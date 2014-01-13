@@ -1,85 +1,318 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/2] drm/tegra: Obtain head number from DT
-Date: Mon, 13 Jan 2014 15:21:34 +0100
-Message-ID: <1389622894-9574-3-git-send-email-treding@nvidia.com>
-References: <1389622894-9574-1-git-send-email-treding@nvidia.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1389622894-9574-1-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv11] ARM: dts: Add support for the cpuimx35 board from Eukrea and its baseboard.
+Date: Mon, 13 Jan 2014 15:22:05 +0100
+Message-ID: <1389622925-21628-1-git-send-email-denis@eukrea.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The head number of a given display controller is fixed in hardware and
-required to program outputs appropriately. Relying on the driver probe
-order to determine this number will not work, since that could yield a
-situation where the second head was probed first and would be assigned
-head number 0 instead of 1.
+The following devices/functionalities were added:
+ * Main and secondary UARTs.
+ * i2c and the pcf8563 device.
+ * Ethernet.
+ * NAND.
+ * The BP1 button.
+ * The LED.
+ * Watchdog
+ * SD.
 
-Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- .../bindings/gpu/nvidia,tegra20-host1x.txt           |  3 +++
- drivers/gpu/drm/tegra/dc.c                           | 20 ++++++++++++++++++--
- 2 files changed, 21 insertions(+), 2 deletions(-)
+ChangeLog v10->v11:
+- The other patches in this serie have already been applied in the for-=
+next branch
+  in Shawn Guo's tree at git://git.linaro.org/people/shawnguo/linux-2.6=
+=2Egit :
+    4449d01 ARM i.MX35: build in pinctrl support.
+    cd01fd4 ARM: imx_v6_v7_defconfig: Enable some drivers used on the c=
+puimx35.
+- Reordered the Cc list and dropped the Cc to the devicetree binding ma=
+intainers.
+- Moved the pins of the hoggrp inside their respective node, the bp1 an=
+d led1 nodes
+  were updated accordingly.
+- The esdhc1's gpio was fixed: the card detect code will never uses the=
+ gpio "active"
+  high/low setting, instead it uses that GPIO as an IRQ.
+- Cosmetic fixes in the uart pinctrl nodes.
 
-diff --git a/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
-index 9e9008f8fa32..efaeec8961b6 100644
---- a/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
-+++ b/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
-@@ -118,6 +118,9 @@ of the following host1x client modules:
-     See ../reset/reset.txt for details.
-   - reset-names: Must include the following entries:
-     - dc
-+  - nvidia,head: The number of the display controller head. This is used to
-+    setup the various types of output to receive video data from the given
-+    head.
- 
-   Each display controller node has a child node, named "rgb", that represents
-   the RGB output associated with the controller. It can take the following
-diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
-index 386f3b4b0094..ce0d2c2c7aac 100644
---- a/drivers/gpu/drm/tegra/dc.c
-+++ b/drivers/gpu/drm/tegra/dc.c
-@@ -1100,8 +1100,6 @@ static int tegra_dc_init(struct host1x_client *client)
- 	struct tegra_dc *dc = host1x_client_to_dc(client);
- 	int err;
- 
--	dc->pipe = tegra->drm->mode_config.num_crtc;
--
- 	drm_crtc_init(tegra->drm, &dc->base, &tegra_crtc_funcs);
- 	drm_mode_crtc_set_gamma_size(&dc->base, 256);
- 	drm_crtc_helper_add(&dc->base, &tegra_crtc_helper_funcs);
-@@ -1160,6 +1158,20 @@ static const struct host1x_client_ops dc_client_ops = {
- 	.exit = tegra_dc_exit,
- };
- 
-+static int tegra_dc_parse_dt(struct tegra_dc *dc)
-+{
-+	u32 value;
-+	int err;
+ChangeLog v9->v10:
+- Added Fabio Estevam To the Cc list
+
+ChangeLog v8->v9:
+- Added the dtb target into arch/arm/boot/dts/Makefile.
+- Added a blank line before the pcf8563 node in the i2c1 node.
+- Whitespace cleanups as requested by Shawn Guo.
+- _' was used in label, it's now fixed (it has been replaced with '-').
+- The recently introduced defines for input and gpios are now used.
+- The uarts had the fsl,uart-has-rtscts property set, but they didn't u=
+se=20
+  any rts and cts pins in the uart pinctrl nodes.
+
+ChangeLog v7->v8:
+- The commit message was improved.
+- The board specific iomuxc pins group configuration that were in imx35=
+=2Edtsi were moved here.
+- The rest of the patch was updated accordingly.
+
+ChangeLog v6->v7:
+- Added Grant Likely in the Cc list.
+- Shortened the license.
+- The tsc2007 pads were moved in another patch.
+
+ChangeLog v5->v6:
+- Shawn Guo was added in the Cc.
+---
+ arch/arm/boot/dts/Makefile                         |    1 +
+ arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi       |   59 +++++++++
+ .../boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts  |  137 ++++++++++++=
+++++++++
+ 3 files changed, 197 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
+ create mode 100644 arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.=
+dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 059d280..d41edc7 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -143,6 +143,7 @@ dtb-$(CONFIG_ARCH_MXC) +=3D \
+ 	imx27-phytec-phycard-s-som.dtb \
+ 	imx27-phytec-phycard-s-rdk.dtb \
+ 	imx31-bug.dtb \
++	imx35-eukrea-mbimxsd35-baseboard.dtb \
+ 	imx50-evk.dtb \
+ 	imx51-apf51.dtb \
+ 	imx51-apf51dev.dtb \
+diff --git a/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi b/arch/arm/bo=
+ot/dts/imx35-eukrea-cpuimx35.dtsi
+new file mode 100644
+index 0000000..303f789
+--- /dev/null
++++ b/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
+@@ -0,0 +1,59 @@
++/*
++ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
-+	err = of_property_read_u32(dc->dev->of_node, "nvidia,head", &value);
-+	if (err < 0)
-+		return err;
++#include "imx35.dtsi"
 +
-+	dc->pipe = value;
++/ {
++	model =3D "Eukrea CPUIMX35";
++	compatible =3D "eukrea,cpuimx35", "fsl,imx35";
 +
-+	return 0;
-+}
++	memory {
++		reg =3D <0x80000000 0x8000000>; /* 128M */
++	};
++};
 +
- static const struct tegra_dc_soc_info tegra20_dc_soc_info = {
- 	.supports_interlacing = false,
- };
-@@ -1207,6 +1219,10 @@ static int tegra_dc_probe(struct platform_device *pdev)
- 	dc->dev = &pdev->dev;
- 	dc->soc = id->data;
- 
-+	err = tegra_dc_parse_dt(dc);
-+	if (err < 0)
-+		return err;
++&fec {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_fec>;
++	status =3D "okay";
++};
 +
- 	dc->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(dc->clk)) {
- 		dev_err(&pdev->dev, "failed to get clock\n");
--- 
-1.8.4.2
++&i2c1 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_i2c1>;
++	status =3D "okay";
++
++	pcf8563@51 {
++		compatible =3D "nxp,pcf8563";
++		reg =3D <0x51>;
++	};
++};
++
++&iomuxc {
++	imx35-eukrea {
++		pinctrl_fec: fecgrp {
++			fsl,pins =3D <MX35_FEC_PINGRP1>;
++		};
++
++		pinctrl_i2c1: i2c1grp {
++			fsl,pins =3D <MX35_I2C1_PINGRP1>;
++		};
++	};
++};
++
++&nfc {
++	nand-bus-width =3D <8>;
++	nand-ecc-mode =3D "hw";
++	nand-on-flash-bbt;
++	status =3D "okay";
++};
+diff --git a/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts b/a=
+rch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
+new file mode 100644
+index 0000000..833bd1f
+--- /dev/null
++++ b/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
+@@ -0,0 +1,137 @@
++/*
++ * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include "imx35-eukrea-cpuimx35.dtsi"
++
++/ {
++	model =3D "Eukrea CPUIMX35";
++	compatible =3D "eukrea,mbimxsd35-baseboard", "eukrea,cpuimx35", "fsl,=
+imx35";
++
++	gpio_keys {
++		compatible =3D "gpio-keys";
++
++		bp1 {
++			pinctrl-names =3D "default";
++			pinctrl-0 =3D <&pinctrl_bp1>;
++			label =3D "BP1";
++			gpios =3D <&gpio3 25 GPIO_ACTIVE_LOW>;
++			linux,code =3D <BTN_MISC>;
++			gpio-key,wakeup;
++			linux,input-type =3D <1>;
++		};
++	};
++
++	leds {
++		compatible =3D "gpio-leds";
++
++		led1 {
++			pinctrl-names =3D "default";
++			pinctrl-0 =3D <&pinctrl_led1>;
++			label =3D "led1";
++			gpios =3D <&gpio3 29 GPIO_ACTIVE_LOW>;
++			linux,default-trigger =3D "heartbeat";
++		};
++	};
++};
++
++&audmux {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_audmux>;
++	status =3D "okay";
++};
++
++&esdhc1 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_esdhc1>;
++	cd-gpios =3D <&gpio3 24>;
++	status =3D "okay";
++};
++
++&i2c1 {
++	tlv320aic23: codec@1a {
++		compatible =3D "ti,tlv320aic23";
++		reg =3D <0x1a>;
++	};
++};
++
++&iomuxc {
++	imx35-eukrea {
++		pinctrl_audmux: audmuxgrp {
++			fsl,pins =3D <MX35_AUDMUX_PINGRP1>;
++		};
++
++		pinctrl_bp1: bp1grp {
++			fsl,pins =3D <MX35_PAD_LD19__GPIO3_25  0x80000000>;
++		};
++
++		pinctrl_esdhc1: esdhc1grp {
++			fsl,pins =3D <
++				  MX35_ESDHC1_PINGRP1
++				  MX35_PAD_LD18__GPIO3_24  0x80000000 /* CD */
++			>;
++		};
++
++		pinctrl_fec: fecgrp {
++			fsl,pins =3D <MX35_FEC_PINGRP1>;
++		};
++
++		pinctrl_i2c1: i2c1grp {
++			fsl,pins =3D <MX35_I2C1_PINGRP1>;
++		};
++
++		pinctrl_led1: led1grp {
++			fsl,pins =3D <MX35_PAD_LD23__GPIO3_29  0x80000000>;
++		};
++
++		pinctrl_reg_lcd_3v3: reg-lcd-3v3 {
++			fsl,pins =3D <MX35_PAD_D3_CLS__GPIO1_4 0x80000000>;
++		};
++
++		pinctrl_uart1: uart1grp {
++			fsl,pins =3D <
++				MX35_UART1_PINGRP1
++				MX35_UART1_RTSCTS_PINGRP1
++			>;
++		};
++
++		pinctrl_uart2: uart2grp {
++			fsl,pins =3D <
++				MX35_UART2_PINGRP1
++				MX35_UART2_RTSCTS_PINGRP1
++			>;
++		};
++	};
++};
++
++&ssi1 {
++	fsl,mode =3D "i2s-slave";
++	status =3D "okay";
++};
++
++&uart1 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_uart1>;
++	fsl,uart-has-rtscts;
++	status =3D "okay";
++};
++
++&uart2 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_uart2>;
++	fsl,uart-has-rtscts;
++	status =3D "okay";
++};
+--=20
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
