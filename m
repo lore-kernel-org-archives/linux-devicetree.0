@@ -1,51 +1,120 @@
-From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH V3 4/5] ARM: dts: imx6sl: add compatible name for i.mx6q
-Date: Mon, 13 Jan 2014 13:58:37 +0800
-Message-ID: <1389592718-9999-4-git-send-email-b20788@freescale.com>
-References: <1389592718-9999-1-git-send-email-b20788@freescale.com>
+From: Xiubo Li <Li.Xiubo@freescale.com>
+Subject: [PATCHv2 1/6] ASoC: core: add off-CODEC widgets list
+	register/unregister
+Date: Mon, 13 Jan 2014 13:53:53 +0800
+Message-ID: <1389592438-13761-2-git-send-email-Li.Xiubo@freescale.com>
+References: <1389592438-13761-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1389592718-9999-1-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1389592438-13761-1-git-send-email-Li.Xiubo@freescale.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: broonie@kernel.org, lgirdwood@gmail.com
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Xiubo Li <Li.Xiubo@freescale.com>, linux-kernel@vger.kernel.org, kuninori.morimoto.gx@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-Add compatible name of i.mx6q for those reuse modules.
+This will be need for some audio card, which maybe using the simple
+card and the off-CODEC widgets is needed.
 
-Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
 ---
- arch/arm/boot/dts/imx6sl.dtsi |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/sound/soc.h  | 10 ++++++++++
+ sound/soc/soc-core.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 49 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index a5ef3c3..5fbf42d 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -564,7 +564,7 @@
- 			};
+diff --git a/include/sound/soc.h b/include/sound/soc.h
+index 03ce45b..23f9572 100644
+--- a/include/sound/soc.h
++++ b/include/sound/soc.h
+@@ -326,6 +326,7 @@ struct snd_soc_platform_driver;
+ struct snd_soc_codec;
+ struct snd_soc_codec_driver;
+ struct snd_soc_component;
++struct snd_soc_widgets;
+ struct snd_soc_component_driver;
+ struct soc_enum;
+ struct snd_soc_jack;
+@@ -385,6 +386,8 @@ int devm_snd_soc_register_component(struct device *dev,
+ 			 const struct snd_soc_component_driver *cmpnt_drv,
+ 			 struct snd_soc_dai_driver *dai_drv, int num_dai);
+ void snd_soc_unregister_component(struct device *dev);
++int snd_soc_register_widgets(struct snd_soc_widgets *wdg);
++void snd_soc_unregister_widgets(struct snd_soc_widgets *wdg);
+ int snd_soc_codec_volatile_register(struct snd_soc_codec *codec,
+ 				    unsigned int reg);
+ int snd_soc_codec_readable_register(struct snd_soc_codec *codec,
+@@ -664,6 +667,13 @@ struct snd_soc_component {
+ 	const struct snd_soc_component_driver *driver;
+ };
  
- 			src: src@020d8000 {
--				compatible = "fsl,imx6sl-src", "fsl,imx51-src";
-+				compatible = "fsl,imx6sl-src", "fsl,imx6q-src", "fsl,imx51-src";
- 				reg = <0x020d8000 0x4000>;
- 				interrupts = <0 91 IRQ_TYPE_LEVEL_HIGH>,
- 					     <0 96 IRQ_TYPE_LEVEL_HIGH>;
-@@ -584,7 +584,7 @@
- 			};
++struct snd_soc_widgets {
++	const char *name;
++	struct list_head list;
++	const struct snd_soc_dapm_widget *widgets;
++	unsigned int cnt;
++};
++
+ /* SoC Audio Codec device */
+ struct snd_soc_codec {
+ 	const char *name;
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index 3a128f0..9adcada 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -3821,6 +3821,45 @@ int snd_soc_unregister_card(struct snd_soc_card *card)
+ }
+ EXPORT_SYMBOL_GPL(snd_soc_unregister_card);
  
- 			iomuxc: iomuxc@020e0000 {
--				compatible = "fsl,imx6sl-iomuxc";
-+				compatible = "fsl,imx6sl-iomuxc", "fsl,imx6q-iomuxc";
- 				reg = <0x020e0000 0x4000>;
- 			};
- 
++static DEFINE_MUTEX(widgets_mutex);
++static LIST_HEAD(widgets_list);
++/**
++ * snd_soc_register_widgets - Register off codec widgets with
++ * the ASoC core
++ *
++ * @wdg: widgets to register
++ *
++ */
++int snd_soc_register_widgets(struct snd_soc_widgets *wdg)
++{
++	int ret;
++
++	if (!wdg)
++		return -EINVAL;
++
++	mutex_lock(&widgets_mutex);
++	list_add(&wdg->list, &widgets_list);
++	mutex_unlock(&widgets_mutex);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(snd_soc_register_widgets);
++
++/**
++ * snd_soc_unregister_widgets - Unregister off codec widgets with
++ * the ASoC core
++ *
++ * @wdg: widgets to unregister
++ *
++ */
++void snd_soc_unregister_widgets(struct snd_soc_widgets *wdg)
++{
++	mutex_lock(&widgets_mutex);
++	list_del(&wdg->list);
++	mutex_unlock(&widgets_mutex);
++}
++EXPORT_SYMBOL_GPL(snd_soc_unregister_widgets);
++
+ /*
+  * Simplify DAI link configuration by removing ".-1" from device names
+  * and sanitizing names.
 -- 
-1.7.9.5
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.4
