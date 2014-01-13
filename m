@@ -1,46 +1,67 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: DT include files
-Date: Mon, 13 Jan 2014 10:31:59 +0800
-Message-ID: <20140113023157.GC23525@S2101-09.ap.freescale.net>
-References: <20140103023211.GA25079@S2101-09.ap.freescale.net>
- <201401111415.29395.arnd@arndb.de>
- <20140112032516.GA23525@S2101-09.ap.freescale.net>
- <201401122121.20084.arnd@arndb.de>
- <CACRpkdYPrso7KSfWPhZC6chA4z=+YSjKb_SCLx4B-aMmYZYb4A@mail.gmail.com>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH 2/3] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
+Date: Mon, 13 Jan 2014 10:37:15 +0800
+Message-ID: <52D3515B.7040008@linaro.org>
+References: <1389278112-7099-1-git-send-email-zhangfei.gao@linaro.org> <1389278112-7099-3-git-send-email-zhangfei.gao@linaro.org> <003601cf0e09$5fb07c90$1f1175b0$%jun@samsung.com> <52CFFFDA.8050108@linaro.org> <001501cf1004$7b1f34b0$715d9e10$%jun@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYPrso7KSfWPhZC6chA4z=+YSjKb_SCLx4B-aMmYZYb4A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=EUC-KR
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <001501cf1004$7b1f34b0$715d9e10$%jun@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Seungwon Jeon <tgih.jun@samsung.com>, 'Chris Ball' <cjb@laptop.org>, 'Arnd Bergmann' <arnd@arndb.de>, 'Mike Turquette' <mturquette@linaro.org>, 'Rob Herring' <robherring2@gmail.com>, 'Jaehoon Chung' <jh80.chung@samsung.com>, 'Kumar Gala' <galak@codeaurora.org>, 'Haojian Zhuang' <haojian.zhuang@linaro.org>
+Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org, 'Zhigang Wang' <brooke.wangzhigang@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 13, 2014 at 12:16:10AM +0100, Linus Walleij wrote:
-> > I'm also surprised that you have to know multiple constants
-> > (mux register, input register, config register offsets) to select a
-> > particular pin. I would have expected that you could have one constant
-> > from which the driver is able to compute the other ones.
+
+
+On 01/13/2014 10:09 AM, Seungwon Jeon wrote:
+> On Fri, January 10, 2014, Zhangfei Gao wrote:
+>> On 01/10/2014 09:39 PM, Seungwon Jeon wrote:
+>>>> +static void dw_mci_k3_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+>>>> +{
+>>>> +	struct dw_mci_k3_priv_data *priv = host->priv;
+>>>> +	u32 rate = priv->clk_table[ios->timing];
+>>>
+>>> First, sorry for quick review even though your effort.
+>>> But I still worry about this change.
+>>> Currently k3 host's clock table depends on value number of SD/MMC mode value.
+>>> It seems close to identifier for eachg mode. I think it's not good way to use as table's index.
+>>> Can you modify to mmc_clk_determine_rate() in your another patch-set?
+>>> I guess required actual target rate could be determined depending on ios->clock.
+>>>
+>>
+>> No, it can not get input clock source rate simply from ios->clock, also
+>> requied info like which controller, which mode etc.
+>> Here is setting clock source rate, not the working clock rate.
+>>
+>> For example, emmc init clock source rate is 13M, while sd init clock
+>> source is 25M, it can not simply get such info from ios->clock.
+>> And for HS200, emmc may have to set clock source rate to 104M since the
+>> controller limitation and can not work stable as 208M.
 > 
-> I might have merged this but I was younger then :-/
+> Yes, clock table is source clock rate, not actual working clock rate.
+> I was not saying that 'ios->clock' would be used for source clock directly.
+> I meant that you can adjust the source clock rate depending on 'ios->clock'.
+> You've already done with clock table similarly in mmc_clk_determine_rate().
 > 
-> Now I don't like the looks of this. I think the DT typically shall not
-> store register offsets and bitfield information. I think doing
-> so is taking away the responsibility of the driver knowing the
-> hardware and moving too close to Open Firmware.
+> For example, in case of HS200, 'ios->clock' will be passed with 200MHz.
+> And then, mmc_clk_determine_rate() can set the 'rate & best' to 100000000 and 720000000 respectively.
+> Also, 'ios->clock' with 400KHz or less may be passed for init clock.
+> If clock id is HI3620_SD_CIUCLK, 'rate & best' can be selected with 13000000 and 26000000.
+> If not and it's case of MMC,  'rate & best' can be selected with 25000000 and 180000000.
+> If it should be considered with other conditions, please let me know.
 
-We only have data in device tree, and drivers, at least imx pinctrl
-driver, still need to know hardware for how to apply these data into
-hardware.
+However, I am afraid this will make things complicated rather than
+simplified.
 
-As I just replied to Arnd, all the motivation of having these data in
-device tree is to release kernel from being bloated by those huge mount
-of data due to the complexity and flexibility of IMX pin controller.
+The function mmc_clk_determine_rate() will need the info which
+controller it is, what's the init clock rate, what's the max clock rate,
+and what's the limitation, which may be different as different soc, and
+can not be hardcoded.
+The limitation may in HS200 and SDR104 mode.
 
-Shawn
+The plan is only input init rate and max rate instead of the table,
+while others directly use ios->clock, only if the the limitation resolved.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
