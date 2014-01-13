@@ -1,101 +1,89 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv10][ 2/3] ARM: dts: Add support for the cpuimx35 board
- from Eukrea and its baseboard.
-Date: Mon, 13 Jan 2014 12:45:01 +0800
-Message-ID: <20140113044459.GM23525@S2101-09.ap.freescale.net>
-References: <1389368441-26310-1-git-send-email-denis@eukrea.com>
- <1389368441-26310-2-git-send-email-denis@eukrea.com>
+From: Seungwon Jeon <tgih.jun@samsung.com>
+Subject: RE: [PATCH 2/3] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
+Date: Mon, 13 Jan 2014 14:32:46 +0900
+Message-ID: <001c01cf1020$e3e1aed0$aba50c70$%jun@samsung.com>
+References: <1389278112-7099-1-git-send-email-zhangfei.gao@linaro.org>
+ <1389278112-7099-3-git-send-email-zhangfei.gao@linaro.org>
+ <003601cf0e09$5fb07c90$1f1175b0$%jun@samsung.com>
+ <52CFFFDA.8050108@linaro.org>
+ <001501cf1004$7b1f34b0$715d9e10$%jun@samsung.com>
+ <52D3515B.7040008@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1389368441-26310-2-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <52D3515B.7040008@linaro.org>
+Content-language: ko
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: 'zhangfei' <zhangfei.gao@linaro.org>, 'Chris Ball' <cjb@laptop.org>, 'Arnd Bergmann' <arnd@arndb.de>, 'Mike Turquette' <mturquette@linaro.org>, 'Rob Herring' <robherring2@gmail.com>, 'Jaehoon Chung' <jh80.chung@samsung.com>, 'Kumar Gala' <galak@codeaurora.org>, 'Haojian Zhuang' <haojian.zhuang@linaro.org>
+Cc: devicetree@vger.kernel.org, 'Zhigang Wang' <brooke.wangzhigang@huawei.com>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 10, 2014 at 04:40:40PM +0100, Denis Carikli wrote:
-> +&iomuxc {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_hog>;
-> +
-> +	imx35-eukrea {
-> +		pinctrl_hog: hoggrp {
-> +			fsl,pins = <
-> +				MX35_PAD_LD18__GPIO3_24  0x80000000
-> +				MX35_PAD_LD19__GPIO3_25  0x80000000
-> +				MX35_PAD_LD23__GPIO3_29  0x80000000
-
-Create pinctrl entry for gpio-leds and gpio-keys to contain them just
-like other devices, and move ESDHC CD pin into esdhc1grp, so that we do
-not need this hoggrp.  The hoggrp should only hold the pins that do not
-really belong to any client devices.
-
-> +			>;
-> +		};
-> +
-> +		pinctrl_audmux: audmuxgrp {
-> +			fsl,pins = <MX35_AUDMUX_PINGRP1>;
-> +		};
-> +
-> +		pinctrl_esdhc1: esdhc1grp {
-> +			fsl,pins = <MX35_ESDHC1_PINGRP1>;
-> +		};
-> +
-> +		pinctrl_fec: fecgrp {
-> +			fsl,pins = <MX35_FEC_PINGRP1>;
-> +		};
-> +
-> +		pinctrl_i2c1: i2c1grp {
-> +			fsl,pins = <MX35_I2C1_PINGRP1>;
-> +		};
-> +
-> +		pinctrl_reg_lcd_3v3: reg-lcd-3v3 {
-> +			fsl,pins = <MX35_PAD_D3_CLS__GPIO1_4 0x80000000>;
-> +		};
-> +
-> +		pinctrl_uart1: uart1grp {
-> +			fsl,pins = <MX35_UART1_PINGRP1 MX35_UART1_RTSCTS_PINGRP1>;
-
-Split it into two lines, one macro each.
-
-> +		};
-> +
-> +		pinctrl_uart2: uart2grp {
-> +			fsl,pins = <MX35_UART2_PINGRP1 MX35_UART2_RTSCTS_PINGRP1>;
-
-Ditto
-
-Shawn
-
-> +		};
-> +	};
-> +};
-> +
-> +&ssi1 {
-> +	fsl,mode = "i2s-slave";
-> +	status = "okay";
-> +};
-> +
-> +&uart1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart1>;
-> +	fsl,uart-has-rtscts;
-> +	status = "okay";
-> +};
-> +
-> +&uart2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart2>;
-> +	fsl,uart-has-rtscts;
-> +	status = "okay";
-> +};
-> -- 
-> 1.7.9.5
+On Mon, January 13, 2014, zhangfei wrote:
+> On 01/13/2014 10:09 AM, Seungwon Jeon wrote:
+> > On Fri, January 10, 2014, Zhangfei Gao wrote:
+> >> On 01/10/2014 09:39 PM, Seungwon Jeon wrote:
+> >>>> +static void dw_mci_k3_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+> >>>> +{
+> >>>> +	struct dw_mci_k3_priv_data *priv = host->priv;
+> >>>> +	u32 rate = priv->clk_table[ios->timing];
+> >>>
+> >>> First, sorry for quick review even though your effort.
+> >>> But I still worry about this change.
+> >>> Currently k3 host's clock table depends on value number of SD/MMC mode value.
+> >>> It seems close to identifier for eachg mode. I think it's not good way to use as table's index.
+> >>> Can you modify to mmc_clk_determine_rate() in your another patch-set?
+> >>> I guess required actual target rate could be determined depending on ios->clock.
+> >>>
+> >>
+> >> No, it can not get input clock source rate simply from ios->clock, also
+> >> requied info like which controller, which mode etc.
+> >> Here is setting clock source rate, not the working clock rate.
+> >>
+> >> For example, emmc init clock source rate is 13M, while sd init clock
+> >> source is 25M, it can not simply get such info from ios->clock.
+> >> And for HS200, emmc may have to set clock source rate to 104M since the
+> >> controller limitation and can not work stable as 208M.
+> >
+> > Yes, clock table is source clock rate, not actual working clock rate.
+> > I was not saying that 'ios->clock' would be used for source clock directly.
+> > I meant that you can adjust the source clock rate depending on 'ios->clock'.
+> > You've already done with clock table similarly in mmc_clk_determine_rate().
+> >
+> > For example, in case of HS200, 'ios->clock' will be passed with 200MHz.
+> > And then, mmc_clk_determine_rate() can set the 'rate & best' to 100000000 and 720000000 respectively.
+> > Also, 'ios->clock' with 400KHz or less may be passed for init clock.
+> > If clock id is HI3620_SD_CIUCLK, 'rate & best' can be selected with 13000000 and 26000000.
+> > If not and it's case of MMC,  'rate & best' can be selected with 25000000 and 180000000.
+> > If it should be considered with other conditions, please let me know.
 > 
+> However, I am afraid this will make things complicated rather than
+> simplified.
+> 
+> The function mmc_clk_determine_rate() will need the info which
+> controller it is, what's the init clock rate, what's the max clock rate,
+> and what's the limitation, which may be different as different soc, and
+> can not be hardcoded.
+> The limitation may in HS200 and SDR104 mode.
+> 
+> The plan is only input init rate and max rate instead of the table,
+> while others directly use ios->clock, only if the the limitation resolved.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Handling mmc clock for hi3620 is in drivers/clk/hisilicon/clk-hi3620.c, right?
+Currently only hi3620 has been introduced.
+If hi3620's host has a limitation, clk-hi3620.c can handle clock range(init, max) for source clock enough.
+I feel like clock table is redundant.
+Ok. It's just my suggestion.  But I still point dependency of mode index number.
+K3's clock table refers and depends mode definition value from include/linux/mmc/host.h
+If new mode is added or modified, it should be considered and also may make complicated.
+
+Thanks,
+Seungwon Jeon
