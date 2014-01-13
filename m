@@ -1,361 +1,118 @@
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: [PATCH] clk: hisilicon: add hi3620_mmc_clks
-Date: Mon, 13 Jan 2014 17:37:32 +0800
-Message-ID: <1389605852-10160-1-git-send-email-zhangfei.gao@linaro.org>
-References: <1389604469-8064-2-git-send-email-zhangfei.gao@linaro.org>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1389604469-8064-2-git-send-email-zhangfei.gao@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chris Ball <cjb@laptop.org>, Arnd Bergmann <arnd@arndb.de>, Mike Turquette <mturquette@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, brooke.wangzhigang@huawei.com
-Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org, Zhangfei Gao <zhangfei.gao@linaro.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: sun4i: dt: Add basic board support for
+ LinkSprite pcDuino
+Date: Mon, 13 Jan 2014 11:07:08 +0100
+Message-ID: <20140113100708.GY2941@lukather>
+References: <alpine.DEB.2.02.1401111509430.13932@trabant.deployis.eu>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HENu/cXyPKFN4XCQ"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBAHXZ2LAKGQEPFZUJCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.02.1401111509430.13932-35KbhngVGxv1KanxuVi64+yrfmlZI2zM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
+Cc: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Suggest by Arnd: abstract mmc tuning as clock behavior,
-also because different soc have different tuning method and registers.
-hi3620_mmc_clks is added to handle mmc clock specifically on hi3620.
 
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
----
- .../bindings/arm/hisilicon/hisilicon.txt           |   14 +
- .../devicetree/bindings/clock/hi3620-clock.txt     |    1 +
- drivers/clk/hisilicon/clk-hi3620.c                 |  274 ++++++++++++++++++++
- include/dt-bindings/clock/hi3620-clock.h           |    5 +
- 4 files changed, 294 insertions(+)
+--HENu/cXyPKFN4XCQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-index 8c7a4653508d..df0a452b8526 100644
---- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-+++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-@@ -30,3 +30,17 @@ Example:
- 		resume-offset = <0x308>;
- 		reboot-offset = <0x4>;
- 	};
-+
-+PCTRL: Peripheral misc control register
-+
-+Required Properties:
-+- compatible: "hisilicon,pctrl"
-+- reg: Address and size of pctrl.
-+
-+Example:
-+
-+	/* for Hi3620 */
-+	pctrl: pctrl@fca09000 {
-+		compatible = "hisilicon,pctrl";
-+		reg = <0xfca09000 0x1000>;
-+	};
-diff --git a/Documentation/devicetree/bindings/clock/hi3620-clock.txt b/Documentation/devicetree/bindings/clock/hi3620-clock.txt
-index 4b71ab41be53..dad6269f52c5 100644
---- a/Documentation/devicetree/bindings/clock/hi3620-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/hi3620-clock.txt
-@@ -7,6 +7,7 @@ Required Properties:
- 
- - compatible: should be one of the following.
-   - "hisilicon,hi3620-clock" - controller compatible with Hi3620 SoC.
-+  - "hisilicon,hi3620-mmc-clock" - controller specific for Hi3620 mmc.
- 
- - reg: physical base address of the controller and length of memory mapped
-   region.
-diff --git a/drivers/clk/hisilicon/clk-hi3620.c b/drivers/clk/hisilicon/clk-hi3620.c
-index f24ad6a3a797..38faa469d288 100644
---- a/drivers/clk/hisilicon/clk-hi3620.c
-+++ b/drivers/clk/hisilicon/clk-hi3620.c
-@@ -240,3 +240,277 @@ static void __init hi3620_clk_init(struct device_node *np)
- 				   base);
- }
- CLK_OF_DECLARE(hi3620_clk, "hisilicon,hi3620-clock", hi3620_clk_init);
-+
-+struct hisi_mmc_clock {
-+	unsigned int		id;
-+	const char		*name;
-+	const char		*parent_name;
-+	unsigned long		flags;
-+	u32			clken_reg;
-+	u32			clken_bit;
-+	u32			div_reg;
-+	u32			div_off;
-+	u32			div_bits;
-+	u32			drv_reg;
-+	u32			drv_off;
-+	u32			drv_bits;
-+	u32			sam_reg;
-+	u32			sam_off;
-+	u32			sam_bits;
-+};
-+
-+struct clk_mmc {
-+	struct clk_hw	hw;
-+	u32		id;
-+	void __iomem	*clken_reg;
-+	u32		clken_bit;
-+	void __iomem	*div_reg;
-+	u32		div_off;
-+	u32		div_bits;
-+	void __iomem	*drv_reg;
-+	u32		drv_off;
-+	u32		drv_bits;
-+	void __iomem	*sam_reg;
-+	u32		sam_off;
-+	u32		sam_bits;
-+};
-+
-+#define to_mmc(_hw) container_of(_hw, struct clk_mmc, hw)
-+
-+static struct hisi_mmc_clock hi3620_mmc_clks[] __initdata = {
-+	{ HI3620_SD_CIUCLK,	"sd_bclk1", "sd_clk", CLK_SET_RATE_PARENT, 0x1f8, 0, 0x1f8, 1, 3, 0x1f8, 4, 4, 0x1f8, 8, 4},
-+	{ HI3620_MMC_CIUCLK1,   "mmc_bclk1", "mmc_clk1", CLK_SET_RATE_PARENT, 0x1f8, 12, 0x1f8, 13, 3, 0x1f8, 16, 4, 0x1f8, 20, 4},
-+	{ HI3620_MMC_CIUCLK2,   "mmc_bclk2", "mmc_clk2", CLK_SET_RATE_PARENT, 0x1f8, 24, 0x1f8, 25, 3, 0x1f8, 28, 4, 0x1fc, 0, 4},
-+	{ HI3620_MMC_CIUCLK3,   "mmc_bclk3", "mmc_clk3", CLK_SET_RATE_PARENT, 0x1fc, 4, 0x1fc, 5, 3, 0x1fc, 8, 4, 0x1fc, 12, 4},
-+};
-+
-+static unsigned long mmc_clk_recalc_rate(struct clk_hw *hw,
-+		       unsigned long parent_rate)
-+{
-+	switch (parent_rate) {
-+	case 26000000:
-+		return 13000000;
-+	case 180000000:
-+		return 25000000;
-+	case 360000000:
-+		return 50000000;
-+	case 720000000:
-+		return 100000000;
-+	case 1440000000:
-+		return 180000000;
-+	default:
-+		return parent_rate;
-+	}
-+}
-+
-+static long mmc_clk_determine_rate(struct clk_hw *hw, unsigned long rate,
-+			      unsigned long *best_parent_rate,
-+			      struct clk **best_parent_p)
-+{
-+	struct clk_mmc *mclk = to_mmc(hw);
-+	unsigned long best = 0;
-+
-+	if ((rate <= 13000000) && (mclk->id == HI3620_MMC_CIUCLK1)) {
-+		rate = 13000000;
-+		best = 26000000;
-+	} else if (rate <= 26000000) {
-+		rate = 25000000;
-+		best = 180000000;
-+	} else if (rate <= 52000000) {
-+		rate = 50000000;
-+		best = 360000000;
-+	} else if (rate <= 100000000) {
-+		rate = 100000000;
-+		best = 720000000;
-+	} else {
-+		/* max is 180M */
-+		rate = 180000000;
-+		best = 1440000000;
-+	}
-+	*best_parent_rate = best;
-+	return rate;
-+}
-+
-+static u32 mmc_clk_delay(u32 val, u32 para, u32 off, u32 len)
-+{
-+	u32 i;
-+
-+	if (para >= 0) {
-+		for (i = 0; i < len; i++) {
-+			if (para % 2)
-+				val |= 1 << (off + i);
-+			else
-+				val &= ~(1 << (off + i));
-+			para = para >> 1;
-+		}
-+	}
-+	return val;
-+}
-+
-+static int mmc_clk_set_timing(struct clk_hw *hw, unsigned long rate)
-+{
-+	struct clk_mmc *mclk = to_mmc(hw);
-+	unsigned long flags;
-+	u32 sam, drv, div, val;
-+	static DEFINE_SPINLOCK(mmc_clk_lock);
-+
-+	switch (rate) {
-+	case 13000000:
-+		sam = 3;
-+		drv = 1;
-+		div = 1;
-+		break;
-+	case 25000000:
-+		sam = 13;
-+		drv = 6;
-+		div = 6;
-+		break;
-+	case 50000000:
-+		sam = 3;
-+		drv = 6;
-+		div = 6;
-+		break;
-+	case 100000000:
-+		sam = 6;
-+		drv = 4;
-+		div = 6;
-+		break;
-+	case 180000000:
-+		sam = 6;
-+		drv = 4;
-+		div = 7;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	spin_lock_irqsave(&mmc_clk_lock, flags);
-+
-+	val = readl_relaxed(mclk->clken_reg);
-+	val &= ~(1 << mclk->clken_bit);
-+	writel_relaxed(val, mclk->clken_reg);
-+
-+	val = readl_relaxed(mclk->sam_reg);
-+	val = mmc_clk_delay(val, sam, mclk->sam_off, mclk->sam_bits);
-+	writel_relaxed(val, mclk->sam_reg);
-+
-+	val = readl_relaxed(mclk->drv_reg);
-+	val = mmc_clk_delay(val, drv, mclk->drv_off, mclk->drv_bits);
-+	writel_relaxed(val, mclk->drv_reg);
-+
-+	val = readl_relaxed(mclk->div_reg);
-+	val = mmc_clk_delay(val, div, mclk->div_off, mclk->div_bits);
-+	writel_relaxed(val, mclk->div_reg);
-+
-+	val = readl_relaxed(mclk->clken_reg);
-+	val |= 1 << mclk->clken_bit;
-+	writel_relaxed(val, mclk->clken_reg);
-+
-+	spin_unlock_irqrestore(&mmc_clk_lock, flags);
-+
-+	return 0;
-+}
-+
-+static int mmc_clk_prepare(struct clk_hw *hw)
-+{
-+	struct clk_mmc *mclk = to_mmc(hw);
-+	unsigned long rate;
-+
-+	if (mclk->id == HI3620_MMC_CIUCLK1)
-+		rate = 13000000;
-+	else
-+		rate = 25000000;
-+
-+	return mmc_clk_set_timing(hw, rate);
-+}
-+
-+static int mmc_clk_set_rate(struct clk_hw *hw, unsigned long rate,
-+			     unsigned long parent_rate)
-+{
-+	return mmc_clk_set_timing(hw, rate);
-+}
-+
-+static struct clk_ops clk_mmc_ops = {
-+	.prepare = mmc_clk_prepare,
-+	.determine_rate = mmc_clk_determine_rate,
-+	.set_rate = mmc_clk_set_rate,
-+	.recalc_rate = mmc_clk_recalc_rate,
-+};
-+
-+static struct clk *hisi_register_clk_mmc(struct hisi_mmc_clock *mmc_clk,
-+			void __iomem *base, struct device_node *np)
-+{
-+	struct clk_mmc *mclk;
-+	struct clk *clk;
-+	struct clk_init_data init;
-+
-+	mclk = kzalloc(sizeof(*mclk), GFP_KERNEL);
-+	if (!mclk) {
-+		pr_err("%s: fail to allocate mmc clk\n", __func__);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	init.name = mmc_clk->name;
-+	init.ops = &clk_mmc_ops;
-+	init.flags = mmc_clk->flags | CLK_IS_BASIC;
-+	init.parent_names = (mmc_clk->parent_name ? &mmc_clk->parent_name : NULL);
-+	init.num_parents = (mmc_clk->parent_name ? 1 : 0);
-+	mclk->hw.init = &init;
-+
-+	mclk->id = mmc_clk->id;
-+	mclk->clken_reg = base + mmc_clk->clken_reg;
-+	mclk->clken_bit = mmc_clk->clken_bit;
-+	mclk->div_reg = base + mmc_clk->div_reg;
-+	mclk->div_off = mmc_clk->div_off;
-+	mclk->div_bits = mmc_clk->div_bits;
-+	mclk->drv_reg = base + mmc_clk->drv_reg;
-+	mclk->drv_off = mmc_clk->drv_off;
-+	mclk->drv_bits = mmc_clk->drv_bits;
-+	mclk->sam_reg = base + mmc_clk->sam_reg;
-+	mclk->sam_off = mmc_clk->sam_off;
-+	mclk->sam_bits = mmc_clk->sam_bits;
-+
-+	clk = clk_register(NULL, &mclk->hw);
-+	if (WARN_ON(IS_ERR(clk)))
-+		kfree(mclk);
-+	return clk;
-+}
-+
-+static void __init hi3620_mmc_clk_init(struct device_node *node)
-+{
-+	void __iomem *base;
-+	int i, num = ARRAY_SIZE(hi3620_mmc_clks);
-+	struct clk_onecell_data *clk_data;
-+
-+	if (!node) {
-+		pr_err("failed to find pctrl node in DTS\n");
-+		return;
-+	}
-+
-+	base = of_iomap(node, 0);
-+	if (!base) {
-+		pr_err("failed to map pctrl\n");
-+		return;
-+	}
-+
-+	clk_data = kzalloc(sizeof(*clk_data), GFP_KERNEL);
-+	if (WARN_ON(!clk_data))
-+		return;
-+
-+	clk_data->clks = kzalloc(sizeof(struct clk *) * num, GFP_KERNEL);
-+	if (!clk_data->clks) {
-+		pr_err("%s: fail to allocate mmc clk\n", __func__);
-+		return;
-+	}
-+
-+	for (i = 0; i < num; i++) {
-+		struct hisi_mmc_clock *mmc_clk = &hi3620_mmc_clks[i];
-+		clk_data->clks[mmc_clk->id] =
-+			hisi_register_clk_mmc(mmc_clk, base, node);
-+	}
-+
-+	clk_data->clk_num = num;
-+	of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-+}
-+
-+CLK_OF_DECLARE(hi3620_mmc_clk, "hisilicon,hi3620-mmc-clock", hi3620_mmc_clk_init);
-diff --git a/include/dt-bindings/clock/hi3620-clock.h b/include/dt-bindings/clock/hi3620-clock.h
-index 6eaa6a45e110..21b9d0e2eb0c 100644
---- a/include/dt-bindings/clock/hi3620-clock.h
-+++ b/include/dt-bindings/clock/hi3620-clock.h
-@@ -147,6 +147,11 @@
- #define HI3620_MMC_CLK3		217
- #define HI3620_MCU_CLK		218
- 
-+#define HI3620_SD_CIUCLK	0
-+#define HI3620_MMC_CIUCLK1	1
-+#define HI3620_MMC_CIUCLK2	2
-+#define HI3620_MMC_CIUCLK3	3
-+
- #define HI3620_NR_CLKS		219
- 
- #endif	/* __DTS_HI3620_CLOCK_H */
--- 
-1.7.9.5
+Hi Zoltan,
 
+On Sat, Jan 11, 2014 at 04:54:52PM +0100, Zoltan HERPAI wrote:
+> This patch will add a basic board support DT for the
+> LinkSprite pcDuino.
+>=20
+> Signed-off-by: Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/Makefile              |    1 +
+>  arch/arm/boot/dts/sun4i-a10-pcduino.dts |   48 +++++++++++++++++++++++++=
+++++++
+>  2 files changed, 49 insertions(+), 0 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/sun4i-a10-pcduino.dts
+>=20
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index b663ed7..a2e3620 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -253,6 +253,7 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D \
+>  	sun4i-a10-cubieboard.dtb \
+>  	sun4i-a10-mini-xplus.dtb \
+>  	sun4i-a10-hackberry.dtb \
+> +	sun4i-a10-pcduino.dtb \
+>  	sun5i-a10s-olinuxino-micro.dtb \
+>  	sun5i-a13-olinuxino.dtb \
+>  	sun5i-a13-olinuxino-micro.dtb \
+> diff --git a/arch/arm/boot/dts/sun4i-a10-pcduino.dts b/arch/arm/boot/dts/=
+sun4i-a10-pcduino.dts
+> new file mode 100644
+> index 0000000..752f002
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun4i-a10-pcduino.dts
+> @@ -0,0 +1,48 @@
+> +/*
+> + * Copyright 2014 Zoltan HERPAI
+> + * Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +/dts-v1/;
+> +/include/ "sun4i-a10.dtsi"
+> +
+> +/ {
+> +	model =3D "LinkSprite pcDuino";
+> +	compatible =3D "pcduino,a10-pcduino", "allwinner,sun4i-a10";
+
+Is LinkSprite the retailer or the manufacturer?
+
+If the former, it shouldn't appear in the model string, if the latter,
+it should be the prefix in the compatible.
+
+Otherwise, it looks very good, thanks!
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--HENu/cXyPKFN4XCQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS07rMAAoJEBx+YmzsjxAgPyMP/3nLK9BcpavAx+m8G4MRbrPY
+tw9O6qk2y0DXSZ6QOUt/y1bMQNqxzlkh3cXflrDA0gdmHiJHpiTX2UTbkB4RlKd/
+xmenNEXLO4GRQUJQ4+X5VTfanmMFuRoGlHhHJ+973z/a+eLmUOtMedMxFJ2S42zZ
+zv9lfNdCVoFIOa/tPI5r61nTuk0VzGVLpF9zrx0L7Ud90Q/eXzEl7124rQzt3wg7
+wRh23Igc1s0HJsfWylSUUYv6PQvdg5kK/PmC1HNc+dDx3FzxaDUbE6q9+TlT+4hD
+Pn/pIXZHf7+/qRk2qXSjM9O9aEpP6io8jt6l8fhjpGdnfdryBr8U6TRsaaYWviPF
+XuHOLZF3VmqDqxsVTautHb8AiO9aw7ZP/4/K//i3uJYttblQDH51oygvNZnnZCW3
+xZGvooAN51tf6nncd7lnkCBZUu8ZRAFPqAvEAeYXfvwW/Pp5ruQybaWEsD8TAZ2b
+hMcy6q3cowGUALjPscke9qcFMgL36zOqM7ehhZLlYDWJ1T8E/MLU5HYvafTSeJbD
+ZC17T8Cf2qd6V2wlw06fqfqU9PKtzaQV+0IqihQxJBM9wQMGvr+UvcU57q5IS2Qs
+xVtFPmhdJY3s73aOwyFFm5WzAyKnqla/jS9Zoht2Ov08uKjsmuO3fSpn3aWf0tsh
++OJkJyMRa2MOCUbeYmq5
+=YLGw
+-----END PGP SIGNATURE-----
+
+--HENu/cXyPKFN4XCQ--
