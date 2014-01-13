@@ -1,60 +1,31 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/2] Fix SSI audio function regression when using ROM
- firmware
-Date: Mon, 13 Jan 2014 14:52:26 +0530
-Message-ID: <20140113092226.GE25466@intel.com>
-References: <1389170756-22351-1-git-send-email-Guangyu.Chen@freescale.com>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2M10gZ3BpbzogRHJpdmVyIGZvciBTWVNDT04tYmFzZWQg?=
+ =?UTF-8?B?R1BJT3M=?=
+Date: Mon, 13 Jan 2014 14:23:59 +0400
+Message-ID: <1389608639.913101510@f384.i.mail.ru>
+References: <1389421415-22859-1-git-send-email-shc_work@mail.ru>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1389170756-22351-1-git-send-email-Guangyu.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1389421415-22859-1-git-send-email-shc_work-JGs/UdohzUI@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolin Chen <Guangyu.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?TGludXMgV2FsbGVpag==?= <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?QWxleGFuZHJlIENvdXJib3Q=?= <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, =?UTF-8?B?S3VtYXIgR2FsYQ==?= <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 08, 2014 at 04:45:54PM +0800, Nicolin Chen wrote:
-> Previously we added dual-fifo script support for SSI and SDMA, meanwhile, we
-> switched the default script in DT to this new script. However, there're still
-> quite a few people using the old version or even ROM firmware which means they
-> don't provide any firmware to SDMA driver. In these cases, the SDMA driver'd
-> fail to load essential script then the audio function broken.
-> 
-> This series of patches mainly fix this issue by assigning a default script
-> number for ROM firmware case and reverting the default script in DT so that
-> all kinds of users would continue to run it with or without firmware.
-> 
-> We might later need to figure out a better solution to ensure both SDMA driver
-> and SSI driver could adaptively switch the new script to the old one when V2
-> firmware isn't provided.
-
-Applied both,
-
-Thanks
-
---
-~Vinod
-> 
-> This series of patches are based on Vinod's repository.
-> 
-> Nicolin Chen (2):
->   Revert "ARM: dts: imx: use dual-fifo sdma script for ssi"
->   dma: imx-sdma: Assign a default script number for ROM firmware cases
-> 
->  arch/arm/boot/dts/imx51.dtsi   |  4 ++--
->  arch/arm/boot/dts/imx53.dtsi   |  4 ++--
->  arch/arm/boot/dts/imx6qdl.dtsi | 12 ++++++------
->  arch/arm/boot/dts/imx6sl.dtsi  | 12 ++++++------
->  drivers/dma/imx-sdma.c         |  4 ++++
->  5 files changed, 20 insertions(+), 16 deletions(-)
-> 
-> -- 
-> 1.8.4
-> 
-> 
-
--- 
+0KHRg9Cx0LHQvtGC0LAsIDExINGP0L3QstCw0YDRjyAyMDE0LCAxMDoyMyArMDQ6MDAg0L7RgiBB
+bGV4YW5kZXIgU2hpeWFuIDxzaGNfd29ya0BtYWlsLnJ1PjoKPiBTWVNDT04gZHJpdmVyIHdhcyBk
+ZXNpZ25lZCBmb3IgdXNpbmcgbWVtb3J5IGFyZWFzIChyZWdpc3RlcnMpCj4gdGhhdCBhcmUgdXNl
+ZCBpbiBzZXZlcmFsIHN1YnN5c3RlbXMuIFRoZXJlIGFyZSBzeXN0ZW1zIChDUFVzKQo+IHdoaWNo
+IHVzZSBiaXRzIGluIG9uZSByZWdpc3RlciBmb3IgdmFyaW91cyBwdXJwb3NlcyBhbmQgdGh1cwo+
+IHNob3VsZCBiZSBoYW5kbGVkIGJ5IHZhcmlvdXMga2VybmVsIHN1YnN5c3RlbXMuIFRoaXMgZHJp
+dmVyCj4gYWxsb3dzIHlvdSB0byB1c2UgdGhlIGluZGl2aWR1YWwgU1lTQ09OIGJpdHMgYXMgR1BJ
+T3MuCj4gQVJNIENMUFM3MTFYIFNZU0ZMRzEgaW5wdXQgbGluZXMgaGFzIGJlZW4gYWRkZWQgYXMg
+Zmlyc3QgdXNlcgo+IG9mIHRoaXMgZHJpdmVyLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEFsZXhhbmRl
+ciBTaGl5YW4gPHNoY193b3JrQG1haWwucnU+CgpJIGZvdW5kIHNvbWUgaW5jb3JyZWN0IHRoaW5n
+cyBpbiB0aGlzIHZlcnNpb24sIHNvIHBsZWFzZSBub3QgcmV2aWV3IHRoaXMKcGF0Y2ggdW50aWwg
+SSdsbCBzZW5kIHY0LgpUaGFua3MuCgotLS0K
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
