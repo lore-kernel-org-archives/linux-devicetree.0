@@ -1,62 +1,58 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCHv2 5/6] ASoC: fsl: Add VF610 simple audio card widgets
- driver.
-Date: Mon, 13 Jan 2014 17:16:14 +0000
-Message-ID: <20140113171614.GD29039@sirena.org.uk>
-References: <1389592438-13761-1-git-send-email-Li.Xiubo@freescale.com>
- <1389592438-13761-6-git-send-email-Li.Xiubo@freescale.com>
+From: Ben Gamari <bgamari.foss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] dt: Update I2C trivial devices list
+Date: Mon, 13 Jan 2014 12:26:47 -0500
+Message-ID: <87ob3flrmw.fsf@gmail.com>
+References: <1387239151-19226-1-git-send-email-bgamari.foss@gmail.com> <52B07870.6070809@wwwdotorg.org> <87a9fztofc.fsf@gmail.com> <20140113125128.GE2586@katana> <87r48cklgj.fsf@gmail.com> <52D41B14.6060701@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Nachn7RqbTHiMSEX"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1389592438-13761-6-git-send-email-Li.Xiubo@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Xiubo Li <Li.Xiubo@freescale.com>
-Cc: lgirdwood@gmail.com, kuninori.morimoto.gx@renesas.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha1; protocol="application/pgp-signature"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52D41B14.6060701-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+--=-=-=
+Content-Type: text/plain
 
---Nachn7RqbTHiMSEX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
 
-On Mon, Jan 13, 2014 at 01:53:57PM +0800, Xiubo Li wrote:
-> This is the SGTL5000 codec based off-CODEC widgets supports.
->=20
-> Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
-> ---
->  sound/soc/fsl/Kconfig                     | 25 ++++++++++++++++++
->  sound/soc/fsl/Makefile                    |  3 +++
->  sound/soc/fsl/snd-soc-simple-card-vf610.c | 43 +++++++++++++++++++++++++=
-++++++
+> On 01/13/2014 07:25 AM, Ben Gamari wrote:
+>> Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> writes:
+>>> What about putting this into a seperate paragraph prefixed with "Current
+>>> Linux specific implementation:"?
+>>>
+>> This would address my concern quite nicely.
+>
+> The text should go into Documentation/ not the DT binding.
+>
+The problem here is that as it stands DT is quite daunting to pick
+up. My needs are pretty minimal yet I had to spend many hours sifting
+through source, blogs, and Documentation/* to get something that more or
+less worked. The bindings are generally well-documented, but there is no
+"start here" document in the tree giving conventions and an overview of
+how Linux in particular uses DT.
 
-My previous comment on this still stands - if we're adding an explicit
-machine driver for a simple card that defeats the point of having simple
-card in the first place, the system may as well just have a normal
-machine driver.
+The closest thing I know of is Documentation/devicetree/usage-model.txt.
+Perhaps this is where the language Wolfram suggested should be placed.
 
---Nachn7RqbTHiMSEX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Cheers,
+
+- Ben
+
+--=-=-=
+Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Version: GnuPG v1.4.14 (GNU/Linux)
 
-iQIcBAEBAgAGBQJS1B9bAAoJELSic+t+oim9BnsP+wSGqvNOGzs9e3yopJTBMgWl
-LVsDpWD4M0WtqTw8Q3N3MWZLPAmU49mxTN2xhoWojNRjICPZI+jvO1jdEuatz/78
-lx5kne81YU+oG8yCCEBDXT449nMKQWR/dfC3ZB+KJCYuJ8SECgzJwDd5hOSXc0Lx
-983olXCsgUQcUmDKGGcbwhWDv+82x2GsabWJ/8idyWtLogKl9OQYJeIAbFS3nqWP
-BOlXfXJ0061M3LAPWU58MRYLZoW+Jq3ikcg07b90DPBkzzZcHR2RG98J/CiE7dMh
-Id9Gp7PEB/kAkmV1qRcKoQ1uz0a80RkvVhoRN+QmVi4bEK8G9hndUcc/GQKroxrK
-DuUOq8/B56LOPU7LqbusXSeD4uvL837y6e/SMX/3slGZ8LvDVEt41CKcyEsdHsMe
-CXnOEwUcb0kwi/flKU6VhCUlHyjpJ2aRMV9apqyogLmUlPOXqS//6wiKcbIIZ6mJ
-jo1kfap/Y+EynWsTUNSKGOWxNO3TwBgb+P6pmdr552gAdLl4gE0tuzRGEYB2Opvj
-mutDNP05V8mWkieyujpIcyR2IPEZOILJP0lzlkqRNAaHYea3z5CWUT8Gie32Uk06
-KLouAozxHfo1dVSDNsCv46NF5FScneAnKLmyAQkNKISD7un8mNLrqPtrLl0ylYET
-U5+22Y/ZoKQfKj/oo9u0
-=4Lox
+iQEcBAEBAgAGBQJS1CHXAAoJEErkyLZmeNiDjJwH/RIvVaEN9geH5GXI4X7Y2X2u
+6PgeRboCcxv+9a2BoZt1Poq/6HkskO4G0gmElUrJb1dQBQhEc7a25m5Gcc7Sh9SR
+gjU2pJUZmMGq7py2GPmrRmlDkDtvjN3+jG3HEDxuDxmaOE/zwPO+SEU0FQbBZhaH
+C07QSuy8cHuaKEXnBGqBxfjfqwKWh2V9BGWQsFjocma8Gh5A5PMtPwp8Lh4Yvpcs
+GHPE5yrnAJzNOonKaNVzh2wYIrG5JgLPyyfVQ5hx1E5DftyUsiaPHA7i2vpPNEej
+ZkAjKU5UAyY6gBeyJyVnlN9SdMwLlWmN89SfKKkORyDGzy1rhz/Qig8h63Un6SA=
+=rg6N
 -----END PGP SIGNATURE-----
-
---Nachn7RqbTHiMSEX--
+--=-=-=--
