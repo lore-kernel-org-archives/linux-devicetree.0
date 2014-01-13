@@ -1,62 +1,70 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: Re: [PATCHv5 05/20] cpufreq: cpufreq-cpu0: add dt node parsing for
- cooling device properties
-Date: Mon, 13 Jan 2014 11:08:45 -0400
-Message-ID: <52D4017D.7050400@ti.com>
-References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com> <1384285582-16933-6-git-send-email-eduardo.valentin@ti.com> <744357E9AAD1214791ACBA4B0B909263011C9A19@SHSMSX101.ccr.corp.intel.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH V4 1/6] ARM: dts: imx6q: add common compatible name for
+ reused modules
+Date: Mon, 13 Jan 2014 16:16:23 +0100
+Message-ID: <20140113151623.GL16215@pengutronix.de>
+References: <1389614031-7253-1-git-send-email-b20788@freescale.com>
+ <20140113121016.GJ16215@pengutronix.de>
+ <20140113142249.GW23525@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="6w14OBBopNRxnkc23Fn6ofb3GQF7Pl6gc"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <744357E9AAD1214791ACBA4B0B909263011C9A19@SHSMSX101.ccr.corp.intel.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: "Zhang, Rui" <rui.zhang@intel.com>
-Cc: Eduardo Valentin <eduardo.valentin@ti.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "wni@nvidia.com" <wni@nvidia.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "R, Durgadoss" <durgadoss.r@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Viresh Kumar <viresh.kumar@linaro.org>, "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discu>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140113142249.GW23525-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---6w14OBBopNRxnkc23Fn6ofb3GQF7Pl6gc
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jan 13, 2014 at 10:22:51PM +0800, Shawn Guo wrote:
+> On Mon, Jan 13, 2014 at 01:10:16PM +0100, Sascha Hauer wrote:
+> > > @@ -840,7 +840,7 @@
+> > >  			};
+> > >  
+> > >  			mmdc0: mmdc@021b0000 { /* MMDC0 */
+> > > -				compatible = "fsl,imx6q-mmdc";
+> > > +				compatible = "fsl,imx6q-mmdc", "fsl,mmdc";
+> > 
+> > This is not nice. Here you introduce a fsl,mmdc compatible claiming all
+> > mmdc are compatible to each other and in the driver code you have:
+> > 
+> > static const u32 imx6q_mmdc_io_dsm_offset[]
+> > static const u32 imx6dl_mmdc_io_dsm_offset[]
+> > 
+> > which proves they are *not* compatible.
+> > 
+> > You do this just to share a
+> > 
+> > imx6_pm_get_base(&pm_info->mmdc_base, "fsl,mmdc");
+> > 
+> > across the different i.MX6 SoCs.
+> > 
+> > You can sanitize this by introducing a SoC struct which you populate
+> > differently for the SoCs
+> > 
+> > static pm_soc_data imx6q_data {
+> > 	.mmdc_compat = "fsl,imx6q-mmdc",
+> > };
+> > 
+> > And by putting cpu_type, mmdc_io_num and others in this struct you can
+> > also remove the if(cpu_is_x()) else if (cpu_is_y()) else...
+> 
+> Good point.
+> 
+> Anson, the change below is a demonstration of Sascha's suggestion.
+> Sascha, correct me if I misunderstood your comment.
 
-On 12-01-2014 10:31, Zhang, Rui wrote:
->> +++ b/drivers/cpufreq/Kconfig
->> > @@ -186,7 +186,7 @@ config CPU_FREQ_GOV_CONSERVATIVE
->> >=20
->> >  config GENERIC_CPUFREQ_CPU0
->> >  	tristate "Generic CPU0 cpufreq driver"
->> > -	depends on HAVE_CLK && REGULATOR && PM_OPP && OF
->> > +	depends on HAVE_CLK && REGULATOR && PM_OPP && OF && THERMAL &&
->> > +CPU_THERMAL
-> config: make ARCH=3Darm multi_v7_defconfig
-> All warnings:
-> warning: (ARM_HIGHBANK_CPUFREQ) selects GENERIC_CPUFREQ_CPU0 which=20
-> has unmet direct dependencies (ARCH_HAS_CPUFREQ && CPU_FREQ &&=20
-> HAVE_CLK && REGULATOR && PM_OPP && OF && THERMAL && CPU_THERMAL)
->=20
-> I think you need to select THERMAL and CPU_THERMAL instead, right?
->=20
+Looks good. That's exactly what I meant. Maybe the cpu_type field can
+even be removed the way you did it.
 
-Yeah, I think that would be better. I will send you a fix for that.
+Sascha
 
---=20
-You have got to be excited about what you are doing. (L. Lamport)
-
-Eduardo Valentin
-
-
---6w14OBBopNRxnkc23Fn6ofb3GQF7Pl6gc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iF4EAREIAAYFAlLUAYEACgkQCXcVR3XQvP1DeAEAtnKafVtyvPO7Aa4m6IQtHL+5
-YB9DVIxxyydT4d5qTHAA/jHNYC4nj97SiItKkcKO5lw0d6JhzWkAKc+CB4pBD2Ti
-=blOg
------END PGP SIGNATURE-----
-
---6w14OBBopNRxnkc23Fn6ofb3GQF7Pl6gc--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
