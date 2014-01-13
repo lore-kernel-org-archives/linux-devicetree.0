@@ -1,48 +1,62 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 1/9] spi: rspi: Add missing clk_disable() calls in error
- and cleanup paths
-Date: Mon, 13 Jan 2014 13:17:18 +0100
-Message-ID: <CAMuHMdVjkWD0nP-9f579kUOqG4EVsy9Yp+vwNsM_=LxNU=Bdzg@mail.gmail.com>
-References: <1389525222-3482-1-git-send-email-geert@linux-m68k.org>
-	<1389525222-3482-2-git-send-email-geert@linux-m68k.org>
-	<20140113115947.GL29039@sirena.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH RFC 06/10] ARM: s3c64xx: pm: Add device tree based power
+ domain instantiation
+Date: Mon, 13 Jan 2014 12:17:26 +0000
+Message-ID: <20140113121726.GQ29039@sirena.org.uk>
+References: <1389469372-17199-1-git-send-email-tomasz.figa@gmail.com>
+ <1389469372-17199-7-git-send-email-tomasz.figa@gmail.com>
+ <20140112192910.GW29039@sirena.org.uk>
+ <52D2EE32.5060709@gmail.com>
+ <20140113110935.GB29039@sirena.org.uk>
+ <52D3D880.2090300@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140113115947.GL29039-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="yhCE4sTDB5mqd9YJ"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52D3D880.2090300@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, linux-pm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Pavel Machek <pavel@ucw.cz>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
 
-On Mon, Jan 13, 2014 at 12:59 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Sun, Jan 12, 2014 at 12:13:34PM +0100, Geert Uytterhoeven wrote:
->> From: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
->>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
->
-> This doesn't seem to apply to current code, please check and resend.
-> The fact that there's multiple patch serieses in flight from you for
-> this driver plus development work (again mostly from you) in git is
-> probably not helping here...
+--yhCE4sTDB5mqd9YJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This depends on the series:
+On Mon, Jan 13, 2014 at 01:13:52PM +0100, Tomasz Figa wrote:
 
-[PATCH V2 0/8] spi: rspi: Add support for RZ/A1H
+> Power domain control registers are part of the system controller
+> block, which uses the "samsung,s3c64*-clock" compatible string. I
+> know this is a bit unfortunate, but all registers of this IP block
+> are mapped at the same page and some clock registers are at the
+> other end of this area than others, so there is even no good way to
+> split them into separate mappings.
 
-Gr{oetje,eeting}s,
+I see - probably would've been neater to give it a different name but
+too late now.
 
-                        Geert
+--yhCE4sTDB5mqd9YJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAEBAgAGBQJS09lSAAoJELSic+t+oim9nr4QAIqE+SCkUgeeuBvkgWcgDS1V
+6OPmEeFFFLTkEnq3GtbuKQL42A19y/sJgQSuIkE1kmQjXn2+Jzi/lu4SrYdhw7nR
+/kj0AKnJMQvuQVJJtGeCO81jd+6jHtPgmftkHEC0Xk1QyyeVljw1TmvXp+Y4TC4r
+TktOjbnK4Ag9rG+8u2/GemiQ2SF3mLsAzYQLJ3Z03MPYbDDTlKB5Iwkzck3HjXym
+mt4F+gZdGJ3Z3rTE+mzcfO+CjwQCYAHdTXZIpGD8lge94B7GtLK19Mx9puPCUOPQ
+zKAJ+TVRY7D2B0u28Gqr2s4D8xAWcEMn1J4oTs+dPWPJ3RD5YtYTiOuKaFNqEf00
+PY183uVXUIZAGyCmTi1HpZlBhj6YUoNKL9EEU6RBWWzJfzjn7ZhGoVga0+WULnAy
+2xf0xGxFfon3nO934qEeTp1CWz+2Mw/XBi7udnJcuwhxa31hYn2FH0yjgR1tBj5W
+ipd+FesT43k4slks4dk0sgYv750dPv22HOWySFfR+hP9fEdIbP0muRPMX92QFRgb
+IcktYp3lK052i8bWa02amXY9z++v6kF0uP7uZ9IGG0kqyrcVCCrPGWUdpoe+HiyE
+//1u2pjVT5UfdByXYt3r9yCT7KzUDM1XtaGjVVOU0vU5cTic6FZqZU1+jW89L4WN
+TCPHv1kytVqOVtZ0XHOh
+=1KKe
+-----END PGP SIGNATURE-----
+
+--yhCE4sTDB5mqd9YJ--
