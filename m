@@ -1,131 +1,106 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: Re: [PATCHv9 02/20] thermal: introduce device tree parser
-Date: Mon, 13 Jan 2014 17:29:44 -0400
-Message-ID: <52D45AC8.1010607@ti.com>
-References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com> <1384285582-16933-3-git-send-email-eduardo.valentin@ti.com> <52C4D612.2090808@nvidia.com> <52C5A6CE.5060904@nvidia.com> <20140106135145.GD21906@e106331-lin.cambridge.arm.com> <52CAC3AF.9020401@ti.com> <52CB69FA.9080903@nvidia.com>
+From: Ravi Patel <rapatel@apm.com>
+Subject: Re: [PATCH V2 0/4] misc: xgene: Add support for APM X-Gene SoC Queue
+ Manager/Traffic Manager
+Date: Mon, 13 Jan 2014 14:18:08 -0800
+Message-ID: <CAN1v_Pt9rOGn8zmf+u7MR6-GJPDPswBbuhXu6i=MJVa2mwqNtw@mail.gmail.com>
+References: <1387594651-25771-1-git-send-email-rapatel@apm.com>
+	<CAN1v_PsaAeDiLaiP7FfTHFbNRG=UHuom6-2L6NMwzyOOyB+5cA@mail.gmail.com>
+	<CAN1v_PuySRzi6r9aT_SJrQRMBh9gj-5yXOOY1QpyZ6V4wXyZCA@mail.gmail.com>
+	<201401122219.11593.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="BcHIXGgKPN3KOsf4Pahsrt4VtRMfLhVLN"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <52CB69FA.9080903@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Wei Ni <wni@nvidia.com>
-Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Mark Rutland <mark.rutland@arm.com>, Matthew Longnecker <MLongnecker@nvidia.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "durgadoss.r@intel.com" <durgadoss.r@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201401122219.11593.arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Loc Ho <lho@apm.com>, davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jon Masters <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Keyur Chudgar <kchudgar@apm.com>
 List-Id: devicetree@vger.kernel.org
 
---BcHIXGgKPN3KOsf4Pahsrt4VtRMfLhVLN
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Sun, Jan 12, 2014 at 1:19 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Friday 10 January 2014, Ravi Patel wrote:
+>
+>> Do you want any further clarification or document related to QMTM.
+>> We want to make sure everyone is on same page, understand and
+>> conclude upon that QMTM is a device and and not a bus or a dma
+>> engine.
+>
+> I have a much better understanding now, but there are still a few open
+> questions from my side. Let me try to explain in my own words what I
+> think is the relevant information (part of this is still guessing).
+> It took me a while to figure out what it does from your description,
+> and then some more time to see what it's actually good for (as
+> opposed to adding complexity).
+>
+> Please confirm or correct the individual statements in this
+> description:
+>
+> The QMTM serves as a relay for short (a few bytes) messages between
+> the OS software and various slave hardware blocks on the SoC.
+> The messages are typically but not always DMA descriptors used by the
+> slave device used for starting bus master transactions by the slave,
+> or for notifying sofware about the competion of a DMA transaction.
+>
+> The message format is specific to the slave device and the QMTM
+> only understands the common header of the message.
+>
+> OS software sees the messages in cache-coherent memory and does
+> not require any cache flushes or MMIO access for inbound messages
+> and only a single posted MMIO write for outbound messages.
+>
+> The queues are likely designed to be per-thread and don't require
+> software-side locking.
+>
+> For outbound messages, the QMTM is the bus master of a device-to-device
+> DMA transaction that gets started once a message is queued and the
+> device has signaled that it is ready for receiving it. The QMTM needs
+> to know the bus address of the device as well as a slave ID for
+> the signal pin.
+> For inbound messages, the QMTM slave initiates a busmaster transaction
+> and needs to know the bus address of its QMTM port, while the QMTM
+> needs to know only the slave ID that is associated with the queue.
+>
+> In addition to those hardware properties, the QMTM driver needs to
+> set up a memory buffer for the message queue as seen by the CPU,
+> and needs tell the QMTM the location as well as some other
+> properties such as the message length.
 
-Wei,
+Your description is correct upto this point.
 
-On 06-01-2014 22:44, Wei Ni wrote:
-> On 01/06/2014 10:54 PM, Eduardo Valentin wrote:
->> * PGP Signed by an unknown key
->>
->> On 06-01-2014 09:51, Mark Rutland wrote:
->>> On Thu, Jan 02, 2014 at 05:50:06PM +0000, Matthew Longnecker wrote:
->>>>
->>>>> I think the platform driver may set governor for the thermal zone,
->>>>> so how about to add a property named as "governor",
->>>>> and parse it to tzp->governor_name,
->>>>> something like:
->>>>>                  ret =3D of_property_read_string(child, "governor",=
- &str);
->>>>>                  if (ret =3D=3D 0)
->>>>>                          if (strlen(str) < THERMAL_NAME_LENGTH)
->>>>>                                  strcpy(tzp->governor_name, str);
->>>>>
->>>>> Thanks.
->>>>> Wei.
->>>>
->>>> DT is supposed to describe the hardware, right? The governor isn't=20
->>>> hardware -- it's a software control policy. On the other hand, that =
+> For inbound messages, the QMTM serves a similar purpose as an MSI
+> controller, ensuring that inbound DMA data has arrived in RAM
+> before an interrupt is delivered to the CPU and thereby avoiding
+> the need for an expensive MMIO read to serialize the DMA.
 
->>>> control policy must be tuned according to the behaviors of the platf=
-orm=20
->>>> hardware otherwise the system will be unstable.
->>>>
->>>> Is it appropriate to be naming the governor in DT? If so, is it equa=
-lly=20
->>>> appropriate to describe any governor-specific parameters in DT (even=
-=20
->>>> though they are pure software constructs)?
->>>
->>> The dt should be relatively static -- if the hardware doesn't change =
-the
->>> dt shouldn't have to.
->>>
->>> The governers are not static. We can introduce new ones and throw awa=
-y
->>> old ones at any time. Tuning parameters can also change at any time.
->>>
->>> I'd prefer to not have governer details described in the dt, and the
->>> choice of governer and configuration of its tuning parameters should =
-be
->>> made at runtime somehow.
->>
->> Agreed.
->=20
-> Yes, I think so, but the of-thermal driver handle the
-> thermal_zone_device_register, and pass the "tzp" without governor_name,=
+For inbound messages, slave device generates message on a completion
+of a inbound DMA operation or any relevant operation targeted to the
+CPU. The QMTM's role is to just trigger an interrupt to CPU when there
+is a new message arrived from a slave device. QMTM doesn't know what
+the message was for. It is upto the upper layer drivers to decide how
+to process this message.
 
+> The resources managed by the QMTM are both SoC-global (e.g. bus
+> bandwidth) and slave specific (e.g. ethernet bandwith or buffer space).
+> Global resource management is performed to prevent one slave
+> device from monopolizing the system or preventing other slaves
+> from making forward progress.
+> Examples for local resource management (I had to think about this
+> a long time, but probably some of these are wrong) would be
+> * balancing between multiple non-busmaster devices connected to
+>   a dma-engine
+> * distributing incoming ethernet data to the available CPUs based on
+>   a flow classifier in the MAC, e.g. by IOV MAC address, VLAN tag
+>   or even individual TCP connection depending on the NIC's capabilities.
+> * 802.1p flow control for incoming ethernet data based on the amount
+>   of data queued up between the MAC and the driver
+> * interrupt mitigation for both inbound data and outbound completion,
+>   by delaying the IRQ to the OS until multiple messages have arrived
+>   or a queue specific amount of time has passed.
+> * controlling the amount of outbound buffer space per flow to minimize
+>   buffer-bloat between an ethernet driver and the NIC hardware.
+> * reordering data from outbound flows based on priority.
+>
+> This is basically my current interpretation, I hope I got at least
+> some of it right this time ;-)
 
-In fact, it will fall into the default governor, which is step_wise, by
-default config.
-
-> so the created thermal_zone's governor will be NULL, then it can't run
-> into the governor->throttle() if needed. And currently there have no
-
-Actually, no, the tz will be set to default governor, and its throttle
-call will be called.
-
-> interface to support updating governor and configuration at runtime.
-> I think it's better to initialize the governor_name when register the
-> thermal zone device in the of-thermal driver.
-
-Still, why would you need to change the governor from a in kernel
-decision? There is an ABI to change the thermal zone policy based on
-user(land) request. If you need to change the policy from within the
-kernel, which seams to be what you are trying to propose, you need to
-explain why you need it, say, by giving at least one user of this API or
-explaining its use case.
-
->=20
-> Thanks.
->=20
->>
->>>
->>> Thanks,
->>> Mark.
->>>
->>>
->>
->>
->=20
->=20
->=20
-
-
---=20
-You have got to be excited about what you are doing. (L. Lamport)
-
-Eduardo Valentin
-
-
---BcHIXGgKPN3KOsf4Pahsrt4VtRMfLhVLN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iF4EAREIAAYFAlLUWsgACgkQCXcVR3XQvP1orAEAialtk3Aps/1oTiWfB2foDt96
-3h1Tq5XY7wTnht9Q61cBALCe0wBWAO3KHbJYKNgDeHcMid5INnBMshA76ABfWOtd
-=F2o/
------END PGP SIGNATURE-----
-
---BcHIXGgKPN3KOsf4Pahsrt4VtRMfLhVLN--
+You have got them right. Although we have taken Ethernet examples here,
+most of the local resource management apply to other slave devices also.
