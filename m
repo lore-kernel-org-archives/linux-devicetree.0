@@ -1,90 +1,70 @@
-From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-Subject: Re: DT include files
-Date: Mon, 13 Jan 2014 19:10:17 +0100
-Message-ID: <20140113181017.GI20094@book.gsilab.sittig.org>
-References: <CAOesGMheei8YgzfRp9pmQ0rT9zhJ2_hF56j5Y+jLSy5TadPZ-g@mail.gmail.com>
- <20140103030455.GB25079@S2101-09.ap.freescale.net>
- <CAOesGMihX-pLva-aBCHJ6TYfsN57MzRWiYFTnfKCXOKeja0uUg@mail.gmail.com>
- <20140104011056.GA3282@S2101-09.ap.freescale.net>
- <20140110024124.GA6844@S2101-09.ap.freescale.net>
- <CAOesGMh3HBCYut2hfub3svrJT5JJzoWq8mU=VU0grZbg-JqqbA@mail.gmail.com>
- <52CFF57D.8060808@samsung.com>
- <CAL_JsqKHr6v+6kNXrAdnzH0gpoFCPAjPSnX8iBDgRSMh9JgxvA@mail.gmail.com>
- <20140110170319.GC20094@book.gsilab.sittig.org>
- <52D418EB.1040605@wwwdotorg.org>
+From: Feng Kan <fkan@apm.com>
+Subject: Re: [PATCH V2 1/6] Documentation: add dts binding for X-Gene reboot
+ dts node.
+Date: Mon, 13 Jan 2014 11:25:39 -0800
+Message-ID: <CAL85gmCTsxng3jCaAcCjePE6Pxu7Jg98TDUqQrDFzsfW2GQwEg@mail.gmail.com>
+References: <1389135041-16062-1-git-send-email-fkan@apm.com>
+	<6073715.cGydpIHKD1@wuerfel>
+	<CAL85gmA5Ob+kp-+5seO-wcB8tx4jyiOeFMyCsZWFBLdX09nZDg@mail.gmail.com>
+	<201401131619.35030.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52D418EB.1040605-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201401131619.35030.arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 13, 2014 at 09:48 -0700, Stephen Warren wrote:
-> 
-> On 01/10/2014 10:03 AM, Gerhard Sittig wrote:
-> > On Fri, Jan 10, 2014 at 09:30 -0600, Rob Herring wrote:
-> >>
-> >> As for *.h vs. *.dtsi naming, if the include is only pre-processor
-> >> defines, then I think using .h is the right way. Otherwise, if there
-> >> is any dts syntax, then .dtsi is the right name. It looks to me like
-> >> this style has been followed in both the imx and s3c64xx cases.
-> >>
-> >> On a side note, I'm not really a fan of this pattern:
-> >>
-> >> #define FOO1 1 2 3
-> >>
-> >> #define BAR FOO1 FOO2 FOO3
-> >>
-> >> While it definitely simplifies the dts files, it would never be used
-> >> in C and obfuscates what the actual property size is. Reading a dts
-> >> file, I would naturally assume the define was a single value while in
-> >> fact it could expand to a very large property size.
-> > 
-> > For more complex yet tedious repetitive cases like GPIO banks and
-> > pins I've seen #define directives which introduce "functions"
-> > (macros with parameters).  They appear to be rather useful, can
-> > reflect very well the essence of the information, don't
-> > necessarily pretend to be single values, but still may hide how
-> > many cells they expand to.  For example:
-> > 
-> >   arch/arm/boot/dts/tegra30-cardhu.dtsi:
-> >     interrupts = <TEGRA_GPIO(L, 0) IRQ_TYPE_LEVEL_HIGH>;
-> 
-> I'm not sure I entirely understand your point, but for the record, both
-> TEGRA_GPIO() and IRQ_TYPE_LEVEL_HIGH expand to a single cell, as I would
-> expect (almost?) any DT macro to do.
-
-It turns out I slightly misunderstood Rob's concern.  The issue
-is not that the use of the C language preprocessor is discouraged
-or frouned upon, but instead that obfuscating invariant data or
-spilling random parts of the information across the place in
-unneeded ways is unwanted.  While there is agreement that the use
-of symbolic identifiers can help readability and maintainability
-in certain situations.
-
-Regarding your specific reply:  I haven't noticed before that all
-of the macros I cited do expand to a single cell.  Before that I
-saw the potential to generate more cells when required for a
-single value (like "wide" addresses, or multi cell pins or
-channels or whatever).  Can't tell how much of a concern there is
-against such an approach, don't have strong feelings about it.
-
-Actually I wasn't picking at those specific macros above, quite
-the contrary.  Those were the first I came across searching for
-demonstration of useful preprocessor use. :)  I just did not
-bother to cite several hundred other useful phrases as well.
+> That is not what I was asking about.
+>
+> The problem with your binding is that it doesn't seem to describe
+> the hardware structure at all, but rather try to invent devices
+> because of how it's convenient for how you write the Linux drivers.
+>
+> This is never a good idea and it will become a problem once you
+> try to port a different operating system, or when the structure
+> of the Linux drivers changes. Remember that in Linux we can freely
+> reorganize our code as requirements change, but the bindings have
+> to remain stable to allow running new kernels with an older device
+> tree that may be shipped with the firmware.
+>
+> (Side note: if you end up doing an ACPI driver for this after all,
+> the problem is even worse because it's basically impossible to update
+> the ACPI tables in field, while with DT you can at least override
+> them in the firmware if something goes really wrong.)
+>
+> On most SoCs I've seen, the system reset registers are part of
+> some on-chip device, most likely one of
+> - A SoC-specific system control register set containing various
+>   global registers that may be of interest to other parts of the
+>   kernel.
+FKAN: our system block in your reference would be the system clock unit (SCU).
+It handles number of things (JTAG, clock control, power control not
+touched by OS).
+The register that is relevant to the system reset is this lone
+register. I reduce the
+range of the dts aperture due to this fact.
 
 
-virtually yours
-Gerhard Sittig
--- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
-Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> - A watchdog timer device that will reset the system after a crash,
+>   or when explicit requested by the OS
+> - A dedicated reset controller that has registers for individually
+>   resetting a number of subsystems of the SoC, or all at once in
+>   case of system reboot.
+> - an interface to an external or integrated power management IC
+>   that controls voltages and/or clock frequencies provided to
+>   the SoC and other parts of the system.
+>
+> In each of those cases, we already have a subsystem that is supposed
+> to handle the entire register set and provide a system reset method
+> as one of the things it does. Given that your register is at offset
+> 0x14 from the start of a larger MMIO range, I strongly suspect
+> that the same is true here.
+FKAN: I could remove this dts node and create another dts node that
+describe the range of registers on the SCU and use that node in this driver.
+I am not sure which subsystem I can use to handle this case, I do see a reset
+subsystem in the kernel but more used for ip resets. Please kindly let
+me know. Thanks for the great feedback.
+>
+>         Arnd
