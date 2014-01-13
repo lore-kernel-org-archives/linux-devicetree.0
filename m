@@ -1,70 +1,77 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH V4 1/6] ARM: dts: imx6q: add common compatible name for
- reused modules
-Date: Mon, 13 Jan 2014 16:16:23 +0100
-Message-ID: <20140113151623.GL16215@pengutronix.de>
-References: <1389614031-7253-1-git-send-email-b20788@freescale.com>
- <20140113121016.GJ16215@pengutronix.de>
- <20140113142249.GW23525@S2101-09.ap.freescale.net>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V2 1/6] Documentation: add dts binding for X-Gene reboot dts node.
+Date: Mon, 13 Jan 2014 16:19:34 +0100
+Message-ID: <201401131619.35030.arnd@arndb.de>
+References: <1389135041-16062-1-git-send-email-fkan@apm.com> <6073715.cGydpIHKD1@wuerfel> <CAL85gmA5Ob+kp-+5seO-wcB8tx4jyiOeFMyCsZWFBLdX09nZDg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140113142249.GW23525-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <CAL85gmA5Ob+kp-+5seO-wcB8tx4jyiOeFMyCsZWFBLdX09nZDg@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Feng Kan <fkan@apm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 13, 2014 at 10:22:51PM +0800, Shawn Guo wrote:
-> On Mon, Jan 13, 2014 at 01:10:16PM +0100, Sascha Hauer wrote:
-> > > @@ -840,7 +840,7 @@
-> > >  			};
-> > >  
-> > >  			mmdc0: mmdc@021b0000 { /* MMDC0 */
-> > > -				compatible = "fsl,imx6q-mmdc";
-> > > +				compatible = "fsl,imx6q-mmdc", "fsl,mmdc";
-> > 
-> > This is not nice. Here you introduce a fsl,mmdc compatible claiming all
-> > mmdc are compatible to each other and in the driver code you have:
-> > 
-> > static const u32 imx6q_mmdc_io_dsm_offset[]
-> > static const u32 imx6dl_mmdc_io_dsm_offset[]
-> > 
-> > which proves they are *not* compatible.
-> > 
-> > You do this just to share a
-> > 
-> > imx6_pm_get_base(&pm_info->mmdc_base, "fsl,mmdc");
-> > 
-> > across the different i.MX6 SoCs.
-> > 
-> > You can sanitize this by introducing a SoC struct which you populate
-> > differently for the SoCs
-> > 
-> > static pm_soc_data imx6q_data {
-> > 	.mmdc_compat = "fsl,imx6q-mmdc",
-> > };
-> > 
-> > And by putting cpu_type, mmdc_io_num and others in this struct you can
-> > also remove the if(cpu_is_x()) else if (cpu_is_y()) else...
+On Thursday 09 January 2014, Feng Kan wrote:
+> On Wed, Jan 8, 2014 at 2:08 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Wednesday 08 January 2014 10:05:50 Mark Rutland wrote:
+> >> > +
+> >> > +Example:
+> >> > +
+> >> > +     reboot@0 {
+> >> > +             compatible = "apm,xgene-reboot";
+> >> > +             reg = <0x0 0x17000014 0x0 0x4>;
+> >> > +     };
+> >>
+> >> Given this seems to be a 64-bit address, the unit address should
+> >> preferably be 0,17000014 rather than just 0.
+> >
+> > I also wonder about the size and location of the register.
+> > Are you sure the device is just a single 4-byte register at offset
+> > 0x14, rather than a complex device that happens to contain the
+> > reset register?
 > 
-> Good point.
-> 
-> Anson, the change below is a demonstration of Sascha's suggestion.
-> Sascha, correct me if I misunderstood your comment.
+> FKAN: this is a single 4 byte register when clicked perform the system
+> reset of the platform.
 
-Looks good. That's exactly what I meant. Maybe the cpu_type field can
-even be removed the way you did it.
+That is not what I was asking about.
 
-Sascha
+The problem with your binding is that it doesn't seem to describe
+the hardware structure at all, but rather try to invent devices
+because of how it's convenient for how you write the Linux drivers.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This is never a good idea and it will become a problem once you
+try to port a different operating system, or when the structure
+of the Linux drivers changes. Remember that in Linux we can freely
+reorganize our code as requirements change, but the bindings have
+to remain stable to allow running new kernels with an older device
+tree that may be shipped with the firmware.
+
+(Side note: if you end up doing an ACPI driver for this after all,
+the problem is even worse because it's basically impossible to update
+the ACPI tables in field, while with DT you can at least override
+them in the firmware if something goes really wrong.)
+
+On most SoCs I've seen, the system reset registers are part of
+some on-chip device, most likely one of
+- A SoC-specific system control register set containing various
+  global registers that may be of interest to other parts of the
+  kernel.
+- A watchdog timer device that will reset the system after a crash,
+  or when explicit requested by the OS
+- A dedicated reset controller that has registers for individually
+  resetting a number of subsystems of the SoC, or all at once in
+  case of system reboot.
+- an interface to an external or integrated power management IC
+  that controls voltages and/or clock frequencies provided to
+  the SoC and other parts of the system.
+
+In each of those cases, we already have a subsystem that is supposed
+to handle the entire register set and provide a system reset method
+as one of the things it does. Given that your register is at offset
+0x14 from the start of a larger MMIO range, I strongly suspect
+that the same is true here.
+
+	Arnd
