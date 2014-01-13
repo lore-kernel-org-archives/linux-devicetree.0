@@ -1,104 +1,54 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH V4 1/6] ARM: dts: imx6q: add common compatible name for
- reused modules
-Date: Mon, 13 Jan 2014 13:10:16 +0100
-Message-ID: <20140113121016.GJ16215@pengutronix.de>
-References: <1389614031-7253-1-git-send-email-b20788@freescale.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH RFC 06/10] ARM: s3c64xx: pm: Add device tree based power
+ domain instantiation
+Date: Mon, 13 Jan 2014 13:13:52 +0100
+Message-ID: <52D3D880.2090300@samsung.com>
+References: <1389469372-17199-1-git-send-email-tomasz.figa@gmail.com>
+ <1389469372-17199-7-git-send-email-tomasz.figa@gmail.com>
+ <20140112192910.GW29039@sirena.org.uk> <52D2EE32.5060709@gmail.com>
+ <20140113110935.GB29039@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1389614031-7253-1-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <20140113110935.GB29039@sirena.org.uk>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>
+Cc: linux-pm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Pavel Machek <pavel@ucw.cz>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 13, 2014 at 07:53:46PM +0800, Anson Huang wrote:
-> As some modules are common for all i.MX6 SOCs, to avoid
-> checking cpu type for drivers that needs them, just add a
-> new compatible name for them.
-> 
-> Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx6q.dtsi   |    2 +-
->  arch/arm/boot/dts/imx6qdl.dtsi |    6 +++---
->  2 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-> index 021e0cb..5bc79c7 100644
-> --- a/arch/arm/boot/dts/imx6q.dtsi
-> +++ b/arch/arm/boot/dts/imx6q.dtsi
-> @@ -91,7 +91,7 @@
->  			};
->  
->  			iomuxc: iomuxc@020e0000 {
-> -				compatible = "fsl,imx6q-iomuxc";
-> +				compatible = "fsl,imx6q-iomuxc", "fsl,iomuxc";
->  
->  				ipu2 {
->  					pinctrl_ipu2_1: ipu2grp-1 {
-> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-> index 8a86502..cb9129b 100644
-> --- a/arch/arm/boot/dts/imx6qdl.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
-> @@ -622,7 +622,7 @@
->  			};
->  
->  			src: src@020d8000 {
-> -				compatible = "fsl,imx6q-src", "fsl,imx51-src";
-> +				compatible = "fsl,imx6q-src", "fsl,imx51-src", "fsl,src";
->  				reg = <0x020d8000 0x4000>;
->  				interrupts = <0 91 IRQ_TYPE_LEVEL_HIGH>,
->  					     <0 96 IRQ_TYPE_LEVEL_HIGH>;
-> @@ -630,7 +630,7 @@
->  			};
->  
->  			gpc: gpc@020dc000 {
-> -				compatible = "fsl,imx6q-gpc";
-> +				compatible = "fsl,imx6q-gpc", "fsl,gpc";
->  				reg = <0x020dc000 0x4000>;
->  				interrupts = <0 89 IRQ_TYPE_LEVEL_HIGH>,
->  					     <0 90 IRQ_TYPE_LEVEL_HIGH>;
-> @@ -840,7 +840,7 @@
->  			};
->  
->  			mmdc0: mmdc@021b0000 { /* MMDC0 */
-> -				compatible = "fsl,imx6q-mmdc";
-> +				compatible = "fsl,imx6q-mmdc", "fsl,mmdc";
+On 13.01.2014 12:09, Mark Brown wrote:
+> On Sun, Jan 12, 2014 at 08:34:10PM +0100, Tomasz Figa wrote:
+>> On 12.01.2014 20:29, Mark Brown wrote:
+>>> On Sat, Jan 11, 2014 at 08:42:48PM +0100, Tomasz Figa wrote:
+>
+>>>> This patch adds support for registering power domains of S3C64xx SoCs
+>>>> and binding devices to them using device tree.
+>
+>>>> +#ifdef CONFIG_OF
+>>>> +static struct of_device_id s3c64xx_pd_matches[] = {
+>>>> +	{ .compatible = "samsung,s3c6400-clock", },
+>>>> +	{ .compatible = "samsung,s3c6410-clock", },
+>>>> +	{ },
+>>>>   };
+>
+>>> Looks like a rebasing issue?  Otherwise this looks nice.
+>
+>> Hmm, what's the problem here? Maybe I'm just blind, but I fail to
+>> see anything wrong (except that the array should be const...).
+>
+>> Thanks for reviewing this.
+>
+> I wasn't expecting to see references to clocks come up in power domain
+> code.
+>
 
-This is not nice. Here you introduce a fsl,mmdc compatible claiming all
-mmdc are compatible to each other and in the driver code you have:
+Power domain control registers are part of the system controller block, 
+which uses the "samsung,s3c64*-clock" compatible string. I know this is 
+a bit unfortunate, but all registers of this IP block are mapped at the 
+same page and some clock registers are at the other end of this area 
+than others, so there is even no good way to split them into separate 
+mappings.
 
-static const u32 imx6q_mmdc_io_dsm_offset[]
-static const u32 imx6dl_mmdc_io_dsm_offset[]
-
-which proves they are *not* compatible.
-
-You do this just to share a
-
-imx6_pm_get_base(&pm_info->mmdc_base, "fsl,mmdc");
-
-across the different i.MX6 SoCs.
-
-You can sanitize this by introducing a SoC struct which you populate
-differently for the SoCs
-
-static pm_soc_data imx6q_data {
-	.mmdc_compat = "fsl,imx6q-mmdc",
-};
-
-And by putting cpu_type, mmdc_io_num and others in this struct you can
-also remove the if(cpu_is_x()) else if (cpu_is_y()) else...
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Tomasz
