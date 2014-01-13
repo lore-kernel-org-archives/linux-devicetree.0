@@ -1,29 +1,60 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH 2/2] ARM: dts: imx53: add support for Ka-Ro TX53 modules
-Date: Mon, 13 Jan 2014 20:30:35 +0800
-Message-ID: <20140113123033.GU23525@S2101-09.ap.freescale.net>
-References: <1389609158-11179-1-git-send-email-LW@KARO-electronics.de>
- <1389609158-11179-3-git-send-email-LW@KARO-electronics.de>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH V4 2/6] ARM: imx: add suspend in ocram support on i.mx6q
+Date: Mon, 13 Jan 2014 12:44:45 +0000
+Message-ID: <20140113124445.GV15937@n2100.arm.linux.org.uk>
+References: <1389614031-7253-1-git-send-email-b20788@freescale.com> <1389614031-7253-2-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1389609158-11179-3-git-send-email-LW@KARO-electronics.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
-Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1389614031-7253-2-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 13, 2014 at 11:32:38AM +0100, Lothar Wa=DFmann wrote:
-> This patch adds support for the Ka-Ro electronics GmbH TX53 modules.
-> There are two distinct module types. One with an LVDS display
-> interface and SATA support, the other with a parallel LCD
-> interface and no SATA interface.
->=20
-> Signed-off-by: Lothar Wa=DFmann <LW@KARO-electronics.de>
+On Mon, Jan 13, 2014 at 07:53:47PM +0800, Anson Huang wrote:
+>  #ifdef CONFIG_PM
+> +void imx6_suspend(void);
 
-The patch looks good to me.  Ping me when pwm driver changes gets
-accepted.
+So, imx6_suspend() takes no arguments.
 
-Shawn
+> +static int (*imx6_suspend_in_ocram_fn)(void __iomem *ocram_vbase);
+
+Oh, it takes one argument.
+
+> +		/*
+> +		 * call low level suspend function in ocram,
+> +		 * as we need to float DDR IO.
+> +		 */
+> +		local_flush_tlb_all();
+> +		imx6_suspend_in_ocram_fn(suspend_ocram_base);
+
+Yes, definitely takes one argument...
+
+> +	imx6_suspend_in_ocram_fn = (void *)fncpy(
+> +		suspend_ocram_base + sizeof(*pm_info),
+> +		&imx6_suspend,
+> +		MX6Q_SUSPEND_OCRAM_SIZE - sizeof(*pm_info));
+
+This cast here is needed to work around the above confusion.
+
+> +ENTRY(imx6_suspend)
+> +	ldr	r1, [r0, #PM_INFO_PBASE_OFFSET]
+> +	ldr	r2, [r0, #PM_INFO_RESUME_ADDR_OFFSET]
+> +	ldr	r3, [r0, #PM_INFO_CPU_TYPE_OFFSET]
+> +	ldr	r4, [r0, #PM_INFO_PM_INFO_SIZE_OFFSET]
+
+Yes, definitely takes one argument.
+
+If you fix the prototype for imx6_suspend, you don't need to cast the
+result of fncpy().  Casts should always be avoided where possible.
+
+-- 
+FTTC broadband for 0.8mile line: 5.8Mbps down 500kbps up.  Estimation
+in database were 13.1 to 19Mbit for a good line, about 7.5+ for a bad.
+Estimate before purchase was "up to 13.2Mbit".
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
