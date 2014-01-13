@@ -1,47 +1,142 @@
-From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Subject: Re: [PATCH] of: i2c: Export single device registration method
-Date: Mon, 13 Jan 2014 15:21:17 +0200
-Message-ID: <C80926F1-27C6-4F13-93BF-842E50D471DC@antoniou-consulting.com>
-References: <1383674240-29491-1-git-send-email-panto@antoniou-consulting.com> <20140113121739.GA2586@katana>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140113121739.GA2586@katana>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Balaji T K <balajitk@ti.com>
+Subject: Re: [PATCH v9 4/7] mmc: omap_hsmmc: adapt hsmmc to use pbias regulator
+Date: Mon, 13 Jan 2014 18:59:09 +0530
+Message-ID: <52D3EA25.5020508@ti.com>
+References: <1389279062-32291-1-git-send-email-balajitk@ti.com> <1389375049-5248-1-git-send-email-balajitk@ti.com> <1389375049-5248-5-git-send-email-balajitk@ti.com> <CAOf5uwkVsPA4_kuf4G0JBB9ewb1=HGD5vGMr9pttKuWmAzF1VQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAOf5uwkVsPA4_kuf4G0JBB9ewb1=HGD5vGMr9pttKuWmAzF1VQ@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Michael Trimarchi <michael@amarulasolutions.com>
+Cc: Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Benoit Cousson <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, chris@printf.net, Mark Brown <broonie@kernel.org>, Tony Lindgren <tony@atomide.com>, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
+On Friday 10 January 2014 11:51 PM, Michael Trimarchi wrote:
+> Hi
+>
+> On Fri, Jan 10, 2014 at 6:30 PM, Balaji T K <balajitk@ti.com> wrote:
+>> In DT case, PBAIS registers are programmed via regulator,
+>> use regulator APIs to control PBIAS.
+>>
+>> Signed-off-by: Balaji T K <balajitk@ti.com>
+>> ---
+>>   drivers/mmc/host/omap_hsmmc.c |   39 +++++++++++++++++++++++++++++++++++++++
+>>   1 files changed, 39 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+>> index 342be25..0a390f8 100644
+>> --- a/drivers/mmc/host/omap_hsmmc.c
+>> +++ b/drivers/mmc/host/omap_hsmmc.c
+>> @@ -126,6 +126,10 @@
+>>   #define OMAP_MMC_MAX_CLOCK     52000000
+>>   #define DRIVER_NAME            "omap_hsmmc"
+>>
+>> +#define VDD_1V8                        1800000         /* 180000 uV */
+>> +#define VDD_3V0                        3000000         /* 300000 uV */
+>> +#define VDD_165_195            (ffs(MMC_VDD_165_195) - 1)
+>> +
+>>   /*
+>>    * One controller can have multiple slots, like on some omap boards using
+>>    * omap.c controller driver. Luckily this is not currently done on any known
+>> @@ -164,6 +168,8 @@ struct omap_hsmmc_host {
+>>           */
+>>          struct  regulator       *vcc;
+>>          struct  regulator       *vcc_aux;
+>> +       struct  regulator       *pbias;
+>> +       bool                    pbias_enabled;
+>>          int                     pbias_disable;
+>>          void    __iomem         *base;
+>>          resource_size_t         mapbase;
+>> @@ -272,6 +278,15 @@ static int omap_hsmmc_set_power(struct device *dev, int slot, int power_on,
+>>          if (mmc_slot(host).before_set_reg)
+>>                  mmc_slot(host).before_set_reg(dev, slot, power_on, vdd);
+>>
+>> +       if (host->pbias) {
+>> +               if (host->pbias_enabled == 1) {
+>> +                       ret = regulator_disable(host->pbias);
+>> +                       if (!ret)
+>> +                               host->pbias_enabled = 0;
+>> +               }
+>> +               regulator_set_voltage(host->pbias, VDD_3V0, VDD_3V0);
+>> +       }
+>> +
+>>          /*
+>>           * Assume Vcc regulator is used only to power the card ... OMAP
+>>           * VDDS is used to power the pins, optionally with a transceiver to
+>> @@ -306,9 +321,29 @@ static int omap_hsmmc_set_power(struct device *dev, int slot, int power_on,
+>>                  }
+>>          }
+>>
+>> +       if (host->pbias) {
+>> +               if (vdd <= VDD_165_195)
+>> +                       ret = regulator_set_voltage(host->pbias, VDD_1V8,
+>> +                                                               VDD_1V8);
+>> +               else
+>> +                       ret = regulator_set_voltage(host->pbias, VDD_3V0,
+>> +                                                               VDD_3V0);
+>> +               if (ret < 0)
+>> +                       goto error_set_power;
+>> +
+>> +               if (host->pbias_enabled == 0) {
+>> +                       ret = regulator_enable(host->pbias);
+>> +                       if (!ret) {
+>> +                               host->pbias_enabled = 1;
+>> +                               goto error_set_power;
+>
+> why you a goto to error_set_power if the regulator enable was a succes?
+Hi,
 
-On Jan 13, 2014, at 2:17 PM, Wolfram Sang wrote:
+My bad
+yes, goto error_set_power is not needed when regulator got enabled.
+will remove it.
 
-> On Tue, Nov 05, 2013 at 07:57:20PM +0200, Pantelis Antoniou wrote:
->> Dynamically inserting i2c client device nodes requires the use
->> of a single device registration method. Rework and export it.
->> 
->> Don't be put off by the weird patch format, it's a simple move
->> of the operations applied on each device to a function.
->> 
->> Signed-off-by: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-> 
-> Are there public patches somewhere showing the use case of this patch?
-> 
 
-Of course.
+> and if pbias_enabled is used for verify if is already enabled. Is the
+> same to use
+> regulator_is_enabled?
+>
 
-> https://github.com/pantoniou/linux-beagle-track-mainline/blob/merge-min-20131105/drivers/of/overlay.c#L454
+pbias_enabled is used to verify if it already enabled or not
+and it is used to balance regulator_enable/disable.
 
-This is the how i2c DT overlays work, and is the method that the beaglebone releases work with i2c devices.
+> Michael
+>
+>> +                       }
+>> +               }
+>> +       }
+>> +
+>>          if (mmc_slot(host).after_set_reg)
+>>                  mmc_slot(host).after_set_reg(dev, slot, power_on, vdd);
+>>
+>> +error_set_power:
+>>          return ret;
+>>   }
+>>
+>> @@ -342,6 +377,9 @@ static int omap_hsmmc_reg_get(struct omap_hsmmc_host *host)
+>>          reg = devm_regulator_get_optional(host->dev, "vmmc_aux");
+>>          host->vcc_aux = IS_ERR(reg) ? NULL : reg;
+>>
+>> +       reg = devm_regulator_get_optional(host->dev, "pbias");
+>> +       host->pbias = IS_ERR(reg) ? NULL : reg;
+>> +
+>>          /* For eMMC do not power off when not in sleep state */
+>>          if (mmc_slot(host).no_regulator_off_init)
+>>                  return 0;
+>> @@ -1808,6 +1846,7 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
+>>          host->base      = ioremap(host->mapbase, SZ_4K);
+>>          host->power_mode = MMC_POWER_OFF;
+>>          host->next_data.cookie = 1;
+>> +       host->pbias_enabled = 0;
+>>
+>>          platform_set_drvdata(pdev, host);
+>>
+>> --
+>> 1.7.5.4
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-I am in the process of updating the patchset, but this part of the patch is unaffected.
-
-Regards
-
--- Pantelis
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
