@@ -1,118 +1,41 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: sun4i: dt: Add basic board support for
- LinkSprite pcDuino
-Date: Mon, 13 Jan 2014 11:07:08 +0100
-Message-ID: <20140113100708.GY2941@lukather>
-References: <alpine.DEB.2.02.1401111509430.13932@trabant.deployis.eu>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Subject: [PATCH 1/2] DT: Add vendor prefix for Emerging Display Technologies
+Date: Mon, 13 Jan 2014 11:17:03 +0100
+Message-ID: <1389608224-9975-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HENu/cXyPKFN4XCQ"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBAHXZ2LAKGQEPFZUJCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1401111509430.13932-35KbhngVGxv1KanxuVi64+yrfmlZI2zM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
-Cc: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Silvio F <silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---HENu/cXyPKFN4XCQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+---
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-Hi Zoltan,
-
-On Sat, Jan 11, 2014 at 04:54:52PM +0100, Zoltan HERPAI wrote:
-> This patch will add a basic board support DT for the
-> LinkSprite pcDuino.
->=20
-> Signed-off-by: Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
-> ---
->  arch/arm/boot/dts/Makefile              |    1 +
->  arch/arm/boot/dts/sun4i-a10-pcduino.dts |   48 +++++++++++++++++++++++++=
-++++++
->  2 files changed, 49 insertions(+), 0 deletions(-)
->  create mode 100644 arch/arm/boot/dts/sun4i-a10-pcduino.dts
->=20
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index b663ed7..a2e3620 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -253,6 +253,7 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D \
->  	sun4i-a10-cubieboard.dtb \
->  	sun4i-a10-mini-xplus.dtb \
->  	sun4i-a10-hackberry.dtb \
-> +	sun4i-a10-pcduino.dtb \
->  	sun5i-a10s-olinuxino-micro.dtb \
->  	sun5i-a13-olinuxino.dtb \
->  	sun5i-a13-olinuxino-micro.dtb \
-> diff --git a/arch/arm/boot/dts/sun4i-a10-pcduino.dts b/arch/arm/boot/dts/=
-sun4i-a10-pcduino.dts
-> new file mode 100644
-> index 0000000..752f002
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun4i-a10-pcduino.dts
-> @@ -0,0 +1,48 @@
-> +/*
-> + * Copyright 2014 Zoltan HERPAI
-> + * Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +
-> +/dts-v1/;
-> +/include/ "sun4i-a10.dtsi"
-> +
-> +/ {
-> +	model =3D "LinkSprite pcDuino";
-> +	compatible =3D "pcduino,a10-pcduino", "allwinner,sun4i-a10";
-
-Is LinkSprite the retailer or the manufacturer?
-
-If the former, it shouldn't appear in the model string, if the latter,
-it should be the prefix in the compatible.
-
-Otherwise, it looks very good, thanks!
-
-Maxime
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Do=
+cumentation/devicetree/bindings/vendor-prefixes.txt
+index b458760..49774c3 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -29,6 +29,7 @@ dallas	Maxim Integrated Products (formerly Dallas Sem=
+iconductor)
+ davicom	DAVICOM Semiconductor, Inc.
+ denx	Denx Software Engineering
+ dmo	Data Modul AG
++edt	Emerging Display Technologies
+ emmicro	EM Microelectronic
+ epson	Seiko Epson Corp.
+ est	ESTeem Wireless Modems
 --=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+1.7.2.5
 
---HENu/cXyPKFN4XCQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS07rMAAoJEBx+YmzsjxAgPyMP/3nLK9BcpavAx+m8G4MRbrPY
-tw9O6qk2y0DXSZ6QOUt/y1bMQNqxzlkh3cXflrDA0gdmHiJHpiTX2UTbkB4RlKd/
-xmenNEXLO4GRQUJQ4+X5VTfanmMFuRoGlHhHJ+973z/a+eLmUOtMedMxFJ2S42zZ
-zv9lfNdCVoFIOa/tPI5r61nTuk0VzGVLpF9zrx0L7Ud90Q/eXzEl7124rQzt3wg7
-wRh23Igc1s0HJsfWylSUUYv6PQvdg5kK/PmC1HNc+dDx3FzxaDUbE6q9+TlT+4hD
-Pn/pIXZHf7+/qRk2qXSjM9O9aEpP6io8jt6l8fhjpGdnfdryBr8U6TRsaaYWviPF
-XuHOLZF3VmqDqxsVTautHb8AiO9aw7ZP/4/K//i3uJYttblQDH51oygvNZnnZCW3
-xZGvooAN51tf6nncd7lnkCBZUu8ZRAFPqAvEAeYXfvwW/Pp5ruQybaWEsD8TAZ2b
-hMcy6q3cowGUALjPscke9qcFMgL36zOqM7ehhZLlYDWJ1T8E/MLU5HYvafTSeJbD
-ZC17T8Cf2qd6V2wlw06fqfqU9PKtzaQV+0IqihQxJBM9wQMGvr+UvcU57q5IS2Qs
-xVtFPmhdJY3s73aOwyFFm5WzAyKnqla/jS9Zoht2Ov08uKjsmuO3fSpn3aWf0tsh
-+OJkJyMRa2MOCUbeYmq5
-=YLGw
------END PGP SIGNATURE-----
-
---HENu/cXyPKFN4XCQ--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
