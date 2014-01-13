@@ -1,98 +1,69 @@
-From: Thomas Abraham <ta.omasab@gmail.com>
-Subject: Re: [PATCH 0/6] cpufreq: use cpufreq-cpu0 driver for exynos4210 based
- platforms
-Date: Mon, 13 Jan 2014 19:57:47 +0530
-Message-ID: <CAJuA9ag_DqEAknx6g-Wb0h4syzKGmg6awCybjLn8A_e3jfcEbw@mail.gmail.com>
-References: <1389283165-17708-1-git-send-email-thomas.ab@samsung.com>
- <20140110113240.797381e6@amdc2363>
- <CAJuA9ahCc7b=209Tmh-O_cx2aEhPY+s_TjHHnjGk1x3duE-P1g@mail.gmail.com>
- <52D1FD6B.9050503@gmail.com>
+From: Ben Gamari <bgamari.foss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] dt: Update I2C trivial devices list
+Date: Mon, 13 Jan 2014 09:25:32 -0500
+Message-ID: <87r48cklgj.fsf@gmail.com>
+References: <1387239151-19226-1-git-send-email-bgamari.foss@gmail.com> <52B07870.6070809@wwwdotorg.org> <87a9fztofc.fsf@gmail.com> <20140113125128.GE2586@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52D1FD6B.9050503@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@samsung.com>, kgene.kim@samsung.com, Viresh Kumar <viresh.kumar@linaro.org>, t.figa@samsung.com, cpufreq@vger.kernel.org, linux-samsung-soc@vger.kernel.org, thomas.ab@samsung.com, Shawn Guo <shawn.guo@linaro.org>, Lukasz Majewski <l.majewski@majess.pl>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha1; protocol="application/pgp-signature"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140113125128.GE2586@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 12, 2014 at 7:56 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> On 10.01.2014 12:59, Thomas Abraham wrote:
->>
->> Hi Lukasz,
->>
->> On Fri, Jan 10, 2014 at 4:02 PM, Lukasz Majewski <l.majewski@samsung.com>
->> wrote:
->>>
->>> Hi Thomas,
->>>
->>> I've investigated the topic for a while, so if you don't mind I will
->>> share my thoughts :-)
->>
->>
->> Sure. Thanks for having a look at this patch series.
->>
->>>
->>>> The patch series removes the use of Exynos4210 specific cpufreq driver
->>>> and enables to use the cpufreq-cpu0 driver for Exynos4210 based
->>>> platforms. This is being done for few reasons.
->>>>
->>>> (a) The Exynos4210 cpufreq driver reads/writes clock controller
->>>> registers bypassing the Exynos4 CCF driver which is sort of
->>>> problematic.
->>>
->>>
->>> Also other, already supported devices suffer from it. Namely -
->>> Exynos4x12 and Exynos5250.
->>>
->>
->> Right, I did check the cpufreq driver of these SoCs.
->>
->>> That's why the solution shall be as generic as possible to also work
->>> with those two SoCs.
->>
->>
->> The approach taken here is to encapsulate the source of the CPU domain
->> clock in a single logical clock. The implementation of this logical
->> clock can vary for different Exynos SoCs but the interface to register
->> and use this clock is common for all Exynos SoCs. If the changes in
->> the cpufreq-cpu0 driver are accepted, the combination of cpufreq-cpu0
->> and the logical clock representing the CPU clock is sufficient to
->> provide a generic solution for Exynos4x12 and Exynos5250 SoCs.
->
->
-> Well, looking at Exynos SoCs, the structure of core block is very similar on
-> all of them. You have a single mux to select between MPLL and APLL and then
-> a number of dividers that need to be configured quasi-atomically when CPU
-> frequency is to be changed or, looking at higher level, a set of registers,
-> which values need to be changed (possibly masked).
->
-> I'd say it wouldn't require much more effort to make this common at least
-> for all currently supported Exynos SoCs (except 5440, which has completely
-> different clock logic).
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Hi Tomasz,
+Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> writes:
 
-Sorry, I did not get your point here. The core clock is meant to be
-generic for all Samsung SoCs. There are simple get_rate and round_rate
-generic callbacks provide which a core implementation can optionally
-use. Only the set_rate callback tend to be specific for a core clock.
-And that will also be reused across SoC as applicable. For instance,
-the clock blocks that make up the ARM domain core clock of Exynos5420
-is different from that in Exynos4210.
-
-Thanks,
-Thomas.
-
+> On Tue, Dec 17, 2013 at 11:47:19AM -0500, Ben Gamari wrote:
+>> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
+>>=20
+>> > On 12/16/2013 05:12 PM, Ben Gamari wrote:
+>> >
+>> >> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.tx=
+t b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+>> >
+>> >>  This is a list of trivial i2c devices that have simple device tree
+>> >>  bindings, consisting only of a compatible field, an address and
+>> >> -possibly an interrupt line.
+>> >> +possibly an interrupt line. The compatible field is used to lookup t=
+he
+>> >> +modalias of the driver which will handle the device. The compatible
+>> >> +string may begin with a manufacturer prefix (separated from the
+>> >> +modalias by a comma) which will be stripped off during lookup.
+>> >
+>> > This part of the patch described Linux-specific behaviour, whereas DT
+>> > bindings should be OS-agnostic.
+>> >
+>> I see your point but it would be nice to have language like this
+>> somewhere. One of the biggest challenges in diving in to writing a
+>> devicetree is figuring out details like this.
 >
-> Best regards,
-> Tomasz
+> What about putting this into a seperate paragraph prefixed with "Current
+> Linux specific implementation:"?
+>
+This would address my concern quite nicely.
+
+Cheers,
+
+=2D Ben
+
+--=-=-=
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQEcBAEBAgAGBQJS0/dcAAoJEErkyLZmeNiDRwMH/irA5DSn95+PVa/75JktBuYn
+ff1oZHvOj5GDalFkeIWamIpLbG+Hm3Mq0FPGA9JwuJDeRI3rDEeQYGnR+177+nII
+HGSLDYZsGiWvaWDUDKsuUoDrnjmCtfU7tMyZCfrGzbWlHcMebEjz0Ozvj58bAOTF
+lZ7d9cgl9TQYVMAP4sX2EQwdNR+X+gwK30LT4cNEYkuGFur5jTk99ByNY1rfd9RV
+SKARbOnHzmxTefnaxn2VSudRTgnsfTG3jyV8OP427fqP5zUF3yfqSMu2wKyyPdsS
+6lyA8TXhAYJAlQiQKws2oWt0+zhgRhjxFenshujwkLY/RK9iUingQUuYE//lQBQ=
+=swlV
+-----END PGP SIGNATURE-----
+--=-=-=--
