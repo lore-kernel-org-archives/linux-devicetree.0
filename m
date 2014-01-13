@@ -1,58 +1,56 @@
-From: Ben Gamari <bgamari.foss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dt: Update I2C trivial devices list
-Date: Mon, 13 Jan 2014 12:26:47 -0500
-Message-ID: <87ob3flrmw.fsf@gmail.com>
-References: <1387239151-19226-1-git-send-email-bgamari.foss@gmail.com> <52B07870.6070809@wwwdotorg.org> <87a9fztofc.fsf@gmail.com> <20140113125128.GE2586@katana> <87r48cklgj.fsf@gmail.com> <52D41B14.6060701@wwwdotorg.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 2/2] drm/tegra: Obtain head number from DT
+Date: Mon, 13 Jan 2014 10:46:45 -0700
+Message-ID: <52D42685.1040603@wwwdotorg.org>
+References: <1389622894-9574-1-git-send-email-treding@nvidia.com> <1389622894-9574-3-git-send-email-treding@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha1; protocol="application/pgp-signature"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52D41B14.6060701-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1389622894-9574-3-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+On 01/13/2014 07:21 AM, Thierry Reding wrote:
+> The head number of a given display controller is fixed in hardware and
+> required to program outputs appropriately. Relying on the driver probe
+> order to determine this number will not work, since that could yield a
+> situation where the second head was probed first and would be assigned
+> head number 0 instead of 1.
 
-Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
+This change makes the new properties mandatory, yet they aren't part of
+the DT files yet. So, won't this patch break all display on Tegra?
 
-> On 01/13/2014 07:25 AM, Ben Gamari wrote:
->> Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> writes:
->>> What about putting this into a seperate paragraph prefixed with "Current
->>> Linux specific implementation:"?
->>>
->> This would address my concern quite nicely.
->
-> The text should go into Documentation/ not the DT binding.
->
-The problem here is that as it stands DT is quite daunting to pick
-up. My needs are pretty minimal yet I had to spend many hours sifting
-through source, blogs, and Documentation/* to get something that more or
-less worked. The bindings are generally well-documented, but there is no
-"start here" document in the tree giving conventions and an overview of
-how Linux in particular uses DT.
+To avoid having to modify the Tegra DTs in this patch, can't the code
+fall back to the existing broken algorithm if the property is missing, i.e.:
 
-The closest thing I know of is Documentation/devicetree/usage-model.txt.
-Perhaps this is where the language Wolfram suggested should be placed.
+> diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
 
-Cheers,
+> -	dc->pipe = tegra->drm->mode_config.num_crtc;
 
-- Ben
+Instead,:
 
---=-=-=
-Content-Type: application/pgp-signature
+	if (dc->pipe == -1)
+		dc->pipe = tegra->drm->mode_config.num_crtc;
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
+> +static int tegra_dc_parse_dt(struct tegra_dc *dc)
+> +{
+> +	u32 value;
+> +	int err;
+> +
+> +	err = of_property_read_u32(dc->dev->of_node, "nvidia,head", &value);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	dc->pipe = value;
 
-iQEcBAEBAgAGBQJS1CHXAAoJEErkyLZmeNiDjJwH/RIvVaEN9geH5GXI4X7Y2X2u
-6PgeRboCcxv+9a2BoZt1Poq/6HkskO4G0gmElUrJb1dQBQhEc7a25m5Gcc7Sh9SR
-gjU2pJUZmMGq7py2GPmrRmlDkDtvjN3+jG3HEDxuDxmaOE/zwPO+SEU0FQbBZhaH
-C07QSuy8cHuaKEXnBGqBxfjfqwKWh2V9BGWQsFjocma8Gh5A5PMtPwp8Lh4Yvpcs
-GHPE5yrnAJzNOonKaNVzh2wYIrG5JgLPyyfVQ5hx1E5DftyUsiaPHA7i2vpPNEej
-ZkAjKU5UAyY6gBeyJyVnlN9SdMwLlWmN89SfKKkORyDGzy1rhz/Qig8h63Un6SA=
-=rg6N
------END PGP SIGNATURE-----
---=-=-=--
+Instead:
+
+	err = ...
+	if (!err)
+		dc->pipe = value;
+	else
+		/* Perhaps also emit an error message here */
+		dc->pipe = -1;
