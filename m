@@ -1,64 +1,62 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V2 5/6] power: reset: change xgene reboot driver to use both acpi and dts resource for reboot.
-Date: Mon, 13 Jan 2014 16:03:30 +0100
-Message-ID: <201401131603.31205.arnd@arndb.de>
-References: <1389135041-16062-1-git-send-email-fkan@apm.com> <201401082243.01694.arnd@arndb.de> <CAL85gmB4erJ8C=YYysXuLaY9Tkr79Z=7pAgrv0JuSU+bkxwaxg@mail.gmail.com>
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: Re: [PATCHv5 05/20] cpufreq: cpufreq-cpu0: add dt node parsing for
+ cooling device properties
+Date: Mon, 13 Jan 2014 11:08:45 -0400
+Message-ID: <52D4017D.7050400@ti.com>
+References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com> <1384285582-16933-6-git-send-email-eduardo.valentin@ti.com> <744357E9AAD1214791ACBA4B0B909263011C9A19@SHSMSX101.ccr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <CAL85gmB4erJ8C=YYysXuLaY9Tkr79Z=7pAgrv0JuSU+bkxwaxg@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Feng Kan <fkan@apm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="6w14OBBopNRxnkc23Fn6ofb3GQF7Pl6gc"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <744357E9AAD1214791ACBA4B0B909263011C9A19@SHSMSX101.ccr.corp.intel.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: "Zhang, Rui" <rui.zhang@intel.com>
+Cc: Eduardo Valentin <eduardo.valentin@ti.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "wni@nvidia.com" <wni@nvidia.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "R, Durgadoss" <durgadoss.r@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Viresh Kumar <viresh.kumar@linaro.org>, "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discu>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 09 January 2014, Feng Kan wrote:
-> On Wed, Jan 8, 2014 at 1:43 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Tuesday 07 January 2014, Feng Kan wrote:
-> >> Enable the X-Gene reboot driver to use either the ACPI or the DTS
-> >> resource using the platform driver method.
-> >>
-> >> Signed-off-by: Feng Kan <fkan@apm.com>
-> >> ---
-> >>  drivers/power/reset/xgene-reboot.c |   33 ++++++++++++++++++++++++++++-----
-> >>  1 files changed, 28 insertions(+), 5 deletions(-)
-> >>
-> >
-> > Shouldn't an ACPI based system always be able to reboot through the
-> > UEFI reset_system call? I really don't think we want to support
-> > ACPI on non-UEFI systems.
-> >
-> >         Arnd
-> Thanks Arnd, I will retract the ACPI support for now. We are still
-> trying to figure out how best to support ACPI.
+--6w14OBBopNRxnkc23Fn6ofb3GQF7Pl6gc
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Ok, that makes sense.
+On 12-01-2014 10:31, Zhang, Rui wrote:
+>> +++ b/drivers/cpufreq/Kconfig
+>> > @@ -186,7 +186,7 @@ config CPU_FREQ_GOV_CONSERVATIVE
+>> >=20
+>> >  config GENERIC_CPUFREQ_CPU0
+>> >  	tristate "Generic CPU0 cpufreq driver"
+>> > -	depends on HAVE_CLK && REGULATOR && PM_OPP && OF
+>> > +	depends on HAVE_CLK && REGULATOR && PM_OPP && OF && THERMAL &&
+>> > +CPU_THERMAL
+> config: make ARCH=3Darm multi_v7_defconfig
+> All warnings:
+> warning: (ARM_HIGHBANK_CPUFREQ) selects GENERIC_CPUFREQ_CPU0 which=20
+> has unmet direct dependencies (ARCH_HAS_CPUFREQ && CPU_FREQ &&=20
+> HAVE_CLK && REGULATOR && PM_OPP && OF && THERMAL && CPU_THERMAL)
+>=20
+> I think you need to select THERMAL and CPU_THERMAL instead, right?
+>=20
 
-> The larger problem seems to be the fact that
-> UEFI and ACPI were originally made for x86 and is ill suited for the
-> arm64. I will see if I can find a better path for this patch.
+Yeah, I think that would be better. I will send you a fix for that.
 
-I would strongly recommend to implement the standard UEFI reset
-mechanism on arm64-linux and then ensure your firmware provides
-the appropriate methods.
+--=20
+You have got to be excited about what you are doing. (L. Lamport)
 
-Note that any proper arm64 system that you want a standard Linux
-distro to run on will likely need to implement UEFI anyway.
+Eduardo Valentin
 
-Regarding ACPI, I'm well aware of the problems you are facing, but
-they have less to do with the intruction set (x86 vs arm64) and much
-more with the lack of a standard hardware platform. There is work
-underway to support a standardized subset of arm64 servers with ACPI,
-but X-Gene is rather unlikely to fit into that subset because of how
-it's just a collection of homegrown hardware blocks that are attached
-in seemingly random ways without a clear structure and certainly
-not following any standard.
 
-This is not unusual for ARM SoCs, and we can have learned to
-deal with it, but as we have no intention of supporting multiple
-incompatible ACPI implementations in Linux, you should not spend
-too much time thinking about ACPI on your platform.
+--6w14OBBopNRxnkc23Fn6ofb3GQF7Pl6gc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-	Arnd
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iF4EAREIAAYFAlLUAYEACgkQCXcVR3XQvP1DeAEAtnKafVtyvPO7Aa4m6IQtHL+5
+YB9DVIxxyydT4d5qTHAA/jHNYC4nj97SiItKkcKO5lw0d6JhzWkAKc+CB4pBD2Ti
+=blOg
+-----END PGP SIGNATURE-----
+
+--6w14OBBopNRxnkc23Fn6ofb3GQF7Pl6gc--
