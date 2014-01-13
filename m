@@ -1,74 +1,102 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH] dt: Update I2C trivial devices list
-Date: Mon, 13 Jan 2014 13:51:28 +0100
-Message-ID: <20140113125128.GE2586@katana>
-References: <1387239151-19226-1-git-send-email-bgamari.foss@gmail.com>
- <52B07870.6070809@wwwdotorg.org>
- <87a9fztofc.fsf@gmail.com>
+From: Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
+Subject: [PATCH v2] ARM: sun4i: dt: Add basic board support for
+ LinkSprite pcDuino
+Date: Mon, 13 Jan 2014 14:15:01 +0100 (CET)
+Message-ID: <alpine.DEB.2.02.1401131406230.17739@trabant.deployis.eu>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5oH/S/bF6lOfqCQb"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87a9fztofc.fsf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ben Gamari <bgamari.foss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: TEXT/PLAIN; format=flowed; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDXMFKNVRQIRBWGNZ6LAKGQENUMJFRI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+>From b2cd1681fe988584028d280ca79249f4ebcb271c Mon Sep 17 00:00:00 2001
+From: Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
+Date: Mon, 13 Jan 2014 14:00:12 +0100
+Subject: [PATCH v2] ARM: sun4i: dt: Add basic board support for LinkSprite pcDuino
 
---5oH/S/bF6lOfqCQb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch will add a basic board support DT for the
+LinkSprite pcDuino board.
 
-On Tue, Dec 17, 2013 at 11:47:19AM -0500, Ben Gamari wrote:
-> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
->=20
-> > On 12/16/2013 05:12 PM, Ben Gamari wrote:
-> >
-> >> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt=
- b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> >
-> >>  This is a list of trivial i2c devices that have simple device tree
-> >>  bindings, consisting only of a compatible field, an address and
-> >> -possibly an interrupt line.
-> >> +possibly an interrupt line. The compatible field is used to lookup the
-> >> +modalias of the driver which will handle the device. The compatible
-> >> +string may begin with a manufacturer prefix (separated from the
-> >> +modalias by a comma) which will be stripped off during lookup.
-> >
-> > This part of the patch described Linux-specific behaviour, whereas DT
-> > bindings should be OS-agnostic.
-> >
-> I see your point but it would be nice to have language like this
-> somewhere. One of the biggest challenges in diving in to writing a
-> devicetree is figuring out details like this.
+Signed-off-by: Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
+---
+  arch/arm/boot/dts/Makefile              |    1 +
+  arch/arm/boot/dts/sun4i-a10-pcduino.dts |   48 +++++++++++++++++++++++++++++++
+  2 files changed, 49 insertions(+), 0 deletions(-)
+  create mode 100644 arch/arm/boot/dts/sun4i-a10-pcduino.dts
 
-What about putting this into a seperate paragraph prefixed with "Current
-Linux specific implementation:"?
-
-
---5oH/S/bF6lOfqCQb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS0+FQAAoJEBQN5MwUoCm2KpwP/AyB8ra+SIKmFBzLM0/AsS8g
-9xBV2Fjpgo4zjgrH0+wKX1ZGcERkFaxCEUN4vcSBrUiTdpbbpc6YJVkb4FjzjTx4
-eVzXYxXfg/q8maHP/TrsaLWNoQYHTmcBXeWAAAyuiLNeLWRFCONkQMzTvDq9rXXd
-oYEl+JMvm2eOwlQncPPjI0FJKsFbEUu7Ju6S7ZeeXGJ1k2As2Wy8nTifv3TgWeAQ
-AgpLV0JkCIupM1DELmHRxo2yO9hSHSUU3efgkwCn9RT3zL/+Hnf9gW6Xn+nalvRM
-83PNu71SXmdmr6XTe8ZexLtce36pygX2v/AgQ7Xw94DgdAYpfphML8DVM4TqRf9v
-K+qr86g0WEKgfwX+qdULWGpixvR7FRwh13CDMBwlNywM7T9Ft2gsCFL+G5Etp768
-mxnArOiv6a5GSosai5XJ+WdDgwAW+Ws2+7ln4rFD1aqInhI2gVNyQck/6InCjwq5
-0D6CX5pA5cBxAm8W6fCUYibYC3W2MUYTA4dWIYhce8NFgoXc3NqVuZQ5qTt3aTik
-wj71tWkK6Ip/w8XYwIaNJEiKNO46ddsPS7M/x1GWokU/jCkYW/56SbP5pKc6IrF6
-7I32h+T1gIE4BCFMfoj7QdUWUFy2n5TjrdLy+WbwLGdPtSUqt7v1/iCpRAe3wgUu
-ugZyLQrawMJ32PRao3sr
-=9DAh
------END PGP SIGNATURE-----
-
---5oH/S/bF6lOfqCQb--
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index b663ed7..a2e3620 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -253,6 +253,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += \
+  	sun4i-a10-cubieboard.dtb \
+  	sun4i-a10-mini-xplus.dtb \
+  	sun4i-a10-hackberry.dtb \
++	sun4i-a10-pcduino.dtb \
+  	sun5i-a10s-olinuxino-micro.dtb \
+  	sun5i-a13-olinuxino.dtb \
+  	sun5i-a13-olinuxino-micro.dtb \
+diff --git a/arch/arm/boot/dts/sun4i-a10-pcduino.dts b/arch/arm/boot/dts/sun4i-a10-pcduino.dts
+new file mode 100644
+index 0000000..f5692a3
+--- /dev/null
++++ b/arch/arm/boot/dts/sun4i-a10-pcduino.dts
+@@ -0,0 +1,48 @@
++/*
++ * Copyright 2014 Zoltan HERPAI
++ * Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
++
++/dts-v1/;
++/include/ "sun4i-a10.dtsi"
++
++/ {
++	model = "LinkSprite pcDuino";
++	compatible = "linksprite,a10-pcduino", "allwinner,sun4i-a10";
++
++	soc@01c00000 {
++		emac: ethernet@01c0b000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&emac_pins_a>;
++			phy = <&phy1>;
++			status = "okay";
++		};
++
++		mdio@01c0b080 {
++			status = "okay";
++
++			phy1: ethernet-phy@1 {
++				reg = <1>;
++			};
++		};
++
++		uart0: serial@01c28000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&uart0_pins_a>;
++			status = "okay";
++		};
++
++		i2c0: i2c@01c2ac00 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&i2c0_pins_a>;
++			status = "okay";
++		};
++	};
++};
+-- 
+1.7.0.4
