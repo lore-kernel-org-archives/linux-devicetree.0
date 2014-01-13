@@ -1,67 +1,55 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH 2/3] mmc: dw_mmc: add dw_mmc-k3 for k3 platform
-Date: Mon, 13 Jan 2014 10:37:15 +0800
-Message-ID: <52D3515B.7040008@linaro.org>
-References: <1389278112-7099-1-git-send-email-zhangfei.gao@linaro.org> <1389278112-7099-3-git-send-email-zhangfei.gao@linaro.org> <003601cf0e09$5fb07c90$1f1175b0$%jun@samsung.com> <52CFFFDA.8050108@linaro.org> <001501cf1004$7b1f34b0$715d9e10$%jun@samsung.com>
+From: Yuantian Tang <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH v8] clk: corenet: Adds the clock binding
+Date: Mon, 13 Jan 2014 02:40:07 +0000
+Message-ID: <7dbb1b46adbe44d7893dca779b3fbf14@BL2PR03MB115.namprd03.prod.outlook.com>
+References: <1389320944-2574-1-git-send-email-Yuantian.Tang@freescale.com>
+ <1389385170.24905.19.camel@snotra.buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=EUC-KR
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <001501cf1004$7b1f34b0$715d9e10$%jun@samsung.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Seungwon Jeon <tgih.jun@samsung.com>, 'Chris Ball' <cjb@laptop.org>, 'Arnd Bergmann' <arnd@arndb.de>, 'Mike Turquette' <mturquette@linaro.org>, 'Rob Herring' <robherring2@gmail.com>, 'Jaehoon Chung' <jh80.chung@samsung.com>, 'Kumar Gala' <galak@codeaurora.org>, 'Haojian Zhuang' <haojian.zhuang@linaro.org>
-Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org, 'Zhigang Wang' <brooke.wangzhigang@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1389385170.24905.19.camel-88ow+0ZRuxG2UiBs7uKeOtHuzzzSOjJt@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 01/13/2014 10:09 AM, Seungwon Jeon wrote:
-> On Fri, January 10, 2014, Zhangfei Gao wrote:
->> On 01/10/2014 09:39 PM, Seungwon Jeon wrote:
->>>> +static void dw_mci_k3_set_ios(struct dw_mci *host, struct mmc_ios *ios)
->>>> +{
->>>> +	struct dw_mci_k3_priv_data *priv = host->priv;
->>>> +	u32 rate = priv->clk_table[ios->timing];
->>>
->>> First, sorry for quick review even though your effort.
->>> But I still worry about this change.
->>> Currently k3 host's clock table depends on value number of SD/MMC mode value.
->>> It seems close to identifier for eachg mode. I think it's not good way to use as table's index.
->>> Can you modify to mmc_clk_determine_rate() in your another patch-set?
->>> I guess required actual target rate could be determined depending on ios->clock.
->>>
->>
->> No, it can not get input clock source rate simply from ios->clock, also
->> requied info like which controller, which mode etc.
->> Here is setting clock source rate, not the working clock rate.
->>
->> For example, emmc init clock source rate is 13M, while sd init clock
->> source is 25M, it can not simply get such info from ios->clock.
->> And for HS200, emmc may have to set clock source rate to 104M since the
->> controller limitation and can not work stable as 208M.
-> 
-> Yes, clock table is source clock rate, not actual working clock rate.
-> I was not saying that 'ios->clock' would be used for source clock directly.
-> I meant that you can adjust the source clock rate depending on 'ios->clock'.
-> You've already done with clock table similarly in mmc_clk_determine_rate().
-> 
-> For example, in case of HS200, 'ios->clock' will be passed with 200MHz.
-> And then, mmc_clk_determine_rate() can set the 'rate & best' to 100000000 and 720000000 respectively.
-> Also, 'ios->clock' with 400KHz or less may be passed for init clock.
-> If clock id is HI3620_SD_CIUCLK, 'rate & best' can be selected with 13000000 and 26000000.
-> If not and it's case of MMC,  'rate & best' can be selected with 25000000 and 180000000.
-> If it should be considered with other conditions, please let me know.
-
-However, I am afraid this will make things complicated rather than
-simplified.
-
-The function mmc_clk_determine_rate() will need the info which
-controller it is, what's the init clock rate, what's the max clock rate,
-and what's the limitation, which may be different as different soc, and
-can not be hardcoded.
-The limitation may in HS200 and SDR104 mode.
-
-The plan is only input init rate and max rate instead of the table,
-while others directly use ios->clock, only if the the limitation resolved.
-
-Thanks
+VGhhbmtzIGZvciB5b3VyIHJldmlldy4NCg0KVGhhbmtzLA0KWXVhbnRpYW4NCg0KPiAtLS0tLU9y
+aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0KPiBTZW50OiAy
+MDE05bm0MeaciDEx5pelIOaYn+acn+WFrSA0OjIwDQo+IFRvOiBUYW5nIFl1YW50aWFuLUIyOTk4
+Mw0KPiBDYzogV29vZCBTY290dC1CMDc0MjE7IGdhbGFrQGtlcm5lbC5jcmFzaGluZy5vcmc7IG1h
+cmsucnV0bGFuZEBhcm0uY29tOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXhw
+cGMtZGV2QGxpc3RzLm96bGFicy5vcmc7IExpIFlhbmctTGVvLQ0KPiBSNTg0NzINCj4gU3ViamVj
+dDogUmU6IFtQQVRDSCB2OF0gY2xrOiBjb3JlbmV0OiBBZGRzIHRoZSBjbG9jayBiaW5kaW5nDQo+
+IA0KPiBPbiBGcmksIDIwMTQtMDEtMTAgYXQgMTA6MjkgKzA4MDAsIFRhbmcgWXVhbnRpYW4gd3Jv
+dGU6DQo+ID4gKy0gcmVnOiBPZmZzZXQgYW5kIGxlbmd0aCBvZiB0aGUgY2xvY2sgcmVnaXN0ZXIg
+c2V0DQo+IA0KPiAib2Zmc2V0IiBpbnRvIHdoYXQ/ICBUaGUgY29udGFpbmluZyBub2RlIGlzIG5v
+dCB3aXRoaW4gdGhlIHNjb3BlIG9mIHRoaXMNCj4gYmluZGluZy4NCj4gDQo+IEkga25vdyB0aGF0
+IHBsZW50eSBvZiBvdGhlciBiaW5kaW5ncyBhcmUgd29yZGVkIHRoaXMgd2F5LCBhbmQgSSB3b3Vs
+ZG4ndA0KPiBob2xkIHVwIGFjY2VwdGFuY2UgaWYgdGhpcyB3ZXJlIHRoZSBvbmx5IGlzc3VlLCBi
+dXQgaXQgb3VnaHQgdG8gYmUgZml4ZWQNCj4gdG8gc2F5IHNvbWV0aGluZyBsaWtlICJyZWc6IHJl
+c291cmNlIHplcm8gcmVwcmVzZW50cyB0aGUgY2xvY2sgcmVnaXN0ZXINCj4gc2V0Ii4NCj4gDQpP
+Sywgd2lsbCByZWZpbmUgaXQuDQoNCj4gPiArUmVjb21tZW5kZWQgcHJvcGVydGllczoNCj4gPiAr
+LSBjbG9jay1mcmVxdWVuY3k6IElucHV0IHN5c3RlbSBjbG9jayBmcmVxdWVuY3kuIE11c3QgYmUg
+cHJlc2VudA0KPiA+ICsJaWYgdGhlIGRldmljZSBoYXMgc3ViLW5vZGVzLg0KPiANCj4gV2h5IG9u
+bHkgImlmIHRoZSBkZXZpY2UgaGFzIHN1Yi1ub2RlcyI/DQo+IA0KT0ssIHdpbGwgZml4IGl0Lg0K
+DQo+ID4gKyAgICAgICAqICJmc2wscW9yaXEtc3lzY2xrLTEuMCI6IGZvciBpbnB1dCBzeXN0ZW0g
+Y2xvY2sgKHYxLjApLg0KPiA+ICsgICAgICAgICAgICAgICBJdCB0YWtlcyBwYXJlbnQncyBjbG9j
+ayBhcyBpdHMgY2xvY2suDQo+ID4gKyAgICAgICAqICJmc2wscW9yaXEtc3lzY2xrLTIuMCI6IGZv
+ciBpbnB1dCBzeXN0ZW0gY2xvY2sgKHYyLjApLg0KPiA+ICsgICAgICAgICAgICAgICBJdCB0YWtl
+cyBwYXJlbnQncyBjbG9jayBhcyBpdHMgY2xvY2suDQo+IA0KPiBzL3BhcmVudCdzIGNsb2NrL3Bh
+cmVudCdzIGNsb2NrLWZyZXF1ZW5jeS8gc2luY2UgdGhlIHBhcmVudCBpc24ndA0KPiBhY3R1YWxs
+eSBleHBvc2luZyBhIGNsb2NrIGFzIHBlciB0aGUgY2xvY2sgYmluZGluZ3MuDQo+IA0KT0suDQoN
+Cj4gPiArRXhhbXBsZSBmb3IgY2xvY2sgYmxvY2sgYW5kIGNsb2NrIHByb3ZpZGVyOg0KPiA+ICsv
+IHsNCj4gPiArCWNsb2NrZ2VuOiBnbG9iYWwtdXRpbGl0aWVzQGUxMDAwIHsNCj4gPiArCQljb21w
+YXRpYmxlID0gImZzbCxwNTAyMC1jbG9ja2dlbiIsICJmc2wscW9yaXEtY2xvY2tnZW4tMS4wIjsN
+Cj4gPiArCQlyYW5nZXMgPSA8MHgwIDB4ZTEwMDAgMHgxMDAwPjsNCj4gPiArCQljbG9jay1mcmVx
+dWVuY3kgPSA8MD47DQo+IA0KPiBJdCdkIGJlIGJldHRlciB0byBzaG93IGEgcmVhbCBjbG9jay1m
+cmVxdWVuY3kgaGVyZSAtLSB0aGlzIGlzIGFuIGV4YW1wbGUNCj4gZm9yIHRoZSBub2RlIGFzIHRo
+ZSBPUyBzZWVzIGl0LCBub3Qgd2hhdCBnb2VzIGluIHRoZSBkdHMgYXMgYW4gaW5wdXQgdG8NCj4g
+VS1Cb290Lg0KPiANCk9LLCB3aWxsIHJlbW92ZSBpdC4NCg0KPiAtU2NvdHQNCj4gDQoNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
