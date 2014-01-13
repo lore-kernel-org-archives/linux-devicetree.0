@@ -1,206 +1,89 @@
-From: Balaji T K <balajitk@ti.com>
-Subject: [PATCH v10 5/7] ARM: dts: add pbias dt node
-Date: Mon, 13 Jan 2014 21:06:13 +0530
-Message-ID: <1389627375-9107-6-git-send-email-balajitk@ti.com>
-References: <1389279062-32291-1-git-send-email-balajitk@ti.com>
- <1389627375-9107-1-git-send-email-balajitk@ti.com>
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: Re: [PATCHv9 02/20] thermal: introduce device tree parser
+Date: Mon, 13 Jan 2014 11:37:13 -0400
+Message-ID: <52D40829.9030708@ti.com>
+References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com> <1384285582-16933-3-git-send-email-eduardo.valentin@ti.com> <52C4D612.2090808@nvidia.com> <52C5A6CE.5060904@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1389627375-9107-1-git-send-email-balajitk@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, chris@printf.net, broonie@kernel.org, tony@atomide.com
-Cc: Balaji T K <balajitk@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="qRRl9BSqdcGVBinNxfeT4c6Olt32DcQed"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <52C5A6CE.5060904@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthew Longnecker <mlongnecker@nvidia.com>
+Cc: Wei Ni <wni@nvidia.com>, Eduardo Valentin <eduardo.valentin@ti.com>, swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com, grant.likely@linaro.org, durgadoss.r@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add pbias regulator node as a child of system control
-module - syscon.
+--qRRl9BSqdcGVBinNxfeT4c6Olt32DcQed
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Balaji T K <balajitk@ti.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/boot/dts/dra7.dtsi     |   17 +++++++++++++++++
- arch/arm/boot/dts/omap2430.dtsi |   17 +++++++++++++++++
- arch/arm/boot/dts/omap3.dtsi    |   17 +++++++++++++++++
- arch/arm/boot/dts/omap4.dtsi    |   17 +++++++++++++++++
- arch/arm/boot/dts/omap5.dtsi    |   17 +++++++++++++++++
- 5 files changed, 85 insertions(+), 0 deletions(-)
+On 02-01-2014 13:50, Matthew Longnecker wrote:
+>=20
+>> I think the platform driver may set governor for the thermal zone,
+>> so how about to add a property named as "governor",
+>> and parse it to tzp->governor_name,
+>> something like:
+>>                  ret =3D of_property_read_string(child, "governor", &s=
+tr);
+>>                  if (ret =3D=3D 0)
+>>                          if (strlen(str) < THERMAL_NAME_LENGTH)
+>>                                  strcpy(tzp->governor_name, str);
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index d0df4c4..876c9b8 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -110,6 +110,22 @@
- 			ti,hwmods = "counter_32k";
- 		};
- 
-+		dra7_ctrl_general: tisyscon@4a002e00 {
-+			compatible = "syscon", "simple-bus";
-+			reg = <0x4a002e00 0x7c>;
-+		};
-+
-+		pbias_regulator: pbias_regulator {
-+			compatible = "ti,pbias-omap";
-+			reg = <0 0x4>;
-+			syscon = <&dra7_ctrl_general>;
-+			pbias_mmc_reg: pbias_mmc_omap5 {
-+				regulator-name = "pbias_mmc_omap5";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3000000>;
-+			};
-+		};
-+
- 		dra7_pmx_core: pinmux@4a003400 {
- 			compatible = "pinctrl-single";
- 			reg = <0x4a003400 0x0464>;
-@@ -485,6 +501,7 @@
- 			dmas = <&sdma 61>, <&sdma 62>;
- 			dma-names = "tx", "rx";
- 			status = "disabled";
-+			pbias-supply = <&pbias_mmc_reg>;
- 		};
- 
- 		mmc2: mmc@480b4000 {
-diff --git a/arch/arm/boot/dts/omap2430.dtsi b/arch/arm/boot/dts/omap2430.dtsi
-index d624345..af71eb0 100644
---- a/arch/arm/boot/dts/omap2430.dtsi
-+++ b/arch/arm/boot/dts/omap2430.dtsi
-@@ -29,6 +29,22 @@
- 			pinctrl-single,function-mask = <0x3f>;
- 		};
- 
-+		omap2_scm_general: tisyscon@49002270 {
-+			compatible = "syscon", "simple-bus";
-+			reg = <0x49002270 0x240>;
-+		};
-+
-+		pbias_regulator: pbias_regulator {
-+			compatible = "ti,pbias-omap";
-+			reg = <0x230 0x4>;
-+			syscon = <&omap2_scm_general>;
-+			pbias_mmc_reg: pbias_mmc_omap2430 {
-+				regulator-name = "pbias_mmc_omap2430";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3000000>;
-+			};
-+		};
-+
- 		gpio1: gpio@4900c000 {
- 			compatible = "ti,omap2-gpio";
- 			reg = <0x4900c000 0x200>;
-@@ -183,6 +199,7 @@
- 			ti,dual-volt;
- 			dmas = <&sdma 61>, <&sdma 62>;
- 			dma-names = "tx", "rx";
-+			pbias-supply = <&pbias_mmc_reg>;
- 		};
- 
- 		mmc2: mmc@480b4000 {
-diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-index daabf99..b7828da 100644
---- a/arch/arm/boot/dts/omap3.dtsi
-+++ b/arch/arm/boot/dts/omap3.dtsi
-@@ -137,6 +137,22 @@
- 			pinctrl-single,function-mask = <0xff1f>;
- 		};
- 
-+		omap3_scm_general: tisyscon@48002270 {
-+			compatible = "syscon", "simple-bus";
-+			reg = <0x48002270 0x2f0>;
-+		};
-+
-+		pbias_regulator: pbias_regulator {
-+			compatible = "ti,pbias-omap";
-+			reg = <0x2b0 0x4>;
-+			syscon = <&omap3_scm_general>;
-+			pbias_mmc_reg: pbias_mmc_omap2430 {
-+				regulator-name = "pbias_mmc_omap2430";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3000000>;
-+			};
-+		};
-+
- 		gpio1: gpio@48310000 {
- 			compatible = "ti,omap3-gpio";
- 			reg = <0x48310000 0x200>;
-@@ -351,6 +367,7 @@
- 			ti,dual-volt;
- 			dmas = <&sdma 61>, <&sdma 62>;
- 			dma-names = "tx", "rx";
-+			pbias-supply = <&pbias_mmc_reg>;
- 		};
- 
- 		mmc2: mmc@480b4000 {
-diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-index a1e0585..9e19363 100644
---- a/arch/arm/boot/dts/omap4.dtsi
-+++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -134,6 +134,22 @@
- 			pinctrl-single,function-mask = <0x7fff>;
- 		};
- 
-+		omap4_padconf_global: tisyscon@4a1005a0 {
-+			compatible = "syscon", "simple-bus";
-+			reg = <0x4a1005a0 0x170>;
-+		};
-+
-+		pbias_regulator: pbias_regulator {
-+			compatible = "ti,pbias-omap";
-+			reg = <0x60 0x4>;
-+			syscon = <&omap4_padconf_global>;
-+			pbias_mmc_reg: pbias_mmc_omap4 {
-+				regulator-name = "pbias_mmc_omap4";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3000000>;
-+			};
-+		};
-+
- 		sdma: dma-controller@4a056000 {
- 			compatible = "ti,omap4430-sdma";
- 			reg = <0x4a056000 0x1000>;
-@@ -367,6 +383,7 @@
- 			ti,needs-special-reset;
- 			dmas = <&sdma 61>, <&sdma 62>;
- 			dma-names = "tx", "rx";
-+			pbias-supply = <&pbias_mmc_reg>;
- 		};
- 
- 		mmc2: mmc@480b4000 {
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index fc3fad5..f178899 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -130,6 +130,22 @@
- 			pinctrl-single,function-mask = <0x7fff>;
- 		};
- 
-+		omap5_padconf_global: tisyscon@4a002da0 {
-+			compatible = "syscon";
-+			reg = <0x4A002da0 0xec>;
-+		};
-+
-+		pbias_regulator: pbias_regulator {
-+			compatible = "ti,pbias-omap";
-+			reg = <0x60 0x4>;
-+			syscon = <&omap5_padconf_global>;
-+			pbias_mmc_reg: pbias_mmc_omap5 {
-+				regulator-name = "pbias_mmc_omap5";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3000000>;
-+			};
-+		};
-+
- 		sdma: dma-controller@4a056000 {
- 			compatible = "ti,omap4430-sdma";
- 			reg = <0x4a056000 0x1000>;
-@@ -409,6 +425,7 @@
- 			ti,needs-special-reset;
- 			dmas = <&sdma 61>, <&sdma 62>;
- 			dma-names = "tx", "rx";
-+			pbias-supply = <&pbias_mmc_reg>;
- 		};
- 
- 		mmc2: mmc@480b4000 {
--- 
-1.7.5.4
+The above is not applicable to DT. The very first version of my proposed
+series did include some sort of governor treatment too, fetching such
+data from DT.
 
+>>
+>> Thanks.
+>> Wei.
+>=20
+> DT is supposed to describe the hardware, right? The governor isn't
+> hardware -- it's a software control policy. On the other hand, that
+> control policy must be tuned according to the behaviors of the platform=
+
+> hardware otherwise the system will be unstable.
+
+Yes, this is the correct understanding. We can describe hardware,
+including thermal constraints, as long as they do not include policy or
+OS specific implementation.
+
+>=20
+> Is it appropriate to be naming the governor in DT? If so, is it equally=
+
+> appropriate to describe any governor-specific parameters in DT (even
+> though they are pure software constructs)?
+
+No for both questions.
+
+However, for the parameters, as long as you can map the software
+parameter as a hardware descriptor, then we can discuss if that can be
+used as DT properties.
+
+>=20
+> -Matt
+>=20
+>=20
+
+
+--=20
+You have got to be excited about what you are doing. (L. Lamport)
+
+Eduardo Valentin
+
+
+--qRRl9BSqdcGVBinNxfeT4c6Olt32DcQed
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iF4EAREIAAYFAlLUCCkACgkQCXcVR3XQvP10KwEApcUxeBGNeMLMrEnU9a4Q/Bh9
+i02tQi67DtB9B15nfcQA/3QfCydXrzf/etgKNFlnNOfq2Ryn38FxekhWUCqDIdXa
+=kpN1
+-----END PGP SIGNATURE-----
+
+--qRRl9BSqdcGVBinNxfeT4c6Olt32DcQed--
