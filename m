@@ -1,60 +1,74 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH V4 2/6] ARM: imx: add suspend in ocram support on i.mx6q
-Date: Mon, 13 Jan 2014 12:44:45 +0000
-Message-ID: <20140113124445.GV15937@n2100.arm.linux.org.uk>
-References: <1389614031-7253-1-git-send-email-b20788@freescale.com> <1389614031-7253-2-git-send-email-b20788@freescale.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH] dt: Update I2C trivial devices list
+Date: Mon, 13 Jan 2014 13:51:28 +0100
+Message-ID: <20140113125128.GE2586@katana>
+References: <1387239151-19226-1-git-send-email-bgamari.foss@gmail.com>
+ <52B07870.6070809@wwwdotorg.org>
+ <87a9fztofc.fsf@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="5oH/S/bF6lOfqCQb"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1389614031-7253-2-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <87a9fztofc.fsf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ben Gamari <bgamari.foss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 13, 2014 at 07:53:47PM +0800, Anson Huang wrote:
->  #ifdef CONFIG_PM
-> +void imx6_suspend(void);
 
-So, imx6_suspend() takes no arguments.
+--5oH/S/bF6lOfqCQb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +static int (*imx6_suspend_in_ocram_fn)(void __iomem *ocram_vbase);
+On Tue, Dec 17, 2013 at 11:47:19AM -0500, Ben Gamari wrote:
+> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
+>=20
+> > On 12/16/2013 05:12 PM, Ben Gamari wrote:
+> >
+> >> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt=
+ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> >
+> >>  This is a list of trivial i2c devices that have simple device tree
+> >>  bindings, consisting only of a compatible field, an address and
+> >> -possibly an interrupt line.
+> >> +possibly an interrupt line. The compatible field is used to lookup the
+> >> +modalias of the driver which will handle the device. The compatible
+> >> +string may begin with a manufacturer prefix (separated from the
+> >> +modalias by a comma) which will be stripped off during lookup.
+> >
+> > This part of the patch described Linux-specific behaviour, whereas DT
+> > bindings should be OS-agnostic.
+> >
+> I see your point but it would be nice to have language like this
+> somewhere. One of the biggest challenges in diving in to writing a
+> devicetree is figuring out details like this.
 
-Oh, it takes one argument.
+What about putting this into a seperate paragraph prefixed with "Current
+Linux specific implementation:"?
 
-> +		/*
-> +		 * call low level suspend function in ocram,
-> +		 * as we need to float DDR IO.
-> +		 */
-> +		local_flush_tlb_all();
-> +		imx6_suspend_in_ocram_fn(suspend_ocram_base);
 
-Yes, definitely takes one argument...
+--5oH/S/bF6lOfqCQb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +	imx6_suspend_in_ocram_fn = (void *)fncpy(
-> +		suspend_ocram_base + sizeof(*pm_info),
-> +		&imx6_suspend,
-> +		MX6Q_SUSPEND_OCRAM_SIZE - sizeof(*pm_info));
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
 
-This cast here is needed to work around the above confusion.
+iQIcBAEBAgAGBQJS0+FQAAoJEBQN5MwUoCm2KpwP/AyB8ra+SIKmFBzLM0/AsS8g
+9xBV2Fjpgo4zjgrH0+wKX1ZGcERkFaxCEUN4vcSBrUiTdpbbpc6YJVkb4FjzjTx4
+eVzXYxXfg/q8maHP/TrsaLWNoQYHTmcBXeWAAAyuiLNeLWRFCONkQMzTvDq9rXXd
+oYEl+JMvm2eOwlQncPPjI0FJKsFbEUu7Ju6S7ZeeXGJ1k2As2Wy8nTifv3TgWeAQ
+AgpLV0JkCIupM1DELmHRxo2yO9hSHSUU3efgkwCn9RT3zL/+Hnf9gW6Xn+nalvRM
+83PNu71SXmdmr6XTe8ZexLtce36pygX2v/AgQ7Xw94DgdAYpfphML8DVM4TqRf9v
+K+qr86g0WEKgfwX+qdULWGpixvR7FRwh13CDMBwlNywM7T9Ft2gsCFL+G5Etp768
+mxnArOiv6a5GSosai5XJ+WdDgwAW+Ws2+7ln4rFD1aqInhI2gVNyQck/6InCjwq5
+0D6CX5pA5cBxAm8W6fCUYibYC3W2MUYTA4dWIYhce8NFgoXc3NqVuZQ5qTt3aTik
+wj71tWkK6Ip/w8XYwIaNJEiKNO46ddsPS7M/x1GWokU/jCkYW/56SbP5pKc6IrF6
+7I32h+T1gIE4BCFMfoj7QdUWUFy2n5TjrdLy+WbwLGdPtSUqt7v1/iCpRAe3wgUu
+ugZyLQrawMJ32PRao3sr
+=9DAh
+-----END PGP SIGNATURE-----
 
-> +ENTRY(imx6_suspend)
-> +	ldr	r1, [r0, #PM_INFO_PBASE_OFFSET]
-> +	ldr	r2, [r0, #PM_INFO_RESUME_ADDR_OFFSET]
-> +	ldr	r3, [r0, #PM_INFO_CPU_TYPE_OFFSET]
-> +	ldr	r4, [r0, #PM_INFO_PM_INFO_SIZE_OFFSET]
-
-Yes, definitely takes one argument.
-
-If you fix the prototype for imx6_suspend, you don't need to cast the
-result of fncpy().  Casts should always be avoided where possible.
-
--- 
-FTTC broadband for 0.8mile line: 5.8Mbps down 500kbps up.  Estimation
-in database were 13.1 to 19Mbit for a good line, about 7.5+ for a bad.
-Estimate before purchase was "up to 13.2Mbit".
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--5oH/S/bF6lOfqCQb--
