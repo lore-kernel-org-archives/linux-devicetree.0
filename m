@@ -1,54 +1,85 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] pwm: imx: support polarity inversion
-Date: Mon, 13 Jan 2014 12:13:58 +0100
-Message-ID: <11504930.fjG2AZiQ4e@wuerfel>
-References: <1389608988-10981-1-git-send-email-LW@KARO-electronics.de> <1389608988-10981-3-git-send-email-LW@KARO-electronics.de>
+From: Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
+Subject: [PATCH 2/2] BCM2835: Add I2S driver to device tree
+Date: Mon, 13 Jan 2014 12:16:40 +0100
+Message-ID: <52D3CB18.8040608@koalo.de>
+References: <52D3CA6E.1010803@koalo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1389608988-10981-3-git-send-email-LW@KARO-electronics.de>
-Sender: linux-pwm-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Lothar =?ISO-8859-1?Q?Wa=DFmann?= <LW@karo-electronics.de>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52D3CA6E.1010803-oZ8rN/sblLk@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 13 January 2014 11:29:48 Lothar Wa=DFmann wrote:
+This adds the definitions for the BCM2835 I2S driver
+to the device tree. Some GPIO settings are needed for
+the correct pin functions.
 
-> diff --git a/arch/arm/boot/dts/imx50.dtsi b/arch/arm/boot/dts/imx50.d=
-tsi
-> index 01c0499..e3647a8 100644
-> --- a/arch/arm/boot/dts/imx50.dtsi
-> +++ b/arch/arm/boot/dts/imx50.dtsi
-> @@ -273,7 +273,7 @@
->  			};
-> =20
->  			pwm1: pwm@53fb4000 {
-> -				#pwm-cells =3D <2>;
-> +				#pwm-cells =3D <3>;
->  				compatible =3D "fsl,imx50-pwm", "fsl,imx27-pwm";
->  				reg =3D <0x53fb4000 0x4000>;
->  				clocks =3D <&clks IMX5_CLK_PWM1_IPG_GATE>,
-=2E..
-> @@ -271,6 +293,13 @@ static int imx_pwm_probe(struct platform_device =
-*pdev)
->  		return PTR_ERR(imx->mmio_base);
-> =20
->  	data =3D of_id->data;
-> +	if (data->output_polarity) {
-> +		dev_info(&pdev->dev, "PWM supports inversion\n");
-> +		imx_pwm_ops.set_polarity =3D imx_pwm_set_polarity;
-> +		imx->chip.of_xlate =3D of_pwm_xlate_with_flags;
-> +		imx->chip.of_pwm_n_cells =3D 3;
-> +	}
-> +
->  	imx->config =3D data->config;
->  	imx->set_enable =3D data->set_enable;
+Signed-off-by: Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
+---
 
-This looks like you are breaking compatibility with the binding,
-which requires #pwm-cells to be <2>. You can extend the binding
-to allow both <2> and <3>, but then you have to not only document
-that change in the binding, but also ensure that the pwm driver
-is able to use either variant.
+Sorry, I forgot to disable word-wrap again....
 
-	Arnd
+ arch/arm/boot/dts/bcm2835-rpi-b.dts | 12 +++++++++++-
+ arch/arm/boot/dts/bcm2835.dtsi      | 10 ++++++++++
+ 2 files changed, 21 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+index 2a3b1c1..e83ed2f 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+@@ -23,7 +23,7 @@
+ 
+ &gpio {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&gpioout &alt0 &alt3>;
++	pinctrl-0 = <&gpioout &alt0 &alt2 &alt3>;
+ 
+ 	gpioout: gpioout {
+ 		brcm,pins = <6>;
+@@ -39,6 +39,16 @@
+ 		brcm,pins = <48 49 50 51 52 53>;
+ 		brcm,function = <7>; /* alt3 */
+ 	};
++
++	/* I2S interface */
++	alt2: alt2 {
++		brcm,pins = <28 29 30 31>;
++		brcm,function = <6>; /* alt2 */
++	};
++};
++
++&bcm2835_i2s {
++	status = "okay";
+ };
+ 
+ &i2c0 {
+diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+index 1da6b36..ca2259c 100644
+--- a/arch/arm/boot/dts/bcm2835.dtsi
++++ b/arch/arm/boot/dts/bcm2835.dtsi
+@@ -134,6 +134,16 @@
+ 			#dma-cells = <1>;
+ 			brcm,dma-channel-mask = <0x7f35>;
+ 		};
++
++		bcm2835_i2s: i2s@7e203000 {
++			compatible = "brcm,bcm2835-i2s";
++			reg = <0x7e203000 0x20>,
++			      <0x7e101098 0x02>;
++
++			dmas = <&dma 2>,
++			       <&dma 3>;
++			dma-names = "tx", "rx";
++		};
+ 	};
+ 
+ 	clocks {
+-- 
+1.8.3.2
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
