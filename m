@@ -1,55 +1,72 @@
-From: Yuantian Tang <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v8] clk: corenet: Adds the clock binding
-Date: Mon, 13 Jan 2014 02:40:07 +0000
-Message-ID: <7dbb1b46adbe44d7893dca779b3fbf14@BL2PR03MB115.namprd03.prod.outlook.com>
-References: <1389320944-2574-1-git-send-email-Yuantian.Tang@freescale.com>
- <1389385170.24905.19.camel@snotra.buserror.net>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH 1/6] cpufreq: cpufreq-cpu0: allow optional safe voltage
+ during frequency transitions
+Date: Mon, 13 Jan 2014 11:14:59 +0800
+Message-ID: <20140113031457.GD23525@S2101-09.ap.freescale.net>
+References: <1389283165-17708-1-git-send-email-thomas.ab@samsung.com>
+ <1389283165-17708-2-git-send-email-thomas.ab@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1389385170.24905.19.camel-88ow+0ZRuxG2UiBs7uKeOtHuzzzSOjJt@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1389283165-17708-2-git-send-email-thomas.ab@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <ta.omasab@gmail.com>
+Cc: cpufreq@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, t.figa@samsung.com, kgene.kim@samsung.com, viresh.kumar@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-VGhhbmtzIGZvciB5b3VyIHJldmlldy4NCg0KVGhhbmtzLA0KWXVhbnRpYW4NCg0KPiAtLS0tLU9y
-aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0KPiBTZW50OiAy
-MDE05bm0MeaciDEx5pelIOaYn+acn+WFrSA0OjIwDQo+IFRvOiBUYW5nIFl1YW50aWFuLUIyOTk4
-Mw0KPiBDYzogV29vZCBTY290dC1CMDc0MjE7IGdhbGFrQGtlcm5lbC5jcmFzaGluZy5vcmc7IG1h
-cmsucnV0bGFuZEBhcm0uY29tOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXhw
-cGMtZGV2QGxpc3RzLm96bGFicy5vcmc7IExpIFlhbmctTGVvLQ0KPiBSNTg0NzINCj4gU3ViamVj
-dDogUmU6IFtQQVRDSCB2OF0gY2xrOiBjb3JlbmV0OiBBZGRzIHRoZSBjbG9jayBiaW5kaW5nDQo+
-IA0KPiBPbiBGcmksIDIwMTQtMDEtMTAgYXQgMTA6MjkgKzA4MDAsIFRhbmcgWXVhbnRpYW4gd3Jv
-dGU6DQo+ID4gKy0gcmVnOiBPZmZzZXQgYW5kIGxlbmd0aCBvZiB0aGUgY2xvY2sgcmVnaXN0ZXIg
-c2V0DQo+IA0KPiAib2Zmc2V0IiBpbnRvIHdoYXQ/ICBUaGUgY29udGFpbmluZyBub2RlIGlzIG5v
-dCB3aXRoaW4gdGhlIHNjb3BlIG9mIHRoaXMNCj4gYmluZGluZy4NCj4gDQo+IEkga25vdyB0aGF0
-IHBsZW50eSBvZiBvdGhlciBiaW5kaW5ncyBhcmUgd29yZGVkIHRoaXMgd2F5LCBhbmQgSSB3b3Vs
-ZG4ndA0KPiBob2xkIHVwIGFjY2VwdGFuY2UgaWYgdGhpcyB3ZXJlIHRoZSBvbmx5IGlzc3VlLCBi
-dXQgaXQgb3VnaHQgdG8gYmUgZml4ZWQNCj4gdG8gc2F5IHNvbWV0aGluZyBsaWtlICJyZWc6IHJl
-c291cmNlIHplcm8gcmVwcmVzZW50cyB0aGUgY2xvY2sgcmVnaXN0ZXINCj4gc2V0Ii4NCj4gDQpP
-Sywgd2lsbCByZWZpbmUgaXQuDQoNCj4gPiArUmVjb21tZW5kZWQgcHJvcGVydGllczoNCj4gPiAr
-LSBjbG9jay1mcmVxdWVuY3k6IElucHV0IHN5c3RlbSBjbG9jayBmcmVxdWVuY3kuIE11c3QgYmUg
-cHJlc2VudA0KPiA+ICsJaWYgdGhlIGRldmljZSBoYXMgc3ViLW5vZGVzLg0KPiANCj4gV2h5IG9u
-bHkgImlmIHRoZSBkZXZpY2UgaGFzIHN1Yi1ub2RlcyI/DQo+IA0KT0ssIHdpbGwgZml4IGl0Lg0K
-DQo+ID4gKyAgICAgICAqICJmc2wscW9yaXEtc3lzY2xrLTEuMCI6IGZvciBpbnB1dCBzeXN0ZW0g
-Y2xvY2sgKHYxLjApLg0KPiA+ICsgICAgICAgICAgICAgICBJdCB0YWtlcyBwYXJlbnQncyBjbG9j
-ayBhcyBpdHMgY2xvY2suDQo+ID4gKyAgICAgICAqICJmc2wscW9yaXEtc3lzY2xrLTIuMCI6IGZv
-ciBpbnB1dCBzeXN0ZW0gY2xvY2sgKHYyLjApLg0KPiA+ICsgICAgICAgICAgICAgICBJdCB0YWtl
-cyBwYXJlbnQncyBjbG9jayBhcyBpdHMgY2xvY2suDQo+IA0KPiBzL3BhcmVudCdzIGNsb2NrL3Bh
-cmVudCdzIGNsb2NrLWZyZXF1ZW5jeS8gc2luY2UgdGhlIHBhcmVudCBpc24ndA0KPiBhY3R1YWxs
-eSBleHBvc2luZyBhIGNsb2NrIGFzIHBlciB0aGUgY2xvY2sgYmluZGluZ3MuDQo+IA0KT0suDQoN
-Cj4gPiArRXhhbXBsZSBmb3IgY2xvY2sgYmxvY2sgYW5kIGNsb2NrIHByb3ZpZGVyOg0KPiA+ICsv
-IHsNCj4gPiArCWNsb2NrZ2VuOiBnbG9iYWwtdXRpbGl0aWVzQGUxMDAwIHsNCj4gPiArCQljb21w
-YXRpYmxlID0gImZzbCxwNTAyMC1jbG9ja2dlbiIsICJmc2wscW9yaXEtY2xvY2tnZW4tMS4wIjsN
-Cj4gPiArCQlyYW5nZXMgPSA8MHgwIDB4ZTEwMDAgMHgxMDAwPjsNCj4gPiArCQljbG9jay1mcmVx
-dWVuY3kgPSA8MD47DQo+IA0KPiBJdCdkIGJlIGJldHRlciB0byBzaG93IGEgcmVhbCBjbG9jay1m
-cmVxdWVuY3kgaGVyZSAtLSB0aGlzIGlzIGFuIGV4YW1wbGUNCj4gZm9yIHRoZSBub2RlIGFzIHRo
-ZSBPUyBzZWVzIGl0LCBub3Qgd2hhdCBnb2VzIGluIHRoZSBkdHMgYXMgYW4gaW5wdXQgdG8NCj4g
-VS1Cb290Lg0KPiANCk9LLCB3aWxsIHJlbW92ZSBpdC4NCg0KPiAtU2NvdHQNCj4gDQoNCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Thomas,
+
+On Thu, Jan 09, 2014 at 09:29:20PM +0530, Thomas Abraham wrote:
+> @@ -19,6 +19,10 @@ Optional properties:
+>  - cooling-min-level:
+>  - cooling-max-level:
+>       Please refer to Documentation/devicetree/bindings/thermal/thermal.txt.
+> +- safe-opp-index: Certain platforms require that during a opp transition,
+> +  a system should not go below a particular opp level. For such systems,
+> +  this property specifies the minimum opp to be maintained during the
+> +  opp transitions.
+
+<snip>
+
+> @@ -165,13 +196,27 @@ static int cpu0_cpufreq_probe(struct platform_device *pdev)
+>  		goto out_put_node;
+>  	}
+>  
+> +	if (!of_property_read_u32(np, "safe-opp-index", &safe_opp_index)) {
+> +		rcu_read_lock();
+> +		opp = dev_pm_opp_find_freq_exact(cpu_dev,
+> +			freq_table[safe_opp_index].frequency * 1000, true);
+
+The property safe_opp_index is directly used to index freq_table here.
+It only works when the opp table in device tree is defined in increasing
+order.  But we have nothing in opp binding bindings/power/opp.txt to
+enforce it.  That said, opp table in device tree could be in arbitrary
+order, and thus safe_opp_index gives you nothing reliable.
+
+Shawn
+
+> +		if (IS_ERR(opp)) {
+> +			rcu_read_unlock();
+> +			pr_err("safe opp index %d is invalid\n",
+> +							safe_opp_index);
+> +			goto out_free_table;
+> +		}
+> +		safe_voltage = dev_pm_opp_get_voltage(opp);
+> +		safe_frequency = freq_table[safe_opp_index].frequency;
+> +		rcu_read_unlock();
+> +	}
+> +
+>  	of_property_read_u32(np, "voltage-tolerance", &voltage_tolerance);
+>  
+>  	if (of_property_read_u32(np, "clock-latency", &transition_latency))
+>  		transition_latency = CPUFREQ_ETERNAL;
+>  
+>  	if (!IS_ERR(cpu_reg)) {
+> -		struct dev_pm_opp *opp;
+>  		unsigned long min_uV, max_uV;
+>  		int i;
+>  
+> -- 
+> 1.6.6.rc2
+> 
