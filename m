@@ -1,71 +1,131 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH] ARM: Fix incorrect FDT initrd parameter override
-Date: Mon, 13 Jan 2014 16:28:34 -0500
-Message-ID: <20140113212834.GG19878@titan.lakedaemon.net>
-References: <0a923e$51mtvt@icp-osb-irony-out9.iinet.net.au>
- <20140113152851.GF19878@titan.lakedaemon.net>
- <52D455CE.6090306@killerwolves.net>
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: Re: [PATCHv9 02/20] thermal: introduce device tree parser
+Date: Mon, 13 Jan 2014 17:29:44 -0400
+Message-ID: <52D45AC8.1010607@ti.com>
+References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com> <1384285582-16933-3-git-send-email-eduardo.valentin@ti.com> <52C4D612.2090808@nvidia.com> <52C5A6CE.5060904@nvidia.com> <20140106135145.GD21906@e106331-lin.cambridge.arm.com> <52CAC3AF.9020401@ti.com> <52CB69FA.9080903@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52D455CE.6090306-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
-Cc: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="BcHIXGgKPN3KOsf4Pahsrt4VtRMfLhVLN"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <52CB69FA.9080903@nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Wei Ni <wni@nvidia.com>
+Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Mark Rutland <mark.rutland@arm.com>, Matthew Longnecker <MLongnecker@nvidia.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "durgadoss.r@intel.com" <durgadoss.r@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Ben,
+--BcHIXGgKPN3KOsf4Pahsrt4VtRMfLhVLN
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 14, 2014 at 07:08:30AM +1000, Ben Peddell wrote:
-> Patch submitted with requested changes.
-> 
-> On Mon, 13 Jan 2014 at 10:28:51 AM -0500, Jason Cooper wrote:
-> >> +	initrd_start = initrd_end = 0;
-> > 
-> > This line shouldn't be necessary.  Both are reset in the following hunk
-> > below your change:
-> > 
-> 
-> if (phys_initrd_size &&
->     !memblock_is_region_memory(phys_initrd_start, phys_initrd_size)) {
-> 	pr_err("INITRD: 0x%08llx+0x%08lx is not a memory region - disabling initrd\n",
-> 	       (u64)phys_initrd_start, phys_initrd_size);
-> 	phys_initrd_start = phys_initrd_size = 0;
-> }
-> if (phys_initrd_size &&
->     memblock_is_region_reserved(phys_initrd_start, phys_initrd_size)) {
-> 	pr_err("INITRD: 0x%08llx+0x%08lx overlaps in-use memory region - disabling initrd\n",
-> 	       (u64)phys_initrd_start, phys_initrd_size);
-> 	phys_initrd_start = phys_initrd_size = 0;
-> }
-> 
-> > if (phys_initrd_size) {
-> > 	memblock_reserve(phys_initrd_start, phys_initrd_size);
-> > 
-> > 	/* Now convert initrd to virtual addresses */
-> > 	initrd_start = __phys_to_virt(phys_initrd_start);
-> > 	initrd_end = initrd_start + phys_initrd_size;
-> > }
-> 
-> Please note that above this a check is made to ensure that
-> phys_initrd_start and phys_initrd_size are valid, and they are zeroed
-> if they are not valid.  Therefore if phys_initrd_start or 
-> phys_initrd_size are invalid, then initrd_start and initrd_end are not
-> reset.
-> 
-> This means that if the initrd= address is not present or is invalid
-> then the FDT address will be used anyway as initrd_start and 
-> initrd_end will not have been zeroed, and if that is invalid the
-> kernel will OOPS in unpack_to_rootfs():
+Wei,
 
-Ahhh, ok.  Thanks for the clarification.  You kept that line in the
-version you submitted to Russell's patch tracker?
+On 06-01-2014 22:44, Wei Ni wrote:
+> On 01/06/2014 10:54 PM, Eduardo Valentin wrote:
+>> * PGP Signed by an unknown key
+>>
+>> On 06-01-2014 09:51, Mark Rutland wrote:
+>>> On Thu, Jan 02, 2014 at 05:50:06PM +0000, Matthew Longnecker wrote:
+>>>>
+>>>>> I think the platform driver may set governor for the thermal zone,
+>>>>> so how about to add a property named as "governor",
+>>>>> and parse it to tzp->governor_name,
+>>>>> something like:
+>>>>>                  ret =3D of_property_read_string(child, "governor",=
+ &str);
+>>>>>                  if (ret =3D=3D 0)
+>>>>>                          if (strlen(str) < THERMAL_NAME_LENGTH)
+>>>>>                                  strcpy(tzp->governor_name, str);
+>>>>>
+>>>>> Thanks.
+>>>>> Wei.
+>>>>
+>>>> DT is supposed to describe the hardware, right? The governor isn't=20
+>>>> hardware -- it's a software control policy. On the other hand, that =
 
-thx,
+>>>> control policy must be tuned according to the behaviors of the platf=
+orm=20
+>>>> hardware otherwise the system will be unstable.
+>>>>
+>>>> Is it appropriate to be naming the governor in DT? If so, is it equa=
+lly=20
+>>>> appropriate to describe any governor-specific parameters in DT (even=
+=20
+>>>> though they are pure software constructs)?
+>>>
+>>> The dt should be relatively static -- if the hardware doesn't change =
+the
+>>> dt shouldn't have to.
+>>>
+>>> The governers are not static. We can introduce new ones and throw awa=
+y
+>>> old ones at any time. Tuning parameters can also change at any time.
+>>>
+>>> I'd prefer to not have governer details described in the dt, and the
+>>> choice of governer and configuration of its tuning parameters should =
+be
+>>> made at runtime somehow.
+>>
+>> Agreed.
+>=20
+> Yes, I think so, but the of-thermal driver handle the
+> thermal_zone_device_register, and pass the "tzp" without governor_name,=
 
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+In fact, it will fall into the default governor, which is step_wise, by
+default config.
+
+> so the created thermal_zone's governor will be NULL, then it can't run
+> into the governor->throttle() if needed. And currently there have no
+
+Actually, no, the tz will be set to default governor, and its throttle
+call will be called.
+
+> interface to support updating governor and configuration at runtime.
+> I think it's better to initialize the governor_name when register the
+> thermal zone device in the of-thermal driver.
+
+Still, why would you need to change the governor from a in kernel
+decision? There is an ABI to change the thermal zone policy based on
+user(land) request. If you need to change the policy from within the
+kernel, which seams to be what you are trying to propose, you need to
+explain why you need it, say, by giving at least one user of this API or
+explaining its use case.
+
+>=20
+> Thanks.
+>=20
+>>
+>>>
+>>> Thanks,
+>>> Mark.
+>>>
+>>>
+>>
+>>
+>=20
+>=20
+>=20
+
+
+--=20
+You have got to be excited about what you are doing. (L. Lamport)
+
+Eduardo Valentin
+
+
+--BcHIXGgKPN3KOsf4Pahsrt4VtRMfLhVLN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iF4EAREIAAYFAlLUWsgACgkQCXcVR3XQvP1orAEAialtk3Aps/1oTiWfB2foDt96
+3h1Tq5XY7wTnht9Q61cBALCe0wBWAO3KHbJYKNgDeHcMid5INnBMshA76ABfWOtd
+=F2o/
+-----END PGP SIGNATURE-----
+
+--BcHIXGgKPN3KOsf4Pahsrt4VtRMfLhVLN--
