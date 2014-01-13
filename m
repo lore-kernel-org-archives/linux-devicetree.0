@@ -1,74 +1,83 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V4 2/6] ARM: imx: add suspend in ocram support on i.mx6q
-Date: Mon, 13 Jan 2014 22:19:00 +0800
-Message-ID: <20140113141858.GV23525@S2101-09.ap.freescale.net>
-References: <1389614031-7253-1-git-send-email-b20788@freescale.com>
- <1389614031-7253-2-git-send-email-b20788@freescale.com>
- <20140113124445.GV15937@n2100.arm.linux.org.uk>
+From: Thomas Abraham <ta.omasab@gmail.com>
+Subject: Re: [PATCH 1/6] cpufreq: cpufreq-cpu0: allow optional safe voltage
+ during frequency transitions
+Date: Mon, 13 Jan 2014 19:51:25 +0530
+Message-ID: <CAJuA9ajop9C+vq9LJy48yX8-+RFN+5eqXHYSqiEaXbw3ntPQQg@mail.gmail.com>
+References: <1389283165-17708-1-git-send-email-thomas.ab@samsung.com>
+	<1389283165-17708-2-git-send-email-thomas.ab@samsung.com>
+	<20140113031457.GD23525@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140113124445.GV15937-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <20140113031457.GD23525@S2101-09.ap.freescale.net>
+Sender: cpufreq-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: cpufreq@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, t.figa@samsung.com, kgene.kim@samsung.com, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 13, 2014 at 12:44:45PM +0000, Russell King - ARM Linux wrote:
-> On Mon, Jan 13, 2014 at 07:53:47PM +0800, Anson Huang wrote:
-> >  #ifdef CONFIG_PM
-> > +void imx6_suspend(void);
-> 
-> So, imx6_suspend() takes no arguments.
-> 
-> > +static int (*imx6_suspend_in_ocram_fn)(void __iomem *ocram_vbase);
-> 
-> Oh, it takes one argument.
+Hi Shawn,
 
-Great catch.
+On Mon, Jan 13, 2014 at 8:44 AM, Shawn Guo <shawn.guo@linaro.org> wrote:
+> Hi Thomas,
+>
+> On Thu, Jan 09, 2014 at 09:29:20PM +0530, Thomas Abraham wrote:
+>> @@ -19,6 +19,10 @@ Optional properties:
+>>  - cooling-min-level:
+>>  - cooling-max-level:
+>>       Please refer to Documentation/devicetree/bindings/thermal/thermal.txt.
+>> +- safe-opp-index: Certain platforms require that during a opp transition,
+>> +  a system should not go below a particular opp level. For such systems,
+>> +  this property specifies the minimum opp to be maintained during the
+>> +  opp transitions.
+>
+> <snip>
+>
+>> @@ -165,13 +196,27 @@ static int cpu0_cpufreq_probe(struct platform_device *pdev)
+>>               goto out_put_node;
+>>       }
+>>
+>> +     if (!of_property_read_u32(np, "safe-opp-index", &safe_opp_index)) {
+>> +             rcu_read_lock();
+>> +             opp = dev_pm_opp_find_freq_exact(cpu_dev,
+>> +                     freq_table[safe_opp_index].frequency * 1000, true);
+>
+> The property safe_opp_index is directly used to index freq_table here.
+> It only works when the opp table in device tree is defined in increasing
+> order.  But we have nothing in opp binding bindings/power/opp.txt to
+> enforce it.  That said, opp table in device tree could be in arbitrary
+> order, and thus safe_opp_index gives you nothing reliable.
 
-Anson,
+Yes, true. Thanks for pointing out. Instead of using index, will using
+a tuple of for safe frequency and safe voltage be fine ?
 
-The return type of imx6_suspend() and imx6_suspend_in_ocram_fn should be
-aligned too.
+Thanks,
+Thomas.
 
-Shawn
-
-> 
-> > +		/*
-> > +		 * call low level suspend function in ocram,
-> > +		 * as we need to float DDR IO.
-> > +		 */
-> > +		local_flush_tlb_all();
-> > +		imx6_suspend_in_ocram_fn(suspend_ocram_base);
-> 
-> Yes, definitely takes one argument...
-> 
-> > +	imx6_suspend_in_ocram_fn = (void *)fncpy(
-> > +		suspend_ocram_base + sizeof(*pm_info),
-> > +		&imx6_suspend,
-> > +		MX6Q_SUSPEND_OCRAM_SIZE - sizeof(*pm_info));
-> 
-> This cast here is needed to work around the above confusion.
-> 
-> > +ENTRY(imx6_suspend)
-> > +	ldr	r1, [r0, #PM_INFO_PBASE_OFFSET]
-> > +	ldr	r2, [r0, #PM_INFO_RESUME_ADDR_OFFSET]
-> > +	ldr	r3, [r0, #PM_INFO_CPU_TYPE_OFFSET]
-> > +	ldr	r4, [r0, #PM_INFO_PM_INFO_SIZE_OFFSET]
-> 
-> Yes, definitely takes one argument.
-> 
-> If you fix the prototype for imx6_suspend, you don't need to cast the
-> result of fncpy().  Casts should always be avoided where possible.
-> 
-> -- 
-> FTTC broadband for 0.8mile line: 5.8Mbps down 500kbps up.  Estimation
-> in database were 13.1 to 19Mbit for a good line, about 7.5+ for a bad.
-> Estimate before purchase was "up to 13.2Mbit".
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Shawn
+>
+>> +             if (IS_ERR(opp)) {
+>> +                     rcu_read_unlock();
+>> +                     pr_err("safe opp index %d is invalid\n",
+>> +                                                     safe_opp_index);
+>> +                     goto out_free_table;
+>> +             }
+>> +             safe_voltage = dev_pm_opp_get_voltage(opp);
+>> +             safe_frequency = freq_table[safe_opp_index].frequency;
+>> +             rcu_read_unlock();
+>> +     }
+>> +
+>>       of_property_read_u32(np, "voltage-tolerance", &voltage_tolerance);
+>>
+>>       if (of_property_read_u32(np, "clock-latency", &transition_latency))
+>>               transition_latency = CPUFREQ_ETERNAL;
+>>
+>>       if (!IS_ERR(cpu_reg)) {
+>> -             struct dev_pm_opp *opp;
+>>               unsigned long min_uV, max_uV;
+>>               int i;
+>>
+>> --
+>> 1.6.6.rc2
+>>
+>
