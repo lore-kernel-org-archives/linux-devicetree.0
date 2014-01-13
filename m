@@ -1,106 +1,101 @@
 From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv10][ 1/3] ARM i.MX35: build in pinctrl support.
-Date: Mon, 13 Jan 2014 12:19:23 +0800
-Message-ID: <20140113041921.GK23525@S2101-09.ap.freescale.net>
+Subject: Re: [PATCHv10][ 2/3] ARM: dts: Add support for the cpuimx35 board
+ from Eukrea and its baseboard.
+Date: Mon, 13 Jan 2014 12:45:01 +0800
+Message-ID: <20140113044459.GM23525@S2101-09.ap.freescale.net>
 References: <1389368441-26310-1-git-send-email-denis@eukrea.com>
+ <1389368441-26310-2-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1389368441-26310-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1389368441-26310-2-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 10, 2014 at 04:40:39PM +0100, Denis Carikli wrote:
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+On Fri, Jan 10, 2014 at 04:40:40PM +0100, Denis Carikli wrote:
+> +&iomuxc {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hog>;
+> +
+> +	imx35-eukrea {
+> +		pinctrl_hog: hoggrp {
+> +			fsl,pins = <
+> +				MX35_PAD_LD18__GPIO3_24  0x80000000
+> +				MX35_PAD_LD19__GPIO3_25  0x80000000
+> +				MX35_PAD_LD23__GPIO3_29  0x80000000
 
-This is an invalid email address now.
+Create pinctrl entry for gpio-leds and gpio-keys to contain them just
+like other devices, and move ESDHC CD pin into esdhc1grp, so that we do
+not need this hoggrp.  The hoggrp should only hold the pins that do not
+really belong to any client devices.
 
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> +			>;
+> +		};
+> +
+> +		pinctrl_audmux: audmuxgrp {
+> +			fsl,pins = <MX35_AUDMUX_PINGRP1>;
+> +		};
+> +
+> +		pinctrl_esdhc1: esdhc1grp {
+> +			fsl,pins = <MX35_ESDHC1_PINGRP1>;
+> +		};
+> +
+> +		pinctrl_fec: fecgrp {
+> +			fsl,pins = <MX35_FEC_PINGRP1>;
+> +		};
+> +
+> +		pinctrl_i2c1: i2c1grp {
+> +			fsl,pins = <MX35_I2C1_PINGRP1>;
+> +		};
+> +
+> +		pinctrl_reg_lcd_3v3: reg-lcd-3v3 {
+> +			fsl,pins = <MX35_PAD_D3_CLS__GPIO1_4 0x80000000>;
+> +		};
+> +
+> +		pinctrl_uart1: uart1grp {
+> +			fsl,pins = <MX35_UART1_PINGRP1 MX35_UART1_RTSCTS_PINGRP1>;
 
-I'm not sure why we need to bother device tree folks with such a tiny
-SoC change.
+Split it into two lines, one macro each.
 
-OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
-M:      Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-M:      Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-M:      Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-M:      Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-M:      Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-L:      devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-S:      Maintained
-=46:      Documentation/devicetree/
-=46:      arch/*/boot/dts/
-=46:      include/dt-bindings/
+> +		};
+> +
+> +		pinctrl_uart2: uart2grp {
+> +			fsl,pins = <MX35_UART2_PINGRP1 MX35_UART2_RTSCTS_PINGRP1>;
 
-Does arch/arm/mach-imx/Kconfig match any entry above?
-
-Please copy people and lists with some consideration instead of doing
-that blindly.
-
-> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Eric B=E9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> ---
-> ChangeLog v9->v10:
-> - Added Fabio Estevam to the Cc list.
-> - Removed the duplicated PINCTRL Kconfig selection for the I.MX35,
->   the remaining PINCTRL Kconfig selection is now ordered alphabetical=
-ly.
->=20
-> ChangeLog v8->v9:
-> - patch refreshed when applying it.
->=20
-> ChangeLog v7->v8:
-> - The addition of the imx35 pinctrl driver selection in Kconfig that =
-was in the
->   patch adding the devicetree support for the imx35 was moved here.
-> ---
->  arch/arm/mach-imx/Kconfig |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
-> index b0c6eb3..7778b16c 100644
-> --- a/arch/arm/mach-imx/Kconfig
-> +++ b/arch/arm/mach-imx/Kconfig
-> @@ -125,8 +125,9 @@ config SOC_IMX35
->  	select CPU_V6K
->  	select HAVE_EPIT
->  	select MXC_AVIC
-> -	select SMP_ON_UP if SMP
->  	select PINCTRL
-> +	select PINCTRL_IMX35
-
-While at it, we should drop 'select PINCTRL', since it's been covered b=
-y
-ARCH_MXC.
-
-I fixed it up and applied the patch.  Thanks.
+Ditto
 
 Shawn
 
-> +	select SMP_ON_UP if SMP
-> =20
->  config SOC_IMX5
->  	bool
-> --=20
+> +		};
+> +	};
+> +};
+> +
+> +&ssi1 {
+> +	fsl,mode = "i2s-slave";
+> +	status = "okay";
+> +};
+> +
+> +&uart1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart1>;
+> +	fsl,uart-has-rtscts;
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart2>;
+> +	fsl,uart-has-rtscts;
+> +	status = "okay";
+> +};
+> -- 
 > 1.7.9.5
->=20
+> 
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
