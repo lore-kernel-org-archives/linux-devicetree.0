@@ -1,64 +1,51 @@
-From: Ben Hutchings <bhutchings@solarflare.com>
-Subject: Re: [PATCH net-next v3 2/2] stmmac: Fix kernel crashes for jumbo
- frames
-Date: Tue, 14 Jan 2014 23:20:46 +0000
-Message-ID: <1389741646.2025.218.camel@bwh-desktop.uk.level5networks.com>
-References: <1389719859-29071-1-git-send-email-vbridgers2013@gmail.com>
-	 <1389719859-29071-3-git-send-email-vbridgers2013@gmail.com>
-	 <1389729216.2025.197.camel@bwh-desktop.uk.level5networks.com>
-	 <CAOwfj2Ne1oRU1z6BaH4g2_EJJFtJOWbgs2oMzSq5nNpz9G6LsA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAOwfj2Ne1oRU1z6BaH4g2_EJJFtJOWbgs2oMzSq5nNpz9G6LsA@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Vince Bridgers <vbridgers2013@gmail.com>
-Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, Giuseppe CAVALLARO <peppe.cavallaro@st.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Dinh Nguyen <dinguyen@altera.com>, Rayagond Kokatanur <rayagond@vayavyalabs.com>
+From: Tanmay Inamdar <tinamdar@apm.com>
+Subject: [RFC PATCH V2 0/4] APM X-Gene PCIe controller
+Date: Tue, 14 Jan 2014 15:34:14 -0800
+Message-ID: <1389742458-7693-1-git-send-email-tinamdar@apm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches@apm.com, jcm@redhat.com, Tanmay Inamdar <tinamdar@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-01-14 at 14:44 -0600, Vince Bridgers wrote:
-> On Tue, Jan 14, 2014 at 1:53 PM, Ben Hutchings
-[...]
-> >>
-> >>       /*
-> >>        * Currently only the properties needed on SPEAr600
-> >> @@ -60,6 +64,7 @@ static int stmmac_probe_config_dt(struct platfor=
-m_device *pdev,
-> >>       if (of_device_is_compatible(np, "st,spear600-gmac") ||
-> >>               of_device_is_compatible(np, "snps,dwmac-3.70a") ||
-> >>               of_device_is_compatible(np, "snps,dwmac")) {
-> >> +             of_property_read_u32(np, "max-frame-size", &plat->ma=
-xmtu);
-> > [...]
-> >
-> > Is it the maximum frame size, including Ethernet header?  (And then=
-, is
-> > the CRC or any VLAN header included in the frame size?)
-> > Or is it the MTU, excluding all of those?
-> > You really need to be very clear about what this number represents.
->=20
-> max-frame-size as read from the device tree is defined in the ePAPR
-> v1.1 specification. I originally used a name of "max-mtu", but was
-> asked to change that since this attribute was already defined in the
-> ePAPR v1.1 specification.
-[...]
+This patch adds support for AppliedMicro X-Gene PCIe host controller. The
+driver is tested on X-Gene platform with different gen1/2/3 PCIe endpoint
+cards.
 
-Oh dear, this specification is just as confused as I am.  The example
-value in =C2=A76.3.1.4 is 1518, implying that it is really the frame si=
-ze,
-including the Ethernet header, any VLAN tag, and maybe the CRC.  Howeve=
-r
-the full example in Appendix B1 has 0x5dc (=3D=3D 1500) implying that i=
-t is
-the MTU.
+X-Gene PCIe controller driver has depedency on the pcie arch support for
+arm64. The arm64 pcie arch support is not yet part of mainline Linux kernel
+and approach for arch support is under discussion with arm64 maintainers.
+The reference patch can be found here --> https://lkml.org/lkml/2013/10/23/244
 
-I suppose you should follow whatever interpretation is already used by
-other drivers. :-/
+If someone wishes to test PCIe on X-Gene, arch support patch must be applied
+before the patches in this patch set.
 
-Ben.
+changes since V1:
+1. added PCI domain support
+2. reading cpu and pci addresses from device tree to configure regions.
+3. got rid of unnecessary wrappers for readl and writel.
+4. got rid of endpoint configuration code.
+5. added 'dma-ranges' property support to read inbound region configuration.
+6. renamed host driver file to 'pci-xgene.c' from 'pcie-xgene.c'
+7. dropped 'clock-names' property from bindings
+8. added comments whereever requested.
 
---=20
-Ben Hutchings, Staff Engineer, Solarflare
-Not speaking for my employer; that's the marketing department's job.
-They asked us to note that Solarflare product names are trademarked.
+Tanmay Inamdar (4):
+  pci: APM X-Gene PCIe controller driver
+  arm64:dts: APM X-Gene PCIe device tree nodes
+  dt-bindings: pci: xgene pcie device tree bindings
+  MAINTAINERS: entry for APM X-Gene PCIe host driver
+
+ .../devicetree/bindings/pci/xgene-pcie.txt         |   45 +
+ MAINTAINERS                                        |    7 +
+ arch/arm64/boot/dts/apm-mustang.dts                |    4 +
+ arch/arm64/boot/dts/apm-storm.dtsi                 |  144 +++
+ drivers/pci/host/Kconfig                           |   10 +
+ drivers/pci/host/Makefile                          |    1 +
+ drivers/pci/host/pci-xgene.c                       |  934 ++++++++++++++++++++
+ 7 files changed, 1145 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/xgene-pcie.txt
+ create mode 100644 drivers/pci/host/pci-xgene.c
+
+-- 
+1.7.9.5
