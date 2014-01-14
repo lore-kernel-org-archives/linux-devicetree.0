@@ -1,45 +1,49 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 2/2] drm/tegra: Obtain head number from DT
-Date: Tue, 14 Jan 2014 09:54:10 -0700
-Message-ID: <52D56BB2.9020901@wwwdotorg.org>
-References: <1389622894-9574-1-git-send-email-treding@nvidia.com> <1389622894-9574-3-git-send-email-treding@nvidia.com> <52D42685.1040603@wwwdotorg.org> <20140114141416.GE10936@ulmo.nvidia.com>
+From: "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv4 6/7] hwspinlock/omap: enable module before reading SYSSTATUS
+ register
+Date: Tue, 14 Jan 2014 10:56:26 -0600
+Message-ID: <52D56C3A.7000704@ti.com>
+References: <1389658764-39199-1-git-send-email-s-anna@ti.com> <1389658764-39199-7-git-send-email-s-anna@ti.com> <20140114131052.GA10818@saruman.home> <20140114140440.GA15785@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140114141416.GE10936-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140114140440.GA15785-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/14/2014 07:14 AM, Thierry Reding wrote:
-> On Mon, Jan 13, 2014 at 10:46:45AM -0700, Stephen Warren wrote:
->> On 01/13/2014 07:21 AM, Thierry Reding wrote:
->>> The head number of a given display controller is fixed in hardware and
->>> required to program outputs appropriately. Relying on the driver probe
->>> order to determine this number will not work, since that could yield a
->>> situation where the second head was probed first and would be assigned
->>> head number 0 instead of 1.
->>
->> This change makes the new properties mandatory, yet they aren't part of
->> the DT files yet. So, won't this patch break all display on Tegra?
-> 
-> I don't think it'll make anything worse than it currently is, since both
-> display controllers can't run at the same time with the current code.
+Felipe,
 
-Sure it will; it will prevent any dc device from probing at all:
+On 01/14/2014 08:04 AM, Felipe Balbi wrote:
+> Hi again,
+>
+> On Tue, Jan 14, 2014 at 07:10:52AM -0600, Felipe Balbi wrote:
+>>> diff --git a/drivers/hwspinlock/omap_hwspinlock.c b/drivers/hwspinlock/omap_hwspinlock.c
+>>> index 9f56fb2..194886e 100644
+>>> --- a/drivers/hwspinlock/omap_hwspinlock.c
+>>> +++ b/drivers/hwspinlock/omap_hwspinlock.c
+>>> @@ -101,10 +101,23 @@ static int omap_hwspinlock_probe(struct platform_device *pdev)
+>>>   	if (!io_base)
+>>>   		return -ENOMEM;
+>>>
+>>> +	/*
+>>> +	 * make sure the module is enabled and clocked before reading
+>>> +	 * the module SYSSTATUS register
+>>> +	 */
+>>> +	pm_runtime_enable(&pdev->dev);
+>>> +	pm_runtime_get_sync(&pdev->dev);
+>
+> another thing, you need to check return of pm_runtime_get_sync()
 
-> +static int tegra_dc_parse_dt(struct tegra_dc *dc)
-...
-> +	err = of_property_read_u32(dc->dev->of_node, "nvidia,head", &value);
-> +	if (err < 0)
- +		return err;
-                ^^^^^^^^^^^
-...
-> @@ -1207,6 +1219,10 @@ static int tegra_dc_probe(struct platform_device *pdev)
-...
-> +	err = tegra_dc_parse_dt(dc);
-> +	if (err < 0)
-> +		return err;
-                ^^^^^^^^^^^
+OK, let me check this and your other comment, and the fix is probably a 
+separate patch.
+
+regards
+Suman
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
