@@ -1,58 +1,65 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: Re: [PATCHv5 05/20] cpufreq: cpufreq-cpu0: add dt node parsing for
- cooling device properties
-Date: Tue, 14 Jan 2014 15:07:24 -0400
-Message-ID: <52D58AEC.6020706@ti.com>
-References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com> <1384285582-16933-6-git-send-email-eduardo.valentin@ti.com> <744357E9AAD1214791ACBA4B0B909263011C9A19@SHSMSX101.ccr.corp.intel.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] ohci-platform: Add support for
+ devicetree instantiation
+Date: Tue, 14 Jan 2014 14:08:56 -0500 (EST)
+Message-ID: <Pine.LNX.4.44L0.1401141404420.1310-100000@iolanthe.rowland.org>
+References: <1389653115-11028-2-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="rqLhxVutw0XWqBrJW52q0JlnNclgB2BIN"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <744357E9AAD1214791ACBA4B0B909263011C9A19@SHSMSX101.ccr.corp.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Zhang, Rui" <rui.zhang@intel.com>
-Cc: Eduardo Valentin <eduardo.valentin@ti.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "wni@nvidia.com" <wni@nvidia.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "R, Durgadoss" <durgadoss.r@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Viresh Kumar <viresh.kumar@linaro.org>, "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discu>
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBD6LRVPZ6YGRBSUW22LAKGQEOVXKQVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1389653115-11028-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---rqLhxVutw0XWqBrJW52q0JlnNclgB2BIN
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Mon, 13 Jan 2014, Hans de Goede wrote:
 
-On 12-01-2014 10:31, Zhang, Rui wrote:
-> config: make ARCH=3Darm multi_v7_defconfig
-> All warnings:
-> warning: (ARM_HIGHBANK_CPUFREQ) selects GENERIC_CPUFREQ_CPU0 which=20
-> has unmet direct dependencies (ARCH_HAS_CPUFREQ && CPU_FREQ &&=20
-> HAVE_CLK && REGULATOR && PM_OPP && OF && THERMAL && CPU_THERMAL)
+> Add support for ohci-platform instantiation from devicetree, including
+> optionally getting clks and a phy from devicetree, and enabling / disabling
+> those on power_on / off.
+> 
+> This should allow using ohci-platform from devicetree in various cases.
+> Specifically after this commit it can be used for the ohci controller found
+> on Allwinner sunxi SoCs.
 
-Rui,
+This is fine as far as I am concerned, except for one thing.
 
-BTW, I am not able to reproduce the above warning :-(
+> @@ -60,17 +127,23 @@ static int ohci_platform_probe(struct platform_device *dev)
+>  	struct usb_hcd *hcd;
+>  	struct resource *res_mem;
+>  	struct usb_ohci_pdata *pdata = dev_get_platdata(&dev->dev);
+> -	int irq;
+> -	int err = -ENOMEM;
+> -
+> -	if (!pdata) {
+> -		WARN_ON(1);
+> -		return -ENODEV;
+> -	}
+> +	struct ohci_platform_priv *priv;
+> +	int clk, irq, err;
 
-Are you sure you simply do a
-$  make ARCH=3Darm multi_v7_defconfig
+clk isn't initialized to anything...
 
-??
+> -err_put_hcd:
+> -	usb_put_hcd(hcd);
+>  err_power:
+>  	if (pdata->power_off)
+>  		pdata->power_off(dev);
+> +err_put_clks:
+> +	while (--clk >= 0)
+> +		clk_put(priv->clks[clk]);
 
---=20
-You have got to be excited about what you are doing. (L. Lamport)
+... but it gets used here.  The compiler should have warned about this.
 
-Eduardo Valentin
+After fixing that, you can add
 
+Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
 
---rqLhxVutw0XWqBrJW52q0JlnNclgB2BIN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iF4EAREIAAYFAlLViuwACgkQCXcVR3XQvP3RagD/Xt1EHXcz+FELfwfsdUrW+7R1
-ScNyjka4lEYI14kCm0cBAKIqssi1UhKAhXv0aLfEw9BSW/lyNmIdALWHF+R4TpUx
-=/xy1
------END PGP SIGNATURE-----
-
---rqLhxVutw0XWqBrJW52q0JlnNclgB2BIN--
+Alan Stern
