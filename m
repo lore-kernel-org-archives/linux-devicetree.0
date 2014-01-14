@@ -1,40 +1,23 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V2 1/6] Documentation: add dts binding for X-Gene reboot
- dts node.
-Date: Tue, 14 Jan 2014 07:06:12 +0100
-Message-ID: <201401140706.13406.arnd@arndb.de>
-References: <1389135041-16062-1-git-send-email-fkan@apm.com>
- <201401132043.52491.arnd@arndb.de>
- <CAL85gmCA4kBsRUMC_ENjGfCq5jM11iY5Jx_+A3V9XQDU0b7E0A@mail.gmail.com>
+From: Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 4/6] ARM: DTS: tegra: add the DFLL IP block to the T114
+ SoC file
+Date: Mon, 13 Jan 2014 22:32:36 -0800
+Message-ID: <52D4DA04.4040201@nvidia.com>
+References: <20131219122857.3226.42830.stgit@tamien> <20131219123719.3226.44864.stgit@tamien> <52B389CD.8010004@wwwdotorg.org> <alpine.DEB.2.02.1401132219150.11672@tamien>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL85gmCA4kBsRUMC_ENjGfCq5jM11iY5Jx_+A3V9XQDU0b7E0A@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Feng Kan <fkan@apm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1401132219150.11672@tamien>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 14 January 2014, Feng Kan wrote:
-> 
-> >
-> > Is this related to the standard ARM SCU that manages multiprocessor
-> > systems, or a different unit that uses the same name?
-> 
-> FKAN: You mean the snoop control unit in ARM. This is different from
-> that, the main function of this unit is clk control.
 
-Hmm, if it's *mainly* used for clocks, you may actually just want to
-have a driver in drivers/clk for it that also performs a few of the
-other things on the side.
+On 01/13/2014 10:27 PM, Paul Walmsley wrote:
+> The format is <&clock-provider-phandle clock-id>.
 
-	Arnd
+Ah, one other change: the above string has been dropped.  Pesky examples ;-)
+
+- Paul
