@@ -1,36 +1,79 @@
-From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCHv2 5/6] ASoC: fsl: Add VF610 simple audio card widgets
- driver.
-Date: Tue, 14 Jan 2014 09:55:18 +0000
-Message-ID: <9be381b2ca524e15b085eb7e99445c13@BY2PR03MB505.namprd03.prod.outlook.com>
-References: <1389592438-13761-1-git-send-email-Li.Xiubo@freescale.com>
- <1389592438-13761-6-git-send-email-Li.Xiubo@freescale.com>
- <20140113171614.GD29039@sirena.org.uk>
+From: Zhangfei Gao <zhangfei.gao@gmail.com>
+Subject: Re: [PATCH 1/2] clk: hisilicon: add hi3620_mmc_clks
+Date: Tue, 14 Jan 2014 18:04:55 +0800
+Message-ID: <CAMj5BkgCzg-Nqm-FX_36-1ShGsL9x1HALmtywm-0sHtp53wR5A@mail.gmail.com>
+References: <1389604469-8064-1-git-send-email-zhangfei.gao@linaro.org>
+	<1389604469-8064-2-git-send-email-zhangfei.gao@linaro.org>
+	<002901cf110d$993b4880$cbb1d980$%jun@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140113171614.GD29039-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org" <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <002901cf110d$993b4880$cbb1d980$%jun@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Seungwon Jeon <tgih.jun@samsung.com>
+Cc: Zhangfei Gao <zhangfei.gao@linaro.org>, Chris Ball <cjb@laptop.org>, Arnd Bergmann <arnd@arndb.de>, Mike Turquette <mturquette@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Zhigang Wang <brooke.wangzhigang@huawei.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+>> +static long mmc_clk_determine_rate(struct clk_hw *hw, unsigned long rate,
+>> +                           unsigned long *best_parent_rate,
+>> +                           struct clk **best_parent_p)
+>> +{
+>> +     struct clk_mmc *mclk = to_mmc(hw);
+>> +     unsigned long best = 0;
+>> +
+>> +     if ((rate <= 13000000) && (mclk->id == HI3620_MMC_CIUCLK1)) {
+> No need to check HI3620_MMC_CIUCLK2 and HI3620_MMC_CIUCLK3?
 
-I have sent another patch, if that patch is ok, please ignore this patch
-series.
+Yes, only emmc, id=HI3620_MMC_CIUCLK1, using init clk 13M, while
+others use init clock 25M.
+Add this to handle init mmc init clk 400K and return source clock rate
+13M, from your suggestion in fact.
 
-The new patch :" ASoC: add snd_soc_of_parse_audio_simple_widgets for
-DeviceTree"
+>
+>> +             rate = 13000000;
+>> +             best = 26000000;
+>> +     } else if (rate <= 26000000) {
+>> +             rate = 25000000;
+>> +             best = 180000000;
+>> +     } else if (rate <= 52000000) {
+>> +             rate = 50000000;
+>> +             best = 360000000;
+>> +     } else if (rate <= 100000000) {
+>> +             rate = 100000000;
+>> +             best = 720000000;
+>> +     } else {
+>> +             /* max is 180M */
+>> +             rate = 180000000;
+>> +             best = 1440000000;
+>> +     }
+>> +     *best_parent_rate = best;
+>> +     return rate;
+>> +}
 
-Thanks,
+>> +static int mmc_clk_prepare(struct clk_hw *hw)
+>> +{
+>> +     struct clk_mmc *mclk = to_mmc(hw);
+>> +     unsigned long rate;
+>> +
+>> +     if (mclk->id == HI3620_MMC_CIUCLK1)
+> HI3620_SD_CIUCLK was used in previous version.
+Yes, fixed, though it can work on the dev board.
 
---
-Best Regards,
-Xiubo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Is it fixed with HI3620_MMC_CIUCLK1?
+> And, please clarify in case of HI3620_MMC_CIUCLK2 and HI3620_MMC_CIUCLK3 as well.
+
+Only HI3620_MMC_CIUCLK1 use 13M for init, all others use 25M on hi3620.
+
+>
+> Thanks,
+> Seungwon Jeon
+>
+>> +             rate = 13000000;
+>> +     else
+>> +             rate = 25000000;
+>> +
+>> +     return mmc_clk_set_timing(hw, rate);
+>> +}
+>> +
+
+Thanks
