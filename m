@@ -1,133 +1,114 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCHv13 00/40] ARM: TI SoC clock DT conversion
-Date: Tue, 14 Jan 2014 14:36:13 -0600
-Message-ID: <20140114203613.GA604@saruman.home>
-References: <1389276051-1326-1-git-send-email-t-kristo@ti.com>
- <52CF12FB.6000602@ti.com>
- <20140109231513.GA11648@saruman.home>
- <52CFC2F1.706@ti.com>
- <20140110161352.GG6665@saruman.home>
- <52D02037.3090705@ti.com>
- <20140110185110.GM31323@atomide.com>
- <52D53084.1070105@ti.com>
-Reply-To: <balbi@ti.com>
+From: Vince Bridgers <vbridgers2013@gmail.com>
+Subject: Re: [PATCH net-next v3 2/2] stmmac: Fix kernel crashes for jumbo frames
+Date: Tue, 14 Jan 2014 14:44:35 -0600
+Message-ID: <CAOwfj2Ne1oRU1z6BaH4g2_EJJFtJOWbgs2oMzSq5nNpz9G6LsA@mail.gmail.com>
+References: <1389719859-29071-1-git-send-email-vbridgers2013@gmail.com>
+	<1389719859-29071-3-git-send-email-vbridgers2013@gmail.com>
+	<1389729216.2025.197.camel@bwh-desktop.uk.level5networks.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52D53084.1070105@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, balbi@ti.com, Nishanth Menon <nm@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, rnayak@ti.com, bcousson@baylibre.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1389729216.2025.197.camel@bwh-desktop.uk.level5networks.com>
+Sender: netdev-owner@vger.kernel.org
+To: Ben Hutchings <bhutchings@solarflare.com>
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, Giuseppe CAVALLARO <peppe.cavallaro@st.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Dinh Nguyen <dinguyen@altera.com>, Rayagond Kokatanur <rayagond@vayavyalabs.com>
 List-Id: devicetree@vger.kernel.org
 
---yrj/dFKFPuw6o+aM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jan 14, 2014 at 1:53 PM, Ben Hutchings
+<bhutchings@solarflare.com> wrote:
+> On Tue, 2014-01-14 at 11:17 -0600, Vince Bridgers wrote:
+>> These changes correct the following issues with jumbo frames on the
+>> stmmac driver:
+>>
+>> 1) The Synopsys EMAC can be configured to support different FIFO
+>> sizes at core configuration time. There's no way to query the
+>> controller and know the FIFO size, so the driver needs to get this
+>> information from the device tree in order to know how to correctly
+>> handle MTU changes and setting up dma buffers. The default
+>> max-frame-size is as currently used, which is the size of a jumbo
+>> frame.
+>>
+>> 2) The driver was enabling Jumbo frames by default, but was not allocating
+>> dma buffers of sufficient size to handle the maximum possible packet
+>> size that could be received. This led to memory corruption since DMAs were
+>> occurring beyond the extent of the allocated receive buffers for certain types
+>> of network traffic.
+> [...]
+>> --- a/drivers/net/ethernet/stmicro/stmmac/common.h
+>> +++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+>> @@ -293,6 +293,8 @@ struct dma_features {
+>>  #define STMMAC_CHAIN_MODE    0x1
+>>  #define STMMAC_RING_MODE     0x2
+>>
+>> +#define JUMBO_LEN            9000
+>> +
+>>  struct stmmac_desc_ops {
+>>       /* DMA RX descriptor ring initialization */
+>>       void (*init_rx_desc) (struct dma_desc *p, int disable_rx_ic, int mode,
+> [...]
+>> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+>> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+>> @@ -51,6 +51,10 @@ static int stmmac_probe_config_dt(struct platform_device *pdev,
+>>       plat->mdio_bus_data = devm_kzalloc(&pdev->dev,
+>>                                          sizeof(struct stmmac_mdio_bus_data),
+>>                                          GFP_KERNEL);
+>> +     /* Set the maxmtu to a default of 1500 in case the
+>> +      * parameter is not present in the device tree
+>> +      */
+>> +     plat->maxmtu = JUMBO_LEN;
+>
+> The comment disagrees with the definition of JUMBO_LEN.
 
-On Tue, Jan 14, 2014 at 02:41:40PM +0200, Tero Kristo wrote:
-> On 01/10/2014 08:51 PM, Tony Lindgren wrote:
-> >* Tero Kristo <t-kristo@ti.com> [140110 08:32]:
-> >>On 01/10/2014 06:13 PM, Felipe Balbi wrote:
-> >>>On Fri, Jan 10, 2014 at 11:52:49AM +0200, Tero Kristo wrote:
-> >>>>On 01/10/2014 01:15 AM, Felipe Balbi wrote:
-> >>>>>On Thu, Jan 09, 2014 at 03:22:03PM -0600, Nishanth Menon wrote:
-> >>>>>>
-> >>>>>>conflicts with be changes on Tony's be branch.
-> >>>>>>commit 80f304dd2360cf5d50953c4eb4e902536f6a1263
-> >>>>>>     ARM: OMAP2+: raw read and write endian fix
-> >>>>>>
-> >>>>>>Conflict:
-> >>>>>>arch/arm/mach-omap2/clkt_clksel.c
-> >>>>>>arch/arm/mach-omap2/clkt_dpll.c
-> >>>>>>arch/arm/mach-omap2/clkt_iclk.c
-> >>>>>>arch/arm/mach-omap2/clock.c
-> >>>>>>arch/arm/mach-omap2/clock36xx.c
-> >>>>>>arch/arm/mach-omap2/dpll3xxx.c
-> >>>>>>arch/arm/mach-omap2/dpll44xx.c
-> >>>>>>
-> >>>>>>Both change raw_readls -> should now be just clk api instead which
-> >>>>>>already does readl_relaxed etc.. If Tony feels like, then we should
-> >>>>>>probably post a branch based on 'be' branch for easy merge.
-> >
-> >This should be a trivial merge conflict to handle, so let's not base
-> >things on the BE changes.
-> >
-> >>>>I think all of these fails are caused by the initially bugged
-> >>>>Makefile + Kconfig under mach-omap2. Seems like they can be fixed by
-> >>>>the patches I inlined at the end (will also post them as proper
-> >>>>patches to l-o list after this.) The question is, should Mike go
-> >>>>ahead and merge these along with the base clk patches or how should
-> >>>>we handle them? Patch 1 must be merged, patch 2 is a nice to have one
-> >>>>which allows DRA7 only builds (doing DRA7 only build currently seems
-> >>>>not possible.)
-> >>>
-> >>>If it's OK with Tony, I would suggest having a branch with both patches
-> >>>below which both Tony and Mike merge before merging CCF series. That w=
-ay
-> >>>we avoid bisection problems.
-> >
-> >I can queue those two separately as fixes.
-> >
-> >>That reminds me, I think the baseline branch for the mach-omap2
-> >>patches is still somewhat unclear to me, what should be used for
-> >>this? And which patches should be put there (the mach-omap2 patches
-> >>depend on the drivers/clk/ti part basically, so I need to put at
-> >>least those there also.)
-> >
-> >I would keep the clock patches against some mainline -rc commit if
-> >possible, and if there are non trivial merge conflicts, the omap
-> >to use as the base is commit adfe9361b236154215d4b0fc8b6d79995394b15c.
-> >
-> >In any case, it's probably best that Mike merges this all via his
-> >clock tree unless there non-trivial merge conflicts.
-> >
->=20
-> I just pushed a branch against rc7 with makefile fixes in place to
-> fix omap1 and omap2 only builds for this stuff. Inlined the delta
-> here at the end. Do you want me to repost the series as v14 for this
-> or is the attached delta ok for review purposes? All the changes have
-> been squashed to existing patches (except the 2 patches I posted
-> separately for DRA7xx / AM43xx only builds.)
->=20
-> The test branch itself can be found here:
->=20
-> tree: https://github.com/t-kristo/linux-pm.git
-> branch: 3.13-rc7-dt-clks-v13-build-fixes
->=20
-> Felipe, care to run your randconfig magic for this?
+ok, I'll address the comment inconsistency. The goal is to maintain
+current driver behavior, and add the capability to clip the maximum
+MTU supported by the device based on the configuration option selected
+when the device was created. Some devices support a maxmtu less than
+JUMBO_LEN, but the original driver as upstreamed supported JUMBO_LEN
+sized packets.
 
-This branch builds just fine so far, I still have omap5 multiplaform and
-uniplatform builds, but since that was working before i'm assuming it
-won't break.
+>
+>>
+>>       /*
+>>        * Currently only the properties needed on SPEAr600
+>> @@ -60,6 +64,7 @@ static int stmmac_probe_config_dt(struct platform_device *pdev,
+>>       if (of_device_is_compatible(np, "st,spear600-gmac") ||
+>>               of_device_is_compatible(np, "snps,dwmac-3.70a") ||
+>>               of_device_is_compatible(np, "snps,dwmac")) {
+>> +             of_property_read_u32(np, "max-frame-size", &plat->maxmtu);
+> [...]
+>
+> Is it the maximum frame size, including Ethernet header?  (And then, is
+> the CRC or any VLAN header included in the frame size?)
+> Or is it the MTU, excluding all of those?
+> You really need to be very clear about what this number represents.
 
-cheers
+max-frame-size as read from the device tree is defined in the ePAPR
+v1.1 specification. I originally used a name of "max-mtu", but was
+asked to change that since this attribute was already defined in the
+ePAPR v1.1 specification.
 
---=20
-balbi
+I'm using the standard definition of Ethernet MTU, which is the
+maximum size of the MAC Client data sans the CRC, DA, SA, and
+EtherType fields (IEEE 802.3 2008, Section 3.2.7 - "MAC Client Data
+Field"). This matches the regular usage of this attribute by the
+device trees in the kernel tree at arch/powerpc/boot/dts. There I see
+entries for 1500, 0x5dc, and 9000 for different devices supporting
+different MTUs. So in that context, "max-frame-size" is the same as
+MTU.
 
---yrj/dFKFPuw6o+aM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+I agree the use of "max-frame-size" in this context and usage is
+confusing. I'll clarify in code comments and resubmit if you agree
+that's acceptable.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Cheers,
 
-iQIcBAEBAgAGBQJS1Z+9AAoJEIaOsuA1yqREGewP/3p9TxF6Bl8m+whQ+Dc9PpNP
-JO+ZJUZiTsRZNualVMRzxP5GnbeN4nd6wWT1ZQX/QBqZZgKErhJoxCvhbwzKxaFD
-uRbN185yczzNx0dwbe2fdeN08R44tsJvYOr2cGjIRud6uXWpQfidoXGBWAIAyGNA
-2Mr1F9WDOnY3vm7RcvkWMNAMJ9y6nY2FBkcGTsV80+y3BqbmwQ5QjE2dyX46fIor
-2HLFJo6yyM0buJWaI69jjFbzpxpcx1K5irqJAI14ZAe4tvDOPR1MLD505EV+ZjGw
-ix3LylXV7AnayTsuAo0KR1pfU7USLvokS9EQ1HWwVJw1jBrd6XhH/fxm8M7VRBP3
-SulMDm/loLI+0R6t6DHb1XWt3ffO7NAVHPzLY8MgmISCz1PiqnDaKTTSqZxpvJU6
-4IuflVqF5953dD/xoKdKiPQ2tzSEXW7+sSjP0Q+JjXyy0wDolkJAP0DFgb3jhsEw
-b5i4GCFymwGWFXoemz8OzqUu9PP+7h1cMenxDGWpauLcuU2QN0nIVyZIh+0b9IF9
-It2HyQqmrGSwcEBW3236+S4A1RbP+knDe+15R/M8ett/dL7PaEt28nFFcdmZClFW
-HzrkLwHY0dsOA0cAPERCbmMTgbXVaGOHUSuzKcvWIbrSyX5x55oJzm13IZ5kxZ1t
-SJbLYy0kEQOCb6FnQk7x
-=fWyv
------END PGP SIGNATURE-----
+Vince
 
---yrj/dFKFPuw6o+aM--
+>
+> Ben.
+>
+> --
+> Ben Hutchings, Staff Engineer, Solarflare
+> Not speaking for my employer; that's the marketing department's job.
+> They asked us to note that Solarflare product names are trademarked.
+>
