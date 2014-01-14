@@ -1,110 +1,73 @@
 From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCHv2 9/9] arm: dts: am43x-gp-evm: Add matrix gpio keys.
-Date: Tue, 14 Jan 2014 07:14:44 -0600
-Message-ID: <20140114131444.GD10818@saruman.home>
-References: <1387456421-21379-1-git-send-email-sourav.poddar@ti.com>
- <1387456421-21379-10-git-send-email-sourav.poddar@ti.com>
- <52D417A1.9060007@ti.com>
+Subject: Re: [PATCHv4 6/7] hwspinlock/omap: enable module before reading
+ SYSSTATUS register
+Date: Tue, 14 Jan 2014 08:04:40 -0600
+Message-ID: <20140114140440.GA15785@saruman.home>
+References: <1389658764-39199-1-git-send-email-s-anna@ti.com>
+ <1389658764-39199-7-git-send-email-s-anna@ti.com>
+ <20140114131052.GA10818@saruman.home>
 Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="FFoLq8A0u+X9iRU8"
+	protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
 Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <52D417A1.9060007@ti.com>
+In-Reply-To: <20140114131052.GA10818@saruman.home>
 Sender: linux-omap-owner@vger.kernel.org
-To: sourav <sourav.poddar@ti.com>
-Cc: bcousson@baylibre.com, balbi@ti.com, devicetree@vger.kernel.org, tony@atomide.com, linux-omap@vger.kernel.org, mark.rutland@arm.com, lokeshvutla@ti.com
+To: Felipe Balbi <balbi@ti.com>
+Cc: Suman Anna <s-anna@ti.com>, Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---FFoLq8A0u+X9iRU8
+--mP3DRpeJDSE+ciuQ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 13, 2014 at 10:13:13PM +0530, sourav wrote:
-> Benoit,
->=20
-> On Thursday 19 December 2013 06:03 PM, Sourav Poddar wrote:
-> >Add gpio keys node for am43x gp evm.
-> >
-> >Signed-off-by: Sourav Poddar<sourav.poddar@ti.com>
-> >---
-> >  arch/arm/boot/dts/am437x-gp-evm.dts |   21 +++++++++++++++++++++
-> >  1 file changed, 21 insertions(+)
-> >
-> >diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am4=
-37x-gp-evm.dts
-> >index 0dc248d..4eb72b8 100644
-> >--- a/arch/arm/boot/dts/am437x-gp-evm.dts
-> >+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-> >@@ -13,6 +13,7 @@
-> >  #include "am4372.dtsi"
-> >  #include<dt-bindings/pinctrl/am43xx.h>
-> >  #include<dt-bindings/pwm/pwm.h>
-> >+#include<dt-bindings/gpio/gpio.h>
-> >
-> >  / {
-> >  	model =3D "TI AM437x GP EVM";
-> >@@ -24,6 +25,26 @@
-> >  		brightness-levels =3D<0 51 53 56 62 75 101 152 255>;
-> >  		default-brightness-level =3D<8>;
-> >  	};
-> >+
-> >+	matrix_keypad: matrix_keypad@0 {
-> >+		compatible =3D "gpio-matrix-keypad";
-> >+		debounce-delay-ms =3D<5>;
-> >+		col-scan-delay-us =3D<2>;
-> >+
-> >+		row-gpios =3D<&gpio3 21 GPIO_ACTIVE_HIGH /* Bank3, pin21 */
-> >+				&gpio4 3 GPIO_ACTIVE_HIGH /* Bank4, pin3 */
-> >+				&gpio4 2 GPIO_ACTIVE_HIGH>; /* Bank4, pin2 */
-> >+
-> >+		col-gpios =3D<&gpio3 19 GPIO_ACTIVE_HIGH /* Bank3, pin19 */
-> >+				&gpio3 20 GPIO_ACTIVE_HIGH>; /* Bank3, pin20 */
-> >+
-> >+		linux,keymap =3D<0x00000201      /* P1 */
-> >+				0x00010202      /* P2 */
-> >+				0x01000067      /* UP */
-> >+				0x0101006a      /* RIGHT */
-> >+				0x02000069      /* LEFT */
-> >+				0x0201006c>;      /* DOWN */
-> >+		};
-> >  };
-> >
-> >  &am43xx_pinmux {
->=20
-> ping on this series, this series is lying for a while.
-> This series is based on your for_3.14 branch.
+Hi again,
 
-Benoit, do you need us to do anything else to get this merged ? Sourav
-already rebased the patches as you requested back in December 19th.
+On Tue, Jan 14, 2014 at 07:10:52AM -0600, Felipe Balbi wrote:
+> > diff --git a/drivers/hwspinlock/omap_hwspinlock.c b/drivers/hwspinlock/=
+omap_hwspinlock.c
+> > index 9f56fb2..194886e 100644
+> > --- a/drivers/hwspinlock/omap_hwspinlock.c
+> > +++ b/drivers/hwspinlock/omap_hwspinlock.c
+> > @@ -101,10 +101,23 @@ static int omap_hwspinlock_probe(struct platform_=
+device *pdev)
+> >  	if (!io_base)
+> >  		return -ENOMEM;
+> > =20
+> > +	/*
+> > +	 * make sure the module is enabled and clocked before reading
+> > +	 * the module SYSSTATUS register
+> > +	 */
+> > +	pm_runtime_enable(&pdev->dev);
+> > +	pm_runtime_get_sync(&pdev->dev);
 
-cheers
+another thing, you need to check return of pm_runtime_get_sync()
 
 --=20
 balbi
 
---FFoLq8A0u+X9iRU8
+--mP3DRpeJDSE+ciuQ
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJS1ThEAAoJEIaOsuA1yqREGqwP/i/IVMoNNh7M4wyfUAQNaPfR
-SiFlAaqtAY4SNs3H+OzlNR5OgEsPgpAvgi0XtuRI9wVeEKcj4yQENNOyiZg1IBxm
-pIdW1GfbGKj59WAM8N9db2QfxOUf8wnrb53MXgMHa/hwyzHHpJUmhyudC8OgBtIW
-7RIuGF1QveERrClSIihOTEaM+TfgjgjHldhUMLT4Ofrflk+T8wwL8CM+JQ4pOLaL
-vMEh248EBtUo7i67kQYH73sOEQimA5yGCO8wiHfXwYkZMywbhaw6kVRQtztX6CbH
-xFsuAWSf7F5ueZI/t85wMq+d62AIquTVM59EJuHF4es3LOfN0+NgQRA1B8S+dOMX
-wwxxnRiYDga2tJ9R14KitJ7piNgUq+v+OI6h5Jw8id8yaBTMU31W4RouEOdjbW+M
-NM3DeciCfH/GVaXRgdM8xxbiDUSU7q4DVBPR3v1tSonh/4kuHjOsaatq7VvgDNZN
-2u9N6VD3/A6vfN4vQqJotVwf2l+rwpUY1RwaiF0otskgI+WWZxnm0cyRNkNmXQSG
-QKYCTobWQlA2/wmTxg2JD0Gwjjl0zxv1HKT10G9/aEqVKpvb6/H/0C8O4B7c720b
-mJQU3rjY1MEPIRDjDqaygHyGAbj7zk8AyRpNXgJqvMwK1ZLXSGHuhss7HEA6IZU/
-BMC33Ni/0uiuVjQVegnn
-=/twJ
+iQIcBAEBAgAGBQJS1UP3AAoJEIaOsuA1yqRElJUP/1F/oueJnqaGY9iM1/c5pe7y
+/nEliOv45s/+Xm+j8G0oau9eN002nbN83btf5t8w89Tbkntp9hR8kuKh1YdgX3NO
+7lgHT1EE4HkyQSsI8+XnBEhZVnIehnbBaExeFu7UIxY/BtA84aZ4qhVQuA2AfTMG
+HlxCCGv+pwIW5xrwiS2WkByNXlD9L72YHmqZHyzl/B4HbYjbcvkfwh1/LN1TCD21
+Kat9RVwAoUPgp7xD61JIO0ig6I+O73HRzW2Xjbj89j9gs1hVLTBEKNElxgg7LhcH
+vsPQhynShlZwNQN2iAQP9MPXVIVpb5ZI2RpWjJS26ai8B2G38sV7q95ILVrkgLTK
+T6wAgnEMjTysE67r544lvzi9QEGaAGYPOnl2M8EBnqVlxLuNh2POwBeTpGJJrQUh
+s5TFG3XD0zj6OVcpusQwrrnF4XUk2FLXxQePkmaPADJTMBnqD5g/QZnl9VfVEj7B
+0ICbmYhzODgKhdQtkIJFdstdwPSL0BmkHKkCLxc68Za34WVYFGbLeVYR/XuUt5U8
+AJKcA7MyC+vg/jKUL13qaYm7KwdmkZRkLtBT/KG90A2jEwygckrWn/pDNT66RjhS
+ukVrLw3TQEd+6Nnp+MRHV+ANJhHMzxtlF3Z97N3seckON7Wrt4SqaOsnwqII+A10
+xMGT+/pN+qjO/X93kwEC
+=tdmP
 -----END PGP SIGNATURE-----
 
---FFoLq8A0u+X9iRU8--
+--mP3DRpeJDSE+ciuQ--
