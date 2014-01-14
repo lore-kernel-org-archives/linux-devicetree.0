@@ -1,66 +1,225 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] ehci-platform: Add support for clks
- and phy passed through devicetree
-Date: Tue, 14 Jan 2014 14:18:08 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1401141413430.1310-100000@iolanthe.rowland.org>
-References: <1389653115-11028-3-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 1/2] dmaengine: add Qualcomm BAM dma driver
+Date: Tue, 14 Jan 2014 11:43:48 -0800
+Message-ID: <20140114194348.GH14405@codeaurora.org>
+References: <1389380874-22753-1-git-send-email-agross@codeaurora.org>
+ <1389380874-22753-2-git-send-email-agross@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBD6LRVPZ6YGRB4M222LAKGQERJG2WZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1389653115-11028-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1389380874-22753-2-git-send-email-agross@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <agross@codeaurora.org>
+Cc: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 13 Jan 2014, Hans de Goede wrote:
+(Mostly nitpicks)
 
-> Currently ehci-platform is only used in combination with devicetree when used
-> with some Via socs. By extending it to (optionally) get clks and a phy from
-> devicetree, and enabling / disabling those on power_on / off, it can be used
-> more generically. Specifically after this commit it can be used for the
-> ehci controller on Allwinner sunxi SoCs.
+On 01/10, Andy Gross wrote:
+> Add the DMA engine driver for the QCOM Bus Access Manager (BAM) DMA controller
+> found in the MSM 8x74 platforms.
 > 
-> Since ehci-platform is intended to handle any generic enough non pci ehci
-> device, add a "usb-ehci" compatibility string.
+> Each BAM DMA device is associated with a specific on-chip peripheral.  Each
+> channel provides a uni-directional data transfer engine that is capable of
+> transferring data between the peripheral and system memory (System mode), or
+> between two peripherals (BAM2BAM).
 > 
-> There already is a usb-ehci device-tree bindings document, update this
-> with clks and phy bindings info.
+> The initial release of this driver only supports slave transfers between
+> peripherals and system memory.
 > 
-> Although actually quite generic so far the via,vt8500 compatibilty string
-> had its own bindings document. Somehow we even ended up with 2 of them. Since
-> these provide no extra information over the generic usb-ehci documentation,
-> this patch removes them.
+> Signed-off-by: Andy Gross <agross@codeaurora.org>
+> ---
+>  drivers/dma/Kconfig        |   9 +
+>  drivers/dma/Makefile       |   1 +
+>  drivers/dma/qcom_bam_dma.c | 843 +++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/dma/qcom_bam_dma.h | 268 ++++++++++++++
+>  4 files changed, 1121 insertions(+)
+>  create mode 100644 drivers/dma/qcom_bam_dma.c
+>  create mode 100644 drivers/dma/qcom_bam_dma.h
 > 
-> The ehci-ppc-of.c driver also claims the usb-ehci compatibility string,
-> even though it mostly is ibm,usb-ehci-440epx specific. ehci-platform.c is
-> not needed on ppc platforms, so add a !PPC_OF dependency to it to avoid
-> 2 drivers claiming the same compatibility string getting build on ppc.
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> index c823daa..e58e6d2 100644
+> --- a/drivers/dma/Kconfig
+> +++ b/drivers/dma/Kconfig
+> @@ -384,4 +384,13 @@ config DMATEST
+>  config DMA_ENGINE_RAID
+>  	bool
+>  
+> +config QCOM_BAM_DMA
+> +	tristate "QCOM BAM DMA support"
+> +	depends on ARCH_MSM || COMPILE_TEST
 
-Same comment as the ohci-platform patch.
+I don't think writel_relaxed() is available on every arch, so
+it's possible this will break some random arch that doesn't have
+that function.
 
-Oh, and one other thing I almost missed.  (This applies to both 
-patches.)
-
-> +static int ehci_platform_power_on(struct platform_device *dev)
-> +{
-> +	struct usb_hcd *hcd = platform_get_drvdata(dev);
-> +	struct ehci_platform_priv *priv = hcd_to_ehci_priv(hcd);
-> +	int clk, ret;
+> +	select DMA_ENGINE
+> +	select DMA_VIRTUAL_CHANNELS
+> +	---help---
+> +	  Enable support for the QCOM BAM DMA controller.  This controller
+> +	  provides DMA capabilities for a variety of on-chip devices.
 > +
-> +	for (clk = 0; priv->clks[clk] && clk < EHCI_MAX_CLKS; clk++) {
+>  endif
+> diff --git a/drivers/dma/qcom_bam_dma.c b/drivers/dma/qcom_bam_dma.c
+> new file mode 100644
+> index 0000000..7a84b02
+> --- /dev/null
+> +++ b/drivers/dma/qcom_bam_dma.c
+[...]
+> +static int bam_alloc_chan(struct dma_chan *chan)
+[...]
+> +
+> +	/* Go ahead and initialize the pipe/channel hardware here
+> +	   - Reset the channel to clear internal state of the FIFO
+> +	   - Program in the FIFO address
+> +	   - Configure the irq based on the EE passed in from the DT entry
+> +	   - Set mode, direction and enable channel
+> +
+> +	   We do this here because the channel can only be enabled once and
+> +	   can only be disabled via a reset.  If done here, we don't have to
+> +	   manage additional state to figure out when to do this
+> +	*/
 
-Here and in ehci_platform_remove, you need to check clk < EHCI_MAX_CLKS
-_before_ dereferencing priv->clks[clk].  Yes, it probably won't make
-any difference in real life, but it's still wrong in principle.  In
-fact, this is the sort of thing a static checker might find.
+Multi-line comments are of the form:
 
-Alan Stern
+	/*
+	 * comment
+	 */
+
+> +
+> +	bam_reset_channel(bdev, bchan->id);
+> +
+> +	/* write out 8 byte aligned address.  We have enough space for this
+> +	   because we allocated 1 more descriptor (8 bytes) than we can use */
+> +	writel_relaxed(ALIGN(bchan->fifo_phys, sizeof(struct bam_desc_hw)),
+> +			bdev->regs + BAM_P_DESC_FIFO_ADDR(bchan->id));
+> +	writel_relaxed(BAM_DESC_FIFO_SIZE, bdev->regs +
+> +			BAM_P_FIFO_SIZES(bchan->id));
+[...]
+> +
+> +/**
+> + * bam_dma_terminate_all - terminate all transactions
+> + * @chan: dma channel
+> + *
+> + * Idles channel and dequeues and frees all transactions
+> + * No callbacks are done
+> + *
+> +*/
+
+Weird '*' starting the line here and on the next function.
+
+> +static void bam_dma_terminate_all(struct dma_chan *chan)
+> +{
+> +	struct bam_chan *bchan = to_bam_chan(chan);
+> +	struct bam_device *bdev = bchan->bdev;
+> +
+> +	bam_reset_channel(bdev, bchan->id);
+> +
+> +	vchan_free_chan_resources(&bchan->vc);
+> +}
+> +
+> +/**
+> + * bam_control - DMA device control
+> + * @chan: dma channel
+> + * @cmd: control cmd
+> + * @arg: cmd argument
+> + *
+> + * Perform DMA control command
+> + *
+> +*/
+> +static int bam_control(struct dma_chan *chan, enum dma_ctrl_cmd cmd,
+> +	unsigned long arg)
+> +{
+> +	struct bam_chan *bchan = to_bam_chan(chan);
+> +	struct bam_device *bdev = bchan->bdev;
+> +	int ret = 0;
+> +	unsigned long flag;
+> +
+[...]
+> +/**
+> + * bam_dma_irq - irq handler for bam controller
+> + * @irq: IRQ of interrupt
+> + * @data: callback data
+> + *
+> + * IRQ handler for the bam controller
+> + */
+> +static irqreturn_t bam_dma_irq(int irq, void *data)
+> +{
+> +	struct bam_device *bdev = (struct bam_device *)data;
+
+Unnecessary cast from void.
+
+> +static int bam_dma_probe(struct platform_device *pdev)
+> +{
+[...]
+> +
+> +	irq_res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+> +	if (!irq_res) {
+> +		dev_err(bdev->dev, "irq resource is missing\n");
+> +		return -EINVAL;
+> +	}
+
+Please use platform_get_irq() instead.
+
+> diff --git a/drivers/dma/qcom_bam_dma.h b/drivers/dma/qcom_bam_dma.h
+> new file mode 100644
+> index 0000000..2cb3b5f
+> --- /dev/null
+> +++ b/drivers/dma/qcom_bam_dma.h
+[...]
+> +#define BAM_CNFG_BITS_DEFAULT	(BAM_PIPE_CNFG |	\
+> +			BAM_NO_EXT_P_RST |		\
+> +			BAM_IBC_DISABLE |		\
+> +			BAM_SB_CLK_REQ |		\
+> +			BAM_PSM_CSW_REQ |		\
+> +			BAM_PSM_P_RES |			\
+> +			BAM_AU_P_RES |			\
+> +			BAM_SI_P_RES |			\
+> +			BAM_WB_P_RES |			\
+> +			BAM_WB_BLK_CSW |		\
+> +			BAM_WB_CSW_ACK_IDL |		\
+> +			BAM_WB_RETR_SVPNT |		\
+> +			BAM_WB_DSC_AVL_P_RST |		\
+> +			BAM_REG_P_EN |			\
+> +			BAM_PSM_P_HD_DATA |		\
+> +			BAM_AU_ACCUMED |		\
+> +			BAM_CMD_ENABLE)
+> +
+> +/* PIPE CTRL */
+> +#define	P_EN			BIT(1)
+
+Nit: Weird formatting here?
+
+> +#define P_DIRECTION		BIT(3)
+[...]
+> +
+> +
+> +struct bam_device {
+> +	void __iomem *regs;
+> +	struct device *dev;
+> +	struct dma_device common;
+> +	struct device_dma_parameters dma_parms;
+> +	struct bam_chan *channels;
+
+Maybe this should be a flexible array. It looks like probe might
+need to be rewritten to detect the number of channels from the
+hardware before assigning anything, but it should be possible.
+But it probably doesn't matter.
+
+> +	u32 num_channels;
+> +	u32 num_ees;
+> +	unsigned long enabled_ees;
+> +	int irq;
+
+Is irq used?
+
+> +	struct clk *bamclk;
+> +
+> +	/* dma start transaction tasklet */
+> +	struct tasklet_struct task;
+> +};
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
