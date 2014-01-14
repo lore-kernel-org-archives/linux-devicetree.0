@@ -1,28 +1,74 @@
-From: Seungwon Jeon <tgih.jun@samsung.com>
-Subject: RE: [PATCH 2/2] mmc: dw_mmc: k3: remove clk_table
-Date: Tue, 14 Jan 2014 19:42:19 +0900
-Message-ID: <002b01cf1115$4cdfe240$e69fa6c0$%jun@samsung.com>
-References: <1389604469-8064-1-git-send-email-zhangfei.gao@linaro.org>
- <1389604469-8064-3-git-send-email-zhangfei.gao@linaro.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+Subject: [PATCH v1 0/6] STi reset controller suppport
+Date: Tue, 14 Jan 2014 10:50:13 +0000
+Message-ID: <1389696613-19683-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ks_c_5601-1987
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <1389604469-8064-3-git-send-email-zhangfei.gao@linaro.org>
-Content-language: ko
-Sender: linux-mmc-owner@vger.kernel.org
-To: 'Zhangfei Gao' <zhangfei.gao@linaro.org>, 'Chris Ball' <cjb@laptop.org>, 'Arnd Bergmann' <arnd@arndb.de>, 'Mike Turquette' <mturquette@linaro.org>, 'Jaehoon Chung' <jh80.chung@samsung.com>, 'Haojian Zhuang' <haojian.zhuang@linaro.org>, brooke.wangzhigang@huawei.com
-Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Stuart Menefy <stuart.menefy@st.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, stephen.gallimore@st.com, kernel@stlinux.com, lee.jones@linaro.com, Srinivas Kandagatla <srinivas.kandagatla@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, January 13, 2014, Zhangfei Gao wrote:
-> Remove clk_table and directly use ios->clock as clock source rate.
-> Abstract init clock rate and max clock limitation in clk.c
-> 
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+Hi All,
 
-Acked-by: Seungwon Jeon <tgih.jun@samsung.com>
+This patch series adds reset controller support for STi SOC series STiH415 and
+STiH416. It adds support for both regular reset and soft reset controllers.
+On STi series SOCs reset lines are wired up to system configuration registers.
+
+Patch 01: Adds reset controller based on system configuration registers via
+regmap.
+
+Patch 02, 03: adds STiH415 and STiH416 reset controller drivers.
+
+Patch 04, 05: adds STiH415 and STiH416 soft reset controllers.
+
+The final patch 06 selects reset controller in mach-sti Kconfig.
+
+This reset controller will be used by gmac, i2c and st-ir drivers.
+
+Comments?
 
 Thanks,
-Seungwon Jeon
+srini
+
+Srinivas Kandagatla (2):
+  drivers: reset: stih415: add softreset controller
+  drivers: reset: stih416: add softreset controller
+
+Stephen Gallimore (4):
+  drivers: reset: STi SoC system configuration reset controller support
+  drivers: reset: Reset controller driver for STiH415
+  drivers: reset: Reset controller driver for STiH416
+  ARM: STi: Add reset controller support to mach-sti Kconfig
+
+ .../devicetree/bindings/reset/st,sti-powerdown.txt |   46 +++++
+ .../devicetree/bindings/reset/st,sti-softreset.txt |   45 +++++
+ arch/arm/boot/dts/stih415.dtsi                     |   11 ++
+ arch/arm/boot/dts/stih416.dtsi                     |   11 ++
+ arch/arm/mach-sti/Kconfig                          |    3 +
+ drivers/reset/Kconfig                              |    2 +
+ drivers/reset/Makefile                             |    3 +
+ drivers/reset/sti/Kconfig                          |   15 ++
+ drivers/reset/sti/Makefile                         |    4 +
+ drivers/reset/sti/reset-stih415.c                  |   99 +++++++++++
+ drivers/reset/sti/reset-stih416.c                  |  101 +++++++++++
+ drivers/reset/sti/reset-syscfg.c                   |  186 ++++++++++++++++++++
+ drivers/reset/sti/reset-syscfg.h                   |   69 +++++++
+ .../dt-bindings/reset-controller/stih415-resets.h  |   23 +++
+ .../dt-bindings/reset-controller/stih416-resets.h  |   25 +++
+ 15 files changed, 643 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/reset/st,sti-powerdown.txt
+ create mode 100644 Documentation/devicetree/bindings/reset/st,sti-softreset.txt
+ create mode 100644 drivers/reset/sti/Kconfig
+ create mode 100644 drivers/reset/sti/Makefile
+ create mode 100644 drivers/reset/sti/reset-stih415.c
+ create mode 100644 drivers/reset/sti/reset-stih416.c
+ create mode 100644 drivers/reset/sti/reset-syscfg.c
+ create mode 100644 drivers/reset/sti/reset-syscfg.h
+ create mode 100644 include/dt-bindings/reset-controller/stih415-resets.h
+ create mode 100644 include/dt-bindings/reset-controller/stih416-resets.h
+
+-- 
+1.7.6.5
 
