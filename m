@@ -1,80 +1,40 @@
-From: Benoit Cousson <bcousson@baylibre.com>
-Subject: Re: [PATCHv2 9/9] arm: dts: am43x-gp-evm: Add matrix gpio keys.
-Date: Tue, 14 Jan 2014 15:21:41 +0100
-Message-ID: <52D547F5.2080307@baylibre.com>
-References: <1387456421-21379-1-git-send-email-sourav.poddar@ti.com> <1387456421-21379-10-git-send-email-sourav.poddar@ti.com> <52D417A1.9060007@ti.com> <20140114131444.GD10818@saruman.home>
+From: =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>
+Subject: [PATCH] ARM: dts: imx28-apf28dev: add user button
+Date: Tue, 14 Jan 2014 15:21:27 +0100
+Message-ID: <1389709287-25742-1-git-send-email-sebastien.szymanski@armadeus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140114131444.GD10818@saruman.home>
-Sender: linux-omap-owner@vger.kernel.org
-To: balbi@ti.com, sourav <sourav.poddar@ti.com>
-Cc: devicetree@vger.kernel.org, tony@atomide.com, linux-omap@vger.kernel.org, mark.rutland@arm.com, lokeshvutla@ti.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, Julien Boibessot <julien.boibessot@armadeus.com>, =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe,
-
-On 14/01/2014 14:14, Felipe Balbi wrote:
-> On Mon, Jan 13, 2014 at 10:13:13PM +0530, sourav wrote:
->> Benoit,
->>
->> On Thursday 19 December 2013 06:03 PM, Sourav Poddar wrote:
->>> Add gpio keys node for am43x gp evm.
->>>
->>> Signed-off-by: Sourav Poddar<sourav.poddar@ti.com>
->>> ---
->>>   arch/arm/boot/dts/am437x-gp-evm.dts |   21 +++++++++++++++++++++
->>>   1 file changed, 21 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
->>> index 0dc248d..4eb72b8 100644
->>> --- a/arch/arm/boot/dts/am437x-gp-evm.dts
->>> +++ b/arch/arm/boot/dts/am437x-gp-evm.dts
->>> @@ -13,6 +13,7 @@
->>>   #include "am4372.dtsi"
->>>   #include<dt-bindings/pinctrl/am43xx.h>
->>>   #include<dt-bindings/pwm/pwm.h>
->>> +#include<dt-bindings/gpio/gpio.h>
->>>
->>>   / {
->>>   	model = "TI AM437x GP EVM";
->>> @@ -24,6 +25,26 @@
->>>   		brightness-levels =<0 51 53 56 62 75 101 152 255>;
->>>   		default-brightness-level =<8>;
->>>   	};
->>> +
->>> +	matrix_keypad: matrix_keypad@0 {
->>> +		compatible = "gpio-matrix-keypad";
->>> +		debounce-delay-ms =<5>;
->>> +		col-scan-delay-us =<2>;
->>> +
->>> +		row-gpios =<&gpio3 21 GPIO_ACTIVE_HIGH /* Bank3, pin21 */
->>> +				&gpio4 3 GPIO_ACTIVE_HIGH /* Bank4, pin3 */
->>> +				&gpio4 2 GPIO_ACTIVE_HIGH>; /* Bank4, pin2 */
->>> +
->>> +		col-gpios =<&gpio3 19 GPIO_ACTIVE_HIGH /* Bank3, pin19 */
->>> +				&gpio3 20 GPIO_ACTIVE_HIGH>; /* Bank3, pin20 */
->>> +
->>> +		linux,keymap =<0x00000201      /* P1 */
->>> +				0x00010202      /* P2 */
->>> +				0x01000067      /* UP */
->>> +				0x0101006a      /* RIGHT */
->>> +				0x02000069      /* LEFT */
->>> +				0x0201006c>;      /* DOWN */
->>> +		};
->>>   };
->>>
->>>   &am43xx_pinmux {
->>
->> ping on this series, this series is lying for a while.
->> This series is based on your for_3.14 branch.
->
-> Benoit, do you need us to do anything else to get this merged ? Sourav
-> already rebased the patches as you requested back in December 19th.
-
-Nope, I've just needed more BW. I'll apply it ASAP.
-
-Thanks,
-Benoit
-
+U2lnbmVkLW9mZi1ieTogU8OpYmFzdGllbiBTenltYW5za2kgPHNlYmFzdGllbi5zenltYW5za2lA
+YXJtYWRldXMuY29tPgotLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDI4LWFwZjI4ZGV2LmR0cyB8
+IDExICsrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMTEgaW5zZXJ0aW9ucygrKQoKZGlmZiAt
+LWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDI4LWFwZjI4ZGV2LmR0cyBiL2FyY2gvYXJtL2Jv
+b3QvZHRzL2lteDI4LWFwZjI4ZGV2LmR0cwppbmRleCAzMzRkZWE1Li4yMjFjYWM0IDEwMDY0NAot
+LS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXgyOC1hcGYyOGRldi5kdHMKKysrIGIvYXJjaC9hcm0v
+Ym9vdC9kdHMvaW14MjgtYXBmMjhkZXYuZHRzCkBAIC00OCw2ICs0OCw3IEBACiAJCQkJCQlNWDI4
+X1BBRF9MQ0RfRDIwX19HUElPXzFfMjAKIAkJCQkJCU1YMjhfUEFEX0xDRF9EMjFfX0dQSU9fMV8y
+MQogCQkJCQkJTVgyOF9QQURfTENEX0QyMl9fR1BJT18xXzIyCisJCQkJCQlNWDI4X1BBRF9HUE1J
+X0NFMU5fX0dQSU9fMF8xNwogCQkJCQk+OwogCQkJCQlmc2wsZHJpdmUtc3RyZW5ndGggPSA8TVhT
+X0RSSVZFXzRtQT47CiAJCQkJCWZzbCx2b2x0YWdlID0gPE1YU19WT0xUQUdFX0hJR0g+OwpAQCAt
+MTkzLDQgKzE5NCwxNCBAQAogCQlicmlnaHRuZXNzLWxldmVscyA9IDwwIDQgOCAxNiAzMiA2NCAx
+MjggMjU1PjsKIAkJZGVmYXVsdC1icmlnaHRuZXNzLWxldmVsID0gPDY+OwogCX07CisKKwlncGlv
+LWtleXMgeworCQljb21wYXRpYmxlID0gImdwaW8ta2V5cyI7CisKKwkJdXNlci1idXR0b24gewor
+CQkJbGFiZWwgPSAiVXNlciBidXR0b24iOworCQkJZ3Bpb3MgPSA8JmdwaW8wIDE3IDA+OworCQkJ
+bGludXgsY29kZSA9IDwweDEwMD47CisJCX07CisJfTsKIH07Ci0tIAoxLjguMy4yCgoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5l
+bCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
