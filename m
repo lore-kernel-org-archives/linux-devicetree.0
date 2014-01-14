@@ -1,51 +1,41 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH 3/3] ARM: dts: AM4372: Add hwspinlock node
-Date: Mon, 13 Jan 2014 18:26:47 -0600
-Message-ID: <1389659207-39445-4-git-send-email-s-anna@ti.com>
-References: <1389659207-39445-1-git-send-email-s-anna@ti.com>
+From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: [PATCH v2 0/2] Qualcomm Universal Peripheral (QUP) I2C controller
+Date: Mon, 13 Jan 2014 16:30:35 -0800
+Message-ID: <1389659437-16406-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1389659207-39445-1-git-send-email-s-anna@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Benoit Cousson <bcousson@baylibre.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, Suman Anna <s-anna@ti.com>, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Martin Schwidefsky <schwidefsky-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org>, James Ralston <james.d.ralston-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Bill Brown <bill.e.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the hwspinlock device tree node for AM43xx family
-of SoCs.
+Picking up Ivans i2c-qup submission from a few months back, as I've now
+tested and corrected some minor things. I also introduced changes based
+on the review of v1.
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
----
- arch/arm/boot/dts/am4372.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+Changes from v1:
+ - Cleaned up device tree binding example.
+ - Refrased device tree bindings.
+ - Following changes in the i2c framework.
+ - Use the core clock to calculate divider for the bus clock, instead of
+   explicitly setting it.
+ - Remove explicit pinctrl settting.
+ - Split/renamed qup_i2c_enable(bool) into enable/disable functions.
+ - Return value was overwritten on error in write_one/read_one.
+ - Initialize the i2c core every time, so that we actually can execute
+   more than 1 transmission per xfer.
 
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index 974d103..81bf21f 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -325,6 +325,13 @@
- 			status = "disabled";
- 		};
- 
-+		hwspinlock: spinlock@480ca000 {
-+			compatible = "ti,omap4-hwspinlock";
-+			reg = <0x480ca000 0x1000>;
-+			ti,hwmods = "spinlock";
-+			#hwlock-cells = <1>;
-+		};
-+
- 		i2c0: i2c@44e0b000 {
- 			compatible = "ti,am4372-i2c","ti,omap4-i2c";
- 			reg = <0x44e0b000 0x1000>;
+Ivan T. Ivanov (2):
+  i2c: qup: Add device tree bindings information
+  i2c: New bus driver for the QUP I2C controller
+
+ .../devicetree/bindings/i2c/qcom,i2c-qup.txt       |  41 +
+ drivers/i2c/busses/Kconfig                         |  10 +
+ drivers/i2c/busses/Makefile                        |   1 +
+ drivers/i2c/busses/i2c-qup.c                       | 897 +++++++++++++++++++++
+ 4 files changed, 949 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt
+ create mode 100644 drivers/i2c/busses/i2c-qup.c
+
 -- 
-1.8.4.3
+1.8.2.2
