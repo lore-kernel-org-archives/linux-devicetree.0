@@ -1,95 +1,55 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH v5 2/4] devicetree: bindings: Document Krait CPU/L1 EDAC
-Date: Tue, 14 Jan 2014 13:30:32 -0800
-Message-ID: <1389735034-21430-3-git-send-email-sboyd@codeaurora.org>
-References: <1389735034-21430-1-git-send-email-sboyd@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1389735034-21430-1-git-send-email-sboyd@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+Subject: [PATCH v5 0/4] Krait L1/L2 EDAC driver
+Date: Tue, 14 Jan 2014 13:30:30 -0800
+Message-ID: <1389735034-21430-1-git-send-email-sboyd@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Borislav Petkov <bp@alien8.de>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Courtney Cavin <courtney.cavin@sonymobile.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Stepan Moskovchenko <stepanm@codeaurora.org>, David Brown <davidb@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The Krait CPU/L1 error reporting device is made up a per-CPU
-interrupt. While we're here, document the next-level-cache
-property that's used by the Krait EDAC driver.
+This patchset adds support for the Krait L1/L2 cache error detection
+hardware. The first patch adds the Krait l2 indirection
+register code. This patch is in need of an ACK from ARM folks.
+The next two patches add the driver and the binding and 
+the final patch hooks it all up by adding the device tree node.
 
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: <devicetree@vger.kernel.org>
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
----
- Documentation/devicetree/bindings/arm/cpus.txt | 52 ++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+I think Boris will pick up the first and third patches since they depend
+on each other. The final dts change could go through arm-soc via davidb's tree
+and the Documentation patch could go through the devicetree tree. Or patches 1
+through 3 can go through Boris' tree.
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index 91304353eea4..c332b5168456 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -191,6 +191,16 @@ nodes to be present and contain the properties described below.
- 			  property identifying a 64-bit zero-initialised
- 			  memory location.
- 
-+	- interrupts
-+		Usage: required for cpus with compatible string "qcom,krait".
-+		Value type: <prop-encoded-array>
-+		Definition: L1/CPU error interrupt
-+
-+	- next-level-cache
-+		Usage: optional
-+		Value type: <phandle>
-+		Definition: phandle pointing to the next level cache
-+
- Example 1 (dual-cluster big.LITTLE system 32-bit):
- 
- 	cpus {
-@@ -382,3 +392,45 @@ cpus {
- 		cpu-release-addr = <0 0x20000000>;
- 	};
- };
-+
-+
-+Example 5 (Krait 32-bit system):
-+
-+cpus {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	interrupts = <1 9 0xf04>;
-+
-+	cpu@0 {
-+		device_type = "cpu";
-+		compatible = "qcom,krait";
-+		reg = <0>;
-+		next-level-cache = <&L2>;
-+	};
-+
-+	cpu@1 {
-+		device_type = "cpu";
-+		compatible = "qcom,krait";
-+		reg = <1>;
-+		next-level-cache = <&L2>;
-+	};
-+
-+	cpu@2 {
-+		device_type = "cpu";
-+		compatible = "qcom,krait";
-+		reg = <2>;
-+		next-level-cache = <&L2>;
-+	};
-+
-+	cpu@3 {
-+		device_type = "cpu";
-+		compatible = "qcom,krait";
-+		reg = <3>;
-+		next-level-cache = <&L2>;
-+	};
-+
-+	L2: l2-cache {
-+		compatible = "cache";
-+		interrupts = <0 2 0x4>;
-+	};
-+};
+Changes since v4:
+ * Prefixed l2 accessors functions with krait_
+ * Dropped first two patches as Boris says he picked them up
+
+Changes since v3:
+ * Fixed l1_irq handler to properly dereference dev_id
+
+Changes since v2:
+ * Picked up acks
+ * s/an/a/ in DT binding
+
+Stephen Boyd (4):
+  ARM: Add Krait L2 register accessor functions
+  devicetree: bindings: Document Krait CPU/L1 EDAC
+  edac: Add support for Krait CPU cache error detection
+  ARM: dts: msm: Add Krait CPU/L2 nodes
+
+ Documentation/devicetree/bindings/arm/cpus.txt |  52 ++++
+ arch/arm/boot/dts/qcom-msm8974.dtsi            |  41 +++
+ arch/arm/common/Kconfig                        |   3 +
+ arch/arm/common/Makefile                       |   1 +
+ arch/arm/common/krait-l2-accessors.c           |  58 +++++
+ arch/arm/include/asm/krait-l2-accessors.h      |  20 ++
+ drivers/edac/Kconfig                           |   8 +
+ drivers/edac/Makefile                          |   2 +
+ drivers/edac/krait_edac.c                      | 346 +++++++++++++++++++++++++
+ 9 files changed, 531 insertions(+)
+ create mode 100644 arch/arm/common/krait-l2-accessors.c
+ create mode 100644 arch/arm/include/asm/krait-l2-accessors.h
+ create mode 100644 drivers/edac/krait_edac.c
+
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 hosted by The Linux Foundation
