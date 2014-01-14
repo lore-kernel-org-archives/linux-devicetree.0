@@ -1,333 +1,127 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv11] ARM: dts: Add support for the cpuimx35 board from
- Eukrea and its baseboard.
-Date: Tue, 14 Jan 2014 10:44:43 +0800
-Message-ID: <20140114024440.GB1896@S2101-09.ap.freescale.net>
-References: <1389622925-21628-1-git-send-email-denis@eukrea.com>
+From: Wei Ni <wni@nvidia.com>
+Subject: Re: [PATCHv9 02/20] thermal: introduce device tree parser
+Date: Tue, 14 Jan 2014 10:54:23 +0800
+Message-ID: <52D4A6DF.806@nvidia.com>
+References: <1384285582-16933-1-git-send-email-eduardo.valentin@ti.com>
+ <1384285582-16933-3-git-send-email-eduardo.valentin@ti.com>
+ <52C4D612.2090808@nvidia.com> <52C5A6CE.5060904@nvidia.com>
+ <20140106135145.GD21906@e106331-lin.cambridge.arm.com>
+ <52CAC3AF.9020401@ti.com> <52CB69FA.9080903@nvidia.com>
+ <52D45AC8.1010607@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1389622925-21628-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Cc: Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <52D45AC8.1010607@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <eduardo.valentin@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthew Longnecker <MLongnecker@nvidia.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "durgadoss.r@intel.com" <durgadoss.r@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 13, 2014 at 03:22:05PM +0100, Denis Carikli wrote:
-> The following devices/functionalities were added:
->  * Main and secondary UARTs.
->  * i2c and the pcf8563 device.
->  * Ethernet.
->  * NAND.
->  * The BP1 button.
->  * The LED.
->  * Watchdog
->  * SD.
->=20
-> Cc: Eric B=E9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
-> ChangeLog v10->v11:
-> - The other patches in this serie have already been applied in the fo=
-r-next branch
->   in Shawn Guo's tree at git://git.linaro.org/people/shawnguo/linux-2=
-=2E6.git :
->     4449d01 ARM i.MX35: build in pinctrl support.
->     cd01fd4 ARM: imx_v6_v7_defconfig: Enable some drivers used on the=
- cpuimx35.
-> - Reordered the Cc list and dropped the Cc to the devicetree binding =
-maintainers.
-> - Moved the pins of the hoggrp inside their respective node, the bp1 =
-and led1 nodes
->   were updated accordingly.
-> - The esdhc1's gpio was fixed: the card detect code will never uses t=
-he gpio "active"
->   high/low setting, instead it uses that GPIO as an IRQ.
-> - Cosmetic fixes in the uart pinctrl nodes.
->=20
-> ChangeLog v9->v10:
-> - Added Fabio Estevam To the Cc list
->=20
-> ChangeLog v8->v9:
-> - Added the dtb target into arch/arm/boot/dts/Makefile.
-> - Added a blank line before the pcf8563 node in the i2c1 node.
-> - Whitespace cleanups as requested by Shawn Guo.
-> - _' was used in label, it's now fixed (it has been replaced with '-'=
-).
-> - The recently introduced defines for input and gpios are now used.
-> - The uarts had the fsl,uart-has-rtscts property set, but they didn't=
- use=20
->   any rts and cts pins in the uart pinctrl nodes.
->=20
-> ChangeLog v7->v8:
-> - The commit message was improved.
-> - The board specific iomuxc pins group configuration that were in imx=
-35.dtsi were moved here.
-> - The rest of the patch was updated accordingly.
->=20
-> ChangeLog v6->v7:
-> - Added Grant Likely in the Cc list.
-> - Shortened the license.
-> - The tsc2007 pads were moved in another patch.
->=20
-> ChangeLog v5->v6:
-> - Shawn Guo was added in the Cc.
-> ---
->  arch/arm/boot/dts/Makefile                         |    1 +
->  arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi       |   59 +++++++++
->  .../boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts  |  137 ++++++++++=
-++++++++++
->  3 files changed, 197 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
->  create mode 100644 arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboar=
-d.dts
->=20
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 059d280..d41edc7 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -143,6 +143,7 @@ dtb-$(CONFIG_ARCH_MXC) +=3D \
->  	imx27-phytec-phycard-s-som.dtb \
->  	imx27-phytec-phycard-s-rdk.dtb \
->  	imx31-bug.dtb \
-> +	imx35-eukrea-mbimxsd35-baseboard.dtb \
->  	imx50-evk.dtb \
->  	imx51-apf51.dtb \
->  	imx51-apf51dev.dtb \
-> diff --git a/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi b/arch/arm/=
-boot/dts/imx35-eukrea-cpuimx35.dtsi
-> new file mode 100644
-> index 0000000..303f789
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
-> @@ -0,0 +1,59 @@
-> +/*
-> + * Copyright 2013 Eukr=E9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version 2
-> + * of the License, or (at your option) any later version.
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include "imx35.dtsi"
-> +
-> +/ {
-> +	model =3D "Eukrea CPUIMX35";
-> +	compatible =3D "eukrea,cpuimx35", "fsl,imx35";
-> +
-> +	memory {
-> +		reg =3D <0x80000000 0x8000000>; /* 128M */
-> +	};
-> +};
-> +
-> +&fec {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_fec>;
-> +	status =3D "okay";
-> +};
-> +
-> +&i2c1 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_i2c1>;
-> +	status =3D "okay";
-> +
-> +	pcf8563@51 {
-> +		compatible =3D "nxp,pcf8563";
-> +		reg =3D <0x51>;
-> +	};
-> +};
-> +
-> +&iomuxc {
-> +	imx35-eukrea {
-> +		pinctrl_fec: fecgrp {
-> +			fsl,pins =3D <MX35_FEC_PINGRP1>;
-> +		};
-> +
-> +		pinctrl_i2c1: i2c1grp {
-> +			fsl,pins =3D <MX35_I2C1_PINGRP1>;
-> +		};
-> +	};
-> +};
-> +
-> +&nfc {
-> +	nand-bus-width =3D <8>;
-> +	nand-ecc-mode =3D "hw";
-> +	nand-on-flash-bbt;
-> +	status =3D "okay";
-> +};
-> diff --git a/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts b=
-/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
-> new file mode 100644
-> index 0000000..833bd1f
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
-> @@ -0,0 +1,137 @@
-> +/*
-> + * Copyright 2013 Eukr=E9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version 2
-> + * of the License, or (at your option) any later version.
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
-> +#include "imx35-eukrea-cpuimx35.dtsi"
-> +
-> +/ {
-> +	model =3D "Eukrea CPUIMX35";
-> +	compatible =3D "eukrea,mbimxsd35-baseboard", "eukrea,cpuimx35", "fs=
-l,imx35";
-> +
-> +	gpio_keys {
-> +		compatible =3D "gpio-keys";
-> +
-> +		bp1 {
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&pinctrl_bp1>;
+On 01/14/2014 05:29 AM, Eduardo Valentin wrote:
+> * PGP Signed by an unknown key
+> 
+> Wei,
+> 
+> On 06-01-2014 22:44, Wei Ni wrote:
+>> On 01/06/2014 10:54 PM, Eduardo Valentin wrote:
+>>>> Old Signed by an unknown key
+>>>
+>>> On 06-01-2014 09:51, Mark Rutland wrote:
+>>>> On Thu, Jan 02, 2014 at 05:50:06PM +0000, Matthew Longnecker wrote:
+>>>>>
+>>>>>> I think the platform driver may set governor for the thermal zone,
+>>>>>> so how about to add a property named as "governor",
+>>>>>> and parse it to tzp->governor_name,
+>>>>>> something like:
+>>>>>>                  ret = of_property_read_string(child, "governor", &str);
+>>>>>>                  if (ret == 0)
+>>>>>>                          if (strlen(str) < THERMAL_NAME_LENGTH)
+>>>>>>                                  strcpy(tzp->governor_name, str);
+>>>>>>
+>>>>>> Thanks.
+>>>>>> Wei.
+>>>>>
+>>>>> DT is supposed to describe the hardware, right? The governor isn't 
+>>>>> hardware -- it's a software control policy. On the other hand, that 
+>>>>> control policy must be tuned according to the behaviors of the platform 
+>>>>> hardware otherwise the system will be unstable.
+>>>>>
+>>>>> Is it appropriate to be naming the governor in DT? If so, is it equally 
+>>>>> appropriate to describe any governor-specific parameters in DT (even 
+>>>>> though they are pure software constructs)?
+>>>>
+>>>> The dt should be relatively static -- if the hardware doesn't change the
+>>>> dt shouldn't have to.
+>>>>
+>>>> The governers are not static. We can introduce new ones and throw away
+>>>> old ones at any time. Tuning parameters can also change at any time.
+>>>>
+>>>> I'd prefer to not have governer details described in the dt, and the
+>>>> choice of governer and configuration of its tuning parameters should be
+>>>> made at runtime somehow.
+>>>
+>>> Agreed.
+>>
+>> Yes, I think so, but the of-thermal driver handle the
+>> thermal_zone_device_register, and pass the "tzp" without governor_name,
+> 
+> In fact, it will fall into the default governor, which is step_wise, by
+> default config.
 
-Shouldn't the pinctrl state be added in the parent node?
+In the thermal_zone_device_register(), it has following codes:
+    if (tz->tzp)
+            tz->governor = __find_governor(tz->tzp->governor_name);
+    else
+            tz->governor = __find_governor(DEFAULT_THERMAL_GOVERNOR);
 
-> +			label =3D "BP1";
-> +			gpios =3D <&gpio3 25 GPIO_ACTIVE_LOW>;
-> +			linux,code =3D <BTN_MISC>;
-> +			gpio-key,wakeup;
-> +			linux,input-type =3D <1>;
-> +		};
-> +	};
-> +
-> +	leds {
-> +		compatible =3D "gpio-leds";
-> +
-> +		led1 {
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&pinctrl_led1>;
+It mean if the tz->tzp is not NULL, and the governor_name is NULL, then
+the __find_governor() will return NULL, so the tz->governor is NULL, it
+can't fall into the default governor. And in the of-thermal driver, it
+call the thermal_zone_device_register(), and pass the "tzp" without
+governor_name.
+I think if we want to change the governor in user space, we need to fix
+this first.
 
-Ditto
+> 
+>> so the created thermal_zone's governor will be NULL, then it can't run
+>> into the governor->throttle() if needed. And currently there have no
+> 
+> Actually, no, the tz will be set to default governor, and its throttle
+> call will be called.
+> 
+>> interface to support updating governor and configuration at runtime.
+>> I think it's better to initialize the governor_name when register the
+>> thermal zone device in the of-thermal driver.
+> 
+> Still, why would you need to change the governor from a in kernel
+> decision? There is an ABI to change the thermal zone policy based on
+> user(land) request. If you need to change the policy from within the
+> kernel, which seams to be what you are trying to propose, you need to
+> explain why you need it, say, by giving at least one user of this API or
+> explaining its use case.
 
-Shawn
+The thermal_zone_device_register() support to set the governor which you
+want, but with the of-thermal framework, it only support to set to
+default governor, if fix above issue. I think the driver which use the
+of-thermal should be able to set to any governors which it want, in its
+initialization. So I add the function thermal_update_governor().
 
-> +			label =3D "led1";
-> +			gpios =3D <&gpio3 29 GPIO_ACTIVE_LOW>;
-> +			linux,default-trigger =3D "heartbeat";
-> +		};
-> +	};
-> +};
-> +
-> +&audmux {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_audmux>;
-> +	status =3D "okay";
-> +};
-> +
-> +&esdhc1 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_esdhc1>;
-> +	cd-gpios =3D <&gpio3 24>;
-> +	status =3D "okay";
-> +};
-> +
-> +&i2c1 {
-> +	tlv320aic23: codec@1a {
-> +		compatible =3D "ti,tlv320aic23";
-> +		reg =3D <0x1a>;
-> +	};
-> +};
-> +
-> +&iomuxc {
-> +	imx35-eukrea {
-> +		pinctrl_audmux: audmuxgrp {
-> +			fsl,pins =3D <MX35_AUDMUX_PINGRP1>;
-> +		};
-> +
-> +		pinctrl_bp1: bp1grp {
-> +			fsl,pins =3D <MX35_PAD_LD19__GPIO3_25  0x80000000>;
-> +		};
-> +
-> +		pinctrl_esdhc1: esdhc1grp {
-> +			fsl,pins =3D <
-> +				  MX35_ESDHC1_PINGRP1
-> +				  MX35_PAD_LD18__GPIO3_24  0x80000000 /* CD */
-> +			>;
-> +		};
-> +
-> +		pinctrl_fec: fecgrp {
-> +			fsl,pins =3D <MX35_FEC_PINGRP1>;
-> +		};
-> +
-> +		pinctrl_i2c1: i2c1grp {
-> +			fsl,pins =3D <MX35_I2C1_PINGRP1>;
-> +		};
-> +
-> +		pinctrl_led1: led1grp {
-> +			fsl,pins =3D <MX35_PAD_LD23__GPIO3_29  0x80000000>;
-> +		};
-> +
-> +		pinctrl_reg_lcd_3v3: reg-lcd-3v3 {
-> +			fsl,pins =3D <MX35_PAD_D3_CLS__GPIO1_4 0x80000000>;
-> +		};
-> +
-> +		pinctrl_uart1: uart1grp {
-> +			fsl,pins =3D <
-> +				MX35_UART1_PINGRP1
-> +				MX35_UART1_RTSCTS_PINGRP1
-> +			>;
-> +		};
-> +
-> +		pinctrl_uart2: uart2grp {
-> +			fsl,pins =3D <
-> +				MX35_UART2_PINGRP1
-> +				MX35_UART2_RTSCTS_PINGRP1
-> +			>;
-> +		};
-> +	};
-> +};
-> +
-> +&ssi1 {
-> +	fsl,mode =3D "i2s-slave";
-> +	status =3D "okay";
-> +};
-> +
-> +&uart1 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_uart1>;
-> +	fsl,uart-has-rtscts;
-> +	status =3D "okay";
-> +};
-> +
-> +&uart2 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_uart2>;
-> +	fsl,uart-has-rtscts;
-> +	status =3D "okay";
-> +};
-> --=20
-> 1.7.9.5
->=20
+> 
+>>
+>> Thanks.
+>>
+>>>
+>>>>
+>>>> Thanks,
+>>>> Mark.
+>>>>
+>>>>
+>>>
+>>>
+>>
+>>
+>>
+> 
+> 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
