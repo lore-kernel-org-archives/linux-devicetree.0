@@ -1,36 +1,61 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v8 3/4] ata: Add APM X-Gene SoC SATA host controller
- driver
-Date: Tue, 14 Jan 2014 11:46:14 -0500
-Message-ID: <20140114164540.GK12131@htj.dyndns.org>
-References: <6EB44142-06DA-4C9D-8999-CFA9EE30E03D@apm.com>
- <20140112114958.GA8509@mtj.dyndns.org>
- <CAPw-ZTmfKfPY3DRfJT6FQP78ULwfcjGG76cNfr9yk7UMdrO4wg@mail.gmail.com>
- <20140113160843.GB29053@htj.dyndns.org>
- <CAPw-ZT=A=c9-3BfP-LoDBXByQqfvATpAdS4NPPWB9+R1+GHfDA@mail.gmail.com>
- <20140114160312.GH12131@htj.dyndns.org>
- <20140114160419.GI12131@htj.dyndns.org>
- <CAPw-ZTmn6JiDku=vz=m9v5MNuFrK_-d0ehU_88drCYGHM8Wv=Q@mail.gmail.com>
- <20140114163008.GJ12131@htj.dyndns.org>
- <CAPw-ZTn7QZkPGLMYkd0m4uS_vC53bOfv-N7M=jUTnzMSVJkMrw@mail.gmail.com>
+From: "Anna, Suman" <s-anna@ti.com>
+Subject: Re: [PATCHv4 7/7] hwspinlock/omap: enable build for AM33xx, AM43xx
+ & DRA7xx
+Date: Tue, 14 Jan 2014 10:51:31 -0600
+Message-ID: <52D56B13.2050409@ti.com>
+References: <1389658764-39199-1-git-send-email-s-anna@ti.com>
+ <1389658764-39199-8-git-send-email-s-anna@ti.com>
+ <20140114131207.GB10818@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPw-ZTn7QZkPGLMYkd0m4uS_vC53bOfv-N7M=jUTnzMSVJkMrw@mail.gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Loc Ho <lho@apm.com>
-Cc: David Milburn <dmilburn@redhat.com>, "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "jcm@redhat.com" <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140114131207.GB10818@saruman.home>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: balbi@ti.com
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 14, 2014 at 08:37:18AM -0800, Loc Ho wrote:
-> This issue has NOT been observed but the design has this issue and
-> observed from verification. As a mean to ensure that this never occur
-> from design itself, this is the workaround and only apply to SATA and
-> SDIO. The SDIO don't need this special flush as discussed in earlier
-> email.
+Felipe,
 
-Urgh... can't say I'm a big fan of this hardware. :(
+On 01/14/2014 07:12 AM, Felipe Balbi wrote:
+> On Mon, Jan 13, 2014 at 06:19:24PM -0600, Suman Anna wrote:
+>> HwSpinlocks are supported on AM33xx, AM43xx and DRA7xx SoC
+>> device families as well. The IPs are identical to that of
+>> OMAP4/OMAP5, except for the number of locks.
+>>
+>> Add a depends on to the above family of SoCs to enable the
+>> build support for OMAP hwspinlock driver for any of the above
+>> SoC configs.
+>>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> ---
+>>   drivers/hwspinlock/Kconfig | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/hwspinlock/Kconfig b/drivers/hwspinlock/Kconfig
+>> index 70637d2..3612cb5 100644
+>> --- a/drivers/hwspinlock/Kconfig
+>> +++ b/drivers/hwspinlock/Kconfig
+>> @@ -10,7 +10,7 @@ menu "Hardware Spinlock drivers"
+>>
+>>   config HWSPINLOCK_OMAP
+>>   	tristate "OMAP Hardware Spinlock device"
+>> -	depends on ARCH_OMAP4 || SOC_OMAP5
+>> +	depends on ARCH_OMAP4 || SOC_OMAP5 || SOC_DRA7XX || SOC_AM33XX || SOC_AM43XX
+>
+> how about just using ARCH_OMAP2PLUS ?
 
--- 
-tejun
+We do not want the driver to build in OMAP2-only and/or OMAP3-only 
+configurations, on which the hwspinlock IP is not even present.
+
+regards
+Suman
