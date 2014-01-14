@@ -1,71 +1,123 @@
-From: Zhang Rui <rui.zhang@intel.com>
-Subject: [PATCH 4/4] OF: introduce OF style 'modalias' support for platform bus.
-Date: Tue, 14 Jan 2014 16:46:38 +0800
-Message-ID: <1389689198-2641-5-git-send-email-rui.zhang@intel.com>
-References: <1389689198-2641-1-git-send-email-rui.zhang@intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1389689198-2641-1-git-send-email-rui.zhang@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org
-Cc: wsa@the-dreams.de, broonie@linaro.org, gregkh@linuxfoundation.org, rafael.j.wysocki@intel.com, grant.likely@linaro.org, rob.herring@calxeda.com, jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com, Zhang Rui <rui.zhang@intel.com>, devicetree@vger.kernel.org
+From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6sl: add keypad support for i.mx6sl-evk
+ board.
+Date: Tue, 14 Jan 2014 16:50:22 +0800
+Message-ID: <20140114085022.GA20128@ubuntu>
+References: <1389685029-17323-1-git-send-email-b20788@freescale.com>
+ <20140114082948.GC1896@S2101-09.ap.freescale.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140114082948.GC1896-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Fix a problem that, the platform bus supports the OF style modalias
-in .uevent() call, but not in its device 'modalias' sysfs attribute.
+On Tue, Jan 14, 2014 at 04:29:50PM +0800, Shawn Guo wrote:
 
-cc: devicetree@vger.kernel.org
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
----
- drivers/base/platform.c   |    4 ++++
- drivers/of/device.c       |    3 +++
- include/linux/of_device.h |    6 ++++++
- 3 files changed, 13 insertions(+)
+OK, I saw this define "#define MATRIX_KEY(row, col, code)"
+in include/dt-bindings/input/input.h, please ignore my first
+reply. Will do it in V2.
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 2f4aea2..bc78848 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -679,6 +679,10 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
- 	struct platform_device	*pdev = to_platform_device(dev);
- 	int len;
- 
-+	len = of_device_get_modalias(dev, buf, PAGE_SIZE -1);
-+	if (len != -ENODEV)
-+		return len;
-+
- 	len = acpi_device_modalias(dev, buf, PAGE_SIZE -1);
- 	if (len != -ENODEV)
- 		return len;
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index f685e55..dafb973 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -85,6 +85,9 @@ ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
- 	int cplen, i;
- 	ssize_t tsize, csize, repend;
- 
-+	if ((!dev) || (!dev->of_node))
-+		return -ENODEV;
-+
- 	/* Name & Type */
- 	csize = snprintf(str, len, "of:N%sT%s", dev->of_node->name,
- 			 dev->of_node->type);
-diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-index 82ce324..8d7dd67 100644
---- a/include/linux/of_device.h
-+++ b/include/linux/of_device.h
-@@ -64,6 +64,12 @@ static inline int of_driver_match_device(struct device *dev,
- static inline void of_device_uevent(struct device *dev,
- 			struct kobj_uevent_env *env) { }
- 
-+static inline int of_device_get_modalias(struct device *dev,
-+				   char *str, ssize_t len)
-+{
-+	return -ENODEV;
-+}
-+
- static inline int of_device_uevent_modalias(struct device *dev,
- 				   struct kobj_uevent_env *env)
- {
--- 
-1.7.9.5
+
+> On Tue, Jan 14, 2014 at 03:37:09PM +0800, Anson Huang wrote:
+> > i.MX6SL EVK board has a 3*3 keypad matrix to support 8 keypads,
+> > enable them, the keymap is as below:
+> > 
+> > SW6:  0x00000067    /* KEY_UP */
+> > SW7:  0x0001006c    /* KEY_DOWN */
+> > SW8:  0x0002001c    /* KEY_ENTER */
+> > SW9:  0x01000066    /* KEY_HOME */
+> > SW10: 0x0101006a    /* KEY_RIGHT */
+> > SW11: 0x01020069    /* KEY_LEFT */
+> > SW12: 0x02000072    /* KEY_VOLUMEDOWN */
+> > SW13: 0x02010073    /* KEY_VOLUMEUP */
+> > 
+> > Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/imx6sl-evk.dts |   27 +++++++++++++++++++++++++++
+> >  arch/arm/boot/dts/imx6sl.dtsi    |    2 ++
+> >  2 files changed, 29 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/imx6sl-evk.dts b/arch/arm/boot/dts/imx6sl-evk.dts
+> > index f5e4513..8d49a10 100644
+> > --- a/arch/arm/boot/dts/imx6sl-evk.dts
+> > +++ b/arch/arm/boot/dts/imx6sl-evk.dts
+> > @@ -93,6 +93,17 @@
+> >  			fsl,pins = <MX6SL_FEC_PINGRP1>;
+> >  		};
+> >  
+> > +		pinctrl_kpp: kppgrp {
+> > +			fsl,pins = <
+> > +				MX6SL_PAD_KEY_ROW0__KEY_ROW0    0x1b010
+> > +				MX6SL_PAD_KEY_ROW1__KEY_ROW1    0x1b010
+> > +				MX6SL_PAD_KEY_ROW2__KEY_ROW2    0x1b0b0
+> > +				MX6SL_PAD_KEY_COL0__KEY_COL0    0x80000000
+> > +				MX6SL_PAD_KEY_COL1__KEY_COL1    0x80000000
+> > +				MX6SL_PAD_KEY_COL2__KEY_COL2    0x80000000
+> 
+> Rather than using whatever the config register gives us, why don't we
+> put a proper pad confg value for COLs just like ROWs?
+> 
+> > +			>;
+> > +		};
+> > +
+> >  		pinctrl_uart1: uart1grp {
+> >  			fsl,pins = <MX6SL_UART1_PINGRP1>;
+> >  		};
+> > @@ -139,6 +150,22 @@
+> >  	};
+> >  };
+> >  
+> > +&kpp {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_kpp>;
+> > +	linux,keymap = <
+> > +			0x00000067    /* KEY_UP */
+> > +			0x0001006c    /* KEY_DOWN */
+> > +			0x0002001c    /* KEY_ENTER */
+> > +			0x01000066    /* KEY_HOME */
+> > +			0x0101006a    /* KEY_RIGHT */
+> > +			0x01020069    /* KEY_LEFT */
+> > +			0x02000072    /* KEY_VOLUMEDOWN */
+> > +			0x02010073    /* KEY_VOLUMEUP */
+> 
+> You can use the macros defined in include/dt-bindings/input/input.h to
+> make them more readable.
+> 
+> Shawn
+> 
+> > +		>;
+> > +	status = "okay";
+> > +};
+> > +
+> >  &uart1 {
+> >  	pinctrl-names = "default";
+> >  	pinctrl-0 = <&pinctrl_uart1>;
+> > diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+> > index a5ef3c3..a449c4f 100644
+> > --- a/arch/arm/boot/dts/imx6sl.dtsi
+> > +++ b/arch/arm/boot/dts/imx6sl.dtsi
+> > @@ -393,8 +393,10 @@
+> >  			};
+> >  
+> >  			kpp: kpp@020b8000 {
+> > +				compatible = "fsl,imx6sl-kpp", "fsl,imx21-kpp";
+> >  				reg = <0x020b8000 0x4000>;
+> >  				interrupts = <0 82 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clocks = <&clks IMX6SL_CLK_DUMMY>;
+> >  			};
+> >  
+> >  			wdog1: wdog@020bc000 {
+> > -- 
+> > 1.7.9.5
+> > 
+> > 
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
