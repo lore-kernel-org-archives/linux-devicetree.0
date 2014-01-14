@@ -1,328 +1,87 @@
-From: <srinivas.kandagatla@st.com>
-Subject: [PATCH v1 4/5] ARM:STi: STiH416: Add interrupt support for pin controller
-Date: Tue, 14 Jan 2014 14:52:27 +0000
-Message-ID: <1389711147-21130-1-git-send-email-srinivas.kandagatla@st.com>
-References: <1389711077-20949-1-git-send-email-srinivas.kandagatla@st.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V2 0/4] misc: xgene: Add support for APM X-Gene SoC Queue
+ Manager/Traffic Manager
+Date: Tue, 14 Jan 2014 16:15:55 +0100
+Message-ID: <201401141615.55820.arnd@arndb.de>
+References: <1387594651-25771-1-git-send-email-rapatel@apm.com>
+ <201401122219.11593.arnd@arndb.de>
+ <CAN1v_Pt9rOGn8zmf+u7MR6-GJPDPswBbuhXu6i=MJVa2mwqNtw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1389711077-20949-1-git-send-email-srinivas.kandagatla@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srinivas.kandagatla@st.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAN1v_Pt9rOGn8zmf+u7MR6-GJPDPswBbuhXu6i=MJVa2mwqNtw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ravi Patel <rapatel@apm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jon Masters <jcm@redhat.com>, Greg KH <gregkh@linuxfoundation.org>, "patches@apm.com" <patches@apm.com>, linux-kernel@vger.kernel.org, Loc Ho <lho@apm.com>, netdev@vger.kernel.org, Keyur Chudgar <kchudgar@apm.com>, davem@davemloft.net, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+On Monday 13 January 2014, Ravi Patel wrote:
+> > Examples for local resource management (I had to think about this
+> > a long time, but probably some of these are wrong) would be
+> > * balancing between multiple non-busmaster devices connected to
+> >   a dma-engine
+> > * distributing incoming ethernet data to the available CPUs based on
+> >   a flow classifier in the MAC, e.g. by IOV MAC address, VLAN tag
+> >   or even individual TCP connection depending on the NIC's capabilities.
+> > * 802.1p flow control for incoming ethernet data based on the amount
+> >   of data queued up between the MAC and the driver
+> > * interrupt mitigation for both inbound data and outbound completion,
+> >   by delaying the IRQ to the OS until multiple messages have arrived
+> >   or a queue specific amount of time has passed.
+> > * controlling the amount of outbound buffer space per flow to minimize
+> >   buffer-bloat between an ethernet driver and the NIC hardware.
+> > * reordering data from outbound flows based on priority.
+> >
+> > This is basically my current interpretation, I hope I got at least
+> > some of it right this time ;-)
+> 
+> You have got them right. Although we have taken Ethernet examples here,
+> most of the local resource management apply to other slave devices also.
 
-This patch adds interrupt support for STiH416 pin controllers.
+I'm very suprised I got all those right, it seems it's a quite sophisticated
+piece of hardware then. I guess most other slave devices only use a subset
+of the capabilities that ethernet wants.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
----
- arch/arm/boot/dts/stih416-pinctrl.dtsi |   81 ++++++++++++++++++++++++++++++++
- 1 files changed, 81 insertions(+), 0 deletions(-)
+Now that I have a better understanding of what the driver is good for and
+how it's used, let's have a look at how we can make it fit into the Linux
+driver APIs and the DT bindings. We don't have anything exactly like this
+yet, but I think the "mailbox" framework is a close enough match that we
+can fit it in there, with some extensions. This framework is still in the
+process of being created (so far there is only a TI OMAP specific driver,
+and one for pl320), and I've not seen any mailboxes that support IRQ
+mitigation or multiple software interfaces per hardware mailbox, but those
+should be easy enough to add.
 
-diff --git a/arch/arm/boot/dts/stih416-pinctrl.dtsi b/arch/arm/boot/dts/stih416-pinctrl.dtsi
-index 74f8cfc..3adbd98 100644
---- a/arch/arm/boot/dts/stih416-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stih416-pinctrl.dtsi
-@@ -8,6 +8,7 @@
-  * publishhed by the Free Software Foundation.
-  */
- #include "st-pincfg.h"
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
- / {
- 
- 	aliases {
-@@ -49,41 +50,57 @@
- 			#size-cells	= <1>;
- 			compatible	= "st,stih416-sbc-pinctrl";
- 			st,syscfg	= <&syscfg_sbc>;
-+			reg 		= <0xfe61f080 0x4>;
-+			reg-names	= "irqmux";
-+			interrupts 	= <GIC_SPI 182 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts-names = "irqmux";
- 			ranges		= <0 0xfe610000 0x6000>;
- 
- 			PIO0: gpio@fe610000 {
- 				gpio-controller;
- 				#gpio-cells = <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0 0x100>;
- 				st,bank-name	= "PIO0";
- 			};
- 			PIO1: gpio@fe611000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x1000 0x100>;
- 				st,bank-name	= "PIO1";
- 			};
- 			PIO2: gpio@fe612000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x2000 0x100>;
- 				st,bank-name	= "PIO2";
- 			};
- 			PIO3: gpio@fe613000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x3000 0x100>;
- 				st,bank-name	= "PIO3";
- 			};
- 			PIO4: gpio@fe614000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x4000 0x100>;
- 				st,bank-name	= "PIO4";
- 			};
- 			PIO40: gpio@fe615000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x5000 0x100>;
- 				st,bank-name	= "PIO40";
- 				st,retime-pin-mask = <0x7f>;
-@@ -181,65 +198,89 @@
- 			#size-cells	= <1>;
- 			compatible	= "st,stih416-front-pinctrl";
- 			st,syscfg	= <&syscfg_front>;
-+			reg 		= <0xfee0f080 0x4>;
-+			reg-names	= "irqmux";
-+			interrupts 	= <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts-names = "irqmux";
- 			ranges		= <0 0xfee00000 0x10000>;
- 
- 			PIO5: gpio@fee00000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0 0x100>;
- 				st,bank-name	= "PIO5";
- 			};
- 			PIO6: gpio@fee01000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x1000 0x100>;
- 				st,bank-name	= "PIO6";
- 			};
- 			PIO7: gpio@fee02000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x2000 0x100>;
- 				st,bank-name	= "PIO7";
- 			};
- 			PIO8: gpio@fee03000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x3000 0x100>;
- 				st,bank-name	= "PIO8";
- 			};
- 			PIO9: gpio@fee04000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x4000 0x100>;
- 				st,bank-name	= "PIO9";
- 			};
- 			PIO10: gpio@fee05000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x5000 0x100>;
- 				st,bank-name	= "PIO10";
- 			};
- 			PIO11: gpio@fee06000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x6000 0x100>;
- 				st,bank-name	= "PIO11";
- 			};
- 			PIO12: gpio@fee07000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x7000 0x100>;
- 				st,bank-name	= "PIO12";
- 			};
- 			PIO30: gpio@fee08000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x8000 0x100>;
- 				st,bank-name	= "PIO30";
- 			};
- 			PIO31: gpio@fee09000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x9000 0x100>;
- 				st,bank-name	= "PIO31";
- 			};
-@@ -276,41 +317,57 @@
- 			#size-cells	= <1>;
- 			compatible	= "st,stih416-rear-pinctrl";
- 			st,syscfg	= <&syscfg_rear>;
-+			reg 		= <0xfe82f080 0x4>;
-+			reg-names	= "irqmux";
-+			interrupts 	= <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts-names = "irqmux";
- 			ranges 		= <0 0xfe820000 0x6000>;
- 
- 			PIO13: gpio@fe820000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0 0x100>;
- 				st,bank-name	= "PIO13";
- 			};
- 			PIO14: gpio@fe821000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x1000 0x100>;
- 				st,bank-name	= "PIO14";
- 			};
- 			PIO15: gpio@fe822000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x2000 0x100>;
- 				st,bank-name	= "PIO15";
- 			};
- 			PIO16: gpio@fe823000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x3000 0x100>;
- 				st,bank-name	= "PIO16";
- 			};
- 			PIO17: gpio@fe824000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x4000 0x100>;
- 				st,bank-name	= "PIO17";
- 			};
- 			PIO18: gpio@fe825000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x5000 0x100>;
- 				st,bank-name	= "PIO18";
- 				st,retime-pin-mask = <0xf>;
-@@ -384,23 +441,33 @@
- 			#size-cells	= <1>;
- 			compatible	= "st,stih416-fvdp-fe-pinctrl";
- 			st,syscfg	= <&syscfg_fvdp_fe>;
-+			reg 		= <0xfd6bf080 0x4>;
-+			reg-names	= "irqmux";
-+			interrupts 	= <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts-names = "irqmux";
- 			ranges		= <0 0xfd6b0000 0x3000>;
- 
- 			PIO100: gpio@fd6b0000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0 0x100>;
- 				st,bank-name	= "PIO100";
- 			};
- 			PIO101: gpio@fd6b1000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x1000 0x100>;
- 				st,bank-name	= "PIO101";
- 			};
- 			PIO102: gpio@fd6b2000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x2000 0x100>;
- 				st,bank-name	= "PIO102";
- 			};
-@@ -411,29 +478,41 @@
- 			#size-cells	= <1>;
- 			compatible	= "st,stih416-fvdp-lite-pinctrl";
- 			st,syscfg		= <&syscfg_fvdp_lite>;
-+			reg 		= <0xfd33f080 0x4>;
-+			reg-names	= "irqmux";
-+			interrupts 	= <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts-names = "irqmux";
- 			ranges			= <0 0xfd330000 0x5000>;
- 
- 			PIO103: gpio@fd330000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0 0x100>;
- 				st,bank-name	= "PIO103";
- 			};
- 			PIO104: gpio@fd331000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x1000 0x100>;
- 				st,bank-name	= "PIO104";
- 			};
- 			PIO105: gpio@fd332000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x2000 0x100>;
- 				st,bank-name	= "PIO105";
- 			};
- 			PIO106: gpio@fd333000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x3000 0x100>;
- 				st,bank-name	= "PIO106";
- 			};
-@@ -441,6 +520,8 @@
- 			PIO107: gpio@fd334000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x4000 0x100>;
- 				st,bank-name	= "PIO107";
- 				st,retime-pin-mask = <0xf>;
--- 
-1.7.6.5
+For the DT binding, I would suggest using something along the lines of
+what we have for clocks, pinctrl and dmaengine. OMAP doesn't use this
+(yet), but now would be a good time to standardize it. The QMTM node
+should define a "#mailbox-cells" property that indicates how many
+32-bit cells a qmtm needs to describe the connection between the
+controller and the slave. My best guess is that this would be hardcoded
+to <3>, using two cells for a 64-bit FIFO bus address, and a 32-bit cell
+for the slave-id signal number. All other parameters that you have in
+the big table in the qmtm driver at the moment can then get moved into
+the slave drivers, as they are constant per type of slave. This will
+simplify the QMTM driver.
+
+In the slave, you should have a "mailboxes" property with a phandle
+to the qmtm followed by the three cells to identify the actual
+queue. If it's possible that a device uses more than one rx and
+one tx queue, we also need a "mailbox-names" property to identify
+the individual queues.
+
+For the in-kernel interfaces, we should probably start a conversation
+with the owners of the mailbox drivers to get a common API, for now
+I'd suggest you just leave it as it is, and only adapt for the new
+binding.
+
+	Arnd
