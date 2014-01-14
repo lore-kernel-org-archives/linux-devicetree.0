@@ -1,69 +1,79 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: [PATCH v4 2/6] spmi: add generic SPMI controller binding
- documentation
-Date: Tue, 14 Jan 2014 12:41:36 -0600
-Message-ID: <fab36e4f391264a81281faeadfd69d51cab32296.1389738151.git.joshc@codeaurora.org>
+From: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v4 5/6] spmi: document the PMIC arbiter SPMI bindings
+Date: Tue, 14 Jan 2014 12:41:39 -0600
+Message-ID: <6dbb1c77001542e093d3af09ea976d402ed24d17.1389738151.git.joshc@codeaurora.org>
 References: <cover.1389738151.git.joshc@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <cover.1389738151.git.joshc@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Sagar Dharia <sdharia@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Michael Bohan <mbohan@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1389738151.git.joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gilad Avidov <gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
+Signed-off-by: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/spmi/spmi.txt | 41 +++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spmi/spmi.txt
+ .../bindings/spmi/qcom,spmi-pmic-arb.txt           | 46 ++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
 
-diff --git a/Documentation/devicetree/bindings/spmi/spmi.txt b/Documentation/devicetree/bindings/spmi/spmi.txt
+diff --git a/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt b/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
 new file mode 100644
-index 0000000..462a42f
+index 0000000..9e50cb3
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/spmi/spmi.txt
-@@ -0,0 +1,41 @@
-+System Power Management Interface (SPMI) Controller
++++ b/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
+@@ -0,0 +1,46 @@
++Qualcomm SPMI Controller (PMIC Arbiter)
 +
-+This document defines a generic set of bindings for use by SPMI controllers.  A
-+controller is modelled in device tree as a node with zero or more child nodes,
-+each representing a unique slave on the bus.
++The SPMI PMIC Arbiter is found on the Snapdragon 800 Series.  It is an SPMI
++controller with wrapping arbitration logic to allow for multiple on-chip
++devices to control a single SPMI master.
++
++The PMIC Arbiter can also act as an interrupt controller, providing interrupts
++to slave devices.
++
++See spmi.txt for the generic SPMI controller binding requirements for child
++nodes.
 +
 +Required properties:
++- compatible : should be "qcom,spmi-pmic-arb".
++- reg-names  : should be "core", "intr", "cnfg"
++- reg : register specifiers, must contain 3 entries, in the follow order:
++     core registers, interrupt controller registers, configuration registers
 +- #address-cells : must be set to 2
 +- #size-cells : must be set to 0
++- qcom,ee : indicates the active Execution Environment identifier (0-5)
++- qcom,channel : which of the PMIC Arb provided channels to use for accesses (0-5)
++- interrupt-controller : indicates the PMIC arbiter is an interrupt controller
++- #interrupt-cells = <4>:  interrupts are specified as a 4-tuple:
++    cell 1: slave ID for the requested interrupt (0-15)
++    cell 2: peripheral ID for requested interrupt (0-255)
++    cell 3: the requested peripheral interrupt (0-7)
++    cell 4: interrupt flags indicating level-sense information, as defined in
++            dt-bindings/interrupt-controller/irq.h
 +
-+Child nodes:
++Example:
 +
-+An SPMI controller node can contain zero or more child nodes representing slave
-+devices on the bus.  Child 'reg' properties are specified as an address, type
-+pair.  The address must be in the range 0-15 (4 bits).  The type must be one of
-+SPMI_USID (0) or SPMI_GSID (1) for Unique Slave ID or Group Slave ID respectively.
-+These are the identifiers "statically assigned by the system integrator", as
-+per the SPMI spec.
-+
-+Each child node must have one and only one 'reg' entry of type SPMI_USID.
-+
-+#include <dt-bindings/spmi/spmi.h>
-+
-+	spmi@.. {
-+		compatible = "...";
-+		reg = <...>;
++	spmi {
++		compatible = "qcom,spmi-pmic-arb";
++		reg-names = "core", "intr", "cnfg";
++		reg = <0xfc4cf000 0x1000>,
++		      <0Xfc4cb000 0x1000>,
++		      <0Xfc4ca000 0x1000>;
++		qcom,ee = <0>;
++		qcom,channel = <0>;
 +
 +		#address-cells = <2>;
-+		#size-cells <0>;
++		#size-cells = <0>;
 +
-+		child@0 {
-+			compatible = "...";
-+			reg = <0 SPMI_USID>;
-+		};
-+
-+		child@7 {
-+			compatible = "...";
-+			reg = <7 SPMI_USID
-+			       3 SPMI_GSID>;
-+		};
++		interrupt-controller;
++		#interrupt-cells = <4>;
 +	};
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 hosted by The Linux Foundation
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
