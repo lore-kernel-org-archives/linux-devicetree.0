@@ -1,106 +1,72 @@
-From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH V2] ARM: dts: imx6sl: add keypad support for i.mx6sl-evk board.
-Date: Tue, 14 Jan 2014 17:23:31 +0800
-Message-ID: <1389691411-25231-1-git-send-email-b20788@freescale.com>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCBWMl0gQVJNOiBkdHM6IGlteDZzbDogYWRkIGtleXBhZCBz?=
+ =?UTF-8?B?dXBwb3J0IGZvciBpLm14NnNsLWV2ayBib2FyZC4=?=
+Date: Tue, 14 Jan 2014 13:27:43 +0400
+Message-ID: <1389691663.16566847@f126.i.mail.ru>
+References: <1389691411-25231-1-git-send-email-b20788@freescale.com>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1389691411-25231-1-git-send-email-b20788@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?QW5zb24gSHVhbmc=?= <b20788@freescale.com>
+Cc: devicetree@vger.kernel.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-i.MX6SL EVK board has a 3*3 keypad matrix to support 8 keypads,
-enable them, the keymap is as below:
-
-SW6:  MATRIX_KEY(0x0, 0x0, 0x67)  /* ROW0, COL0, KEY_UP */
-SW7:  MATRIX_KEY(0x0, 0x1, 0x6c)  /* ROW0, COL1, KEY_DOWN */
-SW8:  MATRIX_KEY(0x0, 0x2, 0x1c)  /* ROW0, COL2, KEY_ENTER */
-SW9:  MATRIX_KEY(0x1, 0x0, 0x66)  /* ROW1, COL0, KEY_HOME */
-SW10: MATRIX_KEY(0x1, 0x1, 0x6a)  /* ROW1, COL1, KEY_RIGHT */
-SW11: MATRIX_KEY(0x1, 0x2, 0x69)  /* ROW1, COL2, KEY_LEFT */
-SW12: MATRIX_KEY(0x2, 0x0, 0x72)  /* ROW2, COL0, KEY_VOLUMEDOWN */
-SW13: MATRIX_KEY(0x2, 0x1, 0x73)  /* ROW2, COL1, KEY_VOLUMEUP */
-
-Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- arch/arm/boot/dts/imx6sl-evk.dts |   28 ++++++++++++++++++++++++++++
- arch/arm/boot/dts/imx6sl.dtsi    |    2 ++
- 2 files changed, 30 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx6sl-evk.dts b/arch/arm/boot/dts/imx6sl-evk.dts
-index f5e4513..a2a0399 100644
---- a/arch/arm/boot/dts/imx6sl-evk.dts
-+++ b/arch/arm/boot/dts/imx6sl-evk.dts
-@@ -8,6 +8,7 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/input/input.h>
- #include "imx6sl.dtsi"
- 
- / {
-@@ -93,6 +94,17 @@
- 			fsl,pins = <MX6SL_FEC_PINGRP1>;
- 		};
- 
-+		pinctrl_kpp: kppgrp {
-+			fsl,pins = <
-+				MX6SL_PAD_KEY_ROW0__KEY_ROW0    0x1b010
-+				MX6SL_PAD_KEY_ROW1__KEY_ROW1    0x1b010
-+				MX6SL_PAD_KEY_ROW2__KEY_ROW2    0x1b0b0
-+				MX6SL_PAD_KEY_COL0__KEY_COL0    0x110b0
-+				MX6SL_PAD_KEY_COL1__KEY_COL1    0x110b0
-+				MX6SL_PAD_KEY_COL2__KEY_COL2    0x110b0
-+			>;
-+		};
-+
- 		pinctrl_uart1: uart1grp {
- 			fsl,pins = <MX6SL_UART1_PINGRP1>;
- 		};
-@@ -139,6 +151,22 @@
- 	};
- };
- 
-+&kpp {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_kpp>;
-+	linux,keymap = <
-+			MATRIX_KEY(0x0, 0x0, 0x67)  /* ROW0, COL0, KEY_UP */
-+			MATRIX_KEY(0x0, 0x1, 0x6c)  /* ROW0, COL1, KEY_DOWN */
-+			MATRIX_KEY(0x0, 0x2, 0x1c)  /* ROW0, COL2, KEY_ENTER */
-+			MATRIX_KEY(0x1, 0x0, 0x66)  /* ROW1, COL0, KEY_HOME */
-+			MATRIX_KEY(0x1, 0x1, 0x6a)  /* ROW1, COL1, KEY_RIGHT */
-+			MATRIX_KEY(0x1, 0x2, 0x69)  /* ROW1, COL2, KEY_LEFT */
-+			MATRIX_KEY(0x2, 0x0, 0x72)  /* ROW2, COL0, KEY_VOLUMEDOWN */
-+			MATRIX_KEY(0x2, 0x1, 0x73)  /* ROW2, COL1, KEY_VOLUMEUP */
-+	>;
-+	status = "okay";
-+};
-+
- &uart1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart1>;
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index a5ef3c3..a449c4f 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -393,8 +393,10 @@
- 			};
- 
- 			kpp: kpp@020b8000 {
-+				compatible = "fsl,imx6sl-kpp", "fsl,imx21-kpp";
- 				reg = <0x020b8000 0x4000>;
- 				interrupts = <0 82 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX6SL_CLK_DUMMY>;
- 			};
- 
- 			wdog1: wdog@020bc000 {
--- 
-1.7.9.5
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+0JLRgtC+0YDQvdC40LosIDE0INGP0L3QstCw0YDRjyAyMDE0LCAxNzoyMyArMDg6MDAg0L7RgiBB
+bnNvbiBIdWFuZyA8YjIwNzg4QGZyZWVzY2FsZS5jb20+Ogo+IGkuTVg2U0wgRVZLIGJvYXJkIGhh
+cyBhIDMqMyBrZXlwYWQgbWF0cml4IHRvIHN1cHBvcnQgOCBrZXlwYWRzLAo+IGVuYWJsZSB0aGVt
+LCB0aGUga2V5bWFwIGlzIGFzIGJlbG93Ogo+IAo+IFNXNjogIE1BVFJJWF9LRVkoMHgwLCAweDAs
+IDB4NjcpICAvKiBST1cwLCBDT0wwLCBLRVlfVVAgKi8KPiBTVzc6ICBNQVRSSVhfS0VZKDB4MCwg
+MHgxLCAweDZjKSAgLyogUk9XMCwgQ09MMSwgS0VZX0RPV04gKi8KPiBTVzg6ICBNQVRSSVhfS0VZ
+KDB4MCwgMHgyLCAweDFjKSAgLyogUk9XMCwgQ09MMiwgS0VZX0VOVEVSICovCj4gU1c5OiAgTUFU
+UklYX0tFWSgweDEsIDB4MCwgMHg2NikgIC8qIFJPVzEsIENPTDAsIEtFWV9IT01FICovCj4gU1cx
+MDogTUFUUklYX0tFWSgweDEsIDB4MSwgMHg2YSkgIC8qIFJPVzEsIENPTDEsIEtFWV9SSUdIVCAq
+Lwo+IFNXMTE6IE1BVFJJWF9LRVkoMHgxLCAweDIsIDB4NjkpICAvKiBST1cxLCBDT0wyLCBLRVlf
+TEVGVCAqLwo+IFNXMTI6IE1BVFJJWF9LRVkoMHgyLCAweDAsIDB4NzIpICAvKiBST1cyLCBDT0ww
+LCBLRVlfVk9MVU1FRE9XTiAqLwo+IFNXMTM6IE1BVFJJWF9LRVkoMHgyLCAweDEsIDB4NzMpICAv
+KiBST1cyLCBDT0wxLCBLRVlfVk9MVU1FVVAgKi8KPiAKPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBI
+dWFuZyA8YjIwNzg4QGZyZWVzY2FsZS5jb20+Cj4gLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lt
+eDZzbC1ldmsuZHRzIHwgICAyOCArKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gIGFyY2gv
+YXJtL2Jvb3QvZHRzL2lteDZzbC5kdHNpICAgIHwgICAgMiArKwo+ICAyIGZpbGVzIGNoYW5nZWQs
+IDMwIGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14
+NnNsLWV2ay5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2c2wtZXZrLmR0cwo+IGluZGV4IGY1
+ZTQ1MTMuLmEyYTAzOTkgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnNsLWV2
+ay5kdHMKPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2c2wtZXZrLmR0cwo+IEBAIC04LDYg
+KzgsNyBAQAo+ICAKPiAgL2R0cy12MS87Cj4gIAo+ICsjaW5jbHVkZSA8ZHQtYmluZGluZ3MvaW5w
+dXQvaW5wdXQuaD4KPiAgI2luY2x1ZGUgImlteDZzbC5kdHNpIgo+ICAKPiAgLyB7Cj4gQEAgLTkz
+LDYgKzk0LDE3IEBACj4gIAkJCWZzbCxwaW5zID0gPE1YNlNMX0ZFQ19QSU5HUlAxPjsKPiAgCQl9
+Owo+ICAKPiArCQlwaW5jdHJsX2twcDoga3BwZ3JwIHsKPiArCQkJZnNsLHBpbnMgPSA8Cj4gKwkJ
+CQlNWDZTTF9QQURfS0VZX1JPVzBfX0tFWV9ST1cwICAgIDB4MWIwMTAKPiArCQkJCU1YNlNMX1BB
+RF9LRVlfUk9XMV9fS0VZX1JPVzEgICAgMHgxYjAxMAo+ICsJCQkJTVg2U0xfUEFEX0tFWV9ST1cy
+X19LRVlfUk9XMiAgICAweDFiMGIwCj4gKwkJCQlNWDZTTF9QQURfS0VZX0NPTDBfX0tFWV9DT0ww
+ICAgIDB4MTEwYjAKPiArCQkJCU1YNlNMX1BBRF9LRVlfQ09MMV9fS0VZX0NPTDEgICAgMHgxMTBi
+MAo+ICsJCQkJTVg2U0xfUEFEX0tFWV9DT0wyX19LRVlfQ09MMiAgICAweDExMGIwCj4gKwkJCT47
+Cj4gKwkJfTsKPiArCj4gIAkJcGluY3RybF91YXJ0MTogdWFydDFncnAgewo+ICAJCQlmc2wscGlu
+cyA9IDxNWDZTTF9VQVJUMV9QSU5HUlAxPjsKPiAgCQl9Owo+IEBAIC0xMzksNiArMTUxLDIyIEBA
+Cj4gIAl9Owo+ICB9Owo+ICAKPiArJmtwcCB7Cj4gKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQi
+Owo+ICsJcGluY3RybC0wID0gPCZwaW5jdHJsX2twcD47Cj4gKwlsaW51eCxrZXltYXAgPSA8Cj4g
+KwkJCU1BVFJJWF9LRVkoMHgwLCAweDAsIDB4NjcpICAvKiBST1cwLCBDT0wwLCBLRVlfVVAgKi8K
+PiArCQkJTUFUUklYX0tFWSgweDAsIDB4MSwgMHg2YykgIC8qIFJPVzAsIENPTDEsIEtFWV9ET1dO
+ICovCj4gKwkJCU1BVFJJWF9LRVkoMHgwLCAweDIsIDB4MWMpICAvKiBST1cwLCBDT0wyLCBLRVlf
+RU5URVIgKi8KPiArCQkJTUFUUklYX0tFWSgweDEsIDB4MCwgMHg2NikgIC8qIFJPVzEsIENPTDAs
+IEtFWV9IT01FICovCj4gKwkJCU1BVFJJWF9LRVkoMHgxLCAweDEsIDB4NmEpICAvKiBST1cxLCBD
+T0wxLCBLRVlfUklHSFQgKi8KPiArCQkJTUFUUklYX0tFWSgweDEsIDB4MiwgMHg2OSkgIC8qIFJP
+VzEsIENPTDIsIEtFWV9MRUZUICovCj4gKwkJCU1BVFJJWF9LRVkoMHgyLCAweDAsIDB4NzIpICAv
+KiBST1cyLCBDT0wwLCBLRVlfVk9MVU1FRE9XTiAqLwo+ICsJCQlNQVRSSVhfS0VZKDB4MiwgMHgx
+LCAweDczKSAgLyogUk9XMiwgQ09MMSwgS0VZX1ZPTFVNRVVQICovCj4gKwk+OwoKU28gd2h5IHlv
+dSB3YW50IHRvIHVzZSBoZXhhZGVjaW1hbCB2YWx1ZXMgaW5zdGVhZCBkZWZpbml0aW9ucyBmb3IK
+a2V5cyBmcm9tIGR0LWJpbmRpbmdzL2lucHV0L2lucHV0LmggPwoKLS0tCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGlu
+ZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
+aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
