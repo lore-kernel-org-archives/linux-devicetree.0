@@ -1,94 +1,67 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCHv4 7/7] hwspinlock/omap: enable build for AM33xx, AM43xx &
- DRA7xx
-Date: Tue, 14 Jan 2014 11:29:01 -0600
-Message-ID: <20140114172901.GB27374@saruman.home>
-References: <1389658764-39199-1-git-send-email-s-anna@ti.com>
- <1389658764-39199-8-git-send-email-s-anna@ti.com>
- <20140114131207.GB10818@saruman.home>
- <52D56B13.2050409@ti.com>
-Reply-To: <balbi@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 4/6] ARM: DTS: tegra: add the DFLL IP block to the T114
+ SoC file
+Date: Tue, 14 Jan 2014 10:43:58 -0700
+Message-ID: <52D5775E.9080209@wwwdotorg.org>
+References: <20131219122857.3226.42830.stgit@tamien> <20131219123719.3226.44864.stgit@tamien> <52B389CD.8010004@wwwdotorg.org> <52D4D314.3000208@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="H1spWtNR+x+ondvy"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52D56B13.2050409@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Anna, Suman" <s-anna@ti.com>
-Cc: balbi@ti.com, Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52D4D314.3000208-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---H1spWtNR+x+ondvy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 01/13/2014 11:03 PM, Paul Walmsley wrote:
+> On 12/19/2013 04:05 PM, Stephen Warren wrote:
+>> On 12/19/2013 05:49 AM, Paul Walmsley wrote:
+>>> Add basic DT bindings for the DFLL IP block for the NVIDIA Tegra114 SoC.
+>>> diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra114-dfll.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra114-dfll.txt
 
-On Tue, Jan 14, 2014 at 10:51:31AM -0600, Anna, Suman wrote:
-> Felipe,
->=20
-> On 01/14/2014 07:12 AM, Felipe Balbi wrote:
-> >On Mon, Jan 13, 2014 at 06:19:24PM -0600, Suman Anna wrote:
-> >>HwSpinlocks are supported on AM33xx, AM43xx and DRA7xx SoC
-> >>device families as well. The IPs are identical to that of
-> >>OMAP4/OMAP5, except for the number of locks.
-> >>
-> >>Add a depends on to the above family of SoCs to enable the
-> >>build support for OMAP hwspinlock driver for any of the above
-> >>SoC configs.
-> >>
-> >>Signed-off-by: Suman Anna <s-anna@ti.com>
-> >>---
-> >>  drivers/hwspinlock/Kconfig | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >>diff --git a/drivers/hwspinlock/Kconfig b/drivers/hwspinlock/Kconfig
-> >>index 70637d2..3612cb5 100644
-> >>--- a/drivers/hwspinlock/Kconfig
-> >>+++ b/drivers/hwspinlock/Kconfig
-> >>@@ -10,7 +10,7 @@ menu "Hardware Spinlock drivers"
-> >>
-> >>  config HWSPINLOCK_OMAP
-> >>  	tristate "OMAP Hardware Spinlock device"
-> >>-	depends on ARCH_OMAP4 || SOC_OMAP5
-> >>+	depends on ARCH_OMAP4 || SOC_OMAP5 || SOC_DRA7XX || SOC_AM33XX || SOC=
-_AM43XX
-> >
-> >how about just using ARCH_OMAP2PLUS ?
->=20
-> We do not want the driver to build in OMAP2-only and/or OMAP3-only
-> configurations, on which the hwspinlock IP is not even present.
+>>> +- clock-names : Must contain an array of strings, one per 'clocks'
+>>> +                two-cell array.  The position in the array of these
+>> clock-names defines the set of entries in clocks, not the other way around.
+> 
+> Hmm.  If one refers to the DT clock binding documentation, it lists the
+> 'clock-names' property as optional, and the 'clocks' property as mandatory:
+> 
+> -----
+> 
+> |==Clock consumers==
+> 
+> Required properties:
+> clocks:		List of phandle and clock specifier pairs, one pair
+> 		for each clock input to the device.  Note: if the
+> 		clock provider specifies '0' for #clock-cells, then
+> 		only the phandle portion of the pair will appear.
+> 
+> Optional properties:
+> clock-names:	List of clock input name strings sorted in the same
+> 		order as the clocks property.  Consumers drivers
+> 		will use clock-names to match clock input names
+> 		with clocks specifiers.
+> 
+> -----
+> |
+> 
+> 
+>  https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/clock/clock-bindings.txt#n47
+> 
+> Considering that of_clk_get() doesn't require names, it certainly
+> appears to be the way that the original patch described it (modulo the
+> bit about 'cells'; which has been fixed.)
 
-It won't be enabled by default, will it ? You're just saying that it
-_can_ be enabled. In fact, I would go one step further and use:
+If the binding defines that clock must exist at certain indices in the
+clock property, and clock-names isn't used, then the clocks property
+defines which clocks must exist.
 
-	depends on ARCH_OMAP2PLUS || COMPILE_TEST
+However, if the binding is defining clock names, then the clock-names
+property is the master that defines which clocks exist. In this case,
+the index of entries in the clocks property is undefined by the binding;
+it must simply match the clock-names property, which can be arbitrarily
+ordered by the user.
 
-your choice though ;-)
-
---=20
-balbi
-
---H1spWtNR+x+ondvy
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJS1XPdAAoJEIaOsuA1yqREOiMP/A1Pl6Sluq6jyk+3BcWR9QqM
-Fj2F5V8hW5VCVKYqn8944yUZ/Jhi30rVtGNwcWm/obMOM4Y4o0iCwl4iAT26szjG
-py9Ij2Fvnd8QaT0ytz04to3Sd6VTsB2xWW5PkgUI/yM7aTknBHszXGA0waDT7XXV
-CHWnhXRQ5zSbY7WxXCXELed7Mom/nhSiry0rocJxpVJFq0jnZ+gM+8Bonf6ozn+y
-Q1JathiBrSUzC0hij6md2TJh6i5cUxVtG/wzbw3hqHs06EwqHm/exoJqquiorRIt
-TPimHFGHK97F4OzJ0vTVcrNmIZGwHHBNXZ7CtW92owpRXiJ/UrhVF3NZPkGzKlxu
-7XZwL67NO3jqO8u8a6gaRLdg/sz9884hZXjGmkuv43rLFBB3pSg9HZF+UDYwozqj
-Ly1bnRfFHdTQdRUjmNQRNybh51d8v1x9LhnmHRp9iDqDG+uxhZZJzjjD2M4O9h4T
-21ju2rYyD+0+6xvVjHb/sP91PpnXtzh4RwhU+ZOFCJ/cO3Ly+UmGdlSIL5Zdw3YX
-ezY7tJMkFd+5wgqcvWuYTSp+Lw3ekMQGN08ldJbAKt55LZAcbTe2Ppx+oV8T5ao+
-rPjlEB98FTn+L86YS1urPvQRVLaVDznipdetwI0ZpDV9cx2AG32P2DySK9NaqlDz
-03Vv8bIvJOzEaNNJRGPh
-=FVki
------END PGP SIGNATURE-----
-
---H1spWtNR+x+ondvy--
+Since this is a new binding, we should use the clock-names style to
+ensure easy future backwards-compatible changes.
