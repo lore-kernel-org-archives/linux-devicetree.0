@@ -1,30 +1,59 @@
-From: Kevin Hilman <khilman@linaro.org>
-Subject: Re: [PATCH 1/3] mmc: dw_mmc: use slot-gpio to handle cd pin
-Date: Tue, 14 Jan 2014 07:58:13 -0800
-Message-ID: <CAGa+x85awFYsrU9Gggirpaip3vggtSqu5GinVzss=nfNcp4nww@mail.gmail.com>
-References: <1389278112-7099-1-git-send-email-zhangfei.gao@linaro.org>
-	<1389278112-7099-2-git-send-email-zhangfei.gao@linaro.org>
+From: Dinh Nguyen <dinguyen@altera.com>
+Subject: Re: [PATCH net-next v2 1/2] dts: Add a binding for Synopsys emac
+ max-frame-size
+Date: Tue, 14 Jan 2014 09:57:36 -0600
+Message-ID: <1389715056.10673.9.camel@linux-builds1>
+References: <1389710409-14106-1-git-send-email-vbridgers2013@gmail.com>
+	 <1389710409-14106-2-git-send-email-vbridgers2013@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1389278112-7099-2-git-send-email-zhangfei.gao@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc: Chris Ball <cjb@laptop.org>, Arnd Bergmann <arnd@arndb.de>, Mike Turquette <mturquette@linaro.org>, Rob Herring <robherring2@gmail.com>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Kumar Gala <galak@codeaurora.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, linux-mmc@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Patch Tracking <patches@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Tomasz Figa <tomasz.figa@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1389710409-14106-2-git-send-email-vbridgers2013@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Vince Bridgers <vbridgers2013@gmail.com>
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, peppe.cavallaro@st.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rayagond@vayavyalabs.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 9, 2014 at 6:35 AM, Zhangfei Gao <zhangfei.gao@linaro.org> wrote:
-> Suggested by Jaehoon: Use slot-gpio to handle cd-gpio
-> Add function dw_mci_of_get_cd_gpio to check "cd-gpios" from dts.
-> mmc_gpio_request_cd and mmc_gpio_get_cd are used to handle cd pin
->
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
+On Tue, 2014-01-14 at 08:40 -0600, Vince Bridgers wrote:
+> This change adds a parameter for the Synopsys 10/100/1000
+> stmmac Ethernet driver to configure the maximum frame
+> size supported by the EMAC driver. Synopsys allows the FIFO
+> sizes to be configured when the cores are built for a particular
+> device, but do not provide a way for the driver to read
+> information from the device about the maximum MTU size
+> supported as limited by the device's FIFO size.
+> 
+> Signed-off-by: Vince Bridgers <vbridgers2013@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/net/stmmac.txt |    5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+> index eba0e5e..26a0ba9 100644
+> --- a/Documentation/devicetree/bindings/net/stmmac.txt
+> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
+> @@ -30,6 +30,10 @@ Required properties:
+>  
+>  Optional properties:
+>  - mac-address: 6 bytes, mac address
+> +- snps,max-frame-size:	Maximum frame size permitted. This parameter is useful 
 
-The Samsung Arndale board started failing boot from MMC root tests
-starting with next-20140113 and I bisected it down to this patch.
-Reverting this patch on top of next-20140114 gets Arndale booting
-again from MMC.  Is there some supporting DT data that's missing for
-Arndale?
+I don't think max-frame-size should be a snps-only binding.
 
-Kevin
+Dinh
+> +			since different implementations of the Synopsys MAC may 
+> +			have different FIFO sizes depending on the selections
+> +			made in Synopsys Core Consultant.
+
+
+>  
+>  Examples:
+>  
+> @@ -40,5 +44,6 @@ Examples:
+>  		interrupts = <24 23>;
+>  		interrupt-names = "macirq", "eth_wake_irq";
+>  		mac-address = [000000000000]; /* Filled in by U-Boot */
+> +		snps,max-frame-size = <3800>;
+>  		phy-mode = "gmii";
+>  	};
