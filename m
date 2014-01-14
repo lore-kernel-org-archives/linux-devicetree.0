@@ -1,334 +1,110 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v5 1/2] ohci-platform: Add support for
- devicetree instantiation
-Date: Mon, 13 Jan 2014 23:45:14 +0100
-Message-ID: <1389653115-11028-2-git-send-email-hdegoede@redhat.com>
-References: <1389653115-11028-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: [PATCHv4 0/7] omap hwspinlock dt support
+Date: Mon, 13 Jan 2014 18:19:17 -0600
+Message-ID: <1389658764-39199-1-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBBWZ2GLAKGQEEVZY5FA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1389653115-11028-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for ohci-platform instantiation from devicetree, including
-optionally getting clks and a phy from devicetree, and enabling / disabling
-those on power_on / off.
+Hi,
 
-This should allow using ohci-platform from devicetree in various cases.
-Specifically after this commit it can be used for the ohci controller found
-on Allwinner sunxi SoCs.
+This is an updated series mainly addressing Mark Rutland's comments
+about hwlock specifier being always one-cell. The series adds the
+support for #hwlock-cells property and adds a simple default OF
+translate function.
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- Documentation/devicetree/bindings/usb/usb-ohci.txt |  22 +++
- drivers/usb/host/ohci-platform.c                   | 164 ++++++++++++++++++---
- 2 files changed, 162 insertions(+), 24 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/usb-ohci.txt
+The DTS patches from previous series have already been merged, and
+needs this property to be added. This is handled in a separate series
+that only deals with OMAP hwspinlock DTS patches.
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-ohci.txt b/Documentation/devicetree/bindings/usb/usb-ohci.txt
-new file mode 100644
-index 0000000..f9d6c73
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/usb-ohci.txt
-@@ -0,0 +1,22 @@
-+USB OHCI controllers
-+
-+Required properties:
-+- compatible : "usb-ohci"
-+- reg : ohci controller register range (address and length)
-+- interrupts : ohci controller interrupt
-+
-+Optional properties:
-+- clocks : a list of phandle + clock specifier pairs
-+- phys : phandle + phy specifier pair
-+- phy-names : "usb"
-+
-+Example:
-+
-+	ohci0: ohci@0x01c14400 {
-+		compatible = "allwinner,sun4i-a10-ohci", "usb-ohci";
-+		reg = <0x01c14400 0x100>;
-+		interrupts = <64>;
-+		clocks = <&usb_clk 6>, <&ahb_gates 2>;
-+		phys = <&usbphy 1>;
-+		phy-names = "usb";
-+	};
-diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
-index f351ff5..60e125d 100644
---- a/drivers/usb/host/ohci-platform.c
-+++ b/drivers/usb/host/ohci-platform.c
-@@ -3,6 +3,7 @@
-  *
-  * Copyright 2007 Michael Buesch <m@bues.ch>
-  * Copyright 2011-2012 Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-+ * Copyright 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-  *
-  * Derived from the OCHI-SSB driver
-  * Derived from the OHCI-PCI driver
-@@ -14,11 +15,14 @@
-  * Licensed under the GNU/GPL. See COPYING for details.
-  */
- 
-+#include <linux/clk.h>
-+#include <linux/dma-mapping.h>
- #include <linux/hrtimer.h>
- #include <linux/io.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/err.h>
-+#include <linux/phy/phy.h>
- #include <linux/platform_device.h>
- #include <linux/usb/ohci_pdriver.h>
- #include <linux/usb.h>
-@@ -27,6 +31,13 @@
- #include "ohci.h"
- 
- #define DRIVER_DESC "OHCI generic platform driver"
-+#define OHCI_MAX_CLKS 3
-+#define hcd_to_ohci_priv(h) ((struct ohci_platform_priv *)hcd_to_ohci(h)->priv)
-+
-+struct ohci_platform_priv {
-+	struct clk *clks[OHCI_MAX_CLKS];
-+	struct phy *phy;
-+};
- 
- static const char hcd_name[] = "ohci-platform";
- 
-@@ -48,11 +59,67 @@ static int ohci_platform_reset(struct usb_hcd *hcd)
- 	return ohci_setup(hcd);
- }
- 
-+static int ohci_platform_power_on(struct platform_device *dev)
-+{
-+	struct usb_hcd *hcd = platform_get_drvdata(dev);
-+	struct ohci_platform_priv *priv = hcd_to_ohci_priv(hcd);
-+	int clk, ret;
-+
-+	for (clk = 0; priv->clks[clk] && clk < OHCI_MAX_CLKS; clk++) {
-+		ret = clk_prepare_enable(priv->clks[clk]);
-+		if (ret)
-+			goto err_disable_clks;
-+	}
-+
-+	if (priv->phy) {
-+		ret = phy_init(priv->phy);
-+		if (ret)
-+			goto err_disable_clks;
-+
-+		ret = phy_power_on(priv->phy);
-+		if (ret)
-+			goto err_exit_phy;
-+	}
-+
-+	return 0;
-+
-+err_exit_phy:
-+	phy_exit(priv->phy);
-+err_disable_clks:
-+	while (--clk >= 0)
-+		clk_disable_unprepare(priv->clks[clk]);
-+
-+	return ret;
-+}
-+
-+static void ohci_platform_power_off(struct platform_device *dev)
-+{
-+	struct usb_hcd *hcd = platform_get_drvdata(dev);
-+	struct ohci_platform_priv *priv = hcd_to_ohci_priv(hcd);
-+	int clk;
-+
-+	if (priv->phy) {
-+		phy_power_off(priv->phy);
-+		phy_exit(priv->phy);
-+	}
-+
-+	for (clk = OHCI_MAX_CLKS - 1; clk >= 0; clk--)
-+		if (priv->clks[clk])
-+			clk_disable_unprepare(priv->clks[clk]);
-+}
-+
- static struct hc_driver __read_mostly ohci_platform_hc_driver;
- 
- static const struct ohci_driver_overrides platform_overrides __initconst = {
--	.product_desc =	"Generic Platform OHCI controller",
--	.reset =	ohci_platform_reset,
-+	.product_desc =		"Generic Platform OHCI controller",
-+	.reset =		ohci_platform_reset,
-+	.extra_priv_size =	sizeof(struct ohci_platform_priv),
-+};
-+
-+static struct usb_ohci_pdata ohci_platform_defaults = {
-+	.power_on =		ohci_platform_power_on,
-+	.power_suspend =	ohci_platform_power_off,
-+	.power_off =		ohci_platform_power_off,
- };
- 
- static int ohci_platform_probe(struct platform_device *dev)
-@@ -60,17 +127,23 @@ static int ohci_platform_probe(struct platform_device *dev)
- 	struct usb_hcd *hcd;
- 	struct resource *res_mem;
- 	struct usb_ohci_pdata *pdata = dev_get_platdata(&dev->dev);
--	int irq;
--	int err = -ENOMEM;
--
--	if (!pdata) {
--		WARN_ON(1);
--		return -ENODEV;
--	}
-+	struct ohci_platform_priv *priv;
-+	int clk, irq, err;
- 
- 	if (usb_disabled())
- 		return -ENODEV;
- 
-+	/*
-+	 * Use reasonable defaults so platforms don't have to provide these
-+	 * with DT probing on ARM.
-+	 */
-+	if (!pdata)
-+		pdata = &ohci_platform_defaults;
-+
-+	err = dma_coerce_mask_and_coherent(&dev->dev, DMA_BIT_MASK(32));
-+	if (err)
-+		return err;
-+
- 	irq = platform_get_irq(dev, 0);
- 	if (irq < 0) {
- 		dev_err(&dev->dev, "no irq provided");
-@@ -83,17 +156,40 @@ static int ohci_platform_probe(struct platform_device *dev)
- 		return -ENXIO;
- 	}
- 
-+	hcd = usb_create_hcd(&ohci_platform_hc_driver, &dev->dev,
-+			dev_name(&dev->dev));
-+	if (!hcd)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(dev, hcd);
-+	dev->dev.platform_data = pdata;
-+	priv = hcd_to_ohci_priv(hcd);
-+
-+	if (pdata == &ohci_platform_defaults && dev->dev.of_node) {
-+		priv->phy = devm_phy_get(&dev->dev, "usb");
-+		if (IS_ERR(priv->phy)) {
-+			err = PTR_ERR(priv->phy);
-+			if (err == -EPROBE_DEFER)
-+				goto err_put_hcd;
-+			priv->phy = NULL;
-+		}
-+
-+		for (clk = 0; clk < OHCI_MAX_CLKS; clk++) {
-+			priv->clks[clk] = of_clk_get(dev->dev.of_node, clk);
-+			if (IS_ERR(priv->clks[clk])) {
-+				err = PTR_ERR(priv->clks[clk]);
-+				if (err == -EPROBE_DEFER)
-+					goto err_put_clks;
-+				priv->clks[clk] = NULL;
-+				break;
-+			}
-+		}
-+	}
-+
- 	if (pdata->power_on) {
- 		err = pdata->power_on(dev);
- 		if (err < 0)
--			return err;
--	}
--
--	hcd = usb_create_hcd(&ohci_platform_hc_driver, &dev->dev,
--			dev_name(&dev->dev));
--	if (!hcd) {
--		err = -ENOMEM;
--		goto err_power;
-+			goto err_put_clks;
- 	}
- 
- 	hcd->rsrc_start = res_mem->start;
-@@ -102,21 +198,25 @@ static int ohci_platform_probe(struct platform_device *dev)
- 	hcd->regs = devm_ioremap_resource(&dev->dev, res_mem);
- 	if (IS_ERR(hcd->regs)) {
- 		err = PTR_ERR(hcd->regs);
--		goto err_put_hcd;
-+		goto err_power;
- 	}
- 	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
- 	if (err)
--		goto err_put_hcd;
--
--	platform_set_drvdata(dev, hcd);
-+		goto err_power;
- 
- 	return err;
- 
--err_put_hcd:
--	usb_put_hcd(hcd);
- err_power:
- 	if (pdata->power_off)
- 		pdata->power_off(dev);
-+err_put_clks:
-+	while (--clk >= 0)
-+		clk_put(priv->clks[clk]);
-+err_put_hcd:
-+	if (pdata == &ohci_platform_defaults)
-+		dev->dev.platform_data = NULL;
-+
-+	usb_put_hcd(hcd);
- 
- 	return err;
- }
-@@ -125,13 +225,22 @@ static int ohci_platform_remove(struct platform_device *dev)
- {
- 	struct usb_hcd *hcd = platform_get_drvdata(dev);
- 	struct usb_ohci_pdata *pdata = dev_get_platdata(&dev->dev);
-+	struct ohci_platform_priv *priv = hcd_to_ohci_priv(hcd);
-+	int clk;
- 
- 	usb_remove_hcd(hcd);
--	usb_put_hcd(hcd);
- 
- 	if (pdata->power_off)
- 		pdata->power_off(dev);
- 
-+	for (clk = 0; priv->clks[clk] && clk < OHCI_MAX_CLKS; clk++)
-+		clk_put(priv->clks[clk]);
-+
-+	usb_put_hcd(hcd);
-+
-+	if (pdata == &ohci_platform_defaults)
-+		dev->dev.platform_data = NULL;
-+
- 	return 0;
- }
- 
-@@ -178,6 +287,12 @@ static int ohci_platform_resume(struct device *dev)
- #define ohci_platform_resume	NULL
- #endif /* CONFIG_PM */
- 
-+static const struct of_device_id ohci_platform_ids[] = {
-+	{ .compatible = "usb-ohci", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ohci_platform_ids);
-+
- static const struct platform_device_id ohci_platform_table[] = {
- 	{ "ohci-platform", 0 },
- 	{ }
-@@ -198,6 +313,7 @@ static struct platform_driver ohci_platform_driver = {
- 		.owner	= THIS_MODULE,
- 		.name	= "ohci-platform",
- 		.pm	= &ohci_platform_pm_ops,
-+		.of_match_table = ohci_platform_ids,
- 	}
- };
- 
+The series, along with the DTS patches, is tested on top of v3.13-rc8
+plus Tero's v13 clock DT series and Tony's 3.14 staged branches. The
+validation on OMAP5, DRA7, AM437 requires Tero's series with couple of
+additional base patches for AM43xx. AM43xx functionality needs a hwmod
+fix [1] for creating the associated omap_device as well.
+
+The validation logs on all the applicable OMAP SoCs are at:
+  OMAP4 - http://paste2.org/YJ7ZwG80
+  OMAP5 - http://paste2.org/c6vO96b9
+  DRA7  - http://paste2.org/tHvxN439
+  AM33x - http://paste2.org/AjCv0U4t
+  AM43x - http://paste2.org/2AKIPa55
+
+The kernel with the test patches plus the various pulled in branches
+is here for reference (not for merging)
+https://github.com/sumananna/omap-kernel/commits/hwspinlock/3.13-rc8-v4-test
+
+[1] http://marc.info/?l=linux-omap&m=138939747524820&w=2
+
+Changes new in v4:
+- The DT bindings are split into separate patches, and updated to
+  add comments about #hwlock-cells (Patches 1 & 2)
+- Fixed a registration issue with repeated module installation and
+  removal. (Patch 3)
+- Added a new OF helper to support #hwlock-cells in addition to the
+  previous OF functions (Patch 4). The OMAP adaptation patch is
+  updated to use the default translate function (Patch 5)
+- Updated hwspinlock documentation to adjust for the structure
+  changes and the new api additions. (Patches 3, 4)
+- Added build support for AM335x, AM43xx and DRA7xx (Patch 7)
+- The AM335/AM43x fix patch is unchanged (Patch 6)
+
+v3:
+- Removed the DT property hwlock-base-id and associated OF helper
+- Added changes in core to support requesting a specific hwlock using
+  phandle + args approach
+- Revised both the common and OMAP DT bindings document
+http://marc.info/?l=linux-omap&m=138143992932197&w=2
+
+v2:
+- Added a new common DT binding documentation and OF helpers.
+- Revised OMAP DT parse support to use the new OF helper (Patch2)
+- OMAP5 hwspinlock support including the hwmod entry and DT node
+- Add AM335x support to OMAP hwspinlock driver, including a fix
+  needed in driver given that AM335 spinlock module requires s/w wakeup
+- AM335 DT node for spinlock, and a hwmod change to enable smart-idle
+  for AM335.
+- OMAP4 DT node patch is unchanged
+http://marc.info/?l=linux-omap&m=137944644112727&w=2
+
+v1:
+- Add DT parse support to OMAP hwspinlock driver
+- Add OMAP4 DT node and bindings information
+http://marc.info/?l=linux-omap&m=137823082308009&w=2
+
+Suman Anna (7):
+  Documentation: dt: add common bindings for hwspinlock
+  Documentation: dt: add the omap hwspinlock bindings document
+  hwspinlock/core: maintain a list of registered hwspinlock banks
+  hwspinlock/core: add common OF helpers
+  hwspinlock/omap: add support for dt nodes
+  hwspinlock/omap: enable module before reading SYSSTATUS register
+  hwspinlock/omap: enable build for AM33xx, AM43xx & DRA7xx
+
+ .../devicetree/bindings/hwlock/hwlock.txt          |  52 +++++++
+ .../devicetree/bindings/hwlock/omap-hwspinlock.txt |  24 ++++
+ Documentation/hwspinlock.txt                       |  36 ++++-
+ MAINTAINERS                                        |   1 -
+ arch/arm/mach-omap2/Makefile                       |   3 -
+ arch/arm/mach-omap2/hwspinlock.c                   |  60 --------
+ drivers/hwspinlock/Kconfig                         |   2 +-
+ drivers/hwspinlock/hwspinlock_core.c               | 159 ++++++++++++++++++++-
+ drivers/hwspinlock/hwspinlock_internal.h           |   6 +
+ drivers/hwspinlock/omap_hwspinlock.c               |  39 +++--
+ include/linux/hwspinlock.h                         |  20 ++-
+ 11 files changed, 321 insertions(+), 81 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/hwlock/hwlock.txt
+ create mode 100644 Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
+ delete mode 100644 arch/arm/mach-omap2/hwspinlock.c
+
 -- 
-1.8.4.2
+1.8.4.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
