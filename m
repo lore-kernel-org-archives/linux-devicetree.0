@@ -1,185 +1,201 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv13 00/40] ARM: TI SoC clock DT conversion
-Date: Tue, 14 Jan 2014 14:41:40 +0200
-Message-ID: <52D53084.1070105@ti.com>
-References: <1389276051-1326-1-git-send-email-t-kristo@ti.com> <52CF12FB.6000602@ti.com> <20140109231513.GA11648@saruman.home> <52CFC2F1.706@ti.com> <20140110161352.GG6665@saruman.home> <52D02037.3090705@ti.com> <20140110185110.GM31323@atomide.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH v2 2/2] i2c: New bus driver for the QUP I2C controller
+Date: Tue, 14 Jan 2014 15:03:00 +0200
+Message-ID: <1389704580.2794.17.camel@iivanov-dev.int.mm-sol.com>
+References: <1389659437-16406-1-git-send-email-bjorn.andersson@sonymobile.com>
+	 <1389659437-16406-3-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140110185110.GM31323@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: balbi@ti.com, Nishanth Menon <nm@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, rnayak@ti.com, bcousson@baylibre.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1389659437-16406-3-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, Jean Delvare <khali@linux-fr.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, James Ralston <james.d.ralston@intel.com>, Bill Brown <bill.e.brown@intel.com>, Matt Porter <matt.porter@linaro.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/10/2014 08:51 PM, Tony Lindgren wrote:
-> * Tero Kristo <t-kristo@ti.com> [140110 08:32]:
->> On 01/10/2014 06:13 PM, Felipe Balbi wrote:
->>> On Fri, Jan 10, 2014 at 11:52:49AM +0200, Tero Kristo wrote:
->>>> On 01/10/2014 01:15 AM, Felipe Balbi wrote:
->>>>> On Thu, Jan 09, 2014 at 03:22:03PM -0600, Nishanth Menon wrote:
->>>>>>
->>>>>> conflicts with be changes on Tony's be branch.
->>>>>> commit 80f304dd2360cf5d50953c4eb4e902536f6a1263
->>>>>>      ARM: OMAP2+: raw read and write endian fix
->>>>>>
->>>>>> Conflict:
->>>>>> arch/arm/mach-omap2/clkt_clksel.c
->>>>>> arch/arm/mach-omap2/clkt_dpll.c
->>>>>> arch/arm/mach-omap2/clkt_iclk.c
->>>>>> arch/arm/mach-omap2/clock.c
->>>>>> arch/arm/mach-omap2/clock36xx.c
->>>>>> arch/arm/mach-omap2/dpll3xxx.c
->>>>>> arch/arm/mach-omap2/dpll44xx.c
->>>>>>
->>>>>> Both change raw_readls -> should now be just clk api instead which
->>>>>> already does readl_relaxed etc.. If Tony feels like, then we should
->>>>>> probably post a branch based on 'be' branch for easy merge.
->
-> This should be a trivial merge conflict to handle, so let's not base
-> things on the BE changes.
->
->>>> I think all of these fails are caused by the initially bugged
->>>> Makefile + Kconfig under mach-omap2. Seems like they can be fixed by
->>>> the patches I inlined at the end (will also post them as proper
->>>> patches to l-o list after this.) The question is, should Mike go
->>>> ahead and merge these along with the base clk patches or how should
->>>> we handle them? Patch 1 must be merged, patch 2 is a nice to have one
->>>> which allows DRA7 only builds (doing DRA7 only build currently seems
->>>> not possible.)
->>>
->>> If it's OK with Tony, I would suggest having a branch with both patches
->>> below which both Tony and Mike merge before merging CCF series. That way
->>> we avoid bisection problems.
->
-> I can queue those two separately as fixes.
->
->> That reminds me, I think the baseline branch for the mach-omap2
->> patches is still somewhat unclear to me, what should be used for
->> this? And which patches should be put there (the mach-omap2 patches
->> depend on the drivers/clk/ti part basically, so I need to put at
->> least those there also.)
->
-> I would keep the clock patches against some mainline -rc commit if
-> possible, and if there are non trivial merge conflicts, the omap
-> to use as the base is commit adfe9361b236154215d4b0fc8b6d79995394b15c.
->
-> In any case, it's probably best that Mike merges this all via his
-> clock tree unless there non-trivial merge conflicts.
->
 
-I just pushed a branch against rc7 with makefile fixes in place to fix 
-omap1 and omap2 only builds for this stuff. Inlined the delta here at 
-the end. Do you want me to repost the series as v14 for this or is the 
-attached delta ok for review purposes? All the changes have been 
-squashed to existing patches (except the 2 patches I posted separately 
-for DRA7xx / AM43xx only builds.)
+Hi Bjorn, 
 
-The test branch itself can be found here:
+Just two comments.
 
-tree: https://github.com/t-kristo/linux-pm.git
-branch: 3.13-rc7-dt-clks-v13-build-fixes
+On Mon, 2014-01-13 at 16:30 -0800, Bjorn Andersson wrote: 
+> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+> 
+> This bus driver supports the QUP i2c hardware controller in the Qualcomm
+> MSM SOCs.  The Qualcomm Universal Peripheral Engine (QUP) is a general
+> purpose data path engine with input/output FIFOs and an embedded i2c
+> mini-core. The driver supports FIFO mode (for low bandwidth	applications)
+> and block mode (interrupt generated for each block-size data transfer).
+> The driver currently does not support DMA transfers.
+> 
+> Shamelessly based on codeaurora version of the driver.
+> 
+> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+> [bjorn: updated to reflect i2c framework changes
+>         splited up qup_i2c_enable() in enable/disable
+>         don't overwrite ret value on error in xfer functions
+>         initilize core for each transfer
+>         remove explicit pinctrl selection
+>         use existing clock instead of setting new core clock]
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> ---
 
-Felipe, care to run your randconfig magic for this?
+<snip>
 
--Tero
+> +
+> +static int qup_i2c_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *node = pdev->dev.of_node;
+> +	struct qup_i2c_dev *qup;
+> +	struct resource *res;
+> +	u32 val, io_mode, hw_ver, size;
+> +	int ret, fs_div, hs_div;
+> +	int src_clk_freq;
+> +
+> +	qup = devm_kzalloc(&pdev->dev, sizeof(*qup), GFP_KERNEL);
+> +	if (!qup)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, qup);
+> +
+> +	ret = of_alias_get_id(node, "i2c");
+> +	if (ret >= 0)
+> +		pdev->id = ret;
 
-----------------
-diff --git a/arch/arm/mach-omap2/Kconfig b/arch/arm/mach-omap2/Kconfig
-index dc21df1..e65948a 100644
---- a/arch/arm/mach-omap2/Kconfig
-+++ b/arch/arm/mach-omap2/Kconfig
-@@ -76,6 +76,16 @@ config SOC_AM43XX
-  	select ARM_GIC
-  	select MACH_OMAP_GENERIC
+This is part of the i2c_add_adapter() and have to be dropped.
 
-+config SOC_DRA7XX
-+	bool "TI DRA7XX"
-+	depends on ARCH_MULTI_V7
-+	select ARCH_OMAP2PLUS
-+	select ARM_CPU_SUSPEND if PM
-+	select ARM_GIC
-+	select CPU_V7
-+	select HAVE_SMP
-+	select HAVE_ARM_ARCH_TIMER
-+
-  config ARCH_OMAP2PLUS
-  	bool
-  	select ARCH_HAS_BANDGAP
-@@ -128,14 +138,6 @@ config SOC_HAS_REALTIME_COUNTER
-  	depends on SOC_OMAP5 || SOC_DRA7XX
-  	default y
+> +
+> +	qup->dev = &pdev->dev;
+> +
+> +	qup->clk_freq = 100000;
+> +	if (!of_property_read_u32(node, "clock-frequency", &val))
+> +		qup->clk_freq = val;
+> +
+> +	/* We support frequencies up to FAST Mode(400KHz) */
+> +	if (qup->clk_freq <= 0 || qup->clk_freq > 400000) {
+> +		dev_err(qup->dev, "clock frequency not supported %d\n",
+> +			qup->clk_freq);
+> +		return -EIO;
+> +	}
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	qup->base = devm_ioremap_resource(qup->dev, res);
+> +	if (IS_ERR(qup->base))
+> +		return PTR_ERR(qup->base);
+> +
+> +	qup->irq = platform_get_irq(pdev, 0);
+> +	if (qup->irq < 0) {
+> +		dev_err(qup->dev, "No IRQ defined\n");
+> +		return qup->irq;
+> +	}
+> +
+> +	qup->clk = devm_clk_get(qup->dev, "core");
+> +	if (IS_ERR(qup->clk)) {
+> +		dev_err(qup->dev, "Could not get core clock\n");
+> +		return PTR_ERR(qup->clk);
+> +	}
+> +
+> +	qup->pclk = devm_clk_get(qup->dev, "iface");
+> +	if (IS_ERR(qup->pclk)) {
+> +		dev_err(qup->dev, "Could not get iface clock\n");
+> +		return PTR_ERR(qup->pclk);
+> +	}
+> +
+> +	init_completion(&qup->xfer);
+> +
+> +	qup_i2c_enable_clocks(qup);
+> +
+> +	/*
+> +	 * Bootloaders might leave a pending interrupt on certain QUP's,
+> +	 * so we reset the core before registering for interrupts.
+> +	 */
+> +	writel(1, qup->base + QUP_SW_RESET);
+> +	ret = qup_i2c_poll_state(qup, 0, true);
+> +	if (ret)
+> +		goto fail;
+> +
+> +	ret = devm_request_irq(qup->dev, qup->irq, qup_i2c_interrupt,
+> +			       IRQF_TRIGGER_HIGH, "i2c_qup", qup);
+> +	if (ret) {
+> +		dev_err(qup->dev, "Request %d IRQ failed\n", qup->irq);
+> +		goto fail;
+> +	}
+> +	disable_irq(qup->irq);
+> +
+> +	hw_ver = readl(qup->base + QUP_HW_VERSION);
+> +	dev_dbg(qup->dev, "%d Revision %x\n", pdev->id, hw_ver);
+> +
+> +	src_clk_freq = clk_get_rate(qup->clk);
+> +	fs_div = ((src_clk_freq / qup->clk_freq) / 2) - 3;
+> +	hs_div = 3;
+> +	qup->clk_ctl = (hs_div << 8) | (fs_div & 0xff);
+> +	qup->one_bit_t = (USEC_PER_SEC / qup->clk_freq) + 1;
+> +
+> +	io_mode = readl(qup->base + QUP_IO_MODE);
+> +
+> +	size = QUP_OUTPUT_BLOCK_SIZE(io_mode);
+> +	if (size)
+> +		qup->out_blk_sz = size * 16;
+> +	else
+> +		qup->out_blk_sz = 16;
+> +
+> +	size = QUP_INPUT_BLOCK_SIZE(io_mode);
+> +	if (size)
+> +		qup->in_blk_sz = size * 16;
+> +	else
+> +		qup->in_blk_sz = 16;
+> +
+> +	qup->xfer_time = msecs_to_jiffies(qup->out_fifo_sz);
+> +
+> +	/*
+> +	 * The block/fifo size w.r.t. 'actual data' is 1/2 due to 'tag'
+> +	 * associated with each byte written/received
+> +	 */
+> +	qup->out_blk_sz /= 2;
+> +	qup->in_blk_sz /= 2;
+> +
+> +	size = QUP_OUTPUT_FIFO_SIZE(io_mode);
+> +	qup->out_fifo_sz = qup->out_blk_sz * (2 << size);
+> +
+> +	size = QUP_INPUT_FIFO_SIZE(io_mode);
+> +	qup->in_fifo_sz = qup->in_blk_sz * (2 << size);
+> +
+> +	/*
+> +	 * Wait for FIFO number of bytes to be absolutely sure
+> +	 * that I2C write state machine is not idle. Each byte
+> +	 * takes 9 clock cycles. (8 bits + 1 ack)
+> +	 */
+> +	qup->wait_idle = qup->one_bit_t * 9;
+> +	qup->wait_idle *= qup->out_fifo_sz;
+> +
+> +	dev_info(qup->dev, "IN:block:%d, fifo:%d, OUT:block:%d, fifo:%d\n",
+> +		qup->in_blk_sz, qup->in_fifo_sz,
+> +		qup->out_blk_sz, qup->out_fifo_sz);
 
--config SOC_DRA7XX
--	bool "TI DRA7XX"
--	select ARM_ARCH_TIMER
--	select CPU_V7
--	select ARM_GIC
--	select HAVE_SMP
--	select COMMON_CLK
--
-  comment "OMAP Core Type"
-  	depends on ARCH_OMAP2
+This could be lowered to dbg, I think.
 
-diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
-index 088305f..8ebe9f3 100644
---- a/arch/arm/mach-omap2/Makefile
-+++ b/arch/arm/mach-omap2/Makefile
-@@ -132,6 +132,7 @@ obj-$(CONFIG_SOC_AM33XX)		+= $(voltagedomain-common)
-  obj-$(CONFIG_SOC_AM43XX)		+= $(voltagedomain-common)
-  obj-$(CONFIG_SOC_OMAP5)			+= $(voltagedomain-common)
-  obj-$(CONFIG_SOC_OMAP5)                += voltagedomains54xx_data.o
-+obj-$(CONFIG_SOC_DRA7XX)		+= $(voltagedomain-common)
+> +
+> +	i2c_set_adapdata(&qup->adap, qup);
+> +	qup->adap.algo = &qup_i2c_algo;
+> +	qup->adap.nr = pdev->id;
+> +	qup->adap.dev.parent = qup->dev;
+> +	qup->adap.dev.of_node = pdev->dev.of_node;
+> +	strlcpy(qup->adap.name, "QUP I2C adapter", sizeof(qup->adap.name));
+> +
+> +	ret = i2c_add_numbered_adapter(&qup->adap);
+> +	if (!ret) {
+> +		pm_runtime_set_autosuspend_delay(qup->dev, MSEC_PER_SEC);
+> +		pm_runtime_use_autosuspend(qup->dev);
+> +		pm_runtime_enable(qup->dev);
+> +		return 0;
+> +	}
+> +fail:
+> +	qup_i2c_disable_clocks(qup);
+> +	return ret;
+> +}
+> +
 
-  # OMAP powerdomain framework
-  powerdomain-common			+= powerdomain.o powerdomain-common.o
-@@ -191,6 +192,9 @@ obj-$(CONFIG_ARCH_OMAP4)		+= dpll3xxx.o dpll44xx.o
-  obj-$(CONFIG_SOC_AM33XX)		+= $(clock-common) dpll3xxx.o
-  obj-$(CONFIG_SOC_OMAP5)			+= $(clock-common)
-  obj-$(CONFIG_SOC_OMAP5)			+= dpll3xxx.o dpll44xx.o
-+obj-$(CONFIG_SOC_DRA7XX)		+= $(clock-common)
-+obj-$(CONFIG_SOC_DRA7XX)		+= dpll3xxx.o dpll44xx.o
-+obj-$(CONFIG_SOC_AM43XX)		+= $(clock-common) dpll3xxx.o
-
-  # OMAP2 clock rate set data (old "OPP" data)
-  obj-$(CONFIG_SOC_OMAP2420)		+= opp2420_data.o
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index c61f768..41bd909 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -35,7 +35,7 @@ obj-$(CONFIG_ARCH_TEGRA)	+= tegra/
-  obj-$(CONFIG_PLAT_SAMSUNG)	+= samsung/
-  obj-$(CONFIG_COMMON_CLK_XGENE)  += clk-xgene.o
-  obj-$(CONFIG_COMMON_CLK_KEYSTONE)	+= keystone/
--obj-$(CONFIG_ARCH_OMAP)		+= ti/
-+obj-$(CONFIG_ARCH_OMAP2PLUS)	+= ti/
-
-  obj-$(CONFIG_X86)		+= x86/
-
-diff --git a/drivers/clk/ti/Makefile b/drivers/clk/ti/Makefile
-index 007c3c2..4319d40 100644
---- a/drivers/clk/ti/Makefile
-+++ b/drivers/clk/ti/Makefile
-@@ -1,10 +1,11 @@
-  ifneq ($(CONFIG_OF),)
--obj-y					+= clk.o dpll.o autoidle.o divider.o \
--					   fixed-factor.o gate.o clockdomain.o \
--					   composite.o mux.o apll.o clk-43xx.o
--obj-$(CONFIG_SOC_AM33XX)		+= clk-33xx.o
--obj-$(CONFIG_ARCH_OMAP3)		+= interface.o clk-3xxx.o
--obj-$(CONFIG_ARCH_OMAP4)		+= clk-44xx.o
--obj-$(CONFIG_SOC_OMAP5)			+= clk-54xx.o
--obj-$(CONFIG_SOC_DRA7XX)		+= clk-7xx.o
-+obj-y					+= clk.o autoidle.o clockdomain.o
-+clk-common				= dpll.o composite.o divider.o gate.o \
-+					  fixed-factor.o mux.o apll.o
-+obj-$(CONFIG_SOC_AM33XX)		+= $(clk-common) clk-33xx.o
-+obj-$(CONFIG_ARCH_OMAP3)		+= $(clk-common) interface.o clk-3xxx.o
-+obj-$(CONFIG_ARCH_OMAP4)		+= $(clk-common) clk-44xx.o
-+obj-$(CONFIG_SOC_OMAP5)			+= $(clk-common) clk-54xx.o
-+obj-$(CONFIG_SOC_DRA7XX)		+= $(clk-common) clk-7xx.o
-+obj-$(CONFIG_SOC_AM43XX)		+= $(clk-common) clk-43xx.o
-  endif
-
+Thanks, 
+Ivan
 
