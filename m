@@ -1,225 +1,81 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 1/2] dmaengine: add Qualcomm BAM dma driver
-Date: Tue, 14 Jan 2014 11:43:48 -0800
-Message-ID: <20140114194348.GH14405@codeaurora.org>
-References: <1389380874-22753-1-git-send-email-agross@codeaurora.org>
- <1389380874-22753-2-git-send-email-agross@codeaurora.org>
+From: Ben Hutchings <bhutchings@solarflare.com>
+Subject: Re: [PATCH net-next v3 2/2] stmmac: Fix kernel crashes for jumbo
+ frames
+Date: Tue, 14 Jan 2014 19:53:36 +0000
+Message-ID: <1389729216.2025.197.camel@bwh-desktop.uk.level5networks.com>
+References: <1389719859-29071-1-git-send-email-vbridgers2013@gmail.com>
+	 <1389719859-29071-3-git-send-email-vbridgers2013@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1389380874-22753-2-git-send-email-agross@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <agross@codeaurora.org>
-Cc: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1389719859-29071-3-git-send-email-vbridgers2013@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Vince Bridgers <vbridgers2013@gmail.com>
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, peppe.cavallaro@st.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dinguyen@altera.com, rayagond@vayavyalabs.com
 List-Id: devicetree@vger.kernel.org
 
-(Mostly nitpicks)
-
-On 01/10, Andy Gross wrote:
-> Add the DMA engine driver for the QCOM Bus Access Manager (BAM) DMA controller
-> found in the MSM 8x74 platforms.
+On Tue, 2014-01-14 at 11:17 -0600, Vince Bridgers wrote:
+> These changes correct the following issues with jumbo frames on the
+> stmmac driver:
 > 
-> Each BAM DMA device is associated with a specific on-chip peripheral.  Each
-> channel provides a uni-directional data transfer engine that is capable of
-> transferring data between the peripheral and system memory (System mode), or
-> between two peripherals (BAM2BAM).
+> 1) The Synopsys EMAC can be configured to support different FIFO
+> sizes at core configuration time. There's no way to query the
+> controller and know the FIFO size, so the driver needs to get this
+> information from the device tree in order to know how to correctly
+> handle MTU changes and setting up dma buffers. The default
+> max-frame-size is as currently used, which is the size of a jumbo
+> frame.
 > 
-> The initial release of this driver only supports slave transfers between
-> peripherals and system memory.
-> 
-> Signed-off-by: Andy Gross <agross@codeaurora.org>
-> ---
->  drivers/dma/Kconfig        |   9 +
->  drivers/dma/Makefile       |   1 +
->  drivers/dma/qcom_bam_dma.c | 843 +++++++++++++++++++++++++++++++++++++++++++++
->  drivers/dma/qcom_bam_dma.h | 268 ++++++++++++++
->  4 files changed, 1121 insertions(+)
->  create mode 100644 drivers/dma/qcom_bam_dma.c
->  create mode 100644 drivers/dma/qcom_bam_dma.h
-> 
-> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> index c823daa..e58e6d2 100644
-> --- a/drivers/dma/Kconfig
-> +++ b/drivers/dma/Kconfig
-> @@ -384,4 +384,13 @@ config DMATEST
->  config DMA_ENGINE_RAID
->  	bool
+> 2) The driver was enabling Jumbo frames by default, but was not allocating
+> dma buffers of sufficient size to handle the maximum possible packet
+> size that could be received. This led to memory corruption since DMAs were
+> occurring beyond the extent of the allocated receive buffers for certain types
+> of network traffic.
+[...]
+> --- a/drivers/net/ethernet/stmicro/stmmac/common.h
+> +++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+> @@ -293,6 +293,8 @@ struct dma_features {
+>  #define STMMAC_CHAIN_MODE	0x1
+>  #define STMMAC_RING_MODE	0x2
 >  
-> +config QCOM_BAM_DMA
-> +	tristate "QCOM BAM DMA support"
-> +	depends on ARCH_MSM || COMPILE_TEST
-
-I don't think writel_relaxed() is available on every arch, so
-it's possible this will break some random arch that doesn't have
-that function.
-
-> +	select DMA_ENGINE
-> +	select DMA_VIRTUAL_CHANNELS
-> +	---help---
-> +	  Enable support for the QCOM BAM DMA controller.  This controller
-> +	  provides DMA capabilities for a variety of on-chip devices.
+> +#define JUMBO_LEN		9000
 > +
->  endif
-> diff --git a/drivers/dma/qcom_bam_dma.c b/drivers/dma/qcom_bam_dma.c
-> new file mode 100644
-> index 0000000..7a84b02
-> --- /dev/null
-> +++ b/drivers/dma/qcom_bam_dma.c
+>  struct stmmac_desc_ops {
+>  	/* DMA RX descriptor ring initialization */
+>  	void (*init_rx_desc) (struct dma_desc *p, int disable_rx_ic, int mode,
 [...]
-> +static int bam_alloc_chan(struct dma_chan *chan)
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+> @@ -51,6 +51,10 @@ static int stmmac_probe_config_dt(struct platform_device *pdev,
+>  	plat->mdio_bus_data = devm_kzalloc(&pdev->dev,
+>  					   sizeof(struct stmmac_mdio_bus_data),
+>  					   GFP_KERNEL);
+> +	/* Set the maxmtu to a default of 1500 in case the
+> +	 * parameter is not present in the device tree
+> +	 */
+> +	plat->maxmtu = JUMBO_LEN;
+
+The comment disagrees with the definition of JUMBO_LEN.
+
+>  
+>  	/*
+>  	 * Currently only the properties needed on SPEAr600
+> @@ -60,6 +64,7 @@ static int stmmac_probe_config_dt(struct platform_device *pdev,
+>  	if (of_device_is_compatible(np, "st,spear600-gmac") ||
+>  		of_device_is_compatible(np, "snps,dwmac-3.70a") ||
+>  		of_device_is_compatible(np, "snps,dwmac")) {
+> +		of_property_read_u32(np, "max-frame-size", &plat->maxmtu);
 [...]
-> +
-> +	/* Go ahead and initialize the pipe/channel hardware here
-> +	   - Reset the channel to clear internal state of the FIFO
-> +	   - Program in the FIFO address
-> +	   - Configure the irq based on the EE passed in from the DT entry
-> +	   - Set mode, direction and enable channel
-> +
-> +	   We do this here because the channel can only be enabled once and
-> +	   can only be disabled via a reset.  If done here, we don't have to
-> +	   manage additional state to figure out when to do this
-> +	*/
 
-Multi-line comments are of the form:
+Is it the maximum frame size, including Ethernet header?  (And then, is
+the CRC or any VLAN header included in the frame size?)
+Or is it the MTU, excluding all of those?
+You really need to be very clear about what this number represents.
 
-	/*
-	 * comment
-	 */
-
-> +
-> +	bam_reset_channel(bdev, bchan->id);
-> +
-> +	/* write out 8 byte aligned address.  We have enough space for this
-> +	   because we allocated 1 more descriptor (8 bytes) than we can use */
-> +	writel_relaxed(ALIGN(bchan->fifo_phys, sizeof(struct bam_desc_hw)),
-> +			bdev->regs + BAM_P_DESC_FIFO_ADDR(bchan->id));
-> +	writel_relaxed(BAM_DESC_FIFO_SIZE, bdev->regs +
-> +			BAM_P_FIFO_SIZES(bchan->id));
-[...]
-> +
-> +/**
-> + * bam_dma_terminate_all - terminate all transactions
-> + * @chan: dma channel
-> + *
-> + * Idles channel and dequeues and frees all transactions
-> + * No callbacks are done
-> + *
-> +*/
-
-Weird '*' starting the line here and on the next function.
-
-> +static void bam_dma_terminate_all(struct dma_chan *chan)
-> +{
-> +	struct bam_chan *bchan = to_bam_chan(chan);
-> +	struct bam_device *bdev = bchan->bdev;
-> +
-> +	bam_reset_channel(bdev, bchan->id);
-> +
-> +	vchan_free_chan_resources(&bchan->vc);
-> +}
-> +
-> +/**
-> + * bam_control - DMA device control
-> + * @chan: dma channel
-> + * @cmd: control cmd
-> + * @arg: cmd argument
-> + *
-> + * Perform DMA control command
-> + *
-> +*/
-> +static int bam_control(struct dma_chan *chan, enum dma_ctrl_cmd cmd,
-> +	unsigned long arg)
-> +{
-> +	struct bam_chan *bchan = to_bam_chan(chan);
-> +	struct bam_device *bdev = bchan->bdev;
-> +	int ret = 0;
-> +	unsigned long flag;
-> +
-[...]
-> +/**
-> + * bam_dma_irq - irq handler for bam controller
-> + * @irq: IRQ of interrupt
-> + * @data: callback data
-> + *
-> + * IRQ handler for the bam controller
-> + */
-> +static irqreturn_t bam_dma_irq(int irq, void *data)
-> +{
-> +	struct bam_device *bdev = (struct bam_device *)data;
-
-Unnecessary cast from void.
-
-> +static int bam_dma_probe(struct platform_device *pdev)
-> +{
-[...]
-> +
-> +	irq_res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-> +	if (!irq_res) {
-> +		dev_err(bdev->dev, "irq resource is missing\n");
-> +		return -EINVAL;
-> +	}
-
-Please use platform_get_irq() instead.
-
-> diff --git a/drivers/dma/qcom_bam_dma.h b/drivers/dma/qcom_bam_dma.h
-> new file mode 100644
-> index 0000000..2cb3b5f
-> --- /dev/null
-> +++ b/drivers/dma/qcom_bam_dma.h
-[...]
-> +#define BAM_CNFG_BITS_DEFAULT	(BAM_PIPE_CNFG |	\
-> +			BAM_NO_EXT_P_RST |		\
-> +			BAM_IBC_DISABLE |		\
-> +			BAM_SB_CLK_REQ |		\
-> +			BAM_PSM_CSW_REQ |		\
-> +			BAM_PSM_P_RES |			\
-> +			BAM_AU_P_RES |			\
-> +			BAM_SI_P_RES |			\
-> +			BAM_WB_P_RES |			\
-> +			BAM_WB_BLK_CSW |		\
-> +			BAM_WB_CSW_ACK_IDL |		\
-> +			BAM_WB_RETR_SVPNT |		\
-> +			BAM_WB_DSC_AVL_P_RST |		\
-> +			BAM_REG_P_EN |			\
-> +			BAM_PSM_P_HD_DATA |		\
-> +			BAM_AU_ACCUMED |		\
-> +			BAM_CMD_ENABLE)
-> +
-> +/* PIPE CTRL */
-> +#define	P_EN			BIT(1)
-
-Nit: Weird formatting here?
-
-> +#define P_DIRECTION		BIT(3)
-[...]
-> +
-> +
-> +struct bam_device {
-> +	void __iomem *regs;
-> +	struct device *dev;
-> +	struct dma_device common;
-> +	struct device_dma_parameters dma_parms;
-> +	struct bam_chan *channels;
-
-Maybe this should be a flexible array. It looks like probe might
-need to be rewritten to detect the number of channels from the
-hardware before assigning anything, but it should be possible.
-But it probably doesn't matter.
-
-> +	u32 num_channels;
-> +	u32 num_ees;
-> +	unsigned long enabled_ees;
-> +	int irq;
-
-Is irq used?
-
-> +	struct clk *bamclk;
-> +
-> +	/* dma start transaction tasklet */
-> +	struct tasklet_struct task;
-> +};
+Ben.
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Ben Hutchings, Staff Engineer, Solarflare
+Not speaking for my employer; that's the marketing department's job.
+They asked us to note that Solarflare product names are trademarked.
