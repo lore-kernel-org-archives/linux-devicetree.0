@@ -1,84 +1,51 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH v2 1/2] i2c: qup: Add device tree bindings information
-Date: Tue, 14 Jan 2014 10:57:21 +0200
-Message-ID: <1389689841.2794.8.camel@iivanov-dev.int.mm-sol.com>
-References: <1389659437-16406-1-git-send-email-bjorn.andersson@sonymobile.com>
-	 <1389659437-16406-2-git-send-email-bjorn.andersson@sonymobile.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH V4 1/6] ARM: dts: imx6q: add common compatible name for
+ reused modules
+Date: Tue, 14 Jan 2014 10:16:27 +0100
+Message-ID: <20140114091626.GM16215@pengutronix.de>
+References: <1389614031-7253-1-git-send-email-b20788@freescale.com>
+ <20140113121016.GJ16215@pengutronix.de>
+ <20140113142249.GW23525@S2101-09.ap.freescale.net>
+ <20140113151623.GL16215@pengutronix.de>
+ <20140114022609.GA1896@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1389659437-16406-2-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, Jean Delvare <khali@linux-fr.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, James Ralston <james.d.ralston@intel.com>, Bill Brown <bill.e.brown@intel.com>, Matt Porter <matt.porter@linaro.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140114022609.GA1896-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-Thanks Bjorn, 
-
-I have prepared second version, but never send it out :-).
-One thing suggested by Mark was missed in this version.
-
-
-On Mon, 2014-01-13 at 16:30 -0800, Bjorn Andersson wrote: 
-> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+On Tue, Jan 14, 2014 at 10:26:11AM +0800, Shawn Guo wrote:
 > 
-> The Qualcomm Universal Peripherial (QUP) wraps I2C mini-core and
-> provide input and output FIFO's for it. I2C controller can operate
-> as master with supported bus speeds of 100Kbps and 400Kbps.
+> Since the assembly function imx6_suspend() needs to check the cpu_type,
+> we have to keep it in imx6_cpu_pm_info.  So I assume you're suggesting
+> we remove the field from imx6_pm_socdata and determine the cpu_type by
+> comparing socdata pointer with particular imx6_pm_socdata like below?
 > 
-> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> [bjorn: reformulated part of binding description and cleaned up example]
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> ---
->  .../devicetree/bindings/i2c/qcom,i2c-qup.txt       | 41 ++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt
+> 	if (socdata == &imx6q_pm_data)
+> 		pm_info->cpu_type = MXC_CPU_IMX6Q;
+> 	else if (socdata == &imx6dl_pm_data)
+> 		pm_info->cpu_type = MXC_CPU_IMX6DL;
+> 	else if (socdata == &imx6sl_pm_data)
+> 		pm_info->cpu_type = MXC_CPU_IMX6SL;
 > 
-> diff --git a/Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt b/Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt
-> new file mode 100644
-> index 0000000..a99711b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt
-> @@ -0,0 +1,41 @@
-> +Qualcomm Universal Peripheral (QUP) I2C controller
-> +
-> +Required properties:
-> + - compatible: Should be "qcom,i2c-qup".
-> + - reg: Should contain QUP register address and length.
-> + - interrupts: Should contain I2C interrupt.
-> +
-> + - clocks: Should contain the core clock and the AHB clock.
+> Looking at these if-clauses, I do not think we win too much from doing
+> thing in this way.
 
-+ - clocks: a list of phandle + clock-specifier pairs for each entry in
-+           clock-names
+Indeed not. I thought the cpu_type field would be unused now, but this
+is not the case.
 
-> + - clock-names: Should be "core" for the core clock and "iface" for the
-> +                AHB clock.
-> +
-> + - #address-cells: Should be <1> Address cells for i2c device address
-> + - #size-cells: Should be <0> as i2c addresses have no size component
-> +
-> +Optional properties:
-> + - clock-frequency: Should specify the desired i2c bus clock frequency in Hz,
-> +                    default is 100kHz if omitted.
-> +
-> +Child nodes should conform to i2c bus binding.
-> +
-> +Example:
-> +
-> + i2c2: i2c@f9924000 {
-> + 	compatible = "qcom,i2c-qup";
-> + 	reg = <0xf9924000 0x1000>;
-> + 	interrupts = <0 96 0>;
-> +
-> + 	clocks = <&gcc_blsp1_qup2_i2c_apps_clk>, <&gcc_blsp1_ahb_clk>;
+Sascha
 
-In the light of the latest patches from Stephen, this could be 
-
-+ 	clocks = <&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>, <&gcc GCC_BLSP1_AHB_CLK>;
-
-
-Regards,
-Ivan
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
