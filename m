@@ -1,49 +1,60 @@
-From: "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv4 6/7] hwspinlock/omap: enable module before reading SYSSTATUS
- register
-Date: Tue, 14 Jan 2014 10:56:26 -0600
-Message-ID: <52D56C3A.7000704@ti.com>
-References: <1389658764-39199-1-git-send-email-s-anna@ti.com> <1389658764-39199-7-git-send-email-s-anna@ti.com> <20140114131052.GA10818@saruman.home> <20140114140440.GA15785@saruman.home>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140114140440.GA15785-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-l0cyMroinI0@public.gmane.org
-Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Vince Bridgers <vbridgers2013@gmail.com>
+Subject: [PATCH net-next v3 0/2] stmmac: fix kernel crashes for jumbo frames
+Date: Tue, 14 Jan 2014 11:17:37 -0600
+Message-ID: <1389719859-29071-1-git-send-email-vbridgers2013@gmail.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, netdev@vger.kernel.org
+Cc: peppe.cavallaro@st.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dinguyen@altera.com, rayagond@vayavyalabs.com, vbridgers2013@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Felipe,
+v3: 
+* change snps,max-frame-size to max-frame-size
 
-On 01/14/2014 08:04 AM, Felipe Balbi wrote:
-> Hi again,
->
-> On Tue, Jan 14, 2014 at 07:10:52AM -0600, Felipe Balbi wrote:
->>> diff --git a/drivers/hwspinlock/omap_hwspinlock.c b/drivers/hwspinlock/omap_hwspinlock.c
->>> index 9f56fb2..194886e 100644
->>> --- a/drivers/hwspinlock/omap_hwspinlock.c
->>> +++ b/drivers/hwspinlock/omap_hwspinlock.c
->>> @@ -101,10 +101,23 @@ static int omap_hwspinlock_probe(struct platform_device *pdev)
->>>   	if (!io_base)
->>>   		return -ENOMEM;
->>>
->>> +	/*
->>> +	 * make sure the module is enabled and clocked before reading
->>> +	 * the module SYSSTATUS register
->>> +	 */
->>> +	pm_runtime_enable(&pdev->dev);
->>> +	pm_runtime_get_sync(&pdev->dev);
->
-> another thing, you need to check return of pm_runtime_get_sync()
+v2: 
+* change snps,max-mtu to snps,max-frame-size
 
-OK, let me check this and your other comment, and the fix is probably a 
-separate patch.
 
-regards
-Suman
+These patches address two kernel crashes seen when using jumbo frames on 
+the Synopsys stmmac driver, and adds device tree configurability for the 
+maximum mtu. The Synopsys emac fifo sizes can be configured when a logic
+design is synthesized, but does not provide a way for a driver to query the
+exact fifo size. 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The crashes seen were due to two issues. 
+
+1) The dma buffer size was being set after the dma buffers were allocated.
+This caused a crash when changing the mtu since it was possible the buffers
+would subsequently be freed using an incorrect dma buffer size. This could
+also cause kernel panics due to memory corruption since a large mtu size could
+have been configured, but the dma buffers were not sized accordingly. 
+
+2) Jumbo frames were being enabled by default, but the dma buffers were not
+sized accordingly. This caused memory corruption in the context of certain
+types of network traffic, leading to kernel panics. 
+
+I've tested these changes using automated, reproducible testware. I can
+demonstrate the panics described before the fixes and show that the fixes
+address the problems described. 
+
+Testing and improvements continue through the use of the mentioned automated
+and reproducible testware. 
+
+Vince Bridgers
+
+Vince Bridgers (2):
+  dts: Add a binding for Synopsys emac max-frame-size
+  stmmac: Fix kernel crashes for jumbo frames
+
+ Documentation/devicetree/bindings/net/stmmac.txt   |    5 +++++
+ drivers/net/ethernet/stmicro/stmmac/common.h       |    4 +++-
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000.h    |    7 ++-----
+ .../net/ethernet/stmicro/stmmac/dwmac1000_core.c   |    7 ++++++-
+ .../net/ethernet/stmicro/stmmac/dwmac100_core.c    |    2 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |   11 +++++++----
+ .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |    5 +++++
+ include/linux/stmmac.h                             |    1 +
+ 8 files changed, 30 insertions(+), 12 deletions(-)
+
+-- 
+1.7.9.5
