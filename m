@@ -1,7 +1,7 @@
 From: Marc Carino <marc.ceeeee@gmail.com>
-Subject: [PATCH v3 3/7] ARM: do CPU-specific init for Broadcom Brahma15 cores
-Date: Tue, 14 Jan 2014 15:48:49 -0800
-Message-ID: <1389743333-16741-4-git-send-email-marc.ceeeee@gmail.com>
+Subject: [PATCH v3 5/7] ARM: brcmstb: add misc. DT bindings for brcm,brcmstb-*
+Date: Tue, 14 Jan 2014 15:48:51 -0800
+Message-ID: <1389743333-16741-6-git-send-email-marc.ceeeee@gmail.com>
 References: <1389743333-16741-1-git-send-email-marc.ceeeee@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1389743333-16741-1-git-send-email-marc.ceeeee@gmail.com>
@@ -10,43 +10,64 @@ To: Christian Daudt <bcm@fixthebug.org>, Arnd Bergmann <arnd@arndb.de>
 Cc: Florian Fainelli <f.fainelli@gmail.com>, Matt Porter <matt.porter@linaro.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Marc Carino <marc.ceeeee@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Perform any CPU-specific initialization required on the
-Broadcom Brahma-15 core.
+Document the bindings that the Broadcom STB platform needs
+for proper bootup.
 
 Signed-off-by: Marc Carino <marc.ceeeee@gmail.com>
 Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- arch/arm/mm/proc-v7.S |   11 +++++++++++
- 1 files changed, 11 insertions(+), 0 deletions(-)
+ .../devicetree/bindings/arm/brcm-brcmstb.txt       |   43 ++++++++++++++++++++
+ 1 files changed, 43 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/brcm-brcmstb.txt
 
-diff --git a/arch/arm/mm/proc-v7.S b/arch/arm/mm/proc-v7.S
-index bd17819..98ea423 100644
---- a/arch/arm/mm/proc-v7.S
-+++ b/arch/arm/mm/proc-v7.S
-@@ -193,6 +193,7 @@ __v7_cr7mp_setup:
- 	b	1f
- __v7_ca7mp_setup:
- __v7_ca15mp_setup:
-+__v7_b15mp_setup:
- 	mov	r10, #0
- 1:
- #ifdef CONFIG_SMP
-@@ -494,6 +495,16 @@ __v7_ca15mp_proc_info:
- 	.size	__v7_ca15mp_proc_info, . - __v7_ca15mp_proc_info
- 
- 	/*
-+	 * Broadcom Corporation Brahma-B15 processor.
-+	 */
-+	.type	__v7_b15mp_proc_info, #object
-+__v7_b15mp_proc_info:
-+	.long	0x420f00f0
-+	.long	0xff0ffff0
-+	__v7_proc __v7_b15mp_setup, hwcaps = HWCAP_IDIV
-+	.size	__v7_b15mp_proc_info, . - __v7_b15mp_proc_info
+diff --git a/Documentation/devicetree/bindings/arm/brcm-brcmstb.txt b/Documentation/devicetree/bindings/arm/brcm-brcmstb.txt
+new file mode 100644
+index 0000000..5f1aba7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/brcm-brcmstb.txt
+@@ -0,0 +1,43 @@
++Broadcom STB platforms Device Tree Bindings
++-------------------------------------------
++Boards with Broadcom Brahma15 ARM-based BCM7xxx SoC shall have the following
++properties.
 +
-+	/*
- 	 * Qualcomm Inc. Krait processors.
- 	 */
- 	.type	__krait_proc_info, #object
++Required root node properties:
++
++    - compatible = "brcm,brcmstb-<chip_id>";
++
++Further, a node with the following compatible string shall be defined:
++
++    - compatible: "brcm,brcmstb-gen-ctrl-v1"
++
++brcmstb-gen-ctrl
++----------------
++This node describes the registers needed for reset and CPU power control.
++
++    - compatible: "brcm,brcmstb-gen-ctrl-v1"
++    - properties:
++        o reg = <rst-src-en-reg-base len
++                 sw-mstr-rst-reg-base len
++                 cpu-rst-cfg-reg-base len
++                 cpu-pwr-zone-ctrl-reg-base len
++                 stb-boot-hi-addr0-reg len>;
++
++example:
++/ {
++    model = "Broadcom STB";
++    compatible =  "brcm,brcmstb-7445";
++
++    /* snip */
++
++    gen-ctrl {
++        compatible = "brcm,brcmstb-gen-ctrl-v1";
++        reg = <0xf0404304 0x4
++               0xf0404308 0x4
++               0xf03e2578 0x4
++               0xf03e2488 0x10
++               0xf0452000 0x20>;
++    };
++
++    /* snip */
++};
 -- 
 1.7.1
