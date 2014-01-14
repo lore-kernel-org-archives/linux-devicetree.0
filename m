@@ -1,79 +1,64 @@
-From: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v4 5/6] spmi: document the PMIC arbiter SPMI bindings
-Date: Tue, 14 Jan 2014 12:41:39 -0600
-Message-ID: <6dbb1c77001542e093d3af09ea976d402ed24d17.1389738151.git.joshc@codeaurora.org>
-References: <cover.1389738151.git.joshc@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1389738151.git.joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gilad Avidov <gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Ben Hutchings <bhutchings@solarflare.com>
+Subject: Re: [PATCH net-next v3 2/2] stmmac: Fix kernel crashes for jumbo
+ frames
+Date: Tue, 14 Jan 2014 23:20:46 +0000
+Message-ID: <1389741646.2025.218.camel@bwh-desktop.uk.level5networks.com>
+References: <1389719859-29071-1-git-send-email-vbridgers2013@gmail.com>
+	 <1389719859-29071-3-git-send-email-vbridgers2013@gmail.com>
+	 <1389729216.2025.197.camel@bwh-desktop.uk.level5networks.com>
+	 <CAOwfj2Ne1oRU1z6BaH4g2_EJJFtJOWbgs2oMzSq5nNpz9G6LsA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAOwfj2Ne1oRU1z6BaH4g2_EJJFtJOWbgs2oMzSq5nNpz9G6LsA@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Vince Bridgers <vbridgers2013@gmail.com>
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, Giuseppe CAVALLARO <peppe.cavallaro@st.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Dinh Nguyen <dinguyen@altera.com>, Rayagond Kokatanur <rayagond@vayavyalabs.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- .../bindings/spmi/qcom,spmi-pmic-arb.txt           | 46 ++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
+On Tue, 2014-01-14 at 14:44 -0600, Vince Bridgers wrote:
+> On Tue, Jan 14, 2014 at 1:53 PM, Ben Hutchings
+[...]
+> >>
+> >>       /*
+> >>        * Currently only the properties needed on SPEAr600
+> >> @@ -60,6 +64,7 @@ static int stmmac_probe_config_dt(struct platfor=
+m_device *pdev,
+> >>       if (of_device_is_compatible(np, "st,spear600-gmac") ||
+> >>               of_device_is_compatible(np, "snps,dwmac-3.70a") ||
+> >>               of_device_is_compatible(np, "snps,dwmac")) {
+> >> +             of_property_read_u32(np, "max-frame-size", &plat->ma=
+xmtu);
+> > [...]
+> >
+> > Is it the maximum frame size, including Ethernet header?  (And then=
+, is
+> > the CRC or any VLAN header included in the frame size?)
+> > Or is it the MTU, excluding all of those?
+> > You really need to be very clear about what this number represents.
+>=20
+> max-frame-size as read from the device tree is defined in the ePAPR
+> v1.1 specification. I originally used a name of "max-mtu", but was
+> asked to change that since this attribute was already defined in the
+> ePAPR v1.1 specification.
+[...]
 
-diff --git a/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt b/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
-new file mode 100644
-index 0000000..9e50cb3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
-@@ -0,0 +1,46 @@
-+Qualcomm SPMI Controller (PMIC Arbiter)
-+
-+The SPMI PMIC Arbiter is found on the Snapdragon 800 Series.  It is an SPMI
-+controller with wrapping arbitration logic to allow for multiple on-chip
-+devices to control a single SPMI master.
-+
-+The PMIC Arbiter can also act as an interrupt controller, providing interrupts
-+to slave devices.
-+
-+See spmi.txt for the generic SPMI controller binding requirements for child
-+nodes.
-+
-+Required properties:
-+- compatible : should be "qcom,spmi-pmic-arb".
-+- reg-names  : should be "core", "intr", "cnfg"
-+- reg : register specifiers, must contain 3 entries, in the follow order:
-+     core registers, interrupt controller registers, configuration registers
-+- #address-cells : must be set to 2
-+- #size-cells : must be set to 0
-+- qcom,ee : indicates the active Execution Environment identifier (0-5)
-+- qcom,channel : which of the PMIC Arb provided channels to use for accesses (0-5)
-+- interrupt-controller : indicates the PMIC arbiter is an interrupt controller
-+- #interrupt-cells = <4>:  interrupts are specified as a 4-tuple:
-+    cell 1: slave ID for the requested interrupt (0-15)
-+    cell 2: peripheral ID for requested interrupt (0-255)
-+    cell 3: the requested peripheral interrupt (0-7)
-+    cell 4: interrupt flags indicating level-sense information, as defined in
-+            dt-bindings/interrupt-controller/irq.h
-+
-+Example:
-+
-+	spmi {
-+		compatible = "qcom,spmi-pmic-arb";
-+		reg-names = "core", "intr", "cnfg";
-+		reg = <0xfc4cf000 0x1000>,
-+		      <0Xfc4cb000 0x1000>,
-+		      <0Xfc4ca000 0x1000>;
-+		qcom,ee = <0>;
-+		qcom,channel = <0>;
-+
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <4>;
-+	};
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Oh dear, this specification is just as confused as I am.  The example
+value in =C2=A76.3.1.4 is 1518, implying that it is really the frame si=
+ze,
+including the Ethernet header, any VLAN tag, and maybe the CRC.  Howeve=
+r
+the full example in Appendix B1 has 0x5dc (=3D=3D 1500) implying that i=
+t is
+the MTU.
 
+I suppose you should follow whatever interpretation is already used by
+other drivers. :-/
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ben.
+
+--=20
+Ben Hutchings, Staff Engineer, Solarflare
+Not speaking for my employer; that's the marketing department's job.
+They asked us to note that Solarflare product names are trademarked.
