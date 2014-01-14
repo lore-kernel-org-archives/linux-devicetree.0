@@ -1,67 +1,118 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 4/6] ARM: DTS: tegra: add the DFLL IP block to the T114
- SoC file
-Date: Tue, 14 Jan 2014 10:43:58 -0700
-Message-ID: <52D5775E.9080209@wwwdotorg.org>
-References: <20131219122857.3226.42830.stgit@tamien> <20131219123719.3226.44864.stgit@tamien> <52B389CD.8010004@wwwdotorg.org> <52D4D314.3000208@nvidia.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCHv2 9/9] arm: dts: am43x-gp-evm: Add matrix gpio keys.
+Date: Tue, 14 Jan 2014 11:54:26 -0600
+Message-ID: <20140114175426.GB13600@saruman.home>
+References: <1387456421-21379-1-git-send-email-sourav.poddar@ti.com>
+ <1387456421-21379-10-git-send-email-sourav.poddar@ti.com>
+ <52D417A1.9060007@ti.com>
+ <20140114131444.GD10818@saruman.home>
+ <52D547F5.2080307@baylibre.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52D4D314.3000208-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+g7M9IMkV8truYOl"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52D547F5.2080307@baylibre.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <bcousson@baylibre.com>
+Cc: balbi@ti.com, sourav <sourav.poddar@ti.com>, devicetree@vger.kernel.org, tony@atomide.com, linux-omap@vger.kernel.org, mark.rutland@arm.com, lokeshvutla@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 01/13/2014 11:03 PM, Paul Walmsley wrote:
-> On 12/19/2013 04:05 PM, Stephen Warren wrote:
->> On 12/19/2013 05:49 AM, Paul Walmsley wrote:
->>> Add basic DT bindings for the DFLL IP block for the NVIDIA Tegra114 SoC.
->>> diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra114-dfll.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra114-dfll.txt
+--+g7M9IMkV8truYOl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->>> +- clock-names : Must contain an array of strings, one per 'clocks'
->>> +                two-cell array.  The position in the array of these
->> clock-names defines the set of entries in clocks, not the other way around.
-> 
-> Hmm.  If one refers to the DT clock binding documentation, it lists the
-> 'clock-names' property as optional, and the 'clocks' property as mandatory:
-> 
-> -----
-> 
-> |==Clock consumers==
-> 
-> Required properties:
-> clocks:		List of phandle and clock specifier pairs, one pair
-> 		for each clock input to the device.  Note: if the
-> 		clock provider specifies '0' for #clock-cells, then
-> 		only the phandle portion of the pair will appear.
-> 
-> Optional properties:
-> clock-names:	List of clock input name strings sorted in the same
-> 		order as the clocks property.  Consumers drivers
-> 		will use clock-names to match clock input names
-> 		with clocks specifiers.
-> 
-> -----
-> |
-> 
-> 
->  https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/clock/clock-bindings.txt#n47
-> 
-> Considering that of_clk_get() doesn't require names, it certainly
-> appears to be the way that the original patch described it (modulo the
-> bit about 'cells'; which has been fixed.)
+On Tue, Jan 14, 2014 at 03:21:41PM +0100, Benoit Cousson wrote:
+> Hi Felipe,
+>=20
+> On 14/01/2014 14:14, Felipe Balbi wrote:
+> >On Mon, Jan 13, 2014 at 10:13:13PM +0530, sourav wrote:
+> >>Benoit,
+> >>
+> >>On Thursday 19 December 2013 06:03 PM, Sourav Poddar wrote:
+> >>>Add gpio keys node for am43x gp evm.
+> >>>
+> >>>Signed-off-by: Sourav Poddar<sourav.poddar@ti.com>
+> >>>---
+> >>>  arch/arm/boot/dts/am437x-gp-evm.dts |   21 +++++++++++++++++++++
+> >>>  1 file changed, 21 insertions(+)
+> >>>
+> >>>diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/a=
+m437x-gp-evm.dts
+> >>>index 0dc248d..4eb72b8 100644
+> >>>--- a/arch/arm/boot/dts/am437x-gp-evm.dts
+> >>>+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
+> >>>@@ -13,6 +13,7 @@
+> >>>  #include "am4372.dtsi"
+> >>>  #include<dt-bindings/pinctrl/am43xx.h>
+> >>>  #include<dt-bindings/pwm/pwm.h>
+> >>>+#include<dt-bindings/gpio/gpio.h>
+> >>>
+> >>>  / {
+> >>>  	model =3D "TI AM437x GP EVM";
+> >>>@@ -24,6 +25,26 @@
+> >>>  		brightness-levels =3D<0 51 53 56 62 75 101 152 255>;
+> >>>  		default-brightness-level =3D<8>;
+> >>>  	};
+> >>>+
+> >>>+	matrix_keypad: matrix_keypad@0 {
+> >>>+		compatible =3D "gpio-matrix-keypad";
+> >>>+		debounce-delay-ms =3D<5>;
+> >>>+		col-scan-delay-us =3D<2>;
+> >>>+
+> >>>+		row-gpios =3D<&gpio3 21 GPIO_ACTIVE_HIGH /* Bank3, pin21 */
+> >>>+				&gpio4 3 GPIO_ACTIVE_HIGH /* Bank4, pin3 */
+> >>>+				&gpio4 2 GPIO_ACTIVE_HIGH>; /* Bank4, pin2 */
+> >>>+
+> >>>+		col-gpios =3D<&gpio3 19 GPIO_ACTIVE_HIGH /* Bank3, pin19 */
+> >>>+				&gpio3 20 GPIO_ACTIVE_HIGH>; /* Bank3, pin20 */
+> >>>+
+> >>>+		linux,keymap =3D<0x00000201      /* P1 */
+> >>>+				0x00010202      /* P2 */
+> >>>+				0x01000067      /* UP */
+> >>>+				0x0101006a      /* RIGHT */
+> >>>+				0x02000069      /* LEFT */
+> >>>+				0x0201006c>;      /* DOWN */
+> >>>+		};
+> >>>  };
+> >>>
+> >>>  &am43xx_pinmux {
+> >>
+> >>ping on this series, this series is lying for a while.
+> >>This series is based on your for_3.14 branch.
+> >
+> >Benoit, do you need us to do anything else to get this merged ? Sourav
+> >already rebased the patches as you requested back in December 19th.
+>=20
+> Nope, I've just needed more BW. I'll apply it ASAP.
 
-If the binding defines that clock must exist at certain indices in the
-clock property, and clock-names isn't used, then the clocks property
-defines which clocks must exist.
+cool, thanks.
 
-However, if the binding is defining clock names, then the clock-names
-property is the master that defines which clocks exist. In this case,
-the index of entries in the clocks property is undefined by the binding;
-it must simply match the clock-names property, which can be arbitrarily
-ordered by the user.
+--=20
+balbi
 
-Since this is a new binding, we should use the clock-names style to
-ensure easy future backwards-compatible changes.
+--+g7M9IMkV8truYOl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJS1XnSAAoJEIaOsuA1yqRE4EAP/A/Xtlt+9gqShUIUcxoZXZM5
+a67rB1g60C9JaZ2iDGl42obye5Smf3Bi2gwM29G00TJNVb1YadDhO+9HsJCOPvLY
+e/uEWPOAZ4m8i8hTfaMX4sRH+8GiskJT7JD3wrq7WepCDpkaFBHzeShsjxdsroNN
+CskeNj0Hwcl7fWsCg9NU/K/Hbg8kXG1GsS/D2ApPFdOSVFGQ1HDHmSzwYYOZkfJi
+judzScIhKmdeQDvBkWg8ncxwY5XUwBDmx7fgvlqmN0v3dgtA2w57ugw5nfTOZHwB
+ullKpYuv7NNp+dL+ETuLHnc0up2pAVGwmh0qFZbNktjPNdwUviV8e/MRNlvFQTsI
+pcCqCLrH122neDPqQYmDfEaDyhs13tRkce+4LrM724ftfeQRxSgCvOggG1lOrnrD
+VuNs+tBKiorTenj3qjVsWkthSILFER8kcU2TKNeBkDloOA2DCnGPGaOcMcAaO+sB
+pB0zHb/ebDCfVgW4X4G93dN0udBh/WAJqGSFXGV7/jFpjfKVs/52PY7fuhQwNBB/
+sWJeGx8yoxUGmAS/5ADhwKm3WGTe2W+i9OXVLuA5yN2KoBMib+rQy6JijsKoJyAX
+7AgDOnNOC5Werq4M0aZ+R2C+ryvlq/L+EEfQ1lL+BYXu3zicU3elg0zkYTaX7niz
+I9wKq8bImj1Nyzxv0kUK
+=vkSn
+-----END PGP SIGNATURE-----
+
+--+g7M9IMkV8truYOl--
