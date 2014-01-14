@@ -1,40 +1,65 @@
-From: Kevin Hilman <khilman@linaro.org>
-Subject: Re: [PATCH RFC 04/10] base: power: Add generic OF-based power domain look-up
-Date: Tue, 14 Jan 2014 07:42:26 -0800
-Message-ID: <87r48a8t99.fsf@linaro.org>
-References: <1389469372-17199-1-git-send-email-tomasz.figa@gmail.com>
-	<1389469372-17199-5-git-send-email-tomasz.figa@gmail.com>
+From: Dinh Nguyen <dinguyen@altera.com>
+Subject: Re: [PATCH net-next v2 0/2] stmmac: fix kernel crashes for jumbo
+ frames
+Date: Tue, 14 Jan 2014 09:52:50 -0600
+Message-ID: <1389714770.10673.6.camel@linux-builds1>
+References: <1389710409-14106-1-git-send-email-vbridgers2013@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1389469372-17199-5-git-send-email-tomasz.figa@gmail.com> (Tomasz
-	Figa's message of "Sat, 11 Jan 2014 20:42:46 +0100")
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene.kim@samsung.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1389710409-14106-1-git-send-email-vbridgers2013@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Vince Bridgers <vbridgers2013@gmail.com>
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, peppe.cavallaro@st.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rayagond@vayavyalabs.com
 List-Id: devicetree@vger.kernel.org
 
-Tomasz Figa <tomasz.figa@gmail.com> writes:
+Hi Vince
 
-> This patch introduces generic code to perform power domain look-up using
-> device tree and automatically bind devices to their power domains.
-> Generic device tree binding is introduced to specify power domains of
-> devices in their device tree nodes.
->
-> Backwards compatibility with legacy Samsung-specific power domain
-> bindings is provided, but for now the new code is not compiled when
-> CONFIG_ARCH_EXYNOS is selected to avoid collision with legacy code. This
-> will change as soon as Exynos power domain code gets converted to use
-> the generic framework in further patch.
->
-> Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
+On Tue, 2014-01-14 at 08:40 -0600, Vince Bridgers wrote:
+> These patches address two kernel crashes seen when using jumbo frames on 
+> the Synopsys stmmac driver, and adds device tree configurability for the 
+> maximum mtu. The Synopsys emac fifo sizes can be configured when a logic
+> design is synthesized, but does not provide a way for a driver to query the
+> exact fifo size. 
+> 
+> The crashes seen were due to two issues. 
+> 
+> 1) The dma buffer size was being set after the dma buffers were allocated.
+> This caused a crash when changing the mtu since it was possible the buffers
+> would subsequently be freed using an incorrect dma buffer size. This could
+> also cause kernel panics due to memory corruption since a large mtu size could
+> have been configured, but the dma buffers were not sized accordingly. 
+> 
+> 2) Jumbo frames were being enabled by default, but the dma buffers were not
+> sized accordingly. This caused memory corruption in the context of certain
+> types of network traffic, leading to kernel panics. 
+> 
+> I've tested these changes using automated, reproducible testware. I can
+> demonstrate the panics described before the fixes and show that the fixes
+> address the problems described. 
+> 
+> Testing and improvements continue through the use of the mentioned automated
+> and reproducible testware. 
+> 
+> Vince Bridgers
+> 
+> Vince Bridgers (2):
+>   dts: Add a binding for Synopsys emac max-frame-size
+>   stmmac: Fix kernel crashes for jumbo frames
+> 
+>  Documentation/devicetree/bindings/net/stmmac.txt   |    5 +++++
+>  drivers/net/ethernet/stmicro/stmmac/common.h       |    4 +++-
+>  drivers/net/ethernet/stmicro/stmmac/dwmac1000.h    |    7 ++-----
+>  .../net/ethernet/stmicro/stmmac/dwmac1000_core.c   |    7 ++++++-
+>  .../net/ethernet/stmicro/stmmac/dwmac100_core.c    |    2 +-
+>  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |   11 +++++++----
+>  .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |    5 +++++
+>  include/linux/stmmac.h                             |    1 +
+>  8 files changed, 30 insertions(+), 12 deletions(-)
 
-I haven't read through this in detail yet, but wanted to make sure that
-the DT representation can handle nested power domains.  At least
-SH-mobile has a hierarchy of power domains and the genpd code can handle
-that, so wanted to make sure that the DT representation can handle it as
-well.
+
+What has changed since v1? A version log would be nice.
 
 Thanks,
-
-Kevin
+Dinh
