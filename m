@@ -1,50 +1,105 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH V4 1/6] ARM: dts: imx6q: add common compatible name for
- reused modules
-Date: Tue, 14 Jan 2014 10:16:27 +0100
-Message-ID: <20140114091626.GM16215@pengutronix.de>
-References: <1389614031-7253-1-git-send-email-b20788@freescale.com>
- <20140113121016.GJ16215@pengutronix.de>
- <20140113142249.GW23525@S2101-09.ap.freescale.net>
- <20140113151623.GL16215@pengutronix.de>
- <20140114022609.GA1896@S2101-09.ap.freescale.net>
+From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH V2] ARM: dts: imx6sl: add keypad support for i.mx6sl-evk board.
+Date: Tue, 14 Jan 2014 17:23:31 +0800
+Message-ID: <1389691411-25231-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140114022609.GA1896-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 14, 2014 at 10:26:11AM +0800, Shawn Guo wrote:
-> 
-> Since the assembly function imx6_suspend() needs to check the cpu_type,
-> we have to keep it in imx6_cpu_pm_info.  So I assume you're suggesting
-> we remove the field from imx6_pm_socdata and determine the cpu_type by
-> comparing socdata pointer with particular imx6_pm_socdata like below?
-> 
-> 	if (socdata == &imx6q_pm_data)
-> 		pm_info->cpu_type = MXC_CPU_IMX6Q;
-> 	else if (socdata == &imx6dl_pm_data)
-> 		pm_info->cpu_type = MXC_CPU_IMX6DL;
-> 	else if (socdata == &imx6sl_pm_data)
-> 		pm_info->cpu_type = MXC_CPU_IMX6SL;
-> 
-> Looking at these if-clauses, I do not think we win too much from doing
-> thing in this way.
+i.MX6SL EVK board has a 3*3 keypad matrix to support 8 keypads,
+enable them, the keymap is as below:
 
-Indeed not. I thought the cpu_type field would be unused now, but this
-is not the case.
+SW6:  MATRIX_KEY(0x0, 0x0, 0x67)  /* ROW0, COL0, KEY_UP */
+SW7:  MATRIX_KEY(0x0, 0x1, 0x6c)  /* ROW0, COL1, KEY_DOWN */
+SW8:  MATRIX_KEY(0x0, 0x2, 0x1c)  /* ROW0, COL2, KEY_ENTER */
+SW9:  MATRIX_KEY(0x1, 0x0, 0x66)  /* ROW1, COL0, KEY_HOME */
+SW10: MATRIX_KEY(0x1, 0x1, 0x6a)  /* ROW1, COL1, KEY_RIGHT */
+SW11: MATRIX_KEY(0x1, 0x2, 0x69)  /* ROW1, COL2, KEY_LEFT */
+SW12: MATRIX_KEY(0x2, 0x0, 0x72)  /* ROW2, COL0, KEY_VOLUMEDOWN */
+SW13: MATRIX_KEY(0x2, 0x1, 0x73)  /* ROW2, COL1, KEY_VOLUMEUP */
 
-Sascha
+Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6sl-evk.dts |   28 ++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6sl.dtsi    |    2 ++
+ 2 files changed, 30 insertions(+)
 
+diff --git a/arch/arm/boot/dts/imx6sl-evk.dts b/arch/arm/boot/dts/imx6sl-evk.dts
+index f5e4513..a2a0399 100644
+--- a/arch/arm/boot/dts/imx6sl-evk.dts
++++ b/arch/arm/boot/dts/imx6sl-evk.dts
+@@ -8,6 +8,7 @@
+ 
+ /dts-v1/;
+ 
++#include <dt-bindings/input/input.h>
+ #include "imx6sl.dtsi"
+ 
+ / {
+@@ -93,6 +94,17 @@
+ 			fsl,pins = <MX6SL_FEC_PINGRP1>;
+ 		};
+ 
++		pinctrl_kpp: kppgrp {
++			fsl,pins = <
++				MX6SL_PAD_KEY_ROW0__KEY_ROW0    0x1b010
++				MX6SL_PAD_KEY_ROW1__KEY_ROW1    0x1b010
++				MX6SL_PAD_KEY_ROW2__KEY_ROW2    0x1b0b0
++				MX6SL_PAD_KEY_COL0__KEY_COL0    0x110b0
++				MX6SL_PAD_KEY_COL1__KEY_COL1    0x110b0
++				MX6SL_PAD_KEY_COL2__KEY_COL2    0x110b0
++			>;
++		};
++
+ 		pinctrl_uart1: uart1grp {
+ 			fsl,pins = <MX6SL_UART1_PINGRP1>;
+ 		};
+@@ -139,6 +151,22 @@
+ 	};
+ };
+ 
++&kpp {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_kpp>;
++	linux,keymap = <
++			MATRIX_KEY(0x0, 0x0, 0x67)  /* ROW0, COL0, KEY_UP */
++			MATRIX_KEY(0x0, 0x1, 0x6c)  /* ROW0, COL1, KEY_DOWN */
++			MATRIX_KEY(0x0, 0x2, 0x1c)  /* ROW0, COL2, KEY_ENTER */
++			MATRIX_KEY(0x1, 0x0, 0x66)  /* ROW1, COL0, KEY_HOME */
++			MATRIX_KEY(0x1, 0x1, 0x6a)  /* ROW1, COL1, KEY_RIGHT */
++			MATRIX_KEY(0x1, 0x2, 0x69)  /* ROW1, COL2, KEY_LEFT */
++			MATRIX_KEY(0x2, 0x0, 0x72)  /* ROW2, COL0, KEY_VOLUMEDOWN */
++			MATRIX_KEY(0x2, 0x1, 0x73)  /* ROW2, COL1, KEY_VOLUMEUP */
++	>;
++	status = "okay";
++};
++
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart1>;
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index a5ef3c3..a449c4f 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -393,8 +393,10 @@
+ 			};
+ 
+ 			kpp: kpp@020b8000 {
++				compatible = "fsl,imx6sl-kpp", "fsl,imx21-kpp";
+ 				reg = <0x020b8000 0x4000>;
+ 				interrupts = <0 82 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clks IMX6SL_CLK_DUMMY>;
+ 			};
+ 
+ 			wdog1: wdog@020bc000 {
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+1.7.9.5
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
