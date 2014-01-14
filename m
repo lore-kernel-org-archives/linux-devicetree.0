@@ -1,79 +1,53 @@
-From: Zhangfei Gao <zhangfei.gao@gmail.com>
-Subject: Re: [PATCH 1/2] clk: hisilicon: add hi3620_mmc_clks
-Date: Tue, 14 Jan 2014 18:04:55 +0800
-Message-ID: <CAMj5BkgCzg-Nqm-FX_36-1ShGsL9x1HALmtywm-0sHtp53wR5A@mail.gmail.com>
-References: <1389604469-8064-1-git-send-email-zhangfei.gao@linaro.org>
-	<1389604469-8064-2-git-send-email-zhangfei.gao@linaro.org>
-	<002901cf110d$993b4880$cbb1d980$%jun@samsung.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 2/4] pinctrl: Add pinctrl binding for Broadcom Capri SoCs
+Date: Tue, 14 Jan 2014 11:16:45 +0100
+Message-ID: <CACRpkdYyz+zrzt0y135Wcq-yUMhiHOb1ov15+SsnVOcZvad96g@mail.gmail.com>
+References: <1386787041-6035-1-git-send-email-syin@broadcom.com>
+	<1387592016-13740-1-git-send-email-syin@broadcom.com>
+	<1387592016-13740-3-git-send-email-syin@broadcom.com>
+	<CACRpkdaAq15wKD900SqN1sQFLBATiuA3vNoua+KJGHU+gdCgqg@mail.gmail.com>
+	<52CC6782.4060309@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <002901cf110d$993b4880$cbb1d980$%jun@samsung.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Seungwon Jeon <tgih.jun@samsung.com>
-Cc: Zhangfei Gao <zhangfei.gao@linaro.org>, Chris Ball <cjb@laptop.org>, Arnd Bergmann <arnd@arndb.de>, Mike Turquette <mturquette@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Zhigang Wang <brooke.wangzhigang@huawei.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, patches@linaro.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <52CC6782.4060309@broadcom.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sherman Yin <syin@broadcom.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <rob.herring@calxeda.com>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
->> +static long mmc_clk_determine_rate(struct clk_hw *hw, unsigned long rate,
->> +                           unsigned long *best_parent_rate,
->> +                           struct clk **best_parent_p)
->> +{
->> +     struct clk_mmc *mclk = to_mmc(hw);
->> +     unsigned long best = 0;
->> +
->> +     if ((rate <= 13000000) && (mclk->id == HI3620_MMC_CIUCLK1)) {
-> No need to check HI3620_MMC_CIUCLK2 and HI3620_MMC_CIUCLK3?
+On Tue, Jan 7, 2014 at 9:45 PM, Sherman Yin <syin@broadcom.com> wrote:
+> On 14-01-07 09:15 AM, Linus Walleij wrote:
 
-Yes, only emmc, id=HI3620_MMC_CIUCLK1, using init clk 13M, while
-others use init clock 25M.
-Add this to handle init mmc init clk 400K and return source clock rate
-13M, from your suggestion in fact.
+> Is that what you wanted to see in pinctrl-bindings.txt, or is there
+> something else you want to see added to that txt file?  I didn't want to add
+> the description of slew-rate arguments there because this is capri-specific.
+> I'm not quite sure what else to add.
+(...)
+> That doc already says bias-pull-up is specified in Ohm, and the specific
+> values are chip-specific, so I don't think they should be mentioned there.
 
+You're right, forget about this. I didn't realize the pinctrl bindings doc
+was that good...
+
+>>> +Optional Properties (for HDMI pins):
+>>> +
+>>> +- function:                    String. Specifies the pin mux selection.
+>>> Values
+>>> +                               must be one of: "alt1", "alt2", "alt3",
+>>> "alt4"
+>>> +- slew-rate:                   Integer. Controls slew rate.
+>>> +                                       0: Standard(100kbps)&
+>>> Fast(400kbps) mode
+>>> +                                       1: Highspeed (3.4Mbps) mode
+>>
+>> Hmmmm slew rate is not specifiec in "bps" but rather in
+>> something like volts per second. But maybe it's best to keep
+>> this value driver-specific.
 >
->> +             rate = 13000000;
->> +             best = 26000000;
->> +     } else if (rate <= 26000000) {
->> +             rate = 25000000;
->> +             best = 180000000;
->> +     } else if (rate <= 52000000) {
->> +             rate = 50000000;
->> +             best = 360000000;
->> +     } else if (rate <= 100000000) {
->> +             rate = 100000000;
->> +             best = 720000000;
->> +     } else {
->> +             /* max is 180M */
->> +             rate = 180000000;
->> +             best = 1440000000;
->> +     }
->> +     *best_parent_rate = best;
->> +     return rate;
->> +}
+> Right, I think the slew-rates values are capri specific.
 
->> +static int mmc_clk_prepare(struct clk_hw *hw)
->> +{
->> +     struct clk_mmc *mclk = to_mmc(hw);
->> +     unsigned long rate;
->> +
->> +     if (mclk->id == HI3620_MMC_CIUCLK1)
-> HI3620_SD_CIUCLK was used in previous version.
-Yes, fixed, though it can work on the dev board.
+OK
 
-> Is it fixed with HI3620_MMC_CIUCLK1?
-> And, please clarify in case of HI3620_MMC_CIUCLK2 and HI3620_MMC_CIUCLK3 as well.
-
-Only HI3620_MMC_CIUCLK1 use 13M for init, all others use 25M on hi3620.
-
->
-> Thanks,
-> Seungwon Jeon
->
->> +             rate = 13000000;
->> +     else
->> +             rate = 25000000;
->> +
->> +     return mmc_clk_set_timing(hw, rate);
->> +}
->> +
-
-Thanks
+Yours,
+Linus Walleij
