@@ -1,126 +1,67 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] devicetree: bindings: Document Krait CPU/L1 EDAC
-Date: Wed, 15 Jan 2014 10:27:01 +0000
-Message-ID: <20140115102701.GA27314@e102568-lin.cambridge.arm.com>
-References: <1389735034-21430-1-git-send-email-sboyd@codeaurora.org>
- <1389735034-21430-3-git-send-email-sboyd@codeaurora.org>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH RFC v2 REPOST 2/8] ASoC: davinci-evm: Add
+ named clock reference to DT bindings
+Date: Wed, 15 Jan 2014 13:12:03 +0200
+Message-ID: <52D66D03.1040608@ti.com>
+References: <cover.1387535299.git.jsarha@ti.com>
+ <c1ae738c9b6cd9f2e595eed1f4981378ded46925.1387535302.git.jsarha@ti.com>
+ <20131231131617.GZ31886@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1389735034-21430-3-git-send-email-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20131231131617.GZ31886@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 14, 2014 at 09:30:32PM +0000, Stephen Boyd wrote:
-> The Krait CPU/L1 error reporting device is made up a per-CPU
-> interrupt. While we're here, document the next-level-cache
-> property that's used by the Krait EDAC driver.
-> 
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-> Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/cpus.txt | 52 ++++++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> index 91304353eea4..c332b5168456 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -191,6 +191,16 @@ nodes to be present and contain the properties described below.
->  			  property identifying a 64-bit zero-initialised
->  			  memory location.
->  
-> +	- interrupts
-> +		Usage: required for cpus with compatible string "qcom,krait".
-> +		Value type: <prop-encoded-array>
-> +		Definition: L1/CPU error interrupt
+On 12/31/2013 03:16 PM, Mark Brown wrote:
+> On Fri, Dec 20, 2013 at 12:38:27PM +0200, Jyri Sarha wrote:
+>
+>> +static int evm_startup(struct snd_pcm_substream *substream)
+>> +{
+>> +	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+>> +	struct snd_soc_card *soc_card = rtd->codec->card;
+>> +	struct clk *mclk = ((struct snd_soc_card_drvdata_davinci *)
+>> +			    snd_soc_card_get_drvdata(soc_card))->mclk;
+>
+> Why do you need to cast away void?  Ths indicates something is going
+> wrong here though I can't see what.
 
-I reckon you want this property to belong in the cpus node (example below),
-not in cpu nodes, right ?
+I'll fix that.
 
-Are you relying on a platform device to be created for /cpus node in
-order for this series to work ? I guess that's why you want the
-interrupts property to be defined in /cpus so that it becomes a platform
-device resource (and you also add a compatible property in /cpus that is
-missing in these bindings).
+>> +	mclk = of_clk_get_by_name(np, "ti,codec-clock");
+>> +	if (PTR_ERR(mclk) == -EPROBE_DEFER) {
+>> +		return -EPROBE_DEFER;
+>> +	} else if (IS_ERR(mclk)) {
+>> +		dev_dbg(&pdev->dev, "Codec clock not found.\n");
+>> +		mclk = NULL;
+>> +	}
+>
+> The driver will unconditionally enable and disable the clock which I'd
+> not expect to work well if we got an error, I'd expect either NULL checks
+> on use or a fixed clock to be registered from code in the case where
+> we're using the old binding.
+>
 
-> +
-> +	- next-level-cache
-> +		Usage: optional
-> +		Value type: <phandle>
-> +		Definition: phandle pointing to the next level cache
-> +
->  Example 1 (dual-cluster big.LITTLE system 32-bit):
->  
->  	cpus {
-> @@ -382,3 +392,45 @@ cpus {
->  		cpu-release-addr = <0 0x20000000>;
->  	};
->  };
-> +
-> +
-> +Example 5 (Krait 32-bit system):
-> +
-> +cpus {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	interrupts = <1 9 0xf04>;
+In the drivers/clk/clk.c the clk == NULL is always checked before using 
+the pointer. However, adding NULL checks would save couple of 
+lock-unlock cycles. I'll add them.
 
-In patch 4 you also add a compatible property here, and that's not documented,
-and honestly I do not think that's acceptable either. I guess you want a
-compatible property here to match the platform driver, right ?
+> I'd also expect to see devm_clk_get() used here, with the standard
+> clock-names based lookup from DT.
+>
 
-Thank you,
-Lorenzo
+I'll fix that.
 
-> +
-> +	cpu@0 {
-> +		device_type = "cpu";
-> +		compatible = "qcom,krait";
-> +		reg = <0>;
-> +		next-level-cache = <&L2>;
-> +	};
-> +
-> +	cpu@1 {
-> +		device_type = "cpu";
-> +		compatible = "qcom,krait";
-> +		reg = <1>;
-> +		next-level-cache = <&L2>;
-> +	};
-> +
-> +	cpu@2 {
-> +		device_type = "cpu";
-> +		compatible = "qcom,krait";
-> +		reg = <2>;
-> +		next-level-cache = <&L2>;
-> +	};
-> +
-> +	cpu@3 {
-> +		device_type = "cpu";
-> +		compatible = "qcom,krait";
-> +		reg = <3>;
-> +		next-level-cache = <&L2>;
-> +	};
-> +
-> +	L2: l2-cache {
-> +		compatible = "cache";
-> +		interrupts = <0 2 0x4>;
-> +	};
-> +};
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> hosted by The Linux Foundation
-> 
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Jyri
