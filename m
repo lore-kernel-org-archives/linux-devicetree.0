@@ -1,210 +1,115 @@
-From: Balaji T K <balajitk@ti.com>
-Subject: Re: [PATCH v10 5/7] ARM: dts: add pbias dt node
-Date: Wed, 15 Jan 2014 20:39:28 +0530
-Message-ID: <52D6A4A8.5060307@ti.com>
-References: <1389279062-32291-1-git-send-email-balajitk@ti.com> <1389627375-9107-1-git-send-email-balajitk@ti.com> <1389627375-9107-6-git-send-email-balajitk@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1389627375-9107-6-git-send-email-balajitk@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Balaji T K <balajitk@ti.com>
-Cc: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, chris@printf.net, broonie@kernel.org, tony@atomide.com
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] drm/tegra: Obtain head number from DT
+Date: Wed, 15 Jan 2014 16:18:02 +0100
+Message-ID: <1389799082-12897-1-git-send-email-treding@nvidia.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 13 January 2014 09:06 PM, Balaji T K wrote:
-> Add pbias regulator node as a child of system control
-> module - syscon.
->
-> Signed-off-by: Balaji T K <balajitk@ti.com>
-> Acked-by: Tony Lindgren <tony@atomide.com>
-Hi Benoit,
+The head number of a given display controller is fixed in hardware and
+required to program outputs appropriately. Relying on the driver probe
+order to determine this number will not work, since that could yield a
+situation where the second head was probed first and would be assigned
+head number 0 instead of 1.
 
-Gentle Ping, Let me know if you have any comments.
+By explicitly specifying the head number in the device tree, it is no
+longer necessary to rely on these assumptions. As a fallback, if the
+property isn't available, derive the head number from the display
+controller node's position in the device tree. That's somewhat more
+reliable than the previous default but not a proper solution.
 
-> ---
->   arch/arm/boot/dts/dra7.dtsi     |   17 +++++++++++++++++
->   arch/arm/boot/dts/omap2430.dtsi |   17 +++++++++++++++++
->   arch/arm/boot/dts/omap3.dtsi    |   17 +++++++++++++++++
->   arch/arm/boot/dts/omap4.dtsi    |   17 +++++++++++++++++
->   arch/arm/boot/dts/omap5.dtsi    |   17 +++++++++++++++++
->   5 files changed, 85 insertions(+), 0 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index d0df4c4..876c9b8 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -110,6 +110,22 @@
->   			ti,hwmods = "counter_32k";
->   		};
->
-> +		dra7_ctrl_general: tisyscon@4a002e00 {
-> +			compatible = "syscon", "simple-bus";
-> +			reg = <0x4a002e00 0x7c>;
-> +		};
-> +
-> +		pbias_regulator: pbias_regulator {
-> +			compatible = "ti,pbias-omap";
-> +			reg = <0 0x4>;
-> +			syscon = <&dra7_ctrl_general>;
-> +			pbias_mmc_reg: pbias_mmc_omap5 {
-> +				regulator-name = "pbias_mmc_omap5";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3000000>;
-> +			};
-> +		};
-> +
->   		dra7_pmx_core: pinmux@4a003400 {
->   			compatible = "pinctrl-single";
->   			reg = <0x4a003400 0x0464>;
-> @@ -485,6 +501,7 @@
->   			dmas = <&sdma 61>, <&sdma 62>;
->   			dma-names = "tx", "rx";
->   			status = "disabled";
-> +			pbias-supply = <&pbias_mmc_reg>;
->   		};
->
->   		mmc2: mmc@480b4000 {
-> diff --git a/arch/arm/boot/dts/omap2430.dtsi b/arch/arm/boot/dts/omap2430.dtsi
-> index d624345..af71eb0 100644
-> --- a/arch/arm/boot/dts/omap2430.dtsi
-> +++ b/arch/arm/boot/dts/omap2430.dtsi
-> @@ -29,6 +29,22 @@
->   			pinctrl-single,function-mask = <0x3f>;
->   		};
->
-> +		omap2_scm_general: tisyscon@49002270 {
-> +			compatible = "syscon", "simple-bus";
-> +			reg = <0x49002270 0x240>;
-> +		};
-> +
-> +		pbias_regulator: pbias_regulator {
-> +			compatible = "ti,pbias-omap";
-> +			reg = <0x230 0x4>;
-> +			syscon = <&omap2_scm_general>;
-> +			pbias_mmc_reg: pbias_mmc_omap2430 {
-> +				regulator-name = "pbias_mmc_omap2430";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3000000>;
-> +			};
-> +		};
-> +
->   		gpio1: gpio@4900c000 {
->   			compatible = "ti,omap2-gpio";
->   			reg = <0x4900c000 0x200>;
-> @@ -183,6 +199,7 @@
->   			ti,dual-volt;
->   			dmas = <&sdma 61>, <&sdma 62>;
->   			dma-names = "tx", "rx";
-> +			pbias-supply = <&pbias_mmc_reg>;
->   		};
->
->   		mmc2: mmc@480b4000 {
-> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-> index daabf99..b7828da 100644
-> --- a/arch/arm/boot/dts/omap3.dtsi
-> +++ b/arch/arm/boot/dts/omap3.dtsi
-> @@ -137,6 +137,22 @@
->   			pinctrl-single,function-mask = <0xff1f>;
->   		};
->
-> +		omap3_scm_general: tisyscon@48002270 {
-> +			compatible = "syscon", "simple-bus";
-> +			reg = <0x48002270 0x2f0>;
-> +		};
-> +
-> +		pbias_regulator: pbias_regulator {
-> +			compatible = "ti,pbias-omap";
-> +			reg = <0x2b0 0x4>;
-> +			syscon = <&omap3_scm_general>;
-> +			pbias_mmc_reg: pbias_mmc_omap2430 {
-> +				regulator-name = "pbias_mmc_omap2430";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3000000>;
-> +			};
-> +		};
-> +
->   		gpio1: gpio@48310000 {
->   			compatible = "ti,omap3-gpio";
->   			reg = <0x48310000 0x200>;
-> @@ -351,6 +367,7 @@
->   			ti,dual-volt;
->   			dmas = <&sdma 61>, <&sdma 62>;
->   			dma-names = "tx", "rx";
-> +			pbias-supply = <&pbias_mmc_reg>;
->   		};
->
->   		mmc2: mmc@480b4000 {
-> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-> index a1e0585..9e19363 100644
-> --- a/arch/arm/boot/dts/omap4.dtsi
-> +++ b/arch/arm/boot/dts/omap4.dtsi
-> @@ -134,6 +134,22 @@
->   			pinctrl-single,function-mask = <0x7fff>;
->   		};
->
-> +		omap4_padconf_global: tisyscon@4a1005a0 {
-> +			compatible = "syscon", "simple-bus";
-> +			reg = <0x4a1005a0 0x170>;
-> +		};
-> +
-> +		pbias_regulator: pbias_regulator {
-> +			compatible = "ti,pbias-omap";
-> +			reg = <0x60 0x4>;
-> +			syscon = <&omap4_padconf_global>;
-> +			pbias_mmc_reg: pbias_mmc_omap4 {
-> +				regulator-name = "pbias_mmc_omap4";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3000000>;
-> +			};
-> +		};
-> +
->   		sdma: dma-controller@4a056000 {
->   			compatible = "ti,omap4430-sdma";
->   			reg = <0x4a056000 0x1000>;
-> @@ -367,6 +383,7 @@
->   			ti,needs-special-reset;
->   			dmas = <&sdma 61>, <&sdma 62>;
->   			dma-names = "tx", "rx";
-> +			pbias-supply = <&pbias_mmc_reg>;
->   		};
->
->   		mmc2: mmc@480b4000 {
-> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-> index fc3fad5..f178899 100644
-> --- a/arch/arm/boot/dts/omap5.dtsi
-> +++ b/arch/arm/boot/dts/omap5.dtsi
-> @@ -130,6 +130,22 @@
->   			pinctrl-single,function-mask = <0x7fff>;
->   		};
->
-> +		omap5_padconf_global: tisyscon@4a002da0 {
-> +			compatible = "syscon";
-> +			reg = <0x4A002da0 0xec>;
-> +		};
-> +
-> +		pbias_regulator: pbias_regulator {
-> +			compatible = "ti,pbias-omap";
-> +			reg = <0x60 0x4>;
-> +			syscon = <&omap5_padconf_global>;
-> +			pbias_mmc_reg: pbias_mmc_omap5 {
-> +				regulator-name = "pbias_mmc_omap5";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3000000>;
-> +			};
-> +		};
-> +
->   		sdma: dma-controller@4a056000 {
->   			compatible = "ti,omap4430-sdma";
->   			reg = <0x4a056000 0x1000>;
-> @@ -409,6 +425,7 @@
->   			ti,needs-special-reset;
->   			dmas = <&sdma 61>, <&sdma 62>;
->   			dma-names = "tx", "rx";
-> +			pbias-supply = <&pbias_mmc_reg>;
->   		};
->
->   		mmc2: mmc@480b4000 {
->
+Tested-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v2:
+- if the nvidia,head property isn't present, find the position of the
+  display controller within the DT and derive the head number from it
 
+ .../bindings/gpu/nvidia,tegra20-host1x.txt         |  3 ++
+ drivers/gpu/drm/tegra/dc.c                         | 41 ++++++++++++++++++++--
+ 2 files changed, 42 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
+index 9e9008f8fa32..efaeec8961b6 100644
+--- a/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
++++ b/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
+@@ -118,6 +118,9 @@ of the following host1x client modules:
+     See ../reset/reset.txt for details.
+   - reset-names: Must include the following entries:
+     - dc
++  - nvidia,head: The number of the display controller head. This is used to
++    setup the various types of output to receive video data from the given
++    head.
+ 
+   Each display controller node has a child node, named "rgb", that represents
+   the RGB output associated with the controller. It can take the following
+diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
+index 386f3b4b0094..9336006b475d 100644
+--- a/drivers/gpu/drm/tegra/dc.c
++++ b/drivers/gpu/drm/tegra/dc.c
+@@ -1100,8 +1100,6 @@ static int tegra_dc_init(struct host1x_client *client)
+ 	struct tegra_dc *dc = host1x_client_to_dc(client);
+ 	int err;
+ 
+-	dc->pipe = tegra->drm->mode_config.num_crtc;
+-
+ 	drm_crtc_init(tegra->drm, &dc->base, &tegra_crtc_funcs);
+ 	drm_mode_crtc_set_gamma_size(&dc->base, 256);
+ 	drm_crtc_helper_add(&dc->base, &tegra_crtc_helper_funcs);
+@@ -1187,6 +1185,41 @@ static const struct of_device_id tegra_dc_of_match[] = {
+ 	}
+ };
+ 
++static int tegra_dc_parse_dt(struct tegra_dc *dc)
++{
++	struct device_node *np;
++	u32 value = 0;
++	int err;
++
++	err = of_property_read_u32(dc->dev->of_node, "nvidia,head", &value);
++	if (err < 0) {
++		dev_err(dc->dev, "missing \"nvidia,head\" property\n");
++
++		/*
++		 * If the nvidia,head property isn't present, try to find the
++		 * correct head number by looking up the position of this
++		 * display controller's node within the device tree. Assuming
++		 * that the nodes are ordered properly in the DTS file and
++		 * that the translation into a flattened device tree blob
++		 * preserves that ordering this will actually yield the right
++		 * head number.
++		 *
++		 * If those assumptions don't hold, this will still work for
++		 * cases where only a single display controller is used.
++		 */
++		for_each_matching_node(np, tegra_dc_of_match) {
++			if (np == dc->dev->of_node)
++				break;
++
++			value++;
++		}
++	}
++
++	dc->pipe = value;
++
++	return 0;
++}
++
+ static int tegra_dc_probe(struct platform_device *pdev)
+ {
+ 	const struct of_device_id *id;
+@@ -1207,6 +1240,10 @@ static int tegra_dc_probe(struct platform_device *pdev)
+ 	dc->dev = &pdev->dev;
+ 	dc->soc = id->data;
+ 
++	err = tegra_dc_parse_dt(dc);
++	if (err < 0)
++		return err;
++
+ 	dc->clk = devm_clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(dc->clk)) {
+ 		dev_err(&pdev->dev, "failed to get clock\n");
+-- 
+1.8.4.2
