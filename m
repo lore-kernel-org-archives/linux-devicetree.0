@@ -1,45 +1,135 @@
-From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
-Subject: Re: [PATCH 3/7] iommu/omap: Convert to devicetree
-Date: Wed, 15 Jan 2014 18:16:13 +0100
-Message-ID: <52D6C25D.8050005@epfl.ch>
-References: <1387284818-28739-1-git-send-email-florian.vaussard@epfl.ch>
-	<1387284818-28739-4-git-send-email-florian.vaussard@epfl.ch>
-	<1764051.JiGg1d3s1L@avalon> <20140102010150.GA9933@earth.universe>
-Reply-To: florian.vaussard-p8DiymsW2f8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20140102010150.GA9933-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?QmVub8OudCBDb3Vzc29u?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: [PATCH v5 00/14] Add support for MSM's mmio clock/reset controller
+Date: Wed, 15 Jan 2014 10:47:20 -0800
+Message-ID: <1389811654-21397-1-git-send-email-sboyd@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Saravana Kannan <skannan@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+The first breaks a reset-controller include ordering requirement. It got
+an ack so I think we're ok for it to go through the clock tree.
 
-On 01/02/2014 02:01 AM, Sebastian Reichel wrote:
-> Hi,
-> 
-> On Thu, Jan 02, 2014 at 01:13:42AM +0100, Laurent Pinchart wrote:
->>> +		.of_match_table = omap_iommu_of_match,
->>
->> If CONFIG_OF isn't defined (pretty unlikely I agree, but a possibility you 
->> seem to be prepared for nonetheless given the above #if), this will fail to 
->> compile.
-> 
-> FYI: This is avoided in other drivers by using
-> of_match_ptr(omap_iommu_of_match), which is replaced with NULL by
-> the preprocessor if CONFIG_OF is not defined.
-> 
+The next patch adds support for setting the rate and the parent at the
+same time based on patches from James Hogan's remuxing set_rate series.
 
-Thank you for the hint.
+After that we add MSM clock hardware support and SoC specific drivers. The DT
+node additions will be sent through the MSM maintainers once these patches are
+accepted.
 
-Florian
+Changes since v4:
+ * Moved regmap code out of the core into drivers/clk/qcom/
+ * Reworked to use a wrapper clk_regmap struct
+
+Changes since v3:
+ * Moved binding include to clock/
+ * New patch for 8660 GCC driver
+ * Renamed directory to qcom to match vendor prefix
+ * Added some missing clocks in 8974 GCC driver
+ * New patch for 8974 MMCC driver
+
+Changes since v2:
+
+ * Completed 8960 and 8974 GCC data & dt-bindings
+ * Added support for reset controllers
+ * Squashed some bugs in 8974 gcc clocks
+ * New patch to fix clk NULL pointer deref
+ * New patch to fix #include requirement for reset-controller.h
+
+Changes since v1:
+
+ * Rewrote binding to use #clock-cells=1
+ * Reworked library components (pll, rcg, branch) to use regmap
+ * Dropped common clock framework patches that did DT parsing
+ * New patches for regmap support in common clock framework
+
+Stephen Boyd (14):
+  reset: Silence warning in reset-controller.h
+  clk: Add set_rate_and_parent() op
+  clk: qcom: Add a regmap type clock struct
+  clk: qcom: Add support for phase locked loops (PLLs)
+  clk: qcom: Add support for root clock generators (RCGs)
+  clk: qcom: Add support for branches/gate clocks
+  clk: qcom: Add reset controller support
+  clk: qcom: Add support for MSM8960's global clock controller (GCC)
+  clk: qcom: Add support for MSM8960's multimedia clock controller
+    (MMCC)
+  clk: qcom: Add support for MSM8974's global clock controller (GCC)
+  clk: qcom: Add support for MSM8974's multimedia clock controller
+    (MMCC)
+  clk: qcom: Add support for MSM8660's global clock controller (GCC)
+  devicetree: bindings: Document qcom,gcc
+  devicetree: bindings: Document qcom,mmcc
+
+ Documentation/clk.txt                              |    3 +
+ .../devicetree/bindings/clock/qcom,gcc.txt         |   21 +
+ .../devicetree/bindings/clock/qcom,mmcc.txt        |   21 +
+ drivers/clk/Kconfig                                |    2 +
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/clk.c                                  |   78 +-
+ drivers/clk/qcom/Kconfig                           |   47 +
+ drivers/clk/qcom/Makefile                          |   14 +
+ drivers/clk/qcom/clk-branch.c                      |  159 ++
+ drivers/clk/qcom/clk-branch.h                      |   56 +
+ drivers/clk/qcom/clk-pll.c                         |  222 ++
+ drivers/clk/qcom/clk-pll.h                         |   66 +
+ drivers/clk/qcom/clk-rcg.c                         |  517 ++++
+ drivers/clk/qcom/clk-rcg.h                         |  159 ++
+ drivers/clk/qcom/clk-rcg2.c                        |  291 ++
+ drivers/clk/qcom/clk-regmap.c                      |  114 +
+ drivers/clk/qcom/clk-regmap.h                      |   45 +
+ drivers/clk/qcom/gcc-msm8660.c                     | 2819 ++++++++++++++++++
+ drivers/clk/qcom/gcc-msm8960.c                     | 2993 ++++++++++++++++++++
+ drivers/clk/qcom/gcc-msm8974.c                     | 2694 ++++++++++++++++++
+ drivers/clk/qcom/mmcc-msm8960.c                    | 2321 +++++++++++++++
+ drivers/clk/qcom/mmcc-msm8974.c                    | 2625 +++++++++++++++++
+ drivers/clk/qcom/reset.c                           |   63 +
+ drivers/clk/qcom/reset.h                           |   37 +
+ include/dt-bindings/clock/qcom,gcc-msm8660.h       |  276 ++
+ include/dt-bindings/clock/qcom,gcc-msm8960.h       |  313 ++
+ include/dt-bindings/clock/qcom,gcc-msm8974.h       |  320 +++
+ include/dt-bindings/clock/qcom,mmcc-msm8960.h      |  137 +
+ include/dt-bindings/clock/qcom,mmcc-msm8974.h      |  161 ++
+ include/dt-bindings/reset/qcom,gcc-msm8660.h       |  134 +
+ include/dt-bindings/reset/qcom,gcc-msm8960.h       |  118 +
+ include/dt-bindings/reset/qcom,gcc-msm8974.h       |   96 +
+ include/dt-bindings/reset/qcom,mmcc-msm8960.h      |   93 +
+ include/dt-bindings/reset/qcom,mmcc-msm8974.h      |   62 +
+ include/linux/clk-provider.h                       |   15 +
+ include/linux/reset-controller.h                   |    1 +
+ 36 files changed, 17075 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+ create mode 100644 drivers/clk/qcom/Kconfig
+ create mode 100644 drivers/clk/qcom/Makefile
+ create mode 100644 drivers/clk/qcom/clk-branch.c
+ create mode 100644 drivers/clk/qcom/clk-branch.h
+ create mode 100644 drivers/clk/qcom/clk-pll.c
+ create mode 100644 drivers/clk/qcom/clk-pll.h
+ create mode 100644 drivers/clk/qcom/clk-rcg.c
+ create mode 100644 drivers/clk/qcom/clk-rcg.h
+ create mode 100644 drivers/clk/qcom/clk-rcg2.c
+ create mode 100644 drivers/clk/qcom/clk-regmap.c
+ create mode 100644 drivers/clk/qcom/clk-regmap.h
+ create mode 100644 drivers/clk/qcom/gcc-msm8660.c
+ create mode 100644 drivers/clk/qcom/gcc-msm8960.c
+ create mode 100644 drivers/clk/qcom/gcc-msm8974.c
+ create mode 100644 drivers/clk/qcom/mmcc-msm8960.c
+ create mode 100644 drivers/clk/qcom/mmcc-msm8974.c
+ create mode 100644 drivers/clk/qcom/reset.c
+ create mode 100644 drivers/clk/qcom/reset.h
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-msm8660.h
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-msm8960.h
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-msm8974.h
+ create mode 100644 include/dt-bindings/clock/qcom,mmcc-msm8960.h
+ create mode 100644 include/dt-bindings/clock/qcom,mmcc-msm8974.h
+ create mode 100644 include/dt-bindings/reset/qcom,gcc-msm8660.h
+ create mode 100644 include/dt-bindings/reset/qcom,gcc-msm8960.h
+ create mode 100644 include/dt-bindings/reset/qcom,gcc-msm8974.h
+ create mode 100644 include/dt-bindings/reset/qcom,mmcc-msm8960.h
+ create mode 100644 include/dt-bindings/reset/qcom,mmcc-msm8974.h
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
