@@ -1,31 +1,32 @@
-From: Sergei Ianovich <ynvich@gmail.com>
-Subject: Re: [PATCH v3 11/21] ARM: pxa: support ICP DAS LP-8x4x FPGA irq
-Date: Wed, 15 Jan 2014 17:17:44 +0400
-Message-ID: <1389791864.9124.5.camel@host5.omatika.ru>
-References: <1386901645-28895-1-git-send-email-ynvich@gmail.com>
-	 <1387309071-22382-1-git-send-email-ynvich@gmail.com>
-	 <1387309071-22382-12-git-send-email-ynvich@gmail.com>
-	 <CACRpkdaY7xpoeeUqBBqUS2swe6Y5gKt67VYNvNRrsbFhyU=ATw@mail.gmail.com>
-	 <1389207661.10754.42.camel@host5.omatika.ru>
-	 <CACRpkda_6P3s3LBwV5ve+=_JhxehephvpPT=pKPk3NzEKQLa9g@mail.gmail.com>
+From: Balaji T K <balajitk@ti.com>
+Subject: Re: [PATCH 0/3] ARM: dts: am43x/am335x-evm: add SD card hotplug support
+Date: Wed, 15 Jan 2014 19:05:54 +0530
+Message-ID: <52D68EBA.1020200@ti.com>
+References: <1388161746-24179-1-git-send-email-balajitk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkda_6P3s3LBwV5ve+=_JhxehephvpPT=pKPk3NzEKQLa9g@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@linaro.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1388161746-24179-1-git-send-email-balajitk@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Balaji T K <balajitk@ti.com>
+Cc: bcousson@baylibre.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-01-15 at 08:39 +0100, Linus Walleij wrote:
-> On Wed, Jan 8, 2014 at 8:01 PM, Sergei Ianovich <ynvich@gmail.com> wrote:
-> Hm I don't know why I was deluded into thinking this had something to
-> do with GPIO. I must have been soft in the head. Sorry about all those
-> comments ...
+On Friday 27 December 2013 09:59 PM, Balaji T K wrote:
+> Balaji T K (3):
+>    ARM: dts: am335x-evm: add SD card hotplug support
+>    ARM: dts: am335x-evmsk: add SD card hotplug support
+>    ARM: dts: am43x-epos-evm: add SD card hotplug support
+>
+>   arch/arm/boot/dts/am335x-evm.dts     |    9 +++++++++
+>   arch/arm/boot/dts/am335x-evmsk.dts   |    9 +++++++++
+>   arch/arm/boot/dts/am4372.dtsi        |    1 +
+>   arch/arm/boot/dts/am43x-epos-evm.dts |    9 +++++++++
+>   4 files changed, 28 insertions(+), 0 deletions(-)
+>
+Hi Benoit,
 
-It's not your fault for sure. My commit message wasn't clear enough and
-needed clarifications. It is better now.
+Gentle ping!
 
-Thanks for constructive reviewing.
 
