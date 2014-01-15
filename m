@@ -1,78 +1,31 @@
-From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH 4/6] ARM: DTS: tegra: add the DFLL IP block to the T114
- SoC file
-Date: Wed, 15 Jan 2014 20:50:25 +0100
-Message-ID: <20140115195025.GU20094@book.gsilab.sittig.org>
-References: <20131219122857.3226.42830.stgit@tamien>
- <20131219123719.3226.44864.stgit@tamien>
- <52B389CD.8010004@wwwdotorg.org>
- <alpine.DEB.2.02.1401132219150.11672@tamien>
+From: Loc Ho <lho@apm.com>
+Subject: Re: [PATCH v9 2/4] Documentation: Add documentation for APM X-Gene
+ SoC SATA host controller DTS binding
+Date: Wed, 15 Jan 2014 12:04:02 -0800
+Message-ID: <CAPw-ZT=wJVQ2Qw47Ehgu6rJZ4HkpADrGuhZr8Yjf4XA6z+-xbA@mail.gmail.com>
+References: <1389769910-15505-1-git-send-email-lho@apm.com>
+	<1389769910-15505-2-git-send-email-lho@apm.com>
+	<1389769910-15505-3-git-send-email-lho@apm.com>
+	<20140115111839.GB25824@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1401132219150.11672@tamien>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20140115111839.GB25824@e106331-lin.cambridge.arm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "olof@lixom.net" <olof@lixom.net>, "tj@kernel.org" <tj@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "dmilburn@redhat.com" <dmilburn@redhat.com>, "jcm@redhat.com" <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 13, 2014 at 22:27 -0800, Paul Walmsley wrote:
-> 
-> On Thu, 19 Dec 2013, Stephen Warren wrote:
-> 
-> >On 12/19/2013 05:49 AM, Paul Walmsley wrote:
-> >>Add basic DT bindings for the DFLL IP block for the NVIDIA Tegra114 SoC.
-> >
-> >>diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra114-dfll.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra114-dfll.txt
-> >
-> >>+- clocks : Must contain an array of two-cell arrays, one per clock.
-> >>+           DFLL source clocks.  At minimum this should include the
-> >>+           reference clock source and the IP block's main clock
-> >>+           source.  Also it should contain the DFLL's I2C controller
-> >>+           clock source.  The format is <&clock-provider-phandle
-> >>+           clock-id>.
-> >
-> >Entries in "clocks" aren't two cells, they're a phandle plus as many
-> >cells as the node referenced by the phandle specifies.
-> 
-> It's worth noting that the clock binding documentation itself refers
-> to pairs:
-> 
-> ----
-> 
-> clocks:		List of phandle and clock specifier pairs, one pair
-> 		for each clock input to the device.  Note: if the
-> 		clock provider specifies '0' for #clock-cells, then
-> 		only the phandle portion of the pair will appear.
-> 
-> ----
-> 
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/clock/clock-bindings.txt#n50
-> 
-> But given the ambiguity of that documentation, I basically agree, so
-> have changed it to:
+Hi,
 
-Please note that there neither is an ambiguity nor a conflict
-here, and that you actually acknowledge what Stephen said:
+>> +- clocks             : Reference to the clock entry.
+>> +- phys                       : PHY reference with parameter 0.
+>
+> The specific value of the phy-specifier shouldn't matter to this
+> binding. What should matter is what it logically corresponds to.
 
-Clocks get referenced by a pair which consists of a phandle for
-the clock provider and a clock specifier.  The clock specifier is
-made of as many cells as the clock provider's #clock-cells
-property defines (including none, or any other number than 1).
+I not quite following this. Are you suggest that I drop the value 0.
+In the binding, one needs to specify the mode of operation - 0 is for
+SATA. Can you explain more?
 
-This is exactly what Stephen said:  A "clocks" item does not need
-to have two cells.  The pair of phandle and clock specifier don't
-necessarily translate into two cells, instead the number of cells
-depends on the clock provider.
-
-Also note that the phandle is specifically _not_ part of the
-clock specifier.
-
-
-virtually yours
-Gerhard Sittig
--- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
-Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
+-Loc
