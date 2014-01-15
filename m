@@ -1,77 +1,272 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCHv13 00/40] ARM: TI SoC clock DT conversion
-Date: Wed, 15 Jan 2014 11:35:48 -0800
-Message-ID: <20140115193547.GF7993@atomide.com>
-References: <20140110161352.GG6665@saruman.home>
- <52D02037.3090705@ti.com>
- <20140110185110.GM31323@atomide.com>
- <52D53084.1070105@ti.com>
- <20140114203613.GA604@saruman.home>
- <20140115020421.GA24195@saruman.home>
- <20140115031632.4167.2698@quantum>
- <20140115035011.4167.96678@quantum>
- <20140115171323.GA22739@atomide.com>
- <20140115192340.4167.87685@quantum>
+From: Sebastian Reichel <sre@debian.org>
+Subject: [RFCv2] Device Tree bindings for OMAP3 Camera System
+Date: Wed, 15 Jan 2014 20:41:28 +0100
+Message-ID: <20140115194127.GA30988@earth.universe>
+References: <20131103220315.GA11659@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="PEIAKu/WMn1b1Hv9"
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140115192340.4167.87685@quantum>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: balbi@ti.com, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, rnayak@ti.com, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <20131103220315.GA11659@earth.universe>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-* Mike Turquette <mturquette@linaro.org> [140115 11:25]:
-> Quoting Tony Lindgren (2014-01-15 09:13:23)
-> > * Mike Turquette <mturquette@linaro.org> [140114 19:52]:
-> > > > 
-> > > > These 40 patches apply very cleanly on top of clk-next with 2
-> > > > exceptions:
-> > > > 
-> > > > 1) I did not apply "[PATCH 30/42] ARM: dts: AM35xx: use DT clock data"
-> > > > because I do not have arch/arm/boot/dts/am3517.dtsi in clk-next (based
-> > > > on 3.13-rc1).
-> > > > 
-> > > > 2) Minor merge conflict in arch/arm/boot/dts/omap3.dtsi which I think I
-> > > > resolved correctly but would like verification.
-> > > > 
-> > > > I'd prefer to simply merge these patches into clk-next, which is the
-> > > > most straightforward route. Any ideas on how to handle the missing
-> > > > AM35xx dtsi data? It can always go as a separate fix after this stuff
-> > > > gets merged which, ironically, is how that file was created in the first
-> > > > place.
-> > 
-> > You could do something like this to take advantage of fast forward and
-> > not have to do a merge back from mainline:
-> > 
-> > $ git checkout -b am3517-clk v3.13-rc8 # or any other -rc with am3517.dtsi
-> > $ git merge clk-next-omap # this fast forwards clk-next-omap to the desired -rc
-> > $ git am am3517-clk-patch
-> > $ git checkout clk-next
-> > $ git merge clk-next-omap # this fast forwards clk-next to the desired -rc
-> 
-> That makes sense, but is there anything bad about doing that for a
-> branch you intend to send as a pull request? I don't see how any of the
-> commits get re-written or anything... I just wonder if there is some
-> subtlety that I am not accounting for that makes this approach bad for
-> sending to Linus.
 
-No there should not be any issues. That's the preferred way to keep
-development branches updated and pullable in long term without any need
-to rebase.
+--PEIAKu/WMn1b1Hv9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Note that there will be only a merge commit if there is a conflict,
-otherwise the fast forward will be transparent. So the trick to avoiding
-rebasing and back merges is to apply patches against what they need in a
-local branch, then after testing merge that local branch into the development
-branch. Then for the upsteam pull request, you just need to make it against
-the -rc you merged in.
+Hi,
 
-AFAIK what Linus does not like is doing a back merge to a development
-branch from mainline, probably as it adds a pointless commit. Or rebasing
-a branch as that way it won't stay pullable.
+I finally found some time to update the proposed binding
+documentation for omap3isp according to the comments on RFCv1.
 
-Regards,
+Changes since v1:
+ * Use common DT clock bindings to provide isp-xclk
+ * Use common DT video-interface bindings to specify device connections
+ * Apply style updates suggested by Mark Rutland
+ * I renamed ti,enable-crc to ti,disable-crc, since I think its supposed
+   to be used for remote hw adding broken crc values. I can't see other
+   reasons for disabling it :)
+ * I've kept the clocks the same for now. I think somebody else should look
+   over them. Changing the actual referenced clocks / renaming them is just
+   a small change and can be done at a later time in the omap3isp DT process
+   IMHO.
+ * I've kept the reg reference as a list for now, since that's how the
+   omap3isp driver currently works and I can't see any disadvantages
+   in making the memory segmentation visible in the DTS file.
 
-Tony
+So here is the proposed DT binding documentation:
+
+Binding for the OMAP3 Camera subsystem with the image signal processor (ISP)
+feature. The binding follows the common video-interfaces Device Tree bindin=
+g,
+so it is recommended to read the common binding description first. This des=
+cription
+can be found in Documentation/devicetree/bindings/media/video-interfaces.txt
+
+omap3isp node
+-------------
+
+Required properties:
+
+- compatible    : should be "ti,omap3isp" for OMAP3.
+- reg       : physical addresses and length of the registers set.
+- clocks    : list of clock specifiers, corresponding to entries in
+          clock-names property.
+- clock-names   : must contain "cam_ick", "cam_mclk", "csi2_96m_fck",
+          "l3_ick" entries, matching entries in the clocks property.
+- interrupts    : must contain mmu interrupt.
+- ti,iommu  : phandle to isp mmu.
+- #address-cells: Should be set to <1>.
+- #size-cells   : Should be set to <0>.
+
+Optional properties:
+
+- vdd-csiphy1-supply    : regulator for csi phy1
+- vdd-csiphy2-supply    : regulator for csi phy2
+
+isp-xclk subnode
+----------------
+
+The omap3 ISP provides two external clocks, which are available as subnodes=
+ of
+the omap3isp node. Devices using one of these clock devices are supposed to=
+ follow
+the common Device Tree clock bindings described in
+
+Documentation/devicetree/bindings/clock/clock-bindings.txt
+
+Required properties:
+ - compatible   : should contain "ti,omap3-cam-xclk"
+ - reg      : should be set to
+  * <0> for cam_xclka
+  * <1> for cam_xclkb
+ - #clock-cells : should be set to <0>
+
+port subnode
+------------
+
+The omap3 ISP provides three different physical interfaces for camera
+connections. Each of them is described using a port node.
+
+Required properties:
+ - reg : Should be set to one of the following values
+   * <0> for the parallel interface (CPI)
+   * <1> for the first serial interface (CSI1)
+   * <2> for the second serial interface (CSI2)
+
+endpoint subnode for parallel interface
+---------------------------------------
+
+The endpoint subnode describes the connection between the port and the remo=
+te
+camera device.
+
+Required properties:
+ - remote-endpoint  : phandle to remote device
+
+Optional properties:
+ - data-shift       : integer describing how far the data lanes are shifted.
+ - pclk-sample      : integer describing if clk should be interpreted on
+              rising (<1>) or falling edge (<0>). Default is <1>.
+ - hsync-active     : integer describing if hsync is active high (<1>) or
+              active low (<0>). Default is <1>.
+ - vsync-active     : integer describing if vsync is active high (<1>) or
+              active low (<0>). Default is <1>.
+ - ti,data-ones-complement : boolean, describing that the data's polarity is
+                 one's complement.
+
+endpoint subnode for serial interfaces
+--------------------------------------
+
+Required properties:
+ - ti,isp-interface-type    : should be one of the following values
+  * <0> to use the phy in CSI mode
+  * <1> to use the phy in CCP mode
+  * <2> to use the phy in CCP mode, but configured for MIPI CSI2
+ - ti,isp-clock-divisor     : integer used for configuration of the
+                  video port output clock control.
+
+Optional properties:
+ - ti,disable-crc       : boolean, which disables crc checking.
+ - ti,strobe-mode       : boolean, which setups data/strobe physical
+                  layer instead of data/clock physical layer.
+ - pclk-sample          : integer describing if clk should be interpreted on
+                  rising (<1>) or falling edge (<0>). Default is <1>.
+- data-lanes: an array of physical data lane indexes. Position of an entry
+  determines the logical lane number, while the value of an entry indicates
+  physical lane, e.g. for 2-lane MIPI CSI-2 bus we could have
+  "data-lanes =3D <1 2>;", assuming the clock lane is on hardware lane 0.
+  This property is valid for serial busses only (e.g. MIPI CSI-2).
+- clock-lanes: an array of physical clock lane indexes. Position of an entry
+  determines the logical lane number, while the value of an entry indicates
+  physical lane, e.g. for a MIPI CSI-2 bus we could have "clock-lanes =3D <=
+0>;",
+  which places the clock lane on hardware lane 0. This property is valid for
+  serial busses only (e.g. MIPI CSI-2). Note that for the MIPI CSI-2 bus th=
+is
+  array contains only one entry.
+
+Example for Nokia N900
+----------------------
+
+omap3isp: isp@480BC000 {
+    compatible =3D "ti,omap3isp";
+    reg =3D   <0x480BC000 0x070>, /* base */
+        <0x480BC100 0x078>, /* cbuf */
+        <0x480BC400 0x1F0>, /* cpp2 */
+        <0x480BC600 0x0A8>, /* ccdc */
+        <0x480BCA00 0x048>, /* hist */
+        <0x480BCC00 0x060>, /* h3a  */
+        <0x480BCE00 0x0A0>, /* prev */
+        <0x480BD000 0x0AC>, /* resz */
+        <0x480BD200 0x0FC>, /* sbl  */
+        <0x480BD400 0x070>; /* mmu  */
+
+    clocks =3D <&cam_ick>,
+         <&cam_mclk>,
+         <&csi2_96m_fck>,
+         <&l3_ick>;
+    clock-names =3D "cam_ick",
+              "cam_mclk",
+              "csi2_96m_fck",
+              "l3_ick";
+
+    interrupts =3D <24>;
+
+    ti,iommu =3D <&mmu_isp>;
+
+    isp_xclk1: isp-xclk@0 {
+        compatible =3D "ti,omap3-isp-xclk";
+        reg =3D <0>;
+        #clock-cells =3D <0>;
+    };
+
+    isp_xclk2: isp-xclk@1 {
+        compatible =3D "ti,omap3-isp-xclk";
+        reg =3D <1>;
+        #clock-cells =3D <0>;
+    };
+
+    #address-cells =3D <1>;
+    #size-cells =3D <0>;
+
+    port@0 {
+        reg =3D <0>;
+
+        /* parallel interface is not used on Nokia N900 */
+        parallel_ep: endpoint {};
+    };
+
+    port@1 {
+        reg =3D <1>;
+
+        csi1_ep: endpoint {
+            remote-endpoint =3D <&switch_in>;
+            ti,isp-clock-divisor =3D <1>;
+            ti,strobe-mode;
+        };
+    }
+
+    port@2 {
+        reg =3D <2>;
+
+        /* second serial interface is not used on Nokia N900 */
+        csi2_ep: endpoint {};
+    }
+};
+
+camera-switch {
+    /*
+     * TODO:=20
+     *  - check if the switching code is generic enough to use a
+     *    more generic name like "gpio-camera-switch".
+     *  - document the camera-switch binding
+     */
+    compatible =3D "nokia,n900-camera-switch";
+
+    gpios =3D <&gpio4 1>; /* 97 */
+
+    port@0 {
+        switch_in: endpoint {
+            remote-endpoint =3D <&csi1_ep>;
+        };
+
+        switch_out1: endpoint {
+            remote-endpoint =3D <&et8ek8>;
+        };
+
+        switch_out2: endpoint {
+            remote-endpoint =3D <&smiapp_dfl>;
+        };
+    };
+};
+
+--PEIAKu/WMn1b1Hv9
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCAAGBQJS1uRnAAoJENju1/PIO/qaQjoQAJWEoHr/IcIgbzZCXLVbPBWq
+g80S5aEyv6GRvZ7uVmwk/atOrT6Zp+2ewEuC6zR7HU5sbun5Yr7Ry1huHJdtRMpF
+bkuJsZIjX9MnfAj0i49c2YZrlTifjtsqSKsAPH3ks84Sv8QXUfh6/IBrlZLqNtbR
+gzXiUc6neilY2IBi72+atiwRuTprF2Tul8xFCzqXu+mLfO0xdvHhfaTC/8QmW5e3
+45HG/kqEkZ7wBU/fDBE5llIGJYYKlpsycJbTiW2eIaQrsvSmaYrZX8EZ+rnZIsgA
+3on3Kjc2+vu/bRCyxEUf+SzRjfbv5HWgRPq5jIeFpGWkds1AW6YAE/WT6/2ifyRf
+hkDTCbMhoQGFXctRQR+4M2Hgp5uaJrf4RWhbLgHBctLuooQWpdPLOnSFP84PaAD5
+mzd5rIUtYsjo5RDy3nYXvn9uSOr2EX+4jVv9QILvBAOtljifdDQaFZw8939An9az
+LcAwJWi2d1YOOOOoGbuH/DRZ3IN4VTbDBEQwHulnvaZJ00G334mV80Ep/tUlYC6X
+Jg+QrgzSclTVVXUJ27UL9kF88d2UH1LkHSus1wDRJr5CF6jqR6NGbjKWA6uQp7xz
+j5GVOr0U4YDbr4aDDnZYzNpZrf4iQdRcJzddL+xw4PpjQLEEkpes62e2LUpWHNss
+azaxq0i+LdRsRIt/Wk5U
+=528f
+-----END PGP SIGNATURE-----
+
+--PEIAKu/WMn1b1Hv9--
