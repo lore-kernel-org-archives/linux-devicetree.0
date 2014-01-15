@@ -1,45 +1,47 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH 1/3] mmc: dw_mmc: use slot-gpio to handle cd pin
-Date: Wed, 15 Jan 2014 09:09:09 +0800
-Message-ID: <52D5DFB5.7@linaro.org>
-References: <1389278112-7099-1-git-send-email-zhangfei.gao@linaro.org>	<1389278112-7099-2-git-send-email-zhangfei.gao@linaro.org>	<CAGa+x85awFYsrU9Gggirpaip3vggtSqu5GinVzss=nfNcp4nww@mail.gmail.com> <CAOesGMi5bK6siLQ2dVkR7P30+5zQa8qsyxa3UsWj0Kw9OEXCPw@mail.gmail.com>
+From: Feng Kan <fkan@apm.com>
+Subject: [PATCH V3 0/3] Enable X-Gene platform reboot driver.
+Date: Tue, 14 Jan 2014 17:07:32 -0800
+Message-ID: <1389748055-23534-1-git-send-email-fkan@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAOesGMi5bK6siLQ2dVkR7P30+5zQa8qsyxa3UsWj0Kw9OEXCPw@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@linaro.org>
-Cc: Chris Ball <cjb@laptop.org>, Arnd Bergmann <arnd@arndb.de>, Mike Turquette <mturquette@linaro.org>, Rob Herring <robherring2@gmail.com>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Kumar Gala <galak@codeaurora.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Patch Tracking <patches@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Feng Kan <fkan@apm.com>
 List-Id: devicetree@vger.kernel.org
 
+Enable X-Gene platform driver for the X-Gene platform. Change the
+driver to use syscon to access the system clock unit's system
+reset register.
 
+V2 Change:
+	- Add support for using ACPI resource.
 
-On 01/15/2014 01:23 AM, Olof Johansson wrote:
-> On Tue, Jan 14, 2014 at 7:58 AM, Kevin Hilman <khilman@linaro.org> wrote:
->> On Thu, Jan 9, 2014 at 6:35 AM, Zhangfei Gao <zhangfei.gao@linaro.org> wrote:
->>> Suggested by Jaehoon: Use slot-gpio to handle cd-gpio
->>> Add function dw_mci_of_get_cd_gpio to check "cd-gpios" from dts.
->>> mmc_gpio_request_cd and mmc_gpio_get_cd are used to handle cd pin
->>>
->>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
->>> Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
->>
->> The Samsung Arndale board started failing boot from MMC root tests
->> starting with next-20140113 and I bisected it down to this patch.
->> Reverting this patch on top of next-20140114 gets Arndale booting
->> again from MMC.  Is there some supporting DT data that's missing for
->> Arndale?
->
-> Rather, it looks like this patch changes behaviour and no longer uses
-> dw_mci_get_cd() to find out if there's a card attached -- it switches
-> to rely only on GPIO (see the last chunk in the patch). That seems
-> broken?
->
-Oops,
-Change using dw_mci_get_cd set flag DW_MMC_CARD_PRESENT.
-And dw_mci_get_cd is called from mmc_rescan, a litter later than 
-dw_mci_probe.
-Is that too late?
+V3 Change:
+	- Remove the reboot driver's use of acpi resource patch.
+	- Change the reboot driver to use syscon to parse out 
+	  system clock register. Remove the old method of getting
+	  register from the reboot driver directly.
+	- Remove documentation since its now simple.
 
-Thanks
+Feng Kan (3):
+  arm64: add reboot dts entry for X-Gene platform.
+  arm64: Enable system reset via arch Kconfig for X-Gene system.
+  power: reset: use syscon driver to parse reboot register from scu
+
+ arch/arm64/Kconfig                 |    2 ++
+ arch/arm64/boot/dts/apm-storm.dtsi |   10 ++++++++++
+ drivers/power/reset/xgene-reboot.c |   33 +++++++++++++++++----------------
+ 3 files changed, 29 insertions(+), 16 deletions(-)
+
+-- 
+1.7.6.1
