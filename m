@@ -1,86 +1,69 @@
-From: Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 7/7] ARM: brcmstb: dts: add a reference DTS for Broadcom 7445
-Date: Wed, 15 Jan 2014 10:22:07 -0800
-Message-ID: <61E0E2A7-F7FC-4397-8E92-06CC409912B9@gmail.com>
-References: <1389743333-16741-1-git-send-email-marc.ceeeee@gmail.com> <1389743333-16741-8-git-send-email-marc.ceeeee@gmail.com> <201401151410.39112.arnd@arndb.de>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain;
-	charset=us-ascii
+From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Subject: Re: [PATCH 1/7] iommu/omap: Do bus_set_iommu() only if probe()
+	succeeds
+Date: Wed, 15 Jan 2014 18:12:37 +0100
+Message-ID: <52D6C185.2090303@epfl.ch>
+References: <1387284818-28739-1-git-send-email-florian.vaussard@epfl.ch>
+	<1387284818-28739-2-git-send-email-florian.vaussard@epfl.ch>
+	<52B888C2.8040303@ti.com> <52B8A5F8.3000706@epfl.ch>
+	<52B8C8C1.8080101@ti.com>
+Reply-To: florian.vaussard-p8DiymsW2f8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201401151410.39112.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <52B8C8C1.8080101-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?QmVub8OudCBDb3Vzc29u?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Hi Suman,
 
-Thank you for the suggestion - it's exactly what we were looking for!
+So back to this...
+
+On 12/24/2013 12:35 AM, Anna, Suman wrote:
+> Hi Florian,
+> 
+
+[...]
+
+>>
+>> If omap_iommu_probe() fails, the init will have called bus_set_iommu()
+>> anyways. Thus, when a driver request the iommu by calling
+>> iommu_domain_alloc(), it will succeed (but iommu_attach_device() will
+>> fail if I remember).
+> 
+> Yeah, thats the behavior I expected anyway.
+> 
+>> Leaving a driver with a dangling reference to
+>> a phantom iommu is not good IMHO. It will lead to strange behaviours
+>> one day or another.
+>>
+>> As for the multiple iommu case, as I do not think it is currently
+>> possible, as bus_type (in this case &platform_bus_type) has only
+>> one struct iommu_ops. bus_set_iommu() will return EBUSY on the
+>> second call. Am I missing something?
+> 
+> What I meant was the problem you cited will still exist, say if ISP MMU
+> probe failed, but the IVA MMU probe succeeded. The bus_set_iommu() can
+> only be called once anyway, so moving it from init to probe would not
+> help much.
+> 
+
+Ok I see your point. Similar IPs share the same ops, but with different
+omap_iommu_arch_data, even if currently we only have one registered
+IOMMU for OMAP3.
+
+So I will drop this patch.
 
 Regards,
-Marc
-
-Sent from my phone
-
-> On Jan 15, 2014, at 5:10 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> 
->> On Wednesday 15 January 2014, Marc Carino wrote:
->> +       gen-ctrl {
->> +               compatible = "brcm,brcmstb-gen-ctrl-v1";
->> +               reg = <0xf0404304 0x4
->> +                      0xf0404308 0x4
->> +                      0xf03e2578 0x4
->> +                      0xf03e2488 0x10
->> +                      0xf0452000 0x20>;
->> +       };
-> 
-> Sorry I didn't get back to you on this when we discussed the previous
-> version. I'm actually less happy with this DT representation than the
-> original. What I take from your description is that you have multiple
-> register ranges that basically combine more-or-less random registers
-> that belong into different Linux subsystems.
-> 
-> I think the best way to deal with this is to have the "syscon" driver
-> handle the multiplexing between the various drivers that need access
-> to the registers. It would look something like (taking the numbers
-> from your previous patch):
-> 
->    ahb {
->        ranges = <0 0xf0000000 0x1000000>; /* 16 MB remapped registers */
-> 
->        hif-cpubuictrl: syscon@3e2400 {
->            compatible = "brcm,7445-cpubioctrl", "syscon";
->            reg = <0x3e2000, 0x1000>;
->        };
-> 
->        hif-continuation: syscon@45200 {
->            compatible = "brcm,7445-hif-continuation", "syscon";
->            reg = <0x452000, 0x1000>;
->        };
-> 
->        sun-top-ctrl: ...
->    };
-> 
-> This lets the syscon driver find and map the three register areas.
-> Drivers that need access to the registers then do 
-> 
->    reset {
->        compatible = "brcm,7445-reset-ctrl";
->        syscon = <&sun-top-ctrl 0x300 0x100>;
->        #reset-cells = <1>;
->    };
-> 
-> And then you can add a regular device driver to drivers/reset that provides
-> a device_reset() API to other drivers, or a system-reset function to be
-> registered as arm_pm_restart. This driver would use
-> syscon_regmap_lookup_by_phandle() to get access to a regmap pointer,
-> and then use either hardcoded offsets into the regmap, or get those
-> offsets from numbers in the devicetree, as provided in the example
-> above.
-> 
->    Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Florian
