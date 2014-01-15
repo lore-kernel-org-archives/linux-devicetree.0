@@ -1,76 +1,72 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: sun4i: dt: Add basic board support
- for LinkSprite pcDuino
-Date: Wed, 15 Jan 2014 09:14:54 +0100
-Message-ID: <20140115081453.GD3377@lukather>
-References: <alpine.DEB.2.02.1401131406230.17739@trabant.deployis.eu>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH 1/2] clk: hisilicon: add hi3620_mmc_clks
+Date: Wed, 15 Jan 2014 00:29:08 -0800
+Message-ID: <20140115082908.4167.34040@quantum>
+References: <1389604469-8064-1-git-send-email-zhangfei.gao@linaro.org>
+ <1389604469-8064-2-git-send-email-zhangfei.gao@linaro.org>
+ <20140114201740.4167.52076@quantum> <52D5E709.7040105@linaro.org>
+ <20140115035339.4167.51194@quantum> <52D623CC.50009@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="XvKFcGCOAo53UbWW"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBB4H3GLAKGQENAPUKCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1401131406230.17739-35KbhngVGxv1KanxuVi64+yrfmlZI2zM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
-Cc: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <52D623CC.50009@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Haojian Zhuang <haojian.zhuang@linaro.org>, zhangfei <zhangfei.gao@linaro.org>, Chris Ball <cjb@laptop.org>, Arnd Bergmann <arnd@arndb.de>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, brooke.wangzhigang@huawei.com
+Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Quoting Haojian Zhuang (2014-01-14 21:59:40)
+> 
+> On 01/15/2014 11:53 AM, Mike Turquette wrote:
+> > Quoting zhangfei (2014-01-14 17:40:25)
+> >> Dear Mike
+> >>
+> >> On 01/15/2014 04:17 AM, Mike Turquette wrote:
+> >>> Quoting Zhangfei Gao (2014-01-13 01:14:28)
+> >>>> Suggest by Arnd: abstract mmc tuning as clock behavior,
+> >>>> also because different soc have different tuning method and registers.
+> >>>> hi3620_mmc_clks is added to handle mmc clock specifically on hi3620.
+> >>>>
+> >>>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> >>>> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> >>>> Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
+> >>> Patch looks good to me with one exception. I do not have
+> >>> Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt in the
+> >>> clk-next branch. Is there a stable branch I can pull in as a dependency?
+> >> Mach-hisi just have been uploaeded.
+> >> Have tried next-20140114, the patch can be applied successfully.
+> >> While v3.13-rc8 still can not.
+> >>
+> >> Is this fine?
+> > Can you give me a link to the branch that introduces
+> > Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt?
+> >
+> > I guess the patch introducing it is going through arm-soc. Is this going
+> > in for 3.14? If so then perhaps the clk tree and the arm-soc tree can
+> > share a stable branch that introduces it.
+> >
+> > Regards,
+> > Mike
+> >
+> Some patches are merged into arm-soc, and others are in clk tree.
+> If sharing a stable branch between arm-soc and clk tree, it only means
+> that we need to revert all commits that are in arm-soc and clk tree.
+> I think it's too complex.
 
---XvKFcGCOAo53UbWW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm suggesting reverting any patches that are applied to arm-soc. I'm
+only suggesting that there might be a common branch that both the clk
+and arm-soc trees can depend on to fix this problem.
 
-Hi,
+> 
+> How about split the patch? The patch on document should enter in arm-soc.
 
-On Mon, Jan 13, 2014 at 02:15:01PM +0100, Zoltan HERPAI wrote:
-> From b2cd1681fe988584028d280ca79249f4ebcb271c Mon Sep 17 00:00:00 2001
-> From: Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
-> Date: Mon, 13 Jan 2014 14:00:12 +0100
-> Subject: [PATCH v2] ARM: sun4i: dt: Add basic board support for LinkSprit=
-e pcDuino
->=20
-> This patch will add a basic board support DT for the
-> LinkSprite pcDuino board.
->=20
-> Signed-off-by: Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
+That is one approach. You might want to run it past the arm-soc folks
+first to see if they will take in the binding definition for 3.14.
 
-Queued in sunxi/dt-for-3.15
+Regards,
+Mike
 
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---XvKFcGCOAo53UbWW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS1kN9AAoJEBx+YmzsjxAgU0kQAInkRa1xAgnCZig/2pol8KWM
-rxx3M3Ax0ERfJFN8t2yxAIaBUij4TPluApani4RoemYnjUTRtbPtSLVAfJbfU0ys
-M9xZ4GLflWYUVXS6J/jdLaV1+Uw8QfHzcWezA8uHpBNybP2HFJ7ywEv3Ph8yPBAa
-th7IkZN4wSFeC74hgK3TPoSof/oVFnHXZYhMSx8tgcLjYLp6611olCLhGXXe1IV2
-bv8e7PoLyfVoY7uxsSbz89YKQw8LW6EaZq7Tm741AM4JLnJL7G8d6xsfOXprAvQ9
-8/50G3NcZ/ulFKuzEMa3e9fxk/l2V3TmqSCLov85LqVmKaCLpQAdiFGGCKqVXIO3
-WVaPvvitIX9sbI7v1XSpQTmkvtL6ut1ah0dW/m/+aNETYt7RBGE83ZDdsbCAzscn
-L5f5jZPAtwvDe9x6gReELMUa8Wudn3W+RKDZ/loReLFgtJ8c/ngeJkyYcbuDxHXf
-iW2KQYrix27XXVPSxMBGF7wxcaDyJYsjHlpUo6n7vdOtYlz3akkkYMkyLiKs2Lbg
-X+NksMrQ/Ur7KEGQ740nwJHc+y1avw8O/tV8/96U2urEDlfbblfxYniNM2A/LAL4
-Aw7uRzg0Ek1aUGNdokYbwyBttB7shGrShttcLUSzUJO/b2XzmRdu0yafpjAlNwXM
-P7o0na3lXAmO108WNseM
-=66dB
------END PGP SIGNATURE-----
-
---XvKFcGCOAo53UbWW--
+> 
+> Regards
+> Haojian
