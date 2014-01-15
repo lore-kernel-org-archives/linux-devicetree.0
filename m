@@ -1,64 +1,76 @@
-From: "Anna, Suman" <s-anna@ti.com>
-Subject: Re: [PATCHv4 6/7] hwspinlock/omap: enable module before reading
- SYSSTATUS register
-Date: Wed, 15 Jan 2014 17:46:50 -0600
-Message-ID: <52D71DEA.6020602@ti.com>
-References: <1389658764-39199-1-git-send-email-s-anna@ti.com>
- <1389658764-39199-7-git-send-email-s-anna@ti.com>
- <20140114131052.GA10818@saruman.home> <20140114140440.GA15785@saruman.home>
- <52D56C3A.7000704@ti.com>
+From: Loc Ho <lho@apm.com>
+Subject: Re: [PATCH v9 2/4] Documentation: Add documentation for APM X-Gene
+ SoC SATA host controller DTS binding
+Date: Wed, 15 Jan 2014 15:59:27 -0800
+Message-ID: <CAPw-ZT=QXwOVvpgJSL5qU8J2eEuAt3nnXJDfDwPXTTo7z4Fe-A@mail.gmail.com>
+References: <1389769910-15505-1-git-send-email-lho@apm.com>
+	<5905127.tqJ3nFt5cj@wuerfel>
+	<CAPw-ZTmVYfPLUVmtes3Gn8Z=+gyFtLoZxc-QUdHH7-ePjKAG9A@mail.gmail.com>
+	<4632602.a1zUZOeMuh@wuerfel>
+	<CAPw-ZTmn-aNJcLd1mZPRtog_ncq=GC94ULCJb-400oYqERYK5g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52D56C3A.7000704@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: balbi@ti.com
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <CAPw-ZTmn-aNJcLd1mZPRtog_ncq=GC94ULCJb-400oYqERYK5g@mail.gmail.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Suman Tripathi <stripathi@apm.com>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "jcm@redhat.com" <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, "tj@kernel.org" <tj@kernel.org>, "dmilburn@redhat.com" <dmilburn@redhat.com>, "olof@lixom.net" <olof@lixom.net>, Tuan Phan <tphan@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Felipe,
+Hi,
 
- >
-> On 01/14/2014 08:04 AM, Felipe Balbi wrote:
->> Hi again,
+>>> >> >> +- clocks             : Reference to the clock entry.
+>>> >> >> +- phys                       : PHY reference with parameter 0.
+>>> >> >
+>>> >> > The specific value of the phy-specifier shouldn't matter to this
+>>> >> > binding. What should matter is what it logically corresponds to.
+>>> >>
+>>> >> I not quite following this. Are you suggest that I drop the value 0.
+>>> >> In the binding, one needs to specify the mode of operation - 0 is for
+>>> >> SATA. Can you explain more?
+>>> >
+>>> > The SATA device should not care what the argument for the PHY
+>>> > device is. You could connect the same device to another PHY
+>>> > that has a different set of arguments, which is the whole point
+>>> > of abstracting it.
+>>> >
+>>>
+>>> I understand what you wrote here. We should not have an argument from
+>>> the host controller. Then my question is how should the PHY node
+>>> indicates that it needs to be configured itself as an SATA PHY?
 >>
->> On Tue, Jan 14, 2014 at 07:10:52AM -0600, Felipe Balbi wrote:
->>>> diff --git a/drivers/hwspinlock/omap_hwspinlock.c
->>>> b/drivers/hwspinlock/omap_hwspinlock.c
->>>> index 9f56fb2..194886e 100644
->>>> --- a/drivers/hwspinlock/omap_hwspinlock.c
->>>> +++ b/drivers/hwspinlock/omap_hwspinlock.c
->>>> @@ -101,10 +101,23 @@ static int omap_hwspinlock_probe(struct
->>>> platform_device *pdev)
->>>>       if (!io_base)
->>>>           return -ENOMEM;
->>>>
->>>> +    /*
->>>> +     * make sure the module is enabled and clocked before reading
->>>> +     * the module SYSSTATUS register
->>>> +     */
->>>> +    pm_runtime_enable(&pdev->dev);
->>>> +    pm_runtime_get_sync(&pdev->dev);
+>> The "phys" property should specify whatever the configuration of
+>> the phy device is supposed to be. It's just not the business of
+>> the sata driver or the sata binding to know what that configuration
+>> is.
 >>
->> another thing, you need to check return of pm_runtime_get_sync()
 >
-> OK, let me check this and your other comment, and the fix is probably a
-> separate patch.
+> Here is what I have and I am trying to piece this together:
+>
+> phy1 {
+>    #phy-cells = <0>;  /* No parameter as suggest by Mark */
+> };
+>
+> sata1 {
+>     :::
+>     phys = <&phy1>;
+> };
+>
+> What I don't get is how does one specify the mode
+> (SATA/USB/SGMII/etc)? As another parameter in the phy1 node?
 >
 
-I realized the changes relevant to your comments were introduced in this 
-patch, so just refreshed the patch with fixes instead of doing a 
-separate patch. I didn't do a v5 just for these change, and will do so 
-if there are more comments on the DT adaptation.
+May be I misread what Mark mentioned. The binding documentation should
+not specify the requirement of 0. And the binding of the dts should be
+as is:
 
-regards
-Suman
+phy1 {
+   #phy-cells = <1>;
+};
+
+sata1 {
+   :::
+   phys = <&phy1 0>;     where 0 indicates the mode of operation?
+};
+
+-Loc
