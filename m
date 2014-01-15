@@ -1,68 +1,210 @@
-From: boris brezillon <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RFC PATCH 3/9] of: mtd: add NAND timings retrieval support
-Date: Wed, 15 Jan 2014 16:09:01 +0100
-Message-ID: <52D6A48D.4080302@overkiz.com>
-References: <1389190924-26226-1-git-send-email-b.brezillon@overkiz.com> <1389190924-26226-4-git-send-email-b.brezillon@overkiz.com> <20140108183418.GA12358@obsidianresearch.com> <52CDA032.3010804@overkiz.com> <20140108191339.GB12358@obsidianresearch.com> <52CE5F82.6070802@overkiz.com> <20140109173505.GB8899@obsidianresearch.com>
+From: Balaji T K <balajitk@ti.com>
+Subject: Re: [PATCH v10 5/7] ARM: dts: add pbias dt node
+Date: Wed, 15 Jan 2014 20:39:28 +0530
+Message-ID: <52D6A4A8.5060307@ti.com>
+References: <1389279062-32291-1-git-send-email-balajitk@ti.com> <1389627375-9107-1-git-send-email-balajitk@ti.com> <1389627375-9107-6-git-send-email-balajitk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140109173505.GB8899-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1389627375-9107-6-git-send-email-balajitk@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Balaji T K <balajitk@ti.com>
+Cc: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, chris@printf.net, broonie@kernel.org, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Jason,
-
-On 09/01/2014 18:35, Jason Gunthorpe wrote:
-> On Thu, Jan 09, 2014 at 09:36:18AM +0100, boris brezillon wrote:
+On Monday 13 January 2014 09:06 PM, Balaji T K wrote:
+> Add pbias regulator node as a child of system control
+> module - syscon.
 >
->>> You might want to check if you can boil down the DT timings from th=
-e
->>> huge list to just an ONFI mode number..
->> Sure, but the sunxi driver needs at least 19 of them...
-> So does mvebu's NAND driver..
+> Signed-off-by: Balaji T K <balajitk@ti.com>
+> Acked-by: Tony Lindgren <tony@atomide.com>
+Hi Benoit,
+
+Gentle Ping, Let me know if you have any comments.
+
+> ---
+>   arch/arm/boot/dts/dra7.dtsi     |   17 +++++++++++++++++
+>   arch/arm/boot/dts/omap2430.dtsi |   17 +++++++++++++++++
+>   arch/arm/boot/dts/omap3.dtsi    |   17 +++++++++++++++++
+>   arch/arm/boot/dts/omap4.dtsi    |   17 +++++++++++++++++
+>   arch/arm/boot/dts/omap5.dtsi    |   17 +++++++++++++++++
+>   5 files changed, 85 insertions(+), 0 deletions(-)
 >
-> What I ment was you could have a
+> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> index d0df4c4..876c9b8 100644
+> --- a/arch/arm/boot/dts/dra7.dtsi
+> +++ b/arch/arm/boot/dts/dra7.dtsi
+> @@ -110,6 +110,22 @@
+>   			ti,hwmods = "counter_32k";
+>   		};
 >
->    onfi,nand-timing-mode =3D 0
+> +		dra7_ctrl_general: tisyscon@4a002e00 {
+> +			compatible = "syscon", "simple-bus";
+> +			reg = <0x4a002e00 0x7c>;
+> +		};
+> +
+> +		pbias_regulator: pbias_regulator {
+> +			compatible = "ti,pbias-omap";
+> +			reg = <0 0x4>;
+> +			syscon = <&dra7_ctrl_general>;
+> +			pbias_mmc_reg: pbias_mmc_omap5 {
+> +				regulator-name = "pbias_mmc_omap5";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3000000>;
+> +			};
+> +		};
+> +
+>   		dra7_pmx_core: pinmux@4a003400 {
+>   			compatible = "pinctrl-single";
+>   			reg = <0x4a003400 0x0464>;
+> @@ -485,6 +501,7 @@
+>   			dmas = <&sdma 61>, <&sdma 62>;
+>   			dma-names = "tx", "rx";
+>   			status = "disabled";
+> +			pbias-supply = <&pbias_mmc_reg>;
+>   		};
 >
-> in the DT. Each of the modes defines all ~19 parameters, higher modes
-> are faster.
+>   		mmc2: mmc@480b4000 {
+> diff --git a/arch/arm/boot/dts/omap2430.dtsi b/arch/arm/boot/dts/omap2430.dtsi
+> index d624345..af71eb0 100644
+> --- a/arch/arm/boot/dts/omap2430.dtsi
+> +++ b/arch/arm/boot/dts/omap2430.dtsi
+> @@ -29,6 +29,22 @@
+>   			pinctrl-single,function-mask = <0x3f>;
+>   		};
 >
-> Pick a mode value that fits all the parameters of the connected
-> non-ONFI flash.
+> +		omap2_scm_general: tisyscon@49002270 {
+> +			compatible = "syscon", "simple-bus";
+> +			reg = <0x49002270 0x240>;
+> +		};
+> +
+> +		pbias_regulator: pbias_regulator {
+> +			compatible = "ti,pbias-omap";
+> +			reg = <0x230 0x4>;
+> +			syscon = <&omap2_scm_general>;
+> +			pbias_mmc_reg: pbias_mmc_omap2430 {
+> +				regulator-name = "pbias_mmc_omap2430";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3000000>;
+> +			};
+> +		};
+> +
+>   		gpio1: gpio@4900c000 {
+>   			compatible = "ti,omap2-gpio";
+>   			reg = <0x4900c000 0x200>;
+> @@ -183,6 +199,7 @@
+>   			ti,dual-volt;
+>   			dmas = <&sdma 61>, <&sdma 62>;
+>   			dma-names = "tx", "rx";
+> +			pbias-supply = <&pbias_mmc_reg>;
+>   		};
 >
-> This would be instead of defining each parameter
-> individually.. Provide some helpers to convert from a onfi mode numbe=
-r
-> to all the onfi defined timing parameters so that drivers can
-> configure the HW..
-
-Are you suggesting we should provide a function that converts these
-modes into a nand_timings struct, or just use the timing modes and
-let the NAND controller drivers configure its IP accordingly ?
-
-I found the ONFI timing tables in this document:
-
-www.*onfi*.org/~/media/*ONFI*/specs/*onfi*_3_1_spec.pdf=E2=80=8E (chapt=
-er 4.16).
-
-I suppose my nand_timings struct should use the names described
-page 110-111 (at least if we decide to use nand_timings and not
-nand_timing_modes), right ?
-
-Best Regards,
-
-Boris
-
+>   		mmc2: mmc@480b4000 {
+> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+> index daabf99..b7828da 100644
+> --- a/arch/arm/boot/dts/omap3.dtsi
+> +++ b/arch/arm/boot/dts/omap3.dtsi
+> @@ -137,6 +137,22 @@
+>   			pinctrl-single,function-mask = <0xff1f>;
+>   		};
 >
-> Jason
+> +		omap3_scm_general: tisyscon@48002270 {
+> +			compatible = "syscon", "simple-bus";
+> +			reg = <0x48002270 0x2f0>;
+> +		};
+> +
+> +		pbias_regulator: pbias_regulator {
+> +			compatible = "ti,pbias-omap";
+> +			reg = <0x2b0 0x4>;
+> +			syscon = <&omap3_scm_general>;
+> +			pbias_mmc_reg: pbias_mmc_omap2430 {
+> +				regulator-name = "pbias_mmc_omap2430";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3000000>;
+> +			};
+> +		};
+> +
+>   		gpio1: gpio@48310000 {
+>   			compatible = "ti,omap3-gpio";
+>   			reg = <0x48310000 0x200>;
+> @@ -351,6 +367,7 @@
+>   			ti,dual-volt;
+>   			dmas = <&sdma 61>, <&sdma 62>;
+>   			dma-names = "tx", "rx";
+> +			pbias-supply = <&pbias_mmc_reg>;
+>   		};
+>
+>   		mmc2: mmc@480b4000 {
+> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+> index a1e0585..9e19363 100644
+> --- a/arch/arm/boot/dts/omap4.dtsi
+> +++ b/arch/arm/boot/dts/omap4.dtsi
+> @@ -134,6 +134,22 @@
+>   			pinctrl-single,function-mask = <0x7fff>;
+>   		};
+>
+> +		omap4_padconf_global: tisyscon@4a1005a0 {
+> +			compatible = "syscon", "simple-bus";
+> +			reg = <0x4a1005a0 0x170>;
+> +		};
+> +
+> +		pbias_regulator: pbias_regulator {
+> +			compatible = "ti,pbias-omap";
+> +			reg = <0x60 0x4>;
+> +			syscon = <&omap4_padconf_global>;
+> +			pbias_mmc_reg: pbias_mmc_omap4 {
+> +				regulator-name = "pbias_mmc_omap4";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3000000>;
+> +			};
+> +		};
+> +
+>   		sdma: dma-controller@4a056000 {
+>   			compatible = "ti,omap4430-sdma";
+>   			reg = <0x4a056000 0x1000>;
+> @@ -367,6 +383,7 @@
+>   			ti,needs-special-reset;
+>   			dmas = <&sdma 61>, <&sdma 62>;
+>   			dma-names = "tx", "rx";
+> +			pbias-supply = <&pbias_mmc_reg>;
+>   		};
+>
+>   		mmc2: mmc@480b4000 {
+> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+> index fc3fad5..f178899 100644
+> --- a/arch/arm/boot/dts/omap5.dtsi
+> +++ b/arch/arm/boot/dts/omap5.dtsi
+> @@ -130,6 +130,22 @@
+>   			pinctrl-single,function-mask = <0x7fff>;
+>   		};
+>
+> +		omap5_padconf_global: tisyscon@4a002da0 {
+> +			compatible = "syscon";
+> +			reg = <0x4A002da0 0xec>;
+> +		};
+> +
+> +		pbias_regulator: pbias_regulator {
+> +			compatible = "ti,pbias-omap";
+> +			reg = <0x60 0x4>;
+> +			syscon = <&omap5_padconf_global>;
+> +			pbias_mmc_reg: pbias_mmc_omap5 {
+> +				regulator-name = "pbias_mmc_omap5";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3000000>;
+> +			};
+> +		};
+> +
+>   		sdma: dma-controller@4a056000 {
+>   			compatible = "ti,omap4430-sdma";
+>   			reg = <0x4a056000 0x1000>;
+> @@ -409,6 +425,7 @@
+>   			ti,needs-special-reset;
+>   			dmas = <&sdma 61>, <&sdma 62>;
+>   			dma-names = "tx", "rx";
+> +			pbias-supply = <&pbias_mmc_reg>;
+>   		};
+>
+>   		mmc2: mmc@480b4000 {
+>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
