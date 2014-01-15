@@ -1,92 +1,61 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 4/4] OF: introduce OF style 'modalias' support for
- platform bus.
-Date: Wed, 15 Jan 2014 07:45:18 -0600
-Message-ID: <CAL_JsqJFRQ+27N_9AwZXpx4V=g8HKn84WdVKtQ_Br_8SQTXY7g@mail.gmail.com>
-References: <1389689198-2641-1-git-send-email-rui.zhang@intel.com>
-	<1389689198-2641-5-git-send-email-rui.zhang@intel.com>
+From: Anssi Hannula <anssi.hannula@iki.fi>
+Subject: Re: [PATCH RFC v2 REPOST 3/8] ASoC: davinci-evm: HDMI
+ audio support for TDA998x trough McASP I2S bus
+Date: Wed, 15 Jan 2014 15:48:29 +0200
+Message-ID: <52D691AD.3010206@iki.fi>
+References: <cover.1387535299.git.jsarha@ti.com>
+ <d3c3f645d39338df0ee9686cb030255ce36a249d.1387535302.git.jsarha@ti.com>
+ <20131231132555.GA31886@sirena.org.uk> <52D67099.1040904@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1389689198-2641-5-git-send-email-rui.zhang@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zhang Rui <rui.zhang@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, wsa@the-dreams.de, Mark Brown <broonie@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, rafael.j.wysocki@intel.com, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <52D67099.1040904@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jyri Sarha <jsarha@ti.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org, "Ujfalusi, Peter" <peter.ujfalusi@ti.com>, Mark Brown <broonie@kernel.org>, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 14, 2014 at 2:46 AM, Zhang Rui <rui.zhang@intel.com> wrote:
-> Fix a problem that, the platform bus supports the OF style modalias
-> in .uevent() call, but not in its device 'modalias' sysfs attribute.
->
-> cc: devicetree@vger.kernel.org
-> Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+15.01.2014 13:27, Jyri Sarha kirjoitti:
+> On 12/31/2013 03:25 PM, Mark Brown wrote:
+>> On Fri, Dec 20, 2013 at 12:39:38PM +0200, Jyri Sarha wrote:
+>>> support. The only supported sample format is SNDRV_PCM_FORMAT_S32_LE.
+>>> The 8 least significant bits are ignored.
+>>
+>> Where does this constraint come from?
+>>
+> 
+>  From driver/gpu/drm/i2c/tda998x_drv.c. The driver configures CTS_N 
+> register statically to a value that works only with 4 byte samples. 
+> According to my tests it is possible to support 3 and 2 byte samples too 
+> by changing the CTS_N register value, but I am not sure if the 
+> configuration can be changed on the fly. My data sheet of the nxp chip 
+> is very vague about the register definitions, but I suppose the register 
+> configures some clock divider on the chip. HDMI supports only upto 24bit 
+> audio and the data sheet states that any extraneous least significant 
+> bits are ignored.
 
-Acked-by: Rob Herring <robh@kernel.org>
+That sounds strange, CTS/N values only depend on audio sample rate and
+TMDS/video clock, not on the audio format or the size of samples (HDMI
+spec sec 7.2 - Audio Sample Clock Capture and Regeneration).
 
-As there doesn't appear any dependency with the rest of this series, I
-can take this.
+Sure there isn't anything more going on (like the used HDMI sink being
+more tolerant to wrong CTS/N with 4-byte samples, or more likely
+something else I can't immediately think of)?
 
-One minor nit below.
 
-> ---
->  drivers/base/platform.c   |    4 ++++
->  drivers/of/device.c       |    3 +++
->  include/linux/of_device.h |    6 ++++++
->  3 files changed, 13 insertions(+)
->
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index 2f4aea2..bc78848 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -679,6 +679,10 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
->         struct platform_device  *pdev = to_platform_device(dev);
->         int len;
->
-> +       len = of_device_get_modalias(dev, buf, PAGE_SIZE -1);
-> +       if (len != -ENODEV)
-> +               return len;
-> +
->         len = acpi_device_modalias(dev, buf, PAGE_SIZE -1);
->         if (len != -ENODEV)
->                 return len;
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index f685e55..dafb973 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -85,6 +85,9 @@ ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
->         int cplen, i;
->         ssize_t tsize, csize, repend;
->
-> +       if ((!dev) || (!dev->of_node))\
+BTW, radeon driver has some code that calculates static CTS/N values
+since the hw autogeneration is not reliable there:
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/radeon/r600_hdmi.c
+Not that it directly helps now, but just for the record...
 
-Don't need the parentheses here.
-
-> +               return -ENODEV;
-> +
->         /* Name & Type */
->         csize = snprintf(str, len, "of:N%sT%s", dev->of_node->name,
->                          dev->of_node->type);
-> diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-> index 82ce324..8d7dd67 100644
-> --- a/include/linux/of_device.h
-> +++ b/include/linux/of_device.h
-> @@ -64,6 +64,12 @@ static inline int of_driver_match_device(struct device *dev,
->  static inline void of_device_uevent(struct device *dev,
->                         struct kobj_uevent_env *env) { }
->
-> +static inline int of_device_get_modalias(struct device *dev,
-> +                                  char *str, ssize_t len)
-> +{
-> +       return -ENODEV;
-> +}
-> +
->  static inline int of_device_uevent_modalias(struct device *dev,
->                                    struct kobj_uevent_env *env)
->  {
-> --
-> 1.7.9.5
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Anssi Hannula
