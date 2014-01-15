@@ -1,71 +1,26 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCHv13 00/40] ARM: TI SoC clock DT conversion
-Date: Wed, 15 Jan 2014 11:23:40 -0800
-Message-ID: <20140115192340.4167.87685@quantum>
-References: <20140109231513.GA11648@saruman.home>
- <20140110161352.GG6665@saruman.home>
- <52D02037.3090705@ti.com> <20140110185110.GM31323@atomide.com>
- <52D53084.1070105@ti.com> <20140114203613.GA604@saruman.home>
- <20140115020421.GA24195@saruman.home> <20140115031632.4167.2698@quantum>
- <20140115035011.4167.96678@quantum> <20140115171323.GA22739@atomide.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v7 0/2] ohci and ehci-platform clks, phy and dt support
+Date: Wed, 15 Jan 2014 20:24:41 +0100
+Message-ID: <1389813883-567-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140115171323.GA22739@atomide.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, paul@pwsan.com, rnayak@ti.com, balbi@ti.com, Tero Kristo <t-kristo@ti.com>, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBAWB3OLAKGQEGTBBRHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Tony Lindgren (2014-01-15 09:13:23)
-> * Mike Turquette <mturquette@linaro.org> [140114 19:52]:
-> > > 
-> > > These 40 patches apply very cleanly on top of clk-next with 2
-> > > exceptions:
-> > > 
-> > > 1) I did not apply "[PATCH 30/42] ARM: dts: AM35xx: use DT clock data"
-> > > because I do not have arch/arm/boot/dts/am3517.dtsi in clk-next (based
-> > > on 3.13-rc1).
-> > > 
-> > > 2) Minor merge conflict in arch/arm/boot/dts/omap3.dtsi which I think I
-> > > resolved correctly but would like verification.
-> > > 
-> > > I'd prefer to simply merge these patches into clk-next, which is the
-> > > most straightforward route. Any ideas on how to handle the missing
-> > > AM35xx dtsi data? It can always go as a separate fix after this stuff
-> > > gets merged which, ironically, is how that file was created in the first
-> > > place.
-> 
-> You could do something like this to take advantage of fast forward and
-> not have to do a merge back from mainline:
-> 
-> $ git checkout -b am3517-clk v3.13-rc8 # or any other -rc with am3517.dtsi
-> $ git merge clk-next-omap # this fast forwards clk-next-omap to the desired -rc
-> $ git am am3517-clk-patch
-> $ git checkout clk-next
-> $ git merge clk-next-omap # this fast forwards clk-next to the desired -rc
+Hi All,
 
-Tony,
-
-That makes sense, but is there anything bad about doing that for a
-branch you intend to send as a pull request? I don't see how any of the
-commits get re-written or anything... I just wonder if there is some
-subtlety that I am not accounting for that makes this approach bad for
-sending to Linus.
+This version of my ohci and ehci-platform clks, phy and dt support patch-set,
+really fixes the 2 small bugs Alan found.
 
 Regards,
-Mike
 
-> 
-> Regards,
-> 
-> Tony 
+Hans
