@@ -1,125 +1,126 @@
-From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Subject: Re: [PATCH 1/3] power_supply: modelgauge_battery: Maxim ModelGauge
- ICs gauge
-Date: Wed, 15 Jan 2014 14:20:57 +0400
-Message-ID: <52D66109.5080809@cogentembedded.com>
-References: <1389286145-15375-1-git-send-email-vladimir.barinov@cogentembedded.com> <1389286145-15375-2-git-send-email-vladimir.barinov@cogentembedded.com> <52D56650.9070607@samsung.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] devicetree: bindings: Document Krait CPU/L1 EDAC
+Date: Wed, 15 Jan 2014 10:27:01 +0000
+Message-ID: <20140115102701.GA27314@e102568-lin.cambridge.arm.com>
+References: <1389735034-21430-1-git-send-email-sboyd@codeaurora.org>
+ <1389735034-21430-3-git-send-email-sboyd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <52D56650.9070607@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: dwmw2@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, anton@enomsg.org, mk7.kang@samsung.com, kmpark@infradead.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1389735034-21430-3-git-send-email-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello, Krzysztof,
+On Tue, Jan 14, 2014 at 09:30:32PM +0000, Stephen Boyd wrote:
+> The Krait CPU/L1 error reporting device is made up a per-CPU
+> interrupt. While we're here, document the next-level-cache
+> property that's used by the Krait EDAC driver.
+> 
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+> Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.txt | 52 ++++++++++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> index 91304353eea4..c332b5168456 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -191,6 +191,16 @@ nodes to be present and contain the properties described below.
+>  			  property identifying a 64-bit zero-initialised
+>  			  memory location.
+>  
+> +	- interrupts
+> +		Usage: required for cpus with compatible string "qcom,krait".
+> +		Value type: <prop-encoded-array>
+> +		Definition: L1/CPU error interrupt
 
-Thank you for the review.
+I reckon you want this property to belong in the cpus node (example below),
+not in cpu nodes, right ?
 
-On 01/14/2014 08:31 PM, Krzysztof Kozlowski wrote:
-> On 01/09/2014 05:49 PM, Vladimir Barinov wrote:
->> Add Maxim ModelGauge ICs gauge driver for 
->> MAX17040/41/43/44/48/49/58/59 chips
->>
->> Signed-off-by: Vladimir Barinov 
->> <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
->>
->> ---
->>   drivers/power/Kconfig                            |    8
->>   drivers/power/Makefile                           |    1
->>   drivers/power/modelgauge_battery.c               |  875 
->> +++++++++++++++++++++++
->>   include/linux/platform_data/battery-modelgauge.h |   44 +
->>   4 files changed, 928 insertions(+)
->>
->
-> [...]
->
->> +static int modelgauge_read_reg(struct i2c_client *client, u8 reg, 
->> u16 *value)
->> +{
->> +    int ret = i2c_smbus_read_word_data(client, reg);
->> +
->> +    if (ret < 0) {
->> +        dev_err(&client->dev, "%s: err %d\n", __func__, ret);
->> +        return ret;
->> +    }
->> +
->> +    *value = be16_to_cpu(ret);
->> +    return 0;
->> +}
->
-> Have you considered using regmap for accessing registers? I know that 
-> other max17* drivers don't use it but it may be this could be the time 
-> to switch to regmap API?
->
-> [...]
-Sure, I will rework for the next try. Thx for pointing to this.
->
->> +static int modelgauge_probe(struct i2c_client *client,
->> +                const struct i2c_device_id *id)
->> +{
->> +    struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
->> +    struct modelgauge_priv *priv;
->> +    int ret;
->> +
->> +    if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_WORD_DATA))
->> +        return -EIO;
->> +
->> +    priv = devm_kzalloc(&client->dev, sizeof(*priv), GFP_KERNEL);
->> +    if (!priv)
->> +        return -ENOMEM;
->> +
->> +    if (client->dev.of_node)
->> +        priv->pdata = modelgauge_parse_dt(&client->dev);
->> +    else
->> +        priv->pdata = client->dev.platform_data;
->> +
->> +    priv->client    = client;
->> +    priv->chip    = id->driver_data;
->> +
->> +    i2c_set_clientdata(client, priv);
->> +
->> +    priv->battery.name        = "modelgauge_battery";
->> +    priv->battery.type        = POWER_SUPPLY_TYPE_BATTERY;
->> +    priv->battery.get_property    = modelgauge_get_property;
->> +    priv->battery.properties    = modelgauge_battery_props;
->> +    priv->battery.num_properties    = 
->> ARRAY_SIZE(modelgauge_battery_props);
->> +
->> +    INIT_WORK(&priv->load_work, modelgauge_load_model_work);
->> +    INIT_DELAYED_WORK(&priv->rcomp_work, modelgauge_update_rcomp_work);
->> +
->> +    ret = modelgauge_init(priv);
->> +    if (ret)
->> +        return ret;
->> +
->> +    ret = power_supply_register(&client->dev, &priv->battery);
->> +    if (ret) {
->> +        dev_err(&client->dev, "failed: power supply register\n");
->> +        goto err_supply;
->> +    }
->> +
->> +    if (client->irq) {
->> +        switch (priv->chip) {
->> +        case ID_MAX17040:
->> +        case ID_MAX17041:
->> +            dev_err(&client->dev, "alert line is not supported\n");
->> +            ret = -EINVAL;
->> +            goto err_irq;
->> +        default:
->> +            ret = request_threaded_irq(client->irq, NULL,
->> +                           modelgauge_irq_handler,
->> +                           IRQF_TRIGGER_FALLING,
->> +                           priv->battery.name, priv);
->
-> I think you may use devm_request_threaded_irq() here.
-Ok, thx,
->
-> Best regards,
-> Krzysztof
+Are you relying on a platform device to be created for /cpus node in
+order for this series to work ? I guess that's why you want the
+interrupts property to be defined in /cpus so that it becomes a platform
+device resource (and you also add a compatible property in /cpus that is
+missing in these bindings).
 
-Regards,
-Vladimir
+> +
+> +	- next-level-cache
+> +		Usage: optional
+> +		Value type: <phandle>
+> +		Definition: phandle pointing to the next level cache
+> +
+>  Example 1 (dual-cluster big.LITTLE system 32-bit):
+>  
+>  	cpus {
+> @@ -382,3 +392,45 @@ cpus {
+>  		cpu-release-addr = <0 0x20000000>;
+>  	};
+>  };
+> +
+> +
+> +Example 5 (Krait 32-bit system):
+> +
+> +cpus {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	interrupts = <1 9 0xf04>;
+
+In patch 4 you also add a compatible property here, and that's not documented,
+and honestly I do not think that's acceptable either. I guess you want a
+compatible property here to match the platform driver, right ?
+
+Thank you,
+Lorenzo
+
+> +
+> +	cpu@0 {
+> +		device_type = "cpu";
+> +		compatible = "qcom,krait";
+> +		reg = <0>;
+> +		next-level-cache = <&L2>;
+> +	};
+> +
+> +	cpu@1 {
+> +		device_type = "cpu";
+> +		compatible = "qcom,krait";
+> +		reg = <1>;
+> +		next-level-cache = <&L2>;
+> +	};
+> +
+> +	cpu@2 {
+> +		device_type = "cpu";
+> +		compatible = "qcom,krait";
+> +		reg = <2>;
+> +		next-level-cache = <&L2>;
+> +	};
+> +
+> +	cpu@3 {
+> +		device_type = "cpu";
+> +		compatible = "qcom,krait";
+> +		reg = <3>;
+> +		next-level-cache = <&L2>;
+> +	};
+> +
+> +	L2: l2-cache {
+> +		compatible = "cache";
+> +		interrupts = <0 2 0x4>;
+> +	};
+> +};
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> hosted by The Linux Foundation
+> 
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
