@@ -1,87 +1,121 @@
-From: boris brezillon <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RFC PATCH 3/9] of: mtd: add NAND timings retrieval support
-Date: Wed, 15 Jan 2014 18:03:01 +0100
-Message-ID: <52D6BF45.80407@overkiz.com>
-References: <1389190924-26226-1-git-send-email-b.brezillon@overkiz.com> <1389190924-26226-4-git-send-email-b.brezillon@overkiz.com> <20140108183418.GA12358@obsidianresearch.com> <52CDA032.3010804@overkiz.com> <20140108191339.GB12358@obsidianresearch.com> <52CE5F82.6070802@overkiz.com> <20140109173505.GB8899@obsidianresearch.com> <52D6A48D.4080302@overkiz.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 5/7] ARM: brcmstb: add misc. DT bindings for
+ brcm,brcmstb-*
+Date: Wed, 15 Jan 2014 17:11:55 +0000
+Message-ID: <20140115171155.GK25824@e106331-lin.cambridge.arm.com>
+References: <1389743333-16741-1-git-send-email-marc.ceeeee@gmail.com>
+ <1389743333-16741-6-git-send-email-marc.ceeeee@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52D6A48D.4080302-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1389743333-16741-6-git-send-email-marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15/01/2014 16:09, boris brezillon wrote:
-> Hello Jason,
->
-> On 09/01/2014 18:35, Jason Gunthorpe wrote:
->> On Thu, Jan 09, 2014 at 09:36:18AM +0100, boris brezillon wrote:
->>
->>>> You might want to check if you can boil down the DT timings from t=
-he
->>>> huge list to just an ONFI mode number..
->>> Sure, but the sunxi driver needs at least 19 of them...
->> So does mvebu's NAND driver..
->>
->> What I ment was you could have a
->>
->>    onfi,nand-timing-mode =3D 0
->>
->> in the DT. Each of the modes defines all ~19 parameters, higher mode=
-s
->> are faster.
->>
->> Pick a mode value that fits all the parameters of the connected
->> non-ONFI flash.
->>
->> This would be instead of defining each parameter
->> individually.. Provide some helpers to convert from a onfi mode numb=
-er
->> to all the onfi defined timing parameters so that drivers can
->> configure the HW..
->
-> Are you suggesting we should provide a function that converts these
-> modes into a nand_timings struct, or just use the timing modes and
-> let the NAND controller drivers configure its IP accordingly ?
->
-> I found the ONFI timing tables in this document:
->
-> www.*onfi*.org/~/media/*ONFI*/specs/*onfi*_3_1_spec.pdf=E2=80=8E (cha=
-pter 4.16).
->
-> I suppose my nand_timings struct should use the names described
-> page 110-111 (at least if we decide to use nand_timings and not
-> nand_timing_modes), right ?
+On Tue, Jan 14, 2014 at 11:48:51PM +0000, Marc Carino wrote:
+> Document the bindings that the Broadcom STB platform needs
+> for proper bootup.
+> 
+> Signed-off-by: Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/arm/brcm-brcmstb.txt       |   43 ++++++++++++++++++++
+>  1 files changed, 43 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/brcm-brcmstb.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/brcm-brcmstb.txt b/Documentation/devicetree/bindings/arm/brcm-brcmstb.txt
+> new file mode 100644
+> index 0000000..5f1aba7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/brcm-brcmstb.txt
+> @@ -0,0 +1,43 @@
+> +Broadcom STB platforms Device Tree Bindings
+> +-------------------------------------------
+> +Boards with Broadcom Brahma15 ARM-based BCM7xxx SoC shall have the following
+> +properties.
+> +
+> +Required root node properties:
+> +
+> +    - compatible = "brcm,brcmstb-<chip_id>";
 
-After taking a closer look at this document, the only parameter=20
-available in my
-nand_timings struct that is not defined in the standard is tR_max (data=
-=20
-transfer
-from cell to register).
+I'd prefer it if variants were listed explicitly (as it makes it far
+easier to grep for). Something like:
 
-And the ONFI standard defines 4 more timings:
-- tCEA_max
-- tCEH_min
-- tFEAT_max
-- tITC_max
+- compatible: should contain one of:
+  * "brcm,brcmsrb-7445"
+  * "brcm,brcmsrb-7446"
 
+> +
+> +Further, a node with the following compatible string shall be defined:
+> +
+> +    - compatible: "brcm,brcmstb-gen-ctrl-v1"
 
+It's probably better to say a brcmstb-gen-ctrl node (described below)
+should be present, or you'll have two places to update the compatible
+strings for each new variant...
 
->
-> Best Regards,
->
-> Boris
->
->>
->> Jason
->
+> +
+> +brcmstb-gen-ctrl
+> +----------------
+> +This node describes the registers needed for reset and CPU power control.
+> +
+> +    - compatible: "brcm,brcmstb-gen-ctrl-v1"
+> +    - properties:
 
+This looks odd, compatible is itself a property.
+
+> +        o reg = <rst-src-en-reg-base len
+> +                 sw-mstr-rst-reg-base len
+> +                 cpu-rst-cfg-reg-base len
+> +                 cpu-pwr-zone-ctrl-reg-base len
+> +                 stb-boot-hi-addr0-reg len>;
+
+This would be nicer as something like follows, but with less
+abberviation (unless these names are from a datasheet for the hardware).
+
+- reg: a list of base-address size pairs:
+  * The first entry should cover the sw-mstr-rst registers
+  * The second entry should cover the cpu-rst-cfg registers
+  * The third entry should cover the cpu-pwr-zone registers
+  * The fourth entry should cover the stb-boot-hi-addr0 registers
+
+It may make sense to use reg-names, future revisions might change
+things.
+
+> +
+> +example:
+> +/ {
+> +    model = "Broadcom STB";
+> +    compatible =  "brcm,brcmstb-7445";
+> +
+> +    /* snip */
+> +
+> +    gen-ctrl {
+> +        compatible = "brcm,brcmstb-gen-ctrl-v1";
+> +        reg = <0xf0404304 0x4
+> +               0xf0404308 0x4
+> +               0xf03e2578 0x4
+> +               0xf03e2488 0x10
+> +               0xf0452000 0x20>;
+
+Nit: please bracket each entry individually:
+
+reg = <0xf0404304 0x4>,
+      <0xf0404308 0x4>,
+      <0xf03e2578 0x4>,
+      <0xf03e2488 0x10>,
+      <0xf0452000 0x20>;
+
+Also, these look to be single registers in a larger register bank. Is
+there any reason you can't describe the bank(s) they are in? That'll
+give you more flexibility in the driver...
+
+Thanks,
+Mark
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
