@@ -1,173 +1,45 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 7/7] ARM: brcmstb: dts: add a reference DTS for
- Broadcom 7445
-Date: Wed, 15 Jan 2014 17:40:33 +0000
-Message-ID: <20140115174033.GM25824@e106331-lin.cambridge.arm.com>
-References: <1389743333-16741-1-git-send-email-marc.ceeeee@gmail.com>
- <1389743333-16741-8-git-send-email-marc.ceeeee@gmail.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH] ARM: Kirkwood: Add DT description of QNAP 419
+Date: Wed, 15 Jan 2014 18:45:19 +0100
+Message-ID: <20140115174519.GE17530@lunn.ch>
+References: <1389048557-16364-1-git-send-email-andrew@lunn.ch>
+ <1389174517.12612.87.camel@kazak.uk.xensource.com>
+ <20140111210443.GT9681@lunn.ch>
+ <201401151736.46280.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1389743333-16741-8-git-send-email-marc.ceeeee@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Carino <marc.ceeeee@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Christian Daudt <bcm@fixthebug.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Matt Porter <matt.porter@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <201401151736.46280.arnd@arndb.de>
+Sender: linux-input-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Ian Campbell <ijc@hellion.org.uk>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>, linux-input@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, tbm@cyrius.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 14, 2014 at 11:48:53PM +0000, Marc Carino wrote:
-> Add a sample DTS which will allow bootup of a board populated
-> with the BCM7445 chip.
+> > But i'm also a little bit concerned by the "unique number" and this
+> > ending up in /dev/input/by-path/platform-gpio_keys.3-event. Is this
+> > path supposed to be stable? This unique number is not stable. An
+> > unwitting change to the DT could cause its value to change. Do we need
+> > to make it stable?
+> > 
 > 
-> Signed-off-by: Marc Carino <marc.ceeeee@gmail.com>
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  arch/arm/boot/dts/brcmstb-7445.dts |  104 ++++++++++++++++++++++++++++++++++++
->  1 files changed, 104 insertions(+), 0 deletions(-)
->  create mode 100644 arch/arm/boot/dts/brcmstb-7445.dts
-> 
-> diff --git a/arch/arm/boot/dts/brcmstb-7445.dts b/arch/arm/boot/dts/brcmstb-7445.dts
-> new file mode 100644
-> index 0000000..cbe73b4
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/brcmstb-7445.dts
-> @@ -0,0 +1,104 @@
-> +/dts-v1/;
-> +/include/ "skeleton.dtsi"
-> +
-> +/ {
-> +	#address-cells = <0x1>;
-> +	#size-cells = <0x1>;
+> One possibility would be to create an artificial bus in DT for all
+> gpio-keys devices, use #address-cells=<1> and #size-cells=<0>
+> for it, and give each device a unique reg property. Not sure if that
+> would be considered an elegant solution though.
 
-I see that there are some Xen patches floating around for the B15, so
-presumably you have LPAE (and therefore can have physical addresses
-wider than 32-bits).
+Hi Arnd
 
-Are all peripherals and memory in the bottom 4GB of the physical address
-space? If not, I'd recommend you bump #address-cells (and #size-cells)
-to <2> now, or you'll need to rewrite half the DT to add currently
-missing peripherals...
+Can i imply from your answer that you think 
 
-Also, unless you're writing an address or mask it's usually nicer to
-have the value in decimal rather than hex. Please could you get rid of
-the 0x prefix on the #address-cells, #size-cells, #clock-cells values?
+/dev/input/by-path/platform-gpio_keys.3-event
 
-It's a minor issue, but it's nicer for humans to read...
+should be stable?
 
-> +	model = "Broadcom STB (7445)";
-> +	compatible = "brcm,brcmstb-7445";
-> +	interrupt-parent = <&gic>;
-> +
-> +	chosen {};
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x0 0x40000000 0x40000000 0x40000000 0x80000000 0x40000000>;
-> +	};
+A quick look at udev rules seems to suggestion this is an issue for
+input/gpio-keys and maybe audio and video if there is a top level DT
+property collecting the different sub devices together for ASOC and
+V4L.
 
-As a general note, where you have list properties, please bracket
-elements individually (here and elsewhere) so it's possible to read,
-e.g:
-
-	reg = <0x00000000 0x40000000>,
-	      <0x40000000 0x40000000>,
-	      <0x80000000 0x40000000>;
-
-In this case, the memory is contiguous, so you can describe it with one
-reg entry:
-
-	reg = <0x0 0xc0000000>;
-
-> +
-> +	cpupll: cpupll@0 {
-> +		#clock-cells = <0x0>;
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <1500000000>;
-> +	};
-
-The unit-address (the "@0") should go, as this doesn't have a reg entry.
-same for the cpu-clk-div@0 node below:
-
-> +
-> +	cpuclk: cpu-clk-div@0 {
-> +		#clock-cells = <0x0>;
-> +		compatible = "brcm,brcmstb-cpu-clk-div";
-> +		reg = <0xf03e257c 0x4>;
-> +		clocks = <&cpupll>;
-> +		div-table = <0x0 0x1 0x11 0x2 0x12 0x4 0x13 0x8 0x14 0x10>;
-> +	};
-
-The unit-address here should be f03e257c (or 0,f03e257c if you move to
-#address-cells = <2>).
-
-Is this binding documented anywhere? It doesn't seem to be added in this
-series, and grep on mainline gave me nothing...
-
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpu@0 {
-> +			compatible = "brcm,brahma15";
-
-I think this string should change, as mentioned in my cpu binding
-patch comments.
-
-> +			operating-points = <0x16e360 0x0
-> +					    0x0b71b0 0x0
-> +					    0x05b8d8 0x0
-> +					    0x02dc6c 0x0
-> +					    0x016e36 0x0>;
-
-These might be easier to read in decimal...
-
-> +			clocks = <&cpuclk>;
-> +			device_type = "cpu";
-> +			reg = <0>;
-> +			clock-frequency = <1500000000>;
-> +		};
-> +
-> +		cpu@1 {
-> +			compatible = "brcm,brahma15";
-> +			device_type = "cpu";
-> +			reg = <1>;
-> +			clock-frequency = <1500000000>;
-> +		};
-> +
-> +		cpu@2 {
-> +			compatible = "brcm,brahma15";
-> +			device_type = "cpu";
-> +			reg = <2>;
-> +			clock-frequency = <1500000000>;
-> +		};
-> +
-> +		cpu@3 {
-> +			compatible = "brcm,brahma15";
-> +			device_type = "cpu";
-> +			reg = <3>;
-> +			clock-frequency = <1500000000>;
-> +		};
-> +	};
-> +
-> +	gic: interrupt-controller@ffd00000 {
-> +		compatible = "brcm,brahma15-gic", "arm,cortex-a15-gic";
-> +		reg = <0xffd01000 0x1000
-> +		       0xffd02000 0x2000>;
-
-I see you have Xen patches, and therefore presumably have a GIC with
-virtualization features. Could you add the missing reg entries for the
-virtual control and virtual cpu interface registers please?
-
-Cheers,
-Mark.
+Thanks
+	Andrew
