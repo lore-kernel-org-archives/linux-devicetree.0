@@ -1,115 +1,85 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] drm/tegra: Obtain head number from DT
-Date: Wed, 15 Jan 2014 16:18:02 +0100
-Message-ID: <1389799082-12897-1-git-send-email-treding@nvidia.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 1/1] of/irq: create interrupts-extended-2 property
+Date: Wed, 15 Jan 2014 09:28:54 -0600
+Message-ID: <CAL_JsqJFk7nJBv6dBLh9nMnyJbhuEb+PQYD9cTDUAXJjb8zdZg@mail.gmail.com>
+References: <1389786445-10598-1-git-send-email-plagnioj@jcrosoft.com>
+	<20140115121750.GE25824@e106331-lin.cambridge.arm.com>
+	<20140115124041.GD9558@ns203013.ovh.net>
+	<20140115134653.GF25824@e106331-lin.cambridge.arm.com>
+	<CAL_JsqKbFw4OSkjxYafuaDsmRPU3RXZB8dhJ4zxyaUwSRwfpPw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKbFw4OSkjxYafuaDsmRPU3RXZB8dhJ4zxyaUwSRwfpPw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The head number of a given display controller is fixed in hardware and
-required to program outputs appropriately. Relying on the driver probe
-order to determine this number will not work, since that could yield a
-situation where the second head was probed first and would be assigned
-head number 0 instead of 1.
+Fixing DT list address...
 
-By explicitly specifying the head number in the device tree, it is no
-longer necessary to rely on these assumptions. As a fallback, if the
-property isn't available, derive the head number from the display
-controller node's position in the device tree. That's somewhat more
-reliable than the previous default but not a proper solution.
-
-Tested-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-Changes in v2:
-- if the nvidia,head property isn't present, find the position of the
-  display controller within the DT and derive the head number from it
-
- .../bindings/gpu/nvidia,tegra20-host1x.txt         |  3 ++
- drivers/gpu/drm/tegra/dc.c                         | 41 ++++++++++++++++++++--
- 2 files changed, 42 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
-index 9e9008f8fa32..efaeec8961b6 100644
---- a/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
-+++ b/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
-@@ -118,6 +118,9 @@ of the following host1x client modules:
-     See ../reset/reset.txt for details.
-   - reset-names: Must include the following entries:
-     - dc
-+  - nvidia,head: The number of the display controller head. This is used to
-+    setup the various types of output to receive video data from the given
-+    head.
- 
-   Each display controller node has a child node, named "rgb", that represents
-   the RGB output associated with the controller. It can take the following
-diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
-index 386f3b4b0094..9336006b475d 100644
---- a/drivers/gpu/drm/tegra/dc.c
-+++ b/drivers/gpu/drm/tegra/dc.c
-@@ -1100,8 +1100,6 @@ static int tegra_dc_init(struct host1x_client *client)
- 	struct tegra_dc *dc = host1x_client_to_dc(client);
- 	int err;
- 
--	dc->pipe = tegra->drm->mode_config.num_crtc;
--
- 	drm_crtc_init(tegra->drm, &dc->base, &tegra_crtc_funcs);
- 	drm_mode_crtc_set_gamma_size(&dc->base, 256);
- 	drm_crtc_helper_add(&dc->base, &tegra_crtc_helper_funcs);
-@@ -1187,6 +1185,41 @@ static const struct of_device_id tegra_dc_of_match[] = {
- 	}
- };
- 
-+static int tegra_dc_parse_dt(struct tegra_dc *dc)
-+{
-+	struct device_node *np;
-+	u32 value = 0;
-+	int err;
-+
-+	err = of_property_read_u32(dc->dev->of_node, "nvidia,head", &value);
-+	if (err < 0) {
-+		dev_err(dc->dev, "missing \"nvidia,head\" property\n");
-+
-+		/*
-+		 * If the nvidia,head property isn't present, try to find the
-+		 * correct head number by looking up the position of this
-+		 * display controller's node within the device tree. Assuming
-+		 * that the nodes are ordered properly in the DTS file and
-+		 * that the translation into a flattened device tree blob
-+		 * preserves that ordering this will actually yield the right
-+		 * head number.
-+		 *
-+		 * If those assumptions don't hold, this will still work for
-+		 * cases where only a single display controller is used.
-+		 */
-+		for_each_matching_node(np, tegra_dc_of_match) {
-+			if (np == dc->dev->of_node)
-+				break;
-+
-+			value++;
-+		}
-+	}
-+
-+	dc->pipe = value;
-+
-+	return 0;
-+}
-+
- static int tegra_dc_probe(struct platform_device *pdev)
- {
- 	const struct of_device_id *id;
-@@ -1207,6 +1240,10 @@ static int tegra_dc_probe(struct platform_device *pdev)
- 	dc->dev = &pdev->dev;
- 	dc->soc = id->data;
- 
-+	err = tegra_dc_parse_dt(dc);
-+	if (err < 0)
-+		return err;
-+
- 	dc->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(dc->clk)) {
- 		dev_err(&pdev->dev, "failed to get clock\n");
--- 
-1.8.4.2
+On Wed, Jan 15, 2014 at 9:16 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Wed, Jan 15, 2014 at 7:46 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>> On Wed, Jan 15, 2014 at 12:40:41PM +0000, Jean-Christophe PLAGNIOL-VILLARD wrote:
+>>> On 12:17 Wed 15 Jan     , Mark Rutland wrote:
+>>> > On Wed, Jan 15, 2014 at 11:47:25AM +0000, Jean-Christophe PLAGNIOL-VILLARD wrote:
+>>> > > The new interrupts-extended property, which reuses the phandle+arguments
+>>> > > pattern used by GPIOs and other core bindings, still have some issue.
+>>> > >
+>>> > > If an SoC have already specifiy interrupt and a board want to add specific
+>>> > > interrupt such as GPIO (which can be optionnal) be need to re-define
+>>> > > interrupts-extended. So allow to have an optionnale interrupts-extended-2
+>>> > > property.
+>>> > >
+>>> >
+>>> > NAK.
+>>> >
+>>> > This is a hack that works around a dts organisation issue. This is _not_
+>>> > a binding or parsing issue.
+>>>
+>>> So the DT is stupid. Yes w have board and SoC information
+>>> so we do not want to duplicate them. Having a way to descript SoC vs board
+>>> specific information need to be provided.
+>>
+>> I agree that the current situation isn't fantastic. That doesn't make
+>> the DT stupid. There are other solutions to this problem.
+>>
+>>>
+>>> >
+>>> > Properties can be overridden - just describe all of the interrupts in
+>>> > the final dts file.
+>>> this is wrong, which mean you duplicate informaation and duplicate bug and
+>>> fixes
+>>
+>> It's certainly not nice, but it doesn't make it wrong.
+>>
+>> The same problem can be found with any other list property that varies
+>> per-board. Hacking the parsing of each property is not a solution.
+>>
+>> Today the only way to implement what you want is to have the list in the
+>> final file.
+>>
+>> One way of working with that would be to have the common interrupts
+>> described in a shared macro in the soc file:
+>>
+>> #define SOC_COMMON_INTERRUPTS <&intc1 5 1>, <&intc2 1 0>
+>
+> Yuck. Please, let's not encourage this pattern.
+>
+>> Then the soc file can have:
+>>
+>>         interrupts = SOC_COMMON_INTERRUPTS;
+>>
+>> And the board can have:
+>>
+>>         interrupts = SOC_COMMON_INTERRUPTS, <&intc1 6 1>;
+>
+> Unless this is solved in dtc include mechanism, just duplicate the
+> interrupts in each board file. I'd rather have the duplication than
+> continued churn of refactoring dtsi files.
+>
+> Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
