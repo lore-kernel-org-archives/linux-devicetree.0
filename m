@@ -1,42 +1,275 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v9 2/4] Documentation: Add documentation for APM X-Gene SoC SATA host controller DTS binding
-Date: Wed, 15 Jan 2014 22:12:17 +0100
-Message-ID: <4632602.a1zUZOeMuh@wuerfel>
-References: <1389769910-15505-1-git-send-email-lho@apm.com> <5905127.tqJ3nFt5cj@wuerfel> <CAPw-ZTmVYfPLUVmtes3Gn8Z=+gyFtLoZxc-QUdHH7-ePjKAG9A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <CAPw-ZTmVYfPLUVmtes3Gn8Z=+gyFtLoZxc-QUdHH7-ePjKAG9A@mail.gmail.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Loc Ho <lho@apm.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Suman Tripathi <stripathi@apm.com>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "jcm@redhat.com" <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, "tj@kernel.org" <tj@kernel.org>, "dmilburn@redhat.com" <dmilburn@redhat.com>, "olof@lixom.net" <olof@lixom.net>, Tuan Phan <tphan@apm.com>
+From: Matthew Garrett <matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] net/dt: Add support for overriding phy configuration from device tree
+Date: Wed, 15 Jan 2014 16:38:58 -0500
+Message-ID: <1389821938-3126-1-git-send-email-matthew.garrett@nebula.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, Matthew Garrett <matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 15 January 2014 13:08:47 Loc Ho wrote:
-> >> >> +- clocks             : Reference to the clock entry.
-> >> >> +- phys                       : PHY reference with parameter 0.
-> >> >
-> >> > The specific value of the phy-specifier shouldn't matter to this
-> >> > binding. What should matter is what it logically corresponds to.
-> >>
-> >> I not quite following this. Are you suggest that I drop the value 0.
-> >> In the binding, one needs to specify the mode of operation - 0 is for
-> >> SATA. Can you explain more?
-> >
-> > The SATA device should not care what the argument for the PHY
-> > device is. You could connect the same device to another PHY
-> > that has a different set of arguments, which is the whole point
-> > of abstracting it.
-> >
-> 
-> I understand what you wrote here. We should not have an argument from
-> the host controller. Then my question is how should the PHY node
-> indicates that it needs to be configured itself as an SATA PHY?
+Some hardware may be broken in interesting and board-specific ways, such
+that various bits of functionality don't work. This patch provides a
+mechanism for overriding mii registers during init based on the contents of
+the device tree data, allowing board-specific fixups without having to
+pollute generic code.
 
-The "phys" property should specify whatever the configuration of
-the phy device is supposed to be. It's just not the business of
-the sata driver or the sata binding to know what that configuration
-is.
+Signed-off-by: Matthew Garrett <matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/net/phy.txt |  13 +++
+ drivers/net/phy/phy_device.c                  |  29 +++++-
+ drivers/of/of_net.c                           | 124 ++++++++++++++++++++++++++
+ include/linux/of_net.h                        |  12 +++
+ 4 files changed, 177 insertions(+), 1 deletion(-)
 
-	Arnd
+diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
+index 7cd18fb..552a5e0 100644
+--- a/Documentation/devicetree/bindings/net/phy.txt
++++ b/Documentation/devicetree/bindings/net/phy.txt
+@@ -23,6 +23,19 @@ Optional Properties:
+   assume clause 22. The compatible list may also contain other
+   elements.
+ 
++The following properties may be added to either the phy node or the parent
++ethernet device:
++
++- phy-mii-advertise-10half: Whether to advertise half-duplex 10MBit
++- phy-mii-advertise-10full: Whether to advertise full-duplex 10MBit
++- phy-mii-advertise-100half: Whether to advertise half-duplex 100MBit
++- phy-mii-advertise-100full: Whether to advertise full-duplex 100MBit
++- phy-mii-advertise-100base4: Whether to advertise 100base4
++- phy-mii-advertise-1000half: Whether to advertise half-duplex 1000MBit
++- phy-mii-advertise-1000full: Whether to advertise full-duplex 1000MBit
++- phy-mii-as-master: Configure phy to act as master/slave
++- phy-mii-manual-master: Enable/disable manual master/slave configuration
++
+ Example:
+ 
+ ethernet-phy@0 {
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index d6447b3..91793bc 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -33,6 +33,7 @@
+ #include <linux/mii.h>
+ #include <linux/ethtool.h>
+ #include <linux/phy.h>
++#include <linux/of_net.h>
+ 
+ #include <asm/io.h>
+ #include <asm/irq.h>
+@@ -497,6 +498,28 @@ void phy_disconnect(struct phy_device *phydev)
+ }
+ EXPORT_SYMBOL(phy_disconnect);
+ 
++int phy_override_from_of(struct phy_device *phydev)
++{
++	int reg, regval;
++	u16 val, mask;
++
++	/* Check for phy register overrides from OF */
++	for (reg = 0; reg < 16; reg++) {
++		if (!of_get_mii_register(phydev, reg, &val, &mask)) {
++			if (!mask)
++				continue;
++			regval = phy_read(phydev, reg);
++			if (regval < 0)
++				continue;
++			regval &= ~mask;
++			regval |= val;
++			phy_write(phydev, reg, regval);
++		}
++	}
++
++	return 0;
++}
++
+ int phy_init_hw(struct phy_device *phydev)
+ {
+ 	int ret;
+@@ -508,7 +531,11 @@ int phy_init_hw(struct phy_device *phydev)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	return phydev->drv->config_init(phydev);
++	ret = phydev->drv->config_init(phydev);
++	if (ret < 0)
++		return ret;
++
++	return phy_override_from_of(phydev);
+ }
+ 
+ /**
+diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
+index 8f9be2e..4545608 100644
+--- a/drivers/of/of_net.c
++++ b/drivers/of/of_net.c
+@@ -93,3 +93,127 @@ const void *of_get_mac_address(struct device_node *np)
+ 	return NULL;
+ }
+ EXPORT_SYMBOL(of_get_mac_address);
++
++/**
++ * Provide phy register overrides from the device tree. Some hardware may
++ * be broken in interesting and board-specific ways, so we want a mechanism
++ * for the board data to provide overrides for default values. This should be
++ * called during phy init.
++ */
++int of_get_mii_register(struct phy_device *phydev, int reg, u16 *val,
++			u16 *mask)
++{
++	u32 tmp;
++	struct device *dev = &phydev->dev;
++	struct device_node *np = dev->of_node;
++
++	*val = 0;
++	*mask = 0;
++
++	if (!np && dev->parent->of_node)
++		np = dev->parent->of_node;
++
++	if (!np)
++		return 0;
++
++	switch (reg) {
++	case MII_ADVERTISE:
++		if (!of_property_read_u32(np, "phy-mii-advertise-10half",
++					   &tmp)) {
++			if (tmp) {
++				*val |= ADVERTISE_10HALF;
++				phydev->advertising |= SUPPORTED_10baseT_Half;
++			} else {
++				phydev->advertising &=
++					~(SUPPORTED_10baseT_Half);
++			}
++
++			*mask |= ADVERTISE_10HALF;
++		}
++		if (!of_property_read_u32(np, "phy-mii-advertise-10full",
++					   &tmp)) {
++			if (tmp) {
++				*val |= ADVERTISE_10FULL;
++				phydev->advertising |= SUPPORTED_10baseT_Full;
++			} else {
++				phydev->advertising &=
++					~(SUPPORTED_10baseT_Full);
++			}
++
++			*mask |= ADVERTISE_10FULL;
++		}
++		if (!of_property_read_u32(np, "phy-mii-advertise-100half",
++					   &tmp)) {
++			if (tmp) {
++				*val |= ADVERTISE_100HALF;
++				phydev->advertising |= SUPPORTED_100baseT_Half;
++			} else {
++				phydev->advertising &=
++					~(SUPPORTED_100baseT_Half);
++			}
++
++			*mask |= ADVERTISE_100HALF;
++		}
++		if (!of_property_read_u32(np, "phy-mii-advertise-100full",
++					   &tmp)) {
++			if (tmp) {
++				*val |= ADVERTISE_100FULL;
++				phydev->advertising |= SUPPORTED_100baseT_Full;
++			} else {
++				phydev->advertising &=
++					~(SUPPORTED_100baseT_Full);
++			}
++
++			*mask |= ADVERTISE_100FULL;
++		}
++		if (!of_property_read_u32(np, "phy-mii-advertise-100base4",
++					   &tmp)) {
++			if (tmp)
++				*val |= ADVERTISE_100BASE4;
++			*mask |= ADVERTISE_100BASE4;
++		}
++		break;
++	case MII_CTRL1000:
++		if (!of_property_read_u32(np, "phy-mii-advertise-1000full",
++					   &tmp)) {
++			if (tmp) {
++				*val |= ADVERTISE_1000FULL;
++				phydev->advertising |= SUPPORTED_1000baseT_Full;
++			} else {
++				phydev->advertising &=
++					~(SUPPORTED_1000baseT_Full);
++			}
++
++			*mask |= ADVERTISE_1000FULL;
++		}
++		if (!of_property_read_u32(np, "phy-mii-advertise-1000half",
++					   &tmp)) {
++			if (tmp) {
++				*val |= ADVERTISE_1000HALF;
++				phydev->advertising |= SUPPORTED_1000baseT_Half;
++			} else {
++				phydev->advertising &=
++					~(SUPPORTED_1000baseT_Half);
++			}
++
++			*mask |= ADVERTISE_1000HALF;
++		}
++		if (!of_property_read_u32(np, "phy-mii-as-master",
++					   &tmp)) {
++			if (tmp)
++				*val |= CTL1000_AS_MASTER;
++			*mask |= CTL1000_AS_MASTER;
++		}
++		if (!of_property_read_u32(np, "phy-mii-manual-master",
++					   &tmp)) {
++			if (tmp)
++				*val |= CTL1000_ENABLE_MASTER;
++			*mask |= CTL1000_ENABLE_MASTER;
++		}
++		break;
++	default:
++		return -EINVAL;
++	}
++	return 0;
++}
++EXPORT_SYMBOL(of_get_mii_register);
+diff --git a/include/linux/of_net.h b/include/linux/of_net.h
+index 34597c8..2e478bc 100644
+--- a/include/linux/of_net.h
++++ b/include/linux/of_net.h
+@@ -7,10 +7,14 @@
+ #ifndef __LINUX_OF_NET_H
+ #define __LINUX_OF_NET_H
+ 
++#include <linux/phy.h>
++
+ #ifdef CONFIG_OF_NET
+ #include <linux/of.h>
+ extern int of_get_phy_mode(struct device_node *np);
+ extern const void *of_get_mac_address(struct device_node *np);
++extern int of_get_mii_register(struct phy_device *np, int reg, u16 *val,
++			       u16 *mask);
+ #else
+ static inline int of_get_phy_mode(struct device_node *np)
+ {
+@@ -21,6 +25,14 @@ static inline const void *of_get_mac_address(struct device_node *np)
+ {
+ 	return NULL;
+ }
++static inline int of_get_mii_register(struct phy_device *np, int reg, u16 *val,
++				      u16 *mask)
++{
++	*val = 0;
++	*mask = 0;
++
++	return -EINVAL;
++}
+ #endif
+ 
+ #endif /* __LINUX_OF_NET_H */
+-- 
+1.8.4.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
