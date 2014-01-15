@@ -1,109 +1,76 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3.1 11/21] ARM: pxa: support ICP DAS LP-8x4x FPGA irq
-Date: Wed, 15 Jan 2014 08:46:47 +0100
-Message-ID: <CACRpkdaA_HBcRgBj9+x_RJquSnvy-r7Wqp-z=ZnoGaCBy+wamw@mail.gmail.com>
-References: <1387309071-22382-12-git-send-email-ynvich@gmail.com>
-	<1389308855-32588-1-git-send-email-ynvich@gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: sun4i: dt: Add basic board support
+ for LinkSprite pcDuino
+Date: Wed, 15 Jan 2014 09:14:54 +0100
+Message-ID: <20140115081453.GD3377@lukather>
+References: <alpine.DEB.2.02.1401131406230.17739@trabant.deployis.eu>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1389308855-32588-1-git-send-email-ynvich@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sergei Ianovich <ynvich@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@linaro.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="XvKFcGCOAo53UbWW"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBB4H3GLAKGQENAPUKCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.02.1401131406230.17739-35KbhngVGxv1KanxuVi64+yrfmlZI2zM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
+Cc: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is looking much better!
 
-On Fri, Jan 10, 2014 at 12:07 AM, Sergei Ianovich <ynvich@gmail.com> wrote:
+--XvKFcGCOAo53UbWW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +++ b/drivers/irqchip/irq-lp8x4x.c
-(...)
+Hi,
 
-You could add some kerneldoc to this following struct (OK nitpick, but
-still nice, especially for the last two variables).
+On Mon, Jan 13, 2014 at 02:15:01PM +0100, Zoltan HERPAI wrote:
+> From b2cd1681fe988584028d280ca79249f4ebcb271c Mon Sep 17 00:00:00 2001
+> From: Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
+> Date: Mon, 13 Jan 2014 14:00:12 +0100
+> Subject: [PATCH v2] ARM: sun4i: dt: Add basic board support for LinkSprit=
+e pcDuino
+>=20
+> This patch will add a basic board support DT for the
+> LinkSprite pcDuino board.
+>=20
+> Signed-off-by: Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
 
-> +struct lp8x4x_irq_data {
-> +       void                    *base;
-> +       struct irq_domain       *domain;
-> +       unsigned long           num_irq;
-> +       unsigned char           irq_sys_enabled;
-> +       unsigned char           irq_high_enabled;
-> +};
-> +
-> +static void lp8x4x_mask_irq(struct irq_data *d)
-> +{
-> +       unsigned mask;
-> +       unsigned long irq = d->hwirq;
+Queued in sunxi/dt-for-3.15
 
-Name the local variable hwirq too so we know what it is.
+Thanks!
+Maxime
 
-> +       struct lp8x4x_irq_data *host = irq_data_get_irq_chip_data(d);
-> +
-> +       if (!host) {
-> +               pr_err("lp8x4x: missing host data for irq %i\n", d->irq);
-> +               return;
-> +       }
-> +
-> +       if (irq >= host->num_irq) {
-> +               pr_err("lp8x4x: wrong irq handler for irq %i\n", d->irq);
-> +               return;
-> +       }
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-This is on the hotpath. Do you *really* need these two checks?
+--XvKFcGCOAo53UbWW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-(...)
-> +static void lp8x4x_unmask_irq(struct irq_data *d)
-> +{
-> +       unsigned mask;
-> +       unsigned long irq = d->hwirq;
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
 
-Name the variable "hwirq".
+iQIcBAEBAgAGBQJS1kN9AAoJEBx+YmzsjxAgU0kQAInkRa1xAgnCZig/2pol8KWM
+rxx3M3Ax0ERfJFN8t2yxAIaBUij4TPluApani4RoemYnjUTRtbPtSLVAfJbfU0ys
+M9xZ4GLflWYUVXS6J/jdLaV1+Uw8QfHzcWezA8uHpBNybP2HFJ7ywEv3Ph8yPBAa
+th7IkZN4wSFeC74hgK3TPoSof/oVFnHXZYhMSx8tgcLjYLp6611olCLhGXXe1IV2
+bv8e7PoLyfVoY7uxsSbz89YKQw8LW6EaZq7Tm741AM4JLnJL7G8d6xsfOXprAvQ9
+8/50G3NcZ/ulFKuzEMa3e9fxk/l2V3TmqSCLov85LqVmKaCLpQAdiFGGCKqVXIO3
+WVaPvvitIX9sbI7v1XSpQTmkvtL6ut1ah0dW/m/+aNETYt7RBGE83ZDdsbCAzscn
+L5f5jZPAtwvDe9x6gReELMUa8Wudn3W+RKDZ/loReLFgtJ8c/ngeJkyYcbuDxHXf
+iW2KQYrix27XXVPSxMBGF7wxcaDyJYsjHlpUo6n7vdOtYlz3akkkYMkyLiKs2Lbg
+X+NksMrQ/Ur7KEGQ740nwJHc+y1avw8O/tV8/96U2urEDlfbblfxYniNM2A/LAL4
+Aw7uRzg0Ek1aUGNdokYbwyBttB7shGrShttcLUSzUJO/b2XzmRdu0yafpjAlNwXM
+P7o0na3lXAmO108WNseM
+=66dB
+-----END PGP SIGNATURE-----
 
-> +       struct lp8x4x_irq_data *host = irq_data_get_irq_chip_data(d);
-> +
-> +       if (!host) {
-> +               pr_err("lp8x4x: missing host data for irq %i\n", d->irq);
-> +               return;
-> +       }
-> +
-> +       if (irq >= host->num_irq) {
-> +               pr_err("lp8x4x: wrong irq handler for irq %i\n", d->irq);
-> +               return;
-> +       }
-
-Again overzealous error checks.
-
-(...)
-> +static void lp8x4x_irq_handler(unsigned int irq, struct irq_desc *desc)
-> +{
-> +       int n;
-> +       unsigned long mask;
-> +       struct irq_chip *chip = irq_desc_get_chip(desc);
-> +       struct lp8x4x_irq_data *host = irq_desc_get_handler_data(desc);
-> +
-> +       if (!host)
-> +               return;
-
-I don't think this happens either?
-
-> +       chained_irq_enter(chip, desc);
-> +
-> +       for (;;) {
-> +               mask = ioread8(host->base + CLRHILVINT) & 0xff;
-> +               mask |= (ioread8(host->base + SECOINT) & SECOINT_MASK) << 8;
-> +               mask |= (ioread8(host->base + PRIMINT) & PRIMINT_MASK) << 8;
-> +               mask &= host->irq_high_enabled | (host->irq_sys_enabled << 8);
-> +               if (mask == 0)
-> +                       break;
-> +               for_each_set_bit(n, &mask, BITS_PER_LONG)
-> +                       generic_handle_irq(irq_find_mapping(host->domain, n));
-> +       }
-
-I like the looks of this.
-
-If you fix this:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+--XvKFcGCOAo53UbWW--
