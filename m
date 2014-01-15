@@ -1,76 +1,68 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] ohci-platform: Add support for
- devicetree instantiation
-Date: Wed, 15 Jan 2014 16:07:40 +0100
-Message-ID: <52D6A43C.9090706@redhat.com>
-References: <Pine.LNX.4.44L0.1401141404420.1310-100000@iolanthe.rowland.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: boris brezillon <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC PATCH 3/9] of: mtd: add NAND timings retrieval support
+Date: Wed, 15 Jan 2014 16:09:01 +0100
+Message-ID: <52D6A48D.4080302@overkiz.com>
+References: <1389190924-26226-1-git-send-email-b.brezillon@overkiz.com> <1389190924-26226-4-git-send-email-b.brezillon@overkiz.com> <20140108183418.GA12358@obsidianresearch.com> <52CDA032.3010804@overkiz.com> <20140108191339.GB12358@obsidianresearch.com> <52CE5F82.6070802@overkiz.com> <20140109173505.GB8899@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBRGI3KLAKGQEOLEMORQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <Pine.LNX.4.44L0.1401141404420.1310-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140109173505.GB8899-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello Jason,
 
-On 01/14/2014 08:08 PM, Alan Stern wrote:
-> On Mon, 13 Jan 2014, Hans de Goede wrote:
+On 09/01/2014 18:35, Jason Gunthorpe wrote:
+> On Thu, Jan 09, 2014 at 09:36:18AM +0100, boris brezillon wrote:
 >
->> Add support for ohci-platform instantiation from devicetree, including
->> optionally getting clks and a phy from devicetree, and enabling / disabling
->> those on power_on / off.
->>
->> This should allow using ohci-platform from devicetree in various cases.
->> Specifically after this commit it can be used for the ohci controller found
->> on Allwinner sunxi SoCs.
+>>> You might want to check if you can boil down the DT timings from th=
+e
+>>> huge list to just an ONFI mode number..
+>> Sure, but the sunxi driver needs at least 19 of them...
+> So does mvebu's NAND driver..
 >
-> This is fine as far as I am concerned, except for one thing.
+> What I ment was you could have a
 >
->> @@ -60,17 +127,23 @@ static int ohci_platform_probe(struct platform_device *dev)
->>   	struct usb_hcd *hcd;
->>   	struct resource *res_mem;
->>   	struct usb_ohci_pdata *pdata = dev_get_platdata(&dev->dev);
->> -	int irq;
->> -	int err = -ENOMEM;
->> -
->> -	if (!pdata) {
->> -		WARN_ON(1);
->> -		return -ENODEV;
->> -	}
->> +	struct ohci_platform_priv *priv;
->> +	int clk, irq, err;
+>    onfi,nand-timing-mode =3D 0
 >
-> clk isn't initialized to anything...
+> in the DT. Each of the modes defines all ~19 parameters, higher modes
+> are faster.
+>
+> Pick a mode value that fits all the parameters of the connected
+> non-ONFI flash.
+>
+> This would be instead of defining each parameter
+> individually.. Provide some helpers to convert from a onfi mode numbe=
+r
+> to all the onfi defined timing parameters so that drivers can
+> configure the HW..
 
-Good catch, will fix and then do a v6 with this + the issue from your other mail fixed
-and I'll add your ack.
+Are you suggesting we should provide a function that converts these
+modes into a nand_timings struct, or just use the timing modes and
+let the NAND controller drivers configure its IP accordingly ?
+
+I found the ONFI timing tables in this document:
+
+www.*onfi*.org/~/media/*ONFI*/specs/*onfi*_3_1_spec.pdf=E2=80=8E (chapt=
+er 4.16).
+
+I suppose my nand_timings struct should use the names described
+page 110-111 (at least if we decide to use nand_timings and not
+nand_timing_modes), right ?
+
+Best Regards,
+
+Boris
 
 >
->> -err_put_hcd:
->> -	usb_put_hcd(hcd);
->>   err_power:
->>   	if (pdata->power_off)
->>   		pdata->power_off(dev);
->> +err_put_clks:
->> +	while (--clk >= 0)
->> +		clk_put(priv->clks[clk]);
->
-> ... but it gets used here.  The compiler should have warned about this.
+> Jason
 
-Should have yes, but it doesn't (I've just double checked).
-
-> After fixing that, you can add
->
-> Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-
-Thanks & Regards,
-
-Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
