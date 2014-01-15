@@ -1,56 +1,55 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 6/7] ARM: brcmstb: gic: add compatible string for
- Broadcom Brahma15
-Date: Wed, 15 Jan 2014 17:20:05 +0000
-Message-ID: <20140115172005.GL25824@e106331-lin.cambridge.arm.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v3 3/7] ARM: do CPU-specific init for Broadcom Brahma15
+ cores
+Date: Wed, 15 Jan 2014 17:19:54 +0000
+Message-ID: <20140115171953.GB28782@mudshark.cambridge.arm.com>
 References: <1389743333-16741-1-git-send-email-marc.ceeeee@gmail.com>
- <1389743333-16741-7-git-send-email-marc.ceeeee@gmail.com>
+ <1389743333-16741-4-git-send-email-marc.ceeeee@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1389743333-16741-7-git-send-email-marc.ceeeee@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+In-Reply-To: <1389743333-16741-4-git-send-email-marc.ceeeee@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Marc Carino <marc.ceeeee@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Christian Daudt <bcm@fixthebug.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Matt Porter <matt.porter@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Christian Daudt <bcm@fixthebug.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Matt Porter <matt.porter@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 14, 2014 at 11:48:52PM +0000, Marc Carino wrote:
-> Document the Broadcom Brahma B15 GIC implementation as compatible
-> with the ARM GIC standard.
+On Tue, Jan 14, 2014 at 11:48:49PM +0000, Marc Carino wrote:
+> Perform any CPU-specific initialization required on the
+> Broadcom Brahma-15 core.
 > 
 > Signed-off-by: Marc Carino <marc.ceeeee@gmail.com>
 > Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
->  Documentation/devicetree/bindings/arm/gic.txt |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
+>  arch/arm/mm/proc-v7.S |   11 +++++++++++
+>  1 files changed, 11 insertions(+), 0 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
-> index 3dfb0c0..b7d7970 100644
-> --- a/Documentation/devicetree/bindings/arm/gic.txt
-> +++ b/Documentation/devicetree/bindings/arm/gic.txt
-> @@ -15,6 +15,7 @@ Main node required properties:
->  	"arm,cortex-a9-gic"
->  	"arm,cortex-a7-gic"
->  	"arm,arm11mp-gic"
-> +	"brcm,brahma15-gic"
+> diff --git a/arch/arm/mm/proc-v7.S b/arch/arm/mm/proc-v7.S
+> index bd17819..98ea423 100644
+> --- a/arch/arm/mm/proc-v7.S
+> +++ b/arch/arm/mm/proc-v7.S
+> @@ -193,6 +193,7 @@ __v7_cr7mp_setup:
+>  	b	1f
+>  __v7_ca7mp_setup:
+>  __v7_ca15mp_setup:
+> +__v7_b15mp_setup:
+>  	mov	r10, #0
+>  1:
+>  #ifdef CONFIG_SMP
+> @@ -494,6 +495,16 @@ __v7_ca15mp_proc_info:
+>  	.size	__v7_ca15mp_proc_info, . - __v7_ca15mp_proc_info
+>  
+>  	/*
+> +	 * Broadcom Corporation Brahma-B15 processor.
+> +	 */
+> +	.type	__v7_b15mp_proc_info, #object
+> +__v7_b15mp_proc_info:
+> +	.long	0x420f00f0
+> +	.long	0xff0ffff0
+> +	__v7_proc __v7_b15mp_setup, hwcaps = HWCAP_IDIV
 
-Similarly to the cpu binding patch, I think this should be
-"brcm,brahma-b15-gic".
+You only need to specify HWCAP_IDIV if you screwed up your idregs (namely
+CPUID_EXT_ISAR0). Do you actually need this for your core?
 
-It doesn't have to be done here, but it might make sense to add
-"arm,gic-v2" for arbitrary GICv2 implementations to use as a fallback
-compatible string.
-
-Cheers,
-Mark.
+Will
