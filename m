@@ -1,101 +1,190 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v7 3/4] PHY: add APM X-Gene SoC 15Gbps Multi-purpose
- PHY driver
-Date: Wed, 15 Jan 2014 12:09:46 +0000
-Message-ID: <20140115120946.GD25824@e106331-lin.cambridge.arm.com>
-References: <1389769840-15469-1-git-send-email-lho@apm.com>
- <1389769840-15469-2-git-send-email-lho@apm.com>
- <1389769840-15469-3-git-send-email-lho@apm.com>
- <1389769840-15469-4-git-send-email-lho@apm.com>
+From: Dinh Nguyen <dinh.linux@gmail.com>
+Subject: Re: [PATCHv9 1/4] clk: socfpga: Add a clk-phase property to the "altr,
+ socfpga-gate-clk"
+Date: Wed, 15 Jan 2014 06:36:52 -0600
+Message-ID: <52D680E4.6090608@gmail.com>
+References: <1389303079-19808-1-git-send-email-dinguyen@altera.com> <1389303079-19808-2-git-send-email-dinguyen@altera.com> <52CF6D67.1000803@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1389769840-15469-4-git-send-email-lho@apm.com>
-Content-Language: en-US
-Sender: linux-ide-owner@vger.kernel.org
-To: Loc Ho <lho@apm.com>
-Cc: "olof@lixom.net" <olof@lixom.net>, "tj@kernel.org" <tj@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "dmilburn@redhat.com" <dmilburn@redhat.com>, "jcm@redhat.com" <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <52CF6D67.1000803@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>, dinguyen@altera.com, arnd@arndb.de, cjb@laptop.org, tgih.jun@samsung.com, heiko@sntech.de, dianders@chromium.org, alim.akhtar@samsung.com, bzhao@marvell.com, mturquette@linaro.org
+Cc: zhangfei.gao@linaro.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 15, 2014 at 07:10:39AM +0000, Loc Ho wrote:
+Hi Mike,
 
-[...]
+On 1/9/14 9:47 PM, Jaehoon Chung wrote:
+> Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
+>
+> On 01/10/2014 06:31 AM, dinguyen@altera.com wrote:
+>> From: Dinh Nguyen <dinguyen@altera.com>
+>>
+>> The clk-phase property is used to represent the 2 clock phase values that is
+>> needed for the SD/MMC driver. Add a prepare function to the clk_ops, that will
+>> use the syscon driver to set sdmmc_clk's phase shift that is located in the
+>> system manager.
+>>
+>> Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
+>> Acked-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+>> ---
+>> v9: none
+>> v8: Use degrees in the clk-phase binding property
+>> v7: Add dts property to represent the clk phase of the sdmmc_clk. Add a
+>>     prepare function to the gate clk that will toggle clock phase setting.
+>>     Remove the "altr,socfpga-sdmmc-sdr-clk" clock type.
+>> v6: Add a new clock type "altr,socfpga-sdmmc-sdr-clk" that will be used to
+>>     set the phase shift settings.
+>> v5: Use the "snps,dw-mshc" binding
+>> v4: Use the sdmmc_clk prepare function to set the phase shift settings
+>> v3: Not use the syscon driver because as of 3.13-rc1, the syscon driver is
+>>     loaded after the clock driver.
+>> v2: Use the syscon driver
+>> ---
+>>  .../devicetree/bindings/clock/altr_socfpga.txt     |    5 ++
+>>  arch/arm/boot/dts/socfpga.dtsi                     |    1 +
+>>  drivers/clk/socfpga/clk-gate.c                     |   68 ++++++++++++++++++++
+>>  3 files changed, 74 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/altr_socfpga.txt b/Documentation/devicetree/bindings/clock/altr_socfpga.txt
+>> index 0045433..5dfd145 100644
+>> --- a/Documentation/devicetree/bindings/clock/altr_socfpga.txt
+>> +++ b/Documentation/devicetree/bindings/clock/altr_socfpga.txt
+>> @@ -23,3 +23,8 @@ Optional properties:
+>>          and the bit index.
+>>  - div-reg : For "socfpga-gate-clk", div-reg contains the divider register, bit shift,
+>>          and width.
+>> +- clk-phase : For the sdmmc_clk, contains the value of the clock phase that controls
+>> +	the SDMMC CIU clock. The first value is the clk_sample(smpsel), and the second
+>> +	value is the cclk_in_drv(drvsel). The clk-phase is used to enable the correct
+>> +	hold/delay times that is needed for the SD/MMC CIU clock. The values of both
+>> +	can be 0-315 degrees, in 45 degree increments.
+>> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+>> index f936476..e776512 100644
+>> --- a/arch/arm/boot/dts/socfpga.dtsi
+>> +++ b/arch/arm/boot/dts/socfpga.dtsi
+>> @@ -413,6 +413,7 @@
+>>  						compatible = "altr,socfpga-gate-clk";
+>>  						clocks = <&f2s_periph_ref_clk>, <&main_nand_sdmmc_clk>, <&per_nand_mmc_clk>;
+>>  						clk-gate = <0xa0 8>;
+>> +						clk-phase = <0 135>;
+>>  					};
+>>  
+>>  					nand_x_clk: nand_x_clk {
+>> diff --git a/drivers/clk/socfpga/clk-gate.c b/drivers/clk/socfpga/clk-gate.c
+>> index 4efcf4e..501d513 100644
+>> --- a/drivers/clk/socfpga/clk-gate.c
+>> +++ b/drivers/clk/socfpga/clk-gate.c
+>> @@ -19,7 +19,9 @@
+>>  #include <linux/clkdev.h>
+>>  #include <linux/clk-provider.h>
+>>  #include <linux/io.h>
+>> +#include <linux/mfd/syscon.h>
+>>  #include <linux/of.h>
+>> +#include <linux/regmap.h>
+>>  
+>>  #include "clk.h"
+>>  
+>> @@ -35,6 +37,11 @@
+>>  
+>>  #define to_socfpga_gate_clk(p) container_of(p, struct socfpga_gate_clk, hw.hw)
+>>  
+>> +/* SDMMC Group for System Manager defines */
+>> +#define SYSMGR_SDMMCGRP_CTRL_OFFSET    0x108
+>> +#define SYSMGR_SDMMC_CTRL_SET(smplsel, drvsel) \
+>> +	((((smplsel) & 0x7) << 3) | (((drvsel) & 0x7) << 0))
+>> +
+>>  static u8 socfpga_clk_get_parent(struct clk_hw *hwclk)
+>>  {
+>>  	u32 l4_src;
+>> @@ -115,7 +122,61 @@ static unsigned long socfpga_clk_recalc_rate(struct clk_hw *hwclk,
+>>  	return parent_rate / div;
+>>  }
+>>  
+>> +static int socfpga_clk_prepare(struct clk_hw *hwclk)
+>> +{
+>> +	struct socfpga_gate_clk *socfpgaclk = to_socfpga_gate_clk(hwclk);
+>> +	struct regmap *sys_mgr_base_addr;
+>> +	int i;
+>> +	u32 hs_timing;
+>> +	u32 clk_phase[2];
+>> +
+>> +	if (socfpgaclk->clk_phase[0] || socfpgaclk->clk_phase[1]) {
+>> +		sys_mgr_base_addr = syscon_regmap_lookup_by_compatible("altr,sys-mgr");
+>> +		if (IS_ERR(sys_mgr_base_addr)) {
+>> +			pr_err("%s: failed to find altr,sys-mgr regmap!\n", __func__);
+>> +			return -EINVAL;
+>> +		}
+>> +
+>> +		for (i = 0; i < 2; i++) {
+>> +			switch (socfpgaclk->clk_phase[i]) {
+>> +			case 0:
+>> +				clk_phase[i] = 0;
+>> +				break;
+>> +			case 45:
+>> +				clk_phase[i] = 1;
+>> +				break;
+>> +			case 90:
+>> +				clk_phase[i] = 2;
+>> +				break;
+>> +			case 135:
+>> +				clk_phase[i] = 3;
+>> +				break;
+>> +			case 180:
+>> +				clk_phase[i] = 4;
+>> +				break;
+>> +			case 225:
+>> +				clk_phase[i] = 5;
+>> +				break;
+>> +			case 270:
+>> +				clk_phase[i] = 6;
+>> +				break;
+>> +			case 315:
+>> +				clk_phase[i] = 7;
+>> +				break;
+>> +			default:
+>> +				clk_phase[i] = 0;
+>> +				break;
+>> +			}
+>> +		}
+>> +		hs_timing = SYSMGR_SDMMC_CTRL_SET(clk_phase[0], clk_phase[1]);
+>> +		regmap_write(sys_mgr_base_addr, SYSMGR_SDMMCGRP_CTRL_OFFSET,
+>> +			hs_timing);
+>> +	}
+>> +	return 0;
+>> +}
+>> +
+>>  static struct clk_ops gateclk_ops = {
+>> +	.prepare = socfpga_clk_prepare,
+>>  	.recalc_rate = socfpga_clk_recalc_rate,
+>>  	.get_parent = socfpga_clk_get_parent,
+>>  	.set_parent = socfpga_clk_set_parent,
+>> @@ -126,6 +187,7 @@ static void __init __socfpga_gate_init(struct device_node *node,
+>>  {
+>>  	u32 clk_gate[2];
+>>  	u32 div_reg[3];
+>> +	u32 clk_phase[2];
+>>  	u32 fixed_div;
+>>  	struct clk *clk;
+>>  	struct socfpga_gate_clk *socfpga_clk;
+>> @@ -166,6 +228,12 @@ static void __init __socfpga_gate_init(struct device_node *node,
+>>  		socfpga_clk->div_reg = 0;
+>>  	}
+>>  
+>> +	rc = of_property_read_u32_array(node, "clk-phase", clk_phase, 2);
+>> +	if (!rc) {
+>> +		socfpga_clk->clk_phase[0] = clk_phase[0];
+>> +		socfpga_clk->clk_phase[1] = clk_phase[1];
+>> +	}
+>> +
+>>  	of_property_read_string(node, "clock-output-names", &clk_name);
+>>  
+>>  	init.name = clk_name;
+>>
+Can you apply this to your clk tree?
 
-> + * The APM X-Gene PHY consists of two PLL clock macro's (CMU) and lanes.
-> + * The first PLL clock macro is used for internal reference clock. The second
-> + * PLL clock macro is used to generate the clock for the PHY. This driver
-> + * configures the first PLL CMU, the second PLL CMU, and programs the PHY to
-> + * operate according to the mode of operation. The first PLL CMU is only
-> + * required if internal clock is enabled.
-> + *
-> + * Logical Layer Out Of HW module units:
-> + *
-> + * -----------------
-> + * | Internal      |    |------|
-> + * | Ref PLL CMU   |----|      |     -------------    ---------
-> + * ------------ ----    | MUX  |-----|PHY PLL CMU|----| Serdes|
-> + *                      |      |     |           |    ---------
-> + * External Clock ------|      |     -------------
-> + *                      |------|
-> + *
-> + * The Ref PLL CMU CSR (Configureation System Registers) is accessed
-> + * indirectly from the SDS offset at 0x2000. It is only required for
-> + * internal reference clock.
-> + * The PHY PLL CMU CSR is accessed indirectly from the SDS offset at 0x0000.
-> + * The Serdes CSR is accessed indirectly from the SDS offset at 0x0400.
-> + *
-> + * The Ref PLL CMU can be located within the same PHY IP or outside the PHY IP
-> + * due to shared Ref PLL CMU. For PHY with Ref PLL CMU shared with another IP,
-> + * it is located outside the PHY IP. This is the case for the PHY located
-> + * at 0x1f23a000 (SATA Port 4/5). For such PHY, another resource is required
-> + * to located the SDS/Ref PLL CMU module and its clock for that IP enabled.
-> + *
-> + * Currently, this driver only supports SATA mode with external clock.
-> + */
+Thanks,
+Dinh
 
-Having looked at this and the binding, I'm confused as to why we need an
-additional reg entry when we're using the external clock.
-
-Surely the second resource (the external CMU base) is a property of the
-shared ref PLL clock, rather than the PHY itself. How do you handle two
-units trying to use the shared PLL?
-
-I think makes sense to model the ref PLL CMU as a separate clock, and
-use clock-names to differentiate between the two inputs to the mux:
-
-external: external_clock {
-        compatible = "fixed-clock";
-        clock-frequency = < ... >;
-	#clock-cells = <0>;
-};
-
-ref_pll: reference_clock {
-        compatible = "apm,xgene-ref-pll";
-        reg = < .... >;
-        #clock-cells = <0>;
-};
-
-phy {
-        compatible = "apm,xgene-phy";
-        reg = < ... >;
-        clocks = <&ref_pll>, <&external>;
-        clock-names = "ref-pll", "external";
-	...
-};
-
-
-That also means the phy only needs a single compatible string -- you can
-figure out what to do by probing the set of clocks.
-
-Does that make sense? Is there something I'm missing?
-
-[...]
-
-> +       /* Retrieve optional clock */
-> +       ctx->clk = clk_get(&pdev->dev, NULL);
-
-There's no clocks proeprty in the binding. Please add one.
-
-Cheers,
-Mark.
