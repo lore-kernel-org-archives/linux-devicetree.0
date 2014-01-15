@@ -1,75 +1,313 @@
-From: Kevin Hilman <khilman@linaro.org>
-Subject: Re: [PATCH 1/2] clk: hisilicon: add hi3620_mmc_clks
-Date: Wed, 15 Jan 2014 08:14:59 -0800
-Message-ID: <878uuh43y4.fsf@linaro.org>
-References: <1389604469-8064-1-git-send-email-zhangfei.gao@linaro.org>
-	<1389604469-8064-2-git-send-email-zhangfei.gao@linaro.org>
-	<20140114201740.4167.52076@quantum> <52D5E709.7040105@linaro.org>
-	<20140115035339.4167.51194@quantum> <52D623CC.50009@linaro.org>
-	<20140115082908.4167.34040@quantum>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20140115082908.4167.34040@quantum> (Mike Turquette's message of
-	"Wed, 15 Jan 2014 00:29:08 -0800")
-Sender: linux-mmc-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Haojian Zhuang <haojian.zhuang@linaro.org>, zhangfei <zhangfei.gao@linaro.org>, Chris Ball <cjb@laptop.org>, Arnd Bergmann <arnd@arndb.de>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, brooke.wangzhigang@huawei.com, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org
+From: Alexander Shiyan <shc_work@mail.ru>
+Subject: [PATCH] input: Add new driver for ARM CLPS711X keypad
+Date: Wed, 15 Jan 2014 20:27:18 +0400
+Message-ID: <1389803238-32612-1-git-send-email-shc_work@mail.ru>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: linux-input@vger.kernel.org
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>
 List-Id: devicetree@vger.kernel.org
 
-Mike Turquette <mturquette@linaro.org> writes:
+This patch adds a new driver for keypad for Cirrus Logic CLPS711X CPUs
+and devicetree binding documentation.
+Target CPU contain keyboard interface which can scan 8 column lines,
+so we can read row GPIOs to read status and determine asserted state.
 
-> Quoting Haojian Zhuang (2014-01-14 21:59:40)
->> 
->> On 01/15/2014 11:53 AM, Mike Turquette wrote:
->> > Quoting zhangfei (2014-01-14 17:40:25)
->> >> Dear Mike
->> >>
->> >> On 01/15/2014 04:17 AM, Mike Turquette wrote:
->> >>> Quoting Zhangfei Gao (2014-01-13 01:14:28)
->> >>>> Suggest by Arnd: abstract mmc tuning as clock behavior,
->> >>>> also because different soc have different tuning method and registers.
->> >>>> hi3620_mmc_clks is added to handle mmc clock specifically on hi3620.
->> >>>>
->> >>>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
->> >>>> Acked-by: Arnd Bergmann <arnd@arndb.de>
->> >>>> Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
->> >>> Patch looks good to me with one exception. I do not have
->> >>> Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt in the
->> >>> clk-next branch. Is there a stable branch I can pull in as a dependency?
->> >> Mach-hisi just have been uploaeded.
->> >> Have tried next-20140114, the patch can be applied successfully.
->> >> While v3.13-rc8 still can not.
->> >>
->> >> Is this fine?
->> > Can you give me a link to the branch that introduces
->> > Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt?
->> >
->> > I guess the patch introducing it is going through arm-soc. Is this going
->> > in for 3.14? If so then perhaps the clk tree and the arm-soc tree can
->> > share a stable branch that introduces it.
->> >
->> > Regards,
->> > Mike
->> >
->> Some patches are merged into arm-soc, and others are in clk tree.
->> If sharing a stable branch between arm-soc and clk tree, it only means
->> that we need to revert all commits that are in arm-soc and clk tree.
->> I think it's too complex.
->
-> I'm suggesting reverting any patches that are applied to arm-soc. I'm
-> only suggesting that there might be a common branch that both the clk
-> and arm-soc trees can depend on to fix this problem.
+Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+---
+ .../devicetree/bindings/input/clps711x-keypad.txt  |  29 +++
+ drivers/input/keyboard/Kconfig                     |  12 ++
+ drivers/input/keyboard/Makefile                    |   1 +
+ drivers/input/keyboard/clps711x-keypad.c           | 209 +++++++++++++++++++++
+ 4 files changed, 251 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/clps711x-keypad.txt
+ create mode 100644 drivers/input/keyboard/clps711x-keypad.c
 
-This one is stable, and is where the binding is introduced:
+diff --git a/Documentation/devicetree/bindings/input/clps711x-keypad.txt b/Documentation/devicetree/bindings/input/clps711x-keypad.txt
+new file mode 100644
+index 0000000..26b7fe5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/clps711x-keypad.txt
+@@ -0,0 +1,29 @@
++* Cirrus Logic CLPS711X matrix keypad device tree bindings
++
++Required Properties:
++- compatible:    Should be "cirrus,clps711x--keypad".
++- syscon:        phandle to syscon device node which control keypad (SYSCON1).
++- row-gpios:     List of GPIOs used as row lines.
++- poll-interval: Poll interval time in milliseconds.
++- linux,keymap:  The definition can be found at
++                 bindings/input/matrix-keymap.txt.
++
++Optional Properties:
++- autorepeat:    Enable autorepeat feature.
++
++Example:
++	keypad {
++		compatible = "cirrus,clps711x--keypad";
++		syscon = <&syscon1>;
++		autorepeat;
++		poll-interval = <120>;
++		row-gpios = <&porta 0 0>,
++			    <&porta 1 0>;
++
++		linux,keymap = <
++			MATRIX_KEY(0, 0, KEY_UP)
++			MATRIX_KEY(0, 1, KEY_DOWN)
++			MATRIX_KEY(1, 0, KEY_LEFT)
++			MATRIX_KEY(1, 1, KEY_RIGHT)
++		>;
++	};
+diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+index a673c9f..126901b 100644
+--- a/drivers/input/keyboard/Kconfig
++++ b/drivers/input/keyboard/Kconfig
+@@ -151,6 +151,18 @@ config KEYBOARD_BFIN
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called bf54x-keys.
+ 
++config KEYBOARD_CLPS711X
++	tristate "CLPS711X Keypad support"
++	depends on OF_GPIO && (ARCH_CLPS711X || COMPILE_TEST)
++	select INPUT_MATRIXKMAP
++	select INPUT_POLLDEV
++	help
++	  Say Y here to enable the matrix keypad on the Cirrus Logic
++	  CLPS711X CPU.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called clps711x-keypad.
++
+ config KEYBOARD_LKKBD
+ 	tristate "DECstation/VAXstation LK201/LK401 keyboard"
+ 	select SERIO
+diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
+index a699b61..f8589fe 100644
+--- a/drivers/input/keyboard/Makefile
++++ b/drivers/input/keyboard/Makefile
+@@ -11,6 +11,7 @@ obj-$(CONFIG_KEYBOARD_AMIGA)		+= amikbd.o
+ obj-$(CONFIG_KEYBOARD_ATARI)		+= atakbd.o
+ obj-$(CONFIG_KEYBOARD_ATKBD)		+= atkbd.o
+ obj-$(CONFIG_KEYBOARD_BFIN)		+= bf54x-keys.o
++obj-$(CONFIG_KEYBOARD_CLPS711X)		+= clps711x-keypad.o
+ obj-$(CONFIG_KEYBOARD_CROS_EC)		+= cros_ec_keyb.o
+ obj-$(CONFIG_KEYBOARD_DAVINCI)		+= davinci_keyscan.o
+ obj-$(CONFIG_KEYBOARD_EP93XX)		+= ep93xx_keypad.o
+diff --git a/drivers/input/keyboard/clps711x-keypad.c b/drivers/input/keyboard/clps711x-keypad.c
+new file mode 100644
+index 0000000..1e2c93f
+--- /dev/null
++++ b/drivers/input/keyboard/clps711x-keypad.c
+@@ -0,0 +1,209 @@
++/*
++ * Cirrus Logic CLPS711X Keypad driver
++ *
++ * Copyright (C) 2014 Alexander Shiyan <shc_work@mail.ru>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#include <linux/delay.h>
++#include <linux/input.h>
++#include <linux/input-polldev.h>
++#include <linux/module.h>
++#include <linux/of_gpio.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/input/matrix_keypad.h>
++#include <linux/mfd/syscon.h>
++#include <linux/mfd/syscon/clps711x.h>
++
++#define CLPS711X_KEYPAD_COL_COUNT	8
++
++struct clps711x_gpio_data {
++	int	gpio;
++	bool	active_low;
++	DECLARE_BITMAP(last_state, CLPS711X_KEYPAD_COL_COUNT);
++};
++
++struct clps711x_keypad_data {
++	struct regmap			*syscon;
++	int				row_count;
++	unsigned int			row_shift;
++	struct clps711x_gpio_data	*gpio_data;
++};
++
++static void clps711x_keypad_poll(struct input_polled_dev *dev)
++{
++	const unsigned short *keycodes = dev->input->keycode;
++	struct clps711x_keypad_data *priv = dev->private;
++	int col, row;
++
++	for (col = 0; col < CLPS711X_KEYPAD_COL_COUNT; col++) {
++		/* Assert column */
++		regmap_update_bits(priv->syscon, SYSCON_OFFSET,
++				   SYSCON1_KBDSCAN_MASK,
++				   SYSCON1_KBDSCAN(8 + col));
++
++		/* Scan rows */
++		for (row = 0; row < priv->row_count; row++) {
++			struct clps711x_gpio_data *data = &priv->gpio_data[row];
++			bool state, state1;
++
++			/* Protection against fluctuations */
++			do {
++				state = gpio_get_value_cansleep(data->gpio);
++				udelay(1);
++				state1 = gpio_get_value_cansleep(data->gpio);
++			} while (state != state1);
++
++			state ^= data->active_low;
++
++			if (test_bit(col, data->last_state) != state) {
++				int code = MATRIX_SCAN_CODE(row, col,
++							    priv->row_shift);
++
++				if (state)
++					set_bit(col, data->last_state);
++				else
++					clear_bit(col, data->last_state);
++
++				input_event(dev->input, EV_MSC, MSC_SCAN, code);
++				if (keycodes[code])
++					input_report_key(dev->input,
++							 keycodes[code], state);
++			}
++		}
++
++		/* Set all columns to low */
++		regmap_update_bits(priv->syscon, SYSCON_OFFSET,
++				   SYSCON1_KBDSCAN_MASK, SYSCON1_KBDSCAN(1));
++	}
++
++	input_sync(dev->input);
++}
++
++static int clps711x_keypad_probe(struct platform_device *pdev)
++{
++	struct clps711x_keypad_data *priv;
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++	struct input_polled_dev *poll_dev;
++	u32 poll_interval;
++	int i, err;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->syscon = syscon_regmap_lookup_by_phandle(np, "syscon");
++	if (IS_ERR(priv->syscon))
++		return PTR_ERR(priv->syscon);
++
++	priv->row_count = of_gpio_named_count(np, "row-gpios");
++	if (priv->row_count < 1)
++		return -EINVAL;
++
++	priv->gpio_data = devm_kzalloc(dev, sizeof(*priv->gpio_data) *
++				       priv->row_count, GFP_KERNEL);
++	if (!priv->gpio_data)
++		return -ENOMEM;
++
++	priv->row_shift = get_count_order(CLPS711X_KEYPAD_COL_COUNT);
++
++	for (i = 0; i < priv->row_count; i++) {
++		struct clps711x_gpio_data *data = &priv->gpio_data[i];
++		enum of_gpio_flags flg;
++
++		data->gpio = of_get_named_gpio_flags(np, "row-gpios", i, &flg);
++		if (data->gpio < 0)
++			return data->gpio;
++
++		err = devm_gpio_request_one(dev, data->gpio, GPIOF_IN, NULL);
++		if (err)
++			return err;
++
++		data->active_low = flg & OF_GPIO_ACTIVE_LOW;
++	}
++
++	err = of_property_read_u32(np, "poll-interval", &poll_interval);
++	if (err)
++		return err;
++
++	poll_dev = input_allocate_polled_device();
++	if (!poll_dev)
++		return -ENOMEM;
++
++	poll_dev->private		= priv;
++	poll_dev->poll			= clps711x_keypad_poll;
++	poll_dev->poll_interval		= poll_interval;
++	poll_dev->input->name		= pdev->name;
++	poll_dev->input->dev.parent	= &pdev->dev;
++	poll_dev->input->id.bustype	= BUS_HOST;
++	poll_dev->input->id.vendor	= 0x0001;
++	poll_dev->input->id.product	= 0x0001;
++	poll_dev->input->id.version	= 0x0100;
++
++	err = matrix_keypad_build_keymap(NULL, NULL, priv->row_count,
++					 CLPS711X_KEYPAD_COL_COUNT,
++					 NULL, poll_dev->input);
++	if (err)
++		goto out_err;
++
++	input_set_capability(poll_dev->input, EV_MSC, MSC_SCAN);
++	if (of_property_read_bool(np, "autorepeat"))
++		__set_bit(EV_REP, poll_dev->input->evbit);
++
++	platform_set_drvdata(pdev, poll_dev);
++
++	/* Set all columns to low */
++	regmap_update_bits(priv->syscon, SYSCON_OFFSET, SYSCON1_KBDSCAN_MASK,
++			   SYSCON1_KBDSCAN(1));
++
++	err = input_register_polled_device(poll_dev);
++	if (err)
++		goto out_err;
++
++	/* Report initial state */
++	clps711x_keypad_poll(poll_dev);
++
++	return 0;
++
++out_err:
++	input_free_polled_device(poll_dev);
++
++	return err;
++}
++
++static int clps711x_keypad_remove(struct platform_device *pdev)
++{
++	struct input_polled_dev *poll_dev = platform_get_drvdata(pdev);
++
++	input_unregister_polled_device(poll_dev);
++	input_free_polled_device(poll_dev);
++
++	return 0;
++}
++
++static struct of_device_id clps711x_keypad_of_match[] = {
++	{ .compatible = "cirrus,clps711x-keypad", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, clps711x_keypad_of_match);
++
++static struct platform_driver clps711x_keypad_driver = {
++	.driver	= {
++		.name		= "clps711x-keypad",
++		.owner		= THIS_MODULE,
++		.of_match_table	= clps711x_keypad_of_match,
++	},
++	.probe	= clps711x_keypad_probe,
++	.remove	= clps711x_keypad_remove,
++};
++module_platform_driver(clps711x_keypad_driver);
++
++MODULE_AUTHOR("Alexander Shiyan <shc_work@mail.ru>");
++MODULE_DESCRIPTION("Cirrus Logic CLPS711X Keypad driver");
++MODULE_LICENSE("GPL");
+-- 
+1.8.3.2
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git hisi/soc
-
->> How about split the patch? The patch on document should enter in arm-soc.
->
-> That is one approach. You might want to run it past the arm-soc folks
-> first to see if they will take in the binding definition for 3.14.
-
-We're not taking anything new for 3.14.
-
-Kevin
