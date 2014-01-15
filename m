@@ -1,41 +1,98 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH net-next v3 2/2] stmmac: Fix kernel crashes for jumbo
- frames
-Date: Wed, 15 Jan 2014 14:57:25 -0800 (PST)
-Message-ID: <20140115.145725.801343084524328515.davem@davemloft.net>
-References: <1389719859-29071-3-git-send-email-vbridgers2013@gmail.com>
-	<1389729216.2025.197.camel@bwh-desktop.uk.level5networks.com>
-	<CAOwfj2Ne1oRU1z6BaH4g2_EJJFtJOWbgs2oMzSq5nNpz9G6LsA@mail.gmail.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: [UPDATED PATCHv4 6/7] hwspinlock/omap: enable module before reading
+ SYSSTATUS register
+Date: Wed, 15 Jan 2014 17:36:48 -0600
+Message-ID: <1389829008-31941-1-git-send-email-s-anna@ti.com>
+References: <1389658764-39199-7-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAOwfj2Ne1oRU1z6BaH4g2_EJJFtJOWbgs2oMzSq5nNpz9G6LsA@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: vbridgers2013@gmail.com
-Cc: bhutchings@solarflare.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, peppe.cavallaro@st.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dinguyen@altera.com, rayagond@vayavyalabs.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1389658764-39199-7-git-send-email-s-anna@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Suman Anna <s-anna@ti.com>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Vince Bridgers <vbridgers2013@gmail.com>
-Date: Tue, 14 Jan 2014 14:44:35 -0600
+The number of hwspinlocks are determined based on the value read
+from the IP block's SYSSTATUS register. However, the module may
+not be enabled and clocked, and the read may result in a bus error.
 
-> On Tue, Jan 14, 2014 at 1:53 PM, Ben Hutchings
-> <bhutchings@solarflare.com> wrote:
->> On Tue, 2014-01-14 at 11:17 -0600, Vince Bridgers wrote:
->>> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
->>> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
->>> @@ -51,6 +51,10 @@ static int stmmac_probe_config_dt(struct platform_device *pdev,
->>>       plat->mdio_bus_data = devm_kzalloc(&pdev->dev,
->>>                                          sizeof(struct stmmac_mdio_bus_data),
->>>                                          GFP_KERNEL);
->>> +     /* Set the maxmtu to a default of 1500 in case the
->>> +      * parameter is not present in the device tree
->>> +      */
->>> +     plat->maxmtu = JUMBO_LEN;
->>
->> The comment disagrees with the definition of JUMBO_LEN.
-> 
-> ok, I'll address the comment inconsistency.
+This particular issue is seen rather easily on AM33XX, since the
+module wakeup is software controlled, and it is disabled out of
+reset. Make sure the module is enabled and clocked before reading
+the SYSSTATUS register.
 
-Therefore I'm expecting to see a v4 of this series at some point,
-thanks.
+Signed-off-by: Suman Anna <s-anna@ti.com>
+---
+ drivers/hwspinlock/omap_hwspinlock.c | 27 ++++++++++++++++++++-------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/hwspinlock/omap_hwspinlock.c b/drivers/hwspinlock/omap_hwspinlock.c
+index 9f56fb2..7764291 100644
+--- a/drivers/hwspinlock/omap_hwspinlock.c
++++ b/drivers/hwspinlock/omap_hwspinlock.c
+@@ -101,10 +101,29 @@ static int omap_hwspinlock_probe(struct platform_device *pdev)
+ 	if (!io_base)
+ 		return -ENOMEM;
+ 
++	/*
++	 * make sure the module is enabled and clocked before reading
++	 * the module SYSSTATUS register
++	 */
++	pm_runtime_enable(&pdev->dev);
++	ret = pm_runtime_get_sync(&pdev->dev);
++	if (ret < 0) {
++		pm_runtime_put_noidle(&pdev->dev);
++		goto iounmap_base;
++	}
++
+ 	/* Determine number of locks */
+ 	i = readl(io_base + SYSSTATUS_OFFSET);
+ 	i >>= SPINLOCK_NUMLOCKS_BIT_OFFSET;
+ 
++	/*
++	 * runtime PM will make sure the clock of this module is
++	 * enabled again iff at least one lock is requested
++	 */
++	ret = pm_runtime_put_sync(&pdev->dev);
++	if (ret < 0)
++		goto iounmap_base;
++
+ 	/* one of the four lsb's must be set, and nothing else */
+ 	if (hweight_long(i & 0xf) != 1 || i > 8) {
+ 		ret = -EINVAL;
+@@ -124,12 +143,6 @@ static int omap_hwspinlock_probe(struct platform_device *pdev)
+ 	for (i = 0, hwlock = &bank->lock[0]; i < num_locks; i++, hwlock++)
+ 		hwlock->priv = io_base + LOCK_BASE_OFFSET + sizeof(u32) * i;
+ 
+-	/*
+-	 * runtime PM will make sure the clock of this module is
+-	 * enabled iff at least one lock is requested
+-	 */
+-	pm_runtime_enable(&pdev->dev);
+-
+ 	ret = hwspin_lock_register(bank, &pdev->dev, &omap_hwspinlock_ops,
+ 						base_id, num_locks);
+ 	if (ret)
+@@ -138,9 +151,9 @@ static int omap_hwspinlock_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ reg_fail:
+-	pm_runtime_disable(&pdev->dev);
+ 	kfree(bank);
+ iounmap_base:
++	pm_runtime_disable(&pdev->dev);
+ 	iounmap(io_base);
+ 	return ret;
+ }
+-- 
+1.8.4.3
