@@ -1,37 +1,109 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 11/21] ARM: pxa: support ICP DAS LP-8x4x FPGA irq
-Date: Wed, 15 Jan 2014 08:39:35 +0100
-Message-ID: <CACRpkda_6P3s3LBwV5ve+=_JhxehephvpPT=pKPk3NzEKQLa9g@mail.gmail.com>
-References: <1386901645-28895-1-git-send-email-ynvich@gmail.com>
-	<1387309071-22382-1-git-send-email-ynvich@gmail.com>
-	<1387309071-22382-12-git-send-email-ynvich@gmail.com>
-	<CACRpkdaY7xpoeeUqBBqUS2swe6Y5gKt67VYNvNRrsbFhyU=ATw@mail.gmail.com>
-	<1389207661.10754.42.camel@host5.omatika.ru>
+Subject: Re: [PATCH v3.1 11/21] ARM: pxa: support ICP DAS LP-8x4x FPGA irq
+Date: Wed, 15 Jan 2014 08:46:47 +0100
+Message-ID: <CACRpkdaA_HBcRgBj9+x_RJquSnvy-r7Wqp-z=ZnoGaCBy+wamw@mail.gmail.com>
+References: <1387309071-22382-12-git-send-email-ynvich@gmail.com>
+	<1389308855-32588-1-git-send-email-ynvich@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1389207661.10754.42.camel@host5.omatika.ru>
+In-Reply-To: <1389308855-32588-1-git-send-email-ynvich@gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
 To: Sergei Ianovich <ynvich@gmail.com>
 Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@linaro.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 8, 2014 at 8:01 PM, Sergei Ianovich <ynvich@gmail.com> wrote:
-> On Thu, 2014-01-02 at 13:32 +0100, Linus Walleij wrote:
->> On Tue, Dec 17, 2013 at 8:37 PM, Sergei Ianovich <ynvich@gmail.com> wrote:
->> Usually combined GPIO+IRQ controllers are put into drivers/gpio but
->> this is a bit special as it seems to handle also non-GPIO-related IRQs
->> so let's get some input on this.
->
-> This one is a plain IRQ controller. It has simple input lines, not GPIO
-> pins. The chip reports its status to upper level interrupt controller.
-> The upper level controller is PXA GPIO in this case.
+This is looking much better!
 
-Hm I don't know why I was deluded into thinking this had something to
-do with GPIO. I must have been soft in the head. Sorry about all those
-comments ...
+On Fri, Jan 10, 2014 at 12:07 AM, Sergei Ianovich <ynvich@gmail.com> wrote:
 
-I'll re-read the irqchip driver v3.1.
+> +++ b/drivers/irqchip/irq-lp8x4x.c
+(...)
+
+You could add some kerneldoc to this following struct (OK nitpick, but
+still nice, especially for the last two variables).
+
+> +struct lp8x4x_irq_data {
+> +       void                    *base;
+> +       struct irq_domain       *domain;
+> +       unsigned long           num_irq;
+> +       unsigned char           irq_sys_enabled;
+> +       unsigned char           irq_high_enabled;
+> +};
+> +
+> +static void lp8x4x_mask_irq(struct irq_data *d)
+> +{
+> +       unsigned mask;
+> +       unsigned long irq = d->hwirq;
+
+Name the local variable hwirq too so we know what it is.
+
+> +       struct lp8x4x_irq_data *host = irq_data_get_irq_chip_data(d);
+> +
+> +       if (!host) {
+> +               pr_err("lp8x4x: missing host data for irq %i\n", d->irq);
+> +               return;
+> +       }
+> +
+> +       if (irq >= host->num_irq) {
+> +               pr_err("lp8x4x: wrong irq handler for irq %i\n", d->irq);
+> +               return;
+> +       }
+
+This is on the hotpath. Do you *really* need these two checks?
+
+(...)
+> +static void lp8x4x_unmask_irq(struct irq_data *d)
+> +{
+> +       unsigned mask;
+> +       unsigned long irq = d->hwirq;
+
+Name the variable "hwirq".
+
+> +       struct lp8x4x_irq_data *host = irq_data_get_irq_chip_data(d);
+> +
+> +       if (!host) {
+> +               pr_err("lp8x4x: missing host data for irq %i\n", d->irq);
+> +               return;
+> +       }
+> +
+> +       if (irq >= host->num_irq) {
+> +               pr_err("lp8x4x: wrong irq handler for irq %i\n", d->irq);
+> +               return;
+> +       }
+
+Again overzealous error checks.
+
+(...)
+> +static void lp8x4x_irq_handler(unsigned int irq, struct irq_desc *desc)
+> +{
+> +       int n;
+> +       unsigned long mask;
+> +       struct irq_chip *chip = irq_desc_get_chip(desc);
+> +       struct lp8x4x_irq_data *host = irq_desc_get_handler_data(desc);
+> +
+> +       if (!host)
+> +               return;
+
+I don't think this happens either?
+
+> +       chained_irq_enter(chip, desc);
+> +
+> +       for (;;) {
+> +               mask = ioread8(host->base + CLRHILVINT) & 0xff;
+> +               mask |= (ioread8(host->base + SECOINT) & SECOINT_MASK) << 8;
+> +               mask |= (ioread8(host->base + PRIMINT) & PRIMINT_MASK) << 8;
+> +               mask &= host->irq_high_enabled | (host->irq_sys_enabled << 8);
+> +               if (mask == 0)
+> +                       break;
+> +               for_each_set_bit(n, &mask, BITS_PER_LONG)
+> +                       generic_handle_irq(irq_find_mapping(host->domain, n));
+> +       }
+
+I like the looks of this.
+
+If you fix this:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
