@@ -1,97 +1,54 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] devicetree: bindings: Document Krait CPU/L1 EDAC
-Date: Wed, 15 Jan 2014 08:56:23 -0800
-Message-ID: <20140115165623.GJ14405@codeaurora.org>
-References: <1389735034-21430-1-git-send-email-sboyd@codeaurora.org>
- <1389735034-21430-3-git-send-email-sboyd@codeaurora.org>
- <20140115102701.GA27314@e102568-lin.cambridge.arm.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 4/7] ARM: brcmstb: add CPU binding for Broadcom Brahma15
+Date: Wed, 15 Jan 2014 16:58:26 +0000
+Message-ID: <20140115165825.GJ25824@e106331-lin.cambridge.arm.com>
+References: <1389743333-16741-1-git-send-email-marc.ceeeee@gmail.com>
+ <1389743333-16741-5-git-send-email-marc.ceeeee@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20140115102701.GA27314-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1389743333-16741-5-git-send-email-marc.ceeeee@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Carino <marc.ceeeee@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Christian Daudt <bcm@fixthebug.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Matt Porter <matt.porter@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/15, Lorenzo Pieralisi wrote:
-> On Tue, Jan 14, 2014 at 09:30:32PM +0000, Stephen Boyd wrote:
-> > The Krait CPU/L1 error reporting device is made up a per-CPU
-> > interrupt. While we're here, document the next-level-cache
-> > property that's used by the Krait EDAC driver.
-> > 
-> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> > Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-> > Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/arm/cpus.txt | 52 ++++++++++++++++++++++++++
-> >  1 file changed, 52 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> > index 91304353eea4..c332b5168456 100644
-> > --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> > +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> > @@ -191,6 +191,16 @@ nodes to be present and contain the properties described below.
-> >  			  property identifying a 64-bit zero-initialised
-> >  			  memory location.
-> >  
-> > +	- interrupts
-> > +		Usage: required for cpus with compatible string "qcom,krait".
-> > +		Value type: <prop-encoded-array>
-> > +		Definition: L1/CPU error interrupt
+On Tue, Jan 14, 2014 at 11:48:50PM +0000, Marc Carino wrote:
+> Add the Broadcom Brahma B15 CPU to the DT CPU binding list.
 > 
-> I reckon you want this property to belong in the cpus node (example below),
-> not in cpu nodes, right ?
-
-Yes.
-
+> Signed-off-by: Marc Carino <marc.ceeeee@gmail.com>
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.txt |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
 > 
-> Are you relying on a platform device to be created for /cpus node in
-> order for this series to work ? I guess that's why you want the
-> interrupts property to be defined in /cpus so that it becomes a platform
-> device resource (and you also add a compatible property in /cpus that is
-> missing in these bindings).
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> index 9130435..423b879 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -163,6 +163,7 @@ nodes to be present and contain the properties described below.
+>  			    "arm,cortex-r4"
+>  			    "arm,cortex-r5"
+>  			    "arm,cortex-r7"
+> +			    "brcm,brahma15"
 
-Ah yes. I'll move this to the /cpus section.
+Given all the documentation I can find online calls the CPU
+"Brahma-B15", would it not make more sense for this to be
+"brcm,brahma-b15"? 
 
-> 
-> > +
-> > +	- next-level-cache
-> > +		Usage: optional
-> > +		Value type: <phandle>
-> > +		Definition: phandle pointing to the next level cache
-> > +
-> >  Example 1 (dual-cluster big.LITTLE system 32-bit):
-> >  
-> >  	cpus {
-> > @@ -382,3 +392,45 @@ cpus {
-> >  		cpu-release-addr = <0 0x20000000>;
-> >  	};
-> >  };
-> > +
-> > +
-> > +Example 5 (Krait 32-bit system):
-> > +
-> > +cpus {
-> > +	#address-cells = <1>;
-> > +	#size-cells = <0>;
-> > +	interrupts = <1 9 0xf04>;
-> 
-> In patch 4 you also add a compatible property here, and that's not documented,
-> and honestly I do not think that's acceptable either. I guess you want a
-> compatible property here to match the platform driver, right ?
+That would match what we do for the ARM Cortex-[ar]\d processors.
 
-Ah sorry, I forgot to put the compatible property here like in
-the dts change. I'll do that in the next revision. Yes we need a
-compatible property here to match the platform driver.
+Otherwise, this looks fine to me.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Mark.
