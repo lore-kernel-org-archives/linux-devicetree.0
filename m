@@ -1,37 +1,59 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V3] ARM: dts: imx6sl: add keypad support for i.mx6sl-evk
- board.
-Date: Wed, 15 Jan 2014 13:56:45 +0800
-Message-ID: <20140115055643.GE1896@S2101-09.ap.freescale.net>
-References: <1389691828-27000-1-git-send-email-b20788@freescale.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH] ARM: dts: imx28-apf28dev: add user button
+Date: Wed, 15 Jan 2014 13:58:32 +0800
+Message-ID: <20140115055830.GF1896@S2101-09.ap.freescale.net>
+References: <1389709287-25742-1-git-send-email-sebastien.szymanski@armadeus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1389691828-27000-1-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1389709287-25742-1-git-send-email-sebastien.szymanski@armadeus.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?iso-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski@armadeus.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Julien Boibessot <julien.boibessot@armadeus.com>, Russell King <linux@arm.linux.org.uk>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 14, 2014 at 05:30:28PM +0800, Anson Huang wrote:
-> i.MX6SL EVK board has a 3*3 keypad matrix to support 8 keypads,
-> enable them, the keymap is as below:
-> 
-> SW6:  MATRIX_KEY(0x0, 0x0, KEY_UP)         /* ROW0, COL0 */
-> SW7:  MATRIX_KEY(0x0, 0x1, KEY_DOWN)       /* ROW0, COL1 */
-> SW8:  MATRIX_KEY(0x0, 0x2, KEY_ENTER)      /* ROW0, COL2 */
-> SW9:  MATRIX_KEY(0x1, 0x0, KEY_HOME)       /* ROW1, COL0 */
-> SW10: MATRIX_KEY(0x1, 0x1, KEY_RIGHT)      /* ROW1, COL1 */
-> SW11: MATRIX_KEY(0x1, 0x2, KEY_LEFT)       /* ROW1, COL2 */
-> SW12: MATRIX_KEY(0x2, 0x0, KEY_VOLUMEDOWN) /* ROW2, COL0 */
-> SW13: MATRIX_KEY(0x2, 0x1, KEY_VOLUMEUP)   /* ROW2, COL1 */
-> 
-> Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On Tue, Jan 14, 2014 at 03:21:27PM +0100, S=E9bastien Szymanski wrote:
+> Signed-off-by: S=E9bastien Szymanski <sebastien.szymanski@armadeus.co=
+m>
+> ---
+>  arch/arm/boot/dts/imx28-apf28dev.dts | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 
 Applied, thanks.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Shawn
+
+>=20
+> diff --git a/arch/arm/boot/dts/imx28-apf28dev.dts b/arch/arm/boot/dts=
+/imx28-apf28dev.dts
+> index 334dea5..221cac4 100644
+> --- a/arch/arm/boot/dts/imx28-apf28dev.dts
+> +++ b/arch/arm/boot/dts/imx28-apf28dev.dts
+> @@ -48,6 +48,7 @@
+>  						MX28_PAD_LCD_D20__GPIO_1_20
+>  						MX28_PAD_LCD_D21__GPIO_1_21
+>  						MX28_PAD_LCD_D22__GPIO_1_22
+> +						MX28_PAD_GPMI_CE1N__GPIO_0_17
+>  					>;
+>  					fsl,drive-strength =3D <MXS_DRIVE_4mA>;
+>  					fsl,voltage =3D <MXS_VOLTAGE_HIGH>;
+> @@ -193,4 +194,14 @@
+>  		brightness-levels =3D <0 4 8 16 32 64 128 255>;
+>  		default-brightness-level =3D <6>;
+>  	};
+> +
+> +	gpio-keys {
+> +		compatible =3D "gpio-keys";
+> +
+> +		user-button {
+> +			label =3D "User button";
+> +			gpios =3D <&gpio0 17 0>;
+> +			linux,code =3D <0x100>;
+> +		};
+> +	};
+>  };
+> --=20
+> 1.8.3.2
+>=20
