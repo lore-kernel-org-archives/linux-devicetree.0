@@ -1,54 +1,55 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v7 2/4] Documentation: Add APM X-Gene SoC 15Gbps
- Multi-purpose PHY driver binding documentation
-Date: Wed, 15 Jan 2014 11:31:16 +0000
-Message-ID: <20140115113116.GC25824@e106331-lin.cambridge.arm.com>
-References: <1389769840-15469-1-git-send-email-lho@apm.com>
- <1389769840-15469-2-git-send-email-lho@apm.com>
- <1389769840-15469-3-git-send-email-lho@apm.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH 3/3] Binding: atmel-wm8904: add option to choose clock
+Date: Wed, 15 Jan 2014 12:54:17 +0100
+Message-ID: <20140115115417.GA9558@ns203013.ovh.net>
+References: <1389669956-2304-1-git-send-email-voice.shen@atmel.com>
+ <1389669956-2304-4-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1389769840-15469-3-git-send-email-lho@apm.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Loc Ho <lho@apm.com>
-Cc: "olof@lixom.net" <olof@lixom.net>, "tj@kernel.org" <tj@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "dmilburn@redhat.com" <dmilburn@redhat.com>, "jcm@redhat.com" <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+In-Reply-To: <1389669956-2304-4-git-send-email-voice.shen@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-doc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, broonie@kernel.org, linux-sound@vger.kernel.org, Rob Landley <rob@landley.net>, Mark Brown <broonie@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 15, 2014 at 07:10:38AM +0000, Loc Ho wrote:
-> Signed-off-by: Loc Ho <lho@apm.com>
-> Signed-off-by: Tuan Phan <tphan@apm.com>
-> Signed-off-by: Suman Tripathi <stripathi@apm.com>
-> ---
->  .../devicetree/bindings/phy/apm-xgene-phy.txt      |   94 ++++++++++++++++++++
->  1 files changed, 94 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/phy/apm-xgene-phy.txt
+On 11:25 Tue 14 Jan     , Bo Shen wrote:
+> Add the option to choose clock output on which pin connect to SSC.
+> Default is on TK pin to SSC, add clk_from_rk_pin option, the clock
+> is on RK pin to SSC.
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/apm-xgene-phy.txt b/Documentation/devicetree/bindings/phy/apm-xgene-phy.txt
-> new file mode 100644
-> index 0000000..4ffbae0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/apm-xgene-phy.txt
-> @@ -0,0 +1,94 @@
-> +* APM X-Gene 15Gbps Multi-purpose PHY nodes
-> +
-> +PHY nodes are defined to describe on-chip 15Gbps Multi-purpose PHY. Each
-> +PHY (pair of lanes) has its own node.
-> +
-> +Required properties:
-> +- compatible		: Shall be "apm,xgene-phy" or
-> +			  "apm,xgene-phy-ext". The "apm,xgene-phy" describes
-> +			  an PHY with internal reference PLL located within
-> +			  the IP. The "apm,xgene-phy-ext" describes an PHY
-> +			  where the internal reference PLL located outside of
-> +			  the IP.
+> Signed-off-by: Bo Shen <voice.shen@atmel.com>
+> ---
+> 
+>  Documentation/devicetree/bindings/sound/atmel-wm8904.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/atmel-wm8904.txt b/Documentation/devicetree/bindings/sound/atmel-wm8904.txt
+> index 8bbe50c..68a5c1a 100644
+> --- a/Documentation/devicetree/bindings/sound/atmel-wm8904.txt
+> +++ b/Documentation/devicetree/bindings/sound/atmel-wm8904.txt
+> @@ -33,6 +33,8 @@ Required properties:
+>  
+>  Optional properties:
+>    - pinctrl-names, pinctrl-0: Please refer to pinctrl-bindings.txt
+> +  - clk_from_rk_pin: according to hardware design, clk privide on rk pin
+							  provide
 
-How about:
-
-- compatible: shall contain one of:
-  * "apm,xgene-phy" - PHY has an internal reference PLL.
-  * "apm,xgene-phy-ext" - PHYs has an external reference PLL.
-
-Cheers,
-Mark.
+	?? no example?
+> +    to ssc device
+>  
+>  Example:
+>  sound {
+> -- 
+> 1.8.5.2
+> 
