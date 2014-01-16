@@ -1,111 +1,92 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: Re: [PATCH] Parse missing regulator constraints from device tree
- blob
-Date: Thu, 16 Jan 2014 17:56:53 +0000
-Message-ID: <20140116175653.GJ17314@sirena.org.uk>
-References: <8217085.584601389885483146.JavaMail.weblogic@epml20>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] devicetree: bindings: Document Krait CPU/L1 EDAC
+Date: Thu, 16 Jan 2014 10:05:05 -0800
+Message-ID: <20140116180505.GA30925@codeaurora.org>
+References: <1389735034-21430-1-git-send-email-sboyd@codeaurora.org>
+ <1389735034-21430-3-git-send-email-sboyd@codeaurora.org>
+ <20140115102701.GA27314@e102568-lin.cambridge.arm.com>
+ <20140115165623.GJ14405@codeaurora.org>
+ <20140116013840.GA674@codeaurora.org>
+ <20140116113332.GC25540@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="u3bvv0EcKsvvYeex"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <8217085.584601389885483146.JavaMail.weblogic@epml20>
+In-Reply-To: <20140116113332.GC25540-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Saurabh Singh <saurabh1.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "celinux-dev-VxL1A5FK7jA05z2xGA6PZHhyD016LWXt@public.gmane.org" <celinux-dev-VxL1A5FK7jA05z2xGA6PZHhyD016LWXt@public.gmane.org>, SREEVATSA D B <srevatsa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Praveen BP <bp.praveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 01/16, Lorenzo Pieralisi wrote:
+> On Thu, Jan 16, 2014 at 01:38:40AM +0000, Stephen Boyd wrote:
+> > On 01/15, Stephen Boyd wrote:
+> > > 
+> > > Ah sorry, I forgot to put the compatible property here like in
+> > > the dts change. I'll do that in the next revision. Yes we need a
+> > > compatible property here to match the platform driver.
+> > > 
+> > 
+> > This is the replacement patch
+> > 
+> > -----8<------
+> > From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > Subject: [PATCH v9] devicetree: bindings: Document Krait CPU/L1 EDAC
+> > 
+> > The Krait CPU/L1 error reporting device is made up a per-CPU
+> > interrupt. While we're here, document the next-level-cache
+> > property that's used by the Krait EDAC driver.
+> > 
+> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+> > Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/arm/cpus.txt | 58 ++++++++++++++++++++++++++
+> >  1 file changed, 58 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> > index 91304353eea4..03a529e791c4 100644
+> > --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> > +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> > @@ -62,6 +62,20 @@ nodes to be present and contain the properties described below.
+> >  		Value type: <u32>
+> >  		Definition: must be set to 0
+> >  
+> > +	- compatible
+> > +		Usage: optional
+> > +		Value type: <string>
+> > +		Definition: should be one of the compatible strings listed
+> > +			    in the cpu node compatible property. This property
+> > +			    shall only be present if all the cpu nodes have the
+> > +			    same compatible property.
+> 
+> Do we really want to do that ? I am not sure. A cpus node is supposed to
+> be a container node, we should not define this binding just because we
+> know the kernel creates a platform device for it then.
 
---u3bvv0EcKsvvYeex
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is just copying more of the ePAPR spec into this document.
+It just so happens that having a compatible field here allows a
+platform device to be created. I don't see why that's a problem.
 
-On Thu, Jan 16, 2014 at 03:18:03PM +0000, Saurabh Singh wrote:
-> Hi Mark,
->=20
-> > Please send patches using the process in SubmittingPatches, the formatt=
-ing
-> > of the submission is very important for tools like git am which people =
-use to
-> > work with patches.
->=20
-> As per your request sending the patch and description in git format.
-> Please find below the patch.
->=20
-> Regards,
+> 
+> interrupts is a cpu node property and I think it should be kept as such.
+> 
+> I know it will be duplicated and I know you can't rely on a platform
+> device for probing (since if I am not mistaken, removing a compatible
+> string from cpus prevents its platform device creation), but that's an issue
+> related to how the kernel works, you should not define DT bindings to solve
+> that IMHO.
 
-No, please do as I asked and follow the process in SubmittingPatches -
-as I said the format things are sent in is very important for the
-tooling.  Pasting the patch into a mail after some other text definitely
-doesn't give a mail in the format covered in SubmittingPatches.  If in
-doubt send the mail to yourself and then compare it with other patches
-sent to the list and test by applying with git am and make sure the
-patch and changelog come out OK.
+The interrupts property is also common for all cpus so it seems
+fine to collapse the value down into a PPI specifier indicating
+that all CPUs get the interrupt, similar to how we compress the
+information about the compatible string.
 
-> +- regulator-valid-modes-mask: valid operations for regulator on particul=
-ar machine
-
-This is not adequately documented, what are "valid operations" and how
-would they be encoded?
-
-> +- regulator-input-uv: regulator input voltage, only if supply is another=
- regulator
-
-Why provide a property for this, surely if there is another regulator we
-can just find out from that regulator what voltage it is outputting?
-
-> +- regulator-initial-mode: default mode to set on startup
-
-It is not documented what a mode is here or how one would specify it in
-the property.
-
-> +- regulator-initial-state: suspend state to set at init
-
-Again, no semantics are provided for this.
-
-> +- regulator-state-mem, regulator-state-disk, regulator-state-standby:
-> +	defines regulator suspend to memory, suspend to disk (hibernate) and st=
-andby respectively.
-> +	have following sub-constarints:
-> +	- regulator-state-uv: suspend voltage
-> +	- regulator-state-mode: suspend regulator operating mode
-> +	- regulator-state-enabled: is regulator enabled in this suspend state
-> +	- regulator-state-disabled: is the regulator disbled in this suspend st=
-ate
-
-I am very nervous about the idea of putting this stuff into DT.  This
-matches less and less well with modern system designs which are becoming
-more and more dynamic, and of course the concepts of suspending to
-memory, disk and standby are unclear and fluid - what is the difference
-between memory and standby for example?
-
-I'd be interested to know if there are real systems that need this and
-can't figure out what to do dynamically.
-
---u3bvv0EcKsvvYeex
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS2B1iAAoJELSic+t+oim9iAYP/AuJHsyrofRiQ0I5yVcxno42
-8nlrM5F9aDq2zrRNZhM0actKSc1tm5eGWz0hCWSO5DI6UXY4vPSd0iRYR/sP+Z+q
-AzjxqTYVbUDY/zSExm0YNIZ4xSPqX4Ta6LGRxWG+t6LPPZc6YePkOrquBA72AKNS
-MGEVKWdx0m0mRLEAFniqvf58FZ5NXVibCs7haZHFwg+11h+E53xIl0RlB2jlz9Ci
-tnU9yWIpuX4ddizNt7089NVym9GCYo1kydPEShQd0QNPKgCviwQQAz88zwKRWXjp
-HEtwgZFcqOsNL5EYOFJ+81XJiYzK91FWU2F8OXOUvbs+jLUpJZYdfb6PhGmjkG5p
-bZEb3/eAn0ubToerir8uenz9Z0agCKem8JLPiMY/83I8S6kh9kD5088Xpzd4TDkF
-2UQgkSQyKXLQkWYxLRdrFUI1LD/TNgQyJ9PsVbUYl25QMC7dsSPbQjlauedUqaBc
-r+urFnye9StNkQRlqSXZ38V0+cjUuERcqGniyYniNGntHREgckCdkZB2bHLW23LI
-6azsXzCyIwGZZ6C6qUxqzn5GStVyjRhytL2XVpBObP8yzM2FCjzz0dzGF4wLSLql
-Q5hTyBLyjJDSK4pYJVnFYatuhAhrC3vQu/zAD7jHtRH1WmQnQM65dPZThLnYu0Qw
-Un24a0dPkrGQHKbPwUwW
-=k/RX
------END PGP SIGNATURE-----
-
---u3bvv0EcKsvvYeex--
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
