@@ -1,109 +1,76 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v5 2/4] devicetree: bindings: Document Krait CPU/L1 EDAC
-Date: Thu, 16 Jan 2014 18:33:26 +0000
-Message-ID: <20140116183326.GG25540@e102568-lin.cambridge.arm.com>
-References: <1389735034-21430-1-git-send-email-sboyd@codeaurora.org>
- <1389735034-21430-3-git-send-email-sboyd@codeaurora.org>
- <20140115102701.GA27314@e102568-lin.cambridge.arm.com>
- <20140115165623.GJ14405@codeaurora.org>
- <20140116013840.GA674@codeaurora.org>
- <20140116113332.GC25540@e102568-lin.cambridge.arm.com>
- <20140116180505.GA30925@codeaurora.org>
+From: Vince Bridgers <vbridgers2013@gmail.com>
+Subject: Re: [PATCH net-next v4 1/2] dts: Add a binding for Synopsys emac max-frame-size
+Date: Thu, 16 Jan 2014 12:48:53 -0600
+Message-ID: <CAOwfj2N2p_B-Wq0DTzt76RAbqCu5O088wxWiLEvHCc0qusDq-g@mail.gmail.com>
+References: <1389881155-9758-1-git-send-email-vbridgers2013@gmail.com>
+	<1389881155-9758-2-git-send-email-vbridgers2013@gmail.com>
+	<1389894601.11912.54.camel@bwh-desktop.uk.level5networks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140116180505.GA30925@codeaurora.org>
-Content-Disposition: inline
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Borislav Petkov <bp@alien8.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1389894601.11912.54.camel@bwh-desktop.uk.level5networks.com>
+Sender: netdev-owner@vger.kernel.org
+To: Ben Hutchings <bhutchings@solarflare.com>
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, Giuseppe CAVALLARO <peppe.cavallaro@st.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Dinh Nguyen <dinguyen@altera.com>, Rayagond Kokatanur <rayagond@vayavyalabs.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 16, 2014 at 06:05:05PM +0000, Stephen Boyd wrote:
-> On 01/16, Lorenzo Pieralisi wrote:
-> > On Thu, Jan 16, 2014 at 01:38:40AM +0000, Stephen Boyd wrote:
-> > > On 01/15, Stephen Boyd wrote:
-> > > > 
-> > > > Ah sorry, I forgot to put the compatible property here like in
-> > > > the dts change. I'll do that in the next revision. Yes we need a
-> > > > compatible property here to match the platform driver.
-> > > > 
-> > > 
-> > > This is the replacement patch
-> > > 
-> > > -----8<------
-> > > From: Stephen Boyd <sboyd@codeaurora.org>
-> > > Subject: [PATCH v9] devicetree: bindings: Document Krait CPU/L1 EDAC
-> > > 
-> > > The Krait CPU/L1 error reporting device is made up a per-CPU
-> > > interrupt. While we're here, document the next-level-cache
-> > > property that's used by the Krait EDAC driver.
-> > > 
-> > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > Cc: Kumar Gala <galak@codeaurora.org>
-> > > Cc: <devicetree@vger.kernel.org>
-> > > Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/arm/cpus.txt | 58 ++++++++++++++++++++++++++
-> > >  1 file changed, 58 insertions(+)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> > > index 91304353eea4..03a529e791c4 100644
-> > > --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> > > +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> > > @@ -62,6 +62,20 @@ nodes to be present and contain the properties described below.
-> > >  		Value type: <u32>
-> > >  		Definition: must be set to 0
-> > >  
-> > > +	- compatible
-> > > +		Usage: optional
-> > > +		Value type: <string>
-> > > +		Definition: should be one of the compatible strings listed
-> > > +			    in the cpu node compatible property. This property
-> > > +			    shall only be present if all the cpu nodes have the
-> > > +			    same compatible property.
-> > 
-> > Do we really want to do that ? I am not sure. A cpus node is supposed to
-> > be a container node, we should not define this binding just because we
-> > know the kernel creates a platform device for it then.
-> 
-> This is just copying more of the ePAPR spec into this document.
-> It just so happens that having a compatible field here allows a
-> platform device to be created. I don't see why that's a problem.
+On Thu, Jan 16, 2014 at 11:50 AM, Ben Hutchings
+<bhutchings@solarflare.com> wrote:
+> On Thu, 2014-01-16 at 08:05 -0600, Vince Bridgers wrote:
+>> This change adds a parameter for the Synopsys 10/100/1000
+>> stmmac Ethernet driver to configure the maximum frame
+>> size supported by the EMAC driver. Synopsys allows the FIFO
+>> sizes to be configured when the cores are built for a particular
+>> device, but do not provide a way for the driver to read
+>> information from the device about the maximum MTU size
+>> supported as limited by the device's FIFO size.
+>>
+>> Signed-off-by: Vince Bridgers <vbridgers2013@gmail.com>
+>> ---
+>> V4: add comments to explain use of max-frame-size with respect
+>>     to inconsistent definition and use in the ePAPR v1.1 spec
+>
+> Well, ePAPR does not seem to be consistent with itself. :-)
+>
+>> V3: change snps,max-frame-size to max-frame-size
+>> V2: change snps,max-mtu to snps,max-frame-size
+>> ---
+>>  Documentation/devicetree/bindings/net/stmmac.txt |   13 ++++++++++++-
+>>  1 file changed, 12 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+>> index eba0e5e..d553be2 100644
+>> --- a/Documentation/devicetree/bindings/net/stmmac.txt
+>> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
+>> @@ -29,7 +29,17 @@ Required properties:
+>>                               ignored if force_thresh_dma_mode is set.
+>>
+>>  Optional properties:
+>> -- mac-address: 6 bytes, mac address
+>> +- mac-address:               6 bytes, mac address
+>> +- max-frame-size:    Maximum frame size permitted. This parameter is useful
+>> +                     since different implementations of the Synopsys MAC may
+>> +                     have different FIFO sizes depending on the selections
+>> +                     made in Synopsys Core Consultant. Note that the usage
+>> +                     is inconsistent with the definition in the ePAPR v1.1
+>> +                     specification, as it defines max-frame-size inclusive
+>> +                     of the MAC DA, SA, Ethertype and CRC while usage is
+>> +                     consistent with the IEEE definition of MAC Client
+>> +                     Data, which is sans the MAC DA, SA, Ethertype and
+>> +                     CRC.
+> [...]
+>
+> While this is very precise, I fear that it is now so verbose that it
+> actually becomes confusing.  Can this not be condensed to 'the maximum
+> MTU and MRU, rather than the maximum Ethernet frame size'?
+>
+> Ben.
 
-I do not see why you cannot define a node like pmu or arch-timer and stick
-a compatible property in there. cpus node does not represent a device, and
-must not be created as a platform device, that's my opinion.
+Sure, I'll cut this down and resubmit as V5. How about
 
-What would you do for big.LITTLE systems ? We are going to create two
-cpus node because we need two platform devices ? I really think there
-must be a better way to implement this, but I will let DT maintainers
-make a decision.
+"The Maximum Transfer Unit (IEEE defined MTU), rather than the maximum
+frame size."
 
-> > interrupts is a cpu node property and I think it should be kept as such.
-> > 
-> > I know it will be duplicated and I know you can't rely on a platform
-> > device for probing (since if I am not mistaken, removing a compatible
-> > string from cpus prevents its platform device creation), but that's an issue
-> > related to how the kernel works, you should not define DT bindings to solve
-> > that IMHO.
-> 
-> The interrupts property is also common for all cpus so it seems
-> fine to collapse the value down into a PPI specifier indicating
-> that all CPUs get the interrupt, similar to how we compress the
-> information about the compatible string.
+Cheers,
 
-I think it is nicer to create a device node (as I said, like a pmu or an
-arch-timer) and define interrupts there along with a proper compatible
-property. This would serve the same purpose without adding properties in
-the cpus node.
-
-cpu-edac {
-	compatible = "qcom,cpu-edac";
-	interrupts = <...>;
-};
-
-Thanks,
-Lorenzo
+Vince
