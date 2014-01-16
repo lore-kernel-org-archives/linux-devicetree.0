@@ -1,65 +1,32 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: Re: [PATCH 3/3] Binding: atmel-wm8904: add option to choose clock
-Date: Thu, 16 Jan 2014 09:38:52 +0800
-Message-ID: <52D7382C.4080705@atmel.com>
-References: <1389669956-2304-1-git-send-email-voice.shen@atmel.com> <1389669956-2304-4-git-send-email-voice.shen@atmel.com> <52D6C2A1.4080405@atmel.com>
+From: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCHv9 0/2] dma: Add Freescale eDMA engine driver support
+Date: Thu, 16 Jan 2014 10:29:58 +0800
+Message-ID: <1389839400-29728-1-git-send-email-b35083@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <52D6C2A1.4080405@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: broonie@kernel.org, devicetree@vger.kernel.org, plagnioj@jcrosoft.com, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Mark Brown <broonie@linaro.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Nicolas,
+This series add Freescale eDMA engine support.
 
-On 01/16/2014 01:17 AM, Nicolas Ferre wrote:
-> On 14/01/2014 04:25, Bo Shen :
->> Add the option to choose clock output on which pin connect to SSC.
->> Default is on TK pin to SSC, add clk_from_rk_pin option, the clock
->
-> Please do not use "_" in DT properties. It is a common pattern to use
-> "-" instead.
+Jingchang Lu (2):
+	ARM: dts: vf610: Add eDMA node
+	dma: Add Freescale eDMA engine driver support
 
-OK, I will use "-" instead in next version.
+ Documentation/devicetree/bindings/dma/fsl-edma.txt |  66 ++++
+ arch/arm/boot/dts/vf610.dtsi                       |  30 ++
+ drivers/dma/Kconfig                                |  10 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/fsl-edma.c                             | 957 +++++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 1064 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/fsl-edma.txt
+ create mode 100644 drivers/dma/fsl-edma.c
 
->> is on RK pin to SSC.
->>
->> Signed-off-by: Bo Shen <voice.shen@atmel.com>
->> ---
->>
->>   Documentation/devicetree/bindings/sound/atmel-wm8904.txt | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/sound/atmel-wm8904.txt b/Documentation/devicetree/bindings/sound/atmel-wm8904.txt
->> index 8bbe50c..68a5c1a 100644
->> --- a/Documentation/devicetree/bindings/sound/atmel-wm8904.txt
->> +++ b/Documentation/devicetree/bindings/sound/atmel-wm8904.txt
->> @@ -33,6 +33,8 @@ Required properties:
->>
->>   Optional properties:
->>     - pinctrl-names, pinctrl-0: Please refer to pinctrl-bindings.txt
->> +  - clk_from_rk_pin: according to hardware design, clk privide on rk pin
->
-> typo + more description is needed:
-> Please tell that it is a boolean property, that by default it is using
-> the TK pin (like in the commit message in fact).
 
-OK, I will add more description for it.
-
-Thanks
-
-> Bye,
->
->> +    to ssc device
->>
->>   Example:
->>   sound {
->>
->
->
-
-Best Regards,
-Bo Shen
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
