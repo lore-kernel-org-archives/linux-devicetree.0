@@ -1,50 +1,115 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V2] net/dt: Add support for overriding phy configuration from device tree
-Date: Thu, 16 Jan 2014 16:16:46 +0100
-Message-ID: <7510122.cayuQ6qt8r@wuerfel>
-References: <20140116135905.GV20094@book.gsilab.sittig.org> <1389883631-1480-1-git-send-email-matthew.garrett@nebula.com>
+From: Saurabh Singh <saurabh1.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: Re: [PATCH] Parse missing regulator constraints from device tree
+ blob
+Date: Thu, 16 Jan 2014 15:18:06 +0000 (GMT)
+Message-ID: <8217085.584601389885483146.JavaMail.weblogic@epml20>
+Reply-To: saurabh1.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1389883631-1480-1-git-send-email-matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org>
+MIME-version: 1.0
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthew Garrett <matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "celinux-dev-VxL1A5FK7jA05z2xGA6PZHhyD016LWXt@public.gmane.org" <celinux-dev-VxL1A5FK7jA05z2xGA6PZHhyD016LWXt@public.gmane.org>, SREEVATSA D B <srevatsa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Praveen BP <bp.praveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 16 January 2014 09:47:11 Matthew Garrett wrote:
-> +               if (!of_property_read_u32(np, "phy-mii-advertise-10half",
-> +                                          &tmp)) {
-> +                       if (tmp) {
-> +                               *val |= ADVERTISE_10HALF;
-> +                               phydev->advertising |= SUPPORTED_10baseT_Half;
-> +                       } else {
-> +                               phydev->advertising &=
-> +                                       ~(SUPPORTED_10baseT_Half);
-> +                       }
-> +
-> +                       *mask |= ADVERTISE_10HALF;
-> +               }
-> +               if (!of_property_read_u32(np, "phy-mii-advertise-10full",
-> +                                          &tmp)) {
-> +                       if (tmp) {
-> +                               *val |= ADVERTISE_10FULL;
-> +                               phydev->advertising |= SUPPORTED_10baseT_Full;
-> +                       } else {
-> +                               phydev->advertising &=
-> +                                       ~(SUPPORTED_10baseT_Full);
-> +                       }
-> +
-> +                       *mask |= ADVERTISE_10FULL;
-> +               }
-> 
+SGkgTWFyaywNCg0KPiBQbGVhc2Ugc2VuZCBwYXRjaGVzIHVzaW5nIHRoZSBwcm9jZXNzIGluIFN1
+Ym1pdHRpbmdQYXRjaGVzLCB0aGUgZm9ybWF0dGluZw0KPiBvZiB0aGUgc3VibWlzc2lvbiBpcyB2
+ZXJ5IGltcG9ydGFudCBmb3IgdG9vbHMgbGlrZSBnaXQgYW0gd2hpY2ggcGVvcGxlIHVzZSB0bw0K
+PiB3b3JrIHdpdGggcGF0Y2hlcy4NCg0KQXMgcGVyIHlvdXIgcmVxdWVzdCBzZW5kaW5nIHRoZSBw
+YXRjaCBhbmQgZGVzY3JpcHRpb24gaW4gZ2l0IGZvcm1hdC4NClBsZWFzZSBmaW5kIGJlbG93IHRo
+ZSBwYXRjaC4NCg0KUmVnYXJkcywNClNhdXJhYmggU2luZ2ggU2VuZ2FyDQpMZWFkIEVuZ2luZWVy
+DQpTYW1zdW5nIFImRCBJbnN0aXR1dGUNCkluZGlhDQoNCj09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PQ0KRnJvbSBTYXVyYWJoIFNpbmdoIDxzYXVyYWJoMS5zQHNhbXN1bmcuY29tPiBNb24gU2VwIDE3
+IDAwOjAwOjAwIDIwMDENCkRhdGU6IFRodSwgMTYgSmFuIDIwMTQgMjA6MzY6MTUgKzA1MzANClN1
+YmplY3Q6IFtQQVRDSF0gRnJvbTogU2F1cmFiaCBTaW5naCBTZW5nYXIgPHNhdXJhYmgxLnNAc2Ft
+c3VuZy5jb20+DQoNClRoaXMgcGF0Y2ggYWRkcyBzdXBwb3J0IGZvciBwYXJzaW5nIGZvbGxvd2lu
+ZyByZWd1bGF0b3IgY29udHJhaW50cyBmcm9tDQpkZXZpY2UgdHJlZSBibG9iLg0KMS4gdmFsaWQg
+bW9kZXMgbWFzayAodmFsaWRfbW9kZXNfbWFzaykNCjIuIGlucHV0IG1pY3Jvdm9sdChpbnB1dF91
+VikNCjMuIGluaXRpYWwgbW9kZSAoaW5pdGlhbF9tb2RlKQ0KNC4gaW5pdGlhbCBzdGF0ZSAoaW5p
+dGlhbF9zdGF0ZSkNCjUuIHN0YXRlIG1lbSAoc3RhdGVfbWVtKQ0KNi4gc3RhdGUgZGlzayAoc3Rh
+dGVfZGlzaykNCjcuIHN0YXRlIHN0YW5kYnkgKHN0YXRlX3N0YW5kYnkpDQoNClNpZ25lZC1vZmYt
+Ynk6IFNhdXJhYmggU2luZ2ggU2VuZ2FyIDxzYXVyYWJoMS5zQHNhbXN1bmcuY29tPg0KLS0tDQog
+Li4uL2RldmljZXRyZWUvYmluZGluZ3MvcmVndWxhdG9yL3JlZ3VsYXRvci50eHQgICAgfCAgIDE5
+ICsrKysrKysrKw0KIGRyaXZlcnMvcmVndWxhdG9yL29mX3JlZ3VsYXRvci5jICAgICAgICAgICAg
+ICAgICAgIHwgICA0MSArKysrKysrKysrKysrKysrKysrKw0KIDIgZmlsZXMgY2hhbmdlZCwgNjAg
+aW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWd1bGF0b3IvcmVndWxhdG9yLnR4dCBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWd1bGF0b3IvcmVndWxhdG9yLnR4dA0KaW5kZXgg
+MmJkOGYwOS4uNzc5MzQ0NSAxMDA2NDQNCi0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9yZWd1bGF0b3IvcmVndWxhdG9yLnR4dA0KKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3JlZ3VsYXRvci9yZWd1bGF0b3IudHh0DQpAQCAtMTQsNiArMTQsMTcg
+QEAgT3B0aW9uYWwgcHJvcGVydGllczoNCiAtIHJlZ3VsYXRvci1yYW1wLWRlbGF5OiByYW1wIGRl
+bGF5IGZvciByZWd1bGF0b3IoaW4gdVYvdVMpDQogICBGb3IgaGFyZHdhcmVzIHdoaWNoIHN1cHBv
+cnQgZGlzYWJsaW5nIHJhbXAgcmF0ZSwgaXQgc2hvdWxkIGJlIGV4cGxpY2l0bHkNCiAgIGludGlh
+bGlzZWQgdG8gemVybyAocmVndWxhdG9yLXJhbXAtZGVsYXkgPSA8MD4pIGZvciBkaXNhYmxpbmcg
+cmFtcCBkZWxheS4NCistIHJlZ3VsYXRvci12YWxpZC1tb2Rlcy1tYXNrOiB2YWxpZCBvcGVyYXRp
+b25zIGZvciByZWd1bGF0b3Igb24gcGFydGljdWxhciBtYWNoaW5lDQorLSByZWd1bGF0b3ItaW5w
+dXQtdXY6IHJlZ3VsYXRvciBpbnB1dCB2b2x0YWdlLCBvbmx5IGlmIHN1cHBseSBpcyBhbm90aGVy
+IHJlZ3VsYXRvcg0KKy0gcmVndWxhdG9yLWluaXRpYWwtbW9kZTogZGVmYXVsdCBtb2RlIHRvIHNl
+dCBvbiBzdGFydHVwDQorLSByZWd1bGF0b3ItaW5pdGlhbC1zdGF0ZTogc3VzcGVuZCBzdGF0ZSB0
+byBzZXQgYXQgaW5pdA0KKy0gcmVndWxhdG9yLXN0YXRlLW1lbSwgcmVndWxhdG9yLXN0YXRlLWRp
+c2ssIHJlZ3VsYXRvci1zdGF0ZS1zdGFuZGJ5Og0KKwlkZWZpbmVzIHJlZ3VsYXRvciBzdXNwZW5k
+IHRvIG1lbW9yeSwgc3VzcGVuZCB0byBkaXNrIChoaWJlcm5hdGUpIGFuZCBzdGFuZGJ5IHJlc3Bl
+Y3RpdmVseS4NCisJaGF2ZSBmb2xsb3dpbmcgc3ViLWNvbnN0YXJpbnRzOg0KKwktIHJlZ3VsYXRv
+ci1zdGF0ZS11djogc3VzcGVuZCB2b2x0YWdlDQorCS0gcmVndWxhdG9yLXN0YXRlLW1vZGU6IHN1
+c3BlbmQgcmVndWxhdG9yIG9wZXJhdGluZyBtb2RlDQorCS0gcmVndWxhdG9yLXN0YXRlLWVuYWJs
+ZWQ6IGlzIHJlZ3VsYXRvciBlbmFibGVkIGluIHRoaXMgc3VzcGVuZCBzdGF0ZQ0KKwktIHJlZ3Vs
+YXRvci1zdGF0ZS1kaXNhYmxlZDogaXMgdGhlIHJlZ3VsYXRvciBkaXNibGVkIGluIHRoaXMgc3Vz
+cGVuZCBzdGF0ZQ0KIA0KIERlcHJlY2F0ZWQgcHJvcGVydGllczoNCiAtIHJlZ3VsYXRvci1jb21w
+YXRpYmxlOiBJZiBhIHJlZ3VsYXRvciBjaGlwIGNvbnRhaW5zIG11bHRpcGxlDQpAQCAtMjksNiAr
+NDAsMTQgQEAgRXhhbXBsZToNCiAJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDI1MDAwMDA+
+Ow0KIAkJcmVndWxhdG9yLWFsd2F5cy1vbjsNCiAJCXZpbi1zdXBwbHkgPSA8JnZpbj47DQorCQly
+ZWd1bGF0b3ItdmFsaWQtbW9kZXMtbWFzayA9IDxSRUdVTEFUT1JfTU9ERV9GQVNUPjsNCisJCXJl
+Z3VsYXRvci1pbml0aWFsLW1vZGUgPSA8UkVHVUxBVE9SX01PREVfU1RBTkRCWT47DQorCQlyZWd1
+bGF0b3ItaW5pdGlhbC1zdGF0ZSA9IDxQTV9TVVNQRU5EX01FTT47DQorCQlyZWd1bGF0b3Itc3Rh
+dGUtbWVtIHsNCisJCQlyZWd1bGF0b3Itc3RhdGUtbW9kZSA9IDxSRUdVTEFUT1JfTU9ERV9JRExF
+PjsNCisJCQlyZWd1bGF0b3Itc3RhdGUtZW5hYmxlZDsNCisJCX07DQorDQogCX07DQogDQogUmVn
+dWxhdG9yIENvbnN1bWVyczoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3JlZ3VsYXRvci9vZl9yZWd1
+bGF0b3IuYyBiL2RyaXZlcnMvcmVndWxhdG9yL29mX3JlZ3VsYXRvci5jDQppbmRleCA3ODI3Mzg0
+Li4zMjhkNzZmIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9yZWd1bGF0b3Ivb2ZfcmVndWxhdG9yLmMN
+CisrKyBiL2RyaXZlcnMvcmVndWxhdG9yL29mX3JlZ3VsYXRvci5jDQpAQCAtMTYsMTEgKzE2LDI3
+IEBADQogI2luY2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9tYWNoaW5lLmg+DQogI2luY2x1ZGUgPGxp
+bnV4L3JlZ3VsYXRvci9vZl9yZWd1bGF0b3IuaD4NCiANCisvKioNCisgKiBzZXRfcmVndWxhdG9y
+X3N0YXRlX2NvbnN0cmFpbnRzIC0gc2V0IHJlZ3VsYXRvciBzdGF0ZSBmb3IgbG93IHBvd2VyIHN5
+c3RlbSBzdGF0ZXMNCisgKiBAbnA6IGRldmljZSBub2RlIGZvciB0aGUgbG93IHBvd2VyIHJlZ3Vs
+YXRvciBzdGF0ZQ0KKyAqIEByZWd1bGF0b3Jfc3RhdGU6IHJlZ3VsYXRvcl9zdGF0ZSBzdHJ1Y3R1
+cmUgbmVlZCB0byBiZSBmaWxsZWQNCisgKi8NCitzdGF0aWMgdm9pZCBzZXRfcmVndWxhdG9yX3N0
+YXRlX2NvbnN0cmFpbnRzKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAsDQorCQlzdHJ1Y3QgcmVndWxh
+dG9yX3N0YXRlICpzdGF0ZSkNCit7DQorCW9mX3Byb3BlcnR5X3JlYWRfdTMyKG5wLCAicmVndWxh
+dG9yLXN0YXRlLXV2IiwgJnN0YXRlLT51Vik7DQorCW9mX3Byb3BlcnR5X3JlYWRfdTMyKG5wLCAi
+cmVndWxhdG9yLXN0YXRlLW1vZGUiLCAmc3RhdGUtPm1vZGUpOw0KKwlzdGF0ZS0+ZW5hYmxlZCA9
+IG9mX3Byb3BlcnR5X3JlYWRfYm9vbChucCwgInJlZ3VsYXRvci1zdGF0ZS1lbmFibGVkIik7DQor
+CXN0YXRlLT5kaXNhYmxlZCA9IG9mX3Byb3BlcnR5X3JlYWRfYm9vbChucCwgInJlZ3VsYXRvci1z
+dGF0ZS1kaXNhYmxlZCIpOw0KK30NCisNCisNCiBzdGF0aWMgdm9pZCBvZl9nZXRfcmVndWxhdGlv
+bl9jb25zdHJhaW50cyhzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wLA0KIAkJCQkJc3RydWN0IHJlZ3Vs
+YXRvcl9pbml0X2RhdGEgKippbml0X2RhdGEpDQogew0KIAljb25zdCBfX2JlMzIgKm1pbl91Viwg
+Km1heF91ViwgKnVWX29mZnNldDsNCiAJY29uc3QgX19iZTMyICptaW5fdUEsICptYXhfdUEsICpy
+YW1wX2RlbGF5Ow0KKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKnN0YXRlOw0KIAlzdHJ1Y3QgcHJvcGVy
+dHkgKnByb3A7DQogCXN0cnVjdCByZWd1bGF0aW9uX2NvbnN0cmFpbnRzICpjb25zdHJhaW50cyA9
+ICYoKmluaXRfZGF0YSktPmNvbnN0cmFpbnRzOw0KIA0KQEAgLTczLDYgKzg5LDMxIEBAIHN0YXRp
+YyB2b2lkIG9mX2dldF9yZWd1bGF0aW9uX2NvbnN0cmFpbnRzKHN0cnVjdCBkZXZpY2Vfbm9kZSAq
+bnAsDQogCQllbHNlDQogCQkJY29uc3RyYWludHMtPnJhbXBfZGlzYWJsZSA9IHRydWU7DQogCX0N
+CisNCisJb2ZfcHJvcGVydHlfcmVhZF91MzIobnAsICJyZWd1bGF0b3ItdmFsaWQtbW9kZXMtbWFz
+ayIsDQorCQkJCQkmY29uc3RyYWludHMtPnZhbGlkX21vZGVzX21hc2spOw0KKwlvZl9wcm9wZXJ0
+eV9yZWFkX3UzMihucCwgInJlZ3VsYXRvci1pbnB1dC11diIsDQorCQkJCQkmY29uc3RyYWludHMt
+PmlucHV0X3VWKTsNCisJb2ZfcHJvcGVydHlfcmVhZF91MzIobnAsICJyZWd1bGF0b3ItaW5pdGlh
+bC1tb2RlIiwNCisJCQkJCSZjb25zdHJhaW50cy0+aW5pdGlhbF9tb2RlKTsNCisJb2ZfcHJvcGVy
+dHlfcmVhZF91MzIobnAsICJyZWd1bGF0b3ItaW5pdGlhbC1zdGF0ZSIsDQorCQkJCQkmY29uc3Ry
+YWludHMtPmluaXRpYWxfc3RhdGUpOw0KKw0KKwkvKiByZWd1bGF0b3Igc3RhdGUgZHVyaW5nIGxv
+dyBwb3dlciBzeXN0ZW0gc3RhdGVzICovDQorCXN0YXRlID0gb2ZfZmluZF9ub2RlX2J5X25hbWUo
+bnAsICJyZWd1bGF0b3Itc3RhdGUtbWVtIik7DQorCWlmIChzdGF0ZSkNCisJCXNldF9yZWd1bGF0
+b3Jfc3RhdGVfY29uc3RyYWludHMoc3RhdGUsDQorCQkJCSZjb25zdHJhaW50cy0+c3RhdGVfbWVt
+KTsNCisNCisJc3RhdGUgPSBvZl9maW5kX25vZGVfYnlfbmFtZShucCwgInJlZ3VsYXRvci1zdGF0
+ZS1kaXNrIik7DQorCWlmIChzdGF0ZSkNCisJCXNldF9yZWd1bGF0b3Jfc3RhdGVfY29uc3RyYWlu
+dHMoc3RhdGUsDQorCQkJCSZjb25zdHJhaW50cy0+c3RhdGVfZGlzayk7DQorDQorCXN0YXRlID0g
+b2ZfZmluZF9ub2RlX2J5X25hbWUobnAsICJyZWd1bGF0b3Itc3RhdGUtc3RhbmRieSIpOw0KKwlp
+ZiAoc3RhdGUpDQorCQlzZXRfcmVndWxhdG9yX3N0YXRlX2NvbnN0cmFpbnRzKHN0YXRlLA0KKwkJ
+CQkmY29uc3RyYWludHMtPnN0YXRlX3N0YW5kYnkpOw0KIH0NCiANCiAvKioNCi0tIA0KMS43LjAu
+NA==
 
-Just a style suggestion: rather than almost duplicating the same 12 lines
-of code for each property, I think it can be split out into a helper
-function.
-
-	Arnd
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
