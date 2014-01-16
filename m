@@ -1,55 +1,69 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 4/4] OF: introduce OF style 'modalias' support for
- platform bus.
-Date: Thu, 16 Jan 2014 15:21:12 -0600
-Message-ID: <CAL_Jsq+uVs=pHqSaQcQY-TQNnkFJ1MWkZxfE1B3Oxjby7uqrmw@mail.gmail.com>
-References: <1389689198-2641-1-git-send-email-rui.zhang@intel.com>
-	<1389689198-2641-5-git-send-email-rui.zhang@intel.com>
-	<CAL_JsqJFRQ+27N_9AwZXpx4V=g8HKn84WdVKtQ_Br_8SQTXY7g@mail.gmail.com>
-	<744357E9AAD1214791ACBA4B0B909263011CE77F@SHSMSX101.ccr.corp.intel.com>
+Subject: Re: [PATCH] dt: Document a compatible entry for MDIO ethernet Phys
+Date: Thu, 16 Jan 2014 15:30:48 -0600
+Message-ID: <CAL_JsqJ+0kyPUmRQr0BVnR+2GrOdLOMqjzgghZ9HnhODtKtwOw@mail.gmail.com>
+References: <20131210193947.GU5429@obsidianresearch.com>
+	<CAL_JsqLpWSXd44ErAs=+xYS8ESaBSY6EJEneZFYqtbpfyM4iPQ@mail.gmail.com>
+	<20140108211610.GC12358@obsidianresearch.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <744357E9AAD1214791ACBA4B0B909263011CE77F@SHSMSX101.ccr.corp.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Zhang, Rui" <rui.zhang@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "wsa@the-dreams.de" <wsa@the-dreams.de>, Mark Brown <broonie@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "jarkko.nikula@linux.intel.com" <jarkko.nikula@linux.intel.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140108211610.GC12358@obsidianresearch.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 16, 2014 at 1:04 AM, Zhang, Rui <rui.zhang@intel.com> wrote:
+On Wed, Jan 8, 2014 at 3:16 PM, Jason Gunthorpe
+<jgunthorpe@obsidianresearch.com> wrote:
+> On Wed, Jan 08, 2014 at 12:37:03PM -0600, Rob Herring wrote:
 >
->
->> -----Original Message-----
->> From: Rob Herring [mailto:robherring2@gmail.com]
->> Sent: Wednesday, January 15, 2014 9:45 PM
->> To: Zhang, Rui
->> Cc: linux-kernel@vger.kernel.org; linux-acpi@vger.kernel.org; linux-
->> i2c@vger.kernel.org; linux-spi@vger.kernel.org; wsa@the-dreams.de; Mark
->> Brown; Greg Kroah-Hartman; Wysocki, Rafael J; Grant Likely; Rob Herring;
->> jarkko.nikula@linux.intel.com; mika.westerberg@linux.intel.com;
->> devicetree@vger.kernel.org
->> Subject: Re: [PATCH 4/4] OF: introduce OF style 'modalias' support for
->> platform bus.
->> Importance: High
+>> > Patch to parse this compatible string to follow if this binding is
+>> > acceptable.
 >>
->> On Tue, Jan 14, 2014 at 2:46 AM, Zhang Rui <rui.zhang@intel.com> wrote:
->> > Fix a problem that, the platform bus supports the OF style modalias
->> in
->> > .uevent() call, but not in its device 'modalias' sysfs attribute.
->> >
->> > cc: devicetree@vger.kernel.org
->> > Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+>> One minor comment below, otherwise:
 >>
 >> Acked-by: Rob Herring <robh@kernel.org>
->>
->> As there doesn't appear any dependency with the rest of this series, I
->> can take this.
->>
-> Thanks.
 >
+> K, I'll send a series hopefully in a few weeks after some travel.
+>
+>> > +  If the phy's identifier is known then the list may contain an entry
+>> > +  of the form: "ethernet-phy-idAAAA,BBBB" where
+>>
+>> I think this should be a period rather than a comma as we are not
+>> separating a vendor ID from product ID.
+>
+> OK, that makes sense.
+>
+> Inspecting further, the format of the 32 bit AAAABBBB is actually
+> broken out into:
+>   OUI[3:18] || OUI[19:24] || MODEL[5:0] || REV[3:0]
+>
+> So a possible choice with the 'vendor ID,product ID' split is:
+>   ethernet-phyOOOOO,MM.R
+>
+> xlate is:
+>
+> AAAABBBB = ((OOOOO >> 6) << 16) |
+>            ((OOOOO & 0x3f) << 10) |
+>            (MM << 4) |
+>            R
+>
+> Which doesn't textually match the register value, or any other
+> phy ID constants in the kernel, however makes more sense from the
+> 'vendor ID,product ID' angle.
+>
+> Eg a Marvell 88E1310 would encode into the two options as:
+>   ethernet-phy05043,29.0
+>   ethernet-phy-id0141.0e90
+>
+> And the kernel has constants like this:
+> include/linux/marvell_phy.h:#define MARVELL_PHY_ID_88E1318S 0x01410e90
+>
+> In light of this detail do you still like 'ethernet-phy-id0141.0e90' ?
 
-Looks like there is actually a dependency in modalias_show, and the
-comment about PAGE_SIZE would apply here too I think. So the whole
-series should be taken together.
+I'm fine either way. Separating out the OUI had crossed my mind. That
+probably does make the value in the DT more meaningful. Is the OUI
+used anywhere in the kernel?
 
 Rob
