@@ -1,146 +1,127 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v5 2/4] devicetree: bindings: Document Krait CPU/L1 EDAC
-Date: Thu, 16 Jan 2014 11:33:32 +0000
-Message-ID: <20140116113332.GC25540@e102568-lin.cambridge.arm.com>
-References: <1389735034-21430-1-git-send-email-sboyd@codeaurora.org>
- <1389735034-21430-3-git-send-email-sboyd@codeaurora.org>
- <20140115102701.GA27314@e102568-lin.cambridge.arm.com>
- <20140115165623.GJ14405@codeaurora.org>
- <20140116013840.GA674@codeaurora.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v6 2/6] misc: sram: implement mmio-sram-reserved option
+Date: Thu, 16 Jan 2014 12:45:27 +0000
+Message-ID: <20140116124527.GD19578@e106331-lin.cambridge.arm.com>
+References: <27256277.YJ687suYy5@phil>
+ <1669323.jqjZBfkRx4@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140116013840.GA674@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Borislav Petkov <bp@alien8.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <1669323.jqjZBfkRx4@phil>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "arm@kernel.org" <arm@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 16, 2014 at 01:38:40AM +0000, Stephen Boyd wrote:
-> On 01/15, Stephen Boyd wrote:
-> > 
-> > Ah sorry, I forgot to put the compatible property here like in
-> > the dts change. I'll do that in the next revision. Yes we need a
-> > compatible property here to match the platform driver.
-> > 
-> 
-> This is the replacement patch
-> 
-> -----8<------
-> From: Stephen Boyd <sboyd@codeaurora.org>
-> Subject: [PATCH v9] devicetree: bindings: Document Krait CPU/L1 EDAC
-> 
-> The Krait CPU/L1 error reporting device is made up a per-CPU
-> interrupt. While we're here, document the next-level-cache
-> property that's used by the Krait EDAC driver.
-> 
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: <devicetree@vger.kernel.org>
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+On Wed, Jan 15, 2014 at 09:41:28PM +0000, Heiko St=C3=BCbner wrote:
+> This implements support for the mmio-sram-reserved option to keep the
+> genpool from using these areas.
+>=20
+> Suggested-by: Rob Herring <robherring2@gmail.com>
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> Tested-by: Ulrich Prinz <ulrich.prinz@googlemail.com>
 > ---
->  Documentation/devicetree/bindings/arm/cpus.txt | 58 ++++++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> index 91304353eea4..03a529e791c4 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -62,6 +62,20 @@ nodes to be present and contain the properties described below.
->  		Value type: <u32>
->  		Definition: must be set to 0
->  
-> +	- compatible
-> +		Usage: optional
-> +		Value type: <string>
-> +		Definition: should be one of the compatible strings listed
-> +			    in the cpu node compatible property. This property
-> +			    shall only be present if all the cpu nodes have the
-> +			    same compatible property.
-
-Do we really want to do that ? I am not sure. A cpus node is supposed to
-be a container node, we should not define this binding just because we
-know the kernel creates a platform device for it then.
-
-interrupts is a cpu node property and I think it should be kept as such.
-
-I know it will be duplicated and I know you can't rely on a platform
-device for probing (since if I am not mistaken, removing a compatible
-string from cpus prevents its platform device creation), but that's an issue
-related to how the kernel works, you should not define DT bindings to solve
-that IMHO.
-
-Lorenzo
-
-> +
-> +	- interrupts
-> +		Usage: required when node contains cpus with compatible
-> +		       string "qcom,krait".
-> +		Value type: <prop-encoded-array>
-> +		Definition: L1/CPU error interrupt
-> +
->  - cpu node
->  
->  	Description: Describes a CPU in an ARM based system
-> @@ -191,6 +205,11 @@ nodes to be present and contain the properties described below.
->  			  property identifying a 64-bit zero-initialised
->  			  memory location.
->  
-> +	- next-level-cache
-> +		Usage: optional
-> +		Value type: <phandle>
-> +		Definition: phandle pointing to the next level cache
-> +
->  Example 1 (dual-cluster big.LITTLE system 32-bit):
->  
->  	cpus {
-> @@ -382,3 +401,42 @@ cpus {
->  		cpu-release-addr = <0 0x20000000>;
->  	};
+>  drivers/misc/sram.c |  118 +++++++++++++++++++++++++++++++++++++++++=
+++++++----
+>  1 file changed, 110 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/misc/sram.c b/drivers/misc/sram.c
+> index afe66571..7fb60f3 100644
+> --- a/drivers/misc/sram.c
+> +++ b/drivers/misc/sram.c
+> @@ -36,13 +36,23 @@ struct sram_dev {
+>  	struct clk *clk;
 >  };
-> +
-> +
-> +Example 5 (Krait 32-bit system):
-> +
-> +cpus {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	interrupts = <1 9 0xf04>;
-> +	compatible = "qcom,krait";
-> +
-> +	cpu@0 {
-> +		device_type = "cpu";
-> +		reg = <0>;
-> +		next-level-cache = <&L2>;
-> +	};
-> +
-> +	cpu@1 {
-> +		device_type = "cpu";
-> +		reg = <1>;
-> +		next-level-cache = <&L2>;
-> +	};
-> +
-> +	cpu@2 {
-> +		device_type = "cpu";
-> +		reg = <2>;
-> +		next-level-cache = <&L2>;
-> +	};
-> +
-> +	cpu@3 {
-> +		device_type = "cpu";
-> +		reg = <3>;
-> +		next-level-cache = <&L2>;
-> +	};
-> +
-> +	L2: l2-cache {
-> +		compatible = "cache";
-> +		interrupts = <0 2 0x4>;
-> +	};
+> =20
+> +struct sram_reserve {
+> +	unsigned long start;
+> +	unsigned long size;
 > +};
-> -- 
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> hosted by The Linux Foundation
-> 
+> +
+>  static int sram_probe(struct platform_device *pdev)
+>  {
+>  	void __iomem *virt_base;
+>  	struct sram_dev *sram;
+>  	struct resource *res;
+> -	unsigned long size;
+> -	int ret;
+> +	unsigned long size, cur_start, cur_size;
+> +	const __be32 *reserved_list =3D NULL;
+> +	int reserved_size =3D 0;
+> +	struct sram_reserve *rblocks;
+> +	unsigned int nblocks;
+> +	int ret =3D 0;
+> +	int i;
+> =20
+>  	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	virt_base =3D devm_ioremap_resource(&pdev->dev, res);
+> @@ -65,19 +75,111 @@ static int sram_probe(struct platform_device *pd=
+ev)
+>  	if (!sram->pool)
+>  		return -ENOMEM;
+> =20
+> -	ret =3D gen_pool_add_virt(sram->pool, (unsigned long)virt_base,
+> -				res->start, size, -1);
+> -	if (ret < 0) {
+> -		if (sram->clk)
+> -			clk_disable_unprepare(sram->clk);
+> -		return ret;
+> +	if (pdev->dev.of_node) {
+> +		reserved_list =3D of_get_property(pdev->dev.of_node,
+> +						"mmio-sram-reserved",
+> +						&reserved_size);
+> +		if (reserved_list) {
+> +			reserved_size /=3D sizeof(*reserved_list);
+
+As a general observation, It looks like a lot of people need to know ho=
+w
+many array elements a property might hold (for datastructure
+allocation), and are open-coding element counting.
+
+I think it would be nice if we had a helper function to count how many
+elements a property can hold (of_property_count_u32_elems?) that would
+centralise strict sanity checking (e.g. prop->len % elem_size =3D=3D 0)=
+ and
+DTB format details (so you don't have to care about endianness, and it
+becomes possible to add DTB metadata later and get runtime type
+checking).
+
+That can all come later and shouldn't block this patch.
+
+> +			if (!reserved_size || reserved_size % 2) {
+> +				dev_warn(&pdev->dev, "wrong number of arguments in mmio-sram-res=
+erved\n");
+> +				reserved_list =3D NULL;
+> +				reserved_size =3D 0;
+> +			}
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * We need an additional block to mark the end of the memory region
+> +	 * after the reserved blocks from the dt are processed.
+> +	 */
+> +	nblocks =3D reserved_size / 2 + 1;
+> +	rblocks =3D kmalloc((nblocks) * sizeof(*rblocks), GFP_KERNEL);
+> +	if (!rblocks) {
+> +		ret =3D -ENOMEM;
+> +		goto err_alloc;
+> +	}
+> +
+> +	cur_start =3D 0;
+> +	for (i =3D 0; i < nblocks - 1; i++) {
+> +		rblocks[i].start =3D be32_to_cpu(*reserved_list++);
+> +		rblocks[i].size =3D be32_to_cpu(*reserved_list++);
+
+It feels a little odd to have to have to care about the format of the
+dtb and do endianness conversion here. It would be nice to limit the
+scope of DTB format details to the of_ helper functions.
+
+Could you use of_property_read_u32_index here instead please?
+
+Otherwise this looks fine to me.
+
+Cheers,
+Mark.
