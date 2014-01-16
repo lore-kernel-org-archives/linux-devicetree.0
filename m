@@ -1,82 +1,114 @@
-From: Saurabh Singh <saurabh1.s@samsung.com>
-Subject: [PATCH] Parse missing regulator constraints from device tree blob
-Date: Thu, 16 Jan 2014 06:34:45 +0000 (GMT)
-Message-ID: <23745449.572421389854083634.JavaMail.weblogic@epml20>
-Reply-To: saurabh1.s@samsung.com
+From: "Zhang, Rui" <rui.zhang@intel.com>
+Subject: RE: [PATCH 4/4] OF: introduce OF style 'modalias' support for
+ platform bus.
+Date: Thu, 16 Jan 2014 07:04:19 +0000
+Message-ID: <744357E9AAD1214791ACBA4B0B909263011CE77F@SHSMSX101.ccr.corp.intel.com>
+References: <1389689198-2641-1-git-send-email-rui.zhang@intel.com>
+	<1389689198-2641-5-git-send-email-rui.zhang@intel.com>
+ <CAL_JsqJFRQ+27N_9AwZXpx4V=g8HKn84WdVKtQ_Br_8SQTXY7g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-MIME-version: 1.0
+In-Reply-To: <CAL_JsqJFRQ+27N_9AwZXpx4V=g8HKn84WdVKtQ_Br_8SQTXY7g@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: lgirdwood@gmail.com, broonie@kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, celinux-dev@tree.celinuxforum.org
-Cc: srevatsa@samsung.com, bp.praveen@samsung.com
+To: Rob Herring <robherring2@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "wsa@the-dreams.de" <wsa@the-dreams.de>, Mark Brown <broonie@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "jarkko.nikula@linux.intel.com" <jarkko.nikula@linux.intel.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIHBhcnNpbmcgZm9sbG93aW5nIHJlZ3VsYXRvciBj
-b250cmFpbnRzIGZyb20gZGV2aWNlIHRyZWUgYmxvYi4NCjEuIHZhbGlkIG1vZGVzIG1hc2sgKHZh
-bGlkX21vZGVzX21hc2spDQoyLiBpbnB1dCBtaWNyb3ZvbHQoaW5wdXRfdVYpDQozLiBpbml0aWFs
-IG1vZGUgKGluaXRpYWxfbW9kZSkNCjQuIGluaXRpYWwgc3RhdGUgKGluaXRpYWxfc3RhdGUpDQo1
-LiBzdGF0ZSBtZW0gKHN0YXRlX21lbSkNCjYuIHN0YXRlIGRpc2sgKHN0YXRlX2Rpc2spDQo3LiBz
-dGF0ZSBzdGFuZGJ5IChzdGF0ZV9zdGFuZGJ5KQ0KDQpUaGlzIHBhdGNoIGlzIGN1cnJlbnRseSBh
-Z2FpbnN0IGEgbGludXggMy4xMi42IGtlcm5lbC4NCg0KZGlmZnN0YXQgZm9yIHRoaXMgcGF0Y2gg
-aXM6DQogb2ZfcmVndWxhdG9yLmMgfCAgIDYzICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCA2MyBpbnNlcnRp
-b25zKCspDQoNClRvIGFwcGx5IHRoZSBwYXRjaCwgaW4gdGhlIHJvb3Qgb2YgYSBrZXJuZWwgdHJl
-ZSB1c2U6DQpwYXRjaCAtcDEgPCBvZl9yZWd1bGF0b3IucGF0Y2gNCg0KUGxlYXNlIGxldCBtZSBr
-bm93IGFueSBmZWVkYmFjayB5b3UgaGF2ZSBvbiB0aGlzIHBhdGNoIG9yIHRoZSBhcHByb2FjaCB1
-c2VkLg0KDQpSZWdhcmRzLA0KPT09PT09PT09PT09PT09PT09PT09DQpTYXVyYWJoIFNpbmdoIFNl
-bmdhcg0KTGVhZCBFbmdpbmVlcg0KU2Ftc3VuZyBSJkQgSW5zdGl0dXRlDQpJbmRpYQ0KU2Ftc3Vu
-Zw0KPT09PT09PT09PT09PT09PT09PT09DQpTaWduZWQtb2ZmLWJ5OiBTYXVyYWJoIFNpbmdoIFNl
-bmdhciA8c2F1cmFiaDEuc0BzYW1zdW5nLmNvbT4NCg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0N
-Ci0tLSBsaW51eC0zLjEyLjYvZHJpdmVycy9yZWd1bGF0b3Ivb2ZfcmVndWxhdG9yLmMub3JpZwky
-MDE0LTAxLTA4IDE3OjE5OjQzLjA4NTkwMzU3MyArMDUzMA0KKysrIGxpbnV4LTMuMTIuNi9kcml2
-ZXJzL3JlZ3VsYXRvci9vZl9yZWd1bGF0b3IuYwkyMDE0LTAxLTE1IDIwOjEyOjIyLjE0NjU0MzEy
-OCArMDUzMA0KQEAgLTE2LDExICsxNiw0MCBAQA0KICNpbmNsdWRlIDxsaW51eC9yZWd1bGF0b3Iv
-bWFjaGluZS5oPg0KICNpbmNsdWRlIDxsaW51eC9yZWd1bGF0b3Ivb2ZfcmVndWxhdG9yLmg+DQog
-DQorLyoqDQorICogc2V0X3JlZ3VsYXRvcl9zdGF0ZV9jb25zdHJhaW50cyAtIHNldCByZWd1bGF0
-b3Igc3RhdGUgZm9yIGxvdyBwb3dlciBzeXN0ZW0gc3RhdGVzDQorICogQG5wOiBkZXZpY2Ugbm9k
-ZSBmb3IgdGhlIGxvdyBwb3dlciByZWd1bGF0b3Igc3RhdGUNCisgKiBAcmVndWxhdG9yX3N0YXRl
-OiByZWd1bGF0b3Jfc3RhdGUgc3RydWN0dXJlIG5lZWQgdG8gYmUgZmlsbGVkDQorICovDQorc3Rh
-dGljIHZvaWQgc2V0X3JlZ3VsYXRvcl9zdGF0ZV9jb25zdHJhaW50cyhzdHJ1Y3QgZGV2aWNlX25v
-ZGUgKm5wLA0KKwkJc3RydWN0IHJlZ3VsYXRvcl9zdGF0ZSAqcmVndWxhdG9yX3N0YXRlKQ0KK3sN
-CisJY29uc3QgX19iZTMyICp1ViwgKm1vZGU7DQorDQorCXVWID0gb2ZfZ2V0X3Byb3BlcnR5KG5w
-LCAicmVndWxhdG9yLXN0YXRlLXVWIiwgTlVMTCk7DQorCWlmICh1VikNCisJCXJlZ3VsYXRvcl9z
-dGF0ZS0+dVYgPSBiZTMyX3RvX2NwdSgqdVYpOw0KKw0KKwltb2RlID0gb2ZfZ2V0X3Byb3BlcnR5
-KG5wLCAicmVndWxhdG9yLXN0YXRlLW1vZGUiLCBOVUxMKTsNCisJaWYgKG1vZGUpDQorCQlyZWd1
-bGF0b3Jfc3RhdGUtPm1vZGUgPSBiZTMyX3RvX2NwdSgqbW9kZSk7DQorDQorCWlmIChvZl9maW5k
-X3Byb3BlcnR5KG5wLCAicmVndWxhdG9yLXN0YXRlLWVuYWJsZWQiLCBOVUxMKSkNCisJCXJlZ3Vs
-YXRvcl9zdGF0ZS0+ZW5hYmxlZCA9IHRydWU7DQorDQorCWlmIChvZl9maW5kX3Byb3BlcnR5KG5w
-LCAicmVndWxhdG9yLXN0YXRlLWRpc2FibGVkIiwgTlVMTCkpDQorCQlyZWd1bGF0b3Jfc3RhdGUt
-PmRpc2FibGVkID0gdHJ1ZTsNCit9DQorDQorDQogc3RhdGljIHZvaWQgb2ZfZ2V0X3JlZ3VsYXRp
-b25fY29uc3RyYWludHMoc3RydWN0IGRldmljZV9ub2RlICpucCwNCiAJCQkJCXN0cnVjdCByZWd1
-bGF0b3JfaW5pdF9kYXRhICoqaW5pdF9kYXRhKQ0KIHsNCiAJY29uc3QgX19iZTMyICptaW5fdVYs
-ICptYXhfdVYsICp1Vl9vZmZzZXQ7DQogCWNvbnN0IF9fYmUzMiAqbWluX3VBLCAqbWF4X3VBLCAq
-cmFtcF9kZWxheTsNCisJY29uc3QgX19iZTMyICAqaW5pdGlhbF9tb2RlLCAqaW5pdGlhbF9zdGF0
-ZTsNCisJY29uc3QgX19iZTMyICAqaW5wdXRfdVYsICp2YWxpZF9tb2Rlc19tYXNrOw0KKwlzdHJ1
-Y3QgZGV2aWNlX25vZGUgKnN0YXRlOw0KIAlzdHJ1Y3QgcHJvcGVydHkgKnByb3A7DQogCXN0cnVj
-dCByZWd1bGF0aW9uX2NvbnN0cmFpbnRzICpjb25zdHJhaW50cyA9ICYoKmluaXRfZGF0YSktPmNv
-bnN0cmFpbnRzOw0KIA0KQEAgLTczLDYgKzEwMiw0MCBAQCBzdGF0aWMgdm9pZCBvZl9nZXRfcmVn
-dWxhdGlvbl9jb25zdHJhaW50DQogCQllbHNlDQogCQkJY29uc3RyYWludHMtPnJhbXBfZGlzYWJs
-ZSA9IHRydWU7DQogCX0NCisNCisJdmFsaWRfbW9kZXNfbWFzayA9IG9mX2dldF9wcm9wZXJ0eShu
-cCwNCisJCQkicmVndWxhdG9yLXZhbGlkLW1vZGVzLW1hc2siLCBOVUxMKTsNCisJaWYgKHZhbGlk
-X21vZGVzX21hc2spDQorCQljb25zdHJhaW50cy0+dmFsaWRfbW9kZXNfbWFzayA9IGJlMzJfdG9f
-Y3B1KCp2YWxpZF9tb2Rlc19tYXNrKTsNCisNCisJaW5wdXRfdVYgPSBvZl9nZXRfcHJvcGVydHko
-bnAsICJyZWd1bGF0b3ItaW5wdXQtbWljcm92b2x0IiwgTlVMTCk7DQorCWlmIChpbnB1dF91VikN
-CisJCWNvbnN0cmFpbnRzLT5pbnB1dF91ViA9IGJlMzJfdG9fY3B1KCppbnB1dF91Vik7DQorDQor
-CWluaXRpYWxfbW9kZSA9IG9mX2dldF9wcm9wZXJ0eShucCwgInJlZ3VsYXRvci1pbml0aWFsLW1v
-ZGUiLCBOVUxMKTsNCisJaWYgKGluaXRpYWxfbW9kZSkNCisJCWNvbnN0cmFpbnRzLT5pbml0aWFs
-X21vZGUgPSBiZTMyX3RvX2NwdSgqaW5pdGlhbF9tb2RlKTsNCisNCisJaW5pdGlhbF9zdGF0ZSA9
-IG9mX2dldF9wcm9wZXJ0eShucCwgInJlZ3VsYXRvci1pbml0aWFsLXN0YXRlIiwgTlVMTCk7DQor
-CWlmIChpbml0aWFsX3N0YXRlKQ0KKwkJY29uc3RyYWludHMtPmluaXRpYWxfc3RhdGUgPSBiZTMy
-X3RvX2NwdSgqaW5pdGlhbF9zdGF0ZSk7DQorDQorCS8qIHJlZ3VsYXRvciBzdGF0ZSBkdXJpbmcg
-bG93IHBvd2VyIHN5c3RlbSBzdGF0ZXMgKi8NCisJc3RhdGUgPSBvZl9maW5kX25vZGVfYnlfbmFt
-ZShucCwgInJlZ3VsYXRvci1zdGF0ZS1tZW0iKTsNCisJaWYgKHN0YXRlKQ0KKwkJc2V0X3JlZ3Vs
-YXRvcl9zdGF0ZV9jb25zdHJhaW50cyhzdGF0ZSwNCisJCQkJJmNvbnN0cmFpbnRzLT5zdGF0ZV9t
-ZW0pOw0KKw0KKwlzdGF0ZSA9IG9mX2ZpbmRfbm9kZV9ieV9uYW1lKG5wLCAicmVndWxhdG9yLXN0
-YXRlLWRpc2siKTsNCisJaWYgKHN0YXRlKQ0KKwkJc2V0X3JlZ3VsYXRvcl9zdGF0ZV9jb25zdHJh
-aW50cyhzdGF0ZSwNCisJCQkJJmNvbnN0cmFpbnRzLT5zdGF0ZV9kaXNrKTsNCisNCisJc3RhdGUg
-PSBvZl9maW5kX25vZGVfYnlfbmFtZShucCwgInJlZ3VsYXRvci1zdGF0ZS1zdGFuZGJ5Iik7DQor
-CWlmIChzdGF0ZSkNCisJCXNldF9yZWd1bGF0b3Jfc3RhdGVfY29uc3RyYWludHMoc3RhdGUsDQor
-CQkJCSZjb25zdHJhaW50cy0+c3RhdGVfc3RhbmRieSk7DQorDQogfQ0KIA0KIC8qKg==
+
+
+> -----Original Message-----
+> From: Rob Herring [mailto:robherring2@gmail.com]
+> Sent: Wednesday, January 15, 2014 9:45 PM
+> To: Zhang, Rui
+> Cc: linux-kernel@vger.kernel.org; linux-acpi@vger.kernel.org; linux-
+> i2c@vger.kernel.org; linux-spi@vger.kernel.org; wsa@the-dreams.de; Mark
+> Brown; Greg Kroah-Hartman; Wysocki, Rafael J; Grant Likely; Rob Herring;
+> jarkko.nikula@linux.intel.com; mika.westerberg@linux.intel.com;
+> devicetree@vger.kernel.org
+> Subject: Re: [PATCH 4/4] OF: introduce OF style 'modalias' support for
+> platform bus.
+> Importance: High
+> 
+> On Tue, Jan 14, 2014 at 2:46 AM, Zhang Rui <rui.zhang@intel.com> wrote:
+> > Fix a problem that, the platform bus supports the OF style modalias
+> in
+> > .uevent() call, but not in its device 'modalias' sysfs attribute.
+> >
+> > cc: devicetree@vger.kernel.org
+> > Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+> 
+> As there doesn't appear any dependency with the rest of this series, I
+> can take this.
+> 
+Thanks.
+
+-rui
+> One minor nit below.
+> 
+> > ---
+> >  drivers/base/platform.c   |    4 ++++
+> >  drivers/of/device.c       |    3 +++
+> >  include/linux/of_device.h |    6 ++++++
+> >  3 files changed, 13 insertions(+)
+> >
+> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c index
+> > 2f4aea2..bc78848 100644
+> > --- a/drivers/base/platform.c
+> > +++ b/drivers/base/platform.c
+> > @@ -679,6 +679,10 @@ static ssize_t modalias_show(struct device *dev,
+> struct device_attribute *a,
+> >         struct platform_device  *pdev = to_platform_device(dev);
+> >         int len;
+> >
+> > +       len = of_device_get_modalias(dev, buf, PAGE_SIZE -1);
+> > +       if (len != -ENODEV)
+> > +               return len;
+> > +
+> >         len = acpi_device_modalias(dev, buf, PAGE_SIZE -1);
+> >         if (len != -ENODEV)
+> >                 return len;
+> > diff --git a/drivers/of/device.c b/drivers/of/device.c index
+> > f685e55..dafb973 100644
+> > --- a/drivers/of/device.c
+> > +++ b/drivers/of/device.c
+> > @@ -85,6 +85,9 @@ ssize_t of_device_get_modalias(struct device *dev,
+> char *str, ssize_t len)
+> >         int cplen, i;
+> >         ssize_t tsize, csize, repend;
+> >
+> > +       if ((!dev) || (!dev->of_node))\
+> 
+> Don't need the parentheses here.
+> 
+> > +               return -ENODEV;
+> > +
+> >         /* Name & Type */
+> >         csize = snprintf(str, len, "of:N%sT%s", dev->of_node->name,
+> >                          dev->of_node->type); diff --git
+> > a/include/linux/of_device.h b/include/linux/of_device.h index
+> > 82ce324..8d7dd67 100644
+> > --- a/include/linux/of_device.h
+> > +++ b/include/linux/of_device.h
+> > @@ -64,6 +64,12 @@ static inline int of_driver_match_device(struct
+> > device *dev,  static inline void of_device_uevent(struct device *dev,
+> >                         struct kobj_uevent_env *env) { }
+> >
+> > +static inline int of_device_get_modalias(struct device *dev,
+> > +                                  char *str, ssize_t len) {
+> > +       return -ENODEV;
+> > +}
+> > +
+> >  static inline int of_device_uevent_modalias(struct device *dev,
+> >                                    struct kobj_uevent_env *env)  {
+> > --
+> > 1.7.9.5
+> >
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe devicetree"
+> > in the body of a message to majordomo@vger.kernel.org More majordomo
+> > info at  http://vger.kernel.org/majordomo-info.html
