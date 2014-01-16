@@ -1,44 +1,137 @@
-From: Boris BREZILLON <b.brezillon@overkiz.com>
-Subject: [PATCH] ARM: at91/dt: fix sama5d3 ohci hclk clock reference
-Date: Thu, 16 Jan 2014 16:25:34 +0100
-Message-ID: <1389885934-26119-1-git-send-email-b.brezillon@overkiz.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Boris BREZILLON <b.brezillon@overkiz.com>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 3/4] ASoC: tlv320aic32x4: DT support
+Date: Thu, 16 Jan 2014 16:30:26 +0100
+Message-ID: <1389886227-876-4-git-send-email-mpa@pengutronix.de>
+References: <1389886227-876-1-git-send-email-mpa@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1389886227-876-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The hclk clock of the ohci node is referencing udphs_clk instead of
-uhphs_clk.
+Add DT support for this codec. The bindings differ a bit from the aic3x
+codec bindings, so I created a new binding documentation. The difference
+is especially a "ti,ldo-enable" property, which enables the internal
+LDOs.
 
-Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- arch/arm/boot/dts/sama5d3.dtsi |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../devicetree/bindings/sound/tlv320aic32x4.txt    | 23 +++++++++++++++++
+ sound/soc/codecs/tlv320aic32x4.c                   | 30 ++++++++++++++++++++++
+ 2 files changed, 53 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
 
-diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index e398e5d..31356e2 100644
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -1195,7 +1195,7 @@
- 			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
- 			reg = <0x00600000 0x100000>;
- 			interrupts = <32 IRQ_TYPE_LEVEL_HIGH 2>;
--			clocks = <&usb>, <&uhphs_clk>, <&udphs_clk>,
-+			clocks = <&usb>, <&uhphs_clk>, <&uhphs_clk>,
- 				 <&uhpck>;
- 			clock-names = "usb_clk", "ohci_clk", "hclk", "uhpck";
- 			status = "disabled";
+diff --git a/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt b/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
+new file mode 100644
+index 0000000..5c8fb4a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
+@@ -0,0 +1,23 @@
++Texas Instruments - tlv320aic32x4 Codec module
++
++The tlv320aic32x4 serial control bus communicates through I2C protocols
++
++Required properties:
++ - compatible: Should be "ti,tlv320aic32x4"
++ - reg: I2C slave address
++
++Optional properties:
++ - ti,ldo-enable: Bool, has to be set when the codec is powered only through the
++   LDOIN pin.
++ - gpio-reset - gpio pin number used for codec reset
++
++
++Example:
++
++codec: tlv320aic32x4@18 {
++	compatible = "ti,tlv320aic32x4";
++	reg = <0x18>;
++	clocks = <&clks 201>;
++	clock-names = "mclk";
++	ti,ldo-enable;
++};
+diff --git a/sound/soc/codecs/tlv320aic32x4.c b/sound/soc/codecs/tlv320aic32x4.c
+index 1c9f1d8..840f529 100644
+--- a/sound/soc/codecs/tlv320aic32x4.c
++++ b/sound/soc/codecs/tlv320aic32x4.c
+@@ -29,6 +29,7 @@
+ #include <linux/delay.h>
+ #include <linux/pm.h>
+ #include <linux/gpio.h>
++#include <linux/of_gpio.h>
+ #include <linux/i2c.h>
+ #include <linux/cdev.h>
+ #include <linux/slab.h>
+@@ -669,11 +670,27 @@ static struct snd_soc_codec_driver soc_codec_dev_aic32x4 = {
+ 	.num_dapm_routes = ARRAY_SIZE(aic32x4_dapm_routes),
+ };
+ 
++static int aic32x4_parse_dt(struct aic32x4_priv *aic32x4,
++		struct device_node *np)
++{
++	aic32x4->swapdacs = false;
++	aic32x4->micpga_routing = 0;
++	aic32x4->rstn_gpio = of_get_named_gpio(np, "gpio-reset", 0);
++
++	if (of_property_read_bool(np, "ti,ldo-enable"))
++		aic32x4->power_cfg = AIC32X4_PWR_AIC32X4_LDO_ENABLE;
++	else
++		aic32x4->power_cfg = 0;
++
++	return 0;
++}
++
+ static int aic32x4_i2c_probe(struct i2c_client *i2c,
+ 			     const struct i2c_device_id *id)
+ {
+ 	struct aic32x4_pdata *pdata = i2c->dev.platform_data;
+ 	struct aic32x4_priv *aic32x4;
++	struct device_node *np = i2c->dev.of_node;
+ 	int ret;
+ 
+ 	aic32x4 = devm_kzalloc(&i2c->dev, sizeof(struct aic32x4_priv),
+@@ -692,6 +709,12 @@ static int aic32x4_i2c_probe(struct i2c_client *i2c,
+ 		aic32x4->swapdacs = pdata->swapdacs;
+ 		aic32x4->micpga_routing = pdata->micpga_routing;
+ 		aic32x4->rstn_gpio = pdata->rstn_gpio;
++	} else if (np) {
++		ret = aic32x4_parse_dt(aic32x4, np);
++		if (ret) {
++			dev_err(&i2c->dev, "Failed to parse DT node\n");
++			return ret;
++		}
+ 	} else {
+ 		aic32x4->power_cfg = 0;
+ 		aic32x4->swapdacs = false;
+@@ -723,10 +746,17 @@ static const struct i2c_device_id aic32x4_i2c_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, aic32x4_i2c_id);
+ 
++static const struct of_device_id aic32x4_of_id[] = {
++	{ .compatible = "ti,tlv320aic32x4", },
++	{ /* senitel */ }
++};
++MODULE_DEVICE_TABLE(of, aic32x4_of_id);
++
+ static struct i2c_driver aic32x4_i2c_driver = {
+ 	.driver = {
+ 		.name = "tlv320aic32x4",
+ 		.owner = THIS_MODULE,
++		.of_match_table = aic32x4_of_id,
+ 	},
+ 	.probe =    aic32x4_i2c_probe,
+ 	.remove =   aic32x4_i2c_remove,
 -- 
-1.7.9.5
+1.8.5.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
