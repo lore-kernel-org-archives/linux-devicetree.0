@@ -1,83 +1,164 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH net-next v4 1/2] dts: Add a binding for Synopsys emac max-frame-size
-Date: Thu, 16 Jan 2014 13:29:18 -0600
-Message-ID: <CAL_Jsq+81QtmC9dtKRU1b427Y0OjhyxZZ1gZbsvk9WWutM4TVQ@mail.gmail.com>
-References: <1389881155-9758-1-git-send-email-vbridgers2013@gmail.com>
-	<1389881155-9758-2-git-send-email-vbridgers2013@gmail.com>
-	<1389894601.11912.54.camel@bwh-desktop.uk.level5networks.com>
-	<CAOwfj2N2p_B-Wq0DTzt76RAbqCu5O088wxWiLEvHCc0qusDq-g@mail.gmail.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v5 00/14] Add support for MSM's mmio clock/reset controller
+Date: Thu, 16 Jan 2014 11:28:38 -0800
+Message-ID: <20140116192838.4167.31023@quantum>
+References: <1389811654-21397-1-git-send-email-sboyd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAOwfj2N2p_B-Wq0DTzt76RAbqCu5O088wxWiLEvHCc0qusDq-g@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Vince Bridgers <vbridgers2013@gmail.com>
-Cc: Ben Hutchings <bhutchings@solarflare.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, netdev@vger.kernel.org, Giuseppe CAVALLARO <peppe.cavallaro@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Dinh Nguyen <dinguyen@altera.com>, Rayagond Kokatanur <rayagond@vayavyalabs.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1389811654-21397-1-git-send-email-sboyd@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org, Saravana Kannan <skannan@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 16, 2014 at 12:48 PM, Vince Bridgers
-<vbridgers2013@gmail.com> wrote:
-> On Thu, Jan 16, 2014 at 11:50 AM, Ben Hutchings
-> <bhutchings@solarflare.com> wrote:
->> On Thu, 2014-01-16 at 08:05 -0600, Vince Bridgers wrote:
->>> This change adds a parameter for the Synopsys 10/100/1000
->>> stmmac Ethernet driver to configure the maximum frame
->>> size supported by the EMAC driver. Synopsys allows the FIFO
->>> sizes to be configured when the cores are built for a particular
->>> device, but do not provide a way for the driver to read
->>> information from the device about the maximum MTU size
->>> supported as limited by the device's FIFO size.
->>>
->>> Signed-off-by: Vince Bridgers <vbridgers2013@gmail.com>
->>> ---
->>> V4: add comments to explain use of max-frame-size with respect
->>>     to inconsistent definition and use in the ePAPR v1.1 spec
->>
->> Well, ePAPR does not seem to be consistent with itself. :-)
->>
->>> V3: change snps,max-frame-size to max-frame-size
->>> V2: change snps,max-mtu to snps,max-frame-size
->>> ---
->>>  Documentation/devicetree/bindings/net/stmmac.txt |   13 ++++++++++++-
->>>  1 file changed, 12 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
->>> index eba0e5e..d553be2 100644
->>> --- a/Documentation/devicetree/bindings/net/stmmac.txt
->>> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
->>> @@ -29,7 +29,17 @@ Required properties:
->>>                               ignored if force_thresh_dma_mode is set.
->>>
->>>  Optional properties:
->>> -- mac-address: 6 bytes, mac address
->>> +- mac-address:               6 bytes, mac address
->>> +- max-frame-size:    Maximum frame size permitted. This parameter is useful
->>> +                     since different implementations of the Synopsys MAC may
->>> +                     have different FIFO sizes depending on the selections
->>> +                     made in Synopsys Core Consultant. Note that the usage
->>> +                     is inconsistent with the definition in the ePAPR v1.1
->>> +                     specification, as it defines max-frame-size inclusive
->>> +                     of the MAC DA, SA, Ethertype and CRC while usage is
->>> +                     consistent with the IEEE definition of MAC Client
->>> +                     Data, which is sans the MAC DA, SA, Ethertype and
->>> +                     CRC.
->> [...]
->>
->> While this is very precise, I fear that it is now so verbose that it
->> actually becomes confusing.  Can this not be condensed to 'the maximum
->> MTU and MRU, rather than the maximum Ethernet frame size'?
->>
->> Ben.
->
-> Sure, I'll cut this down and resubmit as V5. How about
->
-> "The Maximum Transfer Unit (IEEE defined MTU), rather than the maximum
-> frame size."
+Quoting Stephen Boyd (2014-01-15 10:47:20)
+> The first breaks a reset-controller include ordering requirement. It got
+> an ack so I think we're ok for it to go through the clock tree.
+> 
+> The next patch adds support for setting the rate and the parent at the
+> same time based on patches from James Hogan's remuxing set_rate series.
+> 
+> After that we add MSM clock hardware support and SoC specific drivers. The DT
+> node additions will be sent through the MSM maintainers once these patches are
+> accepted.
 
-If you are not following the ePAPR definition, then call the property
-something else rather than relying on the documentation to explain the
-different meaning. Why can't the driver adjust the size from the ePAPR
-definition? Otherwise, I would go back to the v2 name of
-"snps,max-mtu".
+Hi Stephen,
 
-Rob
+These patches look great and I've taken them into clk-next for testing.
+They should get pushed out to my Linaro mirror later today and will go
+in for 3.14. Thanks for spinning the revisions to this series so
+quickly.
+
+There might still be some way to share the regmap helpers in the future,
+and getting these patches merged is a good starting point.
+
+Regards,
+Mike
+
+> 
+> Changes since v4:
+>  * Moved regmap code out of the core into drivers/clk/qcom/
+>  * Reworked to use a wrapper clk_regmap struct
+> 
+> Changes since v3:
+>  * Moved binding include to clock/
+>  * New patch for 8660 GCC driver
+>  * Renamed directory to qcom to match vendor prefix
+>  * Added some missing clocks in 8974 GCC driver
+>  * New patch for 8974 MMCC driver
+> 
+> Changes since v2:
+> 
+>  * Completed 8960 and 8974 GCC data & dt-bindings
+>  * Added support for reset controllers
+>  * Squashed some bugs in 8974 gcc clocks
+>  * New patch to fix clk NULL pointer deref
+>  * New patch to fix #include requirement for reset-controller.h
+> 
+> Changes since v1:
+> 
+>  * Rewrote binding to use #clock-cells=1
+>  * Reworked library components (pll, rcg, branch) to use regmap
+>  * Dropped common clock framework patches that did DT parsing
+>  * New patches for regmap support in common clock framework
+> 
+> Stephen Boyd (14):
+>   reset: Silence warning in reset-controller.h
+>   clk: Add set_rate_and_parent() op
+>   clk: qcom: Add a regmap type clock struct
+>   clk: qcom: Add support for phase locked loops (PLLs)
+>   clk: qcom: Add support for root clock generators (RCGs)
+>   clk: qcom: Add support for branches/gate clocks
+>   clk: qcom: Add reset controller support
+>   clk: qcom: Add support for MSM8960's global clock controller (GCC)
+>   clk: qcom: Add support for MSM8960's multimedia clock controller
+>     (MMCC)
+>   clk: qcom: Add support for MSM8974's global clock controller (GCC)
+>   clk: qcom: Add support for MSM8974's multimedia clock controller
+>     (MMCC)
+>   clk: qcom: Add support for MSM8660's global clock controller (GCC)
+>   devicetree: bindings: Document qcom,gcc
+>   devicetree: bindings: Document qcom,mmcc
+> 
+>  Documentation/clk.txt                              |    3 +
+>  .../devicetree/bindings/clock/qcom,gcc.txt         |   21 +
+>  .../devicetree/bindings/clock/qcom,mmcc.txt        |   21 +
+>  drivers/clk/Kconfig                                |    2 +
+>  drivers/clk/Makefile                               |    1 +
+>  drivers/clk/clk.c                                  |   78 +-
+>  drivers/clk/qcom/Kconfig                           |   47 +
+>  drivers/clk/qcom/Makefile                          |   14 +
+>  drivers/clk/qcom/clk-branch.c                      |  159 ++
+>  drivers/clk/qcom/clk-branch.h                      |   56 +
+>  drivers/clk/qcom/clk-pll.c                         |  222 ++
+>  drivers/clk/qcom/clk-pll.h                         |   66 +
+>  drivers/clk/qcom/clk-rcg.c                         |  517 ++++
+>  drivers/clk/qcom/clk-rcg.h                         |  159 ++
+>  drivers/clk/qcom/clk-rcg2.c                        |  291 ++
+>  drivers/clk/qcom/clk-regmap.c                      |  114 +
+>  drivers/clk/qcom/clk-regmap.h                      |   45 +
+>  drivers/clk/qcom/gcc-msm8660.c                     | 2819 ++++++++++++++++++
+>  drivers/clk/qcom/gcc-msm8960.c                     | 2993 ++++++++++++++++++++
+>  drivers/clk/qcom/gcc-msm8974.c                     | 2694 ++++++++++++++++++
+>  drivers/clk/qcom/mmcc-msm8960.c                    | 2321 +++++++++++++++
+>  drivers/clk/qcom/mmcc-msm8974.c                    | 2625 +++++++++++++++++
+>  drivers/clk/qcom/reset.c                           |   63 +
+>  drivers/clk/qcom/reset.h                           |   37 +
+>  include/dt-bindings/clock/qcom,gcc-msm8660.h       |  276 ++
+>  include/dt-bindings/clock/qcom,gcc-msm8960.h       |  313 ++
+>  include/dt-bindings/clock/qcom,gcc-msm8974.h       |  320 +++
+>  include/dt-bindings/clock/qcom,mmcc-msm8960.h      |  137 +
+>  include/dt-bindings/clock/qcom,mmcc-msm8974.h      |  161 ++
+>  include/dt-bindings/reset/qcom,gcc-msm8660.h       |  134 +
+>  include/dt-bindings/reset/qcom,gcc-msm8960.h       |  118 +
+>  include/dt-bindings/reset/qcom,gcc-msm8974.h       |   96 +
+>  include/dt-bindings/reset/qcom,mmcc-msm8960.h      |   93 +
+>  include/dt-bindings/reset/qcom,mmcc-msm8974.h      |   62 +
+>  include/linux/clk-provider.h                       |   15 +
+>  include/linux/reset-controller.h                   |    1 +
+>  36 files changed, 17075 insertions(+), 19 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+>  create mode 100644 drivers/clk/qcom/Kconfig
+>  create mode 100644 drivers/clk/qcom/Makefile
+>  create mode 100644 drivers/clk/qcom/clk-branch.c
+>  create mode 100644 drivers/clk/qcom/clk-branch.h
+>  create mode 100644 drivers/clk/qcom/clk-pll.c
+>  create mode 100644 drivers/clk/qcom/clk-pll.h
+>  create mode 100644 drivers/clk/qcom/clk-rcg.c
+>  create mode 100644 drivers/clk/qcom/clk-rcg.h
+>  create mode 100644 drivers/clk/qcom/clk-rcg2.c
+>  create mode 100644 drivers/clk/qcom/clk-regmap.c
+>  create mode 100644 drivers/clk/qcom/clk-regmap.h
+>  create mode 100644 drivers/clk/qcom/gcc-msm8660.c
+>  create mode 100644 drivers/clk/qcom/gcc-msm8960.c
+>  create mode 100644 drivers/clk/qcom/gcc-msm8974.c
+>  create mode 100644 drivers/clk/qcom/mmcc-msm8960.c
+>  create mode 100644 drivers/clk/qcom/mmcc-msm8974.c
+>  create mode 100644 drivers/clk/qcom/reset.c
+>  create mode 100644 drivers/clk/qcom/reset.h
+>  create mode 100644 include/dt-bindings/clock/qcom,gcc-msm8660.h
+>  create mode 100644 include/dt-bindings/clock/qcom,gcc-msm8960.h
+>  create mode 100644 include/dt-bindings/clock/qcom,gcc-msm8974.h
+>  create mode 100644 include/dt-bindings/clock/qcom,mmcc-msm8960.h
+>  create mode 100644 include/dt-bindings/clock/qcom,mmcc-msm8974.h
+>  create mode 100644 include/dt-bindings/reset/qcom,gcc-msm8660.h
+>  create mode 100644 include/dt-bindings/reset/qcom,gcc-msm8960.h
+>  create mode 100644 include/dt-bindings/reset/qcom,gcc-msm8974.h
+>  create mode 100644 include/dt-bindings/reset/qcom,mmcc-msm8960.h
+>  create mode 100644 include/dt-bindings/reset/qcom,mmcc-msm8974.h
+> 
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> hosted by The Linux Foundation
+> 
