@@ -1,31 +1,82 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: add vendor prefix for Ka-Ro electronics GmbH
-Date: Thu, 16 Jan 2014 17:18:23 -0600
-Message-ID: <CAL_Jsq+YmyL9X3JvsKWJOV9D5zv7GqA1LAsWKQj90wfKut65Vg@mail.gmail.com>
-References: <1386849993-29371-1-git-send-email-LW@KARO-electronics.de>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH v2 1/2] i2c: qup: Add device tree bindings information
+Date: Thu, 16 Jan 2014 15:20:48 -0800
+Message-ID: <20140116232047.GK30911@sonymobile.com>
+References: <1389659437-16406-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1389659437-16406-2-git-send-email-bjorn.andersson@sonymobile.com>
+ <1389689841.2794.8.camel@iivanov-dev.int.mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1386849993-29371-1-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?ISO-8859-1?Q?Lothar_Wa=DFmann?= <LW-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1389689841.2794.8.camel@iivanov-dev.int.mm-sol.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, Jean Delvare <khali@linux-fr.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, James Ralston <james.d.ralston@intel.com>, Bill Brown <bill.e.brown@intel.com>, Matt Porter <matt.porter@linaro.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 12, 2013 at 6:06 AM, Lothar Wa=DFmann <LW@karo-electronics.=
-de> wrote:
->
-> Signed-off-by: Lothar Wa=DFmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-> ---
->  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
+On Tue 14 Jan 00:57 PST 2014, Ivan T. Ivanov wrote:
 
-Applied.
+> 
+> Thanks Bjorn, 
+> 
+> I have prepared second version, but never send it out :-).
+> One thing suggested by Mark was missed in this version.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yeah, Mattew told me you we're assigned to other things and asked me to send
+out an update as I had gotten it to work on our boards.
+
+I did modify the wording of most of these to match how it is written in the
+other Qualcomm definitions.
+
+@Mark, would you rather have me change this to your suggested wording?
+
+> 
+> 
+> On Mon, 2014-01-13 at 16:30 -0800, Bjorn Andersson wrote: 
+> > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+> > 
+[snip]
+> > + - clocks: Should contain the core clock and the AHB clock.
+> 
+> + - clocks: a list of phandle + clock-specifier pairs for each entry in
+> +           clock-names
+> 
+
+This is in line with how it's written in other drivers, so if the DT
+maintainers doesn't disagree I would like to keep phandles out of the
+description. This specific line is a verbatime copy of the msm_serial
+documentation (same block, different mode)...
+
+> > + - clock-names: Should be "core" for the core clock and "iface" for the
+> > +                AHB clock.
+> > +
+> > + - #address-cells: Should be <1> Address cells for i2c device address
+> > + - #size-cells: Should be <0> as i2c addresses have no size component
+> > +
+> > +Optional properties:
+> > + - clock-frequency: Should specify the desired i2c bus clock frequency in Hz,
+> > +                    default is 100kHz if omitted.
+> > +
+> > +Child nodes should conform to i2c bus binding.
+> > +
+> > +Example:
+> > +
+> > + i2c2: i2c@f9924000 {
+> > + 	compatible = "qcom,i2c-qup";
+> > + 	reg = <0xf9924000 0x1000>;
+> > + 	interrupts = <0 96 0>;
+> > +
+> > + 	clocks = <&gcc_blsp1_qup2_i2c_apps_clk>, <&gcc_blsp1_ahb_clk>;
+> 
+> In the light of the latest patches from Stephen, this could be 
+> 
+> + 	clocks = <&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>, <&gcc GCC_BLSP1_AHB_CLK>;
+
+Yes, that's exactly what I have in my dts. However as this is just an example
+I didn't feel it was worth tainting the documentation with all those capital
+letters ;)
+So unless DT maintainers disagree I would like to just keep it as an example.
+
+Regards,
+Bjorn
