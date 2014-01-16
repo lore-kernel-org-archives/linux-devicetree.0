@@ -1,83 +1,83 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v5 2/4] devicetree: bindings: Document Krait CPU/L1 EDAC
-Date: Thu, 16 Jan 2014 11:26:17 -0800
-Message-ID: <20140116192617.GA13785@codeaurora.org>
-References: <1389735034-21430-1-git-send-email-sboyd@codeaurora.org>
- <1389735034-21430-3-git-send-email-sboyd@codeaurora.org>
- <20140115102701.GA27314@e102568-lin.cambridge.arm.com>
- <20140115165623.GJ14405@codeaurora.org>
- <20140116013840.GA674@codeaurora.org>
- <20140116113332.GC25540@e102568-lin.cambridge.arm.com>
- <20140116180505.GA30925@codeaurora.org>
- <20140116183326.GG25540@e102568-lin.cambridge.arm.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH net-next v4 1/2] dts: Add a binding for Synopsys emac max-frame-size
+Date: Thu, 16 Jan 2014 13:29:18 -0600
+Message-ID: <CAL_Jsq+81QtmC9dtKRU1b427Y0OjhyxZZ1gZbsvk9WWutM4TVQ@mail.gmail.com>
+References: <1389881155-9758-1-git-send-email-vbridgers2013@gmail.com>
+	<1389881155-9758-2-git-send-email-vbridgers2013@gmail.com>
+	<1389894601.11912.54.camel@bwh-desktop.uk.level5networks.com>
+	<CAOwfj2N2p_B-Wq0DTzt76RAbqCu5O088wxWiLEvHCc0qusDq-g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140116183326.GG25540@e102568-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Borislav Petkov <bp@alien8.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAOwfj2N2p_B-Wq0DTzt76RAbqCu5O088wxWiLEvHCc0qusDq-g@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Vince Bridgers <vbridgers2013@gmail.com>
+Cc: Ben Hutchings <bhutchings@solarflare.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, netdev@vger.kernel.org, Giuseppe CAVALLARO <peppe.cavallaro@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Dinh Nguyen <dinguyen@altera.com>, Rayagond Kokatanur <rayagond@vayavyalabs.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/16, Lorenzo Pieralisi wrote:
-> On Thu, Jan 16, 2014 at 06:05:05PM +0000, Stephen Boyd wrote:
-> > On 01/16, Lorenzo Pieralisi wrote:
-> > > Do we really want to do that ? I am not sure. A cpus node is supposed to
-> > > be a container node, we should not define this binding just because we
-> > > know the kernel creates a platform device for it then.
-> > 
-> > This is just copying more of the ePAPR spec into this document.
-> > It just so happens that having a compatible field here allows a
-> > platform device to be created. I don't see why that's a problem.
-> 
-> I do not see why you cannot define a node like pmu or arch-timer and stick
-> a compatible property in there. cpus node does not represent a device, and
-> must not be created as a platform device, that's my opinion.
-> 
+On Thu, Jan 16, 2014 at 12:48 PM, Vince Bridgers
+<vbridgers2013@gmail.com> wrote:
+> On Thu, Jan 16, 2014 at 11:50 AM, Ben Hutchings
+> <bhutchings@solarflare.com> wrote:
+>> On Thu, 2014-01-16 at 08:05 -0600, Vince Bridgers wrote:
+>>> This change adds a parameter for the Synopsys 10/100/1000
+>>> stmmac Ethernet driver to configure the maximum frame
+>>> size supported by the EMAC driver. Synopsys allows the FIFO
+>>> sizes to be configured when the cores are built for a particular
+>>> device, but do not provide a way for the driver to read
+>>> information from the device about the maximum MTU size
+>>> supported as limited by the device's FIFO size.
+>>>
+>>> Signed-off-by: Vince Bridgers <vbridgers2013@gmail.com>
+>>> ---
+>>> V4: add comments to explain use of max-frame-size with respect
+>>>     to inconsistent definition and use in the ePAPR v1.1 spec
+>>
+>> Well, ePAPR does not seem to be consistent with itself. :-)
+>>
+>>> V3: change snps,max-frame-size to max-frame-size
+>>> V2: change snps,max-mtu to snps,max-frame-size
+>>> ---
+>>>  Documentation/devicetree/bindings/net/stmmac.txt |   13 ++++++++++++-
+>>>  1 file changed, 12 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+>>> index eba0e5e..d553be2 100644
+>>> --- a/Documentation/devicetree/bindings/net/stmmac.txt
+>>> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
+>>> @@ -29,7 +29,17 @@ Required properties:
+>>>                               ignored if force_thresh_dma_mode is set.
+>>>
+>>>  Optional properties:
+>>> -- mac-address: 6 bytes, mac address
+>>> +- mac-address:               6 bytes, mac address
+>>> +- max-frame-size:    Maximum frame size permitted. This parameter is useful
+>>> +                     since different implementations of the Synopsys MAC may
+>>> +                     have different FIFO sizes depending on the selections
+>>> +                     made in Synopsys Core Consultant. Note that the usage
+>>> +                     is inconsistent with the definition in the ePAPR v1.1
+>>> +                     specification, as it defines max-frame-size inclusive
+>>> +                     of the MAC DA, SA, Ethertype and CRC while usage is
+>>> +                     consistent with the IEEE definition of MAC Client
+>>> +                     Data, which is sans the MAC DA, SA, Ethertype and
+>>> +                     CRC.
+>> [...]
+>>
+>> While this is very precise, I fear that it is now so verbose that it
+>> actually becomes confusing.  Can this not be condensed to 'the maximum
+>> MTU and MRU, rather than the maximum Ethernet frame size'?
+>>
+>> Ben.
+>
+> Sure, I'll cut this down and resubmit as V5. How about
+>
+> "The Maximum Transfer Unit (IEEE defined MTU), rather than the maximum
+> frame size."
 
-I had what you're suggesting before in the original revision of
-this patch. Please take a look at the original patch series[1]. I
-suppose it could be tweaked slightly to still have a cache node
-for the L2 interrupt and the next-level-cache pointer from the
-CPUs.
+If you are not following the ePAPR definition, then call the property
+something else rather than relying on the documentation to explain the
+different meaning. Why can't the driver adjust the size from the ePAPR
+definition? Otherwise, I would go back to the v2 name of
+"snps,max-mtu".
 
-> What would you do for big.LITTLE systems ? We are going to create two
-> cpus node because we need two platform devices ? I really think there
-> must be a better way to implement this, but I will let DT maintainers
-> make a decision.
-
-There is no such thing as big.LITTLE for Krait, so this is not a
-concern.
-
-> 
-> > > interrupts is a cpu node property and I think it should be kept as such.
-> > > 
-> > > I know it will be duplicated and I know you can't rely on a platform
-> > > device for probing (since if I am not mistaken, removing a compatible
-> > > string from cpus prevents its platform device creation), but that's an issue
-> > > related to how the kernel works, you should not define DT bindings to solve
-> > > that IMHO.
-> > 
-> > The interrupts property is also common for all cpus so it seems
-> > fine to collapse the value down into a PPI specifier indicating
-> > that all CPUs get the interrupt, similar to how we compress the
-> > information about the compatible string.
-> 
-> I think it is nicer to create a device node (as I said, like a pmu or an
-> arch-timer) and define interrupts there along with a proper compatible
-> property. This would serve the same purpose without adding properties in
-> the cpus node.
-> 
-> cpu-edac {
-> 	compatible = "qcom,cpu-edac";
-> 	interrupts = <...>;
-> };
-
-Yes, please see the original thread.
-
-[1] https://lkml.org/lkml/2013/10/29/134
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Rob
