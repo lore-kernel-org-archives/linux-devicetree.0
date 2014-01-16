@@ -1,84 +1,106 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 2/2] ehci-platform: Add support for clks
- and phy passed through devicetree
-Date: Wed, 15 Jan 2014 16:11:03 -0800
-Message-ID: <CAGVrzcY1koEX=9pJHMOZ4rvKn49aAEzFvvqvsS74N+nDRW2L+g@mail.gmail.com>
-References: <1389813883-567-1-git-send-email-hdegoede@redhat.com> <1389813883-567-3-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Subject: Re: [PATCH 4/4] OF: introduce OF style 'modalias' support for platform bus.
+Date: Thu, 16 Jan 2014 02:09:55 +0100
+Message-ID: <77231285.q8OGi4Gmjj@vostro.rjw.lan>
+References: <1389689198-2641-1-git-send-email-rui.zhang@intel.com> <1389689198-2641-5-git-send-email-rui.zhang@intel.com> <CAL_JsqJFRQ+27N_9AwZXpx4V=g8HKn84WdVKtQ_Br_8SQTXY7g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCH67JWTV4DBBQGH3SLAKGQEI4ALISI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1389813883-567-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJFRQ+27N_9AwZXpx4V=g8HKn84WdVKtQ_Br_8SQTXY7g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014/1/15 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>:
-> Currently ehci-platform is only used in combination with devicetree when used
-> with some Via socs. By extending it to (optionally) get clks and a phy from
-> devicetree, and enabling / disabling those on power_on / off, it can be used
-> more generically. Specifically after this commit it can be used for the
-> ehci controller on Allwinner sunxi SoCs.
->
-> Since ehci-platform is intended to handle any generic enough non pci ehci
-> device, add a "usb-ehci" compatibility string.
->
-> There already is a usb-ehci device-tree bindings document, update this
-> with clks and phy bindings info.
->
-> Although actually quite generic so far the via,vt8500 compatibilty string
-> had its own bindings document. Somehow we even ended up with 2 of them. Since
-> these provide no extra information over the generic usb-ehci documentation,
-> this patch removes them.
->
-> The ehci-ppc-of.c driver also claims the usb-ehci compatibility string,
-> even though it mostly is ibm,usb-ehci-440epx specific. ehci-platform.c is
-> not needed on ppc platforms, so add a !PPC_OF dependency to it to avoid
-> 2 drivers claiming the same compatibility string getting build on ppc.
->
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/usb/usb-ehci.txt |  25 +++-
->  .../devicetree/bindings/usb/via,vt8500-ehci.txt    |  15 ---
->  .../devicetree/bindings/usb/vt8500-ehci.txt        |  12 --
->  drivers/usb/host/Kconfig                           |   1 +
->  drivers/usb/host/ehci-platform.c                   | 149 +++++++++++++++++----
->  5 files changed, 142 insertions(+), 60 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/usb/via,vt8500-ehci.txt
->  delete mode 100644 Documentation/devicetree/bindings/usb/vt8500-ehci.txt
->
-> diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt b/Documentation/devicetree/bindings/usb/usb-ehci.txt
-> index fa18612..fad10f3 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
-> @@ -7,13 +7,14 @@ Required properties:
->      (debug-port or other) can be also specified here, but only after
->      definition of standard EHCI registers.
->    - interrupts : one EHCI interrupt should be described here.
-> -If device registers are implemented in big endian mode, the device
-> -node should have "big-endian-regs" property.
-> -If controller implementation operates with big endian descriptors,
-> -"big-endian-desc" property should be specified.
-> -If both big endian registers and descriptors are used by the controller
-> -implementation, "big-endian" property can be specified instead of having
-> -both "big-endian-regs" and "big-endian-desc".
-> +
-> +Optional properties:
-> + - big-endian-regs : boolean, set this for hcds with big-endian registers
-> + - big-endian-desc : boolean, set this for hcds with big-endian descriptors
-> + - big-endian : boolean, for hcds with big-endian-regs + big-endian-desc
+On Wednesday, January 15, 2014 07:45:18 AM Rob Herring wrote:
+> On Tue, Jan 14, 2014 at 2:46 AM, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> > Fix a problem that, the platform bus supports the OF style modalias
+> > in .uevent() call, but not in its device 'modalias' sysfs attribute.
+> >
+> > cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Signed-off-by: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> 
+> As there doesn't appear any dependency with the rest of this series, I
+> can take this.
 
-These properties are specified here in the documentation binding, but
-they are not handled by the ehci-platform driver, is that intentional?
-Fairly quickly people will start adopting the ehci-platform driver on
-DT-aware platforms, so it would be nice to support those 2 (3)
-properties right away?
+Please do, thanks!
+
+> One minor nit below.
+> 
+> > ---
+> >  drivers/base/platform.c   |    4 ++++
+> >  drivers/of/device.c       |    3 +++
+> >  include/linux/of_device.h |    6 ++++++
+> >  3 files changed, 13 insertions(+)
+> >
+> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> > index 2f4aea2..bc78848 100644
+> > --- a/drivers/base/platform.c
+> > +++ b/drivers/base/platform.c
+> > @@ -679,6 +679,10 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
+> >         struct platform_device  *pdev = to_platform_device(dev);
+> >         int len;
+> >
+> > +       len = of_device_get_modalias(dev, buf, PAGE_SIZE -1);
+> > +       if (len != -ENODEV)
+> > +               return len;
+> > +
+> >         len = acpi_device_modalias(dev, buf, PAGE_SIZE -1);
+> >         if (len != -ENODEV)
+> >                 return len;
+> > diff --git a/drivers/of/device.c b/drivers/of/device.c
+> > index f685e55..dafb973 100644
+> > --- a/drivers/of/device.c
+> > +++ b/drivers/of/device.c
+> > @@ -85,6 +85,9 @@ ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
+> >         int cplen, i;
+> >         ssize_t tsize, csize, repend;
+> >
+> > +       if ((!dev) || (!dev->of_node))\
+> 
+> Don't need the parentheses here.
+> 
+> > +               return -ENODEV;
+> > +
+> >         /* Name & Type */
+> >         csize = snprintf(str, len, "of:N%sT%s", dev->of_node->name,
+> >                          dev->of_node->type);
+> > diff --git a/include/linux/of_device.h b/include/linux/of_device.h
+> > index 82ce324..8d7dd67 100644
+> > --- a/include/linux/of_device.h
+> > +++ b/include/linux/of_device.h
+> > @@ -64,6 +64,12 @@ static inline int of_driver_match_device(struct device *dev,
+> >  static inline void of_device_uevent(struct device *dev,
+> >                         struct kobj_uevent_env *env) { }
+> >
+> > +static inline int of_device_get_modalias(struct device *dev,
+> > +                                  char *str, ssize_t len)
+> > +{
+> > +       return -ENODEV;
+> > +}
+> > +
+> >  static inline int of_device_uevent_modalias(struct device *dev,
+> >                                    struct kobj_uevent_env *env)
+> >  {
+> > --
+> > 1.7.9.5
+> >
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-acpi" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
 -- 
-Florian
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
