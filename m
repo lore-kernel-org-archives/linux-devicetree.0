@@ -1,86 +1,173 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 3/3] Binding: atmel-wm8904: add option to
-	choose clock
-Date: Thu, 16 Jan 2014 11:03:03 +0000
-Message-ID: <20140116110303.GN15567@sirena.org.uk>
-References: <1389669956-2304-1-git-send-email-voice.shen@atmel.com>
- <1389669956-2304-4-git-send-email-voice.shen@atmel.com>
- <20140115115417.GA9558@ns203013.ovh.net> <52D736E0.90207@atmel.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCHv9 2/2] dma: Add Freescale eDMA engine driver support
+Date: Thu, 16 Jan 2014 11:12:06 +0000
+Message-ID: <20140116111205.GB19578@e106331-lin.cambridge.arm.com>
+References: <1389839400-29728-1-git-send-email-b35083@freescale.com>
+ <1389839400-29728-3-git-send-email-b35083@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6908932230470904412=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <52D736E0.90207@atmel.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-doc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, nicolas.ferre@atmel.com, linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1389839400-29728-3-git-send-email-b35083@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jingchang Lu <b35083@freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "vinod.koul@intel.com" <vinod.koul@intel.com>, Alison Wang <b18965@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jan 16, 2014 at 02:30:00AM +0000, Jingchang Lu wrote:
+> Add Freescale enhanced direct memory(eDMA) controller support.
+> This module can be found on Vybrid and LS-1 SoCs.
+> 
+> Signed-off-by: Alison Wang <b18965@freescale.com>
+> Signed-off-by: Jingchang Lu <b35083@freescale.com>
+> ---
+> changes in v9:
+>  define endian's operating functions instead of macro definition.
+>  remove the filter function, using dma_get_slave_channel instead.
+> 
+> changes in v8:
+>  change the edma driver according eDMA dts change.
+>  add big-endian and little-endian handling.
+> 
+>  no changes in v4 ~ v7.
+> 
+>  changes in v3:
+>   add vf610 edma dt-bindings namespace with prefix VF610_*.
+> 
+>  changes in v2:
+>   using generic dma-channels property instead of fsl,dma-channels.
+> 
+> 
+>  Documentation/devicetree/bindings/dma/fsl-edma.txt |  66 ++
+>  drivers/dma/Kconfig                                |  10 +
+>  drivers/dma/Makefile                               |   1 +
+>  drivers/dma/fsl-edma.c                             | 957 +++++++++++++++++++++
+>  4 files changed, 1034 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/fsl-edma.txt
+>  create mode 100644 drivers/dma/fsl-edma.c
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/fsl-edma.txt b/Documentation/devicetree/bindings/dma/fsl-edma.txt
+> new file mode 100644
+> index 0000000..5a5fb61
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/fsl-edma.txt
+> @@ -0,0 +1,66 @@
+> +* Freescale enhanced Direct Memory Access(eDMA) Controller
+> +
+> +  The eDMA channels have multiplex capability by programmble memory-mapped
+> +registers. channels are split into two groups, called DMAMUX0 and DMAMUX1,
+> +specific DMA request source can only be multiplexed by any channel of certain
+> +group, DMAMUX0 or DMAMUX1, but not both.
+> +
+> +* eDMA Controller
+> +Required properties:
+> +- compatible :
+> +       - "fsl,vf610-edma" for eDMA used similar to that on Vybrid vf610 SoC
+> +- reg : Specifies base physical address(s) and size of the eDMA registers.
+> +       The 1st region is eDMA control register's address and size.
+> +       The 2nd and the 3rd regions are programmable channel multiplexing
+> +       control register's address and size.
+> +- interrupts : Should contain eDMA interrupt
+> +- interrupt-names : Should be "edma-tx" for transmission interrupt and
+> +       "edma-err" for error interrupt
 
---===============6908932230470904412==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JjsO4Ft8DCMnlCnY"
-Content-Disposition: inline
+The description of interrupts and interrupt-names is a bit odd. How
+about:
 
+- interrupts: a list of interrupt-specifiers, one for each entry in
+  interrupt-names.
 
---JjsO4Ft8DCMnlCnY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+- interrupt names: should contain:
+  * "edma-tx" - the transmission interrupt.
+  * "edma-err" - the error interrupt.
 
-On Thu, Jan 16, 2014 at 09:33:20AM +0800, Bo Shen wrote:
-> On 01/15/2014 07:54 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> +- #dma-cells : Must be <2>.
+> +       The 1st cell specifies the DMAMUX(0 for DMAMUX0 and 1 for DMAMUX1).
+> +       Specific request source can only be multiplexed by specific channels
+> +       group called DMAMUX.
+> +       The 2nd cell specifies the request source(slot) ID.
+> +       See the SoC's reference manual for all the supported request sources.
+> +- dma-channels : Number of channels supported by the controller
+> +- clock-names : The channel group block clock names
+> +- clocks : eDMA module clock
 
-> >>  Optional properties:
-> >>    - pinctrl-names, pinctrl-0: Please refer to pinctrl-bindings.txt
-> >>+  - clk_from_rk_pin: according to hardware design, clk privide on rk pin
-> >							  provide
+The set of expected clock-names should be well defined, and the example
+has more than one clock..
 
-> >	?? no example?
+This should be something like:
 
-> If this patch set is acceptable. The sama5 audio will use it (I will
-> send patch after this patch set). Do I still need to put the example
-> in the binding document?
+- clocks: a list of phandle + clock-specifier pairs, one for each entry
+  in clock-names.
 
-It doesn't seem terribly worthwhile to have the example include every
-boolean property, it's not like people should find it hard to work out
-how to use them.
+- clock-names: a list of clock names. Should contain:
+  * "dmamux0" - <insert description here>
+  * "dmamux1" - <insert description here>
 
---JjsO4Ft8DCMnlCnY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> +
+> +
+> +Examples:
+> +
+> +edma0: dma-controller@40018000 {
+> +       #dma-cells = <2>;
+> +       compatible = "fsl,vf610-edma";
+> +       reg = <0x40018000 0x2000>,
+> +               <0x40024000 0x1000>,
+> +               <0x40025000 0x1000>;
+> +       interrupts = <0 8 IRQ_TYPE_LEVEL_HIGH>,
+> +               <0 9 IRQ_TYPE_LEVEL_HIGH>;
+> +       interrupt-names = "edma-tx", "edma-err";
+> +       dma-channels = <32>;
+> +       clock-names = "dmamux0", "dmamux1";
+> +       clocks = <&clks VF610_CLK_DMAMUX0>,
+> +               <&clks VF610_CLK_DMAMUX1>;
+> +};
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+[...]
 
-iQIcBAEBAgAGBQJS17xkAAoJELSic+t+oim9NXsP/2iHK/usFtT3j305+tbZ8Fq6
-XLveQXN/1X0buz1qcxK+2Ty6DMQZKA2DhH+uL9i4HmdOXmIBclFNpuQt1j2Gf4FX
-CN6x9WT+IG6XkFYtOMRnYaiMOq0Y9zGp/kMh0jGfO9e1KpZk6h8tIrP6uAxTeRJU
-ZNVPtCuoCQs2XMVV0heG8qWX8u+CzOgPz4wOapHHQJjDV9vMB3FLckn8Z5RnSklL
-0t0e01O/utDwvBndZlpc6TGR/viS6HzgpMufqaZQMPmqBMSR0Z/V1AKaZKjmHBjK
-OQ88+uJWCUII1bCxIEOXhB62Qap81pKKuUmKLyRs/8NMKiqqfkdRllmPotj8S5b3
-zT9PGfygBfgAThUbw3kcePEcTXawtH5Jg6Q6gNUIyNnSItIRnied9P+7vdz7mgjm
-3GkG1omF4IhYdPxfUAqQZtGeiud+RTmo7bPyglJMGE91jm9Y5W4TGHNLDtMGxaX+
-pnJr2BMClYY5jgSZYAuDaipP0BslIVtDYXqYIN6tn76sOEczY7fSEOITj5E2433D
-qGXk9bwwMkkD42BxJ8CgmwqjmczAd/FsAGe1SfYDcGBdUxaPldkF3laxbgPphh6O
-FdxN9f24o1DPo+TlSbGKI5MLTb49V4j+7aV3cr0peFeKnn1e8LgeeOSIhk/dV6FN
-QCx6WBMHuc3IxUEPrSKU
-=ueZP
------END PGP SIGNATURE-----
+> +       for (i = 0; i < DMAMUX_NR; i++) {
+> +               char clkname[32];
+> +
+> +               res = platform_get_resource(pdev, IORESOURCE_MEM, 1 + i);
+> +               fsl_edma->muxbase[i] = devm_ioremap_resource(&pdev->dev, res);
+> +               if (IS_ERR(fsl_edma->muxbase[i]))
+> +                       return PTR_ERR(fsl_edma->muxbase[i]);
+> +
+> +               sprintf(clkname, "dmamux%d", i);
+> +               fsl_edma->muxclk[i] = of_clk_get(np, i);
+> +               fsl_edma->muxclk[i] = devm_clk_get(&pdev->dev, clkname);
 
---JjsO4Ft8DCMnlCnY--
+The of_clk_get should disappear. It's always overwritten and
+devm_clk_get will do what you want.
 
---===============6908932230470904412==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+> +               if (IS_ERR(fsl_edma->muxclk[i])) {
+> +                       dev_err(&pdev->dev, "Missing DMAMUX block clock.\n");
+> +                       return PTR_ERR(fsl_edma->muxclk[i]);
+> +               }
+> +
+> +               ret = clk_prepare_enable(fsl_edma->muxclk[i]);
+> +               if (ret) {
+> +                       dev_err(&pdev->dev, "DMAMUX clk block failed.\n");
+> +                       return ret;
+> +               }
+> +
+> +       }
+> +
+> +       ret = fsl_edma_irq_init(pdev, fsl_edma);
+> +       if (ret)
+> +               return ret;
+> +
+> +       fsl_edma->big_endian = of_property_read_bool(np, "big-endian");
 
+This isn't in the binding.
 
---===============6908932230470904412==--
+Thanks,
+Mark.
