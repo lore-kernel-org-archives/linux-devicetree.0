@@ -1,102 +1,77 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: [PATCH] of: add function to count number of u32 elements in a property
-Date: Thu, 16 Jan 2014 19:04:42 +0100
-Message-ID: <3781679.27UF2dWtKL@phil>
-References: <27256277.YJ687suYy5@phil> <1669323.jqjZBfkRx4@phil> <20140116124527.GD19578@e106331-lin.cambridge.arm.com>
+From: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 2/4] ARM: sun6i: dt: Add PLL6 and SPI module clocks
+Date: Thu, 16 Jan 2014 12:15:28 -0600
+Message-ID: <20140116181528.GY8153@joshc.qualcomm.com>
+References: <1389892285-11745-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1389892285-11745-3-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140116124527.GD19578@e106331-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "arm@kernel.org" <arm@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1389892285-11745-3-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The need to know the number of array elements in a property is
-a common pattern. To prevent duplication of open-coded implementations
-add a helper function that also centralises strict sanity checking
-and DTB format details.
+On Thu, Jan 16, 2014 at 06:11:23PM +0100, Maxime Ripard wrote:
+> The module clocks in the A31 are still compatible with the A10 one. Add the SPI
+> module clocks and the PLL6 in the device tree to allow their use by the SPI
+> controllers.
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun6i-a31.dtsi | 48 +++++++++++++++++++++++++++++++---------
+>  1 file changed, 38 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+> index 5256ad9..ae058eb 100644
+> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
+> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+> @@ -73,16 +73,12 @@
+>  			clocks = <&osc24M>;
+>  		};
+>  
+> -		/*
+> -		 * This is a dummy clock, to be used as placeholder on
+> -		 * other mux clocks when a specific parent clock is not
+> -		 * yet implemented. It should be dropped when the driver
+> -		 * is complete.
+> -		 */
+> -		pll6: pll6 {
+> -			#clock-cells = <0>;
+> -			compatible = "fixed-clock";
+> -			clock-frequency = <0>;
+> +		pll6: clk@01c20028 {
+> +			#clock-cells = <1>;
+> +			compatible = "allwinner,sun6i-a31-pll6-clk";
+> +			reg = <0x01c20028 0x4>;
+> +			clocks = <&osc24M>;
+> +			clock-output-names = "pll6";
+>  		};
+>  
+>  		cpu: cpu@01c20050 {
+> @@ -182,6 +178,38 @@
+>  					"apb2_uart1", "apb2_uart2", "apb2_uart3",
+>  					"apb2_uart4", "apb2_uart5";
+>  		};
+> +
+> +		spi0_clk: clk@01c200a0 {
+> +			#clock-cells = <0>;
+> +			compatible = "allwinner,sun4i-mod0-clk";
+> +			reg = <0x01c200a0 0x4>;
+> +			clocks = <&osc24M>, <&pll6>;
 
-Suggested-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
-Hi Mark,
-did you mean it like this? I've tested it with the sram-reserve change and
-it made the part of the determining the number elements a lot nicer :-)
+This looks weird.  You've set the pll6 #clock-cells = <1>, but you
+aren't using a specifier here.  Same below, as well.  The binding
+documentation indicates that #clock-cells should be 0 for the pll6 node.
 
- drivers/of/base.c  |   32 ++++++++++++++++++++++++++++++++
- include/linux/of.h |    8 ++++++++
- 2 files changed, 40 insertions(+)
+  Josh
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index f807d0e..0f40ea5 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -920,6 +920,38 @@ int of_property_read_u32_index(const struct device_node *np,
- EXPORT_SYMBOL_GPL(of_property_read_u32_index);
- 
- /**
-+ * of_property_count_u32_elems - Count the number of u32 values in a property
-+ *
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ *
-+ * Search for a property in a device node and count the number of u32 elements
-+ * in it. Returns number of elements on sucess, -EINVAL if the property does
-+ * not exist or its length does not match a multiple of u32 and -ENODATA if the
-+ * property does not have a value.
-+ */
-+int of_property_count_u32_elems(const struct device_node *np,
-+				const char *propname)
-+{
-+	int elem_size = sizeof(u32);
-+	int len;
-+	struct property *prop = of_find_property(np, propname, &len);
-+
-+	if (!prop)
-+		return -EINVAL;
-+	if (!prop->value)
-+		return -ENODATA;
-+
-+	if (prop->length % elem_size != 0) {
-+		pr_err("size of %s is not a multiple of u32\n", propname);
-+		return -EINVAL;
-+	}
-+
-+	return len / elem_size;
-+}
-+EXPORT_SYMBOL_GPL(of_property_count_u32_elems);
-+
-+/**
-  * of_property_read_u8_array - Find and read an array of u8 from a property.
-  *
-  * @np:		device node from which the property value is to be read.
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 276c546..5794942 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -253,6 +253,8 @@ extern struct property *of_find_property(const struct device_node *np,
- extern int of_property_read_u32_index(const struct device_node *np,
- 				       const char *propname,
- 				       u32 index, u32 *out_value);
-+extern int of_property_count_u32_elems(const struct device_node *np,
-+				       const char *propname);
- extern int of_property_read_u8_array(const struct device_node *np,
- 			const char *propname, u8 *out_values, size_t sz);
- extern int of_property_read_u16_array(const struct device_node *np,
-@@ -432,6 +434,12 @@ static inline int of_property_read_u32_index(const struct device_node *np,
- 	return -ENOSYS;
- }
- 
-+static inline int of_property_count_u32_elems(const struct device_node *np,
-+			const char *propname)
-+{
-+	return -ENOSYS;
-+}
-+
- static inline int of_property_read_u8_array(const struct device_node *np,
- 			const char *propname, u8 *out_values, size_t sz)
- {
 -- 
-1.7.10.4
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
