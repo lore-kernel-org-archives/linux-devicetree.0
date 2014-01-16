@@ -1,127 +1,56 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v6 2/6] misc: sram: implement mmio-sram-reserved option
-Date: Thu, 16 Jan 2014 12:45:27 +0000
-Message-ID: <20140116124527.GD19578@e106331-lin.cambridge.arm.com>
-References: <27256277.YJ687suYy5@phil>
- <1669323.jqjZBfkRx4@phil>
+From: Andreas Herrmann <andreas.herrmann@calxeda.com>
+Subject: [PATCH 08/11] of: Increase MAX_PHANDLE_ARGS
+Date: Thu, 16 Jan 2014 13:44:20 +0100
+Message-ID: <1389876263-25759-9-git-send-email-andreas.herrmann@calxeda.com>
+References: <1389876263-25759-1-git-send-email-andreas.herrmann@calxeda.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1669323.jqjZBfkRx4@phil>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "arm@kernel.org" <arm@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1389876263-25759-1-git-send-email-andreas.herrmann@calxeda.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: devicetree@vger.kernel.org, Andreas Herrmann <herrmann.der.user@googlemail.com>, Grant Likely <grant.likely@linaro.org>, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, Andreas Herrmann <andreas.herrmann@calxeda.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 15, 2014 at 09:41:28PM +0000, Heiko St=C3=BCbner wrote:
-> This implements support for the mmio-sram-reserved option to keep the
-> genpool from using these areas.
->=20
-> Suggested-by: Rob Herring <robherring2@gmail.com>
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> Tested-by: Ulrich Prinz <ulrich.prinz@googlemail.com>
-> ---
->  drivers/misc/sram.c |  118 +++++++++++++++++++++++++++++++++++++++++=
-++++++----
->  1 file changed, 110 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/misc/sram.c b/drivers/misc/sram.c
-> index afe66571..7fb60f3 100644
-> --- a/drivers/misc/sram.c
-> +++ b/drivers/misc/sram.c
-> @@ -36,13 +36,23 @@ struct sram_dev {
->  	struct clk *clk;
->  };
-> =20
-> +struct sram_reserve {
-> +	unsigned long start;
-> +	unsigned long size;
-> +};
-> +
->  static int sram_probe(struct platform_device *pdev)
->  {
->  	void __iomem *virt_base;
->  	struct sram_dev *sram;
->  	struct resource *res;
-> -	unsigned long size;
-> -	int ret;
-> +	unsigned long size, cur_start, cur_size;
-> +	const __be32 *reserved_list =3D NULL;
-> +	int reserved_size =3D 0;
-> +	struct sram_reserve *rblocks;
-> +	unsigned int nblocks;
-> +	int ret =3D 0;
-> +	int i;
-> =20
->  	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	virt_base =3D devm_ioremap_resource(&pdev->dev, res);
-> @@ -65,19 +75,111 @@ static int sram_probe(struct platform_device *pd=
-ev)
->  	if (!sram->pool)
->  		return -ENOMEM;
-> =20
-> -	ret =3D gen_pool_add_virt(sram->pool, (unsigned long)virt_base,
-> -				res->start, size, -1);
-> -	if (ret < 0) {
-> -		if (sram->clk)
-> -			clk_disable_unprepare(sram->clk);
-> -		return ret;
-> +	if (pdev->dev.of_node) {
-> +		reserved_list =3D of_get_property(pdev->dev.of_node,
-> +						"mmio-sram-reserved",
-> +						&reserved_size);
-> +		if (reserved_list) {
-> +			reserved_size /=3D sizeof(*reserved_list);
+arm-smmu driver uses of_parse_phandle_with_args when parsing DT
+information to determine stream IDs for a master device.
+Thus the number of stream IDs per master device is bound by
+MAX_PHANDLE_ARGS.
 
-As a general observation, It looks like a lot of people need to know ho=
-w
-many array elements a property might hold (for datastructure
-allocation), and are open-coding element counting.
+To support Calxeda ECX-2000 hardware arm-smmu driver requires a
+slightly higher value for MAX_PHANDLE_ARGS as this hardware has 10
+stream IDs for one master device.
 
-I think it would be nice if we had a helper function to count how many
-elements a property can hold (of_property_count_u32_elems?) that would
-centralise strict sanity checking (e.g. prop->len % elem_size =3D=3D 0)=
- and
-DTB format details (so you don't have to care about endianness, and it
-becomes possible to add DTB metadata later and get runtime type
-checking).
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: Andreas Herrmann <herrmann.der.user@googlemail.com>
+Signed-off-by: Andreas Herrmann <andreas.herrmann@calxeda.com>
+---
+ include/linux/of.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-That can all come later and shouldn't block this patch.
-
-> +			if (!reserved_size || reserved_size % 2) {
-> +				dev_warn(&pdev->dev, "wrong number of arguments in mmio-sram-res=
-erved\n");
-> +				reserved_list =3D NULL;
-> +				reserved_size =3D 0;
-> +			}
-> +		}
-> +	}
-> +
-> +	/*
-> +	 * We need an additional block to mark the end of the memory region
-> +	 * after the reserved blocks from the dt are processed.
-> +	 */
-> +	nblocks =3D reserved_size / 2 + 1;
-> +	rblocks =3D kmalloc((nblocks) * sizeof(*rblocks), GFP_KERNEL);
-> +	if (!rblocks) {
-> +		ret =3D -ENOMEM;
-> +		goto err_alloc;
-> +	}
-> +
-> +	cur_start =3D 0;
-> +	for (i =3D 0; i < nblocks - 1; i++) {
-> +		rblocks[i].start =3D be32_to_cpu(*reserved_list++);
-> +		rblocks[i].size =3D be32_to_cpu(*reserved_list++);
-
-It feels a little odd to have to have to care about the format of the
-dtb and do endianness conversion here. It would be nice to limit the
-scope of DTB format details to the of_ helper functions.
-
-Could you use of_property_read_u32_index here instead please?
-
-Otherwise this looks fine to me.
-
-Cheers,
-Mark.
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 276c546..0807af8 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -67,7 +67,7 @@ struct device_node {
+ #endif
+ };
+ 
+-#define MAX_PHANDLE_ARGS 8
++#define MAX_PHANDLE_ARGS 10
+ struct of_phandle_args {
+ 	struct device_node *np;
+ 	int args_count;
+-- 
+1.7.9.5
