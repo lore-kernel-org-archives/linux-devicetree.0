@@ -1,103 +1,87 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH] regulator: ti-abb: Add support for interleaved LDO registers
-Date: Thu, 16 Jan 2014 13:32:30 -0600
-Message-ID: <1389900750-27625-1-git-send-email-nm@ti.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 2/2] i2c designware add support of I2C standard mode
+Date: Thu, 16 Jan 2014 20:33:45 +0100
+Message-ID: <20140116193345.GB4127@katana>
+References: <20130828153429.GB7066@ab42.lan>
+ <1381244455-3836-2-git-send-email-romainba@abilis.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="l76fUT7nc3MelDdI"
 Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1381244455-3836-2-git-send-email-romainba@abilis.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Nishanth Menon <nm@ti.com>
+To: Romain Baeriswyl <Romain.Baeriswyl@abilis.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, Vineet Gupta <vgupta@synopsys.com>, Christian Ruppert <christian.ruppert@abilis.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Chiau Ee Chew <chiau.ee.chew@intel.com>, Shinya Kuribayashi <skuribay@pobox.com>, Jean Delvare <khali@linux-fr.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Romain Baeriswyl <romainba@abilis.com>
 List-Id: devicetree@vger.kernel.org
 
-Certain platforms such as DRA7 have quirky memory maps such as:
-PRM_ABBLDO_DSPEVE_CTRL	0x4ae07e20
-PRM_ABBLDO_IVA_CTRL	0x4ae07e24
-other-registers
-PRM_ABBLDO_DSPEVE_SETUP	0x4ae07e30
-PRM_ABBLDO_IVA_SETUP	0x4ae07e34
 
-These need the address allocation to be either shared OR unique
-allocation per register instance.
+--l76fUT7nc3MelDdI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So, introduce v3 type of ABB for these instances to allocate based on
-shared address ranges.
+On Tue, Oct 08, 2013 at 05:00:55PM +0200, Romain Baeriswyl wrote:
+> Some legacy devices support ony I2C standard mode at 100kHz.=20
+> This patch allows to select the standard mode through the DTS=20
+> with the use of the existing clock-frequency parameter.
+>=20
+> When clock-frequency parameter is not set, the fast mode is selected.
+> Only when the parameter is set at 100000, the standard mode is selected.
+>=20
+> Signed-off-by: Romain Baeriswyl <romainba@abilis.com>
+> Reviewed-by: Christian Ruppert <christian.ruppert@abilis.com>
 
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
-Baseline off: v3.13-rc8
+Pretty much OK. One change needed, though:
 
-The alternate approach is to introduce registers as seperate
-reg-names options, which means all existing abb-v1,v2 will probably have to
-change as well.
+> ---
+>  .../devicetree/bindings/i2c/i2c-designware.txt     |    1 +
+>  drivers/i2c/busses/i2c-designware-platdrv.c        |   17 ++++++++++++++=
++--
+>  2 files changed, 16 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/D=
+ocumentation/devicetree/bindings/i2c/i2c-designware.txt
+> index 5199b0c..16d0bef 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> @@ -9,6 +9,7 @@ Required properties :
+>  Recommended properties :
+> =20
+>   - clock-frequency : desired I2C bus clock frequency in Hz.
+> +   Only standard mode at 100kHz and fast mode at 400kHz are supported.
 
-The reason for this mishmash of register allocation is due to SoC integration
-lack of discipline of ensuring that device instances need contigous register
-allocation :(.. but too late to fix :(
+This should not go the bindings doc, since this is a linux specific
+detail. It should go...
 
- .../bindings/regulator/ti-abb-regulator.txt        |    1 +
- drivers/regulator/ti-abb-regulator.c               |   26 +++++++++++++++++++-
- 2 files changed, 26 insertions(+), 1 deletion(-)
+> +		if (clk_freq !=3D 100000 && clk_freq !=3D 400000)
+> +			return -EINVAL;
 
-diff --git a/Documentation/devicetree/bindings/regulator/ti-abb-regulator.txt b/Documentation/devicetree/bindings/regulator/ti-abb-regulator.txt
-index 2e57a33..96ae151 100644
---- a/Documentation/devicetree/bindings/regulator/ti-abb-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/ti-abb-regulator.txt
-@@ -4,6 +4,7 @@ Required Properties:
- - compatible: Should be one of:
-   - "ti,abb-v1" for older SoCs like OMAP3
-   - "ti,abb-v2" for newer SoCs like OMAP4, OMAP5
-+  - "ti,abb-v3" for newer SoCs like DRA7 quirky addressing
- - reg: Address and length of the register set for the device. It contains
-   the information of registers in the same order as described by reg-names
- - reg-names: Should contain the reg names
-diff --git a/drivers/regulator/ti-abb-regulator.c b/drivers/regulator/ti-abb-regulator.c
-index b187b6b..5f9cfd4 100644
---- a/drivers/regulator/ti-abb-regulator.c
-+++ b/drivers/regulator/ti-abb-regulator.c
-@@ -673,9 +673,23 @@ static const struct ti_abb_reg abb_regs_v2 = {
- 	.opp_sel_mask		= (0x03 << 0),
- };
- 
-+static const struct ti_abb_reg abb_regs_v3 = {
-+	.control_reg		= 0x00,
-+	.setup_reg		= 0x10,
-+
-+	.sr2_wtcnt_value_mask	= (0xff << 8),
-+	.fbb_sel_mask		= (0x01 << 2),
-+	.rbb_sel_mask		= (0x01 << 1),
-+	.sr2_en_mask		= (0x01 << 0),
-+
-+	.opp_change_mask	= (0x01 << 2),
-+	.opp_sel_mask		= (0x03 << 0),
-+};
-+
- static const struct of_device_id ti_abb_of_match[] = {
- 	{.compatible = "ti,abb-v1", .data = &abb_regs_v1},
- 	{.compatible = "ti,abb-v2", .data = &abb_regs_v2},
-+	{.compatible = "ti,abb-v3", .data = &abb_regs_v3},
- 	{ },
- };
- 
-@@ -724,7 +738,17 @@ static int ti_abb_probe(struct platform_device *pdev)
- 	/* Map ABB resources */
- 	pname = "base-address";
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, pname);
--	abb->base = devm_ioremap_resource(dev, res);
-+	if (!res) {
-+		dev_err(dev, "Missing '%s' IO resource\n", pname);
-+		return -ENODEV;
-+	}
-+
-+	/*
-+	 * On some platforms such as DRA7, the register range of ABB LDOx is
-+	 * interleaved with registers of another ABB LDO and non-LDO registers!
-+	 * We cannot use reserved allocation in these cases.
-+	 */
-+	abb->base = devm_ioremap_nocache(dev, res->start, resource_size(res));
- 	if (IS_ERR(abb->base))
- 		return PTR_ERR(abb->base);
- 
--- 
-1.7.9.5
+=2E.. here as an dev_err message "Only x and y supported".
 
+Rest looks good, thanks!
+
+
+--l76fUT7nc3MelDdI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS2DQZAAoJEBQN5MwUoCm2kmsQALLJAM6Xk0o0t1UK4lBSwt4k
+0JqR+ny1S48lMjcezUcr4ZKnTZ+q89ZUPYLbj67L0Su1WNz2JOe8x9FVphFscHo1
+wNGlQhps04iY/fXchmKVBId6geg+obby00LZMHo/rCYgkF2JMXJA+MM1Qzo7EIkM
+fORdk4R3FNySd3mAgSW367CMnmhTzQaQd8Zs+WkNjVOnrw6nWEFXXsf77jt8zWWX
+b7asf3mAJanLVTap4wgdl91Z6y4fQ9M+wbnztUYLDE74gCNmpQ/6iSRR7k7h8Zok
+yc+jGN6VuPaazURkUysQ/0k9Qcx02alkX7V30pnTBv+T59DRque8ZOoRbyqAno8L
+rCPuJxAKGuWQep+JUl+wTiBM7jl+/WY2wzoE8K8RxGYme+iVM1DWtZRVHZbvtouc
+J+WRepfbqsBPoYsItB24XQgYj3P3vDxhs9V7OdJNOwyqwY3/rXJIfwD/tWddUlmj
+W5y/o/KXGtYH+BV17IcwiOxMeSuEzQgdLfIJS1KhiQz7YvMShVNVZXIevhyNgjpI
+iY+AuYsNX3+OKkO1OWAXAuh6ynFrjkwFAuFGgycLNxTL4A++FLQE+cU+f+joFY5r
+fKc9j+Kfw8hyhiNVllW88lAhW05JCFVmpZoA4MRjFLz/YoFfu63wh2z3PUwdwdfe
+sUccSJhXdCNydh/E1VDk
+=AQCa
+-----END PGP SIGNATURE-----
+
+--l76fUT7nc3MelDdI--
