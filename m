@@ -1,15 +1,15 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCHv9 2/2] dma: Add Freescale eDMA engine driver support
-Date: Thu, 16 Jan 2014 11:12:06 +0000
-Message-ID: <20140116111205.GB19578@e106331-lin.cambridge.arm.com>
-References: <1389839400-29728-1-git-send-email-b35083@freescale.com>
- <1389839400-29728-3-git-send-email-b35083@freescale.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 7/7] ARM: brcmstb: dts: add a reference DTS for
+ Broadcom 7445
+Date: Thu, 16 Jan 2014 12:19:00 +0100
+Message-ID: <201401161219.01038.arnd@arndb.de>
+References: <1389743333-16741-1-git-send-email-marc.ceeeee@gmail.com>
+ <61E0E2A7-F7FC-4397-8E92-06CC409912B9@gmail.com> <52D72FCD.1030005@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1389839400-29728-3-git-send-email-b35083@freescale.com>
+In-Reply-To: <52D72FCD.1030005@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,155 +19,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jingchang Lu <b35083@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "vinod.koul@intel.com" <vinod.koul@intel.com>, Alison Wang <b18965@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Marc C <marc.ceeeee@gmail.com>, Michal Simek <michal.simek@xilinx.com>, Mark Brown <broonie@kernel.org>, David Brown <davidb@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Christian Daudt <bcm@fixthebug.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Matt Porter <matt.porter@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 16, 2014 at 02:30:00AM +0000, Jingchang Lu wrote:
-> Add Freescale enhanced direct memory(eDMA) controller support.
-> This module can be found on Vybrid and LS-1 SoCs.
+On Thursday 16 January 2014, Marc C wrote:
+> > And then you can add a regular device driver to drivers/reset that provides a
+> > device_reset() API to other drivers, or a system-reset function to be registered as
+> > arm_pm_restart. This driver would use syscon_regmap_lookup_by_phandle() to get access
+> > to a regmap pointer, and then use either hardcoded offsets into the regmap, or get
+> > those offsets from numbers in the devicetree, as provided in the example above.
 > 
-> Signed-off-by: Alison Wang <b18965@freescale.com>
-> Signed-off-by: Jingchang Lu <b35083@freescale.com>
-> ---
-> changes in v9:
->  define endian's operating functions instead of macro definition.
->  remove the filter function, using dma_get_slave_channel instead.
+> I was able to port a standalone "reboot" driver using syscon + regmap. However, for the
+> SMP initialization case, it turns out that syscon is configured after SMP init. Do you
+> have any advice for this type of situation?
 > 
-> changes in v8:
->  change the edma driver according eDMA dts change.
->  add big-endian and little-endian handling.
-> 
->  no changes in v4 ~ v7.
-> 
->  changes in v3:
->   add vf610 edma dt-bindings namespace with prefix VF610_*.
-> 
->  changes in v2:
->   using generic dma-channels property instead of fsl,dma-channels.
-> 
-> 
->  Documentation/devicetree/bindings/dma/fsl-edma.txt |  66 ++
->  drivers/dma/Kconfig                                |  10 +
->  drivers/dma/Makefile                               |   1 +
->  drivers/dma/fsl-edma.c                             | 957 +++++++++++++++++++++
->  4 files changed, 1034 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/fsl-edma.txt
->  create mode 100644 drivers/dma/fsl-edma.c
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/fsl-edma.txt b/Documentation/devicetree/bindings/dma/fsl-edma.txt
-> new file mode 100644
-> index 0000000..5a5fb61
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/fsl-edma.txt
-> @@ -0,0 +1,66 @@
-> +* Freescale enhanced Direct Memory Access(eDMA) Controller
-> +
-> +  The eDMA channels have multiplex capability by programmble memory-mapped
-> +registers. channels are split into two groups, called DMAMUX0 and DMAMUX1,
-> +specific DMA request source can only be multiplexed by any channel of certain
-> +group, DMAMUX0 or DMAMUX1, but not both.
-> +
-> +* eDMA Controller
-> +Required properties:
-> +- compatible :
-> +       - "fsl,vf610-edma" for eDMA used similar to that on Vybrid vf610 SoC
-> +- reg : Specifies base physical address(s) and size of the eDMA registers.
-> +       The 1st region is eDMA control register's address and size.
-> +       The 2nd and the 3rd regions are programmable channel multiplexing
-> +       control register's address and size.
-> +- interrupts : Should contain eDMA interrupt
-> +- interrupt-names : Should be "edma-tx" for transmission interrupt and
-> +       "edma-err" for error interrupt
+> I'd hate to go around in circles, but without resorting to hard-coded offsets, perhaps I
+> can just add the remaining "non-regmap" register offsets in the DT?
 
-The description of interrupts and interrupt-names is a bit odd. How
-about:
+You are not the first one to stumble over this problem. There are
+two ways to get out of it, and we should probably implement both in
+the long run:
 
-- interrupts: a list of interrupt-specifiers, one for each entry in
-  interrupt-names.
+1. Other platforms also require the syscon driver to be active before
+the regular device driver probing starts. Michal Simek has the same
+issue in the zynq clock driver that you have for SMP initialization.
+We have talked about this with Mark Brown already, and I think we will
+find a solution for this in the end, but it's not as straightforward
+as I first hoped. We can probably use help in this area.
 
-- interrupt names: should contain:
-  * "edma-tx" - the transmission interrupt.
-  * "edma-err" - the error interrupt.
+2. There is actually no reason for the SMP code to be called this early,
+and multiple platforms would like to move SMP init to a later stage.
+Stephen Boyd has recently started reworking the way we do SMP init,
+and he may have some more insight.
 
-> +- #dma-cells : Must be <2>.
-> +       The 1st cell specifies the DMAMUX(0 for DMAMUX0 and 1 for DMAMUX1).
-> +       Specific request source can only be multiplexed by specific channels
-> +       group called DMAMUX.
-> +       The 2nd cell specifies the request source(slot) ID.
-> +       See the SoC's reference manual for all the supported request sources.
-> +- dma-channels : Number of channels supported by the controller
-> +- clock-names : The channel group block clock names
-> +- clocks : eDMA module clock
+In the meantime, I'd suggest you do the binding under the assumption
+that it will work eventually, and then work around the current limitations
+in the SMP code by looking for the device nodes you need and map them
+manually, as you did in the previous versions of your patch set.
 
-The set of expected clock-names should be well defined, and the example
-has more than one clock..
-
-This should be something like:
-
-- clocks: a list of phandle + clock-specifier pairs, one for each entry
-  in clock-names.
-
-- clock-names: a list of clock names. Should contain:
-  * "dmamux0" - <insert description here>
-  * "dmamux1" - <insert description here>
-
-> +
-> +
-> +Examples:
-> +
-> +edma0: dma-controller@40018000 {
-> +       #dma-cells = <2>;
-> +       compatible = "fsl,vf610-edma";
-> +       reg = <0x40018000 0x2000>,
-> +               <0x40024000 0x1000>,
-> +               <0x40025000 0x1000>;
-> +       interrupts = <0 8 IRQ_TYPE_LEVEL_HIGH>,
-> +               <0 9 IRQ_TYPE_LEVEL_HIGH>;
-> +       interrupt-names = "edma-tx", "edma-err";
-> +       dma-channels = <32>;
-> +       clock-names = "dmamux0", "dmamux1";
-> +       clocks = <&clks VF610_CLK_DMAMUX0>,
-> +               <&clks VF610_CLK_DMAMUX1>;
-> +};
-
-[...]
-
-> +       for (i = 0; i < DMAMUX_NR; i++) {
-> +               char clkname[32];
-> +
-> +               res = platform_get_resource(pdev, IORESOURCE_MEM, 1 + i);
-> +               fsl_edma->muxbase[i] = devm_ioremap_resource(&pdev->dev, res);
-> +               if (IS_ERR(fsl_edma->muxbase[i]))
-> +                       return PTR_ERR(fsl_edma->muxbase[i]);
-> +
-> +               sprintf(clkname, "dmamux%d", i);
-> +               fsl_edma->muxclk[i] = of_clk_get(np, i);
-> +               fsl_edma->muxclk[i] = devm_clk_get(&pdev->dev, clkname);
-
-The of_clk_get should disappear. It's always overwritten and
-devm_clk_get will do what you want.
-
-> +               if (IS_ERR(fsl_edma->muxclk[i])) {
-> +                       dev_err(&pdev->dev, "Missing DMAMUX block clock.\n");
-> +                       return PTR_ERR(fsl_edma->muxclk[i]);
-> +               }
-> +
-> +               ret = clk_prepare_enable(fsl_edma->muxclk[i]);
-> +               if (ret) {
-> +                       dev_err(&pdev->dev, "DMAMUX clk block failed.\n");
-> +                       return ret;
-> +               }
-> +
-> +       }
-> +
-> +       ret = fsl_edma_irq_init(pdev, fsl_edma);
-> +       if (ret)
-> +               return ret;
-> +
-> +       fsl_edma->big_endian = of_property_read_bool(np, "big-endian");
-
-This isn't in the binding.
-
-Thanks,
-Mark.
+	Arnd
