@@ -1,45 +1,82 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv12] ARM: dts: Add support for the cpuimx35 board from
- Eukrea and its baseboard.
-Date: Thu, 16 Jan 2014 14:16:18 +0800
-Message-ID: <20140116061616.GA4049@S2101-09.ap.freescale.net>
-References: <1389803532-8516-1-git-send-email-denis@eukrea.com>
+From: Saurabh Singh <saurabh1.s@samsung.com>
+Subject: [PATCH] Parse missing regulator constraints from device tree blob
+Date: Thu, 16 Jan 2014 06:34:45 +0000 (GMT)
+Message-ID: <23745449.572421389854083634.JavaMail.weblogic@epml20>
+Reply-To: saurabh1.s@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1389803532-8516-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Cc: Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+MIME-version: 1.0
+Sender: linux-kernel-owner@vger.kernel.org
+To: lgirdwood@gmail.com, broonie@kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, celinux-dev@tree.celinuxforum.org
+Cc: srevatsa@samsung.com, bp.praveen@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 15, 2014 at 05:32:12PM +0100, Denis Carikli wrote:
-> The following devices/functionalities were added:
->  * Main and secondary UARTs.
->  * i2c and the pcf8563 device.
->  * Ethernet.
->  * NAND.
->  * The BP1 button.
->  * The LED.
->  * Watchdog
->  * SD.
->=20
-> Cc: Eric B=E9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-
-Applied, thanks.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIHBhcnNpbmcgZm9sbG93aW5nIHJlZ3VsYXRvciBj
+b250cmFpbnRzIGZyb20gZGV2aWNlIHRyZWUgYmxvYi4NCjEuIHZhbGlkIG1vZGVzIG1hc2sgKHZh
+bGlkX21vZGVzX21hc2spDQoyLiBpbnB1dCBtaWNyb3ZvbHQoaW5wdXRfdVYpDQozLiBpbml0aWFs
+IG1vZGUgKGluaXRpYWxfbW9kZSkNCjQuIGluaXRpYWwgc3RhdGUgKGluaXRpYWxfc3RhdGUpDQo1
+LiBzdGF0ZSBtZW0gKHN0YXRlX21lbSkNCjYuIHN0YXRlIGRpc2sgKHN0YXRlX2Rpc2spDQo3LiBz
+dGF0ZSBzdGFuZGJ5IChzdGF0ZV9zdGFuZGJ5KQ0KDQpUaGlzIHBhdGNoIGlzIGN1cnJlbnRseSBh
+Z2FpbnN0IGEgbGludXggMy4xMi42IGtlcm5lbC4NCg0KZGlmZnN0YXQgZm9yIHRoaXMgcGF0Y2gg
+aXM6DQogb2ZfcmVndWxhdG9yLmMgfCAgIDYzICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCA2MyBpbnNlcnRp
+b25zKCspDQoNClRvIGFwcGx5IHRoZSBwYXRjaCwgaW4gdGhlIHJvb3Qgb2YgYSBrZXJuZWwgdHJl
+ZSB1c2U6DQpwYXRjaCAtcDEgPCBvZl9yZWd1bGF0b3IucGF0Y2gNCg0KUGxlYXNlIGxldCBtZSBr
+bm93IGFueSBmZWVkYmFjayB5b3UgaGF2ZSBvbiB0aGlzIHBhdGNoIG9yIHRoZSBhcHByb2FjaCB1
+c2VkLg0KDQpSZWdhcmRzLA0KPT09PT09PT09PT09PT09PT09PT09DQpTYXVyYWJoIFNpbmdoIFNl
+bmdhcg0KTGVhZCBFbmdpbmVlcg0KU2Ftc3VuZyBSJkQgSW5zdGl0dXRlDQpJbmRpYQ0KU2Ftc3Vu
+Zw0KPT09PT09PT09PT09PT09PT09PT09DQpTaWduZWQtb2ZmLWJ5OiBTYXVyYWJoIFNpbmdoIFNl
+bmdhciA8c2F1cmFiaDEuc0BzYW1zdW5nLmNvbT4NCg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0N
+Ci0tLSBsaW51eC0zLjEyLjYvZHJpdmVycy9yZWd1bGF0b3Ivb2ZfcmVndWxhdG9yLmMub3JpZwky
+MDE0LTAxLTA4IDE3OjE5OjQzLjA4NTkwMzU3MyArMDUzMA0KKysrIGxpbnV4LTMuMTIuNi9kcml2
+ZXJzL3JlZ3VsYXRvci9vZl9yZWd1bGF0b3IuYwkyMDE0LTAxLTE1IDIwOjEyOjIyLjE0NjU0MzEy
+OCArMDUzMA0KQEAgLTE2LDExICsxNiw0MCBAQA0KICNpbmNsdWRlIDxsaW51eC9yZWd1bGF0b3Iv
+bWFjaGluZS5oPg0KICNpbmNsdWRlIDxsaW51eC9yZWd1bGF0b3Ivb2ZfcmVndWxhdG9yLmg+DQog
+DQorLyoqDQorICogc2V0X3JlZ3VsYXRvcl9zdGF0ZV9jb25zdHJhaW50cyAtIHNldCByZWd1bGF0
+b3Igc3RhdGUgZm9yIGxvdyBwb3dlciBzeXN0ZW0gc3RhdGVzDQorICogQG5wOiBkZXZpY2Ugbm9k
+ZSBmb3IgdGhlIGxvdyBwb3dlciByZWd1bGF0b3Igc3RhdGUNCisgKiBAcmVndWxhdG9yX3N0YXRl
+OiByZWd1bGF0b3Jfc3RhdGUgc3RydWN0dXJlIG5lZWQgdG8gYmUgZmlsbGVkDQorICovDQorc3Rh
+dGljIHZvaWQgc2V0X3JlZ3VsYXRvcl9zdGF0ZV9jb25zdHJhaW50cyhzdHJ1Y3QgZGV2aWNlX25v
+ZGUgKm5wLA0KKwkJc3RydWN0IHJlZ3VsYXRvcl9zdGF0ZSAqcmVndWxhdG9yX3N0YXRlKQ0KK3sN
+CisJY29uc3QgX19iZTMyICp1ViwgKm1vZGU7DQorDQorCXVWID0gb2ZfZ2V0X3Byb3BlcnR5KG5w
+LCAicmVndWxhdG9yLXN0YXRlLXVWIiwgTlVMTCk7DQorCWlmICh1VikNCisJCXJlZ3VsYXRvcl9z
+dGF0ZS0+dVYgPSBiZTMyX3RvX2NwdSgqdVYpOw0KKw0KKwltb2RlID0gb2ZfZ2V0X3Byb3BlcnR5
+KG5wLCAicmVndWxhdG9yLXN0YXRlLW1vZGUiLCBOVUxMKTsNCisJaWYgKG1vZGUpDQorCQlyZWd1
+bGF0b3Jfc3RhdGUtPm1vZGUgPSBiZTMyX3RvX2NwdSgqbW9kZSk7DQorDQorCWlmIChvZl9maW5k
+X3Byb3BlcnR5KG5wLCAicmVndWxhdG9yLXN0YXRlLWVuYWJsZWQiLCBOVUxMKSkNCisJCXJlZ3Vs
+YXRvcl9zdGF0ZS0+ZW5hYmxlZCA9IHRydWU7DQorDQorCWlmIChvZl9maW5kX3Byb3BlcnR5KG5w
+LCAicmVndWxhdG9yLXN0YXRlLWRpc2FibGVkIiwgTlVMTCkpDQorCQlyZWd1bGF0b3Jfc3RhdGUt
+PmRpc2FibGVkID0gdHJ1ZTsNCit9DQorDQorDQogc3RhdGljIHZvaWQgb2ZfZ2V0X3JlZ3VsYXRp
+b25fY29uc3RyYWludHMoc3RydWN0IGRldmljZV9ub2RlICpucCwNCiAJCQkJCXN0cnVjdCByZWd1
+bGF0b3JfaW5pdF9kYXRhICoqaW5pdF9kYXRhKQ0KIHsNCiAJY29uc3QgX19iZTMyICptaW5fdVYs
+ICptYXhfdVYsICp1Vl9vZmZzZXQ7DQogCWNvbnN0IF9fYmUzMiAqbWluX3VBLCAqbWF4X3VBLCAq
+cmFtcF9kZWxheTsNCisJY29uc3QgX19iZTMyICAqaW5pdGlhbF9tb2RlLCAqaW5pdGlhbF9zdGF0
+ZTsNCisJY29uc3QgX19iZTMyICAqaW5wdXRfdVYsICp2YWxpZF9tb2Rlc19tYXNrOw0KKwlzdHJ1
+Y3QgZGV2aWNlX25vZGUgKnN0YXRlOw0KIAlzdHJ1Y3QgcHJvcGVydHkgKnByb3A7DQogCXN0cnVj
+dCByZWd1bGF0aW9uX2NvbnN0cmFpbnRzICpjb25zdHJhaW50cyA9ICYoKmluaXRfZGF0YSktPmNv
+bnN0cmFpbnRzOw0KIA0KQEAgLTczLDYgKzEwMiw0MCBAQCBzdGF0aWMgdm9pZCBvZl9nZXRfcmVn
+dWxhdGlvbl9jb25zdHJhaW50DQogCQllbHNlDQogCQkJY29uc3RyYWludHMtPnJhbXBfZGlzYWJs
+ZSA9IHRydWU7DQogCX0NCisNCisJdmFsaWRfbW9kZXNfbWFzayA9IG9mX2dldF9wcm9wZXJ0eShu
+cCwNCisJCQkicmVndWxhdG9yLXZhbGlkLW1vZGVzLW1hc2siLCBOVUxMKTsNCisJaWYgKHZhbGlk
+X21vZGVzX21hc2spDQorCQljb25zdHJhaW50cy0+dmFsaWRfbW9kZXNfbWFzayA9IGJlMzJfdG9f
+Y3B1KCp2YWxpZF9tb2Rlc19tYXNrKTsNCisNCisJaW5wdXRfdVYgPSBvZl9nZXRfcHJvcGVydHko
+bnAsICJyZWd1bGF0b3ItaW5wdXQtbWljcm92b2x0IiwgTlVMTCk7DQorCWlmIChpbnB1dF91VikN
+CisJCWNvbnN0cmFpbnRzLT5pbnB1dF91ViA9IGJlMzJfdG9fY3B1KCppbnB1dF91Vik7DQorDQor
+CWluaXRpYWxfbW9kZSA9IG9mX2dldF9wcm9wZXJ0eShucCwgInJlZ3VsYXRvci1pbml0aWFsLW1v
+ZGUiLCBOVUxMKTsNCisJaWYgKGluaXRpYWxfbW9kZSkNCisJCWNvbnN0cmFpbnRzLT5pbml0aWFs
+X21vZGUgPSBiZTMyX3RvX2NwdSgqaW5pdGlhbF9tb2RlKTsNCisNCisJaW5pdGlhbF9zdGF0ZSA9
+IG9mX2dldF9wcm9wZXJ0eShucCwgInJlZ3VsYXRvci1pbml0aWFsLXN0YXRlIiwgTlVMTCk7DQor
+CWlmIChpbml0aWFsX3N0YXRlKQ0KKwkJY29uc3RyYWludHMtPmluaXRpYWxfc3RhdGUgPSBiZTMy
+X3RvX2NwdSgqaW5pdGlhbF9zdGF0ZSk7DQorDQorCS8qIHJlZ3VsYXRvciBzdGF0ZSBkdXJpbmcg
+bG93IHBvd2VyIHN5c3RlbSBzdGF0ZXMgKi8NCisJc3RhdGUgPSBvZl9maW5kX25vZGVfYnlfbmFt
+ZShucCwgInJlZ3VsYXRvci1zdGF0ZS1tZW0iKTsNCisJaWYgKHN0YXRlKQ0KKwkJc2V0X3JlZ3Vs
+YXRvcl9zdGF0ZV9jb25zdHJhaW50cyhzdGF0ZSwNCisJCQkJJmNvbnN0cmFpbnRzLT5zdGF0ZV9t
+ZW0pOw0KKw0KKwlzdGF0ZSA9IG9mX2ZpbmRfbm9kZV9ieV9uYW1lKG5wLCAicmVndWxhdG9yLXN0
+YXRlLWRpc2siKTsNCisJaWYgKHN0YXRlKQ0KKwkJc2V0X3JlZ3VsYXRvcl9zdGF0ZV9jb25zdHJh
+aW50cyhzdGF0ZSwNCisJCQkJJmNvbnN0cmFpbnRzLT5zdGF0ZV9kaXNrKTsNCisNCisJc3RhdGUg
+PSBvZl9maW5kX25vZGVfYnlfbmFtZShucCwgInJlZ3VsYXRvci1zdGF0ZS1zdGFuZGJ5Iik7DQor
+CWlmIChzdGF0ZSkNCisJCXNldF9yZWd1bGF0b3Jfc3RhdGVfY29uc3RyYWludHMoc3RhdGUsDQor
+CQkJCSZjb25zdHJhaW50cy0+c3RhdGVfc3RhbmRieSk7DQorDQogfQ0KIA0KIC8qKg==
