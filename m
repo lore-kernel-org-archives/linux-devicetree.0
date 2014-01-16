@@ -1,76 +1,84 @@
-From: Loc Ho <lho@apm.com>
-Subject: Re: [PATCH v9 2/4] Documentation: Add documentation for APM X-Gene
- SoC SATA host controller DTS binding
-Date: Wed, 15 Jan 2014 15:59:27 -0800
-Message-ID: <CAPw-ZT=QXwOVvpgJSL5qU8J2eEuAt3nnXJDfDwPXTTo7z4Fe-A@mail.gmail.com>
-References: <1389769910-15505-1-git-send-email-lho@apm.com>
-	<5905127.tqJ3nFt5cj@wuerfel>
-	<CAPw-ZTmVYfPLUVmtes3Gn8Z=+gyFtLoZxc-QUdHH7-ePjKAG9A@mail.gmail.com>
-	<4632602.a1zUZOeMuh@wuerfel>
-	<CAPw-ZTmn-aNJcLd1mZPRtog_ncq=GC94ULCJb-400oYqERYK5g@mail.gmail.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 2/2] ehci-platform: Add support for clks
+ and phy passed through devicetree
+Date: Wed, 15 Jan 2014 16:11:03 -0800
+Message-ID: <CAGVrzcY1koEX=9pJHMOZ4rvKn49aAEzFvvqvsS74N+nDRW2L+g@mail.gmail.com>
+References: <1389813883-567-1-git-send-email-hdegoede@redhat.com> <1389813883-567-3-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <CAPw-ZTmn-aNJcLd1mZPRtog_ncq=GC94ULCJb-400oYqERYK5g@mail.gmail.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Suman Tripathi <stripathi@apm.com>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "jcm@redhat.com" <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, "tj@kernel.org" <tj@kernel.org>, "dmilburn@redhat.com" <dmilburn@redhat.com>, "olof@lixom.net" <olof@lixom.net>, Tuan Phan <tphan@apm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCH67JWTV4DBBQGH3SLAKGQEI4ALISI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1389813883-567-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
->>> >> >> +- clocks             : Reference to the clock entry.
->>> >> >> +- phys                       : PHY reference with parameter 0.
->>> >> >
->>> >> > The specific value of the phy-specifier shouldn't matter to this
->>> >> > binding. What should matter is what it logically corresponds to.
->>> >>
->>> >> I not quite following this. Are you suggest that I drop the value 0.
->>> >> In the binding, one needs to specify the mode of operation - 0 is for
->>> >> SATA. Can you explain more?
->>> >
->>> > The SATA device should not care what the argument for the PHY
->>> > device is. You could connect the same device to another PHY
->>> > that has a different set of arguments, which is the whole point
->>> > of abstracting it.
->>> >
->>>
->>> I understand what you wrote here. We should not have an argument from
->>> the host controller. Then my question is how should the PHY node
->>> indicates that it needs to be configured itself as an SATA PHY?
->>
->> The "phys" property should specify whatever the configuration of
->> the phy device is supposed to be. It's just not the business of
->> the sata driver or the sata binding to know what that configuration
->> is.
->>
+2014/1/15 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>:
+> Currently ehci-platform is only used in combination with devicetree when used
+> with some Via socs. By extending it to (optionally) get clks and a phy from
+> devicetree, and enabling / disabling those on power_on / off, it can be used
+> more generically. Specifically after this commit it can be used for the
+> ehci controller on Allwinner sunxi SoCs.
 >
-> Here is what I have and I am trying to piece this together:
+> Since ehci-platform is intended to handle any generic enough non pci ehci
+> device, add a "usb-ehci" compatibility string.
 >
-> phy1 {
->    #phy-cells = <0>;  /* No parameter as suggest by Mark */
-> };
+> There already is a usb-ehci device-tree bindings document, update this
+> with clks and phy bindings info.
 >
-> sata1 {
->     :::
->     phys = <&phy1>;
-> };
+> Although actually quite generic so far the via,vt8500 compatibilty string
+> had its own bindings document. Somehow we even ended up with 2 of them. Since
+> these provide no extra information over the generic usb-ehci documentation,
+> this patch removes them.
 >
-> What I don't get is how does one specify the mode
-> (SATA/USB/SGMII/etc)? As another parameter in the phy1 node?
+> The ehci-ppc-of.c driver also claims the usb-ehci compatibility string,
+> even though it mostly is ibm,usb-ehci-440epx specific. ehci-platform.c is
+> not needed on ppc platforms, so add a !PPC_OF dependency to it to avoid
+> 2 drivers claiming the same compatibility string getting build on ppc.
 >
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/usb/usb-ehci.txt |  25 +++-
+>  .../devicetree/bindings/usb/via,vt8500-ehci.txt    |  15 ---
+>  .../devicetree/bindings/usb/vt8500-ehci.txt        |  12 --
+>  drivers/usb/host/Kconfig                           |   1 +
+>  drivers/usb/host/ehci-platform.c                   | 149 +++++++++++++++++----
+>  5 files changed, 142 insertions(+), 60 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/usb/via,vt8500-ehci.txt
+>  delete mode 100644 Documentation/devicetree/bindings/usb/vt8500-ehci.txt
+>
+> diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+> index fa18612..fad10f3 100644
+> --- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
+> +++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+> @@ -7,13 +7,14 @@ Required properties:
+>      (debug-port or other) can be also specified here, but only after
+>      definition of standard EHCI registers.
+>    - interrupts : one EHCI interrupt should be described here.
+> -If device registers are implemented in big endian mode, the device
+> -node should have "big-endian-regs" property.
+> -If controller implementation operates with big endian descriptors,
+> -"big-endian-desc" property should be specified.
+> -If both big endian registers and descriptors are used by the controller
+> -implementation, "big-endian" property can be specified instead of having
+> -both "big-endian-regs" and "big-endian-desc".
+> +
+> +Optional properties:
+> + - big-endian-regs : boolean, set this for hcds with big-endian registers
+> + - big-endian-desc : boolean, set this for hcds with big-endian descriptors
+> + - big-endian : boolean, for hcds with big-endian-regs + big-endian-desc
 
-May be I misread what Mark mentioned. The binding documentation should
-not specify the requirement of 0. And the binding of the dts should be
-as is:
-
-phy1 {
-   #phy-cells = <1>;
-};
-
-sata1 {
-   :::
-   phys = <&phy1 0>;     where 0 indicates the mode of operation?
-};
-
--Loc
+These properties are specified here in the documentation binding, but
+they are not handled by the ehci-platform driver, is that intentional?
+Fairly quickly people will start adopting the ehci-platform driver on
+DT-aware platforms, so it would be nice to support those 2 (3)
+properties right away?
+-- 
+Florian
