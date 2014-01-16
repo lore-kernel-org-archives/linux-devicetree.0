@@ -1,77 +1,122 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v3 7/7] ARM: brcmstb: dts: add a reference DTS for Broadcom
- 7445
-Date: Thu, 16 Jan 2014 14:37:53 +0100
-Message-ID: <0ed449b4-dad4-47a0-9f7d-c3423d4e50f1@TX2EHSMHS007.ehs.local>
-References: <1389743333-16741-1-git-send-email-marc.ceeeee@gmail.com>
- <61E0E2A7-F7FC-4397-8E92-06CC409912B9@gmail.com> <52D72FCD.1030005@gmail.com>
- <201401161219.01038.arnd@arndb.de>
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] i2c: New bus driver for the QUP I2C controller
+Date: Thu, 16 Jan 2014 15:37:24 +0200
+Message-ID: <1389879444.2794.44.camel@iivanov-dev.int.mm-sol.com>
+References: <1389659437-16406-1-git-send-email-bjorn.andersson@sonymobile.com>
+	 <1389659437-16406-3-git-send-email-bjorn.andersson@sonymobile.com>
+	 <20140115164604.GI14405@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201401161219.01038.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Christian Daudt <bcm@fixthebug.org>, Stephen Boyd <sboyd@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marc C <marc.ceeeee@gmail.com>, Mark Brown <broonie@kernel.org>, Matt Porter <matt.porter@linaro.org>, David Brown <davidb@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140115164604.GI14405-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Martin Schwidefsky <schwidefsky-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org>, James Ralston <james.d.ralston-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Bill Brown <bill.e.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/16/2014 12:19 PM, Arnd Bergmann wrote:
-> On Thursday 16 January 2014, Marc C wrote:
->>> And then you can add a regular device driver to drivers/reset that provides a
->>> device_reset() API to other drivers, or a system-reset function to be registered as
->>> arm_pm_restart. This driver would use syscon_regmap_lookup_by_phandle() to get access
->>> to a regmap pointer, and then use either hardcoded offsets into the regmap, or get
->>> those offsets from numbers in the devicetree, as provided in the example above.
->>
->> I was able to port a standalone "reboot" driver using syscon + regmap. However, for the
->> SMP initialization case, it turns out that syscon is configured after SMP init. Do you
->> have any advice for this type of situation?
->>
->> I'd hate to go around in circles, but without resorting to hard-coded offsets, perhaps I
->> can just add the remaining "non-regmap" register offsets in the DT?
+
+Hi,
+
+On Wed, 2014-01-15 at 08:46 -0800, Stephen Boyd wrote: 
+> On 01/13, Bjorn Andersson wrote:
+> > +/*
+> > + * QUP driver for Qualcomm MSM platforms
+> > + *
+> > + */
 > 
-> You are not the first one to stumble over this problem. There are
-> two ways to get out of it, and we should probably implement both in
-> the long run:
+> This comment seems redundant, we know what file we're looking at.
 > 
-> 1. Other platforms also require the syscon driver to be active before
-> the regular device driver probing starts. Michal Simek has the same
-> issue in the zynq clock driver that you have for SMP initialization.
-> We have talked about this with Mark Brown already, and I think we will
-> find a solution for this in the end, but it's not as straightforward
-> as I first hoped. We can probably use help in this area.
-
-I wouldn't say issue because we have created workaround which should be acceptable.
-For more info.
-https://lkml.org/lkml/2014/1/6/349  patch 2/7 is that what we have done
-to get it work.
-Also I hope that this can go to mainline before any nice solution will be find
-not to stop work on others drivers which use regmap.
-
-But there is definitely a space for doing this better.
-
-
-> 2. There is actually no reason for the SMP code to be called this early,
-> and multiple platforms would like to move SMP init to a later stage.
-> Stephen Boyd has recently started reworking the way we do SMP init,
-> and he may have some more insight.
+> > +
+> > +struct qup_i2c_dev {
+> > +	struct device		*dev;
+> > +	void __iomem		*base;
+> > +	struct pinctrl		*pctrl;
 > 
-> In the meantime, I'd suggest you do the binding under the assumption
-> that it will work eventually, and then work around the current limitations
-> in the SMP code by looking for the device nodes you need and map them
-> manually, as you did in the previous versions of your patch set.
+> This is unused.
+> 
+> > +	int			irq;
+> > +	struct clk		*clk;
+> > +	struct clk		*pclk;
+> > +	struct i2c_adapter	adap;
+> > +
+> > +	int			clk_freq;
+> 
+> This is only ever used in probe, so why do we need to store it
+> away?
+> 
+> > +	int			clk_ctl;
+> > +	int			one_bit_t;
+> > +	int			out_fifo_sz;
+> > +	int			in_fifo_sz;
+> > +	int			out_blk_sz;
+> > +	int			in_blk_sz;
+> > +	unsigned long		xfer_time;
+> > +	unsigned long		wait_idle;
+> > +
+> > +	struct i2c_msg		*msg;
+> > +	/* Current possion in user message buffer */
+> 
+> s/possion/position/?
+> 
+> > +	int			pos;
+> > +	/* Keep number of bytes left to be transmitted */
+> > +	int			cnt;
+> > +	/* I2C protocol errors */
+> > +	u32			bus_err;
+> > +	/* QUP core errors */
+> > +	u32			qup_err;
+> > +	/*
+> > +	 * maximum bytes that could be send (per iterration). could be
+> 
+> s/iterration/iteration/?
+> 
+> > +	 * equal of fifo size or block size (in block mode)
+> > +	 */
+> > +	int			chunk_sz;
+> > +	struct completion	xfer;
+> > +};
+> > +
+> > +static irqreturn_t qup_i2c_interrupt(int irq, void *dev)
+> > +{
+> > +	struct qup_i2c_dev *qup = dev;
+> > +	u32 bus_err;
+> > +	u32 qup_err;
+> > +	u32 opflags;
+> > +
+> [...]
+> > +
+> > +	if (opflags & QUP_OUT_SVC_FLAG)
+> > +		writel(QUP_OUT_SVC_FLAG, qup->base + QUP_OPERATIONAL);
+> > +
+> > +	if (!(qup->msg->flags == I2C_M_RD))
+> 
+> Should this be?
+> 
+> 	if (!(qup->msg->flags & I2C_M_RD))
+> 
+> Otherwise it should be
+> 
+> 	if (qup->msg->flags != I2C_M_RD)
+> 
 
-Yep, that's exactly what we have done just because of other driver developing
-till this is resolved.
+This check is actually broken. Intention was that if this is read
+transaction and there is no QUP_MX_INPUT_DONE or QUP_IN_SVC_FLAG
+to exit without wakeup transfer thread. As is it now it will never
+complete write transactions.
 
-Thanks,
-Michal
+Regards,
+Ivan
+
+> > +		return IRQ_HANDLED;
+> > +
+> > +	if ((opflags & QUP_MX_INPUT_DONE) || (opflags & QUP_IN_SVC_FLAG))
+> > +		writel(QUP_IN_SVC_FLAG, qup->base + QUP_OPERATIONAL);
+> > +
+> > +done:
+> > +	qup->qup_err = qup_err;
+> > +	qup->bus_err = bus_err;
+> > +	complete(&qup->xfer);
+> > +	return IRQ_HANDLED;
+> > +}
+> > +
