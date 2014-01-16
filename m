@@ -1,62 +1,64 @@
-From: Vince Bridgers <vbridgers2013@gmail.com>
-Subject: [PATCH net-next v4 1/2] dts: Add a binding for Synopsys emac max-frame-size
-Date: Thu, 16 Jan 2014 08:05:54 -0600
-Message-ID: <1389881155-9758-2-git-send-email-vbridgers2013@gmail.com>
-References: <1389881155-9758-1-git-send-email-vbridgers2013@gmail.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1389881155-9758-1-git-send-email-vbridgers2013@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, netdev@vger.kernel.org
-Cc: peppe.cavallaro@st.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dinguyen@altera.com, rayagond@vayavyalabs.com, vbridgers2013@gmail.com
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 08/11] of: Increase MAX_PHANDLE_ARGS
+Date: Thu, 16 Jan 2014 08:25:59 -0600
+Message-ID: <CAL_Jsq+fDUYne1OQAd4AeQw-JAoFBf0TCv4YVpy6Vt_UmdkA8A@mail.gmail.com>
+References: <1389876263-25759-1-git-send-email-andreas.herrmann@calxeda.com>
+	<1389876263-25759-9-git-send-email-andreas.herrmann@calxeda.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1389876263-25759-9-git-send-email-andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This change adds a parameter for the Synopsys 10/100/1000
-stmmac Ethernet driver to configure the maximum frame
-size supported by the EMAC driver. Synopsys allows the FIFO
-sizes to be configured when the cores are built for a particular
-device, but do not provide a way for the driver to read
-information from the device about the maximum MTU size
-supported as limited by the device's FIFO size.
+On Thu, Jan 16, 2014 at 6:44 AM, Andreas Herrmann
+<andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org> wrote:
+> arm-smmu driver uses of_parse_phandle_with_args when parsing DT
+> information to determine stream IDs for a master device.
+> Thus the number of stream IDs per master device is bound by
+> MAX_PHANDLE_ARGS.
+>
+> To support Calxeda ECX-2000 hardware arm-smmu driver requires a
+> slightly higher value for MAX_PHANDLE_ARGS as this hardware has 10
+> stream IDs for one master device.
+>
+> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Andreas Herrmann <herrmann.der.user-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> Signed-off-by: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-Signed-off-by: Vince Bridgers <vbridgers2013@gmail.com>
----
-V4: add comments to explain use of max-frame-size with respect
-    to inconsistent definition and use in the ePAPR v1.1 spec
-V3: change snps,max-frame-size to max-frame-size
-V2: change snps,max-mtu to snps,max-frame-size
----
- Documentation/devicetree/bindings/net/stmmac.txt |   13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-index eba0e5e..d553be2 100644
---- a/Documentation/devicetree/bindings/net/stmmac.txt
-+++ b/Documentation/devicetree/bindings/net/stmmac.txt
-@@ -29,7 +29,17 @@ Required properties:
- 				ignored if force_thresh_dma_mode is set.
- 
- Optional properties:
--- mac-address: 6 bytes, mac address
-+- mac-address:		6 bytes, mac address
-+- max-frame-size:	Maximum frame size permitted. This parameter is useful
-+			since different implementations of the Synopsys MAC may
-+			have different FIFO sizes depending on the selections
-+			made in Synopsys Core Consultant. Note that the usage
-+			is inconsistent with the definition in the ePAPR v1.1
-+			specification, as it defines max-frame-size inclusive
-+			of the MAC DA, SA, Ethertype and CRC while usage is
-+			consistent with the IEEE definition of MAC Client
-+			Data, which is sans the MAC DA, SA, Ethertype and
-+			CRC.
- 
- Examples:
- 
-@@ -40,5 +50,6 @@ Examples:
- 		interrupts = <24 23>;
- 		interrupt-names = "macirq", "eth_wake_irq";
- 		mac-address = [000000000000]; /* Filled in by U-Boot */
-+		max-frame-size = <3800>;
- 		phy-mode = "gmii";
- 	};
--- 
-1.7.9.5
+One comment below...
+
+> ---
+>  include/linux/of.h |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 276c546..0807af8 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -67,7 +67,7 @@ struct device_node {
+>  #endif
+>  };
+>
+> -#define MAX_PHANDLE_ARGS 8
+> +#define MAX_PHANDLE_ARGS 10
+
+Just bump this to 16. This is normally just a temporary on the stack
+and 8 more words on the stack is not going to cost much.
+
+Rob
