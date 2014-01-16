@@ -1,109 +1,64 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 4/4] ASoC: tlv320aic32x4: Support for master clock
-Date: Thu, 16 Jan 2014 16:30:27 +0100
-Message-ID: <1389886227-876-5-git-send-email-mpa@pengutronix.de>
-References: <1389886227-876-1-git-send-email-mpa@pengutronix.de>
+From: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: moxart: move fixed rate clock child node to board level dts
+Date: Thu, 16 Jan 2014 16:39:06 +0100
+Message-ID: <1389886746-972-1-git-send-email-jonas.jensen@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1389886227-876-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for a master clock passed through DT. The master clock of
-the codec is only active when the codec is in use.
+When a skeleton "clocks { .. }" remain in .dtsi, the child node can
+be moved to .dts, "ref12" is then found by of_clk_get().
 
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- .../devicetree/bindings/sound/tlv320aic32x4.txt    |  2 ++
- sound/soc/codecs/tlv320aic32x4.c                   | 23 ++++++++++++++++++++++
- 2 files changed, 25 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt b/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
-index 5c8fb4a..4ed7c37 100644
---- a/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
-+++ b/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
-@@ -10,6 +10,8 @@ Optional properties:
-  - ti,ldo-enable: Bool, has to be set when the codec is powered only through the
-    LDOIN pin.
-  - gpio-reset - gpio pin number used for codec reset
-+ - clocks/clock-names: Clock named 'mclk' for the master clock of the codec.
-+   See clock/clock-bindings.txt for information about the detailed format.
+Notes:
+    Applies to next-20140116
+
+ arch/arm/boot/dts/moxart-uc7112lx.dts | 8 ++++++++
+ arch/arm/boot/dts/moxart.dtsi         | 6 ------
+ 2 files changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm/boot/dts/moxart-uc7112lx.dts b/arch/arm/boot/dts/moxart-uc7112lx.dts
+index 90749d5..10d088d 100644
+--- a/arch/arm/boot/dts/moxart-uc7112lx.dts
++++ b/arch/arm/boot/dts/moxart-uc7112lx.dts
+@@ -17,6 +17,14 @@
+ 		reg = <0x0 0x2000000>;
+ 	};
  
++	clocks {
++		ref12: ref12M {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <12000000>;
++		};
++	};
++
+ 	flash@80000000,0 {
+ 		compatible = "numonyx,js28f128", "cfi-flash";
+ 		reg = <0x80000000 0x1000000>;
+diff --git a/arch/arm/boot/dts/moxart.dtsi b/arch/arm/boot/dts/moxart.dtsi
+index da1d8ef..1fd27ed 100644
+--- a/arch/arm/boot/dts/moxart.dtsi
++++ b/arch/arm/boot/dts/moxart.dtsi
+@@ -26,12 +26,6 @@
+ 	clocks {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+-
+-		ref12: ref12M {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <12000000>;
+-		};
+ 	};
  
- Example:
-diff --git a/sound/soc/codecs/tlv320aic32x4.c b/sound/soc/codecs/tlv320aic32x4.c
-index 840f529..33ab004 100644
---- a/sound/soc/codecs/tlv320aic32x4.c
-+++ b/sound/soc/codecs/tlv320aic32x4.c
-@@ -33,6 +33,7 @@
- #include <linux/i2c.h>
- #include <linux/cdev.h>
- #include <linux/slab.h>
-+#include <linux/clk.h>
- 
- #include <sound/tlv320aic32x4.h>
- #include <sound/core.h>
-@@ -67,6 +68,7 @@ struct aic32x4_priv {
- 	u32 micpga_routing;
- 	bool swapdacs;
- 	int rstn_gpio;
-+	struct clk *mclk;
- };
- 
- /* 0dB min, 0.5dB steps */
-@@ -487,8 +489,21 @@ static int aic32x4_mute(struct snd_soc_dai *dai, int mute)
- static int aic32x4_set_bias_level(struct snd_soc_codec *codec,
- 				  enum snd_soc_bias_level level)
- {
-+	struct aic32x4_priv *aic32x4 = snd_soc_codec_get_drvdata(codec);
-+
- 	switch (level) {
- 	case SND_SOC_BIAS_ON:
-+		/* Switch on master clock */
-+		if (!IS_ERR(aic32x4->mclk)) {
-+			int ret;
-+
-+			ret = clk_prepare_enable(aic32x4->mclk);
-+			if (ret) {
-+				dev_err(codec->dev, "Failed to enable master clock\n");
-+				return ret;
-+			}
-+		}
-+
- 		/* Switch on PLL */
- 		snd_soc_update_bits(codec, AIC32X4_PLLPR,
- 				    AIC32X4_PLLEN, AIC32X4_PLLEN);
-@@ -516,6 +531,10 @@ static int aic32x4_set_bias_level(struct snd_soc_codec *codec,
- 	case SND_SOC_BIAS_PREPARE:
- 		break;
- 	case SND_SOC_BIAS_STANDBY:
-+		/* Switch off master clock */
-+		if (!IS_ERR(aic32x4->mclk))
-+			clk_disable_unprepare(aic32x4->mclk);
-+
- 		/* Switch off PLL */
- 		snd_soc_update_bits(codec, AIC32X4_PLLPR,
- 				    AIC32X4_PLLEN, 0);
-@@ -722,6 +741,10 @@ static int aic32x4_i2c_probe(struct i2c_client *i2c,
- 		aic32x4->rstn_gpio = -1;
- 	}
- 
-+	aic32x4->mclk = devm_clk_get(&i2c->dev, "mclk");
-+	if (IS_ERR(aic32x4->mclk))
-+		dev_info(&i2c->dev, "No mclk found, continuing without clock\n");
-+
- 	if (gpio_is_valid(aic32x4->rstn_gpio)) {
- 		ret = devm_gpio_request_one(&i2c->dev, aic32x4->rstn_gpio,
- 				GPIOF_OUT_INIT_LOW, "tlv320aic32x4 rstn");
+ 	soc {
 -- 
-1.8.5.2
+1.8.2.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
