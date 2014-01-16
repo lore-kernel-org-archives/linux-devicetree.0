@@ -1,101 +1,56 @@
-From: Marc C <marc.ceeeee@gmail.com>
-Subject: Re: [PATCH v3 7/7] ARM: brcmstb: dts: add a reference DTS for Broadcom
- 7445
-Date: Wed, 15 Jan 2014 17:03:09 -0800
-Message-ID: <52D72FCD.1030005@gmail.com>
-References: <1389743333-16741-1-git-send-email-marc.ceeeee@gmail.com> <1389743333-16741-8-git-send-email-marc.ceeeee@gmail.com> <201401151410.39112.arnd@arndb.de> <61E0E2A7-F7FC-4397-8E92-06CC409912B9@gmail.com>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: Re: [PATCH 3/3] Binding: atmel-wm8904: add option to choose clock
+Date: Thu, 16 Jan 2014 09:33:20 +0800
+Message-ID: <52D736E0.90207@atmel.com>
+References: <1389669956-2304-1-git-send-email-voice.shen@atmel.com> <1389669956-2304-4-git-send-email-voice.shen@atmel.com> <20140115115417.GA9558@ns203013.ovh.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <61E0E2A7-F7FC-4397-8E92-06CC409912B9@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Christian Daudt <bcm@fixthebug.org>, Florian Fainelli <f.fainelli@gmail.com>, Matt Porter <matt.porter@linaro.org>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-sound-owner@vger.kernel.org>
+In-Reply-To: <20140115115417.GA9558@ns203013.ovh.net>
+Sender: linux-sound-owner@vger.kernel.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: broonie@kernel.org, nicolas.ferre@atmel.com, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Mark Brown <broonie@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Arnd,
+Hi J,
 
-> And then you can add a regular device driver to drivers/reset that provides a
-> device_reset() API to other drivers, or a system-reset function to be registered as
-> arm_pm_restart. This driver would use syscon_regmap_lookup_by_phandle() to get access
-> to a regmap pointer, and then use either hardcoded offsets into the regmap, or get
-> those offsets from numbers in the devicetree, as provided in the example above.
+On 01/15/2014 07:54 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 11:25 Tue 14 Jan     , Bo Shen wrote:
+>> Add the option to choose clock output on which pin connect to SSC.
+>> Default is on TK pin to SSC, add clk_from_rk_pin option, the clock
+>> is on RK pin to SSC.
+>>
+>> Signed-off-by: Bo Shen <voice.shen@atmel.com>
+>> ---
+>>
+>>   Documentation/devicetree/bindings/sound/atmel-wm8904.txt | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/sound/atmel-wm8904.txt b/Documentation/devicetree/bindings/sound/atmel-wm8904.txt
+>> index 8bbe50c..68a5c1a 100644
+>> --- a/Documentation/devicetree/bindings/sound/atmel-wm8904.txt
+>> +++ b/Documentation/devicetree/bindings/sound/atmel-wm8904.txt
+>> @@ -33,6 +33,8 @@ Required properties:
+>>
+>>   Optional properties:
+>>     - pinctrl-names, pinctrl-0: Please refer to pinctrl-bindings.txt
+>> +  - clk_from_rk_pin: according to hardware design, clk privide on rk pin
+> 							  provide
+>
+> 	?? no example?
 
-I was able to port a standalone "reboot" driver using syscon + regmap. However, for the
-SMP initialization case, it turns out that syscon is configured *after* SMP init. Do you
-have any advice for this type of situation?
+If this patch set is acceptable. The sama5 audio will use it (I will 
+send patch after this patch set). Do I still need to put the example in 
+the binding document?
 
-I'd hate to go around in circles, but without resorting to hard-coded offsets, perhaps I
-can just add the remaining "non-regmap" register offsets in the DT?
+>> +    to ssc device
+>>
+>>   Example:
+>>   sound {
+>> --
+>> 1.8.5.2
+>>
 
-Thanks,
-Marc
-
-On 01/15/2014 10:22 AM, Marc wrote:
-> Hi Arnd,
-> 
-> Thank you for the suggestion - it's exactly what we were looking for!
-> 
-> Regards,
-> Marc
-> 
-> Sent from my phone
-> 
->> On Jan 15, 2014, at 5:10 AM, Arnd Bergmann <arnd@arndb.de> wrote:
->>
->>> On Wednesday 15 January 2014, Marc Carino wrote:
->>> +       gen-ctrl {
->>> +               compatible = "brcm,brcmstb-gen-ctrl-v1";
->>> +               reg = <0xf0404304 0x4
->>> +                      0xf0404308 0x4
->>> +                      0xf03e2578 0x4
->>> +                      0xf03e2488 0x10
->>> +                      0xf0452000 0x20>;
->>> +       };
->>
->> Sorry I didn't get back to you on this when we discussed the previous
->> version. I'm actually less happy with this DT representation than the
->> original. What I take from your description is that you have multiple
->> register ranges that basically combine more-or-less random registers
->> that belong into different Linux subsystems.
->>
->> I think the best way to deal with this is to have the "syscon" driver
->> handle the multiplexing between the various drivers that need access
->> to the registers. It would look something like (taking the numbers
->> from your previous patch):
->>
->>    ahb {
->>        ranges = <0 0xf0000000 0x1000000>; /* 16 MB remapped registers */
->>
->>        hif-cpubuictrl: syscon@3e2400 {
->>            compatible = "brcm,7445-cpubioctrl", "syscon";
->>            reg = <0x3e2000, 0x1000>;
->>        };
->>
->>        hif-continuation: syscon@45200 {
->>            compatible = "brcm,7445-hif-continuation", "syscon";
->>            reg = <0x452000, 0x1000>;
->>        };
->>
->>        sun-top-ctrl: ...
->>    };
->>
->> This lets the syscon driver find and map the three register areas.
->> Drivers that need access to the registers then do 
->>
->>    reset {
->>        compatible = "brcm,7445-reset-ctrl";
->>        syscon = <&sun-top-ctrl 0x300 0x100>;
->>        #reset-cells = <1>;
->>    };
->>
->> And then you can add a regular device driver to drivers/reset that provides
->> a device_reset() API to other drivers, or a system-reset function to be
->> registered as arm_pm_restart. This driver would use
->> syscon_regmap_lookup_by_phandle() to get access to a regmap pointer,
->> and then use either hardcoded offsets into the regmap, or get those
->> offsets from numbers in the devicetree, as provided in the example
->> above.
->>
->>    Arnd
+Best Regards,
+Bo Shen
