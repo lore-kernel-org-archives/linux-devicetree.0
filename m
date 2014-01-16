@@ -1,106 +1,101 @@
-From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Subject: Re: [PATCH 4/4] OF: introduce OF style 'modalias' support for platform bus.
-Date: Thu, 16 Jan 2014 02:09:55 +0100
-Message-ID: <77231285.q8OGi4Gmjj@vostro.rjw.lan>
-References: <1389689198-2641-1-git-send-email-rui.zhang@intel.com> <1389689198-2641-5-git-send-email-rui.zhang@intel.com> <CAL_JsqJFRQ+27N_9AwZXpx4V=g8HKn84WdVKtQ_Br_8SQTXY7g@mail.gmail.com>
+From: Marc C <marc.ceeeee@gmail.com>
+Subject: Re: [PATCH v3 7/7] ARM: brcmstb: dts: add a reference DTS for Broadcom
+ 7445
+Date: Wed, 15 Jan 2014 17:03:09 -0800
+Message-ID: <52D72FCD.1030005@gmail.com>
+References: <1389743333-16741-1-git-send-email-marc.ceeeee@gmail.com> <1389743333-16741-8-git-send-email-marc.ceeeee@gmail.com> <201401151410.39112.arnd@arndb.de> <61E0E2A7-F7FC-4397-8E92-06CC409912B9@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJFRQ+27N_9AwZXpx4V=g8HKn84WdVKtQ_Br_8SQTXY7g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <61E0E2A7-F7FC-4397-8E92-06CC409912B9@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Christian Daudt <bcm@fixthebug.org>, Florian Fainelli <f.fainelli@gmail.com>, Matt Porter <matt.porter@linaro.org>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, January 15, 2014 07:45:18 AM Rob Herring wrote:
-> On Tue, Jan 14, 2014 at 2:46 AM, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
-> > Fix a problem that, the platform bus supports the OF style modalias
-> > in .uevent() call, but not in its device 'modalias' sysfs attribute.
-> >
-> > cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Signed-off-by: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-> As there doesn't appear any dependency with the rest of this series, I
-> can take this.
+Hello Arnd,
 
-Please do, thanks!
+> And then you can add a regular device driver to drivers/reset that provides a
+> device_reset() API to other drivers, or a system-reset function to be registered as
+> arm_pm_restart. This driver would use syscon_regmap_lookup_by_phandle() to get access
+> to a regmap pointer, and then use either hardcoded offsets into the regmap, or get
+> those offsets from numbers in the devicetree, as provided in the example above.
 
-> One minor nit below.
-> 
-> > ---
-> >  drivers/base/platform.c   |    4 ++++
-> >  drivers/of/device.c       |    3 +++
-> >  include/linux/of_device.h |    6 ++++++
-> >  3 files changed, 13 insertions(+)
-> >
-> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> > index 2f4aea2..bc78848 100644
-> > --- a/drivers/base/platform.c
-> > +++ b/drivers/base/platform.c
-> > @@ -679,6 +679,10 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
-> >         struct platform_device  *pdev = to_platform_device(dev);
-> >         int len;
-> >
-> > +       len = of_device_get_modalias(dev, buf, PAGE_SIZE -1);
-> > +       if (len != -ENODEV)
-> > +               return len;
-> > +
-> >         len = acpi_device_modalias(dev, buf, PAGE_SIZE -1);
-> >         if (len != -ENODEV)
-> >                 return len;
-> > diff --git a/drivers/of/device.c b/drivers/of/device.c
-> > index f685e55..dafb973 100644
-> > --- a/drivers/of/device.c
-> > +++ b/drivers/of/device.c
-> > @@ -85,6 +85,9 @@ ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
-> >         int cplen, i;
-> >         ssize_t tsize, csize, repend;
-> >
-> > +       if ((!dev) || (!dev->of_node))\
-> 
-> Don't need the parentheses here.
-> 
-> > +               return -ENODEV;
-> > +
-> >         /* Name & Type */
-> >         csize = snprintf(str, len, "of:N%sT%s", dev->of_node->name,
-> >                          dev->of_node->type);
-> > diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-> > index 82ce324..8d7dd67 100644
-> > --- a/include/linux/of_device.h
-> > +++ b/include/linux/of_device.h
-> > @@ -64,6 +64,12 @@ static inline int of_driver_match_device(struct device *dev,
-> >  static inline void of_device_uevent(struct device *dev,
-> >                         struct kobj_uevent_env *env) { }
-> >
-> > +static inline int of_device_get_modalias(struct device *dev,
-> > +                                  char *str, ssize_t len)
-> > +{
-> > +       return -ENODEV;
-> > +}
-> > +
-> >  static inline int of_device_uevent_modalias(struct device *dev,
-> >                                    struct kobj_uevent_env *env)
-> >  {
-> > --
-> > 1.7.9.5
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-acpi" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I was able to port a standalone "reboot" driver using syscon + regmap. However, for the
+SMP initialization case, it turns out that syscon is configured *after* SMP init. Do you
+have any advice for this type of situation?
 
--- 
-I speak only for myself.
-Rafael J. Wysocki, Intel Open Source Technology Center.
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'd hate to go around in circles, but without resorting to hard-coded offsets, perhaps I
+can just add the remaining "non-regmap" register offsets in the DT?
+
+Thanks,
+Marc
+
+On 01/15/2014 10:22 AM, Marc wrote:
+> Hi Arnd,
+> 
+> Thank you for the suggestion - it's exactly what we were looking for!
+> 
+> Regards,
+> Marc
+> 
+> Sent from my phone
+> 
+>> On Jan 15, 2014, at 5:10 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+>>
+>>> On Wednesday 15 January 2014, Marc Carino wrote:
+>>> +       gen-ctrl {
+>>> +               compatible = "brcm,brcmstb-gen-ctrl-v1";
+>>> +               reg = <0xf0404304 0x4
+>>> +                      0xf0404308 0x4
+>>> +                      0xf03e2578 0x4
+>>> +                      0xf03e2488 0x10
+>>> +                      0xf0452000 0x20>;
+>>> +       };
+>>
+>> Sorry I didn't get back to you on this when we discussed the previous
+>> version. I'm actually less happy with this DT representation than the
+>> original. What I take from your description is that you have multiple
+>> register ranges that basically combine more-or-less random registers
+>> that belong into different Linux subsystems.
+>>
+>> I think the best way to deal with this is to have the "syscon" driver
+>> handle the multiplexing between the various drivers that need access
+>> to the registers. It would look something like (taking the numbers
+>> from your previous patch):
+>>
+>>    ahb {
+>>        ranges = <0 0xf0000000 0x1000000>; /* 16 MB remapped registers */
+>>
+>>        hif-cpubuictrl: syscon@3e2400 {
+>>            compatible = "brcm,7445-cpubioctrl", "syscon";
+>>            reg = <0x3e2000, 0x1000>;
+>>        };
+>>
+>>        hif-continuation: syscon@45200 {
+>>            compatible = "brcm,7445-hif-continuation", "syscon";
+>>            reg = <0x452000, 0x1000>;
+>>        };
+>>
+>>        sun-top-ctrl: ...
+>>    };
+>>
+>> This lets the syscon driver find and map the three register areas.
+>> Drivers that need access to the registers then do 
+>>
+>>    reset {
+>>        compatible = "brcm,7445-reset-ctrl";
+>>        syscon = <&sun-top-ctrl 0x300 0x100>;
+>>        #reset-cells = <1>;
+>>    };
+>>
+>> And then you can add a regular device driver to drivers/reset that provides
+>> a device_reset() API to other drivers, or a system-reset function to be
+>> registered as arm_pm_restart. This driver would use
+>> syscon_regmap_lookup_by_phandle() to get access to a regmap pointer,
+>> and then use either hardcoded offsets into the regmap, or get those
+>> offsets from numbers in the devicetree, as provided in the example
+>> above.
+>>
+>>    Arnd
