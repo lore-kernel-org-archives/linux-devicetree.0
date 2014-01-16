@@ -1,71 +1,64 @@
-From: Gerhard Sittig <gsi@denx.de>
-Subject: Re: [PATCH] net/dt: Add support for overriding phy configuration
- from device tree
-Date: Thu, 16 Jan 2014 14:59:05 +0100
-Message-ID: <20140116135905.GV20094@book.gsilab.sittig.org>
-References: <1389821938-3126-1-git-send-email-matthew.garrett@nebula.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] Parse missing regulator constraints from device tree blob
+Date: Thu, 16 Jan 2014 14:07:12 +0000
+Message-ID: <20140116140712.GE17314@sirena.org.uk>
+References: <27224826.584141389879802275.JavaMail.weblogic@epml20>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="DqhR8hV3EnoxUkKN"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1389821938-3126-1-git-send-email-matthew.garrett@nebula.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com
+In-Reply-To: <27224826.584141389879802275.JavaMail.weblogic@epml20>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Saurabh Singh <saurabh1.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "celinux-dev-VxL1A5FK7jA05z2xGA6PZHhyD016LWXt@public.gmane.org" <celinux-dev-VxL1A5FK7jA05z2xGA6PZHhyD016LWXt@public.gmane.org>, SREEVATSA D B <srevatsa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Praveen BP <bp.praveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 15, 2014 at 16:38 -0500, Matthew Garrett wrote:
-> 
-> Some hardware may be broken in interesting and board-specific ways, such
-> that various bits of functionality don't work. This patch provides a
-> mechanism for overriding mii registers during init based on the contents of
-> the device tree data, allowing board-specific fixups without having to
-> pollute generic code.
-> 
-> Signed-off-by: Matthew Garrett <matthew.garrett@nebula.com>
-> ---
->  Documentation/devicetree/bindings/net/phy.txt |  13 +++
->  drivers/net/phy/phy_device.c                  |  29 +++++-
->  drivers/of/of_net.c                           | 124 ++++++++++++++++++++++++++
->  include/linux/of_net.h                        |  12 +++
->  4 files changed, 177 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
-> index 7cd18fb..552a5e0 100644
-> --- a/Documentation/devicetree/bindings/net/phy.txt
-> +++ b/Documentation/devicetree/bindings/net/phy.txt
-> @@ -23,6 +23,19 @@ Optional Properties:
->    assume clause 22. The compatible list may also contain other
->    elements.
->  
-> +The following properties may be added to either the phy node or the parent
-> +ethernet device:
-> +
-> +- phy-mii-advertise-10half: Whether to advertise half-duplex 10MBit
-> +- phy-mii-advertise-10full: Whether to advertise full-duplex 10MBit
-> +- phy-mii-advertise-100half: Whether to advertise half-duplex 100MBit
-> +- phy-mii-advertise-100full: Whether to advertise full-duplex 100MBit
-> +- phy-mii-advertise-100base4: Whether to advertise 100base4
-> +- phy-mii-advertise-1000half: Whether to advertise half-duplex 1000MBit
-> +- phy-mii-advertise-1000full: Whether to advertise full-duplex 1000MBit
-> +- phy-mii-as-master: Configure phy to act as master/slave
-> +- phy-mii-manual-master: Enable/disable manual master/slave configuration
-> +
->  Example:
->  
->  ethernet-phy@0 {
 
-These properties are booleans, and optional?  Does it mean that
-you cannot _disable_ broken features?  Or does it mean that you
-_must_ specify the non-broken features and thus break backwards
-compatibility?  Or are these properties not boolean (they are not
-used in the example either, unfortunately), and the binding text
-would need an update for clarity?  What am I missing?
+--DqhR8hV3EnoxUkKN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Jan 16, 2014 at 01:43:23PM +0000, Saurabh Singh wrote:
+> Hi Mark,
+>=20
+> New patch incorporating your suggestions is given below.
+>=20
+> > * None of these properties are documented. Documentation is required so
+> >   that the contract is defined. That allows people to learn how to use
+> >   the properties, and makes clear what we can and cannot change
+> >   kernel-side.
+> Done.  The documentation is in the patch below.
 
-virtually yours
-Gerhard Sittig
--- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
-Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office@denx.de
+Please send patches using the process in SubmittingPatches, the
+formatting of the submission is very important for tools like git am
+which people use to work with patches.
+
+--DqhR8hV3EnoxUkKN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS1+eNAAoJELSic+t+oim9jNMP/ig9ppqMxc0cg2tfMODfcKwc
+m/iBW1Ty0SNTuX+VOXnXAQG6YGRT31A3I+V0ANuaeMQ3yXtiSeO7btqrEn22qrTA
+0NwGDSazDJiPz2/M/g370H7ky+avRK8WpLVtmClsKGFTJ5Shor86HJZTYv37DPO5
+3ybKHfkKcjICpUpNOVn1A0b964lPRGVSkgdheda8J4GOuQbEa2rjnbx//HLHtIe/
+NmJYFyvF3DDS9e9boauQySV8Yy9kOGORXreEe2bs9SUsvPlVKSC4Pah+DE9WHy9e
+OgvNiwCVwFhH1DI2Jv65IZknm+vVkEoW4D6KXrYHhXr8xMtUQTWRUo2jLu5ylHBk
+k+2y0EkJzVoEmh3JQEU3OTEwqnEFi8eI7+P3BR+VdUAMGY8MVIDnVjLzbt7gHstw
+o5vLgrvX5h4blIx7fcdOwZTDmbfhyGJO8+Vb24lQ/ltLwuQrFpVUW9TNtzV5AFls
+RgfGhOTzp1kD1ykGWlcLG1jMzgmf3GN0bhSkBpeIYPfXAK0u4bBT54rSiUyEX4cg
+JpxSVCJeI55Kt+f60Y2cb4woLcJCWwRx6iqEehIrfnSTBtCEWUa0XsyxwXaQ311e
+RKLku/VS47OBw4HsOrMzvaZGjVsQoppMadZBudpgBOvpR/zW04xqswtsQMJ+yxol
+6V3R1CrISUTa1iFMStF2
+=KFxQ
+-----END PGP SIGNATURE-----
+
+--DqhR8hV3EnoxUkKN--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
