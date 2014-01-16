@@ -1,71 +1,55 @@
-From: Ben Hutchings <bhutchings@solarflare.com>
-Subject: Re: [PATCH net-next v4 1/2] dts: Add a binding for Synopsys emac
- max-frame-size
-Date: Thu, 16 Jan 2014 17:50:01 +0000
-Message-ID: <1389894601.11912.54.camel@bwh-desktop.uk.level5networks.com>
-References: <1389881155-9758-1-git-send-email-vbridgers2013@gmail.com>
-	 <1389881155-9758-2-git-send-email-vbridgers2013@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1389881155-9758-2-git-send-email-vbridgers2013@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Vince Bridgers <vbridgers2013@gmail.com>
-Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, peppe.cavallaro@st.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dinguyen@altera.com, rayagond@vayavyalabs.com
+From: Srikanth Thokala <sthokal@xilinx.com>
+Subject: [PATCH] Add Xilinx AXI Video DMA Engine driver
+Date: Thu, 16 Jan 2014 23:23:22 +0530
+Message-ID: <1389894803-4147-1-git-send-email-sthokal@xilinx.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dan.j.williams@intel.com, vinod.koul@intel.com, michal.simek@xilinx.com, grant.likely@linaro.org, robh+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Srikanth Thokala <sthokal@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2014-01-16 at 08:05 -0600, Vince Bridgers wrote:
-> This change adds a parameter for the Synopsys 10/100/1000
-> stmmac Ethernet driver to configure the maximum frame
-> size supported by the EMAC driver. Synopsys allows the FIFO
-> sizes to be configured when the cores are built for a particular
-> device, but do not provide a way for the driver to read
-> information from the device about the maximum MTU size
-> supported as limited by the device's FIFO size.
-> 
-> Signed-off-by: Vince Bridgers <vbridgers2013@gmail.com>
-> ---
-> V4: add comments to explain use of max-frame-size with respect
->     to inconsistent definition and use in the ePAPR v1.1 spec
+Hi,
 
-Well, ePAPR does not seem to be consistent with itself. :-)
+This is the driver for Xilinx AXI Video Direct Memory Access Engine.
+It is a soft IP core, which provides high-bandwidth direct memory
+access between memory and AXI4-Stream video type target peripherals 
+including peripherals which support AXI4-Stream Video Protocol. The
+core provides efficient two dimensional DMA operations with independent
+asynchronous read and write channel operation.
 
-> V3: change snps,max-frame-size to max-frame-size
-> V2: change snps,max-mtu to snps,max-frame-size
-> ---
->  Documentation/devicetree/bindings/net/stmmac.txt |   13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-> index eba0e5e..d553be2 100644
-> --- a/Documentation/devicetree/bindings/net/stmmac.txt
-> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
-> @@ -29,7 +29,17 @@ Required properties:
->  				ignored if force_thresh_dma_mode is set.
->  
->  Optional properties:
-> -- mac-address: 6 bytes, mac address
-> +- mac-address:		6 bytes, mac address
-> +- max-frame-size:	Maximum frame size permitted. This parameter is useful
-> +			since different implementations of the Synopsys MAC may
-> +			have different FIFO sizes depending on the selections
-> +			made in Synopsys Core Consultant. Note that the usage
-> +			is inconsistent with the definition in the ePAPR v1.1
-> +			specification, as it defines max-frame-size inclusive
-> +			of the MAC DA, SA, Ethertype and CRC while usage is
-> +			consistent with the IEEE definition of MAC Client
-> +			Data, which is sans the MAC DA, SA, Ethertype and
-> +			CRC.
-[...]
+For more information on the IP, please refer to
+http://www.xilinx.com/support/documentation/ip_documentation/axi_vdma/v6_1/pg020_axi_vdma.pdf
 
-While this is very precise, I fear that it is now so verbose that it
-actually becomes confusing.  Can this not be condensed to 'the maximum
-MTU and MRU, rather than the maximum Ethernet frame size'?
+This patch also provides a test client, which assumes read and write channels
+of the core are configured in a back-to-back connection.  It transfers 
+data on the write channel, read and verify the data on the read channel. 
 
-Ben.
+Use cases:
+++++++++++
+1. Xilinx Video Targeted Reference design
+   http://www.wiki.xilinx.com/Zynq+Base+TRD+14.5
+2. Common Display Framework
+   http://events.linuxfoundation.org/sites/events/files/slides/20131024-elce.pdf
+
+Regards,
+Srikanth
+
+Srikanth Thokala (1):
+  dma: Add Xilinx AXI Video Direct Memory Access Engine driver support
+
+ .../devicetree/bindings/dma/xilinx/xilinx_vdma.txt |   71 +
+ .../bindings/dma/xilinx/xilinx_vdma_test.txt       |   39 +
+ drivers/dma/Kconfig                                |   23 +
+ drivers/dma/Makefile                               |    1 +
+ drivers/dma/xilinx/Makefile                        |    2 +
+ drivers/dma/xilinx/xilinx_vdma.c                   | 1497 ++++++++++++++++++++
+ drivers/dma/xilinx/xilinx_vdma_test.c              |  629 ++++++++
+ 7 files changed, 2262 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma_test.txt
+ create mode 100644 drivers/dma/xilinx/Makefile
+ create mode 100644 drivers/dma/xilinx/xilinx_vdma.c
+ create mode 100644 drivers/dma/xilinx/xilinx_vdma_test.c
 
 -- 
-Ben Hutchings, Staff Engineer, Solarflare
-Not speaking for my employer; that's the marketing department's job.
-They asked us to note that Solarflare product names are trademarked.
+1.7.9.5
