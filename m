@@ -1,56 +1,46 @@
-From: Andreas Herrmann <andreas.herrmann@calxeda.com>
-Subject: [PATCH 08/11] of: Increase MAX_PHANDLE_ARGS
-Date: Thu, 16 Jan 2014 13:44:20 +0100
-Message-ID: <1389876263-25759-9-git-send-email-andreas.herrmann@calxeda.com>
-References: <1389876263-25759-1-git-send-email-andreas.herrmann@calxeda.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 3/4] ARM: pinctrl: Add Broadcom Capri pinctrl driver
+Date: Thu, 16 Jan 2014 14:19:11 +0100
+Message-ID: <CACRpkdaPZrR=kEknr3YKDWLd_E+o22Yn19ei7iT6cdbYdbeZ2w@mail.gmail.com>
+References: <1386787041-6035-1-git-send-email-syin@broadcom.com>
+	<1387592016-13740-1-git-send-email-syin@broadcom.com>
+	<1387592016-13740-4-git-send-email-syin@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1389876263-25759-1-git-send-email-andreas.herrmann@calxeda.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: devicetree@vger.kernel.org, Andreas Herrmann <herrmann.der.user@googlemail.com>, Grant Likely <grant.likely@linaro.org>, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, Andreas Herrmann <andreas.herrmann@calxeda.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1387592016-13740-4-git-send-email-syin@broadcom.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sherman Yin <syin@broadcom.com>, "arm@kernel.org" <arm@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <rob.herring@calxeda.com>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-arm-smmu driver uses of_parse_phandle_with_args when parsing DT
-information to determine stream IDs for a master device.
-Thus the number of stream IDs per master device is bound by
-MAX_PHANDLE_ARGS.
+On Sat, Dec 21, 2013 at 3:13 AM, Sherman Yin <syin@broadcom.com> wrote:
 
-To support Calxeda ECX-2000 hardware arm-smmu driver requires a
-slightly higher value for MAX_PHANDLE_ARGS as this hardware has 10
-stream IDs for one master device.
+'> Adds pinctrl driver for Broadcom Capri (BCM281xx) SoCs.
+>
+> Signed-off-by: Sherman Yin <syin@broadcom.com>
+> Reviewed-by: Christian Daudt <bcm@fixthebug.org>
+> Reviewed-by: Matt Porter <matt.porter@linaro.org>
+> ---
+> v4: - PINCTRL selected in Kconfig, PINCTRL_CAPRI selected in bcm_defconfig
+>     - make use of regmap
+>     - change CAPRI_PIN_UPDATE from macro to inline function.
+>     - Handle pull-up strength arg in Ohm instead of enum
 
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: Andreas Herrmann <herrmann.der.user@googlemail.com>
-Signed-off-by: Andreas Herrmann <andreas.herrmann@calxeda.com>
----
- include/linux/of.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Patch applied. It is really good now! It's late before the merge
+window, but you've done a tremendous work on this driver and
+I don't want to delay its deployment further.
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 276c546..0807af8 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -67,7 +67,7 @@ struct device_node {
- #endif
- };
- 
--#define MAX_PHANDLE_ARGS 8
-+#define MAX_PHANDLE_ARGS 10
- struct of_phandle_args {
- 	struct device_node *np;
- 	int args_count;
--- 
-1.7.9.5
+But note:
+
+>  arch/arm/configs/bcm_defconfig  |    1 +
+>  arch/arm/mach-bcm/Kconfig       |    1 +
+
+I've optimistically applied these two hunks of the patch as well,
+but if there is any conflict with the ARM SoC tree I will just rebase
+the patch and pull these *out*.
+
+ARM SoC maintainers: be warned if something collides.
+
+Yours,
+Linus Walleij
