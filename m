@@ -1,61 +1,146 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 7/7] ARM: brcmstb: dts: add a reference DTS for
- Broadcom 7445
-Date: Thu, 16 Jan 2014 12:19:00 +0100
-Message-ID: <201401161219.01038.arnd@arndb.de>
-References: <1389743333-16741-1-git-send-email-marc.ceeeee@gmail.com>
- <61E0E2A7-F7FC-4397-8E92-06CC409912B9@gmail.com> <52D72FCD.1030005@gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v5 2/4] devicetree: bindings: Document Krait CPU/L1 EDAC
+Date: Thu, 16 Jan 2014 11:33:32 +0000
+Message-ID: <20140116113332.GC25540@e102568-lin.cambridge.arm.com>
+References: <1389735034-21430-1-git-send-email-sboyd@codeaurora.org>
+ <1389735034-21430-3-git-send-email-sboyd@codeaurora.org>
+ <20140115102701.GA27314@e102568-lin.cambridge.arm.com>
+ <20140115165623.GJ14405@codeaurora.org>
+ <20140116013840.GA674@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52D72FCD.1030005@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc C <marc.ceeeee@gmail.com>, Michal Simek <michal.simek@xilinx.com>, Mark Brown <broonie@kernel.org>, David Brown <davidb@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Christian Daudt <bcm@fixthebug.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Matt Porter <matt.porter@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20140116013840.GA674@codeaurora.org>
+Content-Disposition: inline
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Borislav Petkov <bp@alien8.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 16 January 2014, Marc C wrote:
-> > And then you can add a regular device driver to drivers/reset that provides a
-> > device_reset() API to other drivers, or a system-reset function to be registered as
-> > arm_pm_restart. This driver would use syscon_regmap_lookup_by_phandle() to get access
-> > to a regmap pointer, and then use either hardcoded offsets into the regmap, or get
-> > those offsets from numbers in the devicetree, as provided in the example above.
+On Thu, Jan 16, 2014 at 01:38:40AM +0000, Stephen Boyd wrote:
+> On 01/15, Stephen Boyd wrote:
+> > 
+> > Ah sorry, I forgot to put the compatible property here like in
+> > the dts change. I'll do that in the next revision. Yes we need a
+> > compatible property here to match the platform driver.
+> > 
 > 
-> I was able to port a standalone "reboot" driver using syscon + regmap. However, for the
-> SMP initialization case, it turns out that syscon is configured after SMP init. Do you
-> have any advice for this type of situation?
+> This is the replacement patch
 > 
-> I'd hate to go around in circles, but without resorting to hard-coded offsets, perhaps I
-> can just add the remaining "non-regmap" register offsets in the DT?
+> -----8<------
+> From: Stephen Boyd <sboyd@codeaurora.org>
+> Subject: [PATCH v9] devicetree: bindings: Document Krait CPU/L1 EDAC
+> 
+> The Krait CPU/L1 error reporting device is made up a per-CPU
+> interrupt. While we're here, document the next-level-cache
+> property that's used by the Krait EDAC driver.
+> 
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: <devicetree@vger.kernel.org>
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.txt | 58 ++++++++++++++++++++++++++
+>  1 file changed, 58 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> index 91304353eea4..03a529e791c4 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -62,6 +62,20 @@ nodes to be present and contain the properties described below.
+>  		Value type: <u32>
+>  		Definition: must be set to 0
+>  
+> +	- compatible
+> +		Usage: optional
+> +		Value type: <string>
+> +		Definition: should be one of the compatible strings listed
+> +			    in the cpu node compatible property. This property
+> +			    shall only be present if all the cpu nodes have the
+> +			    same compatible property.
 
-You are not the first one to stumble over this problem. There are
-two ways to get out of it, and we should probably implement both in
-the long run:
+Do we really want to do that ? I am not sure. A cpus node is supposed to
+be a container node, we should not define this binding just because we
+know the kernel creates a platform device for it then.
 
-1. Other platforms also require the syscon driver to be active before
-the regular device driver probing starts. Michal Simek has the same
-issue in the zynq clock driver that you have for SMP initialization.
-We have talked about this with Mark Brown already, and I think we will
-find a solution for this in the end, but it's not as straightforward
-as I first hoped. We can probably use help in this area.
+interrupts is a cpu node property and I think it should be kept as such.
 
-2. There is actually no reason for the SMP code to be called this early,
-and multiple platforms would like to move SMP init to a later stage.
-Stephen Boyd has recently started reworking the way we do SMP init,
-and he may have some more insight.
+I know it will be duplicated and I know you can't rely on a platform
+device for probing (since if I am not mistaken, removing a compatible
+string from cpus prevents its platform device creation), but that's an issue
+related to how the kernel works, you should not define DT bindings to solve
+that IMHO.
 
-In the meantime, I'd suggest you do the binding under the assumption
-that it will work eventually, and then work around the current limitations
-in the SMP code by looking for the device nodes you need and map them
-manually, as you did in the previous versions of your patch set.
+Lorenzo
 
-	Arnd
+> +
+> +	- interrupts
+> +		Usage: required when node contains cpus with compatible
+> +		       string "qcom,krait".
+> +		Value type: <prop-encoded-array>
+> +		Definition: L1/CPU error interrupt
+> +
+>  - cpu node
+>  
+>  	Description: Describes a CPU in an ARM based system
+> @@ -191,6 +205,11 @@ nodes to be present and contain the properties described below.
+>  			  property identifying a 64-bit zero-initialised
+>  			  memory location.
+>  
+> +	- next-level-cache
+> +		Usage: optional
+> +		Value type: <phandle>
+> +		Definition: phandle pointing to the next level cache
+> +
+>  Example 1 (dual-cluster big.LITTLE system 32-bit):
+>  
+>  	cpus {
+> @@ -382,3 +401,42 @@ cpus {
+>  		cpu-release-addr = <0 0x20000000>;
+>  	};
+>  };
+> +
+> +
+> +Example 5 (Krait 32-bit system):
+> +
+> +cpus {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	interrupts = <1 9 0xf04>;
+> +	compatible = "qcom,krait";
+> +
+> +	cpu@0 {
+> +		device_type = "cpu";
+> +		reg = <0>;
+> +		next-level-cache = <&L2>;
+> +	};
+> +
+> +	cpu@1 {
+> +		device_type = "cpu";
+> +		reg = <1>;
+> +		next-level-cache = <&L2>;
+> +	};
+> +
+> +	cpu@2 {
+> +		device_type = "cpu";
+> +		reg = <2>;
+> +		next-level-cache = <&L2>;
+> +	};
+> +
+> +	cpu@3 {
+> +		device_type = "cpu";
+> +		reg = <3>;
+> +		next-level-cache = <&L2>;
+> +	};
+> +
+> +	L2: l2-cache {
+> +		compatible = "cache";
+> +		interrupts = <0 2 0x4>;
+> +	};
+> +};
+> -- 
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> hosted by The Linux Foundation
+> 
