@@ -1,71 +1,80 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: sunxi: Add driver for sunxi usb phy
-Date: Thu, 16 Jan 2014 15:07:18 +0800
-Message-ID: <CAGb2v65rSc7iAKCcPMYaQZ+q=m85RcSE2dmpgE6MoeXNgRCwfg@mail.gmail.com>
-References: <1389740305-6993-1-git-send-email-hdegoede@redhat.com>
- <52D6A27A.4090600@ti.com> <52D6ADEA.1050900@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [PATCH 2/2] Input: edt-ft5x06: Add DT support
+Date: Thu, 16 Jan 2014 08:49:43 +0100
+Message-ID: <20140116084943.17da0226@ipc1.ka-ro>
+References: <1389608224-9975-1-git-send-email-LW@KARO-electronics.de>
+	<1389608224-9975-2-git-send-email-LW@KARO-electronics.de>
+	<20140113134441.GD1273@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBO4K32LAKGQEYVTTSBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <52D6ADEA.1050900-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20140113134441.GD1273@e106331-lin.cambridge.arm.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Shawn Guo <shawn.guo@linaro.org>, Silvio F <silvio.fricke@gmail.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Jingoo Han <jg1.han@samsung.com>, Fugang Duan <B38611@freescale.com>, Sachin Kamat <sachin.kamat@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Simon Budig <simon.budig@kernelconcepts.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+Hi,
 
-On Wed, Jan 15, 2014 at 11:48 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> Hi,
->
->
-> On 01/15/2014 04:00 PM, Kishon Vijay Abraham I wrote:
->>
->> On Wednesday 15 January 2014 04:28 AM, Hans de Goede wrote:
+Mark Rutland wrote:
+> On Mon, Jan 13, 2014 at 10:17:04AM +0000, Lothar Wa=C3=9Fmann wrote:
+> > This patch allows the edt-ft5x06 multitouch panel driver to be
+> > configured via DT.
+> >=20
+> > Signed-off-by: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
+> > ---
+> >  .../bindings/input/touchscreen/edt-ft5x06.txt      |   31 ++++
+> >  drivers/input/touchscreen/edt-ft5x06.c             |  145 ++++++++=
++++++++----
+> >  2 files changed, 145 insertions(+), 31 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/input/touchsc=
+reen/edt-ft5x06.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/ed=
+t-ft5x06.txt b/Documentation/devicetree/bindings/input/touchscreen/edt-=
+ft5x06.txt
+> > new file mode 100644
+> > index 0000000..629dbdd
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x0=
+6.txt
+> > @@ -0,0 +1,31 @@
+> > +* EDT FT5x06 Multiple Touch Controller
+> > +
 [...]
->>> +static int sun4i_usb_phy_init(struct phy *_phy)
->>> +{
->>> +       struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
->>> +       struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
->>> +       int ret;
->>> +
->>> +       ret = clk_prepare_enable(data->clk);
->>> +       if (ret)
->>> +               return ret;
->>> +
->>> +       ret = reset_control_deassert(phy->reset);
->>> +       if (ret) {
->>> +               clk_disable_unprepare(data->clk);
->>> +               return ret;
->>> +       }
->>> +
->>> +       /* Adjust PHY's magnitude and rate */
->>> +       sun4i_usb_phy_write(phy, 0x20, 0x14, 5);
->>
->>
->> No magic values. Use macros instead.
->
->
-> We don't have docs, these values come from the Android code (and the comment
-> above has been translated from Chinese). I can make up some random
-> macros for this, but seems counter-productive, it seems best to just leave
-> this as magic until the day we actually have documentation and thus can use
-> defines with the proper register names, etc.
+> > +- threshold: allows setting the "click"-threshold in the range fro=
+m 20 to 80.
+> > +- gain: sensitivity (0..31) (lower value -> higher sensitivity)
+> > +- offset: edge compensation (0..31)
+> > +- report_rate: report rate (3..14)
+>=20
+> s/_/-/ on property names please. Also, it may make sense to prefix th=
+ese
+> as they're rather generic sounding names.
+>=20
+> Could you elaborate on these a litle please? What units are each of
+> these in? Why does it make sense to have them in the dt?
+>=20
+I just converted them from being passed via platform_data. I have no
+idea what they actually control and what units they use. I could not
+even find a manual where they are documented.
+Maybe Simon Budig can help out here as the original driver author.
 
-We have some names for the registers from Allwinner code:
-https://github.com/linux-sunxi/linux-sunxi/blob/lichee-3.0.8-sun4i/drivers/usb/sun4i_usb/usbc/usbc_phy.c#L39
 
-And the comments in the file also suggests valid values for some of them,
-though the actual code in the sunxi usb drivers (not the otg one) don't
-seem to match.
+Lothar Wa=C3=9Fmann
+--=20
+___________________________________________________________
 
-[...]
+Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
+Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
+Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
+Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
 
-Cheers
-ChenYu
+www.karo-electronics.de | info@karo-electronics.de
+___________________________________________________________
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
