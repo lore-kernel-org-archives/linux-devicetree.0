@@ -1,60 +1,95 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH 1/2] i2c designware make SCL and SDA falling time
- configurable
-Date: Thu, 16 Jan 2014 20:43:03 +0100
-Message-ID: <20140116194303.GC4127@katana>
-References: <20130828153429.GB7066@ab42.lan>
- <1381244455-3836-1-git-send-email-romainba@abilis.com>
- <20131009075538.GQ3521@intel.com>
- <5255FAB5.7080803@gmail.com>
- <525A85D6.3090608@pobox.com>
+From: Ben Hutchings <bhutchings@solarflare.com>
+Subject: Re: [PATCH net-next v4 1/2] dts: Add a binding for Synopsys emac
+ max-frame-size
+Date: Thu, 16 Jan 2014 19:45:23 +0000
+Message-ID: <1389901523.11912.75.camel@bwh-desktop.uk.level5networks.com>
+References: <1389881155-9758-1-git-send-email-vbridgers2013@gmail.com>
+	 <1389881155-9758-2-git-send-email-vbridgers2013@gmail.com>
+	 <1389894601.11912.54.camel@bwh-desktop.uk.level5networks.com>
+	 <CAOwfj2N2p_B-Wq0DTzt76RAbqCu5O088wxWiLEvHCc0qusDq-g@mail.gmail.com>
+	 <CAL_Jsq+81QtmC9dtKRU1b427Y0OjhyxZZ1gZbsvk9WWutM4TVQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="da4uJneut+ArUgXk"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <525A85D6.3090608-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shinya Kuribayashi <skuribay-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>
-Cc: rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Romain.Baeriswyl-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org, vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org, chiau.ee.chew-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, romainba-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+81QtmC9dtKRU1b427Y0OjhyxZZ1gZbsvk9WWutM4TVQ@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Vince Bridgers <vbridgers2013@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, netdev@vger.kernel.org, Giuseppe CAVALLARO <peppe.cavallaro@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Dinh Nguyen <dinguyen@altera.com>, Rayagond Kokatanur <rayagond@vayavyalabs.com>
 List-Id: devicetree@vger.kernel.org
 
-
---da4uJneut+ArUgXk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-
-> >You can also use the gcc-ism, which is a bit more concise:
+On Thu, 2014-01-16 at 13:29 -0600, Rob Herring wrote:
+> On Thu, Jan 16, 2014 at 12:48 PM, Vince Bridgers
+> <vbridgers2013@gmail.com> wrote:
+> > On Thu, Jan 16, 2014 at 11:50 AM, Ben Hutchings
+> > <bhutchings@solarflare.com> wrote:
+> >> On Thu, 2014-01-16 at 08:05 -0600, Vince Bridgers wrote:
+> >>> This change adds a parameter for the Synopsys 10/100/1000
+> >>> stmmac Ethernet driver to configure the maximum frame
+> >>> size supported by the EMAC driver. Synopsys allows the FIFO
+> >>> sizes to be configured when the cores are built for a particular
+> >>> device, but do not provide a way for the driver to read
+> >>> information from the device about the maximum MTU size
+> >>> supported as limited by the device's FIFO size.
+> >>>
+> >>> Signed-off-by: Vince Bridgers <vbridgers2013@gmail.com>
+> >>> ---
+> >>> V4: add comments to explain use of max-frame-size with respect
+> >>>     to inconsistent definition and use in the ePAPR v1.1 spec
+> >>
+> >> Well, ePAPR does not seem to be consistent with itself. :-)
+> >>
+> >>> V3: change snps,max-frame-size to max-frame-size
+> >>> V2: change snps,max-mtu to snps,max-frame-size
+> >>> ---
+> >>>  Documentation/devicetree/bindings/net/stmmac.txt |   13 ++++++++++++-
+> >>>  1 file changed, 12 insertions(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+> >>> index eba0e5e..d553be2 100644
+> >>> --- a/Documentation/devicetree/bindings/net/stmmac.txt
+> >>> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
+> >>> @@ -29,7 +29,17 @@ Required properties:
+> >>>                               ignored if force_thresh_dma_mode is set.
+> >>>
+> >>>  Optional properties:
+> >>> -- mac-address: 6 bytes, mac address
+> >>> +- mac-address:               6 bytes, mac address
+> >>> +- max-frame-size:    Maximum frame size permitted. This parameter is useful
+> >>> +                     since different implementations of the Synopsys MAC may
+> >>> +                     have different FIFO sizes depending on the selections
+> >>> +                     made in Synopsys Core Consultant. Note that the usage
+> >>> +                     is inconsistent with the definition in the ePAPR v1.1
+> >>> +                     specification, as it defines max-frame-size inclusive
+> >>> +                     of the MAC DA, SA, Ethertype and CRC while usage is
+> >>> +                     consistent with the IEEE definition of MAC Client
+> >>> +                     Data, which is sans the MAC DA, SA, Ethertype and
+> >>> +                     CRC.
+> >> [...]
+> >>
+> >> While this is very precise, I fear that it is now so verbose that it
+> >> actually becomes confusing.  Can this not be condensed to 'the maximum
+> >> MTU and MRU, rather than the maximum Ethernet frame size'?
+> >>
+> >> Ben.
 > >
-> >	sda_falling_time =3D dev->sda_falling_time ?: 300;
->=20
-> +1
+> > Sure, I'll cut this down and resubmit as V5. How about
+> >
+> > "The Maximum Transfer Unit (IEEE defined MTU), rather than the maximum
+> > frame size."
+> 
+> If you are not following the ePAPR definition, then call the property
+> something else rather than relying on the documentation to explain the
+> different meaning. Why can't the driver adjust the size from the ePAPR
+> definition? Otherwise, I would go back to the v2 name of
+> "snps,max-mtu".
 
-ditto
+ePAPR *doesn't have* a clear definition:
+http://article.gmane.org/gmane.linux.network/300098
 
+Ben.
 
---da4uJneut+ArUgXk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS2DZHAAoJEBQN5MwUoCm2qmMP/i30l5qC0IveqNude9EHHU2i
-GdLGveQ6xKL5rvqytQ/u13psjSWf+ba+gnUv8+tY2ExlH9s2tNEdwWtBfU+tVhhw
-GImF3z+Lau8NA0bOA5VBkLQUnEmFKb2N9IJ29uEi6CGFAWdvRcQfT8ohvjvGC99J
-UChSq9LJeo28BNp2lOR86TM0UzoWvzAS+Qzb7q55VJxgYvmg+LZWJhb0AKm8Za5w
-5hInrXOLPd6m4yNj17Tl/V2nGES46n28D7ZPYjp02Tf4Xkjpcx0/A9xIhDl3gq2h
-3uJk65kq6iyqgHYgv2B7C092zF8YjSBp3r8vAWCOACx90rKdYKkeRzRRDfCc/FP4
-7HqWK33kXHAcBJYBz6mp1Vjt05plaF498OF0Wp+ONn+SSxtlSvUFwhAKx6Qu2cg+
-M+tiuuAvFmTB+w4+cALNeoE7uRCyXUzcNP+J8LBcnatcdBzoyEDVCgsSKY+fgLXW
-xchSNFMh8h4Bla2yef9vJjZhHI+5C5VBvpCUfRFCu+EPhNGamiymuDA4vw/jhUk6
-7LdDj1ElTQgdaNnbxEPo9uTsBuyud3qHOgbdhXvsXPWxkPoHy2uZWk4e92KqHmzk
-GTL9lPcx80lkSWm40ntB/jyjXOy7B6nkd+Ba1D2XCjZc5Mcd2I1k+OysMrqqe+4c
-JSZjPYBNI2zYIPiuoZN8
-=kRrR
------END PGP SIGNATURE-----
-
---da4uJneut+ArUgXk--
+-- 
+Ben Hutchings, Staff Engineer, Solarflare
+Not speaking for my employer; that's the marketing department's job.
+They asked us to note that Solarflare product names are trademarked.
