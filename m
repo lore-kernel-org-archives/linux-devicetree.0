@@ -1,329 +1,205 @@
-From: <srinivas.kandagatla@st.com>
-Subject: [PATCH v2 3/4] ARM:STi: STiH416: Add interrupt support for pin controller
-Date: Thu, 16 Jan 2014 15:37:37 +0000
-Message-ID: <1389886657-32035-1-git-send-email-srinivas.kandagatla@st.com>
-References: <1389886545-31498-1-git-send-email-srinivas.kandagatla@st.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCHv2 2/2] pwm: imx: support polarity inversion
+Date: Thu, 16 Jan 2014 17:03:57 +0100
+Message-ID: <20140116160356.GY16215@pengutronix.de>
+References: <1389859585-14006-1-git-send-email-LW@KARO-electronics.de>
+ <1389859585-14006-3-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1389886545-31498-1-git-send-email-srinivas.kandagatla@st.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srinivas.kandagatla@st.com
+Content-Type: text/plain; charset="iso-8859-15"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1389859585-14006-3-git-send-email-LW@KARO-electronics.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lothar =?iso-8859-15?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, Rob Landley <rob@landley.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+On Thu, Jan 16, 2014 at 09:06:25AM +0100, Lothar Wa=DFmann wrote:
+> The i.MX PWM controller supports inverting the polarity of the PWM
+> output. Make this feature available in the pxm-imx driver.
+> =
 
-This patch adds interrupt support for STiH416 pin controllers.
+> Signed-off-by: Lothar Wa=DFmann <LW@KARO-electronics.de>
+> ---
+>  Documentation/devicetree/bindings/pwm/imx-pwm.txt |    5 +-
+>  drivers/pwm/pwm-imx.c                             |   42 +++++++++++++++=
+++++++
+>  2 files changed, 45 insertions(+), 2 deletions(-)
+> =
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
----
- arch/arm/boot/dts/stih416-pinctrl.dtsi |   81 ++++++++++++++++++++++++++++++++
- 1 files changed, 81 insertions(+), 0 deletions(-)
+> diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.txt b/Document=
+ation/devicetree/bindings/pwm/imx-pwm.txt
+> index b50d7a6d..d0b04b5 100644
+> --- a/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+> +++ b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+> @@ -3,8 +3,9 @@ Freescale i.MX PWM controller
+>  Required properties:
+>  - compatible: should be "fsl,<soc>-pwm"
+>  - reg: physical base address and length of the controller's registers
+> -- #pwm-cells: should be 2. See pwm.txt in this directory for a descripti=
+on of
+> -  the cells format.
+> +- #pwm-cells: may be 2 for backwards compatibility or 3 to support
+> +  switching the output polarity. See pwm.txt in this directory for a
+> +  description of the cells format.
+>  - interrupts: The interrupt for the pwm controller
+>  =
 
-diff --git a/arch/arm/boot/dts/stih416-pinctrl.dtsi b/arch/arm/boot/dts/stih416-pinctrl.dtsi
-index 74f8cfc..3adbd98 100644
---- a/arch/arm/boot/dts/stih416-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stih416-pinctrl.dtsi
-@@ -8,6 +8,7 @@
-  * publishhed by the Free Software Foundation.
-  */
- #include "st-pincfg.h"
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
- / {
- 
- 	aliases {
-@@ -49,41 +50,57 @@
- 			#size-cells	= <1>;
- 			compatible	= "st,stih416-sbc-pinctrl";
- 			st,syscfg	= <&syscfg_sbc>;
-+			reg 		= <0xfe61f080 0x4>;
-+			reg-names	= "irqmux";
-+			interrupts 	= <GIC_SPI 182 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts-names = "irqmux";
- 			ranges		= <0 0xfe610000 0x6000>;
- 
- 			PIO0: gpio@fe610000 {
- 				gpio-controller;
- 				#gpio-cells = <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0 0x100>;
- 				st,bank-name	= "PIO0";
- 			};
- 			PIO1: gpio@fe611000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x1000 0x100>;
- 				st,bank-name	= "PIO1";
- 			};
- 			PIO2: gpio@fe612000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x2000 0x100>;
- 				st,bank-name	= "PIO2";
- 			};
- 			PIO3: gpio@fe613000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x3000 0x100>;
- 				st,bank-name	= "PIO3";
- 			};
- 			PIO4: gpio@fe614000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x4000 0x100>;
- 				st,bank-name	= "PIO4";
- 			};
- 			PIO40: gpio@fe615000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x5000 0x100>;
- 				st,bank-name	= "PIO40";
- 				st,retime-pin-mask = <0x7f>;
-@@ -181,65 +198,89 @@
- 			#size-cells	= <1>;
- 			compatible	= "st,stih416-front-pinctrl";
- 			st,syscfg	= <&syscfg_front>;
-+			reg 		= <0xfee0f080 0x4>;
-+			reg-names	= "irqmux";
-+			interrupts 	= <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts-names = "irqmux";
- 			ranges		= <0 0xfee00000 0x10000>;
- 
- 			PIO5: gpio@fee00000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0 0x100>;
- 				st,bank-name	= "PIO5";
- 			};
- 			PIO6: gpio@fee01000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x1000 0x100>;
- 				st,bank-name	= "PIO6";
- 			};
- 			PIO7: gpio@fee02000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x2000 0x100>;
- 				st,bank-name	= "PIO7";
- 			};
- 			PIO8: gpio@fee03000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x3000 0x100>;
- 				st,bank-name	= "PIO8";
- 			};
- 			PIO9: gpio@fee04000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x4000 0x100>;
- 				st,bank-name	= "PIO9";
- 			};
- 			PIO10: gpio@fee05000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x5000 0x100>;
- 				st,bank-name	= "PIO10";
- 			};
- 			PIO11: gpio@fee06000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x6000 0x100>;
- 				st,bank-name	= "PIO11";
- 			};
- 			PIO12: gpio@fee07000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x7000 0x100>;
- 				st,bank-name	= "PIO12";
- 			};
- 			PIO30: gpio@fee08000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x8000 0x100>;
- 				st,bank-name	= "PIO30";
- 			};
- 			PIO31: gpio@fee09000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x9000 0x100>;
- 				st,bank-name	= "PIO31";
- 			};
-@@ -276,41 +317,57 @@
- 			#size-cells	= <1>;
- 			compatible	= "st,stih416-rear-pinctrl";
- 			st,syscfg	= <&syscfg_rear>;
-+			reg 		= <0xfe82f080 0x4>;
-+			reg-names	= "irqmux";
-+			interrupts 	= <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts-names = "irqmux";
- 			ranges 		= <0 0xfe820000 0x6000>;
- 
- 			PIO13: gpio@fe820000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0 0x100>;
- 				st,bank-name	= "PIO13";
- 			};
- 			PIO14: gpio@fe821000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x1000 0x100>;
- 				st,bank-name	= "PIO14";
- 			};
- 			PIO15: gpio@fe822000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x2000 0x100>;
- 				st,bank-name	= "PIO15";
- 			};
- 			PIO16: gpio@fe823000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x3000 0x100>;
- 				st,bank-name	= "PIO16";
- 			};
- 			PIO17: gpio@fe824000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x4000 0x100>;
- 				st,bank-name	= "PIO17";
- 			};
- 			PIO18: gpio@fe825000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x5000 0x100>;
- 				st,bank-name	= "PIO18";
- 				st,retime-pin-mask = <0xf>;
-@@ -384,23 +441,33 @@
- 			#size-cells	= <1>;
- 			compatible	= "st,stih416-fvdp-fe-pinctrl";
- 			st,syscfg	= <&syscfg_fvdp_fe>;
-+			reg 		= <0xfd6bf080 0x4>;
-+			reg-names	= "irqmux";
-+			interrupts 	= <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts-names = "irqmux";
- 			ranges		= <0 0xfd6b0000 0x3000>;
- 
- 			PIO100: gpio@fd6b0000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0 0x100>;
- 				st,bank-name	= "PIO100";
- 			};
- 			PIO101: gpio@fd6b1000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x1000 0x100>;
- 				st,bank-name	= "PIO101";
- 			};
- 			PIO102: gpio@fd6b2000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x2000 0x100>;
- 				st,bank-name	= "PIO102";
- 			};
-@@ -411,29 +478,41 @@
- 			#size-cells	= <1>;
- 			compatible	= "st,stih416-fvdp-lite-pinctrl";
- 			st,syscfg		= <&syscfg_fvdp_lite>;
-+			reg 		= <0xfd33f080 0x4>;
-+			reg-names	= "irqmux";
-+			interrupts 	= <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts-names = "irqmux";
- 			ranges			= <0 0xfd330000 0x5000>;
- 
- 			PIO103: gpio@fd330000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0 0x100>;
- 				st,bank-name	= "PIO103";
- 			};
- 			PIO104: gpio@fd331000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x1000 0x100>;
- 				st,bank-name	= "PIO104";
- 			};
- 			PIO105: gpio@fd332000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x2000 0x100>;
- 				st,bank-name	= "PIO105";
- 			};
- 			PIO106: gpio@fd333000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x3000 0x100>;
- 				st,bank-name	= "PIO106";
- 			};
-@@ -441,6 +520,8 @@
- 			PIO107: gpio@fd334000 {
- 				gpio-controller;
- 				#gpio-cells	= <1>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
- 				reg		= <0x4000 0x100>;
- 				st,bank-name	= "PIO107";
- 				st,retime-pin-mask = <0xf>;
--- 
-1.7.6.5
+>  Example:
+> diff --git a/drivers/pwm/pwm-imx.c b/drivers/pwm/pwm-imx.c
+> index 3b00a82..05461bb 100644
+> --- a/drivers/pwm/pwm-imx.c
+> +++ b/drivers/pwm/pwm-imx.c
+> @@ -36,6 +36,7 @@
+>  #define MX3_PWMCR_DOZEEN		(1 << 24)
+>  #define MX3_PWMCR_WAITEN		(1 << 23)
+>  #define MX3_PWMCR_DBGEN			(1 << 22)
+> +#define MX3_PWMCR_POUTC			(1 << 18)
+>  #define MX3_PWMCR_CLKSRC_IPG_HIGH	(2 << 16)
+>  #define MX3_PWMCR_CLKSRC_IPG		(1 << 16)
+>  #define MX3_PWMCR_EN			(1 << 0)
+> @@ -138,6 +139,9 @@ static int imx_pwm_config_v2(struct pwm_chip *chip,
+>  	if (test_bit(PWMF_ENABLED, &pwm->flags))
+>  		cr |=3D MX3_PWMCR_EN;
+>  =
 
+> +	if (pwm->polarity =3D=3D PWM_POLARITY_INVERSED)
+> +		cr |=3D MX3_PWMCR_POUTC;
+> +
+>  	writel(cr, imx->mmio_base + MX3_PWMCR);
+>  =
+
+>  	return 0;
+> @@ -155,6 +159,11 @@ static void imx_pwm_set_enable_v2(struct pwm_chip *c=
+hip, bool enable)
+>  	else
+>  		val &=3D ~MX3_PWMCR_EN;
+>  =
+
+> +	if (chip->pwms[0].polarity =3D=3D PWM_POLARITY_INVERSED)
+> +		val |=3D MX3_PWMCR_POUTC;
+> +	else
+> +		val &=3D ~MX3_PWMCR_POUTC;
+> +
+>  	writel(val, imx->mmio_base + MX3_PWMCR);
+>  }
+>  =
+
+> @@ -198,6 +207,17 @@ static void imx_pwm_disable(struct pwm_chip *chip, s=
+truct pwm_device *pwm)
+>  	clk_disable_unprepare(imx->clk_per);
+>  }
+>  =
+
+> +static int imx_pwm_set_polarity(struct pwm_chip *chip, struct pwm_device=
+ *pwm,
+> +				enum pwm_polarity polarity)
+> +{
+> +	struct imx_chip *imx =3D to_imx_chip(chip);
+> +
+> +	dev_dbg(imx->chip.dev, "%s: polarity set to %s\n", __func__,
+> +		polarity =3D=3D PWM_POLARITY_INVERSED ? "inverted" : "normal");
+> +
+> +	return 0;
+> +}
+> +
+>  static struct pwm_ops imx_pwm_ops =3D {
+>  	.enable =3D imx_pwm_enable,
+>  	.disable =3D imx_pwm_disable,
+> @@ -209,6 +229,7 @@ struct imx_pwm_data {
+>  	int (*config)(struct pwm_chip *chip,
+>  		struct pwm_device *pwm, int duty_ns, int period_ns);
+>  	void (*set_enable)(struct pwm_chip *chip, bool enable);
+> +	unsigned output_polarity:1;
+>  };
+>  =
+
+>  static struct imx_pwm_data imx_pwm_data_v1 =3D {
+> @@ -219,6 +240,7 @@ static struct imx_pwm_data imx_pwm_data_v1 =3D {
+>  static struct imx_pwm_data imx_pwm_data_v2 =3D {
+>  	.config =3D imx_pwm_config_v2,
+>  	.set_enable =3D imx_pwm_set_enable_v2,
+> +	.output_polarity =3D 1,
+>  };
+>  =
+
+>  static const struct of_device_id imx_pwm_dt_ids[] =3D {
+> @@ -271,6 +293,26 @@ static int imx_pwm_probe(struct platform_device *pde=
+v)
+>  		return PTR_ERR(imx->mmio_base);
+>  =
+
+>  	data =3D of_id->data;
+> +	if (data->output_polarity) {
+> +		const struct device_node *np =3D pdev->dev.of_node;
+> +		u32 num_cells;
+> +
+> +		dev_dbg(&pdev->dev, "PWM supports output inversion\n");
+> +		ret =3D of_property_read_u32(np, "#pwm-cells", &num_cells);
+> +		if (ret < 0) {
+> +			dev_err(&pdev->dev, "missing property '#pwm-cells'\n");
+> +			return ret;
+> +		}
+> +		if (num_cells =3D=3D 3) {
+> +			imx_pwm_ops.set_polarity =3D imx_pwm_set_polarity;
+> +			imx->chip.of_xlate =3D of_pwm_xlate_with_flags;
+> +		} else if (num_cells !=3D 2) {
+> +			dev_err(&pdev->dev, "'#pwm-cells' must be <2> or <3>\n");
+> +			return -EINVAL;
+> +		}
+> +		imx->chip.of_pwm_n_cells =3D num_cells;
+> +	}
+
+Can't this be done in the PWM core? Right now the PWM core checks for
+of_pwm_n_cells before calling ->of_xlate. IMO this check should be done
+in the of_xlate hook. Then of_pwm_simple_xlate and
+of_pwm_xlate_with_flags can be merged into something like:
+
+static struct pwm_device *
+of_pwm_simple_xlate(struct pwm_chip *pc, const struct of_phandle_args
+*args)
+{
+	struct pwm_device *pwm;
+	int ret;
+
+	if (pc->of_pwm_n_cells < 2)
+		return ERR_PTR(-EINVAL);
+
+	if (args->args[0] >=3D pc->npwm)
+		return ERR_PTR(-EINVAL);
+
+	pwm =3D pwm_request_from_chip(pc, args->args[0], NULL);
+	if (IS_ERR(pwm))
+		return pwm;
+
+	if (pc->of_pwm_n_cells >=3D 3) {
+		if (args->args[2] & PWM_POLARITY_INVERTED)
+			ret =3D pwm_set_polarity(pwm, PWM_POLARITY_INVERSED);
+		else
+			ret =3D pwm_set_polarity(pwm, PWM_POLARITY_NORMAL);
+		if (ret)
+			return ret;
+	}
+
+	pwm_set_period(pwm, args->args[1]);
+
+	return pwm;
+}
+
+Sascha
+
+-- =
+
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
