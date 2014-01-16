@@ -1,122 +1,124 @@
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] i2c: New bus driver for the QUP I2C controller
-Date: Thu, 16 Jan 2014 15:37:24 +0200
-Message-ID: <1389879444.2794.44.camel@iivanov-dev.int.mm-sol.com>
-References: <1389659437-16406-1-git-send-email-bjorn.andersson@sonymobile.com>
-	 <1389659437-16406-3-git-send-email-bjorn.andersson@sonymobile.com>
-	 <20140115164604.GI14405@codeaurora.org>
+From: Saurabh Singh <saurabh1.s@samsung.com>
+Subject: Re: [PATCH] Parse missing regulator constraints from device tree blob
+Date: Thu, 16 Jan 2014 13:43:24 +0000 (GMT)
+Message-ID: <27224826.584141389879802275.JavaMail.weblogic@epml20>
+Reply-To: saurabh1.s@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140115164604.GI14405-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Martin Schwidefsky <schwidefsky-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org>, James Ralston <james.d.ralston-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Bill Brown <bill.e.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+MIME-version: 1.0
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "celinux-dev@tree.celinuxforum.org" <celinux-dev@tree.celinuxforum.org>, SREEVATSA D B <srevatsa@samsung.com>, Praveen BP <bp.praveen@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-
-Hi,
-
-On Wed, 2014-01-15 at 08:46 -0800, Stephen Boyd wrote: 
-> On 01/13, Bjorn Andersson wrote:
-> > +/*
-> > + * QUP driver for Qualcomm MSM platforms
-> > + *
-> > + */
-> 
-> This comment seems redundant, we know what file we're looking at.
-> 
-> > +
-> > +struct qup_i2c_dev {
-> > +	struct device		*dev;
-> > +	void __iomem		*base;
-> > +	struct pinctrl		*pctrl;
-> 
-> This is unused.
-> 
-> > +	int			irq;
-> > +	struct clk		*clk;
-> > +	struct clk		*pclk;
-> > +	struct i2c_adapter	adap;
-> > +
-> > +	int			clk_freq;
-> 
-> This is only ever used in probe, so why do we need to store it
-> away?
-> 
-> > +	int			clk_ctl;
-> > +	int			one_bit_t;
-> > +	int			out_fifo_sz;
-> > +	int			in_fifo_sz;
-> > +	int			out_blk_sz;
-> > +	int			in_blk_sz;
-> > +	unsigned long		xfer_time;
-> > +	unsigned long		wait_idle;
-> > +
-> > +	struct i2c_msg		*msg;
-> > +	/* Current possion in user message buffer */
-> 
-> s/possion/position/?
-> 
-> > +	int			pos;
-> > +	/* Keep number of bytes left to be transmitted */
-> > +	int			cnt;
-> > +	/* I2C protocol errors */
-> > +	u32			bus_err;
-> > +	/* QUP core errors */
-> > +	u32			qup_err;
-> > +	/*
-> > +	 * maximum bytes that could be send (per iterration). could be
-> 
-> s/iterration/iteration/?
-> 
-> > +	 * equal of fifo size or block size (in block mode)
-> > +	 */
-> > +	int			chunk_sz;
-> > +	struct completion	xfer;
-> > +};
-> > +
-> > +static irqreturn_t qup_i2c_interrupt(int irq, void *dev)
-> > +{
-> > +	struct qup_i2c_dev *qup = dev;
-> > +	u32 bus_err;
-> > +	u32 qup_err;
-> > +	u32 opflags;
-> > +
-> [...]
-> > +
-> > +	if (opflags & QUP_OUT_SVC_FLAG)
-> > +		writel(QUP_OUT_SVC_FLAG, qup->base + QUP_OPERATIONAL);
-> > +
-> > +	if (!(qup->msg->flags == I2C_M_RD))
-> 
-> Should this be?
-> 
-> 	if (!(qup->msg->flags & I2C_M_RD))
-> 
-> Otherwise it should be
-> 
-> 	if (qup->msg->flags != I2C_M_RD)
-> 
-
-This check is actually broken. Intention was that if this is read
-transaction and there is no QUP_MX_INPUT_DONE or QUP_IN_SVC_FLAG
-to exit without wakeup transfer thread. As is it now it will never
-complete write transactions.
-
-Regards,
-Ivan
-
-> > +		return IRQ_HANDLED;
-> > +
-> > +	if ((opflags & QUP_MX_INPUT_DONE) || (opflags & QUP_IN_SVC_FLAG))
-> > +		writel(QUP_IN_SVC_FLAG, qup->base + QUP_OPERATIONAL);
-> > +
-> > +done:
-> > +	qup->qup_err = qup_err;
-> > +	qup->bus_err = bus_err;
-> > +	complete(&qup->xfer);
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
+SGkgTWFyaywNCg0KTmV3IHBhdGNoIGluY29ycG9yYXRpbmcgeW91ciBzdWdnZXN0aW9ucyBpcyBn
+aXZlbiBiZWxvdy4NCg0KPiAqIE5vbmUgb2YgdGhlc2UgcHJvcGVydGllcyBhcmUgZG9jdW1lbnRl
+ZC4gRG9jdW1lbnRhdGlvbiBpcyByZXF1aXJlZCBzbw0KPiAgIHRoYXQgdGhlIGNvbnRyYWN0IGlz
+IGRlZmluZWQuIFRoYXQgYWxsb3dzIHBlb3BsZSB0byBsZWFybiBob3cgdG8gdXNlDQo+ICAgdGhl
+IHByb3BlcnRpZXMsIGFuZCBtYWtlcyBjbGVhciB3aGF0IHdlIGNhbiBhbmQgY2Fubm90IGNoYW5n
+ZQ0KPiAgIGtlcm5lbC1zaWRlLg0KRG9uZS4gIFRoZSBkb2N1bWVudGF0aW9uIGlzIGluIHRoZSBw
+YXRjaCBiZWxvdy4NCg0KPiAqIEl0IGxlYWtzIExpbnV4IGludGVybmFsIGRldGFpbHMgKGUuZy4g
+c3VzcGVuZF9zdGF0ZV90IHZhbHVlcywNCj4gICB2YWxpZF9tb2RlX21hc2spIHdpdGhvdXQgYW55
+IGF0dGVtcHQgYXQgYWJzdHJhY3Rpb24sIGluIHZpb2xhdGlvbiBvZg0KPiAgIGR0IHByaW5jaXBs
+ZXMuDQpVbmxpa2UgdmFsaWRfb3BzX21hc2ssIHZhbGlkX21vZGVfbWFzayBjYW5ub3QgYmUgZGVy
+aXZlZCBmcm9tIHRoZSBvdGhlciBzZXR0aW5ncy4NCkl0IGRlcGVuZHMgb24gdGhlIGhhcmR3YXJl
+IChyZWd1bGF0b3IpIGNhcGFiaWxpdHkuIFNvLCBpdCBoYXMgdG8gYmUgc3BlY2lmaWVkIGluIERU
+IGJsb2IuDQoNCj4gKiBBY2Nlc3NvcnMgYXJlIHVzZWQgcG9vcmx5LiBFbmRpYW5uZXNzIGNvbnZl
+cnNpb24gaXMgZG9uZSBtYW51YWxseQ0KPiAgIHJhdGhlciB0aGFuIGJlaW5nIGxlZnQgdG8gYWNj
+ZXNzb3JzLCBhbmQgcHJvcGVydHkgbGVuZ3RocyBhcmVuJ3QNCj4gICBjaGVja2VkLg0KVXNlZCB0
+aGUgYWNjZXNzb3JzIGZvciB1MzIgYW5kIGJvb2wuDQoNCj4gCXUzMiB1djsNCj4gCW9mX3Byb3Bl
+cnR5X3JlYWRfdTMyKG5wLCAicmVndWxhdG9yLXN0YXRlLXV2IiwgJnV2KTsNCj4gDQo+IEhvd2V2
+ZXIsIGFzIGZhciBhcyBJIGNhbiBzZWUgdGhpcyB2YWx1ZSBzaG91bGQgY29tZSBmcm9tIGFuIGlu
+cHV0IHN1cHBseQ0KPiBhbnl3YXkuDQpUaGlzIGlzIG5vdCBpbnB1dCBzdXBwbHkuIFRoaXMgaXMg
+b3BlcmF0aW5nIHZvbHRhZ2UgdG8gYmUgc2V0IHdoZW4gZGV2aWNlIHN1c3BlbmRzLg0KDQpkaWZm
+c3RhdCBmb3IgdGhpcyBwYXRjaCBpczoNCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvcmVndWxhdG9yL3JlZ3VsYXRvci50eHQgfCAgIDE5ICsrKysrKw0KIGRyaXZlcnMvcmVndWxh
+dG9yL29mX3JlZ3VsYXRvci5jICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNDEgKysrKysr
+KysrKysrKysNCiAyIGZpbGVzIGNoYW5nZWQsIDYwIGluc2VydGlvbnMoKykNCg0KVG8gYXBwbHkg
+dGhlIHBhdGNoLCBpbiB0aGUgcm9vdCBvZiBhIGtlcm5lbCB0cmVlIHVzZToNCnBhdGNoIC1wMSA8
+IG9mX3JlZ3VsYXRvci5wYXRjaA0KDQpQbGVhc2UgbGV0IG1lIGtub3cgYW55IGZlZWRiYWNrIHlv
+dSBoYXZlIG9uIHRoaXMgcGF0Y2ggb3IgdGhlIGFwcHJvYWNoIHVzZWQuDQoNClJlZ2FyZHMsDQo9
+PT09PT09PT09PT09PT09PT09PT0NClNhdXJhYmggU2luZ2ggU2VuZ2FyDQpMZWFkIEVuZ2luZWVy
+DQpTYW1zdW5nIFImRCBJbnN0aXR1dGUNCkluZGlhDQpTYW1zdW5nDQo9PT09PT09PT09PT09PT09
+PT09PT0NClNpZ25lZC1vZmYtYnk6IFNhdXJhYmggU2luZ2ggU2VuZ2FyIDxzYXVyYWJoMS5zQHNh
+bXN1bmcuY29tPg0KDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KZGlmZiAtdXByTiAtWCBsaW51
+eC0zLjEyLjYtdmFuaWxsYS9Eb2N1bWVudGF0aW9uL2RvbnRkaWZmIGxpbnV4LTMuMTIuNi12YW5p
+bGxhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWd1bGF0b3IvcmVndWxhdG9y
+LnR4dCBsaW51eC0zLjEyLjYvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3JlZ3Vs
+YXRvci9yZWd1bGF0b3IudHh0DQotLS0gbGludXgtMy4xMi42LXZhbmlsbGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3JlZ3VsYXRvci9yZWd1bGF0b3IudHh0CTIwMTMtMTItMjAg
+MjE6MjE6MzMuMDAwMDAwMDAwICswNTMwDQorKysgbGludXgtMy4xMi42L0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9yZWd1bGF0b3IvcmVndWxhdG9yLnR4dAkyMDE0LTAxLTE2IDE4
+OjQ3OjE3LjcwODYwODgxMSArMDUzMA0KQEAgLTE0LDYgKzE0LDE3IEBAIE9wdGlvbmFsIHByb3Bl
+cnRpZXM6DQogLSByZWd1bGF0b3ItcmFtcC1kZWxheTogcmFtcCBkZWxheSBmb3IgcmVndWxhdG9y
+KGluIHVWL3VTKQ0KICAgRm9yIGhhcmR3YXJlcyB3aGljaCBzdXBwb3J0IGRpc2FibGluZyByYW1w
+IHJhdGUsIGl0IHNob3VsZCBiZSBleHBsaWNpdGx5DQogICBpbnRpYWxpc2VkIHRvIHplcm8gKHJl
+Z3VsYXRvci1yYW1wLWRlbGF5ID0gPDA+KSBmb3IgZGlzYWJsaW5nIHJhbXAgZGVsYXkuDQorLSBy
+ZWd1bGF0b3ItdmFsaWQtbW9kZXMtbWFzazogdmFsaWQgb3BlcmF0aW9ucyBmb3IgcmVndWxhdG9y
+IG9uIHBhcnRpY3VsYXIgbWFjaGluZQ0KKy0gcmVndWxhdG9yLWlucHV0LXV2OiByZWd1bGF0b3Ig
+aW5wdXQgdm9sdGFnZSwgb25seSBpZiBzdXBwbHkgaXMgYW5vdGhlciByZWd1bGF0b3INCistIHJl
+Z3VsYXRvci1pbml0aWFsLW1vZGU6IGRlZmF1bHQgbW9kZSB0byBzZXQgb24gc3RhcnR1cA0KKy0g
+cmVndWxhdG9yLWluaXRpYWwtc3RhdGU6IHN1c3BlbmQgc3RhdGUgdG8gc2V0IGF0IGluaXQNCist
+IHJlZ3VsYXRvci1zdGF0ZS1tZW0sIHJlZ3VsYXRvci1zdGF0ZS1kaXNrLCByZWd1bGF0b3Itc3Rh
+dGUtc3RhbmRieToNCisJZGVmaW5lcyByZWd1bGF0b3Igc3VzcGVuZCB0byBtZW1vcnksIHN1c3Bl
+bmQgdG8gZGlzayAoaGliZXJuYXRlKSBhbmQgc3RhbmRieSByZXNwZWN0aXZlbHkuDQorCWhhdmUg
+Zm9sbG93aW5nIHN1Yi1jb25zdGFyaW50czoNCisJLSByZWd1bGF0b3Itc3RhdGUtdXY6IHN1c3Bl
+bmQgdm9sdGFnZQ0KKwktIHJlZ3VsYXRvci1zdGF0ZS1tb2RlOiBzdXNwZW5kIHJlZ3VsYXRvciBv
+cGVyYXRpbmcgbW9kZQ0KKwktIHJlZ3VsYXRvci1zdGF0ZS1lbmFibGVkOiBpcyByZWd1bGF0b3Ig
+ZW5hYmxlZCBpbiB0aGlzIHN1c3BlbmQgc3RhdGUNCisJLSByZWd1bGF0b3Itc3RhdGUtZGlzYWJs
+ZWQ6IGlzIHRoZSByZWd1bGF0b3IgZGlzYmxlZCBpbiB0aGlzIHN1c3BlbmQgc3RhdGUNCiANCiBE
+ZXByZWNhdGVkIHByb3BlcnRpZXM6DQogLSByZWd1bGF0b3ItY29tcGF0aWJsZTogSWYgYSByZWd1
+bGF0b3IgY2hpcCBjb250YWlucyBtdWx0aXBsZQ0KQEAgLTI5LDYgKzQwLDE0IEBAIEV4YW1wbGU6
+DQogCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwyNTAwMDAwPjsNCiAJCXJlZ3VsYXRvci1h
+bHdheXMtb247DQogCQl2aW4tc3VwcGx5ID0gPCZ2aW4+Ow0KKwkJcmVndWxhdG9yLXZhbGlkLW1v
+ZGVzLW1hc2sgPSA8UkVHVUxBVE9SX01PREVfRkFTVD47DQorCQlyZWd1bGF0b3ItaW5pdGlhbC1t
+b2RlID0gPFJFR1VMQVRPUl9NT0RFX1NUQU5EQlk+Ow0KKwkJcmVndWxhdG9yLWluaXRpYWwtc3Rh
+dGUgPSA8UE1fU1VTUEVORF9NRU0+Ow0KKwkJcmVndWxhdG9yLXN0YXRlLW1lbSB7DQorCQkJcmVn
+dWxhdG9yLXN0YXRlLW1vZGUgPSA8UkVHVUxBVE9SX01PREVfSURMRT47DQorCQkJcmVndWxhdG9y
+LXN0YXRlLWVuYWJsZWQ7DQorCQl9Ow0KKw0KIAl9Ow0KIA0KIFJlZ3VsYXRvciBDb25zdW1lcnM6
+DQpkaWZmIC11cHJOIC1YIGxpbnV4LTMuMTIuNi12YW5pbGxhL0RvY3VtZW50YXRpb24vZG9udGRp
+ZmYgbGludXgtMy4xMi42LXZhbmlsbGEvZHJpdmVycy9yZWd1bGF0b3Ivb2ZfcmVndWxhdG9yLmMg
+bGludXgtMy4xMi42L2RyaXZlcnMvcmVndWxhdG9yL29mX3JlZ3VsYXRvci5jDQotLS0gbGludXgt
+My4xMi42LXZhbmlsbGEvZHJpdmVycy9yZWd1bGF0b3Ivb2ZfcmVndWxhdG9yLmMJMjAxMy0xMi0y
+MCAyMToyMTozMy4wMDAwMDAwMDAgKzA1MzANCisrKyBsaW51eC0zLjEyLjYvZHJpdmVycy9yZWd1
+bGF0b3Ivb2ZfcmVndWxhdG9yLmMJMjAxNC0wMS0xNiAxODo0NTo0NC4xMzU5Mjg0MTQgKzA1MzAN
+CkBAIC0xNiwxMSArMTYsMjcgQEANCiAjaW5jbHVkZSA8bGludXgvcmVndWxhdG9yL21hY2hpbmUu
+aD4NCiAjaW5jbHVkZSA8bGludXgvcmVndWxhdG9yL29mX3JlZ3VsYXRvci5oPg0KIA0KKy8qKg0K
+KyAqIHNldF9yZWd1bGF0b3Jfc3RhdGVfY29uc3RyYWludHMgLSBzZXQgcmVndWxhdG9yIHN0YXRl
+IGZvciBsb3cgcG93ZXIgc3lzdGVtIHN0YXRlcw0KKyAqIEBucDogZGV2aWNlIG5vZGUgZm9yIHRo
+ZSBsb3cgcG93ZXIgcmVndWxhdG9yIHN0YXRlDQorICogQHJlZ3VsYXRvcl9zdGF0ZTogcmVndWxh
+dG9yX3N0YXRlIHN0cnVjdHVyZSBuZWVkIHRvIGJlIGZpbGxlZA0KKyAqLw0KK3N0YXRpYyB2b2lk
+IHNldF9yZWd1bGF0b3Jfc3RhdGVfY29uc3RyYWludHMoc3RydWN0IGRldmljZV9ub2RlICpucCwN
+CisJCXN0cnVjdCByZWd1bGF0b3Jfc3RhdGUgKnN0YXRlKQ0KK3sNCisJb2ZfcHJvcGVydHlfcmVh
+ZF91MzIobnAsICJyZWd1bGF0b3Itc3RhdGUtdXYiLCAmc3RhdGUtPnVWKTsNCisJb2ZfcHJvcGVy
+dHlfcmVhZF91MzIobnAsICJyZWd1bGF0b3Itc3RhdGUtbW9kZSIsICZzdGF0ZS0+bW9kZSk7DQor
+CXN0YXRlLT5lbmFibGVkID0gb2ZfcHJvcGVydHlfcmVhZF9ib29sKG5wLCAicmVndWxhdG9yLXN0
+YXRlLWVuYWJsZWQiKTsNCisJc3RhdGUtPmRpc2FibGVkID0gb2ZfcHJvcGVydHlfcmVhZF9ib29s
+KG5wLCAicmVndWxhdG9yLXN0YXRlLWRpc2FibGVkIik7DQorfQ0KKw0KKw0KIHN0YXRpYyB2b2lk
+IG9mX2dldF9yZWd1bGF0aW9uX2NvbnN0cmFpbnRzKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAsDQog
+CQkJCQlzdHJ1Y3QgcmVndWxhdG9yX2luaXRfZGF0YSAqKmluaXRfZGF0YSkNCiB7DQogCWNvbnN0
+IF9fYmUzMiAqbWluX3VWLCAqbWF4X3VWLCAqdVZfb2Zmc2V0Ow0KIAljb25zdCBfX2JlMzIgKm1p
+bl91QSwgKm1heF91QSwgKnJhbXBfZGVsYXk7DQorCXN0cnVjdCBkZXZpY2Vfbm9kZSAqc3RhdGU7
+DQogCXN0cnVjdCBwcm9wZXJ0eSAqcHJvcDsNCiAJc3RydWN0IHJlZ3VsYXRpb25fY29uc3RyYWlu
+dHMgKmNvbnN0cmFpbnRzID0gJigqaW5pdF9kYXRhKS0+Y29uc3RyYWludHM7DQogDQpAQCAtNzMs
+NiArODksMzEgQEAgc3RhdGljIHZvaWQgb2ZfZ2V0X3JlZ3VsYXRpb25fY29uc3RyYWludA0KIAkJ
+ZWxzZQ0KIAkJCWNvbnN0cmFpbnRzLT5yYW1wX2Rpc2FibGUgPSB0cnVlOw0KIAl9DQorDQorCW9m
+X3Byb3BlcnR5X3JlYWRfdTMyKG5wLCAicmVndWxhdG9yLXZhbGlkLW1vZGVzLW1hc2siLA0KKwkJ
+CQkJJmNvbnN0cmFpbnRzLT52YWxpZF9tb2Rlc19tYXNrKTsNCisJb2ZfcHJvcGVydHlfcmVhZF91
+MzIobnAsICJyZWd1bGF0b3ItaW5wdXQtdXYiLA0KKwkJCQkJJmNvbnN0cmFpbnRzLT5pbnB1dF91
+Vik7DQorCW9mX3Byb3BlcnR5X3JlYWRfdTMyKG5wLCAicmVndWxhdG9yLWluaXRpYWwtbW9kZSIs
+DQorCQkJCQkmY29uc3RyYWludHMtPmluaXRpYWxfbW9kZSk7DQorCW9mX3Byb3BlcnR5X3JlYWRf
+dTMyKG5wLCAicmVndWxhdG9yLWluaXRpYWwtc3RhdGUiLA0KKwkJCQkJJmNvbnN0cmFpbnRzLT5p
+bml0aWFsX3N0YXRlKTsNCisNCisJLyogcmVndWxhdG9yIHN0YXRlIGR1cmluZyBsb3cgcG93ZXIg
+c3lzdGVtIHN0YXRlcyAqLw0KKwlzdGF0ZSA9IG9mX2ZpbmRfbm9kZV9ieV9uYW1lKG5wLCAicmVn
+dWxhdG9yLXN0YXRlLW1lbSIpOw0KKwlpZiAoc3RhdGUpDQorCQlzZXRfcmVndWxhdG9yX3N0YXRl
+X2NvbnN0cmFpbnRzKHN0YXRlLA0KKwkJCQkmY29uc3RyYWludHMtPnN0YXRlX21lbSk7DQorDQor
+CXN0YXRlID0gb2ZfZmluZF9ub2RlX2J5X25hbWUobnAsICJyZWd1bGF0b3Itc3RhdGUtZGlzayIp
+Ow0KKwlpZiAoc3RhdGUpDQorCQlzZXRfcmVndWxhdG9yX3N0YXRlX2NvbnN0cmFpbnRzKHN0YXRl
+LA0KKwkJCQkmY29uc3RyYWludHMtPnN0YXRlX2Rpc2spOw0KKw0KKwlzdGF0ZSA9IG9mX2ZpbmRf
+bm9kZV9ieV9uYW1lKG5wLCAicmVndWxhdG9yLXN0YXRlLXN0YW5kYnkiKTsNCisJaWYgKHN0YXRl
+KQ0KKwkJc2V0X3JlZ3VsYXRvcl9zdGF0ZV9jb25zdHJhaW50cyhzdGF0ZSwNCisJCQkJJmNvbnN0
+cmFpbnRzLT5zdGF0ZV9zdGFuZGJ5KTsNCiB9DQogDQogLyoq
