@@ -1,114 +1,71 @@
-From: "Zhang, Rui" <rui.zhang@intel.com>
-Subject: RE: [PATCH 4/4] OF: introduce OF style 'modalias' support for
- platform bus.
-Date: Thu, 16 Jan 2014 07:04:19 +0000
-Message-ID: <744357E9AAD1214791ACBA4B0B909263011CE77F@SHSMSX101.ccr.corp.intel.com>
-References: <1389689198-2641-1-git-send-email-rui.zhang@intel.com>
-	<1389689198-2641-5-git-send-email-rui.zhang@intel.com>
- <CAL_JsqJFRQ+27N_9AwZXpx4V=g8HKn84WdVKtQ_Br_8SQTXY7g@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: sunxi: Add driver for sunxi usb phy
+Date: Thu, 16 Jan 2014 15:07:18 +0800
+Message-ID: <CAGb2v65rSc7iAKCcPMYaQZ+q=m85RcSE2dmpgE6MoeXNgRCwfg@mail.gmail.com>
+References: <1389740305-6993-1-git-send-email-hdegoede@redhat.com>
+ <52D6A27A.4090600@ti.com> <52D6ADEA.1050900@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJFRQ+27N_9AwZXpx4V=g8HKn84WdVKtQ_Br_8SQTXY7g@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "wsa@the-dreams.de" <wsa@the-dreams.de>, Mark Brown <broonie@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "jarkko.nikula@linux.intel.com" <jarkko.nikula@linux.intel.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBO4K32LAKGQEYVTTSBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <52D6ADEA.1050900-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Hans,
 
+On Wed, Jan 15, 2014 at 11:48 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi,
+>
+>
+> On 01/15/2014 04:00 PM, Kishon Vijay Abraham I wrote:
+>>
+>> On Wednesday 15 January 2014 04:28 AM, Hans de Goede wrote:
+[...]
+>>> +static int sun4i_usb_phy_init(struct phy *_phy)
+>>> +{
+>>> +       struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
+>>> +       struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
+>>> +       int ret;
+>>> +
+>>> +       ret = clk_prepare_enable(data->clk);
+>>> +       if (ret)
+>>> +               return ret;
+>>> +
+>>> +       ret = reset_control_deassert(phy->reset);
+>>> +       if (ret) {
+>>> +               clk_disable_unprepare(data->clk);
+>>> +               return ret;
+>>> +       }
+>>> +
+>>> +       /* Adjust PHY's magnitude and rate */
+>>> +       sun4i_usb_phy_write(phy, 0x20, 0x14, 5);
+>>
+>>
+>> No magic values. Use macros instead.
+>
+>
+> We don't have docs, these values come from the Android code (and the comment
+> above has been translated from Chinese). I can make up some random
+> macros for this, but seems counter-productive, it seems best to just leave
+> this as magic until the day we actually have documentation and thus can use
+> defines with the proper register names, etc.
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robherring2@gmail.com]
-> Sent: Wednesday, January 15, 2014 9:45 PM
-> To: Zhang, Rui
-> Cc: linux-kernel@vger.kernel.org; linux-acpi@vger.kernel.org; linux-
-> i2c@vger.kernel.org; linux-spi@vger.kernel.org; wsa@the-dreams.de; Mark
-> Brown; Greg Kroah-Hartman; Wysocki, Rafael J; Grant Likely; Rob Herring;
-> jarkko.nikula@linux.intel.com; mika.westerberg@linux.intel.com;
-> devicetree@vger.kernel.org
-> Subject: Re: [PATCH 4/4] OF: introduce OF style 'modalias' support for
-> platform bus.
-> Importance: High
-> 
-> On Tue, Jan 14, 2014 at 2:46 AM, Zhang Rui <rui.zhang@intel.com> wrote:
-> > Fix a problem that, the platform bus supports the OF style modalias
-> in
-> > .uevent() call, but not in its device 'modalias' sysfs attribute.
-> >
-> > cc: devicetree@vger.kernel.org
-> > Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> 
-> As there doesn't appear any dependency with the rest of this series, I
-> can take this.
-> 
-Thanks.
+We have some names for the registers from Allwinner code:
+https://github.com/linux-sunxi/linux-sunxi/blob/lichee-3.0.8-sun4i/drivers/usb/sun4i_usb/usbc/usbc_phy.c#L39
 
--rui
-> One minor nit below.
-> 
-> > ---
-> >  drivers/base/platform.c   |    4 ++++
-> >  drivers/of/device.c       |    3 +++
-> >  include/linux/of_device.h |    6 ++++++
-> >  3 files changed, 13 insertions(+)
-> >
-> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c index
-> > 2f4aea2..bc78848 100644
-> > --- a/drivers/base/platform.c
-> > +++ b/drivers/base/platform.c
-> > @@ -679,6 +679,10 @@ static ssize_t modalias_show(struct device *dev,
-> struct device_attribute *a,
-> >         struct platform_device  *pdev = to_platform_device(dev);
-> >         int len;
-> >
-> > +       len = of_device_get_modalias(dev, buf, PAGE_SIZE -1);
-> > +       if (len != -ENODEV)
-> > +               return len;
-> > +
-> >         len = acpi_device_modalias(dev, buf, PAGE_SIZE -1);
-> >         if (len != -ENODEV)
-> >                 return len;
-> > diff --git a/drivers/of/device.c b/drivers/of/device.c index
-> > f685e55..dafb973 100644
-> > --- a/drivers/of/device.c
-> > +++ b/drivers/of/device.c
-> > @@ -85,6 +85,9 @@ ssize_t of_device_get_modalias(struct device *dev,
-> char *str, ssize_t len)
-> >         int cplen, i;
-> >         ssize_t tsize, csize, repend;
-> >
-> > +       if ((!dev) || (!dev->of_node))\
-> 
-> Don't need the parentheses here.
-> 
-> > +               return -ENODEV;
-> > +
-> >         /* Name & Type */
-> >         csize = snprintf(str, len, "of:N%sT%s", dev->of_node->name,
-> >                          dev->of_node->type); diff --git
-> > a/include/linux/of_device.h b/include/linux/of_device.h index
-> > 82ce324..8d7dd67 100644
-> > --- a/include/linux/of_device.h
-> > +++ b/include/linux/of_device.h
-> > @@ -64,6 +64,12 @@ static inline int of_driver_match_device(struct
-> > device *dev,  static inline void of_device_uevent(struct device *dev,
-> >                         struct kobj_uevent_env *env) { }
-> >
-> > +static inline int of_device_get_modalias(struct device *dev,
-> > +                                  char *str, ssize_t len) {
-> > +       return -ENODEV;
-> > +}
-> > +
-> >  static inline int of_device_uevent_modalias(struct device *dev,
-> >                                    struct kobj_uevent_env *env)  {
-> > --
-> > 1.7.9.5
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree"
-> > in the body of a message to majordomo@vger.kernel.org More majordomo
-> > info at  http://vger.kernel.org/majordomo-info.html
+And the comments in the file also suggests valid values for some of them,
+though the actual code in the sunxi usb drivers (not the otg one) don't
+seem to match.
+
+[...]
+
+Cheers
+ChenYu
