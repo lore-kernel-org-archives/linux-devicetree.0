@@ -1,103 +1,70 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] Parse missing regulator constraints from device tree
- blob
-Date: Thu, 16 Jan 2014 10:28:01 +0000
-Message-ID: <20140116102800.GA19578@e106331-lin.cambridge.arm.com>
-References: <23745449.572421389854083634.JavaMail.weblogic@epml20>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: sunxi: Add driver for sunxi usb phy
+Date: Thu, 16 Jan 2014 11:33:17 +0100
+Message-ID: <52D7B56D.8060403@redhat.com>
+References: <1389740305-6993-1-git-send-email-hdegoede@redhat.com> <52D6A27A.4090600@ti.com> <52D6ADEA.1050900@redhat.com> <CAGb2v65rSc7iAKCcPMYaQZ+q=m85RcSE2dmpgE6MoeXNgRCwfg@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <23745449.572421389854083634.JavaMail.weblogic@epml20>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Saurabh Singh <saurabh1.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "celinux-dev-VxL1A5FK7jA05z2xGA6PZHhyD016LWXt@public.gmane.org" <celinux-dev-VxL1A5FK7jA05z2xGA6PZHhyD016LWXt@public.gmane.org>, "srevatsa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <srevatsa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "bp.praveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <bp.praveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRB5HK32LAKGQEM4SC2YQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAGb2v65rSc7iAKCcPMYaQZ+q=m85RcSE2dmpgE6MoeXNgRCwfg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Thu, Jan 16, 2014 at 06:34:46AM +0000, Saurabh Singh wrote:
-> This patch adds support for parsing following regulator contraints from device tree blob.
-> 1. valid modes mask (valid_modes_mask)
-> 2. input microvolt(input_uV)
-> 3. initial mode (initial_mode)
-> 4. initial state (initial_state)
-> 5. state mem (state_mem)
-> 6. state disk (state_disk)
-> 7. state standby (state_standby)
-> 
-> This patch is currently against a linux 3.12.6 kernel.
-> 
-> diffstat for this patch is:
->  of_regulator.c |   63 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 63 insertions(+)
-> 
-> To apply the patch, in the root of a kernel tree use:
-> patch -p1 < of_regulator.patch
-> 
-> Please let me know any feedback you have on this patch or the approach used.
+On 01/16/2014 08:07 AM, Chen-Yu Tsai wrote:
+> Hi Hans,
+>
+> On Wed, Jan 15, 2014 at 11:48 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> Hi,
+>>
+>>
+>> On 01/15/2014 04:00 PM, Kishon Vijay Abraham I wrote:
+>>>
+>>> On Wednesday 15 January 2014 04:28 AM, Hans de Goede wrote:
+> [...]
+>>>> +static int sun4i_usb_phy_init(struct phy *_phy)
+>>>> +{
+>>>> +       struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
+>>>> +       struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
+>>>> +       int ret;
+>>>> +
+>>>> +       ret = clk_prepare_enable(data->clk);
+>>>> +       if (ret)
+>>>> +               return ret;
+>>>> +
+>>>> +       ret = reset_control_deassert(phy->reset);
+>>>> +       if (ret) {
+>>>> +               clk_disable_unprepare(data->clk);
+>>>> +               return ret;
+>>>> +       }
+>>>> +
+>>>> +       /* Adjust PHY's magnitude and rate */
+>>>> +       sun4i_usb_phy_write(phy, 0x20, 0x14, 5);
+>>>
+>>>
+>>> No magic values. Use macros instead.
+>>
+>>
+>> We don't have docs, these values come from the Android code (and the comment
+>> above has been translated from Chinese). I can make up some random
+>> macros for this, but seems counter-productive, it seems best to just leave
+>> this as magic until the day we actually have documentation and thus can use
+>> defines with the proper register names, etc.
+>
+> We have some names for the registers from Allwinner code:
+> https://github.com/linux-sunxi/linux-sunxi/blob/lichee-3.0.8-sun4i/drivers/usb/sun4i_usb/usbc/usbc_phy.c#L39
 
-There are several issues with this patch:
+Ah good catch, thanks. I'll use those in the next revision of the phy driver.
 
-* None of these properties are documented. Documentation is required so
-  that the contract is defined. That allows people to learn how to use
-  the properties, and makes clear what we can and cannot change
-  kernel-side.
+Regards,
 
-* It leaks Linux internal details (e.g. suspend_state_t values,
-  valid_mode_mask) without any attempt at abstraction, in violation of
-  dt principles.
-
-* Accessors are used poorly. Endianness conversion is done manually
-  rather than being left to accessors, and property lengths aren't
-  checked.
-
-> 
-> Regards,
-> =====================
-> Saurabh Singh Sengar
-> Lead Engineer
-> Samsung R&D Institute
-> India
-> Samsung
-> =====================
-> Signed-off-by: Saurabh Singh Sengar <saurabh1.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> 
-> --------------------------------------------------------------------------------
-> --- linux-3.12.6/drivers/regulator/of_regulator.c.orig	2014-01-08 17:19:43.085903573 +0530
-> +++ linux-3.12.6/drivers/regulator/of_regulator.c	2014-01-15 20:12:22.146543128 +0530
-> @@ -16,11 +16,40 @@
->  #include <linux/regulator/machine.h>
->  #include <linux/regulator/of_regulator.h>
->  
-> +/**
-> + * set_regulator_state_constraints - set regulator state for low power system states
-> + * @np: device node for the low power regulator state
-> + * @regulator_state: regulator_state structure need to be filled
-> + */
-> +static void set_regulator_state_constraints(struct device_node *np,
-> +		struct regulator_state *regulator_state)
-> +{
-> +	const __be32 *uV, *mode;
-> +
-> +	uV = of_get_property(np, "regulator-state-uV", NULL);
-
-Typically properties are all lower-case.
-
-> +	if (uV)
-> +		regulator_state->uV = be32_to_cpu(*uV);
-
-As an example, to use accessors correctly, here you should have:
-
-	u32 uv;
-	of_property_read_u32(np, "regulator-state-uv", &uv);
-
-However, as far as I can see this value should come from an input supply
-anyway.
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hans
