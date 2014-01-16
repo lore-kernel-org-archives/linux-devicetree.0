@@ -1,117 +1,59 @@
-From: Loc Ho <lho@apm.com>
-Subject: [PATCH v10 4/4] arm64: Add APM X-Gene SoC SATA host controller DTS entries
-Date: Thu, 16 Jan 2014 09:11:27 -0700
-Message-ID: <1389888687-29741-5-git-send-email-lho@apm.com>
-References: <1389888687-29741-1-git-send-email-lho@apm.com>
- <1389888687-29741-2-git-send-email-lho@apm.com>
- <1389888687-29741-3-git-send-email-lho@apm.com>
- <1389888687-29741-4-git-send-email-lho@apm.com>
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1389888687-29741-4-git-send-email-lho@apm.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dmilburn@redhat.com, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH 4/5] dt/bindings: remove device_type "network" references
+Date: Thu, 16 Jan 2014 16:30:49 +0000
+Message-ID: <20140116163049.9D367C40973@trevor.secretlab.ca>
+References: <1386760555-22732-1-git-send-email-grant.likely@linaro.org> < 1386760555-22732-5-git-send-email-grant.likely@linaro.org> <52A87401. 5030001@monstr.eu>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <52A87401.5030001@monstr.eu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: monstr@monstr.eu
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Loc Ho <lho@apm.com>
-Signed-off-by: Tuan Phan <tphan@apm.com>
-Signed-off-by: Suman Tripathi <stripathi@apm.com>
----
- arch/arm64/boot/dts/apm-storm.dtsi |   75 ++++++++++++++++++++++++++++++++++++
- 1 files changed, 75 insertions(+), 0 deletions(-)
+On Wed, 11 Dec 2013 15:17:37 +0100, Michal Simek <monstr@monstr.eu> wrote:
+> On 12/11/2013 12:15 PM, Grant Likely wrote:
+> > device_type is deprecated and the kernel doesn't require it in most
+> > cases. The only exceptions for flat tree users are the "gianfar",
+> > "ucc_geth" and "ibm,emac" bindings, and arguably that requirement could
+> > be relaxed for ucc_geth and ibm,emac (that is a task for separate
+> > patches though).
+> > 
+> > This patch removes references to device_type="network" from the binding
+> > documentation where possible and removes the properties from ARM and
+> > microblaze dts files. This patch does not modify the powerpc .dts files
+> > since there are a much larger number of them affected and I think the
+> > ucc_geth, ibm,emac and gianfar users should be addressed before clearing
+> > out the references to reduce the chance of breakage.
+> > 
+> > Signed-off-by: Grant Likely <grant.likely@linaro.org>
+> > Cc: Rob Herring <rob.herring@calxeda.com>
+> > Cc: Pawel Moll <pawel.moll@arm.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> > Cc: Kumar Gala <galak@codeaurora.org>
+> > Cc: Michal Simek <monstr@monstr.eu>
+> > ---
+> >  Documentation/devicetree/bindings/marvell.txt                    | 2 --
+> >  Documentation/devicetree/bindings/net/marvell-orion-net.txt      | 2 --
+> >  Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/network.txt | 1 -
+> >  arch/arm/boot/dts/dove.dtsi                                      | 1 -
+> >  arch/arm/boot/dts/kirkwood.dtsi                                  | 2 --
+> >  arch/arm/boot/dts/orion5x.dtsi                                   | 1 -
+> >  arch/microblaze/platform/generic/system.dts                      | 1 -
+> >  7 files changed, 10 deletions(-)
+> 
+> Acked-by: Michal Simek <monstr@monstr.eu>
+> 
+> btw: what device types can be used?
+> I am having them for serial, watchdog, pci, memory, cpu, ethernet-phy
+> (will remove network from our generator).
+> 
+> when I grep kernel there are others types like soc, ipmi and a lot for powerpc.
 
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index b1e9cc9..ae9d145 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -221,6 +221,48 @@
- 				enable-offset = <0x0>;
- 				enable-mask = <0x06>;
- 			};
-+
-+			sata01clk: sata01clk@1f21c000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				clock-names = "socplldiv2";
-+				reg = <0x0 0x1f21c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "sata01clk";
-+				csr-offset = <0x4>;
-+				csr-mask = <0x05>;
-+				enable-offset = <0x0>;
-+				enable-mask = <0x39>;
-+			};
-+
-+			sata23clk: sata23clk@1f22c000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				clock-names = "socplldiv2";
-+				reg = <0x0 0x1f22c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "sata23clk";
-+				csr-offset = <0x4>;
-+				csr-mask = <0x05>;
-+				enable-offset = <0x0>;
-+				enable-mask = <0x39>;
-+			};
-+
-+			sata45clk: sata45clk@1f23c000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				clock-names = "socplldiv2";
-+				reg = <0x0 0x1f23c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "sata45clk";
-+				csr-offset = <0x4>;
-+				csr-mask = <0x05>;
-+				enable-offset = <0x0>;
-+				enable-mask = <0x39>;
-+			};
- 		};
- 
- 		serial0: serial@1c020000 {
-@@ -268,5 +310,38 @@
- 			apm,tx-boost-gain = <31 31 31 31 31 31>;
- 			apm,tx-eye-tuning = <2 10 10 2 10 10>;
- 		};
-+
-+		sata1: sata@1a000000 {
-+			compatible = "apm,xgene-ahci-sgmii";
-+			reg = <0x0 0x1a000000 0x0 0x1000>,
-+			      <0x0 0x1f210000 0x0 0x10000>;
-+			interrupts = <0x0 0x86 0x4>;
-+			status = "disabled";
-+			clocks = <&sata01clk 0>;
-+			phys = <&phy1 0>;
-+			phy-names = "sata-6g";
-+		};
-+
-+		sata2: sata@1a400000 {
-+			compatible = "apm,xgene-ahci-sgmii";
-+			reg = <0x0 0x1a400000 0x0 0x1000>,
-+			      <0x0 0x1f220000 0x0 0x10000>;
-+			interrupts = <0x0 0x87 0x4>;
-+			status = "ok";
-+			clocks = <&sata23clk 0>;
-+			phys = <&phy2 0>;
-+			phy-names = "sata-6g";
-+		};
-+
-+		sata3: sata@1a800000 {
-+			compatible = "apm,xgene-ahci-pcie";
-+			reg = <0x0 0x1a800000 0x0 0x1000>,
-+			      <0x0 0x1f230000 0x0 0x10000>;
-+			interrupts = <0x0 0x88 0x4>;
-+			status = "ok";
-+			clocks = <&sata45clk 0>;
-+			phys = <&phy3 0>;
-+			phy-names = "sata-6g";
-+		};
- 	};
- };
--- 
-1.5.5
+There are a number of users, but most of them are bogus since they can
+just as easily be expressed via a compatible value. There are a few
+cases where they are required. PCI bus nodes, memory nodes, and cpus for
+example. General rule here is avoid device_type entirely unless some
+core infrastructure of the kernel requires it.
 
+g.
