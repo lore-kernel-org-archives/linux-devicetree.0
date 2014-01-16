@@ -1,66 +1,80 @@
-From: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: moxart: move fixed rate clock child node to board level dts
-Date: Thu, 16 Jan 2014 16:39:06 +0100
-Message-ID: <1389886746-972-1-git-send-email-jonas.jensen@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: <srinivas.kandagatla@st.com>
+Subject: [PATCH v2 0/4] pinctrl: st: Add interrupt controller support.
+Date: Thu, 16 Jan 2014 15:35:45 +0000
+Message-ID: <1389886545-31498-1-git-send-email-srinivas.kandagatla@st.com>
+References: <1389711077-20949-1-git-send-email-srinivas.kandagatla@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1389711077-20949-1-git-send-email-srinivas.kandagatla@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srinivas.kandagatla@st.com
 List-Id: devicetree@vger.kernel.org
 
-When a skeleton "clocks { .. }" remain in .dtsi, the child node can
-be moved to .dts, "ref12" is then found by of_clk_get().
+From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
 
-Signed-off-by: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
+Hi Linus W, 
 
-Notes:
-    Applies to next-20140116
+Thankyou for reviewing v1 of the patch-set the comments were very useful.
 
- arch/arm/boot/dts/moxart-uc7112lx.dts | 8 ++++++++
- arch/arm/boot/dts/moxart.dtsi         | 6 ------
- 2 files changed, 8 insertions(+), 6 deletions(-)
+This series of v2 patches add interrupt controller support to ST pinctrl
+driver incorporating all the review comments.
 
-diff --git a/arch/arm/boot/dts/moxart-uc7112lx.dts b/arch/arm/boot/dts/moxart-uc7112lx.dts
-index 90749d5..10d088d 100644
---- a/arch/arm/boot/dts/moxart-uc7112lx.dts
-+++ b/arch/arm/boot/dts/moxart-uc7112lx.dts
-@@ -17,6 +17,14 @@
- 		reg = <0x0 0x2000000>;
- 	};
- 
-+	clocks {
-+		ref12: ref12M {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <12000000>;
-+		};
-+	};
-+
- 	flash@80000000,0 {
- 		compatible = "numonyx,js28f128", "cfi-flash";
- 		reg = <0x80000000 0x1000000>;
-diff --git a/arch/arm/boot/dts/moxart.dtsi b/arch/arm/boot/dts/moxart.dtsi
-index da1d8ef..1fd27ed 100644
---- a/arch/arm/boot/dts/moxart.dtsi
-+++ b/arch/arm/boot/dts/moxart.dtsi
-@@ -26,12 +26,6 @@
- 	clocks {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--
--		ref12: ref12M {
--			compatible = "fixed-clock";
--			#clock-cells = <0>;
--			clock-frequency = <12000000>;
--		};
- 	};
- 
- 	soc {
+ST pin controller GPIO bank can have one of the two possible types of
+interrupt-wirings.
+
+First type is via irqmux, single interrupt is used by multiple gpio
+banks. This reduces number of interrupts numbers required by pin controller.
+All these gpio banks belong to a single pin controller.
+
+Second type has a dedicated interrupt per gpio bank. Interrupt number usage is
+very high in this case.
+
+This patch adds support to both these wirings.
+
+Also, ST pin controller hardware only supports level triggered interrupts.
+However for drivers like gpio keypad requires edge trigger interrupt support,
+so one of the patch adds edge trigger interrupt support in software by using
+the existing level trigger support in hardware.
+
+Patch 01: Adds level interrupt support to pin controller.
+Patch 02 Adds software edge trigger support.
+Patch 03,04 : Updates STiH415, STiH416 dts files for interrupt support.
+
+
+Changes since v1:
+	Updated below changes suggest by Linus W.
+	- Added updated example in binding document.
+	- removed un-necessary varibles in st_gpio_bank and st_pinctrl struct.
+	- renamed irq disabled/enabled functions with masked/unmasked
+	  functions.
+	- Fixed a issue in interrupt handler which could miss interrupts.
+	- Added new hooks startup and shutdown which can mark gpio lines.
+	- create irq mapping at probe stage instead of doing it in to_irq.
+	- removed driver specfic irq_domain xlate function with generic one.
+	- Added extra documention for software edge trigger support.
+	- reformated few debug messages.
+
+I did skip the first patch from my last v1 patchset as you have already
+applied it.
+
+Thanks,
+srini
+
+
+Srinivas Kandagatla (4):
+  pinctrl: st: Add Interrupt support.
+  pinctrl: st: Add software edge trigger interrupt support.
+  ARM:STi: STiH416: Add interrupt support for pin controller
+  ARM:STi: STiH415: Add interrupt support for pin controller
+
+ .../devicetree/bindings/pinctrl/pinctrl-st.txt     |   73 ++++-
+ arch/arm/boot/dts/stih415-pinctrl.dtsi             |   75 +++++
+ arch/arm/boot/dts/stih416-pinctrl.dtsi             |   81 +++++
+ drivers/pinctrl/pinctrl-st.c                       |  337 +++++++++++++++++++-
+ 4 files changed, 558 insertions(+), 8 deletions(-)
+
 -- 
-1.8.2.1
+1.7.6.5
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
