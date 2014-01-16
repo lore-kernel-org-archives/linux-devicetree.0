@@ -1,164 +1,103 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v5 00/14] Add support for MSM's mmio clock/reset controller
-Date: Thu, 16 Jan 2014 11:28:38 -0800
-Message-ID: <20140116192838.4167.31023@quantum>
-References: <1389811654-21397-1-git-send-email-sboyd@codeaurora.org>
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH] regulator: ti-abb: Add support for interleaved LDO registers
+Date: Thu, 16 Jan 2014 13:32:30 -0600
+Message-ID: <1389900750-27625-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1389811654-21397-1-git-send-email-sboyd@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org, Saravana Kannan <skannan@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Stephen Boyd (2014-01-15 10:47:20)
-> The first breaks a reset-controller include ordering requirement. It got
-> an ack so I think we're ok for it to go through the clock tree.
-> 
-> The next patch adds support for setting the rate and the parent at the
-> same time based on patches from James Hogan's remuxing set_rate series.
-> 
-> After that we add MSM clock hardware support and SoC specific drivers. The DT
-> node additions will be sent through the MSM maintainers once these patches are
-> accepted.
+Certain platforms such as DRA7 have quirky memory maps such as:
+PRM_ABBLDO_DSPEVE_CTRL	0x4ae07e20
+PRM_ABBLDO_IVA_CTRL	0x4ae07e24
+other-registers
+PRM_ABBLDO_DSPEVE_SETUP	0x4ae07e30
+PRM_ABBLDO_IVA_SETUP	0x4ae07e34
 
-Hi Stephen,
+These need the address allocation to be either shared OR unique
+allocation per register instance.
 
-These patches look great and I've taken them into clk-next for testing.
-They should get pushed out to my Linaro mirror later today and will go
-in for 3.14. Thanks for spinning the revisions to this series so
-quickly.
+So, introduce v3 type of ABB for these instances to allocate based on
+shared address ranges.
 
-There might still be some way to share the regmap helpers in the future,
-and getting these patches merged is a good starting point.
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+Baseline off: v3.13-rc8
 
-Regards,
-Mike
+The alternate approach is to introduce registers as seperate
+reg-names options, which means all existing abb-v1,v2 will probably have to
+change as well.
 
-> 
-> Changes since v4:
->  * Moved regmap code out of the core into drivers/clk/qcom/
->  * Reworked to use a wrapper clk_regmap struct
-> 
-> Changes since v3:
->  * Moved binding include to clock/
->  * New patch for 8660 GCC driver
->  * Renamed directory to qcom to match vendor prefix
->  * Added some missing clocks in 8974 GCC driver
->  * New patch for 8974 MMCC driver
-> 
-> Changes since v2:
-> 
->  * Completed 8960 and 8974 GCC data & dt-bindings
->  * Added support for reset controllers
->  * Squashed some bugs in 8974 gcc clocks
->  * New patch to fix clk NULL pointer deref
->  * New patch to fix #include requirement for reset-controller.h
-> 
-> Changes since v1:
-> 
->  * Rewrote binding to use #clock-cells=1
->  * Reworked library components (pll, rcg, branch) to use regmap
->  * Dropped common clock framework patches that did DT parsing
->  * New patches for regmap support in common clock framework
-> 
-> Stephen Boyd (14):
->   reset: Silence warning in reset-controller.h
->   clk: Add set_rate_and_parent() op
->   clk: qcom: Add a regmap type clock struct
->   clk: qcom: Add support for phase locked loops (PLLs)
->   clk: qcom: Add support for root clock generators (RCGs)
->   clk: qcom: Add support for branches/gate clocks
->   clk: qcom: Add reset controller support
->   clk: qcom: Add support for MSM8960's global clock controller (GCC)
->   clk: qcom: Add support for MSM8960's multimedia clock controller
->     (MMCC)
->   clk: qcom: Add support for MSM8974's global clock controller (GCC)
->   clk: qcom: Add support for MSM8974's multimedia clock controller
->     (MMCC)
->   clk: qcom: Add support for MSM8660's global clock controller (GCC)
->   devicetree: bindings: Document qcom,gcc
->   devicetree: bindings: Document qcom,mmcc
-> 
->  Documentation/clk.txt                              |    3 +
->  .../devicetree/bindings/clock/qcom,gcc.txt         |   21 +
->  .../devicetree/bindings/clock/qcom,mmcc.txt        |   21 +
->  drivers/clk/Kconfig                                |    2 +
->  drivers/clk/Makefile                               |    1 +
->  drivers/clk/clk.c                                  |   78 +-
->  drivers/clk/qcom/Kconfig                           |   47 +
->  drivers/clk/qcom/Makefile                          |   14 +
->  drivers/clk/qcom/clk-branch.c                      |  159 ++
->  drivers/clk/qcom/clk-branch.h                      |   56 +
->  drivers/clk/qcom/clk-pll.c                         |  222 ++
->  drivers/clk/qcom/clk-pll.h                         |   66 +
->  drivers/clk/qcom/clk-rcg.c                         |  517 ++++
->  drivers/clk/qcom/clk-rcg.h                         |  159 ++
->  drivers/clk/qcom/clk-rcg2.c                        |  291 ++
->  drivers/clk/qcom/clk-regmap.c                      |  114 +
->  drivers/clk/qcom/clk-regmap.h                      |   45 +
->  drivers/clk/qcom/gcc-msm8660.c                     | 2819 ++++++++++++++++++
->  drivers/clk/qcom/gcc-msm8960.c                     | 2993 ++++++++++++++++++++
->  drivers/clk/qcom/gcc-msm8974.c                     | 2694 ++++++++++++++++++
->  drivers/clk/qcom/mmcc-msm8960.c                    | 2321 +++++++++++++++
->  drivers/clk/qcom/mmcc-msm8974.c                    | 2625 +++++++++++++++++
->  drivers/clk/qcom/reset.c                           |   63 +
->  drivers/clk/qcom/reset.h                           |   37 +
->  include/dt-bindings/clock/qcom,gcc-msm8660.h       |  276 ++
->  include/dt-bindings/clock/qcom,gcc-msm8960.h       |  313 ++
->  include/dt-bindings/clock/qcom,gcc-msm8974.h       |  320 +++
->  include/dt-bindings/clock/qcom,mmcc-msm8960.h      |  137 +
->  include/dt-bindings/clock/qcom,mmcc-msm8974.h      |  161 ++
->  include/dt-bindings/reset/qcom,gcc-msm8660.h       |  134 +
->  include/dt-bindings/reset/qcom,gcc-msm8960.h       |  118 +
->  include/dt-bindings/reset/qcom,gcc-msm8974.h       |   96 +
->  include/dt-bindings/reset/qcom,mmcc-msm8960.h      |   93 +
->  include/dt-bindings/reset/qcom,mmcc-msm8974.h      |   62 +
->  include/linux/clk-provider.h                       |   15 +
->  include/linux/reset-controller.h                   |    1 +
->  36 files changed, 17075 insertions(+), 19 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.txt
->  create mode 100644 drivers/clk/qcom/Kconfig
->  create mode 100644 drivers/clk/qcom/Makefile
->  create mode 100644 drivers/clk/qcom/clk-branch.c
->  create mode 100644 drivers/clk/qcom/clk-branch.h
->  create mode 100644 drivers/clk/qcom/clk-pll.c
->  create mode 100644 drivers/clk/qcom/clk-pll.h
->  create mode 100644 drivers/clk/qcom/clk-rcg.c
->  create mode 100644 drivers/clk/qcom/clk-rcg.h
->  create mode 100644 drivers/clk/qcom/clk-rcg2.c
->  create mode 100644 drivers/clk/qcom/clk-regmap.c
->  create mode 100644 drivers/clk/qcom/clk-regmap.h
->  create mode 100644 drivers/clk/qcom/gcc-msm8660.c
->  create mode 100644 drivers/clk/qcom/gcc-msm8960.c
->  create mode 100644 drivers/clk/qcom/gcc-msm8974.c
->  create mode 100644 drivers/clk/qcom/mmcc-msm8960.c
->  create mode 100644 drivers/clk/qcom/mmcc-msm8974.c
->  create mode 100644 drivers/clk/qcom/reset.c
->  create mode 100644 drivers/clk/qcom/reset.h
->  create mode 100644 include/dt-bindings/clock/qcom,gcc-msm8660.h
->  create mode 100644 include/dt-bindings/clock/qcom,gcc-msm8960.h
->  create mode 100644 include/dt-bindings/clock/qcom,gcc-msm8974.h
->  create mode 100644 include/dt-bindings/clock/qcom,mmcc-msm8960.h
->  create mode 100644 include/dt-bindings/clock/qcom,mmcc-msm8974.h
->  create mode 100644 include/dt-bindings/reset/qcom,gcc-msm8660.h
->  create mode 100644 include/dt-bindings/reset/qcom,gcc-msm8960.h
->  create mode 100644 include/dt-bindings/reset/qcom,gcc-msm8974.h
->  create mode 100644 include/dt-bindings/reset/qcom,mmcc-msm8960.h
->  create mode 100644 include/dt-bindings/reset/qcom,mmcc-msm8974.h
-> 
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> hosted by The Linux Foundation
-> 
+The reason for this mishmash of register allocation is due to SoC integration
+lack of discipline of ensuring that device instances need contigous register
+allocation :(.. but too late to fix :(
+
+ .../bindings/regulator/ti-abb-regulator.txt        |    1 +
+ drivers/regulator/ti-abb-regulator.c               |   26 +++++++++++++++++++-
+ 2 files changed, 26 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/regulator/ti-abb-regulator.txt b/Documentation/devicetree/bindings/regulator/ti-abb-regulator.txt
+index 2e57a33..96ae151 100644
+--- a/Documentation/devicetree/bindings/regulator/ti-abb-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/ti-abb-regulator.txt
+@@ -4,6 +4,7 @@ Required Properties:
+ - compatible: Should be one of:
+   - "ti,abb-v1" for older SoCs like OMAP3
+   - "ti,abb-v2" for newer SoCs like OMAP4, OMAP5
++  - "ti,abb-v3" for newer SoCs like DRA7 quirky addressing
+ - reg: Address and length of the register set for the device. It contains
+   the information of registers in the same order as described by reg-names
+ - reg-names: Should contain the reg names
+diff --git a/drivers/regulator/ti-abb-regulator.c b/drivers/regulator/ti-abb-regulator.c
+index b187b6b..5f9cfd4 100644
+--- a/drivers/regulator/ti-abb-regulator.c
++++ b/drivers/regulator/ti-abb-regulator.c
+@@ -673,9 +673,23 @@ static const struct ti_abb_reg abb_regs_v2 = {
+ 	.opp_sel_mask		= (0x03 << 0),
+ };
+ 
++static const struct ti_abb_reg abb_regs_v3 = {
++	.control_reg		= 0x00,
++	.setup_reg		= 0x10,
++
++	.sr2_wtcnt_value_mask	= (0xff << 8),
++	.fbb_sel_mask		= (0x01 << 2),
++	.rbb_sel_mask		= (0x01 << 1),
++	.sr2_en_mask		= (0x01 << 0),
++
++	.opp_change_mask	= (0x01 << 2),
++	.opp_sel_mask		= (0x03 << 0),
++};
++
+ static const struct of_device_id ti_abb_of_match[] = {
+ 	{.compatible = "ti,abb-v1", .data = &abb_regs_v1},
+ 	{.compatible = "ti,abb-v2", .data = &abb_regs_v2},
++	{.compatible = "ti,abb-v3", .data = &abb_regs_v3},
+ 	{ },
+ };
+ 
+@@ -724,7 +738,17 @@ static int ti_abb_probe(struct platform_device *pdev)
+ 	/* Map ABB resources */
+ 	pname = "base-address";
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, pname);
+-	abb->base = devm_ioremap_resource(dev, res);
++	if (!res) {
++		dev_err(dev, "Missing '%s' IO resource\n", pname);
++		return -ENODEV;
++	}
++
++	/*
++	 * On some platforms such as DRA7, the register range of ABB LDOx is
++	 * interleaved with registers of another ABB LDO and non-LDO registers!
++	 * We cannot use reserved allocation in these cases.
++	 */
++	abb->base = devm_ioremap_nocache(dev, res->start, resource_size(res));
+ 	if (IS_ERR(abb->base))
+ 		return PTR_ERR(abb->base);
+ 
+-- 
+1.7.9.5
+
