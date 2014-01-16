@@ -1,87 +1,169 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 2/2] i2c designware add support of I2C standard mode
-Date: Thu, 16 Jan 2014 20:33:45 +0100
-Message-ID: <20140116193345.GB4127@katana>
-References: <20130828153429.GB7066@ab42.lan>
- <1381244455-3836-2-git-send-email-romainba@abilis.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/4] spi: sunxi: Add Allwinner A31 SPI
+ controller driver
+Date: Thu, 16 Jan 2014 19:40:03 +0000
+Message-ID: <20140116194003.GN17314@sirena.org.uk>
+References: <1389892285-11745-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1389892285-11745-4-git-send-email-maxime.ripard@free-electrons.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="l76fUT7nc3MelDdI"
-Return-path: <linux-doc-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="R92lf0Oi2sxyK3LA"
+Return-path: <linux-sunxi+bncBDQ2L75W5QGBBK7L4CLAKGQEIDJ2YEQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1381244455-3836-2-git-send-email-romainba@abilis.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Romain Baeriswyl <Romain.Baeriswyl@abilis.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, Vineet Gupta <vgupta@synopsys.com>, Christian Ruppert <christian.ruppert@abilis.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Chiau Ee Chew <chiau.ee.chew@intel.com>, Shinya Kuribayashi <skuribay@pobox.com>, Jean Delvare <khali@linux-fr.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Romain Baeriswyl <romainba@abilis.com>
+In-Reply-To: <1389892285-11745-4-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---l76fUT7nc3MelDdI
+--R92lf0Oi2sxyK3LA
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 08, 2013 at 05:00:55PM +0200, Romain Baeriswyl wrote:
-> Some legacy devices support ony I2C standard mode at 100kHz.=20
-> This patch allows to select the standard mode through the DTS=20
-> with the use of the existing clock-frequency parameter.
->=20
-> When clock-frequency parameter is not set, the fast mode is selected.
-> Only when the parameter is set at 100000, the standard mode is selected.
->=20
-> Signed-off-by: Romain Baeriswyl <romainba@abilis.com>
-> Reviewed-by: Christian Ruppert <christian.ruppert@abilis.com>
+On Thu, Jan 16, 2014 at 06:11:24PM +0100, Maxime Ripard wrote:
 
-Pretty much OK. One change needed, though:
+Looks pretty clean, a few fairly small things below.
 
-> ---
->  .../devicetree/bindings/i2c/i2c-designware.txt     |    1 +
->  drivers/i2c/busses/i2c-designware-platdrv.c        |   17 ++++++++++++++=
-+--
->  2 files changed, 16 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/D=
-ocumentation/devicetree/bindings/i2c/i2c-designware.txt
-> index 5199b0c..16d0bef 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> @@ -9,6 +9,7 @@ Required properties :
->  Recommended properties :
-> =20
->   - clock-frequency : desired I2C bus clock frequency in Hz.
-> +   Only standard mode at 100kHz and fast mode at 400kHz are supported.
+> +- clocks: phandle to the clocks feeding the SPI controller. Two are
+> +          needed:
+> +  - "ahb": the gated AHB parent clock
+> +  - "mod": the parent module clock
 
-This should not go the bindings doc, since this is a linux specific
-detail. It should go...
+I guess you should specify that this needs to be done with clock-names
+too then?
 
-> +		if (clk_freq !=3D 100000 && clk_freq !=3D 400000)
-> +			return -EINVAL;
+> --- a/drivers/spi/Makefile
+> +++ b/drivers/spi/Makefile
+> @@ -69,6 +69,7 @@ obj-$(CONFIG_SPI_SH_HSPI)		+= spi-sh-hspi.o
+>  obj-$(CONFIG_SPI_SH_MSIOF)		+= spi-sh-msiof.o
+>  obj-$(CONFIG_SPI_SH_SCI)		+= spi-sh-sci.o
+>  obj-$(CONFIG_SPI_SIRF)		+= spi-sirf.o
+> +obj-$(CONFIG_ARCH_SUNXI)		+= spi-sun6i.o
 
-=2E.. here as an dev_err message "Only x and y supported".
+I would expect a new Kconfig symbol for this.
 
-Rest looks good, thanks!
+> +static inline void sun6i_spi_drain_fifo(struct sun6i_spi *sspi, int len)
+> +{
+> +	u32 reg, cnt;
+> +	u8 byte;
+> +
+> +	/* See how much data are available */
 
+data is available.
 
---l76fUT7nc3MelDdI
+> +	while (len--) {
+> +		byte = readb(sspi->base_addr + SUN6I_RXDATA_REG);
+> +		if (sspi->rx_buf)
+> +			*sspi->rx_buf++ = byte;
+> +	}
+
+It seems like this hardware is only able to handle bidirectional
+operation - this is actually quite common and isn't always as simple as
+it is here.  Can I persuade you to put something in the core which
+provides dummy data buffers for this case?  I was thinking flags like
+must_tx and must_rx or something but didn't get around to this yet.
+
+> +static int sun6i_spi_finish_transfer(struct spi_device *spi,
+> +				     struct spi_transfer *tfr,
+> +				     bool cs_change)
+> +{
+> +	struct sun6i_spi *sspi = spi_master_get_devdata(spi->master);
+> +
+> +	sun6i_spi_drain_fifo(sspi, SUN6I_FIFO_DEPTH);
+> +
+> +	if (tfr->delay_usecs)
+> +		udelay(tfr->delay_usecs);
+
+If you implement this using transfer_one() (as you should) the core will
+do this for you.
+
+> +	if (status & SUN6I_INT_CTL_RF_OVF) {
+> +		sun6i_spi_drain_fifo(sspi, SUN6I_FIFO_DEPTH);
+> +		sun6i_spi_write(sspi, SUN6I_INT_STA_REG, SUN6I_INT_CTL_RF_OVF);
+> +		return IRQ_HANDLED;
+> +	}
+
+This looks like an overflow - a log message would be helpful for users
+and you should possibly be flagging an error on the current transfer.
+
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	sspi->base_addr = devm_request_and_ioremap(&pdev->dev, res);
+> +	if (!sspi->base_addr) {
+> +		dev_err(&pdev->dev, "Unable to remap IO\n");
+> +		ret = -ENXIO;
+> +		goto err;
+> +	}
+
+devm_ioremap_resource() is nicer in that it returns an error and then
+you don't need to log either since it's noisy itself.
+
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0) {
+> +		dev_err(&pdev->dev, "No spi IRQ specified\n");
+> +		ret = -ENXIO;
+
+Don't overwrite the error code.
+
+> +	ret = clk_set_rate(sspi->mclk, 100000000);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Couldn't change module clock rate\n");
+> +		goto err2;
+> +	}
+
+Does this really need to be fatal (or done at all)?  There seems to be
+another reasonably flexible divider in the IP and it's more common to
+either set this per transfer to something that rounds nicely or just use
+the default and rely on the dividers.
+
+> +	ret = clk_prepare_enable(sspi->mclk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Couldn't enable clock 'ahb spi'\n");
+> +		goto err2;
+> +	}
+
+I would recommend moving these to runtime PM so the clocks are only
+active when the device is actually in use, the core will do the runtime
+PM management if you set auto_runtime_pm so it's really easy to
+implement.
+
+> +	ret = reset_control_deassert(sspi->rstc);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Couldn't deassert the device from reset\n");
+> +		goto err3;
+> +	}
+> +
+> +	sun6i_spi_write(sspi, SUN6I_GBL_CTL_REG,
+> +			SUN6I_GBL_CTL_BUS_ENABLE | SUN6I_GBL_CTL_MASTER | SUN6I_GBL_CTL_TP);
+
+Similarly here the IP could be kept in reset when not in use.
+
+--R92lf0Oi2sxyK3LA
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJS2DQZAAoJEBQN5MwUoCm2kmsQALLJAM6Xk0o0t1UK4lBSwt4k
-0JqR+ny1S48lMjcezUcr4ZKnTZ+q89ZUPYLbj67L0Su1WNz2JOe8x9FVphFscHo1
-wNGlQhps04iY/fXchmKVBId6geg+obby00LZMHo/rCYgkF2JMXJA+MM1Qzo7EIkM
-fORdk4R3FNySd3mAgSW367CMnmhTzQaQd8Zs+WkNjVOnrw6nWEFXXsf77jt8zWWX
-b7asf3mAJanLVTap4wgdl91Z6y4fQ9M+wbnztUYLDE74gCNmpQ/6iSRR7k7h8Zok
-yc+jGN6VuPaazURkUysQ/0k9Qcx02alkX7V30pnTBv+T59DRque8ZOoRbyqAno8L
-rCPuJxAKGuWQep+JUl+wTiBM7jl+/WY2wzoE8K8RxGYme+iVM1DWtZRVHZbvtouc
-J+WRepfbqsBPoYsItB24XQgYj3P3vDxhs9V7OdJNOwyqwY3/rXJIfwD/tWddUlmj
-W5y/o/KXGtYH+BV17IcwiOxMeSuEzQgdLfIJS1KhiQz7YvMShVNVZXIevhyNgjpI
-iY+AuYsNX3+OKkO1OWAXAuh6ynFrjkwFAuFGgycLNxTL4A++FLQE+cU+f+joFY5r
-fKc9j+Kfw8hyhiNVllW88lAhW05JCFVmpZoA4MRjFLz/YoFfu63wh2z3PUwdwdfe
-sUccSJhXdCNydh/E1VDk
-=AQCa
+iQIcBAEBAgAGBQJS2DWPAAoJELSic+t+oim9JgoQAIHWUh4oREDc5EFQGExWxMPq
+lHpGUGK6uaTC7hDzeO588fzZbI7XiokExizatJ29pPrllJQcawokRRiJoQyHUYUR
+GtLg9+iz6hpX326TeR+XkCkcVxKCK1Q3TmbIFojUZS0irM3MlyEsnMoWUr98QVyN
+M4OkZYt/+dYohC6xAB32NV0lVohh/sNgPFvKtg9eoCKfQ0eicZdWjh7aLjB7zZVP
+tGFF3uNoeEnDz8ptYxym/yA+WQ7urVQgsHT1yc9lF71qee8U5fjtvdz811HITuR5
+BmJLfxW4GPHRNjMgcVo/s4cfkhPnKFDQksM7TNqR11MQksPnBtF7gpHEOKjH0Htw
+RJGoRc5mC/UDp72iyqLcvNd0UdbqTlOCXqo9/ZJxKaeFpsZZ+qyTAKz8ittLFIK9
+ZmmbkLB13XDJIe7KQwSUBMFSUgz4Wyql0c0I/N8ihD4yOhoOplf5DeRWVvrd8ekU
+xvhlVzojKR5p/il3j80JzZ8rnAb6ipSLE1aGAgFSlzuejPotJVo0dwSaapswOTFi
+ntpv5dTJ+/ckpBDbG295SL5he7FxEZw5vk90iSpk8ZYG6LC4oJXpZuH3jQzZ8h/N
+vZmfUjJwxW4gaNzJ8rF9RmTqeT+i00kGwmzrNmwjm4TDIEqHvQ69pRkr312SMdY5
++GoHyrHeQQcOnLjUU/d4
+=Laes
 -----END PGP SIGNATURE-----
 
---l76fUT7nc3MelDdI--
+--R92lf0Oi2sxyK3LA--
