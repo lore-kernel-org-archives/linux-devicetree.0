@@ -1,216 +1,43 @@
-From: Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v9] clk: add MOXA ART SoCs clock driver
-Date: Fri, 17 Jan 2014 15:17:58 +0000
-Message-ID: <52D949A6.9060607@arm.com>
-References: <1386602163-28479-1-git-send-email-jonas.jensen@gmail.com> <1389971035-17781-1-git-send-email-jonas.jensen@gmail.com>
+From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH] Add Xilinx AXI Video DMA Engine driver
+Date: Fri, 17 Jan 2014 17:32:17 +0200
+Message-ID: <1389972737.7619.14.camel@smile>
+References: <1389894803-4147-1-git-send-email-sthokal@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1389971035-17781-1-git-send-email-jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1389894803-4147-1-git-send-email-sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sudeep.Holla-5wv7dgnIgG8@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "adam.jaremko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <adam.jaremko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 17/01/14 15:03, Jonas Jensen wrote:
-> This patch adds MOXA ART SoCs clock driver support.
+On Thu, 2014-01-16 at 23:23 +0530, Srikanth Thokala wrote:
+> Hi,
 > 
-> Signed-off-by: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
+> This is the driver for Xilinx AXI Video Direct Memory Access Engine.
+> It is a soft IP core, which provides high-bandwidth direct memory
+> access between memory and AXI4-Stream video type target peripherals 
+> including peripherals which support AXI4-Stream Video Protocol. The
+> core provides efficient two dimensional DMA operations with independent
+> asynchronous read and write channel operation.
 > 
-> Notes:
->     Changes since v8:
->     
->     1. rebase drivers/clk/Makefile to next-20140117
->     
->     DT bindings document:
->     
->     2. use two separate sections describing PLL/APB
->     3. update example
->     
->     Applies to next-20140117
+> For more information on the IP, please refer to
+> http://www.xilinx.com/support/documentation/ip_documentation/axi_vdma/v6_1/pg020_axi_vdma.pdf
 > 
->  .../bindings/clock/moxa,moxart-clock.txt           |  48 +++++++++
->  drivers/clk/Makefile                               |   1 +
->  drivers/clk/clk-moxart.c                           | 112 +++++++++++++++++++++
->  3 files changed, 161 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/moxa,moxart-clock.txt
->  create mode 100644 drivers/clk/clk-moxart.c
+> This patch also provides a test client, which assumes read and write channels
+> of the core are configured in a back-to-back connection.  It transfers 
+> data on the write channel, read and verify the data on the read channel. 
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/moxa,moxart-clock.txt b/Documentation/devicetree/bindings/clock/moxa,moxart-clock.txt
-> new file mode 100644
-> index 0000000..242e3fc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/moxa,moxart-clock.txt
-> @@ -0,0 +1,48 @@
-> +Device Tree Clock bindings for arch-moxart
-> +
-> +This binding uses the common clock binding[1].
-> +
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +MOXA ART SoCs allow to determine PLL output and APB frequencies
-> +by reading registers holding multiplier and divisor information.
-> +
-> +
-> +PLL:
-> +
-> +Required properties:
-> +- compatible : Must be "moxa,moxart-pll-clock"
-> +- #clock-cells : Should be 0
-> +- reg : Should contain registers location and length
-> +- clocks : Should contain phandle to parent clock
-> +
-> +Optional properties:
-> +- clock-output-names : Should contain clock name
-> +
-> +
-> +APB:
-> +
-> +Required properties:
-> +- compatible : Must be "moxa,moxart-apb-clock"
-> +- #clock-cells : Should be 0
-> +- reg : Should contain registers location and length
-> +- clocks : Should contain phandle to parent clock
-> +
-> +Optional properties:
-> +- clock-output-names : Should contain clock name
-> +
-> +
-> +For example:
-> +
-> +	clk_pll: clk_pll@98100000 {
-> +		compatible = "moxa,moxart-pll-clock";
-> +		#clock-cells = <0>;
-> +		reg = <0x98100000 0x34>;
-> +	};
-> +
-> +	clk_apb: clk_apb@98100000 {
-> +		compatible = "moxa,moxart-apb-clock";
-> +		#clock-cells = <0>;
-> +		reg = <0x98100000 0x34>;
-> +		clocks = <&clk_pll>;
-> +	};
-> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> index 0c16e9c..ed5d58d 100644
-> --- a/drivers/clk/Makefile
-> +++ b/drivers/clk/Makefile
-> @@ -12,6 +12,7 @@ obj-$(CONFIG_COMMON_CLK)	+= clk-composite.o
->  # SoCs specific
->  obj-$(CONFIG_ARCH_BCM2835)	+= clk-bcm2835.o
->  obj-$(CONFIG_ARCH_EFM32)	+= clk-efm32gg.o
-> +obj-$(CONFIG_ARCH_MOXART)	+= clk-moxart.o
->  obj-$(CONFIG_ARCH_NOMADIK)	+= clk-nomadik.o
->  obj-$(CONFIG_ARCH_HIGHBANK)	+= clk-highbank.o
->  obj-$(CONFIG_ARCH_HI3xxx)	+= hisilicon/
-> diff --git a/drivers/clk/clk-moxart.c b/drivers/clk/clk-moxart.c
-> new file mode 100644
-> index 0000000..f0436a3
-> --- /dev/null
-> +++ b/drivers/clk/clk-moxart.c
-> @@ -0,0 +1,112 @@
-> +/*
-> + * MOXA ART SoCs clock driver.
-> + *
-> + * Copyright (C) 2013 Jonas Jensen
-> + *
-> + * Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2.  This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/io.h>
-> +#include <linux/of_address.h>
-> +#include <linux/clkdev.h>
-> +
-> +void __init moxart_of_pll_clk_init(struct device_node *node)
-> +{
-> +	static void __iomem *base;
-> +	struct clk *clk, *ref_clk;
-> +	unsigned long rate;
-> +	unsigned int mul;
-> +	const char *name = node->name;
-> +
-> +	of_property_read_string(node, "clock-output-names", &name);
-> +
-> +	base = of_iomap(node, 0);
-> +	if (!base) {
-> +		pr_err("%s: of_iomap failed\n", node->full_name);
-> +		return;
-> +	}
-> +
-> +	mul = readl(base + 0x30) >> 3 & 0x3f;
-> +	iounmap(base);
-> +
-> +	ref_clk = of_clk_get(node, 0);
-> +	if (IS_ERR(ref_clk)) {
-> +		pr_err("%s: of_clk_get failed\n", node->full_name);
-> +		return;
-> +	}
-> +
-> +	rate = mul * clk_get_rate(ref_clk);
-> +
-> +	clk = clk_register_fixed_rate(NULL, name, NULL, CLK_IS_ROOT, rate);
-> +	if (IS_ERR(clk)) {
-> +		pr_err("%s: clk_register_fixed_rate failed\n", node->full_name);
-> +		return;
-> +	}
-> +
-> +	clk_register_clkdev(clk, NULL, name);
-> +	of_clk_add_provider(node, of_clk_src_simple_get, clk);
-> +}
-> +CLK_OF_DECLARE(moxart_pll_clock, "moxa,moxart-pll-clock",
-> +	       moxart_of_pll_clk_init);
-> +
-> +void __init moxart_of_apb_clk_init(struct device_node *node)
-> +{
-> +	static void __iomem *base;
-> +	struct clk *clk, *pll_clk;
-> +	unsigned long rate;
-> +	unsigned int div, val;
-> +	const char *name = node->name;
-> +
-> +	of_property_read_string(node, "clock-output-names", &name);
-> +
-> +	base = of_iomap(node, 0);
-> +	if (!base) {
-> +		pr_err("%s: of_iomap failed\n", node->full_name);
-> +		return;
-> +	}
-> +
-> +	val = readl(base + 0xc) >> 4 & 0x7;
-> +	iounmap(base);
-> +
-> +	switch (val) {
-> +	case 1:
-> +		div = 3;
-> +		break;
-> +	case 2:
-> +		div = 4;
-> +		break;
-> +	case 3:
-> +		div = 6;
-> +		break;
-> +	case 4:
-> +		div = 8;
-> +		break;
-> +	default:
-> +		div = 2;
-> +		break;
-> +	}
+>  drivers/dma/xilinx/xilinx_vdma_test.c              |  629 ++++++++
 
-How about something like this to avoid unnecessary switch:
-	int div_idx[] = { 2, 3, 4, 6, 8};
-	if (val > 4)
-		val = 0;
-	div = div_idx[val];
+What about to modify dmatest.c accordingly to your needs?
+I see no much sense to have another copy of that in the tree.
 
-Regards,
-Sudeep
+-- 
+Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Intel Finland Oy
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
