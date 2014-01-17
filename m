@@ -1,420 +1,125 @@
-From: Yuvaraj Kumar <yuvaraj.cd@gmail.com>
-Subject: Re: [PATCH V6 1/2] PHY: Exynos: Add Exynos5250 SATA PHY driver
-Date: Fri, 17 Jan 2014 17:20:58 +0530
-Message-ID: <CAKuRcOKEvvq7s8EwKq97KL2RY1bX_pVtQvtncoi6VsopdpXafg@mail.gmail.com>
-References: <1389337208-11325-1-git-send-email-yuvaraj.cd@samsung.com>
- <1389337208-11325-2-git-send-email-yuvaraj.cd@samsung.com>
- <52D00C33.4060305@samsung.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/4] ARM: sun6i: dt: Add PLL6 and SPI module clocks
+Date: Fri, 17 Jan 2014 13:07:45 +0100
+Message-ID: <20140117120745.GB3867@lukather>
+References: <1389892285-11745-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1389892285-11745-3-git-send-email-maxime.ripard@free-electrons.com>
+ <20140116181528.GY8153@joshc.qualcomm.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52D00C33.4060305@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-doc@vger.kernel.org, Girish K S <ks.giri@samsung.com>, Wolfram Sang <wsa@the-dreams.de>, Vasanth Ananthan <vasanth.a@samsung.com>, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, linux-ide@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Christoffer Dall <christoffer.dall@linaro.org>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="NMuMz9nt05w80d4+"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBG534SLAKGQEGYDFESA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140116181528.GY8153-OP5zVEFNDbfdOxZ39nK119BPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
- Sorry for the late reply.
 
-On Fri, Jan 10, 2014 at 8:35 PM, Tomasz Figa <t.figa@samsung.com> wrote:
-> Hi Yuvaraj,
->
-> In general this version looks pretty good, but I have some questions inline.
-Please find my comments inline.
->
-> On 10.01.2014 08:00, Yuvaraj Kumar C D wrote:
-> [snip]
->
->> diff --git a/drivers/phy/phy-exynos5250-sata-i2c.c
->> b/drivers/phy/phy-exynos5250-sata-i2c.c
->> new file mode 100644
->> index 0000000..206e337
->> --- /dev/null
->> +++ b/drivers/phy/phy-exynos5250-sata-i2c.c
->> @@ -0,0 +1,40 @@
->> +/*
->> + * Copyright (C) 2013 Samsung Electronics Co.Ltd
->> + * Author:
->> + *     Yuvaraj C D <yuvaraj.cd@samsung.com>
->> + *
->> + * This program is free software; you can redistribute  it and/or modify
->> it
->> + * under  the terms of  the GNU General  Public License as published by
->> the
->> + * Free Software Foundation;  either version 2 of the  License, or (at
->> your
->> + * option) any later version.
->> + *
->> + */
->> +
->> +#include <linux/i2c.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +
->> +static int exynos_sata_i2c_probe(struct i2c_client *client,
->> +               const struct i2c_device_id *i2c_id)
->> +{
->> +       return 0;
->> +}
->> +
->> +static const struct i2c_device_id sataphy_i2c_device_match[] = {
->> +       { "exynos-sataphy-i2c", 0 },
->> +};
->> +
->> +static struct i2c_driver sataphy_i2c_driver = {
->> +       .probe          = exynos_sata_i2c_probe,
->> +       .id_table       = sataphy_i2c_device_match,
->> +       .driver   = {
->> +               .name = "exynos-sataphy-i2c",
->> +               .owner = THIS_MODULE,
->> +       },
->> +};
->> +
->> +static int __init exynos5250_phy_i2c_init(void)
->> +{
->> +       return i2c_add_driver(&sataphy_i2c_driver);
->> +}
->> +module_init(exynos5250_phy_i2c_init);
->
->
-> Hmm, is this driver even necessary now?
-Yes.It will not necessary now with of_find_i2c_device_by_node.I will
-remove phy-exynos5250-sata-i2c.c
->
-> Wolfram, would it be possible to use an i2c_client without a driver bound to
-> it?
->
->
->> diff --git a/drivers/phy/phy-exynos5250-sata.c
->> b/drivers/phy/phy-exynos5250-sata.c
->> new file mode 100644
->> index 0000000..6e5ff8d
->> --- /dev/null
->> +++ b/drivers/phy/phy-exynos5250-sata.c
->> @@ -0,0 +1,238 @@
->> +/*
->> + * Samsung SATA SerDes(PHY) driver
->> + *
->> + * Copyright (C) 2013 Samsung Electronics Co., Ltd.
->> + * Authors: Girish K S <ks.giri@samsung.com>
->> + *         Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/delay.h>
->> +#include <linux/io.h>
->> +#include <linux/i2c.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/phy/phy.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regmap.h>
->> +#include <linux/spinlock.h>
->> +#include <linux/mfd/syscon.h>
->> +
->> +#define EXYNOS5_SATA_RESET             0x4
->> +#define RESET_CMN_RST_N                        (1 << 1)
->> +#define LINK_RESET                     0xF0000
->
->
-> nit: Lowercase is preferred in hexadecimal notation.
-> + all other occurrences in this file.
-Ok.
->
->
->> +#define EXYNOS5_SATA_MODE0             0x10
->> +#define EXYNOS5_SATAPHY_PMU_ENABLE     (1 << 0)
->> +#define SATA_SPD_GEN3                  (2 << 0)
->> +#define EXYNOS5_SATA_CTRL0             0x14
->> +#define CTRL0_P0_PHY_CALIBRATED_SEL    (1 << 9)
->> +#define CTRL0_P0_PHY_CALIBRATED                (1 << 8)
->> +#define EXYNOS5_SATA_PHSATA_CTRLM      0xE0
->> +#define PHCTRLM_REF_RATE               (1 << 1)
->> +#define PHCTRLM_HIGH_SPEED             (1 << 0)
->> +#define EXYNOS5_SATA_PHSATA_STATM      0xF0
->> +#define PHSTATM_PLL_LOCKED             (1 << 0)
->> +#define EXYNOS_SATA_PHY_EN             (1 << 0)
->> +#define SATAPHY_CONTROL_OFFSET         0x0724
->> +
->> +struct exynos_sata_phy {
->> +       struct phy *phy;
->> +       struct clk *phyclk;
->> +       void __iomem *regs;
->> +       void __iomem *pmureg;
->> +       struct i2c_client *client;
->> +};
->> +
->> +static bool wait_for_reg_status(void __iomem *base, u32 reg, u32
->> checkbit,
->> +                               u32 status)
->> +{
->> +       unsigned long timeout = jiffies + usecs_to_jiffies(1000);
->
->
-> nit: It would be better to define the timeout using a macro to not use magic
-> numbers.
-Ok
->
->
->> +
->> +       while (time_before(jiffies, timeout)) {
->> +               if ((readl(base + reg) & checkbit) == status)
->> +                       return true;
->> +       }
->> +
->> +       return false;
->> +}
->> +
->> +static int exynos_sata_phy_power_on(struct phy *phy)
->> +{
->> +       struct exynos_sata_phy *sata_phy = phy_get_drvdata(phy);
->> +
->> +       regmap_update_bits(sata_phy->pmureg, SATAPHY_CONTROL_OFFSET,
->> +                       EXYNOS5_SATAPHY_PMU_ENABLE, EXYNOS_SATA_PHY_EN);
->
->
-> regmap_update_bits can return an error. Wouldn't it be better to return it
-> as return value of this function instead of returning 0 all the time? As a
-> side effect, this would make the function smaller by two lines.
-Yes.Will incorporate in next version.
->
->
->> +
->> +       return 0;
->> +}
->> +
->> +static int exynos_sata_phy_power_off(struct phy *phy)
->> +{
->> +       struct exynos_sata_phy *sata_phy = phy_get_drvdata(phy);
->> +
->> +       regmap_update_bits(sata_phy->pmureg, SATAPHY_CONTROL_OFFSET,
->> +                       EXYNOS5_SATAPHY_PMU_ENABLE, ~EXYNOS_SATA_PHY_EN);
->
->
-> Same here.
-Yes.Will incorporate in next version.
->
->
->> +
->> +       return 0;
->> +}
->> +
->> +static int exynos_sata_phy_init(struct phy *phy)
->> +{
->> +       u32 val = 0;
->> +       int ret = 0;
->> +       u8 buf[] = { 0x3A, 0x0B };
->> +       struct exynos_sata_phy *sata_phy = phy_get_drvdata(phy);
->> +
->> +       regmap_update_bits(sata_phy->pmureg, SATAPHY_CONTROL_OFFSET,
->> +                       EXYNOS5_SATAPHY_PMU_ENABLE, EXYNOS_SATA_PHY_EN);
->
->
-> regmap_update_bits returns an error code.
-Yes.Will incorporate in next version.
->
->
->> +
->> +       writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
->> +
->> +       val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
->> +       val |= 0xFF;
->> +       writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
->> +
->> +       val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
->> +       val |= LINK_RESET;
->> +       writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
->> +
->> +       val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
->> +       val |= RESET_CMN_RST_N;
->> +       writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
->> +
->> +       val = readl(sata_phy->regs + EXYNOS5_SATA_PHSATA_CTRLM);
->> +       val &= ~PHCTRLM_REF_RATE;
->> +       writel(val, sata_phy->regs + EXYNOS5_SATA_PHSATA_CTRLM);
->> +
->> +       /* High speed enable for Gen3 */
->> +       val = readl(sata_phy->regs + EXYNOS5_SATA_PHSATA_CTRLM);
->> +       val |= PHCTRLM_HIGH_SPEED;
->> +       writel(val, sata_phy->regs + EXYNOS5_SATA_PHSATA_CTRLM);
->> +
->> +       val = readl(sata_phy->regs + EXYNOS5_SATA_CTRL0);
->> +       val |= CTRL0_P0_PHY_CALIBRATED_SEL | CTRL0_P0_PHY_CALIBRATED;
->> +       writel(val, sata_phy->regs + EXYNOS5_SATA_CTRL0);
->> +
->> +       val = readl(sata_phy->regs + EXYNOS5_SATA_MODE0);
->> +       val |= SATA_SPD_GEN3;
->> +       writel(val, sata_phy->regs + EXYNOS5_SATA_MODE0);
->> +
->> +       ret = i2c_master_send(sata_phy->client, buf, sizeof(buf));
->> +       if (ret < 0)
->> +               return -ENXIO;
->
->
-> Wouldn't it be better to return the same error code as i2c_master_send
-> returned?
-Yes.Will incorporate in next version.
->
->
->> +
->> +       /* release cmu reset */
->> +       val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
->> +       val &= ~RESET_CMN_RST_N;
->> +       writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
->> +
->> +       val = readl(sata_phy->regs + EXYNOS5_SATA_RESET);
->> +       val |= RESET_CMN_RST_N;
->> +       writel(val, sata_phy->regs + EXYNOS5_SATA_RESET);
->> +
->> +       return (wait_for_reg_status(sata_phy->regs,
->> EXYNOS5_SATA_PHSATA_STATM,
->> +               PHSTATM_PLL_LOCKED, 1)) ? 0 : -EINVAL;
->> +
->
->
-> nit: Stray blank line.
-Ok.will remove
->
-> Also it might be more readable after making wait_for_reg_status() return an
-> integer error code (0 and e.g. -EFAULT) and rewriting the last line to:
->
->         ret = wait_for_reg_status(sata_phy->regs,
->                                         EXYNOS5_SATA_PHSATA_STATM,
->                                         PHSTATM_PLL_LOCKED, 1);
->         if (ret < 0)
->                 dev_err(&sata_phy->client->dev,
->                         "PHY PLL locking failed\n");
->
->         return ret;
->
-Ok.
-> By the way, isn't this initialization really needed whenever the PHY is
-> powered on?
-In Exynos5250, we do require to power on the phy before writing
-anything into phy controller register space.
-As you know,phy_ops have separate callbacks power_on and init .So I
-just used those to separate these functionalities.
->
->
->> +}
->> +
->> +static struct phy_ops exynos_sata_phy_ops = {
->> +       .init           = exynos_sata_phy_init,
->> +       .power_on       = exynos_sata_phy_power_on,
->> +       .power_off      = exynos_sata_phy_power_off,
->> +       .owner          = THIS_MODULE,
->> +};
->> +
->> +static int exynos_sata_phy_probe(struct platform_device *pdev)
->> +{
->> +       struct exynos_sata_phy *sata_phy;
->> +       struct device *dev = &pdev->dev;
->> +       struct resource *res;
->> +       struct phy_provider *phy_provider;
->> +       struct device_node *node;
->> +       int ret = 0;
->> +
->> +       sata_phy = devm_kzalloc(dev, sizeof(*sata_phy), GFP_KERNEL);
->> +       if (!sata_phy)
->> +               return -ENOMEM;
->> +
->> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +
->> +       sata_phy->regs = devm_ioremap_resource(dev, res);
->> +       if (IS_ERR(sata_phy->regs))
->> +               return PTR_ERR(sata_phy->regs);
->> +
->> +       sata_phy->pmureg = syscon_regmap_lookup_by_phandle(dev->of_node,
->> +                                       "samsung,syscon-phandle");
->
->
-> pmureg is defined as (void __iomem *) in struct exynos_sata_phy, but
-> syscon_regmap_lookup_by_phandle() returns (struct regmap *). Moreover it
-> does not return NULL on error, but rather ERR_PTR(). Please correct this.
-Ohh!my mistake.Will correct in next version.
->
->
->> +       if (!sata_phy->pmureg) {
->> +               dev_err(dev, "syscon regmap lookup failed.\n");
->> +               return PTR_ERR(sata_phy->pmureg);
->> +       }
->> +
->> +       node = of_parse_phandle(dev->of_node,
->> +                       "samsung,exynos-sataphy-i2c-phandle", 0);
->> +       if (!node)
->> +               return -ENODEV;
->
->
-> An error here means that a required DT property was not specified or was
-> specified incorrectly. IMHO -EINVAL would be better here.
-ok
->
->
->> +
->> +       sata_phy->client = of_find_i2c_device_by_node(node);
->> +       if (!sata_phy->client)
->> +               return -EPROBE_DEFER;
->> +
->> +       dev_set_drvdata(dev, sata_phy);
->> +
->> +       sata_phy->phyclk = devm_clk_get(dev, "sata_phyctrl");
->> +       if (IS_ERR(sata_phy->phyclk)) {
->> +               dev_err(dev, "failed to get clk for PHY\n");
->> +               return PTR_ERR(sata_phy->phyclk);
->> +       }
->> +
->> +       ret = clk_prepare_enable(sata_phy->phyclk);
->> +       if (ret < 0) {
->> +               dev_err(dev, "failed to enable source clk\n");
->> +               return ret;
->> +       }
->> +
->> +       sata_phy->phy = devm_phy_create(dev, &exynos_sata_phy_ops, NULL);
->> +       if (IS_ERR(sata_phy->phy)) {
->> +               clk_disable_unprepare(sata_phy->phyclk);
->> +               dev_err(dev, "failed to create PHY\n");
->> +               return PTR_ERR(sata_phy->phy);
->> +       }
->> +
->> +       phy_set_drvdata(sata_phy->phy, sata_phy);
->> +
->> +       phy_provider = devm_of_phy_provider_register(dev,
->> +                                       of_phy_simple_xlate);
->> +       if (IS_ERR(phy_provider)) {
->> +               clk_disable_unprepare(sata_phy->phyclk);
->> +               return PTR_ERR(phy_provider);
->> +       }
->> +
->> +       return 0;
->> +}
->> +
->> +static const struct of_device_id exynos_sata_phy_of_match[] = {
->> +       { .compatible = "samsung,exynos5250-sata-phy" },
->> +       { },
->> +};
->> +MODULE_DEVICE_TABLE(of, exynos_sata_phy_of_match);
->> +
->> +static struct platform_driver exynos_sata_phy_driver = {
->> +       .probe  = exynos_sata_phy_probe,
->
->
-> If this driver can be compiled as module, don't you also need remove?
-Will add in next version.
->
-> Best regards,
-> Tomasz
+--NMuMz9nt05w80d4+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Josh,
+
+On Thu, Jan 16, 2014 at 12:15:28PM -0600, Josh Cartwright wrote:
+> On Thu, Jan 16, 2014 at 06:11:23PM +0100, Maxime Ripard wrote:
+> > The module clocks in the A31 are still compatible with the A10 one. Add=
+ the SPI
+> > module clocks and the PLL6 in the device tree to allow their use by the=
+ SPI
+> > controllers.
+> >=20
+> > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/sun6i-a31.dtsi | 48 +++++++++++++++++++++++++++++++-=
+--------
+> >  1 file changed, 38 insertions(+), 10 deletions(-)
+> >=20
+> > diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i=
+-a31.dtsi
+> > index 5256ad9..ae058eb 100644
+> > --- a/arch/arm/boot/dts/sun6i-a31.dtsi
+> > +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+> > @@ -73,16 +73,12 @@
+> >  			clocks =3D <&osc24M>;
+> >  		};
+> > =20
+> > -		/*
+> > -		 * This is a dummy clock, to be used as placeholder on
+> > -		 * other mux clocks when a specific parent clock is not
+> > -		 * yet implemented. It should be dropped when the driver
+> > -		 * is complete.
+> > -		 */
+> > -		pll6: pll6 {
+> > -			#clock-cells =3D <0>;
+> > -			compatible =3D "fixed-clock";
+> > -			clock-frequency =3D <0>;
+> > +		pll6: clk@01c20028 {
+> > +			#clock-cells =3D <1>;
+> > +			compatible =3D "allwinner,sun6i-a31-pll6-clk";
+> > +			reg =3D <0x01c20028 0x4>;
+> > +			clocks =3D <&osc24M>;
+> > +			clock-output-names =3D "pll6";
+> >  		};
+> > =20
+> >  		cpu: cpu@01c20050 {
+> > @@ -182,6 +178,38 @@
+> >  					"apb2_uart1", "apb2_uart2", "apb2_uart3",
+> >  					"apb2_uart4", "apb2_uart5";
+> >  		};
+> > +
+> > +		spi0_clk: clk@01c200a0 {
+> > +			#clock-cells =3D <0>;
+> > +			compatible =3D "allwinner,sun4i-mod0-clk";
+> > +			reg =3D <0x01c200a0 0x4>;
+> > +			clocks =3D <&osc24M>, <&pll6>;
+>=20
+> This looks weird.  You've set the pll6 #clock-cells =3D <1>, but you
+> aren't using a specifier here.  Same below, as well.  The binding
+> documentation indicates that #clock-cells should be 0 for the pll6 node.
+
+Ah, right, it's a dumb copy/paste mistake.
+
+I'd expect dtc to output a warning/error in such case, but apparently
+it doesn't.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--NMuMz9nt05w80d4+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS2R0RAAoJEBx+YmzsjxAgZIMP/jSdAvtwBrXo5RfquYcPwaf/
+eRbUfbUwhBxi1TgMOodxqr/RvgKZAix8cGXAZbn/lPevwCCF+YaB5ydCJrcnb9HK
+yvFjFmb0kweYpMZDkfL3KNDEkgiK5l5+ayxT0A1C6kEv6yi/oXTsVOhP6sds1rVg
+p3my6L3Id/hwq/2RD9QidzSTJVyR1OURCR3Uq8RHZIg9s6znQngLLytpVVsIUg2U
+x6sDA9VzGfbJJkWC9xewGrZrYtUNTNAt8LoTLcHN60hdGRrILAF+HXisyy5tdww9
+o1ZiHNnsn8M3DMABNQ2MBNMmy9CgTJqcUIIVlPkR/EyGFW4Fb4gcxT8+yTwgCfRy
+Qw38N4F3W8WNpOu1OZtMy8/0J7OU5Mlkqqvygq5z9/hZ1hJVk87c/WkwpDLye25Y
+oIhXE+Sv5p3n+uGaCj+rBpDtUkw8Vzyw4KrSYUC9PpOctBHO0NNEz1nVcBtrfqKy
+j/DcZ8WJccfeCKb7q/7UpAGi5pe1kpCnOFdHaZlT+X0LioVeVp0rRbfPMdv9bCqo
+d4FbJUAPmjVK1ECavcXdY4rMWxno9KI75SWU5yaBlQNUkFPlJFWYjasKkS55N56c
+BCpTnlTg2DdBeOL7sQSZHAJGJ629H3AgiSi08B4l3n7JRvz/a61YTwfMjbofmGR/
+tuPPDWIS9SEylXuuXdq3
+=Ple6
+-----END PGP SIGNATURE-----
+
+--NMuMz9nt05w80d4+--
