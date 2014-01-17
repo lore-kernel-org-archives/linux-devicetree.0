@@ -1,73 +1,38 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] of: add function to count number of u32 elements in a
- property
-Date: Fri, 17 Jan 2014 14:44:57 +0000
-Message-ID: <20140117144456.GG19578@e106331-lin.cambridge.arm.com>
-References: <27256277.YJ687suYy5@phil> <1669323.jqjZBfkRx4@phil>
- <20140116124527.GD19578@e106331-lin.cambridge.arm.com>
- <3781679.27UF2dWtKL@phil>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: How to support SDIO wifi/bt in DT
+Date: Fri, 17 Jan 2014 15:47:54 +0100
+Message-ID: <201401171547.55384.arnd@arndb.de>
+References: <20140116133649.GV15937@n2100.arm.linux.org.uk> <CAOesGMgzi5Buduo2pd0PP8CvKVir69yZ-jjX0Gbda871GiD8rg@mail.gmail.com> <alpine.LFD.2.10.1401162204560.28907@knanqh.ubzr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <3781679.27UF2dWtKL@phil>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <alpine.LFD.2.10.1401162204560.28907@knanqh.ubzr>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Nicolas Pitre <nico@fluxnic.net>
+Cc: Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBKYW4gMTYsIDIwMTQgYXQgMDY6MDQ6NDJQTSArMDAwMCwgSGVpa28gU3TDvGJuZXIg
-d3JvdGU6Cj4gVGhlIG5lZWQgdG8ga25vdyB0aGUgbnVtYmVyIG9mIGFycmF5IGVsZW1lbnRzIGlu
-IGEgcHJvcGVydHkgaXMKPiBhIGNvbW1vbiBwYXR0ZXJuLiBUbyBwcmV2ZW50IGR1cGxpY2F0aW9u
-IG9mIG9wZW4tY29kZWQgaW1wbGVtZW50YXRpb25zCj4gYWRkIGEgaGVscGVyIGZ1bmN0aW9uIHRo
-YXQgYWxzbyBjZW50cmFsaXNlcyBzdHJpY3Qgc2FuaXR5IGNoZWNraW5nCj4gYW5kIERUQiBmb3Jt
-YXQgZGV0YWlscy4KPiAKPiBTdWdnZXN0ZWQtYnk6IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5k
-QGFybS5jb20+Cj4gU2lnbmVkLW9mZi1ieTogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5k
-ZT4KPiAtLS0KPiBIaSBNYXJrLAo+IGRpZCB5b3UgbWVhbiBpdCBsaWtlIHRoaXM/IEkndmUgdGVz
-dGVkIGl0IHdpdGggdGhlIHNyYW0tcmVzZXJ2ZSBjaGFuZ2UgYW5kCj4gaXQgbWFkZSB0aGUgcGFy
-dCBvZiB0aGUgZGV0ZXJtaW5pbmcgdGhlIG51bWJlciBlbGVtZW50cyBhIGxvdCBuaWNlciA6LSkK
-ClllcyEgVGhpcyBsb29rcyBwcmV0dHkgbmljZSEgOikKCj4gCj4gIGRyaXZlcnMvb2YvYmFzZS5j
-ICB8ICAgMzIgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgaW5jbHVkZS9saW51
-eC9vZi5oIHwgICAgOCArKysrKysrKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDQwIGluc2VydGlvbnMo
-KykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9vZi9iYXNlLmMgYi9kcml2ZXJzL29mL2Jhc2Uu
-Ywo+IGluZGV4IGY4MDdkMGUuLjBmNDBlYTUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9vZi9iYXNl
-LmMKPiArKysgYi9kcml2ZXJzL29mL2Jhc2UuYwo+IEBAIC05MjAsNiArOTIwLDM4IEBAIGludCBv
-Zl9wcm9wZXJ0eV9yZWFkX3UzMl9pbmRleChjb25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wLAo+
-ICBFWFBPUlRfU1lNQk9MX0dQTChvZl9wcm9wZXJ0eV9yZWFkX3UzMl9pbmRleCk7Cj4gIAo+ICAv
-KioKPiArICogb2ZfcHJvcGVydHlfY291bnRfdTMyX2VsZW1zIC0gQ291bnQgdGhlIG51bWJlciBv
-ZiB1MzIgdmFsdWVzIGluIGEgcHJvcGVydHkKPiArICoKPiArICogQG5wOgkJZGV2aWNlIG5vZGUg
-ZnJvbSB3aGljaCB0aGUgcHJvcGVydHkgdmFsdWUgaXMgdG8gYmUgcmVhZC4KPiArICogQHByb3Bu
-YW1lOgluYW1lIG9mIHRoZSBwcm9wZXJ0eSB0byBiZSBzZWFyY2hlZC4KPiArICoKPiArICogU2Vh
-cmNoIGZvciBhIHByb3BlcnR5IGluIGEgZGV2aWNlIG5vZGUgYW5kIGNvdW50IHRoZSBudW1iZXIg
-b2YgdTMyIGVsZW1lbnRzCj4gKyAqIGluIGl0LiBSZXR1cm5zIG51bWJlciBvZiBlbGVtZW50cyBv
-biBzdWNlc3MsIC1FSU5WQUwgaWYgdGhlIHByb3BlcnR5IGRvZXMKPiArICogbm90IGV4aXN0IG9y
-IGl0cyBsZW5ndGggZG9lcyBub3QgbWF0Y2ggYSBtdWx0aXBsZSBvZiB1MzIgYW5kIC1FTk9EQVRB
-IGlmIHRoZQo+ICsgKiBwcm9wZXJ0eSBkb2VzIG5vdCBoYXZlIGEgdmFsdWUuCj4gKyAqLwo+ICtp
-bnQgb2ZfcHJvcGVydHlfY291bnRfdTMyX2VsZW1zKGNvbnN0IHN0cnVjdCBkZXZpY2Vfbm9kZSAq
-bnAsCj4gKwkJCQljb25zdCBjaGFyICpwcm9wbmFtZSkKPiArewo+ICsJaW50IGVsZW1fc2l6ZSA9
-IHNpemVvZih1MzIpOwo+ICsJaW50IGxlbjsKPiArCXN0cnVjdCBwcm9wZXJ0eSAqcHJvcCA9IG9m
-X2ZpbmRfcHJvcGVydHkobnAsIHByb3BuYW1lLCAmbGVuKTsKPiArCj4gKwlpZiAoIXByb3ApCj4g
-KwkJcmV0dXJuIC1FSU5WQUw7Cj4gKwlpZiAoIXByb3AtPnZhbHVlKQo+ICsJCXJldHVybiAtRU5P
-REFUQTsKPiArCj4gKwlpZiAocHJvcC0+bGVuZ3RoICUgZWxlbV9zaXplICE9IDApIHsKPiArCQlw
-cl9lcnIoInNpemUgb2YgJXMgaXMgbm90IGEgbXVsdGlwbGUgb2YgdTMyXG4iLCBwcm9wbmFtZSk7
-Cj4gKwkJcmV0dXJuIC1FSU5WQUw7Cj4gKwl9Cj4gKwo+ICsJcmV0dXJuIGxlbiAvIGVsZW1fc2l6
-ZTsKPiArfQo+ICtFWFBPUlRfU1lNQk9MX0dQTChvZl9wcm9wZXJ0eV9jb3VudF91MzJfZWxlbXMp
-OwoKQXMgUm9iIHNhaWQgaW4gaGlzIHJlcGx5LCBpdCB3b3VsZCBiZSBuaWNlIHRvIHNwbGl0IHRo
-aXMgaW50byBhIHN0YXRpYwpoZWxwZXIgdGhhdCB0b29rIGVsZW0gc2l6ZSBhcyBhIHBhcmFtZXRl
-ciwgc28gd2UgY2FuIGhhdmUgdGhlIGZ1bGwgc3VpdGUKb2Ygb2ZfcHJvcGVydHlfY291bnRfe3U4
-LHUxNix1MzIsdTY0fV9lbGVtcy4KCkFsc28sIEkgdGhpbmsgeW91IGNhbiBnZXQgcmlkIG9mIGxl
-biBhbmQgYWx3YXlzIHVzZSBwcm9wLT5sZW5ndGgsIGFzCm90aGVyIGhlbHBlcnMgc2VlbSB0byBk
-by4KCkNoZWVycyBmb3IgcHV0dGluZyB0aGlzIHRvZ2V0aGVyIQoKTWFyay4KCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
-bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Friday 17 January 2014, Nicolas Pitre wrote:
+> On Thu, 16 Jan 2014, Olof Johansson wrote:
+> 
+> > "for SDIO slots" is somewhat misleading; nearly all controllers only
+> > do one slot/device per controller. The designware controller can do
+> > multiple slots, and that adds a bit of driver and binding complexity
+> > for something that seemingly not a single vendor has actually
+> > implemented.
+> 
+> The Marvell 8688, just to name one, does both WIFI and BlueTooth over 
+> the same SDIO controller using separate functions/slots.
+> 
+> Or maybe I'm misunderstanding you?
+> 
+
+I wasn't aware of this but I just checked (in mmc_attach_sdio) that
+there can be multiple functions on a slot. I assume the sd8688 has
+a single slot with two functions, so that potentially extends the
+problem space if we need to supply clocks and regulators per
+function rather than just per slot.
+
+	Arnd
