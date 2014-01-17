@@ -1,51 +1,66 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH RFC 1/6] net: rfkill: gpio: fix gpio name
- buffer size off by 1
-Date: Fri, 17 Jan 2014 17:59:30 +0800
-Message-ID: <CAGb2v67L__kusyfSxSc1Rmb6mtJ_VQQF+rCfr1AiUxCemaXMqA@mail.gmail.com>
-References: <1389941251-32692-1-git-send-email-wens@csie.org>
- <1389941251-32692-2-git-send-email-wens@csie.org> <063D6719AE5E284EB5DD2968C1650D6D45EA9D@AcuExch.aculab.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: How to support SDIO wifi/bt in DT
+Date: Fri, 17 Jan 2014 18:06:41 +0800
+Message-ID: <CAGb2v640Qeb60dMq2kH6M6NqkVbdUh1JcCus3a7D7icQeDdKNg@mail.gmail.com>
+References: <20140116133649.GV15937@n2100.arm.linux.org.uk>
+ <3215037.8HVCjAeS8g@wuerfel> <CAOesGMgzi5Buduo2pd0PP8CvKVir69yZ-jjX0Gbda871GiD8rg@mail.gmail.com>
+ <20140116195819.GY15937@n2100.arm.linux.org.uk> <CAOesGMjZzwuOvt3iV+CDXZr5-hWvay_xaO-RH5syB1D-zGVu+A@mail.gmail.com>
+ <20140117093909.GB2348@piout.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBF764OLAKGQEUTE2AWA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <063D6719AE5E284EB5DD2968C1650D6D45EA9D-VkEWCZq2GCInGFn1LkZF6NBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: David Laight <David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org>
-Cc: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20140117093909.GB2348@piout.net>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 17, 2014 at 5:46 PM, David Laight <David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org> wrote:
-> From: Chen-Yu Tsai
->> snprintf should be passed the complete size of the buffer, including
->> the space for '\0'. The previous code resulted in the *_reset and
->> *_shutdown strings being truncated.
-> ...
->> diff --git a/net/rfkill/rfkill-gpio.c b/net/rfkill/rfkill-gpio.c
-> ...
->> -     snprintf(rfkill->reset_name, len + 6 , "%s_reset", rfkill->name);
->> -     snprintf(rfkill->shutdown_name, len + 9, "%s_shutdown", rfkill->name);
->> +     snprintf(rfkill->reset_name, len + 7 , "%s_reset", rfkill->name);
->> +     snprintf(rfkill->shutdown_name, len + 10, "%s_shutdown", rfkill->name);
+On Fri, Jan 17, 2014 at 5:39 PM, Alexandre Belloni
+<alexandre.belloni@free-electrons.com> wrote:
+> On Thu, Jan 16, 2014 at 12:00:47PM -0800, Olof Johansson wrote :
+>> On Thu, Jan 16, 2014 at 11:58 AM, Russell King - ARM Linux
+>> <linux@arm.linux.org.uk> wrote:
+>> > On Thu, Jan 16, 2014 at 09:15:17AM -0800, Olof Johansson wrote:
+>> >> We've dealt with it with local code in our tree for Chrome OS, and I
+>> >> suspect everyone else has too. It's definitely time to solve
+>> >> generically.
+>> >
+>> > As there's no code for any Cubox-i or Hummingboard (they're both purely
+>> > DT), what this means is that the answer to Wifi/BT support in mainline is
+>> > that this is "impossible at the moment"...
+>> >
+>> > I guess this is becoming a higher priority issue which really needs to be
+>> > solved somehow. :)
+>>
+>> I'm looking at it right now actually, might as well sort it out while
+>> people are paying attention. Patches a little later today unless I get
+>> distrac^Winterrupted. :)
+>>
 >
-> I can't find the context for the above, but they look very dubious.
-> I'd expect: snprintf(foo, sizeof foo, ...).
-> If you are trying to truncate rfkill->name you need to use %.*s.
+> Maybe it is not completely related but I think it needs to be thought
+> about while you are it:
+>
+> The TI wilink chips (TiWi, wl12xx, wl18xx) have wifi on SDIO and BT on
+> UART but they share the same clock. So, the next question would be what
+> if I just want to enable one or the other (and take that decision at
+> runtime) ?
 
-The driver allocates these buffers on the fly, a few lines above:
+Some Broadcom chips (BCM4329/4330) and the AP6210 found on CubieTruck
+are like this as well. In our case, the SD/MMC host driver hasn't been
+mainlined yet. But BT on UART is independent and usable.
 
-        len = strlen(rfkill->name);
-        rfkill->reset_name = devm_kzalloc(&pdev->dev, len + 7, GFP_KERNEL);
-        rfkill->shutdown_name = devm_kzalloc(&pdev->dev, len + 10, GFP_KERNEL);
+> Where do I put the pinctrl/clocks/regulators in the DT ? I guess it can
+> become an issue to enable both WiFi and BT at the same time if both SDIO
+> and UART are trying to handle the same pinctrl and regulators.
 
-I am not trying to truncate rfkill->name. Rather, the buffer length passed
-to snprintf was wrong, so the resulting name was truncated by one character.
+Shouldn't the clocks and regulators be registered in the DT _AS_ clocks
+and regulators? fixed-regulator already accepts GPIO lines. fixed-rate-clock
+mentions GPIOs in DT bindings, but doesn't seem to use them in the code.
+We'd still need a device to tie them to, especially in the UART use case.
+
+Or we could try rfkill devices. Not saying it's the correct way, but it is
+a solution.
 
 
-Thanks,
+Cheers,
 ChenYu
