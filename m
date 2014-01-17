@@ -1,59 +1,38 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] regulator: ti-abb: Add support for interleaved LDO
- registers
-Date: Fri, 17 Jan 2014 16:08:21 +0000
-Message-ID: <20140117160821.GV17314@sirena.org.uk>
-References: <1389900750-27625-1-git-send-email-nm@ti.com>
+From: Seungwon Jeon <essuuj@gmail.com>
+Subject: Re: [PATCH 2/2] mmc: dw_mmc: k3: remove clk_table
+Date: Sat, 18 Jan 2014 01:10:23 +0900
+Message-ID: <CAFt19AB2Yk4U06-R9rMqFgEHFjN_L-pnc1wR35SQUjX28j7tZQ@mail.gmail.com>
+References: <1389604469-8064-1-git-send-email-zhangfei.gao@linaro.org>
+	<1389604469-8064-3-git-send-email-zhangfei.gao@linaro.org>
+	<002b01cf1115$4cdfe240$e69fa6c0$%jun@samsung.com>
+	<86sism7iuz.fsf@void.printf.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tYlHSoJ8Aop8eNG2"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1389900750-27625-1-git-send-email-nm@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <86sism7iuz.fsf@void.printf.net>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chris Ball <chris@printf.net>
+Cc: Seungwon Jeon <tgih.jun@samsung.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Mike Turquette <mturquette@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, brooke.wangzhigang@huawei.com, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Sat, Jan 18, 2014 at 12:01 AM, Chris Ball <chris@printf.net> wrote:
+>
+> Hi,
+>
+> On Tue, Jan 14 2014, Seungwon Jeon wrote:
+> > On Monday, January 13, 2014, Zhangfei Gao wrote:
+> >> Remove clk_table and directly use ios->clock as clock source rate.
+> >> Abstract init clock rate and max clock limitation in clk.c
+> >>
+> >> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> >
+> > Acked-by: Seungwon Jeon <tgih.jun@samsung.com>
+>
+> It looks like patch 1/2 did not make 3.14.  Do you want me to take
+> this patch for 3.14 anyway?  (Why?)
+Yes, I hope that it would be merged this time.
+I think that this change should have been applied to (036f29: mmc:
+dw_mmc: add dw_mmc-k3 for k3 platform) originally.
 
---tYlHSoJ8Aop8eNG2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jan 16, 2014 at 01:32:30PM -0600, Nishanth Menon wrote:
-> Certain platforms such as DRA7 have quirky memory maps such as:
-> PRM_ABBLDO_DSPEVE_CTRL	0x4ae07e20
-> PRM_ABBLDO_IVA_CTRL	0x4ae07e24
-> other-registers
-> PRM_ABBLDO_DSPEVE_SETUP	0x4ae07e30
-> PRM_ABBLDO_IVA_SETUP	0x4ae07e34
->=20
-> These need the address allocation to be either shared OR unique
-> allocation per register instance.
-
-Is there a system controller involved here by any chance?
-
---tYlHSoJ8Aop8eNG2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS2VVyAAoJELSic+t+oim9XwoQAIjGJfqR+6qVUUGLZJFGfFmh
-ucGBlJvtAcU/1j+tYln5lGGvUAaurt/LF6/Yltjq0j1pyZ7PdiOoTdL6J7x/s4ZN
-oZFuD6FGp5mxRmTXOOhLCT8YCK4BvBlNzPf7OvcPsHnTgHwOQl0XdiHCprWT7fNx
-DJhRdOp3blcoVhA7yCb+VtGQTY+0f2dMT/I2LISe7GWh6cFxlQX0CJKSlHDJLqYY
-sqRp23v03+R7jq5c5a3WHQJZER8TQzHG4yuE1aY8huZPzYsxQM5Dq95i2qbbXuuC
-Yfwhbfbh9DKU4NY159Eoy+pOIwpgCOwSciPlAroiK8KxkuzZDDqPCeRV39BVr0aR
-cLrqv2C83lsb7u2wixGlrfmRPGv8+Ldm2zvas9zucFrBf/b86C4h6cV3dwmZ4xjV
-lpKWSYzAg+84v2SMpCkeys54xH7dGWNP3qWARbiG/x1uGJDzgaxdoRu/C3O5jyiZ
-WgxSfhe8pOK9OtcnMZTkkWrYyhS2iN6CqAvw8keApROB8g7cSwMC2NwEHpmcSqaT
-oB6onsG+CqGyYbTk1kVB8OgBHZy5j300qeGcBRo9jTwqnWltDj7YX91qK5VwPyuo
-H4uKWsLzzu+ZchhaQC4euuoPG7114EQ28cCA5wfjkdrAssuEnbhs/zNbqNdj3+f5
-hSv/toVbOeiBoe3v0i/x
-=kV/j
------END PGP SIGNATURE-----
-
---tYlHSoJ8Aop8eNG2--
+Thanks,
+sw-j
