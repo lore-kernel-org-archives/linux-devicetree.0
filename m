@@ -1,118 +1,78 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] of: add functions to count number of elements in a property
-Date: Fri, 17 Jan 2014 11:42:14 -0600
-Message-ID: <CAL_JsqJ_St=OegpexzrTGXwmOYCz4YeWk_1S+R_q6NajmmPqSA@mail.gmail.com>
-References: <27256277.YJ687suYy5@phil>
-	<3781679.27UF2dWtKL@phil>
-	<20140117144456.GG19578@e106331-lin.cambridge.arm.com>
-	<1434798.oSb68sYmYT@phil>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH RFC 4/6] net: rfkill: gpio: add device tree support
+Date: Sat, 18 Jan 2014 01:43:31 +0800
+Message-ID: <CAGb2v67UKiyfJbKZ_Frk3OwZupMPoA2Ck3Hj2zsRFXBQPztavg@mail.gmail.com>
+References: <1389941251-32692-1-git-send-email-wens@csie.org>
+ <1389941251-32692-5-git-send-email-wens@csie.org> <201401171747.46332.arnd@arndb.de>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1434798.oSb68sYmYT@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBWGX4WLAKGQEZNLIT5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <201401171747.46332.arnd-r2nGTMty4D4@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 17, 2014 at 9:44 AM, Heiko St=FCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrot=
-e:
-> The need to know the number of array elements in a property is
-> a common pattern. To prevent duplication of open-coded implementation=
-s
-> add a helper static function that also centralises strict sanity
-> checking and DTB format details, as well as a set of wrapper function=
-s
-> for u8, u16, u32 and u64.
+On Sat, Jan 18, 2014 at 12:47 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Friday 17 January 2014, Chen-Yu Tsai wrote:
+>> diff --git a/Documentation/devicetree/bindings/rfkill/rfkill-gpio.txt b/Documentation/devicetree/bindings/rfkill/rfkill-gpio.txt
+>> new file mode 100644
+>> index 0000000..8a07ea4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/rfkill/rfkill-gpio.txt
+>> @@ -0,0 +1,26 @@
+>> +GPIO controlled RFKILL devices
+>> +
+>> +Required properties:
+>> +- compatible   : Must be "rfkill-gpio".
+>> +- rfkill-name  : Name of RFKILL device
+>> +- rfkill-type  : Type of RFKILL device: 1 for WiFi, 2 for BlueTooth
+>> +- NAME_shutdown-gpios  : GPIO phandle to shutdown control
+>> +                         (phandle must be the second)
+>> +- NAME_reset-gpios     : GPIO phandle to reset control
+>> +
+>> +NAME must match the rfkill-name property. NAME_shutdown-gpios or
+>> +NAME_reset-gpios, or both, must be defined.
+>> +
 >
-> Suggested-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> ---
-> changes since v1:
-> address comments from Rob Herring and Mark Rutland:
-> - provide a helper and a set of wrappers for u8-u64
-> - get rid of extra len variable, prop->length is enough
-> - include node name in error message
+> I don't understand this part. Why do you include the name in the
+> gpios property, rather than just hardcoding the property strings
+> to "shutdown-gpios" and "reset-gpios"?
+
+This quirk is a result of how gpiod_get_index implements device tree
+lookup. You'll also notice that the shutdown GPIO must be the second
+phandle, as the driver uses indexed lookup to support ACPI cases.
+If con_id is given, it is prepended to "gpios" as the property string.
+con_id is also used as the label passed to gpiod_request, which is
+then shown in /sys/kernel/debug/gpio.
+
+I can do a seperate lookup for the device tree case, with or without
+fallback to platform lookup tables. Then the names can be "reset-gpio"
+and "shutdown-gpio". Need to promote gpiod_request to non-static so
+we can register usage of the gpio, to match non-dt code path.
+
+Personally I prefer adding a "label" parameter to gpiod_get_index, so
+we can use a different name than con_id. con_id isn't used in the ACPI
+case, and is optional in platform lookup case. However device tree
+lookup is dependent on this. What I see is non-uniform behavior
+between the three. In my opinion this is undesirable, but I haven't
+come up with a good solution yet.
+
+About the property string, is the plural form required, even though we
+only want one?
+
+Thanks!
+
+ChenYu
+
+> The description of hte "rfkill-name" property seems to suggest
+> that you can only have one logical RFKILL device per device node,
+> so he names would not be ambiguous.
 >
->  drivers/of/base.c  |   98 ++++++++++++++++++++++++++++++++++++++++++=
-++++++++++
->  include/linux/of.h |   32 +++++++++++++++++
->  2 files changed, 130 insertions(+)
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index f807d0e..b6e6d4a 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -862,6 +862,104 @@ struct device_node *of_find_node_by_phandle(pha=
-ndle handle)
->  EXPORT_SYMBOL(of_find_node_by_phandle);
->
->  /**
-> + * of_count_property_elems_of_size - Count the number of elements in=
- a property
-> + *
-> + * @np:                device node from which the property value is =
-to be read.
-> + * @propname:  name of the property to be searched.
-> + * @elem_size: size of the individual element
-> + */
-> +static int of_count_property_elems_of_size(const struct device_node =
-*np,
-> +                               const char *propname, int elem_size)
-> +{
-> +       struct property *prop =3D of_find_property(np, propname, NULL=
-);
-> +
-> +       if (!prop)
-> +               return -EINVAL;
-> +       if (!prop->value)
-> +               return -ENODATA;
-> +
-> +       if (prop->length % elem_size !=3D 0) {
-> +               pr_err("size of %s in node %s is not a multiple of %d=
-\n",
-> +                      propname, np->name, elem_size);
-> +               return -EINVAL;
-> +       }
-> +
-> +       return prop->length / elem_size;
-> +}
-
-Export this one.
-
-> +
-> +/**
-> + * of_property_count_u8_elems - Count the number of u8 elements in a=
- property
-> + *
-> + * @np:                device node from which the property value is =
-to be read.
-> + * @propname:  name of the property to be searched.
-> + *
-> + * Search for a property in a device node and count the number of u8=
- elements
-> + * in it. Returns number of elements on sucess, -EINVAL if the prope=
-rty does
-> + * not exist or its length does not match a multiple of u8 and -ENOD=
-ATA if the
-> + * property does not have a value.
-> + */
-> +int of_property_count_u8_elems(const struct device_node *np,
-> +                               const char *propname)
-> +{
-> +       return of_count_property_elems_of_size(np, propname, sizeof(u=
-8));
-> +}
-> +EXPORT_SYMBOL_GPL(of_property_count_u8_elems);
-
-And make all these static inline.
-
-Then you only need a single empty function for !OF.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>         Arnd
