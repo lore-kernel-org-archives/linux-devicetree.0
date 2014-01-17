@@ -1,46 +1,71 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCHv3 1/4] DT: Add vendor prefix for Emerging Display Technologies
-Date: Fri, 17 Jan 2014 16:18:14 -0600
-Message-ID: <CAL_JsqKTJBZyHjsEYRgYdr6gqGSNtUK1HnOOM5ediH-xZci1mA@mail.gmail.com>
-References: <1389961718-8130-1-git-send-email-LW@KARO-electronics.de>
-	<1389961718-8130-2-git-send-email-LW@KARO-electronics.de>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH v2 2/2] i2c: New bus driver for the QUP I2C controller
+Date: Fri, 17 Jan 2014 14:19:39 -0800
+Message-ID: <20140117221938.GA14212@sonymobile.com>
+References: <1389659437-16406-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1389659437-16406-3-git-send-email-bjorn.andersson@sonymobile.com>
+ <20140115164604.GI14405@codeaurora.org>
+ <20140117001833.GL30911@sonymobile.com>
+ <20140117003314.GB13785@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1389961718-8130-2-git-send-email-LW@KARO-electronics.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?Lothar_Wa=DFmann?= <LW@karo-electronics.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Grant Likely <grant.likely@linaro.org>, Jonathan Cameron <jic23@kernel.org>, Shawn Guo <shawn.guo@linaro.org>, Silvio F <silvio.fricke@gmail.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Jingoo Han <jg1.han@samsung.com>, Fugang Duan <B38611@freescale.com>, Sachin Kamat <sachin.kamat@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20140117003314.GB13785@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Matt Porter <matt.porter@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, James Ralston <james.d.ralston@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Bill Brown <bill.e.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>"linux-kernel@vger.kernel.org" <linux->
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 17, 2014 at 6:28 AM, Lothar Wa=DFmann <LW@karo-electronics.=
-de> wrote:
->
-> Signed-off-by: Lothar Wa=DFmann <LW@KARO-electronics.de>
-> ---
->  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
+On Thu 16 Jan 16:33 PST 2014, Stephen Boyd wrote:
 
-Applied.
+> On 01/16, Bjorn Andersson wrote:
+> > On Wed 15 Jan 08:46 PST 2014, Stephen Boyd wrote:
+> > 
+> > > On 01/13, Bjorn Andersson wrote:
+> > > > +
+> > > > +static int
+> > > > +qup_i2c_poll_state(struct qup_i2c_dev *qup, u32 req_state, bool only_valid)
+> > > > +{
+> > > > +	int retries = 0;
+> > > > +	u32 state;
+> > > > +
+> > > > +	do {
+> > > > +		state = readl(qup->base + QUP_STATE);
+> > > > +
+> > > > +		/*
+> > > > +		 * If only valid bit needs to be checked, requested state is
+> > > > +		 * 'don't care'
+> > > > +		 */
+> > > 
+> > > It looks like req_state == 0 means only_valid == true. Can we
+> > > drop the only_valid argument to this function?
+> > > 
+> > 
+> > In all cases but the reset in the beginning of qup_i2c_xfer, so it seems that
+> > it has to stay.
+> 
+> Oh that's because QUP_RESET_STATE is equal to 0? It looks like
+> bits 0 and 1 are the state field and bit 2 is a flag indicating
+> that bits 0 and 1 are valid. Why not OR in the QUP_STATE_VALID
+> flag into the macros that are passed to this function? Then the
+> logic would simply be looping looking for a match of the
+> req_state (which is really a mask now).
 
-Rob
+While it's true that req_state == 0 means only_valid, it is not true that
+only_valid means req_state == 0. So there would be no way to differentiate
+between "valid and reset" and "valid and don't care about run/pause/reset".
 
->
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/=
-Documentation/devicetree/bindings/vendor-prefixes.txt
-> index b458760..49774c3 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -29,6 +29,7 @@ dallas        Maxim Integrated Products (formerly D=
-allas Semiconductor)
->  davicom        DAVICOM Semiconductor, Inc.
->  denx   Denx Software Engineering
->  dmo    Data Modul AG
-> +edt    Emerging Display Technologies
->  emmicro        EM Microelectronic
->  epson  Seiko Epson Corp.
->  est    ESTeem Wireless Modems
-> --
-> 1.7.2.5
->
+So I could move the logic around, but I don't see how we could reduce the
+number of parameters to the function.
+
+// Bjorn
