@@ -1,71 +1,139 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: Re: [PATCH v2 2/2] i2c: New bus driver for the QUP I2C controller
-Date: Fri, 17 Jan 2014 14:19:39 -0800
-Message-ID: <20140117221938.GA14212@sonymobile.com>
-References: <1389659437-16406-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1389659437-16406-3-git-send-email-bjorn.andersson@sonymobile.com>
- <20140115164604.GI14405@codeaurora.org>
- <20140117001833.GL30911@sonymobile.com>
- <20140117003314.GB13785@codeaurora.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 1/2] dmaengine: add Qualcomm BAM dma driver
+Date: Fri, 17 Jan 2014 23:49:27 +0100
+Message-ID: <201401172349.28229.arnd@arndb.de>
+References: <1389380874-22753-1-git-send-email-agross@codeaurora.org> <1389380874-22753-2-git-send-email-agross@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20140117003314.GB13785@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Matt Porter <matt.porter@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, James Ralston <james.d.ralston@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Bill Brown <bill.e.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>"linux-kernel@vger.kernel.org" <linux->
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1389380874-22753-2-git-send-email-agross@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Andy Gross <agross@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 16 Jan 16:33 PST 2014, Stephen Boyd wrote:
+On Friday 10 January 2014, Andy Gross wrote:
 
-> On 01/16, Bjorn Andersson wrote:
-> > On Wed 15 Jan 08:46 PST 2014, Stephen Boyd wrote:
-> > 
-> > > On 01/13, Bjorn Andersson wrote:
-> > > > +
-> > > > +static int
-> > > > +qup_i2c_poll_state(struct qup_i2c_dev *qup, u32 req_state, bool only_valid)
-> > > > +{
-> > > > +	int retries = 0;
-> > > > +	u32 state;
-> > > > +
-> > > > +	do {
-> > > > +		state = readl(qup->base + QUP_STATE);
-> > > > +
-> > > > +		/*
-> > > > +		 * If only valid bit needs to be checked, requested state is
-> > > > +		 * 'don't care'
-> > > > +		 */
-> > > 
-> > > It looks like req_state == 0 means only_valid == true. Can we
-> > > drop the only_valid argument to this function?
-> > > 
-> > 
-> > In all cases but the reset in the beginning of qup_i2c_xfer, so it seems that
-> > it has to stay.
-> 
-> Oh that's because QUP_RESET_STATE is equal to 0? It looks like
-> bits 0 and 1 are the state field and bit 2 is a flag indicating
-> that bits 0 and 1 are valid. Why not OR in the QUP_STATE_VALID
-> flag into the macros that are passed to this function? Then the
-> logic would simply be looping looking for a match of the
-> req_state (which is really a mask now).
+> +static bool bam_dma_filter(struct dma_chan *chan, void *data)
+> +{
+> +	struct bam_filter_args *args = data;
+> +	struct bam_chan *bchan = to_bam_chan(chan);
+> +
+> +	if (args->dev == chan->device &&
+> +		args->id == bchan->id) {
+> +
+> +		/* we found the channel, so lets set the EE and dir */
+> +		bchan->ee = args->ee;
+> +		bchan->slave.direction = args->dir ?
+> +				DMA_DEV_TO_MEM : DMA_MEM_TO_DEV;
+> +		return true;
+> +	}
+> +
+> +	return false;
+> +}
 
-While it's true that req_state == 0 means only_valid, it is not true that
-only_valid means req_state == 0. So there would be no way to differentiate
-between "valid and reset" and "valid and don't care about run/pause/reset".
+A filter function should no longer be needed.
 
-So I could move the logic around, but I don't see how we could reduce the
-number of parameters to the function.
+> +static struct dma_chan *bam_dma_xlate(struct of_phandle_args *dma_spec,
+> +		struct of_dma *of)
+> +{
+> +	struct bam_filter_args args;
+> +	dma_cap_mask_t cap;
+> +
+> +	if (dma_spec->args_count != 3)
+> +		return NULL;
+> +
+> +	args.dev = of->of_dma_data;
+> +	args.id = dma_spec->args[0];
+> +	args.ee = dma_spec->args[1];
+> +	args.dir = dma_spec->args[2];
+> +
+> +	dma_cap_zero(cap);
+> +	dma_cap_set(DMA_SLAVE, cap);
+> +
+> +	return dma_request_channel(cap, bam_dma_filter, &args);
+> +}
 
-// Bjorn
+Instead, call dma_get_slave_channel() with the right channel that you already know
+here.
+
+> +	if (pdev->dev.of_node) {
+> +		ret = of_dma_controller_register(pdev->dev.of_node,
+> +				bam_dma_xlate, &bdev->common);
+> +
+> +		if (ret) {
+> +			dev_err(bdev->dev, "failed to register of_dma\n");
+> +			goto err_unregister_dma;
+> +		}
+> +	}
+
+No need to check for pdev->dev.of_node when that is the only mode of probing.
+
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id bam_of_match[] = {
+> +	{ .compatible = "qcom,bam-v1.4.0", },
+> +	{ .compatible = "qcom,bam-v1.4.1", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, bam_of_match);
+> +#endif
+
+Also, you can remove the #ifdef here and the of_match_ptr() below.
+
+> +
+> +static struct platform_driver bam_dma_driver = {
+> +	.probe = bam_dma_probe,
+> +	.remove = bam_dma_remove,
+> +	.driver = {
+> +		.name = "bam-dma-engine",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = of_match_ptr(bam_of_match),
+> +	},
+> +};
+> +
+> +static int __init bam_dma_init(void)
+> +{
+> +	return platform_driver_register(&bam_dma_driver);
+> +}
+> +
+> +static void __exit bam_dma_exit(void)
+> +{
+> +	return platform_driver_unregister(&bam_dma_driver);
+> +}
+> +
+
+module_platform_driver()
+
+> diff --git a/drivers/dma/qcom_bam_dma.h b/drivers/dma/qcom_bam_dma.h
+> new file mode 100644
+> index 0000000..2cb3b5f
+> --- /dev/null
+> +++ b/drivers/dma/qcom_bam_dma.h
+> @@ -0,0 +1,268 @@
+> +#ifndef __QCOM_BAM_DMA_H__
+> +#define __QCOM_BAM_DMA_H__
+> +
+> +#include <linux/dmaengine.h>
+> +#include "virt-dma.h"
+> +
+> +enum bam_channel_dir {
+> +	BAM_PIPE_CONSUMER = 0,	/* channel reads from data-fifo or memory */
+> +	BAM_PIPE_PRODUCER,	/* channel writes to data-fifo or memory */
+> +};
+
+Since the header does not serve as an interface, just move all the contents
+into the driver directly.
+
+> +struct bam_desc_hw {
+> +	u32 addr;		/* Buffer physical address */
+> +	u16 size;		/* Buffer size in bytes */
+> +	u16 flags;
+> +} __packed;
+
+Remove __packed here, it only makes the access less efficient but does not change
+the layout, which is already packed.
+
+	Arnd
