@@ -1,93 +1,79 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: How to support SDIO wifi/bt in DT
-Date: Fri, 17 Jan 2014 11:14:56 +0100
-Message-ID: <20140117101456.GD2348@piout.net>
-References: <20140116133649.GV15937@n2100.arm.linux.org.uk>
- <3215037.8HVCjAeS8g@wuerfel>
- <CAOesGMgzi5Buduo2pd0PP8CvKVir69yZ-jjX0Gbda871GiD8rg@mail.gmail.com>
- <20140116195819.GY15937@n2100.arm.linux.org.uk>
- <CAOesGMjZzwuOvt3iV+CDXZr5-hWvay_xaO-RH5syB1D-zGVu+A@mail.gmail.com>
- <20140117093909.GB2348@piout.net>
- <CAGb2v640Qeb60dMq2kH6M6NqkVbdUh1JcCus3a7D7icQeDdKNg@mail.gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v5 2/4] devicetree: bindings: Document Krait CPU/L1 EDAC
+Date: Fri, 17 Jan 2014 10:21:09 +0000
+Message-ID: <20140117102109.GA22544@e102568-lin.cambridge.arm.com>
+References: <1389735034-21430-1-git-send-email-sboyd@codeaurora.org>
+ <1389735034-21430-3-git-send-email-sboyd@codeaurora.org>
+ <20140115102701.GA27314@e102568-lin.cambridge.arm.com>
+ <20140115165623.GJ14405@codeaurora.org>
+ <20140116013840.GA674@codeaurora.org>
+ <20140116113332.GC25540@e102568-lin.cambridge.arm.com>
+ <20140116180505.GA30925@codeaurora.org>
+ <20140116183326.GG25540@e102568-lin.cambridge.arm.com>
+ <20140116192617.GA13785@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="llIrKcgUOe3dCx0c"
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20140116192617.GA13785@codeaurora.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v640Qeb60dMq2kH6M6NqkVbdUh1JcCus3a7D7icQeDdKNg@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Borislav Petkov <bp@alien8.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jan 16, 2014 at 07:26:17PM +0000, Stephen Boyd wrote:
+> On 01/16, Lorenzo Pieralisi wrote:
+> > On Thu, Jan 16, 2014 at 06:05:05PM +0000, Stephen Boyd wrote:
+> > > On 01/16, Lorenzo Pieralisi wrote:
+> > > > Do we really want to do that ? I am not sure. A cpus node is supposed to
+> > > > be a container node, we should not define this binding just because we
+> > > > know the kernel creates a platform device for it then.
+> > > 
+> > > This is just copying more of the ePAPR spec into this document.
+> > > It just so happens that having a compatible field here allows a
+> > > platform device to be created. I don't see why that's a problem.
+> > 
+> > I do not see why you cannot define a node like pmu or arch-timer and stick
+> > a compatible property in there. cpus node does not represent a device, and
+> > must not be created as a platform device, that's my opinion.
+> > 
+> 
+> I had what you're suggesting before in the original revision of
+> this patch. Please take a look at the original patch series[1]. I
+> suppose it could be tweaked slightly to still have a cache node
+> for the L2 interrupt and the next-level-cache pointer from the
+> CPUs.
 
---llIrKcgUOe3dCx0c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ok, sorry, we are running around in circles here, basically you moved
+the node to cpus according to reviews. I still think that treating cpus
+as a device is not a great idea, even though I am in the same
+position with C-states and probably will add C-state tables in the cpus
+node.
 
-On Fri, Jan 17, 2014 at 06:06:41PM +0800, Chen-Yu Tsai wrote :
-> On Fri, Jan 17, 2014 at 5:39 PM, Alexandre Belloni
-> <alexandre.belloni@free-electrons.com> wrote:
-> > Maybe it is not completely related but I think it needs to be thought
-> > about while you are it:
-> >
-> > The TI wilink chips (TiWi, wl12xx, wl18xx) have wifi on SDIO and BT on
-> > UART but they share the same clock. So, the next question would be what
-> > if I just want to enable one or the other (and take that decision at
-> > runtime) ?
->=20
-> Some Broadcom chips (BCM4329/4330) and the AP6210 found on CubieTruck
-> are like this as well. In our case, the SD/MMC host driver hasn't been
-> mainlined yet. But BT on UART is independent and usable.
->=20
-> > Where do I put the pinctrl/clocks/regulators in the DT ? I guess it can
-> > become an issue to enable both WiFi and BT at the same time if both SDIO
-> > and UART are trying to handle the same pinctrl and regulators.
->=20
-> Shouldn't the clocks and regulators be registered in the DT _AS_ clocks
-> and regulators? fixed-regulator already accepts GPIO lines. fixed-rate-cl=
-ock
-> mentions GPIOs in DT bindings, but doesn't seem to use them in the code.
-> We'd still need a device to tie them to, especially in the UART use case.
->=20
+http://comments.gmane.org/gmane.linux.power-management.general/41012
 
-Yeah, I meant if you tie your clock/pinctrl/reset/regulator to both the
-BT and the WiFI nodes because it is shared, you'll at least get a
-warning or one of the two won't be working.
+I just would like to see under cpus nodes and properties that apply to
+all ARM systems, and avoid defining properties (eg interrupts) that
+have different meanings for different ARM cores.
 
-> Or we could try rfkill devices. Not saying it's the correct way, but it is
-> a solution.
->=20
+The question related to why the kernel should create a platform device
+out of cpus is still open. I really do not want to block your series
+for these simple issues but we have to make a decision and stick to that,
+I am fine either way if we have a plan.
 
-You'll get the same issue there. Two rfkill devices sharing the same
-clock or reset for example.
+> > What would you do for big.LITTLE systems ? We are going to create two
+> > cpus node because we need two platform devices ? I really think there
+> > must be a better way to implement this, but I will let DT maintainers
+> > make a decision.
+> 
+> There is no such thing as big.LITTLE for Krait, so this is not a
+> concern.
 
---=20
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Yes, but if a core supporting big.LITTLE requires the same concept you
+need here we have to cater for that because after all cpus is a node that
+exists on ALL ARM systems, we should not rush and find a solution du
+jour without thinking about all foreseeable use cases.
 
---llIrKcgUOe3dCx0c
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBCAAGBQJS2QKfAAoJEKbNnwlvZCyz0zUP/j988Zb8a8pjqzTpgAZHwB9P
-3ggwAfjeDZCl04Bs0wRleFmS1m30FpcIxpyE5PlnMU0BBQgMThx4t0f0CdxXK05j
-clufckWZqTRcMo7f3TCjP34l7uxJl4vwrkbKJsS+vnSC8whkny1zgvW95oR0QvOa
-9pdTzCMPA8nJbHe+lWZf6gGyeb9z/pxHqMXv1gPFMm3T5SFCTu7Ky4QFKGw5N45U
-saOAog+y6RRabpM1dN98PFyDm99wP6y6HmV+zl0D+CLRrWykrb446rLZ3UEHtJLI
-xsvdSl/Wwy4VYIwZOLNLB1eG6iLwtMj3x+IhsxdUBnson8Pkn1bjes7E5+q+eO4B
-48Zz4z6ESajosKsCK1oRdzRmL7crV/kcuhJwq535Ef28UJKkO742HKYafuYo3vZO
-AN+wn5PisXGtcpoTz7YRUE20XliAJPdyjvreWtrgJvbWEIvEkjtJsmED2uvwVnWc
-BN0q2HZGSbFO73Y4AMHTuiwURJqv+kQNKdqpZweuO90UOMEwdFxAP1zosCxdWg1Z
-cSWhMY3SnXKfWFpfumTh66z6pqYwLTbqHBTCdbkiPvgOGqVnYhaTQ9lecZInFi5q
-Z9Rwc+52TBAErcwOfr2CQO/bHLQ35V1ig6Bs+OY8BCGJzkx/4mfhLP1gzOTkkXtQ
-op8MMh80FfwIHeZve8lj
-=ROgt
------END PGP SIGNATURE-----
-
---llIrKcgUOe3dCx0c--
+Thank you,
+Lorenzo
