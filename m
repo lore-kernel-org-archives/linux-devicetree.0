@@ -1,60 +1,44 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH v7 0/2] ohci and ehci-platform clks, phy and dt support
-Date: Fri, 17 Jan 2014 12:12:29 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1401171053180.1162-100000@iolanthe.rowland.org>
-References: <2909743.WgOIUglCS0@lenovo>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH v2 13/28] drm/i2c: tda998x: use irq for connection
+	status and EDID read
+Date: Fri, 17 Jan 2014 18:27:08 +0100
+Message-ID: <20140117182708.3758acb1@armhf>
+References: <20140109120412.7697d23c@armhf>
+	<20140111181432.GB15937@n2100.arm.linux.org.uk>
+	<52D18EE9.5030305@gmail.com> <20140112195113.316d0c98@armhf>
+	<52D2EC5D.2010800@gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2909743.WgOIUglCS0@lenovo>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <52D2EC5D.2010800@gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces@lists.freedesktop.org
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 16 Jan 2014, Florian Fainelli wrote:
-
-> Le mercredi 15 janvier 2014, 15:26:21 Alan Stern a =E9crit :
-> > On Wed, 15 Jan 2014, Hans de Goede wrote:
-> > > Hi All,
-> > >=20
-> > > This version of my ohci and ehci-platform clks, phy and dt suppor=
-t
-> > > patch-set, really fixes the 2 small bugs Alan found.
-> >=20
-> > All okay -- this time I can't find anything to complain about.  :-)
->=20
-> There is one minor issue; which is that the ehci binding claims the d=
-river=20
-> supports the following optional boolean properties:
->=20
-> - big-endian-regs : boolean, set this for hcds with big-endian regist=
-ers
-> - big-endian-desc : boolean, set this for hcds with big-endian descri=
-ptors
-> - big-endian : boolean, for hcds with big-endian-regs + big-endian-de=
-sc
->=20
-> while it does not (yet) so this is misleading. Can we at get that fix=
-ed before=20
-> merging? Copy pasting the PPC ehci driver should do the job.
-
-I agree it needs to be fixed.  This can be done in a follow-up patch,
-though.  It doesn't have to be in this one because nobody is using
-ehci-platform with DT yet.
-
-A simple copy from the PPC driver isn't quite enough, because the
-platform data settings would override the DT values. =20
-ehci_platform_reset has to be changed so that it sets
-ehci->big_endian_desc and _mmio if the pdata flags are set, but
-otherwise leaves them alone.
-
-Hans, would you like to write another patch to take care of this?
-
-Alan Stern
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gU3VuLCAxMiBKYW4gMjAxNCAyMDoyNjoyMSArMDEwMApTZWJhc3RpYW4gSGVzc2VsYmFydGgg
+PHNlYmFzdGlhbi5oZXNzZWxiYXJ0aEBnbWFpbC5jb20+IHdyb3RlOgoKPiBPbiAwMS8xMi8yMDE0
+IDA3OjUxIFBNLCBKZWFuLUZyYW5jb2lzIE1vaW5lIHdyb3RlOgo+ID4gT24gU2F0LCAxMSBKYW4g
+MjAxNCAxOTozNToyMSArMDEwMAo+ID4gU2ViYXN0aWFuIEhlc3NlbGJhcnRoIDxzZWJhc3RpYW4u
+aGVzc2VsYmFydGhAZ21haWwuY29tPiB3cm90ZToKPiA+Cj4gPj4gQXQgbGVhc3QgZm9yIHRoZSBE
+VCBwYXJ0LCBJJ2Qgc3VnZ2VzdCB0byBub3QgYXNrIGZvciBpbnRlcnJ1cHQgZGlyZWN0bHkKPiA+
+PiBidXQgdXNlIGEgcHJvcGVyIGdwaW9zIHByb3BlcnR5LiBUaGUgY2FuIG9mIGNvdXJzZSBiZSBj
+b252ZXJ0ZWQgdG8KPiA+PiBwcml2LT5pbnRfaXJxIGluIHNvbWUgdGRhOTk4eF9kdF9wcm9iZS4K
+PiA+Cj4gPiBNYXkgeW91IGdpdmUgbWUgbW9yZSBpbmZvcm1hdGlvbj8KPiAKPiBTdXJlLCBzZWUg
+WzFdLgo+IAo+IFsxXSBodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL2FyY2hpdmVzL2RyaS1k
+ZXZlbC8yMDEzLU1heS8wMzg4MjIuaHRtbAoKVGhhbmtzIGZvciB0aGUgbGluaywgYnV0IEkgc3Rp
+bGwgZG9uJ3Qgc2VlIHRoZSBhZHZhbnRhZ2Ugb2YgdGhlIGdwaW8KKHdoaWNoIHZhbHVlPykgb3Zl
+ciB0aGUgaXJxIG51bWJlci4KCi0tIApLZW4gYXIgYydoZW50YcOxCXwJICAgICAgKiogQnJlaXpo
+IGhhIExpbnV4IGF0YXYhICoqCkplZgkJfAkJaHR0cDovL21vaW5lamYuZnJlZS5mci8KX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
