@@ -1,69 +1,72 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] dma: Add Xilinx AXI Video Direct Memory Access Engine
- driver support
-Date: Fri, 17 Jan 2014 17:13:07 +0100
-Message-ID: <201401171713.08550.arnd@arndb.de>
-References: <1389894803-4147-1-git-send-email-sthokal@xilinx.com>
- <1389894803-4147-2-git-send-email-sthokal@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1389894803-4147-2-git-send-email-sthokal@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, vinod.koul@intel.com, linux-kernel@vger.kernel.org, michal.simek@xilinx.com, Srikanth Thokala <sthokal@xilinx.com>, dmaengine@vger.kernel.org, robh+dt@kernel.org, grant.likely@linaro.org, dan.j.williams@intel.com
+From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Subject: Re: [PATCH] of: fix of_update_property()
+Date: Fri, 17 Jan 2014 18:42:47 +0200
+Message-ID: <07586E1B-FDB0-4D91-8467-15E9435FD9CD@antoniou-consulting.com>
+References: <1389933996-19306-1-git-send-email-Li.Xiubo@freescale.com> <CAL_JsqJuAv8=pBuzYO5ZGzroD1kq6gjmNsTjoVyXR=vcu+-pTA@mail.gmail.com>
+Mime-Version: 1.0 (Apple Message framework v1085)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJuAv8=pBuzYO5ZGzroD1kq6gjmNsTjoVyXR=vcu+-pTA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 16 January 2014, Srikanth Thokala wrote:
-> @@ -0,0 +1,71 @@
-> +Xilinx AXI VDMA engine, it does transfers between memory and video devices.
-> +It can be configured to have one channel or two channels. If configured
-> +as two channels, one is to transmit to the video device and another is
-> +to receive from the video device.
-> +
-> +Required properties:
-> +- compatible: Should be "xlnx,axi-vdma-1.00.a"
-> +- #dma-cells: Should be <1>, see "dmas" property below
-> +- reg: Should contain VDMA registers location and length.
-> +- interrupts: Should contain per channel VDMA interrupts.
-> +- compatible (child node): It should be either "xlnx,axi-vdma-mm2s-channel" or
-> +       "xlnx,axi-vdma-s2mm-channel". It depends on the hardware design and it
-> +       can also have both channels.
-> +- xlnx,device-id: Should contain device number in each channel. It should be
-> +       {0,1,2...so on} to the number of VDMA devices configured in hardware.
-> +- xlnx,num-fstores: Should be the number of framebuffers as configured in h/w.
-> +- xlnx,data-width: Should contain the stream data width, takes {32,64...so on}.
-> +- xlnx,flush-fsync: (Optional) Tells whether which channel to Flush on Fsync.
-> +       It takes following values:
-> +       {1}, flush both channels
-> +       {2}, flush mm2s channel
-> +       {3}, flush s2mm channel
-> +- xlnx,include-sg: (Optional) Tells whether configured for Scatter-mode in
-> +       the hardware.
-> +- xlnx,include-dre: (Optional) Tells whether hardware is configured for Data
-> +       Realignment Engine.
-> +- xlnx,genlock-mode: (Optional) Tells whether Genlock synchornisation is
-> +       enabled/disabled in hardware.
+Hi Rob,
 
-The documentation doesn't seem to match the example, since you don't mention
-the fact that the channels have separate nodes here, or which properties
-are meant for the parent or the child node. Also, some of the "required"
-properties are absent in the example, which makes no sense.
 
-I also assume that some of the properties should just go away:
+On Jan 17, 2014, at 4:49 PM, Rob Herring wrote:
 
-* xlnx,device-id should be the argument in the handle from the slave device
-* data width should be a property of the slave driver that is configured
-  through dma_slave_config(), unless you can have dma engines that only
-  support certain a width.
+> On Thu, Jan 16, 2014 at 10:46 PM, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+>> The of_update_property() is intent to update a property in a node
+> 
+[ snip ]
 
-	Arnd
+>>                return of_add_property(np, newprop);
+> 
+> Isn't there also a race that if you do 2 updates for a non-existent
+> property and both threads try to add the property, the first one will
+> succeed and the 2nd will fail. The 2nd one needs to retry as well.
+> 
+> Also, couldn't the node itself be removed while trying to do the update?
+> 
+> There seem to be multiple problems with this code, but doing multiple
+> simultaneous, conflicting updates seems like an unlikely case.
+> 
+
+There are multiple problems with this function.
+
+First of all, the firing of the notifier at the beginning with OF_RECONFIG_UPDATE_PROPERTY
+even though we have no idea if the property is found.
+
+The locking is no good; the lock should be taken before the search by switching to using
+__of_find_property. Threading is just not handled well at all at the moment. 
+Retrying is just bogus.
+
+The biggest problem is the semantics; IMHO we should just remove the option to create
+a property if it doesn't exist. I don't think there are many callers that use update property
+expecting to be created if it doesn't exist.
+
+> Rob
+> 
+>> @@ -1593,7 +1594,7 @@ int of_update_property(struct device_node *np, struct property *newprop)
+>>        raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>> 
+>>        if (!found)
+>> -               return -ENODEV;
+>> +               goto retry;
+>> 
+>> #ifdef CONFIG_PROC_DEVICETREE
+>>        /* try to add to proc as well if it was initialized */
+>> --
+>> 1.8.4
+>> 
+>> 
+
+Regards
+
+-- Pantelis--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
