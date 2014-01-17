@@ -1,192 +1,141 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC PATCH V2 1/4] pci: APM X-Gene PCIe controller driver
-Date: Fri, 17 Jan 2014 16:07:36 +0100
-Message-ID: <201401171607.37561.arnd@arndb.de>
-References: <1389742458-7693-1-git-send-email-tinamdar@apm.com> <201401151339.58593.arnd@arndb.de> <CACoXjc=ZT9fEm_KdY4WFSoS8n5FmO+hn9LjsR4m8YZG2iBbt5A@mail.gmail.com>
+From: Saurabh Singh <saurabh1.s@samsung.com>
+Subject: Re: [PATCH] Parse missing regulator constraints from device tree blob
+Date: Fri, 17 Jan 2014 15:11:19 +0000 (GMT)
+Message-ID: <758915.615271389971476784.JavaMail.weblogic@epml20>
+Reply-To: saurabh1.s@samsung.com
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACoXjc=ZT9fEm_KdY4WFSoS8n5FmO+hn9LjsR4m8YZG2iBbt5A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+MIME-version: 1.0
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "celinux-dev@tree.celinuxforum.org" <celinux-dev@tree.celinuxforum.org>, SREEVATSA D B <srevatsa@samsung.com>, Praveen BP <bp.praveen@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 17 January 2014, Tanmay Inamdar wrote:
-> On Wed, Jan 15, 2014 at 4:39 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Wednesday 15 January 2014, Tanmay Inamdar wrote:
-> >> This patch adds the AppliedMicro X-Gene SOC PCIe controller driver.
-> >> X-Gene PCIe controller supports maxmum upto 8 lanes and GEN3 speed.
-> >> X-Gene has maximum 5 PCIe ports supported.
-> >>
-> >> Signed-off-by: Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>
-> >
-> > This already looks much better than the first version, but I have a more
-> > comments. Most importantly, it would help to know how the root ports
-> > are structured. Is this a standard root complex and multiple ports,
-> > multiple root complexes with one port each, or a nonstandard organization
-> > that is a mix of those two models?
-> 
-> This is multiple root complexes with one port each.
-
-Ok.
-
-> > I also wonder why you need to do this at all. If there isn't a global
-> > config space for all ports, but rather a separate type0/type1 config
-> > cycle based on the bus number, I see that as an indication that the
-> > ports are in fact separate domains and should each start with bus 0.
-> 
-> It is not a standard ECAM layout. We also have a separate RTDID
-> register as well to program bus, device, function. While accessing EP
-> config space, we have to set the bit 17:16 as 2b'01. The same config
-> space address is utilized for enabling a customized nonstandard PCIe
-> DMA feature. The bits are defined to differentiate the access purpose.
-> The feature is not supported in this driver yet.
-> 
-> Secondly I don't think it will matter if each port starts with bus 0.
-> As long as we set the correct BDF in RTDID and set correct bits in
-> config address, the config reads and writes would work. Right?
-
-Yes, I think the current code will work (aside from my other comment),
-but it seems unnecessary to do this if you use pci domains correctly:
-
-If you have one pci domain and one root port per root complex, you
-would not get any config space cycles for the root port and can
-do away with the special case here, as well as with the
-xgene_pcie_fixup_bridge() that seems to be a special case to
-avoid touching the root ports as well.
-
-> >
-> >> +     switch (restype) {
-> >> +     case IORESOURCE_MEM:
-> >> +             res = &port->mem.res;
-> >> +             pci_addr = port->mem.pci_addr;
-> >> +             min_size = SZ_128M;
-> >> +             break;
-> >> +     case IORESOURCE_IO:
-> >> +             res = &port->io.res;
-> >> +             pci_addr = port->io.pci_addr;
-> >> +             min_size = 128;
-> >> +             flag |= OB_LO_IO;
-> >> +             break;
-> >> +     }
-> >
-> > I assume this works ok, but seems wrong in one detail: If the resource
-> > is marked IORESOURCE_IO, res->start is supposed to be in I/O space, not
-> > in memory space, which would make it the wrong number to program
-> > into the hardware registers.
-
-Sorry, I was actually wrong with my statement above and I thought I had
-deleted my comment before sending the mail.
-
-> Yes for using ioport resource. However we have decided to defer using
-> it since 'pci_ioremap_io' is not yet supported from arm64 side.
-> 
-> From HW point of view, for memory mapped IO space, it is nothing but a
-> piece taken out of the ranges in address map for outbound accesses. So
-> while configuring registers from SOC side, it should take the CPU
-> address which is address from SOC address map. Right?
-> 
-> Later on we can have a separate io resource like 'realio' similar to
-> what pci-mvebu.c does.
-
-I think your code is actually correct here, but please also add the
-pci_ioremap_io implementation for arm64 in a separate patch in this
-series. It shouldn't be hard and we need it for every pci host driver
-anyway.
-
-> >> +static int xgene_pcie_setup(int nr, struct pci_sys_data *sys)
-> >> +{
-> >> +     struct xgene_pcie_port *pp = xgene_pcie_sys_to_port(sys);
-> >> +
-> >> +     if (pp == NULL)
-> >> +             return 0;
-> >> +
-> >> +     sys->mem_offset = pp->mem.res.start - pp->mem.pci_addr;
-> >> +     pci_add_resource_offset(&sys->resources, &pp->mem.res,
-> >> +                             sys->mem_offset);
-> >> +     return 1;
-> >> +}
-
-> > Also, what would be a reason for the port to be zero here? If
-> > it's something that can't happen in practice, don't try to handle
-> > it gracefully. You can use BUG_ON() for fatal conditions that
-> > are supposed to be impossible to reach.
-> 
-> This function is a hook to upper layer. We register nr_controllers in
-> hw_pci structure as MAX_PORTS we support. It can happen that number of
-> ports actually enabled from device tree are less than the number in
-> nr_controllers.
-
-I see. I'll comment more on this below.
-
-> >> +     if (!port->link_up)
-> >> +             dev_info(port->dev, "(rc) link down\n");
-> >> +     else
-> >> +             dev_info(port->dev, "(rc) x%d gen-%d link up\n",
-> >> +                             lanes, port->link_speed + 1);
-> >> +#ifdef CONFIG_PCI_DOMAINS
-> >> +     xgene_pcie_hw.domain++;
-> >> +#endif
-> >> +     xgene_pcie_hw.private_data[index++] = port;
-> >> +     platform_set_drvdata(pdev, port);
-> >> +     return 0;
-> >> +}
-> >
-> > Do you have multiple domains or not? I don't see how it can work if you
-> > make the domain setup conditional on a kernel configuration option.
-> > If you in fact have multiple domains, make sure in Kconfig that
-> > CONFIG_PCI_DOMAINS is enabled. Otherwise don't mess with the domain
-> > number...
-> 
-> It is enabled in Kconfig.
-
-Ok, then remove the #ifdef here.
-
-> >> +static int __init xgene_pcie_init(void)
-> >> +{
-> >> +     void *private;
-> >> +     int ret;
-> >> +
-> >> +     pr_info("X-Gene: PCIe driver\n");
-> >> +
-> >> +     /* allocate private data to keep xgene_pcie_port information */
-> >> +     private = kzalloc((XGENE_PCIE_MAX_PORTS * sizeof(void *)), GFP_KERNEL);
-> >
-> > This should not be done unconditionally: There is no point in printing
-> > a message or allocating memory if you don't actually run on a system
-> > with this device.
-> 
-> I am doing this here because I have one instance of hw_pci structure
-> with multiple pcie controllers. I can't do it from probe since it will
-> be called once per instance in device tree.
-> 
-> >
-> >> +     xgene_pcie_hw.private_data = private;
-> >> +     ret = platform_driver_probe(&xgene_pcie_driver,
-> >> +                                 xgene_pcie_probe_bridge);
-> >> +     if (ret)
-> >> +             return ret;
-> >> +     pci_common_init(&xgene_pcie_hw);
-> >> +     return 0;
-> >
-> > This seems wrong: You should not use platform_driver_probe() because
-> > that has issues with deferred probing.
-> 
-> I think 'platform_driver_probe' prevents the deferred probing.
-> 'pci_common_init' needs to be called only once with current driver
-> structure. The probes for all pcie ports should be finished (ports
-> initialized) before 'pci_common_init' gets called.
-
-I think it would be cleaner for dynamically registered host controllers
-to call pci_common_init_dev() with nr_controllers=1 once for each root
-complex in the probe() function. This should take care of a few other
-things I've mentioned as well.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIHBhcnNpbmcgZm9sbG93aW5nIHJlZ3VsYXRvciBj
+b250cmFpbnRzIGZyb20NCmRldmljZSB0cmVlIGJsb2IuDQoxLiB2YWxpZCBtb2RlcyBtYXNrICh2
+YWxpZF9tb2Rlc19tYXNrKQ0KMi4gaW5pdGlhbCBtb2RlIChpbml0aWFsX21vZGUpDQozLiBpbml0
+aWFsIHN0YXRlIChpbml0aWFsX3N0YXRlKQ0KNC4gc3RhdGUgbWVtIChzdGF0ZV9tZW0pDQo1LiBz
+dGF0ZSBkaXNrIChzdGF0ZV9kaXNrKQ0KNi4gc3RhdGUgc3RhbmRieSAoc3RhdGVfc3RhbmRieSkN
+Cg0KU2lnbmVkLW9mZi1ieTogU2F1cmFiaCBTaW5naCBTZW5nYXIgPHNhdXJhYmgxLnNAc2Ftc3Vu
+Zy5jb20+DQotLS0NCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWd1bGF0b3IvcmVndWxhdG9y
+LnR4dCAgICB8ICAgNDUgKysrKysrKysrKysrDQogZHJpdmVycy9yZWd1bGF0b3Ivb2ZfcmVndWxh
+dG9yLmMgICAgICAgICAgICAgICAgICAgfCAgIDc3ICsrKysrKysrKysrKysrKysrKysrDQogMiBm
+aWxlcyBjaGFuZ2VkLCAxMjIgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkNCg0KZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWd1bGF0b3IvcmVndWxh
+dG9yLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWd1bGF0b3IvcmVn
+dWxhdG9yLnR4dA0KaW5kZXggMmJkOGYwOS4uNmRjOTM1YiAxMDA2NDQNCi0tLSBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWd1bGF0b3IvcmVndWxhdG9yLnR4dA0KKysrIGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3JlZ3VsYXRvci9yZWd1bGF0b3IudHh0
+DQpAQCAtMTQsNiArMTQsMzYgQEAgT3B0aW9uYWwgcHJvcGVydGllczoNCiAtIHJlZ3VsYXRvci1y
+YW1wLWRlbGF5OiByYW1wIGRlbGF5IGZvciByZWd1bGF0b3IoaW4gdVYvdVMpDQogICBGb3IgaGFy
+ZHdhcmVzIHdoaWNoIHN1cHBvcnQgZGlzYWJsaW5nIHJhbXAgcmF0ZSwgaXQgc2hvdWxkIGJlIGV4
+cGxpY2l0bHkNCiAgIGludGlhbGlzZWQgdG8gemVybyAocmVndWxhdG9yLXJhbXAtZGVsYXkgPSA8
+MD4pIGZvciBkaXNhYmxpbmcgcmFtcCBkZWxheS4NCistIHJlZ3VsYXRvci12YWxpZC1tb2Rlcy1t
+YXNrOiB2YWxpZCBvcGVyYXRpb25zIGZvciByZWd1bGF0b3Igb24gcGFydGljdWxhciBtYWNoaW5l
+DQorICBTdXBwb3J0cyBmb2xsb3dpbmcgbW9kZXMgb2Ygb3BlcmF0aW9uczoNCisgIE1vZGUJCQlE
+ZXNjcmlwdGlvbg0KKyAgLS0tLQkJCS0tLS0tLS0tLS0tDQorICBmYXN0CQkJUmVndWxhdG9yIGNh
+biBoYW5kbGUgZmFzdCBjaGFuZ2VzIGluIGl0J3MgbG9hZA0KKyAgbm9ybWFsCQlOb3JtYWwgcmVn
+dWxhdG9yIHBvd2VyIHN1cHBseSBtb2RlDQorICBpZGxlCQkJUmVndWxhdG9yIHJ1bnMgaW4gYSBt
+b3JlIGVmZmljaWVudCBtb2RlIGZvciBsaWdodCBsb2Fkcy4NCisgIHN0YW5kYnkJCVJlZ3VsYXRv
+ciBydW5zIGluIHRoZSBtb3N0IGVmZmljaWVudCBtb2RlIGZvciB2ZXJ5IGxpZ2h0IGxvYWRzDQor
+ICBTZWUgdGhlIGV4YW1wbGUgZ2l2ZW4gYmVsb3cuDQorDQorLSByZWd1bGF0b3ItaW5pdGlhbC1t
+b2RlOiBkZWZhdWx0IG1vZGUgdG8gc2V0IG9uIHN0YXJ0dXANCisgIFJlZmVyIHRvIHJlZ3VsYXRv
+ci1pbml0aWFsLW1vZGUgZm9yIG1vZGVzIHN1cHBvcnRlZA0KKw0KKy0gcmVndWxhdG9yLWluaXRp
+YWwtc3RhdGU6IHN1c3BlbmQgc3RhdGUgdG8gc2V0IGF0IGluaXQNCisgIEFueSBvbmUgb2YgdGhl
+IGZvbGxvd2luZyBzdGF0ZXMgY2FuIGJlIHNldDoNCisgIE1vZGUJCQlEZXNjcmlwdGlvbg0KKyAg
+LS0tLQkJCS0tLS0tLS0tLS0tDQorICBzdXNwZW5kLW1lbQkJc3VzcGVuZCB0byBtZW1vcnkNCisg
+IHN1c3BlbmQtc3RhbmRieQlzdGFuZGJ5IG1vZGUNCisgIHN1c3BlbmQtZGlzawkJc3VzcGVuZCB0
+byBkaXNrDQorICBTZWUgdGhlIGV4YW1wbGUgZ2l2ZW4gYmVsb3cuDQorDQorLSByZWd1bGF0b3It
+c3RhdGUtbWVtLCByZWd1bGF0b3Itc3RhdGUtZGlzaywgcmVndWxhdG9yLXN0YXRlLXN0YW5kYnk6
+DQorCWRlZmluZXMgcmVndWxhdG9yIHN1c3BlbmQgdG8gbWVtb3J5LCBzdXNwZW5kIHRvIGRpc2sg
+KGhpYmVybmF0ZSkgYW5kIHN0YW5kYnkgcmVzcGVjdGl2ZWx5Lg0KKwloYXZlIGZvbGxvd2luZyBz
+dWItY29uc3RhcmludHM6DQorCS0gcmVndWxhdG9yLXN0YXRlLXV2OiB2b2x0YWdlIHRvIHNldCBp
+biBzdXNwZW5kIHN0YXRlDQorCS0gcmVndWxhdG9yLXN0YXRlLW1vZGU6IHN1c3BlbmQgcmVndWxh
+dG9yIG9wZXJhdGluZyBtb2RlLA0KKwkgIHJlZmVyIHRvIHJlZ3VsYXRvci12YWxpZC1tb2Rlcy1t
+YXNrIGZvciBtb2RlcyBzdXBwb3J0ZWQNCisJLSByZWd1bGF0b3Itc3RhdGUtZW5hYmxlZDogaXMg
+cmVndWxhdG9yIGVuYWJsZWQgaW4gdGhpcyBzdXNwZW5kIHN0YXRlDQorCS0gcmVndWxhdG9yLXN0
+YXRlLWRpc2FibGVkOiBpcyB0aGUgcmVndWxhdG9yIGRpc2JsZWQgaW4gdGhpcyBzdXNwZW5kIHN0
+YXRlDQogDQogRGVwcmVjYXRlZCBwcm9wZXJ0aWVzOg0KIC0gcmVndWxhdG9yLWNvbXBhdGlibGU6
+IElmIGEgcmVndWxhdG9yIGNoaXAgY29udGFpbnMgbXVsdGlwbGUNCkBAIC0yOSw2ICs1OSwyMSBA
+QCBFeGFtcGxlOg0KIAkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MjUwMDAwMD47DQogCQly
+ZWd1bGF0b3ItYWx3YXlzLW9uOw0KIAkJdmluLXN1cHBseSA9IDwmdmluPjsNCisJCXJlZ3VsYXRv
+ci1pbml0aWFsLW1vZGUgPSAibm9ybWFsIjsNCisJCXJlZ3VsYXRvci1pbml0aWFsLXN0YXRlID0g
+InN1c3BlbmQtbWVtIjsNCisJCXJlZ3VsYXRvci12YWxpZC1tb2Rlcy1tYXNrIHsNCisJCS8qY2Fu
+IHN1cHBvcnQgbXVsdGlwbGUgbW9kZQ0KKwkJICogaW4gdGhpcyBleGFtcGxlIHN1cHBvcnRpbmcg
+ZmFzdCBhbmQgbm9ybWFsIG1vZGUgKi8NCisJCQlmYXN0LW1vZGU7DQorCQkJbm9ybWFsLW1vZGU7
+DQorCQl9Ow0KKwkJcmVndWxhdG9yLXN0YXRlLW1lbSB7DQorCQkJcmVndWxhdG9yLXN0YXRlLW1v
+ZGUgPSAiaWRsZSI7DQorCQkJcmVndWxhdG9yLXN0YXRlLWVuYWJsZWQ7DQorCQl9Ow0KKwkJcmVn
+dWxhdG9yLXN0YXRlLWRpc2sgew0KKwkJCXJlZ3VsYXRvci1zdGF0ZS1kaXNhYmxlZDsNCisJCX07
+DQogCX07DQogDQogUmVndWxhdG9yIENvbnN1bWVyczoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3Jl
+Z3VsYXRvci9vZl9yZWd1bGF0b3IuYyBiL2RyaXZlcnMvcmVndWxhdG9yL29mX3JlZ3VsYXRvci5j
+DQppbmRleCA3ODI3Mzg0Li4zMDMwNTk3IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9yZWd1bGF0b3Iv
+b2ZfcmVndWxhdG9yLmMNCisrKyBiL2RyaXZlcnMvcmVndWxhdG9yL29mX3JlZ3VsYXRvci5jDQpA
+QCAtMTYsMTEgKzE2LDM2IEBADQogI2luY2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9tYWNoaW5lLmg+
+DQogI2luY2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9vZl9yZWd1bGF0b3IuaD4NCiANCisvKioNCisg
+KiBzZXRfcmVndWxhdG9yX3N0YXRlX2NvbnN0cmFpbnRzIC0gc2V0IHJlZ3VsYXRvciBzdGF0ZSBm
+b3IgbG93IHBvd2VyIHN5c3RlbSBzdGF0ZXMNCisgKiBAbnA6IGRldmljZSBub2RlIGZvciB0aGUg
+bG93IHBvd2VyIHJlZ3VsYXRvciBzdGF0ZQ0KKyAqIEByZWd1bGF0b3Jfc3RhdGU6IHJlZ3VsYXRv
+cl9zdGF0ZSBzdHJ1Y3R1cmUgbmVlZCB0byBiZSBmaWxsZWQNCisgKi8NCitzdGF0aWMgdm9pZCBz
+ZXRfcmVndWxhdG9yX3N0YXRlX2NvbnN0cmFpbnRzKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAsDQor
+CQlzdHJ1Y3QgcmVndWxhdG9yX3N0YXRlICpzdGF0ZSkNCit7DQorCW9mX3Byb3BlcnR5X3JlYWRf
+dTMyKG5wLCAicmVndWxhdG9yLXN0YXRlLXV2IiwgJnN0YXRlLT51Vik7DQorCWlmICghb2ZfcHJv
+cGVydHlfbWF0Y2hfc3RyaW5nKG5wLCAicmVndWxhdG9yLXN0YXRlLW1vZGUiLCAiZmFzdCIpKQ0K
+KwkJc3RhdGUtPm1vZGUgPSBSRUdVTEFUT1JfTU9ERV9GQVNUOw0KKwllbHNlIGlmICghb2ZfcHJv
+cGVydHlfbWF0Y2hfc3RyaW5nKG5wLCAicmVndWxhdG9yLXN0YXRlLW1vZGUiLA0KKwkJCQkJCQkJ
+Im5vcm1hbCIpKQ0KKwkJc3RhdGUtPm1vZGUgPSBSRUdVTEFUT1JfTU9ERV9OT1JNQUw7DQorCWVs
+c2UgaWYgKCFvZl9wcm9wZXJ0eV9tYXRjaF9zdHJpbmcobnAsICJyZWd1bGF0b3Itc3RhdGUtbW9k
+ZSIsICJpZGxlIikpDQorCQlzdGF0ZS0+bW9kZSA9IFJFR1VMQVRPUl9NT0RFX0lETEU7DQorCWVs
+c2UgaWYgKCFvZl9wcm9wZXJ0eV9tYXRjaF9zdHJpbmcobnAsICJyZWd1bGF0b3Itc3RhdGUtbW9k
+ZSIsDQorCQkJCQkJCQkic3RhbmRieSIpKQ0KKwkJc3RhdGUtPm1vZGUgPSBSRUdVTEFUT1JfTU9E
+RV9TVEFOREJZOw0KKwlzdGF0ZS0+ZW5hYmxlZCA9IG9mX3Byb3BlcnR5X3JlYWRfYm9vbChucCwg
+InJlZ3VsYXRvci1zdGF0ZS1lbmFibGVkIik7DQorCXN0YXRlLT5kaXNhYmxlZCA9IG9mX3Byb3Bl
+cnR5X3JlYWRfYm9vbChucCwgInJlZ3VsYXRvci1zdGF0ZS1kaXNhYmxlZCIpOw0KK30NCisNCisN
+CiBzdGF0aWMgdm9pZCBvZl9nZXRfcmVndWxhdGlvbl9jb25zdHJhaW50cyhzdHJ1Y3QgZGV2aWNl
+X25vZGUgKm5wLA0KIAkJCQkJc3RydWN0IHJlZ3VsYXRvcl9pbml0X2RhdGEgKippbml0X2RhdGEp
+DQogew0KIAljb25zdCBfX2JlMzIgKm1pbl91ViwgKm1heF91ViwgKnVWX29mZnNldDsNCiAJY29u
+c3QgX19iZTMyICptaW5fdUEsICptYXhfdUEsICpyYW1wX2RlbGF5Ow0KKwlzdHJ1Y3QgZGV2aWNl
+X25vZGUgKnN0YXRlLCAqdmFsaWRfbW9kZXM7DQogCXN0cnVjdCBwcm9wZXJ0eSAqcHJvcDsNCiAJ
+c3RydWN0IHJlZ3VsYXRpb25fY29uc3RyYWludHMgKmNvbnN0cmFpbnRzID0gJigqaW5pdF9kYXRh
+KS0+Y29uc3RyYWludHM7DQogDQpAQCAtNzMsNiArOTgsNTggQEAgc3RhdGljIHZvaWQgb2ZfZ2V0
+X3JlZ3VsYXRpb25fY29uc3RyYWludHMoc3RydWN0IGRldmljZV9ub2RlICpucCwNCiAJCWVsc2UN
+CiAJCQljb25zdHJhaW50cy0+cmFtcF9kaXNhYmxlID0gdHJ1ZTsNCiAJfQ0KKw0KKwl2YWxpZF9t
+b2RlcyA9IG9mX2ZpbmRfbm9kZV9ieV9uYW1lKG5wLCAicmVndWxhdG9yLXZhbGlkLW1vZGVzLW1h
+c2siKTsNCisJaWYgKHZhbGlkX21vZGVzKSB7DQorCQlpZiAob2ZfcHJvcGVydHlfcmVhZF9ib29s
+KHZhbGlkX21vZGVzLCAiZmFzdCIpKQ0KKwkJCWNvbnN0cmFpbnRzLT52YWxpZF9tb2Rlc19tYXNr
+ID0gUkVHVUxBVE9SX01PREVfRkFTVDsNCisJCWlmIChvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wodmFs
+aWRfbW9kZXMsICJub3JtYWwiKSkNCisJCQljb25zdHJhaW50cy0+dmFsaWRfbW9kZXNfbWFzayB8
+PSBSRUdVTEFUT1JfTU9ERV9OT1JNQUw7DQorCQlpZiAob2ZfcHJvcGVydHlfcmVhZF9ib29sKHZh
+bGlkX21vZGVzLCAiaWRsZSIpKQ0KKwkJCWNvbnN0cmFpbnRzLT52YWxpZF9tb2Rlc19tYXNrIHw9
+IFJFR1VMQVRPUl9NT0RFX0lETEU7DQorCQlpZiAob2ZfcHJvcGVydHlfcmVhZF9ib29sKHZhbGlk
+X21vZGVzLCAic3RhbmRieSIpKQ0KKwkJCWNvbnN0cmFpbnRzLT52YWxpZF9tb2Rlc19tYXNrIHw9
+IFJFR1VMQVRPUl9NT0RFX1NUQU5EQlk7DQorCX0NCisNCisJLyogZmxhZyBhc3NpZ25tZW50IGZv
+ciBpbml0aWFsIG1vZGUqLw0KKwlpZiAoIW9mX3Byb3BlcnR5X21hdGNoX3N0cmluZyhucCwgInJl
+Z3VsYXRvci1pbml0aWFsLW1vZGUiLCAiZmFzdCIpKQ0KKwkJY29uc3RyYWludHMtPmluaXRpYWxf
+bW9kZSA9IFJFR1VMQVRPUl9NT0RFX0ZBU1Q7DQorCWVsc2UgaWYgKCFvZl9wcm9wZXJ0eV9tYXRj
+aF9zdHJpbmcobnAsICJyZWd1bGF0b3ItaW5pdGlhbC1tb2RlIiwNCisJCQkJCQkJCSJub3JtYWwi
+KSkNCisJCWNvbnN0cmFpbnRzLT5pbml0aWFsX21vZGUgPSBSRUdVTEFUT1JfTU9ERV9OT1JNQUw7
+DQorCWVsc2UgaWYgKCFvZl9wcm9wZXJ0eV9tYXRjaF9zdHJpbmcobnAsICJyZWd1bGF0b3ItaW5p
+dGlhbC1tb2RlIiwNCisJCQkJCQkJCSJpZGxlIikpDQorCQljb25zdHJhaW50cy0+aW5pdGlhbF9t
+b2RlID0gUkVHVUxBVE9SX01PREVfSURMRTsNCisJZWxzZSBpZiAoIW9mX3Byb3BlcnR5X21hdGNo
+X3N0cmluZyhucCwgInJlZ3VsYXRvci1pbml0aWFsLW1vZGUiLA0KKwkJCQkJCQkJInN0YW5kYnki
+KSkNCisJCWNvbnN0cmFpbnRzLT5pbml0aWFsX21vZGUgPSBSRUdVTEFUT1JfTU9ERV9TVEFOREJZ
+Ow0KKw0KKwkvKiBmbGFnIGFzc2lnbm1lbnQgZm9yIGluaXRpYWwgc3RhdGUqLw0KKwlpZiAoIW9m
+X3Byb3BlcnR5X21hdGNoX3N0cmluZyhucCwNCisJCQkJInJlZ3VsYXRvci1pbml0aWFsLXN0YXRl
+IiwgInN1c3BlbmQtbWVtIikpDQorCQljb25zdHJhaW50cy0+aW5pdGlhbF9zdGF0ZSA9IFBNX1NV
+U1BFTkRfTUVNOw0KKwllbHNlIGlmICghb2ZfcHJvcGVydHlfbWF0Y2hfc3RyaW5nKG5wLA0KKwkJ
+CQkicmVndWxhdG9yLWluaXRpYWwtc3RhdGUiLCAic3VzcGVuZC1zdGFuZGJ5IikpDQorCQljb25z
+dHJhaW50cy0+aW5pdGlhbF9zdGF0ZSA9IFBNX1NVU1BFTkRfU1RBTkRCWTsNCisJZWxzZSBpZiAo
+IW9mX3Byb3BlcnR5X21hdGNoX3N0cmluZyhucCwNCisJCQkJInJlZ3VsYXRvci1pbml0aWFsLXN0
+YXRlIiwgInN1c3BlbmQtZGlzayIpKQ0KKwkJY29uc3RyYWludHMtPmluaXRpYWxfc3RhdGUgPSBQ
+TV9TVVNQRU5EX01BWDsNCisNCisJLyogcmVndWxhdG9yIHN0YXRlIGR1cmluZyBsb3cgcG93ZXIg
+c3lzdGVtIHN0YXRlcyAqLw0KKwlzdGF0ZSA9IG9mX2ZpbmRfbm9kZV9ieV9uYW1lKG5wLCAicmVn
+dWxhdG9yLXN0YXRlLW1lbSIpOw0KKwlpZiAoc3RhdGUpDQorCQlzZXRfcmVndWxhdG9yX3N0YXRl
+X2NvbnN0cmFpbnRzKHN0YXRlLA0KKwkJCQkmY29uc3RyYWludHMtPnN0YXRlX21lbSk7DQorDQor
+CXN0YXRlID0gb2ZfZmluZF9ub2RlX2J5X25hbWUobnAsICJyZWd1bGF0b3Itc3RhdGUtZGlzayIp
+Ow0KKwlpZiAoc3RhdGUpDQorCQlzZXRfcmVndWxhdG9yX3N0YXRlX2NvbnN0cmFpbnRzKHN0YXRl
+LA0KKwkJCQkmY29uc3RyYWludHMtPnN0YXRlX2Rpc2spOw0KKw0KKwlzdGF0ZSA9IG9mX2ZpbmRf
+bm9kZV9ieV9uYW1lKG5wLCAicmVndWxhdG9yLXN0YXRlLXN0YW5kYnkiKTsNCisJaWYgKHN0YXRl
+KQ0KKwkJc2V0X3JlZ3VsYXRvcl9zdGF0ZV9jb25zdHJhaW50cyhzdGF0ZSwNCisJCQkJJmNvbnN0
+cmFpbnRzLT5zdGF0ZV9zdGFuZGJ5KTsNCiB9DQogDQogLyoqDQotLSANCjEuNy4wLjQ=
