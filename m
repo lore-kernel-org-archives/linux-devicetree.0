@@ -1,100 +1,56 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH v2 1/2] i2c: qup: Add device tree bindings information
-Date: Fri, 17 Jan 2014 09:40:45 +0200
-Message-ID: <1389944445.2794.48.camel@iivanov-dev.int.mm-sol.com>
-References: <1389659437-16406-1-git-send-email-bjorn.andersson@sonymobile.com>
-	 <1389659437-16406-2-git-send-email-bjorn.andersson@sonymobile.com>
-	 <1389689841.2794.8.camel@iivanov-dev.int.mm-sol.com>
-	 <20140116232047.GK30911@sonymobile.com>
+From: Jagan Teki <jagannadh.teki@gmail.com>
+Subject: Re: [PATCH v4 0/7] mtd: spi-nor: add a new framework for SPI NOR
+Date: Fri, 17 Jan 2014 14:09:58 +0530
+Message-ID: <CAD6G_RSF_TPk8g9CNmSc+xs+9psLmJoakZw3Eqf-a8KD5P4AVg@mail.gmail.com>
+References: <1387950629-27448-1-git-send-email-b32955@freescale.com>
+	<CAD6G_RTnNQgeJM8Tc16Sc1_n29d=V9sJN1ePrOAn5YzM+GujMQ@mail.gmail.com>
+	<52D7A237.8@freescale.com>
+	<CAD6G_RRNg-uRtKnnVgJYpUGPsKecAUm9mwETVJsCsaGSuL2eCw@mail.gmail.com>
+	<20140117020226.GB27652@shlinux2.ap.freescale.net>
+	<CAD6G_RR7vgmHGFj4GqwCYLQQO6tbsZAeCzVBivbcxnCGSwgiWQ@mail.gmail.com>
+	<20140117065401.GA6140@shlinux2.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140116232047.GK30911@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Bill Brown <bill.e.brown@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Jean Delvare <khali@linux-fr.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, James Ralston <james.d.ralston@intel.com>, Martin Schwidefsky <schwid>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140117065401.GA6140@shlinux2.ap.freescale.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Huang Shijie <b32955@freescale.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, angus.clark@st.com, Shawn Guo <shawn.guo@linaro.org>, b44548@freescale.com, Mark Brown <broonie@linaro.org>, linux-doc@vger.kernel.org, b18965@freescale.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, "Gupta, Pekon" <pekon@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, Brian Norris <computersforpeace@gmail.com>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jan 17, 2014 at 12:24 PM, Huang Shijie <b32955@freescale.com> wrote:
+> On Fri, Jan 17, 2014 at 12:36:08PM +0530, Jagan Teki wrote:
+>> >> My basic question is like I have a qspi spi controller in my SOC and I
+>> >> designed two boards B1 and B2
+>> >
+>> > okay.
+>> >
+>> >> B1 with quad spi controller connected with non-flash as a slave and B2
+>> >> with quad spi controller connected
+>> >> with quad flash as a slave.
+>> > You can use the framework for B2. But for B1, you should not use the framework,
+>> > since this framework is just for the SPI-NOR. If you do not connected with
+>> > a NOR, i think it's better to code another driver for your controller.
+>>
+>> Means we have two separate controller drivers for same controller one
+>> with spi-nor and
+>> another with spi is it?
+> Take drivers/spi/spi-imx.c for example, if you connect a NOR to it, you only
+> need to add a NOR device node in the device tree. In the probe, it will call
+> the m25p80.c to probe the NOR device.
+>
+> But if we connect other device to it. you should set another device node for it.
+>
+> I am not sure if your controller driver can works as the spi-imx.c
 
-Hi, 
+My question here was - this new framework suggest to write a two
+different controller
+drivers one is for non spi-nor and spi-nor models? do you agree that?
 
-On Thu, 2014-01-16 at 15:20 -0800, Bjorn Andersson wrote: 
-> On Tue 14 Jan 00:57 PST 2014, Ivan T. Ivanov wrote:
-> 
-> > 
-> > Thanks Bjorn, 
-> > 
-> > I have prepared second version, but never send it out :-).
-> > One thing suggested by Mark was missed in this version.
-> 
-> Yeah, Mattew told me you we're assigned to other things and asked me to send
-> out an update as I had gotten it to work on our boards.
-> 
-> I did modify the wording of most of these to match how it is written in the
-> other Qualcomm definitions.
-> 
-> @Mark, would you rather have me change this to your suggested wording?
-> 
-> > 
-> > 
-> > On Mon, 2014-01-13 at 16:30 -0800, Bjorn Andersson wrote: 
-> > > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-> > > 
-> [snip]
-> > > + - clocks: Should contain the core clock and the AHB clock.
-> > 
-> > + - clocks: a list of phandle + clock-specifier pairs for each entry in
-> > +           clock-names
-> > 
-> 
-> This is in line with how it's written in other drivers, so if the DT
-> maintainers doesn't disagree I would like to keep phandles out of the
-> description. This specific line is a verbatime copy of the msm_serial
-> documentation (same block, different mode)...
-> 
-> > > + - clock-names: Should be "core" for the core clock and "iface" for the
-> > > +                AHB clock.
-> > > +
-> > > + - #address-cells: Should be <1> Address cells for i2c device address
-> > > + - #size-cells: Should be <0> as i2c addresses have no size component
-> > > +
-> > > +Optional properties:
-> > > + - clock-frequency: Should specify the desired i2c bus clock frequency in Hz,
-> > > +                    default is 100kHz if omitted.
-> > > +
-> > > +Child nodes should conform to i2c bus binding.
-> > > +
-> > > +Example:
-> > > +
-> > > + i2c2: i2c@f9924000 {
-> > > + 	compatible = "qcom,i2c-qup";
-> > > + 	reg = <0xf9924000 0x1000>;
-> > > + 	interrupts = <0 96 0>;
-> > > +
-> > > + 	clocks = <&gcc_blsp1_qup2_i2c_apps_clk>, <&gcc_blsp1_ahb_clk>;
-> > 
-> > In the light of the latest patches from Stephen, this could be 
-> > 
-> > + 	clocks = <&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>, <&gcc GCC_BLSP1_AHB_CLK>;
-> 
-> Yes, that's exactly what I have in my dts. However as this is just an example
-> I didn't feel it was worth tainting the documentation with all those capital
-> letters ;)
-> So unless DT maintainers disagree I would like to just keep it as an example.
+And also one important note from your design was spi-nor mode is
+completely bypassing
+Linux spi core is that the good idea?
 
-Until, we get some meaningful board DTS files for Qualcomm platforms, it
-is easy for people which will like to test or use drivers to just copy
-and paste these definitions.
-
-Regards,
-Ivan
-
-> 
-> Regards,
-> Bjorn
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+-- 
+Thanks,
+Jagan.
