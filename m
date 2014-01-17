@@ -1,35 +1,172 @@
-From: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
-Subject: Re: [PATCH REPOST] ARM: Fix incorrect FDT initrd parameter override
-Date: Fri, 17 Jan 2014 22:45:02 +1000
-Message-ID: <52D925CE.8050204@killerwolves.net>
-References: <deeb5f$5527t1@icp-osb-irony-out2.iinet.net.au> <CAL_JsqJNPbQVKtW0amaOSc1is9oKrGapaHR=YJGJy6TrGQeKYw@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH net-next v3 2/8] net: stmmac: Add support for
+ optional reset control
+Date: Fri, 17 Jan 2014 21:24:41 +0800
+Message-ID: <1389965087-21971-3-git-send-email-wens@csie.org>
+References: <1389965087-21971-1-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJNPbQVKtW0amaOSc1is9oKrGapaHR=YJGJy6TrGQeKYw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBKW64SLAKGQE3NNHNOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1389965087-21971-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 16, 2014 at 10:04 AM -0600, Rob Herring wrote:
->> Signed-off-by: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
-> 
-> I'd really like to see phys_initrd_* removed, but that would be more
-> invasive, so:
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-> Please submit to Russell's patch system and mark for stable. I don't
-> think there is time before 3.13 is released.
+The DWMAC has a reset assert line, which is used on some SoCs. Add an
+optional reset control to stmmac driver core.
 
-This patch (7941/2) was submitted on 14 Jan after being acked by Jason Cooper.
+To support reset control deferred probing, this patch changes the driver
+probe function to return the actual error, instead of just -EINVAL.
 
-<http://lists.infradead.org/pipermail/linux-arm-kernel/2014-January/225272.html>
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ Documentation/devicetree/bindings/net/stmmac.txt      |  3 +++
+ drivers/net/ethernet/stmicro/stmmac/Kconfig           |  1 +
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h          |  2 ++
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c     | 19 ++++++++++++++++++-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c      |  4 ++--
+ drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c |  4 ++--
+ 6 files changed, 28 insertions(+), 5 deletions(-)
 
-I apologise for the duplicate patch post.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+index eba0e5e..d132513 100644
+--- a/Documentation/devicetree/bindings/net/stmmac.txt
++++ b/Documentation/devicetree/bindings/net/stmmac.txt
+@@ -30,6 +30,9 @@ Required properties:
+ 
+ Optional properties:
+ - mac-address: 6 bytes, mac address
++- resets: Should contain a phandle to the STMMAC reset signal, if any
++- reset-names: Should contain the reset signal name "stmmaceth", if a
++	reset phandle is given
+ 
+ Examples:
+ 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
+index 6e52c0f..b59d1ef 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
++++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
+@@ -5,6 +5,7 @@ config STMMAC_ETH
+ 	select PHYLIB
+ 	select CRC32
+ 	select PTP_1588_CLOCK
++	select RESET_CONTROLLER
+ 	---help---
+ 	  This is the driver for the Ethernet IPs are built around a
+ 	  Synopsys IP Core and only tested on the STMicroelectronics
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+index 73709e9..c1c141f 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+@@ -32,6 +32,7 @@
+ #include <linux/pci.h>
+ #include "common.h"
+ #include <linux/ptp_clock_kernel.h>
++#include <linux/reset.h>
+ 
+ struct stmmac_priv {
+ 	/* Frequently used values are kept adjacent for cache effect */
+@@ -91,6 +92,7 @@ struct stmmac_priv {
+ 	int wolopts;
+ 	int wol_irq;
+ 	struct clk *stmmac_clk;
++	struct reset_control *stmmac_rst;
+ 	int clk_csr;
+ 	struct timer_list eee_ctrl_timer;
+ 	int lpi_irq;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 0d2c4cb..0c5c120 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -51,6 +51,7 @@
+ #include <linux/net_tstamp.h>
+ #include "stmmac_ptp.h"
+ #include "stmmac.h"
++#include <linux/reset.h>
+ 
+ #define STMMAC_ALIGN(x)	L1_CACHE_ALIGN(x)
+ #define JUMBO_LEN	9000
+@@ -2728,10 +2729,24 @@ struct stmmac_priv *stmmac_dvr_probe(struct device *device,
+ 	if (IS_ERR(priv->stmmac_clk)) {
+ 		dev_warn(priv->device, "%s: warning: cannot get CSR clock\n",
+ 			 __func__);
++		ret = PTR_ERR(priv->stmmac_clk);
+ 		goto error_clk_get;
+ 	}
+ 	clk_prepare_enable(priv->stmmac_clk);
+ 
++	priv->stmmac_rst = devm_reset_control_get(priv->device,
++						  STMMAC_RESOURCE_NAME);
++	if (IS_ERR(priv->stmmac_rst)) {
++		if (PTR_ERR(priv->stmmac_rst) == -EPROBE_DEFER) {
++			ret = -EPROBE_DEFER;
++			goto error_hw_init;
++		}
++		dev_info(priv->device, "no reset control found\n");
++		priv->stmmac_rst = NULL;
++	}
++	if (priv->stmmac_rst)
++		reset_control_deassert(priv->stmmac_rst);
++
+ 	/* Init MAC and get the capabilities */
+ 	ret = stmmac_hw_init(priv);
+ 	if (ret)
+@@ -2808,7 +2823,7 @@ error_hw_init:
+ error_clk_get:
+ 	free_netdev(ndev);
+ 
+-	return NULL;
++	return ERR_PTR(ret);
+ }
+ 
+ /**
+@@ -2832,6 +2847,8 @@ int stmmac_dvr_remove(struct net_device *ndev)
+ 		stmmac_mdio_unregister(ndev);
+ 	netif_carrier_off(ndev);
+ 	unregister_netdev(ndev);
++	if (priv->stmmac_rst)
++		reset_control_assert(priv->stmmac_rst);
+ 	clk_disable_unprepare(priv->stmmac_clk);
+ 	free_netdev(ndev);
+ 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+index 37ba2e0..2916089 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+@@ -100,9 +100,9 @@ static int stmmac_pci_probe(struct pci_dev *pdev,
+ 	stmmac_default_data();
+ 
+ 	priv = stmmac_dvr_probe(&(pdev->dev), &plat_dat, addr);
+-	if (!priv) {
++	if (IS_ERR(priv)) {
+ 		pr_err("%s: main driver probe failed", __func__);
+-		ret = -ENODEV;
++		ret = PTR_ERR(priv);
+ 		goto err_out;
+ 	}
+ 	priv->dev->irq = pdev->irq;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+index 6d0bf22..cc6b89a7 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+@@ -152,9 +152,9 @@ static int stmmac_pltfr_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	priv = stmmac_dvr_probe(&(pdev->dev), plat_dat, addr);
+-	if (!priv) {
++	if (IS_ERR(priv)) {
+ 		pr_err("%s: main driver probe failed", __func__);
+-		return -ENODEV;
++		return PTR_ERR(priv);
+ 	}
+ 
+ 	/* Get MAC address if available (DT) */
+-- 
+1.8.5.2
