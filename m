@@ -1,184 +1,140 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: [PATCH v2 00/15] media: rc: ImgTec IR decoder driver
-Date: Fri, 17 Jan 2014 13:58:45 +0000
-Message-ID: <1389967140-20704-1-git-send-email-james.hogan@imgtec.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: add function to count number of u32 elements in a property
+Date: Fri, 17 Jan 2014 08:29:07 -0600
+Message-ID: <CAL_JsqJmQOCAGmb1cYZwRA74Zb1OJ8F6UaEc03i7OUgxW0kaNg@mail.gmail.com>
+References: <27256277.YJ687suYy5@phil>
+	<1669323.jqjZBfkRx4@phil>
+	<20140116124527.GD19578@e106331-lin.cambridge.arm.com>
+	<3781679.27UF2dWtKL@phil>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <m.chehab@samsung.com>, linux-media@vger.kernel.org
-Cc: James Hogan <james.hogan@imgtec.com>, Jarod Wilson <jarod@redhat.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3781679.27UF2dWtKL@phil>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-A few generic changes (patches 1-5) and then add a driver for the ImgTec
-Infrared decoder block (patches 6-15). Two separate rc input devices are
-exposed depending on kernel configuration. One uses the hardware decoder
-which is set up with timings for a specific protocol and supports
-mask/value filtering and wake events. The other uses raw edge interrupts
-and the generic software protocol decoders to allow multiple protocols
-to be supported, including those not supported by the hardware decoder.
+On Thu, Jan 16, 2014 at 12:04 PM, Heiko St=FCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wro=
+te:
+> The need to know the number of array elements in a property is
+> a common pattern. To prevent duplication of open-coded implementation=
+s
+> add a helper function that also centralises strict sanity checking
+> and DTB format details.
+>
+> Suggested-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> ---
+> Hi Mark,
+> did you mean it like this? I've tested it with the sram-reserve chang=
+e and
+> it made the part of the determining the number elements a lot nicer :=
+-)
+>
+>  drivers/of/base.c  |   32 ++++++++++++++++++++++++++++++++
+>  include/linux/of.h |    8 ++++++++
+>  2 files changed, 40 insertions(+)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index f807d0e..0f40ea5 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -920,6 +920,38 @@ int of_property_read_u32_index(const struct devi=
+ce_node *np,
+>  EXPORT_SYMBOL_GPL(of_property_read_u32_index);
+>
+>  /**
+> + * of_property_count_u32_elems - Count the number of u32 values in a=
+ property
+> + *
+> + * @np:                device node from which the property value is =
+to be read.
+> + * @propname:  name of the property to be searched.
+> + *
+> + * Search for a property in a device node and count the number of u3=
+2 elements
+> + * in it. Returns number of elements on sucess, -EINVAL if the prope=
+rty does
+> + * not exist or its length does not match a multiple of u32 and -ENO=
+DATA if the
+> + * property does not have a value.
+> + */
+> +int of_property_count_u32_elems(const struct device_node *np,
+> +                               const char *propname)
+> +{
+> +       int elem_size =3D sizeof(u32);
 
-The hardware decoder timing values, raw data to scan code conversion
-function and scan code filter to raw data filter conversion function are
-provided in separate files for each protocol which the main driver can
-use. The new generic scan code filter interface is made use of to reduce
-interrupts and control wake events.
+This should be a parameter, so functions for different sized
+properties can be a simple wrapper function.
 
-Changes in v2:
+> +       int len;
+> +       struct property *prop =3D of_find_property(np, propname, &len=
+);
+> +
+> +       if (!prop)
+> +               return -EINVAL;
+> +       if (!prop->value)
+> +               return -ENODATA;
+> +
+> +       if (prop->length % elem_size !=3D 0) {
+> +               pr_err("size of %s is not a multiple of u32\n", propn=
+ame);
 
-Patchset:
-- New generic patches 1, 3-5:
-  - Patch 1 adds sysfs documentation which is extended by patch 4.
-  - Patch 3 adds a raw decoder for the Sharp protocol.
-  - Patch 4 adds the scancode filtering sysfs interface generically (bit
-    of an RFC really).
-  - Patch 5 changes the scancode format for 32-bit NEC (bit of an RFC
-    really - can we get away with this?).
+The node name would be useful here too.
 
-DT bindings:
-- Future proof compatible string from "img,ir" to "img,ir1", where the 1
-  corresponds to the major revision number of the hardware (Tomasz
-  Figa).
-- Added clock-names property and three specific clock names described in
-  the manual, only one of which is used by the current driver (Tomasz
-  Figa).
-
-Misc:
-- Use spin_lock_irq() instead of spin_lock_irqsave() in various bits of
-  code that aren't accessible from hard interrupt context.
-- Add io.h include to img-ir.h.
-
-Raw Decoder:
-- Echo the last sample after 150ms if no edges have been detected. This
-  allows the soft decoder state machines to recognise the final space
-  when no repeat code is received.
-- Avoid removal race by checking for RC device in ISR.
-
-Hardware Decoder:
-- Remove the dynamic registration and unregistration of protocol decoder
-  timings. It didn't really get us much and it complicated locking and
-  load ordering.
-- Simplify locking of decoders, they're now only modified when
-  preprocessed, and all other use is after that, so preprocessing is the
-  only place locking is required.
-- Use the new generic filtering interface rather than creating the sysfs
-  files in the driver. This rearranges the code a bit, so as to use an
-  array of 2 filters (normal and wake) rather than separate struct
-  members for each, and passes the array index around between functions
-  rather than the pointer to the filter.
-- Extend the scancode() decoder callback to handle full 32bit scancodes.
-  Previously negative scancodes were treated specially, and indicated
-  repeat codes or invalid raw data, but 32bit NEC may result in a
-  scancode with the top bit set. Therefore change the scancode() return
-  value to simply indicate success/fail/repeat, and add an extra
-  scancode output pointer parameter that must have been written by the
-  callback if it returns IMG_IR_SCANCODE.
-- Separate clock rate specific data in the decoder timings structure so
-  that it can be more easily shared between instantiations of the
-  driver. A new struct img_ir_reg_timings stores the calculated clock
-  rate specific register values for the timings. This allows us to make
-  more widespread use of const on decoder timings.
-- Make tolerance of hardware decoder timings configurable per protocol
-  rather than being fixed at 10% for all protocols. This allows the
-  tolerance of the Sharp protocol timings in particular to be increased.
-- Fix typo in img_ir_enable_wake (s/RC_FILTER_WAKUP/RC_FILTER_WAKEUP/).
-- Fix change_protocol to accept a zero protocol mask (for when "none" is
-  written to /sys/class/rc/rcX/protocols).
-- Stop the end_timer (for keyups after repeat code timeout) safely on
-  removal and protocol switch.
-- Fix rc_map.rc_type initialisation to use __ffs64(proto_mask).
-- Fix img_ir_allowed_protos() to return a protocol mask in a u64 rather
-  than an unsigned long.
-- Use setup_timer() macro for the end timer rather than using
-  init_timer() and setting function pointer and data explicitly.
-- Add a debug message for when the scancode() callback rejects the data.
-- Minor cosmetic changes (variable naming e.g. s/ir_dev/rdev/ in
-  img_ir_set_protocol).
-
-NEC decoder:
-- Update scancode and filter callbacks to handle 32-bit NEC as used by
-  Apple and TiVo remotes (the new 32-bit NEC scancode format is used,
-  with the correct bit orientation).
-- Make it possible to set the filter to extended NEC even when the high
-  bits of the scancode value aren't set, by taking the mask into account
-  too. My TV remote happens to use extended NEC with address 0x7f00,
-  which unfortunately maps to scancodes 0x007f** which looks like normal
-  NEC and couldn't previously be filtered.
-
-Sharp decoder:
-- Fix typo in logic 1 pulse width comment.
-- Set tolerance to 20%, which seemed to be needed for the cases I have.
-
-Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>
-Cc: Jarod Wilson <jarod@redhat.com>
-Cc: linux-media@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: Rob Landley <rob@landley.net>
-Cc: linux-doc@vger.kernel.org
-Cc: Tomasz Figa <tomasz.figa@gmail.com>
-
-James Hogan (15):
-  media: rc: document rc class sysfs API
-  media: rc: add Sharp infrared protocol
-  media: rc: add raw decoder for Sharp protocol
-  media: rc: add sysfs scancode filtering interface
-  media: rc: change 32bit NEC scancode format
-  dt: binding: add binding for ImgTec IR block
-  media: rc: img-ir: add base driver
-  media: rc: img-ir: add raw driver
-  media: rc: img-ir: add hardware decoder driver
-  media: rc: img-ir: add to build
-  media: rc: img-ir: add NEC decoder module
-  media: rc: img-ir: add JVC decoder module
-  media: rc: img-ir: add Sony decoder module
-  media: rc: img-ir: add Sharp decoder module
-  media: rc: img-ir: add Sanyo decoder module
-
- Documentation/ABI/testing/sysfs-class-rc           |   92 ++
- .../devicetree/bindings/media/img-ir1.txt          |   30 +
- drivers/media/rc/Kconfig                           |   11 +
- drivers/media/rc/Makefile                          |    2 +
- drivers/media/rc/img-ir/Kconfig                    |   61 ++
- drivers/media/rc/img-ir/Makefile                   |   11 +
- drivers/media/rc/img-ir/img-ir-core.c              |  176 ++++
- drivers/media/rc/img-ir/img-ir-hw.c                | 1040 ++++++++++++++++++++
- drivers/media/rc/img-ir/img-ir-hw.h                |  269 +++++
- drivers/media/rc/img-ir/img-ir-jvc.c               |   92 ++
- drivers/media/rc/img-ir/img-ir-nec.c               |  148 +++
- drivers/media/rc/img-ir/img-ir-raw.c               |  151 +++
- drivers/media/rc/img-ir/img-ir-raw.h               |   60 ++
- drivers/media/rc/img-ir/img-ir-sanyo.c             |  122 +++
- drivers/media/rc/img-ir/img-ir-sharp.c             |   99 ++
- drivers/media/rc/img-ir/img-ir-sony.c              |  145 +++
- drivers/media/rc/img-ir/img-ir.h                   |  166 ++++
- drivers/media/rc/ir-nec-decoder.c                  |    5 +-
- drivers/media/rc/ir-sharp-decoder.c                |  200 ++++
- drivers/media/rc/keymaps/rc-tivo.c                 |   86 +-
- drivers/media/rc/rc-core-priv.h                    |    6 +
- drivers/media/rc/rc-main.c                         |  137 +++
- include/media/rc-core.h                            |   29 +
- include/media/rc-map.h                             |    4 +-
- 24 files changed, 3097 insertions(+), 45 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-class-rc
- create mode 100644 Documentation/devicetree/bindings/media/img-ir1.txt
- create mode 100644 drivers/media/rc/img-ir/Kconfig
- create mode 100644 drivers/media/rc/img-ir/Makefile
- create mode 100644 drivers/media/rc/img-ir/img-ir-core.c
- create mode 100644 drivers/media/rc/img-ir/img-ir-hw.c
- create mode 100644 drivers/media/rc/img-ir/img-ir-hw.h
- create mode 100644 drivers/media/rc/img-ir/img-ir-jvc.c
- create mode 100644 drivers/media/rc/img-ir/img-ir-nec.c
- create mode 100644 drivers/media/rc/img-ir/img-ir-raw.c
- create mode 100644 drivers/media/rc/img-ir/img-ir-raw.h
- create mode 100644 drivers/media/rc/img-ir/img-ir-sanyo.c
- create mode 100644 drivers/media/rc/img-ir/img-ir-sharp.c
- create mode 100644 drivers/media/rc/img-ir/img-ir-sony.c
- create mode 100644 drivers/media/rc/img-ir/img-ir.h
- create mode 100644 drivers/media/rc/ir-sharp-decoder.c
-
--- 
-1.8.3.2
-
-
+> +               return -EINVAL;
+> +       }
+> +
+> +       return len / elem_size;
+> +}
+> +EXPORT_SYMBOL_GPL(of_property_count_u32_elems);
+> +
+> +/**
+>   * of_property_read_u8_array - Find and read an array of u8 from a p=
+roperty.
+>   *
+>   * @np:                device node from which the property value is =
+to be read.
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 276c546..5794942 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -253,6 +253,8 @@ extern struct property *of_find_property(const st=
+ruct device_node *np,
+>  extern int of_property_read_u32_index(const struct device_node *np,
+>                                        const char *propname,
+>                                        u32 index, u32 *out_value);
+> +extern int of_property_count_u32_elems(const struct device_node *np,
+> +                                      const char *propname);
+>  extern int of_property_read_u8_array(const struct device_node *np,
+>                         const char *propname, u8 *out_values, size_t =
+sz);
+>  extern int of_property_read_u16_array(const struct device_node *np,
+> @@ -432,6 +434,12 @@ static inline int of_property_read_u32_index(con=
+st struct device_node *np,
+>         return -ENOSYS;
+>  }
+>
+> +static inline int of_property_count_u32_elems(const struct device_no=
+de *np,
+> +                       const char *propname)
+> +{
+> +       return -ENOSYS;
+> +}
+> +
+>  static inline int of_property_read_u8_array(const struct device_node=
+ *np,
+>                         const char *propname, u8 *out_values, size_t =
+sz)
+>  {
+> --
+> 1.7.10.4
+>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
