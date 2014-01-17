@@ -1,80 +1,122 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [RFC/PATCH 0/1] mtd: Add NAND ECC devicetree binding
-Date: Fri, 17 Jan 2014 17:33:48 -0300
-Message-ID: <20140117203347.GC3843@localhost>
-References: <1389960820-18696-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <20980858CB6D3A4BAE95CA194937D5E73EA66555@DBDE04.ent.ti.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCHv13 00/40] ARM: TI SoC clock DT conversion
+Date: Fri, 17 Jan 2014 12:58:32 -0800
+Message-ID: <20140117205832.4167.95162@quantum>
+References: <52D53084.1070105@ti.com> <20140115031632.4167.2698@quantum>
+ <20140115035011.4167.96678@quantum> <20140115171323.GA22739@atomide.com>
+ <20140115192340.4167.87685@quantum> <20140115193547.GF7993@atomide.com>
+ <20140116213954.4167.37071@quantum> <87r486mrh5.fsf@linaro.org>
+ <20140117175312.GH7993@atomide.com> <52D9723A.6000700@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73EA66555-yXqyApvAXouIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Gupta, Pekon" <pekon-l0cyMroinI0@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Seif Mazareeb <seif-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52D9723A.6000700@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@linaro.org>
+Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, paul@pwsan.com, rnayak@ti.com, balbi@ti.com, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 17, 2014 at 05:58:13PM +0000, Gupta, Pekon wrote:
-> Hi Ezequiel,
->=20
-> >From: Ezequiel Garcia [mailto:ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org]
-> >
-> >This patch is our first proposal to address the need for a suitable =
-ECC
-> >devicetree binding.
-> >
-> >NAND controllers have special ECC modes, raising per-driver ECC mode=
- devicetree
-> >binding. See for instance the binding for OMAP:
-> >
-> > - ti,nand-ecc-opt: A string setting the ECC layout to use. One of:
-> >	"sw"		<deprecated> use "ham1" instead
-> >	"hw"		<deprecated> use "ham1" instead
-> >	"hw-romcode"	<deprecated> use "ham1" instead
-> >	"ham1"		1-bit Hamming ecc code
-> >	"bch4"		4-bit BCH ecc code
-> >	"bch8"		8-bit BCH ecc code
-> >
-> >Other drivers (such as pxa3xx-nand) have similar requirements, with =
-special
-> >(controller-specific) ECC modes. Instead of adding a possibly differ=
-ent binding
-> >per compatible-string, let's add generic ECC strength and ECC step s=
-ize.
-> >
-> >This properties should describe completely the ECC mode and let driv=
-ers choose
-> >the appropriate ECC mode.
-> >
-> Yes, this is good approach.
-> It was found earlier that generic NAND DT bindings are not much use t=
-o other
-> controllers as well, as different h/w engines have different interpre=
-tations.
-> Brian Norris had similar comments giving example of his hardware.
-> (hope following reference helps).
->=20
-> [1] http://lists.infradead.org/pipermail/linux-mtd/2013-September/048=
-869.html
->=20
+Quoting Tero Kristo (2014-01-17 10:11:06)
+> On 01/17/2014 07:53 PM, Tony Lindgren wrote:
+> > * Kevin Hilman <khilman@linaro.org> [140117 09:48]:
+> >> Mike Turquette <mturquette@linaro.org> writes:
+> >>
+> >> [...]
+> >>
+> >>> I took Tony's advice and fast-forwarded clk-next to -rc7 and applied
+> >>> Tero's series. This includes the AM3517 bits now. I've pushed this
+> >>> branch to clk-next-omap (force update) on my Linaro mirror. Can you do a
+> >>> final sanity test before I merge this into clk-next?
+> 
+> I think you accidentally merged wrong branch to clk-next-omap with the 
+> latest refresh. This is one is missing the build-fixes now, when it 
+> earlier had those in.
+> 
+> The correct branch to merge was 3.13-rc7-dt-clks-v13-build-fixes.
+> 
+> This also causes the build failure below for omap1.
 
-Yes, Brian suggested this ecc-strength/ecc-size approach on IRC.
+You are right. I broke the OMAPs. I force updated clk-next-omap (and
+clk-next) with the correct branch this time.
 
-Pekon, do you think this binding proposal is good enough to describe OM=
-AP NAND
-ECC mode?
+Regards,
+Mike
 
-I'm not implying we should deprecate the recently added "ti-nand-ecc-op=
-t",
-but just want to know it's eventually possible.
-
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> -Tero
+> 
+> >>
+> >> I merged clk-next-omap into next-20140117 and build/boot tested
+> >> omap2plus_defconfig, multi_v7_defconfig and
+> >> multi_v7_defconfig+CONFIG_LPAE=y and all passed a basic boot test for
+> >> omap5uevm.
+> >>
+> >> I'll add OMAP5 to the automated boot testing starting with the next
+> >> linux-next.
+> >
+> > OK that's good news. Looks like omap1_defconfig build has now started
+> > failing though:
+> >
+> > vers/built-in.o: In function `omap5xxx_dt_clk_init':
+> > :(.init.text+0x846c): undefined reference to `omap2_clk_disable_autoidle_all'
+> > drivers/built-in.o: In function `am43xx_dt_clk_init':
+> > :(.init.text+0x856c): undefined reference to `omap2_clk_disable_autoidle_all'
+> > drivers/built-in.o:(.rodata+0xc3c4): undefined reference to `omap3_clkoutx2_recalc'
+> > drivers/built-in.o:(.rodata+0xc40c): undefined reference to `omap3_noncore_dpll_enable'
+> > drivers/built-in.o:(.rodata+0xc410): undefined reference to `omap3_noncore_dpll_disable'
+> > drivers/built-in.o:(.rodata+0xc41c): undefined reference to `omap3_dpll_recalc'
+> > drivers/built-in.o:(.rodata+0xc420): undefined reference to `omap2_dpll_round_rate'
+> > drivers/built-in.o:(.rodata+0xc42c): undefined reference to `omap2_init_dpll_parent'
+> > drivers/built-in.o:(.rodata+0xc430): undefined reference to `omap3_noncore_dpll_set_rate'
+> > drivers/built-in.o:(.rodata+0xc470): undefined reference to `omap3_dpll_recalc'
+> > drivers/built-in.o:(.rodata+0xc474): undefined reference to `omap2_dpll_round_rate'
+> > drivers/built-in.o:(.rodata+0xc480): undefined reference to `omap2_init_dpll_parent'
+> > drivers/built-in.o:(.rodata+0xc4a0): undefined reference to `omap3_noncore_dpll_enable'
+> > drivers/built-in.o:(.rodata+0xc4a4): undefined reference to `omap3_noncore_dpll_disable'
+> > drivers/built-in.o:(.rodata+0xc4b0): undefined reference to `omap3_dpll_recalc'
+> > drivers/built-in.o:(.rodata+0xc4b4): undefined reference to `omap2_dpll_round_rate'
+> > drivers/built-in.o:(.rodata+0xc4c0): undefined reference to `omap2_init_dpll_parent'
+> > drivers/built-in.o:(.rodata+0xc4c4): undefined reference to `omap3_dpll4_set_rate'
+> > drivers/built-in.o:(.rodata+0xc4e0): undefined reference to `omap3_noncore_dpll_enable'
+> > drivers/built-in.o:(.rodata+0xc4e4): undefined reference to `omap3_noncore_dpll_disable'
+> > drivers/built-in.o:(.rodata+0xc4f0): undefined reference to `omap3_dpll_recalc'
+> > drivers/built-in.o:(.rodata+0xc4f4): undefined reference to `omap2_dpll_round_rate'
+> > drivers/built-in.o:(.rodata+0xc500): undefined reference to `omap2_init_dpll_parent'
+> > drivers/built-in.o:(.rodata+0xc504): undefined reference to `omap3_noncore_dpll_set_rate'
+> > drivers/built-in.o:(.rodata+0xc530): undefined reference to `omap3_dpll_recalc'
+> > drivers/built-in.o:(.rodata+0xc540): undefined reference to `omap2_init_dpll_parent'
+> > drivers/built-in.o:(.rodata+0xc560): undefined reference to `omap3_noncore_dpll_enable'
+> > drivers/built-in.o:(.rodata+0xc564): undefined reference to `omap3_noncore_dpll_disable'
+> > drivers/built-in.o:(.rodata+0xc570): undefined reference to `omap4_dpll_regm4xen_recalc'
+> > drivers/built-in.o:(.rodata+0xc574): undefined reference to `omap4_dpll_regm4xen_round_rate'
+> > drivers/built-in.o:(.rodata+0xc580): undefined reference to `omap2_init_dpll_parent'
+> > drivers/built-in.o:(.rodata+0xc584): undefined reference to `omap3_noncore_dpll_set_rate'
+> > drivers/built-in.o:(.rodata+0xc5b0): undefined reference to `omap3_dpll_recalc'
+> > drivers/built-in.o:(.rodata+0xc5b4): undefined reference to `omap2_dpll_round_rate'
+> > drivers/built-in.o:(.rodata+0xc5c0): undefined reference to `omap2_init_dpll_parent'
+> > drivers/built-in.o:(.rodata+0xc5c4): undefined reference to `omap3_noncore_dpll_set_rate'
+> > drivers/built-in.o:(.rodata+0xc63c): undefined reference to `omap2_dflt_clk_enable'
+> > drivers/built-in.o:(.rodata+0xc640): undefined reference to `omap2_dflt_clk_disable'
+> > drivers/built-in.o:(.rodata+0xc644): undefined reference to `omap2_dflt_clk_is_enabled'
+> > drivers/built-in.o:(.rodata+0xc728): undefined reference to `omap2_clkops_enable_clkdm'
+> > drivers/built-in.o:(.rodata+0xc72c): undefined reference to `omap2_clkops_disable_clkdm'
+> > drivers/built-in.o:(.rodata+0xc754): undefined reference to `omap2_init_clk_clkdm'
+> > drivers/built-in.o:(.rodata+0xc784): undefined reference to `omap2_dflt_clk_disable'
+> > drivers/built-in.o:(.rodata+0xc788): undefined reference to `omap2_dflt_clk_is_enabled'
+> > drivers/built-in.o:(.rodata+0xc7ac): undefined reference to `omap2_init_clk_clkdm'
+> > drivers/built-in.o:(.rodata+0xc7c0): undefined reference to `omap2_dflt_clk_enable'
+> > drivers/built-in.o:(.rodata+0xc7c4): undefined reference to `omap2_dflt_clk_disable'
+> > drivers/built-in.o:(.rodata+0xc7c8): undefined reference to `omap2_dflt_clk_is_enabled'
+> > drivers/built-in.o:(.rodata+0xc7ec): undefined reference to `omap2_init_clk_clkdm'
+> > drivers/built-in.o:(.rodata+0xc838): undefined reference to `__clk_mux_determine_rate'
+> > drivers/built-in.o:(.rodata+0xc904): undefined reference to `omap2_dflt_clk_enable'
+> > drivers/built-in.o:(.rodata+0xc908): undefined reference to `omap2_dflt_clk_disable'
+> > drivers/built-in.o:(.rodata+0xc90c): undefined reference to `omap2_dflt_clk_is_enabled'
+> > drivers/built-in.o:(.rodata+0xc930): undefined reference to `omap2_init_clk_clkdm'
+> >
+> > Regards,
+> >
+> > Tony
+> >
+> 
