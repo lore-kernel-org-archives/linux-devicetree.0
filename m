@@ -1,81 +1,61 @@
-From: Simon Budig <simon.budig@kernelconcepts.de>
-Subject: Re: [PATCH 2/2] Input: edt-ft5x06: Add DT support
-Date: Fri, 17 Jan 2014 02:39:52 +0100
-Message-ID: <52D889E8.6070603@kernelconcepts.de>
-References: <1389608224-9975-1-git-send-email-LW@KARO-electronics.de> <1389608224-9975-2-git-send-email-LW@KARO-electronics.de> <20140113134441.GD1273@e106331-lin.cambridge.arm.com> <20140116084943.17da0226@ipc1.ka-ro>
+From: Jingchang Lu <jingchang.lu@freescale.com>
+Subject: RE: [PATCHv9 2/2] dma: Add Freescale eDMA engine driver support
+Date: Fri, 17 Jan 2014 02:22:26 +0000
+Message-ID: <8e515b3695ea4c33a61f354b77be0b6b@BL2PR03MB467.namprd03.prod.outlook.com>
+References: <1389839400-29728-1-git-send-email-b35083@freescale.com>
+ <1389839400-29728-3-git-send-email-b35083@freescale.com>
+ <201401161202.49333.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="bcW2Isj5vRf1KifWxSwhmSWCGJVPdxpEs"
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20140116084943.17da0226@ipc1.ka-ro>
-Sender: linux-input-owner@vger.kernel.org
-To: =?UTF-8?B?TG90aGFyIFdhw59tYW5u?= <LW@KARO-electronics.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Shawn Guo <shawn.guo@linaro.org>, Silvio F <silvio.fricke@gmail.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Jingoo Han <jg1.han@samsung.com>, Fugang Duan <B38611@freescale.com>, Sachin Kamat <sachin.kamat@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201401161202.49333.arnd@arndb.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---bcW2Isj5vRf1KifWxSwhmSWCGJVPdxpEs
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-On 16/01/14 08:49, Lothar Wa=C3=9Fmann wrote:
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.=
-txt
->>> @@ -0,0 +1,31 @@
->>> +* EDT FT5x06 Multiple Touch Controller
->>> +
-> [...]
->>> +- threshold: allows setting the "click"-threshold in the range from =
-20 to 80.
->>> +- gain: sensitivity (0..31) (lower value -> higher sensitivity)
->>> +- offset: edge compensation (0..31)
->>> +- report_rate: report rate (3..14)
->>
->> s/_/-/ on property names please. Also, it may make sense to prefix the=
-se
->> as they're rather generic sounding names.
->>
->> Could you elaborate on these a litle please? What units are each of
->> these in? Why does it make sense to have them in the dt?
->>
-> I just converted them from being passed via platform_data. I have no
-> idea what they actually control and what units they use. I could not
-> even find a manual where they are documented.
-> Maybe Simon Budig can help out here as the original driver author.
-
-The units are not specified in the datasheets available to me. I suspect
-that these are some sort of counter values related to the cap sensing.
-
-The defaults differ for the different size glasses, so I really suspect
-these are basically just numbers.
-
-The only somewhat reasonable unit is available for the report-rate: it
-is specified as about <value> * 10 touch reports per second.
-
-Bye,
-        Simon
-
---=20
-       Simon Budig                        kernel concepts GmbH
-       simon.budig@kernelconcepts.de      Sieghuetter Hauptweg 48
-       +49-271-771091-17                  D-57072 Siegen
 
 
+> -----Original Message-----
+> From: Arnd Bergmann [mailto:arnd@arndb.de]
+> Sent: Thursday, January 16, 2014 7:03 PM
+> To: Lu Jingchang-B35083
+> Cc: vinod.koul@intel.com; dan.j.williams@intel.com; shawn.guo@linaro.org;
+> pawel.moll@arm.com; mark.rutland@arm.com; swarren@wwwdotorg.org; linux-
+> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> devicetree@vger.kernel.org; Wang Huan-B18965
+> Subject: Re: [PATCHv9 2/2] dma: Add Freescale eDMA engine driver support
+> 
+> On Thursday 16 January 2014, Jingchang Lu wrote:
+> > Add Freescale enhanced direct memory(eDMA) controller support.
+> > This module can be found on Vybrid and LS-1 SoCs.
+> >
+> > Signed-off-by: Alison Wang <b18965@freescale.com>
+> > Signed-off-by: Jingchang Lu <b35083@freescale.com>
+> 
+> Very nice! All my previous comments have been addressed, so
+> 
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> 
+> One small comment still:
+> 
+> > +
+> > +static DEFINE_MUTEX(fsl_edma_mutex);
+> > +
+> 
+> I think this mutex should be part of struct fsl_edma_engine, not global.
+Yes, it should be for each edma controller, I will define it in struct fsl_edma_engine. Thanks.
 
---bcW2Isj5vRf1KifWxSwhmSWCGJVPdxpEs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-Comment: Using GnuPG with Icedove - http://www.enigmail.net/
-
-iEYEARECAAYFAlLYiegACgkQO2O/RXesiHAaAACcDPpmHZMki2/Pl6ZTFezHku1I
-X28An1QWb+yfOogf0Dz9Bs6vzuiCH+/O
-=/cPA
------END PGP SIGNATURE-----
-
---bcW2Isj5vRf1KifWxSwhmSWCGJVPdxpEs--
+Best Regards,
+Jingchang
