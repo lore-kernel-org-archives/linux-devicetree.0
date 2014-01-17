@@ -1,72 +1,38 @@
-From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Subject: Re: [PATCH] of: fix of_update_property()
-Date: Fri, 17 Jan 2014 18:42:47 +0200
-Message-ID: <07586E1B-FDB0-4D91-8467-15E9435FD9CD@antoniou-consulting.com>
-References: <1389933996-19306-1-git-send-email-Li.Xiubo@freescale.com> <CAL_JsqJuAv8=pBuzYO5ZGzroD1kq6gjmNsTjoVyXR=vcu+-pTA@mail.gmail.com>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJuAv8=pBuzYO5ZGzroD1kq6gjmNsTjoVyXR=vcu+-pTA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH] regulator: ti-abb: Add support for interleaved LDO registers
+Date: Fri, 17 Jan 2014 10:47:29 -0600
+Message-ID: <52D95EA1.6000608@ti.com>
+References: <1389900750-27625-1-git-send-email-nm@ti.com> <20140117160821.GV17314@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140117160821.GV17314@sirena.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-
-On Jan 17, 2014, at 4:49 PM, Rob Herring wrote:
-
-> On Thu, Jan 16, 2014 at 10:46 PM, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
->> The of_update_property() is intent to update a property in a node
+On 01/17/2014 10:08 AM, Mark Brown wrote:
+> On Thu, Jan 16, 2014 at 01:32:30PM -0600, Nishanth Menon wrote:
+>> Certain platforms such as DRA7 have quirky memory maps such as:
+>> PRM_ABBLDO_DSPEVE_CTRL	0x4ae07e20
+>> PRM_ABBLDO_IVA_CTRL	0x4ae07e24
+>> other-registers
+>> PRM_ABBLDO_DSPEVE_SETUP	0x4ae07e30
+>> PRM_ABBLDO_IVA_SETUP	0x4ae07e34
+>>
+>> These need the address allocation to be either shared OR unique
+>> allocation per register instance.
 > 
-[ snip ]
-
->>                return of_add_property(np, newprop);
+> Is there a system controller involved here by any chance?
 > 
-> Isn't there also a race that if you do 2 updates for a non-existent
-> property and both threads try to add the property, the first one will
-> succeed and the 2nd will fail. The 2nd one needs to retry as well.
-> 
-> Also, couldn't the node itself be removed while trying to do the update?
-> 
-> There seem to be multiple problems with this code, but doing multiple
-> simultaneous, conflicting updates seems like an unlikely case.
-> 
+Nope. ABB LDO module is a standalone instance whose register set
+happens to be part of a memory range, as I recently got to know, is a
+favorite for our hardware designers to put "misc" modules at SoC
+integration time - Sigh! I guess I have made more than enough stink
+about this internally already :(.
 
-There are multiple problems with this function.
-
-First of all, the firing of the notifier at the beginning with OF_RECONFIG_UPDATE_PROPERTY
-even though we have no idea if the property is found.
-
-The locking is no good; the lock should be taken before the search by switching to using
-__of_find_property. Threading is just not handled well at all at the moment. 
-Retrying is just bogus.
-
-The biggest problem is the semantics; IMHO we should just remove the option to create
-a property if it doesn't exist. I don't think there are many callers that use update property
-expecting to be created if it doesn't exist.
-
-> Rob
-> 
->> @@ -1593,7 +1594,7 @@ int of_update_property(struct device_node *np, struct property *newprop)
->>        raw_spin_unlock_irqrestore(&devtree_lock, flags);
->> 
->>        if (!found)
->> -               return -ENODEV;
->> +               goto retry;
->> 
->> #ifdef CONFIG_PROC_DEVICETREE
->>        /* try to add to proc as well if it was initialized */
->> --
->> 1.8.4
->> 
->> 
-
-Regards
-
--- Pantelis--
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Nishanth Menon
