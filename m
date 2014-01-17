@@ -1,201 +1,59 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2] of: add functions to count number of elements in a property
-Date: Fri, 17 Jan 2014 16:44:14 +0100
-Message-ID: <1434798.oSb68sYmYT@phil>
-References: <27256277.YJ687suYy5@phil> <3781679.27UF2dWtKL@phil> <20140117144456.GG19578@e106331-lin.cambridge.arm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] regulator: ti-abb: Add support for interleaved LDO
+ registers
+Date: Fri, 17 Jan 2014 16:08:21 +0000
+Message-ID: <20140117160821.GV17314@sirena.org.uk>
+References: <1389900750-27625-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140117144456.GG19578-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="tYlHSoJ8Aop8eNG2"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1389900750-27625-1-git-send-email-nm@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The need to know the number of array elements in a property is
-a common pattern. To prevent duplication of open-coded implementations
-add a helper static function that also centralises strict sanity
-checking and DTB format details, as well as a set of wrapper functions
-for u8, u16, u32 and u64.
 
-Suggested-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
-changes since v1:
-address comments from Rob Herring and Mark Rutland:
-- provide a helper and a set of wrappers for u8-u64
-- get rid of extra len variable, prop->length is enough
-- include node name in error message
+--tYlHSoJ8Aop8eNG2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- drivers/of/base.c  |   98 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/of.h |   32 +++++++++++++++++
- 2 files changed, 130 insertions(+)
+On Thu, Jan 16, 2014 at 01:32:30PM -0600, Nishanth Menon wrote:
+> Certain platforms such as DRA7 have quirky memory maps such as:
+> PRM_ABBLDO_DSPEVE_CTRL	0x4ae07e20
+> PRM_ABBLDO_IVA_CTRL	0x4ae07e24
+> other-registers
+> PRM_ABBLDO_DSPEVE_SETUP	0x4ae07e30
+> PRM_ABBLDO_IVA_SETUP	0x4ae07e34
+>=20
+> These need the address allocation to be either shared OR unique
+> allocation per register instance.
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index f807d0e..b6e6d4a 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -862,6 +862,104 @@ struct device_node *of_find_node_by_phandle(phandle handle)
- EXPORT_SYMBOL(of_find_node_by_phandle);
- 
- /**
-+ * of_count_property_elems_of_size - Count the number of elements in a property
-+ *
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ * @elem_size:	size of the individual element
-+ */
-+static int of_count_property_elems_of_size(const struct device_node *np,
-+				const char *propname, int elem_size)
-+{
-+	struct property *prop = of_find_property(np, propname, NULL);
-+
-+	if (!prop)
-+		return -EINVAL;
-+	if (!prop->value)
-+		return -ENODATA;
-+
-+	if (prop->length % elem_size != 0) {
-+		pr_err("size of %s in node %s is not a multiple of %d\n",
-+		       propname, np->name, elem_size);
-+		return -EINVAL;
-+	}
-+
-+	return prop->length / elem_size;
-+}
-+
-+/**
-+ * of_property_count_u8_elems - Count the number of u8 elements in a property
-+ *
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ *
-+ * Search for a property in a device node and count the number of u8 elements
-+ * in it. Returns number of elements on sucess, -EINVAL if the property does
-+ * not exist or its length does not match a multiple of u8 and -ENODATA if the
-+ * property does not have a value.
-+ */
-+int of_property_count_u8_elems(const struct device_node *np,
-+				const char *propname)
-+{
-+	return of_count_property_elems_of_size(np, propname, sizeof(u8));
-+}
-+EXPORT_SYMBOL_GPL(of_property_count_u8_elems);
-+
-+/**
-+ * of_property_count_u16_elems - Count the number of u16 elements in a property
-+ *
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ *
-+ * Search for a property in a device node and count the number of u16 elements
-+ * in it. Returns number of elements on sucess, -EINVAL if the property does
-+ * not exist or its length does not match a multiple of u16 and -ENODATA if the
-+ * property does not have a value.
-+ */
-+int of_property_count_u16_elems(const struct device_node *np,
-+				const char *propname)
-+{
-+	return of_count_property_elems_of_size(np, propname, sizeof(u16));
-+}
-+EXPORT_SYMBOL_GPL(of_property_count_u16_elems);
-+
-+/**
-+ * of_property_count_u32_elems - Count the number of u32 elements in a property
-+ *
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ *
-+ * Search for a property in a device node and count the number of u32 elements
-+ * in it. Returns number of elements on sucess, -EINVAL if the property does
-+ * not exist or its length does not match a multiple of u32 and -ENODATA if the
-+ * property does not have a value.
-+ */
-+int of_property_count_u32_elems(const struct device_node *np,
-+				const char *propname)
-+{
-+	return of_count_property_elems_of_size(np, propname, sizeof(u32));
-+}
-+EXPORT_SYMBOL_GPL(of_property_count_u32_elems);
-+
-+/**
-+ * of_property_count_u64_elems - Count the number of u64 elements in a property
-+ *
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ *
-+ * Search for a property in a device node and count the number of u64 elements
-+ * in it. Returns number of elements on sucess, -EINVAL if the property does
-+ * not exist or its length does not match a multiple of u64 and -ENODATA if the
-+ * property does not have a value.
-+ */
-+int of_property_count_u64_elems(const struct device_node *np,
-+				const char *propname)
-+{
-+	return of_count_property_elems_of_size(np, propname, sizeof(u64));
-+}
-+EXPORT_SYMBOL_GPL(of_property_count_u64_elems);
-+
-+/**
-  * of_find_property_value_of_size
-  *
-  * @np:		device node from which the property value is to be read.
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 276c546..06fe898 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -250,6 +250,14 @@ extern struct device_node *of_find_node_with_property(
- extern struct property *of_find_property(const struct device_node *np,
- 					 const char *name,
- 					 int *lenp);
-+extern int of_property_count_u8_elems(const struct device_node *np,
-+				       const char *propname);
-+extern int of_property_count_u16_elems(const struct device_node *np,
-+				       const char *propname);
-+extern int of_property_count_u32_elems(const struct device_node *np,
-+				       const char *propname);
-+extern int of_property_count_u64_elems(const struct device_node *np,
-+				       const char *propname);
- extern int of_property_read_u32_index(const struct device_node *np,
- 				       const char *propname,
- 				       u32 index, u32 *out_value);
-@@ -426,6 +434,30 @@ static inline struct device_node *of_find_compatible_node(
- 	return NULL;
- }
- 
-+static inline int of_property_count_u8_elems(const struct device_node *np,
-+			const char *propname)
-+{
-+	return -ENOSYS;
-+}
-+
-+static inline int of_property_count_u16_elems(const struct device_node *np,
-+			const char *propname)
-+{
-+	return -ENOSYS;
-+}
-+
-+static inline int of_property_count_u32_elems(const struct device_node *np,
-+			const char *propname)
-+{
-+	return -ENOSYS;
-+}
-+
-+static inline int of_property_count_u64_elems(const struct device_node *np,
-+			const char *propname)
-+{
-+	return -ENOSYS;
-+}
-+
- static inline int of_property_read_u32_index(const struct device_node *np,
- 			const char *propname, u32 index, u32 *out_value)
- {
--- 
-1.7.10.4
+Is there a system controller involved here by any chance?
 
+--tYlHSoJ8Aop8eNG2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS2VVyAAoJELSic+t+oim9XwoQAIjGJfqR+6qVUUGLZJFGfFmh
+ucGBlJvtAcU/1j+tYln5lGGvUAaurt/LF6/Yltjq0j1pyZ7PdiOoTdL6J7x/s4ZN
+oZFuD6FGp5mxRmTXOOhLCT8YCK4BvBlNzPf7OvcPsHnTgHwOQl0XdiHCprWT7fNx
+DJhRdOp3blcoVhA7yCb+VtGQTY+0f2dMT/I2LISe7GWh6cFxlQX0CJKSlHDJLqYY
+sqRp23v03+R7jq5c5a3WHQJZER8TQzHG4yuE1aY8huZPzYsxQM5Dq95i2qbbXuuC
+Yfwhbfbh9DKU4NY159Eoy+pOIwpgCOwSciPlAroiK8KxkuzZDDqPCeRV39BVr0aR
+cLrqv2C83lsb7u2wixGlrfmRPGv8+Ldm2zvas9zucFrBf/b86C4h6cV3dwmZ4xjV
+lpKWSYzAg+84v2SMpCkeys54xH7dGWNP3qWARbiG/x1uGJDzgaxdoRu/C3O5jyiZ
+WgxSfhe8pOK9OtcnMZTkkWrYyhS2iN6CqAvw8keApROB8g7cSwMC2NwEHpmcSqaT
+oB6onsG+CqGyYbTk1kVB8OgBHZy5j300qeGcBRo9jTwqnWltDj7YX91qK5VwPyuo
+H4uKWsLzzu+ZchhaQC4euuoPG7114EQ28cCA5wfjkdrAssuEnbhs/zNbqNdj3+f5
+hSv/toVbOeiBoe3v0i/x
+=kV/j
+-----END PGP SIGNATURE-----
+
+--tYlHSoJ8Aop8eNG2--
