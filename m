@@ -1,82 +1,100 @@
-From: Archit Taneja <archit@ti.com>
-Subject: Re: [PATCH v5 0/2] DMM DT adaptation
-Date: Fri, 17 Jan 2014 13:02:36 +0530
-Message-ID: <52D8DC94.6010307@ti.com>
-References: <1379063679-4869-1-git-send-email-archit@ti.com> <1387274542-29645-1-git-send-email-archit@ti.com> <52C6AE73.9020303@ti.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH v2 1/2] i2c: qup: Add device tree bindings information
+Date: Fri, 17 Jan 2014 09:40:45 +0200
+Message-ID: <1389944445.2794.48.camel@iivanov-dev.int.mm-sol.com>
+References: <1389659437-16406-1-git-send-email-bjorn.andersson@sonymobile.com>
+	 <1389659437-16406-2-git-send-email-bjorn.andersson@sonymobile.com>
+	 <1389689841.2794.8.camel@iivanov-dev.int.mm-sol.com>
+	 <20140116232047.GK30911@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <52C6AE73.9020303@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: bcousson@baylibre.com, tony@atomide.com, mark.rutland@arm.com
-Cc: robdclark@gmail.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20140116232047.GK30911@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Bill Brown <bill.e.brown@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Jean Delvare <khali@linux-fr.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, James Ralston <james.d.ralston@intel.com>, Martin Schwidefsky <schwid>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
 
-On Friday 03 January 2014 06:04 PM, Archit Taneja wrote:
-> Hullo,
->
-> On Tuesday 17 December 2013 03:32 PM, Archit Taneja wrote:
->> The DMM/Tiler block can used by omapdrm to allocate frame buffers.
->> With the
->> removal of address and irq data from the omap4 hwmods, the probe of
->> DMM driver
->> fails and omapdrm isn't able to utilize the DMM hardware.
->>
->> Add DMM bindings for OMAP4 and OMAP5 and DRA7x.
->
-> Can this be pulled for 3.14? I've incorporated comments from Mark and
-> other folks.
+Hi, 
 
-Can you please ack the first patch in the series?
+On Thu, 2014-01-16 at 15:20 -0800, Bjorn Andersson wrote: 
+> On Tue 14 Jan 00:57 PST 2014, Ivan T. Ivanov wrote:
+> 
+> > 
+> > Thanks Bjorn, 
+> > 
+> > I have prepared second version, but never send it out :-).
+> > One thing suggested by Mark was missed in this version.
+> 
+> Yeah, Mattew told me you we're assigned to other things and asked me to send
+> out an update as I had gotten it to work on our boards.
+> 
+> I did modify the wording of most of these to match how it is written in the
+> other Qualcomm definitions.
+> 
+> @Mark, would you rather have me change this to your suggested wording?
+> 
+> > 
+> > 
+> > On Mon, 2014-01-13 at 16:30 -0800, Bjorn Andersson wrote: 
+> > > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+> > > 
+> [snip]
+> > > + - clocks: Should contain the core clock and the AHB clock.
+> > 
+> > + - clocks: a list of phandle + clock-specifier pairs for each entry in
+> > +           clock-names
+> > 
+> 
+> This is in line with how it's written in other drivers, so if the DT
+> maintainers doesn't disagree I would like to keep phandles out of the
+> description. This specific line is a verbatime copy of the msm_serial
+> documentation (same block, different mode)...
+> 
+> > > + - clock-names: Should be "core" for the core clock and "iface" for the
+> > > +                AHB clock.
+> > > +
+> > > + - #address-cells: Should be <1> Address cells for i2c device address
+> > > + - #size-cells: Should be <0> as i2c addresses have no size component
+> > > +
+> > > +Optional properties:
+> > > + - clock-frequency: Should specify the desired i2c bus clock frequency in Hz,
+> > > +                    default is 100kHz if omitted.
+> > > +
+> > > +Child nodes should conform to i2c bus binding.
+> > > +
+> > > +Example:
+> > > +
+> > > + i2c2: i2c@f9924000 {
+> > > + 	compatible = "qcom,i2c-qup";
+> > > + 	reg = <0xf9924000 0x1000>;
+> > > + 	interrupts = <0 96 0>;
+> > > +
+> > > + 	clocks = <&gcc_blsp1_qup2_i2c_apps_clk>, <&gcc_blsp1_ahb_clk>;
+> > 
+> > In the light of the latest patches from Stephen, this could be 
+> > 
+> > + 	clocks = <&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>, <&gcc GCC_BLSP1_AHB_CLK>;
+> 
+> Yes, that's exactly what I have in my dts. However as this is just an example
+> I didn't feel it was worth tainting the documentation with all those capital
+> letters ;)
+> So unless DT maintainers disagree I would like to just keep it as an example.
 
-The second one is going via a pull request to the drm maintainer:
+Until, we get some meaningful board DTS files for Qualcomm platforms, it
+is easy for people which will like to test or use drivers to just copy
+and paste these definitions.
 
-https://git.kernel.org/cgit/linux/kernel/git/tomba/linux.git/commit/?id=3d232346c5656b300028b6c920ddc10b229b5264
+Regards,
+Ivan
 
-Thanks,
-Archit
-
->
-> Thanks,
-> Archit
->
->>
->> Changes in v5:
->> - Use of_match_ptr() in the dmm driver.
->> - Add DT node for DRA7x as dra7.dtsi is now in mainline.
->>
->> Changes in v4:
->> - Clean up documentation further.
->>
->> Changes in v3:
->> - Fix mistakes in documentation and remove aliases for dmm nodes.
->>
->> Changes in v2:
->> - No changes, split out into a separate series containing only DT
->> related parts.
->>
->>
->> Archit Taneja (2):
->>    arm: dts: omap4+: Add DMM bindings
->>    drm: omap: Enable DT support for DMM
->>
->>   Documentation/devicetree/bindings/arm/omap/dmm.txt | 22
->> ++++++++++++++++++++++
->>   arch/arm/boot/dts/dra7.dtsi                        |  7 +++++++
->>   arch/arm/boot/dts/omap4.dtsi                       |  7 +++++++
->>   arch/arm/boot/dts/omap5.dtsi                       |  7 +++++++
->>   drivers/gpu/drm/omapdrm/omap_dmm_tiler.c           |  7 +++++++
->>   5 files changed, 50 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/arm/omap/dmm.txt
->>
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
->
-
+> 
+> Regards,
+> Bjorn
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
