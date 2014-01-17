@@ -1,35 +1,45 @@
-From: Chris Ball <chris@printf.net>
-Subject: Re: [PATCH 2/2] mmc: dw_mmc: k3: remove clk_table
-Date: Fri, 17 Jan 2014 23:00:35 +0000
-Message-ID: <86mwiu6woc.fsf@void.printf.net>
-References: <1389604469-8064-1-git-send-email-zhangfei.gao@linaro.org>
-	<1389604469-8064-3-git-send-email-zhangfei.gao@linaro.org>
-	<002b01cf1115$4cdfe240$e69fa6c0$%jun@samsung.com>
-	<86sism7iuz.fsf@void.printf.net>
-	<CAFt19AB2Yk4U06-R9rMqFgEHFjN_L-pnc1wR35SQUjX28j7tZQ@mail.gmail.com>
-	<20140117225631.4167.47840@quantum>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: [PATCH v3 0/2] Qualcomm Universal Peripheral (QUP) I2C controller
+Date: Fri, 17 Jan 2014 15:03:37 -0800
+Message-ID: <1389999819-10648-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20140117225631.4167.47840@quantum> (Mike Turquette's message of
-	"Fri, 17 Jan 2014 14:56:31 -0800")
-Sender: linux-mmc-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Seungwon Jeon <essuuj@gmail.com>, Seungwon Jeon <tgih.jun@samsung.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Jaehoon Chung <jh80.chung@samsung.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, brooke.wangzhigang@huawei.com, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Jean Delvare <khali@linux-fr.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, James Ralston <james.d.ralston@intel.com>, Bill Brown <bill.e.brown@intel.com>, Matt Porter <matt.porter@linaro.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
+Continuing on Ivans i2c-qup series.
 
-On Fri, Jan 17 2014, Mike Turquette wrote:
-> Oops, I just read this mail. I have taken in patch #1 through the clk
-> tree but have not yet pushed it out to my public mirror.
->
-> Chris, I'm happy to take it if you haven't yet.
+Changes from v2:
+ - Removed unused variables and includes
+ - Corrected read logic in irq handler
+ - Made the polling loop in qup_i2c_poll_state() less arbitrary
+ - Only building suspend/resume if CONFIG_PM_SLEEP
 
-That's fine.  I'd like to take 2/2, just pushed it to mmc-next for 3.14.
+Changes from v1:
+ - Cleaned up device tree binding example.
+ - Refrased device tree bindings.
+ - Following changes in the i2c framework.
+ - Use the core clock to calculate divider for the bus clock, instead of
+   explicitly setting it.
+ - Remove explicit pinctrl settting.
+ - Split/renamed qup_i2c_enable(bool) into enable/disable functions.
+ - Return value was overwritten on error in write_one/read_one.
+ - Initialize the i2c core every time, so that we actually can execute
+   more than 1 transmission per xfer.
 
-Thanks,
+Ivan T. Ivanov (2):
+  i2c: qup: Add device tree bindings information
+  i2c: New bus driver for the QUP I2C controller
 
-- Chris.
+ .../devicetree/bindings/i2c/qcom,i2c-qup.txt       |  41 +
+ drivers/i2c/busses/Kconfig                         |  10 +
+ drivers/i2c/busses/Makefile                        |   1 +
+ drivers/i2c/busses/i2c-qup.c                       | 894 +++++++++++++++++++++
+ 4 files changed, 946 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt
+ create mode 100644 drivers/i2c/busses/i2c-qup.c
+
 -- 
-Chris Ball   <chris@printf.net>   <http://printf.net/>
+1.8.2.2
