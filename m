@@ -1,50 +1,42 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH RFC 4/6] net: rfkill: gpio: add device tree support
-Date: Fri, 17 Jan 2014 17:47:45 +0100
-Message-ID: <201401171747.46332.arnd@arndb.de>
-References: <1389941251-32692-1-git-send-email-wens@csie.org> <1389941251-32692-5-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 3/3] power: reset: use syscon driver to parse reboot
+ register from scu
+Date: Fri, 17 Jan 2014 17:52:46 +0100
+Message-ID: <201401171752.47393.arnd@arndb.de>
+References: <1389748055-23534-1-git-send-email-fkan@apm.com>
+ <1389748055-23534-4-git-send-email-fkan@apm.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDEKVJM7XAHRBPF54WLAKGQEYXQQA2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1389941251-32692-5-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1389748055-23534-4-git-send-email-fkan@apm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Feng Kan <fkan@apm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 17 January 2014, Chen-Yu Tsai wrote:
-> diff --git a/Documentation/devicetree/bindings/rfkill/rfkill-gpio.txt b/Documentation/devicetree/bindings/rfkill/rfkill-gpio.txt
-> new file mode 100644
-> index 0000000..8a07ea4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rfkill/rfkill-gpio.txt
-> @@ -0,0 +1,26 @@
-> +GPIO controlled RFKILL devices
-> +
-> +Required properties:
-> +- compatible   : Must be "rfkill-gpio".
-> +- rfkill-name  : Name of RFKILL device
-> +- rfkill-type  : Type of RFKILL device: 1 for WiFi, 2 for BlueTooth
-> +- NAME_shutdown-gpios  : GPIO phandle to shutdown control
-> +                         (phandle must be the second)
-> +- NAME_reset-gpios     : GPIO phandle to reset control
-> +
-> +NAME must match the rfkill-name property. NAME_shutdown-gpios or
-> +NAME_reset-gpios, or both, must be defined.
-> +
+On Wednesday 15 January 2014, Feng Kan wrote:
+> +static int __init xgene_reboot_init(void)
+>  {
+>         arm_pm_restart = xgene_restart;
+>         return 0;
+>  }
+>  device_initcall(xgene_reboot_init);
 
-I don't understand this part. Why do you include the name in the
-gpios property, rather than just hardcoding the property strings
-to "shutdown-gpios" and "reset-gpios"?
+This won't work on a generic kernel, since you unconditionally set the
+pm_restart function to your own, which is broken for everything else.
 
-The description of hte "rfkill-name" property seems to suggest
-that you can only have one logical RFKILL device per device node,
-so he names would not be ambiguous.
+Please keep the platform_driver to attach to the reboot device
+as you had before. It might be good to turn this into a generic
+"syscon-reset" driver that gets both the register number and
+the contents to write from the device node.
 
 	Arnd
