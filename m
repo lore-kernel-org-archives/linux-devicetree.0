@@ -1,40 +1,222 @@
-From: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 2/2] mmc: dw_mmc: k3: remove clk_table
-Date: Fri, 17 Jan 2014 15:01:24 +0000
-Message-ID: <86sism7iuz.fsf@void.printf.net>
-References: <1389604469-8064-1-git-send-email-zhangfei.gao@linaro.org>
-	<1389604469-8064-3-git-send-email-zhangfei.gao@linaro.org>
-	<002b01cf1115$4cdfe240$e69fa6c0$%jun@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <002b01cf1115$4cdfe240$e69fa6c0$%jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> (Seungwon
-	Jeon's message of "Tue, 14 Jan 2014 19:42:19 +0900")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: 'Zhangfei Gao' <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Arnd Bergmann' <arnd-r2nGTMty4D4@public.gmane.org>, 'Mike Turquette' <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Jaehoon Chung' <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Haojian Zhuang' <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, brooke.wangzhigang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jonas Jensen <jonas.jensen@gmail.com>
+Subject: [PATCH v9] clk: add MOXA ART SoCs clock driver
+Date: Fri, 17 Jan 2014 16:03:55 +0100
+Message-ID: <1389971035-17781-1-git-send-email-jonas.jensen@gmail.com>
+References: <1386602163-28479-1-git-send-email-jonas.jensen@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1386602163-28479-1-git-send-email-jonas.jensen@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mturquette@linaro.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arm@kernel.org, mark.rutland@arm.com, tomasz.figa@gmail.com, adam.jaremko@gmail.com, sylvester.nawrocki@gmail.com, Jonas Jensen <jonas.jensen@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch adds MOXA ART SoCs clock driver support.
 
-On Tue, Jan 14 2014, Seungwon Jeon wrote:
-> On Monday, January 13, 2014, Zhangfei Gao wrote:
->> Remove clk_table and directly use ios->clock as clock source rate.
->> Abstract init clock rate and max clock limitation in clk.c
->> 
->> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> Acked-by: Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Jonas Jensen <jonas.jensen@gmail.com>
+---
 
-It looks like patch 1/2 did not make 3.14.  Do you want me to take
-this patch for 3.14 anyway?  (Why?)
+Notes:
+    Changes since v8:
+    
+    1. rebase drivers/clk/Makefile to next-20140117
+    
+    DT bindings document:
+    
+    2. use two separate sections describing PLL/APB
+    3. update example
+    
+    Applies to next-20140117
 
-Thanks,
+ .../bindings/clock/moxa,moxart-clock.txt           |  48 +++++++++
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-moxart.c                           | 112 +++++++++++++++++++++
+ 3 files changed, 161 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/moxa,moxart-clock.txt
+ create mode 100644 drivers/clk/clk-moxart.c
 
-- Chris.
+diff --git a/Documentation/devicetree/bindings/clock/moxa,moxart-clock.txt b/Documentation/devicetree/bindings/clock/moxa,moxart-clock.txt
+new file mode 100644
+index 0000000..242e3fc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/moxa,moxart-clock.txt
+@@ -0,0 +1,48 @@
++Device Tree Clock bindings for arch-moxart
++
++This binding uses the common clock binding[1].
++
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++MOXA ART SoCs allow to determine PLL output and APB frequencies
++by reading registers holding multiplier and divisor information.
++
++
++PLL:
++
++Required properties:
++- compatible : Must be "moxa,moxart-pll-clock"
++- #clock-cells : Should be 0
++- reg : Should contain registers location and length
++- clocks : Should contain phandle to parent clock
++
++Optional properties:
++- clock-output-names : Should contain clock name
++
++
++APB:
++
++Required properties:
++- compatible : Must be "moxa,moxart-apb-clock"
++- #clock-cells : Should be 0
++- reg : Should contain registers location and length
++- clocks : Should contain phandle to parent clock
++
++Optional properties:
++- clock-output-names : Should contain clock name
++
++
++For example:
++
++	clk_pll: clk_pll@98100000 {
++		compatible = "moxa,moxart-pll-clock";
++		#clock-cells = <0>;
++		reg = <0x98100000 0x34>;
++	};
++
++	clk_apb: clk_apb@98100000 {
++		compatible = "moxa,moxart-apb-clock";
++		#clock-cells = <0>;
++		reg = <0x98100000 0x34>;
++		clocks = <&clk_pll>;
++	};
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index 0c16e9c..ed5d58d 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -12,6 +12,7 @@ obj-$(CONFIG_COMMON_CLK)	+= clk-composite.o
+ # SoCs specific
+ obj-$(CONFIG_ARCH_BCM2835)	+= clk-bcm2835.o
+ obj-$(CONFIG_ARCH_EFM32)	+= clk-efm32gg.o
++obj-$(CONFIG_ARCH_MOXART)	+= clk-moxart.o
+ obj-$(CONFIG_ARCH_NOMADIK)	+= clk-nomadik.o
+ obj-$(CONFIG_ARCH_HIGHBANK)	+= clk-highbank.o
+ obj-$(CONFIG_ARCH_HI3xxx)	+= hisilicon/
+diff --git a/drivers/clk/clk-moxart.c b/drivers/clk/clk-moxart.c
+new file mode 100644
+index 0000000..f0436a3
+--- /dev/null
++++ b/drivers/clk/clk-moxart.c
+@@ -0,0 +1,112 @@
++/*
++ * MOXA ART SoCs clock driver.
++ *
++ * Copyright (C) 2013 Jonas Jensen
++ *
++ * Jonas Jensen <jonas.jensen@gmail.com>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/io.h>
++#include <linux/of_address.h>
++#include <linux/clkdev.h>
++
++void __init moxart_of_pll_clk_init(struct device_node *node)
++{
++	static void __iomem *base;
++	struct clk *clk, *ref_clk;
++	unsigned long rate;
++	unsigned int mul;
++	const char *name = node->name;
++
++	of_property_read_string(node, "clock-output-names", &name);
++
++	base = of_iomap(node, 0);
++	if (!base) {
++		pr_err("%s: of_iomap failed\n", node->full_name);
++		return;
++	}
++
++	mul = readl(base + 0x30) >> 3 & 0x3f;
++	iounmap(base);
++
++	ref_clk = of_clk_get(node, 0);
++	if (IS_ERR(ref_clk)) {
++		pr_err("%s: of_clk_get failed\n", node->full_name);
++		return;
++	}
++
++	rate = mul * clk_get_rate(ref_clk);
++
++	clk = clk_register_fixed_rate(NULL, name, NULL, CLK_IS_ROOT, rate);
++	if (IS_ERR(clk)) {
++		pr_err("%s: clk_register_fixed_rate failed\n", node->full_name);
++		return;
++	}
++
++	clk_register_clkdev(clk, NULL, name);
++	of_clk_add_provider(node, of_clk_src_simple_get, clk);
++}
++CLK_OF_DECLARE(moxart_pll_clock, "moxa,moxart-pll-clock",
++	       moxart_of_pll_clk_init);
++
++void __init moxart_of_apb_clk_init(struct device_node *node)
++{
++	static void __iomem *base;
++	struct clk *clk, *pll_clk;
++	unsigned long rate;
++	unsigned int div, val;
++	const char *name = node->name;
++
++	of_property_read_string(node, "clock-output-names", &name);
++
++	base = of_iomap(node, 0);
++	if (!base) {
++		pr_err("%s: of_iomap failed\n", node->full_name);
++		return;
++	}
++
++	val = readl(base + 0xc) >> 4 & 0x7;
++	iounmap(base);
++
++	switch (val) {
++	case 1:
++		div = 3;
++		break;
++	case 2:
++		div = 4;
++		break;
++	case 3:
++		div = 6;
++		break;
++	case 4:
++		div = 8;
++		break;
++	default:
++		div = 2;
++		break;
++	}
++
++	pll_clk = of_clk_get(node, 0);
++	if (IS_ERR(pll_clk)) {
++		pr_err("%s: of_clk_get failed\n", node->full_name);
++		return;
++	}
++
++	rate = clk_get_rate(pll_clk) / (div * 2);
++
++	clk = clk_register_fixed_rate(NULL, name, NULL, CLK_IS_ROOT, rate);
++	if (IS_ERR(clk)) {
++		pr_err("%s: clk_register_fixed_rate failed\n", node->full_name);
++		return;
++	}
++
++	clk_register_clkdev(clk, NULL, name);
++	of_clk_add_provider(node, of_clk_src_simple_get, clk);
++}
++CLK_OF_DECLARE(moxart_apb_clock, "moxa,moxart-apb-clock",
++	       moxart_of_apb_clk_init);
 -- 
-Chris Ball   <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>   <http://printf.net/>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.2.1
