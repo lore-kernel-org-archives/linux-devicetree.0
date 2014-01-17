@@ -1,62 +1,60 @@
-From: "Gupta, Pekon" <pekon@ti.com>
-Subject: RE: [RFC/PATCH 0/1] mtd: Add NAND ECC devicetree binding
-Date: Fri, 17 Jan 2014 17:58:13 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA66555@DBDE04.ent.ti.com>
-References: <1389960820-18696-1-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] regulator: ti-abb: Add support for interleaved LDO
+ registers
+Date: Fri, 17 Jan 2014 18:00:15 +0000
+Message-ID: <20140117180015.GA17314@sirena.org.uk>
+References: <1389900750-27625-1-git-send-email-nm@ti.com>
+ <20140117160821.GV17314@sirena.org.uk>
+ <52D95EA1.6000608@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1389960820-18696-1-git-send-email-ezequiel.garcia@free-electrons.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Brian Norris <computersforpeace@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Seif Mazareeb <seif@marvell.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Gregory Clement <gregory.clement@free-electrons.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Hch1Uz/zGPcHFdv8"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52D95EA1.6000608@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ezequiel,
 
->From: Ezequiel Garcia [mailto:ezequiel.garcia@free-electrons.com]
->
->This patch is our first proposal to address the need for a suitable ECC
->devicetree binding.
->
->NAND controllers have special ECC modes, raising per-driver ECC mode devicetree
->binding. See for instance the binding for OMAP:
->
-> - ti,nand-ecc-opt: A string setting the ECC layout to use. One of:
->	"sw"		<deprecated> use "ham1" instead
->	"hw"		<deprecated> use "ham1" instead
->	"hw-romcode"	<deprecated> use "ham1" instead
->	"ham1"		1-bit Hamming ecc code
->	"bch4"		4-bit BCH ecc code
->	"bch8"		8-bit BCH ecc code
->
->Other drivers (such as pxa3xx-nand) have similar requirements, with special
->(controller-specific) ECC modes. Instead of adding a possibly different binding
->per compatible-string, let's add generic ECC strength and ECC step size.
->
->This properties should describe completely the ECC mode and let drivers choose
->the appropriate ECC mode.
->
-Yes, this is good approach.
-It was found earlier that generic NAND DT bindings are not much use to other
-controllers as well, as different h/w engines have different interpretations.
-Brian Norris had similar comments giving example of his hardware.
-(hope following reference helps).
+--Hch1Uz/zGPcHFdv8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-[1] http://lists.infradead.org/pipermail/linux-mtd/2013-September/048869.html
+On Fri, Jan 17, 2014 at 10:47:29AM -0600, Nishanth Menon wrote:
+> On 01/17/2014 10:08 AM, Mark Brown wrote:
 
-with regards, pekon
+> > Is there a system controller involved here by any chance?
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> Nope. ABB LDO module is a standalone instance whose register set
+> happens to be part of a memory range, as I recently got to know, is a
+> favorite for our hardware designers to put "misc" modules at SoC
+> integration time - Sigh! I guess I have made more than enough stink
+> about this internally already :(.
+
+That sounds exactly like a system controller :)
+
+--Hch1Uz/zGPcHFdv8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS2W+sAAoJELSic+t+oim9n2AQAI0kIZoMcPjhCM5OIo2/D7as
+oTUwvd+BtWSC7FPxD+T34yfUj+iQQ1lywAsP3W4xRzp3gYJ93qlpqB2UHwFsWarj
+nAO1Xx2rc0oJwAq7S1N6PpPuGP3XH3wSjAZzFi/ffiVwFYKdohPGJaT8qzHNdJ1g
+rabAv8m+HcwZhVB8dQa8r4g+I8g6lqiLGdo28bs5FitQoIgrWyKF9kUJbesWhwYi
+MsJXbrQoLA+cluQISH3t952lPu3bko4EL+ayu+Yutmb9/8qTt5OZLtlyHldyzSVO
+k/TzqMPkxSvNGDlbxskYBUqkwVVERyS5cRf9ZTQnmaVQucxlum3ifbdKBjTeTSCa
+MDXbl6m+Wp4+izQ45brYtlyjRkJdE8nAxJQ2wA1WgIlf7DzODDtl619RI+BIvYEk
+Mk//SwSnoKxyFB9StV08CexdxxVGYGA0+FfGgDdixTpZwi3Tv7yF7Kn/dhvBmHEH
+5rmB4WCqwyQ0IAbh39ItnKclQqR55Lr418IHDbOtZvjMRDr/v7Y7zmEcTgd5xB5V
+PLG9Lr4PCtxDwyvfAUVqH7rQW0Y1CfrMufz20ogtLADUEIR9GjjrHf3yNowXgctF
+nXAWpviN/cE6yBbx0M26++4lPLwFLy1FfOScwRDnawMfiMvt9PxXaGzAr1NnqpTH
+PQ1TxRuVWxxdExZRtgzI
+=/bV9
+-----END PGP SIGNATURE-----
+
+--Hch1Uz/zGPcHFdv8--
