@@ -1,195 +1,119 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v4] of: add functions to count number of elements in a property
-Date: Sat, 18 Jan 2014 13:02:08 +0100
-Message-ID: <5115255.DrcMbtXc1P@phil>
-References: <27256277.YJ687suYy5@phil> <1434798.oSb68sYmYT@phil> <CAL_JsqJ_St=OegpexzrTGXwmOYCz4YeWk_1S+R_q6NajmmPqSA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJ_St=OegpexzrTGXwmOYCz4YeWk_1S+R_q6NajmmPqSA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+From: Thomas Abraham <ta.omasab@gmail.com>
+Subject: [PATCH v2 3/7] devicetree: bindings: add cpu clock configuration data binding for Exynos4/5
+Date: Sat, 18 Jan 2014 17:40:53 +0530
+Message-ID: <1390047057-2239-4-git-send-email-thomas.ab@samsung.com>
+References: <1390047057-2239-1-git-send-email-thomas.ab@samsung.com>
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <1390047057-2239-1-git-send-email-thomas.ab@samsung.com>
+Sender: cpufreq-owner@vger.kernel.org
+To: cpufreq@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org, mturquette@linaro.org, shawn.guo@linaro.org, kgene.kim@samsung.com, t.figa@samsung.com, l.majewski@samsung.com, viresh.kumar@linaro.org, thomas.ab@samsung.com, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The need to know the number of array elements in a property is
-a common pattern. To prevent duplication of open-coded implementations
-add a helper static function that also centralises strict sanity
-checking and DTB format details, as well as a set of wrapper functions
-for u8, u16, u32 and u64.
+From: Thomas Abraham <thomas.ab@samsung.com>
 
-Suggested-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+The clk ops of the new Samsung cpu clock provider type requires configuration
+data that will be programmed in the multiple clock blocks encapsulated within
+the cpu clock provider type. This configuration data is held in the clock
+controller node. Update clock binding documentation about this configuration
+data format for Samsung Exynos4 and Exynos5 platforms.
+
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Tomasz Figa <t.figa@samsung.com>
+Cc: <devicetree@vger.kernel.org>
+Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
 ---
-changes since v3:
-address more comments from Rob Herring
-- export the base function and inline the type-specific wrappers
-changes since v2:
-address more comments from Mark Rutland
-- switch to of_property_count_elems_of_size
-- use full_name instead of name in error message
-changes since v1:
-address comments from Rob Herring and Mark Rutland:
-- provide a helper and a set of wrappers for u8-u64
-- get rid of extra len variable, prop->length is enough
-- include node name in error message
+ .../devicetree/bindings/clock/exynos4-clock.txt    |   30 ++++++++++++++++++++
+ .../devicetree/bindings/clock/exynos5250-clock.txt |   21 ++++++++++++++
+ 2 files changed, 51 insertions(+), 0 deletions(-)
 
-Mark, does your Reviewed-by holds for this variant too?
-
- drivers/of/base.c  |   32 ++++++++++++++++++++++
- include/linux/of.h |   76 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 108 insertions(+)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index f807d0e..21646c0 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -862,6 +862,38 @@ struct device_node *of_find_node_by_phandle(phandle handle)
- EXPORT_SYMBOL(of_find_node_by_phandle);
+diff --git a/Documentation/devicetree/bindings/clock/exynos4-clock.txt b/Documentation/devicetree/bindings/clock/exynos4-clock.txt
+index a2ac2d9..c28aabd 100644
+--- a/Documentation/devicetree/bindings/clock/exynos4-clock.txt
++++ b/Documentation/devicetree/bindings/clock/exynos4-clock.txt
+@@ -15,6 +15,29 @@ Required Properties:
  
- /**
-+ * of_property_count_elems_of_size - Count the number of elements in a property
-+ *
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ * @elem_size:	size of the individual element
-+ *
-+ * Search for a property in a device node and count the number of elements of
-+ * size elem_size in it. Returns number of elements on sucess, -EINVAL if the
-+ * property does not exist or its length does not match a multiple of u16 and
-+ * -ENODATA if the property does not have a value.
-+ */
-+int of_property_count_elems_of_size(const struct device_node *np,
-+				const char *propname, int elem_size)
-+{
-+	struct property *prop = of_find_property(np, propname, NULL);
-+
-+	if (!prop)
-+		return -EINVAL;
-+	if (!prop->value)
-+		return -ENODATA;
-+
-+	if (prop->length % elem_size != 0) {
-+		pr_err("size of %s in node %s is not a multiple of %d\n",
-+		       propname, np->full_name, elem_size);
-+		return -EINVAL;
-+	}
-+
-+	return prop->length / elem_size;
-+}
-+EXPORT_SYMBOL_GPL(of_property_count_elems_of_size);
-+
-+/**
-  * of_find_property_value_of_size
-  *
-  * @np:		device node from which the property value is to be read.
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 276c546..293920d 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -250,6 +250,8 @@ extern struct device_node *of_find_node_with_property(
- extern struct property *of_find_property(const struct device_node *np,
- 					 const char *name,
- 					 int *lenp);
-+extern int of_property_count_elems_of_size(const struct device_node *np,
-+				const char *propname, int elem_size);
- extern int of_property_read_u32_index(const struct device_node *np,
- 				       const char *propname,
- 				       u32 index, u32 *out_value);
-@@ -426,6 +428,12 @@ static inline struct device_node *of_find_compatible_node(
- 	return NULL;
- }
+ - #clock-cells: should be 1.
  
-+static inline int of_property_count_elems_of_size(const struct device_node *np,
-+			const char *propname, int elem_size)
-+{
-+	return -ENOSYS;
-+}
++- arm-frequency-table: defines the list of arm clock speeds supported and
++  the associated configuration values required to setup the clock controller
++  for generating those speeds. The format of each entry included in the
++  arm-frequency-table should be as defined below (#cells per entry = 13)
 +
- static inline int of_property_read_u32_index(const struct device_node *np,
- 			const char *propname, u32 index, u32 *out_value)
- {
-@@ -565,6 +573,74 @@ static inline int of_node_to_nid(struct device_node *device) { return 0; }
- #endif
++  - for Exynos4210 and Exynos4212 based platforms:
++      cell #1: arm clock frequency
++      cell #2: expected arm clock parent frequency
++      cell #3 ~ cell 12#: value of clock divider in the following order
++	       core_ratio, corem0_ratio, corem1_ratio, periph_ratio,
++	       atb_ratio, pclk_dbg_ratio, apll_ratio, core2_ratio,
++	       copy_ratio, hpm_ratio.
++      cell #13: reserved (should be zero).
++
++  - for Exynos4412 based platforms:
++      cell #1: arm clock frequency
++      cell #2: expected arm clock parent frequency
++      cell #3 ~ cell #13: value of clock divider in the following order
++	       core_ratio, corem0_ratio, corem1_ratio, periph_ratio,
++	       atb_ratio, pclk_dbg_ratio, apll_ratio, core2_ratio,
++	       copy_ratio, hpm_ratio, cores_ratio
++
++
+ The following is the list of clocks generated by the controller. Each clock is
+ assigned an identifier and client nodes use this identifier to specify the
+ clock which they consume. Some of the clocks are available only on a particular
+@@ -275,6 +298,13 @@ Example 1: An example of a clock controller node is listed below.
+ 		compatible = "samsung,exynos4210-clock";
+ 		reg = <0x10030000 0x20000>;
+ 		#clock-cells = <1>;
++
++		arm-frequency-table = <1200000 1200000 0 3 7 3 4 1 7 0 5 0>,
++				      <1000000 1000000 0 3 7 3 4 1 7 0 4 0>,
++				      < 800000  800000 0 3 7 3 3 1 7 0 3 0>,
++				      < 500000  500000 0 3 7 3 3 1 7 0 3 0>,
++				      < 400000  400000 0 3 7 3 3 1 7 0 3 0>,
++				      < 200000  200000 0 1 3 1 1 1 0 0 3 0>;
+ 	};
  
- /**
-+ * of_property_count_u8_elems - Count the number of u8 elements in a property
-+ *
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ *
-+ * Search for a property in a device node and count the number of u8 elements
-+ * in it. Returns number of elements on sucess, -EINVAL if the property does
-+ * not exist or its length does not match a multiple of u8 and -ENODATA if the
-+ * property does not have a value.
-+ */
-+static inline int of_property_count_u8_elems(const struct device_node *np,
-+				const char *propname)
-+{
-+	return of_property_count_elems_of_size(np, propname, sizeof(u8));
-+}
+ Example 2: UART controller node that consumes the clock generated by the clock
+diff --git a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
+index 72ce617..99eae9c 100644
+--- a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
++++ b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
+@@ -13,6 +13,20 @@ Required Properties:
+ 
+ - #clock-cells: should be 1.
+ 
++- arm-frequency-table: defines the list of arm clock speeds supported and
++  the associated configuration values required to setup the clock controller
++  for generating those speeds. The format of each entry included in the
++  arm-frequency-table should be as defined below (#cells per entry = 13)
 +
-+/**
-+ * of_property_count_u16_elems - Count the number of u16 elements in a property
-+ *
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ *
-+ * Search for a property in a device node and count the number of u16 elements
-+ * in it. Returns number of elements on sucess, -EINVAL if the property does
-+ * not exist or its length does not match a multiple of u16 and -ENODATA if the
-+ * property does not have a value.
-+ */
-+static inline int of_property_count_u16_elems(const struct device_node *np,
-+				const char *propname)
-+{
-+	return of_property_count_elems_of_size(np, propname, sizeof(u16));
-+}
++      cell #1: arm clock frequency
++      cell #2: expected arm clock parent frequency
++      cell #3 ~ cell #12: value of clock divider in the following order
++	       arm_ratio, cpud_ratio, acp_ratio, periph_ratio,
++	       atb_ratio, pclk_dbg_ratio, apll_ratio, arm2_ratio,
++	       copy_ratio, hpm_ratio
++      cell #13: reserved (should be zero)
 +
-+/**
-+ * of_property_count_u32_elems - Count the number of u32 elements in a property
-+ *
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ *
-+ * Search for a property in a device node and count the number of u32 elements
-+ * in it. Returns number of elements on sucess, -EINVAL if the property does
-+ * not exist or its length does not match a multiple of u32 and -ENODATA if the
-+ * property does not have a value.
-+ */
-+static inline int of_property_count_u32_elems(const struct device_node *np,
-+				const char *propname)
-+{
-+	return of_property_count_elems_of_size(np, propname, sizeof(u32));
-+}
 +
-+/**
-+ * of_property_count_u64_elems - Count the number of u64 elements in a property
-+ *
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ *
-+ * Search for a property in a device node and count the number of u64 elements
-+ * in it. Returns number of elements on sucess, -EINVAL if the property does
-+ * not exist or its length does not match a multiple of u64 and -ENODATA if the
-+ * property does not have a value.
-+ */
-+static inline int of_property_count_u64_elems(const struct device_node *np,
-+				const char *propname)
-+{
-+	return of_property_count_elems_of_size(np, propname, sizeof(u64));
-+}
+ The following is the list of clocks generated by the controller. Each clock is
+ assigned an identifier and client nodes use this identifier to specify the
+ clock which they consume.
+@@ -177,6 +191,13 @@ Example 1: An example of a clock controller node is listed below.
+ 		compatible = "samsung,exynos5250-clock";
+ 		reg = <0x10010000 0x30000>;
+ 		#clock-cells = <1>;
 +
-+/**
-  * of_property_read_bool - Findfrom a property
-  * @np:		device node from which the property value is to be read.
-  * @propname:	name of the property to be searched.
++		arm-frequency-table = <1700000 1700000 0 3 7 7 7 3 5 0 0 2>,
++				      <1600000 1600000 0 3 7 7 7 1 4 0 0 2>,
++				      <1500000 1500000 0 2 7 7 7 1 4 0 0 2>,
++				      <1400000 1400000 0 2 7 7 6 1 4 0 0 2>,
++				      <1300000 1300000 0 2 7 7 6 1 3 0 0 2>,
++				      <1200000 1200000 0 2 7 7 5 1 3 0 0 2>;
+ 	};
+ 
+ Example 2: UART controller node that consumes the clock generated by the clock
 -- 
-1.7.10.4
+1.6.6.rc2
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
