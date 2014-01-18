@@ -1,42 +1,66 @@
-From: Alex Ling <kasimling@gmail.com>
-Subject: [PATCH 2/2] ARM: dts: Add AT24C08 EEPROM support to TINY4412
-Date: Sat, 18 Jan 2014 22:24:43 +0800
-Message-ID: <1390055084-27483-2-git-send-email-kasimling@gmail.com>
-References: <1390055084-27483-1-git-send-email-kasimling@gmail.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1390055084-27483-1-git-send-email-kasimling@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: ben-linux@fluff.org, kgene.kim@samsung.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Alex Ling <kasimling@gmail.com>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: [PATCH 2/6] ARM: shmbobile: r8a7790.dtsi: add pci0/1/2 nodes
+Date: Sat, 18 Jan 2014 15:03:36 +0000
+Message-ID: <1390057420-13226-3-git-send-email-ben.dooks@codethink.co.uk>
+References: <1390057420-13226-1-git-send-email-ben.dooks@codethink.co.uk>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1390057420-13226-1-git-send-email-ben.dooks@codethink.co.uk>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-kernel@lists.codethink.co.uk
+Cc: linux-sh@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>, devicetree@vger.kernel.org, horms+renesas@verge.net.au
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for AT24C08 EEPROM found on TINY4412 board.
+Add nodes for USB PCI bridge devices.
 
-Signed-off-by: Alex Ling <kasimling@gmail.com>
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
 ---
- arch/arm/boot/dts/exynos4412-tiny4412.dts |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Cc: devicetree@vger.kernel.org
+Cc: linux-sh@vger.kernel.org
+Cc: horms+renesas@verge.net.au
+---
+ arch/arm/boot/dts/r8a7790.dtsi | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos4412-tiny4412.dts b/arch/arm/boot/dts/exynos4412-tiny4412.dts
-index 2c6bfe3..9f63664 100644
---- a/arch/arm/boot/dts/exynos4412-tiny4412.dts
-+++ b/arch/arm/boot/dts/exynos4412-tiny4412.dts
-@@ -109,4 +109,16 @@
- 			clock-frequency = <24000000>;
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index 3cc834b..c5e9783 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -728,4 +728,34 @@
+ 				"rcan1", "rcan0", "qspi_mod", "i2c3", "i2c2", "i2c1", "i2c0";
  		};
  	};
 +
-+	i2c@13860000 {
-+		status = "okay";
-+		samsung,i2c-sda-delay = <100>;
-+		samsung,i2c-max-bus-freq = <200000>;
++	pci0: pci@ee090000  {
++		compatible = "renesas,pci-r8a7790";
++		clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
++		reg = <0x0 0xee090000 0x0 0xc00>,
++		      <0x0 0xee080000 0x0 0x1100>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 111 IRQ_TYPE_LEVEL_HIGH>;
++		status = "disabled";
++	};
 +
-+		eeprom@50 {
-+			compatible = "atmel,24c08";
-+			reg = <0x50>;
-+			pagesize = <16>;
-+		};
++	pci1: pci@ee0b0000  {
++		compatible = "renesas,pci-r8a7790";
++		clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
++		reg = <0x0 0xee0b0000 0x0 0xc00>,
++		      <0x0 0xee0a0000 0x0 0x1100>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 112 IRQ_TYPE_LEVEL_HIGH>;
++		status = "disabled";
++	};
++
++	pci2: pci@ee0d0000  {
++		compatible = "renesas,pci-r8a7790";
++		clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
++		reg = <0x0 0xee0d0000 0x0 0xc00>,
++		      <0x0 0xee0c0000 0x0 0x1100>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 113 IRQ_TYPE_LEVEL_HIGH>;
++		status = "disabled";
 +	};
  };
 -- 
-1.7.9.5
+1.8.5.2
+
