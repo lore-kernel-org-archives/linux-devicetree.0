@@ -1,7 +1,7 @@
 From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: [PATCH 6/6] ARM: shmobile: lager.dtb: add usbphy reference
-Date: Sat, 18 Jan 2014 15:03:40 +0000
-Message-ID: <1390057420-13226-7-git-send-email-ben.dooks@codethink.co.uk>
+Subject: [PATCH 3/6] ARM: shmobile: lager.dts: add pci 0/1/2
+Date: Sat, 18 Jan 2014 15:03:37 +0000
+Message-ID: <1390057420-13226-4-git-send-email-ben.dooks@codethink.co.uk>
 References: <1390057420-13226-1-git-send-email-ben.dooks@codethink.co.uk>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1390057420-13226-1-git-send-email-ben.dooks@codethink.co.uk>
@@ -10,7 +10,9 @@ To: linux-kernel@lists.codethink.co.uk
 Cc: linux-sh@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Enable the usbphy node so that the phy driver is available.
+Enable pci1 and pci2 nodes for USB controllers attached to the AHB<>PCI
+bridge devices. Node pci0 is enabled for the moment as a device, but
+could be switched to usb-gadget mode later.
 
 Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
@@ -20,20 +22,57 @@ Cc: devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND...)
 Cc: Magnus Damm <magnus.damm@gmail.com> (supporter:ARM/SHMOBILE ARM...)
 Cc: Simon Horman <horms@verge.net.au> (supporter:ARM/SHMOBILE ARM...)
 ---
- arch/arm/boot/dts/r8a7790-lager.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/r8a7790-lager.dts | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
 diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
-index 8dfcd25..83bf18d 100644
+index 57569cb..8dfcd25 100644
 --- a/arch/arm/boot/dts/r8a7790-lager.dts
 +++ b/arch/arm/boot/dts/r8a7790-lager.dts
-@@ -125,3 +125,7 @@
- 	pinctrl-0 = <&usb2_pins>;
- 	pinctrl-names = "default";
+@@ -80,6 +80,22 @@
+ 		renesas,groups = "mmc1_data8", "mmc1_ctrl";
+ 		renesas,function = "mmc1";
+ 	};
++
++	usb0_pins: usb0 {
++		renesas,groups = "usb0";
++		renesas,function = "usb";
++	};
++
++	usb1_pins: usb1 {
++		renesas,groups = "usb1";
++		renesas,function = "usb";
++	};
++
++	usb2_pins: usb2 {
++		renesas,groups = "usb2";
++		renesas,function = "usb";
++	};
++
+ };
+ 
+ &mmcif1 {
+@@ -91,3 +107,21 @@
+ 	non-removable;
+ 	status = "okay";
  };
 +
-+&usbphy {
++&pci0 {
 +	status = "okay";
++	pinctrl-0 = <&usb0_pins>;
++	pinctrl-names = "default";
++};
++
++&pci1 {
++	status = "okay";
++	pinctrl-0 = <&usb1_pins>;
++	pinctrl-names = "default";
++};
++
++&pci2 {
++	status = "okay";
++	pinctrl-0 = <&usb2_pins>;
++	pinctrl-names = "default";
 +};
 -- 
 1.8.5.2
