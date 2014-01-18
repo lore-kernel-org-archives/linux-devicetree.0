@@ -1,91 +1,64 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCHv13 00/40] ARM: TI SoC clock DT conversion
-Date: Fri, 17 Jan 2014 19:20:06 -0600
-Message-ID: <52D9D6C6.2000700@ti.com>
-References: <52D53084.1070105@ti.com>	<20140115031632.4167.2698@quantum>	<20140115035011.4167.96678@quantum>	<20140115171323.GA22739@atomide.com>	<20140115192340.4167.87685@quantum>	<20140115193547.GF7993@atomide.com>	<20140116213954.4167.37071@quantum>	<87r486mrh5.fsf@linaro.org>	<20140117175312.GH7993@atomide.com>	<52D9723A.6000700@ti.com>	<20140117205832.4167.95162@quantum>	<52D9C484.6000404@ti.com>	<CAOesGMiniMi9xG6ByL0pQE7wzpM82JB40cPvfJcSYkXPs3PrDw@mail.gmail.com>	<52D9C88C.3020508@ti.com>
- <CAOesGMjB-Np1hkHfAPWeCxGK20OzWBt5zumFzDp5WLKTrntUAQ@mail.gmail.com>
+From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 3/4] ARM: pinctrl: Add Broadcom Capri pinctrl driver
+Date: Fri, 17 Jan 2014 21:56:00 -0500
+Message-ID: <20140118025600.GS31049@beef>
+References: <1386787041-6035-1-git-send-email-syin@broadcom.com>
+ <1387592016-13740-1-git-send-email-syin@broadcom.com>
+ <1387592016-13740-4-git-send-email-syin@broadcom.com>
+ <CACRpkdaPZrR=kEknr3YKDWLd_E+o22Yn19ei7iT6cdbYdbeZ2w@mail.gmail.com>
+ <52D98B99.5050604@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOesGMjB-Np1hkHfAPWeCxGK20OzWBt5zumFzDp5WLKTrntUAQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Olof Johansson <olof@lixom.net>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Paul Walmsley <paul@pwsan.com>, Kevin Hilman <khilman@linaro.org>, Mike Turquette <mturquette@linaro.org>, Tony Lindgren <tony@atomide.com>, Rajendra Nayak <rnayak@ti.com>, Felipe Balbi <balbi@ti.com>, Tero Kristo <t-kristo@ti.com>, Benoit Cousson <bcousson@baylibre.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52D98B99.5050604-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sherman Yin <syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/17/2014 06:23 PM, Olof Johansson wrote:
-> On Fri, Jan 17, 2014 at 4:19 PM, Nishanth Menon <nm@ti.com> wrote:
->> On 01/17/2014 06:12 PM, Olof Johansson wrote:
->>> On Fri, Jan 17, 2014 at 4:02 PM, Nishanth Menon <nm@ti.com> wrote:
->>>
->>>> clk-next-6a0cad9 + next-20140117 multi_v7_defconfig + CONFIG_LPAE=y:
->>>>  1: am335x-evm:  Boot PASS: http://slexy.org/raw/s21GRhEOj4
->>>>  2:  am335x-sk:  Boot PASS: http://slexy.org/raw/s20zcNsD8h
->>>>  3: am3517-evm:  Boot PASS: http://slexy.org/raw/s27U9IfRKR
->>>>  4:  am37x-evm:  Boot PASS: http://slexy.org/raw/s2zYyeonec
->>>>  5: am43xx-epos:  Boot PASS: http://slexy.org/raw/s21iCRjTHK
->>>>  6: beagleboard-xm:  Boot PASS: http://slexy.org/raw/s20bPGL3Sz
->>>>  7: beaglebone-black:  Boot PASS: http://slexy.org/raw/s21AhFmkCk
->>>>  8:      crane: No Image built - Missing platform support?:
->>>>  9:       dra7:  Boot FAIL: http://slexy.org/raw/s21Qh3sQRu
->>>> * DRA7 not enabled?
->>>> 10:        ldp:  Boot PASS: http://slexy.org/raw/s21fvBfBgs
->>>> 11:   panda-es:  Boot FAIL: http://slexy.org/raw/s20RsgVUZJ
->>>> * known issue (https://patchwork.kernel.org/patch/3084521/)
->>>> 12:    sdp2430:  Boot FAIL: v6 platform - wont boot with multi_v7
->>>> 13:    sdp3430:  Boot PASS: http://slexy.org/raw/s20rhjjBwe
->>>> 14:    sdp4430:  Boot PASS: http://slexy.org/raw/s2My0UfNPm
->>>> 15:       uevm:  Boot PASS: http://slexy.org/raw/s21aqF6eMN
->>>> TOTAL = 15 boards, Booted Boards = 11, No Boot boards = 4
->>>
->>>
->>> I have a hard time believing the above; A8/A9 boards are not bootable
->>> with CONFIG_LPAE=y...
->>
->> You are right! Drat!! I had CONFIG_LPAE=y in my script, not
->> CONFIG_ARM_LPAE=y! Grrr...
->>
->> Retest in a around 30 mins..
+On Fri, Jan 17, 2014 at 11:59:21AM -0800, Sherman Yin wrote:
+> On 14-01-16 05:19 AM, Linus Walleij wrote:
+> >On Sat, Dec 21, 2013 at 3:13 AM, Sherman Yin <syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> >
+> >'> Adds pinctrl driver for Broadcom Capri (BCM281xx) SoCs.
+> >>
+> >>Signed-off-by: Sherman Yin <syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> >>Reviewed-by: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>
+> >>Reviewed-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >>---
+> >>v4: - PINCTRL selected in Kconfig, PINCTRL_CAPRI selected in bcm_defconfig
+> >>     - make use of regmap
+> >>     - change CAPRI_PIN_UPDATE from macro to inline function.
+> >>     - Handle pull-up strength arg in Ohm instead of enum
+> >
+> >Patch applied. It is really good now! It's late before the merge
+> >window, but you've done a tremendous work on this driver and
+> >I don't want to delay its deployment further.
 > 
-> It's not a huge concern though; it's unlikely that LPAE makes a
-> functional difference on this patch series. It's still useful to catch
-> warnings, etc (most likely printk formats and the like).
-> 
-I suppose, as expected:
-clk-next-6a0cad9 + next-20140117 multi_v7_defconfig + CONFIG_ARM_LPAE=y
-* .config = http://slexy.org/view/s208uSeQS8
-* Build warnings: http://slexy.org/raw/s20n7YwbwN
- 1: am335x-evm:  Boot FAIL: http://slexy.org/raw/s20tF2eUZG
- 2:  am335x-sk:  Boot FAIL: http://slexy.org/raw/s2uP65lOMQ
- 3: am3517-evm:  Boot FAIL: http://slexy.org/raw/s2Lx13gsFZ
- 4:  am37x-evm:  Boot FAIL: http://slexy.org/raw/s2eOLXxvsT
- 5: am43xx-epos:  Boot FAIL: http://slexy.org/raw/s24coJzGvR
- 6: BeagleBoard-XM:  Boot FAIL: http://slexy.org/raw/s240WznuPd
- 7: BeagleBone-Black:  Boot FAIL: http://slexy.org/raw/s20NG2UVTU
- 8:      crane: No Image built - Missing platform support?:
- 9:       dra7:  Boot FAIL: http://slexy.org/raw/s21T3RpHx2
-^^ might probably boot if we enable CONFIG_SOC_DRA7XX in multi_v7
-(this is another A15 target)
-10:        ldp:  Boot FAIL: http://slexy.org/raw/s2F4VO9hDM
-11: PandaBoard-ES:  Boot FAIL: http://slexy.org/raw/s20HpzT1jW
-12:    sdp2430:  Boot FAIL: http://slexy.org/raw/s21snV1EvL
-13:    sdp3430:  Boot FAIL: http://slexy.org/raw/s2FwkVfG5R
-14:    sdp4430:  Boot FAIL: http://slexy.org/raw/s2xiWxlpTj
-15:       uevm:  Boot PASS: http://slexy.org/raw/s2LWUOmfiG
-TOTAL = 15 boards, Booted Boards = 1, No Boot boards = 14
+> Great, thanks for the support and reviews!
 
-I am running a defconfig set check on next-20140117 and will do one
-with next-20140118 once that is ready for comparison results
+Very nice! Now after having completely missing something fundamental on
+my reviews, I feel compelled to bring it up at the 11^H^H12th hour.
 
--- 
-Regards,
-Nishanth Menon
+That is, this is the *only* BCM281xx driver to be named Capri, both in
+the filename and driver code, but also in the binding compatible. We
+didn't do that on anything else that's gone upstream to date. This
+really introduces an unfortunate inconsistency as it obscures which
+SoC family this binding and driver belong with.
+
+I wonder if Linus would accept a rename at this point (too late for 3.14
+presumably, but for 3.15) of s/capri/bcm281xx throughout, bcm11351 for
+the compatible string, as we have for the machine compatible, and also
+BCM281XX for the Kconfig option. If not, I'll survive, but it pains me
+to see one thing completely different out of this entire family. If
+nothing else, it would be great to address the compatible string before
+this hits the 3.14 release.
+
+Linus?
+
+-Matt
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
