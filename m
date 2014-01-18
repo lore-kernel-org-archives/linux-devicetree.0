@@ -1,47 +1,46 @@
 From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: [PATCH 1/6] pci-rcar-gen2: add initial device tree documentation
-Date: Sat, 18 Jan 2014 15:03:35 +0000
-Message-ID: <1390057420-13226-2-git-send-email-ben.dooks@codethink.co.uk>
+Subject: [PATCH 5/6] ARM: shmobile: r8a7790.dtsi: add usbphy node
+Date: Sat, 18 Jan 2014 15:03:39 +0000
+Message-ID: <1390057420-13226-6-git-send-email-ben.dooks@codethink.co.uk>
 References: <1390057420-13226-1-git-send-email-ben.dooks@codethink.co.uk>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1390057420-13226-1-git-send-email-ben.dooks@codethink.co.uk>
 Sender: linux-sh-owner@vger.kernel.org
 To: linux-kernel@lists.codethink.co.uk
-Cc: linux-sh@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>, devicetree@vger.kernel.org, horms+renesas@verge.net.au
+Cc: linux-sh@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Add initial documentation for the pci-rcar-gen2 driver device tree bindings.
-This is not yet complete and needs work on the sub-nodes for the PCI bus.
+Add node for USB PHY driver to the base R8A7790 device tree include file.
+It is up to the board file to enable and configure it as necessary.
 
 Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
 ---
-Cc: linux-sh@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: horms+renesas@verge.net.au
+Cc: devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND...)
+Cc: Magnus Damm <magnus.damm@gmail.com> (supporter:ARM/SHMOBILE ARM...)
+Cc: Simon Horman <horms@verge.net.au> (supporter:ARM/SHMOBILE ARM...)
+Cc: linux-sh@vger.kernel.org (open list:ARM/SHMOBILE ARM...)
 ---
- Documentation/devicetree/bindings/pci/renessas,pci-r8a7790 | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/renessas,pci-r8a7790
+ arch/arm/boot/dts/r8a7790.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/renessas,pci-r8a7790 b/Documentation/devicetree/bindings/pci/renessas,pci-r8a7790
-new file mode 100644
-index 0000000..65268d9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/renessas,pci-r8a7790
-@@ -0,0 +1,12 @@
-+Renesas internal AHB to PCI bridge
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index c5e9783..ea180a5 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -758,4 +758,12 @@
+ 		interrupts = <0 113 IRQ_TYPE_LEVEL_HIGH>;
+ 		status = "disabled";
+ 	};
 +
-+This is the bridge used internally to connect the USB controllers to the
-+AHB.
-+
-+Required properties:
-+ - compatible: "renesas,pci-r8a7790" for the R8A7790 SoC
-+ - reg : A list of physical regions to access the device. The first is
-+         the operational registers for the OHCI/EHCI controller and the
-+	 second region is for the bridge configuration and control registers.
-+ - interrupts : interrupt for the device
-+ - clocks : The reference to the device clock
-\ No newline at end of file
++	usbphy: usbphy@e6590100 {
++		compatible = "renesas,usb-phy-r8a7790";
++		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
++		clock-names = "usbhs";
++		reg = < 0x0 0xe6590100 0x0 0x100>;
++		status = "disabled";
++	};
+ };
 -- 
 1.8.5.2
 
