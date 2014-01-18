@@ -1,190 +1,398 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCHv13 00/40] ARM: TI SoC clock DT conversion
-Date: Fri, 17 Jan 2014 18:02:12 -0600
-Message-ID: <52D9C484.6000404@ti.com>
-References: <52D53084.1070105@ti.com> <20140115031632.4167.2698@quantum>
- <20140115035011.4167.96678@quantum> <20140115171323.GA22739@atomide.com>
- <20140115192340.4167.87685@quantum> <20140115193547.GF7993@atomide.com>
- <20140116213954.4167.37071@quantum> <87r486mrh5.fsf@linaro.org>
- <20140117175312.GH7993@atomide.com> <52D9723A.6000700@ti.com>
- <20140117205832.4167.95162@quantum>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] DT: net: document Ethernet bindings in one place
+Date: Sat, 18 Jan 2014 04:05:07 +0300
+Message-ID: <201401180405.07859.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140117205832.4167.95162@quantum>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mike Turquette <mturquette@linaro.org>, Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@linaro.org>
-Cc: devicetree@vger.kernel.org, paul@pwsan.com, rnayak@ti.com, balbi@ti.com, bcousson@baylibre.com, Olof Johansson <olof@lixom.net>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/17/2014 02:58 PM, Mike Turquette wrote:
-> Quoting Tero Kristo (2014-01-17 10:11:06)
->> On 01/17/2014 07:53 PM, Tony Lindgren wrote:
->>> * Kevin Hilman <khilman@linaro.org> [140117 09:48]:
->>>> Mike Turquette <mturquette@linaro.org> writes:
->>>>
->>>> [...]
->>>>
->>>>> I took Tony's advice and fast-forwarded clk-next to -rc7 and applied
->>>>> Tero's series. This includes the AM3517 bits now. I've pushed this
->>>>> branch to clk-next-omap (force update) on my Linaro mirror. Can you do a
->>>>> final sanity test before I merge this into clk-next?
->>
->> I think you accidentally merged wrong branch to clk-next-omap with the 
->> latest refresh. This is one is missing the build-fixes now, when it 
->> earlier had those in.
->>
->> The correct branch to merge was 3.13-rc7-dt-clks-v13-build-fixes.
->>
->> This also causes the build failure below for omap1.
-> 
-> You are right. I broke the OMAPs. I force updated clk-next-omap (and
-> clk-next) with the correct branch this time.
+This patch is an attempt to gather the Ethernet related bindings in one file,
+like it's done in the MMC and some other subsystems. It should save the trouble
+of documenting several properties over and over in each binding document.
 
-Build tests: omap1_defconfig:
-clk-next-6a0cad9: builds fine
-clk-next-6a0cad9 + next-20140117: http://slexy.org/view/s2HgtvUtAl
-	disabling CONFIG_BT, builds fine
+I have used the Embedded Power Architecture(TM) Platform Requirements (ePAPR)
+standard as a base for the properties description, also documenting some ad-hoc
+properties that have been introduced over time despite having direct analogs in
+ePAPR.
 
-Boot tests: clk-next-6a0cad9, clk-next-6a0cad9 + next-20140117 : No
-regressions seen
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-Detailed Boot logs:
+---
+The patch is against DaveM's 'net-next.git' repo and the DaVinci EMAC bindings
+fix I've posted yesterday:
 
-clk-next-6a0cad9 omap2plus_defconfig:
- 1: am335x-evm:  Boot PASS: http://slexy.org/raw/s21idEk2IZ
- 2:  am335x-sk:  Boot PASS: http://slexy.org/raw/s21Q4w8gWT
- 3: am3517-evm:  Boot PASS: http://slexy.org/raw/s21dT7y2CA
- 4:  am37x-evm:  Boot PASS: http://slexy.org/raw/s2VFaOtuDP
- 5: am43xx-epos:  Boot PASS: http://slexy.org/raw/s20L0DBt1d
- 6: beagleboard-xm:  Boot PASS: http://slexy.org/raw/s20gKsdH3A
- 7: beaglebone-black:  Boot PASS: http://slexy.org/raw/s2ZXTJswqY
- 8:      crane: No Image built - Missing platform support?:
- 9:       dra7:  Boot PASS: http://slexy.org/raw/s2XZfjQz67
-10:        ldp: No Image built - Missing platform support?:
-11:   panda-es:  Boot PASS: http://slexy.org/raw/s2ESRQgBbc
-12:    sdp2430: No Image built - Missing platform support?:
-13:    sdp3430:  Boot PASS: http://slexy.org/raw/s2YsAO3ZPJ
-14:    sdp4430:  Boot PASS: http://slexy.org/raw/s2MxxggHkh
-15:       uevm:  Boot PASS: http://slexy.org/raw/s2wJT0B7wf
-TOTAL = 15 boards, Booted Boards = 12, No Boot boards = 3
+http://patchwork.ozlabs.org/patch/311854/
 
-clk-next-6a0cad9 multi_v7_defconfig:
- 1: am335x-evm:  Boot FAIL: http://slexy.org/raw/s21AXBDbM9
-* regulator/mmc missing here
- 2:  am335x-sk:  Boot FAIL: http://slexy.org/raw/s21pQPhupJ
-* regulator/mmc missing here
- 3: am3517-evm:  Boot PASS: http://slexy.org/raw/s21iM7TEiQ
- 4:  am37x-evm:  Boot PASS: http://slexy.org/raw/s2pBD6nplU
- 5: am43xx-epos:  Boot PASS: http://slexy.org/raw/s2X9mnCKhT
- 6: beagleboard-xm:  Boot PASS: http://slexy.org/raw/s21CjzZtZ6
- 7: beaglebone-black:  Boot PASS: http://slexy.org/raw/s2vCfnss8N
- 8:      crane: No Image built - Missing platform support?:
- 9:       dra7:  Boot FAIL: http://slexy.org/raw/s21Xn4t22A
-* DRA7 not enabled?
-10:        ldp: No Image built - Missing platform support?:
-11:   panda-es:  Boot PASS: http://slexy.org/raw/s21ZoijL9i
-12:    sdp2430: No Image built - Missing platform support?:
-13:    sdp3430:  Boot PASS: http://slexy.org/raw/s21rdIfh7S
-14:    sdp4430:  Boot PASS: http://slexy.org/raw/s21HXFj9cw
-15:       uevm:  Boot FAIL: http://slexy.org/raw/s21m26VdbI
-* regulator/mmc missing here
-TOTAL = 15 boards, Booted Boards = 8, No Boot boards = 7
+ Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt    |    5 --
+ Documentation/devicetree/bindings/net/arc_emac.txt                |   12 ------
+ Documentation/devicetree/bindings/net/cavium-mix.txt              |    7 ---
+ Documentation/devicetree/bindings/net/cavium-pip.txt              |    7 ---
+ Documentation/devicetree/bindings/net/cdns-emac.txt               |    5 --
+ Documentation/devicetree/bindings/net/cpsw.txt                    |    3 -
+ Documentation/devicetree/bindings/net/davicom-dm9000.txt          |    2 -
+ Documentation/devicetree/bindings/net/davinci_emac.txt            |    4 --
+ Documentation/devicetree/bindings/net/ethernet.txt                |   20 ++++++++++
+ Documentation/devicetree/bindings/net/fsl-fec.txt                 |    4 --
+ Documentation/devicetree/bindings/net/fsl-tsec-phy.txt            |   11 +----
+ Documentation/devicetree/bindings/net/lpc-eth.txt                 |    4 --
+ Documentation/devicetree/bindings/net/macb.txt                    |    5 --
+ Documentation/devicetree/bindings/net/marvell-armada-370-neta.txt |    4 --
+ Documentation/devicetree/bindings/net/marvell-orion-net.txt       |    3 -
+ Documentation/devicetree/bindings/net/micrel-ks8851.txt           |    3 -
+ Documentation/devicetree/bindings/net/smsc-lan91c111.txt          |    1 
+ Documentation/devicetree/bindings/net/smsc911x.txt                |    4 --
+ Documentation/devicetree/bindings/net/stmmac.txt                  |    5 --
+ 19 files changed, 25 insertions(+), 84 deletions(-)
 
-clk-next-6a0cad9 multi_v7_defconfig+CONFIG_LPAE=y:
- 1: am335x-evm:  Boot FAIL: http://slexy.org/raw/s21GIuprIx
-* regulator/mmc missing here
- 2:  am335x-sk:  Boot FAIL: http://slexy.org/raw/s20Vy6K9Rg
-* regulator/mmc missing here
- 3: am3517-evm:  Boot PASS: http://slexy.org/raw/s20jXaoTYq
- 4:  am37x-evm:  Boot PASS: http://slexy.org/raw/s20bk4uHcb
- 5: am43xx-epos:  Boot PASS: http://slexy.org/raw/s2gVGjYMXz
- 6: beagleboard-xm:  Boot PASS: http://slexy.org/raw/s26D0F2N1t
- 7: beaglebone-black:  Boot PASS: http://slexy.org/raw/s2ThmugNzC
- 8:      crane: No Image built - Missing platform support?:
- 9:       dra7:  Boot FAIL: http://slexy.org/raw/s21HdQFchd
-* DRA7 not enabled?
-10:        ldp: No Image built - Missing platform support?:
-11:   panda-es:  Boot PASS: http://slexy.org/raw/s2042Y9Pyb
-12:    sdp2430: No Image built - Missing platform support?:
-13:    sdp3430:  Boot PASS: http://slexy.org/raw/s2NCg8nLki
-14:    sdp4430:  Boot PASS: http://slexy.org/raw/s25GxRkWcj
-15:       uevm:  Boot FAIL: http://slexy.org/raw/s2Q7xBYM3a
-* regulator/mmc missing here
-TOTAL = 15 boards, Booted Boards = 8, No Boot boards = 7
-
-
-clk-next-6a0cad9 + next-20140117 omap2plus_defconfig:
- 1: am335x-evm:  Boot PASS: http://slexy.org/raw/s2ll3LdMN2
- 2:  am335x-sk:  Boot PASS: http://slexy.org/raw/s2jyAF2Och
- 3: am3517-evm:  Boot PASS: http://slexy.org/raw/s20nPsCcUS
- 4:  am37x-evm:  Boot PASS: http://slexy.org/raw/s2Rn7Vqh8x
- 5: am43xx-epos:  Boot PASS: http://slexy.org/raw/s2frIhnu6Y
- 6: beagleboard-xm:  Boot PASS: http://slexy.org/raw/s2GNee8kHF
- 7: beaglebone-black:  Boot PASS: http://slexy.org/raw/s2G7fD4rGD
- 8:      crane: No Image built - Missing platform support?: (pending
-merge from Benoit)
- 9:       dra7:  Boot PASS: http://slexy.org/raw/s21W2zLl5q
-10:        ldp:  Boot FAIL: http://slexy.org/raw/s21518Tibq
-* intermittent failures seen previously as well -> debug pending
-11:   panda-es:  Boot PASS: http://slexy.org/raw/s20WddZMVp
-12:    sdp2430:  Boot PASS: http://slexy.org/raw/s2cVr3BLLi
-13:    sdp3430:  Boot PASS: http://slexy.org/raw/s21h9oDSCv
-14:    sdp4430:  Boot PASS: http://slexy.org/raw/s21PWBCUKn
-15:       uevm:  Boot PASS: http://slexy.org/raw/s2OxDQtC9E
-TOTAL = 15 boards, Booted Boards = 13, No Boot boards = 2
-
-clk-next-6a0cad9 + next-20140117 multi_v7_defconfig:
- 1: am335x-evm:  Boot PASS: http://slexy.org/raw/s20MpjXQ71
- 2:  am335x-sk:  Boot PASS: http://slexy.org/raw/s2T0vnX8s7
- 3: am3517-evm:  Boot PASS: http://slexy.org/raw/s2hvsW2oVi
- 4:  am37x-evm:  Boot PASS: http://slexy.org/raw/s2Li1DqaeQ
- 5: am43xx-epos:  Boot PASS: http://slexy.org/raw/s2MHh0c19C
- 6: beagleboard-xm:  Boot PASS: http://slexy.org/raw/s21RnOxxUk
- 7: beaglebone-black:  Boot PASS: http://slexy.org/raw/s2qaKF0lqp
- 8:      crane: No Image built - Missing platform support?:
- 9:       dra7:  Boot FAIL: http://slexy.org/raw/s203u2hQ1m
-* DRA7 not enabled?
-10:        ldp:  Boot PASS: http://slexy.org/raw/s2ug8MyzzE
-11:   panda-es:  Boot FAIL: http://slexy.org/raw/s2NVPvwb2I
-* known issue (https://patchwork.kernel.org/patch/3084521/)
-12:    sdp2430:  Boot FAIL: v6 platform - wont boot with multi_v7
-13:    sdp3430:  Boot PASS: http://slexy.org/raw/s28vswaDnc
-14:    sdp4430:  Boot PASS: http://slexy.org/raw/s21wk2lqiC
-15:       uevm:  Boot PASS: http://slexy.org/raw/s21soF15Dy
-TOTAL = 15 boards, Booted Boards = 11, No Boot boards = 4
-
-clk-next-6a0cad9 + next-20140117 multi_v7_defconfig + CONFIG_LPAE=y:
- 1: am335x-evm:  Boot PASS: http://slexy.org/raw/s21GRhEOj4
- 2:  am335x-sk:  Boot PASS: http://slexy.org/raw/s20zcNsD8h
- 3: am3517-evm:  Boot PASS: http://slexy.org/raw/s27U9IfRKR
- 4:  am37x-evm:  Boot PASS: http://slexy.org/raw/s2zYyeonec
- 5: am43xx-epos:  Boot PASS: http://slexy.org/raw/s21iCRjTHK
- 6: beagleboard-xm:  Boot PASS: http://slexy.org/raw/s20bPGL3Sz
- 7: beaglebone-black:  Boot PASS: http://slexy.org/raw/s21AhFmkCk
- 8:      crane: No Image built - Missing platform support?:
- 9:       dra7:  Boot FAIL: http://slexy.org/raw/s21Qh3sQRu
-* DRA7 not enabled?
-10:        ldp:  Boot PASS: http://slexy.org/raw/s21fvBfBgs
-11:   panda-es:  Boot FAIL: http://slexy.org/raw/s20RsgVUZJ
-* known issue (https://patchwork.kernel.org/patch/3084521/)
-12:    sdp2430:  Boot FAIL: v6 platform - wont boot with multi_v7
-13:    sdp3430:  Boot PASS: http://slexy.org/raw/s20rhjjBwe
-14:    sdp4430:  Boot PASS: http://slexy.org/raw/s2My0UfNPm
-15:       uevm:  Boot PASS: http://slexy.org/raw/s21aqF6eMN
-TOTAL = 15 boards, Booted Boards = 11, No Boot boards = 4
-
-
-
--- 
-Regards,
-Nishanth Menon
+Index: net-next/Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt
+===================================================================
+--- net-next.orig/Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt
++++ net-next/Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt
+@@ -4,13 +4,8 @@ Required properties:
+ - compatible: should be "allwinner,sun4i-emac".
+ - reg: address and length of the register set for the device.
+ - interrupts: interrupt for the device
+-- phy: A phandle to a phy node defining the PHY address (as the reg
+-  property, a single integer).
+ - clocks: A phandle to the reference clock for this device
+ 
+-Optional properties:
+-- (local-)mac-address: mac address to be used by this driver
+-
+ Example:
+ 
+ emac: ethernet@01c0b000 {
+Index: net-next/Documentation/devicetree/bindings/net/arc_emac.txt
+===================================================================
+--- net-next.orig/Documentation/devicetree/bindings/net/arc_emac.txt
++++ net-next/Documentation/devicetree/bindings/net/arc_emac.txt
+@@ -6,18 +6,6 @@ Required properties:
+ - interrupts: Should contain the EMAC interrupts
+ - clock-frequency: CPU frequency. It is needed to calculate and set polling
+ period of EMAC.
+-- max-speed: Maximum supported data-rate in Mbit/s. In some HW configurations
+-bandwidth of external memory controller might be a limiting factor. That's why
+-it's required to specify which data-rate is supported on current SoC or FPGA.
+-For example if only 10 Mbit/s is supported (10BASE-T) set "10". If 100 Mbit/s is
+-supported (100BASE-TX) set "100".
+-- phy: PHY device attached to the EMAC via MDIO bus
+-
+-Child nodes of the driver are the individual PHY devices connected to the
+-MDIO bus. They must have a "reg" property given the PHY address on the MDIO bus.
+-
+-Optional properties:
+-- mac-address: 6 bytes, mac address
+ 
+ Examples:
+ 
+Index: net-next/Documentation/devicetree/bindings/net/cavium-mix.txt
+===================================================================
+--- net-next.orig/Documentation/devicetree/bindings/net/cavium-mix.txt
++++ net-next/Documentation/devicetree/bindings/net/cavium-mix.txt
+@@ -18,13 +18,6 @@ Properties:
+ - interrupts: Two interrupt specifiers.  The first is the MIX
+   interrupt routing and the second the routing for the AGL interrupts.
+ 
+-- mac-address: Optional, the MAC address to assign to the device.
+-
+-- local-mac-address: Optional, the MAC address to assign to the device
+-  if mac-address is not specified.
+-
+-- phy-handle: Optional, a phandle for the PHY device connected to this device.
+-
+ Example:
+ 	ethernet@1070000100800 {
+ 		compatible = "cavium,octeon-5750-mix";
+Index: net-next/Documentation/devicetree/bindings/net/cavium-pip.txt
+===================================================================
+--- net-next.orig/Documentation/devicetree/bindings/net/cavium-pip.txt
++++ net-next/Documentation/devicetree/bindings/net/cavium-pip.txt
+@@ -35,13 +35,6 @@ Properties for PIP port which is a child
+ 
+ - reg: The port number within the interface group.
+ 
+-- mac-address: Optional, the MAC address to assign to the device.
+-
+-- local-mac-address: Optional, the MAC address to assign to the device
+-  if mac-address is not specified.
+-
+-- phy-handle: Optional, a phandle for the PHY device connected to this device.
+-
+ Example:
+ 
+ 	pip@11800a0000000 {
+Index: net-next/Documentation/devicetree/bindings/net/cdns-emac.txt
+===================================================================
+--- net-next.orig/Documentation/devicetree/bindings/net/cdns-emac.txt
++++ net-next/Documentation/devicetree/bindings/net/cdns-emac.txt
+@@ -6,11 +6,6 @@ Required properties:
+   or the generic form: "cdns,emac".
+ - reg: Address and length of the register set for the device
+ - interrupts: Should contain macb interrupt
+-- phy-mode: String, operation mode of the PHY interface.
+-  Supported values are: "mii", "rmii".
+-
+-Optional properties:
+-- local-mac-address: 6 bytes, mac address
+ 
+ Examples:
+ 
+Index: net-next/Documentation/devicetree/bindings/net/cpsw.txt
+===================================================================
+--- net-next.orig/Documentation/devicetree/bindings/net/cpsw.txt
++++ net-next/Documentation/devicetree/bindings/net/cpsw.txt
+@@ -28,9 +28,6 @@ Optional properties:
+ Slave Properties:
+ Required properties:
+ - phy_id		: Specifies slave phy id
+-- phy-mode		: The interface between the SoC and the PHY (a string
+-			  that of_get_phy_mode() can understand)
+-- mac-address		: Specifies slave MAC address
+ 
+ Optional properties:
+ - dual_emac_res_vlan	: Specifies VID to be used to segregate the ports
+Index: net-next/Documentation/devicetree/bindings/net/davicom-dm9000.txt
+===================================================================
+--- net-next.orig/Documentation/devicetree/bindings/net/davicom-dm9000.txt
++++ net-next/Documentation/devicetree/bindings/net/davicom-dm9000.txt
+@@ -9,8 +9,6 @@ Required properties:
+ - interrupts : interrupt specifier specific to interrupt controller
+ 
+ Optional properties:
+-- local-mac-address : A bytestring of 6 bytes specifying Ethernet MAC address
+-    to use (from firmware or bootloader)
+ - davicom,no-eeprom : Configuration EEPROM is not available
+ - davicom,ext-phy : Use external PHY
+ 
+Index: net-next/Documentation/devicetree/bindings/net/davinci_emac.txt
+===================================================================
+--- net-next.orig/Documentation/devicetree/bindings/net/davinci_emac.txt
++++ net-next/Documentation/devicetree/bindings/net/davinci_emac.txt
+@@ -19,9 +19,7 @@ Required properties:
+ 			  Miscellaneous Interrupt>
+ 
+ Optional properties:
+-- phy-handle: Contains a phandle to an Ethernet PHY.
+-              If absent, davinci_emac driver defaults to 100/FULL.
+-- local-mac-address : 6 bytes, mac address
++- phy-handle: If absent, davinci_emac driver defaults to 100/FULL.
+ 
+ Example (enbw_cmc board):
+ 	eth0: emac@1e20000 {
+Index: net-next/Documentation/devicetree/bindings/net/ethernet.txt
+===================================================================
+--- /dev/null
++++ net-next/Documentation/devicetree/bindings/net/ethernet.txt
+@@ -0,0 +1,20 @@
++The following properties are common to the Ethernet controllers:
++
++- local-mac-address: array of 6 bytes, specifies the MAC address that was
++  assigned to the network device;
++- mac-address: array of 6 bytes, specifies the MAC address that was last used by
++  the boot program; should be used in cases where the MAC address assigned to
++  the device by the boot program is different from the "local-mac-address"
++  property;
++- max-speed: number, specifies maximum speed in Mbit/s supported by the device;
++- phy-mode: string, operation mode of the PHY interface; supported values are
++  "mii", "gmii", "sgmii", "tbi", "rev-mii", "rmii", "rgmii", "rgmii-id",
++  "rgmii-rxid", "rgmii-txid", "rtbi", "smii", "xgmii";
++- phy-connection-type: the same as "phy-mode" property (but described in ePAPR);
++- phy-handle: phandle, specifies a reference to a node representing a PHY
++  device (this property is described in ePAPR);
++- phy: the same as "phy-handle" property (but actually ad-hoc one).
++
++Child nodes of the Ethernet controller are typically the individual PHY devices
++connected via the MDIO bus (sometimes the MDIO bus controller is separate).
++They are described in the phy.txt file in this same directory.
+Index: net-next/Documentation/devicetree/bindings/net/fsl-fec.txt
+===================================================================
+--- net-next.orig/Documentation/devicetree/bindings/net/fsl-fec.txt
++++ net-next/Documentation/devicetree/bindings/net/fsl-fec.txt
+@@ -4,12 +4,8 @@ Required properties:
+ - compatible : Should be "fsl,<soc>-fec"
+ - reg : Address and length of the register set for the device
+ - interrupts : Should contain fec interrupt
+-- phy-mode : String, operation mode of the PHY interface.
+-  Supported values are: "mii", "gmii", "sgmii", "tbi", "rmii",
+-  "rgmii", "rgmii-id", "rgmii-rxid", "rgmii-txid", "rtbi", "smii".
+ 
+ Optional properties:
+-- local-mac-address : 6 bytes, mac address
+ - phy-reset-gpios : Should specify the gpio for phy reset
+ - phy-reset-duration : Reset duration in milliseconds.  Should present
+   only if property "phy-reset-gpios" is available.  Missing the property
+Index: net-next/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
+===================================================================
+--- net-next.orig/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
++++ net-next/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
+@@ -38,22 +38,15 @@ Properties:
+   - model : Model of the device.  Can be "TSEC", "eTSEC", or "FEC"
+   - compatible : Should be "gianfar"
+   - reg : Offset and length of the register set for the device
+-  - local-mac-address : List of bytes representing the ethernet address of
+-    this controller
+   - interrupts : For FEC devices, the first interrupt is the device's
+     interrupt.  For TSEC and eTSEC devices, the first interrupt is
+     transmit, the second is receive, and the third is error.
+-  - phy-handle : The phandle for the PHY connected to this ethernet
+-    controller.
+   - fixed-link : <a b c d e> where a is emulated phy id - choose any,
+     but unique to the all specified fixed-links, b is duplex - 0 half,
+     1 full, c is link speed - d#10/d#100/d#1000, d is pause - 0 no
+     pause, 1 pause, e is asym_pause - 0 no asym_pause, 1 asym_pause.
+-  - phy-connection-type : a string naming the controller/PHY interface type,
+-    i.e., "mii" (default), "rmii", "gmii", "rgmii", "rgmii-id", "sgmii",
+-    "tbi", or "rtbi".  This property is only really needed if the connection
+-    is of type "rgmii-id", as all other connection types are detected by
+-    hardware.
++  - phy-connection-type : only really needed if the connection is of type
++    "rgmii-id", as all other connection types are detected by hardware.
+   - fsl,magic-packet : If present, indicates that the hardware supports
+     waking up via magic packet.
+   - bd-stash : If present, indicates that the hardware supports stashing
+Index: net-next/Documentation/devicetree/bindings/net/lpc-eth.txt
+===================================================================
+--- net-next.orig/Documentation/devicetree/bindings/net/lpc-eth.txt
++++ net-next/Documentation/devicetree/bindings/net/lpc-eth.txt
+@@ -6,10 +6,8 @@ Required properties:
+ - interrupts: Should contain ethernet controller interrupt
+ 
+ Optional properties:
+-- phy-mode: String, operation mode of the PHY interface.
+-  Supported values are: "mii", "rmii" (default)
++- phy-mode: if absent, "rmii" is assumed.
+ - use-iram: Use LPC32xx internal SRAM (IRAM) for DMA buffering
+-- local-mac-address : 6 bytes, mac address
+ 
+ Example:
+ 
+Index: net-next/Documentation/devicetree/bindings/net/macb.txt
+===================================================================
+--- net-next.orig/Documentation/devicetree/bindings/net/macb.txt
++++ net-next/Documentation/devicetree/bindings/net/macb.txt
+@@ -8,11 +8,6 @@ Required properties:
+   the Cadence GEM, or the generic form: "cdns,gem".
+ - reg: Address and length of the register set for the device
+ - interrupts: Should contain macb interrupt
+-- phy-mode: String, operation mode of the PHY interface.
+-  Supported values are: "mii", "rmii", "gmii", "rgmii".
+-
+-Optional properties:
+-- local-mac-address: 6 bytes, mac address
+ 
+ Examples:
+ 
+Index: net-next/Documentation/devicetree/bindings/net/marvell-armada-370-neta.txt
+===================================================================
+--- net-next.orig/Documentation/devicetree/bindings/net/marvell-armada-370-neta.txt
++++ net-next/Documentation/devicetree/bindings/net/marvell-armada-370-neta.txt
+@@ -4,10 +4,6 @@ Required properties:
+ - compatible: should be "marvell,armada-370-neta".
+ - reg: address and length of the register set for the device.
+ - interrupts: interrupt for the device
+-- phy: A phandle to a phy node defining the PHY address (as the reg
+-  property, a single integer).
+-- phy-mode: The interface between the SoC and the PHY (a string that
+-  of_get_phy_mode() can understand)
+ - clocks: a pointer to the reference clock for this device.
+ 
+ Example:
+Index: net-next/Documentation/devicetree/bindings/net/marvell-orion-net.txt
+===================================================================
+--- net-next.orig/Documentation/devicetree/bindings/net/marvell-orion-net.txt
++++ net-next/Documentation/devicetree/bindings/net/marvell-orion-net.txt
+@@ -37,7 +37,6 @@ Required port properties:
+       "marvell,kirkwood-eth-port".
+  - reg: port number relative to ethernet controller, shall be 0, 1, or 2.
+  - interrupts: port interrupt.
+- - local-mac-address: 6 bytes MAC address.
+ 
+ Optional port properties:
+  - marvell,tx-queue-size: size of the transmit ring buffer.
+@@ -49,7 +48,7 @@ Optional port properties:
+ 
+ and
+ 
+- - phy-handle: phandle reference to ethernet PHY.
++ - phy-handle: if a PHY is connected.
+ 
+ or
+ 
+Index: net-next/Documentation/devicetree/bindings/net/micrel-ks8851.txt
+===================================================================
+--- net-next.orig/Documentation/devicetree/bindings/net/micrel-ks8851.txt
++++ net-next/Documentation/devicetree/bindings/net/micrel-ks8851.txt
+@@ -4,6 +4,3 @@ Required properties:
+ - compatible = "micrel,ks8851-ml" of parallel interface
+ - reg : 2 physical address and size of registers for data and command
+ - interrupts : interrupt connection
+-
+-Optional properties:
+-- local-mac-address : Ethernet mac address to use
+Index: net-next/Documentation/devicetree/bindings/net/smsc-lan91c111.txt
+===================================================================
+--- net-next.orig/Documentation/devicetree/bindings/net/smsc-lan91c111.txt
++++ net-next/Documentation/devicetree/bindings/net/smsc-lan91c111.txt
+@@ -7,7 +7,6 @@ Required properties:
+ 
+ Optional properties:
+ - phy-device : phandle to Ethernet phy
+-- local-mac-address : Ethernet mac address to use
+ - reg-io-width : Mask of sizes (in bytes) of the IO accesses that
+   are supported on the device.  Valid value for SMSC LAN91c111 are
+   1, 2 or 4.  If it's omitted or invalid, the size would be 2 meaning
+Index: net-next/Documentation/devicetree/bindings/net/smsc911x.txt
+===================================================================
+--- net-next.orig/Documentation/devicetree/bindings/net/smsc911x.txt
++++ net-next/Documentation/devicetree/bindings/net/smsc911x.txt
+@@ -6,9 +6,6 @@ Required properties:
+ - interrupts : Should contain SMSC LAN interrupt line
+ - interrupt-parent : Should be the phandle for the interrupt controller
+   that services interrupts for this device
+-- phy-mode : String, operation mode of the PHY interface.
+-  Supported values are: "mii", "gmii", "sgmii", "tbi", "rmii",
+-  "rgmii", "rgmii-id", "rgmii-rxid", "rgmii-txid", "rtbi", "smii".
+ 
+ Optional properties:
+ - reg-shift : Specify the quantity to shift the register offsets by
+@@ -23,7 +20,6 @@ Optional properties:
+   external PHY
+ - smsc,save-mac-address : Indicates that mac address needs to be saved
+   before resetting the controller
+-- local-mac-address : 6 bytes, mac address
+ 
+ Examples:
+ 
+Index: net-next/Documentation/devicetree/bindings/net/stmmac.txt
+===================================================================
+--- net-next.orig/Documentation/devicetree/bindings/net/stmmac.txt
++++ net-next/Documentation/devicetree/bindings/net/stmmac.txt
+@@ -10,8 +10,6 @@ Required properties:
+ - interrupt-names: Should contain the interrupt names "macirq"
+   "eth_wake_irq" if this interrupt is supported in the "interrupts"
+   property
+-- phy-mode: String, operation mode of the PHY interface.
+-  Supported values are: "mii", "rmii", "gmii", "rgmii".
+ - snps,phy-addr		phy address to connect to.
+ - snps,reset-gpio 	gpio number for phy reset.
+ - snps,reset-active-low boolean flag to indicate if phy reset is active low.
+@@ -28,9 +26,6 @@ Required properties:
+ 				mode for both tx and rx. This flag is
+ 				ignored if force_thresh_dma_mode is set.
+ 
+-Optional properties:
+-- mac-address: 6 bytes, mac address
+-
+ Examples:
+ 
+ 	gmac0: ethernet@e0800000 {
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
