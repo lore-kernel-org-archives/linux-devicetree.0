@@ -1,288 +1,85 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v4] of: add functions to count number of elements in a property
-Date: Sat, 18 Jan 2014 16:28:51 +0100
-Message-ID: <1812408.EavpSnUyy3@phil>
-References: <27256277.YJ687suYy5@phil> <5115255.DrcMbtXc1P@phil> <CAL_JsqJord1OOjwcKk1jqF5o+XO3uw+Lc4ATtQacgwZWAoQq1g@mail.gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v7 0/2] ohci and ehci-platform clks, phy and
+ dt support
+Date: Sat, 18 Jan 2014 17:21:08 +0100
+Message-ID: <52DAA9F4.2090601@redhat.com>
+References: <Pine.LNX.4.44L0.1401171053180.1162-100000@iolanthe.rowland.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJord1OOjwcKk1jqF5o+XO3uw+Lc4ATtQacgwZWAoQq1g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRB66T5KLAKGQE2T723CQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.44L0.1401171053180.1162-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Samstag, 18. Januar 2014, 09:07:30 schrieb Rob Herring:
-> On Sat, Jan 18, 2014 at 6:02 AM, Heiko St=FCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wr=
-ote:
-> > The need to know the number of array elements in a property is
-> > a common pattern. To prevent duplication of open-coded implementati=
-ons
-> > add a helper static function that also centralises strict sanity
-> > checking and DTB format details, as well as a set of wrapper functi=
-ons
-> > for u8, u16, u32 and u64.
-> >=20
-> > Suggested-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> > ---
->=20
-> Looks good. Do you plan to convert some users to use this?
+Hi,
 
-My plan at the moment was to "just" use it for my mmio-sram-reserve stu=
-ff -=20
-just wanted to make sure that this change is sane, before having to sen=
-t the=20
-whole thing for each iteration.
+On 01/17/2014 06:12 PM, Alan Stern wrote:
+> On Thu, 16 Jan 2014, Florian Fainelli wrote:
+>
+>> Le mercredi 15 janvier 2014, 15:26:21 Alan Stern a =EF=BF=BDcrit :
+>>> On Wed, 15 Jan 2014, Hans de Goede wrote:
+>>>> Hi All,
+>>>>
+>>>> This version of my ohci and ehci-platform clks, phy and dt support
+>>>> patch-set, really fixes the 2 small bugs Alan found.
+>>>
+>>> All okay -- this time I can't find anything to complain about.  :-)
+>>
+>> There is one minor issue; which is that the ehci binding claims the driv=
+er
+>> supports the following optional boolean properties:
+>>
+>> - big-endian-regs : boolean, set this for hcds with big-endian registers
+>> - big-endian-desc : boolean, set this for hcds with big-endian descripto=
+rs
+>> - big-endian : boolean, for hcds with big-endian-regs + big-endian-desc
+>>
+>> while it does not (yet) so this is misleading. Can we at get that fixed =
+before
+>> merging? Copy pasting the PPC ehci driver should do the job.
+>
+> I agree it needs to be fixed.  This can be done in a follow-up patch,
+> though.  It doesn't have to be in this one because nobody is using
+> ehci-platform with DT yet.
+>
+> A simple copy from the PPC driver isn't quite enough, because the
+> platform data settings would override the DT values.
+> ehci_platform_reset has to be changed so that it sets
+> ehci->big_endian_desc and _mmio if the pdata flags are set, but
+> otherwise leaves them alone.
+>
+> Hans, would you like to write another patch to take care of this?
 
-I haven't yet looked where the other users, that Mark mentioned, are at=
- :-)
+I already took a quick look at this, setting the ehci->big_endian* flags is=
+ easy,
+the problem is that they won't work unless we also define
+CONFIG_USB_EHCI_BIG_ENDIAN_DESC and CONFIG_USB_EHCI_BIG_ENDIAN_MMIO
 
+I would like to avoid doing something like the ugliness we've with
+USB_OHCI_HCD_PPC_OF_BE and USB_OHCI_HCD_PPC_OF_LE, which means just selecti=
+ng these
+2 config options whenever USB_EHCI_HCD_PLATFORM is enabled, but I'm not sur=
+e if that
+is acceptable.
 
-Heiko
+The same goes for the ohci code btw.
 
+Regards,
 
-> > changes since v3:
-> > address more comments from Rob Herring
-> > - export the base function and inline the type-specific wrappers
-> > changes since v2:
-> > address more comments from Mark Rutland
-> > - switch to of_property_count_elems_of_size
-> > - use full_name instead of name in error message
-> > changes since v1:
-> > address comments from Rob Herring and Mark Rutland:
-> > - provide a helper and a set of wrappers for u8-u64
-> > - get rid of extra len variable, prop->length is enough
-> > - include node name in error message
-> >=20
-> > Mark, does your Reviewed-by holds for this variant too?
-> >=20
-> >  drivers/of/base.c  |   32 ++++++++++++++++++++++
-> >  include/linux/of.h |   76
-> >  ++++++++++++++++++++++++++++++++++++++++++++++++++++ 2 files chang=
-ed,
-> >  108 insertions(+)
-> >=20
-> > diff --git a/drivers/of/base.c b/drivers/of/base.c
-> > index f807d0e..21646c0 100644
-> > --- a/drivers/of/base.c
-> > +++ b/drivers/of/base.c
-> > @@ -862,6 +862,38 @@ struct device_node *of_find_node_by_phandle(ph=
-andle
-> > handle)>=20
-> >  EXPORT_SYMBOL(of_find_node_by_phandle);
-> > =20
-> >  /**
-> >=20
-> > + * of_property_count_elems_of_size - Count the number of elements =
-in a
-> > property + *
-> > + * @np:                device node from which the property value i=
-s to be
-> > read. + * @propname:  name of the property to be searched.
-> > + * @elem_size: size of the individual element
-> > + *
-> > + * Search for a property in a device node and count the number of
-> > elements of + * size elem_size in it. Returns number of elements on
-> > sucess, -EINVAL if the + * property does not exist or its length do=
-es not
-> > match a multiple of u16 and + * -ENODATA if the property does not h=
-ave a
-> > value.
-> > + */
-> > +int of_property_count_elems_of_size(const struct device_node *np,
-> > +                               const char *propname, int elem_size=
-)
-> > +{
-> > +       struct property *prop =3D of_find_property(np, propname, NU=
-LL);
-> > +
-> > +       if (!prop)
-> > +               return -EINVAL;
-> > +       if (!prop->value)
-> > +               return -ENODATA;
-> > +
-> > +       if (prop->length % elem_size !=3D 0) {
-> > +               pr_err("size of %s in node %s is not a multiple of =
-%d\n",
-> > +                      propname, np->full_name, elem_size);
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       return prop->length / elem_size;
-> > +}
-> > +EXPORT_SYMBOL_GPL(of_property_count_elems_of_size);
-> > +
-> > +/**
-> >=20
-> >   * of_find_property_value_of_size
-> >   *
-> >   * @np:                device node from which the property value i=
-s to be
-> >   read.>=20
-> > diff --git a/include/linux/of.h b/include/linux/of.h
-> > index 276c546..293920d 100644
-> > --- a/include/linux/of.h
-> > +++ b/include/linux/of.h
-> > @@ -250,6 +250,8 @@ extern struct device_node *of_find_node_with_pr=
-operty(
-> >=20
-> >  extern struct property *of_find_property(const struct device_node =
-*np,
-> > =20
-> >                                          const char *name,
-> >                                          int *lenp);
-> >=20
-> > +extern int of_property_count_elems_of_size(const struct device_nod=
-e *np,
-> > +                               const char *propname, int elem_size=
-);
-> >=20
-> >  extern int of_property_read_u32_index(const struct device_node *np=
-,
-> > =20
-> >                                        const char *propname,
-> >                                        u32 index, u32 *out_value);
-> >=20
-> > @@ -426,6 +428,12 @@ static inline struct device_node
-> > *of_find_compatible_node(>=20
-> >         return NULL;
-> > =20
-> >  }
-> >=20
-> > +static inline int of_property_count_elems_of_size(const struct
-> > device_node *np, +                       const char *propname, int
-> > elem_size)
-> > +{
-> > +       return -ENOSYS;
-> > +}
-> > +
-> >=20
-> >  static inline int of_property_read_u32_index(const struct device_n=
-ode
-> >  *np,
-> > =20
-> >                         const char *propname, u32 index, u32 *out_v=
-alue)
-> > =20
-> >  {
-> >=20
-> > @@ -565,6 +573,74 @@ static inline int of_node_to_nid(struct device=
-_node
-> > *device) { return 0; }>=20
-> >  #endif
-> > =20
-> >  /**
-> >=20
-> > + * of_property_count_u8_elems - Count the number of u8 elements in=
- a
-> > property + *
-> > + * @np:                device node from which the property value i=
-s to be
-> > read. + * @propname:  name of the property to be searched.
-> > + *
-> > + * Search for a property in a device node and count the number of =
-u8
-> > elements + * in it. Returns number of elements on sucess, -EINVAL i=
-f the
-> > property does + * not exist or its length does not match a multiple=
- of u8
-> > and -ENODATA if the + * property does not have a value.
-> > + */
-> > +static inline int of_property_count_u8_elems(const struct device_n=
-ode
-> > *np,
-> > +                               const char *propname)
-> > +{
-> > +       return of_property_count_elems_of_size(np, propname, sizeof=
-(u8));
-> > +}
-> > +
-> > +/**
-> > + * of_property_count_u16_elems - Count the number of u16 elements =
-in a
-> > property + *
-> > + * @np:                device node from which the property value i=
-s to be
-> > read. + * @propname:  name of the property to be searched.
-> > + *
-> > + * Search for a property in a device node and count the number of =
-u16
-> > elements + * in it. Returns number of elements on sucess, -EINVAL i=
-f the
-> > property does + * not exist or its length does not match a multiple=
- of
-> > u16 and -ENODATA if the + * property does not have a value.
-> > + */
-> > +static inline int of_property_count_u16_elems(const struct device_=
-node
-> > *np, +                               const char *propname)
-> > +{
-> > +       return of_property_count_elems_of_size(np, propname, sizeof=
-(u16));
-> > +}
-> > +
-> > +/**
-> > + * of_property_count_u32_elems - Count the number of u32 elements =
-in a
-> > property + *
-> > + * @np:                device node from which the property value i=
-s to be
-> > read. + * @propname:  name of the property to be searched.
-> > + *
-> > + * Search for a property in a device node and count the number of =
-u32
-> > elements + * in it. Returns number of elements on sucess, -EINVAL i=
-f the
-> > property does + * not exist or its length does not match a multiple=
- of
-> > u32 and -ENODATA if the + * property does not have a value.
-> > + */
-> > +static inline int of_property_count_u32_elems(const struct device_=
-node
-> > *np, +                               const char *propname)
-> > +{
-> > +       return of_property_count_elems_of_size(np, propname, sizeof=
-(u32));
-> > +}
-> > +
-> > +/**
-> > + * of_property_count_u64_elems - Count the number of u64 elements =
-in a
-> > property + *
-> > + * @np:                device node from which the property value i=
-s to be
-> > read. + * @propname:  name of the property to be searched.
-> > + *
-> > + * Search for a property in a device node and count the number of =
-u64
-> > elements + * in it. Returns number of elements on sucess, -EINVAL i=
-f the
-> > property does + * not exist or its length does not match a multiple=
- of
-> > u64 and -ENODATA if the + * property does not have a value.
-> > + */
-> > +static inline int of_property_count_u64_elems(const struct device_=
-node
-> > *np, +                               const char *propname)
-> > +{
-> > +       return of_property_count_elems_of_size(np, propname, sizeof=
-(u64));
-> > +}
-> > +
-> > +/**
-> >=20
-> >   * of_property_read_bool - Findfrom a property
-> >   * @np:                device node from which the property value i=
-s to be
-> >   read. * @propname:  name of the property to be searched.
-> >=20
-> > --
-> > 1.7.10.4
+Hans
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/groups/opt_out.
