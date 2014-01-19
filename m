@@ -1,56 +1,176 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC v3 04/13] ahci-platform: Undo pdata->resume on
- resume failure
-Date: Sun, 19 Jan 2014 20:34:51 +0100
-Message-ID: <52DC28DB.7070804@redhat.com>
-References: <1390088935-7193-1-git-send-email-hdegoede@redhat.com> <1390088935-7193-5-git-send-email-hdegoede@redhat.com> <20140119112737.GC11123@htj.dyndns.org> <52DC1C15.1030107@redhat.com> <20140119191349.GA32165@mtj.dyndns.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Joe Perches <joe@perches.com>
+Subject: Re: ping [PATCH v3] WAN: Adding support for Lantiq PEF2256 E1
+ chipset (FALC56)
+Date: Sun, 19 Jan 2014 11:34:55 -0800
+Message-ID: <1390160095.2290.9.camel@joe-AO722>
+References: <20140119180732.A1D99432AF@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBYOR6CLAKGQEFKZYSQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140119191349.GA32165-9pTldWuhBndy/B6EtB590w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20140119180732.A1D99432AF@localhost.localdomain>
+Sender: netdev-owner@vger.kernel.org
+To: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Krzysztof Halasa <khc@pm.waw.pl>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, marc.balemboy@c-s.fr
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Sun, 2014-01-19 at 19:07 +0100, Christophe Leroy wrote:
+> Pinging this watch as we got no feedback since 22 Nov, although we have taken
+> into account reviews from v1 and v2.
+> 
+> The patch adds WAN support for Lantiq FALC56 - PEF2256 E1 Chipset.
 
-On 01/19/2014 08:13 PM, Tejun Heo wrote:
-> Hello,
->
-> On Sun, Jan 19, 2014 at 07:40:21PM +0100, Hans de Goede wrote:
->> That sounds like your advocating for just returning from resume on the
->> first error without undoing any of the previous steps, have I gotten that
->> right?
->
-> Yeah, or just ignore reset failure and proceed.
+trivia:
 
-That seems like a bad idea IMHO, if reset failed something is seriously
-amiss and just continuing as nothing happened seems unhelpful.
+> diff -urN a/drivers/net/wan/pef2256.c b/drivers/net/wan/pef2256.c
+[]
+> +static void config_hdlc_timeslot(struct pef2256_dev_priv *priv, int ts)
+> +{
+> +	static struct {
+> +		u32 ttr;
+> +		u32 rtr;
+> +	} regs[] = {
+> +		{ TTR1, RTR1 },
+> +		{ TTR2, RTR2 },
+> +		{ TTR3, RTR3 },
+> +		{ TTR4, RTR4 },
+> +	};
 
->> That sounds as sensible as any other approach on resume errors
->> (there are IMHO no good answers), if that is what you mean, shall I do a
->
-> Suspending back is the wrong answer tho.
->
->> patch in the next versions of my patch-set doing that ?
->
-> Isn't just dropping this patch enough tho?
+const
 
-Well the current error handling still re-disables the clks on resume failure,
-if you want to proceed with resume as far as possible, rather then return to
-a suspended state it seems sensible to just leave the clocks on as well.
+> +	int cfg_bit = 1 << (31 - ts);
+> +	int reg_bit = 1 << (7 - (ts % 8));
+> +	int j = ts / 8;
 
-Also disabling the clocks on resume failure, followed by a rmmod will cause
-a WARN_ON to trigger in the clock-framework when ahci_host_stop tries to
-disable the clks for a second time.
+looks endian specific
 
-Regards,
+> +
+> +	if (j >= 4)
+> +		return;
+> +
+> +	if (priv->Tx_TS & cfg_bit)
+> +		pef2256_s8(priv, regs[j].ttr, 1 << reg_bit);
+> +
+> +	if (priv->Rx_TS & cfg_bit)
+> +		pef2256_s8(priv, regs[j].rtr, 1 << reg_bit);
+> +}
 
-Hans
+> +static void init_falc(struct pef2256_dev_priv *priv)
+> +{
+
+a lot of the below looks like it should use
+switch/case blocks.
+
+> +	/* Clocking rate for FALC56 */
+> +
+> +	/* Nothing to do for clocking rate 2M  */
+> +
+> +	/* clocking rate 4M  */
+> +	if (priv->clock_rate == CLOCK_RATE_4M)
+> +		pef2256_s8(priv, SIC1, SIC1_SSC0);
+> +
+> +	/* clocking rate 8M  */
+> +	if (priv->clock_rate == CLOCK_RATE_8M)
+> +		pef2256_s8(priv, SIC1, SIC1_SSC1);
+> +
+> +	/* clocking rate 16M  */
+> +	if (priv->clock_rate == CLOCK_RATE_16M) {
+> +		pef2256_s8(priv, SIC1, SIC1_SSC0);
+> +		pef2256_s8(priv, SIC1, SIC1_SSC1);
+> +	}
+> +
+> +	/* data rate for FALC56 */
+> +
+> +	/* Nothing to do for data rate 2M on the system data bus */
+> +
+> +	/* data rate 4M on the system data bus */
+> +	if (priv->data_rate == DATA_RATE_4M)
+> +		pef2256_s8(priv, FMR1, FMR1_SSD0);
+> +
+> +	/* data rate 8M on the system data bus */
+> +	if (priv->data_rate == DATA_RATE_8M)
+> +		pef2256_s8(priv, SIC1, SIC1_SSD1);
+> +
+> +	/* data rate 16M on the system data bus */
+> +	if (priv->data_rate == DATA_RATE_16M) {
+> +		pef2256_s8(priv, FMR1, FMR1_SSD0);
+> +		pef2256_s8(priv, SIC1, SIC1_SSD1);
+> +	}
+> +
+> +	/* channel phase for FALC56 */
+> +
+> +	/* Nothing to do for channel phase 1 */
+> +
+> +	if (priv->channel_phase == CHANNEL_PHASE_2)
+> +		pef2256_s8(priv, SIC2, SIC2_SICS0);
+> +
+> +	if (priv->channel_phase == CHANNEL_PHASE_3)
+> +		pef2256_s8(priv, SIC2, SIC2_SICS1);
+> +
+> +	if (priv->channel_phase == CHANNEL_PHASE_4) {
+> +		pef2256_s8(priv, SIC2, SIC2_SICS0);
+> +		pef2256_s8(priv, SIC2, SIC2_SICS1);
+> +	}
+> +
+> +	if (priv->channel_phase == CHANNEL_PHASE_5)
+> +		pef2256_s8(priv, SIC2, SIC2_SICS2);
+> +
+> +	if (priv->channel_phase == CHANNEL_PHASE_6) {
+> +		pef2256_s8(priv, SIC2, SIC2_SICS0);
+> +		pef2256_s8(priv, SIC2, SIC2_SICS2);
+> +	}
+> +
+> +	if (priv->channel_phase == CHANNEL_PHASE_7) {
+> +		pef2256_s8(priv, SIC2, SIC2_SICS1);
+> +		pef2256_s8(priv, SIC2, SIC2_SICS2);
+> +	}
+> +
+> +	if (priv->channel_phase == CHANNEL_PHASE_8) {
+> +		pef2256_s8(priv, SIC2, SIC2_SICS0);
+> +		pef2256_s8(priv, SIC2, SIC2_SICS1);
+> +		pef2256_s8(priv, SIC2, SIC2_SICS2);
+> +	}
+
+> +static ssize_t fs_attr_mode_store(struct device *dev,
+> +			struct device_attribute *attr,  const char *buf,
+> +			size_t count)
+> +{
+> +	struct net_device *ndev = dev_get_drvdata(dev);
+> +	struct pef2256_dev_priv *priv = dev_to_hdlc(ndev)->priv;
+> +	long int value;
+> +	int ret = kstrtol(buf, 10, &value);
+> +	int reconfigure = (value != priv->mode);
+
+Ugly test and set before determining if the previous
+function was successful.
+
+> +	if (value != MASTER_MODE && value != SLAVE_MODE)
+> +		ret = -EINVAL;
+> +
+> +	if (ret < 0)
+> +		netdev_info(ndev, "Invalid mode (0 or 1 expected\n");
+> +	else {
+> +		priv->mode = value;
+> +		if (reconfigure && netif_carrier_ok(ndev))
+> +			init_falc(priv);
+> +	}
+> +
+> +	return strnlen(buf, count);
+
+odd that you set ret and then don't use it.
+
+
+> +static ssize_t fs_attr_Tx_TS_store(struct device *dev,
+> +			struct device_attribute *attr,  const char *buf,
+> +			size_t count)
+> +{
+> +	struct net_device *ndev = dev_get_drvdata(dev);
+> +	struct pef2256_dev_priv *priv = dev_to_hdlc(ndev)->priv;
+> +	unsigned long value;
+> +	int ret = kstrtoul(buf, 16, (long int *)&value);
+
+unportable cast
+
+> +	int reconfigure = (value != priv->mode);
+
+again with the test/set before determining function success.
