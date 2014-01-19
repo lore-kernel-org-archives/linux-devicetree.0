@@ -1,152 +1,94 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [RFC v3 13/13] ARM: sun7i: dts: Add ahci / sata support
-Date: Sun, 19 Jan 2014 00:48:55 +0100
-Message-ID: <1390088935-7193-14-git-send-email-hdegoede@redhat.com>
-References: <1390088935-7193-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Huang Shijie <shijie8@gmail.com>
+Subject: Re: [PATCH v4 0/7] mtd: spi-nor: add a new framework for SPI NOR
+Date: Sun, 19 Jan 2014 10:28:52 +0800
+Message-ID: <52DB3864.2040606@gmail.com>
+References: <1387950629-27448-1-git-send-email-b32955@freescale.com> <CAD6G_RTnNQgeJM8Tc16Sc1_n29d=V9sJN1ePrOAn5YzM+GujMQ@mail.gmail.com> <52D7A237.8@freescale.com> <CAD6G_RRNg-uRtKnnVgJYpUGPsKecAUm9mwETVJsCsaGSuL2eCw@mail.gmail.com> <20140117020226.GB27652@shlinux2.ap.freescale.net> <CAD6G_RR7vgmHGFj4GqwCYLQQO6tbsZAeCzVBivbcxnCGSwgiWQ@mail.gmail.com> <20140117065401.GA6140@shlinux2.ap.freescale.net> <CAD6G_RSF_TPk8g9CNmSc+xs+9psLmJoakZw3Eqf-a8KD5P4AVg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBDVG5SLAKGQEYEYDJOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1390088935-7193-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAD6G_RSF_TPk8g9CNmSc+xs+9psLmJoakZw3Eqf-a8KD5P4AVg@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Jagan Teki <jagannadh.teki@gmail.com>, Huang Shijie <b32955@freescale.com>
+Cc: angus.clark@st.com, Brian Norris <computersforpeace@gmail.com>, b44548@freescale.com, linux-doc@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@linaro.org>, b18965@freescale.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, "Gupta, Pekon" <pekon@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, Shawn Guo <shawn.guo@linaro.org>, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds sunxi sata support to A20 boards that have such a connector.
-Some boards also feature a regulator via a GPIO and support for this is also
-added.
 
-Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20-cubieboard2.dts     |  6 ++++++
- arch/arm/boot/dts/sun7i-a20-cubietruck.dts      | 20 ++++++++++++++++++++
- arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts |  6 ++++++
- arch/arm/boot/dts/sun7i-a20.dtsi                |  8 ++++++++
- 4 files changed, 40 insertions(+)
+=E4=BA=8E 2014=E5=B9=B401=E6=9C=8817=E6=97=A5 16:39, Jagan Teki =E5=86=99=
+=E9=81=93:
+> On Fri, Jan 17, 2014 at 12:24 PM, Huang Shijie <b32955@freescale.com>=
+ wrote:
+>> On Fri, Jan 17, 2014 at 12:36:08PM +0530, Jagan Teki wrote:
+>>>>> My basic question is like I have a qspi spi controller in my SOC =
+and I
+>>>>> designed two boards B1 and B2
+>>>> okay.
+>>>>
+>>>>> B1 with quad spi controller connected with non-flash as a slave a=
+nd B2
+>>>>> with quad spi controller connected
+>>>>> with quad flash as a slave.
+>>>> You can use the framework for B2. But for B1, you should not use t=
+he framework,
+>>>> since this framework is just for the SPI-NOR. If you do not connec=
+ted with
+>>>> a NOR, i think it's better to code another driver for your control=
+ler.
+>>> Means we have two separate controller drivers for same controller o=
+ne
+>>> with spi-nor and
+>>> another with spi is it?
+>> Take drivers/spi/spi-imx.c for example, if you connect a NOR to it, =
+you only
+>> need to add a NOR device node in the device tree. In the probe, it w=
+ill call
+>> the m25p80.c to probe the NOR device.
+>>
+>> But if we connect other device to it. you should set another device =
+node for it.
+>>
+>> I am not sure if your controller driver can works as the spi-imx.c
+> My question here was - this new framework suggest to write a two
+> different controller
+> drivers one is for non spi-nor and spi-nor models? do you agree that?
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-index 48777cd..785fac0 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-@@ -13,6 +13,7 @@
- 
- /dts-v1/;
- /include/ "sun7i-a20.dtsi"
-+/include/ "sunxi-ahci-reg.dtsi"
- 
- / {
- 	model = "Cubietech Cubieboard2";
-@@ -28,6 +29,11 @@
- 			status = "okay";
- 		};
- 
-+		sata: ahci@01c18000 {
-+			target-supply = <&reg_ahci_5v>;
-+			status = "okay";
-+		};
-+
- 		pinctrl@01c20800 {
- 			mmc0_cd_pin_cubieboard2: mmc0_cd_pin@0 {
- 				allwinner,pins = "PH1";
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-index 2684f27..68e0809 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-@@ -13,6 +13,7 @@
- 
- /dts-v1/;
- /include/ "sun7i-a20.dtsi"
-+/include/ "sunxi-ahci-reg.dtsi"
- 
- / {
- 	model = "Cubietech Cubietruck";
-@@ -28,6 +29,11 @@
- 			status = "okay";
- 		};
- 
-+		sata: ahci@01c18000 {
-+			target-supply = <&reg_ahci_5v>;
-+			status = "okay";
-+		};
-+
- 		pinctrl@01c20800 {
- 			mmc0_cd_pin_cubietruck: mmc0_cd_pin@0 {
- 				allwinner,pins = "PH1";
-@@ -36,6 +42,13 @@
- 				allwinner,pull = <0>;
- 			};
- 
-+			ahci_pwr_pin_cubietruck: ahci_pwr_pin@1 {
-+				allwinner,pins = "PH12";
-+				allwinner,function = "gpio_out";
-+				allwinner,drive = <0>;
-+				allwinner,pull = <0>;
-+			};
-+
- 			led_pins_cubietruck: led_pins@0 {
- 				allwinner,pins = "PH7", "PH11", "PH20", "PH21";
- 				allwinner,function = "gpio_out";
-@@ -84,4 +97,11 @@
- 			gpios = <&pio 7 7 0>;
- 		};
- 	};
-+
-+	regulators {
-+		reg_ahci_5v: ahci-5v {
-+			pinctrl-0 = <&ahci_pwr_pin_cubietruck>;
-+			gpio = <&pio 7 12 0>;
-+		};
-+	};
- };
-diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
-index bf6f6c8..8a289c4 100644
---- a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
-@@ -13,6 +13,7 @@
- 
- /dts-v1/;
- /include/ "sun7i-a20.dtsi"
-+/include/ "sunxi-ahci-reg.dtsi"
- 
- / {
- 	model = "Olimex A20-Olinuxino Micro";
-@@ -37,6 +38,11 @@
- 			status = "okay";
- 		};
- 
-+		sata: ahci@01c18000 {
-+			target-supply = <&reg_ahci_5v>;
-+			status = "okay";
-+		};
-+
- 		pinctrl@01c20800 {
- 			mmc0_cd_pin_olinuxinom: mmc0_cd_pin@0 {
- 				allwinner,pins = "PH1";
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index c9c123a..fc1be33 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -347,6 +347,14 @@
- 			status = "disabled";
- 		};
- 
-+		sata: ahci@01c18000 {
-+			compatible = "allwinner,sun4i-a10-ahci";
-+			reg = <0x01c18000 0x1000>;
-+			interrupts = <0 56 1>;
-+			clocks = <&pll6 0>, <&ahb_gates 25>;
-+			status = "disabled";
-+		};
-+
- 		pio: pinctrl@01c20800 {
- 			compatible = "allwinner,sun7i-a20-pinctrl";
- 			reg = <0x01c20800 0x400>;
--- 
-1.8.4.2
+
+If your controller can either connects to a NOR, or can connects to=20
+other devices, it means your controller is a _BUS_.
+You just need to write the bus driver for your controller, such as the=20
+spi-imx.c and drivers/bus/imx-weim.c do.
+
+Since you have connect a device to your controller. you also need to=20
+write a driver for your device, such as the m25p80.c is
+for your spi nor device.
+
+Just think about that how do you code your driver for SPI NOR _without_=
+=20
+this framework:
+do your driver need to call the m25p80.c? if you do call the m25p80.c,=20
+you actually write your so-called "two drivers" :)
+
+
+This framework does not change any logic for the current kernel, except=
+=20
+adding a layer. With the new layer, we can code the
+driver for the controllers which is a SPI-NOR controller, not a SPI bus=
+=20
+controller.
+
+
+>
+> And also one important note from your design was spi-nor mode is
+> completely bypassing
+> Linux spi core is that the good idea?
+>
+yes. I think it's a good idea.
+
+As Mark even pointed, the freescale's Quadspi controller is not a SPI=20
+controller, it is a SPI-NOR controller, it does _not_ need the
+LINUX SPI core.
+
+
+thanks
+Huang Shijie
