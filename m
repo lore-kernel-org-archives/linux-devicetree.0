@@ -1,69 +1,43 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] libata, dt: Add clocks to sata_rcar bindings
-Date: Sun, 19 Jan 2014 21:16:42 +0100
-Message-ID: <2218997.BjldcaRU33@avalon>
-References: <1389910062-17777-1-git-send-email-valentine.barshak@cogentembedded.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: PWM...
+Date: Sun, 19 Jan 2014 21:26:40 +0100
+Message-ID: <201401192126.41543.arnd@arndb.de>
+References: <20140119164956.GR15937@n2100.arm.linux.org.uk> <CAOesGMi7g=PHjzhkuObkeu+P_c6kUz5uFcND7euafUW56CvsnQ@mail.gmail.com> <20140119193026.GS15937@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1389910062-17777-1-git-send-email-valentine.barshak@cogentembedded.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Valentine Barshak <valentine.barshak@cogentembedded.com>
-Cc: linux-sh@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Tejun Heo <tj@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20140119193026.GS15937@n2100.arm.linux.org.uk>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, "arm@kernel.org" <arm@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Valentine,
+On Sunday 19 January 2014, Russell King - ARM Linux wrote:
+> On Sun, Jan 19, 2014 at 11:11:41AM -0800, Olof Johansson wrote:
+> > On Sun, Jan 19, 2014 at 11:08 AM, Arnd Bergmann <arnd@arndb.de> wrote:
 
-Thank you for the patch.
-
-On Friday 17 January 2014 02:07:42 Valentine Barshak wrote:
-> Now that the clocks are available in the R-Car Gen2 DT,
-> add clocks property description to the sata_rcar bindings.
-> The clocks have been tested on r8a7791 so we use that
-> as an example of the R-Car SATA node.
+> > Ah, yes, if you add a cell that can be done. There'll still be the
+> > "dead" first cell that will always be 0, but that's alright.
 > 
-> The patch is against for-next branch of the libata git repo.
+> Does it not mean that PWM specifications of:
 > 
-> Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
-> ---
->  Documentation/devicetree/bindings/ata/sata_rcar.txt | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
+>         <&pwm1 0 n> <&pwm2 0 n>
 > 
-> diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt
-> b/Documentation/devicetree/bindings/ata/sata_rcar.txt index
-> 1e61113..6da60c0 100644
-> --- a/Documentation/devicetree/bindings/ata/sata_rcar.txt
-> +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
-> @@ -7,12 +7,14 @@ Required properties:
->  			  - "renesas,sata-r8a7791" for R-Car M2
->  - reg			: address and length of the SATA registers;
->  - interrupts		: must consist of one interrupt specifier.
-> +- clocks		: must contain a phandle and clock-specifier pair.
-
-I would say "must contain a reference to the functional clock.", as the clock 
-could be referenced by a phandle only depending on the SATA IP core 
-integration in the SoC.
-
-Wouldn't it be time to have standard wordings for clocks (and interrupt) 
-bindings ? 
-
->  Example:
+> would need to be converted to:
 > 
-> -sata: sata@fc600000 {
-> -	compatible = "renesas,sata-r8a7779";
-> -	reg = <0xfc600000 0x2000>;
-> +sata0: sata@ee300000 {
-> +	compatible = "renesas,sata-r8a7791";
-> +	reg = <0 0xee300000 0 0x2000>;
->  	interrupt-parent = <&gic>;
-> -	interrupts = <0 100 IRQ_TYPE_LEVEL_HIGH>;
-> +	interrupts = <0 105 IRQ_TYPE_LEVEL_HIGH>;
-> +	clocks = <&mstp8_clks R8A7791_CLK_SATA0>;
->  };
+>         <&pwm1 0 n 0> <&pwm2 0 n 0>
+> 
+> in every DT file referring to these PWMs - because isn't this just
+> treated in DT as one single array of values?  (If DT knew how many
+> were in each specification, we wouldn't need the #foo-cells...)
 
--- 
-Regards,
+Right: if you change an existing dts file from #pwm-cells=<2> to
+#pwm-cells=<3>, that requires changing all references to the pwm
+controller at the same time. If both the per-soc .dtsi files
+and the per-board .dts files contain references to the same pwm
+controller, that can end up in significant work. I have not checked
+if this is the case for i.MX though.
 
-Laurent Pinchart
-
+	Arnd
