@@ -1,59 +1,58 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: PWM...
-Date: Sun, 19 Jan 2014 19:30:26 +0000
-Message-ID: <20140119193026.GS15937@n2100.arm.linux.org.uk>
-References: <20140119164956.GR15937@n2100.arm.linux.org.uk> <20140119190324.GC28056@quad.lixom.net> <59642204.3UzJCDJHaS@wuerfel> <CAOesGMi7g=PHjzhkuObkeu+P_c6kUz5uFcND7euafUW56CvsnQ@mail.gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC v3 10/13] ahci_imx: Adjust for ahci_platform
+ managing the clocks
+Date: Sun, 19 Jan 2014 20:30:37 +0100
+Message-ID: <52DC27DD.5030309@redhat.com>
+References: <1390088935-7193-1-git-send-email-hdegoede@redhat.com> <1390088935-7193-11-git-send-email-hdegoede@redhat.com> <20140119124134.GQ15937@n2100.arm.linux.org.uk>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAOesGMi7g=PHjzhkuObkeu+P_c6kUz5uFcND7euafUW56CvsnQ@mail.gmail.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, "arm@kernel.org" <arm@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRB2OP6CLAKGQE4V4DF2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140119124134.GQ15937-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 19, 2014 at 11:11:41AM -0800, Olof Johansson wrote:
-> On Sun, Jan 19, 2014 at 11:08 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Sunday 19 January 2014 11:03:24 Olof Johansson wrote:
-> >> >
-> >> > Yes, because iMX6 specifies #pwm-cells as 2, there's no flags able to
-> >> > be specified in the pwms declaration in pwmleds.  So that doesn't work.
-> >> > There's no property to tell pwmleds that it should use inverted sense
-> >> > either.
-> >>
-> >> Adding a property for active-low to the pwm-leds binding would be
-> >> easy, and backwards compatible. I'm surprised the original binding
-> >> didn't specify it. The leds-pwm driver already seems to support it for
-> >> C-configured instances.
-> >>
-> >> I'm also surprised that the imx pwm driver even has a #pwm-cells of
-> >> two, since the driver only supports one output. It'd be nice if they
-> >> had allocated the extra cell for flags, but it's hard to change now,
-> >> unless you do a new binding/compatible value and deprecate the old one.
-> >
-> > Actually I think it's not that hard to change: The binding can specify
-> > that either #pwm-cells=<2> or #pwm-cells=<3> is supported, and the
-> > driver extended to handle both cases. This would maintain backwards
-> > compatibility for old dtb files, though no forward compatibility for
-> > new dtb files with old kernels.
-> 
-> Ah, yes, if you add a cell that can be done. There'll still be the
-> "dead" first cell that will always be 0, but that's alright.
+Hi,
 
-Does it not mean that PWM specifications of:
+On 01/19/2014 01:41 PM, Russell King - ARM Linux wrote:
+> On Sun, Jan 19, 2014 at 12:48:52AM +0100, Hans de Goede wrote:
+>> +enum {
+>> +	CLK_SATA,
+>> +	CLK_SATA_REF,
+>> +	CLK_AHB
+>> +};
+>
+> Err, so we now rely on the order that these clocks are specified in DT
+> rather than their name properties to provide the correct clock... that
+> sounds particularly fragile to me.
 
-	<&pwm1 0 n> <&pwm2 0 n>
+Both in the ohci- / ehci-platform case, where the idea of purely addressing
+clocks by index comes from, as well as in the ahci-platform case, people
+have been asking me to make things more generic, so as to avoid having
+a gazillion almost but not quite the same ehci-foo platform drivers.
 
-would need to be converted to:
+This has already happened with ohci-foo.c drivers, and the hope is that
+with the new generalized ohci-plaform.c many of the existing ohci-foo
+drivers can go away over time.
 
-	<&pwm1 0 n 0> <&pwm2 0 n 0>
+The downside of this generalized approach is that we cannot use clock-names
+since those tend to be implementation specific.
 
-in every DT file referring to these PWMs - because isn't this just
-treated in DT as one single array of values?  (If DT knew how many
-were in each specification, we wouldn't need the #foo-cells...)
+In the specific case of the ahci-imx driver this means that certain clocks
+must be at a specific index, since it needs to know which one is the AHB
+clock, as documented in the bindings documentation. I don't see how mandating
+certain indices is different and/or more fragile then mandating certain names
+in the bindings document. I agree that is is slightly less clear to someone
+reading the dts, but that is the price we have to pay for this desire for
+things to be generic.
 
--- 
-FTTC broadband for 0.8mile line: 5.8Mbps down 500kbps up.  Estimation
-in database were 13.1 to 19Mbit for a good line, about 7.5+ for a bad.
-Estimate before purchase was "up to 13.2Mbit".
+Regards,
+
+Hans
