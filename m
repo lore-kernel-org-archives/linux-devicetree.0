@@ -1,100 +1,45 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: move flexcan1 configuration to hummingboard
-Date: Sun, 19 Jan 2014 11:26:15 +0800
-Message-ID: <20140119032613.GE16158@S2101-09.ap.freescale.net>
-References: <20140116182211.GX15937@n2100.arm.linux.org.uk>
- <E1W3rab-00009u-5I@rmk-PC.arm.linux.org.uk>
+From: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC v3 01/13] libahci: Allow drivers to override start_engine
+Date: Sat, 18 Jan 2014 23:46:43 -0500
+Message-ID: <20140119044643.GH3640@htj.dyndns.org>
+References: <1390088935-7193-1-git-send-email-hdegoede@redhat.com>
+ <1390088935-7193-2-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDQ2FCEAWYLRBN5R5WLAKGQETSN3SPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1390088935-7193-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <E1W3rab-00009u-5I-eh5Bv4kxaXIANfyc6IWni62ZND6+EDdj@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 16, 2014 at 06:22:49PM +0000, Russell King wrote:
-> Flexcan1 is not used on the cubox-i, so move it out of the microsom.
-> 
-> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Hello, Hans.
 
-The patch will not apply against the branch/tag - imx-dt-3.14 I'm
-sending to arm-soc.  Please re-generate it against the tag.
-
-Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-> ---
->  arch/arm/boot/dts/imx6dl-hummingboard.dts | 13 +++++++++++++
->  arch/arm/boot/dts/imx6qdl-microsom.dtsi   | 13 -------------
->  2 files changed, 13 insertions(+), 13 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6dl-hummingboard.dts b/arch/arm/boot/dts/imx6dl-hummingboard.dts
-> index 6184b0366926..e22f3d855c02 100644
-> --- a/arch/arm/boot/dts/imx6dl-hummingboard.dts
-> +++ b/arch/arm/boot/dts/imx6dl-hummingboard.dts
-> @@ -36,6 +36,12 @@
->  	};
->  };
+On Sun, Jan 19, 2014 at 12:48:43AM +0100, Hans de Goede wrote:
+>  void ahci_start_engine(struct ata_port *ap)
+>  {
+>  	void __iomem *port_mmio = ahci_port_base(ap);
+> +	struct ahci_host_priv *hpriv = ap->host->private_data;
+>  	u32 tmp;
 >  
-> +&can1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_hummingboard_flexcan1>;
-> +	status = "okay";
-> +};
+> +	if (hpriv->start_engine) {
+> +		hpriv->start_engine(ap);
+> +		return;
+> +	}
 > +
->  &i2c1 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_i2c1_1>;
-> @@ -53,6 +59,13 @@
->  
->  &iomuxc {
->  	hummingboard {
-> +		pinctrl_hummingboard_flexcan1: hummingboard-flexcan1 {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_SD3_CLK__FLEXCAN1_RX 0x80000000
-> +				MX6QDL_PAD_SD3_CMD__FLEXCAN1_TX 0x80000000
-> +			>;
-> +		};
-> +
->  		pinctrl_hummingboard_gpio1_2: hummingboard-gpio1_2 {
->  			fsl,pins = <
->  				MX6QDL_PAD_GPIO_2__GPIO1_IO02 0x80000000
-> diff --git a/arch/arm/boot/dts/imx6qdl-microsom.dtsi b/arch/arm/boot/dts/imx6qdl-microsom.dtsi
-> index 8aa31a842236..965ac4c1f509 100644
-> --- a/arch/arm/boot/dts/imx6qdl-microsom.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-microsom.dtsi
-> @@ -36,21 +36,8 @@
->  	};
->  };
->  
-> -&can1 {
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&pinctrl_microsom_flexcan1>;
-> -	status = "okay";
-> -};
-> -
->  &iomuxc {
->  	microsom {
-> -		pinctrl_microsom_flexcan1: microsom-flexcan1 {
-> -			fsl,pins = <
-> -				MX6QDL_PAD_SD3_CLK__FLEXCAN1_RX 0x80000000
-> -				MX6QDL_PAD_SD3_CMD__FLEXCAN1_TX 0x80000000
-> -			>;
-> -		};
-> -
->  		pinctrl_microsom_usbotg: microsom-usbotg {
->  			/*
->  			 * Similar to pinctrl_usbotg_2, but we want it
-> -- 
-> 1.8.3.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'd much prefer if the driver always calls hpriv->start_engine() which
+is initialized to the default callback during common init and then
+overridden if necessary.
+
+Thanks.
+
+-- 
+tejun
