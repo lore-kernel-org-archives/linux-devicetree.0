@@ -1,53 +1,54 @@
-From: Huang Shijie <shijie8@gmail.com>
-Subject: Re: [PATCH v4 0/7] mtd: spi-nor: add a new framework for SPI NOR
-Date: Sun, 19 Jan 2014 10:44:06 +0800
-Message-ID: <20140119024405.GA2321@gmail.com>
-References: <1387950629-27448-1-git-send-email-b32955@freescale.com>
- <CAD6G_RTnNQgeJM8Tc16Sc1_n29d=V9sJN1ePrOAn5YzM+GujMQ@mail.gmail.com>
- <52D7A237.8@freescale.com>
- <CAD6G_RRNg-uRtKnnVgJYpUGPsKecAUm9mwETVJsCsaGSuL2eCw@mail.gmail.com>
- <20140117020226.GB27652@shlinux2.ap.freescale.net>
- <CAD6G_RR7vgmHGFj4GqwCYLQQO6tbsZAeCzVBivbcxnCGSwgiWQ@mail.gmail.com>
- <20140117065401.GA6140@shlinux2.ap.freescale.net>
- <CAD6G_RSF_TPk8g9CNmSc+xs+9psLmJoakZw3Eqf-a8KD5P4AVg@mail.gmail.com>
- <CAD6G_RT1m+7BWZyYqU7Pb2+bhki-Wqs6f96=GhMyF1nHyy2wuw@mail.gmail.com>
- <20980858CB6D3A4BAE95CA194937D5E73EA664C6@DBDE04.ent.ti.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH v7 0/2] ohci and ehci-platform clks, phy and
+ dt support
+Date: Sat, 18 Jan 2014 21:49:22 -0500 (EST)
+Message-ID: <Pine.LNX.4.44L0.1401182131290.28218-100000@netrider.rowland.org>
+References: <52DAA9F4.2090601@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73EA664C6@DBDE04.ent.ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Gupta, Pekon" <pekon@ti.com>
-Cc: Huang Shijie <b32955@freescale.com>, "angus.clark@st.com" <angus.clark@st.com>, Brian Norris <computersforpeace@gmail.com>, "b44548@freescale.com" <b44548@freescale.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@linaro.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "Poddar, Sourav" <sourav.poddar@ti.com>, Shawn Guo <shawn.guo@linaro.org>, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jagan Teki <jagannadh.teki@gmail.com>
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBD6LRVPZ6YGRBM725SLAKGQEPH5EJ4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <52DAA9F4.2090601-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 17, 2014 at 05:40:09PM +0000, Gupta, Pekon wrote:
-> Hi Shijie,
-> 
-> >From: Jagan Teki [mailto:jagannadh.teki@gmail.com]
-> [...]
-> >
-> >I feel these are good points to discuss all.
-> >1. With new framework seems like we need two separate controller drivers
-> >    one for non spi-nor and one for spi-nor with single controller hw
-> >2. With spi-nor implementation though the hw is spi complaint but the sw is
-> >   completely ignoring the Linux SPI core interaction.
-> >
-> >I feel above two points are technically wrong - Please correct me if am wrong
-> >but need all developers will join..thanks!
-> >
-> I have been following this patch-set from sometime, And I think point (2)
-> has been discussed back and forth in multiple times in earlier discussions.
-> So, Is it possible for you to summarize point (2) with all pros-n-cons ?
-> 
-> - A README will helpful to clear all doubts and will ease your implementation
->   as well.
-> - It will also help in reducing turn-around time to get this framework in
->    acceptable state and still keep it generic enough.
-> 
-> You can submit the README as Documentation/mtd/spi-nor.txt
-okay.
+On Sat, 18 Jan 2014, Hans de Goede wrote:
 
-thanks
-Huang Shijie
+> > A simple copy from the PPC driver isn't quite enough, because the
+> > platform data settings would override the DT values.
+> > ehci_platform_reset has to be changed so that it sets
+> > ehci->big_endian_desc and _mmio if the pdata flags are set, but
+> > otherwise leaves them alone.
+> >
+> > Hans, would you like to write another patch to take care of this?
+> 
+> I already took a quick look at this, setting the ehci->big_endian* flags is easy,
+> the problem is that they won't work unless we also define
+> CONFIG_USB_EHCI_BIG_ENDIAN_DESC and CONFIG_USB_EHCI_BIG_ENDIAN_MMIO
+
+That's right.  The platforms have to define those symbols if they use 
+big-endian values (or even worse, mixed endian).
+
+> I would like to avoid doing something like the ugliness we've with
+> USB_OHCI_HCD_PPC_OF_BE and USB_OHCI_HCD_PPC_OF_LE, which means just selecting these
+> 2 config options whenever USB_EHCI_HCD_PLATFORM is enabled, but I'm not sure if that
+> is acceptable.
+
+At the moment, I don't think it's so terrible.  That ohci_ppc ugliness
+probably could have been avoided originally.  It looks like an attempt
+to make sure you don't end up matching the hardware to a driver built
+with the wrong endianness.  I imagine it would be less messy to detect 
+that sort of problem at runtime.
+
+> The same goes for the ohci code btw.
+
+Certainly.
+
+Alan Stern
