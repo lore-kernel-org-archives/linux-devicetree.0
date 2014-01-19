@@ -1,39 +1,51 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: PWM...
-Date: Sun, 19 Jan 2014 20:08:24 +0100
-Message-ID: <59642204.3UzJCDJHaS@wuerfel>
-References: <20140119164956.GR15937@n2100.arm.linux.org.uk> <20140119190324.GC28056@quad.lixom.net>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC v3 11/13] ahci-imx: Don't create a nested
+ platform device from probe
+Date: Sun, 19 Jan 2014 20:08:54 +0100
+Message-ID: <52DC22C6.6040806@redhat.com>
+References: <1390088935-7193-1-git-send-email-hdegoede@redhat.com> <1390088935-7193-12-git-send-email-hdegoede@redhat.com> <20140119122540.GN15937@n2100.arm.linux.org.uk>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20140119190324.GC28056@quad.lixom.net>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, arm@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBTWF6CLAKGQETBGBXFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140119122540.GN15937-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 19 January 2014 11:03:24 Olof Johansson wrote:
-> > 
-> > Yes, because iMX6 specifies #pwm-cells as 2, there's no flags able to
-> > be specified in the pwms declaration in pwmleds.  So that doesn't work.
-> > There's no property to tell pwmleds that it should use inverted sense
-> > either.
-> 
-> Adding a property for active-low to the pwm-leds binding would be
-> easy, and backwards compatible. I'm surprised the original binding
-> didn't specify it. The leds-pwm driver already seems to support it for
-> C-configured instances.
-> 
-> I'm also surprised that the imx pwm driver even has a #pwm-cells of
-> two, since the driver only supports one output. It'd be nice if they
-> had allocated the extra cell for flags, but it's hard to change now,
-> unless you do a new binding/compatible value and deprecate the old one.
+Hi,
 
-Actually I think it's not that hard to change: The binding can specify
-that either #pwm-cells=<2> or #pwm-cells=<3> is supported, and the
-driver extended to handle both cases. This would maintain backwards
-compatibility for old dtb files, though no forward compatibility for
-new dtb files with old kernels.
+On 01/19/2014 01:25 PM, Russell King - ARM Linux wrote:
+> On Sun, Jan 19, 2014 at 12:48:53AM +0100, Hans de Goede wrote:
+>> Instead only provide platform_data through of_device_id, like the ahci-sunxi
+>> driver does.
+>
+> It looks like the whole of ahci_imx.c (apart from the inclues) is
+> enclosed in a big ifdef.  You can avoid that by using this in the
+> Makefile:
+>
+>> @@ -10,9 +10,8 @@ obj-$(CONFIG_SATA_INIC162X)	+= sata_inic162x.o
+>>   obj-$(CONFIG_SATA_SIL24)	+= sata_sil24.o
+>>   obj-$(CONFIG_SATA_DWC)		+= sata_dwc_460ex.o
+>>   obj-$(CONFIG_SATA_HIGHBANK)	+= sata_highbank.o libahci.o
+>> -obj-$(CONFIG_AHCI_IMX)		+= ahci_imx.o
+>>
+>> -ahci_plat-objs := ahci_platform.o ahci_sunxi.o
+>> +ahci_plat-objs := ahci_platform.o ahci_imx.o ahci_sunxi.o
+>
+> ahci_plat-y := ahci_platform.o ahci_sunxi.o
+> ahci_plat-$(CONFIG_AHCI_IMX) += ahci_imx.o
+>
 
-	Arnd
+Ah, good idea, the same goes for the sunxi bits. I'll fix this in the next
+revision of the patch-set.
+
+Regards,
+
+Hans
