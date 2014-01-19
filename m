@@ -1,45 +1,56 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH 0/2] DT updates for Hummingboard and new Cubox-i
-Date: Sun, 19 Jan 2014 10:52:46 -0800
-Message-ID: <20140119185246.GB28056@quad.lixom.net>
-References: <20140116182211.GX15937@n2100.arm.linux.org.uk>
- <20140119031816.GD16158@S2101-09.ap.freescale.net>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC v3 08/13] ahci-platform: Allow specifying
+ platform_data through of_device_id
+Date: Sun, 19 Jan 2014 19:56:53 +0100
+Message-ID: <52DC1FF5.80101@redhat.com>
+References: <1390088935-7193-1-git-send-email-hdegoede@redhat.com> <1390088935-7193-9-git-send-email-hdegoede@redhat.com> <20140119113838.GE11123@htj.dyndns.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140119031816.GD16158-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRB7F76CLAKGQEAP3VGPI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140119113838.GE11123-Gd/HAXX7CRxy/B6EtB590w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 19, 2014 at 11:18:18AM +0800, Shawn Guo wrote:
-> On Thu, Jan 16, 2014 at 06:22:12PM +0000, Russell King - ARM Linux wrote:
-> > Now that the Cubox-i has been released, and I have one, I've been able to
-> > update things a little.  Out of the following two patches, the first one
-> > I think is critical to be merged before the microsom support hits
-> > mainline, since it drops the flexcan support from the microsom level,
-> > moving it to the Hummingboard level.
-> 
-> I will be out of town for a few days, and won't be online until next
-> weekend.  So please send the patch directly to arm-soc folks, so that
-> they can send it together with imx-dt-3.14 stuff.
-> 
-> arm-soc folks, please take this as another ping for my imx-dt-3.14 pull
-> request :)
+Hi,
 
-I'm well aware that the DT branch has not been merged, and that's because
-there has been no consensus from DT maintainers on the massive rework
-you did as the base of the branch.
+On 01/19/2014 12:38 PM, Tejun Heo wrote:
+> On Sun, Jan 19, 2014 at 12:48:50AM +0100, Hans de Goede wrote:
+>> @@ -126,7 +151,7 @@ static void ahci_put_clks(struct ahci_host_priv *hpriv)
+>>   static int ahci_probe(struct platform_device *pdev)
+>>   {
+>>   	struct device *dev = &pdev->dev;
+>> -	struct ahci_platform_data *pdata = dev_get_platdata(dev);
+>> +	const struct ahci_platform_data *pdata = ahci_get_pdata(dev);
+>
+> Let's please not add const.  For data types which are known to be
+> terminal, const more or less works, I suppose but for anything even
+> mildly complicated it ends up being more of a headache.  C just
+> doesn't have enough language support to make const actually useful.
+> e.g. now if somebody wants to add an accessor to ahci_platform_data()
+> which is applicable to both readers and writers, we either need two
+> separate accessors for const and !const paths or have to cast away
+> const.
 
-Given the timing, it's not looking like it will be resolved in time for
-the 3.14 merge window (which might open today).
+The problem is that:
 
+1) of_match_device returns const, so without the const the code would need
+to cast that const away somewhere
+2) of_match_device is right to return const because
+2a) the data can actually be const
+2b) even if not const, it is shared between multiple instances of the same
+device-type and thus should never be written too
 
+So as Russell already said, the use of const is correct here, and the best
+thing to do is to simply keep it.
 
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+
+Hans
