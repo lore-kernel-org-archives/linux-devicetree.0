@@ -1,37 +1,90 @@
-From: Sherman Yin <syin@broadcom.com>
-Subject: Re: [PATCH v4 3/4] ARM: pinctrl: Add Broadcom Capri pinctrl driver
-Date: Mon, 20 Jan 2014 11:14:57 -0800
-Message-ID: <52DD75B1.3090701@broadcom.com>
-References: <1386787041-6035-1-git-send-email-syin@broadcom.com>	<1387592016-13740-1-git-send-email-syin@broadcom.com>	<1387592016-13740-4-git-send-email-syin@broadcom.com>	<CACRpkdaPZrR=kEknr3YKDWLd_E+o22Yn19ei7iT6cdbYdbeZ2w@mail.gmail.com>	<52D98B99.5050604@broadcom.com>	<20140118025600.GS31049@beef> <CACRpkdYAANtY=9QtDnYNZLSrF09nTWUH4nK5oJ7mzznS+_=bHA@mail.gmail.com>
+From: Luis Henriques <luis.henriques@canonical.com>
+Subject: [PATCH] powerpc/mpic: Fix build errors for CONFIG_MPIC_WEIRD
+Date: Mon, 20 Jan 2014 19:42:16 +0000
+Message-ID: <20140120194212.GA5684@hercules>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYAANtY=9QtDnYNZLSrF09nTWUH4nK5oJ7mzznS+_=bHA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Matt Porter <mporter@linaro.org>
-Cc: "arm@kernel.org" <arm@kernel.org>, Mark Brown <broonie@kernel.org>, Rob Herring <rob.herring@calxeda.com>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Scott Wood <scottwood@freescale.com>, Wang Dongsheng <dongsheng.wang@freescale.com>, Jia Hongtao <hongtao.jia@freescale.com>, Alexander Gordeev <agordeev@redhat.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 14-01-20 12:16 AM, Linus Walleij wrote:
-> On Sat, Jan 18, 2014 at 3:56 AM, Matt Porter <mporter@linaro.org> wrote:
->
->> I wonder if Linus would accept a rename at this point (too late for 3.14
->> presumably, but for 3.15) of s/capri/bcm281xx throughout, bcm11351 for
->> the compatible string, as we have for the machine compatible, and also
->> BCM281XX for the Kconfig option.
->
-> Yes, if there is some consensus that this is what we want to do.
->
-> I can certainly merge that during the 3.14-rc phase for that matter.
+When CONFIG_MPIC_WEIRD is defined, the following build error occurs:
 
-Hi Linus,
+arch/powerpc/sysdev/mpic.c: In function 'mpic_set_irq_type':
+arch/powerpc/sysdev/mpic.c:892:9: error: case label does not reduce to an integer constant
+         MPIC_INFO(VECPRI_POLARITY_POSITIVE):
+         ^
+arch/powerpc/sysdev/mpic.c:896:9: error: case label does not reduce to an integer constant
+         MPIC_INFO(VECPRI_POLARITY_NEGATIVE):
+         ^
+arch/powerpc/sysdev/mpic.c:900:9: error: case label does not reduce to an integer constant
+         MPIC_INFO(VECPRI_POLARITY_POSITIVE):
+         ^
+arch/powerpc/sysdev/mpic.c:904:9: error: case label does not reduce to an integer constant
+         MPIC_INFO(VECPRI_POLARITY_NEGATIVE):
+         ^
 
-I'll confirm the new name with Matt before sending out another patch. 
-Which would work better for you - a) a set of patches replacing my 
-previous ones, b) a set of patches on top of my previous ones, c) a 
-single patch on top of my previous ones? d) something else?
+This is because the case labels are built by accessing mpic->hw_set, and not an
+integer constant.
 
-Thanks,
-Sherman
+Fixes: 446f6d06fab0 ("powerpc/mpic: Properly set default triggers")
+Cc: <stable@vger.kernel.org> (3.4+)
+Signed-off-by: Luis Henriques <luis.henriques@canonical.com>
+---
+ arch/powerpc/sysdev/mpic.c | 34 +++++++++++++++-------------------
+ 1 file changed, 15 insertions(+), 19 deletions(-)
 
+diff --git a/arch/powerpc/sysdev/mpic.c b/arch/powerpc/sysdev/mpic.c
+index 0e166ed..e7bf1a2 100644
+--- a/arch/powerpc/sysdev/mpic.c
++++ b/arch/powerpc/sysdev/mpic.c
+@@ -886,25 +886,21 @@ int mpic_set_irq_type(struct irq_data *d, unsigned int flow_type)
+ 
+ 	/* Default: read HW settings */
+ 	if (flow_type == IRQ_TYPE_DEFAULT) {
+-		switch(vold & (MPIC_INFO(VECPRI_POLARITY_MASK) |
+-			       MPIC_INFO(VECPRI_SENSE_MASK))) {
+-			case MPIC_INFO(VECPRI_SENSE_EDGE) |
+-			     MPIC_INFO(VECPRI_POLARITY_POSITIVE):
+-				flow_type = IRQ_TYPE_EDGE_RISING;
+-				break;
+-			case MPIC_INFO(VECPRI_SENSE_EDGE) |
+-			     MPIC_INFO(VECPRI_POLARITY_NEGATIVE):
+-				flow_type = IRQ_TYPE_EDGE_FALLING;
+-				break;
+-			case MPIC_INFO(VECPRI_SENSE_LEVEL) |
+-			     MPIC_INFO(VECPRI_POLARITY_POSITIVE):
+-				flow_type = IRQ_TYPE_LEVEL_HIGH;
+-				break;
+-			case MPIC_INFO(VECPRI_SENSE_LEVEL) |
+-			     MPIC_INFO(VECPRI_POLARITY_NEGATIVE):
+-				flow_type = IRQ_TYPE_LEVEL_LOW;
+-				break;
+-		}
++		unsigned int info;
++		info = vold & (MPIC_INFO(VECPRI_POLARITY_MASK) |
++			       MPIC_INFO(VECPRI_SENSE_MASK));
++		if (info == (MPIC_INFO(VECPRI_SENSE_EDGE) |
++			     MPIC_INFO(VECPRI_POLARITY_POSITIVE)))
++			flow_type = IRQ_TYPE_EDGE_RISING;
++		else if (info == (MPIC_INFO(VECPRI_SENSE_EDGE) |
++				  MPIC_INFO(VECPRI_POLARITY_NEGATIVE)))
++			flow_type = IRQ_TYPE_EDGE_FALLING;
++		else if (info == (MPIC_INFO(VECPRI_SENSE_LEVEL) |
++				  MPIC_INFO(VECPRI_POLARITY_POSITIVE)))
++			flow_type = IRQ_TYPE_LEVEL_HIGH;
++		else if (info == (MPIC_INFO(VECPRI_SENSE_LEVEL) |
++				  MPIC_INFO(VECPRI_POLARITY_NEGATIVE)))
++			flow_type = IRQ_TYPE_LEVEL_LOW;
+ 	}
+ 
+ 	/* Apply to irq desc */
+-- 
+1.8.3.2
+
+Cheers,
+--
+Luis
