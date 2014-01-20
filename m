@@ -1,62 +1,61 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v3 16/24] drm/i2c: tda998x: add DT documentation
-Date: Sun, 19 Jan 2014 20:06:09 -0800
-Message-ID: <CAOesGMi96wkHM8jfHNVnM7RJyW2vVoP6FT4YyYzKp-kfc0jTuQ@mail.gmail.com>
-References: <cover.1390153344.git.moinejf@free.fr>
-	<20140119195844.0c975b90@armhf>
+From: Leela Krishna Amudala <l.krishna@samsung.com>
+Subject: Re: [PATCH V12 1/3] ARM: dts: Add pmu sysreg node to exynos5250 and
+ exynos5420 dtsi files
+Date: Mon, 20 Jan 2014 13:09:14 +0900
+Message-ID: <CAL1wa8cfE7_HfkMOx8jKM6p+xjMFGXaE9X1DsN1pfbt11x62jg@mail.gmail.com>
+References: <1386308868-30264-1-git-send-email-l.krishna@samsung.com>
+	<1386308868-30264-2-git-send-email-l.krishna@samsung.com>
+	<20140110074113.GB12119@spo001.leaseweb.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20140119195844.0c975b90@armhf>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces@lists.freedesktop.org
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, DRI mailing list <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20140110074113.GB12119@spo001.leaseweb.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Wim Van Sebroeck <wim@iguana.be>, Kukjin Kim <kgene.kim@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, dianders@chromium.org, t.figa@samsung.com, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, cpgs@samsung.com, linux@roeck-us.net
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 1/10/14, Wim Van Sebroeck <wim@iguana.be> wrote:
+> Hi Leela,
+>
+>> This patch adds pmusysreg node to exynos5250 and exynos5420 dtsi files to
+>> handle PMU register accesses in a centralized way using syscon driver
+>>
+>> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+>> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+>> Reviewed-by: Doug Anderson <dianders@chromium.org>
+>> Tested-by: Doug Anderson <dianders@chromium.org>
+>> ---
+> ...
+>> diff --git a/arch/arm/boot/dts/exynos5420.dtsi
+>> b/arch/arm/boot/dts/exynos5420.dtsi
+>> index b1fa334..cd47db0 100644
+>> --- a/arch/arm/boot/dts/exynos5420.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+>> @@ -402,4 +402,9 @@
+>>  		clock-names = "gscl";
+>>  		samsung,power-domain = <&gsc_pd>;
+>>  	};
+>
+> I can't add this patch since there is no "gscl" in the current linux-tree.
+> Is this depending on another patch or are we going to fix this in another
+> way?
+>
 
-On Sun, Jan 19, 2014 at 10:58 AM, Jean-Francois Moine <moinejf@free.fr> wrote:
-> Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
-> ---
->  .../devicetree/bindings/drm/i2c/tda998x.txt        | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/drm/i2c/tda998x.txt
+Hi Kgene,
 
-Please cc bindings for review to devicetree@vger.kernel.org (cc:d here now)
+Driver changes has been merged to Wim's tree, so can you please pick
+this patch into your tree.
 
-> diff --git a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
-> new file mode 100644
-> index 0000000..72da71d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
-> @@ -0,0 +1,24 @@
-> +Device-Tree bindings for the NXP TDA998x HDMI transmitter
-> +
-> +Required properties;
-> +  - compatible: must be "nxp,tda998x"
-> +
-> +Optional properties:
-> +  - interrupts: interrupt number for HDMI exchanges - default: by polling
+Best Wishes,
+Leela krishna.
 
-What are HDMI exchanges, and how do they differ from other interrupts?
-
-> +
-> +  - pinctrl-0: pin control group to be used for this controller (IRQ).
-> +
-> +  - pinctrl-names: must contain a "default" entry.
-> +
-> +  - video-ports: 24 bits value - default: <0x230145>
-
-What is this?
-
-
--Olof
+> Kind regards,
+> Wim.
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc"
+> in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
