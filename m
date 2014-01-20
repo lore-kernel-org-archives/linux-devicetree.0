@@ -1,111 +1,76 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 3/7] net: moxa: connect to PHY
-Date: Mon, 20 Jan 2014 08:57:53 -0600
-Message-ID: <CAL_JsqKs-snsRaD1JQRVUrg+WBDd9cYxPhtfKf9m5HeJ6df3Pw@mail.gmail.com>
-References: <1390216399-27028-1-git-send-email-jonas.jensen@gmail.com>
-	<1390216399-27028-3-git-send-email-jonas.jensen@gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] libata, dt: Add clocks to sata_rcar bindings
+Date: Mon, 20 Jan 2014 16:29:33 +0100
+Message-ID: <5453735.fEby5SBpD0@avalon>
+References: <1389910062-17777-1-git-send-email-valentine.barshak@cogentembedded.com> <2218997.BjldcaRU33@avalon> <20140120093119.GA28747@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1390216399-27028-3-git-send-email-jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ben Hutchings <bhutchings-s/n/eUQHGBpZroRs9YW3xA@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20140120093119.GA28747@e106331-lin.cambridge.arm.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Valentine Barshak <valentine.barshak@cogentembedded.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tejun Heo <tj@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 20, 2014 at 5:13 AM, Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> The kernel now has a MDIO bus driver and a phy_driver (RTL8201CP),
-> connect to this PHY using OF.
->
-> Signed-off-by: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->
-> Notes:
->     Applies to next-20140120
->
->  .../devicetree/bindings/net/moxa,moxart-mac.txt    | 47 ++++++++++-
->  drivers/net/ethernet/moxa/moxart_ether.c           | 92 +++++++++++++++++++++-
->  drivers/net/ethernet/moxa/moxart_ether.h           |  2 +
->  3 files changed, 138 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt b/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
-> index 583418b..94c1f3b 100644
-> --- a/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
-> +++ b/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
-> @@ -1,21 +1,64 @@
->  MOXA ART Ethernet Controller
->
-> +Integrated MDIO bus node:
-> +
-> +- compatible: "moxa,moxart-mdio"
-> +- Inherits from MDIO bus node binding[1]
-> +
-> +[1] Documentation/devicetree/bindings/net/phy.txt
-> +
-> +
-> +Ethernet node:
-> +
->  Required properties:
->
->  - compatible : Must be "moxa,moxart-mac"
->  - reg : Should contain register location and length
->  - interrupts : Should contain the mac interrupt number
->
-> +Optional Properties:
-> +
-> +- phy-handle : the phandle to a PHY node
-> +
-> +
->  Example:
->
-> +       mdio0: mdio@90900090 {
-> +               compatible = "moxa,moxart-mdio";
-> +               reg = <0x90900090 0x8>;
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               ethphy0: ethernet-phy@1 {
-> +                       device_type = "ethernet-phy";
+Hi Mark,
 
-Drop this. device_type is only for real OpenFirmware.
+On Monday 20 January 2014 09:31:19 Mark Rutland wrote:
+> On Sun, Jan 19, 2014 at 08:16:42PM +0000, Laurent Pinchart wrote:
+> > On Friday 17 January 2014 02:07:42 Valentine Barshak wrote:
+> > > Now that the clocks are available in the R-Car Gen2 DT,
+> > > add clocks property description to the sata_rcar bindings.
+> > > The clocks have been tested on r8a7791 so we use that
+> > > as an example of the R-Car SATA node.
+> > > 
+> > > The patch is against for-next branch of the libata git repo.
+> > > 
+> > > Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
+> > > ---
+> > > 
+> > >  Documentation/devicetree/bindings/ata/sata_rcar.txt | 10 ++++++----
+> > >  1 file changed, 6 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> > > b/Documentation/devicetree/bindings/ata/sata_rcar.txt index
+> > > 1e61113..6da60c0 100644
+> > > --- a/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> > > +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> > > 
+> > > @@ -7,12 +7,14 @@ Required properties:
+> > >  			  - "renesas,sata-r8a7791" for R-Car M2
+> > >  - reg			: address and length of the SATA registers;
+> > >  - interrupts		: must consist of one interrupt specifier.
+> > > +- clocks		: must contain a phandle and clock-specifier pair.
+> > 
+> > I would say "must contain a reference to the functional clock.", as the
+> > clock could be referenced by a phandle only depending on the SATA IP core
+> > integration in the SoC.
+> 
+> In that case the clock-specifier is simply zero cells (though admittedly
+> a pair including a zero-cells element is a bit odd).
+> 
+> The wording in the patch is consistent with the form I've been
+> recommending elsewhere:
+> 
+> - clocks: A list of phandles + clock-specifier pairs, one for each
+>   entry in clock-names.
+> - clock-names: Should contain:
+>   * "fclk" - the functional clock
+>   * "other_clk" - some other clock.
+> 
+> > Wouldn't it be time to have standard wordings for clocks (and interrupt)
+> > bindings ?
+> 
+> I would certainly like to see consistent wording across bindings
+> (especially for interrupts given the addition of the interrupts-extended
+> binding).
 
-> +                       compatible = "moxa,moxart-rtl8201cp", "ethernet-phy-ieee802.3-c22";
-> +                       reg = <1>;
-> +               };
-> +       };
-> +
-> +       mdio1: mdio@92000090 {
-> +               compatible = "moxa,moxart-mdio";
-> +               reg = <0x92000090 0x8>;
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               ethphy1: ethernet-phy@1 {
-> +                       device_type = "ethernet-phy";
-> +                       compatible = "moxa,moxart-rtl8201cp", "ethernet-phy-ieee802.3-c22";
-> +                       reg = <1>;
-> +               };
-> +       };
-> +
->         mac0: mac@90900000 {
+What about creating a new file in Documentation/devicetree/bindings/ with 
+reference wordings for common properties ?
 
-Not part of this patch, but this should really be ethernet@...
+-- 
+Regards,
 
->                 compatible = "moxa,moxart-mac";
-> -               reg =   <0x90900000 0x100>;
-> +               reg = <0x90900000 0x90>;
->                 interrupts = <25 0>;
-> +               phy-handle = <&ethphy0>;
->         };
->
->         mac1: mac@92000000 {
->                 compatible = "moxa,moxart-mac";
-> -               reg =   <0x92000000 0x100>;
-> +               reg = <0x92000000 0x90>;
->                 interrupts = <27 0>;
-> +               phy-handle = <&ethphy1>;
->         };
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
+
