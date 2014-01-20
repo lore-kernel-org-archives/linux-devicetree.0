@@ -1,66 +1,41 @@
-From: Sebastian Reichel <sre@ring0.de>
-Subject: Re: [PATCHv13 27/40] ARM: dts: omap3 clock data
-Date: Mon, 20 Jan 2014 19:00:54 +0100
-Message-ID: <20140120180053.GA25920@earth.universe>
-References: <1389276051-1326-1-git-send-email-t-kristo@ti.com>
- <1389276051-1326-28-git-send-email-t-kristo@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] dma: Add Xilinx AXI Video Direct Memory Access Engine driver support
+Date: Mon, 20 Jan 2014 19:41:07 +0100
+Message-ID: <201401201941.07633.arnd@arndb.de>
+References: <1389894803-4147-1-git-send-email-sthokal@xilinx.com> <201401201239.47665.arnd@arndb.de> <CA+mB=1+mrWAzBCxdMEji2MDRzHajmnxuWtz7iu96ML0DuAB3RQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="h31gzZEtNLTqOjlF"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1389276051-1326-28-git-send-email-t-kristo@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, nm@ti.com, rnayak@ti.com, bcousson@baylibre.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CA+mB=1+mrWAzBCxdMEji2MDRzHajmnxuWtz7iu96ML0DuAB3RQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Monday 20 January 2014, Srikanth Thokala wrote:
+> >
+> >> > * data width should be a property of the slave driver that is configured
+> >> >   through dma_slave_config(), unless you can have dma engines that only
+> >> >   support certain a width.
+> >>
+> >> Yes, this VDMA engine soft IP support only certain widths, which is
+> >> configurable during IP synthesis.
+> >
+> > But what is this property used for in that case? Surely you can't
+> > connect a slave device to a dmaengine if the bus width doesn't match.
+> > You probably have a point here, but I don't understand it yet.
+> 
+> There is a Data-Realignment Engine (DRE) in the IP which is only available for
+> data width setting of 64-bits and less.  So, we use the data-width DT parameter
+> to verify this condition and we update alignment shift accordingly.
 
---h31gzZEtNLTqOjlF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ok, I have to admit I didn't understand all of that, but you clearly
+know what you are talking about here, so I assume you are correct.
 
-Hi,
-
-I just found some time to update my SSI driver adding DT clock
-support. It works, but I wonder if the alias of the ssi clocks
-can be changed to something like the following:
-
-/* omap3430es1-clocks.dtsi */
-ssi_ick: ssi_ick_3430es1 {};
-ssi_ssr_fck: ssi_ssr_fck_3430es1 {};
-ssi_sst_fck: ssi_sst_fck_3430es1 {};
-
-/* omap36xx-omap3430es2plus-clocks.dtsi */
-ssi_ick: ssi_ick_3430es2 {};
-ssi_ssr_fck: ssi_ssr_fck_3430es2 {};
-ssi_sst_fck: ssi_sst_fck_3430es2 {};
-
-With this change I can reference the ssi clocks in omap3.dtsi
-instead of creating files for omap3430es1 and omap3430es2+.
-
--- Sebastian
-
---h31gzZEtNLTqOjlF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCAAGBQJS3WRVAAoJENju1/PIO/qaICEP/Rv7AAzH4Id9zCTDDV2tuMh6
-5kYeqM05EcAA6ES5XaNI3cs76jnsGkLfHMWy682pZU0ePgtgQbOiHE81YYY55kW5
-+nN+dWz5hOhTmcgkaU+yv9NkluYfpu474EF4NODTjXSk1XPpZb45FdeANrLyRz4N
-6jcozWeUA0DPHRAN8cgM5Zj7J9lPdW4COO6QQA1W0cWMD0qGc4cWGYAuIptTloNV
-AzeT1zx0Cy2IRS90HmBKPVJOYKgfcCn6nn9wO5+Qaq+UIC2J0QgpT9T8IOyxfPsM
-m1LxY5678YpD1MK0FWpiNwZmBR0WjwEDLp/DwdJUHXpc1TnSxGNOhV+9vSSEGfwp
-WLzFr+pBZB8MYN646sJU6fAIMsXG13FbodjDM/WSa6yhMAAE+KOin5KbpqTY8wDv
-B1EgQoZfscEMn75Q77KIm91j4N+EZKdJ/Tkzgcwyt/BNM0IEadUnh2dImAoUq+0I
-uhjfZYlOGmdiANIwteWfgvR9qJrcJ3F29YCgf4pfUvTbIV5ly2NJlPwCbiqLvHEj
-ER4o9xqmWBU6y3LEZQizlSc3QNouirmnm2mC3X/9Tkg+rj/qm42hSPP1/SYBZbme
-zEWBzeFMZmsU6VV6Tjjp4BPnWl+BS68d2SYAHjpBxodTMbaLg8tCq8hlhN0gzRc8
-KN1Av8nyzQk8i+yx1iX6
-=HVxk
------END PGP SIGNATURE-----
-
---h31gzZEtNLTqOjlF--
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
