@@ -1,121 +1,192 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] DT: net: document Ethernet bindings in one place
-Date: Tue, 21 Jan 2014 02:33:08 +0300
-Message-ID: <52DDB234.5080206@cogentembedded.com>
-References: <201401180405.07859.sergei.shtylyov@cogentembedded.com>	<CAL_Jsq+oa9P=rh+p-dMZyGP8TcmpX7bTnMU0ynLvFxjxFDYbRg@mail.gmail.com>	<52DD98F7.4090202@cogentembedded.com> <CAL_JsqJXbF1-PcPHR2VP+Vi9A1aWizdsG_r3kDvRt3itXDhCGQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJXbF1-PcPHR2VP+Vi9A1aWizdsG_r3kDvRt3itXDhCGQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 1/1] of/irq: create interrupts-extended-2 property
+Date: Mon, 20 Jan 2014 22:47:42 +0000
+Message-ID: <20140120224742.EC905C40B12@trevor.secretlab.ca>
+References: <1389786445-10598-1-git-send-email-plagnioj@jcrosoft.com> < 20140115121750.GE25824@e106331-lin.cambridge.arm.com> <20140115124041. GD9558@ns203013.ovh.net> <20140115134653.GF25824@e106331-lin.cambridge.arm. com> <20140115161224.GH25824@e106331-lin.cambridge.arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140115161224.GH25824-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/21/2014 12:20 AM, Rob Herring wrote:
+On Wed, 15 Jan 2014 16:12:24 +0000, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> > 
+> > Another, more invasive option would be extend the dts syntax and teach
+> > dtc to handle property appending. Then the soc dts could stay as it is,
+> > and the board dts could have something like:
+> > 
+> > 	/append-property/ interrupts = <&intc1 6 1>;
+> > 	/append-property/ interrupt-names = "board-specific-irq";
+> > 
+> > Both these options solve the issue at the source, are general to other
+> > properties, and allow more than one level of hierarchy (the proposed
+> > interrupts-extended-2 only allows one level).
+> 
+> I've just had a go at implementing the append-property mechanism above
+> in dtc, and it was far easier than I expected (patch below).
+> 
+> Does anyone have any issues with the /append-property/ idea?
 
->>>> This patch is an attempt to gather the Ethernet related bindings in one
->>>> file,
->>>> like it's done in the MMC and some other subsystems. It should save the
->>>> trouble
->>>> of documenting several properties over and over in each binding document.
+I think that is reasonable.
 
->>>> I have used the Embedded Power Architecture(TM) Platform Requirements
->>>> (ePAPR)
->>>> standard as a base for the properties description, also documenting some
->>>> ad-hoc
->>>> properties that have been introduced over time despite having direct
->>>> analogs in
->>>> ePAPR.
+g.
 
->>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> Thanks,
+> Mark.
+> 
+> ---->8----
+> 
+> From 88be0036b6a966bd7506f58e3cb9ce9ea4c5ac48 Mon Sep 17 00:00:00 2001
+> From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Date: Wed, 15 Jan 2014 15:43:51 +0000
+> Subject: [PATCH] dtc: add ability to append properties
+> 
+> When dealing with hierarchies of dtsi files, handling minute differences
+> between individual boards can become very painful. Adding a single
+> board-specific interrupt requires duplicating the entire interrupts
+> property, which requires duplication of common values. This makes bug
+> fixing painful and if not handled very carefully files diverge rapdily.
+> 
+> To ameliorate this, this patch adds the ability to append properties,
+> allowing board files to describe only the additional values required in
+> a property. This functionality also works with strings, so parallel
+> properties like interupts and interrupt-names stay in sync. Properties
+> may be appended multiple times, and deleting properties clears all
+> previous appended values.
+> 
+> To append a property, secondary definitions must be prefixed with
+> /append-property/. This is longer than a possible '+=' syntax, but makes
+> it far easier to spot when appending behaviour is requested, and so
+> hopefully will lead to fewer buggy dts files.
+> 
+> For example, if the following dts fragements are compiled together:
+> 
+>   / {
+>       interrupts = <0>, <1>;
+>       interrupt-names = "zero", "one";
+>   };
+> 
+>   / {
+>       /append-property/ interrupts = <2>, <3>;
+>       /append-property/ interrupt-names = "two", "three";
+>   };
+> 
+> They will result in a dtb equivalent to the following dts fragment:
+> 
+>   / {
+>       interrupts = <0>, <1>, <2>, <3>;
+>       interrupt-names = "zero", "one", "two", "three";
+>   };
+> 
+> Signed-off-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  dtc-lexer.l  |  7 +++++++
+>  dtc-parser.y |  5 +++++
+>  dtc.h        |  2 ++
+>  livetree.c   | 15 ++++++++++++++-
+>  4 files changed, 28 insertions(+), 1 deletion(-)
+> 
+> diff --git a/dtc-lexer.l b/dtc-lexer.l
+> index 0cd7e67..7989abe 100644
+> --- a/dtc-lexer.l
+> +++ b/dtc-lexer.l
+> @@ -131,6 +131,13 @@ static bool pop_input_file(void);
+>  			return DT_DEL_PROP;
+>  		}
+>  
+> +<*>"/append-property/"	{
+> +			DPRINT("Keyword: /append-property/\n");
+> +			DPRINT("<PROPNODENAME>\n");
+> +			BEGIN(PROPNODENAME);
+> +			return DT_APPEND_PROP;
+> +		}
+> +
+>  <*>"/delete-node/"	{
+>  			DPRINT("Keyword: /delete-node/\n");
+>  			DPRINT("<PROPNODENAME>\n");
+> diff --git a/dtc-parser.y b/dtc-parser.y
+> index 4864631..a8409ed 100644
+> --- a/dtc-parser.y
+> +++ b/dtc-parser.y
+> @@ -63,6 +63,7 @@ static unsigned char eval_char_literal(const char *s);
+>  %token DT_LSHIFT DT_RSHIFT DT_LE DT_GE DT_EQ DT_NE DT_AND DT_OR
+>  %token DT_BITS
+>  %token DT_DEL_PROP
+> +%token DT_APPEND_PROP
+>  %token DT_DEL_NODE
+>  %token <propnodename> DT_PROPNODENAME
+>  %token <literal> DT_LITERAL
+> @@ -195,6 +196,10 @@ propdef:
+>  		{
+>  			$$ = build_property($1, empty_data);
+>  		}
+> +	| DT_APPEND_PROP DT_PROPNODENAME '=' propdata ';'
+> +		{
+> +			$$ = build_property_append($2, $4);
+> +		}
+>  	| DT_DEL_PROP DT_PROPNODENAME ';'
+>  		{
+>  			$$ = build_property_delete($2);
+> diff --git a/dtc.h b/dtc.h
+> index 20e4d56..8687530 100644
+> --- a/dtc.h
+> +++ b/dtc.h
+> @@ -133,6 +133,7 @@ struct label {
+>  };
+>  
+>  struct property {
+> +	bool appended;
+>  	bool deleted;
+>  	char *name;
+>  	struct data val;
+> @@ -186,6 +187,7 @@ void delete_labels(struct label **labels);
+>  
+>  struct property *build_property(char *name, struct data val);
+>  struct property *build_property_delete(char *name);
+> +struct property *build_property_append(char *name, struct data val);
+>  struct property *chain_property(struct property *first, struct property *list);
+>  struct property *reverse_properties(struct property *first);
+>  
+> diff --git a/livetree.c b/livetree.c
+> index b61465f..894e42b 100644
+> --- a/livetree.c
+> +++ b/livetree.c
+> @@ -74,6 +74,15 @@ struct property *build_property_delete(char *name)
+>  	return new;
+>  }
+>  
+> +struct property *build_property_append(char *name, struct data val)
+> +{
+> +	struct property *new = build_property(name, val);
+> +
+> +	new->appended = 1;
+> +
+> +	return new;
+> +}
+> +
+>  struct property *chain_property(struct property *first, struct property *list)
+>  {
+>  	assert(first->next == NULL);
+> @@ -167,7 +176,11 @@ struct node *merge_nodes(struct node *old_node, struct node *new_node)
+>  				for_each_label_withdel(new_prop->labels, l)
+>  					add_label(&old_prop->labels, l->label);
+>  
+> -				old_prop->val = new_prop->val;
+> +				if (new_prop->appended)
+> +					old_prop->val = data_merge(old_prop->val, new_prop->val);
+> +				else
+> +					old_prop->val = new_prop->val;
+> +
+>  				old_prop->deleted = 0;
+>  				free(new_prop);
+>  				new_prop = NULL;
+> -- 
+> 1.8.1.1
+> 
 
->>>> ---
->>>> The patch is against DaveM's 'net-next.git' repo and the DaVinci EMAC
->>>> bindings
->>>> fix I've posted yesterday:
-
->>>> http://patchwork.ozlabs.org/patch/311854/
-
->> [...]
-
->>>> Index: net-next/Documentation/devicetree/bindings/net/ethernet.txt
->>>> ===================================================================
->>>> --- /dev/null
->>>> +++ net-next/Documentation/devicetree/bindings/net/ethernet.txt
->>>> @@ -0,0 +1,20 @@
->>>> +The following properties are common to the Ethernet controllers:
->>>> +
->>>> +- local-mac-address: array of 6 bytes, specifies the MAC address that
->>>> was
->>>> +  assigned to the network device;
->>>> +- mac-address: array of 6 bytes, specifies the MAC address that was last
->>>> used by
->>>> +  the boot program; should be used in cases where the MAC address
->>>> assigned to
->>>> +  the device by the boot program is different from the
->>>> "local-mac-address"
->>>> +  property;
->>>> +- max-speed: number, specifies maximum speed in Mbit/s supported by the
->>>> device;
->>>> +- phy-mode: string, operation mode of the PHY interface; supported
->>>> values are
->>>> +  "mii", "gmii", "sgmii", "tbi", "rev-mii", "rmii", "rgmii", "rgmii-id",
->>>> +  "rgmii-rxid", "rgmii-txid", "rtbi", "smii", "xgmii";
-
->>> Mark this as deprecated
-
->>     That's kind of wishful thinking at this point, as that's what the
->> majority of drivers use. I'm unsure of the reasons why that was done,
->> probably people just didn't read the proper specs...
-
-> Or the spec was defined after those bindings.
-
-    No, that's not likely as "phy-connection-type" prop seems very old, most 
-probably predating ePAPR. ePAPR exists since 2008, kernel support for 
-"phy-mode" prop dates back only to 2011.
-
-> Deprecating does not
-> matter for existing bindings. It's only defining new ones that are
-> affected. I was more concerned with giving people guidance on which
-> one to use for new bindings.
-
-    If "phy-connection-type" is to be used, it makes sense to modify 
-of_get_phy_mode() to also look for that prop, right?
-
->>> in favor of phy-connection-type
-
->>     That one is only used by the oldish PowerPC 'gianfar' driver.
-
->>> so it's use does not spread.
-
->>     I'm afraid that's too late, it has spread very far, so that
->> of_get_phy_mode() handles that property, not "phy-connection-type".
-
-> Uggg, I guess this is a case of a defacto standard then if the kernel
-> doesn't even support it.
-
-    What's your guess on what to do on these 2 props then? Still deprecate 
-"phy-mode"?
-
->>>> +- phy-connection-type: the same as "phy-mode" property (but described in
->>>> ePAPR);
->>>> +- phy-handle: phandle, specifies a reference to a node representing a
->>>> PHY
->>>> +  device (this property is described in ePAPR);
->>>> +- phy: the same as "phy-handle" property (but actually ad-hoc one).
-
->>> Mark this as deprecated in favor of phy-handle.
-
->>     Here situation is more optimistic. Quite many drivers still use
->> "phy-handle", though some use even more exotic props I didn't document here.
-
-> Perhaps flagging as "Not recommended for new bindings" would be nicer wording...
-
-    Perhaps.
-
-> Rob
-
-WBR, Sergei
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
