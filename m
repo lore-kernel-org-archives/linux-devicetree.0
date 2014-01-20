@@ -1,64 +1,31 @@
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: Re: [PATCH 4/6] phy-rcar-usb-gen2: add device tree support
-Date: Mon, 20 Jan 2014 12:24:34 +0000
-Message-ID: <52DD1582.3000304@codethink.co.uk>
-References: <1390057420-13226-1-git-send-email-ben.dooks@codethink.co.uk> <1390057420-13226-5-git-send-email-ben.dooks@codethink.co.uk> <52DD141F.3040704@cogentembedded.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v4 3/4] SATA: MV: Add support for the optional PHYs
+Date: Mon, 20 Jan 2014 07:47:24 -0500
+Message-ID: <20140120124724.GD17155@htj.dyndns.org>
+References: <20131219194237.GC22725@htj.dyndns.org>
+ <1388078742-6726-1-git-send-email-andrew@lunn.ch>
+ <1388078742-6726-4-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <52DD141F.3040704@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-kernel@lists.codethink.co.uk, linux-sh@vger.kernel.org, "list@codethink.co.uk:USB PHY LAYER" <linux-usb@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1388078742-6726-4-git-send-email-andrew@lunn.ch>
+Sender: linux-ide-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Jason Cooper <jason@lakedaemon.net>, kishon@ti.com, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 20/01/14 12:18, Sergei Shtylyov wrote:
-> Hello.
->
-> On 18-01-2014 19:03, Ben Dooks wrote:
->
->> Add support for the phy-rcar-gen2-usb driver to be probed from device
->> tree.
->
->> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
->> Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
->> ---
->> Cc: linux-usb@vger.kernel.org (open list:USB PHY LAYER)
->> Cc: linux-sh@vger.kernel.org (open list:ARM/SHMOBILE ARM...)
->> Cc: Magnus Damm <magnus.damm@gmail.com> (supporter:ARM/SHMOBILE ARM...)
->> Cc: Simon Horman <horms@verge.net.au> (supporter:ARM/SHMOBILE ARM...)
->> Cc: devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND...)
->> ---
->>   drivers/usb/phy/phy-rcar-gen2-usb.c | 35
->> ++++++++++++++++++++++++++++++-----
->>   1 file changed, 30 insertions(+), 5 deletions(-)
->
->> diff --git a/drivers/usb/phy/phy-rcar-gen2-usb.c
->> b/drivers/usb/phy/phy-rcar-gen2-usb.c
->> index db3ab34..906b74b 100644
->> --- a/drivers/usb/phy/phy-rcar-gen2-usb.c
->> +++ b/drivers/usb/phy/phy-rcar-gen2-usb.c
-> [...]
->> @@ -203,16 +212,31 @@ static int rcar_gen2_usb_phy_probe(struct
->> platform_device *pdev)
-> [...]
->> +    if (of_id) {
->> +        int len = 0;
->> +
->> +        if (of_get_property(dev->of_node, "renesas,usb0-hs", &len))
->> +            priv->ugctrl2 = USBHS_UGCTRL2_USB0_HS;
->> +        else
->> +            priv->ugctrl2 = USBHS_UGCTRL2_USB0_PCI;
->> +
->> +        if (of_get_property(dev->of_node, "renesas,usb2-ss", &len))
->
->     You can use of_property_read_bool() in both cases as both these
-> props are boolean I guess. It's more handy.
+On Thu, Dec 26, 2013 at 06:25:41PM +0100, Andrew Lunn wrote:
+> Some Marvell SoCs have a SATA PHY which can be powered off, in order
+> to save power. Make use of the generic phy framework to control these
+> phys.
+> 
+> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
 
-Thanks, missed that one, will sort that out.
+Applied to libata/for-3.14.  It's late but not applying this patch
+would reportedly lead to boot failures in certain configurations.
 
+Thanks.
 
 -- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+tejun
