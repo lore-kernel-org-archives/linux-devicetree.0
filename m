@@ -1,50 +1,64 @@
-From: "Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH] ARM: dts: imx6qdl-sabresd: correct gpio key's active
- state
-Date: Mon, 20 Jan 2014 12:00:29 +0000
-Message-ID: <e7dc7d7b841b4c30b1d65070ddbb7c05@BY2PR03MB315.namprd03.prod.outlook.com>
-References: <1390218153-11034-1-git-send-email-b20788@freescale.com>
- <20140120115421.GO16215@pengutronix.de>
+From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH V2] ARM: dts: imx6qdl-sabresd: correct gpio key's active state
+Date: Mon, 20 Jan 2014 20:02:38 +0800
+Message-ID: <1390219358-22157-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140120115421.GO16215-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIFNhc2NoYQ0KCVRoYW5rcyBmb3IgdGhlIHJlbWluZGVyLCB3aWxsIGltcHJvdmUgaXQgaW4g
-VjIuDQoNCkJlc3QgUmVnYXJkcy4NCkFuc29uIGh1YW5nIOm7hOWLh+aJjQ0KwqANCkZyZWVzY2Fs
-ZSBTZW1pY29uZHVjdG9yIFNoYW5naGFpDQrkuIrmtbfmtabkuJzmlrDljLrkuq7mma/ot68xOTLl
-j7dB5bqnMualvA0KMjAxMjAzDQpUZWw6MDIxLTI4OTM3MDU4DQoNCg0KPi0tLS0tT3JpZ2luYWwg
-TWVzc2FnZS0tLS0tDQo+RnJvbTogU2FzY2hhIEhhdWVyIFttYWlsdG86cy5oYXVlckBwZW5ndXRy
-b25peC5kZV0NCj5TZW50OiBNb25kYXksIEphbnVhcnkgMjAsIDIwMTQgNzo1NCBQTQ0KPlRvOiBI
-dWFuZyBZb25nY2FpLUIyMDc4OA0KPkNjOiBzaGF3bi5ndW9AbGluYXJvLm9yZzsgZGV2aWNldHJl
-ZUB2Z2VyLmtlcm5lbC5vcmcNCj5TdWJqZWN0OiBSZTogW1BBVENIXSBBUk06IGR0czogaW14NnFk
-bC1zYWJyZXNkOiBjb3JyZWN0IGdwaW8ga2V5J3MgYWN0aXZlDQo+c3RhdGUNCj4NCj5PbiBNb24s
-IEphbiAyMCwgMjAxNCBhdCAwNzo0MjozM1BNICswODAwLCBBbnNvbiBIdWFuZyB3cm90ZToNCj4+
-IEZyb20gc2NoZW1hdGljLCB0aGUgcG93ZXIsIHZvbCsvLSBrZXkncyBhY3RpdmUgc3RhdGUgaXMg
-bG93LCBzbyB3ZQ0KPj4gbmVlZCB0byBzZXQgdGhlIGdwaW8gZmxhZyB0byBhY3RpdmUgbG93Lg0K
-Pj4NCj4+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxiMjA3ODhAZnJlZXNjYWxlLmNvbT4N
-Cj4+IC0tLQ0KPj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtc2FicmVzZC5kdHNpIHwgICAg
-NiArKystLS0NCj4+ICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9u
-cygtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLXNhYnJl
-c2QuZHRzaQ0KPj4gYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLXNhYnJlc2QuZHRzaQ0KPj4g
-aW5kZXggOTFlNWRkNC4uZjc2ODliNCAxMDA2NDQNCj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRz
-L2lteDZxZGwtc2FicmVzZC5kdHNpDQo+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRs
-LXNhYnJlc2QuZHRzaQ0KPj4gQEAgLTU4LDIxICs1OCwyMSBAQA0KPj4NCj4+ICAJCXBvd2VyIHsN
-Cj4+ICAJCQlsYWJlbCA9ICJQb3dlciBCdXR0b24iOw0KPj4gLQkJCWdwaW9zID0gPCZncGlvMyAy
-OSAwPjsNCj4+ICsJCQlncGlvcyA9IDwmZ3BpbzMgMjkgMT47DQo+DQo+V2hlbiB0b3VjaGluZyB0
-aGlzIHlvdSBjb3VsZCB0YWtlIHRoZSBvcHBvcnR1bml0eSBhbmQgdXNlIEdQSU9fQUNUSVZFX0xP
-Vy4NCj4NCj5TYXNjaGENCj4NCj4tLQ0KPlBlbmd1dHJvbml4IGUuSy4gICAgICAgICAgICAgICAg
-ICAgICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8DQo+SW5kdXN0cmlhbCBM
-aW51eCBTb2x1dGlvbnMgICAgICAgICAgICAgICAgIHwgaHR0cDovL3d3dy5wZW5ndXRyb25peC5k
-ZS8gIHwNCj5QZWluZXIgU3RyLiA2LTgsIDMxMTM3IEhpbGRlc2hlaW0sIEdlcm1hbnkgfCBQaG9u
-ZTogKzQ5LTUxMjEtMjA2OTE3LTAgICAgfA0KPkFtdHNnZXJpY2h0IEhpbGRlc2hlaW0sIEhSQSAy
-Njg2ICAgICAgICAgICB8IEZheDogICArNDktNTEyMS0yMDY5MTctNTU1NSB8DQo+DQoNCg==
+>From schematic, the power, vol+/- key's active state is low,
+so we need to set the gpio flag to active low.
+
+Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6qdl-sabresd.dtsi |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+index 91e5dd4..96a921b 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+@@ -10,6 +10,7 @@
+  * http://www.gnu.org/copyleft/gpl.html
+  */
+ 
++#include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
+ 
+ / {
+@@ -58,21 +59,21 @@
+ 
+ 		power {
+ 			label = "Power Button";
+-			gpios = <&gpio3 29 0>;
++			gpios = <&gpio3 29 GPIO_ACTIVE_LOW>;
+ 			gpio-key,wakeup;
+ 			linux,code = <KEY_POWER>;
+ 		};
+ 
+ 		volume-up {
+ 			label = "Volume Up";
+-			gpios = <&gpio1 4 0>;
++			gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
+ 			gpio-key,wakeup;
+ 			linux,code = <KEY_VOLUMEUP>;
+ 		};
+ 
+ 		volume-down {
+ 			label = "Volume Down";
+-			gpios = <&gpio1 5 0>;
++			gpios = <&gpio1 5 GPIO_ACTIVE_LOW>;
+ 			gpio-key,wakeup;
+ 			linux,code = <KEY_VOLUMEDOWN>;
+ 		};
+-- 
+1.7.9.5
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
