@@ -1,40 +1,60 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v5 2/4] ata: ahci_platform: Update DT compatible list
-Date: Mon, 20 Jan 2014 16:41:26 +0200
-Message-ID: <1390228888-5537-3-git-send-email-rogerq@ti.com>
-References: <1390228888-5537-1-git-send-email-rogerq@ti.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: add rockchip vendor prefix
+Date: Mon, 20 Jan 2014 08:49:11 -0600
+Message-ID: <CAL_JsqLwsJkCbu7rZDGTquryFzom4K4hg3GrczifbAV+pvpcaQ@mail.gmail.com>
+References: <201312201626.48119.heiko@sntech.de>
+	<2229282.4AAJ7iLdU7@phil>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1390228888-5537-1-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tj@kernel.org
-Cc: sergei.shtylyov@cogentembedded.com, kishon@ti.com, b.zolnierkie@samsung.com, hdegoede@redhat.com, arnd@arndb.de, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2229282.4AAJ7iLdU7@phil>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The ahci_platform driver supports "snps,exynos5440-ahci", "ibm,476gtr-ahci"
-and "snps,dwc-ahci". Add this to the DT binding information.
+On Mon, Jan 20, 2014 at 8:23 AM, Heiko St=FCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrot=
+e:
+> Am Freitag, 20. Dezember 2013, 16:26:47 schrieb Heiko St=FCbner:
+>> It seems I forgot to add the vendor prefix for rockchip to the vendo=
+r-prefix
+>> list. Therefore add it now.
+>>
+>> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+>
+> not sure, where this should go through
+> arm-soc? or is there a special dt-tree around?
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
----
- Documentation/devicetree/bindings/ata/ahci-platform.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Sorry, missed this one. I'll apply for 3.14.
 
-diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-index 89de156..08ba647 100644
---- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
-+++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-@@ -4,7 +4,9 @@ SATA nodes are defined to describe on-chip Serial ATA controllers.
- Each SATA controller should have its own node.
- 
- Required properties:
--- compatible        : compatible list, contains "snps,spear-ahci"
-+- compatible        : compatible list, contains "snps,spear-ahci",
-+		      "snps,exynos5440-ahci", "ibm,476gtr-ahci",
-+		      or "snps,dwc-ahci"
- - interrupts        : <interrupt mapping for SATA IRQ>
- - reg               : <registers mapping>
- 
--- 
-1.8.3.2
+Rob
+
+>
+>
+> Thanks
+> Heiko
+>
+>> ---
+>>  Documentation/devicetree/bindings/vendor-prefixes.txt |    1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> b/Documentation/devicetree/bindings/vendor-prefixes.txt index
+>> ca2c190..2dc3b75 100644
+>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> @@ -65,6 +65,7 @@ ralink      Mediatek/Ralink Technology Corp.
+>>  ramtron      Ramtron International
+>>  realtek Realtek Semiconductor Corp.
+>>  renesas      Renesas Electronics Corporation
+>> +rockchip     Fuzhou Rockchip Electronics Co., Ltd
+>>  samsung      Samsung Semiconductor
+>>  sbs  Smart Battery System
+>>  schindler    Schindler
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
