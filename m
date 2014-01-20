@@ -1,38 +1,64 @@
-From: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC v3 05/13] ahci-platform: Pass ahci_host_priv
- ptr to ahci_platform_data init method
-Date: Mon, 20 Jan 2014 07:28:47 -0500
-Message-ID: <20140120122847.GC17155@htj.dyndns.org>
-References: <1390088935-7193-1-git-send-email-hdegoede@redhat.com>
- <1390088935-7193-6-git-send-email-hdegoede@redhat.com>
- <20140119113051.GD11123@htj.dyndns.org>
- <52DC1EC4.3090807@redhat.com>
- <20140119191706.GC32165@mtj.dyndns.org>
- <52DC2DD9.7070403@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: Re: [PATCH 4/6] phy-rcar-usb-gen2: add device tree support
+Date: Mon, 20 Jan 2014 12:24:34 +0000
+Message-ID: <52DD1582.3000304@codethink.co.uk>
+References: <1390057420-13226-1-git-send-email-ben.dooks@codethink.co.uk> <1390057420-13226-5-git-send-email-ben.dooks@codethink.co.uk> <52DD141F.3040704@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDQ2FCEAWYLRBAVN6SLAKGQE2BXG3QI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <52DC2DD9.7070403-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <52DD141F.3040704@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-kernel@lists.codethink.co.uk, linux-sh@vger.kernel.org, "list@codethink.co.uk:USB PHY LAYER" <linux-usb@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 19, 2014 at 08:56:09PM +0100, Hans de Goede wrote:
-> Ok, asking the obvious here I guess, but you would accept a patch moving drivers/ata/ahci.h
-> to include/linux as part of this patch-set ?
+On 20/01/14 12:18, Sergei Shtylyov wrote:
+> Hello.
+>
+> On 18-01-2014 19:03, Ben Dooks wrote:
+>
+>> Add support for the phy-rcar-gen2-usb driver to be probed from device
+>> tree.
+>
+>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>> Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
+>> ---
+>> Cc: linux-usb@vger.kernel.org (open list:USB PHY LAYER)
+>> Cc: linux-sh@vger.kernel.org (open list:ARM/SHMOBILE ARM...)
+>> Cc: Magnus Damm <magnus.damm@gmail.com> (supporter:ARM/SHMOBILE ARM...)
+>> Cc: Simon Horman <horms@verge.net.au> (supporter:ARM/SHMOBILE ARM...)
+>> Cc: devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND...)
+>> ---
+>>   drivers/usb/phy/phy-rcar-gen2-usb.c | 35
+>> ++++++++++++++++++++++++++++++-----
+>>   1 file changed, 30 insertions(+), 5 deletions(-)
+>
+>> diff --git a/drivers/usb/phy/phy-rcar-gen2-usb.c
+>> b/drivers/usb/phy/phy-rcar-gen2-usb.c
+>> index db3ab34..906b74b 100644
+>> --- a/drivers/usb/phy/phy-rcar-gen2-usb.c
+>> +++ b/drivers/usb/phy/phy-rcar-gen2-usb.c
+> [...]
+>> @@ -203,16 +212,31 @@ static int rcar_gen2_usb_phy_probe(struct
+>> platform_device *pdev)
+> [...]
+>> +    if (of_id) {
+>> +        int len = 0;
+>> +
+>> +        if (of_get_property(dev->of_node, "renesas,usb0-hs", &len))
+>> +            priv->ugctrl2 = USBHS_UGCTRL2_USB0_HS;
+>> +        else
+>> +            priv->ugctrl2 = USBHS_UGCTRL2_USB0_PCI;
+>> +
+>> +        if (of_get_property(dev->of_node, "renesas,usb2-ss", &len))
+>
+>     You can use of_property_read_bool() in both cases as both these
+> props are boolean I guess. It's more handy.
 
-Wouldn't creating a minimal file which only contains the necessary
-bits make more sense?
+Thanks, missed that one, will sort that out.
 
-Thanks.
 
 -- 
-tejun
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
