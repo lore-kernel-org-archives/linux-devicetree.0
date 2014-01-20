@@ -1,92 +1,79 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v3 1/2] i2c: qup: Add device tree bindings information
-Date: Mon, 20 Jan 2014 08:10:26 -0600
-Message-ID: <CAL_JsqJBEu8iLzE8-dXniZFytr6cQsprBYiYnJeXS2-80iy1Mw@mail.gmail.com>
-References: <1389999819-10648-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<1389999819-10648-2-git-send-email-bjorn.andersson@sonymobile.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v6 00/10] USB Host support for OMAP5 uEVM (for 3.14)
+Date: Mon, 20 Jan 2014 16:11:21 +0200
+Message-ID: <1390227091-4523-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1389999819-10648-2-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Jean Delvare <khali@linux-fr.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Martin Schwidefsky <schwidefsky@de.ibm.com>, James Ralston <james.d.ralston@intel.com>, Bill Brown <bill.e.brown@intel.com>, Matt Porter <matt.porter@linaro.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>linux
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: balbi-l0cyMroinI0@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, m.paolino-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 17, 2014 at 5:03 PM, Bjorn Andersson
-<bjorn.andersson@sonymobile.com> wrote:
-> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
->
-> The Qualcomm Universal Peripherial (QUP) wraps I2C mini-core and
-> provide input and output FIFO's for it. I2C controller can operate
-> as master with supported bus speeds of 100Kbps and 400Kbps.
->
-> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> [bjorn: reformulated part of binding description and cleaned up example]
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> ---
+Hi Benoit & Tony,
 
-Patch history?
+This patchset brings up USB Host ports and Ethernet port on
+the OMAP5 uEVM board.
 
->  .../devicetree/bindings/i2c/qcom,i2c-qup.txt       | 41 ++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt
->
-> diff --git a/Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt b/Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt
-> new file mode 100644
-> index 0000000..a99711b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt
-> @@ -0,0 +1,41 @@
-> +Qualcomm Universal Peripheral (QUP) I2C controller
-> +
-> +Required properties:
-> + - compatible: Should be "qcom,i2c-qup".
+It depends on the TI Clock DT conversion patches [1] and is based
+on 3.13
 
-Seems a bit generic. All versions of the IP are exactly the same?
-"qcom,<chip>-i2c-qup" would be better.
+[1] - http://article.gmane.org/gmane.linux.ports.arm.kernel/293147
 
-> + - reg: Should contain QUP register address and length.
-> + - interrupts: Should contain I2C interrupt.
-> +
-> + - clocks: Should contain the core clock and the AHB clock.
-> + - clock-names: Should be "core" for the core clock and "iface" for the
-> +                AHB clock.
-> +
-> + - #address-cells: Should be <1> Address cells for i2c device address
-> + - #size-cells: Should be <0> as i2c addresses have no size component
-> +
-> +Optional properties:
-> + - clock-frequency: Should specify the desired i2c bus clock frequency in Hz,
-> +                    default is 100kHz if omitted.
-> +
-> +Child nodes should conform to i2c bus binding.
-> +
-> +Example:
-> +
-> + i2c2: i2c@f9924000 {
-> +       compatible = "qcom,i2c-qup";
-> +       reg = <0xf9924000 0x1000>;
-> +       interrupts = <0 96 0>;
-> +
-> +       clocks = <&gcc_blsp1_qup2_i2c_apps_clk>, <&gcc_blsp1_ahb_clk>;
-> +       clock-names = "core", "iface";
-> +
-> +       clock-frequency = <355000>;
-> +
-> +       #address-cells = <1>;
-> +       #size-cells = <0>;
-> +
-> +       dummy@60 {
-> +               compatible = "dummy";
-> +               reg = <0x60>;
-> +       };
-> + };
-> +
-> --
-> 1.8.2.2
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tested on:
+ - OMAP5 uEVM
+ - Pandaboard ES Rev. B1
+ - Beagleboard-XM Rev C2
+ - Beagleboard Rev C4.
+
+cheers,
+-roger
+
+Changelog:
+
+v6:
+- Initialized clocks to -ENODEV and split patch 3.
+
+v5:
+- Expose all clocks in the DT binding document for mfd:omap-usb-host
+and mfd:omap-usb-tll
+
+v4:
+- Updated DT binding document for clock binding
+
+v3:
+- Rebased on top of 3.13-rc7
+
+cheers,
+-roger
+
+Roger Quadros (10):
+  mfd: omap-usb-host: Use resource managed clk_get()
+  mfd: omap-usb-host: Get clocks based on hardware revision
+  mfd: omap-usb-host: Use clock names as per function for reference
+    clocks
+  mfd: omap-usb-host: Update DT clock binding information
+  mfd: omap-usb-tll: Update DT clock binding information
+  ARM: dts: omap4: Update omap-usb-host node
+  ARM: dts: omap5: Update omap-usb-host node
+  ARM: dts: omap4-panda: Provide USB PHY clock
+  ARM: dts: omap5-uevm: Provide USB PHY clock
+  ARM: OMAP2+: Remove legacy_init_ehci_clk()
+
+ .../devicetree/bindings/mfd/omap-usb-host.txt      |  23 +++
+ .../devicetree/bindings/mfd/omap-usb-tll.txt       |  10 ++
+ arch/arm/boot/dts/omap4-panda-common.dtsi          |   8 +-
+ arch/arm/boot/dts/omap4.dtsi                       |   6 +
+ arch/arm/boot/dts/omap5-uevm.dts                   |   8 +-
+ arch/arm/boot/dts/omap5.dtsi                       |   6 +
+ arch/arm/mach-omap2/pdata-quirks.c                 |  16 --
+ drivers/mfd/omap-usb-host.c                        | 171 ++++++++++-----------
+ 8 files changed, 128 insertions(+), 120 deletions(-)
+
+-- 
+1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
