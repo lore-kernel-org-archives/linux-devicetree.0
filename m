@@ -1,57 +1,71 @@
-From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH] ARM: dts: imx6qdl-sabresd: correct gpio key's active state
-Date: Mon, 20 Jan 2014 19:42:33 +0800
-Message-ID: <1390218153-11034-1-git-send-email-b20788@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Vince Bridgers <vbridgers2013@gmail.com>
+Subject: [PATCH net-next v6 0/2] stmmac: fix kernel crashes for jumbo frames
+Date: Mon, 20 Jan 2014 05:38:59 -0600
+Message-ID: <1390217941-22967-1-git-send-email-vbridgers2013@gmail.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, netdev@vger.kernel.org
+Cc: peppe.cavallaro@st.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dinguyen@altera.com, rayagond@vayavyalabs.com, vbridgers2013@gmail.com
 List-Id: devicetree@vger.kernel.org
 
->From schematic, the power, vol+/- key's active state is low,
-so we need to set the gpio flag to active low.
+v6:
+* no changes since v5, respin for updated net-next
 
-Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- arch/arm/boot/dts/imx6qdl-sabresd.dtsi |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+v5:
+* Simplify use notes for max-frame-size in stmmac.txt, in the
+  devicetree patch. No change to the stmmac driver patch
+  from v4.
 
-diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-index 91e5dd4..f7689b4 100644
---- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-@@ -58,21 +58,21 @@
- 
- 		power {
- 			label = "Power Button";
--			gpios = <&gpio3 29 0>;
-+			gpios = <&gpio3 29 1>;
- 			gpio-key,wakeup;
- 			linux,code = <KEY_POWER>;
- 		};
- 
- 		volume-up {
- 			label = "Volume Up";
--			gpios = <&gpio1 4 0>;
-+			gpios = <&gpio1 4 1>;
- 			gpio-key,wakeup;
- 			linux,code = <KEY_VOLUMEUP>;
- 		};
- 
- 		volume-down {
- 			label = "Volume Down";
--			gpios = <&gpio1 5 0>;
-+			gpios = <&gpio1 5 1>;
- 			gpio-key,wakeup;
- 			linux,code = <KEY_VOLUMEDOWN>;
- 		};
+v4:
+* Address inconsistent comment with use, add comments about inconsistency
+  of max-frame-size definition and use in the ePAPR v1.1 specification.
+
+v3:
+* change snps,max-frame-size to max-frame-size
+
+v2:
+* change snps,max-mtu to snps,max-frame-size
+
+These patches address two kernel crashes seen when using jumbo frames on 
+the Synopsys stmmac driver, and adds device tree configurability for the 
+maximum mtu. The Synopsys emac fifo sizes can be configured when a logic
+design is synthesized, but does not provide a way for a driver to query the
+exact fifo size. 
+
+The crashes seen were due to two issues. 
+
+1) The dma buffer size was being set after the dma buffers were allocated.
+This caused a crash when changing the mtu since it was possible the buffers
+would subsequently be freed using an incorrect dma buffer size. This could
+also cause kernel panics due to memory corruption since a large mtu size could
+have been configured, but the dma buffers were not sized accordingly. 
+
+2) Jumbo frames were being enabled by default, but the dma buffers were not
+sized accordingly. This caused memory corruption in the context of certain
+types of network traffic, leading to kernel panics. 
+
+I've tested these changes using automated, reproducible testware. I can
+demonstrate the panics described before the fixes and show that the fixes
+address the problems described. 
+
+Testing and improvements continue through the use of the mentioned automated
+and reproducible testware. 
+
+Vince Bridgers
+
+Vince Bridgers (2):
+  dts: Add a binding for Synopsys emac max-frame-size
+  stmmac: Fix kernel crashes for jumbo frames
+
+ Documentation/devicetree/bindings/net/stmmac.txt   |    3 +++
+ drivers/net/ethernet/stmicro/stmmac/common.h       |    4 +++-
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000.h    |    7 ++-----
+ .../net/ethernet/stmicro/stmmac/dwmac1000_core.c   |    7 ++++++-
+ .../net/ethernet/stmicro/stmmac/dwmac100_core.c    |    2 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |   11 +++++++----
+ .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |   13 +++++++++++++
+ include/linux/stmmac.h                             |    1 +
+ 8 files changed, 36 insertions(+), 12 deletions(-)
+
 -- 
 1.7.9.5
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
