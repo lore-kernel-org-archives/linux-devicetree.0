@@ -1,65 +1,131 @@
-From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH V2] ARM: dts: imx6qdl-sabresd: correct gpio key's active state
-Date: Mon, 20 Jan 2014 20:02:38 +0800
-Message-ID: <1390219358-22157-1-git-send-email-b20788@freescale.com>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: [PATCH v2 2/4] ASoC: tlv320aic32x4: DT support
+Date: Mon, 20 Jan 2014 13:05:56 +0100
+Message-ID: <1390219558-25341-3-git-send-email-mpa@pengutronix.de>
+References: <1390219558-25341-1-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1390219558-25341-1-git-send-email-mpa@pengutronix.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Kumar Gala <galak@codeaurora.org>, Markus Pargmann <mpa@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
->From schematic, the power, vol+/- key's active state is low,
-so we need to set the gpio flag to active low.
+Add DT support for this codec. The bindings differ a bit from the aic3x
+codec bindings, so I created a new binding documentation.
 
-Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
 ---
- arch/arm/boot/dts/imx6qdl-sabresd.dtsi |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/sound/tlv320aic32x4.txt    | 18 ++++++++++++++++
+ sound/soc/codecs/tlv320aic32x4.c                   | 25 ++++++++++++++++++++++
+ 2 files changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
 
-diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-index 91e5dd4..96a921b 100644
---- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-@@ -10,6 +10,7 @@
-  * http://www.gnu.org/copyleft/gpl.html
-  */
+diff --git a/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt b/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
+new file mode 100644
+index 0000000..cff06ea
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
+@@ -0,0 +1,18 @@
++Texas Instruments - tlv320aic32x4 Codec module
++
++The tlv320aic32x4 serial control bus communicates through I2C protocols
++
++Required properties:
++ - compatible: Should be "ti,tlv320aic32x4"
++ - reg: I2C slave address
++
++Optional properties:
++ - gpio-reset: Reset-GPIO phandle with args as described in gpio/gpio.txt
++
++
++Example:
++
++codec: tlv320aic32x4@18 {
++	compatible = "ti,tlv320aic32x4";
++	reg = <0x18>;
++};
+diff --git a/sound/soc/codecs/tlv320aic32x4.c b/sound/soc/codecs/tlv320aic32x4.c
+index 1c9f1d8..6c38cb7 100644
+--- a/sound/soc/codecs/tlv320aic32x4.c
++++ b/sound/soc/codecs/tlv320aic32x4.c
+@@ -29,6 +29,7 @@
+ #include <linux/delay.h>
+ #include <linux/pm.h>
+ #include <linux/gpio.h>
++#include <linux/of_gpio.h>
+ #include <linux/i2c.h>
+ #include <linux/cdev.h>
+ #include <linux/slab.h>
+@@ -669,11 +670,22 @@ static struct snd_soc_codec_driver soc_codec_dev_aic32x4 = {
+ 	.num_dapm_routes = ARRAY_SIZE(aic32x4_dapm_routes),
+ };
  
-+#include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
++static int aic32x4_parse_dt(struct aic32x4_priv *aic32x4,
++		struct device_node *np)
++{
++	aic32x4->swapdacs = false;
++	aic32x4->micpga_routing = 0;
++	aic32x4->rstn_gpio = of_get_named_gpio(np, "gpio-reset", 0);
++
++	return 0;
++}
++
+ static int aic32x4_i2c_probe(struct i2c_client *i2c,
+ 			     const struct i2c_device_id *id)
+ {
+ 	struct aic32x4_pdata *pdata = i2c->dev.platform_data;
+ 	struct aic32x4_priv *aic32x4;
++	struct device_node *np = i2c->dev.of_node;
+ 	int ret;
  
- / {
-@@ -58,21 +59,21 @@
+ 	aic32x4 = devm_kzalloc(&i2c->dev, sizeof(struct aic32x4_priv),
+@@ -692,6 +704,12 @@ static int aic32x4_i2c_probe(struct i2c_client *i2c,
+ 		aic32x4->swapdacs = pdata->swapdacs;
+ 		aic32x4->micpga_routing = pdata->micpga_routing;
+ 		aic32x4->rstn_gpio = pdata->rstn_gpio;
++	} else if (np) {
++		ret = aic32x4_parse_dt(aic32x4, np);
++		if (ret) {
++			dev_err(&i2c->dev, "Failed to parse DT node\n");
++			return ret;
++		}
+ 	} else {
+ 		aic32x4->power_cfg = 0;
+ 		aic32x4->swapdacs = false;
+@@ -723,10 +741,17 @@ static const struct i2c_device_id aic32x4_i2c_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, aic32x4_i2c_id);
  
- 		power {
- 			label = "Power Button";
--			gpios = <&gpio3 29 0>;
-+			gpios = <&gpio3 29 GPIO_ACTIVE_LOW>;
- 			gpio-key,wakeup;
- 			linux,code = <KEY_POWER>;
- 		};
- 
- 		volume-up {
- 			label = "Volume Up";
--			gpios = <&gpio1 4 0>;
-+			gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
- 			gpio-key,wakeup;
- 			linux,code = <KEY_VOLUMEUP>;
- 		};
- 
- 		volume-down {
- 			label = "Volume Down";
--			gpios = <&gpio1 5 0>;
-+			gpios = <&gpio1 5 GPIO_ACTIVE_LOW>;
- 			gpio-key,wakeup;
- 			linux,code = <KEY_VOLUMEDOWN>;
- 		};
++static const struct of_device_id aic32x4_of_id[] = {
++	{ .compatible = "ti,tlv320aic32x4", },
++	{ /* senitel */ }
++};
++MODULE_DEVICE_TABLE(of, aic32x4_of_id);
++
+ static struct i2c_driver aic32x4_i2c_driver = {
+ 	.driver = {
+ 		.name = "tlv320aic32x4",
+ 		.owner = THIS_MODULE,
++		.of_match_table = aic32x4_of_id,
+ 	},
+ 	.probe =    aic32x4_i2c_probe,
+ 	.remove =   aic32x4_i2c_remove,
 -- 
-1.7.9.5
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.5.2
