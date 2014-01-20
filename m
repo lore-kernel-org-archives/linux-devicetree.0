@@ -1,29 +1,28 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH net-next v3 0/8] net: stmmac: Add Allwinner
- A20 GMAC ethernet
-Date: Sun, 19 Jan 2014 20:03:33 -0800 (PST)
-Message-ID: <20140119.200333.695302698969720789.davem@davemloft.net>
-References: <1389965087-21971-1-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH] DT: net: davinci_emac: "phy-handle" property is
+ actually optional
+Date: Sun, 19 Jan 2014 20:04:11 -0800 (PST)
+Message-ID: <20140119.200411.1357790885368672921.davem@davemloft.net>
+References: <201401170132.14479.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDCIDJ4RTAOBBF6A6KLAKGQED74NOLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1389965087-21971-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: wens-jdAy2FN1RRM@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-qxv4g6HH51o@public.gmane.org, vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org, uclinux-dist-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <201401170132.14479.sergei.shtylyov@cogentembedded.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: sergei.shtylyov@cogentembedded.com
+Cc: netdev@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com
 List-Id: devicetree@vger.kernel.org
 
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Date: Fri, 17 Jan 2014 21:24:39 +0800
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Date: Fri, 17 Jan 2014 01:32:13 +0300
 
-> This is v3 of the  Allwinner A20 GMAC glue layer for stmmac.
-> I have split the series into stmmac driver changes for net-next,
-> and clock and DT patches for their respective trees.
+> Though described as required, the "phy-handle" property for the DaVinci EMAC
+> binding is actually optional, as the driver will happily function without it,
+> assuming 100/FULL link; the property is not specified  either in the example
+> device node,  or in the actual EMAC device nodes for DA850 and AM3517 device
+> trees.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Series applied, thanks.
+Applied.
