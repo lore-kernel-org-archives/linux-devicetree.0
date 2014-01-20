@@ -1,7 +1,7 @@
-From: Olof Johansson <olof@lixom.net>
+From: Simon Horman <horms@verge.net.au>
 Subject: Re: PWM...
-Date: Sun, 19 Jan 2014 15:33:56 -0800
-Message-ID: <20140119233356.GA4986@quad.lixom.net>
+Date: Mon, 20 Jan 2014 09:14:46 +0900
+Message-ID: <20140120001446.GD9752@verge.net.au>
 References: <20140119164956.GR15937@n2100.arm.linux.org.uk>
  <CAOesGMi7g=PHjzhkuObkeu+P_c6kUz5uFcND7euafUW56CvsnQ@mail.gmail.com>
  <20140119193026.GS15937@n2100.arm.linux.org.uk>
@@ -13,7 +13,7 @@ Content-Disposition: inline
 In-Reply-To: <201401192126.41543.arnd@arndb.de>
 Sender: linux-pwm-owner@vger.kernel.org
 To: Arnd Bergmann <arnd@arndb.de>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, "arm@kernel.org" <arm@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-pwm@vger.kernel.org, "arm@kernel.org" <arm@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 On Sun, Jan 19, 2014 at 09:26:40PM +0100, Arnd Bergmann wrote:
@@ -43,12 +43,4 @@ On Sun, Jan 19, 2014 at 09:26:40PM +0100, Arnd Bergmann wrote:
 > controller, that can end up in significant work. I have not checked
 > if this is the case for i.MX though.
 
-Only imx53-tx53.dtsi and imx6qdl-sabresd.dtsi seem to reference pwm nodes from
-a dtsi file, the rest are from dts.
-
-Not all of the dts files have to be converted at the same time either;
-the #pwm-cells property can be changed per dts until they've all been
-converted, then the shared SoC dtsi can be converted.
-
-
--Olof
+Would this change imply that old dtbs would no longer work with new kernels?
