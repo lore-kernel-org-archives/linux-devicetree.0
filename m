@@ -1,192 +1,166 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 1/1] of/irq: create interrupts-extended-2 property
-Date: Mon, 20 Jan 2014 22:47:42 +0000
-Message-ID: <20140120224742.EC905C40B12@trevor.secretlab.ca>
-References: <1389786445-10598-1-git-send-email-plagnioj@jcrosoft.com> < 20140115121750.GE25824@e106331-lin.cambridge.arm.com> <20140115124041. GD9558@ns203013.ovh.net> <20140115134653.GF25824@e106331-lin.cambridge.arm. com> <20140115161224.GH25824@e106331-lin.cambridge.arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140115161224.GH25824-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [PATCH v2 1/2] dmaengine: add Qualcomm BAM dma driver
+Date: Mon, 20 Jan 2014 16:52:45 -0600
+Message-ID: <20140120225245.GA3530@qualcomm.com>
+References: <1389380874-22753-1-git-send-email-agross@codeaurora.org>
+ <1389380874-22753-2-git-send-email-agross@codeaurora.org>
+ <201401172349.28229.arnd@arndb.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201401172349.28229.arnd@arndb.de>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 15 Jan 2014 16:12:24 +0000, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> > 
-> > Another, more invasive option would be extend the dts syntax and teach
-> > dtc to handle property appending. Then the soc dts could stay as it is,
-> > and the board dts could have something like:
-> > 
-> > 	/append-property/ interrupts = <&intc1 6 1>;
-> > 	/append-property/ interrupt-names = "board-specific-irq";
-> > 
-> > Both these options solve the issue at the source, are general to other
-> > properties, and allow more than one level of hierarchy (the proposed
-> > interrupts-extended-2 only allows one level).
+On Fri, Jan 17, 2014 at 11:49:27PM +0100, Arnd Bergmann wrote:
+> On Friday 10 January 2014, Andy Gross wrote:
 > 
-> I've just had a go at implementing the append-property mechanism above
-> in dtc, and it was far easier than I expected (patch below).
+> > +static bool bam_dma_filter(struct dma_chan *chan, void *data)
+> > +{
+> > +	struct bam_filter_args *args = data;
+> > +	struct bam_chan *bchan = to_bam_chan(chan);
+> > +
+> > +	if (args->dev == chan->device &&
+> > +		args->id == bchan->id) {
+> > +
+> > +		/* we found the channel, so lets set the EE and dir */
+> > +		bchan->ee = args->ee;
+> > +		bchan->slave.direction = args->dir ?
+> > +				DMA_DEV_TO_MEM : DMA_MEM_TO_DEV;
+> > +		return true;
+> > +	}
+> > +
+> > +	return false;
+> > +}
 > 
-> Does anyone have any issues with the /append-property/ idea?
-
-I think that is reasonable.
-
-g.
-
-> 
-> Thanks,
-> Mark.
-> 
-> ---->8----
-> 
-> From 88be0036b6a966bd7506f58e3cb9ce9ea4c5ac48 Mon Sep 17 00:00:00 2001
-> From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Date: Wed, 15 Jan 2014 15:43:51 +0000
-> Subject: [PATCH] dtc: add ability to append properties
-> 
-> When dealing with hierarchies of dtsi files, handling minute differences
-> between individual boards can become very painful. Adding a single
-> board-specific interrupt requires duplicating the entire interrupts
-> property, which requires duplication of common values. This makes bug
-> fixing painful and if not handled very carefully files diverge rapdily.
-> 
-> To ameliorate this, this patch adds the ability to append properties,
-> allowing board files to describe only the additional values required in
-> a property. This functionality also works with strings, so parallel
-> properties like interupts and interrupt-names stay in sync. Properties
-> may be appended multiple times, and deleting properties clears all
-> previous appended values.
-> 
-> To append a property, secondary definitions must be prefixed with
-> /append-property/. This is longer than a possible '+=' syntax, but makes
-> it far easier to spot when appending behaviour is requested, and so
-> hopefully will lead to fewer buggy dts files.
-> 
-> For example, if the following dts fragements are compiled together:
-> 
->   / {
->       interrupts = <0>, <1>;
->       interrupt-names = "zero", "one";
->   };
-> 
->   / {
->       /append-property/ interrupts = <2>, <3>;
->       /append-property/ interrupt-names = "two", "three";
->   };
-> 
-> They will result in a dtb equivalent to the following dts fragment:
-> 
->   / {
->       interrupts = <0>, <1>, <2>, <3>;
->       interrupt-names = "zero", "one", "two", "three";
->   };
-> 
-> Signed-off-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> ---
->  dtc-lexer.l  |  7 +++++++
->  dtc-parser.y |  5 +++++
->  dtc.h        |  2 ++
->  livetree.c   | 15 ++++++++++++++-
->  4 files changed, 28 insertions(+), 1 deletion(-)
-> 
-> diff --git a/dtc-lexer.l b/dtc-lexer.l
-> index 0cd7e67..7989abe 100644
-> --- a/dtc-lexer.l
-> +++ b/dtc-lexer.l
-> @@ -131,6 +131,13 @@ static bool pop_input_file(void);
->  			return DT_DEL_PROP;
->  		}
->  
-> +<*>"/append-property/"	{
-> +			DPRINT("Keyword: /append-property/\n");
-> +			DPRINT("<PROPNODENAME>\n");
-> +			BEGIN(PROPNODENAME);
-> +			return DT_APPEND_PROP;
-> +		}
-> +
->  <*>"/delete-node/"	{
->  			DPRINT("Keyword: /delete-node/\n");
->  			DPRINT("<PROPNODENAME>\n");
-> diff --git a/dtc-parser.y b/dtc-parser.y
-> index 4864631..a8409ed 100644
-> --- a/dtc-parser.y
-> +++ b/dtc-parser.y
-> @@ -63,6 +63,7 @@ static unsigned char eval_char_literal(const char *s);
->  %token DT_LSHIFT DT_RSHIFT DT_LE DT_GE DT_EQ DT_NE DT_AND DT_OR
->  %token DT_BITS
->  %token DT_DEL_PROP
-> +%token DT_APPEND_PROP
->  %token DT_DEL_NODE
->  %token <propnodename> DT_PROPNODENAME
->  %token <literal> DT_LITERAL
-> @@ -195,6 +196,10 @@ propdef:
->  		{
->  			$$ = build_property($1, empty_data);
->  		}
-> +	| DT_APPEND_PROP DT_PROPNODENAME '=' propdata ';'
-> +		{
-> +			$$ = build_property_append($2, $4);
-> +		}
->  	| DT_DEL_PROP DT_PROPNODENAME ';'
->  		{
->  			$$ = build_property_delete($2);
-> diff --git a/dtc.h b/dtc.h
-> index 20e4d56..8687530 100644
-> --- a/dtc.h
-> +++ b/dtc.h
-> @@ -133,6 +133,7 @@ struct label {
->  };
->  
->  struct property {
-> +	bool appended;
->  	bool deleted;
->  	char *name;
->  	struct data val;
-> @@ -186,6 +187,7 @@ void delete_labels(struct label **labels);
->  
->  struct property *build_property(char *name, struct data val);
->  struct property *build_property_delete(char *name);
-> +struct property *build_property_append(char *name, struct data val);
->  struct property *chain_property(struct property *first, struct property *list);
->  struct property *reverse_properties(struct property *first);
->  
-> diff --git a/livetree.c b/livetree.c
-> index b61465f..894e42b 100644
-> --- a/livetree.c
-> +++ b/livetree.c
-> @@ -74,6 +74,15 @@ struct property *build_property_delete(char *name)
->  	return new;
->  }
->  
-> +struct property *build_property_append(char *name, struct data val)
-> +{
-> +	struct property *new = build_property(name, val);
-> +
-> +	new->appended = 1;
-> +
-> +	return new;
-> +}
-> +
->  struct property *chain_property(struct property *first, struct property *list)
->  {
->  	assert(first->next == NULL);
-> @@ -167,7 +176,11 @@ struct node *merge_nodes(struct node *old_node, struct node *new_node)
->  				for_each_label_withdel(new_prop->labels, l)
->  					add_label(&old_prop->labels, l->label);
->  
-> -				old_prop->val = new_prop->val;
-> +				if (new_prop->appended)
-> +					old_prop->val = data_merge(old_prop->val, new_prop->val);
-> +				else
-> +					old_prop->val = new_prop->val;
-> +
->  				old_prop->deleted = 0;
->  				free(new_prop);
->  				new_prop = NULL;
-> -- 
-> 1.8.1.1
+> A filter function should no longer be needed.
 > 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok, will remove.
+
+> > +static struct dma_chan *bam_dma_xlate(struct of_phandle_args *dma_spec,
+> > +		struct of_dma *of)
+> > +{
+> > +	struct bam_filter_args args;
+> > +	dma_cap_mask_t cap;
+> > +
+> > +	if (dma_spec->args_count != 3)
+> > +		return NULL;
+> > +
+> > +	args.dev = of->of_dma_data;
+> > +	args.id = dma_spec->args[0];
+> > +	args.ee = dma_spec->args[1];
+> > +	args.dir = dma_spec->args[2];
+> > +
+> > +	dma_cap_zero(cap);
+> > +	dma_cap_set(DMA_SLAVE, cap);
+> > +
+> > +	return dma_request_channel(cap, bam_dma_filter, &args);
+> > +}
+> 
+> Instead, call dma_get_slave_channel() with the right channel that you already know
+> here.
+> 
+
+Agreed.
+
+> > +	if (pdev->dev.of_node) {
+> > +		ret = of_dma_controller_register(pdev->dev.of_node,
+> > +				bam_dma_xlate, &bdev->common);
+> > +
+> > +		if (ret) {
+> > +			dev_err(bdev->dev, "failed to register of_dma\n");
+> > +			goto err_unregister_dma;
+> > +		}
+> > +	}
+> 
+> No need to check for pdev->dev.of_node when that is the only mode of probing.
+> 
+
+Good point. I'll remove extraneous check.
+
+> > +
+> > +#ifdef CONFIG_OF
+> > +static const struct of_device_id bam_of_match[] = {
+> > +	{ .compatible = "qcom,bam-v1.4.0", },
+> > +	{ .compatible = "qcom,bam-v1.4.1", },
+> > +	{}
+> > +};
+> > +MODULE_DEVICE_TABLE(of, bam_of_match);
+> > +#endif
+> 
+> Also, you can remove the #ifdef here and the of_match_ptr() below.
+> 
+
+If this is removed, then I'll have to add the OF dependency in the Kconfig,
+correct?
+
+> > +
+> > +static struct platform_driver bam_dma_driver = {
+> > +	.probe = bam_dma_probe,
+> > +	.remove = bam_dma_remove,
+> > +	.driver = {
+> > +		.name = "bam-dma-engine",
+> > +		.owner = THIS_MODULE,
+> > +		.of_match_table = of_match_ptr(bam_of_match),
+> > +	},
+> > +};
+> > +
+> > +static int __init bam_dma_init(void)
+> > +{
+> > +	return platform_driver_register(&bam_dma_driver);
+> > +}
+> > +
+> > +static void __exit bam_dma_exit(void)
+> > +{
+> > +	return platform_driver_unregister(&bam_dma_driver);
+> > +}
+> > +
+> 
+> module_platform_driver()
+> 
+
+Will fix.
+
+> > diff --git a/drivers/dma/qcom_bam_dma.h b/drivers/dma/qcom_bam_dma.h
+> > new file mode 100644
+> > index 0000000..2cb3b5f
+> > --- /dev/null
+> > +++ b/drivers/dma/qcom_bam_dma.h
+> > @@ -0,0 +1,268 @@
+> > +#ifndef __QCOM_BAM_DMA_H__
+> > +#define __QCOM_BAM_DMA_H__
+> > +
+> > +#include <linux/dmaengine.h>
+> > +#include "virt-dma.h"
+> > +
+> > +enum bam_channel_dir {
+> > +	BAM_PIPE_CONSUMER = 0,	/* channel reads from data-fifo or memory */
+> > +	BAM_PIPE_PRODUCER,	/* channel writes to data-fifo or memory */
+> > +};
+> 
+> Since the header does not serve as an interface, just move all the contents
+> into the driver directly.
+> 
+
+OK.  SBoyd made the same comment.  I'll go ahead and collapse both down to 1
+file.
+
+> > +struct bam_desc_hw {
+> > +	u32 addr;		/* Buffer physical address */
+> > +	u16 size;		/* Buffer size in bytes */
+> > +	u16 flags;
+> > +} __packed;
+> 
+> Remove __packed here, it only makes the access less efficient but does not change
+> the layout, which is already packed.
+
+Ok.  Will fix.
+
+-- 
+sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
