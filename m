@@ -1,71 +1,91 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] libata, dt: Add clocks to sata_rcar bindings
-Date: Mon, 20 Jan 2014 09:31:19 +0000
-Message-ID: <20140120093119.GA28747@e106331-lin.cambridge.arm.com>
-References: <1389910062-17777-1-git-send-email-valentine.barshak@cogentembedded.com>
- <2218997.BjldcaRU33@avalon>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v3 16/24] drm/i2c: tda998x: add DT documentation
+Date: Mon, 20 Jan 2014 10:54:10 +0100
+Message-ID: <20140120105410.15705f32@armhf>
+References: <cover.1390153344.git.moinejf@free.fr>
+	<20140119195844.0c975b90@armhf>
+	<CAOesGMi96wkHM8jfHNVnM7RJyW2vVoP6FT4YyYzKp-kfc0jTuQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2218997.BjldcaRU33@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Valentine Barshak <valentine.barshak@cogentembedded.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tejun Heo <tj@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMi96wkHM8jfHNVnM7RJyW2vVoP6FT4YyYzKp-kfc0jTuQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 19, 2014 at 08:16:42PM +0000, Laurent Pinchart wrote:
-> Hi Valentine,
-> 
-> Thank you for the patch.
-> 
-> On Friday 17 January 2014 02:07:42 Valentine Barshak wrote:
-> > Now that the clocks are available in the R-Car Gen2 DT,
-> > add clocks property description to the sata_rcar bindings.
-> > The clocks have been tested on r8a7791 so we use that
-> > as an example of the R-Car SATA node.
-> > 
-> > The patch is against for-next branch of the libata git repo.
-> > 
-> > Signed-off-by: Valentine Barshak <valentine.barshak@cogentembedded.com>
+On Sun, 19 Jan 2014 20:06:09 -0800
+Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+
+> Hi,
+>=20
+> On Sun, Jan 19, 2014 at 10:58 AM, Jean-Francois Moine <moinejf@free.f=
+r> wrote:
+> > Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
 > > ---
-> >  Documentation/devicetree/bindings/ata/sata_rcar.txt | 10 ++++++----
-> >  1 file changed, 6 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt
-> > b/Documentation/devicetree/bindings/ata/sata_rcar.txt index
-> > 1e61113..6da60c0 100644
-> > --- a/Documentation/devicetree/bindings/ata/sata_rcar.txt
-> > +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
-> > @@ -7,12 +7,14 @@ Required properties:
-> >  			  - "renesas,sata-r8a7791" for R-Car M2
-> >  - reg			: address and length of the SATA registers;
-> >  - interrupts		: must consist of one interrupt specifier.
-> > +- clocks		: must contain a phandle and clock-specifier pair.
-> 
-> I would say "must contain a reference to the functional clock.", as the clock 
-> could be referenced by a phandle only depending on the SATA IP core 
-> integration in the SoC.
+> >  .../devicetree/bindings/drm/i2c/tda998x.txt        | 24 ++++++++++=
+++++++++++++
+> >  1 file changed, 24 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/drm/i2c/tda99=
+8x.txt
+>=20
+> Please cc bindings for review to devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (cc:d her=
+e now)
+>=20
+> > diff --git a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt =
+b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
+> > new file mode 100644
+> > index 0000000..72da71d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
+> > @@ -0,0 +1,24 @@
+> > +Device-Tree bindings for the NXP TDA998x HDMI transmitter
+> > +
+> > +Required properties;
+> > +  - compatible: must be "nxp,tda998x"
+> > +
+> > +Optional properties:
+> > +  - interrupts: interrupt number for HDMI exchanges - default: by =
+polling
+>=20
+> What are HDMI exchanges, and how do they differ from other interrupts=
+?
 
-In that case the clock-specifier is simply zero cells (though admittedly
-a pair including a zero-cells element is a bit odd).
+The used HDMI interrupt events are screen plug/unplug and EDID read.
+There are also CEC read/write which are not yet implemented in the
+tda998x driver.
 
-The wording in the patch is consistent with the form I've been
-recommending elsewhere:
+There is no difference from normal interrupts, except that the events
+may be get by polling, so, the interrupt number is optional.
 
-- clocks: A list of phandles + clock-specifier pairs, one for each
-  entry in clock-names.
-- clock-names: Should contain:
-  * "fclk" - the functional clock
-  * "other_clk" - some other clock.
+> > +
+> > +  - pinctrl-0: pin control group to be used for this controller (I=
+RQ).
+> > +
+> > +  - pinctrl-names: must contain a "default" entry.
+> > +
+> > +  - video-ports: 24 bits value - default: <0x230145>
+>=20
+> What is this?
 
-> 
-> Wouldn't it be time to have standard wordings for clocks (and interrupt) 
-> bindings ? 
+The video-ports value defines how the video controller is connected to
+the tda998x chip. Each 4 bits value tells from which input pins comes
+the video data and if there is any bit inversion. Each byte of this
+video-ports is used to load the VIP_CNTRL_{0,1,2} registers. These ones
+are described in the TDA9983B documentation which is the closer
+available document about the TDA998x family.
 
-I would certainly like to see consistent wording across bindings
-(especially for interrupts given the addition of the interrupts-extended
-binding).
+The default value is the one defined for TI boards.
+A known other value is <0x234501> which is used for Russell's Armada
+DRM driver in the Cubox (Marvell A510), but this driver has no DT
+support.
 
-Cheers,
-Mark.
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
