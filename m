@@ -1,95 +1,48 @@
-From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH] of: fix of_update_property()
-Date: Mon, 20 Jan 2014 05:50:17 +0000
-Message-ID: <b61be84c13ed4056a62743e16beb70f2@BY2PR03MB505.namprd03.prod.outlook.com>
-References: <1389933996-19306-1-git-send-email-Li.Xiubo@freescale.com>
- <CAL_JsqJuAv8=pBuzYO5ZGzroD1kq6gjmNsTjoVyXR=vcu+-pTA@mail.gmail.com>
+From: "Gupta, Pekon" <pekon-l0cyMroinI0@public.gmane.org>
+Subject: RE: [RFC/PATCH 0/1] mtd: Add NAND ECC devicetree binding
+Date: Mon, 20 Jan 2014 06:21:35 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA67E79@DBDE04.ent.ti.com>
+References: <1389960820-18696-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20980858CB6D3A4BAE95CA194937D5E73EA66555@DBDE04.ent.ti.com>
+ <20140117203347.GC3843@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJuAv8=pBuzYO5ZGzroD1kq6gjmNsTjoVyXR=vcu+-pTA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20140117203347.GC3843@localhost>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Seif Mazareeb <seif-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> Subject: Re: [PATCH] of: fix of_update_property()
-> 
-> On Thu, Jan 16, 2014 at 10:46 PM, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> > The of_update_property() is intent to update a property in a node
-> 
-> s/intent/indended/
-> 
-> > and if the property does not exist, will add it to the node.
-> >
-> > The second search of the property is possibly won't be found, that
-> > maybe removed by other thread just before the second search begain,
-> > if so just retry it.
-> 
-> How did you find this problem? Actual use or some artificial stress test?
->
-
-Some artificial stress test at home.
-
- 
-> > Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > ---
-> >  drivers/of/base.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/of/base.c b/drivers/of/base.c
-> > index f807d0e..d0c53bc 100644
-> > --- a/drivers/of/base.c
-> > +++ b/drivers/of/base.c
-> > @@ -1572,6 +1572,7 @@ int of_update_property(struct device_node *np, struct
-> property *newprop)
-> >         if (!newprop->name)
-> >                 return -EINVAL;
-> >
-> > +retry:
-> >         oldprop = of_find_property(np, newprop->name, NULL);
-> >         if (!oldprop)
-> >                 return of_add_property(np, newprop);
-> 
-> Isn't there also a race that if you do 2 updates for a non-existent
-> property and both threads try to add the property, the first one will
-> succeed and the 2nd will fail. The 2nd one needs to retry as well.
-> 
-
-Well, yes, that will happen.
-
-Maybe we could add one __of_add_property() without any locks, like
-__of_find_property(). And then in of_update_prperty() move the searching
-and adding operations to between lock and unlock, like:
-
-	raw_spin_lock_irqsave();
-	oldprop = __of_find_property();
-      	if (!oldprop) {
-              rc = __of_add_property(np, newprop);
-		 ...
-	}
-	...
-	replace the node...
-	...
-	raw_spin_unlock_irqrestore();
-
-> Also, couldn't the node itself be removed while trying to do the update?
-> 
-
-For this is between the lock operations. I think this doesn't matter here.
-
-> There seem to be multiple problems with this code, but doing multiple
-> simultaneous, conflicting updates seems like an unlikely case.
-> 
-
-Yes, but this will happen in theory. 
-
-Thanks,
-
-Best Regards,
-Xiubo
+SGkgRXplcXVpZWwsDQoNCj5Gcm9tOiBFemVxdWllbCBHYXJjaWEgDQo+Pk9uIEZyaSwgSmFuIDE3
+LCAyMDE0IGF0IDA1OjU4OjEzUE0gKzAwMDAsIEd1cHRhLCBQZWtvbiB3cm90ZToNClsuLi5dDQoN
+Cj4+IFllcywgdGhpcyBpcyBnb29kIGFwcHJvYWNoLg0KPj4gSXQgd2FzIGZvdW5kIGVhcmxpZXIg
+dGhhdCBnZW5lcmljIE5BTkQgRFQgYmluZGluZ3MgYXJlIG5vdCBtdWNoIHVzZSB0byBvdGhlcg0K
+Pj4gY29udHJvbGxlcnMgYXMgd2VsbCwgYXMgZGlmZmVyZW50IGgvdyBlbmdpbmVzIGhhdmUgZGlm
+ZmVyZW50IGludGVycHJldGF0aW9ucy4NCj4+IEJyaWFuIE5vcnJpcyBoYWQgc2ltaWxhciBjb21t
+ZW50cyBnaXZpbmcgZXhhbXBsZSBvZiBoaXMgaGFyZHdhcmUuDQo+PiAoaG9wZSBmb2xsb3dpbmcg
+cmVmZXJlbmNlIGhlbHBzKS4NCj4+DQo+PiBbMV0gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+cGlwZXJtYWlsL2xpbnV4LW10ZC8yMDEzLVNlcHRlbWJlci8wNDg4NjkuaHRtbA0KPj4NCj4NCj5Z
+ZXMsIEJyaWFuIHN1Z2dlc3RlZCB0aGlzIGVjYy1zdHJlbmd0aC9lY2Mtc2l6ZSBhcHByb2FjaCBv
+biBJUkMuDQo+DQo+UGVrb24sIGRvIHlvdSB0aGluayB0aGlzIGJpbmRpbmcgcHJvcG9zYWwgaXMg
+Z29vZCBlbm91Z2ggdG8gZGVzY3JpYmUgT01BUCBOQU5EDQo+RUNDIG1vZGU/DQo+DQo+SSdtIG5v
+dCBpbXBseWluZyB3ZSBzaG91bGQgZGVwcmVjYXRlIHRoZSByZWNlbnRseSBhZGRlZCAidGktbmFu
+ZC1lY2Mtb3B0IiwNCj5idXQganVzdCB3YW50IHRvIGtub3cgaXQncyBldmVudHVhbGx5IHBvc3Np
+YmxlLg0KPg0KWWVzLCB0aGlzIGlzIGdvb2QgYXBwcm9hY2ggZm9yIGxvbmctdGVybSwgYW5kIGl0
+IGNhbiByZXBsYWNlICJ0aS1uYW5kLWVjYy1vcHQiDQoidGktbmFuZC1lY2Mtb3B0IiBpcyBub3Qg
+bmV3IERUIGJpbmRpbmcsIGl0IGp1c3QgZ290IHNvbWUgbmV3IHZhbHVlcyBhZGRlZA0KSG93ZXZl
+ciwgeW91IGhhdmUgdG8gY29udmluY2UgRFQgTWFpbnRhaW5lcnMgdG8gZ2V0IHRoaXMgaW4sIGFu
+ZCB0aGVuIGRlcHJlY2F0ZQ0Kb3RoZXIgdmVuZG9yIHNwZWNpZmljIGJpbmRpbmdzLiBJdCB3b3Vs
+ZCBiZSBkaWZmaWN1bHQgdG8gbWFpbnRhaW4gYmFja3dhcmQNCmNvbXBhdGliaWxpdHkgdG8gdGhl
+c2UgYmluZGluZ3MsIGlmIHdlIG1vdmUgdG8gJ25hbmQtZWNjLXN0cmVuZ3RoJy4NCg0KQXQgc29t
+ZS1wb2ludCB3ZSBuZWVkIHRvIGdldCBzb21lIGNvbmNyZXRlIGd1aWRlbGluZXMgZnJvbSBEVCBN
+YWludGFpbmVycyBvbg0KaG93IGxvbmcgd2Ugc2hvdWxkIHN1cHBvcnQgZGVwcmVjYXRlZCBiaW5k
+aW5ncyBpbiBvdXIgY29kZSwgQW5kIHdoYXQgaXMgdGhlDQphZ2Ugb2YgRFQgYmluZGluZy4gSSB0
+aGluayBEYXZpZCBXb29kaG91c2Ugc2hvdWxkIHRocm93IG1vcmUgbGlnaHQsIGFzIGhlIGhhZA0K
+c29tZSBkaXNjdXNzaW9ucyAmIGlkZWFzIG9uIGFib3V0IERUIGJpbmRpbmcgbGlmZSwgZHVyaW5n
+IGEgbGludXggY29uZmVyZW5jZS4NCg0KDQp3aXRoIHJlZ2FyZHMsIHBla29uDQo=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
