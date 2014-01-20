@@ -1,55 +1,72 @@
-From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH RFC 04/10] base: power: Add generic OF-based power domain
- look-up
-Date: Mon, 20 Jan 2014 17:24:17 +0100
-Message-ID: <52DD4DB1.2050200@samsung.com>
-References: <1389469372-17199-1-git-send-email-tomasz.figa@gmail.com>
- <1389469372-17199-5-git-send-email-tomasz.figa@gmail.com>
- <87r48a8t99.fsf@linaro.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/3] mmc: add support for power-on sequencing through DT
+Date: Mon, 20 Jan 2014 16:36:27 +0000
+Message-ID: <20140120163627.GT17314@sirena.org.uk>
+References: <1390190215-22700-1-git-send-email-olof@lixom.net>
+ <1390190215-22700-2-git-send-email-olof@lixom.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <87r48a8t99.fsf-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="xt4oM5y0t/70YhQj"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1390190215-22700-2-git-send-email-olof@lixom.net>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: linux-mmc@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, chris@printf.net, robh+dt@kernel.org, ijc+devicetree@hellion.org.ok, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kevin,
 
-On 14.01.2014 16:42, Kevin Hilman wrote:
-> Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
->
->> This patch introduces generic code to perform power domain look-up using
->> device tree and automatically bind devices to their power domains.
->> Generic device tree binding is introduced to specify power domains of
->> devices in their device tree nodes.
->>
->> Backwards compatibility with legacy Samsung-specific power domain
->> bindings is provided, but for now the new code is not compiled when
->> CONFIG_ARCH_EXYNOS is selected to avoid collision with legacy code. This
->> will change as soon as Exynos power domain code gets converted to use
->> the generic framework in further patch.
->>
->> Signed-off-by: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> I haven't read through this in detail yet, but wanted to make sure that
-> the DT representation can handle nested power domains.  At least
-> SH-mobile has a hierarchy of power domains and the genpd code can handle
-> that, so wanted to make sure that the DT representation can handle it as
-> well.
+--xt4oM5y0t/70YhQj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The representation of power domains themselves as implied by this patch 
-is fully platform-specific. The only generic part is the 
-#power-domain-cells property, which defines the number of cells needed 
-to identify the power domain of given provider. You are free to have any 
-platform-specific properties (or even generic ones, added on top of this 
-patch) to let you specify the hierarchy in DT.
+On Sun, Jan 19, 2014 at 07:56:53PM -0800, Olof Johansson wrote:
 
-Best regards,
-Tomasz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	if (host->card_regulator) {
+
+NULL is a potentially valid regulator; use IS_ERR().  Also see below...
+
+> +		dev_dbg(host->parent, "Enabling external regulator");
+> +		if (regulator_enable(host->card_regulator))
+> +			dev_err(host->parent, "Failed to enable external regulator");
+
+You should really log the error code here.
+
+> +	host->card_regulator = regulator_get(host->parent, "card-external-vcc");
+> +
+
+...this won't handle probe deferral or other errors.  Given what this is
+for it should probably be using regulator_get_optional(), the driver is
+happy to carry on if a supply isn't available.  On the other hand it
+just enables and disables so it's probably easier to just ignore that
+and let the stub regulator get used anyway.
+
+I have to say I do worry what happens if the device has multiple
+supplies that need to be managed (which is common enough, for example
+analogue and digital supplies tend to be decoupled) or if the device can
+do useful things with the supplies.  In the case of SDIO it's *probably*
+less relevant though I have seen applications where it might be.
+
+--xt4oM5y0t/70YhQj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS3VCIAAoJELSic+t+oim9hAcQAI6jHQjZbpCVKAuy5QCEgfQO
+qalfUkwCgNERZgm8KhmL3HjyY6/5Qi2bj21gC/qqWWT3KwSvct+HC+WflxpdO+/F
+p5y0UeJciAS6XF5sUPaTgpXkcl3w/NOvJClaOJputDUDF3og2IAa9cGnXcwvNp8X
+5zg40avldTr1lsdYw5GZPyUov+3F+Vkv9aJpmXnQF5liP1RlIMthdP1ai/CpO7y7
+ELLbS5KVGN7mqzZpSTkEp0K8LkZbATQ51g9Zb1bQni5CrjqSSyApvQTvQ1B0jDjV
+DVJTb8lxUFWwTHXw3yd+LYpdx0NcnoRV4dAdcEs3r4ktHg8rfcq8rEAFCsK23sg8
+Mgq12bnW75f/jJy/a1QnFD56+u7dveu80kIfnu/+XZ3Mz93ZcOQ7dmczOe47uSDX
+1hm33vnulJbelWFZMDwsPlaG7QxQF33ccOoGSlZtyAd8vOnk0PPGWhMC8R6NeGEm
+P1BiqMb2I/JpYC6Me/MkxG61mOQCRV/LW8fNKDFn3L3DSsZ6nWRZoMOwirqNU5+M
+fW5YYBJD71JWHc1a2VQUpOgAoMasBGme2eYNW7p7WP+Nz7iyR5xbpQ9IaEBDlT9k
+P1GkUYTOLNLsDeFoUYjZJruxOQDfS8jGGHLxO22h4BMKxeRCbiuXpZs8GR9y0nk3
+ayYJ4u+LmhV6oyHy5pCV
+=fX3X
+-----END PGP SIGNATURE-----
+
+--xt4oM5y0t/70YhQj--
