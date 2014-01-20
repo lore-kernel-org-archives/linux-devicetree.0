@@ -1,64 +1,63 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 1/3] mmc: add support for power-on sequencing through DT
-Date: Mon, 20 Jan 2014 17:16:21 +0000
-Message-ID: <20140120171621.GG15937@n2100.arm.linux.org.uk>
-References: <1390190215-22700-1-git-send-email-olof@lixom.net> <1390190215-22700-2-git-send-email-olof@lixom.net> <20140120164859.GF15937@n2100.arm.linux.org.uk> <CAOMZO5AfSe_c7gfee0BcZso8ZYg=PaTDwfsXwzpEcM1554VQ6Q@mail.gmail.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH RFC 04/10] base: power: Add generic OF-based power domain
+ look-up
+Date: Mon, 20 Jan 2014 18:32:53 +0100
+Message-ID: <52DD5DC5.3000908@samsung.com>
+References: <1389469372-17199-1-git-send-email-tomasz.figa@gmail.com>
+ <1389469372-17199-5-git-send-email-tomasz.figa@gmail.com>
+ <20140116163409.GD25540@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5AfSe_c7gfee0BcZso8ZYg=PaTDwfsXwzpEcM1554VQ6Q@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Olof Johansson <olof@lixom.net>, linux-mmc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, ijc+devicetree@hellion.org.ok, galak@codeaurora.org, chris@printf.net
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20140116163409.GD25540@e102568-lin.cambridge.arm.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene.kim@samsung.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <Mark.Rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 20, 2014 at 03:03:50PM -0200, Fabio Estevam wrote:
-> On Mon, Jan 20, 2014 at 2:48 PM, Russell King - ARM Linux
-> <linux@arm.linux.org.uk> wrote:
-> 
-> > So far so good.  Now, what about this external oscillator which has its
-> > own separate power control.  My immediate thought is that this can be
-> > specified via card_ext_clock - I would simply need to declare a fixed-rate
-> > clock with either a regulator (power switch) controlled via a gpio (which
-> > would probably be closer to the hardware) or a gpio as an enable... ah,
-> > that requires me to write a common clock driver for that bit since this
-> > is currently not modelled by CCF...
-> 
-> Isn't this covered by the gpios property of fixed-clock?
-> 
-> We do the following to enable the 26MHz codec clock in
-> imx51-babbage.dts via GPIO4_26:
-> 
->         clk_26M: codec_clock {
->             compatible = "fixed-clock";
->             reg=<0>;
->             #clock-cells = <0>;
->             clock-frequency = <26000000>;
->             gpios = <&gpio4 26 GPIO_ACTIVE_LOW>;
->         };
+Hi Lorenzo,
 
-Not as far as I can see.  fixed-clock appears to have two properies:
+On 16.01.2014 17:34, Lorenzo Pieralisi wrote:
+> Hi Tomasz,
+>
+> thank you for posting this series. I would like to use the DT bindings
+> for power domains in the bindings for C-states on ARM:
+>
+> http://comments.gmane.org/gmane.linux.power-management.general/41012
+>
+> and in particular link a given C-state to a given power domain so that the
+> kernel will have a way to actually check what devices are lost upon C-state
+> entry (and for devices I also mean CPU peripheral like PMUs, GIC CPU IF,
+> caches and possibly cpus, all of them already represented with DT nodes).
+>
+> I have a remark:
+>
+> -  Can we group device nodes under a single power-domain-parent so that
+>     all devices defined under that parent won't have to re-define a
+>     power-domain property (a property like interrupt-parent, so to speak)
+>
+> What do you think ?
 
-	clock-frequency
-	clock-output-names
+Hmm, I can see potential benefits of such construct on platforms with 
+clear hierarchy of devices, but to make sure I'm getting it correctly, 
+is the following what you have in mind?
 
-and nothing else.  See of_fixed_clk_setup in drivers/clk/clk-fixed-rate.c.
-You'll also find that the documentation in this file says this about it:
+soc-domain-x@12340000 {
+	compatible = "...";
+	reg = <...>;
+	power-domain-parent = <&power_domains DOMAIN_X>;
 
- * DOC: basic fixed-rate clock that cannot gate
- *
- * Traits of this clock:
- * prepare - clk_(un)prepare only ensures parents are prepared
- * enable - clk_enable only ensures parents are enabled
- * rate - rate is always a fixed value.  No clk_set_rate support
- * parent - fixed parent.  No clk_set_parent support
+	device@1000 {
+		compatible = "...";
+		// inherits power-domain = <&power_domains DOMAIN_X>
+	};
 
-So, I think the bit which you quote from imx51-babbage.dts is wishful
-thinking on the part of the author of the DT file, rather than actually
-being implemented in any way by the kernel DT support.
+	device@2000 {
+		compatible = "...";
+		// inherits power-domain = <&power_domains DOMAIN_X>
+	};
+};
 
--- 
-FTTC broadband for 0.8mile line: 5.8Mbps down 500kbps up.  Estimation
-in database were 13.1 to 19Mbit for a good line, about 7.5+ for a bad.
-Estimate before purchase was "up to 13.2Mbit".
+Best regards,
+Tomasz
