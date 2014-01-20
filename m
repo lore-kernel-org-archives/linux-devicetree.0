@@ -1,75 +1,288 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: Re: [PATCH v2 2/4] ASoC: tlv320aic32x4: DT support
-Date: Mon, 20 Jan 2014 13:58:41 +0100
-Message-ID: <20140120125841.GA6114@pengutronix.de>
-References: <1390219558-25341-1-git-send-email-mpa@pengutronix.de>
- <1390219558-25341-3-git-send-email-mpa@pengutronix.de>
- <1390222497.5871.2.camel@pizza.hi.pengutronix.de>
+From: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Fwd: [PATCH v3 3/7] net: moxa: connect to PHY
+Date: Mon, 20 Jan 2014 14:18:48 +0100
+Message-ID: <CACmBeS1UiHkPWatFrgoqTK4VuhjNfdBtW3juz-ywMWeOPtzyBQ@mail.gmail.com>
+References: <1390216399-27028-1-git-send-email-jonas.jensen@gmail.com>
+	<1390216399-27028-3-git-send-email-jonas.jensen@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <1390222497.5871.2.camel@pizza.hi.pengutronix.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1390216399-27028-3-git-send-email-jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 20, 2014 at 01:54:57PM +0100, Philipp Zabel wrote:
-> Am Montag, den 20.01.2014, 13:05 +0100 schrieb Markus Pargmann:
-> > Add DT support for this codec. The bindings differ a bit from the aic3x
-> > codec bindings, so I created a new binding documentation.
-> > 
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Pawel Moll <pawel.moll@arm.com>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> > Cc: Kumar Gala <galak@codeaurora.org>
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-> > ---
-> >  .../devicetree/bindings/sound/tlv320aic32x4.txt    | 18 ++++++++++++++++
-> >  sound/soc/codecs/tlv320aic32x4.c                   | 25 ++++++++++++++++++++++
-> >  2 files changed, 43 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt b/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
-> > new file mode 100644
-> > index 0000000..cff06ea
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
-> > @@ -0,0 +1,18 @@
-> > +Texas Instruments - tlv320aic32x4 Codec module
-> > +
-> > +The tlv320aic32x4 serial control bus communicates through I2C protocols
-> > +
-> > +Required properties:
-> > + - compatible: Should be "ti,tlv320aic32x4"
-> > + - reg: I2C slave address
-> > +
-> > +Optional properties:
-> > + - gpio-reset: Reset-GPIO phandle with args as described in gpio/gpio.txt
-> 
-> This should be "reset-gpios".
+Forward to devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org because it has parts that
+touches Documentation/devicetree/bindings/net/.
 
-Thanks, I will fix it for v3.
-
-Regards,
-
-Markus
+---------- Forwarded message ----------
+From: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Date: 20 January 2014 12:13
+Subject: [PATCH v3 3/7] net: moxa: connect to PHY
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org,
+linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org,
+f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bhutchings-s/n/eUQHGBpZroRs9YW3xA@public.gmane.org, Jonas Jensen
+<jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+The kernel now has a MDIO bus driver and a phy_driver (RTL8201CP),
+connect to this PHY using OF.
+
+Signed-off-by: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+
+Notes:
+    Applies to next-20140120
+
+ .../devicetree/bindings/net/moxa,moxart-mac.txt    | 47 ++++++++++-
+ drivers/net/ethernet/moxa/moxart_ether.c           | 92 +++++++++++++++++++++-
+ drivers/net/ethernet/moxa/moxart_ether.h           |  2 +
+ 3 files changed, 138 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
+b/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
+index 583418b..94c1f3b 100644
+--- a/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
++++ b/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
+@@ -1,21 +1,64 @@
+ MOXA ART Ethernet Controller
+
++Integrated MDIO bus node:
++
++- compatible: "moxa,moxart-mdio"
++- Inherits from MDIO bus node binding[1]
++
++[1] Documentation/devicetree/bindings/net/phy.txt
++
++
++Ethernet node:
++
+ Required properties:
+
+ - compatible : Must be "moxa,moxart-mac"
+ - reg : Should contain register location and length
+ - interrupts : Should contain the mac interrupt number
+
++Optional Properties:
++
++- phy-handle : the phandle to a PHY node
++
++
+ Example:
+
++       mdio0: mdio@90900090 {
++               compatible = "moxa,moxart-mdio";
++               reg = <0x90900090 0x8>;
++               #address-cells = <1>;
++               #size-cells = <0>;
++
++               ethphy0: ethernet-phy@1 {
++                       device_type = "ethernet-phy";
++                       compatible = "moxa,moxart-rtl8201cp",
+"ethernet-phy-ieee802.3-c22";
++                       reg = <1>;
++               };
++       };
++
++       mdio1: mdio@92000090 {
++               compatible = "moxa,moxart-mdio";
++               reg = <0x92000090 0x8>;
++               #address-cells = <1>;
++               #size-cells = <0>;
++
++               ethphy1: ethernet-phy@1 {
++                       device_type = "ethernet-phy";
++                       compatible = "moxa,moxart-rtl8201cp",
+"ethernet-phy-ieee802.3-c22";
++                       reg = <1>;
++               };
++       };
++
+        mac0: mac@90900000 {
+                compatible = "moxa,moxart-mac";
+-               reg =   <0x90900000 0x100>;
++               reg = <0x90900000 0x90>;
+                interrupts = <25 0>;
++               phy-handle = <&ethphy0>;
+        };
+
+        mac1: mac@92000000 {
+                compatible = "moxa,moxart-mac";
+-               reg =   <0x92000000 0x100>;
++               reg = <0x92000000 0x90>;
+                interrupts = <27 0>;
++               phy-handle = <&ethphy1>;
+        };
+diff --git a/drivers/net/ethernet/moxa/moxart_ether.c
+b/drivers/net/ethernet/moxa/moxart_ether.c
+index 17c9f0e..c19bff2 100644
+--- a/drivers/net/ethernet/moxa/moxart_ether.c
++++ b/drivers/net/ethernet/moxa/moxart_ether.c
+@@ -25,6 +25,9 @@
+ #include <linux/of_irq.h>
+ #include <linux/crc32.h>
+ #include <linux/crc32c.h>
++#include <linux/phy.h>
++#include <linux/of_mdio.h>
++#include <linux/of_net.h>
+
+ #include "moxart_ether.h"
+
+@@ -60,6 +63,16 @@ static int moxart_set_mac_address(struct net_device
+*ndev, void *addr)
+        return 0;
+ }
+
++static int moxart_do_ioctl(struct net_device *ndev, struct ifreq *ir, int cmd)
++{
++       struct moxart_mac_priv_t *priv = netdev_priv(ndev);
++
++       if (!netif_running(ndev))
++               return -EINVAL;
++
++       return phy_mii_ioctl(priv->phy_dev, ir, cmd);
++}
++
+ static void moxart_mac_free_memory(struct net_device *ndev)
+ {
+        struct moxart_mac_priv_t *priv = netdev_priv(ndev);
+@@ -109,6 +122,19 @@ static void moxart_mac_enable(struct net_device *ndev)
+        writel(priv->reg_maccr, priv->base + REG_MAC_CTRL);
+ }
+
++static void moxart_mac_update_duplex(struct net_device *ndev)
++{
++       struct moxart_mac_priv_t *priv = netdev_priv(ndev);
++
++       priv->reg_maccr &= ~(FULLDUP | ENRX_IN_HALFTX);
++       if (priv->duplex)
++               priv->reg_maccr |= FULLDUP;
++       else
++               priv->reg_maccr |= ENRX_IN_HALFTX;
++
++       writel(priv->reg_maccr, priv->base + REG_MAC_CTRL);
++}
++
+ static void moxart_mac_setup_desc_ring(struct net_device *ndev)
+ {
+        struct moxart_mac_priv_t *priv = netdev_priv(ndev);
+@@ -168,6 +194,9 @@ static int moxart_mac_open(struct net_device *ndev)
+        moxart_update_mac_address(ndev);
+        moxart_mac_setup_desc_ring(ndev);
+        moxart_mac_enable(ndev);
++
++       phy_start(priv->phy_dev);
++
+        netif_start_queue(ndev);
+
+        netdev_dbg(ndev, "%s: IMR=0x%x, MACCR=0x%x\n",
+@@ -183,6 +212,8 @@ static int moxart_mac_stop(struct net_device *ndev)
+
+        napi_disable(&priv->napi);
+
++       phy_stop(priv->phy_dev);
++
+        netif_stop_queue(ndev);
+
+        /* disable all interrupts */
+@@ -435,12 +466,49 @@ static struct net_device_ops moxart_netdev_ops = {
+        .ndo_set_mac_address    = moxart_set_mac_address,
+        .ndo_validate_addr      = eth_validate_addr,
+        .ndo_change_mtu         = eth_change_mtu,
++       .ndo_do_ioctl           = moxart_do_ioctl,
+ };
+
++static void moxart_adjust_link(struct net_device *ndev)
++{
++       struct moxart_mac_priv_t *priv = netdev_priv(ndev);
++       unsigned long flags;
++       int status_change = 0;
++
++       if (priv->phy_dev->link) {
++               if (priv->speed != priv->phy_dev->speed) {
++                       priv->speed = priv->phy_dev->speed;
++                       status_change = 1;
++               }
++
++               if (priv->duplex != priv->phy_dev->duplex) {
++                       spin_lock_irqsave(&priv->txlock, flags);
++
++                       priv->duplex = priv->phy_dev->duplex;
++                       moxart_mac_update_duplex(ndev);
++
++                       spin_unlock_irqrestore(&priv->txlock, flags);
++                       status_change = 1;
++               }
++       }
++
++       if (priv->link != priv->phy_dev->link) {
++               if (!priv->phy_dev->link) {
++                       priv->speed = 0;
++                       priv->duplex = -1;
++               }
++               priv->link = priv->phy_dev->link;
++               status_change = 1;
++       }
++
++       if (status_change)
++               phy_print_status(priv->phy_dev);
++}
++
+ static int moxart_mac_probe(struct platform_device *pdev)
+ {
+        struct device *p_dev = &pdev->dev;
+-       struct device_node *node = p_dev->of_node;
++       struct device_node *node = p_dev->of_node, *phy_node;
+        struct net_device *ndev;
+        struct moxart_mac_priv_t *priv;
+        struct resource *res;
+@@ -461,6 +529,28 @@ static int moxart_mac_probe(struct platform_device *pdev)
+        priv = netdev_priv(ndev);
+        priv->ndev = ndev;
+
++       priv->link = 0;
++       priv->speed = 0;
++       priv->duplex = -1;
++
++       phy_node = of_parse_phandle(node, "phy-handle", 0);
++       if (!phy_node) {
++               dev_err(p_dev, "of_parse_phandle failed\n");
++               ret = -ENODEV;
++               goto init_fail;
++       }
++
++       if (phy_node) {
++               priv->phy_dev = of_phy_connect(priv->ndev, phy_node,
++                                              &moxart_adjust_link,
++                                              0, of_get_phy_mode(node));
++               if (!priv->phy_dev) {
++                       dev_err(p_dev, "of_phy_connect failed\n");
++                       ret = -ENODEV;
++                       goto init_fail;
++               }
++       }
++
+        res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+        ndev->base_addr = res->start;
+        priv->base = devm_ioremap_resource(p_dev, res);
+diff --git a/drivers/net/ethernet/moxa/moxart_ether.h
+b/drivers/net/ethernet/moxa/moxart_ether.h
+index 2be9280..b8877bf 100644
+--- a/drivers/net/ethernet/moxa/moxart_ether.h
++++ b/drivers/net/ethernet/moxa/moxart_ether.h
+@@ -297,6 +297,8 @@ struct moxart_mac_priv_t {
+        unsigned int reg_imr;
+        struct napi_struct napi;
+        struct net_device *ndev;
++       struct phy_device *phy_dev;
++       int speed, duplex, link;
+
+        dma_addr_t rx_base;
+        dma_addr_t rx_mapping[RX_DESC_NUM];
+--
+1.8.2.1
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
