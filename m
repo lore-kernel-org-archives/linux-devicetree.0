@@ -1,81 +1,64 @@
-From: Romain Baeriswyl <Romain.Baeriswyl@abilis.com>
-Subject: [PATCH v2 2/2] i2c designware add support of I2C standard mode
-Date: Mon, 20 Jan 2014 17:45:38 +0100
-Message-ID: <1390236338-21407-1-git-send-email-romainba@abilis.com>
-References: <20140116193345.GB4127@katana>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140116193345.GB4127@katana>
-Sender: linux-doc-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, Vineet Gupta <vgupta@synopsys.com>, Christian Ruppert <christian.ruppert@abilis.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Chiau Ee Chew <chiau.ee.chew@intel.com>, Shinya Kuribayashi <skuribay@pobox.com>, Jean Delvare <khali@linux-fr.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, romainba@abilis.com
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 1/3] mmc: add support for power-on sequencing through DT
+Date: Mon, 20 Jan 2014 17:16:21 +0000
+Message-ID: <20140120171621.GG15937@n2100.arm.linux.org.uk>
+References: <1390190215-22700-1-git-send-email-olof@lixom.net> <1390190215-22700-2-git-send-email-olof@lixom.net> <20140120164859.GF15937@n2100.arm.linux.org.uk> <CAOMZO5AfSe_c7gfee0BcZso8ZYg=PaTDwfsXwzpEcM1554VQ6Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5AfSe_c7gfee0BcZso8ZYg=PaTDwfsXwzpEcM1554VQ6Q@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Olof Johansson <olof@lixom.net>, linux-mmc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, ijc+devicetree@hellion.org.ok, galak@codeaurora.org, chris@printf.net
 List-Id: devicetree@vger.kernel.org
 
-Some legacy devices support ony I2C standard mode at 100kHz.
-This patch allows to select the standard mode through the DTS
-with the use of the existing clock-frequency parameter.
+On Mon, Jan 20, 2014 at 03:03:50PM -0200, Fabio Estevam wrote:
+> On Mon, Jan 20, 2014 at 2:48 PM, Russell King - ARM Linux
+> <linux@arm.linux.org.uk> wrote:
+> 
+> > So far so good.  Now, what about this external oscillator which has its
+> > own separate power control.  My immediate thought is that this can be
+> > specified via card_ext_clock - I would simply need to declare a fixed-rate
+> > clock with either a regulator (power switch) controlled via a gpio (which
+> > would probably be closer to the hardware) or a gpio as an enable... ah,
+> > that requires me to write a common clock driver for that bit since this
+> > is currently not modelled by CCF...
+> 
+> Isn't this covered by the gpios property of fixed-clock?
+> 
+> We do the following to enable the 26MHz codec clock in
+> imx51-babbage.dts via GPIO4_26:
+> 
+>         clk_26M: codec_clock {
+>             compatible = "fixed-clock";
+>             reg=<0>;
+>             #clock-cells = <0>;
+>             clock-frequency = <26000000>;
+>             gpios = <&gpio4 26 GPIO_ACTIVE_LOW>;
+>         };
 
-When clock-frequency parameter is not set, the fast mode is selected.
-Only when the parameter is set at 100000, the standard mode is selected.
+Not as far as I can see.  fixed-clock appears to have two properies:
 
-Signed-off-by: Romain Baeriswyl <romainba@abilis.com>
-Reviewed-by: Christian Ruppert <christian.ruppert@abilis.com>
----
- drivers/i2c/busses/i2c-designware-platdrv.c |   21 +++++++++++++++++++--
- 1 files changed, 19 insertions(+), 2 deletions(-)
+	clock-frequency
+	clock-output-names
 
-diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index fc24399..ae0a256 100644
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -122,6 +122,7 @@ static int dw_i2c_probe(struct platform_device *pdev)
- 	struct i2c_adapter *adap;
- 	struct resource *mem;
- 	int irq, r;
-+	u32 clk_freq;
- 
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq < 0) {
-@@ -151,6 +152,9 @@ static int dw_i2c_probe(struct platform_device *pdev)
- 		return PTR_ERR(dev->clk);
- 	clk_prepare_enable(dev->clk);
- 
-+	/* fast mode by default */
-+	clk_freq = 400000;
-+
- 	if (pdev->dev.of_node) {
- 		u32 ht = 0;
- 		u32 ic_clk = dev->get_clk_rate_khz(dev);
-@@ -166,6 +170,15 @@ static int dw_i2c_probe(struct platform_device *pdev)
- 		of_property_read_u32(pdev->dev.of_node,
- 				     "i2c-scl-falling-time-ns",
- 				     &dev->scl_falling_time);
-+
-+		of_property_read_u32(pdev->dev.of_node, "clock-frequency",
-+				     &clk_freq);
-+
-+		/* Only standard mode at 100kHz and fast mode at 400kHz
-+		 * are supported.
-+		 */
-+		if (clk_freq != 100000 && clk_freq != 400000)
-+			return -EINVAL;
- 	}
- 
- 	dev->functionality =
-@@ -175,8 +188,12 @@ static int dw_i2c_probe(struct platform_device *pdev)
- 		I2C_FUNC_SMBUS_BYTE_DATA |
- 		I2C_FUNC_SMBUS_WORD_DATA |
- 		I2C_FUNC_SMBUS_I2C_BLOCK;
--	dev->master_cfg =  DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
--		DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_FAST;
-+	if (clk_freq == 100000)
-+		dev->master_cfg =  DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
-+			DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_STD;
-+	else
-+		dev->master_cfg =  DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
-+			DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_FAST;
- 
- 	/* Try first if we can configure the device from ACPI */
- 	r = dw_i2c_acpi_configure(pdev);
+and nothing else.  See of_fixed_clk_setup in drivers/clk/clk-fixed-rate.c.
+You'll also find that the documentation in this file says this about it:
+
+ * DOC: basic fixed-rate clock that cannot gate
+ *
+ * Traits of this clock:
+ * prepare - clk_(un)prepare only ensures parents are prepared
+ * enable - clk_enable only ensures parents are enabled
+ * rate - rate is always a fixed value.  No clk_set_rate support
+ * parent - fixed parent.  No clk_set_parent support
+
+So, I think the bit which you quote from imx51-babbage.dts is wishful
+thinking on the part of the author of the DT file, rather than actually
+being implemented in any way by the kernel DT support.
+
 -- 
-1.7.1
-
+FTTC broadband for 0.8mile line: 5.8Mbps down 500kbps up.  Estimation
+in database were 13.1 to 19Mbit for a good line, about 7.5+ for a bad.
+Estimate before purchase was "up to 13.2Mbit".
