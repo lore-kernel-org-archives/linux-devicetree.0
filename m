@@ -1,36 +1,68 @@
-From: Yuantian Tang <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v9] clk: corenet: Adds the clock binding
-Date: Mon, 20 Jan 2014 02:26:21 +0000
-Message-ID: <8dc96a3b72aa4960a673e75fc6d24605@BL2PR03MB115.namprd03.prod.outlook.com>
-References: <1389600995-28293-1-git-send-email-Yuantian.Tang@freescale.com>
- <1390007187.24905.293.camel@snotra.buserror.net>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH 0/2] DT updates for Hummingboard and new Cubox-i
+Date: Sun, 19 Jan 2014 19:34:22 -0800
+Message-ID: <CAOesGMiych-jeo_eKGgL1qxsYQ=rkb4UQwgGBsG-7+GMbLJWhg@mail.gmail.com>
+References: <20140116182211.GX15937@n2100.arm.linux.org.uk>
+	<20140119031816.GD16158@S2101-09.ap.freescale.net>
+	<20140119185246.GB28056@quad.lixom.net>
+	<20140120004434.GV15937@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1390007187.24905.293.camel-88ow+0ZRuxG2UiBs7uKeOtHuzzzSOjJt@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20140120004434.GV15937-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFdvb2QgU2NvdHQtQjA3NDIx
-DQo+IFNlbnQ6IDIwMTTlubQx5pyIMTjml6Ug5pif5pyf5YWtIDk6MDYNCj4gVG86IFRhbmcgWXVh
-bnRpYW4tQjI5OTgzDQo+IENjOiBXb29kIFNjb3R0LUIwNzQyMTsgZ2FsYWtAa2VybmVsLmNyYXNo
-aW5nLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
-b3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsgTGkgWWFuZy1MZW8tDQo+IFI1ODQ3
-Mg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY5XSBjbGs6IGNvcmVuZXQ6IEFkZHMgdGhlIGNsb2Nr
-IGJpbmRpbmcNCj4gDQo+IE9uIE1vbiwgMjAxNC0wMS0xMyBhdCAxNjoxNiArMDgwMCwgVGFuZyBZ
-dWFudGlhbiB3cm90ZToNCj4gPiArRXhhbXBsZSBmb3IgY2xvY2sgYmxvY2sgYW5kIGNsb2NrIHBy
-b3ZpZGVyOg0KPiA+ICsvIHsNCj4gPiArCWNsb2NrZ2VuOiBnbG9iYWwtdXRpbGl0aWVzQGUxMDAw
-IHsNCj4gPiArCQljb21wYXRpYmxlID0gImZzbCxwNTAyMC1jbG9ja2dlbiIsICJmc2wscW9yaXEt
-Y2xvY2tnZW4tMS4wIjsNCj4gPiArCQlyYW5nZXMgPSA8MHgwIDB4ZTEwMDAgMHgxMDAwPjsNCj4g
-PiArCQljbG9jay1mcmVxdWVuY3kgPSAxMzMzMzM7DQo+IA0KPiBNaXNzaW5nIDw+IGFyb3VuZCAx
-MzMzMzMsIGFuZCB0aGUgYWN0dWFsIHA1MDIwZHMgaW5wdXQgY2xvY2sgKGJhc2VkIG9uDQo+IG9i
-c2VydmluZyB3aGF0IFUtQm9vdCBmaWxscyBpbikgaXMgMTMzMzMzMzMzLCBub3QgMTMzMzMzLg0K
-PiANClNvcnJ5LCA6KA0KDQo+IEknbGwgZml4IHdoZW4gYXBwbHlpbmcuDQo+IA0KVGhhbmsgeW91
-IHZlcnkgbXVjaC4NCg0KUmVnYXJkcywNCll1YW50aWFuDQoNCj4gLVNjb3R0DQo+IA0KDQo=
+On Sun, Jan 19, 2014 at 4:44 PM, Russell King - ARM Linux
+<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> On Sun, Jan 19, 2014 at 10:52:46AM -0800, Olof Johansson wrote:
+>> On Sun, Jan 19, 2014 at 11:18:18AM +0800, Shawn Guo wrote:
+>> > On Thu, Jan 16, 2014 at 06:22:12PM +0000, Russell King - ARM Linux wrote:
+>> > > Now that the Cubox-i has been released, and I have one, I've been able to
+>> > > update things a little.  Out of the following two patches, the first one
+>> > > I think is critical to be merged before the microsom support hits
+>> > > mainline, since it drops the flexcan support from the microsom level,
+>> > > moving it to the Hummingboard level.
+>> >
+>> > I will be out of town for a few days, and won't be online until next
+>> > weekend.  So please send the patch directly to arm-soc folks, so that
+>> > they can send it together with imx-dt-3.14 stuff.
+>> >
+>> > arm-soc folks, please take this as another ping for my imx-dt-3.14 pull
+>> > request :)
+>>
+>> I'm well aware that the DT branch has not been merged, and that's because
+>> there has been no consensus from DT maintainers on the massive rework
+>> you did as the base of the branch.
+>>
+>> Given the timing, it's not looking like it will be resolved in time for
+>> the 3.14 merge window (which might open today).
+>
+> Okay, that presumably means that the Hummingboard stuff won't be going in
+> through this route, and it sounds like the imx DT stuff will need rework.
+>
+> Is there any objection if I pushed just the Hummingboard files upstream
+> myself?
+
+I'm guessing this is going to mess up Shawn's cleanup patches, but
+time has ran out for 3.14 for those so they will need to be respun
+anyway, most likely.
+
+We can apply them to arm-soc's dt branch. I think it's better if we
+merge them since dts files tend to be one of the conflict-ridden areas
+(even if this particular instance isn't). Send the series our way if
+you want, or send a branch pull request, your choice.
+
+We're generally somewhat liberal w.r.t. applying brand new dts files
+-- just like Greg is liberal with applying new PCI ids in -stable: as
+long as they don't break dtbs target compilation there's little reason
+to sit on them a whole release if they come in early during the cycle
+(pre-rc2 or so).
+
+
+-Olof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
