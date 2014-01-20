@@ -1,48 +1,29 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: How to support SDIO wifi/bt in DT
-Date: Sun, 19 Jan 2014 19:57:20 -0800
-Message-ID: <CAOesGMjeb1syXwYHqsiJnMRu9wfC=zsm8WPoDqvQiZ8gcyHnrg@mail.gmail.com>
-References: <20140116133649.GV15937@n2100.arm.linux.org.uk>
-	<3215037.8HVCjAeS8g@wuerfel>
-	<CAOesGMgzi5Buduo2pd0PP8CvKVir69yZ-jjX0Gbda871GiD8rg@mail.gmail.com>
-	<alpine.LFD.2.10.1401162204560.28907@knanqh.ubzr>
-	<CAL_JsqKX2RT2E6uk3d35m+TWW7iuPFFiuZzOwd0xA9zMgqAZRw@mail.gmail.com>
-	<alpine.LFD.2.10.1401171157340.28907@knanqh.ubzr>
-	<CAOesGMjVpTEku+UJntewi3FXoeEPe9rJP4BBmbSesfFMtY9hnA@mail.gmail.com>
-	<20140119230924.GB8154@piout.net>
-	<20140119233008.GA4867@quad.lixom.net>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH net-next v3 0/8] net: stmmac: Add Allwinner
+ A20 GMAC ethernet
+Date: Sun, 19 Jan 2014 20:03:33 -0800 (PST)
+Message-ID: <20140119.200333.695302698969720789.davem@davemloft.net>
+References: <1389965087-21971-1-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20140119233008.GA4867@quad.lixom.net>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: Nicolas Pitre <nico@fluxnic.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: Text/Plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDCIDJ4RTAOBBF6A6KLAKGQED74NOLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1389965087-21971-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: wens-jdAy2FN1RRM@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-qxv4g6HH51o@public.gmane.org, vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org, uclinux-dist-devel-ZG0+EudsQA8dtHy/vicBwGD2FQJk+8+b@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 19, 2014 at 3:30 PM, Olof Johansson <olof@lixom.net> wrote:
-> On Mon, Jan 20, 2014 at 12:09:25AM +0100, Alexandre Belloni wrote:
->> On Sun, Jan 19, 2014 at 11:29:55AM -0800, Olof Johansson wrote :
->> > The "multi-slot" concept I was talking about was one host controller
->> > for several physical slots. Seems like at91 implements _and_ uses this
->> > but nobody else. However, it seems that they allocate one mmc host per
->> > slot, so the same model still works.
->> >
->>
->> I think we need to be extra careful about the DT bindings then because
->> adding a property in a slot is requiring handling that in the at91
->> driver whereas adding a common property for the various mmc hosts can be
->> done in the core code.
->>
->> From what I remember, it would be really good to put the DT parsing for
->> the slots in the core code but I only had a really quick look at that.
->
-> The patches I have here do it all in the core per host with common
-> bindings. I hope to post them tonight.
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Date: Fri, 17 Jan 2014 21:24:39 +0800
 
-Done. See RFC series at:
+> This is v3 of the  Allwinner A20 GMAC glue layer for stmmac.
+> I have split the series into stmmac driver changes for net-next,
+> and clock and DT patches for their respective trees.
 
-http://marc.info/?l=linux-mmc&m=139019015915702&w=2
-
-
--Olof
+Series applied, thanks.
