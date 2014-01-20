@@ -1,258 +1,413 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: Re: [PATCH v2 1/2] dmaengine: add Qualcomm BAM dma driver
-Date: Mon, 20 Jan 2014 17:20:21 -0600
-Message-ID: <20140120232021.GB3530@qualcomm.com>
-References: <1389380874-22753-1-git-send-email-agross@codeaurora.org>
- <1389380874-22753-2-git-send-email-agross@codeaurora.org>
- <20140114194348.GH14405@codeaurora.org>
+From: Sebastian Reichel <sre@debian.org>
+Subject: Re: [RFCv2] Device Tree bindings for OMAP3 Camera System
+Date: Tue, 21 Jan 2014 00:27:21 +0100
+Message-ID: <20140120232719.GA30894@earth.universe>
+References: <20131103220315.GA11659@earth.universe>
+ <20140115194127.GA30988@earth.universe>
+ <20140120041904.GH9997@valkosipuli.retiisi.org.uk>
+ <52DDA04B.90809@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140114194348.GH14405@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <52DDA04B.90809@gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 14, 2014 at 11:43:48AM -0800, Stephen Boyd wrote:
-> (Mostly nitpicks)
-> 
-> On 01/10, Andy Gross wrote:
-> > Add the DMA engine driver for the QCOM Bus Access Manager (BAM) DMA controller
-> > found in the MSM 8x74 platforms.
-> > 
-> > Each BAM DMA device is associated with a specific on-chip peripheral.  Each
-> > channel provides a uni-directional data transfer engine that is capable of
-> > transferring data between the peripheral and system memory (System mode), or
-> > between two peripherals (BAM2BAM).
-> > 
-> > The initial release of this driver only supports slave transfers between
-> > peripherals and system memory.
-> > 
-> > Signed-off-by: Andy Gross <agross@codeaurora.org>
-> > ---
-> >  drivers/dma/Kconfig        |   9 +
-> >  drivers/dma/Makefile       |   1 +
-> >  drivers/dma/qcom_bam_dma.c | 843 +++++++++++++++++++++++++++++++++++++++++++++
-> >  drivers/dma/qcom_bam_dma.h | 268 ++++++++++++++
-> >  4 files changed, 1121 insertions(+)
-> >  create mode 100644 drivers/dma/qcom_bam_dma.c
-> >  create mode 100644 drivers/dma/qcom_bam_dma.h
-> > 
-> > diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> > index c823daa..e58e6d2 100644
-> > --- a/drivers/dma/Kconfig
-> > +++ b/drivers/dma/Kconfig
-> > @@ -384,4 +384,13 @@ config DMATEST
-> >  config DMA_ENGINE_RAID
-> >  	bool
-> >  
-> > +config QCOM_BAM_DMA
-> > +	tristate "QCOM BAM DMA support"
-> > +	depends on ARCH_MSM || COMPILE_TEST
-> 
-> I don't think writel_relaxed() is available on every arch, so
-> it's possible this will break some random arch that doesn't have
-> that function.
-> 
 
-I'll look into this to see.  If that's the case, I can remove the COMPILE_TEST
-if there is no alternative.
+--45Z9DzgjV8m4Oswq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > +	select DMA_ENGINE
-> > +	select DMA_VIRTUAL_CHANNELS
-> > +	---help---
-> > +	  Enable support for the QCOM BAM DMA controller.  This controller
-> > +	  provides DMA capabilities for a variety of on-chip devices.
-> > +
-> >  endif
-> > diff --git a/drivers/dma/qcom_bam_dma.c b/drivers/dma/qcom_bam_dma.c
-> > new file mode 100644
-> > index 0000000..7a84b02
-> > --- /dev/null
-> > +++ b/drivers/dma/qcom_bam_dma.c
+Hi,
+
+On Mon, Jan 20, 2014 at 11:16:43PM +0100, Sylwester Nawrocki wrote:
+> On 01/20/2014 05:19 AM, Sakari Ailus wrote:
+> >I've also been working on this (besides others); what I have however are
+> >mostly experimental patches. [...]
+
+Thanks. I will have a look at it.
+
 > [...]
-> > +static int bam_alloc_chan(struct dma_chan *chan)
+> >
+> >Over 80 characters per line.
+
+Will be fixed in the next revision.
+
+> >>can be found in Documentation/devicetree/bindings/media/video-interface=
+s.txt
+> >>
+> >>omap3isp node
+> >>-------------
+> >>
+> >>Required properties:
+> >>
+> >>- compatible    : should be "ti,omap3isp" for OMAP3.
+> >>- reg       : physical addresses and length of the registers set.
+> >>- clocks    : list of clock specifiers, corresponding to entries in
+> >>           clock-names property.
+> >>- clock-names   : must contain "cam_ick", "cam_mclk", "csi2_96m_fck",
+> >>           "l3_ick" entries, matching entries in the clocks property.
+> >>- interrupts    : must contain mmu interrupt.
+> >>- ti,iommu  : phandle to isp mmu.
+> >
+> >Is the TI specific? I'd assume not. Hiroshi's patches assume that
+> >at least.
+
+I did not see any iommu standard in Documentation/devicetree/bindings,
+so I added the vendor prefix, for now. I don't have strong feelings for
+this. I saw you used iommus instead, which sounds reasonable for me.
+
+> >>- #address-cells: Should be set to<1>.
+> >>- #size-cells   : Should be set to<0>.
+> >
+> >The ISP also exports clocks. Shouldn't you add
+> >
+> >#clock-cells =3D<1>;
+
+Ok. I already though about that possibility, but wasn't sure which
+way is the cleaner one. Thanks for clarifying.
+
 > [...]
-> > +
-> > +	/* Go ahead and initialize the pipe/channel hardware here
-> > +	   - Reset the channel to clear internal state of the FIFO
-> > +	   - Program in the FIFO address
-> > +	   - Configure the irq based on the EE passed in from the DT entry
-> > +	   - Set mode, direction and enable channel
-> > +
-> > +	   We do this here because the channel can only be enabled once and
-> > +	   can only be disabled via a reset.  If done here, we don't have to
-> > +	   manage additional state to figure out when to do this
-> > +	*/
-> 
-> Multi-line comments are of the form:
-> 
-> 	/*
-> 	 * comment
-> 	 */
-> 
+>=20
+> This doesn't seem to follow the common clock bindings.
 
-Right.  I converted some comments and didn't do the correct multi-line
+I think it does follow common clock bindings at least. Clocks can
+referenced with the following statement:
 
-> > +
-> > +	bam_reset_channel(bdev, bchan->id);
-> > +
-> > +	/* write out 8 byte aligned address.  We have enough space for this
-> > +	   because we allocated 1 more descriptor (8 bytes) than we can use */
-> > +	writel_relaxed(ALIGN(bchan->fifo_phys, sizeof(struct bam_desc_hw)),
-> > +			bdev->regs + BAM_P_DESC_FIFO_ADDR(bchan->id));
-> > +	writel_relaxed(BAM_DESC_FIFO_SIZE, bdev->regs +
-> > +			BAM_P_FIFO_SIZES(bchan->id));
+camera-sensor-0 {
+    clocks =3D <&isp_xclk1>;
+    clock-names =3D ...
+};
+
+> Instead, you could define value of #clock-cells to be 1 and allow clocks
+> consumers to reference the provider node in a standard way, e.g.:
+
+This also works and probably better. I will merge clock provider
+into the main omap3isp node.
+
 > [...]
-> > +
-> > +/**
-> > + * bam_dma_terminate_all - terminate all transactions
-> > + * @chan: dma channel
-> > + *
-> > + * Idles channel and dequeues and frees all transactions
-> > + * No callbacks are done
-> > + *
-> > +*/
-> 
-> Weird '*' starting the line here and on the next function.
-> 
+> >>endpoint subnode for serial interfaces
+> >>--------------------------------------
+> >>
+> >>Required properties:
+> >>  - ti,isp-interface-type    : should be one of the following values
+> >
+> >I think the interface type should be standardised at V4L2 level. We
+> >currently do not do that, but instead do a little bit of guessing.
+>=20
+> I'm all for such a standard property. It seems much more clear to use such
+> a property. And I already run into issues with deriving the bus interface
+> type from existing properties, please see https://linuxtv.org/patch/19937
+>=20
+> I assume it would be fine to add a string type property like
+> "interface-type"
+> or "bus-type".
+>=20
+> >>   *<0>  to use the phy in CSI mode
+> >>   *<1>  to use the phy in CCP mode
+> >>   *<2>  to use the phy in CCP mode, but configured for MIPI CSI2
 
-Will fix.
+mh... from what I understand a port can be configured to be either
+CSI2 or CPP2 type. If CCP2 type is chosen the port can be configured
+to be CSI1 mode instead of actually being CPP2. See
 
-> > +static void bam_dma_terminate_all(struct dma_chan *chan)
-> > +{
-> > +	struct bam_chan *bchan = to_bam_chan(chan);
-> > +	struct bam_device *bdev = bchan->bdev;
-> > +
-> > +	bam_reset_channel(bdev, bchan->id);
-> > +
-> > +	vchan_free_chan_resources(&bchan->vc);
-> > +}
-> > +
-> > +/**
-> > + * bam_control - DMA device control
-> > + * @chan: dma channel
-> > + * @cmd: control cmd
-> > + * @arg: cmd argument
-> > + *
-> > + * Perform DMA control command
-> > + *
-> > +*/
-> > +static int bam_control(struct dma_chan *chan, enum dma_ctrl_cmd cmd,
-> > +	unsigned long arg)
-> > +{
-> > +	struct bam_chan *bchan = to_bam_chan(chan);
-> > +	struct bam_device *bdev = bchan->bdev;
-> > +	int ret = 0;
-> > +	unsigned long flag;
-> > +
+see "struct isp_ccp2_platform_data" in include/media/omap3isp.h.
+
+But actually I made a typo above. This is what I meant:
+
+*<0>  to use the phy in MIPI CSI2 mode
+*<1>  to use the phy in SMIA CCP2 mode
+*<2>  to use the phy in SMIA CCP2 mode, but configured for MIPI CSI1
+
+I'm not sure if this can be properly be described in a standardized
+type property.
+
+> >Hmm. I'm not entirely sure what does this last option mean. I could be
+> >forgetting something, though.
+
+I hope the above description helped.
+
+> >>  - ti,isp-clock-divisor     : integer used for configuration of the
+> >>                   video port output clock control.
+> >>
+> >>Optional properties:
+> >>  - ti,disable-crc       : boolean, which disables crc checking.
+> >
+> >I think crc should be standardised as well.
+>
+> Definitely something we should have a common definition for.
+
+ok.
+
+> >>  - ti,strobe-mode       : boolean, which setups data/strobe physical
+> >>                   layer instead of data/clock physical layer.
+> >>  - pclk-sample          : integer describing if clk should be interpre=
+ted on
+> >>                   rising (<1>) or falling edge (<0>). Default is<1>.
+> >
+> >I see different values on the N9 platform data for CCP2 and CSI2 (front =
+and
+> >back camera). I'm not sure the bus type is related to this or not.
+
+Not sure, what you mean here.
+
+I merged (isp_ccp2_platform_data.phy_layer) into the bus-type
+property described above.
+
+> >>- data-lanes: an array of physical data lane indexes. Position of an en=
+try
+> >>   determines the logical lane number, while the value of an entry indi=
+cates
+> >>   physical lane, e.g. for 2-lane MIPI CSI-2 bus we could have
+> >>   "data-lanes =3D<1 2>;", assuming the clock lane is on hardware lane =
+0.
+> >>   This property is valid for serial busses only (e.g. MIPI CSI-2).
+> >>- clock-lanes: an array of physical clock lane indexes. Position of an =
+entry
+> >>   determines the logical lane number, while the value of an entry indi=
+cates
+> >>   physical lane, e.g. for a MIPI CSI-2 bus we could have "clock-lanes =
+=3D<0>;",
+> >>   which places the clock lane on hardware lane 0. This property is val=
+id for
+> >>   serial busses only (e.g. MIPI CSI-2). Note that for the MIPI CSI-2 b=
+us this
+> >>   array contains only one entry.
+> >
+> >I'd rather refer to
+> >Documentation/devicetree/bindings/media/video-interfaces.txt than copy f=
+rom
+> >it. It's important that there's a single definition for the standard
+> >properties. Just mentioning the property by name should be enough. What =
+do
+> >you think?
+>=20
+> +1
+
+sounds fine to me. Something like this?
+
+- data-lanes: see [0]
+- clock-lanes: see [0]
+
+[0] Documentation/devicetree/bindings/media/video-interfaces.txt
+
+> >>Example for Nokia N900
+> >>----------------------
+> >>
+> >>omap3isp: isp@480BC000 {
+> >>     compatible =3D "ti,omap3isp";
+> >>     reg =3D<0x480BC000 0x070>, /* base */
+> >>         <0x480BC100 0x078>, /* cbuf */
+> >>         <0x480BC400 0x1F0>, /* cpp2 */
+> >>         <0x480BC600 0x0A8>, /* ccdc */
+> >>         <0x480BCA00 0x048>, /* hist */
+> >>         <0x480BCC00 0x060>, /* h3a  */
+> >>         <0x480BCE00 0x0A0>, /* prev */
+> >>         <0x480BD000 0x0AC>, /* resz */
+> >>         <0x480BD200 0x0FC>, /* sbl  */
+> >>         <0x480BD400 0x070>; /* mmu  */
+> >
+> >Mmu is a separate device. (Please see my patches.)
+
+Ok.
+
+I simply took over the memory ranges currently defined in the
+omap3isp driver.
+
+> >>     clocks =3D<&cam_ick>,
+> >>          <&cam_mclk>,
+> >>          <&csi2_96m_fck>,
+> >>          <&l3_ick>;
+> >>     clock-names =3D "cam_ick",
+> >>               "cam_mclk",
+> >>               "csi2_96m_fck",
+> >>               "l3_ick";
+> >>
+> >>     interrupts =3D<24>;
+> >>
+> >>     ti,iommu =3D<&mmu_isp>;
+>=20
+>=20
+> >>     isp_xclk1: isp-xclk@0 {
+> >>         compatible =3D "ti,omap3-isp-xclk";
+> >>         reg =3D<0>;
+> >>         #clock-cells =3D<0>;
+> >>     };
+> >>
+> >>     isp_xclk2: isp-xclk@1 {
+> >>         compatible =3D "ti,omap3-isp-xclk";
+> >>         reg =3D<1>;
+> >>         #clock-cells =3D<0>;
+> >>     };
+>=20
+> I think these whole 2 nodes could be omitted...
+>=20
+> >>     #address-cells =3D<1>;
+> >>     #size-cells =3D<0>;
+>=20
+> .. if you add here:
+>=20
+> 	#clock-cells =3D<1>;
+
+will do.
+
+> >>     port@0 {
+> >>         reg =3D<0>;
+> >>
+> >>         /* parallel interface is not used on Nokia N900 */
+> >>         parallel_ep: endpoint {};
+> >>     };
+> >>
+> >>     port@1 {
+> >>         reg =3D<1>;
+> >>
+> >>         csi1_ep: endpoint {
+> >>             remote-endpoint =3D<&switch_in>;
+> >>             ti,isp-clock-divisor =3D<1>;
+> >>             ti,strobe-mode;
+> >>         };
+> >>     }
+> >>
+> >>     port@2 {
+> >>         reg =3D<2>;
+> >>
+> >>         /* second serial interface is not used on Nokia N900 */
+> >>         csi2_ep: endpoint {};
+> >>     }
+> >>};
+> >>
+> >>camera-switch {
+> >>     /*
+> >>      * TODO:
+> >>      *  - check if the switching code is generic enough to use a
+> >>      *    more generic name like "gpio-camera-switch".
+> >>      *  - document the camera-switch binding
+> >>      */
+> >>     compatible =3D "nokia,n900-camera-switch";
+> >
+> >Indeed. I don't think the hardware engineers realised what kind of a long
+> >standing issue they created for us when they chose that solution. ;)
+> >
+> >Writing a small driver for this that exports a sub-device would probably=
+ be
+> >the best option as this is hardly very generic. Should this be shown to =
+the
+> >user space or not? Probably it'd be nice to avoid showing the related su=
+b-device
+> >if there would be one.
+>
+> Probably we should avoid exposing such a hardware detail to user space.
+> OTOH it would be easy to handle as a media entity through the media
+> controller API.
+
+If this is exposed to the userspace, then a userspace application
+"knows", that it cannot use both cameras at the same time. Otherwise
+it can just react to error messages when it tries to use the second
+camera.
+
+> >I'm still trying to get N9 support working first, the drivers are in a
+> >better shape and there are no such hardware hacks.
+> >
+> >>     gpios =3D<&gpio4 1>; /* 97 */
+>=20
+> I think the binding should be defining how state of the GPIO corresponds
+> to state of the mux.
+
+Obviously it should be mentioned in the n900-camera-switch binding
+Documentation. This document was just the proposal for the omap3isp
+node :)
+
+> >>     port@0 {
+> >>         switch_in: endpoint {
+> >>             remote-endpoint =3D<&csi1_ep>;
+> >>         };
+> >>
+> >>         switch_out1: endpoint {
+> >>             remote-endpoint =3D<&et8ek8>;
+> >>         };
+> >>
+> >>         switch_out2: endpoint {
+> >>             remote-endpoint =3D<&smiapp_dfl>;
+> >>         };
+> >>     };
+>=20
+> This won't work, since names of the nodes are identical they will be
+> combined
+> by the dtc into a single 'endpoint' node with single
+> 'remote-endpoint' property
+> - might not be exactly something that you want.
+> So it could be rewritten like:
+
+right.
+
 > [...]
-> > +/**
-> > + * bam_dma_irq - irq handler for bam controller
-> > + * @irq: IRQ of interrupt
-> > + * @data: callback data
-> > + *
-> > + * IRQ handler for the bam controller
-> > + */
-> > +static irqreturn_t bam_dma_irq(int irq, void *data)
-> > +{
-> > +	struct bam_device *bdev = (struct bam_device *)data;
-> 
-> Unnecessary cast from void.
-> 
+> However, simplifying a bit, the 'endpoint' nodes are supposed to describe
+> the configuration of a bus interface (port) for a specific remote device.
+> Then what you need might be something like:
+>=20
+>  camera-switch {
+> 	compatible =3D "nokia,n900-camera-switch";
+>=20
+> 	#address-cells =3D <1>;
+> 	#size-cells =3D <0>;
+>=20
+> 	switch_in: port@0 {
+> 		reg =3D <0>;
+> 		endpoint {
+> 			remote-endpoint =3D<&csi1_ep>;
+> 		};
+> 	};
+>=20
+>         switch_out1: port@1 {
+> 		reg =3D <1>;
+> 		endpoint {
+> 			remote-endpoint =3D<&et8ek8>;
+> 		};
+> 	};
+>=20
+> 	switch_out2: port@2 {
+> 		endpoint {
+> 			reg =3D <2>;
+> 			remote-endpoint =3D<&smiapp_dfl>;
+> 		};
+> 	};
+>  };
 
-Fixed.
+sounds fine to me.
 
-> > +static int bam_dma_probe(struct platform_device *pdev)
-> > +{
-> [...]
-> > +
-> > +	irq_res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-> > +	if (!irq_res) {
-> > +		dev_err(bdev->dev, "irq resource is missing\n");
-> > +		return -EINVAL;
-> > +	}
-> 
-> Please use platform_get_irq() instead.
-> 
+> I'm just wondering if we need to be describing this in DT in such
+> detail.
 
-Fixed.
+Do you have an alternative suggestion for the N900's bus switch
+hack?
 
-> > diff --git a/drivers/dma/qcom_bam_dma.h b/drivers/dma/qcom_bam_dma.h
-> > new file mode 100644
-> > index 0000000..2cb3b5f
-> > --- /dev/null
-> > +++ b/drivers/dma/qcom_bam_dma.h
-> [...]
-> > +#define BAM_CNFG_BITS_DEFAULT	(BAM_PIPE_CNFG |	\
-> > +			BAM_NO_EXT_P_RST |		\
-> > +			BAM_IBC_DISABLE |		\
-> > +			BAM_SB_CLK_REQ |		\
-> > +			BAM_PSM_CSW_REQ |		\
-> > +			BAM_PSM_P_RES |			\
-> > +			BAM_AU_P_RES |			\
-> > +			BAM_SI_P_RES |			\
-> > +			BAM_WB_P_RES |			\
-> > +			BAM_WB_BLK_CSW |		\
-> > +			BAM_WB_CSW_ACK_IDL |		\
-> > +			BAM_WB_RETR_SVPNT |		\
-> > +			BAM_WB_DSC_AVL_P_RST |		\
-> > +			BAM_REG_P_EN |			\
-> > +			BAM_PSM_P_HD_DATA |		\
-> > +			BAM_AU_ACCUMED |		\
-> > +			BAM_CMD_ENABLE)
-> > +
-> > +/* PIPE CTRL */
-> > +#define	P_EN			BIT(1)
-> 
-> Nit: Weird formatting here?
-> 
+-- Sebastian
 
-That is odd.  Will fix.
+--45Z9DzgjV8m4Oswq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> > +#define P_DIRECTION		BIT(3)
-> [...]
-> > +
-> > +
-> > +struct bam_device {
-> > +	void __iomem *regs;
-> > +	struct device *dev;
-> > +	struct dma_device common;
-> > +	struct device_dma_parameters dma_parms;
-> > +	struct bam_chan *channels;
-> 
-> Maybe this should be a flexible array. It looks like probe might
-> need to be rewritten to detect the number of channels from the
-> hardware before assigning anything, but it should be possible.
-> But it probably doesn't matter.
-> 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-You can't take the number of channels at face value.  Only a subset of that
-number are actually usable by the CPUs execution environment.
+iQIcBAEBCAAGBQJS3bDXAAoJENju1/PIO/qalBUP/RMZB9HIUlZt9Wy8OteH+bT6
+XMS/QKnLWuFNUhJ4vqQvMiZSH1Noi0+5u4QRKTUSAW0jiAXJCZqa4mqnZTHOfhaH
+7WQPY9EE/79RQvs1Dsrmi0Wn581zA7wWoz/UJVGmGUz0CezmATw7u+Ok3S7YA/01
+lKt3zrUdtU7Jw7BPuytNA0KoJU2wusQ21TDhYWUAS/sbbE4yrM/GQcVG8BflmnfQ
+eliPJF6aWYa8kUFLO0L9kI08Q2708YtxgcXthWxYelZBcVsmQUakcOf9C3mlvK+Q
+QqfhvDzOhN1glM3HEoxGgDcRWqEhpB8C7L9rw3Kxo42kSjum3rChh/diKoyMJ3jk
+zlWQYExxhmoo0UvRmAWILwG5YZEdoUht6igzyRD1gb0YWkIO51beN6g4YDDKzjpe
+4qGRmts6wNo2wGxIioEnmgzRN0SBPCd0c92uHjpKTXemEVv5T9pYXx6xRBeHsq1b
+35puCWPWoUeQZHNEoNKEZUIjM8rtzlJxrje29gJ1zFT+pXTQsE5QClPf8/RzJiER
+dywdHDNyhAIhptzfEtgprkRltDxAz9Zw5ci258AohlxC/a90KmaGGD6lSm7XO++m
+ALl8suX99loYkXnje3oxE5qkz+y1igs2fPb27Oeaw2D+iZV3DaejjZj0s9iCSgZk
+Tzam0JLPL9WOISmE6p65
+=B6XD
+-----END PGP SIGNATURE-----
 
-> > +	u32 num_channels;
-> > +	u32 num_ees;
-> > +	unsigned long enabled_ees;
-> > +	int irq;
-> 
-> Is irq used?
-> 
-
-Will remove.
-
-> > +	struct clk *bamclk;
-> > +
-> > +	/* dma start transaction tasklet */
-> > +	struct tasklet_struct task;
-> > +};
-> 
-> -- 
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> hosted by The Linux Foundation
-
--- 
-sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+--45Z9DzgjV8m4Oswq--
