@@ -1,48 +1,54 @@
-From: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
-Subject: Re: ping [PATCH v3] WAN: Adding support for Lantiq PEF2256 E1 chipset
- (FALC56)
-Date: Sun, 19 Jan 2014 18:50:18 -0600
-Message-ID: <52DC72CA.3090403@landley.net>
-References: <20140119180732.A1D99432AF@localhost.localdomain> <1390160095.2290.9.camel@joe-AO722>
+From: Zhou Zhu <zzhu3-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 0/4] video: mmp: add device tree suppport
+Date: Mon, 20 Jan 2014 09:58:57 +0800
+Message-ID: <52DC82E1.7060209@marvell.com>
+References: <1389698184-28761-1-git-send-email-zzhu3@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1390160095.2290.9.camel@joe-AO722>
+In-Reply-To: <1389698184-28761-1-git-send-email-zzhu3-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Christophe Leroy <christophe.leroy-GgN8y9CXRhA@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Krzysztof Halasa <khc-9GfyWEdoJtJmR6Xm/wNWPw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.balemboy-GgN8y9CXRhA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Zhou Zhu <zzhu3-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chao Xie <cxie4-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Guoqing Li <ligq-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/19/14 13:34, Joe Perches wrote:
-> On Sun, 2014-01-19 at 19:07 +0100, Christophe Leroy wrote:
->> Pinging this watch as we got no feedback since 22 Nov, although we have taken
->> into account reviews from v1 and v2.
->>
->> The patch adds WAN support for Lantiq FALC56 - PEF2256 E1 Chipset.
-...
->> +static ssize_t fs_attr_Tx_TS_store(struct device *dev,
->> +			struct device_attribute *attr,  const char *buf,
->> +			size_t count)
->> +{
->> +	struct net_device *ndev = dev_get_drvdata(dev);
->> +	struct pef2256_dev_priv *priv = dev_to_hdlc(ndev)->priv;
->> +	unsigned long value;
->> +	int ret = kstrtoul(buf, 16, (long int *)&value);
+Hi, Tomi,
+Looks there's no more comment now.
+Would you please help to review this patch set and apply it also for 
+3.14 if possible?
+Thank you very much!
+
+On 01/14/2014 07:16 PM, Zhou Zhu wrote:
+> This patch set is to add device tree support for mmp_disp.
+> patch 1/2 are to remove clk_name configure in mach_info before.
+> patch 3/4 are to add device tree support.
 >
-> unportable cast
+> change of v2:
+> add patch to remove config of clk_name in mach_info
+> use phandle to get path.
+> runtime decision of dt usage.
+> clean up to use node name directly.
+>
+> Zhou Zhu (4):
+>    arm: mmp: remove not used disp clk_name in ttc_dkb
+>    video: mmp: no need to get clk_name from mach_info
+>    video: mmp: add devm_mmp_get_path_by_phandle for DT
+>    video: mmp: add device tree support
+>
+>   Documentation/devicetree/bindings/fb/mmp-disp.txt |   60 ++++++++
+>   arch/arm/mach-mmp/ttc_dkb.c                       |    1 -
+>   drivers/video/mmp/core.c                          |   35 +++++
+>   drivers/video/mmp/fb/mmpfb.c                      |   73 ++++++----
+>   drivers/video/mmp/hw/mmp_ctrl.c                   |  154 ++++++++++++++++-----
+>   include/video/mmp_disp.h                          |    3 +-
+>   6 files changed, 268 insertions(+), 58 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/fb/mmp-disp.txt
+>
 
-How is that not portable? It's long == pointer on Linux, which supports 
-LP64 on all targets. (As do BSD, MacOSX, android, and iOS.)
 
-   http://www.unix.org/whitepapers/64bit.html
-   http://www.unix.org/version2/whatsnew/lp64_wp.html
-
-Do you mean it's not portable to Windows?
-
-   http://blogs.msdn.com/oldnewthing/archive/2005/01/31/363790.aspx
-
-Rob
+-- 
+Thanks, -Zhou
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
