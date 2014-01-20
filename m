@@ -1,90 +1,64 @@
-From: Shaik Ameer Basha <shaik.samsung@gmail.com>
-Subject: Re: [PATCH v5 4/4] [media] exynos-scaler: Add DT bindings for SCALER driver
-Date: Mon, 20 Jan 2014 23:34:39 +0900
-Message-ID: <CAOD6ATofW_M+z5vb7doOnjf=wsbZ7vcdjf9qMJpN0o9oz4_8fg@mail.gmail.com>
-References: <1389238094-19386-1-git-send-email-shaik.ameer@samsung.com>
-	<1389238094-19386-5-git-send-email-shaik.ameer@samsung.com>
-	<2542868.mVreZlxTcT@amdc1032>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v5 0/4] ata: ahci_platform: Add PHY support and OMAP support
+Date: Mon, 20 Jan 2014 16:41:24 +0200
+Message-ID: <1390228888-5537-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <2542868.mVreZlxTcT@amdc1032>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Shaik Ameer Basha <shaik.ameer@samsung.com>, LMML <linux-media@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Pawel Osciak <posciak@google.com>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <m.chehab@samsung.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bartlomiej,
+Hi,
 
-Thanks for the review.
+Some platforms have a PHY hooked up to the SATA controller.
+The PHY needs to be initialized and powered up for SATA to work.
+We do that using the Generic PHY framework in PATCH 3.
 
-Yes you are right. I didn't add the users for this driver.
-Once the driver gets merged, I will send more patches with the users.
-Already this driver merge is pending on DT maintainers ack and  I
-don't want to complex it more by adding DT patches :)
+In order to support SATA on the OMAP platforms we need to runtime
+resume the device before use. PATCH 4 takes care of that.
 
-Definitely, I will send the users patches once the driver gets merged.
-And I will address all your comments in next version of patch series.
+PATCH 1 & 2 updates the DT compatible list.
 
+Changelog:
 
-Regards,
-Shaik Ameer Basha
+v5:
+- Don't use break after goto in switch case. Rebased on v3.13
 
-On Thu, Jan 9, 2014 at 6:20 PM, Bartlomiej Zolnierkiewicz
-<b.zolnierkie@samsung.com> wrote:
->
-> Hi,
->
-> On Thursday, January 09, 2014 08:58:14 AM Shaik Ameer Basha wrote:
->> This patch adds the DT binding documentation for the
->> Exynos5420/5410 based SCALER device driver.
->>
->> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
->> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
->> ---
->>  .../devicetree/bindings/media/exynos5-scaler.txt   |   22 ++++++++++++++++++++
->>  1 file changed, 22 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/exynos5-scaler.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/exynos5-scaler.txt b/Documentation/devicetree/bindings/media/exynos5-scaler.txt
->> new file mode 100644
->> index 0000000..9328e7d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/exynos5-scaler.txt
->> @@ -0,0 +1,22 @@
->> +* Samsung Exynos5 SCALER device
->> +
->> +SCALER is used for scaling, blending, color fill and color space
->> +conversion on EXYNOS[5420/5410] SoCs.
->> +
->> +Required properties:
->> +- compatible: should be "samsung,exynos5420-scaler" or
->> +                     "samsung,exynos5410-scaler"
->> +- reg: should contain SCALER physical address location and length
->> +- interrupts: should contain SCALER interrupt number
->> +- clocks: should contain the SCALER clock specifier, from the
->> +                     common clock bindings
->> +- clock-names: should be "scaler"
->> +
->> +Example:
->> +     scaler_0: scaler@12800000 {
->> +             compatible = "samsung,exynos5420-scaler";
->> +             reg = <0x12800000 0x1000>;
->> +             interrupts = <0 220 0>;
->> +             clocks = <&clock 381>;
->> +             clock-names = "scaler";
->> +     };
->
-> Your patchset adds support for EXYNOS5 SCALER but doesn't add any real
-> users of it yet.  Could you please explain why?
->
-> Best regards,
-> --
-> Bartlomiej Zolnierkiewicz
-> Samsung R&D Institute Poland
-> Samsung Electronics
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-media" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+v4:
+- Tackle error conditions while using PHY framework APIs.
+
+v3:
+- Addressed review comments and rebased on 3.13-rc7
+- DT binding update moved to new patch.
+
+v2:
+- got rid of Texas Instruments SATA wrapper driver
+- adressed review comments
+
+cheers,
+-roger
+
+---
+
+Balaji T K (1):
+  ata: ahci_platform: Manage SATA PHY
+
+Roger Quadros (3):
+  ata: ahci_platform: Add DT compatible for Synopsis DWC AHCI controller
+  ata: ahci_platform: Update DT compatible list
+  ata: ahci_platform: runtime resume the device before use
+
+ .../devicetree/bindings/ata/ahci-platform.txt      |  4 +-
+ drivers/ata/ahci.h                                 |  2 +
+ drivers/ata/ahci_platform.c                        | 57 +++++++++++++++++++++-
+ 3 files changed, 61 insertions(+), 2 deletions(-)
+
+-- 
+1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
