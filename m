@@ -1,133 +1,121 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH V2] dt: bindings: submitting patches and ABI documents
-Date: Mon, 20 Jan 2014 22:31:40 +0000
-Message-ID: <20140120223140.8B087C40B12@trevor.secretlab.ca>
-References: <1383759120-21571-1-git-send-email-jason@lakedaemon.net> < 1387299580-9100-1-git-send-email-jason@lakedaemon.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1387299580-9100-1-git-send-email-jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] DT: net: document Ethernet bindings in one place
+Date: Tue, 21 Jan 2014 02:33:08 +0300
+Message-ID: <52DDB234.5080206@cogentembedded.com>
+References: <201401180405.07859.sergei.shtylyov@cogentembedded.com>	<CAL_Jsq+oa9P=rh+p-dMZyGP8TcmpX7bTnMU0ynLvFxjxFDYbRg@mail.gmail.com>	<52DD98F7.4090202@cogentembedded.com> <CAL_JsqJXbF1-PcPHR2VP+Vi9A1aWizdsG_r3kDvRt3itXDhCGQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJXbF1-PcPHR2VP+Vi9A1aWizdsG_r3kDvRt3itXDhCGQ@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 17 Dec 2013 16:59:40 +0000, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
-> Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+On 01/21/2014 12:20 AM, Rob Herring wrote:
 
-Applied, thanks.
+>>>> This patch is an attempt to gather the Ethernet related bindings in one
+>>>> file,
+>>>> like it's done in the MMC and some other subsystems. It should save the
+>>>> trouble
+>>>> of documenting several properties over and over in each binding document.
 
-One note though. Even when the diff is "obvious", the commit description
-should really not be empty. I've added something, but my life is a lot
-easier when I don't have to.
+>>>> I have used the Embedded Power Architecture(TM) Platform Requirements
+>>>> (ePAPR)
+>>>> standard as a base for the properties description, also documenting some
+>>>> ad-hoc
+>>>> properties that have been introduced over time despite having direct
+>>>> analogs in
+>>>> ePAPR.
 
-I've also added the following blurb to point II.2:
+>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-+     Subsystem bindings (anything affecting more than a single device)
-+     then getting a devicetree maintainer to review it is required.
+>>>> ---
+>>>> The patch is against DaveM's 'net-next.git' repo and the DaVinci EMAC
+>>>> bindings
+>>>> fix I've posted yesterday:
 
-g.
+>>>> http://patchwork.ozlabs.org/patch/311854/
 
-> ---
-> Changes from RFC:
->  - incorporated Grant's language
->  - split patches/ABI into two documents
-> 
->  Documentation/devicetree/bindings/ABI.txt          | 39 ++++++++++++++++++++++
->  .../devicetree/bindings/submitting-patches.txt     | 35 +++++++++++++++++++
->  2 files changed, 74 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ABI.txt
->  create mode 100644 Documentation/devicetree/bindings/submitting-patches.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/ABI.txt b/Documentation/devicetree/bindings/ABI.txt
-> new file mode 100644
-> index 000000000000..d25f8d379680
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ABI.txt
-> @@ -0,0 +1,39 @@
-> +
-> +  Devicetree (DT) ABI
-> +
-> +I. Regarding stable bindings/ABI, we quote from the 2013 ARM mini-summit
-> +   summary document:
-> +
-> +     "That still leaves the question of, what does a stable binding look
-> +     like?  Certainly a stable binding means that a newer kernel will not
-> +     break on an older device tree, but that doesn't mean the binding is
-> +     frozen for all time. Grant said there are ways to change bindings that
-> +     don't result in breakage. For instance, if a new property is added,
-> +     then default to the previous behaviour if it is missing. If a binding
-> +     truly needs an incompatible change, then change the compatible string
-> +     at the same time.  The driver can bind against both the old and the
-> +     new. These guidelines aren't new, but they desperately need to be
-> +     documented."
-> +
-> +II.  General binding rules
-> +
-> +  1) Maintainers, don't let perfect be the enemy of good.  Don't hold up a
-> +     binding because it isn't perfect.
-> +
-> +  2) Use specific compatible strings so that if we need to add a feature (DMA)
-> +     in the future, we can create a new compatible string.  See I.
-> +
-> +  3) Bindings can be augmented, but the driver shouldn't break when given
-> +     the old binding. ie. add additional properties, but don't change the
-> +     meaning of an existing property. For drivers, default to the original
-> +     behaviour when a newly added property is missing.
-> +
-> +  4) Don't submit bindings for staging or unstable.  That will be decided by
-> +     the devicetree maintainers *after* discussion on the mailinglist.
-> +
-> +III. Notes
-> +
-> +  1) This document is intended as a general familiarization with the process as
-> +     decided at the 2013 Kernel Summit.  When in doubt, the current word of the
-> +     devicetree maintainers overrules this document.  In that situation, a patch
-> +     updating this document would be appreciated.
-> diff --git a/Documentation/devicetree/bindings/submitting-patches.txt b/Documentation/devicetree/bindings/submitting-patches.txt
-> new file mode 100644
-> index 000000000000..5672cb46681d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/submitting-patches.txt
-> @@ -0,0 +1,35 @@
-> +
-> +  Submitting devicetree (DT) binding patches
-> +
-> +I. For patch submitters
-> +
-> +  0) Normal patch submission rules from Documentation/SubmittingPatches
-> +     applies.
-> +
-> +  1) The Documentation/ portion of the patch should be a separate patch.
-> +
-> +  2) Submit the entire series to the devicetree mailinglist at
-> +
-> +       devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> +
-> +II. For kernel maintainers
-> +
-> +  1) If you aren't comfortable reviewing a given binding, reply to it and ask
-> +     the devicetree maintainers for guidance.  This will help them prioritize
-> +     which ones to review and which ones are ok to let go.
-> +
-> +  2) For driver (not subsystem) bindings: If you are comfortable with the
-> +     binding, and it hasn't received an Acked-by from the devicetree
-> +     maintainers after a few weeks, go ahead and take it.
-> +
-> +  3) For a series going though multiple trees, the binding patch should be
-> +     kept with the driver using the binding.
-> +
-> +III. Notes
-> +
-> +  0) Please see ...bindings/ABI.txt for details regarding devicetree ABI.
-> +
-> +  1) This document is intended as a general familiarization with the process as
-> +     decided at the 2013 Kernel Summit.  When in doubt, the current word of the
-> +     devicetree maintainers overrules this document.  In that situation, a patch
-> +     updating this document would be appreciated.
-> -- 
-> 1.8.5.1
-> 
+>> [...]
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>> Index: net-next/Documentation/devicetree/bindings/net/ethernet.txt
+>>>> ===================================================================
+>>>> --- /dev/null
+>>>> +++ net-next/Documentation/devicetree/bindings/net/ethernet.txt
+>>>> @@ -0,0 +1,20 @@
+>>>> +The following properties are common to the Ethernet controllers:
+>>>> +
+>>>> +- local-mac-address: array of 6 bytes, specifies the MAC address that
+>>>> was
+>>>> +  assigned to the network device;
+>>>> +- mac-address: array of 6 bytes, specifies the MAC address that was last
+>>>> used by
+>>>> +  the boot program; should be used in cases where the MAC address
+>>>> assigned to
+>>>> +  the device by the boot program is different from the
+>>>> "local-mac-address"
+>>>> +  property;
+>>>> +- max-speed: number, specifies maximum speed in Mbit/s supported by the
+>>>> device;
+>>>> +- phy-mode: string, operation mode of the PHY interface; supported
+>>>> values are
+>>>> +  "mii", "gmii", "sgmii", "tbi", "rev-mii", "rmii", "rgmii", "rgmii-id",
+>>>> +  "rgmii-rxid", "rgmii-txid", "rtbi", "smii", "xgmii";
+
+>>> Mark this as deprecated
+
+>>     That's kind of wishful thinking at this point, as that's what the
+>> majority of drivers use. I'm unsure of the reasons why that was done,
+>> probably people just didn't read the proper specs...
+
+> Or the spec was defined after those bindings.
+
+    No, that's not likely as "phy-connection-type" prop seems very old, most 
+probably predating ePAPR. ePAPR exists since 2008, kernel support for 
+"phy-mode" prop dates back only to 2011.
+
+> Deprecating does not
+> matter for existing bindings. It's only defining new ones that are
+> affected. I was more concerned with giving people guidance on which
+> one to use for new bindings.
+
+    If "phy-connection-type" is to be used, it makes sense to modify 
+of_get_phy_mode() to also look for that prop, right?
+
+>>> in favor of phy-connection-type
+
+>>     That one is only used by the oldish PowerPC 'gianfar' driver.
+
+>>> so it's use does not spread.
+
+>>     I'm afraid that's too late, it has spread very far, so that
+>> of_get_phy_mode() handles that property, not "phy-connection-type".
+
+> Uggg, I guess this is a case of a defacto standard then if the kernel
+> doesn't even support it.
+
+    What's your guess on what to do on these 2 props then? Still deprecate 
+"phy-mode"?
+
+>>>> +- phy-connection-type: the same as "phy-mode" property (but described in
+>>>> ePAPR);
+>>>> +- phy-handle: phandle, specifies a reference to a node representing a
+>>>> PHY
+>>>> +  device (this property is described in ePAPR);
+>>>> +- phy: the same as "phy-handle" property (but actually ad-hoc one).
+
+>>> Mark this as deprecated in favor of phy-handle.
+
+>>     Here situation is more optimistic. Quite many drivers still use
+>> "phy-handle", though some use even more exotic props I didn't document here.
+
+> Perhaps flagging as "Not recommended for new bindings" would be nicer wording...
+
+    Perhaps.
+
+> Rob
+
+WBR, Sergei
+
