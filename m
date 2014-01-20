@@ -1,164 +1,256 @@
 From: Andy Gross <agross@codeaurora.org>
 Subject: Re: [PATCH v2 1/2] dmaengine: add Qualcomm BAM dma driver
-Date: Mon, 20 Jan 2014 16:52:45 -0600
-Message-ID: <20140120225245.GA3530@qualcomm.com>
+Date: Mon, 20 Jan 2014 17:20:21 -0600
+Message-ID: <20140120232021.GB3530@qualcomm.com>
 References: <1389380874-22753-1-git-send-email-agross@codeaurora.org>
  <1389380874-22753-2-git-send-email-agross@codeaurora.org>
- <201401172349.28229.arnd@arndb.de>
+ <20140114194348.GH14405@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <201401172349.28229.arnd@arndb.de>
+In-Reply-To: <20140114194348.GH14405@codeaurora.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 17, 2014 at 11:49:27PM +0100, Arnd Bergmann wrote:
-> On Friday 10 January 2014, Andy Gross wrote:
+On Tue, Jan 14, 2014 at 11:43:48AM -0800, Stephen Boyd wrote:
+> (Mostly nitpicks)
 > 
-> > +static bool bam_dma_filter(struct dma_chan *chan, void *data)
-> > +{
-> > +	struct bam_filter_args *args = data;
-> > +	struct bam_chan *bchan = to_bam_chan(chan);
-> > +
-> > +	if (args->dev == chan->device &&
-> > +		args->id == bchan->id) {
-> > +
-> > +		/* we found the channel, so lets set the EE and dir */
-> > +		bchan->ee = args->ee;
-> > +		bchan->slave.direction = args->dir ?
-> > +				DMA_DEV_TO_MEM : DMA_MEM_TO_DEV;
-> > +		return true;
-> > +	}
-> > +
-> > +	return false;
-> > +}
+> On 01/10, Andy Gross wrote:
+> > Add the DMA engine driver for the QCOM Bus Access Manager (BAM) DMA controller
+> > found in the MSM 8x74 platforms.
+> > 
+> > Each BAM DMA device is associated with a specific on-chip peripheral.  Each
+> > channel provides a uni-directional data transfer engine that is capable of
+> > transferring data between the peripheral and system memory (System mode), or
+> > between two peripherals (BAM2BAM).
+> > 
+> > The initial release of this driver only supports slave transfers between
+> > peripherals and system memory.
+> > 
+> > Signed-off-by: Andy Gross <agross@codeaurora.org>
+> > ---
+> >  drivers/dma/Kconfig        |   9 +
+> >  drivers/dma/Makefile       |   1 +
+> >  drivers/dma/qcom_bam_dma.c | 843 +++++++++++++++++++++++++++++++++++++++++++++
+> >  drivers/dma/qcom_bam_dma.h | 268 ++++++++++++++
+> >  4 files changed, 1121 insertions(+)
+> >  create mode 100644 drivers/dma/qcom_bam_dma.c
+> >  create mode 100644 drivers/dma/qcom_bam_dma.h
+> > 
+> > diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> > index c823daa..e58e6d2 100644
+> > --- a/drivers/dma/Kconfig
+> > +++ b/drivers/dma/Kconfig
+> > @@ -384,4 +384,13 @@ config DMATEST
+> >  config DMA_ENGINE_RAID
+> >  	bool
+> >  
+> > +config QCOM_BAM_DMA
+> > +	tristate "QCOM BAM DMA support"
+> > +	depends on ARCH_MSM || COMPILE_TEST
 > 
-> A filter function should no longer be needed.
-> 
-
-Ok, will remove.
-
-> > +static struct dma_chan *bam_dma_xlate(struct of_phandle_args *dma_spec,
-> > +		struct of_dma *of)
-> > +{
-> > +	struct bam_filter_args args;
-> > +	dma_cap_mask_t cap;
-> > +
-> > +	if (dma_spec->args_count != 3)
-> > +		return NULL;
-> > +
-> > +	args.dev = of->of_dma_data;
-> > +	args.id = dma_spec->args[0];
-> > +	args.ee = dma_spec->args[1];
-> > +	args.dir = dma_spec->args[2];
-> > +
-> > +	dma_cap_zero(cap);
-> > +	dma_cap_set(DMA_SLAVE, cap);
-> > +
-> > +	return dma_request_channel(cap, bam_dma_filter, &args);
-> > +}
-> 
-> Instead, call dma_get_slave_channel() with the right channel that you already know
-> here.
+> I don't think writel_relaxed() is available on every arch, so
+> it's possible this will break some random arch that doesn't have
+> that function.
 > 
 
-Agreed.
+I'll look into this to see.  If that's the case, I can remove the COMPILE_TEST
+if there is no alternative.
 
-> > +	if (pdev->dev.of_node) {
-> > +		ret = of_dma_controller_register(pdev->dev.of_node,
-> > +				bam_dma_xlate, &bdev->common);
+> > +	select DMA_ENGINE
+> > +	select DMA_VIRTUAL_CHANNELS
+> > +	---help---
+> > +	  Enable support for the QCOM BAM DMA controller.  This controller
+> > +	  provides DMA capabilities for a variety of on-chip devices.
 > > +
-> > +		if (ret) {
-> > +			dev_err(bdev->dev, "failed to register of_dma\n");
-> > +			goto err_unregister_dma;
-> > +		}
-> > +	}
+> >  endif
+> > diff --git a/drivers/dma/qcom_bam_dma.c b/drivers/dma/qcom_bam_dma.c
+> > new file mode 100644
+> > index 0000000..7a84b02
+> > --- /dev/null
+> > +++ b/drivers/dma/qcom_bam_dma.c
+> [...]
+> > +static int bam_alloc_chan(struct dma_chan *chan)
+> [...]
+> > +
+> > +	/* Go ahead and initialize the pipe/channel hardware here
+> > +	   - Reset the channel to clear internal state of the FIFO
+> > +	   - Program in the FIFO address
+> > +	   - Configure the irq based on the EE passed in from the DT entry
+> > +	   - Set mode, direction and enable channel
+> > +
+> > +	   We do this here because the channel can only be enabled once and
+> > +	   can only be disabled via a reset.  If done here, we don't have to
+> > +	   manage additional state to figure out when to do this
+> > +	*/
 > 
-> No need to check for pdev->dev.of_node when that is the only mode of probing.
+> Multi-line comments are of the form:
+> 
+> 	/*
+> 	 * comment
+> 	 */
 > 
 
-Good point. I'll remove extraneous check.
+Right.  I converted some comments and didn't do the correct multi-line
 
 > > +
-> > +#ifdef CONFIG_OF
-> > +static const struct of_device_id bam_of_match[] = {
-> > +	{ .compatible = "qcom,bam-v1.4.0", },
-> > +	{ .compatible = "qcom,bam-v1.4.1", },
-> > +	{}
-> > +};
-> > +MODULE_DEVICE_TABLE(of, bam_of_match);
-> > +#endif
+> > +	bam_reset_channel(bdev, bchan->id);
+> > +
+> > +	/* write out 8 byte aligned address.  We have enough space for this
+> > +	   because we allocated 1 more descriptor (8 bytes) than we can use */
+> > +	writel_relaxed(ALIGN(bchan->fifo_phys, sizeof(struct bam_desc_hw)),
+> > +			bdev->regs + BAM_P_DESC_FIFO_ADDR(bchan->id));
+> > +	writel_relaxed(BAM_DESC_FIFO_SIZE, bdev->regs +
+> > +			BAM_P_FIFO_SIZES(bchan->id));
+> [...]
+> > +
+> > +/**
+> > + * bam_dma_terminate_all - terminate all transactions
+> > + * @chan: dma channel
+> > + *
+> > + * Idles channel and dequeues and frees all transactions
+> > + * No callbacks are done
+> > + *
+> > +*/
 > 
-> Also, you can remove the #ifdef here and the of_match_ptr() below.
-> 
-
-If this is removed, then I'll have to add the OF dependency in the Kconfig,
-correct?
-
-> > +
-> > +static struct platform_driver bam_dma_driver = {
-> > +	.probe = bam_dma_probe,
-> > +	.remove = bam_dma_remove,
-> > +	.driver = {
-> > +		.name = "bam-dma-engine",
-> > +		.owner = THIS_MODULE,
-> > +		.of_match_table = of_match_ptr(bam_of_match),
-> > +	},
-> > +};
-> > +
-> > +static int __init bam_dma_init(void)
-> > +{
-> > +	return platform_driver_register(&bam_dma_driver);
-> > +}
-> > +
-> > +static void __exit bam_dma_exit(void)
-> > +{
-> > +	return platform_driver_unregister(&bam_dma_driver);
-> > +}
-> > +
-> 
-> module_platform_driver()
+> Weird '*' starting the line here and on the next function.
 > 
 
 Will fix.
+
+> > +static void bam_dma_terminate_all(struct dma_chan *chan)
+> > +{
+> > +	struct bam_chan *bchan = to_bam_chan(chan);
+> > +	struct bam_device *bdev = bchan->bdev;
+> > +
+> > +	bam_reset_channel(bdev, bchan->id);
+> > +
+> > +	vchan_free_chan_resources(&bchan->vc);
+> > +}
+> > +
+> > +/**
+> > + * bam_control - DMA device control
+> > + * @chan: dma channel
+> > + * @cmd: control cmd
+> > + * @arg: cmd argument
+> > + *
+> > + * Perform DMA control command
+> > + *
+> > +*/
+> > +static int bam_control(struct dma_chan *chan, enum dma_ctrl_cmd cmd,
+> > +	unsigned long arg)
+> > +{
+> > +	struct bam_chan *bchan = to_bam_chan(chan);
+> > +	struct bam_device *bdev = bchan->bdev;
+> > +	int ret = 0;
+> > +	unsigned long flag;
+> > +
+> [...]
+> > +/**
+> > + * bam_dma_irq - irq handler for bam controller
+> > + * @irq: IRQ of interrupt
+> > + * @data: callback data
+> > + *
+> > + * IRQ handler for the bam controller
+> > + */
+> > +static irqreturn_t bam_dma_irq(int irq, void *data)
+> > +{
+> > +	struct bam_device *bdev = (struct bam_device *)data;
+> 
+> Unnecessary cast from void.
+> 
+
+Fixed.
+
+> > +static int bam_dma_probe(struct platform_device *pdev)
+> > +{
+> [...]
+> > +
+> > +	irq_res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+> > +	if (!irq_res) {
+> > +		dev_err(bdev->dev, "irq resource is missing\n");
+> > +		return -EINVAL;
+> > +	}
+> 
+> Please use platform_get_irq() instead.
+> 
+
+Fixed.
 
 > > diff --git a/drivers/dma/qcom_bam_dma.h b/drivers/dma/qcom_bam_dma.h
 > > new file mode 100644
 > > index 0000000..2cb3b5f
 > > --- /dev/null
 > > +++ b/drivers/dma/qcom_bam_dma.h
-> > @@ -0,0 +1,268 @@
-> > +#ifndef __QCOM_BAM_DMA_H__
-> > +#define __QCOM_BAM_DMA_H__
+> [...]
+> > +#define BAM_CNFG_BITS_DEFAULT	(BAM_PIPE_CNFG |	\
+> > +			BAM_NO_EXT_P_RST |		\
+> > +			BAM_IBC_DISABLE |		\
+> > +			BAM_SB_CLK_REQ |		\
+> > +			BAM_PSM_CSW_REQ |		\
+> > +			BAM_PSM_P_RES |			\
+> > +			BAM_AU_P_RES |			\
+> > +			BAM_SI_P_RES |			\
+> > +			BAM_WB_P_RES |			\
+> > +			BAM_WB_BLK_CSW |		\
+> > +			BAM_WB_CSW_ACK_IDL |		\
+> > +			BAM_WB_RETR_SVPNT |		\
+> > +			BAM_WB_DSC_AVL_P_RST |		\
+> > +			BAM_REG_P_EN |			\
+> > +			BAM_PSM_P_HD_DATA |		\
+> > +			BAM_AU_ACCUMED |		\
+> > +			BAM_CMD_ENABLE)
 > > +
-> > +#include <linux/dmaengine.h>
-> > +#include "virt-dma.h"
+> > +/* PIPE CTRL */
+> > +#define	P_EN			BIT(1)
+> 
+> Nit: Weird formatting here?
+> 
+
+That is odd.  Will fix.
+
+> > +#define P_DIRECTION		BIT(3)
+> [...]
 > > +
-> > +enum bam_channel_dir {
-> > +	BAM_PIPE_CONSUMER = 0,	/* channel reads from data-fifo or memory */
-> > +	BAM_PIPE_PRODUCER,	/* channel writes to data-fifo or memory */
+> > +
+> > +struct bam_device {
+> > +	void __iomem *regs;
+> > +	struct device *dev;
+> > +	struct dma_device common;
+> > +	struct device_dma_parameters dma_parms;
+> > +	struct bam_chan *channels;
+> 
+> Maybe this should be a flexible array. It looks like probe might
+> need to be rewritten to detect the number of channels from the
+> hardware before assigning anything, but it should be possible.
+> But it probably doesn't matter.
+> 
+
+You can't take the number of channels at face value.  Only a subset of that
+number are actually usable by the CPUs execution environment.
+
+> > +	u32 num_channels;
+> > +	u32 num_ees;
+> > +	unsigned long enabled_ees;
+> > +	int irq;
+> 
+> Is irq used?
+> 
+
+Will remove.
+
+> > +	struct clk *bamclk;
+> > +
+> > +	/* dma start transaction tasklet */
+> > +	struct tasklet_struct task;
 > > +};
 > 
-> Since the header does not serve as an interface, just move all the contents
-> into the driver directly.
-> 
-
-OK.  SBoyd made the same comment.  I'll go ahead and collapse both down to 1
-file.
-
-> > +struct bam_desc_hw {
-> > +	u32 addr;		/* Buffer physical address */
-> > +	u16 size;		/* Buffer size in bytes */
-> > +	u16 flags;
-> > +} __packed;
-> 
-> Remove __packed here, it only makes the access less efficient but does not change
-> the layout, which is already packed.
-
-Ok.  Will fix.
+> -- 
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> hosted by The Linux Foundation
 
 -- 
 sent by an employee of the Qualcomm Innovation Center, Inc.
