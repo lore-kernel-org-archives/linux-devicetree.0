@@ -1,103 +1,43 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] DT: net: document Ethernet bindings in one place
-Date: Tue, 21 Jan 2014 00:45:27 +0300
-Message-ID: <52DD98F7.4090202@cogentembedded.com>
-References: <201401180405.07859.sergei.shtylyov@cogentembedded.com> <CAL_Jsq+oa9P=rh+p-dMZyGP8TcmpX7bTnMU0ynLvFxjxFDYbRg@mail.gmail.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH 0/2] DT updates for Hummingboard and new Cubox-i
+Date: Mon, 20 Jan 2014 12:47:07 -0800
+Message-ID: <CAOesGMjBCbMZrpbKjBBUeFhWEkLHS5rERtajRDk0ew_5FYvQEA@mail.gmail.com>
+References: <20140116182211.GX15937@n2100.arm.linux.org.uk>
+	<20140119031816.GD16158@S2101-09.ap.freescale.net>
+	<20140119185246.GB28056@quad.lixom.net>
+	<20140120004434.GV15937@n2100.arm.linux.org.uk>
+	<CAOesGMiych-jeo_eKGgL1qxsYQ=rkb4UQwgGBsG-7+GMbLJWhg@mail.gmail.com>
+	<20140120095532.GW15937@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+oa9P=rh+p-dMZyGP8TcmpX7bTnMU0ynLvFxjxFDYbRg@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140120095532.GW15937-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/20/2014 05:06 PM, Rob Herring wrote:
+On Mon, Jan 20, 2014 at 1:55 AM, Russell King - ARM Linux
+<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> On Sun, Jan 19, 2014 at 07:34:22PM -0800, Olof Johansson wrote:
+>> I'm guessing this is going to mess up Shawn's cleanup patches, but
+>> time has ran out for 3.14 for those so they will need to be respun
+>> anyway, most likely.
+>>
+>> We can apply them to arm-soc's dt branch. I think it's better if we
+>> merge them since dts files tend to be one of the conflict-ridden areas
+>> (even if this particular instance isn't). Send the series our way if
+>> you want, or send a branch pull request, your choice.
+>
+> There's no conflict, and they build fine according to my autobuilder
+> which includes arm-soc for-next.
 
->> This patch is an attempt to gather the Ethernet related bindings in one file,
->> like it's done in the MMC and some other subsystems. It should save the trouble
->> of documenting several properties over and over in each binding document.
+Great, I didn't see any patches sent from you though. Should I
+cherry-pick them from -next instead?
 
->> I have used the Embedded Power Architecture(TM) Platform Requirements (ePAPR)
->> standard as a base for the properties description, also documenting some ad-hoc
->> properties that have been introduced over time despite having direct analogs in
->> ePAPR.
 
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
->> ---
->> The patch is against DaveM's 'net-next.git' repo and the DaVinci EMAC bindings
->> fix I've posted yesterday:
-
->> http://patchwork.ozlabs.org/patch/311854/
-
-[...]
-
->> Index: net-next/Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt
->> ===================================================================
->> --- net-next.orig/Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt
->> +++ net-next/Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt
->> @@ -4,13 +4,8 @@ Required properties:
->>   - compatible: should be "allwinner,sun4i-emac".
->>   - reg: address and length of the register set for the device.
->>   - interrupts: interrupt for the device
->> -- phy: A phandle to a phy node defining the PHY address (as the reg
->> -  property, a single integer).
->>   - clocks: A phandle to the reference clock for this device
-
->> -Optional properties:
->> -- (local-)mac-address: mac address to be used by this driver
->> -
-
-> You should reference that this binding uses the common ethernet binding doc.
-
-    Oh, I was hoping to avoid that like MMC subsys mostly managed to do (most 
-MMC specific properties are only described once, without outside references to 
-mmc.txt). OTOH, the MMC bindings handling is mostly centralized in the core 
-code, while the Ethernet one is not, so you're probably right here...
-
->> Index: net-next/Documentation/devicetree/bindings/net/ethernet.txt
->> ===================================================================
->> --- /dev/null
->> +++ net-next/Documentation/devicetree/bindings/net/ethernet.txt
->> @@ -0,0 +1,20 @@
->> +The following properties are common to the Ethernet controllers:
->> +
->> +- local-mac-address: array of 6 bytes, specifies the MAC address that was
->> +  assigned to the network device;
->> +- mac-address: array of 6 bytes, specifies the MAC address that was last used by
->> +  the boot program; should be used in cases where the MAC address assigned to
->> +  the device by the boot program is different from the "local-mac-address"
->> +  property;
->> +- max-speed: number, specifies maximum speed in Mbit/s supported by the device;
->> +- phy-mode: string, operation mode of the PHY interface; supported values are
->> +  "mii", "gmii", "sgmii", "tbi", "rev-mii", "rmii", "rgmii", "rgmii-id",
->> +  "rgmii-rxid", "rgmii-txid", "rtbi", "smii", "xgmii";
-
-> Mark this as deprecated
-
-    That's kind of wishful thinking at this point, as that's what the majority 
-of drivers use. I'm unsure of the reasons why that was done, probably people 
-just didn't read the proper specs...
-
-> in favor of phy-connection-type
-
-    That one is only used by the oldish PowerPC 'gianfar' driver.
-
-> so it's use does not spread.
-
-    I'm afraid that's too late, it has spread very far, so that 
-of_get_phy_mode() handles that property, not "phy-connection-type".
-
->> +- phy-connection-type: the same as "phy-mode" property (but described in ePAPR);
->> +- phy-handle: phandle, specifies a reference to a node representing a PHY
->> +  device (this property is described in ePAPR);
->> +- phy: the same as "phy-handle" property (but actually ad-hoc one).
-
-> Mark this as deprecated in favor of phy-handle.
-
-    Here situation is more optimistic. Quite many drivers still use 
-"phy-handle", though some use even more exotic props I didn't document here.
-
-WBR, Sergei
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
