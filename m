@@ -1,84 +1,66 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [PATCH RFC v2 0/2] ARM: defining power states DT bindings
-Date: Mon, 20 Jan 2014 17:47:57 +0000
-Message-ID: <1390240079-6495-1-git-send-email-lorenzo.pieralisi@arm.com>
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-pm-owner@vger.kernel.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Dave Martin <dave.martin@arm.com>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Grant Likely <grant.likely@linaro.org>, Kumar Gala <galak@codeaurora.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Mark Hambleton <mark.hambleton@broadcom.com>, Hanjun Guo <hanjun.guo@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <t.figa@samsung.com>, Kevin Hilman <khilman@linaro.org>
+From: Sebastian Reichel <sre@ring0.de>
+Subject: Re: [PATCHv13 27/40] ARM: dts: omap3 clock data
+Date: Mon, 20 Jan 2014 19:00:54 +0100
+Message-ID: <20140120180053.GA25920@earth.universe>
+References: <1389276051-1326-1-git-send-email-t-kristo@ti.com>
+ <1389276051-1326-28-git-send-email-t-kristo@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="h31gzZEtNLTqOjlF"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1389276051-1326-28-git-send-email-t-kristo@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, nm@ti.com, rnayak@ti.com, bcousson@baylibre.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is v2 of a previous posting:
 
-http://lists.infradead.org/pipermail/linux-arm-kernel/2013-December/215544.=
-html
+--h31gzZEtNLTqOjlF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This patchset depends on the following bindings to be approved and augmente=
-d
-to cater for hierarchical power domains in DT:
+Hi,
 
-http://lists.infradead.org/pipermail/linux-arm-kernel/2014-January/224928.h=
-tml
+I just found some time to update my SSI driver adding DT clock
+support. It works, but I wonder if the alias of the ssi clocks
+can be changed to something like the following:
 
-Changes in v2:
+/* omap3430es1-clocks.dtsi */
+ssi_ick: ssi_ick_3430es1 {};
+ssi_ssr_fck: ssi_ssr_fck_3430es1 {};
+ssi_sst_fck: ssi_sst_fck_3430es1 {};
 
-- Updated cache bindings according to review
-- Added power domain phandle to cache bindings
-- Added power domains to C-states bindings
-- Removed useless reg property from C-states bindings
-- Removed cpu-map references from C-states bindings
-- Added dependency on OPP in C-states parameters
-- Added C-state state hierarchy
+/* omap36xx-omap3430es2plus-clocks.dtsi */
+ssi_ick: ssi_ick_3430es2 {};
+ssi_ssr_fck: ssi_ssr_fck_3430es2 {};
+ssi_sst_fck: ssi_sst_fck_3430es2 {};
 
-ARM based systems embed power management HW that allows SW to enter
-low-power states according to run-time criteria based on parameters (eg
-power state entry/exit latency) that define how a power state has to be
-managed and its respective properties. ARM partners implement HW power
-management schemes through custom HW, with power controllers and relative
-control mechanisms differing on both HW implementations and the way SW can
-control them. This differentiation forces PM software in the kernel to cope
-with states differences in power management drivers, which cause code
-fragmentation and duplication of functionality.
+With this change I can reference the ssi clocks in omap3.dtsi
+instead of creating files for omap3430es1 and omap3430es2+.
 
-Most of the power control scheme HW parameters are not probeable on ARM
-platforms from a SW point of view, hence, in order to tackle the drivers
-fragmentation problem, this patch series defines device tree bindings to
-describe power states parameters on ARM platforms.
+-- Sebastian
 
-Device tree bindings for power states also require the introduction of devi=
-ce
-tree bindings for processor caches, since power states entry/exit require
-SW cache maintainance; in some ARM systems, where firmware does not
-support power down interfaces, cache maintainance must be carried out in th=
-e
-OS power management layer, which then requires a description of the cache
-topology through device tree nodes.
+--h31gzZEtNLTqOjlF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-The power states on ARM are described as "C-states" in this patchset,
-borrowing the nomenclature from ACPI power states bindings which have by no=
-w
-been widely adopted on both x86 and ARM world as power states names.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-C-states device tree standardization shares most of the concepts and
-definitions with the ongoing ACPI ARM C-state bindings proposal so that
-both standards can contain a coherent set of parameters, simplifying the
-way SW will have to handle the respective device drivers.
+iQIcBAEBCAAGBQJS3WRVAAoJENju1/PIO/qaICEP/Rv7AAzH4Id9zCTDDV2tuMh6
+5kYeqM05EcAA6ES5XaNI3cs76jnsGkLfHMWy682pZU0ePgtgQbOiHE81YYY55kW5
++nN+dWz5hOhTmcgkaU+yv9NkluYfpu474EF4NODTjXSk1XPpZb45FdeANrLyRz4N
+6jcozWeUA0DPHRAN8cgM5Zj7J9lPdW4COO6QQA1W0cWMD0qGc4cWGYAuIptTloNV
+AzeT1zx0Cy2IRS90HmBKPVJOYKgfcCn6nn9wO5+Qaq+UIC2J0QgpT9T8IOyxfPsM
+m1LxY5678YpD1MK0FWpiNwZmBR0WjwEDLp/DwdJUHXpc1TnSxGNOhV+9vSSEGfwp
+WLzFr+pBZB8MYN646sJU6fAIMsXG13FbodjDM/WSa6yhMAAE+KOin5KbpqTY8wDv
+B1EgQoZfscEMn75Q77KIm91j4N+EZKdJ/Tkzgcwyt/BNM0IEadUnh2dImAoUq+0I
+uhjfZYlOGmdiANIwteWfgvR9qJrcJ3F29YCgf4pfUvTbIV5ly2NJlPwCbiqLvHEj
+ER4o9xqmWBU6y3LEZQizlSc3QNouirmnm2mC3X/9Tkg+rj/qm42hSPP1/SYBZbme
+zEWBzeFMZmsU6VV6Tjjp4BPnWl+BS68d2SYAHjpBxodTMbaLg8tCq8hlhN0gzRc8
+KN1Av8nyzQk8i+yx1iX6
+=HVxk
+-----END PGP SIGNATURE-----
 
-Lorenzo Pieralisi (2):
-  Documentation: arm: add cache DT bindings
-  Documentation: arm: define DT C-states bindings
-
- Documentation/devicetree/bindings/arm/c-states.txt | 774 +++++++++++++++++=
-++++
- Documentation/devicetree/bindings/arm/cache.txt    | 187 +++++
- Documentation/devicetree/bindings/arm/cpus.txt     |  10 +
- 3 files changed, 971 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/c-states.txt
- create mode 100644 Documentation/devicetree/bindings/arm/cache.txt
-
---=20
-1.8.4
-
-
+--h31gzZEtNLTqOjlF--
