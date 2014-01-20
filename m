@@ -1,89 +1,87 @@
-From: Jingchang Lu <jingchang.lu@freescale.com>
-Subject: RE: [PATCHv10 2/2] dma: Add Freescale eDMA engine driver support
-Date: Mon, 20 Jan 2014 11:05:03 +0000
-Message-ID: <f173c2531461478899818365e06df437@BL2PR03MB467.namprd03.prod.outlook.com>
-References: <1389938684-29467-1-git-send-email-b35083@freescale.com>
- <1389938684-29467-3-git-send-email-b35083@freescale.com>
- <20140120074019.GF26823@intel.com>
- <43d79ce905e24e9bb58ef49ac19db7d7@BL2PR03MB467.namprd03.prod.outlook.com>
- <20140120093541.GX26823@intel.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 4/6] phy-rcar-usb-gen2: add device tree support
+Date: Mon, 20 Jan 2014 15:19:44 +0400
+Message-ID: <52DD0650.1070001@cogentembedded.com>
+References: <1390057420-13226-1-git-send-email-ben.dooks@codethink.co.uk> <1390057420-13226-5-git-send-email-ben.dooks@codethink.co.uk> <52DAD3B3.1050807@cogentembedded.com> <52DCFF31.2040603@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140120093541.GX26823@intel.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "arnd@arndb.de" <arnd@arndb.de>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Huan Wang <Huan.Wang@freescale.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <52DCFF31.2040603@codethink.co.uk>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: linux-kernel@lists.codethink.co.uk, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogVmlub2QgS291bCBbbWFp
-bHRvOnZpbm9kLmtvdWxAaW50ZWwuY29tXQ0KPiBTZW50OiBNb25kYXksIEphbnVhcnkgMjAsIDIw
-MTQgNTozNiBQTQ0KPiBUbzogTHUgSmluZ2NoYW5nLUIzNTA4Mw0KPiBDYzogZGFuLmoud2lsbGlh
-bXNAaW50ZWwuY29tOyBhcm5kQGFybmRiLmRlOyBzaGF3bi5ndW9AbGluYXJvLm9yZzsNCj4gcGF3
-ZWwubW9sbEBhcm0uY29tOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc3dhcnJlbkB3d3dkb3Rvcmcu
-b3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgV2FuZyBI
-dWFuLUIxODk2NQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIdjEwIDIvMl0gZG1hOiBBZGQgRnJlZXNj
-YWxlIGVETUEgZW5naW5lIGRyaXZlciBzdXBwb3J0DQo+IA0KPiBPbiBNb24sIEphbiAyMCwgMjAx
-NCBhdCAwOTowNjo0M0FNICswMDAwLCBKaW5nY2hhbmcgTHUgd3JvdGU6DQo+ID4NCj4gPg0KPiA+
-ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IFZpbm9kIEtvdWwgW21h
-aWx0bzp2aW5vZC5rb3VsQGludGVsLmNvbV0NCj4gPiA+IFNlbnQ6IE1vbmRheSwgSmFudWFyeSAy
-MCwgMjAxNCAzOjQwIFBNDQo+ID4gPiBUbzogTHUgSmluZ2NoYW5nLUIzNTA4Mw0KPiA+ID4gQ2M6
-IGRhbi5qLndpbGxpYW1zQGludGVsLmNvbTsgYXJuZEBhcm5kYi5kZTsgc2hhd24uZ3VvQGxpbmFy
-by5vcmc7DQo+ID4gPiBwYXdlbC5tb2xsQGFybS5jb207IG1hcmsucnV0bGFuZEBhcm0uY29tOyBz
-d2FycmVuQHd3d2RvdG9yZy5vcmc7DQo+IGxpbnV4LQ0KPiA+ID4ga2VybmVsQHZnZXIua2VybmVs
-Lm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+ID4gZGV2aWNl
-dHJlZUB2Z2VyLmtlcm5lbC5vcmc7IFdhbmcgSHVhbi1CMTg5NjUNCj4gPiA+IFN1YmplY3Q6IFJl
-OiBbUEFUQ0h2MTAgMi8yXSBkbWE6IEFkZCBGcmVlc2NhbGUgZURNQSBlbmdpbmUgZHJpdmVyDQo+
-IHN1cHBvcnQNCj4gPiA+DQo+ID4gPiBPbiBGcmksIEphbiAxNywgMjAxNCBhdCAwMjowNDo0NFBN
-ICswODAwLCBKaW5nY2hhbmcgTHUgd3JvdGU6DQo+ID4gPiA+IEFkZCBGcmVlc2NhbGUgZW5oYW5j
-ZWQgZGlyZWN0IG1lbW9yeShlRE1BKSBjb250cm9sbGVyIHN1cHBvcnQuDQo+ID4gPiA+IFRoaXMg
-bW9kdWxlIGNhbiBiZSBmb3VuZCBvbiBWeWJyaWQgYW5kIExTLTEgU29Dcy4NCj4gPiA+ID4NCj4g
-PiA+ID4gU2lnbmVkLW9mZi1ieTogQWxpc29uIFdhbmcgPGIxODk2NUBmcmVlc2NhbGUuY29tPg0K
-PiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBKaW5nY2hhbmcgTHUgPGIzNTA4M0BmcmVlc2NhbGUuY29t
-Pg0KPiA+ID4gPiBBY2tlZC1ieTogQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5kZT4NCj4gPiA+
-ID4gLS0tDQo+ID4gPg0KPiA+ID4gPiArc3RhdGljIGludCBmc2xfZWRtYV9jb250cm9sKHN0cnVj
-dCBkbWFfY2hhbiAqY2hhbiwgZW51bQ0KPiBkbWFfY3RybF9jbWQNCj4gPiA+IGNtZCwNCj4gPiA+
-ID4gKwkJdW5zaWduZWQgbG9uZyBhcmcpDQo+ID4gPiA+ICt7DQo+ID4gPiA+ICsJc3RydWN0IGZz
-bF9lZG1hX2NoYW4gKmZzbF9jaGFuID0gdG9fZnNsX2VkbWFfY2hhbihjaGFuKTsNCj4gPiA+ID4g
-KwlzdHJ1Y3QgZG1hX3NsYXZlX2NvbmZpZyAqY2ZnID0gKHZvaWQgKilhcmc7DQo+ID4gPiA+ICsJ
-dW5zaWduZWQgbG9uZyBmbGFnczsNCj4gPiA+ID4gKwlMSVNUX0hFQUQoaGVhZCk7DQo+ID4gPiA+
-ICsNCj4gPiA+ID4gKwlzd2l0Y2ggKGNtZCkgew0KPiA+ID4gPiArCWNhc2UgRE1BX1RFUk1JTkFU
-RV9BTEw6DQo+ID4gPiA+ICsJCXNwaW5fbG9ja19pcnFzYXZlKCZmc2xfY2hhbi0+dmNoYW4ubG9j
-aywgZmxhZ3MpOw0KPiA+ID4gPiArCQlmc2xfZWRtYV9kaXNhYmxlX3JlcXVlc3QoZnNsX2NoYW4p
-Ow0KPiA+ID4gPiArCQlmc2xfY2hhbi0+ZWRlc2MgPSBOVUxMOw0KPiA+ID4gPiArCQl2Y2hhbl9n
-ZXRfYWxsX2Rlc2NyaXB0b3JzKCZmc2xfY2hhbi0+dmNoYW4sICZoZWFkKTsNCj4gPiA+ID4gKwkJ
-c3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmZnNsX2NoYW4tPnZjaGFuLmxvY2ssIGZsYWdzKTsNCj4g
-PiA+ID4gKwkJdmNoYW5fZG1hX2Rlc2NfZnJlZV9saXN0KCZmc2xfY2hhbi0+dmNoYW4sICZoZWFk
-KTsNCj4gPiA+ID4gKwkJcmV0dXJuIDA7DQo+ID4gPiB3ZWxsIHdoYXQgaGFwcGVucyB0byB0aGUg
-Y3VycmVudCBvbmdvaW5nIHRyYW5zYWN0aW9ucywgaSBkb24ndCBzZWUNCj4gdGhvc2UNCj4gPiA+
-IGdldHRpbmcNCj4gPiA+IHRlcm1pbmF0ZWQ/DQo+ID4gVGhlIGZzbF9lZG1hX2Rpc2FibGVfcmVx
-dWVzdChmc2xfY2hhbikgd291bGQgZW5kIHRoZSBjaGFubmVsJ3Mgb25nb2luZw0KPiB0cmFuc2Fj
-dGlvbiwgdGhlbg0KPiA+IHRoZSBlRE1BIHdvdWxkIG5vdCByZXNwb25zZSB0byBkZXZpY2UgZG1h
-IHJlcXVlc3QsIGFuZCB0aGUNCj4gdmNoYW5fZG1hX2Rlc2NfZnJlZV9saXN0KCkNCj4gPiB3aWxs
-IHJlbGVhc2UgYWxsIGFzc29jaWF0ZSBtZW1vcnkuIFRoYW5rcy4NCj4gQ2FuIHlvdSBleHBsYWlu
-IGEgYml0IG1vcmUgaG93IHRlcm1pbmF0ZSB3aWxsIGhhcHBlbiwgZ2l2ZW4gdGFodCB5b3UgYXJl
-DQo+IHVzaW5nDQo+IHNhbWUgdGhpbmcgZm9yIHBhdXNlPw0KSXQgd29ya3MganVzdCBsaWtlIGFu
-IGludGVycnVwdCBjb250cm9sbGVyIG9uIGlycSBlbmFibGUgYW5kIGRpc2FibGUuIEl0IGhhcyBh
-IHJlZ2lzdGVyIGNhbGxlZA0Kc2V0L2NsZWFyIGVuYWJsZSByZXF1ZXN0IHJlZ2lzdGVyKFNFUlEv
-Q0VSUSkgdG8gZW5hYmxlIG9yIGRpc2FibGUgdGhlIERNQSByZXF1ZXN0IGZvciBhIGdpdmVuDQpj
-aGFubmVsLiBJdCB3b24ndCB0cmFuc2ZlciBkYXRhIGFueSBtb3JlIHdpdGggdGhlIGVuYWJsZSBy
-ZXF1ZXN0IHJlZ2lzdGVyIGNsZWFyZWQuIFNvIGZvciB0aGUNCnBhdXNlIGFuZCB0ZXJtaW5hdGUg
-dGhlIHBhdXNlIGlzIHRoZSBzYW1lLiBBbmQgdGhlcmUgaXMgbm8gb3RoZXIgd2F5IHRvIHN0b3Ag
-dGhlIGNoYW5uZWxzLg0KVGhhbmtzLg0KDQoNCg0KPiA+ID4gPiArc3RhdGljIHN0cnVjdCBkbWFf
-YXN5bmNfdHhfZGVzY3JpcHRvciAqZnNsX2VkbWFfcHJlcF9kbWFfY3ljbGljKA0KPiA+ID4gPiAr
-CQlzdHJ1Y3QgZG1hX2NoYW4gKmNoYW4sIGRtYV9hZGRyX3QgZG1hX2FkZHIsIHNpemVfdA0KPiBi
-dWZfbGVuLA0KPiA+ID4gPiArCQlzaXplX3QgcGVyaW9kX2xlbiwgZW51bSBkbWFfdHJhbnNmZXJf
-ZGlyZWN0aW9uDQo+IGRpcmVjdGlvbiwNCj4gPiA+ID4gKwkJdW5zaWduZWQgbG9uZyBmbGFncywg
-dm9pZCAqY29udGV4dCkNCj4gPiA+ID4gK3sNCj4gPiA+IHlvdSBtYXkgd2FudCB0byBpbXBsZW1l
-bnQgdGhlIGNhcGFibGl0aWVzIGFwaSBzdWJzZXF1ZW50bHkgZm9yIGF1ZGlvDQo+ID4gPiB1c2Fn
-ZS4NCj4gPiBEbyB5b3UgbWVhbiB0aGUgZGV2aWNlX3NsYXZlX2NhcHMgZnVuY3Rpb24/IElmIGl0
-IGlzLCBJIHdpbGwgYWRkIGl0Lg0KPiBZZXMsIHRoYXQgY2FuIGJlIGluY3JlbWVudGFsbHkgYWRk
-ZWQuLg0KSSBoYXZlIHNlbmQgdGhlIHYxMSBwYXRjaCBvdXQgd2l0aCBhIGJhc2ljIGRldmljZV9z
-bGF2ZV9jYXBzIGRlZmluaXRpb24uIEkgbm90aWNlDQp0aGF0IHRoZXJlIGlzIHNvbWUgbmV3IHVw
-ZGF0ZSBvZiB0aGUgZG1hIGNhcGFiaWxpdGllcywgc28gaWYgcG9zc2libGUgYW5kIG90aGVycyBv
-aywNCmNvdWxkIHlvdSBwbGVhc2UgbWVyZ2UgdGhpcyBwYXRjaCBmaXJzdCBhbmQgbGVhdmUgbWUg
-aW1wcm92aW5nIHRoZSBkcml2ZXIgaW4gc3Vic2VxdWVudA0KcGF0Y2hlcy4gVGhhbmtzLg0KDQoN
-CkJlc3QgUmVnYXJkcywNCkppbmdjaGFuZw0KDQo=
+Hello.
+
+On 20-01-2014 14:49, Ben Dooks wrote:
+
+>>> Add support for the phy-rcar-gen2-usb driver to be probed from device
+>>> tree.
+
+>>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>> Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
+>>> ---
+>>> Cc: linux-usb@vger.kernel.org (open list:USB PHY LAYER)
+>>> Cc: linux-sh@vger.kernel.org (open list:ARM/SHMOBILE ARM...)
+>>> Cc: Magnus Damm <magnus.damm@gmail.com> (supporter:ARM/SHMOBILE ARM...)
+>>> Cc: Simon Horman <horms@verge.net.au> (supporter:ARM/SHMOBILE ARM...)
+>>> Cc: devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND...)
+>>> ---
+>>>   drivers/usb/phy/phy-rcar-gen2-usb.c | 35
+>>> ++++++++++++++++++++++++++++++-----
+>>>   1 file changed, 30 insertions(+), 5 deletions(-)
+
+>>> diff --git a/drivers/usb/phy/phy-rcar-gen2-usb.c
+>>> b/drivers/usb/phy/phy-rcar-gen2-usb.c
+>>> index db3ab34..906b74b 100644
+>>> --- a/drivers/usb/phy/phy-rcar-gen2-usb.c
+>>> +++ b/drivers/usb/phy/phy-rcar-gen2-usb.c
+>> [...]
+>>> @@ -177,8 +185,9 @@ static int rcar_gen2_usb_phy_probe(struct
+>>> platform_device *pdev)
+>>>       struct clk *clk;
+>>>       int retval;
+>>>
+>>> +    of_id = of_match_device(rcar_gen2_usb_phy_ofmatch, &pdev->dev);
+
+>>     I don't think another match is needed.
+
+>>>       pdata = dev_get_platdata(&pdev->dev);
+>>> -    if (!pdata) {
+>>> +    if (!pdata && !of_id) {
+>>>           dev_err(dev, "No platform data\n");
+>>>           return -EINVAL;
+>>>       }
+>>> @@ -203,16 +212,31 @@ static int rcar_gen2_usb_phy_probe(struct
+>>> platform_device *pdev)
+>> [...]
+>>> +    if (of_id) {
+
+>>     Isn't checking dev->of_node enough?
+
+> of_node does not contain the id of the entry matched at start time/
+
+    I don't see where are you necessarily using that entry.
+
+>>> +        int len = 0;
+>>> +
+>>> +        if (of_get_property(dev->of_node, "renesas,usb0-hs", &len))
+>>> +            priv->ugctrl2 = USBHS_UGCTRL2_USB0_HS;
+>>> +        else
+>>> +            priv->ugctrl2 = USBHS_UGCTRL2_USB0_PCI;
+>>> +
+>>> +        if (of_get_property(dev->of_node, "renesas,usb2-ss", &len))
+>>> +            priv->ugctrl2 |= USBHS_UGCTRL2_USB2_SS;
+
+>>     Where is the bindings file you document these properties in?
+
+> Should have been in another patch in the series.
+
+    Hm, I think I saw all 6 patches of the series but no bindings.
+Bindings files are typically appended to the patch that adds DT support to a 
+driver...
+
+WBR, Sergei
+
