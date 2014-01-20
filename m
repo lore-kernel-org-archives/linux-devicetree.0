@@ -1,424 +1,133 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [RFCv2] Device Tree bindings for OMAP3 Camera System
-Date: Mon, 20 Jan 2014 23:16:43 +0100
-Message-ID: <52DDA04B.90809@gmail.com>
-References: <20131103220315.GA11659@earth.universe> <20140115194127.GA30988@earth.universe> <20140120041904.GH9997@valkosipuli.retiisi.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20140120041904.GH9997@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>, Sebastian Reichel <sre@debian.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH V2] dt: bindings: submitting patches and ABI documents
+Date: Mon, 20 Jan 2014 22:31:40 +0000
+Message-ID: <20140120223140.8B087C40B12@trevor.secretlab.ca>
+References: <1383759120-21571-1-git-send-email-jason@lakedaemon.net> < 1387299580-9100-1-git-send-email-jason@lakedaemon.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1387299580-9100-1-git-send-email-jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, 17 Dec 2013 16:59:40 +0000, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+> Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 
-On 01/20/2014 05:19 AM, Sakari Ailus wrote:
-> Hi Sebastian,
->
-> I've also been working on this (besides others); what I have however are
-> mostly experimental patches. I'm also using patches from Laurent, Florian
-> Vaussard (IOMMU) and Hiroshi Doyu (IOMMU as well). My tree is here:
->
-> <URL:http://vihersipuli.retiisi.org.uk/cgi-bin/gitweb.cgi?p=~sailus/linux.git;a=summary>
->
-> The branch is rm696-035-dt. The intent is to get the N9/N950 camera support
-> to mainline. Most patches in that branch are experimental. What is missing
-> entirely is constucting subdev groups off of the devices found. The rest
-> will likely contain lots of bugs.
->
-> Seems like you've started with documentation which I'm lacking entirely.
-> Good! :)
->
-> You might want to take a look at least at this one as well:
->
-> <URL:http://vihersipuli.retiisi.org.uk/cgi-bin/gitweb.cgi?p=~sailus/linux.git;a=commitdiff;h=58f7754099539178f47dcca97981bf2ba4c73e54>
->
-> On Wed, Jan 15, 2014 at 08:41:28PM +0100, Sebastian Reichel wrote:
->> Hi,
->>
->> I finally found some time to update the proposed binding
->> documentation for omap3isp according to the comments on RFCv1.
->>
->> Changes since v1:
->>   * Use common DT clock bindings to provide isp-xclk
->>   * Use common DT video-interface bindings to specify device connections
->>   * Apply style updates suggested by Mark Rutland
->>   * I renamed ti,enable-crc to ti,disable-crc, since I think its supposed
->>     to be used for remote hw adding broken crc values. I can't see other
->>     reasons for disabling it :)
->>   * I've kept the clocks the same for now. I think somebody else should look
->>     over them. Changing the actual referenced clocks / renaming them is just
->>     a small change and can be done at a later time in the omap3isp DT process
->>     IMHO.
->>   * I've kept the reg reference as a list for now, since that's how the
->>     omap3isp driver currently works and I can't see any disadvantages
->>     in making the memory segmentation visible in the DTS file.
->>
->> So here is the proposed DT binding documentation:
->>
->> Binding for the OMAP3 Camera subsystem with the image signal processor (ISP)
->> feature. The binding follows the common video-interfaces Device Tree binding,
->> so it is recommended to read the common binding description first. This description
->
-> Over 80 characters per line.
->
->> can be found in Documentation/devicetree/bindings/media/video-interfaces.txt
->>
->> omap3isp node
->> -------------
->>
->> Required properties:
->>
->> - compatible    : should be "ti,omap3isp" for OMAP3.
->> - reg       : physical addresses and length of the registers set.
->> - clocks    : list of clock specifiers, corresponding to entries in
->>            clock-names property.
->> - clock-names   : must contain "cam_ick", "cam_mclk", "csi2_96m_fck",
->>            "l3_ick" entries, matching entries in the clocks property.
->> - interrupts    : must contain mmu interrupt.
->> - ti,iommu  : phandle to isp mmu.
->
-> Is the TI specific? I'd assume not. Hiroshi's patches assume that at least.
->
->> - #address-cells: Should be set to<1>.
->> - #size-cells   : Should be set to<0>.
->
-> The ISP also exports clocks. Shouldn't you add
->
-> #clock-cells =<1>;
+Applied, thanks.
 
-If we treat the omap3isp node as the clock provider node then yes, it
-should be added. And I think it is reasonable to do so, instead of e.g.
-adding a separate DT node for the clocks provider.
+One note though. Even when the diff is "obvious", the commit description
+should really not be empty. I've added something, but my life is a lot
+easier when I don't have to.
 
->> Optional properties:
->>
->> - vdd-csiphy1-supply    : regulator for csi phy1
->> - vdd-csiphy2-supply    : regulator for csi phy2
->>
->> isp-xclk subnode
->> ----------------
->>
->> The omap3 ISP provides two external clocks, which are available as subnodes of
->> the omap3isp node. Devices using one of these clock devices are supposed to follow
->> the common Device Tree clock bindings described in
->>
->> Documentation/devicetree/bindings/clock/clock-bindings.txt
->>
->> Required properties:
->>   - compatible   : should contain "ti,omap3-cam-xclk"
->>   - reg      : should be set to
->>    *<0>  for cam_xclka
->>    *<1>  for cam_xclkb
->>   - #clock-cells : should be set to<0>
->
-> Or to do this instead. I'm not an expert (or perhaps not even a little less)
-> in DT so I don't know. The ISP is still a single device, and I think you
-> might not need these to just refer to the clocks from elsewhere in the DT.
+I've also added the following blurb to point II.2:
 
-This doesn't seem to follow the common clock bindings.
++     Subsystem bindings (anything affecting more than a single device)
++     then getting a devicetree maintainer to review it is required.
 
-Instead, you could define value of #clock-cells to be 1 and allow clocks
-consumers to reference the provider node in a standard way, e.g.:
+g.
 
-/* clk provider node */
-omap3isp-clocks {
-	#clock-cells = <1>;
-};
-
-camera-sensor-0 {
-	clocks = <&omap3isp-clocks 0>; /* XCLK A */
-	clock-names = ...
-};
-
-camera-sensor-1 {	
-	clocks = <&omap3isp-clocks 1>; /* XCLK B */
-	clock-names = ...
-};
-
->> port subnode
->> ------------
->>
->> The omap3 ISP provides three different physical interfaces for camera
->> connections. Each of them is described using a port node.
->>
->> Required properties:
->>   - reg : Should be set to one of the following values
->>     *<0>  for the parallel interface (CPI)
->>     *<1>  for the first serial interface (CSI1)
->>     *<2>  for the second serial interface (CSI2)
->
-> There are two PHYs in 3630 but three receivers. Currently the two are
-> combined in the configuration. I think I agree with your approach.
->
->> endpoint subnode for parallel interface
->> ---------------------------------------
->>
->> The endpoint subnode describes the connection between the port and the remote
->> camera device.
->>
->> Required properties:
->>   - remote-endpoint  : phandle to remote device
->>
->> Optional properties:
->>   - data-shift       : integer describing how far the data lanes are shifted.
->>   - pclk-sample      : integer describing if clk should be interpreted on
->>                rising (<1>) or falling edge (<0>). Default is<1>.
->>   - hsync-active     : integer describing if hsync is active high (<1>) or
->>                active low (<0>). Default is<1>.
->>   - vsync-active     : integer describing if vsync is active high (<1>) or
->>                active low (<0>). Default is<1>.
->>   - ti,data-ones-complement : boolean, describing that the data's polarity is
->>                   one's complement.
->>
->> endpoint subnode for serial interfaces
->> --------------------------------------
->>
->> Required properties:
->>   - ti,isp-interface-type    : should be one of the following values
->
-> I think the interface type should be standardised at V4L2 level. We
-> currently do not do that, but instead do a little bit of guessing.
-
-I'm all for such a standard property. It seems much more clear to use such
-a property. And I already run into issues with deriving the bus interface
-type from existing properties, please see https://linuxtv.org/patch/19937
-
-I assume it would be fine to add a string type property like 
-"interface-type"
-or "bus-type".
-
->>    *<0>  to use the phy in CSI mode
->>    *<1>  to use the phy in CCP mode
->>    *<2>  to use the phy in CCP mode, but configured for MIPI CSI2
->
-> Hmm. I'm not entirely sure what does this last option mean. I could be
-> forgetting something, though.
->
->>   - ti,isp-clock-divisor     : integer used for configuration of the
->>                    video port output clock control.
->>
->> Optional properties:
->>   - ti,disable-crc       : boolean, which disables crc checking.
->
-> I think crc should be standardised as well.
-
-Definitely something we should have a common definition for.
-
->>   - ti,strobe-mode       : boolean, which setups data/strobe physical
->>                    layer instead of data/clock physical layer.
->>   - pclk-sample          : integer describing if clk should be interpreted on
->>                    rising (<1>) or falling edge (<0>). Default is<1>.
->
-> I see different values on the N9 platform data for CCP2 and CSI2 (front and
-> back camera). I'm not sure the bus type is related to this or not.
->
->> - data-lanes: an array of physical data lane indexes. Position of an entry
->>    determines the logical lane number, while the value of an entry indicates
->>    physical lane, e.g. for 2-lane MIPI CSI-2 bus we could have
->>    "data-lanes =<1 2>;", assuming the clock lane is on hardware lane 0.
->>    This property is valid for serial busses only (e.g. MIPI CSI-2).
->> - clock-lanes: an array of physical clock lane indexes. Position of an entry
->>    determines the logical lane number, while the value of an entry indicates
->>    physical lane, e.g. for a MIPI CSI-2 bus we could have "clock-lanes =<0>;",
->>    which places the clock lane on hardware lane 0. This property is valid for
->>    serial busses only (e.g. MIPI CSI-2). Note that for the MIPI CSI-2 bus this
->>    array contains only one entry.
->
-> I'd rather refer to
-> Documentation/devicetree/bindings/media/video-interfaces.txt than copy from
-> it. It's important that there's a single definition for the standard
-> properties. Just mentioning the property by name should be enough. What do
-> you think?
-
-+1
-
->> Example for Nokia N900
->> ----------------------
->>
->> omap3isp: isp@480BC000 {
->>      compatible = "ti,omap3isp";
->>      reg =<0x480BC000 0x070>, /* base */
->>          <0x480BC100 0x078>, /* cbuf */
->>          <0x480BC400 0x1F0>, /* cpp2 */
->>          <0x480BC600 0x0A8>, /* ccdc */
->>          <0x480BCA00 0x048>, /* hist */
->>          <0x480BCC00 0x060>, /* h3a  */
->>          <0x480BCE00 0x0A0>, /* prev */
->>          <0x480BD000 0x0AC>, /* resz */
->>          <0x480BD200 0x0FC>, /* sbl  */
->>          <0x480BD400 0x070>; /* mmu  */
->
-> Mmu is a separate device. (Please see my patches.)
->
->>      clocks =<&cam_ick>,
->>           <&cam_mclk>,
->>           <&csi2_96m_fck>,
->>           <&l3_ick>;
->>      clock-names = "cam_ick",
->>                "cam_mclk",
->>                "csi2_96m_fck",
->>                "l3_ick";
->>
->>      interrupts =<24>;
->>
->>      ti,iommu =<&mmu_isp>;
-
-
->>      isp_xclk1: isp-xclk@0 {
->>          compatible = "ti,omap3-isp-xclk";
->>          reg =<0>;
->>          #clock-cells =<0>;
->>      };
->>
->>      isp_xclk2: isp-xclk@1 {
->>          compatible = "ti,omap3-isp-xclk";
->>          reg =<1>;
->>          #clock-cells =<0>;
->>      };
-
-I think these whole 2 nodes could be omitted...
-
->>      #address-cells =<1>;
->>      #size-cells =<0>;
-
-.. if you add here:
-
-	#clock-cells =<1>;
-
->>      port@0 {
->>          reg =<0>;
->>
->>          /* parallel interface is not used on Nokia N900 */
->>          parallel_ep: endpoint {};
->>      };
->>
->>      port@1 {
->>          reg =<1>;
->>
->>          csi1_ep: endpoint {
->>              remote-endpoint =<&switch_in>;
->>              ti,isp-clock-divisor =<1>;
->>              ti,strobe-mode;
->>          };
->>      }
->>
->>      port@2 {
->>          reg =<2>;
->>
->>          /* second serial interface is not used on Nokia N900 */
->>          csi2_ep: endpoint {};
->>      }
->> };
->>
->> camera-switch {
->>      /*
->>       * TODO:
->>       *  - check if the switching code is generic enough to use a
->>       *    more generic name like "gpio-camera-switch".
->>       *  - document the camera-switch binding
->>       */
->>      compatible = "nokia,n900-camera-switch";
->
-> Indeed. I don't think the hardware engineers realised what kind of a long
-> standing issue they created for us when they chose that solution. ;)
->
-> Writing a small driver for this that exports a sub-device would probably be
-> the best option as this is hardly very generic. Should this be shown to the
-> user space or not? Probably it'd be nice to avoid showing the related sub-device
-> if there would be one.
-
-Probably we should avoid exposing such a hardware detail to user space.
-OTOH it would be easy to handle as a media entity through the media 
-controller
-API.
-
-> I'm still trying to get N9 support working first, the drivers are in a
-> better shape and there are no such hardware hacks.
->
->>      gpios =<&gpio4 1>; /* 97 */
-
-I think the binding should be defining how state of the GPIO corresponds
-to state of the mux.
-
->>      port@0 {
->>          switch_in: endpoint {
->>              remote-endpoint =<&csi1_ep>;
->>          };
->>
->>          switch_out1: endpoint {
->>              remote-endpoint =<&et8ek8>;
->>          };
->>
->>          switch_out2: endpoint {
->>              remote-endpoint =<&smiapp_dfl>;
->>          };
->>      };
-
-This won't work, since names of the nodes are identical they will be 
-combined
-by the dtc into a single 'endpoint' node with single 'remote-endpoint' 
-property
-- might not be exactly something that you want.
-So it could be rewritten like:
-
-  port@0 {
-	#address-cells = <1>;
-	#size-cells = <0>;
-
-	switch_in: endpoint@0 {
-		reg = <0>;
-		remote-endpoint =<&csi1_ep>;
-	};
-
-         switch_out1: endpoint@1 {
-		reg = <1>;
-		remote-endpoint =<&et8ek8>;
-	};
-
-	switch_out2: endpoint@2 {
-		reg = <2>;
-		remote-endpoint =<&smiapp_dfl>;
-	};
-  };
-
-However, simplifying a bit, the 'endpoint' nodes are supposed to describe
-the configuration of a bus interface (port) for a specific remote device.
-Then what you need might be something like:
-
-  camera-switch {
-	compatible = "nokia,n900-camera-switch";
-
-	#address-cells = <1>;
-	#size-cells = <0>;
-
-	switch_in: port@0 {
-		reg = <0>;
-		endpoint {
-			remote-endpoint =<&csi1_ep>;
-		};
-	};
-
-         switch_out1: port@1 {
-		reg = <1>;
-		endpoint {
-			remote-endpoint =<&et8ek8>;
-		};
-	};
-
-	switch_out2: port@2 {
-		endpoint {
-			reg = <2>;
-			remote-endpoint =<&smiapp_dfl>;
-		};
-	};
-  };
-
-I'm just wondering if we need to be describing this in DT in such detail.
+> ---
+> Changes from RFC:
+>  - incorporated Grant's language
+>  - split patches/ABI into two documents
+> 
+>  Documentation/devicetree/bindings/ABI.txt          | 39 ++++++++++++++++++++++
+>  .../devicetree/bindings/submitting-patches.txt     | 35 +++++++++++++++++++
+>  2 files changed, 74 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ABI.txt
+>  create mode 100644 Documentation/devicetree/bindings/submitting-patches.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/ABI.txt b/Documentation/devicetree/bindings/ABI.txt
+> new file mode 100644
+> index 000000000000..d25f8d379680
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ABI.txt
+> @@ -0,0 +1,39 @@
+> +
+> +  Devicetree (DT) ABI
+> +
+> +I. Regarding stable bindings/ABI, we quote from the 2013 ARM mini-summit
+> +   summary document:
+> +
+> +     "That still leaves the question of, what does a stable binding look
+> +     like?  Certainly a stable binding means that a newer kernel will not
+> +     break on an older device tree, but that doesn't mean the binding is
+> +     frozen for all time. Grant said there are ways to change bindings that
+> +     don't result in breakage. For instance, if a new property is added,
+> +     then default to the previous behaviour if it is missing. If a binding
+> +     truly needs an incompatible change, then change the compatible string
+> +     at the same time.  The driver can bind against both the old and the
+> +     new. These guidelines aren't new, but they desperately need to be
+> +     documented."
+> +
+> +II.  General binding rules
+> +
+> +  1) Maintainers, don't let perfect be the enemy of good.  Don't hold up a
+> +     binding because it isn't perfect.
+> +
+> +  2) Use specific compatible strings so that if we need to add a feature (DMA)
+> +     in the future, we can create a new compatible string.  See I.
+> +
+> +  3) Bindings can be augmented, but the driver shouldn't break when given
+> +     the old binding. ie. add additional properties, but don't change the
+> +     meaning of an existing property. For drivers, default to the original
+> +     behaviour when a newly added property is missing.
+> +
+> +  4) Don't submit bindings for staging or unstable.  That will be decided by
+> +     the devicetree maintainers *after* discussion on the mailinglist.
+> +
+> +III. Notes
+> +
+> +  1) This document is intended as a general familiarization with the process as
+> +     decided at the 2013 Kernel Summit.  When in doubt, the current word of the
+> +     devicetree maintainers overrules this document.  In that situation, a patch
+> +     updating this document would be appreciated.
+> diff --git a/Documentation/devicetree/bindings/submitting-patches.txt b/Documentation/devicetree/bindings/submitting-patches.txt
+> new file mode 100644
+> index 000000000000..5672cb46681d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/submitting-patches.txt
+> @@ -0,0 +1,35 @@
+> +
+> +  Submitting devicetree (DT) binding patches
+> +
+> +I. For patch submitters
+> +
+> +  0) Normal patch submission rules from Documentation/SubmittingPatches
+> +     applies.
+> +
+> +  1) The Documentation/ portion of the patch should be a separate patch.
+> +
+> +  2) Submit the entire series to the devicetree mailinglist at
+> +
+> +       devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> +
+> +II. For kernel maintainers
+> +
+> +  1) If you aren't comfortable reviewing a given binding, reply to it and ask
+> +     the devicetree maintainers for guidance.  This will help them prioritize
+> +     which ones to review and which ones are ok to let go.
+> +
+> +  2) For driver (not subsystem) bindings: If you are comfortable with the
+> +     binding, and it hasn't received an Acked-by from the devicetree
+> +     maintainers after a few weeks, go ahead and take it.
+> +
+> +  3) For a series going though multiple trees, the binding patch should be
+> +     kept with the driver using the binding.
+> +
+> +III. Notes
+> +
+> +  0) Please see ...bindings/ABI.txt for details regarding devicetree ABI.
+> +
+> +  1) This document is intended as a general familiarization with the process as
+> +     decided at the 2013 Kernel Summit.  When in doubt, the current word of the
+> +     devicetree maintainers overrules this document.  In that situation, a patch
+> +     updating this document would be appreciated.
+> -- 
+> 1.8.5.1
+> 
 
 --
-Thanks,
-Sylwester
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
