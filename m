@@ -1,59 +1,55 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: PWM...
-Date: Mon, 20 Jan 2014 16:11:47 +0000
-Message-ID: <20140120161147.GS17314@sirena.org.uk>
-References: <20140119164956.GR15937@n2100.arm.linux.org.uk>
- <CAOesGMi7g=PHjzhkuObkeu+P_c6kUz5uFcND7euafUW56CvsnQ@mail.gmail.com>
- <20140119193026.GS15937@n2100.arm.linux.org.uk>
- <201401192126.41543.arnd@arndb.de>
- <20140120001446.GD9752@verge.net.au>
+From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH RFC 04/10] base: power: Add generic OF-based power domain
+ look-up
+Date: Mon, 20 Jan 2014 17:24:17 +0100
+Message-ID: <52DD4DB1.2050200@samsung.com>
+References: <1389469372-17199-1-git-send-email-tomasz.figa@gmail.com>
+ <1389469372-17199-5-git-send-email-tomasz.figa@gmail.com>
+ <87r48a8t99.fsf@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="oXUzUgc67Nrfa9SE"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140120001446.GD9752@verge.net.au>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-pwm@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, "arm@kernel.org" <arm@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <87r48a8t99.fsf-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Kevin,
 
---oXUzUgc67Nrfa9SE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 14.01.2014 16:42, Kevin Hilman wrote:
+> Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+>
+>> This patch introduces generic code to perform power domain look-up using
+>> device tree and automatically bind devices to their power domains.
+>> Generic device tree binding is introduced to specify power domains of
+>> devices in their device tree nodes.
+>>
+>> Backwards compatibility with legacy Samsung-specific power domain
+>> bindings is provided, but for now the new code is not compiled when
+>> CONFIG_ARCH_EXYNOS is selected to avoid collision with legacy code. This
+>> will change as soon as Exynos power domain code gets converted to use
+>> the generic framework in further patch.
+>>
+>> Signed-off-by: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> I haven't read through this in detail yet, but wanted to make sure that
+> the DT representation can handle nested power domains.  At least
+> SH-mobile has a hierarchy of power domains and the genpd code can handle
+> that, so wanted to make sure that the DT representation can handle it as
+> well.
 
-On Mon, Jan 20, 2014 at 09:14:46AM +0900, Simon Horman wrote:
-> On Sun, Jan 19, 2014 at 09:26:40PM +0100, Arnd Bergmann wrote:
+The representation of power domains themselves as implied by this patch 
+is fully platform-specific. The only generic part is the 
+#power-domain-cells property, which defines the number of cells needed 
+to identify the power domain of given provider. You are free to have any 
+platform-specific properties (or even generic ones, added on top of this 
+patch) to let you specify the hierarchy in DT.
 
-> > Right: if you change an existing dts file from #pwm-cells=<2> to
-> > #pwm-cells=<3>, that requires changing all references to the pwm
-
-> Would this change imply that old dtbs would no longer work with new kernels?
-
-So long as the code can still handle both values for #pwm-cells existing
-DTBs should work fine.
-
---oXUzUgc67Nrfa9SE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS3UrAAAoJELSic+t+oim9kvQP+wdej/aMs043+Gb17yKzCrmI
-/fxt8f+0e23W3a2mumeMWwjlBJXaBc+MNam5GgAOB/HLobTBeb75N/PjyGLvNHR0
-biuQAf/sLstKiftoAo4WcxHpA3Y8eiutnPIkNHSluyX3Pcb/KKGPro2TlL1C41MO
-78Qt8zgjTKLrKl65zsUZzsW/W5xAHPGdtUt6vwWKkB4Z6+v8dAtHmM2x8yB4nC9v
-aG37OftkdAgCPEho7NoDiv26nBRdNHqxcKPRhLrdq4ljvtD9dIly/WLzXW56YGp/
-MSYp/sC63bza7Ck6y7w+szXh4xbUp+rey92btLDBtT0/P6mcF6GJsh0MkgdrgTm+
-av8ElJHBXtimpBx/TCfBXASh5XT4YDnWA11ZxzS5vRcrFo0SWFoqlDycZjgglJsA
-zjfbf/SwNZw0gMQmmA6r5N5ek0OOgqu1uFkbH1BoKLzJRjoEIu26rz7gbQpWAHMf
-TXgv5SeKSFQcUCltTZyTYGUFalUrHoqkloBiRn/V/bbC6NCljUTxqIUwfgIXvnE3
-Ii/c7T25Uk9EANGaEn8DyCUAj+uku8u6lBokaAVZEctUybT3HUETlUdh0T2cMsWd
-tr2kM3al38e6ZgB206RI1tucI99JYAZjwI1Bt3SnY7gbZQiWCt1+06E95qinoFQQ
-MGmcjAlyqqux/T2oglg8
-=ROZ3
------END PGP SIGNATURE-----
-
---oXUzUgc67Nrfa9SE--
+Best regards,
+Tomasz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
