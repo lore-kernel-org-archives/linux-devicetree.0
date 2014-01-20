@@ -1,36 +1,50 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 0/2] DT updates for Hummingboard and new Cubox-i
-Date: Mon, 20 Jan 2014 09:55:32 +0000
-Message-ID: <20140120095532.GW15937@n2100.arm.linux.org.uk>
-References: <20140116182211.GX15937@n2100.arm.linux.org.uk> <20140119031816.GD16158@S2101-09.ap.freescale.net> <20140119185246.GB28056@quad.lixom.net> <20140120004434.GV15937@n2100.arm.linux.org.uk> <CAOesGMiych-jeo_eKGgL1qxsYQ=rkb4UQwgGBsG-7+GMbLJWhg@mail.gmail.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [RFC v3 08/13] ahci-platform: Allow specifying platform_data
+ through of_device_id
+Date: Mon, 20 Jan 2014 10:57:28 +0100
+Message-ID: <20140120095728.GM16215@pengutronix.de>
+References: <1390088935-7193-1-git-send-email-hdegoede@redhat.com>
+ <1390088935-7193-9-git-send-email-hdegoede@redhat.com>
+ <20140120082438.GH16215@pengutronix.de>
+ <52DCDFBA.2070903@redhat.com>
+ <20140120090950.GI16215@pengutronix.de>
+ <52DCE9A4.50901@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-ide-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAOesGMiych-jeo_eKGgL1qxsYQ=rkb4UQwgGBsG-7+GMbLJWhg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <52DCE9A4.50901@redhat.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Tejun Heo <tj@kernel.org>, Oliver Schinagl <oliver@schinagl.nl>, Maxime Ripard <maxime.ripard@free-electrons.com>, Richard Zhu <Hong-Xing.Zhu@freescale.com>, linux-ide@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 19, 2014 at 07:34:22PM -0800, Olof Johansson wrote:
-> I'm guessing this is going to mess up Shawn's cleanup patches, but
-> time has ran out for 3.14 for those so they will need to be respun
-> anyway, most likely.
+On Mon, Jan 20, 2014 at 10:17:24AM +0100, Hans de Goede wrote:
+> Hi,
 > 
-> We can apply them to arm-soc's dt branch. I think it's better if we
-> merge them since dts files tend to be one of the conflict-ridden areas
-> (even if this particular instance isn't). Send the series our way if
-> you want, or send a branch pull request, your choice.
+> I'm currently working on a slightly different implementation of a more
+> generic ahci_platform.c where ahci_platform.c exports some standard platform
+> related functionality as library functions.
+> 
+> Drivers which need to override some of ahci_platform.c's behavior because of
+> non standard hw, will then export their own struct platform_driver and can
+> call into the exported functions for standard stuff to avoid code duplication
+> where appropriate, while still having 100% freedom to do things in a custom
+> way where necessary.
 
-There's no conflict, and they build fine according to my autobuilder
-which includes arm-soc for-next.
+Nice, thanks.
+
+> 
+> I hope to post a PATCH RFC v4 with these changes later today, which you will
+> hopefully like better. Input on v4, even just a "yep better" remark would be
+> much appreciated.
+
+Yes, I will give feedback on v4.
+
+Sascha
 
 -- 
-FTTC broadband for 0.8mile line: 5.8Mbps down 500kbps up.  Estimation
-in database were 13.1 to 19Mbit for a good line, about 7.5+ for a bad.
-Estimate before purchase was "up to 13.2Mbit".
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
