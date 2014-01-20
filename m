@@ -1,41 +1,38 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] dma: Add Xilinx AXI Video Direct Memory Access Engine driver support
-Date: Mon, 20 Jan 2014 19:41:07 +0100
-Message-ID: <201401201941.07633.arnd@arndb.de>
-References: <1389894803-4147-1-git-send-email-sthokal@xilinx.com> <201401201239.47665.arnd@arndb.de> <CA+mB=1+mrWAzBCxdMEji2MDRzHajmnxuWtz7iu96ML0DuAB3RQ@mail.gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 1/3] mmc: add support for power-on sequencing through DT
+Date: Mon, 20 Jan 2014 16:47:34 -0200
+Message-ID: <CAOMZO5DP1axSmKcdp0e5yNakirG-_yQ1dHdoqzww3wp3CUt29w@mail.gmail.com>
+References: <1390190215-22700-1-git-send-email-olof@lixom.net>
+	<1390190215-22700-2-git-send-email-olof@lixom.net>
+	<20140120164859.GF15937@n2100.arm.linux.org.uk>
+	<CAOMZO5AfSe_c7gfee0BcZso8ZYg=PaTDwfsXwzpEcM1554VQ6Q@mail.gmail.com>
+	<20140120171621.GG15937@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+mB=1+mrWAzBCxdMEji2MDRzHajmnxuWtz7iu96ML0DuAB3RQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20140120171621.GG15937@n2100.arm.linux.org.uk>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Olof Johansson <olof@lixom.net>, linux-mmc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, ijc+devicetree@hellion.org.ok, Kumar Gala <galak@codeaurora.org>, chris@printf.net
 List-Id: devicetree@vger.kernel.org
 
-On Monday 20 January 2014, Srikanth Thokala wrote:
-> >
-> >> > * data width should be a property of the slave driver that is configured
-> >> >   through dma_slave_config(), unless you can have dma engines that only
-> >> >   support certain a width.
-> >>
-> >> Yes, this VDMA engine soft IP support only certain widths, which is
-> >> configurable during IP synthesis.
-> >
-> > But what is this property used for in that case? Surely you can't
-> > connect a slave device to a dmaengine if the bus width doesn't match.
-> > You probably have a point here, but I don't understand it yet.
-> 
-> There is a Data-Realignment Engine (DRE) in the IP which is only available for
-> data width setting of 64-bits and less.  So, we use the data-width DT parameter
-> to verify this condition and we update alignment shift accordingly.
+On Mon, Jan 20, 2014 at 3:16 PM, Russell King - ARM Linux
+<linux@arm.linux.org.uk> wrote:
 
-Ok, I have to admit I didn't understand all of that, but you clearly
-know what you are talking about here, so I assume you are correct.
+> Not as far as I can see.  fixed-clock appears to have two properies:
+>
+>         clock-frequency
+>         clock-output-names
+>
+> and nothing else.  See of_fixed_clk_setup in drivers/clk/clk-fixed-rate.c.
+> You'll also find that the documentation in this file says this about it:
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Looks like Documentation/devicetree/bindings/clock/fixed-clock.txt is
+misleading then:
+
+"Optional properties:
+- gpios : From common gpio binding; gpio connection to clock enable pin."
+
+Regards,
+
+Fabio Estevam
