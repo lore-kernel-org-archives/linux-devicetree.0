@@ -1,100 +1,50 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [RFC PATCH 1/1] of/irq: create interrupts-extended-2 property
-Date: Tue, 21 Jan 2014 19:57:50 +1100
-Message-ID: <20140121085750.GC21650@voom.redhat.com>
-References: <1389786445-10598-1-git-send-email-plagnioj@jcrosoft.com>
- <20140115161224.GH25824@e106331-lin.cambridge.arm.com>
- <20140120224742.EC905C40B12@trevor.secretlab.ca>
- <CAOesGMjrLs9eEPurjUpOfgyexnc__FJkRYmAR84_f7C15HH07Q@mail.gmail.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH v2 02/15] clocksource: orion: Use atomic access for
+ shared registers
+Date: Tue, 21 Jan 2014 12:02:55 +0100
+Message-ID: <20140121110255.GD13396@lunn.ch>
+References: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <5118193.GjKusj569J@wuerfel>
+ <52DE44B9.70308@gmail.com>
+ <4103670.WQZpL6dQdj@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="bAmEntskrkuBymla"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAOesGMjrLs9eEPurjUpOfgyexnc__FJkRYmAR84_f7C15HH07Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <4103670.WQZpL6dQdj@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+> > The real problem with this is that it resides in orion-time.c which
+> > is fine for Orion SoCs. Armada 370/XP use a different timer and
+> > therefore the _common_ watchdog driver cannot call this function.
+> 
+> Right, I had missed this part.
+> 
+> > Moreover, Dove (out of Orion) and Armada 370/XP will happily live in
+> > one V7 kernel with both time-orion and time-armada-370-xp compiled in.
+> 
+> It still wouldn't be too hard to do: both clock drivers could export
+> functions with different identifiers, and the wdt driver can use
+> conditional compilation (#ifdef or if(IS_ENABLED())) to only call
+> those functions when the respective clocksource drivers are enabled.
 
---bAmEntskrkuBymla
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Arnd.
 
-On Mon, Jan 20, 2014 at 05:03:23PM -0800, Olof Johansson wrote:
-> On Mon, Jan 20, 2014 at 2:47 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> w=
-rote:
-> > On Wed, 15 Jan 2014 16:12:24 +0000, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>=
- wrote:
-> >> >
-> >> > Another, more invasive option would be extend the dts syntax and tea=
-ch
-> >> > dtc to handle property appending. Then the soc dts could stay as it =
-is,
-> >> > and the board dts could have something like:
-> >> >
-> >> >     /append-property/ interrupts =3D <&intc1 6 1>;
-> >> >     /append-property/ interrupt-names =3D "board-specific-irq";
-> >> >
-> >> > Both these options solve the issue at the source, are general to oth=
-er
-> >> > properties, and allow more than one level of hierarchy (the proposed
-> >> > interrupts-extended-2 only allows one level).
-> >>
-> >> I've just had a go at implementing the append-property mechanism above
-> >> in dtc, and it was far easier than I expected (patch below).
-> >>
-> >> Does anyone have any issues with the /append-property/ idea?
-> >
-> > I think that is reasonable.
->=20
->=20
-> The main problem with this (same for clocks) is if you need to append
-> something with a name when the original didn't have any.
->=20
-> Reordering entries might not work for interrupts, since the bindings
-> might have requirements on order.
->=20
-> I'm not aware of a good solution for this. Suggestions welcome.
+The plan is to make dove part of MULTI_V7. At that point, you have
+both dove and armada-370-xp in the same kernel. Conditional
+compilation does not work, the watchdog driver would need to know at
+runtime which timer is in use, and call the right timer function.
 
-So, in principle my preferred way to handle things like this would be
-to add richer expression support, including a token for "previous
-value" when overlaying.
+I'm working on making DT Kirkwood part of MULTI_V5. The changes needed
+are mostly trivial. I expect making Dove part of MULTI_V7 is also
+trivial, so could happen during the next cycle. So this mix of Dove
+and Armada 370 XP is not a theoretical problem, it is something which
+needs to be solved ready for merging during the next window.
 
-But although I've recently had another look at it, that's still a ways
-off, so I wouldn't object to another approach as a stopgap, as long as
-its not too hideous.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---bAmEntskrkuBymla
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJS3jaOAAoJEGw4ysog2bOSTh0QAKc2t097hVPI6dOIr+FHD6Tx
-cXznsdBUpIqO7YEGBQkVQjwvn7eBeLJQPgACqU43HMU0h8uHCrPBLkSH4JNjsMrw
-4Ws9scilqrAN/9Pyu78b95if5eJad9qigfJXAo28ClYBtkoGyBNIwsh3NyWcKiGK
-Sh7zlYbEpBJCHTRlrwk+qMDT8HdrxN8zbLIQELaDHQaiyoA411wg0MNyyFiVJQyv
-5obOzugt9lrvIg5JDhgNh48whMPkb0AR9Mtgp6qmvbccns06oLuS5Z7j+v0JAhTB
-e2EKFxN1N8d/3bspAC1O9sJCU9TSNq304saLofiS7FIyPeX1OkyI1OX3KcwR+61L
-d22yZwj4GEbrfERbnFbdKuSWKg04qrHjmcxLscLka536na2OOq5TE+SqSgxDJY8w
-nFqu4SUIqCglZ3riP7hv/fuA4F9pzDbnA0rEqfa1uQ/Dzcbw0kjD84ayOfhx24FP
-QKRG3nO+HiZd2G7XNhHN4RIUIkreHI6DYUWOfAlieNgButj3tG5az4dgNq46nach
-+rFf8R2lWmN9sG2cQSAI3Ws7gpiK3qitdBVnY6IFaPlZHWl9drLSn19+Nfpx2NkX
-hU6jviTRdXF/S6hHpIW9EgN79PoIUcgt6Vanxy7OOH+ERwE5Lk/jaj/kftK085Jd
-m58DxJOTbx+rFCZ7oSvO
-=KSpP
------END PGP SIGNATURE-----
-
---bAmEntskrkuBymla--
+	Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
