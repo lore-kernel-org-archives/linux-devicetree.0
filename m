@@ -1,101 +1,70 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/2] ohci-platform: Add support for controllers with big-endian regs / descriptors
-Date: Tue, 21 Jan 2014 16:48:34 +0100
-Message-ID: <1390319315-8391-1-git-send-email-hdegoede@redhat.com>
+From: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Subject: [PATCH 4/4] ARM: dts: cm-fx6: add support for USB host port 1
+Date: Tue, 21 Jan 2014 18:13:32 +0200
+Message-ID: <1390320812-25100-5-git-send-email-grinberg@compulab.co.il>
+References: <1390320812-25100-1-git-send-email-grinberg@compulab.co.il>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1390320812-25100-1-git-send-email-grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Note this commit uses the same devicetree booleans for this as the ones
-already existing in the usb-ehci bindings.
+Setup pin control, vbus regulator and the usb host port 1 node
+to enable the USB host port 1 support.
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/usb/usb-ohci.txt |  3 +++
- drivers/usb/host/Kconfig                           |  4 ++++
- drivers/usb/host/ohci-platform.c                   | 27 ++++++++++++++++++++++
- 3 files changed, 34 insertions(+)
+ arch/arm/boot/dts/imx6q-cm-fx6.dts | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-ohci.txt b/Documentation/devicetree/bindings/usb/usb-ohci.txt
-index f9d6c73..aa1d765 100644
---- a/Documentation/devicetree/bindings/usb/usb-ohci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-ohci.txt
-@@ -6,6 +6,9 @@ Required properties:
- - interrupts : ohci controller interrupt
- 
- Optional properties:
-+- big-endian-regs : boolean, set this for hcds with big-endian registers
-+- big-endian-desc : boolean, set this for hcds with big-endian descriptors
-+- big-endian : boolean, for hcds with big-endian-regs + big-endian-desc
- - clocks : a list of phandle + clock specifier pairs
- - phys : phandle + phy specifier pair
- - phy-names : "usb"
-diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-index e28cbe0..237d7b1 100644
---- a/drivers/usb/host/Kconfig
-+++ b/drivers/usb/host/Kconfig
-@@ -512,6 +512,10 @@ config USB_CNS3XXX_OHCI
- 
- config USB_OHCI_HCD_PLATFORM
- 	tristate "Generic OHCI driver for a platform device"
-+	# Always support LE, support BE on architectures which have readl_be
-+	select USB_OHCI_LITTLE_ENDIAN
-+	select USB_OHCI_BIG_ENDIAN_DESC if (AVR32 || MIPS || MICROBLAZE || SPARC || PPC32 || PPC64)
-+	select USB_OHCI_BIG_ENDIAN_MMIO if (AVR32 || MIPS || MICROBLAZE || SPARC || PPC32 || PPC64)
- 	default n
- 	---help---
- 	  Adds an OHCI host driver for a generic platform device, which
-diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
-index b2d0e1e..71e9d8e 100644
---- a/drivers/usb/host/ohci-platform.c
-+++ b/drivers/usb/host/ohci-platform.c
-@@ -128,6 +128,7 @@ static int ohci_platform_probe(struct platform_device *dev)
- 	struct resource *res_mem;
- 	struct usb_ohci_pdata *pdata = dev_get_platdata(&dev->dev);
- 	struct ohci_platform_priv *priv;
-+	struct ohci_hcd *ohci;
- 	int err, irq, clk = 0;
- 
- 	if (usb_disabled())
-@@ -164,8 +165,34 @@ static int ohci_platform_probe(struct platform_device *dev)
- 	platform_set_drvdata(dev, hcd);
- 	dev->dev.platform_data = pdata;
- 	priv = hcd_to_ohci_priv(hcd);
-+	ohci = hcd_to_ohci(hcd);
- 
- 	if (pdata == &ohci_platform_defaults && dev->dev.of_node) {
-+		if (of_property_read_bool(dev->dev.of_node, "big-endian-regs"))
-+			ohci->flags |= OHCI_QUIRK_BE_MMIO;
+diff --git a/arch/arm/boot/dts/imx6q-cm-fx6.dts b/arch/arm/boot/dts/imx6q-cm-fx6.dts
+index 039a155..cf4c186 100644
+--- a/arch/arm/boot/dts/imx6q-cm-fx6.dts
++++ b/arch/arm/boot/dts/imx6q-cm-fx6.dts
+@@ -46,6 +46,16 @@
+ 			gpio = <&gpio3 22 0>;
+ 			enable-active-high;
+ 		};
 +
-+		if (of_property_read_bool(dev->dev.of_node, "big-endian-desc"))
-+			ohci->flags |= OHCI_QUIRK_BE_DESC;
++		reg_usb_h1_vbus: regulator@1 {
++			compatible = "regulator-fixed";
++			reg = <1>;
++			regulator-name = "usb_h1_vbus";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			gpio = <&gpio7 8 0>;
++			enable-active-high;
++		};
+ 	};
+ };
+ 
+@@ -66,6 +76,12 @@
+ 		pinctrl_usbotg: usbotggrp {
+ 			fsl,pins = <MX6QDL_USBOTG_PINGRP2>;
+ 		};
 +
-+		if (of_property_read_bool(dev->dev.of_node, "big-endian"))
-+			ohci->flags |= OHCI_QUIRK_BE_MMIO | OHCI_QUIRK_BE_DESC;
++		pinctrl_usbh1: usbh1grp {
++			fsl,pins = <
++				MX6QDL_PAD_SD3_RST__GPIO7_IO08 0x80000000
++			>;
++		};
+ 	};
+ };
+ 
+@@ -99,3 +115,10 @@
+ 	dr_mode = "otg";
+ 	status = "okay";
+ };
 +
-+#ifndef CONFIG_USB_OHCI_BIG_ENDIAN_MMIO
-+		if (ohci->flags & OHCI_QUIRK_BE_MMIO) {
-+			dev_err(&dev->dev,
-+				"Error big-endian-regs not compiled in\n");
-+			err = -EINVAL;
-+			goto err_put_hcd;
-+		}
-+#endif
-+#ifndef CONFIG_USB_OHCI_BIG_ENDIAN_DESC
-+		if (ohci->flags & OHCI_QUIRK_BE_DESC) {
-+			dev_err(&dev->dev,
-+				"Error big-endian-desc not compiled in\n");
-+			err = -EINVAL;
-+			goto err_put_hcd;
-+		}
-+#endif
- 		priv->phy = devm_phy_get(&dev->dev, "usb");
- 		if (IS_ERR(priv->phy)) {
- 			err = PTR_ERR(priv->phy);
++&usbh1 {
++	vbus-supply = <&reg_usb_h1_vbus>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbh1>;
++	status = "okay";
++};
 -- 
-1.8.5.3
+1.8.3.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
