@@ -1,56 +1,96 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] regulator: ti-abb: Add support for interleaved LDO
- registers
-Date: Tue, 21 Jan 2014 18:55:53 +0000
-Message-ID: <20140121185553.GW17314@sirena.org.uk>
-References: <1389900750-27625-1-git-send-email-nm@ti.com>
+Subject: Re: [PATCH RFC v2 REPOST 3/8] ASoC: davinci-evm: HDMI audio support
+ for TDA998x trough McASP I2S bus
+Date: Tue, 21 Jan 2014 19:15:47 +0000
+Message-ID: <20140121191547.GX17314@sirena.org.uk>
+References: <cover.1387535299.git.jsarha@ti.com>
+ <d3c3f645d39338df0ee9686cb030255ce36a249d.1387535302.git.jsarha@ti.com>
+ <20131231132555.GA31886@sirena.org.uk>
+ <52D67099.1040904@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fJLw1dhSMr+9E5PS"
-Return-path: <linux-doc-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="uaG9ayzK+U7S/M3N"
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1389900750-27625-1-git-send-email-nm@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <52D67099.1040904@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jyri Sarha <jsarha@ti.com>
+Cc: "Ujfalusi, Peter" <peter.ujfalusi@ti.com>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
 
---fJLw1dhSMr+9E5PS
+--uaG9ayzK+U7S/M3N
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Jan 16, 2014 at 01:32:30PM -0600, Nishanth Menon wrote:
+On Wed, Jan 15, 2014 at 01:27:21PM +0200, Jyri Sarha wrote:
+> On 12/31/2013 03:25 PM, Mark Brown wrote:
 
-> -	abb->base = devm_ioremap_resource(dev, res);
+> >>support. The only supported sample format is SNDRV_PCM_FORMAT_S32_LE.
+> >>The 8 least significant bits are ignored.
 
-> +	abb->base = devm_ioremap_nocache(dev, res->start, resource_size(res));
+> >Where does this constraint come from?
 
-devm_ioremap_resouce() should do the right thing if the memory region is
-marked as uncacheable (with IORESOURCE_CACHEABLE not set).  Since I
-can't see the OF code actually setting that flag on the resources unless
-I'm missing something this change isn't needed?
+> From driver/gpu/drm/i2c/tda998x_drv.c. The driver configures CTS_N
+> register statically to a value that works only with 4 byte samples.
+> According to my tests it is possible to support 3 and 2 byte samples
+> too by changing the CTS_N register value, but I am not sure if the
+> configuration can be changed on the fly. My data sheet of the nxp
+> chip is very vague about the register definitions, but I suppose the
+> register configures some clock divider on the chip. HDMI supports
+> only upto 24bit audio and the data sheet states that any extraneous
+> least significant bits are ignored.
 
---fJLw1dhSMr+9E5PS
+Hrm.  This sounds like it ought to be presenting as an ASoC CODEC
+driver.
+
+> >>+	snd_pcm_hw_constraint_minmax(runtime, SNDRV_PCM_HW_PARAM_CHANNELS,
+> >>+				     2, 2);
+
+> >Why not just set all this statically when registering the DAI?
+
+> Because there is no relevant DAI to where to put these limitations.
+> I did not want to add yet another dummy codec driver, but decided to
+> use the already existing ASoC HDMI codec. By default the driver
+> support all audio params supported by HDMI. The limitations are
+> coming from NXP chip, the NXP driver, and because the chip is used
+> in i2s mode. In other words the limitation is coming from machine
+> setup, not from the DAIs.
+
+OK, but it sounds like it's got register configuration as well?  That
+really does sound like a device that ought to have a driver...
+
+> No excuse for i initialization, I'll fix that. The casting is just
+> to survive with just one kmalloc call instead of separate memory
+> blobs for
+> struct snd_pcm_hw_constraint_list and referred list of supported
+> sample rates. I'll allocate a second blob, if that is easier to
+> read.
+
+Yes, please.  Unless it's something where memory is getting tight (eg,
+due to be allocated a lot) it's more important that we can read the code
+than that we save a few bytes.
+
+--uaG9ayzK+U7S/M3N
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJS3sK2AAoJELSic+t+oim9ClwP/3NkQLt/mxG6IiRa88CEscFn
-hekzf9gKmrBK+sodAM+kbdwteizCuH2z0TsBHlDdUs5uKCS3VgUKl0583+MGnPrm
-VtT3bI4rCU9b5Yx8RuAR9tXnFrVbpanpp1ofQUUId0HbNMNRlT8HNafO4FfejSZK
-7D7rhJb4C+557IDcReMOMakq1sCRf8yrrYJyYPBXAVN7/GJNcv2xj6ZWJlcChXK6
-xSjaTrKqSxUX9yHq7Yv/arCfpiQSMaJhd5fWdF0Yjvy7w0VVYYdDNxjhCPwQlCxK
-NBS6m+WFD7aKn1uBbRvrXzABA83oakrpUKCn9EIJ4MvK352emiWt8i59NtfAA/al
-pIXzifLAKptRO0IAqIZxgWNf+7EKx5ni+Fbd3TobhKB8weCfw2JyqSveC4TiJsHD
-ppDQsRGj0NnnfQHf7bVbuu6SD7cqeYcwZSnLk2yhmtXGYtIP5iDwmItk8ZmGJaHi
-pupwKXMgYzWfrIr5HXXqsId1TXpxbCSq/gIdQVBWrobSB3mdgZnUuMQFm+kj+Gqt
-237QJYb15EVtq6lV8Oj6qyzwZKTBb2aCRZl6YkSvkFmNzT91tpMp1V3C8RUYtRmP
-9HRvUdCXOu8vaWw6YtTF/FKZfvrmJb1JTh8DQFbpdYUMuZXxJuKu4KfUdaK/x/D4
-XVrDkb0ivqllk0/QDm+W
-=cn1t
+iQIcBAEBAgAGBQJS3sdgAAoJELSic+t+oim93/IQAIH/TzaBdreV5rnxjUD2+8qL
++Omf8kUrM0qLX+ozEssPNGm459QwGWVAF0+z5Od91xeXBiBqIojKZYgcUkoDEPqd
+DUxCydBs5S6oH6GhdQ6BgpyQzQQRwk6Stl2tXJr3Rfgw28/N13MqgAbJwHv6pk61
+z0syBhoR0xiq+HMXaCDj8sHiO3YBQFYHAmKE/MYp0+qUiaX3fabnhAS+UDDxZi4P
+HivdDnkFX5/5dZhl22hH0//TGXlnrfqG/tthMiOQQLjsVp0TWo0VGOAb1ql+hv6z
+X5RDP3LWFylqzePpf9iLxVxgTEa/uawNXR8ZlBxta5cGIqzL7s4WgvFdUOgnxlQ7
+1AKI1I8pp5ZtpM36jAHaBnkur3830DLVDuEKDbqRCeOqJyRPqQee/gL2fhDQMnx6
+oeEqRivZPLu9xsW3rt41UwFOlkfnx0MP5DYwk4o6u16Rv4RKHgk5SxewKawS4ed4
+A70azunCCLenAt+J4eyslUUO0h1A0ZWvIP8jnZUr4XNj2pLUFJkaV7Ol7r+pH/r7
+jTtRKT9nmEUw/QLyYpyLfiQF9Y7FT6eGUoWx0m78m9DmAGbMSnTO/HJULxnBzvQj
+2livoDN1LPvyVj+8DeQ0H5mYRg44XTfHM7/UFWEOGLWQkCq5cxmwKP+aBAZUudr3
+21UR63Ksa8n2SkItdHIN
+=Tyys
 -----END PGP SIGNATURE-----
 
---fJLw1dhSMr+9E5PS--
+--uaG9ayzK+U7S/M3N--
