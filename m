@@ -1,96 +1,50 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH RFC v2 REPOST 3/8] ASoC: davinci-evm: HDMI audio support
- for TDA998x trough McASP I2S bus
-Date: Tue, 21 Jan 2014 19:15:47 +0000
-Message-ID: <20140121191547.GX17314@sirena.org.uk>
-References: <cover.1387535299.git.jsarha@ti.com>
- <d3c3f645d39338df0ee9686cb030255ce36a249d.1387535302.git.jsarha@ti.com>
- <20131231132555.GA31886@sirena.org.uk>
- <52D67099.1040904@ti.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 1/3] mmc: add support for power-on sequencing through DT
+Date: Tue, 21 Jan 2014 19:19:49 +0000
+Message-ID: <20140121191949.GW15937@n2100.arm.linux.org.uk>
+References: <1390190215-22700-1-git-send-email-olof@lixom.net> <1390190215-22700-2-git-send-email-olof@lixom.net> <20140120164859.GF15937@n2100.arm.linux.org.uk> <CAOMZO5AfSe_c7gfee0BcZso8ZYg=PaTDwfsXwzpEcM1554VQ6Q@mail.gmail.com> <20140120171621.GG15937@n2100.arm.linux.org.uk> <CAOMZO5DP1axSmKcdp0e5yNakirG-_yQ1dHdoqzww3wp3CUt29w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="uaG9ayzK+U7S/M3N"
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <52D67099.1040904@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jyri Sarha <jsarha@ti.com>
-Cc: "Ujfalusi, Peter" <peter.ujfalusi@ti.com>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, bcousson@baylibre.com
+In-Reply-To: <CAOMZO5DP1axSmKcdp0e5yNakirG-_yQ1dHdoqzww3wp3CUt29w@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Olof Johansson <olof@lixom.net>, linux-mmc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, ijc+devicetree@hellion.org.ok, Kumar Gala <galak@codeaurora.org>, chris@printf.net
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jan 20, 2014 at 04:47:34PM -0200, Fabio Estevam wrote:
+> On Mon, Jan 20, 2014 at 3:16 PM, Russell King - ARM Linux
+> <linux@arm.linux.org.uk> wrote:
+> 
+> > Not as far as I can see.  fixed-clock appears to have two properies:
+> >
+> >         clock-frequency
+> >         clock-output-names
+> >
+> > and nothing else.  See of_fixed_clk_setup in drivers/clk/clk-fixed-rate.c.
+> > You'll also find that the documentation in this file says this about it:
+> 
+> Looks like Documentation/devicetree/bindings/clock/fixed-clock.txt is
+> misleading then:
+> 
+> "Optional properties:
+> - gpios : From common gpio binding; gpio connection to clock enable pin."
 
---uaG9ayzK+U7S/M3N
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+It seems so.  It appears that the binding was added to clk-fixed-rate.c
+here:
 
-On Wed, Jan 15, 2014 at 01:27:21PM +0200, Jyri Sarha wrote:
-> On 12/31/2013 03:25 PM, Mark Brown wrote:
+commit 015ba40246497ae02a5f644d4c8adfec76d9b75c
+Date:   Sat Apr 7 21:39:39 2012 -0500
 
-> >>support. The only supported sample format is SNDRV_PCM_FORMAT_S32_LE.
-> >>The 8 least significant bits are ignored.
+and the binding documentation separately:
 
-> >Where does this constraint come from?
+commit 766e6a4ec602d0c107553b91b3434fe9c03474f4
+Date:   Mon Apr 9 14:50:06 2012 -0500
 
-> From driver/gpu/drm/i2c/tda998x_drv.c. The driver configures CTS_N
-> register statically to a value that works only with 4 byte samples.
-> According to my tests it is possible to support 3 and 2 byte samples
-> too by changing the CTS_N register value, but I am not sure if the
-> configuration can be changed on the fly. My data sheet of the nxp
-> chip is very vague about the register definitions, but I suppose the
-> register configures some clock divider on the chip. HDMI supports
-> only upto 24bit audio and the data sheet states that any extraneous
-> least significant bits are ignored.
+>From what I can see, this "gpios" property has never been supported.
 
-Hrm.  This sounds like it ought to be presenting as an ASoC CODEC
-driver.
-
-> >>+	snd_pcm_hw_constraint_minmax(runtime, SNDRV_PCM_HW_PARAM_CHANNELS,
-> >>+				     2, 2);
-
-> >Why not just set all this statically when registering the DAI?
-
-> Because there is no relevant DAI to where to put these limitations.
-> I did not want to add yet another dummy codec driver, but decided to
-> use the already existing ASoC HDMI codec. By default the driver
-> support all audio params supported by HDMI. The limitations are
-> coming from NXP chip, the NXP driver, and because the chip is used
-> in i2s mode. In other words the limitation is coming from machine
-> setup, not from the DAIs.
-
-OK, but it sounds like it's got register configuration as well?  That
-really does sound like a device that ought to have a driver...
-
-> No excuse for i initialization, I'll fix that. The casting is just
-> to survive with just one kmalloc call instead of separate memory
-> blobs for
-> struct snd_pcm_hw_constraint_list and referred list of supported
-> sample rates. I'll allocate a second blob, if that is easier to
-> read.
-
-Yes, please.  Unless it's something where memory is getting tight (eg,
-due to be allocated a lot) it's more important that we can read the code
-than that we save a few bytes.
-
---uaG9ayzK+U7S/M3N
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS3sdgAAoJELSic+t+oim93/IQAIH/TzaBdreV5rnxjUD2+8qL
-+Omf8kUrM0qLX+ozEssPNGm459QwGWVAF0+z5Od91xeXBiBqIojKZYgcUkoDEPqd
-DUxCydBs5S6oH6GhdQ6BgpyQzQQRwk6Stl2tXJr3Rfgw28/N13MqgAbJwHv6pk61
-z0syBhoR0xiq+HMXaCDj8sHiO3YBQFYHAmKE/MYp0+qUiaX3fabnhAS+UDDxZi4P
-HivdDnkFX5/5dZhl22hH0//TGXlnrfqG/tthMiOQQLjsVp0TWo0VGOAb1ql+hv6z
-X5RDP3LWFylqzePpf9iLxVxgTEa/uawNXR8ZlBxta5cGIqzL7s4WgvFdUOgnxlQ7
-1AKI1I8pp5ZtpM36jAHaBnkur3830DLVDuEKDbqRCeOqJyRPqQee/gL2fhDQMnx6
-oeEqRivZPLu9xsW3rt41UwFOlkfnx0MP5DYwk4o6u16Rv4RKHgk5SxewKawS4ed4
-A70azunCCLenAt+J4eyslUUO0h1A0ZWvIP8jnZUr4XNj2pLUFJkaV7Ol7r+pH/r7
-jTtRKT9nmEUw/QLyYpyLfiQF9Y7FT6eGUoWx0m78m9DmAGbMSnTO/HJULxnBzvQj
-2livoDN1LPvyVj+8DeQ0H5mYRg44XTfHM7/UFWEOGLWQkCq5cxmwKP+aBAZUudr3
-21UR63Ksa8n2SkItdHIN
-=Tyys
------END PGP SIGNATURE-----
-
---uaG9ayzK+U7S/M3N--
+-- 
+FTTC broadband for 0.8mile line: 5.8Mbps down 500kbps up.  Estimation
+in database were 13.1 to 19Mbit for a good line, about 7.5+ for a bad.
+Estimate before purchase was "up to 13.2Mbit".
