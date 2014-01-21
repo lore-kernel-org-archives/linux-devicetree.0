@@ -1,45 +1,56 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 1/2] dmaengine: add Qualcomm BAM dma driver
-Date: Tue, 21 Jan 2014 09:03:43 +0100
-Message-ID: <5548936.L46nLkuVIz@wuerfel>
-References: <1389380874-22753-1-git-send-email-agross@codeaurora.org> <201401172349.28229.arnd@arndb.de> <20140120225245.GA3530@qualcomm.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 0/4] ata: ahci_platform: Add PHY support and OMAP support
+Date: Tue, 21 Jan 2014 10:34:58 +0200
+Message-ID: <52DE3132.3000007@ti.com>
+References: <1390228888-5537-1-git-send-email-rogerq@ti.com> <52DD5368.5020301@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140120225245.GA3530@qualcomm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <agross@codeaurora.org>
-Cc: linux-arm-kernel@lists.infradead.org, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52DD5368.5020301-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org
+Cc: sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 20 January 2014 16:52:45 Andy Gross wrote:
-
-> > > +#ifdef CONFIG_OF
-> > > +static const struct of_device_id bam_of_match[] = {
-> > > +	{ .compatible = "qcom,bam-v1.4.0", },
-> > > +	{ .compatible = "qcom,bam-v1.4.1", },
-> > > +	{}
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, bam_of_match);
-> > > +#endif
-> > 
-> > Also, you can remove the #ifdef here and the of_match_ptr() below.
-> > 
+On 01/20/2014 06:48 PM, Hans de Goede wrote:
+> Hi,
 > 
-> If this is removed, then I'll have to add the OF dependency in the Kconfig,
-> correct?
+> On 01/20/2014 03:41 PM, Roger Quadros wrote:
+>> Hi,
+>>
+>> Some platforms have a PHY hooked up to the SATA controller.
+>> The PHY needs to be initialized and powered up for SATA to work.
+>> We do that using the Generic PHY framework in PATCH 3.
+>>
+>> In order to support SATA on the OMAP platforms we need to runtime
+>> resume the device before use. PATCH 4 takes care of that.
+> 
+> Thanks for keeping me in the loop on this. I'm afraid this conflicts
+> quite a bit with my recent ahci_platform.c work, not a big problem
+> really, the series can go in either way.
+> 
+> Your phy support will slot nicely into the new ahci_platform_get_resources
+> and ahci_platform_enable_resources functions my refactoring introduces,
+> looking at it from this pov it might be better / easier to rebase your series
+> on top of the v4 of my series I've just send.
+> 
+> Which brings me to one comment about your series why are you not doing phy_exit
+> and phy_init on suspend resp. resume ? The phy can use quite a bit of power,
+> if the phy init / exit end up in ahci_platform_enable_resources /
+> ahci_platform_disable_resources, this will happen automatically for better or
+> worse. So it would be good to test if this would work or not ...
 
-I believe it will still compile without the CONFIG_OF dependency, but
-having the dependency still makes sense as it's impossible to use the
-driver without CONFIG_OF.
+Right. Bartlomiej had pointed this out earlier, but I just wasn't very sure about it.
 
-The best dependency line is probably
+Is it sufficient to just call phy_power_off() in suspend and phy_power_on() in resume?
+Or do we call phy_exit() and phy_init() respectively as well.
 
-	depends on (ARCH_MSM && OF) || COMPILE_TEST"
+Kishon, any suggestions?
 
-If you expect the same driver to be used on non-MSM platforms from
-qualcomm, e.g. some networking or server equipment, you can also just
-drop the ARCH_MSM dependency.
-
-	Arnd
+cheers,
+-roger
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
