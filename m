@@ -1,290 +1,101 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [RFC/PATCH 1/7 RESEND] drm/rcar-du: Add OF support
-Date: Tue, 21 Jan 2014 16:35:38 +0100
-Message-ID: <1390318538-30157-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1390318362-29954-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1390318362-29954-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Magnus Damm <magnus.damm@gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 2/2] ehci-platform: Add support for controllers with big-endian regs / descriptors
+Date: Tue, 21 Jan 2014 16:48:35 +0100
+Message-ID: <1390319315-8391-2-git-send-email-hdegoede@redhat.com>
+References: <1390319315-8391-1-git-send-email-hdegoede@redhat.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1390319315-8391-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings for the R-Car DU with support for core resources
-(memory, IRQ and clocks). Output configuration must still be passed
-through platform data using OF_DEV_AUXDATA.
+This uses the already documented devicetree booleans for this.
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- .../devicetree/bindings/video/renesas,du.txt       |  49 +++++++
- drivers/gpu/drm/rcar-du/rcar_du_drv.c              | 161 ++++++++++++---------
- 2 files changed, 138 insertions(+), 72 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/video/renesas,du.txt
+ drivers/usb/host/Kconfig         |  3 +++
+ drivers/usb/host/ehci-platform.c | 33 +++++++++++++++++++++++++++++++--
+ 2 files changed, 34 insertions(+), 2 deletions(-)
 
-With the devicetree mailing list CC'ed this time.
-
-diff --git a/Documentation/devicetree/bindings/video/renesas,du.txt b/Documentation/devicetree/bindings/video/renesas,du.txt
-new file mode 100644
-index 0000000..6bd947c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/renesas,du.txt
-@@ -0,0 +1,49 @@
-+* Renesas R-Car Display Unit (DU)
-+
-+Required Properties:
-+
-+  - compatible: must be one of the following.
-+    - "renesas,du-r8a7779" for R8A7779 (R-Car H1) compatible DU
-+    - "renesas,du-r8a7790" for R8A7790 (R-Car H2) compatible DU
-+    - "renesas,du-r8a7790" for R8A7791 (R-Car M2) compatible DU
-+
-+  - reg: A list of base address and length of each memory resource, one for
-+    each entry in the reg-names property.
-+  - reg-names: Name of the memory resources. The DU requires one memory
-+    resource for the DU core (named "du") and one memory resource for each
-+    LVDS encoder (named "lvds.x" with "x" being the LVDS controller numerical
-+    index).
-+
-+  - interrupt-parent: phandle of the parent interrupt controller.
-+  - interrupts: Interrupt specifiers for the DU interrupts.
-+
-+  - clocks: A list of phandles + clock-specifier pairs, one for each entry in
-+    the clock-names property.
-+  - clock-names: Name of the clocks. This property is model-dependent.
-+    - R8A7779 uses a single functional clock. The clock doesn't need to be
-+      named.
-+    - R8A7790 and R8A7790 use one functional clock per channel and one clock
-+      per LVDS encoder. The functional clocks must be named "du.x" with "x"
-+      being the channel numerical index. The LVDS clocks must be named
-+      "lvds.x" with "x" being the LVDS encoder numerical index.
-+
-+
-+Example: R8A7790 (R-Car H2) DU
-+
-+	du: du@feb00000 {
-+		compatible = "renesas,du-r8a7790";
-+		reg = <0 0xfeb00000 0 0x70000>,
-+		      <0 0xfeb90000 0 0x1c>,
-+		      <0 0xfeb94000 0 0x1c>;
-+		reg-names = "du", "lvds.0", "lvds.1";
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 256 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 268 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 269 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp7_clks R8A7790_CLK_DU0>,
-+		         <&mstp7_clks R8A7790_CLK_DU1>,
-+		         <&mstp7_clks R8A7790_CLK_DU2>,
-+		         <&mstp7_clks R8A7790_CLK_LVDS0>,
-+		         <&mstp7_clks R8A7790_CLK_LVDS1>;
-+		clock-names = "du.0", "du.1", "du.2", "lvds.0", "lvds.1";
-+	};
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.c b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-index 5536811..86ba5c7 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-@@ -15,6 +15,7 @@
- #include <linux/io.h>
- #include <linux/mm.h>
- #include <linux/module.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/pm.h>
- #include <linux/slab.h>
-@@ -30,6 +31,90 @@
- #include "rcar_du_regs.h"
+diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+index 237d7b1..4af41f3 100644
+--- a/drivers/usb/host/Kconfig
++++ b/drivers/usb/host/Kconfig
+@@ -256,6 +256,9 @@ config USB_EHCI_ATH79
+ config USB_EHCI_HCD_PLATFORM
+ 	tristate "Generic EHCI driver for a platform device"
+ 	depends on !PPC_OF
++	# Support BE on architectures which have readl_be
++	select USB_EHCI_BIG_ENDIAN_DESC if (AVR32 || MIPS || MICROBLAZE || SPARC || PPC32 || PPC64)
++	select USB_EHCI_BIG_ENDIAN_MMIO if (AVR32 || MIPS || MICROBLAZE || SPARC || PPC32 || PPC64)
+ 	default n
+ 	---help---
+ 	  Adds an EHCI host driver for a generic platform device, which
+diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
+index d8aebc0..5888abb 100644
+--- a/drivers/usb/host/ehci-platform.c
++++ b/drivers/usb/host/ehci-platform.c
+@@ -55,8 +55,10 @@ static int ehci_platform_reset(struct usb_hcd *hcd)
  
- /* -----------------------------------------------------------------------------
-+ * Device Information
-+ */
-+
-+static const struct rcar_du_device_info rcar_du_r8a7779_info = {
-+	.features = 0,
-+	.num_crtcs = 2,
-+	.routes = {
-+		/* R8A7779 has two RGB outputs and one (currently unsupported)
-+		 * TCON output.
-+		 */
-+		[RCAR_DU_OUTPUT_DPAD0] = {
-+			.possible_crtcs = BIT(0),
-+			.encoder_type = DRM_MODE_ENCODER_NONE,
-+		},
-+		[RCAR_DU_OUTPUT_DPAD1] = {
-+			.possible_crtcs = BIT(1) | BIT(0),
-+			.encoder_type = DRM_MODE_ENCODER_NONE,
-+		},
-+	},
-+	.num_lvds = 0,
-+};
-+
-+static const struct rcar_du_device_info rcar_du_r8a7790_info = {
-+	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK | RCAR_DU_FEATURE_DEFR8,
-+	.quirks = RCAR_DU_QUIRK_ALIGN_128B | RCAR_DU_QUIRK_LVDS_LANES,
-+	.num_crtcs = 3,
-+	.routes = {
-+		/* R8A7790 has one RGB output, two LVDS outputs and one
-+		 * (currently unsupported) TCON output.
-+		 */
-+		[RCAR_DU_OUTPUT_DPAD0] = {
-+			.possible_crtcs = BIT(2) | BIT(1) | BIT(0),
-+			.encoder_type = DRM_MODE_ENCODER_NONE,
-+		},
-+		[RCAR_DU_OUTPUT_LVDS0] = {
-+			.possible_crtcs = BIT(0),
-+			.encoder_type = DRM_MODE_ENCODER_LVDS,
-+		},
-+		[RCAR_DU_OUTPUT_LVDS1] = {
-+			.possible_crtcs = BIT(2) | BIT(1),
-+			.encoder_type = DRM_MODE_ENCODER_LVDS,
-+		},
-+	},
-+	.num_lvds = 2,
-+};
-+
-+static const struct rcar_du_device_info rcar_du_r8a7791_info = {
-+	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK | RCAR_DU_FEATURE_DEFR8,
-+	.num_crtcs = 2,
-+	.routes = {
-+		/* R8A7791 has one RGB output, one LVDS output and one
-+		 * (currently unsupported) TCON output.
-+		 */
-+		[RCAR_DU_OUTPUT_DPAD0] = {
-+			.possible_crtcs = BIT(1),
-+			.encoder_type = DRM_MODE_ENCODER_NONE,
-+		},
-+		[RCAR_DU_OUTPUT_LVDS0] = {
-+			.possible_crtcs = BIT(0),
-+			.encoder_type = DRM_MODE_ENCODER_LVDS,
-+		},
-+	},
-+	.num_lvds = 1,
-+};
-+
-+static const struct platform_device_id rcar_du_id_table[] = {
-+	{ "rcar-du-r8a7779", (kernel_ulong_t)&rcar_du_r8a7779_info },
-+	{ "rcar-du-r8a7790", (kernel_ulong_t)&rcar_du_r8a7790_info },
-+	{ "rcar-du-r8a7791", (kernel_ulong_t)&rcar_du_r8a7791_info },
-+	{ }
-+};
-+
-+MODULE_DEVICE_TABLE(platform, rcar_du_id_table);
-+
-+static const struct of_device_id rcar_du_of_table[] = {
-+	{ .compatible = "renesas,du-r8a7779", .data = &rcar_du_r8a7779_info },
-+	{ .compatible = "renesas,du-r8a7790", .data = &rcar_du_r8a7790_info },
-+	{ .compatible = "renesas,du-r8a7791", .data = &rcar_du_r8a7791_info },
-+	{ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, rcar_du_of_table);
-+
-+/* -----------------------------------------------------------------------------
-  * DRM operations
-  */
+ 	hcd->has_tt = pdata->has_tt;
+ 	ehci->has_synopsys_hc_bug = pdata->has_synopsys_hc_bug;
+-	ehci->big_endian_desc = pdata->big_endian_desc;
+-	ehci->big_endian_mmio = pdata->big_endian_mmio;
++	if (pdata->big_endian_desc)
++		ehci->big_endian_desc = 1;
++	if (pdata->big_endian_mmio)
++		ehci->big_endian_mmio = 1;
  
-@@ -53,6 +138,7 @@ static int rcar_du_unload(struct drm_device *dev)
- static int rcar_du_load(struct drm_device *dev, unsigned long flags)
- {
- 	struct platform_device *pdev = dev->platformdev;
-+	struct device_node *np = pdev->dev.of_node;
- 	struct rcar_du_platform_data *pdata = pdev->dev.platform_data;
- 	struct rcar_du_device *rcdu;
- 	struct resource *mem;
-@@ -71,7 +157,8 @@ static int rcar_du_load(struct drm_device *dev, unsigned long flags)
+ 	if (pdata->pre_setup) {
+ 		retval = pdata->pre_setup(hcd);
+@@ -142,6 +144,7 @@ static int ehci_platform_probe(struct platform_device *dev)
+ 	struct resource *res_mem;
+ 	struct usb_ehci_pdata *pdata = dev_get_platdata(&dev->dev);
+ 	struct ehci_platform_priv *priv;
++	struct ehci_hcd *ehci;
+ 	int err, irq, clk = 0;
  
- 	rcdu->dev = &pdev->dev;
- 	rcdu->pdata = pdata;
--	rcdu->info = (struct rcar_du_device_info *)pdev->id_entry->driver_data;
-+	rcdu->info = np ? of_match_device(rcar_du_of_table, rcdu->dev)->data
-+		   : (void *)platform_get_device_id(pdev)->driver_data;
- 	rcdu->ddev = dev;
- 	dev->dev_private = rcdu;
+ 	if (usb_disabled())
+@@ -177,8 +180,34 @@ static int ehci_platform_probe(struct platform_device *dev)
+ 	platform_set_drvdata(dev, hcd);
+ 	dev->dev.platform_data = pdata;
+ 	priv = hcd_to_ehci_priv(hcd);
++	ehci = hcd_to_ehci(hcd);
  
-@@ -229,77 +316,6 @@ static int rcar_du_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static const struct rcar_du_device_info rcar_du_r8a7779_info = {
--	.features = 0,
--	.num_crtcs = 2,
--	.routes = {
--		/* R8A7779 has two RGB outputs and one (currently unsupported)
--		 * TCON output.
--		 */
--		[RCAR_DU_OUTPUT_DPAD0] = {
--			.possible_crtcs = BIT(0),
--			.encoder_type = DRM_MODE_ENCODER_NONE,
--		},
--		[RCAR_DU_OUTPUT_DPAD1] = {
--			.possible_crtcs = BIT(1) | BIT(0),
--			.encoder_type = DRM_MODE_ENCODER_NONE,
--		},
--	},
--	.num_lvds = 0,
--};
--
--static const struct rcar_du_device_info rcar_du_r8a7790_info = {
--	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK | RCAR_DU_FEATURE_DEFR8,
--	.quirks = RCAR_DU_QUIRK_ALIGN_128B | RCAR_DU_QUIRK_LVDS_LANES,
--	.num_crtcs = 3,
--	.routes = {
--		/* R8A7790 has one RGB output, two LVDS outputs and one
--		 * (currently unsupported) TCON output.
--		 */
--		[RCAR_DU_OUTPUT_DPAD0] = {
--			.possible_crtcs = BIT(2) | BIT(1) | BIT(0),
--			.encoder_type = DRM_MODE_ENCODER_NONE,
--		},
--		[RCAR_DU_OUTPUT_LVDS0] = {
--			.possible_crtcs = BIT(0),
--			.encoder_type = DRM_MODE_ENCODER_LVDS,
--		},
--		[RCAR_DU_OUTPUT_LVDS1] = {
--			.possible_crtcs = BIT(2) | BIT(1),
--			.encoder_type = DRM_MODE_ENCODER_LVDS,
--		},
--	},
--	.num_lvds = 2,
--};
--
--static const struct rcar_du_device_info rcar_du_r8a7791_info = {
--	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK | RCAR_DU_FEATURE_DEFR8,
--	.num_crtcs = 2,
--	.routes = {
--		/* R8A7791 has one RGB output, one LVDS output and one
--		 * (currently unsupported) TCON output.
--		 */
--		[RCAR_DU_OUTPUT_DPAD0] = {
--			.possible_crtcs = BIT(1),
--			.encoder_type = DRM_MODE_ENCODER_NONE,
--		},
--		[RCAR_DU_OUTPUT_LVDS0] = {
--			.possible_crtcs = BIT(0),
--			.encoder_type = DRM_MODE_ENCODER_LVDS,
--		},
--	},
--	.num_lvds = 1,
--};
--
--static const struct platform_device_id rcar_du_id_table[] = {
--	{ "rcar-du-r8a7779", (kernel_ulong_t)&rcar_du_r8a7779_info },
--	{ "rcar-du-r8a7790", (kernel_ulong_t)&rcar_du_r8a7790_info },
--	{ "rcar-du-r8a7791", (kernel_ulong_t)&rcar_du_r8a7791_info },
--	{ }
--};
--
--MODULE_DEVICE_TABLE(platform, rcar_du_id_table);
--
- static struct platform_driver rcar_du_platform_driver = {
- 	.probe		= rcar_du_probe,
- 	.remove		= rcar_du_remove,
-@@ -307,6 +323,7 @@ static struct platform_driver rcar_du_platform_driver = {
- 		.owner	= THIS_MODULE,
- 		.name	= "rcar-du",
- 		.pm	= &rcar_du_pm_ops,
-+		.of_match_table = rcar_du_of_table,
- 	},
- 	.id_table	= rcar_du_id_table,
- };
+ 	if (pdata == &ehci_platform_defaults && dev->dev.of_node) {
++		if (of_property_read_bool(dev->dev.of_node, "big-endian-regs"))
++			ehci->big_endian_mmio = 1;
++
++		if (of_property_read_bool(dev->dev.of_node, "big-endian-desc"))
++			ehci->big_endian_desc = 1;
++
++		if (of_property_read_bool(dev->dev.of_node, "big-endian"))
++			ehci->big_endian_mmio = ehci->big_endian_desc = 1;
++
++#ifndef CONFIG_USB_EHCI_BIG_ENDIAN_MMIO
++		if (ehci->big_endian_mmio) {
++			dev_err(&dev->dev,
++				"Error big-endian-regs not compiled in\n");
++			err = -EINVAL;
++			goto err_put_hcd;
++		}
++#endif
++#ifndef CONFIG_USB_EHCI_BIG_ENDIAN_DESC
++		if (ehci->big_endian_desc) {
++			dev_err(&dev->dev,
++				"Error big-endian-desc not compiled in\n");
++			err = -EINVAL;
++			goto err_put_hcd;
++		}
++#endif
+ 		priv->phy = devm_phy_get(&dev->dev, "usb");
+ 		if (IS_ERR(priv->phy)) {
+ 			err = PTR_ERR(priv->phy);
 -- 
-1.8.3.2
+1.8.5.3
 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
