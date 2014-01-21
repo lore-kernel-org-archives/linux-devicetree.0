@@ -1,42 +1,52 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: PWM...
-Date: Tue, 21 Jan 2014 09:39:22 +0900
-Message-ID: <20140121003922.GA31997@verge.net.au>
-References: <20140119164956.GR15937@n2100.arm.linux.org.uk>
- <CAOesGMi7g=PHjzhkuObkeu+P_c6kUz5uFcND7euafUW56CvsnQ@mail.gmail.com>
- <20140119193026.GS15937@n2100.arm.linux.org.uk>
- <201401192126.41543.arnd@arndb.de>
- <20140120001446.GD9752@verge.net.au>
- <20140120161147.GS17314@sirena.org.uk>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [RFC PATCH 1/1] of/irq: create interrupts-extended-2 property
+Date: Mon, 20 Jan 2014 17:03:23 -0800
+Message-ID: <CAOesGMjrLs9eEPurjUpOfgyexnc__FJkRYmAR84_f7C15HH07Q@mail.gmail.com>
+References: <1389786445-10598-1-git-send-email-plagnioj@jcrosoft.com>
+	<20140115161224.GH25824@e106331-lin.cambridge.arm.com>
+	<20140120224742.EC905C40B12@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20140120161147.GS17314@sirena.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-pwm@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, "arm@kernel.org" <arm@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140120224742.EC905C40B12-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 20, 2014 at 04:11:47PM +0000, Mark Brown wrote:
-> On Mon, Jan 20, 2014 at 09:14:46AM +0900, Simon Horman wrote:
-> > On Sun, Jan 19, 2014 at 09:26:40PM +0100, Arnd Bergmann wrote:
-> 
-> > > Right: if you change an existing dts file from #pwm-cells=<2> to
-> > > #pwm-cells=<3>, that requires changing all references to the pwm
-> 
-> > Would this change imply that old dtbs would no longer work with new kernels?
-> 
-> So long as the code can still handle both values for #pwm-cells existing
-> DTBs should work fine.
+On Mon, Jan 20, 2014 at 2:47 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, 15 Jan 2014 16:12:24 +0000, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>> >
+>> > Another, more invasive option would be extend the dts syntax and teach
+>> > dtc to handle property appending. Then the soc dts could stay as it is,
+>> > and the board dts could have something like:
+>> >
+>> >     /append-property/ interrupts = <&intc1 6 1>;
+>> >     /append-property/ interrupt-names = "board-specific-irq";
+>> >
+>> > Both these options solve the issue at the source, are general to other
+>> > properties, and allow more than one level of hierarchy (the proposed
+>> > interrupts-extended-2 only allows one level).
+>>
+>> I've just had a go at implementing the append-property mechanism above
+>> in dtc, and it was far easier than I expected (patch below).
+>>
+>> Does anyone have any issues with the /append-property/ idea?
+>
+> I think that is reasonable.
 
-Thanks, as long as that is the case I have no objections at this time.
+
+The main problem with this (same for clocks) is if you need to append
+something with a name when the original didn't have any.
+
+Reordering entries might not work for interrupts, since the bindings
+might have requirements on order.
+
+I'm not aware of a good solution for this. Suggestions welcome.
+
+
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
