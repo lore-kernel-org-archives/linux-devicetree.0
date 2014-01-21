@@ -1,92 +1,102 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v7 1/2] ohci-platform: Add support for
- devicetree instantiation
-Date: Tue, 21 Jan 2014 18:10:07 +0100
-Message-ID: <52DEA9EF.2090509@redhat.com>
-References: <1389813883-567-1-git-send-email-hdegoede@redhat.com> <1389813883-567-2-git-send-email-hdegoede@redhat.com> <52DEB57C.8080700@cogentembedded.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH] mmc: omap_hsmmc: Add support for Erratum 2.1.1.128 in
+ device tree boot
+Date: Tue, 21 Jan 2014 12:05:49 -0600
+Message-ID: <20140121180549.GS30451@saruman.home>
+References: <1390260542-22213-1-git-send-email-nm@ti.com>
+ <20140120233941.GG6516@saruman.home>
+ <52DEB078.5030005@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRB5XI7KLAKGQEKX5J7NY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <52DEB57C.8080700-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="U2mKMzaWgYxzMy3/"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52DEB078.5030005@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: balbi@ti.com, Balaji T K <balajitk@ti.com>, Chris Ball <chris@printf.net>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
+
+--U2mKMzaWgYxzMy3/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On 01/21/2014 06:59 PM, Sergei Shtylyov wrote:
-> Hello.
->
-> On 01/15/2014 10:24 PM, Hans de Goede wrote:
->
->> Add support for ohci-platform instantiation from devicetree, including
->> optionally getting clks and a phy from devicetree, and enabling / disabl=
-ing
->> those on power_on / off.
->
->> This should allow using ohci-platform from devicetree in various cases.
->> Specifically after this commit it can be used for the ohci controller fo=
-und
->> on Allwinner sunxi SoCs.
->
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-> [...]
->
->    Have only found time to fully read the patches just now...
->
->> diff --git a/Documentation/devicetree/bindings/usb/usb-ohci.txt b/Docume=
-ntation/devicetree/bindings/usb/usb-ohci.txt
->> new file mode 100644
->> index 0000000..f9d6c73
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/usb-ohci.txt
->> @@ -0,0 +1,22 @@
->> +USB OHCI controllers
->> +
->> +Required properties:
->> +- compatible : "usb-ohci"
->> +- reg : ohci controller register range (address and length)
->> +- interrupts : ohci controller interrupt
->> +
->> +Optional properties:
->> +- clocks : a list of phandle + clock specifier pairs
->> +- phys : phandle + phy specifier pair
->> +- phy-names : "usb"
->> +
->> +Example:
->> +
->> +    ohci0: ohci@0x01c14400 {
->
->     Two minor nits: there should be no "0x" in the address part of the no=
-de name. And according to ePAPR [1], "the name of a node should be somewhat=
- generic, reflecting the function of the device and not its precise program=
-ming model. If appropriate, the name should be one of the following choices=
-:
-> [...]
-> - usb".
->
->     Same comments for "usb-ehci" binding.
+On Tue, Jan 21, 2014 at 11:38:00AM -0600, Nishanth Menon wrote:
+> On 01/20/2014 05:39 PM, Felipe Balbi wrote:
+> > On Mon, Jan 20, 2014 at 05:29:02PM -0600, Nishanth Menon wrote:
+> >> When device is booted using devicetree, platforms impacted by
+> >> Erratum 2.1.1.128 is not detected easily in the mmc driver. This errat=
+um
+> >> indicates that the module cannot do multi-block transfers.
+> >>
+> >> Handle this by providing a boolean flag to indicate to driver that it =
+is
+> >> working on a hardware with mentioned limitation.
+> >=20
+> > sure there's no way of reading the revision register to figure this one
+> > out without having to add a new DT attribute ?
+> >=20
+> I did a quick patch to read the Module revision register:
+> http://slexy.org/view/s21TKvlWlR
+>=20
+> sdp2430: Revision: 1.2, Spec: 0.0, normal interrupt
+>=20
+> OMAP3430-ldp: (ES2.1): Revision: 2.6, Spec: 0.0, normal interrupt
+> SDP3430:(ES3.0) Revision: 2.6, Spec: 0.0, normal interrupt
+> AM3517-evm: (ES1.1): Revision: 2.6, Spec: 0.0, normal interrupt
+> AM3517-crane:(ES1.1): Revision: 2.6, Spec: 0.0, normal interrupt
+>=20
+> AM37x-evm: (ES1.2) Revision: 2.6, Spec: 0.0, normal interrupt
+> OMAP3630-beag-xm (ES1.2): Revision: 2.6, Spec: 0.0, normal interrupt
+>=20
+> am335x-evm:(ES1.0): Revision: 3.1, Spec: 0.1, normal interrupt
+> am335x-sk: (ES2.1): Revision: 3.1, Spec: 0.1, normal interrupt
+> am335x-beaglebone-black:(ES2.0): Revision: 3.1, Spec: 0.1, normal
+> interrupt
+>=20
+> sdp4430.txt: (ES2.2): Revision: 3.1, Spec: 0.1, normal interrupt
+>=20
+> OMAP4460-panda-es (ES1.1): Revision: 3.1, Spec: 0.1, normal interrupt
+>=20
+> OMAP5uevm:(ES2.0): Revision: 3.3, Spec: 0.2, normal interrupt
+> dra7-evm (es1.1): Revision: 3.3, Spec: 0.2, normal interrupt
+>=20
+>=20
+> OMAP3430-ldp seems to be the only one impacted with module revision
+> 2.6 -> so using revision information is not really helpful here. Hence
+> the usage of a flag in dt attribute to indicate hardware impacted by
+> erratum.
 
-You're right on both accounts, I'll do a v8 tomorrow, including a re-spin o=
-f the
-big-endian patches.
-
-Regards,
-
-Hans
+alright, that's too bad. Seems like revision in this module isn't very
+useful :-(
 
 --=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/groups/opt_out.
+balbi
+
+--U2mKMzaWgYxzMy3/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJS3rb9AAoJEIaOsuA1yqREMNQP+wS3w/GDoF7wWzNiiN0cd3om
+QEIXQzVbegQTPZ4A1eOX1BhR5NJHU9040e0WicTMaHwSoW0OrxLufp6Kq8dLvwn9
+07Vli+l7qhBKhdWanMuaMwgt77AC56N4/TZy5RNWv66HXLsCUGtaEzrcv4fYMUor
+Hscxctejdm9HAVU/ZpJKju1cXtea85gVCRdzaEU6fHt5xfmag6++vpuu2asopkru
+618OKGh5vMWco7H1S44Rwn7F1EuxA1xv5wGJ8kGd/KKLfLZ8iJP42P9QQ+XBW6nf
+NmBVb6omPRPNCgDT5LH+45meqdUNGhF4xkEoNDVnP3paJdgzndagVc0FwEAiHIhL
+dXWq+J7UUgxtaLyR+0zZtzerfNvIpnly8NvVYFZDDyLylYI0hvOpswmKcxPAlUpy
+bzXdS+ixmIf6qw+U44SqDIvUvY6Fe8G6YEsfbWawCqPdtgtdfHU59BL31y5V25zt
+chX60CImNvcPODgexy+FUJN38FVxbwP6CfcFq85Q13u/bXgmL1sVeWS8xevnkMjv
+gX57yV4zzYkTa2gsHyVAMlhJli5AtkKCwxKZWVqEITkJCRUyuV0Mqmz5vsupgrmY
+KIPzhyrQ82cQSbyI5YP9l7U4EWjY1cW/eY4xVFr062ttsRqgx8DgzbMK1cPX1sMz
+KpJjDJ/nZIe5moqj629t
+=7mFc
+-----END PGP SIGNATURE-----
+
+--U2mKMzaWgYxzMy3/--
