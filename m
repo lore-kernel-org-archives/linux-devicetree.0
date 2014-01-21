@@ -1,83 +1,63 @@
-From: Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH] powerpc: T4240: Add ina220 node in dts
-Date: Tue, 21 Jan 2014 10:31:13 +0800
-Message-ID: <1390271473-23661-1-git-send-email-Yuantian.Tang@freescale.com>
+From: kgene@kernel.org
+Subject: RE: [PATCH V12 1/3] ARM: dts: Add pmu sysreg node to exynos5250 and
+ exynos5420 dtsi files
+Date: Tue, 21 Jan 2014 14:08:04 +0900
+Message-ID: <0baa01cf1666$c42d1d80$4c875880$@kernel.org>
+References: <1386308868-30264-1-git-send-email-l.krishna@samsung.com>
+ <1386308868-30264-2-git-send-email-l.krishna@samsung.com>
+ <20140110074113.GB12119@spo001.leaseweb.com>
+ <CAL1wa8cfE7_HfkMOx8jKM6p+xjMFGXaE9X1DsN1pfbt11x62jg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: b07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tang Yuantian <yuantian.tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAL1wa8cfE7_HfkMOx8jKM6p+xjMFGXaE9X1DsN1pfbt11x62jg@mail.gmail.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Leela Krishna Amudala' <l.krishna@samsung.com>, 'Wim Van Sebroeck' <wim@iguana.be>
+Cc: linux-samsung-soc@vger.kernel.org, dianders@chromium.org, t.figa@samsung.com, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux@roeck-us.net
 List-Id: devicetree@vger.kernel.org
 
-From: Tang Yuantian <yuantian.tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Leela Krishna Amudala wrote:
+> 
+> On 1/10/14, Wim Van Sebroeck <wim@iguana.be> wrote:
+> > Hi Leela,
+> >
+> >> This patch adds pmusysreg node to exynos5250 and exynos5420 dtsi files
+> to
+> >> handle PMU register accesses in a centralized way using syscon driver
+> >>
+> >> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+> >> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+> >> Reviewed-by: Doug Anderson <dianders@chromium.org>
+> >> Tested-by: Doug Anderson <dianders@chromium.org>
+> >> ---
+> > ...
+> >> diff --git a/arch/arm/boot/dts/exynos5420.dtsi
+> >> b/arch/arm/boot/dts/exynos5420.dtsi
+> >> index b1fa334..cd47db0 100644
+> >> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> >> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> >> @@ -402,4 +402,9 @@
+> >>  		clock-names = "gscl";
+> >>  		samsung,power-domain = <&gsc_pd>;
+> >>  	};
+> >
+> > I can't add this patch since there is no "gscl" in the current linux-
+> tree.
+> > Is this depending on another patch or are we going to fix this in
+> another
+> > way?
+> >
+> 
+> Hi Kgene,
+> 
+Hi Leela,
 
-Add power sensor chip ina220 node in dts to support
-power monitor
+> Driver changes has been merged to Wim's tree, so can you please pick
+> this patch into your tree.
+> 
+OK, let me take this and 3rd patch into Samsung tree for next time.
 
-Signed-off-by: Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- arch/powerpc/boot/dts/t4240qds.dts | 42 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
-
-diff --git a/arch/powerpc/boot/dts/t4240qds.dts b/arch/powerpc/boot/dts/t4240qds.dts
-index 63e81b0..97683f6 100644
---- a/arch/powerpc/boot/dts/t4240qds.dts
-+++ b/arch/powerpc/boot/dts/t4240qds.dts
-@@ -159,6 +159,48 @@
- 						interrupts = <0x1 0x1 0 0>;
- 					};
- 				};
-+
-+				i2c@2 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					reg = <0x2>;
-+
-+					ina220@40 {
-+						compatible = "ti,ina220";
-+						reg = <0x40>;
-+						shunt-resistor = <1000>;
-+					};
-+
-+					ina220@41 {
-+						compatible = "ti,ina220";
-+						reg = <0x41>;
-+						shunt-resistor = <1000>;
-+					};
-+
-+					ina220@44 {
-+						compatible = "ti,ina220";
-+						reg = <0x44>;
-+						shunt-resistor = <1000>;
-+					};
-+
-+					ina220@45 {
-+						compatible = "ti,ina220";
-+						reg = <0x45>;
-+						shunt-resistor = <1000>;
-+					};
-+
-+					ina220@46 {
-+						compatible = "ti,ina220";
-+						reg = <0x46>;
-+						shunt-resistor = <1000>;
-+					};
-+
-+					ina220@47 {
-+						compatible = "ti,ina220";
-+						reg = <0x47>;
-+						shunt-resistor = <1000>;
-+					};
-+				};
- 			};
- 		};
- 
--- 
-1.8.0
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Kukjin
