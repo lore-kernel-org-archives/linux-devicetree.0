@@ -1,7 +1,7 @@
 From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [PATCHv3 36/41] Doc/DT: Add DT binding documentation for HDMI Connector
-Date: Tue, 21 Jan 2014 12:57:08 +0200
-Message-ID: <1390301833-24944-37-git-send-email-tomi.valkeinen@ti.com>
+Subject: [PATCHv3 38/41] Doc/DT: Add DT binding documentation for MIPI DSI CM Panel
+Date: Tue, 21 Jan 2014 12:57:10 +0200
+Message-ID: <1390301833-24944-39-git-send-email-tomi.valkeinen@ti.com>
 References: <1390301833-24944-1-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,41 +12,44 @@ To: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-fbde
 Cc: Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Stefan Roese <stefan.roese@gmail.com>, Sebastian Reichel <sre@debian.org>, Robert Nelson <robertcnelson@gmail.com>, "Dr . H . Nikolaus Schaller" <hns@goldelico.com>, Marek Belisko <marek@goldelico.com>, Sebastian Reichel <sre@ring0.de>, Javier Martinez Canillas <javier@dowhile0.org>, Enric Balletbo Serra <eballetbo@gmail.com>, Florian Vaussard <florian.vaussard@epfl.ch>, Tomi Valkeinen <tomi.valkeinen@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add DT binding documentation for HDMI Connector.
+Add DT binding documentation for MIPI DSI Command Mode Panel.
 
 Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 ---
- .../devicetree/bindings/video/hdmi-connector.txt   | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/hdmi-connector.txt
+ .../devicetree/bindings/video/panel-dsi-cm.txt     | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/panel-dsi-cm.txt
 
-diff --git a/Documentation/devicetree/bindings/video/hdmi-connector.txt b/Documentation/devicetree/bindings/video/hdmi-connector.txt
+diff --git a/Documentation/devicetree/bindings/video/panel-dsi-cm.txt b/Documentation/devicetree/bindings/video/panel-dsi-cm.txt
 new file mode 100644
-index 000000000000..5d25f6a432bb
+index 000000000000..73f422556d4f
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/video/hdmi-connector.txt
-@@ -0,0 +1,23 @@
-+HDMI Connector
-+==============
++++ b/Documentation/devicetree/bindings/video/panel-dsi-cm.txt
+@@ -0,0 +1,26 @@
++Generic MIPI DSI Command Mode Panel
++===================================
 +
 +Required properties:
-+- compatible: "hdmi-connector"
++- compatible: "panel-dsi-cm"
 +
 +Optional properties:
-+- label: a symbolic name for the connector
++- label: a symbolic name for the panel
++- gpios: panel reset gpio and TE gpio
 +
 +Required nodes:
-+- Video port for HDMI input
++- Video port for DSI input
 +
 +Example
 +-------
 +
-+hdmi0: connector@1 {
-+	compatible = "hdmi-connector";
-+	label = "hdmi";
++lcd0: display {
++	compatible = "tpo,taal", "panel-dsi-cm";
++	label = "lcd0";
 +
-+	hdmi_connector_in: endpoint {
-+		remote-endpoint = <&tpd12s015_out>;
++	gpios = <&gpio4 6 GPIO_ACTIVE_HIGH>;	/* 102, reset */
++
++	lcd0_in: endpoint {
++		remote-endpoint = <&dsi1_out_ep>;
 +	};
 +};
 -- 
