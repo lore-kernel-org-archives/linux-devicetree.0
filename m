@@ -1,81 +1,71 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v7 1/2] ohci-platform: Add support for
- devicetree instantiation
-Date: Tue, 21 Jan 2014 20:59:24 +0300
-Message-ID: <52DEB57C.8080700@cogentembedded.com>
-References: <1389813883-567-1-git-send-email-hdegoede@redhat.com> <1389813883-567-2-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 1/2] ohci-platform: Add support for controllers with
+ big-endian regs / descriptors
+Date: Tue, 21 Jan 2014 18:01:01 +0100
+Message-ID: <52DEA7CD.5070107@redhat.com>
+References: <Pine.LNX.4.44L0.1401211116370.1272-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBC6MFNV32EFRB3WO7KLAKGQEA5IJUWA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1389813883-567-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <Pine.LNX.4.44L0.1401211116370.1272-100000@iolanthe.rowland.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-usb <linux-usb@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi,
 
-On 01/15/2014 10:24 PM, Hans de Goede wrote:
+On 01/21/2014 05:40 PM, Alan Stern wrote:
+> On Tue, 21 Jan 2014, Hans de Goede wrote:
+>
+>> Note this commit uses the same devicetree booleans for this as the ones
+>> already existing in the usb-ehci bindings.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>
+>> --- a/drivers/usb/host/Kconfig
+>> +++ b/drivers/usb/host/Kconfig
+>> @@ -512,6 +512,10 @@ config USB_CNS3XXX_OHCI
+>>
+>>   config USB_OHCI_HCD_PLATFORM
+>>   	tristate "Generic OHCI driver for a platform device"
+>> +	# Always support LE, support BE on architectures which have readl_be
+>> +	select USB_OHCI_LITTLE_ENDIAN
+>> +	select USB_OHCI_BIG_ENDIAN_DESC if (AVR32 || MIPS || MICROBLAZE || SPARC || PPC32 || PPC64)
+>> +	select USB_OHCI_BIG_ENDIAN_MMIO if (AVR32 || MIPS || MICROBLAZE || SPARC || PPC32 || PPC64)
+>>   	default n
+>
+> The comment line above is slightly misleading.  USB_OHCI_LITTLE_ENDIAN
+> doesn't exactly mean to include support for little-endian controllers;
+> it means include mixed-endian support if either
+> USB_OHCI_BIG_ENDIAN_DESC or USB_OHCI_BIG_ENDIAN_MMIO is set.  That is,
+> the driver determines at runtime whether a particular controller is
+> big-endian or little-endian, rather than choosing to support one or the
+> other at compile time.
 
-> Add support for ohci-platform instantiation from devicetree, including
-> optionally getting clks and a phy from devicetree, and enabling / disabling
-> those on power_on / off.
+Right I already knew that, that is what the "Always" tried to summarize.
 
-> This should allow using ohci-platform from devicetree in various cases.
-> Specifically after this commit it can be used for the ohci controller found
-> on Allwinner sunxi SoCs.
+> In any case, the style we have adopted is that these select lines go in
+> the arch-specific defconfig, not here.
 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-[...]
+Ok, so I should drop the Kconfig parts of both patches ?
 
-   Have only found time to fully read the patches just now...
+>  For example, check out the
+> occurrences of EHCI in arch/mips/Kconfig.  Also, I'm not sure how you
+> came up with that list of architectures for the two selects; it's hard
+> to say if they are right.  For instance, why did you include AVR32?
 
-> diff --git a/Documentation/devicetree/bindings/usb/usb-ohci.txt b/Documentation/devicetree/bindings/usb/usb-ohci.txt
-> new file mode 100644
-> index 0000000..f9d6c73
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/usb-ohci.txt
-> @@ -0,0 +1,22 @@
-> +USB OHCI controllers
-> +
-> +Required properties:
-> +- compatible : "usb-ohci"
-> +- reg : ohci controller register range (address and length)
-> +- interrupts : ohci controller interrupt
-> +
-> +Optional properties:
-> +- clocks : a list of phandle + clock specifier pairs
-> +- phys : phandle + phy specifier pair
-> +- phy-names : "usb"
-> +
-> +Example:
-> +
-> +	ohci0: ohci@0x01c14400 {
+I included all archs which defines readl_be in asm/io.h
 
-    Two minor nits: there should be no "0x" in the address part of the node 
-name. And according to ePAPR [1], "the name of a node should be somewhat 
-generic, reflecting the function of the device and not its precise programming 
-model. If appropriate, the name should be one of the following choices:
-[...]
-- usb".
+Regards,
 
-    Same comments for "usb-ehci" binding.
-
-> +		compatible = "allwinner,sun4i-a10-ohci", "usb-ohci";
-> +		reg = <0x01c14400 0x100>;
-> +		interrupts = <64>;
-> +		clocks = <&usb_clk 6>, <&ahb_gates 2>;
-> +		phys = <&usbphy 1>;
-> +		phy-names = "usb";
-> +	};
-
-[1] http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.pdf
-
-WBR, Sergei
+Hans
