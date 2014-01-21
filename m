@@ -1,42 +1,58 @@
-From: Christoph Fritz <chf.fritz@googlemail.com>
-Subject: [PATCH 6/6] [RFC] omapdss: remove FEAT_DPI_USES_VDDS_DSI from omap3
-Date: Tue, 21 Jan 2014 20:47:40 +0100
-Message-ID: <1390333660-30573-7-git-send-email-chf.fritz@googlemail.com>
-References: <1390333660-30573-1-git-send-email-chf.fritz@googlemail.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1390333660-30573-1-git-send-email-chf.fritz@googlemail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, bcousson@baylibre.com, Archit Taneja <archit@ti.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Daniel Mack <zonque@gmail.com>, "Hans J. Koch" <hjk@hansjkoch.de>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] ohci-platform: Add support for controllers with
+ big-endian regs / descriptors
+Date: Tue, 21 Jan 2014 11:48:40 -0800
+Message-ID: <CAGVrzcZ2arvg3yryHE5KcMz6f1Js2m1=TbWxwZzk12kyKq0tKg@mail.gmail.com>
+References: <52DEA7CD.5070107@redhat.com> <Pine.LNX.4.44L0.1401211308040.1272-100000@iolanthe.rowland.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.44L0.1401211308040.1272-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DBB056 doesn't use DSI for its display, but omap3 forces this erroneously:
+2014/1/21 Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>:
+> On Tue, 21 Jan 2014, Hans de Goede wrote:
+>
+>> Hi,
+>>
+>> On 01/21/2014 05:40 PM, Alan Stern wrote:
+>> > On Tue, 21 Jan 2014, Hans de Goede wrote:
+>> >
+>> >> Note this commit uses the same devicetree booleans for this as the ones
+>> >> already existing in the usb-ehci bindings.
+>> >>
+>> >> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> >
+>> >> --- a/drivers/usb/host/Kconfig
+>> >> +++ b/drivers/usb/host/Kconfig
+>> >> @@ -512,6 +512,10 @@ config USB_CNS3XXX_OHCI
+>> >>
+>> >>   config USB_OHCI_HCD_PLATFORM
+>> >>    tristate "Generic OHCI driver for a platform device"
+>> >> +  # Always support LE, support BE on architectures which have readl_be
+>> >> +  select USB_OHCI_LITTLE_ENDIAN
+>> >> +  select USB_OHCI_BIG_ENDIAN_DESC if (AVR32 || MIPS || MICROBLAZE || SPARC || PPC32 || PPC64)
+>> >> +  select USB_OHCI_BIG_ENDIAN_MMIO if (AVR32 || MIPS || MICROBLAZE || SPARC || PPC32 || PPC64)
+>> >>    default n
+>
+>> > In any case, the style we have adopted is that these select lines go in
+>> > the arch-specific defconfig, not here.
+>>
+>> Ok, so I should drop the Kconfig parts of both patches ?
+>
+> That's rigt.  They are likely to cause trouble, and if the selects were
+> needed then they should already be present somewhere else.
 
-  | OMAP DSS rev 2.0
-  | omapdss DPI error: can't get VDDS_DSI regulator
-  | omapfb omapfb: failed to connect default display
-  | omapfb omapfb: failed to init overlay connections
-  | omapfb omapfb: failed to setup omapfb
-  | platform omapfb: Driver omapfb requests probe deferral
-
-So this patch just disables it for omap3. Consider this as a hack!
-Is there a proper fix for this issue?
----
- drivers/video/omap2/dss/dss_features.c |    1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/video/omap2/dss/dss_features.c b/drivers/video/omap2/dss/dss_features.c
-index f8fd6db..0ae8a84 100644
---- a/drivers/video/omap2/dss/dss_features.c
-+++ b/drivers/video/omap2/dss/dss_features.c
-@@ -536,7 +536,6 @@ static const enum dss_feat_id omap3630_dss_feat_list[] = {
- 	FEAT_ALPHA_FIXED_ZORDER,
- 	FEAT_FIFO_MERGE,
- 	FEAT_OMAP3_DSI_FIFO_BUG,
--	FEAT_DPI_USES_VDDS_DSI,
- };
- 
- static const enum dss_feat_id omap4430_es1_0_dss_feat_list[] = {
+Absolutely, they will actually break platforms. Since you added some
+guards for when these properties are set, but proper support in the
+kernel is not enabled, this is already catching misuses, and as such
+is already an improvement.
 -- 
-1.7.10.4
-
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
