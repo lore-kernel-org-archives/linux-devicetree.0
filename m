@@ -1,51 +1,67 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v2 02/15] clocksource: orion: Use atomic access for
- shared registers
-Date: Tue, 21 Jan 2014 12:02:55 +0100
-Message-ID: <20140121110255.GD13396@lunn.ch>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Removing PLAT_ORION dependency from ARCH_MVEBU (Was Re: [PATCH v2
+ 14/15] watchdog: orion: Allow to build on any Orion platform)
+Date: Tue, 21 Jan 2014 08:06:04 -0300
+Message-ID: <20140121110603.GB4356@localhost>
 References: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <5118193.GjKusj569J@wuerfel>
- <52DE44B9.70308@gmail.com>
- <4103670.WQZpL6dQdj@wuerfel>
+ <1390295561-3466-15-git-send-email-ezequiel.garcia@free-electrons.com>
+ <52DE40BD.10700@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4103670.WQZpL6dQdj@wuerfel>
+In-Reply-To: <52DE40BD.10700-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> > The real problem with this is that it resides in orion-time.c which
-> > is fine for Orion SoCs. Armada 370/XP use a different timer and
-> > therefore the _common_ watchdog driver cannot call this function.
-> 
-> Right, I had missed this part.
-> 
-> > Moreover, Dove (out of Orion) and Armada 370/XP will happily live in
-> > one V7 kernel with both time-orion and time-armada-370-xp compiled in.
-> 
-> It still wouldn't be too hard to do: both clock drivers could export
-> functions with different identifiers, and the wdt driver can use
-> conditional compilation (#ifdef or if(IS_ENABLED())) to only call
-> those functions when the respective clocksource drivers are enabled.
+Sebastian,
 
-Hi Arnd.
+I'm picking on this discussion, with a new Subject.
 
-The plan is to make dove part of MULTI_V7. At that point, you have
-both dove and armada-370-xp in the same kernel. Conditional
-compilation does not work, the watchdog driver would need to know at
-runtime which timer is in use, and call the right timer function.
+On Tue, Jan 21, 2014 at 10:41:17AM +0100, Sebastian Hesselbarth wrote:
+> On 01/21/14 10:12, Ezequiel Garcia wrote:
+> > After getting rid of all the mach-specific code, it's now possible
+> > to allow builds in any Orion platform.
+> >
+> > Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >   drivers/watchdog/Kconfig | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> > index 5be6e91..1689f72 100644
+> > --- a/drivers/watchdog/Kconfig
+> > +++ b/drivers/watchdog/Kconfig
+> > @@ -282,7 +282,7 @@ config DAVINCI_WATCHDOG
+> >
+> >   config ORION_WATCHDOG
+> >   	tristate "Orion watchdog"
+> > -	depends on ARCH_ORION5X || ARCH_KIRKWOOD || ARCH_DOVE
+> > +	depends on PLAT_ORION
+[..]
+>=20
+> I haven't checked why ARCH_MVEBU at all added PLAT_ORION as dependenc=
+y,
+> but IIRC it was just because of a missing mbus driver? If it is just
+> this, we should also remove PLAT_ORION from ARCH_MVEBU to have a clea=
+n
+> cut between new common arch and existing sub-archs.
+>=20
 
-I'm working on making DT Kirkwood part of MULTI_V5. The changes needed
-are mostly trivial. I expect making Dove part of MULTI_V7 is also
-trivial, so could happen during the next cycle. So this mix of Dove
-and Armada 370 XP is not a theoretical problem, it is something which
-needs to be solved ready for merging during the next window.
+Well, I'm not sure if I'm following you. Many drivers currently depend
+on PLAT_ORION, so if we remove PLAT_ORION from ARCH_MVEBU we would have
+to replace: s/PLAT_ORION/ARCH_{MVEBU, KIRKWOOD, DOVE, ...}.
 
-	Andrew
+Is this the suggested roadmap or I've completely misunderstood it?
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
