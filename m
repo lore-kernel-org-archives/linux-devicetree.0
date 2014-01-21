@@ -1,41 +1,35 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] DT: net: document Ethernet bindings in one place
-Date: Wed, 22 Jan 2014 00:19:33 +0300
-Message-ID: <52DEE465.9000202@cogentembedded.com>
-References: <201401180405.07859.sergei.shtylyov@cogentembedded.com> <CAL_Jsq+oa9P=rh+p-dMZyGP8TcmpX7bTnMU0ynLvFxjxFDYbRg@mail.gmail.com> <52DD98F7.4090202@cogentembedded.com> <CAL_JsqJXbF1-PcPHR2VP+Vi9A1aWizdsG_r3kDvRt3itXDhCGQ@mail.gmail.com> <CAGVrzcb3X3soJNJCE5+YSpQrr+EdycCRFkptPvBCgFg4CbGJ4Q@mail.gmail.com> <CAGVrzcb0dfw1orZzUt5-YkShOg-HNbUYvvo2vfmsZUZXy1Aqfg@mail.gmail.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: dts: cm-fx6: rearrange the dts file
+Date: Tue, 21 Jan 2014 21:42:01 +0100
+Message-ID: <20140121204201.GX16215@pengutronix.de>
+References: <1390320812-25100-1-git-send-email-grinberg@compulab.co.il>
+ <1390320812-25100-2-git-send-email-grinberg@compulab.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAGVrzcb0dfw1orZzUt5-YkShOg-HNbUYvvo2vfmsZUZXy1Aqfg@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robherring2@gmail.com>
-Cc: netdev <netdev@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1390320812-25100-2-git-send-email-grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi Igor,
 
-On 01/21/2014 11:05 PM, Florian Fainelli wrote:
+On Tue, Jan 21, 2014 at 06:13:29PM +0200, Igor Grinberg wrote:
+> Move the iomuxc definition before the devices definitions
+> (e.g. gpmi, fec).
 
->>>>     I'm afraid that's too late, it has spread very far, so that
->>>> of_get_phy_mode() handles that property, not "phy-connection-type".
+The nodes are sorted alphabetically. Please keep them sorted.
 
->>> Uggg, I guess this is a case of a defacto standard then if the kernel
->>> doesn't even support it.
+Sascha
 
->> Maybe I forgot to CC you on patch sent to Grant only, I sent a patch a
->> while ago for of_get_phy_mode() to look for both "phy-mode" and
->> "phy-connection-type" since the former has been a Linux invention, but
->> the latter is ePAPR specified.
-
-> Here is a link to the actual patch in question, not sure which tree
-> Grant applied it to though:
-
-> http://lkml.indiana.edu/hypermail/linux/kernel/1311.2/00048.html
-
-    It's not the patch mail, it's Grant's "applied" reply, patch is mangled in 
-this reply, and I couldn't follow the thread. Here's the actual patch mail:
-
-http://marc.info/?l=devicetree&m=138449662807254
-
-WBR, Sergei
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
