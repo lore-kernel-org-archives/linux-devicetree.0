@@ -1,75 +1,187 @@
-From: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Subject: [PATCH 3/4] ARM: dts: cm-fx6: add support for USB OTG
-Date: Tue, 21 Jan 2014 18:13:31 +0200
-Message-ID: <1390320812-25100-4-git-send-email-grinberg@compulab.co.il>
-References: <1390320812-25100-1-git-send-email-grinberg@compulab.co.il>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v3 08/15] watchdog: orion: Introduce per-compatible
+ of_device_id data
+Date: Tue, 21 Jan 2014 08:35:47 -0800
+Message-ID: <20140121163547.GB3311@roeck-us.net>
+References: <1390310774-20781-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1390310774-20781-9-git-send-email-ezequiel.garcia@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1390320812-25100-1-git-send-email-grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1390310774-20781-9-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Setup pin control, vbus regulator and the usb otg node
-to enable the USB OTG support.
+On Tue, Jan 21, 2014 at 10:26:07AM -0300, Ezequiel Garcia wrote:
+> This commit adds an orion_watchdog_data structure to holda compatible-data
 
-Signed-off-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
----
- arch/arm/boot/dts/imx6q-cm-fx6.dts | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+	s/holda/hold/
 
-diff --git a/arch/arm/boot/dts/imx6q-cm-fx6.dts b/arch/arm/boot/dts/imx6q-cm-fx6.dts
-index 07f90a5..039a155 100644
---- a/arch/arm/boot/dts/imx6q-cm-fx6.dts
-+++ b/arch/arm/boot/dts/imx6q-cm-fx6.dts
-@@ -32,7 +32,21 @@
- 		};
- 	};
- 
-+	regulators {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
- 
-+		reg_usb_otg_vbus: regulator@0 {
-+			compatible = "regulator-fixed";
-+			reg = <0>;
-+			regulator-name = "usb_otg_vbus";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			gpio = <&gpio3 22 0>;
-+			enable-active-high;
-+		};
-+	};
- };
- 
- &iomuxc {
-@@ -48,6 +62,10 @@
- 		pinctrl_uart4: uart4grp {
- 			fsl,pins = <MX6QDL_UART4_PINGRP1>;
- 		};
-+
-+		pinctrl_usbotg: usbotggrp {
-+			fsl,pins = <MX6QDL_USBOTG_PINGRP2>;
-+		};
- 	};
- };
- 
-@@ -73,3 +91,11 @@
- &sata {
- 	status = "okay";
- };
-+
-+&usbotg {
-+	vbus-supply = <&reg_usb_otg_vbus>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg>;
-+	dr_mode = "otg";
-+	status = "okay";
-+};
--- 
-1.8.3.2
+> information. This allows to remove the driver-wide definition and to
+> future add support for multiple compatible-strings.
 
+Maybe "and to be able to add support for multiple compatible-strings in the
+future" ?
+
+> 
+> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  drivers/watchdog/orion_wdt.c | 62 ++++++++++++++++++++++++++++++++------------
+>  1 file changed, 46 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
+> index 9a904be..5108496 100644
+> --- a/drivers/watchdog/orion_wdt.c
+> +++ b/drivers/watchdog/orion_wdt.c
+> @@ -24,36 +24,47 @@
+>  #include <linux/clk.h>
+>  #include <linux/err.h>
+>  #include <linux/of.h>
+> +#include <linux/of_device.h>
+>  
+>  /*
+>   * Watchdog timer block registers.
+>   */
+>  #define TIMER_CTRL		0x0000
+> -#define WDT_EN			0x0010
+> -#define WDT_VAL			0x0024
+>  
+>  #define WDT_MAX_CYCLE_COUNT	0xffffffff
+>  #define WDT_IN_USE		0
+>  #define WDT_OK_TO_CLOSE		1
+>  
+While looking at the new defines below, I noticed that WDT_IN_USE and
+WDT_OK_TO_CLOSE are not used (anymore ?) and thus should be removed
+(separate patch, though).
+
+> -#define WDT_RESET_OUT_EN	BIT(1)
+> +#define WDT_A370_RATIO_MASK(v)	((v) << 16)
+> +#define WDT_A370_RATIO_SHIFT	5
+> +#define WDT_A370_RATIO		(1 << WDT_A370_RATIO_SHIFT)
+> +
+> +#define WDT_AXP_FIXED_ENABLE_BIT BIT(10)
+>  
+Those new defines are not used. They should be introduced if and when used.
+
+>  static bool nowayout = WATCHDOG_NOWAYOUT;
+>  static int heartbeat = -1;		/* module parameter (seconds) */
+>  
+> +struct orion_watchdog_data {
+> +	int wdt_counter_offset;
+> +	int wdt_enable_bit;
+> +	int rstout_enable_bit;
+> +};
+> +
+>  struct orion_watchdog {
+>  	struct watchdog_device wdt;
+>  	void __iomem *reg;
+>  	void __iomem *rstout;
+>  	unsigned long clk_rate;
+>  	struct clk *clk;
+> +	struct orion_watchdog_data *data;
+>  };
+>  
+>  static int orion_wdt_ping(struct watchdog_device *wdt_dev)
+>  {
+>  	struct orion_watchdog *dev = watchdog_get_drvdata(wdt_dev);
+>  	/* Reload watchdog duration */
+> -	writel(dev->clk_rate * wdt_dev->timeout, dev->reg + WDT_VAL);
+> +	writel(dev->clk_rate * wdt_dev->timeout,
+> +	       dev->reg + dev->data->wdt_counter_offset);
+>  	return 0;
+>  }
+>  
+> @@ -62,13 +73,16 @@ static int orion_wdt_start(struct watchdog_device *wdt_dev)
+>  	struct orion_watchdog *dev = watchdog_get_drvdata(wdt_dev);
+>  
+>  	/* Set watchdog duration */
+> -	writel(dev->clk_rate * wdt_dev->timeout, dev->reg + WDT_VAL);
+> +	writel(dev->clk_rate * wdt_dev->timeout,
+> +	       dev->reg + dev->data->wdt_counter_offset);
+>  
+>  	/* Enable watchdog timer */
+> -	atomic_io_modify(dev->reg + TIMER_CTRL, WDT_EN, WDT_EN);
+> +	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit,
+> +						dev->data->wdt_enable_bit);
+>  
+>  	/* Enable reset on watchdog */
+> -	atomic_io_modify(dev->rstout, WDT_RESET_OUT_EN, WDT_RESET_OUT_EN);
+> +	atomic_io_modify(dev->rstout, dev->data->rstout_enable_bit,
+> +				      dev->data->rstout_enable_bit);
+>  
+>  	return 0;
+>  }
+> @@ -78,10 +92,10 @@ static int orion_wdt_stop(struct watchdog_device *wdt_dev)
+>  	struct orion_watchdog *dev = watchdog_get_drvdata(wdt_dev);
+>  
+>  	/* Disable reset on watchdog */
+> -	atomic_io_modify(dev->rstout, WDT_RESET_OUT_EN, 0);
+> +	atomic_io_modify(dev->rstout, dev->data->rstout_enable_bit, 0);
+>  
+>  	/* Disable watchdog timer */
+> -	atomic_io_modify(dev->reg + TIMER_CTRL, WDT_EN, 0);
+> +	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit, 0);
+>  
+>  	return 0;
+>  }
+> @@ -89,7 +103,7 @@ static int orion_wdt_stop(struct watchdog_device *wdt_dev)
+>  static unsigned int orion_wdt_get_timeleft(struct watchdog_device *wdt_dev)
+>  {
+>  	struct orion_watchdog *dev = watchdog_get_drvdata(wdt_dev);
+> -	return readl(dev->reg + WDT_VAL) / dev->clk_rate;
+> +	return readl(dev->reg + dev->data->wdt_counter_offset) / dev->clk_rate;
+>  }
+>  
+>  static int orion_wdt_set_timeout(struct watchdog_device *wdt_dev,
+> @@ -119,9 +133,25 @@ static irqreturn_t orion_wdt_irq(int irq, void *devid)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static const struct orion_watchdog_data orion_data = {
+> +	.rstout_enable_bit = BIT(1),
+> +	.wdt_enable_bit = BIT(4),
+> +	.wdt_counter_offset = 0x24,
+> +};
+> +
+> +static const struct of_device_id orion_wdt_of_match_table[] = {
+> +	{
+> +		.compatible = "marvell,orion-wdt",
+> +		.data = &orion_data,
+> +	},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, orion_wdt_of_match_table);
+> +
+>  static int orion_wdt_probe(struct platform_device *pdev)
+>  {
+>  	struct orion_watchdog *dev;
+> +	const struct of_device_id *match;
+>  	unsigned int wdt_max_duration;	/* (seconds) */
+>  	struct resource *res;
+>  	int ret, irq;
+> @@ -131,9 +161,15 @@ static int orion_wdt_probe(struct platform_device *pdev)
+>  	if (!dev)
+>  		return -ENOMEM;
+>  
+> +	match = of_match_device(orion_wdt_of_match_table, &pdev->dev);
+> +	if (!match)
+> +		/* Default legacy match */
+> +		match = &orion_wdt_of_match_table[0];
+> +
+>  	dev->wdt.info = &orion_wdt_info;
+>  	dev->wdt.ops = &orion_wdt_ops;
+>  	dev->wdt.min_timeout = 1;
+> +	dev->data = (struct orion_watchdog_data *)match->data;
+
+match->data is a void *, so the typecast should not be needed here.
+You might want to declare 'data' to be of type
+'const struct orion_watchdog_data *' because otherwise you loose the
+'const' attribute of match->data (which may be the reason for the typecast ?).
+
+Guenter
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
