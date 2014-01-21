@@ -1,76 +1,47 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] DT: net: document Ethernet bindings in one place
-Date: Tue, 21 Jan 2014 12:05:25 -0800
-Message-ID: <CAGVrzcb0dfw1orZzUt5-YkShOg-HNbUYvvo2vfmsZUZXy1Aqfg@mail.gmail.com>
-References: <201401180405.07859.sergei.shtylyov@cogentembedded.com>
- <CAL_Jsq+oa9P=rh+p-dMZyGP8TcmpX7bTnMU0ynLvFxjxFDYbRg@mail.gmail.com>
- <52DD98F7.4090202@cogentembedded.com> <CAL_JsqJXbF1-PcPHR2VP+Vi9A1aWizdsG_r3kDvRt3itXDhCGQ@mail.gmail.com>
- <CAGVrzcb3X3soJNJCE5+YSpQrr+EdycCRFkptPvBCgFg4CbGJ4Q@mail.gmail.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH] regulator: ti-abb: Add support for interleaved LDO registers
+Date: Tue, 21 Jan 2014 14:06:25 -0600
+Message-ID: <52DED341.3030503@ti.com>
+References: <1389900750-27625-1-git-send-email-nm@ti.com> <20140121185553.GW17314@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAGVrzcb3X3soJNJCE5+YSpQrr+EdycCRFkptPvBCgFg4CbGJ4Q@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, netdev <netdev@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140121185553.GW17314@sirena.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2014/1/21 Florian Fainelli <f.fainelli@gmail.com>:
->>>    I'm afraid that's too late, it has spread very far, so that
->>> of_get_phy_mode() handles that property, not "phy-connection-type".
->>
->> Uggg, I guess this is a case of a defacto standard then if the kernel
->> doesn't even support it.
->
-> Maybe I forgot to CC you on patch sent to Grant only, I sent a patch a
-> while ago for of_get_phy_mode() to look for both "phy-mode" and
-> "phy-connection-type" since the former has been a Linux invention, but
-> the latter is ePAPR specified.
+On 01/21/2014 12:55 PM, Mark Brown wrote:
+> On Thu, Jan 16, 2014 at 01:32:30PM -0600, Nishanth Menon wrote:
+> 
+>> -	abb->base = devm_ioremap_resource(dev, res);
+> 
+>> +	abb->base = devm_ioremap_nocache(dev, res->start, resource_size(res));
+> 
+> devm_ioremap_resouce() should do the right thing if the memory region is
+> marked as uncacheable (with IORESOURCE_CACHEABLE not set).  Since I
+> can't see the OF code actually setting that flag on the resources unless
+> I'm missing something this change isn't needed?
+> 
+Without this change, on DRA7 I get:
+[    0.579500] abb_mpu: 1060 <--> 1210 mV
+[    0.580321] abb_ivahd: 1055 <--> 1250 mV
+[    0.580583] ti_abb 4ae07e20.regulator-abb-dspeve: can't request
+region for resource [mem 0x4ae07e20-0x4ae07e2f]
+[    0.580610] ti_abb: probe of 4ae07e20.regulator-abb-dspeve failed
+with error -16
+[    0.581216] abb_gpu: 1090 <--> 1280 mV
 
-Here is a link to the actual patch in question, not sure which tree
-Grant applied it to though:
+with the change in the patch, I get:
+[    0.589750] abb_mpu: 1060 <--> 1210 mV
+[    0.590522] abb_ivahd: 1055 <--> 1250 mV
+[    0.591331] abb_dspeve: 1055 <--> 1250 mV
+[    0.592097] abb_gpu: 1090 <--> 1280 mV
 
-http://lkml.indiana.edu/hypermail/linux/kernel/1311.2/00048.html
-
->
->>
->>>>> +- phy-connection-type: the same as "phy-mode" property (but described in
->>>>> ePAPR);
->>>>> +- phy-handle: phandle, specifies a reference to a node representing a
->>>>> PHY
->>>>> +  device (this property is described in ePAPR);
->>>>> +- phy: the same as "phy-handle" property (but actually ad-hoc one).
->>>
->>>
->>>> Mark this as deprecated in favor of phy-handle.
->>>
->>>
->>>    Here situation is more optimistic. Quite many drivers still use
->>> "phy-handle", though some use even more exotic props I didn't document here.
->>
->> Perhaps flagging as "Not recommended for new bindings" would be nicer wording...
->
-> Ok, so what's the deal here, can't we use phy-handle? There is
-> currently no infrastructure in drivers/net/ or drivers/of/ to look for
-> the "phy-handle" nor "phy" properties as phandles to fetch an Ethernet
-> PHY device tree node. If we are to provide one common place where we
-> want to do this, we will have to look for both properties, why can't
-> we mandate the use of "phy-handle" since this is the ePAPR compliant
-> one?
->
->>
->> Rob
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
->
->
-> --
-> Florian
-
-
-
+reference dts:
+https://github.com/nmenon/linux-2.6-playground/blob/abb-rev-v3.14-rc1-vnext-20140121/arch/arm/boot/dts/dra7.dtsi#L562
 -- 
-Florian
+Regards,
+Nishanth Menon
