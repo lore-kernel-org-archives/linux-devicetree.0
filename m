@@ -1,54 +1,122 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 03/15] watchdog: orion: Use atomic access for shared registers
-Date: Tue, 21 Jan 2014 10:54:37 +0100
-Message-ID: <3381968.dYvuFs4ZXV@wuerfel>
-References: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com> <1390295561-3466-4-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 02/15] clocksource: orion: Use atomic access for shared
+ registers
+Date: Tue, 21 Jan 2014 10:57:37 +0100
+Message-ID: <52DE4491.2000505@linaro.org>
+References: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com> <1390295561-3466-3-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1390295561-3466-4-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1390295561-3466-3-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 21 January 2014 06:12:29 Ezequiel Garcia wrote:
->         writel(~WDT_INT_REQ, BRIDGE_CAUSE);
->  
->         /* Enable watchdog timer */
-> -       reg = readl(wdt_reg + TIMER_CTRL);
-> -       reg |= WDT_EN;
-> -       writel(reg, wdt_reg + TIMER_CTRL);
-> +       atomic_io_modify(wdt_reg + TIMER_CTRL, WDT_EN, WDT_EN);
+On 01/21/2014 10:12 AM, Ezequiel Garcia wrote:
+> Replace the driver-specific thread-safe shared register API
+> by the recently introduced atomic_io_clear_set().
+>
+> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-As mentioned in my comment for patch 2, it seems that the exported
-orion_timer_ctrl_clrset() function would be more appropriate for this.
+Hi Ezequiel,
 
->         /* Enable reset on watchdog */
-> -       reg = readl(RSTOUTn_MASK);
-> -       reg |= WDT_RESET_OUT_EN;
-> -       writel(reg, RSTOUTn_MASK);
-> +       atomic_io_modify(RSTOUTn_MASK, WDT_RESET_OUT_EN, WDT_RESET_OUT_EN);
+in the future, put me in Cc when modifying files in clocksource that=20
+will make my life easier to track the changes.
 
-And this register already has an abstraction in
-arch/arm/mach-mvebu/system-controller.c. I would prefer to find a way
-to generalize that. I can see multiple ways to do that:
+Thanks.
+   -- Daniel
 
-* Turn the "marvell,armada-370-xp-system-controller" device into a "syscon"
-  device that can be used through regmap from other parts of the kernel.
+> ---
+>   drivers/clocksource/time-orion.c | 28 ++++++++++------------------
+>   1 file changed, 10 insertions(+), 18 deletions(-)
+>
+> diff --git a/drivers/clocksource/time-orion.c b/drivers/clocksource/t=
+ime-orion.c
+> index 9c7f018..3f14e56 100644
+> --- a/drivers/clocksource/time-orion.c
+> +++ b/drivers/clocksource/time-orion.c
+> @@ -35,20 +35,6 @@
+>   #define ORION_ONESHOT_MAX	0xfffffffe
+>
+>   static void __iomem *timer_base;
+> -static DEFINE_SPINLOCK(timer_ctrl_lock);
+> -
+> -/*
+> - * Thread-safe access to TIMER_CTRL register
+> - * (shared with watchdog timer)
+> - */
+> -void orion_timer_ctrl_clrset(u32 clr, u32 set)
+> -{
+> -	spin_lock(&timer_ctrl_lock);
+> -	writel((readl(timer_base + TIMER_CTRL) & ~clr) | set,
+> -		timer_base + TIMER_CTRL);
+> -	spin_unlock(&timer_ctrl_lock);
+> -}
+> -EXPORT_SYMBOL(orion_timer_ctrl_clrset);
+>   /*
+>    * Free-running clocksource handling.
+> @@ -68,7 +54,8 @@ static int orion_clkevt_next_event(unsigned long de=
+lta,
+>   {
+>   	/* setup and enable one-shot timer */
+>   	writel(delta, timer_base + TIMER1_VAL);
+> -	orion_timer_ctrl_clrset(TIMER1_RELOAD_EN, TIMER1_EN);
+> +	atomic_io_modify(timer_base + TIMER_CTRL,
+> +		TIMER1_RELOAD_EN | TIMER1_EN, TIMER1_EN);
 
-* Move arch/arm/mach-mvebu/system-controller.c into drivers/soc (we don't
-  have this directory yet, but have discussed it in the past) to export
-  soc-specific functions from there.
+I am not convinced this change is worth.
 
-* Move all of the system-controller implementation into the wdt driver
-  and require that this driver be enabled in order to do regular system
-  reset. The system-controller can register itself as a reboot hook,
-  so you can remove the ".restart = mvebu_restart" part from mach-mvebu.
+Could you elaborate the race the spinlock should prevent ?
 
-	Arnd
+>
+>   	return 0;
+>   }
+> @@ -80,10 +67,13 @@ static void orion_clkevt_mode(enum clock_event_mo=
+de mode,
+>   		/* setup and enable periodic timer at 1/HZ intervals */
+>   		writel(ticks_per_jiffy - 1, timer_base + TIMER1_RELOAD);
+>   		writel(ticks_per_jiffy - 1, timer_base + TIMER1_VAL);
+> -		orion_timer_ctrl_clrset(0, TIMER1_RELOAD_EN | TIMER1_EN);
+> +		atomic_io_modify(timer_base + TIMER_CTRL,
+> +			TIMER1_RELOAD_EN | TIMER1_EN,
+> +			TIMER1_RELOAD_EN | TIMER1_EN);
+>   	} else {
+>   		/* disable timer */
+> -		orion_timer_ctrl_clrset(TIMER1_RELOAD_EN | TIMER1_EN, 0);
+> +		atomic_io_modify(timer_base + TIMER_CTRL,
+> +			TIMER1_RELOAD_EN | TIMER1_EN, 0);
+>   	}
+>   }
+>
+> @@ -131,7 +121,9 @@ static void __init orion_timer_init(struct device=
+_node *np)
+>   	/* setup timer0 as free-running clocksource */
+>   	writel(~0, timer_base + TIMER0_VAL);
+>   	writel(~0, timer_base + TIMER0_RELOAD);
+> -	orion_timer_ctrl_clrset(0, TIMER0_RELOAD_EN | TIMER0_EN);
+> +	atomic_io_modify(timer_base + TIMER_CTRL,
+> +		TIMER0_RELOAD_EN | TIMER0_EN,
+> +		TIMER0_RELOAD_EN | TIMER0_EN);
+>   	clocksource_mmio_init(timer_base + TIMER0_VAL, "orion_clocksource"=
+,
+>   			      clk_get_rate(clk), 300, 32,
+>   			      clocksource_mmio_readl_down);
+>
+
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
