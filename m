@@ -1,53 +1,123 @@
-From: Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH] clk: corenet: Update the clock bindings
-Date: Tue, 21 Jan 2014 10:02:12 +0800
-Message-ID: <1390269732-22798-1-git-send-email-Yuantian.Tang@freescale.com>
+From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v4 0/7] mtd: spi-nor: add a new framework for SPI NOR
+Date: Tue, 21 Jan 2014 10:29:26 +0800
+Message-ID: <20140121022925.GA18529@shlinux2.ap.freescale.net>
+References: <1387950629-27448-1-git-send-email-b32955@freescale.com>
+ <CAD6G_RTnNQgeJM8Tc16Sc1_n29d=V9sJN1ePrOAn5YzM+GujMQ@mail.gmail.com>
+ <52D7A237.8@freescale.com>
+ <CAD6G_RRNg-uRtKnnVgJYpUGPsKecAUm9mwETVJsCsaGSuL2eCw@mail.gmail.com>
+ <20140117020226.GB27652@shlinux2.ap.freescale.net>
+ <CAD6G_RR7vgmHGFj4GqwCYLQQO6tbsZAeCzVBivbcxnCGSwgiWQ@mail.gmail.com>
+ <20140117065401.GA6140@shlinux2.ap.freescale.net>
+ <CAD6G_RSF_TPk8g9CNmSc+xs+9psLmJoakZw3Eqf-a8KD5P4AVg@mail.gmail.com>
+ <52DB3864.2040606@gmail.com>
+ <CAD6G_RTwMJ5DgkCB7wcYw+2p---DqU4KCVJ3CUnHFfCJ0ui_Jw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: b07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b32579-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Tang Yuantian <yuantian.tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAD6G_RTwMJ5DgkCB7wcYw+2p---DqU4KCVJ3CUnHFfCJ0ui_Jw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, angus.clark-qxv4g6HH51o@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, b44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "Gupta, Pekon" <pekon-l0cyMroinI0@public.gmane.org>, Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Tang Yuantian <yuantian.tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On Sun, Jan 19, 2014 at 03:39:34PM +0530, Jagan Teki wrote:
+> > Just think about that how do you code your driver for SPI NOR _without_ this
+> > framework:
+> > do your driver need to call the m25p80.c? if you do call the m25p80.c, you
+> > actually write your so-called "two drivers" :)
+> 
+> I'm still not convinced here, sorry!
+> Let me explain more with example, Just take your (q)spi controller as an example
+> B_FSL1 designed with - serial flash
+> B_FSL2 designed with - touch screen
+> 
+> With this design If we follow current we just need one controller
+> driver (drivers/spi/spi-fsl.c)
+> to serve touch screen and serial flash from upper layers.
+> 
+> MTD core                Input core
+> -------------           -------------------------------
+> m25p80.c             spi  touchscreen driver  (drivers/input/touchscreen)
+> ----------------------------------------------------
+>                           SPI core
+> ----------------------------------------------------
+>       controller driver (drivers/spi/spi-fsl.)
+> ----------------------------------------------------
+> 
+> But with your new SPI-NOR
+> 
+> MTD core
+> ------------
+> SPI-NOR              Input core
+> -----------           ------------------
+> fsl-quadspi.c     spi  touchscreen driver  (drivers/input/touchscreen)
+> ----------------      ------------------------------
+>                          SPI Core
+>                          -----------------------------
+>                          controller driver (drivers/spi/spi-fsl.c)
+>                          -----------------------------------------
+> 
+There is no relationship with the fsl-quadspi.c. 
 
-Main changs include:
-	- Clarified the clock nodes' version number
-	- Fixed a issue in example
-
-Singed-off-by: Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- Documentation/devicetree/bindings/clock/corenet-clock.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/clock/corenet-clock.txt b/Documentation/devicetree/bindings/clock/corenet-clock.txt
-index 24711af..d6cadef 100644
---- a/Documentation/devicetree/bindings/clock/corenet-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/corenet-clock.txt
-@@ -54,6 +54,8 @@ Required properties:
- 		It takes parent's clock-frequency as its clock.
- 	* "fsl,qoriq-sysclk-2.0": for input system clock (v2.0).
- 		It takes parent's clock-frequency as its clock.
-+	Note: v1.0 and v2.0 are clock version which should align to
-+	clockgen node's they belong to which is chassis version.
- - #clock-cells: From common clock binding. The number of cells in a
- 	clock-specifier. Should be <0> for "fsl,qoriq-sysclk-[1,2].0"
- 	clocks, or <1> for "fsl,qoriq-core-pll-[1,2].0" clocks.
-@@ -85,7 +87,7 @@ Example for clock block and clock provider:
- 			#clock-cells = <0>;
- 			compatible = "fsl,qoriq-sysclk-1.0";
- 			clock-output-names = "sysclk";
--		}
-+		};
+It should be like this:
+ MTD core
+ ------------
+ SPI-NOR  framework                       Input core
+ -----------                              ------------------
+ m25p80.c                                 spi  touchscreen driver  (drivers/input/touchscreen)
+ ----------------                         ------------------------------
+ SPI Core                                 SPI Core
+ -----------------------                  -----------------------------
+ drivers/spi/spi-fsl.c                    controller driver (drivers/spi/spi-fsl.c)
+ --------------------------               -----------------------------------------
  
- 		pll0: pll0@800 {
- 			#clock-cells = <1>;
--- 
-1.8.0
 
+> Here see we have two separate drivers for the same controller as it offers two
+> functionalities. and also it never talk to Linux SPI subsystem which is not a
+> good for me as intern hw is SPI-based it must talk to subsystem to make use of
+> Linux SPI API's.
+> 
+> And also you mentioned SPI-NOR controller is not a SPI controller what does that
+> means because it's a NOR flash which is of SPI protocol based.
+
+The SPI controller (or spi bus controller) only handles the _byte_ streams;
+while the spi-nor controller, such as fsl-quadspi.c, can has to __known__
+the exact SPI NOR command to find the proper LUT.
+
+Please read the thread i ever posted in the previous email.
+
+> 
+> I understand that your framework doing good things in matured manner, but
+> seems like it's confuse to me to follow common standards - Just my
+> opinion, may be I'm incorrect.
+> 
+> One more thing question - I have 1-wire spi controller which I was
+> used for flash in
+> one board and keyboard in another board, so if I follow your framework
+> I need to write
+> a driver in drivers/mtd/spi-nor/foo-spi.c and one more in
+> drivers/spi/spi-foo.c - correct?
+
+Please read the device tree node of your controller, find the code like
+
+...................................................
+	flash: m25p80@0 {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		compatible = "st,m25p32";
+		spi-max-frequency = <20000000>;
+		reg = <0>;
+	};
+...................................................
+
+if you call the m25p80,  you do not need to change anything. 
+
+thanks
+Huang Shijie
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
