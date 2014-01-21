@@ -1,62 +1,92 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH] mmc: omap_hsmmc: Add support for Erratum 2.1.1.128 in
- device tree boot
-Date: Tue, 21 Jan 2014 11:38:00 -0600
-Message-ID: <52DEB078.5030005@ti.com>
-References: <1390260542-22213-1-git-send-email-nm@ti.com> <20140120233941.GG6516@saruman.home>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v7 1/2] ohci-platform: Add support for
+ devicetree instantiation
+Date: Tue, 21 Jan 2014 18:10:07 +0100
+Message-ID: <52DEA9EF.2090509@redhat.com>
+References: <1389813883-567-1-git-send-email-hdegoede@redhat.com> <1389813883-567-2-git-send-email-hdegoede@redhat.com> <52DEB57C.8080700@cogentembedded.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20140120233941.GG6516@saruman.home>
-Sender: linux-mmc-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: Balaji T K <balajitk@ti.com>, Chris Ball <chris@printf.net>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRB5XI7KLAKGQEKX5J7NY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <52DEB57C.8080700-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/20/2014 05:39 PM, Felipe Balbi wrote:
-> On Mon, Jan 20, 2014 at 05:29:02PM -0600, Nishanth Menon wrote:
->> When device is booted using devicetree, platforms impacted by
->> Erratum 2.1.1.128 is not detected easily in the mmc driver. This erratum
->> indicates that the module cannot do multi-block transfers.
->>
->> Handle this by providing a boolean flag to indicate to driver that it is
->> working on a hardware with mentioned limitation.
-> 
-> sure there's no way of reading the revision register to figure this one
-> out without having to add a new DT attribute ?
-> 
-I did a quick patch to read the Module revision register:
-http://slexy.org/view/s21TKvlWlR
+Hi,
 
-sdp2430: Revision: 1.2, Spec: 0.0, normal interrupt
+On 01/21/2014 06:59 PM, Sergei Shtylyov wrote:
+> Hello.
+>
+> On 01/15/2014 10:24 PM, Hans de Goede wrote:
+>
+>> Add support for ohci-platform instantiation from devicetree, including
+>> optionally getting clks and a phy from devicetree, and enabling / disabl=
+ing
+>> those on power_on / off.
+>
+>> This should allow using ohci-platform from devicetree in various cases.
+>> Specifically after this commit it can be used for the ohci controller fo=
+und
+>> on Allwinner sunxi SoCs.
+>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+> [...]
+>
+>    Have only found time to fully read the patches just now...
+>
+>> diff --git a/Documentation/devicetree/bindings/usb/usb-ohci.txt b/Docume=
+ntation/devicetree/bindings/usb/usb-ohci.txt
+>> new file mode 100644
+>> index 0000000..f9d6c73
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/usb/usb-ohci.txt
+>> @@ -0,0 +1,22 @@
+>> +USB OHCI controllers
+>> +
+>> +Required properties:
+>> +- compatible : "usb-ohci"
+>> +- reg : ohci controller register range (address and length)
+>> +- interrupts : ohci controller interrupt
+>> +
+>> +Optional properties:
+>> +- clocks : a list of phandle + clock specifier pairs
+>> +- phys : phandle + phy specifier pair
+>> +- phy-names : "usb"
+>> +
+>> +Example:
+>> +
+>> +    ohci0: ohci@0x01c14400 {
+>
+>     Two minor nits: there should be no "0x" in the address part of the no=
+de name. And according to ePAPR [1], "the name of a node should be somewhat=
+ generic, reflecting the function of the device and not its precise program=
+ming model. If appropriate, the name should be one of the following choices=
+:
+> [...]
+> - usb".
+>
+>     Same comments for "usb-ehci" binding.
 
-OMAP3430-ldp: (ES2.1): Revision: 2.6, Spec: 0.0, normal interrupt
-SDP3430:(ES3.0) Revision: 2.6, Spec: 0.0, normal interrupt
-AM3517-evm: (ES1.1): Revision: 2.6, Spec: 0.0, normal interrupt
-AM3517-crane:(ES1.1): Revision: 2.6, Spec: 0.0, normal interrupt
+You're right on both accounts, I'll do a v8 tomorrow, including a re-spin o=
+f the
+big-endian patches.
 
-AM37x-evm: (ES1.2) Revision: 2.6, Spec: 0.0, normal interrupt
-OMAP3630-beag-xm (ES1.2): Revision: 2.6, Spec: 0.0, normal interrupt
-
-am335x-evm:(ES1.0): Revision: 3.1, Spec: 0.1, normal interrupt
-am335x-sk: (ES2.1): Revision: 3.1, Spec: 0.1, normal interrupt
-am335x-beaglebone-black:(ES2.0): Revision: 3.1, Spec: 0.1, normal
-interrupt
-
-sdp4430.txt: (ES2.2): Revision: 3.1, Spec: 0.1, normal interrupt
-
-OMAP4460-panda-es (ES1.1): Revision: 3.1, Spec: 0.1, normal interrupt
-
-OMAP5uevm:(ES2.0): Revision: 3.3, Spec: 0.2, normal interrupt
-dra7-evm (es1.1): Revision: 3.3, Spec: 0.2, normal interrupt
-
-
-OMAP3430-ldp seems to be the only one impacted with module revision
-2.6 -> so using revision information is not really helpful here. Hence
-the usage of a flag in dt attribute to indicate hardware impacted by
-erratum.
-
--- 
 Regards,
-Nishanth Menon
+
+Hans
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/groups/opt_out.
