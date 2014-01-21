@@ -1,47 +1,41 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH] regulator: ti-abb: Add support for interleaved LDO registers
-Date: Tue, 21 Jan 2014 14:06:25 -0600
-Message-ID: <52DED341.3030503@ti.com>
-References: <1389900750-27625-1-git-send-email-nm@ti.com> <20140121185553.GW17314@sirena.org.uk>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] DT: net: document Ethernet bindings in one place
+Date: Wed, 22 Jan 2014 00:19:33 +0300
+Message-ID: <52DEE465.9000202@cogentembedded.com>
+References: <201401180405.07859.sergei.shtylyov@cogentembedded.com> <CAL_Jsq+oa9P=rh+p-dMZyGP8TcmpX7bTnMU0ynLvFxjxFDYbRg@mail.gmail.com> <52DD98F7.4090202@cogentembedded.com> <CAL_JsqJXbF1-PcPHR2VP+Vi9A1aWizdsG_r3kDvRt3itXDhCGQ@mail.gmail.com> <CAGVrzcb3X3soJNJCE5+YSpQrr+EdycCRFkptPvBCgFg4CbGJ4Q@mail.gmail.com> <CAGVrzcb0dfw1orZzUt5-YkShOg-HNbUYvvo2vfmsZUZXy1Aqfg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140121185553.GW17314@sirena.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAGVrzcb0dfw1orZzUt5-YkShOg-HNbUYvvo2vfmsZUZXy1Aqfg@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robherring2@gmail.com>
+Cc: netdev <netdev@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/21/2014 12:55 PM, Mark Brown wrote:
-> On Thu, Jan 16, 2014 at 01:32:30PM -0600, Nishanth Menon wrote:
-> 
->> -	abb->base = devm_ioremap_resource(dev, res);
-> 
->> +	abb->base = devm_ioremap_nocache(dev, res->start, resource_size(res));
-> 
-> devm_ioremap_resouce() should do the right thing if the memory region is
-> marked as uncacheable (with IORESOURCE_CACHEABLE not set).  Since I
-> can't see the OF code actually setting that flag on the resources unless
-> I'm missing something this change isn't needed?
-> 
-Without this change, on DRA7 I get:
-[    0.579500] abb_mpu: 1060 <--> 1210 mV
-[    0.580321] abb_ivahd: 1055 <--> 1250 mV
-[    0.580583] ti_abb 4ae07e20.regulator-abb-dspeve: can't request
-region for resource [mem 0x4ae07e20-0x4ae07e2f]
-[    0.580610] ti_abb: probe of 4ae07e20.regulator-abb-dspeve failed
-with error -16
-[    0.581216] abb_gpu: 1090 <--> 1280 mV
+Hello.
 
-with the change in the patch, I get:
-[    0.589750] abb_mpu: 1060 <--> 1210 mV
-[    0.590522] abb_ivahd: 1055 <--> 1250 mV
-[    0.591331] abb_dspeve: 1055 <--> 1250 mV
-[    0.592097] abb_gpu: 1090 <--> 1280 mV
+On 01/21/2014 11:05 PM, Florian Fainelli wrote:
 
-reference dts:
-https://github.com/nmenon/linux-2.6-playground/blob/abb-rev-v3.14-rc1-vnext-20140121/arch/arm/boot/dts/dra7.dtsi#L562
--- 
-Regards,
-Nishanth Menon
+>>>>     I'm afraid that's too late, it has spread very far, so that
+>>>> of_get_phy_mode() handles that property, not "phy-connection-type".
+
+>>> Uggg, I guess this is a case of a defacto standard then if the kernel
+>>> doesn't even support it.
+
+>> Maybe I forgot to CC you on patch sent to Grant only, I sent a patch a
+>> while ago for of_get_phy_mode() to look for both "phy-mode" and
+>> "phy-connection-type" since the former has been a Linux invention, but
+>> the latter is ePAPR specified.
+
+> Here is a link to the actual patch in question, not sure which tree
+> Grant applied it to though:
+
+> http://lkml.indiana.edu/hypermail/linux/kernel/1311.2/00048.html
+
+    It's not the patch mail, it's Grant's "applied" reply, patch is mangled in 
+this reply, and I couldn't follow the thread. Here's the actual patch mail:
+
+http://marc.info/?l=devicetree&m=138449662807254
+
+WBR, Sergei
