@@ -1,76 +1,107 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 04/15] watchdog: orion: Handle IRQ
-Date: Tue, 21 Jan 2014 11:35:59 -0300
-Message-ID: <20140121143558.GA24923@localhost>
-References: <1390310774-20781-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1390310774-20781-5-git-send-email-ezequiel.garcia@free-electrons.com>
- <52DE84A6.6090909@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52DE84A6.6090909-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Sebastian Reichel <sre@debian.org>
+Subject: [PATCH] ARM: dts: omap3 clocks: simplify ssi aliases
+Date: Tue, 21 Jan 2014 15:37:41 +0100
+Message-ID: <1390315061-14441-1-git-send-email-sre@debian.org>
+References: <52DE24DA.8050104@ti.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52DE24DA.8050104@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sebastian Reichel <sre@ring0.de>, Tero Kristo <t-kristo@ti.com>
+Cc: mturquette@linaro.org, tony@atomide.com, bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Sebastian Reichel <sre@debian.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 21, 2014 at 06:31:02AM -0800, Guenter Roeck wrote:
-> On 01/21/2014 05:26 AM, Ezequiel Garcia wrote:
-> > DT-enabled where an irqchip driver for the brigde interrupt control=
-ler is
-> > available can handle the watchdog IRQ properly. Therefore, we reque=
-st
-> > the interruption and add a dummy handler that merely calls panic().
-> >
-> > This is done in order to have an initial 'ack' of the interruption,
-> > which clears the watchdog state.
-> >
-> > Furthermore, since some platforms don't have such IRQ, this commit
-> > makes the interruption specification optional.
-> >
-> > Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> >   .../devicetree/bindings/watchdog/marvel.txt        |  2 ++
-> >   drivers/watchdog/orion_wdt.c                       | 22 +++++++++=
-++++++++++++-
-> >   2 files changed, 23 insertions(+), 1 deletion(-)
-> >
->=20
-> [ ... ]
->=20
-> >   static int orion_wdt_probe(struct platform_device *pdev)
-> >   {
-> >   	struct resource *res;
-> > -	int ret;
-> > +	int ret, irq;
-> >
-> >   	clk =3D devm_clk_get(&pdev->dev, NULL);
-> >   	if (IS_ERR(clk)) {
-> > @@ -131,6 +138,19 @@ static int orion_wdt_probe(struct platform_dev=
-ice *pdev)
-> >   	if (!wdt_reg)
-> >   		return -ENOMEM;
-> >
-> > +	irq =3D platform_get_irq(pdev, 0);
-> > +	if (irq > 0) {
->=20
-> 0 is a valid interrupt number, and platform_get_irq returns an error =
-code on errors.
-> Should be >=3D 0.
->=20
+update aliases for the ssi clocks ssi_ssr_fck, ssi_sst_fck and ssi_ick
+to make them consistent for omap34xx and omap36xx. This makes it
+possible to reference the clocks from generic omap3 dts files.
 
-Yes, indeed. I'll wait to see if there's any other feedback and then se=
-nd a v4.
+Signed-off-by: Sebastian Reichel <sre@debian.org>
+---
+ arch/arm/boot/dts/omap3430es1-clocks.dtsi              | 10 +++++-----
+ arch/arm/boot/dts/omap36xx-omap3430es2plus-clocks.dtsi | 10 +++++-----
+ 2 files changed, 10 insertions(+), 10 deletions(-)
 
-Thanks a lot!
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/omap3430es1-clocks.dtsi b/arch/arm/boot/dts/omap3430es1-clocks.dtsi
+index 02f6c7f..6f31954 100644
+--- a/arch/arm/boot/dts/omap3430es1-clocks.dtsi
++++ b/arch/arm/boot/dts/omap3430es1-clocks.dtsi
+@@ -82,16 +82,16 @@
+ 		ti,dividers = <0>, <1>, <2>, <3>, <4>, <0>, <6>, <0>, <8>;
+ 	};
+ 
+-	ssi_ssr_fck_3430es1: ssi_ssr_fck_3430es1 {
++	ssi_ssr_fck: ssi_ssr_fck_3430es1 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,composite-clock";
+ 		clocks = <&ssi_ssr_gate_fck_3430es1>, <&ssi_ssr_div_fck_3430es1>;
+ 	};
+ 
+-	ssi_sst_fck_3430es1: ssi_sst_fck_3430es1 {
++	ssi_sst_fck: ssi_sst_fck_3430es1 {
+ 		#clock-cells = <0>;
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&ssi_ssr_fck_3430es1>;
++		clocks = <&ssi_ssr_fck>;
+ 		clock-mult = <1>;
+ 		clock-div = <2>;
+ 	};
+@@ -120,7 +120,7 @@
+ 		clock-div = <1>;
+ 	};
+ 
+-	ssi_ick_3430es1: ssi_ick_3430es1 {
++	ssi_ick: ssi_ick_3430es1 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,omap3-no-wait-interface-clock";
+ 		clocks = <&ssi_l4_ick>;
+@@ -203,6 +203,6 @@
+ 			 <&i2c1_ick>, <&uart2_ick>, <&uart1_ick>, <&gpt11_ick>,
+ 			 <&gpt10_ick>, <&mcbsp5_ick>, <&mcbsp1_ick>,
+ 			 <&omapctrl_ick>, <&aes2_ick>, <&sha12_ick>,
+-			 <&fshostusb_fck>, <&fac_ick>, <&ssi_ick_3430es1>;
++			 <&fshostusb_fck>, <&fac_ick>, <&ssi_ick>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/omap36xx-omap3430es2plus-clocks.dtsi b/arch/arm/boot/dts/omap36xx-omap3430es2plus-clocks.dtsi
+index 8ed475d..877318c 100644
+--- a/arch/arm/boot/dts/omap36xx-omap3430es2plus-clocks.dtsi
++++ b/arch/arm/boot/dts/omap36xx-omap3430es2plus-clocks.dtsi
+@@ -25,16 +25,16 @@
+ 		ti,dividers = <0>, <1>, <2>, <3>, <4>, <0>, <6>, <0>, <8>;
+ 	};
+ 
+-	ssi_ssr_fck_3430es2: ssi_ssr_fck_3430es2 {
++	ssi_ssr_fck: ssi_ssr_fck_3430es2 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,composite-clock";
+ 		clocks = <&ssi_ssr_gate_fck_3430es2>, <&ssi_ssr_div_fck_3430es2>;
+ 	};
+ 
+-	ssi_sst_fck_3430es2: ssi_sst_fck_3430es2 {
++	ssi_sst_fck: ssi_sst_fck_3430es2 {
+ 		#clock-cells = <0>;
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&ssi_ssr_fck_3430es2>;
++		clocks = <&ssi_ssr_fck>;
+ 		clock-mult = <1>;
+ 		clock-div = <2>;
+ 	};
+@@ -55,7 +55,7 @@
+ 		clock-div = <1>;
+ 	};
+ 
+-	ssi_ick_3430es2: ssi_ick_3430es2 {
++	ssi_ick: ssi_ick_3430es2 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,omap3-ssi-interface-clock";
+ 		clocks = <&ssi_l4_ick>;
+@@ -193,6 +193,6 @@
+ 			 <&i2c1_ick>, <&uart2_ick>, <&uart1_ick>, <&gpt11_ick>,
+ 			 <&gpt10_ick>, <&mcbsp5_ick>, <&mcbsp1_ick>,
+ 			 <&omapctrl_ick>, <&aes2_ick>, <&sha12_ick>,
+-			 <&ssi_ick_3430es2>;
++			 <&ssi_ick>;
+ 	};
+ };
+-- 
+1.8.5.2
+
