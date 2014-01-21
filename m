@@ -1,123 +1,52 @@
-From: Anton Blanchard <anton-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
-Subject: [PATCH] dtc: Sort unit addresses by number
-Date: Tue, 21 Jan 2014 13:49:35 +1100
-Message-ID: <20140121134935.1f9cebcc@kryten>
+From: Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] clk: corenet: Update the clock bindings
+Date: Tue, 21 Jan 2014 10:02:12 +0800
+Message-ID: <1390269732-22798-1-git-send-email-Yuantian.Tang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: b07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Cc: galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b32579-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Tang Yuantian <yuantian.tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Tang Yuantian <yuantian.tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-The sort option in dtc treats unit addresses as strings. This causes
-cpu nodes to end up out of order:
+Main changs include:
+	- Clarified the clock nodes' version number
+	- Fixed a issue in example
 
-# dtc -s -I fs -O dts /proc/device-tree | grep PowerPC,POWER7
+Singed-off-by: Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ Documentation/devicetree/bindings/clock/corenet-clock.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-		PowerPC,POWER7@30 {
-		PowerPC,POWER7@68 {
-		PowerPC,POWER7@70 {
-		PowerPC,POWER7@828 {
-		PowerPC,POWER7@860 {
-		PowerPC,POWER7@868 {
-		PowerPC,POWER7@8a0 {
-		PowerPC,POWER7@8b0 {
-		PowerPC,POWER7@8f0 {
-		PowerPC,POWER7@a0 {
-		PowerPC,POWER7@a8 {
-		PowerPC,POWER7@e0 {
-
-If we use this device tree for a kexec boot we end up with a confusing
-layout of logical CPUs:
-
-node 0 cpus: 0-23 72-95
-node 0 size: 32633 MB
-
-node 1 cpus: 24-71
-node 1 size: 32631 MB
-
-The reason for this is that we allocate logical CPU ids as we walk
-through the device tree.
-
-In cmp_subnode, if both nodes have a hex unit address and the
-basenames match, then compare by number.
-
-This fixes the issue:
-
-# dtc -s -I fs -O dts /proc/device-tree | grep PowerPC,POWER7
-		PowerPC,POWER7@30 {
-		PowerPC,POWER7@68 {
-		PowerPC,POWER7@70 {
-		PowerPC,POWER7@a0 {
-		PowerPC,POWER7@a8 {
-		PowerPC,POWER7@e0 {
-		PowerPC,POWER7@828 {
-		PowerPC,POWER7@860 {
-		PowerPC,POWER7@868 {
-		PowerPC,POWER7@8a0 {
-		PowerPC,POWER7@8b0 {
-		PowerPC,POWER7@8f0 {
-
-And the CPU layout is as expected:
-
-node 0 cpus: 0-47
-node 0 size: 32633 MB
-
-node 1 cpus: 48-95
-node 1 size: 32631 MB
-
-Signed-off-by: Anton Blanchard <anton-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
---
-
-Index: b/livetree.c
-===================================================================
---- a/livetree.c
-+++ b/livetree.c
-@@ -656,12 +656,38 @@ static void sort_properties(struct node
- 	free(tbl);
- }
+diff --git a/Documentation/devicetree/bindings/clock/corenet-clock.txt b/Documentation/devicetree/bindings/clock/corenet-clock.txt
+index 24711af..d6cadef 100644
+--- a/Documentation/devicetree/bindings/clock/corenet-clock.txt
++++ b/Documentation/devicetree/bindings/clock/corenet-clock.txt
+@@ -54,6 +54,8 @@ Required properties:
+ 		It takes parent's clock-frequency as its clock.
+ 	* "fsl,qoriq-sysclk-2.0": for input system clock (v2.0).
+ 		It takes parent's clock-frequency as its clock.
++	Note: v1.0 and v2.0 are clock version which should align to
++	clockgen node's they belong to which is chassis version.
+ - #clock-cells: From common clock binding. The number of cells in a
+ 	clock-specifier. Should be <0> for "fsl,qoriq-sysclk-[1,2].0"
+ 	clocks, or <1> for "fsl,qoriq-core-pll-[1,2].0" clocks.
+@@ -85,7 +87,7 @@ Example for clock block and clock provider:
+ 			#clock-cells = <0>;
+ 			compatible = "fsl,qoriq-sysclk-1.0";
+ 			clock-output-names = "sysclk";
+-		}
++		};
  
-+static bool is_hex(const char *str)
-+{
-+	while (*str) {
-+		if (!isxdigit(*str++))
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
- static int cmp_subnode(const void *ax, const void *bx)
- {
--	const struct node *a, *b;
-+	struct node *a, *b;
-+	const char *a_unit, *b_unit;
-+
-+	a = *((struct node * const *)ax);
-+	b = *((struct node * const *)bx);
-+
-+	a_unit = get_unitname(a);
-+	b_unit = get_unitname(b);
-+
-+	/* Sort hex unit addresses by number */
-+	if (a_unit && b_unit && (a->basenamelen == b->basenamelen) &&
-+	    !strncmp(a->name, b->name, a->basenamelen) &&
-+	    is_hex(a_unit) && is_hex(b_unit)) {
-+		unsigned long long a_num, b_num;
-+
-+		a_num = strtoull(a_unit, NULL, 16);
-+		b_num = strtoull(b_unit, NULL, 16);
- 
--	a = *((const struct node * const *)ax);
--	b = *((const struct node * const *)bx);
-+		return (a_num > b_num) - (a_num < b_num);
-+	}
- 
- 	return strcmp(a->name, b->name);
- }
+ 		pll0: pll0@800 {
+ 			#clock-cells = <1>;
+-- 
+1.8.0
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
