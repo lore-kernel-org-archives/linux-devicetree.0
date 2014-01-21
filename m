@@ -1,143 +1,81 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] dtc: Sort unit addresses by number
-Date: Tue, 21 Jan 2014 10:02:21 +0000
-Message-ID: <20140121100221.GJ28747@e106331-lin.cambridge.arm.com>
-References: <20140121134935.1f9cebcc@kryten>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 14/15] watchdog: orion: Allow to build on any Orion
+ platform
+Date: Tue, 21 Jan 2014 07:04:35 -0300
+Message-ID: <20140121100434.GC3577@localhost>
+References: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1390295561-3466-15-git-send-email-ezequiel.garcia@free-electrons.com>
+ <52DE40BD.10700@gmail.com>
+ <20140121094501.GA13396@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140121134935.1f9cebcc@kryten>
+In-Reply-To: <20140121094501.GA13396-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anton Blanchard <anton-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 21, 2014 at 02:49:35AM +0000, Anton Blanchard wrote:
-> 
-> The sort option in dtc treats unit addresses as strings. This causes
-> cpu nodes to end up out of order:
-> 
-> # dtc -s -I fs -O dts /proc/device-tree | grep PowerPC,POWER7
-> 
-> 		PowerPC,POWER7@30 {
-> 		PowerPC,POWER7@68 {
-> 		PowerPC,POWER7@70 {
-> 		PowerPC,POWER7@828 {
-> 		PowerPC,POWER7@860 {
-> 		PowerPC,POWER7@868 {
-> 		PowerPC,POWER7@8a0 {
-> 		PowerPC,POWER7@8b0 {
-> 		PowerPC,POWER7@8f0 {
-> 		PowerPC,POWER7@a0 {
-> 		PowerPC,POWER7@a8 {
-> 		PowerPC,POWER7@e0 {
-> 
-> If we use this device tree for a kexec boot we end up with a confusing
-> layout of logical CPUs:
-> 
-> node 0 cpus: 0-23 72-95
-> node 0 size: 32633 MB
-> 
-> node 1 cpus: 24-71
-> node 1 size: 32631 MB
-> 
-> The reason for this is that we allocate logical CPU ids as we walk
-> through the device tree.
-> 
-> In cmp_subnode, if both nodes have a hex unit address and the
-> basenames match, then compare by number.
-> 
-> This fixes the issue:
-> 
-> # dtc -s -I fs -O dts /proc/device-tree | grep PowerPC,POWER7
-> 		PowerPC,POWER7@30 {
-> 		PowerPC,POWER7@68 {
-> 		PowerPC,POWER7@70 {
-> 		PowerPC,POWER7@a0 {
-> 		PowerPC,POWER7@a8 {
-> 		PowerPC,POWER7@e0 {
-> 		PowerPC,POWER7@828 {
-> 		PowerPC,POWER7@860 {
-> 		PowerPC,POWER7@868 {
-> 		PowerPC,POWER7@8a0 {
-> 		PowerPC,POWER7@8b0 {
-> 		PowerPC,POWER7@8f0 {
-> 
-> And the CPU layout is as expected:
-> 
-> node 0 cpus: 0-47
-> node 0 size: 32633 MB
-> 
-> node 1 cpus: 48-95
-> node 1 size: 32631 MB
-> 
-> Signed-off-by: Anton Blanchard <anton-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
-> --
-> 
-> Index: b/livetree.c
-> ===================================================================
-> --- a/livetree.c
-> +++ b/livetree.c
-> @@ -656,12 +656,38 @@ static void sort_properties(struct node
->  	free(tbl);
->  }
->  
-> +static bool is_hex(const char *str)
-> +{
-> +	while (*str) {
-> +		if (!isxdigit(*str++))
-> +			return false;
-> +	}
-> +
-> +	return true;
-> +}
-> +
->  static int cmp_subnode(const void *ax, const void *bx)
->  {
-> -	const struct node *a, *b;
-> +	struct node *a, *b;
-> +	const char *a_unit, *b_unit;
-> +
-> +	a = *((struct node * const *)ax);
-> +	b = *((struct node * const *)bx);
-> +
-> +	a_unit = get_unitname(a);
-> +	b_unit = get_unitname(b);
-> +
-> +	/* Sort hex unit addresses by number */
-> +	if (a_unit && b_unit && (a->basenamelen == b->basenamelen) &&
-> +	    !strncmp(a->name, b->name, a->basenamelen) &&
-> +	    is_hex(a_unit) && is_hex(b_unit)) {
-> +		unsigned long long a_num, b_num;
-> +
-> +		a_num = strtoull(a_unit, NULL, 16);
-> +		b_num = strtoull(b_unit, NULL, 16);
->  
-> -	a = *((const struct node * const *)ax);
-> -	b = *((const struct node * const *)bx);
-> +		return (a_num > b_num) - (a_num < b_num);
-> +	}
->  
->  	return strcmp(a->name, b->name);
->  }
+Hi Andrew, Sebastian:
 
-Minor issue, but when #address-cells == 2, some unit addresses are split
-in the middle by a ',' to separate the value of each cell, e.g.
-"flash@2,0". For those, is_hex will return false and we'll compare
-unit-addresses as strings.
+On Tue, Jan 21, 2014 at 10:45:01AM +0100, Andrew Lunn wrote:
+> On Tue, Jan 21, 2014 at 10:41:17AM +0100, Sebastian Hesselbarth wrote=
+:
+> > On 01/21/14 10:12, Ezequiel Garcia wrote:
+> > >After getting rid of all the mach-specific code, it's now possible
+> > >to allow builds in any Orion platform.
+> > >
+> > >Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org=
+>
+> > >---
+> > >  drivers/watchdog/Kconfig | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > >diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> > >index 5be6e91..1689f72 100644
+> > >--- a/drivers/watchdog/Kconfig
+> > >+++ b/drivers/watchdog/Kconfig
+> > >@@ -282,7 +282,7 @@ config DAVINCI_WATCHDOG
+> > >
+> > >  config ORION_WATCHDOG
+> > >  	tristate "Orion watchdog"
+> > >-	depends on ARCH_ORION5X || ARCH_KIRKWOOD || ARCH_DOVE
+> > >+	depends on PLAT_ORION
+[..]
+> >=20
+> > while above is true now, I tend to rather have ARCH_MVEBU added her=
+e.
+> > We really want to get rid of both !ARCH_MVEBU and PLAT_ORION and th=
+is
+> > unnecessarily will make it more complicated.
+> >=20
+> > I haven't checked why ARCH_MVEBU at all added PLAT_ORION as depende=
+ncy,
+> > but IIRC it was just because of a missing mbus driver? If it is jus=
+t
+> > this, we should also remove PLAT_ORION from ARCH_MVEBU to have a cl=
+ean
+> > cut between new common arch and existing sub-archs.
+>=20
 
-I took a quick look over the dts in the Linux kernel tree (with `git
-grep "@.\+," -- arch/*/boot/dts` and I think every instance there would
-sort correctly as a string, but it would be nice to fix the issue
-regardless of how large the unit-address is.
+Hm... not sure why we depend on PLAT_ORION. I'll take a look.
 
-Perhaps we could have a helper function for reading the unit-address
-that would take this into account?
+> I took a look at this when moving DT kirkwood into mach-mvebu. There
+> is nothing in plat-orion which ARCH_MVEBU needs. So i agree with
+> Sebastian, it should be PLAT_ORION || ARCH_MVEBU.
+>=20
 
-Cheers,
-Mark.
+OK, will do.
+
+Thanks!
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
