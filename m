@@ -1,99 +1,114 @@
 From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 01/15] ARM: Introduce atomic MMIO modify
-Date: Tue, 21 Jan 2014 06:12:27 -0300
-Message-ID: <1390295561-3466-2-git-send-email-ezequiel.garcia@free-electrons.com>
-References: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com>
+Subject: [PATCH v2 00/15] Armada 370/XP watchdog support
+Date: Tue, 21 Jan 2014 06:12:26 -0300
+Message-ID: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1390295561-3466-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some SoC have MMIO regions that are shared across orthogonal
-subsystems. This commit implements a possible solution for the
-thread-safe access of such regions through a spinlock-protected API.
+The second patchset to extend Orion watchdog driver adding support for
+Armada 370/XP SoC.
 
-Concurrent access is protected with a single spinlock for the
-entire MMIO address space. While this protects shared-registers,
-it also serializes access to unrelated/unshared registers.
+On this series I've tried to address all the issues raised when the previous
+patchset was submitted. See here [1] for the previous thread.
 
-We add relaxed and non-relaxed variants, by using writel_relaxed and writel,
-respectively. The rationale for this is that some users may not require
-register write completion but only thread-safe access to a register.
+I suggest that you go through the above thread to get the full picture.
+Anyway, long story short, the main two issues are the ones preventing
+multiplatform building:
 
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
-Submitted to ARM patch tracker:
-http://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=7930/1
+* Watchdog RSTOUT enable.
 
- arch/arm/include/asm/io.h |  6 ++++++
- arch/arm/kernel/io.c      | 35 +++++++++++++++++++++++++++++++++++
- 2 files changed, 41 insertions(+)
+  While v1 enabled the RSTOUT at each machine initialization, Jason Gunthorpe
+  later pointed out [2] that such enabling might lead to a spurious watchdog
+  trigger, in the event of the watchdog expired event not being cleared.
 
-diff --git a/arch/arm/include/asm/io.h b/arch/arm/include/asm/io.h
-index fbeb39c..8aa4cca 100644
---- a/arch/arm/include/asm/io.h
-+++ b/arch/arm/include/asm/io.h
-@@ -38,6 +38,12 @@
- #define isa_bus_to_virt phys_to_virt
- 
- /*
-+ * Atomic MMIO-wide IO modify
-+ */
-+extern void atomic_io_modify(void __iomem *reg, u32 mask, u32 set);
-+extern void atomic_io_modify_relaxed(void __iomem *reg, u32 mask, u32 set);
-+
-+/*
-  * Generic IO read/write.  These perform native-endian accesses.  Note
-  * that some architectures will want to re-define __raw_{read,write}w.
-  */
-diff --git a/arch/arm/kernel/io.c b/arch/arm/kernel/io.c
-index dcd5b4d..9203cf8 100644
---- a/arch/arm/kernel/io.c
-+++ b/arch/arm/kernel/io.c
-@@ -1,6 +1,41 @@
- #include <linux/export.h>
- #include <linux/types.h>
- #include <linux/io.h>
-+#include <linux/spinlock.h>
-+
-+static DEFINE_RAW_SPINLOCK(__io_lock);
-+
-+/*
-+ * Generic atomic MMIO modify.
-+ *
-+ * Allows thread-safe access to registers shared by unrelated subsystems.
-+ * The access is protected by a single MMIO-wide lock.
-+ */
-+void atomic_io_modify_relaxed(void __iomem *reg, u32 mask, u32 set)
-+{
-+	unsigned long flags;
-+	u32 value;
-+
-+	raw_spin_lock_irqsave(&__io_lock, flags);
-+	value = readl_relaxed(reg) & ~mask;
-+	value |= (set & mask);
-+	writel_relaxed(value, reg);
-+	raw_spin_unlock_irqrestore(&__io_lock, flags);
-+}
-+EXPORT_SYMBOL(atomic_io_modify_relaxed);
-+
-+void atomic_io_modify(void __iomem *reg, u32 mask, u32 set)
-+{
-+	unsigned long flags;
-+	u32 value;
-+
-+	raw_spin_lock_irqsave(&__io_lock, flags);
-+	value = readl_relaxed(reg) & ~mask;
-+	value |= (set & mask);
-+	writel(value, reg);
-+	raw_spin_unlock_irqrestore(&__io_lock, flags);
-+}
-+EXPORT_SYMBOL(atomic_io_modify);
- 
- /*
-  * Copy data from IO memory space to "real" memory space.
+  Therefore, the current patchset adds RSTOUT as a second address resource
+  (or 'reg' entry in devicetree words) to allow different platforms specify
+  the corresponding address of the register. This change allows to build the
+  driver on multiplatforms builds as helps remove a mach-specific header.
+
+  The drawback of this is that the DT backwards compatibility gets broken;
+  this was timely discussed but no better solution was achieved or proposed.
+
+* BRIDGE CAUSE clear removal
+
+  The watchdog cause clear should be done by the bridge irqchip driver, so
+  it's fine to remove it from the watchdog driver and instead request the
+  interruption.
+
+  However, there are still a few platforms (orion5x, and legacy
+  kirkwood/dove) that doesn't have this bridge irqchip support enabled.
+  On these platforms the bridge cause clear is simply *not* done.
+
+  If we are paranoid about this, maybe we can simply add the clear on each
+  mach-xxx/irq.c, together with the other irq is initialization.
+
+The rest of the work is mostly the same as v1.
+
+Patches 1-3 introduces the Atomic I/O API needed to access shared registers;
+this patch has been properly discussed elsewhere and has been submitted to
+the ARM patch tracker for its inclusion in v3.14.
+
+Patches 2-3 uses the atomic I/O API on the clocksource and watchdog drivers.
+The orion clocksource patch is submitted here because the register is shared
+with the watchdog.
+
+Patch 4 adds the interrupt handling as already explained above.
+Patch 5-6 peform the already discussed RSTOUT and BRIDGE CAUSE changes and
+allows multiplatform build.
+
+Patches 7-10 extends the orion_wdt driver to support other SoCs.
+Patch 11 adds the Armada 370/XP support.
+
+Patches 12-13 updates the devicetree files, patch 14 allows to build
+the driver on any Orion platform and finally patch 15 updates the
+defconfig.
+
+This series is based on v3.13-rc8 and has been tested on:
+
+ * Kirkwood Openblocks A6
+ * Armada 370 Reference Design
+
+[1] http://comments.gmane.org/gmane.linux.ports.arm.kernel/263459
+[2] http://permalink.gmane.org/gmane.linux.ports.arm.kernel/263544
+
+Ezequiel Garcia (15):
+  ARM: Introduce atomic MMIO modify
+  clocksource: orion: Use atomic access for shared registers
+  watchdog: orion: Use atomic access for shared registers
+  watchdog: orion: Handle IRQ
+  watchdog: orion: Make RSTOUT register a separate resource
+  watchdog: orion: Remove unneeded BRIDGE_CAUSE clear
+  watchdog: orion: Introduce an orion_watchdog device structure
+  watchdog: orion: Introduce per-compatible of_device_id data
+  watchdog: orion: Add per-compatible clock initialization
+  watchdog: orion: Add per-compatible watchdog start implementation
+  watchdog: orion: Add support for Armada 370 and Armada XP SoC
+  ARM: mvebu: Enable Armada 370/XP watchdog in the devicetree
+  ARM: kirkwood: Add RSTOUT 'reg' entry to devicetree
+  watchdog: orion: Allow to build on any Orion platform
+  ARM: mvebu: Enable watchdog support in defconfig
+
+ .../devicetree/bindings/watchdog/marvel.txt        |   8 +-
+ arch/arm/boot/dts/armada-370-xp.dtsi               |   4 +
+ arch/arm/boot/dts/armada-370.dtsi                  |   5 +
+ arch/arm/boot/dts/armada-xp.dtsi                   |   6 +
+ arch/arm/boot/dts/kirkwood.dtsi                    |   2 +-
+ arch/arm/configs/mvebu_defconfig                   |   2 +
+ arch/arm/include/asm/io.h                          |   6 +
+ arch/arm/kernel/io.c                               |  35 +++
+ arch/arm/mach-dove/include/mach/bridge-regs.h      |   1 +
+ arch/arm/mach-kirkwood/include/mach/bridge-regs.h  |   1 +
+ arch/arm/mach-mv78xx0/include/mach/bridge-regs.h   |   1 +
+ arch/arm/mach-orion5x/include/mach/bridge-regs.h   |   1 +
+ arch/arm/plat-orion/common.c                       |  10 +-
+ drivers/clocksource/time-orion.c                   |  28 +-
+ drivers/watchdog/Kconfig                           |   2 +-
+ drivers/watchdog/orion_wdt.c                       | 316 ++++++++++++++++-----
+ 16 files changed, 333 insertions(+), 95 deletions(-)
+
 -- 
 1.8.1.5
 
