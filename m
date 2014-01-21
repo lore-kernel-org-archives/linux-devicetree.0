@@ -1,80 +1,83 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCH RFC 4/6] net: rfkill: gpio: add device tree support
-Date: Tue, 21 Jan 2014 12:11:06 +0900
-Message-ID: <CAAVeFuLP4MkfXGG1FMauvUw_J63zRXdhGwxqYy5W98L1wCQNbw@mail.gmail.com>
-References: <1389941251-32692-1-git-send-email-wens@csie.org>
- <1389941251-32692-5-git-send-email-wens@csie.org> <201401171747.46332.arnd@arndb.de>
- <CAGb2v67UKiyfJbKZ_Frk3OwZupMPoA2Ck3Hj2zsRFXBQPztavg@mail.gmail.com> <CACRpkdZOD4zeA8T5kbJ4c5NsnuzHCg1mw8rRMYNT9c4R-Qnc6A@mail.gmail.com>
+From: Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] powerpc: T4240: Add ina220 node in dts
+Date: Tue, 21 Jan 2014 10:31:13 +0800
+Message-ID: <1390271473-23661-1-git-send-email-Yuantian.Tang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZOD4zeA8T5kbJ4c5NsnuzHCg1mw8rRMYNT9c4R-Qnc6A@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Johannes Berg <johannes@sipsolutions.net>, "David S. Miller" <davem@davemloft.net>, devicetree <devicetree@vger.kernel.org>, netdev <netdev@vger.kernel.org>, linux-wireless <linux-wireless@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-kernel <linux-kernel@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: b07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Cc: galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tang Yuantian <yuantian.tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 18, 2014 at 8:11 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Fri, Jan 17, 2014 at 6:43 PM, Chen-Yu Tsai <wens@csie.org> wrote:
->> On Sat, Jan 18, 2014 at 12:47 AM, Arnd Bergmann <arnd@arndb.de> wrote:
->
->>>> +- NAME_shutdown-gpios  : GPIO phandle to shutdown control
->>>> +                         (phandle must be the second)
->>>> +- NAME_reset-gpios     : GPIO phandle to reset control
->>>> +
->>>> +NAME must match the rfkill-name property. NAME_shutdown-gpios or
->>>> +NAME_reset-gpios, or both, must be defined.
->>>> +
->>>
->>> I don't understand this part. Why do you include the name in the
->>> gpios property, rather than just hardcoding the property strings
->>> to "shutdown-gpios" and "reset-gpios"?
->>
->> This quirk is a result of how gpiod_get_index implements device tree
->> lookup.
->
-> Why can't it just have a single property "gpios", where the first
-> element is the reset GPIO and the second is the shutdown GPIO?
->
-> rfkill-gpio does this:
->
-> gpio = devm_gpiod_get_index(&pdev->dev, rfkill->reset_name, 0);
-> gpio = devm_gpiod_get_index(&pdev->dev, rfkill->shutdown_name, 1);
->
-> The passed con ID name parameter is only there for the device
-> tree case it seems. (ACPI ignores it.) So what about you just
-> don't pass it at all and patch it to do like this instead:
->
-> gpio = devm_gpiod_get_index(&pdev->dev, NULL, 0);
-> gpio = devm_gpiod_get_index(&pdev->dev, NULL, 1);
->
-> Heikki, are you OK with this change?
->
-> I think this is actually necessary if the ACPI and DT unification
-> pipe dream shall limp forward, we cannot have arguments passed
-> that have a semantic effect on DT but not on ACPI... Drivers
-> that are supposed to use both ACPI and DT will always
-> have to pass NULL as con ID.
+From: Tang Yuantian <yuantian.tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-I agree that's how it should be be done with the current API if your
-driver can obtain GPIOs from both ACPI and DT. This is a potential
-issue, as drivers are not supposed to make assumptions about who is
-going to be their GPIO provider. Let's say you started a driver with
-only DT in mind, and used gpio_get(dev, con_id) to get your GPIOs. DT
-bindings are thus of the form "con_id-gpio = <phandle>", and set in
-stone. Then later, someone wants to use your driver with ACPI. How do
-you handle that gracefully?
+Add power sensor chip ina220 node in dts to support
+power monitor
 
-I'm starting to wonder, now that ACPI is a first-class GPIO provider,
-whether we should not start to encourage the deprecation of the
-"con_id-gpio = <phandle>" binding form in DT and only use a single
-indexed GPIO property per device. The con_id parameter would then only
-be used as a label, which would also have the nice side-effect that
-all GPIOs used for a given function will be reported under the same
-name no matter what the GPIO provider is.
+Signed-off-by: Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ arch/powerpc/boot/dts/t4240qds.dts | 42 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
->From an aesthetic point of view, I definitely prefer using con_id to
-identify GPIOs instead of indexes, but I don't see how we can make it
-play nice with ACPI. Thoughts?
+diff --git a/arch/powerpc/boot/dts/t4240qds.dts b/arch/powerpc/boot/dts/t4240qds.dts
+index 63e81b0..97683f6 100644
+--- a/arch/powerpc/boot/dts/t4240qds.dts
++++ b/arch/powerpc/boot/dts/t4240qds.dts
+@@ -159,6 +159,48 @@
+ 						interrupts = <0x1 0x1 0 0>;
+ 					};
+ 				};
++
++				i2c@2 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					reg = <0x2>;
++
++					ina220@40 {
++						compatible = "ti,ina220";
++						reg = <0x40>;
++						shunt-resistor = <1000>;
++					};
++
++					ina220@41 {
++						compatible = "ti,ina220";
++						reg = <0x41>;
++						shunt-resistor = <1000>;
++					};
++
++					ina220@44 {
++						compatible = "ti,ina220";
++						reg = <0x44>;
++						shunt-resistor = <1000>;
++					};
++
++					ina220@45 {
++						compatible = "ti,ina220";
++						reg = <0x45>;
++						shunt-resistor = <1000>;
++					};
++
++					ina220@46 {
++						compatible = "ti,ina220";
++						reg = <0x46>;
++						shunt-resistor = <1000>;
++					};
++
++					ina220@47 {
++						compatible = "ti,ina220";
++						reg = <0x47>;
++						shunt-resistor = <1000>;
++					};
++				};
+ 			};
+ 		};
+ 
+-- 
+1.8.0
 
-Alex.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
