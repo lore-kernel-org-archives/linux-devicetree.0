@@ -1,52 +1,142 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 02/15] clocksource: orion: Use atomic access for shared
- registers
-Date: Tue, 21 Jan 2014 10:58:17 +0100
-Message-ID: <52DE44B9.70308@gmail.com>
-References: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com> <1390295561-3466-3-git-send-email-ezequiel.garcia@free-electrons.com> <5118193.GjKusj569J@wuerfel>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] dtc: Sort unit addresses by number
+Date: Tue, 21 Jan 2014 10:02:21 +0000
+Message-ID: <20140121100221.GJ28747@e106331-lin.cambridge.arm.com>
+References: <20140121134935.1f9cebcc@kryten>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5118193.GjKusj569J@wuerfel>
+Content-Disposition: inline
+In-Reply-To: <20140121134935.1f9cebcc@kryten>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Anton Blanchard <anton-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/21/14 10:46, Arnd Bergmann wrote:
-> On Tuesday 21 January 2014 06:12:28 Ezequiel Garcia wrote:
->> -/*
->> - * Thread-safe access to TIMER_CTRL register
->> - * (shared with watchdog timer)
->> - */
->> -void orion_timer_ctrl_clrset(u32 clr, u32 set)
->> -{
->> -       spin_lock(&timer_ctrl_lock);
->> -       writel((readl(timer_base + TIMER_CTRL) & ~clr) | set,
->> -               timer_base + TIMER_CTRL);
->> -       spin_unlock(&timer_ctrl_lock);
->> -}
->> -EXPORT_SYMBOL(orion_timer_ctrl_clrset);
->
-> I don't understand what's wrong with this function, it seems like
-> a cleaner approach than touching the register directly from two
-> different drivers. Is this something that would only work on
-> orion but not on armadaxp?
+On Tue, Jan 21, 2014 at 02:49:35AM +0000, Anton Blanchard wrote:
+> 
+> The sort option in dtc treats unit addresses as strings. This causes
+> cpu nodes to end up out of order:
+> 
+> # dtc -s -I fs -O dts /proc/device-tree | grep PowerPC,POWER7
+> 
+> 		PowerPC,POWER7@30 {
+> 		PowerPC,POWER7@68 {
+> 		PowerPC,POWER7@70 {
+> 		PowerPC,POWER7@828 {
+> 		PowerPC,POWER7@860 {
+> 		PowerPC,POWER7@868 {
+> 		PowerPC,POWER7@8a0 {
+> 		PowerPC,POWER7@8b0 {
+> 		PowerPC,POWER7@8f0 {
+> 		PowerPC,POWER7@a0 {
+> 		PowerPC,POWER7@a8 {
+> 		PowerPC,POWER7@e0 {
+> 
+> If we use this device tree for a kexec boot we end up with a confusing
+> layout of logical CPUs:
+> 
+> node 0 cpus: 0-23 72-95
+> node 0 size: 32633 MB
+> 
+> node 1 cpus: 24-71
+> node 1 size: 32631 MB
+> 
+> The reason for this is that we allocate logical CPU ids as we walk
+> through the device tree.
+> 
+> In cmp_subnode, if both nodes have a hex unit address and the
+> basenames match, then compare by number.
+> 
+> This fixes the issue:
+> 
+> # dtc -s -I fs -O dts /proc/device-tree | grep PowerPC,POWER7
+> 		PowerPC,POWER7@30 {
+> 		PowerPC,POWER7@68 {
+> 		PowerPC,POWER7@70 {
+> 		PowerPC,POWER7@a0 {
+> 		PowerPC,POWER7@a8 {
+> 		PowerPC,POWER7@e0 {
+> 		PowerPC,POWER7@828 {
+> 		PowerPC,POWER7@860 {
+> 		PowerPC,POWER7@868 {
+> 		PowerPC,POWER7@8a0 {
+> 		PowerPC,POWER7@8b0 {
+> 		PowerPC,POWER7@8f0 {
+> 
+> And the CPU layout is as expected:
+> 
+> node 0 cpus: 0-47
+> node 0 size: 32633 MB
+> 
+> node 1 cpus: 48-95
+> node 1 size: 32631 MB
+> 
+> Signed-off-by: Anton Blanchard <anton-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
+> --
+> 
+> Index: b/livetree.c
+> ===================================================================
+> --- a/livetree.c
+> +++ b/livetree.c
+> @@ -656,12 +656,38 @@ static void sort_properties(struct node
+>  	free(tbl);
+>  }
+>  
+> +static bool is_hex(const char *str)
+> +{
+> +	while (*str) {
+> +		if (!isxdigit(*str++))
+> +			return false;
+> +	}
+> +
+> +	return true;
+> +}
+> +
+>  static int cmp_subnode(const void *ax, const void *bx)
+>  {
+> -	const struct node *a, *b;
+> +	struct node *a, *b;
+> +	const char *a_unit, *b_unit;
+> +
+> +	a = *((struct node * const *)ax);
+> +	b = *((struct node * const *)bx);
+> +
+> +	a_unit = get_unitname(a);
+> +	b_unit = get_unitname(b);
+> +
+> +	/* Sort hex unit addresses by number */
+> +	if (a_unit && b_unit && (a->basenamelen == b->basenamelen) &&
+> +	    !strncmp(a->name, b->name, a->basenamelen) &&
+> +	    is_hex(a_unit) && is_hex(b_unit)) {
+> +		unsigned long long a_num, b_num;
+> +
+> +		a_num = strtoull(a_unit, NULL, 16);
+> +		b_num = strtoull(b_unit, NULL, 16);
+>  
+> -	a = *((const struct node * const *)ax);
+> -	b = *((const struct node * const *)bx);
+> +		return (a_num > b_num) - (a_num < b_num);
+> +	}
+>  
+>  	return strcmp(a->name, b->name);
+>  }
 
-The real problem with this is that it resides in orion-time.c which
-is fine for Orion SoCs. Armada 370/XP use a different timer and
-therefore the _common_ watchdog driver cannot call this function.
+Minor issue, but when #address-cells == 2, some unit addresses are split
+in the middle by a ',' to separate the value of each cell, e.g.
+"flash@2,0". For those, is_hex will return false and we'll compare
+unit-addresses as strings.
 
-Moreover, Dove (out of Orion) and Armada 370/XP will happily live in
-one V7 kernel with both time-orion and time-armada-370-xp compiled in.
+I took a quick look over the dts in the Linux kernel tree (with `git
+grep "@.\+," -- arch/*/boot/dts` and I think every instance there would
+sort correctly as a string, but it would be nice to fix the issue
+regardless of how large the unit-address is.
 
-The idea of the atomic readl/writel was to have something lightweight
-and _early_ to allow such locking even for timers.
+Perhaps we could have a helper function for reading the unit-address
+that would take this into account?
 
-IIRC, there was some kind of consensus that it is okay to have atomic
-readl/writel here.
-
-Sebastian
+Cheers,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
