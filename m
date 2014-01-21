@@ -1,14 +1,19 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH] mmc: omap_hsmmc: Add support for Erratum 2.1.1.128 in
- device tree boot
-Date: Mon, 20 Jan 2014 17:39:41 -0600
-Message-ID: <20140120233941.GG6516@saruman.home>
-References: <1390260542-22213-1-git-send-email-nm@ti.com>
-Reply-To: balbi@ti.com
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: PWM...
+Date: Tue, 21 Jan 2014 09:39:22 +0900
+Message-ID: <20140121003922.GA31997@verge.net.au>
+References: <20140119164956.GR15937@n2100.arm.linux.org.uk>
+ <CAOesGMi7g=PHjzhkuObkeu+P_c6kUz5uFcND7euafUW56CvsnQ@mail.gmail.com>
+ <20140119193026.GS15937@n2100.arm.linux.org.uk>
+ <201401192126.41543.arnd@arndb.de>
+ <20140120001446.GD9752@verge.net.au>
+ <20140120161147.GS17314@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4958116812461598747=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1390260542-22213-1-git-send-email-nm@ti.com>
+Content-Disposition: inline
+In-Reply-To: <20140120161147.GS17314@sirena.org.uk>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,68 +23,20 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nishanth Menon <nm@ti.com>
-Cc: devicetree@vger.kernel.org, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, linux-mmc@vger.kernel.org, Chris Ball <chris@printf.net>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-pwm@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, "arm@kernel.org" <arm@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
---===============4958116812461598747==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="w/VI3ydZO+RcZ3Ux"
-Content-Disposition: inline
+On Mon, Jan 20, 2014 at 04:11:47PM +0000, Mark Brown wrote:
+> On Mon, Jan 20, 2014 at 09:14:46AM +0900, Simon Horman wrote:
+> > On Sun, Jan 19, 2014 at 09:26:40PM +0100, Arnd Bergmann wrote:
+> 
+> > > Right: if you change an existing dts file from #pwm-cells=<2> to
+> > > #pwm-cells=<3>, that requires changing all references to the pwm
+> 
+> > Would this change imply that old dtbs would no longer work with new kernels?
+> 
+> So long as the code can still handle both values for #pwm-cells existing
+> DTBs should work fine.
 
---w/VI3ydZO+RcZ3Ux
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jan 20, 2014 at 05:29:02PM -0600, Nishanth Menon wrote:
-> When device is booted using devicetree, platforms impacted by
-> Erratum 2.1.1.128 is not detected easily in the mmc driver. This erratum
-> indicates that the module cannot do multi-block transfers.
->=20
-> Handle this by providing a boolean flag to indicate to driver that it is
-> working on a hardware with mentioned limitation.
-
-sure there's no way of reading the revision register to figure this one
-out without having to add a new DT attribute ?
-
---=20
-balbi
-
---w/VI3ydZO+RcZ3Ux
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJS3bO9AAoJEIaOsuA1yqREG3EP/05CRV54qvIN3Yxoea81Yshf
-WtufQ4v6Q6McZZOz3UXUQjh+ZuHRdP+eNylhUD2etI8mUY7PS7yVC8Cm+TdOPeg5
-sjrqiPxcIJbEC1+IhIrxHDaAFynArxQwXNg8ltF9sSNfNPamh9i8toSL7h/r17Ql
-N6jGVdJ/rLNCTSvQwgpqFdZwSYibV+toIO8CvSrp3mWlNApCeG/d9YvTyYTL8Cqa
-0+p3tqzsQLcSayXd3QZc83cMnYLNqDCytZVvGGRVL6AzM2sDsJXew9Ce8DCUkLfE
-Tv/HeLOwzgnESzf2ZB8g/YPhtlKrdo/PvmXye5DF/05tY/tpWvHLsB/hTTY+5qUY
-3se5l5moG+hjI4VbyMvOZmfZDmKxEobZeI3edTeMIN/1z/Z+6oXIsuCA1Lo4gxsI
-yx/KyoFap7CRpC404lB+m6oYlVBoQJz724Il2ZiaLPJgZ9V8Mpe0sydikrfuZzFO
-8c6fHFru7ZRQd1WykXeHuSk59v2cNLtXZI5HXe3J4wyyBlsRMhAdyFSRadVAzmoi
-T6Y4WrdfysAxx18Zz+r9Ia1VRPZa9Gq+dfOYAATmRUOKoqpVKQAUZ6XZo328lUmW
-/eLjPOTneDtHV7VyEzRDmSdC7uoV1ZGMdiRvI5XT3t26stzUes70nlPCz2dvHI+J
-FAQORV2TlKF+LkBILihz
-=j9gs
------END PGP SIGNATURE-----
-
---w/VI3ydZO+RcZ3Ux--
-
-
---===============4958116812461598747==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============4958116812461598747==--
+Thanks, as long as that is the case I have no objections at this time.
