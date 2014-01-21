@@ -1,27 +1,70 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 1/3] mmc: add support for power-on sequencing through
- DT
-Date: Tue, 21 Jan 2014 22:39:10 +0100
-Message-ID: <52DEE8FE.5060400@gmail.com>
-References: <1390190215-22700-1-git-send-email-olof@lixom.net> <1390190215-22700-2-git-send-email-olof@lixom.net> <52DEBDA7.7030200@samsung.com> <CAOesGMjYE9GAosEoYhhb+EqXfy0a6EFfjQAaseqqnKOD734=EA@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] regulator: ti-abb: Add support for interleaved LDO
+ registers
+Date: Tue, 21 Jan 2014 21:56:24 +0000
+Message-ID: <20140121215624.GC17314@sirena.org.uk>
+References: <1389900750-27625-1-git-send-email-nm@ti.com>
+ <20140121185553.GW17314@sirena.org.uk>
+ <52DED341.3030503@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAOesGMjYE9GAosEoYhhb+EqXfy0a6EFfjQAaseqqnKOD734=EA@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>, Tomasz Figa <t.figa@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, chris@printf.net, robh+dt@kernel.org, Kumar Gala <galak@codeaurora.org>, Fabio Estevam <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jhHWkMHPE1TKsc4d"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52DED341.3030503@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 21.01.2014 22:30, Olof Johansson wrote:
-> On Tue, Jan 21, 2014 at 10:34 AM, Tomasz Figa <t.figa@samsung.com> wrote:
->
->> What do you think?
->
-> Sure, post the patches.
 
-OK. Will give it a try this weekend.
+--jhHWkMHPE1TKsc4d
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Tomasz
+On Tue, Jan 21, 2014 at 02:06:25PM -0600, Nishanth Menon wrote:
+
+> Without this change, on DRA7 I get:
+> [    0.579500] abb_mpu: 1060 <--> 1210 mV
+> [    0.580321] abb_ivahd: 1055 <--> 1250 mV
+> [    0.580583] ti_abb 4ae07e20.regulator-abb-dspeve: can't request
+> region for resource [mem 0x4ae07e20-0x4ae07e2f]
+> [    0.580610] ti_abb: probe of 4ae07e20.regulator-abb-dspeve failed
+> with error -16
+> [    0.581216] abb_gpu: 1090 <--> 1280 mV
+
+OK, that's not to do with nocache, that's to do with duplicate
+request_mem_region() calls.  Of course the trick here is that if the
+other thing that requests the memory region doesn't do it then we have a
+problem. =20
+
+I really can't help thinking that a system controller node as the parent
+is going to make things happier for devices that share this register
+bank.  I guess it might be possible to also do it with single register
+memory regions but I'd not be surprised if that wasn't possible and it
+doesn't seem as idiomatic.
+
+--jhHWkMHPE1TKsc4d
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS3u0EAAoJELSic+t+oim9x8YP/RTvB7giqkmD++TcNU5hFrxJ
+hauwcIAC4HftGGR39Is/raPZOBa63ltvyhV83QGoOm156Yttr5hHaiZAVj9k3HTf
+GiJHnCQ0DWcYY70mDNP1PmSoT+PmlgXGLHDQ77yubWsiBw75Ql+CHz7USlWQxQe5
+vW1EchHe26JllsSVok4XsUxjEufj2s5RSigWLJ09GiMTDFQTQdsZugrbVc3rBsSi
+YS8Xdh+Qkg4AGzWsn9TroV4zIs2/gf2uUMCLon8Sc0R9OBpu+6PuGI1BCUDxgKAV
+wrogSPMiw2zljq5B8kyCh4jujFANSgUiSaiJv57c9dlJ25geHYzWjXW/7MRP3XJy
+nwRRNMHXHn2I6r0OcBl3Vz2DRCH3//++wdcmFTaCYGIrnNI9qwB02gJkmxnKac6g
+v2jru8m3ns4kUqo5QA8h/g8YjRURDoLlwVcm/qts5BsetDoTKsBgKF7D2xti8l++
+tuYb/19rsl0Ntlb7ulGC0fM19ZgWH1hh2udrT6hE1Wfd/K4QLX6SKaq4rcy53Bib
+HAzeaP6kp088sifGm2puSVPI73yR73NIFJuwhbAMpgmB65T087PKJDa2vsaBXevf
+CmGDkE2MTithXanFxL/raesN5wj1hadfo9Cj5IhM15sZT1RT43yVojvklWlYaX/c
+pKoUsrONAer4f4dH1HID
+=QAu5
+-----END PGP SIGNATURE-----
+
+--jhHWkMHPE1TKsc4d--
