@@ -1,118 +1,56 @@
-From: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: moxart: DT fixups
-Date: Tue, 21 Jan 2014 16:26:13 +0100
-Message-ID: <1390317973-24110-1-git-send-email-jonas.jensen@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Sebastian Reichel <sre@debian.org>
+Subject: Re: [PATCHv3 39/41] Doc/DT: Add DT binding documentation for Sony
+ acx565akm panel
+Date: Tue, 21 Jan 2014 16:28:31 +0100
+Message-ID: <20140121152830.GB5983@earth.universe>
+References: <1390301833-24944-1-git-send-email-tomi.valkeinen@ti.com>
+ <1390301833-24944-40-git-send-email-tomi.valkeinen@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="SkvwRMAIpAhPCcCJ"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1390301833-24944-40-git-send-email-tomi.valkeinen@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Tony Lindgren <tony@atomide.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Stefan Roese <stefan.roese@gmail.com>, Robert Nelson <robertcnelson@gmail.com>, "Dr . H . Nikolaus Schaller" <hns@goldelico.com>, Marek Belisko <marek@goldelico.com>, Javier Martinez Canillas <javier@dowhile0.org>, Enric Balletbo Serra <eballetbo@gmail.com>, Florian Vaussard <florian.vaussard@epfl.ch>
 List-Id: devicetree@vger.kernel.org
 
-Change DT files to remain coherent with changes in
-accompanying drivers.
 
-1. replace "sdhci" with "mmc"
-2. add bus-width property to mmc node
-3. drop device_type property
-4. replace "mac@" with "ethernet@"
-5. replace CONFIG_MMC_SDHCI_MOXART with CONFIG_MMC_MOXART
+--SkvwRMAIpAhPCcCJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
+On Tue, Jan 21, 2014 at 12:57:11PM +0200, Tomi Valkeinen wrote:
+> Add DT binding documentation for Sony acx565akm panel
+>=20
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
-Notes:
-    Applies on top of:
-    
-    "[PATCH] ARM: moxart: move fixed rate clock child node to board level dts"
-    http://lists.infradead.org/pipermail/linux-arm-kernel/2014-January/226141.html
-    
-    Applies to next-20140121
+Reviewed-by: Sebastian Reichel <sre@debian.org>
 
- arch/arm/boot/dts/moxart-uc7112lx.dts | 5 ++---
- arch/arm/boot/dts/moxart.dtsi         | 8 ++++----
- arch/arm/configs/moxart_defconfig     | 2 +-
- 3 files changed, 7 insertions(+), 8 deletions(-)
+-- Sebastian
 
-diff --git a/arch/arm/boot/dts/moxart-uc7112lx.dts b/arch/arm/boot/dts/moxart-uc7112lx.dts
-index 10d088d..ee6ef7c 100644
---- a/arch/arm/boot/dts/moxart-uc7112lx.dts
-+++ b/arch/arm/boot/dts/moxart-uc7112lx.dts
-@@ -80,15 +80,15 @@
- 	clocks = <&ref12>;
- };
- 
--&sdhci {
-+&mmc {
- 	status = "okay";
-+	bus-width = <4>;
- };
- 
- &mdio0 {
- 	status = "okay";
- 
- 	ethphy0: ethernet-phy@1 {
--		device_type = "ethernet-phy";
- 		compatible = "moxa,moxart-rtl8201cp", "ethernet-phy-ieee802.3-c22";
- 		reg = <1>;
- 	};
-@@ -98,7 +98,6 @@
- 	status = "okay";
- 
- 	ethphy1: ethernet-phy@1 {
--		device_type = "ethernet-phy";
- 		compatible = "moxa,moxart-rtl8201cp", "ethernet-phy-ieee802.3-c22";
- 		reg = <1>;
- 	};
-diff --git a/arch/arm/boot/dts/moxart.dtsi b/arch/arm/boot/dts/moxart.dtsi
-index 1fd27ed..97c8084 100644
---- a/arch/arm/boot/dts/moxart.dtsi
-+++ b/arch/arm/boot/dts/moxart.dtsi
-@@ -90,8 +90,8 @@
- 			clocks = <&clk_apb>;
- 		};
- 
--		sdhci: sdhci@98e00000 {
--			compatible = "moxa,moxart-sdhci";
-+		mmc: mmc@98e00000 {
-+			compatible = "moxa,moxart-mmc";
- 			reg = <0x98e00000 0x5C>;
- 			interrupts = <5 0>;
- 			clocks = <&clk_apb>;
-@@ -117,7 +117,7 @@
- 			status = "disabled";
- 		};
- 
--		mac0: mac@90900000 {
-+		mac0: ethernet@90900000 {
- 			compatible = "moxa,moxart-mac";
- 			reg = <0x90900000 0x90>;
- 			interrupts = <25 0>;
-@@ -126,7 +126,7 @@
- 			status = "disabled";
- 		};
- 
--		mac1: mac@92000000 {
-+		mac1: ethernet@92000000 {
- 			compatible = "moxa,moxart-mac";
- 			reg = <0x92000000 0x90>;
- 			interrupts = <27 0>;
-diff --git a/arch/arm/configs/moxart_defconfig b/arch/arm/configs/moxart_defconfig
-index a3cb76c..708c0cf 100644
---- a/arch/arm/configs/moxart_defconfig
-+++ b/arch/arm/configs/moxart_defconfig
-@@ -107,7 +107,7 @@ CONFIG_WATCHDOG_NOWAYOUT=y
- CONFIG_MOXART_WDT=y
- # CONFIG_USB_SUPPORT is not set
- CONFIG_MMC=y
--CONFIG_MMC_SDHCI_MOXART=y
-+CONFIG_MMC_MOXART=y
- CONFIG_NEW_LEDS=y
- CONFIG_LEDS_CLASS=y
- CONFIG_LEDS_GPIO=y
--- 
-1.8.2.1
+--SkvwRMAIpAhPCcCJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCAAGBQJS3pIeAAoJENju1/PIO/qaloYQAIiDHiTTO8e7Gjd4irx1GICP
+5dZ4uIBOEfmHrzQ+yiU4QI3Y3v6PrZr+m8jMiQBiNotxTwLnEU5ocX45fyREeDDx
+G9MbKZWyDWr1ils1/Qqn9FAil7WB14pgUhek+VYlAWq+i2i+yAiNSL+3tsjb9/A6
+s4hrlgqLMS+VJbHuBf6/vVr2UVaTyancAfOD3mbhYnMoamDn87v125bzVmsSnlZy
+zgvHGIDOs5GDSqXxcg2R/87wmNTf7oFRBxCJujDPNkqz1alYZqApchZRIVfWf7Ua
+lBb0Rz1B5sVLavdigBhzaNIXvLOiCCmMPhRiPFt9oP+t1gFwFtQCT4Jw8t8HSEAz
+Wd/xIhkgSsceqVLPThV9XPyXZbJGC7VAWGy87qzDMyq+emMvYpRAJ6HWr5RqUCal
+mQsphuEkuDso67eovfBDUoyIoB/1J5imdmMv5YoCLEHWDJffDiQQz4HhYKrY8NfJ
+dWwxmHw5JVFhCTh7Y1kw07uwc7fTkKyyKxa1xNfURf22jEYcOace3wsPzCEN5DW/
+2MWBDtx6DMSDszbwi+R6+PNhIZOe9d0ToAR8Muw41sNn56XMwBNSuMqzffIQge2P
+jCpIbjwiDtJVCCg27Ex9L+kJhweeM3aL5DnvIs38DM2HPPpborZTFymYUdYWNTOf
+G81ZAr83jnq/ZiiFy/H6
+=iIpc
+-----END PGP SIGNATURE-----
+
+--SkvwRMAIpAhPCcCJ--
