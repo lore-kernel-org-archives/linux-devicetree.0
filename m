@@ -1,98 +1,76 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH 1/6] ARM: dts: Add CPU OPP table for omap37xx100
-Date: Tue, 21 Jan 2014 13:58:19 -0600
-Message-ID: <52DED15B.10502@ti.com>
-References: <1390333660-30573-1-git-send-email-chf.fritz@googlemail.com> <1390333660-30573-2-git-send-email-chf.fritz@googlemail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH] DT: net: document Ethernet bindings in one place
+Date: Tue, 21 Jan 2014 12:05:25 -0800
+Message-ID: <CAGVrzcb0dfw1orZzUt5-YkShOg-HNbUYvvo2vfmsZUZXy1Aqfg@mail.gmail.com>
+References: <201401180405.07859.sergei.shtylyov@cogentembedded.com>
+ <CAL_Jsq+oa9P=rh+p-dMZyGP8TcmpX7bTnMU0ynLvFxjxFDYbRg@mail.gmail.com>
+ <52DD98F7.4090202@cogentembedded.com> <CAL_JsqJXbF1-PcPHR2VP+Vi9A1aWizdsG_r3kDvRt3itXDhCGQ@mail.gmail.com>
+ <CAGVrzcb3X3soJNJCE5+YSpQrr+EdycCRFkptPvBCgFg4CbGJ4Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1390333660-30573-2-git-send-email-chf.fritz@googlemail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Christoph Fritz <chf.fritz@googlemail.com>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, bcousson@baylibre.com, Archit Taneja <archit@ti.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Daniel Mack <zonque@gmail.com>, "Hans J. Koch" <hjk@hansjkoch.de>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAGVrzcb3X3soJNJCE5+YSpQrr+EdycCRFkptPvBCgFg4CbGJ4Q@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, netdev <netdev@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/21/2014 01:47 PM, Christoph Fritz wrote:
-> This patch adds file omap37xx100.dtsi which includs a SoC specific table
-> for CPU OPP.
-> 
-> Please keep in mind that am/dm37xx100 variants differ from am/dm37xx
-> SoCs without nomenclature marker prefix "100". This marker indicates
-> the maximum cpu frequency. 100 stands for 1 GHz-Cortex-A8, blank means
-> maximum 800 MHz.
-> 
-> For more info, see Datasheet http://www.ti.com/lit/ds/sprs685d/sprs685d.pdf
-> section 7.2.1 "Device and Development-Support Tool Nomenclature".
-> 
-> Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
-> ---
->  arch/arm/boot/dts/omap37xx100.dtsi |   44 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 arch/arm/boot/dts/omap37xx100.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/omap37xx100.dtsi b/arch/arm/boot/dts/omap37xx100.dtsi
-> new file mode 100644
-> index 0000000..064661e
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/omap37xx100.dtsi
-> @@ -0,0 +1,44 @@
-> +/*
-> + * Device Tree Source for OMAP37x SoC
-> + *
-> + * This file is licensed under the terms of the GNU General Public License
-> + * version 2.  This program is licensed "as is" without any warranty of any
-> + * kind, whether express or implied.
-> + */
-> +
-> +#include "omap3.dtsi"
-> +
-> +/ {
-> +	aliases {
-> +		serial3 = &uart4;
-> +	};
-> +
-> +	cpus {
-> +		/* AM/DM37xx */
-> +		cpu@0 {
-> +			operating-points = <
-> +				/* kHz    uV */
-> +				 125000   975000
-> +				 250000  1075000
-> +				 500000  1100000
-> +				 600000  1140000
-> +				 800000  1270000
-> +				1000000  1380000
+2014/1/21 Florian Fainelli <f.fainelli@gmail.com>:
+>>>    I'm afraid that's too late, it has spread very far, so that
+>>> of_get_phy_mode() handles that property, not "phy-connection-type".
+>>
+>> Uggg, I guess this is a case of a defacto standard then if the kernel
+>> doesn't even support it.
+>
+> Maybe I forgot to CC you on patch sent to Grant only, I sent a patch a
+> while ago for of_get_phy_mode() to look for both "phy-mode" and
+> "phy-connection-type" since the former has been a Linux invention, but
+> the latter is ePAPR specified.
 
-This is valid even for 3630/DM3730 as well -> unfortunately - you
-cannot enable 1GHz without enabling ABB and AVS 1.5.
+Here is a link to the actual patch in question, not sure which tree
+Grant applied it to though:
 
-There is a bunch of internal discussion with respect to lack of this
-information available.. but as it stands right now, I dont think this
-is valid.
+http://lkml.indiana.edu/hypermail/linux/kernel/1311.2/00048.html
 
-> +			>;
-> +			clock-latency = <300000>; /* From legacy driver */
-> +		};
-> +	};
-> +
-> +	ocp {
-> +		/* uart4 is only available on CBP and CBC packages */
-> +		uart4: serial@49042000 {
-> +			compatible = "ti,omap3-uart";
-> +			reg = <0x49042000 0x400>;
-> +			interrupts = <80>;
-> +			dmas = <&sdma 81 &sdma 82>;
-> +			dma-names = "tx", "rx";
-> +			ti,hwmods = "uart4";
-> +			clock-frequency = <48000000>;
-> +		};
-> +	};
-> +};
-> 
-Further, we should be able to reuse 3630.dtsi for this.
+>
+>>
+>>>>> +- phy-connection-type: the same as "phy-mode" property (but described in
+>>>>> ePAPR);
+>>>>> +- phy-handle: phandle, specifies a reference to a node representing a
+>>>>> PHY
+>>>>> +  device (this property is described in ePAPR);
+>>>>> +- phy: the same as "phy-handle" property (but actually ad-hoc one).
+>>>
+>>>
+>>>> Mark this as deprecated in favor of phy-handle.
+>>>
+>>>
+>>>    Here situation is more optimistic. Quite many drivers still use
+>>> "phy-handle", though some use even more exotic props I didn't document here.
+>>
+>> Perhaps flagging as "Not recommended for new bindings" would be nicer wording...
+>
+> Ok, so what's the deal here, can't we use phy-handle? There is
+> currently no infrastructure in drivers/net/ or drivers/of/ to look for
+> the "phy-handle" nor "phy" properties as phandles to fetch an Ethernet
+> PHY device tree node. If we are to provide one common place where we
+> want to do this, we will have to look for both properties, why can't
+> we mandate the use of "phy-handle" since this is the ePAPR compliant
+> one?
+>
+>>
+>> Rob
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>
+>
+> --
+> Florian
+
 
 
 -- 
-Regards,
-Nishanth Menon
+Florian
