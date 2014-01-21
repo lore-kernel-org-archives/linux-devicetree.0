@@ -1,98 +1,37 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [RFC PATCH 1/1] of/irq: create interrupts-extended-2 property
-Date: Tue, 21 Jan 2014 13:46:53 +0100
-Message-ID: <20140121124653.GQ9558@ns203013.ovh.net>
-References: <1389786445-10598-1-git-send-email-plagnioj@jcrosoft.com>
- <20140115161224.GH25824@e106331-lin.cambridge.arm.com>
- <20140120224742.EC905C40B12@trevor.secretlab.ca>
- <CAOesGMjrLs9eEPurjUpOfgyexnc__FJkRYmAR84_f7C15HH07Q@mail.gmail.com>
- <20140121120214.GK28747@e106331-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20140121120214.GK28747@e106331-lin.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Gibson <david@gibson.dropbear.id.au>
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH 1/3] serial: sh-sci: Fix compatible string in DT bindings example
+Date: Tue, 21 Jan 2014 13:48:37 +0100
+Message-ID: <1390308519-31320-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+References: <1390308519-31320-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1390308519-31320-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12:02 Tue 21 Jan     , Mark Rutland wrote:
-> On Tue, Jan 21, 2014 at 01:03:23AM +0000, Olof Johansson wrote:
-> > On Mon, Jan 20, 2014 at 2:47 PM, Grant Likely <grant.likely@linaro.org> wrote:
-> > > On Wed, 15 Jan 2014 16:12:24 +0000, Mark Rutland <mark.rutland@arm.com> wrote:
-> > >> >
-> > >> > Another, more invasive option would be extend the dts syntax and teach
-> > >> > dtc to handle property appending. Then the soc dts could stay as it is,
-> > >> > and the board dts could have something like:
-> > >> >
-> > >> >     /append-property/ interrupts = <&intc1 6 1>;
-> > >> >     /append-property/ interrupt-names = "board-specific-irq";
-> > >> >
-> > >> > Both these options solve the issue at the source, are general to other
-> > >> > properties, and allow more than one level of hierarchy (the proposed
-> > >> > interrupts-extended-2 only allows one level).
-> > >>
-> > >> I've just had a go at implementing the append-property mechanism above
-> > >> in dtc, and it was far easier than I expected (patch below).
-> > >>
-> > >> Does anyone have any issues with the /append-property/ idea?
-> > >
-> > > I think that is reasonable.
-> > 
-> > 
-> > The main problem with this (same for clocks) is if you need to append
-> > something with a name when the original didn't have any.
-> 
-> Can you not just add a name in the original file? I assume we're not
-> going to use this to adjust dts files we're not already in full control
-> of.
-> 
-> > 
-> > Reordering entries might not work for interrupts, since the bindings
-> > might have requirements on order.
-> 
-> That's a fair point.
-> 
-> Do we currently have any optional/board-specific interrupts which must
-> appear at the start or middle of the list?
-> 
-> For those, could we add names? The kernel should be abel to fall back to
-> ordering if names aren't present, and we can recommend a particular
-> ordering for compatiblity with older kernels.
-> 
-> As a general preventative measure it would be nice to have named
-> elements whenever elements can be optional.
+Remove the -generic suffix from the compatible string in the serial port
+DT bindings example.
 
-I never was a fanof index search I do agree the names irq is the best way
-> 
-> > 
-> > I'm not aware of a good solution for this. Suggestions welcome.
-> 
-> Me neither. Prepending and appending is easy.
-> 
-> Inserting and/or modifying the list requires knowledge of the size of
-> each element (and for variable-sized entries requires knowledge of the
-> particular binding, which we cannot embed in dtc). 
-> 
-> I suspect adding richer syntax for modifying properties in arbitrary
-> ways will devolve into a turing tarpit.
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+---
+ Documentation/devicetree/bindings/serial/renesas,sci-serial.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-no this need to stay simple if too much complexe => mess up, unmaintainable
+diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+index f372cf2..53e6c17 100644
+--- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
++++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+@@ -37,7 +37,7 @@ Example:
+ 	};
+ 
+ 	scifa0: serial@e6c40000 {
+-		compatible = "renesas,scifa-r8a7790", "renesas,scifa-generic";
++		compatible = "renesas,scifa-r8a7790", "renesas,scifa";
+ 		reg = <0 0xe6c40000 0 64>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 144 IRQ_TYPE_LEVEL_HIGH>;
+-- 
+1.8.3.2
 
-if you really have complex stuff duplicate the info
-
-Best Regards,
-J.
-> 
-> Thanks,
-> Mark.
