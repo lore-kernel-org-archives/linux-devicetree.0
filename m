@@ -1,115 +1,83 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 1/3] dtc: Keep type information from DTS
-Date: Wed, 22 Jan 2014 15:49:45 +1100
-Message-ID: <20140122044945.GF21650@voom.redhat.com>
-References: <1386953352-25402-1-git-send-email-t.figa@samsung.com>
- <1386953352-25402-2-git-send-email-t.figa@samsung.com>
- <52AF41A1.3000508@wwwdotorg.org>
- <20140121120606.A2E7CC4054E@trevor.secretlab.ca>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH] pinctrl: Rename Broadcom Capri pinctrl driver
+Date: Tue, 21 Jan 2014 20:59:10 -0800
+Message-ID: <CAOesGMgvGhT_VujFFFRwSwaqY1m_YwDmRp8MB=8udE5UPq8h5g@mail.gmail.com>
+References: <1390343886-25852-1-git-send-email-syin@broadcom.com>
+	<CAOesGMj7wXJ+DfXzk0U1pusKqZShq+KJdPY8hh=Ffj7KDti4_Q@mail.gmail.com>
+	<20140122013512.GT31176@beef>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qOrJKOH36bD5yhNe"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140121120606.A2E7CC4054E-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140122013512.GT31176@beef>
+Sender: linux-doc-owner@vger.kernel.org
+To: Matt Porter <mporter@linaro.org>
+Cc: Sherman Yin <syin@broadcom.com>, Mark Brown <broonie@kernel.org>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list@broadcom.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jan 21, 2014 at 5:35 PM, Matt Porter <mporter@linaro.org> wrote:
+> On Tue, Jan 21, 2014 at 04:59:35PM -0800, Olof Johansson wrote:
+>> Hi,
+>>
+>>
+>> On Tue, Jan 21, 2014 at 2:38 PM, Sherman Yin <syin@broadcom.com> wrote:
+>> > To be consistent with other Broadcom drivers, the Broadcom Capri pinctrl
+>> > driver and its related CONFIG option are renamed to bcm281xx.
+>> >
+>> > Devicetree compatible string and binding documentation use
+>> > "brcm,bcm11351-pinctrl" to match the machine binding here:
+>> > Documentation/devicetree/bindings/arm/bcm/bcm11351.txt
+>> >
+>> > This driver supports pinctrl on BCM11130, BCM11140, BCM11351, BCM28145
+>> > and BCM28155 SoCs.
+>> >
+>> > Signed-off-by: Sherman Yin <syin@broadcom.com>
+>> > Reviewed-by: Matt Porter <mporter@linaro.org>
+>> > ---
+>> >  ...capri-pinctrl.txt => brcm,bcm11351-pinctrl.txt} |    8 +-
+>> >  arch/arm/boot/dts/bcm11351.dtsi                    |    2 +-
+>> >  arch/arm/configs/bcm_defconfig                     |    2 +-
+>> >  drivers/pinctrl/Kconfig                            |    8 +-
+>> >  drivers/pinctrl/Makefile                           |    2 +-
+>> >  .../{pinctrl-capri.c => pinctrl-bcm281xx.c}        | 1521 ++++++++++----------
+>> >  6 files changed, 775 insertions(+), 768 deletions(-)
+>> >  rename Documentation/devicetree/bindings/pinctrl/{brcm,capri-pinctrl.txt => brcm,bcm11351-pinctrl.txt} (98%)
+>> >  rename drivers/pinctrl/{pinctrl-capri.c => pinctrl-bcm281xx.c} (25%)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,capri-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/brcm,bcm11351-pinctrl.txt
+>> > similarity index 98%
+>> > rename from Documentation/devicetree/bindings/pinctrl/brcm,capri-pinctrl.txt
+>> > rename to Documentation/devicetree/bindings/pinctrl/brcm,bcm11351-pinctrl.txt
+>> > index 9e9e9ef..c119deb 100644
+>> > --- a/Documentation/devicetree/bindings/pinctrl/brcm,capri-pinctrl.txt
+>> > +++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm11351-pinctrl.txt
+>> > @@ -1,4 +1,4 @@
+>> > -Broadcom Capri Pin Controller
+>> > +Broadcom BCM281xx Pin Controller
+>> >
+>> >  This is a pin controller for the Broadcom BCM281xx SoC family, which includes
+>> >  BCM11130, BCM11140, BCM11351, BCM28145, and BCM28155 SoCs.
+>> > @@ -7,14 +7,14 @@ BCM11130, BCM11140, BCM11351, BCM28145, and BCM28155 SoCs.
+>> >
+>> >  Required Properties:
+>> >
+>> > -- compatible:  Must be "brcm,capri-pinctrl".
+>> > +- compatible:  Must be "brcm,bcm11351-pinctrl"
+>>
+>> Since the original binding is queued for 3.14 (I believe?), if this
+>> rename isn't merged for 3.14 then you will still need to accept the
+>> old compatible string (binding). You can document it as deprecated,
+>> but the driver needs to still probe with it.
+>
+> Linus had mentioned that he could take a rename in 3.14-rc for this
+> driver which is really what we had in mind here. Since the binding
+> doesn't become stable until 3.14 is actually released I was under the
+> impression that this is ok without keeping a deprecated compatible
+> string. I notice that Tomasz had comments about this type of situation
+> in http://www.spinics.net/lists/devicetree/msg18010.html
 
---qOrJKOH36bD5yhNe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, if the rename goes in before the binding has been in one stable
+release then we can make noncompatible changes. Which is why I said if
+this isn't merged for 3.14, etc.
 
-On Tue, Jan 21, 2014 at 12:06:06PM +0000, Grant Likely wrote:
-> On Mon, 16 Dec 2013 11:08:33 -0700, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org=
-> wrote:
-> > On 12/13/2013 09:49 AM, Tomasz Figa wrote:
-> > > Currently dtc loses information about data types when parsing DTS,
-> > > because it flattens all the parsed property data into a flat stream of
-> > > bytes. The only saved metadata is for references to other nodes inside
-> > > cell arrays. This makes it impossible to do any checks on data types =
-on
-> > > livetree representation.
-> > >=20
-> > > This patch makes dtc store type information inside data struct by usi=
-ng
-> > > marker infrastructure. A new type of marker is introduced that holds
-> > > type enum as its ref member. Such markers are then inserted wherever
-> > > data of given type starts, so information about type of each property
-> > > data section is preserved.
-> >=20
-> > > diff --git a/dtc-parser.y b/dtc-parser.y
-> >=20
-> > >  	| propdataprefix DT_REF
-> > >  		{
-> > > -			$$ =3D data_add_marker($1, REF_PATH, $2);
-> > > +			struct data d;
-> > > +			d =3D data_add_marker($1, TYPE, (char *)TYPE_STRING);
-> > > +			$$ =3D data_add_marker(d, REF_PATH, $2);
-> > >  		}
-> >=20
-> > I guess here, the lexer does give us a string that's the target of the
-> > reference, so this is correct. However, I wonder if semantically we
-> > shouldn't call this a TYPE_REFERENCE, so we can distinguish between
-> > references and regular strings?
-> >=20
-> > > diff --git a/livetree.c b/livetree.c
-> >=20
-> > > @@ -530,16 +530,24 @@ cell_t get_node_phandle(struct node *root, stru=
-ct node *node)
-> > >  	node->phandle =3D phandle;
-> > > =20
-> > >  	if (!get_property(node, "linux,phandle")
-> > > -	    && (phandle_format & PHANDLE_LEGACY))
-> > > +	    && (phandle_format & PHANDLE_LEGACY)) {
-> > > +		struct data d;
-> > > +
-> > > +		d =3D data_add_marker(empty_data, TYPE, (char *)TYPE_ARRAY_INT32);
-> >=20
-> > Similarly here, can we encode as e.g. TYPE_PHANDLE or something like
-> > that, so we keep the semantic information?
->=20
-> I think both those are reasonable and useful extensions also. On the
-> whole I think the patch is the right thing to do. Feel free to add my
-> acked by:
->=20
-> Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Still a NACK from me, I think this is fundamentally the wrong
-approach.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---qOrJKOH36bD5yhNe
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJS303pAAoJEGw4ysog2bOS99gP/3xeLeceFlY75SC9itHibJak
-+CdN2AhOLm87RMJWPPH+tWbECuR3wxeUBZMPgKQd1IBEA9UcPOfNUHb+LrCYD8Yp
-vQRYlD4YlulZX/CTSahuqaKCMmfkW/vDi2KSxT1x4IbpUVOgti6plSC21iQUHZwS
-6qy/02fPQ/4czA7+MaQVw4N1raxFNrYDJWOanRBx4W0AbXePR2uvw+XvREV8ZzvF
-FJxy3t0Fc15W5vkxfYjMcsCKc+4nt8ULNVi4Vu6wKHTWhfa1boqB6AstbHUJzf15
-x0YgULcDnQy7vOIA5N+lSv6gP0aIPXr3PqyuGWZ8YMTv/bo+VCj6Q4fATHY3xcqO
-uvtlXyOYnxtwevNfC3QOmrV42D/zzCoLloOHMmgZkhHD67tkQIyStHJvxj2cGD/5
-diMcqgwsu9E2WmxLbG4mkpHR2t/HN71lvH3g1JJ5bMiHjSvrGYXBTXpzBnvoldAA
-rkqNIBtJw1xtqTeAPAafrhwhk0fQW7rS4xBv78bd4/XiddfM/PkBtI1k1qsbDGs0
-rPUIim0t0yWBP6hgKB90TM7Dj03vJOno0FS1aADsWxCNdNTYJ0c3VjU2JSMtnOu0
-QX7VcY1e3gZzwezVMNwfRvgddic5ZKPCzlu4EU6JUUAcdQdMqoiAE/5Jg9enoexO
-2g4Bh/yvFS/n6hyLoR9j
-=XquM
------END PGP SIGNATURE-----
-
---qOrJKOH36bD5yhNe--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Olof
