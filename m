@@ -1,100 +1,111 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v5 0/4] ata: ahci_platform: Add PHY support and OMAP support
-Date: Wed, 22 Jan 2014 09:28:44 +0100
-Message-ID: <52DF813C.6080807@redhat.com>
-References: <1390228888-5537-1-git-send-email-rogerq@ti.com> <52DD5368.5020301@redhat.com> <52DE3132.3000007@ti.com> <52DE6114.20601@ti.com> <52DE7D5D.8070307@redhat.com> <52DF7D2C.1080802@ti.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCHv3 00/41] OMAPDSS: DT support v3
+Date: Wed, 22 Jan 2014 10:41:55 +0200
+Message-ID: <52DF8453.7030501@ti.com>
+References: <1390301833-24944-1-git-send-email-tomi.valkeinen@ti.com>
+ <52DEE6B0.20106@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <52DF7D2C.1080802@ti.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, tj@kernel.org, kishon@ti.com
-Cc: sergei.shtylyov@cogentembedded.com, b.zolnierkie@samsung.com, arnd@arndb.de, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============0160918953518885383=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <52DEE6B0.20106@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nishanth Menon <nm@ti.com>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Darren Etheridge <detheridge@ti.com>, Sebastian Reichel <sre@ring0.de>, Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@debian.org>, Stefan Roese <stefan.roese@gmail.com>, Enric Balletbo Serra <eballetbo@gmail.com>, Archit Taneja <archit@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "Dr . H . Nikolaus Schaller" <hns@goldelico.com>, Marek Belisko <marek@goldelico.com>, Robert Nelson <robertcnelson@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>, Florian Vaussard <florian.vaussard@epfl.ch>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+--===============0160918953518885383==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="AgHv0g4DX2lgITqGmPg4bxLV8kbJCdjuG"
 
-On 01/22/2014 09:11 AM, Roger Quadros wrote:
-> Hi,
->
-> On 01/21/2014 03:59 PM, Hans de Goede wrote:
+--AgHv0g4DX2lgITqGmPg4bxLV8kbJCdjuG
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+On 2014-01-21 23:29, Nishanth Menon wrote:
+> Tomi,
+>=20
+> On 01/21/2014 04:56 AM, Tomi Valkeinen wrote:
 >> Hi,
 >>
->> On 01/21/2014 12:59 PM, Roger Quadros wrote:
->>> On 01/21/2014 10:34 AM, Roger Quadros wrote:
->>>> On 01/20/2014 06:48 PM, Hans de Goede wrote:
->>>>> Hi,
->>>>>
->>>>> On 01/20/2014 03:41 PM, Roger Quadros wrote:
->>>>>> Hi,
->>>>>>
->>>>>> Some platforms have a PHY hooked up to the SATA controller.
->>>>>> The PHY needs to be initialized and powered up for SATA to work.
->>>>>> We do that using the Generic PHY framework in PATCH 3.
->>>>>>
->>>>>> In order to support SATA on the OMAP platforms we need to runtime
->>>>>> resume the device before use. PATCH 4 takes care of that.
->>>>>
->>>>> Thanks for keeping me in the loop on this. I'm afraid this conflicts
->>>>> quite a bit with my recent ahci_platform.c work, not a big problem
->>>>> really, the series can go in either way.
->>>>>
->>>>> Your phy support will slot nicely into the new ahci_platform_get_resources
->>>>> and ahci_platform_enable_resources functions my refactoring introduces,
->>>>> looking at it from this pov it might be better / easier to rebase your series
->>>>> on top of the v4 of my series I've just send.
->>>>>
->>>>> Which brings me to one comment about your series why are you not doing phy_exit
->>>>> and phy_init on suspend resp. resume ? The phy can use quite a bit of power,
->>>>> if the phy init / exit end up in ahci_platform_enable_resources /
->>>>> ahci_platform_disable_resources, this will happen automatically for better or
->>>>> worse. So it would be good to test if this would work or not ...
->>>>
->>>> Right. Bartlomiej had pointed this out earlier, but I just wasn't very sure about it.
->>>>
->>>> Is it sufficient to just call phy_power_off() in suspend and phy_power_on() in resume?
->>>> Or do we call phy_exit() and phy_init() respectively as well.
->>>>
->>>> Kishon, any suggestions?
->>>
->>> OK. Answering my own question.
->>>
->>> On OMAP platform we power down the phy in phy_power_off() and idle the DPLL in phy_exit(),
->>> so my guess is both should be called in suspend() to save the most power.
+>> Here's version 3 of the DSS DT series.
 >>
->> Right, this would also match nicely with putting both the phy_init and the phy_power_on call
->> in ahci_platform_enable_resources in ahci_platform.c as it looks after v4 of my ahci_platform
->> rework patch-set, see:
->> https://github.com/jwrdegoede/linux-sunxi/blob/sunxi-devel/drivers/ata/ahci_platform.c
+>> The previous version can be found from:
 >>
->> If this goes there it will be automatically called on both probe and resume (and the counterparts
->> should go to ahci_platform_disable_resources, which will be called on suspend and remove).
+>> v1: http://permalink.gmane.org/gmane.linux.ports.arm.omap/108249
+>> v2: http://permalink.gmane.org/gmane.linux.ports.arm.omap/108866
 >>
->> As said before I don't really have a preference for in which order these patches go upstream,
->> but can you please check that calling phy_poweroff + phy_exit on suspend and undo on resume
->> does not cause issues ?  If it does I need to rethink how things will work after my refactoring,
->> because currently all the clks / optional regulator and now also optional phy get en/disabled in
->> one go through ahci_platform_en/disable_resources.
->
-> I too don't have any preference of the upstream path. Maybe i'll repost this series based on your v4 an then you can include them in your series if you like.
+>> The main changes to v2 are:
+>>
+>> - DT Binding documentation
+>> - OMAP2 DSS support
+>> - Split DSI register space
+>> - DSS nodes disabled by default
+>> - Hack to have generic DT bindings but OMAP specific drivers (for now)=
 
-As indicated doing things in that order has my preference as rebase-conflict resolution should be a lot
-easier that way then the other way around. So if you could do that, that would be great.
+>>
+>> This series can also be found from:
+>>
+>> git://git.kernel.org/pub/scm/linux/kernel/git/tomba/linux.git work/dss=
+-dt-review-3
+>>
+> http://slexy.org/view/s20JhteOFR is my quick build test report -> few
+> checkpatch and build bisect issues would probably need fixing.
 
-> BTW why is your series still RFC at v4?
+Thanks. Shouldn't make trivial changes, and then not run a full
+commit-by-commit compile test...
 
-It was not RFC at v1 and v2, it became RFC at v3 because at that point it included changes which would
-also impact ahci_imx, and I did not have hardware to verify those changes. The wandboard I ordered
-for this has arrived yesterday, so my next version should not be RFC anymore :)
+I fixed the issues and pushed the branch again to work/dss-dt-review-3.
+The fixes are minor, so the already posted series can be reviewed.
 
-> As far as OMAP platform is concerned, calling phy_power_off() + phy_exit() shouldn't be a problem for suspend.
-> Not sure about other platforms as we can't really know for sure what they do in phy_exit().
+ Tomi
 
-Good, after the rework my patch-series does, platforms which need something else can always override
-the ahci_platform_disable_resources behavior (by doing that part themselves) while still using other parts
-of ahci_platform.c as is, that is the whole idea of the rework.
 
-Thanks & Regards,
 
-Hans
+--AgHv0g4DX2lgITqGmPg4bxLV8kbJCdjuG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJS34RXAAoJEPo9qoy8lh71JzkQAILQOThMuQQ7go86pEzYDWlj
+wDpXsf1FaJL9WcUqRsSihV3jNGvs7bcXEuOf22mwqIw45uZqSbwixElA9Uac9L4S
+f97a6Qx+iJJF1cbpgrsSSfvGk1RKLFARHwZwSouBO1hVaitT/+QHKFwLK6mi3Kqi
+5yU0B4kADFVkcWXrKPu+SyDbC9br2+I1iMN2jzFZLCfEXiI8YPPISD8HqRBA+fbp
+voA5Yx1uMqqlKHIvcdjdK8tVKxogmHI5uPTV7oqE30F6ldGww8aWO/P2iqI5LG+I
+euy1acy0gLJ8wSn8APyKS9+rfihIgXX0vtWThWqdmeyP42YTgUog+WqE6A0h6EAK
+Lf9dubne7x0g36FhjMuccqoko+bLg7kqM/TBnq44SBZ2bRlFhYOHnIOcWj6ZXm0J
+C7hg+BPPb+r5EU47ngEqC3NX73nXe6dZjrCdCYUTcEh9et2U7hhJSDzIvQJ84wG4
+TQyVmq7dX+UDLPStgjHrNPc85NwyCS+o0NL2yBkCfYBF69vGTIM05+wJvej+sZh+
+2l7PJaLaQhE0yLk/tqaa1c6gqOaYlWi2U6Lfhq9AjjuXHL9RhlUcdHW+B268lZYL
+r97A3zj2g8+E2pWRB3Q0/paEy87Nc+SuOxSGBbGxOAvaNck4Rpe5FHu4BRo6ircN
+OdqA85sK41AezbOLOQXK
+=QuRv
+-----END PGP SIGNATURE-----
+
+--AgHv0g4DX2lgITqGmPg4bxLV8kbJCdjuG--
+
+
+--===============0160918953518885383==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============0160918953518885383==--
