@@ -1,7 +1,7 @@
 From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 13/18] watchdog: orion: Add per-compatible watchdog start implementation
-Date: Wed, 22 Jan 2014 20:05:10 -0300
-Message-ID: <1390431915-5115-14-git-send-email-ezequiel.garcia@free-electrons.com>
+Subject: [PATCH v4 14/18] watchdog: orion: Add support for Armada 370 and Armada XP SoC
+Date: Wed, 22 Jan 2014 20:05:11 -0300
+Message-ID: <1390431915-5115-15-git-send-email-ezequiel.garcia@free-electrons.com>
 References: <1390431915-5115-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1390431915-5115-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,59 +10,149 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetr
 Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-To handle differences between SoCs this commit adds per-compatible
-string start() function for the watchdog kick-off. This is preparation
-work and makes no functionality changes to the current driver.
+Using the added infrastructure for handling SoC differences,
+this commit adds support for the watchdog controller available
+in Armada 370 and Armada XP SoCs.
 
 Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/watchdog/orion_wdt.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/watchdog/orion_wdt.c | 94 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 94 insertions(+)
 
 diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
-index 5ce5d48..471d6d9 100644
+index 471d6d9..90e8b53 100644
 --- a/drivers/watchdog/orion_wdt.c
 +++ b/drivers/watchdog/orion_wdt.c
-@@ -50,6 +50,7 @@ struct orion_watchdog_data {
- 	int rstout_enable_bit;
- 	int (*clock_init) (struct platform_device *,
- 			   struct orion_watchdog *);
-+	int (*start) (struct watchdog_device *);
- };
+@@ -36,9 +36,17 @@
+  * Watchdog timer block registers.
+  */
+ #define TIMER_CTRL		0x0000
++#define TIMER_A370_STATUS	0x04
  
- struct orion_watchdog {
-@@ -86,7 +87,7 @@ static int orion_wdt_ping(struct watchdog_device *wdt_dev)
+ #define WDT_MAX_CYCLE_COUNT	0xffffffff
+ 
++#define WDT_A370_RATIO_MASK(v)	((v) << 16)
++#define WDT_A370_RATIO_SHIFT	5
++#define WDT_A370_RATIO		(1 << WDT_A370_RATIO_SHIFT)
++
++#define WDT_AXP_FIXED_ENABLE_BIT BIT(10)
++#define WDT_A370_EXPIRED	BIT(31)
++
+ static bool nowayout = WATCHDOG_NOWAYOUT;
+ static int heartbeat = -1;		/* module parameter (seconds) */
+ 
+@@ -78,6 +86,48 @@ static int orion_wdt_clock_init(struct platform_device *pdev,
  	return 0;
  }
  
--static int orion_wdt_start(struct watchdog_device *wdt_dev)
-+static int orion_start(struct watchdog_device *wdt_dev)
++static int armada370_wdt_clock_init(struct platform_device *pdev,
++				    struct orion_watchdog *dev)
++{
++	int ret;
++
++	dev->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(dev->clk))
++		return PTR_ERR(dev->clk);
++	ret = clk_prepare_enable(dev->clk);
++	if (ret)
++		return ret;
++
++	/* Setup watchdog input clock */
++	atomic_io_modify(dev->reg + TIMER_CTRL,
++			WDT_A370_RATIO_MASK(WDT_A370_RATIO_SHIFT),
++			WDT_A370_RATIO_MASK(WDT_A370_RATIO_SHIFT));
++
++	dev->clk_rate = clk_get_rate(dev->clk) / WDT_A370_RATIO;
++	return 0;
++}
++
++static int armadaxp_wdt_clock_init(struct platform_device *pdev,
++				   struct orion_watchdog *dev)
++{
++	int ret;
++
++	dev->clk = of_clk_get_by_name(pdev->dev.of_node, "fixed");
++	if (IS_ERR(dev->clk))
++		return PTR_ERR(dev->clk);
++	ret = clk_prepare_enable(dev->clk);
++	if (ret)
++		return ret;
++
++	/* Enable the fixed watchdog clock input */
++	atomic_io_modify(dev->reg + TIMER_CTRL,
++			 WDT_AXP_FIXED_ENABLE_BIT,
++			 WDT_AXP_FIXED_ENABLE_BIT);
++
++	dev->clk_rate = clk_get_rate(dev->clk);
++	return 0;
++}
++
+ static int orion_wdt_ping(struct watchdog_device *wdt_dev)
  {
  	struct orion_watchdog *dev = watchdog_get_drvdata(wdt_dev);
- 
-@@ -105,6 +106,14 @@ static int orion_wdt_start(struct watchdog_device *wdt_dev)
+@@ -87,6 +137,26 @@ static int orion_wdt_ping(struct watchdog_device *wdt_dev)
  	return 0;
  }
  
-+static int orion_wdt_start(struct watchdog_device *wdt_dev)
++static int armada370_start(struct watchdog_device *wdt_dev)
 +{
 +	struct orion_watchdog *dev = watchdog_get_drvdata(wdt_dev);
 +
-+	/* There are some per-SoC quirks to handle */
-+	return dev->data->start(wdt_dev);
++	/* Set watchdog duration */
++	writel(dev->clk_rate * wdt_dev->timeout,
++	       dev->reg + dev->data->wdt_counter_offset);
++
++	/* Clear the watchdog expiration bit */
++	atomic_io_modify(dev->reg + TIMER_A370_STATUS, WDT_A370_EXPIRED, 0);
++
++	/* Enable watchdog timer */
++	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit,
++						dev->data->wdt_enable_bit);
++
++	atomic_io_modify(dev->rstout, dev->data->rstout_enable_bit,
++				      dev->data->rstout_enable_bit);
++	return 0;
 +}
 +
- static int orion_wdt_stop(struct watchdog_device *wdt_dev)
+ static int orion_start(struct watchdog_device *wdt_dev)
  {
  	struct orion_watchdog *dev = watchdog_get_drvdata(wdt_dev);
-@@ -183,6 +192,7 @@ static const struct orion_watchdog_data orion_data = {
- 	.wdt_enable_bit = BIT(4),
- 	.wdt_counter_offset = 0x24,
- 	.clock_init = orion_wdt_clock_init,
-+	.start = orion_start,
+@@ -195,11 +265,35 @@ static const struct orion_watchdog_data orion_data = {
+ 	.start = orion_start,
  };
  
++static const struct orion_watchdog_data armada370_data = {
++	.rstout_enable_bit = BIT(8),
++	.wdt_enable_bit = BIT(8),
++	.wdt_counter_offset = 0x34,
++	.clock_init = armada370_wdt_clock_init,
++	.start = armada370_start,
++};
++
++static const struct orion_watchdog_data armadaxp_data = {
++	.rstout_enable_bit = BIT(8),
++	.wdt_enable_bit = BIT(8),
++	.wdt_counter_offset = 0x34,
++	.clock_init = armadaxp_wdt_clock_init,
++	.start = armada370_start,
++};
++
  static const struct of_device_id orion_wdt_of_match_table[] = {
+ 	{
+ 		.compatible = "marvell,orion-wdt",
+ 		.data = &orion_data,
+ 	},
++	{
++		.compatible = "marvell,armada-370-wdt",
++		.data = &armada370_data,
++	},
++	{
++		.compatible = "marvell,armada-xp-wdt",
++		.data = &armadaxp_data,
++	},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, orion_wdt_of_match_table);
 -- 
 1.8.1.5
 
