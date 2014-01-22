@@ -1,237 +1,99 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: [PATCH RFC 2/4] drivers: of: implement reserved-memory handling for dma
-Date: Wed, 22 Jan 2014 12:58:50 -0600
-Message-ID: <1390417133-6650-3-git-send-email-joshc@codeaurora.org>
-References: <1390417133-6650-1-git-send-email-joshc@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1390417133-6650-1-git-send-email-joshc@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Laura Abbott <lauraa@codeaurora.org>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Christoph Fritz <chf.fritz@googlemail.com>
+Subject: [PATCH v2 0/5] ARM: add omap3 INCOstartec board support
+Date: Wed, 22 Jan 2014 20:04:15 +0100
+Message-ID: <1390417460-3134-1-git-send-email-chf.fritz@googlemail.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Archit Taneja <archit@ti.com>, bcousson@baylibre.com, "Hans J. Koch" <hjk@hansjkoch.de>, Daniel Mack <zonque@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for handling 'shared-dma-pool' reserved-memory nodes.
+This set of patches adds board support for an omap3 system from INCOstartec.
+It's based on next-20140122.
 
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Laura Abbott <lauraa@codeaurora.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
----
- drivers/of/Kconfig               |   7 ++
- drivers/of/Makefile              |   1 +
- drivers/of/of_reserved_mem_dma.c | 178 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 186 insertions(+)
- create mode 100644 drivers/of/of_reserved_mem_dma.c
+Previously it was based on next-20140115. There, everything works as expected.
 
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index aba13df..ca58fb3e 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -81,4 +81,11 @@ config OF_RESERVED_MEM
- 	help
- 	  Helpers to allow for reservation of memory regions
- 
-+config OF_RESERVED_MEM_DMA
-+	depends on OF_RESERVED_MEM
-+	depends on DMA_CMA || HAVE_GENERIC_DMA_COHERENT
-+	def_bool y
-+	help
-+	  Helpers for reserving memory regions for DMA use
-+
- endmenu # OF
-diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-index ed9660a..6142227 100644
---- a/drivers/of/Makefile
-+++ b/drivers/of/Makefile
-@@ -10,3 +10,4 @@ obj-$(CONFIG_OF_PCI)	+= of_pci.o
- obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
- obj-$(CONFIG_OF_MTD)	+= of_mtd.o
- obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
-+obj-$(CONFIG_OF_RESERVED_MEM_DMA) += of_reserved_mem_dma.o
-diff --git a/drivers/of/of_reserved_mem_dma.c b/drivers/of/of_reserved_mem_dma.c
-new file mode 100644
-index 0000000..e24f02d
---- /dev/null
-+++ b/drivers/of/of_reserved_mem_dma.c
-@@ -0,0 +1,178 @@
-+/*
-+ * Device tree based initialization code for DMA reserved regions.
-+ *
-+ * Copyright (c) 2013, The Linux Foundation. All Rights Reserved.
-+ * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-+ *		http://www.samsung.com
-+ * Author: Marek Szyprowski <m.szyprowski@samsung.com>
-+ * Author: Josh Cartwright <joshc@codeaurora.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of the
-+ * License or (at your optional) any later version of the license.
-+ */
-+#include <linux/memblock.h>
-+#include <linux/err.h>
-+#include <linux/of.h>
-+#include <linux/of_fdt.h>
-+#include <linux/of_platform.h>
-+#include <linux/mm.h>
-+#include <linux/sizes.h>
-+#include <linux/mm_types.h>
-+#include <linux/dma-contiguous.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/of_reserved_mem.h>
-+
-+static void rmem_dma_device_init(struct reserved_mem *rmem,
-+				 struct platform_device *pdev,
-+				 struct of_phandle_args *args)
-+{
-+	dma_declare_coherent_memory(&pdev->dev, rmem->base, rmem->base,
-+		rmem->size, DMA_MEMORY_MAP | DMA_MEMORY_EXCLUSIVE);
-+}
-+
-+static void rmem_dma_device_release(struct reserved_mem *rmem,
-+				    struct platform_device *pdev)
-+{
-+	dma_release_declared_memory(&pdev->dev);
-+}
-+
-+static const struct reserved_mem_ops rmem_dma_ops = {
-+	.device_init	= rmem_dma_device_init,
-+	.device_release	= rmem_dma_device_release,
-+};
-+
-+static int __init rmem_dma_get_reg(unsigned long node, const char *uname,
-+				   phys_addr_t *base, phys_addr_t *size)
-+{
-+	unsigned long len;
-+	__be32 *prop;
-+
-+	prop = of_get_flat_dt_prop(node, "reg", &len);
-+	if (!prop)
-+		return -EINVAL;
-+
-+	if (len < (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32)) {
-+		pr_err("Malformed 'shared-dma-pool' reserved-mem node '%s'.\n",
-+				uname);
-+		return -EINVAL;
-+	}
-+
-+	*base = dt_mem_next_cell(dt_root_addr_cells, &prop);
-+	*size = dt_mem_next_cell(dt_root_size_cells, &prop);
-+	return 0;
-+}
-+
-+static int __init rmem_dma_get_size(unsigned long node, const char *uname,
-+				    phys_addr_t *size)
-+{
-+	unsigned long len;
-+	__be32 *prop;
-+
-+	prop = of_get_flat_dt_prop(node, "size", &len);
-+	if (!prop)
-+		return -EINVAL;
-+
-+	if (len < dt_root_size_cells * sizeof(__be32)) {
-+		pr_err("Malformed 'shared-dma-pool' reserved-mem node '%s'.\n",
-+				uname);
-+		return -EINVAL;
-+	}
-+
-+	*size = dt_mem_next_cell(dt_root_size_cells, &prop);
-+	return 0;
-+}
-+
-+static void rmem_cma_device_init(struct reserved_mem *rmem,
-+				 struct platform_device *pdev,
-+				 struct of_phandle_args *args)
-+{
-+	dev_set_cma_area(&pdev->dev, rmem->cma);
-+}
-+
-+static const struct reserved_mem_ops rmem_cma_ops = {
-+	.device_init	= rmem_cma_device_init,
-+};
-+
-+static int __init rmem_cma_reserve_area(struct reserved_mem *rmem,
-+					unsigned long node, const char *uname)
-+{
-+	int err;
-+
-+	err = dma_contiguous_reserve_area(rmem->size, rmem->base, 0,
-+					  &rmem->cma);
-+	if (err) {
-+		pr_err("Unable to setup CMA reserved-mem region for '%s'.\n",
-+				uname);
-+		return err;
-+	}
-+
-+	if (of_get_flat_dt_prop(node, "linux,cma-default", NULL))
-+		dma_contiguous_set_default(rmem->cma);
-+
-+	rmem->ops = &rmem_cma_ops;
-+	return 0;
-+}
-+
-+static int __init rmem_cma_setup(struct reserved_mem *rmem,
-+				 unsigned long node,
-+				 const char *uname)
-+{
-+	int err;
-+
-+	err = rmem_dma_get_reg(node, uname, &rmem->base, &rmem->size);
-+	if (!err)
-+		goto out_done;
-+
-+	rmem->base = 0;
-+	err = rmem_dma_get_size(node, uname, &rmem->size);
-+	if (err)
-+		goto out_err;
-+
-+out_done:
-+	return rmem_cma_reserve_area(rmem, node, uname);
-+
-+out_err:
-+	pr_err("Malformed 'shared-dma-pool' node '%s'.\n", uname);
-+	return err;
-+}
-+
-+static int __init rmem_dma_excl_setup(struct reserved_mem *rmem,
-+				      unsigned long node,
-+				      const char *uname)
-+{
-+	int err;
-+
-+	err = rmem_dma_get_reg(node, uname, &rmem->base, &rmem->size);
-+	if (!err)
-+		goto out_done;
-+
-+	err = rmem_dma_get_size(node, uname, &rmem->size);
-+	if (err)
-+		goto out_err;
-+
-+	rmem->base = memblock_alloc_base(rmem->size, PAGE_SIZE,
-+					 MEMBLOCK_ALLOC_ANYWHERE);
-+	memblock_free(rmem->base, rmem->size);
-+
-+out_done:
-+	rmem->ops = &rmem_dma_ops;
-+	return memblock_remove(rmem->base, rmem->size);
-+
-+out_err:
-+	pr_err("Unable to setup reserved-mem region '%s' for DMA.\n", uname);
-+	return err;
-+}
-+
-+static int __init rmem_dma_setup(struct reserved_mem *rmem,
-+				 unsigned long node,
-+				 const char *uname)
-+{
-+	if (IS_ENABLED(CONFIG_DMA_CMA) &&
-+		of_get_flat_dt_prop(node, "reusable", NULL))
-+		return rmem_cma_setup(rmem, node, uname);
-+
-+	return rmem_dma_excl_setup(rmem, node, uname);
-+}
-+RESERVEDMEM_OF_DECLARE(dma, "shared-dma-pool", rmem_dma_setup);
+On branch git://git.linaro.org/people/ulf.hansson/clk.git linaro_clk/clk-next
+which holdes all "clock DT conversion" commits, bootlog shows these abnormalities:
+
+  [    0.559600] ------------[ cut here ]------------
+  [    0.559631] WARNING: CPU: 0 PID: 1 at /home/honschu/media/linux/drivers/video/omap2/dss/dss.c:540 dss_set_clock_div+0xac/0xcc()
+  [    0.559661] clk rate mismatch: 345600000 != 172800000
+  [    0.559661] Modules linked in:
+  [    0.559692] CPU: 0 PID: 1 Comm: swapper Not tainted 3.13.0-rc7+ 0
+  [    0.559722] [<c0012fc4>] (unwind_backtrace+0x0/0xf8) from [<c0010e10>] (show_stack+0x10/0x14)
+  [    0.559753] [<c0010e10>] (show_stack+0x10/0x14) from [<c0033fdc>] (warn_slowpath_common+0x64/0x84)
+  [    0.559783] [<c0033fdc>] (warn_slowpath_common+0x64/0x84) from [<c0034090>] (warn_slowpath_fmt+0x30/0x40)
+  [    0.559814] [<c0034090>] (warn_slowpath_fmt+0x30/0x40) from [<c02b23c0>] (dss_set_clock_div+0xac/0xcc)
+  [    0.559844] [<c02b23c0>] (dss_set_clock_div+0xac/0xcc) from [<c0778f48>] (omap_dsshw_probe+0x1ec/0x2e0)
+  [    0.559875] [<c0778f48>] (omap_dsshw_probe+0x1ec/0x2e0) from [<c02ff360>] (platform_drv_probe+0x18/0x48)
+  [    0.559906] [<c02ff360>] (platform_drv_probe+0x18/0x48) from [<c02fdf84>] (driver_probe_device+0x110/0x230)
+  [    0.559936] [<c02fdf84>] (driver_probe_device+0x110/0x230) from [<c02fe138>] (__driver_attach+0x94/0x98)
+  [    0.559967] [<c02fe138>] (__driver_attach+0x94/0x98) from [<c02fc724>] (bus_for_each_dev+0x54/0x88)
+  [    0.559997] [<c02fc724>] (bus_for_each_dev+0x54/0x88) from [<c02fd720>] (bus_add_driver+0xd4/0x1d0)
+  [    0.559997] [<c02fd720>] (bus_add_driver+0xd4/0x1d0) from [<c02fe76c>] (driver_register+0x78/0xf4)
+  [    0.560028] [<c02fe76c>] (driver_register+0x78/0xf4) from [<c02ff2c4>] (platform_driver_probe+0x20/0xa4)
+  [    0.560058] [<c02ff2c4>] (platform_driver_probe+0x20/0xa4) from [<c0778ce0>] (omap_dss_init+0x1c/0x98)
+  [    0.560089] [<c0778ce0>] (omap_dss_init+0x1c/0x98) from [<c0008828>] (do_one_initcall+0xe4/0x144)
+  [    0.560119] [<c0008828>] (do_one_initcall+0xe4/0x144) from [<c075eadc>] (kernel_init_freeable+0xe8/0x1b0)
+  [    0.560150] [<c075eadc>] (kernel_init_freeable+0xe8/0x1b0) from [<c05522bc>] (kernel_init+0x8/0x118)
+  [    0.560180] [<c05522bc>] (kernel_init+0x8/0x118) from [<c000e4c8>] (ret_from_fork+0x14/0x2c)
+  [    0.560302] ---[ end trace 187e8d9dd0655394 ]---
+  [    0.560424] OMAP DSS rev 2.0
+  --snip--
+  [    2.601745] usb 1-1: new high-speed USB device number 2 using ehci-omap
+  [    2.767059] usb 1-1: device descriptor read/64, error -71
+  [    3.007934] usb 1-1: device descriptor read/64, error -71
+  [    3.237091] usb 1-1: new high-speed USB device number 3 using ehci-omap
+  [    3.387054] usb 1-1: device descriptor read/64, error -71
+  [    3.637054] usb 1-1: device descriptor read/64, error -71
+  [    3.867065] usb 1-1: new high-speed USB device number 4 using ehci-omap
+  [    4.296966] usb 1-1: device not accepting address 4, error -71
+  [    4.417053] usb 1-1: new high-speed USB device number 5 using ehci-omap
+  [    4.846954] usb 1-1: device not accepting address 5, error -71
+  [    4.853179] hub 1-0:1.0: unable to enumerate USB device on port 1
+  [    5.217041] usb 2-1: new full-speed USB device number 2 using ohci-omap3
+  [    5.407043] usb 2-1: device descriptor read/64, error -62
+  [    5.697052] usb 2-1: device descriptor read/64, error -62
+  [    5.987060] usb 2-1: new full-speed USB device number 3 using ohci-omap3
+  [    6.066955] .[    6.177062] usb 2-1: device descriptor read/64, error -62
+  [    6.467041] usb 2-1: device descriptor read/64, error -62
+  [    6.757049] usb 2-1: new full-speed USB device number 4 using ohci-omap3
+  [    7.176971] usb 2-1: device not accepting address 4, error -62
+  [    7.357055] usb 2-1: new full-speed USB device number 5 using ohci-omap3
+  [    7.776977] usb 2-1: device not accepting address 5, error -62
+  [    7.783233] hub 2-0:1.0: unable to enumerate USB device on port 1
+
+On next-20140122 the tps65930 (which should be compatible to twl4030) doesn't
+set voltage on IO.1P8 any more which leads to a lot of external subsystem
+failings like dss:
+
+[    0.602264] omapdss_dss: probe of omapdss_dss failed with error -22
+[    0.602691] omapdss CORE error: Failed to initialize DSS platform driver
+[    0.603240] panel-dpi panel-dpi.0: failed to find video source 'dpi.0'
+
+Changes compared to previous version:
+ - rebased on next-20140122 from next-20140115
+ - using omap36xx.dtsi instead of unsupported 1ghz omap37xx100
+
+Christoph Fritz (5):
+  ARM: dts: omap3: Add support for INCOstartec a83x module
+  ARM: dts: omap3: Add support for INCOstartec DBB056 baseboard
+  ARM: OMAP2+: add legacy display for omap3 DBB056
+  ARM: OMAP2+: Add pdata quirk for sys_clkout2 for omap3 DBB056
+  [RFC] omapdss: remove FEAT_DPI_USES_VDDS_DSI from omap3
+
+ arch/arm/boot/dts/Makefile               |    1 +
+ arch/arm/boot/dts/omap3-lilly-a83x.dtsi  |  445 ++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/omap3-lilly-dbb056.dts |  160 +++++++++++
+ arch/arm/mach-omap2/dss-common.c         |   49 ++++
+ arch/arm/mach-omap2/dss-common.h         |    1 +
+ arch/arm/mach-omap2/pdata-quirks.c       |   44 ++-
+ drivers/video/omap2/dss/dss_features.c   |    1 -
+ 7 files changed, 699 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm/boot/dts/omap3-lilly-a83x.dtsi
+ create mode 100644 arch/arm/boot/dts/omap3-lilly-dbb056.dts
+
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+1.7.10.4
+
