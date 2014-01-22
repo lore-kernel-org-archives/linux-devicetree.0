@@ -1,50 +1,112 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 06/15] watchdog: orion: Remove unneeded BRIDGE_CAUSE
- clear
-Date: Wed, 22 Jan 2014 15:03:58 -0300
-Message-ID: <20140122180357.GF27273@localhost>
-References: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1390295561-3466-7-git-send-email-ezequiel.garcia@free-electrons.com>
- <20140121233537.GS18269@obsidianresearch.com>
- <20140122164904.GB27273@localhost>
- <20140122173417.GT18269@obsidianresearch.com>
- <20140122174539.GD27273@localhost>
- <20140122175030.GU18269@obsidianresearch.com>
+From: Gerhard Sittig <gsi@denx.de>
+Subject: Re: [PATCH V6 1/1] drivers/gpio: Altera soft IP GPIO driver
+Date: Wed, 22 Jan 2014 19:09:04 +0100
+Message-ID: <20140122180904.GN20094@book.gsilab.sittig.org>
+References: <1390359265-22808-1-git-send-email-thloh@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140122175030.GU18269-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1390359265-22808-1-git-send-email-thloh@altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: thloh@altera.com
+Cc: linus.walleij@linaro.org, rob.herring@calxeda.com, rob@landley.net, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, thloh.linux@gmail.com, dinguyen@altera.com, lftan@altera.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 22, 2014 at 10:50:30AM -0700, Jason Gunthorpe wrote:
-> On Wed, Jan 22, 2014 at 02:45:40PM -0300, Ezequiel Garcia wrote:
-> =20
-> > Agreed. So, let's assume we can guarantee that request_irq() does t=
-he
-> > job of clearing the cause register (clearing pending irqs).
-> >=20
-> > So, your suggestion is to put request_irq() in the watchdog start()=
-?
-> >=20
-> > Otherwise, we can ensure a watchdog full stop at probe(), before
-> > requesting the IRQ. Both solutions should work, uh?
->=20
-> Right, I would keep the request_irq in probe, just because that feels
-> more idiomatic..
->=20
+On Wed, Jan 22, 2014 at 10:54 +0800, thloh@altera.com wrote:
+> 
+> From: Tien Hock Loh <thloh@altera.com>
+> 
+> Add driver support for Altera GPIO soft IP, including interrupts and I/O.
+> Tested on Altera CV SoC board using dipsw and LED using LED framework.
+> 
+> Signed-off-by: Tien Hock Loh <thloh@altera.com>
+> ---
+>  .../devicetree/bindings/gpio/gpio-altera.txt       |  42 +++
+>  drivers/gpio/Kconfig                               |   7 +
+>  drivers/gpio/Makefile                              |   1 +
+>  drivers/gpio/gpio-altera.c                         | 420 +++++++++++++++++++++
+>  4 files changed, 470 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-altera.txt
+>  create mode 100644 drivers/gpio/gpio-altera.c
 
-Done. Baking v4...
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Since you not only introduce the driver, but do introduce the
+binding as well, I'd suggest to reflect this in the commit
+message.  And put 'binding' into the subject line such that DT
+people can be aware they should have a look.
+
+
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
+> @@ -0,0 +1,42 @@
+> +Altera GPIO controller bindings
+> +
+> +Required properties:
+> +- compatible:
+> +  - "altr,pio-1.0"
+> +- reg: Physical base address and length of the controller's registers.
+> +- #gpio-cells : Should be 1
+> +  - The first cell is the gpio offset number
+> +- gpio-controller : Marks the device node as a GPIO controller.
+
+Learning about required data types when reading the binding would
+be nice.  So that DTS authors can tell whether a property is
+boolean, takes integers or strings, etc
+
+> +- #interrupt-cells : Should be 1.
+> +  - The first cell is the GPIO offset number within the GPIO controller.
+> +- interrupts: Specify the interrupt.
+> +- interrupt-controller: Mark the device node as an interrupt controller
+
+Are these really 'required'?  I'd expect those to be optional.
+
+> +
+> +Altera GPIO specific properties:
+> +- altr,gpio-bank-width: Width of the GPIO bank. This defines how many pins the
+> +  GPIO device has. Ranges between 1-32. Optional and defaults to 32 is not
+> +  specified.
+
+In addition to being specific to the Altera GPIO implementation,
+aren't these optional, too?
+
+> +- altr,interrupt_trigger: Specifies the interrupt trigger type the GPIO
+> +  hardware is synthesized. This field is required if the Altera GPIO controller
+> +  used has IRQ enabled as the interrupt type is not software controlled,
+> +  but hardware synthesized. Required if GPIO is used as an interrupt
+> +  controller. The value is defined in <dt-bindings/interrupt-controller/irq.h>
+> +  Only the following flags are supported:
+> +    IRQ_TYPE_EDGE_RISING
+> +    IRQ_TYPE_EDGE_FALLING
+> +    IRQ_TYPE_EDGE_BOTH
+> +    IRQ_TYPE_LEVEL_HIGH
+
+This text suggests that using the GPIO bank as an interrupt
+controller indeed is optional.  As one would expect.
+
+> +
+> +Example:
+> +
+> +gpio_altr: gpio_altr {
+
+Should node names not be generic, i.e. "gpio"?  While aliases do
+have specific names since they identify a specific node, to later
+reference it from other sites.
+
+> +    compatible = "altr,pio-1.0";
+> +    reg = <0xff200000 0x10>;
+> +    interrupts = <0 45 4>;
+> +    altr,gpio-bank-width = <32>;
+> +    altr,interrupt_trigger = <IRQ_TYPE_EDGE_RISING>;
+> +    #gpio-cells = <1>;
+> +    gpio-controller;
+> +    #interrupt-cells = <1>;
+> +    interrupt-controller;
+> +};
+
+
+virtually yours
+Gerhard Sittig
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office@denx.de
