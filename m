@@ -1,63 +1,47 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 05/15] watchdog: orion: Make RSTOUT register a
- separate resource
-Date: Wed, 22 Jan 2014 15:29:15 -0300
-Message-ID: <20140122182914.GH27273@localhost>
-References: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1390295561-3466-6-git-send-email-ezequiel.garcia@free-electrons.com>
- <20140121233321.GR18269@obsidianresearch.com>
- <3176358.2QFcJHj0fv@wuerfel>
- <20140122162136.GA27273@localhost>
- <20140122180100.GE27273@localhost>
- <20140122181409.GV18269@obsidianresearch.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [RFC] Culling traffic volume on devicetree mailing list
+Date: Wed, 22 Jan 2014 10:35:58 -0800
+Message-ID: <CAOesGMhYfWXCFOc6K67aAcNNRUppONY4WNXTvk2NEJH-rfMrGQ@mail.gmail.com>
+References: <CACxGe6vYMOnyeqdhaAggytxgiLH=ijNOrmuq2FyOUtZCGqfdgQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140122181409.GV18269-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <CACxGe6vYMOnyeqdhaAggytxgiLH=ijNOrmuq2FyOUtZCGqfdgQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 22, 2014 at 11:14:09AM -0700, Jason Gunthorpe wrote:
-> On Wed, Jan 22, 2014 at 03:01:01PM -0300, Ezequiel Garcia wrote:
-> > On Wed, Jan 22, 2014 at 01:21:36PM -0300, Ezequiel Garcia wrote:
-> > > > I don't see a good way out that would preserve backwards compat=
-ibility,
-> > > > other than hardcoding the physical address in the driver, which=
- seems
-> > > > just as bad as breaking compatibility. That said, it is always =
-the
-> > > > same constant (0xf1000000 + 0x20000 + 0x0108) on Dove, Kirkwood=
- and
-> > > > Orion5x (not on mv78xx0, but that doesn't use the wdt), so hard=
-coding
-> > > > a fallback would technically work, but we should print a fat wa=
-rning at
-> > > > boot time if we actually fall back to that.
-> > > >=20
-> > >=20
-> > > Yes, I was thinking just about this. Namely:
-> > >=20
-> > [..]
-> >=20
-> > How about something like this?
->=20
-> I liked Arnd's idea to use an offset from the first register. With th=
-e
-> mbus driver we can now actually change the 0xF1.. prefix via the DT.
->=20
+On Tue, Jan 21, 2014 at 6:40 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> Hi everyone,
+>
+> Today on the devicetree conf call we (Rob, Ian and I) talked about
+> culling the volume of traffic on the devicetree list so that it would
+> be more useful to the DTC maintainers and non-Linux users like
+> freebsd. We'd like to propose creating the following two lists so that
+> those interested don't need to drink from the firehose:
+>
+> devicetree-compiler: Specifically for discussing dt tooling topics
+> (parsing, schema validation, data format)
 
-Good idea. Maybe extracting the base address from the timer control
-register: wdt_reg & 0xff000000 ?
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
+This makes a lot of sense, and should help to decouple the bindings
+and standards from the tool. Should have happened a long time ago. :)
+
+> devicetree-spec: For discussing 'core' device tree bindings. ie.
+> anything that would be a candidate for putting into an ePAPR type
+> spec. Individual device bindings would continue to be posted to
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, but anything affecting subsystems or
+> generic patterns should be posted to this new list.
+
+I predict that it will be hard for someone posting a patch to tell if
+they should send it to this list or some other list. It might be
+convenient for you guys to ignore the high-volume list and just focus
+on this one, but for the people who post patches it just makes it more
+complicated. IMHO.
+
+
+-Olof
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
