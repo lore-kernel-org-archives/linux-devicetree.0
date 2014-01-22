@@ -1,69 +1,121 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v5 00/14] ahci: library-ise ahci_platform, add
- sunxi driver and cleanup imx driver
-Date: Wed, 22 Jan 2014 20:04:35 +0100
-Message-ID: <1390417489-5354-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBWNMQCLQKGQEVXTKXDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Christoph Fritz <chf.fritz@googlemail.com>
+Subject: [PATCH v2 3/5] ARM: OMAP2+: add legacy display for omap3 DBB056
+Date: Wed, 22 Jan 2014 20:04:18 +0100
+Message-ID: <1390417460-3134-4-git-send-email-chf.fritz@googlemail.com>
+References: <1390417460-3134-1-git-send-email-chf.fritz@googlemail.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1390417460-3134-1-git-send-email-chf.fritz@googlemail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Archit Taneja <archit@ti.com>, bcousson@baylibre.com, "Hans J. Koch" <hjk@hansjkoch.de>, Daniel Mack <zonque@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Full device tree support for omapdss is not yet accomplished. Until
+then, init display by legacy platform code.
 
-Here is v4 of my patchset for adding ahci-sunxi support. It has grown quite
-a bit since I've been going for a more generic approach this time and I've
-also cleaned up the ahci-imx driver to use the same generic approach.
+Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
+---
+ arch/arm/mach-omap2/dss-common.c   |   49 ++++++++++++++++++++++++++++++++++++
+ arch/arm/mach-omap2/dss-common.h   |    1 +
+ arch/arm/mach-omap2/pdata-quirks.c |    7 +++++-
+ 3 files changed, 56 insertions(+), 1 deletion(-)
 
-History:
+diff --git a/arch/arm/mach-omap2/dss-common.c b/arch/arm/mach-omap2/dss-common.c
+index dadccc9..b8b4e39 100644
+--- a/arch/arm/mach-omap2/dss-common.c
++++ b/arch/arm/mach-omap2/dss-common.c
+@@ -257,3 +257,52 @@ void __init omap3_igep2_display_init_of(void)
+ 	platform_device_register(&omap3_igep2_tfp410_device);
+ 	platform_device_register(&omap3_igep2_dvi_connector_device);
+ }
++
++/* OMAP3 dbb056 data */
++
++#define DBB056_DISPLAY_ENABLE_GPIO 156
++
++static const struct display_timing dbb056_lcd_videomode = {
++	.pixelclock = { 0, 19200000, 0 },
++
++	.hactive = { 0, 640, 0 },
++	.hfront_porch = { 0, 104, 0 },
++	.hback_porch = { 0, 8, 0 },
++	.hsync_len = { 0, 8, 0 },
++
++	.vactive = { 0, 480, 0 },
++	.vfront_porch = { 0, 104, 0 },
++	.vback_porch = { 0, 8, 0 },
++	.vsync_len = { 0, 8, 0 },
++
++	.flags = DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW |
++		DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_NEGEDGE,
++};
++
++static struct panel_dpi_platform_data dbb056_lcd_pdata = {
++	.name                   = "lcd",
++	.source                 = "dpi.0",
++
++	.data_lines             = 18,
++
++	.display_timing         = &dbb056_lcd_videomode,
++
++	.enable_gpio            = DBB056_DISPLAY_ENABLE_GPIO,
++	.backlight_gpio         = -1,
++};
++
++static struct platform_device dbb056_lcd_device = {
++	.name                   = "panel-dpi",
++	.id                     = 0,
++	.dev.platform_data      = &dbb056_lcd_pdata,
++};
++
++static struct omap_dss_board_info omap_dbb056_dss_data = {
++	.default_display_name = "lcd",
++};
++
++void __init omap3_dbb056_display_init_of(void)
++{
++	platform_device_register(&dbb056_lcd_device);
++	omap_display_init(&omap_dbb056_dss_data);
++}
+diff --git a/arch/arm/mach-omap2/dss-common.h b/arch/arm/mach-omap2/dss-common.h
+index a9becf0..a125b55 100644
+--- a/arch/arm/mach-omap2/dss-common.h
++++ b/arch/arm/mach-omap2/dss-common.h
+@@ -9,5 +9,6 @@
+ void __init omap4_panda_display_init_of(void);
+ void __init omap_4430sdp_display_init_of(void);
+ void __init omap3_igep2_display_init_of(void);
++void __init omap3_dbb056_display_init_of(void);
+ 
+ #endif
+diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
+index 3d5b24d..a58590f 100644
+--- a/arch/arm/mach-omap2/pdata-quirks.c
++++ b/arch/arm/mach-omap2/pdata-quirks.c
+@@ -169,6 +169,10 @@ static void __init am3517_evm_legacy_init(void)
+ 	omap_ctrl_writel(v, AM35XX_CONTROL_IP_SW_RESET);
+ 	omap_ctrl_readl(AM35XX_CONTROL_IP_SW_RESET); /* OCP barrier */
+ }
++static void __init omap3_dbb056_legacy_init(void)
++{
++	omap3_dbb056_display_init_of();
++}
+ #endif /* CONFIG_ARCH_OMAP3 */
+ 
+ #ifdef CONFIG_ARCH_OMAP4
+@@ -259,10 +263,11 @@ struct of_dev_auxdata omap_auxdata_lookup[] __initdata = {
+ static struct pdata_init pdata_quirks[] __initdata = {
+ #ifdef CONFIG_ARCH_OMAP3
+ 	{ "compulab,omap3-sbc-t3730", omap3_sbc_t3730_legacy_init, },
++	{ "incostartec,omap3-lilly-dbb056", omap3_dbb056_legacy_init, },
++	{ "isee,omap3-igep0020", omap3_igep0020_legacy_init, },
+ 	{ "nokia,omap3-n900", hsmmc2_internal_input_clk, },
+ 	{ "nokia,omap3-n9", hsmmc2_internal_input_clk, },
+ 	{ "nokia,omap3-n950", hsmmc2_internal_input_clk, },
+-	{ "isee,omap3-igep0020", omap3_igep0020_legacy_init, },
+ 	{ "ti,omap3-evm-37xx", omap3_evm_legacy_init, },
+ 	{ "ti,omap3-zoom3", omap3_zoom_legacy_init, },
+ 	{ "ti,am3517-evm", am3517_evm_legacy_init, },
+-- 
+1.7.10.4
 
-v1, by Olliver Schinagl:
-This was using the approach of having a platform device which probe method
-creates a new child platform device which gets driven by ahci_platform.c,
-as done by ahci_imx.c .
-
-v2, by Hans de Goede:
-Stand-alone platform driver based on Olliver's work
-
-v3, by Hans de Goede:
-patch-series, with 4 different parts
-a) Make ahci_platform.c more generic, handle more then 1 clk, target pwr
-   regulator
-b) New ahci-sunxi code only populating ahci_platform_data, passed to
-   ahci_platform.c to of_device_id matching.
-c) Refactor ahci-imx code to work the same as the new ahci-sunxi code, this
-   is the reason why v3 is an RFC, I'm waiting for the wandboard I ordered to
-   arrive so that I can actually test this.
-d) dts bindings for the sunxi ahci parts
-
-v4, by Hans de Goede:
-patch-series, with 5 different parts:
-a) Make ahci_platform.c more generic, handle more then 1 clk, target pwr
-   regulator
-b) Turn parts of ahci_platform.c into a library for use by other drivers
-c) New ahci-sunxi driver using the ahci_platform.c library functionality
-d) Refactor ahci-imx code to work the same as the new ahci-sunxi code
-e) dts bindings for the sunxi ahci parts
-
-v5:
-v4 + the following changes:
-1) fsl,imx6q driver is now tested
-2) fixed suspend / resume on fsl,imx6q
-3) Modifed devicetree node naming to match dt spec
-4) Reworked the busy waiting code in the sunxi-phy handling as suggested by
-   Russell King
-
-Parts a-d are intended for merging through the ata tree, the dts bindings
-will be merged to Maxime Ripard's sunxi-dts tree.
-
-Regards,
-
-Hans
