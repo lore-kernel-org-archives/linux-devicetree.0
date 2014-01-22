@@ -1,39 +1,152 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH RFC v4 10/10] ahci_imx: Port to library-ised ahci_platform
-Date: Wed, 22 Jan 2014 08:25:42 +0100
-Message-ID: <52DF7276.5050705@redhat.com>
-References: <1390236303-22538-1-git-send-email-hdegoede@redhat.com> <1390236303-22538-11-git-send-email-hdegoede@redhat.com> <20140122065151.GC16215@pengutronix.de>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v4 2/2] usb: dwc3: adapt dwc3 core to use Generic PHY
+ Framework
+Date: Wed, 22 Jan 2014 09:59:52 +0200
+Message-ID: <52DF7A78.5030700@ti.com>
+References: <1385373690-12170-1-git-send-email-kishon@ti.com>	<1390299099-14764-1-git-send-email-kishon@ti.com>	<1390299099-14764-2-git-send-email-kishon@ti.com>	<52DE7D75.4040302@ti.com> <CAFp+6iFkgD8x4DozhQdRSx=KLWGwR5pOsCxrVgWbcnCMTFT-sg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRB7XE7WLAKGQEGND5IYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140122065151.GC16215-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAFp+6iFkgD8x4DozhQdRSx=KLWGwR5pOsCxrVgWbcnCMTFT-sg@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Vivek Gautam <gautamvivek1987@gmail.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, george.cherian@ti.com, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux USB Mailing List <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 01/22/2014 07:51 AM, Sascha Hauer wrote:
-> Hi Hans,
->
-> On Mon, Jan 20, 2014 at 05:45:03PM +0100, Hans de Goede wrote:
->> This avoids the ugliness of creating a nested platform device from probe.
+On 01/22/2014 08:04 AM, Vivek Gautam wrote:
+> Hi,
+> 
+> 
+> On Tue, Jan 21, 2014 at 7:30 PM, Roger Quadros <rogerq@ti.com> wrote:
+>> Hi Kishon,
 >>
->> Note untested, I've ordered a wandboard to be able to test these changes.
->
-> Looks much better now, thanks. I could test this patch aswell, no need
-> to buy new hardware for this.
+>> On 01/21/2014 12:11 PM, Kishon Vijay Abraham I wrote:
+>>> Adapted dwc3 core to use the Generic PHY Framework. So for init, exit,
+>>> power_on and power_off the following APIs are used phy_init(), phy_exit(),
+>>> phy_power_on() and phy_power_off().
+>>>
+>>> However using the old USB phy library wont be removed till the PHYs of all
+>>> other SoC's using dwc3 core is adapted to the Generic PHY Framework.
+>>>
+>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>> ---
+>>> Changes from v3:
+>>> * avoided using quirks
+>>>
+>>>  Documentation/devicetree/bindings/usb/dwc3.txt |    6 ++-
+>>>  drivers/usb/dwc3/core.c                        |   60 ++++++++++++++++++++++++
+>>>  drivers/usb/dwc3/core.h                        |    7 +++
+>>>  3 files changed, 71 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+>>> index e807635..471366d 100644
+>>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+>>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+>>> @@ -6,11 +6,13 @@ Required properties:
+>>>   - compatible: must be "snps,dwc3"
+>>>   - reg : Address and length of the register set for the device
+>>>   - interrupts: Interrupts used by the dwc3 controller.
+>>> +
+>>> +Optional properties:
+>>>   - usb-phy : array of phandle for the PHY device.  The first element
+>>>     in the array is expected to be a handle to the USB2/HS PHY and
+>>>     the second element is expected to be a handle to the USB3/SS PHY
+>>> -
+>>> -Optional properties:
+>>> + - phys: from the *Generic PHY* bindings
+>>> + - phy-names: from the *Generic PHY* bindings
+>>>   - tx-fifo-resize: determines if the FIFO *has* to be reallocated.
+>>>
+>>>  This is usually a subnode to DWC3 glue to which it is connected.
+>>> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+>>> index e009d4e..036d589 100644
+>>> --- a/drivers/usb/dwc3/core.c
+>>> +++ b/drivers/usb/dwc3/core.c
+>>> @@ -82,6 +82,11 @@ static void dwc3_core_soft_reset(struct dwc3 *dwc)
+>>>
+>>>       usb_phy_init(dwc->usb2_phy);
+>>>       usb_phy_init(dwc->usb3_phy);
+>>> +     if (dwc->usb2_generic_phy)
+>>> +             phy_init(dwc->usb2_generic_phy);
+>>
+>> What if phy_init() fails? You need to report and fail. Same applies for all PHY apis in this patch.
+>>
+>>> +     if (dwc->usb3_generic_phy)
+>>> +             phy_init(dwc->usb3_generic_phy);
+>>> +
+>>>       mdelay(100);
+>>>
+>>>       /* Clear USB3 PHY reset */
+>>> @@ -343,6 +348,11 @@ static void dwc3_core_exit(struct dwc3 *dwc)
+>>>  {
+>>>       usb_phy_shutdown(dwc->usb2_phy);
+>>>       usb_phy_shutdown(dwc->usb3_phy);
+>>> +     if (dwc->usb2_generic_phy)
+>>> +             phy_exit(dwc->usb2_generic_phy);
+>>> +     if (dwc->usb3_generic_phy)
+>>> +             phy_exit(dwc->usb3_generic_phy);
+>>> +
+>>>  }
+>>>
+>>>  #define DWC3_ALIGN_MASK              (16 - 1)
+>>> @@ -433,6 +443,32 @@ static int dwc3_probe(struct platform_device *pdev)
+>>>               }
+>>>       }
+>>>
+>>> +     dwc->usb2_generic_phy = devm_phy_get(dev, "usb2-phy");
+>>> +     if (IS_ERR(dwc->usb2_generic_phy)) {
+>>> +             ret = PTR_ERR(dwc->usb2_generic_phy);
+>>> +             if (ret == -ENOSYS || ret == -ENODEV) {
+>>> +                     dwc->usb2_generic_phy = NULL;
+>>> +             } else if (ret == -EPROBE_DEFER) {
+>>> +                     return ret;
+>>> +             } else {
+>>> +                     dev_err(dev, "no usb2 phy configured\n");
+>>> +                     return ret;
+>>> +             }
+>>> +     }
+>>> +
+>>> +     dwc->usb3_generic_phy = devm_phy_get(dev, "usb3-phy");
+>>> +     if (IS_ERR(dwc->usb3_generic_phy)) {
+>>> +             ret = PTR_ERR(dwc->usb3_generic_phy);
+>>> +             if (ret == -ENOSYS || ret == -ENODEV) {
+>>> +                     dwc->usb3_generic_phy = NULL;
+>>> +             } else if (ret == -EPROBE_DEFER) {
+>>> +                     return ret;
+>>> +             } else {
+>>> +                     dev_err(dev, "no usb3 phy configured\n");
+>>> +                     return ret;
+>>> +             }
+>>> +     }
+>>> +
+>>>       dwc->xhci_resources[0].start = res->start;
+>>>       dwc->xhci_resources[0].end = dwc->xhci_resources[0].start +
+>>>                                       DWC3_XHCI_REGS_END;
+>>> @@ -482,6 +518,11 @@ static int dwc3_probe(struct platform_device *pdev)
+>>>       usb_phy_set_suspend(dwc->usb2_phy, 0);
+>>>       usb_phy_set_suspend(dwc->usb3_phy, 0);
+>>>
+>>> +     if (dwc->usb2_generic_phy)
+>>> +             phy_power_on(dwc->usb2_generic_phy);
+>>> +     if (dwc->usb3_generic_phy)
+>>> +             phy_power_on(dwc->usb3_generic_phy);
+>>> +
+>>
+>> Is it OK to power on the phy before phy_init()?
+> 
+> Isn't phy_init() being done before phy_power_on() in the
+> core_soft_reset() in this patch ?
+> Isn't that what you want here ?
+> 
+>>
+>> I suggest to move phy_init() from core_soft_reset() to here, just before phy_power_on().
+> 
+> core_soft_reset() is called before phy_power_on() itself from
+> dwc3_core_init(), right ?
+> will moving the phy_inti() here make nay difference ?
 
-Thanks for the offer, but the wandboard arrived yesterday. Having a bit more
-variety in the arm hardware I've to test with is good to have anyways.
+You are right. This part is fine then.
 
-Regards,
-
-Hans
+cheers,
+-roger
