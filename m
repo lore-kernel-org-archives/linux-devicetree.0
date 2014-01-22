@@ -1,48 +1,37 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC] Culling traffic volume on devicetree mailing list
-Date: Wed, 22 Jan 2014 08:05:20 -0800
-Message-ID: <5433179.eNHenyFL08@lenovo>
-References: <CACxGe6vYMOnyeqdhaAggytxgiLH=ijNOrmuq2FyOUtZCGqfdgQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6vYMOnyeqdhaAggytxgiLH=ijNOrmuq2FyOUtZCGqfdgQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH v2 0/2] regulator: s5m8767: Use GPIO for controlling Buck9/eMMC
+Date: Wed, 22 Jan 2014 17:07:26 +0100
+Message-ID: <1390406848-20964-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Sangbeom Kim <sbkim73@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, Amit Daniel Kachhap <amit.daniel@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-Le mardi 21 janvier 2014, 14:40:48 Grant Likely a =E9crit :
-> Hi everyone,
->=20
-> Today on the devicetree conf call we (Rob, Ian and I) talked about
-> culling the volume of traffic on the devicetree list so that it would
-> be more useful to the DTC maintainers and non-Linux users like
-> freebsd. We'd like to propose creating the following two lists so tha=
-t
-> those interested don't need to drink from the firehose:
->=20
-> devicetree-compiler: Specifically for discussing dt tooling topics
-> (parsing, schema validation, data format)
->=20
-> devicetree-spec: For discussing 'core' device tree bindings. ie.
-> anything that would be a candidate for putting into an ePAPR type
-> spec. Individual device bindings would continue to be posted to
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, but anything affecting subsystems or
-> generic patterns should be posted to this new list.
->=20
-> Thoughts?
+This is second version of patch adding GPIO control over Buck9 regulator
+in s5m8767 regulator driver.
 
-I definitively support that idea. Any schedule on when you plan on crea=
-ting=20
-those two mailing-lists?
---=20
-=46lorian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Previously the patch was part of larger patchset from which all other patches
+were applied. Changes since previous revision:
+1. Use ena_gpio of regulator core, as suggested by Mark Brown.
+
+This patchset is based on next tree: next-20140122.
+
+Best regards,
+Krzysztof
+
+Krzysztof Kozlowski (2):
+  regulator: s5m8767: Use GPIO for controlling Buck9/eMMC
+  regulator: s5m8767: Document new bindings for Buck9 GPIO control
+
+ .../bindings/regulator/s5m8767-regulator.txt       |   16 +++-
+ drivers/regulator/s5m8767.c                        |   97 +++++++++++++++++++-
+ include/linux/mfd/samsung/core.h                   |    4 +-
+ include/linux/mfd/samsung/s5m8767.h                |    7 ++
+ 4 files changed, 119 insertions(+), 5 deletions(-)
+
+-- 
+1.7.9.5
+
