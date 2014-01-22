@@ -1,58 +1,74 @@
-From: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH RFC 4/6] net: rfkill: gpio: add device tree support
-Date: Wed, 22 Jan 2014 13:00:11 +0200
-Message-ID: <20140122110011.GU18029@intel.com>
-References: <1389941251-32692-1-git-send-email-wens@csie.org>
- <CAAVeFuLP4MkfXGG1FMauvUw_J63zRXdhGwxqYy5W98L1wCQNbw@mail.gmail.com>
- <CACRpkdYiy+sya6NqRfAmsrFOXvaa3qX=qjRuTDW1vZVSaG1+Gg@mail.gmail.com>
- <201401211335.16885.arnd@arndb.de>
- <CAAVeFuKFfAvSPYLmvWV5jjT-peZFJ8sJ2bbh4F=JAYoWLhjZpA@mail.gmail.com>
- <CACRpkdZbb=eO8YRtMn6hW0vn97PkHUo88e_o61DEC8=wPY3_PQ@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH RFC 04/10] base: power: Add generic OF-based power domain
+ look-up
+Date: Wed, 22 Jan 2014 11:00:18 +0000
+Message-ID: <20140122110018.GB24288@e102568-lin.cambridge.arm.com>
+References: <1389469372-17199-1-git-send-email-tomasz.figa@gmail.com>
+ <1389469372-17199-5-git-send-email-tomasz.figa@gmail.com>
+ <20140116163409.GD25540@e102568-lin.cambridge.arm.com>
+ <52DD5DC5.3000908@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDKLLFXN7AKBBFWG72LAKGQE36EOVDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CACRpkdZbb=eO8YRtMn6hW0vn97PkHUo88e_o61DEC8=wPY3_PQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <52DD5DC5.3000908@samsung.com>
 Content-Disposition: inline
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene.kim@samsung.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <Mark.Rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 22, 2014 at 10:58:38AM +0100, Linus Walleij wrote:
-> On Tue, Jan 21, 2014 at 3:53 PM, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Mon, Jan 20, 2014 at 05:32:53PM +0000, Tomasz Figa wrote:
+> Hi Lorenzo,
 > 
-> > The good (or bad, rather) thing about DT is that we can do whatever we
-> > please with the new bindings: decide which name or which index
-> > (doesn't matter here) a GPIO should have. However we don't have this
-> > control over ACPI, where nothing guarantees that the same index will
-> > be used for the same GPIO function.
+> On 16.01.2014 17:34, Lorenzo Pieralisi wrote:
+> > Hi Tomasz,
+> >
+> > thank you for posting this series. I would like to use the DT bindings
+> > for power domains in the bindings for C-states on ARM:
+> >
+> > http://comments.gmane.org/gmane.linux.power-management.general/41012
+> >
+> > and in particular link a given C-state to a given power domain so that the
+> > kernel will have a way to actually check what devices are lost upon C-state
+> > entry (and for devices I also mean CPU peripheral like PMUs, GIC CPU IF,
+> > caches and possibly cpus, all of them already represented with DT nodes).
+> >
+> > I have a remark:
+> >
+> > -  Can we group device nodes under a single power-domain-parent so that
+> >     all devices defined under that parent won't have to re-define a
+> >     power-domain property (a property like interrupt-parent, so to speak)
+> >
+> > What do you think ?
 > 
-> It's not like ACPI will impose some tables on us and expect us to
-> use them as-is no matter how crazy they are. Then indeed the whole
-> idea of unifying ACPI and DT accessors would be moot and it would
-> only work by mistake or as a good joke.
+> Hmm, I can see potential benefits of such construct on platforms with 
+> clear hierarchy of devices, but to make sure I'm getting it correctly, 
+> is the following what you have in mind?
+> 
+> soc-domain-x@12340000 {
+> 	compatible = "...";
+> 	reg = <...>;
+> 	power-domain-parent = <&power_domains DOMAIN_X>;
+> 
+> 	device@1000 {
+> 		compatible = "...";
+> 		// inherits power-domain = <&power_domains DOMAIN_X>
+> 	};
+> 
+> 	device@2000 {
+> 		compatible = "...";
+> 		// inherits power-domain = <&power_domains DOMAIN_X>
+> 	};
+> };
 
-With the current ACPI version we really don't have much of a choice here.
-Only way we can distinguish between a set of GPIOs is to use index and hope
-that the vendor puts the GPIOs in the table in same order that the driver
-expects :-(
+Yes, exactly, it could avoid duplicated data. I still have an issue
+with nodes that are per-cpu but define just one node (eg PMU), since
+a CPU might belong in a power-domain on its own (ie one power domain
+per-CPU) and basically this means that arch-timers, PMU & company should
+link to multiple power domains, ie one per CPU or we find a way to define
+a power domain as "banked".
 
-This is going to get a bit better when ACPI gets properties (like Arnd
-commented already) as then we can get the correct index based on a name in
-a table. However, it still requires the vendor to use naming that is
-suitable for Linux driver in question.
+I need to think about this a bit more, thanks for your feedback.
 
-> The situation with ACPI is just like with DT, it is assumed that the
-> author of these tables also look at the Linux kernel drivers to figure
-> out what argument goes where and we can influence them.
-
-I certainly hope, now that Android is becoming more and more important,
-that the vendors will actually check what the Linux drivers expect and
-populate the tables with such information that is suitable for both ACPI
-and DT enabled driver.
+Lorenzo
