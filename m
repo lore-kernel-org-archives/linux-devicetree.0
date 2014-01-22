@@ -1,65 +1,48 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [RFC PATCH 1/9] drm/exynos: correct timing porch conversion
-Date: Wed, 22 Jan 2014 16:09:04 +0100
-Message-ID: <52DFDF10.20100@samsung.com>
-References: <1390401336-22915-1-git-send-email-a.hajda@samsung.com>
- <1390401336-22915-2-git-send-email-a.hajda@samsung.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC] Culling traffic volume on devicetree mailing list
+Date: Wed, 22 Jan 2014 08:05:20 -0800
+Message-ID: <5433179.eNHenyFL08@lenovo>
+References: <CACxGe6vYMOnyeqdhaAggytxgiLH=ijNOrmuq2FyOUtZCGqfdgQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1390401336-22915-2-git-send-email-a.hajda@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACxGe6vYMOnyeqdhaAggytxgiLH=ijNOrmuq2FyOUtZCGqfdgQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-It seems I have not added description to this patch.
-In this patch porch is calculated in compatible way to
-drm_display_mode_from_videomode core function.
-The way it was seems to me incorrect and it did not work on my hw.
+Le mardi 21 janvier 2014, 14:40:48 Grant Likely a =E9crit :
+> Hi everyone,
+>=20
+> Today on the devicetree conf call we (Rob, Ian and I) talked about
+> culling the volume of traffic on the devicetree list so that it would
+> be more useful to the DTC maintainers and non-Linux users like
+> freebsd. We'd like to propose creating the following two lists so tha=
+t
+> those interested don't need to drink from the firehose:
+>=20
+> devicetree-compiler: Specifically for discussing dt tooling topics
+> (parsing, schema validation, data format)
+>=20
+> devicetree-spec: For discussing 'core' device tree bindings. ie.
+> anything that would be a candidate for putting into an ePAPR type
+> spec. Individual device bindings would continue to be posted to
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, but anything affecting subsystems or
+> generic patterns should be posted to this new list.
+>=20
+> Thoughts?
 
-Anyway this patch could be merged with Sean's patches, if he agrees.
-
-Regards
-Andrzej
-
-On 01/22/2014 03:35 PM, Andrzej Hajda wrote:
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> ---
->  drivers/gpu/drm/exynos/exynos_drm_fimd.c | 11 ++++-------
->  1 file changed, 4 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/exynos/exynos_drm_fimd.c b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
-> index 8caaac2..b611f33 100644
-> --- a/drivers/gpu/drm/exynos/exynos_drm_fimd.c
-> +++ b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
-> @@ -538,21 +538,18 @@ static void fimd_mode_set(struct exynos_drm_manager *mgr,
->  {
->  	struct fimd_context *ctx = mgr->ctx;
->  	struct fimd_mode_data *mode = &ctx->mode;
-> -	int hblank, vblank;
->  
-> -	vblank = in_mode->crtc_vblank_end - in_mode->crtc_vblank_start;
->  	mode->vtotal = in_mode->crtc_vtotal;
->  	mode->vdisplay = in_mode->crtc_vdisplay;
->  	mode->vsync_len = in_mode->crtc_vsync_end - in_mode->crtc_vsync_start;
-> -	mode->vbpd = (vblank - mode->vsync_len) / 2;
-> -	mode->vfpd = vblank - mode->vsync_len - mode->vbpd;
-> +	mode->vbpd = in_mode->crtc_vtotal - in_mode->crtc_vsync_end;
-> +	mode->vfpd = in_mode->crtc_vsync_start - in_mode->crtc_vdisplay;
->  
-> -	hblank = in_mode->crtc_hblank_end - in_mode->crtc_hblank_start;
->  	mode->htotal = in_mode->crtc_htotal;
->  	mode->hdisplay = in_mode->crtc_hdisplay;
->  	mode->hsync_len = in_mode->crtc_hsync_end - in_mode->crtc_hsync_start;
-> -	mode->hbpd = (hblank - mode->hsync_len) / 2;
-> -	mode->hfpd = hblank - mode->hsync_len - mode->hbpd;
-> +	mode->hbpd = in_mode->crtc_htotal - in_mode->crtc_hsync_end;
-> +	mode->hfpd = in_mode->crtc_hsync_start - in_mode->crtc_hdisplay;
->  
->  	mode->clkdiv = fimd_calc_clkdiv(ctx, in_mode);
->  
-> 
+I definitively support that idea. Any schedule on when you plan on crea=
+ting=20
+those two mailing-lists?
+--=20
+=46lorian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
