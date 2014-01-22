@@ -1,7 +1,7 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v8 1/4] ohci-platform: Add support for devicetree instantiation
-Date: Wed, 22 Jan 2014 20:32:54 +0100
-Message-ID: <1390419177-6481-2-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH v8 4/4] ehci-platform: Add support for controllers with big-endian regs / descriptors
+Date: Wed, 22 Jan 2014 20:32:57 +0100
+Message-ID: <1390419177-6481-5-git-send-email-hdegoede@redhat.com>
 References: <1390419177-6481-1-git-send-email-hdegoede@redhat.com>
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1390419177-6481-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
@@ -10,318 +10,74 @@ To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
 Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for ohci-platform instantiation from devicetree, including
-optionally getting clks and a phy from devicetree, and enabling / disabling
-those on power_on / off.
-
-This should allow using ohci-platform from devicetree in various cases.
-Specifically after this commit it can be used for the ohci controller found
-on Allwinner sunxi SoCs.
+This uses the already documented devicetree booleans for this, see:
+Documentation/devicetree/bindings/usb/usb-ehci.txt
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
 ---
- Documentation/devicetree/bindings/usb/usb-ohci.txt |  22 +++
- drivers/usb/host/ohci-platform.c                   | 164 ++++++++++++++++++---
- 2 files changed, 162 insertions(+), 24 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/usb-ohci.txt
+ drivers/usb/host/ehci-platform.c | 33 +++++++++++++++++++++++++++++++--
+ 1 file changed, 31 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-ohci.txt b/Documentation/devicetree/bindings/usb/usb-ohci.txt
-new file mode 100644
-index 0000000..6ba38d9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/usb-ohci.txt
-@@ -0,0 +1,22 @@
-+USB OHCI controllers
-+
-+Required properties:
-+- compatible : "usb-ohci"
-+- reg : ohci controller register range (address and length)
-+- interrupts : ohci controller interrupt
-+
-+Optional properties:
-+- clocks : a list of phandle + clock specifier pairs
-+- phys : phandle + phy specifier pair
-+- phy-names : "usb"
-+
-+Example:
-+
-+	ohci0: usb@01c14400 {
-+		compatible = "allwinner,sun4i-a10-ohci", "usb-ohci";
-+		reg = <0x01c14400 0x100>;
-+		interrupts = <64>;
-+		clocks = <&usb_clk 6>, <&ahb_gates 2>;
-+		phys = <&usbphy 1>;
-+		phy-names = "usb";
-+	};
-diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
-index f351ff5..b2d0e1e 100644
---- a/drivers/usb/host/ohci-platform.c
-+++ b/drivers/usb/host/ohci-platform.c
-@@ -3,6 +3,7 @@
-  *
-  * Copyright 2007 Michael Buesch <m@bues.ch>
-  * Copyright 2011-2012 Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-+ * Copyright 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-  *
-  * Derived from the OCHI-SSB driver
-  * Derived from the OHCI-PCI driver
-@@ -14,11 +15,14 @@
-  * Licensed under the GNU/GPL. See COPYING for details.
-  */
+diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
+index d8aebc0..5888abb 100644
+--- a/drivers/usb/host/ehci-platform.c
++++ b/drivers/usb/host/ehci-platform.c
+@@ -55,8 +55,10 @@ static int ehci_platform_reset(struct usb_hcd *hcd)
  
-+#include <linux/clk.h>
-+#include <linux/dma-mapping.h>
- #include <linux/hrtimer.h>
- #include <linux/io.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/err.h>
-+#include <linux/phy/phy.h>
- #include <linux/platform_device.h>
- #include <linux/usb/ohci_pdriver.h>
- #include <linux/usb.h>
-@@ -27,6 +31,13 @@
- #include "ohci.h"
+ 	hcd->has_tt = pdata->has_tt;
+ 	ehci->has_synopsys_hc_bug = pdata->has_synopsys_hc_bug;
+-	ehci->big_endian_desc = pdata->big_endian_desc;
+-	ehci->big_endian_mmio = pdata->big_endian_mmio;
++	if (pdata->big_endian_desc)
++		ehci->big_endian_desc = 1;
++	if (pdata->big_endian_mmio)
++		ehci->big_endian_mmio = 1;
  
- #define DRIVER_DESC "OHCI generic platform driver"
-+#define OHCI_MAX_CLKS 3
-+#define hcd_to_ohci_priv(h) ((struct ohci_platform_priv *)hcd_to_ohci(h)->priv)
-+
-+struct ohci_platform_priv {
-+	struct clk *clks[OHCI_MAX_CLKS];
-+	struct phy *phy;
-+};
- 
- static const char hcd_name[] = "ohci-platform";
- 
-@@ -48,11 +59,67 @@ static int ohci_platform_reset(struct usb_hcd *hcd)
- 	return ohci_setup(hcd);
- }
- 
-+static int ohci_platform_power_on(struct platform_device *dev)
-+{
-+	struct usb_hcd *hcd = platform_get_drvdata(dev);
-+	struct ohci_platform_priv *priv = hcd_to_ohci_priv(hcd);
-+	int clk, ret;
-+
-+	for (clk = 0; clk < OHCI_MAX_CLKS && priv->clks[clk]; clk++) {
-+		ret = clk_prepare_enable(priv->clks[clk]);
-+		if (ret)
-+			goto err_disable_clks;
-+	}
-+
-+	if (priv->phy) {
-+		ret = phy_init(priv->phy);
-+		if (ret)
-+			goto err_disable_clks;
-+
-+		ret = phy_power_on(priv->phy);
-+		if (ret)
-+			goto err_exit_phy;
-+	}
-+
-+	return 0;
-+
-+err_exit_phy:
-+	phy_exit(priv->phy);
-+err_disable_clks:
-+	while (--clk >= 0)
-+		clk_disable_unprepare(priv->clks[clk]);
-+
-+	return ret;
-+}
-+
-+static void ohci_platform_power_off(struct platform_device *dev)
-+{
-+	struct usb_hcd *hcd = platform_get_drvdata(dev);
-+	struct ohci_platform_priv *priv = hcd_to_ohci_priv(hcd);
-+	int clk;
-+
-+	if (priv->phy) {
-+		phy_power_off(priv->phy);
-+		phy_exit(priv->phy);
-+	}
-+
-+	for (clk = OHCI_MAX_CLKS - 1; clk >= 0; clk--)
-+		if (priv->clks[clk])
-+			clk_disable_unprepare(priv->clks[clk]);
-+}
-+
- static struct hc_driver __read_mostly ohci_platform_hc_driver;
- 
- static const struct ohci_driver_overrides platform_overrides __initconst = {
--	.product_desc =	"Generic Platform OHCI controller",
--	.reset =	ohci_platform_reset,
-+	.product_desc =		"Generic Platform OHCI controller",
-+	.reset =		ohci_platform_reset,
-+	.extra_priv_size =	sizeof(struct ohci_platform_priv),
-+};
-+
-+static struct usb_ohci_pdata ohci_platform_defaults = {
-+	.power_on =		ohci_platform_power_on,
-+	.power_suspend =	ohci_platform_power_off,
-+	.power_off =		ohci_platform_power_off,
- };
- 
- static int ohci_platform_probe(struct platform_device *dev)
-@@ -60,17 +127,23 @@ static int ohci_platform_probe(struct platform_device *dev)
- 	struct usb_hcd *hcd;
+ 	if (pdata->pre_setup) {
+ 		retval = pdata->pre_setup(hcd);
+@@ -142,6 +144,7 @@ static int ehci_platform_probe(struct platform_device *dev)
  	struct resource *res_mem;
- 	struct usb_ohci_pdata *pdata = dev_get_platdata(&dev->dev);
--	int irq;
--	int err = -ENOMEM;
--
--	if (!pdata) {
--		WARN_ON(1);
--		return -ENODEV;
--	}
-+	struct ohci_platform_priv *priv;
-+	int err, irq, clk = 0;
+ 	struct usb_ehci_pdata *pdata = dev_get_platdata(&dev->dev);
+ 	struct ehci_platform_priv *priv;
++	struct ehci_hcd *ehci;
+ 	int err, irq, clk = 0;
  
  	if (usb_disabled())
- 		return -ENODEV;
+@@ -177,8 +180,34 @@ static int ehci_platform_probe(struct platform_device *dev)
+ 	platform_set_drvdata(dev, hcd);
+ 	dev->dev.platform_data = pdata;
+ 	priv = hcd_to_ehci_priv(hcd);
++	ehci = hcd_to_ehci(hcd);
  
-+	/*
-+	 * Use reasonable defaults so platforms don't have to provide these
-+	 * with DT probing on ARM.
-+	 */
-+	if (!pdata)
-+		pdata = &ohci_platform_defaults;
+ 	if (pdata == &ehci_platform_defaults && dev->dev.of_node) {
++		if (of_property_read_bool(dev->dev.of_node, "big-endian-regs"))
++			ehci->big_endian_mmio = 1;
 +
-+	err = dma_coerce_mask_and_coherent(&dev->dev, DMA_BIT_MASK(32));
-+	if (err)
-+		return err;
++		if (of_property_read_bool(dev->dev.of_node, "big-endian-desc"))
++			ehci->big_endian_desc = 1;
 +
- 	irq = platform_get_irq(dev, 0);
- 	if (irq < 0) {
- 		dev_err(&dev->dev, "no irq provided");
-@@ -83,17 +156,40 @@ static int ohci_platform_probe(struct platform_device *dev)
- 		return -ENXIO;
- 	}
- 
-+	hcd = usb_create_hcd(&ohci_platform_hc_driver, &dev->dev,
-+			dev_name(&dev->dev));
-+	if (!hcd)
-+		return -ENOMEM;
++		if (of_property_read_bool(dev->dev.of_node, "big-endian"))
++			ehci->big_endian_mmio = ehci->big_endian_desc = 1;
 +
-+	platform_set_drvdata(dev, hcd);
-+	dev->dev.platform_data = pdata;
-+	priv = hcd_to_ohci_priv(hcd);
-+
-+	if (pdata == &ohci_platform_defaults && dev->dev.of_node) {
-+		priv->phy = devm_phy_get(&dev->dev, "usb");
-+		if (IS_ERR(priv->phy)) {
-+			err = PTR_ERR(priv->phy);
-+			if (err == -EPROBE_DEFER)
-+				goto err_put_hcd;
-+			priv->phy = NULL;
++#ifndef CONFIG_USB_EHCI_BIG_ENDIAN_MMIO
++		if (ehci->big_endian_mmio) {
++			dev_err(&dev->dev,
++				"Error big-endian-regs not compiled in\n");
++			err = -EINVAL;
++			goto err_put_hcd;
 +		}
-+
-+		for (clk = 0; clk < OHCI_MAX_CLKS; clk++) {
-+			priv->clks[clk] = of_clk_get(dev->dev.of_node, clk);
-+			if (IS_ERR(priv->clks[clk])) {
-+				err = PTR_ERR(priv->clks[clk]);
-+				if (err == -EPROBE_DEFER)
-+					goto err_put_clks;
-+				priv->clks[clk] = NULL;
-+				break;
-+			}
++#endif
++#ifndef CONFIG_USB_EHCI_BIG_ENDIAN_DESC
++		if (ehci->big_endian_desc) {
++			dev_err(&dev->dev,
++				"Error big-endian-desc not compiled in\n");
++			err = -EINVAL;
++			goto err_put_hcd;
 +		}
-+	}
-+
- 	if (pdata->power_on) {
- 		err = pdata->power_on(dev);
- 		if (err < 0)
--			return err;
--	}
--
--	hcd = usb_create_hcd(&ohci_platform_hc_driver, &dev->dev,
--			dev_name(&dev->dev));
--	if (!hcd) {
--		err = -ENOMEM;
--		goto err_power;
-+			goto err_put_clks;
- 	}
- 
- 	hcd->rsrc_start = res_mem->start;
-@@ -102,21 +198,25 @@ static int ohci_platform_probe(struct platform_device *dev)
- 	hcd->regs = devm_ioremap_resource(&dev->dev, res_mem);
- 	if (IS_ERR(hcd->regs)) {
- 		err = PTR_ERR(hcd->regs);
--		goto err_put_hcd;
-+		goto err_power;
- 	}
- 	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
- 	if (err)
--		goto err_put_hcd;
--
--	platform_set_drvdata(dev, hcd);
-+		goto err_power;
- 
- 	return err;
- 
--err_put_hcd:
--	usb_put_hcd(hcd);
- err_power:
- 	if (pdata->power_off)
- 		pdata->power_off(dev);
-+err_put_clks:
-+	while (--clk >= 0)
-+		clk_put(priv->clks[clk]);
-+err_put_hcd:
-+	if (pdata == &ohci_platform_defaults)
-+		dev->dev.platform_data = NULL;
-+
-+	usb_put_hcd(hcd);
- 
- 	return err;
- }
-@@ -125,13 +225,22 @@ static int ohci_platform_remove(struct platform_device *dev)
- {
- 	struct usb_hcd *hcd = platform_get_drvdata(dev);
- 	struct usb_ohci_pdata *pdata = dev_get_platdata(&dev->dev);
-+	struct ohci_platform_priv *priv = hcd_to_ohci_priv(hcd);
-+	int clk;
- 
- 	usb_remove_hcd(hcd);
--	usb_put_hcd(hcd);
- 
- 	if (pdata->power_off)
- 		pdata->power_off(dev);
- 
-+	for (clk = 0; clk < OHCI_MAX_CLKS && priv->clks[clk]; clk++)
-+		clk_put(priv->clks[clk]);
-+
-+	usb_put_hcd(hcd);
-+
-+	if (pdata == &ohci_platform_defaults)
-+		dev->dev.platform_data = NULL;
-+
- 	return 0;
- }
- 
-@@ -178,6 +287,12 @@ static int ohci_platform_resume(struct device *dev)
- #define ohci_platform_resume	NULL
- #endif /* CONFIG_PM */
- 
-+static const struct of_device_id ohci_platform_ids[] = {
-+	{ .compatible = "usb-ohci", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ohci_platform_ids);
-+
- static const struct platform_device_id ohci_platform_table[] = {
- 	{ "ohci-platform", 0 },
- 	{ }
-@@ -198,6 +313,7 @@ static struct platform_driver ohci_platform_driver = {
- 		.owner	= THIS_MODULE,
- 		.name	= "ohci-platform",
- 		.pm	= &ohci_platform_pm_ops,
-+		.of_match_table = ohci_platform_ids,
- 	}
- };
- 
++#endif
+ 		priv->phy = devm_phy_get(&dev->dev, "usb");
+ 		if (IS_ERR(priv->phy)) {
+ 			err = PTR_ERR(priv->phy);
 -- 
 1.8.5.3
 
