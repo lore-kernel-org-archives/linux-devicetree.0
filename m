@@ -1,177 +1,39 @@
-From: Jonas Gorski <jogo@openwrt.org>
-Subject: Re: [PATCH 2/2] ehci-platform: Add support for controllers with
- big-endian regs / descriptors
-Date: Wed, 22 Jan 2014 21:34:34 +0100
-Message-ID: <20140122213434.00000f25@openwrt.org>
-References: <1390319315-8391-1-git-send-email-hdegoede@redhat.com>
- <1390319315-8391-2-git-send-email-hdegoede@redhat.com>
- <CAGVrzcZJBjVvJm5WkpXpp_u3a-q4qMqgHvcxCJF=RUoeEwdzjQ@mail.gmail.com>
- <52E01BDA.8000606@redhat.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH] regulator: ti-abb: Add support for interleaved LDO registers
+Date: Wed, 22 Jan 2014 14:48:05 -0600
+Message-ID: <52E02E85.3030509@ti.com>
+References: <1389900750-27625-1-git-send-email-nm@ti.com> <20140121185553.GW17314@sirena.org.uk> <52DED341.3030503@ti.com> <20140121215624.GC17314@sirena.org.uk> <52DEF56C.1000209@ti.com> <20140122201932.GD17314@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52E01BDA.8000606@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, linux-usb <linux-usb@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140122201932.GD17314@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, 22 Jan 2014 20:28:26 +0100
-Hans de Goede <hdegoede@redhat.com> wrote:
-> Hi,
+On 01/22/2014 02:19 PM, Mark Brown wrote:
+> On Tue, Jan 21, 2014 at 04:32:12PM -0600, Nishanth Menon wrote:
 > 
-> On 01/21/2014 08:39 PM, Florian Fainelli wrote:
-> > 2014/1/21 Hans de Goede <hdegoede@redhat.com>:
-> >> This uses the already documented devicetree booleans for this.
-> >
-> > (I would greatly appreciate if you could CC people who gave you
-> > feedback on this before)
+>> The other alternative will be to use reg-names and map individual
+>> registers (there are just setup and control registers to deal with per
+>> abb instance). That will coexist with other pinctrl, bandgap and other
+>> drivers which are not based off syscon.
 > 
-> Will do.
+> Yes, I suspect that's going to be a lot easier to deploy given that
+> there are existing drivers using the current non-syscon setup.  I'm
+> totally fine with that approach.
 > 
-> > A more informative commit message would be welcome, along with a
-> > reference to which Device Tree binding documentation you are referring
-> > to.
-> 
-> I've added a reference to the bindings doc in the commit msg for my next version.
-> 
-> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> >> ---
-> >>   drivers/usb/host/Kconfig         |  3 +++
-> >>   drivers/usb/host/ehci-platform.c | 33 +++++++++++++++++++++++++++++++--
-> >>   2 files changed, 34 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-> >> index 237d7b1..4af41f3 100644
-> >> --- a/drivers/usb/host/Kconfig
-> >> +++ b/drivers/usb/host/Kconfig
-> >> @@ -256,6 +256,9 @@ config USB_EHCI_ATH79
-> >>   config USB_EHCI_HCD_PLATFORM
-> >>          tristate "Generic EHCI driver for a platform device"
-> >>          depends on !PPC_OF
-> >> +       # Support BE on architectures which have readl_be
-> >> +       select USB_EHCI_BIG_ENDIAN_DESC if (AVR32 || MIPS || MICROBLAZE || SPARC || PPC32 || PPC64)
-> >> +       select USB_EHCI_BIG_ENDIAN_MMIO if (AVR32 || MIPS || MICROBLAZE || SPARC || PPC32 || PPC64)
-> >
-> > I do not think this is that simple nor correct for at least Microblaze
-> > and MIPS since they can run in either BE or LE mode, and those
-> > specific platforms should already do the proper select at the
-> > board/SoC level. This *might* be correct for SPARC, PPC32 and PPC64,
-> > although I believe some specific PPC64 boards can run in little-endian
-> > mode like the P-series, SPARC might too.
-> >
-> > It seems to me that you should not touch this and keep the existing
-> > selects in place, if it turns out that the selects are missing the
-> > error messages you added below are catching those misuses.
-> 
-> As discussed with Alan, I will drop these lines from my next version.
-> 
-> >>          default n
-> >>          ---help---
-> >>            Adds an EHCI host driver for a generic platform device, which
-> >> diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
-> >> index d8aebc0..5888abb 100644
-> >> --- a/drivers/usb/host/ehci-platform.c
-> >> +++ b/drivers/usb/host/ehci-platform.c
-> >> @@ -55,8 +55,10 @@ static int ehci_platform_reset(struct usb_hcd *hcd)
-> >>
-> >>          hcd->has_tt = pdata->has_tt;
-> >>          ehci->has_synopsys_hc_bug = pdata->has_synopsys_hc_bug;
-> >> -       ehci->big_endian_desc = pdata->big_endian_desc;
-> >> -       ehci->big_endian_mmio = pdata->big_endian_mmio;
-> >> +       if (pdata->big_endian_desc)
-> >> +               ehci->big_endian_desc = 1;
-> >> +       if (pdata->big_endian_mmio)
-> >> +               ehci->big_endian_mmio = 1;
-> >>
-> >>          if (pdata->pre_setup) {
-> >>                  retval = pdata->pre_setup(hcd);
-> >> @@ -142,6 +144,7 @@ static int ehci_platform_probe(struct platform_device *dev)
-> >>          struct resource *res_mem;
-> >>          struct usb_ehci_pdata *pdata = dev_get_platdata(&dev->dev);
-> >>          struct ehci_platform_priv *priv;
-> >> +       struct ehci_hcd *ehci;
-> >>          int err, irq, clk = 0;
-> >>
-> >>          if (usb_disabled())
-> >> @@ -177,8 +180,34 @@ static int ehci_platform_probe(struct platform_device *dev)
-> >>          platform_set_drvdata(dev, hcd);
-> >>          dev->dev.platform_data = pdata;
-> >>          priv = hcd_to_ehci_priv(hcd);
-> >> +       ehci = hcd_to_ehci(hcd);
-> >>
-> >>          if (pdata == &ehci_platform_defaults && dev->dev.of_node) {
-> >> +               if (of_property_read_bool(dev->dev.of_node, "big-endian-regs"))
-> >> +                       ehci->big_endian_mmio = 1;
-> >> +
-> >> +               if (of_property_read_bool(dev->dev.of_node, "big-endian-desc"))
-> >> +                       ehci->big_endian_desc = 1;
-> >> +
-> >> +               if (of_property_read_bool(dev->dev.of_node, "big-endian"))
-> >> +                       ehci->big_endian_mmio = ehci->big_endian_desc = 1;
-> >
-> > Ok, so I am confused now, should you update
-> > pdata->ehci_big_endian_{desc,mmio} here or is it valid to directly
-> > modify ehci->big_endian_{desc,mmio}, is not there any risk  to undo
-> > what is done in ehci_platform_reset(), or is ehci_platform_reset()
-> > only called for non-DT cases?
-> 
-> Both the pdata checks in ehci_platform_reset() and the dt checks here only
-> ever set these flags, neither code path clears them. And in the dt case pdata
-> will be NULL and vice versa.
+ok - thanks for confirming - this also means that existing compatible
+flags will have to change - but they were present solely to encode the
+offset of setup and control from each other.
 
-If it's safe to set ehci->big_endian_{desc,mmio} from the _probe()
-routine, then maybe the pdata sets in _reset() should be moved into here
-instead of adding extra cludges/checks into _reset().
+Considering that we never had any dtsi in upstream (since they were
+all pending clock dts support for TI platforms), I will go with the
+assumption of not needing to maintain backward compatible for dtbs
+that could never have been generated in upstream kernel.
 
-> 
-> >
-> >> +
-> >> +#ifndef CONFIG_USB_EHCI_BIG_ENDIAN_MMIO
-> >> +               if (ehci->big_endian_mmio) {
-> >> +                       dev_err(&dev->dev,
-> >> +                               "Error big-endian-regs not compiled in\n");
-> >
-> > I do not think using the Device Tree property name would be very
-> > informative since this is supposed to guard against misconfigurations
-> > for both DT and non-DT enabled platforms
-> 
-> Nope this is in a dt only code path.
-
-Then these built-in checks could be done for both paths, as !DT also
-has the issue, just doesn't warn/error out with it.
-
-I also agree with Florian that the error message could be better
-worded, or should be at least have a ":" after "Error". When seeing
-the error message the fist time, I would wonder what "error
-big-endian-regs" are, and why I would want to have them ;)
-
-Finally, IS_ENABLED()* allows you to drop those ugly #ifndefs:
-
-	if (ehci->big_endian_mmio &&
-	    !IS_ENABLED(CONFIG_USB_EHCI_BIG_ENDIAN_MMIO)) {
-                       dev_err(&dev->dev,
-                               "Error big-endian-regs not compiled in\n");
-
-looks much nicer IMHO ;)
-
-
-
-Regards
-Jonas
-
-
-*Yes, I know IS_BUILTIN() would be more formal correct, but IS_ENABLED()
-reads IMHO nicer, and I doubt these config symbols will ever go
-tristate ;)
+-- 
+Regards,
+Nishanth Menon
