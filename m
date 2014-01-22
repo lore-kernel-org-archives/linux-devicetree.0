@@ -1,47 +1,72 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [RFC] Culling traffic volume on devicetree mailing list
-Date: Wed, 22 Jan 2014 10:35:58 -0800
-Message-ID: <CAOesGMhYfWXCFOc6K67aAcNNRUppONY4WNXTvk2NEJH-rfMrGQ@mail.gmail.com>
-References: <CACxGe6vYMOnyeqdhaAggytxgiLH=ijNOrmuq2FyOUtZCGqfdgQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6vYMOnyeqdhaAggytxgiLH=ijNOrmuq2FyOUtZCGqfdgQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+From: Josh Cartwright <joshc@codeaurora.org>
+Subject: [PATCH RFC 0/4] reserved-memory regions/CMA in devicetree, again
+Date: Wed, 22 Jan 2014 12:58:48 -0600
+Message-ID: <1390417133-6650-1-git-send-email-joshc@codeaurora.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 21, 2014 at 6:40 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> Hi everyone,
->
-> Today on the devicetree conf call we (Rob, Ian and I) talked about
-> culling the volume of traffic on the devicetree list so that it would
-> be more useful to the DTC maintainers and non-Linux users like
-> freebsd. We'd like to propose creating the following two lists so that
-> those interested don't need to drink from the firehose:
->
-> devicetree-compiler: Specifically for discussing dt tooling topics
-> (parsing, schema validation, data format)
+Hey Marek-
 
-This makes a lot of sense, and should help to decouple the bindings
-and standards from the tool. Should have happened a long time ago. :)
+What is the current status of the reserved-memory/CMA device tree support
+series?  It looks like it's stalled out a bit since the revert[2].  Hopefully
+this series is a push in the right direction?
 
-> devicetree-spec: For discussing 'core' device tree bindings. ie.
-> anything that would be a candidate for putting into an ePAPR type
-> spec. Individual device bindings would continue to be posted to
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, but anything affecting subsystems or
-> generic patterns should be posted to this new list.
+---
+This set is an adaptation of Marek's original patchset posted here[1],
+and then subsequently reverted here[2].  In [3], Grant proposed a new
+set of bindings after discussion in Edinburgh.
 
-I predict that it will be hard for someone posting a patch to tell if
-they should send it to this list or some other list. It might be
-convenient for you guys to ignore the high-volume list and just focus
-on this one, but for the people who post patches it just makes it more
-complicated. IMHO.
+This is a partially complete implementation of these proposed bindings.
 
+It's functionality is now split into two pieces, the first of which
+implements a default/fallback behavior for reserved-memory nodes; that
+is, reserved memory nodes describing fixed-address static regions will
+be unconditionally reserved, regardless of their intended use.  In
+addition, it provides an interface for adding additional reserved-memory
+types, using a method similar to CLOCKSOURCE_OF_DECLARE().
 
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The second piece uses the above method to provide support for
+reserved-memory nodes whose compatible = "shared-dma-pool".  It makes
+use of CMA when available, and when a describing node has the 'reusable'
+property.
+
+There is basic support for dynamic allocation of memory reserved
+regions, however, noticeably missing is support for additional
+restrictions (use of alignment and alloc-ranges properties).
+
+[1]: http://lkml.kernel.org/g/1377527959-5080-1-git-send-email-m.szyprowski@samsung.com
+[2]: http://lkml.kernel.org/g/1381476448-14548-1-git-send-email-m.szyprowski@samsung.com
+[3]: http://lkml.kernel.org/g/20131030134702.19B57C402A0@trevor.secretlab.ca
+
+Grant Likely (1):
+  of: document bindings for reserved-memory nodes
+
+Josh Cartwright (1):
+  drivers: of: implement reserved-memory handling for dma
+
+Marek Szyprowski (2):
+  drivers: of: add initialization code for reserved memory
+  ARM: init: add support for reserved memory defined by device tree
+
+ .../bindings/reserved-memory/reserved-memory.txt   | 137 +++++++++++++++
+ arch/arm/mm/init.c                                 |   3 +
+ drivers/of/Kconfig                                 |  13 ++
+ drivers/of/Makefile                                |   2 +
+ drivers/of/of_reserved_mem.c                       | 188 +++++++++++++++++++++
+ drivers/of/of_reserved_mem_dma.c                   | 178 +++++++++++++++++++
+ drivers/of/platform.c                              |   4 +
+ include/asm-generic/vmlinux.lds.h                  |  11 ++
+ include/linux/of_reserved_mem.h                    |  61 +++++++
+ 9 files changed, 597 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+ create mode 100644 drivers/of/of_reserved_mem.c
+ create mode 100644 drivers/of/of_reserved_mem_dma.c
+ create mode 100644 include/linux/of_reserved_mem.h
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
+
