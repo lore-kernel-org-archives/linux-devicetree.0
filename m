@@ -1,61 +1,57 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: randconfig build error with next-20140122, in arch/x86/kernel/devicetree.c
-Date: Wed, 22 Jan 2014 09:06:47 -0800
-Message-ID: <52DFFAA7.40008@infradead.org>
-References: <CA+r1Zhjiw3Cv8AnsAhT==nkAYN2dxVXcWABpiVhtHXsW52YRkg@mail.gmail.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [RFC] Culling traffic volume on devicetree mailing list
+Date: Wed, 22 Jan 2014 12:22:43 -0500
+Message-ID: <20140122172243.GC29184@titan.lakedaemon.net>
+References: <CACxGe6vYMOnyeqdhaAggytxgiLH=ijNOrmuq2FyOUtZCGqfdgQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-next-owner@vger.kernel.org>
-In-Reply-To: <CA+r1Zhjiw3Cv8AnsAhT==nkAYN2dxVXcWABpiVhtHXsW52YRkg@mail.gmail.com>
-Sender: linux-next-owner@vger.kernel.org
-To: Jim Davis <jim.epost@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, x86@kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACxGe6vYMOnyeqdhaAggytxgiLH=ijNOrmuq2FyOUtZCGqfdgQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/22/2014 08:34 AM, Jim Davis wrote:
-> Building with the attached random configuration file,
->=20
-> warning: (X86_INTEL_MID) selects INTEL_SCU_IPC which has unmet direct
-> dependencies (X86 && X86_PLATFORM_DEVICES && X86_INTEL_MID)
-> warning: (USB_OTG_FSM && FSL_USB2_OTG && USB_MV_OTG) selects USB_OTG
-> which has unmet direct dependencies (USB_SUPPORT && USB && PM_RUNTIME=
-)
-> warning: (X86_INTEL_MID) selects INTEL_SCU_IPC which has unmet direct
-> dependencies (X86 && X86_PLATFORM_DEVICES && X86_INTEL_MID)
-> warning: (USB_OTG_FSM && FSL_USB2_OTG && USB_MV_OTG) selects USB_OTG
-> which has unmet direct dependencies (USB_SUPPORT && USB && PM_RUNTIME=
-)
->=20
-> arch/x86/kernel/devicetree.c:67:1: warning: data definition has no
-> type or storage class [enabled by default]
->  module_init(add_bus_probe);
->  ^
+Grant,
 
-=46or linux-next, devicetree.c needs to #include <linux/module.h>.
-=46or mainline, it would have needed to #include <linux/init.h>.
-However, it does neither of those.
+On Tue, Jan 21, 2014 at 02:40:48PM +0000, Grant Likely wrote:
+> Hi everyone,
+> 
+> Today on the devicetree conf call 
 
-See Documentation/SubmitChecklist #1:
+Sorry I couldn't make it, I had a last minute engagement yesterday AM.
 
-1: If you use a facility then #include the file that defines/declares
-   that facility.  Don't depend on other header files pulling in ones
-   that you use.
+> we (Rob, Ian and I) talked about culling the volume of traffic on the
+> devicetree list so that it would be more useful to the DTC maintainers
+> and non-Linux users like freebsd. We'd like to propose creating the
+> following two lists so that those interested don't need to drink from
+> the firehose:
+> 
+> devicetree-compiler: Specifically for discussing dt tooling topics
+> (parsing, schema validation, data format)
 
+Ack.
 
-> arch/x86/kernel/devicetree.c:67:1: error: type defaults to =E2=80=98i=
-nt=E2=80=99 in
-> declaration of =E2=80=98module_init=E2=80=99 [-Werror=3Dimplicit-int]
-> arch/x86/kernel/devicetree.c:67:1: warning: parameter names (without
-> types) in function declaration [enabled by default]
-> arch/x86/kernel/devicetree.c:60:19: warning: =E2=80=98add_bus_probe=E2=
-=80=99 defined
-> but not used [-Wunused-function]
->  static int __init add_bus_probe(void)
->                    ^
-> cc1: some warnings being treated as errors
-> make[2]: *** [arch/x86/kernel/devicetree.o] Error 1
->=20
+> devicetree-spec: For discussing 'core' device tree bindings. ie.
+> anything that would be a candidate for putting into an ePAPR type
+> spec. Individual device bindings would continue to be posted to
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, but anything affecting subsystems or
+> generic patterns should be posted to this new list.
+> 
+> Thoughts?
 
+How do patch series submitters easily determine when to send to -spec
+vice the general list?  I'm thinking wrt get_maintainers.pl.
 
---=20
-~Randy
+Perhaps it's worth considering organizing Doc.../bindings/ into
+subsystem/ and ...'not'?  The "suitable for ePAPR" criteria would be a
+good differentiator.
+
+thx,
+
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
