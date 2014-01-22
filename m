@@ -1,112 +1,74 @@
-From: Gerhard Sittig <gsi@denx.de>
-Subject: Re: [PATCH V6 1/1] drivers/gpio: Altera soft IP GPIO driver
-Date: Wed, 22 Jan 2014 19:09:04 +0100
-Message-ID: <20140122180904.GN20094@book.gsilab.sittig.org>
-References: <1390359265-22808-1-git-send-email-thloh@altera.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH RFC v2 2/2] Documentation: arm: define DT C-states
+ bindings
+Date: Wed, 22 Jan 2014 18:11:06 +0000
+Message-ID: <20140122181106.GQ17314@sirena.org.uk>
+References: <1390240079-6495-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1390240079-6495-3-git-send-email-lorenzo.pieralisi@arm.com>
+ <CAKfTPtAbYXuis1bfyDLiHRaYwosre3RAG+iNQSz-y+cWfc3uQA@mail.gmail.com>
+ <20140121133148.GB28801@e102568-lin.cambridge.arm.com>
+ <20140122114232.GB20247@sirena.org.uk>
+ <20140122163322.GF24288@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="p9mNGPlHbodNIlPs"
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1390359265-22808-1-git-send-email-thloh@altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: thloh@altera.com
-Cc: linus.walleij@linaro.org, rob.herring@calxeda.com, rob@landley.net, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, thloh.linux@gmail.com, dinguyen@altera.com, lftan@altera.com
+In-Reply-To: <20140122163322.GF24288@e102568-lin.cambridge.arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Nicolas Pitre <nico@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Antti Miettinen <ananaza@iki.fi>, Amit Kucheria <amit.kucheria@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Hanjun Guo <hanjun.guo@linaro.org>, Mark Hambleton <mark.hambleton@broadcom.com>, Sudeep Holla <Sudeep.Holla@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Kumar Gala <galak@codeaurora.org>, Dave P Martin <Dave.Martin@arm.com>, LAK <linux-arm-kernel@lists.infradead.org>, Charl
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 22, 2014 at 10:54 +0800, thloh@altera.com wrote:
-> 
-> From: Tien Hock Loh <thloh@altera.com>
-> 
-> Add driver support for Altera GPIO soft IP, including interrupts and I/O.
-> Tested on Altera CV SoC board using dipsw and LED using LED framework.
-> 
-> Signed-off-by: Tien Hock Loh <thloh@altera.com>
-> ---
->  .../devicetree/bindings/gpio/gpio-altera.txt       |  42 +++
->  drivers/gpio/Kconfig                               |   7 +
->  drivers/gpio/Makefile                              |   1 +
->  drivers/gpio/gpio-altera.c                         | 420 +++++++++++++++++++++
->  4 files changed, 470 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-altera.txt
->  create mode 100644 drivers/gpio/gpio-altera.c
 
-Since you not only introduce the driver, but do introduce the
-binding as well, I'd suggest to reflect this in the commit
-message.  And put 'binding' into the subject line such that DT
-people can be aware they should have a look.
+--p9mNGPlHbodNIlPs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Wed, Jan 22, 2014 at 04:33:22PM +0000, Lorenzo Pieralisi wrote:
+> On Wed, Jan 22, 2014 at 11:42:32AM +0000, Mark Brown wrote:
 
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
-> @@ -0,0 +1,42 @@
-> +Altera GPIO controller bindings
-> +
-> +Required properties:
-> +- compatible:
-> +  - "altr,pio-1.0"
-> +- reg: Physical base address and length of the controller's registers.
-> +- #gpio-cells : Should be 1
-> +  - The first cell is the gpio offset number
-> +- gpio-controller : Marks the device node as a GPIO controller.
+> > Would it not be sensible to define a PSCI binding that extends this and
+> > other bindings - ISTR some other properties getting scattered into
+> > bindings for it?
 
-Learning about required data types when reading the binding would
-be nice.  So that DTS authors can tell whether a property is
-boolean, takes integers or strings, etc
+> You mean adding the properties in the PSCI bindings instead of defining
+> them here ? Let me think about this, I really reckon these are C-state
 
-> +- #interrupt-cells : Should be 1.
-> +  - The first cell is the GPIO offset number within the GPIO controller.
-> +- interrupts: Specify the interrupt.
-> +- interrupt-controller: Mark the device node as an interrupt controller
+Yes.
 
-Are these really 'required'?  I'd expect those to be optional.
+> specific properties that belong in here (but actually I have to add
+> a statement related to PSCI - ie bindings require a PSCI node to be
+> present and valid), I will look into this.
 
-> +
-> +Altera GPIO specific properties:
-> +- altr,gpio-bank-width: Width of the GPIO bank. This defines how many pins the
-> +  GPIO device has. Ranges between 1-32. Optional and defaults to 32 is not
-> +  specified.
+It depends how you think about it - something like PSCI is going to to
+define properties used in a bunch of different parts of the low level
+code, it seems reasonable for things like this to say that the user
+should refer to the binding for the firmware to find out what options
+that firmware requires and can support rather than having to refer to
+each individual place and have those places enumerate the options for
+each firmware.
 
-In addition to being specific to the Altera GPIO implementation,
-aren't these optional, too?
+--p9mNGPlHbodNIlPs
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +- altr,interrupt_trigger: Specifies the interrupt trigger type the GPIO
-> +  hardware is synthesized. This field is required if the Altera GPIO controller
-> +  used has IRQ enabled as the interrupt type is not software controlled,
-> +  but hardware synthesized. Required if GPIO is used as an interrupt
-> +  controller. The value is defined in <dt-bindings/interrupt-controller/irq.h>
-> +  Only the following flags are supported:
-> +    IRQ_TYPE_EDGE_RISING
-> +    IRQ_TYPE_EDGE_FALLING
-> +    IRQ_TYPE_EDGE_BOTH
-> +    IRQ_TYPE_LEVEL_HIGH
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-This text suggests that using the GPIO bank as an interrupt
-controller indeed is optional.  As one would expect.
+iQIcBAEBAgAGBQJS4Am2AAoJELSic+t+oim9p1gP/Algqqod3b8awFi6JqTv6pSP
+B2Fb6OXW6MsMGaaA3FVsB2XLv/dma/6qaRDBfLMyoFIQTVYe/cdAjRRzrOdp/25P
+/V0DuFGk5r5DXUMb9bi+8kWpTTcInza811RYc4hcdXbquU5nwvLrKQ5/Sl0mYTvp
+Hi+np9Kfp7KuxGaY+ir5suNoeYVDnB5YPfDoeZagWplDfte7cashe042ng2RNpY9
+psVrXg6Vc8qRMYr+cqll9NumfqP4RwaTo3n8UIpVH69B8KLvohXl7hB63K2Dh8XY
+7i1g9gJAEn0SaOFLOXBhNcf8sKaWnnnskPk1C8nB/EK0bacoXefrS5R5RgDyGBNa
+WwQQyT+LmjP3z0zTIetDdzy0k6LVS0en23c2aur2FlFxX8+T75xXK7ZzpvNh1dH6
+HhuK4h6SCfRDPkF8Sl6fGc4DF94oIhx3hjHJljtJYivLyIvqVww+7pHc2Yt4kiAv
+gb/DAZUPV1bS4yCY8FC7G6f3bv8ShDUVpFBRwMV6PbFu0gAY+UtazVYqSTDDseYJ
+3SCGASQkTlWepWynusvnxMcZrd4RUHRLi2Ac2qyXTsl9ER5/JqQHj9HAeKjwrLay
+ljNMWWi1D8ikWNPkPLUz6OB/j2uzu2DgpV0NfzlHNSTPlg7VtPwPrDLTTQW2a9jx
+Pw36h4EgZZgIUAUhYATT
+=qoFF
+-----END PGP SIGNATURE-----
 
-> +
-> +Example:
-> +
-> +gpio_altr: gpio_altr {
-
-Should node names not be generic, i.e. "gpio"?  While aliases do
-have specific names since they identify a specific node, to later
-reference it from other sites.
-
-> +    compatible = "altr,pio-1.0";
-> +    reg = <0xff200000 0x10>;
-> +    interrupts = <0 45 4>;
-> +    altr,gpio-bank-width = <32>;
-> +    altr,interrupt_trigger = <IRQ_TYPE_EDGE_RISING>;
-> +    #gpio-cells = <1>;
-> +    gpio-controller;
-> +    #interrupt-cells = <1>;
-> +    interrupt-controller;
-> +};
-
-
-virtually yours
-Gerhard Sittig
--- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
-Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office@denx.de
+--p9mNGPlHbodNIlPs--
