@@ -1,84 +1,141 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 06/15] watchdog: orion: Remove unneeded BRIDGE_CAUSE
- clear
-Date: Wed, 22 Jan 2014 19:56:55 -0300
-Message-ID: <20140122225654.GB30763@localhost>
-References: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1390295561-3466-7-git-send-email-ezequiel.garcia@free-electrons.com>
- <20140121233537.GS18269@obsidianresearch.com>
- <20140122164904.GB27273@localhost>
- <20140122173417.GT18269@obsidianresearch.com>
- <52E02AB6.7040104@gmail.com>
- <20140122205213.GW18269@obsidianresearch.com>
- <20140122221237.GA30763@localhost>
- <20140122223117.GX18269@obsidianresearch.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFCv2] Device Tree bindings for OMAP3 Camera System
+Date: Wed, 22 Jan 2014 23:57:45 +0100
+Message-ID: <2960230.3bGpm3THhQ@avalon>
+References: <20131103220315.GA11659@earth.universe> <20140120232719.GA30894@earth.universe> <52E045DE.10706@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140122223117.GX18269-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <52E045DE.10706@gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: Sebastian Reichel <sre@debian.org>, Sakari Ailus <sakari.ailus@iki.fi>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 22, 2014 at 03:31:17PM -0700, Jason Gunthorpe wrote:
-> On Wed, Jan 22, 2014 at 07:12:38PM -0300, Ezequiel Garcia wrote:
-> > On Wed, Jan 22, 2014 at 01:52:13PM -0700, Jason Gunthorpe wrote:
-> > > > Clearing BRIDGE_CAUSE will only clear all currently pending ups=
-tream
-> > > > IRQs, of course. If WDT IRQ will be re-raised right after that =
-in
-> > > > BRIDGE_CAUSE depends on the actual HW implementation, i.e. we d=
-o no
-> > > > clear the causing IRQ itself but just what it raised in BRIDGE_=
-CAUSE.
-> > >=20
-> > > Which is why it makes no sense to clear it one time at kernel sta=
-rt.
-> > >=20
-> >=20
-> > So, it seems we need to handle irq_startup(), as you suggested.
-> > I've just tested the attached patch, and it's working fine: the dri=
-ver's
-> > probe() fully stops the watchdog, and then request_irq() acks and
-> > pending interrupts, through the added irq_startup().
-> >=20
-> > How does it look?
->=20
-> Looks sane to me.
->=20
-> I looked some more and there are other drivers (eg irq-metag-ext) tha=
-t
-> take this same approach.
->=20
+Hi,
 
-Yup, I took that one as a starting point.
+On Wednesday 22 January 2014 23:27:42 Sylwester Nawrocki wrote:
+> On 01/21/2014 12:27 AM, Sebastian Reichel wrote:
+> > On Mon, Jan 20, 2014 at 11:16:43PM +0100, Sylwester Nawrocki wrote:
+> >> On 01/20/2014 05:19 AM, Sakari Ailus wrote:
 
-[..]
-> I looked at the irq-orion driver a bit more and noticed this:
->=20
->         ret =3D irq_alloc_domain_generic_chips(domain, nrirqs, 1, np-=
->name,
->                              handle_level_irq, clr, 0, IRQ_GC_INIT_MA=
-SK_CACHE);
->                            ^^^^^^^^^^^^^^^^^^^^^
-> Shouldn't it be handle_edge_irq? Otherwise who is calling irq_ack? Ho=
-w
-> does this work at all? :)
->=20
+[snip]
 
-I'm not familiar with the differences between handle_level_irq and
-handle_edge_irq, but -AFAICS- both seem to ack the IRQ.
+> >>>> camera-switch {
+> >>>> 
+> >>>>      /*
+> >>>>       * TODO:
+> >>>>       *  - check if the switching code is generic enough to use a
+> >>>>       *    more generic name like "gpio-camera-switch".
 
-In fact handle_level_irq(), masks and acks the IRQ as the first thing.
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I think you can use a more generic name. You could probably get some 
+inspiration from the i2c-mux-gpio DT bindings.
+
+> >>>>       *  - document the camera-switch binding
+> >>>>       */
+> >>>>      
+> >>>>      compatible = "nokia,n900-camera-switch";
+> >>> 
+> >>> Indeed. I don't think the hardware engineers realised what kind of a
+> >>> long standing issue they created for us when they chose that solution.
+> >>> ;)
+> >>> 
+> >>> Writing a small driver for this that exports a sub-device would probably
+> >>> be the best option as this is hardly very generic. Should this be shown
+> >>> to the user space or not? Probably it'd be nice to avoid showing the
+> >>> related sub-device if there would be one.
+> >> 
+> >> Probably we should avoid exposing such a hardware detail to user space.
+> >> OTOH it would be easy to handle as a media entity through the media
+> >> controller API.
+> > 
+> > If this is exposed to the userspace, then a userspace application
+> > "knows", that it cannot use both cameras at the same time. Otherwise
+> > it can just react to error messages when it tries to use the second
+> > camera.
+> 
+> Indeed, that's a good argument, I forgot about it for a while.
+> 
+> >>> I'm still trying to get N9 support working first, the drivers are in a
+> >>> better shape and there are no such hardware hacks.
+> >>> 
+> >>>>      gpios =<&gpio4 1>; /* 97 */
+> >> 
+> >> I think the binding should be defining how state of the GPIO corresponds
+> >> to state of the mux.
+> > 
+> > Obviously it should be mentioned in the n900-camera-switch binding
+> > Documentation. This document was just the proposal for the omap3isp
+> > node :)
+> 
+> Huh, I wasn't reading carefully enough! Then since it is just about the
+> OMAP3 ISP it might be a good idea to drop the switch from the example,
+> it seems unrelated.
+> 
+> >>>>      port@0 {
+> >>>>          switch_in: endpoint {
+> >>>>              remote-endpoint =<&csi1_ep>;
+> >>>>          };
+> >>>>          switch_out1: endpoint {
+> >>>>              remote-endpoint =<&et8ek8>;
+> >>>>          };
+> >>>>          switch_out2: endpoint {
+> >>>>              remote-endpoint =<&smiapp_dfl>;
+> >>>>          };
+> >>>>      };
+> >> 
+> >> This won't work, since names of the nodes are identical they will be
+> >> combined by the dtc into a single 'endpoint' node with single
+> >> 'remote-endpoint' property
+> >> - might not be exactly something that you want.
+> > 
+> >> So it could be rewritten like:
+> > right.
+> > 
+> >> [...]
+> >> However, simplifying a bit, the 'endpoint' nodes are supposed to describe
+> >> the configuration of a bus interface (port) for a specific remote device.
+> >> 
+> >> Then what you need might be something like:
+> >>   camera-switch {
+> >> 	
+> >> 	compatible = "nokia,n900-camera-switch";
+> >> 	
+> >> 	#address-cells =<1>;
+> >> 	#size-cells =<0>;
+> >> 	
+> >> 	switch_in: port@0 {
+> >> 		reg =<0>;
+> >> 		endpoint {
+> >> 			remote-endpoint =<&csi1_ep>;
+> >> 		};
+> >> 	};
+> >>          switch_out1: port@1 {
+> >> 		reg =<1>;
+> >> 		endpoint {
+> >> 			remote-endpoint =<&et8ek8>;
+> >> 		};
+> >> 	};
+> >> 	switch_out2: port@2 {
+> >> 		endpoint {
+> >> 			reg =<2>;
+> >> 			remote-endpoint =<&smiapp_dfl>;
+> >> 		};
+> >> 	};
+> >>   };
+> > 
+> > sounds fine to me.
+> > 
+> >> I'm just wondering if we need to be describing this in DT in such
+> >> detail.
+> > 
+> > Do you have an alternative suggestion for the N900's bus switch
+> > hack?
+> 
+> No, not really anything better at the moment.
+
+-- 
+Regards,
+
+Laurent Pinchart
