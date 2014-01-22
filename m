@@ -1,132 +1,401 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH v2 4/5] ARM: OMAP2+: Add pdata quirk for sys_clkout2 for
- omap3 DBB056
-Date: Wed, 22 Jan 2014 13:33:21 -0600
-Message-ID: <52E01D01.2010709@ti.com>
-References: <1390417460-3134-1-git-send-email-chf.fritz@googlemail.com> <1390417460-3134-5-git-send-email-chf.fritz@googlemail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1390417460-3134-5-git-send-email-chf.fritz@googlemail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Christoph Fritz <chf.fritz@googlemail.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Archit Taneja <archit@ti.com>, bcousson@baylibre.com, "Hans J. Koch" <hjk@hansjkoch.de>, Daniel Mack <zonque@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v8 2/4] ehci-platform: Add support for clks and phy passed through devicetree
+Date: Wed, 22 Jan 2014 20:32:55 +0100
+Message-ID: <1390419177-6481-3-git-send-email-hdegoede@redhat.com>
+References: <1390419177-6481-1-git-send-email-hdegoede@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1390419177-6481-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/22/2014 01:04 PM, Christoph Fritz wrote:
-> Full device tree support for clock control is not yet accomplished. Until
-> then, configure the 24Mhz of sys_clkout2 to feed an USB-Hub here.
-> 
-> Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
-> ---
->  arch/arm/mach-omap2/pdata-quirks.c |   37 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
-> 
-> diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-> index a58590f..9ef7ca8 100644
-> --- a/arch/arm/mach-omap2/pdata-quirks.c
-> +++ b/arch/arm/mach-omap2/pdata-quirks.c
-> @@ -171,6 +171,43 @@ static void __init am3517_evm_legacy_init(void)
->  }
->  static void __init omap3_dbb056_legacy_init(void)
->  {
-> +	struct clk *clkout2;
-> +	struct clk *cm96fck;
-> +
-> +	/* Reparent clkout2 to 96M_FCK */
-> +	pr_info("a83x-quirk: Late Reparent clkout2 to 96M_FCK\n");
-what'd be a83x?
+Currently ehci-platform is only used in combination with devicetree when used
+with some Via socs. By extending it to (optionally) get clks and a phy from
+devicetree, and enabling / disabling those on power_on / off, it can be used
+more generically. Specifically after this commit it can be used for the
+ehci controller on Allwinner sunxi SoCs.
 
-> +	clkout2 = clk_get(NULL, "clkout2_src_ck");
-> +	if(clkout2 < 0) {
-> +		pr_err("a83x-quirk: couldn't get clkout2_src_ck\n");
-> +		return;
-> +	}
-> +	cm96fck = clk_get(NULL, "cm_96m_fck");
-> +	if(cm96fck < 0) {
-> +		pr_err("a83x-quirk: couldn't get cm_96m_fck\n");
-> +		return;
-> +	}
-> +	if(clk_set_parent(clkout2, cm96fck) < 0) {
-> +		pr_err("a83x-quirk: couldn't reparent clkout2_src_ck\n");
-> +		return;
-> +	}
-yep - we have bunch of similar code in drivers/clk/ti -> but we'd need
-a generic property to handle this.
-> +
-> +	/* Set clkout2 to 24MHz for internal usb hub*/
-> +	pr_info("a83x-quirk: Set clkout2 to 24MHz for internal usb hub\n");
-> +	clkout2 = clk_get(NULL, "sys_clkout2");
-> +	if(clkout2 < 0) {
-> +		pr_err("a83x-quirk: couldn't get sys_clkout2\n");
-> +		return;
-> +	}
-> +	if(clk_set_rate(clkout2, 24000000) < 0) {
-same here.
-> +		printk(KERN_ERR "board-omap3evm: couldn't set sys_clkout2 rate\n");
-"board-omap3evm:" copy paste?
-any reason why not pr_err?
+Since ehci-platform is intended to handle any generic enough non pci ehci
+device, add a "usb-ehci" compatibility string.
 
-> +		return;
-> +	}
-> +	if(clk_prepare_enable(clkout2) < 0) {
-> +		pr_err("a83x-quirk: couldn't enable sys_clkout2\n");
-> +		return;
-> +	}
-> +
-> +	/* Initialize display */
->  	omap3_dbb056_display_init_of();
->  }
->  #endif /* CONFIG_ARCH_OMAP3 */
-> 
+There already is a usb-ehci device-tree bindings document, update this
+with clks and phy bindings info.
 
-looking at the coding style, I assume we'd missed running
-checkpatch.pl --strict?
+Although actually quite generic so far the via,vt8500 compatibilty string
+had its own bindings document. Somehow we even ended up with 2 of them. Since
+these provide no extra information over the generic usb-ehci documentation,
+this patch removes them.
 
-ERROR: space required before the open parenthesis '('
-#44: FILE: arch/arm/mach-omap2/pdata-quirks.c:180:
-+	if(clkout2 < 0) {
+The ehci-ppc-of.c driver also claims the usb-ehci compatibility string,
+even though it mostly is ibm,usb-ehci-440epx specific. ehci-platform.c is
+not needed on ppc platforms, so add a !PPC_OF dependency to it to avoid
+2 drivers claiming the same compatibility string getting build on ppc.
 
-ERROR: space required before the open parenthesis '('
-#49: FILE: arch/arm/mach-omap2/pdata-quirks.c:185:
-+	if(cm96fck < 0) {
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+---
+ Documentation/devicetree/bindings/usb/usb-ehci.txt |  25 +++-
+ .../devicetree/bindings/usb/via,vt8500-ehci.txt    |  15 ---
+ .../devicetree/bindings/usb/vt8500-ehci.txt        |  12 --
+ drivers/usb/host/Kconfig                           |   1 +
+ drivers/usb/host/ehci-platform.c                   | 149 +++++++++++++++++----
+ 5 files changed, 142 insertions(+), 60 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/usb/via,vt8500-ehci.txt
+ delete mode 100644 Documentation/devicetree/bindings/usb/vt8500-ehci.txt
 
-ERROR: space required before the open parenthesis '('
-#53: FILE: arch/arm/mach-omap2/pdata-quirks.c:189:
-+	if(clk_set_parent(clkout2, cm96fck) < 0) {
-
-ERROR: space required before the open parenthesis '('
-#61: FILE: arch/arm/mach-omap2/pdata-quirks.c:197:
-+	if(clkout2 < 0) {
-
-ERROR: space required before the open parenthesis '('
-#65: FILE: arch/arm/mach-omap2/pdata-quirks.c:201:
-+	if(clk_set_rate(clkout2, 24000000) < 0) {
-
-WARNING: Prefer netdev_err(netdev, ... then dev_err(dev, ... then
-pr_err(...  to printk(KERN_ERR ...
-#66: FILE: arch/arm/mach-omap2/pdata-quirks.c:202:
-+		printk(KERN_ERR "board-omap3evm: couldn't set sys_clkout2 rate\n");
-
-ERROR: space required before the open parenthesis '('
-#69: FILE: arch/arm/mach-omap2/pdata-quirks.c:205:
-+	if(clk_prepare_enable(clkout2) < 0) {
-
-total: 6 errors, 1 warnings, 0 checks, 43 lines checked
-
- has style problems, please review.
-
-If any of these errors are false positives, please report
-them to the maintainer, see CHECKPATCH in MAINTAINERS.
-
-you might want to run something like aiaiai[1] or
-kernel_patch_verify[2] or patman... etc.. to help you clean up for
-minimum needs.
-
-[1] https://lwn.net/Articles/488992/
-[2] https://github.com/nmenon/kernel_patch_verify
-
+diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+index fa18612..2c1aeeb 100644
+--- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
++++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+@@ -7,13 +7,14 @@ Required properties:
+     (debug-port or other) can be also specified here, but only after
+     definition of standard EHCI registers.
+   - interrupts : one EHCI interrupt should be described here.
+-If device registers are implemented in big endian mode, the device
+-node should have "big-endian-regs" property.
+-If controller implementation operates with big endian descriptors,
+-"big-endian-desc" property should be specified.
+-If both big endian registers and descriptors are used by the controller
+-implementation, "big-endian" property can be specified instead of having
+-both "big-endian-regs" and "big-endian-desc".
++
++Optional properties:
++ - big-endian-regs : boolean, set this for hcds with big-endian registers
++ - big-endian-desc : boolean, set this for hcds with big-endian descriptors
++ - big-endian : boolean, for hcds with big-endian-regs + big-endian-desc
++ - clocks : a list of phandle + clock specifier pairs
++ - phys : phandle + phy specifier pair
++ - phy-names : "usb"
+ 
+ Example (Sequoia 440EPx):
+     ehci@e0000300 {
+@@ -23,3 +24,13 @@ Example (Sequoia 440EPx):
+ 	   reg = <0 e0000300 90 0 e0000390 70>;
+ 	   big-endian;
+    };
++
++Example (Allwinner sun4i A10 SoC):
++   ehci0: usb@01c14000 {
++	   compatible = "allwinner,sun4i-a10-ehci", "usb-ehci";
++	   reg = <0x01c14000 0x100>;
++	   interrupts = <39>;
++	   clocks = <&ahb_gates 1>;
++	   phys = <&usbphy 1>;
++	   phy-names = "usb";
++   };
+diff --git a/Documentation/devicetree/bindings/usb/via,vt8500-ehci.txt b/Documentation/devicetree/bindings/usb/via,vt8500-ehci.txt
+deleted file mode 100644
+index 17b3ad1..0000000
+--- a/Documentation/devicetree/bindings/usb/via,vt8500-ehci.txt
++++ /dev/null
+@@ -1,15 +0,0 @@
+-VIA/Wondermedia VT8500 EHCI Controller
+------------------------------------------------------
+-
+-Required properties:
+-- compatible : "via,vt8500-ehci"
+-- reg : Should contain 1 register ranges(address and length)
+-- interrupts : ehci controller interrupt
+-
+-Example:
+-
+-	ehci@d8007900 {
+-		compatible = "via,vt8500-ehci";
+-		reg = <0xd8007900 0x200>;
+-		interrupts = <43>;
+-	};
+diff --git a/Documentation/devicetree/bindings/usb/vt8500-ehci.txt b/Documentation/devicetree/bindings/usb/vt8500-ehci.txt
+deleted file mode 100644
+index 5fb8fd6..0000000
+--- a/Documentation/devicetree/bindings/usb/vt8500-ehci.txt
++++ /dev/null
+@@ -1,12 +0,0 @@
+-VIA VT8500 and Wondermedia WM8xxx SoC USB controllers.
+-
+-Required properties:
+- - compatible: Should be "via,vt8500-ehci" or "wm,prizm-ehci".
+- - reg: Address range of the ehci registers. size should be 0x200
+- - interrupts: Should contain the ehci interrupt.
+-
+-usb: ehci@D8007100 {
+-	compatible = "wm,prizm-ehci", "usb-ehci";
+-	reg = <0xD8007100 0x200>;
+-	interrupts = <1>;
+-};
+diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+index a9707da..e28cbe0 100644
+--- a/drivers/usb/host/Kconfig
++++ b/drivers/usb/host/Kconfig
+@@ -255,6 +255,7 @@ config USB_EHCI_ATH79
+ 
+ config USB_EHCI_HCD_PLATFORM
+ 	tristate "Generic EHCI driver for a platform device"
++	depends on !PPC_OF
+ 	default n
+ 	---help---
+ 	  Adds an EHCI host driver for a generic platform device, which
+diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
+index 7f30b71..d8aebc0 100644
+--- a/drivers/usb/host/ehci-platform.c
++++ b/drivers/usb/host/ehci-platform.c
+@@ -3,6 +3,7 @@
+  *
+  * Copyright 2007 Steven Brown <sbrown-aLUkz7fEuXBWk0Htik3J/w@public.gmane.org>
+  * Copyright 2010-2012 Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
++ * Copyright 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+  *
+  * Derived from the ohci-ssb driver
+  * Copyright 2007 Michael Buesch <m@bues.ch>
+@@ -18,6 +19,7 @@
+  *
+  * Licensed under the GNU/GPL. See COPYING for details.
+  */
++#include <linux/clk.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/err.h>
+ #include <linux/kernel.h>
+@@ -25,6 +27,7 @@
+ #include <linux/io.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
+ #include <linux/usb.h>
+ #include <linux/usb/hcd.h>
+@@ -33,6 +36,13 @@
+ #include "ehci.h"
+ 
+ #define DRIVER_DESC "EHCI generic platform driver"
++#define EHCI_MAX_CLKS 3
++#define hcd_to_ehci_priv(h) ((struct ehci_platform_priv *)hcd_to_ehci(h)->priv)
++
++struct ehci_platform_priv {
++	struct clk *clks[EHCI_MAX_CLKS];
++	struct phy *phy;
++};
+ 
+ static const char hcd_name[] = "ehci-platform";
+ 
+@@ -64,38 +74,90 @@ static int ehci_platform_reset(struct usb_hcd *hcd)
+ 	return 0;
+ }
+ 
++static int ehci_platform_power_on(struct platform_device *dev)
++{
++	struct usb_hcd *hcd = platform_get_drvdata(dev);
++	struct ehci_platform_priv *priv = hcd_to_ehci_priv(hcd);
++	int clk, ret;
++
++	for (clk = 0; clk < EHCI_MAX_CLKS && priv->clks[clk]; clk++) {
++		ret = clk_prepare_enable(priv->clks[clk]);
++		if (ret)
++			goto err_disable_clks;
++	}
++
++	if (priv->phy) {
++		ret = phy_init(priv->phy);
++		if (ret)
++			goto err_disable_clks;
++
++		ret = phy_power_on(priv->phy);
++		if (ret)
++			goto err_exit_phy;
++	}
++
++	return 0;
++
++err_exit_phy:
++	phy_exit(priv->phy);
++err_disable_clks:
++	while (--clk >= 0)
++		clk_disable_unprepare(priv->clks[clk]);
++
++	return ret;
++}
++
++static void ehci_platform_power_off(struct platform_device *dev)
++{
++	struct usb_hcd *hcd = platform_get_drvdata(dev);
++	struct ehci_platform_priv *priv = hcd_to_ehci_priv(hcd);
++	int clk;
++
++	if (priv->phy) {
++		phy_power_off(priv->phy);
++		phy_exit(priv->phy);
++	}
++
++	for (clk = EHCI_MAX_CLKS - 1; clk >= 0; clk--)
++		if (priv->clks[clk])
++			clk_disable_unprepare(priv->clks[clk]);
++}
++
+ static struct hc_driver __read_mostly ehci_platform_hc_driver;
+ 
+ static const struct ehci_driver_overrides platform_overrides __initconst = {
+-	.reset =	ehci_platform_reset,
++	.reset =		ehci_platform_reset,
++	.extra_priv_size =	sizeof(struct ehci_platform_priv),
+ };
+ 
+-static struct usb_ehci_pdata ehci_platform_defaults;
++static struct usb_ehci_pdata ehci_platform_defaults = {
++	.power_on =		ehci_platform_power_on,
++	.power_suspend =	ehci_platform_power_off,
++	.power_off =		ehci_platform_power_off,
++};
+ 
+ static int ehci_platform_probe(struct platform_device *dev)
+ {
+ 	struct usb_hcd *hcd;
+ 	struct resource *res_mem;
+-	struct usb_ehci_pdata *pdata;
+-	int irq;
+-	int err;
++	struct usb_ehci_pdata *pdata = dev_get_platdata(&dev->dev);
++	struct ehci_platform_priv *priv;
++	int err, irq, clk = 0;
+ 
+ 	if (usb_disabled())
+ 		return -ENODEV;
+ 
+ 	/*
+-	 * use reasonable defaults so platforms don't have to provide these.
+-	 * with DT probing on ARM, none of these are set.
++	 * Use reasonable defaults so platforms don't have to provide these
++	 * with DT probing on ARM.
+ 	 */
+-	if (!dev_get_platdata(&dev->dev))
+-		dev->dev.platform_data = &ehci_platform_defaults;
++	if (!pdata)
++		pdata = &ehci_platform_defaults;
+ 
+ 	err = dma_coerce_mask_and_coherent(&dev->dev, DMA_BIT_MASK(32));
+ 	if (err)
+ 		return err;
+ 
+-	pdata = dev_get_platdata(&dev->dev);
+-
+ 	irq = platform_get_irq(dev, 0);
+ 	if (irq < 0) {
+ 		dev_err(&dev->dev, "no irq provided");
+@@ -107,17 +169,40 @@ static int ehci_platform_probe(struct platform_device *dev)
+ 		return -ENXIO;
+ 	}
+ 
++	hcd = usb_create_hcd(&ehci_platform_hc_driver, &dev->dev,
++			     dev_name(&dev->dev));
++	if (!hcd)
++		return -ENOMEM;
++
++	platform_set_drvdata(dev, hcd);
++	dev->dev.platform_data = pdata;
++	priv = hcd_to_ehci_priv(hcd);
++
++	if (pdata == &ehci_platform_defaults && dev->dev.of_node) {
++		priv->phy = devm_phy_get(&dev->dev, "usb");
++		if (IS_ERR(priv->phy)) {
++			err = PTR_ERR(priv->phy);
++			if (err == -EPROBE_DEFER)
++				goto err_put_hcd;
++			priv->phy = NULL;
++		}
++
++		for (clk = 0; clk < EHCI_MAX_CLKS; clk++) {
++			priv->clks[clk] = of_clk_get(dev->dev.of_node, clk);
++			if (IS_ERR(priv->clks[clk])) {
++				err = PTR_ERR(priv->clks[clk]);
++				if (err == -EPROBE_DEFER)
++					goto err_put_clks;
++				priv->clks[clk] = NULL;
++				break;
++			}
++		}
++	}
++
+ 	if (pdata->power_on) {
+ 		err = pdata->power_on(dev);
+ 		if (err < 0)
+-			return err;
+-	}
+-
+-	hcd = usb_create_hcd(&ehci_platform_hc_driver, &dev->dev,
+-			     dev_name(&dev->dev));
+-	if (!hcd) {
+-		err = -ENOMEM;
+-		goto err_power;
++			goto err_put_clks;
+ 	}
+ 
+ 	hcd->rsrc_start = res_mem->start;
+@@ -126,21 +211,25 @@ static int ehci_platform_probe(struct platform_device *dev)
+ 	hcd->regs = devm_ioremap_resource(&dev->dev, res_mem);
+ 	if (IS_ERR(hcd->regs)) {
+ 		err = PTR_ERR(hcd->regs);
+-		goto err_put_hcd;
++		goto err_power;
+ 	}
+ 	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
+ 	if (err)
+-		goto err_put_hcd;
+-
+-	platform_set_drvdata(dev, hcd);
++		goto err_power;
+ 
+ 	return err;
+ 
+-err_put_hcd:
+-	usb_put_hcd(hcd);
+ err_power:
+ 	if (pdata->power_off)
+ 		pdata->power_off(dev);
++err_put_clks:
++	while (--clk >= 0)
++		clk_put(priv->clks[clk]);
++err_put_hcd:
++	if (pdata == &ehci_platform_defaults)
++		dev->dev.platform_data = NULL;
++
++	usb_put_hcd(hcd);
+ 
+ 	return err;
+ }
+@@ -149,13 +238,19 @@ static int ehci_platform_remove(struct platform_device *dev)
+ {
+ 	struct usb_hcd *hcd = platform_get_drvdata(dev);
+ 	struct usb_ehci_pdata *pdata = dev_get_platdata(&dev->dev);
++	struct ehci_platform_priv *priv = hcd_to_ehci_priv(hcd);
++	int clk;
+ 
+ 	usb_remove_hcd(hcd);
+-	usb_put_hcd(hcd);
+ 
+ 	if (pdata->power_off)
+ 		pdata->power_off(dev);
+ 
++	for (clk = 0; clk < EHCI_MAX_CLKS && priv->clks[clk]; clk++)
++		clk_put(priv->clks[clk]);
++
++	usb_put_hcd(hcd);
++
+ 	if (pdata == &ehci_platform_defaults)
+ 		dev->dev.platform_data = NULL;
+ 
+@@ -206,8 +301,10 @@ static int ehci_platform_resume(struct device *dev)
+ static const struct of_device_id vt8500_ehci_ids[] = {
+ 	{ .compatible = "via,vt8500-ehci", },
+ 	{ .compatible = "wm,prizm-ehci", },
++	{ .compatible = "usb-ehci", },
+ 	{}
+ };
++MODULE_DEVICE_TABLE(of, vt8500_ehci_ids);
+ 
+ static const struct platform_device_id ehci_platform_table[] = {
+ 	{ "ehci-platform", 0 },
 -- 
-Regards,
-Nishanth Menon
+1.8.5.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
