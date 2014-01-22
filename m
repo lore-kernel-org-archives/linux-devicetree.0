@@ -1,12 +1,12 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 2/5] clk: sunxi: Add USB clock register defintions
-Date: Wed, 22 Jan 2014 22:36:24 +0100
-Message-ID: <1390426587-16287-3-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH v2 4/5] ARM: sun5i: dt: Add bindings for USB clocks
+Date: Wed, 22 Jan 2014 22:36:26 +0100
+Message-ID: <1390426587-16287-5-git-send-email-hdegoede@redhat.com>
 References: <1390426587-16287-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRB2PTQCLQKGQE3NB52XI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRB3PTQCLQKGQEUC5MK2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1390426587-16287-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,68 +20,52 @@ List-Id: devicetree@vger.kernel.org
 
 From: Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Add register definitions for the usb-clk register found on sun4i, sun5i and
-sun7i SoCs.
-
 Signed-off-by: Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- Documentation/devicetree/bindings/clock/sunxi.txt |  5 +++++
- drivers/clk/sunxi/clk-sunxi.c                     | 12 ++++++++++++
- 2 files changed, 17 insertions(+)
+ arch/arm/boot/dts/sun5i-a10s.dtsi | 9 +++++++++
+ arch/arm/boot/dts/sun5i-a13.dtsi  | 9 +++++++++
+ 2 files changed, 18 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-index 79c7197..8bccb6a 100644
---- a/Documentation/devicetree/bindings/clock/sunxi.txt
-+++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-@@ -37,6 +37,8 @@ Required properties:
- 	"allwinner,sun6i-a31-apb2-gates-clk" - for the APB2 gates on A31
- 	"allwinner,sun4i-mod0-clk" - for the module 0 family of clocks
- 	"allwinner,sun7i-a20-out-clk" - for the external output clocks
-+	"allwinner,sun4i-usb-gates-clk" - for usb gates + resets on A10 / A20
-+	"allwinner,sun5i-a13-usb-gates-clk" - for usb gates + resets on A13
+diff --git a/arch/arm/boot/dts/sun5i-a10s.dtsi b/arch/arm/boot/dts/sun5i-a10s.dtsi
+index 9591959..44235e7 100644
+--- a/arch/arm/boot/dts/sun5i-a10s.dtsi
++++ b/arch/arm/boot/dts/sun5i-a10s.dtsi
+@@ -255,6 +255,15 @@
+ 			clock-output-names = "ir0";
+ 		};
  
- Required properties for all clocks:
- - reg : shall be the control register address for the clock.
-@@ -49,6 +51,9 @@ Required properties for all clocks:
- Additionally, "allwinner,*-gates-clk" clocks require:
- - clock-output-names : the corresponding gate names that the clock controls
- 
-+And "allwinner,*-usb-gates-clk" clocks also require:
-+- reset-cells : shall be set to 1
++		usb_clk: clk@01c200cc {
++			#clock-cells = <1>;
++		        #reset-cells = <1>;
++			compatible = "allwinner,sun5i-a13-usb-gates-clk";
++			reg = <0x01c200cc 0x4>;
++			clocks = <&pll6 1>;
++			clock-output-names = "usb_ohci0", "usb_phy";
++		};
 +
- Clock consumers should specify the desired clocks they use with a
- "clocks" phandle cell. Consumers that are using a gated clock should
- provide an additional ID in their clock property. This ID is the
-diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
-index f1a147c..18cbc3c 100644
---- a/drivers/clk/sunxi/clk-sunxi.c
-+++ b/drivers/clk/sunxi/clk-sunxi.c
-@@ -813,6 +813,16 @@ static const struct gates_data sun4i_ahb_gates_data __initconst = {
- 	.mask = {0x7F77FFF, 0x14FB3F},
- };
+ 		mbus_clk: clk@01c2015c {
+ 			#clock-cells = <0>;
+ 			compatible = "allwinner,sun4i-mod0-clk";
+diff --git a/arch/arm/boot/dts/sun5i-a13.dtsi b/arch/arm/boot/dts/sun5i-a13.dtsi
+index f6f2c81..4193fdf 100644
+--- a/arch/arm/boot/dts/sun5i-a13.dtsi
++++ b/arch/arm/boot/dts/sun5i-a13.dtsi
+@@ -252,6 +252,15 @@
+ 			clock-output-names = "ir0";
+ 		};
  
-+static const struct gates_data sun4i_usb_gates_data __initconst = {
-+	.mask = {0x1C0},
-+	.reset_mask = 0x07,
-+};
++		usb_clk: clk@01c200cc {
++			#clock-cells = <1>;
++		        #reset-cells = <1>;
++			compatible = "allwinner,sun5i-a13-usb-gates-clk";
++			reg = <0x01c200cc 0x4>;
++			clocks = <&pll6 1>;
++			clock-output-names = "usb_ohci0", "usb_phy";
++		};
 +
-+static const struct gates_data sun5i_a13_usb_gates_data __initconst = {
-+	.mask = {0x140},
-+	.reset_mask = 0x03,
-+};
-+
- static const struct gates_data sun5i_a10s_ahb_gates_data __initconst = {
- 	.mask = {0x147667e7, 0x185915},
- };
-@@ -1159,6 +1169,8 @@ static const struct of_device_id clk_gates_match[] __initconst = {
- 	{.compatible = "allwinner,sun6i-a31-apb1-gates-clk", .data = &sun6i_a31_apb1_gates_data,},
- 	{.compatible = "allwinner,sun7i-a20-apb1-gates-clk", .data = &sun7i_a20_apb1_gates_data,},
- 	{.compatible = "allwinner,sun6i-a31-apb2-gates-clk", .data = &sun6i_a31_apb2_gates_data,},
-+	{.compatible = "allwinner,sun4i-usb-gates-clk", .data = &sun4i_usb_gates_data,},
-+	{.compatible = "allwinner,sun5i-a13-usb-gates-clk", .data = &sun5i_a13_usb_gates_data,},
- 	{}
- };
- 
+ 		mbus_clk: clk@01c2015c {
+ 			#clock-cells = <0>;
+ 			compatible = "allwinner,sun4i-mod0-clk";
 -- 
 1.8.5.3
