@@ -1,74 +1,69 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH RFC v2 2/2] Documentation: arm: define DT C-states
- bindings
-Date: Wed, 22 Jan 2014 18:11:06 +0000
-Message-ID: <20140122181106.GQ17314@sirena.org.uk>
-References: <1390240079-6495-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1390240079-6495-3-git-send-email-lorenzo.pieralisi@arm.com>
- <CAKfTPtAbYXuis1bfyDLiHRaYwosre3RAG+iNQSz-y+cWfc3uQA@mail.gmail.com>
- <20140121133148.GB28801@e102568-lin.cambridge.arm.com>
- <20140122114232.GB20247@sirena.org.uk>
- <20140122163322.GF24288@e102568-lin.cambridge.arm.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v2 05/15] watchdog: orion: Make RSTOUT register a
+ separate resource
+Date: Wed, 22 Jan 2014 11:14:09 -0700
+Message-ID: <20140122181409.GV18269@obsidianresearch.com>
+References: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1390295561-3466-6-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20140121233321.GR18269@obsidianresearch.com>
+ <3176358.2QFcJHj0fv@wuerfel>
+ <20140122162136.GA27273@localhost>
+ <20140122180100.GE27273@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="p9mNGPlHbodNIlPs"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140122163322.GF24288@e102568-lin.cambridge.arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Nicolas Pitre <nico@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Antti Miettinen <ananaza@iki.fi>, Amit Kucheria <amit.kucheria@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Hanjun Guo <hanjun.guo@linaro.org>, Mark Hambleton <mark.hambleton@broadcom.com>, Sudeep Holla <Sudeep.Holla@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Kumar Gala <galak@codeaurora.org>, Dave P Martin <Dave.Martin@arm.com>, LAK <linux-arm-kernel@lists.infradead.org>, Charl
+In-Reply-To: <20140122180100.GE27273@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jan 22, 2014 at 03:01:01PM -0300, Ezequiel Garcia wrote:
+> On Wed, Jan 22, 2014 at 01:21:36PM -0300, Ezequiel Garcia wrote:
+> > > I don't see a good way out that would preserve backwards compatibility,
+> > > other than hardcoding the physical address in the driver, which seems
+> > > just as bad as breaking compatibility. That said, it is always the
+> > > same constant (0xf1000000 + 0x20000 + 0x0108) on Dove, Kirkwood and
+> > > Orion5x (not on mv78xx0, but that doesn't use the wdt), so hardcoding
+> > > a fallback would technically work, but we should print a fat warning at
+> > > boot time if we actually fall back to that.
+> > > 
+> > 
+> > Yes, I was thinking just about this. Namely:
+> > 
+> [..]
+> 
+> How about something like this?
 
---p9mNGPlHbodNIlPs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I liked Arnd's idea to use an offset from the first register. With the
+mbus driver we can now actually change the 0xF1.. prefix via the DT.
 
-On Wed, Jan 22, 2014 at 04:33:22PM +0000, Lorenzo Pieralisi wrote:
-> On Wed, Jan 22, 2014 at 11:42:32AM +0000, Mark Brown wrote:
+> +	dev_warn(&pdev->dev, "falling back to harcoded RSTOUT reg 0x%x\n",
+> +		 ORION_RSTOUT_MASK);
 
-> > Would it not be sensible to define a PSCI binding that extends this and
-> > other bindings - ISTR some other properties getting scattered into
-> > bindings for it?
+Maybe:
+dev_warn(&pdev->dev, FW_BUG "falling back to harcoded RSTOUT reg 0x%x\n",
 
-> You mean adding the properties in the PSCI bindings instead of defining
-> them here ? Let me think about this, I really reckon these are C-state
+?
 
-Yes.
+> @@ -139,10 +166,7 @@ static int orion_wdt_probe(struct platform_device *pdev)
+>  	if (!wdt_reg)
+>  		return -ENOMEM;
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> -	if (!res)
+> -		return -ENODEV;
+> -	wdt_rstout = devm_ioremap(&pdev->dev, res->start, resource_size(res));
+> +	wdt_rstout = try_compat_rstout_ioremap(pdev);
+>  	if (!wdt_rstout)
+>  		return -ENOMEM;
 
-> specific properties that belong in here (but actually I have to add
-> a statement related to PSCI - ie bindings require a PSCI node to be
-> present and valid), I will look into this.
+ENOMEM is probably not the right errno? Is there a standard errno for
+malformed DT?
 
-It depends how you think about it - something like PSCI is going to to
-define properties used in a bunch of different parts of the low level
-code, it seems reasonable for things like this to say that the user
-should refer to the binding for the firmware to find out what options
-that firmware requires and can support rather than having to refer to
-each individual place and have those places enumerate the options for
-each firmware.
-
---p9mNGPlHbodNIlPs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS4Am2AAoJELSic+t+oim9p1gP/Algqqod3b8awFi6JqTv6pSP
-B2Fb6OXW6MsMGaaA3FVsB2XLv/dma/6qaRDBfLMyoFIQTVYe/cdAjRRzrOdp/25P
-/V0DuFGk5r5DXUMb9bi+8kWpTTcInza811RYc4hcdXbquU5nwvLrKQ5/Sl0mYTvp
-Hi+np9Kfp7KuxGaY+ir5suNoeYVDnB5YPfDoeZagWplDfte7cashe042ng2RNpY9
-psVrXg6Vc8qRMYr+cqll9NumfqP4RwaTo3n8UIpVH69B8KLvohXl7hB63K2Dh8XY
-7i1g9gJAEn0SaOFLOXBhNcf8sKaWnnnskPk1C8nB/EK0bacoXefrS5R5RgDyGBNa
-WwQQyT+LmjP3z0zTIetDdzy0k6LVS0en23c2aur2FlFxX8+T75xXK7ZzpvNh1dH6
-HhuK4h6SCfRDPkF8Sl6fGc4DF94oIhx3hjHJljtJYivLyIvqVww+7pHc2Yt4kiAv
-gb/DAZUPV1bS4yCY8FC7G6f3bv8ShDUVpFBRwMV6PbFu0gAY+UtazVYqSTDDseYJ
-3SCGASQkTlWepWynusvnxMcZrd4RUHRLi2Ac2qyXTsl9ER5/JqQHj9HAeKjwrLay
-ljNMWWi1D8ikWNPkPLUz6OB/j2uzu2DgpV0NfzlHNSTPlg7VtPwPrDLTTQW2a9jx
-Pw36h4EgZZgIUAUhYATT
-=qoFF
------END PGP SIGNATURE-----
-
---p9mNGPlHbodNIlPs--
+Jason
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
