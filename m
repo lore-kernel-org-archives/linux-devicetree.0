@@ -1,62 +1,60 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 2/2] regulator: s5m8767: Document new bindings for
- Buck9 GPIO control
-Date: Wed, 22 Jan 2014 19:49:27 +0000
-Message-ID: <20140122194927.GZ17314@sirena.org.uk>
-References: <1390406848-20964-1-git-send-email-k.kozlowski@samsung.com>
- <1390406848-20964-3-git-send-email-k.kozlowski@samsung.com>
+Subject: Re: [PATCH] regulator: ti-abb: Add support for interleaved LDO
+ registers
+Date: Wed, 22 Jan 2014 20:19:32 +0000
+Message-ID: <20140122201932.GD17314@sirena.org.uk>
+References: <1389900750-27625-1-git-send-email-nm@ti.com>
+ <20140121185553.GW17314@sirena.org.uk>
+ <52DED341.3030503@ti.com>
+ <20140121215624.GC17314@sirena.org.uk>
+ <52DEF56C.1000209@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="cuTOFZ26ESCmzf04"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="M7C8deoQiHu/TN9U"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1390406848-20964-3-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Sangbeom Kim <sbkim73@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, Amit Daniel Kachhap <amit.daniel@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+In-Reply-To: <52DEF56C.1000209@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---cuTOFZ26ESCmzf04
+--M7C8deoQiHu/TN9U
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Jan 22, 2014 at 05:07:28PM +0100, Krzysztof Kozlowski wrote:
-> Add documentation for new bindings for controlling (enable/disable) the
-> Buck9 Converter by GPIO (BUCK9EN).
+On Tue, Jan 21, 2014 at 04:32:12PM -0600, Nishanth Menon wrote:
 
-Your CC list for this is *very* large...
+> The other alternative will be to use reg-names and map individual
+> registers (there are just setup and control registers to deal with per
+> abb instance). That will coexist with other pinctrl, bandgap and other
+> drivers which are not based off syscon.
 
-> +	- s5m8767,pmic-ext-control-enable: regulator can be enabled/disabled
-> +		by GPIO (valid only for buck9).
-> +	- s5m8767,pmic-ext-control-gpio: GPIO specifier for one GPIO
-> +		controlling this regulator (valid only for buck9).
-> +		This property is required when 's5m8767,pmic-ext-control-enable' is specified.
+Yes, I suspect that's going to be a lot easier to deploy given that
+there are existing drivers using the current non-syscon setup.  I'm
+totally fine with that approach.
 
-In what situation might the GPIO be present but not usable - can't we
-just use the presence of the GPIO property?  Also GPIO properties are
-supposed to be always "-gpios".
-
---cuTOFZ26ESCmzf04
+--M7C8deoQiHu/TN9U
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJS4CDEAAoJELSic+t+oim9Pq0P/31Fbn4RJnd39sT3N+pWQI0l
-EMBxB8o7fmDQdNym/B/Zs8zIqVFWIFEJexP2071vVE3zjodBJH2msQD8E0OK8W7p
-p/Hw8Dhloj8G4QnqiXsvfl/wFpwe0NhcDeaOLDSYX4W7hT5V2HI47D+LAaU7mFo0
-EMJ/pWUECbiekt+X3xgXBEh3ysh03I1QRDl299N+NuQHwwRzilqIcYHhpYppU1je
-npwa/C6sNNeCVR+Dmgw22g7wjTTqK5+M040j8lDpQW2sSdd2ukgFNG+rN+RMF8Ng
-XiDWyCPNsToBYQq5uemR2dDbq4hJS6RkAS+zx5LO1koNQMKewPCOV+Sjhpdvo5cM
-fis6Ec1xR55++yiOwACGHrH1GSy/ghMybQIxTFZI/9X6FouwKNXpp6A0TJX38JTT
-50jGVvkJdbbaBxoeqYzIcXGVLdmV/PhvXV6k/ws8MvRpKzARMiBU9LhXqB2jd5rt
-nJilduKnLxTLZfoyO4rRos2FQNV38tMQ2cznEEc/U180iYt1fpoSRzXAa8XTI9I9
-1ASzbEVtZf/LPD94bZRd7II8sa8yH0aGUddC2aceGPlCsvAod1ALWd6CsfR5KmIs
-JiqgJv0yfnlcHQDhHO2G6GBTtL+PTj5ZAjnp3GeM69sG+lXFpYRJurBCGSf9nTv1
-fw/zDZCYC4NRQslR+sCY
-=Hu/4
+iQIcBAEBAgAGBQJS4CfQAAoJELSic+t+oim9yCkP/26nhSpmqHzgZBj7ol+IB99E
+bSYbdzaFVD24DueizieloBTdGu0FdBhEvMf4VCC3B8JxrI2Zw9A6Y20b2PHBQu39
+JuHP6QoNbAWso7OGuiXsNXAmbdZOgarSKahrwhH4hPskYy4E2hL+lWeqoJoyHq08
+MMPtMFdkga767Ebj6S4JeMLDMDic0YtamctWe4dh14EHDO0TfGawOdUMSEQZFZ2M
+Vhe8LD0rz4m9fmj8MWSc3xTzO3XH7CUT6FJQ6fU1RVNkjoXsd9qEr8XsRd5rm2Nf
+CsIYalH/SSZ0vWCPOPDy1YOjuUm2bFdo8Fv1zRJQqi5DspXccpp4vzOFUIfuu9f7
+IEckLIe97X1O2sUoYQld7DBW1UcTIdGzfZkhnsVNwHPNMfo1/YchUaRpNR6cPFxd
+mcWoZP9BZgGs8KT1sw2dfLCJnMLYGdgxXWce3P6x7TrJ4WoQrI0FOACBUNMX/QOj
+6eVaO95/18GqNgsDFIoIGz/9OSKi2ak2Lzy97VlqGuhYfkTW/mm7kwp2MRF8Z1OK
+/zWzm6XFlGn3+Mlo38ogZNmlxrkifaSfRMoBcDMBwQbzv8Ufy9whEO4ax+SqAaWW
+zAbsa2CdEda1/9GuHq+Xw7wMQ93f7rXvrnX0PYmHL4QsoUSMLZd0dh+H3sbLtink
+yMpsSQJJX+1YZ2Lee5k7
+=9y0b
 -----END PGP SIGNATURE-----
 
---cuTOFZ26ESCmzf04--
+--M7C8deoQiHu/TN9U--
