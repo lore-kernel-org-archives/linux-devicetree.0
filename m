@@ -1,79 +1,57 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 05/15] watchdog: orion: Make RSTOUT register a
- separate resource
-Date: Wed, 22 Jan 2014 13:21:37 -0300
-Message-ID: <20140122162136.GA27273@localhost>
-References: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1390295561-3466-6-git-send-email-ezequiel.garcia@free-electrons.com>
- <20140121233321.GR18269@obsidianresearch.com>
- <3176358.2QFcJHj0fv@wuerfel>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH RFC v2 2/2] Documentation: arm: define DT C-states
+ bindings
+Date: Wed, 22 Jan 2014 16:23:14 +0000
+Message-ID: <20140122162313.GE24288@e102568-lin.cambridge.arm.com>
+References: <1390240079-6495-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1390240079-6495-3-git-send-email-lorenzo.pieralisi@arm.com>
+ <CAKfTPtAbYXuis1bfyDLiHRaYwosre3RAG+iNQSz-y+cWfc3uQA@mail.gmail.com>
+ <20140121133148.GB28801@e102568-lin.cambridge.arm.com>
+ <CAP245DXdFS5FEkrDvSw07aDDuZDqFPZXF=CoBLPrBB4JuYE8cQ@mail.gmail.com>
+ <20140121152358.GD28801@e102568-lin.cambridge.arm.com>
+ <20140122115214.GG17314@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140122115214.GG17314@sirena.org.uk>
 Content-Disposition: inline
-In-Reply-To: <3176358.2QFcJHj0fv@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Amit Kucheria <amit.kucheria@linaro.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Kevin Hilman <khilman@linaro.org>, Linux PM list <linux-pm@vger.kernel.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Nicolas Pitre <nico@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Antti Miettinen <ananaza@iki.fi>, Tomasz Figa <t.figa@samsung.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Hanjun Guo <hanjun.guo@linaro.org>, Mark Hambleton <mark.hambleton@broadcom.com>, Sudeep Holla <Sudeep.Holla@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Kumar Gala <galak@codeaurora.org>, Dave P Martin <Dave.Martin@arm.com>, Lists LAKML <linux-arm-kernel@lists.infradead.org>, Charles
 List-Id: devicetree@vger.kernel.org
 
-Jason, Arnd:
+Hi Mark,
 
-On Wed, Jan 22, 2014 at 10:48:37AM +0100, Arnd Bergmann wrote:
-> On Tuesday 21 January 2014 16:33:21 Jason Gunthorpe wrote:
-> > On Tue, Jan 21, 2014 at 06:12:31AM -0300, Ezequiel Garcia wrote:
-> > > In order to support other SoC, it's required to distinguish
-> > > the 'control' timer register, from the 'rstout' register
-> > > that enables system reset on watchdog expiration.
-> >=20
-> > > +     res =3D platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> > > +     if (!res)
-> > > +             return -ENODEV;
-> >            ^^^^^^^^^^^^^^^^^^^^^^
-> >=20
-> > This change seems to break compatibility with existing DT files tha=
-t
-> > have only a single entry in reg?
-> >=20
-> > Can the value be defaulted some how if missing?
->=20
-> I think this is a direct consequence of the attempt to remove the
-> header file dependency, since the RSTOUTn_MASK macro is defined
-> in mach/bridge-regs.h.
->=20
+On Wed, Jan 22, 2014 at 11:52:14AM +0000, Mark Brown wrote:
+> On Tue, Jan 21, 2014 at 03:23:59PM +0000, Lorenzo Pieralisi wrote:
+> > On Tue, Jan 21, 2014 at 02:35:11PM +0000, Amit Kucheria wrote:
+> 
+> > > DT-newbie here. What would happen if a vendor does not characterise
+> > > the latency at each OPP? IOW, the table only contains latency values
+> > > for a subset of the OPPs.
+> 
+> > The bindings are explicit, so the kernel will barf. Adding a LUT to map
+> > latencies to OPPs make me cringe, so I would not change the current
+> > bindings.
+> 
+> Actually looking at the OPP binding I do wonder if it might not be
+> better to have a v2/rich binding for them which is extensible - the fact
+> that it's not possible to add additional information seems like an
+> issue, this can't be the only thing anyone might want to add and lining
+> up multiple tables is never fun.
 
-Exactly. Just for the record, I warned about this a while back:
+On one hand OPP bindings need improvement and that's on the cards. I am not
+really following what you mean by "extensible", I only want to make sure
+that the C-state bindings do not become too complex.
 
-http://www.spinics.net/lists/arm-kernel/msg270163.html
+Do you mean extending OPP bindings to add eg C-state information there
+(or whatever piece of information that is OPP dependent) ?
+It seems a bit of a stretch but I can think about that.
 
-That said, it truly sucks to break compatibility so finding a way to
-keep backwards compatibility would be certainly desirable.
+I think that C-state properties are better defined in the C-state bindings
+that was the idea but I am open to suggestions.
 
-> I don't see a good way out that would preserve backwards compatibilit=
-y,
-> other than hardcoding the physical address in the driver, which seems
-> just as bad as breaking compatibility. That said, it is always the
-> same constant (0xf1000000 + 0x20000 + 0x0108) on Dove, Kirkwood and
-> Orion5x (not on mv78xx0, but that doesn't use the wdt), so hardcoding
-> a fallback would technically work, but we should print a fat warning =
-at
-> boot time if we actually fall back to that.
->=20
+Thank you !
+Lorenzo
 
-Yes, I was thinking just about this. Namely:
-
-If the second resource is missing *and* the compatible-string is
-"orion-watchdog" (or it's not DT-registered), then use a hardcoded
-RSTOUTn_MASK address. And pr_warn() something.
-
-Thanks for the feedback,
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
