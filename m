@@ -1,59 +1,77 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] DT: net: document Ethernet bindings in one place
-Date: Tue, 21 Jan 2014 19:30:39 -0600
-Message-ID: <CAL_JsqJF4m5ny5v_G1nEaNbH3Esdw8kuz__JpiJbkF=2ciY=9g@mail.gmail.com>
-References: <201401180405.07859.sergei.shtylyov@cogentembedded.com>
-	<CAL_Jsq+oa9P=rh+p-dMZyGP8TcmpX7bTnMU0ynLvFxjxFDYbRg@mail.gmail.com>
-	<52DD98F7.4090202@cogentembedded.com>
-	<CAL_JsqJXbF1-PcPHR2VP+Vi9A1aWizdsG_r3kDvRt3itXDhCGQ@mail.gmail.com>
-	<CAGVrzcb3X3soJNJCE5+YSpQrr+EdycCRFkptPvBCgFg4CbGJ4Q@mail.gmail.com>
+From: Matt Porter <mporter@linaro.org>
+Subject: Re: [PATCH] pinctrl: Rename Broadcom Capri pinctrl driver
+Date: Tue, 21 Jan 2014 20:35:12 -0500
+Message-ID: <20140122013512.GT31176@beef>
+References: <1390343886-25852-1-git-send-email-syin@broadcom.com>
+ <CAOesGMj7wXJ+DfXzk0U1pusKqZShq+KJdPY8hh=Ffj7KDti4_Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAGVrzcb3X3soJNJCE5+YSpQrr+EdycCRFkptPvBCgFg4CbGJ4Q@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, netdev <netdev@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAOesGMj7wXJ+DfXzk0U1pusKqZShq+KJdPY8hh=Ffj7KDti4_Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Sherman Yin <syin@broadcom.com>, Mark Brown <broonie@kernel.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list@broadcom.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 21, 2014 at 1:56 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> 2014/1/20 Rob Herring <robherring2@gmail.com>:
->> On Mon, Jan 20, 2014 at 3:45 PM, Sergei Shtylyov
->> <sergei.shtylyov@cogentembedded.com> wrote:
->>> On 01/20/2014 05:06 PM, Rob Herring wrote:
+On Tue, Jan 21, 2014 at 04:59:35PM -0800, Olof Johansson wrote:
+> Hi,
+> 
+> 
+> On Tue, Jan 21, 2014 at 2:38 PM, Sherman Yin <syin@broadcom.com> wrote:
+> > To be consistent with other Broadcom drivers, the Broadcom Capri pinctrl
+> > driver and its related CONFIG option are renamed to bcm281xx.
+> >
+> > Devicetree compatible string and binding documentation use
+> > "brcm,bcm11351-pinctrl" to match the machine binding here:
+> > Documentation/devicetree/bindings/arm/bcm/bcm11351.txt
+> >
+> > This driver supports pinctrl on BCM11130, BCM11140, BCM11351, BCM28145
+> > and BCM28155 SoCs.
+> >
+> > Signed-off-by: Sherman Yin <syin@broadcom.com>
+> > Reviewed-by: Matt Porter <mporter@linaro.org>
+> > ---
+> >  ...capri-pinctrl.txt => brcm,bcm11351-pinctrl.txt} |    8 +-
+> >  arch/arm/boot/dts/bcm11351.dtsi                    |    2 +-
+> >  arch/arm/configs/bcm_defconfig                     |    2 +-
+> >  drivers/pinctrl/Kconfig                            |    8 +-
+> >  drivers/pinctrl/Makefile                           |    2 +-
+> >  .../{pinctrl-capri.c => pinctrl-bcm281xx.c}        | 1521 ++++++++++----------
+> >  6 files changed, 775 insertions(+), 768 deletions(-)
+> >  rename Documentation/devicetree/bindings/pinctrl/{brcm,capri-pinctrl.txt => brcm,bcm11351-pinctrl.txt} (98%)
+> >  rename drivers/pinctrl/{pinctrl-capri.c => pinctrl-bcm281xx.c} (25%)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,capri-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/brcm,bcm11351-pinctrl.txt
+> > similarity index 98%
+> > rename from Documentation/devicetree/bindings/pinctrl/brcm,capri-pinctrl.txt
+> > rename to Documentation/devicetree/bindings/pinctrl/brcm,bcm11351-pinctrl.txt
+> > index 9e9e9ef..c119deb 100644
+> > --- a/Documentation/devicetree/bindings/pinctrl/brcm,capri-pinctrl.txt
+> > +++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm11351-pinctrl.txt
+> > @@ -1,4 +1,4 @@
+> > -Broadcom Capri Pin Controller
+> > +Broadcom BCM281xx Pin Controller
+> >
+> >  This is a pin controller for the Broadcom BCM281xx SoC family, which includes
+> >  BCM11130, BCM11140, BCM11351, BCM28145, and BCM28155 SoCs.
+> > @@ -7,14 +7,14 @@ BCM11130, BCM11140, BCM11351, BCM28145, and BCM28155 SoCs.
+> >
+> >  Required Properties:
+> >
+> > -- compatible:  Must be "brcm,capri-pinctrl".
+> > +- compatible:  Must be "brcm,bcm11351-pinctrl"
+> 
+> Since the original binding is queued for 3.14 (I believe?), if this
+> rename isn't merged for 3.14 then you will still need to accept the
+> old compatible string (binding). You can document it as deprecated,
+> but the driver needs to still probe with it.
 
-[snip]
+Linus had mentioned that he could take a rename in 3.14-rc for this
+driver which is really what we had in mind here. Since the binding
+doesn't become stable until 3.14 is actually released I was under the
+impression that this is ok without keeping a deprecated compatible
+string. I notice that Tomasz had comments about this type of situation
+in http://www.spinics.net/lists/devicetree/msg18010.html
 
->>>>> +- phy-connection-type: the same as "phy-mode" property (but described in
->>>>> ePAPR);
->>>>> +- phy-handle: phandle, specifies a reference to a node representing a
->>>>> PHY
->>>>> +  device (this property is described in ePAPR);
->>>>> +- phy: the same as "phy-handle" property (but actually ad-hoc one).
->>>
->>>
->>>> Mark this as deprecated in favor of phy-handle.
->>>
->>>
->>>    Here situation is more optimistic. Quite many drivers still use
->>> "phy-handle", though some use even more exotic props I didn't document here.
->>
->> Perhaps flagging as "Not recommended for new bindings" would be nicer wording...
->
-> Ok, so what's the deal here, can't we use phy-handle? There is
-> currently no infrastructure in drivers/net/ or drivers/of/ to look for
-> the "phy-handle" nor "phy" properties as phandles to fetch an Ethernet
-> PHY device tree node. If we are to provide one common place where we
-> want to do this, we will have to look for both properties, why can't
-> we mandate the use of "phy-handle" since this is the ePAPR compliant
-> one?
-
-My count is 3 using "phy" and 11 using "phy-handle". Even if we
-mandate phy-handle, we still have to support both properties to
-maintain compatibility with existing DTs. But nothing new should use
-"phy".  I'm not sure that something common really helps here. Drivers
-using "phy" can continue to and new ones use "phy-handle". After a
-quick scan, there doesn't appear to be any multi-line pattern in the
-drivers we could factor out.
-
-Rob
+-Matt
