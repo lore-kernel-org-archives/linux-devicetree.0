@@ -1,43 +1,181 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RFC 4/6] net: rfkill: gpio: add device tree support
-Date: Wed, 22 Jan 2014 10:58:38 +0100
-Message-ID: <CACRpkdZbb=eO8YRtMn6hW0vn97PkHUo88e_o61DEC8=wPY3_PQ@mail.gmail.com>
-References: <1389941251-32692-1-git-send-email-wens@csie.org>
-	<CAAVeFuLP4MkfXGG1FMauvUw_J63zRXdhGwxqYy5W98L1wCQNbw@mail.gmail.com>
-	<CACRpkdYiy+sya6NqRfAmsrFOXvaa3qX=qjRuTDW1vZVSaG1+Gg@mail.gmail.com>
-	<201401211335.16885.arnd@arndb.de>
-	<CAAVeFuKFfAvSPYLmvWV5jjT-peZFJ8sJ2bbh4F=JAYoWLhjZpA@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v4 2/2] usb: dwc3: adapt dwc3 core to use Generic PHY
+ Framework
+Date: Wed, 22 Jan 2014 15:44:31 +0530
+Message-ID: <52DF9A07.7030808@ti.com>
+References: <1385373690-12170-1-git-send-email-kishon@ti.com>	<1390299099-14764-1-git-send-email-kishon@ti.com>	<1390299099-14764-2-git-send-email-kishon@ti.com>	<52DE7D75.4040302@ti.com>
+ <CAFp+6iFkgD8x4DozhQdRSx=KLWGwR5pOsCxrVgWbcnCMTFT-sg@mail.gmail.com>
+ <52DF7A78.5030700@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDE6RCFOWIARBTVM72LAKGQE4PLIF2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAAVeFuKFfAvSPYLmvWV5jjT-peZFJ8sJ2bbh4F=JAYoWLhjZpA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <52DF7A78.5030700@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Roger Quadros <rogerq@ti.com>, Vivek Gautam <gautamvivek1987@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, george.cherian@ti.com, Heikki Krogerus <heikki.krogerus@linux.intel.com>, linux-doc@vger.kernel.org, Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, linux-omap@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 21, 2014 at 3:53 PM, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Wednesday 22 January 2014 01:29 PM, Roger Quadros wrote:
+> On 01/22/2014 08:04 AM, Vivek Gautam wrote:
+>> Hi,
+>>
+>>
+>> On Tue, Jan 21, 2014 at 7:30 PM, Roger Quadros <rogerq@ti.com> wrote:
+>>> Hi Kishon,
+>>>
+>>> On 01/21/2014 12:11 PM, Kishon Vijay Abraham I wrote:
+>>>> Adapted dwc3 core to use the Generic PHY Framework. So for init, exit,
+>>>> power_on and power_off the following APIs are used phy_init(), phy_exit(),
+>>>> phy_power_on() and phy_power_off().
+>>>>
+>>>> However using the old USB phy library wont be removed till the PHYs of all
+>>>> other SoC's using dwc3 core is adapted to the Generic PHY Framework.
+>>>>
+>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>> ---
+>>>> Changes from v3:
+>>>> * avoided using quirks
+>>>>
+>>>>  Documentation/devicetree/bindings/usb/dwc3.txt |    6 ++-
+>>>>  drivers/usb/dwc3/core.c                        |   60 ++++++++++++++++++++++++
+>>>>  drivers/usb/dwc3/core.h                        |    7 +++
+>>>>  3 files changed, 71 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+>>>> index e807635..471366d 100644
+>>>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+>>>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+>>>> @@ -6,11 +6,13 @@ Required properties:
+>>>>   - compatible: must be "snps,dwc3"
+>>>>   - reg : Address and length of the register set for the device
+>>>>   - interrupts: Interrupts used by the dwc3 controller.
+>>>> +
+>>>> +Optional properties:
+>>>>   - usb-phy : array of phandle for the PHY device.  The first element
+>>>>     in the array is expected to be a handle to the USB2/HS PHY and
+>>>>     the second element is expected to be a handle to the USB3/SS PHY
+>>>> -
+>>>> -Optional properties:
+>>>> + - phys: from the *Generic PHY* bindings
+>>>> + - phy-names: from the *Generic PHY* bindings
+>>>>   - tx-fifo-resize: determines if the FIFO *has* to be reallocated.
+>>>>
+>>>>  This is usually a subnode to DWC3 glue to which it is connected.
+>>>> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+>>>> index e009d4e..036d589 100644
+>>>> --- a/drivers/usb/dwc3/core.c
+>>>> +++ b/drivers/usb/dwc3/core.c
+>>>> @@ -82,6 +82,11 @@ static void dwc3_core_soft_reset(struct dwc3 *dwc)
+>>>>
+>>>>       usb_phy_init(dwc->usb2_phy);
+>>>>       usb_phy_init(dwc->usb3_phy);
+>>>> +     if (dwc->usb2_generic_phy)
+>>>> +             phy_init(dwc->usb2_generic_phy);
+>>>
+>>> What if phy_init() fails? You need to report and fail. Same applies for all PHY apis in this patch.
+>>>
+>>>> +     if (dwc->usb3_generic_phy)
+>>>> +             phy_init(dwc->usb3_generic_phy);
+>>>> +
+>>>>       mdelay(100);
+>>>>
+>>>>       /* Clear USB3 PHY reset */
+>>>> @@ -343,6 +348,11 @@ static void dwc3_core_exit(struct dwc3 *dwc)
+>>>>  {
+>>>>       usb_phy_shutdown(dwc->usb2_phy);
+>>>>       usb_phy_shutdown(dwc->usb3_phy);
+>>>> +     if (dwc->usb2_generic_phy)
+>>>> +             phy_exit(dwc->usb2_generic_phy);
+>>>> +     if (dwc->usb3_generic_phy)
+>>>> +             phy_exit(dwc->usb3_generic_phy);
+>>>> +
+>>>>  }
+>>>>
+>>>>  #define DWC3_ALIGN_MASK              (16 - 1)
+>>>> @@ -433,6 +443,32 @@ static int dwc3_probe(struct platform_device *pdev)
+>>>>               }
+>>>>       }
+>>>>
+>>>> +     dwc->usb2_generic_phy = devm_phy_get(dev, "usb2-phy");
+>>>> +     if (IS_ERR(dwc->usb2_generic_phy)) {
+>>>> +             ret = PTR_ERR(dwc->usb2_generic_phy);
+>>>> +             if (ret == -ENOSYS || ret == -ENODEV) {
+>>>> +                     dwc->usb2_generic_phy = NULL;
+>>>> +             } else if (ret == -EPROBE_DEFER) {
+>>>> +                     return ret;
+>>>> +             } else {
+>>>> +                     dev_err(dev, "no usb2 phy configured\n");
+>>>> +                     return ret;
+>>>> +             }
+>>>> +     }
+>>>> +
+>>>> +     dwc->usb3_generic_phy = devm_phy_get(dev, "usb3-phy");
+>>>> +     if (IS_ERR(dwc->usb3_generic_phy)) {
+>>>> +             ret = PTR_ERR(dwc->usb3_generic_phy);
+>>>> +             if (ret == -ENOSYS || ret == -ENODEV) {
+>>>> +                     dwc->usb3_generic_phy = NULL;
+>>>> +             } else if (ret == -EPROBE_DEFER) {
+>>>> +                     return ret;
+>>>> +             } else {
+>>>> +                     dev_err(dev, "no usb3 phy configured\n");
+>>>> +                     return ret;
+>>>> +             }
+>>>> +     }
+>>>> +
+>>>>       dwc->xhci_resources[0].start = res->start;
+>>>>       dwc->xhci_resources[0].end = dwc->xhci_resources[0].start +
+>>>>                                       DWC3_XHCI_REGS_END;
+>>>> @@ -482,6 +518,11 @@ static int dwc3_probe(struct platform_device *pdev)
+>>>>       usb_phy_set_suspend(dwc->usb2_phy, 0);
+>>>>       usb_phy_set_suspend(dwc->usb3_phy, 0);
+>>>>
+>>>> +     if (dwc->usb2_generic_phy)
+>>>> +             phy_power_on(dwc->usb2_generic_phy);
+>>>> +     if (dwc->usb3_generic_phy)
+>>>> +             phy_power_on(dwc->usb3_generic_phy);
+>>>> +
+>>>
+>>> Is it OK to power on the phy before phy_init()?
+>>
+>> Isn't phy_init() being done before phy_power_on() in the
+>> core_soft_reset() in this patch ?
+>> Isn't that what you want here ?
+>>
+>>>
+>>> I suggest to move phy_init() from core_soft_reset() to here, just before phy_power_on().
+>>
+>> core_soft_reset() is called before phy_power_on() itself from
+>> dwc3_core_init(), right ?
+>> will moving the phy_inti() here make nay difference ?
+> 
+> You are right. This part is fine then.
 
-> The good (or bad, rather) thing about DT is that we can do whatever we
-> please with the new bindings: decide which name or which index
-> (doesn't matter here) a GPIO should have. However we don't have this
-> control over ACPI, where nothing guarantees that the same index will
-> be used for the same GPIO function.
+Yeah.. it was fixed in one of the earlier patches which got merged.
 
-It's not like ACPI will impose some tables on us and expect us to
-use them as-is no matter how crazy they are. Then indeed the whole
-idea of unifying ACPI and DT accessors would be moot and it would
-only work by mistake or as a good joke.
+commit 3088f1085d1c08f31f02db26796555a66cdf7ca1
+Author: Kishon Vijay Abraham I <kishon@ti.com>
+Date:   Mon Nov 25 15:31:21 2013 +0530
 
-The situation with ACPI is just like with DT, it is assumed that the
-author of these tables also look at the Linux kernel drivers to figure
-out what argument goes where and we can influence them.
+    usb: dwc3: invoke phy_resume after phy_init
 
-Yours,
-Linus Walleij
+    usb_phy_set_suspend(phy, 0) is called before usb_phy_init. Fix it.
+
+    Reported-by: Roger Quadros <rogerq@ti.com>
+    Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+    Signed-off-by: Felipe Balbi <balbi@ti.com>
+
+Cheers,
+Kishon
+> 
+> cheers,
+> -roger
+> 
