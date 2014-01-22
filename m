@@ -1,152 +1,85 @@
 From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v4 2/2] usb: dwc3: adapt dwc3 core to use Generic PHY
- Framework
-Date: Wed, 22 Jan 2014 09:59:52 +0200
-Message-ID: <52DF7A78.5030700@ti.com>
-References: <1385373690-12170-1-git-send-email-kishon@ti.com>	<1390299099-14764-1-git-send-email-kishon@ti.com>	<1390299099-14764-2-git-send-email-kishon@ti.com>	<52DE7D75.4040302@ti.com> <CAFp+6iFkgD8x4DozhQdRSx=KLWGwR5pOsCxrVgWbcnCMTFT-sg@mail.gmail.com>
+Subject: Re: [PATCH v5 0/4] ata: ahci_platform: Add PHY support and OMAP support
+Date: Wed, 22 Jan 2014 10:11:24 +0200
+Message-ID: <52DF7D2C.1080802@ti.com>
+References: <1390228888-5537-1-git-send-email-rogerq@ti.com> <52DD5368.5020301@redhat.com> <52DE3132.3000007@ti.com> <52DE6114.20601@ti.com> <52DE7D5D.8070307@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAFp+6iFkgD8x4DozhQdRSx=KLWGwR5pOsCxrVgWbcnCMTFT-sg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Vivek Gautam <gautamvivek1987@gmail.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, george.cherian@ti.com, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux USB Mailing List <linux-usb@vger.kernel.org>
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <52DE7D5D.8070307@redhat.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>, tj@kernel.org, kishon@ti.com
+Cc: sergei.shtylyov@cogentembedded.com, b.zolnierkie@samsung.com, arnd@arndb.de, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/22/2014 08:04 AM, Vivek Gautam wrote:
+Hi,
+
+On 01/21/2014 03:59 PM, Hans de Goede wrote:
 > Hi,
 > 
+> On 01/21/2014 12:59 PM, Roger Quadros wrote:
+>> On 01/21/2014 10:34 AM, Roger Quadros wrote:
+>>> On 01/20/2014 06:48 PM, Hans de Goede wrote:
+>>>> Hi,
+>>>>
+>>>> On 01/20/2014 03:41 PM, Roger Quadros wrote:
+>>>>> Hi,
+>>>>>
+>>>>> Some platforms have a PHY hooked up to the SATA controller.
+>>>>> The PHY needs to be initialized and powered up for SATA to work.
+>>>>> We do that using the Generic PHY framework in PATCH 3.
+>>>>>
+>>>>> In order to support SATA on the OMAP platforms we need to runtime
+>>>>> resume the device before use. PATCH 4 takes care of that.
+>>>>
+>>>> Thanks for keeping me in the loop on this. I'm afraid this conflicts
+>>>> quite a bit with my recent ahci_platform.c work, not a big problem
+>>>> really, the series can go in either way.
+>>>>
+>>>> Your phy support will slot nicely into the new ahci_platform_get_resources
+>>>> and ahci_platform_enable_resources functions my refactoring introduces,
+>>>> looking at it from this pov it might be better / easier to rebase your series
+>>>> on top of the v4 of my series I've just send.
+>>>>
+>>>> Which brings me to one comment about your series why are you not doing phy_exit
+>>>> and phy_init on suspend resp. resume ? The phy can use quite a bit of power,
+>>>> if the phy init / exit end up in ahci_platform_enable_resources /
+>>>> ahci_platform_disable_resources, this will happen automatically for better or
+>>>> worse. So it would be good to test if this would work or not ...
+>>>
+>>> Right. Bartlomiej had pointed this out earlier, but I just wasn't very sure about it.
+>>>
+>>> Is it sufficient to just call phy_power_off() in suspend and phy_power_on() in resume?
+>>> Or do we call phy_exit() and phy_init() respectively as well.
+>>>
+>>> Kishon, any suggestions?
+>>
+>> OK. Answering my own question.
+>>
+>> On OMAP platform we power down the phy in phy_power_off() and idle the DPLL in phy_exit(),
+>> so my guess is both should be called in suspend() to save the most power.
 > 
-> On Tue, Jan 21, 2014 at 7:30 PM, Roger Quadros <rogerq@ti.com> wrote:
->> Hi Kishon,
->>
->> On 01/21/2014 12:11 PM, Kishon Vijay Abraham I wrote:
->>> Adapted dwc3 core to use the Generic PHY Framework. So for init, exit,
->>> power_on and power_off the following APIs are used phy_init(), phy_exit(),
->>> phy_power_on() and phy_power_off().
->>>
->>> However using the old USB phy library wont be removed till the PHYs of all
->>> other SoC's using dwc3 core is adapted to the Generic PHY Framework.
->>>
->>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>> ---
->>> Changes from v3:
->>> * avoided using quirks
->>>
->>>  Documentation/devicetree/bindings/usb/dwc3.txt |    6 ++-
->>>  drivers/usb/dwc3/core.c                        |   60 ++++++++++++++++++++++++
->>>  drivers/usb/dwc3/core.h                        |    7 +++
->>>  3 files changed, 71 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
->>> index e807635..471366d 100644
->>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
->>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
->>> @@ -6,11 +6,13 @@ Required properties:
->>>   - compatible: must be "snps,dwc3"
->>>   - reg : Address and length of the register set for the device
->>>   - interrupts: Interrupts used by the dwc3 controller.
->>> +
->>> +Optional properties:
->>>   - usb-phy : array of phandle for the PHY device.  The first element
->>>     in the array is expected to be a handle to the USB2/HS PHY and
->>>     the second element is expected to be a handle to the USB3/SS PHY
->>> -
->>> -Optional properties:
->>> + - phys: from the *Generic PHY* bindings
->>> + - phy-names: from the *Generic PHY* bindings
->>>   - tx-fifo-resize: determines if the FIFO *has* to be reallocated.
->>>
->>>  This is usually a subnode to DWC3 glue to which it is connected.
->>> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
->>> index e009d4e..036d589 100644
->>> --- a/drivers/usb/dwc3/core.c
->>> +++ b/drivers/usb/dwc3/core.c
->>> @@ -82,6 +82,11 @@ static void dwc3_core_soft_reset(struct dwc3 *dwc)
->>>
->>>       usb_phy_init(dwc->usb2_phy);
->>>       usb_phy_init(dwc->usb3_phy);
->>> +     if (dwc->usb2_generic_phy)
->>> +             phy_init(dwc->usb2_generic_phy);
->>
->> What if phy_init() fails? You need to report and fail. Same applies for all PHY apis in this patch.
->>
->>> +     if (dwc->usb3_generic_phy)
->>> +             phy_init(dwc->usb3_generic_phy);
->>> +
->>>       mdelay(100);
->>>
->>>       /* Clear USB3 PHY reset */
->>> @@ -343,6 +348,11 @@ static void dwc3_core_exit(struct dwc3 *dwc)
->>>  {
->>>       usb_phy_shutdown(dwc->usb2_phy);
->>>       usb_phy_shutdown(dwc->usb3_phy);
->>> +     if (dwc->usb2_generic_phy)
->>> +             phy_exit(dwc->usb2_generic_phy);
->>> +     if (dwc->usb3_generic_phy)
->>> +             phy_exit(dwc->usb3_generic_phy);
->>> +
->>>  }
->>>
->>>  #define DWC3_ALIGN_MASK              (16 - 1)
->>> @@ -433,6 +443,32 @@ static int dwc3_probe(struct platform_device *pdev)
->>>               }
->>>       }
->>>
->>> +     dwc->usb2_generic_phy = devm_phy_get(dev, "usb2-phy");
->>> +     if (IS_ERR(dwc->usb2_generic_phy)) {
->>> +             ret = PTR_ERR(dwc->usb2_generic_phy);
->>> +             if (ret == -ENOSYS || ret == -ENODEV) {
->>> +                     dwc->usb2_generic_phy = NULL;
->>> +             } else if (ret == -EPROBE_DEFER) {
->>> +                     return ret;
->>> +             } else {
->>> +                     dev_err(dev, "no usb2 phy configured\n");
->>> +                     return ret;
->>> +             }
->>> +     }
->>> +
->>> +     dwc->usb3_generic_phy = devm_phy_get(dev, "usb3-phy");
->>> +     if (IS_ERR(dwc->usb3_generic_phy)) {
->>> +             ret = PTR_ERR(dwc->usb3_generic_phy);
->>> +             if (ret == -ENOSYS || ret == -ENODEV) {
->>> +                     dwc->usb3_generic_phy = NULL;
->>> +             } else if (ret == -EPROBE_DEFER) {
->>> +                     return ret;
->>> +             } else {
->>> +                     dev_err(dev, "no usb3 phy configured\n");
->>> +                     return ret;
->>> +             }
->>> +     }
->>> +
->>>       dwc->xhci_resources[0].start = res->start;
->>>       dwc->xhci_resources[0].end = dwc->xhci_resources[0].start +
->>>                                       DWC3_XHCI_REGS_END;
->>> @@ -482,6 +518,11 @@ static int dwc3_probe(struct platform_device *pdev)
->>>       usb_phy_set_suspend(dwc->usb2_phy, 0);
->>>       usb_phy_set_suspend(dwc->usb3_phy, 0);
->>>
->>> +     if (dwc->usb2_generic_phy)
->>> +             phy_power_on(dwc->usb2_generic_phy);
->>> +     if (dwc->usb3_generic_phy)
->>> +             phy_power_on(dwc->usb3_generic_phy);
->>> +
->>
->> Is it OK to power on the phy before phy_init()?
+> Right, this would also match nicely with putting both the phy_init and the phy_power_on call
+> in ahci_platform_enable_resources in ahci_platform.c as it looks after v4 of my ahci_platform
+> rework patch-set, see:
+> https://github.com/jwrdegoede/linux-sunxi/blob/sunxi-devel/drivers/ata/ahci_platform.c
 > 
-> Isn't phy_init() being done before phy_power_on() in the
-> core_soft_reset() in this patch ?
-> Isn't that what you want here ?
+> If this goes there it will be automatically called on both probe and resume (and the counterparts
+> should go to ahci_platform_disable_resources, which will be called on suspend and remove).
 > 
->>
->> I suggest to move phy_init() from core_soft_reset() to here, just before phy_power_on().
-> 
-> core_soft_reset() is called before phy_power_on() itself from
-> dwc3_core_init(), right ?
-> will moving the phy_inti() here make nay difference ?
+> As said before I don't really have a preference for in which order these patches go upstream,
+> but can you please check that calling phy_poweroff + phy_exit on suspend and undo on resume
+> does not cause issues ?  If it does I need to rethink how things will work after my refactoring,
+> because currently all the clks / optional regulator and now also optional phy get en/disabled in
+> one go through ahci_platform_en/disable_resources.
 
-You are right. This part is fine then.
+I too don't have any preference of the upstream path. Maybe i'll repost this series based on your v4 an then you can include them in your series if you like. BTW why is your series still RFC at v4?
+
+As far as OMAP platform is concerned, calling phy_power_off() + phy_exit() shouldn't be a problem for suspend.
+Not sure about other platforms as we can't really know for sure what they do in phy_exit().
+
+If phy_power_on/off() and phy_init()/phy_exit() are always meant to be called together then what is the point of having 2 functions each for power up/down.
 
 cheers,
 -roger
