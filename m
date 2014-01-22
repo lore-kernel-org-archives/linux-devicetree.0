@@ -1,94 +1,39 @@
-From: Xiubo Li <Li.Xiubo@freescale.com>
-Subject: [PATCHv2 2/2] of: fix of_update_property()
-Date: Wed, 22 Jan 2014 13:57:40 +0800
-Message-ID: <1390370260-11273-2-git-send-email-Li.Xiubo@freescale.com>
-References: <1390370260-11273-1-git-send-email-Li.Xiubo@freescale.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH RFC v4 10/10] ahci_imx: Port to library-ised ahci_platform
+Date: Wed, 22 Jan 2014 08:25:42 +0100
+Message-ID: <52DF7276.5050705@redhat.com>
+References: <1390236303-22538-1-git-send-email-hdegoede@redhat.com> <1390236303-22538-11-git-send-email-hdegoede@redhat.com> <20140122065151.GC16215@pengutronix.de>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1390370260-11273-1-git-send-email-Li.Xiubo@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, grant.likely@linaro.org
-Cc: panto@antoniou-consulting.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Xiubo Li <Li.Xiubo@freescale.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRB7XE7WLAKGQEGND5IYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140122065151.GC16215-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The of_update_property() is intented to update a property in a node
-and if the property does not exist, will add it.
+Hi,
 
-The second search of the property is possibly won't be found, that
-maybe removed by other thread just before the second search begain.
+On 01/22/2014 07:51 AM, Sascha Hauer wrote:
+> Hi Hans,
+>
+> On Mon, Jan 20, 2014 at 05:45:03PM +0100, Hans de Goede wrote:
+>> This avoids the ugliness of creating a nested platform device from probe.
+>>
+>> Note untested, I've ordered a wandboard to be able to test these changes.
+>
+> Looks much better now, thanks. I could test this patch aswell, no need
+> to buy new hardware for this.
 
-Using the __of_find_property() and __of_add_property() instead and
-move them into lock operations.
+Thanks for the offer, but the wandboard arrived yesterday. Having a bit more
+variety in the arm hardware I've to test with is good to have anyways.
 
-Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
-Cc: Pantelis Antoniou <panto@antoniou-consulting.com>
----
- drivers/of/base.c | 36 ++++++++++++++----------------------
- 1 file changed, 14 insertions(+), 22 deletions(-)
+Regards,
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index b86b77a..458072d 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1573,7 +1573,7 @@ int of_update_property(struct device_node *np, struct property *newprop)
- {
- 	struct property **next, *oldprop;
- 	unsigned long flags;
--	int rc, found = 0;
-+	int rc = 0;
- 
- 	rc = of_property_notify(OF_RECONFIG_UPDATE_PROPERTY, np, newprop);
- 	if (rc)
-@@ -1582,36 +1582,28 @@ int of_update_property(struct device_node *np, struct property *newprop)
- 	if (!newprop->name)
- 		return -EINVAL;
- 
--	oldprop = of_find_property(np, newprop->name, NULL);
--	if (!oldprop)
--		return of_add_property(np, newprop);
--
- 	raw_spin_lock_irqsave(&devtree_lock, flags);
--	next = &np->properties;
--	while (*next) {
--		if (*next == oldprop) {
--			/* found the node */
--			newprop->next = oldprop->next;
--			*next = newprop;
--			oldprop->next = np->deadprops;
--			np->deadprops = oldprop;
--			found = 1;
--			break;
--		}
--		next = &(*next)->next;
-+	oldprop = __of_find_property(np, newprop->name, NULL);
-+	if (!oldprop) {
-+		/* add the node */
-+		rc = __of_add_property(np, newprop);
-+	} else {
-+		/* replace the node */
-+		next = &oldprop;
-+		newprop->next = oldprop->next;
-+		*next = newprop;
-+		oldprop->next = np->deadprops;
-+		np->deadprops = oldprop;
- 	}
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 
--	if (!found)
--		return -ENODEV;
--
- #ifdef CONFIG_PROC_DEVICETREE
- 	/* try to add to proc as well if it was initialized */
--	if (np->pde)
-+	if (!rc && np->pde)
- 		proc_device_tree_update_prop(np->pde, newprop, oldprop);
- #endif /* CONFIG_PROC_DEVICETREE */
- 
--	return 0;
-+	return rc;
- }
- 
- #if defined(CONFIG_OF_DYNAMIC)
--- 
-1.8.4
+Hans
