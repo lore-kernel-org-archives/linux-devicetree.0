@@ -1,60 +1,74 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] regulator: ti-abb: Add support for interleaved LDO
- registers
-Date: Wed, 22 Jan 2014 20:19:32 +0000
-Message-ID: <20140122201932.GD17314@sirena.org.uk>
-References: <1389900750-27625-1-git-send-email-nm@ti.com>
- <20140121185553.GW17314@sirena.org.uk>
- <52DED341.3030503@ti.com>
- <20140121215624.GC17314@sirena.org.uk>
- <52DEF56C.1000209@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="M7C8deoQiHu/TN9U"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52DEF56C.1000209@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 06/15] watchdog: orion: Remove unneeded BRIDGE_CAUSE
+ clear
+Date: Wed, 22 Jan 2014 21:31:50 +0100
+Message-ID: <52E02AB6.7040104@gmail.com>
+References: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com> <1390295561-3466-7-git-send-email-ezequiel.garcia@free-electrons.com> <20140121233537.GS18269@obsidianresearch.com> <20140122164904.GB27273@localhost> <20140122173417.GT18269@obsidianresearch.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140122173417.GT18269-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 01/22/2014 06:34 PM, Jason Gunthorpe wrote:
+> On Wed, Jan 22, 2014 at 01:49:05PM -0300, Ezequiel Garcia wrote:
+>>> Looking at this patch in isolation it looks to me like the clear
+>>> bridge lines should be replaced with a request_irq (as that does the
+>>> clear) - is the request_irq in the wrong spot?
+>>
+>> In that case, I thought that requesting the IRQ at probe time was enough
+>> to ensure the BRIDGE_CAUSE would be cleared by the time the watchdog is
+>> started. However, after reading through the irqchip code again, I'm no longer
+>> sure this is the case.
+>
+> The watchdog should ideally be fully stopped before request_irq so
+> there is no possible race.
+>
+>> It looks like the BRIDGE_CAUSE register is cleared when the interruption
+>> is acked (which happens in the handler if I understood the code right).
+>> So requesting the IRQ is useless...
+>
+> IMHO, the IRQ stuff should clear out pending edge triggered interrupts
+> at request_irq time. It makes no sense to take an interrupt for a
+> stale edge event.
+>
+> I had always assumed the core code did this via irq_gc_ack_clr_bit -
+> but I don't see an obvious path..
+>
+>> Sebastian: If the above is correct, do you think we can add a cause clear to
+>> the orion irqchip? (supposing it's harmful) Something like this:
 
---M7C8deoQiHu/TN9U
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ezequiel,
 
-On Tue, Jan 21, 2014 at 04:32:12PM -0600, Nishanth Menon wrote:
+irqchip/irq-orion.c does mask all interrupts but you are right, it 
+should also clear pending interrupts right after that.
 
-> The other alternative will be to use reg-names and map individual
-> registers (there are just setup and control registers to deal with per
-> abb instance). That will coexist with other pinctrl, bandgap and other
-> drivers which are not based off syscon.
+So
+	/* mask all interrupts */
+	writel(0, gc->reg_base + ORION_BRIDGE_IRQ_MASK);
 
-Yes, I suspect that's going to be a lot easier to deploy given that
-there are existing drivers using the current non-syscon setup.  I'm
-totally fine with that approach.
+should become
 
---M7C8deoQiHu/TN9U
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+	/* mask and clear all interrupts */
+	writel(0, gc->reg_base + ORION_BRIDGE_IRQ_MASK);
+	writel(~0, gc->reg_base + ORION_BRIDGE_IRQ_CAUSE);
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Could also be clear on write 0, I'll check that. I already had some
+beer, so I'll postpone any patches till tomorrow.
 
-iQIcBAEBAgAGBQJS4CfQAAoJELSic+t+oim9yCkP/26nhSpmqHzgZBj7ol+IB99E
-bSYbdzaFVD24DueizieloBTdGu0FdBhEvMf4VCC3B8JxrI2Zw9A6Y20b2PHBQu39
-JuHP6QoNbAWso7OGuiXsNXAmbdZOgarSKahrwhH4hPskYy4E2hL+lWeqoJoyHq08
-MMPtMFdkga767Ebj6S4JeMLDMDic0YtamctWe4dh14EHDO0TfGawOdUMSEQZFZ2M
-Vhe8LD0rz4m9fmj8MWSc3xTzO3XH7CUT6FJQ6fU1RVNkjoXsd9qEr8XsRd5rm2Nf
-CsIYalH/SSZ0vWCPOPDy1YOjuUm2bFdo8Fv1zRJQqi5DspXccpp4vzOFUIfuu9f7
-IEckLIe97X1O2sUoYQld7DBW1UcTIdGzfZkhnsVNwHPNMfo1/YchUaRpNR6cPFxd
-mcWoZP9BZgGs8KT1sw2dfLCJnMLYGdgxXWce3P6x7TrJ4WoQrI0FOACBUNMX/QOj
-6eVaO95/18GqNgsDFIoIGz/9OSKi2ak2Lzy97VlqGuhYfkTW/mm7kwp2MRF8Z1OK
-/zWzm6XFlGn3+Mlo38ogZNmlxrkifaSfRMoBcDMBwQbzv8Ufy9whEO4ax+SqAaWW
-zAbsa2CdEda1/9GuHq+Xw7wMQ93f7rXvrnX0PYmHL4QsoUSMLZd0dh+H3sbLtink
-yMpsSQJJX+1YZ2Lee5k7
-=9y0b
------END PGP SIGNATURE-----
+Clearing BRIDGE_CAUSE will only clear all currently pending upstream
+IRQs, of course. If WDT IRQ will be re-raised right after that in
+BRIDGE_CAUSE depends on the actual HW implementation, i.e. we do no
+clear the causing IRQ itself but just what it raised in BRIDGE_CAUSE.
 
---M7C8deoQiHu/TN9U--
+So, you should also clear WDT's irq in the driver yourself to clear a
+possible pending upstream BRIDGE_CAUSE.
+
+Sebastian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
