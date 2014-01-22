@@ -1,38 +1,72 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 17/18] watchdog: orion: Enable the build on ARCH_MVEBU
-Date: Wed, 22 Jan 2014 20:05:14 -0300
-Message-ID: <1390431915-5115-18-git-send-email-ezequiel.garcia@free-electrons.com>
-References: <1390431915-5115-1-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 06/15] watchdog: orion: Remove unneeded BRIDGE_CAUSE
+ clear
+Date: Thu, 23 Jan 2014 00:49:50 +0100
+Message-ID: <52E0591E.6030009@gmail.com>
+References: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com> <1390295561-3466-7-git-send-email-ezequiel.garcia@free-electrons.com> <20140121233537.GS18269@obsidianresearch.com> <20140122164904.GB27273@localhost> <20140122173417.GT18269@obsidianresearch.com> <52E02AB6.7040104@gmail.com> <20140122205213.GW18269@obsidianresearch.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1390431915-5115-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20140122205213.GW18269-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-After adding support for Armada 370/XP SoC let's enable the build on
-these platforms.
+On 01/22/2014 09:52 PM, Jason Gunthorpe wrote:
+>> Clearing BRIDGE_CAUSE will only clear all currently pending upstream
+>> IRQs, of course. If WDT IRQ will be re-raised right after that in
+>> BRIDGE_CAUSE depends on the actual HW implementation, i.e. we do no
+>> clear the causing IRQ itself but just what it raised in BRIDGE_CAUSE.
+>
+> Which is why it makes no sense to clear it one time at kernel start.
+>
+> Either you only get new edge triggered interrupts after request_irq
+> (sane behavior) or you might sometimes get an old pending edge
+> triggered interrupt after request_irq (crazy behavior).
+>
+> Clearing BRIDGE_CAUSE at kernel start only shortens the racy window it
+> doesn't eliminate it.
 
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- drivers/watchdog/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Actually, I missed that we mask all BRIDGE irqs in
+orion_bridge_irq_init. If we now also clear already pending irqs, that
+will not raise any old interrupts as long as watchdog clears all
+reasons for upstream irqs before requesting a BRIDGE irq.
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 5be6e91..8b79012 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -282,7 +282,7 @@ config DAVINCI_WATCHDOG
- 
- config ORION_WATCHDOG
- 	tristate "Orion watchdog"
--	depends on ARCH_ORION5X || ARCH_KIRKWOOD || ARCH_DOVE
-+	depends on ARCH_ORION5X || ARCH_KIRKWOOD || ARCH_DOVE || ARCH_MVEBU
- 	select WATCHDOG_CORE
- 	help
- 	  Say Y here if to include support for the watchdog timer
--- 
-1.8.1.5
+> In the more familiar level triggered world the driver would go to the
+> device and ensure it wasn't asserting an IRQ level and then do the
+> request_irq. This guarentees it won't get an interrupt callback.
+>
+> In a edge triggered world the driver should go to the device an ensure
+> that it won't create a new IRQ, then do request_irq - confident that
+> there will NEVER be a call to the IRQ handler, under any
+> circumstances.
+>
+> So I think edge triggered interrupts need to ack any possible old edge
+> trigger in the cause register before the first unmask - eg in the
+> setup callback.
+ >
+>> So, you should also clear WDT's irq in the driver yourself to clear a
+>> possible pending upstream BRIDGE_CAUSE.
+>
+> Which isn't possible - the BRIDGE_CAUSE is owned by the irq driver and
+> it must be cleared there, and it must only be cleared after the wdt
+> has been stopped so it doesn't set it again.
+
+I should have been more precise here: I meant watchdog driver should
+clear all sources of possible upstream interrupts in its _own_
+registers.
+
+> Notice that Ezequiel has added an IRQ handler that just calls panic,
+> so a spurious interrupt call is VERY VERY BAD.
+
+And I understand that he now clears watchdog's register before
+requesting an irq. All that is missing is bridge_irq driver clearing
+CAUSE register after masking all irqs, right?
+
+I'll stich a patch for that hopefully tomorrow.
+
+Sebastian
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
