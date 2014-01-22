@@ -1,83 +1,75 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH RFC v2 2/2] Documentation: arm: define DT C-states
- bindings
-Date: Wed, 22 Jan 2014 18:17:24 +0000
-Message-ID: <20140122181724.GR17314@sirena.org.uk>
-References: <1390240079-6495-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1390240079-6495-3-git-send-email-lorenzo.pieralisi@arm.com>
- <CAKfTPtAbYXuis1bfyDLiHRaYwosre3RAG+iNQSz-y+cWfc3uQA@mail.gmail.com>
- <20140121133148.GB28801@e102568-lin.cambridge.arm.com>
- <CAP245DXdFS5FEkrDvSw07aDDuZDqFPZXF=CoBLPrBB4JuYE8cQ@mail.gmail.com>
- <20140121152358.GD28801@e102568-lin.cambridge.arm.com>
- <20140122115214.GG17314@sirena.org.uk>
- <20140122162313.GE24288@e102568-lin.cambridge.arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 05/15] watchdog: orion: Make RSTOUT register a separate
+ resource
+Date: Wed, 22 Jan 2014 19:21:37 +0100
+Message-ID: <3159777.ZVRLCgpLar@wuerfel>
+References: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20140122180100.GE27273@localhost>
+ <20140122181409.GV18269@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="CWeaa2rMoVPmUX0K"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140122162313.GE24288@e102568-lin.cambridge.arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Amit Kucheria <amit.kucheria@linaro.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Kevin Hilman <khilman@linaro.org>, Linux PM list <linux-pm@vger.kernel.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Nicolas Pitre <nico@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Antti Miettinen <ananaza@iki.fi>, Tomasz Figa <t.figa@samsung.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Hanjun Guo <hanjun.guo@linaro.org>, Mark Hambleton <mark.hambleton@broadcom.com>, Sudeep Holla <Sudeep.Holla@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Kumar Gala <galak@codeaurora.org>, Dave P Martin <Dave.Martin@arm.com>, Lists LAKML <linux-arm-kernel@lists.infradead.org>, Charles
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140122181409.GV18269@obsidianresearch.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: Lior Amsalem <alior@marvell.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Wim Van Sebroeck <wim@iguana.be>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wednesday 22 January 2014 11:14:09 Jason Gunthorpe wrote:
+> On Wed, Jan 22, 2014 at 03:01:01PM -0300, Ezequiel Garcia wrote:
+> > On Wed, Jan 22, 2014 at 01:21:36PM -0300, Ezequiel Garcia wrote:
+> > > > I don't see a good way out that would preserve backwards compatibility,
+> > > > other than hardcoding the physical address in the driver, which seems
+> > > > just as bad as breaking compatibility. That said, it is always the
+> > > > same constant (0xf1000000 + 0x20000 + 0x0108) on Dove, Kirkwood and
+> > > > Orion5x (not on mv78xx0, but that doesn't use the wdt), so hardcoding
+> > > > a fallback would technically work, but we should print a fat warning at
+> > > > boot time if we actually fall back to that.
+> > > > 
+> > > 
+> > > Yes, I was thinking just about this. Namely:
+> > > 
+> > [..]
+> > 
+> > How about something like this?
+> 
+> I liked Arnd's idea to use an offset from the first register. With the
+> mbus driver we can now actually change the 0xF1.. prefix via the DT.
 
---CWeaa2rMoVPmUX0K
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+That wasn't actually my idea, but it does sound reasonable.
 
-On Wed, Jan 22, 2014 at 04:23:14PM +0000, Lorenzo Pieralisi wrote:
-> On Wed, Jan 22, 2014 at 11:52:14AM +0000, Mark Brown wrote:
+> > +     dev_warn(&pdev->dev, "falling back to harcoded RSTOUT reg 0x%x\n",
+> > +              ORION_RSTOUT_MASK);
+> 
+> Maybe:
+> dev_warn(&pdev->dev, FW_BUG "falling back to harcoded RSTOUT reg 0x%x\n",
 
-> > Actually looking at the OPP binding I do wonder if it might not be
-> > better to have a v2/rich binding for them which is extensible - the fact
-> > that it's not possible to add additional information seems like an
-> > issue, this can't be the only thing anyone might want to add and lining
-> > up multiple tables is never fun.
+I was thinking of WARN_ON(), i.e. something that users will actually notice ;-)
 
-> On one hand OPP bindings need improvement and that's on the cards. I am not
-> really following what you mean by "extensible", I only want to make sure
-> that the C-state bindings do not become too complex.
+> > @@ -139,10 +166,7 @@ static int orion_wdt_probe(struct platform_device *pdev)
+> >       if (!wdt_reg)
+> >               return -ENOMEM;
+> >  
+> > -     res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> > -     if (!res)
+> > -             return -ENODEV;
+> > -     wdt_rstout = devm_ioremap(&pdev->dev, res->start, resource_size(res));
+> > +     wdt_rstout = try_compat_rstout_ioremap(pdev);
+> >       if (!wdt_rstout)
+> >               return -ENOMEM;
+> 
+> ENOMEM is probably not the right errno? Is there a standard errno for
+> malformed DT?
 
-By extensible I guess I mostly mean not just a list of numbers we can't
-add additional information to without breaking compatibility.  Having to
-look through tables and make sure they all use the same indexes gets
-error prone and generally miserable.
+I don't think so. I'd probably use ENODEV, but it's not ideal.
 
-> Do you mean extending OPP bindings to add eg C-state information there
-> (or whatever piece of information that is OPP dependent) ?
-> It seems a bit of a stretch but I can think about that.
-
-> I think that C-state properties are better defined in the C-state bindings
-> that was the idea but I am open to suggestions.
-
-I think defining in these bindings makes total sense, it's just
-providing an extension to the OPP binding (which is already being looked
-at anyway).  The exensibility issue I see is that with the current OPP
-binding it's inelegant for another binding to add extra information
-about an operating point relevant to that binding.
-
---CWeaa2rMoVPmUX0K
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS4AsxAAoJELSic+t+oim9KcwQAI+g3qxKQU3FzR0w1Rac0CCq
-ldeQd4jwdOP1Vw8HLPQFkXwpNb5XUScREX5h0mRusH3PY/7cWM3CIaOeRvzY0D7O
-XXnT5kIq87O2XDIVXMpQiD18GUMADsrT3/y66qZOzNMQ2JyGhRTrX3aTtqK5cw65
-O4Er8qUqIkmkPjDm1qzTY4Al5Gtfj6/uTt/eybSf1BAakPwemh5uyemrpjGcoOWV
-bU+ErH2KfnWAV1SQ0HEDASaPeq5d331f5kqe1gz4yuAa0QmR6bRpma8YSO3K/7VH
-b52ROTwOUT9nonfIuaUw0drnGaKwEEvyXWcQ5PQ5p/XE5qOAIU2RDE4Y9uQndgZs
-Y9kmiwOwRKHXSsZuCB4Ld6xqtLFQnQHHmddtK4zZczh6J5lswFEb8m8jsiHnbJCK
-YtY9viQajNsML045FZ/bhywIj3LG8Ank/BWtvJmK61d8YNqEcjIr9Cq7KktSbJ2k
-zMoOugCYdzJOdbJMRV/PoXLeKuj7wU0devzYJTlPagaoZlb0HGkjnoDxE3OIoRXs
-s+ixrV+8nchm4p+SrKnsPd3yigZjm1RqAf9QXY3MUd+HdkoHvZh7gF2AIzDJGHi8
-FsoJmviBieyVqY7dx7zG8GRQ1v7eVnXIwRL1ND6RfrQylGsmidQm6AO6FyfyAIU/
-Zra8sz61a3PJUW+FbfQI
-=DHTC
------END PGP SIGNATURE-----
-
---CWeaa2rMoVPmUX0K--
+	Arnd
