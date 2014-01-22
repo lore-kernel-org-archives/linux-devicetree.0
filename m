@@ -1,75 +1,208 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 05/15] watchdog: orion: Make RSTOUT register a separate
- resource
-Date: Wed, 22 Jan 2014 19:21:37 +0100
-Message-ID: <3159777.ZVRLCgpLar@wuerfel>
-References: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <20140122180100.GE27273@localhost>
- <20140122181409.GV18269@obsidianresearch.com>
+From: Gerhard Sittig <gsi@denx.de>
+Subject: Re: [PATCH V6 1/1] drivers/gpio: Altera soft IP GPIO driver
+Date: Wed, 22 Jan 2014 19:24:20 +0100
+Message-ID: <20140122182420.GO20094@book.gsilab.sittig.org>
+References: <1390359265-22808-1-git-send-email-thloh@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140122181409.GV18269@obsidianresearch.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: Lior Amsalem <alior@marvell.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Wim Van Sebroeck <wim@iguana.be>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1390359265-22808-1-git-send-email-thloh@altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: thloh@altera.com
+Cc: linus.walleij@linaro.org, rob.herring@calxeda.com, rob@landley.net, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, thloh.linux@gmail.com, dinguyen@altera.com, lftan@altera.com
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 22 January 2014 11:14:09 Jason Gunthorpe wrote:
-> On Wed, Jan 22, 2014 at 03:01:01PM -0300, Ezequiel Garcia wrote:
-> > On Wed, Jan 22, 2014 at 01:21:36PM -0300, Ezequiel Garcia wrote:
-> > > > I don't see a good way out that would preserve backwards compatibility,
-> > > > other than hardcoding the physical address in the driver, which seems
-> > > > just as bad as breaking compatibility. That said, it is always the
-> > > > same constant (0xf1000000 + 0x20000 + 0x0108) on Dove, Kirkwood and
-> > > > Orion5x (not on mv78xx0, but that doesn't use the wdt), so hardcoding
-> > > > a fallback would technically work, but we should print a fat warning at
-> > > > boot time if we actually fall back to that.
-> > > > 
-> > > 
-> > > Yes, I was thinking just about this. Namely:
-> > > 
-> > [..]
-> > 
-> > How about something like this?
+[ this reply is related to the Linux driver source code,
+  I kept device tree and doc concerns in the other reply ]
+
+you introduce a Linux driver, yet I don't see any Linux
+development ML in the Cc: list (only the GPIO maintainer and
+doc/DT related lists) -- am I missing something?
+
+On Wed, Jan 22, 2014 at 10:54 +0800, thloh@altera.com wrote:
 > 
-> I liked Arnd's idea to use an offset from the first register. With the
-> mbus driver we can now actually change the 0xF1.. prefix via the DT.
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-altera.c
+> [ ... ]
+> +
+> +static int altera_gpio_irq_set_type(struct irq_data *d,
+> +				unsigned int type)
+> +{
+> +	struct altera_gpio_chip *altera_gc = irq_data_get_irq_chip_data(d);
+> +
+> +	if (type == IRQ_TYPE_NONE)
+> +		return 0;
+> +
+> +	if (type == IRQ_TYPE_LEVEL_HIGH &&
+> +		altera_gc->interrupt_trigger == IRQ_TYPE_LEVEL_HIGH) {
+> +		return 0;
+> +	} else {
+> +		if (type == IRQ_TYPE_EDGE_RISING &&
+> +			altera_gc->interrupt_trigger == IRQ_TYPE_EDGE_RISING)
+> +			return 0;
+> +		else if (type == IRQ_TYPE_EDGE_FALLING &&
+> +			altera_gc->interrupt_trigger == IRQ_TYPE_EDGE_FALLING)
+> +			return 0;
+> +		else if (type == IRQ_TYPE_EDGE_BOTH &&
+> +			altera_gc->interrupt_trigger == IRQ_TYPE_EDGE_BOTH)
+> +			return 0;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
 
-That wasn't actually my idea, but it does sound reasonable.
+This style of indentation makes readers miss the fact that the
+condition is multi-line and the body is just a single line.  From
+a quick look one might assume broken code due to missing braces.
+Please adjust the alignment.
 
-> > +     dev_warn(&pdev->dev, "falling back to harcoded RSTOUT reg 0x%x\n",
-> > +              ORION_RSTOUT_MASK);
-> 
-> Maybe:
-> dev_warn(&pdev->dev, FW_BUG "falling back to harcoded RSTOUT reg 0x%x\n",
+> +static void altera_gpio_irq_handler(unsigned int irq, struct irq_desc *desc)
+> +{
+> +	struct altera_gpio_chip *altera_gc = irq_desc_get_handler_data(desc);
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	struct of_mm_gpio_chip *mm_gc = &altera_gc->mmchip;
+> +	unsigned long status;
+> +
+> +	int i;
+> +
+> +	chained_irq_enter(chip, desc);
+> +	/* Handling for level trigger and edge trigger is different */
+> +	if (altera_gc->interrupt_trigger == IRQ_TYPE_LEVEL_HIGH) {
+> +		status = readl_relaxed(mm_gc->regs + ALTERA_GPIO_DATA);
+> +		status &= readl_relaxed(mm_gc->regs + ALTERA_GPIO_IRQ_MASK);
+> +
+> +		for (i = 0; i < mm_gc->gc.ngpio; i++) {
+> +			if (BIT(i) & status) {
 
-I was thinking of WARN_ON(), i.e. something that users will actually notice ;-)
+this looks like "Yoda programming" :)  checking the constant
+value against a variable, making readers stop and wonder
 
-> > @@ -139,10 +166,7 @@ static int orion_wdt_probe(struct platform_device *pdev)
-> >       if (!wdt_reg)
-> >               return -ENOMEM;
-> >  
-> > -     res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> > -     if (!res)
-> > -             return -ENODEV;
-> > -     wdt_rstout = devm_ioremap(&pdev->dev, res->start, resource_size(res));
-> > +     wdt_rstout = try_compat_rstout_ioremap(pdev);
-> >       if (!wdt_rstout)
-> >               return -ENOMEM;
-> 
-> ENOMEM is probably not the right errno? Is there a standard errno for
-> malformed DT?
+> +				generic_handle_irq(irq_find_mapping(
+> +					altera_gc->domain, i));
+> +			}
+> +		}
+> +	} else {
+> +		while ((status =
+> +			(readl_relaxed(mm_gc->regs + ALTERA_GPIO_EDGE_CAP) &
+> +			readl_relaxed(mm_gc->regs + ALTERA_GPIO_IRQ_MASK)))) {
+> +			writel_relaxed(status,
+> +				mm_gc->regs + ALTERA_GPIO_EDGE_CAP);
+> +			for (i = 0; i < mm_gc->gc.ngpio; i++) {
+> +				if (BIT(i) & status) {
+> +					generic_handle_irq(irq_find_mapping(
+> +						altera_gc->domain, i));
+> +				}
+> +			}
+> +		}
+> +	}
+> +
+> +	chained_irq_exit(chip, desc);
+> +}
 
-I don't think so. I'd probably use ENODEV, but it's not ideal.
+> +int altera_gpio_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *node = pdev->dev.of_node;
+> +	int i, id, reg, ret;
+> +	struct altera_gpio_chip *altera_gc = devm_kzalloc(&pdev->dev,
+> +				sizeof(*altera_gc), GFP_KERNEL);
+> +	if (altera_gc == NULL) {
+> +		pr_err("%s: out of memory\n", node->full_name);
+> +		return -ENOMEM;
+> +	}
+> +	altera_gc->domain = 0;
+> +
+> +	spin_lock_init(&altera_gc->gpio_lock);
+> +
+> +	id = pdev->id;
+> +
+> +	if (of_property_read_u32(node, "altr,gpio-bank-width", &reg))
+> +		/*By default assume full GPIO controller*/
+> +		altera_gc->mmchip.gc.ngpio = 32;
+> +	else
+> +		altera_gc->mmchip.gc.ngpio = reg;
+> +
+> +	if (altera_gc->mmchip.gc.ngpio > 32) {
+> +		pr_warn("%s: ngpio is greater than 32, defaulting to 32\n",
+> +			node->full_name);
 
-	Arnd
+use dev_warn() so users can better identify the instance?
+hand-rolling this with pr_warn() and node->full_name is
+unexpected
+
+> +		altera_gc->mmchip.gc.ngpio = 32;
+> +	}
+> +
+> +	altera_gc->mmchip.gc.direction_input	= altera_gpio_direction_input;
+> +	altera_gc->mmchip.gc.direction_output	= altera_gpio_direction_output;
+> +	altera_gc->mmchip.gc.get		= altera_gpio_get;
+> +	altera_gc->mmchip.gc.set		= altera_gpio_set;
+> +	altera_gc->mmchip.gc.to_irq		= altera_gpio_to_irq;
+> +	altera_gc->mmchip.gc.owner		= THIS_MODULE;
+> +
+> +	ret = of_mm_gpiochip_add(node, &altera_gc->mmchip);
+> +	if (ret) {
+> +		pr_err("%s: Failed adding memory mapped gpiochip\n",
+> +			node->full_name);
+> +		return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, altera_gc);
+> +
+> +	altera_gc->mapped_irq = irq_of_parse_and_map(node, 0);
+> +
+> +	if (!altera_gc->mapped_irq)
+> +		goto skip_irq;
+
+interrupt controller support is optional in the code, too -- good
+
+> +
+> +	altera_gc->domain = irq_domain_add_linear(node,
+> +		altera_gc->mmchip.gc.ngpio, &altera_gpio_irq_ops, altera_gc);
+> +
+> +	for (i = 0; i < altera_gc->mmchip.gc.ngpio; i++)
+> +		irq_create_mapping(altera_gc->domain, i);
+> +
+> +	if (!altera_gc->domain) {
+> +		ret = -ENODEV;
+> +		goto dispose_irq;
+> +	}
+
+do you reference the domain already between allocation and the
+check for successful allocation?
+
+> +
+> +	if (of_property_read_u32(node, "altr,interrupt_trigger", &reg)) {
+> +		ret = -EINVAL;
+> +		pr_err("%s: interrupt_trigger value not set in device tree\n",
+> +			node->full_name);
+> +		goto teardown;
+> +	}
+> +	altera_gc->interrupt_trigger = reg;
+> +
+> +	irq_set_handler_data(altera_gc->mapped_irq, altera_gc);
+> +	irq_set_chained_handler(altera_gc->mapped_irq, altera_gpio_irq_handler);
+> +
+> +	return 0;
+> +
+> +teardown:
+> +	irq_domain_remove(altera_gc->domain);
+> +dispose_irq:
+> +	irq_dispose_mapping(altera_gc->mapped_irq);
+> +	WARN_ON(gpiochip_remove(&altera_gc->mmchip.gc) < 0);
+> +
+> +	pr_err("%s: registration failed with status %d\n",
+> +		node->full_name, ret);
+> +
+> +	return ret;
+> +skip_irq:
+> +	return 0;
+> +}
+
+
+virtually yours
+Gerhard Sittig
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office@denx.de
