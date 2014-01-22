@@ -1,83 +1,161 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH] pinctrl: Rename Broadcom Capri pinctrl driver
-Date: Tue, 21 Jan 2014 20:59:10 -0800
-Message-ID: <CAOesGMgvGhT_VujFFFRwSwaqY1m_YwDmRp8MB=8udE5UPq8h5g@mail.gmail.com>
-References: <1390343886-25852-1-git-send-email-syin@broadcom.com>
-	<CAOesGMj7wXJ+DfXzk0U1pusKqZShq+KJdPY8hh=Ffj7KDti4_Q@mail.gmail.com>
-	<20140122013512.GT31176@beef>
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH v4 2/2] usb: dwc3: adapt dwc3 core to use Generic PHY Framework
+Date: Wed, 22 Jan 2014 11:34:45 +0530
+Message-ID: <CAFp+6iFkgD8x4DozhQdRSx=KLWGwR5pOsCxrVgWbcnCMTFT-sg@mail.gmail.com>
+References: <1385373690-12170-1-git-send-email-kishon@ti.com>
+	<1390299099-14764-1-git-send-email-kishon@ti.com>
+	<1390299099-14764-2-git-send-email-kishon@ti.com>
+	<52DE7D75.4040302@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140122013512.GT31176@beef>
-Sender: linux-doc-owner@vger.kernel.org
-To: Matt Porter <mporter@linaro.org>
-Cc: Sherman Yin <syin@broadcom.com>, Mark Brown <broonie@kernel.org>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list@broadcom.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <52DE7D75.4040302@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, george.cherian@ti.com, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux USB Mailing List <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 21, 2014 at 5:35 PM, Matt Porter <mporter@linaro.org> wrote:
-> On Tue, Jan 21, 2014 at 04:59:35PM -0800, Olof Johansson wrote:
->> Hi,
->>
->>
->> On Tue, Jan 21, 2014 at 2:38 PM, Sherman Yin <syin@broadcom.com> wrote:
->> > To be consistent with other Broadcom drivers, the Broadcom Capri pinctrl
->> > driver and its related CONFIG option are renamed to bcm281xx.
->> >
->> > Devicetree compatible string and binding documentation use
->> > "brcm,bcm11351-pinctrl" to match the machine binding here:
->> > Documentation/devicetree/bindings/arm/bcm/bcm11351.txt
->> >
->> > This driver supports pinctrl on BCM11130, BCM11140, BCM11351, BCM28145
->> > and BCM28155 SoCs.
->> >
->> > Signed-off-by: Sherman Yin <syin@broadcom.com>
->> > Reviewed-by: Matt Porter <mporter@linaro.org>
->> > ---
->> >  ...capri-pinctrl.txt => brcm,bcm11351-pinctrl.txt} |    8 +-
->> >  arch/arm/boot/dts/bcm11351.dtsi                    |    2 +-
->> >  arch/arm/configs/bcm_defconfig                     |    2 +-
->> >  drivers/pinctrl/Kconfig                            |    8 +-
->> >  drivers/pinctrl/Makefile                           |    2 +-
->> >  .../{pinctrl-capri.c => pinctrl-bcm281xx.c}        | 1521 ++++++++++----------
->> >  6 files changed, 775 insertions(+), 768 deletions(-)
->> >  rename Documentation/devicetree/bindings/pinctrl/{brcm,capri-pinctrl.txt => brcm,bcm11351-pinctrl.txt} (98%)
->> >  rename drivers/pinctrl/{pinctrl-capri.c => pinctrl-bcm281xx.c} (25%)
->> >
->> > diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,capri-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/brcm,bcm11351-pinctrl.txt
->> > similarity index 98%
->> > rename from Documentation/devicetree/bindings/pinctrl/brcm,capri-pinctrl.txt
->> > rename to Documentation/devicetree/bindings/pinctrl/brcm,bcm11351-pinctrl.txt
->> > index 9e9e9ef..c119deb 100644
->> > --- a/Documentation/devicetree/bindings/pinctrl/brcm,capri-pinctrl.txt
->> > +++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm11351-pinctrl.txt
->> > @@ -1,4 +1,4 @@
->> > -Broadcom Capri Pin Controller
->> > +Broadcom BCM281xx Pin Controller
->> >
->> >  This is a pin controller for the Broadcom BCM281xx SoC family, which includes
->> >  BCM11130, BCM11140, BCM11351, BCM28145, and BCM28155 SoCs.
->> > @@ -7,14 +7,14 @@ BCM11130, BCM11140, BCM11351, BCM28145, and BCM28155 SoCs.
->> >
->> >  Required Properties:
->> >
->> > -- compatible:  Must be "brcm,capri-pinctrl".
->> > +- compatible:  Must be "brcm,bcm11351-pinctrl"
->>
->> Since the original binding is queued for 3.14 (I believe?), if this
->> rename isn't merged for 3.14 then you will still need to accept the
->> old compatible string (binding). You can document it as deprecated,
->> but the driver needs to still probe with it.
+Hi,
+
+
+On Tue, Jan 21, 2014 at 7:30 PM, Roger Quadros <rogerq@ti.com> wrote:
+> Hi Kishon,
 >
-> Linus had mentioned that he could take a rename in 3.14-rc for this
-> driver which is really what we had in mind here. Since the binding
-> doesn't become stable until 3.14 is actually released I was under the
-> impression that this is ok without keeping a deprecated compatible
-> string. I notice that Tomasz had comments about this type of situation
-> in http://www.spinics.net/lists/devicetree/msg18010.html
+> On 01/21/2014 12:11 PM, Kishon Vijay Abraham I wrote:
+>> Adapted dwc3 core to use the Generic PHY Framework. So for init, exit,
+>> power_on and power_off the following APIs are used phy_init(), phy_exit(),
+>> phy_power_on() and phy_power_off().
+>>
+>> However using the old USB phy library wont be removed till the PHYs of all
+>> other SoC's using dwc3 core is adapted to the Generic PHY Framework.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>> Changes from v3:
+>> * avoided using quirks
+>>
+>>  Documentation/devicetree/bindings/usb/dwc3.txt |    6 ++-
+>>  drivers/usb/dwc3/core.c                        |   60 ++++++++++++++++++++++++
+>>  drivers/usb/dwc3/core.h                        |    7 +++
+>>  3 files changed, 71 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+>> index e807635..471366d 100644
+>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+>> @@ -6,11 +6,13 @@ Required properties:
+>>   - compatible: must be "snps,dwc3"
+>>   - reg : Address and length of the register set for the device
+>>   - interrupts: Interrupts used by the dwc3 controller.
+>> +
+>> +Optional properties:
+>>   - usb-phy : array of phandle for the PHY device.  The first element
+>>     in the array is expected to be a handle to the USB2/HS PHY and
+>>     the second element is expected to be a handle to the USB3/SS PHY
+>> -
+>> -Optional properties:
+>> + - phys: from the *Generic PHY* bindings
+>> + - phy-names: from the *Generic PHY* bindings
+>>   - tx-fifo-resize: determines if the FIFO *has* to be reallocated.
+>>
+>>  This is usually a subnode to DWC3 glue to which it is connected.
+>> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+>> index e009d4e..036d589 100644
+>> --- a/drivers/usb/dwc3/core.c
+>> +++ b/drivers/usb/dwc3/core.c
+>> @@ -82,6 +82,11 @@ static void dwc3_core_soft_reset(struct dwc3 *dwc)
+>>
+>>       usb_phy_init(dwc->usb2_phy);
+>>       usb_phy_init(dwc->usb3_phy);
+>> +     if (dwc->usb2_generic_phy)
+>> +             phy_init(dwc->usb2_generic_phy);
+>
+> What if phy_init() fails? You need to report and fail. Same applies for all PHY apis in this patch.
+>
+>> +     if (dwc->usb3_generic_phy)
+>> +             phy_init(dwc->usb3_generic_phy);
+>> +
+>>       mdelay(100);
+>>
+>>       /* Clear USB3 PHY reset */
+>> @@ -343,6 +348,11 @@ static void dwc3_core_exit(struct dwc3 *dwc)
+>>  {
+>>       usb_phy_shutdown(dwc->usb2_phy);
+>>       usb_phy_shutdown(dwc->usb3_phy);
+>> +     if (dwc->usb2_generic_phy)
+>> +             phy_exit(dwc->usb2_generic_phy);
+>> +     if (dwc->usb3_generic_phy)
+>> +             phy_exit(dwc->usb3_generic_phy);
+>> +
+>>  }
+>>
+>>  #define DWC3_ALIGN_MASK              (16 - 1)
+>> @@ -433,6 +443,32 @@ static int dwc3_probe(struct platform_device *pdev)
+>>               }
+>>       }
+>>
+>> +     dwc->usb2_generic_phy = devm_phy_get(dev, "usb2-phy");
+>> +     if (IS_ERR(dwc->usb2_generic_phy)) {
+>> +             ret = PTR_ERR(dwc->usb2_generic_phy);
+>> +             if (ret == -ENOSYS || ret == -ENODEV) {
+>> +                     dwc->usb2_generic_phy = NULL;
+>> +             } else if (ret == -EPROBE_DEFER) {
+>> +                     return ret;
+>> +             } else {
+>> +                     dev_err(dev, "no usb2 phy configured\n");
+>> +                     return ret;
+>> +             }
+>> +     }
+>> +
+>> +     dwc->usb3_generic_phy = devm_phy_get(dev, "usb3-phy");
+>> +     if (IS_ERR(dwc->usb3_generic_phy)) {
+>> +             ret = PTR_ERR(dwc->usb3_generic_phy);
+>> +             if (ret == -ENOSYS || ret == -ENODEV) {
+>> +                     dwc->usb3_generic_phy = NULL;
+>> +             } else if (ret == -EPROBE_DEFER) {
+>> +                     return ret;
+>> +             } else {
+>> +                     dev_err(dev, "no usb3 phy configured\n");
+>> +                     return ret;
+>> +             }
+>> +     }
+>> +
+>>       dwc->xhci_resources[0].start = res->start;
+>>       dwc->xhci_resources[0].end = dwc->xhci_resources[0].start +
+>>                                       DWC3_XHCI_REGS_END;
+>> @@ -482,6 +518,11 @@ static int dwc3_probe(struct platform_device *pdev)
+>>       usb_phy_set_suspend(dwc->usb2_phy, 0);
+>>       usb_phy_set_suspend(dwc->usb3_phy, 0);
+>>
+>> +     if (dwc->usb2_generic_phy)
+>> +             phy_power_on(dwc->usb2_generic_phy);
+>> +     if (dwc->usb3_generic_phy)
+>> +             phy_power_on(dwc->usb3_generic_phy);
+>> +
+>
+> Is it OK to power on the phy before phy_init()?
 
-Yes, if the rename goes in before the binding has been in one stable
-release then we can make noncompatible changes. Which is why I said if
-this isn't merged for 3.14, etc.
+Isn't phy_init() being done before phy_power_on() in the
+core_soft_reset() in this patch ?
+Isn't that what you want here ?
+
+>
+> I suggest to move phy_init() from core_soft_reset() to here, just before phy_power_on().
+
+core_soft_reset() is called before phy_power_on() itself from
+dwc3_core_init(), right ?
+will moving the phy_inti() here make nay difference ?
+
+>
+>>       ret = dwc3_event_buffers_setup(dwc);
+>>       if (ret) {
+>>               dev_err(dwc->dev, "failed to setup event buffers\n");
+[...]
+snip
 
 
--Olof
+-- 
+Best Regards
+Vivek Gautam
+Samsung R&D Institute, Bangalore
+India
