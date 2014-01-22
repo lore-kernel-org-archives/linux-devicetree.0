@@ -1,85 +1,281 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 06/15] watchdog: orion: Remove unneeded BRIDGE_CAUSE
- clear
-Date: Wed, 22 Jan 2014 19:12:38 -0300
-Message-ID: <20140122221237.GA30763@localhost>
-References: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1390295561-3466-7-git-send-email-ezequiel.garcia@free-electrons.com>
- <20140121233537.GS18269@obsidianresearch.com>
- <20140122164904.GB27273@localhost>
- <20140122173417.GT18269@obsidianresearch.com>
- <52E02AB6.7040104@gmail.com>
- <20140122205213.GW18269@obsidianresearch.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH] regulator: ti-abb: Add support for interleaved LDO
+ registers
+Date: Wed, 22 Jan 2014 16:25:23 -0600
+Message-ID: <20140122222523.GA4999@kahuna>
+References: <1389900750-27625-1-git-send-email-nm@ti.com>
+ <20140121185553.GW17314@sirena.org.uk>
+ <52DED341.3030503@ti.com>
+ <20140121215624.GC17314@sirena.org.uk>
+ <52DEF56C.1000209@ti.com>
+ <20140122201932.GD17314@sirena.org.uk>
+ <52E02E85.3030509@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140122205213.GW18269-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <52E02E85.3030509@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 22, 2014 at 01:52:13PM -0700, Jason Gunthorpe wrote:
-> > Clearing BRIDGE_CAUSE will only clear all currently pending upstrea=
-m
-> > IRQs, of course. If WDT IRQ will be re-raised right after that in
-> > BRIDGE_CAUSE depends on the actual HW implementation, i.e. we do no
-> > clear the causing IRQ itself but just what it raised in BRIDGE_CAUS=
-E.
->=20
-> Which is why it makes no sense to clear it one time at kernel start.
->=20
+On 14:48-20140122, Nishanth Menon wrote:
+> On 01/22/2014 02:19 PM, Mark Brown wrote:
+> > On Tue, Jan 21, 2014 at 04:32:12PM -0600, Nishanth Menon wrote:
+> > 
+> >> The other alternative will be to use reg-names and map individual
+> >> registers (there are just setup and control registers to deal with per
+> >> abb instance). That will coexist with other pinctrl, bandgap and other
+> >> drivers which are not based off syscon.
+> > 
+> > Yes, I suspect that's going to be a lot easier to deploy given that
+> > there are existing drivers using the current non-syscon setup.  I'm
+> > totally fine with that approach.
+> > 
+> ok - thanks for confirming - this also means that existing compatible
+> flags will have to change - but they were present solely to encode the
+> offset of setup and control from each other.
+> 
+> Considering that we never had any dtsi in upstream (since they were
+> all pending clock dts support for TI platforms), I will go with the
+> assumption of not needing to maintain backward compatible for dtbs
+> that could never have been generated in upstream kernel.
 
-So, it seems we need to handle irq_startup(), as you suggested.
-I've just tested the attached patch, and it's working fine: the driver'=
-s
-probe() fully stops the watchdog, and then request_irq() acks and
-pending interrupts, through the added irq_startup().
+How about something like the following? If this is acceptable, I can do
+a complete round of retest and ensure everything is functional on all
+platforms and post it as a formal patch:
 
-How does it look?
+>From 510812eeb10d5dffe44aa896746468bcb7f17fe2 Mon Sep 17 00:00:00 2001
+From: Nishanth Menon <nm@ti.com>
+Date: Wed, 22 Jan 2014 16:06:57 -0600
+Subject: [RFC PATCH] regulator: ti-abb: Add support for interleaved LDO registers
 
-diff --git a/drivers/irqchip/irq-orion.c b/drivers/irqchip/irq-orion.c
-index e51d400..91a3955 100644
---- a/drivers/irqchip/irq-orion.c
-+++ b/drivers/irqchip/irq-orion.c
-@@ -108,6 +108,16 @@ IRQCHIP_DECLARE(orion_intc, "marvell,orion-intc", =
-orion_irq_init);
- #define ORION_BRIDGE_IRQ_CAUSE	0x00
- #define ORION_BRIDGE_IRQ_MASK	0x04
-=20
-+static unsigned int orion_bridge_irq_startup(struct irq_data *data)
-+{
-+	/* Ack pending interrupts */
-+	data->chip->irq_ack(data);
-+
-+	/* Unmask the interrupt */
-+	data->chip->irq_unmask(data);
-+	return 0;
-+}
-+
- static void orion_bridge_irq_handler(unsigned int irq, struct irq_desc=
- *desc)
+Certain platforms such as DRA7 have quirky memory maps such as:
+PRM_ABBLDO_DSPEVE_CTRL      0x4ae07e20
+PRM_ABBLDO_IVA_CTRL 0x4ae07e24
+other-registers
+PRM_ABBLDO_DSPEVE_SETUP     0x4ae07e30
+PRM_ABBLDO_IVA_SETUP        0x4ae07e34
+
+These need the address range allocation to be either not reserved OR unique
+allocation per register instance or use something like syscon based
+solution.
+
+By going with unique allocation per register, we are able to now have a
+single compatible driver for all instances on all platforms which use
+the IP block.
+
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+ .../bindings/regulator/ti-abb-regulator.txt        |    6 +-
+ drivers/regulator/ti-abb-regulator.c               |   75 +++++++-------------
+ 2 files changed, 30 insertions(+), 51 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/regulator/ti-abb-regulator.txt b/Documentation/devicetree/bindings/regulator/ti-abb-regulator.txt
+index 2e57a33..395e279 100644
+--- a/Documentation/devicetree/bindings/regulator/ti-abb-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/ti-abb-regulator.txt
+@@ -2,12 +2,12 @@ Adaptive Body Bias(ABB) SoC internal LDO regulator for Texas Instruments SoCs
+ 
+ Required Properties:
+ - compatible: Should be one of:
+-  - "ti,abb-v1" for older SoCs like OMAP3
+-  - "ti,abb-v2" for newer SoCs like OMAP4, OMAP5
++  - "ti,abb-v1" for SoCs like OMAP3,4,5,DRA7
+ - reg: Address and length of the register set for the device. It contains
+   the information of registers in the same order as described by reg-names
+ - reg-names: Should contain the reg names
+-  - "base-address"	- contains base address of ABB module
++  - "control-address"	- contains control register address of ABB module
++  - "setup-address"	- contains setup register address of ABB module
+   - "int-address"	- contains address of interrupt register for ABB module
+   (also see Optional properties)
+ - #address-cell: should be 0
+diff --git a/drivers/regulator/ti-abb-regulator.c b/drivers/regulator/ti-abb-regulator.c
+index b187b6b..aebad81 100644
+--- a/drivers/regulator/ti-abb-regulator.c
++++ b/drivers/regulator/ti-abb-regulator.c
+@@ -54,8 +54,6 @@ struct ti_abb_info {
+ 
+ /**
+  * struct ti_abb_reg - Register description for ABB block
+- * @setup_reg:			setup register offset from base
+- * @control_reg:		control register offset from base
+  * @sr2_wtcnt_value_mask:	setup register- sr2_wtcnt_value mask
+  * @fbb_sel_mask:		setup register- FBB sel mask
+  * @rbb_sel_mask:		setup register- RBB sel mask
+@@ -64,9 +62,6 @@ struct ti_abb_info {
+  * @opp_sel_mask:		control register - mask for mode to operate
+  */
+ struct ti_abb_reg {
+-	u32 setup_reg;
+-	u32 control_reg;
+-
+ 	/* Setup register fields */
+ 	u32 sr2_wtcnt_value_mask;
+ 	u32 fbb_sel_mask;
+@@ -82,7 +77,8 @@ struct ti_abb_reg {
+  * struct ti_abb - ABB instance data
+  * @rdesc:			regulator descriptor
+  * @clk:			clock(usually sysclk) supplying ABB block
+- * @base:			base address of ABB block
++ * @control_reg:		control register of the ABB module
++ * @setup_reg:			setup register of the ABB module
+  * @int_base:			interrupt register base address
+  * @efuse_base:			(optional) efuse base address for ABB modes
+  * @ldo_base:			(optional) LDOVBB vset override base address
+@@ -98,7 +94,8 @@ struct ti_abb_reg {
+ struct ti_abb {
+ 	struct regulator_desc rdesc;
+ 	struct clk *clk;
+-	void __iomem *base;
++	void __iomem *setup_reg;
++	void __iomem *control_reg;
+ 	void __iomem *int_base;
+ 	void __iomem *efuse_base;
+ 	void __iomem *ldo_base;
+@@ -118,20 +115,18 @@ struct ti_abb {
+  * ti_abb_rmw() - handy wrapper to set specific register bits
+  * @mask:	mask for register field
+  * @value:	value shifted to mask location and written
+- * @offset:	offset of register
+- * @base:	base address
++ * @base:	register address
+  *
+  * Return: final register value (may be unused)
+  */
+-static inline u32 ti_abb_rmw(u32 mask, u32 value, u32 offset,
+-			     void __iomem *base)
++static inline u32 ti_abb_rmw(u32 mask, u32 value, void __iomem *base)
  {
- 	struct irq_domain *d =3D irq_get_handler_data(irq);
-@@ -176,6 +186,7 @@ static int __init orion_bridge_irq_init(struct devi=
-ce_node *np,
-=20
- 	gc->chip_types[0].regs.ack =3D ORION_BRIDGE_IRQ_CAUSE;
- 	gc->chip_types[0].regs.mask =3D ORION_BRIDGE_IRQ_MASK;
-+	gc->chip_types[0].chip.irq_startup =3D orion_bridge_irq_startup;
- 	gc->chip_types[0].chip.irq_ack =3D irq_gc_ack_clr_bit;
- 	gc->chip_types[0].chip.irq_mask =3D irq_gc_mask_clr_bit;
- 	gc->chip_types[0].chip.irq_unmask =3D irq_gc_mask_set_bit;
+ 	u32 val;
+ 
+-	val = readl(base + offset);
++	val = readl(base);
+ 	val &= ~mask;
+ 	val |= (value << __ffs(mask)) & mask;
+-	writel(val, base + offset);
++	writel(val, base);
+ 
+ 	return val;
+ }
+@@ -263,21 +258,19 @@ static int ti_abb_set_opp(struct regulator_dev *rdev, struct ti_abb *abb,
+ 	if (ret)
+ 		goto out;
+ 
+-	ti_abb_rmw(regs->fbb_sel_mask | regs->rbb_sel_mask, 0, regs->setup_reg,
+-		   abb->base);
++	ti_abb_rmw(regs->fbb_sel_mask | regs->rbb_sel_mask, 0, abb->setup_reg);
+ 
+ 	switch (info->opp_sel) {
+ 	case TI_ABB_SLOW_OPP:
+-		ti_abb_rmw(regs->rbb_sel_mask, 1, regs->setup_reg, abb->base);
++		ti_abb_rmw(regs->rbb_sel_mask, 1, abb->setup_reg);
+ 		break;
+ 	case TI_ABB_FAST_OPP:
+-		ti_abb_rmw(regs->fbb_sel_mask, 1, regs->setup_reg, abb->base);
++		ti_abb_rmw(regs->fbb_sel_mask, 1, abb->setup_reg);
+ 		break;
+ 	}
+ 
+ 	/* program next state of ABB ldo */
+-	ti_abb_rmw(regs->opp_sel_mask, info->opp_sel, regs->control_reg,
+-		   abb->base);
++	ti_abb_rmw(regs->opp_sel_mask, info->opp_sel, abb->control_reg);
+ 
+ 	/*
+ 	 * program LDO VBB vset override if needed for !bypass mode
+@@ -288,7 +281,7 @@ static int ti_abb_set_opp(struct regulator_dev *rdev, struct ti_abb *abb,
+ 		ti_abb_program_ldovbb(dev, abb, info);
+ 
+ 	/* Initiate ABB ldo change */
+-	ti_abb_rmw(regs->opp_change_mask, 1, regs->control_reg, abb->base);
++	ti_abb_rmw(regs->opp_change_mask, 1, abb->control_reg);
+ 
+ 	/* Wait for ABB LDO to complete transition to new Bias setting */
+ 	ret = ti_abb_wait_txdone(dev, abb);
+@@ -490,8 +483,7 @@ static int ti_abb_init_timings(struct device *dev, struct ti_abb *abb)
+ 	dev_dbg(dev, "%s: Clk_rate=%ld, sr2_cnt=0x%08x\n", __func__,
+ 		clk_get_rate(abb->clk), sr2_wt_cnt_val);
+ 
+-	ti_abb_rmw(regs->sr2_wtcnt_value_mask, sr2_wt_cnt_val, regs->setup_reg,
+-		   abb->base);
++	ti_abb_rmw(regs->sr2_wtcnt_value_mask, sr2_wt_cnt_val, abb->setup_reg);
+ 
+ 	return 0;
+ }
+@@ -645,25 +637,7 @@ static struct regulator_ops ti_abb_reg_ops = {
+ 	.get_voltage_sel = ti_abb_get_voltage_sel,
+ };
+ 
+-/* Default ABB block offsets, IF this changes in future, create new one */
+-static const struct ti_abb_reg abb_regs_v1 = {
+-	/* WARNING: registers are wrongly documented in TRM */
+-	.setup_reg		= 0x04,
+-	.control_reg		= 0x00,
+-
+-	.sr2_wtcnt_value_mask	= (0xff << 8),
+-	.fbb_sel_mask		= (0x01 << 2),
+-	.rbb_sel_mask		= (0x01 << 1),
+-	.sr2_en_mask		= (0x01 << 0),
+-
+-	.opp_change_mask	= (0x01 << 2),
+-	.opp_sel_mask		= (0x03 << 0),
+-};
+-
+-static const struct ti_abb_reg abb_regs_v2 = {
+-	.setup_reg		= 0x00,
+-	.control_reg		= 0x04,
+-
++static const struct ti_abb_reg abb_regs = {
+ 	.sr2_wtcnt_value_mask	= (0xff << 8),
+ 	.fbb_sel_mask		= (0x01 << 2),
+ 	.rbb_sel_mask		= (0x01 << 1),
+@@ -674,8 +648,7 @@ static const struct ti_abb_reg abb_regs_v2 = {
+ };
+ 
+ static const struct of_device_id ti_abb_of_match[] = {
+-	{.compatible = "ti,abb-v1", .data = &abb_regs_v1},
+-	{.compatible = "ti,abb-v2", .data = &abb_regs_v2},
++	{.compatible = "ti,abb-v1", .data = &abb_regs},
+ 	{ },
+ };
+ 
+@@ -722,11 +695,17 @@ static int ti_abb_probe(struct platform_device *pdev)
+ 	abb->regs = match->data;
+ 
+ 	/* Map ABB resources */
+-	pname = "base-address";
++	pname = "setup-address";
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, pname);
++	abb->setup_reg = devm_ioremap_resource(dev, res);
++	if (IS_ERR(abb->setup_reg))
++		return PTR_ERR(abb->setup_reg);
++
++	pname = "control-address";
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, pname);
+-	abb->base = devm_ioremap_resource(dev, res);
+-	if (IS_ERR(abb->base))
+-		return PTR_ERR(abb->base);
++	abb->control_reg = devm_ioremap_resource(dev, res);
++	if (IS_ERR(abb->control_reg))
++		return PTR_ERR(abb->control_reg);
+ 
+ 	pname = "int-address";
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, pname);
+@@ -860,7 +839,7 @@ skip_opt:
+ 	platform_set_drvdata(pdev, rdev);
+ 
+ 	/* Enable the ldo if not already done by bootloader */
+-	ti_abb_rmw(abb->regs->sr2_en_mask, 1, abb->regs->setup_reg, abb->base);
++	ti_abb_rmw(abb->regs->sr2_en_mask, 1, abb->setup_reg);
+ 
+ 	return 0;
+ }
+-- 
+1.7.9.5
 
-
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Nishanth Menon
