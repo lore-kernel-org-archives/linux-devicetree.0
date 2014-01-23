@@ -1,63 +1,133 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] clk: corenet: Update the clock bindings
-Date: Wed, 22 Jan 2014 18:44:23 -0600
-Message-ID: <1390437863.24905.549.camel@snotra.buserror.net>
-References: <1390269732-22798-1-git-send-email-Yuantian.Tang@freescale.com>
+From: Tien Hock Loh <thloh.linux@gmail.com>
+Subject: Re: [PATCH V6 1/1] drivers/gpio: Altera soft IP GPIO driver
+Date: Thu, 23 Jan 2014 09:47:11 +0800
+Message-ID: <CAOLUe6Ya=bTYrURhieWQkZewYf2Z8kFN82nkxwfM5DJDHb5wzw@mail.gmail.com>
+References: <1390359265-22808-1-git-send-email-thloh@altera.com>
+	<20140122180904.GN20094@book.gsilab.sittig.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1390269732-22798-1-git-send-email-Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: b07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b32579-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140122180904.GN20094@book.gsilab.sittig.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Gerhard Sittig <gsi@denx.de>
+Cc: Tien Hock Loh <thloh@altera.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dinguyen@altera.com, "lftan@altera.com" <lftan@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-01-21 at 10:02 +0800, Tang Yuantian wrote:
-> From: Tang Yuantian <yuantian.tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> Main changs include:
-> 	- Clarified the clock nodes' version number
-> 	- Fixed a issue in example
-> 
-> Singed-off-by: Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/clock/corenet-clock.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/corenet-clock.txt b/Documentation/devicetree/bindings/clock/corenet-clock.txt
-> index 24711af..d6cadef 100644
-> --- a/Documentation/devicetree/bindings/clock/corenet-clock.txt
-> +++ b/Documentation/devicetree/bindings/clock/corenet-clock.txt
-> @@ -54,6 +54,8 @@ Required properties:
->  		It takes parent's clock-frequency as its clock.
->  	* "fsl,qoriq-sysclk-2.0": for input system clock (v2.0).
->  		It takes parent's clock-frequency as its clock.
-> +	Note: v1.0 and v2.0 are clock version which should align to
-> +	clockgen node's they belong to which is chassis version.
+On Thu, Jan 23, 2014 at 2:09 AM, Gerhard Sittig <gsi@denx.de> wrote:
+> On Wed, Jan 22, 2014 at 10:54 +0800, thloh@altera.com wrote:
+>>
+>> From: Tien Hock Loh <thloh@altera.com>
+>>
+>> Add driver support for Altera GPIO soft IP, including interrupts and I/O.
+>> Tested on Altera CV SoC board using dipsw and LED using LED framework.
+>>
+>> Signed-off-by: Tien Hock Loh <thloh@altera.com>
+>> ---
+>>  .../devicetree/bindings/gpio/gpio-altera.txt       |  42 +++
+>>  drivers/gpio/Kconfig                               |   7 +
+>>  drivers/gpio/Makefile                              |   1 +
+>>  drivers/gpio/gpio-altera.c                         | 420 +++++++++++++++++++++
+>>  4 files changed, 470 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-altera.txt
+>>  create mode 100644 drivers/gpio/gpio-altera.c
+>
+> Since you not only introduce the driver, but do introduce the
+> binding as well, I'd suggest to reflect this in the commit
+> message.  And put 'binding' into the subject line such that DT
+> people can be aware they should have a look.
 
-Instead, how about a note like this near the top of the file:
+OK noted. Putting v7 up by in a few days so people get to review v6.
 
-All references to "1.0" and "2.0" refer to the QorIQ chassis version to
-which the chip complies.
+>
+>
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
+>> @@ -0,0 +1,42 @@
+>> +Altera GPIO controller bindings
+>> +
+>> +Required properties:
+>> +- compatible:
+>> +  - "altr,pio-1.0"
+>> +- reg: Physical base address and length of the controller's registers.
+>> +- #gpio-cells : Should be 1
+>> +  - The first cell is the gpio offset number
+>> +- gpio-controller : Marks the device node as a GPIO controller.
+>
+> Learning about required data types when reading the binding would
+> be nice.  So that DTS authors can tell whether a property is
+> boolean, takes integers or strings, etc
 
-Chassis Version		Example Chips
----------------		-------------
-1.0			p4080, p5020, p5040
-2.0			t4240, b4860, t1040
+Hmm, I don't quite understand your statement. I'm referring to other
+gpio device tree binding documentation when creating this. Do you mind
+to elaborate what you're expecting?
 
+>
+>> +- #interrupt-cells : Should be 1.
+>> +  - The first cell is the GPIO offset number within the GPIO controller.
+>> +- interrupts: Specify the interrupt.
+>> +- interrupt-controller: Mark the device node as an interrupt controller
+>
+> Are these really 'required'?  I'd expect those to be optional.
 
-BTW, this binding and the associated driver really should be called
-"qoriq-clock", not "corenet-clock".  This would match the compatible
-string, and it doesn't really have much to do with corenet (which is
-part of the QorIQ chassis v1 and v2, but not *this* part).  Do you know
-if the chassis v3 clock interface will be similar enough to share a
-driver?
+Yeah, I'll move this to optional section.
 
--Scott
+>
+>> +
+>> +Altera GPIO specific properties:
+>> +- altr,gpio-bank-width: Width of the GPIO bank. This defines how many pins the
+>> +  GPIO device has. Ranges between 1-32. Optional and defaults to 32 is not
+>> +  specified.
+>
+> In addition to being specific to the Altera GPIO implementation,
+> aren't these optional, too?
 
+Ditto. Moving this to optional section.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>> +- altr,interrupt_trigger: Specifies the interrupt trigger type the GPIO
+>> +  hardware is synthesized. This field is required if the Altera GPIO controller
+>> +  used has IRQ enabled as the interrupt type is not software controlled,
+>> +  but hardware synthesized. Required if GPIO is used as an interrupt
+>> +  controller. The value is defined in <dt-bindings/interrupt-controller/irq.h>
+>> +  Only the following flags are supported:
+>> +    IRQ_TYPE_EDGE_RISING
+>> +    IRQ_TYPE_EDGE_FALLING
+>> +    IRQ_TYPE_EDGE_BOTH
+>> +    IRQ_TYPE_LEVEL_HIGH
+>
+> This text suggests that using the GPIO bank as an interrupt
+> controller indeed is optional.  As one would expect.
+>
+
+Ditto.
+
+>> +
+>> +Example:
+>> +
+>> +gpio_altr: gpio_altr {
+>
+> Should node names not be generic, i.e. "gpio"?  While aliases do
+> have specific names since they identify a specific node, to later
+> reference it from other sites.
+
+Okay, I'll update the node name.
+
+>
+>> +    compatible = "altr,pio-1.0";
+>> +    reg = <0xff200000 0x10>;
+>> +    interrupts = <0 45 4>;
+>> +    altr,gpio-bank-width = <32>;
+>> +    altr,interrupt_trigger = <IRQ_TYPE_EDGE_RISING>;
+>> +    #gpio-cells = <1>;
+>> +    gpio-controller;
+>> +    #interrupt-cells = <1>;
+>> +    interrupt-controller;
+>> +};
+>
+>
+> virtually yours
+> Gerhard Sittig
+> --
+> DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+> HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+> Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office@denx.de
