@@ -1,152 +1,92 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v5 13/14] ARM: sun4i: dts: Add ahci / sata support
-Date: Thu, 23 Jan 2014 15:48:00 +0100
-Message-ID: <52E12BA0.4050003@redhat.com>
-References: <1390417489-5354-1-git-send-email-hdegoede@redhat.com> <1390417489-5354-14-git-send-email-hdegoede@redhat.com> <CAGb2v65mYK7Lo_KC+sGvYG7P2kDOy7CZgGane2eY8+-pMvH1mw@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC] Culling traffic volume on devicetree mailing list
+Date: Thu, 23 Jan 2014 08:53:34 -0600
+Message-ID: <CAL_JsqL7SHFB2Pg6u0+1ZdeDSRaBS5S_=K8gWGcjbq3MpgyvFw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBK6XQSLQKGQEHHRPPFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAGb2v65mYK7Lo_KC+sGvYG7P2kDOy7CZgGane2eY8+-pMvH1mw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Jan 23, 2014 at 5:03 AM, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org> wrote:
+> On Wed, 2014-01-22 at 10:35 -0800, Olof Johansson wrote:
+>> > devicetree-spec: For discussing 'core' device tree bindings. ie.
+>> > anything that would be a candidate for putting into an ePAPR type
+>> > spec. Individual device bindings would continue to be posted to
+>> > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, but anything affecting subsystems or
+>> > generic patterns should be posted to this new list.
+>>
+>> I predict that it will be hard for someone posting a patch to tell if
+>> they should send it to this list or some other list. It might be
+>> convenient for you guys to ignore the high-volume list and just focus
+>> on this one, but for the people who post patches it just makes it more
+>> complicated. IMHO.
+>
+> The issue with the current list is that it is too much of a firehose of
+> Linux patches for other non-Linux consumers of DTB e.g. BSD folks, me
+> with my Xen hat, see [0] for the intersection of those two which
+> prompted me to mention this on the call.
+>
+> The firehose means that these people don't subscribe and therefore lack
+> visibility into what is going on with the core bindings (e.g. BSD seems
+> to have a different binding for gic interrupts, mentioned in the linked
+> thread).
+>
+> I don't think the intention of the split was/should be that "core"
+> Linux/DTB people should only subscribe to -spec@, rather that it be a
+> more targeted list which non-Linux/DTB folks can be involved with to
+> discuss core binding issues and standardisation etc.
+>
+> It seems like devicetree@ would be the right default destination for any
+> patch and so should be what is listed in MAINTAINERS etc.
+>
+> Anyone who is doing actual core/spec work appropriate to -spec@ is
+> either going to be involved enough to know this themselves or can be
+> asked to CC the other list too as part of the first round of review. The
+> number of patches which would need to go to -spec should be a pretty
+> small fraction.
+>
 
-On 01/23/2014 09:34 AM, Chen-Yu Tsai wrote:
-> Hi,
->
-> On Thu, Jan 23, 2014 at 3:04 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> From: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
->>
->> This patch adds sunxi sata support to A10 boards that have such a connector.
->> Some boards also feature a regulator via a GPIO and support for this is also
->> added.
->>
->> Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/sun4i-a10-a1000.dts      |  4 ++++
->>   arch/arm/boot/dts/sun4i-a10-cubieboard.dts |  6 +++++
->>   arch/arm/boot/dts/sun4i-a10.dtsi           |  8 +++++++
->>   arch/arm/boot/dts/sunxi-ahci-reg.dtsi      | 38 ++++++++++++++++++++++++++++++
->>   4 files changed, 56 insertions(+)
->>   create mode 100644 arch/arm/boot/dts/sunxi-ahci-reg.dtsi
->>
->> diff --git a/arch/arm/boot/dts/sun4i-a10-a1000.dts b/arch/arm/boot/dts/sun4i-a10-a1000.dts
->> index aef8207..3fb7305 100644
->> --- a/arch/arm/boot/dts/sun4i-a10-a1000.dts
->> +++ b/arch/arm/boot/dts/sun4i-a10-a1000.dts
->> @@ -48,6 +48,10 @@
->>                          status = "okay";
->>                  };
->>
->> +               ahci: sata@01c18000 {
->> +                       status = "okay";
->> +               };
->> +
->>                  pinctrl@01c20800 {
->>                          mmc0_cd_pin_a1000: mmc0_cd_pin@0 {
->>                                  allwinner,pins = "PH1";
->> diff --git a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
->> index f50fb2b..6ae1110 100644
->> --- a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
->> +++ b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
->> @@ -12,6 +12,7 @@
->>
->>   /dts-v1/;
->>   /include/ "sun4i-a10.dtsi"
->> +/include/ "sunxi-ahci-reg.dtsi"
->>
->>   / {
->>          model = "Cubietech Cubieboard";
->> @@ -51,6 +52,11 @@
->>                          status = "okay";
->>                  };
->>
->> +               ahci: sata@01c18000 {
->> +                       target-supply = <&reg_ahci_5v>;
->> +                       status = "okay";
->> +               };
->> +
->>                  pinctrl@01c20800 {
->>                          mmc0_cd_pin_cubieboard: mmc0_cd_pin@0 {
->>                                  allwinner,pins = "PH1";
->> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
->> index 4736dd2..198dcda 100644
->> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
->> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
->> @@ -331,6 +331,14 @@
->>                          status = "disabled";
->>                  };
->>
->> +               ahci: sata@01c18000 {
->> +                       compatible = "allwinner,sun4i-a10-ahci";
->> +                       reg = <0x01c18000 0x1000>;
->> +                       interrupts = <56>;
->> +                       clocks = <&pll6 0>, <&ahb_gates 25>;
->> +                       status = "disabled";
->> +               };
->> +
->
-> Consider adding
->
->      pinctrl-names = "default";
->
-> in the ahci node to suppress "default pin state not found" warnings.
-> Same goes for sun7i-a20.dtsi.
+One approach would be to just try to reduce the firehose a bit.
 
-ahci does not use pinctrl, the ahci (and usb) phys have dedicated pins,
-since they don't use pinctrl at all no such warnings are issued.
+The list gets lots of patches which are not new bindings because we
+trigger on any dts change and any patch with of_get_property or
+of_match_table. I'm guessing the latter was mainly to catch missing
+documentation, but it is clear that we are failing at that as we are
+at about 50% documented compatible strings in a new kernel (hopefully
+my checkpatch addition will improve that).
 
->
->>                  intc: interrupt-controller@01c20400 {
->>                          compatible = "allwinner,sun4i-ic";
->>                          reg = <0x01c20400 0x400>;
->> diff --git a/arch/arm/boot/dts/sunxi-ahci-reg.dtsi b/arch/arm/boot/dts/sunxi-ahci-reg.dtsi
->> new file mode 100644
->> index 0000000..955b197
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/sunxi-ahci-reg.dtsi
->> @@ -0,0 +1,38 @@
->> +/*
->> + * sunxi boards sata target power supply common code
->> + *
->> + * Copyright 2014 - Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> + *
->> + * The code contained herein is licensed under the GNU General Public
->> + * License. You may obtain a copy of the GNU General Public License
->> + * Version 2 or later at the following locations:
->> + *
->> + * http://www.opensource.org/licenses/gpl-license.html
->> + * http://www.gnu.org/copyleft/gpl.html
->> + */
->> +
->> +/ {
->> +       soc@01c00000 {
->
-> This block needs to be under
->
->      pinctrl@01c20800 {
->
->> +               ahci_pwr_pin_a: ahci_pwr_pin@0 {
->> +                       allwinner,pins = "PB8";
->> +                       allwinner,function = "gpio_out";
->> +                       allwinner,drive = <0>;
->> +                       allwinner,pull = <0>;
->> +               };
->
->      };
+I think dts files are pretty well reviewed by platform maintainers and
+lots of changes are just new boards using existing bindings. There
+should be little for DT maintainers to review there. This was
+discussed and agreed to at the ARM summit.
 
-You're completely right, fixed in my local tree.
+So something like this:
 
-Regards,
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 6c20792..4e485c0 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6267,8 +6267,6 @@ S:        Maintained
+ F:     drivers/of/
+ F:     include/linux/of*.h
+ F:     scripts/dtc/
+-K:     of_get_property
+-K:     of_match_table
 
-Hans
+ OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+ M:     Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+@@ -6279,7 +6277,6 @@ M:        Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+ L:     devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+ S:     Maintained
+ F:     Documentation/devicetree/
+-F:     arch/*/boot/dts/
+ F:     include/dt-bindings/
+
+ OPENRISC ARCHITECTURE
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
