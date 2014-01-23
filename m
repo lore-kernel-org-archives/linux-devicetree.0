@@ -1,56 +1,46 @@
-From: Mohit Kumar <mohit.kumar@st.com>
-Subject: [PATCH V2 3/8] ahci: Add a driver_data field to struct ahci_platform_data
-Date: Thu, 23 Jan 2014 16:02:43 +0530
-Message-ID: <af75111fb61aebfee6e0233b39dc4cf006906402.1390471111.git.mohit.kumar@st.com>
+From: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH V2 1/8] SPEAr13xx: Set dt field entry <stmmac,phy-addr> for phy probe
+Date: Thu, 23 Jan 2014 16:02:41 +0530
+Message-ID: <12754927160d11063aad96c011c4807cb0aa1775.1390471111.git.mohit.kumar@st.com>
 References: <cover.1390471111.git.mohit.kumar@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <cover.1390471111.git.mohit.kumar@st.com>
-Sender: linux-ide-owner@vger.kernel.org
-Cc: Pratyush Anand <pratyush.anand@st.com>, Viresh Kumar <viresh.linux@gmail.com>, spear-devel@list.st.com, linux-arm-kernel@lists.infradead.org, Tejun Heo <tj@kernel.org>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1390471111.git.mohit.kumar-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>, Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Pratyush Anand <pratyush.anand@st.com>
+DT field name for the phy address changed since kernel 3.10. Set the
+snps,phy-addr to 0xffffffff so that the driver probes for the phy.
 
-Platform functions passed to the driver may also need some private
-data. Till, now following approaches have been taken to manage these
-data:
--- SPEAr13xx platform keep it locally in the files defining platform
-functions.
--- IMX has created a new ahci platform device as a child of
-platform device created by DT and then attached this data as the
-driver_data of ahci's dev->parent.
-
-Adding a driver_data field helps in using the same platform driver as
-that of created by DT.
-
-Signed-off-by: Pratyush Anand <pratyush.anand@st.com>
-Tested-by: Mohit Kumar <mohit.kumar@st.com>
-Cc: Viresh Kumar <viresh.linux@gmail.com>
-Cc: spear-devel@list.st.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: Tejun Heo <tj@kernel.org>
-Cc: linux-ide@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
+Cc: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
+Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
- include/linux/ahci_platform.h |    1 +
+ arch/arm/boot/dts/spear13xx.dtsi |    1 +
  1 files changed, 1 insertions(+), 0 deletions(-)
 
-diff --git a/include/linux/ahci_platform.h b/include/linux/ahci_platform.h
-index 73a2500..76d35e8 100644
---- a/include/linux/ahci_platform.h
-+++ b/include/linux/ahci_platform.h
-@@ -28,6 +28,7 @@ struct ahci_platform_data {
- 	const struct ata_port_info *ata_port_info;
- 	unsigned int force_port_map;
- 	unsigned int mask_port_map;
-+	void *driver_data;
- };
+diff --git a/arch/arm/boot/dts/spear13xx.dtsi b/arch/arm/boot/dts/spear13xx.dtsi
+index 4382547..3518803 100644
+--- a/arch/arm/boot/dts/spear13xx.dtsi
++++ b/arch/arm/boot/dts/spear13xx.dtsi
+@@ -155,6 +155,7 @@
  
- #endif /* _AHCI_PLATFORM_H */
+ 		gmac0: eth@e2000000 {
+ 			compatible = "st,spear600-gmac";
++			snps,phy-addr = <0xffffffff>;
+ 			reg = <0xe2000000 0x8000>;
+ 			interrupts = <0 33 0x4
+ 				      0 34 0x4>;
 -- 
 1.7.0.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
