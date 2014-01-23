@@ -1,73 +1,88 @@
-From: Yuantian Tang <Yuantian.Tang@freescale.com>
-Subject: RE: [PATCH] clk: corenet: Update the clock bindings
-Date: Thu, 23 Jan 2014 02:47:18 +0000
-Message-ID: <d61cabaec0af4aada9fadf93e7c0bb61@BL2PR03MB115.namprd03.prod.outlook.com>
-References: <1390269732-22798-1-git-send-email-Yuantian.Tang@freescale.com>
- <1390437863.24905.549.camel@snotra.buserror.net>
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: Re: [RFC PATCH 1/9] drm/exynos: correct timing porch conversion
+Date: Thu, 23 Jan 2014 11:01:56 +0800
+Message-ID: <CAGS+omBgp5SZAcnkELWw3n_rStHY9tgoBR_yQwdZAH_0WWg_0Q@mail.gmail.com>
+References: <1390401336-22915-1-git-send-email-a.hajda@samsung.com>
+	<1390401336-22915-2-git-send-email-a.hajda@samsung.com>
+	<52DFDF10.20100@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1390437863.24905.549.camel@snotra.buserror.net>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Scott Wood <scottwood@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "prabhakar@freescale.com" <prabhakar@freescale.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <52DFDF10.20100@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces@lists.freedesktop.org
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dri-devel <dri-devel@lists.freedesktop.org>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0K
-PiBTZW50OiAyMDE05bm0MeaciDIz5pelIOaYn+acn+WbmyA4OjQ0DQo+IFRvOiBUYW5nIFl1YW50
-aWFuLUIyOTk4Mw0KPiBDYzogV29vZCBTY290dC1CMDc0MjE7IGdhbGFrQGtlcm5lbC5jcmFzaGlu
-Zy5vcmc7IGxpbnV4cHBjLQ0KPiBkZXZAbGlzdHMub3psYWJzLm9yZzsgZGV2aWNldHJlZUB2Z2Vy
-Lmtlcm5lbC5vcmc7IEt1c2h3YWhhIFByYWJoYWthci0NCj4gQjMyNTc5DQo+IFN1YmplY3Q6IFJl
-OiBbUEFUQ0hdIGNsazogY29yZW5ldDogVXBkYXRlIHRoZSBjbG9jayBiaW5kaW5ncw0KPiANCj4g
-T24gVHVlLCAyMDE0LTAxLTIxIGF0IDEwOjAyICswODAwLCBUYW5nIFl1YW50aWFuIHdyb3RlOg0K
-PiA+IEZyb206IFRhbmcgWXVhbnRpYW4gPHl1YW50aWFuLnRhbmdAZnJlZXNjYWxlLmNvbT4NCj4g
-Pg0KPiA+IE1haW4gY2hhbmdzIGluY2x1ZGU6DQo+ID4gCS0gQ2xhcmlmaWVkIHRoZSBjbG9jayBu
-b2RlcycgdmVyc2lvbiBudW1iZXINCj4gPiAJLSBGaXhlZCBhIGlzc3VlIGluIGV4YW1wbGUNCj4g
-Pg0KPiA+IFNpbmdlZC1vZmYtYnk6IFRhbmcgWXVhbnRpYW4gPFl1YW50aWFuLlRhbmdAZnJlZXNj
-YWxlLmNvbT4NCj4gPiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Nsb2NrL2NvcmVuZXQtY2xvY2sudHh0IHwgNCArKystDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAz
-IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY29yZW5ldC1jbG9jay50eHQNCj4g
-PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9jb3JlbmV0LWNsb2Nr
-LnR4dA0KPiA+IGluZGV4IDI0NzExYWYuLmQ2Y2FkZWYgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2NvcmVuZXQtY2xvY2sudHh0DQo+ID4g
-KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2NvcmVuZXQtY2xv
-Y2sudHh0DQo+ID4gQEAgLTU0LDYgKzU0LDggQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiAg
-CQlJdCB0YWtlcyBwYXJlbnQncyBjbG9jay1mcmVxdWVuY3kgYXMgaXRzIGNsb2NrLg0KPiA+ICAJ
-KiAiZnNsLHFvcmlxLXN5c2Nsay0yLjAiOiBmb3IgaW5wdXQgc3lzdGVtIGNsb2NrICh2Mi4wKS4N
-Cj4gPiAgCQlJdCB0YWtlcyBwYXJlbnQncyBjbG9jay1mcmVxdWVuY3kgYXMgaXRzIGNsb2NrLg0K
-PiA+ICsJTm90ZTogdjEuMCBhbmQgdjIuMCBhcmUgY2xvY2sgdmVyc2lvbiB3aGljaCBzaG91bGQg
-YWxpZ24gdG8NCj4gPiArCWNsb2NrZ2VuIG5vZGUncyB0aGV5IGJlbG9uZyB0byB3aGljaCBpcyBj
-aGFzc2lzIHZlcnNpb24uDQo+IA0KPiBJbnN0ZWFkLCBob3cgYWJvdXQgYSBub3RlIGxpa2UgdGhp
-cyBuZWFyIHRoZSB0b3Agb2YgdGhlIGZpbGU6DQo+IA0KPiBBbGwgcmVmZXJlbmNlcyB0byAiMS4w
-IiBhbmQgIjIuMCIgcmVmZXIgdG8gdGhlIFFvcklRIGNoYXNzaXMgdmVyc2lvbiB0bw0KPiB3aGlj
-aCB0aGUgY2hpcCBjb21wbGllcy4NCj4gDQo+IENoYXNzaXMgVmVyc2lvbgkJRXhhbXBsZSBDaGlw
-cw0KPiAtLS0tLS0tLS0tLS0tLS0JCS0tLS0tLS0tLS0tLS0NCj4gMS4wCQkJcDQwODAsIHA1MDIw
-LCBwNTA0MA0KPiAyLjAJCQl0NDI0MCwgYjQ4NjAsIHQxMDQwDQo+IA0KQmV0dGVyLCBJIHdpbGwg
-dXBkYXRlLg0KDQo+IA0KPiBCVFcsIHRoaXMgYmluZGluZyBhbmQgdGhlIGFzc29jaWF0ZWQgZHJp
-dmVyIHJlYWxseSBzaG91bGQgYmUgY2FsbGVkDQo+ICJxb3JpcS1jbG9jayIsIG5vdCAiY29yZW5l
-dC1jbG9jayIuICBUaGlzIHdvdWxkIG1hdGNoIHRoZSBjb21wYXRpYmxlDQo+IHN0cmluZywgYW5k
-IGl0IGRvZXNuJ3QgcmVhbGx5IGhhdmUgbXVjaCB0byBkbyB3aXRoIGNvcmVuZXQgKHdoaWNoIGlz
-IHBhcnQNCj4gb2YgdGhlIFFvcklRIGNoYXNzaXMgdjEgYW5kIHYyLCBidXQgbm90ICp0aGlzKiBw
-YXJ0KS4gIERvIHlvdSBrbm93IGlmIHRoZQ0KPiBjaGFzc2lzIHYzIGNsb2NrIGludGVyZmFjZSB3
-aWxsIGJlIHNpbWlsYXIgZW5vdWdoIHRvIHNoYXJlIGEgZHJpdmVyPw0KPiANCkRvZXNuJ3QgUW9y
-SVEgaW5jbHVkZSBzb21lIGxvdy1lbmQgc29jcywgbGlrZSBwMTAyMiwgcDEwMjA/IA0KVGhpcyBk
-cml2ZXIgaGFzIG5vdGhpbmcgdG8gZG8gd2l0aCB0aGVzZSBib2FyZHMuIA0KSSBoYXZlIG5vIGlk
-ZWEgYWJvdXQgY2hhc3NpcyB2My4gSWYgaXQgaGFzIHNpbWlsYXIgY2xvY2sgdHJlZSwgdGhpcyBk
-cml2ZXIgY2FuIGJlIHNoYXJlZC4NCkV2ZW4gdGhlIGRyaXZlciBjYW4ndCBiZSB1c2VkIGJ5IHYz
-LCB3ZSBjYW4gZWFzaWx5IGFkZCB2MyBzdXBwb3J0IHNpbmNlIGl0IGhhcyBkaWZmZXJlbnQNCkNv
-bXBhdGlibGUgc3RyaW5nLg0KDQpSZWdhcmRzLA0KWXVhbnRpYW4NCg0KPiAtU2NvdHQNCj4gDQoN
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBj
-LWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9s
-aXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+On Wed, Jan 22, 2014 at 11:09 PM, Andrzej Hajda <a.hajda@samsung.com> wrote:
+> Hi,
+>
+> It seems I have not added description to this patch.
+> In this patch porch is calculated in compatible way to
+> drm_display_mode_from_videomode core function.
+> The way it was seems to me incorrect and it did not work on my hw.
+>
+> Anyway this patch could be merged with Sean's patches, if he agrees.
+>
+> Regards
+> Andrzej
+>
+> On 01/22/2014 03:35 PM, Andrzej Hajda wrote:
+>> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+
+Yes, it does make more sense than just arbitrarily assigning half of
+the non-sync blank period to the back porch, and the remainder to the
+front porch.
+With your follow-on commit message added, this is:
+
+Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
+
+>> ---
+>>  drivers/gpu/drm/exynos/exynos_drm_fimd.c | 11 ++++-------
+>>  1 file changed, 4 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/exynos/exynos_drm_fimd.c b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
+>> index 8caaac2..b611f33 100644
+>> --- a/drivers/gpu/drm/exynos/exynos_drm_fimd.c
+>> +++ b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
+>> @@ -538,21 +538,18 @@ static void fimd_mode_set(struct exynos_drm_manager *mgr,
+>>  {
+>>       struct fimd_context *ctx = mgr->ctx;
+>>       struct fimd_mode_data *mode = &ctx->mode;
+>> -     int hblank, vblank;
+>>
+>> -     vblank = in_mode->crtc_vblank_end - in_mode->crtc_vblank_start;
+>>       mode->vtotal = in_mode->crtc_vtotal;
+>>       mode->vdisplay = in_mode->crtc_vdisplay;
+>>       mode->vsync_len = in_mode->crtc_vsync_end - in_mode->crtc_vsync_start;
+>> -     mode->vbpd = (vblank - mode->vsync_len) / 2;
+>> -     mode->vfpd = vblank - mode->vsync_len - mode->vbpd;
+>> +     mode->vbpd = in_mode->crtc_vtotal - in_mode->crtc_vsync_end;
+>> +     mode->vfpd = in_mode->crtc_vsync_start - in_mode->crtc_vdisplay;
+>>
+>> -     hblank = in_mode->crtc_hblank_end - in_mode->crtc_hblank_start;
+>>       mode->htotal = in_mode->crtc_htotal;
+>>       mode->hdisplay = in_mode->crtc_hdisplay;
+>>       mode->hsync_len = in_mode->crtc_hsync_end - in_mode->crtc_hsync_start;
+>> -     mode->hbpd = (hblank - mode->hsync_len) / 2;
+>> -     mode->hfpd = hblank - mode->hsync_len - mode->hbpd;
+>> +     mode->hbpd = in_mode->crtc_htotal - in_mode->crtc_hsync_end;
+>> +     mode->hfpd = in_mode->crtc_hsync_start - in_mode->crtc_hdisplay;
+>>
+>>       mode->clkdiv = fimd_calc_clkdiv(ctx, in_mode);
+>>
+>>
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
