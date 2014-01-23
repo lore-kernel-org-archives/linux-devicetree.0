@@ -1,48 +1,47 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC PATCH 0/9] mtd: nand: add sunxi NAND Flash Controller support
-Date: Thu, 23 Jan 2014 09:22:16 -0600
-Message-ID: <CAL_JsqJNd_gtn-cCLbZxT=s5NkkXp0DZkJkZrBhWiaL6Js=woQ@mail.gmail.com>
-References: <1389190924-26226-1-git-send-email-b.brezillon@overkiz.com>
-	<52D1494E.9090303@overkiz.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH 2/2] ehci-platform: Add support for controllers with
+ big-endian regs / descriptors
+Date: Thu, 23 Jan 2014 10:46:45 -0500 (EST)
+Message-ID: <Pine.LNX.4.44L0.1401231044110.1279-100000@iolanthe.rowland.org>
+References: <20140123000330.00002567@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <52D1494E.9090303@overkiz.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: boris brezillon <b.brezillon@overkiz.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mtd@lists.infradead.org, dev@linux-sunxi.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140123000330.00002567-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 11, 2014 at 7:38 AM, boris brezillon
-<b.brezillon@overkiz.com> wrote:
-> On 08/01/2014 15:21, Boris BREZILLON wrote:
->>
->> Hello,
->>
->> This series add the sunxi NFC support with up to 8 NAND chip connected.
->> I'm still in the early stages drivers development and some key features
->> are
->> missing, but it's usable (I tested it on the cubietruck board).
->>
->> Here's what's missing:
->>   - HW ECC support
->>   - DMA support
->>   - HW randomization support
->>   - many more improvements
->>
->> This series depends on Emilio's patch series implementing mod0 clks
->>
->> (http://lists.infradead.org/pipermail/linux-arm-kernel/2013-July/185478.html)
->> + an other patch not yet posted
->>
->> (http://git.elopez.com.ar/linux/commits/5b4eb3ac406b9c98965714d40e8dd6da943d1ab0)
->
->
-> During my reasearch regarding the HW ECC and HW randomizer of the Allwinner
-> NAND flash controller I found this document describing the Altera NAND flash
-> controller
-> (which is in turn based on a cadence IP):
+On Thu, 23 Jan 2014, Jonas Gorski wrote:
 
-Which may be similar to drivers/mtd/nand/denali.c as Cadence bought Denali?
+> On Wed, 22 Jan 2014 16:17:42 -0500 (EST)
+> Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org> wrote:
+> 
+> > On Wed, 22 Jan 2014, Jonas Gorski wrote:
+> > 
+> > > If it's safe to set ehci->big_endian_{desc,mmio} from the _probe()
+> > > routine, then maybe the pdata sets in _reset() should be moved into here
+> > > instead of adding extra cludges/checks into _reset().
+> > 
+> > Why?  What difference would it make?
+> 
+> Effectivewise none, but to me it seems to be cleaner to set them once in
+> probe() instead of everytime reset() is called.
+> 
+> I admit I don't know the code flow good enough if reset() is called
+> more than once in the lifetime of a hcd device.
 
-Rob
+Only once.
+
+> And as I said, it would allow doing the checks the patch adds for both
+> DT and !DT, not just DT only.
+
+That's true.  Or the checks could be moved into the probe routine.
+
+Alan Stern
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
