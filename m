@@ -1,212 +1,228 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [GIT PULL] DeviceTree for 3.14
-Date: Thu, 23 Jan 2014 10:50:48 -0600
-Message-ID: <CAL_JsqJe=ge2CsF2GuMd=Ua57V-zDvd-L0nrZNnOdmNdDaPn=A@mail.gmail.com>
+From: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2] dma: Add Xilinx AXI Video Direct Memory Access Engine
+ driver support
+Date: Thu, 23 Jan 2014 23:05:34 +0530
+Message-ID: <CA+mB=1+jHxyx47jnbJuuNOFAK3sfresnyZfQ80zxoJn0kse57A@mail.gmail.com>
+References: <1390409565-4200-1-git-send-email-sthokal@xilinx.com>
+	<1390409565-4200-2-git-send-email-sthokal@xilinx.com>
+	<CAAsK9AFGM+852N-F98p32JSHEpg5ZKv-0wyzFGx9675GBp7gQg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAsK9AFGM+852N-F98p32JSHEpg5ZKv-0wyzFGx9675GBp7gQg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Levente Kurusa <levex-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
+Cc: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Linus,
+Hi Levente,
 
-Please pull DeviceTree updates for 3.14.
+On Thu, Jan 23, 2014 at 3:00 AM, Levente Kurusa <levex-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org> wrote:
+> Hello,
+>
+> 2014/1/22 Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>:
+>> This is the driver for the AXI Video Direct Memory Access (AXI
+>> VDMA) core, which is a soft Xilinx IP core that provides high-
+>> bandwidth direct memory access between memory and AXI4-Stream
+>> type video target peripherals. The core provides efficient two
+>> dimensional DMA operations with independent asynchronous read
+>> and write channel operation.
+>>
+>> This module works on Zynq (ARM Based SoC) and Microblaze platforms.
+>>
+>> Signed-off-by: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>> ---
+>
+> Another two remarks, after you fixed them ( or not :-) )
+> you can have my:
+>
+> Reviewed-by: Levente Kurusa <levex-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
+>
+> Oh, and next time please if you post a patch that fixes something I pointed out,
+> CC me as I had a hard time finding this patch, thanks. :-)
 
-Rob
+Sure. Thanks
 
-The following changes since commit d6e0a2dd12f4067a5bcefb8bbd8ddbeff800=
-afbc:
+>
+>> NOTE:
+>> 1. Created a separate directory 'dma/xilinx' as Xilinx has two more
+>>    DMA IPs and we are also planning to upstream these drivers soon.
+>> 2. Rebased on v3.13.0-rc8
+>>
+>> Changes in v2:
+>> - Removed DMA Test client module from the patchset as suggested
+>>   by Andy Shevchenko
+>> - Removed device-id DT property, as suggested by Arnd Bergmann
+>> - Properly documented DT bindings as suggested by Arnd Bergmann
+>> - Returning with error, if registration of DMA to node fails
+>> - Fixed typo errors
+>> - Used BIT() macro at applicable places
+>> - Added missing header file to the patchset
+>> - Changed copyright year to include 2014
+>> ---
+>>  .../devicetree/bindings/dma/xilinx/xilinx_vdma.txt |   75 +
+>>  drivers/dma/Kconfig                                |   14 +
+>>  drivers/dma/Makefile                               |    1 +
+>>  drivers/dma/xilinx/Makefile                        |    1 +
+>>  drivers/dma/xilinx/xilinx_vdma.c                   | 1486 ++++++++++++++++++++
+>>  include/linux/amba/xilinx_dma.h                    |   50 +
+>>  6 files changed, 1627 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
+>>  create mode 100644 drivers/dma/xilinx/Makefile
+>>  create mode 100644 drivers/dma/xilinx/xilinx_vdma.c
+>>  create mode 100644 include/linux/amba/xilinx_dma.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
+>> new file mode 100644
+>> index 0000000..ab8be1a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
+>> @@ -0,0 +1,75 @@
+>> +Xilinx AXI VDMA engine, it does transfers between memory and video devices.
+>> +It can be configured to have one channel or two channels. If configured
+>> +as two channels, one is to transmit to the video device and another is
+>> +to receive from the video device.
+>> +
+>> +Required properties:
+>> +- compatible: Should be "xlnx,axi-vdma-1.00.a"
+>> +- #dma-cells: Should be <1>, see "dmas" property below
+>> +- reg: Should contain VDMA registers location and length.
+>> +- xlnx,num-fstores: Should be the number of framebuffers as configured in h/w.
+>> +- dma-channel child node: Should have atleast one channel and can have upto
+>> +       two channels per device. This node specifies the properties of each
+>> +       DMA channel (see child node properties below).
+>> +
+>> +Optional properties:
+>> +- xlnx,include-sg: Tells whether configured for Scatter-mode in
+>> +       the hardware.
+>> [...]
+>> +
+>> +/**
+>> + * xilinx_vdma_is_running - Check if VDMA channel is running
+>> + * @chan: Driver specific VDMA channel
+>> + *
+>> + * Return: '1' if running, '0' if not.
+>> + */
+>> +static int xilinx_vdma_is_running(struct xilinx_vdma_chan *chan)
+>> +{
+>> +       return !(vdma_ctrl_read(chan, XILINX_VDMA_REG_DMASR) &
+>> +                XILINX_VDMA_DMASR_HALTED) &&
+>> +               (vdma_ctrl_read(chan, XILINX_VDMA_REG_DMACR) &
+>> +                XILINX_VDMA_DMACR_RUNSTOP);
+>> +}
+>> +
 
-  Linux 3.13-rc7 (2014-01-04 15:12:14 -0800)
+[...]
 
-are available in the git repository at:
+>> +       /* Retrieve the channel properties from the device tree */
+>> +       has_dre = of_property_read_bool(node, "xlnx,include-dre");
+>> +
+>> +       chan->genlock = of_property_read_bool(node, "xlnx,genlock-mode");
+>> +
+>> +       err = of_property_read_u32(node, "xlnx,datawidth", &value);
+>> +       if (!err) {
+>> +               u32 width = value >> 3; /* Convert bits to bytes */
+>> +
+>> +               /* If data width is greater than 8 bytes, DRE is not in hw */
+>> +               if (width > 8)
+>> +                       has_dre = false;
+>> +
+>> +               if (!has_dre)
+>> +                       xdev->common.copy_align = fls(width - 1);
+>> +       } else {
+>> +               dev_err(xdev->dev, "missing xlnx,datawidth property\n");
+>> +               return err;
+>> +       }
+>
+> Can you please convert this to:
+> if (err) {
+>  dev_err(...);
+>  return err;
+> }
+>
+> That way we can avoid the else clause.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-tags/devicetree-for-3.14
+Ok. I will fix it in v3.
 
-for you to fetch changes up to e48ca29d30a10556eb7abd8d91980b8a57dabf10=
-:
+>> +
+>> +       if (of_device_is_compatible(node, "xlnx,axi-vdma-mm2s-channel")) {
+>> +               chan->direction = DMA_MEM_TO_DEV;
+>> +               chan->id = 0;
+>> +
+>> +               chan->ctrl_offset = XILINX_VDMA_MM2S_CTRL_OFFSET;
+>> +               chan->desc_offset = XILINX_VDMA_MM2S_DESC_OFFSET;
+>> +
+>> +               if (xdev->flush_on_fsync == XILINX_VDMA_FLUSH_BOTH ||
+>> +                   xdev->flush_on_fsync == XILINX_VDMA_FLUSH_MM2S)
+>> +                       chan->flush_on_fsync = true;
+>> +       } else if (of_device_is_compatible(node,
+>> +                                           "xlnx,axi-vdma-s2mm-channel")) {
+>> +               chan->direction = DMA_DEV_TO_MEM;
+>> +               chan->id = 1;
+>> +
+>> +               chan->ctrl_offset = XILINX_VDMA_S2MM_CTRL_OFFSET;
+>> +               chan->desc_offset = XILINX_VDMA_S2MM_DESC_OFFSET;
+>> +
+>> +               if (xdev->flush_on_fsync == XILINX_VDMA_FLUSH_BOTH ||
+>> +                   xdev->flush_on_fsync == XILINX_VDMA_FLUSH_S2MM)
+>> +                       chan->flush_on_fsync = true;
+>> +       } else {
+>> +               dev_err(xdev->dev, "Invalid channel compatible node\n");
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       /* Request the interrupt */
+>> +       chan->irq = irq_of_parse_and_map(node, 0);
+>> +       err = devm_request_irq(xdev->dev, chan->irq, xilinx_vdma_irq_handler,
+>> +                              IRQF_SHARED, "xilinx-vdma-controller", chan);
+>> +       if (err) {
+>> +               dev_err(xdev->dev, "unable to request IRQ\n");
+>
+> It might be worth to also tell the IRQ number that failed
+> to register.
 
-  dt-bindings: add rockchip vendor prefix (2014-01-23 09:15:23 -0600)
+Ok.
 
-----------------------------------------------------------------
-DeviceTree updates for 3.14:
+>
+>> +               return err;
+>> +       }
+>> +
+>> +       /* Initialize the DMA channel and add it to the DMA engine channels
+>> +        * list.
+>> +        */
+>> +       chan->common.device = &xdev->common;
+>> +
+>> +       list_add_tail(&chan->common.device_node, &xdev->common.channels);
 
-- Add new documents with guidelines for DT binding stability and review
-  process. This is one of the outcomes of Kernel Summit DT discussions.
-- Remove a bunch of device_type usage which is only for OF and
-  deprecated with FDT.
-- Fix a long standing issue with compatible string match ordering.
-- Various minor binding documentation updates.
+[...]
 
-----------------------------------------------------------------
-=46lorian Vaussard (2):
-      of: add vendor prefix for Gumstix
-      of: add vendor prefixe for EPFL
+>> +       err = of_property_read_u32(node, "xlnx,num-fstores", &num_frames);
+>> +       if (err < 0) {
+>> +               dev_err(xdev->dev, "missing xlnx,num-fstores property\n");
+>> +               return err;
+>> +       }
+>> +
+>> +       of_property_read_u32(node, "xlnx,flush-fsync", &xdev->flush_on_fsync);
+>
+> Error check?
 
-Gerhard Sittig (1):
-      dts: bindings: trivial clock bindings doc fixes
+Sure, with a warning message as it is optional DT property.  I will
+fix it in v3.
 
-Grant Likely (5):
-      dt/bindings: Remove all references to device_type "ethernet-phy"
-      dt/bindings: Remove references to linux,phandle properties
-      dt/bindings: remove users of device_type "mdio"
-      dt/bindings: remove device_type "network" references
-      dt/bindings: Remove device_type "serial" from marvell,mv64360-mps=
-c
+Srikanth
 
-Heiko St=FCbner (1):
-      dt-bindings: add rockchip vendor prefix
-
-Jason Cooper (1):
-      dt/bindings: submitting patches and ABI documents
-
-Lothar Wa=DFmann (2):
-      of: add vendor prefix for Ka-Ro electronics GmbH
-      DT: Add vendor prefix for Emerging Display Technologies
-
-Peter Crosthwaite (2):
-      of: irq: Ignore disabled interrupt controllers
-      of: irq: Ignore disabled intc's when searching map
-
-Rob Herring (3):
-      dt-bindings: add GIC-400 binding
-      Merge remote-tracking branch 'grant/devicetree/next' into for-3.1=
-4
-      Merge remote-tracking branch 'grant/devicetree/next' into for-3.1=
-4
-
-Sebastian Hesselbarth (1):
-      OF: base: match each node compatible against all given matches fi=
-rst
-
-Soren Brinkmann (1):
-      devicetree: macb: Document clock properties
-
-Tony Prisk (1):
-      serial: vt8500: Add missing binding document for arch-vt8500
-serial driver.
-
-Xiubo Li (1):
-      of: Fix __of_device_is_available check
-
- Documentation/devicetree/bindings/ABI.txt          | 39 ++++++++++++++=
-+
- Documentation/devicetree/bindings/arm/gic.txt      |  1 +
- .../devicetree/bindings/clock/clock-bindings.txt   |  2 +-
- Documentation/devicetree/bindings/marvell.txt      |  8 ----
- Documentation/devicetree/bindings/net/macb.txt     |  6 +++
- .../devicetree/bindings/net/marvell-orion-net.txt  |  3 --
- Documentation/devicetree/bindings/net/phy.txt      |  5 --
- .../bindings/powerpc/fsl/cpm_qe/network.txt        |  2 -
- .../bindings/powerpc/fsl/cpm_qe/qe/pincfg.txt      |  3 --
- .../devicetree/bindings/serial/vt8500-uart.txt     | 26 ++++++++++
- .../devicetree/bindings/submitting-patches.txt     | 38 ++++++++++++++=
-+
- .../devicetree/bindings/vendor-prefixes.txt        |  5 ++
- Documentation/devicetree/booting-without-of.txt    |  3 --
- arch/arm/boot/dts/dove.dtsi                        |  2 -
- arch/arm/boot/dts/kirkwood-cloudbox.dts            |  1 -
- arch/arm/boot/dts/kirkwood-db.dtsi                 |  1 -
- arch/arm/boot/dts/kirkwood-dnskw.dtsi              |  1 -
- arch/arm/boot/dts/kirkwood-dockstar.dts            |  1 -
- arch/arm/boot/dts/kirkwood-dreamplug.dts           |  2 -
- arch/arm/boot/dts/kirkwood-goflexnet.dts           |  1 -
- .../arm/boot/dts/kirkwood-guruplug-server-plus.dts |  2 -
- arch/arm/boot/dts/kirkwood-ib62x0.dts              |  1 -
- arch/arm/boot/dts/kirkwood-iconnect.dts            |  1 -
- arch/arm/boot/dts/kirkwood-iomega_ix2_200.dts      |  1 -
- arch/arm/boot/dts/kirkwood-km_kirkwood.dts         |  1 -
- arch/arm/boot/dts/kirkwood-lsxl.dtsi               |  2 -
- arch/arm/boot/dts/kirkwood-mplcec4.dts             |  2 -
- .../boot/dts/kirkwood-netgear_readynas_duo_v2.dts  |  1 -
- arch/arm/boot/dts/kirkwood-ns2-common.dtsi         |  1 -
- arch/arm/boot/dts/kirkwood-openblocks_a6.dts       |  1 -
- arch/arm/boot/dts/kirkwood-openblocks_a7.dts       |  2 -
- arch/arm/boot/dts/kirkwood-sheevaplug-common.dtsi  |  1 -
- arch/arm/boot/dts/kirkwood-topkick.dts             |  1 -
- arch/arm/boot/dts/kirkwood-ts219.dtsi              |  1 -
- arch/arm/boot/dts/kirkwood.dtsi                    |  2 -
- .../dts/orion5x-lacie-ethernet-disk-mini-v2.dts    |  1 -
- arch/arm/boot/dts/orion5x.dtsi                     |  1 -
- arch/microblaze/platform/generic/system.dts        |  1 -
- arch/powerpc/boot/dts/adder875-redboot.dts         |  2 -
- arch/powerpc/boot/dts/adder875-uboot.dts           |  2 -
- arch/powerpc/boot/dts/asp834x-redboot.dts          |  2 -
- arch/powerpc/boot/dts/c2k.dts                      |  5 --
- arch/powerpc/boot/dts/ep8248e.dts                  |  3 --
- arch/powerpc/boot/dts/ep88xc.dts                   |  2 -
- arch/powerpc/boot/dts/gef_ppc9a.dts                |  2 -
- arch/powerpc/boot/dts/gef_sbc310.dts               |  2 -
- arch/powerpc/boot/dts/gef_sbc610.dts               |  2 -
- arch/powerpc/boot/dts/holly.dts                    |  1 -
- arch/powerpc/boot/dts/ksi8560.dts                  |  3 --
- arch/powerpc/boot/dts/mpc7448hpc2.dts              |  1 -
- arch/powerpc/boot/dts/mpc8272ads.dts               |  3 --
- arch/powerpc/boot/dts/mpc8308_p1m.dts              |  2 -
- arch/powerpc/boot/dts/mpc8308rdb.dts               |  1 -
- arch/powerpc/boot/dts/mpc8313erdb.dts              |  1 -
- arch/powerpc/boot/dts/mpc8315erdb.dts              |  2 -
- arch/powerpc/boot/dts/mpc832x_mds.dts              |  2 -
- arch/powerpc/boot/dts/mpc832x_rdb.dts              |  2 -
- arch/powerpc/boot/dts/mpc8349emitx.dts             |  1 -
- arch/powerpc/boot/dts/mpc8349emitxgp.dts           |  1 -
- arch/powerpc/boot/dts/mpc834x_mds.dts              |  2 -
- arch/powerpc/boot/dts/mpc836x_mds.dts              |  2 -
- arch/powerpc/boot/dts/mpc836x_rdk.dts              |  4 --
- arch/powerpc/boot/dts/mpc8377_mds.dts              |  2 -
- arch/powerpc/boot/dts/mpc8377_rdb.dts              |  1 -
- arch/powerpc/boot/dts/mpc8377_wlan.dts             |  2 -
- arch/powerpc/boot/dts/mpc8378_mds.dts              |  2 -
- arch/powerpc/boot/dts/mpc8378_rdb.dts              |  1 -
- arch/powerpc/boot/dts/mpc8379_mds.dts              |  2 -
- arch/powerpc/boot/dts/mpc8379_rdb.dts              |  1 -
- arch/powerpc/boot/dts/mpc8536ds.dtsi               |  2 -
- arch/powerpc/boot/dts/mpc8540ads.dts               |  3 --
- arch/powerpc/boot/dts/mpc8541cds.dts               |  2 -
- arch/powerpc/boot/dts/mpc8544ds.dtsi               |  2 -
- arch/powerpc/boot/dts/mpc8548cds.dtsi              |  4 --
- arch/powerpc/boot/dts/mpc8555cds.dts               |  2 -
- arch/powerpc/boot/dts/mpc8560ads.dts               |  4 --
- arch/powerpc/boot/dts/mpc8568mds.dts               |  8 ----
- arch/powerpc/boot/dts/mpc8569mds.dts               |  6 ---
- arch/powerpc/boot/dts/mpc8641_hpcn.dts             |  4 --
- arch/powerpc/boot/dts/mpc8641_hpcn_36b.dts         |  4 --
- arch/powerpc/boot/dts/mpc866ads.dts                |  1 -
- arch/powerpc/boot/dts/mpc885ads.dts                |  3 --
- arch/powerpc/boot/dts/p1021mds.dts                 |  2 -
- arch/powerpc/boot/dts/p1025rdb_32b.dts             |  2 -
- arch/powerpc/boot/dts/ppa8548.dts                  |  2 -
- arch/powerpc/boot/dts/pq2fads.dts                  |  3 --
- arch/powerpc/boot/dts/prpmc2800.dts                |  5 --
- arch/powerpc/boot/dts/sbc8349.dts                  |  2 -
- arch/powerpc/boot/dts/sbc8548-post.dtsi            |  2 -
- arch/powerpc/boot/dts/sbc8641d.dts                 |  4 --
- arch/powerpc/boot/dts/stx_gp3_8560.dts             |  2 -
- arch/powerpc/boot/dts/stxssa8555.dts               |  2 -
- arch/powerpc/boot/dts/tqm8540.dts                  |  3 --
- arch/powerpc/boot/dts/tqm8541.dts                  |  3 --
- arch/powerpc/boot/dts/tqm8548-bigflash.dts         |  5 --
- arch/powerpc/boot/dts/tqm8548.dts                  |  5 --
- arch/powerpc/boot/dts/tqm8555.dts                  |  3 --
- arch/powerpc/boot/dts/tqm8560.dts                  |  3 --
- arch/powerpc/boot/dts/tqm8xx.dts                   |  1 -
- arch/powerpc/sysdev/mv64x60_dev.c                  |  2 +-
- arch/powerpc/sysdev/mv64x60_udbg.c                 |  2 +-
- drivers/of/base.c                                  | 56 ++++++++++++++=
-+-------
- drivers/of/irq.c                                   |  6 ++-
- 103 files changed, 163 insertions(+), 231 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/ABI.txt
- create mode 100644 Documentation/devicetree/bindings/serial/vt8500-uar=
-t.txt
- create mode 100644 Documentation/devicetree/bindings/submitting-patche=
-s.txt
+[...]
+>> --
+>
+> --
+> Regards,
+> Levente Kurusa
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
