@@ -1,84 +1,179 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFCv2] Device Tree bindings for OMAP3 Camera System
-Date: Thu, 23 Jan 2014 12:44:46 +0100
-Message-ID: <1550284.gaVFBYq9I9@avalon>
-References: <20131103220315.GA11659@earth.universe> <2960230.3bGpm3THhQ@avalon> <20140123001128.GA12425@earth.universe>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCHv2 2/2] pwm: imx: support polarity inversion
+Date: Thu, 23 Jan 2014 11:52:03 +0000
+Message-ID: <20140123115203.GV15937@n2100.arm.linux.org.uk>
+References: <1389859585-14006-1-git-send-email-LW@KARO-electronics.de> <1389859585-14006-3-git-send-email-LW@KARO-electronics.de> <20140116160356.GY16215@pengutronix.de> <20140123083714.3c6e86ae@ipc1.ka-ro>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart5288855.0Skuhf1585"; micalg="pgp-sha1"; protocol="application/pgp-signature"
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20140123001128.GA12425@earth.universe>
-Sender: linux-media-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Sakari Ailus <sakari.ailus@iki.fi>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140123083714.3c6e86ae@ipc1.ka-ro>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, Rob Landley <rob@landley.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jan 23, 2014 at 08:37:14AM +0100, Lothar Wa=DFmann wrote:
+> This wouldn't buy much without a material change to of_pwm_get().
+> The function of_parse_phandle_with_args() called by of_pwm_get()
+> requires the number of args in the pwms property be greater or equal =
+to
+> the #pwm-cells property in the pwm node. Thus, the interesting case o=
+f
+> having #pwm-cells =3D <3> without changing the existing users is
+> prohibited by of_parse_phandle_with_args().
 
---nextPart5288855.0Skuhf1585
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="us-ascii"
+I really don't think that's a problem we need to be concerned with at
+the moment.  What we need is for the kernel to be able to parse files
+with #pwm-cells =3D <2> with the pwms property containing two arguments=
+,
+and when they're updated to #pwm-cells =3D <3> with the pwms property
+containing three arguments.
 
-Hi Sebastian,
+Yes, that means all the board dt files need to be updated at the same
+time to include the additional argument, but I don't see that as a big
+problem.
 
-On Thursday 23 January 2014 01:11:29 Sebastian Reichel wrote:
-> On Wed, Jan 22, 2014 at 11:57:45PM +0100, Laurent Pinchart wrote:
-> > [...]
-> >=20
-> >> camera-switch {
-> >>=20
-> >>      /*
-> >>     =20
-> >>       * TODO:
-> >>       *  - check if the switching code is generic enough to use a
-> >>       *    more generic name like "gpio-camera-switch".
-> >=20
-> > I think you can use a more generic name. You could probably get som=
+What we do need to do is to adjust the PWM parsing code such that it's
+possible to use either specification without causing any side effects.
+
+I would test this, but as u-boot is rather fscked at the moment and the
+networking has broken on my cubox-i as a result... and it seems that th=
 e
-> > inspiration from the i2c-mux-gpio DT bindings.
->=20
-> My main concern is, that the gpio used for switching is also connecte=
-d to
-> the reset pin of one of the cameras. Maybe that fact can just be negl=
-ected,
-> though?
+u-boot developers have pissed off cubox-i u-boot hackers soo much that
+they've dropped u-boot in favour of barebox...
 
-I'm not the only one to wish we could change that, but alas! we'll have=
- to=20
-live with that stupid hardware design decision :-)
+ drivers/pwm/core.c  | 59 +++++++++++++++++++++++++++++----------------=
+--------
+ include/linux/pwm.h |  2 ++
+ 2 files changed, 34 insertions(+), 27 deletions(-)
 
-What we want to ensure here is that the two sensors won't be accessed a=
-t the=20
-same time, as that would lead to errors. This was previously handled by=
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index 2ca95042a0b9..40adbce8ef0c 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -132,14 +132,11 @@ static int pwm_device_request(struct pwm_device *=
+pwm, const char *label)
+ }
 =20
-callback function to board code, but board code is now going away. The=20=
+ struct pwm_device *
+-of_pwm_xlate_with_flags(struct pwm_chip *pc, const struct of_phandle_a=
+rgs *args)
++of_pwm_xlate(struct pwm_chip *pc, const struct of_phandle_args *args)
+ {
+ 	struct pwm_device *pwm;
+=20
+-	if (pc->of_pwm_n_cells < 3)
+-		return ERR_PTR(-EINVAL);
+-
+-	if (args->args[0] >=3D pc->npwm)
++	if (args->args_count < 2)
+ 		return ERR_PTR(-EINVAL);
+=20
+ 	pwm =3D pwm_request_from_chip(pc, args->args[0], NULL);
+@@ -148,33 +145,45 @@ of_pwm_xlate_with_flags(struct pwm_chip *pc, cons=
+t struct of_phandle_args *args)
+=20
+ 	pwm_set_period(pwm, args->args[1]);
+=20
+-	if (args->args[2] & PWM_POLARITY_INVERTED)
+-		pwm_set_polarity(pwm, PWM_POLARITY_INVERSED);
+-	else
+-		pwm_set_polarity(pwm, PWM_POLARITY_NORMAL);
++	if (args->args_count > 2) {
++		int err;
++
++		if (args->args[2] & PWM_POLARITY_INVERTED)
++			err =3D pwm_set_polarity(pwm, PWM_POLARITY_INVERSED);
++		else
++			err =3D pwm_set_polarity(pwm, PWM_POLARITY_NORMAL);
++
++		pwm_put(pwm);
++		return ERR_PTR(err);
++	}
+=20
+ 	return pwm;
+ }
++EXPORT_SYMBOL(of_pwm_xlate);
++
++struct pwm_device *
++of_pwm_xlate_with_flags(struct pwm_chip *pc, const struct of_phandle_a=
+rgs *args)
++{
++	if (pc->of_pwm_n_cells < 3)
++		return ERR_PTR(-EINVAL);
++
++	if (args->args_count !=3D pc->of_pwm_n_cells)
++		return ERR_PTR(-EINVAL);
++
++	return of_pwm_xlate(pc, args);
++}
+ EXPORT_SYMBOL_GPL(of_pwm_xlate_with_flags);
+=20
+ static struct pwm_device *
+ of_pwm_simple_xlate(struct pwm_chip *pc, const struct of_phandle_args =
+*args)
+ {
+-	struct pwm_device *pwm;
+-
+ 	if (pc->of_pwm_n_cells < 2)
+ 		return ERR_PTR(-EINVAL);
+=20
+-	if (args->args[0] >=3D pc->npwm)
++	if (args->args_count !=3D pc->of_pwm_n_cells)
+ 		return ERR_PTR(-EINVAL);
+=20
+-	pwm =3D pwm_request_from_chip(pc, args->args[0], NULL);
+-	if (IS_ERR(pwm))
+-		return pwm;
+-
+-	pwm_set_period(pwm, args->args[1]);
+-
+-	return pwm;
++	return of_pwm_xlate(pc, args);
+ }
+=20
+ static void of_pwmchip_add(struct pwm_chip *chip)
+@@ -536,16 +545,12 @@ struct pwm_device *of_pwm_get(struct device_node =
+*np, const char *con_id)
+ 		goto put;
+ 	}
+=20
+-	if (args.args_count !=3D pc->of_pwm_n_cells) {
+-		pr_debug("%s: wrong #pwm-cells for %s\n", np->full_name,
+-			 args.np->full_name);
+-		pwm =3D ERR_PTR(-EINVAL);
+-		goto put;
+-	}
+-
+ 	pwm =3D pc->of_xlate(pc, &args);
+-	if (IS_ERR(pwm))
++	if (IS_ERR(pwm)) {
++		pr_debug("%s: of_xlate failed for %s: %d\n", np->full_name,
++			 args.np->full_name, (int)PTR_ERR(pwm));
+ 		goto put;
++	}
+=20
+ 	/*
+ 	 * If a consumer name was not given, try to look it up from the
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index f0feafd184a0..14a823f77c31 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -188,6 +188,8 @@ struct pwm_device *pwm_request_from_chip(struct pwm=
+_chip *chip,
+ 					 unsigned int index,
+ 					 const char *label);
+=20
++struct pwm_device *of_pwm_xlate(struct pwm_chip *pc,
++		const struct of_phandle_args *args);
+ struct pwm_device *of_pwm_xlate_with_flags(struct pwm_chip *pc,
+ 		const struct of_phandle_args *args);
+=20
 
-challenge is to find a way to express the constraints in DT. I'm not su=
-re=20
-whether that's doable in a generic way, and this might be one of the ra=
-re=20
-cases where board code is still needed.
 
-Sakari, have you given this a thought ?
-
-=2D-=20
-Regards,
-
-Laurent Pinchart
-
---nextPart5288855.0Skuhf1585
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQEcBAABAgAGBQJS4QCzAAoJEIkPb2GL7hl14bEH/RwwE2ajQ0m4lQtqzD68sgOL
-R1gfj9S851zEl2Axb+7sICL64xxb9yzuwlSEue6KdXKtVNyB0bUpYujfj1Z912Oc
-QT9gPjRDebVo+jnS8XqfyvDzisUGuaYtWl0RVhmvDvtyiLEcic0rBpMwsJeedVYm
-kFs5jmI4sHYAZnbRsFt4AiGY9sWbJeMuBMmnJH9Q72X9h+O71qay/4f9WppdS9Le
-NJQFCnbiC4voBoCbBLFvxaREDxCF+X/ims12njZS2v9pdFwXP6CInDRgAgA9/GRY
-gNM9mwvlufDFNs5BWmPf5TvUy/T6ltykqXisan6/8n7wVGp4/saR+nf0bk6Dj9k=
-=5V4U
------END PGP SIGNATURE-----
-
---nextPart5288855.0Skuhf1585--
+--=20
+=46TTC broadband for 0.8mile line: 5.8Mbps down 500kbps up.  Estimation
+in database were 13.1 to 19Mbit for a good line, about 7.5+ for a bad.
+Estimate before purchase was "up to 13.2Mbit".
