@@ -1,75 +1,61 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 06/15] watchdog: orion: Remove unneeded BRIDGE_CAUSE
- clear
-Date: Thu, 23 Jan 2014 22:15:54 +0100
-Message-ID: <52E1868A.8020208@gmail.com>
-References: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com> <1390295561-3466-7-git-send-email-ezequiel.garcia@free-electrons.com> <20140121233537.GS18269@obsidianresearch.com> <20140122164904.GB27273@localhost> <20140122173417.GT18269@obsidianresearch.com> <52E02AB6.7040104@gmail.com> <20140122205213.GW18269@obsidianresearch.com> <52E0591E.6030009@gmail.com> <20140123111049.GB6065@localhost> <20140123115432.GC6065@localhost>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 0/9] CPU enable method based SMP/hotplug + MSM conversion
+Date: Thu, 23 Jan 2014 16:04:28 -0600
+Message-ID: <463D867F-6EF1-40E4-8AFB-28E54433CD79@codeaurora.org>
+References: <1387845593-10050-1-git-send-email-sboyd@codeaurora.org> <201401082237.36626.arnd@arndb.de> <52CE005A.3070802@codeaurora.org>
+Mime-Version: 1.0 (Mac OS X Mail 7.1 \(1827\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140123115432.GC6065@localhost>
+In-Reply-To: <52CE005A.3070802-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Jason, Ezequiel,
 
-On 01/23/2014 12:54 PM, Ezequiel Garcia wrote:
-> Sebastian,
->
-> On Thu, Jan 23, 2014 at 08:10:49AM -0300, Ezequiel Garcia wrote:
->> On Thu, Jan 23, 2014 at 12:49:50AM +0100, Sebastian Hesselbarth wrote:
->> [..]
->>>> Notice that Ezequiel has added an IRQ handler that just calls panic,
->>>> so a spurious interrupt call is VERY VERY BAD.
->>>
->>> And I understand that he now clears watchdog's register before
->>> requesting an irq. All that is missing is bridge_irq driver clearing
->>> CAUSE register after masking all irqs, right?
->>>
->>
->> Are you sure clearing the CAUSE register after masking the IRQs will be enough?
->>
->> AFAICS, until now nobody unmasks the watchdog IRQ (at least the orion_wdt
->> driver didn't request the interruption) but *still* the CAUSE register is set
->> upon watchdog expiration. So I would guessed a masked interrupt still raises a
->> bit in the CAUSE register.
->>
->
-> Let me add some real information instead of my speculations. Taken from
-> the Kirkwood specification:
->
-> Table 136: Mbus-L to Mbus Bridge Interrupt Mask Register
-> Offset:		0x00020114
-> Field: 		Mask
-> Type/InitVal: 	RW 0x0
-> Description:	There is a mask bit per each cause bit. Mask only affects the
-> 		assertion of interrupt pins. It does not affect the setting of
-> 		bits in the Cause register.
->
-> So I guess this is why Jason has been insisting with the introduction of
-> the irq_startup.
->
-> (Just for reference, the little patch I attached yesterday proved to work here.)
+On Jan 8, 2014, at 7:50 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
 
-You guys were so right ;)
+> On 01/08/14 13:37, Arnd Bergmann wrote:
+>> On Tuesday 24 December 2013, Stephen Boyd wrote:
+>>> This is a rework of patches sent a months back by Rohit[1].
+>>> The goal of these patches is to add support for SMP and (basic)
+>>> hotplug on MSM based SoCs. To get there, we add support for a
+>>> generic way to hook in SMP/hotplug support code based on DT. To
+>>> show how it's used, we convert the MSM8660 SMP support code over
+>>> to the new method. After that we add support for the rest of the
+>>> upstream MSM SoCs (note these patches are piled high on top of
+>>> Rohit's patches to add 8074 support to MSM[2] and my follow ups[3,4],
+>>> but this should only matter to the MSM maintainers).
+>>> 
+>>> This is one of the last items of code that still requires us to have
+>>> a mach directory and a machine descriptor. We should be able to move
+>>> the hotplug/smp code out of mach directories if this approach is
+>>> accepted.
+>> The implementation looks ok to me, but I wonder whether on a global
+>> scale we want to tie it more closely to the cpuidle implementations.
+>> We already have a drivers/cpuidle framework, and while I admit
+>> that I'm not familiar with the code in there, I would assume that
+>> the smp operations and the cpuidle code usually go hand in hand.
+> 
+> Sure. Right now the smp ops code is fairly well tied into the arch layer
+> so it sounds like there is some future work when we move this stuff out
+> of the mach directory.
+> 
+> Would arm-soc be able to pick these patches up for 3.14? I think
+> everything is in place for these patches now that Mark has reviewed them.
 
-I just tested your v4 of the watchdog patches and forced a stale
-watchdog irq. It will cause a watchdog reset as you predicted.
+Ping, wondering if arm-soc would pick up:
 
-I have some fixes for irq-orion.c's bridge irq that take care of:
-- handle_edge_irq
-- mask _and_ clear irqs on init
-- use irq_enable to ensure stale irqs are acked before unmask
+ ARM: Introduce CPU_METHOD_OF_DECLARE() for cpu hotplug/smp
 
-With the last one, the stale watchdog irq will not raise watchdog's
-irq handler anymore.
+The other patches are all msm specific so we can handle them through the normal channels.
 
-BTW, during my test, it looks like RSTOUT wasn't set, so I'll add
-my Tested-by on v4 when I have investigated that.
+- k
 
-Sebastian
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
