@@ -1,73 +1,69 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 06/15] watchdog: orion: Remove unneeded BRIDGE_CAUSE
- clear
-Date: Thu, 23 Jan 2014 01:03:26 +0100
-Message-ID: <52E05C4E.9060709@gmail.com>
-References: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com> <1390295561-3466-7-git-send-email-ezequiel.garcia@free-electrons.com> <20140121233537.GS18269@obsidianresearch.com> <20140122164904.GB27273@localhost> <20140122173417.GT18269@obsidianresearch.com> <52E02AB6.7040104@gmail.com> <20140122205213.GW18269@obsidianresearch.com> <20140122221237.GA30763@localhost> <20140122223117.GX18269@obsidianresearch.com>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140122223117.GX18269-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Sebastian Reichel <sre@debian.org>
+Subject: Re: [RFCv2] Device Tree bindings for OMAP3 Camera System
+Date: Thu, 23 Jan 2014 01:11:29 +0100
+Message-ID: <20140123001128.GA12425@earth.universe>
+References: <20131103220315.GA11659@earth.universe>
+ <20140120232719.GA30894@earth.universe>
+ <52E045DE.10706@gmail.com>
+ <2960230.3bGpm3THhQ@avalon>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="k1lZvvs/B4yU6o8G"
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2960230.3bGpm3THhQ@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Sakari Ailus <sakari.ailus@iki.fi>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 01/22/2014 11:31 PM, Jason Gunthorpe wrote:
-> On Wed, Jan 22, 2014 at 07:12:38PM -0300, Ezequiel Garcia wrote:
->> On Wed, Jan 22, 2014 at 01:52:13PM -0700, Jason Gunthorpe wrote:
->>>> Clearing BRIDGE_CAUSE will only clear all currently pending upstream
->>>> IRQs, of course. If WDT IRQ will be re-raised right after that in
->>>> BRIDGE_CAUSE depends on the actual HW implementation, i.e. we do no
->>>> clear the causing IRQ itself but just what it raised in BRIDGE_CAUSE.
->>>
->>> Which is why it makes no sense to clear it one time at kernel start.
->>>
->>
->> So, it seems we need to handle irq_startup(), as you suggested.
->> I've just tested the attached patch, and it's working fine: the driver's
->> probe() fully stops the watchdog, and then request_irq() acks and
->> pending interrupts, through the added irq_startup().
->>
->> How does it look?
->
-> Looks sane to me.
->
-> I looked some more and there are other drivers (eg irq-metag-ext) that
-> take this same approach.
->
-> Sebastian:
-> I looked at the irq-orion driver a bit more and noticed this:
->
->          ret = irq_alloc_domain_generic_chips(domain, nrirqs, 1, np->name,
->                               handle_level_irq, clr, 0, IRQ_GC_INIT_MASK_CACHE);
->                             ^^^^^^^^^^^^^^^^^^^^^
-> Shouldn't it be handle_edge_irq? Otherwise who is calling irq_ack? How
-> does this work at all? :)
 
-I can tell you that it comes from arch/arm/plat-orion/irq.c and I
-blindly copied it. I never really checked the differences in handling
-level/edge irqs. Besides, if it wasn't working, we wouldn't get far
-in booting the kernel without timer irqs.
+--k1lZvvs/B4yU6o8G
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- From a HW point-of-view, I'd say the difference is that an
-edge-triggered irq samples level transitions from e.g. low to high.
-It also remains asserted if you clear the actual cause of the interrupt
-and is only asserted again on the next low-to-high transition.
+Hi,
 
-A level-triggered irq will be asserted as long as the cause of the irq
-is asserted. If you clear the cause, you'll also clear that bit in the
-upstream controller.
+On Wed, Jan 22, 2014 at 11:57:45PM +0100, Laurent Pinchart wrote:
+> [...]
+>> camera-switch {
+>>      /*
+>>       * TODO:
+>>       *  - check if the switching code is generic enough to use a
+>>       *    more generic name like "gpio-camera-switch".
+>=20
+> I think you can use a more generic name. You could probably get some=20
+> inspiration from the i2c-mux-gpio DT bindings.
 
-*BUT*, I will double-check how Linux deals with level/edge irqs and if
-Orion SoCs have edge or level triggered cause registers. That should
-reveal, if it is more sane to use handle_edge_irq here and possibly in
-the main interrupt controller, too.
+My main concern is, that the gpio used for switching is also
+connected to the reset pin of one of the cameras. Maybe that
+fact can just be neglected, though?
 
-Sebastian
+> [...]
 
+-- Sebastian
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--k1lZvvs/B4yU6o8G
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCAAGBQJS4F4wAAoJENju1/PIO/qaa6kP/31H7aF2nUkXaI/y5r6DYhx4
+Uc7nKcLVgcF4wd8/VLbNEhg1Gw9PUdCkF42qZIm2WC+hj5OukG38Gw1aZanGBHNB
+yx1x0o9tflVhikcpVz1QJfPqgDnMLgbpyIxPTtYVNRsY+sMpDpR+2+k/kRLYPtLv
+RY5m2w6lRPvcmiV8LLzj7WEwlotJz/mdQLwvvLsmcfoHMnK9K4s/6rQdNOmycj0a
+kztUp/qiyQqU2vAHcfmdAfyBQ30m3pUCo0g7s4ctJ461i0lxb220tB+NqbO/wFgJ
+2wKBY9TDJJqwzwOcxrbbCXi/uEs/Syafe/KYvbtmOYbnn+SiK3e3HrHQRPlnR8+Q
+NJyZ1IkvV/5wZ15lpH+vqoZjRa6iUyFwQ93kIi4YAnBk64hGW0Q31szqbCn4XnJs
+2HGaDygf38SwJH5e77NR40H2PyaJ3tCjKeZdGAHQ1CUURGkRhVcQZkz60A7kjP56
+LAqcxP/5HYKSAqs82Ud2etp03IzxXRWEBPOq4I7b4bbjNgdZyrWfY5okVdWgiguZ
+7nNJw+2Y4SSHLOLf2x1IHmV6JaqvzebfHefBRoN+v6f4oa5q9TRQuWqBB+5dXeA+
+KsNeywP9OOLQGp3AE1f4+AML8/oDU0ADna3AWrUIVWC4CJY4S+BPEetPoEqVjRmt
+j/H5J2VBvy0I9wX/B/E9
+=vxpY
+-----END PGP SIGNATURE-----
+
+--k1lZvvs/B4yU6o8G--
