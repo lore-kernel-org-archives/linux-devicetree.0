@@ -1,179 +1,80 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCHv2 2/2] pwm: imx: support polarity inversion
-Date: Thu, 23 Jan 2014 11:52:03 +0000
-Message-ID: <20140123115203.GV15937@n2100.arm.linux.org.uk>
-References: <1389859585-14006-1-git-send-email-LW@KARO-electronics.de> <1389859585-14006-3-git-send-email-LW@KARO-electronics.de> <20140116160356.GY16215@pengutronix.de> <20140123083714.3c6e86ae@ipc1.ka-ro>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 06/15] watchdog: orion: Remove unneeded BRIDGE_CAUSE
+ clear
+Date: Thu, 23 Jan 2014 08:54:33 -0300
+Message-ID: <20140123115432.GC6065@localhost>
+References: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1390295561-3466-7-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20140121233537.GS18269@obsidianresearch.com>
+ <20140122164904.GB27273@localhost>
+ <20140122173417.GT18269@obsidianresearch.com>
+ <52E02AB6.7040104@gmail.com>
+ <20140122205213.GW18269@obsidianresearch.com>
+ <52E0591E.6030009@gmail.com>
+ <20140123111049.GB6065@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140123083714.3c6e86ae@ipc1.ka-ro>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, Rob Landley <rob@landley.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20140123111049.GB6065@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 23, 2014 at 08:37:14AM +0100, Lothar Wa=DFmann wrote:
-> This wouldn't buy much without a material change to of_pwm_get().
-> The function of_parse_phandle_with_args() called by of_pwm_get()
-> requires the number of args in the pwms property be greater or equal =
-to
-> the #pwm-cells property in the pwm node. Thus, the interesting case o=
+Sebastian,
+
+On Thu, Jan 23, 2014 at 08:10:49AM -0300, Ezequiel Garcia wrote:
+> On Thu, Jan 23, 2014 at 12:49:50AM +0100, Sebastian Hesselbarth wrote=
+:
+> [..]
+> > > Notice that Ezequiel has added an IRQ handler that just calls pan=
+ic,
+> > > so a spurious interrupt call is VERY VERY BAD.
+> >=20
+> > And I understand that he now clears watchdog's register before
+> > requesting an irq. All that is missing is bridge_irq driver clearin=
+g
+> > CAUSE register after masking all irqs, right?
+> >=20
+>=20
+> Are you sure clearing the CAUSE register after masking the IRQs will =
+be enough?
+>=20
+> AFAICS, until now nobody unmasks the watchdog IRQ (at least the orion=
+_wdt
+> driver didn't request the interruption) but *still* the CAUSE registe=
+r is set
+> upon watchdog expiration. So I would guessed a masked interrupt still=
+ raises a
+> bit in the CAUSE register.
+>=20
+
+Let me add some real information instead of my speculations. Taken from
+the Kirkwood specification:
+
+Table 136: Mbus-L to Mbus Bridge Interrupt Mask Register
+Offset:		0x00020114
+=46ield: 		Mask
+Type/InitVal: 	RW 0x0
+Description:	There is a mask bit per each cause bit. Mask only affects =
+the
+		assertion of interrupt pins. It does not affect the setting of
+		bits in the Cause register.
+
+So I guess this is why Jason has been insisting with the introduction o=
 f
-> having #pwm-cells =3D <3> without changing the existing users is
-> prohibited by of_parse_phandle_with_args().
+the irq_startup.
 
-I really don't think that's a problem we need to be concerned with at
-the moment.  What we need is for the kernel to be able to parse files
-with #pwm-cells =3D <2> with the pwms property containing two arguments=
-,
-and when they're updated to #pwm-cells =3D <3> with the pwms property
-containing three arguments.
-
-Yes, that means all the board dt files need to be updated at the same
-time to include the additional argument, but I don't see that as a big
-problem.
-
-What we do need to do is to adjust the PWM parsing code such that it's
-possible to use either specification without causing any side effects.
-
-I would test this, but as u-boot is rather fscked at the moment and the
-networking has broken on my cubox-i as a result... and it seems that th=
-e
-u-boot developers have pissed off cubox-i u-boot hackers soo much that
-they've dropped u-boot in favour of barebox...
-
- drivers/pwm/core.c  | 59 +++++++++++++++++++++++++++++----------------=
---------
- include/linux/pwm.h |  2 ++
- 2 files changed, 34 insertions(+), 27 deletions(-)
-
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 2ca95042a0b9..40adbce8ef0c 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -132,14 +132,11 @@ static int pwm_device_request(struct pwm_device *=
-pwm, const char *label)
- }
-=20
- struct pwm_device *
--of_pwm_xlate_with_flags(struct pwm_chip *pc, const struct of_phandle_a=
-rgs *args)
-+of_pwm_xlate(struct pwm_chip *pc, const struct of_phandle_args *args)
- {
- 	struct pwm_device *pwm;
-=20
--	if (pc->of_pwm_n_cells < 3)
--		return ERR_PTR(-EINVAL);
--
--	if (args->args[0] >=3D pc->npwm)
-+	if (args->args_count < 2)
- 		return ERR_PTR(-EINVAL);
-=20
- 	pwm =3D pwm_request_from_chip(pc, args->args[0], NULL);
-@@ -148,33 +145,45 @@ of_pwm_xlate_with_flags(struct pwm_chip *pc, cons=
-t struct of_phandle_args *args)
-=20
- 	pwm_set_period(pwm, args->args[1]);
-=20
--	if (args->args[2] & PWM_POLARITY_INVERTED)
--		pwm_set_polarity(pwm, PWM_POLARITY_INVERSED);
--	else
--		pwm_set_polarity(pwm, PWM_POLARITY_NORMAL);
-+	if (args->args_count > 2) {
-+		int err;
-+
-+		if (args->args[2] & PWM_POLARITY_INVERTED)
-+			err =3D pwm_set_polarity(pwm, PWM_POLARITY_INVERSED);
-+		else
-+			err =3D pwm_set_polarity(pwm, PWM_POLARITY_NORMAL);
-+
-+		pwm_put(pwm);
-+		return ERR_PTR(err);
-+	}
-=20
- 	return pwm;
- }
-+EXPORT_SYMBOL(of_pwm_xlate);
-+
-+struct pwm_device *
-+of_pwm_xlate_with_flags(struct pwm_chip *pc, const struct of_phandle_a=
-rgs *args)
-+{
-+	if (pc->of_pwm_n_cells < 3)
-+		return ERR_PTR(-EINVAL);
-+
-+	if (args->args_count !=3D pc->of_pwm_n_cells)
-+		return ERR_PTR(-EINVAL);
-+
-+	return of_pwm_xlate(pc, args);
-+}
- EXPORT_SYMBOL_GPL(of_pwm_xlate_with_flags);
-=20
- static struct pwm_device *
- of_pwm_simple_xlate(struct pwm_chip *pc, const struct of_phandle_args =
-*args)
- {
--	struct pwm_device *pwm;
--
- 	if (pc->of_pwm_n_cells < 2)
- 		return ERR_PTR(-EINVAL);
-=20
--	if (args->args[0] >=3D pc->npwm)
-+	if (args->args_count !=3D pc->of_pwm_n_cells)
- 		return ERR_PTR(-EINVAL);
-=20
--	pwm =3D pwm_request_from_chip(pc, args->args[0], NULL);
--	if (IS_ERR(pwm))
--		return pwm;
--
--	pwm_set_period(pwm, args->args[1]);
--
--	return pwm;
-+	return of_pwm_xlate(pc, args);
- }
-=20
- static void of_pwmchip_add(struct pwm_chip *chip)
-@@ -536,16 +545,12 @@ struct pwm_device *of_pwm_get(struct device_node =
-*np, const char *con_id)
- 		goto put;
- 	}
-=20
--	if (args.args_count !=3D pc->of_pwm_n_cells) {
--		pr_debug("%s: wrong #pwm-cells for %s\n", np->full_name,
--			 args.np->full_name);
--		pwm =3D ERR_PTR(-EINVAL);
--		goto put;
--	}
--
- 	pwm =3D pc->of_xlate(pc, &args);
--	if (IS_ERR(pwm))
-+	if (IS_ERR(pwm)) {
-+		pr_debug("%s: of_xlate failed for %s: %d\n", np->full_name,
-+			 args.np->full_name, (int)PTR_ERR(pwm));
- 		goto put;
-+	}
-=20
- 	/*
- 	 * If a consumer name was not given, try to look it up from the
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index f0feafd184a0..14a823f77c31 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -188,6 +188,8 @@ struct pwm_device *pwm_request_from_chip(struct pwm=
-_chip *chip,
- 					 unsigned int index,
- 					 const char *label);
-=20
-+struct pwm_device *of_pwm_xlate(struct pwm_chip *pc,
-+		const struct of_phandle_args *args);
- struct pwm_device *of_pwm_xlate_with_flags(struct pwm_chip *pc,
- 		const struct of_phandle_args *args);
-=20
-
-
+(Just for reference, the little patch I attached yesterday proved to wo=
+rk here.)
 --=20
-=46TTC broadband for 0.8mile line: 5.8Mbps down 500kbps up.  Estimation
-in database were 13.1 to 19Mbit for a good line, about 7.5+ for a bad.
-Estimate before purchase was "up to 13.2Mbit".
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
