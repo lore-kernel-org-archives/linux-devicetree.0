@@ -1,40 +1,44 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 4/4] ARM:STi: STiH415: Add interrupt support for pin controller
-Date: Thu, 23 Jan 2014 08:33:48 +0100
-Message-ID: <CACRpkdZhUshDzSQtTO=ZXk1Lany1C-2UBBjVTwykh8DSLpFBAw@mail.gmail.com>
-References: <1389886545-31498-1-git-send-email-srinivas.kandagatla@st.com>
-	<1389886665-32076-1-git-send-email-srinivas.kandagatla@st.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v2 2/2] regulator: s5m8767: Document new bindings for Buck9
+ GPIO control
+Date: Thu, 23 Jan 2014 08:37:01 +0100
+Message-ID: <1390462621.25714.5.camel@AMDC1943>
+References: <1390406848-20964-1-git-send-email-k.kozlowski@samsung.com>
+ <1390406848-20964-3-git-send-email-k.kozlowski@samsung.com>
+ <20140122194927.GZ17314@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1389886665-32076-1-git-send-email-srinivas.kandagatla@st.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20140122194927.GZ17314@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Sangbeom Kim <sbkim73@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, Amit Daniel Kachhap <amit.daniel@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 16, 2014 at 4:37 PM,  <srinivas.kandagatla@st.com> wrote:
+On Wed, 2014-01-22 at 19:49 +0000, Mark Brown wrote:
+> On Wed, Jan 22, 2014 at 05:07:28PM +0100, Krzysztof Kozlowski wrote:
+> > Add documentation for new bindings for controlling (enable/disable) the
+> > Buck9 Converter by GPIO (BUCK9EN).
+> 
+> Your CC list for this is *very* large...
+Hmmm... The get_maintainers produces such long list for any change in
+Documentation/devicetree/bindings... I'll stop using it for this.
 
-> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
->
-> This patch adds interrupt support for STiH415 pin controllers.
->
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+> 
+> > +	- s5m8767,pmic-ext-control-enable: regulator can be enabled/disabled
+> > +		by GPIO (valid only for buck9).
+> > +	- s5m8767,pmic-ext-control-gpio: GPIO specifier for one GPIO
+> > +		controlling this regulator (valid only for buck9).
+> > +		This property is required when 's5m8767,pmic-ext-control-enable' is specified.
+> 
+> In what situation might the GPIO be present but not usable - can't we
+> just use the presence of the GPIO property?  Also GPIO properties are
+> supposed to be always "-gpios".
+Remove the "s5m8767,pmic-ext-control-enable" and use only
+"s5m8767,pmic-ext-control-gpios"? Sure, that makes sense. Thanks for
+idea.
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-Merge this through ARM SoC.
-
-> +                       reg             = <0xfe61f080 0x4>;
-> +                       reg-names       = "irqmux";
-
-Aha so that is how it looks when you handle the separate
-mux reg, well I can't think of anything better and this works
-fine for me.
-
-The alternative would be to have a syscon thing using regmap
-such as drivers/mfd/syscon.c but I really cannot decide
-between these two design patterns for odd registers.
-
-Yours,
-Linus Walleij
+Best regards,
+Krzysztof
