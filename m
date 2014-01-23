@@ -1,75 +1,114 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v3 7/7] ARM: brcmstb: dts: add a reference DTS for Broadcom
- 7445
-Date: Thu, 23 Jan 2014 09:58:21 +0100
-Message-ID: <52E0D9AD.1040409@monstr.eu>
-References: <1389743333-16741-1-git-send-email-marc.ceeeee@gmail.com> <201401161219.01038.arnd@arndb.de> <20140116134732.GB17314@sirena.org.uk> <201401171804.30572.arnd@arndb.de>
-Reply-To: monstr@monstr.eu
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 2/8 v4] crypto:s5p-sss: Add device tree support
+Date: Thu, 23 Jan 2014 11:28:08 +0100
+Message-ID: <52E0EEB8.4080602@samsung.com>
+References: <1389243541-13122-1-git-send-email-ch.naveen@samsung.com>
+ <1389777291-15026-1-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="AKaUerVwI6LMuuVxib5JgnEqqbliEUWie"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201401171804.30572.arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Brown <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Christian Daudt <bcm@fixthebug.org>, Stephen Boyd <sboyd@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marc C <marc.ceeeee@gmail.com>, Matt Porter <matt.porter@linaro.org>, David Brown <davidb@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1389777291-15026-1-git-send-email-ch.naveen@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, vzapolskiy@gmail.com, herbert@gondor.apana.org.au, naveenkrishna.ch@gmail.com, cpgs@samsung.com, tomasz.figa@gmail.com, "David S. Miller" <davem@davemloft.net>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---AKaUerVwI6LMuuVxib5JgnEqqbliEUWie
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On 01/17/2014 06:04 PM, Arnd Bergmann wrote:
-> On Thursday 16 January 2014, Mark Brown wrote:
->> On Thu, Jan 16, 2014 at 12:19:00PM +0100, Arnd Bergmann wrote:
->>
->>> 1. Other platforms also require the syscon driver to be active before=
+(Adding missing devicetre ML list at CC.)
 
->>> the regular device driver probing starts. Michal Simek has the same
->>> issue in the zynq clock driver that you have for SMP initialization.
->>> We have talked about this with Mark Brown already, and I think we wil=
-l
->>> find a solution for this in the end, but it's not as straightforward
->>> as I first hoped. We can probably use help in this area.
->>
->> I thought the solution with deferring registration of the resource for=
+On 15/01/14 10:14, Naveen Krishna Chatradhi wrote:
+> This patch adds device tree support to the s5p-sss.c crypto driver.
+> 
+> Also, Documentation under devicetree/bindings added.
+> 
+> Signed-off-by: Naveen Krishna Ch <ch.naveen@samsung.com>
+> CC: Herbert Xu <herbert@gondor.apana.org.au>
+> CC: David S. Miller <davem@davemloft.net>
+> CC: Vladimir Zapolskiy <vzapolskiy@gmail.com>
+> TO: <linux-crypto@vger.kernel.org>
+> CC: <linux-samsung-soc@vger.kernel.org>
+> ---
+> Changes since v3:
+> None
+> 
+>  .../devicetree/bindings/crypto/samsung-sss.txt     |   20 ++++++++++++++++++++
+>  drivers/crypto/s5p-sss.c                           |   10 +++++++++-
+>  2 files changed, 29 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/samsung-sss.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/crypto/samsung-sss.txt b/Documentation/devicetree/bindings/crypto/samsung-sss.txt
+> new file mode 100644
+> index 0000000..2f9d7e4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/crypto/samsung-sss.txt
+> @@ -0,0 +1,20 @@
+> +Samsung SoC SSS (Security SubSystem) module
+> +
+> +The SSS module in S5PV210 SoC supports the following:
+> +-- Feeder (FeedCtrl)
+> +-- Advanced Encryption Standard (AES)
+> +-- Data Encryption Standard (DES)/3DES
+> +-- Public Key Accelerator (PKA)
+> +-- SHA-1/SHA-256/MD5/HMAC (SHA-1/SHA-256/MD5)/PRNG
+> +-- PRNG: Pseudo Random Number Generator
+> +
+> +Required properties:
+> +
+> +- compatible : Should contain entries for this and backward compatible
+> +  SSS versions:
+> +  - "samsung,s5pv210-secss" for S5PV210 SoC.
+> +- reg : Offset and length of the register set for the module
+> +- interrupts : the interrupt-specifier for the SSS module.
+> +		Two interrupts "feed control and hash" in case of S5PV210
 
->> dev_get_regmap() until a proper device materialised seemed simple and
->> enough, did you folks run into any problems with that?  I had assumed =
-a
->> patch was likely to materialise so wasn't worrying about it myself.
->=20
-> I'm still hoping that Michal will do that patch.
+It should be described in what order both interrupts are supposed to be
+specified.
 
-And what was the resolution/recommendation how to do it?
+> +- clocks : the required gating clock for the SSS module.
+> +- clock-names : the gating clock name to be requested in the SSS driver.
+> diff --git a/drivers/crypto/s5p-sss.c b/drivers/crypto/s5p-sss.c
+> index 93cddeb..2da5617 100644
+> --- a/drivers/crypto/s5p-sss.c
+> +++ b/drivers/crypto/s5p-sss.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/scatterlist.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/io.h>
+> +#include <linux/of.h>
+>  #include <linux/crypto.h>
+>  #include <linux/interrupt.h>
+>  
+> @@ -177,6 +178,12 @@ struct s5p_aes_dev {
+>  
+>  static struct s5p_aes_dev *s5p_dev;
+>  
+> +static const struct of_device_id s5p_sss_dt_match[] = {
+> +	{ .compatible = "samsung,s5pv210-secss", },
 
+nit: the first semicolon could be omitted.
+
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, s5p_sss_dt_match);
+> +
+>  static void s5p_set_dma_indata(struct s5p_aes_dev *dev, struct scatterlist *sg)
+>  {
+>  	SSS_WRITE(dev, FCBRDMAS, sg_dma_address(sg));
+> @@ -676,7 +683,8 @@ static struct platform_driver s5p_aes_crypto = {
+>  	.remove	= s5p_aes_remove,
+>  	.driver	= {
+>  		.owner	= THIS_MODULE,
+> -		.name	= "s5p-secss",
+> +		.name	= "s5pv210-secss",
+
+Why you're changing the driver name ? It's not related and not needed AFAICT.
+
+> +		.of_match_table = s5p_sss_dt_match,
+>  	},
+>  };
+
+--
 Thanks,
-Michal
-
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---AKaUerVwI6LMuuVxib5JgnEqqbliEUWie
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlLg2a0ACgkQykllyylKDCFGKQCaA18apnuO36qPgCQdCuCPBPFB
-HhkAnic918oEawOlDrUNrgIQk/KJ07j8
-=SzUS
------END PGP SIGNATURE-----
-
---AKaUerVwI6LMuuVxib5JgnEqqbliEUWie--
+Sylwester
