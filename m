@@ -1,59 +1,212 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCHv2 2/2] pwm: imx: support polarity inversion
-Date: Thu, 23 Jan 2014 16:44:33 +0000
-Message-ID: <20140123164433.GX15937@n2100.arm.linux.org.uk>
-References: <1389859585-14006-1-git-send-email-LW@KARO-electronics.de> <1389859585-14006-3-git-send-email-LW@KARO-electronics.de> <20140116160356.GY16215@pengutronix.de> <20140123083714.3c6e86ae@ipc1.ka-ro> <20140123115203.GV15937@n2100.arm.linux.org.uk>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [GIT PULL] DeviceTree for 3.14
+Date: Thu, 23 Jan 2014 10:50:48 -0600
+Message-ID: <CAL_JsqJe=ge2CsF2GuMd=Ua57V-zDvd-L0nrZNnOdmNdDaPn=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140123115203.GV15937@n2100.arm.linux.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 23, 2014 at 11:52:03AM +0000, Russell King - ARM Linux wrot=
-e:
-> On Thu, Jan 23, 2014 at 08:37:14AM +0100, Lothar Wa=DFmann wrote:
-> > This wouldn't buy much without a material change to of_pwm_get().
-> > The function of_parse_phandle_with_args() called by of_pwm_get()
-> > requires the number of args in the pwms property be greater or equa=
-l to
-> > the #pwm-cells property in the pwm node. Thus, the interesting case=
- of
-> > having #pwm-cells =3D <3> without changing the existing users is
-> > prohibited by of_parse_phandle_with_args().
->=20
-> I really don't think that's a problem we need to be concerned with at
-> the moment.  What we need is for the kernel to be able to parse files
-> with #pwm-cells =3D <2> with the pwms property containing two argumen=
-ts,
-> and when they're updated to #pwm-cells =3D <3> with the pwms property
-> containing three arguments.
->=20
-> Yes, that means all the board dt files need to be updated at the same
-> time to include the additional argument, but I don't see that as a bi=
-g
-> problem.
->=20
-> What we do need to do is to adjust the PWM parsing code such that it'=
-s
-> possible to use either specification without causing any side effects=
-=2E
->=20
-> I would test this, but as u-boot is rather fscked at the moment and t=
-he
-> networking has broken on my cubox-i as a result... and it seems that =
-the
-> u-boot developers have pissed off cubox-i u-boot hackers soo much tha=
-t
-> they've dropped u-boot in favour of barebox...
+Linus,
 
-Okay, finally confirmed that this works with #pwm-cells =3D 2.
+Please pull DeviceTree updates for 3.14.
 
---=20
-=46TTC broadband for 0.8mile line: 5.8Mbps down 500kbps up.  Estimation
-in database were 13.1 to 19Mbit for a good line, about 7.5+ for a bad.
-Estimate before purchase was "up to 13.2Mbit".
+Rob
+
+The following changes since commit d6e0a2dd12f4067a5bcefb8bbd8ddbeff800=
+afbc:
+
+  Linux 3.13-rc7 (2014-01-04 15:12:14 -0800)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+tags/devicetree-for-3.14
+
+for you to fetch changes up to e48ca29d30a10556eb7abd8d91980b8a57dabf10=
+:
+
+  dt-bindings: add rockchip vendor prefix (2014-01-23 09:15:23 -0600)
+
+----------------------------------------------------------------
+DeviceTree updates for 3.14:
+
+- Add new documents with guidelines for DT binding stability and review
+  process. This is one of the outcomes of Kernel Summit DT discussions.
+- Remove a bunch of device_type usage which is only for OF and
+  deprecated with FDT.
+- Fix a long standing issue with compatible string match ordering.
+- Various minor binding documentation updates.
+
+----------------------------------------------------------------
+=46lorian Vaussard (2):
+      of: add vendor prefix for Gumstix
+      of: add vendor prefixe for EPFL
+
+Gerhard Sittig (1):
+      dts: bindings: trivial clock bindings doc fixes
+
+Grant Likely (5):
+      dt/bindings: Remove all references to device_type "ethernet-phy"
+      dt/bindings: Remove references to linux,phandle properties
+      dt/bindings: remove users of device_type "mdio"
+      dt/bindings: remove device_type "network" references
+      dt/bindings: Remove device_type "serial" from marvell,mv64360-mps=
+c
+
+Heiko St=FCbner (1):
+      dt-bindings: add rockchip vendor prefix
+
+Jason Cooper (1):
+      dt/bindings: submitting patches and ABI documents
+
+Lothar Wa=DFmann (2):
+      of: add vendor prefix for Ka-Ro electronics GmbH
+      DT: Add vendor prefix for Emerging Display Technologies
+
+Peter Crosthwaite (2):
+      of: irq: Ignore disabled interrupt controllers
+      of: irq: Ignore disabled intc's when searching map
+
+Rob Herring (3):
+      dt-bindings: add GIC-400 binding
+      Merge remote-tracking branch 'grant/devicetree/next' into for-3.1=
+4
+      Merge remote-tracking branch 'grant/devicetree/next' into for-3.1=
+4
+
+Sebastian Hesselbarth (1):
+      OF: base: match each node compatible against all given matches fi=
+rst
+
+Soren Brinkmann (1):
+      devicetree: macb: Document clock properties
+
+Tony Prisk (1):
+      serial: vt8500: Add missing binding document for arch-vt8500
+serial driver.
+
+Xiubo Li (1):
+      of: Fix __of_device_is_available check
+
+ Documentation/devicetree/bindings/ABI.txt          | 39 ++++++++++++++=
++
+ Documentation/devicetree/bindings/arm/gic.txt      |  1 +
+ .../devicetree/bindings/clock/clock-bindings.txt   |  2 +-
+ Documentation/devicetree/bindings/marvell.txt      |  8 ----
+ Documentation/devicetree/bindings/net/macb.txt     |  6 +++
+ .../devicetree/bindings/net/marvell-orion-net.txt  |  3 --
+ Documentation/devicetree/bindings/net/phy.txt      |  5 --
+ .../bindings/powerpc/fsl/cpm_qe/network.txt        |  2 -
+ .../bindings/powerpc/fsl/cpm_qe/qe/pincfg.txt      |  3 --
+ .../devicetree/bindings/serial/vt8500-uart.txt     | 26 ++++++++++
+ .../devicetree/bindings/submitting-patches.txt     | 38 ++++++++++++++=
++
+ .../devicetree/bindings/vendor-prefixes.txt        |  5 ++
+ Documentation/devicetree/booting-without-of.txt    |  3 --
+ arch/arm/boot/dts/dove.dtsi                        |  2 -
+ arch/arm/boot/dts/kirkwood-cloudbox.dts            |  1 -
+ arch/arm/boot/dts/kirkwood-db.dtsi                 |  1 -
+ arch/arm/boot/dts/kirkwood-dnskw.dtsi              |  1 -
+ arch/arm/boot/dts/kirkwood-dockstar.dts            |  1 -
+ arch/arm/boot/dts/kirkwood-dreamplug.dts           |  2 -
+ arch/arm/boot/dts/kirkwood-goflexnet.dts           |  1 -
+ .../arm/boot/dts/kirkwood-guruplug-server-plus.dts |  2 -
+ arch/arm/boot/dts/kirkwood-ib62x0.dts              |  1 -
+ arch/arm/boot/dts/kirkwood-iconnect.dts            |  1 -
+ arch/arm/boot/dts/kirkwood-iomega_ix2_200.dts      |  1 -
+ arch/arm/boot/dts/kirkwood-km_kirkwood.dts         |  1 -
+ arch/arm/boot/dts/kirkwood-lsxl.dtsi               |  2 -
+ arch/arm/boot/dts/kirkwood-mplcec4.dts             |  2 -
+ .../boot/dts/kirkwood-netgear_readynas_duo_v2.dts  |  1 -
+ arch/arm/boot/dts/kirkwood-ns2-common.dtsi         |  1 -
+ arch/arm/boot/dts/kirkwood-openblocks_a6.dts       |  1 -
+ arch/arm/boot/dts/kirkwood-openblocks_a7.dts       |  2 -
+ arch/arm/boot/dts/kirkwood-sheevaplug-common.dtsi  |  1 -
+ arch/arm/boot/dts/kirkwood-topkick.dts             |  1 -
+ arch/arm/boot/dts/kirkwood-ts219.dtsi              |  1 -
+ arch/arm/boot/dts/kirkwood.dtsi                    |  2 -
+ .../dts/orion5x-lacie-ethernet-disk-mini-v2.dts    |  1 -
+ arch/arm/boot/dts/orion5x.dtsi                     |  1 -
+ arch/microblaze/platform/generic/system.dts        |  1 -
+ arch/powerpc/boot/dts/adder875-redboot.dts         |  2 -
+ arch/powerpc/boot/dts/adder875-uboot.dts           |  2 -
+ arch/powerpc/boot/dts/asp834x-redboot.dts          |  2 -
+ arch/powerpc/boot/dts/c2k.dts                      |  5 --
+ arch/powerpc/boot/dts/ep8248e.dts                  |  3 --
+ arch/powerpc/boot/dts/ep88xc.dts                   |  2 -
+ arch/powerpc/boot/dts/gef_ppc9a.dts                |  2 -
+ arch/powerpc/boot/dts/gef_sbc310.dts               |  2 -
+ arch/powerpc/boot/dts/gef_sbc610.dts               |  2 -
+ arch/powerpc/boot/dts/holly.dts                    |  1 -
+ arch/powerpc/boot/dts/ksi8560.dts                  |  3 --
+ arch/powerpc/boot/dts/mpc7448hpc2.dts              |  1 -
+ arch/powerpc/boot/dts/mpc8272ads.dts               |  3 --
+ arch/powerpc/boot/dts/mpc8308_p1m.dts              |  2 -
+ arch/powerpc/boot/dts/mpc8308rdb.dts               |  1 -
+ arch/powerpc/boot/dts/mpc8313erdb.dts              |  1 -
+ arch/powerpc/boot/dts/mpc8315erdb.dts              |  2 -
+ arch/powerpc/boot/dts/mpc832x_mds.dts              |  2 -
+ arch/powerpc/boot/dts/mpc832x_rdb.dts              |  2 -
+ arch/powerpc/boot/dts/mpc8349emitx.dts             |  1 -
+ arch/powerpc/boot/dts/mpc8349emitxgp.dts           |  1 -
+ arch/powerpc/boot/dts/mpc834x_mds.dts              |  2 -
+ arch/powerpc/boot/dts/mpc836x_mds.dts              |  2 -
+ arch/powerpc/boot/dts/mpc836x_rdk.dts              |  4 --
+ arch/powerpc/boot/dts/mpc8377_mds.dts              |  2 -
+ arch/powerpc/boot/dts/mpc8377_rdb.dts              |  1 -
+ arch/powerpc/boot/dts/mpc8377_wlan.dts             |  2 -
+ arch/powerpc/boot/dts/mpc8378_mds.dts              |  2 -
+ arch/powerpc/boot/dts/mpc8378_rdb.dts              |  1 -
+ arch/powerpc/boot/dts/mpc8379_mds.dts              |  2 -
+ arch/powerpc/boot/dts/mpc8379_rdb.dts              |  1 -
+ arch/powerpc/boot/dts/mpc8536ds.dtsi               |  2 -
+ arch/powerpc/boot/dts/mpc8540ads.dts               |  3 --
+ arch/powerpc/boot/dts/mpc8541cds.dts               |  2 -
+ arch/powerpc/boot/dts/mpc8544ds.dtsi               |  2 -
+ arch/powerpc/boot/dts/mpc8548cds.dtsi              |  4 --
+ arch/powerpc/boot/dts/mpc8555cds.dts               |  2 -
+ arch/powerpc/boot/dts/mpc8560ads.dts               |  4 --
+ arch/powerpc/boot/dts/mpc8568mds.dts               |  8 ----
+ arch/powerpc/boot/dts/mpc8569mds.dts               |  6 ---
+ arch/powerpc/boot/dts/mpc8641_hpcn.dts             |  4 --
+ arch/powerpc/boot/dts/mpc8641_hpcn_36b.dts         |  4 --
+ arch/powerpc/boot/dts/mpc866ads.dts                |  1 -
+ arch/powerpc/boot/dts/mpc885ads.dts                |  3 --
+ arch/powerpc/boot/dts/p1021mds.dts                 |  2 -
+ arch/powerpc/boot/dts/p1025rdb_32b.dts             |  2 -
+ arch/powerpc/boot/dts/ppa8548.dts                  |  2 -
+ arch/powerpc/boot/dts/pq2fads.dts                  |  3 --
+ arch/powerpc/boot/dts/prpmc2800.dts                |  5 --
+ arch/powerpc/boot/dts/sbc8349.dts                  |  2 -
+ arch/powerpc/boot/dts/sbc8548-post.dtsi            |  2 -
+ arch/powerpc/boot/dts/sbc8641d.dts                 |  4 --
+ arch/powerpc/boot/dts/stx_gp3_8560.dts             |  2 -
+ arch/powerpc/boot/dts/stxssa8555.dts               |  2 -
+ arch/powerpc/boot/dts/tqm8540.dts                  |  3 --
+ arch/powerpc/boot/dts/tqm8541.dts                  |  3 --
+ arch/powerpc/boot/dts/tqm8548-bigflash.dts         |  5 --
+ arch/powerpc/boot/dts/tqm8548.dts                  |  5 --
+ arch/powerpc/boot/dts/tqm8555.dts                  |  3 --
+ arch/powerpc/boot/dts/tqm8560.dts                  |  3 --
+ arch/powerpc/boot/dts/tqm8xx.dts                   |  1 -
+ arch/powerpc/sysdev/mv64x60_dev.c                  |  2 +-
+ arch/powerpc/sysdev/mv64x60_udbg.c                 |  2 +-
+ drivers/of/base.c                                  | 56 ++++++++++++++=
++-------
+ drivers/of/irq.c                                   |  6 ++-
+ 103 files changed, 163 insertions(+), 231 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/ABI.txt
+ create mode 100644 Documentation/devicetree/bindings/serial/vt8500-uar=
+t.txt
+ create mode 100644 Documentation/devicetree/bindings/submitting-patche=
+s.txt
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
