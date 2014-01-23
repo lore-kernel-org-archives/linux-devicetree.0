@@ -1,61 +1,56 @@
-From: Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC] Culling traffic volume on devicetree mailing list
-Date: Thu, 23 Jan 2014 11:03:47 +0000
-Message-ID: <1390475027.24595.47.camel@kazak.uk.xensource.com>
-References: <CACxGe6vYMOnyeqdhaAggytxgiLH=ijNOrmuq2FyOUtZCGqfdgQ@mail.gmail.com>
-	 <CAOesGMhYfWXCFOc6K67aAcNNRUppONY4WNXTvk2NEJH-rfMrGQ@mail.gmail.com>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 06/15] watchdog: orion: Remove unneeded BRIDGE_CAUSE
+ clear
+Date: Thu, 23 Jan 2014 08:10:51 -0300
+Message-ID: <20140123111049.GB6065@localhost>
+References: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1390295561-3466-7-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20140121233537.GS18269@obsidianresearch.com>
+ <20140122164904.GB27273@localhost>
+ <20140122173417.GT18269@obsidianresearch.com>
+ <52E02AB6.7040104@gmail.com>
+ <20140122205213.GW18269@obsidianresearch.com>
+ <52E0591E.6030009@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMhYfWXCFOc6K67aAcNNRUppONY4WNXTvk2NEJH-rfMrGQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52E0591E.6030009-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-01-22 at 10:35 -0800, Olof Johansson wrote:
-> > devicetree-spec: For discussing 'core' device tree bindings. ie.
-> > anything that would be a candidate for putting into an ePAPR type
-> > spec. Individual device bindings would continue to be posted to
-> > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, but anything affecting subsystems or
-> > generic patterns should be posted to this new list.
-> 
-> I predict that it will be hard for someone posting a patch to tell if
-> they should send it to this list or some other list. It might be
-> convenient for you guys to ignore the high-volume list and just focus
-> on this one, but for the people who post patches it just makes it more
-> complicated. IMHO.
+On Thu, Jan 23, 2014 at 12:49:50AM +0100, Sebastian Hesselbarth wrote:
+[..]
+> > Notice that Ezequiel has added an IRQ handler that just calls panic=
+,
+> > so a spurious interrupt call is VERY VERY BAD.
+>=20
+> And I understand that he now clears watchdog's register before
+> requesting an irq. All that is missing is bridge_irq driver clearing
+> CAUSE register after masking all irqs, right?
+>=20
 
-The issue with the current list is that it is too much of a firehose of
-Linux patches for other non-Linux consumers of DTB e.g. BSD folks, me
-with my Xen hat, see [0] for the intersection of those two which
-prompted me to mention this on the call.
+Are you sure clearing the CAUSE register after masking the IRQs will be=
+ enough?
 
-The firehose means that these people don't subscribe and therefore lack
-visibility into what is going on with the core bindings (e.g. BSD seems
-to have a different binding for gic interrupts, mentioned in the linked
-thread).
+AFAICS, until now nobody unmasks the watchdog IRQ (at least the orion_w=
+dt
+driver didn't request the interruption) but *still* the CAUSE register =
+is set
+upon watchdog expiration. So I would guessed a masked interrupt still r=
+aises a
+bit in the CAUSE register.
 
-I don't think the intention of the split was/should be that "core"
-Linux/DTB people should only subscribe to -spec@, rather that it be a
-more targeted list which non-Linux/DTB folks can be involved with to
-discuss core binding issues and standardisation etc.
-
-It seems like devicetree@ would be the right default destination for any
-patch and so should be what is listed in MAINTAINERS etc.
-
-Anyone who is doing actual core/spec work appropriate to -spec@ is
-either going to be involved enough to know this themselves or can be
-asked to CC the other list too as part of the first round of review. The
-number of patches which would need to go to -spec should be a pretty
-small fraction.
-
-Ian.
-
-[0] http://thread.gmane.org/gmane.os.freebsd.xen/1976
-
+Although I'm no sure I'm making sense here or just noise...
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
