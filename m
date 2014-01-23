@@ -1,76 +1,82 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v2 06/15] watchdog: orion: Remove unneeded BRIDGE_CAUSE
- clear
-Date: Wed, 22 Jan 2014 17:19:34 -0700
-Message-ID: <20140123001934.GY18269@obsidianresearch.com>
-References: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1390295561-3466-7-git-send-email-ezequiel.garcia@free-electrons.com>
- <20140121233537.GS18269@obsidianresearch.com>
- <20140122164904.GB27273@localhost>
- <20140122173417.GT18269@obsidianresearch.com>
- <52E02AB6.7040104@gmail.com>
- <20140122205213.GW18269@obsidianresearch.com>
- <20140122221237.GA30763@localhost>
- <20140122223117.GX18269@obsidianresearch.com>
- <52E05C4E.9060709@gmail.com>
+From: Paul Gortmaker <paul.gortmaker@windriver.com>
+Subject: Re: randconfig build error with next-20140122, in arch/x86/kernel/devicetree.c
+Date: Wed, 22 Jan 2014 19:26:12 -0500
+Message-ID: <CAP=VYLq_rhAUqyfPAPYTwAH5zjR4OtpULGPh6dBQJDbGtG8ZcA@mail.gmail.com>
+References: <CA+r1Zhjiw3Cv8AnsAhT==nkAYN2dxVXcWABpiVhtHXsW52YRkg@mail.gmail.com>
+ <52DFFAA7.40008@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52E05C4E.9060709-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-next-owner@vger.kernel.org>
+In-Reply-To: <52DFFAA7.40008@infradead.org>
+Sender: linux-next-owner@vger.kernel.org
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Jim Davis <jim.epost@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>, "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, mingo@redhat.com, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 23, 2014 at 01:03:26AM +0100, Sebastian Hesselbarth wrote:
-> >Sebastian:
-> >I looked at the irq-orion driver a bit more and noticed this:
-> >
-> >         ret = irq_alloc_domain_generic_chips(domain, nrirqs, 1, np->name,
-> >                              handle_level_irq, clr, 0, IRQ_GC_INIT_MASK_CACHE);
-> >                            ^^^^^^^^^^^^^^^^^^^^^
-> >Shouldn't it be handle_edge_irq? Otherwise who is calling irq_ack? How
-> >does this work at all? :)
-> 
-> I can tell you that it comes from arch/arm/plat-orion/irq.c and I
-> blindly copied it. I never really checked the differences in handling
-> level/edge irqs. Besides, if it wasn't working, we wouldn't get far
-> in booting the kernel without timer irqs.
+On Wed, Jan 22, 2014 at 12:06 PM, Randy Dunlap <rdunlap@infradead.org> =
+wrote:
+> On 01/22/2014 08:34 AM, Jim Davis wrote:
+>> Building with the attached random configuration file,
+>>
+>> warning: (X86_INTEL_MID) selects INTEL_SCU_IPC which has unmet direc=
+t
+>> dependencies (X86 && X86_PLATFORM_DEVICES && X86_INTEL_MID)
+>> warning: (USB_OTG_FSM && FSL_USB2_OTG && USB_MV_OTG) selects USB_OTG
+>> which has unmet direct dependencies (USB_SUPPORT && USB && PM_RUNTIM=
+E)
+>> warning: (X86_INTEL_MID) selects INTEL_SCU_IPC which has unmet direc=
+t
+>> dependencies (X86 && X86_PLATFORM_DEVICES && X86_INTEL_MID)
+>> warning: (USB_OTG_FSM && FSL_USB2_OTG && USB_MV_OTG) selects USB_OTG
+>> which has unmet direct dependencies (USB_SUPPORT && USB && PM_RUNTIM=
+E)
+>>
+>> arch/x86/kernel/devicetree.c:67:1: warning: data definition has no
+>> type or storage class [enabled by default]
+>>  module_init(add_bus_probe);
+>>  ^
+>
+> For linux-next, devicetree.c needs to #include <linux/module.h>.
+> For mainline, it would have needed to #include <linux/init.h>.
+> However, it does neither of those.
 
-Ezequiel found the ack call I missed, so it makes sense it works.
+Thanks guys; I've already queued a fix for this.
 
-I think the difference in routines only starts to matter when you can
-get another incoming edge IRQ while already handling one (due to SMP?
-threaded interrupts? RealTime? not sure)
+http://git.kernel.org/cgit/linux/kernel/git/paulg/init.git/commit/?id=3D=
+3d83b6b84210066f0886b0916136fa49ca61704d
 
-> It also remains asserted if you clear the actual cause of the interrupt
-> and is only asserted again on the next low-to-high transition.
-
-Which is why Ezequiel's patch is the right approach: we need to clear
-the interrupt latched in the cause register after the watchdog driver
-disable but before enabling/unmasking the interrupt.
-
-Remember, the BRIDGE_MASK register has no effect on the BRIDGE_CAUSE,
-it only effects which bits propogate to the main cause register.
-
-> *BUT*, I will double-check how Linux deals with level/edge irqs and if
-> Orion SoCs have edge or level triggered cause registers. That should
-> reveal, if it is more sane to use handle_edge_irq here and possibly in
-> the main interrupt controller, too.
-
-There is a mixture.
-
-Any cause bit documented to be clearable is edge triggered, all others
-are level.
-
-On Kirkwood this means all of the main interrupt controller bits are
-level and all the bridge bits are edge. Which means edge is
-definitely correct for the bridge handler, and level correct for the
-main handler.
-
-Jason
+Paul.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+>
+> See Documentation/SubmitChecklist #1:
+>
+> 1: If you use a facility then #include the file that defines/declares
+>    that facility.  Don't depend on other header files pulling in ones
+>    that you use.http://git.kernel.org/cgit/linux/kernel/git/paulg/ini=
+t.git/commit/?id=3D3d83b6b84210066f0886b0916136fa49ca61704d
+>
+>
+>> arch/x86/kernel/devicetree.c:67:1: error: type defaults to =91int=92=
+ in
+>> declaration of =91module_init=92 [-Werror=3Dimplicit-int]
+>> arch/x86/kernel/devicetree.c:67:1: warning: parameter names (without
+>> types) in function declaration [enabled by default]
+>> arch/x86/kernel/devicetree.c:60:19: warning: =91add_bus_probe=92 def=
+ined
+>> but not used [-Wunused-function]
+>>  static int __init add_bus_probe(void)
+>>                    ^
+>> cc1: some warnings being treated as errors
+>> make[2]: *** [arch/x86/kernel/devicetree.o] Error 1
+>>
+>
+>
+> --
+> ~Randy
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-next"=
+ in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
