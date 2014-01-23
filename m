@@ -1,117 +1,73 @@
-From: Tien Hock Loh <thloh.linux@gmail.com>
-Subject: Re: [PATCH V6 1/1] drivers/gpio: Altera soft IP GPIO driver
-Date: Thu, 23 Jan 2014 10:00:21 +0800
-Message-ID: <CAOLUe6YubMRvsK=tvojruJfqYGga8CmcuQW2t_sS_Md=ENUKWw@mail.gmail.com>
-References: <1390359265-22808-1-git-send-email-thloh@altera.com>
-	<20140122180904.GN20094@book.gsilab.sittig.org>
-	<52E036B7.1050101@gmail.com>
+From: Yuantian Tang <Yuantian.Tang@freescale.com>
+Subject: RE: [PATCH] clk: corenet: Update the clock bindings
+Date: Thu, 23 Jan 2014 02:47:18 +0000
+Message-ID: <d61cabaec0af4aada9fadf93e7c0bb61@BL2PR03MB115.namprd03.prod.outlook.com>
+References: <1390269732-22798-1-git-send-email-Yuantian.Tang@freescale.com>
+ <1390437863.24905.549.camel@snotra.buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <52E036B7.1050101@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Dinh Nguyen <dinh.linux@gmail.com>
-Cc: Gerhard Sittig <gsi@denx.de>, Tien Hock Loh <thloh@altera.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dinguyen@altera.com, "lftan@altera.com" <lftan@altera.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1390437863.24905.549.camel@snotra.buserror.net>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Scott Wood <scottwood@freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "prabhakar@freescale.com" <prabhakar@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 23, 2014 at 5:23 AM, Dinh Nguyen <dinh.linux@gmail.com> wrote:
-> Hi Tien Hock,
->
-> On 1/22/14 12:09 PM, Gerhard Sittig wrote:
->> On Wed, Jan 22, 2014 at 10:54 +0800, thloh@altera.com wrote:
->>> From: Tien Hock Loh <thloh@altera.com>
->>>
->>> Add driver support for Altera GPIO soft IP, including interrupts and I/O.
->>> Tested on Altera CV SoC board using dipsw and LED using LED framework.
->>>
->>> Signed-off-by: Tien Hock Loh <thloh@altera.com>
->>> ---
->>>  .../devicetree/bindings/gpio/gpio-altera.txt       |  42 +++
->>>  drivers/gpio/Kconfig                               |   7 +
->>>  drivers/gpio/Makefile                              |   1 +
->>>  drivers/gpio/gpio-altera.c                         | 420 +++++++++++++++++++++
->>>  4 files changed, 470 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-altera.txt
->>>  create mode 100644 drivers/gpio/gpio-altera.c
->> Since you not only introduce the driver, but do introduce the
->> binding as well, I'd suggest to reflect this in the commit
->> message.  And put 'binding' into the subject line such that DT
->> people can be aware they should have a look.
->
-> Yes, and you also do not have the correct DT email address too.
-> Please look at the updated MAINTAINERS file for the correct DT
-> BINDINGS address.
->
-> Dinh
-
-Yeah, it seems like Rob's email had changed since my last post.
-However, he should be getting the email from
-devicetree@vger.kernel.org mailing list as well.
-
->>
->>
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
->>> @@ -0,0 +1,42 @@
->>> +Altera GPIO controller bindings
->>> +
->>> +Required properties:
->>> +- compatible:
->>> +  - "altr,pio-1.0"
->>> +- reg: Physical base address and length of the controller's registers.
->>> +- #gpio-cells : Should be 1
->>> +  - The first cell is the gpio offset number
->>> +- gpio-controller : Marks the device node as a GPIO controller.
->> Learning about required data types when reading the binding would
->> be nice.  So that DTS authors can tell whether a property is
->> boolean, takes integers or strings, etc
->>
->>> +- #interrupt-cells : Should be 1.
->>> +  - The first cell is the GPIO offset number within the GPIO controller.
->>> +- interrupts: Specify the interrupt.
->>> +- interrupt-controller: Mark the device node as an interrupt controller
->> Are these really 'required'?  I'd expect those to be optional.
->>
->>> +
->>> +Altera GPIO specific properties:
->>> +- altr,gpio-bank-width: Width of the GPIO bank. This defines how many pins the
->>> +  GPIO device has. Ranges between 1-32. Optional and defaults to 32 is not
->>> +  specified.
->> In addition to being specific to the Altera GPIO implementation,
->> aren't these optional, too?
->>
->>> +- altr,interrupt_trigger: Specifies the interrupt trigger type the GPIO
->>> +  hardware is synthesized. This field is required if the Altera GPIO controller
->>> +  used has IRQ enabled as the interrupt type is not software controlled,
->>> +  but hardware synthesized. Required if GPIO is used as an interrupt
->>> +  controller. The value is defined in <dt-bindings/interrupt-controller/irq.h>
->>> +  Only the following flags are supported:
->>> +    IRQ_TYPE_EDGE_RISING
->>> +    IRQ_TYPE_EDGE_FALLING
->>> +    IRQ_TYPE_EDGE_BOTH
->>> +    IRQ_TYPE_LEVEL_HIGH
->> This text suggests that using the GPIO bank as an interrupt
->> controller indeed is optional.  As one would expect.
->>
->>> +
->>> +Example:
->>> +
->>> +gpio_altr: gpio_altr {
->> Should node names not be generic, i.e. "gpio"?  While aliases do
->> have specific names since they identify a specific node, to later
->> reference it from other sites.
->>
->>> +    compatible = "altr,pio-1.0";
->>> +    reg = <0xff200000 0x10>;
->>> +    interrupts = <0 45 4>;
->>> +    altr,gpio-bank-width = <32>;
->>> +    altr,interrupt_trigger = <IRQ_TYPE_EDGE_RISING>;
->>> +    #gpio-cells = <1>;
->>> +    gpio-controller;
->>> +    #interrupt-cells = <1>;
->>> +    interrupt-controller;
->>> +};
->>
->> virtually yours
->> Gerhard Sittig
->
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0K
+PiBTZW50OiAyMDE05bm0MeaciDIz5pelIOaYn+acn+WbmyA4OjQ0DQo+IFRvOiBUYW5nIFl1YW50
+aWFuLUIyOTk4Mw0KPiBDYzogV29vZCBTY290dC1CMDc0MjE7IGdhbGFrQGtlcm5lbC5jcmFzaGlu
+Zy5vcmc7IGxpbnV4cHBjLQ0KPiBkZXZAbGlzdHMub3psYWJzLm9yZzsgZGV2aWNldHJlZUB2Z2Vy
+Lmtlcm5lbC5vcmc7IEt1c2h3YWhhIFByYWJoYWthci0NCj4gQjMyNTc5DQo+IFN1YmplY3Q6IFJl
+OiBbUEFUQ0hdIGNsazogY29yZW5ldDogVXBkYXRlIHRoZSBjbG9jayBiaW5kaW5ncw0KPiANCj4g
+T24gVHVlLCAyMDE0LTAxLTIxIGF0IDEwOjAyICswODAwLCBUYW5nIFl1YW50aWFuIHdyb3RlOg0K
+PiA+IEZyb206IFRhbmcgWXVhbnRpYW4gPHl1YW50aWFuLnRhbmdAZnJlZXNjYWxlLmNvbT4NCj4g
+Pg0KPiA+IE1haW4gY2hhbmdzIGluY2x1ZGU6DQo+ID4gCS0gQ2xhcmlmaWVkIHRoZSBjbG9jayBu
+b2RlcycgdmVyc2lvbiBudW1iZXINCj4gPiAJLSBGaXhlZCBhIGlzc3VlIGluIGV4YW1wbGUNCj4g
+Pg0KPiA+IFNpbmdlZC1vZmYtYnk6IFRhbmcgWXVhbnRpYW4gPFl1YW50aWFuLlRhbmdAZnJlZXNj
+YWxlLmNvbT4NCj4gPiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Nsb2NrL2NvcmVuZXQtY2xvY2sudHh0IHwgNCArKystDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAz
+IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY29yZW5ldC1jbG9jay50eHQNCj4g
+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9jb3JlbmV0LWNsb2Nr
+LnR4dA0KPiA+IGluZGV4IDI0NzExYWYuLmQ2Y2FkZWYgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2NvcmVuZXQtY2xvY2sudHh0DQo+ID4g
+KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2NvcmVuZXQtY2xv
+Y2sudHh0DQo+ID4gQEAgLTU0LDYgKzU0LDggQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiAg
+CQlJdCB0YWtlcyBwYXJlbnQncyBjbG9jay1mcmVxdWVuY3kgYXMgaXRzIGNsb2NrLg0KPiA+ICAJ
+KiAiZnNsLHFvcmlxLXN5c2Nsay0yLjAiOiBmb3IgaW5wdXQgc3lzdGVtIGNsb2NrICh2Mi4wKS4N
+Cj4gPiAgCQlJdCB0YWtlcyBwYXJlbnQncyBjbG9jay1mcmVxdWVuY3kgYXMgaXRzIGNsb2NrLg0K
+PiA+ICsJTm90ZTogdjEuMCBhbmQgdjIuMCBhcmUgY2xvY2sgdmVyc2lvbiB3aGljaCBzaG91bGQg
+YWxpZ24gdG8NCj4gPiArCWNsb2NrZ2VuIG5vZGUncyB0aGV5IGJlbG9uZyB0byB3aGljaCBpcyBj
+aGFzc2lzIHZlcnNpb24uDQo+IA0KPiBJbnN0ZWFkLCBob3cgYWJvdXQgYSBub3RlIGxpa2UgdGhp
+cyBuZWFyIHRoZSB0b3Agb2YgdGhlIGZpbGU6DQo+IA0KPiBBbGwgcmVmZXJlbmNlcyB0byAiMS4w
+IiBhbmQgIjIuMCIgcmVmZXIgdG8gdGhlIFFvcklRIGNoYXNzaXMgdmVyc2lvbiB0bw0KPiB3aGlj
+aCB0aGUgY2hpcCBjb21wbGllcy4NCj4gDQo+IENoYXNzaXMgVmVyc2lvbgkJRXhhbXBsZSBDaGlw
+cw0KPiAtLS0tLS0tLS0tLS0tLS0JCS0tLS0tLS0tLS0tLS0NCj4gMS4wCQkJcDQwODAsIHA1MDIw
+LCBwNTA0MA0KPiAyLjAJCQl0NDI0MCwgYjQ4NjAsIHQxMDQwDQo+IA0KQmV0dGVyLCBJIHdpbGwg
+dXBkYXRlLg0KDQo+IA0KPiBCVFcsIHRoaXMgYmluZGluZyBhbmQgdGhlIGFzc29jaWF0ZWQgZHJp
+dmVyIHJlYWxseSBzaG91bGQgYmUgY2FsbGVkDQo+ICJxb3JpcS1jbG9jayIsIG5vdCAiY29yZW5l
+dC1jbG9jayIuICBUaGlzIHdvdWxkIG1hdGNoIHRoZSBjb21wYXRpYmxlDQo+IHN0cmluZywgYW5k
+IGl0IGRvZXNuJ3QgcmVhbGx5IGhhdmUgbXVjaCB0byBkbyB3aXRoIGNvcmVuZXQgKHdoaWNoIGlz
+IHBhcnQNCj4gb2YgdGhlIFFvcklRIGNoYXNzaXMgdjEgYW5kIHYyLCBidXQgbm90ICp0aGlzKiBw
+YXJ0KS4gIERvIHlvdSBrbm93IGlmIHRoZQ0KPiBjaGFzc2lzIHYzIGNsb2NrIGludGVyZmFjZSB3
+aWxsIGJlIHNpbWlsYXIgZW5vdWdoIHRvIHNoYXJlIGEgZHJpdmVyPw0KPiANCkRvZXNuJ3QgUW9y
+SVEgaW5jbHVkZSBzb21lIGxvdy1lbmQgc29jcywgbGlrZSBwMTAyMiwgcDEwMjA/IA0KVGhpcyBk
+cml2ZXIgaGFzIG5vdGhpbmcgdG8gZG8gd2l0aCB0aGVzZSBib2FyZHMuIA0KSSBoYXZlIG5vIGlk
+ZWEgYWJvdXQgY2hhc3NpcyB2My4gSWYgaXQgaGFzIHNpbWlsYXIgY2xvY2sgdHJlZSwgdGhpcyBk
+cml2ZXIgY2FuIGJlIHNoYXJlZC4NCkV2ZW4gdGhlIGRyaXZlciBjYW4ndCBiZSB1c2VkIGJ5IHYz
+LCB3ZSBjYW4gZWFzaWx5IGFkZCB2MyBzdXBwb3J0IHNpbmNlIGl0IGhhcyBkaWZmZXJlbnQNCkNv
+bXBhdGlibGUgc3RyaW5nLg0KDQpSZWdhcmRzLA0KWXVhbnRpYW4NCg0KPiAtU2NvdHQNCj4gDQoN
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBj
+LWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9s
+aXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
