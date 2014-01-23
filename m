@@ -1,63 +1,71 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] regulator: ti-abb: Add support for interleaved LDO
- registers
-Date: Thu, 23 Jan 2014 12:29:59 +0000
-Message-ID: <20140123122959.GJ17314@sirena.org.uk>
-References: <1389900750-27625-1-git-send-email-nm@ti.com>
- <20140121185553.GW17314@sirena.org.uk>
- <52DED341.3030503@ti.com>
- <20140121215624.GC17314@sirena.org.uk>
- <52DEF56C.1000209@ti.com>
- <20140122201932.GD17314@sirena.org.uk>
- <52E02E85.3030509@ti.com>
- <20140122222523.GA4999@kahuna>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCHv2 2/2] pwm: imx: support polarity inversion
+Date: Thu, 23 Jan 2014 12:33:41 +0000
+Message-ID: <20140123123341.GW15937@n2100.arm.linux.org.uk>
+References: <1389859585-14006-1-git-send-email-LW@KARO-electronics.de> <1389859585-14006-3-git-send-email-LW@KARO-electronics.de> <20140116160356.GY16215@pengutronix.de> <20140123083714.3c6e86ae@ipc1.ka-ro> <20140123115203.GV15937@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6A1TVAKxAUhQ4PCu"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140122222523.GA4999@kahuna>
+In-Reply-To: <20140123115203.GV15937@n2100.arm.linux.org.uk>
 Sender: linux-doc-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jan 23, 2014 at 11:52:03AM +0000, Russell King - ARM Linux wrot=
+e:
+> On Thu, Jan 23, 2014 at 08:37:14AM +0100, Lothar Wa=DFmann wrote:
+> > This wouldn't buy much without a material change to of_pwm_get().
+> > The function of_parse_phandle_with_args() called by of_pwm_get()
+> > requires the number of args in the pwms property be greater or equa=
+l to
+> > the #pwm-cells property in the pwm node. Thus, the interesting case=
+ of
+> > having #pwm-cells =3D <3> without changing the existing users is
+> > prohibited by of_parse_phandle_with_args().
+>=20
+> I really don't think that's a problem we need to be concerned with at
+> the moment.  What we need is for the kernel to be able to parse files
+> with #pwm-cells =3D <2> with the pwms property containing two argumen=
+ts,
+> and when they're updated to #pwm-cells =3D <3> with the pwms property
+> containing three arguments.
+>=20
+> Yes, that means all the board dt files need to be updated at the same
+> time to include the additional argument, but I don't see that as a bi=
+g
+> problem.
+>=20
+> What we do need to do is to adjust the PWM parsing code such that it'=
+s
+> possible to use either specification without causing any side effects=
+=2E
+>=20
+> I would test this, but as u-boot is rather fscked at the moment and t=
+he
+> networking has broken on my cubox-i as a result... and it seems that =
+the
+> u-boot developers have pissed off cubox-i u-boot hackers soo much tha=
+t
+> they've dropped u-boot in favour of barebox...
 
---6A1TVAKxAUhQ4PCu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Oh, and another reason... the u-boot video settings are totally and utt=
+erly
+buggered to the point that it doesn't produce correct timings, and it s=
+eems
+that u-boot people have zero interest in fixing that, so u-boot mainlin=
+e is
+basically refusing to fix this - another reason to stay away from it.
 
-On Wed, Jan 22, 2014 at 04:25:23PM -0600, Nishanth Menon wrote:
+(1024x768 @ 60Hz produces 70Hz refresh on iMX6Q here - I've seen it pro=
+duce
+51Hz on iMX6S, both of which are far enough out that lots of display de=
+vices
+will not accept it as a valid signal.)
 
-> How about something like the following? If this is acceptable, I can do
-> a complete round of retest and ensure everything is functional on all
-> platforms and post it as a formal patch:
-
-Looks OK from a quick scan.  It seems nothing in mainline is using the
--v2 binding so it's probably OK to delete it but if it's not too much
-bother it might be better to keep it since I expect some downstream
-trees might've picked that up already.
-
---6A1TVAKxAUhQ4PCu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS4QtEAAoJELSic+t+oim9i4UP/j/141Y4ZJbFdLqvLhqX7LVQ
-jjYEOwyGFqgUX4o/unC4qqi1OW2tkrsLuziteAwbfezv7cZjUA5hO7aW/NLjSL9D
-yMEKVudJuOHi9KJBy4SdKuRMJfXt7DrYVkmXxSDvxRNrOJmwdXVUrUk2tYkllSii
-p+dGvMk74Yavp9LEPvEbdLwyA/xd1KT+IU7yhcOZDJGpChlg0AhBGCvgFrT0eyDk
-jLx9IN0gslwGxVpsusm7YLe57Trozz3ApruuMx+pOA7YHMCWGX3rMxgxNShXggMH
-wnBzXlzh3PN12te3Z0uo+IKYATB6dpZfaY8QwQNmqP78MbMPLE5Z3QVDO4FLkKnk
-ekQ3juyzGZD6E+j16ZU+Wb6owQIlMXndKygAIymszWHc2zlkETOubyKI46qxeceB
-TugGuyE4GoLubgVjyapcuwrwXLpgAdsuiYH7ur8Xi2znyNIl8pWVQlkrj32Jxfc3
-qt2ItDYzeQWsY8YLiPnFmBPnDgqrkZYZjY2zRylQ/gfKUV7U47g8Rfx4zY0fDw8P
-Ofuw43QU75uKG6gJ1MEGEAGVUQUr7cIReaysj2M158QPrDTAKnEyUVTCz2mDWNTf
-gn4e2yPBP8MvrOcqV9ViaSNMaFjRPwif5Oz0WyC6Cdogfnc13MxZ7sjUQMh3gf3J
-e3FJDKzi5hlePBRBc1mz
-=fKAO
------END PGP SIGNATURE-----
-
---6A1TVAKxAUhQ4PCu--
+--=20
+=46TTC broadband for 0.8mile line: 5.8Mbps down 500kbps up.  Estimation
+in database were 13.1 to 19Mbit for a good line, about 7.5+ for a bad.
+Estimate before purchase was "up to 13.2Mbit".
