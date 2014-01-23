@@ -1,66 +1,59 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] regulator: ti-abb: Add support for interleaved LDO
- registers
-Date: Thu, 23 Jan 2014 16:34:28 +0000
-Message-ID: <20140123163428.GP17314@sirena.org.uk>
-References: <20140121185553.GW17314@sirena.org.uk>
- <52DED341.3030503@ti.com>
- <20140121215624.GC17314@sirena.org.uk>
- <52DEF56C.1000209@ti.com>
- <20140122201932.GD17314@sirena.org.uk>
- <52E02E85.3030509@ti.com>
- <20140122222523.GA4999@kahuna>
- <20140123122959.GJ17314@sirena.org.uk>
- <20140123162009.GA17432@kahuna>
- <52E142AC.4030200@ti.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCHv2 2/2] pwm: imx: support polarity inversion
+Date: Thu, 23 Jan 2014 16:44:33 +0000
+Message-ID: <20140123164433.GX15937@n2100.arm.linux.org.uk>
+References: <1389859585-14006-1-git-send-email-LW@KARO-electronics.de> <1389859585-14006-3-git-send-email-LW@KARO-electronics.de> <20140116160356.GY16215@pengutronix.de> <20140123083714.3c6e86ae@ipc1.ka-ro> <20140123115203.GV15937@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ohhUr6qMC+8zx6A6"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <52E142AC.4030200@ti.com>
+In-Reply-To: <20140123115203.GV15937@n2100.arm.linux.org.uk>
 Sender: linux-doc-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jan 23, 2014 at 11:52:03AM +0000, Russell King - ARM Linux wrot=
+e:
+> On Thu, Jan 23, 2014 at 08:37:14AM +0100, Lothar Wa=DFmann wrote:
+> > This wouldn't buy much without a material change to of_pwm_get().
+> > The function of_parse_phandle_with_args() called by of_pwm_get()
+> > requires the number of args in the pwms property be greater or equa=
+l to
+> > the #pwm-cells property in the pwm node. Thus, the interesting case=
+ of
+> > having #pwm-cells =3D <3> without changing the existing users is
+> > prohibited by of_parse_phandle_with_args().
+>=20
+> I really don't think that's a problem we need to be concerned with at
+> the moment.  What we need is for the kernel to be able to parse files
+> with #pwm-cells =3D <2> with the pwms property containing two argumen=
+ts,
+> and when they're updated to #pwm-cells =3D <3> with the pwms property
+> containing three arguments.
+>=20
+> Yes, that means all the board dt files need to be updated at the same
+> time to include the additional argument, but I don't see that as a bi=
+g
+> problem.
+>=20
+> What we do need to do is to adjust the PWM parsing code such that it'=
+s
+> possible to use either specification without causing any side effects=
+=2E
+>=20
+> I would test this, but as u-boot is rather fscked at the moment and t=
+he
+> networking has broken on my cubox-i as a result... and it seems that =
+the
+> u-boot developers have pissed off cubox-i u-boot hackers soo much tha=
+t
+> they've dropped u-boot in favour of barebox...
 
---ohhUr6qMC+8zx6A6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Okay, finally confirmed that this works with #pwm-cells =3D 2.
 
-On Thu, Jan 23, 2014 at 10:26:20AM -0600, Nishanth Menon wrote:
-> On 01/23/2014 10:20 AM, Nishanth Menon wrote:
-
-> Sigh.. the check was supposed to be:
-> if (abb->regs->setup_off || abb->regs->control_off) {
-
-> Darned.. forgot to commit! Grr... anyways.. still looking for feedback
-> for the remaining.
-
-Looks sensible enough from a quick scan again - so long as it passes
-your testing...  :)
-
---ohhUr6qMC+8zx6A6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS4USQAAoJELSic+t+oim92+8P/3SVrmLk0xSJq4IzRnU8ELWa
-190t95x5Fk6Fc1y46f0q6lzews8XTMnyfhTgKrV6ixQNB7Caul8UJ5jV8hSIL2Jj
-2r4M6qFpiYby27Yc3dQuoZ7CwfB/TC5xDM5NtlUmaCpe0mjcv3ED2tYgqUTWHv+L
-vXsHSTAHbCXWrGWLclys7ZNcTW87piGka5nXeKWmK3A0zyloSvFpOM8SdsB2uP6p
-gKMYufF6AP0pYuiqTcDve4hswOZ3ZuohKDDaZRG562P/V/gkqRDR8cTr16yRz3jl
-v9E1hG2mojed57gs8D7Oh6imWKN5srcnPG7RRaNfohfDH7bJwjbU/RtI7m9Bbutb
-UAYvI46lLKsRPWpICLMOA9PyGgD7w9qUi+ktnHfNThxAWMLl/2nh65dGVfXlG0RX
-8JEDhTmXDbBRUY4DXNQ1EYNdyST+7w/WdYr3eS1JZ5k5SSlhDXGw9vt21PtmJWlq
-YHqhAsU5kvb7r4Jeec67U2X8ak3Oqs8ZTlLSoVqx9L+g1G62CWJMiI4UP4V5hkou
-L8QNtcnhPViaIXMhQ4myspHow9EF8kdAgsndjFJr4NKk+7/AaXGIqglqnSnE5ylA
-VziW0d/kQ25ffij4GVAH6ATGWsQC/vy31Xm91J0rT48YCLheShiyJ0kkQmOVYT65
-NKaUuG6430M+7HNih0nD
-=1Ihh
------END PGP SIGNATURE-----
-
---ohhUr6qMC+8zx6A6--
+--=20
+=46TTC broadband for 0.8mile line: 5.8Mbps down 500kbps up.  Estimation
+in database were 13.1 to 19Mbit for a good line, about 7.5+ for a bad.
+Estimate before purchase was "up to 13.2Mbit".
