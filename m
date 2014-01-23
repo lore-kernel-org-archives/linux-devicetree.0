@@ -1,228 +1,101 @@
-From: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2] dma: Add Xilinx AXI Video Direct Memory Access Engine
- driver support
-Date: Thu, 23 Jan 2014 23:05:34 +0530
-Message-ID: <CA+mB=1+jHxyx47jnbJuuNOFAK3sfresnyZfQ80zxoJn0kse57A@mail.gmail.com>
-References: <1390409565-4200-1-git-send-email-sthokal@xilinx.com>
-	<1390409565-4200-2-git-send-email-sthokal@xilinx.com>
-	<CAAsK9AFGM+852N-F98p32JSHEpg5ZKv-0wyzFGx9675GBp7gQg@mail.gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 2/8 v4] crypto:s5p-sss: Add device tree support
+Date: Thu, 23 Jan 2014 17:41:21 +0000
+Message-ID: <20140123174121.GI15586@e106331-lin.cambridge.arm.com>
+References: <1389243541-13122-1-git-send-email-ch.naveen@samsung.com>
+ <1389777291-15026-1-git-send-email-ch.naveen@samsung.com>
+ <52E0EEB8.4080602@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAsK9AFGM+852N-F98p32JSHEpg5ZKv-0wyzFGx9675GBp7gQg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Levente Kurusa <levex-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
-Cc: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52E0EEB8.4080602@samsung.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "vzapolskiy@gmail.com" <vzapolskiy@gmail.com>, "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>, "naveenkrishna.ch@gmail.com" <naveenkrishna.ch@gmail.com>, "cpgs@samsung.com" <cpgs@samsung.com>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, "David S. Miller" <davem@davemloft.net>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Levente,
+On Thu, Jan 23, 2014 at 10:28:08AM +0000, Sylwester Nawrocki wrote:
+> Hi,
+> 
+> (Adding missing devicetre ML list at CC.)
+> 
+> On 15/01/14 10:14, Naveen Krishna Chatradhi wrote:
+> > This patch adds device tree support to the s5p-sss.c crypto driver.
+> > 
+> > Also, Documentation under devicetree/bindings added.
+> > 
+> > Signed-off-by: Naveen Krishna Ch <ch.naveen@samsung.com>
+> > CC: Herbert Xu <herbert@gondor.apana.org.au>
+> > CC: David S. Miller <davem@davemloft.net>
+> > CC: Vladimir Zapolskiy <vzapolskiy@gmail.com>
+> > TO: <linux-crypto@vger.kernel.org>
+> > CC: <linux-samsung-soc@vger.kernel.org>
+> > ---
+> > Changes since v3:
+> > None
+> > 
+> >  .../devicetree/bindings/crypto/samsung-sss.txt     |   20 ++++++++++++++++++++
+> >  drivers/crypto/s5p-sss.c                           |   10 +++++++++-
+> >  2 files changed, 29 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/devicetree/bindings/crypto/samsung-sss.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/crypto/samsung-sss.txt b/Documentation/devicetree/bindings/crypto/samsung-sss.txt
+> > new file mode 100644
+> > index 0000000..2f9d7e4
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/crypto/samsung-sss.txt
+> > @@ -0,0 +1,20 @@
+> > +Samsung SoC SSS (Security SubSystem) module
+> > +
+> > +The SSS module in S5PV210 SoC supports the following:
+> > +-- Feeder (FeedCtrl)
+> > +-- Advanced Encryption Standard (AES)
+> > +-- Data Encryption Standard (DES)/3DES
+> > +-- Public Key Accelerator (PKA)
+> > +-- SHA-1/SHA-256/MD5/HMAC (SHA-1/SHA-256/MD5)/PRNG
+> > +-- PRNG: Pseudo Random Number Generator
+> > +
+> > +Required properties:
+> > +
+> > +- compatible : Should contain entries for this and backward compatible
+> > +  SSS versions:
+> > +  - "samsung,s5pv210-secss" for S5PV210 SoC.
+> > +- reg : Offset and length of the register set for the module
+> > +- interrupts : the interrupt-specifier for the SSS module.
+> > +		Two interrupts "feed control and hash" in case of S5PV210
+> 
+> It should be described in what order both interrupts are supposed to be
+> specified.
+> 
+> > +- clocks : the required gating clock for the SSS module.
+> > +- clock-names : the gating clock name to be requested in the SSS driver.
 
-On Thu, Jan 23, 2014 at 3:00 AM, Levente Kurusa <levex-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org> wrote:
-> Hello,
->
-> 2014/1/22 Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>:
->> This is the driver for the AXI Video Direct Memory Access (AXI
->> VDMA) core, which is a soft Xilinx IP core that provides high-
->> bandwidth direct memory access between memory and AXI4-Stream
->> type video target peripherals. The core provides efficient two
->> dimensional DMA operations with independent asynchronous read
->> and write channel operation.
->>
->> This module works on Zynq (ARM Based SoC) and Microblaze platforms.
->>
->> Signed-off-by: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->> ---
->
-> Another two remarks, after you fixed them ( or not :-) )
-> you can have my:
->
-> Reviewed-by: Levente Kurusa <levex-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
->
-> Oh, and next time please if you post a patch that fixes something I pointed out,
-> CC me as I had a hard time finding this patch, thanks. :-)
+The _exact_ names expected must be described in the binding, or this
+property is useless.
 
-Sure. Thanks
+> > diff --git a/drivers/crypto/s5p-sss.c b/drivers/crypto/s5p-sss.c
+> > index 93cddeb..2da5617 100644
+> > --- a/drivers/crypto/s5p-sss.c
+> > +++ b/drivers/crypto/s5p-sss.c
+> > @@ -22,6 +22,7 @@
+> >  #include <linux/scatterlist.h>
+> >  #include <linux/dma-mapping.h>
+> >  #include <linux/io.h>
+> > +#include <linux/of.h>
+> >  #include <linux/crypto.h>
+> >  #include <linux/interrupt.h>
+> >  
+> > @@ -177,6 +178,12 @@ struct s5p_aes_dev {
+> >  
+> >  static struct s5p_aes_dev *s5p_dev;
+> >  
+> > +static const struct of_device_id s5p_sss_dt_match[] = {
+> > +	{ .compatible = "samsung,s5pv210-secss", },
+> 
+> nit: the first semicolon could be omitted.
 
->
->> NOTE:
->> 1. Created a separate directory 'dma/xilinx' as Xilinx has two more
->>    DMA IPs and we are also planning to upstream these drivers soon.
->> 2. Rebased on v3.13.0-rc8
->>
->> Changes in v2:
->> - Removed DMA Test client module from the patchset as suggested
->>   by Andy Shevchenko
->> - Removed device-id DT property, as suggested by Arnd Bergmann
->> - Properly documented DT bindings as suggested by Arnd Bergmann
->> - Returning with error, if registration of DMA to node fails
->> - Fixed typo errors
->> - Used BIT() macro at applicable places
->> - Added missing header file to the patchset
->> - Changed copyright year to include 2014
->> ---
->>  .../devicetree/bindings/dma/xilinx/xilinx_vdma.txt |   75 +
->>  drivers/dma/Kconfig                                |   14 +
->>  drivers/dma/Makefile                               |    1 +
->>  drivers/dma/xilinx/Makefile                        |    1 +
->>  drivers/dma/xilinx/xilinx_vdma.c                   | 1486 ++++++++++++++++++++
->>  include/linux/amba/xilinx_dma.h                    |   50 +
->>  6 files changed, 1627 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
->>  create mode 100644 drivers/dma/xilinx/Makefile
->>  create mode 100644 drivers/dma/xilinx/xilinx_vdma.c
->>  create mode 100644 include/linux/amba/xilinx_dma.h
->>
->> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
->> new file mode 100644
->> index 0000000..ab8be1a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
->> @@ -0,0 +1,75 @@
->> +Xilinx AXI VDMA engine, it does transfers between memory and video devices.
->> +It can be configured to have one channel or two channels. If configured
->> +as two channels, one is to transmit to the video device and another is
->> +to receive from the video device.
->> +
->> +Required properties:
->> +- compatible: Should be "xlnx,axi-vdma-1.00.a"
->> +- #dma-cells: Should be <1>, see "dmas" property below
->> +- reg: Should contain VDMA registers location and length.
->> +- xlnx,num-fstores: Should be the number of framebuffers as configured in h/w.
->> +- dma-channel child node: Should have atleast one channel and can have upto
->> +       two channels per device. This node specifies the properties of each
->> +       DMA channel (see child node properties below).
->> +
->> +Optional properties:
->> +- xlnx,include-sg: Tells whether configured for Scatter-mode in
->> +       the hardware.
->> [...]
->> +
->> +/**
->> + * xilinx_vdma_is_running - Check if VDMA channel is running
->> + * @chan: Driver specific VDMA channel
->> + *
->> + * Return: '1' if running, '0' if not.
->> + */
->> +static int xilinx_vdma_is_running(struct xilinx_vdma_chan *chan)
->> +{
->> +       return !(vdma_ctrl_read(chan, XILINX_VDMA_REG_DMASR) &
->> +                XILINX_VDMA_DMASR_HALTED) &&
->> +               (vdma_ctrl_read(chan, XILINX_VDMA_REG_DMACR) &
->> +                XILINX_VDMA_DMACR_RUNSTOP);
->> +}
->> +
+I assume you mean comma ratehr than semicolon?
 
-[...]
-
->> +       /* Retrieve the channel properties from the device tree */
->> +       has_dre = of_property_read_bool(node, "xlnx,include-dre");
->> +
->> +       chan->genlock = of_property_read_bool(node, "xlnx,genlock-mode");
->> +
->> +       err = of_property_read_u32(node, "xlnx,datawidth", &value);
->> +       if (!err) {
->> +               u32 width = value >> 3; /* Convert bits to bytes */
->> +
->> +               /* If data width is greater than 8 bytes, DRE is not in hw */
->> +               if (width > 8)
->> +                       has_dre = false;
->> +
->> +               if (!has_dre)
->> +                       xdev->common.copy_align = fls(width - 1);
->> +       } else {
->> +               dev_err(xdev->dev, "missing xlnx,datawidth property\n");
->> +               return err;
->> +       }
->
-> Can you please convert this to:
-> if (err) {
->  dev_err(...);
->  return err;
-> }
->
-> That way we can avoid the else clause.
-
-Ok. I will fix it in v3.
-
->> +
->> +       if (of_device_is_compatible(node, "xlnx,axi-vdma-mm2s-channel")) {
->> +               chan->direction = DMA_MEM_TO_DEV;
->> +               chan->id = 0;
->> +
->> +               chan->ctrl_offset = XILINX_VDMA_MM2S_CTRL_OFFSET;
->> +               chan->desc_offset = XILINX_VDMA_MM2S_DESC_OFFSET;
->> +
->> +               if (xdev->flush_on_fsync == XILINX_VDMA_FLUSH_BOTH ||
->> +                   xdev->flush_on_fsync == XILINX_VDMA_FLUSH_MM2S)
->> +                       chan->flush_on_fsync = true;
->> +       } else if (of_device_is_compatible(node,
->> +                                           "xlnx,axi-vdma-s2mm-channel")) {
->> +               chan->direction = DMA_DEV_TO_MEM;
->> +               chan->id = 1;
->> +
->> +               chan->ctrl_offset = XILINX_VDMA_S2MM_CTRL_OFFSET;
->> +               chan->desc_offset = XILINX_VDMA_S2MM_DESC_OFFSET;
->> +
->> +               if (xdev->flush_on_fsync == XILINX_VDMA_FLUSH_BOTH ||
->> +                   xdev->flush_on_fsync == XILINX_VDMA_FLUSH_S2MM)
->> +                       chan->flush_on_fsync = true;
->> +       } else {
->> +               dev_err(xdev->dev, "Invalid channel compatible node\n");
->> +               return -EINVAL;
->> +       }
->> +
->> +       /* Request the interrupt */
->> +       chan->irq = irq_of_parse_and_map(node, 0);
->> +       err = devm_request_irq(xdev->dev, chan->irq, xilinx_vdma_irq_handler,
->> +                              IRQF_SHARED, "xilinx-vdma-controller", chan);
->> +       if (err) {
->> +               dev_err(xdev->dev, "unable to request IRQ\n");
->
-> It might be worth to also tell the IRQ number that failed
-> to register.
-
-Ok.
-
->
->> +               return err;
->> +       }
->> +
->> +       /* Initialize the DMA channel and add it to the DMA engine channels
->> +        * list.
->> +        */
->> +       chan->common.device = &xdev->common;
->> +
->> +       list_add_tail(&chan->common.device_node, &xdev->common.channels);
-
-[...]
-
->> +       err = of_property_read_u32(node, "xlnx,num-fstores", &num_frames);
->> +       if (err < 0) {
->> +               dev_err(xdev->dev, "missing xlnx,num-fstores property\n");
->> +               return err;
->> +       }
->> +
->> +       of_property_read_u32(node, "xlnx,flush-fsync", &xdev->flush_on_fsync);
->
-> Error check?
-
-Sure, with a warning message as it is optional DT property.  I will
-fix it in v3.
-
-Srikanth
-
-[...]
->> --
->
-> --
-> Regards,
-> Levente Kurusa
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Mark.
