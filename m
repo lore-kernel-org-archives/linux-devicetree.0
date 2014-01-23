@@ -1,56 +1,137 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 06/15] watchdog: orion: Remove unneeded BRIDGE_CAUSE
- clear
-Date: Thu, 23 Jan 2014 08:10:51 -0300
-Message-ID: <20140123111049.GB6065@localhost>
-References: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1390295561-3466-7-git-send-email-ezequiel.garcia@free-electrons.com>
- <20140121233537.GS18269@obsidianresearch.com>
- <20140122164904.GB27273@localhost>
- <20140122173417.GT18269@obsidianresearch.com>
- <52E02AB6.7040104@gmail.com>
- <20140122205213.GW18269@obsidianresearch.com>
- <52E0591E.6030009@gmail.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH v2] dma: Add Xilinx AXI Video Direct Memory Access Engine
+ driver support
+Date: Thu, 23 Jan 2014 12:25:22 +0100
+Message-ID: <52E0FC22.8060903@metafoo.de>
+References: <1390409565-4200-1-git-send-email-sthokal@xilinx.com> <1390409565-4200-2-git-send-email-sthokal@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52E0591E.6030009-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1390409565-4200-2-git-send-email-sthokal@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srikanth Thokala <sthokal@xilinx.com>
+Cc: dan.j.williams@intel.com, vinod.koul@intel.com, michal.simek@xilinx.com, grant.likely@linaro.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 23, 2014 at 12:49:50AM +0100, Sebastian Hesselbarth wrote:
-[..]
-> > Notice that Ezequiel has added an IRQ handler that just calls panic=
-,
-> > so a spurious interrupt call is VERY VERY BAD.
->=20
-> And I understand that he now clears watchdog's register before
-> requesting an irq. All that is missing is bridge_irq driver clearing
-> CAUSE register after masking all irqs, right?
->=20
+On 01/22/2014 05:52 PM, Srikanth Thokala wrote:
+[...]
+> +/**
+> + * xilinx_vdma_device_control - Configure DMA channel of the device
+> + * @dchan: DMA Channel pointer
+> + * @cmd: DMA control command
+> + * @arg: Channel configuration
+> + *
+> + * Return: '0' on success and failure value on error
+> + */
+> +static int xilinx_vdma_device_control(struct dma_chan *dchan,
+> +				      enum dma_ctrl_cmd cmd, unsigned long arg)
+> +{
+> +	struct xilinx_vdma_chan *chan = to_xilinx_chan(dchan);
+> +
+> +	switch (cmd) {
+> +	case DMA_TERMINATE_ALL:
+> +		xilinx_vdma_terminate_all(chan);
+> +		return 0;
+> +	case DMA_SLAVE_CONFIG:
+> +		return xilinx_vdma_slave_config(chan,
+> +					(struct xilinx_vdma_config *)arg);
 
-Are you sure clearing the CAUSE register after masking the IRQs will be=
- enough?
+You really shouldn't be overloading the generic API with your own semantics.
+DMA_SLAVE_CONFIG should take a dma_slave_config and nothing else.
 
-AFAICS, until now nobody unmasks the watchdog IRQ (at least the orion_w=
-dt
-driver didn't request the interruption) but *still* the CAUSE register =
-is set
-upon watchdog expiration. So I would guessed a masked interrupt still r=
-aises a
-bit in the CAUSE register.
+> +	default:
+> +		return -ENXIO;
+> +	}
+> +}
+> +
+[...]
+> +
+> +	/* Request the interrupt */
+> +	chan->irq = irq_of_parse_and_map(node, 0);
+> +	err = devm_request_irq(xdev->dev, chan->irq, xilinx_vdma_irq_handler,
+> +			       IRQF_SHARED, "xilinx-vdma-controller", chan);
 
-Although I'm no sure I'm making sense here or just noise...
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This is a clasic example of where to not use devm_request_irq. 'chan' is
+accessed in the interrupt handler, but if you use devm_request_irq 'chan'
+will be freed before the interrupt handler has been released, which means
+there is now a race condition where the interrupt handler can access already
+freed memory.
+
+> +	if (err) {
+> +		dev_err(xdev->dev, "unable to request IRQ\n");
+> +		return err;
+> +	}
+> +
+> +	/* Initialize the DMA channel and add it to the DMA engine channels
+> +	 * list.
+> +	 */
+> +	chan->common.device = &xdev->common;
+> +
+> +	list_add_tail(&chan->common.device_node, &xdev->common.channels);
+> +	xdev->chan[chan->id] = chan;
+> +
+> +	/* Reset the channel */
+> +	err = xilinx_vdma_chan_reset(chan);
+> +	if (err < 0) {
+> +		dev_err(xdev->dev, "Reset channel failed\n");
+> +		return err;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * struct of_dma_filter_xilinx_args - Channel filter args
+> + * @dev: DMA device structure
+> + * @chan_id: Channel id
+> + */
+> +struct of_dma_filter_xilinx_args {
+> +	struct dma_device *dev;
+> +	u32 chan_id;
+> +};
+> +
+> +/**
+> + * xilinx_vdma_dt_filter - VDMA channel filter function
+> + * @chan: DMA channel pointer
+> + * @param: Filter match value
+> + *
+> + * Return: true/false based on the result
+> + */
+> +static bool xilinx_vdma_dt_filter(struct dma_chan *chan, void *param)
+> +{
+> +	struct of_dma_filter_xilinx_args *args = param;
+> +
+> +	return chan->device == args->dev && chan->chan_id == args->chan_id;
+> +}
+> +
+> +/**
+> + * of_dma_xilinx_xlate - Translation function
+> + * @dma_spec: Pointer to DMA specifier as found in the device tree
+> + * @ofdma: Pointer to DMA controller data
+> + *
+> + * Return: DMA channel pointer on success and NULL on error
+> + */
+> +static struct dma_chan *of_dma_xilinx_xlate(struct of_phandle_args *dma_spec,
+> +						struct of_dma *ofdma)
+> +{
+> +	struct of_dma_filter_xilinx_args args;
+> +	dma_cap_mask_t cap;
+> +
+> +	args.dev = ofdma->of_dma_data;
+> +	if (!args.dev)
+> +		return NULL;
+> +
+> +	if (dma_spec->args_count != 1)
+> +		return NULL;
+> +
+> +	dma_cap_zero(cap);
+> +	dma_cap_set(DMA_SLAVE, cap);
+> +
+> +	args.chan_id = dma_spec->args[0];
+> +
+> +	return dma_request_channel(cap, xilinx_vdma_dt_filter, &args);
+
+There is a new helper function called dma_get_slave_channel, which makes
+this much easier. Take a look at the k3dma.c driver for an example.
+> +}
