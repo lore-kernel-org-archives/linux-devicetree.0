@@ -1,69 +1,63 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 7/7] ARM: brcmstb: dts: add a reference DTS for
- Broadcom 7445
-Date: Thu, 23 Jan 2014 12:25:19 +0000
-Message-ID: <20140123122519.GI17314@sirena.org.uk>
-References: <1389743333-16741-1-git-send-email-marc.ceeeee@gmail.com>
- <201401161219.01038.arnd@arndb.de>
- <20140116134732.GB17314@sirena.org.uk>
- <201401171804.30572.arnd@arndb.de>
- <52E0D9AD.1040409@monstr.eu>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] regulator: ti-abb: Add support for interleaved LDO
+ registers
+Date: Thu, 23 Jan 2014 12:29:59 +0000
+Message-ID: <20140123122959.GJ17314@sirena.org.uk>
+References: <1389900750-27625-1-git-send-email-nm@ti.com>
+ <20140121185553.GW17314@sirena.org.uk>
+ <52DED341.3030503@ti.com>
+ <20140121215624.GC17314@sirena.org.uk>
+ <52DEF56C.1000209@ti.com>
+ <20140122201932.GD17314@sirena.org.uk>
+ <52E02E85.3030509@ti.com>
+ <20140122222523.GA4999@kahuna>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="nKzfxXxTXZ/rSi7L"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="6A1TVAKxAUhQ4PCu"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <52E0D9AD.1040409-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc C <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20140122222523.GA4999@kahuna>
+Sender: linux-doc-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---nKzfxXxTXZ/rSi7L
+--6A1TVAKxAUhQ4PCu
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Jan 23, 2014 at 09:58:21AM +0100, Michal Simek wrote:
-> On 01/17/2014 06:04 PM, Arnd Bergmann wrote:
+On Wed, Jan 22, 2014 at 04:25:23PM -0600, Nishanth Menon wrote:
 
-> >> I thought the solution with deferring registration of the resource for
-> >> dev_get_regmap() until a proper device materialised seemed simple and
-> >> enough, did you folks run into any problems with that?  I had assumed a
-> >> patch was likely to materialise so wasn't worrying about it myself.
+> How about something like the following? If this is acceptable, I can do
+> a complete round of retest and ensure everything is functional on all
+> platforms and post it as a formal patch:
 
-> > I'm still hoping that Michal will do that patch.
+Looks OK from a quick scan.  It seems nothing in mainline is using the
+-v2 binding so it's probably OK to delete it but if it's not too much
+bother it might be better to keep it since I expect some downstream
+trees might've picked that up already.
 
-> And what was the resolution/recommendation how to do it?
-
-Split the regmap creation so the managed resource registration could be
-done later on with an already allocated regmap instead of requiring it
-to be done at creation time.
-
---nKzfxXxTXZ/rSi7L
+--6A1TVAKxAUhQ4PCu
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJS4QosAAoJELSic+t+oim9IRcP/RcjGAsMw6AO4bwnobfriOfK
-xb5wIBfEqOzluTw30In/ZnbAeC3K5Ul0nempH/U+RxD7xyVnNlZO+UUINEWN5ItE
-JsSGEmn7e0JG//41R1AzgxbsbNGNYfpRpb2xlYhWLS6OatMg8w8kUV2c55r36Siz
-evsaTwVLtthtKqAe+dB/67gtMzAZ2ZmzTShifIRankVekdS47bRDIkeYDzM51rKG
-vYRub5hVHZpCPAvAQdtJLXRTZYAr1QCLklSt8UI4ljoU6UrsKaUBBhdJ+LdKOLEO
-zPSYgtJv+r6uyO6SRIj4qCCYy9mhkYkNzWRjII1Spsajec+aauFTPu8vaB6xo6Sm
-RkgkxzbR27lwNH9vXIj6KuFlFfcEX8kgby+RqbIL9vEFOEy8wuOPGYUtSRJskTSq
-gdMigTu28aMrfFt+xQkwQiuy8AD7/I/sVo4JtWj4w2bYce5D+hfaSLJZ2oevQgRV
-geAVvBbka1B7+zM6yMTrEP4VO+vQHi1nEzy71XnyYyeL8mVcR/RauotNP9j2dcyt
-spIn4+xOaCCOPi4MQgMZM12Tmb+R6XUppqzpYJ3D0eMk1bhU+CrBLc4NhJoyMW7p
-ESmev1tmVjQL20iICF7PZ7fwOlYZUNzvhbKl6ad18HrFUnQoLTZHlo8fB02Z15MD
-2LDhhY+BvIZ6aR8FVUD2
-=Xx7b
+iQIcBAEBAgAGBQJS4QtEAAoJELSic+t+oim9i4UP/j/141Y4ZJbFdLqvLhqX7LVQ
+jjYEOwyGFqgUX4o/unC4qqi1OW2tkrsLuziteAwbfezv7cZjUA5hO7aW/NLjSL9D
+yMEKVudJuOHi9KJBy4SdKuRMJfXt7DrYVkmXxSDvxRNrOJmwdXVUrUk2tYkllSii
+p+dGvMk74Yavp9LEPvEbdLwyA/xd1KT+IU7yhcOZDJGpChlg0AhBGCvgFrT0eyDk
+jLx9IN0gslwGxVpsusm7YLe57Trozz3ApruuMx+pOA7YHMCWGX3rMxgxNShXggMH
+wnBzXlzh3PN12te3Z0uo+IKYATB6dpZfaY8QwQNmqP78MbMPLE5Z3QVDO4FLkKnk
+ekQ3juyzGZD6E+j16ZU+Wb6owQIlMXndKygAIymszWHc2zlkETOubyKI46qxeceB
+TugGuyE4GoLubgVjyapcuwrwXLpgAdsuiYH7ur8Xi2znyNIl8pWVQlkrj32Jxfc3
+qt2ItDYzeQWsY8YLiPnFmBPnDgqrkZYZjY2zRylQ/gfKUV7U47g8Rfx4zY0fDw8P
+Ofuw43QU75uKG6gJ1MEGEAGVUQUr7cIReaysj2M158QPrDTAKnEyUVTCz2mDWNTf
+gn4e2yPBP8MvrOcqV9ViaSNMaFjRPwif5Oz0WyC6Cdogfnc13MxZ7sjUQMh3gf3J
+e3FJDKzi5hlePBRBc1mz
+=fKAO
 -----END PGP SIGNATURE-----
 
---nKzfxXxTXZ/rSi7L--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--6A1TVAKxAUhQ4PCu--
