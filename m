@@ -1,106 +1,77 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] clk: corenet: Update the clock bindings
-Date: Thu, 23 Jan 2014 15:03:28 -0600
-Message-ID: <1390511008.24905.581.camel@snotra.buserror.net>
-References: <1390269732-22798-1-git-send-email-Yuantian.Tang@freescale.com>
-	 <1390437863.24905.549.camel@snotra.buserror.net>
-	 <d61cabaec0af4aada9fadf93e7c0bb61@BL2PR03MB115.namprd03.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 06/15] watchdog: orion: Remove unneeded BRIDGE_CAUSE
+ clear
+Date: Thu, 23 Jan 2014 22:15:54 +0100
+Message-ID: <52E1868A.8020208@gmail.com>
+References: <1390295561-3466-1-git-send-email-ezequiel.garcia@free-electrons.com> <1390295561-3466-7-git-send-email-ezequiel.garcia@free-electrons.com> <20140121233537.GS18269@obsidianresearch.com> <20140122164904.GB27273@localhost> <20140122173417.GT18269@obsidianresearch.com> <52E02AB6.7040104@gmail.com> <20140122205213.GW18269@obsidianresearch.com> <52E0591E.6030009@gmail.com> <20140123111049.GB6065@localhost> <20140123115432.GC6065@localhost>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d61cabaec0af4aada9fadf93e7c0bb61-AZ66ij2kwaY2zE7nYf+DgeO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+In-Reply-To: <20140123115432.GC6065@localhost>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tang Yuantian-B29983 <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kushwaha Prabhakar-B32579 <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-01-22 at 20:47 -0600, Tang Yuantian-B29983 wrote:
-> > -----Original Message-----
-> > From: Wood Scott-B07421
-> > Sent: 2014=E5=B9=B41=E6=9C=8823=E6=97=A5 =E6=98=9F=E6=9C=9F=E5=9B=9B=
- 8:44
-> > To: Tang Yuantian-B29983
-> > Cc: Wood Scott-B07421; galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org; linuxppc-
-> > dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Kushwaha Prabhaka=
-r-
-> > B32579
-> > Subject: Re: [PATCH] clk: corenet: Update the clock bindings
-> >=20
-> > On Tue, 2014-01-21 at 10:02 +0800, Tang Yuantian wrote:
-> > > From: Tang Yuantian <yuantian.tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > >
-> > > Main changs include:
-> > > 	- Clarified the clock nodes' version number
-> > > 	- Fixed a issue in example
-> > >
-> > > Singed-off-by: Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/clock/corenet-clock.txt | 4 ++=
-+-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/clock/corenet-cloc=
-k.txt
-> > > b/Documentation/devicetree/bindings/clock/corenet-clock.txt
-> > > index 24711af..d6cadef 100644
-> > > --- a/Documentation/devicetree/bindings/clock/corenet-clock.txt
-> > > +++ b/Documentation/devicetree/bindings/clock/corenet-clock.txt
-> > > @@ -54,6 +54,8 @@ Required properties:
-> > >  		It takes parent's clock-frequency as its clock.
-> > >  	* "fsl,qoriq-sysclk-2.0": for input system clock (v2.0).
-> > >  		It takes parent's clock-frequency as its clock.
-> > > +	Note: v1.0 and v2.0 are clock version which should align to
-> > > +	clockgen node's they belong to which is chassis version.
-> >=20
-> > Instead, how about a note like this near the top of the file:
-> >=20
-> > All references to "1.0" and "2.0" refer to the QorIQ chassis versio=
-n to
-> > which the chip complies.
-> >=20
-> > Chassis Version		Example Chips
-> > ---------------		-------------
-> > 1.0			p4080, p5020, p5040
-> > 2.0			t4240, b4860, t1040
-> >=20
-> Better, I will update.
->=20
-> >=20
-> > BTW, this binding and the associated driver really should be called
-> > "qoriq-clock", not "corenet-clock".  This would match the compatibl=
-e
-> > string, and it doesn't really have much to do with corenet (which i=
-s part
-> > of the QorIQ chassis v1 and v2, but not *this* part).  Do you know =
-if the
-> > chassis v3 clock interface will be similar enough to share a driver=
-?
-> >=20
-> Doesn't QorIQ include some low-end socs, like p1022, p1020?=20
+Jason, Ezequiel,
 
-Yes, but those aren't "QorIQ Chassis 1.0" or "QorIQ Chassis 2.0".
-They're mpc85xx-family chips.
+On 01/23/2014 12:54 PM, Ezequiel Garcia wrote:
+> Sebastian,
+>
+> On Thu, Jan 23, 2014 at 08:10:49AM -0300, Ezequiel Garcia wrote:
+>> On Thu, Jan 23, 2014 at 12:49:50AM +0100, Sebastian Hesselbarth wrote:
+>> [..]
+>>>> Notice that Ezequiel has added an IRQ handler that just calls panic,
+>>>> so a spurious interrupt call is VERY VERY BAD.
+>>>
+>>> And I understand that he now clears watchdog's register before
+>>> requesting an irq. All that is missing is bridge_irq driver clearing
+>>> CAUSE register after masking all irqs, right?
+>>>
+>>
+>> Are you sure clearing the CAUSE register after masking the IRQs will be enough?
+>>
+>> AFAICS, until now nobody unmasks the watchdog IRQ (at least the orion_wdt
+>> driver didn't request the interruption) but *still* the CAUSE register is set
+>> upon watchdog expiration. So I would guessed a masked interrupt still raises a
+>> bit in the CAUSE register.
+>>
+>
+> Let me add some real information instead of my speculations. Taken from
+> the Kirkwood specification:
+>
+> Table 136: Mbus-L to Mbus Bridge Interrupt Mask Register
+> Offset:		0x00020114
+> Field: 		Mask
+> Type/InitVal: 	RW 0x0
+> Description:	There is a mask bit per each cause bit. Mask only affects the
+> 		assertion of interrupt pins. It does not affect the setting of
+> 		bits in the Cause register.
+>
+> So I guess this is why Jason has been insisting with the introduction of
+> the irq_startup.
+>
+> (Just for reference, the little patch I attached yesterday proved to work here.)
 
-In any case, if "qoriq" makes sense for the compatible, I don't see why
-it doesn't make sense for the driver.
+You guys were so right ;)
 
-> This driver has nothing to do with these boards.=20
-> I have no idea about chassis v3. If it has similar clock tree, this d=
-river can be shared.
-> Even the driver can't be used by v3, we can easily add v3 support sin=
-ce it has different
-> Compatible string.
+I just tested your v4 of the watchdog patches and forced a stale
+watchdog irq. It will cause a watchdog reset as you predicted.
 
-The reason I mentioned it is that chassis v3 will involve ARM chips tha=
-t
-have their own interconnect rather than corenet.
+I have some fixes for irq-orion.c's bridge irq that take care of:
+- handle_edge_irq
+- mask _and_ clear irqs on init
+- use irq_enable to ensure stale irqs are acked before unmask
 
--Scott
+With the last one, the stale watchdog irq will not raise watchdog's
+irq handler anymore.
 
+BTW, during my test, it looks like RSTOUT wasn't set, so I'll add
+my Tested-by on v4 when I have investigated that.
+
+Sebastian
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
