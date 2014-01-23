@@ -1,189 +1,60 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH V2 06/10] clk/samsung: add support for pll2650xx
-Date: Thu, 23 Jan 2014 19:46:03 +0100
-Message-ID: <52E1636B.70702@samsung.com>
-References: <1389099548-14649-1-git-send-email-rahul.sharma@samsung.com>
- <1389099548-14649-7-git-send-email-rahul.sharma@samsung.com>
+From: Gerhard Sittig <gsi@denx.de>
+Subject: Re: [PATCH V6 1/1] drivers/gpio: Altera soft IP GPIO driver
+Date: Thu, 23 Jan 2014 19:59:06 +0100
+Message-ID: <20140123185906.GU20094@book.gsilab.sittig.org>
+References: <1390359265-22808-1-git-send-email-thloh@altera.com>
+ <20140122180904.GN20094@book.gsilab.sittig.org>
+ <CAOLUe6Ya=bTYrURhieWQkZewYf2Z8kFN82nkxwfM5DJDHb5wzw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1389099548-14649-7-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: mturquette@linaro.org, kgene.kim@samsung.com, thomas.ab@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAOLUe6Ya=bTYrURhieWQkZewYf2Z8kFN82nkxwfM5DJDHb5wzw@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tien Hock Loh <thloh.linux@gmail.com>
+Cc: Tien Hock Loh <thloh@altera.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dinguyen@altera.com, "lftan@altera.com" <lftan@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rahul,
+On Thu, Jan 23, 2014 at 09:47 +0800, Tien Hock Loh wrote:
+> 
+> On Thu, Jan 23, 2014 at 2:09 AM, Gerhard Sittig <gsi@denx.de> wrote:
+> > On Wed, Jan 22, 2014 at 10:54 +0800, thloh@altera.com wrote:
+> >>
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
+> >> @@ -0,0 +1,42 @@
+> >> +Altera GPIO controller bindings
+> >> +
+> >> +Required properties:
+> >> +- compatible:
+> >> +  - "altr,pio-1.0"
+> >> +- reg: Physical base address and length of the controller's registers.
+> >> +- #gpio-cells : Should be 1
+> >> +  - The first cell is the gpio offset number
+> >> +- gpio-controller : Marks the device node as a GPIO controller.
+> >
+> > Learning about required data types when reading the binding would
+> > be nice.  So that DTS authors can tell whether a property is
+> > boolean, takes integers or strings, etc
+> 
+> Hmm, I don't quite understand your statement. I'm referring to other
+> gpio device tree binding documentation when creating this. Do you mind
+> to elaborate what you're expecting?
 
-On 07.01.2014 13:59, Rahul Sharma wrote:
-> Add support for pll2650xx in samsung pll file. This pll variant
-> is close to pll36xx but uses CON2 registers instead of CON1.
->
-> Aud_pll in Exynos5260 is pll2650xx and uses this code.
->
-> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-> ---
->   drivers/clk/samsung/clk-pll.c |  101 +++++++++++++++++++++++++++++++++++++++++
->   drivers/clk/samsung/clk-pll.h |    2 +-
->   2 files changed, 102 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/clk/samsung/clk-pll.c b/drivers/clk/samsung/clk-pll.c
-> index 08f85ae..35cbc60 100644
-> --- a/drivers/clk/samsung/clk-pll.c
-> +++ b/drivers/clk/samsung/clk-pll.c
-> @@ -812,6 +812,101 @@ static const struct clk_ops samsung_pll2550xx_clk_min_ops = {
->   	.recalc_rate = samsung_pll2550xx_recalc_rate,
->   };
->
-> +/*
-> + * PLL2650XX Clock Type
-> + */
-> +
-> +/* Maximum lock time can be 3000 * PDIV cycles */
-> +#define PLL2650XX_LOCK_FACTOR (3000)
-> +
-> +#define PLL2650XX_MDIV_SHIFT		(9)
-> +#define PLL2650XX_PDIV_SHIFT		(3)
-> +#define PLL2650XX_SDIV_SHIFT		(0)
-> +#define PLL2650XX_KDIV_SHIFT		(0)
-> +#define PLL2650XX_MDIV_MASK		(0x1ff)
-> +#define PLL2650XX_PDIV_MASK		(0x3f)
-> +#define PLL2650XX_SDIV_MASK		(0x7)
-> +#define PLL2650XX_KDIV_MASK		(0xffff)
-> +#define PLL2650XX_PLL_ENABLE_SHIFT	(23)
-> +#define PLL2650XX_PLL_LOCKTIME_SHIFT	(21)
-> +#define PLL2650XX_PLL_FOUTMASK_SHIFT	(31)
+Do you mean you have been citing, or copying from other bindings?
+Got inspiration from them, did what they do?  This I'd understand.
 
-For single bit fields it would be better to use simple definitions, 
-using BIT() macro, such as
+But you don't _reference_ other bindings or a common binding.
+The above quotation is complete from the start of the file, and
+one cannot learn from this specific binding what the data types
+of the properties are, nor are other bindings referred to.
 
-#define PLL2650XX_PLL_ENABLE		BIT(23)
+It's easy to fix.  No problem there.
 
-and then using it with | or & ~ operators directly.
 
-Also there is no need for parentheses around simple integers.
-
-> +
-> +static unsigned long samsung_pll2650xx_recalc_rate(struct clk_hw *hw,
-> +				unsigned long parent_rate)
-> +{
-> +	struct samsung_clk_pll *pll = to_clk_pll(hw);
-> +	u32 mdiv, pdiv, sdiv, pll_con0, pll_con2;
-> +	s16 kdiv;
-> +	u64 fvco = parent_rate;
-> +
-> +	pll_con0 = __raw_readl(pll->con_reg);
-> +	pll_con2 = __raw_readl(pll->con_reg + 8);
-> +	mdiv = (pll_con0 >> PLL2650XX_MDIV_SHIFT) & PLL2650XX_MDIV_MASK;
-> +	pdiv = (pll_con0 >> PLL2650XX_PDIV_SHIFT) & PLL2650XX_PDIV_MASK;
-> +	sdiv = (pll_con0 >> PLL2650XX_SDIV_SHIFT) & PLL2650XX_SDIV_MASK;
-> +	kdiv = (s16)(pll_con2 & PLL2650XX_KDIV_MASK);
-> +
-> +	fvco *= (mdiv << 16) + kdiv;
-> +	do_div(fvco, (pdiv << sdiv));
-> +	fvco >>= 16;
-> +
-> +	return (unsigned long)fvco;
-> +}
-> +
-> +static int samsung_pll2650xx_set_rate(struct clk_hw *hw, unsigned long drate,
-> +					unsigned long parent_rate)
-> +{
-> +	struct samsung_clk_pll *pll = to_clk_pll(hw);
-> +	u32 tmp, pll_con0, pll_con2;
-> +	const struct samsung_pll_rate_table *rate;
-> +
-> +	rate = samsung_get_pll_settings(pll, drate);
-> +	if (!rate) {
-> +		pr_err("%s: Invalid rate : %lu for pll clk %s\n", __func__,
-> +			drate, __clk_get_name(hw->clk));
-> +		return -EINVAL;
-> +	}
-> +
-> +	pll_con0 = __raw_readl(pll->con_reg);
-> +	pll_con2 = __raw_readl(pll->con_reg + 8);
-> +
-> +	 /* Change PLL PMS values */
-> +	pll_con0 &= ~(PLL2650XX_MDIV_MASK << PLL2650XX_MDIV_SHIFT |
-> +			PLL2650XX_PDIV_MASK << PLL2650XX_PDIV_SHIFT |
-> +			PLL2650XX_SDIV_MASK << PLL2650XX_SDIV_SHIFT);
-> +	pll_con0 |= rate->mdiv << PLL2650XX_MDIV_SHIFT;
-> +	pll_con0 |= rate->pdiv << PLL2650XX_PDIV_SHIFT;
-> +	pll_con0 |= rate->sdiv << PLL2650XX_SDIV_SHIFT;
-> +	pll_con0 |= 1 << PLL2650XX_PLL_ENABLE_SHIFT;
-> +	pll_con0 |= 1 << PLL2650XX_PLL_FOUTMASK_SHIFT;
-> +
-> +	pll_con2 &= ~(PLL2650XX_KDIV_MASK << PLL2650XX_KDIV_SHIFT);
-> +	pll_con2 |= ((~(rate->kdiv) + 1) & PLL2650XX_KDIV_MASK)
-> +			<< PLL2650XX_KDIV_SHIFT;
-
-Huh? This looks suspiciously. Why KDIV needs to be negated and increased 
-by 1?
-
-> +
-> +	/* Set PLL lock time. */
-> +	__raw_writel(PLL2650XX_LOCK_FACTOR * rate->pdiv, pll->lock_reg);
-> +
-> +	__raw_writel(pll_con0, pll->con_reg);
-> +	__raw_writel(pll_con2, pll->con_reg + 8);
-> +
-> +	do {
-> +		tmp = __raw_readl(pll->con_reg);
-> +	} while (!(tmp & (0x1 << PLL2650XX_PLL_LOCKTIME_SHIFT)));
-
-Is the right bit being checked here? On other PLLs it's 29th bit named 
-LOCK_STAT. Could you confirm this?
-
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct clk_ops samsung_pll2650xx_clk_ops = {
-> +	.recalc_rate = samsung_pll2650xx_recalc_rate,
-> +	.set_rate = samsung_pll2650xx_set_rate,
-> +	.round_rate = samsung_pll_round_rate,
-> +};
-> +
-> +static const struct clk_ops samsung_pll2650xx_clk_min_ops = {
-> +	.recalc_rate = samsung_pll2650xx_recalc_rate,
-> +};
-> +
->   static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
->   				struct samsung_pll_clock *pll_clk,
->   				void __iomem *base)
-> @@ -895,6 +990,12 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
->   		else
->   			init.ops = &samsung_pll2550xx_clk_ops;
->   		break;
-> +	case pll_2650xx:
-> +		if (!pll->rate_table)
-> +			init.ops = &samsung_pll2650xx_clk_min_ops;
-> +		else
-> +			init.ops = &samsung_pll2650xx_clk_ops;
-> +		break;
->   	default:
->   		pr_warn("%s: Unknown pll type for pll clk %s\n",
->   			__func__, pll_clk->name);
-> diff --git a/drivers/clk/samsung/clk-pll.h b/drivers/clk/samsung/clk-pll.h
-> index e106470..b326e94 100644
-> --- a/drivers/clk/samsung/clk-pll.h
-> +++ b/drivers/clk/samsung/clk-pll.h
-> @@ -26,6 +26,7 @@ enum samsung_pll_type {
->   	pll_6552,
->   	pll_6553,
->   	pll_2550xx,
-> +	pll_2650xx,
->   };
->
->   #define PLL_35XX_RATE(_rate, _m, _p, _s)			\
-> @@ -93,5 +94,4 @@ struct samsung_pll_rate_table {
->   extern struct clk * __init samsung_clk_register_pll2550x(const char *name,
->   			const char *pname, const void __iomem *reg_base,
->   			const unsigned long offset);
-> -
-
-Not a part of this change.
-
-Best regards,
-Tomasz
+virtually yours
+Gerhard Sittig
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office@denx.de
