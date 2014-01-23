@@ -1,69 +1,142 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: Re: [RFCv2] Device Tree bindings for OMAP3 Camera System
-Date: Thu, 23 Jan 2014 01:11:29 +0100
-Message-ID: <20140123001128.GA12425@earth.universe>
-References: <20131103220315.GA11659@earth.universe>
- <20140120232719.GA30894@earth.universe>
- <52E045DE.10706@gmail.com>
- <2960230.3bGpm3THhQ@avalon>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH RFC 04/10] base: power: Add generic OF-based power
+ domain look-up
+Date: Wed, 22 Jan 2014 16:18:02 -0800
+Message-ID: <20140123001802.GF13785@codeaurora.org>
+References: <1389469372-17199-1-git-send-email-tomasz.figa@gmail.com>
+ <1389469372-17199-5-git-send-email-tomasz.figa@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="k1lZvvs/B4yU6o8G"
-Return-path: <linux-media-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2960230.3bGpm3THhQ@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Sakari Ailus <sakari.ailus@iki.fi>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+In-Reply-To: <1389469372-17199-5-git-send-email-tomasz.figa@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: linux-pm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomasz Figa <t.figa@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Pavel Machek <pavel@ucw.cz>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 01/11, Tomasz Figa wrote:
+> +
+> +/**
+> + * of_genpd_lock() - Lock access to of_genpd_providers list
+> + */
+> +static void of_genpd_lock(void)
+> +{
+> +	mutex_lock(&of_genpd_mutex);
+> +}
+> +
+> +/**
+> + * of_genpd_unlock() - Unlock access to of_genpd_providers list
+> + */
+> +static void of_genpd_unlock(void)
+> +{
+> +	mutex_unlock(&of_genpd_mutex);
+> +}
 
---k1lZvvs/B4yU6o8G
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Why do we need these functions? Can't we just call
+mutex_lock/unlock directly?
 
-Hi,
+> +
+> +/**
+> + * of_genpd_add_provider() - Register a domain provider for a node
+> + * @np: Device node pointer associated with domain provider
+> + * @genpd_src_get: callback for decoding domain
+> + * @data: context pointer for @genpd_src_get callback.
 
-On Wed, Jan 22, 2014 at 11:57:45PM +0100, Laurent Pinchart wrote:
-> [...]
->> camera-switch {
->>      /*
->>       * TODO:
->>       *  - check if the switching code is generic enough to use a
->>       *    more generic name like "gpio-camera-switch".
->=20
-> I think you can use a more generic name. You could probably get some=20
-> inspiration from the i2c-mux-gpio DT bindings.
+These look a little outdated.
 
-My main concern is, that the gpio used for switching is also
-connected to the reset pin of one of the cameras. Maybe that
-fact can just be neglected, though?
+> + */
+> +int of_genpd_add_provider(struct device_node *np, genpd_xlate_t xlate,
+> +			  void *data)
+> +{
+> +	struct of_genpd_provider *cp;
+> +
+> +	cp = kzalloc(sizeof(struct of_genpd_provider), GFP_KERNEL);
 
-> [...]
+Please use sizeof(*cp) instead.
 
--- Sebastian
+> +	if (!cp)
+> +		return -ENOMEM;
+> +
+> +	cp->node = of_node_get(np);
+> +	cp->data = data;
+> +	cp->xlate = xlate;
+> +
+> +	of_genpd_lock();
+> +	list_add(&cp->link, &of_genpd_providers);
+> +	of_genpd_unlock();
+> +	pr_debug("Added domain provider from %s\n", np->full_name);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(of_genpd_add_provider);
+> +
+[...]
+> +
+> +/* See of_genpd_get_from_provider(). */
+> +static struct generic_pm_domain *__of_genpd_get_from_provider(
+> +					struct of_phandle_args *genpdspec)
+> +{
+> +	struct of_genpd_provider *provider;
+> +	struct generic_pm_domain *genpd = ERR_PTR(-ENOENT);
 
---k1lZvvs/B4yU6o8G
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Can this be -EPROBE_DEFER so that we can defer probe until a
+later time if the power domain provider hasn't registered yet?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+> +
+> +	/* Check if we have such a provider in our array */
+> +	list_for_each_entry(provider, &of_genpd_providers, link) {
+> +		if (provider->node == genpdspec->np)
+> +			genpd = provider->xlate(genpdspec, provider->data);
+> +		if (!IS_ERR(genpd))
+> +			break;
+> +	}
+> +
+> +	return genpd;
+> +}
+> +
+[...]
+> +static int of_genpd_notifier_call(struct notifier_block *nb,
+> +				  unsigned long event, void *data)
+> +{
+> +	struct device *dev = data;
+> +	int ret;
+> +
+> +	if (!dev->of_node)
+> +		return NOTIFY_DONE;
+> +
+> +	switch (event) {
+> +	case BUS_NOTIFY_BIND_DRIVER:
+> +		ret = of_genpd_add_to_domain(dev);
+> +		break;
+> +
+> +	case BUS_NOTIFY_UNBOUND_DRIVER:
+> +		ret = of_genpd_del_from_domain(dev);
+> +		break;
+> +
+> +	default:
+> +		return NOTIFY_DONE;
+> +	}
+> +
+> +	return notifier_from_errno(ret);
+> +}
+> +
+> +static struct notifier_block of_genpd_notifier_block = {
+> +	.notifier_call = of_genpd_notifier_call,
+> +};
+> +
+> +static int of_genpd_init(void)
+> +{
+> +	return bus_register_notifier(&platform_bus_type,
+> +					&of_genpd_notifier_block);
+> +}
+> +core_initcall(of_genpd_init);
 
-iQIcBAEBCAAGBQJS4F4wAAoJENju1/PIO/qaa6kP/31H7aF2nUkXaI/y5r6DYhx4
-Uc7nKcLVgcF4wd8/VLbNEhg1Gw9PUdCkF42qZIm2WC+hj5OukG38Gw1aZanGBHNB
-yx1x0o9tflVhikcpVz1QJfPqgDnMLgbpyIxPTtYVNRsY+sMpDpR+2+k/kRLYPtLv
-RY5m2w6lRPvcmiV8LLzj7WEwlotJz/mdQLwvvLsmcfoHMnK9K4s/6rQdNOmycj0a
-kztUp/qiyQqU2vAHcfmdAfyBQ30m3pUCo0g7s4ctJ461i0lxb220tB+NqbO/wFgJ
-2wKBY9TDJJqwzwOcxrbbCXi/uEs/Syafe/KYvbtmOYbnn+SiK3e3HrHQRPlnR8+Q
-NJyZ1IkvV/5wZ15lpH+vqoZjRa6iUyFwQ93kIi4YAnBk64hGW0Q31szqbCn4XnJs
-2HGaDygf38SwJH5e77NR40H2PyaJ3tCjKeZdGAHQ1CUURGkRhVcQZkz60A7kjP56
-LAqcxP/5HYKSAqs82Ud2etp03IzxXRWEBPOq4I7b4bbjNgdZyrWfY5okVdWgiguZ
-7nNJw+2Y4SSHLOLf2x1IHmV6JaqvzebfHefBRoN+v6f4oa5q9TRQuWqBB+5dXeA+
-KsNeywP9OOLQGp3AE1f4+AML8/oDU0ADna3AWrUIVWC4CJY4S+BPEetPoEqVjRmt
-j/H5J2VBvy0I9wX/B/E9
-=vxpY
------END PGP SIGNATURE-----
+Would it be possible to call the of_genpd_add_to_domain() and
+of_genpd_del_from_domain() functions directly in the driver core,
+similar to how the pinctrl framework has a hook in there? That
+way we're not relying on any initcall ordering for this.
 
---k1lZvvs/B4yU6o8G--
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
