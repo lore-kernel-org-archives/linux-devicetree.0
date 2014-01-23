@@ -1,49 +1,152 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM i.MX53: dts: Add TVE to i.MX53-QSB device tree
-Date: Thu, 23 Jan 2014 12:08:44 -0200
-Message-ID: <CAOMZO5BOJ1W_x=M_ymCtTGf186EYE4X4Tw8yA23SD7cSDQAvEw@mail.gmail.com>
-References: <1380192374-9531-1-git-send-email-p.zabel@pengutronix.de>
-	<1380192374-9531-2-git-send-email-p.zabel@pengutronix.de>
-	<20130927011643.GB25146@S2101-09.ap.freescale.net>
-	<1380552008.3959.29.camel@pizza.hi.pengutronix.de>
-	<20131005015845.GC2734@S2101-09.ap.freescale.net>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v5 13/14] ARM: sun4i: dts: Add ahci / sata support
+Date: Thu, 23 Jan 2014 15:48:00 +0100
+Message-ID: <52E12BA0.4050003@redhat.com>
+References: <1390417489-5354-1-git-send-email-hdegoede@redhat.com> <1390417489-5354-14-git-send-email-hdegoede@redhat.com> <CAGb2v65mYK7Lo_KC+sGvYG7P2kDOy7CZgGane2eY8+-pMvH1mw@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131005015845.GC2734-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBK6XQSLQKGQEHHRPPFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAGb2v65mYK7Lo_KC+sGvYG7P2kDOy7CZgGane2eY8+-pMvH1mw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+Hi,
 
-On Fri, Oct 4, 2013 at 10:58 PM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Sep 30, 2013 at 04:40:08PM +0200, Philipp Zabel wrote:
->> > > @@ -280,8 +289,8 @@ memgpu: /memreserve/ 0xb0000000 0x04000000;
->> > >                   };
->> > >
->> > >                   ldo8_reg: ldo8 {
->> > > -                         regulator-min-microvolt = <1200000>;
->> > > -                         regulator-max-microvolt = <3600000>;
->> > > +                         regulator-min-microvolt = <2750000>;
->> > > +                         regulator-max-microvolt = <2750000>;
->> >
->> > Why this change?
->>
->> According to the reference manual, the TVDAC supply should be 2.75 V. If
->> there are no ill effects if this ldo is actually set to 3.6 V, this
->> change could be dropped.
+On 01/23/2014 09:34 AM, Chen-Yu Tsai wrote:
+> Hi,
 >
-> So you either add a comment in commit log for the change or drop the
-> change.
+> On Thu, Jan 23, 2014 at 3:04 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> From: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+>>
+>> This patch adds sunxi sata support to A10 boards that have such a connector.
+>> Some boards also feature a regulator via a GPIO and support for this is also
+>> added.
+>>
+>> Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/sun4i-a10-a1000.dts      |  4 ++++
+>>   arch/arm/boot/dts/sun4i-a10-cubieboard.dts |  6 +++++
+>>   arch/arm/boot/dts/sun4i-a10.dtsi           |  8 +++++++
+>>   arch/arm/boot/dts/sunxi-ahci-reg.dtsi      | 38 ++++++++++++++++++++++++++++++
+>>   4 files changed, 56 insertions(+)
+>>   create mode 100644 arch/arm/boot/dts/sunxi-ahci-reg.dtsi
+>>
+>> diff --git a/arch/arm/boot/dts/sun4i-a10-a1000.dts b/arch/arm/boot/dts/sun4i-a10-a1000.dts
+>> index aef8207..3fb7305 100644
+>> --- a/arch/arm/boot/dts/sun4i-a10-a1000.dts
+>> +++ b/arch/arm/boot/dts/sun4i-a10-a1000.dts
+>> @@ -48,6 +48,10 @@
+>>                          status = "okay";
+>>                  };
+>>
+>> +               ahci: sata@01c18000 {
+>> +                       status = "okay";
+>> +               };
+>> +
+>>                  pinctrl@01c20800 {
+>>                          mmc0_cd_pin_a1000: mmc0_cd_pin@0 {
+>>                                  allwinner,pins = "PH1";
+>> diff --git a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+>> index f50fb2b..6ae1110 100644
+>> --- a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+>> +++ b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+>> @@ -12,6 +12,7 @@
+>>
+>>   /dts-v1/;
+>>   /include/ "sun4i-a10.dtsi"
+>> +/include/ "sunxi-ahci-reg.dtsi"
+>>
+>>   / {
+>>          model = "Cubietech Cubieboard";
+>> @@ -51,6 +52,11 @@
+>>                          status = "okay";
+>>                  };
+>>
+>> +               ahci: sata@01c18000 {
+>> +                       target-supply = <&reg_ahci_5v>;
+>> +                       status = "okay";
+>> +               };
+>> +
+>>                  pinctrl@01c20800 {
+>>                          mmc0_cd_pin_cubieboard: mmc0_cd_pin@0 {
+>>                                  allwinner,pins = "PH1";
+>> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+>> index 4736dd2..198dcda 100644
+>> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
+>> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+>> @@ -331,6 +331,14 @@
+>>                          status = "disabled";
+>>                  };
+>>
+>> +               ahci: sata@01c18000 {
+>> +                       compatible = "allwinner,sun4i-a10-ahci";
+>> +                       reg = <0x01c18000 0x1000>;
+>> +                       interrupts = <56>;
+>> +                       clocks = <&pll6 0>, <&ahb_gates 25>;
+>> +                       status = "disabled";
+>> +               };
+>> +
+>
+> Consider adding
+>
+>      pinctrl-names = "default";
+>
+> in the ahci node to suppress "default pin state not found" warnings.
+> Same goes for sun7i-a20.dtsi.
 
-Do you plan to resubmit this patch?
+ahci does not use pinctrl, the ahci (and usb) phys have dedicated pins,
+since they don't use pinctrl at all no such warnings are issued.
+
+>
+>>                  intc: interrupt-controller@01c20400 {
+>>                          compatible = "allwinner,sun4i-ic";
+>>                          reg = <0x01c20400 0x400>;
+>> diff --git a/arch/arm/boot/dts/sunxi-ahci-reg.dtsi b/arch/arm/boot/dts/sunxi-ahci-reg.dtsi
+>> new file mode 100644
+>> index 0000000..955b197
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sunxi-ahci-reg.dtsi
+>> @@ -0,0 +1,38 @@
+>> +/*
+>> + * sunxi boards sata target power supply common code
+>> + *
+>> + * Copyright 2014 - Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> + *
+>> + * The code contained herein is licensed under the GNU General Public
+>> + * License. You may obtain a copy of the GNU General Public License
+>> + * Version 2 or later at the following locations:
+>> + *
+>> + * http://www.opensource.org/licenses/gpl-license.html
+>> + * http://www.gnu.org/copyleft/gpl.html
+>> + */
+>> +
+>> +/ {
+>> +       soc@01c00000 {
+>
+> This block needs to be under
+>
+>      pinctrl@01c20800 {
+>
+>> +               ahci_pwr_pin_a: ahci_pwr_pin@0 {
+>> +                       allwinner,pins = "PB8";
+>> +                       allwinner,function = "gpio_out";
+>> +                       allwinner,drive = <0>;
+>> +                       allwinner,pull = <0>;
+>> +               };
+>
+>      };
+
+You're completely right, fixed in my local tree.
 
 Regards,
 
-Fabio Estevam
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hans
