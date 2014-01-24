@@ -1,48 +1,90 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH] of: Update qcom vendor prefix description
-Date: Fri, 24 Jan 2014 12:47:14 -0600
-Message-ID: <7EA784E2-5108-4896-886A-444315793453@codeaurora.org>
-References: <1387410076-22283-1-git-send-email-galak@codeaurora.org> <CAOesGMjt9d_JkoyJbJuByiO8AUDWb79hCLhw9DKfS_C8WPhooQ@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.1 \(1827\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOesGMjt9d_JkoyJbJuByiO8AUDWb79hCLhw9DKfS_C8WPhooQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, linux-arm-msm@vger.kernel.org
+From: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCH] ARM: dts: bcm28155-ap: Fix Card Detection GPIO
+Date: Fri, 24 Jan 2014 10:48:40 -0800
+Message-ID: <CAAYSxhpSz8ZF_urMfQ4xdc1fhFdQC-_=9U1dvNn=EU_OoNsWbw@mail.gmail.com>
+References: <1389120821-12007-1-git-send-email-tim.kryger@linaro.org>
+	<CAEPRUYo0r5YcRTYdgSNLqedVV4D0bsor7USBoxRRpBXRs7wpbw@mail.gmail.com>
+	<CAAYSxhpgJwnq63fUdYBtmneRads_69c2mik8upofvAS1Y25fOA@mail.gmail.com>
+	<CAEPRUYpyr2_3pfa3rqYiYPAOwJfA+0AdqyGaf5s7YiWH=zfTeA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAEPRUYpyr2_3pfa3rqYiYPAOwJfA+0AdqyGaf5s7YiWH=zfTeA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Arm Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jan 8, 2014 at 4:54 PM, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org> wrote:
+> On Wed, Jan 8, 2014 at 4:28 PM, Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On Wed, Jan 8, 2014 at 3:38 PM, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org> wrote:
+>>> On Tue, Jan 7, 2014 at 10:53 AM, Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>> The board schematic states that the "SD_CARD_DET_N gets pulled to GND
+>>>> when card is inserted" so the polarity has been updated to active low.
+>>>>
+>>>> Polarity is now specified with a GPIO define instead of a magic number.
+>>>>
+>>>> Signed-off-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> Reviewed-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> ---
+>>>>  arch/arm/boot/dts/bcm28155-ap.dts | 4 +++-
+>>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/bcm28155-ap.dts b/arch/arm/boot/dts/bcm28155-ap.dts
+>>>> index 08e47c2..27dd110 100644
+>>>> --- a/arch/arm/boot/dts/bcm28155-ap.dts
+>>>> +++ b/arch/arm/boot/dts/bcm28155-ap.dts
+>>>> @@ -13,6 +13,8 @@
+>>>>
+>>>>  /dts-v1/;
+>>>>
+>>>> +#include <dt-bindings/gpio/gpio.h>
+>>>> +
+>>>>  #include "bcm11351.dtsi"
+>>>>
+>>>>  / {
+>>>> @@ -40,7 +42,7 @@
+>>>>
+>>>>         sdio4: sdio@3f1b0000 {
+>>>>                 max-frequency = <48000000>;
+>>>> -               cd-gpios = <&gpio 14 0>;
+>>>> +               cd-gpios = <&gpio 14 GPIO_ACTIVE_LOW>;
+>>>>                 status = "okay";
+>>>>         };
+>>>>  };
+>>>> --
+>>>> 1.8.0.1
+>>>>
+>>> Tim,
+>>>  Does bcm11351-brt not also suffer from the same bug? If it does can
+>>> you pls update the patch to also fix it?
+>>>
+>>>  Thanks,
+>>>    csd
+>>
+>> The BRT and AP boards are similar so it may have the same problem but
+>> I don't have a BRT and wouldn't be able to test any changes to its DTS
+>> file.
+>>
+>> -Tim
+>
+> [sorry for the resend for those that get it twice]
+> Agreed - it's time that dts file go away. In this case:
+> Acked-by: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>
+>
+> Olof - can you pls pull in this patch. This is the bugfix that was
+> discussed in irc earlier today.
+>
+>  thanks,
+>    csd
 
-On Dec 18, 2013, at 5:50 PM, Olof Johansson <olof@lixom.net> wrote:
+Christian,
 
-> On Wed, Dec 18, 2013 at 3:41 PM, Kumar Gala <galak@codeaurora.org> wr=
-ote:
->> Update vendor description to be the full name of the corporate entit=
-y that
->> produces the SoCs associated with this prefix.
->>=20
->> Signed-off-by: Kumar Gala <galak@codeaurora.org>
->=20
-> Acked-by: Olof Johansson <olof@lixom.net>
->=20
->=20
-> -Olof
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree"=
- in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm not sure Olof saw your reply.  Olof and Kevin are now on CC.
 
-Rob,
-
-Did this get lost, haven=92t seen it applied
-
-thanks
-
-- k
-
---=20
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, host=
-ed by The Linux Foundation
+Thanks,
+Tim Kryger
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
