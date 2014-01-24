@@ -1,43 +1,115 @@
-From: Anton Blanchard <anton-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
-Subject: Re: [PATCH] dtc: Sort unit addresses by number
-Date: Fri, 24 Jan 2014 23:21:10 +1100
-Message-ID: <20140124232110.51de5adc@kryten>
-References: <20140121134935.1f9cebcc@kryten>
-	<20140121100221.GJ28747@e106331-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140121100221.GJ28747-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH v4 06/15] ARM: shmobile: r7s72100 dtsi: Add RSPI nodes
+Date: Fri, 24 Jan 2014 13:49:42 +0100
+Message-ID: <1390567791-8988-7-git-send-email-geert@linux-m68k.org>
+References: <1390567791-8988-1-git-send-email-geert@linux-m68k.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1390567791-8988-1-git-send-email-geert@linux-m68k.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+From: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
 
-Hi Mark,
+Signed-off-by: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
+Cc: devicetree@vger.kernel.org
+---
+v4:
+  - Switch to named IRQs
+v3:
+  - No changes
+v2:
+  - No changes
 
-> Minor issue, but when #address-cells == 2, some unit addresses are
-> split in the middle by a ',' to separate the value of each cell, e.g.
-> "flash@2,0". For those, is_hex will return false and we'll compare
-> unit-addresses as strings.
-> 
-> I took a quick look over the dts in the Linux kernel tree (with `git
-> grep "@.\+," -- arch/*/boot/dts` and I think every instance there
-> would sort correctly as a string, but it would be nice to fix the
-> issue regardless of how large the unit-address is.
-> 
-> Perhaps we could have a helper function for reading the unit-address
-> that would take this into account?
+ arch/arm/boot/dts/r7s72100.dtsi |   70 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
 
-I was already getting nervous at the complexity of the sort function,
-so I added the is_hex() check to ignore any complex unit addresses. 
-
-A helper function to read a unit address sounds like a simple enough
-solution though.
-
-Anton
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+index ff0bd6be454f..d7013df6bb10 100644
+--- a/arch/arm/boot/dts/r7s72100.dtsi
++++ b/arch/arm/boot/dts/r7s72100.dtsi
+@@ -34,6 +34,11 @@
+ 		gpio10 = &port10;
+ 		gpio11 = &port11;
+ 		gpio12 = &jtagport0;
++		spi0 = &spi0;
++		spi1 = &spi1;
++		spi2 = &spi2;
++		spi3 = &spi3;
++		spi4 = &spi4;
+ 	};
+ 
+ 	cpus {
+@@ -289,4 +294,69 @@
+ 		clock-frequency = <100000>;
+ 		status = "disabled";
+ 	};
++
++	spi0: spi@e800c800 {
++		compatible = "renesas,rspi-r7s72100", "renesas,rspi-rz";
++		reg = <0xe800c800 0x24>;
++		interrupts = <0 238 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 239 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 240 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "error", "rx", "tx";
++		num-cs = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	spi1: spi@e800d000 {
++		compatible = "renesas,rspi-r7s72100", "renesas,rspi-rz";
++		reg = <0xe800d000 0x24>;
++		interrupts = <0 241 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 242 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 243 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "error", "rx", "tx";
++		num-cs = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	spi2: spi@e800d800 {
++		compatible = "renesas,rspi-r7s72100", "renesas,rspi-rz";
++		reg = <0xe800d800 0x24>;
++		interrupts = <0 244 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 245 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 246 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "error", "rx", "tx";
++		num-cs = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	spi3: spi@e800e000 {
++		compatible = "renesas,rspi-r7s72100", "renesas,rspi-rz";
++		reg = <0xe800e000 0x24>;
++		interrupts = <0 247 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 248 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 249 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "error", "rx", "tx";
++		num-cs = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	spi4: spi@e800e800 {
++		compatible = "renesas,rspi-r7s72100", "renesas,rspi-rz";
++		reg = <0xe800e800 0x24>;
++		interrupts = <0 250 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 251 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 252 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "error", "rx", "tx";
++		num-cs = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
+ };
+-- 
+1.7.9.5
