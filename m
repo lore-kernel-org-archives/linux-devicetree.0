@@ -1,68 +1,45 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v2] dma: Add Xilinx AXI Video Direct Memory Access Engine
- driver support
-Date: Fri, 24 Jan 2014 14:24:27 +0100
-Message-ID: <52E2698B.6070001@metafoo.de>
-References: <1390409565-4200-1-git-send-email-sthokal@xilinx.com> <1390409565-4200-2-git-send-email-sthokal@xilinx.com> <52E0FC22.8060903@metafoo.de> <CA+mB=1L6yvCwA3mKCwz83LQbXiVau110REV64rYrSzUhGE4ucA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+mB=1L6yvCwA3mKCwz83LQbXiVau110REV64rYrSzUhGE4ucA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH v3 0/2] regulator: s5m8767: Use GPIO for controlling Buck9/eMMC
+Date: Fri, 24 Jan 2014 14:37:56 +0100
+Message-ID: <1390570678-30686-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sangbeom Kim <sbkim73@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Sachin Kamat <sachin.kamat@linaro.org>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/24/2014 12:16 PM, Srikanth Thokala wrote:
-> Hi Lars,
-> 
-> On Thu, Jan 23, 2014 at 4:55 PM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
->> On 01/22/2014 05:52 PM, Srikanth Thokala wrote:
->> [...]
->>> +/**
->>> + * xilinx_vdma_device_control - Configure DMA channel of the device
->>> + * @dchan: DMA Channel pointer
->>> + * @cmd: DMA control command
->>> + * @arg: Channel configuration
->>> + *
->>> + * Return: '0' on success and failure value on error
->>> + */
->>> +static int xilinx_vdma_device_control(struct dma_chan *dchan,
->>> +                                   enum dma_ctrl_cmd cmd, unsigned long arg)
->>> +{
->>> +     struct xilinx_vdma_chan *chan = to_xilinx_chan(dchan);
->>> +
->>> +     switch (cmd) {
->>> +     case DMA_TERMINATE_ALL:
->>> +             xilinx_vdma_terminate_all(chan);
->>> +             return 0;
->>> +     case DMA_SLAVE_CONFIG:
->>> +             return xilinx_vdma_slave_config(chan,
->>> +                                     (struct xilinx_vdma_config *)arg);
->>
->> You really shouldn't be overloading the generic API with your own semantics.
->> DMA_SLAVE_CONFIG should take a dma_slave_config and nothing else.
-> 
-> Ok.  The driver needs few additional configuration from the slave
-> device like Vertical
-> Size, Horizontal Size,  Stride etc., for the DMA transfers, in that case do you
-> suggest me to define a separate dma_ctrl_cmd like the one FSLDMA_EXTERNAL_START
-> defined for Freescale drivers?
+Hi,
 
-In my opinion it is not a good idea to have driver implement a generic API,
-but at the same time let the driver have custom semantics for those API
-calls. It's a bit like having a gpio driver that expects 23 and 42 as the
-values passed to gpio_set_value instead of 0 and 1. It completely defeats
-the purpose of a generic API, namely that you are able to write generic code
-that makes use of the API without having to know about which implementation
-API it is talking to. The dmaengine framework provides the
-dmaengine_prep_interleaved_dma() function to setup two dimensional
-transfers, e.g. take a look at sirf-dma.c or imx-dma.c.
 
-- Lars
+This is third version of patch adding GPIO control over Buck9 regulator
+in s5m8767 regulator driver.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Previously the patch was part of larger patchset from which all other patches
+were applied.
+
+
+Changes since v2:
+1. Use only one DT property ("s5m8767,pmic-ext-control-gpios");
+   suggested by Mark Brown.
+
+Changes since v1:
+1. Use ena_gpio of regulator core, as suggested by Mark Brown.
+
+
+This patchset is based on next tree: next-20140122.
+
+Best regards,
+Krzysztof
+
+Krzysztof Kozlowski (2):
+  regulator: s5m8767: Use GPIO for controlling Buck9/eMMC
+  regulator: s5m8767: Document new binding for Buck9 GPIO control
+
+ .../bindings/regulator/s5m8767-regulator.txt       |   13 ++-
+ drivers/regulator/s5m8767.c                        |   87 +++++++++++++++++++-
+ include/linux/mfd/samsung/core.h                   |    3 +-
+ include/linux/mfd/samsung/s5m8767.h                |    7 ++
+ 4 files changed, 105 insertions(+), 5 deletions(-)
+
+-- 
+1.7.9.5
