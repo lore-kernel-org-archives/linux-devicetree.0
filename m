@@ -1,65 +1,118 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 4/8] ARM: do CPU-specific init for Broadcom Brahma15
- cores
-Date: Fri, 24 Jan 2014 10:54:48 +0000
-Message-ID: <20140124105448.GA814@e106331-lin.cambridge.arm.com>
-References: <1390361452-3124-1-git-send-email-marc.ceeeee@gmail.com>
- <1390361452-3124-5-git-send-email-marc.ceeeee@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 Resend] Documentation: mfd: Add binding document for S2MPA01
+Date: Fri, 24 Jan 2014 16:28:07 +0530
+Message-ID: <1390561087-31850-1-git-send-email-sachin.kamat@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1390361452-3124-5-git-send-email-marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 22, 2014 at 03:30:48AM +0000, Marc Carino wrote:
-> Perform any CPU-specific initialization required on the
-> Broadcom Brahma-15 core.
-> 
-> Signed-off-by: Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/mm/proc-v7.S |   11 +++++++++++
->  1 files changed, 11 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/mm/proc-v7.S b/arch/arm/mm/proc-v7.S
-> index bd17819..98ea423 100644
-> --- a/arch/arm/mm/proc-v7.S
-> +++ b/arch/arm/mm/proc-v7.S
-> @@ -193,6 +193,7 @@ __v7_cr7mp_setup:
->  	b	1f
->  __v7_ca7mp_setup:
->  __v7_ca15mp_setup:
-> +__v7_b15mp_setup:
->  	mov	r10, #0
->  1:
->  #ifdef CONFIG_SMP
-> @@ -494,6 +495,16 @@ __v7_ca15mp_proc_info:
->  	.size	__v7_ca15mp_proc_info, . - __v7_ca15mp_proc_info
->  
->  	/*
-> +	 * Broadcom Corporation Brahma-B15 processor.
-> +	 */
-> +	.type	__v7_b15mp_proc_info, #object
-> +__v7_b15mp_proc_info:
-> +	.long	0x420f00f0
-> +	.long	0xff0ffff0
-> +	__v7_proc __v7_b15mp_setup, hwcaps = HWCAP_IDIV
+Added initial binding documentation for S2MPA01 MFD.
 
-On the third posting, Will Deacon asked if the hwcap override was really
-required [1]. Two postings later there's been no answer.
+Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+* Re-organised as suggested by Mark Rutland.
+---
+ Documentation/devicetree/bindings/mfd/s2mpa01.txt |   86 +++++++++++++++++++++
+ 1 file changed, 86 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/s2mpa01.txt
 
-Is your CPUID_EXT_ISAR0 value wrong? If so, please add a comment to that
-effect (as with __krait_proc_info).
+diff --git a/Documentation/devicetree/bindings/mfd/s2mpa01.txt b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
+new file mode 100644
+index 000000000000..70879b92b24b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
+@@ -0,0 +1,86 @@
++
++* Samsung S2MPA01 Voltage and Current Regulator
++
++The Samsung S2MPA01 is a multi-function device which includes high
++efficiency buck converters including Dual-Phase buck converter, various LDOs,
++and an RTC. It is interfaced to the host controller using an I2C interface.
++Each sub-block is addressed by the host system using different I2C slave
++addresses.
++
++Required properties:
++- compatible: Should be "samsung,s2mpa01-pmic".
++- reg: Specifies the I2C slave address of the PMIC block. It should be 0x66.
++
++Optional properties:
++- interrupt-parent: Specifies the phandle of the interrupt controller to which
++  the interrupts from s2mpa01 are delivered to.
++- interrupts: Interrupt specifier for interrupt source (connected to SoC).
++
++Optional nodes:
++- regulators: The regulators of s2mpa01 that have to be instantiated should be
++  included in a sub-node named 'regulators'. Regulator nodes and constraints
++  included in this sub-node use the standard regulator bindings which are
++  documented elsewhere.
++
++Properties for BUCK regulator nodes:
++ regulator-ramp-delay for BUCKs = [6250/12500(default)/25000/50000] uV/us
++
++ BUCK[1/2/3/4] supports disabling ramp delay on hardware, so explictly
++ regulator-ramp-delay = <0> can be used for them to disable ramp delay.
++ In the absence of the regulator-ramp-delay property, the default ramp
++ delay will be used.
++
++  NOTE: Some BUCKs share the ramp rate setting i.e. same ramp value will be set
++  for a particular group of BUCKs. So provide same regulator-ramp-delay<value>.
++  Grouping of BUCKs sharing ramp rate setting is as follow : BUCK[1, 6],
++  BUCK[2, 4], and BUCK[8, 9, 10]
++
++The following are the names of the regulators that the s2mpa01 PMIC block
++supports. Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
++as per the datasheet of s2mpa01.
++
++	- LDOn
++		  - valid values for n are 1 to 26
++		  - Example: LDO1, LD02, LDO26
++	- BUCKn
++		  - valid values for n are 1 to 10.
++		  - Example: BUCK1, BUCK2, BUCK9
++
++Example:
++
++	s2mpa01_pmic@66 {
++		compatible = "samsung,s2mpa01-pmic";
++		reg = <0x66>;
++
++		regulators {
++			ldo1_reg: LDO1 {
++				regulator-name = "VDD_ALIVE";
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <1000000>;
++			};
++
++			ldo2_reg: LDO2 {
++				regulator-name = "VDDQ_MMC2";
++				regulator-min-microvolt = <2800000>;
++				regulator-max-microvolt = <2800000>;
++				regulator-always-on;
++			};
++
++			buck1_reg: BUCK1 {
++				regulator-name = "vdd_mif";
++				regulator-min-microvolt = <950000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-always-on;
++				regulator-boot-on;
++			};
++
++			buck2_reg: BUCK2 {
++				regulator-name = "vdd_arm";
++				regulator-min-microvolt = <950000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-ramp-delay = <50000>;
++			};
++		};
++	};
+-- 
+1.7.9.5
 
-Thanks,
-Mark.
-
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-January/225895.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
