@@ -1,69 +1,40 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 6/9] ARM: DTS: omap5: Set all audio related IP's status to disabled as default
-Date: Fri, 24 Jan 2014 10:19:04 +0200
-Message-ID: <1390551547-12406-7-git-send-email-peter.ujfalusi@ti.com>
-References: <1390551547-12406-1-git-send-email-peter.ujfalusi@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 2/4] pinctrl: st: Add software edge trigger interrupt
+ support.
+Date: Fri, 24 Jan 2014 08:28:59 +0000
+Message-ID: <20140124082859.GJ8586@lee--X1>
+References: <1389886545-31498-1-git-send-email-srinivas.kandagatla@st.com>
+ <1389886651-31990-1-git-send-email-srinivas.kandagatla@st.com>
+ <CACRpkdaBAnpfHBqkgU2emZrYwHGh9KvDvqfnCvaWdU5jYgxStA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1390551547-12406-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <bcousson@baylibre.com>
-Cc: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaBAnpfHBqkgU2emZrYwHGh9KvDvqfnCvaWdU5jYgxStA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Board dts files will need to enable the IP nodes which they are using and
-does not have to care about the not used ones (to disable them).
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- arch/arm/boot/dts/omap5.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+> > +/*
+> > + * As edge triggers are not supported at hardware level, it is sup=
+ported by
+> > + * software by exploiting the level trigger support in hardware.
+>=20
+> (...)
+>=20
+> All this is quite hard to understand. Maybe it's just because
+> it's hard overall. Edge triggers are not supported by hardware
+> so we use the hardware edge trigger support?
+>=20
+> That is a bit oxymoronic...
 
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index fc3fad563861..84cee44f1fad 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -467,6 +467,7 @@
- 			dmas = <&sdma 65>,
- 			       <&sdma 66>;
- 			dma-names = "up_link", "dn_link";
-+			status = "disabled";
- 		};
- 
- 		dmic: dmic@4012e000 {
-@@ -478,6 +479,7 @@
- 			ti,hwmods = "dmic";
- 			dmas = <&sdma 67>;
- 			dma-names = "up_link";
-+			status = "disabled";
- 		};
- 
- 		mcbsp1: mcbsp@40122000 {
-@@ -492,6 +494,7 @@
- 			dmas = <&sdma 33>,
- 			       <&sdma 34>;
- 			dma-names = "tx", "rx";
-+			status = "disabled";
- 		};
- 
- 		mcbsp2: mcbsp@40124000 {
-@@ -506,6 +509,7 @@
- 			dmas = <&sdma 17>,
- 			       <&sdma 18>;
- 			dma-names = "tx", "rx";
-+			status = "disabled";
- 		};
- 
- 		mcbsp3: mcbsp@40126000 {
-@@ -520,6 +524,7 @@
- 			dmas = <&sdma 19>,
- 			       <&sdma 20>;
- 			dma-names = "tx", "rx";
-+			status = "disabled";
- 		};
- 
- 		timer1: timer@4ae18000 {
--- 
-1.8.5.3
+That's not what is says. Read it again. :)
 
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
