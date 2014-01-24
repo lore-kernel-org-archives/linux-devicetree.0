@@ -1,57 +1,67 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC] Culling traffic volume on devicetree mailing list
-Date: Fri, 24 Jan 2014 11:06:43 +0000
-Message-ID: <20140124110643.4F3DEC4088D@trevor.secretlab.ca>
-References: <CACxGe6vYMOnyeqdhaAggytxgiLH=ijNOrmuq2FyOUtZCGqfdgQ@mail.gmail. com> <5433179.eNHenyFL08@lenovo>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v5 8/8] ARM: brcmstb: dts: add a reference DTS for
+ Broadcom 7445
+Date: Fri, 24 Jan 2014 11:09:10 +0000
+Message-ID: <20140124110910.GC814@e106331-lin.cambridge.arm.com>
+References: <1390361452-3124-1-git-send-email-marc.ceeeee@gmail.com>
+ <1390361452-3124-9-git-send-email-marc.ceeeee@gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5433179.eNHenyFL08@lenovo>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1390361452-3124-9-git-send-email-marc.ceeeee@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Carino <marc.ceeeee@gmail.com>
+Cc: Christian Daudt <bcm@fixthebug.org>, Arnd Bergmann <arnd@arndb.de>, Florian Fainelli <f.fainelli@gmail.com>, Matt Porter <matt.porter@linaro.org>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 22 Jan 2014 08:05:20 -0800, Florian Fainelli <f.fainelli@gmail.=
-com> wrote:
-> Hi,
->=20
-> Le mardi 21 janvier 2014, 14:40:48 Grant Likely a =C3=A9crit :
-> > Hi everyone,
-> >=20
-> > Today on the devicetree conf call we (Rob, Ian and I) talked about
-> > culling the volume of traffic on the devicetree list so that it wou=
-ld
-> > be more useful to the DTC maintainers and non-Linux users like
-> > freebsd. We'd like to propose creating the following two lists so t=
-hat
-> > those interested don't need to drink from the firehose:
-> >=20
-> > devicetree-compiler: Specifically for discussing dt tooling topics
-> > (parsing, schema validation, data format)
-> >=20
-> > devicetree-spec: For discussing 'core' device tree bindings. ie.
-> > anything that would be a candidate for putting into an ePAPR type
-> > spec. Individual device bindings would continue to be posted to
-> > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, but anything affecting subsystems or
-> > generic patterns should be posted to this new list.
-> >=20
-> > Thoughts?
->=20
-> I definitively support that idea. Any schedule on when you plan on cr=
-eating=20
-> those two mailing-lists?
+On Wed, Jan 22, 2014 at 03:30:52AM +0000, Marc Carino wrote:
+> Add a sample DTS which will allow bootup of a board populated
+> with the BCM7445 chip.
+> 
+> Signed-off-by: Marc Carino <marc.ceeeee@gmail.com>
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  arch/arm/boot/dts/bcm7445.dts |  111 +++++++++++++++++++++++++++++++++++++++++
+>  1 files changed, 111 insertions(+), 0 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/bcm7445.dts
+> 
+> diff --git a/arch/arm/boot/dts/bcm7445.dts b/arch/arm/boot/dts/bcm7445.dts
+> new file mode 100644
+> index 0000000..ffa3305
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/bcm7445.dts
+> @@ -0,0 +1,111 @@
+> +/dts-v1/;
+> +/include/ "skeleton.dtsi"
+> +
+> +/ {
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +	model = "Broadcom STB (bcm7445)";
+> +	compatible = "brcm,bcm7445", "brcm,brcmstb";
+> +	interrupt-parent = <&gic>;
+> +
+> +	chosen {};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x00 0x00000000 0x00 0x40000000>,
+> +		      <0x00 0x40000000 0x00 0x40000000>,
+> +		      <0x00 0x80000000 0x00 0x40000000>;
+> +	};
 
-Next week.
+As I commented on v3 [1], these are contiguous and can be described with
+a single entry:
 
-g.
+memory {
+	device_type = "memory";
+	reg = <0x0 0x00000000 0x0 0xc0000000>;
+};
 
-> --=20
-> Florian
+Is there any reason to have three entries?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Mark.
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-January/225899.html
