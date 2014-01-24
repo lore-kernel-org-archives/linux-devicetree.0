@@ -1,184 +1,48 @@
-From: Pratyush Anand <pratyush.anand@st.com>
-Subject: Re: [PATCH V2 4/8] SPEAr13xx: Fixup: Move SPEAr1340 SATA platform
- code to system cfg driver
-Date: Fri, 24 Jan 2014 09:59:59 +0530
-Message-ID: <20140124042959.GC2369@pratyush-vbox>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 1/8] SPEAr13xx: Set dt field entry <stmmac,phy-addr>
+ for phy probe
+Date: Fri, 24 Jan 2014 10:32:34 +0530
+Message-ID: <CAOh2x=mQLyMV_0Swf3o2c9bW_DNCLT-fQFc3Qs6yt1+9prabmw@mail.gmail.com>
 References: <cover.1390471111.git.mohit.kumar@st.com>
- <0c4bf78f2a843625f3175cdf259fad653bd2e86d.1390471111.git.mohit.kumar@st.com>
- <201401231322.54914.arnd@arndb.de>
+	<12754927160d11063aad96c011c4807cb0aa1775.1390471111.git.mohit.kumar@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201401231322.54914.arnd@arndb.de>
-Sender: linux-ide-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mohit KUMAR DCG <Mohit.KUMAR@st.com>, Viresh Kumar <viresh.linux@gmail.com>, spear-devel <spear-devel@list.st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tejun Heo <tj@kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <12754927160d11063aad96c011c4807cb0aa1775.1390471111.git.mohit.kumar-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
+Cc: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On Thu, Jan 23, 2014 at 4:02 PM, Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org> wrote:
+> DT field name for the phy address changed since kernel 3.10. Set the
+> snps,phy-addr to 0xffffffff so that the driver probes for the phy.
+>
+> Signed-off-by: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
+> Cc: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
+> Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  arch/arm/boot/dts/spear13xx.dtsi |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/spear13xx.dtsi b/arch/arm/boot/dts/spear13xx.dtsi
+> index 4382547..3518803 100644
+> --- a/arch/arm/boot/dts/spear13xx.dtsi
+> +++ b/arch/arm/boot/dts/spear13xx.dtsi
+> @@ -155,6 +155,7 @@
+>
+>                 gmac0: eth@e2000000 {
+>                         compatible = "st,spear600-gmac";
+> +                       snps,phy-addr = <0xffffffff>;
+>                         reg = <0xe2000000 0x8000>;
+>                         interrupts = <0 33 0x4
+>                                       0 34 0x4>;
 
-Thanks for your valuable comments.
-
-On Thu, Jan 23, 2014 at 08:22:54PM +0800, Arnd Bergmann wrote:
-> On Thursday 23 January 2014, Mohit Kumar wrote:
-> > diff --git a/arch/arm/boot/dts/spear13xx.dtsi b/arch/arm/boot/dts/spear13xx.dtsi
-> > index 3518803..2b4e58e 100644
-> > --- a/arch/arm/boot/dts/spear13xx.dtsi
-> > +++ b/arch/arm/boot/dts/spear13xx.dtsi
-> > @@ -78,6 +78,10 @@
-> >  		status = "disabled";
-> >  	};
-> >  
-> > +	cfg {
-> > +		compatible = "st,spear13xx-cfg";
-> > +	};
-> > +
-> >  	ahb {
-> >  		#address-cells = <1>;
-> >  		#size-cells = <1>;
-> 
-> I only saw some of the patches, and did not get a patch with the binding
-> description for this device. Please forward that patch to me, or add it
-> to the series if you didn't have one.
-
-It was not there.
-Will add a patch for the same in v3.
-
-> 
-> I assume you'd want a phandle pointing to the syscon device in here
-> as well?
-
-Since there is only one syscon device in the whole DT, so do I really
-need to add phandle? Currently I am using
-syscon_regmap_lookup_by_compatible to find  syscon device.
-
-> 
-> Regarding the naming, please do not use 'xx' wildcards in DT compatible
-> strings. Instead, use the exact model name of the first supported
-> version of the hardware (e.g. spear1300 or spear600) that remains
-> compatible. If there are minor variations between the versions,
-> use a list with the most specific version as well as the older ones
-> it's compatible with.
-
-Ok..ll take care.
-
-> 
-> > @@ -221,6 +225,11 @@
-> >  				  0xd8000000 0xd8000000 0x01000000
-> >  				  0xe0000000 0xe0000000 0x10000000>;
-> >  
-> > +			misc: misc@e0700000 {
-> > +				compatible = "st,spear13xx-misc", "syscon";
-> > +				reg = <0xe0700000 0x1000>;
-> > +			};
-> > +
-> 
-> Same here. Also, I would make this 'misc: syscon@e0700000', since 'misc'
-> does not seem like an appropriate device name.
-
-Ok.
-
-> 
-> 
-> > +/* SPEAr1340 Registers */
-> > +/* Power Management Registers */
-> > +#define SPEAR1340_PCM_CFG			0x100
-> > +	#define SPEAR1340_PCM_CFG_SATA_POWER_EN	0x800
-> > +#define SPEAR1340_PCM_WKUP_CFG			0x104
-> > +#define SPEAR1340_SWITCH_CTR			0x108
-> > +
-> > +#define SPEAR1340_PERIP1_SW_RST			0x318
-> > +	#define SPEAR1340_PERIP1_SW_RST_SATA	0x1000
-> > +#define SPEAR1340_PERIP2_SW_RST			0x31C
-> > +#define SPEAR1340_PERIP3_SW_RST			0x320
-> > +
-> > +/* PCIE - SATA configuration registers */
-> > +#define SPEAR1340_PCIE_SATA_CFG			0x424
-> > +	/* PCIE CFG MASks */
-> > +	#define SPEAR1340_PCIE_CFG_DEVICE_PRESENT	(1 << 11)
-> > +	#define SPEAR1340_PCIE_CFG_POWERUP_RESET	(1 << 10)
-> > +	#define SPEAR1340_PCIE_CFG_CORE_CLK_EN		(1 << 9)
-> > +	#define SPEAR1340_PCIE_CFG_AUX_CLK_EN		(1 << 8)
-> > +	#define SPEAR1340_SATA_CFG_TX_CLK_EN		(1 << 4)
-> > +	#define SPEAR1340_SATA_CFG_RX_CLK_EN		(1 << 3)
-> > +	#define SPEAR1340_SATA_CFG_POWERUP_RESET	(1 << 2)
-> > +	#define SPEAR1340_SATA_CFG_PM_CLK_EN		(1 << 1)
-> > +	#define SPEAR1340_PCIE_SATA_SEL_PCIE		(0)
-> > +	#define SPEAR1340_PCIE_SATA_SEL_SATA		(1)
-> > +	#define SPEAR1340_PCIE_SATA_CFG_MASK		0xF1F
-> > +	#define SPEAR1340_PCIE_CFG_VAL	(SPEAR1340_PCIE_SATA_SEL_PCIE | \
-> > +			SPEAR1340_PCIE_CFG_AUX_CLK_EN | \
-> > +			SPEAR1340_PCIE_CFG_CORE_CLK_EN | \
-> > +			SPEAR1340_PCIE_CFG_POWERUP_RESET | \
-> > +			SPEAR1340_PCIE_CFG_DEVICE_PRESENT)
-> > +	#define SPEAR1340_SATA_CFG_VAL	(SPEAR1340_PCIE_SATA_SEL_SATA | \
-> > +			SPEAR1340_SATA_CFG_PM_CLK_EN | \
-> > +			SPEAR1340_SATA_CFG_POWERUP_RESET | \
-> > +			SPEAR1340_SATA_CFG_RX_CLK_EN | \
-> > +			SPEAR1340_SATA_CFG_TX_CLK_EN)
-> > +
-> > +#define SPEAR1340_PCIE_MIPHY_CFG		0x428
-> > +	#define SPEAR1340_MIPHY_OSC_BYPASS_EXT		(1 << 31)
-> > +	#define SPEAR1340_MIPHY_CLK_REF_DIV2		(1 << 27)
-> > +	#define SPEAR1340_MIPHY_CLK_REF_DIV4		(2 << 27)
-> > +	#define SPEAR1340_MIPHY_CLK_REF_DIV8		(3 << 27)
-> > +	#define SPEAR1340_MIPHY_PLL_RATIO_TOP(x)	(x << 0)
-> > +	#define SPEAR1340_PCIE_MIPHY_CFG_MASK		0xF80000FF
-> > +	#define SPEAR1340_PCIE_SATA_MIPHY_CFG_SATA \
-> > +			(SPEAR1340_MIPHY_OSC_BYPASS_EXT | \
-> > +			SPEAR1340_MIPHY_CLK_REF_DIV2 | \
-> > +			SPEAR1340_MIPHY_PLL_RATIO_TOP(60))
-> > +	#define SPEAR1340_PCIE_SATA_MIPHY_CFG_SATA_25M_CRYSTAL_CLK \
-> > +			(SPEAR1340_MIPHY_PLL_RATIO_TOP(120))
-> > +	#define SPEAR1340_PCIE_SATA_MIPHY_CFG_PCIE \
-> > +			(SPEAR1340_MIPHY_OSC_BYPASS_EXT | \
-> > +			SPEAR1340_MIPHY_PLL_RATIO_TOP(25))
-> > +
-> > +struct spear13xx_cfg_priv {
-> > +	struct regmap		*misc;
-> > +};
-> > +
-> > +/* SATA device registration */
-> > +static void spear1340_sata_miphy_init(struct spear13xx_cfg_priv *cfgpriv)
-> > +{
-> > +	regmap_update_bits(cfgpriv->misc, SPEAR1340_PCIE_SATA_CFG,
-> > +			SPEAR1340_PCIE_SATA_CFG_MASK, SPEAR1340_SATA_CFG_VAL);
-> > +	regmap_update_bits(cfgpriv->misc, SPEAR1340_PCIE_MIPHY_CFG,
-> > +			SPEAR1340_PCIE_MIPHY_CFG_MASK,
-> > +			SPEAR1340_PCIE_SATA_MIPHY_CFG_SATA_25M_CRYSTAL_CLK);
-> > +	/* Switch on sata power domain */
-> > +	regmap_update_bits(cfgpriv->misc, SPEAR1340_PCM_CFG,
-> > +			SPEAR1340_PCM_CFG_SATA_POWER_EN,
-> > +			SPEAR1340_PCM_CFG_SATA_POWER_EN);
-> > +	msleep(20);
-> > +	/* Disable PCIE SATA Controller reset */
-> > +	regmap_update_bits(cfgpriv->misc, SPEAR1340_PERIP1_SW_RST,
-> > +			SPEAR1340_PERIP1_SW_RST_SATA, 0);
-> > +	msleep(20);
-> > +}
-> 
-> Looking at the actual code now, this very much looks like it ought to
-> be a "phy" driver and get put in drivers/phy/.
-
-Actually these registers are part of common system configurations
-register space (called as misc space) for SPEAr SOC. So we opted for
-syscon framework.
-
-PHY registers space starts from 0xEB800000, which can be
-programmed for various phy specific functions like power management,
-tx/rx settings, comparator settings etc. In most of the cases phy
-works with default settings, however there are few exceptions for
-which we will be adding a phy driver for further improvement of SPEAr
-drivers.
-
-Regards
-Pratyush
-> 
-> Please see the recent mailing list discussions about making the ahci
-> driver more generic. Once you put this code in a proper phy driver,
-> you should be able to avoid a lot of your workaround and just use
-> the regular ahci-platform driver without any hand-crafted platform
-> data callbacks.
-> 
-> 	Arnd
+Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
