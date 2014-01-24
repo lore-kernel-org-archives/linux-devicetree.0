@@ -1,64 +1,48 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 1/1] of/irq: create interrupts-extended-2 property
-Date: Fri, 24 Jan 2014 17:39:55 +0000
-Message-ID: <20140124173955.135E1C40A02@trevor.secretlab.ca>
-References: <1389786445-10598-1-git-send-email-plagnioj@jcrosoft.com> < 20140115161224.GH25824@e106331-lin.cambridge.arm.com> <20140120224742. EC905C40B12@trevor.secretlab.ca> < CAOesGMjrLs9eEPurjUpOfgyexnc__FJkRYmAR84_f7C15HH07Q@mail.gmail.com>
+From: Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH V4 5/5] Documentation: power: reset: Add documentation
+ for generic SYSCON reboot driver
+Date: Fri, 24 Jan 2014 12:55:13 -0500
+Message-ID: <52E2A901.4050707@codeaurora.org>
+References: <1390504801-24483-1-git-send-email-fkan@apm.com> <1390504801-24483-6-git-send-email-fkan@apm.com> <20140124113920.GF814@e106331-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMjrLs9eEPurjUpOfgyexnc__FJkRYmAR84_f7C15HH07Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20140124113920.GF814-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 20 Jan 2014 17:03:23 -0800, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
-> On Mon, Jan 20, 2014 at 2:47 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > On Wed, 15 Jan 2014 16:12:24 +0000, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> >> >
-> >> > Another, more invasive option would be extend the dts syntax and teach
-> >> > dtc to handle property appending. Then the soc dts could stay as it is,
-> >> > and the board dts could have something like:
-> >> >
-> >> >     /append-property/ interrupts = <&intc1 6 1>;
-> >> >     /append-property/ interrupt-names = "board-specific-irq";
-> >> >
-> >> > Both these options solve the issue at the source, are general to other
-> >> > properties, and allow more than one level of hierarchy (the proposed
-> >> > interrupts-extended-2 only allows one level).
-> >>
-> >> I've just had a go at implementing the append-property mechanism above
-> >> in dtc, and it was far easier than I expected (patch below).
-> >>
-> >> Does anyone have any issues with the /append-property/ idea?
-> >
-> > I think that is reasonable.
+On 01/24/2014 06:39 AM, Mark Rutland wrote:
+> On Thu, Jan 23, 2014 at 07:20:01PM +0000, Feng Kan wrote:
+>> Add documentation for generic SYSCON reboot driver.
+>>
+>> Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+>> ---
+>>  .../bindings/power/reset/syscon-reboot.txt         |   16 ++++++++++++++++
+>>  1 files changed, 16 insertions(+), 0 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+>> new file mode 100644
+>> index 0000000..e9eb1fe
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+>> @@ -0,0 +1,16 @@
+>> +Generic SYSCON mapped register reset driver
 > 
-> 
-> The main problem with this (same for clocks) is if you need to append
-> something with a name when the original didn't have any.
-> 
-> Reordering entries might not work for interrupts, since the bindings
-> might have requirements on order.
+> Bindings should describe hardware, not drivers.
 
-Hmmm, yes. to handle that case would need a higher level construct that
-keeps the name and interrupt value together. Maybe something like this?
+How is this different than what's done for PSCI?
 
-device {
-	add-interrupt(27);
-	add-interrupt(29, 5, controller=&intc1);
-	add-interrupt(2, 4, name="error");
-};
+Thanks,
+Christopher
 
-I'm using python-like syntax here where controller and name are optional
-arguments.
-
-We could get DTC to generate the appropriate interrupt-parent,
-interrupts, interrupts-extended and interrupt-names properties as
-needed. Of course the shared context would be lost when the tree is
-compiled, but it would be useful for building up parsing data. It would
-also work for gpio, clocks and similar bindings. Kind of like an
-intelligent macro.
-
-g.
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by the Linux Foundation.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
