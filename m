@@ -1,103 +1,134 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] ARM-i.MX6Q-dts : Added USB_OTG Support
-Date: Fri, 24 Jan 2014 23:04:52 +0100
-Message-ID: <20140124220452.GL16215@pengutronix.de>
-References: <1390555724-9779-1-git-send-email-ashutosh.s@phytec.in>
+From: Marc C <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V4 5/5] Documentation: power: reset: Add documentation
+ for generic SYSCON reboot driver
+Date: Fri, 24 Jan 2014 15:16:32 -0800
+Message-ID: <52E2F450.2070100@gmail.com>
+References: <1390504801-24483-1-git-send-email-fkan@apm.com> <1390504801-24483-6-git-send-email-fkan@apm.com> <20140124113920.GF814@e106331-lin.cambridge.arm.com> <CAL85gmDJeUY0zUjkmpMo7g_hLj34RsgU1VEF80wouLzOFGAdqQ@mail.gmail.com> <20140124182355.GF4758@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1390555724-9779-1-git-send-email-ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ashutosh singh <ashuleapyear-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ashutosh singh <ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140124182355.GF4758-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Please add Phytec phyFLEX-i.MX6 to the subject. I assumed some SoC
-specific changes here.
+Hi Mark,
 
-Sascha
+>> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+>> new file mode 100644
+>> index 0000000..e9eb1fe
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+>> @@ -0,0 +1,16 @@
+>> +Generic SYSCON mapped register reset driver
+>
+> Bindings should describe hardware, not drivers
 
-On Fri, Jan 24, 2014 at 02:58:44PM +0530, Ashutosh singh wrote:
-> This patch adds support for USB_OTG on Phytec phyFLEX-i.MX6 Quad module.
+In a perfect world, the hardware designers would place _all_ of the registers needed to
+support rebooting in a contiguous section of the memory map. However, this isn't the case
+on some platforms, especially on ARM-based SoCs.
+
+While I completely agree with you that the bindings describe hardware, I don't see how
+Feng's work is contrary to that. Feng is working on logically-grouping an otherwise
+"random" set of registers into a logical grouping. In this case, Feng is uniting a group
+of registers and calling them the "reboot" register block.
+
+> What's wrong with having a system clock unit binding, that the kernel
+> can decompose as appropriate?
+
+>From what I understand, the arm-soc maintainers want to reduce (and perhaps even
+eliminate) these board-specific constructs, and try to utilize common driver-code that
+resides in the "driver" folder. I can vouch for the syscon/regmap framework as something
+which would enable the effort.
+
+Thanks,
+Marc C
+
+On 01/24/2014 10:23 AM, Mark Rutland wrote:
+> On Fri, Jan 24, 2014 at 06:03:10PM +0000, Feng Kan wrote:
+>> On Fri, Jan 24, 2014 at 3:39 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>>> On Thu, Jan 23, 2014 at 07:20:01PM +0000, Feng Kan wrote:
+>>>> Add documentation for generic SYSCON reboot driver.
+>>>>
+>>>> Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+>>>> ---
+>>>>  .../bindings/power/reset/syscon-reboot.txt         |   16 ++++++++++++++++
+>>>>  1 files changed, 16 insertions(+), 0 deletions(-)
+>>>>  create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+>>>> new file mode 100644
+>>>> index 0000000..e9eb1fe
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+>>>> @@ -0,0 +1,16 @@
+>>>> +Generic SYSCON mapped register reset driver
+>>>
+>>> Bindings should describe hardware, not drivers.
+>>>
+>>> What precisely does this binding describe?
+>>>
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible: should contain "syscon-reboot"
+>>>> +- regmap: this is phandle to the register map node
+>>>> +- offset: offset in the register map for the reboot register
+>>>> +- mask: the reset value written to the reboot register
+>>>> +
+>>>> +Examples:
+>>>> +
+>>>> +reboot {
+>>>> +   compatible = "syscon-reboot";
+>>>> +   regmap = <&regmapnode>;
+>>>> +   offset = <0x0>;
+>>>> +   mask = <0x1>;
+>>>> +};
+>>>
+>>> Access size? Endianness?
+>> FKAN: are you asking for documentation? I don't see alot of example of
+>> support for these.
 > 
-> Signed-off-by: Ashutosh singh <ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx6q-phytec-pbab01.dts  |    4 ++++
->  arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi |   22 ++++++++++++++++++++++
->  2 files changed, 26 insertions(+)
+> If I used the enippet in the example, what endianness and access size
+> should I expect an OS to perform? That should be documented.
 > 
-> diff --git a/arch/arm/boot/dts/imx6q-phytec-pbab01.dts b/arch/arm/boot/dts/imx6q-phytec-pbab01.dts
-> index 7d37ec6..39e69bd 100644
-> --- a/arch/arm/boot/dts/imx6q-phytec-pbab01.dts
-> +++ b/arch/arm/boot/dts/imx6q-phytec-pbab01.dts
-> @@ -32,3 +32,7 @@
->  &usdhc3 {
->  	status = "okay";
->  };
-> +
-> +&usbotg {
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi b/arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi
-> index 1a3b50d..dcb1d59 100644
-> --- a/arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi
-> +++ b/arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi
-> @@ -18,6 +18,19 @@
->  	memory {
->  		reg = <0x10000000 0x80000000>;
->  	};
-> +
-> +	regulators {
-> +		compatible = "simple-bus";
-> +
-> +		reg_usb_otg_vbus: usb_otg_vbus {
-> +			compatible = "regulator-fixed";
-> +			regulator-name = "usb_otg_vbus";
-> +			regulator-min-microvolt = <5000000>;
-> +			regulator-max-microvolt = <5000000>;
-> +			gpio = <&gpio4 15 0>;
-> +			enable-active-low;
-> +		};
-> +	};
->  };
->  
->  &ecspi3 {
-> @@ -134,6 +147,7 @@
->  				MX6QDL_PAD_EIM_D23__GPIO3_IO23 0x80000000
->  				MX6QDL_PAD_DISP0_DAT3__GPIO4_IO24 0x80000000 /* SPI NOR chipselect */
->  				MX6QDL_PAD_DI0_PIN15__GPIO4_IO17  0x80000000 /* PMIC interrupt */
-> +				MX6QDL_PAD_KEY_ROW4__GPIO4_IO15   0x80000000 /* USB_OTG_PWR_EN */
->  			>;
->  		};
->  	};
-> @@ -178,3 +192,11 @@
->          wp-gpios = <&gpio1 29 0>;
->          status = "disabled";
->  };
-> +
-> +&usbotg {
-> +	vbus-supply = <&reg_usb_otg_vbus>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_usbotg_1>;
-> +	disable-over-current;
-> +	status = "disabled";
-> +};
-> -- 
-> 1.7.9.5
+> If this doesn't match the general case, we can add properties later to
+> adjust the access size and/or endianness. We just need to document what
+> the binding actually describes currently, or it's not possible to
+> implement anything based off of the binding documentation.
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I should be able to read a binding document and write a dts. I shouldn't
+> have to read the code to figure out what the binding describes.
+> 
+>>
+>>>
+>>> Why can we not have a binding for the register bank this exists in, and
+>>> have that pass on the appropriate details to a syscon-reboot driver?
+>>
+>> FKAN: Thats a good idea. But the hardware in this case (SCU) system
+>> clock unit has a bunch of registers used for different functions. If syscon is
+>> used alot in this case and we pile more attribute into it. It would get kinda
+>> messy after a while.
+> 
+> Huh?
+> 
+> What's wrong with having a system clock unit binding, that the kernel
+> can decompose as appropriate?
+> 
+> I don't get your syscon argument.
+> 
+> Thanks,
+> Mark.
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > 
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
