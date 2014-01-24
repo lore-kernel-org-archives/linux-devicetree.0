@@ -1,37 +1,28 @@
-From: Mark Rutland <mark.rutland@arm.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 Subject: Re: [PATCH V4 5/5] Documentation: power: reset: Add documentation
  for generic SYSCON reboot driver
-Date: Fri, 24 Jan 2014 18:19:48 +0000
-Message-ID: <20140124181948.GE4758@e106331-lin.cambridge.arm.com>
+Date: Fri, 24 Jan 2014 18:23:55 +0000
+Message-ID: <20140124182355.GF4758@e106331-lin.cambridge.arm.com>
 References: <1390504801-24483-1-git-send-email-fkan@apm.com>
  <1390504801-24483-6-git-send-email-fkan@apm.com>
  <20140124113920.GF814@e106331-lin.cambridge.arm.com>
- <52E2A901.4050707@codeaurora.org>
+ <CAL85gmDJeUY0zUjkmpMo7g_hLj34RsgU1VEF80wouLzOFGAdqQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <52E2A901.4050707@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Christopher Covington <cov@codeaurora.org>
-Cc: Feng Kan <fkan@apm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <CAL85gmDJeUY0zUjkmpMo7g_hLj34RsgU1VEF80wouLzOFGAdqQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 24, 2014 at 05:55:13PM +0000, Christopher Covington wrote:
-> On 01/24/2014 06:39 AM, Mark Rutland wrote:
+On Fri, Jan 24, 2014 at 06:03:10PM +0000, Feng Kan wrote:
+> On Fri, Jan 24, 2014 at 3:39 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
 > > On Thu, Jan 23, 2014 at 07:20:01PM +0000, Feng Kan wrote:
 > >> Add documentation for generic SYSCON reboot driver.
 > >>
-> >> Signed-off-by: Feng Kan <fkan@apm.com>
+> >> Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
 > >> ---
 > >>  .../bindings/power/reset/syscon-reboot.txt         |   16 ++++++++++++++++
 > >>  1 files changed, 16 insertions(+), 0 deletions(-)
@@ -44,19 +35,62 @@ On Fri, Jan 24, 2014 at 05:55:13PM +0000, Christopher Covington wrote:
 > >> +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
 > >> @@ -0,0 +1,16 @@
 > >> +Generic SYSCON mapped register reset driver
-> > 
+> >
 > > Bindings should describe hardware, not drivers.
+> >
+> > What precisely does this binding describe?
+> >
+> >> +
+> >> +Required properties:
+> >> +- compatible: should contain "syscon-reboot"
+> >> +- regmap: this is phandle to the register map node
+> >> +- offset: offset in the register map for the reboot register
+> >> +- mask: the reset value written to the reboot register
+> >> +
+> >> +Examples:
+> >> +
+> >> +reboot {
+> >> +   compatible = "syscon-reboot";
+> >> +   regmap = <&regmapnode>;
+> >> +   offset = <0x0>;
+> >> +   mask = <0x1>;
+> >> +};
+> >
+> > Access size? Endianness?
+> FKAN: are you asking for documentation? I don't see alot of example of
+> support for these.
+
+If I used the enippet in the example, what endianness and access size
+should I expect an OS to perform? That should be documented.
+
+If this doesn't match the general case, we can add properties later to
+adjust the access size and/or endianness. We just need to document what
+the binding actually describes currently, or it's not possible to
+implement anything based off of the binding documentation.
+
+I should be able to read a binding document and write a dts. I shouldn't
+have to read the code to figure out what the binding describes.
+
 > 
-> How is this different than what's done for PSCI?
+> >
+> > Why can we not have a binding for the register bank this exists in, and
+> > have that pass on the appropriate details to a syscon-reboot driver?
+> 
+> FKAN: Thats a good idea. But the hardware in this case (SCU) system
+> clock unit has a bunch of registers used for different functions. If syscon is
+> used alot in this case and we pile more attribute into it. It would get kinda
+> messy after a while.
 
-A PSCI node in the DT defines a standard interface to a firmware which
-is external to Linux. The PSCI binding does not contain the word
-"driver", but describes the interface that the binding describes, with
-reference to approriate documentation.
+Huh?
 
-All I'm arguing for here is a description of the class of hardware this
-is applicable to, rather than "this is what this particular driver
-uses".
+What's wrong with having a system clock unit binding, that the kernel
+can decompose as appropriate?
+
+I don't get your syscon argument.
 
 Thanks,
 Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
