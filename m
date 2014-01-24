@@ -1,81 +1,76 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: Re: [PATCH v3 1/2] i2c: qup: Add device tree bindings information
-Date: Fri, 24 Jan 2014 01:18:41 -0600
-Message-ID: <20140124071841.GA6113@qualcomm.com>
-References: <1389999819-10648-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1389999819-10648-2-git-send-email-bjorn.andersson@sonymobile.com>
- <CAL_JsqJBEu8iLzE8-dXniZFytr6cQsprBYiYnJeXS2-80iy1Mw@mail.gmail.com>
- <20140121024007.GE13785@codeaurora.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: DT include files
+Date: Fri, 24 Jan 2014 09:02:09 +0100
+Message-ID: <2907925.DyxHkYtGr7@phil>
+References: <20140103023211.GA25079@S2101-09.ap.freescale.net> <201401122121.20084.arnd@arndb.de> <20140113021912.GB23525@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20140121024007.GE13785@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Matt Porter <matt.porter@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Grant Likely <grant.likely@linaro.org>, James Ralston <james.d.ralston@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Jean Delvare <khali@linux-fr.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Bill Brown <bill.e.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vg
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140113021912.GB23525-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 20, 2014 at 06:40:07PM -0800, Stephen Boyd wrote:
-> On 01/20, Rob Herring wrote:
-> > On Fri, Jan 17, 2014 at 5:03 PM, Bjorn Andersson
-> > <bjorn.andersson@sonymobile.com> wrote:
-> > 
-> > >  .../devicetree/bindings/i2c/qcom,i2c-qup.txt       | 41 ++++++++++++++++++++++
-> > >  1 file changed, 41 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt b/Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt
-> > > new file mode 100644
-> > > index 0000000..a99711b
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt
-> > > @@ -0,0 +1,41 @@
-> > > +Qualcomm Universal Peripheral (QUP) I2C controller
-> > > +
-> > > +Required properties:
-> > > + - compatible: Should be "qcom,i2c-qup".
-> > 
-> > Seems a bit generic. All versions of the IP are exactly the same?
-> > "qcom,<chip>-i2c-qup" would be better.
-> > 
+Hi Shawn,
+
+did this topic get any final resolution - especially in terms of the pingrp.h 
+header?
+
+As I'm currently preparing two board files (imx50 and imx6sl) this discussion 
+made me unsure if using the pin-group definitions is still the preferred style.
+
+
+Thanks
+Heiko
+
+On Monday 13 January 2014 10:19:14 Shawn Guo wrote:
+> On Sun, Jan 12, 2014 at 09:21:19PM +0100, Arnd Bergmann wrote:
+> > I was under the impression that the generic pinctrl binding was designed
+> > in a way to let you assign labels to each possible (reasonable)
+> > configuration so you didn't have get to this level of detail at the
+> > driver.
 > 
-> There are different versions of the IP in different SoCs. The
-> versions for platforms supported upstream are:
+> The generic part of pinctrl binding only covers the procedure how a
+> client device get its pinctrl state configuration from a pin controller
+> node.  That's what we defined in bindings/pinctrl/pinctrl-bindings.txt
+> and implemented in pinctrl core.  But the details of how a pinctrl state
+> configuration should be interpreted for a particular pin controller is
+> defined by individual pin controller binding like fsl,imx-pinctrl.txt,
+> and implemented in the pin controller driver like
+> drivers/pinctrl/pinctrl-imx.c.
 > 
-> 	1.1.1 (MSM8660, MSM8960)
-> 	2.2.1 (MSM8974v2)
+> > I'm also surprised that you have to know multiple constants
+> > (mux register, input register, config register offsets) to select a
+> > particular pin. I would have expected that you could have one constant
+> > from which the driver is able to compute the other ones.
 > 
-> so how about one of "qcom,i2c-qup-v1.1.1" or
-> "qcom,i2c-qup-v2.2.1" should be specified as more specific
-> compatible strings in addition to "qcom,i2c-qup"?
+> That's what we do before.  We define a constant in the binding and have
+> the driver to maintain these data and look up the data using the
+> constant.  See commit below for imx6q example.
 > 
+>   d8fe357 pinctrl: pinctrl-imx: add imx6q pinctrl driver
+> 
+> The biggest problem with that approach is we have huge data to maintain
+> in the driver because of the complexity and flexibility of IMX pin
+> controller design.  And these data can not be init data.  Check that big
+> array of struct imx_pin_reg in commit above for what I'm talking about.
+> So when we build a v7 kernel image for IMX, we will have such big array
+> for each of these SoCs, imx50, imx51, imx53, imx6sl, imx6dl, imx6q, and
+> more to come.
+> 
+> That's why we went through the pain of breaking DT compatibility to move
+> all these data into device tree one year ago with the commit below.
+> 
+>   e164153 pinctrl: imx: move hard-coding data into device tree
+> 
+> Now kernel gets released from the floating and we do not even need to
+> touch kernel to add these data when new SoC support is added.
+> 
+> Shawn
 
-This definitely needs two compatible tags.  The v1.1.1 supports the FIFO, block,
-and data mover modes.  The v2.2.1 supports FIFO, block, and BAM DMA.
-
-The BAM patches are currently in review and ideally BAM support can be added to
-the I2C.  We'll need a way to differentiate so BAM can be used.
-
-Otherwise, the register interfaces are interchangeable except for BAM specific
-fields in the registers.
-
-
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
--- 
-sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
