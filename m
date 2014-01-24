@@ -1,67 +1,92 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v5 4/4] [media] exynos-scaler: Add DT bindings for SCALER
- driver
-Date: Fri, 24 Jan 2014 17:09:53 +0100
-Message-ID: <52E29051.3070906@samsung.com>
-References: <1389238094-19386-1-git-send-email-shaik.ameer@samsung.com>
- <1389238094-19386-5-git-send-email-shaik.ameer@samsung.com>
+From: Mark Salter <msalter@redhat.com>
+Subject: Re: [PATCH 2/5] arm64: dts: APM X-Gene SoC Ethernet device tree nodes
+Date: Fri, 24 Jan 2014 12:01:46 -0500
+Message-ID: <1390582906.12454.26.camel@deneb.redhat.com>
+References: <1387597376-29303-1-git-send-email-isubramanian@apm.com>
+ <1387597376-29303-3-git-send-email-isubramanian@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1389238094-19386-5-git-send-email-shaik.ameer@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Shaik Ameer Basha <shaik.ameer@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: s.nawrocki@samsung.com, posciak@google.com, hverkuil@xs4all.nl, m.chehab@samsung.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1387597376-29303-3-git-send-email-isubramanian@apm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Iyappan Subramanian <isubramanian@apm.com>
+Cc: devicetree@vger.kernel.org, jcm@redhat.com, gregkh@linuxfoundation.org, patches@apm.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Keyur Chudgar <kchudgar@apm.com>, davem@davemloft.net, linux-arm-kernel@lists.infradead.org, Ravi Patel <rapatel@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shaik,
-
-On 09.01.2014 04:28, Shaik Ameer Basha wrote:
-> This patch adds the DT binding documentation for the
-> Exynos5420/5410 based SCALER device driver.
->
-> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
-> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+On Fri, 2013-12-20 at 19:42 -0800, Iyappan Subramanian wrote:
+> Device tree files for APM X-Gene SoC Ethernet.
+> 
+> Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
+> Signed-off-by: Ravi Patel <rapatel@apm.com>
+> Signed-off-by: Keyur Chudgar <kchudgar@apm.com>
 > ---
->   .../devicetree/bindings/media/exynos5-scaler.txt   |   22 ++++++++++++++++++++
->   1 file changed, 22 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/media/exynos5-scaler.txt
->
-> diff --git a/Documentation/devicetree/bindings/media/exynos5-scaler.txt b/Documentation/devicetree/bindings/media/exynos5-scaler.txt
-> new file mode 100644
-> index 0000000..9328e7d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/exynos5-scaler.txt
-> @@ -0,0 +1,22 @@
-> +* Samsung Exynos5 SCALER device
+>  arch/arm64/boot/dts/apm-mustang.dts |    8 ++++++++
+>  arch/arm64/boot/dts/apm-storm.dtsi  |   19 +++++++++++++++++++
+>  2 files changed, 27 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/apm-mustang.dts b/arch/arm64/boot/dts/apm-mustang.dts
+> index 1247ca1..ccb2771 100644
+> --- a/arch/arm64/boot/dts/apm-mustang.dts
+> +++ b/arch/arm64/boot/dts/apm-mustang.dts
+> @@ -17,6 +17,10 @@
+>  	model = "APM X-Gene Mustang board";
+>  	compatible = "apm,mustang", "apm,xgene-storm";
+>  
+> +        aliases {
+> +                ethernet0 = &menet;
+> +        };
 > +
-> +SCALER is used for scaling, blending, color fill and color space
-> +conversion on EXYNOS[5420/5410] SoCs.
+>  	chosen { };
+>  
+>  	memory {
+> @@ -24,3 +28,7 @@
+>  		reg = < 0x1 0x00000000 0x0 0x80000000 >; /* Updated by bootloader */
+>  	};
+>  };
 > +
-> +Required properties:
-> +- compatible: should be "samsung,exynos5420-scaler" or
-> +			"samsung,exynos5410-scaler"
-> +- reg: should contain SCALER physical address location and length
-> +- interrupts: should contain SCALER interrupt number
+> +&menet {
+> +        status = "ok";
+> +};
+> diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
+> index f64f946..9c7b8cd 100644
+> --- a/arch/arm64/boot/dts/apm-storm.dtsi
+> +++ b/arch/arm64/boot/dts/apm-storm.dtsi
+> @@ -204,5 +204,24 @@
+>  			#clock-cells = <1>;
+>  			clocks = <&qmlclk 0>;
+>  		};
+> +
+> +		menet: ethernet@17020000 {
+> +			compatible = "apm,xgene-enet";
+> +			status = "disabled";
+> +			reg = <0x0 0x17020000 0x0 0x30>,
+> +			      <0x0 0x17020000 0x0 0x10000>,
+> +			      <0x0 0x17020000 0x0 0x20>;
+> +			slave-name = "RGMII";
+> +			interrupts = <0x0 0x38 0x4>,
+> +				     <0x0 0x39 0x4>,
+> +				     <0x0 0x3a 0x4>;
+> +			#clock-cells = <1>;
+> +			clocks = <&eth8clk 0>;
+> +			local-mac-address = <0x0 0x11 0x3a 0x8a 0x5a 0x78>;
 
-s/number/specifier/
+Shouldn't this be a byte string?:
 
-> +- clocks: should contain the SCALER clock specifier, from the
-> +			common clock bindings
+			local-mac-address = [ 00 11 3a 8a 5a 78 ];
 
-s/specifier/phandle and specifier pair for each clock listed in 
-clock-names property/
-
-s/from/according to/
-
-> +- clock-names: should be "scaler"
-
-should contain exactly one entry:
-  - "scaler" - IP bus clock.
-
-Also this patch should be first in the series to let the driver added in 
-further patches use already present bindings.
-
-Best regards,
-Tomasz
+> +			max-frame-size = <0x233a>;
+> +			devid = <8>;
+> +			phyid = <3>;
+> +			phy-mode = "rgmii";
+> +		};
+>  	};
+>  };
