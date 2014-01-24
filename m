@@ -1,33 +1,65 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 1/3] mmc: add support for power-on sequencing through DT
-Date: Fri, 24 Jan 2014 15:35:23 -0200
-Message-ID: <CAOMZO5DdTP0gimwdsBUZK3wXrnUd2FN3w-FszLQkvCwM8gvPpg@mail.gmail.com>
-References: <1390190215-22700-1-git-send-email-olof@lixom.net>
-	<1390190215-22700-2-git-send-email-olof@lixom.net>
-	<20140120164859.GF15937@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20140120164859.GF15937@n2100.arm.linux.org.uk>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>, jsarha@ti.com
-Cc: Olof Johansson <olof@lixom.net>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, ijc+devicetree@hellion.org.ok, Kumar Gala <galak@codeaurora.org>, chris@printf.net
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 1/1] of/irq: create interrupts-extended-2 property
+Date: Fri, 24 Jan 2014 17:39:55 +0000
+Message-ID: <20140124173955.135E1C40A02@trevor.secretlab.ca>
+References: <1389786445-10598-1-git-send-email-plagnioj@jcrosoft.com> < 20140115161224.GH25824@e106331-lin.cambridge.arm.com> <20140120224742. EC905C40B12@trevor.secretlab.ca> < CAOesGMjrLs9eEPurjUpOfgyexnc__FJkRYmAR84_f7C15HH07Q@mail.gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMjrLs9eEPurjUpOfgyexnc__FJkRYmAR84_f7C15HH07Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 20, 2014 at 2:48 PM, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
+On Mon, 20 Jan 2014 17:03:23 -0800, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+> On Mon, Jan 20, 2014 at 2:47 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > On Wed, 15 Jan 2014 16:12:24 +0000, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> >> >
+> >> > Another, more invasive option would be extend the dts syntax and teach
+> >> > dtc to handle property appending. Then the soc dts could stay as it is,
+> >> > and the board dts could have something like:
+> >> >
+> >> >     /append-property/ interrupts = <&intc1 6 1>;
+> >> >     /append-property/ interrupt-names = "board-specific-irq";
+> >> >
+> >> > Both these options solve the issue at the source, are general to other
+> >> > properties, and allow more than one level of hierarchy (the proposed
+> >> > interrupts-extended-2 only allows one level).
+> >>
+> >> I've just had a go at implementing the append-property mechanism above
+> >> in dtc, and it was far easier than I expected (patch below).
+> >>
+> >> Does anyone have any issues with the /append-property/ idea?
+> >
+> > I think that is reasonable.
+> 
+> 
+> The main problem with this (same for clocks) is if you need to append
+> something with a name when the original didn't have any.
+> 
+> Reordering entries might not work for interrupts, since the bindings
+> might have requirements on order.
 
-> So far so good.  Now, what about this external oscillator which has its
-> own separate power control.  My immediate thought is that this can be
-> specified via card_ext_clock - I would simply need to declare a fixed-rate
-> clock with either a regulator (power switch) controlled via a gpio (which
-> would probably be closer to the hardware) or a gpio as an enable... ah,
-> that requires me to write a common clock driver for that bit since this
-> is currently not modelled by CCF...
+Hmmm, yes. to handle that case would need a higher level construct that
+keeps the name and interrupt value together. Maybe something like this?
 
-Jiry Sarha posted a gpio controlled clock proposal:
-http://www.spinics.net/lists/devicetree/msg16651.html
+device {
+	add-interrupt(27);
+	add-interrupt(29, 5, controller=&intc1);
+	add-interrupt(2, 4, name="error");
+};
 
-Regards,
+I'm using python-like syntax here where controller and name are optional
+arguments.
 
-Fabio Estevam
+We could get DTC to generate the appropriate interrupt-parent,
+interrupts, interrupts-extended and interrupt-names properties as
+needed. Of course the shared context would be lost when the tree is
+compiled, but it would be useful for building up parsing data. It would
+also work for gpio, clocks and similar bindings. Kind of like an
+intelligent macro.
+
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
