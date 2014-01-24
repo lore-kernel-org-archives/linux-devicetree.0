@@ -1,57 +1,68 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v4 13/14] spi: rspi: Add DT support
-Date: Fri, 24 Jan 2014 14:05:46 +0100
-Message-ID: <CAMuHMdWFzJ-PfFQz-mgbtYdV9d_8=mr+F51=1Jhx0K-HrGrwFg@mail.gmail.com>
-References: <1390553044-11860-1-git-send-email-geert@linux-m68k.org>
-	<1390553044-11860-14-git-send-email-geert@linux-m68k.org>
-	<20140124093349.GK15586@e106331-lin.cambridge.arm.com>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH v2] dma: Add Xilinx AXI Video Direct Memory Access Engine
+ driver support
+Date: Fri, 24 Jan 2014 14:24:27 +0100
+Message-ID: <52E2698B.6070001@metafoo.de>
+References: <1390409565-4200-1-git-send-email-sthokal@xilinx.com> <1390409565-4200-2-git-send-email-sthokal@xilinx.com> <52E0FC22.8060903@metafoo.de> <CA+mB=1L6yvCwA3mKCwz83LQbXiVau110REV64rYrSzUhGE4ucA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140124093349.GK15586-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CA+mB=1L6yvCwA3mKCwz83LQbXiVau110REV64rYrSzUhGE4ucA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 24, 2014 at 10:33 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->> +- interrupts       : 1 interrupt for RSPI cores using a single multiplexed
->> +                  interrupt,
->> +                  3 interrupts (SPEI, SPRI, SPTI) for RSPI cores using
->> +                  separate interrupts.
->> +- interrupt-names  : Array of strings associated with the interrupt numbers:
->> +                  "error" for SPEI, "rx" for SPRI, and "tx" for SPTI.
->> +                  For RSPI cores using a single multiplexed interrupt, the
->> +                  name "mux" is optional.
->
-> Rather than defining the set of interrupts twice, it would be nice to
-> have interrupts defined in terms of interrupt-names:
->
-> - interrupts: a list of interrupt-specifiers, one for each entry in
->   interrupt-names. If interrupt-names is not present, an interrupt
->   specifier for a single muxed interrupt.
->
-> - interrupt-names: A list of interrupt names. Should contain (if
->   present):
->   * "error" for SPEI
->   * "rx" for SPRI
->   * "tx" to SPTI
->   * "mux" for a single muxed interrupt
+On 01/24/2014 12:16 PM, Srikanth Thokala wrote:
+> Hi Lars,
+> 
+> On Thu, Jan 23, 2014 at 4:55 PM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
+>> On 01/22/2014 05:52 PM, Srikanth Thokala wrote:
+>> [...]
+>>> +/**
+>>> + * xilinx_vdma_device_control - Configure DMA channel of the device
+>>> + * @dchan: DMA Channel pointer
+>>> + * @cmd: DMA control command
+>>> + * @arg: Channel configuration
+>>> + *
+>>> + * Return: '0' on success and failure value on error
+>>> + */
+>>> +static int xilinx_vdma_device_control(struct dma_chan *dchan,
+>>> +                                   enum dma_ctrl_cmd cmd, unsigned long arg)
+>>> +{
+>>> +     struct xilinx_vdma_chan *chan = to_xilinx_chan(dchan);
+>>> +
+>>> +     switch (cmd) {
+>>> +     case DMA_TERMINATE_ALL:
+>>> +             xilinx_vdma_terminate_all(chan);
+>>> +             return 0;
+>>> +     case DMA_SLAVE_CONFIG:
+>>> +             return xilinx_vdma_slave_config(chan,
+>>> +                                     (struct xilinx_vdma_config *)arg);
+>>
+>> You really shouldn't be overloading the generic API with your own semantics.
+>> DMA_SLAVE_CONFIG should take a dma_slave_config and nothing else.
+> 
+> Ok.  The driver needs few additional configuration from the slave
+> device like Vertical
+> Size, Horizontal Size,  Stride etc., for the DMA transfers, in that case do you
+> suggest me to define a separate dma_ctrl_cmd like the one FSLDMA_EXTERNAL_START
+> defined for Freescale drivers?
 
-Yes, that sounds much better, thank you.
-Will update.
+In my opinion it is not a good idea to have driver implement a generic API,
+but at the same time let the driver have custom semantics for those API
+calls. It's a bit like having a gpio driver that expects 23 and 42 as the
+values passed to gpio_set_value instead of 0 and 1. It completely defeats
+the purpose of a generic API, namely that you are able to write generic code
+that makes use of the API without having to know about which implementation
+API it is talking to. The dmaengine framework provides the
+dmaengine_prep_interleaved_dma() function to setup two dimensional
+transfers, e.g. take a look at sirf-dma.c or imx-dma.c.
 
-Gr{oetje,eeting}s,
-
-                        Geert
+- Lars
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
