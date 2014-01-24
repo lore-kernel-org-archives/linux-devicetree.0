@@ -1,149 +1,666 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V2 4/8] SPEAr13xx: Fixup: Move SPEAr1340 SATA platform
- code to system cfg driver
-Date: Fri, 24 Jan 2014 21:53:00 +0100
-Message-ID: <201401242153.00848.arnd@arndb.de>
-References: <cover.1390471111.git.mohit.kumar@st.com>
- <201401231322.54914.arnd@arndb.de> <20140124042959.GC2369@pratyush-vbox>
+From: Marc C <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 1/8] ARM: brcmstb: add infrastructure for ARM-based
+ Broadcom STB SoCs
+Date: Fri, 24 Jan 2014 13:26:07 -0800
+Message-ID: <52E2DA6F.7050107@gmail.com>
+References: <1390361452-3124-1-git-send-email-marc.ceeeee@gmail.com> <1390361452-3124-2-git-send-email-marc.ceeeee@gmail.com> <20140124101407.GL15586@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140124042959.GC2369@pratyush-vbox>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Pratyush Anand <pratyush.anand@st.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mohit KUMAR DCG <Mohit.KUMAR@st.com>, spear-devel <spear-devel@list.st.com>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Viresh Kumar <viresh.linux@gmail.com>, Tejun Heo <tj@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140124101407.GL15586-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 24 January 2014, Pratyush Anand wrote:
-> On Thu, Jan 23, 2014 at 08:22:54PM +0800, Arnd Bergmann wrote:
-> > On Thursday 23 January 2014, Mohit Kumar wrote:
-> > 
-> > I assume you'd want a phandle pointing to the syscon device in here
-> > as well?
+Hi Mark,
+
+>> +static void __init brcmstb_init_early(void)
+>> +{
+>> +       add_preferred_console("ttyS", 0, "115200");
+>> +}
+>
+> Is this really required?
+
+I think I can drop this. It was a holdover from our older kernels.
+
+>> +       /*
+>> +       * set the reset vector to point to the secondary_startup
+>> +       * routine
+>> +       */
+>> +       cpu_set_boot_addr(cpu, virt_to_phys(brcmstb_secondary_startup));
+>> +
+>> +       flush_cache_all();
+>
+> Why? What does the new CPU need before its caches are coherent and up?
+
+Absolutely nothing! I should be able to drop this as well.
+
+Regarding the CPU power-down sequence, I'll review it and make sure it follows the
+"Processor power domain" sequence in the A15 TRM. For any deviations, I'll double-check
+with our H/W designers to ensure there aren't any magic requirements unaccounted for.
+
+Thank you for taking a deep-dive into the code! I'll make the appropriate modifications
+per your suggestions.
+
+Regards,
+Marc C
+
+
+On 01/24/2014 02:14 AM, Mark Rutland wrote:
+> On Wed, Jan 22, 2014 at 03:30:45AM +0000, Marc Carino wrote:
+>> The BCM7xxx series of Broadcom SoCs are used primarily in set-top boxes.
+>>
+>> This patch adds machine support for the ARM-based Broadcom SoCs.
+>>
+>> Signed-off-by: Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  arch/arm/configs/multi_v7_defconfig |    1 +
+>>  arch/arm/mach-bcm/Kconfig           |   14 ++
+>>  arch/arm/mach-bcm/Makefile          |    4 +
+>>  arch/arm/mach-bcm/brcmstb.c         |  110 ++++++++++++
+>>  arch/arm/mach-bcm/brcmstb.h         |   38 ++++
+>>  arch/arm/mach-bcm/headsmp-brcmstb.S |   34 ++++
+>>  arch/arm/mach-bcm/hotplug-brcmstb.c |  334 +++++++++++++++++++++++++++++++++++
+>>  7 files changed, 535 insertions(+), 0 deletions(-)
+>>  create mode 100644 arch/arm/mach-bcm/brcmstb.c
+>>  create mode 100644 arch/arm/mach-bcm/brcmstb.h
+>>  create mode 100644 arch/arm/mach-bcm/headsmp-brcmstb.S
+>>  create mode 100644 arch/arm/mach-bcm/hotplug-brcmstb.c
+>>
+>> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+>> index c1df4e9..7028d11 100644
+>> --- a/arch/arm/configs/multi_v7_defconfig
+>> +++ b/arch/arm/configs/multi_v7_defconfig
+>> @@ -7,6 +7,7 @@ CONFIG_MACH_ARMADA_370=y
+>>  CONFIG_MACH_ARMADA_XP=y
+>>  CONFIG_ARCH_BCM=y
+>>  CONFIG_ARCH_BCM_MOBILE=y
+>> +CONFIG_ARCH_BRCMSTB=y
+>>  CONFIG_GPIO_PCA953X=y
+>>  CONFIG_ARCH_HIGHBANK=y
+>>  CONFIG_ARCH_KEYSTONE=y
+>> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
+>> index 9fe6d88..2c1ae83 100644
+>> --- a/arch/arm/mach-bcm/Kconfig
+>> +++ b/arch/arm/mach-bcm/Kconfig
+>> @@ -31,6 +31,20 @@ config ARCH_BCM_MOBILE
+>>           BCM11130, BCM11140, BCM11351, BCM28145 and
+>>           BCM28155 variants.
+>>
+>> +config ARCH_BRCMSTB
+>> +       bool "Broadcom BCM7XXX based boards" if ARCH_MULTI_V7
+>> +       depends on MMU
+>> +       select ARM_GIC
+>> +       select MIGHT_HAVE_PCI
+>> +       select HAVE_SMP
+>> +       select HAVE_ARM_ARCH_TIMER
+>> +       help
+>> +         Say Y if you intend to run the kernel on a Broadcom ARM-based STB
+>> +         chipset.
+>> +
+>> +         This enables support for Broadcom ARM-based set-top box chipsets,
+>> +         including the 7445 family of chips.
+>> +
+>>  endmenu
+>>
+>>  endif
+>> diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
+>> index c2ccd5a..b744a12 100644
+>> --- a/arch/arm/mach-bcm/Makefile
+>> +++ b/arch/arm/mach-bcm/Makefile
+>> @@ -13,3 +13,7 @@
+>>  obj-$(CONFIG_ARCH_BCM_MOBILE)  := board_bcm281xx.o bcm_kona_smc.o bcm_kona_smc_asm.o kona.o
+>>  plus_sec := $(call as-instr,.arch_extension sec,+sec)
+>>  AFLAGS_bcm_kona_smc_asm.o      :=-Wa,-march=armv7-a$(plus_sec)
+>> +
+>> +obj-$(CONFIG_ARCH_BRCMSTB)     := brcmstb.o
+>> +obj-$(CONFIG_SMP)              += headsmp-brcmstb.o
+>> +obj-$(CONFIG_HOTPLUG_CPU)      += hotplug-brcmstb.o
+>> diff --git a/arch/arm/mach-bcm/brcmstb.c b/arch/arm/mach-bcm/brcmstb.c
+>> new file mode 100644
+>> index 0000000..7a6093d
+>> --- /dev/null
+>> +++ b/arch/arm/mach-bcm/brcmstb.c
+>> @@ -0,0 +1,110 @@
+>> +/*
+>> + * Copyright (C) 2013 Broadcom Corporation
+>> + *
+>> + * This program is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License as
+>> + * published by the Free Software Foundation version 2.
+>> + *
+>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+>> + * kind, whether express or implied; without even the implied warranty
+>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/console.h>
+>> +#include <linux/clocksource.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/device.h>
+>> +#include <linux/errno.h>
+>> +#include <linux/init.h>
+>> +#include <linux/io.h>
+>> +#include <linux/jiffies.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_irq.h>
+>> +#include <linux/of_platform.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/printk.h>
+>> +#include <linux/smp.h>
+>> +
+>> +#include <asm/cacheflush.h>
+>> +#include <asm/mach-types.h>
+>> +#include <asm/mach/arch.h>
+>> +#include <asm/mach/map.h>
+>> +#include <asm/mach/time.h>
+>> +
+>> +#include "brcmstb.h"
+>> +
+>> +/***********************************************************************
+>> + * STB CPU (main application processor)
+>> + ***********************************************************************/
+>> +
+>> +static const char *brcmstb_match[] __initconst = {
+>> +       "brcm,bcm7445",
+>> +       "brcm,brcmstb",
+>> +       NULL
+>> +};
+>> +
+>> +static void __init brcmstb_init_early(void)
+>> +{
+>> +       add_preferred_console("ttyS", 0, "115200");
+>> +}
 > 
-> Since there is only one syscon device in the whole DT, so do I really
-> need to add phandle? Currently I am using
-> syscon_regmap_lookup_by_compatible to find  syscon device.
-
-I'd much rather use syscon_regmap_lookup_by_phandle than
-syscon_regmap_lookup_by_compatible, all the time, since this makes
-the relationship between the devices explicit.
- 
-The phandle method also allows you to pass regmap indexes in the
-same property, which can be handy if two variants of the chip have
-the same registers at a different offset.
-
-> > > +/* SPEAr1340 Registers */
-> > > +/* Power Management Registers */
-> > > +#define SPEAR1340_PCM_CFG			0x100
-> > > +	#define SPEAR1340_PCM_CFG_SATA_POWER_EN	0x800
-> > > +#define SPEAR1340_PCM_WKUP_CFG			0x104
-> > > +#define SPEAR1340_SWITCH_CTR			0x108
-> > > +
-> > > +#define SPEAR1340_PERIP1_SW_RST			0x318
-> > > +	#define SPEAR1340_PERIP1_SW_RST_SATA	0x1000
-> > > +#define SPEAR1340_PERIP2_SW_RST			0x31C
-> > > +#define SPEAR1340_PERIP3_SW_RST			0x320
-> > > +
-> > > +/* PCIE - SATA configuration registers */
-> > > +#define SPEAR1340_PCIE_SATA_CFG			0x424
-> > > +	/* PCIE CFG MASks */
-> > > +	#define SPEAR1340_PCIE_CFG_DEVICE_PRESENT	(1 << 11)
-> > > +	#define SPEAR1340_PCIE_CFG_POWERUP_RESET	(1 << 10)
-> > > +	#define SPEAR1340_PCIE_CFG_CORE_CLK_EN		(1 << 9)
-> > > +	#define SPEAR1340_PCIE_CFG_AUX_CLK_EN		(1 << 8)
-> > > +	#define SPEAR1340_SATA_CFG_TX_CLK_EN		(1 << 4)
-> > > +	#define SPEAR1340_SATA_CFG_RX_CLK_EN		(1 << 3)
-> > > +	#define SPEAR1340_SATA_CFG_POWERUP_RESET	(1 << 2)
-> > > +	#define SPEAR1340_SATA_CFG_PM_CLK_EN		(1 << 1)
-> > > +	#define SPEAR1340_PCIE_SATA_SEL_PCIE		(0)
-> > > +	#define SPEAR1340_PCIE_SATA_SEL_SATA		(1)
-> > > +	#define SPEAR1340_PCIE_SATA_CFG_MASK		0xF1F
-> > > +	#define SPEAR1340_PCIE_CFG_VAL	(SPEAR1340_PCIE_SATA_SEL_PCIE | \
-> > > +			SPEAR1340_PCIE_CFG_AUX_CLK_EN | \
-> > > +			SPEAR1340_PCIE_CFG_CORE_CLK_EN | \
-> > > +			SPEAR1340_PCIE_CFG_POWERUP_RESET | \
-> > > +			SPEAR1340_PCIE_CFG_DEVICE_PRESENT)
-> > > +	#define SPEAR1340_SATA_CFG_VAL	(SPEAR1340_PCIE_SATA_SEL_SATA | \
-> > > +			SPEAR1340_SATA_CFG_PM_CLK_EN | \
-> > > +			SPEAR1340_SATA_CFG_POWERUP_RESET | \
-> > > +			SPEAR1340_SATA_CFG_RX_CLK_EN | \
-> > > +			SPEAR1340_SATA_CFG_TX_CLK_EN)
-> > > +
-> > > +#define SPEAR1340_PCIE_MIPHY_CFG		0x428
-> > > +	#define SPEAR1340_MIPHY_OSC_BYPASS_EXT		(1 << 31)
-> > > +	#define SPEAR1340_MIPHY_CLK_REF_DIV2		(1 << 27)
-> > > +	#define SPEAR1340_MIPHY_CLK_REF_DIV4		(2 << 27)
-> > > +	#define SPEAR1340_MIPHY_CLK_REF_DIV8		(3 << 27)
-> > > +	#define SPEAR1340_MIPHY_PLL_RATIO_TOP(x)	(x << 0)
-> > > +	#define SPEAR1340_PCIE_MIPHY_CFG_MASK		0xF80000FF
-> > > +	#define SPEAR1340_PCIE_SATA_MIPHY_CFG_SATA \
-> > > +			(SPEAR1340_MIPHY_OSC_BYPASS_EXT | \
-> > > +			SPEAR1340_MIPHY_CLK_REF_DIV2 | \
-> > > +			SPEAR1340_MIPHY_PLL_RATIO_TOP(60))
-> > > +	#define SPEAR1340_PCIE_SATA_MIPHY_CFG_SATA_25M_CRYSTAL_CLK \
-> > > +			(SPEAR1340_MIPHY_PLL_RATIO_TOP(120))
-> > > +	#define SPEAR1340_PCIE_SATA_MIPHY_CFG_PCIE \
-> > > +			(SPEAR1340_MIPHY_OSC_BYPASS_EXT | \
-> > > +			SPEAR1340_MIPHY_PLL_RATIO_TOP(25))
-> > > +
-> > > +struct spear13xx_cfg_priv {
-> > > +	struct regmap		*misc;
-> > > +};
-> > > +
-> > > +/* SATA device registration */
-> > > +static void spear1340_sata_miphy_init(struct spear13xx_cfg_priv *cfgpriv)
-> > > +{
-> > > +	regmap_update_bits(cfgpriv->misc, SPEAR1340_PCIE_SATA_CFG,
-> > > +			SPEAR1340_PCIE_SATA_CFG_MASK, SPEAR1340_SATA_CFG_VAL);
-> > > +	regmap_update_bits(cfgpriv->misc, SPEAR1340_PCIE_MIPHY_CFG,
-> > > +			SPEAR1340_PCIE_MIPHY_CFG_MASK,
-> > > +			SPEAR1340_PCIE_SATA_MIPHY_CFG_SATA_25M_CRYSTAL_CLK);
-> > > +	/* Switch on sata power domain */
-> > > +	regmap_update_bits(cfgpriv->misc, SPEAR1340_PCM_CFG,
-> > > +			SPEAR1340_PCM_CFG_SATA_POWER_EN,
-> > > +			SPEAR1340_PCM_CFG_SATA_POWER_EN);
-> > > +	msleep(20);
-> > > +	/* Disable PCIE SATA Controller reset */
-> > > +	regmap_update_bits(cfgpriv->misc, SPEAR1340_PERIP1_SW_RST,
-> > > +			SPEAR1340_PERIP1_SW_RST_SATA, 0);
-> > > +	msleep(20);
-> > > +}
-> > 
-> > Looking at the actual code now, this very much looks like it ought to
-> > be a "phy" driver and get put in drivers/phy/.
+> Is this really required?
 > 
-> Actually these registers are part of common system configurations
-> register space (called as misc space) for SPEAr SOC. So we opted for
-> syscon framework.
+>> +
+>> +/***********************************************************************
+>> + * SMP boot
+>> + ***********************************************************************/
+>> +
+>> +#ifdef CONFIG_SMP
+>> +static DEFINE_SPINLOCK(boot_lock);
+>> +
+>> +static void __cpuinit brcmstb_secondary_init(unsigned int cpu)
+>> +{
+>> +       /*
+>> +        * Synchronise with the boot thread.
+>> +        */
+>> +       spin_lock(&boot_lock);
+>> +       spin_unlock(&boot_lock);
+>> +}
+>> +
+>> +static int __cpuinit brcmstb_boot_secondary(unsigned int cpu,
+>> +                                           struct task_struct *idle)
+>> +{
+>> +       /*
+>> +        * set synchronisation state between this boot processor
+>> +        * and the secondary one
+>> +        */
+>> +       spin_lock(&boot_lock);
+>> +
+>> +       /* Bring up power to the core if necessary */
+>> +       if (brcmstb_cpu_get_power_state(cpu) == 0)
+>> +               brcmstb_cpu_power_on(cpu);
+>> +
+>> +       brcmstb_cpu_boot(cpu);
+>> +
+>> +       /*
+>> +        * now the secondary core is starting up let it run its
+>> +        * calibrations, then wait for it to finish
+>> +        */
+>> +       spin_unlock(&boot_lock);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +struct smp_operations brcmstb_smp_ops __initdata = {
+>> +       .smp_prepare_cpus       = brcmstb_cpu_ctrl_setup,
+>> +       .smp_secondary_init     = brcmstb_secondary_init,
+>> +       .smp_boot_secondary     = brcmstb_boot_secondary,
+>> +#ifdef CONFIG_HOTPLUG_CPU
+>> +       .cpu_kill               = brcmstb_cpu_kill,
+>> +       .cpu_die                = brcmstb_cpu_die,
+>> +#endif
+>> +};
+>> +#endif
+>> +
+>> +DT_MACHINE_START(BRCMSTB, "Broadcom STB (Flattened Device Tree)")
+>> +       .dt_compat      = brcmstb_match,
+>> +#ifdef CONFIG_SMP
+>> +       .smp            = smp_ops(brcmstb_smp_ops),
+>> +#endif
+>> +       .init_early     = brcmstb_init_early,
+>> +MACHINE_END
+>> diff --git a/arch/arm/mach-bcm/brcmstb.h b/arch/arm/mach-bcm/brcmstb.h
+>> new file mode 100644
+>> index 0000000..e49bde6
+>> --- /dev/null
+>> +++ b/arch/arm/mach-bcm/brcmstb.h
+>> @@ -0,0 +1,38 @@
+>> +/*
+>> + * Copyright (C) 2013 Broadcom Corporation
+>> + *
+>> + * This program is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License as
+>> + * published by the Free Software Foundation version 2.
+>> + *
+>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+>> + * kind, whether express or implied; without even the implied warranty
+>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#ifndef __BRCMSTB_H__
+>> +#define __BRCMSTB_H__
+>> +
+>> +#if !defined(__ASSEMBLY__)
+>> +#include <linux/smp.h>
+>> +#endif
+>> +
+>> +#if !defined(__ASSEMBLY__)
+>> +extern void brcmstb_secondary_startup(void);
+>> +extern void brcmstb_cpu_boot(unsigned int cpu);
+>> +extern void brcmstb_cpu_power_on(unsigned int cpu);
+>> +extern int brcmstb_cpu_get_power_state(unsigned int cpu);
+>> +extern struct smp_operations brcmstb_smp_ops;
+>> +#if defined(CONFIG_HOTPLUG_CPU)
+>> +extern void brcmstb_cpu_die(unsigned int cpu);
+>> +extern int brcmstb_cpu_kill(unsigned int cpu);
+>> +void __init brcmstb_cpu_ctrl_setup(unsigned int max_cpus);
+>> +#else
+>> +static inline void brcmstb_cpu_die(unsigned int cpu) {}
+>> +static inline int brcmstb_cpu_kill(unsigned int cpu) {}
+>> +static inline void __init brcmstb_cpu_ctrl_setup(unsigned int max_cpus) {}
+>> +#endif
+>> +#endif
+>> +
+>> +#endif /* __BRCMSTB_H__ */
+>> diff --git a/arch/arm/mach-bcm/headsmp-brcmstb.S b/arch/arm/mach-bcm/headsmp-brcmstb.S
+>> new file mode 100644
+>> index 0000000..57ec438
+>> --- /dev/null
+>> +++ b/arch/arm/mach-bcm/headsmp-brcmstb.S
+>> @@ -0,0 +1,34 @@
+>> +/*
+>> + * SMP boot code for secondary CPUs
+>> + * Based on arch/arm/mach-tegra/headsmp.S
+>> + *
+>> + * Copyright (C) 2010 NVIDIA, Inc.
+>> + * Copyright (C) 2013 Broadcom Corporation
+>> + *
+>> + * This program is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License as
+>> + * published by the Free Software Foundation version 2.
+>> + *
+>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+>> + * kind, whether express or implied; without even the implied warranty
+>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#include <asm/assembler.h>
+>> +#include <linux/linkage.h>
+>> +#include <linux/init.h>
+>> +
+>> +        .section ".text.head", "ax"
+>> +       __CPUINIT
+> 
+> __CPUINIT is either going or gone by now. This should disappear.
+> 
+>> +
+>> +ENTRY(brcmstb_secondary_startup)
+>> +        /*
+>> +         * Ensure CPU is in a sane state by disabling all IRQs and switching
+>> +         * into SVC mode.
+>> +         */
+>> +        setmode        PSR_I_BIT | PSR_F_BIT | SVC_MODE, r0
+>> +
+>> +        bl      v7_invalidate_l1
+>> +        b       secondary_startup
+>> +ENDPROC(brcmstb_secondary_startup)
+>> diff --git a/arch/arm/mach-bcm/hotplug-brcmstb.c b/arch/arm/mach-bcm/hotplug-brcmstb.c
+>> new file mode 100644
+>> index 0000000..ff4a732
+>> --- /dev/null
+>> +++ b/arch/arm/mach-bcm/hotplug-brcmstb.c
+>> @@ -0,0 +1,334 @@
+>> +/*
+>> + * Broadcom STB CPU hotplug support for ARM
+>> + *
+>> + * Copyright (C) 2013 Broadcom Corporation
+>> + *
+>> + * This program is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License as
+>> + * published by the Free Software Foundation version 2.
+>> + *
+>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+>> + * kind, whether express or implied; without even the implied warranty
+>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#include <linux/delay.h>
+>> +#include <linux/device.h>
+>> +#include <linux/errno.h>
+>> +#include <linux/init.h>
+>> +#include <linux/io.h>
+>> +#include <linux/jiffies.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_irq.h>
+>> +#include <linux/of_platform.h>
+>> +#include <linux/printk.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/smp.h>
+>> +#include <linux/mfd/syscon.h>
+>> +
+>> +#include <asm/cacheflush.h>
+>> +#include <asm/mach-types.h>
+>> +
+>> +#include "brcmstb.h"
+>> +
+>> +enum {
+>> +       ZONE_MAN_CLKEN_MASK             = BIT(0),
+>> +       ZONE_MAN_RESET_CNTL_MASK        = BIT(1),
+>> +       ZONE_MAN_MEM_PWR_MASK           = BIT(4),
+>> +       ZONE_RESERVED_1_MASK            = BIT(5),
+>> +       ZONE_MAN_ISO_CNTL_MASK          = BIT(6),
+>> +       ZONE_MANUAL_CONTROL_MASK        = BIT(7),
+>> +       ZONE_PWR_DN_REQ_MASK            = BIT(9),
+>> +       ZONE_PWR_UP_REQ_MASK            = BIT(10),
+>> +       ZONE_BLK_RST_ASSERT_MASK        = BIT(10),
+>> +       ZONE_PWR_OFF_STATE_MASK         = BIT(26),
+>> +       ZONE_PWR_ON_STATE_MASK          = BIT(26),
+>> +       ZONE_DPG_PWR_STATE_MASK         = BIT(28),
+>> +       ZONE_MEM_PWR_STATE_MASK         = BIT(29),
+>> +       ZONE_RESET_STATE_MASK           = BIT(31),
+>> +};
+>> +
+>> +static void __iomem *cpubiuctrl_block;
+>> +static void __iomem *hif_cont_block;
+>> +static u32 cpu0_pwr_zone_ctrl_reg;
+>> +static u32 cpu_rst_cfg_reg;
+>> +static u32 hif_cont_reg;
+>> +DEFINE_PER_CPU(int, per_cpu_sw_state);
+>> +
+>> +static void __iomem *pwr_ctrl_get_base(unsigned int cpu)
+>> +{
+>> +       void __iomem *base = cpubiuctrl_block + cpu0_pwr_zone_ctrl_reg;
+>> +       base += (cpu * 4);
+> 
+> CPU isn't guaranteed to be the physical CPU ID (MPIDR.Aff*). While it
+> almost certainly will be, we can't guarantee it in the face of a kexec,
+> for example.
+> 
+> You can use cpu_logical_map(cpu) to get the physical ID.
+> 
+>> +       return base;
+>> +}
+>> +
+>> +static u32 pwr_ctrl_rd(unsigned int cpu)
+>> +{
+>> +       void __iomem *base = pwr_ctrl_get_base(cpu);
+>> +       return readl_relaxed(base);
+>> +}
+>> +
+>> +static void pwr_ctrl_wr(unsigned int cpu, u32 val)
+>> +{
+>> +       void __iomem *base = pwr_ctrl_get_base(cpu);
+>> +       writel(val, base);
+>> +}
+>> +
+>> +static void cpu_rst_cfg_set(int cpu, int set)
+>> +{
+>> +       u32 val;
+>> +       val = readl_relaxed(cpubiuctrl_block + cpu_rst_cfg_reg);
+>> +       if (set)
+>> +               val |= BIT(cpu);
+>> +       else
+>> +               val &= ~BIT(cpu);
+> 
+> Likewise here.
+> 
+>> +       writel_relaxed(val, cpubiuctrl_block + cpu_rst_cfg_reg);
+>> +}
+>> +
+>> +static void cpu_set_boot_addr(int cpu, unsigned long boot_addr)
+>> +{
+>> +       const int reg_ofs = cpu * 8;
+> 
+> And here.
+> 
+>> +       writel_relaxed(0, hif_cont_block + hif_cont_reg + reg_ofs);
+>> +       writel_relaxed(boot_addr, hif_cont_block + hif_cont_reg + 4 + reg_ofs);
+>> +}
+>> +
+>> +void brcmstb_cpu_boot(unsigned int cpu)
+>> +{
+>> +       pr_info("SMP: Booting CPU%d...\n", cpu);
+>> +
+>> +       /*
+>> +       * set the reset vector to point to the secondary_startup
+>> +       * routine
+>> +       */
+>> +       cpu_set_boot_addr(cpu, virt_to_phys(brcmstb_secondary_startup));
+>> +
+>> +       flush_cache_all();
+> 
+> Why? What does the new CPU need before its caches are coherent and up?
+> 
+>> +
+>> +       /* unhalt the cpu */
+>> +       cpu_rst_cfg_set(cpu, 0);
+>> +}
+>> +
+>> +void brcmstb_cpu_power_on(unsigned int cpu)
+>> +{
+>> +       /*
+>> +        * The secondary cores power was cut, so we must go through
+>> +        * power-on initialization.
+>> +        */
+>> +       u32 tmp;
+>> +
+>> +       pr_info("SMP: Powering up CPU%d...\n", cpu);
+>> +
+>> +       /* Request zone power up */
+>> +       pwr_ctrl_wr(cpu, ZONE_PWR_UP_REQ_MASK);
+>> +
+>> +       /* Wait for the power up FSM to complete */
+>> +       do {
+>> +               tmp = pwr_ctrl_rd(cpu);
+>> +       } while (!(tmp & ZONE_PWR_ON_STATE_MASK));
+>> +
+>> +       per_cpu(per_cpu_sw_state, cpu) = 1;
+>> +}
+>> +
+>> +int brcmstb_cpu_get_power_state(unsigned int cpu)
+>> +{
+>> +       int tmp = pwr_ctrl_rd(cpu);
+>> +       return (tmp & ZONE_RESET_STATE_MASK) ? 0 : 1;
+>> +}
+>> +
+>> +void __ref brcmstb_cpu_die(unsigned int cpu)
+>> +{
+>> +       /* Derived from misc_bpcm_arm.c */
+>> +
+>> +       /* Clear SCTLR.C bit */
+>> +       __asm__(
+>> +               "mrc    p15, 0, r0, c1, c0, 0\n"
+>> +               "bic    r0, r0, #(1 << 2)\n"
+>> +               "mcr    p15, 0, r0, c1, c0, 0\n"
+>> +               : /* no output */
+>> +               : /* no input */
+>> +               : "r0"  /* clobber r0 */
+>> +       );
+> 
+> This is odd. Why not allow GCC to allocate the register?
+> 
+>> +
+>> +       /*
+>> +        * Instruction barrier to ensure cache is really disabled before
+>> +        * cleaning/invalidating the caches
+>> +        */
+>> +       isb();
+> 
+> I think you could use:
+> 
+> set_cr(get_cr() & ~CR_C))
+> 
+> Which would do all of the above (including the isb), and will get GCC to
+> allocate the register.
+> 
+>> +
+>> +       flush_cache_all();
+>> +
+>> +       /* Invalidate all instruction caches to PoU (ICIALLU) */
+>> +       /* Data sync. barrier to ensure caches have emptied out */
+>> +       __asm__("mcr    p15, 0, r0, c7, c5, 0\n" : : : "r0");
+>> +       dsb();
+> 
+> Why do you need to invalidate the I-cache?
+> 
+>> +
+>> +       /*
+>> +        * Clear ACTLR.SMP bit to prevent broadcast TLB messages from reaching
+>> +        * this core
+>> +        */
+>> +       __asm__(
+>> +               "mrc    p15, 0, r0, c1, c0, 1\n"
+>> +               "bic    r0, r0, #(1 << 6)\n"
+>> +               "mcr    p15, 0, r0, c1, c0, 1\n"
+>> +               : /* no output */
+>> +               : /* no input */
+>> +               : "r0"  /* clobber r0 */
+>> +       );
+> 
+> Surely you can use an output operand to get GCC to allocate the register
+> for you?
+> 
+>> +
+>> +       /* Disable all IRQs for this CPU */
+>> +       arch_local_irq_disable();
+>> +
+>> +       per_cpu(per_cpu_sw_state, cpu) = 0;
+> 
+> Your caches are off at this point, so this could be going straight to
+> memory. Yet readers of this value aren't cleaning their caches before
+> reading this, so they could hit a stale cached copy.
+> 
+>> +
+>> +       /*
+>> +        * Final full barrier to ensure everything before this instruction has
+>> +        * quiesced.
+>> +        */
+>> +       isb();
+>> +       dsb();
+>> +
+>> +       /* Sit and wait to die */
+>> +       wfi();
+>> +
+>> +       /* We should never get here... */
+>> +       nop();
+> 
+> Why the nop first?
+> 
+>> +       panic("Spurious interrupt on CPU %d received!\n", cpu);
+>> +}
+>> +
+>> +int brcmstb_cpu_kill(unsigned int cpu)
+>> +{
+>> +       u32 tmp;
+>> +
+>> +       pr_info("SMP: Powering down CPU%d...\n", cpu);
+>> +
+>> +       while (per_cpu(per_cpu_sw_state, cpu))
+>> +               ;
+> 
+> As this was written to with caches disabled, the cached copy of the
+> value (which this is reading) could be stale. Surely you need to
+> clean+invalidate the line for this value each time you read it to give
+> it a chance to update?
+> 
+>> +
+>> +       /* Program zone reset */
+>> +       pwr_ctrl_wr(cpu, ZONE_RESET_STATE_MASK | ZONE_BLK_RST_ASSERT_MASK |
+>> +                             ZONE_PWR_DN_REQ_MASK);
+>> +
+>> +       /* Verify zone reset */
+>> +       tmp = pwr_ctrl_rd(cpu);
+>> +       if (!(tmp & ZONE_RESET_STATE_MASK))
+>> +               pr_err("%s: Zone reset bit for CPU %d not asserted!\n",
+>> +                       __func__, cpu);
+>> +
+>> +       /* Wait for power down */
+>> +       do {
+>> +               tmp = pwr_ctrl_rd(cpu);
+>> +       } while (!(tmp & ZONE_PWR_OFF_STATE_MASK));
+>> +
+>> +       /* Settle-time from Broadcom-internal DVT reference code */
+>> +       udelay(7);
+>> +
+>> +       /* Assert reset on the CPU */
+>> +       cpu_rst_cfg_set(cpu, 1);
+>> +
+>> +       return 1;
+>> +}
+>> +
+>> +static int __init setup_hifcpubiuctrl_regs(struct device_node *np)
+>> +{
+>> +       int rc = 0;
+>> +       char *name;
+>> +       int index;
+>> +       struct device_node *syscon_np = NULL;
+>> +
+>> +       name = "syscon-cpu";
+>> +
+>> +       syscon_np = of_parse_phandle(np, name, 0);
+>> +       if (!syscon_np) {
+>> +               pr_err("can't find phandle %s\n", name);
+>> +               rc = -EINVAL;
+>> +               goto cleanup;
+>> +       }
+>> +
+>> +       cpubiuctrl_block = of_iomap(syscon_np, 0);
+>> +       if (!cpubiuctrl_block) {
+>> +               pr_err("iomap failed for cpubiuctrl_block\n");
+>> +               rc = -EINVAL;
+>> +               goto cleanup;
+>> +       }
+>> +
+>> +       index = 1;
+>> +       rc = of_property_read_u32_index(np, name, index,
+>> +                                       &cpu0_pwr_zone_ctrl_reg);
+> 
+> The index variable seems rather pointless. Why not just use the value
+> in-place?
+> 
+>> +       if (rc) {
+>> +               pr_err("failed to read %d from %s property (%d)\n", index, name,
+>> +                       rc);
+> 
+> It might be better to state _what_ you're looking for (what does the
+> value represent?).
+> 
+>> +               rc = -EINVAL;
+>> +               goto cleanup;
+>> +       }
+>> +
+>> +       index = 2;
+>> +       rc = of_property_read_u32_index(np, name, index, &cpu_rst_cfg_reg);
+> 
+> Likewise for all of the above.
+> 
+> Thanks,
+> Mark.
+> 
 
-The use of syscon for this is good, I have no objection to that, and
-was suggesting that you create a logical "phy" device that uses the
-misc syscon device as a backend.
- 
-> PHY registers space starts from 0xEB800000, which can be
-> programmed for various phy specific functions like power management,
-> tx/rx settings, comparator settings etc. In most of the cases phy
-> works with default settings, however there are few exceptions for
-> which we will be adding a phy driver for further improvement of SPEAr
-> drivers.
-
-I see. So while the code you have here could be expressed as a phy driver
-by itself, there is another part of the SoC that controls the actual
-phy. How about if you add the phy device node to DT, and write a driver
-that doesn't actually program the phy registers for now, but does contain
-the code that you have posted here. That would give you flexibility for
-future extensions and at the same time let you remove all SPEAr specific
-code from the actual AHCI driver by using the generic ahci-platform
-driver.
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
