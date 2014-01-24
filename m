@@ -1,67 +1,67 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v5 8/8] ARM: brcmstb: dts: add a reference DTS for
- Broadcom 7445
-Date: Fri, 24 Jan 2014 11:09:10 +0000
-Message-ID: <20140124110910.GC814@e106331-lin.cambridge.arm.com>
-References: <1390361452-3124-1-git-send-email-marc.ceeeee@gmail.com>
- <1390361452-3124-9-git-send-email-marc.ceeeee@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1390361452-3124-9-git-send-email-marc.ceeeee@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Carino <marc.ceeeee@gmail.com>
-Cc: Christian Daudt <bcm@fixthebug.org>, Arnd Bergmann <arnd@arndb.de>, Florian Fainelli <f.fainelli@gmail.com>, Matt Porter <matt.porter@linaro.org>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [RFC] Culling traffic volume on devicetree mailing list
+Date: Fri, 24 Jan 2014 11:11:35 +0000
+Message-ID: <20140124111135.25994C4088D@trevor.secretlab.ca>
+References: <CACxGe6vYMOnyeqdhaAggytxgiLH=ijNOrmuq2FyOUtZCGqfdgQ@mail.gmail. com> <20140122172243.GC29184@titan.lakedaemon.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140122172243.GC29184-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 22, 2014 at 03:30:52AM +0000, Marc Carino wrote:
-> Add a sample DTS which will allow bootup of a board populated
-> with the BCM7445 chip.
+On Wed, 22 Jan 2014 12:22:43 -0500, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+> Grant,
 > 
-> Signed-off-by: Marc Carino <marc.ceeeee@gmail.com>
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  arch/arm/boot/dts/bcm7445.dts |  111 +++++++++++++++++++++++++++++++++++++++++
->  1 files changed, 111 insertions(+), 0 deletions(-)
->  create mode 100644 arch/arm/boot/dts/bcm7445.dts
+> On Tue, Jan 21, 2014 at 02:40:48PM +0000, Grant Likely wrote:
+> > Hi everyone,
+> > 
+> > Today on the devicetree conf call 
 > 
-> diff --git a/arch/arm/boot/dts/bcm7445.dts b/arch/arm/boot/dts/bcm7445.dts
-> new file mode 100644
-> index 0000000..ffa3305
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/bcm7445.dts
-> @@ -0,0 +1,111 @@
-> +/dts-v1/;
-> +/include/ "skeleton.dtsi"
-> +
-> +/ {
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +	model = "Broadcom STB (bcm7445)";
-> +	compatible = "brcm,bcm7445", "brcm,brcmstb";
-> +	interrupt-parent = <&gic>;
-> +
-> +	chosen {};
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x00 0x00000000 0x00 0x40000000>,
-> +		      <0x00 0x40000000 0x00 0x40000000>,
-> +		      <0x00 0x80000000 0x00 0x40000000>;
-> +	};
+> Sorry I couldn't make it, I had a last minute engagement yesterday AM.
+> 
+> > we (Rob, Ian and I) talked about culling the volume of traffic on the
+> > devicetree list so that it would be more useful to the DTC maintainers
+> > and non-Linux users like freebsd. We'd like to propose creating the
+> > following two lists so that those interested don't need to drink from
+> > the firehose:
+> > 
+> > devicetree-compiler: Specifically for discussing dt tooling topics
+> > (parsing, schema validation, data format)
+> 
+> Ack.
+> 
+> > devicetree-spec: For discussing 'core' device tree bindings. ie.
+> > anything that would be a candidate for putting into an ePAPR type
+> > spec. Individual device bindings would continue to be posted to
+> > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, but anything affecting subsystems or
+> > generic patterns should be posted to this new list.
+> > 
+> > Thoughts?
+> 
+> How do patch series submitters easily determine when to send to -spec
+> vice the general list?  I'm thinking wrt get_maintainers.pl.
 
-As I commented on v3 [1], these are contiguous and can be described with
-a single entry:
+Driver patch authors wouldn't need to worry about it over much.
+get_maintainer.pl currently does what is needed. Only when developers
+start venturing into core bindings would they need to worry about the
+spec list. I'm inclined to believe that the traffic will be small enough
+that we can simply tell people, "hey, this looks pretty generic, you
+should probably post it to the spec list."
 
-memory {
-	device_type = "memory";
-	reg = <0x0 0x00000000 0x0 0xc0000000>;
-};
+Maybe devicetree-core would be a better list name though.
 
-Is there any reason to have three entries?
+> 
+> Perhaps it's worth considering organizing Doc.../bindings/ into
+> subsystem/ and ...'not'?  The "suitable for ePAPR" criteria would be a
+> good differentiator.
 
-Thanks,
-Mark.
+I'm not opposed to that. Having someone curate that directory would be
+helpful. Want to volunteer? :-)
 
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-January/225899.html
+g.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
