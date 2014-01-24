@@ -1,51 +1,59 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 1/2] usb: dwc3: core: continue probing if usb phy library
- returns -ENODEV/-ENXIO
-Date: Fri, 24 Jan 2014 19:39:12 +0530
-Message-ID: <52E27408.8060808@ti.com>
-References: <1385373690-12170-1-git-send-email-kishon@ti.com> <1390299099-14764-1-git-send-email-kishon@ti.com> <20140121144725.GF30451@saruman.home>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH 0/2] DT updates for Hummingboard and new Cubox-i
+Date: Fri, 24 Jan 2014 23:09:31 +0800
+Message-ID: <20140124150927.GA2780@S2101-09.ap.freescale.net>
+References: <20140116182211.GX15937@n2100.arm.linux.org.uk>
+ <20140119031816.GD16158@S2101-09.ap.freescale.net>
+ <20140119185246.GB28056@quad.lixom.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140121144725.GF30451@saruman.home>
-Sender: linux-doc-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: george.cherian@ti.com, heikki.krogerus@linux.intel.com, rogerq@ti.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20140119185246.GB28056@quad.lixom.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Sun, Jan 19, 2014 at 10:52:46AM -0800, Olof Johansson wrote:
+> I'm well aware that the DT branch has not been merged, and that's because
+> there has been no consensus from DT maintainers on the massive rework
+> you did as the base of the branch.
 
-On Tuesday 21 January 2014 08:17 PM, Felipe Balbi wrote:
-> On Tue, Jan 21, 2014 at 03:41:38PM +0530, Kishon Vijay Abraham I wrote:
->> Since PHYs for dwc3 is optional (not all SoCs that have DWC3 use PHYs),
->> do not return from probe if the USB PHY library returns -ENODEV as that
-> 
-> this isn't correct, they all have PHYs, some of them might not be
-> controllable.
+I guess the 'massive rework' you're talking about is the patch series
+that begins with 'ARM: dts: imx6qdl: make pinctrl nodes board specific'?
+If so, I hope you would agree that we're trying to solve a real
+problem [1], even though the solution does not look like the best to
+you.
 
-right, but we use USB PHY library only for controllable PHYs (apart from using
-nop).
-> 
->> indicates the platform does not have PHY.
-> 
-> not really, that indicates the current platform tried to grab a PHY and
-> the PHY doesn't exist. If there's anybody with a non-controllable PHY
-> and someone gives me a really good reason for not using the generic
-> no-op PHY, then we should add a flag and we could:
-> 
-> 	if (!likely(dwc->flags & DWC3_USB2PHY_DRIVER_NOT_NEEDED))
-> 		dwc3_grab_phys(dwc);
-> 
-> But I really want to see the argument against using no-op. As far as I
-> could see, everybody needs a PHY driver one way or another, some
-> platforms just haven't sent any PHY driver upstream and have their own
-> hacked up solution to avoid using the PHY layer.
+So which specific part of the solution are you objecting to?  Those
+MX6QDL_*_PINGRP macros defined in imx6qdl-pingrp.h?  If that's the
+case, I can send a follow-up patch to kill the macros by filling in the
+pin group definitions directly.  The pros is that the pin group
+definitions for given board will be more intuitive, and the cons is that
+the change set will be even more massive, because the same multi-lines
+pin group definitions will be duplicated in multiple board dts files,
+which use the same group of pins for given device.
 
-I was trying to address Heikki concerns in my previous version [1] where I used
-quirks to identify if the platform does not have PHY.
+Or any other better idea?
 
-[1] -> https://lkml.org/lkml/2013/12/5/32
+> 
+> Given the timing, it's not looking like it will be resolved in time for
+> the 3.14 merge window (which might open today).
 
-Thanks
-Kishon
+That's frustrating and will be surprising a lot of people who expect to
+see their board support in 3.14 release.
+
+Shawn
+
+
+[1] http://thread.gmane.org/gmane.linux.ports.arm.kernel/275912/
