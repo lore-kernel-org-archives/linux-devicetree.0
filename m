@@ -1,106 +1,103 @@
-From: Marc C <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 8/8] ARM: brcmstb: dts: add a reference DTS for Broadcom
- 7445
-Date: Fri, 24 Jan 2014 13:39:25 -0800
-Message-ID: <52E2DD8D.1050609@gmail.com>
-References: <1390361452-3124-1-git-send-email-marc.ceeeee@gmail.com> <1390361452-3124-9-git-send-email-marc.ceeeee@gmail.com> <20140124110910.GC814@e106331-lin.cambridge.arm.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] ARM-i.MX6Q-dts : Added USB_OTG Support
+Date: Fri, 24 Jan 2014 23:04:52 +0100
+Message-ID: <20140124220452.GL16215@pengutronix.de>
+References: <1390555724-9779-1-git-send-email-ashutosh.s@phytec.in>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140124110910.GC814-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1390555724-9779-1-git-send-email-ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ashutosh singh <ashuleapyear-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ashutosh singh <ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Please add Phytec phyFLEX-i.MX6 to the subject. I assumed some SoC
+specific changes here.
 
-> As I commented on v3 [1], these are contiguous and can be described with
-> a single entry:
->
-> memory {
-> 	device_type = "memory";
-> 	reg = <0x0 0x00000000 0x0 0xc0000000>;
-> };
->
-> Is there any reason to have three entries?
+Sascha
 
-Oopsies, sorry for missing that.
-
-On BCM7445 and derivatives, there are 3 memory controllers. For each memory controller,
-the first 1GB of physical DRAM is mapped to:
-
-* 0x00_0000_0000
-* 0x00_4000_0000
-* 0x00_8000_0000
-
-The memory controllers aren't interleaved. So, it's possible for the SoC to have a
-discontiguous memory-mapping, where a designer chooses not to populate physical DRAM in
-the middle.
-
-The 'reg' property was broken-up to have each chunk of memory given a dedicated memblock.
-
-All that said, if you like, I can rework the patch as you've suggested.
-
-Thanks,
-Marc C
-
-
-On 01/24/2014 03:09 AM, Mark Rutland wrote:
-> On Wed, Jan 22, 2014 at 03:30:52AM +0000, Marc Carino wrote:
->> Add a sample DTS which will allow bootup of a board populated
->> with the BCM7445 chip.
->>
->> Signed-off-by: Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/bcm7445.dts |  111 +++++++++++++++++++++++++++++++++++++++++
->>  1 files changed, 111 insertions(+), 0 deletions(-)
->>  create mode 100644 arch/arm/boot/dts/bcm7445.dts
->>
->> diff --git a/arch/arm/boot/dts/bcm7445.dts b/arch/arm/boot/dts/bcm7445.dts
->> new file mode 100644
->> index 0000000..ffa3305
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/bcm7445.dts
->> @@ -0,0 +1,111 @@
->> +/dts-v1/;
->> +/include/ "skeleton.dtsi"
->> +
->> +/ {
->> +	#address-cells = <2>;
->> +	#size-cells = <2>;
->> +	model = "Broadcom STB (bcm7445)";
->> +	compatible = "brcm,bcm7445", "brcm,brcmstb";
->> +	interrupt-parent = <&gic>;
->> +
->> +	chosen {};
->> +
->> +	memory {
->> +		device_type = "memory";
->> +		reg = <0x00 0x00000000 0x00 0x40000000>,
->> +		      <0x00 0x40000000 0x00 0x40000000>,
->> +		      <0x00 0x80000000 0x00 0x40000000>;
->> +	};
+On Fri, Jan 24, 2014 at 02:58:44PM +0530, Ashutosh singh wrote:
+> This patch adds support for USB_OTG on Phytec phyFLEX-i.MX6 Quad module.
 > 
-> As I commented on v3 [1], these are contiguous and can be described with
-> a single entry:
+> Signed-off-by: Ashutosh singh <ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx6q-phytec-pbab01.dts  |    4 ++++
+>  arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi |   22 ++++++++++++++++++++++
+>  2 files changed, 26 insertions(+)
 > 
-> memory {
-> 	device_type = "memory";
-> 	reg = <0x0 0x00000000 0x0 0xc0000000>;
-> };
+> diff --git a/arch/arm/boot/dts/imx6q-phytec-pbab01.dts b/arch/arm/boot/dts/imx6q-phytec-pbab01.dts
+> index 7d37ec6..39e69bd 100644
+> --- a/arch/arm/boot/dts/imx6q-phytec-pbab01.dts
+> +++ b/arch/arm/boot/dts/imx6q-phytec-pbab01.dts
+> @@ -32,3 +32,7 @@
+>  &usdhc3 {
+>  	status = "okay";
+>  };
+> +
+> +&usbotg {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi b/arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi
+> index 1a3b50d..dcb1d59 100644
+> --- a/arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi
+> +++ b/arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi
+> @@ -18,6 +18,19 @@
+>  	memory {
+>  		reg = <0x10000000 0x80000000>;
+>  	};
+> +
+> +	regulators {
+> +		compatible = "simple-bus";
+> +
+> +		reg_usb_otg_vbus: usb_otg_vbus {
+> +			compatible = "regulator-fixed";
+> +			regulator-name = "usb_otg_vbus";
+> +			regulator-min-microvolt = <5000000>;
+> +			regulator-max-microvolt = <5000000>;
+> +			gpio = <&gpio4 15 0>;
+> +			enable-active-low;
+> +		};
+> +	};
+>  };
+>  
+>  &ecspi3 {
+> @@ -134,6 +147,7 @@
+>  				MX6QDL_PAD_EIM_D23__GPIO3_IO23 0x80000000
+>  				MX6QDL_PAD_DISP0_DAT3__GPIO4_IO24 0x80000000 /* SPI NOR chipselect */
+>  				MX6QDL_PAD_DI0_PIN15__GPIO4_IO17  0x80000000 /* PMIC interrupt */
+> +				MX6QDL_PAD_KEY_ROW4__GPIO4_IO15   0x80000000 /* USB_OTG_PWR_EN */
+>  			>;
+>  		};
+>  	};
+> @@ -178,3 +192,11 @@
+>          wp-gpios = <&gpio1 29 0>;
+>          status = "disabled";
+>  };
+> +
+> +&usbotg {
+> +	vbus-supply = <&reg_usb_otg_vbus>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usbotg_1>;
+> +	disable-over-current;
+> +	status = "disabled";
+> +};
+> -- 
+> 1.7.9.5
 > 
-> Is there any reason to have three entries?
-> 
-> Thanks,
-> Mark.
-> 
-> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-January/225899.html
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
 
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
