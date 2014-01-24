@@ -1,62 +1,51 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH v3 2/2] regulator: s5m8767: Document new binding for Buck9 GPIO
- control
-Date: Fri, 24 Jan 2014 14:37:58 +0100
-Message-ID: <1390570678-30686-3-git-send-email-k.kozlowski@samsung.com>
-References: <1390570678-30686-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1390570678-30686-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sangbeom Kim <sbkim73@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Sachin Kamat <sachin.kamat@linaro.org>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 1/2] usb: dwc3: core: continue probing if usb phy library
+ returns -ENODEV/-ENXIO
+Date: Fri, 24 Jan 2014 19:39:12 +0530
+Message-ID: <52E27408.8060808@ti.com>
+References: <1385373690-12170-1-git-send-email-kishon@ti.com> <1390299099-14764-1-git-send-email-kishon@ti.com> <20140121144725.GF30451@saruman.home>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140121144725.GF30451@saruman.home>
+Sender: linux-doc-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: george.cherian@ti.com, heikki.krogerus@linux.intel.com, rogerq@ti.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for new binding for controlling (enable/disable) the
-Buck9 Converter by GPIO (BUCK9EN).
+Hi,
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Kyungmin Park <kyungmin.park@samsung.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
----
- .../bindings/regulator/s5m8767-regulator.txt       |   13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+On Tuesday 21 January 2014 08:17 PM, Felipe Balbi wrote:
+> On Tue, Jan 21, 2014 at 03:41:38PM +0530, Kishon Vijay Abraham I wrote:
+>> Since PHYs for dwc3 is optional (not all SoCs that have DWC3 use PHYs),
+>> do not return from probe if the USB PHY library returns -ENODEV as that
+> 
+> this isn't correct, they all have PHYs, some of them might not be
+> controllable.
 
-diff --git a/Documentation/devicetree/bindings/regulator/s5m8767-regulator.txt b/Documentation/devicetree/bindings/regulator/s5m8767-regulator.txt
-index fc6b38f035bd..d290988ed975 100644
---- a/Documentation/devicetree/bindings/regulator/s5m8767-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/s5m8767-regulator.txt
-@@ -69,13 +69,16 @@ sub-node should be of the format as listed below.
- 		};
- 	};
- The above regulator entries are defined in regulator bindings documentation
--except op_mode description.
-+except these properties:
- 	- op_mode: describes the different operating modes of the LDO's with
- 		power mode change in SOC. The different possible values are,
- 		0 - always off mode
- 		1 - on in normal mode
- 		2 - low power mode
- 		3 - suspend mode
-+	- s5m8767,pmic-ext-control-gpios: (optional) GPIO specifier for one
-+		GPIO controlling this regulator (enable/disable); This is
-+		valid only for buck9.
- 
- The following are the names of the regulators that the s5m8767 pmic block
- supports. Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
-@@ -148,5 +151,13 @@ Example:
- 				regulator-always-on;
- 				regulator-boot-on;
- 			};
-+
-+			vemmc_reg: BUCK9 {
-+				regulator-name = "VMEM_VDD_2.8V";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				op_mode = <3>; /* Standby Mode */
-+				s5m8767,pmic-ext-control-gpios = <&gpk0 2 0>;
-+			};
- 		};
- 	};
--- 
-1.7.9.5
+right, but we use USB PHY library only for controllable PHYs (apart from using
+nop).
+> 
+>> indicates the platform does not have PHY.
+> 
+> not really, that indicates the current platform tried to grab a PHY and
+> the PHY doesn't exist. If there's anybody with a non-controllable PHY
+> and someone gives me a really good reason for not using the generic
+> no-op PHY, then we should add a flag and we could:
+> 
+> 	if (!likely(dwc->flags & DWC3_USB2PHY_DRIVER_NOT_NEEDED))
+> 		dwc3_grab_phys(dwc);
+> 
+> But I really want to see the argument against using no-op. As far as I
+> could see, everybody needs a PHY driver one way or another, some
+> platforms just haven't sent any PHY driver upstream and have their own
+> hacked up solution to avoid using the PHY layer.
+
+I was trying to address Heikki concerns in my previous version [1] where I used
+quirks to identify if the platform does not have PHY.
+
+[1] -> https://lkml.org/lkml/2013/12/5/32
+
+Thanks
+Kishon
