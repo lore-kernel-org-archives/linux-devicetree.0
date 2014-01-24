@@ -1,50 +1,162 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC] Culling traffic volume on devicetree mailing list
-Date: Fri, 24 Jan 2014 11:13:34 +0000
-Message-ID: <20140124111334.3B295C4088D@trevor.secretlab.ca>
-References: <CACxGe6vYMOnyeqdhaAggytxgiLH=ijNOrmuq2FyOUtZCGqfdgQ@mail.gmail. com> <CAOesGMhYfWXCFOc6K67aAcNNRUppONY4WNXTvk2NEJH-rfMrGQ@mail.gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMhYfWXCFOc6K67aAcNNRUppONY4WNXTvk2NEJH-rfMrGQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+From: Srikanth Thokala <sthokal@xilinx.com>
+Subject: Re: [PATCH v2] dma: Add Xilinx AXI Video Direct Memory Access Engine
+ driver support
+Date: Fri, 24 Jan 2014 16:46:05 +0530
+Message-ID: <CA+mB=1L6yvCwA3mKCwz83LQbXiVau110REV64rYrSzUhGE4ucA@mail.gmail.com>
+References: <1390409565-4200-1-git-send-email-sthokal@xilinx.com>
+	<1390409565-4200-2-git-send-email-sthokal@xilinx.com>
+	<52E0FC22.8060903@metafoo.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <52E0FC22.8060903@metafoo.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Srikanth Thokala <sthokal@xilinx.com>, dan.j.williams@intel.com, vinod.koul@intel.com, michal.simek@xilinx.com, Grant Likely <grant.likely@linaro.org>, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 22 Jan 2014 10:35:58 -0800, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
-> On Tue, Jan 21, 2014 at 6:40 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> > Hi everyone,
-> >
-> > Today on the devicetree conf call we (Rob, Ian and I) talked about
-> > culling the volume of traffic on the devicetree list so that it would
-> > be more useful to the DTC maintainers and non-Linux users like
-> > freebsd. We'd like to propose creating the following two lists so that
-> > those interested don't need to drink from the firehose:
-> >
-> > devicetree-compiler: Specifically for discussing dt tooling topics
-> > (parsing, schema validation, data format)
-> 
-> This makes a lot of sense, and should help to decouple the bindings
-> and standards from the tool. Should have happened a long time ago. :)
-> 
-> > devicetree-spec: For discussing 'core' device tree bindings. ie.
-> > anything that would be a candidate for putting into an ePAPR type
-> > spec. Individual device bindings would continue to be posted to
-> > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, but anything affecting subsystems or
-> > generic patterns should be posted to this new list.
-> 
-> I predict that it will be hard for someone posting a patch to tell if
-> they should send it to this list or some other list. It might be
-> convenient for you guys to ignore the high-volume list and just focus
-> on this one, but for the people who post patches it just makes it more
-> complicated. IMHO.
+Hi Lars,
 
-I'm inclined to stick with the default of post to the original
-devicetree list via get_maintainer.pl, and then direct people to the
-core list on a case by case basis when they start doing something
-generic.
+On Thu, Jan 23, 2014 at 4:55 PM, Lars-Peter Clausen <lars@metafoo.de> wrote:
+> On 01/22/2014 05:52 PM, Srikanth Thokala wrote:
+> [...]
+>> +/**
+>> + * xilinx_vdma_device_control - Configure DMA channel of the device
+>> + * @dchan: DMA Channel pointer
+>> + * @cmd: DMA control command
+>> + * @arg: Channel configuration
+>> + *
+>> + * Return: '0' on success and failure value on error
+>> + */
+>> +static int xilinx_vdma_device_control(struct dma_chan *dchan,
+>> +                                   enum dma_ctrl_cmd cmd, unsigned long arg)
+>> +{
+>> +     struct xilinx_vdma_chan *chan = to_xilinx_chan(dchan);
+>> +
+>> +     switch (cmd) {
+>> +     case DMA_TERMINATE_ALL:
+>> +             xilinx_vdma_terminate_all(chan);
+>> +             return 0;
+>> +     case DMA_SLAVE_CONFIG:
+>> +             return xilinx_vdma_slave_config(chan,
+>> +                                     (struct xilinx_vdma_config *)arg);
+>
+> You really shouldn't be overloading the generic API with your own semantics.
+> DMA_SLAVE_CONFIG should take a dma_slave_config and nothing else.
 
-g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok.  The driver needs few additional configuration from the slave
+device like Vertical
+Size, Horizontal Size,  Stride etc., for the DMA transfers, in that case do you
+suggest me to define a separate dma_ctrl_cmd like the one FSLDMA_EXTERNAL_START
+defined for Freescale drivers?
+
+>
+>> +     default:
+>> +             return -ENXIO;
+>> +     }
+>> +}
+>> +
+> [...]
+>> +
+>> +     /* Request the interrupt */
+>> +     chan->irq = irq_of_parse_and_map(node, 0);
+>> +     err = devm_request_irq(xdev->dev, chan->irq, xilinx_vdma_irq_handler,
+>> +                            IRQF_SHARED, "xilinx-vdma-controller", chan);
+>
+> This is a clasic example of where to not use devm_request_irq. 'chan' is
+> accessed in the interrupt handler, but if you use devm_request_irq 'chan'
+> will be freed before the interrupt handler has been released, which means
+> there is now a race condition where the interrupt handler can access already
+> freed memory.
+
+Ok, thank you for the clarification on this thread.  I will fix it in v3.
+
+>
+>> +     if (err) {
+>> +             dev_err(xdev->dev, "unable to request IRQ\n");
+>> +             return err;
+>> +     }
+>> +
+>> +     /* Initialize the DMA channel and add it to the DMA engine channels
+>> +      * list.
+>> +      */
+>> +     chan->common.device = &xdev->common;
+>> +
+>> +     list_add_tail(&chan->common.device_node, &xdev->common.channels);
+>> +     xdev->chan[chan->id] = chan;
+>> +
+>> +     /* Reset the channel */
+>> +     err = xilinx_vdma_chan_reset(chan);
+>> +     if (err < 0) {
+>> +             dev_err(xdev->dev, "Reset channel failed\n");
+>> +             return err;
+>> +     }
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +/**
+>> + * struct of_dma_filter_xilinx_args - Channel filter args
+>> + * @dev: DMA device structure
+>> + * @chan_id: Channel id
+>> + */
+>> +struct of_dma_filter_xilinx_args {
+>> +     struct dma_device *dev;
+>> +     u32 chan_id;
+>> +};
+>> +
+>> +/**
+>> + * xilinx_vdma_dt_filter - VDMA channel filter function
+>> + * @chan: DMA channel pointer
+>> + * @param: Filter match value
+>> + *
+>> + * Return: true/false based on the result
+>> + */
+>> +static bool xilinx_vdma_dt_filter(struct dma_chan *chan, void *param)
+>> +{
+>> +     struct of_dma_filter_xilinx_args *args = param;
+>> +
+>> +     return chan->device == args->dev && chan->chan_id == args->chan_id;
+>> +}
+>> +
+>> +/**
+>> + * of_dma_xilinx_xlate - Translation function
+>> + * @dma_spec: Pointer to DMA specifier as found in the device tree
+>> + * @ofdma: Pointer to DMA controller data
+>> + *
+>> + * Return: DMA channel pointer on success and NULL on error
+>> + */
+>> +static struct dma_chan *of_dma_xilinx_xlate(struct of_phandle_args *dma_spec,
+>> +                                             struct of_dma *ofdma)
+>> +{
+>> +     struct of_dma_filter_xilinx_args args;
+>> +     dma_cap_mask_t cap;
+>> +
+>> +     args.dev = ofdma->of_dma_data;
+>> +     if (!args.dev)
+>> +             return NULL;
+>> +
+>> +     if (dma_spec->args_count != 1)
+>> +             return NULL;
+>> +
+>> +     dma_cap_zero(cap);
+>> +     dma_cap_set(DMA_SLAVE, cap);
+>> +
+>> +     args.chan_id = dma_spec->args[0];
+>> +
+>> +     return dma_request_channel(cap, xilinx_vdma_dt_filter, &args);
+>
+> There is a new helper function called dma_get_slave_channel, which makes
+> this much easier. Take a look at the k3dma.c driver for an example.
+
+Ok.  I will check and fix it in v3.
+
+Srikanth
+
+>> +}
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
