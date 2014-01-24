@@ -1,81 +1,106 @@
-From: Tanmay Inamdar <tinamdar@apm.com>
-Subject: [RFC PATCH V3 3/4] dt-bindings: pci: xgene pcie device tree bindings
-Date: Fri, 24 Jan 2014 13:32:47 -0800
-Message-ID: <1390599168-13150-4-git-send-email-tinamdar@apm.com>
-References: <1390599168-13150-1-git-send-email-tinamdar@apm.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1390599168-13150-1-git-send-email-tinamdar@apm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches@apm.com, jcm@redhat.com, Tanmay Inamdar <tinamdar@apm.com>
+From: Marc C <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 8/8] ARM: brcmstb: dts: add a reference DTS for Broadcom
+ 7445
+Date: Fri, 24 Jan 2014 13:39:25 -0800
+Message-ID: <52E2DD8D.1050609@gmail.com>
+References: <1390361452-3124-1-git-send-email-marc.ceeeee@gmail.com> <1390361452-3124-9-git-send-email-marc.ceeeee@gmail.com> <20140124110910.GC814@e106331-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140124110910.GC814-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the bindings for X-Gene PCIe driver. The driver resides
-under 'drivers/pci/host/pci-xgene.c' file.
+Hi Mark,
 
-Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
----
- .../devicetree/bindings/pci/xgene-pci.txt          |   52 ++++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/xgene-pci.txt
+> As I commented on v3 [1], these are contiguous and can be described with
+> a single entry:
+>
+> memory {
+> 	device_type = "memory";
+> 	reg = <0x0 0x00000000 0x0 0xc0000000>;
+> };
+>
+> Is there any reason to have three entries?
 
-diff --git a/Documentation/devicetree/bindings/pci/xgene-pci.txt b/Documentation/devicetree/bindings/pci/xgene-pci.txt
-new file mode 100644
-index 0000000..60e4a54
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/xgene-pci.txt
-@@ -0,0 +1,52 @@
-+* AppliedMicro X-Gene PCIe interface
-+
-+Required properties:
-+- device_type: set to "pci"
-+- compatible: should contain "xgene,pcie" to identify the core.
-+- reg: A list of physical base address and length for each set of controller
-+       registers. Must contain an entry for each entry in the reg-names
-+       property.
-+- reg-names: Must include the following entries:
-+  "csr": controller configuration registers.
-+  "cfg": pcie configuration space registers.
-+- #address-cells: set to <3>
-+- #size-cells: set to <2>
-+- ranges: ranges for the outbound memory, I/O regions.
-+- dma-ranges: ranges for the inbound memory regions.
-+- #interrupt-cells: set to <1>
-+- interrupt-map-mask and interrupt-map: standard PCI properties
-+	to define the mapping of the PCIe interface to interrupt
-+	numbers.
-+- clocks: from common clock binding: handle to pci clock.
-+
-+Optional properties:
-+- status: Either "ok" or "disabled".
-+
-+Example:
-+
-+SoC specific DT Entry:
-+	pcie0: pcie@1f2b0000 {
-+		status = "disabled";
-+		device_type = "pci";
-+		compatible = "apm,xgene-pcie";
-+		#interrupt-cells = <1>;
-+		#size-cells = <2>;
-+		#address-cells = <3>;
-+		reg = < 0x00 0x1f2b0000 0x0 0x00010000   /* Controller registers */
-+			0xe0 0xd0000000 0x0 0x00200000>; /* PCI config space */
-+		reg-names = "csr", "cfg";
-+		ranges = <0x01000000 0x00 0x00000000 0xe0 0x00000000 0x00 0x00010000   /* io */
-+			  0x02000000 0x00 0x10000000 0xe0 0x10000000 0x00 0x80000000>; /* mem */
-+		dma-ranges = <0x42000000 0x40 0x00000000 0x40 0x00000000 0x40 0x00000000>;
-+		interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+		interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xc2 0x1
-+				 0x0 0x0 0x0 0x2 &gic 0x0 0xc3 0x1
-+				 0x0 0x0 0x0 0x3 &gic 0x0 0xc4 0x1
-+				 0x0 0x0 0x0 0x4 &gic 0x0 0xc5 0x1>;
-+		clocks = <&pcie0clk 0>;
-+	};
-+
-+Board specific DT Entry:
-+	&pcie0 {
-+		status = "ok";
-+	};
--- 
-1.7.9.5
+Oopsies, sorry for missing that.
+
+On BCM7445 and derivatives, there are 3 memory controllers. For each memory controller,
+the first 1GB of physical DRAM is mapped to:
+
+* 0x00_0000_0000
+* 0x00_4000_0000
+* 0x00_8000_0000
+
+The memory controllers aren't interleaved. So, it's possible for the SoC to have a
+discontiguous memory-mapping, where a designer chooses not to populate physical DRAM in
+the middle.
+
+The 'reg' property was broken-up to have each chunk of memory given a dedicated memblock.
+
+All that said, if you like, I can rework the patch as you've suggested.
+
+Thanks,
+Marc C
+
+
+On 01/24/2014 03:09 AM, Mark Rutland wrote:
+> On Wed, Jan 22, 2014 at 03:30:52AM +0000, Marc Carino wrote:
+>> Add a sample DTS which will allow bootup of a board populated
+>> with the BCM7445 chip.
+>>
+>> Signed-off-by: Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/bcm7445.dts |  111 +++++++++++++++++++++++++++++++++++++++++
+>>  1 files changed, 111 insertions(+), 0 deletions(-)
+>>  create mode 100644 arch/arm/boot/dts/bcm7445.dts
+>>
+>> diff --git a/arch/arm/boot/dts/bcm7445.dts b/arch/arm/boot/dts/bcm7445.dts
+>> new file mode 100644
+>> index 0000000..ffa3305
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/bcm7445.dts
+>> @@ -0,0 +1,111 @@
+>> +/dts-v1/;
+>> +/include/ "skeleton.dtsi"
+>> +
+>> +/ {
+>> +	#address-cells = <2>;
+>> +	#size-cells = <2>;
+>> +	model = "Broadcom STB (bcm7445)";
+>> +	compatible = "brcm,bcm7445", "brcm,brcmstb";
+>> +	interrupt-parent = <&gic>;
+>> +
+>> +	chosen {};
+>> +
+>> +	memory {
+>> +		device_type = "memory";
+>> +		reg = <0x00 0x00000000 0x00 0x40000000>,
+>> +		      <0x00 0x40000000 0x00 0x40000000>,
+>> +		      <0x00 0x80000000 0x00 0x40000000>;
+>> +	};
+> 
+> As I commented on v3 [1], these are contiguous and can be described with
+> a single entry:
+> 
+> memory {
+> 	device_type = "memory";
+> 	reg = <0x0 0x00000000 0x0 0xc0000000>;
+> };
+> 
+> Is there any reason to have three entries?
+> 
+> Thanks,
+> Mark.
+> 
+> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-January/225899.html
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
