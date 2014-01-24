@@ -1,118 +1,146 @@
-From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 Resend] Documentation: mfd: Add binding document for S2MPA01
-Date: Fri, 24 Jan 2014 16:28:07 +0530
-Message-ID: <1390561087-31850-1-git-send-email-sachin.kamat@linaro.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 6/8] ARM: brcmstb: add misc. DT bindings for brcmstb
+Date: Fri, 24 Jan 2014 11:03:00 +0000
+Message-ID: <20140124110300.GB814@e106331-lin.cambridge.arm.com>
+References: <1390361452-3124-1-git-send-email-marc.ceeeee@gmail.com>
+ <1390361452-3124-7-git-send-email-marc.ceeeee@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1390361452-3124-7-git-send-email-marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Added initial binding documentation for S2MPA01 MFD.
+On Wed, Jan 22, 2014 at 03:30:50AM +0000, Marc Carino wrote:
+> Document the bindings that the Broadcom STB platform needs
+> for proper bootup.
+> 
+> Signed-off-by: Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/arm/brcm-brcmstb.txt       |   95 ++++++++++++++++++++
+>  1 files changed, 95 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/brcm-brcmstb.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/brcm-brcmstb.txt b/Documentation/devicetree/bindings/arm/brcm-brcmstb.txt
+> new file mode 100644
+> index 0000000..3c436cc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/brcm-brcmstb.txt
+> @@ -0,0 +1,95 @@
+> +ARM Broadcom STB platforms Device Tree Bindings
+> +-----------------------------------------------
+> +Boards with Broadcom Brahma15 ARM-based BCMxxxx (generally BCM7xxx variants)
+> +SoC shall have the following DT organization:
+> +
+> +Required root node properties:
+> +    - compatible: "brcm,bcm<chip_id>", "brcm,brcmstb"
+> +
+> +example:
+> +/ {
+> +    #address-cells = <2>;
+> +    #size-cells = <2>;
+> +    model = "Broadcom STB (bcm7445)";
+> +    compatible = "brcm,bcm7445", "brcm,brcmstb";
+> +
+> +Further, syscon nodes that map platform-specific registers used for general
+> +system control is required:
+> +
+> +    - compatible: "brcm,bcm<chip_id>-sun-top-ctrl", "syscon"
+> +    - compatible: "brcm,bcm<chip_id>-hif-cpubiuctrl", "syscon"
+> +    - compatible: "brcm,bcm<chip_id>-hif-continuation", "syscon"
+> +
+> +example:
+> +    rdb {
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +        compatible = "simple-bus";
+> +        ranges = <0 0x00 0xf0000000 0x1000000>;
+> +
+> +        sun_top_ctrl: syscon@404000 {
+> +            compatible = "brcm,bcm7445-sun-top-ctrl", "syscon";
+> +            reg = <0x404000 0x51c>;
+> +        };
+> +
+> +        hif_cpubiuctrl: syscon@3e2400 {
+> +            compatible = "brcm,bcm7445-hif-cpubiuctrl", "syscon";
+> +            reg = <0x3e2400 0x5b4>;
+> +        };
+> +
+> +        hif_continuation: syscon@452000 {
+> +            compatible = "brcm,bcm7445-hif-continuation", "syscon";
+> +            reg = <0x452000 0x100>;
+> +        };
+> +    };
+> +
+> +Lastly, nodes that allow for support of SMP initialization and reboot are
+> +required:
+> +
+> +smpboot
+> +-------
+> +Required properties:
+> +
+> +    - compatible
+> +        The string "brcm,brcmstb-smpboot".
+> +
+> +    - syscon-cpu
+> +        A phandle / integer array property which lets the BSP know the location
+> +        of certain CPU power-on registers.
+> +
+> +        The layout of the property is as follows:
+> +            o a phandle to the "hif_cpubiuctrl" syscon node
+> +            o offset to the base CPU power zone register
+> +            o offset to the base CPU reset register
 
-Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-* Re-organised as suggested by Mark Rutland.
----
- Documentation/devicetree/bindings/mfd/s2mpa01.txt |   86 +++++++++++++++++++++
- 1 file changed, 86 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/s2mpa01.txt
+How variable are these values?
 
-diff --git a/Documentation/devicetree/bindings/mfd/s2mpa01.txt b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
-new file mode 100644
-index 000000000000..70879b92b24b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
-@@ -0,0 +1,86 @@
-+
-+* Samsung S2MPA01 Voltage and Current Regulator
-+
-+The Samsung S2MPA01 is a multi-function device which includes high
-+efficiency buck converters including Dual-Phase buck converter, various LDOs,
-+and an RTC. It is interfaced to the host controller using an I2C interface.
-+Each sub-block is addressed by the host system using different I2C slave
-+addresses.
-+
-+Required properties:
-+- compatible: Should be "samsung,s2mpa01-pmic".
-+- reg: Specifies the I2C slave address of the PMIC block. It should be 0x66.
-+
-+Optional properties:
-+- interrupt-parent: Specifies the phandle of the interrupt controller to which
-+  the interrupts from s2mpa01 are delivered to.
-+- interrupts: Interrupt specifier for interrupt source (connected to SoC).
-+
-+Optional nodes:
-+- regulators: The regulators of s2mpa01 that have to be instantiated should be
-+  included in a sub-node named 'regulators'. Regulator nodes and constraints
-+  included in this sub-node use the standard regulator bindings which are
-+  documented elsewhere.
-+
-+Properties for BUCK regulator nodes:
-+ regulator-ramp-delay for BUCKs = [6250/12500(default)/25000/50000] uV/us
-+
-+ BUCK[1/2/3/4] supports disabling ramp delay on hardware, so explictly
-+ regulator-ramp-delay = <0> can be used for them to disable ramp delay.
-+ In the absence of the regulator-ramp-delay property, the default ramp
-+ delay will be used.
-+
-+  NOTE: Some BUCKs share the ramp rate setting i.e. same ramp value will be set
-+  for a particular group of BUCKs. So provide same regulator-ramp-delay<value>.
-+  Grouping of BUCKs sharing ramp rate setting is as follow : BUCK[1, 6],
-+  BUCK[2, 4], and BUCK[8, 9, 10]
-+
-+The following are the names of the regulators that the s2mpa01 PMIC block
-+supports. Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
-+as per the datasheet of s2mpa01.
-+
-+	- LDOn
-+		  - valid values for n are 1 to 26
-+		  - Example: LDO1, LD02, LDO26
-+	- BUCKn
-+		  - valid values for n are 1 to 10.
-+		  - Example: BUCK1, BUCK2, BUCK9
-+
-+Example:
-+
-+	s2mpa01_pmic@66 {
-+		compatible = "samsung,s2mpa01-pmic";
-+		reg = <0x66>;
-+
-+		regulators {
-+			ldo1_reg: LDO1 {
-+				regulator-name = "VDD_ALIVE";
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <1000000>;
-+			};
-+
-+			ldo2_reg: LDO2 {
-+				regulator-name = "VDDQ_MMC2";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-always-on;
-+			};
-+
-+			buck1_reg: BUCK1 {
-+				regulator-name = "vdd_mif";
-+				regulator-min-microvolt = <950000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			buck2_reg: BUCK2 {
-+				regulator-name = "vdd_arm";
-+				regulator-min-microvolt = <950000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-ramp-delay = <50000>;
-+			};
-+		};
-+	};
--- 
-1.7.9.5
+> +
+> +    - syscon-cont
+> +        A phandle pointing to the syscon node which describes the CPU boot
+> +        continuation registers.
+> +            o a phandle to the "hif_continuation" syscon node
+> +
+> +example:
+> +    smpboot {
+> +        compatible = "brcm,brcmstb-smpboot";
+> +        syscon-cpu = <&hif_cpubiuctrl 0x88 0x178>;
+> +        syscon-cont = <&hif_continuation>;
+> +    };
 
+This looks odd. This doesn't seem like a device, but rather a grouping
+of disparate devices used for a particular software purpose.
+
+> +
+> +reboot
+> +-------
+> +Required properties
+> +
+> +    - compatible
+> +        The string property "brcm,brcmstb-reboot".
+> +
+> +    - syscon
+> +        A phandle / integer array that points to the syscon node which describes
+> +        the general system reset registers.
+> +            o a phandle to "sun_top_ctrl"
+> +            o offset to the "reset source enable" register
+> +            o offset to the "software master reset" register
+
+How variable are these values?
+
+> +
+> +example:
+> +    reboot {
+> +        compatible = "brcm,brcmstb-reboot";
+> +        syscon = <&sun_top_ctrl 0x304 0x308>;
+> +    };
+
+As with smpboot, this seems odd.
+
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
