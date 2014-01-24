@@ -1,81 +1,97 @@
-From: Ashutosh singh <ashuleapyear-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM-i.MX6Q-dts : Added USB_OTG Support
-Date: Fri, 24 Jan 2014 14:58:44 +0530
-Message-ID: <1390555724-9779-1-git-send-email-ashutosh.s@phytec.in>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ashutosh singh <ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 13/14] spi: rspi: Add DT support
+Date: Fri, 24 Jan 2014 09:33:49 +0000
+Message-ID: <20140124093349.GK15586@e106331-lin.cambridge.arm.com>
+References: <1390553044-11860-1-git-send-email-geert@linux-m68k.org>
+ <1390553044-11860-14-git-send-email-geert@linux-m68k.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1390553044-11860-14-git-send-email-geert@linux-m68k.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Brown <broonie@kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for USB_OTG on Phytec phyFLEX-i.MX6 Quad module.
+On Fri, Jan 24, 2014 at 08:44:03AM +0000, Geert Uytterhoeven wrote:
+> From: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
+> Cc: devicetree@vger.kernel.org
+> ---
+> v2:
+>   - Clarify RSPI/QSPI
+>   - Add interrupt-parent
+>   - s/should/must/ for #address-cells and #size-cells
+> v3:
+>   - Add renesas,rspi-sh
+>   - Drop -rcar suffix for QSPI
+>   - Clarify num-cs
+>   - Implement DT support in driver
+>   - Changed one-line summary from "Documentation: dt: Add Renesas RSPI/QSPI
+>     bindings" to "spi: rspi: Add DT support"
+> v4:
+>   - Clarify SoCtype and interrupts
+>   - Add clock property
+>   - Add QSPI example
+>   - Add interrupt-names
+>   - Add link to Renesas pinctrl
+>   - Rename "renesas,rspi-sh" to "renesas,rspi", to match platform device
+>     naming
+>   - spi-rspi.c:
+>       - Remove Soc-specific matching from spi-rspi.c given the fallback is
+> 	mandatory
+>       - Things became a lot simpler due to the replacement of platform_data
+>         fields by the "rspi-rz" platform device binding.
+> ---
+>  Documentation/devicetree/bindings/spi/spi-rspi.txt |   58 +++++++++++
+>  drivers/spi/spi-rspi.c                             |  106 ++++++++++++++------
+>  2 files changed, 135 insertions(+), 29 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-rspi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/spi-rspi.txt b/Documentation/devicetree/bindings/spi/spi-rspi.txt
+> new file mode 100644
+> index 000000000000..ed84299a9c61
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-rspi.txt
+> @@ -0,0 +1,58 @@
+> +Device tree configuration for Renesas RSPI/QSPI driver
+> +
+> +Required properties:
+> +- compatible       : For Renesas Serial Peripheral Interface on legacy SH:
+> +		     "renesas,rspi-<soctype>", "renesas,rspi" as fallback.
+> +		     For Renesas Serial Peripheral Interface on RZ/A1H:
+> +		     "renesas,rspi-<soctype>", "renesas,rspi-rz" as fallback.
+> +		     For Quad Serial Peripheral Interface on R-Car Gen2:
+> +		     "renesas,qspi-<soctype>", "renesas,qspi" as fallback.
+> +		     Examples of valid soctypes are "sh7757" (SH),
+> +		     "r7s72100" (RZ/A1H), "r8a7790" (R-Car H2), and
+> +		     "r8a7791" (R-Car M2).
+> +- reg              : Address start and address range size of the device
+> +- interrupts       : 1 interrupt for RSPI cores using a single multiplexed
+> +		     interrupt,
+> +		     3 interrupts (SPEI, SPRI, SPTI) for RSPI cores using
+> +		     separate interrupts.
+> +- interrupt-names  : Array of strings associated with the interrupt numbers:
+> +		     "error" for SPEI, "rx" for SPRI, and "tx" for SPTI.
+> +		     For RSPI cores using a single multiplexed interrupt, the
+> +		     name "mux" is optional.
 
-Signed-off-by: Ashutosh singh <ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
----
- arch/arm/boot/dts/imx6q-phytec-pbab01.dts  |    4 ++++
- arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi |   22 ++++++++++++++++++++++
- 2 files changed, 26 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6q-phytec-pbab01.dts b/arch/arm/boot/dts/imx6q-phytec-pbab01.dts
-index 7d37ec6..39e69bd 100644
---- a/arch/arm/boot/dts/imx6q-phytec-pbab01.dts
-+++ b/arch/arm/boot/dts/imx6q-phytec-pbab01.dts
-@@ -32,3 +32,7 @@
- &usdhc3 {
- 	status = "okay";
- };
-+
-+&usbotg {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi b/arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi
-index 1a3b50d..dcb1d59 100644
---- a/arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi
-+++ b/arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi
-@@ -18,6 +18,19 @@
- 	memory {
- 		reg = <0x10000000 0x80000000>;
- 	};
-+
-+	regulators {
-+		compatible = "simple-bus";
-+
-+		reg_usb_otg_vbus: usb_otg_vbus {
-+			compatible = "regulator-fixed";
-+			regulator-name = "usb_otg_vbus";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			gpio = <&gpio4 15 0>;
-+			enable-active-low;
-+		};
-+	};
- };
- 
- &ecspi3 {
-@@ -134,6 +147,7 @@
- 				MX6QDL_PAD_EIM_D23__GPIO3_IO23 0x80000000
- 				MX6QDL_PAD_DISP0_DAT3__GPIO4_IO24 0x80000000 /* SPI NOR chipselect */
- 				MX6QDL_PAD_DI0_PIN15__GPIO4_IO17  0x80000000 /* PMIC interrupt */
-+				MX6QDL_PAD_KEY_ROW4__GPIO4_IO15   0x80000000 /* USB_OTG_PWR_EN */
- 			>;
- 		};
- 	};
-@@ -178,3 +192,11 @@
-         wp-gpios = <&gpio1 29 0>;
-         status = "disabled";
- };
-+
-+&usbotg {
-+	vbus-supply = <&reg_usb_otg_vbus>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg_1>;
-+	disable-over-current;
-+	status = "disabled";
-+};
--- 
-1.7.9.5
+Rather than defining the set of interrupts twice, it would be nice to
+have interrupts defined in terms of interrupt-names:
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- interrupts: a list of interrupt-specifiers, one for each entry in
+  interrupt-names. If interrupt-names is not present, an interrupt
+  specifier for a single muxed interrupt.
+
+- interrupt-names: A list of interrupt names. Should contain (if
+  present):
+  * "error" for SPEI
+  * "rx" for SPRI
+  * "tx" to SPTI
+  * "mux" for a single muxed interrupt
+
+Thanks,
+Mark.
