@@ -1,18 +1,17 @@
-From: Mohit KUMAR DCG <Mohit.KUMAR@st.com>
-Subject: RE: [PATCH V2 1/8] SPEAr13xx: Set dt field entry <stmmac,phy-addr>
- for phy probe
-Date: Fri, 24 Jan 2014 14:51:41 +0800
-Message-ID: <2CC2A0A4A178534D93D5159BF3BCB66189FBF943E5@EAPEX1MAIL1.st.com>
-References: <cover.1390471111.git.mohit.kumar@st.com>
- <12754927160d11063aad96c011c4807cb0aa1775.1390471111.git.mohit.kumar@st.com>
- <CAOh2x=mQLyMV_0Swf3o2c9bW_DNCLT-fQFc3Qs6yt1+9prabmw@mail.gmail.com>
- <CAGb2v64pSvoRBzrpzXT5yywqWSw8ryQiuVop2tMSRpU2=YMLiw@mail.gmail.com>
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [PATCH v3 1/2] i2c: qup: Add device tree bindings information
+Date: Fri, 24 Jan 2014 01:18:41 -0600
+Message-ID: <20140124071841.GA6113@qualcomm.com>
+References: <1389999819-10648-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1389999819-10648-2-git-send-email-bjorn.andersson@sonymobile.com>
+ <CAL_JsqJBEu8iLzE8-dXniZFytr6cQsprBYiYnJeXS2-80iy1Mw@mail.gmail.com>
+ <20140121024007.GE13785@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAGb2v64pSvoRBzrpzXT5yywqWSw8ryQiuVop2tMSRpU2=YMLiw@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20140121024007.GE13785@codeaurora.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,72 +21,61 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chen-Yu Tsai <wens@csie.org>, Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Pratyush ANAND <pratyush.anand@st.com>, spear-devel <spear-devel@list.st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Matt Porter <matt.porter@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Grant Likely <grant.likely@linaro.org>, James Ralston <james.d.ralston@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Jean Delvare <khali@linux-fr.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Bill Brown <bill.e.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vg
 List-Id: devicetree@vger.kernel.org
 
-Hello Chen,
+On Mon, Jan 20, 2014 at 06:40:07PM -0800, Stephen Boyd wrote:
+> On 01/20, Rob Herring wrote:
+> > On Fri, Jan 17, 2014 at 5:03 PM, Bjorn Andersson
+> > <bjorn.andersson@sonymobile.com> wrote:
+> > 
+> > >  .../devicetree/bindings/i2c/qcom,i2c-qup.txt       | 41 ++++++++++++++++++++++
+> > >  1 file changed, 41 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt b/Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt
+> > > new file mode 100644
+> > > index 0000000..a99711b
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt
+> > > @@ -0,0 +1,41 @@
+> > > +Qualcomm Universal Peripheral (QUP) I2C controller
+> > > +
+> > > +Required properties:
+> > > + - compatible: Should be "qcom,i2c-qup".
+> > 
+> > Seems a bit generic. All versions of the IP are exactly the same?
+> > "qcom,<chip>-i2c-qup" would be better.
+> > 
+> 
+> There are different versions of the IP in different SoCs. The
+> versions for platforms supported upstream are:
+> 
+> 	1.1.1 (MSM8660, MSM8960)
+> 	2.2.1 (MSM8974v2)
+> 
+> so how about one of "qcom,i2c-qup-v1.1.1" or
+> "qcom,i2c-qup-v2.2.1" should be specified as more specific
+> compatible strings in addition to "qcom,i2c-qup"?
+> 
 
-> -----Original Message-----
-> From: wens213@gmail.com [mailto:wens213@gmail.com] On Behalf Of
-> Chen-Yu Tsai
-> Sent: Friday, January 24, 2014 11:33 AM
-> To: Viresh Kumar
-> Cc: Mohit KUMAR DCG; Pratyush ANAND; spear-devel; linux-arm-
-> kernel@lists.infradead.org; devicetree
-> Subject: Re: [PATCH V2 1/8] SPEAr13xx: Set dt field entry <stmmac,phy-
-> addr> for phy probe
-> 
-> Hi,
-> 
-> On Fri, Jan 24, 2014 at 1:02 PM, Viresh Kumar <viresh.kumar@linaro.org>
-> wrote:
-> > On Thu, Jan 23, 2014 at 4:02 PM, Mohit Kumar <mohit.kumar@st.com>
-> wrote:
-> >> DT field name for the phy address changed since kernel 3.10. Set the
-> >> snps,phy-addr to 0xffffffff so that the driver probes for the phy.
-> 
-> This will no longer be required. The default behavior for DT based setups has
-> been changed to auto-detecting the phy.
-> 
-> See http://patchwork.ozlabs.org/patch/312063/
-> 
-- Thanks, we will test with your patch and remove this one from v3.
+This definitely needs two compatible tags.  The v1.1.1 supports the FIFO, block,
+and data mover modes.  The v2.2.1 supports FIFO, block, and BAM DMA.
 
-Regards
-Mohit
-> 
-> Cheers
-> ChenYu
-> 
-> >>
-> >> Signed-off-by: Mohit Kumar <mohit.kumar@st.com>
-> >> Cc: Pratyush Anand <pratyush.anand@st.com>
-> >> Cc: Viresh Kumar <viresh.linux@gmail.com>
-> >> Cc: spear-devel@list.st.com
-> >> Cc: linux-arm-kernel@lists.infradead.org
-> >> Cc: devicetree@vger.kernel.org
-> >> ---
-> >>  arch/arm/boot/dts/spear13xx.dtsi |    1 +
-> >>  1 files changed, 1 insertions(+), 0 deletions(-)
-> >>
-> >> diff --git a/arch/arm/boot/dts/spear13xx.dtsi
-> >> b/arch/arm/boot/dts/spear13xx.dtsi
-> >> index 4382547..3518803 100644
-> >> --- a/arch/arm/boot/dts/spear13xx.dtsi
-> >> +++ b/arch/arm/boot/dts/spear13xx.dtsi
-> >> @@ -155,6 +155,7 @@
-> >>
-> >>                 gmac0: eth@e2000000 {
-> >>                         compatible = "st,spear600-gmac";
-> >> +                       snps,phy-addr = <0xffffffff>;
-> >>                         reg = <0xe2000000 0x8000>;
-> >>                         interrupts = <0 33 0x4
-> >>                                       0 34 0x4>;
-> >
-> > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+The BAM patches are currently in review and ideally BAM support can be added to
+the I2C.  We'll need a way to differentiate so BAM can be used.
+
+Otherwise, the register interfaces are interchangeable except for BAM specific
+fields in the registers.
+
+
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
