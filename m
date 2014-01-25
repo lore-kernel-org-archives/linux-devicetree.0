@@ -1,38 +1,63 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 00/18] Armada 370/XP watchdog support
-Date: Sat, 25 Jan 2014 14:09:35 -0300
-Message-ID: <20140125170934.GA12589@localhost>
-References: <1390431915-5115-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <52E19A44.7040308@gmail.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: [PATCH v4 16/24] drm/i2c: tda998x: add DT documentation
+Date: Sat, 25 Jan 2014 18:14:37 +0100
+Message-ID: <20140125181437.08ef52c5@armhf>
+References: <cover.1390646891.git.moinejf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52E19A44.7040308-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.1390646891.git.moinejf@free.fr>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces@lists.freedesktop.org
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+To: dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 23, 2014 at 11:40:04PM +0100, Sebastian Hesselbarth wrote:
-> On 01/23/2014 12:04 AM, Ezequiel Garcia wrote:
-> > After some lengthy discussion on the [v2] and [v3] patchsets, here'=
-s a new
-> > round. I hope I haven't forgotten anything.
-> >
->=20
-> Tested-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->=20
-> on Dove.
+Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
+---
+ .../devicetree/bindings/drm/i2c/tda998x.txt        | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/drm/i2c/tda998x.txt
 
-Great, thanks a lot!
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
+new file mode 100644
+index 0000000..b91d73f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
+@@ -0,0 +1,26 @@
++Device-Tree bindings for the NXP TDA998x HDMI transmitter
++
++Required properties;
++  - compatible: must be "nxp,tda998x"
++
++Optional properties:
++  - interrupts: interrupt number - default: polling
++
++  - pinctrl-0: pin control group to be used for
++	screen plug/unplug interrupt.
++
++  - pinctrl-names: must contain a "default" entry.
++
++  - video-ports: 24 bits value which defines how the video controller
++	output is wired to the TDA998x input - default: <0x230145>
++
++Example:
++
++	tda998x: hdmi-encoder {
++		compatible = "nxp,tda998x";
++		reg = <0x70>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <27 2>;		/* falling edge */
++		pinctrl-0 = <&pmx_camera>;
++		pinctrl-names = "default";
++	};
+-- 
+1.8.5.3
