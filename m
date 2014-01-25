@@ -1,69 +1,90 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH 0/2] DT updates for Hummingboard and new Cubox-i
-Date: Fri, 24 Jan 2014 19:44:45 -0800
-Message-ID: <CAOesGMhp1S-XJjGZQBPmH7RFT_pobSFLTBT+4fSKdZ3zhukEhA@mail.gmail.com>
-References: <20140116182211.GX15937@n2100.arm.linux.org.uk>
-	<20140119031816.GD16158@S2101-09.ap.freescale.net>
-	<20140119185246.GB28056@quad.lixom.net>
-	<20140124150927.GA2780@S2101-09.ap.freescale.net>
+From: Pratyush Anand <pratyush.anand@gmail.com>
+Subject: Re: [PATCH V2 4/8] SPEAr13xx: Fixup: Move SPEAr1340 SATA platform
+ code to system cfg driver
+Date: Sat, 25 Jan 2014 11:06:51 +0530
+Message-ID: <CAHM4w1=We03RGnUdq5_tzTaLaMRK+a8MiAss6SRaDK=fWoqF_w@mail.gmail.com>
+References: <cover.1390471111.git.mohit.kumar@st.com>
+	<201401231322.54914.arnd@arndb.de>
+	<20140124042959.GC2369@pratyush-vbox>
+	<201401242153.00848.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140124150927.GA2780-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <201401242153.00848.arnd@arndb.de>
+Sender: linux-ide-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Pratyush Anand <pratyush.anand@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mohit KUMAR DCG <Mohit.KUMAR@st.com>, spear-devel <spear-devel@list.st.com>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Viresh Kumar <viresh.linux@gmail.com>, Tejun Heo <tj@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Arnd,
 
-On Fri, Jan 24, 2014 at 7:09 AM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Sun, Jan 19, 2014 at 10:52:46AM -0800, Olof Johansson wrote:
->> I'm well aware that the DT branch has not been merged, and that's because
->> there has been no consensus from DT maintainers on the massive rework
->> you did as the base of the branch.
+
+On Sat, Jan 25, 2014 at 2:23 AM, Arnd Bergmann <arnd@arndb.de> wrote:
 >
-> I guess the 'massive rework' you're talking about is the patch series
-> that begins with 'ARM: dts: imx6qdl: make pinctrl nodes board specific'?
-> If so, I hope you would agree that we're trying to solve a real
-> problem [1], even though the solution does not look like the best to
-> you.
+> On Friday 24 January 2014, Pratyush Anand wrote:
+> > On Thu, Jan 23, 2014 at 08:22:54PM +0800, Arnd Bergmann wrote:
+> > > On Thursday 23 January 2014, Mohit Kumar wrote:
+> > >
+> > > I assume you'd want a phandle pointing to the syscon device in here
+> > > as well?
+> >
+> > Since there is only one syscon device in the whole DT, so do I really
+> > need to add phandle? Currently I am using
+> > syscon_regmap_lookup_by_compatible to find  syscon device.
 >
-> So which specific part of the solution are you objecting to?  Those
-> MX6QDL_*_PINGRP macros defined in imx6qdl-pingrp.h?  If that's the
-> case, I can send a follow-up patch to kill the macros by filling in the
-> pin group definitions directly.  The pros is that the pin group
-> definitions for given board will be more intuitive, and the cons is that
-> the change set will be even more massive, because the same multi-lines
-> pin group definitions will be duplicated in multiple board dts files,
-> which use the same group of pins for given device.
+> I'd much rather use syscon_regmap_lookup_by_phandle than
+> syscon_regmap_lookup_by_compatible, all the time, since this makes
+> the relationship between the devices explicit.
 >
-> Or any other better idea?
-
-I haven't heard any other maintainers being positive to this change.
-Not Linus W, as the pinctrl maintainer, and none of the DT
-maintainers. I asked for their review, which should mean acks or
-general approval from them, and I haven't seen any come in. Or did I
-miss it?
-
->> Given the timing, it's not looking like it will be resolved in time for
->> the 3.14 merge window (which might open today).
+> The phandle method also allows you to pass regmap indexes in the
+> same property, which can be handy if two variants of the chip have
+> the same registers at a different offset.
 >
-> That's frustrating and will be surprising a lot of people who expect to
-> see their board support in 3.14 release.
+> > > > +/* SPEAr1340 Registers */
+> > > > +/* Power Management Registers */
 
-Yes, it is very unfortunate.
+[...]
 
-See this as a chance to adjust your process. Next time you send a
-large pull request that gets questions like these, please consider
-splitting off the controversial part in a separate branch so that the
-bulk of the changes can go in. That's what other maintainers tend to
-do. Right now you have chosen to let your pinctrl header file changes
-hold up everything for everyone that merges code through you.
+> > > Looking at the actual code now, this very much looks like it ought to
+> > > be a "phy" driver and get put in drivers/phy/.
+> >
+> > Actually these registers are part of common system configurations
+> > register space (called as misc space) for SPEAr SOC. So we opted for
+> > syscon framework.
+>
+> The use of syscon for this is good, I have no objection to that, and
+> was suggesting that you create a logical "phy" device that uses the
+> misc syscon device as a backend.
+>
+> > PHY registers space starts from 0xEB800000, which can be
+> > programmed for various phy specific functions like power management,
+> > tx/rx settings, comparator settings etc. In most of the cases phy
+> > works with default settings, however there are few exceptions for
+> > which we will be adding a phy driver for further improvement of SPEAr
+> > drivers.
+>
+> I see. So while the code you have here could be expressed as a phy driver
+> by itself, there is another part of the SoC that controls the actual
+> phy. How about if you add the phy device node to DT, and write a driver
+> that doesn't actually program the phy registers for now, but does contain
+> the code that you have posted here. That would give you flexibility for
+> future extensions and at the same time let you remove all SPEAr specific
+> code from the actual AHCI driver by using the generic ahci-platform
+> driver.
 
+OK..
+--  will move all these code to a phy driver.
+-- so, no need of a new cfg node as of now.
+-- will pass syscon phandle to phy driver.
+-- currently will keep ahci platform plugin (as it is here) in phy driver.
+will remove when generic ahci driver is in place.
 
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+Pratyush
+>
+>         Arnd
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
