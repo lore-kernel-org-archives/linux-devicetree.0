@@ -1,134 +1,38 @@
-From: Marc C <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V4 5/5] Documentation: power: reset: Add documentation
- for generic SYSCON reboot driver
-Date: Fri, 24 Jan 2014 15:16:32 -0800
-Message-ID: <52E2F450.2070100@gmail.com>
-References: <1390504801-24483-1-git-send-email-fkan@apm.com> <1390504801-24483-6-git-send-email-fkan@apm.com> <20140124113920.GF814@e106331-lin.cambridge.arm.com> <CAL85gmDJeUY0zUjkmpMo7g_hLj34RsgU1VEF80wouLzOFGAdqQ@mail.gmail.com> <20140124182355.GF4758@e106331-lin.cambridge.arm.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [GIT PULL] Thermal management updates for v3.14-rc1
+Date: Fri, 24 Jan 2014 18:00:15 -0800
+Message-ID: <CA+55aFyPGdJEP3fpZxVqQNp_BtJ3vqqq_0xst_3H8Pf9QV627Q@mail.gmail.com>
+References: <1390534568.12771.58.camel@rzhang1-mobl4>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140124182355.GF4758-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1390534568.12771.58.camel@rzhang1-mobl4>
+Sender: linux-pm-owner@vger.kernel.org
+To: Zhang Rui <rui.zhang@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, linux-devicetree <devicetree@vger.kernel.org>, linux-lmsensor <lm-sensors@lm-sensors.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
->> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
-b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
->> new file mode 100644
->> index 0000000..e9eb1fe
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
->> @@ -0,0 +1,16 @@
->> +Generic SYSCON mapped register reset driver
+On Thu, Jan 23, 2014 at 7:36 PM, Zhang Rui <rui.zhang@intel.com> wrote:
 >
-> Bindings should describe hardware, not drivers
+> Please pull from the git repository at
+>
+>    git://git.kernel.org/pub/scm/linux/kernel/git/rzhang/linux.git next
+>
+> to receive Thermal management updates for v3.14-rc1
 
-In a perfect world, the hardware designers would place _all_ of the registers needed to
-support rebooting in a contiguous section of the memory map. However, this isn't the case
-on some platforms, especially on ARM-based SoCs.
+This annoys me _enormously_:
 
-While I completely agree with you that the bindings describe hardware, I don't see how
-Feng's work is contrary to that. Feng is working on logically-grouping an otherwise
-"random" set of registers into a logical grouping. In this case, Feng is uniting a group
-of registers and calling them the "reboot" register block.
+  CONFIG_ACPI_INT3403_THERMAL:
 
-> What's wrong with having a system clock unit binding, that the kernel
-> can decompose as appropriate?
+  This driver uses ACPI INT3403 device objects. If present, it will
+  register each INT3403 thermal sensor as a thermal zone.
 
->From what I understand, the arm-soc maintainers want to reduce (and perhaps even
-eliminate) these board-specific constructs, and try to utilize common driver-code that
-resides in the "driver" folder. I can vouch for the syscon/regmap framework as something
-which would enable the effort.
+This is the "help" text for the new ACPI thermal driver.
 
-Thanks,
-Marc C
+WTF?
 
-On 01/24/2014 10:23 AM, Mark Rutland wrote:
-> On Fri, Jan 24, 2014 at 06:03:10PM +0000, Feng Kan wrote:
->> On Fri, Jan 24, 2014 at 3:39 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->>> On Thu, Jan 23, 2014 at 07:20:01PM +0000, Feng Kan wrote:
->>>> Add documentation for generic SYSCON reboot driver.
->>>>
->>>> Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
->>>> ---
->>>>  .../bindings/power/reset/syscon-reboot.txt         |   16 ++++++++++++++++
->>>>  1 files changed, 16 insertions(+), 0 deletions(-)
->>>>  create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
->>>> new file mode 100644
->>>> index 0000000..e9eb1fe
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
->>>> @@ -0,0 +1,16 @@
->>>> +Generic SYSCON mapped register reset driver
->>>
->>> Bindings should describe hardware, not drivers.
->>>
->>> What precisely does this binding describe?
->>>
->>>> +
->>>> +Required properties:
->>>> +- compatible: should contain "syscon-reboot"
->>>> +- regmap: this is phandle to the register map node
->>>> +- offset: offset in the register map for the reboot register
->>>> +- mask: the reset value written to the reboot register
->>>> +
->>>> +Examples:
->>>> +
->>>> +reboot {
->>>> +   compatible = "syscon-reboot";
->>>> +   regmap = <&regmapnode>;
->>>> +   offset = <0x0>;
->>>> +   mask = <0x1>;
->>>> +};
->>>
->>> Access size? Endianness?
->> FKAN: are you asking for documentation? I don't see alot of example of
->> support for these.
-> 
-> If I used the enippet in the example, what endianness and access size
-> should I expect an OS to perform? That should be documented.
-> 
-> If this doesn't match the general case, we can add properties later to
-> adjust the access size and/or endianness. We just need to document what
-> the binding actually describes currently, or it's not possible to
-> implement anything based off of the binding documentation.
-> 
-> I should be able to read a binding document and write a dts. I shouldn't
-> have to read the code to figure out what the binding describes.
-> 
->>
->>>
->>> Why can we not have a binding for the register bank this exists in, and
->>> have that pass on the appropriate details to a syscon-reboot driver?
->>
->> FKAN: Thats a good idea. But the hardware in this case (SCU) system
->> clock unit has a bunch of registers used for different functions. If syscon is
->> used alot in this case and we pile more attribute into it. It would get kinda
->> messy after a while.
-> 
-> Huh?
-> 
-> What's wrong with having a system clock unit binding, that the kernel
-> can decompose as appropriate?
-> 
-> I don't get your syscon argument.
-> 
-> Thanks,
-> Mark.
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+Really, whoever wrote that "help" text wasn't thinking of helping
+users. What the f*ck is an INT3403 device object? Is is common? Where?
+Is it a standard? Is it something normal people should expect?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+              Linus
