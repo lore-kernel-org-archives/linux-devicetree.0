@@ -1,38 +1,45 @@
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [GIT PULL] Thermal management updates for v3.14-rc1
-Date: Fri, 24 Jan 2014 18:00:15 -0800
-Message-ID: <CA+55aFyPGdJEP3fpZxVqQNp_BtJ3vqqq_0xst_3H8Pf9QV627Q@mail.gmail.com>
-References: <1390534568.12771.58.camel@rzhang1-mobl4>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: DT include files
+Date: Sat, 25 Jan 2014 10:25:22 +0800
+Message-ID: <20140125022519.GA8759@S2101-09.ap.freescale.net>
+References: <20140103023211.GA25079@S2101-09.ap.freescale.net>
+ <201401122121.20084.arnd@arndb.de>
+ <20140113021912.GB23525@S2101-09.ap.freescale.net>
+ <2907925.DyxHkYtGr7@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1390534568.12771.58.camel@rzhang1-mobl4>
-Sender: linux-pm-owner@vger.kernel.org
-To: Zhang Rui <rui.zhang@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, linux-devicetree <devicetree@vger.kernel.org>, linux-lmsensor <lm-sensors@lm-sensors.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <2907925.DyxHkYtGr7@phil>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 23, 2014 at 7:36 PM, Zhang Rui <rui.zhang@intel.com> wrote:
->
-> Please pull from the git repository at
->
->    git://git.kernel.org/pub/scm/linux/kernel/git/rzhang/linux.git next
->
-> to receive Thermal management updates for v3.14-rc1
+On Fri, Jan 24, 2014 at 09:02:09AM +0100, Heiko St=FCbner wrote:
+> Hi Shawn,
+>=20
+> did this topic get any final resolution - especially in terms of the =
+pingrp.h=20
+> header?
+>=20
+> As I'm currently preparing two board files (imx50 and imx6sl) this di=
+scussion=20
+> made me unsure if using the pin-group definitions is still the prefer=
+red style.
 
-This annoys me _enormously_:
+Yes, we need to get a conclusion ASAP.  The whole imx-dt-3.14 pull
+request has been held for a few weeks because of that, and I'm asking
+for direction there [1].
 
-  CONFIG_ACPI_INT3403_THERMAL:
+Shawn
 
-  This driver uses ACPI INT3403 device objects. If present, it will
-  register each INT3403 thermal sensor as a thermal zone.
+[1] http://thread.gmane.org/gmane.linux.drivers.devicetree/58685/focus=3D=
+296761
 
-This is the "help" text for the new ACPI thermal driver.
-
-WTF?
-
-Really, whoever wrote that "help" text wasn't thinking of helping
-users. What the f*ck is an INT3403 device object? Is is common? Where?
-Is it a standard? Is it something normal people should expect?
-
-              Linus
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
