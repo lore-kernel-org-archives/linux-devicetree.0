@@ -1,73 +1,125 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH V2 1/4] pci: APM X-Gene PCIe controller driver
-Date: Sat, 25 Jan 2014 21:11:34 +0100
-Message-ID: <5086198.ZOWZ5xuyna@wuerfel>
-References: <1389742458-7693-1-git-send-email-tinamdar@apm.com> <CACoXjc=ZT9fEm_KdY4WFSoS8n5FmO+hn9LjsR4m8YZG2iBbt5A@mail.gmail.com> <CACoXjc=-JtpiM3m4DSA_DeOxYr3sihGGf4FSaJ2yC08rpm6ANQ@mail.gmail.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v4 01/18] ARM: Introduce atomic MMIO modify
+Date: Sat, 25 Jan 2014 15:32:31 -0500
+Message-ID: <20140125203231.GG29184@titan.lakedaemon.net>
+References: <1390431915-5115-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1390431915-5115-2-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACoXjc=-JtpiM3m4DSA_DeOxYr3sihGGf4FSaJ2yC08rpm6ANQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Tanmay Inamdar <tinamdar@apm.com>, devicetree@vger.kernel.org, Jon Masters <jcm@redhat.com>, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, patches <patches@apm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1390431915-5115-2-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 24 January 2014 13:28:22 Tanmay Inamdar wrote:
-> On Thu, Jan 16, 2014 at 5:10 PM, Tanmay Inamdar <tinamdar@apm.com> wrote:
-> > On Wed, Jan 15, 2014 at 4:39 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> >> On Wednesday 15 January 2014, Tanmay Inamdar wrote:
+Russell,
 
-> >>
-> >>> +static void xgene_pcie_poll_linkup(struct xgene_pcie_port *port, u32 *lanes)
-> >>> +{
-> >>> +     void *csr_base = port->csr_base;
-> >>> +     u32 val32;
-> >>> +     u64 start_time, time;
-> >>> +
-> >>> +     /*
-> >>> +      * A component enters the LTSSM Detect state within
-> >>> +      * 20ms of the end of fundamental core reset.
-> >>> +      */
-> >>> +     msleep(XGENE_LTSSM_DETECT_WAIT);
-> >>> +     port->link_up = 0;
-> >>> +     start_time = jiffies;
-> >>> +     do {
-> >>> +             val32 = readl(csr_base + PCIECORE_CTLANDSTATUS);
-> >>> +             if (val32 & LINK_UP_MASK) {
-> >>> +                     port->link_up = 1;
-> >>> +                     port->link_speed = PIPE_PHY_RATE_RD(val32);
-> >>> +                     val32 = readl(csr_base + BRIDGE_STATUS_0);
-> >>> +                     *lanes = val32 >> 26;
-> >>> +             }
-> >>> +             time = jiffies_to_msecs(jiffies - start_time);
-> >>> +     } while ((!port->link_up) || (time <= XGENE_LTSSM_L0_WAIT));
-> >>> +}
-> >>
-> >> Maybe another msleep() in the loop? It seems weird to first do an
-> >> unconditional sleep but then busy-wait for the result.
-> >
-> > ok.
+On Wed, Jan 22, 2014 at 08:04:58PM -0300, Ezequiel Garcia wrote:
+> Some SoC have MMIO regions that are shared across orthogonal
+> subsystems. This commit implements a possible solution for the
+> thread-safe access of such regions through a spinlock-protected API.
 > 
-> This loop can execute for maximum 4 msec. So putting msleep(1) won't
-> get us much.
- 
-4 msec is still quite a long time for a busy loop that can be spent doing
-useful work in another thread.
-
-> >>
-> >> Another general note: Your "compatible" strings are rather unspecific.
-> >> Do you have a version number for this IP block? I suppose that it's related
-> >> to one that has been used in other chips before, or will be used in future
-> >> chips, if it's not actually licensed from some other company.
-> >
-> > I will have to check this.
-> >
+> Concurrent access is protected with a single spinlock for the
+> entire MMIO address space. While this protects shared-registers,
+> it also serializes access to unrelated/unshared registers.
 > 
-> We have decided to stick with current compatible string for now.
+> We add relaxed and non-relaxed variants, by using writel_relaxed and writel,
+> respectively. The rationale for this is that some users may not require
+> register write completion but only thread-safe access to a register.
+> 
+> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  arch/arm/include/asm/io.h |  6 ++++++
+>  arch/arm/kernel/io.c      | 35 +++++++++++++++++++++++++++++++++++
+>  2 files changed, 41 insertions(+)
 
-Can you elaborate on your reasoning? Does this mean X-Gene is a one-off
-product and you won't be doing any new chips based on the same hardware
-components?
+This has been in your patch tracker for a while:
 
-	Arnd
+  http://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=7930/1
+
+When you requested Acks, we sent them:
+
+  http://www.spinics.net/lists/arm-kernel/msg300250.html
+
+Is there anything more you need from us?  The rest of this series
+depends on this patch.  Could you place it in a topic branch so we can
+base the rest of the series off of it?  Or, if you prefer, Ack it and
+drop it from your patch tracker?  I'm fine either way.
+
+thx,
+
+Jason.
+
+> 
+> diff --git a/arch/arm/include/asm/io.h b/arch/arm/include/asm/io.h
+> index fbeb39c..8aa4cca 100644
+> --- a/arch/arm/include/asm/io.h
+> +++ b/arch/arm/include/asm/io.h
+> @@ -38,6 +38,12 @@
+>  #define isa_bus_to_virt phys_to_virt
+>  
+>  /*
+> + * Atomic MMIO-wide IO modify
+> + */
+> +extern void atomic_io_modify(void __iomem *reg, u32 mask, u32 set);
+> +extern void atomic_io_modify_relaxed(void __iomem *reg, u32 mask, u32 set);
+> +
+> +/*
+>   * Generic IO read/write.  These perform native-endian accesses.  Note
+>   * that some architectures will want to re-define __raw_{read,write}w.
+>   */
+> diff --git a/arch/arm/kernel/io.c b/arch/arm/kernel/io.c
+> index dcd5b4d..9203cf8 100644
+> --- a/arch/arm/kernel/io.c
+> +++ b/arch/arm/kernel/io.c
+> @@ -1,6 +1,41 @@
+>  #include <linux/export.h>
+>  #include <linux/types.h>
+>  #include <linux/io.h>
+> +#include <linux/spinlock.h>
+> +
+> +static DEFINE_RAW_SPINLOCK(__io_lock);
+> +
+> +/*
+> + * Generic atomic MMIO modify.
+> + *
+> + * Allows thread-safe access to registers shared by unrelated subsystems.
+> + * The access is protected by a single MMIO-wide lock.
+> + */
+> +void atomic_io_modify_relaxed(void __iomem *reg, u32 mask, u32 set)
+> +{
+> +	unsigned long flags;
+> +	u32 value;
+> +
+> +	raw_spin_lock_irqsave(&__io_lock, flags);
+> +	value = readl_relaxed(reg) & ~mask;
+> +	value |= (set & mask);
+> +	writel_relaxed(value, reg);
+> +	raw_spin_unlock_irqrestore(&__io_lock, flags);
+> +}
+> +EXPORT_SYMBOL(atomic_io_modify_relaxed);
+> +
+> +void atomic_io_modify(void __iomem *reg, u32 mask, u32 set)
+> +{
+> +	unsigned long flags;
+> +	u32 value;
+> +
+> +	raw_spin_lock_irqsave(&__io_lock, flags);
+> +	value = readl_relaxed(reg) & ~mask;
+> +	value |= (set & mask);
+> +	writel(value, reg);
+> +	raw_spin_unlock_irqrestore(&__io_lock, flags);
+> +}
+> +EXPORT_SYMBOL(atomic_io_modify);
+>  
+>  /*
+>   * Copy data from IO memory space to "real" memory space.
+> -- 
+> 1.8.1.5
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
