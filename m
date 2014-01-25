@@ -1,11 +1,10 @@
 From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: =?UTF-8?q?=5BPATCH=207/9=5D=20ARM=3A=20dts=3A=20imx25=3A=20remove=20the=20use=20of=20pingrp=20macros?=
-Date: Sun, 26 Jan 2014 00:43:09 +0800
-Message-ID: <1390668191-20289-8-git-send-email-shawn.guo@linaro.org>
+Subject: [PATCH 9/9] ARM: dts: vf610: remove the use of pingrp macros
+Date: Sun, 26 Jan 2014 00:43:11 +0800
+Message-ID: <1390668191-20289-10-git-send-email-shawn.guo@linaro.org>
 References: <1390668191-20289-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1390668191-20289-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
@@ -13,248 +12,267 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2
 Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-We created the pingrp macros in imx25-pingrp.h for purpose of less LOC
-when same pin group is used by multiple boards.  However, DT maintainer=
-s
+We created the pingrp macros in vf610-pingrp.h for purpose of less LOC
+when same pin group is used by multiple boards.  However, DT maintainers
 take it as an abuse of DTC macro support.  So let's get rid of it to
 make the pins used by given device more intuitive.
 
 Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi       |   17 +++-
- .../boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts  |   56 ++++++++++++=
---
- arch/arm/boot/dts/imx25-pingrp.h                   |   81 ------------=
---------
- arch/arm/boot/dts/imx25.dtsi                       |    2 +-
- 4 files changed, 67 insertions(+), 89 deletions(-)
- delete mode 100644 arch/arm/boot/dts/imx25-pingrp.h
+ arch/arm/boot/dts/vf610-cosmic.dts |   17 ++++-
+ arch/arm/boot/dts/vf610-pingrp.h   |  127 ------------------------------------
+ arch/arm/boot/dts/vf610-twr.dts    |   42 ++++++++++--
+ arch/arm/boot/dts/vf610.dtsi       |    2 +-
+ 4 files changed, 53 insertions(+), 135 deletions(-)
+ delete mode 100644 arch/arm/boot/dts/vf610-pingrp.h
 
-diff --git a/arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi b/arch/arm/bo=
-ot/dts/imx25-eukrea-cpuimx25.dtsi
-index 8abd45a..d6f2764 100644
---- a/arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi
-+++ b/arch/arm/boot/dts/imx25-eukrea-cpuimx25.dtsi
+diff --git a/arch/arm/boot/dts/vf610-cosmic.dts b/arch/arm/boot/dts/vf610-cosmic.dts
+index 432960a..3fd1b74 100644
+--- a/arch/arm/boot/dts/vf610-cosmic.dts
++++ b/arch/arm/boot/dts/vf610-cosmic.dts
 @@ -43,11 +43,24 @@
  &iomuxc {
- 	imx25-eukrea-cpuimx25 {
- 		pinctrl_fec: fecgrp {
--			fsl,pins =3D <MX25_FEC_PINGRP1>;
-+			fsl,pins =3D <
-+				MX25_PAD_FEC_MDC__FEC_MDC		0x80000000
-+				MX25_PAD_FEC_MDIO__FEC_MDIO		0x400001e0
-+				MX25_PAD_FEC_TDATA0__FEC_TDATA0		0x80000000
-+				MX25_PAD_FEC_TDATA1__FEC_TDATA1		0x80000000
-+				MX25_PAD_FEC_TX_EN__FEC_TX_EN		0x80000000
-+				MX25_PAD_FEC_RDATA0__FEC_RDATA0		0x80000000
-+				MX25_PAD_FEC_RDATA1__FEC_RDATA1		0x80000000
-+				MX25_PAD_FEC_RX_DV__FEC_RX_DV		0x80000000
-+				MX25_PAD_FEC_TX_CLK__FEC_TX_CLK		0x1c0
+ 	vf610-cosmic {
+ 		pinctrl_fec1: fec1grp {
+-			fsl,pins = <VF610_FEC1_PINGRP1>;
++			fsl,pins = <
++				VF610_PAD_PTC9__ENET_RMII1_MDC		0x30d2
++				VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3
++				VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1
++				VF610_PAD_PTC12__ENET_RMII_RXD1		0x30d1
++				VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1
++				VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1
++				VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2
++				VF610_PAD_PTC16__ENET_RMII1_TXD0	0x30d2
++				VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2
 +			>;
  		};
-=20
- 		pinctrl_i2c1: i2c1grp {
--			fsl,pins =3D <MX25_I2C1_PINGRP1>;
-+			fsl,pins =3D <
-+				MX25_PAD_I2C1_CLK__I2C1_CLK		0x80000000
-+				MX25_PAD_I2C1_DAT__I2C1_DAT		0x80000000
-+			>;
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts b/a=
-rch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
-index 30073f8..62fb3da 100644
---- a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
-+++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
-@@ -78,11 +78,23 @@
- &iomuxc {
- 	imx25-eukrea-mbimxsd25-baseboard {
- 		pinctrl_audmux: audmuxgrp {
--			fsl,pins =3D <MX25_AUDMUX_PINGRP1>;
-+			fsl,pins =3D <
-+				MX25_PAD_KPP_COL3__AUD5_TXFS		0xe0
-+				MX25_PAD_KPP_COL2__AUD5_TXC		0xe0
-+				MX25_PAD_KPP_COL1__AUD5_RXD		0xe0
-+				MX25_PAD_KPP_COL0__AUD5_TXD		0xe0
-+			>;
- 		};
-=20
- 		pinctrl_esdhc1: esdhc1grp {
--			fsl,pins =3D <MX25_ESDHC1_PINGRP1>;
-+			fsl,pins =3D <
-+				MX25_PAD_SD1_CMD__SD1_CMD		0x400000c0
-+				MX25_PAD_SD1_CLK__SD1_CLK		0x400000c0
-+				MX25_PAD_SD1_DATA0__SD1_DATA0		0x400000c0
-+				MX25_PAD_SD1_DATA1__SD1_DATA1		0x400000c0
-+				MX25_PAD_SD1_DATA2__SD1_DATA2		0x400000c0
-+				MX25_PAD_SD1_DATA3__SD1_DATA3		0x400000c0
-+			>;
- 		};
-=20
- 		pinctrl_gpiokeys: gpiokeysgrp {
-@@ -94,15 +106,49 @@
- 		};
-=20
- 		pinctrl_lcdc: lcdcgrp {
--			fsl,pins =3D <MX25_LCDC_PINGRP1>;
-+			fsl,pins =3D <
-+				MX25_PAD_LD0__LD0			0x1
-+				MX25_PAD_LD1__LD1			0x1
-+				MX25_PAD_LD2__LD2			0x1
-+				MX25_PAD_LD3__LD3			0x1
-+				MX25_PAD_LD4__LD4			0x1
-+				MX25_PAD_LD5__LD5			0x1
-+				MX25_PAD_LD6__LD6			0x1
-+				MX25_PAD_LD7__LD7			0x1
-+				MX25_PAD_LD8__LD8			0x1
-+				MX25_PAD_LD9__LD9			0x1
-+				MX25_PAD_LD10__LD10			0x1
-+				MX25_PAD_LD11__LD11			0x1
-+				MX25_PAD_LD12__LD12			0x1
-+				MX25_PAD_LD13__LD13			0x1
-+				MX25_PAD_LD14__LD14			0x1
-+				MX25_PAD_LD15__LD15			0x1
-+				MX25_PAD_GPIO_E__LD16			0x1
-+				MX25_PAD_GPIO_F__LD17			0x1
-+				MX25_PAD_HSYNC__HSYNC			0x80000000
-+				MX25_PAD_VSYNC__VSYNC			0x80000000
-+				MX25_PAD_LSCLK__LSCLK			0x80000000
-+				MX25_PAD_OE_ACD__OE_ACD			0x80000000
-+				MX25_PAD_CONTRAST__CONTRAST		0x80000000
-+			>;
- 		};
-=20
+ 
  		pinctrl_uart1: uart1grp {
--			fsl,pins =3D <MX25_UART1_PINGRP1>;
-+			fsl,pins =3D <
-+				MX25_PAD_UART1_RTS__UART1_RTS		0xe0
-+				MX25_PAD_UART1_CTS__UART1_CTS		0xe0
-+				MX25_PAD_UART1_TXD__UART1_TXD		0x80000000
-+				MX25_PAD_UART1_RXD__UART1_RXD		0xc0
-+			>;
- 		};
-=20
- 		pinctrl_uart2: uart2grp {
--			fsl,pins =3D <MX25_UART2_PINGRP1>;
-+			fsl,pins =3D <
-+				MX25_PAD_UART2_RXD__UART2_RXD		0x80000000
-+				MX25_PAD_UART2_TXD__UART2_TXD		0x80000000
-+				MX25_PAD_UART2_RTS__UART2_RTS		0x80000000
-+				MX25_PAD_UART2_CTS__UART2_CTS		0x80000000
+-			fsl,pins = <VF610_UART1_PINGRP1>;
++			fsl,pins = <
++				VF610_PAD_PTB4__UART1_TX		0x21a2
++				VF610_PAD_PTB5__UART1_RX		0x21a1
 +			>;
  		};
  	};
  };
-diff --git a/arch/arm/boot/dts/imx25-pingrp.h b/arch/arm/boot/dts/imx25=
--pingrp.h
+diff --git a/arch/arm/boot/dts/vf610-pingrp.h b/arch/arm/boot/dts/vf610-pingrp.h
 deleted file mode 100644
-index 4a35a63..0000000
---- a/arch/arm/boot/dts/imx25-pingrp.h
+index 0858f4f..0000000
+--- a/arch/arm/boot/dts/vf610-pingrp.h
 +++ /dev/null
-@@ -1,81 +0,0 @@
+@@ -1,127 +0,0 @@
 -/*
-- * Copyright 2013 Eukr=C3=A9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+- * Copyright (C) 2013 Freescale Semiconductor, Inc.
 - *
-- * This program is free software; you can redistribute it and/or modif=
-y
+- * This program is free software; you can redistribute it and/or modify
 - * it under the terms of the GNU General Public License version 2 as
 - * published by the Free Software Foundation.
 - *
 - */
 -
--#ifndef __DTS_IMX25_PINGRP_H
--#define __DTS_IMX25_PINGRP_H
+-#ifndef __DTS_VF610_PINGRP_H
+-#define __DTS_VF610_PINGRP_H
 -
--#include "imx25-pinfunc.h"
+-#include "vf610-pinfunc.h"
 -
--#define MX25_AUDMUX_PINGRP1 \
--	MX25_PAD_KPP_COL3__AUD5_TXFS			0xe0 \
--	MX25_PAD_KPP_COL2__AUD5_TXC			0xe0 \
--	MX25_PAD_KPP_COL1__AUD5_RXD			0xe0 \
--	MX25_PAD_KPP_COL0__AUD5_TXD			0xe0
+-#define VF610_DCU0_PINGRP1 \
+-	VF610_PAD_PTB8__GPIO_30			0x42 \
+-	VF610_PAD_PTE0__DCU0_HSYNC		0x42 \
+-	VF610_PAD_PTE1__DCU0_VSYNC		0x42 \
+-	VF610_PAD_PTE2__DCU0_PCLK		0x42 \
+-	VF610_PAD_PTE4__DCU0_DE			0x42 \
+-	VF610_PAD_PTE5__DCU0_R0			0x42 \
+-	VF610_PAD_PTE6__DCU0_R1			0x42 \
+-	VF610_PAD_PTE7__DCU0_R2			0x42 \
+-	VF610_PAD_PTE8__DCU0_R3			0x42 \
+-	VF610_PAD_PTE9__DCU0_R4			0x42 \
+-	VF610_PAD_PTE10__DCU0_R5		0x42 \
+-	VF610_PAD_PTE11__DCU0_R6		0x42 \
+-	VF610_PAD_PTE12__DCU0_R7		0x42 \
+-	VF610_PAD_PTE13__DCU0_G0		0x42 \
+-	VF610_PAD_PTE14__DCU0_G1		0x42 \
+-	VF610_PAD_PTE15__DCU0_G2		0x42 \
+-	VF610_PAD_PTE16__DCU0_G3		0x42 \
+-	VF610_PAD_PTE17__DCU0_G4		0x42 \
+-	VF610_PAD_PTE18__DCU0_G5		0x42 \
+-	VF610_PAD_PTE19__DCU0_G6		0x42 \
+-	VF610_PAD_PTE20__DCU0_G7		0x42 \
+-	VF610_PAD_PTE21__DCU0_B0		0x42 \
+-	VF610_PAD_PTE22__DCU0_B1		0x42 \
+-	VF610_PAD_PTE23__DCU0_B2		0x42 \
+-	VF610_PAD_PTE24__DCU0_B3		0x42 \
+-	VF610_PAD_PTE25__DCU0_B4		0x42 \
+-	VF610_PAD_PTE26__DCU0_B5		0x42 \
+-	VF610_PAD_PTE27__DCU0_B6		0x42 \
+-	VF610_PAD_PTE28__DCU0_B7		0x42
 -
--#define MX25_ESDHC1_PINGRP1 \
--	MX25_PAD_SD1_CMD__SD1_CMD			0x400000c0 \
--	MX25_PAD_SD1_CLK__SD1_CLK			0x400000c0 \
--	MX25_PAD_SD1_DATA0__SD1_DATA0			0x400000c0 \
--	MX25_PAD_SD1_DATA1__SD1_DATA1			0x400000c0 \
--	MX25_PAD_SD1_DATA2__SD1_DATA2			0x400000c0 \
--	MX25_PAD_SD1_DATA3__SD1_DATA3			0x400000c0
+-#define VF610_DSPI0_PINGRP1 \
+-	VF610_PAD_PTB19__DSPI0_CS0		0x1182 \
+-	VF610_PAD_PTB20__DSPI0_SIN		0x1181 \
+-	VF610_PAD_PTB21__DSPI0_SOUT		0x1182 \
+-	VF610_PAD_PTB22__DSPI0_SCK		0x1182
 -
--#define MX25_FEC_PINGRP1 \
--	MX25_PAD_FEC_MDC__FEC_MDC			0x80000000 \
--	MX25_PAD_FEC_MDIO__FEC_MDIO			0x400001e0 \
--	MX25_PAD_FEC_TDATA0__FEC_TDATA0			0x80000000 \
--	MX25_PAD_FEC_TDATA1__FEC_TDATA1			0x80000000 \
--	MX25_PAD_FEC_TX_EN__FEC_TX_EN			0x80000000 \
--	MX25_PAD_FEC_RDATA0__FEC_RDATA0			0x80000000 \
--	MX25_PAD_FEC_RDATA1__FEC_RDATA1			0x80000000 \
--	MX25_PAD_FEC_RX_DV__FEC_RX_DV			0x80000000 \
--	MX25_PAD_FEC_TX_CLK__FEC_TX_CLK			0x1c0
+-#define VF610_ESDHC1_PINGRP1 \
+-	VF610_PAD_PTA24__ESDHC1_CLK		0x31ef \
+-	VF610_PAD_PTA25__ESDHC1_CMD		0x31ef \
+-	VF610_PAD_PTA26__ESDHC1_DAT0		0x31ef \
+-	VF610_PAD_PTA27__ESDHC1_DAT1		0x31ef \
+-	VF610_PAD_PTA28__ESDHC1_DATA2		0x31ef \
+-	VF610_PAD_PTA29__ESDHC1_DAT3		0x31ef \
+-	VF610_PAD_PTA7__GPIO_134		0x219d
 -
--#define MX25_I2C1_PINGRP1 \
--	MX25_PAD_I2C1_CLK__I2C1_CLK			0x80000000 \
--	MX25_PAD_I2C1_DAT__I2C1_DAT			0x80000000
+-#define VF610_FEC0_PINGRP1 \
+-	VF610_PAD_PTA6__RMII_CLKIN		0x30d1 \
+-	VF610_PAD_PTC0__ENET_RMII0_MDC		0x30d3 \
+-	VF610_PAD_PTC1__ENET_RMII0_MDIO		0x30d1 \
+-	VF610_PAD_PTC2__ENET_RMII0_CRS		0x30d1 \
+-	VF610_PAD_PTC3__ENET_RMII0_RXD1		0x30d1 \
+-	VF610_PAD_PTC4__ENET_RMII0_RXD0		0x30d1 \
+-	VF610_PAD_PTC5__ENET_RMII0_RXER		0x30d1 \
+-	VF610_PAD_PTC6__ENET_RMII0_TXD1		0x30d2 \
+-	VF610_PAD_PTC7__ENET_RMII0_TXD0		0x30d2 \
+-	VF610_PAD_PTC8__ENET_RMII0_TXEN		0x30d2
 -
--#define MX25_LCDC_PINGRP1 \
--	MX25_PAD_LD0__LD0				0x1 \
--	MX25_PAD_LD1__LD1				0x1 \
--	MX25_PAD_LD2__LD2				0x1 \
--	MX25_PAD_LD3__LD3				0x1 \
--	MX25_PAD_LD4__LD4				0x1 \
--	MX25_PAD_LD5__LD5				0x1 \
--	MX25_PAD_LD6__LD6				0x1 \
--	MX25_PAD_LD7__LD7				0x1 \
--	MX25_PAD_LD8__LD8				0x1 \
--	MX25_PAD_LD9__LD9				0x1 \
--	MX25_PAD_LD10__LD10				0x1 \
--	MX25_PAD_LD11__LD11				0x1 \
--	MX25_PAD_LD12__LD12				0x1 \
--	MX25_PAD_LD13__LD13				0x1 \
--	MX25_PAD_LD14__LD14				0x1 \
--	MX25_PAD_LD15__LD15				0x1 \
--	MX25_PAD_GPIO_E__LD16				0x1 \
--	MX25_PAD_GPIO_F__LD17				0x1 \
--	MX25_PAD_HSYNC__HSYNC				0x80000000 \
--	MX25_PAD_VSYNC__VSYNC				0x80000000 \
--	MX25_PAD_LSCLK__LSCLK				0x80000000 \
--	MX25_PAD_OE_ACD__OE_ACD				0x80000000 \
--	MX25_PAD_CONTRAST__CONTRAST			0x80000000
+-#define VF610_FEC1_PINGRP1 \
+-	VF610_PAD_PTC9__ENET_RMII1_MDC		0x30d2 \
+-	VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3 \
+-	VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1 \
+-	VF610_PAD_PTC12__ENET_RMII_RXD1		0x30d1 \
+-	VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1 \
+-	VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1 \
+-	VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2 \
+-	VF610_PAD_PTC16__ENET_RMII1_TXD0	0x30d2 \
+-	VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2 \
 -
--#define MX25_UART1_PINGRP1 \
--	MX25_PAD_UART1_RTS__UART1_RTS			0xe0 \
--	MX25_PAD_UART1_CTS__UART1_CTS			0xe0 \
--	MX25_PAD_UART1_TXD__UART1_TXD			0x80000000 \
--	MX25_PAD_UART1_RXD__UART1_RXD			0xc0
+-#define VF610_I2C0_PINGRP1 \
+-	VF610_PAD_PTB14__I2C0_SCL		0x30d3 \
+-	VF610_PAD_PTB15__I2C0_SDA		0x30d3 \
 -
--#define MX25_UART2_PINGRP1 \
--	MX25_PAD_UART2_RXD__UART2_RXD			0x80000000 \
--	MX25_PAD_UART2_TXD__UART2_TXD			0x80000000 \
--	MX25_PAD_UART2_RTS__UART2_RTS			0x80000000 \
--	MX25_PAD_UART2_CTS__UART2_CTS			0x80000000
+-#define VF610_PWM0_PINGRP1 \
+-	VF610_PAD_PTB0__FTM0_CH0		0x1582 \
+-	VF610_PAD_PTB1__FTM0_CH1		0x1582 \
+-	VF610_PAD_PTB2__FTM0_CH2		0x1582 \
+-	VF610_PAD_PTB3__FTM0_CH3		0x1582 \
+-	VF610_PAD_PTB6__FTM0_CH6		0x1582 \
+-	VF610_PAD_PTB7__FTM0_CH7		0x1582
 -
--#endif /* __DTS_IMX25_PINGRP_H */
-diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dts=
-i
-index 9e9e3b8..32f760e 100644
---- a/arch/arm/boot/dts/imx25.dtsi
-+++ b/arch/arm/boot/dts/imx25.dtsi
-@@ -10,7 +10,7 @@
+-#define VF610_QSPI0_PINGRP1 \
+-	VF610_PAD_PTD0__QSPI0_A_QSCK		0x307b \
+-	VF610_PAD_PTD1__QSPI0_A_CS0		0x307f \
+-	VF610_PAD_PTD2__QSPI0_A_DATA3		0x3073 \
+-	VF610_PAD_PTD3__QSPI0_A_DATA2		0x3073 \
+-	VF610_PAD_PTD4__QSPI0_A_DATA1		0x3073 \
+-	VF610_PAD_PTD5__QSPI0_A_DATA0		0x307b \
+-	VF610_PAD_PTD7__QSPI0_B_QSCK		0x307b \
+-	VF610_PAD_PTD8__QSPI0_B_CS0		0x307f \
+-	VF610_PAD_PTD9__QSPI0_B_DATA3		0x3073 \
+-	VF610_PAD_PTD10__QSPI0_B_DATA2		0x3073 \
+-	VF610_PAD_PTD11__QSPI0_B_DATA1		0x3073 \
+-	VF610_PAD_PTD12__QSPI0_B_DATA0		0x307b
+-
+-#define VF610_SAI2_PINGRP1 \
+-	VF610_PAD_PTA16__SAI2_TX_BCLK		0x02ed \
+-	VF610_PAD_PTA18__SAI2_TX_DATA		0x02ee \
+-	VF610_PAD_PTA19__SAI2_TX_SYNC		0x02ed \
+-	VF610_PAD_PTA21__SAI2_RX_BCLK		0x02ed \
+-	VF610_PAD_PTA22__SAI2_RX_DATA		0x02ed \
+-	VF610_PAD_PTA23__SAI2_RX_SYNC		0x02ed \
+-	VF610_PAD_PTB18__EXT_AUDIO_MCLK		0x02ed
+-
+-#define VF610_UART1_PINGRP1 \
+-	VF610_PAD_PTB4__UART1_TX		0x21a2 \
+-	VF610_PAD_PTB5__UART1_RX		0x21a1
+-
+-#define VF610_USBVBUS_PINGRP1 \
+-	VF610_PAD_PTA24__USB1_VBUS_EN		0x219c \
+-	VF610_PAD_PTA16__USB0_VBUS_EN		0x219c
+-
+-#endif /* __DTS_VF610_PINGRP_H */
+diff --git a/arch/arm/boot/dts/vf610-twr.dts b/arch/arm/boot/dts/vf610-twr.dts
+index 80db14e..e3a3805 100644
+--- a/arch/arm/boot/dts/vf610-twr.dts
++++ b/arch/arm/boot/dts/vf610-twr.dts
+@@ -77,23 +77,55 @@
+ &iomuxc {
+ 	vf610-twr {
+ 		pinctrl_dspi0: dspi0grp {
+-			fsl,pins = <VF610_DSPI0_PINGRP1>;
++			fsl,pins = <
++				VF610_PAD_PTB19__DSPI0_CS0		0x1182
++				VF610_PAD_PTB20__DSPI0_SIN		0x1181
++				VF610_PAD_PTB21__DSPI0_SOUT		0x1182
++				VF610_PAD_PTB22__DSPI0_SCK		0x1182
++			>;
+ 		};
+ 
+ 		pinctrl_fec0: fec0grp {
+-			fsl,pins = <VF610_FEC0_PINGRP1>;
++			fsl,pins = <
++				VF610_PAD_PTA6__RMII_CLKIN		0x30d1
++				VF610_PAD_PTC0__ENET_RMII0_MDC		0x30d3
++				VF610_PAD_PTC1__ENET_RMII0_MDIO		0x30d1
++				VF610_PAD_PTC2__ENET_RMII0_CRS		0x30d1
++				VF610_PAD_PTC3__ENET_RMII0_RXD1		0x30d1
++				VF610_PAD_PTC4__ENET_RMII0_RXD0		0x30d1
++				VF610_PAD_PTC5__ENET_RMII0_RXER		0x30d1
++				VF610_PAD_PTC6__ENET_RMII0_TXD1		0x30d2
++				VF610_PAD_PTC7__ENET_RMII0_TXD0		0x30d2
++				VF610_PAD_PTC8__ENET_RMII0_TXEN		0x30d2
++			>;
+ 		};
+ 
+ 		pinctrl_fec1: fec1grp {
+-			fsl,pins = <VF610_FEC1_PINGRP1>;
++			fsl,pins = <
++				VF610_PAD_PTC9__ENET_RMII1_MDC		0x30d2
++				VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3
++				VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1
++				VF610_PAD_PTC12__ENET_RMII_RXD1		0x30d1
++				VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1
++				VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1
++				VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2
++				VF610_PAD_PTC16__ENET_RMII1_TXD0	0x30d2
++				VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2
++			>;
+ 		};
+ 
+ 		pinctrl_i2c0: i2c0grp {
+-			fsl,pins = <VF610_I2C0_PINGRP1>;
++			fsl,pins = <
++				VF610_PAD_PTB14__I2C0_SCL		0x30d3
++				VF610_PAD_PTB15__I2C0_SDA		0x30d3
++			>;
+ 		};
+ 
+ 		pinctrl_uart1: uart1grp {
+-			fsl,pins = <VF610_UART1_PINGRP1>;
++			fsl,pins = <
++				VF610_PAD_PTB4__UART1_TX		0x21a2
++				VF610_PAD_PTB5__UART1_RX		0x21a1
++			>;
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
+index ef8a0ee..183943e 100644
+--- a/arch/arm/boot/dts/vf610.dtsi
++++ b/arch/arm/boot/dts/vf610.dtsi
+@@ -8,7 +8,7 @@
   */
-=20
+ 
  #include "skeleton.dtsi"
--#include "imx25-pingrp.h"
-+#include "imx25-pinfunc.h"
-=20
+-#include "vf610-pingrp.h"
++#include "vf610-pinfunc.h"
+ #include <dt-bindings/clock/vf610-clock.h>
+ 
  / {
- 	aliases {
---=20
+-- 
 1.7.9.5
 
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
