@@ -1,7 +1,7 @@
 From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 9/9] ARM: dts: vf610: remove the use of pingrp macros
-Date: Sun, 26 Jan 2014 00:43:11 +0800
-Message-ID: <1390668191-20289-10-git-send-email-shawn.guo@linaro.org>
+Subject: [PATCH 8/9] ARM: dts: imx27: remove the use of pingrp macros
+Date: Sun, 26 Jan 2014 00:43:10 +0800
+Message-ID: <1390668191-20289-9-git-send-email-shawn.guo@linaro.org>
 References: <1390668191-20289-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,262 +12,545 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2
 Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-We created the pingrp macros in vf610-pingrp.h for purpose of less LOC
+We created the pingrp macros in imx27-pingrp.h for purpose of less LOC
 when same pin group is used by multiple boards.  However, DT maintainers
 take it as an abuse of DTC macro support.  So let's get rid of it to
 make the pins used by given device more intuitive.
 
 Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/vf610-cosmic.dts |   17 ++++-
- arch/arm/boot/dts/vf610-pingrp.h   |  127 ------------------------------------
- arch/arm/boot/dts/vf610-twr.dts    |   42 ++++++++++--
- arch/arm/boot/dts/vf610.dtsi       |    2 +-
- 4 files changed, 53 insertions(+), 135 deletions(-)
- delete mode 100644 arch/arm/boot/dts/vf610-pingrp.h
+ arch/arm/boot/dts/imx27-apf27.dts                |   26 +++-
+ arch/arm/boot/dts/imx27-apf27dev.dts             |   65 +++++++++-
+ arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts |   27 ++--
+ arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts |   26 +++-
+ arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts   |   23 +++-
+ arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi  |   38 +++++-
+ arch/arm/boot/dts/imx27-pingrp.h                 |  151 ----------------------
+ arch/arm/boot/dts/imx27.dtsi                     |    2 +-
+ 8 files changed, 177 insertions(+), 181 deletions(-)
+ delete mode 100644 arch/arm/boot/dts/imx27-pingrp.h
 
-diff --git a/arch/arm/boot/dts/vf610-cosmic.dts b/arch/arm/boot/dts/vf610-cosmic.dts
-index 432960a..3fd1b74 100644
---- a/arch/arm/boot/dts/vf610-cosmic.dts
-+++ b/arch/arm/boot/dts/vf610-cosmic.dts
-@@ -43,11 +43,24 @@
+diff --git a/arch/arm/boot/dts/imx27-apf27.dts b/arch/arm/boot/dts/imx27-apf27.dts
+index 8bc75c7..09f57b3 100644
+--- a/arch/arm/boot/dts/imx27-apf27.dts
++++ b/arch/arm/boot/dts/imx27-apf27.dts
+@@ -37,11 +37,33 @@
  &iomuxc {
- 	vf610-cosmic {
+ 	imx27-apf27 {
  		pinctrl_fec1: fec1grp {
--			fsl,pins = <VF610_FEC1_PINGRP1>;
+-			fsl,pins = <MX27_FEC1_PINGRP1>;
 +			fsl,pins = <
-+				VF610_PAD_PTC9__ENET_RMII1_MDC		0x30d2
-+				VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3
-+				VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1
-+				VF610_PAD_PTC12__ENET_RMII_RXD1		0x30d1
-+				VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1
-+				VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1
-+				VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2
-+				VF610_PAD_PTC16__ENET_RMII1_TXD0	0x30d2
-+				VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2
++				MX27_PAD_SD3_CMD__FEC_TXD0 0x0
++				MX27_PAD_SD3_CLK__FEC_TXD1 0x0
++				MX27_PAD_ATA_DATA0__FEC_TXD2 0x0
++				MX27_PAD_ATA_DATA1__FEC_TXD3 0x0
++				MX27_PAD_ATA_DATA2__FEC_RX_ER 0x0
++				MX27_PAD_ATA_DATA3__FEC_RXD1 0x0
++				MX27_PAD_ATA_DATA4__FEC_RXD2 0x0
++				MX27_PAD_ATA_DATA5__FEC_RXD3 0x0
++				MX27_PAD_ATA_DATA6__FEC_MDIO 0x0
++				MX27_PAD_ATA_DATA7__FEC_MDC 0x0
++				MX27_PAD_ATA_DATA8__FEC_CRS 0x0
++				MX27_PAD_ATA_DATA9__FEC_TX_CLK 0x0
++				MX27_PAD_ATA_DATA10__FEC_RXD0 0x0
++				MX27_PAD_ATA_DATA11__FEC_RX_DV 0x0
++				MX27_PAD_ATA_DATA12__FEC_RX_CLK 0x0
++				MX27_PAD_ATA_DATA13__FEC_COL 0x0
++				MX27_PAD_ATA_DATA14__FEC_TX_ER 0x0
++				MX27_PAD_ATA_DATA15__FEC_TX_EN 0x0
 +			>;
  		};
  
  		pinctrl_uart1: uart1grp {
--			fsl,pins = <VF610_UART1_PINGRP1>;
+-			fsl,pins = <MX27_UART1_PINGRP1>;
 +			fsl,pins = <
-+				VF610_PAD_PTB4__UART1_TX		0x21a2
-+				VF610_PAD_PTB5__UART1_RX		0x21a1
++				MX27_PAD_UART1_TXD__UART1_TXD 0x0
++				MX27_PAD_UART1_RXD__UART1_RXD 0x0
 +			>;
  		};
  	};
  };
-diff --git a/arch/arm/boot/dts/vf610-pingrp.h b/arch/arm/boot/dts/vf610-pingrp.h
+diff --git a/arch/arm/boot/dts/imx27-apf27dev.dts b/arch/arm/boot/dts/imx27-apf27dev.dts
+index 2555d80..2b6d489 100644
+--- a/arch/arm/boot/dts/imx27-apf27dev.dts
++++ b/arch/arm/boot/dts/imx27-apf27dev.dts
+@@ -108,7 +108,11 @@
+ &iomuxc {
+ 	imx27-apf27dev {
+ 		pinctrl_cspi1: cspi1grp {
+-			fsl,pins = <MX27_CSPI1_PINGRP1>;
++			fsl,pins = <
++				MX27_PAD_CSPI1_MISO__CSPI1_MISO 0x0
++				MX27_PAD_CSPI1_MOSI__CSPI1_MOSI 0x0
++				MX27_PAD_CSPI1_SCLK__CSPI1_SCLK 0x0
++			>;
+ 		};
+ 
+ 		pinctrl_cspi1_cs: cspi1csgrp {
+@@ -116,7 +120,11 @@
+ 		};
+ 
+ 		pinctrl_cspi2: cspi2grp {
+-			fsl,pins = <MX27_CSPI2_PINGRP1>;
++			fsl,pins = <
++				MX27_PAD_CSPI2_MISO__CSPI2_MISO 0x0
++				MX27_PAD_CSPI2_MOSI__CSPI2_MOSI 0x0
++				MX27_PAD_CSPI2_SCLK__CSPI2_SCLK 0x0
++			>;
+ 		};
+ 
+ 		pinctrl_cspi2_cs: cspi2csgrp {
+@@ -136,23 +144,66 @@
+ 		};
+ 
+ 		pinctrl_imxfb1: imxfbgrp {
+-			fsl,pins = <MX27_FB_PINGRP1>;
++			fsl,pins = <
++				MX27_PAD_CLS__CLS 0x0
++				MX27_PAD_CONTRAST__CONTRAST 0x0
++				MX27_PAD_LD0__LD0 0x0
++				MX27_PAD_LD1__LD1 0x0
++				MX27_PAD_LD2__LD2 0x0
++				MX27_PAD_LD3__LD3 0x0
++				MX27_PAD_LD4__LD4 0x0
++				MX27_PAD_LD5__LD5 0x0
++				MX27_PAD_LD6__LD6 0x0
++				MX27_PAD_LD7__LD7 0x0
++				MX27_PAD_LD8__LD8 0x0
++				MX27_PAD_LD9__LD9 0x0
++				MX27_PAD_LD10__LD10 0x0
++				MX27_PAD_LD11__LD11 0x0
++				MX27_PAD_LD12__LD12 0x0
++				MX27_PAD_LD13__LD13 0x0
++				MX27_PAD_LD14__LD14 0x0
++				MX27_PAD_LD15__LD15 0x0
++				MX27_PAD_LD16__LD16 0x0
++				MX27_PAD_LD17__LD17 0x0
++				MX27_PAD_LSCLK__LSCLK 0x0
++				MX27_PAD_OE_ACD__OE_ACD 0x0
++				MX27_PAD_PS__PS 0x0
++				MX27_PAD_REV__REV 0x0
++				MX27_PAD_SPL_SPR__SPL_SPR 0x0
++				MX27_PAD_HSYNC__HSYNC 0x0
++				MX27_PAD_VSYNC__VSYNC 0x0
++			>;
+ 		};
+ 
+ 		pinctrl_i2c1: i2c1grp {
+-			fsl,pins = <MX27_I2C1_PINGRP1>;
++			fsl,pins = <
++				MX27_PAD_I2C_DATA__I2C_DATA 0x0
++				MX27_PAD_I2C_CLK__I2C_CLK 0x0
++			>;
+ 		};
+ 
+ 		pinctrl_i2c2: i2c2grp {
+-			fsl,pins = <MX27_I2C2_PINGRP1>;
++			fsl,pins = <
++				MX27_PAD_I2C2_SDA__I2C2_SDA 0x0
++				MX27_PAD_I2C2_SCL__I2C2_SCL 0x0
++			>;
+ 		};
+ 
+ 		pinctrl_pwm: pwmgrp {
+-			fsl,pins = <MX27_PWM_PINGRP1>;
++			fsl,pins = <
++				MX27_PAD_PWMO__PWMO 0x0
++			>;
+ 		};
+ 
+ 		pinctrl_sdhc2: sdhc2grp {
+-			fsl,pins = <MX27_SDHC2_PINGRP1>;
++			fsl,pins = <
++				MX27_PAD_SD2_CLK__SD2_CLK 0x0
++				MX27_PAD_SD2_CMD__SD2_CMD 0x0
++				MX27_PAD_SD2_D0__SD2_D0 0x0
++				MX27_PAD_SD2_D1__SD2_D1 0x0
++				MX27_PAD_SD2_D2__SD2_D2 0x0
++				MX27_PAD_SD2_D3__SD2_D3 0x0
++			>;
+ 		};
+ 
+ 		pinctrl_sdhc2_cd: sdhc2cdgrp {
+diff --git a/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts b/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
+index 0d65023..04cadfc 100644
+--- a/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
++++ b/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
+@@ -76,31 +76,42 @@
+ &iomuxc {
+ 	imx27-phycard-s-rdk {
+ 		pinctrl_i2c1: i2c1grp {
+-			fsl,pins = <MX27_I2C2_PINGRP1>;
++			fsl,pins = <
++				MX27_PAD_I2C2_SDA__I2C2_SDA 0x0
++				MX27_PAD_I2C2_SCL__I2C2_SCL 0x0
++			>;
+ 		};
+ 
+ 		pinctrl_owire1: owire1grp {
+-			fsl,pins = <MX27_OWIRE1_PINGRP1>;
++			fsl,pins = <
++				MX27_PAD_RTCK__OWIRE 0x0
++			>;
+ 		};
+ 
+ 		pinctrl_uart1: uart1grp {
+ 			fsl,pins = <
+-				MX27_UART1_PINGRP1
+-				MX27_UART1_RTSCTS_PINGRP1
++				MX27_PAD_UART1_TXD__UART1_TXD 0x0
++				MX27_PAD_UART1_RXD__UART1_RXD 0x0
++				MX27_PAD_UART1_CTS__UART1_CTS 0x0
++				MX27_PAD_UART1_RTS__UART1_RTS 0x0
+ 			>;
+ 		};
+ 
+ 		pinctrl_uart2: uart2grp {
+ 			fsl,pins = <
+-				MX27_UART2_PINGRP1
+-				MX27_UART2_RTSCTS_PINGRP1
++				MX27_PAD_UART2_TXD__UART2_TXD 0x0
++				MX27_PAD_UART2_RXD__UART2_RXD 0x0
++				MX27_PAD_UART2_CTS__UART2_CTS 0x0
++				MX27_PAD_UART2_RTS__UART2_RTS 0x0
+ 			>;
+ 		};
+ 
+ 		pinctrl_uart3: uart3grp {
+ 			fsl,pins = <
+-				MX27_UART3_PINGRP1
+-				MX27_UART3_RTSCTS_PINGRP1
++				MX27_PAD_UART3_TXD__UART3_TXD 0x0
++				MX27_PAD_UART3_RXD__UART3_RXD 0x0
++				MX27_PAD_UART3_CTS__UART3_CTS 0x0
++				MX27_PAD_UART3_RTS__UART3_RTS 0x0
+ 			>;
+ 		};
+ 	};
+diff --git a/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts b/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts
+index db8c095..e51e550 100644
+--- a/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts
++++ b/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts
+@@ -32,11 +32,33 @@
+ &iomuxc {
+ 	imx27-phycard-s-som {
+ 		pinctrl_fec1: fec1grp {
+-			fsl,pins = <MX27_FEC1_PINGRP1>;
++			fsl,pins = <
++				MX27_PAD_SD3_CMD__FEC_TXD0 0x0
++				MX27_PAD_SD3_CLK__FEC_TXD1 0x0
++				MX27_PAD_ATA_DATA0__FEC_TXD2 0x0
++				MX27_PAD_ATA_DATA1__FEC_TXD3 0x0
++				MX27_PAD_ATA_DATA2__FEC_RX_ER 0x0
++				MX27_PAD_ATA_DATA3__FEC_RXD1 0x0
++				MX27_PAD_ATA_DATA4__FEC_RXD2 0x0
++				MX27_PAD_ATA_DATA5__FEC_RXD3 0x0
++				MX27_PAD_ATA_DATA6__FEC_MDIO 0x0
++				MX27_PAD_ATA_DATA7__FEC_MDC 0x0
++				MX27_PAD_ATA_DATA8__FEC_CRS 0x0
++				MX27_PAD_ATA_DATA9__FEC_TX_CLK 0x0
++				MX27_PAD_ATA_DATA10__FEC_RXD0 0x0
++				MX27_PAD_ATA_DATA11__FEC_RX_DV 0x0
++				MX27_PAD_ATA_DATA12__FEC_RX_CLK 0x0
++				MX27_PAD_ATA_DATA13__FEC_COL 0x0
++				MX27_PAD_ATA_DATA14__FEC_TX_ER 0x0
++				MX27_PAD_ATA_DATA15__FEC_TX_EN 0x0
++			>;
+ 		};
+ 
+ 		pinctrl_i2c2: i2c2grp {
+-			fsl,pins = <MX27_I2C2_PINGRP1>;
++			fsl,pins = <
++				MX27_PAD_I2C2_SDA__I2C2_SDA 0x0
++				MX27_PAD_I2C2_SCL__I2C2_SCL 0x0
++			>;
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts b/arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts
+index eaaff00..9f8ad51 100644
+--- a/arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts
++++ b/arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts
+@@ -45,12 +45,19 @@
+ 		};
+ 
+ 		pinctrl_owire1: owire1grp {
+-			fsl,pins = <MX27_OWIRE1_PINGRP1>;
++			fsl,pins = <
++				MX27_PAD_RTCK__OWIRE 0x0
++			>;
+ 		};
+ 
+ 		pinctrl_sdhc2: sdhc2grp {
+ 			fsl,pins = <
+-				MX27_SDHC2_PINGRP1
++				MX27_PAD_SD2_CLK__SD2_CLK 0x0
++				MX27_PAD_SD2_CMD__SD2_CMD 0x0
++				MX27_PAD_SD2_D0__SD2_D0 0x0
++				MX27_PAD_SD2_D1__SD2_D1 0x0
++				MX27_PAD_SD2_D2__SD2_D2 0x0
++				MX27_PAD_SD2_D3__SD2_D3 0x0
+ 				MX27_PAD_SSI3_FS__GPIO3_28	0x0 /* WP */
+ 				MX27_PAD_SSI3_RXDAT__GPIO3_29	0x0 /* CD */
+ 			>;
+@@ -58,15 +65,19 @@
+ 
+ 		pinctrl_uart1: uart1grp {
+ 			fsl,pins = <
+-				MX27_UART1_PINGRP1
+-				MX27_UART1_RTSCTS_PINGRP1
++				MX27_PAD_UART1_TXD__UART1_TXD 0x0
++				MX27_PAD_UART1_RXD__UART1_RXD 0x0
++				MX27_PAD_UART1_CTS__UART1_CTS 0x0
++				MX27_PAD_UART1_RTS__UART1_RTS 0x0
+ 			>;
+ 		};
+ 
+ 		pinctrl_uart2: uart2grp {
+ 			fsl,pins = <
+-				MX27_UART2_PINGRP1
+-				MX27_UART2_RTSCTS_PINGRP1
++				MX27_PAD_UART2_TXD__UART2_TXD 0x0
++				MX27_PAD_UART2_RXD__UART2_RXD 0x0
++				MX27_PAD_UART2_CTS__UART2_CTS 0x0
++				MX27_PAD_UART2_RTS__UART2_RTS 0x0
+ 			>;
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi b/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi
+index c934999..230cfaf 100644
+--- a/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi
++++ b/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi
+@@ -186,7 +186,9 @@
+ 	imx27_phycore_som {
+ 		pinctrl_cspi1: cspi1grp {
+ 			fsl,pins = <
+-				MX27_CSPI1_PINGRP1
++				MX27_PAD_CSPI1_MISO__CSPI1_MISO 0x0
++				MX27_PAD_CSPI1_MOSI__CSPI1_MOSI 0x0
++				MX27_PAD_CSPI1_SCLK__CSPI1_SCLK 0x0
+ 				MX27_PAD_CSPI1_SS0__GPIO4_28	0x0 /* SPI1 CS0 */
+ 				MX27_PAD_USB_PWR__GPIO2_23	0x0 /* PMIC IRQ */
+ 			>;
+@@ -194,17 +196,45 @@
+ 
+ 		pinctrl_fec1: fec1grp {
+ 			fsl,pins = <
+-				MX27_FEC1_PINGRP1
++				MX27_PAD_SD3_CMD__FEC_TXD0 0x0
++				MX27_PAD_SD3_CLK__FEC_TXD1 0x0
++				MX27_PAD_ATA_DATA0__FEC_TXD2 0x0
++				MX27_PAD_ATA_DATA1__FEC_TXD3 0x0
++				MX27_PAD_ATA_DATA2__FEC_RX_ER 0x0
++				MX27_PAD_ATA_DATA3__FEC_RXD1 0x0
++				MX27_PAD_ATA_DATA4__FEC_RXD2 0x0
++				MX27_PAD_ATA_DATA5__FEC_RXD3 0x0
++				MX27_PAD_ATA_DATA6__FEC_MDIO 0x0
++				MX27_PAD_ATA_DATA7__FEC_MDC 0x0
++				MX27_PAD_ATA_DATA8__FEC_CRS 0x0
++				MX27_PAD_ATA_DATA9__FEC_TX_CLK 0x0
++				MX27_PAD_ATA_DATA10__FEC_RXD0 0x0
++				MX27_PAD_ATA_DATA11__FEC_RX_DV 0x0
++				MX27_PAD_ATA_DATA12__FEC_RX_CLK 0x0
++				MX27_PAD_ATA_DATA13__FEC_COL 0x0
++				MX27_PAD_ATA_DATA14__FEC_TX_ER 0x0
++				MX27_PAD_ATA_DATA15__FEC_TX_EN 0x0
+ 				MX27_PAD_SSI3_TXDAT__GPIO3_30	0x0 /* FEC RST */
+ 			>;
+ 		};
+ 
+ 		pinctrl_i2c2: i2c2grp {
+-			fsl,pins = <MX27_I2C2_PINGRP1>;
++			fsl,pins = <
++				MX27_PAD_I2C2_SDA__I2C2_SDA 0x0
++				MX27_PAD_I2C2_SCL__I2C2_SCL 0x0
++			>;
+ 		};
+ 
+ 		pinctrl_nfc: nfcgrp {
+-			fsl,pins = <MX27_NFC_PINGRP1>;
++			fsl,pins = <
++				MX27_PAD_NFRB__NFRB 0x0
++				MX27_PAD_NFCLE__NFCLE 0x0
++				MX27_PAD_NFWP_B__NFWP_B 0x0
++				MX27_PAD_NFCE_B__NFCE_B 0x0
++				MX27_PAD_NFALE__NFALE 0x0
++				MX27_PAD_NFRE_B__NFRE_B 0x0
++				MX27_PAD_NFWE_B__NFWE_B 0x0
++			>;
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx27-pingrp.h b/arch/arm/boot/dts/imx27-pingrp.h
 deleted file mode 100644
-index 0858f4f..0000000
---- a/arch/arm/boot/dts/vf610-pingrp.h
+index 57ca02f..0000000
+--- a/arch/arm/boot/dts/imx27-pingrp.h
 +++ /dev/null
-@@ -1,127 +0,0 @@
+@@ -1,151 +0,0 @@
 -/*
-- * Copyright (C) 2013 Freescale Semiconductor, Inc.
+- * Copyright 2013 Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pengutronix
 - *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
+- * The code contained herein is licensed under the GNU General Public
+- * License. You may obtain a copy of the GNU General Public License
+- * Version 2 or later at the following locations:
 - *
+- * http://www.opensource.org/licenses/gpl-license.html
+- * http://www.gnu.org/copyleft/gpl.html
 - */
+-#ifndef __DTS_IMX27_PINGRP_H
+-#define __DTS_IMX27_PINGRP_H
 -
--#ifndef __DTS_VF610_PINGRP_H
--#define __DTS_VF610_PINGRP_H
+-#include "imx27-pinfunc.h"
 -
--#include "vf610-pinfunc.h"
+-#define MX27_CSPI1_PINGRP1 \
+-	MX27_PAD_CSPI1_MISO__CSPI1_MISO 0x0 \
+-	MX27_PAD_CSPI1_MOSI__CSPI1_MOSI 0x0 \
+-	MX27_PAD_CSPI1_SCLK__CSPI1_SCLK 0x0
 -
--#define VF610_DCU0_PINGRP1 \
--	VF610_PAD_PTB8__GPIO_30			0x42 \
--	VF610_PAD_PTE0__DCU0_HSYNC		0x42 \
--	VF610_PAD_PTE1__DCU0_VSYNC		0x42 \
--	VF610_PAD_PTE2__DCU0_PCLK		0x42 \
--	VF610_PAD_PTE4__DCU0_DE			0x42 \
--	VF610_PAD_PTE5__DCU0_R0			0x42 \
--	VF610_PAD_PTE6__DCU0_R1			0x42 \
--	VF610_PAD_PTE7__DCU0_R2			0x42 \
--	VF610_PAD_PTE8__DCU0_R3			0x42 \
--	VF610_PAD_PTE9__DCU0_R4			0x42 \
--	VF610_PAD_PTE10__DCU0_R5		0x42 \
--	VF610_PAD_PTE11__DCU0_R6		0x42 \
--	VF610_PAD_PTE12__DCU0_R7		0x42 \
--	VF610_PAD_PTE13__DCU0_G0		0x42 \
--	VF610_PAD_PTE14__DCU0_G1		0x42 \
--	VF610_PAD_PTE15__DCU0_G2		0x42 \
--	VF610_PAD_PTE16__DCU0_G3		0x42 \
--	VF610_PAD_PTE17__DCU0_G4		0x42 \
--	VF610_PAD_PTE18__DCU0_G5		0x42 \
--	VF610_PAD_PTE19__DCU0_G6		0x42 \
--	VF610_PAD_PTE20__DCU0_G7		0x42 \
--	VF610_PAD_PTE21__DCU0_B0		0x42 \
--	VF610_PAD_PTE22__DCU0_B1		0x42 \
--	VF610_PAD_PTE23__DCU0_B2		0x42 \
--	VF610_PAD_PTE24__DCU0_B3		0x42 \
--	VF610_PAD_PTE25__DCU0_B4		0x42 \
--	VF610_PAD_PTE26__DCU0_B5		0x42 \
--	VF610_PAD_PTE27__DCU0_B6		0x42 \
--	VF610_PAD_PTE28__DCU0_B7		0x42
+-#define MX27_CSPI2_PINGRP1 \
+-	MX27_PAD_CSPI2_MISO__CSPI2_MISO 0x0 \
+-	MX27_PAD_CSPI2_MOSI__CSPI2_MOSI 0x0 \
+-	MX27_PAD_CSPI2_SCLK__CSPI2_SCLK 0x0
 -
--#define VF610_DSPI0_PINGRP1 \
--	VF610_PAD_PTB19__DSPI0_CS0		0x1182 \
--	VF610_PAD_PTB20__DSPI0_SIN		0x1181 \
--	VF610_PAD_PTB21__DSPI0_SOUT		0x1182 \
--	VF610_PAD_PTB22__DSPI0_SCK		0x1182
+-#define MX27_CSPI3_PINGRP1 \
+-	MX27_PAD_SD1_CLK__CSPI3_SCLK 0x0 \
+-	MX27_PAD_SD1_D0__CSPI3_MISO 0x0 \
+-	MX27_PAD_SD1_CMD__CSPI3_MOSI 0x0
 -
--#define VF610_ESDHC1_PINGRP1 \
--	VF610_PAD_PTA24__ESDHC1_CLK		0x31ef \
--	VF610_PAD_PTA25__ESDHC1_CMD		0x31ef \
--	VF610_PAD_PTA26__ESDHC1_DAT0		0x31ef \
--	VF610_PAD_PTA27__ESDHC1_DAT1		0x31ef \
--	VF610_PAD_PTA28__ESDHC1_DATA2		0x31ef \
--	VF610_PAD_PTA29__ESDHC1_DAT3		0x31ef \
--	VF610_PAD_PTA7__GPIO_134		0x219d
+-#define MX27_FB_PINGRP1 \
+-	MX27_PAD_CLS__CLS 0x0 \
+-	MX27_PAD_CONTRAST__CONTRAST 0x0 \
+-	MX27_PAD_LD0__LD0 0x0 \
+-	MX27_PAD_LD1__LD1 0x0 \
+-	MX27_PAD_LD2__LD2 0x0 \
+-	MX27_PAD_LD3__LD3 0x0 \
+-	MX27_PAD_LD4__LD4 0x0 \
+-	MX27_PAD_LD5__LD5 0x0 \
+-	MX27_PAD_LD6__LD6 0x0 \
+-	MX27_PAD_LD7__LD7 0x0 \
+-	MX27_PAD_LD8__LD8 0x0 \
+-	MX27_PAD_LD9__LD9 0x0 \
+-	MX27_PAD_LD10__LD10 0x0 \
+-	MX27_PAD_LD11__LD11 0x0 \
+-	MX27_PAD_LD12__LD12 0x0 \
+-	MX27_PAD_LD13__LD13 0x0 \
+-	MX27_PAD_LD14__LD14 0x0 \
+-	MX27_PAD_LD15__LD15 0x0 \
+-	MX27_PAD_LD16__LD16 0x0 \
+-	MX27_PAD_LD17__LD17 0x0 \
+-	MX27_PAD_LSCLK__LSCLK 0x0 \
+-	MX27_PAD_OE_ACD__OE_ACD 0x0 \
+-	MX27_PAD_PS__PS 0x0 \
+-	MX27_PAD_REV__REV 0x0 \
+-	MX27_PAD_SPL_SPR__SPL_SPR 0x0 \
+-	MX27_PAD_HSYNC__HSYNC 0x0 \
+-	MX27_PAD_VSYNC__VSYNC 0x0
 -
--#define VF610_FEC0_PINGRP1 \
--	VF610_PAD_PTA6__RMII_CLKIN		0x30d1 \
--	VF610_PAD_PTC0__ENET_RMII0_MDC		0x30d3 \
--	VF610_PAD_PTC1__ENET_RMII0_MDIO		0x30d1 \
--	VF610_PAD_PTC2__ENET_RMII0_CRS		0x30d1 \
--	VF610_PAD_PTC3__ENET_RMII0_RXD1		0x30d1 \
--	VF610_PAD_PTC4__ENET_RMII0_RXD0		0x30d1 \
--	VF610_PAD_PTC5__ENET_RMII0_RXER		0x30d1 \
--	VF610_PAD_PTC6__ENET_RMII0_TXD1		0x30d2 \
--	VF610_PAD_PTC7__ENET_RMII0_TXD0		0x30d2 \
--	VF610_PAD_PTC8__ENET_RMII0_TXEN		0x30d2
+-#define MX27_FEC1_PINGRP1 \
+-	MX27_PAD_SD3_CMD__FEC_TXD0 0x0 \
+-	MX27_PAD_SD3_CLK__FEC_TXD1 0x0 \
+-	MX27_PAD_ATA_DATA0__FEC_TXD2 0x0 \
+-	MX27_PAD_ATA_DATA1__FEC_TXD3 0x0 \
+-	MX27_PAD_ATA_DATA2__FEC_RX_ER 0x0 \
+-	MX27_PAD_ATA_DATA3__FEC_RXD1 0x0 \
+-	MX27_PAD_ATA_DATA4__FEC_RXD2 0x0 \
+-	MX27_PAD_ATA_DATA5__FEC_RXD3 0x0 \
+-	MX27_PAD_ATA_DATA6__FEC_MDIO 0x0 \
+-	MX27_PAD_ATA_DATA7__FEC_MDC 0x0 \
+-	MX27_PAD_ATA_DATA8__FEC_CRS 0x0 \
+-	MX27_PAD_ATA_DATA9__FEC_TX_CLK 0x0 \
+-	MX27_PAD_ATA_DATA10__FEC_RXD0 0x0 \
+-	MX27_PAD_ATA_DATA11__FEC_RX_DV 0x0 \
+-	MX27_PAD_ATA_DATA12__FEC_RX_CLK 0x0 \
+-	MX27_PAD_ATA_DATA13__FEC_COL 0x0 \
+-	MX27_PAD_ATA_DATA14__FEC_TX_ER 0x0 \
+-	MX27_PAD_ATA_DATA15__FEC_TX_EN 0x0
 -
--#define VF610_FEC1_PINGRP1 \
--	VF610_PAD_PTC9__ENET_RMII1_MDC		0x30d2 \
--	VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3 \
--	VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1 \
--	VF610_PAD_PTC12__ENET_RMII_RXD1		0x30d1 \
--	VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1 \
--	VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1 \
--	VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2 \
--	VF610_PAD_PTC16__ENET_RMII1_TXD0	0x30d2 \
--	VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2 \
+-#define MX27_I2C1_PINGRP1 \
+-	MX27_PAD_I2C_DATA__I2C_DATA 0x0 \
+-	MX27_PAD_I2C_CLK__I2C_CLK 0x0
 -
--#define VF610_I2C0_PINGRP1 \
--	VF610_PAD_PTB14__I2C0_SCL		0x30d3 \
--	VF610_PAD_PTB15__I2C0_SDA		0x30d3 \
+-#define MX27_I2C2_PINGRP1 \
+-	MX27_PAD_I2C2_SDA__I2C2_SDA 0x0 \
+-	MX27_PAD_I2C2_SCL__I2C2_SCL 0x0
 -
--#define VF610_PWM0_PINGRP1 \
--	VF610_PAD_PTB0__FTM0_CH0		0x1582 \
--	VF610_PAD_PTB1__FTM0_CH1		0x1582 \
--	VF610_PAD_PTB2__FTM0_CH2		0x1582 \
--	VF610_PAD_PTB3__FTM0_CH3		0x1582 \
--	VF610_PAD_PTB6__FTM0_CH6		0x1582 \
--	VF610_PAD_PTB7__FTM0_CH7		0x1582
+-#define MX27_NFC_PINGRP1 \
+-	MX27_PAD_NFRB__NFRB 0x0 \
+-	MX27_PAD_NFCLE__NFCLE 0x0 \
+-	MX27_PAD_NFWP_B__NFWP_B 0x0 \
+-	MX27_PAD_NFCE_B__NFCE_B 0x0 \
+-	MX27_PAD_NFALE__NFALE 0x0 \
+-	MX27_PAD_NFRE_B__NFRE_B 0x0 \
+-	MX27_PAD_NFWE_B__NFWE_B 0x0
 -
--#define VF610_QSPI0_PINGRP1 \
--	VF610_PAD_PTD0__QSPI0_A_QSCK		0x307b \
--	VF610_PAD_PTD1__QSPI0_A_CS0		0x307f \
--	VF610_PAD_PTD2__QSPI0_A_DATA3		0x3073 \
--	VF610_PAD_PTD3__QSPI0_A_DATA2		0x3073 \
--	VF610_PAD_PTD4__QSPI0_A_DATA1		0x3073 \
--	VF610_PAD_PTD5__QSPI0_A_DATA0		0x307b \
--	VF610_PAD_PTD7__QSPI0_B_QSCK		0x307b \
--	VF610_PAD_PTD8__QSPI0_B_CS0		0x307f \
--	VF610_PAD_PTD9__QSPI0_B_DATA3		0x3073 \
--	VF610_PAD_PTD10__QSPI0_B_DATA2		0x3073 \
--	VF610_PAD_PTD11__QSPI0_B_DATA1		0x3073 \
--	VF610_PAD_PTD12__QSPI0_B_DATA0		0x307b
+-#define MX27_OWIRE1_PINGRP1 \
+-	MX27_PAD_RTCK__OWIRE 0x0
 -
--#define VF610_SAI2_PINGRP1 \
--	VF610_PAD_PTA16__SAI2_TX_BCLK		0x02ed \
--	VF610_PAD_PTA18__SAI2_TX_DATA		0x02ee \
--	VF610_PAD_PTA19__SAI2_TX_SYNC		0x02ed \
--	VF610_PAD_PTA21__SAI2_RX_BCLK		0x02ed \
--	VF610_PAD_PTA22__SAI2_RX_DATA		0x02ed \
--	VF610_PAD_PTA23__SAI2_RX_SYNC		0x02ed \
--	VF610_PAD_PTB18__EXT_AUDIO_MCLK		0x02ed
+-#define MX27_PWM_PINGRP1 \
+-	MX27_PAD_PWMO__PWMO 0x0
 -
--#define VF610_UART1_PINGRP1 \
--	VF610_PAD_PTB4__UART1_TX		0x21a2 \
--	VF610_PAD_PTB5__UART1_RX		0x21a1
+-#define MX27_SDHC1_PINGRP1 \
+-	MX27_PAD_SD1_CLK__SD1_CLK 0x0 \
+-	MX27_PAD_SD1_CMD__SD1_CMD 0x0 \
+-	MX27_PAD_SD1_D0__SD1_D0 0x0 \
+-	MX27_PAD_SD1_D1__SD1_D1 0x0 \
+-	MX27_PAD_SD1_D2__SD1_D2 0x0 \
+-	MX27_PAD_SD1_D3__SD1_D3 0x0
 -
--#define VF610_USBVBUS_PINGRP1 \
--	VF610_PAD_PTA24__USB1_VBUS_EN		0x219c \
--	VF610_PAD_PTA16__USB0_VBUS_EN		0x219c
+-#define MX27_SDHC2_PINGRP1 \
+-	MX27_PAD_SD2_CLK__SD2_CLK 0x0 \
+-	MX27_PAD_SD2_CMD__SD2_CMD 0x0 \
+-	MX27_PAD_SD2_D0__SD2_D0 0x0 \
+-	MX27_PAD_SD2_D1__SD2_D1 0x0 \
+-	MX27_PAD_SD2_D2__SD2_D2 0x0 \
+-	MX27_PAD_SD2_D3__SD2_D3 0x0
 -
--#endif /* __DTS_VF610_PINGRP_H */
-diff --git a/arch/arm/boot/dts/vf610-twr.dts b/arch/arm/boot/dts/vf610-twr.dts
-index 80db14e..e3a3805 100644
---- a/arch/arm/boot/dts/vf610-twr.dts
-+++ b/arch/arm/boot/dts/vf610-twr.dts
-@@ -77,23 +77,55 @@
- &iomuxc {
- 	vf610-twr {
- 		pinctrl_dspi0: dspi0grp {
--			fsl,pins = <VF610_DSPI0_PINGRP1>;
-+			fsl,pins = <
-+				VF610_PAD_PTB19__DSPI0_CS0		0x1182
-+				VF610_PAD_PTB20__DSPI0_SIN		0x1181
-+				VF610_PAD_PTB21__DSPI0_SOUT		0x1182
-+				VF610_PAD_PTB22__DSPI0_SCK		0x1182
-+			>;
- 		};
- 
- 		pinctrl_fec0: fec0grp {
--			fsl,pins = <VF610_FEC0_PINGRP1>;
-+			fsl,pins = <
-+				VF610_PAD_PTA6__RMII_CLKIN		0x30d1
-+				VF610_PAD_PTC0__ENET_RMII0_MDC		0x30d3
-+				VF610_PAD_PTC1__ENET_RMII0_MDIO		0x30d1
-+				VF610_PAD_PTC2__ENET_RMII0_CRS		0x30d1
-+				VF610_PAD_PTC3__ENET_RMII0_RXD1		0x30d1
-+				VF610_PAD_PTC4__ENET_RMII0_RXD0		0x30d1
-+				VF610_PAD_PTC5__ENET_RMII0_RXER		0x30d1
-+				VF610_PAD_PTC6__ENET_RMII0_TXD1		0x30d2
-+				VF610_PAD_PTC7__ENET_RMII0_TXD0		0x30d2
-+				VF610_PAD_PTC8__ENET_RMII0_TXEN		0x30d2
-+			>;
- 		};
- 
- 		pinctrl_fec1: fec1grp {
--			fsl,pins = <VF610_FEC1_PINGRP1>;
-+			fsl,pins = <
-+				VF610_PAD_PTC9__ENET_RMII1_MDC		0x30d2
-+				VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3
-+				VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1
-+				VF610_PAD_PTC12__ENET_RMII_RXD1		0x30d1
-+				VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1
-+				VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1
-+				VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2
-+				VF610_PAD_PTC16__ENET_RMII1_TXD0	0x30d2
-+				VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2
-+			>;
- 		};
- 
- 		pinctrl_i2c0: i2c0grp {
--			fsl,pins = <VF610_I2C0_PINGRP1>;
-+			fsl,pins = <
-+				VF610_PAD_PTB14__I2C0_SCL		0x30d3
-+				VF610_PAD_PTB15__I2C0_SDA		0x30d3
-+			>;
- 		};
- 
- 		pinctrl_uart1: uart1grp {
--			fsl,pins = <VF610_UART1_PINGRP1>;
-+			fsl,pins = <
-+				VF610_PAD_PTB4__UART1_TX		0x21a2
-+				VF610_PAD_PTB5__UART1_RX		0x21a1
-+			>;
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
-index ef8a0ee..183943e 100644
---- a/arch/arm/boot/dts/vf610.dtsi
-+++ b/arch/arm/boot/dts/vf610.dtsi
-@@ -8,7 +8,7 @@
+-#define MX27_SDHC3_PINGRP1 \
+-	MX27_PAD_SD3_CLK__SD3_CLK 0x0 \
+-	MX27_PAD_SD3_CMD__SD3_CMD 0x0 \
+-	MX27_PAD_SD3_D0__SD3_D0 0x0 \
+-	MX27_PAD_SD3_D1__SD3_D1 0x0 \
+-	MX27_PAD_SD3_D2__SD3_D2 0x0 \
+-	MX27_PAD_SD3_D3__SD3_D3 0x0
+-
+-#define MX27_UART1_PINGRP1 \
+-	MX27_PAD_UART1_TXD__UART1_TXD 0x0 \
+-	MX27_PAD_UART1_RXD__UART1_RXD 0x0
+-
+-#define MX27_UART1_RTSCTS_PINGRP1 \
+-	MX27_PAD_UART1_CTS__UART1_CTS 0x0 \
+-	MX27_PAD_UART1_RTS__UART1_RTS 0x0
+-
+-#define MX27_UART2_PINGRP1 \
+-	MX27_PAD_UART2_TXD__UART2_TXD 0x0 \
+-	MX27_PAD_UART2_RXD__UART2_RXD 0x0
+-
+-#define MX27_UART2_RTSCTS_PINGRP1 \
+-	MX27_PAD_UART2_CTS__UART2_CTS 0x0 \
+-	MX27_PAD_UART2_RTS__UART2_RTS 0x0
+-
+-#define MX27_UART3_PINGRP1 \
+-	MX27_PAD_UART3_TXD__UART3_TXD 0x0 \
+-	MX27_PAD_UART3_RXD__UART3_RXD 0x0
+-
+-#define MX27_UART3_RTSCTS_PINGRP1 \
+-	MX27_PAD_UART3_CTS__UART3_CTS 0x0 \
+-	MX27_PAD_UART3_RTS__UART3_RTS 0x0
+-
+-#endif /* __DTS_IMX27_PINGRP_H */
+diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
+index 63b1b32..1af8fcf 100644
+--- a/arch/arm/boot/dts/imx27.dtsi
++++ b/arch/arm/boot/dts/imx27.dtsi
+@@ -10,7 +10,7 @@
   */
  
  #include "skeleton.dtsi"
--#include "vf610-pingrp.h"
-+#include "vf610-pinfunc.h"
- #include <dt-bindings/clock/vf610-clock.h>
+-#include "imx27-pingrp.h"
++#include "imx27-pinfunc.h"
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/gpio/gpio.h>
  
- / {
 -- 
 1.7.9.5
 
