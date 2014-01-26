@@ -1,249 +1,76 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 08/18] watchdog: orion: Make RSTOUT register a
- separate resource
-Date: Sun, 26 Jan 2014 10:20:52 -0300
-Message-ID: <20140126132051.GC14713@localhost>
-References: <1390431915-5115-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1390431915-5115-9-git-send-email-ezequiel.garcia@free-electrons.com>
- <52E4003E.4070106@roeck-us.net>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v2] dma: Add Xilinx AXI Video Direct Memory Access
+ Engine driver support
+Date: Sun, 26 Jan 2014 19:29:33 +0530
+Message-ID: <20140126135933.GD10628@intel.com>
+References: <1390409565-4200-1-git-send-email-sthokal@xilinx.com>
+ <1390409565-4200-2-git-send-email-sthokal@xilinx.com>
+ <52E0FC22.8060903@metafoo.de>
+ <CA+mB=1L6yvCwA3mKCwz83LQbXiVau110REV64rYrSzUhGE4ucA@mail.gmail.com>
+ <52E2698B.6070001@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <52E4003E.4070106-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+In-Reply-To: <52E2698B.6070001@metafoo.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Srikanth Thokala <sthokal@xilinx.com>, dan.j.williams@intel.com, michal.simek@xilinx.com, Grant Likely <grant.likely@linaro.org>, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 25, 2014 at 10:19:42AM -0800, Guenter Roeck wrote:
-> On 01/22/2014 03:05 PM, Ezequiel Garcia wrote:
-> > In order to support other SoC, it's required to distinguish
-> > the 'control' timer register, from the 'rstout' register
-> > that enables system reset on watchdog expiration.
-> >
-> > To prevent a compatibility break, this commit adds a fallback
-> > to a hardcoded RSTOUT address.
-> >
-> > Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> >   .../devicetree/bindings/watchdog/marvel.txt        |  6 ++-
-> >   arch/arm/mach-dove/include/mach/bridge-regs.h      |  1 +
-> >   arch/arm/mach-kirkwood/include/mach/bridge-regs.h  |  1 +
-> >   arch/arm/mach-mv78xx0/include/mach/bridge-regs.h   |  1 +
-> >   arch/arm/mach-orion5x/include/mach/bridge-regs.h   |  1 +
-> >   arch/arm/plat-orion/common.c                       | 10 +++--
-> >   drivers/watchdog/orion_wdt.c                       | 44 +++++++++=
-++++++++++++-
-> >   7 files changed, 56 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/watchdog/marvel.txt =
-b/Documentation/devicetree/bindings/watchdog/marvel.txt
-> > index 0731fbd..1544fe9 100644
-> > --- a/Documentation/devicetree/bindings/watchdog/marvel.txt
-> > +++ b/Documentation/devicetree/bindings/watchdog/marvel.txt
-> > @@ -3,7 +3,9 @@
-> >   Required Properties:
-> >
-> >   - Compatibility : "marvell,orion-wdt"
-> > -- reg		: Address of the timer registers
-> > +- reg		: Should contain two entries: first one with the
-> > +		  timer control address, second one with the
-> > +		  rstout enable address.
-> >
-> >   Optional properties:
-> >
-> > @@ -14,7 +16,7 @@ Example:
-> >
-> >   	wdt@20300 {
-> >   		compatible =3D "marvell,orion-wdt";
-> > -		reg =3D <0x20300 0x28>;
-> > +		reg =3D <0x20300 0x28>, <0x20108 0x4>;
-> >   		interrupts =3D <3>;
-> >   		timeout-sec =3D <10>;
-> >   		status =3D "okay";
-> > diff --git a/arch/arm/mach-dove/include/mach/bridge-regs.h b/arch/a=
-rm/mach-dove/include/mach/bridge-regs.h
-> > index 5362df3..f4a5b34 100644
-> > --- a/arch/arm/mach-dove/include/mach/bridge-regs.h
-> > +++ b/arch/arm/mach-dove/include/mach/bridge-regs.h
-> > @@ -21,6 +21,7 @@
-> >   #define  CPU_CTRL_PCIE1_LINK	0x00000008
-> >
-> >   #define RSTOUTn_MASK		(BRIDGE_VIRT_BASE + 0x0108)
-> > +#define RSTOUTn_MASK_PHYS	(BRIDGE_PHYS_BASE + 0x0108)
-> >   #define  SOFT_RESET_OUT_EN	0x00000004
-> >
-> >   #define SYSTEM_SOFT_RESET	(BRIDGE_VIRT_BASE + 0x010c)
-> > diff --git a/arch/arm/mach-kirkwood/include/mach/bridge-regs.h b/ar=
-ch/arm/mach-kirkwood/include/mach/bridge-regs.h
-> > index 8b9d1c9..60f6421 100644
-> > --- a/arch/arm/mach-kirkwood/include/mach/bridge-regs.h
-> > +++ b/arch/arm/mach-kirkwood/include/mach/bridge-regs.h
-> > @@ -21,6 +21,7 @@
-> >   #define CPU_RESET		0x00000002
-> >
-> >   #define RSTOUTn_MASK		(BRIDGE_VIRT_BASE + 0x0108)
-> > +#define RSTOUTn_MASK_PHYS	(BRIDGE_PHYS_BASE + 0x0108)
-> >   #define SOFT_RESET_OUT_EN	0x00000004
-> >
-> >   #define SYSTEM_SOFT_RESET	(BRIDGE_VIRT_BASE + 0x010c)
-> > diff --git a/arch/arm/mach-mv78xx0/include/mach/bridge-regs.h b/arc=
-h/arm/mach-mv78xx0/include/mach/bridge-regs.h
-> > index 5f03484..e20d6da 100644
-> > --- a/arch/arm/mach-mv78xx0/include/mach/bridge-regs.h
-> > +++ b/arch/arm/mach-mv78xx0/include/mach/bridge-regs.h
-> > @@ -15,6 +15,7 @@
-> >   #define L2_WRITETHROUGH		0x00020000
-> >
-> >   #define RSTOUTn_MASK		(BRIDGE_VIRT_BASE + 0x0108)
-> > +#define RSTOUTn_MASK_PHYS	(BRIDGE_PHYS_BASE + 0x0108)
-> >   #define SOFT_RESET_OUT_EN	0x00000004
-> >
-> >   #define SYSTEM_SOFT_RESET	(BRIDGE_VIRT_BASE + 0x010c)
-> > diff --git a/arch/arm/mach-orion5x/include/mach/bridge-regs.h b/arc=
-h/arm/mach-orion5x/include/mach/bridge-regs.h
-> > index f727d03..5766e3f 100644
-> > --- a/arch/arm/mach-orion5x/include/mach/bridge-regs.h
-> > +++ b/arch/arm/mach-orion5x/include/mach/bridge-regs.h
-> > @@ -18,6 +18,7 @@
-> >   #define CPU_CTRL		(ORION5X_BRIDGE_VIRT_BASE + 0x104)
-> >
-> >   #define RSTOUTn_MASK		(ORION5X_BRIDGE_VIRT_BASE + 0x108)
-> > +#define RSTOUTn_MASK_PHYS	(ORION5X_BRIDGE_PHYS_BASE + 0x108)
-> >
-> >   #define CPU_SOFT_RESET		(ORION5X_BRIDGE_VIRT_BASE + 0x10c)
-> >
-> > diff --git a/arch/arm/plat-orion/common.c b/arch/arm/plat-orion/com=
-mon.c
-> > index c66d163..3375037 100644
-> > --- a/arch/arm/plat-orion/common.c
-> > +++ b/arch/arm/plat-orion/common.c
-> > @@ -594,14 +594,16 @@ void __init orion_spi_1_init(unsigned long ma=
-pbase)
-> >   /****************************************************************=
-*************
-> >    * Watchdog
-> >    ****************************************************************=
-************/
-> > -static struct resource orion_wdt_resource =3D
-> > -		DEFINE_RES_MEM(TIMER_PHYS_BASE, 0x28);
-> > +static struct resource orion_wdt_resource[] =3D {
-> > +		DEFINE_RES_MEM(TIMER_PHYS_BASE, 0x04),
-> > +		DEFINE_RES_MEM(RSTOUTn_MASK_PHYS, 0x04),
-> > +};
-> >
-> >   static struct platform_device orion_wdt_device =3D {
-> >   	.name		=3D "orion_wdt",
-> >   	.id		=3D -1,
-> > -	.num_resources	=3D 1,
-> > -	.resource	=3D &orion_wdt_resource,
-> > +	.num_resources	=3D ARRAY_SIZE(orion_wdt_resource),
-> > +	.resource	=3D orion_wdt_resource,
-> >   };
-> >
-> >   void __init orion_wdt_init(void)
-> > diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_=
-wdt.c
-> > index f5e7b17..ba8eea9d 100644
-> > --- a/drivers/watchdog/orion_wdt.c
-> > +++ b/drivers/watchdog/orion_wdt.c
-> > @@ -26,6 +26,12 @@
-> >   #include <linux/of.h>
-> >   #include <mach/bridge-regs.h>
-> >
-> > +/* RSTOUT mask register physical address for Orion5x, Kirkwood and=
- Dove */
-> > +#define ORION_RSTOUT_MASK_OFFSET	0x20108
-> > +
-> > +/* Internal registers can be configured at any 1 MiB aligned addre=
-ss */
-> > +#define INTERNAL_REGS_MASK		~(SZ_1M - 1)
-> > +
-> >   /*
-> >    * Watchdog timer block registers.
-> >    */
-> > @@ -44,6 +50,7 @@ static unsigned int wdt_max_duration;	/* (seconds=
-) */
-> >   static struct clk *clk;
-> >   static unsigned int wdt_tclk;
-> >   static void __iomem *wdt_reg;
-> > +static void __iomem *wdt_rstout;
-> >
-> >   static int orion_wdt_ping(struct watchdog_device *wdt_dev)
-> >   {
-> > @@ -64,14 +71,14 @@ static int orion_wdt_start(struct watchdog_devi=
-ce *wdt_dev)
-> >   	atomic_io_modify(wdt_reg + TIMER_CTRL, WDT_EN, WDT_EN);
-> >
-> >   	/* Enable reset on watchdog */
-> > -	atomic_io_modify(RSTOUTn_MASK, WDT_RESET_OUT_EN, WDT_RESET_OUT_EN=
-);
-> > +	atomic_io_modify(wdt_rstout, WDT_RESET_OUT_EN, WDT_RESET_OUT_EN);
-> >   	return 0;
-> >   }
-> >
-> >   static int orion_wdt_stop(struct watchdog_device *wdt_dev)
-> >   {
-> >   	/* Disable reset on watchdog */
-> > -	atomic_io_modify(RSTOUTn_MASK, WDT_RESET_OUT_EN, 0);
-> > +	atomic_io_modify(wdt_rstout, WDT_RESET_OUT_EN, 0);
-> >
-> >   	/* Disable watchdog timer */
-> >   	atomic_io_modify(wdt_reg + TIMER_CTRL, WDT_EN, 0);
-> > @@ -116,6 +123,33 @@ static irqreturn_t orion_wdt_irq(int irq, void=
- *devid)
-> >   	return IRQ_HANDLED;
-> >   }
-> >
-> > +/*
-> > + * The original devicetree binding for this driver specified only
-> > + * one memory resource, so in order to keep DT backwards compatibi=
-lity
-> > + * we try to fallback to a hardcoded register address, if the reso=
-urce
-> > + * is missing from the devicetree.
-> > + */
-> > +static void __iomem *try_rstout_ioremap(struct platform_device *pd=
-ev,
-> > +					phys_addr_t internal_regs)
-> > +{
-> > +	struct resource *res;
-> > +	phys_addr_t rstout;
-> > +
-> > +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> > +	if (res)
-> > +		return devm_ioremap(&pdev->dev, res->start,
-> > +				    resource_size(res));
-> > +
-> > +	/* This workaround works only for "orion-wdt", DT-enabled */
-> > +	if (!of_device_is_compatible(pdev->dev.of_node, "marvell,orion-wd=
-t"))
-> > +		return NULL;
-> > +
-> > +	rstout =3D internal_regs + ORION_RSTOUT_MASK_OFFSET;
-> > +
-> > +	WARN(1, FW_BUG "falling back to harcoded RSTOUT reg 0x%x\n", rsto=
-ut);
->=20
-> WARN seems to be a bit excessive here. Is that on purpose (sorry if t=
-hat was discussed and I missed it) ?
->=20
-> Assuming it is on purpose
->=20
-> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
->=20
+On Fri, Jan 24, 2014 at 02:24:27PM +0100, Lars-Peter Clausen wrote:
+> On 01/24/2014 12:16 PM, Srikanth Thokala wrote:
+> > Hi Lars,
+> > 
+> > On Thu, Jan 23, 2014 at 4:55 PM, Lars-Peter Clausen <lars@metafoo.de> wrote:
+> >> On 01/22/2014 05:52 PM, Srikanth Thokala wrote:
+> >> [...]
+> >>> +/**
+> >>> + * xilinx_vdma_device_control - Configure DMA channel of the device
+> >>> + * @dchan: DMA Channel pointer
+> >>> + * @cmd: DMA control command
+> >>> + * @arg: Channel configuration
+> >>> + *
+> >>> + * Return: '0' on success and failure value on error
+> >>> + */
+> >>> +static int xilinx_vdma_device_control(struct dma_chan *dchan,
+> >>> +                                   enum dma_ctrl_cmd cmd, unsigned long arg)
+> >>> +{
+> >>> +     struct xilinx_vdma_chan *chan = to_xilinx_chan(dchan);
+> >>> +
+> >>> +     switch (cmd) {
+> >>> +     case DMA_TERMINATE_ALL:
+> >>> +             xilinx_vdma_terminate_all(chan);
+> >>> +             return 0;
+> >>> +     case DMA_SLAVE_CONFIG:
+> >>> +             return xilinx_vdma_slave_config(chan,
+> >>> +                                     (struct xilinx_vdma_config *)arg);
+> >>
+> >> You really shouldn't be overloading the generic API with your own semantics.
+> >> DMA_SLAVE_CONFIG should take a dma_slave_config and nothing else.
+> > 
+> > Ok.  The driver needs few additional configuration from the slave
+> > device like Vertical
+> > Size, Horizontal Size,  Stride etc., for the DMA transfers, in that case do you
+> > suggest me to define a separate dma_ctrl_cmd like the one FSLDMA_EXTERNAL_START
+> > defined for Freescale drivers?
+> 
+> In my opinion it is not a good idea to have driver implement a generic API,
+> but at the same time let the driver have custom semantics for those API
+> calls. It's a bit like having a gpio driver that expects 23 and 42 as the
+> values passed to gpio_set_value instead of 0 and 1. It completely defeats
+> the purpose of a generic API, namely that you are able to write generic code
+> that makes use of the API without having to know about which implementation
+> API it is talking to. The dmaengine framework provides the
+> dmaengine_prep_interleaved_dma() function to setup two dimensional
+> transfers, e.g. take a look at sirf-dma.c or imx-dma.c.
 
-Yes, it's on purpose. We want users to notice this and be aware they ha=
-ve
-a broken dtb (hence the sign firmware bug).
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
+The question here i think would be waht this device supports? Is the hardware
+capable of doing interleaved transfers, then would make sense.
+
+While we do try to get users use dma_slave_config, but there will always be
+someone who have specfic params. If we can generalize then we might want to add
+to the dma_slave_config as well
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+~Vinod
