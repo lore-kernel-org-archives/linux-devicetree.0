@@ -1,55 +1,66 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 07/18] watchdog: orion: Handle IRQ
-Date: Sun, 26 Jan 2014 15:57:51 +0100
-Message-ID: <20140126155751.6c6ea59d@skate>
-References: <1390431915-5115-1-git-send-email-ezequiel.garcia@free-electrons.com>
-	<1390431915-5115-8-git-send-email-ezequiel.garcia@free-electrons.com>
-	<20140126090412.37f4932f@skate>
-	<20140126131445.GA14713@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140126131445.GA14713@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: [PATCH 3/8] ARM: shmbobile: r8a7790.dtsi: add pci0/1/2 nodes
+Date: Sun, 26 Jan 2014 16:49:00 +0000
+Message-ID: <1390754945-28142-4-git-send-email-ben.dooks@codethink.co.uk>
+References: <1390754945-28142-1-git-send-email-ben.dooks@codethink.co.uk>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1390754945-28142-1-git-send-email-ben.dooks@codethink.co.uk>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-kernel@lists.codethink.co.uk
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, horms+renesas@verge.net.au
 List-Id: devicetree@vger.kernel.org
 
-Dear Ezequiel Garcia,
+Add nodes for USB PCI bridge devices.
 
-On Sun, 26 Jan 2014 10:14:46 -0300, Ezequiel Garcia wrote:
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
+---
+Cc: devicetree@vger.kernel.org
+Cc: linux-sh@vger.kernel.org
+Cc: horms+renesas@verge.net.au
+---
+ arch/arm/boot/dts/r8a7790.dtsi | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-> > I don't quiite understand the first sentence of this commit log, and
-> > the commit title looks wrong. Maybe a bad copy/paste or something?
-> > 
-> 
-> Hm... yes it doesn't look right. It should read:
-> 
-> "DT-enabled platforms, where the irqchip driver for the brigde interrupt
-> controller is available, can handle the watchdog IRQ properly. Therefore,
-> we request the interrupt and add a dummy handler that merely calls panic()".
-
-Ok.
-
-> I guess we can re-phrase it be a bit more readable.
-> 
-> Why does th commit title looks wrong? By requesting the IRQ we are
-> "handling it", no?
-
-Right, but it looks "truncated". Maybe something like:
-
-watchdog: orion: handle irq to avoid having to clear BRIDGE_CLAUSE
-
-or something like that (adjust to the actual reality, I haven't
-followed all the implications).
-
-Thomas
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index 3cc834b..e716df8 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -728,4 +728,34 @@
+ 				"rcan1", "rcan0", "qspi_mod", "i2c3", "i2c2", "i2c1", "i2c0";
+ 		};
+ 	};
++
++	pci0: pci@ee090000  {
++		compatible = "renesas,pci-r8a7790";
++		clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
++		reg = <0x0 0xee090000 0x0 0xc00>,
++		      <0x0 0xee080000 0x0 0x1100>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
++		status = "disabled";
++	};
++
++	pci1: pci@ee0b0000  {
++		compatible = "renesas,pci-r8a7790";
++		clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
++		reg = <0x0 0xee0b0000 0x0 0xc00>,
++		      <0x0 0xee0a0000 0x0 0x1100>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 112 IRQ_TYPE_LEVEL_HIGH>;
++		status = "disabled";
++	};
++
++	pci2: pci@ee0d0000  {
++		compatible = "renesas,pci-r8a7790";
++		clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
++		reg = <0x0 0xee0d0000 0x0 0xc00>,
++		      <0x0 0xee0c0000 0x0 0x1100>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 113 IRQ_TYPE_LEVEL_HIGH>;
++		status = "disabled";
++	};
+ };
 -- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.5.2
+
