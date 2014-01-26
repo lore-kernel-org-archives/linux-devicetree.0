@@ -1,35 +1,25 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 6/8] phy-rcar-usb-gen2: add device tree documentation
-Date: Sun, 26 Jan 2014 20:07:02 +0100
-Message-ID: <CAMuHMdV=_guap4ZpkifB+3pcYVM_myc-d2vJgoVPMLni+QFyrg@mail.gmail.com>
+Subject: Re: [PATCH 2/8] pci-rcar-gen2: add initial device tree documentation
+Date: Sun, 26 Jan 2014 20:09:39 +0100
+Message-ID: <CAMuHMdVo80pmYG+MC8d4-_Lxod0j2reAEEFM4sC7Z2vCbEioMw@mail.gmail.com>
 References: <1390754945-28142-1-git-send-email-ben.dooks@codethink.co.uk>
-	<1390754945-28142-7-git-send-email-ben.dooks@codethink.co.uk>
+	<1390754945-28142-3-git-send-email-ben.dooks@codethink.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1390754945-28142-7-git-send-email-ben.dooks@codethink.co.uk>
+In-Reply-To: <1390754945-28142-3-git-send-email-ben.dooks@codethink.co.uk>
 Sender: linux-sh-owner@vger.kernel.org
 To: Ben Dooks <ben.dooks@codethink.co.uk>
 Cc: linux-kernel@lists.codethink.co.uk, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, horms+renesas@verge.net.au
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 26, 2014 at 5:49 PM, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/renesas,rcar-gen2-usb-phy.txt
-> @@ -0,0 +1,16 @@
-> +Renesas RCar gen2 USB PHY bindings
-> +
-> +Required properties:
-> + - compatible: "renesas,usb-phy-r8a7790" for the R8A7790 SoC or
-> +    "renesas,rcar-gen2-usb-phy" for any generic comaptible device.
-> + - reg : A single region to access device registers
-> + - clocks : The reference to the clock to use for this block
-> + - clock-names : The name for the clock at index 0 (must be "usbhs")
-> +
-> +Note, interrupt is currently not supported by the driver, but there should
-> +be a node in the device tree for it.
+On Sun, Jan 26, 2014 at 5:48 PM, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
+> + - reg : A list of physical regions to access the device. The first is
+> +         the operational registers for the OHCI/EHCI controller and the
+> +        second region is for the bridge configuration and control registers.
 
-s/node/property/?
+You may want to add "reg-names" to use named regions, as there
+is more than one region.
 
 Gr{oetje,eeting}s,
 
