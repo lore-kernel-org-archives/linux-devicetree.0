@@ -1,66 +1,49 @@
 From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: [PATCH 3/8] ARM: shmbobile: r8a7790.dtsi: add pci0/1/2 nodes
-Date: Sun, 26 Jan 2014 16:49:00 +0000
-Message-ID: <1390754945-28142-4-git-send-email-ben.dooks@codethink.co.uk>
+Subject: [PATCH 6/8] phy-rcar-usb-gen2: add device tree documentation
+Date: Sun, 26 Jan 2014 16:49:03 +0000
+Message-ID: <1390754945-28142-7-git-send-email-ben.dooks@codethink.co.uk>
 References: <1390754945-28142-1-git-send-email-ben.dooks@codethink.co.uk>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1390754945-28142-1-git-send-email-ben.dooks@codethink.co.uk>
 Sender: linux-sh-owner@vger.kernel.org
 To: linux-kernel@lists.codethink.co.uk
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, horms+renesas@verge.net.au
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, horms+renesas@verge.net.au
 List-Id: devicetree@vger.kernel.org
 
-Add nodes for USB PCI bridge devices.
+Documentation for phy-rcar-usb-gen2 device tree binding.
 
 Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
----
-Cc: devicetree@vger.kernel.org
+--
 Cc: linux-sh@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 Cc: horms+renesas@verge.net.au
 ---
- arch/arm/boot/dts/r8a7790.dtsi | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ .../bindings/usb/renesas,rcar-gen2-usb-phy.txt           | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/renesas,rcar-gen2-usb-phy.txt
 
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-index 3cc834b..e716df8 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -728,4 +728,34 @@
- 				"rcan1", "rcan0", "qspi_mod", "i2c3", "i2c2", "i2c1", "i2c0";
- 		};
- 	};
+diff --git a/Documentation/devicetree/bindings/usb/renesas,rcar-gen2-usb-phy.txt b/Documentation/devicetree/bindings/usb/renesas,rcar-gen2-usb-phy.txt
+new file mode 100644
+index 0000000..e1d2dd9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/renesas,rcar-gen2-usb-phy.txt
+@@ -0,0 +1,16 @@
++Renesas RCar gen2 USB PHY bindings
 +
-+	pci0: pci@ee090000  {
-+		compatible = "renesas,pci-r8a7790";
-+		clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
-+		reg = <0x0 0xee090000 0x0 0xc00>,
-+		      <0x0 0xee080000 0x0 0x1100>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
-+		status = "disabled";
-+	};
++Required properties:
++ - compatible: "renesas,usb-phy-r8a7790" for the R8A7790 SoC or
++    "renesas,rcar-gen2-usb-phy" for any generic comaptible device.
++ - reg : A single region to access device registers
++ - clocks : The reference to the clock to use for this block
++ - clock-names : The name for the clock at index 0 (must be "usbhs")
 +
-+	pci1: pci@ee0b0000  {
-+		compatible = "renesas,pci-r8a7790";
-+		clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
-+		reg = <0x0 0xee0b0000 0x0 0xc00>,
-+		      <0x0 0xee0a0000 0x0 0x1100>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 112 IRQ_TYPE_LEVEL_HIGH>;
-+		status = "disabled";
-+	};
++Note, interrupt is currently not supported by the driver, but there should
++be a node in the device tree for it.
 +
-+	pci2: pci@ee0d0000  {
-+		compatible = "renesas,pci-r8a7790";
-+		clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
-+		reg = <0x0 0xee0d0000 0x0 0xc00>,
-+		      <0x0 0xee0c0000 0x0 0x1100>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 113 IRQ_TYPE_LEVEL_HIGH>;
-+		status = "disabled";
-+	};
- };
++Optional properties:
++
++ - renesas,usb0-hs: boolean, if present USB0 is connected to HS device.
++ - renesas,usb2-ss: boolean, if present USB2 is connected to XHCI controller.
 -- 
 1.8.5.2
 
