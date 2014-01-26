@@ -1,95 +1,181 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 3/5] spi: sunxi: Add Allwinner A31 SPI
- controller driver
-Date: Fri, 31 Jan 2014 23:47:04 +0100
-Message-ID: <20140131224704.GI2950@lukather>
-References: <1391165752-1819-1-git-send-email-maxime.ripard@free-electrons.com>
- <1391165752-1819-4-git-send-email-maxime.ripard@free-electrons.com>
- <20140131124809.GE22609@sirena.org.uk>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="RHdRtM27np9fZUoh"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBG6RWCLQKGQEDLBIBWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140131124809.GE22609-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org
-List-Id: devicetree@vger.kernel.org
+Return-Path: <21cnbao@gmail.com>
+From: Barry Song <21cnbao@gmail.com>
+Subject: [PATCH v5] dmaengine: sirf: enable generic dt binding for dma channels
+Date: Sun, 26 Jan 2014 10:08:45 +0800
+Message-Id: <1389190369-2012-1-git-send-email-21cnbao@gmail.com>
+To: vinod.koul@intel.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: devicetree@vger.kernel.org, dmaengine@vger.kernel.org, workgroup.linux@csr.com, Lars-Peter Clausen <lars@metafoo.de>, Barry Song <Baohua.Song@csr.com>
+List-ID: <devicetree@vger.kernel.org>
 
+From: Barry Song <Baohua.Song@csr.com>
 
---RHdRtM27np9fZUoh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+move to support of_dma_request_slave_channel() and dma_request_slave_channel.
+we add a xlate() to let dma clients be able to find right dma_chan by generic
+"dmas" properties in dts.
 
-On Fri, Jan 31, 2014 at 12:48:09PM +0000, Mark Brown wrote:
-> On Fri, Jan 31, 2014 at 11:55:50AM +0100, Maxime Ripard wrote:
->=20
-> > +	master =3D devm_spi_alloc_master(&pdev->dev, sizeof(struct sun6i_spi)=
-);
-> > +	if (!master) {
-> > +		dev_err(&pdev->dev, "Unable to allocate SPI Master\n");
-> > +		return -ENOMEM;
-> > +	}
->=20
-> This now depends on your other series which as I said doesn't look like
-> the best approach.
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Barry Song <Baohua.Song@csr.com>
+---
+ -v5:
+ add Acked-by: vinod.koul@intel.com;
+ cc devicetree guys as Acked from dt was required
 
-Indeed, I forgot to mention it in the cover letter. My bad.
+ .../devicetree/bindings/dma/sirfsoc-dma.txt        |   43 ++++++++++++++++++++
+ arch/arm/boot/dts/atlas6.dtsi                      |    2 +
+ arch/arm/boot/dts/prima2.dtsi                      |    2 +
+ drivers/dma/sirf-dma.c                             |   23 ++++++++++
+ 4 files changed, 70 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/sirfsoc-dma.txt
 
->=20
-> > +	pm_runtime_enable(&pdev->dev);
-> > +	if (!pm_runtime_enabled(&pdev->dev)) {
-> > +		ret =3D sun6i_spi_runtime_resume(&pdev->dev);
-> > +		if (ret) {
-> > +			dev_err(&pdev->dev, "Couldn't resume the device\n");
-> > +			return ret;
-> > +		}
-> > +	}
->=20
-> No, as discussed don't do this - notice how other drivers aren't written
-> this way either.  Like I said leave the device powered on startup and
-> then let it be idled by runtime PM.
-
-Well, some SPI drivers are actually written like that (all the tegra
-SPI drivers for example). It's not an excuse, but waking up the device
-only to put it back in suspend right away seems kind of
-inefficient. Plus, the pm_runtime_idle callback you suggested are
-actually calling runtime_idle, while we want to call runtime_suspend.
-
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---RHdRtM27np9fZUoh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS7CfoAAoJEBx+YmzsjxAg0tcQAIsQCJpG97ymE6ms+cNXMBnA
-dYPjkpfZ0YbI4PoiFc1PLfaR+wiWbFeJaPn4apMAfoRZ6FFgM1jN5qDLfmui6my3
-fUnIxeU5f4VExsphF/7MRdbfASzIGRJ9o33bZn1UqcWX4+54/pVB40nSXRoX2pQn
-eepkHylLuO4NZhJApXzrB9eOOrzJxtoai7HGSNyiAT/T+HgA3BbPpN+7gGzb81q3
-qi9wHA9lryOhQQMmuGdeVWJTgbLMwtxBkbmYhK9OFk5QXKuPcnzpU+0XaRhYSVdO
-77hyafL3dX+06NRM0sKwIZEB17gIyQpV1q2RdeV7o3JdxCu1VDMw7VjF0G8TBlXI
-JoBbh+XRP9Bx4yxZrnQzI+0vwUOsL0QVYDXX1N7uJ7pkJgUSvn4vaYRGEwyQsz2R
-4vDlZJYSZZyMvQoEbqbJIFstMCuegVgfHSUmDjX9j8oM1EAkMSaf7FUN/bWbae3C
-uryCMzHElW5AG7LXFdAHk6h0V1GuJtmhN0lin3d61aBOaWMI7PqJbOOqzB/tpFdA
-hT/p800S/Jn7Ao1pX8ShM6s2EIM8HgtweeKUiQA/MznUSVg7ol2cE27ojfeDcoJM
-Vp7NTIQaohtiBo/CTpu42C8sHa2JcmrNJGNWRxDONEh19byl4iuZtXniU243wrsI
-KztbtMoaJNLDBPoIaSQI
-=FmH2
------END PGP SIGNATURE-----
-
---RHdRtM27np9fZUoh--
+diff --git a/Documentation/devicetree/bindings/dma/sirfsoc-dma.txt b/Documentation/devicetree/bindings/dma/sirfsoc-dma.txt
+new file mode 100644
+index 0000000..ecbc96a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/sirfsoc-dma.txt
+@@ -0,0 +1,43 @@
++* CSR SiRFSoC DMA controller
++
++See dma.txt first
++
++Required properties:
++- compatible: Should be "sirf,prima2-dmac" or "sirf,marco-dmac"
++- reg: Should contain DMA registers location and length.
++- interrupts: Should contain one interrupt shared by all channel
++- #dma-cells: must be <1>. used to represent the number of integer
++    cells in the dmas property of client device.
++- clocks: clock required
++
++Example:
++
++Controller:
++dmac0: dma-controller@b00b0000 {
++	compatible = "sirf,prima2-dmac";
++	reg = <0xb00b0000 0x10000>;
++	interrupts = <12>;
++	clocks = <&clks 24>;
++	#dma-cells = <1>;
++};
++
++
++Client:
++Fill the specific dma request line in dmas. In the below example, spi0 read
++channel request line is 9 of the 2nd dma controller, while write channel uses
++4 of the 2nd dma controller; spi1 read channel request line is 12 of the 1st
++dma controller, while write channel uses 13 of the 1st dma controller:
++
++spi0: spi@b00d0000 {
++	compatible = "sirf,prima2-spi";
++	dmas = <&dmac1 9>,
++		<&dmac1 4>;
++	dma-names = "rx", "tx";
++};
++
++spi1: spi@b0170000 {
++	compatible = "sirf,prima2-spi";
++	dmas = <&dmac0 12>,
++		<&dmac0 13>;
++	dma-names = "rx", "tx";
++};
+diff --git a/arch/arm/boot/dts/atlas6.dtsi b/arch/arm/boot/dts/atlas6.dtsi
+index b63cfef..4f41f0a 100644
+--- a/arch/arm/boot/dts/atlas6.dtsi
++++ b/arch/arm/boot/dts/atlas6.dtsi
+@@ -260,6 +260,7 @@
+ 				reg = <0xb00b0000 0x10000>;
+ 				interrupts = <12>;
+ 				clocks = <&clks 24>;
++				#dma-cells = <1>;
+ 			};
+ 
+ 			dmac1: dma-controller@b0160000 {
+@@ -268,6 +269,7 @@
+ 				reg = <0xb0160000 0x10000>;
+ 				interrupts = <13>;
+ 				clocks = <&clks 25>;
++				#dma-cells = <1>;
+ 			};
+ 
+ 			vip@b00C0000 {
+diff --git a/arch/arm/boot/dts/prima2.dtsi b/arch/arm/boot/dts/prima2.dtsi
+index b292a5c..19e4e22 100644
+--- a/arch/arm/boot/dts/prima2.dtsi
++++ b/arch/arm/boot/dts/prima2.dtsi
+@@ -277,6 +277,7 @@
+ 				reg = <0xb00b0000 0x10000>;
+ 				interrupts = <12>;
+ 				clocks = <&clks 24>;
++				#dma-cells = <1>;
+ 			};
+ 
+ 			dmac1: dma-controller@b0160000 {
+@@ -285,6 +286,7 @@
+ 				reg = <0xb0160000 0x10000>;
+ 				interrupts = <13>;
+ 				clocks = <&clks 25>;
++				#dma-cells = <1>;
+ 			};
+ 
+ 			vip@b00C0000 {
+diff --git a/drivers/dma/sirf-dma.c b/drivers/dma/sirf-dma.c
+index 6aec3ad..8b74c0d 100644
+--- a/drivers/dma/sirf-dma.c
++++ b/drivers/dma/sirf-dma.c
+@@ -18,6 +18,7 @@
+ #include <linux/of_device.h>
+ #include <linux/of_platform.h>
+ #include <linux/clk.h>
++#include <linux/of_dma.h>
+ #include <linux/sirfsoc_dma.h>
+ 
+ #include "dmaengine.h"
+@@ -640,6 +641,18 @@ bool sirfsoc_dma_filter_id(struct dma_chan *chan, void *chan_id)
+ }
+ EXPORT_SYMBOL(sirfsoc_dma_filter_id);
+ 
++static struct dma_chan *of_dma_sirfsoc_xlate(struct of_phandle_args *dma_spec,
++	struct of_dma *ofdma)
++{
++	struct sirfsoc_dma *sdma = ofdma->of_dma_data;
++	unsigned int request = dma_spec->args[0];
++
++	if (request > SIRFSOC_DMA_CHANNELS)
++		return NULL;
++
++	return dma_get_slave_channel(&sdma->channels[request].chan);
++}
++
+ static int sirfsoc_dma_probe(struct platform_device *op)
+ {
+ 	struct device_node *dn = op->dev.of_node;
+@@ -744,11 +757,20 @@ static int sirfsoc_dma_probe(struct platform_device *op)
+ 	if (ret)
+ 		goto free_irq;
+ 
++	/* Device-tree DMA controller registration */
++	ret = of_dma_controller_register(dn, of_dma_sirfsoc_xlate, sdma);
++	if (ret) {
++		dev_err(dev, "failed to register DMA controller\n");
++		goto unreg_dma_dev;
++	}
++
+ 	pm_runtime_enable(&op->dev);
+ 	dev_info(dev, "initialized SIRFSOC DMAC driver\n");
+ 
+ 	return 0;
+ 
++unreg_dma_dev:
++	dma_async_device_unregister(dma);
+ free_irq:
+ 	free_irq(sdma->irq, sdma);
+ irq_dispose:
+@@ -761,6 +783,7 @@ static int sirfsoc_dma_remove(struct platform_device *op)
+ 	struct device *dev = &op->dev;
+ 	struct sirfsoc_dma *sdma = dev_get_drvdata(dev);
+ 
++	of_dma_controller_free(op->dev.of_node);
+ 	dma_async_device_unregister(&sdma->dma);
+ 	free_irq(sdma->irq, sdma);
+ 	irq_dispose_mapping(sdma->irq);
+-- 
+1.7.5.4
