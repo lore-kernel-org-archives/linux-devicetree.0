@@ -1,49 +1,46 @@
 From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: [PATCH 1/8] pci-rcar-gen2: add of match table
-Date: Sun, 26 Jan 2014 16:48:58 +0000
-Message-ID: <1390754945-28142-2-git-send-email-ben.dooks@codethink.co.uk>
+Subject: [PATCH 7/8] ARM: shmobile: r8a7790.dtsi: add usbphy node
+Date: Sun, 26 Jan 2014 16:49:04 +0000
+Message-ID: <1390754945-28142-8-git-send-email-ben.dooks@codethink.co.uk>
 References: <1390754945-28142-1-git-send-email-ben.dooks@codethink.co.uk>
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1390754945-28142-1-git-send-email-ben.dooks@codethink.co.uk>
-Sender: linux-pci-owner@vger.kernel.org
+Sender: linux-sh-owner@vger.kernel.org
 To: linux-kernel@lists.codethink.co.uk
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>, Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add OF match table for pci-rcar-gen2 driver for device tree support.
+Add node for USB PHY driver to the base R8A7790 device tree include file.
+It is up to the board file to enable and configure it as necessary.
 
 Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
 ---
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Simon Horman <horms@verge.net.au>
-Cc: linux-pci@vger.kernel.org
-Cc: linux-sh@vger.kernel.org
 Cc: devicetree@vger.kernel.org
+Cc: Magnus Damm <magnus.damm@gmail.com>
+Cc: Simon Horman <horms@verge.net.au>
+Cc: linux-sh@vger.kernel.org
 ---
- drivers/pci/host/pci-rcar-gen2.c | 8 ++++++++
+ arch/arm/boot/dts/r8a7790.dtsi | 8 ++++++++
  1 file changed, 8 insertions(+)
 
-diff --git a/drivers/pci/host/pci-rcar-gen2.c b/drivers/pci/host/pci-rcar-gen2.c
-index ceec147..ea65bac 100644
---- a/drivers/pci/host/pci-rcar-gen2.c
-+++ b/drivers/pci/host/pci-rcar-gen2.c
-@@ -311,9 +311,17 @@ static int __init rcar_pci_probe(struct platform_device *pdev)
- 	return rcar_pci_add_controller(priv);
- }
- 
-+static struct of_device_id rcar_pci_of_match[] = {
-+	{ .compatible = "renesas,pci-r8a7790", },
-+	{ },
-+};
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index e716df8..5542859 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -758,4 +758,12 @@
+ 		interrupts = <0 113 IRQ_TYPE_LEVEL_HIGH>;
+ 		status = "disabled";
+ 	};
 +
-+MODULE_DEVICE_TABLE(of, rcar_pci_of_match);
-+
- static struct platform_driver rcar_pci_driver = {
- 	.driver = {
- 		.name = "pci-rcar-gen2",
-+		.of_match_table = rcar_pci_of_match,
- 	},
++	usbphy: usbphy@e6590100 {
++		compatible = "renesas,usb-phy-r8a7790";
++		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
++		clock-names = "usbhs";
++		reg = < 0x0 0xe6590100 0x0 0x100>;
++		status = "disabled";
++	};
  };
- 
 -- 
 1.8.5.2
+
