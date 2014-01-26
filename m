@@ -1,93 +1,40 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2] of: make of_get_phy_mode parse 'phy-connection-type'
-Date: Sat, 25 Jan 2014 19:04:49 -0800
-Message-ID: <52E47B51.3030308@gmail.com>
-References: <20131114074711.9A8C5C402E1@trevor.secretlab.ca> < 1384496612-28392-1-git-send-email-f.fainelli@gmail.com> <20131116122451.3F0B9C4038F@trevor.secretlab.ca>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 07/18] watchdog: orion: Handle IRQ
+Date: Sun, 26 Jan 2014 09:04:12 +0100
+Message-ID: <20140126090412.37f4932f@skate>
+References: <1390431915-5115-1-git-send-email-ezequiel.garcia@free-electrons.com>
+	<1390431915-5115-8-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131116122451.3F0B9C4038F@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: rob.herring@calxeda.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1390431915-5115-8-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 16/11/2013 04:24, Grant Likely a =E9crit :
-> On Fri, 15 Nov 2013 06:23:32 +0000, Florian Fainelli <f.fainelli@gmai=
-l.com> wrote:
->> Per the ePAPR v1.1 specification, 'phy-connection-type' is the canon=
-ical
->> property name for describing an Ethernet to PHY connection type. Mak=
-e
->> sure that of_get_phy_mode() also attempts to parse that property and
->> update the comments mentioning 'phy-mode' to also include
->> 'phy-connection-type'.
->>
->> Acked-by: Grant Likely <grant.likely@linaro.org>
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->
-> Applied, thanks
+Dear Ezequiel Garcia,
 
-Grant, where is that patch, and will it be part of a pull request to 3.=
-14?
+On Wed, 22 Jan 2014 20:05:04 -0300, Ezequiel Garcia wrote:
+> DT-enabled where an irqchip driver for the brigde interrupt controller is
+> available can handle the watchdog IRQ properly. Therefore, we request
+> the interruption and add a dummy handler that merely calls panic().
 
-Thanks!
+I don't quiite understand the first sentence of this commit log, and
+the commit title looks wrong. Maybe a bad copy/paste or something?
 
->
-> g.
->
->> ---
->> Changes since v2:
->> - reworked the error condition to look nicer per Grant's suggestion
->> - added Grant's Acked-by tag
->> - fixed a typo in the commit message on "mentioning"
->>
->>   drivers/of/of_net.c | 11 +++++++----
->>   1 file changed, 7 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
->> index 8f9be2e..651e249 100644
->> --- a/drivers/of/of_net.c
->> +++ b/drivers/of/of_net.c
->> @@ -13,8 +13,8 @@
->>
->>   /**
->>    * It maps 'enum phy_interface_t' found in include/linux/phy.h
->> - * into the device tree binding of 'phy-mode', so that Ethernet
->> - * device driver can get phy interface from device tree.
->> + * into the device tree binding of 'phy-mode' or 'phy-connection-ty=
-pe',
->> + * so that Ethernet device driver can get phy interface from device=
- tree.
->>    */
->>   static const char *phy_modes[] =3D {
->>   	[PHY_INTERFACE_MODE_NA]		=3D "",
->> @@ -36,8 +36,9 @@ static const char *phy_modes[] =3D {
->>    * of_get_phy_mode - Get phy mode for given device_node
->>    * @np:	Pointer to the given device_node
->>    *
->> - * The function gets phy interface string from property 'phy-mode',
->> - * and return its index in phy_modes table, or errno in error case.
->> + * The function gets phy interface string from property 'phy-mode' =
-or
->> + * 'phy-connection-type', and return its index in phy_modes table, =
-or errno in
->> + * error case.
->>    */
->>   int of_get_phy_mode(struct device_node *np)
->>   {
->> @@ -46,6 +47,8 @@ int of_get_phy_mode(struct device_node *np)
->>
->>   	err =3D of_property_read_string(np, "phy-mode", &pm);
->>   	if (err < 0)
->> +		err =3D of_property_read_string(np, "phy-connection-type", &pm);
->> +	if (err < 0)
->>   		return err;
->>
->>   	for (i =3D 0; i < ARRAY_SIZE(phy_modes); i++)
->> --
->> 1.8.3.2
->>
->
+> 
+> This is done in order to have an initial 'ack' of the interruption,
+
+interruption -> interrupt
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
