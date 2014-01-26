@@ -1,56 +1,69 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 08/18] watchdog: orion: Make RSTOUT register a
- separate resource
-Date: Sun, 26 Jan 2014 09:17:53 +0100
-Message-ID: <20140126091753.2910a39f@skate>
-References: <1390431915-5115-1-git-send-email-ezequiel.garcia@free-electrons.com>
-	<1390431915-5115-9-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH] of: Fix uninitialized child warning in for_each_child_of_node() if !OF
+Date: Sun, 26 Jan 2014 11:21:08 +0100
+Message-ID: <1390731668-904-1-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1390431915-5115-9-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, David Howells <dhowells@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Ezequiel Garcia,
+If CONFIG_OF=3Dn:
 
-On Wed, 22 Jan 2014 20:05:05 -0300, Ezequiel Garcia wrote:
+drivers/i2c/i2c-mux.c: In function =E2=80=98i2c_add_mux_adapter=E2=80=99=
+:
+drivers/i2c/i2c-mux.c:158: warning: =E2=80=98child=E2=80=99 is used uni=
+nitialized in this function
+drivers/leds/leds-lp55xx-common.c: In function =E2=80=98lp55xx_of_popul=
+ate_pdata=E2=80=99:
+drivers/leds/leds-lp55xx-common.c:560: warning: =E2=80=98child=E2=80=99=
+ is used uninitialized in this function
+drivers/leds/leds-pwm.c: In function =E2=80=98led_pwm_probe=E2=80=99:
+drivers/leds/leds-pwm.c:89: warning: =E2=80=98child=E2=80=99 is used un=
+initialized in this function
+drivers/mfd/stmpe.c: In function =E2=80=98stmpe_of_probe=E2=80=99:
+drivers/mfd/stmpe.c:1112: warning: =E2=80=98child=E2=80=99 is used unin=
+itialized in this function
+drivers/mfd/tc3589x.c: In function =E2=80=98tc3589x_probe=E2=80=99:
+drivers/mfd/tc3589x.c:324: warning: =E2=80=98child=E2=80=99 is used uni=
+nitialized in this function
+drivers/power/charger-manager.c: In function =E2=80=98of_cm_parse_desc=E2=
+=80=99:
+drivers/power/charger-manager.c:1606: warning: =E2=80=98child=E2=80=99 =
+is used uninitialized in this function
 
-> +/* RSTOUT mask register physical address for Orion5x, Kirkwood and Dove */
-> +#define ORION_RSTOUT_MASK_OFFSET	0x20108
-> +
-> +/* Internal registers can be configured at any 1 MiB aligned address */
-> +#define INTERNAL_REGS_MASK		~(SZ_1M - 1)
+Introduced by commit 00b2c76a6abbe082bb5afb89ee49ec325e9cd4d2
+("include/linux/of.h: make for_each_child_of_node() reference its args =
+when
+CONFIG_OF=3Dn").
 
-I'm not a big fan of hardcoding the internal register window size in a
-driver. I would have preferred to have used the offset between the
-watchdog registers and the rstout register, but since this one is
-*before* the watchdog registers, it would have to be a negative offset.
-Not sure how to handle this.
+Instead of dropping the "__of_use_dn(child)" again, explicitly set chil=
+d
+to NULL, to protect against code using child after the loop (child =3D=3D=
+ NULL
+is the loop termination condition if CONFIG_OF=3Dy).
 
-> +/*
-> + * The original devicetree binding for this driver specified only
-> + * one memory resource, so in order to keep DT backwards compatibility
-> + * we try to fallback to a hardcoded register address, if the resource
-> + * is missing from the devicetree.
-> + */
-> +static void __iomem *try_rstout_ioremap(struct platform_device *pdev,
-> +					phys_addr_t internal_regs)
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+---
+ include/linux/of.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Why is it called "try" ? It actually does the mapping. So I would
-prefer the function to be named:
-
-	orion_wdt_ioremap_rstout()
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 70c64ba17fa5..0bf44f2fe092 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -383,7 +383,7 @@ static inline void __of_use_dn(const struct device_=
+node *np)
+ }
+=20
+ #define for_each_child_of_node(parent, child) \
+-	while (__of_use_dn(parent), __of_use_dn(child), 0)
++	while (__of_use_dn(parent), child =3D NULL, 0)
+=20
+ #define for_each_available_child_of_node(parent, child) \
+ 	while (0)
+--=20
+1.7.9.5
