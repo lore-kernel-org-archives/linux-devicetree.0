@@ -1,188 +1,93 @@
-From: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5] dmaengine: sirf: enable generic dt binding for dma channels
-Date: Sun, 26 Jan 2014 10:08:45 +0800
-Message-ID: <1389190369-2012-1-git-send-email-21cnbao__4455.85754137046$1390702168$gmane$org@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, workgroup.linux-kQvG35nSl+M@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2] of: make of_get_phy_mode parse 'phy-connection-type'
+Date: Sat, 25 Jan 2014 19:04:49 -0800
+Message-ID: <52E47B51.3030308@gmail.com>
+References: <20131114074711.9A8C5C402E1@trevor.secretlab.ca> < 1384496612-28392-1-git-send-email-f.fainelli@gmail.com> <20131116122451.3F0B9C4038F@trevor.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131116122451.3F0B9C4038F@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: rob.herring@calxeda.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
+Le 16/11/2013 04:24, Grant Likely a =E9crit :
+> On Fri, 15 Nov 2013 06:23:32 +0000, Florian Fainelli <f.fainelli@gmai=
+l.com> wrote:
+>> Per the ePAPR v1.1 specification, 'phy-connection-type' is the canon=
+ical
+>> property name for describing an Ethernet to PHY connection type. Mak=
+e
+>> sure that of_get_phy_mode() also attempts to parse that property and
+>> update the comments mentioning 'phy-mode' to also include
+>> 'phy-connection-type'.
+>>
+>> Acked-by: Grant Likely <grant.likely@linaro.org>
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>
+> Applied, thanks
 
-move to support of_dma_request_slave_channel() and dma_request_slave_channel.
-we add a xlate() to let dma clients be able to find right dma_chan by generic
-"dmas" properties in dts.
+Grant, where is that patch, and will it be part of a pull request to 3.=
+14?
 
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Signed-off-by: Barry Song <Baohua.Song-kQvG35nSl+M@public.gmane.org>
----
- -v5:
- add Acked-by: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org;
- cc devicetree guys as Acked from dt was required
+Thanks!
 
- .../devicetree/bindings/dma/sirfsoc-dma.txt        |   43 ++++++++++++++++++++
- arch/arm/boot/dts/atlas6.dtsi                      |    2 +
- arch/arm/boot/dts/prima2.dtsi                      |    2 +
- drivers/dma/sirf-dma.c                             |   23 ++++++++++
- 4 files changed, 70 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/sirfsoc-dma.txt
-
-diff --git a/Documentation/devicetree/bindings/dma/sirfsoc-dma.txt b/Documentation/devicetree/bindings/dma/sirfsoc-dma.txt
-new file mode 100644
-index 0000000..ecbc96a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/sirfsoc-dma.txt
-@@ -0,0 +1,43 @@
-+* CSR SiRFSoC DMA controller
-+
-+See dma.txt first
-+
-+Required properties:
-+- compatible: Should be "sirf,prima2-dmac" or "sirf,marco-dmac"
-+- reg: Should contain DMA registers location and length.
-+- interrupts: Should contain one interrupt shared by all channel
-+- #dma-cells: must be <1>. used to represent the number of integer
-+    cells in the dmas property of client device.
-+- clocks: clock required
-+
-+Example:
-+
-+Controller:
-+dmac0: dma-controller@b00b0000 {
-+	compatible = "sirf,prima2-dmac";
-+	reg = <0xb00b0000 0x10000>;
-+	interrupts = <12>;
-+	clocks = <&clks 24>;
-+	#dma-cells = <1>;
-+};
-+
-+
-+Client:
-+Fill the specific dma request line in dmas. In the below example, spi0 read
-+channel request line is 9 of the 2nd dma controller, while write channel uses
-+4 of the 2nd dma controller; spi1 read channel request line is 12 of the 1st
-+dma controller, while write channel uses 13 of the 1st dma controller:
-+
-+spi0: spi@b00d0000 {
-+	compatible = "sirf,prima2-spi";
-+	dmas = <&dmac1 9>,
-+		<&dmac1 4>;
-+	dma-names = "rx", "tx";
-+};
-+
-+spi1: spi@b0170000 {
-+	compatible = "sirf,prima2-spi";
-+	dmas = <&dmac0 12>,
-+		<&dmac0 13>;
-+	dma-names = "rx", "tx";
-+};
-diff --git a/arch/arm/boot/dts/atlas6.dtsi b/arch/arm/boot/dts/atlas6.dtsi
-index b63cfef..4f41f0a 100644
---- a/arch/arm/boot/dts/atlas6.dtsi
-+++ b/arch/arm/boot/dts/atlas6.dtsi
-@@ -260,6 +260,7 @@
- 				reg = <0xb00b0000 0x10000>;
- 				interrupts = <12>;
- 				clocks = <&clks 24>;
-+				#dma-cells = <1>;
- 			};
- 
- 			dmac1: dma-controller@b0160000 {
-@@ -268,6 +269,7 @@
- 				reg = <0xb0160000 0x10000>;
- 				interrupts = <13>;
- 				clocks = <&clks 25>;
-+				#dma-cells = <1>;
- 			};
- 
- 			vip@b00C0000 {
-diff --git a/arch/arm/boot/dts/prima2.dtsi b/arch/arm/boot/dts/prima2.dtsi
-index b292a5c..19e4e22 100644
---- a/arch/arm/boot/dts/prima2.dtsi
-+++ b/arch/arm/boot/dts/prima2.dtsi
-@@ -277,6 +277,7 @@
- 				reg = <0xb00b0000 0x10000>;
- 				interrupts = <12>;
- 				clocks = <&clks 24>;
-+				#dma-cells = <1>;
- 			};
- 
- 			dmac1: dma-controller@b0160000 {
-@@ -285,6 +286,7 @@
- 				reg = <0xb0160000 0x10000>;
- 				interrupts = <13>;
- 				clocks = <&clks 25>;
-+				#dma-cells = <1>;
- 			};
- 
- 			vip@b00C0000 {
-diff --git a/drivers/dma/sirf-dma.c b/drivers/dma/sirf-dma.c
-index 6aec3ad..8b74c0d 100644
---- a/drivers/dma/sirf-dma.c
-+++ b/drivers/dma/sirf-dma.c
-@@ -18,6 +18,7 @@
- #include <linux/of_device.h>
- #include <linux/of_platform.h>
- #include <linux/clk.h>
-+#include <linux/of_dma.h>
- #include <linux/sirfsoc_dma.h>
- 
- #include "dmaengine.h"
-@@ -640,6 +641,18 @@ bool sirfsoc_dma_filter_id(struct dma_chan *chan, void *chan_id)
- }
- EXPORT_SYMBOL(sirfsoc_dma_filter_id);
- 
-+static struct dma_chan *of_dma_sirfsoc_xlate(struct of_phandle_args *dma_spec,
-+	struct of_dma *ofdma)
-+{
-+	struct sirfsoc_dma *sdma = ofdma->of_dma_data;
-+	unsigned int request = dma_spec->args[0];
-+
-+	if (request > SIRFSOC_DMA_CHANNELS)
-+		return NULL;
-+
-+	return dma_get_slave_channel(&sdma->channels[request].chan);
-+}
-+
- static int sirfsoc_dma_probe(struct platform_device *op)
- {
- 	struct device_node *dn = op->dev.of_node;
-@@ -744,11 +757,20 @@ static int sirfsoc_dma_probe(struct platform_device *op)
- 	if (ret)
- 		goto free_irq;
- 
-+	/* Device-tree DMA controller registration */
-+	ret = of_dma_controller_register(dn, of_dma_sirfsoc_xlate, sdma);
-+	if (ret) {
-+		dev_err(dev, "failed to register DMA controller\n");
-+		goto unreg_dma_dev;
-+	}
-+
- 	pm_runtime_enable(&op->dev);
- 	dev_info(dev, "initialized SIRFSOC DMAC driver\n");
- 
- 	return 0;
- 
-+unreg_dma_dev:
-+	dma_async_device_unregister(dma);
- free_irq:
- 	free_irq(sdma->irq, sdma);
- irq_dispose:
-@@ -761,6 +783,7 @@ static int sirfsoc_dma_remove(struct platform_device *op)
- 	struct device *dev = &op->dev;
- 	struct sirfsoc_dma *sdma = dev_get_drvdata(dev);
- 
-+	of_dma_controller_free(op->dev.of_node);
- 	dma_async_device_unregister(&sdma->dma);
- 	free_irq(sdma->irq, sdma);
- 	irq_dispose_mapping(sdma->irq);
--- 
-1.7.5.4
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> g.
+>
+>> ---
+>> Changes since v2:
+>> - reworked the error condition to look nicer per Grant's suggestion
+>> - added Grant's Acked-by tag
+>> - fixed a typo in the commit message on "mentioning"
+>>
+>>   drivers/of/of_net.c | 11 +++++++----
+>>   1 file changed, 7 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
+>> index 8f9be2e..651e249 100644
+>> --- a/drivers/of/of_net.c
+>> +++ b/drivers/of/of_net.c
+>> @@ -13,8 +13,8 @@
+>>
+>>   /**
+>>    * It maps 'enum phy_interface_t' found in include/linux/phy.h
+>> - * into the device tree binding of 'phy-mode', so that Ethernet
+>> - * device driver can get phy interface from device tree.
+>> + * into the device tree binding of 'phy-mode' or 'phy-connection-ty=
+pe',
+>> + * so that Ethernet device driver can get phy interface from device=
+ tree.
+>>    */
+>>   static const char *phy_modes[] =3D {
+>>   	[PHY_INTERFACE_MODE_NA]		=3D "",
+>> @@ -36,8 +36,9 @@ static const char *phy_modes[] =3D {
+>>    * of_get_phy_mode - Get phy mode for given device_node
+>>    * @np:	Pointer to the given device_node
+>>    *
+>> - * The function gets phy interface string from property 'phy-mode',
+>> - * and return its index in phy_modes table, or errno in error case.
+>> + * The function gets phy interface string from property 'phy-mode' =
+or
+>> + * 'phy-connection-type', and return its index in phy_modes table, =
+or errno in
+>> + * error case.
+>>    */
+>>   int of_get_phy_mode(struct device_node *np)
+>>   {
+>> @@ -46,6 +47,8 @@ int of_get_phy_mode(struct device_node *np)
+>>
+>>   	err =3D of_property_read_string(np, "phy-mode", &pm);
+>>   	if (err < 0)
+>> +		err =3D of_property_read_string(np, "phy-connection-type", &pm);
+>> +	if (err < 0)
+>>   		return err;
+>>
+>>   	for (i =3D 0; i < ARRAY_SIZE(phy_modes); i++)
+>> --
+>> 1.8.3.2
+>>
+>
