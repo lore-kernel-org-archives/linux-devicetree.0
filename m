@@ -1,83 +1,109 @@
-From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Subject: [PATCH 4/8] ARM: shmobile: lager.dts: add pci 0/1/2
-Date: Sun, 26 Jan 2014 16:49:01 +0000
-Message-ID: <1390754945-28142-5-git-send-email-ben.dooks@codethink.co.uk>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: [PATCH 5/8] phy-rcar-usb-gen2: add device tree support
+Date: Sun, 26 Jan 2014 16:49:02 +0000
+Message-ID: <1390754945-28142-6-git-send-email-ben.dooks@codethink.co.uk>
 References: <1390754945-28142-1-git-send-email-ben.dooks@codethink.co.uk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1390754945-28142-1-git-send-email-ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org
-Cc: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1390754945-28142-1-git-send-email-ben.dooks@codethink.co.uk>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-kernel@lists.codethink.co.uk
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable pci1 and pci2 nodes for USB controllers attached to the AHB<>PCI
-bridge devices. Node pci0 is enabled for the moment as a device, but
-could be switched to usb-gadget mode later.
+Add support for the phy-rcar-gen2-usb driver to be probed from device tree.
 
-Signed-off-by: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Reviewed-by: Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
 ---
-Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
----
- arch/arm/boot/dts/r8a7790-lager.dts | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+Fixes from v1:
+	- use of_property_reasd-bool()
+	- remove unused of_id variable
 
-diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
-index 57569cb..8dfcd25 100644
---- a/arch/arm/boot/dts/r8a7790-lager.dts
-+++ b/arch/arm/boot/dts/r8a7790-lager.dts
-@@ -80,6 +80,22 @@
- 		renesas,groups = "mmc1_data8", "mmc1_ctrl";
- 		renesas,function = "mmc1";
- 	};
-+
-+	usb0_pins: usb0 {
-+		renesas,groups = "usb0";
-+		renesas,function = "usb";
-+	};
-+
-+	usb1_pins: usb1 {
-+		renesas,groups = "usb1";
-+		renesas,function = "usb";
-+	};
-+
-+	usb2_pins: usb2 {
-+		renesas,groups = "usb2";
-+		renesas,function = "usb";
-+	};
-+
- };
+Cc: linux-usb@vger.kernel.org
+Cc: linux-sh@vger.kernel.org
+Cc: Magnus Damm <magnus.damm@gmail.com>
+Cc: Simon Horman <horms@verge.net.au>
+Cc: devicetree@vger.kernel.org
+---
+ drivers/usb/phy/phy-rcar-gen2-usb.c | 31 ++++++++++++++++++++++++++-----
+ 1 file changed, 26 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/usb/phy/phy-rcar-gen2-usb.c b/drivers/usb/phy/phy-rcar-gen2-usb.c
+index db3ab34..d146388 100644
+--- a/drivers/usb/phy/phy-rcar-gen2-usb.c
++++ b/drivers/usb/phy/phy-rcar-gen2-usb.c
+@@ -15,6 +15,7 @@
+ #include <linux/module.h>
+ #include <linux/platform_data/usb-rcar-gen2-phy.h>
+ #include <linux/platform_device.h>
++#include <linux/of_device.h>
+ #include <linux/spinlock.h>
+ #include <linux/usb/otg.h>
  
- &mmcif1 {
-@@ -91,3 +107,21 @@
- 	non-removable;
- 	status = "okay";
- };
-+
-+&pci0 {
-+	status = "okay";
-+	pinctrl-0 = <&usb0_pins>;
-+	pinctrl-names = "default";
+@@ -167,6 +168,12 @@ out:
+ 	spin_unlock_irqrestore(&priv->lock, flags);
+ }
+ 
++static struct of_device_id rcar_gen2_usb_phy_ofmatch[] = {
++	{ .compatible = "renesas,usb-phy-r8a7790", },
++	{ .compatible = "renesas,rcar-gen2-usb-phy", },
++	{ },
 +};
 +
-+&pci1 {
-+	status = "okay";
-+	pinctrl-0 = <&usb1_pins>;
-+	pinctrl-names = "default";
-+};
+ static int rcar_gen2_usb_phy_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -178,7 +185,7 @@ static int rcar_gen2_usb_phy_probe(struct platform_device *pdev)
+ 	int retval;
+ 
+ 	pdata = dev_get_platdata(&pdev->dev);
+-	if (!pdata) {
++	if (!pdata && !dev->of_node) {
+ 		dev_err(dev, "No platform data\n");
+ 		return -EINVAL;
+ 	}
+@@ -203,16 +210,29 @@ static int rcar_gen2_usb_phy_probe(struct platform_device *pdev)
+ 	spin_lock_init(&priv->lock);
+ 	priv->clk = clk;
+ 	priv->base = base;
+-	priv->ugctrl2 = pdata->chan0_pci ?
+-			USBHS_UGCTRL2_USB0_PCI : USBHS_UGCTRL2_USB0_HS;
+-	priv->ugctrl2 |= pdata->chan2_pci ?
+-			USBHS_UGCTRL2_USB2_PCI : USBHS_UGCTRL2_USB2_SS;
+ 	priv->phy.dev = dev;
+ 	priv->phy.label = dev_name(dev);
+ 	priv->phy.init = rcar_gen2_usb_phy_init;
+ 	priv->phy.shutdown = rcar_gen2_usb_phy_shutdown;
+ 	priv->phy.set_suspend = rcar_gen2_usb_phy_set_suspend;
+ 
++	if (of_id) {
++		if (of_property_read_bool(dev->of_node, "renesas,usb0-hs"))
++			priv->ugctrl2 = USBHS_UGCTRL2_USB0_HS;
++		else
++			priv->ugctrl2 = USBHS_UGCTRL2_USB0_PCI;
 +
-+&pci2 {
-+	status = "okay";
-+	pinctrl-0 = <&usb2_pins>;
-+	pinctrl-names = "default";
-+};
++		if (of_property_read_bool(dev->of_node, "renesas,usb2-ss"))
++			priv->ugctrl2 |= USBHS_UGCTRL2_USB2_SS;
++		else
++			priv->ugctrl2 |= USBHS_UGCTRL2_USB2_PCI;
++	} else {
++		priv->ugctrl2 = pdata->chan0_pci ?
++			USBHS_UGCTRL2_USB0_PCI : USBHS_UGCTRL2_USB0_HS;
++		priv->ugctrl2 |= pdata->chan2_pci ?
++			USBHS_UGCTRL2_USB2_PCI : USBHS_UGCTRL2_USB2_SS;
++	}
++
+ 	retval = usb_add_phy(&priv->phy, USB_PHY_TYPE_USB2);
+ 	if (retval < 0) {
+ 		dev_err(dev, "Failed to add USB phy\n");
+@@ -236,6 +256,7 @@ static int rcar_gen2_usb_phy_remove(struct platform_device *pdev)
+ static struct platform_driver rcar_gen2_usb_phy_driver = {
+ 	.driver = {
+ 		.name = "usb_phy_rcar_gen2",
++		.of_match_table = rcar_gen2_usb_phy_ofmatch,
+ 	},
+ 	.probe = rcar_gen2_usb_phy_probe,
+ 	.remove = rcar_gen2_usb_phy_remove,
 -- 
 1.8.5.2
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
