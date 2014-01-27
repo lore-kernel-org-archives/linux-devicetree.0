@@ -1,119 +1,83 @@
-From: Max Filippov <jcmvbkbc@gmail.com>
-Subject: Re: [PATCH 1/3] net: ethoc: don't advertise gigabit speed on attached
- PHY
-Date: Mon, 27 Jan 2014 20:17:16 +0400
-Message-ID: <52E6868C.3070401@gmail.com>
-References: <1390795167-6677-1-git-send-email-jcmvbkbc@gmail.com> <1390795167-6677-2-git-send-email-jcmvbkbc@gmail.com> <1390817904.2735.127.camel@deadeye.wl.decadent.org.uk>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: Fix uninitialized child warning in
+ for_each_child_of_node() if !OF
+Date: Mon, 27 Jan 2014 10:21:00 -0600
+Message-ID: <CAL_JsqJyaMDkj6jE+qk6AuUNB0-TOLdqeYDBdjH+1YJFu2V0DQ@mail.gmail.com>
+References: <1390731668-904-1-git-send-email-geert@linux-m68k.org>
+	<CAL_JsqLq+3Ehns0QaPajzLQCYUL+k+vx3j2vHTCdKMt948h6-g@mail.gmail.com>
+	<CAMuHMdVNLYoWD=Q+utHUgEBJ1619Q5x=DsZEtmeEbogrQM2a0Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1390817904.2735.127.camel@deadeye.wl.decadent.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ben Hutchings <ben@decadent.org.uk>
-Cc: "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Chris Zankel <chris@zankel.net>, Marc Gauthier <marc@cadence.com>, "David S. Miller" <davem@davemloft.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdVNLYoWD=Q+utHUgEBJ1619Q5x=DsZEtmeEbogrQM2a0Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Howells <dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ben,
-
-On Mon, Jan 27, 2014 at 2:18 PM, Ben Hutchings <ben@decadent.org.uk> wrote:
-> On Mon, 2014-01-27 at 07:59 +0400, Max Filippov wrote:
->> OpenCores 10/100 Mbps MAC does not support speeds above 100 Mbps, but does
->> not disable advertisement when PHY supports them. This results in
->> non-functioning network when the MAC is connected to a gigabit PHY connected
->> to a gigabit switch.
+On Mon, Jan 27, 2014 at 8:52 AM, Geert Uytterhoeven
+<geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> On Mon, Jan 27, 2014 at 3:16 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
+wrote:
+>> On Sun, Jan 26, 2014 at 4:21 AM, Geert Uytterhoeven
+>> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+>>> If CONFIG_OF=3Dn:
+>>>
+>>> drivers/i2c/i2c-mux.c: In function =91i2c_add_mux_adapter=92:
+>>> drivers/i2c/i2c-mux.c:158: warning: =91child=92 is used uninitializ=
+ed in this function
+>>> drivers/leds/leds-lp55xx-common.c: In function =91lp55xx_of_populat=
+e_pdata=92:
+>>> drivers/leds/leds-lp55xx-common.c:560: warning: =91child=92 is used=
+ uninitialized in this function
+>>> drivers/leds/leds-pwm.c: In function =91led_pwm_probe=92:
+>>> drivers/leds/leds-pwm.c:89: warning: =91child=92 is used uninitiali=
+zed in this function
+>>> drivers/mfd/stmpe.c: In function =91stmpe_of_probe=92:
+>>> drivers/mfd/stmpe.c:1112: warning: =91child=92 is used uninitialize=
+d in this function
+>>> drivers/mfd/tc3589x.c: In function =91tc3589x_probe=92:
+>>> drivers/mfd/tc3589x.c:324: warning: =91child=92 is used uninitializ=
+ed in this function
+>>> drivers/power/charger-manager.c: In function =91of_cm_parse_desc=92=
+:
+>>> drivers/power/charger-manager.c:1606: warning: =91child=92 is used =
+uninitialized in this function
+>>>
+>>> Introduced by commit 00b2c76a6abbe082bb5afb89ee49ec325e9cd4d2
+>    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>>> ("include/linux/of.h: make for_each_child_of_node() reference its a=
+rgs when
+>>> CONFIG_OF=3Dn").
+>>>
+>>> Instead of dropping the "__of_use_dn(child)" again, explicitly set =
+child
+>>> to NULL, to protect against code using child after the loop (child =
+=3D=3D NULL
+>>> is the loop termination condition if CONFIG_OF=3Dy).
+>>>
+>>> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 >>
->> The fix is to disable gigabit speed advertisement on attached PHY
->> unconditionally.
+>> Just got fixed in mainline:
 >>
->> Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
->> ---
->>  drivers/net/ethernet/ethoc.c | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/net/ethernet/ethoc.c b/drivers/net/ethernet/ethoc.c
->> index 4de8cfd..0aa1a05 100644
->> --- a/drivers/net/ethernet/ethoc.c
->> +++ b/drivers/net/ethernet/ethoc.c
->> @@ -712,6 +712,8 @@ static int ethoc_open(struct net_device *dev)
->>               netif_start_queue(dev);
->>       }
->>
->> +     priv->phy->advertising &= ~(ADVERTISED_1000baseT_Full |
->> +                                 ADVERTISED_1000baseT_Half);
->>       phy_start(priv->phy);
->>       napi_enable(&priv->napi);
->>
+>> commit 00b2c76a6abbe082bb5afb89ee49ec325e9cd4d2
 >
-> This is not sufficient to disable gigabit speeds; the supported mask
-> should also be limited.  And it should be done even before the net
+> Nope, this is the one that introduced new warnings.
 
-I tried that, but when I also limit supported mask the phy driver doesn't
-touch gigabit advertising register int the genphy_config_advert at all.
-That's probably right for ethtool interface, but ethoc doesn't support
-ethtool.
+Oh right, sorry. Read that too fast.
 
-> device is registered.
->
-> Rather than poking into the phy_device structure directly from this
-> driver, I think you should add a function in phylib for this purpose.
+Won't your change trigger warnings from -Wunused-but-set-variable in
+cases where child is not used? That would only be enabled for "W=3D1"
+though.
 
-Like below?
+I think the right fix here is all the for_each_X macros should not be
+conditional on CONFIG_OF and we should rely on the functions they call
+like of_get_next_child to do the right thing for !OF.
 
----8<---
->From 347331f399626ecaa9a8e54252f55e0b6788772f Mon Sep 17 00:00:00 2001
-From: Max Filippov <jcmvbkbc@gmail.com>
-Date: Mon, 27 Jan 2014 04:01:40 +0400
-Subject: [PATCH 1/3] net: ethoc: don't advertise gigabit speed on attached PHY
-
-OpenCores 10/100 Mbps MAC does not support speeds above 100 Mbps, but does
-not disable advertisement when PHY supports them. This results in
-non-functioning network when the MAC is connected to a gigabit PHY connected
-to a gigabit switch.
-
-The fix is to disable gigabit speed advertisement on attached PHY
-unconditionally.
-
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
----
- drivers/net/ethernet/ethoc.c | 3 +++
- include/linux/phy.h          | 5 +++++
- 2 files changed, 8 insertions(+)
-
-diff --git a/drivers/net/ethernet/ethoc.c b/drivers/net/ethernet/ethoc.c
-index 4de8cfd..e817d58 100644
---- a/drivers/net/ethernet/ethoc.c
-+++ b/drivers/net/ethernet/ethoc.c
-@@ -688,6 +688,9 @@ static int ethoc_mdio_probe(struct net_device *dev)
- 	}
-
- 	priv->phy = phy;
-+	phy_update_adv(phy,
-+		       ~(ADVERTISED_1000baseT_Full |
-+			 ADVERTISED_1000baseT_Half), 0);
- 	return 0;
- }
-
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 48a4dc3..0282a8d 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -559,6 +559,11 @@ static inline int phy_read_status(struct phy_device *phydev) {
- 	return phydev->drv->read_status(phydev);
- }
-
-+static inline void phy_update_adv(struct phy_device *phydev, u32 mask, u32 set)
-+{
-+	phydev->advertising = (phydev->advertising & mask) | set;
-+}
-+
- int genphy_setup_forced(struct phy_device *phydev);
- int genphy_restart_aneg(struct phy_device *phydev);
- int genphy_config_aneg(struct phy_device *phydev);
--- 
-1.8.1.4
-
-
--- 
-Thanks.
--- Max
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
