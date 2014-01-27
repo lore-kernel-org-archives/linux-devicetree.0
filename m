@@ -1,45 +1,43 @@
-From: Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH RFC v2 1/2] Documentation: arm: add cache DT bindings
-Date: Mon, 27 Jan 2014 18:11:38 +0000
-Message-ID: <20140127181138.GB2178@e103592.cambridge.arm.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/2] Replace /include/ (dtc) with #include
+Date: Mon, 27 Jan 2014 12:14:49 -0600
+Message-ID: <CAL_JsqLsSFW3JeYYMb2E3Wi68GM_r_BeJmhfom5BnX7EgaenrA@mail.gmail.com>
+References: <1389348970-5498-1-git-send-email-pankaj.dubey@samsung.com>
+	<52E63DD8.9070909@samsung.com>
+	<20140127163111.GA8358@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-pm-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, Tomasz Figa <t.figa@samsung.com>, Mark Hambleton <mark.hambleton@broadcom.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, Nicolas Pitre <nico@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Grant Likely <grant.likely@linaro.org>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@linaro.org>, linux-pm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen Boyd <sboyd@codeaurora.org>, Amit Kucheria <amit.kucheria@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Hanjun Guo <hanjun.guo@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140127163111.GA8358-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 27, 2014 at 12:58:39PM +0000, Russell King - ARM Linux wrote:
-> On Tue, Jan 21, 2014 at 11:49:01AM +0000, Dave Martin wrote:
-> > I do have a worry that because the kernel won't normally use this
-> > information, by default it will get pasted between .dts files, won't get
-> > tested and will be wrong rather often.  It also violates the DT principle
-> > that probeable information should not be present in the DT -- ePAPR
-> > obviously envisages systems where cache geometry information is not
-> > probeable, but that's not the case for architected caches on ARM, except
-> > in rare cases where the CLIDR is wrong.
-> 
-> That statement is wrong.  There are caches on ARM CPUs where there is no
-> CLIDR register.  I suggest reading the earlier DDI0100 revisions.
+On Mon, Jan 27, 2014 at 10:31 AM, Catalin Marinas
+<catalin.marinas-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Mon, Jan 27, 2014 at 11:07:04AM +0000, Pankaj Dubey wrote:
+>> On 01/10/2014 07:16 PM, Pankaj Dubey wrote:
+>> > Replace /include/ (dtc) with #include (C pre-processor) for all ARM64
+>> > based SoC dts files.
+>> >
+>> > Pankaj Dubey (2):
+>> >    arm64: dts: use #include for all AppliedMicro device tree files
+>> >    arm64: dts: use #include for all ARM fast model device tree file
+>> >
+>> >   arch/arm64/boot/dts/apm-mustang.dts    |    2 +-
+>> >   arch/arm64/boot/dts/rtsm_ve-aemv8a.dts |    2 +-
+>> >   2 files changed, 2 insertions(+), 2 deletions(-)
+>> >
+>> Gentle ping.
+>
+> It would be good to include some rationale behind this change and I'm
+> waiting for the DT guys to ack it.
 
-You're right; I should have qualified that statement with the proviso
-that there _is_ a CLIDR (or some other reliably way to discover the
-cache geometry directly from the hardware).  In particular, this applies
-to all v7-[AR] CPUs, but not to <=v5.  Not sure about v6 -- it may be
-a mixture.
+Change this when you actually need it.
 
-My worry was about duplication of information; so if there is no discovery
-mechanism then there is no duplication and no problem -- on those older
-CPUs, the corresponding information could be placed in the DT, or where
-it doesn't cause a problem it can remain hard-coded into the kernel, as
-at present.  If we _allow_ inclusion of that information in the DT for
-pre-v7, that still raises questions about what information gets used if
-there is hard-coded geometry in the kernel too.
-
-I can't see a sufficient reason to advocate churn for pre-v7 platforms,
-but other people's views may differ.
-
-Cheers
----Dave
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
