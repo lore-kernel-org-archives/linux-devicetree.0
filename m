@@ -1,29 +1,29 @@
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: Re: [PATCH 2/8] pci-rcar-gen2: add initial device tree documentation
-Date: Mon, 27 Jan 2014 12:07:06 +0000
-Message-ID: <52E64BEA.90109@codethink.co.uk>
-References: <1390754945-28142-1-git-send-email-ben.dooks@codethink.co.uk> <1390754945-28142-3-git-send-email-ben.dooks@codethink.co.uk> <CAMuHMdVo80pmYG+MC8d4-_Lxod0j2reAEEFM4sC7Z2vCbEioMw@mail.gmail.com>
+From: Antti P Miettinen <ananaza@iki.fi>
+Subject: Re: [PATCH RFC v2 2/2] Documentation: arm: define DT C-states
+ bindings
+Date: Mon, 27 Jan 2014 14:48:15 +0200 (EET)
+Message-ID: <20140127.144815.1048814583962628826.apm@brigitte.kvy.fi>
+References: <1390240079-6495-3-git-send-email-lorenzo.pieralisi@arm.com>
+	<20140125.101546.1134862463481697494.apm@brigitte.kvy.fi>
+	<20140127114125.GD16639@e102568-lin.cambridge.arm.com>
+Reply-To: ananaza@iki.fi
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVo80pmYG+MC8d4-_Lxod0j2reAEEFM4sC7Z2vCbEioMw@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-kernel@lists.codethink.co.uk, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, horms+renesas@verge.net.au
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140127114125.GD16639@e102568-lin.cambridge.arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: lorenzo.pieralisi@arm.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Dave.Martin@arm.com, Mark.Rutland@arm.com, Sudeep.Holla@arm.com, Charles.Garcia-Tobin@arm.com, nico@linaro.org, robh+dt@kernel.org, pdeschrijver@nvidia.com, grant.likely@linaro.org, galak@codeaurora.org, santosh.shilimkar@ti.com, mark.hambleton@broadcom.com, hanjun.guo@linaro.org, daniel.lezcano@linaro.org, amit.kucheria@linaro.org, vincent.guittot@linaro.org, sboyd@codeaurora.org, t.figa@samsung.com, khilman@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 26/01/14 19:09, Geert Uytterhoeven wrote:
-> On Sun, Jan 26, 2014 at 5:48 PM, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
->> + - reg : A list of physical regions to access the device. The first is
->> +         the operational registers for the OHCI/EHCI controller and the
->> +        second region is for the bridge configuration and control registers.
->
-> You may want to add "reg-names" to use named regions, as there
-> is more than one region.
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> That's why I defined the worst case. How did you implemented it in your
+> idle drivers ? That would help generalize it, after all these bindings
+> are there to simplify drivers upstreaming, feedback welcome.
 
-I will sort that out, it may require further patching...
+Currently we do not handle this well downstream either. The problem
+with worst case is that the absolute worst case can be really bad and
+probability of it might be very low. Sorry - no ready answer :-)
 
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+	--Antti
