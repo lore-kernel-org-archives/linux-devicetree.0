@@ -1,74 +1,43 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 0/2] DT updates for Hummingboard and new Cubox-i
-Date: Mon, 27 Jan 2014 09:16:12 +0100
-Message-ID: <1390810572.4847.4.camel@weser.hi.pengutronix.de>
-References: <20140116182211.GX15937@n2100.arm.linux.org.uk>
-	 <20140119031816.GD16158@S2101-09.ap.freescale.net>
-	 <20140119185246.GB28056@quad.lixom.net>
-	 <20140124150927.GA2780@S2101-09.ap.freescale.net>
-	 <CAOesGMhp1S-XJjGZQBPmH7RFT_pobSFLTBT+4fSKdZ3zhukEhA@mail.gmail.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH 1/3] mmc: add support for power-on sequencing through
+ DT
+Date: Mon, 27 Jan 2014 10:43:20 +0200
+Message-ID: <52E61C28.1020207@ti.com>
+References: <1390190215-22700-1-git-send-email-olof@lixom.net>	<1390190215-22700-2-git-send-email-olof@lixom.net>	<20140120164859.GF15937@n2100.arm.linux.org.uk> <CAOMZO5DdTP0gimwdsBUZK3wXrnUd2FN3w-FszLQkvCwM8gvPpg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMhp1S-XJjGZQBPmH7RFT_pobSFLTBT+4fSKdZ3zhukEhA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAOMZO5DdTP0gimwdsBUZK3wXrnUd2FN3w-FszLQkvCwM8gvPpg@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Olof Johansson <olof@lixom.net>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, ijc+devicetree@hellion.org.ok, Kumar Gala <galak@codeaurora.org>, chris@printf.net
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 24.01.2014, 19:44 -0800 schrieb Olof Johansson:
-> Hi,
-> 
-> On Fri, Jan 24, 2014 at 7:09 AM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > On Sun, Jan 19, 2014 at 10:52:46AM -0800, Olof Johansson wrote:
-> >> I'm well aware that the DT branch has not been merged, and that's because
-> >> there has been no consensus from DT maintainers on the massive rework
-> >> you did as the base of the branch.
-> >
-> > I guess the 'massive rework' you're talking about is the patch series
-> > that begins with 'ARM: dts: imx6qdl: make pinctrl nodes board specific'?
-> > If so, I hope you would agree that we're trying to solve a real
-> > problem [1], even though the solution does not look like the best to
-> > you.
-> >
-> > So which specific part of the solution are you objecting to?  Those
-> > MX6QDL_*_PINGRP macros defined in imx6qdl-pingrp.h?  If that's the
-> > case, I can send a follow-up patch to kill the macros by filling in the
-> > pin group definitions directly.  The pros is that the pin group
-> > definitions for given board will be more intuitive, and the cons is that
-> > the change set will be even more massive, because the same multi-lines
-> > pin group definitions will be duplicated in multiple board dts files,
-> > which use the same group of pins for given device.
-> >
-> > Or any other better idea?
-> 
-> I haven't heard any other maintainers being positive to this change.
-> Not Linus W, as the pinctrl maintainer, and none of the DT
-> maintainers. I asked for their review, which should mean acks or
-> general approval from them, and I haven't seen any come in. Or did I
-> miss it?
-> 
+On 01/24/2014 07:35 PM, Fabio Estevam wrote:
+> On Mon, Jan 20, 2014 at 2:48 PM, Russell King - ARM Linux
+> <linux@arm.linux.org.uk> wrote:
+>
+>> So far so good.  Now, what about this external oscillator which has its
+>> own separate power control.  My immediate thought is that this can be
+>> specified via card_ext_clock - I would simply need to declare a fixed-rate
+>> clock with either a regulator (power switch) controlled via a gpio (which
+>> would probably be closer to the hardware) or a gpio as an enable... ah,
+>> that requires me to write a common clock driver for that bit since this
+>> is currently not modelled by CCF...
+>
+> Jiry Sarha posted a gpio controlled clock proposal:
+> http://www.spinics.net/lists/devicetree/msg16651.html
+>
 
-Just to throw in some opinion: we at Pengutronix use the new macros for
-some time now and we pretty much like them. We are even in the process
-of pushing them to our bootloader. They do not obfuscate things beyond
-the status quo, as we always needed some form of grouping. Now it's just
-a macro, before it was a phandle.
+I have not received too much feedback to my patch yet. CCF is a bit new 
+territory to me, but I think having a separate stackable clk-gpio would 
+be more flexible than having the gpio property implemented in 
+clk-fixed-rate.
 
-Also those are not changing ABI, so if people really hate them (which I
-seriously doubt) we can always revert or change them to something other
-later. So IMHO I would really like the change to go in as is.
+Anyway, I am happy do it either way as long as I can get a gpio 
+-controlled clock implementation into the main line.
 
-Regards,
-Lucas
--- 
-Pengutronix e.K.                           | Lucas Stach                 |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-5076 |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Cheers,
+Jyri
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
