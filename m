@@ -1,126 +1,92 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Firmware for Bluetooth (and wifi)
-Date: Mon, 27 Jan 2014 11:12:04 +0100
-Message-ID: <52E630F4.8090805@gmail.com>
-References: <52A040CE.5040706@schinagl.nl> <52A09B5B.70800@schinagl.nl> <CAGRGNgWBgWqoPUdHSm2OXGb8r-ca5NX2z4_v0eG6oOMgJRd3HQ@mail.gmail.com> <52B17973.1000608@broadcom.com> <52B19F38.7060503@redhat.com> <52B1CA51.4010202@broadcom.com> <CAGb2v67cnP0yth0xxBKcaW_T2fF+4nP4r6h9NLqy5FV2x=hO=Q@mail.gmail.com> <CAGb2v67mmYnyPeOd4Wwp1zHs7EC_Gr+gEdaaMWeKP5z_Z_SVGA@mail.gmail.com> <CAGb2v66646-1Sye=Eb04_SoeCGBU064OePcxDi7th1fqU8XfBg@mail.gmail.com> <52BD68BA.3080304@broadcom.com> <CAGb2v67Q=q4vyOftb+BLhAYR-6d04dDP3+kY3b88U8_vCvAmgQ@mail.gmail.com> <52CD12D4.5030008@broadcom.com> <CAGb2v64+5Rgs6JxD0iH3bcwXPOm-xyS_LSmWLfx0qiMQwreOeQ@mail.gmail.com> <52E19A27.7000402@redhat.com> <52E19E1C.1010402@redhat.com> <CAGb2v66KhGoGmoFkTw9PQYBtX9YQbmxk4oy_tM4LM_UhZMkcZg@mail.gmail.com> <52E5392B.80605@redhat.com>
-  <CAGb2v6594vsKCd9E8apojQXE8h6WJj4-doJ8wa85Nt3EFZhXHA@mail.gmail.com> <52E580A8.4060600@broadcom.com> <52E5A631.4030204@gmail.com> <52E62510.5090103@broadcom.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH 1/3] net: ethoc: don't advertise gigabit speed on
+ attached PHY
+Date: Mon, 27 Jan 2014 10:18:24 +0000
+Message-ID: <1390817904.2735.127.camel@deadeye.wl.decadent.org.uk>
+References: <1390795167-6677-1-git-send-email-jcmvbkbc@gmail.com>
+	 <1390795167-6677-2-git-send-email-jcmvbkbc@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBCCYVXM26EFRB67BTCLQKGQEIJRB3DY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <52E62510.5090103-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-tXMGAH4+qIyy6f7SGZ8a"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1390795167-6677-2-git-send-email-jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Zankel <chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org>, Marc Gauthier <marc-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27.01.2014 10:21, Arend van Spriel wrote:
-> On 01/27/2014 01:20 AM, Tomasz Figa wrote:
->> Hi Chen-Yu, Arend,
->>
->> On 26.01.2014 22:39, Arend van Spriel wrote:
->>> On 01/26/2014 05:58 PM, Chen-Yu Tsai wrote:
->>>> Hi,
->>>>
->>>> On Mon, Jan 27, 2014 at 12:34 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>> wrote:
->>>>> Hi,
->>>>>
->>>>> On 01/24/2014 04:38 AM, Chen-Yu Tsai wrote:
->>>>>
->>>>> <snip>
->>>>>
->>>>>
->>>>>>> Quick update, I've just tested:
->>>>>>> https://github.com/wens/linux/commits/wip/sunxi-next-wifi
->>>>>>
->>>>>>
->>>>>> About this, I would like to move WiFi power control to a regulator,
->>>>>> and controlled by sunxi-mci via vmmc-supply (not supported ATM)
->>>>>
->>>>>
->>>>> Actually the sunxi-mci.c driver already has support for an optional
->>>>> regulator called vmmc.
->>>>>
->>>>> I like this idea, I've done a version of the dt patch using a regulator
->>>>> instead of rfkill here:
->>>>> https://github.com/jwrdegoede/linux-sunxi/commit/8d200113b573549cdcdc1b2d5a5a1cad15cfbe07
->>>>>
->>>>>
->>>>> This works as advertised and IMHO is the better solution.
->>>>
->>>> I have a version in another branch I haven't pushed. I had it using an
->>>> always-on regulator. I can adjust it to use vmmc.
->>>>
->>>> BTW, I'd like to do a patch for sunxi-mci to use the DT parsing code
->>>> in mmc core.
->>>> We should re-use code if possible, wouldn't you agree?
->>>>
->>>>>>> About the oob interrupt stuff not working, AFAIK you should set a
->>>>>>> pinctrl
->>>>>>> function (not input, but a function like mmc is a function) on the
->>>>>>> pin in
->>>>>>> question
->>>>>>> for it to work as external interrupt, I believe you're not doing
->>>>>>> so in
->>>>>>> your
->>>>>>> dts.
->>>>>>
->>>>>>
->>>>>> The pinctrl driver seems to set the function when the interrupt is
->>>>>> enabled.
->>>>>> Unfortunately we don't have any documentation/examples on how to
->>>>>> use them.
->>>>>> I will look into that later.
->>>>>
->>>>>
->>>>> Hmm, but you also have a pinctrl entry in the dts setting it up as
->>>>> gpio-input,
->>>>> maybe that conflicts ?
->>>>
->>>> I made a version with pinctrl entry setup as "irq", got an interrupt,
->>>> but then the whole thing hung. Looks like pinctrl irqchip was not
->>>> properly handling chained interrupts. I have done a simple fix, and I
->>>> hope to test it tomorrow. Then I'll do some more testing with different
->>>> configurations and hopefully write some documents.
->>>
->>> Hi Chen-Yu,
->>>
->>> I had a look at github tree from Hans with your DT support patch for
->>> brcmfmac. I applied it to my 3.14 tree and modified it a little. I guess
->>> the bindings are still experimental, but I would prefer you to use brcm
->>> instead of broadcom in the 'compatible' entry as found in
->>> Documentation/devicetree/bindings/vendor-prefixes.txt. There is an
->>> exception to this rule in the bindings (in net/broadcom-bcm87xx.txt),
->>> but I guess that train has left and it is tricky to change it now.
->>> In the brcmfmac patch you also use multiple of_device ids. Could we make
->>> it more generic, ie. compatible = "brcm,brcmfmac" or "brcm,wifi-fullmac"
->>> or whatever...
->>
->> brcmfmac and wifi-fullmac strings sound to generic for me. What happens
->> if an incompatible brcmfmac chip shows up? I'd rather use something like
->> "bcm43xx" to cover existing chip family, if all the bcm43xx chips are
->> compatible, or something more specific otherwise.
->
-> The brcmfmac driver that consumes these DT nodes will have a closer look
-> at the device obtaining the chipid during the probe and determine if it
-> can support it. So the compatible string indicates that the device needs
-> a so-called fullmac wireless driver opposed to a mac80211 aka. softmac
-> wireless driver.
 
-The compatible string should guarantee that the chip ID register holds a 
-valid value, so just "wifi-fullmac" or "brcmfmac" sounds too generic to 
-me. The string must specify the family of chips with this chip ID scheme 
-in a reasonably precise way. "brcm,bcm43xx-fmac" maybe? I still see a 
-risk of, say, BCM43999 showing up, which would be a completely different 
-chip. while having the model matching the pattern.
+--=-tXMGAH4+qIyy6f7SGZ8a
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-However this is something for you Broadcom guys to know better, so feel 
-free to suggest anything better.
+On Mon, 2014-01-27 at 07:59 +0400, Max Filippov wrote:
+> OpenCores 10/100 Mbps MAC does not support speeds above 100 Mbps, but doe=
+s
+> not disable advertisement when PHY supports them. This results in
+> non-functioning network when the MAC is connected to a gigabit PHY connec=
+ted
+> to a gigabit switch.
+>=20
+> The fix is to disable gigabit speed advertisement on attached PHY
+> unconditionally.
+>=20
+> Signed-off-by: Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/net/ethernet/ethoc.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/net/ethernet/ethoc.c b/drivers/net/ethernet/ethoc.c
+> index 4de8cfd..0aa1a05 100644
+> --- a/drivers/net/ethernet/ethoc.c
+> +++ b/drivers/net/ethernet/ethoc.c
+> @@ -712,6 +712,8 @@ static int ethoc_open(struct net_device *dev)
+>  		netif_start_queue(dev);
+>  	}
+> =20
+> +	priv->phy->advertising &=3D ~(ADVERTISED_1000baseT_Full |
+> +				    ADVERTISED_1000baseT_Half);
+>  	phy_start(priv->phy);
+>  	napi_enable(&priv->napi);
+> =20
 
-Best regards,
-Tomasz
+This is not sufficient to disable gigabit speeds; the supported mask
+should also be limited.  And it should be done even before the net
+device is registered.
+
+Rather than poking into the phy_device structure directly from this
+driver, I think you should add a function in phylib for this purpose.
+
+Ben.
+
+--=20
+Ben Hutchings
+If at first you don't succeed, you're doing about average.
+
+--=-tXMGAH4+qIyy6f7SGZ8a
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIVAwUAUuYycOe/yOyVhhEJAQp34Q//TPzwP4h/FhMmDjv9CRo03LRIzf5+qMZ1
+rkGc83qDljET4urKIkNrFkDKpx/v5lDdfpvdzsx5uWIe03dT6v+UerF9AoALqVYG
+dg3dJ4sDq1FPAkh+umLXUQt9P5K1i0d8HVw/m3mLXuadUuZgMdrUt3aIXFYADVES
+ZpskHcc/egMXmnkbBtn/JwLeO97OZDEsPWkLOkuEclP+E7N6ME/OxVz4H5XvWJrK
+YSmd29WnfYURwqjTETTp9fpAToTJZGG8glt1ffrh3AZvmuEnQDkYbbL0rrFSteYB
+I0qmlY8ZEb5XlsWe9kT87Ohp4SpwKAnZD3kv3ItOGWucuMBIyvsdkW7rJcQudH72
+dtffrLIUgFT30LUHK7/11R+cZNffWlUachCfJpz+nZjMDqVnvzyvKnxzjiHHOP8s
+YPvg0Jj+fMXdDdmNETmsgGpjjGlwlhXjGAlxVjVdvqdTaDaIZuHLrmB6pdcpuMoV
+ST6+UilrC8ZhGyqpZ3ZOqdl9w41yhGVMlPUcXtaliM0wXgnG65PM3xK/iXBoMSdP
+mvP4XX37HDB/1++Ba9WoxgN9UhMxXcKFS5Cql/ClcCknAd3Q15x8SSBQjHjE+Y6E
+CdIr/Z3x/2gKqtNsonaaXtqUdkpe0dhXBuSBWXhdTYIyLxn9J6RlAWd40elDH7aJ
+dXJSG6sQplg=
+=n2kR
+-----END PGP SIGNATURE-----
+
+--=-tXMGAH4+qIyy6f7SGZ8a--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
