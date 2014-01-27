@@ -1,51 +1,46 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH 0/9] ARM: dts: imx: remove the use of pingrp macros
-Date: Mon, 27 Jan 2014 09:47:10 -0800
-Message-ID: <CAOesGMgV-UPTujzdnb5FWHM7b5X-_f7qCE7awrF4+snB2Tn+9g@mail.gmail.com>
-References: <1390668191-20289-1-git-send-email-shawn.guo@linaro.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH RFC v2 1/2] Documentation: arm: add cache DT bindings
+Date: Mon, 27 Jan 2014 18:10:05 +0000
+Message-ID: <20140127181005.GA8367@e102568-lin.cambridge.arm.com>
+References: <1390240079-6495-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1390240079-6495-2-git-send-email-lorenzo.pieralisi@arm.com>
+ <20140121114845.GA2598@e103592.cambridge.arm.com>
+ <20140127125839.GL15937@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1390668191-20289-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140127125839.GL15937@n2100.arm.linux.org.uk>
+Content-Disposition: inline
+Sender: linux-pm-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Dave P Martin <Dave.Martin@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Nicolas Pitre <nico@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Kumar Gala <galak@codeaurora.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Antti Miettinen <ananaza@iki.fi>, Mark Hambleton <mark.hambleton@broadcom.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, "linux-arm-kernel@lists.infradead.org" <linux-ar>
 List-Id: devicetree@vger.kernel.org
 
-Shawn,
+On Mon, Jan 27, 2014 at 12:58:39PM +0000, Russell King - ARM Linux wrote:
+> On Tue, Jan 21, 2014 at 11:49:01AM +0000, Dave Martin wrote:
+> > I do have a worry that because the kernel won't normally use this
+> > information, by default it will get pasted between .dts files, won't get
+> > tested and will be wrong rather often.  It also violates the DT principle
+> > that probeable information should not be present in the DT -- ePAPR
+> > obviously envisages systems where cache geometry information is not
+> > probeable, but that's not the case for architected caches on ARM, except
+> > in rare cases where the CLIDR is wrong.
+> 
+> That statement is wrong.  There are caches on ARM CPUs where there is no
+> CLIDR register.  I suggest reading the earlier DDI0100 revisions.
 
-On Sat, Jan 25, 2014 at 8:43 AM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Hi Rob,
->
-> In order to solve a pinctrl data efficiency problem, we introduced
-> pingrp macros [1] in this development cycle as the base of board dts
-> support.  The whole imx-dt-3.14 pull request has been held by Olof for
-> a few weeks because he wants to get a general approval from DT folks
-> on this change.  But unfortunately it appears that you are not fond of
-> this change.
->
-> I just spent the day to create a patch series against imx-dt-3.14 to
-> remove these pingrp macros.  May I get your nod on this quick
-> turn-around, so that we do not miss the merge window?
->
-> Hi Olof,
->
-> I guess we do not have to shut the door for imx-dt-3.14 if you and DT
-> folks are happy with this patch series, which is a quite straight
-> forward search&replace change?
-
-The merge window is halfway over already, the time for us to pick up
-large branches like these are long past.
-
-Please rebase (since this is a partial revert of some of the earlier
-patches in your dt branch, I think?), and resend after -rc1 for 3.15
-inclusion.
-
+You are right, Dave was referring to the cache geometry properties in the
+ePAPRv1.1, and the question on whether to ignore them for ARM. True, some
+earlier ARM processors would need DT properties to define cache geometry owing
+to the lack of cache type/id registers, but I guess we can work around that
+and safely rule cache geometry properties out for ARM (better that than
+having people rely on dts files containing wrong copy'n'pasted cache
+geometry properties, that's the reasoning). The only reason we are defining
+these bindings is to make sure we are able to detect which CPUs share what
+caches, we can work around the lack of cache type/id registers to probe
+geometry in earlier processors in the kernel.
 
 Thanks,
+Lorenzo
 
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
