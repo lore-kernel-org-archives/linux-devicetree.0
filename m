@@ -1,53 +1,154 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V4] regulator: ti-abb: Add support for interleaved LDO
- registers
-Date: Mon, 27 Jan 2014 19:34:57 +0000
-Message-ID: <20140127193457.GR11841@sirena.org.uk>
-References: <20140123163428.GP17314@sirena.org.uk>
- <1390499847-8822-1-git-send-email-nm@ti.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] net: ethoc: don't advertise gigabit speed on attached PHY
+Date: Mon, 27 Jan 2014 11:36:32 -0800
+Message-ID: <CAGVrzcZ15Ov4zFDkaX=YuK0xVa+_QVjha1TN0cnhoMHYh1Jx4Q@mail.gmail.com>
+References: <1390795167-6677-1-git-send-email-jcmvbkbc@gmail.com>
+ <1390795167-6677-2-git-send-email-jcmvbkbc@gmail.com> <1390817904.2735.127.camel@deadeye.wl.decadent.org.uk>
+ <52E6868C.3070401@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="562f9N4fbIs+fPrJ"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1390499847-8822-1-git-send-email-nm@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52E6868C.3070401-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, "linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org" <linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Zankel <chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org>, Marc Gauthier <marc-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+2014-01-27 Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> Hi Ben,
+>
+> On Mon, Jan 27, 2014 at 2:18 PM, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org> wrote:
+>> On Mon, 2014-01-27 at 07:59 +0400, Max Filippov wrote:
+>>> OpenCores 10/100 Mbps MAC does not support speeds above 100 Mbps, but does
+>>> not disable advertisement when PHY supports them. This results in
+>>> non-functioning network when the MAC is connected to a gigabit PHY connected
+>>> to a gigabit switch.
+>>>
+>>> The fix is to disable gigabit speed advertisement on attached PHY
+>>> unconditionally.
+>>>
+>>> Signed-off-by: Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>>  drivers/net/ethernet/ethoc.c | 2 ++
+>>>  1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/drivers/net/ethernet/ethoc.c b/drivers/net/ethernet/ethoc.c
+>>> index 4de8cfd..0aa1a05 100644
+>>> --- a/drivers/net/ethernet/ethoc.c
+>>> +++ b/drivers/net/ethernet/ethoc.c
+>>> @@ -712,6 +712,8 @@ static int ethoc_open(struct net_device *dev)
+>>>               netif_start_queue(dev);
+>>>       }
+>>>
+>>> +     priv->phy->advertising &= ~(ADVERTISED_1000baseT_Full |
+>>> +                                 ADVERTISED_1000baseT_Half);
+>>>       phy_start(priv->phy);
+>>>       napi_enable(&priv->napi);
+>>>
+>>
+>> This is not sufficient to disable gigabit speeds; the supported mask
+>> should also be limited.  And it should be done even before the net
+>
+> I tried that, but when I also limit supported mask the phy driver doesn't
+> touch gigabit advertising register int the genphy_config_advert at all.
+> That's probably right for ethtool interface, but ethoc doesn't support
+> ethtool.
 
---562f9N4fbIs+fPrJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is not right for libphy either, phydev->supported must reflect
+that you support Gigabit or not.
 
-On Thu, Jan 23, 2014 at 11:57:27AM -0600, Nishanth Menon wrote:
-> Certain platforms such as DRA7 have quirky memory maps such as:
-> PRM_ABBLDO_DSPEVE_CTRL	0x4ae07e20
-> PRM_ABBLDO_IVA_CTRL	0x4ae07e24
+Since ethoc supports libphy, there really is no reason not to
+implement the ethtool_{get,set}_settings callbacks using
+phy_mii_ioctl().
 
-Applied, thanks.
+>
+>> device is registered.
+>>
+>> Rather than poking into the phy_device structure directly from this
+>> driver, I think you should add a function in phylib for this purpose.
 
---562f9N4fbIs+fPrJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+All drivers are currently modifying phydev->advertising and
+phydev->supported directly, most of them do it correctly as far as I
+checked. It does make some sense to add a helper function though.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+>
+> Like below?
+>
+> ---8<---
+> From 347331f399626ecaa9a8e54252f55e0b6788772f Mon Sep 17 00:00:00 2001
+> From: Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Date: Mon, 27 Jan 2014 04:01:40 +0400
+> Subject: [PATCH 1/3] net: ethoc: don't advertise gigabit speed on attached PHY
+>
+> OpenCores 10/100 Mbps MAC does not support speeds above 100 Mbps, but does
+> not disable advertisement when PHY supports them. This results in
+> non-functioning network when the MAC is connected to a gigabit PHY connected
+> to a gigabit switch.
+>
+> The fix is to disable gigabit speed advertisement on attached PHY
+> unconditionally.
+>
+> Signed-off-by: Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/net/ethernet/ethoc.c | 3 +++
+>  include/linux/phy.h          | 5 +++++
+>  2 files changed, 8 insertions(+)
+>
+> diff --git a/drivers/net/ethernet/ethoc.c b/drivers/net/ethernet/ethoc.c
+> index 4de8cfd..e817d58 100644
+> --- a/drivers/net/ethernet/ethoc.c
+> +++ b/drivers/net/ethernet/ethoc.c
+> @@ -688,6 +688,9 @@ static int ethoc_mdio_probe(struct net_device *dev)
+>         }
+>
+>         priv->phy = phy;
+> +       phy_update_adv(phy,
+> +                      ~(ADVERTISED_1000baseT_Full |
+> +                        ADVERTISED_1000baseT_Half), 0);
+>         return 0;
+>  }
+>
+> diff --git a/include/linux/phy.h b/include/linux/phy.h
+> index 48a4dc3..0282a8d 100644
+> --- a/include/linux/phy.h
+> +++ b/include/linux/phy.h
+> @@ -559,6 +559,11 @@ static inline int phy_read_status(struct phy_device *phydev) {
+>         return phydev->drv->read_status(phydev);
+>  }
+>
+> +static inline void phy_update_adv(struct phy_device *phydev, u32 mask, u32 set)
+> +{
+> +       phydev->advertising = (phydev->advertising & mask) | set;
+> +}
+> +
 
-iQIcBAEBAgAGBQJS5rTeAAoJELSic+t+oim9iZEP/R5nR6txXjzrDDL0R6C0VuvP
-3tJ0GUpfYWhdEUjQP58Ow8C8Pd8+qmP6MheQc1lpH5Xhorw0e4Ccb7drO/KwN20m
-Lzbo95eHLZV8sNYXf0lLcs0erSZbgbGtIHmpp5YBfNHeP9WbhnoI6Bg1wGDkssoO
-+Mv6BH7GzWCjHPsdUPCDH5e3fQgG5fJ0NB1qzmlI8WAXDjKS1vU+2V7p/ZUVZUPk
-ik9Sk5I62jVWiMqjwwRTB6+jwS49IS3GI6oP4qqzNAOGaFnABlASVtMUIYCtnnHc
-X3Q6m9maz/1Ip38fcQmSi4Uh/faIUsDAI2OJbFC897+0fIN/dFU7f7NS7DDQibRn
-Kc1x58Mu9RY8RiqEMeTsZuxMpoDfIX4+V+b/CEeAbiNiCbwFs8YhBhgPlZ+9rsTQ
-Ev9/BX2QK6vJ4IOrqzY1fVAM1BKnfMS58AQjzd9jq6rttR+i+HjCwGvx6b9gcuhv
-g33swG2Wpxo9QypPJMZMSDWiesuJK5BUDkL44vDgbKUj8xSGquP4Y94n51inpB+z
-qMyhsLJfSKTbaT58bW4df1AofXXIf/0c5xfSeDQDuun8UCOnIYcLOXtPVDUvwmLu
-Lb+MPLFoH7gm2+4i/RFZpvSy5wlgcUwrQfXKcLDWuDmwKImAZK02tC9k1IrhDEb6
-PqyVw6eZzhBbDRRMqtjH
-=S9HT
------END PGP SIGNATURE-----
+This should be a preliminary patch to this patchset, so you first
+introduce the function, then use it in the driver, but the idea looks
+good. There is room for updating quite some drivers out there since
+those used to modify phydev->advertising and phydev->supported
+directly without using an accessor.
 
---562f9N4fbIs+fPrJ--
+>  int genphy_setup_forced(struct phy_device *phydev);
+>  int genphy_restart_aneg(struct phy_device *phydev);
+>  int genphy_config_aneg(struct phy_device *phydev);
+> --
+> 1.8.1.4
+>
+>
+> --
+> Thanks.
+> -- Max
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+
+
+
+-- 
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
