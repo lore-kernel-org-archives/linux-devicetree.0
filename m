@@ -1,109 +1,62 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Firmware for Bluetooth (and wifi)
-Date: Mon, 27 Jan 2014 01:20:01 +0100
-Message-ID: <52E5A631.4030204@gmail.com>
-References: <52A040CE.5040706@schinagl.nl> <CAFXj5xjJ0DTa0Qo1avLboQF-e3TFv3aEr_jjkuZjinwuTzXykQ@mail.gmail.com> <52A09B5B.70800@schinagl.nl> <CAGRGNgWBgWqoPUdHSm2OXGb8r-ca5NX2z4_v0eG6oOMgJRd3HQ@mail.gmail.com> <52B17973.1000608@broadcom.com> <52B19F38.7060503@redhat.com> <52B1CA51.4010202@broadcom.com> <CAGb2v67cnP0yth0xxBKcaW_T2fF+4nP4r6h9NLqy5FV2x=hO=Q@mail.gmail.com> <CAGb2v67mmYnyPeOd4Wwp1zHs7EC_Gr+gEdaaMWeKP5z_Z_SVGA@mail.gmail.com> <CAGb2v66646-1Sye=Eb04_SoeCGBU064OePcxDi7th1fqU8XfBg@mail.gmail.com> <52BD68BA.3080304@broadcom.com> <CAGb2v67Q=q4vyOftb+BLhAYR-6d04dDP3+kY3b88U8_vCvAmgQ@mail.gmail.com> <52CD12D4.5030008@broadcom.com> <CAGb2v64+5Rgs6JxD0iH3bcwXPOm-xyS_LSmWLfx0qiMQwreOeQ@mail.gmail.com> <52E19A27.7000402@redhat.com> <52E19E1C.1010402@redhat.com> <CAGb2v66KhGoGmoFkTw9PQYBtX
- 9YQbmxk4oy_tM4LM_UhZMkcZg@mail.gmail.com> <52E5392B.80605@redhat.com> <CAGb2v6594vsKCd9E8apojQXE8h6WJj4-doJ8wa85Nt3EFZhXHA@mail.gmail.com> <52E580A8.4060600@broadcom.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBCCYVXM26EFRBOGMS2LQKGQEOSKRT5Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <52E580A8.4060600-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Christoph Fritz <chf.fritz@googlemail.com>
+Subject: [PATCH v3 0/4] ARM: add omap3 INCOstartec board support
+Date: Mon, 27 Jan 2014 01:33:13 +0100
+Message-ID: <1390782797-24105-1-git-send-email-chf.fritz@googlemail.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, bcousson@baylibre.com, Daniel Mack <zonque@gmail.com>, "Hans J. Koch" <hjk@hansjkoch.de>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chen-Yu, Arend,
+This set of patches adds board support for an omap3 system from INCOstartec.
+It's based on next-20140124.
 
-On 26.01.2014 22:39, Arend van Spriel wrote:
-> On 01/26/2014 05:58 PM, Chen-Yu Tsai wrote:
->> Hi,
->>
->> On Mon, Jan 27, 2014 at 12:34 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->>> Hi,
->>>
->>> On 01/24/2014 04:38 AM, Chen-Yu Tsai wrote:
->>>
->>> <snip>
->>>
->>>
->>>>> Quick update, I've just tested:
->>>>> https://github.com/wens/linux/commits/wip/sunxi-next-wifi
->>>>
->>>>
->>>> About this, I would like to move WiFi power control to a regulator,
->>>> and controlled by sunxi-mci via vmmc-supply (not supported ATM)
->>>
->>>
->>> Actually the sunxi-mci.c driver already has support for an optional
->>> regulator called vmmc.
->>>
->>> I like this idea, I've done a version of the dt patch using a regulator
->>> instead of rfkill here:
->>> https://github.com/jwrdegoede/linux-sunxi/commit/8d200113b573549cdcdc1b2d5a5a1cad15cfbe07
->>>
->>> This works as advertised and IMHO is the better solution.
->>
->> I have a version in another branch I haven't pushed. I had it using an
->> always-on regulator. I can adjust it to use vmmc.
->>
->> BTW, I'd like to do a patch for sunxi-mci to use the DT parsing code
->> in mmc core.
->> We should re-use code if possible, wouldn't you agree?
->>
->>>>> About the oob interrupt stuff not working, AFAIK you should set a pinctrl
->>>>> function (not input, but a function like mmc is a function) on the pin in
->>>>> question
->>>>> for it to work as external interrupt, I believe you're not doing so in
->>>>> your
->>>>> dts.
->>>>
->>>>
->>>> The pinctrl driver seems to set the function when the interrupt is
->>>> enabled.
->>>> Unfortunately we don't have any documentation/examples on how to use them.
->>>> I will look into that later.
->>>
->>>
->>> Hmm, but you also have a pinctrl entry in the dts setting it up as
->>> gpio-input,
->>> maybe that conflicts ?
->>
->> I made a version with pinctrl entry setup as "irq", got an interrupt,
->> but then the whole thing hung. Looks like pinctrl irqchip was not
->> properly handling chained interrupts. I have done a simple fix, and I
->> hope to test it tomorrow. Then I'll do some more testing with different
->> configurations and hopefully write some documents.
->
-> Hi Chen-Yu,
->
-> I had a look at github tree from Hans with your DT support patch for
-> brcmfmac. I applied it to my 3.14 tree and modified it a little. I guess
-> the bindings are still experimental, but I would prefer you to use brcm
-> instead of broadcom in the 'compatible' entry as found in
-> Documentation/devicetree/bindings/vendor-prefixes.txt. There is an
-> exception to this rule in the bindings (in net/broadcom-bcm87xx.txt),
-> but I guess that train has left and it is tricky to change it now.
-> In the brcmfmac patch you also use multiple of_device ids. Could we make
-> it more generic, ie. compatible = "brcm,brcmfmac" or "brcm,wifi-fullmac"
-> or whatever...
+Due to a regression since next-20140115 the following errors are present:
 
-brcmfmac and wifi-fullmac strings sound to generic for me. What happens 
-if an incompatible brcmfmac chip shows up? I'd rather use something like 
-"bcm43xx" to cover existing chip family, if all the bcm43xx chips are 
-compatible, or something more specific otherwise.
+ - pin sys_clkout2, which gets configured to 24 Mhz by the fourth patch
+   in this set, erroneously outputs only 12 Mhz.
+   Just out of curiosity, configuring it to 48 Mhz puts out desired 24 Mhz.
 
-By the way, you might find this thread interesting:
+ - omap_dss, which gets configured by the third patch in this set, fails
+   to do 'dss_set_fck_rate(fck);' in
+   drivers/video/omap2/dss/dss.c:dss_setup_default_clock() which leads to:
 
-http://thread.gmane.org/gmane.linux.kernel.mmc/24728/focus=24783
+    | omapdss_dss: probe of omapdss_dss failed with error -22
+    | omapdss CORE error: Failed to initialize DSS platform driver
+    | panel-dpi panel-dpi.0: failed to find video source 'dpi.0
 
-In addition to the general idea of handling power control, I have also 
-posted a link to my patch adding DT support to brcmfmac driver.
+  Both regressions seem to have something to do with the clock framework. 
+  Could this be related to the DT clock conversion patches?
 
-Best regards,
-Tomasz
+Changes compared to previous version (v3):
+ - rebased on next-20140124
+ - use pinctrl macros OMAP3_WKUP_IOPAD, OMAP3_CORE1_IOPAD
+   and OMAP3630_CORE2_IOPAD
+ - use same convention for all comments
+ - dss-quirk: name twl4030 VPLL2 regulator as vdds_dsi
+ - fix style
+Changes compared to previous version (v2):
+ - rebased on next-20140122 from next-20140115
+ - using omap36xx.dtsi instead of unsupported 1ghz omap37xx100
+Initial version (v1):
+ - based on next-20140115
+
+Christoph Fritz (4):
+  ARM: dts: omap3: Add support for INCOstartec a83x module
+  ARM: dts: omap3: Add support for INCOstartec DBB056 baseboard
+  ARM: OMAP2+: add legacy display for omap3 DBB056
+  ARM: OMAP2+: Add pdata quirk for sys_clkout2 for omap3 DBB056
+
+ arch/arm/boot/dts/Makefile               |    1 +
+ arch/arm/boot/dts/omap3-lilly-a83x.dtsi  |  459 ++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/omap3-lilly-dbb056.dts |  165 +++++++++++
+ arch/arm/mach-omap2/dss-common.c         |   49 ++++
+ arch/arm/mach-omap2/dss-common.h         |    1 +
+ arch/arm/mach-omap2/pdata-quirks.c       |   45 ++-
+ 6 files changed, 719 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/omap3-lilly-a83x.dtsi
+ create mode 100644 arch/arm/boot/dts/omap3-lilly-dbb056.dts
+
+-- 
+1.7.10.4
+
