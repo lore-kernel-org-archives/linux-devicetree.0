@@ -1,168 +1,75 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v5 00/20] Armada 370/XP watchdog support
-Date: Mon, 27 Jan 2014 10:50:52 -0500
-Message-ID: <20140127155052.GL29184@titan.lakedaemon.net>
-References: <1390836440-12744-1-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Max Filippov <jcmvbkbc@gmail.com>
+Subject: Re: [PATCH 3/3] net: ethoc: document OF bindings
+Date: Mon, 27 Jan 2014 19:52:58 +0400
+Message-ID: <CAMo8BfKm_rzDDs9BpfQkaew9DP9T8y0RnjzT_1gzs9Xrbx2CLA@mail.gmail.com>
+References: <1390795167-6677-1-git-send-email-jcmvbkbc@gmail.com>
+	<1390795167-6677-4-git-send-email-jcmvbkbc@gmail.com>
+	<CAL_JsqLjn4FXrNGLGHs639TEqmQKPx_kk9JbAd-hn7mexzAjNg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1390836440-12744-1-git-send-email-ezequiel.garcia@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Cc: Lior Amsalem <alior@marvell.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Daniel Lezcano <daniel.lezcano@linaro.org>, Wim Van Sebroeck <wim@iguana.be>, Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLjn4FXrNGLGHs639TEqmQKPx_kk9JbAd-hn7mexzAjNg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chris Zankel <chris@zankel.net>, Marc Gauthier <marc@cadence.com>, "David S. Miller" <davem@davemloft.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 27, 2014 at 12:27:00PM -0300, Ezequiel Garcia wrote:
-> A new round, mostly fixing some minor nitpicks.
-> 
-> This entire series depends on latest irqchip-orion fixes by Sebastian.
-> Namely, this one: https://lkml.org/lkml/2014/1/23/594.
-> 
-> How should we handle this dependency?
+Hi Rob,
 
-Sorry, I'm short on time atm.  Which specific patches now depend on his
-changes?
+On Mon, Jan 27, 2014 at 6:10 PM, Rob Herring <robherring2@gmail.com> wrote:
+> On Sun, Jan 26, 2014 at 9:59 PM, Max Filippov <jcmvbkbc@gmail.com> wrote:
+>> Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+>> ---
+>>  .../devicetree/bindings/net/opencores-ethoc.txt    | 25 ++++++++++++++++++++++
+>>  1 file changed, 25 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/net/opencores-ethoc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/opencores-ethoc.txt b/Documentation/devicetree/bindings/net/opencores-ethoc.txt
+>> new file mode 100644
+>> index 0000000..f7c6c94
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/opencores-ethoc.txt
+>> @@ -0,0 +1,25 @@
+>> +* OpenCores MAC 10/100 Mbps
+>> +
+>> +Required properties:
+>> +- compatible: Should be "opencores,ethoc".
+>
+> There are not different versions of IP or is the version probeable?
 
-I'll be doing a topic branch for tglx for that, so it shouldn't be
-rocket surgery.  The big unknown is the MMIO patch currently in
-Russell's patch tracker.
+AFAIK there's single version of this 10/100 MAC.
+It doesn't have any identification registers.
 
-We may end up waiting for MMIO and Sebastian's changes to land, then
-applying this during the next cycle.
+>> +- reg: Address and length of the register set for the device and of its
+>> +  descriptor memory.
+>> +- interrupts: Should contain ethoc interrupt.
+>> +
+>> +Optional properties:
+>> +- local-mac-address: 6 bytes, mac address
+>
+> There's a patch in progress to move all the standard network
+> properties to a common location, so you can remove this.
 
-thx,
+Will do.
 
-Jason.
+>> +- clock-frequency: basic MAC frequency.
+>> +- mii-mgmt-clock-frequency: frequency of MII management bus. Together
+>> +  with clock-frequency determines the value programmed into the CLKDIV
+>> +  field of MIIMODER register.
+>> +
+>> +Examples:
+>> +
+>> +       enet0: ethoc@fd030000 {
+>> +               compatible = "opencores,ethoc";
+>> +               reg = <0xfd030000 0x4000 0xfd800000 0x4000>;
+>> +               interrupts = <1>;
+>> +               local-mac-address = [00 50 c2 13 6f 00];
+>> +               clock-frequency = <50000000>;
+>> +               mii-mgmt-clock-frequency = <5000000>;
+>> +        };
+>> --
+>> 1.8.1.4
 
-> Changes from v4 are:
-> 
->   * Provided better commit subject and commit log for patch 7:
->     "watchdog: orion: Handle the interrupt so it's properly acked".
-> 
->   * Corrected the misnamed fuction try_rstout_ioremap().
-> 
->   * A bunch of s/interruption/interrupt fixes
-> 
->   * Dropped the '0' as a valid IRQ in the platform_get_irq() check, given
->     it should return a positive virq-space number.
-> 
-> Changes from v3 are:
-> 
->   * It wasn't nice to break DT compatibility by adding a second resource
->     requirement, so we provided a fallback to use the RSTOUT address.
->     All in all, the solution doesn't look too bad.
-> 
->   * Added a full watchdog stop at driver probe time, *before* the call
->     to request_irq().
-> 
->     Notice that currently the request_irq() doesn't seem to clear the
->     pending interrupt. This means the BRIDGE_CAUSE clear removal is
->     still not safe.
-> 
->     This should be fixed sooner than later and, of course, before this
->     gets merged.
-> 
->   * Rework the interrupt request, to use devm_request_irq() and
->     avoid dealing with IRQ releasing.
-> 
->   * Added proper clock error handling and fixed the probe() error path.
-> 
->   * Typos and minor issues got fixed
-> 
-> Changes from v2:
-> 
->  * Add proper error checking on clk_prepare_enable() and return
->    PTR_ERR instead of ENODEV. Suggested by Fabio Estevam.
-> 
->  * After the usage of the atomic I/O and considering the watchdog core
->    does its own serialization, the driver's spinlock was completely
->    redundant and was removed. Also suggested by Fabio.
-> 
->  * Instead of making the driver dependent on PLAT_ORION, added a dependency
->    to ARCH_MVEBU. This was proposed by Sebastian and Andrew, given
->    we're working on PLAT_ORION removal.
-> 
-> Changes from v1:
-> 
->   * Watchdog RSTOUT enable.
->     While v1 enabled the RSTOUT at each machine initialization, Jason Gunthorpe
->     later pointed out [2] that such enabling might lead to a spurious watchdog
->     trigger, in the event of the watchdog expired event not being cleared.
-> 
->     Therefore, the current patchset adds RSTOUT as a second address resource
->     (or 'reg' entry in devicetree words) to allow different platforms specify
->     the corresponding address of the register. This change allows to build the
->     driver on multiplatforms builds as helps remove a mach-specific header.
-> 
->     The drawback of this is that the DT backwards compatibility gets broken;
->     this was timely discussed but no better solution was achieved or proposed.
-> 
->   * BRIDGE CAUSE clear removal
->     The watchdog cause clear should be done by the bridge irqchip driver, so
->     it's fine to remove it from the watchdog driver and instead request the
->     interrupt.
-> 
->     However, there are still a few platforms (orion5x, and legacy
->     kirkwood/dove) that doesn't have this bridge irqchip support enabled.
->     On these platforms the bridge cause clear is simply *not* done.
-> 
->     If we are paranoid about this, maybe we can simply add the clear on each
->     mach-xxx/irq.c, together with the other irq is initialization.
-> 
-> Once again, thanks to everyone who helped reviewing this.
-> 
-> Ezequiel Garcia (20):
->   ARM: Introduce atomic MMIO modify
->   clocksource: orion: Use atomic access for shared registers
->   watchdog: orion: Add clock error handling
->   watchdog: orion: Use atomic access for shared registers
->   watchdog: orion: Remove unused macros
->   watchdog: orion: Make sure the watchdog is initially stopped
->   watchdog: orion: Handle the interrupt so it's properly acked
->   watchdog: orion: Make RSTOUT register a separate resource
->   watchdog: orion: Remove unneeded BRIDGE_CAUSE clear
->   watchdog: orion: Introduce an orion_watchdog device structure
->   watchdog: orion: Introduce per-compatible of_device_id data
->   watchdog: orion: Add per-compatible clock initialization
->   watchdog: orion: Add per-compatible watchdog start implementation
->   watchdog: orion: Add support for Armada 370 and Armada XP SoC
->   ARM: mvebu: Enable Armada 370/XP watchdog in the devicetree
->   ARM: kirkwood: Add RSTOUT 'reg' entry to devicetree
->   ARM: dove: Enable Dove watchdog in the devicetree
->   watchdog: orion: Enable the build on ARCH_MVEBU
->   ARM: mvebu: Enable watchdog support in defconfig
->   ARM: dove: Enable watchdog support in the defconfig
-> 
->  .../devicetree/bindings/watchdog/marvel.txt        |   8 +-
->  arch/arm/boot/dts/armada-370-xp.dtsi               |   4 +
->  arch/arm/boot/dts/armada-370.dtsi                  |   5 +
->  arch/arm/boot/dts/armada-xp.dtsi                   |   6 +
->  arch/arm/boot/dts/dove.dtsi                        |   8 +
->  arch/arm/boot/dts/kirkwood.dtsi                    |   2 +-
->  arch/arm/configs/dove_defconfig                    |   2 +
->  arch/arm/configs/mvebu_defconfig                   |   2 +
->  arch/arm/include/asm/io.h                          |   6 +
->  arch/arm/kernel/io.c                               |  35 ++
->  arch/arm/mach-dove/include/mach/bridge-regs.h      |   1 +
->  arch/arm/mach-kirkwood/include/mach/bridge-regs.h  |   1 +
->  arch/arm/mach-mv78xx0/include/mach/bridge-regs.h   |   1 +
->  arch/arm/mach-orion5x/include/mach/bridge-regs.h   |   1 +
->  arch/arm/plat-orion/common.c                       |  10 +-
->  drivers/clocksource/time-orion.c                   |  28 +-
->  drivers/watchdog/Kconfig                           |   2 +-
->  drivers/watchdog/orion_wdt.c                       | 369 ++++++++++++++++-----
->  18 files changed, 383 insertions(+), 108 deletions(-)
-> 
-> -- 
-> 1.8.1.5
-> 
+-- 
+Thanks.
+-- Max
