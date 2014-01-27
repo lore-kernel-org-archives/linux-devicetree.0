@@ -1,157 +1,105 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC] Documentation: devicetree: bindings: drm: Xylon binding
-Date: Mon, 27 Jan 2014 16:22:55 +0000
-Message-ID: <20140127162255.GG16516@e106331-lin.cambridge.arm.com>
-References: <52E67F9E.20492.1406B56@davorjoja.logicbricks.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] of: Fix uninitialized child warning in
+ for_each_child_of_node() if !OF
+Date: Mon, 27 Jan 2014 17:23:35 +0100
+Message-ID: <CAMuHMdUn2VJP-LRMKLmiC7jMw3NXLx0fZsGzQJtwjPLY7+9B5g@mail.gmail.com>
+References: <1390731668-904-1-git-send-email-geert@linux-m68k.org>
+	<CAL_JsqLq+3Ehns0QaPajzLQCYUL+k+vx3j2vHTCdKMt948h6-g@mail.gmail.com>
+	<CAMuHMdVNLYoWD=Q+utHUgEBJ1619Q5x=DsZEtmeEbogrQM2a0Q@mail.gmail.com>
+	<CAL_JsqJyaMDkj6jE+qk6AuUNB0-TOLdqeYDBdjH+1YJFu2V0DQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52E67F9E.20492.1406B56-l//4pz4nnF2T4XiunKkQOL/f6Pfn6aUBAL8bYrjMMd8@public.gmane.org>
+In-Reply-To: <CAL_JsqJyaMDkj6jE+qk6AuUNB0-TOLdqeYDBdjH+1YJFu2V0DQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Davor Joja <davorjoja-bBue3UIS71U2IjGS+8YXRQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Howells <dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 27, 2014 at 03:47:42PM +0000, Davor Joja wrote:
-> Hi,
+On Mon, Jan 27, 2014 at 5:21 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wr=
+ote:
+> On Mon, Jan 27, 2014 at 8:52 AM, Geert Uytterhoeven
+> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+>> On Mon, Jan 27, 2014 at 3:16 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>=
+ wrote:
+>>> On Sun, Jan 26, 2014 at 4:21 AM, Geert Uytterhoeven
+>>> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+>>>> If CONFIG_OF=3Dn:
+>>>>
+>>>> drivers/i2c/i2c-mux.c: In function =E2=80=98i2c_add_mux_adapter=E2=
+=80=99:
+>>>> drivers/i2c/i2c-mux.c:158: warning: =E2=80=98child=E2=80=99 is use=
+d uninitialized in this function
+>>>> drivers/leds/leds-lp55xx-common.c: In function =E2=80=98lp55xx_of_=
+populate_pdata=E2=80=99:
+>>>> drivers/leds/leds-lp55xx-common.c:560: warning: =E2=80=98child=E2=80=
+=99 is used uninitialized in this function
+>>>> drivers/leds/leds-pwm.c: In function =E2=80=98led_pwm_probe=E2=80=99=
+:
+>>>> drivers/leds/leds-pwm.c:89: warning: =E2=80=98child=E2=80=99 is us=
+ed uninitialized in this function
+>>>> drivers/mfd/stmpe.c: In function =E2=80=98stmpe_of_probe=E2=80=99:
+>>>> drivers/mfd/stmpe.c:1112: warning: =E2=80=98child=E2=80=99 is used=
+ uninitialized in this function
+>>>> drivers/mfd/tc3589x.c: In function =E2=80=98tc3589x_probe=E2=80=99=
+:
+>>>> drivers/mfd/tc3589x.c:324: warning: =E2=80=98child=E2=80=99 is use=
+d uninitialized in this function
+>>>> drivers/power/charger-manager.c: In function =E2=80=98of_cm_parse_=
+desc=E2=80=99:
+>>>> drivers/power/charger-manager.c:1606: warning: =E2=80=98child=E2=80=
+=99 is used uninitialized in this function
+>>>>
+>>>> Introduced by commit 00b2c76a6abbe082bb5afb89ee49ec325e9cd4d2
+>>    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>>>> ("include/linux/of.h: make for_each_child_of_node() reference its =
+args when
+>>>> CONFIG_OF=3Dn").
+>>>>
+>>>> Instead of dropping the "__of_use_dn(child)" again, explicitly set=
+ child
+>>>> to NULL, to protect against code using child after the loop (child=
+ =3D=3D NULL
+>>>> is the loop termination condition if CONFIG_OF=3Dy).
+>>>>
+>>>> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+>>>
+>>> Just got fixed in mainline:
+>>>
+>>> commit 00b2c76a6abbe082bb5afb89ee49ec325e9cd4d2
+>>
+>> Nope, this is the one that introduced new warnings.
+>
+> Oh right, sorry. Read that too fast.
+>
+> Won't your change trigger warnings from -Wunused-but-set-variable in
+> cases where child is not used? That would only be enabled for "W=3D1"
+> though.
+>
+> I think the right fix here is all the for_each_X macros should not be
+> conditional on CONFIG_OF and we should rely on the functions they cal=
+l
+> like of_get_next_child to do the right thing for !OF.
 
-Hi,
+That's indeed an alternative fix. As long as of_get_next_child() and
+friends return NULL, that'll work fine.
 
-> 
-> Can I please get comments about adding new vendor prefix "xylon", and on 
-> following devicetree binding for Xylon configurable video controller (logiCVC).
-> Shown node is prepared for Xilinx Linux kernel dts file.
+Gr{oetje,eeting}s,
 
-Does this device have any publicly-accessible documentation?
+                        Geert
 
-It would be helpful if you could Cc this to some graphics related
-mailing lists. Not everyone on devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org is a graphics
-expert, and you'll get much better feedback with the relevant people on
-Cc.
-
-It would also be nice to see some code with the binding, and for both
-the code and binding to be sent as patches. That makes it _far_ easier
-to review as it's far easier to compare with existing bindings if in a
-standard format.
-
-> 
-> 
-> logicvc_0: logicvc@40030000 {
-> 	compatible = "xylon,logicvc-4.00.a";
-> 	reg = <0x40030000 0x6000>;
-> 	interrupt-parent = <&ps7_scugic_0>;
-> 	interrupts = <0 59 4>;
-> 	background-layer-bits-per-pixel = <32>;
-> 	display-interface = <0>;
-> 	display-color-space = <1>;
-> 	is-readable-regs = <1>;
-> 	is-size-position = <1>;
-> 	layer-width = <2048>;
-> 	num-layers = <4>;
-> 	layer_0 {
-> 		address = <0>;
-> 		alpha-mode = <0>;
-> 		data-width = <16>;
-> 		type = <0>;
-> 	} ;
-> 	layer_1 {
-> 		address = <0>;
-> 		alpha-mode = <0>;
-> 		data-width = <32>;
-> 		type = <0>;
-> 	} ;
-> 	layer_2 {
-> 		address = <0>;
-> 		alpha-mode = <1>;
-> 		data-width = <32>;
-> 		type = <0>;
-> 	} ;
-> 	layer_3 {
-> 		address = <0>;
-> 		alpha-mode = <0>;
-> 		data-width = <16>;
-> 		type = <1>;
-> 	} ;
-> } ;
-> 
-> 
-> Required properties for configuring logiCVC device:
->  - compatible: value must be "xylon,logicvc-4.00.a"
->  - reg: base address and size of the logiCVC IP
-
-Presumably the address and size of the MMIO region the IP has?
-
-Does it only have a single bank of registers?
-
->  - interrupts-parent: the phandle for interrupt controller
->  - interrupts: the interrupt number
-
-Does the device have only a single interrupt?
-
->  - background-layer-bits-per-pixel: background layer color format (0, 16, 32)
->       if "0" last available layer is standard layer
-
-Why is 0 quoted, and what is a "standard layer"?
-
->       if 16 or 32, last available layer is background layer implemented in
->       hw register and containing specified bits per pixel color value
->  - display-interface: logiCVC to display physical interface
->       (0=Parallel, 1=ITU656)
->  - display-color-space: logiCVC to display physical color space
->       (0=RGB, 1=YCbCr 4:2:2, 2=YCbCr 4:4:4)
-
-These sound like they should be properties of the display this unit is
-attached to.
-
->  - is-readable-regs: all hw registers are readable by sw
-
-Which registers aren't always accessible?
-
->  - is-size-position: hw changing of layer size and position
-
-These look like booleans, but have values above.
-
->  - layer-width: layer width in pixels, common for all layers
->  - num-layers: supported number of layers (1-5)
-
-If you require a node for each layer, you don't need this proeprty --
-you can simply count the layer nodes.
-
->       if "background-layer-bits-per-pixel != 0", "num-layers" property value is
->       decreased by 1
-
-Does that mean the author of the dt subtracts one, or this is done by
-the kernel?
-
-Why?
-
->  - layer_N
-
-Where N is?
-
->     - address: layer address hardcoded in hw (0=Unused, 0x...)
-
-The example gives all layers 0 / unused. What exactly is this address
-space?
-
->     - alpha-mode: layer transparency mode (0=Layer, 1=Pixel)
->          layer alpha mode contains single alpha value for all layer pixels
->          pixel alpha mode contains alpha value per pixel in video memory
->          pixel alpha mode can increase physical size of pixel in memory
->          (8 bits per pixel in pixel alpha mode uses 16 bits per pixel in 
-> memory)
-
-This looks like a runtime decision rather than a property of the device.
-
->     - data-width: layer bits per pixel color format (16, 32)
->     - type: layer type (0=RGB, 1=YCbCr)
-
-Likewise why is this static?
-
-Thanks,
-Mark.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
+m68k.org
+
+In personal conversations with technical people, I call myself a hacker=
+=2E But
+when I'm talking to journalists I just say "programmer" or something li=
+ke that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
