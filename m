@@ -1,196 +1,109 @@
-From: Christoph Fritz <chf.fritz@googlemail.com>
-Subject: Re: [PATCH v2 1/5] ARM: dts: omap3: Add support for INCOstartec a83x
- module
-Date: Mon, 27 Jan 2014 01:04:49 +0100
-Message-ID: <20140127000449.GB30378@mars>
-References: <1390417460-3134-1-git-send-email-chf.fritz@googlemail.com>
- <1390417460-3134-2-git-send-email-chf.fritz@googlemail.com>
- <52E0207E.3050900@ti.com>
+From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Firmware for Bluetooth (and wifi)
+Date: Mon, 27 Jan 2014 01:20:01 +0100
+Message-ID: <52E5A631.4030204@gmail.com>
+References: <52A040CE.5040706@schinagl.nl> <CAFXj5xjJ0DTa0Qo1avLboQF-e3TFv3aEr_jjkuZjinwuTzXykQ@mail.gmail.com> <52A09B5B.70800@schinagl.nl> <CAGRGNgWBgWqoPUdHSm2OXGb8r-ca5NX2z4_v0eG6oOMgJRd3HQ@mail.gmail.com> <52B17973.1000608@broadcom.com> <52B19F38.7060503@redhat.com> <52B1CA51.4010202@broadcom.com> <CAGb2v67cnP0yth0xxBKcaW_T2fF+4nP4r6h9NLqy5FV2x=hO=Q@mail.gmail.com> <CAGb2v67mmYnyPeOd4Wwp1zHs7EC_Gr+gEdaaMWeKP5z_Z_SVGA@mail.gmail.com> <CAGb2v66646-1Sye=Eb04_SoeCGBU064OePcxDi7th1fqU8XfBg@mail.gmail.com> <52BD68BA.3080304@broadcom.com> <CAGb2v67Q=q4vyOftb+BLhAYR-6d04dDP3+kY3b88U8_vCvAmgQ@mail.gmail.com> <52CD12D4.5030008@broadcom.com> <CAGb2v64+5Rgs6JxD0iH3bcwXPOm-xyS_LSmWLfx0qiMQwreOeQ@mail.gmail.com> <52E19A27.7000402@redhat.com> <52E19E1C.1010402@redhat.com> <CAGb2v66KhGoGmoFkTw9PQYBtX
+ 9YQbmxk4oy_tM4LM_UhZMkcZg@mail.gmail.com> <52E5392B.80605@redhat.com> <CAGb2v6594vsKCd9E8apojQXE8h6WJj4-doJ8wa85Nt3EFZhXHA@mail.gmail.com> <52E580A8.4060600@broadcom.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52E0207E.3050900@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Archit Taneja <archit@ti.com>, bcousson@baylibre.com, "Hans J. Koch" <hjk@hansjkoch.de>, Daniel Mack <zonque@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBCCYVXM26EFRBOGMS2LQKGQEOSKRT5Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <52E580A8.4060600-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Nishanth,
+Hi Chen-Yu, Arend,
 
- thanks for reviewing this patch. Please see my comments below.
+On 26.01.2014 22:39, Arend van Spriel wrote:
+> On 01/26/2014 05:58 PM, Chen-Yu Tsai wrote:
+>> Hi,
+>>
+>> On Mon, Jan 27, 2014 at 12:34 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>>> Hi,
+>>>
+>>> On 01/24/2014 04:38 AM, Chen-Yu Tsai wrote:
+>>>
+>>> <snip>
+>>>
+>>>
+>>>>> Quick update, I've just tested:
+>>>>> https://github.com/wens/linux/commits/wip/sunxi-next-wifi
+>>>>
+>>>>
+>>>> About this, I would like to move WiFi power control to a regulator,
+>>>> and controlled by sunxi-mci via vmmc-supply (not supported ATM)
+>>>
+>>>
+>>> Actually the sunxi-mci.c driver already has support for an optional
+>>> regulator called vmmc.
+>>>
+>>> I like this idea, I've done a version of the dt patch using a regulator
+>>> instead of rfkill here:
+>>> https://github.com/jwrdegoede/linux-sunxi/commit/8d200113b573549cdcdc1b2d5a5a1cad15cfbe07
+>>>
+>>> This works as advertised and IMHO is the better solution.
+>>
+>> I have a version in another branch I haven't pushed. I had it using an
+>> always-on regulator. I can adjust it to use vmmc.
+>>
+>> BTW, I'd like to do a patch for sunxi-mci to use the DT parsing code
+>> in mmc core.
+>> We should re-use code if possible, wouldn't you agree?
+>>
+>>>>> About the oob interrupt stuff not working, AFAIK you should set a pinctrl
+>>>>> function (not input, but a function like mmc is a function) on the pin in
+>>>>> question
+>>>>> for it to work as external interrupt, I believe you're not doing so in
+>>>>> your
+>>>>> dts.
+>>>>
+>>>>
+>>>> The pinctrl driver seems to set the function when the interrupt is
+>>>> enabled.
+>>>> Unfortunately we don't have any documentation/examples on how to use them.
+>>>> I will look into that later.
+>>>
+>>>
+>>> Hmm, but you also have a pinctrl entry in the dts setting it up as
+>>> gpio-input,
+>>> maybe that conflicts ?
+>>
+>> I made a version with pinctrl entry setup as "irq", got an interrupt,
+>> but then the whole thing hung. Looks like pinctrl irqchip was not
+>> properly handling chained interrupts. I have done a simple fix, and I
+>> hope to test it tomorrow. Then I'll do some more testing with different
+>> configurations and hopefully write some documents.
+>
+> Hi Chen-Yu,
+>
+> I had a look at github tree from Hans with your DT support patch for
+> brcmfmac. I applied it to my 3.14 tree and modified it a little. I guess
+> the bindings are still experimental, but I would prefer you to use brcm
+> instead of broadcom in the 'compatible' entry as found in
+> Documentation/devicetree/bindings/vendor-prefixes.txt. There is an
+> exception to this rule in the bindings (in net/broadcom-bcm87xx.txt),
+> but I guess that train has left and it is tricky to change it now.
+> In the brcmfmac patch you also use multiple of_device ids. Could we make
+> it more generic, ie. compatible = "brcm,brcmfmac" or "brcm,wifi-fullmac"
+> or whatever...
 
-On Wed, Jan 22, 2014 at 01:48:14PM -0600, Nishanth Menon wrote:
-> On 01/22/2014 01:04 PM, Christoph Fritz wrote:
+brcmfmac and wifi-fullmac strings sound to generic for me. What happens 
+if an incompatible brcmfmac chip shows up? I'd rather use something like 
+"bcm43xx" to cover existing chip family, if all the bcm43xx chips are 
+compatible, or something more specific otherwise.
 
-> > +	regulators {
-> > +		compatible = "simple-bus";
-> Shrug, just moving the fixed regulator to root also will do the job,
-> not sure simple-bus much sense here :(
-> 
+By the way, you might find this thread interesting:
 
-will get fixed
+http://thread.gmane.org/gmane.linux.kernel.mmc/24728/focus=24783
 
-> > +		reg_vcc3: vcc3 {
-> > +                        compatible = "regulator-fixed";
-> > +                        regulator-name = "VCC3";
-> > +                        regulator-min-microvolt = <3300000>;
-> > +                        regulator-max-microvolt = <3300000>;
-> > +                        regulator-always-on;
-> > +		};
-> > +	};
-> > +
-> > +	hsusb1_phy: hsusb1_phy {
-> > +		compatible = "usb-nop-xceiv";
-> > +		vcc-supply = <&reg_vcc3>;
-> > +	};
-> > +};
-> > +
-> > +&omap3_pmx_wkup {
-> > +	pinctrl-names = "default";
-> > +
-> > +	lan9221_pins: pinmux_lan9221_pins {
-> > +		pinctrl-single,pins = <
-> > +			0x5A (PIN_INPUT | MUX_MODE4)   /* gpio_129 */
-> umm.. you might want to follow the convention as you followed later in
-> comments.
+In addition to the general idea of handling power control, I have also 
+posted a link to my patch adding DT support to brcmfmac driver.
 
-My convention was: If pin can be described unique with one name,
-don't use two. But I'll change that to be uniform with all comments.
-
-> > +		>;
-> > +	};
-> > +
-> > +	tsc2048_pins: pinmux_tsc2048_pins {
-> > +		pinctrl-single,pins = <
-> > +			0x16 (PIN_INPUT_PULLUP | MUX_MODE4)   /* gpio_8 */
-> umm.. you might want to follow the convention as you followed later in
-> comments.
-
-will get fixed
-
-> > +		>;
-> > +	};
-> > +
-> > +	mmc1cd_pins: pinmux_mmc1cd_pins {
-> > +		pinctrl-single,pins = <
-> > +			0x56 (PIN_INPUT | MUX_MODE4)   /* gpio_126 */
-> umm.. you might want to follow the convention as you followed later in
-> comments.
-
-will get fixed
-
-> > +		>;
-> > +	};
-> > +};
-> > +
-> > +&omap3_pmx_core {
-> > +	pinctrl-names = "default";
-> > +
-> > +	gpio1_pins: pinmux_gpio1_pins {
-> > +		pinctrl-single,pins = <
-> > +			0x5ca (PIN_OUTPUT_PULLDOWN | MUX_MODE4)   /* gpio_29 */
-> umm.. you might want to follow the convention as you followed later in
-> comments.
-
-will get fixed
-
-> > +		>;
-> > +	};
-> > +
-> > +	uart1_pins: pinmux_uart1_pins {
-> > +		pinctrl-single,pins = <
-> > +			0x14c (PIN_OUTPUT | MUX_MODE0)   /* uart1_tx.uart1_tx */
-> > +			0x14e (PIN_OUTPUT | MUX_MODE0)   /* uart1_rts.uart1_rts */
-> > +			0x150 (PIN_INPUT | MUX_MODE0)    /* uart1_cts.uart1_cts */
-> > +			0x152 (PIN_INPUT | MUX_MODE0)    /* uart1_rx.uart1_rx */
-> > +		>;
-> you may be interested in include/dt-bindings/pinctrl/omap.h
-> OMAP3_CORE1_IOPAD, OMAP3_CORE2_IOPAD as needed here.
-
-will get fixed
-
-> > +	};
-> > +
-> > +	uart2_pins: pinmux_uart2_pins {
-> > +		pinctrl-single,pins = <
-> > +			0x140 (PIN_OUTPUT | MUX_MODE1)   /* mcbsp3_clkx.uart2_tx */
-> > +			0x142 (PIN_INPUT | MUX_MODE1)    /* mcbsp3_fsx.uart2_rx */
-> > +		>;
-> > +	};
-> > +
-> > +	uart3_pins: pinmux_uart3_pins {
-> > +		pinctrl-single,pins = <
-> > +			0x16e (PIN_INPUT | MUX_MODE0)    /* uart3_rx_irrx.uart3_rx_irrx */
-> > +			0x170 (PIN_OUTPUT | MUX_MODE0)   /* uart3_tx_irtx.uart3_tx_irtx */
-> > +		>;
-> > +	};
-> > +
-> > +	i2c1_pins: pinmux_i2c1_pins {
-> > +		pinctrl-single,pins = <
-> > +			0x18a (PIN_INPUT_PULLUP | MUX_MODE0)    /* i2c1_scl */
-> > +			0x18c (PIN_INPUT_PULLUP | MUX_MODE0)    /* i2c1_sda */
-> umm.. you might want to follow the convention as you followed
-> elsewhere in comments.
-
-will get fixed
-
-> > +		>;
-> > +	};
-> > +
-> > +	i2c2_pins: pinmux_i2c2_pins {
-> > +		pinctrl-single,pins = <
-> > +			0x18e (PIN_INPUT | MUX_MODE0)   /* i2c2_scl.i2c2_scl */
-> > +			0x190 (PIN_INPUT | MUX_MODE0)   /* i2c2_sda.i2c2_sda */
-> > +		>;
-> > +	};
-> > +
-> > +	i2c3_pins: pinmux_i2c3_pins {
-> > +		pinctrl-single,pins = <
-> > +			0x192 (PIN_INPUT | MUX_MODE0)   /* i2c3_scl.i2c3_scl */
-> > +			0x194 (PIN_INPUT | MUX_MODE0)   /* i2c3_sda.i2c3_sda */
-> > +		>;
-> > +	};
-> > +
-> > +	hsusb1_pins: pinmux_hsusb1_pins {
-> > +		pinctrl-single,pins = <
-> > +			0x5a8 (PIN_OUTPUT | MUX_MODE3)  /* etk_clk.hsusb1_stp */
-> &omap3_pmx_core2 and OMAP3_CORE2_IOPAD probably here. and probably see
-> similar usage in other board dtsi.
-
-will get fixed
-
-> > +
-> > +#include "twl4030.dtsi"
-> > +#include "twl4030_omap3.dtsi"
-> > +
-> > +&twl {
-> > +	vmmc1: regulator-vmmc1 {
-> > +		regulator-always-on;
-> > +	};
-> > +
-> > +	vdd1: regulator-vdd1 {
-> > +		regulator-always-on;
-> > +	};
-> > +
-> > +	vdd2: regulator-vdd2 {
-> > +		regulator-always-on;
-> > +	};
-> I hope you have covered all required regulators here including the
-> ones you might need for IO.1P8 perhaps?
-
-Yes, I rechecked all and it's fine now. IO.1P8 was low due to a
-hardware error which is now fixed.
-
-> > +
-> > +&mmc1 {
-> > +	reg = <0x4809c000 0x400>;
-> little curious as to why this. is that to override length 0x200 to
-> 0x400? that belongs to soc.dtsi then.
-
-This is a remnant from last year and will get purged.
-
-Let me reroll this patch in a new v3 set.
-
-Thanks
-  -- Christoph
+Best regards,
+Tomasz
