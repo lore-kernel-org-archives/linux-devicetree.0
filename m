@@ -1,39 +1,79 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v5 20/20] ARM: dove: Enable watchdog support in the defconfig
-Date: Mon, 27 Jan 2014 12:27:20 -0300
-Message-ID: <1390836440-12744-21-git-send-email-ezequiel.garcia@free-electrons.com>
-References: <1390836440-12744-1-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] net: via-rhine: add OF bus binding
+Date: Mon, 27 Jan 2014 19:34:40 +0400
+Message-ID: <CABjd4Yz2Kfed_qBfSAEXoAcVxfsmhTBA-83YJ9_iSwPZ+r1qYQ@mail.gmail.com>
+References: <1385227995-3956-1-git-send-email-alchark@gmail.com>
+	<1390823503-24087-1-git-send-email-alchark@gmail.com>
+	<1390823503-24087-4-git-send-email-alchark@gmail.com>
+	<1390834654.2735.148.camel@deadeye.wl.decadent.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1390836440-12744-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1390834654.2735.148.camel-nDn/Rdv9kqW9Jme8/bJn5UCKIB8iOfG2tUK59QYPAWc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Luethi <rl-7uj+XXdSDtwfv37vnLkPlQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Now that we have watchdog support, let's add it to the defconfig.
+2014/1/27 Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>:
+> On Mon, 2014-01-27 at 15:51 +0400, Alexey Charkov wrote:
+>> This should make the driver usable with VIA/WonderMedia ARM-based
+>> Systems-on-Chip integrated Rhine III adapters. Note that these
+>> are always in MMIO mode, and don't have any known EEPROM.
+> [...]
+>> --- a/drivers/net/ethernet/via/Kconfig
+>> +++ b/drivers/net/ethernet/via/Kconfig
+>> @@ -19,7 +19,7 @@ if NET_VENDOR_VIA
+>>
+>>  config VIA_RHINE
+>>         tristate "VIA Rhine support"
+>> -       depends on PCI
+>> +       depends on (PCI || USE_OF)
+>>         select CRC32
+>>         select MII
+>>         ---help---
+>
+> This seems like the right thing to do, but it means you need to add
+> #ifdef CONFIG_PCI and #ifdef CONFIG_USE_OF around the driver structures
+> and related functions.
 
-Tested-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/configs/dove_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+Frankly, I would like to avoid that if possible (as pointed out in the
+cover email), as I believe we would get a cleaner driver without
+#ifdef. This is also the way it was done in via-velocity, and it works
+just fine.
 
-diff --git a/arch/arm/configs/dove_defconfig b/arch/arm/configs/dove_defconfig
-index 1101054..a330690 100644
---- a/arch/arm/configs/dove_defconfig
-+++ b/arch/arm/configs/dove_defconfig
-@@ -80,6 +80,8 @@ CONFIG_SPI_ORION=y
- # CONFIG_HWMON is not set
- CONFIG_THERMAL=y
- CONFIG_DOVE_THERMAL=y
-+CONFIG_WATCHDOG=y
-+CONFIG_ORION_WATCHDOG=y
- CONFIG_USB=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_EHCI_HCD=y
--- 
-1.8.1.5
+> You should compile-test in configurations that have just one of those
+> dependencies enabled.
 
+This has been compile-tested and runtime-tested in OF-only
+configuration on WM8950, and Roger also tested it in PCI-only
+configuration, so it seems to work fine.
+
+> [...]
+>> --- a/drivers/net/ethernet/via/via-rhine.c
+>> +++ b/drivers/net/ethernet/via/via-rhine.c
+> [...]
+>> @@ -847,7 +856,8 @@ static void rhine_hw_init(struct net_device *dev, long pioaddr)
+>>               msleep(5);
+>>
+>>       /* Reload EEPROM controlled bytes cleared by soft reset */
+>> -     rhine_reload_eeprom(pioaddr, dev);
+>> +     if (!strncmp(dev->dev.parent->bus->name, "pci", 3))
+>> +             rhine_reload_eeprom(pioaddr, dev);
+> [...]
+>
+> Ew.  I think you should use dev_is_pci(), although you might also need
+> to guard that with #ifdef CONFIG_PCI.
+
+Oh, cool. Didn't realize it existed :) Will adjust, thanks.
+
+I believe the #ifdef is not strictly required, though, as we include
+the PCI header anyway (and the macro expands to just a simple test).
+Any specific concerns why we should do that, apart from the +3.8%
+module size increase?
+
+Thanks,
+Alexey
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
