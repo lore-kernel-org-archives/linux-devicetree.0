@@ -1,53 +1,55 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH RFC v2 2/2] Documentation: arm: define DT C-states bindings
-Date: Mon, 27 Jan 2014 11:41:26 +0000
-Message-ID: <20140127114125.GD16639@e102568-lin.cambridge.arm.com>
-References: <1390240079-6495-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1390240079-6495-3-git-send-email-lorenzo.pieralisi@arm.com>
- <20140125.101546.1134862463481697494.apm@brigitte.kvy.fi>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140125.101546.1134862463481697494.apm@brigitte.kvy.fi>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Antti P Miettinen <ananaza@iki.fi>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>, "khilman@linaro.org" <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "pdeschrijver@nvidia.com" <pdeschrijver@nvidia.com>, "nico@linaro.org" <nico@linaro.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "t.figa@samsung.com" <t.figa@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "santosh.shilimkar@ti.com" <santosh.shilimkar@ti.com>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, "mark.hambleton@broadcom.com" <mark.hambleton@broadcom.com>, Sudeep Holla <Sudeep.Holla@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "galak@codeaurora.org" <galak@codeau>
+From: Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/3] Resubmit: net: via-rhine: add support for on-chip Rhine controllers
+Date: Mon, 27 Jan 2014 15:51:40 +0400
+Message-ID: <1390823503-24087-1-git-send-email-alchark@gmail.com>
+References: <1385227995-3956-1-git-send-email-alchark@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1385227995-3956-1-git-send-email-alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rl-7uj+XXdSDtwfv37vnLkPlQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 25, 2014 at 08:15:46AM +0000, Antti P Miettinen wrote:
-> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Subject: [PATCH RFC v2 2/2] Documentation: arm: define DT C-states bindings
-> Date: Mon, 20 Jan 2014 17:47:59 +0000
-> > +	- latency
-> > +		Usage: Required
-> > +		Value type: <prop-encoded-array>
-> > +		Definition: List of u32 values representing worst case latency
-> > +			    in microseconds required to enter and exit the
-> > +			    C-state, one value per OPP [2]. The list should
-> > +			    be specified in the same order as the operating
-> > +			    points property list of the cpu this state is
-> > +			    valid on.
-> > +			    If no OPP bindings are present, the latency value
-> > +			    is associated with the current OPP of CPUs in the
-> > +			    system.
-> 
-> I'm afraid the CPU OPP is not enough to capture the variance in
-> latencies. Especially memory frequency affects some of the latencies
-> very stronly.
+This series introduces platform bus (OpenFirmware) binding for 
+via-rhine, as used in various ARM-based Systems-on-Chip by 
+VIA/WonderMedia.
 
-That's why I defined the worst case. How did you implemented it in your
-idle drivers ? That would help generalize it, after all these bindings
-are there to simplify drivers upstreaming, feedback welcome.
+This has been tested in OF configuration by myself on a WM8950-based VIA 
+APC Rock development board, and in PCI configuration by Roger.
 
-Thanks,
-Lorenzo
+Unfortunately, I can't find my original submission from 30 Nov in any of 
+the mailing list archives (must have done something stupid while 
+sending). However, Roger seems to have received the patches fine, tested 
+them on PCI and signed off, so I'm including his Signed-off-by: with 
+this submission along with my own.
+
+Please note that this series does not include any ifdefs for either PCI 
+or OF case, so in Roger's set-up the third patch increased module size 
+from 39372 to 40868 bytes (+3.8%). I'm following the example of 
+via-velocity here, which didn't have ifdefs either (and I believe it is 
+cleaner this way).
+
+Not sure if it's appropriate for 3.14 at this point, but getting it 
+merged to -next would be much appreciated.
+
+Best regards,
+Alexey
+
+Alexey Charkov (3):
+  net: via-rhine: switch to generic DMA functions
+  net: via-rhine: reduce usage of the PCI-specific struct
+  net: via-rhine: add OF bus binding
+
+ .../devicetree/bindings/net/via-rhine.txt          |  18 +
+ drivers/net/ethernet/via/Kconfig                   |   2 +-
+ drivers/net/ethernet/via/via-rhine.c               | 403 ++++++++++++---------
+ 3 files changed, 260 insertions(+), 163 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/via-rhine.txt
+
+-- 
+1.8.5.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
