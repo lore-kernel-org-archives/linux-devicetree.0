@@ -1,76 +1,142 @@
-From: Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] net: via-rhine: switch to generic DMA functions
-Date: Mon, 27 Jan 2014 19:26:45 +0400
-Message-ID: <CABjd4Yyq_Mia=2DkC83Wpi6o1o3m5+yoMcDL4WdZmuLvRtu6qg@mail.gmail.com>
-References: <1385227995-3956-1-git-send-email-alchark@gmail.com>
-	<1390823503-24087-1-git-send-email-alchark@gmail.com>
-	<1390823503-24087-2-git-send-email-alchark@gmail.com>
-	<1390834190.2735.143.camel@deadeye.wl.decadent.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v5 00/20] Armada 370/XP watchdog support
+Date: Mon, 27 Jan 2014 12:27:00 -0300
+Message-ID: <1390836440-12744-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1390834190.2735.143.camel-nDn/Rdv9kqW9Jme8/bJn5UCKIB8iOfG2tUK59QYPAWc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Luethi <rl-7uj+XXdSDtwfv37vnLkPlQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014/1/27 Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>:
-> On Mon, 2014-01-27 at 15:51 +0400, Alexey Charkov wrote:
->> Remove legacy PCI DMA wrappers and instead use generic DMA functions
->> directly in preparation for OF bus binding
->>
->> Signed-off-by: Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Signed-off-by: Roger Luethi <rl-7uj+XXdSDtwfv37vnLkPlQ@public.gmane.org>
->> ---
->>  drivers/net/ethernet/via/via-rhine.c | 56 +++++++++++++++++++-----------------
->>  1 file changed, 29 insertions(+), 27 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/via/via-rhine.c b/drivers/net/ethernet/via/via-rhine.c
->> index ef312bc..fee8732 100644
->> --- a/drivers/net/ethernet/via/via-rhine.c
->> +++ b/drivers/net/ethernet/via/via-rhine.c
->> @@ -919,10 +919,10 @@ static int rhine_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
->>               goto err_out;
->>
->>       /* this should always be supported */
->> -     rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
->> +     rc = dma_set_mask(&pdev->dev, DMA_BIT_MASK(32));
->>       if (rc) {
->>               dev_err(&pdev->dev,
->> -                     "32-bit PCI DMA addresses not supported by the card!?\n");
->> +                     "32-bit DMA addresses not supported by the card!?\n");
->>               goto err_out;
->>       }
->>
->> @@ -1094,20 +1094,22 @@ static int alloc_ring(struct net_device* dev)
->>       void *ring;
->>       dma_addr_t ring_dma;
->>
->> -     ring = pci_alloc_consistent(rp->pdev,
->> +     ring = dma_alloc_coherent(&rp->pdev->dev,
->>                                   RX_RING_SIZE * sizeof(struct rx_desc) +
->>                                   TX_RING_SIZE * sizeof(struct tx_desc),
->> -                                 &ring_dma);
->> +                                 &ring_dma,
->> +                                     GFP_ATOMIC);
-> [...]
->
-> Indentation is messed up here (and in several other function calls
-> you're changing).  You should align the function arguments so each line
-> begins in the column after the opening parenthesis.
+A new round, mostly fixing some minor nitpicks.
 
-Ben, thanks for pointing out. I actually just tried to follow the
-style of surrounding code, but happy to adjust if that's the preferred
-option. From what I can see, these lines should still fit in below 80
-cols even with increased indents...
+This entire series depends on latest irqchip-orion fixes by Sebastian.
+Namely, this one: https://lkml.org/lkml/2014/1/23/594.
 
-Should we then also adjust other function calls within the driver with
-similar indentation (if any), that are currently not touched by this
-patch series?
+How should we handle this dependency?
 
-Thanks,
-Alexey
+Changes from v4 are:
+
+  * Provided better commit subject and commit log for patch 7:
+    "watchdog: orion: Handle the interrupt so it's properly acked".
+
+  * Corrected the misnamed fuction try_rstout_ioremap().
+
+  * A bunch of s/interruption/interrupt fixes
+
+  * Dropped the '0' as a valid IRQ in the platform_get_irq() check, given
+    it should return a positive virq-space number.
+
+Changes from v3 are:
+
+  * It wasn't nice to break DT compatibility by adding a second resource
+    requirement, so we provided a fallback to use the RSTOUT address.
+    All in all, the solution doesn't look too bad.
+
+  * Added a full watchdog stop at driver probe time, *before* the call
+    to request_irq().
+
+    Notice that currently the request_irq() doesn't seem to clear the
+    pending interrupt. This means the BRIDGE_CAUSE clear removal is
+    still not safe.
+
+    This should be fixed sooner than later and, of course, before this
+    gets merged.
+
+  * Rework the interrupt request, to use devm_request_irq() and
+    avoid dealing with IRQ releasing.
+
+  * Added proper clock error handling and fixed the probe() error path.
+
+  * Typos and minor issues got fixed
+
+Changes from v2:
+
+ * Add proper error checking on clk_prepare_enable() and return
+   PTR_ERR instead of ENODEV. Suggested by Fabio Estevam.
+
+ * After the usage of the atomic I/O and considering the watchdog core
+   does its own serialization, the driver's spinlock was completely
+   redundant and was removed. Also suggested by Fabio.
+
+ * Instead of making the driver dependent on PLAT_ORION, added a dependency
+   to ARCH_MVEBU. This was proposed by Sebastian and Andrew, given
+   we're working on PLAT_ORION removal.
+
+Changes from v1:
+
+  * Watchdog RSTOUT enable.
+    While v1 enabled the RSTOUT at each machine initialization, Jason Gunthorpe
+    later pointed out [2] that such enabling might lead to a spurious watchdog
+    trigger, in the event of the watchdog expired event not being cleared.
+
+    Therefore, the current patchset adds RSTOUT as a second address resource
+    (or 'reg' entry in devicetree words) to allow different platforms specify
+    the corresponding address of the register. This change allows to build the
+    driver on multiplatforms builds as helps remove a mach-specific header.
+
+    The drawback of this is that the DT backwards compatibility gets broken;
+    this was timely discussed but no better solution was achieved or proposed.
+
+  * BRIDGE CAUSE clear removal
+    The watchdog cause clear should be done by the bridge irqchip driver, so
+    it's fine to remove it from the watchdog driver and instead request the
+    interrupt.
+
+    However, there are still a few platforms (orion5x, and legacy
+    kirkwood/dove) that doesn't have this bridge irqchip support enabled.
+    On these platforms the bridge cause clear is simply *not* done.
+
+    If we are paranoid about this, maybe we can simply add the clear on each
+    mach-xxx/irq.c, together with the other irq is initialization.
+
+Once again, thanks to everyone who helped reviewing this.
+
+Ezequiel Garcia (20):
+  ARM: Introduce atomic MMIO modify
+  clocksource: orion: Use atomic access for shared registers
+  watchdog: orion: Add clock error handling
+  watchdog: orion: Use atomic access for shared registers
+  watchdog: orion: Remove unused macros
+  watchdog: orion: Make sure the watchdog is initially stopped
+  watchdog: orion: Handle the interrupt so it's properly acked
+  watchdog: orion: Make RSTOUT register a separate resource
+  watchdog: orion: Remove unneeded BRIDGE_CAUSE clear
+  watchdog: orion: Introduce an orion_watchdog device structure
+  watchdog: orion: Introduce per-compatible of_device_id data
+  watchdog: orion: Add per-compatible clock initialization
+  watchdog: orion: Add per-compatible watchdog start implementation
+  watchdog: orion: Add support for Armada 370 and Armada XP SoC
+  ARM: mvebu: Enable Armada 370/XP watchdog in the devicetree
+  ARM: kirkwood: Add RSTOUT 'reg' entry to devicetree
+  ARM: dove: Enable Dove watchdog in the devicetree
+  watchdog: orion: Enable the build on ARCH_MVEBU
+  ARM: mvebu: Enable watchdog support in defconfig
+  ARM: dove: Enable watchdog support in the defconfig
+
+ .../devicetree/bindings/watchdog/marvel.txt        |   8 +-
+ arch/arm/boot/dts/armada-370-xp.dtsi               |   4 +
+ arch/arm/boot/dts/armada-370.dtsi                  |   5 +
+ arch/arm/boot/dts/armada-xp.dtsi                   |   6 +
+ arch/arm/boot/dts/dove.dtsi                        |   8 +
+ arch/arm/boot/dts/kirkwood.dtsi                    |   2 +-
+ arch/arm/configs/dove_defconfig                    |   2 +
+ arch/arm/configs/mvebu_defconfig                   |   2 +
+ arch/arm/include/asm/io.h                          |   6 +
+ arch/arm/kernel/io.c                               |  35 ++
+ arch/arm/mach-dove/include/mach/bridge-regs.h      |   1 +
+ arch/arm/mach-kirkwood/include/mach/bridge-regs.h  |   1 +
+ arch/arm/mach-mv78xx0/include/mach/bridge-regs.h   |   1 +
+ arch/arm/mach-orion5x/include/mach/bridge-regs.h   |   1 +
+ arch/arm/plat-orion/common.c                       |  10 +-
+ drivers/clocksource/time-orion.c                   |  28 +-
+ drivers/watchdog/Kconfig                           |   2 +-
+ drivers/watchdog/orion_wdt.c                       | 369 ++++++++++++++++-----
+ 18 files changed, 383 insertions(+), 108 deletions(-)
+
+-- 
+1.8.1.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
