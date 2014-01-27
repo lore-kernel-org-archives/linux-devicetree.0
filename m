@@ -1,55 +1,31 @@
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: Re: [PATCH 1/8] pci-rcar-gen2: add of match table
-Date: Mon, 27 Jan 2014 13:27:09 +0000
-Message-ID: <52E65EAD.9000909@codethink.co.uk>
-References: <1390754945-28142-1-git-send-email-ben.dooks@codethink.co.uk> <1390754945-28142-2-git-send-email-ben.dooks@codethink.co.uk> <52E6559D.6090708@cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 2/8] pci-rcar-gen2: add initial device tree documentation
+Date: Mon, 27 Jan 2014 17:31:01 +0400
+Message-ID: <52E65F95.9080306@cogentembedded.com>
+References: <1390754945-28142-1-git-send-email-ben.dooks@codethink.co.uk>	<1390754945-28142-3-git-send-email-ben.dooks@codethink.co.uk> <CAMuHMdVo80pmYG+MC8d4-_Lxod0j2reAEEFM4sC7Z2vCbEioMw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <52E6559D.6090708@cogentembedded.com>
+In-Reply-To: <CAMuHMdVo80pmYG+MC8d4-_Lxod0j2reAEEFM4sC7Z2vCbEioMw@mail.gmail.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-kernel@lists.codethink.co.uk, Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: linux-kernel@lists.codethink.co.uk, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, horms+renesas@verge.net.au
 List-Id: devicetree@vger.kernel.org
 
-On 27/01/14 12:48, Sergei Shtylyov wrote:
-> Hello.
->
-> On 26-01-2014 20:48, Ben Dooks wrote:
->
->> Add OF match table for pci-rcar-gen2 driver for device tree support.
->
->> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
->> ---
->> Cc: Bjorn Helgaas <bhelgaas@google.com>
->> Cc: Simon Horman <horms@verge.net.au>
->> Cc: linux-pci@vger.kernel.org
->> Cc: linux-sh@vger.kernel.org
->> Cc: devicetree@vger.kernel.org
->> ---
->>   drivers/pci/host/pci-rcar-gen2.c | 8 ++++++++
->>   1 file changed, 8 insertions(+)
->
->> diff --git a/drivers/pci/host/pci-rcar-gen2.c
->> b/drivers/pci/host/pci-rcar-gen2.c
->> index ceec147..ea65bac 100644
->> --- a/drivers/pci/host/pci-rcar-gen2.c
->> +++ b/drivers/pci/host/pci-rcar-gen2.c
->> @@ -311,9 +311,17 @@ static int __init rcar_pci_probe(struct
->> platform_device *pdev)
->>       return rcar_pci_add_controller(priv);
->>   }
->>
->> +static struct of_device_id rcar_pci_of_match[] = {
->> +    { .compatible = "renesas,pci-r8a7790", },
->
->     Why only H2 SoC, if the driver is for both Gen2 SoCs?
+Hello.
 
-I can add a "renesas,pci-rcar-gen2" as a fallback match however
-I've not got anything other than an r8a7790 to test on. Also the
-compatible properties are preferably named after the soc.
+On 26-01-2014 23:09, Geert Uytterhoeven wrote:
 
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+>> + - reg : A list of physical regions to access the device. The first is
+>> +         the operational registers for the OHCI/EHCI controller and the
+>> +        second region is for the bridge configuration and control registers.
+
+> You may want to add "reg-names" to use named regions, as there
+> is more than one region.
+
+    I've already told Ben he can't claim EHCI/OHCI register ranges at the 
+bridge node, so there should be only one "reg" specifier.
+
+WBR, Sergei
+
