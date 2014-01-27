@@ -1,7 +1,7 @@
 From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v5 02/20] clocksource: orion: Use atomic access for shared registers
-Date: Mon, 27 Jan 2014 12:27:02 -0300
-Message-ID: <1390836440-12744-3-git-send-email-ezequiel.garcia@free-electrons.com>
+Subject: [PATCH v5 03/20] watchdog: orion: Add clock error handling
+Date: Mon, 27 Jan 2014 12:27:03 -0300
+Message-ID: <1390836440-12744-4-git-send-email-ezequiel.garcia@free-electrons.com>
 References: <1390836440-12744-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1390836440-12744-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,78 +10,72 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetr
 Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Replace the driver-specific thread-safe shared register API
-by the recently introduced atomic_io_clear_set().
+This commit adds a check for clk_prepare_enable success and introduces
+an error path to disable the clock properly.
 
-Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Tested-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/clocksource/time-orion.c | 28 ++++++++++------------------
- 1 file changed, 10 insertions(+), 18 deletions(-)
+ drivers/watchdog/orion_wdt.c | 29 +++++++++++++++++++----------
+ 1 file changed, 19 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/clocksource/time-orion.c b/drivers/clocksource/time-orion.c
-index 9c7f018..3f14e56 100644
---- a/drivers/clocksource/time-orion.c
-+++ b/drivers/clocksource/time-orion.c
-@@ -35,20 +35,6 @@
- #define ORION_ONESHOT_MAX	0xfffffffe
- 
- static void __iomem *timer_base;
--static DEFINE_SPINLOCK(timer_ctrl_lock);
--
--/*
-- * Thread-safe access to TIMER_CTRL register
-- * (shared with watchdog timer)
-- */
--void orion_timer_ctrl_clrset(u32 clr, u32 set)
--{
--	spin_lock(&timer_ctrl_lock);
--	writel((readl(timer_base + TIMER_CTRL) & ~clr) | set,
--		timer_base + TIMER_CTRL);
--	spin_unlock(&timer_ctrl_lock);
--}
--EXPORT_SYMBOL(orion_timer_ctrl_clrset);
- 
- /*
-  * Free-running clocksource handling.
-@@ -68,7 +54,8 @@ static int orion_clkevt_next_event(unsigned long delta,
- {
- 	/* setup and enable one-shot timer */
- 	writel(delta, timer_base + TIMER1_VAL);
--	orion_timer_ctrl_clrset(TIMER1_RELOAD_EN, TIMER1_EN);
-+	atomic_io_modify(timer_base + TIMER_CTRL,
-+		TIMER1_RELOAD_EN | TIMER1_EN, TIMER1_EN);
- 
- 	return 0;
- }
-@@ -80,10 +67,13 @@ static void orion_clkevt_mode(enum clock_event_mode mode,
- 		/* setup and enable periodic timer at 1/HZ intervals */
- 		writel(ticks_per_jiffy - 1, timer_base + TIMER1_RELOAD);
- 		writel(ticks_per_jiffy - 1, timer_base + TIMER1_VAL);
--		orion_timer_ctrl_clrset(0, TIMER1_RELOAD_EN | TIMER1_EN);
-+		atomic_io_modify(timer_base + TIMER_CTRL,
-+			TIMER1_RELOAD_EN | TIMER1_EN,
-+			TIMER1_RELOAD_EN | TIMER1_EN);
- 	} else {
- 		/* disable timer */
--		orion_timer_ctrl_clrset(TIMER1_RELOAD_EN | TIMER1_EN, 0);
-+		atomic_io_modify(timer_base + TIMER_CTRL,
-+			TIMER1_RELOAD_EN | TIMER1_EN, 0);
+diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
+index f7722a4..7f19fa3 100644
+--- a/drivers/watchdog/orion_wdt.c
++++ b/drivers/watchdog/orion_wdt.c
+@@ -151,17 +151,24 @@ static int orion_wdt_probe(struct platform_device *pdev)
+ 	clk = devm_clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(clk)) {
+ 		dev_err(&pdev->dev, "Orion Watchdog missing clock\n");
+-		return -ENODEV;
++		return PTR_ERR(clk);
  	}
+-	clk_prepare_enable(clk);
++	ret = clk_prepare_enable(clk);
++	if (ret)
++		return ret;
+ 	wdt_tclk = clk_get_rate(clk);
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!res)
+-		return -ENODEV;
++	if (!res) {
++		ret = -ENODEV;
++		goto disable_clk;
++	}
++
+ 	wdt_reg = devm_ioremap(&pdev->dev, res->start, resource_size(res));
+-	if (!wdt_reg)
+-		return -ENOMEM;
++	if (!wdt_reg) {
++		ret = -ENOMEM;
++		goto disable_clk;
++	}
+ 
+ 	wdt_max_duration = WDT_MAX_CYCLE_COUNT / wdt_tclk;
+ 
+@@ -171,14 +178,16 @@ static int orion_wdt_probe(struct platform_device *pdev)
+ 
+ 	watchdog_set_nowayout(&orion_wdt, nowayout);
+ 	ret = watchdog_register_device(&orion_wdt);
+-	if (ret) {
+-		clk_disable_unprepare(clk);
+-		return ret;
+-	}
++	if (ret)
++		goto disable_clk;
+ 
+ 	pr_info("Initial timeout %d sec%s\n",
+ 		orion_wdt.timeout, nowayout ? ", nowayout" : "");
+ 	return 0;
++
++disable_clk:
++	clk_disable_unprepare(clk);
++	return ret;
  }
  
-@@ -131,7 +121,9 @@ static void __init orion_timer_init(struct device_node *np)
- 	/* setup timer0 as free-running clocksource */
- 	writel(~0, timer_base + TIMER0_VAL);
- 	writel(~0, timer_base + TIMER0_RELOAD);
--	orion_timer_ctrl_clrset(0, TIMER0_RELOAD_EN | TIMER0_EN);
-+	atomic_io_modify(timer_base + TIMER_CTRL,
-+		TIMER0_RELOAD_EN | TIMER0_EN,
-+		TIMER0_RELOAD_EN | TIMER0_EN);
- 	clocksource_mmio_init(timer_base + TIMER0_VAL, "orion_clocksource",
- 			      clk_get_rate(clk), 300, 32,
- 			      clocksource_mmio_readl_down);
+ static int orion_wdt_remove(struct platform_device *pdev)
 -- 
 1.8.1.5
 
