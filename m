@@ -1,105 +1,40 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] of: Fix uninitialized child warning in
- for_each_child_of_node() if !OF
-Date: Mon, 27 Jan 2014 17:23:35 +0100
-Message-ID: <CAMuHMdUn2VJP-LRMKLmiC7jMw3NXLx0fZsGzQJtwjPLY7+9B5g@mail.gmail.com>
-References: <1390731668-904-1-git-send-email-geert@linux-m68k.org>
-	<CAL_JsqLq+3Ehns0QaPajzLQCYUL+k+vx3j2vHTCdKMt948h6-g@mail.gmail.com>
-	<CAMuHMdVNLYoWD=Q+utHUgEBJ1619Q5x=DsZEtmeEbogrQM2a0Q@mail.gmail.com>
-	<CAL_JsqJyaMDkj6jE+qk6AuUNB0-TOLdqeYDBdjH+1YJFu2V0DQ@mail.gmail.com>
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 0/2] Replace /include/ (dtc) with #include
+Date: Mon, 27 Jan 2014 16:31:11 +0000
+Message-ID: <20140127163111.GA8358@arm.com>
+References: <1389348970-5498-1-git-send-email-pankaj.dubey@samsung.com>
+ <52E63DD8.9070909@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJyaMDkj6jE+qk6AuUNB0-TOLdqeYDBdjH+1YJFu2V0DQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52E63DD8.9070909-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Howells <dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 27, 2014 at 5:21 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wr=
-ote:
-> On Mon, Jan 27, 2014 at 8:52 AM, Geert Uytterhoeven
-> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
->> On Mon, Jan 27, 2014 at 3:16 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>=
- wrote:
->>> On Sun, Jan 26, 2014 at 4:21 AM, Geert Uytterhoeven
->>> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
->>>> If CONFIG_OF=3Dn:
->>>>
->>>> drivers/i2c/i2c-mux.c: In function =E2=80=98i2c_add_mux_adapter=E2=
-=80=99:
->>>> drivers/i2c/i2c-mux.c:158: warning: =E2=80=98child=E2=80=99 is use=
-d uninitialized in this function
->>>> drivers/leds/leds-lp55xx-common.c: In function =E2=80=98lp55xx_of_=
-populate_pdata=E2=80=99:
->>>> drivers/leds/leds-lp55xx-common.c:560: warning: =E2=80=98child=E2=80=
-=99 is used uninitialized in this function
->>>> drivers/leds/leds-pwm.c: In function =E2=80=98led_pwm_probe=E2=80=99=
-:
->>>> drivers/leds/leds-pwm.c:89: warning: =E2=80=98child=E2=80=99 is us=
-ed uninitialized in this function
->>>> drivers/mfd/stmpe.c: In function =E2=80=98stmpe_of_probe=E2=80=99:
->>>> drivers/mfd/stmpe.c:1112: warning: =E2=80=98child=E2=80=99 is used=
- uninitialized in this function
->>>> drivers/mfd/tc3589x.c: In function =E2=80=98tc3589x_probe=E2=80=99=
-:
->>>> drivers/mfd/tc3589x.c:324: warning: =E2=80=98child=E2=80=99 is use=
-d uninitialized in this function
->>>> drivers/power/charger-manager.c: In function =E2=80=98of_cm_parse_=
-desc=E2=80=99:
->>>> drivers/power/charger-manager.c:1606: warning: =E2=80=98child=E2=80=
-=99 is used uninitialized in this function
->>>>
->>>> Introduced by commit 00b2c76a6abbe082bb5afb89ee49ec325e9cd4d2
->>    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->>>> ("include/linux/of.h: make for_each_child_of_node() reference its =
-args when
->>>> CONFIG_OF=3Dn").
->>>>
->>>> Instead of dropping the "__of_use_dn(child)" again, explicitly set=
- child
->>>> to NULL, to protect against code using child after the loop (child=
- =3D=3D NULL
->>>> is the loop termination condition if CONFIG_OF=3Dy).
->>>>
->>>> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
->>>
->>> Just got fixed in mainline:
->>>
->>> commit 00b2c76a6abbe082bb5afb89ee49ec325e9cd4d2
->>
->> Nope, this is the one that introduced new warnings.
->
-> Oh right, sorry. Read that too fast.
->
-> Won't your change trigger warnings from -Wunused-but-set-variable in
-> cases where child is not used? That would only be enabled for "W=3D1"
-> though.
->
-> I think the right fix here is all the for_each_X macros should not be
-> conditional on CONFIG_OF and we should rely on the functions they cal=
-l
-> like of_get_next_child to do the right thing for !OF.
+On Mon, Jan 27, 2014 at 11:07:04AM +0000, Pankaj Dubey wrote:
+> On 01/10/2014 07:16 PM, Pankaj Dubey wrote:
+> > Replace /include/ (dtc) with #include (C pre-processor) for all ARM64
+> > based SoC dts files.
+> >
+> > Pankaj Dubey (2):
+> >    arm64: dts: use #include for all AppliedMicro device tree files
+> >    arm64: dts: use #include for all ARM fast model device tree file
+> >
+> >   arch/arm64/boot/dts/apm-mustang.dts    |    2 +-
+> >   arch/arm64/boot/dts/rtsm_ve-aemv8a.dts |    2 +-
+> >   2 files changed, 2 insertions(+), 2 deletions(-)
+> >
+> Gentle ping.
 
-That's indeed an alternative fix. As long as of_get_next_child() and
-friends return NULL, that'll work fine.
+It would be good to include some rationale behind this change and I'm
+waiting for the DT guys to ack it.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+-- 
+Catalin
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
-m68k.org
-
-In personal conversations with technical people, I call myself a hacker=
-=2E But
-when I'm talking to journalists I just say "programmer" or something li=
-ke that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
