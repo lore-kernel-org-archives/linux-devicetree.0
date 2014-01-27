@@ -1,47 +1,72 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/4] ARM: dts: cm-fx6: add SATA support
-Date: Mon, 27 Jan 2014 15:37:56 +0800
-Message-ID: <20140127073754.GB4765@S2101-09.ap.freescale.net>
-References: <1390320812-25100-1-git-send-email-grinberg@compulab.co.il>
- <1390320812-25100-3-git-send-email-grinberg@compulab.co.il>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 0/2] DT updates for Hummingboard and new Cubox-i
+Date: Mon, 27 Jan 2014 09:16:12 +0100
+Message-ID: <1390810572.4847.4.camel@weser.hi.pengutronix.de>
+References: <20140116182211.GX15937@n2100.arm.linux.org.uk>
+	 <20140119031816.GD16158@S2101-09.ap.freescale.net>
+	 <20140119185246.GB28056@quad.lixom.net>
+	 <20140124150927.GA2780@S2101-09.ap.freescale.net>
+	 <CAOesGMhp1S-XJjGZQBPmH7RFT_pobSFLTBT+4fSKdZ3zhukEhA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1390320812-25100-3-git-send-email-grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+In-Reply-To: <CAOesGMhp1S-XJjGZQBPmH7RFT_pobSFLTBT+4fSKdZ3zhukEhA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 21, 2014 at 06:13:30PM +0200, Igor Grinberg wrote:
-> Enable SATA on cm-fx6.
+Am Freitag, den 24.01.2014, 19:44 -0800 schrieb Olof Johansson:
+> Hi,
 > 
-> Signed-off-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx6q-cm-fx6.dts | 4 ++++
->  1 file changed, 4 insertions(+)
+> On Fri, Jan 24, 2014 at 7:09 AM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > On Sun, Jan 19, 2014 at 10:52:46AM -0800, Olof Johansson wrote:
+> >> I'm well aware that the DT branch has not been merged, and that's because
+> >> there has been no consensus from DT maintainers on the massive rework
+> >> you did as the base of the branch.
+> >
+> > I guess the 'massive rework' you're talking about is the patch series
+> > that begins with 'ARM: dts: imx6qdl: make pinctrl nodes board specific'?
+> > If so, I hope you would agree that we're trying to solve a real
+> > problem [1], even though the solution does not look like the best to
+> > you.
+> >
+> > So which specific part of the solution are you objecting to?  Those
+> > MX6QDL_*_PINGRP macros defined in imx6qdl-pingrp.h?  If that's the
+> > case, I can send a follow-up patch to kill the macros by filling in the
+> > pin group definitions directly.  The pros is that the pin group
+> > definitions for given board will be more intuitive, and the cons is that
+> > the change set will be even more massive, because the same multi-lines
+> > pin group definitions will be duplicated in multiple board dts files,
+> > which use the same group of pins for given device.
+> >
+> > Or any other better idea?
 > 
-> diff --git a/arch/arm/boot/dts/imx6q-cm-fx6.dts b/arch/arm/boot/dts/imx6q-cm-fx6.dts
-> index 94cc6b5..07f90a5 100644
-> --- a/arch/arm/boot/dts/imx6q-cm-fx6.dts
-> +++ b/arch/arm/boot/dts/imx6q-cm-fx6.dts
-> @@ -69,3 +69,7 @@
->  	pinctrl-0 = <&pinctrl_uart4>;
->  	status = "okay";
->  };
-> +
-> +&sata {
-> +	status = "okay";
-> +};
-
-Please sort these labeled nodes alphabetically.
-
-Shawn
-
-> -- 
-> 1.8.3.2
+> I haven't heard any other maintainers being positive to this change.
+> Not Linus W, as the pinctrl maintainer, and none of the DT
+> maintainers. I asked for their review, which should mean acks or
+> general approval from them, and I haven't seen any come in. Or did I
+> miss it?
 > 
+
+Just to throw in some opinion: we at Pengutronix use the new macros for
+some time now and we pretty much like them. We are even in the process
+of pushing them to our bootloader. They do not obfuscate things beyond
+the status quo, as we always needed some form of grouping. Now it's just
+a macro, before it was a phandle.
+
+Also those are not changing ABI, so if people really hate them (which I
+seriously doubt) we can always revert or change them to something other
+later. So IMHO I would really like the change to go in as is.
+
+Regards,
+Lucas
+-- 
+Pengutronix e.K.                           | Lucas Stach                 |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-5076 |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
