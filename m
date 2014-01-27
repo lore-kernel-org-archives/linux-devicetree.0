@@ -1,65 +1,75 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 3/4] ASoC: tda998x: add DT documentation
-Date: Mon, 27 Jan 2014 20:56:27 +0000
-Message-ID: <20140127205627.GD11841@sirena.org.uk>
-References: <cover.1390813480.git.moinejf@free.fr>
- <22fafd7e11771ffc25c84ff609d18039f07b7295.1390813481.git.moinejf@free.fr>
- <20140127204302.GY11841@sirena.org.uk>
- <20140127204534.GB15937@n2100.arm.linux.org.uk>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 3/3] net: ethoc: document OF bindings
+Date: Mon, 27 Jan 2014 13:12:33 -0800
+Message-ID: <CAGVrzcb0RzOgT+bT250vFU=Bxe8_nJ56QSz9t+6yRmw+jPf-Rg@mail.gmail.com>
+References: <1390795167-6677-1-git-send-email-jcmvbkbc@gmail.com>
+ <1390795167-6677-4-git-send-email-jcmvbkbc@gmail.com> <CAL_JsqLjn4FXrNGLGHs639TEqmQKPx_kk9JbAd-hn7mexzAjNg@mail.gmail.com>
+ <CAMo8BfKm_rzDDs9BpfQkaew9DP9T8y0RnjzT_1gzs9Xrbx2CLA@mail.gmail.com>
+ <CAGVrzcb4Y8zu6Q24-0d-uKppGE=HrvEXPUD2-Mo8r5JC80nDSw@mail.gmail.com> <CAMo8BfLhFyOY1+FJ0qh8iL969totUCmHdJ0LzyqBAzwi1-Ht=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9KMRXrBaLD3S8C0H"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140127204534.GB15937@n2100.arm.linux.org.uk>
+In-Reply-To: <CAMo8BfLhFyOY1+FJ0qh8iL969totUCmHdJ0LzyqBAzwi1-Ht=A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Jean-Francois Moine <moinejf@free.fr>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Dave Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>
+To: Max Filippov <jcmvbkbc@gmail.com>
+Cc: Rob Herring <robherring2@gmail.com>, "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chris Zankel <chris@zankel.net>, Marc Gauthier <marc@cadence.com>, "David S. Miller" <davem@davemloft.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
+2014-01-27 Max Filippov <jcmvbkbc@gmail.com>:
+> On Mon, Jan 27, 2014 at 11:45 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>> 2014-01-27 Max Filippov <jcmvbkbc@gmail.com>:
+>>> On Mon, Jan 27, 2014 at 6:10 PM, Rob Herring <robherring2@gmail.com> wrote:
+>>>> On Sun, Jan 26, 2014 at 9:59 PM, Max Filippov <jcmvbkbc@gmail.com> wrote:
+>
+> [...]
+>
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/net/opencores-ethoc.txt
+>>>>> @@ -0,0 +1,25 @@
+>>>>> +* OpenCores MAC 10/100 Mbps
+>>>>> +
+>>>>> +Required properties:
+>>>>> +- compatible: Should be "opencores,ethoc".
+>>>>
+>>>> There are not different versions of IP or is the version probeable?
+>>>
+>>> AFAIK there's single version of this 10/100 MAC.
+>>> It doesn't have any identification registers.
+>>
+>> Since this is an IP block that people can modify due to its open
+>> source nature, it would have been good to define a revision register
+>> or such which would allow software to gate specific code based on that
+>> revision.
+>
+> Probably yes, though I haven't heard of any modified versions of this MAC
+> out there.
+>
+> [...]
+>
+>>>>> +Examples:
+>>>>> +
+>>>>> +       enet0: ethoc@fd030000 {
+>>>>> +               compatible = "opencores,ethoc";
+>>>>> +               reg = <0xfd030000 0x4000 0xfd800000 0x4000>;
+>>>>> +               interrupts = <1>;
+>>>>> +               local-mac-address = [00 50 c2 13 6f 00];
+>>>>> +               clock-frequency = <50000000>;
+>>>>> +               mii-mgmt-clock-frequency = <5000000>;
+>>
+>> 5Mhz management clock? Can't you make it work with the standard 2.5Mhz
+>> management clock? Is not there a risk not to be able to "talk" to some
+>> PHY chips out there which do not support > 2.5Mhz management clock?
+>
+> Yes I can, it just didn't occur to me that there is a standard 2.5MHz setting.
+>
+>> Since this is an ethoc specific property, should it be prefixed with "ethoc,"?
+>
+> Is it worth keeping this parameter at all, or just always default to 2.5MHz?
 
---9KMRXrBaLD3S8C0H
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Jan 27, 2014 at 08:45:34PM +0000, Russell King - ARM Linux wrote:
-> On Mon, Jan 27, 2014 at 08:43:02PM +0000, Mark Brown wrote:
-> > On Mon, Jan 27, 2014 at 09:34:49AM +0100, Jean-Francois Moine wrote:
-
-> > > +	- audio-ports: one or two values.
-> > > +		The first value defines the I2S input port.
-> > > +		The second one, if present, defines the S/PDIF input port.
-
-> > I take it these are port numbers on the device and it's not possible to
-> > do something like having multiple I2S ports?
-
-> You can feed it with multiple synchronised I2S streams for the additional
-> channels.
-
-Ah, I feared as much.  The bindings ought to take account of that
-posibility even if the code can't use additional ports yet.  Perhaps
-separate properties for I2S and S/PDIF?
-
---9KMRXrBaLD3S8C0H
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS5sf4AAoJELSic+t+oim9l+AQAJwZVDa/OoV3JumAi8CZgoT0
-rULrwoP9ZkIrI/IdV+YcygDtzE998ulCownvZTSSD1kYPrEafgWKQtPlZzffTX+t
-rcINMh0c5J2QTouy7dkCrRsDYJ9YQhiReWuE6PS8fy6GMo4EjI1yTiFydfZ3HLKo
-heLHLXzm9+J07dsqqAxe3IlRsgDCUvEewgbwz9M0rUCPH3ENPQw8VjXYSWAdPmpO
-8Zqq05YInnd5DSLWPd9mxTjF8QW0Nf+cA4PAVS9wvr7B4grSvT8w55g4LzQIUapo
-nkAa4KqT1wHz+ojKcKGH+nujb2TSkZmcsPnzVjAG469kPnDwUrs40x0LvpcteKg2
-cesfi98228Bay33jM5f/xcAD4jT7/LUSq7s4uRKVZS+PLA83ysoQ348sci9TxbaA
-3oTo74DvZMuDyEfKBAWk5WyfCicRmAst7b+GjfdKXxst9u0YoKagEVDyI85Pf1bn
-0/dJIJL+/+XcE3Ghq2JlK2pNBObi/4BBMO/HeV0CVzAA+TzZES8jsGMcex0LW3Lm
-JVZDTWB5O72cZtF72cEsrip78VrShXJB/mBRqEzl7iPOeiwwjS9WR8Bb9KL3M/vW
-wk23+0+3hsFb1S3k9wZuXhnC/kVYSRYM0TkW54dgd7kT4P6jfQDmRHcNHAZQBSNh
-bnAqTJQLt8+VNUkc8JSY
-=niaY
------END PGP SIGNATURE-----
-
---9KMRXrBaLD3S8C0H--
+Your example lists 5Mhz, so I assume this is of some use for you on
+the platform you are working with? My concern is that this might not
+be compatible with all PHY devices out there and might create hard to
+debug issues where you get some MDIO transactions to succeeds and some
+which don't.
+-- 
+Florian
