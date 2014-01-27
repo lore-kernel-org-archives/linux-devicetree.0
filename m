@@ -1,88 +1,59 @@
-From: Tanmay Inamdar <tinamdar@apm.com>
-Subject: Re: [RFC PATCH V2 1/4] pci: APM X-Gene PCIe controller driver
-Date: Mon, 27 Jan 2014 14:54:25 -0800
-Message-ID: <CACoXjcnTnhWS-5yOgiHA5yVaBjdH1DVzmSsknEBJLB+CFR0EyA@mail.gmail.com>
-References: <1389742458-7693-1-git-send-email-tinamdar@apm.com>
-	<CACoXjc=ZT9fEm_KdY4WFSoS8n5FmO+hn9LjsR4m8YZG2iBbt5A@mail.gmail.com>
-	<CACoXjc=-JtpiM3m4DSA_DeOxYr3sihGGf4FSaJ2yC08rpm6ANQ@mail.gmail.com>
-	<5086198.ZOWZ5xuyna@wuerfel>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 1/2] DT: net: davinci_emac: "ti,davinci-rmii-en" property
+ is actually optional
+Date: Mon, 27 Jan 2014 14:57:14 -0800
+Message-ID: <CAGVrzcYdd3KjoHyAS2_y5e9BBPk4O9t7pCiCqoWGXQ=T6Qg-yA@mail.gmail.com>
+References: <201401280247.42415.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5086198.ZOWZ5xuyna@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Jon Masters <jcm@redhat.com>, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, patches <patches@apm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <201401280247.42415.sergei.shtylyov@cogentembedded.com>
+Sender: netdev-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: netdev <netdev@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, davinci-linux-open-source@linux.davincidsp.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 25, 2014 at 12:11 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Friday 24 January 2014 13:28:22 Tanmay Inamdar wrote:
->> On Thu, Jan 16, 2014 at 5:10 PM, Tanmay Inamdar <tinamdar@apm.com> wrote:
->> > On Wed, Jan 15, 2014 at 4:39 AM, Arnd Bergmann <arnd@arndb.de> wrote:
->> >> On Wednesday 15 January 2014, Tanmay Inamdar wrote:
+2014-01-27 Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>:
+> Though described as required, the "ti,davinci-rmii-en" property for the DaVinci
+> EMAC binding seems actually optional, as the driver should happily work without
+> it; the property is not specified either  in the example device node or in the
+> actual EMAC device node for DA850 device tree, only AM3517 one.
 >
->> >>
->> >>> +static void xgene_pcie_poll_linkup(struct xgene_pcie_port *port, u32 *lanes)
->> >>> +{
->> >>> +     void *csr_base = port->csr_base;
->> >>> +     u32 val32;
->> >>> +     u64 start_time, time;
->> >>> +
->> >>> +     /*
->> >>> +      * A component enters the LTSSM Detect state within
->> >>> +      * 20ms of the end of fundamental core reset.
->> >>> +      */
->> >>> +     msleep(XGENE_LTSSM_DETECT_WAIT);
->> >>> +     port->link_up = 0;
->> >>> +     start_time = jiffies;
->> >>> +     do {
->> >>> +             val32 = readl(csr_base + PCIECORE_CTLANDSTATUS);
->> >>> +             if (val32 & LINK_UP_MASK) {
->> >>> +                     port->link_up = 1;
->> >>> +                     port->link_speed = PIPE_PHY_RATE_RD(val32);
->> >>> +                     val32 = readl(csr_base + BRIDGE_STATUS_0);
->> >>> +                     *lanes = val32 >> 26;
->> >>> +             }
->> >>> +             time = jiffies_to_msecs(jiffies - start_time);
->> >>> +     } while ((!port->link_up) || (time <= XGENE_LTSSM_L0_WAIT));
->> >>> +}
->> >>
->> >> Maybe another msleep() in the loop? It seems weird to first do an
->> >> unconditional sleep but then busy-wait for the result.
->> >
->> > ok.
->>
->> This loop can execute for maximum 4 msec. So putting msleep(1) won't
->> get us much.
+> While at it, document the property better...
 >
-> 4 msec is still quite a long time for a busy loop that can be spent doing
-> useful work in another thread.
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 >
+> ---
+> Actually I think this property should have been boolean...
+>
+>  Documentation/devicetree/bindings/net/davinci_emac.txt |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> Index: net/Documentation/devicetree/bindings/net/davinci_emac.txt
+> ===================================================================
+> --- net.orig/Documentation/devicetree/bindings/net/davinci_emac.txt
+> +++ net/Documentation/devicetree/bindings/net/davinci_emac.txt
+> @@ -10,7 +10,6 @@ Required properties:
+>  - ti,davinci-ctrl-mod-reg-offset: offset to control module register
+>  - ti,davinci-ctrl-ram-offset: offset to control module ram
+>  - ti,davinci-ctrl-ram-size: size of control module ram
+> -- ti,davinci-rmii-en: use RMII
+>  - ti,davinci-no-bd-ram: has the emac controller BD RAM
+>  - interrupts: interrupt mapping for the davinci emac interrupts sources:
+>                4 sources: <Receive Threshold Interrupt
+> @@ -22,6 +21,7 @@ Optional properties:
+>  - phy-handle: Contains a phandle to an Ethernet PHY.
+>                If absent, davinci_emac driver defaults to 100/FULL.
+>  - local-mac-address : 6 bytes, mac address
+> +- ti,davinci-rmii-en: 1 byte, 1 means use RMII
 
-Right. If 'msleep(1)' is used, then 'checkpatch' throws a warning
-saying that it can actually sleep for 20ms in some cases. I will check
-if 'usleep_range' is useful here.
-
->> >>
->> >> Another general note: Your "compatible" strings are rather unspecific.
->> >> Do you have a version number for this IP block? I suppose that it's related
->> >> to one that has been used in other chips before, or will be used in future
->> >> chips, if it's not actually licensed from some other company.
->> >
->> > I will have to check this.
->> >
->>
->> We have decided to stick with current compatible string for now.
->
-> Can you elaborate on your reasoning? Does this mean X-Gene is a one-off
-> product and you won't be doing any new chips based on the same hardware
-> components?
-
-The current convention is to key upon the family name - X-Gene. Future
-chips will also be a part of X-Gene family. Right now it is unclear if
-there are any obvious feature additions to be done in Linux PCIe
-driver. Until then same driver is expected to work as is in future
-chips.
-
->
->         Arnd
+This just made me look at the actual DT binding documentation and the
+driver, but there is support for specifying a PHY device tree node,
+but no corresponding 'phy-connection-type' property which would tell
+whether the connection is Reduced MII, MII or something else.
+'phy-connection-type' would convey much more information about what is
+happening, and once know, should also make the driver automatically
+configure for Reduced MII or anything else, hence making
+"ti,davinc-rmii-en" obsolete.
+-- 
+Florian
