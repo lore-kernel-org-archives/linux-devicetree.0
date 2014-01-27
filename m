@@ -1,56 +1,76 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/9] ARM: dts: imx6qdl: remove the use of pingrp macros
-Date: Mon, 27 Jan 2014 23:22:55 +0800
-Message-ID: <20140127152253.GE4765@S2101-09.ap.freescale.net>
-References: <1390668191-20289-1-git-send-email-shawn.guo@linaro.org>
- <1390668191-20289-2-git-send-email-shawn.guo@linaro.org>
- <20140127143745.GM15937@n2100.arm.linux.org.uk>
- <20140127150509.GD4765@S2101-09.ap.freescale.net>
- <20140127151638.GN15937@n2100.arm.linux.org.uk>
+From: Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] net: via-rhine: switch to generic DMA functions
+Date: Mon, 27 Jan 2014 19:26:45 +0400
+Message-ID: <CABjd4Yyq_Mia=2DkC83Wpi6o1o3m5+yoMcDL4WdZmuLvRtu6qg@mail.gmail.com>
+References: <1385227995-3956-1-git-send-email-alchark@gmail.com>
+	<1390823503-24087-1-git-send-email-alchark@gmail.com>
+	<1390823503-24087-2-git-send-email-alchark@gmail.com>
+	<1390834190.2735.143.camel@deadeye.wl.decadent.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140127151638.GN15937-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+In-Reply-To: <1390834190.2735.143.camel-nDn/Rdv9kqW9Jme8/bJn5UCKIB8iOfG2tUK59QYPAWc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Luethi <rl-7uj+XXdSDtwfv37vnLkPlQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 27, 2014 at 03:16:39PM +0000, Russell King - ARM Linux wrote:
-> On Mon, Jan 27, 2014 at 11:05:11PM +0800, Shawn Guo wrote:
-> > On Mon, Jan 27, 2014 at 02:37:45PM +0000, Russell King - ARM Linux wrote:
-> > > On Sun, Jan 26, 2014 at 12:43:03AM +0800, Shawn Guo wrote:
-> > > >  arch/arm/boot/dts/imx6dl-hummingboard.dts  |    5 +-
-> > > >  arch/arm/boot/dts/imx6qdl-microsom.dtsi    |    5 +-
-> > > 
-> > > I've merged your changes here into my local copy of these just to reduce
-> > > the conflicts - unfortunately, it's taken soo long to deal with the above
-> > > that the cubox-i has now been released, which has prompted some
-> > > reorganisation between the above two files.
-> > > 
-> > > I would much rather you dropped these two entirely, and let me push them
-> > > upstream, rather than having some nasty conflicts which result from this.
-> > 
-> > So you're basically asking me to drop patch [1] from imx/dt branch (tag
-> > imx-dt-3.14), which I have sent to Olof for 3.14 inclusion.  Yes, I
-> > still hope Olof can pull it with this turn-around series applied on top.
-> > So please let's wait for Olof's word to see if we can make it.  If it's
-> > still a NO for some reason, I will be certainly fine with you pushing
-> > hummingboard stuff upstream, and will drop it from my tree.
-> 
-> My point is that the DT files I _now_ have are quite different in
-> organisation to the ones I submitted to you, so there's going to be
-> conflicts if your version goes in.
-> 
-> Moreover, I don't want the old ones in 3.14 as-is, because I don't want
-> declarations which should not have been in the microsom file but in the
-> hummingboard file being in a final release of the mainline kernel.
+2014/1/27 Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>:
+> On Mon, 2014-01-27 at 15:51 +0400, Alexey Charkov wrote:
+>> Remove legacy PCI DMA wrappers and instead use generic DMA functions
+>> directly in preparation for OF bus binding
+>>
+>> Signed-off-by: Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Signed-off-by: Roger Luethi <rl-7uj+XXdSDtwfv37vnLkPlQ@public.gmane.org>
+>> ---
+>>  drivers/net/ethernet/via/via-rhine.c | 56 +++++++++++++++++++-----------------
+>>  1 file changed, 29 insertions(+), 27 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/via/via-rhine.c b/drivers/net/ethernet/via/via-rhine.c
+>> index ef312bc..fee8732 100644
+>> --- a/drivers/net/ethernet/via/via-rhine.c
+>> +++ b/drivers/net/ethernet/via/via-rhine.c
+>> @@ -919,10 +919,10 @@ static int rhine_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+>>               goto err_out;
+>>
+>>       /* this should always be supported */
+>> -     rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
+>> +     rc = dma_set_mask(&pdev->dev, DMA_BIT_MASK(32));
+>>       if (rc) {
+>>               dev_err(&pdev->dev,
+>> -                     "32-bit PCI DMA addresses not supported by the card!?\n");
+>> +                     "32-bit DMA addresses not supported by the card!?\n");
+>>               goto err_out;
+>>       }
+>>
+>> @@ -1094,20 +1094,22 @@ static int alloc_ring(struct net_device* dev)
+>>       void *ring;
+>>       dma_addr_t ring_dma;
+>>
+>> -     ring = pci_alloc_consistent(rp->pdev,
+>> +     ring = dma_alloc_coherent(&rp->pdev->dev,
+>>                                   RX_RING_SIZE * sizeof(struct rx_desc) +
+>>                                   TX_RING_SIZE * sizeof(struct tx_desc),
+>> -                                 &ring_dma);
+>> +                                 &ring_dma,
+>> +                                     GFP_ATOMIC);
+> [...]
+>
+> Indentation is messed up here (and in several other function calls
+> you're changing).  You should align the function arguments so each line
+> begins in the column after the opening parenthesis.
 
-We can take care of them with incremental patches during early -rc.
+Ben, thanks for pointing out. I actually just tried to follow the
+style of surrounding code, but happy to adjust if that's the preferred
+option. From what I can see, these lines should still fit in below 80
+cols even with increased indents...
 
-Shawn
+Should we then also adjust other function calls within the driver with
+similar indentation (if any), that are currently not touched by this
+patch series?
 
+Thanks,
+Alexey
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
