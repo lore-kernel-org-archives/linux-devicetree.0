@@ -1,95 +1,56 @@
-From: Davor Joja <davorjoja-bBue3UIS71U2IjGS+8YXRQ@public.gmane.org>
-Subject: [RFC] Documentation: devicetree: bindings: drm: Xylon binding
-Date: Mon, 27 Jan 2014 16:47:42 +0100
-Message-ID: <52E67F9E.20492.1406B56@davorjoja.logicbricks.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] net: via-rhine: add OF bus binding
+Date: Mon, 27 Jan 2014 09:56:12 -0600
+Message-ID: <CAL_JsqLi0QKeeUkGMKmYZ1ki02mzk=L1gDxTJyXFGiOe_aHiVw@mail.gmail.com>
+References: <1385227995-3956-1-git-send-email-alchark@gmail.com>
+	<1390823503-24087-1-git-send-email-alchark@gmail.com>
+	<1390823503-24087-4-git-send-email-alchark@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Description: Mail message body
+In-Reply-To: <1390823503-24087-4-git-send-email-alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rl-7uj+XXdSDtwfv37vnLkPlQ@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Jan 27, 2014 at 5:51 AM, Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> This should make the driver usable with VIA/WonderMedia ARM-based
+> Systems-on-Chip integrated Rhine III adapters. Note that these
+> are always in MMIO mode, and don't have any known EEPROM.
+>
+> Signed-off-by: Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Roger Luethi <rl-7uj+XXdSDtwfv37vnLkPlQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/net/via-rhine.txt          |  18 ++
+>  drivers/net/ethernet/via/Kconfig                   |   2 +-
+>  drivers/net/ethernet/via/via-rhine.c               | 293 +++++++++++++--------
+>  3 files changed, 200 insertions(+), 113 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/via-rhine.txt
+>
+> diff --git a/Documentation/devicetree/bindings/net/via-rhine.txt b/Documentation/devicetree/bindings/net/via-rhine.txt
+> new file mode 100644
+> index 0000000..684dd3a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/via-rhine.txt
+> @@ -0,0 +1,18 @@
+> +* VIA Rhine 10/100 Network Controller
+> +
+> +Required properties:
+> +- compatible : Should be "via,rhine"
 
-Can I please get comments about adding new vendor prefix "xylon", and on 
-following devicetree binding for Xylon configurable video controller (logiCVC).
-Shown node is prepared for Xilinx Linux kernel dts file.
+This should be more specific rather than...
 
+> +- reg : Address and length of the io space
+> +- interrupts : Should contain the controller interrupt line
+> +- rhine,revision : Rhine core revision, used to inform the
+> +       driver of quirks and capabilities to expect from
+> +       the device. Mimics the respective PCI attribute.
 
-logicvc_0: logicvc@40030000 {
-	compatible = "xylon,logicvc-4.00.a";
-	reg = <0x40030000 0x6000>;
-	interrupt-parent = <&ps7_scugic_0>;
-	interrupts = <0 59 4>;
-	background-layer-bits-per-pixel = <32>;
-	display-interface = <0>;
-	display-color-space = <1>;
-	is-readable-regs = <1>;
-	is-size-position = <1>;
-	layer-width = <2048>;
-	num-layers = <4>;
-	layer_0 {
-		address = <0>;
-		alpha-mode = <0>;
-		data-width = <16>;
-		type = <0>;
-	} ;
-	layer_1 {
-		address = <0>;
-		alpha-mode = <0>;
-		data-width = <32>;
-		type = <0>;
-	} ;
-	layer_2 {
-		address = <0>;
-		alpha-mode = <1>;
-		data-width = <32>;
-		type = <0>;
-	} ;
-	layer_3 {
-		address = <0>;
-		alpha-mode = <0>;
-		data-width = <16>;
-		type = <1>;
-	} ;
-} ;
+having this property. The OF match table can then have the quirks set
+based on compatible strings.
 
-
-Required properties for configuring logiCVC device:
- - compatible: value must be "xylon,logicvc-4.00.a"
- - reg: base address and size of the logiCVC IP
- - interrupts-parent: the phandle for interrupt controller
- - interrupts: the interrupt number
- - background-layer-bits-per-pixel: background layer color format (0, 16, 32)
-      if "0" last available layer is standard layer
-      if 16 or 32, last available layer is background layer implemented in
-      hw register and containing specified bits per pixel color value
- - display-interface: logiCVC to display physical interface
-      (0=Parallel, 1=ITU656)
- - display-color-space: logiCVC to display physical color space
-      (0=RGB, 1=YCbCr 4:2:2, 2=YCbCr 4:4:4)
- - is-readable-regs: all hw registers are readable by sw
- - is-size-position: hw changing of layer size and position
- - layer-width: layer width in pixels, common for all layers
- - num-layers: supported number of layers (1-5)
-      if "background-layer-bits-per-pixel != 0", "num-layers" property value is
-      decreased by 1
- - layer_N
-    - address: layer address hardcoded in hw (0=Unused, 0x...)
-    - alpha-mode: layer transparency mode (0=Layer, 1=Pixel)
-         layer alpha mode contains single alpha value for all layer pixels
-         pixel alpha mode contains alpha value per pixel in video memory
-         pixel alpha mode can increase physical size of pixel in memory
-         (8 bits per pixel in pixel alpha mode uses 16 bits per pixel in 
-memory)
-    - data-width: layer bits per pixel color format (16, 32)
-    - type: layer type (0=RGB, 1=YCbCr)
-
-
-Thank you,
-Davor
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
