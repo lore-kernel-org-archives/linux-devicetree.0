@@ -1,52 +1,124 @@
-From: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Subject: Re: [PATCH 2/4] ARM: dts: cm-fx6: add SATA support
-Date: Mon, 27 Jan 2014 11:06:47 +0200
-Message-ID: <52E621A7.7030201@compulab.co.il>
-References: <1390320812-25100-1-git-send-email-grinberg@compulab.co.il> <1390320812-25100-3-git-send-email-grinberg@compulab.co.il> <20140127073754.GB4765@S2101-09.ap.freescale.net>
+From: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: Firmware for Bluetooth (and wifi)
+Date: Mon, 27 Jan 2014 10:21:20 +0100
+Message-ID: <52E62510.5090103@broadcom.com>
+References: <52A040CE.5040706@schinagl.nl> <52A09B5B.70800@schinagl.nl> <CAGRGNgWBgWqoPUdHSm2OXGb8r-ca5NX2z4_v0eG6oOMgJRd3HQ@mail.gmail.com> <52B17973.1000608@broadcom.com> <52B19F38.7060503@redhat.com> <52B1CA51.4010202@broadcom.com> <CAGb2v67cnP0yth0xxBKcaW_T2fF+4nP4r6h9NLqy5FV2x=hO=Q@mail.gmail.com> <CAGb2v67mmYnyPeOd4Wwp1zHs7EC_Gr+gEdaaMWeKP5z_Z_SVGA@mail.gmail.com> <CAGb2v66646-1Sye=Eb04_SoeCGBU064OePcxDi7th1fqU8XfBg@mail.gmail.com> <52BD68BA.3080304@broadcom.com> <CAGb2v67Q=q4vyOftb+BLhAYR-6d04dDP3+kY3b88U8_vCvAmgQ@mail.gmail.com> <52CD12D4.5030008@broadcom.com> <CAGb2v64+5Rgs6JxD0iH3bcwXPOm-xyS_LSmWLfx0qiMQwreOeQ@mail.gmail.com> <52E19A27.7000402@redhat.com> <52E19E1C.1010402@redhat.com> <CAGb2v66KhGoGmoFkTw9PQYBtX9YQbmxk4oy_tM4LM_UhZMkcZg@mail.gmail.com> <52E5392B.80605@redhat.com>
+  <CAGb2v6594vsKCd9E8apojQXE8h6WJj4-doJ8wa85Nt3EFZhXHA@mail.gmail.com> <52E580A8.4060600@broadcom.com> <52E5A631.4030204@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140127073754.GB4765-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Return-path: <linux-sunxi+bncBCKLZOXH5AIBBE6KTCLQKGQEHOQU6BI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <52E5A631.4030204-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/27/14 09:37, Shawn Guo wrote:
-> On Tue, Jan 21, 2014 at 06:13:30PM +0200, Igor Grinberg wrote:
->> Enable SATA on cm-fx6.
->>
->> Signed-off-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/imx6q-cm-fx6.dts | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/imx6q-cm-fx6.dts b/arch/arm/boot/dts/imx6q-cm-fx6.dts
->> index 94cc6b5..07f90a5 100644
->> --- a/arch/arm/boot/dts/imx6q-cm-fx6.dts
->> +++ b/arch/arm/boot/dts/imx6q-cm-fx6.dts
->> @@ -69,3 +69,7 @@
->>  	pinctrl-0 = <&pinctrl_uart4>;
->>  	status = "okay";
->>  };
->> +
->> +&sata {
->> +	status = "okay";
->> +};
+On 01/27/2014 01:20 AM, Tomasz Figa wrote:
+> Hi Chen-Yu, Arend,
 > 
-> Please sort these labeled nodes alphabetically.
+> On 26.01.2014 22:39, Arend van Spriel wrote:
+>> On 01/26/2014 05:58 PM, Chen-Yu Tsai wrote:
+>>> Hi,
+>>>
+>>> On Mon, Jan 27, 2014 at 12:34 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>> wrote:
+>>>> Hi,
+>>>>
+>>>> On 01/24/2014 04:38 AM, Chen-Yu Tsai wrote:
+>>>>
+>>>> <snip>
+>>>>
+>>>>
+>>>>>> Quick update, I've just tested:
+>>>>>> https://github.com/wens/linux/commits/wip/sunxi-next-wifi
+>>>>>
+>>>>>
+>>>>> About this, I would like to move WiFi power control to a regulator,
+>>>>> and controlled by sunxi-mci via vmmc-supply (not supported ATM)
+>>>>
+>>>>
+>>>> Actually the sunxi-mci.c driver already has support for an optional
+>>>> regulator called vmmc.
+>>>>
+>>>> I like this idea, I've done a version of the dt patch using a regulator
+>>>> instead of rfkill here:
+>>>> https://github.com/jwrdegoede/linux-sunxi/commit/8d200113b573549cdcdc1b2d5a5a1cad15cfbe07
+>>>>
+>>>>
+>>>> This works as advertised and IMHO is the better solution.
+>>>
+>>> I have a version in another branch I haven't pushed. I had it using an
+>>> always-on regulator. I can adjust it to use vmmc.
+>>>
+>>> BTW, I'd like to do a patch for sunxi-mci to use the DT parsing code
+>>> in mmc core.
+>>> We should re-use code if possible, wouldn't you agree?
+>>>
+>>>>>> About the oob interrupt stuff not working, AFAIK you should set a
+>>>>>> pinctrl
+>>>>>> function (not input, but a function like mmc is a function) on the
+>>>>>> pin in
+>>>>>> question
+>>>>>> for it to work as external interrupt, I believe you're not doing
+>>>>>> so in
+>>>>>> your
+>>>>>> dts.
+>>>>>
+>>>>>
+>>>>> The pinctrl driver seems to set the function when the interrupt is
+>>>>> enabled.
+>>>>> Unfortunately we don't have any documentation/examples on how to
+>>>>> use them.
+>>>>> I will look into that later.
+>>>>
+>>>>
+>>>> Hmm, but you also have a pinctrl entry in the dts setting it up as
+>>>> gpio-input,
+>>>> maybe that conflicts ?
+>>>
+>>> I made a version with pinctrl entry setup as "irq", got an interrupt,
+>>> but then the whole thing hung. Looks like pinctrl irqchip was not
+>>> properly handling chained interrupts. I have done a simple fix, and I
+>>> hope to test it tomorrow. Then I'll do some more testing with different
+>>> configurations and hopefully write some documents.
+>>
+>> Hi Chen-Yu,
+>>
+>> I had a look at github tree from Hans with your DT support patch for
+>> brcmfmac. I applied it to my 3.14 tree and modified it a little. I guess
+>> the bindings are still experimental, but I would prefer you to use brcm
+>> instead of broadcom in the 'compatible' entry as found in
+>> Documentation/devicetree/bindings/vendor-prefixes.txt. There is an
+>> exception to this rule in the bindings (in net/broadcom-bcm87xx.txt),
+>> but I guess that train has left and it is tricky to change it now.
+>> In the brcmfmac patch you also use multiple of_device ids. Could we make
+>> it more generic, ie. compatible = "brcm,brcmfmac" or "brcm,wifi-fullmac"
+>> or whatever...
+> 
+> brcmfmac and wifi-fullmac strings sound to generic for me. What happens
+> if an incompatible brcmfmac chip shows up? I'd rather use something like
+> "bcm43xx" to cover existing chip family, if all the bcm43xx chips are
+> compatible, or something more specific otherwise.
 
-Ok.
+The brcmfmac driver that consumes these DT nodes will have a closer look
+at the device obtaining the chipid during the probe and determine if it
+can support it. So the compatible string indicates that the device needs
+a so-called fullmac wireless driver opposed to a mac80211 aka. softmac
+wireless driver.
 
-I'll wait for the "pingrp macros" to settle down and resend.
+> By the way, you might find this thread interesting:
+> 
+> http://thread.gmane.org/gmane.linux.kernel.mmc/24728/focus=24783
+> 
+> In addition to the general idea of handling power control, I have also
+> posted a link to my patch adding DT support to brcmfmac driver.
 
-Thanks!
+You peaked my interest and I will catch up reading the thread.
 
--- 
 Regards,
-Igor.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Arend
