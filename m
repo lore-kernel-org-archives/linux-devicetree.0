@@ -1,169 +1,168 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH] phy-rcar-usb-gen2: add device tree support
-Date: Mon, 27 Jan 2014 09:33:22 -0600
-Message-ID: <20140127153322.GB13268@saruman.home>
-References: <1390754945-28142-6-git-send-email-ben.dooks@codethink.co.uk>
- <1390755901-3743-1-git-send-email-ben.dooks@codethink.co.uk>
-Reply-To: <balbi@ti.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH v5 00/20] Armada 370/XP watchdog support
+Date: Mon, 27 Jan 2014 10:50:52 -0500
+Message-ID: <20140127155052.GL29184@titan.lakedaemon.net>
+References: <1390836440-12744-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xgyAXRrhYN0wYx8y"
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1390755901-3743-1-git-send-email-ben.dooks@codethink.co.uk>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: linux-kernel@lists.codethink.co.uk, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, devicetree@vger.kernel.org
+In-Reply-To: <1390836440-12744-1-git-send-email-ezequiel.garcia@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Cc: Lior Amsalem <alior@marvell.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Tawfik Bayouk <tawfik@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Daniel Lezcano <daniel.lezcano@linaro.org>, Wim Van Sebroeck <wim@iguana.be>, Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
---xgyAXRrhYN0wYx8y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jan 27, 2014 at 12:27:00PM -0300, Ezequiel Garcia wrote:
+> A new round, mostly fixing some minor nitpicks.
+> 
+> This entire series depends on latest irqchip-orion fixes by Sebastian.
+> Namely, this one: https://lkml.org/lkml/2014/1/23/594.
+> 
+> How should we handle this dependency?
 
-Hi,
+Sorry, I'm short on time atm.  Which specific patches now depend on his
+changes?
 
-On Sun, Jan 26, 2014 at 05:05:01PM +0000, Ben Dooks wrote:
-> Add support for the phy-rcar-gen2-usb driver to be probed from device tre=
-e.
->=20
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
-> ---
-> Fixes from v2:
-> 	- fix missing of_if patch
-> (I clearly should not be let near git-rebase when hungry)
->=20
-> Fixes from v1:
-> 	- use of_property_reasd-bool()
-> 	- remove unused of_id variable
->=20
-> Cc: linux-usb@vger.kernel.org
-> Cc: linux-sh@vger.kernel.org
-> Cc: Magnus Damm <magnus.damm@gmail.com>
-> Cc: Simon Horman <horms@verge.net.au>
-> Cc: devicetree@vger.kernel.org
+I'll be doing a topic branch for tglx for that, so it shouldn't be
+rocket surgery.  The big unknown is the MMIO patch currently in
+Russell's patch tracker.
 
-it's a good practice to Cc maintainers ;-)
+We may end up waiting for MMIO and Sebastian's changes to land, then
+applying this during the next cycle.
 
-patch looks good to me, but I'd like to get an Ack from one of DT
-maintainers
+thx,
 
-> ---
->  drivers/usb/phy/phy-rcar-gen2-usb.c | 31 ++++++++++++++++++++++++++-----
->  1 file changed, 26 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/usb/phy/phy-rcar-gen2-usb.c b/drivers/usb/phy/phy-rc=
-ar-gen2-usb.c
-> index db3ab34..e4665b9 100644
-> --- a/drivers/usb/phy/phy-rcar-gen2-usb.c
-> +++ b/drivers/usb/phy/phy-rcar-gen2-usb.c
-> @@ -15,6 +15,7 @@
->  #include <linux/module.h>
->  #include <linux/platform_data/usb-rcar-gen2-phy.h>
->  #include <linux/platform_device.h>
-> +#include <linux/of_device.h>
->  #include <linux/spinlock.h>
->  #include <linux/usb/otg.h>
-> =20
-> @@ -167,6 +168,12 @@ out:
->  	spin_unlock_irqrestore(&priv->lock, flags);
->  }
-> =20
-> +static struct of_device_id rcar_gen2_usb_phy_ofmatch[] =3D {
-> +	{ .compatible =3D "renesas,usb-phy-r8a7790", },
-> +	{ .compatible =3D "renesas,rcar-gen2-usb-phy", },
-> +	{ },
-> +};
-> +
->  static int rcar_gen2_usb_phy_probe(struct platform_device *pdev)
->  {
->  	struct device *dev =3D &pdev->dev;
-> @@ -178,7 +185,7 @@ static int rcar_gen2_usb_phy_probe(struct platform_de=
-vice *pdev)
->  	int retval;
-> =20
->  	pdata =3D dev_get_platdata(&pdev->dev);
-> -	if (!pdata) {
-> +	if (!pdata && !dev->of_node) {
->  		dev_err(dev, "No platform data\n");
->  		return -EINVAL;
->  	}
-> @@ -203,16 +210,29 @@ static int rcar_gen2_usb_phy_probe(struct platform_=
-device *pdev)
->  	spin_lock_init(&priv->lock);
->  	priv->clk =3D clk;
->  	priv->base =3D base;
-> -	priv->ugctrl2 =3D pdata->chan0_pci ?
-> -			USBHS_UGCTRL2_USB0_PCI : USBHS_UGCTRL2_USB0_HS;
-> -	priv->ugctrl2 |=3D pdata->chan2_pci ?
-> -			USBHS_UGCTRL2_USB2_PCI : USBHS_UGCTRL2_USB2_SS;
->  	priv->phy.dev =3D dev;
->  	priv->phy.label =3D dev_name(dev);
->  	priv->phy.init =3D rcar_gen2_usb_phy_init;
->  	priv->phy.shutdown =3D rcar_gen2_usb_phy_shutdown;
->  	priv->phy.set_suspend =3D rcar_gen2_usb_phy_set_suspend;
-> =20
-> +	if (dev->of_node) {
-> +		if (of_property_read_bool(dev->of_node, "renesas,usb0-hs"))
-> +			priv->ugctrl2 =3D USBHS_UGCTRL2_USB0_HS;
-> +		else
-> +			priv->ugctrl2 =3D USBHS_UGCTRL2_USB0_PCI;
-> +
-> +		if (of_property_read_bool(dev->of_node, "renesas,usb2-ss"))
-> +			priv->ugctrl2 |=3D USBHS_UGCTRL2_USB2_SS;
-> +		else
-> +			priv->ugctrl2 |=3D USBHS_UGCTRL2_USB2_PCI;
-> +	} else {
-> +		priv->ugctrl2 =3D pdata->chan0_pci ?
-> +			USBHS_UGCTRL2_USB0_PCI : USBHS_UGCTRL2_USB0_HS;
-> +		priv->ugctrl2 |=3D pdata->chan2_pci ?
-> +			USBHS_UGCTRL2_USB2_PCI : USBHS_UGCTRL2_USB2_SS;
-> +	}
-> +
->  	retval =3D usb_add_phy(&priv->phy, USB_PHY_TYPE_USB2);
->  	if (retval < 0) {
->  		dev_err(dev, "Failed to add USB phy\n");
-> @@ -236,6 +256,7 @@ static int rcar_gen2_usb_phy_remove(struct platform_d=
-evice *pdev)
->  static struct platform_driver rcar_gen2_usb_phy_driver =3D {
->  	.driver =3D {
->  		.name =3D "usb_phy_rcar_gen2",
-> +		.of_match_table =3D rcar_gen2_usb_phy_ofmatch,
->  	},
->  	.probe =3D rcar_gen2_usb_phy_probe,
->  	.remove =3D rcar_gen2_usb_phy_remove,
-> --=20
-> 1.8.5.2
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jason.
 
---=20
-balbi
-
---xgyAXRrhYN0wYx8y
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJS5nxCAAoJEIaOsuA1yqRE6QoQAKIdILc8lpJVaUT5GdplIDDH
-H8AAeZODdFPE24R8UmA8Ok9uwH8CLg4YBPfxVbm0JZmNgIYU++xY6REeKAcxTre3
-Dhh9o+oH0NYnzQCZHXC8DVGFlsCqGMaf2cFayMj52UGzm2aWOfAfu30KH7LWBO2M
-Bo8bM+h0VhZNcnV+RrM2iHiBiZnFrYQq6y23m4qj2jifzGkvTr2RAHYPBtx6TzZn
-LiL3iD8bdtouNcaVXTFlMwTeyKKgwHEQceD+IpkiJGBT2ENZjIt4Bf7FjkjMsyQu
-uhFbebWAeBtdIwyCalEDV/etCMVx/lYAqesEwMubXxpC/9O8dtY78EBOxZTGE2gp
-uSdqRSuZ7PaQRSV2w9gMtSX2dBWXx4oFYSXNOm/xRH/+BnHgpYeZzdAvpSrP3MD8
-wgrgBK4sFRZLIOoARhSXieCbf/UpqIoAR/rnGIUNjhdCwkfOLs6OW/sW991sJfQY
-X/GjZqIFuzupRsMyNydy+SSckz1mLAX/Rcjj49zSQH8LR0YmSZUxP1kfZtjJB5+5
-kW8LPNoCobHknHFXL13XedCWCX996pIcGbVQcCVneNXghAyIFxcZ1tUUCxsOTKHq
-oYTBBMMV2zjync2Ro3ShYMEiNcd414XvAPpCzOG9Pn+fe/OLU1Qu+O0Z4IKKVYzW
-MHqoXsdvl37mSV0PmVqH
-=dWWF
------END PGP SIGNATURE-----
-
---xgyAXRrhYN0wYx8y--
+> Changes from v4 are:
+> 
+>   * Provided better commit subject and commit log for patch 7:
+>     "watchdog: orion: Handle the interrupt so it's properly acked".
+> 
+>   * Corrected the misnamed fuction try_rstout_ioremap().
+> 
+>   * A bunch of s/interruption/interrupt fixes
+> 
+>   * Dropped the '0' as a valid IRQ in the platform_get_irq() check, given
+>     it should return a positive virq-space number.
+> 
+> Changes from v3 are:
+> 
+>   * It wasn't nice to break DT compatibility by adding a second resource
+>     requirement, so we provided a fallback to use the RSTOUT address.
+>     All in all, the solution doesn't look too bad.
+> 
+>   * Added a full watchdog stop at driver probe time, *before* the call
+>     to request_irq().
+> 
+>     Notice that currently the request_irq() doesn't seem to clear the
+>     pending interrupt. This means the BRIDGE_CAUSE clear removal is
+>     still not safe.
+> 
+>     This should be fixed sooner than later and, of course, before this
+>     gets merged.
+> 
+>   * Rework the interrupt request, to use devm_request_irq() and
+>     avoid dealing with IRQ releasing.
+> 
+>   * Added proper clock error handling and fixed the probe() error path.
+> 
+>   * Typos and minor issues got fixed
+> 
+> Changes from v2:
+> 
+>  * Add proper error checking on clk_prepare_enable() and return
+>    PTR_ERR instead of ENODEV. Suggested by Fabio Estevam.
+> 
+>  * After the usage of the atomic I/O and considering the watchdog core
+>    does its own serialization, the driver's spinlock was completely
+>    redundant and was removed. Also suggested by Fabio.
+> 
+>  * Instead of making the driver dependent on PLAT_ORION, added a dependency
+>    to ARCH_MVEBU. This was proposed by Sebastian and Andrew, given
+>    we're working on PLAT_ORION removal.
+> 
+> Changes from v1:
+> 
+>   * Watchdog RSTOUT enable.
+>     While v1 enabled the RSTOUT at each machine initialization, Jason Gunthorpe
+>     later pointed out [2] that such enabling might lead to a spurious watchdog
+>     trigger, in the event of the watchdog expired event not being cleared.
+> 
+>     Therefore, the current patchset adds RSTOUT as a second address resource
+>     (or 'reg' entry in devicetree words) to allow different platforms specify
+>     the corresponding address of the register. This change allows to build the
+>     driver on multiplatforms builds as helps remove a mach-specific header.
+> 
+>     The drawback of this is that the DT backwards compatibility gets broken;
+>     this was timely discussed but no better solution was achieved or proposed.
+> 
+>   * BRIDGE CAUSE clear removal
+>     The watchdog cause clear should be done by the bridge irqchip driver, so
+>     it's fine to remove it from the watchdog driver and instead request the
+>     interrupt.
+> 
+>     However, there are still a few platforms (orion5x, and legacy
+>     kirkwood/dove) that doesn't have this bridge irqchip support enabled.
+>     On these platforms the bridge cause clear is simply *not* done.
+> 
+>     If we are paranoid about this, maybe we can simply add the clear on each
+>     mach-xxx/irq.c, together with the other irq is initialization.
+> 
+> Once again, thanks to everyone who helped reviewing this.
+> 
+> Ezequiel Garcia (20):
+>   ARM: Introduce atomic MMIO modify
+>   clocksource: orion: Use atomic access for shared registers
+>   watchdog: orion: Add clock error handling
+>   watchdog: orion: Use atomic access for shared registers
+>   watchdog: orion: Remove unused macros
+>   watchdog: orion: Make sure the watchdog is initially stopped
+>   watchdog: orion: Handle the interrupt so it's properly acked
+>   watchdog: orion: Make RSTOUT register a separate resource
+>   watchdog: orion: Remove unneeded BRIDGE_CAUSE clear
+>   watchdog: orion: Introduce an orion_watchdog device structure
+>   watchdog: orion: Introduce per-compatible of_device_id data
+>   watchdog: orion: Add per-compatible clock initialization
+>   watchdog: orion: Add per-compatible watchdog start implementation
+>   watchdog: orion: Add support for Armada 370 and Armada XP SoC
+>   ARM: mvebu: Enable Armada 370/XP watchdog in the devicetree
+>   ARM: kirkwood: Add RSTOUT 'reg' entry to devicetree
+>   ARM: dove: Enable Dove watchdog in the devicetree
+>   watchdog: orion: Enable the build on ARCH_MVEBU
+>   ARM: mvebu: Enable watchdog support in defconfig
+>   ARM: dove: Enable watchdog support in the defconfig
+> 
+>  .../devicetree/bindings/watchdog/marvel.txt        |   8 +-
+>  arch/arm/boot/dts/armada-370-xp.dtsi               |   4 +
+>  arch/arm/boot/dts/armada-370.dtsi                  |   5 +
+>  arch/arm/boot/dts/armada-xp.dtsi                   |   6 +
+>  arch/arm/boot/dts/dove.dtsi                        |   8 +
+>  arch/arm/boot/dts/kirkwood.dtsi                    |   2 +-
+>  arch/arm/configs/dove_defconfig                    |   2 +
+>  arch/arm/configs/mvebu_defconfig                   |   2 +
+>  arch/arm/include/asm/io.h                          |   6 +
+>  arch/arm/kernel/io.c                               |  35 ++
+>  arch/arm/mach-dove/include/mach/bridge-regs.h      |   1 +
+>  arch/arm/mach-kirkwood/include/mach/bridge-regs.h  |   1 +
+>  arch/arm/mach-mv78xx0/include/mach/bridge-regs.h   |   1 +
+>  arch/arm/mach-orion5x/include/mach/bridge-regs.h   |   1 +
+>  arch/arm/plat-orion/common.c                       |  10 +-
+>  drivers/clocksource/time-orion.c                   |  28 +-
+>  drivers/watchdog/Kconfig                           |   2 +-
+>  drivers/watchdog/orion_wdt.c                       | 369 ++++++++++++++++-----
+>  18 files changed, 383 insertions(+), 108 deletions(-)
+> 
+> -- 
+> 1.8.1.5
+> 
