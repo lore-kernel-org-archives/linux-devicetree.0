@@ -1,99 +1,55 @@
-From: Srikanth Thokala <sthokal@xilinx.com>
-Subject: Re: [PATCH v2] dma: Add Xilinx AXI Video Direct Memory Access Engine
- driver support
-Date: Mon, 27 Jan 2014 18:42:36 +0530
-Message-ID: <CA+mB=1JvnTcyRnuvdnW1BCeiMLSTMrrAbKwVKgwFUmWrVuXzSw@mail.gmail.com>
-References: <1390409565-4200-1-git-send-email-sthokal@xilinx.com>
-	<1390409565-4200-2-git-send-email-sthokal@xilinx.com>
-	<52E0FC22.8060903@metafoo.de>
-	<CA+mB=1L6yvCwA3mKCwz83LQbXiVau110REV64rYrSzUhGE4ucA@mail.gmail.com>
-	<52E2698B.6070001@metafoo.de>
-	<20140126135933.GD10628@intel.com>
-	<52E54849.2000208@metafoo.de>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: Re: [PATCH 1/8] pci-rcar-gen2: add of match table
+Date: Mon, 27 Jan 2014 13:27:09 +0000
+Message-ID: <52E65EAD.9000909@codethink.co.uk>
+References: <1390754945-28142-1-git-send-email-ben.dooks@codethink.co.uk> <1390754945-28142-2-git-send-email-ben.dooks@codethink.co.uk> <52E6559D.6090708@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <52E54849.2000208@metafoo.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Vinod Koul <vinod.koul@intel.com>, Srikanth Thokala <sthokal@xilinx.com>, dan.j.williams@intel.com, michal.simek@xilinx.com, Grant Likely <grant.likely@linaro.org>, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <52E6559D.6090708@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-kernel@lists.codethink.co.uk, Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lars/Vinod,
-
-On Sun, Jan 26, 2014 at 11:09 PM, Lars-Peter Clausen <lars@metafoo.de> wrote:
-> On 01/26/2014 02:59 PM, Vinod Koul wrote:
->> On Fri, Jan 24, 2014 at 02:24:27PM +0100, Lars-Peter Clausen wrote:
->>> On 01/24/2014 12:16 PM, Srikanth Thokala wrote:
->>>> Hi Lars,
->>>>
->>>> On Thu, Jan 23, 2014 at 4:55 PM, Lars-Peter Clausen <lars@metafoo.de> wrote:
->>>>> On 01/22/2014 05:52 PM, Srikanth Thokala wrote:
->>>>> [...]
->>>>>> +/**
->>>>>> + * xilinx_vdma_device_control - Configure DMA channel of the device
->>>>>> + * @dchan: DMA Channel pointer
->>>>>> + * @cmd: DMA control command
->>>>>> + * @arg: Channel configuration
->>>>>> + *
->>>>>> + * Return: '0' on success and failure value on error
->>>>>> + */
->>>>>> +static int xilinx_vdma_device_control(struct dma_chan *dchan,
->>>>>> +                                   enum dma_ctrl_cmd cmd, unsigned long arg)
->>>>>> +{
->>>>>> +     struct xilinx_vdma_chan *chan = to_xilinx_chan(dchan);
->>>>>> +
->>>>>> +     switch (cmd) {
->>>>>> +     case DMA_TERMINATE_ALL:
->>>>>> +             xilinx_vdma_terminate_all(chan);
->>>>>> +             return 0;
->>>>>> +     case DMA_SLAVE_CONFIG:
->>>>>> +             return xilinx_vdma_slave_config(chan,
->>>>>> +                                     (struct xilinx_vdma_config *)arg);
->>>>>
->>>>> You really shouldn't be overloading the generic API with your own semantics.
->>>>> DMA_SLAVE_CONFIG should take a dma_slave_config and nothing else.
->>>>
->>>> Ok.  The driver needs few additional configuration from the slave
->>>> device like Vertical
->>>> Size, Horizontal Size,  Stride etc., for the DMA transfers, in that case do you
->>>> suggest me to define a separate dma_ctrl_cmd like the one FSLDMA_EXTERNAL_START
->>>> defined for Freescale drivers?
->>>
->>> In my opinion it is not a good idea to have driver implement a generic API,
->>> but at the same time let the driver have custom semantics for those API
->>> calls. It's a bit like having a gpio driver that expects 23 and 42 as the
->>> values passed to gpio_set_value instead of 0 and 1. It completely defeats
->>> the purpose of a generic API, namely that you are able to write generic code
->>> that makes use of the API without having to know about which implementation
->>> API it is talking to. The dmaengine framework provides the
->>> dmaengine_prep_interleaved_dma() function to setup two dimensional
->>> transfers, e.g. take a look at sirf-dma.c or imx-dma.c.
+On 27/01/14 12:48, Sergei Shtylyov wrote:
+> Hello.
+>
+> On 26-01-2014 20:48, Ben Dooks wrote:
+>
+>> Add OF match table for pci-rcar-gen2 driver for device tree support.
+>
+>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>> ---
+>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> Cc: Simon Horman <horms@verge.net.au>
+>> Cc: linux-pci@vger.kernel.org
+>> Cc: linux-sh@vger.kernel.org
+>> Cc: devicetree@vger.kernel.org
+>> ---
+>>   drivers/pci/host/pci-rcar-gen2.c | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>
+>> diff --git a/drivers/pci/host/pci-rcar-gen2.c
+>> b/drivers/pci/host/pci-rcar-gen2.c
+>> index ceec147..ea65bac 100644
+>> --- a/drivers/pci/host/pci-rcar-gen2.c
+>> +++ b/drivers/pci/host/pci-rcar-gen2.c
+>> @@ -311,9 +311,17 @@ static int __init rcar_pci_probe(struct
+>> platform_device *pdev)
+>>       return rcar_pci_add_controller(priv);
+>>   }
 >>
->> The question here i think would be waht this device supports? Is the hardware
->> capable of doing interleaved transfers, then would make sense.
+>> +static struct of_device_id rcar_pci_of_match[] = {
+>> +    { .compatible = "renesas,pci-r8a7790", },
 >
-> The hardware does 2D transfers. The parameters for a transfer are height,
-> width and stride. That's only a subset of what interleaved transfers can be
-> (xt->num_frames must be one for 2d transfers). But if I remember correctly
-> there has been some discussion on this in the past and the result of that
-> discussion was that using interleaved transfers for 2D transfers is
-> preferred over adding a custom API for 2D transfers.
+>     Why only H2 SoC, if the driver is for both Gen2 SoCs?
 
-I went through the prep_interleaved_dma API and I see only one descriptor
-is prepared per API call (i.e. per frame).  As our IP supports upto 16 frame
-buffers (can be more in future), isn't it less efficient compared to the
-prep_slave_sg where we get a single sg list and can prepare all the descriptors
-(of non-contiguous buffers) in one go?  Correct me, if am wrong and let me
-know your opinions.
+I can add a "renesas,pci-rcar-gen2" as a fallback match however
+I've not got anything other than an r8a7790 to test on. Also the
+compatible properties are preferably named after the soc.
 
-Srikanth
-
->
-> - Lars
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
