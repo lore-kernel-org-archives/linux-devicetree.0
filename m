@@ -1,86 +1,54 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] net: ethoc: document OF bindings
-Date: Mon, 27 Jan 2014 11:45:45 -0800
-Message-ID: <CAGVrzcb4Y8zu6Q24-0d-uKppGE=HrvEXPUD2-Mo8r5JC80nDSw@mail.gmail.com>
-References: <1390795167-6677-1-git-send-email-jcmvbkbc@gmail.com>
- <1390795167-6677-4-git-send-email-jcmvbkbc@gmail.com> <CAL_JsqLjn4FXrNGLGHs639TEqmQKPx_kk9JbAd-hn7mexzAjNg@mail.gmail.com>
- <CAMo8BfKm_rzDDs9BpfQkaew9DP9T8y0RnjzT_1gzs9Xrbx2CLA@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 13/14] spi: rspi: Add DT support
+Date: Mon, 27 Jan 2014 20:11:21 +0000
+Message-ID: <20140127201121.GO11841@sirena.org.uk>
+References: <1390553044-11860-1-git-send-email-geert@linux-m68k.org>
+ <1390553044-11860-14-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMo8BfKm_rzDDs9BpfQkaew9DP9T8y0RnjzT_1gzs9Xrbx2CLA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org" <linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Zankel <chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org>, Marc Gauthier <marc-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mgiPvHqStUXOBTSF"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1390553044-11860-14-git-send-email-geert@linux-m68k.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-spi@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2014-01-27 Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> Hi Rob,
->
-> On Mon, Jan 27, 2014 at 6:10 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Sun, Jan 26, 2014 at 9:59 PM, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> Signed-off-by: Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> ---
->>>  .../devicetree/bindings/net/opencores-ethoc.txt    | 25 ++++++++++++++++++++++
->>>  1 file changed, 25 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/net/opencores-ethoc.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/opencores-ethoc.txt b/Documentation/devicetree/bindings/net/opencores-ethoc.txt
->>> new file mode 100644
->>> index 0000000..f7c6c94
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/net/opencores-ethoc.txt
->>> @@ -0,0 +1,25 @@
->>> +* OpenCores MAC 10/100 Mbps
->>> +
->>> +Required properties:
->>> +- compatible: Should be "opencores,ethoc".
->>
->> There are not different versions of IP or is the version probeable?
->
-> AFAIK there's single version of this 10/100 MAC.
-> It doesn't have any identification registers.
 
-Since this is an IP block that people can modify due to its open
-source nature, it would have been good to define a revision register
-or such which would allow software to gate specific code based on that
-revision.
->
->>> +- reg: Address and length of the register set for the device and of its
->>> +  descriptor memory.
->>> +- interrupts: Should contain ethoc interrupt.
->>> +
->>> +Optional properties:
->>> +- local-mac-address: 6 bytes, mac address
->>
->> There's a patch in progress to move all the standard network
->> properties to a common location, so you can remove this.
->
-> Will do.
->
->>> +- clock-frequency: basic MAC frequency.
->>> +- mii-mgmt-clock-frequency: frequency of MII management bus. Together
->>> +  with clock-frequency determines the value programmed into the CLKDIV
->>> +  field of MIIMODER register.
->>> +
->>> +Examples:
->>> +
->>> +       enet0: ethoc@fd030000 {
->>> +               compatible = "opencores,ethoc";
->>> +               reg = <0xfd030000 0x4000 0xfd800000 0x4000>;
->>> +               interrupts = <1>;
->>> +               local-mac-address = [00 50 c2 13 6f 00];
->>> +               clock-frequency = <50000000>;
->>> +               mii-mgmt-clock-frequency = <5000000>;
+--mgiPvHqStUXOBTSF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-5Mhz management clock? Can't you make it work with the standard 2.5Mhz
-management clock? Is not there a risk not to be able to "talk" to some
-PHY chips out there which do not support > 2.5Mhz management clock?
+On Fri, Jan 24, 2014 at 09:44:03AM +0100, Geert Uytterhoeven wrote:
+> From: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
+>=20
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
+> Cc: devicetree@vger.kernel.org
 
-Since this is an ethoc specific property, should it be prefixed with "ethoc,"?
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This looks good modulo Mark's comment on the binding document.
+
+--mgiPvHqStUXOBTSF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS5r1mAAoJELSic+t+oim9LUIP/0bIGdCuE/AcP9uw7WR39WuR
+YSwZY2QjijQ19m2tj3WN/oEtSkwZoIxmjUECl3bxBOzvaKUSCqXFZka4hTrHYT7p
+yLhNQsTzLpI/yBud3gkqmbTuq5lwSKNFBv4EMYborzsbbkMFPF8rsZkpeCEixo45
+2zOOE+lfNeK0mccxdKdSp4Jtrue3zzWFHgWUbmEAZFz3XmqKXs0XDCMAvKDnXq8z
+eUk+cyPqOf3mpKh8UBoj+nL74H6ynTNOCEW/p4T9C0kKRM+R3heUdG3OrDLniy8n
+c4vy1EbIixL3IyGE+wWbtoTb2a3QEfwhlOA1AHI1pX9C1uAtDBESISz3E+a5nCwW
+5PUZtHhL59uc1TExNRlll3g6vKSkOuFFqnP4c2lraRlOpGaDdBLfZD+VQoPg1GKQ
+ez2FTAto+H0hbeazRIY+B+IGbn5mS6Kaun/rKORKTjJSPAExjNkinTI1aYta9R5N
+ZROfdJ3zNKGWihXSQJyhaG/vTTOiFBnkDVM7aGh389bTA4J9R8pCIRPTbXu+zwKQ
+5F37V9H9TBRpxQy3Md58YrJT96QOHKuiEbxvUnXaeLo0BW+7PKJE3SskAx4EwqrW
+vOnOg5Po9eLsZe4htOYuWRIJr4TRmKKkszHxZfCgZbwNk0g4rYhaD5igzpHJsXnb
+8KvuykUFpwOcZQoOjJPN
+=QbZm
+-----END PGP SIGNATURE-----
+
+--mgiPvHqStUXOBTSF--
