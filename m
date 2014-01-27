@@ -1,37 +1,65 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
 Subject: Re: [PATCH 3/4] ASoC: tda998x: add DT documentation
-Date: Mon, 27 Jan 2014 20:45:34 +0000
-Message-ID: <20140127204534.GB15937@n2100.arm.linux.org.uk>
-References: <cover.1390813480.git.moinejf@free.fr> <22fafd7e11771ffc25c84ff609d18039f07b7295.1390813481.git.moinejf@free.fr> <20140127204302.GY11841@sirena.org.uk>
+Date: Mon, 27 Jan 2014 20:56:27 +0000
+Message-ID: <20140127205627.GD11841@sirena.org.uk>
+References: <cover.1390813480.git.moinejf@free.fr>
+ <22fafd7e11771ffc25c84ff609d18039f07b7295.1390813481.git.moinejf@free.fr>
+ <20140127204302.GY11841@sirena.org.uk>
+ <20140127204534.GB15937@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="9KMRXrBaLD3S8C0H"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140127204302.GY11841-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20140127204534.GB15937@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Jean-Francois Moine <moinejf@free.fr>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Dave Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 27, 2014 at 08:43:02PM +0000, Mark Brown wrote:
-> On Mon, Jan 27, 2014 at 09:34:49AM +0100, Jean-Francois Moine wrote:
-> 
-> > +	- compatible: must be "nxp,tda998x-codec".
-> > +	- audio-ports: one or two values.
-> > +		The first value defines the I2S input port.
-> > +		The second one, if present, defines the S/PDIF input port.
-> 
-> I take it these are port numbers on the device and it's not possible to
-> do something like having multiple I2S ports?
 
-You can feed it with multiple synchronised I2S streams for the additional
-channels.
+--9KMRXrBaLD3S8C0H
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-FTTC broadband for 0.8mile line: 5.8Mbps down 500kbps up.  Estimation
-in database were 13.1 to 19Mbit for a good line, about 7.5+ for a bad.
-Estimate before purchase was "up to 13.2Mbit".
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, Jan 27, 2014 at 08:45:34PM +0000, Russell King - ARM Linux wrote:
+> On Mon, Jan 27, 2014 at 08:43:02PM +0000, Mark Brown wrote:
+> > On Mon, Jan 27, 2014 at 09:34:49AM +0100, Jean-Francois Moine wrote:
+
+> > > +	- audio-ports: one or two values.
+> > > +		The first value defines the I2S input port.
+> > > +		The second one, if present, defines the S/PDIF input port.
+
+> > I take it these are port numbers on the device and it's not possible to
+> > do something like having multiple I2S ports?
+
+> You can feed it with multiple synchronised I2S streams for the additional
+> channels.
+
+Ah, I feared as much.  The bindings ought to take account of that
+posibility even if the code can't use additional ports yet.  Perhaps
+separate properties for I2S and S/PDIF?
+
+--9KMRXrBaLD3S8C0H
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS5sf4AAoJELSic+t+oim9l+AQAJwZVDa/OoV3JumAi8CZgoT0
+rULrwoP9ZkIrI/IdV+YcygDtzE998ulCownvZTSSD1kYPrEafgWKQtPlZzffTX+t
+rcINMh0c5J2QTouy7dkCrRsDYJ9YQhiReWuE6PS8fy6GMo4EjI1yTiFydfZ3HLKo
+heLHLXzm9+J07dsqqAxe3IlRsgDCUvEewgbwz9M0rUCPH3ENPQw8VjXYSWAdPmpO
+8Zqq05YInnd5DSLWPd9mxTjF8QW0Nf+cA4PAVS9wvr7B4grSvT8w55g4LzQIUapo
+nkAa4KqT1wHz+ojKcKGH+nujb2TSkZmcsPnzVjAG469kPnDwUrs40x0LvpcteKg2
+cesfi98228Bay33jM5f/xcAD4jT7/LUSq7s4uRKVZS+PLA83ysoQ348sci9TxbaA
+3oTo74DvZMuDyEfKBAWk5WyfCicRmAst7b+GjfdKXxst9u0YoKagEVDyI85Pf1bn
+0/dJIJL+/+XcE3Ghq2JlK2pNBObi/4BBMO/HeV0CVzAA+TzZES8jsGMcex0LW3Lm
+JVZDTWB5O72cZtF72cEsrip78VrShXJB/mBRqEzl7iPOeiwwjS9WR8Bb9KL3M/vW
+wk23+0+3hsFb1S3k9wZuXhnC/kVYSRYM0TkW54dgd7kT4P6jfQDmRHcNHAZQBSNh
+bnAqTJQLt8+VNUkc8JSY
+=niaY
+-----END PGP SIGNATURE-----
+
+--9KMRXrBaLD3S8C0H--
