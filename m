@@ -1,29 +1,47 @@
-From: Antti P Miettinen <ananaza@iki.fi>
-Subject: Re: [PATCH RFC v2 2/2] Documentation: arm: define DT C-states
- bindings
-Date: Mon, 27 Jan 2014 14:48:15 +0200 (EET)
-Message-ID: <20140127.144815.1048814583962628826.apm@brigitte.kvy.fi>
-References: <1390240079-6495-3-git-send-email-lorenzo.pieralisi@arm.com>
-	<20140125.101546.1134862463481697494.apm@brigitte.kvy.fi>
-	<20140127114125.GD16639@e102568-lin.cambridge.arm.com>
-Reply-To: ananaza@iki.fi
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 1/8] pci-rcar-gen2: add of match table
+Date: Mon, 27 Jan 2014 16:48:29 +0400
+Message-ID: <52E6559D.6090708@cogentembedded.com>
+References: <1390754945-28142-1-git-send-email-ben.dooks@codethink.co.uk> <1390754945-28142-2-git-send-email-ben.dooks@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140127114125.GD16639@e102568-lin.cambridge.arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: lorenzo.pieralisi@arm.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Dave.Martin@arm.com, Mark.Rutland@arm.com, Sudeep.Holla@arm.com, Charles.Garcia-Tobin@arm.com, nico@linaro.org, robh+dt@kernel.org, pdeschrijver@nvidia.com, grant.likely@linaro.org, galak@codeaurora.org, santosh.shilimkar@ti.com, mark.hambleton@broadcom.com, hanjun.guo@linaro.org, daniel.lezcano@linaro.org, amit.kucheria@linaro.org, vincent.guittot@linaro.org, sboyd@codeaurora.org, t.figa@samsung.com, khilman@linaro.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1390754945-28142-2-git-send-email-ben.dooks@codethink.co.uk>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ben Dooks <ben.dooks@codethink.co.uk>, linux-kernel@lists.codethink.co.uk
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> That's why I defined the worst case. How did you implemented it in your
-> idle drivers ? That would help generalize it, after all these bindings
-> are there to simplify drivers upstreaming, feedback welcome.
+Hello.
 
-Currently we do not handle this well downstream either. The problem
-with worst case is that the absolute worst case can be really bad and
-probability of it might be very low. Sorry - no ready answer :-)
+On 26-01-2014 20:48, Ben Dooks wrote:
 
-	--Antti
+> Add OF match table for pci-rcar-gen2 driver for device tree support.
+
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> ---
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Simon Horman <horms@verge.net.au>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-sh@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> ---
+>   drivers/pci/host/pci-rcar-gen2.c | 8 ++++++++
+>   1 file changed, 8 insertions(+)
+
+> diff --git a/drivers/pci/host/pci-rcar-gen2.c b/drivers/pci/host/pci-rcar-gen2.c
+> index ceec147..ea65bac 100644
+> --- a/drivers/pci/host/pci-rcar-gen2.c
+> +++ b/drivers/pci/host/pci-rcar-gen2.c
+> @@ -311,9 +311,17 @@ static int __init rcar_pci_probe(struct platform_device *pdev)
+>   	return rcar_pci_add_controller(priv);
+>   }
+>
+> +static struct of_device_id rcar_pci_of_match[] = {
+> +	{ .compatible = "renesas,pci-r8a7790", },
+
+    Why only H2 SoC, if the driver is for both Gen2 SoCs?
+
+WBR, Sergei
+
