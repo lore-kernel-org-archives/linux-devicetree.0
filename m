@@ -1,66 +1,51 @@
-From: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 1/2] usb: dwc3: core: continue probing if usb phy library
- returns -ENODEV/-ENXIO
-Date: Mon, 27 Jan 2014 17:08:55 +0200
-Message-ID: <20140127150855.GA17928@xps8300>
-References: <1385373690-12170-1-git-send-email-kishon@ti.com>
- <1390299099-14764-1-git-send-email-kishon@ti.com>
- <20140121144725.GF30451@saruman.home>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 1/9] ARM: dts: imx6qdl: remove the use of pingrp macros
+Date: Mon, 27 Jan 2014 15:16:39 +0000
+Message-ID: <20140127151638.GN15937@n2100.arm.linux.org.uk>
+References: <1390668191-20289-1-git-send-email-shawn.guo@linaro.org> <1390668191-20289-2-git-send-email-shawn.guo@linaro.org> <20140127143745.GM15937@n2100.arm.linux.org.uk> <20140127150509.GD4765@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140121144725.GF30451-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
+In-Reply-To: <20140127150509.GD4765-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, george.cherian-l0cyMroinI0@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe,
-
-On Tue, Jan 21, 2014 at 08:47:25AM -0600, Felipe Balbi wrote:
-> On Tue, Jan 21, 2014 at 03:41:38PM +0530, Kishon Vijay Abraham I wrote:
-> > Since PHYs for dwc3 is optional (not all SoCs that have DWC3 use PHYs),
-> > do not return from probe if the USB PHY library returns -ENODEV as that
+On Mon, Jan 27, 2014 at 11:05:11PM +0800, Shawn Guo wrote:
+> On Mon, Jan 27, 2014 at 02:37:45PM +0000, Russell King - ARM Linux wrote:
+> > On Sun, Jan 26, 2014 at 12:43:03AM +0800, Shawn Guo wrote:
+> > >  arch/arm/boot/dts/imx6dl-hummingboard.dts  |    5 +-
+> > >  arch/arm/boot/dts/imx6qdl-microsom.dtsi    |    5 +-
+> > 
+> > I've merged your changes here into my local copy of these just to reduce
+> > the conflicts - unfortunately, it's taken soo long to deal with the above
+> > that the cubox-i has now been released, which has prompted some
+> > reorganisation between the above two files.
+> > 
+> > I would much rather you dropped these two entirely, and let me push them
+> > upstream, rather than having some nasty conflicts which result from this.
 > 
-> this isn't correct, they all have PHYs, some of them might not be
-> controllable.
-> 
-> > indicates the platform does not have PHY.
-> 
-> not really, that indicates the current platform tried to grab a PHY and
-> the PHY doesn't exist. If there's anybody with a non-controllable PHY
-> and someone gives me a really good reason for not using the generic
-> no-op PHY, then we should add a flag and we could:
-> 
-> 	if (!likely(dwc->flags & DWC3_USB2PHY_DRIVER_NOT_NEEDED))
-> 		dwc3_grab_phys(dwc);
+> So you're basically asking me to drop patch [1] from imx/dt branch (tag
+> imx-dt-3.14), which I have sent to Olof for 3.14 inclusion.  Yes, I
+> still hope Olof can pull it with this turn-around series applied on top.
+> So please let's wait for Olof's word to see if we can make it.  If it's
+> still a NO for some reason, I will be certainly fine with you pushing
+> hummingboard stuff upstream, and will drop it from my tree.
 
-Why would you need to know if the PHY drivers are needed or not
-explicitly in your controller driver?
+My point is that the DT files I _now_ have are quite different in
+organisation to the ones I submitted to you, so there's going to be
+conflicts if your version goes in.
 
-> But I really want to see the argument against using no-op. As far as I
-> could see, everybody needs a PHY driver one way or another, some
-> platforms just haven't sent any PHY driver upstream and have their own
-> hacked up solution to avoid using the PHY layer.
-
-Not true in our case. Platforms using Intel's SoCs and chip sets may
-or may not have controllable USB PHY. Quite often they don't. The
-Baytrails have usually ULPI PHY for USB2, but that does not mean they
-provide any vendor specific functions or any need for a driver in any
-case.
-
-Are we talking about the old USB PHY library or the new PHY framework
-with the no-op PHY driver?
-
-Well, in any case, I don't understand what is the purpose of the no-op
-PHY driver. What are you drying to achieve with that?
-
-
-Thanks,
+Moreover, I don't want the old ones in 3.14 as-is, because I don't want
+declarations which should not have been in the microsom file but in the
+hummingboard file being in a final release of the mainline kernel.
 
 -- 
-heikki
+FTTC broadband for 0.8mile line: 5.8Mbps down 500kbps up.  Estimation
+in database were 13.1 to 19Mbit for a good line, about 7.5+ for a bad.
+Estimate before purchase was "up to 13.2Mbit".
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
