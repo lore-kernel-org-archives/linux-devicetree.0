@@ -1,88 +1,70 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 2/9] ARM: dts: imx6sl: remove the use of pingrp macros
-Date: Tue, 28 Jan 2014 11:17:22 +0100
-Message-ID: <5923680.sl3G3EgCsY@phil>
-References: <1390668191-20289-1-git-send-email-shawn.guo@linaro.org> <1390668191-20289-3-git-send-email-shawn.guo@linaro.org>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 14/20] watchdog: orion: Add support for Armada 370 and
+ Armada XP SoC
+Date: Tue, 28 Jan 2014 07:27:50 -0300
+Message-ID: <20140128102750.GA13052@localhost>
+References: <1390836440-12744-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1390836440-12744-15-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20140127173624.GT15937@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1390668191-20289-3-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140127173624.GT15937-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+On Mon, Jan 27, 2014 at 05:36:24PM +0000, Russell King - ARM Linux wrot=
+e:
+[..]
+> > +static int armadaxp_wdt_clock_init(struct platform_device *pdev,
+> > +				   struct orion_watchdog *dev)
+> > +{
+> > +	int ret;
+> > +
+> > +	dev->clk =3D of_clk_get_by_name(pdev->dev.of_node, "fixed");
+> > +	if (IS_ERR(dev->clk))
+> > +		return PTR_ERR(dev->clk);
+> > +	ret =3D clk_prepare_enable(dev->clk);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	/* Enable the fixed watchdog clock input */
+> > +	atomic_io_modify(dev->reg + TIMER_CTRL,
+> > +			 WDT_AXP_FIXED_ENABLE_BIT,
+> > +			 WDT_AXP_FIXED_ENABLE_BIT);
+> > +
+> > +	dev->clk_rate =3D clk_get_rate(dev->clk);
+> > +	return 0;
+> > +}
+>=20
+> Doesn't this result in dev->clk being leaked?  Or at least a differen=
+ce
+> in the way dev->clk needs to be cleaned up between these two function=
+s?
+>=20
 
-On Sunday, 26. January 2014 00:43:04 Shawn Guo wrote:
-> We created the pingrp macros in imx6sl-pingrp.h for purpose of less LOC
-> when same pin group is used by multiple boards.  However, DT maintainers
-> take it as an abuse of DTC macro support.  So let's get rid of it to
-> make the pins used by given device more intuitive.
-> 
-> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx6sl-evk.dts  |  120 ++++++++++++++++++++++++++----
->  arch/arm/boot/dts/imx6sl-pingrp.h |  148
-> ------------------------------------- arch/arm/boot/dts/imx6sl.dtsi     |  
->  1 -
->  3 files changed, 107 insertions(+), 162 deletions(-)
->  delete mode 100644 arch/arm/boot/dts/imx6sl-pingrp.h
-> 
-> diff --git a/arch/arm/boot/dts/imx6sl-evk.dts
-> b/arch/arm/boot/dts/imx6sl-evk.dts index f5e4513..8594d13 100644
-> --- a/arch/arm/boot/dts/imx6sl-evk.dts
-> +++ b/arch/arm/boot/dts/imx6sl-evk.dts
-> @@ -86,55 +86,149 @@
->  		};
-> 
->  		pinctrl_ecspi1: ecspi1grp {
-> -			fsl,pins = <MX6SL_ECSPI1_PINGRP1>;
-> +			fsl,pins = <
-> +				MX6SL_PAD_ECSPI1_MISO__ECSPI1_MISO	0x100b1
-> +				MX6SL_PAD_ECSPI1_MOSI__ECSPI1_MOSI	0x100b1
-> +				MX6SL_PAD_ECSPI1_SCLK__ECSPI1_SCLK	0x100b1
-> +			>;
->  		};
-> 
->  		pinctrl_fec: fecgrp {
-> -			fsl,pins = <MX6SL_FEC_PINGRP1>;
-> +			fsl,pins = <
-> +				MX6SL_PAD_FEC_MDC__FEC_MDC		0x1b0b0
-> +				MX6SL_PAD_FEC_MDIO__FEC_MDIO		0x1b0b0
-> +				MX6SL_PAD_FEC_CRS_DV__FEC_RX_DV		0x1b0b0
-> +				MX6SL_PAD_FEC_RXD0__FEC_RX_DATA0	0x1b0b0
-> +				MX6SL_PAD_FEC_RXD1__FEC_RX_DATA1	0x1b0b0
-> +				MX6SL_PAD_FEC_TX_EN__FEC_TX_EN		0x1b0b0
-> +				MX6SL_PAD_FEC_TXD0__FEC_TX_DATA0	0x1b0b0
-> +				MX6SL_PAD_FEC_TXD1__FEC_TX_DATA1	0x1b0b0
-> +				MX6SL_PAD_FEC_REF_CLK__FEC_REF_OUT	0x4001b0a8
-> +			>;
->  		};
+Yes, indeed.
 
-[... and so on for the other groups ... ]
+> I think it would be better in this case to use the standard clk_get()=
+ in
+> the first function and always use clk_put()... until there is a devm_=
+*
+> version of the of_clk_get* functions.
+>=20
 
-I'm confused now :-) . Current linux-next [0] shows the pin-settings as part 
-of imx6sl.dtsi - a way a lot of other architectures organize their pingroups 
-too, with the board file only referencing the relevant pingroups from the 
-predefined ones of the soc.
+Sound good.
 
-So I guess your move to the pingrp-header moved them out of the imx6sl.dtsi to 
-the .h and is not part of linux-next; but this patch (and the others in this 
-series) now moves the definitions into the individual board files. Can't you 
-just move them back to the soc-dtsi files to prevent each board duplicating 
-them?
-
-Or I've simply missed previous discussions about this ;-) .
-
-
-Thanks
-Heiko
-
-[0] https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree/arch/arm/boot/dts/imx6sl.dtsi#n640
-
+Thanks,
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
