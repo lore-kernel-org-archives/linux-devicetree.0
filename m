@@ -1,98 +1,79 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH v2 02/21] devicetree: bindings: update MVEBU pinctrl binding documentation
-Date: Tue, 28 Jan 2014 01:39:14 +0100
-Message-ID: <1390869573-27624-3-git-send-email-sebastian.hesselbarth@gmail.com>
-References: <1390674856-4993-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1390869573-27624-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1390869573-27624-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [RFC PATCH V2 1/4] pci: APM X-Gene PCIe controller driver
+Date: Mon, 27 Jan 2014 17:55:25 -0700
+Message-ID: <CAErSpo5zMd_k407tvzPS85Nub9p2KMQnHJLTqd3eyvjdgfVtLg@mail.gmail.com>
+References: <1389742458-7693-1-git-send-email-tinamdar@apm.com>
+ <CACoXjc=ZT9fEm_KdY4WFSoS8n5FmO+hn9LjsR4m8YZG2iBbt5A@mail.gmail.com>
+ <CACoXjc=-JtpiM3m4DSA_DeOxYr3sihGGf4FSaJ2yC08rpm6ANQ@mail.gmail.com> <5086198.ZOWZ5xuyna@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <5086198.ZOWZ5xuyna@wuerfel>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jon Masters <jcm@redhat.com>, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, patches <patches@apm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Dove pinctrl binding now requires three different reg properties. This
-updates corresponding binding and example accordingly. While at it, also
-document reg property as required for the other MVEBU SoC pinctrl nodes.
+We're only seeing Arnd's side of the conversation on linux-pci.
+Tanmay, are your messages being rejected because they're too "fancy",
+per the definition here: http://vger.kernel.org/majordomo-info.html ?
 
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
----
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Gregory Clement <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- .../devicetree/bindings/pinctrl/marvell,armada-370-pinctrl.txt          | 1 +
- Documentation/devicetree/bindings/pinctrl/marvell,armada-xp-pinctrl.txt | 1 +
- Documentation/devicetree/bindings/pinctrl/marvell,dove-pinctrl.txt      | 1 +
- Documentation/devicetree/bindings/pinctrl/marvell,kirkwood-pinctrl.txt  | 1 +
- Documentation/devicetree/bindings/pinctrl/marvell,mvebu-pinctrl.txt     | 2 +-
- 5 files changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/marvell,armada-370-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/marvell,armada-370-pinctrl.txt
-index 01ef408e205f..adda2a8d1d52 100644
---- a/Documentation/devicetree/bindings/pinctrl/marvell,armada-370-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/marvell,armada-370-pinctrl.txt
-@@ -5,6 +5,7 @@ part and usage.
- 
- Required properties:
- - compatible: "marvell,88f6710-pinctrl"
-+- reg: register specifier of MPP registers
- 
- Available mpp pins/groups and functions:
- Note: brackets (x) are not part of the mpp name for marvell,function and given
-diff --git a/Documentation/devicetree/bindings/pinctrl/marvell,armada-xp-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/marvell,armada-xp-pinctrl.txt
-index bfa0a2e5e0cb..373dbccd7ab0 100644
---- a/Documentation/devicetree/bindings/pinctrl/marvell,armada-xp-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/marvell,armada-xp-pinctrl.txt
-@@ -6,6 +6,7 @@ part and usage.
- Required properties:
- - compatible: "marvell,mv78230-pinctrl", "marvell,mv78260-pinctrl",
-               "marvell,mv78460-pinctrl"
-+- reg: register specifier of MPP registers
- 
- This driver supports all Armada XP variants, i.e. mv78230, mv78260, and mv78460.
- 
-diff --git a/Documentation/devicetree/bindings/pinctrl/marvell,dove-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/marvell,dove-pinctrl.txt
-index 50ec3512a292..cf52477cc7ee 100644
---- a/Documentation/devicetree/bindings/pinctrl/marvell,dove-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/marvell,dove-pinctrl.txt
-@@ -6,6 +6,7 @@ part and usage.
- Required properties:
- - compatible: "marvell,dove-pinctrl"
- - clocks: (optional) phandle of pdma clock
-+- reg: register specifiers of MPP, MPP4, and PMU MPP registers
- 
- Available mpp pins/groups and functions:
- Note: brackets (x) are not part of the mpp name for marvell,function and given
-diff --git a/Documentation/devicetree/bindings/pinctrl/marvell,kirkwood-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/marvell,kirkwood-pinctrl.txt
-index 95daf6335c37..730444a9a4de 100644
---- a/Documentation/devicetree/bindings/pinctrl/marvell,kirkwood-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/marvell,kirkwood-pinctrl.txt
-@@ -8,6 +8,7 @@ Required properties:
-               "marvell,88f6190-pinctrl", "marvell,88f6192-pinctrl",
-               "marvell,88f6281-pinctrl", "marvell,88f6282-pinctrl"
-               "marvell,98dx4122-pinctrl"
-+- reg: register specifier of MPP registers
- 
- This driver supports all kirkwood variants, i.e. 88f6180, 88f619x, and 88f628x.
- It also support the 88f6281-based variant in the 98dx412x Bobcat SoCs.
-diff --git a/Documentation/devicetree/bindings/pinctrl/marvell,mvebu-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/marvell,mvebu-pinctrl.txt
-index 0a26c3aa4e6d..0c09f4eb2af0 100644
---- a/Documentation/devicetree/bindings/pinctrl/marvell,mvebu-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/marvell,mvebu-pinctrl.txt
-@@ -37,7 +37,7 @@ uart1: serial@12100 {
- 
- pinctrl: pinctrl@d0200 {
- 	compatible = "marvell,dove-pinctrl";
--	reg = <0xd0200 0x20>;
-+	reg = <0xd0200 0x14>, <0xd0440 0x04>, <0xd802c 0x08>;
- 
- 	pmx_uart1_sw: pmx-uart1-sw {
- 		marvell,pins = "mpp_uart1";
--- 
-1.8.5.2
+On Sat, Jan 25, 2014 at 1:11 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Friday 24 January 2014 13:28:22 Tanmay Inamdar wrote:
+>> On Thu, Jan 16, 2014 at 5:10 PM, Tanmay Inamdar <tinamdar@apm.com> wrote:
+>> > On Wed, Jan 15, 2014 at 4:39 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> >> On Wednesday 15 January 2014, Tanmay Inamdar wrote:
+>
+>> >>
+>> >>> +static void xgene_pcie_poll_linkup(struct xgene_pcie_port *port, u32 *lanes)
+>> >>> +{
+>> >>> +     void *csr_base = port->csr_base;
+>> >>> +     u32 val32;
+>> >>> +     u64 start_time, time;
+>> >>> +
+>> >>> +     /*
+>> >>> +      * A component enters the LTSSM Detect state within
+>> >>> +      * 20ms of the end of fundamental core reset.
+>> >>> +      */
+>> >>> +     msleep(XGENE_LTSSM_DETECT_WAIT);
+>> >>> +     port->link_up = 0;
+>> >>> +     start_time = jiffies;
+>> >>> +     do {
+>> >>> +             val32 = readl(csr_base + PCIECORE_CTLANDSTATUS);
+>> >>> +             if (val32 & LINK_UP_MASK) {
+>> >>> +                     port->link_up = 1;
+>> >>> +                     port->link_speed = PIPE_PHY_RATE_RD(val32);
+>> >>> +                     val32 = readl(csr_base + BRIDGE_STATUS_0);
+>> >>> +                     *lanes = val32 >> 26;
+>> >>> +             }
+>> >>> +             time = jiffies_to_msecs(jiffies - start_time);
+>> >>> +     } while ((!port->link_up) || (time <= XGENE_LTSSM_L0_WAIT));
+>> >>> +}
+>> >>
+>> >> Maybe another msleep() in the loop? It seems weird to first do an
+>> >> unconditional sleep but then busy-wait for the result.
+>> >
+>> > ok.
+>>
+>> This loop can execute for maximum 4 msec. So putting msleep(1) won't
+>> get us much.
+>
+> 4 msec is still quite a long time for a busy loop that can be spent doing
+> useful work in another thread.
+>
+>> >>
+>> >> Another general note: Your "compatible" strings are rather unspecific.
+>> >> Do you have a version number for this IP block? I suppose that it's related
+>> >> to one that has been used in other chips before, or will be used in future
+>> >> chips, if it's not actually licensed from some other company.
+>> >
+>> > I will have to check this.
+>> >
+>>
+>> We have decided to stick with current compatible string for now.
+>
+> Can you elaborate on your reasoning? Does this mean X-Gene is a one-off
+> product and you won't be doing any new chips based on the same hardware
+> components?
+>
+>         Arnd
