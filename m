@@ -1,180 +1,52 @@
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH RFC v2 2/2] Documentation: arm: define DT C-states bindings
-Date: Tue, 28 Jan 2014 09:24:54 +0100
-Message-ID: <CAKfTPtAEekg_KHhLikJK=njC-b5F=MOmAmSP8P96+j_23-iu3Q@mail.gmail.com>
-References: <1390240079-6495-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1390240079-6495-3-git-send-email-lorenzo.pieralisi@arm.com>
- <CAKfTPtAbYXuis1bfyDLiHRaYwosre3RAG+iNQSz-y+cWfc3uQA@mail.gmail.com>
- <20140122192041.GA3709@e102568-lin.cambridge.arm.com> <CAKfTPtDHTs67qvoA6++zo4SZdZJj4T_BV2gVECOu-76-2kLbuw@mail.gmail.com>
- <20140124175806.GC23274@e102568-lin.cambridge.arm.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3] DT: net: document Ethernet bindings in one place
+Date: Tue, 28 Jan 2014 09:26:58 +0100
+Message-ID: <CAMuHMdV6QNGAh8s40z766N6HMboUW_eO85Gs7p0JBAuZ6vW1Nw@mail.gmail.com>
+References: <201401280316.28735.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140124175806.GC23274@e102568-lin.cambridge.arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Dave P Martin <Dave.Martin@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Kumar Gala <galak@codeaurora.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Mark Hambleton <mark.hambleton@broadcom.com>, Hanjun Guo <hanjun.guo@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <t.figa@samsung.com>, Kevin Hilman <khilman@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <201401280316.28735.sergei.shtylyov@cogentembedded.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, galak@codeaurora.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Max Filippov <jcmvbkbc@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 24 January 2014 18:58, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
-> Hi Vincent,
->
-> On Fri, Jan 24, 2014 at 08:40:40AM +0000, Vincent Guittot wrote:
->
-> [...]
->
->> Hi Lorenzo,
->>
->> Sorry for the late reply,
->>
->>
->> > I had an idea. To simplify things, I think that one possibility is to
->> > add a parameter to the power domain specifier (platform specific, see
->> > Tomasz bindings):
->>
->> We can't use a simple boolean state (on/off) for defining the
->> powerdomain state associated to a c-state so your proposal of being
->> able to add a parameter that will define the power domain state is
->> interesting.
->>
->> >
->> > Documentation/devicetree/bindings/power/power_domain.txt
->> >
->> > http://lists.infradead.org/pipermail/linux-arm-kernel/2014-January/224928.html
->> >
->> > to represent, when that state is entered the behavior of the power
->> > controller (ie cache RAM retention or cache shutdown or in general any
->> > substate within a power domain). Since it is platform specific, and since
->> > we are able to link caches to the power domain, the power controller will
->> > actually define what happens to the cache when that state is entered
->> > (basically we use the power domain specifier additional parameter to define
->> > a "substate" in that power domain e.g.:
->> >
->> > Example:
->> >
->> > foo_power_controller {
->> >         [...]
->> >         /*
->> >          * first cell is register index, second one is the state index
->> >          * that in turn implies the state behavior - eg cache lost or
->> >          * retained
->> >          */
->> >         #power-domain-cells = <2>;
->> > };
->> >
->> > l1-cache {
->> >         [...]
->> >         /*
->> >          * syntax: power-domains = list of power domain specifiers
->> >                 <[&power_domain_phandle register-index state],[&power_domain_phandle register-index state]>;
->> >                 The syntax is defined by the power controller du jour
->> >                 as described by Tomasz bindings
->> >         */
->> >         power-domains =<&foo_power_controller 0 0 &foo_power_controller 0 1>;
->>
->> Normally, power-domains describes a list of power domain specifiers
->> that are necessary for the l1-cache to at least retain its state so
->> i'm not sure understand your example above
->
->>
->> If we take the example of system that support running, retention and
->> powerdown state described as state 0, 1 and 2 for the power domain, i
->> would have set the l1-cache like:
->>        power-domains =<&foo_power_controller 0 1>;
->>
->> for saying that the state is retained up to state 1
->>
->> Please look below, i have modified the rest of your example accordingly
->>
->> >
->> > }:
->> >
->> > and then
->> >
->> > state0 {
->> >         index = <2>;
->> >         compatible = "arm,cpu-power-state";
->> >         latency = <...>;
->> >         /*
->> >          * This means that when the state is entered, the power
->> >          * controller should use register index 0 and state 0,
->> >          * whose meaning is power controller specific. Since we
->> >          * know all components affected (for every component
->> >          * we declare its power domain(s) and states so we
->> >          * know what components are affected by the state entry.
->> >          * Given the cache node above and this phandle, the state
->> >          * implies that the cache is retained, register index == 0 state == 0
->> >          /*
->> >         power-domain =<&foo_power_controller 0 0>;
->>
->> for retention state we need to set the power domain in state 1
->>         power-domain =<&foo_power_controller 0 1>;
->>
->> > };
->> >
->> > state1 {
->> >         index = <3>;
->> >         compatible = "arm,cpu-power-state";
->> >         latency = <...>;
->> >         /*
->> >          * This means that when the state is entered, the power
->> >          * controller should use register index 0 and state 1,
->> >          * whose meaning is power controller specific. Since we
->> >          * know all components affected (for every component
->> >          * we declare its power domain(s) and states so we
->> >          * know what components are affected by the state entry.
->> >          * Given the cache node above and this phandle, the state
->> >          * implies that the cache is lost, register index == 0 state == 1
->> >          /*
->> >         power-domain =<&foo_power_controller 0 1>;
->>
->> for power down mode, we need to set thge power domain in state 2
->>         power-domain =<&foo_power_controller 0 2>;
->
-> Ok, what I meant was not what you got, but your approach looks sensible
-> too. What I do not like is that the power-domain specifier is power
+On Tue, Jan 28, 2014 at 1:16 AM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> --- /dev/null
+> +++ net-next/Documentation/devicetree/bindings/net/ethernet.txt
+> @@ -0,0 +1,23 @@
+> +The following properties are common to the Ethernet controllers:
+> +
+> +- local-mac-address: array of 6 bytes, specifies the MAC address that was
+> +  assigned to the network device;
+> +- mac-address: array of 6 bytes, specifies the MAC address that was last used by
+> +  the boot program; should be used in cases where the MAC address assigned to
+> +  the device by the boot program is different from the "local-mac-address"
+> +  property;
+> +- max-speed: number, specifies maximum speed in Mbit/s supported by the device;
+> +- max-frame-size: number, maximum transfer unit (IEEE defined MTU), rather than
+> +  the maximum frame size (there's contradiction in ePAPR).
+> +- phy-mode: string, operation mode of the PHY interface; supported values are
+> +  "mii", "gmii", "sgmii", "tbi", "rev-mii", "rmii", "rgmii", "rgmii-id",
+> +  "rgmii-rxid", "rgmii-txid", "rtbi", "smii", "xgmii"; not recommended for new
+> +  bindings;
+> +- phy-connection-type: the same as "phy-mode" property but described in ePAPR;
+> +- phy-handle: phandle, specifies a reference to a node representing a PHY
+> +  device; this property is described in ePAPR and so preferred;
+> +- phy: the same as "phy-handle" property, not recommended for new bindings.
 
-sorry for the misconception of your example
+I think it would be more clear to move the not recommended ones to a new
+paragraph, with a preamble stating they're not recommended for new bindings.
 
-> controller specific (that was true even for my example). In theory
-> we can achieve something identical by forcing every component in a power
-> domain to specify the max C-state index that allows it to retain its
+Gr{oetje,eeting}s,
 
-I'm not sure that we should force a component to set an opaque (for
-the component) max c-state. The device should describe its power
-domain requirements and the correlation of the latter with the
-description of the c-state binding should be enough to deduct the max
-c-state.
+                        Geert
 
-> state (through a specific property). Same logic to your example applies.
-> Nice thing is that we do not change the power domain specifiers, bad thing
-> is that it adds two properties to each device (c-state index and
-> power-domain-specifier - but we can make it hierarchical so that device
-> nodes can inherit the maximum operating C-state by inheriting the value
-> from a parent node providing a common value).
->
-> In my example the third parameter was just a number that the power
-> controller would decode (eg 0 = cache retained, 1 = cache lost)
-> according to its implementation, it was not a "state index". The
-> power controller would know what to do with eg a cache component (that
-> declares to be in that power domain) when a C-state with that power
-> domain specifier was entered.
->
-> Not very different from what you are saying, let's get to the nub:
->
-> - Either we define it in a platform specific way through the power
->   domain specifier
-> - Or we force a max-c-state-supported property for every device,
->   possibly hierarchical
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-As explained above, adding a max-cstate property for a device that
-only know the power-domain is not a good thing IMHO.
-
-Vincent
-
->
-> Thoughts ?
->
-> Thank you !
-> Lorenzo
->
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
