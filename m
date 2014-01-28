@@ -1,52 +1,253 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3] DT: net: document Ethernet bindings in one place
-Date: Tue, 28 Jan 2014 09:26:58 +0100
-Message-ID: <CAMuHMdV6QNGAh8s40z766N6HMboUW_eO85Gs7p0JBAuZ6vW1Nw@mail.gmail.com>
-References: <201401280316.28735.sergei.shtylyov@cogentembedded.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv12] ARM: dts: Add support for the cpuimx35 board from
+ Eukrea and its baseboard.
+Date: Tue, 28 Jan 2014 16:37:51 +0800
+Message-ID: <20140128083746.GA20595@S2101-09.ap.freescale.net>
+References: <1389803532-8516-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <201401280316.28735.sergei.shtylyov@cogentembedded.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, galak@codeaurora.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Max Filippov <jcmvbkbc@gmail.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1389803532-8516-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Cc: Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 28, 2014 at 1:16 AM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
+On Wed, Jan 15, 2014 at 05:32:12PM +0100, Denis Carikli wrote:
+> diff --git a/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi b/arch/arm/=
+boot/dts/imx35-eukrea-cpuimx35.dtsi
+> new file mode 100644
+> index 0000000..303f789
 > --- /dev/null
-> +++ net-next/Documentation/devicetree/bindings/net/ethernet.txt
-> @@ -0,0 +1,23 @@
-> +The following properties are common to the Ethernet controllers:
+> +++ b/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
+> @@ -0,0 +1,59 @@
+> +/*
+> + * Copyright 2013 Eukr=E9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version 2
+> + * of the License, or (at your option) any later version.
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
 > +
-> +- local-mac-address: array of 6 bytes, specifies the MAC address that was
-> +  assigned to the network device;
-> +- mac-address: array of 6 bytes, specifies the MAC address that was last used by
-> +  the boot program; should be used in cases where the MAC address assigned to
-> +  the device by the boot program is different from the "local-mac-address"
-> +  property;
-> +- max-speed: number, specifies maximum speed in Mbit/s supported by the device;
-> +- max-frame-size: number, maximum transfer unit (IEEE defined MTU), rather than
-> +  the maximum frame size (there's contradiction in ePAPR).
-> +- phy-mode: string, operation mode of the PHY interface; supported values are
-> +  "mii", "gmii", "sgmii", "tbi", "rev-mii", "rmii", "rgmii", "rgmii-id",
-> +  "rgmii-rxid", "rgmii-txid", "rtbi", "smii", "xgmii"; not recommended for new
-> +  bindings;
-> +- phy-connection-type: the same as "phy-mode" property but described in ePAPR;
-> +- phy-handle: phandle, specifies a reference to a node representing a PHY
-> +  device; this property is described in ePAPR and so preferred;
-> +- phy: the same as "phy-handle" property, not recommended for new bindings.
+> +#include "imx35.dtsi"
+> +
+> +/ {
+> +	model =3D "Eukrea CPUIMX35";
+> +	compatible =3D "eukrea,cpuimx35", "fsl,imx35";
+> +
+> +	memory {
+> +		reg =3D <0x80000000 0x8000000>; /* 128M */
+> +	};
+> +};
+> +
+> +&fec {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_fec>;
+> +	status =3D "okay";
+> +};
+> +
+> +&i2c1 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_i2c1>;
+> +	status =3D "okay";
+> +
+> +	pcf8563@51 {
+> +		compatible =3D "nxp,pcf8563";
+> +		reg =3D <0x51>;
+> +	};
+> +};
+> +
+> +&iomuxc {
+> +	imx35-eukrea {
+> +		pinctrl_fec: fecgrp {
+> +			fsl,pins =3D <MX35_FEC_PINGRP1>;
+> +		};
+> +
+> +		pinctrl_i2c1: i2c1grp {
+> +			fsl,pins =3D <MX35_I2C1_PINGRP1>;
+> +		};
 
-I think it would be more clear to move the not recommended ones to a new
-paragraph, with a preamble stating they're not recommended for new bindings.
+You have these two pingrp in imx35-eukrea-cpuimx35.dtsi ...
 
-Gr{oetje,eeting}s,
+> +	};
+> +};
+> +
+> +&nfc {
+> +	nand-bus-width =3D <8>;
+> +	nand-ecc-mode =3D "hw";
+> +	nand-on-flash-bbt;
+> +	status =3D "okay";
+> +};
+> diff --git a/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts b=
+/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
+> new file mode 100644
+> index 0000000..23f6fe1
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
+> @@ -0,0 +1,137 @@
+> +/*
+> + * Copyright 2013 Eukr=E9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version 2
+> + * of the License, or (at your option) any later version.
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include "imx35-eukrea-cpuimx35.dtsi"
 
-                        Geert
+=2E.. imx35-eukrea-cpuimx35.dtsi is being included here ...
+
+> +
+> +/ {
+> +	model =3D "Eukrea CPUIMX35";
+> +	compatible =3D "eukrea,mbimxsd35-baseboard", "eukrea,cpuimx35", "fs=
+l,imx35";
+> +
+> +	gpio_keys {
+> +		compatible =3D "gpio-keys";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&pinctrl_bp1>;
+> +
+> +		bp1 {
+> +			label =3D "BP1";
+> +			gpios =3D <&gpio3 25 GPIO_ACTIVE_LOW>;
+> +			linux,code =3D <BTN_MISC>;
+> +			gpio-key,wakeup;
+> +			linux,input-type =3D <1>;
+> +		};
+> +	};
+> +
+> +	leds {
+> +		compatible =3D "gpio-leds";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&pinctrl_led1>;
+> +
+> +		led1 {
+> +			label =3D "led1";
+> +			gpios =3D <&gpio3 29 GPIO_ACTIVE_LOW>;
+> +			linux,default-trigger =3D "heartbeat";
+> +		};
+> +	};
+> +};
+> +
+> +&audmux {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_audmux>;
+> +	status =3D "okay";
+> +};
+> +
+> +&esdhc1 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_esdhc1>;
+> +	cd-gpios =3D <&gpio3 24>;
+> +	status =3D "okay";
+> +};
+> +
+> +&i2c1 {
+> +	tlv320aic23: codec@1a {
+> +		compatible =3D "ti,tlv320aic23";
+> +		reg =3D <0x1a>;
+> +	};
+> +};
+> +
+> +&iomuxc {
+> +	imx35-eukrea {
+> +		pinctrl_audmux: audmuxgrp {
+> +			fsl,pins =3D <MX35_AUDMUX_PINGRP1>;
+> +		};
+> +
+> +		pinctrl_bp1: bp1grp {
+> +			fsl,pins =3D <MX35_PAD_LD19__GPIO3_25  0x80000000>;
+> +		};
+> +
+> +		pinctrl_esdhc1: esdhc1grp {
+> +			fsl,pins =3D <
+> +				  MX35_ESDHC1_PINGRP1
+> +				  MX35_PAD_LD18__GPIO3_24  0x80000000 /* CD */
+> +			>;
+> +		};
+> +
+> +		pinctrl_fec: fecgrp {
+> +			fsl,pins =3D <MX35_FEC_PINGRP1>;
+> +		};
+> +
+> +		pinctrl_i2c1: i2c1grp {
+> +			fsl,pins =3D <MX35_I2C1_PINGRP1>;
+> +		};
+
+=2E.. why do you need to have them again?
+
+I spotted this when rebasing this patch on pingrp removal series, and
+just dropped them from imx35-eukrea-mbimxsd35-baseboard.dts.  Let me
+know if I did get it right.
+
+Shawn
+
+> +
+> +		pinctrl_led1: led1grp {
+> +			fsl,pins =3D <MX35_PAD_LD23__GPIO3_29  0x80000000>;
+> +		};
+> +
+> +		pinctrl_reg_lcd_3v3: reg-lcd-3v3 {
+> +			fsl,pins =3D <MX35_PAD_D3_CLS__GPIO1_4 0x80000000>;
+> +		};
+> +
+> +		pinctrl_uart1: uart1grp {
+> +			fsl,pins =3D <
+> +				MX35_UART1_PINGRP1
+> +				MX35_UART1_RTSCTS_PINGRP1
+> +			>;
+> +		};
+> +
+> +		pinctrl_uart2: uart2grp {
+> +			fsl,pins =3D <
+> +				MX35_UART2_PINGRP1
+> +				MX35_UART2_RTSCTS_PINGRP1
+> +			>;
+> +		};
+> +	};
+> +};
+> +
+> +&ssi1 {
+> +	fsl,mode =3D "i2s-slave";
+> +	status =3D "okay";
+> +};
+> +
+> +&uart1 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_uart1>;
+> +	fsl,uart-has-rtscts;
+> +	status =3D "okay";
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_uart2>;
+> +	fsl,uart-has-rtscts;
+> +	status =3D "okay";
+> +};
+> --=20
+> 1.7.9.5
+>=20
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
