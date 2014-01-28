@@ -1,57 +1,88 @@
-From: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: Firmware for Bluetooth (and wifi)
-Date: Tue, 28 Jan 2014 11:11:02 +0100
-Message-ID: <52E78236.50702@broadcom.com>
-References: <52A040CE.5040706@schinagl.nl> <52A09B5B.70800@schinagl.nl> <CAGRGNgWBgWqoPUdHSm2OXGb8r-ca5NX2z4_v0eG6oOMgJRd3HQ@mail.gmail.com> <52B17973.1000608@broadcom.com> <52B19F38.7060503@redhat.com> <52B1CA51.4010202@broadcom.com> <CAGb2v67cnP0yth0xxBKcaW_T2fF+4nP4r6h9NLqy5FV2x=hO=Q@mail.gmail.com> <CAGb2v67mmYnyPeOd4Wwp1zHs7EC_Gr+gEdaaMWeKP5z_Z_SVGA@mail.gmail.com> <CAGb2v66646-1Sye=Eb04_SoeCGBU064OePcxDi7th1fqU8XfBg@mail.gmail.com> <52BD68BA.3080304@broadcom.com> <CAGb2v67Q=q4vyOftb+BLhAYR-6d04dDP3+kY3b88U8_vCvAmgQ@mail.gmail.com> <52CD12D4.5030008@broadcom.com> <CAGb2v64+5Rgs6JxD0iH3bcwXPOm-xyS_LSmWLfx0qiMQwreOeQ@mail.gmail.com> <52E19A27.7000402@redhat.com> <52E19E1C.1010402@redhat.com> <CAGb2v66KhGoGmoFkTw9PQYBtX9YQbmxk4oy_tM4LM_UhZMkcZg@mail.gmail.com> <52E5392B.80605@redhat.com>
-  <CAGb2v6594vsKCd9E8apojQXE8h6WJj4-doJ8wa85Nt3EFZhXHA@mail.gmail.com> <52E580A8.4060600@broadcom.com> <52E5A631.4030204@gmail.com> <52E62510.5090103@broadcom.com> <52E630F4.8090805@gmail.com
- >
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 2/9] ARM: dts: imx6sl: remove the use of pingrp macros
+Date: Tue, 28 Jan 2014 11:17:22 +0100
+Message-ID: <5923680.sl3G3EgCsY@phil>
+References: <1390668191-20289-1-git-send-email-shawn.guo@linaro.org> <1390668191-20289-3-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCKLZOXH5AIBBO4ET2LQKGQE533QYVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <52E630F4.8090805-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1390668191-20289-3-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/27/2014 11:12 AM, Tomasz Figa wrote:
->> The brcmfmac driver that consumes these DT nodes will have a closer look
->> at the device obtaining the chipid during the probe and determine if it
->> can support it. So the compatible string indicates that the device needs
->> a so-called fullmac wireless driver opposed to a mac80211 aka. softmac
->> wireless driver.
+Hi Shawn,
+
+On Sunday, 26. January 2014 00:43:04 Shawn Guo wrote:
+> We created the pingrp macros in imx6sl-pingrp.h for purpose of less LOC
+> when same pin group is used by multiple boards.  However, DT maintainers
+> take it as an abuse of DTC macro support.  So let's get rid of it to
+> make the pins used by given device more intuitive.
 > 
-> The compatible string should guarantee that the chip ID register holds a
-> valid value, so just "wifi-fullmac" or "brcmfmac" sounds too generic to
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx6sl-evk.dts  |  120 ++++++++++++++++++++++++++----
+>  arch/arm/boot/dts/imx6sl-pingrp.h |  148
+> ------------------------------------- arch/arm/boot/dts/imx6sl.dtsi     |  
+>  1 -
+>  3 files changed, 107 insertions(+), 162 deletions(-)
+>  delete mode 100644 arch/arm/boot/dts/imx6sl-pingrp.h
+> 
+> diff --git a/arch/arm/boot/dts/imx6sl-evk.dts
+> b/arch/arm/boot/dts/imx6sl-evk.dts index f5e4513..8594d13 100644
+> --- a/arch/arm/boot/dts/imx6sl-evk.dts
+> +++ b/arch/arm/boot/dts/imx6sl-evk.dts
+> @@ -86,55 +86,149 @@
+>  		};
+> 
+>  		pinctrl_ecspi1: ecspi1grp {
+> -			fsl,pins = <MX6SL_ECSPI1_PINGRP1>;
+> +			fsl,pins = <
+> +				MX6SL_PAD_ECSPI1_MISO__ECSPI1_MISO	0x100b1
+> +				MX6SL_PAD_ECSPI1_MOSI__ECSPI1_MOSI	0x100b1
+> +				MX6SL_PAD_ECSPI1_SCLK__ECSPI1_SCLK	0x100b1
+> +			>;
+>  		};
+> 
+>  		pinctrl_fec: fecgrp {
+> -			fsl,pins = <MX6SL_FEC_PINGRP1>;
+> +			fsl,pins = <
+> +				MX6SL_PAD_FEC_MDC__FEC_MDC		0x1b0b0
+> +				MX6SL_PAD_FEC_MDIO__FEC_MDIO		0x1b0b0
+> +				MX6SL_PAD_FEC_CRS_DV__FEC_RX_DV		0x1b0b0
+> +				MX6SL_PAD_FEC_RXD0__FEC_RX_DATA0	0x1b0b0
+> +				MX6SL_PAD_FEC_RXD1__FEC_RX_DATA1	0x1b0b0
+> +				MX6SL_PAD_FEC_TX_EN__FEC_TX_EN		0x1b0b0
+> +				MX6SL_PAD_FEC_TXD0__FEC_TX_DATA0	0x1b0b0
+> +				MX6SL_PAD_FEC_TXD1__FEC_TX_DATA1	0x1b0b0
+> +				MX6SL_PAD_FEC_REF_CLK__FEC_REF_OUT	0x4001b0a8
+> +			>;
+>  		};
 
-I am not sure I understand this requirement. Is the DT node claimed
-somehow after of_find_matching_node() and unavailable to other drivers.
+[... and so on for the other groups ... ]
 
-> me. The string must specify the family of chips with this chip ID scheme
-> in a reasonably precise way. "brcm,bcm43xx-fmac" maybe? I still see a
-> risk of, say, BCM43999 showing up, which would be a completely different
-> chip. while having the model matching the pattern.
+I'm confused now :-) . Current linux-next [0] shows the pin-settings as part 
+of imx6sl.dtsi - a way a lot of other architectures organize their pingroups 
+too, with the board file only referencing the relevant pingroups from the 
+predefined ones of the soc.
 
-If a completely different chip, ie. BCM43999, shows up in a board the
-device tree should not use "brcm,bcm43xx-fmac". That would be an error
-in the dts file, right? All the devices listed in your bindings patch
-are treated the same, ie. *compatible* on DT level and hence can have
-the same compatible property.
+So I guess your move to the pingrp-header moved them out of the imx6sl.dtsi to 
+the .h and is not part of linux-next; but this patch (and the others in this 
+series) now moves the definitions into the individual board files. Can't you 
+just move them back to the soc-dtsi files to prevent each board duplicating 
+them?
 
-In my opinion that is what the compatible property is about. It
-identifies how a specific category of devices is accessed/configured. As
-an example please see [1]. It shows one compatible string for a binding
-that is used for different MPIC controllers.
+Or I've simply missed previous discussions about this ;-) .
 
-Just to be clear, I like your suggestion to use "brcm,bcm43xx-fmac", but
-felt you did not so added my explanation/point of view.
 
-Regards,
-Arend
+Thanks
+Heiko
 
-[1] Documentation/devicetree/bindings/powerpc/fsl/mpic.txt
+[0] https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree/arch/arm/boot/dts/imx6sl.dtsi#n640
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
