@@ -1,83 +1,74 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Firmware for Bluetooth (and wifi)
-Date: Tue, 28 Jan 2014 11:41:38 +0100
-Message-ID: <52E78962.7080404@redhat.com>
-References: <52A040CE.5040706@schinagl.nl> <CAGRGNgWBgWqoPUdHSm2OXGb8r-ca5NX2z4_v0eG6oOMgJRd3HQ@mail.gmail.com> <52B17973.1000608@broadcom.com> <52B19F38.7060503@redhat.com> <52B1CA51.4010202@broadcom.com> <CAGb2v67cnP0yth0xxBKcaW_T2fF+4nP4r6h9NLqy5FV2x=hO=Q@mail.gmail.com> <CAGb2v67mmYnyPeOd4Wwp1zHs7EC_Gr+gEdaaMWeKP5z_Z_SVGA@mail.gmail.com> <CAGb2v66646-1Sye=Eb04_SoeCGBU064OePcxDi7th1fqU8XfBg@mail.gmail.com> <52BD68BA.3080304@broadcom.com> <CAGb2v67Q=q4vyOftb+BLhAYR-6d04dDP3+kY3b88U8_vCvAmgQ@mail.gmail.com> <52CD12D4.5030008@broadcom.com> <CAGb2v64+5Rgs6JxD0iH3bcwXPOm-xyS_LSmWLfx0qiMQwreOeQ@mail.gmail.com> <52E19A27.7000402@redhat.com> <52E19E1C.1010402@redhat.com> <CAGb2v66KhGoGmoFkTw9PQYBtX9YQbmxk4oy_tM4LM_UhZMkcZg@mail.gmail.com> <52E5392B.80605@redhat.com> <CAGb2v6594vsKCd9E8apojQXE8h
- 6WJj4-doJ8wa85Nt3EFZhXHA@mail.gmail.com> <52E580A8.4060600@broadcom.com> <52E5A631.4030204@gmail.com> <52E62510.5090103@broadcom.com> <52E630F4.8090805@gmail.com > <52E78236.50702@broadcom.!
- com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/3] mmc: add support for power-on sequencing through DT
+Date: Tue, 28 Jan 2014 11:48:10 +0100
+Message-ID: <201401281148.10670.arnd@arndb.de>
+References: <1390190215-22700-1-git-send-email-olof@lixom.net>
+ <52E700F0.7040708@gmail.com>
+ <CAPDyKFpOhQtiyCmzie3=sfg42Vv5_rReRNgUf8kALoE6TBe2cw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBJMTT2LQKGQE234R3RA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <52E78236.50702-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAPDyKFpOhQtiyCmzie3=sfg42Vv5_rReRNgUf8kALoE6TBe2cw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tomasz Figa <t.figa@samsung.com>, linux-mmc <linux-mmc@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Chris Ball <chris@printf.net>, robh+dt@kernel.org, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 01/28/2014 11:11 AM, Arend van Spriel wrote:
-> On 01/27/2014 11:12 AM, Tomasz Figa wrote:
->>> The brcmfmac driver that consumes these DT nodes will have a closer look
->>> at the device obtaining the chipid during the probe and determine if it
->>> can support it. So the compatible string indicates that the device needs
->>> a so-called fullmac wireless driver opposed to a mac80211 aka. softmac
->>> wireless driver.
->>
->> The compatible string should guarantee that the chip ID register holds a
->> valid value, so just "wifi-fullmac" or "brcmfmac" sounds too generic to
+On Tuesday 28 January 2014, Ulf Hansson wrote:
+> On 28 January 2014 01:59, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> > On 27.01.2014 11:19, Ulf Hansson wrote:
+> >> There is already a host capability that I think we could use to handle
+> >> this. MMC_CAP_NONREMOVABLE, the corresponding DT binding string is
+> >> "non-removable", and it may be set per host device.
+> >>
+> >> Using this cap means the mmc_rescan process that runs to detect new
+> >> cards, will only be executed once and during boot. So, we need to make
+> >> sure all resources and powers are provided to the card at this point.
+> >> Otherwise the card will not be detected.
+> >
+> > I don't quite like this requirement, especially if you consider
+> > multi-platform kernels where a lot of drivers is going to be provided as
+> > modules. WLAN drivers are especially good candidates. This means that even
+> > if the card is powered off at boot-up, if user (or init system) loads
+> > appropriate module, which powers the chip on, MMC core must be able to
+> > notice this.
 > 
-> I am not sure I understand this requirement. Is the DT node claimed
-> somehow after of_find_matching_node() and unavailable to other drivers.
+> To be able to detect the card, the WLAN driver doesn't have to be
+> probed, only the "power controller" driver. I suppose this is were it
+> becomes a bit tricky.
 > 
->> me. The string must specify the family of chips with this chip ID scheme
->> in a reasonably precise way. "brcm,bcm43xx-fmac" maybe? I still see a
->> risk of, say, BCM43999 showing up, which would be a completely different
->> chip. while having the model matching the pattern.
-> 
-> If a completely different chip, ie. BCM43999, shows up in a board the
-> device tree should not use "brcm,bcm43xx-fmac". That would be an error
-> in the dts file, right? All the devices listed in your bindings patch
-> are treated the same, ie. *compatible* on DT level and hence can have
-> the same compatible property.
-> 
-> In my opinion that is what the compatible property is about. It
-> identifies how a specific category of devices is accessed/configured. As
-> an example please see [1]. It shows one compatible string for a binding
-> that is used for different MPIC controllers.
-> 
-> Just to be clear, I like your suggestion to use "brcm,bcm43xx-fmac", but
-> felt you did not so added my explanation/point of view.
+> Somehow the mmc core needs to be involved in the probe process of the
+> power controller driver. Could perhaps the power controller bus be
+> located in the mmc core and thus the power controller driver needs to
+> register itself by using a new API from the mmc core? Similar how SDIO
+> func driver's register themselves.
 
-The usual way to solve this is to have the dts file have a list of
-compatibility strings going from specific to more generic, so for ie the
-wifi on the cubietruck the dts file would contain:
+I think there is another option, which does have its own pros and cons:
+We could move all the power handling back into the sdio function driver
+if we allow a secondary detection path using DT rather than the probing
+of the SDIO bus. Essentially you'd have to list the class/vendor/device
+ID for each function that cannot be autodetected in DT, and have the
+SDIO core pretend that it found the device just by looking at the
+device nodes, and register the struct sdio_func so it can be bound to
+the driver. The driver then does all the power handling in a device
+specific way. At some point the hardware gets registered at the 
+mmc host, and the sdio core connects the bus state to the already present
+sdio_func, possibly notifying the function driver that it has become
+usable.
 
-compatible = "brcm,bcm43362", "brcm,bcm43xx-fmac";
+Obviously, this can only work for CAP_NONREMOVABLE devices, but those
+are exactly the ones we are worried about here. The advantage is that
+the power sequencing for a particular device can then be in device
+specific code and can have an arbitrarily complex in the driver without
+needing the mmc code to handle all possible corner cases.
 
-And then the brcmfmac driver will contain .compatible = "brcm,bcm43xx-fmac"
-
-If we then ever need to have some specific quirks in the driver the driver
-can use of_device_is_compatible(dev->of_node, "brcm,bcm43362") to check for
-the 43362.
-
-Their could even be a completely separate driver for the "brcm,bcm43362",
-with brcmfmac still claiming "brcm,bcm43xx-fmac", as matching is done
-from left to right, so if there is a specific driver and a more generic
-one the specific driver will win (assuming both are built-in / loaded
-at probe time).
-
-TL;DR: dts file should have:
-  compatible = "brcm,bcm43362", "brcm,bcm43xx-fmac";
-brcmfmac should have:
-  .compatible = "brcm,bcm43xx-fmac",
-So that we can add device specific quirks later (if necessary).
-
-Regards,
-
-Hans
+	Arnd
