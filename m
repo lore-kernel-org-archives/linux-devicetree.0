@@ -1,93 +1,62 @@
-From: Ben Hutchings <ben@decadent.org.uk>
-Subject: Re: [PATCH 3/3] net: via-rhine: add OF bus binding
-Date: Mon, 27 Jan 2014 23:40:11 +0000
-Message-ID: <1390866011.4405.2.camel@deadeye.wl.decadent.org.uk>
-References: <1385227995-3956-1-git-send-email-alchark@gmail.com>
-	 <1390823503-24087-1-git-send-email-alchark@gmail.com>
-	 <1390823503-24087-4-git-send-email-alchark@gmail.com>
-	 <1390834654.2735.148.camel@deadeye.wl.decadent.org.uk>
-	 <CABjd4Yz2Kfed_qBfSAEXoAcVxfsmhTBA-83YJ9_iSwPZ+r1qYQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-lqUvMEKlP/A+W9wDQi+i"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABjd4Yz2Kfed_qBfSAEXoAcVxfsmhTBA-83YJ9_iSwPZ+r1qYQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexey Charkov <alchark@gmail.com>
-Cc: netdev@vger.kernel.org, Tony Prisk <linux@prisktech.co.nz>, devicetree@vger.kernel.org, Roger Luethi <rl@hellgate.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: [PATCH v2 01/21] devicetree: bindings: add missing Marvell Dove SoC documentation
+Date: Tue, 28 Jan 2014 01:39:13 +0100
+Message-ID: <1390869573-27624-2-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <1390674856-4993-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1390869573-27624-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1390869573-27624-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Marvell Dove SoC binding was not documented, yet. Add the documentation
+and also describe Global Configuration register node in it.
 
---=-lqUvMEKlP/A+W9wDQi+i
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+---
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Gregory Clement <gregory.clement@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ .../devicetree/bindings/arm/marvell,dove.txt       | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/marvell,dove.txt
 
-On Mon, 2014-01-27 at 19:34 +0400, Alexey Charkov wrote:
-> 2014/1/27 Ben Hutchings <ben@decadent.org.uk>:
-> > On Mon, 2014-01-27 at 15:51 +0400, Alexey Charkov wrote:
-> >> This should make the driver usable with VIA/WonderMedia ARM-based
-> >> Systems-on-Chip integrated Rhine III adapters. Note that these
-> >> are always in MMIO mode, and don't have any known EEPROM.
-> > [...]
-> >> --- a/drivers/net/ethernet/via/Kconfig
-> >> +++ b/drivers/net/ethernet/via/Kconfig
-> >> @@ -19,7 +19,7 @@ if NET_VENDOR_VIA
-> >>
-> >>  config VIA_RHINE
-> >>         tristate "VIA Rhine support"
-> >> -       depends on PCI
-> >> +       depends on (PCI || USE_OF)
-> >>         select CRC32
-> >>         select MII
-> >>         ---help---
-> >
-> > This seems like the right thing to do, but it means you need to add
-> > #ifdef CONFIG_PCI and #ifdef CONFIG_USE_OF around the driver structures
-> > and related functions.
->=20
-> Frankly, I would like to avoid that if possible (as pointed out in the
-> cover email), as I believe we would get a cleaner driver without
-> #ifdef. This is also the way it was done in via-velocity, and it works
-> just fine.
+diff --git a/Documentation/devicetree/bindings/arm/marvell,dove.txt b/Documentation/devicetree/bindings/arm/marvell,dove.txt
+new file mode 100644
+index 000000000000..aaaf64c56e44
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/marvell,dove.txt
+@@ -0,0 +1,22 @@
++Marvell Dove Platforms Device Tree Bindings
++-----------------------------------------------
++
++Boards with a Marvell Dove SoC shall have the following properties:
++
++Required root node property:
++- compatible: must contain "marvell,dove";
++
++* Global Configuration registers
++
++Global Configuration registers of Dove SoC are shared by a syscon node.
++
++Required properties:
++- compatible: must contain "marvell,dove-global-config" and "syscon".
++- reg: base address and size of the Global Configuration registers.
++
++Example:
++
++gconf: global-config@e802c {
++	compatible = "marvell,dove-global-config", "syscon";
++	reg = <0xe802c 0x14>;
++};
+-- 
+1.8.5.2
 
-OK, I'm surprised that all the PCI functions have dummy definitions.
-
-> > You should compile-test in configurations that have just one of those
-> > dependencies enabled.
->=20
-> This has been compile-tested and runtime-tested in OF-only
-> configuration on WM8950, and Roger also tested it in PCI-only
-> configuration, so it seems to work fine.
-[...]
-
-Good, then I have no objection.
-
-Ben.
-
---=20
-Ben Hutchings
-If at first you don't succeed, you're doing about average.
-
---=-lqUvMEKlP/A+W9wDQi+i
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIVAwUAUubuW+e/yOyVhhEJAQpVGQ//d1srlooIRbGRoSGeEH7zZbpAMv6grkeS
-ABdZhue0hVQRq/dIIDmzwfkPHMYykjJPM7YTVY6tT2QJ+UCvgNBFCeG8kXBRTUMQ
-Ybz02Od5YbqqY0IXPFFj3jrVixAk+Nwx6+DVwjP84+odUmg8UTn1V9IviXSk3Jfg
-9qV9ut07SffsWYyDqHsf4zUmFPYIWXE8CCsXN3YMWCcKFkdhwVI7fbMQEazRLEHZ
-QseVmmHGIoBS9KBfGc+aIHzME9wFIIAFbFouFlXY39+i70Wdkyf+GidS/TjP5nSF
-0kumtirxSopbowlWsJSC2+Cd0vYz4P6tQQk/8t+9qR5VkgmNmSceyQtEZGfhvPx9
-VMf7NhSJ1P8ASnoGiheEFgEgCLfBoNKnXmPtRVkhesZhp1iWUv7W6HOD/ot/gH2R
-TKeBzsDA0WMXmkNntumStolS418lkF4IQz7EX4EXiLafxlJdnnNcZ/BYVYRd5na3
-9X55qslsbrEaRt+3ZjJWmu3gp1N0Kmh3fVzlFsfiSQHJiso89OEer7LnpB/hcQBg
-v6VQrIGaTG03pN2Bb9vQjW99v4IcKLD3pibCecSmOW9nPXiKTXPI+8KBSqoBDUly
-RZ6ND+6xrX880gMNKOnyTfNwUJW6/0tCFtaRj05KEILmsPDcjuWADaBqiMy4rFEi
-tn97EGF+hBg=
-=3EKG
------END PGP SIGNATURE-----
-
---=-lqUvMEKlP/A+W9wDQi+i--
