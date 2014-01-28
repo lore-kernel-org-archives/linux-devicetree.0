@@ -1,57 +1,60 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/9] ARM: dts: imx6sl: remove the use of pingrp macros
-Date: Tue, 28 Jan 2014 19:20:49 +0800
-Message-ID: <20140128112047.GC20583@S2101-09.ap.freescale.net>
-References: <1390668191-20289-1-git-send-email-shawn.guo@linaro.org>
- <1390668191-20289-3-git-send-email-shawn.guo@linaro.org>
- <5923680.sl3G3EgCsY@phil>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [Patch v3 2/2] dmaengine: qcom_bam_dma: Add device tree binding
+Date: Tue, 28 Jan 2014 17:02:42 +0530
+Message-ID: <20140128113242.GJ10628@intel.com>
+References: <1390890471-14882-1-git-send-email-agross@codeaurora.org>
+ <1390890471-14882-3-git-send-email-agross@codeaurora.org>
+ <52E772DF.6000604@metafoo.de>
+ <4697306.PPWWh8UGTE@wuerfel>
+ <20140128111756.GE15937@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5923680.sl3G3EgCsY@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+In-Reply-To: <20140128111756.GE15937@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <agross@codeaurora.org>, dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 28, 2014 at 11:17:22AM +0100, Heiko St=FCbner wrote:
-> [... and so on for the other groups ... ]
->=20
-> I'm confused now :-) . Current linux-next [0] shows the pin-settings =
-as part=20
-> of imx6sl.dtsi - a way a lot of other architectures organize their pi=
-ngroups=20
-> too, with the board file only referencing the relevant pingroups from=
- the=20
-> predefined ones of the soc.
->=20
-> So I guess your move to the pingrp-header moved them out of the imx6s=
-l.dtsi to=20
-> the .h and is not part of linux-next;
+On Tue, Jan 28, 2014 at 11:17:57AM +0000, Russell King - ARM Linux wrote:
+> On Tue, Jan 28, 2014 at 10:16:53AM +0100, Arnd Bergmann wrote:
+> > On Tuesday 28 January 2014 10:05:35 Lars-Peter Clausen wrote:
+> > > Why does the direction needs to be specified in specifier? I see two
+> > > options, either the direction per is fixed in hardware. In that case the DMA
+> > > controller node should describe which channel is which direction. Or the
+> > > direction is not fixed in hardware and can be changed at runtime in which
+> > > case it should be set on a per descriptor basis.
+> > 
+> > Normally the direction is implied by dmaengine_slave_config().
+> 
+> No.  The direction argument in there is deprecated - we've been talking
+> about removing it for some time.
+> 
+> DMA engine drivers should store all parameters of the configuration, and
+> then select the appropriate ones when preparing a transfer (which itself
+> involves a direction.)
 
-Yes, my for-next branch was excluded from linux-next temporarily for
-some reason.  I will ask Stephen to add it back once v3.14-rc1 is out.
-That said, you can see nothing we developed in this cycle on linux-next
-for now.
-
-> but this patch (and the others in this=20
-> series) now moves the definitions into the individual board files. Ca=
-n't you=20
-> just move them back to the soc-dtsi files to prevent each board dupli=
-cating=20
-> them?
-
-No.  That will bring back the problem we try to solve from the
-beginning [1].
-
-Shawn
-
-[1] http://thread.gmane.org/gmane.linux.ports.arm.kernel/275912/
+Right all the prep_ calls for slave cases have explcit direction argument so
+sending it using slave config makes no sense. So will remove it after the merge
+window closes and fix :)
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+~Vinod
+> 
+> Not doing this implies that if you have a half-duplex device, you have to
+> repeatedly issue a dmaengine_slave_config() call, a prepare call, and a
+> submit call to the DMA engine code for every segment you want to transfer.
+> We don't need that kind of DMA engine specific behaviour in DMA engine
+> users.
+> 
+> -- 
+> FTTC broadband for 0.8mile line: 5.8Mbps down 500kbps up.  Estimation
+> in database were 13.1 to 19Mbit for a good line, about 7.5+ for a bad.
+> Estimate before purchase was "up to 13.2Mbit".
+> --
+> To unsubscribe from this list: send the line "unsubscribe dmaengine" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
