@@ -1,51 +1,123 @@
-From: Chris Ball <chris@printf.net>
-Subject: Re: [PATCH 1/3] mmc: add support for power-on sequencing through DT
-Date: Tue, 28 Jan 2014 01:08:32 +0000
-Message-ID: <861tzs29rj.fsf@void.printf.net>
-References: <1390190215-22700-1-git-send-email-olof@lixom.net>
-	<1390190215-22700-2-git-send-email-olof@lixom.net>
-	<52DEBDA7.7030200@samsung.com> <52E54540.8080304@gmail.com>
-	<CAPDyKFqpOLZiUSDvxVtYrBM8DtrZDLE27LKzyoWaf29Ni2vcFQ@mail.gmail.com>
-	<52E700F0.7040708@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <52E700F0.7040708@gmail.com> (Tomasz Figa's message of "Tue, 28
-	Jan 2014 01:59:28 +0100")
-Sender: linux-mmc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Olof Johansson <olof@lixom.net>, linux-mmc <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, robh+dt@kernel.org, mark.rutland@arm.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 00/21] pinctrl: mvebu: restructure and remove hardcoded addresses from Dove pinctrl
+Date: Tue, 28 Jan 2014 01:39:12 +0100
+Message-ID: <1390869573-27624-1-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <1390674856-4993-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1390674856-4993-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch set is one required step for Dove to hop into mach-mvebu.
+Until now, pinctrl-dove was hardcoding some registers that do not
+directly belong to MPP core registers. This is not compatible with
+what we want for mach-mvebu.
 
-On Tue, Jan 28 2014, Tomasz Figa wrote:
->> I am not sure I understand why this is needed. I think it would be
->> more convenient to use MMC_CAP_NONREMOVABLE instead as stated earlier.
->> But please elaborate, I might have missed something.
->
-> See above. I'm not quite convinced that state of MMC interface should
-> determine power state of the chip. I can easily imagine a situation
-> where the MMC link is powered down (link power management) but the
-> WLAN chip keeps operation. Keep in mind that those are usually
-> complete SoCs that can keep processing network traffic autonomously
-> and wake-up the application processor whenever anything interesting
-> happens using extra out of bounds signalling, which might trigger
-> re-enabling the MMC link.
+Unfortunately, the common pinctrl driver part has a design flaw,
+that requires some restructuring. As Thomas pointed out, the redesign
+taken in v1 [1] is not sufficient for possible future Orion5x SoC pinctrl.
 
-For what it's worth, we did this using upstream code (libertas-sd8686
-WLAN with sdhci-pxav3) at OLPC.  We set the SDIO device to 1-bit mode
-on system suspend, using MMC_CAP_NONREMOVABLE, MMC_PM_KEEP_POWER and
-MMC_PM_WAKE_SDIO_IRQ, and tell the PMU to wake on the 1-bit data line.
-When it wakes the system, the system sees the SDIO interrupt and
-processes the waiting network traffic.
+The "common" part of the patch set therefore, overhawls MVEBU pinctrl
+to remove any register mangling from the common pinctrl driver and
+moves it into SoC specific drivers instead.
 
-So this use case is already supported using the current interfaces.
-If this interface doesn't work for your use case, could you talk a
-little more about what you're trying to achieve?
+The "Dove" part of the patch set removes all hardcoded addresses
+from pinctrl-dove by either requesting additional resources or a
+syscon provided regmap for global config registers. As this changes
+existing driver to DT binding relationship, all additional resources
+are probed in a backward compatible way. If the corresponding resource
+cannot be found, we derive it from the existing pinctrl resource and
+warn about the old DTB firmware.
 
-Thanks,
+Patches 1 to 4 remain unchanged:
 
-- Chris.
+Patch 1 and 2 add or update binding documentation for dove, global
+config syscon, and pinctrl-dove. The latter also documents missing reg
+property requirement for other mvebu pinctrl nodes.
+
+Patch 3 and 4 add the new pinctrl reg property values and global config
+register syscon to exisiting dove.dtsi.
+
+Patches 5-8 now prepare to fix the misdesign of common mvebu pinctrl
+driver, that requested the resource instead of getting it from the SoC
+specific driver stub:
+
+Patch 5 temporarily adds passing the base address the common driver
+and moves resource requests to the SoC specific drivers. Patch 6 adds
+some useful mask/shift defines. Patches 7 and 8 allow to identify
+mpp pin ranges by NULL mpp name instead of special get/set callbacks.
+
+Patches 9-12 provide SoC specific callbacks for mpp ctrl registers
+even if they match the standard layout. This then allows patches 13
+and 14 to get rid of base addresses and the temporary address passing.
+
+Patches 15-20 comprise the rebased hardcoded address removal for
+Dove from v1. Patch 21 finally consolidates Dove pmu mpp definition
+by exploiting auto-numbering of mpp names.
+
+The patch set is still based on pre-v3.14-rc1 mainline.  It has been
+boot tested on Dove and compile tested only for Kirkwood, Armada 370
+and XP.
+
+[1] https://lkml.org/lkml/2014/1/25/131
+
+Sebastian Hesselbarth (21):
+  devicetree: bindings: add missing Marvell Dove SoC documentation
+  devicetree: bindings: update MVEBU pinctrl binding documentation
+  ARM: dove: add additional pinctrl registers
+  ARM: dove: add global-config register node
+  pinctrl: mvebu: prepare to fix misdesigned resource allocation
+  pinctrl: mvebu: add common mpp reg defines to mvebu pinctrl include
+  pinctrl: mvebu: move generic group name generation
+  pinctrl: mvebu: remove checks for mpp_get/set
+  pinctrl: mvebu: dove: provide generic mpp callbacks
+  pinctrl: mvebu: kirkwood: provide generic mpp callbacks
+  pinctrl: mvebu: armada-370: provide generic mpp callbacks
+  pinctrl: mvebu: armada-xp: provide generic mpp callbacks
+  pinctrl: mvebu: remove unused macros and functions
+  pinctrl: mvebu: remove base address from common driver
+  pinctrl: mvebu: dove: request additional resources
+  pinctrl: mvebu: dove: request syscon regmap for global registers
+  pinctrl: mvebu: dove: use remapped mpp base registers
+  pinctrl: mvebu: dove: use remapped mpp4 register
+  pinctrl: mvebu: dove: use remapped pmu_mpp registers
+  pinctrl: mvebu: dove: use global register regmap
+  pinctrl: mvebu: dove: consolidate auto-numbered pmu mpp ranges
+
+ .../devicetree/bindings/arm/marvell,dove.txt       |  22 ++
+ .../pinctrl/marvell,armada-370-pinctrl.txt         |   1 +
+ .../bindings/pinctrl/marvell,armada-xp-pinctrl.txt |   1 +
+ .../bindings/pinctrl/marvell,dove-pinctrl.txt      |   1 +
+ .../bindings/pinctrl/marvell,kirkwood-pinctrl.txt  |   1 +
+ .../bindings/pinctrl/marvell,mvebu-pinctrl.txt     |   2 +-
+ arch/arm/boot/dts/dove.dtsi                        |  10 +-
+ drivers/pinctrl/mvebu/Kconfig                      |   1 +
+ drivers/pinctrl/mvebu/pinctrl-armada-370.c         |  34 +-
+ drivers/pinctrl/mvebu/pinctrl-armada-xp.c          |  38 ++-
+ drivers/pinctrl/mvebu/pinctrl-dove.c               | 374 +++++++++++++--------
+ drivers/pinctrl/mvebu/pinctrl-kirkwood.c           |  39 ++-
+ drivers/pinctrl/mvebu/pinctrl-mvebu.c              |  94 +-----
+ drivers/pinctrl/mvebu/pinctrl-mvebu.h              |  16 +-
+ 14 files changed, 388 insertions(+), 246 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/marvell,dove.txt
+
+---
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 -- 
-Chris Ball   <chris@printf.net>   <http://printf.net/>
+1.8.5.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
