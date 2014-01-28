@@ -1,66 +1,79 @@
-From: Alexey Charkov <alchark@gmail.com>
-Subject: Re: [PATCH 3/3] net: via-rhine: add OF bus binding
-Date: Tue, 28 Jan 2014 22:31:20 +0400
-Message-ID: <CABjd4Yx5HtbGjo_ZsOJ5SvqFQZey1fv5K36PD=D9fUUn0SanVQ@mail.gmail.com>
-References: <1385227995-3956-1-git-send-email-alchark@gmail.com>
-	<1390823503-24087-1-git-send-email-alchark@gmail.com>
-	<1390823503-24087-4-git-send-email-alchark@gmail.com>
-	<1390834654.2735.148.camel@deadeye.wl.decadent.org.uk>
-	<CABjd4Yz2Kfed_qBfSAEXoAcVxfsmhTBA-83YJ9_iSwPZ+r1qYQ@mail.gmail.com>
-	<1390866011.4405.2.camel@deadeye.wl.decadent.org.uk>
+From: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] clk: sunxi: Add support for USB
+ clock-register reset bits
+Date: Tue, 28 Jan 2014 16:38:46 -0300
+Message-ID: <52E80746.9020500@elopez.com.ar>
+References: <1390426587-16287-1-git-send-email-hdegoede@redhat.com> <1390426587-16287-2-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1390866011.4405.2.camel@deadeye.wl.decadent.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ben Hutchings <ben@decadent.org.uk>
-Cc: netdev <netdev@vger.kernel.org>, Tony Prisk <linux@prisktech.co.nz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Roger Luethi <rl@hellgate.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBD73XIMS3EHBBXUOUCLQKGQERZ7LL2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1390426587-16287-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014/1/28 Ben Hutchings <ben@decadent.org.uk>:
-> On Mon, 2014-01-27 at 19:34 +0400, Alexey Charkov wrote:
->> 2014/1/27 Ben Hutchings <ben@decadent.org.uk>:
->> > On Mon, 2014-01-27 at 15:51 +0400, Alexey Charkov wrote:
->> >> This should make the driver usable with VIA/WonderMedia ARM-based
->> >> Systems-on-Chip integrated Rhine III adapters. Note that these
->> >> are always in MMIO mode, and don't have any known EEPROM.
->> > [...]
->> >> --- a/drivers/net/ethernet/via/Kconfig
->> >> +++ b/drivers/net/ethernet/via/Kconfig
->> >> @@ -19,7 +19,7 @@ if NET_VENDOR_VIA
->> >>
->> >>  config VIA_RHINE
->> >>         tristate "VIA Rhine support"
->> >> -       depends on PCI
->> >> +       depends on (PCI || USE_OF)
->> >>         select CRC32
->> >>         select MII
->> >>         ---help---
->> >
->> > This seems like the right thing to do, but it means you need to add
->> > #ifdef CONFIG_PCI and #ifdef CONFIG_USE_OF around the driver structures
->> > and related functions.
->>
->> Frankly, I would like to avoid that if possible (as pointed out in the
->> cover email), as I believe we would get a cleaner driver without
->> #ifdef. This is also the way it was done in via-velocity, and it works
->> just fine.
->
-> OK, I'm surprised that all the PCI functions have dummy definitions.
->
->> > You should compile-test in configurations that have just one of those
->> > dependencies enabled.
->>
->> This has been compile-tested and runtime-tested in OF-only
->> configuration on WM8950, and Roger also tested it in PCI-only
->> configuration, so it seems to work fine.
-> [...]
->
-> Good, then I have no objection.
+Hi Hans,
 
-Thanks Ben! Would it be fine to add your Reviewed-by at the next
-iteration, once I fix indentation of function arguments and
-dev_is_pci()?
+El 22/01/14 18:36, Hans de Goede escribi=F3:
+> The usb-clk register is special in that it not only contains clk gate bit=
+s,
+> but also has a few reset bits. This commit adds support for this by allow=
+ing
+> gates type sunxi clks to also register a reset controller.
+>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+(snip)
+>   static const struct gates_data sun4i_axi_gates_data __initconst =3D {
+> @@ -818,6 +873,7 @@ static void __init sunxi_gates_clk_setup(struct devic=
+e_node *node,
+>   					 struct gates_data *data)
+>   {
+>   	struct clk_onecell_data *clk_data;
+> +	struct gates_reset_data *reset_data;
+>   	const char *clk_parent;
+>   	const char *clk_name;
+>   	void *reg;
+> @@ -861,6 +917,21 @@ static void __init sunxi_gates_clk_setup(struct devi=
+ce_node *node,
+>   	clk_data->clk_num =3D i;
+>
+>   	of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
+> +
+> +	/* Register a reset controler for gates with reset bits */
+> +	if (data->reset_mask =3D=3D 0)
+> +		return;
+> +
+> +	reset_data =3D kzalloc(sizeof(*reset_data), GFP_KERNEL);
+> +	if (!reset_data)
+> +		return;
+> +
+> +	reset_data->reg =3D reg;
+> +	reset_data->lock =3D &clk_lock;
+> +	reset_data->rcdev.nr_resets =3D hweight32(data->reset_mask);
 
-Thanks,
-Alexey
+I know I made you change this, but after having a second look into=20
+nr_resets, I think your original implementation makes more sense. This=20
+will break if you use a mask with holes on it. Sorry :(
+
+> +	reset_data->rcdev.ops =3D &sunxi_gates_reset_ops;
+> +	reset_data->rcdev.of_node =3D node;
+> +	reset_controller_register(&reset_data->rcdev);
+>   }
+
+Emilio
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/groups/opt_out.
