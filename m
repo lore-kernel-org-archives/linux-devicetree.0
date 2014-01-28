@@ -1,53 +1,53 @@
-From: Arnd Bergmann <arnd@arndb.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Subject: Re: [Patch v3 2/2] dmaengine: qcom_bam_dma: Add device tree binding
-Date: Tue, 28 Jan 2014 13:05:10 +0100
-Message-ID: <4916428.f0GtxdkWKj@wuerfel>
-References: <1390890471-14882-1-git-send-email-agross@codeaurora.org>
- <20140128111756.GE15937@n2100.arm.linux.org.uk>
- <20140128113242.GJ10628@intel.com>
+Date: Tue, 28 Jan 2014 13:08:47 +0100
+Message-ID: <9156959.vu4XdoKglI@wuerfel>
+References: <1390890471-14882-1-git-send-email-agross@codeaurora.org> <20140128113242.GJ10628@intel.com> <4916428.f0GtxdkWKj@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140128113242.GJ10628@intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <agross@codeaurora.org>, dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4916428.f0GtxdkWKj@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 28 January 2014 17:02:42 Vinod Koul wrote:
-> On Tue, Jan 28, 2014 at 11:17:57AM +0000, Russell King - ARM Linux wrote:
-> > On Tue, Jan 28, 2014 at 10:16:53AM +0100, Arnd Bergmann wrote:
-> > > On Tuesday 28 January 2014 10:05:35 Lars-Peter Clausen wrote:
-> > > > Why does the direction needs to be specified in specifier? I see two
-> > > > options, either the direction per is fixed in hardware. In that case the DMA
-> > > > controller node should describe which channel is which direction. Or the
-> > > > direction is not fixed in hardware and can be changed at runtime in which
-> > > > case it should be set on a per descriptor basis.
+On Tuesday 28 January 2014 13:05:10 Arnd Bergmann wrote:
+> On Tuesday 28 January 2014 17:02:42 Vinod Koul wrote:
+> > On Tue, Jan 28, 2014 at 11:17:57AM +0000, Russell King - ARM Linux wrote:
+> > > On Tue, Jan 28, 2014 at 10:16:53AM +0100, Arnd Bergmann wrote:
+> > > > On Tuesday 28 January 2014 10:05:35 Lars-Peter Clausen wrote:
+> > > > > Why does the direction needs to be specified in specifier? I see two
+> > > > > options, either the direction per is fixed in hardware. In that case the DMA
+> > > > > controller node should describe which channel is which direction. Or the
+> > > > > direction is not fixed in hardware and can be changed at runtime in which
+> > > > > case it should be set on a per descriptor basis.
+> > > > 
+> > > > Normally the direction is implied by dmaengine_slave_config().
 > > > 
-> > > Normally the direction is implied by dmaengine_slave_config().
+> > > No.  The direction argument in there is deprecated - we've been talking
+> > > about removing it for some time.
+> > > 
+> > > DMA engine drivers should store all parameters of the configuration, and
+> > > then select the appropriate ones when preparing a transfer (which itself
+> > > involves a direction.)
 > > 
-> > No.  The direction argument in there is deprecated - we've been talking
-> > about removing it for some time.
-> > 
-> > DMA engine drivers should store all parameters of the configuration, and
-> > then select the appropriate ones when preparing a transfer (which itself
-> > involves a direction.)
+> > Right all the prep_ calls for slave cases have explcit direction argument so
+> > sending it using slave config makes no sense. So will remove it after the merge
+> > window closes and fix 
 > 
-> Right all the prep_ calls for slave cases have explcit direction argument so
-> sending it using slave config makes no sense. So will remove it after the merge
-> window closes and fix 
+> Ok, thanks for clearing up my mistake. However, the argument remains:
+> the direction doesn't need to be in the DT DMA descriptor since it
+> gets set by software anyway.
 
-Ok, thanks for clearing up my mistake. However, the argument remains:
-the direction doesn't need to be in the DT DMA descriptor since it
-gets set by software anyway.
+On a related note, should we try to remove the slave_id field from
+the slave config structure as well? I believe it is still used by
+the shmobile dma engine in non-DT mode, but that is inconsistent with
+how all the others work, and with what the same driver does for DT.
 
 	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
