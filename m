@@ -1,91 +1,58 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] clk: sunxi: Add USB clock register defintions
-Date: Tue, 28 Jan 2014 10:44:27 +0100
-Message-ID: <20140128094427.GZ3867@lukather>
-References: <1390426587-16287-1-git-send-email-hdegoede@redhat.com>
- <1390426587-16287-3-git-send-email-hdegoede@redhat.com>
- <20140127144349.GJ3867@lukather>
- <52E67316.5020906@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCH v3 5/6] ASoC: tlv320aic32x4: Support for
+	master clock
+Date: Tue, 28 Jan 2014 11:01:47 +0100
+Message-ID: <20140128100147.GE32009@pengutronix.de>
+References: <1390824190-18376-1-git-send-email-mpa@pengutronix.de>
+ <1390824190-18376-6-git-send-email-mpa@pengutronix.de>
+ <20140127181707.GD11841@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ulNsWUvGrZAj8PMr"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBIHYTWLQKGQEMEMC3VY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <52E67316.5020906-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20140127181707.GD11841@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jan 27, 2014 at 06:17:07PM +0000, Mark Brown wrote:
+> On Mon, Jan 27, 2014 at 01:03:09PM +0100, Markus Pargmann wrote:
+> 
+> >  	case SND_SOC_BIAS_STANDBY:
+> > +		/* Switch off master clock */
+> > +		if (!IS_ERR(aic32x4->mclk))
+> > +			clk_disable_unprepare(aic32x4->mclk);
+> > +
+> >  		/* Switch off PLL */
+> >  		snd_soc_update_bits(codec, AIC32X4_PLLPR,
+> >  				    AIC32X4_PLLEN, 0);
+> 
+> This looks like it's disabling the MCLK before disabling the PLL - if
+> the two are being disabled together I would expect to see the other way
+> around.
 
---ulNsWUvGrZAj8PMr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes right, should be the other way round, although it doesn't make a
+difference.
+I will change it for v4.
 
-On Mon, Jan 27, 2014 at 03:54:14PM +0100, Hans de Goede wrote:
-> >> "allwinner,sun5i-a13-usb-gates-clk" - for usb gates + resets on A13
-> >=20
-> > Maybe we can just remove the gates from there? Even though they
-> > are gates, they are also (a bit) more than that.
->=20
-> To be clear you mean s/usb-gates-clk/usb-clk/ right ?
+Thanks,
 
-Yep, exactly
-
-> > I guess that means that we will have the OHCI0 gate declared with
-> > <&...-gates-clk 6>, while it's actually the first gate for this
-> > clock?
->=20
-> Correct.
->=20
-> > Maybe introducing an offset field in the gates_data would be a
-> > good idea, so that we always start from indexing the gates from 0
-> > in the DT?
->=20
-> Well for the other "gates" type clks we also have holes in the
-> range, and we always refer to the clk with the bit number in the reg
-> as the clock-cell value.
-
-Yes, we have holes, but I see two majors differences here:
-  - the other gates are just gates, while the usb clocks are a bit
-    more than that.
-  - the other gates' gating bits thus all start at bit 0, while here,
-    since it's kind of a "mixed" clock, the gating bits start at bit 6
-    (on the A20 at least)
+Markus
 
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
 
---ulNsWUvGrZAj8PMr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS53v7AAoJEBx+YmzsjxAgXesP+wRFmwP8R/nJ/DfSCnGpnV8M
-qF9hsdpy1YTFcm8tK7ZriRSYi510Wfg7DNYVQRaFjA8HU54EaFddrv9w70pEIFIF
-k9jysJDhk5iZdLXopr1nc2+eMUA7YH7SjMx9POmjXtkOs0Fpqyl1TBi4w811BWG9
-CAZkgTlyJKapAKYjp3WpOJ8XBZUiypXC2h1z0U7nxbkD5GpKpRymOaEvkBa+octa
-iOgNdErF6mbHBLnoLULFAHJ5LUJWe/KSzeaoolhPGReabD1kXFRRdKleH/Fc0ffp
-dAL1rSTsjwccFrhGAyUBoVNIZvCesRpFhU3O3KgFs2EavMdbyQHsvVW7UYOPU2Rp
-dB/If5YMJ831gPzvomHAEFqCzRN2HSY5OkqUg2okcsz7fwCQ0bj28JcWej2OCAo3
-g4KvJiZbSV5g6A1VuJxeIPzgv5SeEC7xFGjgvQ+KJ+0BiY0dPkQPTxk7GlZks0Kn
-KEXBspmNgR7ZtLGnYAQYV4Pd1PHxJvBdZlvcBEMPamdNS18OhMdRFflEi7Mw5bdd
-G7o7SzGnZGbHWgyVUZMhsrAhulMjpEwo7D2sqKaJ81YtNTW/HqcteaCpuQcyxWIi
-Zo+UbErzMMwP858i3EnuXe/P5oE2U+5tuKUTbOOF7473zvtXnOoV2xZx9O1OHC9R
-3fF+o90RzzNVyyRQPjtP
-=bLTF
------END PGP SIGNATURE-----
-
---ulNsWUvGrZAj8PMr--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
