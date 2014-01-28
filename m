@@ -1,253 +1,78 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv12] ARM: dts: Add support for the cpuimx35 board from
- Eukrea and its baseboard.
-Date: Tue, 28 Jan 2014 16:37:51 +0800
-Message-ID: <20140128083746.GA20595@S2101-09.ap.freescale.net>
-References: <1389803532-8516-1-git-send-email-denis@eukrea.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [Patch v3 2/2] dmaengine: qcom_bam_dma: Add device tree binding
+Date: Tue, 28 Jan 2014 10:05:35 +0100
+Message-ID: <52E772DF.6000604@metafoo.de>
+References: <1390890471-14882-1-git-send-email-agross@codeaurora.org> <1390890471-14882-3-git-send-email-agross@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1389803532-8516-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Cc: Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1390890471-14882-3-git-send-email-agross@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <agross@codeaurora.org>
+Cc: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 15, 2014 at 05:32:12PM +0100, Denis Carikli wrote:
-> diff --git a/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi b/arch/arm/=
-boot/dts/imx35-eukrea-cpuimx35.dtsi
+On 01/28/2014 07:27 AM, Andy Gross wrote:
+> Add device tree binding support for the QCOM BAM DMA driver.
+> 
+> Signed-off-by: Andy Gross <agross@codeaurora.org>
+> ---
+>  .../devicetree/bindings/dma/qcom_bam_dma.txt       |   52 ++++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
 > new file mode 100644
-> index 0000000..303f789
+> index 0000000..53fd10a
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
-> @@ -0,0 +1,59 @@
-> +/*
-> + * Copyright 2013 Eukr=E9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version 2
-> + * of the License, or (at your option) any later version.
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
+> +++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+> @@ -0,0 +1,52 @@
+> +QCOM BAM DMA controller
 > +
-> +#include "imx35.dtsi"
+> +Required properties:
+> +- compatible:	Must be "qcom,bam-v1.4.0" for MSM8974 V1
+> +		Must be "qcom,bam-v1.4.1" for MSM8974 V2
+> +- reg: Address range for DMA registers
+> +- interrupts: single interrupt for this controller
+> +- #dma-cells: must be <2>
+> +- clocks: required clock
+> +- clock-names: name of clock
+> +- qcom,ee : indicates the active Execution Environment identifier (0-7)
 > +
-> +/ {
-> +	model =3D "Eukrea CPUIMX35";
-> +	compatible =3D "eukrea,cpuimx35", "fsl,imx35";
+> +Example:
 > +
-> +	memory {
-> +		reg =3D <0x80000000 0x8000000>; /* 128M */
-> +	};
-> +};
-> +
-> +&fec {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_fec>;
-> +	status =3D "okay";
-> +};
-> +
-> +&i2c1 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_i2c1>;
-> +	status =3D "okay";
-> +
-> +	pcf8563@51 {
-> +		compatible =3D "nxp,pcf8563";
-> +		reg =3D <0x51>;
-> +	};
-> +};
-> +
-> +&iomuxc {
-> +	imx35-eukrea {
-> +		pinctrl_fec: fecgrp {
-> +			fsl,pins =3D <MX35_FEC_PINGRP1>;
-> +		};
-> +
-> +		pinctrl_i2c1: i2c1grp {
-> +			fsl,pins =3D <MX35_I2C1_PINGRP1>;
-> +		};
-
-You have these two pingrp in imx35-eukrea-cpuimx35.dtsi ...
-
-> +	};
-> +};
-> +
-> +&nfc {
-> +	nand-bus-width =3D <8>;
-> +	nand-ecc-mode =3D "hw";
-> +	nand-on-flash-bbt;
-> +	status =3D "okay";
-> +};
-> diff --git a/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts b=
-/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
-> new file mode 100644
-> index 0000000..23f6fe1
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx35-eukrea-mbimxsd35-baseboard.dts
-> @@ -0,0 +1,137 @@
-> +/*
-> + * Copyright 2013 Eukr=E9a Electromatique <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version 2
-> + * of the License, or (at your option) any later version.
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
-> +#include "imx35-eukrea-cpuimx35.dtsi"
-
-=2E.. imx35-eukrea-cpuimx35.dtsi is being included here ...
-
-> +
-> +/ {
-> +	model =3D "Eukrea CPUIMX35";
-> +	compatible =3D "eukrea,mbimxsd35-baseboard", "eukrea,cpuimx35", "fs=
-l,imx35";
-> +
-> +	gpio_keys {
-> +		compatible =3D "gpio-keys";
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&pinctrl_bp1>;
-> +
-> +		bp1 {
-> +			label =3D "BP1";
-> +			gpios =3D <&gpio3 25 GPIO_ACTIVE_LOW>;
-> +			linux,code =3D <BTN_MISC>;
-> +			gpio-key,wakeup;
-> +			linux,input-type =3D <1>;
-> +		};
+> +	uart-bam: dma@f9984000 = {
+> +		compatible = "qcom,bam-v1.4.1";
+> +		reg = <0xf9984000 0x15000>;
+> +		interrupts = <0 94 0>;
+> +		clocks = <&gcc GCC_BAM_DMA_AHB_CLK>;
+> +		clock-names = "bam_clk";
+> +		#dma-cells = <2>;
+> +		qcom,ee = <0>;
 > +	};
 > +
-> +	leds {
-> +		compatible =3D "gpio-leds";
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&pinctrl_led1>;
+> +Client:
+> +Required properties:
+> +- dmas: List of dma channel requests
+> +- dma-names: Names of aforementioned requested channels
 > +
-> +		led1 {
-> +			label =3D "led1";
-> +			gpios =3D <&gpio3 29 GPIO_ACTIVE_LOW>;
-> +			linux,default-trigger =3D "heartbeat";
-> +		};
-> +	};
-> +};
+> +Clients must use the format described in the dma.txt file, using a three cell
+> +specifier for each channel.
 > +
-> +&audmux {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_audmux>;
-> +	status =3D "okay";
-> +};
+> +The three cells in order are:
+> +  1. A phandle pointing to the DMA controller
+> +  2. The channel number
+> +  3. Direction of the fixed unidirectional channel
+> +     0 - Memory to Device
+> +     1 - Device to Memory
+> +     2 - Device to Device
 > +
-> +&esdhc1 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_esdhc1>;
-> +	cd-gpios =3D <&gpio3 24>;
-> +	status =3D "okay";
-> +};
-> +
-> +&i2c1 {
-> +	tlv320aic23: codec@1a {
-> +		compatible =3D "ti,tlv320aic23";
-> +		reg =3D <0x1a>;
-> +	};
-> +};
-> +
-> +&iomuxc {
-> +	imx35-eukrea {
-> +		pinctrl_audmux: audmuxgrp {
-> +			fsl,pins =3D <MX35_AUDMUX_PINGRP1>;
-> +		};
-> +
-> +		pinctrl_bp1: bp1grp {
-> +			fsl,pins =3D <MX35_PAD_LD19__GPIO3_25  0x80000000>;
-> +		};
-> +
-> +		pinctrl_esdhc1: esdhc1grp {
-> +			fsl,pins =3D <
-> +				  MX35_ESDHC1_PINGRP1
-> +				  MX35_PAD_LD18__GPIO3_24  0x80000000 /* CD */
-> +			>;
-> +		};
-> +
-> +		pinctrl_fec: fecgrp {
-> +			fsl,pins =3D <MX35_FEC_PINGRP1>;
-> +		};
-> +
-> +		pinctrl_i2c1: i2c1grp {
-> +			fsl,pins =3D <MX35_I2C1_PINGRP1>;
-> +		};
 
-=2E.. why do you need to have them again?
+Why does the direction needs to be specified in specifier? I see two
+options, either the direction per is fixed in hardware. In that case the DMA
+controller node should describe which channel is which direction. Or the
+direction is not fixed in hardware and can be changed at runtime in which
+case it should be set on a per descriptor basis.
 
-I spotted this when rebasing this patch on pingrp removal series, and
-just dropped them from imx35-eukrea-mbimxsd35-baseboard.dts.  Let me
-know if I did get it right.
-
-Shawn
-
-> +
-> +		pinctrl_led1: led1grp {
-> +			fsl,pins =3D <MX35_PAD_LD23__GPIO3_29  0x80000000>;
-> +		};
-> +
-> +		pinctrl_reg_lcd_3v3: reg-lcd-3v3 {
-> +			fsl,pins =3D <MX35_PAD_D3_CLS__GPIO1_4 0x80000000>;
-> +		};
-> +
-> +		pinctrl_uart1: uart1grp {
-> +			fsl,pins =3D <
-> +				MX35_UART1_PINGRP1
-> +				MX35_UART1_RTSCTS_PINGRP1
-> +			>;
-> +		};
-> +
-> +		pinctrl_uart2: uart2grp {
-> +			fsl,pins =3D <
-> +				MX35_UART2_PINGRP1
-> +				MX35_UART2_RTSCTS_PINGRP1
-> +			>;
-> +		};
-> +	};
-> +};
-> +
-> +&ssi1 {
-> +	fsl,mode =3D "i2s-slave";
-> +	status =3D "okay";
-> +};
-> +
-> +&uart1 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_uart1>;
-> +	fsl,uart-has-rtscts;
-> +	status =3D "okay";
-> +};
-> +
-> +&uart2 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_uart2>;
-> +	fsl,uart-has-rtscts;
-> +	status =3D "okay";
-> +};
-> --=20
-> 1.7.9.5
->=20
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- Lars
