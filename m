@@ -1,38 +1,45 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 0/2] DT: net: davinci_emac: couple more properties actually
- optional
-Date: Thu, 30 Jan 2014 01:42:28 +0300
-Message-ID: <52E983D4.4070405@cogentembedded.com>
-References: <201401280245.35745.sergei.shtylyov@cogentembedded.com> <20140128.234315.2164810932256158473.davem@davemloft.net>
+Subject: Re: [PATCH] DT: net: document Ethernet bindings in one place
+Date: Thu, 30 Jan 2014 02:04:26 +0300
+Message-ID: <52E988FA.8040807@cogentembedded.com>
+References: <201401180405.07859.sergei.shtylyov@cogentembedded.com> <CAL_Jsq+oa9P=rh+p-dMZyGP8TcmpX7bTnMU0ynLvFxjxFDYbRg@mail.gmail.com> <52DD98F7.4090202@cogentembedded.com> <CAL_JsqJXbF1-PcPHR2VP+Vi9A1aWizdsG_r3kDvRt3itXDhCGQ@mail.gmail.com> <CAGVrzcb3X3soJNJCE5+YSpQrr+EdycCRFkptPvBCgFg4CbGJ4Q@mail.gmail.com> <CAGVrzcb0dfw1orZzUt5-YkShOg-HNbUYvvo2vfmsZUZXy1Aqfg@mail.gmail.com> <52DEE465.9000202@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140128.234315.2164810932256158473.davem@davemloft.net>
+In-Reply-To: <52DEE465.9000202@cogentembedded.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: netdev@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com
+To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robherring2@gmail.com>
+Cc: netdev <netdev@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
 Hello.
 
-On 01/29/2014 10:43 AM, David Miller wrote:
+On 01/22/2014 12:19 AM, Sergei Shtylyov wrote:
 
->>     Though described as required, couple more properties in the DaVinci EMAC
->> binding are actually optional, as the driver will happily function without them.
->> The patchset is against DaveM's 'net.git' tree this time.
+>>>>>     I'm afraid that's too late, it has spread very far, so that
+>>>>> of_get_phy_mode() handles that property, not "phy-connection-type".
 
->> [1/2] DT: net: davinci_emac: "ti,davinci-rmii-en" property is actually optional
->> [2/2] DT: net: davinci_emac: "ti,davinci-no-bd-ram" property is actually optional
+>>>> Uggg, I guess this is a case of a defacto standard then if the kernel
+>>>> doesn't even support it.
 
-> Series applied with the "has/have" thing fixed.
+>>> Maybe I forgot to CC you on patch sent to Grant only, I sent a patch a
+>>> while ago for of_get_phy_mode() to look for both "phy-mode" and
+>>> "phy-connection-type" since the former has been a Linux invention, but
+>>> the latter is ePAPR specified.
 
-> Thanks.
+>> Here is a link to the actual patch in question, not sure which tree
+>> Grant applied it to though:
 
-    Thank you!
-    Unfortunately, this driver presents a bad example of DT bindings overall 
-(caused in its turn by a misuse of the platform data for the EMAC type 
-differing instead of the platform device IDs).
+>> http://lkml.indiana.edu/hypermail/linux/kernel/1311.2/00048.html
+
+>     It's not the patch mail, it's Grant's "applied" reply, patch is mangled in
+> this reply, and I couldn't follow the thread. Here's the actual patch mail:
+
+> http://marc.info/?l=devicetree&m=138449662807254
+
+    Florian, I didn't find this patch in Grant's official tree, so maybe you 
+should ask him where is the patch already?
 
 WBR, Sergei
 
