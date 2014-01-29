@@ -1,13 +1,13 @@
 From: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC PATCH v2 02/14] of: mtd: add NAND ECC level
- requirements retrieval
-Date: Wed, 29 Jan 2014 15:34:12 +0100
-Message-ID: <1391006064-28890-3-git-send-email-b.brezillon.dev@gmail.com>
+Subject: [RFC PATCH v2 04/14] mtd: nand: define struct nand_timings
+Date: Wed, 29 Jan 2014 15:34:14 +0100
+Message-ID: <1391006064-28890-5-git-send-email-b.brezillon.dev@gmail.com>
 References: <1391006064-28890-1-git-send-email-b.brezillon.dev@gmail.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDE6NB73YAMBBANDUSLQKGQEBYS2A7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDE6NB73YAMBBAVDUSLQKGQE52HNSKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1391006064-28890-1-git-send-email-b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,75 +19,81 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some chip do not support automatic retrieval of ECC level requirements.
-Provide an helper function to retrieve these requirements from DT.
+Define a struct containing the standard NAND timings as described in NAND
+datasheets.
 
 Signed-off-by: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/of/of_mtd.c    |   25 +++++++++++++++++++++++++
- include/linux/of_mtd.h |    7 +++++++
- 2 files changed, 32 insertions(+)
+ include/linux/mtd/nand.h |   49 ++++++++++++++++++++++++++++++++++++++++++=
+++++
+ 1 file changed, 49 insertions(+)
 
-diff --git a/drivers/of/of_mtd.c b/drivers/of/of_mtd.c
-index a27ec94..e8ced61 100644
---- a/drivers/of/of_mtd.c
-+++ b/drivers/of/of_mtd.c
-@@ -50,6 +50,31 @@ int of_get_nand_ecc_mode(struct device_node *np)
- EXPORT_SYMBOL_GPL(of_get_nand_ecc_mode);
- 
- /**
-+ * of_get_nand_ecc_level - Get nand ecc level for the given device_node
-+ * @np:	Pointer to the given device_node
-+ * @strengh: ECC strength
-+ * @blk_size: ECC block size
-+ *
-+ * The function gets ecc level requirements from property 'nand-ecc-level'.
-+ * Return 0 on success, -errno otherwise.
-+ */
-+int of_get_nand_ecc_level(struct device_node *np, u32 *strengh, u32 *blk_size)
-+{
-+	int err;
-+
-+	err = of_property_read_u32_index(np, "nand-ecc-level", 0, strengh);
-+	if (err < 0)
-+		return err;
-+
-+	err = of_property_read_u32_index(np, "nand-ecc-level", 1, blk_size);
-+	if (err < 0)
-+		return err;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(of_get_nand_ecc_level);
+diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
+index 9e6c8f9..67f0829 100644
+--- a/include/linux/mtd/nand.h
++++ b/include/linux/mtd/nand.h
+@@ -805,4 +805,53 @@ static inline bool nand_is_slc(struct nand_chip *chip)
+ {
+ 	return chip->bits_per_cell =3D=3D 1;
+ }
 +
 +/**
-  * of_get_nand_bus_width - Get nand bus witdh for given device_node
-  * @np:	Pointer to the given device_node
-  *
-diff --git a/include/linux/of_mtd.h b/include/linux/of_mtd.h
-index 6f10e93..3bd8c3b 100644
---- a/include/linux/of_mtd.h
-+++ b/include/linux/of_mtd.h
-@@ -13,6 +13,7 @@
- 
- #include <linux/of.h>
- int of_get_nand_ecc_mode(struct device_node *np);
-+int of_get_nand_ecc_level(struct device_node *np, u32 *strengh, u32 *blk_size);
- int of_get_nand_bus_width(struct device_node *np);
- bool of_get_nand_on_flash_bbt(struct device_node *np);
- 
-@@ -23,6 +24,12 @@ static inline int of_get_nand_ecc_mode(struct device_node *np)
- 	return -ENOSYS;
- }
- 
-+static inline int of_get_nand_ecc_level(struct device_node *np, u32 *strengh,
-+					u32 *blk_size)
-+{
-+	return -ENOSYS;
-+}
++ * struct nand_sdr_timings - SDR NAND chip timings
++ *
++ * This struct defines the timing requirements of a SDR NAND chip.
++ * These informations can be found in every NAND datasheets and the timing=
+s
++ * meaning are described in the ONFI specifications:
++ * www.onfi.org/~/media/ONFI/specs/onfi_3_1_spec.pdf=E2=80=8E (chapter 4.1=
+5 Timing
++ * Parameters)
++ *
++ */
 +
- static inline int of_get_nand_bus_width(struct device_node *np)
- {
- 	return -ENOSYS;
--- 
++struct nand_sdr_timings {
++	u32 tALH_min;
++	u32 tADL_min;
++	u32 tALS_min;
++	u32 tAR_min;
++	u32 tCEA_max;
++	u32 tCEH_min;
++	u32 tCH_min;
++	u32 tCHZ_max;
++	u32 tCLH_min;
++	u32 tCLR_min;
++	u32 tCLS_min;
++	u32 tCOH_min;
++	u32 tCS_min;
++	u32 tDH_min;
++	u32 tDS_min;
++	u32 tFEAT_max;
++	u32 tIR_min;
++	u32 tITC_max;
++	u32 tRC_min;
++	u32 tREA_max;
++	u32 tREH_min;
++	u32 tRHOH_min;
++	u32 tRHW_min;
++	u32 tRHZ_max;
++	u32 tRLOH_min;
++	u32 tRP_min;
++	u32 tRR_min;
++	u64 tRST_max;
++	u32 tWB_max;
++	u32 tWC_min;
++	u32 tWH_min;
++	u32 tWHR_min;
++	u32 tWP_min;
++	u32 tWW_min;
++};
++
+ #endif /* __LINUX_MTD_NAND_H */
+--=20
 1.7.9.5
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/groups/opt_out.
