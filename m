@@ -1,64 +1,66 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/8] pci-rcar-gen2: add of match table
-Date: Wed, 29 Jan 2014 11:06:42 +0100
-Message-ID: <CAMuHMdVSWM5wYeA1OarFEv_yYCJR1FSm5Ercjyc5qtcVameSsw@mail.gmail.com>
-References: <1390754945-28142-1-git-send-email-ben.dooks@codethink.co.uk>
-	<1390754945-28142-2-git-send-email-ben.dooks@codethink.co.uk>
-	<52E6559D.6090708@cogentembedded.com>
-	<52E65EAD.9000909@codethink.co.uk>
-	<20140129061722.GB23833@verge.net.au>
+From: boris brezillon <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC PATCH 0/9] mtd: nand: add sunxi NAND Flash
+ Controller support
+Date: Wed, 29 Jan 2014 11:20:42 +0100
+Message-ID: <52E8D5FA.9070400@overkiz.com>
+References: <1389190924-26226-1-git-send-email-b.brezillon@overkiz.com>	<52D1494E.9090303@overkiz.com> <CAL_JsqJNd_gtn-cCLbZxT=s5NkkXp0DZkJkZrBhWiaL6Js=woQ@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140129061722.GB23833@verge.net.au>
-Sender: linux-pci-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-kernel@lists.codethink.co.uk, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBDGNFFFRWEIBBJNMUOLQKGQEPP7WR2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAL_JsqJNd_gtn-cCLbZxT=s5NkkXp0DZkJkZrBhWiaL6Js=woQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 29, 2014 at 7:17 AM, Simon Horman <horms@verge.net.au> wrote:
->> >>+static struct of_device_id rcar_pci_of_match[] = {
->> >>+    { .compatible = "renesas,pci-r8a7790", },
->> >
->> >    Why only H2 SoC, if the driver is for both Gen2 SoCs?
+Hello Rob,
+
+On 23/01/2014 16:22, Rob Herring wrote:
+> On Sat, Jan 11, 2014 at 7:38 AM, boris brezillon
+> <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org> wrote:
+>> On 08/01/2014 15:21, Boris BREZILLON wrote:
+>>> Hello,
+>>>
+>>> This series add the sunxi NFC support with up to 8 NAND chip connected.
+>>> I'm still in the early stages drivers development and some key features
+>>> are
+>>> missing, but it's usable (I tested it on the cubietruck board).
+>>>
+>>> Here's what's missing:
+>>>    - HW ECC support
+>>>    - DMA support
+>>>    - HW randomization support
+>>>    - many more improvements
+>>>
+>>> This series depends on Emilio's patch series implementing mod0 clks
+>>>
+>>> (http://lists.infradead.org/pipermail/linux-arm-kernel/2013-July/185478.html)
+>>> + an other patch not yet posted
+>>>
+>>> (http://git.elopez.com.ar/linux/commits/5b4eb3ac406b9c98965714d40e8dd6da943d1ab0)
 >>
->> I can add a "renesas,pci-rcar-gen2" as a fallback match however
->> I've not got anything other than an r8a7790 to test on. Also the
->> compatible properties are preferably named after the soc.
+>> During my reasearch regarding the HW ECC and HW randomizer of the Allwinner
+>> NAND flash controller I found this document describing the Altera NAND flash
+>> controller
+>> (which is in turn based on a cadence IP):
+> Which may be similar to drivers/mtd/nand/denali.c as Cadence bought Denali?
+Actually I was wrong, the sunxi and the cadence IP have nothing in common.
+This was pointed out by Henrik (see this thread :
+https://groups.google.com/forum/#!searchin/linux-sunxi/nand/linux-sunxi/x69tFBi95Zk/bNyJlWWOV8oJ 
+<https://groups.google.com/forum/#%21searchin/linux-sunxi/nand/linux-sunxi/x69tFBi95Zk/bNyJlWWOV8oJ>).
+
+
+Sorry for the false hopes.
+
+Best Regards,
+
+Boris
+
 >
-> I'm not sure what the "best practice" is here but I propose that
-> you add both "renesas,pci-rcar-gen2" and "renesas,pci-r8a7790" now.
-
-To the driver or to the '90 DTS?
-
-If the DTS says
-
-    compatible = "renesas,pci-r8a7790", "renesas,pci-rcar-gen2"
-
-then the driver can just live with "renesas,pci-rcar-gen2" for now.
-
-> And that "renesas,pci-r8a7791" can be added once the code has been
-> integrated and tested on that platform.
-
-And later we can add
-
-    compatible = "renesas,pci-r8a7791", "renesas,pci-rcar-gen2"
-
-to the '91 DTS if it turns out to be compatible.
-
-If the '91 turns out to be incompatible, or partially compatible, the driver
-can be updated later to handle both "renesas,pci-r8a7790" and
-"renesas,pci-r8a7791" and differentiate between them.
-
-(That's what I was instructed to do with SPI ;-)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> Rob
