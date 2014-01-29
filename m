@@ -1,86 +1,62 @@
-From: Boris BREZILLON <b.brezillon.dev@gmail.com>
-Subject: Re: [RFC PATCH v2 09/14] mtd: nand: add sunxi NFC dt bindings doc
-Date: Wed, 29 Jan 2014 19:01:40 +0100
-Message-ID: <52E94204.1050207@gmail.com>
-References: <1391006064-28890-1-git-send-email-b.brezillon.dev@gmail.com>	<1391006064-28890-10-git-send-email-b.brezillon.dev@gmail.com> <CAL_JsqLVr1gSLArqtfOiHce+u6ZK8FiKMX0o9bvMrMoGGhATvg@mail.gmail.com>
+From: "Gupta, Pekon" <pekon@ti.com>
+Subject: RE: [RFC PATCH v2 09/14] mtd: nand: add sunxi NFC dt bindings doc
+Date: Wed, 29 Jan 2014 18:02:33 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA6C01D@DBDE04.ent.ti.com>
+References: <1391006064-28890-1-git-send-email-b.brezillon.dev@gmail.com>
+ <1391006064-28890-10-git-send-email-b.brezillon.dev@gmail.com>
+ <CAL_JsqLVr1gSLArqtfOiHce+u6ZK8FiKMX0o9bvMrMoGGhATvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
 In-Reply-To: <CAL_JsqLVr1gSLArqtfOiHce+u6ZK8FiKMX0o9bvMrMoGGhATvg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Brian Norris <computersforpeace@gmail.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mtd@lists.infradead.org, dev@linux-sunxi.org
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>, Boris BREZILLON <b.brezillon.dev@gmail.com>, "Ezequiel Garcia
+ (ezequiel.garcia@free-electrons.com)" <ezequiel.garcia@free-electrons.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "dev@linux-sunxi.org" <dev@linux-sunxi.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob,
+Dear Rob, and other DT maintainers,
 
-Le 29/01/2014 18:11, Rob Herring a =E9crit :
-> On Wed, Jan 29, 2014 at 8:34 AM, Boris BREZILLON
-> <b.brezillon.dev@gmail.com> wrote:
->> Add the sunxi NAND Flash Controller dt bindings documentation.
->>
->> Signed-off-by: Boris BREZILLON <b.brezillon.dev@gmail.com>
->> ---
->>   .../devicetree/bindings/mtd/sunxi-nand.txt         |   46 ++++++++=
-++++++++++++
->>   1 file changed, 46 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mtd/sunxi-nan=
-d.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/sunxi-nand.txt b/=
-Documentation/devicetree/bindings/mtd/sunxi-nand.txt
->> new file mode 100644
->> index 0000000..b0e55a3
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
->> @@ -0,0 +1,46 @@
->> +Allwinner NAND Flash Controller (NFC)
->> +
->> +Required properties:
->> +- compatible : "allwinner,sun4i-nand".
->> +- reg : shall contain registers location and length for data and re=
-g.
->> +- interrupts : shall define the nand controller interrupt.
->> +- #address-cells: shall be set to 1. Encode the nand CS.
->> +- #size-cells : shall be set to 0.
->> +- clocks : shall reference nand controller clocks.
->> +- clock-names : nand controller internal clock names. Shall contain=
- :
->> +    * "ahb_clk" : AHB gating clock
->> +    * "sclk" : nand controller clock
->> +
->> +Optional children nodes:
->> +Children nodes represent the available nand chips.
->> +
->> +Optional properties:
-> For the controller or per nand chip?
->
->> +- onfi,nand-timing-mode : mandatory if the chip does not support th=
-e ONFI
+>From: Rob Herring
+[...]
+>> +- onfi,nand-timing-mode : mandatory if the chip does not support the ONFI
 >> +  standard.
-> Add to generic nand binding.
+>
+>Add to generic nand binding.
 >
 >> +- allwinner,rb : shall contain the native Ready/Busy ids.
 >> + or
 >> +- rb-gpios : shall contain the gpios used as R/B pins.
-> Isn't allwinner,rb implied by a lack of rb-gpios property. Or no R/B
-> pin is an option?
-Both are optional. In case none of the properties are defined the dev_r=
-eady
-callback is set to NULL and the nand_base waiting loop is used.
-
-> If so, don't you need some fixed time delay
-> properties like max erase time?
-
-This is handled in nand_base (using the chip_delay field), but I guess=20
-we could
-use the information retrieved from nand timings and the operation in=20
-progress...
-
-> rb-gpios could be added to the generic nand binding as well.
-Sure.
 >
-> Rob
+>Isn't allwinner,rb implied by a lack of rb-gpios property. Or no R/B
+>pin is an option? If so, don't you need some fixed time delay
+>properties like max erase time?
+>
+>rb-gpios could be added to the generic nand binding as well.
+>
+I do think this should go into generic nand binding, as this is controller specific.
+Some controllers have dedicated R/B pin (Ready/Busy) while others may use
+GPIO instead. It's the way a hardware controller is designed.
 
+Request you to please consider Ack from MTD Maintainers 'at-least' for
+generic NAND DT bindings. There is already a discussion going in
+a separate thread for which is still not awaiting replies [1].
+
+[1] http://lists.infradead.org/pipermail/linux-mtd/2014-January/051625.html
+
+
+with regards, pekon
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
