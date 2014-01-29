@@ -1,63 +1,147 @@
-From: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 08/11] of: Increase MAX_PHANDLE_ARGS
-Date: Wed, 29 Jan 2014 18:16:11 +0100
-Message-ID: <20140129171611.GB13543@alberich>
-References: <1389876263-25759-1-git-send-email-andreas.herrmann@calxeda.com>
-	<1389876263-25759-9-git-send-email-andreas.herrmann@calxeda.com>
-	<20140117110830.GW3471@alberich> <52E92842.3000001@amd.com>
-	<CAL_JsqLhzp5jUJPA91rNkQ07kCDYCDZLxw8LxxFEVP9b12e1Jw@mail.gmail.com>
-	<52E93360.1000904@amd.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v3 4/6] ARM: tegra: Add efuse bindings
+Date: Wed, 29 Jan 2014 11:18:31 -0600
+Message-ID: <CAL_JsqKy2rMT6tuTOJGqVeuRsGHsdnJ9w-sECG5ML9Z1aRpiNg@mail.gmail.com>
+References: <1390952176-30402-1-git-send-email-pdeschrijver@nvidia.com>
+	<1390952176-30402-5-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52E93360.1000904-5C7GfCeVMHo@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Suravee Suthikulanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1390952176-30402-5-git-send-email-pdeschrijver@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 29, 2014 at 11:59:12AM -0500, Suravee Suthikulanit wrote:
-> On 1/29/2014 10:57 AM, Rob Herring wrote:
-> >>> diff --git a/include/linux/of.h b/include/linux/of.h
-> >>> >>index 276c546..24e1b28 100644
-> >>> >>--- a/include/linux/of.h
-> >>> >>+++ b/include/linux/of.h
-> >>> >>@@ -67,7 +67,7 @@ struct device_node {
-> >>> >>   #endif
-> >>> >>   };
-> >>> >>
-> >>> >>-#define MAX_PHANDLE_ARGS 8
-> >>> >>+#define MAX_PHANDLE_ARGS 16
-> >> >
-> >> >
-> >> >Since the MMU-500 specify "Number of SMRs" upto 128 registers, shouldn't
-> >> >this be changed to be able to support 128 StreamIDs as well?  Although I am
-> >> >not sure if this would be too big to have on the stack per Rob's comment in
-> >> >the previous patch set.
-> > Do you actually need 128 now? If not, then we can deal with that when
-> > we get there. There are lots of things in spec's that are not actually
-> > implemented or supported.
-> 
-> Actually, we are using 32 on the AMD system. So, do you think we can set 
-> this to 32 instead?
+On Tue, Jan 28, 2014 at 5:36 PM, Peter De Schrijver
+<pdeschrijver@nvidia.com> wrote:
+> Add efuse bindings for Tegra20, Tegra30, Tegra114 and Tegra124.
+>
+> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
 
-I think that's ok.
+Acked-by: Rob Herring <robh@kernel.org>
 
-But are we really talking about number of SMRs or number of StreamIDs
-per master device here? Ie. are you just having 32 SMRs for an SMMU on
-your AMD system or do you have master devices which have 32 StreamIDs?
+Rob
 
-If it's just number of SMRs we don't need to modify this macro.
-
-
-Andreas
+> ---
+>  .../devicetree/bindings/fuse/fuse-tegra.txt        |   32 ++++++++++++++++++++
+>  arch/arm/boot/dts/tegra114.dtsi                    |    7 ++++
+>  arch/arm/boot/dts/tegra124.dtsi                    |    7 ++++
+>  arch/arm/boot/dts/tegra20.dtsi                     |    7 ++++
+>  arch/arm/boot/dts/tegra30.dtsi                     |    7 ++++
+>  5 files changed, 60 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/fuse/fuse-tegra.txt
+>
+> diff --git a/Documentation/devicetree/bindings/fuse/fuse-tegra.txt b/Documentation/devicetree/bindings/fuse/fuse-tegra.txt
+> new file mode 100644
+> index 0000000..8a566a1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/fuse/fuse-tegra.txt
+> @@ -0,0 +1,32 @@
+> +NVIDIA Tegra20/Tegra30/Tegr114/Tegra124 fuse driver.
+> +
+> +Required properties:
+> +- compatible : should be:
+> +       "nvidia,tegra20-efuse"
+> +       "nvidia,tegra30-efuse"
+> +       "nvidia,tegra114-efuse"
+> +       "nvidia,tegra124-efuse"
+> +  Details:
+> +  nvidia,tegra20-efuse: Tegra20 requires using APB DMA to read the fuse data
+> +       due to a hardware bug. Tegra20 also lacks certain information which is
+> +       available in later generations such as fab code, lot code, wafer id,..
+> +  nvidia,tegra30-efuse, nvidia,tegra114-efuse and nvidia,tegra124-efuse:
+> +       The differences between these SoCs are the size of the efuse array,
+> +       the location of the spare (OEM programmable) bits and the location of
+> +       the speedo data.
+> +- reg: Should contain 2 entries: the first entry gives the physical address
+> +       and length of the fuse registers, the second entry gives the physical
+> +       address and length of the apbmisc registers. These are used to provide
+> +       the chipid, chip revision and strapping options.
+> +- clocks: Should contain a pointer to the fuse clock.
+> +
+> +Example:
+> +
+> +        fuse@7000f800 {
+> +                compatible = "nvidia,tegra20-efuse";
+> +                reg = <0x7000F800 0x400>,
+> +                      <0x70000000 0x400>;
+> +                clocks = <&tegra_car TEGRA20_CLK_FUSE>;
+> +        };
+> +
+> +
+> diff --git a/arch/arm/boot/dts/tegra114.dtsi b/arch/arm/boot/dts/tegra114.dtsi
+> index 389e987..05ca90b 100644
+> --- a/arch/arm/boot/dts/tegra114.dtsi
+> +++ b/arch/arm/boot/dts/tegra114.dtsi
+> @@ -481,6 +481,13 @@
+>                 clock-names = "pclk", "clk32k_in";
+>         };
+>
+> +       fuse@7000f800 {
+> +               compatible = "nvidia,tegra114-efuse";
+> +               reg = <0x7000f800 0x400>,
+> +                     <0x70000000 0x400>;
+> +               clocks = <&tegra_car TEGRA114_CLK_FUSE>;
+> +       };
+> +
+>         iommu@70019010 {
+>                 compatible = "nvidia,tegra114-smmu", "nvidia,tegra30-smmu";
+>                 reg = <0x70019010 0x02c
+> diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
+> index ec0698a..30faa73 100644
+> --- a/arch/arm/boot/dts/tegra124.dtsi
+> +++ b/arch/arm/boot/dts/tegra124.dtsi
+> @@ -381,6 +381,13 @@
+>                 clock-names = "pclk", "clk32k_in";
+>         };
+>
+> +       fuse@7000f800 {
+> +               compatible = "nvidia,tegra124-efuse";
+> +               reg = <0x7000f800 0x400>,
+> +                     <0x70000000 0x400>;
+> +               clocks = <&tegra_car TEGRA124_CLK_FUSE>;
+> +       };
+> +
+>         sdhci@700b0000 {
+>                 compatible = "nvidia,tegra124-sdhci";
+>                 reg = <0x700b0000 0x200>;
+> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+> index 480ecda..a1a15d7 100644
+> --- a/arch/arm/boot/dts/tegra20.dtsi
+> +++ b/arch/arm/boot/dts/tegra20.dtsi
+> @@ -541,6 +541,13 @@
+>                 #size-cells = <0>;
+>         };
+>
+> +       fuse@7000f800 {
+> +               compatible = "nvidia,tegra20-efuse";
+> +               reg = <0x7000F800 0x400>,
+> +                     <0x70000000 0x400>;
+> +               clocks = <&tegra_car TEGRA20_CLK_FUSE>;
+> +       };
+> +
+>         pcie-controller@80003000 {
+>                 compatible = "nvidia,tegra20-pcie";
+>                 device_type = "pci";
+> diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
+> index ed8e770..1ec80fa 100644
+> --- a/arch/arm/boot/dts/tegra30.dtsi
+> +++ b/arch/arm/boot/dts/tegra30.dtsi
+> @@ -623,6 +623,13 @@
+>                 nvidia,ahb = <&ahb>;
+>         };
+>
+> +       fuse@7000f800 {
+> +               compatible = "nvidia,tegra30-efuse";
+> +               reg = <0x7000f800 0x400>,
+> +                     <0x70000000 0x400>;
+> +               clocks = <&tegra_car TEGRA30_CLK_FUSE>;
+> +       };
+> +
+>         ahub@70080000 {
+>                 compatible = "nvidia,tegra30-ahub";
+>                 reg = <0x70080000 0x200
+> --
+> 1.7.7.rc0.72.g4b5ea.dirty
+>
