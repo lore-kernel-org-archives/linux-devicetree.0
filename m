@@ -1,90 +1,38 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH V2 1/4] pci: APM X-Gene PCIe controller driver
-Date: Wed, 29 Jan 2014 20:36:34 +0100
-Message-ID: <201401292036.34501.arnd@arndb.de>
-References: <1389742458-7693-1-git-send-email-tinamdar@apm.com>
- <5086198.ZOWZ5xuyna@wuerfel>
- <CACoXjcnTnhWS-5yOgiHA5yVaBjdH1DVzmSsknEBJLB+CFR0EyA@mail.gmail.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH v5 16/20] ARM: kirkwood: Add RSTOUT 'reg' entry to
+ devicetree
+Date: Wed, 29 Jan 2014 21:15:54 +0100
+Message-ID: <20140129201554.GJ10864@lunn.ch>
+References: <1390836440-12744-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1390836440-12744-17-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACoXjcnTnhWS-5yOgiHA5yVaBjdH1DVzmSsknEBJLB+CFR0EyA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tanmay Inamdar <tinamdar@apm.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, patches <patches@apm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Jon Masters <jcm@redhat.com>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1390836440-12744-17-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 27 January 2014, Tanmay Inamdar wrote:
-> On Sat, Jan 25, 2014 at 12:11 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Friday 24 January 2014 13:28:22 Tanmay Inamdar wrote:
-> >> On Thu, Jan 16, 2014 at 5:10 PM, Tanmay Inamdar <tinamdar@apm.com> wrote:
-> >> > On Wed, Jan 15, 2014 at 4:39 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> >> >> On Wednesday 15 January 2014, Tanmay Inamdar wrote:
-> >> >>
-> >> >> Maybe another msleep() in the loop? It seems weird to first do an
-> >> >> unconditional sleep but then busy-wait for the result.
-> >> >
-> >> > ok.
-> >>
-> >> This loop can execute for maximum 4 msec. So putting msleep(1) won't
-> >> get us much.
-> >
-> > 4 msec is still quite a long time for a busy loop that can be spent doing
-> > useful work in another thread.
-> >
+On Mon, Jan 27, 2014 at 12:27:16PM -0300, Ezequiel Garcia wrote:
+> In order to support multiplatform builds the watchdog devicetree binding
+> was modified and now the 'reg' property is specified to need two
+> entries. This commit adds the second entry as-per the new specification.
 > 
-> Right. If 'msleep(1)' is used, then 'checkpatch' throws a warning
-> saying that it can actually sleep for 20ms in some cases. I will check
-> if 'usleep_range' is useful here.
+> Tested-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Sound good. This is really a false positive from checkpatch though,
-with the timeout handling in place, everything's fine even with
-msleep(1).
+Hi Ezequiel
 
-> >> >>
-> >> >> Another general note: Your "compatible" strings are rather unspecific.
-> >> >> Do you have a version number for this IP block? I suppose that it's related
-> >> >> to one that has been used in other chips before, or will be used in future
-> >> >> chips, if it's not actually licensed from some other company.
-> >> >
-> >> > I will have to check this.
-> >> >
-> >>
-> >> We have decided to stick with current compatible string for now.
-> >
-> > Can you elaborate on your reasoning? Does this mean X-Gene is a one-off
-> > product and you won't be doing any new chips based on the same hardware
-> > components?
-> 
-> The current convention is to key upon the family name - X-Gene. Future
-> chips will also be a part of X-Gene family. Right now it is unclear if
-> there are any obvious feature additions to be done in Linux PCIe
-> driver. Until then same driver is expected to work as is in future
-> chips.
+I tested on Kirkwood, using the standard watchdog test cases. Works
+great.
 
-This is not enough for me. Of course you hope that things keep working,
-but experience shows that sometimes hardware has slight differences that
-you need to work around later. It's better to always be specific and
-at least as a secondary identifier list the exact model of the component,
-or if that is not know, the model of the SoC. The driver can bind to
-the most generic string, but in DT you should have a specific one as
-well.
+Tested-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 
-You could for instance have something like
-
-	compatible = "apm,xgene-1234w78-pcie", "thirdparty,pcie-1.23", "apm,xgene-pcie", "thirdparty,pcie";
-
-as an example where you licensed the pcie block version 1.23 from a company
-named thirdparty and integrated it into the xgene variant with product
-code 1234w78.
-
-	Arnd
+Thanks
+	Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
