@@ -1,38 +1,36 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 00/20] Armada 370/XP watchdog support
-Date: Wed, 29 Jan 2014 15:19:50 -0300
-Message-ID: <20140129181949.GB27143@localhost>
-References: <1390836440-12744-1-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH 1/2] clk: ti: am335x: remove unecessary cpu0 clk node
+Date: Wed, 29 Jan 2014 12:19:16 -0600
+Message-ID: <1391019557-22313-2-git-send-email-nm@ti.com>
+References: <1391019557-22313-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1390836440-12744-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1391019557-22313-1-git-send-email-nm@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Mike Turquette <mturquette@linaro.org>
+Cc: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 27, 2014 at 12:27:00PM -0300, Ezequiel Garcia wrote:
-> A new round, mostly fixing some minor nitpicks.
->=20
+cpu0 clock node has no functionality, since cpufreq-cpu0 is already
+capable of picking up the clock from dts.
 
-If anyone wants to give this a test, here's a public branch:
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+ drivers/clk/ti/clk-33xx.c |    1 -
+ 1 file changed, 1 deletion(-)
 
-https://github.com/MISL-EBU-System-SW/mainline-public/tree/wdt_for_v3.1=
-4_v5
-
-I'll be resending a new v6 adressing Russell's last comment about the
-clock initialization, as soon as v3.14-rc1 is out.
-
-Go, testers, go!
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/clk/ti/clk-33xx.c b/drivers/clk/ti/clk-33xx.c
+index 776ee45..028b337 100644
+--- a/drivers/clk/ti/clk-33xx.c
++++ b/drivers/clk/ti/clk-33xx.c
+@@ -34,7 +34,6 @@ static struct ti_dt_clk am33xx_clks[] = {
+ 	DT_CLK(NULL, "dpll_core_m5_ck", "dpll_core_m5_ck"),
+ 	DT_CLK(NULL, "dpll_core_m6_ck", "dpll_core_m6_ck"),
+ 	DT_CLK(NULL, "dpll_mpu_ck", "dpll_mpu_ck"),
+-	DT_CLK("cpu0", NULL, "dpll_mpu_ck"),
+ 	DT_CLK(NULL, "dpll_mpu_m2_ck", "dpll_mpu_m2_ck"),
+ 	DT_CLK(NULL, "dpll_ddr_ck", "dpll_ddr_ck"),
+ 	DT_CLK(NULL, "dpll_ddr_m2_ck", "dpll_ddr_m2_ck"),
+-- 
+1.7.9.5
