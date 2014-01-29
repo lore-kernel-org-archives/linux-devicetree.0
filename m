@@ -1,58 +1,47 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/8] pci-rcar-gen2: add of match table
-Date: Wed, 29 Jan 2014 21:20:38 +0900
-Message-ID: <20140129122038.GA26253@verge.net.au>
-References: <1390754945-28142-1-git-send-email-ben.dooks@codethink.co.uk>
- <1390754945-28142-2-git-send-email-ben.dooks@codethink.co.uk>
- <52E6559D.6090708@cogentembedded.com>
- <52E65EAD.9000909@codethink.co.uk>
- <20140129061722.GB23833@verge.net.au>
- <CAMuHMdVSWM5wYeA1OarFEv_yYCJR1FSm5Ercjyc5qtcVameSsw@mail.gmail.com>
+Subject: Re: [PATCH] phy-rcar-usb-gen2: add device tree support
+Date: Wed, 29 Jan 2014 21:22:02 +0900
+Message-ID: <20140129122202.GB26253@verge.net.au>
+References: <1390754945-28142-6-git-send-email-ben.dooks@codethink.co.uk>
+ <1390755901-3743-1-git-send-email-ben.dooks@codethink.co.uk>
+ <52E6A436.5090408@cogentembedded.com>
+ <52E6AE32.5050906@codethink.co.uk>
+ <20140129062212.GD23833@verge.net.au>
+ <52E8DAF6.5090105@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdVSWM5wYeA1OarFEv_yYCJR1FSm5Ercjyc5qtcVameSsw@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-kernel@lists.codethink.co.uk, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <52E8DAF6.5090105@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>, linux-kernel@lists.codethink.co.uk, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 29, 2014 at 11:06:42AM +0100, Geert Uytterhoeven wrote:
-> On Wed, Jan 29, 2014 at 7:17 AM, Simon Horman <horms@verge.net.au> wrote:
-> >> >>+static struct of_device_id rcar_pci_of_match[] = {
-> >> >>+    { .compatible = "renesas,pci-r8a7790", },
-> >> >
-> >> >    Why only H2 SoC, if the driver is for both Gen2 SoCs?
-> >>
-> >> I can add a "renesas,pci-rcar-gen2" as a fallback match however
-> >> I've not got anything other than an r8a7790 to test on. Also the
-> >> compatible properties are preferably named after the soc.
-> >
-> > I'm not sure what the "best practice" is here but I propose that
-> > you add both "renesas,pci-rcar-gen2" and "renesas,pci-r8a7790" now.
+On Wed, Jan 29, 2014 at 02:41:58PM +0400, Sergei Shtylyov wrote:
+> Hello.
 > 
-> To the driver or to the '90 DTS?
+> On 29-01-2014 10:22, Simon Horman wrote:
 > 
-> If the DTS says
+> >>[snip]
 > 
->     compatible = "renesas,pci-r8a7790", "renesas,pci-rcar-gen2"
+> >>>>+static struct of_device_id rcar_gen2_usb_phy_ofmatch[] = {
+> >>>>+    { .compatible = "renesas,usb-phy-r8a7790", },
+> >>>>+    { .compatible = "renesas,rcar-gen2-usb-phy", },
 > 
-> then the driver can just live with "renesas,pci-rcar-gen2" for now.
+> >>>    Frankly speaking, I don't understand the need for the clearly
+> >>>duplicate entries.
 > 
-> > And that "renesas,pci-r8a7791" can be added once the code has been
-> > integrated and tested on that platform.
+> >>Thanks, will look into remove it.
+> >>Anyone else have any comments on this?
 > 
-> And later we can add
+> >I would like you to leave it there.
 > 
->     compatible = "renesas,pci-r8a7791", "renesas,pci-rcar-gen2"
+> >As we know the r8a7790 is an R-Car Gen2 SoC.  But there are other R-Car
+> >Gen2 SoCs, such as the r8a7791, they it could plausibly make use of
+> >rcar-gen2-usb-phy until the driver is updated with a usb-phy-r8a7791 entry.
 > 
-> to the '91 DTS if it turns out to be compatible.
-> 
-> If the '91 turns out to be incompatible, or partially compatible, the driver
-> can be updated later to handle both "renesas,pci-r8a7790" and
-> "renesas,pci-r8a7791" and differentiate between them.
-> 
-> (That's what I was instructed to do with SPI ;-)
+>    Why not just "update" the driver this way now, may I ask?
 
-Thanks, that is more or less how I thought things work :)
+Because I don't believe that Ben has access to r8a7791 hardware
+to test the change and thus it makes sense to handle it separately.
