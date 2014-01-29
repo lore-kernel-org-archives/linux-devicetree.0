@@ -1,34 +1,33 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [Patch v3 2/2] dmaengine: qcom_bam_dma: Add device tree binding
-Date: Wed, 29 Jan 2014 16:05:22 +0100
-Message-ID: <21038487.ygragjUUsd@wuerfel>
-References: <1390890471-14882-1-git-send-email-agross@codeaurora.org> <9156959.vu4XdoKglI@wuerfel> <20140128121656.GH15937@n2100.arm.linux.org.uk>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH V4 5/5] Documentation: power: reset: Add documentation for generic SYSCON reboot driver
+Date: Wed, 29 Jan 2014 16:08:47 +0100
+Message-ID: <3683633.QqePEXQehq@wuerfel>
+References: <1390504801-24483-1-git-send-email-fkan@apm.com> <20140124182355.GF4758@e106331-lin.cambridge.arm.com> <52E2F450.2070100@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140128121656.GH15937@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Vinod Koul <vinod.koul@intel.com>, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <agross@codeaurora.org>, dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52E2F450.2070100-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Marc C <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 28 January 2014 12:16:56 Russell King - ARM Linux wrote:
-> On Tue, Jan 28, 2014 at 01:08:47PM +0100, Arnd Bergmann wrote:
+On Friday 24 January 2014 15:16:32 Marc C wrote:
 > 
-> On balance, I think the virtual channel approach makes client drivers
-> more elegant and simpler, and makes the DMA engine API easier to use,
-> and gives greater flexibility for future improvements.  So, I wouldn't
-> miss the slave_id being removed.
+> > What's wrong with having a system clock unit binding, that the kernel
+> > can decompose as appropriate?
+> 
+> From what I understand, the arm-soc maintainers want to reduce (and perhaps even
+> eliminate) these board-specific constructs, and try to utilize common driver-code that
+> resides in the "driver" folder. I can vouch for the syscon/regmap framework as something
+> which would enable the effort.
 
-Ok, good. There are some dmaengine drivers that actually behave
-in hardware like the virtual-channel extension, i.e. they have
-one physical channel per request line (qcom_bam_dma seems to be
-one of them in fact), so they don't really have a choice.
-
-The way that both the DT and ACPI bindings are structured,
-the request ID is always known by the time the channel is
-allocated to allow this model, and that means supporting both
-approaches in the same master or slave driver is a mess.
+While your statement is true in general, it doesn't seem to counter
+what Mark R said above.
 
 	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
