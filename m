@@ -1,50 +1,101 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] phy-rcar-usb-gen2: add device tree support
-Date: Wed, 29 Jan 2014 16:26:55 +0400
-Message-ID: <52E8F38F.9030609@cogentembedded.com>
-References: <1390754945-28142-6-git-send-email-ben.dooks@codethink.co.uk> <1390755901-3743-1-git-send-email-ben.dooks@codethink.co.uk> <52E6A436.5090408@cogentembedded.com> <52E6AE32.5050906@codethink.co.uk> <20140129062212.GD23833@verge.net.au> <52E8DAF6.5090105@cogentembedded.com> <20140129122202.GB26253@verge.net.au>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH RFC v2 2/2] Documentation: arm: define DT C-states
+ bindings
+Date: Wed, 29 Jan 2014 12:33:03 +0000
+Message-ID: <20140129123303.GA10396@e102568-lin.cambridge.arm.com>
+References: <20140127155924.GA2178@e103592.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140129122202.GB26253-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Valentine Barshak <valentine.barshak-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140127155924.GA2178@e103592.cambridge.arm.com>
+Content-Disposition: inline
+Sender: linux-pm-owner@vger.kernel.org
+To: Dave Martin <Dave.Martin@arm.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Nicolas Pitre <nico@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Antti Miettinen <ananaza@iki.fi>, Amit Kucheria <amit.kucheria@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Hanjun Guo <hanjun.guo@linaro.org>, Mark Hambleton <mark.hambleton@broadcom.com>, Sudeep Holla <Sudeep.Holla@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Kumar Gala <galak@codeaurora.org>, LAK <linux-arm-kernel@lists.infradead.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Mon, Jan 27, 2014 at 03:59:37PM +0000, Dave Martin wrote:
+> On Fri, Jan 24, 2014 at 05:58:07PM +0000, Lorenzo Pieralisi wrote:
 
-On 29-01-2014 16:22, Simon Horman wrote:
+[...]
 
->>>> [snip]
+> > > > state0 {
+> > > >         index = <2>;
+> > > >         compatible = "arm,cpu-power-state";
+> > > >         latency = <...>;
+> > > >         /*
+> > > >          * This means that when the state is entered, the power
+> > > >          * controller should use register index 0 and state 0,
+> > > >          * whose meaning is power controller specific. Since we
+> > > >          * know all components affected (for every component
+> > > >          * we declare its power domain(s) and states so we
+> > > >          * know what components are affected by the state entry.
+> > > >          * Given the cache node above and this phandle, the state
+> > > >          * implies that the cache is retained, register index == 0 state == 0
+> > > >          /*
+> > > >         power-domain =<&foo_power_controller 0 0>;
+> > > 
+> > > for retention state we need to set the power domain in state 1
+> > >         power-domain =<&foo_power_controller 0 1>;
+> 
+> The name "power-domain" probably needs changing if the specifier contains
+> state information too.
+> 
+> Instead, we could call it "power-state" or similar.
+> 
+> 
+> Key issues I see:
+> 
+> 1) How to describe platforms where there is no "power controller" as such,
+>    just a bunch of clocks and regulators that Linux has to poke directly.
+> 
+> 2) Two devices might have the same power controller (in terms of IP and
+>    revision), but integrated in different ways.  So, maybe thinking of
+>    the referenced thing as a power controller is not correct.  We can
+>    thing in terms of referring to individual power domains, or maybe
+>    to a "power model" for the SoC.
 
->>>>>> +static struct of_device_id rcar_gen2_usb_phy_ofmatch[] = {
->>>>>> +    { .compatible = "renesas,usb-phy-r8a7790", },
->>>>>> +    { .compatible = "renesas,rcar-gen2-usb-phy", },
+The example was misleading. There is no link to a power controller as
+such, the phandle is to a power domain, which fits with what you are
+saying, basically the C-state does not care about how the power domain
+is implemented, it just defines that that specific power domain is
+affected. I am not sure we should change the naming either, a C-state
+defines a power-domain specifier, which implies a certain behaviour
+for a power domain. It is platform specific, so for certain platforms
+the cells represent a state for others they do not.
 
->>>>>     Frankly speaking, I don't understand the need for the clearly
->>>>> duplicate entries.
+>    The power domain or model becomes a container for power (domains and)
+>    states, and refers to the IP blocks (power controllers, regulators,
+>    clocks, clamps, whatever) required to implement it.
+> 
+>    This change of abstraction might map more naturally onto "bunch
+>    of clocks and regulators" situations: the power model or domain
+>    binding can make symbolic references to clocks and regulators etc.,
+>    so that the binding becomes less dependent on the exact content of
+>    the rest of the DT.
 
->>>> Thanks, will look into remove it.
->>>> Anyone else have any comments on this?
+Exactly, I agree, the complexity is in the power-domain (how states are
+handled, what components should be programmed, etc) the C-state just
+defines what power-domain it affects, with power domain specifier cells
+providing additional, power domain specific, semantics (ie retention vs.
+shutdown).
 
->>> I would like you to leave it there.
+> 3) We need to be very clear that the power state specifier needs to be
+>    defined in terms of the actual hardware effects in the relevant SoC-
+>    specific binding -- at the "what" level, rather than "how".
+> 
+>    There's a fair chance of people getting lazy: they'll just stuff
+>    indices in the DT which map to random LUTs in the Linux driver.  In
+>    that case, the DT would be describing the Linux driver, not the
+>    hardware -- that's not what we want.
+> 
+>    Delegating the job of defining power states to the SoC documentation
+>    seems acceptable, though.
 
->>> As we know the r8a7790 is an R-Car Gen2 SoC.  But there are other R-Car
->>> Gen2 SoCs, such as the r8a7791, they it could plausibly make use of
->>> rcar-gen2-usb-phy until the driver is updated with a usb-phy-r8a7791 entry.
+I agree, and I think we are pretty close to a general agreement on this
+specific subject.
 
->>     Why not just "update" the driver this way now, may I ask?
+Thank you,
+Lorenzo
 
-> Because I don't believe that Ben has access to r8a7791 hardware
-> to test the change and thus it makes sense to handle it separately.
-
-    I believe Valentine has already tested the driver with both SoCs.
-
-WBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
