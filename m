@@ -1,45 +1,40 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] DT: net: document Ethernet bindings in one place
-Date: Thu, 30 Jan 2014 02:04:26 +0300
-Message-ID: <52E988FA.8040807@cogentembedded.com>
-References: <201401180405.07859.sergei.shtylyov@cogentembedded.com> <CAL_Jsq+oa9P=rh+p-dMZyGP8TcmpX7bTnMU0ynLvFxjxFDYbRg@mail.gmail.com> <52DD98F7.4090202@cogentembedded.com> <CAL_JsqJXbF1-PcPHR2VP+Vi9A1aWizdsG_r3kDvRt3itXDhCGQ@mail.gmail.com> <CAGVrzcb3X3soJNJCE5+YSpQrr+EdycCRFkptPvBCgFg4CbGJ4Q@mail.gmail.com> <CAGVrzcb0dfw1orZzUt5-YkShOg-HNbUYvvo2vfmsZUZXy1Aqfg@mail.gmail.com> <52DEE465.9000202@cogentembedded.com>
+From: Henrik =?ISO-8859-1?Q?Nordstr=F6m?= <henrik-N0bZODiMPoV/1Aw6q1k8hdHuzzzSOjJt@public.gmane.org>
+Subject: Re: Re: [RFC PATCH v2 09/14] mtd: nand: add sunxi NFC
+ dt bindings doc
+Date: Wed, 29 Jan 2014 23:37:59 +0100
+Message-ID: <1391035079.14902.3.camel@localhost>
+References: <1391006064-28890-1-git-send-email-b.brezillon.dev@gmail.com>
+	 <1391006064-28890-10-git-send-email-b.brezillon.dev@gmail.com>
+	 <CAL_JsqLVr1gSLArqtfOiHce+u6ZK8FiKMX0o9bvMrMoGGhATvg@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <52DEE465.9000202@cogentembedded.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robherring2@gmail.com>
-Cc: netdev <netdev@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDOLXAGRVEERBX4FU2LQKGQE2LFDBVA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAL_JsqLVr1gSLArqtfOiHce+u6ZK8FiKMX0o9bvMrMoGGhATvg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+ons 2014-01-29 klockan 11:11 -0600 skrev Rob Herring:
 
-On 01/22/2014 12:19 AM, Sergei Shtylyov wrote:
+> Isn't allwinner,rb implied by a lack of rb-gpios property. Or no R/B
+> pin is an option? If so, don't you need some fixed time delay
+> properties like max erase time?
+> 
+> rb-gpios could be added to the generic nand binding as well.
 
->>>>>     I'm afraid that's too late, it has spread very far, so that
->>>>> of_get_phy_mode() handles that property, not "phy-connection-type".
+The Allwinner NAND controller have dedicated RB pins when NAND is
+enabled, only MUXed with other functions when NAND is not enabled.
 
->>>> Uggg, I guess this is a case of a defacto standard then if the kernel
->>>> doesn't even support it.
+Leaving RB unconnected is not a valid hardware configuration. The
+controller internal timing engine depends on being able to sense RB to
+sequence NAND commands properly.
 
->>> Maybe I forgot to CC you on patch sent to Grant only, I sent a patch a
->>> while ago for of_get_phy_mode() to look for both "phy-mode" and
->>> "phy-connection-type" since the former has been a Linux invention, but
->>> the latter is ePAPR specified.
-
->> Here is a link to the actual patch in question, not sure which tree
->> Grant applied it to though:
-
->> http://lkml.indiana.edu/hypermail/linux/kernel/1311.2/00048.html
-
->     It's not the patch mail, it's Grant's "applied" reply, patch is mangled in
-> this reply, and I couldn't follow the thread. Here's the actual patch mail:
-
-> http://marc.info/?l=devicetree&m=138449662807254
-
-    Florian, I didn't find this patch in Grant's official tree, so maybe you 
-should ask him where is the patch already?
-
-WBR, Sergei
-
+Regards
+Henrik
