@@ -1,36 +1,38 @@
-From: Matt Porter <mporter@linaro.org>
-Subject: [PATCH 4/5] pwm: enable TI PWMSS if the IIO tiecap driver is selected
-Date: Wed, 29 Jan 2014 15:59:58 -0500
-Message-ID: <1391029199-3670-5-git-send-email-mporter@linaro.org>
-References: <1391029199-3670-1-git-send-email-mporter@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1391029199-3670-1-git-send-email-mporter@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <thierry.reding@gmail.com>
-Cc: linux-iio@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, linux-pwm@vger.kernel.org, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linaro Patches <patches@linaro.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 0/2] DT: net: davinci_emac: couple more properties actually
+ optional
+Date: Thu, 30 Jan 2014 01:42:28 +0300
+Message-ID: <52E983D4.4070405@cogentembedded.com>
+References: <201401280245.35745.sergei.shtylyov@cogentembedded.com> <20140128.234315.2164810932256158473.davem@davemloft.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140128.234315.2164810932256158473.davem@davemloft.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: netdev@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com
 List-Id: devicetree@vger.kernel.org
 
-The IIO TI ECAP driver depends on the TI PWMSS management
-driver in this subsystem. Enable PWMSS when the IIO TI ECAP
-driver is selected.
+Hello.
 
-Signed-off-by: Matt Porter <mporter@linaro.org>
----
- drivers/pwm/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 01/29/2014 10:43 AM, David Miller wrote:
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 22f2f28..bd3cc65 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -219,7 +219,7 @@ config  PWM_TIEHRPWM
- 
- config  PWM_TIPWMSS
- 	bool
--	default y if SOC_AM33XX && (PWM_TIECAP || PWM_TIEHRPWM)
-+	default y if SOC_AM33XX && (IIO_TIECAP || PWM_TIECAP || PWM_TIEHRPWM)
- 	help
- 	  PWM Subsystem driver support for AM33xx SOC.
- 
--- 
-1.8.4
+>>     Though described as required, couple more properties in the DaVinci EMAC
+>> binding are actually optional, as the driver will happily function without them.
+>> The patchset is against DaveM's 'net.git' tree this time.
+
+>> [1/2] DT: net: davinci_emac: "ti,davinci-rmii-en" property is actually optional
+>> [2/2] DT: net: davinci_emac: "ti,davinci-no-bd-ram" property is actually optional
+
+> Series applied with the "has/have" thing fixed.
+
+> Thanks.
+
+    Thank you!
+    Unfortunately, this driver presents a bad example of DT bindings overall 
+(caused in its turn by a misuse of the platform data for the EMAC type 
+differing instead of the platform device IDs).
+
+WBR, Sergei
+
