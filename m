@@ -1,61 +1,74 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2] DT: net: document Ethernet bindings in one place
-Date: Wed, 29 Jan 2014 10:16:48 -0600
-Message-ID: <CAL_JsqLJrS2w0idwpi0Ar4RyuZ050sb0eYVyzM1HE4df4FxdZQ@mail.gmail.com>
-References: <201401280150.32456.sergei.shtylyov@cogentembedded.com>
-	<CAL_JsqLH6j=eGPr53myATQ+ySwr4P1y7Lnvqa9Y+-YAqqWa_FA@mail.gmail.com>
-	<52E7D31A.4090107@cogentembedded.com>
+From: Bjorn Andersson <bjorn@kryo.se>
+Subject: Re: [PATCH v3 0/2] Qualcomm Universal Peripheral (QUP) I2C controller
+Date: Wed, 29 Jan 2014 08:32:49 -0800
+Message-ID: <CAJAp7Oj_D1QvG9nBWTVrW1QVEpqi2cTTc9c6Um25DDzidCjW1w@mail.gmail.com>
+References: <1389999819-10648-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1390983246.28998.24.camel@iivanov-dev.int.mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <52E7D31A.4090107@cogentembedded.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Max Filippov <jcmvbkbc@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1390983246.28998.24.camel@iivanov-dev.int.mm-sol.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Matt Porter <matt.porter@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Grant Likely <grant.likely@linaro.org>, James Ralston <james.d.ralston@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Bill Brown <bill.e.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>"linux-kernel@vger.kernel.org" <linux>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 28, 2014 at 9:56 AM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> On 01/28/2014 04:38 PM, Rob Herring wrote:
+On Wed, Jan 29, 2014 at 12:14 AM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
 >
->>> This patch is an attempt to gather the Ethernet related bindings in one
->>> file,
->>> like it's done in the MMC and some other subsystems. It should save some
->>> of
->>> the trouble of documenting several properties over and over in each
->>> binding
->>> document, instead only making reference to the main file.
-
-[snip]
-
->>>   - compatible: should be "allwinner,sun4i-emac".
->>>   - reg: address and length of the register set for the device.
->>>   - interrupts: interrupt for the device
->>> -- phy: A phandle to a phy node defining the PHY address (as the reg
->>> -  property, a single integer).
->>> +- phy: see ethernet.txt file in the same directory.
->>>   - clocks: A phandle to the reference clock for this device
->>>
->>>   Optional properties:
->>> -- (local-)mac-address: mac address to be used by this driver
->>> +- [local-]mac-address: see ethernet.txt file in the same directory
+> Hi Bjorn,
 >
->> Sorry, but I meant you should just have a single statement like:
+> On Fri, 2014-01-17 at 15:03 -0800, Bjorn Andersson wrote:
+>> Continuing on Ivans i2c-qup series.
+>>
 >
->> This binding uses standard ethernet properties defined in ethernet.txt.
+> Do you plan to send v4 of this driver? I would like to address
+> the remaining errors and suggestions and send a new version.
 >
->    This way it won't be clear which of the properties are used and which are
-> not, no?
+Hi Ivan,
 
-You're right. For the phy properties we need to specify which ones are
-used. This could be done only for bindings using the not recommended
-properties.
+Yes I'm planning to send out a new revision of the patch set.
 
-For optional properties like local-mac-address, I don't think these
-need to be listed. They can be used for all devices and whether or not
-a given Linux driver supports using the property is not really the
-concern of the binding documentation. An exception could be a device
-that requires a optional property (i.e. a NIC with no eeprom to store
-a MAC address).
+I've incorporated fixes from the review comments here and my colleague
+concluded through some testing that block read did not work, so we've
+fixed that as well.
 
-Rob
+What have been holding me from submitting a new patchset is the 3
+functions that does polling of state and status updates;
+* qup_i2c_poll_state() reads the state register up to 1000 times,
+hoping we reach the expected state, will delay 100uS and then continue
+with 1000 more retries.
+  According to the data sheet a state transition is supposed to take
+up to 2 bus cycles. Only time I can see that this would take longer
+time are all error states, but the data sheet is not very clear
+regarding this.
+
+* qup_i2c_wait_idle() reads the status register up to 1000 times,
+hoping the fifo gets drained and the bus go idle, if that fails it
+sleeps for the time we expect it to take to drain a full fifo and then
+loops another 1000 times. This waits for the fifo to have drained and
+the bus to go idle. On a read we get to this state if we issue the
+write and then hit the error state, so we would reset the entire
+block. On write we will only wait for the buffer not to be full before
+returning.
+
+* qup_i2c_wait_clock_ready() waits up to 300 bus-clocks for the i2c
+bus to go idle or forced low, I don't know why it retries 300 times.
+This is called at the end of a write, possibly to wait for the fifo to
+drain.
+
+
+All three loops are in line with how it's been in codeaurora since the
+beginning of time, but I at least need to figure out some good names
+for those "magic numbers".
+
+Regards,
+Bjorn
