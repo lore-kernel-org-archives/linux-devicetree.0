@@ -1,234 +1,121 @@
-From: Davor Joja <davorjoja-bBue3UIS71U2IjGS+8YXRQ@public.gmane.org>
-Subject: Re: [RFC] Documentation: devicetree: bindings: drm: Xylon binding
-Date: Wed, 29 Jan 2014 12:00:15 +0100
-Message-ID: <52E8DF3F.15769.3CE4C3@davorjoja.logicbricks.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 1/5] clk: sunxi: Add support for PLL6 on the A31
+Date: Wed, 29 Jan 2014 12:10:46 +0100
+Message-ID: <1390993850-9054-2-git-send-email-maxime.ripard@free-electrons.com>
+References: <1390993850-9054-1-git-send-email-maxime.ripard@free-electrons.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Description: Mail message body
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBOOFUOLQKGQEGMO2S3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1390993850-9054-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The A31 has a slightly different PLL6 clock. Add support for this new clock in
+our driver.
 
-Can I get some comments on below mails?
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
+ drivers/clk/sunxi/clk-sunxi.c                     | 45 +++++++++++++++++++++++
+ 2 files changed, 46 insertions(+)
 
-I want to create devicetree node for Xylon logiCVC DRM device driver, and get 
-comments and suggestions from community.
-At the end I would send driver and devicetree binding to mainline.
-
-Thank you,
-Davor
-
-
-> Hi Mark,
-> 
-> > On Mon, Jan 27, 2014 at 03:47:42PM +0000, Davor Joja wrote:
-> > > Hi,
-> > 
-> > Hi,
-> > 
-> > > 
-> > > Can I please get comments about adding new vendor prefix "xylon", and on 
-> > > following devicetree binding for Xylon configurable video controller (logiCVC).
-> > > Shown node is prepared for Xilinx Linux kernel dts file.
-> > 
-> > Does this device have any publicly-accessible documentation?
-> 
-> Yes it has, but it does not explain the details mentioned in binding.
-> http://www.logicbricks.com/Documentation/Datasheets/IP/logiCVC-ML_hds.pdf
-> 
-> > 
-> > It would be helpful if you could Cc this to some graphics related
-> > mailing lists. Not everyone on devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org is a graphics
-> > expert, and you'll get much better feedback with the relevant people on
-> > Cc.
-> > 
-> 
-> Ok, CC'ed.
-> 
-> > It would also be nice to see some code with the binding, and for both
-> > the code and binding to be sent as patches. That makes it _far_ easier
-> > to review as it's far easier to compare with existing bindings if in a
-> > standard format.
-> > 
-> 
-> Currently I do not have it. I only have some old binding which I want to get 
-> rid off. That is why I want to change binding (officially) and then rewrite the 
-> driver code for that exact binding.
-> 
-> > > 
-> > > 
-> > > logicvc_0: logicvc@40030000 {
-> > > 	compatible = "xylon,logicvc-4.00.a";
-> > > 	reg = <0x40030000 0x6000>;
-> > > 	interrupt-parent = <&ps7_scugic_0>;
-> > > 	interrupts = <0 59 4>;
-> > > 	background-layer-bits-per-pixel = <32>;
-> > > 	display-interface = <0>;
-> > > 	display-color-space = <1>;
-> > > 	is-readable-regs = <1>;
-> > > 	is-size-position = <1>;
-> > > 	layer-width = <2048>;
-> > > 	num-layers = <4>;
-> > > 	layer_0 {
-> > > 		address = <0>;
-> > > 		alpha-mode = <0>;
-> > > 		data-width = <16>;
-> > > 		type = <0>;
-> > > 	} ;
-> > > 	layer_1 {
-> > > 		address = <0>;
-> > > 		alpha-mode = <0>;
-> > > 		data-width = <32>;
-> > > 		type = <0>;
-> > > 	} ;
-> > > 	layer_2 {
-> > > 		address = <0>;
-> > > 		alpha-mode = <1>;
-> > > 		data-width = <32>;
-> > > 		type = <0>;
-> > > 	} ;
-> > > 	layer_3 {
-> > > 		address = <0>;
-> > > 		alpha-mode = <0>;
-> > > 		data-width = <16>;
-> > > 		type = <1>;
-> > > 	} ;
-> > > } ;
-> > > 
-> > > 
-> > > Required properties for configuring logiCVC device:
-> > >  - compatible: value must be "xylon,logicvc-4.00.a"
-> > >  - reg: base address and size of the logiCVC IP
-> > 
-> > Presumably the address and size of the MMIO region the IP has?
-> 
-> Yes, MMIO region address where IP resides and size of IP registers area.
-> 
-> > 
-> > Does it only have a single bank of registers?
-> > 
-> 
-> Yes.
-> 
-> > >  - interrupts-parent: the phandle for interrupt controller
-> > >  - interrupts: the interrupt number
-> > 
-> > Does the device have only a single interrupt?
-> 
-> Yes, in this case connected to ARM GIC.
-> 
-> > 
-> > >  - background-layer-bits-per-pixel: background layer color format (0, 16, 32)
-> > >       if "0" last available layer is standard layer
-> > 
-> > Why is 0 quoted, and what is a "standard layer"?
-> 
-> Thought that this is simple way for saying "not used".
-> Maybe have / not to have property?
-> 
-> > 
-> > >       if 16 or 32, last available layer is background layer implemented in
-> > >       hw register and containing specified bits per pixel color value
-> > >  - display-interface: logiCVC to display physical interface
-> > >       (0=Parallel, 1=ITU656)
-> > >  - display-color-space: logiCVC to display physical color space
-> > >       (0=RGB, 1=YCbCr 4:2:2, 2=YCbCr 4:4:4)
-> > 
-> > These sound like they should be properties of the display this unit is
-> > attached to.
-> 
-> To be more exact, this is output interface to whatever (LCD, encoder, 
-> converter, ...), but it is IP property selectable when configuring.
-> Maybe better name for property should be "interface" and "color-space".
-> 
-> > 
-> > >  - is-readable-regs: all hw registers are readable by sw
-> > 
-> > Which registers aren't always accessible?
-> 
-> IP core can be configured to disable read registers access to all except 
-> interrupt status power control and interupt status.
-> 
-> > 
-> > >  - is-size-position: hw changing of layer size and position
-> > 
-> > These look like booleans, but have values above.
-> 
-> Yes, it is boolean.
-> Should it be
-> "readable-regs;" instead "is-readable-regs = <1>;"
-> "size-position;" instead "is-size-position = <1>;"
-> 
-> > 
-> > >  - layer-width: layer width in pixels, common for all layers
-> > >  - num-layers: supported number of layers (1-5)
-> > 
-> > If you require a node for each layer, you don't need this proeprty --
-> > you can simply count the layer nodes.
-> 
-> True, I do not know what is practice in this case.
-> 
-> > 
-> > >       if "background-layer-bits-per-pixel != 0", "num-layers" property value is
-> > >       decreased by 1
-> > 
-> > Does that mean the author of the dt subtracts one, or this is done by
-> > the kernel?
-> > 
-> 
-> In given example it is substracted by author, and I would like to have it like 
-> that.
-> This comment should be just info for user, and maybe it is confusing.
-> 
-> > Why?
-> > 
-> > >  - layer_N
-> > 
-> > Where N is?
-> 
-> 0-4
-> 
-> > 
-> > >     - address: layer address hardcoded in hw (0=Unused, 0x...)
-> > 
-> > The example gives all layers 0 / unused. What exactly is this address
-> > space?
-> 
-> This property is set while configuring IP, and if it is set to "0" then driver 
-> knows that there is no dedicated address for video memory and uses its own.
-> 
-> > 
-> > >     - alpha-mode: layer transparency mode (0=Layer, 1=Pixel)
-> > >          layer alpha mode contains single alpha value for all layer pixels
-> > >          pixel alpha mode contains alpha value per pixel in video memory
-> > >          pixel alpha mode can increase physical size of pixel in memory
-> > >          (8 bits per pixel in pixel alpha mode uses 16 bits per pixel in 
-> > > memory)
-> > 
-> > This looks like a runtime decision rather than a property of the device.
-> > 
-> > >     - data-width: layer bits per pixel color format (16, 32)
-> > >     - type: layer type (0=RGB, 1=YCbCr)
-> > 
-> > Likewise why is this static?
-> 
-> What exactly do you mean with "runtime decision"?
-> All layer properties are configured in IP, and driver needs to know what they 
-> are to properly handle pixel memory access on specific layer.
-> 
-> Thank you,
-> Davor
-> 
-> > 
-> > Thanks,
-> > Mark.
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+index c2cb762..954845c 100644
+--- a/Documentation/devicetree/bindings/clock/sunxi.txt
++++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+@@ -11,6 +11,7 @@ Required properties:
+ 	"allwinner,sun6i-a31-pll1-clk" - for the main PLL clock on A31
+ 	"allwinner,sun4i-pll5-clk" - for the PLL5 clock
+ 	"allwinner,sun4i-pll6-clk" - for the PLL6 clock
++	"allwinner,sun6i-a31-pll6-clk" - for the PLL6 clock on A31
+ 	"allwinner,sun4i-cpu-clk" - for the CPU multiplexer clock
+ 	"allwinner,sun4i-axi-clk" - for the AXI clock
+ 	"allwinner,sun4i-axi-gates-clk" - for the AXI gates
+diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+index 659e4ea..990ad5d 100644
+--- a/drivers/clk/sunxi/clk-sunxi.c
++++ b/drivers/clk/sunxi/clk-sunxi.c
+@@ -249,7 +249,38 @@ static void sun4i_get_pll5_factors(u32 *freq, u32 parent_rate,
+ 	*n = DIV_ROUND_UP(div, (*k+1));
+ }
+ 
++/**
++ * sun6i_a31_get_pll6_factors() - calculates n, k factors for A31 PLL6
++ * PLL6 rate is calculated as follows
++ * rate = parent_rate * n * (k + 1) / 2
++ * parent_rate is always 24Mhz
++ */
++
++static void sun6i_a31_get_pll6_factors(u32 *freq, u32 parent_rate,
++				       u8 *n, u8 *k, u8 *m, u8 *p)
++{
++	u8 div;
++
++	/*
++	 * We always have 24MHz / 2, so we can just say that our
++	 * parent clock is 12MHz.
++	 */
++	parent_rate = parent_rate / 2;
++
++	/* Normalize value to a parent_rate multiple (24M / 2) */
++	div = *freq / parent_rate;
++	*freq = parent_rate * div;
++
++	/* we were called to round the frequency, we can now return */
++	if (n == NULL)
++		return;
++
++	*k = div / 32;
++	if (*k > 3)
++		*k = 3;
+ 
++	*n = DIV_ROUND_UP(div, (*k+1));
++}
+ 
+ /**
+  * sun4i_get_apb1_factors() - calculates m, p factors for APB1
+@@ -416,6 +447,13 @@ static struct clk_factors_config sun4i_pll5_config = {
+ 	.kwidth = 2,
+ };
+ 
++static struct clk_factors_config sun6i_a31_pll6_config = {
++	.nshift	= 8,
++	.nwidth = 5,
++	.kshift = 4,
++	.kwidth = 2,
++};
++
+ static struct clk_factors_config sun4i_apb1_config = {
+ 	.mshift = 0,
+ 	.mwidth = 5,
+@@ -457,6 +495,12 @@ static const struct factors_data sun4i_pll5_data __initconst = {
+ 	.getter = sun4i_get_pll5_factors,
+ };
+ 
++static const struct factors_data sun6i_a31_pll6_data __initconst = {
++	.enable = 31,
++	.table = &sun6i_a31_pll6_config,
++	.getter = sun6i_a31_get_pll6_factors,
++};
++
+ static const struct factors_data sun4i_apb1_data __initconst = {
+ 	.table = &sun4i_apb1_config,
+ 	.getter = sun4i_get_apb1_factors,
+@@ -972,6 +1016,7 @@ free_clkdata:
+ static const struct of_device_id clk_factors_match[] __initconst = {
+ 	{.compatible = "allwinner,sun4i-pll1-clk", .data = &sun4i_pll1_data,},
+ 	{.compatible = "allwinner,sun6i-a31-pll1-clk", .data = &sun6i_a31_pll1_data,},
++	{.compatible = "allwinner,sun6i-a31-pll6-clk", .data = &sun6i_a31_pll6_data,},
+ 	{.compatible = "allwinner,sun4i-apb1-clk", .data = &sun4i_apb1_data,},
+ 	{.compatible = "allwinner,sun4i-mod0-clk", .data = &sun4i_mod0_data,},
+ 	{.compatible = "allwinner,sun7i-a20-out-clk", .data = &sun7i_a20_out_data,},
+-- 
+1.8.4.2
