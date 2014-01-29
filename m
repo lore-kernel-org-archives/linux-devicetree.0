@@ -1,35 +1,67 @@
-From: Jim Lin <jilin@nvidia.com>
-Subject: Re: [PATCH v3 3/6] misc: fuse: Add efuse driver for Tegra
-Date: Wed, 29 Jan 2014 10:26:18 +0800
-Message-ID: <1390962378.2398.11.camel@jilin-desktop>
-References: <1390952176-30402-1-git-send-email-pdeschrijver@nvidia.com>
-	 <1390952176-30402-4-git-send-email-pdeschrijver@nvidia.com>
+From: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+Subject: Re: [PATCH 3/3] net: via-rhine: add OF bus binding
+Date: Wed, 29 Jan 2014 16:44:41 +1300
+Message-ID: <52E87929.30708@prisktech.co.nz>
+References: <1385227995-3956-1-git-send-email-alchark@gmail.com>	<1390823503-24087-1-git-send-email-alchark@gmail.com>	<1390823503-24087-4-git-send-email-alchark@gmail.com>	<CAL_JsqLi0QKeeUkGMKmYZ1ki02mzk=L1gDxTJyXFGiOe_aHiVw@mail.gmail.com> <CABjd4Yxo0Pp+QtTuXhKBT9KdVhUk12x2L8+FBL_ZWmPYopG2JQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1390952176-30402-4-git-send-email-pdeschrijver@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Danny Huang <dahuang@nvidia.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABjd4Yxo0Pp+QtTuXhKBT9KdVhUk12x2L8+FBL_ZWmPYopG2JQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roger Luethi <rl-7uj+XXdSDtwfv37vnLkPlQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-01-29 at 07:36 +0800, Peter De Schrijver wrote:
-> Implement fuse driver for Tegra20, Tegra30, Tegra114 and Tegra124.
-> 
-> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-> ---
->  Documentation/ABI/testing/sysfs-driver-tegra-fuse |    8 +
->  drivers/misc/fuse/Makefile                        |    1 +
->  drivers/misc/fuse/tegra/Makefile                  |    7 +
->  drivers/misc/fuse/tegra/fuse-tegra.c              |  228 ++++++++++++++++
->  drivers/misc/fuse/tegra/fuse-tegra20.c            |  136 ++++++++++
->  drivers/misc/fuse/tegra/fuse-tegra30.c            |  178 +++++++++++++
->  drivers/misc/fuse/tegra/fuse.h                    |   82 ++++++
-Could we move this fuse.h to other folder under /include/linux
-(like /include/linux/platform_data)
-for other driver to include?
-So other driver can invoke function to read fuse data if needed.
+On 29/01/14 07:27, Alexey Charkov wrote:
+> 2014/1/27 Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+>> On Mon, Jan 27, 2014 at 5:51 AM, Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> This should make the driver usable with VIA/WonderMedia ARM-based
+>>> Systems-on-Chip integrated Rhine III adapters. Note that these
+>>> are always in MMIO mode, and don't have any known EEPROM.
+>>>
+>>> Signed-off-by: Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> Signed-off-by: Roger Luethi <rl-7uj+XXdSDtwfv37vnLkPlQ@public.gmane.org>
+>>> ---
+>>>   .../devicetree/bindings/net/via-rhine.txt          |  18 ++
+>>>   drivers/net/ethernet/via/Kconfig                   |   2 +-
+>>>   drivers/net/ethernet/via/via-rhine.c               | 293 +++++++++++++--------
+>>>   3 files changed, 200 insertions(+), 113 deletions(-)
+>>>   create mode 100644 Documentation/devicetree/bindings/net/via-rhine.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/net/via-rhine.txt b/Documentation/devicetree/bindings/net/via-rhine.txt
+>>> new file mode 100644
+>>> index 0000000..684dd3a
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/net/via-rhine.txt
+>>> @@ -0,0 +1,18 @@
+>>> +* VIA Rhine 10/100 Network Controller
+>>> +
+>>> +Required properties:
+>>> +- compatible : Should be "via,rhine"
+>> This should be more specific rather than...
+>>
+>>> +- reg : Address and length of the io space
+>>> +- interrupts : Should contain the controller interrupt line
+>>> +- rhine,revision : Rhine core revision, used to inform the
+>>> +       driver of quirks and capabilities to expect from
+>>> +       the device. Mimics the respective PCI attribute.
+>> having this property. The OF match table can then have the quirks set
+>> based on compatible strings.
+> Sounds fair. Do you think something like the following would fly?
+>
+> Required properties:
+> - compatible : Should be "via,rhine-soc-vt8500" for integrated Rhine
+> cores found in SoC's such as VIA VT8500, WonderMedia WM8950 and
+> possibly others. These are listed as 1106:3106 rev. 0x84 on the
+> virtual PCI bus under vendor-provided kernels.
+Does it need a special name? I would have assumed they are using their 
+own IP for the VT6105 or VT6106S.
+Then you can use it to add quirks later on if needed.
 
---nvpublic
-
+Regards
+Tony Prisk
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
