@@ -1,114 +1,100 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH 1/2] usb: dwc3: core: continue probing if usb phy library
- returns -ENODEV/-ENXIO
-Date: Wed, 29 Jan 2014 16:47:00 +0200
-Message-ID: <20140129144659.GA22152@xps8300>
-References: <1385373690-12170-1-git-send-email-kishon@ti.com>
- <1390299099-14764-1-git-send-email-kishon@ti.com>
- <20140121144725.GF30451@saruman.home>
- <20140127150855.GA17928@xps8300>
- <20140127160458.GF13268@saruman.home>
- <20140128153230.GA20991@xps8300>
- <20140128163036.GD28546@saruman.home>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] net: via-rhine: add OF bus binding
+Date: Wed, 29 Jan 2014 08:59:43 -0600
+Message-ID: <CAL_JsqK2aLSGzjp_gqJ=ePPybf85S0FFQ2n+XascUSYPnSoHcA@mail.gmail.com>
+References: <1385227995-3956-1-git-send-email-alchark@gmail.com>
+	<1390823503-24087-1-git-send-email-alchark@gmail.com>
+	<1390823503-24087-4-git-send-email-alchark@gmail.com>
+	<CAL_JsqLi0QKeeUkGMKmYZ1ki02mzk=L1gDxTJyXFGiOe_aHiVw@mail.gmail.com>
+	<CABjd4Yxo0Pp+QtTuXhKBT9KdVhUk12x2L8+FBL_ZWmPYopG2JQ@mail.gmail.com>
+	<52E87929.30708@prisktech.co.nz>
+	<CABjd4Yy2pFr=qr1_e3XqupHngp_mF0GcDT0hCM46v=tNNDY1hw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140128163036.GD28546@saruman.home>
-Sender: linux-doc-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, george.cherian@ti.com, rogerq@ti.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABjd4Yy2pFr=qr1_e3XqupHngp_mF0GcDT0hCM46v=tNNDY1hw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roger Luethi <rl-7uj+XXdSDtwfv37vnLkPlQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Jan 28, 2014 at 11:20 PM, Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 2014/1/29 Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>:
+>> On 29/01/14 07:27, Alexey Charkov wrote:
+>>>
+>>> 2014/1/27 Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+>>>>
+>>>> On Mon, Jan 27, 2014 at 5:51 AM, Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>> wrote:
+>>>>>
+>>>>> This should make the driver usable with VIA/WonderMedia ARM-based
+>>>>> Systems-on-Chip integrated Rhine III adapters. Note that these
+>>>>> are always in MMIO mode, and don't have any known EEPROM.
+>>>>>
+>>>>> Signed-off-by: Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>> Signed-off-by: Roger Luethi <rl-7uj+XXdSDtwfv37vnLkPlQ@public.gmane.org>
+>>>>> ---
+>>>>>   .../devicetree/bindings/net/via-rhine.txt          |  18 ++
+>>>>>   drivers/net/ethernet/via/Kconfig                   |   2 +-
+>>>>>   drivers/net/ethernet/via/via-rhine.c               | 293
+>>>>> +++++++++++++--------
+>>>>>   3 files changed, 200 insertions(+), 113 deletions(-)
+>>>>>   create mode 100644 Documentation/devicetree/bindings/net/via-rhine.txt
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/net/via-rhine.txt
+>>>>> b/Documentation/devicetree/bindings/net/via-rhine.txt
+>>>>> new file mode 100644
+>>>>> index 0000000..684dd3a
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/net/via-rhine.txt
+>>>>> @@ -0,0 +1,18 @@
+>>>>> +* VIA Rhine 10/100 Network Controller
+>>>>> +
+>>>>> +Required properties:
+>>>>> +- compatible : Should be "via,rhine"
+>>>>
+>>>> This should be more specific rather than...
+>>>>
+>>>>> +- reg : Address and length of the io space
+>>>>> +- interrupts : Should contain the controller interrupt line
+>>>>> +- rhine,revision : Rhine core revision, used to inform the
+>>>>> +       driver of quirks and capabilities to expect from
+>>>>> +       the device. Mimics the respective PCI attribute.
+>>>>
+>>>> having this property. The OF match table can then have the quirks set
+>>>> based on compatible strings.
+>>>
+>>> Sounds fair. Do you think something like the following would fly?
+>>>
+>>> Required properties:
+>>> - compatible : Should be "via,rhine-soc-vt8500" for integrated Rhine
+>>> cores found in SoC's such as VIA VT8500, WonderMedia WM8950 and
+>>> possibly others. These are listed as 1106:3106 rev. 0x84 on the
+>>> virtual PCI bus under vendor-provided kernels.
+>>
+>> Does it need a special name? I would have assumed they are using their own
+>> IP for the VT6105 or VT6106S.
+>> Then you can use it to add quirks later on if needed.
+>
+> The problem is that I have no reliable source for the exact name of
+> the IP block. The lookup table within the driver says that rev. 0x83
+> is VT6105_B0, and rev. 0x8A is VT6105L (and it doesn't contain any
+> entry for 0x84, so our case gets treated as 0x83 currently).
+>
+> If we only differentiate them by the compatible string, I would be
+> reluctant to call it vt6105 or vt6106 or whatever else without knowing
+> for sure. Otherwise, if at some point we need to add any quirks
+> specific to rev. 0x84, we wouldn't be able to do that without
+> side-effects.
 
-On Tue, Jan 28, 2014 at 10:30:36AM -0600, Felipe Balbi wrote:
-> On Tue, Jan 28, 2014 at 05:32:30PM +0200, Heikki Krogerus wrote:
-> > On Mon, Jan 27, 2014 at 10:05:20AM -0600, Felipe Balbi wrote:
-> > For the controller drivers the PHYs are just a resource like any
-> > other. The controller drivers can't have any responsibility of
-> > them. They should not care if PHY drivers are available for them or
-> > not, or even if the PHY framework is available or not.
-> 
-> huh? If memory isn't available you don't continue probing, right ? If
-> your IORESOURCE_MEM is missing, you also don't continue probing, if your
-> IRQ line is missing, you bail too. Those are also nothing but resources
-> to the driver, what you're asking here is to treat PHY as a _different_
-> resource; which might be fine, but we need to make sure we don't
-> continue probing when a PHY is missing in a platform that certainly
-> needs a PHY.
+If you don't know the IP rev, then you should assume it is different
+and you should certainly know which chip it is in. This is why the soc
+name is typically in the compatible string. You can always have
+multiple compatible strings. You want to have a unique compatible
+string so you can add quirks later if needed.
 
-Yes, true. In my head I was comparing the PHY only to resources like
-gpios, clocks, dma channels, etc. that are often optional to the
-drivers.
-
-> > > > > But I really want to see the argument against using no-op. As far as I
-> > > > > could see, everybody needs a PHY driver one way or another, some
-> > > > > platforms just haven't sent any PHY driver upstream and have their own
-> > > > > hacked up solution to avoid using the PHY layer.
-> > > > 
-> > > > Not true in our case. Platforms using Intel's SoCs and chip sets may
-> > > > or may not have controllable USB PHY. Quite often they don't. The
-> > > > Baytrails have usually ULPI PHY for USB2, but that does not mean they
-> > > > provide any vendor specific functions or any need for a driver in any
-> > > > case.
-> > > 
-> > > that's different from what I heard.
-> > 
-> > I don't know where you got that impression, but it's not true. The
-> > Baytrail SoCs for example don't have internal USB PHYs, which means
-> > the manufacturers using it can select what they want. So we have
-> > boards where PHY driver(s) is needed and boards where it isn't.
-> 
-> alright, that explains it ;-) So you have external USB2 and USB3 PHYs ?
-> You have an external PIPE3 interface ? That's quite an achievement,
-> kudos to your HW designers. Getting timing closure on PIPE3 is a
-> difficult task.
-
-No, only the USB2 PHY is external. I'm giving you wrong information,
-I'm sorry about that. Need to concentrate on what I'm writing.
-
-<snip>
-
-> > This is really good to get. We have some projects where we are dealing
-> > with more embedded environments, like IVI, where the kernel should be
-> > stripped of everything useless. Since the PHYs are autonomous, we
-> > should be able to disable the PHY libraries/frameworks.
-> 
-> hmmm, in that case it's a lot easier to treat. We can use
-> ERR_PTR(-ENXIO) as an indication that the framework is disabled, or
-> something like that.
-> 
-> The difficult is really reliably supporting e.g. OMAP5 (which won't work
-> without a PHY) and your BayTrail with autonomous PHYs. What can we use
-> as an indication ?
-
-OMAP has it's own glue driver, so shouldn't it depend on the PHY
-layer?
-
-> I mean, I need to know that a particular platform depends on a PHY
-> driver before I decide to return -EPROBE_DEFER or just assume the PHY
-> isn't needed ;-)
-
-I don't think dwc3 (core) should care about that. The PHY layer needs
-to tell us that. If the PHY driver that the platform depends is not
-available yet, the PHY layer returns -EPROBE_DEFER and dwc3 ends up
-returning -EPROBE_DEFER.
-
-<snip>
-
-> > I think our goals are the same. I just want to also minimize the need
-> > for any platform specific extra work from the upper layers regarding
-> > the PHYs.
-> 
-> I'll agree to that, but let's not apply patches until we're 100% sure
-> there will be no regressions. Looking at $subject, I don't think it
-> satisfies that condition ;-)
-
-Agreed. Let's think this through carefully.
-
-
-Cheers,
-
--- 
-heikki
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
