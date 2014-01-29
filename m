@@ -1,72 +1,74 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] net: via-rhine: add OF bus binding
-Date: Wed, 29 Jan 2014 07:46:02 -0600
-Message-ID: <CAL_JsqKui20VM1rcw-Sc-cr9gSaXOrzXheDNUUnn+H+bjqEO5A@mail.gmail.com>
-References: <1385227995-3956-1-git-send-email-alchark@gmail.com>
-	<1390823503-24087-1-git-send-email-alchark@gmail.com>
-	<1390823503-24087-4-git-send-email-alchark@gmail.com>
-	<CAL_JsqLi0QKeeUkGMKmYZ1ki02mzk=L1gDxTJyXFGiOe_aHiVw@mail.gmail.com>
-	<CABjd4Yxo0Pp+QtTuXhKBT9KdVhUk12x2L8+FBL_ZWmPYopG2JQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABjd4Yxo0Pp+QtTuXhKBT9KdVhUk12x2L8+FBL_ZWmPYopG2JQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roger Luethi <rl-7uj+XXdSDtwfv37vnLkPlQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Boris BREZILLON <b.brezillon.dev@gmail.com>
+Subject: [RFC PATCH v2 00/14] mtd: nand: add sunxi NAND Flash Controller support
+Date: Wed, 29 Jan 2014 15:34:10 +0100
+Message-ID: <1391006064-28890-1-git-send-email-b.brezillon.dev@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Brian Norris <computersforpeace@gmail.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Boris BREZILLON <b.brezillon.dev@gmail.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, dev@linux-sunxi.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 28, 2014 at 12:27 PM, Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> 2014/1/27 Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
->> On Mon, Jan 27, 2014 at 5:51 AM, Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> This should make the driver usable with VIA/WonderMedia ARM-based
->>> Systems-on-Chip integrated Rhine III adapters. Note that these
->>> are always in MMIO mode, and don't have any known EEPROM.
->>>
->>> Signed-off-by: Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Signed-off-by: Roger Luethi <rl-7uj+XXdSDtwfv37vnLkPlQ@public.gmane.org>
->>> ---
->>>  .../devicetree/bindings/net/via-rhine.txt          |  18 ++
->>>  drivers/net/ethernet/via/Kconfig                   |   2 +-
->>>  drivers/net/ethernet/via/via-rhine.c               | 293 +++++++++++++--------
->>>  3 files changed, 200 insertions(+), 113 deletions(-)
->>>  create mode 100644 Documentation/devicetree/bindings/net/via-rhine.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/via-rhine.txt b/Documentation/devicetree/bindings/net/via-rhine.txt
->>> new file mode 100644
->>> index 0000000..684dd3a
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/net/via-rhine.txt
->>> @@ -0,0 +1,18 @@
->>> +* VIA Rhine 10/100 Network Controller
->>> +
->>> +Required properties:
->>> +- compatible : Should be "via,rhine"
->>
->> This should be more specific rather than...
->>
->>> +- reg : Address and length of the io space
->>> +- interrupts : Should contain the controller interrupt line
->>> +- rhine,revision : Rhine core revision, used to inform the
->>> +       driver of quirks and capabilities to expect from
->>> +       the device. Mimics the respective PCI attribute.
->>
->> having this property. The OF match table can then have the quirks set
->> based on compatible strings.
->
-> Sounds fair. Do you think something like the following would fly?
->
-> Required properties:
-> - compatible : Should be "via,rhine-soc-vt8500" for integrated Rhine
-> cores found in SoC's such as VIA VT8500, WonderMedia WM8950 and
-> possibly others. These are listed as 1106:3106 rev. 0x84 on the
-> virtual PCI bus under vendor-provided kernels.
+Hello,
 
-Yes, although the "soc" part seems a bit redundant. The usual pattern
-is <vendor>,<chip/soc>-<device>. I would go with "via,vt8500-rhine".
+This series adds support for the sunxi NAND Flash Controller (NFC).
+This controller supports up to 8 NAND chip connected.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm still in the early stages drivers development and some key features are
+missing, but it's usable (I tested it on the cubietruck board).
+
+Here's what's missing:
+ - DMA support
+ - HW randomization support
+ - other improvements ?
+
+This series depends on Emilio's patch series implementing mod0 clks
+(http://lists.infradead.org/pipermail/linux-arm-kernel/2013-July/185478.html)
++ an other patch not yet posted
+(http://git.elopez.com.ar/linux/commits/5b4eb3ac406b9c98965714d40e8dd6da943d1ab0)
+
+
+Best Regards,
+
+Boris
+
+Changes since v1:
+ - add HW ECC support
+ - rework NAND timings retrieval (use ONFI timing mode instead of raw timings)
+ - add nand-ecc-level property to specify NAND ECC requirements from DT
+
+Boris BREZILLON (14):
+  mtd: nand: retrieve ECC requirements from Hynix READ ID byte 4
+  of: mtd: add NAND ECC level requirements retrieval
+  of: mtd: add documentation for nand-ecc-level property
+  mtd: nand: define struct nand_timings
+  mtd: nand: add ONFI timing mode to nand_timings converter
+  of: mtd: add NAND timing mode retrieval support
+  of: mtd: add documentation for the ONFI NAND timing mode property
+  mtd: nand: add sunxi NAND flash controller support
+  mtd: nand: add sunxi NFC dt bindings doc
+  ARM: dt/sunxi: add NFC node to Allwinner A20 SoC
+  ARM: dt/sunxi: add NFC pinctrl pin definitions
+  ARM: sunxi/dt: enable NAND on cubietruck board
+  mtd: nand: add sunxi HW ECC support
+  ARM: sunxi/dt: enable HW ECC on cubietruck board
+
+ Documentation/devicetree/bindings/mtd/nand.txt     |    8 +
+ .../devicetree/bindings/mtd/sunxi-nand.txt         |   46 +
+ arch/arm/boot/dts/sun7i-a20-cubietruck.dts         |   31 +
+ arch/arm/boot/dts/sun7i-a20.dtsi                   |   35 +
+ drivers/mtd/nand/Kconfig                           |    6 +
+ drivers/mtd/nand/Makefile                          |    3 +-
+ drivers/mtd/nand/nand_base.c                       |   37 +
+ drivers/mtd/nand/nand_timings.c                    |  248 +++++
+ drivers/mtd/nand/sunxi_nand.c                      |  997 ++++++++++++++++++++
+ drivers/of/of_mtd.c                                |   44 +
+ include/linux/mtd/nand.h                           |   53 ++
+ include/linux/of_mtd.h                             |   15 +
+ 12 files changed, 1522 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/sunxi-nand.txt
+ create mode 100644 drivers/mtd/nand/nand_timings.c
+ create mode 100644 drivers/mtd/nand/sunxi_nand.c
+
+-- 
+1.7.9.5
+
