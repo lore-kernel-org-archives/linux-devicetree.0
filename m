@@ -1,95 +1,60 @@
-From: Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] net: via-rhine: add OF bus binding
-Date: Wed, 29 Jan 2014 09:20:14 +0400
-Message-ID: <CABjd4Yy2pFr=qr1_e3XqupHngp_mF0GcDT0hCM46v=tNNDY1hw@mail.gmail.com>
-References: <1385227995-3956-1-git-send-email-alchark@gmail.com>
-	<1390823503-24087-1-git-send-email-alchark@gmail.com>
-	<1390823503-24087-4-git-send-email-alchark@gmail.com>
-	<CAL_JsqLi0QKeeUkGMKmYZ1ki02mzk=L1gDxTJyXFGiOe_aHiVw@mail.gmail.com>
-	<CABjd4Yxo0Pp+QtTuXhKBT9KdVhUk12x2L8+FBL_ZWmPYopG2JQ@mail.gmail.com>
-	<52E87929.30708@prisktech.co.nz>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/8] pci-rcar-gen2: add of match table
+Date: Wed, 29 Jan 2014 15:17:22 +0900
+Message-ID: <20140129061722.GB23833@verge.net.au>
+References: <1390754945-28142-1-git-send-email-ben.dooks@codethink.co.uk>
+ <1390754945-28142-2-git-send-email-ben.dooks@codethink.co.uk>
+ <52E6559D.6090708@cogentembedded.com>
+ <52E65EAD.9000909@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52E87929.30708-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roger Luethi <rl-7uj+XXdSDtwfv37vnLkPlQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52E65EAD.9000909@codethink.co.uk>
+Sender: linux-pci-owner@vger.kernel.org
+To: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-kernel@lists.codethink.co.uk, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2014/1/29 Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>:
-> On 29/01/14 07:27, Alexey Charkov wrote:
->>
->> 2014/1/27 Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
->>>
->>> On Mon, Jan 27, 2014 at 5:51 AM, Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> wrote:
->>>>
->>>> This should make the driver usable with VIA/WonderMedia ARM-based
->>>> Systems-on-Chip integrated Rhine III adapters. Note that these
->>>> are always in MMIO mode, and don't have any known EEPROM.
->>>>
->>>> Signed-off-by: Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>> Signed-off-by: Roger Luethi <rl-7uj+XXdSDtwfv37vnLkPlQ@public.gmane.org>
->>>> ---
->>>>   .../devicetree/bindings/net/via-rhine.txt          |  18 ++
->>>>   drivers/net/ethernet/via/Kconfig                   |   2 +-
->>>>   drivers/net/ethernet/via/via-rhine.c               | 293
->>>> +++++++++++++--------
->>>>   3 files changed, 200 insertions(+), 113 deletions(-)
->>>>   create mode 100644 Documentation/devicetree/bindings/net/via-rhine.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/net/via-rhine.txt
->>>> b/Documentation/devicetree/bindings/net/via-rhine.txt
->>>> new file mode 100644
->>>> index 0000000..684dd3a
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/net/via-rhine.txt
->>>> @@ -0,0 +1,18 @@
->>>> +* VIA Rhine 10/100 Network Controller
->>>> +
->>>> +Required properties:
->>>> +- compatible : Should be "via,rhine"
->>>
->>> This should be more specific rather than...
->>>
->>>> +- reg : Address and length of the io space
->>>> +- interrupts : Should contain the controller interrupt line
->>>> +- rhine,revision : Rhine core revision, used to inform the
->>>> +       driver of quirks and capabilities to expect from
->>>> +       the device. Mimics the respective PCI attribute.
->>>
->>> having this property. The OF match table can then have the quirks set
->>> based on compatible strings.
->>
->> Sounds fair. Do you think something like the following would fly?
->>
->> Required properties:
->> - compatible : Should be "via,rhine-soc-vt8500" for integrated Rhine
->> cores found in SoC's such as VIA VT8500, WonderMedia WM8950 and
->> possibly others. These are listed as 1106:3106 rev. 0x84 on the
->> virtual PCI bus under vendor-provided kernels.
->
-> Does it need a special name? I would have assumed they are using their own
-> IP for the VT6105 or VT6106S.
-> Then you can use it to add quirks later on if needed.
+On Mon, Jan 27, 2014 at 01:27:09PM +0000, Ben Dooks wrote:
+> On 27/01/14 12:48, Sergei Shtylyov wrote:
+> >Hello.
+> >
+> >On 26-01-2014 20:48, Ben Dooks wrote:
+> >
+> >>Add OF match table for pci-rcar-gen2 driver for device tree support.
+> >
+> >>Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> >>---
+> >>Cc: Bjorn Helgaas <bhelgaas@google.com>
+> >>Cc: Simon Horman <horms@verge.net.au>
+> >>Cc: linux-pci@vger.kernel.org
+> >>Cc: linux-sh@vger.kernel.org
+> >>Cc: devicetree@vger.kernel.org
+> >>---
+> >>  drivers/pci/host/pci-rcar-gen2.c | 8 ++++++++
+> >>  1 file changed, 8 insertions(+)
+> >
+> >>diff --git a/drivers/pci/host/pci-rcar-gen2.c
+> >>b/drivers/pci/host/pci-rcar-gen2.c
+> >>index ceec147..ea65bac 100644
+> >>--- a/drivers/pci/host/pci-rcar-gen2.c
+> >>+++ b/drivers/pci/host/pci-rcar-gen2.c
+> >>@@ -311,9 +311,17 @@ static int __init rcar_pci_probe(struct
+> >>platform_device *pdev)
+> >>      return rcar_pci_add_controller(priv);
+> >>  }
+> >>
+> >>+static struct of_device_id rcar_pci_of_match[] = {
+> >>+    { .compatible = "renesas,pci-r8a7790", },
+> >
+> >    Why only H2 SoC, if the driver is for both Gen2 SoCs?
+> 
+> I can add a "renesas,pci-rcar-gen2" as a fallback match however
+> I've not got anything other than an r8a7790 to test on. Also the
+> compatible properties are preferably named after the soc.
 
-The problem is that I have no reliable source for the exact name of
-the IP block. The lookup table within the driver says that rev. 0x83
-is VT6105_B0, and rev. 0x8A is VT6105L (and it doesn't contain any
-entry for 0x84, so our case gets treated as 0x83 currently).
-
-If we only differentiate them by the compatible string, I would be
-reluctant to call it vt6105 or vt6106 or whatever else without knowing
-for sure. Otherwise, if at some point we need to add any quirks
-specific to rev. 0x84, we wouldn't be able to do that without
-side-effects.
-
-Thoughts welcome :)
-
-Thanks,
-Alexey
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm not sure what the "best practice" is here but I propose that
+you add both "renesas,pci-rcar-gen2" and "renesas,pci-r8a7790" now.
+And that "renesas,pci-r8a7791" can be added once the code has been
+integrated and tested on that platform.
