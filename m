@@ -1,117 +1,44 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v6 8/8] usb: ehci-exynos: Change to use phy provided by
- the generic phy framework
-Date: Wed, 29 Jan 2014 12:55:19 -0800
-Message-ID: <CAOesGMgKQrW=Rb6ZtpOVKAZ6dDzy82CzbmOJtKRb8x6JaS1QLg@mail.gmail.com>
-References: <1391016574-25237-1-git-send-email-k.debski@samsung.com>
-	<1391016574-25237-9-git-send-email-k.debski@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1391016574-25237-9-git-send-email-k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, mat.krawczuk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, yulgon.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, av.tikhomirov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, tjakobi-o02PS0xoJP9W0yFyLvAVXMxlOr/tl8fh@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/5] IIO pulse capture support for TI ECAP
+Date: Wed, 29 Jan 2014 15:59:54 -0500
+Message-ID: <1391029199-3670-1-git-send-email-mporter@linaro.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This series adds support for PWM capture devices within IIO and
+adds a TI ECAP IIO driver.
 
-On Wed, Jan 29, 2014 at 9:29 AM, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> Change the phy provider used from the old one using the USB phy
-> framework to a new one using the Generic phy framework.
->
-> Signed-off-by: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/usb/exynos-usb.txt         |   13 +++
->  drivers/usb/host/ehci-exynos.c                     |   97 +++++++++++++-------
->  2 files changed, 76 insertions(+), 34 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt b/Documentation/devicetree/bindings/usb/exynos-usb.txt
-> index d967ba1..25e199a 100644
-> --- a/Documentation/devicetree/bindings/usb/exynos-usb.txt
-> +++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
-> @@ -12,6 +12,10 @@ Required properties:
->   - interrupts: interrupt number to the cpu.
->   - clocks: from common clock binding: handle to usb clock.
->   - clock-names: from common clock binding: Shall be "usbhost".
-> +  - port: if in the SoC there are EHCI phys, they should be listed here.
-> +One phy per port. Each port should have its reg entry with a consecutive
-> +number. Also it should contain phys and phy-names entries specifying the
-> +phy used by the port.
->
->  Optional properties:
->   - samsung,vbus-gpio:  if present, specifies the GPIO that
-> @@ -27,6 +31,15 @@ Example:
->
->                 clocks = <&clock 285>;
->                 clock-names = "usbhost";
-> +
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               port@0 {
-> +                   reg = <0>;
-> +                   phys = <&usb2phy 1>;
-> +                   phy-names = "host";
-> +                   status = "disabled";
-> +               };
->         };
->
->  OHCI
+PWM capture devices are supported using a new IIO "pulse" channel type.
 
-[...]
+The IIO ECAP driver implements interrupt driven triggered buffer capture
+only as raw sample reads are not applicable to this hardware.
+Initially, the driver supports a single pulse width measurement with
+configurable polarity. The ECAP hardware can support measurement of a
+complete period and duty cycle but this is not yet implemented.
 
-> @@ -102,14 +132,26 @@ static int exynos_ehci_probe(struct platform_device *pdev)
->                                         "samsung,exynos5440-ehci"))
->                 goto skip_phy;
->
-> -       phy = devm_usb_get_phy(&pdev->dev, USB_PHY_TYPE_USB2);
-> -       if (IS_ERR(phy)) {
-> -               usb_put_hcd(hcd);
-> -               dev_warn(&pdev->dev, "no platform data or transceiver defined\n");
-> -               return -EPROBE_DEFER;
-> -       } else {
-> -               exynos_ehci->phy = phy;
-> -               exynos_ehci->otg = phy->otg;
-> +       for_each_available_child_of_node(pdev->dev.of_node, child) {
-> +               err = of_property_read_u32(child, "reg", &phy_number);
-> +               if (err) {
-> +                       dev_err(&pdev->dev, "Failed to parse device tree\n");
-> +                       of_node_put(child);
-> +                       return err;
-> +               }
-> +               if (phy_number >= PHY_NUMBER) {
-> +                       dev_err(&pdev->dev, "Failed to parse device tree - number out of range\n");
-> +                       of_node_put(child);
-> +                       return -EINVAL;
-> +               }
-> +               phy = devm_of_phy_get(&pdev->dev, child, 0);
-> +               of_node_put(child);
-> +               if (IS_ERR(phy)) {
-> +                       dev_err(&pdev->dev, "Failed to get phy number %d",
-> +                                                               phy_number);
-> +                       return PTR_ERR(phy);
-> +               }
-> +               exynos_ehci->phy[phy_number] = phy;
+Matt Porter (5):
+  iio: add support for pulse width capture devices
+  iio: pulse: add TI ECAP driver
+  iio: enable selection and build of pulse drivers
+  pwm: enable TI PWMSS if the IIO tiecap driver is selected
+  ARM: dts: AM33XX: Add ecap interrupt properties
 
-this looks like it is now breaking older device trees, where ports
-might not be described. Since device tree interfaces need to be
-backwards compatible, you still need to handle the old case of not
-having ports described.
+ arch/arm/boot/dts/am33xx.dtsi   |   6 +
+ drivers/iio/Kconfig             |   1 +
+ drivers/iio/Makefile            |   1 +
+ drivers/iio/industrialio-core.c |   1 +
+ drivers/iio/pulse/Kconfig       |  20 ++
+ drivers/iio/pulse/Makefile      |   6 +
+ drivers/iio/pulse/tiecap.c      | 493 ++++++++++++++++++++++++++++++++++++++++
+ drivers/pwm/Kconfig             |   2 +-
+ include/linux/iio/types.h       |   1 +
+ 9 files changed, 530 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/iio/pulse/Kconfig
+ create mode 100644 drivers/iio/pulse/Makefile
+ create mode 100644 drivers/iio/pulse/tiecap.c
 
-There are two ways of doing this:
-
-1. Fall back to the old behavior if there are no ports
-2. Use a new compatible value for the new model with port subnodes,
-and if the old compatible value is used, then fall back to the old
-behavior.
-
-I'm guessing (1) might be easiest since you can check for the presence
-of #address-cells to tell if this is just an old style node, or if
-it's a new-style node without any ports below it.
-
-
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.8.4
