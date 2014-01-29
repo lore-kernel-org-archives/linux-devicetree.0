@@ -1,74 +1,70 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2] DT: net: document Ethernet bindings in one place
-Date: Thu, 30 Jan 2014 02:48:12 +0300
-Message-ID: <52E9933C.7090803@cogentembedded.com>
-References: <201401280150.32456.sergei.shtylyov@cogentembedded.com>	<CAL_JsqLH6j=eGPr53myATQ+ySwr4P1y7Lnvqa9Y+-YAqqWa_FA@mail.gmail.com>	<52E7D31A.4090107@cogentembedded.com> <CAL_JsqLJrS2w0idwpi0Ar4RyuZ050sb0eYVyzM1HE4df4FxdZQ@mail.gmail.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH 2/2] ARM: dts: OMAP3+: add clock nodes for CPU
+Date: Wed, 29 Jan 2014 17:32:41 -0600
+Message-ID: <52E98F99.2050600@ti.com>
+References: <1391019557-22313-1-git-send-email-nm@ti.com>	<1391019557-22313-3-git-send-email-nm@ti.com>
+ <CAOCHtYjaCBn2oOk66ef9wiz_GJnVwHDyx446_mrkipPoENaeUQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLJrS2w0idwpi0Ar4RyuZ050sb0eYVyzM1HE4df4FxdZQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Max Filippov <jcmvbkbc@gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAOCHtYjaCBn2oOk66ef9wiz_GJnVwHDyx446_mrkipPoENaeUQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robert Nelson <robertcnelson@gmail.com>
+Cc: devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, Tony Lindgren <tony@atomide.com>, linux kernel <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 01/29/2014 01:29 PM, Robert Nelson wrote:
+> On Wed, Jan 29, 2014 at 12:19 PM, Nishanth Menon <nm@ti.com> wrote:
+>> OMAP34xx, AM3517 and OMAP36xx platforms use dpll1 clock.
+>>
+>> OMAP443x, OMAP446x, OMAP447x, OMAP5, DRA7, AM43xx platforms use
+>> dpll_mpu clock.
+>>
+>> Latency used is the generic latency defined in omap-cpufreq
+>> driver.
+>>
+>> Signed-off-by: Nishanth Menon <nm@ti.com>
+> 
+> Hi Nishanth,
+> 
+> After this patch, do you see any limitation to finally enabling 1Ghz
+> operation on the beagle-xm by default? Or are we still missing a
+> dependicy somewhere?
 
-On 01/29/2014 07:16 PM, Rob Herring wrote:
+yes, there is:
+a) ABB dt series - i will repost this in a few mins
+b) AVS conversion from non-dt mode to dt supported mode. (which by
+itself depends on VC/VP conversion).
+c) clk notifier based dvfs for cpufreq-cpu0 -> this allows us to
+introduce the necessary plumbing for mpu voltage domain such that the
+TWL4030 regulator, AVS and ABB are rightly sequenced.
 
->>>> This patch is an attempt to gather the Ethernet related bindings in one
->>>> file,
->>>> like it's done in the MMC and some other subsystems. It should save some
->>>> of
->>>> the trouble of documenting several properties over and over in each
->>>> binding
->>>> document, instead only making reference to the main file.
+What you have done in the patch below is to introduce ABB regulator -
+but no one is actually using it -> this might actually work on certain
+samples at 1GHz, but prolonged operation will either damage the device
+or fail on other samples - I have tried numerous times Internally to
+get approval for non ABB/AVS configuration for 1GHz - but I have a
+clear feedback that it cannot be done with the constraints of
+DM3730/OMAP3630.
 
-> [snip]
+Lets do this a series at a time and build up the necessary support -
+we get clock nodes for dvfs (using i2c1) here with cpufreq-cpu0 with
+this series. If folks can ack and queue this up, we can get in ABB dts
+nodes in place - allowing us to work on the next set -> sequencing
+using clock notifier. in parallel we could work on converting AVS back
+to dt based solution.
 
->>>>    - compatible: should be "allwinner,sun4i-emac".
->>>>    - reg: address and length of the register set for the device.
->>>>    - interrupts: interrupt for the device
->>>> -- phy: A phandle to a phy node defining the PHY address (as the reg
->>>> -  property, a single integer).
->>>> +- phy: see ethernet.txt file in the same directory.
->>>>    - clocks: A phandle to the reference clock for this device
->>>>
->>>>    Optional properties:
->>>> -- (local-)mac-address: mac address to be used by this driver
->>>> +- [local-]mac-address: see ethernet.txt file in the same directory
+yes, the road is long.
 
->>> Sorry, but I meant you should just have a single statement like:
-
->>> This binding uses standard ethernet properties defined in ethernet.txt.
-
->>     This way it won't be clear which of the properties are used and which are
->> not, no?
-
-> You're right. For the phy properties we need to specify which ones are
-> used. This could be done only for bindings using the not recommended
-> properties.
-
-    Sigh, the issue with e.g. "phy-mode" is I can't un-recommend it yet as the 
-patch adding "phy-connection-type" parsing to of_get_phy_mode() seems to have 
-been lost in transit. :-/
-
-> For optional properties like local-mac-address, I don't think these
-> need to be listed. They can be used for all devices and whether or not
-> a given Linux driver supports using the property is not really the
-> concern of the binding documentation. An exception could be a device
-
-    Hm, this gets somewhat complicated... but let's try.
-
-> that requires a optional property (i.e. a NIC with no eeprom to store
-> a MAC address).
-
-    Can't remember an example of such device from the top of my head anyways 
-(as it requires the boot loader to fill in this property which is still a 
-problem).
-
-> Rob
-
-WBR, Sergei
-
+-- 
+Regards,
+Nishanth Menon
