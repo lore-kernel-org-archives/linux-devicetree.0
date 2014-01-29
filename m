@@ -1,14 +1,13 @@
 From: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC PATCH v2 07/14] of: mtd: add documentation for the
- ONFI NAND timing mode property
-Date: Wed, 29 Jan 2014 15:34:17 +0100
-Message-ID: <1391006064-28890-8-git-send-email-b.brezillon.dev@gmail.com>
+Subject: [RFC PATCH v2 06/14] of: mtd: add NAND timing mode
+ retrieval support
+Date: Wed, 29 Jan 2014 15:34:16 +0100
+Message-ID: <1391006064-28890-7-git-send-email-b.brezillon.dev@gmail.com>
 References: <1391006064-28890-1-git-send-email-b.brezillon.dev@gmail.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDE6NB73YAMBBCVDUSLQKGQE3BXO4JY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDE6NB73YAMBBCFDUSLQKGQEET4ECXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1391006064-28890-1-git-send-email-b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,36 +19,74 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for the ONFI NAND timing mode property.
+Add a function to retrieve NAND timing mode (ONFI timing mode) from a given
+DT node.
 
 Signed-off-by: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/mtd/nand.txt |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/of/of_mtd.c    |   19 +++++++++++++++++++
+ include/linux/of_mtd.h |    8 ++++++++
+ 2 files changed, 27 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation=
-/devicetree/bindings/mtd/nand.txt
-index 0c962296..75e46f3 100644
---- a/Documentation/devicetree/bindings/mtd/nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/nand.txt
-@@ -8,3 +8,8 @@
-   E.g. : nand-ecc-level =3D <4 512>; /* 4 bits / 512 bytes */
- - nand-bus-width : 8 or 16 bus width if not present 8
- - nand-on-flash-bbt: boolean to enable on flash bbt option if not present =
-false
-+- onfi,nand-timing-mode: an integer encoding the ONFI timing mode of the N=
-AND
-+  chip. This is only used when the chip does not support the ONFI standard=
-.
-+  Choose the closest mode fulfilling the NAND chip timings.
-+  For a full description of the different timing modes see this document:
-+  www.onfi.org/~/media/ONFI/specs/onfi_3_1_spec.pdf=E2=80=8E
---=20
+diff --git a/drivers/of/of_mtd.c b/drivers/of/of_mtd.c
+index e8ced61..63155d4 100644
+--- a/drivers/of/of_mtd.c
++++ b/drivers/of/of_mtd.c
+@@ -108,3 +108,22 @@ bool of_get_nand_on_flash_bbt(struct device_node *np)
+ 	return of_property_read_bool(np, "nand-on-flash-bbt");
+ }
+ EXPORT_SYMBOL_GPL(of_get_nand_on_flash_bbt);
++
++/**
++ * of_get_nand_timings - Get nand timings for the given device_node
++ * @np:	Pointer to the given device_node
++ *
++ * return 0 on success errno other wise
++ */
++int of_get_nand_onfi_timing_mode(struct device_node *np)
++{
++	int err;
++	u32 mode;
++
++	err = of_property_read_u32(np, "onfi,nand-timing-mode", &mode);
++	if (err)
++		return err;
++
++	return mode;
++}
++EXPORT_SYMBOL_GPL(of_get_nand_onfi_timing_mode);
+diff --git a/include/linux/of_mtd.h b/include/linux/of_mtd.h
+index 3bd8c3b..eb9fda6 100644
+--- a/include/linux/of_mtd.h
++++ b/include/linux/of_mtd.h
+@@ -9,6 +9,8 @@
+ #ifndef __LINUX_OF_MTD_H
+ #define __LINUX_OF_NET_H
+ 
++#include <linux/mtd/nand.h>
++
+ #ifdef CONFIG_OF_MTD
+ 
+ #include <linux/of.h>
+@@ -16,6 +18,7 @@ int of_get_nand_ecc_mode(struct device_node *np);
+ int of_get_nand_ecc_level(struct device_node *np, u32 *strengh, u32 *blk_size);
+ int of_get_nand_bus_width(struct device_node *np);
+ bool of_get_nand_on_flash_bbt(struct device_node *np);
++int of_get_nand_onfi_timing_mode(struct device_node *np);
+ 
+ #else /* CONFIG_OF_MTD */
+ 
+@@ -40,6 +43,11 @@ static inline bool of_get_nand_on_flash_bbt(struct device_node *np)
+ 	return false;
+ }
+ 
++static inline int of_get_nand_onfi_timing_mode(struct device_node *np)
++{
++	return -ENOSYS;
++}
++
+ #endif /* CONFIG_OF_MTD */
+ 
+ #endif /* __LINUX_OF_MTD_H */
+-- 
 1.7.9.5
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/groups/opt_out.
