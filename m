@@ -1,32 +1,61 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V4 5/5] Documentation: power: reset: Add documentation for generic SYSCON reboot driver
-Date: Wed, 29 Jan 2014 16:08:47 +0100
-Message-ID: <3683633.QqePEXQehq@wuerfel>
-References: <1390504801-24483-1-git-send-email-fkan@apm.com> <20140124182355.GF4758@e106331-lin.cambridge.arm.com> <52E2F450.2070100@gmail.com>
+From: Suravee Suthikulanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+Subject: Re: [PATCH v2 08/11] of: Increase MAX_PHANDLE_ARGS
+Date: Wed, 29 Jan 2014 10:11:46 -0600
+Message-ID: <52E92842.3000001@amd.com>
+References: <1389876263-25759-1-git-send-email-andreas.herrmann@calxeda.com>	<1389876263-25759-9-git-send-email-andreas.herrmann@calxeda.com> <20140117110830.GW3471@alberich>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52E2F450.2070100-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20140117110830.GW3471@alberich>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Marc C <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 24 January 2014 15:16:32 Marc C wrote:
-> 
-> > What's wrong with having a system clock unit binding, that the kernel
-> > can decompose as appropriate?
-> 
-> From what I understand, the arm-soc maintainers want to reduce (and perhaps even
-> eliminate) these board-specific constructs, and try to utilize common driver-code that
-> resides in the "driver" folder. I can vouch for the syscon/regmap framework as something
-> which would enable the effort.
+On 1/17/2014 5:08 AM, Andreas Herrmann wrote:
+>
+> arm-smmu driver uses of_parse_phandle_with_args when parsing DT
+> information to determine stream IDs for a master device.
+> Thus the number of stream IDs per master device is bound by
+> MAX_PHANDLE_ARGS.
+>
+> To support Calxeda ECX-2000 hardware arm-smmu driver requires a
+> slightly higher value for MAX_PHANDLE_ARGS as this hardware has 10
+> stream IDs for one master device.
+>
+> Increasing it to 16 seems a reasonable choice.
+>
+> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Andreas Herrmann <herrmann.der.user-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> ---
+>   include/linux/of.h |    2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 276c546..24e1b28 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -67,7 +67,7 @@ struct device_node {
+>   #endif
+>   };
+>
+> -#define MAX_PHANDLE_ARGS 8
+> +#define MAX_PHANDLE_ARGS 16
 
-While your statement is true in general, it doesn't seem to counter
-what Mark R said above.
+Since the MMU-500 specify "Number of SMRs" upto 128 registers, shouldn't 
+this be changed to be able to support 128 StreamIDs as well?  Although I 
+am not sure if this would be too big to have on the stack per Rob's 
+comment in the previous patch set.
 
-	Arnd
+Thank you,
+
+Suravee
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
