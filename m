@@ -1,49 +1,58 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 5/5] ARM: sunxi: Enable A31 SPI and SID in
- the defconfig
-Date: Wed, 29 Jan 2014 12:10:50 +0100
-Message-ID: <1390993850-9054-6-git-send-email-maxime.ripard@free-electrons.com>
-References: <1390993850-9054-1-git-send-email-maxime.ripard@free-electrons.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/8] pci-rcar-gen2: add of match table
+Date: Wed, 29 Jan 2014 21:20:38 +0900
+Message-ID: <20140129122038.GA26253@verge.net.au>
+References: <1390754945-28142-1-git-send-email-ben.dooks@codethink.co.uk>
+ <1390754945-28142-2-git-send-email-ben.dooks@codethink.co.uk>
+ <52E6559D.6090708@cogentembedded.com>
+ <52E65EAD.9000909@codethink.co.uk>
+ <20140129061722.GB23833@verge.net.au>
+ <CAMuHMdVSWM5wYeA1OarFEv_yYCJR1FSm5Ercjyc5qtcVameSsw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBPWFUOLQKGQEO4TDOWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1390993850-9054-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVSWM5wYeA1OarFEv_yYCJR1FSm5Ercjyc5qtcVameSsw@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-kernel@lists.codethink.co.uk, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/configs/sunxi_defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+On Wed, Jan 29, 2014 at 11:06:42AM +0100, Geert Uytterhoeven wrote:
+> On Wed, Jan 29, 2014 at 7:17 AM, Simon Horman <horms@verge.net.au> wrote:
+> >> >>+static struct of_device_id rcar_pci_of_match[] = {
+> >> >>+    { .compatible = "renesas,pci-r8a7790", },
+> >> >
+> >> >    Why only H2 SoC, if the driver is for both Gen2 SoCs?
+> >>
+> >> I can add a "renesas,pci-rcar-gen2" as a fallback match however
+> >> I've not got anything other than an r8a7790 to test on. Also the
+> >> compatible properties are preferably named after the soc.
+> >
+> > I'm not sure what the "best practice" is here but I propose that
+> > you add both "renesas,pci-rcar-gen2" and "renesas,pci-r8a7790" now.
+> 
+> To the driver or to the '90 DTS?
+> 
+> If the DTS says
+> 
+>     compatible = "renesas,pci-r8a7790", "renesas,pci-rcar-gen2"
+> 
+> then the driver can just live with "renesas,pci-rcar-gen2" for now.
+> 
+> > And that "renesas,pci-r8a7791" can be added once the code has been
+> > integrated and tested on that platform.
+> 
+> And later we can add
+> 
+>     compatible = "renesas,pci-r8a7791", "renesas,pci-rcar-gen2"
+> 
+> to the '91 DTS if it turns out to be compatible.
+> 
+> If the '91 turns out to be incompatible, or partially compatible, the driver
+> can be updated later to handle both "renesas,pci-r8a7790" and
+> "renesas,pci-r8a7791" and differentiate between them.
+> 
+> (That's what I was instructed to do with SPI ;-)
 
-diff --git a/arch/arm/configs/sunxi_defconfig b/arch/arm/configs/sunxi_defconfig
-index 3e2259b..b5df4a5 100644
---- a/arch/arm/configs/sunxi_defconfig
-+++ b/arch/arm/configs/sunxi_defconfig
-@@ -24,6 +24,7 @@ CONFIG_IP_PNP_BOOTP=y
- # CONFIG_WIRELESS is not set
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
-+CONFIG_EEPROM_SUNXI_SID=y
- CONFIG_NETDEVICES=y
- CONFIG_SUN4I_EMAC=y
- # CONFIG_NET_CADENCE is not set
-@@ -48,6 +49,8 @@ CONFIG_I2C=y
- # CONFIG_I2C_COMPAT is not set
- CONFIG_I2C_CHARDEV=y
- CONFIG_I2C_MV64XXX=y
-+CONFIG_SPI=y
-+CONFIG_SPI_SUN6I=y
- CONFIG_GPIO_SYSFS=y
- # CONFIG_HWMON is not set
- CONFIG_WATCHDOG=y
--- 
-1.8.4.2
+Thanks, that is more or less how I thought things work :)
