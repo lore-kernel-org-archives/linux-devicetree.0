@@ -1,53 +1,43 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: [PATCH v5 15/23] drm/i2c: tda998x: add DT documentation
-Date: Sat, 25 Jan 2014 18:14:37 +0100
-Message-ID: <2fbe4ac9f3f0be5b300191066408379b9565098e.1390986083.git.moinejf@free.fr>
-References: <cover.1390986082.git.moinejf@free.fr>
+From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Subject: [PATCH 7/9 v5] crypto:s5p-sss: validate iv before memcpy
+Date: Wed, 29 Jan 2014 14:55:28 +0530
+Message-ID: <1390987528-18862-1-git-send-email-ch.naveen@samsung.com>
+References: <1389243640-13282-1-git-send-email-ch.naveen@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1390986082.git.moinejf@free.fr>
+In-reply-to: <1389243640-13282-1-git-send-email-ch.naveen@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org
-Cc: Dave Airlie <airlied@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+To: linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, vzapolskiy@gmail.com, herbert@gondor.apana.org.au, naveenkrishna.ch@gmail.com, cpgs@samsung.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
----
- .../devicetree/bindings/drm/i2c/tda998x.txt        | 27 ++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/drm/i2c/tda998x.txt
+This patch adds code to validate "iv" buffer before trying to
+memcpy the contents
 
-diff --git a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
-new file mode 100644
-index 0000000..d7df01c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
-@@ -0,0 +1,27 @@
-+Device-Tree bindings for the NXP TDA998x HDMI transmitter
-+
-+Required properties;
-+  - compatible: must be "nxp,tda998x"
-+
-+Optional properties:
-+  - interrupts: interrupt number and trigger type
-+	default: polling
-+
-+  - pinctrl-0: pin control group to be used for
-+	screen plug/unplug interrupt.
-+
-+  - pinctrl-names: must contain a "default" entry.
-+
-+  - video-ports: 24 bits value which defines how the video controller
-+	output is wired to the TDA998x input - default: <0x230145>
-+
-+Example:
-+
-+	tda998x: hdmi-encoder {
-+		compatible = "nxp,tda998x";
-+		reg = <0x70>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <27 2>;		/* falling edge */
-+		pinctrl-0 = <&pmx_camera>;
-+		pinctrl-names = "default";
-+	};
+Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+---
+Changes since v4:
+None
+
+Changes since v3:
+None
+
+ drivers/crypto/s5p-sss.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/crypto/s5p-sss.c b/drivers/crypto/s5p-sss.c
+index da1c8943..a890273 100644
+--- a/drivers/crypto/s5p-sss.c
++++ b/drivers/crypto/s5p-sss.c
+@@ -380,7 +380,8 @@ static void s5p_set_aes(struct s5p_aes_dev *dev,
+ {
+ 	void __iomem *keystart;
+ 
+-	memcpy(dev->aes_ioaddr + SSS_REG_AES_IV_DATA (0), iv, 0x10);
++	if (iv)
++		memcpy(dev->aes_ioaddr + SSS_REG_AES_IV_DATA (0), iv, 0x10);
+ 
+ 	if (keylen == AES_KEYSIZE_256)
+ 		keystart = dev->aes_ioaddr + SSS_REG_AES_KEY_DATA(0);
 -- 
-1.9.rc1
+1.7.9.5
