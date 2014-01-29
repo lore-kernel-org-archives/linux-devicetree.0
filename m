@@ -1,62 +1,61 @@
-From: Suravee Suthikulanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-Subject: Re: [PATCH v2 08/11] of: Increase MAX_PHANDLE_ARGS
-Date: Wed, 29 Jan 2014 10:11:46 -0600
-Message-ID: <52E92842.3000001@amd.com>
-References: <1389876263-25759-1-git-send-email-andreas.herrmann@calxeda.com>	<1389876263-25759-9-git-send-email-andreas.herrmann@calxeda.com> <20140117110830.GW3471@alberich>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2] DT: net: document Ethernet bindings in one place
+Date: Wed, 29 Jan 2014 10:16:48 -0600
+Message-ID: <CAL_JsqLJrS2w0idwpi0Ar4RyuZ050sb0eYVyzM1HE4df4FxdZQ@mail.gmail.com>
+References: <201401280150.32456.sergei.shtylyov@cogentembedded.com>
+	<CAL_JsqLH6j=eGPr53myATQ+ySwr4P1y7Lnvqa9Y+-YAqqWa_FA@mail.gmail.com>
+	<52E7D31A.4090107@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140117110830.GW3471@alberich>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <52E7D31A.4090107@cogentembedded.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Max Filippov <jcmvbkbc@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 1/17/2014 5:08 AM, Andreas Herrmann wrote:
+On Tue, Jan 28, 2014 at 9:56 AM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> On 01/28/2014 04:38 PM, Rob Herring wrote:
 >
-> arm-smmu driver uses of_parse_phandle_with_args when parsing DT
-> information to determine stream IDs for a master device.
-> Thus the number of stream IDs per master device is bound by
-> MAX_PHANDLE_ARGS.
->
-> To support Calxeda ECX-2000 hardware arm-smmu driver requires a
-> slightly higher value for MAX_PHANDLE_ARGS as this hardware has 10
-> stream IDs for one master device.
->
-> Increasing it to 16 seems a reasonable choice.
->
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Andreas Herrmann <herrmann.der.user-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> ---
->   include/linux/of.h |    2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 276c546..24e1b28 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -67,7 +67,7 @@ struct device_node {
->   #endif
->   };
->
-> -#define MAX_PHANDLE_ARGS 8
-> +#define MAX_PHANDLE_ARGS 16
+>>> This patch is an attempt to gather the Ethernet related bindings in one
+>>> file,
+>>> like it's done in the MMC and some other subsystems. It should save some
+>>> of
+>>> the trouble of documenting several properties over and over in each
+>>> binding
+>>> document, instead only making reference to the main file.
 
-Since the MMU-500 specify "Number of SMRs" upto 128 registers, shouldn't 
-this be changed to be able to support 128 StreamIDs as well?  Although I 
-am not sure if this would be too big to have on the stack per Rob's 
-comment in the previous patch set.
+[snip]
 
-Thank you,
+>>>   - compatible: should be "allwinner,sun4i-emac".
+>>>   - reg: address and length of the register set for the device.
+>>>   - interrupts: interrupt for the device
+>>> -- phy: A phandle to a phy node defining the PHY address (as the reg
+>>> -  property, a single integer).
+>>> +- phy: see ethernet.txt file in the same directory.
+>>>   - clocks: A phandle to the reference clock for this device
+>>>
+>>>   Optional properties:
+>>> -- (local-)mac-address: mac address to be used by this driver
+>>> +- [local-]mac-address: see ethernet.txt file in the same directory
+>
+>> Sorry, but I meant you should just have a single statement like:
+>
+>> This binding uses standard ethernet properties defined in ethernet.txt.
+>
+>    This way it won't be clear which of the properties are used and which are
+> not, no?
 
-Suravee
+You're right. For the phy properties we need to specify which ones are
+used. This could be done only for bindings using the not recommended
+properties.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+For optional properties like local-mac-address, I don't think these
+need to be listed. They can be used for all devices and whether or not
+a given Linux driver supports using the property is not really the
+concern of the binding documentation. An exception could be a device
+that requires a optional property (i.e. a NIC with no eeprom to store
+a MAC address).
+
+Rob
