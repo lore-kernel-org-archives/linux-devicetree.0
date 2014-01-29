@@ -1,89 +1,84 @@
-From: Boris BREZILLON <b.brezillon.dev@gmail.com>
-Subject: Re: [RFC PATCH v2 03/14] of: mtd: add documentation for nand-ecc-level
- property
-Date: Wed, 29 Jan 2014 19:39:34 +0100
-Message-ID: <52E94AE6.3020107@gmail.com>
-References: <1391006064-28890-1-git-send-email-b.brezillon.dev@gmail.com> <1391006064-28890-4-git-send-email-b.brezillon.dev@gmail.com> <20140129175331.GA27143@localhost>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [RFC PATCH v2 08/14] mtd: nand: add sunxi NAND
+ flash controller support
+Date: Wed, 29 Jan 2014 15:46:20 -0300
+Message-ID: <20140129184619.GC27143@localhost>
+References: <1391006064-28890-1-git-send-email-b.brezillon.dev@gmail.com>
+ <1391006064-28890-9-git-send-email-b.brezillon.dev@gmail.com>
+ <20140129175641.GF1427@obsidianresearch.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140129175331.GA27143@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Brian Norris <computersforpeace@gmail.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, dev@linux-sunxi.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Pekon Gupta <pekon@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDO2JZM64ELRBA4ZUWLQKGQECA3U3WY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140129175641.GF1427-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Ezequiel
+On Wed, Jan 29, 2014 at 10:56:42AM -0700, Jason Gunthorpe wrote:
+> On Wed, Jan 29, 2014 at 03:34:18PM +0100, Boris BREZILLON wrote:
+>=20
+> [..]
+>=20
+> > +static int sunxi_nand_chip_init(struct device *dev, struct sunxi_nfc *=
+nfc,
+> [..]
+> > +       ret =3D sunxi_nand_chip_init_timings(chip, np);
+> > +       if (ret)
+> > +               return ret;
+> [..]
+> > +       ret =3D nand_scan_ident(mtd, nsels, NULL);
+>=20
+> This ordering looks a bit problematic, will onfi_get_async_timing_mode
+> ever return anything other than ONFI_TIMING_MODE_UNKNOWN if it is
+> called before nand_scan_ident ? What sets clk_rate to non-zero if there
+> is no DT property?
+>=20
+> For a flow that uses onfi_get_async_timing_mode rather than DT the
+> driver should set the interface to timing mode 0 (slowest) and then
+> call nand_scan_ident, and then reset the interface to the detected
+> timing mode.
+>=20
 
-Le 29/01/2014 18:53, Ezequiel Garcia a =C3=A9crit :
-> On Wed, Jan 29, 2014 at 03:34:13PM +0100, Boris BREZILLON wrote:
->> nand-ecc-level property statically defines NAND chip's ECC requireme=
-nts.
->>
->> Signed-off-by: Boris BREZILLON <b.brezillon.dev@gmail.com>
->> ---
->>   Documentation/devicetree/bindings/mtd/nand.txt |    3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Docume=
-ntation/devicetree/bindings/mtd/nand.txt
->> index 03855c8..0c962296 100644
->> --- a/Documentation/devicetree/bindings/mtd/nand.txt
->> +++ b/Documentation/devicetree/bindings/mtd/nand.txt
->> @@ -3,5 +3,8 @@
->>   - nand-ecc-mode : String, operation mode of the NAND ecc mode.
->>     Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_o=
-ob_first",
->>     "soft_bch".
->> +- nand-ecc-level : Two cells property defining the ECC level requir=
-ements.
->> +  The first cell represent the strength and the second cell the ECC=
- block size.
->> +  E.g. : nand-ecc-level =3D <4 512>; /* 4 bits / 512 bytes */
->>   - nand-bus-width : 8 or 16 bus width if not present 8
->>   - nand-on-flash-bbt: boolean to enable on flash bbt option if not =
-present false
-> Hm.. when was this proposal agreed?
-Never, this is a proposal based on my needs, and this was not present i=
-n the
-1st version of this series :-).
-> It seems I've missed the
-> discussion...
->
-> FWIW, we've already proposed an equivalent one, but it received no
-> feedback from the devicetree maintainers:
->
-> http://comments.gmane.org/gmane.linux.drivers.devicetree/58764
->
-> Maybe we can discuss about it now?
->
->    nand-ecc-strength : integer ECC required strength.
->    nand-ecc-size : integer step size associated to the ECC strength.
->
->    vs.
->
->    nand-ecc-level : Two cells property defining the ECC level require=
-ments.
->    The first cell represent the strength and the second cell the ECC =
-block size.
->    E.g. : nand-ecc-level =3D <4 512>; /* 4 bits / 512 bytes */
->
-> It's really the same proposal but with a different format, right?
+Yes. And I believe this is a requirement from the ONFI 2.1 spec:
 
-Yes it is.
+"""
+4.1.4.3. Source Synchronous to Asynchronous
+[..]
 
-> IMHO, the former is more human-readable, but other than that I see no
-> difference.
+The host shall transition to the asynchronous data interface. Then the
+host shall issue the Reset (FFh) command described in the previous paragrap=
+h
+using asynchronous timing mode 0, thus the host transitions to the asynchro=
+nous
+data interface prior to issuing the Reset (FFh). A device in any timing mod=
+e is
+required to recognize a Reset (FFh) command issued in asynchronous timing
+mode 0.
 
-As I already said to Pekon, I won't complain if my proposal is not chos=
-en,
-as long as there is a proper way to define these ECC requirements ;-).
+[..]
 
-Best Regards,
+After CE# has been pulled high and then transitioned low again, the host
+should issue a Set Features to select the appropriate asynchronous timing m=
+ode.
+"""
 
-Boris
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
 
->
-> Brian? DT-guys?
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/groups/opt_out.
