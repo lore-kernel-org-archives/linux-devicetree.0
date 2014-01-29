@@ -1,46 +1,57 @@
-From: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH REPOST] of: Add vendor prefix for Xen hypervisor
-Date: Wed, 29 Jan 2014 13:01:01 +0000
-Message-ID: <1391000461-20713-1-git-send-email-ian.campbell@citrix.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH] ARM: dts: Add basic devices for AM3517-craneboard
+Date: Wed, 29 Jan 2014 07:30:59 -0600
+Message-ID: <52E90293.5080906@ti.com>
+References: <1386626150-23504-1-git-send-email-nm@ti.com> <52B0A9C8.7070201@ti.com> <52B1D3DC.1010304@baylibre.com> <52B1D50A.50406@ti.com> <52B1D866.7040300@baylibre.com> <52DD522E.1070607@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52DD522E.1070607@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-I suppose vendors of virtual hardware ought to be listed here as well.
+On 01/20/2014 10:43 AM, Nishanth Menon wrote:
+> Benoit,
+> 
+> On 12/18/2013 11:16 AM, Benoit Cousson wrote:
+>> On 18/12/2013 18:02, Nishanth Menon wrote:
+>>> On 12/18/2013 10:57 AM, Benoit Cousson wrote:
+>>>> On 17/12/2013 20:45, Nishanth Menon wrote:
+>>>>> On 12/09/2013 03:55 PM, Nishanth Menon wrote:
+>>>>>> Craneboard is a hardware development platform based on the Sitara
+>>>>>> AM3517 ARM Cortex - A8 microprocessor device - see [1] for more
+>>>>>> details. Add basic devices for craneboard as replacement for the board
+>>>>>> file scheduled for removal as part of device tree conversion
+>>>>>>
+>>>>>> [1] http://craneboard.org
+>>>>>>
+>>>>>> Signed-off-by: Nishanth Menon <nm@ti.com>
+>>>>>> ---
+>>>>>
+>>>>> gentle ping.. had'nt seen a response on this patch. Could we queue
+>>>>> this up for v3.14-rc1?
+>>>>
+>>>> Yep, it looks good to me.
+>>> Thanks benoit.
+>>>
+>>>> But if you don't mind I'll start pushing my branch after Xmas :-).
+>>>
+>>> As long as Tony is ok with it, I have no issues either - will be great
+>>> to have dt only boot in .14-rc1 though.
+>>
+>> Good point, it is already -rc4.
+>>
+>> OK, I'll just queued it and pushed it to for_3.14/dts.
+> 
+> I dont see this in next-20140120 yet - wondering if Tony or you have
+> plans for one of .14 rcs OR if this is queued for .15.
 
-Signed-off-by: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Acked-by: Stefano Stabellini <Stefano.Stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Acked-by: Stephen Warren <swarren@nvidia>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
-v2: rebased for repost.
----
- Documentation/devicetree/bindings/vendor-prefixes.txt |    1 +
- 1 file changed, 1 insertion(+)
+gentle ping yet again :(
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 3f900cd..a30e3b7 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -90,4 +90,5 @@ via	VIA Technologies, Inc.
- winbond Winbond Electronics corp.
- wlf	Wolfson Microelectronics
- wm	Wondermedia Technologies, Inc.
-+xen	Xen Hypervisor
- xlnx	Xilinx
+
 -- 
-1.7.10.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Nishanth Menon
