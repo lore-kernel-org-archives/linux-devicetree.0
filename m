@@ -1,39 +1,53 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+From: Ian Campbell <Ian.Campbell@citrix.com>
 Subject: Re: [PATCH] arm: document "mach-virt" platform.
-Date: Thu, 30 Jan 2014 18:28:59 +0100
-Message-ID: <201401301828.59294.arnd@arndb.de>
+Date: Thu, 30 Jan 2014 17:29:41 +0000
+Message-ID: <1391102981.9495.46.camel@kazak.uk.xensource.com>
 References: <1391098262-15944-1-git-send-email-ian.campbell@citrix.com>
+	  <52EA8853.8080709@arm.com>
+	 <1391102475.9495.44.camel@kazak.uk.xensource.com>
+	 <52EA8AD3.8080904@arm.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1391098262-15944-1-git-send-email-ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <52EA8AD3.8080904@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Will Deacon <Will.Deacon@arm.com>, Stefano Stabellini <stefano.stabellini@eu.citrix.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 30 January 2014, Ian Campbell wrote:
-> mach-virt has existed for a while but it is not written down what it actually
-> consists of. Although it seems a bit unusual to document a binding for an
-> entire platform since mach-virt is entirely virtual it is helpful to have
-> something to refer to in the absence of a single concrete implementation.
+On Thu, 2014-01-30 at 17:24 +0000, Marc Zyngier wrote:
+> >> I'm afraid I disagree with most of the above. The whole point of
+> >> mach-virt is to provide a shell for DT platforms. None of this hardware
+> >> is mandated. Instead, all the necessary information should be described
+> >> in DT.
+> > 
+> > "Add support for the smallest, dumbest possible platform, to be
+> >  used as a guest for KVM or other hypervisors.
+> > 
+> >  It only mandates a GIC and architected timers"
+> > 
+> > (your original commit message :-P)
 > 
-> I've done my best to capture the requirements based on the git log and my
-> memory/understanding.
+> Right. 1984, here we come. I'll disappear for a while, rewriting the
+> history. More seriously, that was just me scheming to get it merged,
+> hiding my cunning plan for mach-virt world domination!
+
+:-)
+
+> >> Actually, mach-virt doesn't really stand for Virtual Machine. It stands
+> >> for virtual mach-* directory! Eventually, mach-virt should become the
+> >> default platform, the one we use when we don't match anything else in
+> >> the kernel
+> > 
+> > I can word it more like that for sure, along with the alternative
+> > wording suggested by Christopher/Stefano to clarify the intent that
+> > everything comes from DTB and removal of the specific requirements for
+> > GIC/timer/PSCI I think that suit the (new) intention better?
 > 
-> While here remove the xenvm dts example, the Xen tools will now build a
-> suitable mach-virt compatible dts when launching the guest.
+> Yes, please! :-)
 
-It might be worth noting in the changeset comment that the 'compatible'
-string is actually no longer needed on newer kernels: All the members
-of the machine descriptor are now the defaults (we should remove the
-virt_init() function as well), and the fallback machine descriptor should
-work just fine if any other string gets passed.
+OK, I'll come up with an updated version.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Ian.
