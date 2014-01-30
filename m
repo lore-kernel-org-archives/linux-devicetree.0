@@ -1,52 +1,55 @@
-From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: [PATCH] ARM: keystone: dts: disable "msmcsram" clock
-Date: Thu, 30 Jan 2014 13:45:43 +0200
-Message-ID: <1391082343-13371-1-git-send-email-ivan.khoronzhuk@ti.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: [PATCH v2 3/5] ASoC: tda998x: add DT documentation
+Date: Thu, 30 Jan 2014 11:32:48 +0100
+Message-ID: <5c20133f084ba9e41c00120b8a7c8d5ed8a23ffa.1391081934.git.moinejf@free.fr>
+References: <cover.1391081933.git.moinejf@free.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, galak@codeaurora.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, santosh.shilimkar@ti.com, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.1391081933.git.moinejf@free.fr>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces@lists.freedesktop.org
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-At late init all unused clocks are disabled. So clocks that were not
-get before will be gated. In Keysone 2 SoC we have at least one
-necessary clock that is not used by any driver - "msmcsram". This
-clock is necessary, because it supplies the Multicore Shared Memory
-Controller (MSMC). The MSMC provides memory protection for accesses to
-the MSMC SRAM and DDR3 memory from system masters. It also manages
-traffic among mastering peripherals and the EMIF.
+This patch adds the DT documentation of the NXP TDA998x CODEC.
 
-This means that MSMC clock is always needed by SoC and cannot be gated.
-It is only one from necessary clocks that was not used by any driver.
-So to avoid its gating at late init we have to disable it in DT.
-
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
 ---
- arch/arm/boot/dts/keystone-clocks.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/sound/tda998x.txt | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/tda998x.txt
 
-diff --git a/arch/arm/boot/dts/keystone-clocks.dtsi b/arch/arm/boot/dts/keystone-clocks.dtsi
-index 2363593..e7aea2e 100644
---- a/arch/arm/boot/dts/keystone-clocks.dtsi
-+++ b/arch/arm/boot/dts/keystone-clocks.dtsi
-@@ -332,6 +332,7 @@ clocks {
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk1>;
- 		clock-output-names = "msmcsram";
-+		status = "disabled";
- 		reg = <0x02350038 0xb00>, <0x0235001c 0x400>;
- 		reg-names = "control", "domain";
- 		domain-id = <7>;
+diff --git a/Documentation/devicetree/bindings/sound/tda998x.txt b/Documentation/devicetree/bindings/sound/tda998x.txt
+new file mode 100644
+index 0000000..13b73ca
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/tda998x.txt
+@@ -0,0 +1,16 @@
++Device-Tree bindings for the NXP TDA998x HDMI transmitter
++
++Required properties:
++	- compatible: must be "nxp,tda998x-codec".
++	- audio-ports: one or two values corresponding to entries in
++		the audio-port-names property.
++	- audio-port-names: must contain "i2s", "spdif" entries
++		matching entries in the audio-ports property.
++
++Example node:
++
++	hdmi_codec: hdmi-codec {
++		compatible = "nxp,tda998x-codec";
++		audio-ports = <0x03>, <0x04>;
++		audio-port-names = "i2s", "spdif";
++	};
 -- 
-1.8.3.2
+1.9.rc1
