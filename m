@@ -1,181 +1,164 @@
-Return-Path: <21cnbao@gmail.com>
-From: Barry Song <21cnbao@gmail.com>
-Subject: [PATCH v5] dmaengine: sirf: enable generic dt binding for dma channels
-Date: Sun, 26 Jan 2014 10:08:45 +0800
-Message-Id: <1389190369-2012-1-git-send-email-21cnbao@gmail.com>
-To: vinod.koul@intel.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, dmaengine@vger.kernel.org, workgroup.linux@csr.com, Lars-Peter Clausen <lars@metafoo.de>, Barry Song <Baohua.Song@csr.com>
+Return-Path: <santosh.shilimkar@ti.com>
+From: "Shilimkar, Santosh" <santosh.shilimkar@ti.com>
+Subject: RE: [PATCH] ARM: keystone: dts: disable "msmcsram" clock
+Date: Thu, 30 Jan 2014 13:25:59 +0000
+Message-ID: <448912EABC71F84BBCADFD3C67C4BE52A0B4B6@DBDE04.ent.ti.com>
+References: <1391082343-13371-1-git-send-email-ivan.khoronzhuk@ti.com>
+In-Reply-To: <1391082343-13371-1-git-send-email-ivan.khoronzhuk@ti.com>
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_448912EABC71F84BBCADFD3C67C4BE52A0B4B6DBDE04entticom_"
+MIME-Version: 1.0
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "Khoronzhuk, Ivan" <ivan.khoronzhuk@ti.com>
+Cc: "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Barry Song <Baohua.Song@csr.com>
+--_000_448912EABC71F84BBCADFD3C67C4BE52A0B4B6DBDE04entticom_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-move to support of_dma_request_slave_channel() and dma_request_slave_channel.
-we add a xlate() to let dma clients be able to find right dma_chan by generic
-"dmas" properties in dts.
+Disable is not good idea since it conveys wrong info....
 
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Barry Song <Baohua.Song@csr.com>
+Hyperlink case was different.
+
+Sent from my Android phone using TouchDown (www.nitrodesk.com)
+
+-----Original Message-----
+From: Khoronzhuk, Ivan [ivan.khoronzhuk@ti.com]
+Received: Thursday, 30 Jan 2014, 6:45am
+To: robh+dt@kernel.org [robh+dt@kernel.org]; galak@codeaurora.org [galak@co=
+deaurora.org]
+CC: pawel.moll@arm.com [pawel.moll@arm.com]; mark.rutland@arm.com [mark.rut=
+land@arm.com]; ijc+devicetree@hellion.org.uk [ijc+devicetree@hellion.org.uk=
+]; linux@arm.linux.org.uk [linux@arm.linux.org.uk]; devicetree@vger.kernel.=
+org [devicetree@vger.kernel.org]; linux-arm-kernel@lists.infradead.org [lin=
+ux-arm-kernel@lists.infradead.org]; linux-kernel@vger.kernel.org [linux-ker=
+nel@vger.kernel.org]; Shilimkar, Santosh [santosh.shilimkar@ti.com]; Khoron=
+zhuk, Ivan [ivan.khoronzhuk@ti.com]
+Subject: [PATCH] ARM: keystone: dts: disable "msmcsram" clock
+
+At late init all unused clocks are disabled. So clocks that were not
+get before will be gated. In Keysone 2 SoC we have at least one
+necessary clock that is not used by any driver - "msmcsram". This
+clock is necessary, because it supplies the Multicore Shared Memory
+Controller (MSMC). The MSMC provides memory protection for accesses to
+the MSMC SRAM and DDR3 memory from system masters. It also manages
+traffic among mastering peripherals and the EMIF.
+
+This means that MSMC clock is always needed by SoC and cannot be gated.
+It is only one from necessary clocks that was not used by any driver.
+So to avoid its gating at late init we have to disable it in DT.
+
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 ---
- -v5:
- add Acked-by: vinod.koul@intel.com;
- cc devicetree guys as Acked from dt was required
+ arch/arm/boot/dts/keystone-clocks.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
- .../devicetree/bindings/dma/sirfsoc-dma.txt        |   43 ++++++++++++++++++++
- arch/arm/boot/dts/atlas6.dtsi                      |    2 +
- arch/arm/boot/dts/prima2.dtsi                      |    2 +
- drivers/dma/sirf-dma.c                             |   23 ++++++++++
- 4 files changed, 70 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/sirfsoc-dma.txt
+diff --git a/arch/arm/boot/dts/keystone-clocks.dtsi b/arch/arm/boot/dts/key=
+stone-clocks.dtsi
+index 2363593..e7aea2e 100644
+--- a/arch/arm/boot/dts/keystone-clocks.dtsi
++++ b/arch/arm/boot/dts/keystone-clocks.dtsi
+@@ -332,6 +332,7 @@ clocks {
+                 compatible =3D "ti,keystone,psc-clock";
+                 clocks =3D <&chipclk1>;
+                 clock-output-names =3D "msmcsram";
++               status =3D "disabled";
+                 reg =3D <0x02350038 0xb00>, <0x0235001c 0x400>;
+                 reg-names =3D "control", "domain";
+                 domain-id =3D <7>;
+--
+1.8.3.2
 
-diff --git a/Documentation/devicetree/bindings/dma/sirfsoc-dma.txt b/Documentation/devicetree/bindings/dma/sirfsoc-dma.txt
-new file mode 100644
-index 0000000..ecbc96a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/sirfsoc-dma.txt
-@@ -0,0 +1,43 @@
-+* CSR SiRFSoC DMA controller
-+
-+See dma.txt first
-+
-+Required properties:
-+- compatible: Should be "sirf,prima2-dmac" or "sirf,marco-dmac"
-+- reg: Should contain DMA registers location and length.
-+- interrupts: Should contain one interrupt shared by all channel
-+- #dma-cells: must be <1>. used to represent the number of integer
-+    cells in the dmas property of client device.
-+- clocks: clock required
-+
-+Example:
-+
-+Controller:
-+dmac0: dma-controller@b00b0000 {
-+	compatible = "sirf,prima2-dmac";
-+	reg = <0xb00b0000 0x10000>;
-+	interrupts = <12>;
-+	clocks = <&clks 24>;
-+	#dma-cells = <1>;
-+};
-+
-+
-+Client:
-+Fill the specific dma request line in dmas. In the below example, spi0 read
-+channel request line is 9 of the 2nd dma controller, while write channel uses
-+4 of the 2nd dma controller; spi1 read channel request line is 12 of the 1st
-+dma controller, while write channel uses 13 of the 1st dma controller:
-+
-+spi0: spi@b00d0000 {
-+	compatible = "sirf,prima2-spi";
-+	dmas = <&dmac1 9>,
-+		<&dmac1 4>;
-+	dma-names = "rx", "tx";
-+};
-+
-+spi1: spi@b0170000 {
-+	compatible = "sirf,prima2-spi";
-+	dmas = <&dmac0 12>,
-+		<&dmac0 13>;
-+	dma-names = "rx", "tx";
-+};
-diff --git a/arch/arm/boot/dts/atlas6.dtsi b/arch/arm/boot/dts/atlas6.dtsi
-index b63cfef..4f41f0a 100644
---- a/arch/arm/boot/dts/atlas6.dtsi
-+++ b/arch/arm/boot/dts/atlas6.dtsi
-@@ -260,6 +260,7 @@
- 				reg = <0xb00b0000 0x10000>;
- 				interrupts = <12>;
- 				clocks = <&clks 24>;
-+				#dma-cells = <1>;
- 			};
- 
- 			dmac1: dma-controller@b0160000 {
-@@ -268,6 +269,7 @@
- 				reg = <0xb0160000 0x10000>;
- 				interrupts = <13>;
- 				clocks = <&clks 25>;
-+				#dma-cells = <1>;
- 			};
- 
- 			vip@b00C0000 {
-diff --git a/arch/arm/boot/dts/prima2.dtsi b/arch/arm/boot/dts/prima2.dtsi
-index b292a5c..19e4e22 100644
---- a/arch/arm/boot/dts/prima2.dtsi
-+++ b/arch/arm/boot/dts/prima2.dtsi
-@@ -277,6 +277,7 @@
- 				reg = <0xb00b0000 0x10000>;
- 				interrupts = <12>;
- 				clocks = <&clks 24>;
-+				#dma-cells = <1>;
- 			};
- 
- 			dmac1: dma-controller@b0160000 {
-@@ -285,6 +286,7 @@
- 				reg = <0xb0160000 0x10000>;
- 				interrupts = <13>;
- 				clocks = <&clks 25>;
-+				#dma-cells = <1>;
- 			};
- 
- 			vip@b00C0000 {
-diff --git a/drivers/dma/sirf-dma.c b/drivers/dma/sirf-dma.c
-index 6aec3ad..8b74c0d 100644
---- a/drivers/dma/sirf-dma.c
-+++ b/drivers/dma/sirf-dma.c
-@@ -18,6 +18,7 @@
- #include <linux/of_device.h>
- #include <linux/of_platform.h>
- #include <linux/clk.h>
-+#include <linux/of_dma.h>
- #include <linux/sirfsoc_dma.h>
- 
- #include "dmaengine.h"
-@@ -640,6 +641,18 @@ bool sirfsoc_dma_filter_id(struct dma_chan *chan, void *chan_id)
- }
- EXPORT_SYMBOL(sirfsoc_dma_filter_id);
- 
-+static struct dma_chan *of_dma_sirfsoc_xlate(struct of_phandle_args *dma_spec,
-+	struct of_dma *ofdma)
-+{
-+	struct sirfsoc_dma *sdma = ofdma->of_dma_data;
-+	unsigned int request = dma_spec->args[0];
-+
-+	if (request > SIRFSOC_DMA_CHANNELS)
-+		return NULL;
-+
-+	return dma_get_slave_channel(&sdma->channels[request].chan);
-+}
-+
- static int sirfsoc_dma_probe(struct platform_device *op)
- {
- 	struct device_node *dn = op->dev.of_node;
-@@ -744,11 +757,20 @@ static int sirfsoc_dma_probe(struct platform_device *op)
- 	if (ret)
- 		goto free_irq;
- 
-+	/* Device-tree DMA controller registration */
-+	ret = of_dma_controller_register(dn, of_dma_sirfsoc_xlate, sdma);
-+	if (ret) {
-+		dev_err(dev, "failed to register DMA controller\n");
-+		goto unreg_dma_dev;
-+	}
-+
- 	pm_runtime_enable(&op->dev);
- 	dev_info(dev, "initialized SIRFSOC DMAC driver\n");
- 
- 	return 0;
- 
-+unreg_dma_dev:
-+	dma_async_device_unregister(dma);
- free_irq:
- 	free_irq(sdma->irq, sdma);
- irq_dispose:
-@@ -761,6 +783,7 @@ static int sirfsoc_dma_remove(struct platform_device *op)
- 	struct device *dev = &op->dev;
- 	struct sirfsoc_dma *sdma = dev_get_drvdata(dev);
- 
-+	of_dma_controller_free(op->dev.of_node);
- 	dma_async_device_unregister(&sdma->dma);
- 	free_irq(sdma->irq, sdma);
- 	irq_dispose_mapping(sdma->irq);
--- 
-1.7.5.4
+
+--_000_448912EABC71F84BBCADFD3C67C4BE52A0B4B6DBDE04entticom_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Diso-8859-=
+1">
+<meta name=3D"Generator" content=3D"Microsoft Exchange Server">
+<!-- converted from text --><style><!-- .EmailQuote { margin-left: 1pt; pad=
+ding-left: 4pt; border-left: #800000 2px solid; } --></style>
+</head>
+<body>
+<div style=3D"font-family:Calibri,Arial,Helvetica,sans-serif; font-size:11p=
+t; color:black">
+<span style=3D"font-family:Calibri,Arial,Helvetica,sans-serif; font-size:11=
+pt; color:black">Disable is not good idea since it conveys wrong info....<b=
+r>
+<br>
+Hyperlink case was different.<br>
+<br>
+Sent from my Android phone using TouchDown (www.nitrodesk.com)<br>
+<br>
+<span style=3D"color:black">-----Original Message----- <br>
+<b>From:</b> Khoronzhuk, Ivan [ivan.khoronzhuk@ti.com]<br>
+<b>Received:</b> Thursday, 30 Jan 2014, 6:45am<br>
+<b>To:</b> robh&#43;dt@kernel.org [robh&#43;dt@kernel.org]; galak@codeauror=
+a.org [galak@codeaurora.org]<br>
+<b>CC:</b> pawel.moll@arm.com [pawel.moll@arm.com]; mark.rutland@arm.com [m=
+ark.rutland@arm.com]; ijc&#43;devicetree@hellion.org.uk [ijc&#43;devicetree=
+@hellion.org.uk]; linux@arm.linux.org.uk [linux@arm.linux.org.uk]; devicetr=
+ee@vger.kernel.org [devicetree@vger.kernel.org];
+ linux-arm-kernel@lists.infradead.org [linux-arm-kernel@lists.infradead.org=
+]; linux-kernel@vger.kernel.org [linux-kernel@vger.kernel.org]; Shilimkar, =
+Santosh [santosh.shilimkar@ti.com]; Khoronzhuk, Ivan [ivan.khoronzhuk@ti.co=
+m]<br>
+<b>Subject:</b> [PATCH] ARM: keystone: dts: disable &quot;msmcsram&quot; cl=
+ock<br>
+<br>
+</span></span></div>
+<font size=3D"2"><span style=3D"font-size:10pt;">
+<div class=3D"PlainText">At late init all unused clocks are disabled. So cl=
+ocks that were not<br>
+get before will be gated. In Keysone 2 SoC we have at least one<br>
+necessary clock that is not used by any driver - &quot;msmcsram&quot;. This=
+<br>
+clock is necessary, because it supplies the Multicore Shared Memory<br>
+Controller (MSMC). The MSMC provides memory protection for accesses to<br>
+the MSMC SRAM and DDR3 memory from system masters. It also manages<br>
+traffic among mastering peripherals and the EMIF.<br>
+<br>
+This means that MSMC clock is always needed by SoC and cannot be gated.<br>
+It is only one from necessary clocks that was not used by any driver.<br>
+So to avoid its gating at late init we have to disable it in DT.<br>
+<br>
+Signed-off-by: Ivan Khoronzhuk &lt;ivan.khoronzhuk@ti.com&gt;<br>
+---<br>
+&nbsp;arch/arm/boot/dts/keystone-clocks.dtsi | 1 &#43;<br>
+&nbsp;1 file changed, 1 insertion(&#43;)<br>
+<br>
+diff --git a/arch/arm/boot/dts/keystone-clocks.dtsi b/arch/arm/boot/dts/key=
+stone-clocks.dtsi<br>
+index 2363593..e7aea2e 100644<br>
+--- a/arch/arm/boot/dts/keystone-clocks.dtsi<br>
+&#43;&#43;&#43; b/arch/arm/boot/dts/keystone-clocks.dtsi<br>
+@@ -332,6 &#43;332,7 @@ clocks {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp; compatible =3D &quot;ti,keystone,psc-clock&quot;;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp; clocks =3D &lt;&amp;chipclk1&gt;;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp; clock-output-names =3D &quot;msmcsram&quot;;<br>
+&#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp; status =3D &quot;disabled&quot;;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp; reg =3D &lt;0x02350038 0xb00&gt;, &lt;0x0235001c 0x40=
+0&gt;;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp; reg-names =3D &quot;control&quot;, &quot;domain&quot;=
+;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp; domain-id =3D &lt;7&gt;;<br>
+-- <br>
+1.8.3.2<br>
+<br>
+</div>
+</span></font>
+</body>
+</html>
+
+--_000_448912EABC71F84BBCADFD3C67C4BE52A0B4B6DBDE04entticom_--
