@@ -1,89 +1,71 @@
-From: delicious quinoa <delicious.quinoa@gmail.com>
-Subject: Re: [PATCH v9] gpio: add a driver for Synopsys DesignWare APB GPIO
-Date: Thu, 30 Jan 2014 16:05:56 -0600
-Message-ID: <CANk1AXQHY2cMf4vTyj1EJs1Dz_C69ppJU9xCX58CUO122y84Hw@mail.gmail.com>
-References: <1386364179-28650-1-git-send-email-delicious.quinoa@gmail.com>
-	<CANk1AXS=CADN53aO5KVN3UorddJ0wZ2PTqwo2XmeRuxYe_DoLg@mail.gmail.com>
-	<20131212090838.GD25478@pengutronix.de>
-	<CANk1AXRxTGRMJMvXe4jgG2GfuELsDTNJnRLXK-MGe3gGxinmLA@mail.gmail.com>
-	<20140130205000.GB26861@pengutronix.de>
-	<CANk1AXS9fbNafLxiUz8OoPVUtwPDhHhYx7+MGi_JyDdG6J9F-Q@mail.gmail.com>
-	<20140130213232.GC26861@pengutronix.de>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v5 00/20] Armada 370/XP watchdog support
+Date: Thu, 30 Jan 2014 17:16:29 -0500
+Message-ID: <20140130221629.GH29184@titan.lakedaemon.net>
+References: <1390836440-12744-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20140129181949.GB27143@localhost>
+ <20140130205315.GD29184@titan.lakedaemon.net>
+ <20140130215056.GA1063@localhost>
+ <52EACB92.2080700@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140130213232.GC26861@pengutronix.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: Linus Walleij <linus.walleij@stericsson.com>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Jamie Iles <jamie@jamieiles.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Yves Vandervennet <rocket.yvanderv@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52EACB92.2080700-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 30, 2014 at 3:32 PM, Steffen Trumtrar
-<s.trumtrar@pengutronix.de> wrote:
-> On Thu, Jan 30, 2014 at 03:15:11PM -0600, delicious quinoa wrote:
->> On Thu, Jan 30, 2014 at 2:50 PM, Steffen Trumtrar
->> <s.trumtrar@pengutronix.de> wrote:
->> > Hi!
->> >
->> > On Thu, Jan 30, 2014 at 01:40:04PM -0600, delicious quinoa wrote:
->> >> On Thu, Dec 12, 2013 at 3:08 AM, Steffen Trumtrar
->> >> <s.trumtrar@pengutronix.de> wrote:
->> >>
->> >> > Second: The interrupt is registered as "GIC 37", which is a real interrupt on
->> >> > the Socfpga. I would expect it to be marked as "GPIO 2xx" (or something in that
->> >> > range). The interrupt from the gpiochip itself isn't registered at all ?!
->> >>
->> >> Hi Stephen,
->> >>
->> >> Did you export the gpio lines and set the edge in sysfs?  Because the
->> >> interrupts aren't allocated otherwise.
->> >>
->> >> For instance:
->> >>
->> >> root@socfpga_cyclone5:~# echo 195 > /sys/class/gpio/export
->> >> root@socfpga_cyclone5:~# echo rising > /sys/class/gpio/gpio195/edge
->> >>
->> >> Now I can see a pretty nicely named interrupt in /proc/interrupts:
->> >>
->> >> 256:          0          0  gpio-dwapb  24  gpiolib
->> >>
->> >
->> > I didn't try that and I think this behaviour is pretty uncommon.
->> > This should be fixed in the driver. I never wrote a gpiochip-driver,
->> > so I don't know what is missing, but maybe just some functioncall ?!
->> > All other drivers I came across have that entry from probing without
->> > any fiddling.
->>
->> Hi Steffen,
->>
->> Do you mean 'all other gpio drivers' or 'all other non-gpio drivers'?
->
-> I meant gpio drivers (at least the ones I have used).
->
->>
->> This is the behavior that is implemented in the community gpio
->> framework drivers/gpio/gpiolib.c, not anything special implemented in
->> this dw gpio driver.
->>
->> It's documented in Documentation/gpio/sysfs.txt and
->> Documentation/ABI/testing/sysfs-gpio.
->>
->> You get userspace control of a gpio by 'export'ing it in sysfs.  And
->> then by default, the interrupt edge is set to 'none' (no irq) until
->> you set the edge in sysfs.
->>
->
-> Hm, okay...for GPIOs I'm with you. But when I specify a gpio as
-> interrupt for a device, I have to first export it manually before I can
-> use the device? Sounds weird.
->
-> Steffen
+On Thu, Jan 30, 2014 at 11:00:50PM +0100, Sebastian Hesselbarth wrote:
+> On 01/30/2014 10:50 PM, Ezequiel Garcia wrote:
+> >On Thu, Jan 30, 2014 at 03:53:15PM -0500, Jason Cooper wrote:
+> >>Ezequiel,
+> >>
+> >>On Wed, Jan 29, 2014 at 03:19:50PM -0300, Ezequiel Garcia wrote:
+> >>>On Mon, Jan 27, 2014 at 12:27:00PM -0300, Ezequiel Garcia wrote:
+> >>>>A new round, mostly fixing some minor nitpicks.
+> >>>>
+> >>>
+> >>>If anyone wants to give this a test, here's a public branch:
+> >>>
+> >>>https://github.com/MISL-EBU-System-SW/mainline-public/tree/wdt_for_v3.14_v5
+> >>
+> >>I just took a quick glance at this (commit oneliners/tags) and there
+> >>doesn't appear to be any dependence on Sebastian's series.  Did I miss
+> >>something?
+> >>
+> >
+> >True, I've completely missed that. I pushed the branch in a rush!
+> >
+> >Let me prepare a v6, fixing the remaining issue pointed out by Russell,
+> >and push again (together with Sebastian's irqchip fixes).
+> 
+> Umm, no. Just directly name irqchip-orion fixes. Jason will send a PR
+> for irqchip-fixes _with-in_ v3.14 while watchdog will go into v3.15.
 
-Seems normal usage both in userspace and in kernel drivers that need a gpio.
+Yes, but I'd like to do a topic branch for that irqchip PR.  That way,
+we don't have to wait for them to land in an -rc.  We can push the
+watchdog changes when they are ready, and they can be based on v3.14-rc1
+with irqchip/orion-fixes (or whatever) pulled in.
 
-Looking at other kernel drivers that use a gpio, I can see examples
-that do gpio_request() to get the gpio that they care about.  Then
-gpio_to_irq() and request_irq().  If you grep for 'gpio_to_irq' then
-look to see how they got the gpio, you'll see it pretty quickly.
+> In any way, do not include my patches into your set.
 
-Alan
+Agreed.  I wasn't really keen on including the MMIO patch in the series
+since it was already in rmk's patch tracker.  Listing the deps in the
+coverletter is enough.
+
+> Jason: Ezequiel's watchdog patches install an irq handler that will
+> panic(TM) on a watchdog irq. irqchip-orion does not properly clear
+> stale bridge irqs which could signal a watchdog irq left by bootloader
+> (or watchdog triggering between bootloader and driver probe).
+
+Ok.  I'll look things over and get some branches setup this weekend.
+
+thx,
+
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
