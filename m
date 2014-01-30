@@ -1,59 +1,57 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: recommended action for bootloaders regarding modifying
- device-tree nodes
-Date: Thu, 30 Jan 2014 15:45:58 -0500
-Message-ID: <20140130204558.GC29184@titan.lakedaemon.net>
-References: <CAJ+vNU366GiY4k_rnh1Jf0kra+PU99w4tDdM2sNioUAJCiZqOA@mail.gmail.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v9] gpio: add a driver for Synopsys DesignWare APB GPIO
+Date: Thu, 30 Jan 2014 21:50:00 +0100
+Message-ID: <20140130205000.GB26861@pengutronix.de>
+References: <1386364179-28650-1-git-send-email-delicious.quinoa@gmail.com>
+ <CANk1AXS=CADN53aO5KVN3UorddJ0wZ2PTqwo2XmeRuxYe_DoLg@mail.gmail.com>
+ <20131212090838.GD25478@pengutronix.de>
+ <CANk1AXRxTGRMJMvXe4jgG2GfuELsDTNJnRLXK-MGe3gGxinmLA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAJ+vNU366GiY4k_rnh1Jf0kra+PU99w4tDdM2sNioUAJCiZqOA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <CANk1AXRxTGRMJMvXe4jgG2GfuELsDTNJnRLXK-MGe3gGxinmLA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: delicious quinoa <delicious.quinoa@gmail.com>
+Cc: Linus Walleij <linus.walleij@stericsson.com>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Jamie Iles <jamie@jamieiles.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Yves Vandervennet <rocket.yvanderv@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tim,
+Hi!
 
-On Thu, Jan 30, 2014 at 01:11:18AM -0800, Tim Harvey wrote:
-> My approach has been to define a per-baseboard device-tree in Linux
-> for a 'fully loaded' board, then remove nodes which the EEPROM claims
-> are not present in the bootloader before it passes the DTB to the
-> kernel.  I do this by defining aliases in the device-tree for the
-> peripherals that are 'optional' so that the bootloader itself does not
-> need to know the details about how the device is connected.
+On Thu, Jan 30, 2014 at 01:40:04PM -0600, delicious quinoa wrote:
+> On Thu, Dec 12, 2013 at 3:08 AM, Steffen Trumtrar
+> <s.trumtrar@pengutronix.de> wrote:
+> 
+> > Second: The interrupt is registered as "GIC 37", which is a real interrupt on
+> > the Socfpga. I would expect it to be marked as "GPIO 2xx" (or something in that
+> > range). The interrupt from the gpiochip itself isn't registered at all ?!
+> 
+> Hi Stephen,
+> 
+> Did you export the gpio lines and set the edge in sysfs?  Because the
+> interrupts aren't allocated otherwise.
+> 
+> For instance:
+> 
+> root@socfpga_cyclone5:~# echo 195 > /sys/class/gpio/export
+> root@socfpga_cyclone5:~# echo rising > /sys/class/gpio/gpio195/edge
+> 
+> Now I can see a pretty nicely named interrupt in /proc/interrupts:
+> 
+> 256:          0          0  gpio-dwapb  24  gpiolib
+> 
 
-This is more of a process question:  Is there any information captured
-in your EEPROM that can't be represented in the dtb?  iow, at the point
-when you write the EEPROM, why not write the dtb to it as configured?
+I didn't try that and I think this behaviour is pretty uncommon.
+This should be fixed in the driver. I never wrote a gpiochip-driver,
+so I don't know what is missing, but maybe just some functioncall ?!
+All other drivers I came across have that entry from probing without
+any fiddling.
 
-You could have pre-configured dtsi fragments for each config option, and
-then dynamically create the board dts from the order.
+Thanks,
+Steffen
 
-I only ask because it would solve the problem below.  However, there's a
-lot more to changing a manufacturing process than meets the eye. :)
-
-> Is it more appropriate for the bootloader to 'remove' nodes for
-> devices that are not physically present or should I be setting their
-> status property to 'disabled' instead?  I'm not clear if either option
-> really has any pros or cons.
-
-That depends on how you have it structured.  Is it a valid dtb?
-Meaning, do you have four nodes all at the same register address?
-Perhaps you could provide an example dts?
-
-thx,
-
-Jason.
-
-> Tim Harvey - Principal Software Engineer
-> Gateworks Corporation
-
-btw - one of my first embedded projects was on one of your boards. An
-ixp425 with 4 mini-pci slots.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
