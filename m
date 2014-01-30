@@ -1,61 +1,81 @@
-From: Patrice CHOTARD <patrice.chotard-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 1/4] ARM: STi: add stid127 soc support
-Date: Thu, 30 Jan 2014 15:55:41 +0100
-Message-ID: <1391093744-19905-2-git-send-email-patrice.chotard@st.com>
+From: Patrice CHOTARD <patrice.chotard@st.com>
+Subject: [PATCH 4/4] ARM: dts: add B2112 board support
+Date: Thu, 30 Jan 2014 15:55:44 +0100
+Message-ID: <1391093744-19905-5-git-send-email-patrice.chotard@st.com>
 References: <1391093744-19905-1-git-send-email-patrice.chotard@st.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1391093744-19905-1-git-send-email-patrice.chotard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: maxime.coquelin-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1391093744-19905-1-git-send-email-patrice.chotard@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc: maxime.coquelin@st.com, alexandre.torgue@st.com, patrice.chotard@st.com, Giuseppe Cavallaro <peppe.cavallaro@st.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+From: Alexandre TORGUE <alexandre.torgue@st.com>
 
-This patch adds support to STiD127 SoC.
-The main adaptation is the L2 cache way size compare to STiH41x SoCs.
+Add support for B2112  board based on STiD127 SoC.
 
-Signed-off-by: alexandre torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Signed-off-by: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
 ---
- arch/arm/mach-sti/board-dt.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/Makefile          |    3 ++-
+ arch/arm/boot/dts/stid127-b2112.dts |   35 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 37 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/stid127-b2112.dts
 
-diff --git a/arch/arm/mach-sti/board-dt.c b/arch/arm/mach-sti/board-dt.c
-index 1217fb5..be018a9 100644
---- a/arch/arm/mach-sti/board-dt.c
-+++ b/arch/arm/mach-sti/board-dt.c
-@@ -9,6 +9,7 @@
- 
- #include <linux/irq.h>
- #include <linux/of_platform.h>
-+#include <linux/of.h>
- #include <asm/hardware/cache-l2x0.h>
- #include <asm/mach/arch.h>
- 
-@@ -18,6 +19,10 @@ void __init stih41x_l2x0_init(void)
- {
- 	u32 way_size = 0x4;
- 	u32 aux_ctrl;
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index d57c1a6..7173dca 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -247,7 +247,8 @@ dtb-$(CONFIG_ARCH_SPEAR6XX)+= spear600-evb.dtb
+ dtb-$(CONFIG_ARCH_STI)+= stih415-b2000.dtb \
+ 	stih416-b2000.dtb \
+ 	stih415-b2020.dtb \
+-	stih416-b2020.dtb
++	stih416-b2020.dtb \
++	stid127-b2112.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += \
+ 	sun4i-a10-a1000.dtb \
+ 	sun4i-a10-cubieboard.dtb \
+diff --git a/arch/arm/boot/dts/stid127-b2112.dts b/arch/arm/boot/dts/stid127-b2112.dts
+new file mode 100644
+index 0000000..b4507e3
+--- /dev/null
++++ b/arch/arm/boot/dts/stid127-b2112.dts
+@@ -0,0 +1,35 @@
++/*
++ * Copyright (C) 2013 STMicroelectronics Limited.
++ * Author: Alexandre Torgue <alexandre.torgue@st.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * publishhed by the Free Software Foundation.
++ */
++/dts-v1/;
++#include "stid127.dtsi"
 +
-+	if (of_machine_is_compatible("st,stid127"))
-+		way_size = 0x3;
++/ {
++	model = "STiD127 B2112 Board";
++	compatible = "st,stid127", "st,stid127-b2112";
 +
- 	/* may be this can be encoded in macros like BIT*() */
- 	aux_ctrl = (0x1 << L2X0_AUX_CTRL_SHARE_OVERRIDE_SHIFT) |
- 		(0x1 << L2X0_AUX_CTRL_DATA_PREFETCH_SHIFT) |
-@@ -36,6 +41,7 @@ static void __init stih41x_machine_init(void)
- static const char *stih41x_dt_match[] __initdata = {
- 	"st,stih415",
- 	"st,stih416",
-+	"st,stid127",
- 	NULL
- };
- 
++	memory{
++		device_type = "memory";
++		reg = <0x40000000 0x10000000>;
++	};
++
++	chosen {
++		bootargs = "console=ttyAS0,115200";
++		linux,stdout-path = &uart2;
++	};
++
++	aliases {
++		ttyAS0 = &uart2;
++	};
++
++	soc {
++		uart2: serial@fe532000{
++			status = "okay";
++		};
++	};
++};
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
