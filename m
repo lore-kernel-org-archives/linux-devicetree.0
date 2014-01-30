@@ -1,44 +1,47 @@
-From: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Re: [RFC PATCH v2 08/14] mtd: nand: add sunxi NAND
- flash controller support
-Date: Thu, 30 Jan 2014 09:57:41 +0100
-Message-ID: <52EA1405.8060801@gmail.com>
-References: <1391006064-28890-1-git-send-email-b.brezillon.dev@gmail.com> <1391006064-28890-9-git-send-email-b.brezillon.dev@gmail.com> <20140129175641.GF1427@obsidianresearch.com> <20140129184619.GC27143@localhost> <20140129191005.GG1427@obsidianresearch.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Subject: recommended action for bootloaders regarding modifying device-tree nodes
+Date: Thu, 30 Jan 2014 01:11:18 -0800
+Message-ID: <CAJ+vNU366GiY4k_rnh1Jf0kra+PU99w4tDdM2sNioUAJCiZqOA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBDE6NB73YAMBBB5IVCLQKGQEAJPWRMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140129191005.GG1427-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29/01/2014 20:10, Jason Gunthorpe wrote:
-> On Wed, Jan 29, 2014 at 03:46:20PM -0300, Ezequiel Garcia wrote:
->
->> After CE# has been pulled high and then transitioned low again, the host
->> should issue a Set Features to select the appropriate asynchronous timing mode.
->> """
-> Oh, I had forgot you should do a set feature too
->
-> Boris, I think the core core should handle this dance and the driver
-> should just implement a call back to change the timing mode on the
-> interface..
->
-> If I ever get a moment I can work on support for timing setting in the
-> mvebu driver, I have boards here with ONFI NAND..
+Greetings,
 
-Okay, I'll wait :).
+I develop the boot-loader and kernel for a family of boards that have
+an on-board EEPROM which contains information as to what options are
+physically loaded on the board such as memory size/config, and
+peripheral IC's.  We allow customers to create special builds of our
+standard products with sub-loaded components and while each
+combination of options ends up with a unique model number, it seems
+silly to create a different static device-trees for each possible
+option (not to mention we don't create the unique model number until
+an order is placed).
 
-Thanks.
+My approach has been to define a per-baseboard device-tree in Linux
+for a 'fully loaded' board, then remove nodes which the EEPROM claims
+are not present in the bootloader before it passes the DTB to the
+kernel.  I do this by defining aliases in the device-tree for the
+peripherals that are 'optional' so that the bootloader itself does not
+need to know the details about how the device is connected.
 
->
-> Regards,
-> Jason
->
+Is it more appropriate for the bootloader to 'remove' nodes for
+devices that are not physically present or should I be setting their
+status property to 'disabled' instead?  I'm not clear if either option
+really has any pros or cons.
+
+Thanks for any suggestions or comments,
+
+Tim
+
+Tim Harvey - Principal Software Engineer
+Gateworks Corporation
+3026 S. Higuera St. San Luis Obispo CA 93401
+805-781-2000
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
