@@ -1,66 +1,52 @@
-From: Sudeep Holla <Sudeep.Holla@arm.com>
-Subject: Extending OPP bindings
-Date: Thu, 30 Jan 2014 13:43:38 +0000
-Message-ID: <52EA570A.8040501@arm.com>
+From: Boris BREZILLON <b.brezillon.dev@gmail.com>
+Subject: =?UTF-8?q?=5BRFC=20PATCH=20pre-v3=2007/14=5D=20of=3A=20mtd=3A=20add=20documentation=20for=20the=20ONFI=20NAND=20timing=20mode=20property?=
+Date: Thu, 30 Jan 2014 14:46:02 +0100
+Message-ID: <1391089562-8385-1-git-send-email-b.brezillon.dev@gmail.com>
+References: <1391006064-28890-1-git-send-email-b.brezillon.dev@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Sudeep.Holla@arm.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Morten Rasmussen <Morten.Rasmussen@arm.com>, Shawn Guo <shawn.guo@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, Mark Brown <mark.brown@linaro.org>, Nishanth Menon <nm@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1391006064-28890-1-git-send-email-b.brezillon.dev@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Brian Norris <computersforpeace@gmail.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Boris BREZILLON <b.brezillon.dev@gmail.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, dev@linux-sunxi.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Add documentation for the ONFI NAND timing mode property.
 
-I am looking into a couple shortcomings in the current OPP bindings and
-how to address them. Feel free to add to the list if you think of any more
-issues that needs to be addressed or if and how any problem mentioned below
-can be handled with the existing bindings.
+Signed-off-by: Boris BREZILLON <b.brezillon.dev@gmail.com>
+---
+Changes since v2:
+ - fix description of the nand-timing-mode property: the mode property =
+is
+   a mask containing all supported modes, each mode is encoded as a bit
+   position
 
-1. indexing: currently there are no indices in the operating-points.
-	It's assumed that the list is either in ascending or descending
-	order of frequency but not explicit in the binding document.
-	There are arch/arm/boot/dts/* files with opps in both styles.
-	Few other bindings like thermal defines bindings like
-	cooling-{min,max}-state assuming some order which is broken IMO.
+ Documentation/devicetree/bindings/mtd/nand.txt |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-	One such use-case that came up recently[0] is the c-state latencies
-	which could be different for each OPP. It would be good if the
-	latencies are specified with the indices to OPP table to avoid
-	inconsistency between the bindings.
-
-	It's mainly to avoid issues due to inconsistency and duplication
-	on data(frequency) in multiple bindings requiring it.
-
-	Once we have indices to each on the OPP entries, then other binding
-	using it can refer to OPP with phandle and OPP index/specifier pairs
-	very similar to clock provider and consumer.
-
-2. sharing opps: I have tried to address this issue previously[1] but unable
-	to conclude yet on this.
-
-3. latencies(*): currently the latency that the CPU/memory access is unavailable
-	during an OPP transition is generic i.e. same from any OPP to any
-	other OPP. Does it make sense to have this per-OPP entry ?
-
-4. power(*): A measure of maximum power dissipation in an OPP state.
-	This might be useful measure for power aware scheduling ?
-
-(*) these are already part of P-state in ACPI(refer struct acpi_processor_px
-in include/acpi/processor.h)
-
-Apart from these I have seen on-going discussion for Samsung Exynos CPUFreq[2]
-which might have some feedback for OPP bindings.
-
-It would be good to consolidate the shortcomings found so far, that could
-help in extending the current OPP bindings.
-
-Regards,
-Sudeep
-
-[0] http://www.spinics.net/lists/arm-kernel/msg301971.html
-[1] http://www.spinics.net/lists/cpufreq/msg07911.html
-[2] http://www.spinics.net/lists/cpufreq/msg09169.html
-
+diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documenta=
+tion/devicetree/bindings/mtd/nand.txt
+index 0c962296..60c7112 100644
+--- a/Documentation/devicetree/bindings/mtd/nand.txt
++++ b/Documentation/devicetree/bindings/mtd/nand.txt
+@@ -8,3 +8,10 @@
+   E.g. : nand-ecc-level =3D <4 512>; /* 4 bits / 512 bytes */
+ - nand-bus-width : 8 or 16 bus width if not present 8
+ - nand-on-flash-bbt: boolean to enable on flash bbt option if not pres=
+ent false
++- onfi,nand-timing-mode: an integer encoding the supported ONFI timing=
+ modes of
++  the NAND chip. Each supported mode is represented as a bit position =
+(i.e. :
++  mode 0 and 1 =3D> (1 << 0) | (1 << 1) =3D 0x3).
++  This is only used when the chip does not support the ONFI standard.
++  The last bit set represent the closest mode fulfilling the NAND chip=
+ timings.
++  For a full description of the different timing modes see this docume=
+nt:
++  www.onfi.org/~/media/ONFI/specs/onfi_3_1_spec.pdf=E2=80=8E
+--=20
+1.7.9.5
 
