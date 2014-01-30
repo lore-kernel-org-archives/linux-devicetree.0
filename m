@@ -1,159 +1,58 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH 2/4] ARM: dts: OMAP4: Add device nodes for ABB
-Date: Wed, 29 Jan 2014 17:46:14 -0600
-Message-ID: <1391039177-25284-3-git-send-email-nm@ti.com>
-References: <1391039177-25284-1-git-send-email-nm@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1391039177-25284-1-git-send-email-nm@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, "Andrii.Tseglytskyi" <andrii.tseglytskyi@ti.com>, Nishanth Menon <nm@ti.com>
+From: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH V5 0/5] Add X-Gene platform reboot mechanism
+Date: Wed, 29 Jan 2014 16:03:13 -0800
+Message-ID: <1391040198-14185-1-git-send-email-fkan@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: patches-qTEPVZfXA3Y@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Andrii.Tseglytskyi" <andrii.tseglytskyi@ti.com>
+Enable reboot driver for the X-Gene platform. Add generic syscon reboot
+driver.
 
-Add ABB device nodes for OMAP443x family of devices. abb_iva is
-populated, but disabled as it is not used on current OMAP443x family,
-but the node is used on OMAP446x family. Data is based on OMAP443x
-Technical Reference Manual revision AN (April 2013).
+V5 Change:
+	- Documentation update, endian and access size.
 
-ABB device nodes for OMAP4460 device Data is based on OMAP4460
-Technical Reference Manual revision Z (April 2013)
+V4 Change:
+	- Remove old X-Gene reboot driver
+	- Add generic syscon reboot driver
+	- Add DTS and Kconfig for X-Gene reboot using syscon method
 
-[nm@ti.com: co-developer]
-Signed-off-by: Nishanth Menon <nm@ti.com>
-Signed-off-by: Andrii.Tseglytskyi <andrii.tseglytskyi@ti.com>
----
- arch/arm/boot/dts/omap4.dtsi    |   26 ++++++++++++++++++++++++++
- arch/arm/boot/dts/omap443x.dtsi |   26 ++++++++++++++++++++++++++
- arch/arm/boot/dts/omap4460.dtsi |   37 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 89 insertions(+)
+V3 Change:
+	- Remove the reboot driver's use of acpi resource patch.
+	- Change the reboot driver to use syscon to parse out 
+	  system clock register. Remove the old method of getting
+	  register from the reboot driver directly.
+	- Remove documentation since its now simple.
 
-diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-index d3f8a6e..72e6bd7 100644
---- a/arch/arm/boot/dts/omap4.dtsi
-+++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -757,6 +757,32 @@
- 			dmas = <&sdma 117>, <&sdma 116>;
- 			dma-names = "tx", "rx";
- 		};
-+
-+		abb_mpu: regulator-abb-mpu {
-+			compatible = "ti,abb-v2";
-+			regulator-name = "abb_mpu";
-+			#address-cells = <0>;
-+			#size-cells = <0>;
-+			ti,tranxdone-status-mask = <0x80>;
-+			clocks = <&sys_clkin_ck>;
-+			ti,settling-time = <50>;
-+			ti,clock-cycles = <16>;
-+
-+			status = "disabled";
-+		};
-+
-+		abb_iva: regulator-abb-iva {
-+			compatible = "ti,abb-v2";
-+			regulator-name = "abb_iva";
-+			#address-cells = <0>;
-+			#size-cells = <0>;
-+			ti,tranxdone-status-mask = <0x80000000>;
-+			clocks = <&sys_clkin_ck>;
-+			ti,settling-time = <50>;
-+			ti,clock-cycles = <16>;
-+
-+			status = "disabled";
-+		};
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/omap443x.dtsi b/arch/arm/boot/dts/omap443x.dtsi
-index 8c1cfad..0adfa1d 100644
---- a/arch/arm/boot/dts/omap443x.dtsi
-+++ b/arch/arm/boot/dts/omap443x.dtsi
-@@ -43,6 +43,32 @@
- 			#thermal-sensor-cells = <0>;
- 		};
- 	};
-+
-+	ocp {
-+		abb_mpu: regulator-abb-mpu {
-+			status = "okay";
-+
-+			reg = <0x4a307bd0 0x8>, <0x4a306014 0x4>;
-+			reg-names = "base-address", "int-address";
-+
-+			ti,abb_info = <
-+			/*uV		ABB	efuse	rbb_m	fbb_m	vset_m*/
-+			1025000		0	0	0	0	0
-+			1200000		0	0	0	0	0
-+			1313000		0	0	0	0	0
-+			1375000		1	0	0	0	0
-+			1389000		1	0	0	0	0
-+			>;
-+		};
-+
-+		/* Default unused, just provide register info for record */
-+		abb_iva: regulator-abb-iva {
-+			reg = <0x4a307bd8 0x8>, <0x4a306010 0x4>;
-+			reg-names = "base-address", "int-address";
-+		};
-+
-+	};
-+
- };
- 
- /include/ "omap443x-clocks.dtsi"
-diff --git a/arch/arm/boot/dts/omap4460.dtsi b/arch/arm/boot/dts/omap4460.dtsi
-index 6b32f52..194f9ef 100644
---- a/arch/arm/boot/dts/omap4460.dtsi
-+++ b/arch/arm/boot/dts/omap4460.dtsi
-@@ -50,7 +50,44 @@
- 
- 			#thermal-sensor-cells = <0>;
- 		};
-+
-+		abb_mpu: regulator-abb-mpu {
-+			status = "okay";
-+
-+			reg = <0x4a307bd0 0x8>, <0x4a306014 0x4>,
-+			      <0x4A002268 0x4>;
-+			reg-names = "base-address", "int-address",
-+				    "efuse-address";
-+
-+			ti,abb_info = <
-+			/*uV		ABB	efuse	rbb_m	fbb_m	vset_m*/
-+			1025000		0	0	0	0	0
-+			1200000		0	0	0	0	0
-+			1313000		0	0	0x100000 0x40000 0
-+			1375000		1	0	0	0	0
-+			1389000		1	0	0	0	0
-+			>;
-+		};
-+
-+		abb_iva: regulator-abb-iva {
-+			status = "okay";
-+
-+			reg = <0x4a307bd8 0x8>, <0x4a306010 0x4>,
-+			      <0x4A002268 0x4>;
-+			reg-names = "base-address", "int-address",
-+				    "efuse-address";
-+
-+			ti,abb_info = <
-+			/*uV		ABB	efuse	rbb_m	fbb_m	vset_m*/
-+			950000		0	0	0	0	0
-+			1140000		0	0	0	0	0
-+			1291000		0	0	0x200000 0	0
-+			1375000		1	0	0	0	0
-+			1376000		1	0	0	0	0
-+			>;
-+		};
- 	};
-+
- };
- 
- /include/ "omap446x-clocks.dtsi"
+V2 Change:
+	- Add support for using ACPI resource.
+
+Feng Kan (5):
+  power: reset: Add generic SYSCON register mapped reset
+  power: reset: Remove X-Gene reboot driver
+  arm64: dts: Add X-Gene reboot driver dts node
+  arm64: Select reboot driver for X-Gene platform
+  Documentation: power: reset: Add documentation for generic SYSCON
+    reboot driver
+
+ .../bindings/power/reset/syscon-reboot.txt         |   23 +++++
+ arch/arm64/Kconfig                                 |    2 +
+ arch/arm64/boot/dts/apm-storm.dtsi                 |   13 +++
+ drivers/power/reset/Kconfig                        |    8 +-
+ drivers/power/reset/Makefile                       |    2 +-
+ drivers/power/reset/syscon-reboot.c                |  100 +++++++++++++++++++
+ drivers/power/reset/xgene-reboot.c                 |  103 --------------------
+ 7 files changed, 143 insertions(+), 108 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+ create mode 100644 drivers/power/reset/syscon-reboot.c
+ delete mode 100644 drivers/power/reset/xgene-reboot.c
+
 -- 
-1.7.9.5
+1.7.6.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
