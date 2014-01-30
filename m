@@ -1,66 +1,52 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5] spi: rspi: Add DT support
-Date: Thu, 30 Jan 2014 11:25:58 +0000
-Message-ID: <20140130112558.GJ22609@sirena.org.uk>
-References: <1390900898-31579-1-git-send-email-geert@linux-m68k.org>
- <20140129180009.GF22609@sirena.org.uk>
- <CAMuHMdX+EUUHxOgc8RF=C=qdYiOc8h+su4r-=HAhWXUqEivSvw@mail.gmail.com>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Subject: [PATCH] ARM: keystone: dts: disable "msmcsram" clock
+Date: Thu, 30 Jan 2014 13:45:43 +0200
+Message-ID: <1391082343-13371-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="x+RZeZVNR8VILNfK"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdX+EUUHxOgc8RF=C=qdYiOc8h+su4r-=HAhWXUqEivSvw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, galak@codeaurora.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, santosh.shilimkar@ti.com, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+At late init all unused clocks are disabled. So clocks that were not
+get before will be gated. In Keysone 2 SoC we have at least one
+necessary clock that is not used by any driver - "msmcsram". This
+clock is necessary, because it supplies the Multicore Shared Memory
+Controller (MSMC). The MSMC provides memory protection for accesses to
+the MSMC SRAM and DDR3 memory from system masters. It also manages
+traffic among mastering peripherals and the EMIF.
 
---x+RZeZVNR8VILNfK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This means that MSMC clock is always needed by SoC and cannot be gated.
+It is only one from necessary clocks that was not used by any driver.
+So to avoid its gating at late init we have to disable it in DT.
 
-On Wed, Jan 29, 2014 at 08:10:34PM +0100, Geert Uytterhoeven wrote:
-> On Wed, Jan 29, 2014 at 7:00 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+---
+ arch/arm/boot/dts/keystone-clocks.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-> > well?
-
-> As there were no code changes in v5 of "spi: rspi: Add DT support",
-> Patch "[14/14] spi: rspi: Add support for Quad and Dual SPI Transfers on QSPI"
-> should still apply fine.
-
-> Do you want me to resubmit?
-
-I see you did actually resend before I saw this but yes, in general it's
-better to resend stuff.  If you start applying version X of one patch
-with version Y of another it's more work and there's a lot of things
-that can go wrong between user error and unexpected dependencies.
-
---x+RZeZVNR8VILNfK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS6jbDAAoJELSic+t+oim9rAAP/ilbsPSWzOwHbOccXYNkFtmv
-i29xa74m/5BXZQo5k8tG/kqzhRs+6/s90ZML3f0HlFMWXDdUmN1KVBtHxZAuU4C4
-r9I+AyEdbqw1hyiqZ9D9goJxYHzu3Tg1sQv5WUCK81aUVHiC6cc2t3dyNau+HHO0
-zAtUAC6E/AtZ5rXtKhNgkkJ1SOTNg7/O4IVq88Q2Ft4/Kd9I0/QvkOjGRU5Y+UDY
-GwyFnbu3henK57WAa7VQc02SQVKr+4MWa9PzRMfoYTpaXzy6iMyXkOe+PGpRfbQh
-c2IFTCwOk5LAqFyAvdB8KU38ZytxE09ex9ZRACTRG2hxsExCNMGdtwgJJDAp1aS1
-5qTNrzFhbfZIE9MpQddHEl8QHjQGh8UtjysAyZQz46ghyF110aKjIsyzQxCcTqLr
-mnHSZCSHNHUejfuhK8htvwoqg4Ii6UWwGta3hhNVSKICHuQZx+IiOzqr7IEDk39F
-y6hhzuGm+q3uDCnr2CdLUuQ0Dty9rcvXfezkhtTbh3eKPK6S01g4b8L7VNQNj0//
-orIiTbn3p23BmmH2jub6LE91eReUAcy8R+Csq6jq0un0UfyhGaFYussTgtGX2P24
-zk3+z3+wkVe0uap3rZbyhKO7cR92Y5sevPcvJgZw2kQgkKau+hQMbxz2rbvQBwDD
-GdUCNteEXwVyjhSzagak
-=9TkV
------END PGP SIGNATURE-----
-
---x+RZeZVNR8VILNfK--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/keystone-clocks.dtsi b/arch/arm/boot/dts/keystone-clocks.dtsi
+index 2363593..e7aea2e 100644
+--- a/arch/arm/boot/dts/keystone-clocks.dtsi
++++ b/arch/arm/boot/dts/keystone-clocks.dtsi
+@@ -332,6 +332,7 @@ clocks {
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk1>;
+ 		clock-output-names = "msmcsram";
++		status = "disabled";
+ 		reg = <0x02350038 0xb00>, <0x0235001c 0x400>;
+ 		reg-names = "control", "domain";
+ 		domain-id = <7>;
+-- 
+1.8.3.2
