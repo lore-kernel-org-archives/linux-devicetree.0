@@ -1,95 +1,45 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH v3 0/2] Qualcomm Universal Peripheral (QUP) I2C controller
-Date: Thu, 30 Jan 2014 15:27:16 -0800
-Message-ID: <CAJAp7OgEttDsM=FH2n3yvVwQ8X1__F3jLF=snF6Kr7EiE5w9oQ@mail.gmail.com>
-References: <1389999819-10648-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1390983246.28998.24.camel@iivanov-dev.int.mm-sol.com>
- <CAJAp7Oj_D1QvG9nBWTVrW1QVEpqi2cTTc9c6Um25DDzidCjW1w@mail.gmail.com>
- <1391095811.3275.17.camel@iivanov-dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1391095811.3275.17.camel@iivanov-dev>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Matt Porter <matt.porter@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Grant Likely <grant.likely@linaro.org>, James Ralston <james.d.ralston@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Jean Delvare <khali@linux-fr.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Bill Brown <bill.e.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vge>
+From: Kleber Sacilotto de Souza <klebers-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] of: fix PCI bus match for PCIe slots
+Date: Thu, 30 Jan 2014 21:29:44 -0200
+Message-ID: <1391124584-28847-1-git-send-email-klebers@linux.vnet.ibm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Brian King <brking-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kleber Sacilotto de Souza <klebers-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 30, 2014 at 7:30 AM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
->
-> Hi Bjorn,
->
-> On Wed, 2014-01-29 at 08:32 -0800, Bjorn Andersson wrote:
->> On Wed, Jan 29, 2014 at 12:14 AM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
->> >
->> > Hi Bjorn,
->> >
->> > On Fri, 2014-01-17 at 15:03 -0800, Bjorn Andersson wrote:
->> >> Continuing on Ivans i2c-qup series.
->> >>
->> >
->> > Do you plan to send v4 of this driver? I would like to address
->> > the remaining errors and suggestions and send a new version.
->> >
->> Hi Ivan,
->>
->> Yes I'm planning to send out a new revision of the patch set.
->>
->> I've incorporated fixes from the review comments here and my colleague
->> concluded through some testing that block read did not work, so we've
->> fixed that as well.
->
-> Busted. I have not test it.
+On IBM pseries systems the device_type device-tree property of a PCIe
+bridge contains the string "pciex". The of_bus_pci_match() function was
+looking only for "pci" on this property, so in such cases the bus
+matching code was falling back to the default bus, causing problems on
+functions that should be using "assigned-addresses" for region address
+translation. This patch fixes the problem by also looking for "pciex" on
+the PCI bus match function.
 
-No worries, I'm glad you did the major cleanup from codeaurora!
+Signed-off-by: Kleber Sacilotto de Souza <klebers-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+---
+ drivers/of/address.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
->
->>
->> What have been holding me from submitting a new patchset is the 3
->> functions that does polling of state and status updates;
->> * qup_i2c_poll_state() reads the state register up to 1000 times,
->> hoping we reach the expected state, will delay 100uS and then continue
->> with 1000 more retries.
->>   According to the data sheet a state transition is supposed to take
->> up to 2 bus cycles. Only time I can see that this would take longer
->> time are all error states, but the data sheet is not very clear
->> regarding this.
->>
->> * qup_i2c_wait_idle() reads the status register up to 1000 times,
->> hoping the fifo gets drained and the bus go idle, if that fails it
->> sleeps for the time we expect it to take to drain a full fifo and then
->> loops another 1000 times. This waits for the fifo to have drained and
->> the bus to go idle. On a read we get to this state if we issue the
->> write and then hit the error state, so we would reset the entire
->> block. On write we will only wait for the buffer not to be full before
->> returning.
->>
->> * qup_i2c_wait_clock_ready() waits up to 300 bus-clocks for the i2c
->> bus to go idle or forced low, I don't know why it retries 300 times.
->> This is called at the end of a write, possibly to wait for the fifo to
->> drain.
->>
->>
->> All three loops are in line with how it's been in codeaurora since the
->> beginning of time, but I at least need to figure out some good names
->> for those "magic numbers".
->
->
-> Sure. I have keep them this way, just because I don't have information
-> for internal trickery of the block.
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index d3dd41c..0da2c0f 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -102,8 +102,8 @@ static int of_bus_pci_match(struct device_node *np)
+ 	 * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
+ 	 * "ht" is hypertransport
+ 	 */
+-	return !strcmp(np->type, "pci") || !strcmp(np->type, "vci") ||
+-		!strcmp(np->type, "ht");
++	return !strcmp(np->type, "pci") || !strcmp(np->type, "pciex") ||
++		!strcmp(np->type, "vci") || !strcmp(np->type, "ht");
+ }
+ 
+ static void of_bus_pci_count_cells(struct device_node *np,
+-- 
+1.7.1
 
-I'll continue to talk to the Qualcomm guys to see if we can figure out
-anything regarding the expected timings of those operations and I'll
-send out a new version when we have something saner.
-
-Regards,
-Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
