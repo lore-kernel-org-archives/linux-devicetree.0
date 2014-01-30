@@ -1,40 +1,317 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [RFC PATCH V3 0/4] APM X-Gene PCIe controller
-Date: Thu, 30 Jan 2014 11:06:00 -0700
-Message-ID: <CAErSpo79zaf_92KCVkUSCrZLHML0B365K6Q6-0p1LEVVQJ=cVA@mail.gmail.com>
-References: <1390599168-13150-1-git-send-email-tinamdar@apm.com>
- <CAErSpo7Dfd4NJBEDuVe1VCvZObFq1YvV2x77S60Z4-CZq89QJw@mail.gmail.com>
- <CACoXjc=LSrLK=kd9GJoHWJovVDC+TfH2bZO-2Ht9jMoBrL9eag@mail.gmail.com> <201401301521.11665.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <201401301521.11665.arnd@arndb.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Tanmay Inamdar <tinamdar@apm.com>, Dann Frazier <dann.frazier@canonical.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches <patches@apm.com>, Jon Masters <jcm@redhat.com>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: [PATCH] ARM: dts: msm: split out msm8660 and msm8960 soc into dts include
+Date: Thu, 30 Jan 2014 12:08:15 -0600
+Message-ID: <1391105295-15325-1-git-send-email-galak@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-arm-msm@vger.kernel.org
+Cc: Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 30, 2014 at 7:21 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Thursday 30 January 2014, Tanmay Inamdar wrote:
->> >
->> > When you repost, please make sure you fix whatever problem is
->> > preventing your email from appearing on the vger mailing lists.  I
->> > won't apply things that haven't appeared on the linux-pci list,
->> > because that list is the opportunity for other people to review them.
->> >
->> You are absolutely right. If the patches are not reaching mailing
->> list, they should not appear on archive list as well. However I am
->> seeing my patches recorded on archives. So I am not sure if they are
->> actually getting dropped on linux-pci or any other mailing list.
->>
->> http://www.spinics.net/lists/linux-pci/msg28198.html
->> http://article.gmane.org/gmane.linux.kernel.pci/28442/match=tanmay+inamdar
->
-> Very strange. I can also confirm that I received the patches through
-> the linux-arm-kernel and devicetree mailing lists without problems.
+Pull the SoC device tree bits into their own files so other boards based
+on these SoCs can include them and reduce duplication across a number of
+boards.
 
-Sorry, the problem was on my end.  I must have mistakenly marked one
-of those messages as spam, and gmail thought all the rest were spam,
-too.  Sorry about that.
+Signed-off-by: Kumar Gala <galak@codeaurora.org>
+---
+ arch/arm/boot/dts/qcom-msm8660-surf.dts | 59 +--------------------------
+ arch/arm/boot/dts/qcom-msm8660.dtsi     | 63 +++++++++++++++++++++++++++++
+ arch/arm/boot/dts/qcom-msm8960-cdp.dts  | 66 +------------------------------
+ arch/arm/boot/dts/qcom-msm8960.dtsi     | 70 +++++++++++++++++++++++++++++++++
+ 4 files changed, 135 insertions(+), 123 deletions(-)
+ create mode 100644 arch/arm/boot/dts/qcom-msm8660.dtsi
+ create mode 100644 arch/arm/boot/dts/qcom-msm8960.dtsi
 
-Bjorn
+diff --git a/arch/arm/boot/dts/qcom-msm8660-surf.dts b/arch/arm/boot/dts/qcom-msm8660-surf.dts
+index 68a72f5..169bad9 100644
+--- a/arch/arm/boot/dts/qcom-msm8660-surf.dts
++++ b/arch/arm/boot/dts/qcom-msm8660-surf.dts
+@@ -1,63 +1,6 @@
+-/dts-v1/;
+-
+-/include/ "skeleton.dtsi"
+-
+-#include <dt-bindings/clock/qcom,gcc-msm8660.h>
++#include "qcom-msm8660.dtsi"
+ 
+ / {
+ 	model = "Qualcomm MSM8660 SURF";
+ 	compatible = "qcom,msm8660-surf", "qcom,msm8660";
+-	interrupt-parent = <&intc>;
+-
+-	intc: interrupt-controller@2080000 {
+-		compatible = "qcom,msm-8660-qgic";
+-		interrupt-controller;
+-		#interrupt-cells = <3>;
+-		reg = < 0x02080000 0x1000 >,
+-		      < 0x02081000 0x1000 >;
+-	};
+-
+-	timer@2000000 {
+-		compatible = "qcom,scss-timer", "qcom,msm-timer";
+-		interrupts = <1 0 0x301>,
+-			     <1 1 0x301>,
+-			     <1 2 0x301>;
+-		reg = <0x02000000 0x100>;
+-		clock-frequency = <27000000>,
+-				  <32768>;
+-		cpu-offset = <0x40000>;
+-	};
+-
+-	msmgpio: gpio@800000 {
+-		compatible = "qcom,msm-gpio";
+-		reg = <0x00800000 0x4000>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-		ngpio = <173>;
+-		interrupts = <0 16 0x4>;
+-		interrupt-controller;
+-		#interrupt-cells = <2>;
+-	};
+-
+-	gcc: clock-controller@900000 {
+-		compatible = "qcom,gcc-msm8660";
+-		#clock-cells = <1>;
+-		#reset-cells = <1>;
+-		reg = <0x900000 0x4000>;
+-	};
+-
+-	serial@19c40000 {
+-		compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
+-		reg = <0x19c40000 0x1000>,
+-		      <0x19c00000 0x1000>;
+-		interrupts = <0 195 0x0>;
+-		clocks = <&gcc GSBI12_UART_CLK>, <&gcc GSBI12_H_CLK>;
+-		clock-names = "core", "iface";
+-	};
+-
+-	qcom,ssbi@500000 {
+-		compatible = "qcom,ssbi";
+-		reg = <0x500000 0x1000>;
+-		qcom,controller-type = "pmic-arbiter";
+-	};
+ };
+diff --git a/arch/arm/boot/dts/qcom-msm8660.dtsi b/arch/arm/boot/dts/qcom-msm8660.dtsi
+new file mode 100644
+index 0000000..69d6c4e
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-msm8660.dtsi
+@@ -0,0 +1,63 @@
++/dts-v1/;
++
++/include/ "skeleton.dtsi"
++
++#include <dt-bindings/clock/qcom,gcc-msm8660.h>
++
++/ {
++	model = "Qualcomm MSM8660";
++	compatible = "qcom,msm8660";
++	interrupt-parent = <&intc>;
++
++	intc: interrupt-controller@2080000 {
++		compatible = "qcom,msm-8660-qgic";
++		interrupt-controller;
++		#interrupt-cells = <3>;
++		reg = < 0x02080000 0x1000 >,
++		      < 0x02081000 0x1000 >;
++	};
++
++	timer@2000000 {
++		compatible = "qcom,scss-timer", "qcom,msm-timer";
++		interrupts = <1 0 0x301>,
++			     <1 1 0x301>,
++			     <1 2 0x301>;
++		reg = <0x02000000 0x100>;
++		clock-frequency = <27000000>,
++				  <32768>;
++		cpu-offset = <0x40000>;
++	};
++
++	msmgpio: gpio@800000 {
++		compatible = "qcom,msm-gpio";
++		reg = <0x00800000 0x4000>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		ngpio = <173>;
++		interrupts = <0 16 0x4>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gcc: clock-controller@900000 {
++		compatible = "qcom,gcc-msm8660";
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++		reg = <0x900000 0x4000>;
++	};
++
++	serial@19c40000 {
++		compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
++		reg = <0x19c40000 0x1000>,
++		      <0x19c00000 0x1000>;
++		interrupts = <0 195 0x0>;
++		clocks = <&gcc GSBI12_UART_CLK>, <&gcc GSBI12_H_CLK>;
++		clock-names = "core", "iface";
++	};
++
++	qcom,ssbi@500000 {
++		compatible = "qcom,ssbi";
++		reg = <0x500000 0x1000>;
++		qcom,controller-type = "pmic-arbiter";
++	};
++};
+diff --git a/arch/arm/boot/dts/qcom-msm8960-cdp.dts b/arch/arm/boot/dts/qcom-msm8960-cdp.dts
+index 7c30de4..a58fb88 100644
+--- a/arch/arm/boot/dts/qcom-msm8960-cdp.dts
++++ b/arch/arm/boot/dts/qcom-msm8960-cdp.dts
+@@ -1,70 +1,6 @@
+-/dts-v1/;
+-
+-/include/ "skeleton.dtsi"
+-
+-#include <dt-bindings/clock/qcom,gcc-msm8960.h>
++#include "qcom-msm8960.dtsi"
+ 
+ / {
+ 	model = "Qualcomm MSM8960 CDP";
+ 	compatible = "qcom,msm8960-cdp", "qcom,msm8960";
+-	interrupt-parent = <&intc>;
+-
+-	intc: interrupt-controller@2000000 {
+-		compatible = "qcom,msm-qgic2";
+-		interrupt-controller;
+-		#interrupt-cells = <3>;
+-		reg = < 0x02000000 0x1000 >,
+-		      < 0x02002000 0x1000 >;
+-	};
+-
+-	timer@200a000 {
+-		compatible = "qcom,kpss-timer", "qcom,msm-timer";
+-		interrupts = <1 1 0x301>,
+-			     <1 2 0x301>,
+-			     <1 3 0x301>;
+-		reg = <0x0200a000 0x100>;
+-		clock-frequency = <27000000>,
+-				  <32768>;
+-		cpu-offset = <0x80000>;
+-	};
+-
+-	msmgpio: gpio@800000 {
+-		compatible = "qcom,msm-gpio";
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-		ngpio = <150>;
+-		interrupts = <0 16 0x4>;
+-		interrupt-controller;
+-		#interrupt-cells = <2>;
+-		reg = <0x800000 0x4000>;
+-	};
+-
+-	gcc: clock-controller@900000 {
+-		compatible = "qcom,gcc-msm8960";
+-		#clock-cells = <1>;
+-		#reset-cells = <1>;
+-		reg = <0x900000 0x4000>;
+-	};
+-
+-	clock-controller@4000000 {
+-		compatible = "qcom,mmcc-msm8960";
+-		reg = <0x4000000 0x1000>;
+-		#clock-cells = <1>;
+-		#reset-cells = <1>;
+-	};
+-
+-	serial@16440000 {
+-		compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
+-		reg = <0x16440000 0x1000>,
+-		      <0x16400000 0x1000>;
+-		interrupts = <0 154 0x0>;
+-		clocks = <&gcc GSBI5_UART_CLK>, <&gcc GSBI5_H_CLK>;
+-		clock-names = "core", "iface";
+-	};
+-
+-	qcom,ssbi@500000 {
+-		compatible = "qcom,ssbi";
+-		reg = <0x500000 0x1000>;
+-		qcom,controller-type = "pmic-arbiter";
+-	};
+ };
+diff --git a/arch/arm/boot/dts/qcom-msm8960.dtsi b/arch/arm/boot/dts/qcom-msm8960.dtsi
+new file mode 100644
+index 0000000..ff00282
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-msm8960.dtsi
+@@ -0,0 +1,70 @@
++/dts-v1/;
++
++/include/ "skeleton.dtsi"
++
++#include <dt-bindings/clock/qcom,gcc-msm8960.h>
++
++/ {
++	model = "Qualcomm MSM8960";
++	compatible = "qcom,msm8960";
++	interrupt-parent = <&intc>;
++
++	intc: interrupt-controller@2000000 {
++		compatible = "qcom,msm-qgic2";
++		interrupt-controller;
++		#interrupt-cells = <3>;
++		reg = < 0x02000000 0x1000 >,
++		      < 0x02002000 0x1000 >;
++	};
++
++	timer@200a000 {
++		compatible = "qcom,kpss-timer", "qcom,msm-timer";
++		interrupts = <1 1 0x301>,
++			     <1 2 0x301>,
++			     <1 3 0x301>;
++		reg = <0x0200a000 0x100>;
++		clock-frequency = <27000000>,
++				  <32768>;
++		cpu-offset = <0x80000>;
++	};
++
++	msmgpio: gpio@800000 {
++		compatible = "qcom,msm-gpio";
++		gpio-controller;
++		#gpio-cells = <2>;
++		ngpio = <150>;
++		interrupts = <0 16 0x4>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		reg = <0x800000 0x4000>;
++	};
++
++	gcc: clock-controller@900000 {
++		compatible = "qcom,gcc-msm8960";
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++		reg = <0x900000 0x4000>;
++	};
++
++	clock-controller@4000000 {
++		compatible = "qcom,mmcc-msm8960";
++		reg = <0x4000000 0x1000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
++	serial@16440000 {
++		compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
++		reg = <0x16440000 0x1000>,
++		      <0x16400000 0x1000>;
++		interrupts = <0 154 0x0>;
++		clocks = <&gcc GSBI5_UART_CLK>, <&gcc GSBI5_H_CLK>;
++		clock-names = "core", "iface";
++	};
++
++	qcom,ssbi@500000 {
++		compatible = "qcom,ssbi";
++		reg = <0x500000 0x1000>;
++		qcom,controller-type = "pmic-arbiter";
++	};
++};
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
