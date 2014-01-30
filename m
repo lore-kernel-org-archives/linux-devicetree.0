@@ -1,41 +1,48 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH V3 0/4] APM X-Gene PCIe controller
-Date: Thu, 30 Jan 2014 15:17:51 +0100
-Message-ID: <201401301517.51352.arnd@arndb.de>
-References: <1390599168-13150-1-git-send-email-tinamdar@apm.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH] dt-bindings: add vendor-prefix for neonode
+Date: Thu, 30 Jan 2014 15:18:46 +0100
+Message-ID: <2809570.RstiYk4HG8@phil>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1390599168-13150-1-git-send-email-tinamdar@apm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tanmay Inamdar <tinamdar@apm.com>
-Cc: devicetree@vger.kernel.org, jcm@redhat.com, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, patches@apm.com, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 24 January 2014, Tanmay Inamdar wrote:
-> This patch adds support for AppliedMicro X-Gene PCIe host controller. The
-> driver is tested on X-Gene platform with different gen1/2/3 PCIe endpoint
-> cards.
-> 
-> X-Gene PCIe controller driver has depedency on the pcie arch support for
-> arm64. The arm64 pcie arch support is not yet part of mainline Linux kernel
-> and approach for arch support is under discussion with arm64 maintainers.
-> The reference patch can be found here --> https://lkml.org/lkml/2013/10/23/244
-> 
-> If someone wishes to test PCIe on X-Gene, arch support patch must be applied
-> before the patches in this patch set.
+From: Heiko Stuebner <heiko.stuebner-HCpLIkUQxWGakBO8gow8eQ@public.gmane.org>
 
-This is starting to look really good now. I have a few small comments left,
-otherwise it can get merged. As mentioned in one of my review comments, it
-would be good to have the arch support patch posted along with the driver.
+Neonode Inc. is the Manufacturer of the zforce infraread touchscreens
+used in a lot of ebook readers and supported by the zforce_ts driver.
 
-	Arnd
+Signed-off-by: Heiko Stuebner <heiko.stuebner-HCpLIkUQxWGakBO8gow8eQ@public.gmane.org>
+---
+Dmitry, the input maintainer, didn't want to carry the vendor-prefix
+addition [0], therefore add it separately.
+
+[0] http://permalink.gmane.org/gmane.linux.kernel.input/33887
+
+ Documentation/devicetree/bindings/vendor-prefixes.txt |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index edbb8d8..32a60a9 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -47,6 +47,7 @@ maxim	Maxim Integrated Products
+ microchip	Microchip Technology Inc.
+ mosaixtech	Mosaix Technologies, Inc.
+ national	National Semiconductor
++neonode		Neonode Inc.
+ nintendo	Nintendo
+ nvidia	NVIDIA
+ nxp	NXP Semiconductors
+-- 
+1.7.10.4
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
