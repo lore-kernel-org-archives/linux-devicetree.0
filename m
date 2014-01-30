@@ -1,91 +1,173 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH v3 0/2] Qualcomm Universal Peripheral (QUP) I2C controller
-Date: Thu, 30 Jan 2014 17:30:11 +0200
-Message-ID: <1391095811.3275.17.camel@iivanov-dev>
-References: <1389999819-10648-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1390983246.28998.24.camel@iivanov-dev.int.mm-sol.com>
- <CAJAp7Oj_D1QvG9nBWTVrW1QVEpqi2cTTc9c6Um25DDzidCjW1w@mail.gmail.com>
+From: Ian Campbell <ian.campbell@citrix.com>
+Subject: [PATCH] arm: document "mach-virt" platform.
+Date: Thu, 30 Jan 2014 16:11:02 +0000
+Message-ID: <1391098262-15944-1-git-send-email-ian.campbell@citrix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAJAp7Oj_D1QvG9nBWTVrW1QVEpqi2cTTc9c6Um25DDzidCjW1w@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Andersson <bjorn@kryo.se>
-Cc: Mark Rutland <mark.rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Matt Porter <matt.porter@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Grant Likely <grant.likely@linaro.org>, James Ralston <james.d.ralston@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Jean Delvare <khali@linux-fr.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Bill Brown <bill.e.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vge>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Ian Campbell <ian.campbell@citrix.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Stefano Stabellini <stefano.stabellini@eu.citrix.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+mach-virt has existed for a while but it is not written down what it actually
+consists of. Although it seems a bit unusual to document a binding for an
+entire platform since mach-virt is entirely virtual it is helpful to have
+something to refer to in the absence of a single concrete implementation.
 
-Hi Bjorn,
+I've done my best to capture the requirements based on the git log and my
+memory/understanding.
 
-On Wed, 2014-01-29 at 08:32 -0800, Bjorn Andersson wrote: 
-> On Wed, Jan 29, 2014 at 12:14 AM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
-> >
-> > Hi Bjorn,
-> >
-> > On Fri, 2014-01-17 at 15:03 -0800, Bjorn Andersson wrote:
-> >> Continuing on Ivans i2c-qup series.
-> >>
-> >
-> > Do you plan to send v4 of this driver? I would like to address
-> > the remaining errors and suggestions and send a new version.
-> >
-> Hi Ivan,
-> 
-> Yes I'm planning to send out a new revision of the patch set.
-> 
-> I've incorporated fixes from the review comments here and my colleague
-> concluded through some testing that block read did not work, so we've
-> fixed that as well.
+While here remove the xenvm dts example, the Xen tools will now build a
+suitable mach-virt compatible dts when launching the guest.
 
-Busted. I have not test it.
+Signed-off-by: Ian Campbell <ian.campbell@citrix.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: Olof Johansson <olof@lixom.net>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+---
+I'm not sure which tree this sort of thing should go though, sorry for the
+huge Cc.
+---
+ .../devicetree/bindings/arm/mach-virt.txt          |   32 ++++++++
+ arch/arm/boot/dts/xenvm-4.2.dts                    |   81 --------------------
+ 2 files changed, 32 insertions(+), 81 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/mach-virt.txt
+ delete mode 100644 arch/arm/boot/dts/xenvm-4.2.dts
 
-> 
-> What have been holding me from submitting a new patchset is the 3
-> functions that does polling of state and status updates;
-> * qup_i2c_poll_state() reads the state register up to 1000 times,
-> hoping we reach the expected state, will delay 100uS and then continue
-> with 1000 more retries.
->   According to the data sheet a state transition is supposed to take
-> up to 2 bus cycles. Only time I can see that this would take longer
-> time are all error states, but the data sheet is not very clear
-> regarding this.
-> 
-> * qup_i2c_wait_idle() reads the status register up to 1000 times,
-> hoping the fifo gets drained and the bus go idle, if that fails it
-> sleeps for the time we expect it to take to drain a full fifo and then
-> loops another 1000 times. This waits for the fifo to have drained and
-> the bus to go idle. On a read we get to this state if we issue the
-> write and then hit the error state, so we would reset the entire
-> block. On write we will only wait for the buffer not to be full before
-> returning.
-> 
-> * qup_i2c_wait_clock_ready() waits up to 300 bus-clocks for the i2c
-> bus to go idle or forced low, I don't know why it retries 300 times.
-> This is called at the end of a write, possibly to wait for the fifo to
-> drain.
-> 
-> 
-> All three loops are in line with how it's been in codeaurora since the
-> beginning of time, but I at least need to figure out some good names
-> for those "magic numbers".
-
-
-Sure. I have keep them this way, just because I don't have information
-for internal trickery of the block.
-
-Thanks, 
-Ivan
-
-
-> 
-> Regards,
-> Bjorn
+diff --git a/Documentation/devicetree/bindings/arm/mach-virt.txt b/Documentation/devicetree/bindings/arm/mach-virt.txt
+new file mode 100644
+index 0000000..562bcda
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/mach-virt.txt
+@@ -0,0 +1,32 @@
++* Mach-virt "Dummy Virtual Machine" platform
++
++"mach-virt" is the smallest, dumbest platform possible, to be used as
++a guest for Xen, KVM and other hypervisors. It has no
++properties/functionality of its own and is driven entirely by device
++tree.
++
++This document defines the requirements for such a platform.
++
++* Required properties:
++
++- compatible: should be one of:
++	"linux,dummy-virt"
++	"xen,xenvm"
++
++In addition to the standard nodes (chosen, cpus, memory etc) the
++platform is required to provide certain other basic functionality
++which must be described in the device tree:
++
++    The platform must provide an ARM Generic Interrupt Controller
++    (GIC), defined in Documentation/devicetree/bindings/arm/gic.txt.
++
++    The platform must provide ARM architected timer, defined in
++    Documentation/devicetree/bindings/arm/arch_timer.txt.
++
++    If the platform is SMP then it must provide the Power State
++    Coordination Interface (PSCI) described in
++    Documentation/devicetree/bindings/arm/psci.txt.
++
++The platform may also provide hypervisor specific functionality
++(e.g. PV I/O), if it does so then this functionality must be
++discoverable (directly or indirectly) via device tree.
+diff --git a/arch/arm/boot/dts/xenvm-4.2.dts b/arch/arm/boot/dts/xenvm-4.2.dts
+deleted file mode 100644
+index 3369151..0000000
+--- a/arch/arm/boot/dts/xenvm-4.2.dts
++++ /dev/null
+@@ -1,81 +0,0 @@
+-/*
+- * Xen Virtual Machine for unprivileged guests
+- *
+- * Based on ARM Ltd. Versatile Express CoreTile Express (single CPU)
+- * Cortex-A15 MPCore (V2P-CA15)
+- *
+- */
+-
+-/dts-v1/;
+-
+-/ {
+-	model = "XENVM-4.2";
+-	compatible = "xen,xenvm-4.2", "xen,xenvm";
+-	interrupt-parent = <&gic>;
+-	#address-cells = <2>;
+-	#size-cells = <2>;
+-
+-	chosen {
+-		/* this field is going to be adjusted by the hypervisor */
+-		bootargs = "console=hvc0 root=/dev/xvda";
+-	};
+-
+-	cpus {
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		cpu@0 {
+-			device_type = "cpu";
+-			compatible = "arm,cortex-a15";
+-			reg = <0>;
+-		};
+-
+-		cpu@1 {
+-			device_type = "cpu";
+-			compatible = "arm,cortex-a15";
+-			reg = <1>;
+-		};
+-	};
+-
+-	psci {
+-		compatible      = "arm,psci";
+-		method          = "hvc";
+-		cpu_off         = <1>;
+-		cpu_on          = <2>;
+-	};
+-
+-	memory@80000000 {
+-		device_type = "memory";
+-		/* this field is going to be adjusted by the hypervisor */
+-		reg = <0 0x80000000 0 0x08000000>;
+-	};
+-
+-	gic: interrupt-controller@2c001000 {
+-		compatible = "arm,cortex-a15-gic", "arm,cortex-a9-gic";
+-		#interrupt-cells = <3>;
+-		#address-cells = <0>;
+-		interrupt-controller;
+-		reg = <0 0x2c001000 0 0x1000>,
+-		      <0 0x2c002000 0 0x100>;
+-	};
+-
+-	timer {
+-		compatible = "arm,armv7-timer";
+-		interrupts = <1 13 0xf08>,
+-			     <1 14 0xf08>,
+-			     <1 11 0xf08>,
+-			     <1 10 0xf08>;
+-	};
+-
+-	hypervisor {
+-		compatible = "xen,xen-4.2", "xen,xen";
+-		/* this field is going to be adjusted by the hypervisor */
+-		reg = <0 0xb0000000 0 0x20000>;
+-		/* this field is going to be adjusted by the hypervisor */
+-		interrupts = <1 15 0xf08>;
+-	};
+-
+-	motherboard {
+-		arm,v2m-memory-map = "rs1";
+-	};
+-};
+-- 
+1.7.10.4
