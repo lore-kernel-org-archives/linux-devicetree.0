@@ -1,77 +1,55 @@
-From: delicious quinoa <delicious.quinoa@gmail.com>
-Subject: Re: [PATCH v9] gpio: add a driver for Synopsys DesignWare APB GPIO
-Date: Thu, 30 Jan 2014 15:15:11 -0600
-Message-ID: <CANk1AXS9fbNafLxiUz8OoPVUtwPDhHhYx7+MGi_JyDdG6J9F-Q@mail.gmail.com>
-References: <1386364179-28650-1-git-send-email-delicious.quinoa@gmail.com>
-	<CANk1AXS=CADN53aO5KVN3UorddJ0wZ2PTqwo2XmeRuxYe_DoLg@mail.gmail.com>
-	<20131212090838.GD25478@pengutronix.de>
-	<CANk1AXRxTGRMJMvXe4jgG2GfuELsDTNJnRLXK-MGe3gGxinmLA@mail.gmail.com>
-	<20140130205000.GB26861@pengutronix.de>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: recommended action for bootloaders regarding modifying
+ device-tree nodes
+Date: Thu, 30 Jan 2014 14:15:12 -0700
+Message-ID: <20140130211512.GD13372@obsidianresearch.com>
+References: <CAJ+vNU366GiY4k_rnh1Jf0kra+PU99w4tDdM2sNioUAJCiZqOA@mail.gmail.com>
+ <20140130204558.GC29184@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140130205000.GB26861@pengutronix.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: Linus Walleij <linus.walleij@stericsson.com>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Jamie Iles <jamie@jamieiles.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Yves Vandervennet <rocket.yvanderv@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140130204558.GC29184-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 30, 2014 at 2:50 PM, Steffen Trumtrar
-<s.trumtrar@pengutronix.de> wrote:
-> Hi!
->
-> On Thu, Jan 30, 2014 at 01:40:04PM -0600, delicious quinoa wrote:
->> On Thu, Dec 12, 2013 at 3:08 AM, Steffen Trumtrar
->> <s.trumtrar@pengutronix.de> wrote:
->>
->> > Second: The interrupt is registered as "GIC 37", which is a real interrupt on
->> > the Socfpga. I would expect it to be marked as "GPIO 2xx" (or something in that
->> > range). The interrupt from the gpiochip itself isn't registered at all ?!
->>
->> Hi Stephen,
->>
->> Did you export the gpio lines and set the edge in sysfs?  Because the
->> interrupts aren't allocated otherwise.
->>
->> For instance:
->>
->> root@socfpga_cyclone5:~# echo 195 > /sys/class/gpio/export
->> root@socfpga_cyclone5:~# echo rising > /sys/class/gpio/gpio195/edge
->>
->> Now I can see a pretty nicely named interrupt in /proc/interrupts:
->>
->> 256:          0          0  gpio-dwapb  24  gpiolib
->>
->
-> I didn't try that and I think this behaviour is pretty uncommon.
-> This should be fixed in the driver. I never wrote a gpiochip-driver,
-> so I don't know what is missing, but maybe just some functioncall ?!
-> All other drivers I came across have that entry from probing without
-> any fiddling.
+On Thu, Jan 30, 2014 at 03:45:58PM -0500, Jason Cooper wrote:
 
-Hi Steffen,
+> This is more of a process question:  Is there any information captured
+> in your EEPROM that can't be represented in the dtb?  iow, at the point
+> when you write the EEPROM, why not write the dtb to it as configured?
 
-Do you mean 'all other gpio drivers' or 'all other non-gpio drivers'?
+I can share what we do here.. In our systems the serial EEPROM is only
+256 bytes, so storing things in DT format would be challenging.
 
-This is the behavior that is implemented in the community gpio
-framework drivers/gpio/gpiolib.c, not anything special implemented in
-this dw gpio driver.
+What we do is have a master DTB that has the union of all our
+configurations. The boot process has a very simple bit of code that
+runs down the DTB in binary format and replaces entire
+OF_DT_BEGIN_NODE->OF_DT_END_NODE regions with OF_DT_NOP.
 
-It's documented in Documentation/gpio/sysfs.txt and
-Documentation/ABI/testing/sysfs-gpio.
+The NOP approach is very simple, no other changes (eg offset
+recalculation) needs to be done to the DT, so we can do this process
+with a very small code footprint and without libfdt.
 
-You get userspace control of a gpio by 'export'ing it in sysfs.  And
-then by default, the interrupt edge is set to 'none' (no irq) until
-you set the edge in sysfs.
+Choosing which sections to drop is done with some combination of
+hardwired code and searching for specific property patterns. There are
+also a few places where placeholder sections are directly fixed up, eg
+a mac address is written into a placeholder of 0s, etc.
 
-Alan
+So an example might be
 
->
-> Thanks,
-> Steffen
->
-> --
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+   optional_peripheral@10000 {
+      orc,board-style = <1>;
+      [..]
+   }
+
+Eg The board-style number comes from the EEPROM and if board-style !=
+1 then the entire stanza is replaced with NOP.
+
+Jason
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
