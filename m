@@ -1,60 +1,79 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [RFC] dtc: add ability to make nodes conditional on them being
- referenced
-Date: Thu, 30 Jan 2014 13:44:48 +0100
-Message-ID: <20140130134448.682ab850@ipc1.ka-ro>
-References: <1578575.rVWgTPdq1W@phil>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v2 0/5] Smart Card(SC) interface, TI USIM & NxP SC phy
+ driver
+Date: Thu, 30 Jan 2014 05:05:15 -0800
+Message-ID: <20140130130515.GC23970@kroah.com>
+References: <1390192434-19386-1-git-send-email-satish.patel@ti.com>
+ <52E9E8B0.2020000@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1578575.rVWgTPdq1W@phil>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-Cc: Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Shawn Guo <shawn.guo@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52E9E8B0.2020000-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Satish Patel <satish.patel-l0cyMroinI0@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Jan 30, 2014 at 11:22:48AM +0530, Satish Patel wrote:
+> 
+> On 1/20/2014 10:03 AM, Satish Patel wrote:
+> > Changes from v1:
+> > * RFC(v1) comments are fixed
+> >
+> > ** removed "gpio_to_irq" as GPIO controller process  cell from DT and
+> > give it to DT node
+> > ** comments on documentation
+> > ** few other comments on null checks are resolved
+> >
+> > * BWT timing configuration is added to ti-usim driver
+> >
+> > v1 cover letter link#
+> > https://lkml.org/lkml/2014/1/6/250
+> >
+> > Satish Patel (5):
+> >   sc_phy:SmartCard(SC) PHY interface to SC controller
+> >   misc: tda8026: Add NXP TDA8026 PHY driver
+> >   char: ti-usim: Add driver for USIM module on AM43xx
+> >   ARM: dts: AM43xx: DT entries added for ti-usim
+> >   ARM: dts: AM43xx-epos-evm: DT entries  for ti-usim and phy
+> >
+> >  Documentation/devicetree/bindings/misc/tda8026.txt |   19 +
+> >  .../devicetree/bindings/ti-usim/ti-usim.txt        |   31 +
+> >  Documentation/sc_phy.txt                           |  171 ++
+> >  arch/arm/boot/dts/am4372.dtsi                      |   10 +
+> >  arch/arm/boot/dts/am43x-epos-evm.dts               |   43 +
+> >  drivers/char/Kconfig                               |    7 +
+> >  drivers/char/Makefile                              |    1 +
+> >  drivers/char/ti-usim-hw.h                          |  863 +++++++++
+> >  drivers/char/ti-usim.c                             | 1859 ++++++++++++++++++++
+> >  drivers/misc/Kconfig                               |    7 +
+> >  drivers/misc/Makefile                              |    1 +
+> >  drivers/misc/tda8026.c                             | 1255 +++++++++++++
+> >  include/linux/sc_phy.h                             |  132 ++
+> >  include/linux/ti-usim.h                            |   98 +
+> >  14 files changed, 4497 insertions(+), 0 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/misc/tda8026.txt
+> >  create mode 100644 Documentation/devicetree/bindings/ti-usim/ti-usim.txt
+> >  create mode 100644 Documentation/sc_phy.txt
+> >  create mode 100644 drivers/char/ti-usim-hw.h
+> >  create mode 100644 drivers/char/ti-usim.c
+> >  create mode 100644 drivers/misc/tda8026.c
+> >  create mode 100644 include/linux/sc_phy.h
+> >  create mode 100644 include/linux/ti-usim.h
+> Any comments on this patch series ?
+> 
+> If not,
+> Can you accept these patches for next merge window
 
-Heiko St=C3=BCbner wrote:
-> From: Heiko Stuebner <heiko.stuebner@bqreaders.com>
->=20
-> On i.MX, which carries a lot of pin-groups of which most are unused o=
-n
-> individual boards, they noticed that this plehora of nodes also resul=
-ts
-> in the runtime-lookup-performance also degrading [0].
->=20
-> A i.MX-specific solution defining the pingroups in the board files bu=
-t
-> using macros to reference the pingroup-data was not well received
->=20
-> This patch is trying to solve this issue in a more general way, by
-> adding the ability to mark nodes as needing to be referenced somewher=
-e
-> in the tree.
->=20
-> To mark a node a needing to be referenced it must be prefixed with
-> /delete-unreferenced/. This makes dtc check the nodes reference-statu=
-s
-> when creating the flattened tree, dropping it if unreferenced.
->=20
-> For example, the i.MX6SL pingroup
->=20
-> 	/delete-uneferenced/ pinctrl_ecspi1_1: ecspi1grp-1 {
-                 ^^
-s/unef/unref/
-not really important here, but bad for copy/pasters
+It's the middle of this merge window, and I can't accept any patches
+until after 3.14-rc1 is out, at which point I'll start to work on my
+patch backlog.
 
+thanks,
 
-Lothar Wa=C3=9Fmann
---=20
-___________________________________________________________
-
-Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
-Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
-Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
-Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
-
-www.karo-electronics.de | info@karo-electronics.de
-___________________________________________________________
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
