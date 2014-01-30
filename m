@@ -1,88 +1,54 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2] DT: net: document Ethernet bindings in one place
-Date: Fri, 31 Jan 2014 01:56:43 +0300
-Message-ID: <52EAD8AB.6060905@cogentembedded.com>
-References: <201401280150.32456.sergei.shtylyov@cogentembedded.com>	<CAL_JsqLH6j=eGPr53myATQ+ySwr4P1y7Lnvqa9Y+-YAqqWa_FA@mail.gmail.com>	<52E7D31A.4090107@cogentembedded.com> <CAL_JsqLJrS2w0idwpi0Ar4RyuZ050sb0eYVyzM1HE4df4FxdZQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 00/20] Armada 370/XP watchdog support
+Date: Thu, 30 Jan 2014 23:00:50 +0100
+Message-ID: <52EACB92.2080700@gmail.com>
+References: <1390836440-12744-1-git-send-email-ezequiel.garcia@free-electrons.com> <20140129181949.GB27143@localhost> <20140130205315.GD29184@titan.lakedaemon.net> <20140130215056.GA1063@localhost>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLJrS2w0idwpi0Ar4RyuZ050sb0eYVyzM1HE4df4FxdZQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Max Filippov <jcmvbkbc@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140130215056.GA1063@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 01/29/2014 07:16 PM, Rob Herring wrote:
-
->>>> This patch is an attempt to gather the Ethernet related bindings in one
->>>> file,
->>>> like it's done in the MMC and some other subsystems. It should save some
->>>> of
->>>> the trouble of documenting several properties over and over in each
->>>> binding
->>>> document, instead only making reference to the main file.
-
-> [snip]
-
->>>>    - compatible: should be "allwinner,sun4i-emac".
->>>>    - reg: address and length of the register set for the device.
->>>>    - interrupts: interrupt for the device
->>>> -- phy: A phandle to a phy node defining the PHY address (as the reg
->>>> -  property, a single integer).
->>>> +- phy: see ethernet.txt file in the same directory.
->>>>    - clocks: A phandle to the reference clock for this device
+On 01/30/2014 10:50 PM, Ezequiel Garcia wrote:
+> On Thu, Jan 30, 2014 at 03:53:15PM -0500, Jason Cooper wrote:
+>> Ezequiel,
+>>
+>> On Wed, Jan 29, 2014 at 03:19:50PM -0300, Ezequiel Garcia wrote:
+>>> On Mon, Jan 27, 2014 at 12:27:00PM -0300, Ezequiel Garcia wrote:
+>>>> A new round, mostly fixing some minor nitpicks.
 >>>>
->>>>    Optional properties:
->>>> -- (local-)mac-address: mac address to be used by this driver
->>>> +- [local-]mac-address: see ethernet.txt file in the same directory
+>>>
+>>> If anyone wants to give this a test, here's a public branch:
+>>>
+>>> https://github.com/MISL-EBU-System-SW/mainline-public/tree/wdt_for_v3.14_v5
+>>
+>> I just took a quick glance at this (commit oneliners/tags) and there
+>> doesn't appear to be any dependence on Sebastian's series.  Did I miss
+>> something?
+>>
+>
+> True, I've completely missed that. I pushed the branch in a rush!
+>
+> Let me prepare a v6, fixing the remaining issue pointed out by Russell,
+> and push again (together with Sebastian's irqchip fixes).
 
->>> Sorry, but I meant you should just have a single statement like:
+Umm, no. Just directly name irqchip-orion fixes. Jason will send a PR
+for irqchip-fixes _with-in_ v3.14 while watchdog will go into v3.15.
 
->>> This binding uses standard ethernet properties defined in ethernet.txt.
+Or are there any plans to get watchdog in *now*?
 
->>     This way it won't be clear which of the properties are used and which are
->> not, no?
+In any way, do not include my patches into your set.
 
-> You're right. For the phy properties we need to specify which ones are
-> used. This could be done only for bindings using the not recommended
-> properties.
+Jason: Ezequiel's watchdog patches install an irq handler that will
+panic(TM) on a watchdog irq. irqchip-orion does not properly clear
+stale bridge irqs which could signal a watchdog irq left by bootloader
+(or watchdog triggering between bootloader and driver probe).
 
-> For optional properties like local-mac-address, I don't think these
-> need to be listed. They can be used for all devices and whether or not
-> a given Linux driver supports using the property is not really the
-> concern of the binding documentation. An exception could be a device
-> that requires a optional property (i.e. a NIC with no eeprom to store
-> a MAC address).
-
-    So, to avoid any ambiguities, will this fragment be OK with you:
-
-Index: net-next/Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt
-===================================================================
---- net-next.orig/Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt
-+++ net-next/Documentation/devicetree/bindings/net/allwinner,sun4i-emac.txt
-@@ -4,13 +4,9 @@ Required properties:
-  - compatible: should be "allwinner,sun4i-emac".
-  - reg: address and length of the register set for the device.
-  - interrupts: interrupt for the device
--- phy: A phandle to a phy node defining the PHY address (as the reg
--  property, a single integer).
-+- phy: see ethernet.txt file in the same directory.
-  - clocks: A phandle to the reference clock for this device
-
--Optional properties:
--- (local-)mac-address: mac address to be used by this driver
--
-  Example:
-
-  emac: ethernet@01c0b000 {
-
-    Or do I still need to insert "this binding uses standard Ethernet 
-properties defined in ethernet.txt in the same directory" somewhere?
-
-> Rob
-
-WBR, Sergei
-
+Sebastian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
