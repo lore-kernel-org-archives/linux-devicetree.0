@@ -1,35 +1,44 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH V3 0/4] APM X-Gene PCIe controller
-Date: Thu, 30 Jan 2014 15:21:11 +0100
-Message-ID: <201401301521.11665.arnd@arndb.de>
-References: <1390599168-13150-1-git-send-email-tinamdar@apm.com> <CAErSpo7Dfd4NJBEDuVe1VCvZObFq1YvV2x77S60Z4-CZq89QJw@mail.gmail.com> <CACoXjc=LSrLK=kd9GJoHWJovVDC+TfH2bZO-2Ht9jMoBrL9eag@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CACoXjc=LSrLK=kd9GJoHWJovVDC+TfH2bZO-2Ht9jMoBrL9eag@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Tanmay Inamdar <tinamdar@apm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Dann Frazier <dann.frazier@canonical.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches <patches@apm.com>, Jon Masters <jcm@redhat.com>
+From: Florian Vaussard <florian.vaussard@epfl.ch>
+Subject: [PATCH 4/5] Documentation: devicetree: sja1000: add reg-io-width binding
+Date: Thu, 30 Jan 2014 15:29:27 +0100
+Message-ID: <1391092168-21246-5-git-send-email-florian.vaussard@epfl.ch>
+References: <1391092168-21246-1-git-send-email-florian.vaussard@epfl.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1391092168-21246-1-git-send-email-florian.vaussard@epfl.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, florian.vaussard@epfl.ch, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 30 January 2014, Tanmay Inamdar wrote:
-> >
-> > When you repost, please make sure you fix whatever problem is
-> > preventing your email from appearing on the vger mailing lists.  I
-> > won't apply things that haven't appeared on the linux-pci list,
-> > because that list is the opportunity for other people to review them.
-> >
-> You are absolutely right. If the patches are not reaching mailing
-> list, they should not appear on archive list as well. However I am
-> seeing my patches recorded on archives. So I am not sure if they are
-> actually getting dropped on linux-pci or any other mailing list.
-> 
-> http://www.spinics.net/lists/linux-pci/msg28198.html
-> http://article.gmane.org/gmane.linux.kernel.pci/28442/match=tanmay+inamdar
+Add the reg-io-width property to describe the width of the memory
+accesses.
 
-Very strange. I can also confirm that I received the patches through
-the linux-arm-kernel and devicetree mailing lists without problems.
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
+---
+ Documentation/devicetree/bindings/net/can/sja1000.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-	Arnd
+diff --git a/Documentation/devicetree/bindings/net/can/sja1000.txt b/Documentation/devicetree/bindings/net/can/sja1000.txt
+index f2105a4..b4a6d53 100644
+--- a/Documentation/devicetree/bindings/net/can/sja1000.txt
++++ b/Documentation/devicetree/bindings/net/can/sja1000.txt
+@@ -12,6 +12,10 @@ Required properties:
+ 
+ Optional properties:
+ 
++- reg-io-width : Specify the size (in bytes) of the IO accesses that
++	should be performed on the device.  Valid value is 1, 2 or 4.
++	Default to 1 (8 bits).
++
+ - nxp,external-clock-frequency : Frequency of the external oscillator
+ 	clock in Hz. Note that the internal clock frequency used by the
+ 	SJA1000 is half of that value. If not specified, a default value
+-- 
+1.8.1.2
