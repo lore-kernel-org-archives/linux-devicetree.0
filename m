@@ -1,47 +1,55 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 0/3] RFC/RFT: Powering on MMC Wifi/BT modules in MMC
-	core
-Date: Thu, 30 Jan 2014 21:49:17 +0000
-Message-ID: <20140130214917.GE15937@n2100.arm.linux.org.uk>
-References: <1390190215-22700-1-git-send-email-olof@lixom.net>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 00/20] Armada 370/XP watchdog support
+Date: Thu, 30 Jan 2014 18:50:57 -0300
+Message-ID: <20140130215056.GA1063@localhost>
+References: <1390836440-12744-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20140129181949.GB27143@localhost>
+ <20140130205315.GD29184@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1390190215-22700-1-git-send-email-olof@lixom.net>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>, Chris Ball <chris@printf.net>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.ok, galak@codeaurora.org
+In-Reply-To: <20140130205315.GD29184-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 19, 2014 at 07:56:52PM -0800, Olof Johansson wrote:
-> This is a small series enhancing the MMC core code to power on modules
-> before the host in cases where needed, and the corresponding DT bindings
-> changes.
-> 
-> I've got some other issues to debug on the Chromebook, i.e. the interface
-> doens't actually work. So far it seems unrelated to this patch set so
-> it's worth posting this and get things going since others need the same
-> functionality (i.e Cubox-i).
-> 
-> As mentioned in the patch in the series, I haven't implemented power-down
-> yet, I wanted to make sure that the power-on side will be adequate for
-> those who are looking to use it right away.
-> 
-> Comments/test reports/etc welcome.
+On Thu, Jan 30, 2014 at 03:53:15PM -0500, Jason Cooper wrote:
+> Ezequiel,
+>=20
+> On Wed, Jan 29, 2014 at 03:19:50PM -0300, Ezequiel Garcia wrote:
+> > On Mon, Jan 27, 2014 at 12:27:00PM -0300, Ezequiel Garcia wrote:
+> > > A new round, mostly fixing some minor nitpicks.
+> > >=20
+> >=20
+> > If anyone wants to give this a test, here's a public branch:
+> >=20
+> > https://github.com/MISL-EBU-System-SW/mainline-public/tree/wdt_for_=
+v3.14_v5
+>=20
+> I just took a quick glance at this (commit oneliners/tags) and there
+> doesn't appear to be any dependence on Sebastian's series.  Did I mis=
+s
+> something?
+>=20
 
-So, I thought I'd give this a go on the Cubox-i4, and... it doesn't work
-there.  It's not your patches, it's down to sdhci-esdhc-imx.c not using
-mmc_of_parse() at all, so those new properties have no way to be used
-there.
+True, I've completely missed that. I pushed the branch in a rush!
 
-It doesn't look like it could in its current form use mmc_of_parse(),
-as the imx code manually parses some of the generic properties to hand
-them into the sdhci layer.  This looks icky, and it looks like something
-that should be fixed - why should drivers be parsing the core attributes
-themselves?
+Let me prepare a v6, fixing the remaining issue pointed out by Russell,
+and push again (together with Sebastian's irqchip fixes).
 
--- 
-FTTC broadband for 0.8mile line: 5.8Mbps down 500kbps up.  Estimation
-in database were 13.1 to 19Mbit for a good line, about 7.5+ for a bad.
-Estimate before purchase was "up to 13.2Mbit".
+> Also, the MMIO patch hit mainline last night.
+>=20
+
+Yup, I saw it. Thanks for the notice!
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
