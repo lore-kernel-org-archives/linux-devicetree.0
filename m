@@ -1,73 +1,78 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 00/20] Armada 370/XP watchdog support
-Date: Thu, 30 Jan 2014 19:37:39 -0300
-Message-ID: <20140130223738.GA1261@localhost>
-References: <1390836440-12744-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <20140129181949.GB27143@localhost>
- <20140130205315.GD29184@titan.lakedaemon.net>
- <20140130215056.GA1063@localhost>
- <52EACB92.2080700@gmail.com>
+From: Suravee Suthikulanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+Subject: Re: [PATCH v2 08/11] of: Increase MAX_PHANDLE_ARGS
+Date: Thu, 30 Jan 2014 16:53:35 -0600
+Message-ID: <52EAD7EF.3040305@amd.com>
+References: <1389876263-25759-1-git-send-email-andreas.herrmann@calxeda.com>
+	<1389876263-25759-9-git-send-email-andreas.herrmann@calxeda.com>
+	<20140117110830.GW3471@alberich> <52E92842.3000001@amd.com>
+	<CAL_JsqLhzp5jUJPA91rNkQ07kCDYCDZLxw8LxxFEVP9b12e1Jw@mail.gmail.com>
+	<52E93360.1000904@amd.com> <20140129171611.GB13543@alberich>
+	<52E939CB.1020705@amd.com>
+	<20140129172932.GQ26622@mudshark.cambridge.arm.com>
+	<52E940FC.9050602@amd.com>
+	<20140129180350.GS26622@mudshark.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52EACB92.2080700-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20140129180350.GS26622-MRww78TxoiP5vMa5CHWGZ34zcgK1vI+I0E9HWUfgJXw@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 30, 2014 at 11:00:50PM +0100, Sebastian Hesselbarth wrote:
-> On 01/30/2014 10:50 PM, Ezequiel Garcia wrote:
-> > On Thu, Jan 30, 2014 at 03:53:15PM -0500, Jason Cooper wrote:
-> >> Ezequiel,
-> >>
-> >> On Wed, Jan 29, 2014 at 03:19:50PM -0300, Ezequiel Garcia wrote:
-> >>> On Mon, Jan 27, 2014 at 12:27:00PM -0300, Ezequiel Garcia wrote:
-> >>>> A new round, mostly fixing some minor nitpicks.
-> >>>>
-> >>>
-> >>> If anyone wants to give this a test, here's a public branch:
-> >>>
-> >>> https://github.com/MISL-EBU-System-SW/mainline-public/tree/wdt_fo=
-r_v3.14_v5
-> >>
-> >> I just took a quick glance at this (commit oneliners/tags) and the=
-re
-> >> doesn't appear to be any dependence on Sebastian's series.  Did I =
-miss
-> >> something?
-> >>
-> >
-> > True, I've completely missed that. I pushed the branch in a rush!
-> >
-> > Let me prepare a v6, fixing the remaining issue pointed out by Russ=
-ell,
-> > and push again (together with Sebastian's irqchip fixes).
->=20
-> Umm, no. Just directly name irqchip-orion fixes. Jason will send a PR
-> for irqchip-fixes _with-in_ v3.14 while watchdog will go into v3.15.
->=20
+On 1/29/2014 12:03 PM, Will Deacon wrote:
+> On Wed, Jan 29, 2014 at 05:57:16PM +0000, Suravee Suthikulanit wrote:
+>> On 1/29/2014 11:29 AM, Will Deacon wrote:
+>>> On Wed, Jan 29, 2014 at 05:26:35PM +0000, Suravee Suthikulanit wrote:
+>>>> On 1/29/2014 11:16 AM, Andreas Herrmann wrote:
+>>>>> On Wed, Jan 29, 2014 at 11:59:12AM -0500, Suravee Suthikulanit wrote:
+>>>>>> Actually, we are using 32 on the AMD system. So, do you think we can set
+>>>>>> this to 32 instead?
+>>>>>
+>>>>> I think that's ok.
+>>>>>
+>>>>> But are we really talking about number of SMRs or number of StreamIDs
+>>>>> per master device here? Ie. are you just having 32 SMRs for an SMMU on
+>>>>> your AMD system or do you have master devices which have 32 StreamIDs?
+>>>>>
+>>>>> If it's just number of SMRs we don't need to modify this macro.
+>>>>>
+>>>>
+>>>> I am referring to the case where each mmu-master can have upto 32 streamID.
+>>>
+>>> Crikey, how many SMRs do you have? Andreas and I have been struggling to
+>>> write a decent allocator for those, so if you have any algorithms that don't
+>>> require a quantum computer, we'd love to hear from you :)!
+>>>
+>>> Will
+>>>
+>>
+>> Are you talking about the __arm_smmu_alloc_bitmap()?
+>>
+>> Currently, we have configured the each SMMU to have 32 SMRs and using
+>> 15-bit streamID. However, we mostly have upto 32 streamID for each
+>> master, and most of the SMMU only have one master.  So it looks like the
+>> current logic should be ok.
+>
+> Interesting... how does that work for PCI? Do you force all devices behind a
+> given RC into the same address space?
+>
+> Will
+>
 
-That sounds good.
+For PCI devices, we are using the bus, device, and function id to make 
+up the 15-bit SID for devices behind a particular PCI root complex.
 
-> Or are there any plans to get watchdog in *now*?
->=20
+I also notice that we are currently not supporting the streamID mask in 
+the SMR.  Is this something planed for the future?
 
-Not on my side, I'm aiming at v3.15.
-
-> In any way, do not include my patches into your set.
->=20
-
-Hm, maybe I've misexpressed myself. I wasn't intending to include
-the patches on a submission, but just in a branch on the github repo.
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Suravee
