@@ -1,52 +1,36 @@
-From: Boris BREZILLON <b.brezillon.dev@gmail.com>
-Subject: =?UTF-8?q?=5BRFC=20PATCH=20pre-v3=2007/14=5D=20of=3A=20mtd=3A=20add=20documentation=20for=20the=20ONFI=20NAND=20timing=20mode=20property?=
-Date: Thu, 30 Jan 2014 14:46:02 +0100
-Message-ID: <1391089562-8385-1-git-send-email-b.brezillon.dev@gmail.com>
-References: <1391006064-28890-1-git-send-email-b.brezillon.dev@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4] gpio: Driver for SYSCON-based GPIOs
+Date: Thu, 30 Jan 2014 14:54:36 +0100
+Message-ID: <CACRpkdaVn0iNFYKE3HXWxnb4iCJorF0HSVG4Uvz8Q18SiF5PUQ@mail.gmail.com>
+References: <1389632203-22806-1-git-send-email-shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1391006064-28890-1-git-send-email-b.brezillon.dev@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Brian Norris <computersforpeace@gmail.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: Boris BREZILLON <b.brezillon.dev@gmail.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, dev@linux-sunxi.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1389632203-22806-1-git-send-email-shc_work@mail.ru>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexander Shiyan <shc_work@mail.ru>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@linaro.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for the ONFI NAND timing mode property.
+On Mon, Jan 13, 2014 at 5:56 PM, Alexander Shiyan <shc_work@mail.ru> wrote:
 
-Signed-off-by: Boris BREZILLON <b.brezillon.dev@gmail.com>
----
-Changes since v2:
- - fix description of the nand-timing-mode property: the mode property =
-is
-   a mask containing all supported modes, each mode is encoded as a bit
-   position
+> SYSCON driver was designed for using memory areas (registers)
+> that are used in several subsystems. There are systems (CPUs)
+> which use bits in one register for various purposes and thus
+> should be handled by various kernel subsystems. This driver
+> allows you to use the individual SYSCON bits as GPIOs.
+> ARM CLPS711X SYSFLG1 input lines has been added as first user
+> of this driver.
+>
+> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
 
- Documentation/devicetree/bindings/mtd/nand.txt |    7 +++++++
- 1 file changed, 7 insertions(+)
+Oh the pain. I am so ambivalent of this patch as it obfuscates
+some stuff about the hardware that the driver should know,
+while at the same time being elegant in a way.
 
-diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documenta=
-tion/devicetree/bindings/mtd/nand.txt
-index 0c962296..60c7112 100644
---- a/Documentation/devicetree/bindings/mtd/nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/nand.txt
-@@ -8,3 +8,10 @@
-   E.g. : nand-ecc-level =3D <4 512>; /* 4 bits / 512 bytes */
- - nand-bus-width : 8 or 16 bus width if not present 8
- - nand-on-flash-bbt: boolean to enable on flash bbt option if not pres=
-ent false
-+- onfi,nand-timing-mode: an integer encoding the supported ONFI timing=
- modes of
-+  the NAND chip. Each supported mode is represented as a bit position =
-(i.e. :
-+  mode 0 and 1 =3D> (1 << 0) | (1 << 1) =3D 0x3).
-+  This is only used when the chip does not support the ONFI standard.
-+  The last bit set represent the closest mode fulfilling the NAND chip=
- timings.
-+  For a full description of the different timing modes see this docume=
-nt:
-+  www.onfi.org/~/media/ONFI/specs/onfi_3_1_spec.pdf=E2=80=8E
---=20
-1.7.9.5
+What does the ARM SoC maintainers think about this approach?
 
+Arnd, Olof, Kevin: is this something you'd like to see deployed?
+
+Yours,
+Linus Walleij
