@@ -1,49 +1,62 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 5/5] ARM: sunxi: Enable A31 SPI and SID in
- the defconfig
-Date: Fri, 31 Jan 2014 11:55:52 +0100
-Message-ID: <1391165752-1819-6-git-send-email-maxime.ripard@free-electrons.com>
-References: <1391165752-1819-1-git-send-email-maxime.ripard@free-electrons.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v2 5/6] Documentation: devicetree: sja1000: add reg-io-width
+ binding
+Date: Fri, 31 Jan 2014 13:29:23 +0100
+Message-ID: <52EB9723.3080008@pengutronix.de>
+References: <1391164513-11529-1-git-send-email-florian.vaussard@epfl.ch> <1391164513-11529-6-git-send-email-florian.vaussard@epfl.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBR4EV2LQKGQEGEX7U3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1391165752-1819-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="ww83BKGxHQMiMNjaLNkeUORUscjVlNXGa"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <1391164513-11529-6-git-send-email-florian.vaussard@epfl.ch>
+Sender: linux-can-owner@vger.kernel.org
+To: Florian Vaussard <florian.vaussard@epfl.ch>, Wolfgang Grandegger <wg@grandegger.com>
+Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/configs/sunxi_defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--ww83BKGxHQMiMNjaLNkeUORUscjVlNXGa
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/configs/sunxi_defconfig b/arch/arm/configs/sunxi_defconfig
-index 3e2259b..b5df4a5 100644
---- a/arch/arm/configs/sunxi_defconfig
-+++ b/arch/arm/configs/sunxi_defconfig
-@@ -24,6 +24,7 @@ CONFIG_IP_PNP_BOOTP=y
- # CONFIG_WIRELESS is not set
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
-+CONFIG_EEPROM_SUNXI_SID=y
- CONFIG_NETDEVICES=y
- CONFIG_SUN4I_EMAC=y
- # CONFIG_NET_CADENCE is not set
-@@ -48,6 +49,8 @@ CONFIG_I2C=y
- # CONFIG_I2C_COMPAT is not set
- CONFIG_I2C_CHARDEV=y
- CONFIG_I2C_MV64XXX=y
-+CONFIG_SPI=y
-+CONFIG_SPI_SUN6I=y
- CONFIG_GPIO_SYSFS=y
- # CONFIG_HWMON is not set
- CONFIG_WATCHDOG=y
--- 
-1.8.4.2
+On 01/31/2014 11:35 AM, Florian Vaussard wrote:
+> Add the reg-io-width property to describe the width of the memory
+> accesses.
+>=20
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: devicetree@vger.kernel.org
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
+
+I think it makes sense to squash into patch 6.
+
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--ww83BKGxHQMiMNjaLNkeUORUscjVlNXGa
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+Comment: Using GnuPG with Icedove - http://www.enigmail.net/
+
+iEYEARECAAYFAlLrlyMACgkQjTAFq1RaXHNnuwCdH5m/wkLVR4LxHI1CPRbGPvrI
+MXoAn0KIKf/yOdj+9bxmc3NFNMf/M4hk
+=XWNK
+-----END PGP SIGNATURE-----
+
+--ww83BKGxHQMiMNjaLNkeUORUscjVlNXGa--
