@@ -1,46 +1,72 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V3 6/8] SPEAr13xx: Fixup: Move SPEAr1340 SATA platform code to phy driver
-Date: Fri, 31 Jan 2014 16:27:50 +0100
-Message-ID: <201401311627.50482.arnd@arndb.de>
-References: <cover.1391077731.git.mohit.kumar@st.com> <201401301421.00990.arnd@arndb.de> <20140131041204.GC2618@pratyush-vbox>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: Extending OPP bindings
+Date: Fri, 31 Jan 2014 15:46:48 +0000
+Message-ID: <20140131154648.GF22609@sirena.org.uk>
+References: <52EA570A.8040501@arm.com>
+ <52EAF1CA.3040702@ti.com>
+ <20140131124620.GC2616@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20140131041204.GC2618@pratyush-vbox>
-Sender: linux-ide-owner@vger.kernel.org
-To: Pratyush Anand <pratyush.anand@st.com>
-Cc: Mohit KUMAR DCG <Mohit.KUMAR@st.com>, Viresh Kumar <viresh.linux@gmail.com>, Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, spear-devel <spear-devel@list.st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7faAIFVyKtREcqXC"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140131124620.GC2616@e102568-lin.cambridge.arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Nishanth Menon <nm@ti.com>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Eduardo Valentin <eduardo.valentin@ti.com>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Morten Rasmussen <Morten.Rasmussen@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 31 January 2014, Pratyush Anand wrote:
-> On Thu, Jan 30, 2014 at 09:21:00PM +0800, Arnd Bergmann wrote:
-> > On Thursday 30 January 2014, Mohit Kumar wrote:
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/phy/spear13xx-miphy.txt b/Documentation/devicetree/bindings/phy/spear13xx-miphy.txt
-> > > new file mode 100644
-> > > index 0000000..208b37d
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/phy/spear13xx-miphy.txt
-> > > @@ -0,0 +1,8 @@
-> > > +Required properties:
-> > > +- compatible : should be "st,spear1340-sata-pcie-phy".
-> > 
-> > Just for confirmation: This phy is by design only capable of driving
-> > sata or pcie, but nothing else if reused in a different SoC, right?
-> > 
-> > If the phy is actually more generic than that, I'd suggest changing
-> > the name, otherwise it's ok.
-> 
-> OK, we will give a generic name as it can be used for sata/pcie/usb3.0.
-> Although, phy register definition may vary from version to version,
-> but that can be managed,as and when support of new soc is added. 
 
-It probably doesn't hurt to already define a list of possible
-modes in the binding that you already know about. That way, you
-don't have to update the binding in sync with the driver if you
-add another mode, such as USB.
+--7faAIFVyKtREcqXC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-	Arnd
+On Fri, Jan 31, 2014 at 12:46:20PM +0000, Lorenzo Pieralisi wrote:
 
+> Indexing does not mean that the index in the DT is the same as the one
+> allocated by the OS. Indexing is there to point at specific OPPs from
+> different DT nodes, a good example are clock bindings and that's exactly
+> how they work.
+
+> Can you provide me with an example where the indexing would go wrong
+> please ?
+
+This does depend on what you mean by indexing but if you're talking
+about having bindings where you have things that refer to the nth
+element in an array in that form then it can become hard to read the
+resulting DT and the potential for errors is increased.  Changes to the
+original table need to take into account all the references to the table
+and (especially if the number of entries gets large) it can be prone to
+miscounting when checking references.
+
+With OPPs this might happen if new operating points are characterised or
+some are removed, for example due to new SoC variants or binning.
+
+> Certainly relying on implicit ordering is not great either, actually I
+> would say that it is broken.
+
+Yes, that too - some sort of explict reference does help.
+
+--7faAIFVyKtREcqXC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS68VkAAoJELSic+t+oim9P40P/3YzpMTOKCzdHHpdzFMGnNw7
+/VtuGzjKUmA7QhvtOqaxn5HmzlrXu6jgb8nYIZqIQePEsp1pc4BOijuz9+h21ryQ
+pV8LOSRjc8Kzfay/TpsQ5F2fYS47e8rkPv0GI9+9F3mLsZFK4nxklBg/XqmH8bij
+vdRK5PA3Qfus087QtuIn4CxoUO9FQIRcTETrJiY0zzhldogFh0fHQ+SoqNUAvLKQ
+1SzWlVqwgUes4hUdIyG7VRy2Ztk82qQZe8EiqOGpMHqylav4PrZA5u34o19g28wc
+pRhmwaDivyg56JJJgwtgUvIQmHJ2YZJlroNASactZDuGmpK7Yh/+wc2Lh7KVBx9z
+KK3Y0U1Ng34C1Tn55nN1fTkLtDrR9mPyFgoLIUpi3xfp42vVC+RwOEuknWKHfA4S
+5/HWMajER8kDq6B/thyS7sqveWNwqrxmK26RmN410CCfZEFltdHwst59ky0shoJF
+ENujBtRTt6G7Mj+UxyUOGRj/3stp4YamCiqIzbdg9SazBx14RXs0jDHY8gyNNfz/
+ycMKBA7mcDIdlk1DQCEMeLcr2RfqxxBqUMLtN1Ntrk7P6ID/5s/UQ8olwAv+AR1b
+K8AdYOTVRtTt48j61uwYcyFMIlfcTnho+DUUq63d+ejr1A2x29kYddcSxdnRT0Rq
+W4mdpl8xXhENC9ZTyy+5
+=ZQCg
+-----END PGP SIGNATURE-----
+
+--7faAIFVyKtREcqXC--
