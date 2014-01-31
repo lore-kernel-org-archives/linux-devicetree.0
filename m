@@ -1,46 +1,56 @@
-From: Andrew Chew <achew@nvidia.com>
-Subject: [PATCH v1] ARM: tegra: add nvidia,wdt-timer-id optional property
-Date: Fri, 31 Jan 2014 13:46:51 -0800
-Message-ID: <1391204811-6293-1-git-send-email-achew@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, swarren@wwwdotorg.org, thierry.reding@gmail.com, abrestic@chromium.org, dgreid@chromium.org, katierh@chromium.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Chew <achew@nvidia.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH v2 1/2] dt: Document a compatible entry for MDIO ethernet Phys
+Date: Fri, 31 Jan 2014 14:50:44 -0700
+Message-ID: <1391205045-1751-1-git-send-email-jgunthorpe@obsidianresearch.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This optional property can be used to specify which timers are to be used
-for hardware watchdog timeouts (via a tegra wdt driver).
+This describes a compatible entry of the form:
+  ethernet-phy-idAAAA,BBBB
+Which is modelled after the PCI structured compatible entry
+(pciVVVV,DDDD.SSSS.ssss.RR)
 
-Signed-off-by: Andrew Chew <achew@nvidia.com>
+If present the OF core will be able to use this information to
+directly create the correct phy without auto probing the bus.
+
+Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/timer/nvidia,tegra30-timer.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ Documentation/devicetree/bindings/net/phy.txt | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 
-diff --git a/Documentation/devicetree/bindings/timer/nvidia,tegra30-timer.txt b/Documentation/devicetree/bindings/timer/nvidia,tegra30-timer.txt
-index b5082a1..e87fa70 100644
---- a/Documentation/devicetree/bindings/timer/nvidia,tegra30-timer.txt
-+++ b/Documentation/devicetree/bindings/timer/nvidia,tegra30-timer.txt
-@@ -13,6 +13,13 @@ Required properties:
- - clocks : Must contain one entry, for the module clock.
-   See ../clocks/clock-bindings.txt for details.
+diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
+index 7cd18fb..989122c 100644
+--- a/Documentation/devicetree/bindings/net/phy.txt
++++ b/Documentation/devicetree/bindings/net/phy.txt
+@@ -23,10 +23,18 @@ Optional Properties:
+   assume clause 22. The compatible list may also contain other
+   elements.
  
-+Optional properties:
++  If the phy's identifier is known then the list may contain an entry
++  of the form: "ethernet-phy-idAAAA.BBBB" where
++     AAAA - The value of the 16 bit Phy Identifier 1 register as
++            4 hex digits. This is the chip vendor OUI bits 3:18
++     BBBB - The value of the 16 bit Phy Identifier 2 register as
++            4 hex digits. This is the chip vendor OUI bits 19:24,
++            followed by 10 bits of a vendor specific ID.
 +
-+- nvidia,wdt-timer-id: A list of timer IDs to be used for watchdogs.
-+    Watchdog 0 will be assigned to the first timer listed, watchdog 1 will
-+    be assigned to the second timer listed, etc. up to the number of watchdogs
-+    available.
-+
- timer {
- 	compatible = "nvidia,tegra30-timer", "nvidia,tegra20-timer";
- 	reg = <0x60005000 0x400>;
-@@ -23,4 +30,5 @@ timer {
- 		      0 121 0x04
- 		      0 122 0x04>;
- 	clocks = <&tegra_car 214>;
-+	nvidia,wdt-timer-id = <7 8>;
- };
+ Example:
+ 
+ ethernet-phy@0 {
+-	compatible = "ethernet-phy-ieee802.3-c22";
++	compatible = "ethernet-phy-id0141.0e90", "ethernet-phy-ieee802.3-c22";
+ 	linux,phandle = <2452000>;
+ 	interrupt-parent = <40000>;
+ 	interrupts = <35 1>;
 -- 
-1.8.1.5
+1.8.1.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
