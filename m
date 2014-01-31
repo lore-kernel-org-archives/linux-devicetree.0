@@ -1,157 +1,81 @@
-From: Pratyush Anand <pratyush.anand@st.com>
-Subject: Re: [PATCH V3 6/8] SPEAr13xx: Fixup: Move SPEAr1340 SATA platform
- code to phy driver
-Date: Fri, 31 Jan 2014 09:42:04 +0530
-Message-ID: <20140131041204.GC2618@pratyush-vbox>
-References: <cover.1391077731.git.mohit.kumar@st.com>
- <7b9e0a98a6873f66e519791dfba20418e2a68c5a.1391077731.git.mohit.kumar@st.com>
- <201401301421.00990.arnd@arndb.de>
+From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Subject: Re: recommended action for bootloaders regarding modifying
+ device-tree nodes
+Date: Thu, 30 Jan 2014 20:39:00 -0800
+Message-ID: <CAJ+vNU2zis+1DUCzmegUFw+Z6XATBEPJ+yqMsttp4ENcckHUYA@mail.gmail.com>
+References: <CAJ+vNU366GiY4k_rnh1Jf0kra+PU99w4tDdM2sNioUAJCiZqOA@mail.gmail.com>
+	<20140130204558.GC29184@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <201401301421.00990.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mohit KUMAR DCG <Mohit.KUMAR@st.com>, spear-devel <spear-devel@list.st.com>, Kishon Vijay Abraham I <kishon@ti.com>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Viresh Kumar <viresh.linux@gmail.com>, Tejun Heo <tj@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140130204558.GC29184-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 30, 2014 at 09:21:00PM +0800, Arnd Bergmann wrote:
-> On Thursday 30 January 2014, Mohit Kumar wrote:
-> > 
-> > diff --git a/Documentation/devicetree/bindings/phy/spear13xx-miphy.txt b/Documentation/devicetree/bindings/phy/spear13xx-miphy.txt
-> > new file mode 100644
-> > index 0000000..208b37d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/spear13xx-miphy.txt
-> > @@ -0,0 +1,8 @@
-> > +Required properties:
-> > +- compatible : should be "st,spear1340-sata-pcie-phy".
-> 
-> Just for confirmation: This phy is by design only capable of driving
-> sata or pcie, but nothing else if reused in a different SoC, right?
-> 
-> If the phy is actually more generic than that, I'd suggest changing
-> the name, otherwise it's ok.
+On Thu, Jan 30, 2014 at 12:45 PM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+> Hi Tim,
+>
+> On Thu, Jan 30, 2014 at 01:11:18AM -0800, Tim Harvey wrote:
+>> My approach has been to define a per-baseboard device-tree in Linux
+>> for a 'fully loaded' board, then remove nodes which the EEPROM claims
+>> are not present in the bootloader before it passes the DTB to the
+>> kernel.  I do this by defining aliases in the device-tree for the
+>> peripherals that are 'optional' so that the bootloader itself does not
+>> need to know the details about how the device is connected.
+>
+> This is more of a process question:  Is there any information captured
+> in your EEPROM that can't be represented in the dtb?  iow, at the point
+> when you write the EEPROM, why not write the dtb to it as configured?
+>
+> You could have pre-configured dtsi fragments for each config option, and
+> then dynamically create the board dts from the order.
+>
+> I only ask because it would solve the problem below.  However, there's a
+> lot more to changing a manufacturing process than meets the eye. :)
+>
 
-OK, we will give a generic name as it can be used for sata/pcie/usb3.0.
-Although, phy register definition may vary from version to version,
-but that can be managed,as and when support of new soc is added. 
+our eeprom config section is only 40 bytes.  It contains a SKU string,
+mac addrs, and some bitwise fields for the various optional components
+that we can subload.
 
-> 
-> > +- reg : offset and length of the PHY register set.
-> > +- misc: phandle for the syscon node to access misc registers
-> > +- #phy-cells : from the generic PHY bindings, must be 2.
-> > +	- 1st arg: phandle to the phy node.
-> > +	- 2nd arg: 0 if phy (in 1st arg) is to be used for sata else 1.
-> > +	- 3rd arg: Instance id of the phy (in 1st arg).
-> 
-> I would count "arg" differently: There are three cells, and the first
-> cell is the phandle, while the second and third cells contain the first
-> and second argument.
+>> Is it more appropriate for the bootloader to 'remove' nodes for
+>> devices that are not physically present or should I be setting their
+>> status property to 'disabled' instead?  I'm not clear if either option
+>> really has any pros or cons.
+>
+> That depends on how you have it structured.  Is it a valid dtb?
+> Meaning, do you have four nodes all at the same register address?
+> Perhaps you could provide an example dts?
 
-Ok..will modify accordingly.
+yes its a valid dtb - it is just the superset of everything the
+baseboard (ie schematic design) can support.
 
-> 
-> The third cell seems redundant, more on that below.
-> 
-> > +		ahci0: ahci@b1000000 {
-> >  			compatible = "snps,spear-ahci";
-> >  			reg = <0xb1000000 0x10000>;
-> >  			interrupts = <0 68 0x4>;
-> > +			phys = <&miphy0 0 0>;
-> > +			phy-names = "ahci-phy";
-> >  			status = "disabled";
-> >  		};
-> >  
-> > -		ahci@b1800000 {
-> > +		ahci1: ahci@b1800000 {
-> >  			compatible = "snps,spear-ahci";
-> >  			reg = <0xb1800000 0x10000>;
-> >  			interrupts = <0 69 0x4>;
-> > +			phys = <&miphy1 0 1>;
-> > +			phy-names = "ahci-phy";
-> >  			status = "disabled";
-> >  		};
-> >  
-> > -		ahci@b4000000 {
-> > +		ahci2: ahci@b4000000 {
-> >  			compatible = "snps,spear-ahci";
-> >  			reg = <0xb4000000 0x10000>;
-> >  			interrupts = <0 70 0x4>;
-> > +			phys = <&miphy2 0 2>;
-> > +			phy-names = "ahci-phy";
-> >  			status = "disabled";
-> >  		};
-> 
-> In each case, the number of the phy 'miphyX' is identical to the
-> third cell, and I suspect this is by design. In the driver, the
-> 'id' field is set in the xlate function, but I could not find any
-> place where it actually gets used, so unless you know that it's
-> needed, I'd suggest simply removing it.
+A good example is a custom SKU of a baseboard with ethernet subloaded.
+ If the EEPROM says there is no ethernet mac or phy, I would want to
+remove or disable the ethernet node from the devicetree.
 
-It has not been used in this patch, as SATA support is currently only
-for SPEAr1340, where we have only one instance.
+Another example would be a node for 'gpio-pps' (GPIO based
+pulse-per-second) support.  A baseboard design that has a GPS with its
+PPS signal tied to a GPIO would define this in the device-tree, but if
+the EEPROM says the GPS isn't loaded, I would want to remove or
+disable the gps-pps node.
 
-Will be using it in PCIe for SPEAr1310 where 3 instances are present.
+Tim
 
-> 
-> Even if you need it, it may be better to have the instance encoded
-> in the phy node itself, since it's a property of the phy hardware
-> (e.g. if you have to pass the number into a generic register that
-> is global to all phys.
-
-Ok..ll do that.
-
-> 
-> Alternatively, you could have a different representation, where you
-> have a single DT device node representing all three PHYs, with
-> "reg = <0xeb800000 0xc000>;" In that case, all sata devices would
-> point to the same phy node and pass the instance id so the phy
-> driver can operated the correct register set.
-
-Instance ID is mainly needed to manipulate wrapper register present
-within SPEAr13xx misc space. We have a single register in misc space
-having bit fields controlling all 3 phys, and there we need this id.
-
-> 
-> > +static int spear1340_sata_miphy_init(struct spear13xx_phy_priv *phypriv)
-> > +{
-> > +	regmap_update_bits(phypriv->misc, SPEAR1340_PCIE_SATA_CFG,
-> > +			SPEAR1340_PCIE_SATA_CFG_MASK, SPEAR1340_SATA_CFG_VAL);
-> > +	regmap_update_bits(phypriv->misc, SPEAR1340_PCIE_MIPHY_CFG,
-> > +			SPEAR1340_PCIE_MIPHY_CFG_MASK,
-> > +			SPEAR1340_PCIE_SATA_MIPHY_CFG_SATA_25M_CRYSTAL_CLK);
-> > +	/* Switch on sata power domain */
-> > +	regmap_update_bits(phypriv->misc, SPEAR1340_PCM_CFG,
-> > +			SPEAR1340_PCM_CFG_SATA_POWER_EN,
-> > +			SPEAR1340_PCM_CFG_SATA_POWER_EN);
-> > +	msleep(20);
-> > +	/* Disable PCIE SATA Controller reset */
-> > +	regmap_update_bits(phypriv->misc, SPEAR1340_PERIP1_SW_RST,
-> > +			SPEAR1340_PERIP1_SW_RST_SATA, 0);
-> > +	msleep(20);
-> > +
-> > +	return 0;
-> > +}
-> 
-> I guess some of the parts above can eventually get moved into other
-> drivers (reset controller, power domains) that get called directly
-> by the SATA driver (e.g. though reset_device()). Since that won't
-> impact the PHY binding, it seems fine to leave it here for now.
-
-thanks :)
-
-Regards
-Pratyush
-> 
-> 	Arnd
+>
+> thx,
+>
+> Jason.
+>
+>> Tim Harvey - Principal Software Engineer
+>> Gateworks Corporation
+>
+> btw - one of my first embedded projects was on one of your boards. An
+> ixp425 with 4 mini-pci slots.
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
