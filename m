@@ -1,55 +1,40 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v3] DT: net: document Ethernet bindings in one place
-Date: Fri, 31 Jan 2014 23:54:14 +0300
-Message-ID: <52EC0D76.9020701@cogentembedded.com>
-References: <201401280316.28735.sergei.shtylyov@cogentembedded.com> <CAMuHMdV6QNGAh8s40z766N6HMboUW_eO85Gs7p0JBAuZ6vW1Nw@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: STi: add stid127 soc support
+Date: Fri, 31 Jan 2014 21:15:33 +0100
+Message-ID: <201401312115.33731.arnd@arndb.de>
+References: <1391093744-19905-1-git-send-email-patrice.chotard@st.com> <201401301939.08302.arnd@arndb.de> <52EB96BB.6070800@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdV6QNGAh8s40z766N6HMboUW_eO85Gs7p0JBAuZ6vW1Nw@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, galak@codeaurora.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Max Filippov <jcmvbkbc@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52EB96BB.6070800-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: srinivas kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patrice CHOTARD <patrice.chotard-qxv4g6HH51o@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, maxime.coquelin-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Friday 31 January 2014, srinivas kandagatla wrote:
 
-On 01/28/2014 11:26 AM, Geert Uytterhoeven wrote:
+> > Sorry if I missed the initial review, but can you explain
+> > why this is needed to start with?
+>
+> On ST SoCs the default value for L2 AUX_CTRL register is 0x0, so we  set
+> the way-size explicit here.
 
->> --- /dev/null
->> +++ net-next/Documentation/devicetree/bindings/net/ethernet.txt
->> @@ -0,0 +1,23 @@
->> +The following properties are common to the Ethernet controllers:
->> +
->> +- local-mac-address: array of 6 bytes, specifies the MAC address that was
->> +  assigned to the network device;
->> +- mac-address: array of 6 bytes, specifies the MAC address that was last used by
->> +  the boot program; should be used in cases where the MAC address assigned to
->> +  the device by the boot program is different from the "local-mac-address"
->> +  property;
->> +- max-speed: number, specifies maximum speed in Mbit/s supported by the device;
->> +- max-frame-size: number, maximum transfer unit (IEEE defined MTU), rather than
->> +  the maximum frame size (there's contradiction in ePAPR).
->> +- phy-mode: string, operation mode of the PHY interface; supported values are
->> +  "mii", "gmii", "sgmii", "tbi", "rev-mii", "rmii", "rgmii", "rgmii-id",
->> +  "rgmii-rxid", "rgmii-txid", "rtbi", "smii", "xgmii"; not recommended for new
->> +  bindings;
->> +- phy-connection-type: the same as "phy-mode" property but described in ePAPR;
->> +- phy-handle: phandle, specifies a reference to a node representing a PHY
->> +  device; this property is described in ePAPR and so preferred;
->> +- phy: the same as "phy-handle" property, not recommended for new bindings.
+Unfortunately, we keep going back and forth on the L2 cache controller
+setup between "it should work automatically" and "we don't want to
+have configuration data in DT", where my personal opinion is that
+the first one is more important here.
 
-> I think it would be more clear to move the not recommended ones to a new
-> paragraph, with a preamble stating they're not recommended for new bindings.
+Now, there are a couple of properties that are defined in
+Documentation/devicetree/bindings/arm/l2cc.txt to let some of the
+things get set up automatically already. Can you check which bits
+are missing there, if any? Are they better described as "configuration"
+or "hardware" settings?
 
-    In fact, at the moment, only "phy" prop can be named as not recommended, 
-the "phy-mode" should better be described as de facto standard as it's 
-mentioned even in ePAPR 1.1 examples (and of_get_phy_mode() patch to recognize 
-"phy-connection-type" as well as "phy-mode" prop probably got lost somewhere). 
-Thus I'm not sure it's worth creating separate paragraph for the sake of one 
-prop is worth it now. Although there's also "phy-device" which I didn't 
-mention here (and IIRC there's some more non-standard ways to address the PHY)...
-
-WBR, Sergei
-
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
