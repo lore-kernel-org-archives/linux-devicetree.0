@@ -1,62 +1,40 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH v2 5/6] Documentation: devicetree: sja1000: add reg-io-width
- binding
-Date: Fri, 31 Jan 2014 13:29:23 +0100
-Message-ID: <52EB9723.3080008@pengutronix.de>
-References: <1391164513-11529-1-git-send-email-florian.vaussard@epfl.ch> <1391164513-11529-6-git-send-email-florian.vaussard@epfl.ch>
+From: srinivas kandagatla <srinivas.kandagatla@st.com>
+Subject: Re: [PATCH 1/4] ARM: STi: add stid127 soc support
+Date: Fri, 31 Jan 2014 12:27:39 +0000
+Message-ID: <52EB96BB.6070800@st.com>
+References: <1391093744-19905-1-git-send-email-patrice.chotard@st.com>
+ <1391093744-19905-2-git-send-email-patrice.chotard@st.com>
+ <201401301935.16463.arnd@arndb.de> <201401301939.08302.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="ww83BKGxHQMiMNjaLNkeUORUscjVlNXGa"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <1391164513-11529-6-git-send-email-florian.vaussard@epfl.ch>
-Sender: linux-can-owner@vger.kernel.org
-To: Florian Vaussard <florian.vaussard@epfl.ch>, Wolfgang Grandegger <wg@grandegger.com>
-Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201401301939.08302.arnd@arndb.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, kernel@stlinux.com, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Patrice CHOTARD <patrice.chotard@st.com>, Stuart Menefy <stuart.menefy@st.com>, alexandre.torgue@st.com, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, maxime.coquelin@st.com
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---ww83BKGxHQMiMNjaLNkeUORUscjVlNXGa
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hi Arnd,
+On 30/01/14 18:39, Arnd Bergmann wrote:
+> Actually reading the code in this file shows that the L2 cache
+> initialization is the only nonstandard thing in there. We should
+> really find a way to get rid of the entire function.
+I think this will get rid of lot of code left in board-dt.
 
-On 01/31/2014 11:35 AM, Florian Vaussard wrote:
-> Add the reg-io-width property to describe the width of the memory
-> accesses.
->=20
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: devicetree@vger.kernel.org
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
+> 
+> Sorry if I missed the initial review, but can you explain
+> why this is needed to start with?
+On ST SoCs the default value for L2 AUX_CTRL register is 0x0, so we  set
+the way-size explicit here.
 
-I think it makes sense to squash into patch 6.
-
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---ww83BKGxHQMiMNjaLNkeUORUscjVlNXGa
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-Comment: Using GnuPG with Icedove - http://www.enigmail.net/
-
-iEYEARECAAYFAlLrlyMACgkQjTAFq1RaXHNnuwCdH5m/wkLVR4LxHI1CPRbGPvrI
-MXoAn0KIKf/yOdj+9bxmc3NFNMf/M4hk
-=XWNK
------END PGP SIGNATURE-----
-
---ww83BKGxHQMiMNjaLNkeUORUscjVlNXGa--
+Thanks,
+srini
