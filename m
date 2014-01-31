@@ -1,66 +1,82 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] spi: sunxi: Add Allwinner A31 SPI
- controller driver
-Date: Fri, 31 Jan 2014 16:03:28 +0000
-Message-ID: <20140131160328.GI22609@sirena.org.uk>
-References: <1390993850-9054-1-git-send-email-maxime.ripard@free-electrons.com>
- <1390993850-9054-4-git-send-email-maxime.ripard@free-electrons.com>
- <20140129122520.GY11841@sirena.org.uk>
- <20140129133227.GQ3867@lukather>
- <CAGa+x854huSmiWmEv2EgOPUgZKcp3iitNaBvKXt8DiEj8msSVg@mail.gmail.com>
- <20140131081147.GC2950@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: recommended action for bootloaders regarding modifying
+ device-tree nodes
+Date: Fri, 31 Jan 2014 11:07:59 -0500
+Message-ID: <20140131160759.GI29184@titan.lakedaemon.net>
+References: <CAJ+vNU366GiY4k_rnh1Jf0kra+PU99w4tDdM2sNioUAJCiZqOA@mail.gmail.com>
+ <20140130204558.GC29184@titan.lakedaemon.net>
+ <CAJ+vNU2zis+1DUCzmegUFw+Z6XATBEPJ+yqMsttp4ENcckHUYA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="RelyVQTGfPeWBXwZ"
-Return-path: <linux-sunxi+bncBDQ2L75W5QGBBZ4SV6LQKGQE7XKWPQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140131081147.GC2950@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org
+In-Reply-To: <CAJ+vNU2zis+1DUCzmegUFw+Z6XATBEPJ+yqMsttp4ENcckHUYA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jan 30, 2014 at 08:39:00PM -0800, Tim Harvey wrote:
+> On Thu, Jan 30, 2014 at 12:45 PM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+> > Hi Tim,
+> >
+> > On Thu, Jan 30, 2014 at 01:11:18AM -0800, Tim Harvey wrote:
+> >> My approach has been to define a per-baseboard device-tree in Linux
+> >> for a 'fully loaded' board, then remove nodes which the EEPROM claims
+> >> are not present in the bootloader before it passes the DTB to the
+> >> kernel.  I do this by defining aliases in the device-tree for the
+> >> peripherals that are 'optional' so that the bootloader itself does not
+> >> need to know the details about how the device is connected.
+> >
+> > This is more of a process question:  Is there any information captured
+> > in your EEPROM that can't be represented in the dtb?  iow, at the point
+> > when you write the EEPROM, why not write the dtb to it as configured?
+> >
+> > You could have pre-configured dtsi fragments for each config option, and
+> > then dynamically create the board dts from the order.
+> >
+> > I only ask because it would solve the problem below.  However, there's a
+> > lot more to changing a manufacturing process than meets the eye. :)
+> >
+> 
+> our eeprom config section is only 40 bytes.  It contains a SKU string,
+> mac addrs, and some bitwise fields for the various optional components
+> that we can subload.
 
---RelyVQTGfPeWBXwZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ok.
 
-On Fri, Jan 31, 2014 at 09:11:47AM +0100, Maxime Ripard wrote:
+> >> Is it more appropriate for the bootloader to 'remove' nodes for
+> >> devices that are not physically present or should I be setting their
+> >> status property to 'disabled' instead?  I'm not clear if either option
+> >> really has any pros or cons.
+> >
+> > That depends on how you have it structured.  Is it a valid dtb?
+> > Meaning, do you have four nodes all at the same register address?
+> > Perhaps you could provide an example dts?
+> 
+> yes its a valid dtb - it is just the superset of everything the
+> baseboard (ie schematic design) can support.
+> 
+> A good example is a custom SKU of a baseboard with ethernet subloaded.
+>  If the EEPROM says there is no ethernet mac or phy, I would want to
+> remove or disable the ethernet node from the devicetree.
+> 
+> Another example would be a node for 'gpio-pps' (GPIO based
+> pulse-per-second) support.  A baseboard design that has a GPS with its
+> PPS signal tied to a GPIO would define this in the device-tree, but if
+> the EEPROM says the GPS isn't loaded, I would want to remove or
+> disable the gps-pps node.
 
-> Wouldn't it be better if it was suspended by default, and just waken
-> up whenever the framework needs it?
+I think JasonG's approach is the way to go (inserting nops).  But it's a
+matter of preference as long as the output is a valid dtb.
 
-The aim should be to come out of probe in that state if runtime PM is
-enabled but don't do it with these hacks, do it by idling the device
-at the end of probe for example.  Apart from anything else this code
-just looks ugly.
+on a side note:  Do you still have to tie your dtb to a version of the
+kernel?
 
---RelyVQTGfPeWBXwZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+thx,
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS68lNAAoJELSic+t+oim9iSAP/js3AxmDpVbHs3m7d+fv68Fw
-CsZOZdFbQgi0NB/XqQPCK/EJT/yGQs9nXyTzyPAGRi5Dn9Nu4Xc5JLFu24m15eg2
-RNWATXq6sftb7Mk3Khp5yrdrF9XfjUUAuO5Jki/Gc5k6QrJvRm468bU1BjtoDx3C
-37KyXjl1XxqYGeGQmnj4om09FYdqCbzAok1mxsa9kXQELs4LVq2096YcVxSzesJu
-OPRRU6oBAap9kqXv7+V58V0/F0FHZmz5OytE7FsGHghc88dbQ0UVUtx+NU2egy2k
-T3lcYbE51hGL41mryK3hv7D4xygWbxTUVnmBD4RcItTeaLekWvkAREe2Pug2rVx5
-egyZBbU5xniXBE+RkLYmENDm4uAfeT1UjJOaY+azfSVKp63dtMZDLTWyN6vl9NJ+
-pJUOsvspdCMBlmPlSNZ0x56sgDehK9o1rVRVvaWNFaUFGmzx5m3cfYTDdnBCsvWx
-3qM3KODnFAok+s+j0HyNUMeyKiRdx9U1otHdmSZ1ilynxvRrTFRs+eNnreSscQDS
-euroErykTPM7ZGy2DKg81xyjLqK86DqjhlHnQjk+1Jgtfv3YPTojNUth3w5JAjA1
-8652xz16QY+pajsDABw2WjklnxR4qBH4kpl7BsPGeRFcy71aJeDTIcKPqtZf+TrR
-FZ1HLs8M7Lo/KhS3zpmz
-=N6v6
------END PGP SIGNATURE-----
-
---RelyVQTGfPeWBXwZ--
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
