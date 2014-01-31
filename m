@@ -1,59 +1,37 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: add vendor-prefix for neonode
-Date: Fri, 31 Jan 2014 12:20:57 -0600
-Message-ID: <CAL_JsqJmFK0H15JbogMP+vTYE7xTijUGwOZNLkzkd7pVRBNROg@mail.gmail.com>
-References: <2809570.RstiYk4HG8@phil>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH] of: add vendor prefix for Honeywell
+Date: Fri, 31 Jan 2014 10:53:01 -0800
+Message-ID: <CAOesGMhFEMNFbAC4rUdccYVHM8yX9Mz+Vx73jGxBYGrSOa4Gaw@mail.gmail.com>
+References: <1390685924-11877-1-git-send-email-marek@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2809570.RstiYk4HG8@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1390685924-11877-1-git-send-email-marek@goldelico.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Marek Belisko <marek@goldelico.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 30, 2014 at 8:18 AM, Heiko St=FCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrot=
-e:
-> From: Heiko Stuebner <heiko.stuebner-HCpLIkUQxWGakBO8gow8eQ@public.gmane.org>
->
-> Neonode Inc. is the Manufacturer of the zforce infraread touchscreens
-> used in a lot of ebook readers and supported by the zforce_ts driver.
->
-> Signed-off-by: Heiko Stuebner <heiko.stuebner-HCpLIkUQxWGakBO8gow8eQ@public.gmane.org>
+On Sat, Jan 25, 2014 at 1:38 PM, Marek Belisko <marek@goldelico.com> wrote:
+> Signed-off-by: Marek Belisko <marek@goldelico.com>
 > ---
-> Dmitry, the input maintainer, didn't want to carry the vendor-prefix
-> addition [0], therefore add it separately.
-
-Applied.
-
-Rob
-
->
-> [0] http://permalink.gmane.org/gmane.linux.kernel.input/33887
->
->  Documentation/devicetree/bindings/vendor-prefixes.txt |    1 +
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
 >  1 file changed, 1 insertion(+)
 >
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/=
-Documentation/devicetree/bindings/vendor-prefixes.txt
-> index edbb8d8..32a60a9 100644
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 3f900cd..b14c617 100644
 > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
 > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -47,6 +47,7 @@ maxim Maxim Integrated Products
->  microchip      Microchip Technology Inc.
->  mosaixtech     Mosaix Technologies, Inc.
->  national       National Semiconductor
-> +neonode                Neonode Inc.
->  nintendo       Nintendo
->  nvidia NVIDIA
->  nxp    NXP Semiconductors
-> --
-> 1.7.10.4
->
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> @@ -40,6 +40,7 @@ gmt   Global Mixed-mode Technology, Inc.
+>  gumstix        Gumstix, Inc.
+>  haoyu  Haoyu Microelectronic Co. Ltd.
+>  hisilicon      Hisilicon Limited.
+> +honeywell      Honeywell
+
+The norm has usually been to use the the stock ticker symbol of a
+public company if it is available. In other words, I think the prefix
+here should be 'hon', since Honeywell is a publicly traded company
+under that ticker.
+
+
+-Olof
