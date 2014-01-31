@@ -1,45 +1,34 @@
-From: Florian Vaussard <florian.vaussard@epfl.ch>
-Subject: [PATCH v3 4/5] Documentation: devicetree: sja1000: add reg-io-width binding
-Date: Fri, 31 Jan 2014 14:34:36 +0100
-Message-ID: <1391175277-19833-5-git-send-email-florian.vaussard@epfl.ch>
-References: <1391175277-19833-1-git-send-email-florian.vaussard@epfl.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1391175277-19833-1-git-send-email-florian.vaussard@epfl.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Andreas Larsson <andreas@gaisler.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org, florian.vaussard@epfl.ch, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] ARM: dts: k2hk-evm: rename clock node to clocks
+Date: Fri, 31 Jan 2014 18:11:37 +0400
+Message-ID: <52EBAF19.7080902@cogentembedded.com>
+References: <1391175066-13862-1-git-send-email-grygorii.strashko@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1391175066-13862-1-git-send-email-grygorii.strashko@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>, santosh.shilimkar@ti.com, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+Cc: ivan.khoronzhuk@ti.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the reg-io-width property to describe the width of the memory
-accesses.
+Hello.
 
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
----
- Documentation/devicetree/bindings/net/can/sja1000.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+On 31-01-2014 17:31, Grygorii Strashko wrote:
 
-diff --git a/Documentation/devicetree/bindings/net/can/sja1000.txt b/Documentation/devicetree/bindings/net/can/sja1000.txt
-index f2105a4..b4a6d53 100644
---- a/Documentation/devicetree/bindings/net/can/sja1000.txt
-+++ b/Documentation/devicetree/bindings/net/can/sja1000.txt
-@@ -12,6 +12,10 @@ Required properties:
- 
- Optional properties:
- 
-+- reg-io-width : Specify the size (in bytes) of the IO accesses that
-+	should be performed on the device.  Valid value is 1, 2 or 4.
-+	Default to 1 (8 bits).
-+
- - nxp,external-clock-frequency : Frequency of the external oscillator
- 	clock in Hz. Note that the internal clock frequency used by the
- 	SJA1000 is half of that value. If not specified, a default value
--- 
-1.8.1.2
+> Fix type in clock(s) node name: "clock"-->"clocks".
+
+    Maybe "typo"? :-)
+
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+
+WBR, Sergei
