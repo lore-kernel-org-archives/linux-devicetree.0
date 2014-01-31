@@ -1,38 +1,45 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v2 00/21] pinctrl: mvebu: restructure and remove hardcoded
- addresses from Dove pinctrl
-Date: Fri, 31 Jan 2014 11:22:39 +0100
-Message-ID: <52EB796F.9000109@gmail.com>
-References: <1390674856-4993-1-git-send-email-sebastian.hesselbarth@gmail.com> <1390869573-27624-1-git-send-email-sebastian.hesselbarth@gmail.com> <CACRpkda5HRxpLWWizT_58SJ6Fb=TQpO=Y5yFThpZkUbUYmU8fg@mail.gmail.com>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkda5HRxpLWWizT_58SJ6Fb=TQpO=Y5yFThpZkUbUYmU8fg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Florian Vaussard <florian.vaussard@epfl.ch>
+Subject: [PATCH v2 5/6] Documentation: devicetree: sja1000: add reg-io-width binding
+Date: Fri, 31 Jan 2014 11:35:12 +0100
+Message-ID: <1391164513-11529-6-git-send-email-florian.vaussard@epfl.ch>
+References: <1391164513-11529-1-git-send-email-florian.vaussard@epfl.ch>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1391164513-11529-1-git-send-email-florian.vaussard@epfl.ch>
+Sender: netdev-owner@vger.kernel.org
+To: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, florian.vaussard@epfl.ch, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/31/14 11:17, Linus Walleij wrote:
-> On Tue, Jan 28, 2014 at 1:39 AM, Sebastian Hesselbarth
-> <sebastian.hesselbarth@gmail.com> wrote:
->
->> This patch set is one required step for Dove to hop into mach-mvebu.
->> Until now, pinctrl-dove was hardcoding some registers that do not
->> directly belong to MPP core registers. This is not compatible with
->> what we want for mach-mvebu.
->
-> All this stuff is really nice, so if you can get Thomas to add his
-> review-tag on this stuff and maybe have some Tested-by:s
-> from other parties, I'd be happy to pull the end result to the
-> pinctrl tree, or alternatively provide my ACK for you to take this
-> through ARM SoC.
+Add the reg-io-width property to describe the width of the memory
+accesses.
 
-Luckily, we have a "pinctrl/mvebu" subfolder these patches will mess
-with. I think it will be better to keep then all together and take
-them through the MVEBU branch. This way we can have an eye on it and 
-base off subsequent patches without bothering you.
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
+---
+ Documentation/devicetree/bindings/net/can/sja1000.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-I'll come back to request your ACK as soon as we have sorted it out.
-
-Sebastian
+diff --git a/Documentation/devicetree/bindings/net/can/sja1000.txt b/Documentation/devicetree/bindings/net/can/sja1000.txt
+index f2105a4..b4a6d53 100644
+--- a/Documentation/devicetree/bindings/net/can/sja1000.txt
++++ b/Documentation/devicetree/bindings/net/can/sja1000.txt
+@@ -12,6 +12,10 @@ Required properties:
+ 
+ Optional properties:
+ 
++- reg-io-width : Specify the size (in bytes) of the IO accesses that
++	should be performed on the device.  Valid value is 1, 2 or 4.
++	Default to 1 (8 bits).
++
+ - nxp,external-clock-frequency : Frequency of the external oscillator
+ 	clock in Hz. Note that the internal clock frequency used by the
+ 	SJA1000 is half of that value. If not specified, a default value
+-- 
+1.8.1.2
