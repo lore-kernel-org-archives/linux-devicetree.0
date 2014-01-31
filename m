@@ -1,39 +1,54 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: STi: add stid127 soc support
-Date: Fri, 31 Jan 2014 21:15:33 +0100
-Message-ID: <201401312115.33731.arnd@arndb.de>
-References: <1391093744-19905-1-git-send-email-patrice.chotard@st.com> <201401301939.08302.arnd@arndb.de> <52EB96BB.6070800@st.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
+From: Vince Bridgers <vbridgers2013-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH net-next 1/2] dts: Add bindings for multicast hash bins and perfect filter entries
+Date: Fri, 31 Jan 2014 14:15:55 -0600
+Message-ID: <1391199356-27226-2-git-send-email-vbridgers2013@gmail.com>
+References: <1391199356-27226-1-git-send-email-vbridgers2013@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52EB96BB.6070800-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <1391199356-27226-1-git-send-email-vbridgers2013-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: srinivas kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patrice CHOTARD <patrice.chotard-qxv4g6HH51o@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, maxime.coquelin-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: peppe.cavallaro-qxv4g6HH51o@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, rayagond-AmucfkJibqKGw+nKnLezzg@public.gmane.org, vbridgers2013-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 31 January 2014, srinivas kandagatla wrote:
+This change adds bindings for the number of multicast hash bins and perfect
+filter entries supported by the Synopsys EMAC. The Synopsys EMAC core is
+configurable at device creation time, and can be configured for a different
+number of multicast hash bins and a different number of perfect filter entries.
+The device does not provide a way to query these parameters, therefore
+parameters are required. The Altera Cyclone V SOC has support for 256
+multicast hash bins and 128 perfect filter entries, and is different than
+what's currently provided in the stmmac driver.
 
-> > Sorry if I missed the initial review, but can you explain
-> > why this is needed to start with?
->
-> On ST SoCs the default value for L2 AUX_CTRL register is 0x0, so we  set
-> the way-size explicit here.
+Signed-off-by: Vince Bridgers <vbridgers2013-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/net/stmmac.txt |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Unfortunately, we keep going back and forth on the L2 cache controller
-setup between "it should work automatically" and "we don't want to
-have configuration data in DT", where my personal opinion is that
-the first one is more important here.
+diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+index 9d92d42..dbf7498 100644
+--- a/Documentation/devicetree/bindings/net/stmmac.txt
++++ b/Documentation/devicetree/bindings/net/stmmac.txt
+@@ -34,6 +34,10 @@ Optional properties:
+ 	reset phandle is given
+ - max-frame-size:	Maximum Transfer Unit (IEEE defined MTU), rather
+ 			than the maximum frame size.
++- snps,multicast-filter-bins:	Number of multicast filter hash bins
++				supported by this device instance
++- snps,perfect-filter-entries:	Number of perfect filter entries supported
++				by this device instance
+ 
+ Examples:
+ 
+@@ -46,4 +50,6 @@ Examples:
+ 		mac-address = [000000000000]; /* Filled in by U-Boot */
+ 		max-frame-size = <3800>;
+ 		phy-mode = "gmii";
++		snps,multicast-filter-bins = <256>;
++		snps,perfect-filter-entries = <128>;
+ 	};
+-- 
+1.7.9.5
 
-Now, there are a couple of properties that are defined in
-Documentation/devicetree/bindings/arm/l2cc.txt to let some of the
-things get set up automatically already. Can you check which bits
-are missing there, if any? Are they better described as "configuration"
-or "hardware" settings?
-
-	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
