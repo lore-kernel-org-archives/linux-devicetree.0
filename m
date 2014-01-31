@@ -1,206 +1,76 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: Extending OPP bindings
-Date: Fri, 31 Jan 2014 12:46:20 +0000
-Message-ID: <20140131124620.GC2616@e102568-lin.cambridge.arm.com>
-References: <52EA570A.8040501@arm.com>
- <52EAF1CA.3040702@ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 3/5] spi: sunxi: Add Allwinner A31 SPI
+ controller driver
+Date: Fri, 31 Jan 2014 12:48:09 +0000
+Message-ID: <20140131124809.GE22609@sirena.org.uk>
+References: <1391165752-1819-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1391165752-1819-4-git-send-email-maxime.ripard@free-electrons.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <52EAF1CA.3040702@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="iY5udFbGw2SsPZe4"
+Return-path: <linux-sunxi+bncBDQ2L75W5QGBBH5XV2LQKGQEG5DTFHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-pm-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Morten Rasmussen <Morten.Rasmussen@arm.com>, Shawn Guo <shawn.guo@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, Mark Brown <mark.brown@linaro.org>, Eduardo Valentin <eduardo.valentin@ti.com>
+In-Reply-To: <1391165752-1819-4-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Nishanth,
 
-On Fri, Jan 31, 2014 at 12:43:54AM +0000, Nishanth Menon wrote:
-> Hi Sudeep,
-> 
-> On 01/30/2014 07:43 AM, Sudeep Holla wrote:
-> 
-> > 
-> > I am looking into a couple shortcomings in the current OPP bindings and
-> > how to address them. Feel free to add to the list if you think of any more
-> > issues that needs to be addressed or if and how any problem mentioned below
-> > can be handled with the existing bindings.
-> > 
-> > 1. indexing: currently there are no indices in the operating-points.
-> indexing is based on frequency which is why the accessors use
-> frequency to pull out the OPP data.
-> 
-> indexing is a horrible idea - on platforms where OPP may be disabled
-> or enabled for various reasons(see arch/arm/mach-imx/mach-imx6q.c,
-> arch/arm/mach-omap2/board-omap3beagle.c etc) - the indexing you see in
-> dts is just a myth that may not exist once the nodes are loaded and
-> operated upon depending on SoC variations (example efuse describing
-> which OPPs can be used and which not).
+--iY5udFbGw2SsPZe4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I do not understand why. As long as a mapping from DT to data structures
-in the kernel is done at boot, I can see how by indexing device nodes
-can refer to specific OPPs. If they are disabled, amen, as long as we
-can point at specific operating points that should be ok.
+On Fri, Jan 31, 2014 at 11:55:50AM +0100, Maxime Ripard wrote:
 
-Indexing does not mean that the index in the DT is the same as the one
-allocated by the OS. Indexing is there to point at specific OPPs from
-different DT nodes, a good example are clock bindings and that's exactly
-how they work.
+> +	master = devm_spi_alloc_master(&pdev->dev, sizeof(struct sun6i_spi));
+> +	if (!master) {
+> +		dev_err(&pdev->dev, "Unable to allocate SPI Master\n");
+> +		return -ENOMEM;
+> +	}
 
-Can you provide me with an example where the indexing would go wrong
-please ?
+This now depends on your other series which as I said doesn't look like
+the best approach.
 
-Certainly relying on implicit ordering is not great either, actually I
-would say that it is broken.
+> +	pm_runtime_enable(&pdev->dev);
+> +	if (!pm_runtime_enabled(&pdev->dev)) {
+> +		ret = sun6i_spi_runtime_resume(&pdev->dev);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "Couldn't resume the device\n");
+> +			return ret;
+> +		}
+> +	}
 
-> That said, the original OPP[1][2] series discussion started by trying
-> to kill indexing precisely for the same reason.. once you have it - it
-> becomes just crazy to deal with.
+No, as discussed don't do this - notice how other drivers aren't written
+this way either.  Like I said leave the device powered on startup and
+then let it be idled by runtime PM.
 
-I could not find any "index killing" :) discussion in there, but I will
-keep reading.
+--iY5udFbGw2SsPZe4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> > 	It's assumed that the list is either in ascending or descending
-> > 	order of frequency but not explicit in the binding document.
-> > 	There are arch/arm/boot/dts/* files with opps in both styles.
-> it should not matter -> opp library should do an insertion sort and
-> organize it in ascending order once all the data is inserted. (line
-> 449ish in opp.c)
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-That's OS details and they must not be mandated by the bindings.
-We cannot rely on word of mouth for things to work, I do not like
-implicit rules, so the bindings should speficy the ordering or better
-a way to reference OPPs.
+iQIcBAEBAgAGBQJS65uGAAoJELSic+t+oim9eagP/1uZeSFrHuaHL6Pc/qQWV49j
+vlm+fMGJFyXTkpTCSw4g/99UG4r6Tei+eoQQZ1f0FGeDCruWU+RPaN1sVtiEyfYm
+srDRaS5DLjrYAki+1XiRHCegaNvcbDyaHsZVriEnw2d2Ck0FI/AEjULz8eDSPMb2
+5ZU0rTW+mFweTXjbGdQJjnBV/Q1K7qzbK/ZdGN/nGCcsOKdTN9Pb77Lf+S57AqZr
+KXwEfbQqlVNR2oMekrQ/nXNIjTU35yLRj+efBS21atRZur6d0RxFeYIvXfdWC0xb
+DY1ramrodT4mUX8fHxq9oW4j/l+pEmd3PgIpLh7xaaEPet52ymQZmK/TvDubg4IT
+TDPvV5aW6bHDykUQRNgMbuByH9Nj8SOkR5+W8tSKZ1QTcUsvo0M9nGftipHWBks4
+m6hPjy1keC7G+/c5H/f+gv10L1lYAZUTcW7lHyeN1gimaCoo8Fu6cKdw+pj+C6Wo
+dYaCwd8pH6cjtUxb8OAvbCBTyW+Tm5T/X+cFJpQqu6J99jcoRk2uzei1iJNqMZGd
+Jgu6cGcO5GaT1liBbBezNIOI9wKZmjwODnXE4FMZeNkA1tQg1TSJLq91cf5EeP1R
+i/+A+FYfkgV0uatpyV9LyhVj4zXSBwrfDb1iFJL8eTNddVuQ/C1Wg7Moz1PQme6c
+NfHWSJ3HNZfZdF/bZ6M6
+=nU+u
+-----END PGP SIGNATURE-----
 
-> if you see issues with the insertion sort not functioning, it is a bug
-> and should be easy to track down and fix.
-
-Problem is not the insertion sort, problem is that DT bindings do not
-define a way to refer to a specific OPP, unless we do that implicitly
-and again, I rest my case, that is broken.
-
-> > 	Few other bindings like thermal defines bindings like
-> > 	cooling-{min,max}-state assuming some order which is broken IMO.
-> Now that you bring it up, I missed it :(.. yeah, I might have
-> preferred it to be min frequency and max_frequency - I agree it is
-> probably broken. I'd let Eduardo comment more about it.
-> 
-> > 
-> > 	One such use-case that came up recently[0] is the c-state latencies
-> > 	which could be different for each OPP. It would be good if the
-> > 	latencies are specified with the indices to OPP table to avoid
-> > 	inconsistency between the bindings.
-> 
-> You can define C states based on frequencies as well - which really
-> makes sense - since that sounds really like our constraint (say
-> valid-at-frequency "xyz"
-
-I do not think that's generic enough, I do not like the idea of looking
-up frequencies (eg a C-state target_residency does not depend on the
-frequency only - ie voltage and other factors play a role, it really
-depends on an operating point- looking it up by frequency is misleading IMO).
-
-> > 	It's mainly to avoid issues due to inconsistency and duplication
-> > 	on data(frequency) in multiple bindings requiring it.
-> > 
-> > 	Once we have indices to each on the OPP entries, then other binding
-> > 	using it can refer to OPP with phandle and OPP index/specifier pairs
-> > 	very similar to clock provider and consumer.
-> 
-> Having used indexing in OMAP platforms, indexing is a problem waiting
-> to happen unfortunately :(
-
-Please be specific, I do not see why it is a problem.
-
-[...]
-
-> > 3. latencies(*): currently the latency that the CPU/memory access is unavailable
-> > 	during an OPP transition is generic i.e. same from any OPP to any
-> > 	other OPP. Does it make sense to have this per-OPP entry ?
-> 
-> Why modify OPP when you are describing something else? you are
-> describing "latency at a frequency" - just because an OPP definition
-> as it stands right now is {frequency, voltage} tuple, makes it a very
-> attractive target to keep extending it -> believe me, we have done
-> that in the past ->arch/arm/mach-omap2/opp4xxx_data.c efuse register
-> describing AVS per frequency is tempting..
-> 
-> why not have memory-latency-per-opp = <frequency latency>?
-> 
-> that allows OPP definitions to change in the future, but the
-> definition remain constant.
-> 
-> That said -> consider the following usecase: AM335x, OMAP3,4... (i
-> will use omap4 as an example)
-> MPU@300MHz and bus (on which LPDDR2 memory is) at 100MHz
-> AND
-> MPU@300MHz and bus (on which LPDDR2 memory is) at 200MHz
-> 
-> are both valid with different memory access latencies. tying it down
-> to OPP for MPU is just plain wrong - as it ignores other factors.
-
-I think it is time we were defining OPPs for the system as a whole, the
-issue has been brought up for C-state dependencies as well.
-
-http://lists.infradead.org/pipermail/linux-arm-kernel/2014-January/228042.html
-
-We can easily define a global node that encompasses OPPs for various
-devices, and then map the OPPs for devices to a global OPP table.
-
-(totally made-up DT bindings, just to get the message across)
-
-opps {
-	operating-points = <......>;
-	operating-point-cells = <2>;
-
-	cpu-opps {
-	/* where index maps to a global OPP above where the CPU OPP is valid */
-		operating-points = <...... index>;
-	
-	};
-	memory-opp {
-	/*
-	   where index maps to a global OPP above where the memory OPP is
-	   valid
-	*/
-		operating-points = <...... index>;
-	};
-};
-
-> > 4. power(*): A measure of maximum power dissipation in an OPP state.
-> > 	This might be useful measure for power aware scheduling ?
-> Umm.. this is a hard nut to crack -> I had considered that previously
-> as well -> In reality the leakage characteristics of the SoC
-> distribution varies dramatically depending on which end of the
-> distribution you look for a specific process node. in my company, we
-> typically use cold, hot,nominal devices, this is some form or other
-> (example - Samsung calls it "SoC's ASV group" [4]) - and every SoC
-> company comes up with some strategy or other to control it optimally
-> -> TI uses ABB[5], AVS[6] - etc... - not an unique problem -> so what
-> will "power" mean? we cannot create dts per SoC part.
-
-Yes, that's a hard nut to crack. Probably we can define a reference value,
-to be debated.
-
-> > (*) these are already part of P-state in ACPI(refer struct acpi_processor_px
-> > in include/acpi/processor.h)
-> 
-> Hmm.. what do we do with legacy processors that dont support ACPI or
-> what ever our latest ARM term is for the equivalent?
-> 
-> > 
-> > Apart from these I have seen on-going discussion for Samsung Exynos CPUFreq[2]
-> > which might have some feedback for OPP bindings.
-> > 
-> > It would be good to consolidate the shortcomings found so far, that could
-> > help in extending the current OPP bindings.
-> 
-> I hope this discussion helps. open to more views as well.
-
-It helps a lot, thank you, please keep it going.
-
-Thanks,
-Lorenzo
-
+--iY5udFbGw2SsPZe4--
