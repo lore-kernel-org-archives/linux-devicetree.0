@@ -1,98 +1,91 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 07/10] watchdog: xilinx: Fix OF binding
-Date: Fri, 31 Jan 2014 11:33:50 -0600
-Message-ID: <CAL_JsqJ+Dc9PFVYcxHvLiG9unKQX-kEc1fsYsieyTjf-AN3j=A@mail.gmail.com>
-References: <ed4cb31c9a549343e6b492cf62fc962d39034bd0.1391177880.git.michal.simek@xilinx.com>
-	<26d172891694e4041e73b7dae85a1848adf38034.1391177880.git.michal.simek@xilinx.com>
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [PATCH v2] dma: Add Xilinx AXI Video Direct Memory Access
+ Engine driver support
+Date: Fri, 31 Jan 2014 11:44:51 -0600
+Message-ID: <20140131174451.GA20512@qualcomm.com>
+References: <1390409565-4200-1-git-send-email-sthokal@xilinx.com>
+ <1390409565-4200-2-git-send-email-sthokal@xilinx.com>
+ <52E0FC22.8060903@metafoo.de>
+ <CA+mB=1L6yvCwA3mKCwz83LQbXiVau110REV64rYrSzUhGE4ucA@mail.gmail.com>
+ <52E2698B.6070001@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <26d172891694e4041e73b7dae85a1848adf38034.1391177880.git.michal.simek@xilinx.com>
+Content-Disposition: inline
+In-Reply-To: <52E2698B.6070001@metafoo.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, Wim Van Sebroeck <wim@iguana.be>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-watchdog@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Srikanth Thokala <sthokal@xilinx.com>, dan.j.williams@intel.com, vinod.koul@intel.com, michal.simek@xilinx.com, Grant Likely <grant.likely@linaro.org>, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 31, 2014 at 8:18 AM, Michal Simek <michal.simek@xilinx.com> wrote:
-> Use of_property_read_u32 functions to clean OF probing.
+On Fri, Jan 24, 2014 at 02:24:27PM +0100, Lars-Peter Clausen wrote:
+> On 01/24/2014 12:16 PM, Srikanth Thokala wrote:
+> > Hi Lars,
+> > 
+> > On Thu, Jan 23, 2014 at 4:55 PM, Lars-Peter Clausen <lars@metafoo.de> wrote:
+> >> On 01/22/2014 05:52 PM, Srikanth Thokala wrote:
+> >> [...]
+> >>> +/**
+> >>> + * xilinx_vdma_device_control - Configure DMA channel of the device
+> >>> + * @dchan: DMA Channel pointer
+> >>> + * @cmd: DMA control command
+> >>> + * @arg: Channel configuration
+> >>> + *
+> >>> + * Return: '0' on success and failure value on error
+> >>> + */
+> >>> +static int xilinx_vdma_device_control(struct dma_chan *dchan,
+> >>> +                                   enum dma_ctrl_cmd cmd, unsigned long arg)
+> >>> +{
+> >>> +     struct xilinx_vdma_chan *chan = to_xilinx_chan(dchan);
+> >>> +
+> >>> +     switch (cmd) {
+> >>> +     case DMA_TERMINATE_ALL:
+> >>> +             xilinx_vdma_terminate_all(chan);
+> >>> +             return 0;
+> >>> +     case DMA_SLAVE_CONFIG:
+> >>> +             return xilinx_vdma_slave_config(chan,
+> >>> +                                     (struct xilinx_vdma_config *)arg);
+> >>
+> >> You really shouldn't be overloading the generic API with your own semantics.
+> >> DMA_SLAVE_CONFIG should take a dma_slave_config and nothing else.
+> > 
+> > Ok.  The driver needs few additional configuration from the slave
+> > device like Vertical
+> > Size, Horizontal Size,  Stride etc., for the DMA transfers, in that case do you
+> > suggest me to define a separate dma_ctrl_cmd like the one FSLDMA_EXTERNAL_START
+> > defined for Freescale drivers?
+> 
+> In my opinion it is not a good idea to have driver implement a generic API,
+> but at the same time let the driver have custom semantics for those API
+> calls. It's a bit like having a gpio driver that expects 23 and 42 as the
+> values passed to gpio_set_value instead of 0 and 1. It completely defeats
+> the purpose of a generic API, namely that you are able to write generic code
+> that makes use of the API without having to know about which implementation
+> API it is talking to. The dmaengine framework provides the
+> dmaengine_prep_interleaved_dma() function to setup two dimensional
+> transfers, e.g. take a look at sirf-dma.c or imx-dma.c.
+> 
 
-The subject is a bit misleading as this doesn't really fix anything.
+The comments in the include/linux/dmaengine.h state that if you have
+non-generic, non-fixed configuration then you can just create your own
+structure and embed the dma_slave_config.  Using the container_of you can get
+back your structure.
 
->
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
->
->  drivers/watchdog/of_xilinx_wdt.c | 25 ++++++++++---------------
->  1 file changed, 10 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/watchdog/of_xilinx_wdt.c b/drivers/watchdog/of_xilinx_wdt.c
-> index c229cc4..475440a6 100644
-> --- a/drivers/watchdog/of_xilinx_wdt.c
-> +++ b/drivers/watchdog/of_xilinx_wdt.c
-> @@ -147,8 +147,7 @@ static u32 xwdt_selftest(struct xwdt_device *xdev)
->  static int xwdt_probe(struct platform_device *pdev)
->  {
->         int rc;
-> -       u32 *tmptr;
-> -       u32 *pfreq;
-> +       u32 pfreq, enable_once;
->         struct resource *res;
->         struct xwdt_device *xdev;
->         bool no_timeout = false;
-> @@ -168,28 +167,24 @@ static int xwdt_probe(struct platform_device *pdev)
->         if (IS_ERR(xdev->base))
->                 return PTR_ERR(xdev->base);
->
-> -       pfreq = (u32 *)of_get_property(pdev->dev.of_node,
-> -                                       "clock-frequency", NULL);
-> -
-> -       if (pfreq == NULL) {
-> +       rc = of_property_read_u32(pdev->dev.of_node, "clock-frequency", &pfreq);
-> +       if (rc) {
->                 dev_warn(&pdev->dev,
->                          "The watchdog clock frequency cannot be obtained\n");
->                 no_timeout = true;
+I agree that we should always use the generic structure if possible, but
+sometimes there are some non-standard things that you have to do for your
+hardware.  I am currently in a bind for adding some quirky features that are
+required by peripherals who want to use the QCOM DMA devices.
 
-You can kill this...
+If the context field in prep_slave_sg and prep_dma_cyclic was exposed to
+everyone, that would allow an easy way to pass in hardware specific
+configuration without bastardizing the slave_config.  I noticed that rapidio is
+the only consumer of that field and that they have their own prep function.
 
->         }
->
-> -       tmptr = (u32 *)of_get_property(pdev->dev.of_node,
-> -                                       "xlnx,wdt-interval", NULL);
-> -       if (tmptr == NULL) {
-> +       rc = of_property_read_u32(pdev->dev.of_node, "xlnx,wdt-interval",
-> +                                 &xdev->wdt_interval);
-> +       if (rc) {
->                 dev_warn(&pdev->dev,
->                          "Parameter \"xlnx,wdt-interval\" not found\n");
->                 no_timeout = true;
+If we are not going to allow people to do their own slave_config when they need
+to, then we need to remove the comments from the include file and expose the
+context to the dmaengine_prep_slave_sg and dmaengine_prep_dma_cyclic.
 
-and this...
-
-> -       } else {
-> -               xdev->wdt_interval = *tmptr;
->         }
->
-> -       tmptr = (u32 *)of_get_property(pdev->dev.of_node,
-> -                                       "xlnx,wdt-enable-once", NULL);
-> -       if (tmptr == NULL) {
-> +       rc = of_property_read_u32(pdev->dev.of_node, "xlnx,wdt-enable-once",
-> +                                 &enable_once);
-> +       if (!rc && enable_once) {
->                 dev_warn(&pdev->dev,
->                          "Parameter \"xlnx,wdt-enable-once\" not found\n");
->                 watchdog_set_nowayout(xilinx_wdt_wdd, true);
-> @@ -201,7 +196,7 @@ static int xwdt_probe(struct platform_device *pdev)
->   */
->         if (!no_timeout)
-
-and use "if (pfreq && xdev->wdt_interval)" if you initialize pfreq to 0.
-
->                 xilinx_wdt_wdd->timeout = 2 * ((1 << xdev->wdt_interval) /
-> -                                         *pfreq);
-> +                                         pfreq);
-
-Is the wdog really usable if the timeout properties are missing? Seems
-like you should fail to probe rather than warn.
-
-Rob
+-- 
+sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
