@@ -1,99 +1,45 @@
-From: srinivas kandagatla <srinivas.kandagatla@st.com>
-Subject: Re: [PATCH 4/4] ARM: dts: add B2112 board support
-Date: Fri, 31 Jan 2014 12:51:22 +0000
-Message-ID: <52EB9C4A.7040105@st.com>
-References: <1391093744-19905-1-git-send-email-patrice.chotard@st.com>
- <1391093744-19905-5-git-send-email-patrice.chotard@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1391093744-19905-5-git-send-email-patrice.chotard@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Patrice CHOTARD <patrice.chotard@st.com>, Stuart Menefy <stuart.menefy@st.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>, alexandre.torgue@st.com, maxime.coquelin@st.com
+From: Florian Vaussard <florian.vaussard@epfl.ch>
+Subject: [PATCH v3 4/5] Documentation: devicetree: sja1000: add reg-io-width binding
+Date: Fri, 31 Jan 2014 14:34:36 +0100
+Message-ID: <1391175277-19833-5-git-send-email-florian.vaussard@epfl.ch>
+References: <1391175277-19833-1-git-send-email-florian.vaussard@epfl.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1391175277-19833-1-git-send-email-florian.vaussard@epfl.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Andreas Larsson <andreas@gaisler.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org, florian.vaussard@epfl.ch, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 30/01/14 14:55, Patrice CHOTARD wrote:
-> From: Alexandre TORGUE <alexandre.torgue@st.com>
-> 
-> Add support for B2112  board based on STiD127 SoC.
-> 
-> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-> Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
-> ---
->  arch/arm/boot/dts/Makefile          |    3 ++-
->  arch/arm/boot/dts/stid127-b2112.dts |   35 +++++++++++++++++++++++++++++++++++
->  2 files changed, 37 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/stid127-b2112.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index d57c1a6..7173dca 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -247,7 +247,8 @@ dtb-$(CONFIG_ARCH_SPEAR6XX)+= spear600-evb.dtb
->  dtb-$(CONFIG_ARCH_STI)+= stih415-b2000.dtb \
->  	stih416-b2000.dtb \
->  	stih415-b2020.dtb \
-> -	stih416-b2020.dtb
-> +	stih416-b2020.dtb \
-> +	stid127-b2112.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) += \
->  	sun4i-a10-a1000.dtb \
->  	sun4i-a10-cubieboard.dtb \
-> diff --git a/arch/arm/boot/dts/stid127-b2112.dts b/arch/arm/boot/dts/stid127-b2112.dts
-> new file mode 100644
-> index 0000000..b4507e3
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/stid127-b2112.dts
-> @@ -0,0 +1,35 @@
-> +/*
-> + * Copyright (C) 2013 STMicroelectronics Limited.
+Add the reg-io-width property to describe the width of the memory
+accesses.
 
-2014
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
+---
+ Documentation/devicetree/bindings/net/can/sja1000.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> + * Author: Alexandre Torgue <alexandre.torgue@st.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * publishhed by the Free Software Foundation.
-
-s/publishhed/published/
-
-> + */
-> +/dts-v1/;
-> +#include "stid127.dtsi"
-> +
-> +/ {
-> +	model = "STiD127 B2112 Board";
-> +	compatible = "st,stid127", "st,stid127-b2112";
-> +
-> +	memory{
-> +		device_type = "memory";
-> +		reg = <0x40000000 0x10000000>;
-> +	};
-> +
-> +	chosen {
-> +		bootargs = "console=ttyAS0,115200";
-> +		linux,stdout-path = &uart2;
-> +	};
-> +
-> +	aliases {
-> +		ttyAS0 = &uart2;
-> +	};
-> +
-> +	soc {
-> +		uart2: serial@fe532000{
-> +			status = "okay";
-> +		};
-> +	};
-> +};
-> 
+diff --git a/Documentation/devicetree/bindings/net/can/sja1000.txt b/Documentation/devicetree/bindings/net/can/sja1000.txt
+index f2105a4..b4a6d53 100644
+--- a/Documentation/devicetree/bindings/net/can/sja1000.txt
++++ b/Documentation/devicetree/bindings/net/can/sja1000.txt
+@@ -12,6 +12,10 @@ Required properties:
+ 
+ Optional properties:
+ 
++- reg-io-width : Specify the size (in bytes) of the IO accesses that
++	should be performed on the device.  Valid value is 1, 2 or 4.
++	Default to 1 (8 bits).
++
+ - nxp,external-clock-frequency : Frequency of the external oscillator
+ 	clock in Hz. Note that the internal clock frequency used by the
+ 	SJA1000 is half of that value. If not specified, a default value
+-- 
+1.8.1.2
