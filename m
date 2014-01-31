@@ -1,19 +1,25 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] of: add vendor prefix for Honeywell
-Date: Fri, 31 Jan 2014 12:20:05 -0600
-Message-ID: <CAL_JsqKUK+-XVWJ+ZZB5nUS5ZBO3wTiL17X4bpWoz9Xfou8qpw@mail.gmail.com>
-References: <1390685924-11877-1-git-send-email-marek@goldelico.com>
+Subject: Re: [PATCH] of: add vendor prefix for Allwinner Technology
+Date: Fri, 31 Jan 2014 12:20:22 -0600
+Message-ID: <CAL_Jsq+arxoJ-Ghg-wAB5odcXrBoQ8y_=v=YoExUg8=AojKACw@mail.gmail.com>
+References: <1391045798-7053-1-git-send-email-emilio@elopez.com.ar>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1390685924-11877-1-git-send-email-marek@goldelico.com>
+In-Reply-To: <1391045798-7053-1-git-send-email-emilio@elopez.com.ar>
 Sender: linux-doc-owner@vger.kernel.org
-To: Marek Belisko <marek@goldelico.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>
+Cc: Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 25, 2014 at 3:38 PM, Marek Belisko <marek@goldelico.com> wrote:
-> Signed-off-by: Marek Belisko <marek@goldelico.com>
+On Wed, Jan 29, 2014 at 7:36 PM, Emilio L=F3pez <emilio@elopez.com.ar> =
+wrote:
+> We have been using the "allwinner" prefix for everything so far; let'=
+s
+> document it here.
+>
+> Signed-off-by: Emilio L=F3pez <emilio@elopez.com.ar>
 > ---
 >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
 >  1 file changed, 1 insertion(+)
@@ -23,18 +29,24 @@ Applied.
 Rob
 
 >
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 3f900cd..b14c617 100644
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/=
+Documentation/devicetree/bindings/vendor-prefixes.txt
+> index edbb8d8..5a2904b 100644
 > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
 > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -40,6 +40,7 @@ gmt   Global Mixed-mode Technology, Inc.
->  gumstix        Gumstix, Inc.
->  haoyu  Haoyu Microelectronic Co. Ltd.
->  hisilicon      Hisilicon Limited.
-> +honeywell      Honeywell
->  hp     Hewlett Packard
->  ibm    International Business Machines (IBM)
->  idt    Integrated Device Technologies, Inc.
+> @@ -7,6 +7,7 @@ ad      Avionic Design GmbH
+>  adi    Analog Devices, Inc.
+>  aeroflexgaisler        Aeroflex Gaisler AB
+>  ak     Asahi Kasei Corp.
+> +allwinner      Allwinner Technology Co., Ltd.
+>  altr   Altera Corp.
+>  amcc   Applied Micro Circuits Corporation (APM, formally AMCC)
+>  apm    Applied Micro Circuits Corporation (APM)
 > --
-> 1.8.3.2
+> 1.8.5.3
 >
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree"=
+ in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
