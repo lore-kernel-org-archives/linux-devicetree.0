@@ -1,55 +1,46 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH] ARM: dts: k2hk-evm: rename clock node to clocks
-Date: Fri, 31 Jan 2014 18:03:09 +0200
-Message-ID: <52EBC93D.9000402@ti.com>
-References: <1391175066-13862-1-git-send-email-grygorii.strashko@ti.com>
- <52EBB4F6.3050202@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 6/8] SPEAr13xx: Fixup: Move SPEAr1340 SATA platform code to phy driver
+Date: Fri, 31 Jan 2014 16:27:50 +0100
+Message-ID: <201401311627.50482.arnd@arndb.de>
+References: <cover.1391077731.git.mohit.kumar@st.com> <201401301421.00990.arnd@arndb.de> <20140131041204.GC2618@pratyush-vbox>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52EBB4F6.3050202@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: ivan.khoronzhuk@ti.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20140131041204.GC2618@pratyush-vbox>
+Sender: linux-ide-owner@vger.kernel.org
+To: Pratyush Anand <pratyush.anand@st.com>
+Cc: Mohit KUMAR DCG <Mohit.KUMAR@st.com>, Viresh Kumar <viresh.linux@gmail.com>, Tejun Heo <tj@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, spear-devel <spear-devel@list.st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/31/2014 04:36 PM, Santosh Shilimkar wrote:
-> On Friday 31 January 2014 08:31 AM, Grygorii Strashko wrote:
->> Fix type in clock(s) node name: "clock"-->"clocks".
->>
-> s/type/typo ;-)
->
->> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->> ---
-> No need to resend, I will fix it up while applying it
+On Friday 31 January 2014, Pratyush Anand wrote:
+> On Thu, Jan 30, 2014 at 09:21:00PM +0800, Arnd Bergmann wrote:
+> > On Thursday 30 January 2014, Mohit Kumar wrote:
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/phy/spear13xx-miphy.txt b/Documentation/devicetree/bindings/phy/spear13xx-miphy.txt
+> > > new file mode 100644
+> > > index 0000000..208b37d
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/phy/spear13xx-miphy.txt
+> > > @@ -0,0 +1,8 @@
+> > > +Required properties:
+> > > +- compatible : should be "st,spear1340-sata-pcie-phy".
+> > 
+> > Just for confirmation: This phy is by design only capable of driving
+> > sata or pcie, but nothing else if reused in a different SoC, right?
+> > 
+> > If the phy is actually more generic than that, I'd suggest changing
+> > the name, otherwise it's ok.
+> 
+> OK, we will give a generic name as it can be used for sata/pcie/usb3.0.
+> Although, phy register definition may vary from version to version,
+> but that can be managed,as and when support of new soc is added. 
 
-Thanks
+It probably doesn't hurt to already define a list of possible
+modes in the binding that you already know about. That way, you
+don't have to update the binding in sync with the driver if you
+add another mode, such as USB.
 
->
->>   arch/arm/boot/dts/k2hk-evm.dts |    2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/k2hk-evm.dts b/arch/arm/boot/dts/k2hk-evm.dts
->> index eaefdfe..c02c3a8 100644
->> --- a/arch/arm/boot/dts/k2hk-evm.dts
->> +++ b/arch/arm/boot/dts/k2hk-evm.dts
->> @@ -15,7 +15,7 @@
->>   	compatible =  "ti,keystone-evm";
->>
->>   	soc {
->> -		clock {
->> +		clocks {
->>   			refclksys: refclksys {
->>   				#clock-cells = <0>;
->>   				compatible = "fixed-clock";
->>
->
+	Arnd
+
