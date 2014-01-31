@@ -1,18 +1,18 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 07/10] watchdog: xilinx: Fix OF binding
-Date: Fri, 31 Jan 2014 15:18:16 +0100
-Message-ID: <26d172891694e4041e73b7dae85a1848adf38034.1391177880.git.michal.simek@xilinx.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH 09/10] watchdog: xilinx: Add missing binding
+Date: Fri, 31 Jan 2014 15:18:18 +0100
+Message-ID: <9c721b89ed2ceb6997809bb3363f852277e67dc2.1391177880.git.michal.simek@xilinx.com>
 References: <ed4cb31c9a549343e6b492cf62fc962d39034bd0.1391177880.git.michal.simek@xilinx.com>
 Content-Type: multipart/signed;
-    boundary="=_mimegpg-monstr-desktop-23148-1391177928-0001";
+    boundary="=_mimegpg-monstr-desktop-23171-1391177934-0001";
     micalg=pgp-sha1; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ed4cb31c9a549343e6b492cf62fc962d39034bd0.1391177880.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-In-Reply-To: <ed4cb31c9a549343e6b492cf62fc962d39034bd0.1391177880.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-References: <ed4cb31c9a549343e6b492cf62fc962d39034bd0.1391177880.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
-Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ed4cb31c9a549343e6b492cf62fc962d39034bd0.1391177880.git.michal.simek@xilinx.com>
+In-Reply-To: <ed4cb31c9a549343e6b492cf62fc962d39034bd0.1391177880.git.michal.simek@xilinx.com>
+References: <ed4cb31c9a549343e6b492cf62fc962d39034bd0.1391177880.git.michal.simek@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, monstr@monstr.eu
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 This is a MIME GnuPG-signed message.  If you see this text, it means that
@@ -21,94 +21,60 @@ The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
 To open this message correctly you will need to install E-mail or Usenet
 software that supports modern Internet standards.
 
---=_mimegpg-monstr-desktop-23148-1391177928-0001
+--=_mimegpg-monstr-desktop-23171-1391177934-0001
 
-Use of_property_read_u32 functions to clean OF probing.
+Document current driver binding.
 
-Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
 
- drivers/watchdog/of_xilinx_wdt.c | 25 ++++++++++---------------
- 1 file changed, 10 insertions(+), 15 deletions(-)
+ .../devicetree/bindings/watchdog/of-xilinx-wdt.txt | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
 
-diff --git a/drivers/watchdog/of_xilinx_wdt.c b/drivers/watchdog/of_xilinx_wdt.c
-index c229cc4..475440a6 100644
---- a/drivers/watchdog/of_xilinx_wdt.c
-+++ b/drivers/watchdog/of_xilinx_wdt.c
-@@ -147,8 +147,7 @@ static u32 xwdt_selftest(struct xwdt_device *xdev)
- static int xwdt_probe(struct platform_device *pdev)
- {
- 	int rc;
--	u32 *tmptr;
--	u32 *pfreq;
-+	u32 pfreq, enable_once;
- 	struct resource *res;
- 	struct xwdt_device *xdev;
- 	bool no_timeout = false;
-@@ -168,28 +167,24 @@ static int xwdt_probe(struct platform_device *pdev)
- 	if (IS_ERR(xdev->base))
- 		return PTR_ERR(xdev->base);
-
--	pfreq = (u32 *)of_get_property(pdev->dev.of_node,
--					"clock-frequency", NULL);
--
--	if (pfreq == NULL) {
-+	rc = of_property_read_u32(pdev->dev.of_node, "clock-frequency", &pfreq);
-+	if (rc) {
- 		dev_warn(&pdev->dev,
- 			 "The watchdog clock frequency cannot be obtained\n");
- 		no_timeout = true;
- 	}
-
--	tmptr = (u32 *)of_get_property(pdev->dev.of_node,
--					"xlnx,wdt-interval", NULL);
--	if (tmptr == NULL) {
-+	rc = of_property_read_u32(pdev->dev.of_node, "xlnx,wdt-interval",
-+				  &xdev->wdt_interval);
-+	if (rc) {
- 		dev_warn(&pdev->dev,
- 			 "Parameter \"xlnx,wdt-interval\" not found\n");
- 		no_timeout = true;
--	} else {
--		xdev->wdt_interval = *tmptr;
- 	}
-
--	tmptr = (u32 *)of_get_property(pdev->dev.of_node,
--					"xlnx,wdt-enable-once", NULL);
--	if (tmptr == NULL) {
-+	rc = of_property_read_u32(pdev->dev.of_node, "xlnx,wdt-enable-once",
-+				  &enable_once);
-+	if (!rc && enable_once) {
- 		dev_warn(&pdev->dev,
- 			 "Parameter \"xlnx,wdt-enable-once\" not found\n");
- 		watchdog_set_nowayout(xilinx_wdt_wdd, true);
-@@ -201,7 +196,7 @@ static int xwdt_probe(struct platform_device *pdev)
-  */
- 	if (!no_timeout)
- 		xilinx_wdt_wdd->timeout = 2 * ((1 << xdev->wdt_interval) /
--					  *pfreq);
-+					  pfreq);
-
- 	spin_lock_init(&xdev->spinlock);
- 	watchdog_set_drvdata(xilinx_wdt_wdd, xdev);
+diff --git a/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt b/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
+new file mode 100644
+index 0000000..6d63782
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
+@@ -0,0 +1,23 @@
++Xilinx AXI/PLB soft-core watchdog Device Tree Bindings
++---------------------------------------------------------
++
++Required properties:
++- compatible		: Should be "xlnx,xps-timebase-wdt-1.00.a" or
++			  "xlnx,xps-timebase-wdt-1.01.a".
++- reg			: Physical base address and size
++
++Optional properties:
++- clock-frequency	: Frequency of clock in Hz
++- xlnx,wdt-enable-once	: 0 - Watchdog can be restarted
++			  1 - Watchdog can be enabled just once
++- xlnx,wdt-interval	: Watchdog timeout interval in 2^<val> clock cycles,
++			  <val> is integer from 8 to 31.
++
++Example:
++axi-timebase-wdt@40100000 {
++	clock-frequency = <50000000>;
++	compatible = "xlnx,xps-timebase-wdt-1.00.a";
++	reg = <0x40100000 0x10000>;
++	xlnx,wdt-enable-once = <0x0>;
++	xlnx,wdt-interval = <0x1b>;
++} ;
 --
 1.8.2.3
 
 
---=_mimegpg-monstr-desktop-23148-1391177928-0001
+--=_mimegpg-monstr-desktop-23171-1391177934-0001
 Content-Type: application/pgp-signature
 Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.10 (GNU/Linux)
 
-iEYEABECAAYFAlLrsMgACgkQykllyylKDCE2agCffpz8z7kK8Ip6ol0OI3dGmDMq
-WmwAnjRwdVNI/5IL2uX6U5skoxGR4Idf
-=kCzG
+iEYEABECAAYFAlLrsM4ACgkQykllyylKDCEetwCfR90ezoQ8kAYOAF21M+LkcxPy
+u8sAoJpV2sEEY4tRv9HpRTIZ1TZVDRf6
+=067l
 -----END PGP SIGNATURE-----
 
---=_mimegpg-monstr-desktop-23148-1391177928-0001--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=_mimegpg-monstr-desktop-23171-1391177934-0001--
