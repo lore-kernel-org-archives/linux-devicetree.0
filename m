@@ -1,72 +1,66 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: Extending OPP bindings
-Date: Fri, 31 Jan 2014 15:46:48 +0000
-Message-ID: <20140131154648.GF22609@sirena.org.uk>
-References: <52EA570A.8040501@arm.com>
- <52EAF1CA.3040702@ti.com>
- <20140131124620.GC2616@e102568-lin.cambridge.arm.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] spi: sunxi: Add Allwinner A31 SPI
+ controller driver
+Date: Fri, 31 Jan 2014 16:03:28 +0000
+Message-ID: <20140131160328.GI22609@sirena.org.uk>
+References: <1390993850-9054-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1390993850-9054-4-git-send-email-maxime.ripard@free-electrons.com>
+ <20140129122520.GY11841@sirena.org.uk>
+ <20140129133227.GQ3867@lukather>
+ <CAGa+x854huSmiWmEv2EgOPUgZKcp3iitNaBvKXt8DiEj8msSVg@mail.gmail.com>
+ <20140131081147.GC2950@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7faAIFVyKtREcqXC"
-Return-path: <linux-pm-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="RelyVQTGfPeWBXwZ"
+Return-path: <linux-sunxi+bncBDQ2L75W5QGBBZ4SV6LQKGQE7XKWPQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140131124620.GC2616@e102568-lin.cambridge.arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Nishanth Menon <nm@ti.com>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Eduardo Valentin <eduardo.valentin@ti.com>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Morten Rasmussen <Morten.Rasmussen@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>
+In-Reply-To: <20140131081147.GC2950@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---7faAIFVyKtREcqXC
+--RelyVQTGfPeWBXwZ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, Jan 31, 2014 at 12:46:20PM +0000, Lorenzo Pieralisi wrote:
+On Fri, Jan 31, 2014 at 09:11:47AM +0100, Maxime Ripard wrote:
 
-> Indexing does not mean that the index in the DT is the same as the one
-> allocated by the OS. Indexing is there to point at specific OPPs from
-> different DT nodes, a good example are clock bindings and that's exactly
-> how they work.
+> Wouldn't it be better if it was suspended by default, and just waken
+> up whenever the framework needs it?
 
-> Can you provide me with an example where the indexing would go wrong
-> please ?
+The aim should be to come out of probe in that state if runtime PM is
+enabled but don't do it with these hacks, do it by idling the device
+at the end of probe for example.  Apart from anything else this code
+just looks ugly.
 
-This does depend on what you mean by indexing but if you're talking
-about having bindings where you have things that refer to the nth
-element in an array in that form then it can become hard to read the
-resulting DT and the potential for errors is increased.  Changes to the
-original table need to take into account all the references to the table
-and (especially if the number of entries gets large) it can be prone to
-miscounting when checking references.
-
-With OPPs this might happen if new operating points are characterised or
-some are removed, for example due to new SoC variants or binning.
-
-> Certainly relying on implicit ordering is not great either, actually I
-> would say that it is broken.
-
-Yes, that too - some sort of explict reference does help.
-
---7faAIFVyKtREcqXC
+--RelyVQTGfPeWBXwZ
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJS68VkAAoJELSic+t+oim9P40P/3YzpMTOKCzdHHpdzFMGnNw7
-/VtuGzjKUmA7QhvtOqaxn5HmzlrXu6jgb8nYIZqIQePEsp1pc4BOijuz9+h21ryQ
-pV8LOSRjc8Kzfay/TpsQ5F2fYS47e8rkPv0GI9+9F3mLsZFK4nxklBg/XqmH8bij
-vdRK5PA3Qfus087QtuIn4CxoUO9FQIRcTETrJiY0zzhldogFh0fHQ+SoqNUAvLKQ
-1SzWlVqwgUes4hUdIyG7VRy2Ztk82qQZe8EiqOGpMHqylav4PrZA5u34o19g28wc
-pRhmwaDivyg56JJJgwtgUvIQmHJ2YZJlroNASactZDuGmpK7Yh/+wc2Lh7KVBx9z
-KK3Y0U1Ng34C1Tn55nN1fTkLtDrR9mPyFgoLIUpi3xfp42vVC+RwOEuknWKHfA4S
-5/HWMajER8kDq6B/thyS7sqveWNwqrxmK26RmN410CCfZEFltdHwst59ky0shoJF
-ENujBtRTt6G7Mj+UxyUOGRj/3stp4YamCiqIzbdg9SazBx14RXs0jDHY8gyNNfz/
-ycMKBA7mcDIdlk1DQCEMeLcr2RfqxxBqUMLtN1Ntrk7P6ID/5s/UQ8olwAv+AR1b
-K8AdYOTVRtTt48j61uwYcyFMIlfcTnho+DUUq63d+ejr1A2x29kYddcSxdnRT0Rq
-W4mdpl8xXhENC9ZTyy+5
-=ZQCg
+iQIcBAEBAgAGBQJS68lNAAoJELSic+t+oim9iSAP/js3AxmDpVbHs3m7d+fv68Fw
+CsZOZdFbQgi0NB/XqQPCK/EJT/yGQs9nXyTzyPAGRi5Dn9Nu4Xc5JLFu24m15eg2
+RNWATXq6sftb7Mk3Khp5yrdrF9XfjUUAuO5Jki/Gc5k6QrJvRm468bU1BjtoDx3C
+37KyXjl1XxqYGeGQmnj4om09FYdqCbzAok1mxsa9kXQELs4LVq2096YcVxSzesJu
+OPRRU6oBAap9kqXv7+V58V0/F0FHZmz5OytE7FsGHghc88dbQ0UVUtx+NU2egy2k
+T3lcYbE51hGL41mryK3hv7D4xygWbxTUVnmBD4RcItTeaLekWvkAREe2Pug2rVx5
+egyZBbU5xniXBE+RkLYmENDm4uAfeT1UjJOaY+azfSVKp63dtMZDLTWyN6vl9NJ+
+pJUOsvspdCMBlmPlSNZ0x56sgDehK9o1rVRVvaWNFaUFGmzx5m3cfYTDdnBCsvWx
+3qM3KODnFAok+s+j0HyNUMeyKiRdx9U1otHdmSZ1ilynxvRrTFRs+eNnreSscQDS
+euroErykTPM7ZGy2DKg81xyjLqK86DqjhlHnQjk+1Jgtfv3YPTojNUth3w5JAjA1
+8652xz16QY+pajsDABw2WjklnxR4qBH4kpl7BsPGeRFcy71aJeDTIcKPqtZf+TrR
+FZ1HLs8M7Lo/KhS3zpmz
+=N6v6
 -----END PGP SIGNATURE-----
 
---7faAIFVyKtREcqXC--
+--RelyVQTGfPeWBXwZ--
