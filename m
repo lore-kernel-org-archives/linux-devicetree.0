@@ -1,82 +1,82 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: recommended action for bootloaders regarding modifying
- device-tree nodes
-Date: Fri, 31 Jan 2014 11:07:59 -0500
-Message-ID: <20140131160759.GI29184@titan.lakedaemon.net>
-References: <CAJ+vNU366GiY4k_rnh1Jf0kra+PU99w4tDdM2sNioUAJCiZqOA@mail.gmail.com>
- <20140130204558.GC29184@titan.lakedaemon.net>
- <CAJ+vNU2zis+1DUCzmegUFw+Z6XATBEPJ+yqMsttp4ENcckHUYA@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 08/11] of: Increase MAX_PHANDLE_ARGS
+Date: Fri, 31 Jan 2014 10:24:09 -0600
+Message-ID: <CAL_Jsq+=dm4kPk=e0h_up9=wvED4fd3MBtSNFxm2NEz_yag-uA@mail.gmail.com>
+References: <1389876263-25759-1-git-send-email-andreas.herrmann@calxeda.com>
+	<1389876263-25759-9-git-send-email-andreas.herrmann@calxeda.com>
+	<20140117110830.GW3471@alberich> <52E92842.3000001@amd.com>
+	<CAL_JsqLhzp5jUJPA91rNkQ07kCDYCDZLxw8LxxFEVP9b12e1Jw@mail.gmail.com>
+	<52E93360.1000904@amd.com> <20140129171611.GB13543@alberich>
+	<52E939CB.1020705@amd.com> <20140130174546.GF13543@alberich>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAJ+vNU2zis+1DUCzmegUFw+Z6XATBEPJ+yqMsttp4ENcckHUYA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20140130174546.GF13543@alberich>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 30, 2014 at 08:39:00PM -0800, Tim Harvey wrote:
-> On Thu, Jan 30, 2014 at 12:45 PM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
-> > Hi Tim,
-> >
-> > On Thu, Jan 30, 2014 at 01:11:18AM -0800, Tim Harvey wrote:
-> >> My approach has been to define a per-baseboard device-tree in Linux
-> >> for a 'fully loaded' board, then remove nodes which the EEPROM claims
-> >> are not present in the bootloader before it passes the DTB to the
-> >> kernel.  I do this by defining aliases in the device-tree for the
-> >> peripherals that are 'optional' so that the bootloader itself does not
-> >> need to know the details about how the device is connected.
-> >
-> > This is more of a process question:  Is there any information captured
-> > in your EEPROM that can't be represented in the dtb?  iow, at the point
-> > when you write the EEPROM, why not write the dtb to it as configured?
-> >
-> > You could have pre-configured dtsi fragments for each config option, and
-> > then dynamically create the board dts from the order.
-> >
-> > I only ask because it would solve the problem below.  However, there's a
-> > lot more to changing a manufacturing process than meets the eye. :)
-> >
-> 
-> our eeprom config section is only 40 bytes.  It contains a SKU string,
-> mac addrs, and some bitwise fields for the various optional components
-> that we can subload.
+On Thu, Jan 30, 2014 at 11:45 AM, Andreas Herrmann
+<andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org> wrote:
+> On Wed, Jan 29, 2014 at 12:26:35PM -0500, Suravee Suthikulanit wrote:
+>> On 1/29/2014 11:16 AM, Andreas Herrmann wrote:
+>> > On Wed, Jan 29, 2014 at 11:59:12AM -0500, Suravee Suthikulanit wrote:
+>> >> On 1/29/2014 10:57 AM, Rob Herring wrote:
+>> >>>>> diff --git a/include/linux/of.h b/include/linux/of.h
+>> >>>>>>> index 276c546..24e1b28 100644
+>> >>>>>>> --- a/include/linux/of.h
+>> >>>>>>> +++ b/include/linux/of.h
+>> >>>>>>> @@ -67,7 +67,7 @@ struct device_node {
+>> >>>>>>>    #endif
+>> >>>>>>>    };
+>> >>>>>>>
+>> >>>>>>> -#define MAX_PHANDLE_ARGS 8
+>> >>>>>>> +#define MAX_PHANDLE_ARGS 16
+>> >>>>>
+>> >>>>>
+>> >>>>> Since the MMU-500 specify "Number of SMRs" upto 128 registers, shouldn't
+>> >>>>> this be changed to be able to support 128 StreamIDs as well?  Although I am
+>> >>>>> not sure if this would be too big to have on the stack per Rob's comment in
+>> >>>>> the previous patch set.
+>> >>> Do you actually need 128 now? If not, then we can deal with that when
+>> >>> we get there. There are lots of things in spec's that are not actually
+>> >>> implemented or supported.
+>> >>
+>> >> Actually, we are using 32 on the AMD system. So, do you think we can set
+>> >> this to 32 instead?
+>> >
+>> > I think that's ok.
+>> >
+>> > But are we really talking about number of SMRs or number of StreamIDs
+>> > per master device here? Ie. are you just having 32 SMRs for an SMMU on
+>> > your AMD system or do you have master devices which have 32 StreamIDs?
+>> >
+>> > If it's just number of SMRs we don't need to modify this macro.
+>
+>> I am referring to the case where each mmu-master can have upto 32 streamID.
+>
+> Rob,
+>
+> Do you agree on increasing MAX_PHANDLE_ARGS to 32?
 
-Ok.
+Yes, but more than that will require a closer look. Please get this
+into next early in the cycle.
 
-> >> Is it more appropriate for the bootloader to 'remove' nodes for
-> >> devices that are not physically present or should I be setting their
-> >> status property to 'disabled' instead?  I'm not clear if either option
-> >> really has any pros or cons.
-> >
-> > That depends on how you have it structured.  Is it a valid dtb?
-> > Meaning, do you have four nodes all at the same register address?
-> > Perhaps you could provide an example dts?
-> 
-> yes its a valid dtb - it is just the superset of everything the
-> baseboard (ie schematic design) can support.
-> 
-> A good example is a custom SKU of a baseboard with ethernet subloaded.
->  If the EEPROM says there is no ethernet mac or phy, I would want to
-> remove or disable the ethernet node from the devicetree.
-> 
-> Another example would be a node for 'gpio-pps' (GPIO based
-> pulse-per-second) support.  A baseboard design that has a GPS with its
-> PPS signal tied to a GPIO would define this in the device-tree, but if
-> the EEPROM says the GPS isn't loaded, I would want to remove or
-> disable the gps-pps node.
+> Or should this be done when someone (e.g. Suravee) submits a DTS
+> update with an SMMU node description containing more than 16 stream
+> IDs for a master device?
 
-I think JasonG's approach is the way to go (inserting nops).  But it's a
-matter of preference as long as the output is a valid dtb.
+Well, I am inclined to not care having seen no upstream activity for
+AMD's platform.
 
-on a side note:  Do you still have to tie your dtb to a version of the
-kernel?
-
-thx,
-
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
