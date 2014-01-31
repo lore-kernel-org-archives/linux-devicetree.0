@@ -1,91 +1,46 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: Re: [PATCH v2] dma: Add Xilinx AXI Video Direct Memory Access
- Engine driver support
-Date: Fri, 31 Jan 2014 11:44:51 -0600
-Message-ID: <20140131174451.GA20512@qualcomm.com>
-References: <1390409565-4200-1-git-send-email-sthokal@xilinx.com>
- <1390409565-4200-2-git-send-email-sthokal@xilinx.com>
- <52E0FC22.8060903@metafoo.de>
- <CA+mB=1L6yvCwA3mKCwz83LQbXiVau110REV64rYrSzUhGE4ucA@mail.gmail.com>
- <52E2698B.6070001@metafoo.de>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] arm: document "mach-virt" platform.
+Date: Fri, 31 Jan 2014 11:48:06 -0600
+Message-ID: <CAL_JsqJeka0KeejY4LpGFd7hfYo_OKnnH8QWjSXkcgedvA6BZg@mail.gmail.com>
+References: <1391098262-15944-1-git-send-email-ian.campbell@citrix.com>
+	<201401301828.59294.arnd@arndb.de>
+	<52EA8CFE.7020404@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52E2698B.6070001@metafoo.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Srikanth Thokala <sthokal@xilinx.com>, dan.j.williams@intel.com, vinod.koul@intel.com, michal.simek@xilinx.com, Grant Likely <grant.likely@linaro.org>, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52EA8CFE.7020404-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 24, 2014 at 02:24:27PM +0100, Lars-Peter Clausen wrote:
-> On 01/24/2014 12:16 PM, Srikanth Thokala wrote:
-> > Hi Lars,
-> > 
-> > On Thu, Jan 23, 2014 at 4:55 PM, Lars-Peter Clausen <lars@metafoo.de> wrote:
-> >> On 01/22/2014 05:52 PM, Srikanth Thokala wrote:
-> >> [...]
-> >>> +/**
-> >>> + * xilinx_vdma_device_control - Configure DMA channel of the device
-> >>> + * @dchan: DMA Channel pointer
-> >>> + * @cmd: DMA control command
-> >>> + * @arg: Channel configuration
-> >>> + *
-> >>> + * Return: '0' on success and failure value on error
-> >>> + */
-> >>> +static int xilinx_vdma_device_control(struct dma_chan *dchan,
-> >>> +                                   enum dma_ctrl_cmd cmd, unsigned long arg)
-> >>> +{
-> >>> +     struct xilinx_vdma_chan *chan = to_xilinx_chan(dchan);
-> >>> +
-> >>> +     switch (cmd) {
-> >>> +     case DMA_TERMINATE_ALL:
-> >>> +             xilinx_vdma_terminate_all(chan);
-> >>> +             return 0;
-> >>> +     case DMA_SLAVE_CONFIG:
-> >>> +             return xilinx_vdma_slave_config(chan,
-> >>> +                                     (struct xilinx_vdma_config *)arg);
-> >>
-> >> You really shouldn't be overloading the generic API with your own semantics.
-> >> DMA_SLAVE_CONFIG should take a dma_slave_config and nothing else.
-> > 
-> > Ok.  The driver needs few additional configuration from the slave
-> > device like Vertical
-> > Size, Horizontal Size,  Stride etc., for the DMA transfers, in that case do you
-> > suggest me to define a separate dma_ctrl_cmd like the one FSLDMA_EXTERNAL_START
-> > defined for Freescale drivers?
-> 
-> In my opinion it is not a good idea to have driver implement a generic API,
-> but at the same time let the driver have custom semantics for those API
-> calls. It's a bit like having a gpio driver that expects 23 and 42 as the
-> values passed to gpio_set_value instead of 0 and 1. It completely defeats
-> the purpose of a generic API, namely that you are able to write generic code
-> that makes use of the API without having to know about which implementation
-> API it is talking to. The dmaengine framework provides the
-> dmaengine_prep_interleaved_dma() function to setup two dimensional
-> transfers, e.g. take a look at sirf-dma.c or imx-dma.c.
-> 
+On Thu, Jan 30, 2014 at 11:33 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
+> On 30/01/14 17:28, Arnd Bergmann wrote:
+>> On Thursday 30 January 2014, Ian Campbell wrote:
+>>> mach-virt has existed for a while but it is not written down what it actually
+>>> consists of. Although it seems a bit unusual to document a binding for an
+>>> entire platform since mach-virt is entirely virtual it is helpful to have
+>>> something to refer to in the absence of a single concrete implementation.
+>>>
+>>> I've done my best to capture the requirements based on the git log and my
+>>> memory/understanding.
+>>>
+>>> While here remove the xenvm dts example, the Xen tools will now build a
+>>> suitable mach-virt compatible dts when launching the guest.
+>>
+>> It might be worth noting in the changeset comment that the 'compatible'
+>> string is actually no longer needed on newer kernels: All the members
+>> of the machine descriptor are now the defaults (we should remove the
+>> virt_init() function as well), and the fallback machine descriptor should
+>> work just fine if any other string gets passed.
+>
+> I will ack the patch that removes the mach-virt directory altogether!
 
-The comments in the include/linux/dmaengine.h state that if you have
-non-generic, non-fixed configuration then you can just create your own
-structure and embed the dma_slave_config.  Using the container_of you can get
-back your structure.
+Did I never send that one out? I know I started something. Finding new
+employment has had me distracted...
 
-I agree that we should always use the generic structure if possible, but
-sometimes there are some non-standard things that you have to do for your
-hardware.  I am currently in a bind for adding some quirky features that are
-required by peripherals who want to use the QCOM DMA devices.
-
-If the context field in prep_slave_sg and prep_dma_cyclic was exposed to
-everyone, that would allow an easy way to pass in hardware specific
-configuration without bastardizing the slave_config.  I noticed that rapidio is
-the only consumer of that field and that they have their own prep function.
-
-If we are not going to allow people to do their own slave_config when they need
-to, then we need to remove the comments from the include file and expose the
-context to the dmaengine_prep_slave_sg and dmaengine_prep_dma_cyclic.
-
--- 
-sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
