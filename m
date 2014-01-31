@@ -1,82 +1,122 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 08/11] of: Increase MAX_PHANDLE_ARGS
-Date: Fri, 31 Jan 2014 10:24:09 -0600
-Message-ID: <CAL_Jsq+=dm4kPk=e0h_up9=wvED4fd3MBtSNFxm2NEz_yag-uA@mail.gmail.com>
-References: <1389876263-25759-1-git-send-email-andreas.herrmann@calxeda.com>
-	<1389876263-25759-9-git-send-email-andreas.herrmann@calxeda.com>
-	<20140117110830.GW3471@alberich> <52E92842.3000001@amd.com>
-	<CAL_JsqLhzp5jUJPA91rNkQ07kCDYCDZLxw8LxxFEVP9b12e1Jw@mail.gmail.com>
-	<52E93360.1000904@amd.com> <20140129171611.GB13543@alberich>
-	<52E939CB.1020705@amd.com> <20140130174546.GF13543@alberich>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: Extending OPP bindings
+Date: Fri, 31 Jan 2014 11:17:51 -0600
+Message-ID: <CAL_Jsq+Kq9C39xr9tY8gSX+6QFkNDqwmTyC+dBhLNcxKMweCpw@mail.gmail.com>
+References: <52EA570A.8040501@arm.com>
+	<52EAF1CA.3040702@ti.com>
+	<20140131124620.GC2616@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20140130174546.GF13543@alberich>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140131124620.GC2616@e102568-lin.cambridge.arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Nishanth Menon <nm@ti.com>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Morten Rasmussen <Morten.Rasmussen@arm.com>, Shawn Guo <shawn.guo@linaro.org>, "mturquette@linaro.org" <mturquette@linaro.org>, Mark Brown <mark.brown@linaro.org>, Eduardo Valentin <eduardo.valentin@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 30, 2014 at 11:45 AM, Andreas Herrmann
-<andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org> wrote:
-> On Wed, Jan 29, 2014 at 12:26:35PM -0500, Suravee Suthikulanit wrote:
->> On 1/29/2014 11:16 AM, Andreas Herrmann wrote:
->> > On Wed, Jan 29, 2014 at 11:59:12AM -0500, Suravee Suthikulanit wrote:
->> >> On 1/29/2014 10:57 AM, Rob Herring wrote:
->> >>>>> diff --git a/include/linux/of.h b/include/linux/of.h
->> >>>>>>> index 276c546..24e1b28 100644
->> >>>>>>> --- a/include/linux/of.h
->> >>>>>>> +++ b/include/linux/of.h
->> >>>>>>> @@ -67,7 +67,7 @@ struct device_node {
->> >>>>>>>    #endif
->> >>>>>>>    };
->> >>>>>>>
->> >>>>>>> -#define MAX_PHANDLE_ARGS 8
->> >>>>>>> +#define MAX_PHANDLE_ARGS 16
->> >>>>>
->> >>>>>
->> >>>>> Since the MMU-500 specify "Number of SMRs" upto 128 registers, shouldn't
->> >>>>> this be changed to be able to support 128 StreamIDs as well?  Although I am
->> >>>>> not sure if this would be too big to have on the stack per Rob's comment in
->> >>>>> the previous patch set.
->> >>> Do you actually need 128 now? If not, then we can deal with that when
->> >>> we get there. There are lots of things in spec's that are not actually
->> >>> implemented or supported.
->> >>
->> >> Actually, we are using 32 on the AMD system. So, do you think we can set
->> >> this to 32 instead?
->> >
->> > I think that's ok.
->> >
->> > But are we really talking about number of SMRs or number of StreamIDs
->> > per master device here? Ie. are you just having 32 SMRs for an SMMU on
->> > your AMD system or do you have master devices which have 32 StreamIDs?
->> >
->> > If it's just number of SMRs we don't need to modify this macro.
+On Fri, Jan 31, 2014 at 6:46 AM, Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+> Hi Nishanth,
 >
->> I am referring to the case where each mmu-master can have upto 32 streamID.
+> On Fri, Jan 31, 2014 at 12:43:54AM +0000, Nishanth Menon wrote:
+>> Hi Sudeep,
+>>
+>> On 01/30/2014 07:43 AM, Sudeep Holla wrote:
+>>
+>> >
+>> > I am looking into a couple shortcomings in the current OPP bindings and
+>> > how to address them. Feel free to add to the list if you think of any more
+>> > issues that needs to be addressed or if and how any problem mentioned below
+>> > can be handled with the existing bindings.
+>> >
+>> > 1. indexing: currently there are no indices in the operating-points.
+>> indexing is based on frequency which is why the accessors use
+>> frequency to pull out the OPP data.
+>>
+>> indexing is a horrible idea - on platforms where OPP may be disabled
+>> or enabled for various reasons(see arch/arm/mach-imx/mach-imx6q.c,
+>> arch/arm/mach-omap2/board-omap3beagle.c etc) - the indexing you see in
+>> dts is just a myth that may not exist once the nodes are loaded and
+>> operated upon depending on SoC variations (example efuse describing
+>> which OPPs can be used and which not).
 >
-> Rob,
+> I do not understand why. As long as a mapping from DT to data structures
+> in the kernel is done at boot, I can see how by indexing device nodes
+> can refer to specific OPPs. If they are disabled, amen, as long as we
+> can point at specific operating points that should be ok.
 >
-> Do you agree on increasing MAX_PHANDLE_ARGS to 32?
+> Indexing does not mean that the index in the DT is the same as the one
+> allocated by the OS. Indexing is there to point at specific OPPs from
+> different DT nodes, a good example are clock bindings and that's exactly
+> how they work.
 
-Yes, but more than that will require a closer look. Please get this
-into next early in the cycle.
+That is not a good comparison. With clocks, you are describing which
+physical signal coming out of a hardware block much like interrupts.
+Granted the h/w is not typically documented that way for clocks
+although the numbering could correspond to register bit locations as
+interrupt numbers do. With OPP indexes, they are a totally made up
+software construct.
 
-> Or should this be done when someone (e.g. Suravee) submits a DTS
-> update with an SMMU node description containing more than 16 stream
-> IDs for a master device?
+Perhaps OPPs should be nodes so new fields can be added easily and
+then you have a phandle for each OPP.
 
-Well, I am inclined to not care having seen no upstream activity for
-AMD's platform.
+>
+> Can you provide me with an example where the indexing would go wrong
+> please ?
+
+Putting s/w indexes into DT. Using cell-index for uarts to define
+their tty number was one example.
+
+> Certainly relying on implicit ordering is not great either, actually I
+> would say that it is broken.
+>
+>> That said, the original OPP[1][2] series discussion started by trying
+>> to kill indexing precisely for the same reason.. once you have it - it
+>> becomes just crazy to deal with.
+>
+> I could not find any "index killing" :) discussion in there, but I will
+> keep reading.
+>
+>> >     It's assumed that the list is either in ascending or descending
+>> >     order of frequency but not explicit in the binding document.
+>> >     There are arch/arm/boot/dts/* files with opps in both styles.
+>> it should not matter -> opp library should do an insertion sort and
+>> organize it in ascending order once all the data is inserted. (line
+>> 449ish in opp.c)
+>
+> That's OS details and they must not be mandated by the bindings.
+> We cannot rely on word of mouth for things to work, I do not like
+> implicit rules, so the bindings should speficy the ordering or better
+> a way to reference OPPs.
+>
+>> if you see issues with the insertion sort not functioning, it is a bug
+>> and should be easy to track down and fix.
+>
+> Problem is not the insertion sort, problem is that DT bindings do not
+> define a way to refer to a specific OPP, unless we do that implicitly
+> and again, I rest my case, that is broken.
+>
+>> >     Few other bindings like thermal defines bindings like
+>> >     cooling-{min,max}-state assuming some order which is broken IMO.
+>> Now that you bring it up, I missed it :(.. yeah, I might have
+>> preferred it to be min frequency and max_frequency - I agree it is
+>> probably broken. I'd let Eduardo comment more about it.
+>>
+>> >
+>> >     One such use-case that came up recently[0] is the c-state latencies
+>> >     which could be different for each OPP. It would be good if the
+>> >     latencies are specified with the indices to OPP table to avoid
+>> >     inconsistency between the bindings.
+>>
+>> You can define C states based on frequencies as well - which really
+>> makes sense - since that sounds really like our constraint (say
+>> valid-at-frequency "xyz"
+>
+> I do not think that's generic enough, I do not like the idea of looking
+> up frequencies (eg a C-state target_residency does not depend on the
+> frequency only - ie voltage and other factors play a role, it really
+> depends on an operating point- looking it up by frequency is misleading IMO).
+
+It seems we are trying to fit a square peg into a round hole here.
 
 Rob
