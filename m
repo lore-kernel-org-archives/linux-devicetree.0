@@ -1,562 +1,249 @@
-From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 2/3] iio: Add AS3935 lightning sensor support
-Date: Fri, 31 Jan 2014 22:22:39 -0800
-Message-ID: <1391235760-32652-2-git-send-email-mranostay@gmail.com>
-References: <1391235760-32652-1-git-send-email-mranostay@gmail.com>
+From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: [PATCH v3 5/5] leds: leds-mc13783: Add devicetree support
+Date: Sat,  1 Feb 2014 10:37:23 +0400
+Message-ID: <1391236643-16585-1-git-send-email-shc_work@mail.ru>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1391235760-32652-1-git-send-email-mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-AS3935 chipset can detect lightning strikes and reports those back as
-events and the estimated distance to the storm.
+This patch adds devicetree support for the MC13XXX LED driver.
 
-Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 ---
- .../ABI/testing/sysfs-bus-iio-distance-as3935      |  19 +
- drivers/iio/Kconfig                                |   1 +
- drivers/iio/Makefile                               |   1 +
- drivers/iio/distance/Kconfig                       |  19 +
- drivers/iio/distance/Makefile                      |   6 +
- drivers/iio/distance/as3935.c                      | 438 +++++++++++++++++++++
- 6 files changed, 484 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-distance-as3935
- create mode 100644 drivers/iio/distance/Kconfig
- create mode 100644 drivers/iio/distance/Makefile
- create mode 100644 drivers/iio/distance/as3935.c
+ Documentation/devicetree/bindings/mfd/mc13xxx.txt |  47 +++++++++
+ drivers/leds/leds-mc13783.c                       | 112 ++++++++++++++++++----
+ 2 files changed, 140 insertions(+), 19 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-distance-as3935 b/Documentation/ABI/testing/sysfs-bus-iio-distance-as3935
-new file mode 100644
-index 0000000..cf9a67c
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-distance-as3935
-@@ -0,0 +1,19 @@
-+What		/sys/bus/iio/devices/iio:deviceX/in_distance_raw
-+Date:		January 2014
-+KernelVersion:	3.15
-+Contact:	Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+Description:
-+		Get the current distance in kilometers of storm
-+		0    = no storm activity
-+		1    = storm overhead
-+		1-40 = distance in kilometers
-+		63   = out of range
+diff --git a/Documentation/devicetree/bindings/mfd/mc13xxx.txt b/Documentation/devicetree/bindings/mfd/mc13xxx.txt
+index abd9e3c..1413f39 100644
+--- a/Documentation/devicetree/bindings/mfd/mc13xxx.txt
++++ b/Documentation/devicetree/bindings/mfd/mc13xxx.txt
+@@ -10,9 +10,44 @@ Optional properties:
+ - fsl,mc13xxx-uses-touch : Indicate the touchscreen controller is being used
+ 
+ Sub-nodes:
++- leds : Contain the led nodes and initial register values in property
++  "led-control". Number of register depends of used IC, for MC13783 is 6,
++  for MC13892 is 4, for MC34708 is 1. See datasheet for bits definitions of
++  these registers.
++  - #address-cells: Must be 1.
++  - #size-cells: Must be 0.
++  Each led node should contain "reg", which used as LED ID (described below).
++  Optional properties "label" and "linux,default-trigger" is described in
++  Documentation/devicetree/bindings/leds/common.txt.
+ - regulators : Contain the regulator nodes. The regulators are bound using
+   their names as listed below with their registers and bits for enabling.
+ 
++MC13783 LED IDs:
++    0  : Main display
++    1  : AUX display
++    2  : Keypad
++    3  : Red 1
++    4  : Green 1
++    5  : Blue 1
++    6  : Red 2
++    7  : Green 2
++    8  : Blue 2
++    9  : Red 3
++    10 : Green 3
++    11 : Blue 3
 +
-+What		/sys/bus/iio/devices/iio:deviceX/gain_boost
-+Date:		January 2014
-+KernelVersion:	3.15
-+Contact:	Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+Description:
-+		Show or set the gain boost of the amp, from 0-31 range.
-+		18 = indoors (default)
-+		14 = outdoors
-diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
-index 5dd0e12..5164a68 100644
---- a/drivers/iio/Kconfig
-+++ b/drivers/iio/Kconfig
-@@ -63,6 +63,7 @@ source "drivers/iio/adc/Kconfig"
- source "drivers/iio/amplifiers/Kconfig"
- source "drivers/iio/common/Kconfig"
- source "drivers/iio/dac/Kconfig"
-+source "drivers/iio/distance/Kconfig"
- source "drivers/iio/frequency/Kconfig"
- source "drivers/iio/gyro/Kconfig"
- source "drivers/iio/humidity/Kconfig"
-diff --git a/drivers/iio/Makefile b/drivers/iio/Makefile
-index 887d390..1574731 100644
---- a/drivers/iio/Makefile
-+++ b/drivers/iio/Makefile
-@@ -16,6 +16,7 @@ obj-y += adc/
- obj-y += amplifiers/
- obj-y += common/
- obj-y += dac/
-+obj-y += distance/
- obj-y += gyro/
- obj-y += frequency/
- obj-y += humidity/
-diff --git a/drivers/iio/distance/Kconfig b/drivers/iio/distance/Kconfig
-new file mode 100644
-index 0000000..8a2404c
---- /dev/null
-+++ b/drivers/iio/distance/Kconfig
-@@ -0,0 +1,19 @@
-+#
-+# Distance sensors
-+#
++MC13892 LED IDs:
++    0  : Main display
++    1  : AUX display
++    2  : Keypad
++    3  : Red
++    4  : Green
++    5  : Blue
 +
-+menu "Lightning sensors"
++MC34708 LED IDs:
++    0  : Charger Red
++    1  : Charger Green
 +
-+config AS3935
-+	tristate "AS3935 Franklin lightning sensor"
-+	select IIO_BUFFER
-+	select IIO_TRIGGERED_BUFFER
-+	depends on SPI
-+	help
-+	 If you say yes here you get support for the Austrian Microsystems
-+	 AS3935 lightning detection sensor.
+ MC13783 regulators:
+     sw1a      : regulator SW1A      (register 24, bit 0)
+     sw1b      : regulator SW1B      (register 25, bit 0)
+@@ -89,6 +124,18 @@ ecspi@70010000 { /* ECSPI1 */
+ 		interrupt-parent = <&gpio0>;
+ 		interrupts = <8>;
+ 
++		leds {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			led-control = <0x000 0x000 0x0e0 0x000>;
 +
-+	 This driver can also be built as a module. If so, the module
-+	 will be called as3935.
++			sysled {
++				reg = <3>;
++				label = "system:red:live";
++				linux,default-trigger = "heartbeat";
++			};
++		};
 +
-+endmenu
-diff --git a/drivers/iio/distance/Makefile b/drivers/iio/distance/Makefile
-new file mode 100644
-index 0000000..f63b70d
---- /dev/null
-+++ b/drivers/iio/distance/Makefile
-@@ -0,0 +1,6 @@
-+#
-+# Makefile for IIO distance sensors
-+#
-+
-+# When adding new entries keep the list in alphabetical order
-+obj-$(CONFIG_AS3935)		+= as3935.o
-diff --git a/drivers/iio/distance/as3935.c b/drivers/iio/distance/as3935.c
-new file mode 100644
-index 0000000..ea00cd1
---- /dev/null
-+++ b/drivers/iio/distance/as3935.c
-@@ -0,0 +1,438 @@
-+/*
-+ * as3935.c - Support for AS3935 Franklin lightning sensor
-+ *
-+ * Copyright (C) 2014 Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/delay.h>
-+#include <linux/workqueue.h>
-+#include <linux/mutex.h>
-+#include <linux/err.h>
-+#include <linux/irq.h>
-+#include <linux/gpio.h>
-+#include <linux/spi/spi.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+#include <linux/iio/trigger.h>
-+#include <linux/iio/trigger_consumer.h>
-+#include <linux/iio/buffer.h>
-+#include <linux/iio/triggered_buffer.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/of_gpio.h>
-+
-+
-+#define AS3935_AFE_GAIN		0x00
-+#define AS3935_AFE_MASK		0x3F
-+#define AS3935_AFE_GAIN_MAX	0x1F
-+#define AS3935_AFE_PWR_BIT	(1<<0)
-+
-+#define AS3935_INT		0x03
-+#define AS3935_INT_MASK		0x07
-+#define AS3935_EVENT_INT	(1<<3)
-+#define AS3935_NOISE_INT	(1<<0)
-+
-+#define AS3935_DATA		0x07
-+#define AS3935_DATA_MASK	0x1F
-+
-+#define AS3935_TUNE_CAP		0x08
-+#define AS3935_CALIBRATE	0x3D
-+
-+#define AS3935_WRITE_DATA	(0x1 << 15)
-+#define AS3935_READ_DATA	(0x1 << 14)
-+#define AS3935_ADDRESS(x)	(x << 8)
-+
-+struct as3935_state {
-+	struct spi_device *spi;
-+	struct iio_trigger *trig;
-+	struct mutex lock;
-+	struct delayed_work work;
-+
-+	u8 tune_cap;
-+};
-+
-+static const struct iio_chan_spec as3935_channels[] = {
-+	{
-+		.type           = IIO_DISTANCE,
-+		.info_mask_separate =
-+			BIT(IIO_CHAN_INFO_RAW),
-+		.scan_index     = 0,
-+		.scan_type = {
-+			.sign           = 'u',
-+			.realbits       = 8,
-+			.storagebits    = 8,
-+		},
-+	},
-+	IIO_CHAN_SOFT_TIMESTAMP(1),
-+};
-+
-+static int as3935_read(struct as3935_state *st, unsigned int reg, int *val)
+ 		regulators {
+ 			sw1_reg: mc13892__sw1 {
+ 				regulator-min-microvolt = <600000>;
+diff --git a/drivers/leds/leds-mc13783.c b/drivers/leds/leds-mc13783.c
+index 4cfcfde..e4e4ef5 100644
+--- a/drivers/leds/leds-mc13783.c
++++ b/drivers/leds/leds-mc13783.c
+@@ -19,6 +19,7 @@
+ #include <linux/kernel.h>
+ #include <linux/platform_device.h>
+ #include <linux/leds.h>
++#include <linux/of.h>
+ #include <linux/workqueue.h>
+ #include <linux/mfd/mc13xxx.h>
+ 
+@@ -41,7 +42,7 @@ struct mc13xxx_leds {
+ 	struct mc13xxx			*master;
+ 	struct mc13xxx_led_devtype	*devtype;
+ 	int				num_leds;
+-	struct mc13xxx_led		led[0];
++	struct mc13xxx_led		*led;
+ };
+ 
+ static unsigned int mc13xxx_max_brightness(int id)
+@@ -119,6 +120,74 @@ static void mc13xxx_led_set(struct led_classdev *led_cdev,
+ 	schedule_work(&led->work);
+ }
+ 
++#ifdef CONFIG_OF
++static struct mc13xxx_leds_platform_data __init *mc13xxx_led_probe_dt(
++	struct platform_device *pdev)
 +{
-+	u8 tx, rx;
-+	int ret;
++	struct mc13xxx_leds *leds = platform_get_drvdata(pdev);
++	struct mc13xxx_leds_platform_data *pdata;
++	struct device_node *parent, *child;
++	struct device *dev = &pdev->dev;
++	int i = 0, ret = -ENODATA;
 +
-+	struct spi_transfer xfers[] = {
-+		{
-+			.tx_buf = &tx,
-+			.bits_per_word = 8,
-+			.len = 1,
-+		}, {
-+			.rx_buf = &rx,
-+			.bits_per_word = 8,
-+			.len = 1,
-+		},
-+	};
-+	tx = (AS3935_READ_DATA | AS3935_ADDRESS(reg)) >> 8;
++	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return ERR_PTR(-ENOMEM);
 +
-+	ret = spi_sync_transfer(st->spi, xfers, ARRAY_SIZE(xfers));
-+	*val = rx;
++	of_node_get(dev->parent->of_node);
 +
-+	return ret;
-+};
++	parent = of_find_node_by_name(dev->parent->of_node, "leds");
++	if (!parent)
++		goto out_node_put;
 +
-+static int as3935_write(struct as3935_state *st,
-+				unsigned int reg,
-+				unsigned int val)
-+{
-+	u8 buf[2];
-+
-+	buf[0] = AS3935_WRITE_DATA | AS3935_ADDRESS(reg) >> 8;
-+	buf[1] = val;
-+
-+	return spi_write(st->spi, (u8 *) &buf, 2);
-+};
-+
-+static ssize_t as3935_gain_boost_show(struct device *dev,
-+				struct device_attribute *attr,
-+				char *buf)
-+{
-+	struct as3935_state *st = iio_priv(dev_to_iio_dev(dev));
-+	int val, ret;
-+
-+	ret = as3935_read(st, AS3935_AFE_GAIN, &val);
++	ret = of_property_read_u32_array(parent, "led-control",
++					 pdata->led_control,
++					 leds->devtype->num_regs);
 +	if (ret)
-+		return ret;
-+	val = (val & AS3935_AFE_MASK) >> 1;
++		goto out_node_put;
 +
-+	return sprintf(buf, "%d\n", val);
-+};
++	pdata->num_leds = of_get_child_count(parent);
 +
-+static ssize_t as3935_gain_boost_store(struct device *dev,
-+					struct device_attribute *attr,
-+					const char *buf, size_t len)
-+{
-+	struct as3935_state *st = iio_priv(dev_to_iio_dev(dev));
-+	unsigned long val;
-+	int ret;
-+
-+	ret = kstrtoul((const char *) buf, 10, &val);
-+	if (ret)
-+		return -EINVAL;
-+
-+	if (val > AS3935_AFE_GAIN_MAX)
-+		return -EINVAL;
-+
-+	as3935_write(st, AS3935_AFE_GAIN, val << 1);
-+
-+	return len;
-+};
-+
-+static IIO_DEVICE_ATTR(gain_boost, S_IRUGO | S_IWUSR,
-+	as3935_gain_boost_show, as3935_gain_boost_store, 0);
-+
-+
-+static struct attribute *as3935_attributes[] = {
-+	&iio_dev_attr_gain_boost.dev_attr.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group as3935_attribute_group = {
-+	.attrs = as3935_attributes,
-+};
-+
-+static int as3935_read_raw(struct iio_dev *indio_dev,
-+			   struct iio_chan_spec const *chan,
-+			   int *val,
-+			   int *val2,
-+			   long m)
-+{
-+	struct as3935_state *st = iio_priv(indio_dev);
-+	int ret;
-+
-+	if (m != IIO_CHAN_INFO_RAW)
-+		return -EINVAL;
-+
-+	*val2 = 0;
-+	ret = as3935_read(st, AS3935_DATA, val);
-+	if (ret)
-+		return ret;
-+	return IIO_VAL_INT;
-+}
-+
-+static const struct iio_info as3935_info = {
-+	.driver_module = THIS_MODULE,
-+	.attrs = &as3935_attribute_group,
-+	.read_raw = &as3935_read_raw,
-+};
-+
-+static const struct iio_buffer_setup_ops iio_triggered_buffer_setup_ops = {
-+	.postenable = &iio_triggered_buffer_postenable,
-+	.predisable = &iio_triggered_buffer_predisable,
-+};
-+
-+static irqreturn_t as3935_trigger_handler(int irq, void *private)
-+{
-+	struct iio_poll_func *pf = private;
-+	struct iio_dev *indio_dev = pf->indio_dev;
-+	struct as3935_state *st = iio_priv(indio_dev);
-+	int val, ret;
-+
-+	ret = as3935_read(st, AS3935_DATA, &val);
-+	if (ret)
-+		goto err_read;
-+	val &= AS3935_DATA_MASK;
-+	iio_push_to_buffers_with_timestamp(indio_dev, &val, iio_get_time_ns());
-+err_read:
-+	iio_trigger_notify_done(indio_dev->trig);
-+
-+	return IRQ_HANDLED;
-+};
-+
-+static const struct iio_trigger_ops iio_interrupt_trigger_ops = {
-+	.owner = THIS_MODULE,
-+};
-+
-+static void as3935_event_work(struct work_struct *work)
-+{
-+	struct as3935_state *st;
-+	struct spi_device *spi;
-+	int val;
-+
-+	st = container_of(work, struct as3935_state, work.work);
-+	spi = st->spi;
-+
-+	as3935_read(st, AS3935_INT, &val);
-+	val &= AS3935_INT_MASK;
-+
-+	switch (val) {
-+	case AS3935_EVENT_INT:
-+		iio_trigger_poll(st->trig, 0);
-+		break;
-+	case AS3935_NOISE_INT:
-+		dev_warn(&spi->dev, "noise level is too high");
-+		break;
++	pdata->led = devm_kzalloc(dev, pdata->num_leds * sizeof(*pdata->led),
++				  GFP_KERNEL);
++	if (!pdata->led) {
++		ret = -ENOMEM;
++		goto out_node_put;
 +	}
-+};
 +
-+static irqreturn_t as3935_interrupt_handler(int irq, void *private)
-+{
-+	struct iio_dev *indio_dev = private;
-+	struct as3935_state *st = iio_priv(indio_dev);
++	for_each_child_of_node(parent, child) {
++		const char *str;
++		u32 tmp;
 +
-+	cancel_delayed_work(&st->work);
-+	schedule_delayed_work(&st->work, jiffies_to_msecs(3));
-+	return IRQ_HANDLED;
-+}
++		if (of_property_read_u32(child, "reg", &tmp))
++			continue;
++		pdata->led[i].id = leds->devtype->led_min + tmp;
 +
-+static void calibrate_as3935(struct as3935_state *st)
-+{
-+	mutex_lock(&st->lock);
++		if (!of_property_read_string(child, "label", &str))
++			pdata->led[i].name = str;
++		if (!of_property_read_string(child, "linux,default-trigger",
++					     &str))
++			pdata->led[i].default_trigger = str;
 +
-+	/* mask disturber interrupt bit */
-+	as3935_write(st, AS3935_INT, 1 << 5);
++		i++;
++	};
 +
-+	as3935_write(st, AS3935_CALIBRATE, 0x96);
-+	as3935_write(st, AS3935_TUNE_CAP, 1 << 5 | st->tune_cap);
++	pdata->num_leds = i;
++	ret = i > 0 ? 0 : -ENODATA;
 +
-+	mdelay(2);
-+	as3935_write(st, AS3935_TUNE_CAP, st->tune_cap);
++out_node_put:
++	of_node_put(parent);
 +
-+	mutex_unlock(&st->lock);
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int as3935_suspend(struct spi_device *spi, pm_message_t msg)
-+{
-+	struct iio_dev *indio_dev = spi_get_drvdata(spi);
-+	struct as3935_state *st = iio_priv(indio_dev);
-+	int val, ret;
-+
-+	mutex_lock(&st->lock);
-+	ret = as3935_read(st, AS3935_AFE_GAIN, &val);
-+	if (ret)
-+		return ret;
-+	val |= AS3935_AFE_PWR_BIT;
-+
-+	ret = as3935_write(st, AS3935_AFE_GAIN, val);
-+	mutex_unlock(&st->lock);
-+	return ret;
-+}
-+
-+static int as3935_resume(struct spi_device *spi)
-+{
-+	struct iio_dev *indio_dev = spi_get_drvdata(spi);
-+	struct as3935_state *st = iio_priv(indio_dev);
-+	int val, ret;
-+
-+	mutex_lock(&st->lock);
-+	ret = as3935_read(st, AS3935_AFE_GAIN, &val);
-+	if (ret)
-+		return ret;
-+	val &= ~AS3935_AFE_PWR_BIT;
-+	ret = as3935_write(st, AS3935_AFE_GAIN, val);
-+	mutex_unlock(&st->lock);
-+	return ret;
++	return ret ? ERR_PTR(ret) : pdata;
 +}
 +#else
-+#define as3935_suspend	NULL
-+#define as3935_resume	NULL
++static inline struct mc13xxx_leds_platform_data __init *mc13xxx_led_probe_dt(
++	struct platform_device *pdev)
++{
++	return ERR_PTR(-ENOSYS);
++}
 +#endif
 +
-+static int as3935_probe(struct spi_device *spi)
-+{
-+	struct iio_dev *indio_dev;
-+	struct iio_trigger *trig;
-+	struct as3935_state *st;
-+	struct device_node *np = spi->dev.of_node;
-+	int ret;
+ static int __init mc13xxx_led_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -127,32 +196,37 @@ static int __init mc13xxx_led_probe(struct platform_device *pdev)
+ 	struct mc13xxx_led_devtype *devtype =
+ 		(struct mc13xxx_led_devtype *)pdev->id_entry->driver_data;
+ 	struct mc13xxx_leds *leds;
+-	int i, id, num_leds, ret = -ENODATA;
++	int i, id, ret = -ENODATA;
+ 	u32 init_led = 0;
+ 
+-	if (!pdata) {
+-		dev_err(dev, "Missing platform data\n");
+-		return -ENODEV;
+-	}
+-
+-	num_leds = pdata->num_leds;
+-
+-	if ((num_leds < 1) ||
+-	    (num_leds > (devtype->led_max - devtype->led_min + 1))) {
+-		dev_err(dev, "Invalid LED count %d\n", num_leds);
+-		return -EINVAL;
+-	}
+-
+-	leds = devm_kzalloc(dev, num_leds * sizeof(struct mc13xxx_led) +
+-			    sizeof(struct mc13xxx_leds), GFP_KERNEL);
++	leds = devm_kzalloc(dev, sizeof(*leds), GFP_KERNEL);
+ 	if (!leds)
+ 		return -ENOMEM;
+ 
+ 	leds->devtype = devtype;
+-	leds->num_leds = num_leds;
+ 	leds->master = mcdev;
+ 	platform_set_drvdata(pdev, leds);
+ 
++	if (dev->parent->of_node) {
++		pdata = mc13xxx_led_probe_dt(pdev);
++		if (IS_ERR(pdata))
++			return PTR_ERR(pdata);
++	} else if (!pdata)
++		return -ENODATA;
 +
-+	/* Be sure lightning event interrupt */
-+	if (!spi->irq) {
-+		dev_err(&spi->dev, "unable to get event interrupt\n");
++	leds->num_leds = pdata->num_leds;
++
++	if ((leds->num_leds < 1) ||
++	    (leds->num_leds > (devtype->led_max - devtype->led_min + 1))) {
++		dev_err(dev, "Invalid LED count %d\n", leds->num_leds);
 +		return -EINVAL;
 +	}
 +
-+	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(st));
-+	if (!indio_dev)
++	leds->led = devm_kzalloc(dev, leds->num_leds * sizeof(*leds->led),
++				 GFP_KERNEL);
++	if (!leds->led)
 +		return -ENOMEM;
 +
-+	st = iio_priv(indio_dev);
-+	st->spi = spi;
-+	st->tune_cap = 0;
-+
-+	spi_set_drvdata(spi, indio_dev);
-+	mutex_init(&st->lock);
-+	INIT_DELAYED_WORK(&st->work, as3935_event_work);
-+
-+	ret = of_property_read_u8(np, "ams,tune-cap", &st->tune_cap);
-+	if (ret) {
-+		st->tune_cap = 0;
-+		dev_warn(&spi->dev,
-+			"no tune-cap set, defaulting to %d", st->tune_cap);
-+	}
-+
-+	if (st->tune_cap > 15) {
-+		dev_err(&spi->dev,
-+			"wrong tune-cap setting of %d\n", st->tune_cap);
-+		return -EINVAL;
-+	}
-+
-+	indio_dev->dev.parent = &spi->dev;
-+	indio_dev->name = spi_get_device_id(spi)->name;
-+	indio_dev->channels = as3935_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(as3935_channels);
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->info = &as3935_info;
-+
-+	trig = devm_iio_trigger_alloc(&spi->dev, "%s-dev%d",
-+				      indio_dev->name, indio_dev->id);
-+
-+	if (!trig)
-+		return -ENOMEM;
-+
-+	st->trig = trig;
-+	trig->dev.parent = indio_dev->dev.parent;
-+	iio_trigger_set_drvdata(trig, indio_dev);
-+	trig->ops = &iio_interrupt_trigger_ops;
-+
-+	ret = iio_trigger_register(trig);
-+	if (ret) {
-+		dev_err(&spi->dev, "failed to register trigger\n");
-+		return ret;
-+	}
-+
-+	ret = iio_triggered_buffer_setup(indio_dev, NULL,
-+					&as3935_trigger_handler,
-+					&iio_triggered_buffer_setup_ops);
-+
-+	if (ret) {
-+		dev_err(&spi->dev, "cannot setup iio trigger\n");
-+		goto unregister_trigger;
-+	}
-+
-+	calibrate_as3935(st);
-+
-+	ret = devm_request_irq(&spi->dev, spi->irq,
-+				&as3935_interrupt_handler,
-+				IRQF_TRIGGER_RISING,
-+				dev_name(&spi->dev),
-+				indio_dev);
-+
-+	if (ret) {
-+		dev_err(&spi->dev, "unable to request irq\n");
-+		goto unregister_trigger;
-+	}
-+
-+	ret = iio_device_register(indio_dev);
-+	if (ret < 0) {
-+		dev_err(&spi->dev, "unable to register device\n");
-+		goto unregister_trigger;
-+	}
-+
-+	return 0;
-+
-+unregister_trigger:
-+	iio_trigger_unregister(st->trig);
-+	iio_triggered_buffer_cleanup(indio_dev);
-+
-+	return ret;
-+};
-+
-+static int as3935_remove(struct spi_device *spi)
-+{
-+	struct iio_dev *indio_dev = spi_get_drvdata(spi);
-+	struct as3935_state *st = iio_priv(indio_dev);
-+
-+	iio_trigger_unregister(st->trig);
-+	iio_triggered_buffer_cleanup(indio_dev);
-+	iio_device_unregister(indio_dev);
-+
-+	return 0;
-+};
-+
-+static const struct spi_device_id as3935_id[] = {
-+	{"as3935", 0},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(spi, as3935_id);
-+
-+static struct spi_driver as3935_driver = {
-+	.driver = {
-+		.name	= "as3935",
-+		.owner	= THIS_MODULE,
-+	},
-+	.probe		= as3935_probe,
-+	.remove		= as3935_remove,
-+	.id_table	= as3935_id,
-+	.suspend	= as3935_suspend,
-+	.resume		= as3935_resume,
-+};
-+module_spi_driver(as3935_driver);
-+
-+MODULE_AUTHOR("Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
-+MODULE_DESCRIPTION("AS3935 lightning sensor");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("spi:as3935");
+ 	for (i = 0; i < devtype->num_regs; i++) {
+ 		ret = mc13xxx_reg_write(mcdev, leds->devtype->ledctrl_base + i,
+ 					pdata->led_control[i]);
+@@ -160,7 +234,7 @@ static int __init mc13xxx_led_probe(struct platform_device *pdev)
+ 			return ret;
+ 	}
+ 
+-	for (i = 0; i < num_leds; i++) {
++	for (i = 0; i < leds->num_leds; i++) {
+ 		const char *name, *trig;
+ 
+ 		ret = -EINVAL;
 -- 
 1.8.3.2
 
