@@ -1,381 +1,56 @@
-From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Subject: [PATCH v2 3/3] power_supply: modelgauge_battery: Remove Maxim MAX17040 gauge
-Date: Sun,  2 Feb 2014 02:23:05 +0400
-Message-ID: <1391293385-27539-4-git-send-email-vladimir.barinov@cogentembedded.com>
-References: <1391293385-27539-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1391293385-27539-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: anton@enomsg.org, dwmw2@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: mk7.kang@samsung.com, k.kozlowski@samsung.com, mark.rutland@arm.com
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: fix PCI bus match for PCIe slots
+Date: Sat, 1 Feb 2014 16:54:06 -0600
+Message-ID: <CAL_JsqKUFBSchVZivQ-qsaX4_UtC4fKYa8-Qw2o1zJMZTyk6Fg@mail.gmail.com>
+References: <1391124584-28847-1-git-send-email-klebers@linux.vnet.ibm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1391124584-28847-1-git-send-email-klebers-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kleber Sacilotto de Souza <klebers-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Brian King <brking-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Remove Maxim MAX17040 gauge driver since it is superseded by full-functional
-Maxim ModelGauge ICs gauge driver for MAX17040/41/43/44/48/49/58/59 chips
+On Thu, Jan 30, 2014 at 5:29 PM, Kleber Sacilotto de Souza
+<klebers-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> wrote:
+> On IBM pseries systems the device_type device-tree property of a PCIe
+> bridge contains the string "pciex". The of_bus_pci_match() function was
+> looking only for "pci" on this property, so in such cases the bus
+> matching code was falling back to the default bus, causing problems on
+> functions that should be using "assigned-addresses" for region address
+> translation. This patch fixes the problem by also looking for "pciex" on
+> the PCI bus match function.
 
-Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Does this need to go to stable?
 
----
- drivers/power/Kconfig            |    8 -
- drivers/power/Makefile           |    1 
- drivers/power/max17040_battery.c |  297 ---------------------------------------
- include/linux/max17040_battery.h |   19 --
- 4 files changed, 325 deletions(-)
+> Signed-off-by: Kleber Sacilotto de Souza <klebers-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> ---
+>  drivers/of/address.c |    4 ++--
+>  1 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index d3dd41c..0da2c0f 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -102,8 +102,8 @@ static int of_bus_pci_match(struct device_node *np)
+>          * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
+>          * "ht" is hypertransport
 
-Index: linux-2.6.torvalds/drivers/power/Kconfig
-===================================================================
---- linux-2.6.torvalds.orig/drivers/power/Kconfig	2014-02-02 01:37:35.374626307 +0400
-+++ linux-2.6.torvalds/drivers/power/Kconfig	2014-02-02 01:38:21.966627415 +0400
-@@ -185,14 +185,6 @@
- 	  Say Y here to enable support for batteries charger integrated into
- 	  DA9052 PMIC.
- 
--config BATTERY_MAX17040
--	tristate "Maxim MAX17040 Fuel Gauge"
--	depends on I2C
--	help
--	  MAX17040 is fuel-gauge systems for lithium-ion (Li+) batteries
--	  in handheld and portable equipment. The MAX17040 is configured
--	  to operate with a single lithium cell
--
- config BATTERY_MAX17042
- 	tristate "Maxim MAX17042/17047/17050/8997/8966 Fuel Gauge"
- 	depends on I2C
-Index: linux-2.6.torvalds/drivers/power/Makefile
-===================================================================
---- linux-2.6.torvalds.orig/drivers/power/Makefile	2014-02-02 01:37:35.000000000 +0400
-+++ linux-2.6.torvalds/drivers/power/Makefile	2014-02-02 01:38:21.966627415 +0400
-@@ -30,7 +30,6 @@
- obj-$(CONFIG_BATTERY_BQ27x00)	+= bq27x00_battery.o
- obj-$(CONFIG_BATTERY_DA9030)	+= da9030_battery.o
- obj-$(CONFIG_BATTERY_DA9052)	+= da9052-battery.o
--obj-$(CONFIG_BATTERY_MAX17040)	+= max17040_battery.o
- obj-$(CONFIG_BATTERY_MAX17042)	+= max17042_battery.o
- obj-$(CONFIG_BATTERY_MODELGAUGE)	+= modelgauge_battery.o
- obj-$(CONFIG_BATTERY_Z2)	+= z2_battery.o
-Index: linux-2.6.torvalds/drivers/power/max17040_battery.c
-===================================================================
---- linux-2.6.torvalds.orig/drivers/power/max17040_battery.c	2014-02-02 01:38:29.614627597 +0400
-+++ /dev/null	1970-01-01 00:00:00.000000000 +0000
-@@ -1,297 +0,0 @@
--/*
-- *  max17040_battery.c
-- *  fuel-gauge systems for lithium-ion (Li+) batteries
-- *
-- *  Copyright (C) 2009 Samsung Electronics
-- *  Minkyu Kang <mk7.kang@samsung.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
--
--#include <linux/module.h>
--#include <linux/init.h>
--#include <linux/platform_device.h>
--#include <linux/mutex.h>
--#include <linux/err.h>
--#include <linux/i2c.h>
--#include <linux/delay.h>
--#include <linux/power_supply.h>
--#include <linux/max17040_battery.h>
--#include <linux/slab.h>
--
--#define MAX17040_VCELL_MSB	0x02
--#define MAX17040_VCELL_LSB	0x03
--#define MAX17040_SOC_MSB	0x04
--#define MAX17040_SOC_LSB	0x05
--#define MAX17040_MODE_MSB	0x06
--#define MAX17040_MODE_LSB	0x07
--#define MAX17040_VER_MSB	0x08
--#define MAX17040_VER_LSB	0x09
--#define MAX17040_RCOMP_MSB	0x0C
--#define MAX17040_RCOMP_LSB	0x0D
--#define MAX17040_CMD_MSB	0xFE
--#define MAX17040_CMD_LSB	0xFF
--
--#define MAX17040_DELAY		1000
--#define MAX17040_BATTERY_FULL	95
--
--struct max17040_chip {
--	struct i2c_client		*client;
--	struct delayed_work		work;
--	struct power_supply		battery;
--	struct max17040_platform_data	*pdata;
--
--	/* State Of Connect */
--	int online;
--	/* battery voltage */
--	int vcell;
--	/* battery capacity */
--	int soc;
--	/* State Of Charge */
--	int status;
--};
--
--static int max17040_get_property(struct power_supply *psy,
--			    enum power_supply_property psp,
--			    union power_supply_propval *val)
--{
--	struct max17040_chip *chip = container_of(psy,
--				struct max17040_chip, battery);
--
--	switch (psp) {
--	case POWER_SUPPLY_PROP_STATUS:
--		val->intval = chip->status;
--		break;
--	case POWER_SUPPLY_PROP_ONLINE:
--		val->intval = chip->online;
--		break;
--	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
--		val->intval = chip->vcell;
--		break;
--	case POWER_SUPPLY_PROP_CAPACITY:
--		val->intval = chip->soc;
--		break;
--	default:
--		return -EINVAL;
--	}
--	return 0;
--}
--
--static int max17040_write_reg(struct i2c_client *client, int reg, u8 value)
--{
--	int ret;
--
--	ret = i2c_smbus_write_byte_data(client, reg, value);
--
--	if (ret < 0)
--		dev_err(&client->dev, "%s: err %d\n", __func__, ret);
--
--	return ret;
--}
--
--static int max17040_read_reg(struct i2c_client *client, int reg)
--{
--	int ret;
--
--	ret = i2c_smbus_read_byte_data(client, reg);
--
--	if (ret < 0)
--		dev_err(&client->dev, "%s: err %d\n", __func__, ret);
--
--	return ret;
--}
--
--static void max17040_reset(struct i2c_client *client)
--{
--	max17040_write_reg(client, MAX17040_CMD_MSB, 0x54);
--	max17040_write_reg(client, MAX17040_CMD_LSB, 0x00);
--}
--
--static void max17040_get_vcell(struct i2c_client *client)
--{
--	struct max17040_chip *chip = i2c_get_clientdata(client);
--	u8 msb;
--	u8 lsb;
--
--	msb = max17040_read_reg(client, MAX17040_VCELL_MSB);
--	lsb = max17040_read_reg(client, MAX17040_VCELL_LSB);
--
--	chip->vcell = (msb << 4) + (lsb >> 4);
--}
--
--static void max17040_get_soc(struct i2c_client *client)
--{
--	struct max17040_chip *chip = i2c_get_clientdata(client);
--	u8 msb;
--	u8 lsb;
--
--	msb = max17040_read_reg(client, MAX17040_SOC_MSB);
--	lsb = max17040_read_reg(client, MAX17040_SOC_LSB);
--
--	chip->soc = msb;
--}
--
--static void max17040_get_version(struct i2c_client *client)
--{
--	u8 msb;
--	u8 lsb;
--
--	msb = max17040_read_reg(client, MAX17040_VER_MSB);
--	lsb = max17040_read_reg(client, MAX17040_VER_LSB);
--
--	dev_info(&client->dev, "MAX17040 Fuel-Gauge Ver %d%d\n", msb, lsb);
--}
--
--static void max17040_get_online(struct i2c_client *client)
--{
--	struct max17040_chip *chip = i2c_get_clientdata(client);
--
--	if (chip->pdata->battery_online)
--		chip->online = chip->pdata->battery_online();
--	else
--		chip->online = 1;
--}
--
--static void max17040_get_status(struct i2c_client *client)
--{
--	struct max17040_chip *chip = i2c_get_clientdata(client);
--
--	if (!chip->pdata->charger_online || !chip->pdata->charger_enable) {
--		chip->status = POWER_SUPPLY_STATUS_UNKNOWN;
--		return;
--	}
--
--	if (chip->pdata->charger_online()) {
--		if (chip->pdata->charger_enable())
--			chip->status = POWER_SUPPLY_STATUS_CHARGING;
--		else
--			chip->status = POWER_SUPPLY_STATUS_NOT_CHARGING;
--	} else {
--		chip->status = POWER_SUPPLY_STATUS_DISCHARGING;
--	}
--
--	if (chip->soc > MAX17040_BATTERY_FULL)
--		chip->status = POWER_SUPPLY_STATUS_FULL;
--}
--
--static void max17040_work(struct work_struct *work)
--{
--	struct max17040_chip *chip;
--
--	chip = container_of(work, struct max17040_chip, work.work);
--
--	max17040_get_vcell(chip->client);
--	max17040_get_soc(chip->client);
--	max17040_get_online(chip->client);
--	max17040_get_status(chip->client);
--
--	schedule_delayed_work(&chip->work, MAX17040_DELAY);
--}
--
--static enum power_supply_property max17040_battery_props[] = {
--	POWER_SUPPLY_PROP_STATUS,
--	POWER_SUPPLY_PROP_ONLINE,
--	POWER_SUPPLY_PROP_VOLTAGE_NOW,
--	POWER_SUPPLY_PROP_CAPACITY,
--};
--
--static int max17040_probe(struct i2c_client *client,
--			const struct i2c_device_id *id)
--{
--	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
--	struct max17040_chip *chip;
--	int ret;
--
--	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE))
--		return -EIO;
--
--	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
--	if (!chip)
--		return -ENOMEM;
--
--	chip->client = client;
--	chip->pdata = client->dev.platform_data;
--
--	i2c_set_clientdata(client, chip);
--
--	chip->battery.name		= "battery";
--	chip->battery.type		= POWER_SUPPLY_TYPE_BATTERY;
--	chip->battery.get_property	= max17040_get_property;
--	chip->battery.properties	= max17040_battery_props;
--	chip->battery.num_properties	= ARRAY_SIZE(max17040_battery_props);
--
--	ret = power_supply_register(&client->dev, &chip->battery);
--	if (ret) {
--		dev_err(&client->dev, "failed: power supply register\n");
--		return ret;
--	}
--
--	max17040_reset(client);
--	max17040_get_version(client);
--
--	INIT_DEFERRABLE_WORK(&chip->work, max17040_work);
--	schedule_delayed_work(&chip->work, MAX17040_DELAY);
--
--	return 0;
--}
--
--static int max17040_remove(struct i2c_client *client)
--{
--	struct max17040_chip *chip = i2c_get_clientdata(client);
--
--	power_supply_unregister(&chip->battery);
--	cancel_delayed_work(&chip->work);
--	return 0;
--}
--
--#ifdef CONFIG_PM_SLEEP
--
--static int max17040_suspend(struct device *dev)
--{
--	struct i2c_client *client = to_i2c_client(dev);
--	struct max17040_chip *chip = i2c_get_clientdata(client);
--
--	cancel_delayed_work(&chip->work);
--	return 0;
--}
--
--static int max17040_resume(struct device *dev)
--{
--	struct i2c_client *client = to_i2c_client(dev);
--	struct max17040_chip *chip = i2c_get_clientdata(client);
--
--	schedule_delayed_work(&chip->work, MAX17040_DELAY);
--	return 0;
--}
--
--static SIMPLE_DEV_PM_OPS(max17040_pm_ops, max17040_suspend, max17040_resume);
--#define MAX17040_PM_OPS (&max17040_pm_ops)
--
--#else
--
--#define MAX17040_PM_OPS NULL
--
--#endif /* CONFIG_PM_SLEEP */
--
--static const struct i2c_device_id max17040_id[] = {
--	{ "max17040", 0 },
--	{ }
--};
--MODULE_DEVICE_TABLE(i2c, max17040_id);
--
--static struct i2c_driver max17040_i2c_driver = {
--	.driver	= {
--		.name	= "max17040",
--		.pm	= MAX17040_PM_OPS,
--	},
--	.probe		= max17040_probe,
--	.remove		= max17040_remove,
--	.id_table	= max17040_id,
--};
--module_i2c_driver(max17040_i2c_driver);
--
--MODULE_AUTHOR("Minkyu Kang <mk7.kang@samsung.com>");
--MODULE_DESCRIPTION("MAX17040 Fuel Gauge");
--MODULE_LICENSE("GPL");
-Index: linux-2.6.torvalds/include/linux/max17040_battery.h
-===================================================================
---- linux-2.6.torvalds.orig/include/linux/max17040_battery.h	2014-01-15 14:11:22.000000000 +0400
-+++ /dev/null	1970-01-01 00:00:00.000000000 +0000
-@@ -1,19 +0,0 @@
--/*
-- *  Copyright (C) 2009 Samsung Electronics
-- *  Minkyu Kang <mk7.kang@samsung.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
--
--#ifndef __MAX17040_BATTERY_H_
--#define __MAX17040_BATTERY_H_
--
--struct max17040_platform_data {
--	int (*battery_online)(void);
--	int (*charger_online)(void);
--	int (*charger_enable)(void);
--};
--
--#endif
+How about a comment for who needs pciex.
+
+>          */
+> -       return !strcmp(np->type, "pci") || !strcmp(np->type, "vci") ||
+> -               !strcmp(np->type, "ht");
+> +       return !strcmp(np->type, "pci") || !strcmp(np->type, "pciex") ||
+> +               !strcmp(np->type, "vci") || !strcmp(np->type, "ht");
+>  }
+>
+>  static void of_bus_pci_count_cells(struct device_node *np,
+> --
+> 1.7.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
