@@ -1,53 +1,70 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 3/5] ASoC: tda998x: add DT documentation of the tda998x
- CODEC
-Date: Sat, 01 Feb 2014 22:30:00 +0400
-Message-ID: <52ED3D28.7020709@cogentembedded.com>
-References: <cover.1391274627.git.moinejf@free.fr> <8e4231b7a55802f58a14dd07ac5cd8b0babb1dce.1391274628.git.moinejf@free.fr>
+From: Philipp Zabel <pza-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v7 0/7] ARM: rockchip: add smp functionality
+Date: Sat, 1 Feb 2014 22:51:40 +0100
+Message-ID: <20140201215140.GA1375@pengutronix.de>
+References: <4970034.fqvMoHdOyd@phil>
+ <13010296.nzTT2PqdSR@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8e4231b7a55802f58a14dd07ac5cd8b0babb1dce.1391274628.git.moinejf-GANU6spQydw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <13010296.nzTT2PqdSR@phil>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi Heiko,
 
-On 01-02-2014 20:48, Jean-Francois Moine wrote:
+On Fri, Jan 31, 2014 at 11:03:03PM +0100, Heiko St=FCbner wrote:
+> On Monday, 20. January 2014 16:41:43 Heiko St=FCbner wrote:
+> > This series enables the use of the additional cores on Rockchip
+> > Cortex-A9 SoCs.
+>=20
+> So, two weeks without any general complaints, but I guess part of the=
+ more=20
+> general patches could use an ack.
+>=20
+> Going forward, what would be best way to merge them?
+> As one pull request to arm-soc, or for example splitting them into th=
+e first=20
+> three patches going through the misc tree and the rockchip specific s=
+tuff going=20
+> through arm-soc? Or something else altogether?
+>=20
+>=20
+> > Heiko Stuebner (7):
+> >   of: add functions to count number of elements in a property
+>=20
+> One of the intermediate versions of this patch got a
+> 	Reviewed-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> .
+> Mark, is this still true for this variant addressing some additional =
+wished=20
+> from Rob?
+>=20
+> And this final version got a "Looks good" from Rob Herring in the ori=
+ginal=20
+> thread, but a more formal "ack" might be nice :-) .
+>=20
+>=20
+> >   dt-bindings: sram: describe option to reserve parts of the memory
+> >   misc: sram: implement mmio-sram-reserved option
+>=20
+> Philipp, you acked an intermediate version, and this v7 now should al=
+so=20
+> contain the two separate loops (1st gathering data and 2nd creating t=
+he pool=20
+> parts) you asked for.
+>=20
+> Could I persuade you to take a look again?
 
-> This patch adds the DT documentation of the NXP TDA998x CODEC.
+Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-> Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-> ---
->   Documentation/devicetree/bindings/drm/i2c/tda998x.txt | 17 +++++++++++++++++
->   1 file changed, 17 insertions(+)
-
-> diff --git a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
-> index d7df01c..aa0d81b 100644
-> --- a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
-> +++ b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
-[...]
-> @@ -24,4 +35,10 @@ Example:
->   		interrupts = <27 2>;		/* falling edge */
->   		pinctrl-0 = <&pmx_camera>;
->   		pinctrl-names = "default";
-> +			hdmi_codec: codec {
-
-    This line is indented too far to the right.
-
-> +			compatible = "nxp,tda998x-codec";
-> +			audio-ports = <0x03>, <0x04>;
-> +			audio-port-names = "i2s", "spdif";
-> +			#sound-dai-cells = <1>;
-> +		};
->   	};
-
-WBR, Sergei
-
+regards
+Philipp
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
