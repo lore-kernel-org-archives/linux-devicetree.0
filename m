@@ -1,55 +1,71 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: fix PCI bus match for PCIe slots
-Date: Sat, 1 Feb 2014 16:54:06 -0600
-Message-ID: <CAL_JsqKUFBSchVZivQ-qsaX4_UtC4fKYa8-Qw2o1zJMZTyk6Fg@mail.gmail.com>
-References: <1391124584-28847-1-git-send-email-klebers@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: [PATCH v2 RESEND 2/3] ARM: dts: clps711x: Add bindings documentation for CLPS711X irqchip driver
+Date: Sun,  2 Feb 2014 12:08:40 +0400
+Message-ID: <1391328520-30923-1-git-send-email-shc_work@mail.ru>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1391124584-28847-1-git-send-email-klebers-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kleber Sacilotto de Souza <klebers-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Brian King <brking-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 30, 2014 at 5:29 PM, Kleber Sacilotto de Souza
-<klebers-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> wrote:
-> On IBM pseries systems the device_type device-tree property of a PCIe
-> bridge contains the string "pciex". The of_bus_pci_match() function was
-> looking only for "pci" on this property, so in such cases the bus
-> matching code was falling back to the default bus, causing problems on
-> functions that should be using "assigned-addresses" for region address
-> translation. This patch fixes the problem by also looking for "pciex" on
-> the PCI bus match function.
+Add OF document for Cirrus Logic CLPS711X irqchip driver.
 
-Does this need to go to stable?
+Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+---
+ .../interrupt-controller/cirrus,clps711x-intc.txt  | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/cirrus,clps711x-intc.txt
 
-> Signed-off-by: Kleber Sacilotto de Souza <klebers-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/of/address.c |    4 ++--
->  1 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index d3dd41c..0da2c0f 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -102,8 +102,8 @@ static int of_bus_pci_match(struct device_node *np)
->          * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
->          * "ht" is hypertransport
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/cirrus,clps711x-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/cirrus,clps711x-intc.txt
+new file mode 100644
+index 0000000..759339c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/cirrus,clps711x-intc.txt
+@@ -0,0 +1,41 @@
++Cirrus Logic CLPS711X Interrupt Controller
++
++Required properties:
++
++- compatible: Should be "cirrus,clps711x-intc".
++- reg: Specifies base physical address of the registers set.
++- interrupt-controller: Identifies the node as an interrupt controller.
++- #interrupt-cells: Specifies the number of cells needed to encode an
++  interrupt source. The value shall be 1.
++
++The interrupt sources are as follows:
++ID	Name	Description
++---------------------------
++1:	BLINT	Battery low (FIQ)
++3:	MCINT	Media changed (FIQ)
++4:	CSINT	CODEC sound
++5:	EINT1	External 1
++6:	EINT2	External 2
++7:	EINT3	External 3
++8:	TC1OI	TC1 under flow
++9:	TC2OI	TC2 under flow
++10:	RTCMI	RTC compare match
++11:	TINT	64Hz tick
++12:	UTXINT1	UART1 transmit FIFO half empty
++13:	URXINT1	UART1 receive FIFO half full
++14:	UMSINT	UART1 modem status changed
++15:	SSEOTI	SSI1 end of transfer
++16:	KBDINT	Keyboard
++17:	SS2RX	SSI2 receive FIFO half or greater full
++18:	SS2TX	SSI2 transmit FIFO less than half empty
++28:	UTXINT2	UART2 transmit FIFO half empty
++29:	URXINT2	UART2 receive FIFO half full
++32:	DAIINT	DAI interface (FIQ)
++
++Example:
++	intc: interrupt-controller {
++		compatible = "cirrus,clps711x-intc";
++		reg = <0x80000000 0x4000>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++	};
+-- 
+1.8.3.2
 
-How about a comment for who needs pciex.
-
->          */
-> -       return !strcmp(np->type, "pci") || !strcmp(np->type, "vci") ||
-> -               !strcmp(np->type, "ht");
-> +       return !strcmp(np->type, "pci") || !strcmp(np->type, "pciex") ||
-> +               !strcmp(np->type, "vci") || !strcmp(np->type, "ht");
->  }
->
->  static void of_bus_pci_count_cells(struct device_node *np,
-> --
-> 1.7.1
->
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
