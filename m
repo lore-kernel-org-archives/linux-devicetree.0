@@ -1,145 +1,85 @@
-From: Davor Joja <davorjoja-bBue3UIS71U2IjGS+8YXRQ@public.gmane.org>
-Subject: [RFC 2/2] Documentation: devicetree: bindings: drm: Xylon binding
-Date: Sun, 2 Feb 2014 19:31:23 +0100
-Message-ID: <6344696d-861e-4cfb-bc40-bb49c092c42b@mail.xylon.local>
-References: <1391365883-18071-1-git-send-email-davorjoja@logicbricks.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 RESEND 2/3] ARM: dts: clps711x: Add bindings
+ documentation for CLPS711X irqchip driver
+Date: Sun, 2 Feb 2014 15:48:26 -0600
+Message-ID: <CAL_JsqJPSsdT2zgXyvzQjYfyVbgZKG0Bt9b-7NGCgbT3Fuhq1A@mail.gmail.com>
+References: <1391328520-30923-1-git-send-email-shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1391365883-18071-1-git-send-email-davorjoja-bBue3UIS71U2IjGS+8YXRQ@public.gmane.org>
+In-Reply-To: <1391328520-30923-1-git-send-email-shc_work-JGs/UdohzUI@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Davor Joja <davorjoja-bBue3UIS71U2IjGS+8YXRQ@public.gmane.org>
+To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Xylon binding of DRM driver and logiCVC IP core.
+On Sun, Feb 2, 2014 at 2:08 AM, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org> wrote:
+> Add OF document for Cirrus Logic CLPS711X irqchip driver.
+>
+> Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+> ---
+>  .../interrupt-controller/cirrus,clps711x-intc.txt  | 41 ++++++++++++++++++++++
 
-Signed-off-by: Davor Joja <davorjoja-bBue3UIS71U2IjGS+8YXRQ@public.gmane.org>
----
- .../devicetree/bindings/drm/xylon/logicvc.txt      |   79 ++++++++++++++++++++
- .../devicetree/bindings/drm/xylon/xylon_drm.txt    |   24 ++++++
- 2 files changed, 103 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/drm/xylon/logicvc.txt
- create mode 100644 Documentation/devicetree/bindings/drm/xylon/xylon_drm.txt
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/drm/xylon/logicvc.txt b/Documentation/devicetree/bindings/drm/xylon/logicvc.txt
-new file mode 100644
-index 0000000..505e655
---- /dev/null
-+++ b/Documentation/devicetree/bindings/drm/xylon/logicvc.txt
-@@ -0,0 +1,79 @@
-+Binding for Xylon configurable video controller logiCVC IP core
-+
-+Required properties:
-+ - compatible: value must be "xylon,logicvc-4.00.a"
-+ - reg: MMIO base address and size of the logiCVC IP core address space
-+ - interrupts-parent: the phandle for interrupt controller
-+ - interrupts: the interrupt number
-+ - background-layer-bits-per-pixel: background layer bits per pixel (16, 32)
-+      if omitted, last available layer is logiCVC standard layer, which has its
-+      own video memory of specific size, color format and specified
-+      bits per pixel
-+      if 16 or 32, last available layer is logiCVC background layer,
-+      with only specified bits per pixel value
-+ - interface: logiCVC to display physical interface
-+      (0=Parallel, 1=ITU656)
-+ - color-space: logiCVC to display physical color space
-+      (0=RGB, 1=YCbCr 4:2:2, 2=YCbCr 4:4:4)
-+ - is-readable-regs: all logiCVC registers are available for reading
-+      if omitted, only Interrupt Status, Power Control and IP Version registers
-+      are available for reading
-+ - is-size-position: logiCVC functionality for controlling on screen layer size
-+      and position is available
-+      if omitted, functionality is not available
-+ - pixel-stride: layer video memory width in pixels
-+      common for all available logiCVC standard layers
-+ - layer_0: layer has its own configuration described with below properties
-+   - bits-per-pixel: layer bits per pixel configuration (16, 32)
-+         layer is configured to be used with specific pixel width in bits
-+         pixels written to layer video memory must match in size to configured
-+         bits per pixel value
-+   - format: layer format (0=RGB, 1=YCbCr)
-+         layer is configured to be used with specific color format
-+         pixels written to layer video memory must match specified color format
-+   - transparency: layer transparency (0=Layer, 1=Pixel)
-+         logiCVC layer can be configured to have transparency control on
-+         layer or pixel level
-+         "Layer" mode enables controlling of layer transparency by changing
-+         alpha value in single logiCVC register
-+         "Pixel" mode enables controlling of pixel transparency by changing
-+         dedicated alpha bits of specific pixel in video memory
-+
-+Example:
-+
-+	logicvc_0: logicvc@40000000 {
-+		compatible = "xylon,logicvc-4.00.a";
-+		reg = <0x40000000 0x6000>;
-+		interrupt-parent = <&gic_0>;
-+		interrupts = <0 59 4>;
-+		background-layer-bits-per-pixel = <32>;
-+		interface = <0>;
-+		color-space = <1>;
-+		is-readable-regs;
-+		is-size-position;
-+		pixel-stride = <2048>;
-+		layer_0 {
-+			address = <0x30000000>;
-+			bits-per-pixel = <16>;
-+			format = <0>;
-+			transparency = <0>;
-+		};
-+		layer_1 {
-+			address = <0x30500000>;
-+			bits-per-pixel = <32>;
-+			format = <0>;
-+			transparency = <0>;
-+		};
-+		layer_2 {
-+			address = <0x30E00000>;
-+			bits-per-pixel = <32>;
-+			format = <0>;
-+			transparency = <1>;
-+		};
-+		layer_3 {
-+			address = <0x31700000>;
-+			bits-per-pixel = <16>;
-+			format = <1>;
-+			transparency = <0>;
-+		};
-+	};
-diff --git a/Documentation/devicetree/bindings/drm/xylon/xylon_drm.txt b/Documentation/devicetree/bindings/drm/xylon/xylon_drm.txt
-new file mode 100644
-index 0000000..da4940e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/drm/xylon/xylon_drm.txt
-@@ -0,0 +1,24 @@
-+Binding for Xylon DRM driver
-+
-+Xylon DRM driver supports the Xylon configurable video controller
-+logiCVC FPGA IP core device.
-+
-+On ZC702, ZC706, ZED boards, logiCVC uses SI570 CCF driver for pixel clock
-+generation, and ADV7511 DRM encoder driver to set video encoding configuration.
-+
-+Required properties:
-+ - compatible: value should be "xylon,drm-1.00.a".
-+ - clocks: the phandle for the pixel clock generator
-+ - device: the phandle for logiCVC video controller device
-+ - encoder: the phandle for the video encoder
-+ - private-plane: logiCVC layer id used for DRM driver private plane
-+
-+Example:
-+
-+	xylon_drm {
-+		compatible = "xylon,drm-1.00.a";
-+		clocks = <&si570>;
-+		device = <&logicvc_0>;
-+		encoder = <&adv7511>;
-+		private-plane = <0>;
-+	};
--- 
-1.7.9.5
 
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/cirrus,clps711x-intc.txt
+>
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/cirrus,clps711x-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/cirrus,clps711x-intc.txt
+> new file mode 100644
+> index 0000000..759339c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/cirrus,clps711x-intc.txt
+> @@ -0,0 +1,41 @@
+> +Cirrus Logic CLPS711X Interrupt Controller
+> +
+> +Required properties:
+> +
+> +- compatible: Should be "cirrus,clps711x-intc".
+> +- reg: Specifies base physical address of the registers set.
+> +- interrupt-controller: Identifies the node as an interrupt controller.
+> +- #interrupt-cells: Specifies the number of cells needed to encode an
+> +  interrupt source. The value shall be 1.
+> +
+> +The interrupt sources are as follows:
+> +ID     Name    Description
+> +---------------------------
+> +1:     BLINT   Battery low (FIQ)
+> +3:     MCINT   Media changed (FIQ)
+> +4:     CSINT   CODEC sound
+> +5:     EINT1   External 1
+> +6:     EINT2   External 2
+> +7:     EINT3   External 3
+> +8:     TC1OI   TC1 under flow
+> +9:     TC2OI   TC2 under flow
+> +10:    RTCMI   RTC compare match
+> +11:    TINT    64Hz tick
+> +12:    UTXINT1 UART1 transmit FIFO half empty
+> +13:    URXINT1 UART1 receive FIFO half full
+> +14:    UMSINT  UART1 modem status changed
+> +15:    SSEOTI  SSI1 end of transfer
+> +16:    KBDINT  Keyboard
+> +17:    SS2RX   SSI2 receive FIFO half or greater full
+> +18:    SS2TX   SSI2 transmit FIFO less than half empty
+> +28:    UTXINT2 UART2 transmit FIFO half empty
+> +29:    URXINT2 UART2 receive FIFO half full
+> +32:    DAIINT  DAI interface (FIQ)
+> +
+> +Example:
+> +       intc: interrupt-controller {
+> +               compatible = "cirrus,clps711x-intc";
+> +               reg = <0x80000000 0x4000>;
+> +               interrupt-controller;
+> +               #interrupt-cells = <1>;
+> +       };
+> --
+> 1.8.3.2
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
