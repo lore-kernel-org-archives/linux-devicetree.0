@@ -1,54 +1,38 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v3 3/8] ARM: dts: sun7i: Add GMAC controller
- node to sun7i DTSI
-Date: Mon,  3 Feb 2014 11:32:21 +0800
-Message-ID: <1391398346-5094-4-git-send-email-wens@csie.org>
-References: <1391398346-5094-1-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Christoffer Dall <christoffer.dall@linaro.org>
+Subject: Re: [PATCH] arm: document "mach-virt" platform.
+Date: Sun, 2 Feb 2014 20:54:02 -0800
+Message-ID: <20140203045402.GA4167@cbox>
+References: <1391098262-15944-1-git-send-email-ian.campbell@citrix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBUE3XSLQKGQEXJNZHBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1391398346-5094-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1391098262-15944-1-git-send-email-ian.campbell@citrix.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ian Campbell <ian.campbell@citrix.com>
+Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stefano Stabellini <stefano.stabellini@eu.citrix.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+On Thu, Jan 30, 2014 at 04:11:02PM +0000, Ian Campbell wrote:
+> mach-virt has existed for a while but it is not written down what it actually
+> consists of. Although it seems a bit unusual to document a binding for an
+> entire platform since mach-virt is entirely virtual it is helpful to have
+> something to refer to in the absence of a single concrete implementation.
+> 
+> I've done my best to capture the requirements based on the git log and my
+> memory/understanding.
 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index fc7f470..5fbac23 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -630,6 +630,21 @@
- 			status = "disabled";
- 		};
- 
-+		gmac: ethernet@01c50000 {
-+			compatible = "allwinner,sun7i-a20-gmac";
-+			reg = <0x01c50000 0x10000>;
-+			interrupts = <0 85 4>;
-+			interrupt-names = "macirq";
-+			clocks = <&ahb_gates 49>, <&gmac_tx_clk>;
-+			clock-names = "stmmaceth", "allwinner_gmac_tx";
-+			snps,pbl = <2>;
-+			snps,fixed-burst;
-+			snps,force_sf_dma_mode;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
- 		hstimer@01c60000 {
- 			compatible = "allwinner,sun7i-a20-hstimer";
- 			reg = <0x01c60000 0x1000>;
--- 
-1.9.rc1
+[...]
+
+> 
+> +
+> +The platform may also provide hypervisor specific functionality
+> +(e.g. PV I/O), if it does so then this functionality must be
+> +discoverable (directly or indirectly) via device tree.
+
+While this is obviously true, I'm not sure I see the value of this text.
+
+Isn't it more essential to just say that *any* functionality provided to
+the platform must be discoverable via device tree?
+
+-Christoffer
