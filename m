@@ -1,86 +1,71 @@
-From: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Subject: [PATCH v3 7/7] arm: zynq: Add support for cpufreq
-Date: Mon,  3 Feb 2014 14:34:37 -0800
-Message-ID: <1391466877-28908-8-git-send-email-soren.brinkmann@xilinx.com>
-References: <1391466877-28908-1-git-send-email-soren.brinkmann@xilinx.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1391466877-28908-1-git-send-email-soren.brinkmann@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Michal Simek <michal.simek@xilinx.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org
+From: Andy Gross <agross@codeaurora.org>
+Subject: [Patch v4 0/2] Add Qualcomm BAM dmaengine driver
+Date: Mon,  3 Feb 2014 17:04:45 -0600
+Message-ID: <1391468687-4347-1-git-send-email-agross@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, Andy Gross <agross@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The generic cpufreq-cpu0 driver can scale the CPU frequency on Zynq
-SOCs. Add the required platform device to the BSP and appropriate
-OPPs to the dts.
+This patch set introduces the dmaengine driver for the Qualcomm Bus Access
+Manager (BAM) DMA controller present on MSM 8x74 devices.  A number of the
+on-chip devices have their own BAM DMA controller and use it to move data
+between system memory and peripherals or between two peripherals.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
----
-v3:
- - change lowest frequency to 222223 (F_max / 3)
----
- arch/arm/boot/dts/zynq-7000.dtsi | 6 ++++++
- arch/arm/mach-zynq/Kconfig       | 2 ++
- arch/arm/mach-zynq/common.c      | 3 +++
- 3 files changed, 11 insertions(+)
+The initial version of this driver will only support slave DMA operations
+between system memory and peripherals.
 
-diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-index 8b67b19392ec..789d0bacc110 100644
---- a/arch/arm/boot/dts/zynq-7000.dtsi
-+++ b/arch/arm/boot/dts/zynq-7000.dtsi
-@@ -24,6 +24,12 @@
- 			device_type = "cpu";
- 			reg = <0>;
- 			clocks = <&clkc 3>;
-+			operating-points = <
-+				/* kHz    uV */
-+				666667  1000000
-+				333334  1000000
-+				222223  1000000
-+			>;
- 		};
- 
- 		cpu@1 {
-diff --git a/arch/arm/mach-zynq/Kconfig b/arch/arm/mach-zynq/Kconfig
-index f84fab14f0b7..f03e75bd0b2b 100644
---- a/arch/arm/mach-zynq/Kconfig
-+++ b/arch/arm/mach-zynq/Kconfig
-@@ -2,6 +2,8 @@ config ARCH_ZYNQ
- 	bool "Xilinx Zynq ARM Cortex A9 Platform" if ARCH_MULTI_V7
- 	select ARM_AMBA
- 	select ARM_GIC
-+	select ARCH_HAS_CPUFREQ
-+	select ARCH_HAS_OPP
- 	select COMMON_CLK
- 	select CPU_V7
- 	select GENERIC_CLOCKEVENTS
-diff --git a/arch/arm/mach-zynq/common.c b/arch/arm/mach-zynq/common.c
-index 1db2a5ca9ab8..644468151c04 100644
---- a/arch/arm/mach-zynq/common.c
-+++ b/arch/arm/mach-zynq/common.c
-@@ -51,6 +51,8 @@ static struct platform_device zynq_cpuidle_device = {
-  */
- static void __init zynq_init_machine(void)
- {
-+	struct platform_device_info devinfo = { .name = "cpufreq-cpu0", };
-+
- 	/*
- 	 * 64KB way size, 8-way associativity, parity disabled
- 	 */
-@@ -59,6 +61,7 @@ static void __init zynq_init_machine(void)
- 	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
- 
- 	platform_device_register(&zynq_cpuidle_device);
-+	platform_device_register_full(&devinfo);
- }
- 
- static void __init zynq_timer_init(void)
+Changes from v3:
+	- Remove unused bam_channel_dir.
+	- Remove incorrect write to BAM_IRQ_SRCS_EE (read only).
+	- Remove dma direction from DT binding and revise driver to use
+	  direction from prep_slave_sg.
+	- Remove unnecessary channel reset from channel_init.  This could affect
+	  channels controlled from other execution environments.
+	- Change terminate_all to also take care of the current active
+	  descriptor.
+	- Rework .remove function to correctly mask interrupts and clean up
+	  resources and tasklets.
+
+Changes from v2:
+        - Corrected Kconfig dependencies
+        - Moved execution environment ID to controller DT binding.  The EE is
+          a global setting across all of the channels on the controller.
+        - Combined header into source file.
+        - Corrected copyright date.
+        - Moved channel hardware initialization to occur when channel is used
+          for the first time.
+        - Converted dma_alloc_coherent to dma_alloc_writecombine
+        - Removed unecessary reset of channel from the dma terminate_all
+        - Corrected usage of EE in irq handler and channel configuration
+          functions.
+        - Changed resource functions inside probe to use correct APIs.
+        - Removed dma filter function and modified dma_xlate to use
+          dma_get_slave_channel API
+        - Fixed various nit comments
+
+Changes from v1:
+        - Converted driver to use virt-dma
+        - Reworked probe function per review comments
+        - tx_status function now computes and returns residuals
+        - Removed proprietary slave config.  Removed associated include file.
+        - Renamed files to reflect vendor name instead of specific device
+        - Converted to use (readl|writel)_relaxed w/ appropriate barriers
+        - Removed unions in favor of standard types.
+
+Andy Gross (2):
+  dmaengine: add Qualcomm BAM dma driver
+  dmaengine: qcom_bam_dma: Add device tree binding
+
+ .../devicetree/bindings/dma/qcom_bam_dma.txt       |   48 +
+ drivers/dma/Kconfig                                |    9 +
+ drivers/dma/Makefile                               |    1 +
+ drivers/dma/qcom_bam_dma.c                         | 1059 ++++++++++++++++++++
+ 4 files changed, 1117 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+ create mode 100644 drivers/dma/qcom_bam_dma.c
+
 -- 
-1.8.5.3
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
