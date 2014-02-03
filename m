@@ -1,175 +1,46 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH 07/10] watchdog: xilinx: Fix OF binding
-Date: Mon, 03 Feb 2014 09:01:16 +0100
-Message-ID: <52EF4CCC.8020800@monstr.eu>
-References: <ed4cb31c9a549343e6b492cf62fc962d39034bd0.1391177880.git.michal.simek@xilinx.com> <26d172891694e4041e73b7dae85a1848adf38034.1391177880.git.michal.simek@xilinx.com> <CAL_JsqJ+Dc9PFVYcxHvLiG9unKQX-kEc1fsYsieyTjf-AN3j=A@mail.gmail.com> <52EF4C6F.8040701@monstr.eu>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+From: Florian Vaussard <florian.vaussard@epfl.ch>
+Subject: Re: [PATCH v2 5/6] Documentation: devicetree: sja1000: add reg-io-width
+ binding
+Date: Mon, 03 Feb 2014 09:11:37 +0100
+Message-ID: <52EF4F39.8010403@epfl.ch>
+References: <1391164513-11529-1-git-send-email-florian.vaussard@epfl.ch> <1391164513-11529-6-git-send-email-florian.vaussard@epfl.ch> <52EB9723.3080008@pengutronix.de>
+Reply-To: florian.vaussard@epfl.ch
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="SB0ujlLfnp1AWiEVV2dGwKuQhQpIsvjgU"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52EF4C6F.8040701-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <52EB9723.3080008@pengutronix.de>
+Sender: linux-can-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>, Wolfgang Grandegger <wg@grandegger.com>
+Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---SB0ujlLfnp1AWiEVV2dGwKuQhQpIsvjgU
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
 
-On 02/03/2014 08:59 AM, Michal Simek wrote:
-> On 01/31/2014 06:33 PM, Rob Herring wrote:
->> On Fri, Jan 31, 2014 at 8:18 AM, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org=
-> wrote:
->>> Use of_property_read_u32 functions to clean OF probing.
+
+On 01/31/2014 01:29 PM, Marc Kleine-Budde wrote:
+> On 01/31/2014 11:35 AM, Florian Vaussard wrote:
+>> Add the reg-io-width property to describe the width of the memory
+>> accesses.
 >>
->> The subject is a bit misleading as this doesn't really fix anything.
->=20
-> fair enough. Will change it.
->=20
->>
->>>
->>> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->>> ---
->>>
->>>  drivers/watchdog/of_xilinx_wdt.c | 25 ++++++++++---------------
->>>  1 file changed, 10 insertions(+), 15 deletions(-)
->>>
->>> diff --git a/drivers/watchdog/of_xilinx_wdt.c b/drivers/watchdog/of_x=
-ilinx_wdt.c
->>> index c229cc4..475440a6 100644
->>> --- a/drivers/watchdog/of_xilinx_wdt.c
->>> +++ b/drivers/watchdog/of_xilinx_wdt.c
->>> @@ -147,8 +147,7 @@ static u32 xwdt_selftest(struct xwdt_device *xdev=
-)
->>>  static int xwdt_probe(struct platform_device *pdev)
->>>  {
->>>         int rc;
->>> -       u32 *tmptr;
->>> -       u32 *pfreq;
->>> +       u32 pfreq, enable_once;
->>>         struct resource *res;
->>>         struct xwdt_device *xdev;
->>>         bool no_timeout =3D false;
->>> @@ -168,28 +167,24 @@ static int xwdt_probe(struct platform_device *p=
-dev)
->>>         if (IS_ERR(xdev->base))
->>>                 return PTR_ERR(xdev->base);
->>>
->>> -       pfreq =3D (u32 *)of_get_property(pdev->dev.of_node,
->>> -                                       "clock-frequency", NULL);
->>> -
->>> -       if (pfreq =3D=3D NULL) {
->>> +       rc =3D of_property_read_u32(pdev->dev.of_node, "clock-frequen=
-cy", &pfreq);
->>> +       if (rc) {
->>>                 dev_warn(&pdev->dev,
->>>                          "The watchdog clock frequency cannot be obta=
-ined\n");
->>>                 no_timeout =3D true;
->>
->> You can kill this...
->>
->>>         }
->>>
->>> -       tmptr =3D (u32 *)of_get_property(pdev->dev.of_node,
->>> -                                       "xlnx,wdt-interval", NULL);
->>> -       if (tmptr =3D=3D NULL) {
->>> +       rc =3D of_property_read_u32(pdev->dev.of_node, "xlnx,wdt-inte=
-rval",
->>> +                                 &xdev->wdt_interval);
->>> +       if (rc) {
->>>                 dev_warn(&pdev->dev,
->>>                          "Parameter \"xlnx,wdt-interval\" not found\n=
-");
->>>                 no_timeout =3D true;
->>
->> and this...
->>
->>> -       } else {
->>> -               xdev->wdt_interval =3D *tmptr;
->>>         }
->>>
->>> -       tmptr =3D (u32 *)of_get_property(pdev->dev.of_node,
->>> -                                       "xlnx,wdt-enable-once", NULL)=
-;
->>> -       if (tmptr =3D=3D NULL) {
->>> +       rc =3D of_property_read_u32(pdev->dev.of_node, "xlnx,wdt-enab=
-le-once",
->>> +                                 &enable_once);
->>> +       if (!rc && enable_once) {
->>>                 dev_warn(&pdev->dev,
->>>                          "Parameter \"xlnx,wdt-enable-once\" not foun=
-d\n");
->>>                 watchdog_set_nowayout(xilinx_wdt_wdd, true);
->>> @@ -201,7 +196,7 @@ static int xwdt_probe(struct platform_device *pde=
-v)
->>>   */
->>>         if (!no_timeout)
->>
->> and use "if (pfreq && xdev->wdt_interval)" if you initialize pfreq to =
-0.
->=20
->=20
-> I just wanted to to change functions not logic in the driver.
-> But it can be changed too.
->=20
->>>                 xilinx_wdt_wdd->timeout =3D 2 * ((1 << xdev->wdt_inte=
-rval) /
->>> -                                         *pfreq);
->>> +                                         pfreq);
->>
->> Is the wdog really usable if the timeout properties are missing? Seems=
+>> Cc: Grant Likely <grant.likely@linaro.org>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Pawel Moll <pawel.moll@arm.com>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+>> Cc: Kumar Gala <galak@codeaurora.org>
+>> Cc: devicetree@vger.kernel.org
+>> Acked-by: Rob Herring <robh@kernel.org>
+>> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
+> 
+> I think it makes sense to squash into patch 6.
+> 
 
->> like you should fail to probe rather than warn.
->=20
-> There are 2 things.
-> 1. timeout - you don't need pfreq and wdt_interval to use this driver
-> but for that there should be module parameter timeout there.
-> It should be added.
->=20
-> 2. about warn - based on 1 I don't think driver should failed
-> but I am looking at logic above which I have added there but should be =
-different.
->=20
-> u32 enable_once =3D 0;
-> if (!rc)
-> 	dev_warn
->=20
+According to recent guidelines from the DT maintainers [1], the
+documentation part should be a separate patch. I guess it makes sense to
+ease the review process for new bindings.
 
-if (rc) here sorry.
+Regards
+Florian
 
-Thanks,
-Michal
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---SB0ujlLfnp1AWiEVV2dGwKuQhQpIsvjgU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlLvTMwACgkQykllyylKDCH+SQCgmop3s+GoiLjO0PhSnUO0Dcs2
-BdEAn3ry6Ybl+5bmdRfqFBQouBS+6Enn
-=h0oC
------END PGP SIGNATURE-----
-
---SB0ujlLfnp1AWiEVV2dGwKuQhQpIsvjgU--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1]
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/submitting-patches.txt
