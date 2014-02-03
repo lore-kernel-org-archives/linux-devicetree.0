@@ -1,52 +1,169 @@
-From: Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] arm: document "mach-virt" platform.
-Date: Sun, 2 Feb 2014 20:56:38 -0800
-Message-ID: <20140203045638.GB4167@cbox>
-References: <1391098262-15944-1-git-send-email-ian.campbell@citrix.com>
- <52EA83D6.9050506@codeaurora.org>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH 07/10] watchdog: xilinx: Fix OF binding
+Date: Mon, 03 Feb 2014 08:59:43 +0100
+Message-ID: <52EF4C6F.8040701@monstr.eu>
+References: <ed4cb31c9a549343e6b492cf62fc962d39034bd0.1391177880.git.michal.simek@xilinx.com> <26d172891694e4041e73b7dae85a1848adf38034.1391177880.git.michal.simek@xilinx.com> <CAL_JsqJ+Dc9PFVYcxHvLiG9unKQX-kEc1fsYsieyTjf-AN3j=A@mail.gmail.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52EA83D6.9050506-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="SpFVoNmCUuBv3h8LOJ9KMuql3WrHJNOGg"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJ+Dc9PFVYcxHvLiG9unKQX-kEc1fsYsieyTjf-AN3j=A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Michal Simek <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-watchdog@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 30, 2014 at 11:54:46AM -0500, Christopher Covington wrote:
-> Hi Ian,
-> 
-> On 01/30/2014 11:11 AM, Ian Campbell wrote:
-> > mach-virt has existed for a while but it is not written down what it actually
-> > consists of. Although it seems a bit unusual to document a binding for an
-> > entire platform since mach-virt is entirely virtual it is helpful to have
-> > something to refer to in the absence of a single concrete implementation.
-> > 
-> > I've done my best to capture the requirements based on the git log and my
-> > memory/understanding.
-> > 
-> > While here remove the xenvm dts example, the Xen tools will now build a
-> > suitable mach-virt compatible dts when launching the guest.
-> 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--SpFVoNmCUuBv3h8LOJ9KMuql3WrHJNOGg
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-[...]
+On 01/31/2014 06:33 PM, Rob Herring wrote:
+> On Fri, Jan 31, 2014 at 8:18 AM, Michal Simek <michal.simek@xilinx.com>=
+ wrote:
+>> Use of_property_read_u32 functions to clean OF probing.
+>=20
+> The subject is a bit misleading as this doesn't really fix anything.
 
-> > +The platform may also provide hypervisor specific functionality
-> > +(e.g. PV I/O), if it does so then this functionality must be
-> > +discoverable (directly or indirectly) via device tree.
-> 
-> I think it would be informative to provide pointers here to commonly used
-> paravirtualized devices, especially VirtIO PCI/MMIO.
-> 
+fair enough. Will change it.
 
-I disagree: that would only encourage limited testing or assumptions
-about these specific devices when really this platform is just a
-bare-bones platform driven by device tree which should make no
-preference, whatsoever, about which devices are used with the platform.
+>=20
+>>
+>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+>> ---
+>>
+>>  drivers/watchdog/of_xilinx_wdt.c | 25 ++++++++++---------------
+>>  1 file changed, 10 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/drivers/watchdog/of_xilinx_wdt.c b/drivers/watchdog/of_xi=
+linx_wdt.c
+>> index c229cc4..475440a6 100644
+>> --- a/drivers/watchdog/of_xilinx_wdt.c
+>> +++ b/drivers/watchdog/of_xilinx_wdt.c
+>> @@ -147,8 +147,7 @@ static u32 xwdt_selftest(struct xwdt_device *xdev)=
 
--Christoffer
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>  static int xwdt_probe(struct platform_device *pdev)
+>>  {
+>>         int rc;
+>> -       u32 *tmptr;
+>> -       u32 *pfreq;
+>> +       u32 pfreq, enable_once;
+>>         struct resource *res;
+>>         struct xwdt_device *xdev;
+>>         bool no_timeout =3D false;
+>> @@ -168,28 +167,24 @@ static int xwdt_probe(struct platform_device *pd=
+ev)
+>>         if (IS_ERR(xdev->base))
+>>                 return PTR_ERR(xdev->base);
+>>
+>> -       pfreq =3D (u32 *)of_get_property(pdev->dev.of_node,
+>> -                                       "clock-frequency", NULL);
+>> -
+>> -       if (pfreq =3D=3D NULL) {
+>> +       rc =3D of_property_read_u32(pdev->dev.of_node, "clock-frequenc=
+y", &pfreq);
+>> +       if (rc) {
+>>                 dev_warn(&pdev->dev,
+>>                          "The watchdog clock frequency cannot be obtai=
+ned\n");
+>>                 no_timeout =3D true;
+>=20
+> You can kill this...
+>=20
+>>         }
+>>
+>> -       tmptr =3D (u32 *)of_get_property(pdev->dev.of_node,
+>> -                                       "xlnx,wdt-interval", NULL);
+>> -       if (tmptr =3D=3D NULL) {
+>> +       rc =3D of_property_read_u32(pdev->dev.of_node, "xlnx,wdt-inter=
+val",
+>> +                                 &xdev->wdt_interval);
+>> +       if (rc) {
+>>                 dev_warn(&pdev->dev,
+>>                          "Parameter \"xlnx,wdt-interval\" not found\n"=
+);
+>>                 no_timeout =3D true;
+>=20
+> and this...
+>=20
+>> -       } else {
+>> -               xdev->wdt_interval =3D *tmptr;
+>>         }
+>>
+>> -       tmptr =3D (u32 *)of_get_property(pdev->dev.of_node,
+>> -                                       "xlnx,wdt-enable-once", NULL);=
+
+>> -       if (tmptr =3D=3D NULL) {
+>> +       rc =3D of_property_read_u32(pdev->dev.of_node, "xlnx,wdt-enabl=
+e-once",
+>> +                                 &enable_once);
+>> +       if (!rc && enable_once) {
+>>                 dev_warn(&pdev->dev,
+>>                          "Parameter \"xlnx,wdt-enable-once\" not found=
+\n");
+>>                 watchdog_set_nowayout(xilinx_wdt_wdd, true);
+>> @@ -201,7 +196,7 @@ static int xwdt_probe(struct platform_device *pdev=
+)
+>>   */
+>>         if (!no_timeout)
+>=20
+> and use "if (pfreq && xdev->wdt_interval)" if you initialize pfreq to 0=
+=2E
+
+
+I just wanted to to change functions not logic in the driver.
+But it can be changed too.
+
+>>                 xilinx_wdt_wdd->timeout =3D 2 * ((1 << xdev->wdt_inter=
+val) /
+>> -                                         *pfreq);
+>> +                                         pfreq);
+>=20
+> Is the wdog really usable if the timeout properties are missing? Seems
+> like you should fail to probe rather than warn.
+
+There are 2 things.
+1. timeout - you don't need pfreq and wdt_interval to use this driver
+but for that there should be module parameter timeout there.
+It should be added.
+
+2. about warn - based on 1 I don't think driver should failed
+but I am looking at logic above which I have added there but should be di=
+fferent.
+
+u32 enable_once =3D 0;
+if (!rc)
+	dev_warn
+
+if (enable_once)
+	watchdog_set_nowayout(xilinx_wdt_wdd, true);
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--SpFVoNmCUuBv3h8LOJ9KMuql3WrHJNOGg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlLvTG8ACgkQykllyylKDCHtvgCfWgMVEK9E2Hcf6AqXDlemSKqS
+/w0An359q1s2nK6PeSSpLyHwtQdJw312
+=qMJe
+-----END PGP SIGNATURE-----
+
+--SpFVoNmCUuBv3h8LOJ9KMuql3WrHJNOGg--
