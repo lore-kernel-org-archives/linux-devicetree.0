@@ -1,17 +1,17 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 2/8] ARM: dts: sun7i: Add GMAC clock node
- to sun7i DTSI
-Date: Mon, 3 Feb 2014 20:34:31 +0100
-Message-ID: <20140203193431.GD25625@lukather>
+Subject: Re: [PATCH v3 8/8] ARM: dts: sun7i: Add ethernet alias
+ for GMAC
+Date: Mon, 3 Feb 2014 20:38:02 +0100
+Message-ID: <20140203193802.GE25625@lukather>
 References: <1391398346-5094-1-git-send-email-wens@csie.org>
- <1391398346-5094-3-git-send-email-wens@csie.org>
+ <1391398346-5094-9-git-send-email-wens@csie.org>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="bajzpZikUji1w+G9"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB666X6LQKGQETT5WJRA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="qFgkTsE6LiHkLPZw"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBEXBX6LQKGQEMOIW6YA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1391398346-5094-3-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <1391398346-5094-9-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi>
@@ -23,39 +23,42 @@ Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquett
 List-Id: devicetree@vger.kernel.org
 
 
---bajzpZikUji1w+G9
+--qFgkTsE6LiHkLPZw
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 03, 2014 at 11:32:20AM +0800, Chen-Yu Tsai wrote:
-> The GMAC uses 1 of 2 sources for its transmit clock, depending on the
-> PHY interface mode. Add both sources as dummy clocks, and as parents
-> to the GMAC clock node.
+On Mon, Feb 03, 2014 at 11:32:26AM +0800, Chen-Yu Tsai wrote:
+> U-Boot will insert MAC address into the device tree image.
+> It looks up ethernet[0-5] aliases to find the ethernet nodes.
+> Alias GMAC as ethernet0, as it is the only ethernet controller used.
 >=20
 > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 > ---
->  arch/arm/boot/dts/sun7i-a20.dtsi | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
+>  arch/arm/boot/dts/sun7i-a20.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >=20
 > diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a=
 20.dtsi
-> index 1595e9a..fc7f470 100644
+> index 65fb8d0..c48fb11 100644
 > --- a/arch/arm/boot/dts/sun7i-a20.dtsi
 > +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-> @@ -314,6 +314,34 @@
->  		};
+> @@ -17,7 +17,7 @@
+>  	interrupt-parent =3D <&gic>;
 > =20
->  		/*
-> +		 * The following two are dummy clocks, placeholders used
-> +		 * on gmac_tx clock. The actual frequency and availability
-> +		 * depends on the external PHY, operation mode and link
-> +		 * speed.
-> +		 */
+>  	aliases {
+> -		ethernet0 =3D &emac;
+> +		ethernet0 =3D &gmac;
+>  	};
 
-If it depends on the external PHY, I guess that means it also depends
-on the board, right? Or is the GMAC supposed to always have that clock
-running at 25MHz, no matter what PHY is connected to it?
+I'm not very fond of this patch.
+
+People might rely on the fact that ethernet0 is actually the emac, and
+are expecting u-boot to fill the ethaddr variable to the emac, and not
+the gmac.
+
+Since u-boot is totally able to deal with several ethernet addresses,
+please add it as ethernet1.
 
 Maxime
 
@@ -64,26 +67,26 @@ Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
 
---bajzpZikUji1w+G9
+--qFgkTsE6LiHkLPZw
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.14 (GNU/Linux)
 
-iQIcBAEBAgAGBQJS7+9HAAoJEBx+YmzsjxAgQlQQAKshBcUSSlYHhXIGdt21xOgA
-GIW5gRW29jBCQvJ2iOqYn1jQ1mFo8KM7SklMtr7cPEt4tmuylQYeUzPm2FgXOtrm
-YCfcgGyWQNJPNrBehrigSpTm3JixDPhyp202HJKhnhxKDuJNAUmuXRl4UlG8op3M
-vZ6WaomnSMLPwKN/oqlQ2735eXJUNKwOcyn3cz6R3cB6GTsLoty9QoWSDYZW1u8k
-wAEg/+OcUx+EjcT6Lij6tazLmXedBERs3hUDnJ4x+BwbE/FOcreJHLxncN+v8G2V
-F9PLi2RibHht3h9h+g2q93rrLTLTdUxVVlDnSxbB/MpD3hWRy6xIBlgL1J0uY1cd
-HNtn5ak9goUIsb4yZefc/jV9iXFQqQglFNSA5ixdBOSkSG6jVRJiAwZ9UcikWUto
-nS21RI4GPRzzSDTHdXBa/WYfuntu8jeAXfGriUGA6+3ptZ7Xk0dk4j9P04V7gL6A
-O1NJAX9PzDE0lq3MJPCYf7y+gzS9M6yjZ2HzW8eW2H0Tf1VSwfwdq7L1PJXsJlb3
-XtCKVaClqvoiHYfQXJQ8HLjsAh3wYtYWVMF8/9g5IsyQdOPOaEeV6JkqC7nG6nzQ
-SgCuJCljciOvStqYZYOA55YjLFoltlbVlUhjOMIv/3pqhOGM1vfqg9Uh8HE8GJks
-oDO1O4dNhPIPxXT5NPDB
-=ModD
+iQIcBAEBAgAGBQJS7/AaAAoJEBx+YmzsjxAgHMUQAIXqo3N3GOgg00+H22oTt0F9
+2ZjCZhvbb9wdXzhl6NwzSeW9eDSfzQgECvaaw/AtPKR9dViI4Faw7QJ+JGrkYino
+X5oOK+iI3dNLUDgfPmpK8s1TXtxaNdNzlPs9i9ZG5cR2Hyy/e2prXlfk6j2Qcr1l
+u+NjPLG408A5aynGdr2TBSGuNfWobxkcZoNpZx4+IbSVGZ+O/QfIzjAQwYMM0qV/
+vvWt1CY7r8CYqMKrtPtO06hrif5Jq5Dd8N4y1FsB5+bMQJnzgkFUv1+4ZJpv58aN
+ktCjr5XeQspqr/KvGWuxFKXAalqBe8KCm2RAC7W2H2PDmSmBgo+/KLePYMxBBH2V
+beX2sCDXxMHQIDXZWcm6VGmilvik04kqGpRQUYF/QplumLg1cT6tfV+TbKQYo7qC
+KxO/wquXxByeBc2IRD8KpNVupUe7PUqweG/zhck1QPL/qiSl1KrxENUGUBMdDlEK
+RtnunTxG83LTLRU3uzgebvgzv3t7Pv1zS/bZqlp4dsfgzlHtEI+lptCaUXClnt8r
+IySR4DqKE8bWn4jrWNIaym+U3Qoat0EfpsMRUi2nqN2xlzle9Kod0lGRjtT+Wfkf
+oeZAYibIK+TqyxDrUUfVPc+2ENitbGaleKnl0wH4iISpvxRz6xl640kcf/E7Z1+s
+w6coxfN6mX0EeHKvupQy
+=PYqa
 -----END PGP SIGNATURE-----
 
---bajzpZikUji1w+G9--
+--qFgkTsE6LiHkLPZw--
