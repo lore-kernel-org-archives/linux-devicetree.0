@@ -1,171 +1,119 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH] arm64: Add architecture support for PCI
-Date: Mon, 3 Feb 2014 19:18:38 +0000
-Message-ID: <20140203191837.GC4889@e106497-lin.cambridge.arm.com>
-References: <1391453028-23191-1-git-send-email-Liviu.Dudau@arm.com>
- <1391453028-23191-2-git-send-email-Liviu.Dudau@arm.com>
- <21596846.kVTqp7roW4@wuerfel>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [RFC] dtc: add ability to make nodes conditional on them being
+ referenced
+Date: Mon, 3 Feb 2014 20:22:15 +0100
+Message-ID: <20140203192215.GA25625@lukather>
+References: <1578575.rVWgTPdq1W@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <21596846.kVTqp7roW4@wuerfel>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="OXfL5xGRrasGEqWY"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, linaro-kernel <linaro-kernel@lists.linaro.org>
+In-Reply-To: <1578575.rVWgTPdq1W@phil>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 03, 2014 at 06:58:56PM +0000, Arnd Bergmann wrote:
-> On Monday 03 February 2014 18:43:48 Liviu Dudau wrote:
-> > diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/i=
-o.h
-> > index 4cc813e..ce5bad2 100644
-> > --- a/arch/arm64/include/asm/io.h
-> > +++ b/arch/arm64/include/asm/io.h
-> > @@ -120,9 +120,13 @@ static inline u64 __raw_readq(const volatile v=
-oid __iomem *addr)
-> >  /*
-> >   *  I/O port access primitives.
-> >   */
-> > +#define arch_has_dev_port()	(0)
+
+--OXfL5xGRrasGEqWY
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Thu, Jan 30, 2014 at 01:25:56PM +0100, Heiko St=FCbner wrote:
+> From: Heiko Stuebner <heiko.stuebner-HCpLIkUQxWGakBO8gow8eQ@public.gmane.org>
 >=20
-> Why not?
-
-Maybe I got it the wrong way around, but the comment in include/linux/i=
-o.h says:
-
-/*
- * Some systems do not have legacy ISA devices.
- * /dev/port is not a valid interface on these systems.
- * So for those archs, <asm/io.h> should define the following symbol.
- */
-
-So ... defining it should mean no legacy ISA devices, right?
-
+> On i.MX, which carries a lot of pin-groups of which most are unused on
+> individual boards, they noticed that this plehora of nodes also results
+> in the runtime-lookup-performance also degrading [0].
 >=20
-> >  #define IO_SPACE_LIMIT		0xffff
+> A i.MX-specific solution defining the pingroups in the board files but
+> using macros to reference the pingroup-data was not well received
 >=20
-> You probably want to increase this a bit, to allow multiple host brid=
-ges
-> to have their own I/O space.
-
-OK, but to what size?
-
+> This patch is trying to solve this issue in a more general way, by
+> adding the ability to mark nodes as needing to be referenced somewhere
+> in the tree.
 >=20
-> >  #define PCI_IOBASE		((void __iomem *)(MODULES_VADDR - SZ_2M))
+> To mark a node a needing to be referenced it must be prefixed with
+> /delete-unreferenced/. This makes dtc check the nodes reference-status
+> when creating the flattened tree, dropping it if unreferenced.
 >=20
-> And modify this location: There is no particular reason to have the I=
-/O space
-> mapped exactly 2MB below the loadable modules, as virtual address spa=
-ce is
-> essentially free.
-
-Will talk with Catalin about where to place this.
-
+> For example, the i.MX6SL pingroup
 >=20
-> > +#define ioport_map(port, nr)	(PCI_IOBASE + ((port) & IO_SPACE_LIMI=
-T))
-> > +#define ioport_unmap(addr)
+> 	/delete-uneferenced/ pinctrl_ecspi1_1: ecspi1grp-1 {
+> 		fsl,pins =3D <
+> 			MX6SL_PAD_ECSPI1_MISO__ECSPI1_MISO 0x100b1
+> 			MX6SL_PAD_ECSPI1_MOSI__ECSPI1_MOSI 0x100b1
+> 			MX6SL_PAD_ECSPI1_SCLK__ECSPI1_SCLK 0x100b1
+> 		>;
+> 	};
 >=20
-> inline functions?
-
-Will do, thanks!
-
+> would only be included in the dtb if it got referenced somewhere
+> as pingroup via
 >=20
-> >  static inline u8 inb(unsigned long addr)
-> >  {
-> >  	return readb(addr + PCI_IOBASE);
-> > diff --git a/arch/arm64/include/asm/pci.h b/arch/arm64/include/asm/=
-pci.h
-> > new file mode 100644
-> > index 0000000..dd084a3
-> > --- /dev/null
-> > +++ b/arch/arm64/include/asm/pci.h
-> > @@ -0,0 +1,35 @@
-> > +#ifndef __ASM_PCI_H
-> > +#define __ASM_PCI_H
-> > +#ifdef __KERNEL__
-> > +
-> > +#include <linux/types.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/dma-mapping.h>
-> > +
-> > +#include <asm/io.h>
-> > +#include <asm-generic/pci-bridge.h>
-> > +#include <asm-generic/pci-dma-compat.h>
-> > +
-> > +#define PCIBIOS_MIN_IO		0
-> > +#define PCIBIOS_MIN_MEM		0
+> 	node {
+> 		pinctrl-0 <&pinctrl_ecscpi1_1>;
+> 	};
 >=20
-> PCIBIOS_MIN_IO is normally set to 0x1000, to stay out of the ISA rang=
-e.
-
-:) No ISA support! (Die ISA, die!!)=20
-
+> [0] http://thread.gmane.org/gmane.linux.ports.arm.kernel/275912/
 >=20
-> > diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
-> > new file mode 100644
-> > index 0000000..7b652cf
-> > --- /dev/null
-> > +++ b/arch/arm64/kernel/pci.c
-> > @@ -0,0 +1,112 @@
+> Signed-off-by: Heiko Stuebner <heiko.stuebner-HCpLIkUQxWGakBO8gow8eQ@public.gmane.org>
+> ---
+> This is just the idea I had in [1] explored a bit more. I'm definitely
+> not sure if this is a valid approach to the problem.
+> Also this is my first venture into dtc as well as flex and bison :-) .
 >=20
-> None of this looks really arm64 specific, nor should it be. I think
-> we should try a little harder to move this as a default implementatio=
-n
-> into common code, even if we start out by having all architectures
-> override it.
+> [1] http://www.spinics.net/lists/arm-kernel/msg303731.html
 
-Agree. This is the RFC version. I didn't dare to post a patch with fixe=
-s
-for all architectures. :)
+This is a nice feature to have :)
 
->=20
-> > +int pci_ioremap_io(unsigned int offset, phys_addr_t phys_addr)
-> > +{
-> > +	BUG_ON(offset + SZ_64K - 1 > IO_SPACE_LIMIT);
-> > +
-> > +	return ioremap_page_range((unsigned long)PCI_IOBASE + offset,
-> > +				(unsigned long)PCI_IOBASE + offset + SZ_64K,
-> > +				phys_addr,
-> > +				__pgprot(PROT_DEVICE_nGnRE));
-> > +}
->=20
-> Not sure if we want to treat this one as architecture specific though=
-=2E
-> It certainly won't be portable to x86, but it could be shared with
-> a couple of others. We may also want to redesign the interface.
-> I've been thinking we could make this function allocate space in the
-> Linux virtual I/O space aperture, and pass two resources into it
-> (physical I/O aperture and bus I/O range), and get the actual
-> io_offset as the return value, or a negative error number.
+However, I wonder wether it's the right way of implementing it. I'd
+have another use case for this, which would be to embed a DT in a
+first-stage bootloader. We have around 7kB available currently for the
+DT, and this is actually less than any of our (very small already)
+DTBs. So having this of feature makes complete sense to us
+too. However, we also have some other tools that require most of the
+nodes to be in the DTB.
 
-Not sure I completely follow your idea.
+So I guess turning wether we should delete a node if unreferenced into
+a dtc option would make sense, since every DT user will be able to
+choose, without having to duplicate the DT and make conflicting
+changes.
 
->=20
-> That way, you could have an arbitrary number of host bridges in the
-> system and each one gets a share of the virtual aperture until
-> it's full.
-
-One still needs to fix the pci_request_region use that checks against
-ioport_resource. But it is an interesting idea.
-
->=20
-> 	Arnd
->=20
->=20
-
-Thanks for reviewing this patch!
-
-Liviu
+Maxime
 
 --=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--OXfL5xGRrasGEqWY
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS7+xnAAoJEBx+YmzsjxAgnRcP+weivggq0QOzMwXUjeSDH8hO
+si8/Q5w6/Nb1uBeluE5aRBFpjxV1uLQdToTe8Lt4lKCujZOypJs3/UaTjN6osjGp
+2a3d+E9dixFuGNjD0EYmnpOng+I5xXDnuysQxcbjOD+fnlZfSxkUTfPpMDNozIKV
+JhwOLcc6vuS31ZCi91RugJ5wJR/l0E94Yg1AHDMJKvYTMMlGAQOYmy4cS9YAF+XV
+XiaALtJUWX9gK0yEgYmwUUgKFsqZi3vWGUgDFEM/YJ1oLO/n6GWvy2Y3Mbe5TOEb
+uFOEimpTRIUk8W2rMDqTgOmGPnHyN3zYVqmRAzc/Cvdj35gjTpvhuTqEilkadCRH
+kqKhsRgkurvpsSXHqLJmjYXz4yCM0r8QNImiczvMf+P5nw/4bt8hSNZ3ZAa1TIwa
+Imh7rPkVcIfAEndUUWc1dziwOWR8j7kS0fcuFMgMKvto7FYujwmVaozHu8XPjITa
+6meKqx+FGszN+IfyzE46SFgxNK74w0zH4BGUV1UsFmi7cVarSAFjm47CCc+DDhac
+dvkqAYv+CGKCaRQWDgxBqpCr3429/aIdYxDSDa6ssLHL74wKWL6gMt4E4lBN4dHk
+/V1wH56jNRGNQbf4HRBthQfIXF3a3FUiT5KSO9aioT3FH2l/0WfNWrbzdimaATvS
+dfkQYqzks2hYtZ4E/zLR
+=Ca77
+-----END PGP SIGNATURE-----
+
+--OXfL5xGRrasGEqWY--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
