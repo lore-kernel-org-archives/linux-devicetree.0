@@ -1,40 +1,50 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v2] of: make of_get_phy_mode parse 'phy-connection-type'
-Date: Mon, 03 Feb 2014 14:37:02 +0000
-Message-ID: <20140203143702.14B27C40619@trevor.secretlab.ca>
-References: <20131114074711.9A8C5C402E1@trevor.secretlab.ca> < 1384496612-28392-1-git-send-email-f.fainelli@gmail.com> <20131116122451. 3F0B9C4038F@trevor.secretlab.ca> <52E47B51.3030308@gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: add vendor prefix for Honeywell
+Date: Mon, 3 Feb 2014 08:46:58 -0600
+Message-ID: <CAL_Jsq++pxMmJrn+=dreFJMCT2EUxbOuhrGetBecUTb2ax4YOw@mail.gmail.com>
+References: <1390685924-11877-1-git-send-email-marek@goldelico.com>
+	<CAOesGMhFEMNFbAC4rUdccYVHM8yX9Mz+Vx73jGxBYGrSOa4Gaw@mail.gmail.com>
+	<CAAfyv37SenewbPw9BeLyS_djbxdZf+3aizbgOhhOPNdbmUJrUg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <52E47B51.3030308@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: rob.herring@calxeda.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAfyv37SenewbPw9BeLyS_djbxdZf+3aizbgOhhOPNdbmUJrUg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 25 Jan 2014 19:04:49 -0800, Florian Fainelli <f.fainelli@gmail.=
-com> wrote:
-> Le 16/11/2013 04:24, Grant Likely a =C3=A9crit :
-> > On Fri, 15 Nov 2013 06:23:32 +0000, Florian Fainelli <f.fainelli@gm=
-ail.com> wrote:
-> >> Per the ePAPR v1.1 specification, 'phy-connection-type' is the can=
-onical
-> >> property name for describing an Ethernet to PHY connection type. M=
-ake
-> >> sure that of_get_phy_mode() also attempts to parse that property a=
-nd
-> >> update the comments mentioning 'phy-mode' to also include
-> >> 'phy-connection-type'.
-> >>
-> >> Acked-by: Grant Likely <grant.likely@linaro.org>
-> >> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> >
-> > Applied, thanks
->=20
-> Grant, where is that patch, and will it be part of a pull request to =
-3.14?
+On Fri, Jan 31, 2014 at 3:46 PM, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Fri, Jan 31, 2014 at 7:53 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+>> On Sat, Jan 25, 2014 at 1:38 PM, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> wrote:
+>>> Signed-off-by: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>>>  1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>>> index 3f900cd..b14c617 100644
+>>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>>> @@ -40,6 +40,7 @@ gmt   Global Mixed-mode Technology, Inc.
+>>>  gumstix        Gumstix, Inc.
+>>>  haoyu  Haoyu Microelectronic Co. Ltd.
+>>>  hisilicon      Hisilicon Limited.
+>>> +honeywell      Honeywell
+>>
+>> The norm has usually been to use the the stock ticker symbol of a
+>> public company if it is available. In other words, I think the prefix
+>> here should be 'hon', since Honeywell is a publicly traded company
+>> under that ticker.
+> OK I didn't know about that. I just pick name from here:
+> Documentation/devicetree/bindings/iio/magnetometer/hmc5843.txt
+> So we need to update also compatible property in mentioned file.
 
-I accidentally dropped it for v3.14. It will be in 3.15
+It appears this is already used in omap4-sdp dts for some time, so I'm
+inclined to leave it as honeywell to avoid breaking old dtbs.
 
-g.
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
