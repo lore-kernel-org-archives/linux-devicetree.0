@@ -1,92 +1,101 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 8/8] ARM: dts: sun7i: Add ethernet alias
- for GMAC
-Date: Mon, 3 Feb 2014 20:38:02 +0100
-Message-ID: <20140203193802.GE25625@lukather>
-References: <1391398346-5094-1-git-send-email-wens@csie.org>
- <1391398346-5094-9-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Tanmay Inamdar <tinamdar@apm.com>
+Subject: Re: [RFC PATCH V3 1/4] pci: APM X-Gene PCIe controller driver
+Date: Mon, 3 Feb 2014 11:42:22 -0800
+Message-ID: <CACoXjcnXoysMeBsGuOb3t5b10zdeJ8pOnuOOzR8AaZhsOOYVEw@mail.gmail.com>
+References: <1390599168-13150-1-git-send-email-tinamdar@apm.com>
+	<1390599168-13150-2-git-send-email-tinamdar@apm.com>
+	<201401301516.27091.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qFgkTsE6LiHkLPZw"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBEXBX6LQKGQEMOIW6YA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1391398346-5094-9-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <201401301516.27091.arnd@arndb.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches <patches@apm.com>, Jon Masters <jcm@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jan 30, 2014 at 6:16 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Friday 24 January 2014, Tanmay Inamdar wrote:
+>
+>> +static void xgene_pcie_fixup_bridge(struct pci_dev *dev)
+>> +{
+>> +     int i;
+>> +
+>> +     /* Hide the PCI host BARs from the kernel as their content doesn't
+>> +      * fit well in the resource management
+>> +      */
+>> +     for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
+>> +             dev->resource[i].start = dev->resource[i].end = 0;
+>> +             dev->resource[i].flags = 0;
+>> +     }
+>> +     dev_info(&dev->dev, "Hiding X-Gene pci host bridge resources %s\n",
+>> +              pci_name(dev));
+>> +}
+>> +DECLARE_PCI_FIXUP_HEADER(XGENE_PCIE_VENDORID, XGENE_PCIE_DEVICEID,
+>> +                      xgene_pcie_fixup_bridge);
+>
+> Shouldn't this be gone now that the host bridge is correctly shown
+> at the domain root?
 
---qFgkTsE6LiHkLPZw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In inbound region configuration, whole DDR space is mapped into the
+BAR of RC. When Linux PCI mid-layer starts enumerating, it reads the
+size of BAR of RC and tries to fit it into the memory resource. First
+thing is that the outbound memory is not enough to map the inbound BAR
+space. This creates problem with the resource management logic and
+second thing is that, it is not required to map inbound BAR space RC
+bar as no one will be accessing it further.
 
-On Mon, Feb 03, 2014 at 11:32:26AM +0800, Chen-Yu Tsai wrote:
-> U-Boot will insert MAC address into the device tree image.
-> It looks up ethernet[0-5] aliases to find the ethernet nodes.
-> Alias GMAC as ethernet0, as it is the only ethernet controller used.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun7i-a20.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a=
-20.dtsi
-> index 65fb8d0..c48fb11 100644
-> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
-> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-> @@ -17,7 +17,7 @@
->  	interrupt-parent =3D <&gic>;
-> =20
->  	aliases {
-> -		ethernet0 =3D &emac;
-> +		ethernet0 =3D &gmac;
->  	};
+As Jason suggested, Bridge BAR's should be 0 size unless the bridge
+itself has registers. However this is not the case with XGene PCIe
+controller. It may have been inherited from the legacy design.
+'arch/powerpc/sysdev/ppc4xx_pci.c' has similar fixup function.
 
-I'm not very fond of this patch.
+>
+>> +static int xgene_pcie_setup(int nr, struct pci_sys_data *sys)
+>> +{
+>> +     struct xgene_pcie_port *pp = sys->private_data;
+>> +     struct resource *io = &pp->realio;
+>> +
+>> +     io->start = sys->domain * SZ_64K;
+>> +     io->end = io->start + SZ_64K;
+>> +     io->flags = pp->io.res.flags;
+>> +     io->name = "PCI IO";
+>> +     pci_ioremap_io(io->start, pp->io.res.start);
+>> +
+>> +     pci_add_resource_offset(&sys->resources, io, sys->io_offset);
+>> +     sys->mem_offset = pp->mem.res.start - pp->mem.pci_addr;
+>> +     pci_add_resource_offset(&sys->resources, &pp->mem.res,
+>> +                             sys->mem_offset);
+>> +     return 1;
+>> +}
+>
+> Thanks for bringing back the I/O space handling.
+>
+> You don't seem to set sys->io_offset anywhere, but each of the
+> ports listed in your DT starts a local bus I/O register range
+> at port 0.
+>
+> AFAICT, you need to add (somewhere)
+>
+>         sys->io_offset = pp->realio.start - pp->io.pci_addr;
+>
+> but there could be something else missing. You clearly haven't
+> tested if the I/O space actually works.
 
-People might rely on the fact that ethernet0 is actually the emac, and
-are expecting u-boot to fill the ethaddr variable to the emac, and not
-the gmac.
+That is correct :-). Could not find the card. Thanks for the patch below.
+>
+> If you want to try out the I/O space, I'd suggest using an Intel
+> e1000 network card, which has both memory and i/o space. There
+> is a patch at http://www.spinics.net/lists/linux-pci/msg27684.html
+> that lets you check the I/O registers on it, or you can go
+> through /dev/port from user space.
+>
+> I also haven't seen your patch that adds pci_ioremap_io() for
+> arm64. It would be helpful to keep it in the same patch
+> series, since it won't build without this patch.
 
-Since u-boot is totally able to deal with several ethernet addresses,
-please add it as ethernet1.
+I will post the arm64 pci patch along with next revision of this
+driver. That will cover the 'pci_ioremap_io' as well.
 
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---qFgkTsE6LiHkLPZw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS7/AaAAoJEBx+YmzsjxAgHMUQAIXqo3N3GOgg00+H22oTt0F9
-2ZjCZhvbb9wdXzhl6NwzSeW9eDSfzQgECvaaw/AtPKR9dViI4Faw7QJ+JGrkYino
-X5oOK+iI3dNLUDgfPmpK8s1TXtxaNdNzlPs9i9ZG5cR2Hyy/e2prXlfk6j2Qcr1l
-u+NjPLG408A5aynGdr2TBSGuNfWobxkcZoNpZx4+IbSVGZ+O/QfIzjAQwYMM0qV/
-vvWt1CY7r8CYqMKrtPtO06hrif5Jq5Dd8N4y1FsB5+bMQJnzgkFUv1+4ZJpv58aN
-ktCjr5XeQspqr/KvGWuxFKXAalqBe8KCm2RAC7W2H2PDmSmBgo+/KLePYMxBBH2V
-beX2sCDXxMHQIDXZWcm6VGmilvik04kqGpRQUYF/QplumLg1cT6tfV+TbKQYo7qC
-KxO/wquXxByeBc2IRD8KpNVupUe7PUqweG/zhck1QPL/qiSl1KrxENUGUBMdDlEK
-RtnunTxG83LTLRU3uzgebvgzv3t7Pv1zS/bZqlp4dsfgzlHtEI+lptCaUXClnt8r
-IySR4DqKE8bWn4jrWNIaym+U3Qoat0EfpsMRUi2nqN2xlzle9Kod0lGRjtT+Wfkf
-oeZAYibIK+TqyxDrUUfVPc+2ENitbGaleKnl0wH4iISpvxRz6xl640kcf/E7Z1+s
-w6coxfN6mX0EeHKvupQy
-=PYqa
------END PGP SIGNATURE-----
-
---qFgkTsE6LiHkLPZw--
+>
+>         Arnd
