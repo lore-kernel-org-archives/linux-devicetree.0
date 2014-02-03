@@ -1,49 +1,53 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH 09/10] watchdog: xilinx: Add missing binding
-Date: Mon, 3 Feb 2014 16:13:47 +0100
-Message-ID: <24ecacca-2714-4834-921c-b827c0e592a3@VA3EHSMHS003.ehs.local>
-References: <ed4cb31c9a549343e6b492cf62fc962d39034bd0.1391177880.git.michal.simek@xilinx.com> <9c721b89ed2ceb6997809bb3363f852277e67dc2.1391177880.git.michal.simek@xilinx.com> <201402031606.11753.arnd@arndb.de>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 1/2] devicetree: Add devicetree bindings documentation for
+ the ADAU1977
+Date: Mon, 3 Feb 2014 16:15:24 +0100
+Message-ID: <CAMuHMdVQGZE+1YuWCnJefzy08kb6vNmRN8k+1-K82BubOBAOxQ@mail.gmail.com>
+References: <1391439428-3198-1-git-send-email-lars@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <201402031606.11753.arnd@arndb.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, monstr@monstr.eu, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1391439428-3198-1-git-send-email-lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/03/2014 04:06 PM, Arnd Bergmann wrote:
-> On Friday 31 January 2014, Michal Simek wrote:
->> +Optional properties:
->> +- clock-frequency      : Frequency of clock in Hz
->> +- xlnx,wdt-enable-once : 0 - Watchdog can be restarted
->> +                         1 - Watchdog can be enabled just once
->> +- xlnx,wdt-interval    : Watchdog timeout interval in 2^<val> clock cycles,
->> +                         <val> is integer from 8 to 31.
->> +
-> 
-> The latter two don't really seem to be xilinx specific, it would be
-> reasonable to have a standard watchdog binding that mandates a common
-> format for them.
-> 
-> I'm not sure about the enable-once flag, which seems to just map to the
-> "nowayout" watchdog option that is not a hardware feature at all
-> and should probably be kept as a software setting only, rather than
-> settable through DT. If it is kept, it should have a standard name and
-> get turned into a boolean (present/absent) property rather than a
-> 0/1 integer property.
-> 
-> The interval should really be specified in terms of seconds or miliseconds,
-> not in clock cycles.
+On Mon, Feb 3, 2014 at 3:57 PM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
+> + - adi,micbias: Configures the voltage setting for the MICBIAS pin. If not
+> +   specified the default value will be 8.5 Volts. This property is only valid
+> +   for the ADAU1977.
+> +   Valid values for this property are:
+> +       0: 5.0V
+> +       1: 5.5V
+> +       2: 6.0V
+> +       3: 6.5V
+> +       4: 7.0V
+> +       5: 7.5V
+> +       6: 8.0V
+> +       7: 8.5V
+> +       8: 9.0V
 
-Intention wasn't to fix binding but document current one
-which is in mainline for a long time.
+This means the casual DTS reader need to know about the meaning of
+the values. You can avoid that by:
+  1. Using preprocessor defines. Drawback is that you have to add an
+     include file.
+  2. Using mV, and specify minimum, maximum, and incrementals in the
+     bindings, cfr.
+Documentation/devicetree/bindings/power_supply/ti,bq24735.txt
+     Drawback is that the user can easily specify invalid values.
 
-Apart of this - yes, wdt-enable-once is nowayout and wdt-interval should be timeout
-is seconds, and clock-frequency should go out and use CCF for getting clock.
+Gr{oetje,eeting}s,
 
-Thanks,
-Michal
+                        Geert
 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
