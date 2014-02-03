@@ -1,43 +1,54 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 08/11] of: Increase MAX_PHANDLE_ARGS
-Date: Mon, 3 Feb 2014 16:44:59 +0000
-Message-ID: <20140203164459.GL14112@mudshark.cambridge.arm.com>
-References: <1389876263-25759-1-git-send-email-andreas.herrmann@calxeda.com>
-	<1389876263-25759-9-git-send-email-andreas.herrmann@calxeda.com>
-	<20140117110830.GW3471@alberich> <52E92842.3000001@amd.com>
-	<CAL_JsqLhzp5jUJPA91rNkQ07kCDYCDZLxw8LxxFEVP9b12e1Jw@mail.gmail.com>
-	<52E93360.1000904@amd.com> <20140129171611.GB13543@alberich>
-	<52E939CB.1020705@amd.com> <20140130174546.GF13543@alberich>
-	<CAL_Jsq+=dm4kPk=e0h_up9=wvED4fd3MBtSNFxm2NEz_yag-uA@mail.gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v1] ARM: tegra: add nvidia,wdt-timer-id optional
+ property
+Date: Mon, 3 Feb 2014 17:10:53 +0000
+Message-ID: <20140203171053.GA28338@e106331-lin.cambridge.arm.com>
+References: <1391204811-6293-1-git-send-email-achew@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+=dm4kPk=e0h_up9=wvED4fd3MBtSNFxm2NEz_yag-uA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1391204811-6293-1-git-send-email-achew@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Andrew Chew <achew@nvidia.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "abrestic@chromium.org" <abrestic@chromium.org>, "dgreid@chromium.org" <dgreid@chromium.org>, "katierh@chromium.org" <katierh@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 31, 2014 at 04:24:09PM +0000, Rob Herring wrote:
-> On Thu, Jan 30, 2014 at 11:45 AM, Andreas Herrmann
-> <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org> wrote:
-> > Do you agree on increasing MAX_PHANDLE_ARGS to 32?
+On Fri, Jan 31, 2014 at 09:46:51PM +0000, Andrew Chew wrote:
+> This optional property can be used to specify which timers are to be used
+> for hardware watchdog timeouts (via a tegra wdt driver).
+
+Is there any reason that a particular timer should be used?
+
+This shouldn't even mention the driver, as the binding should describe
+the HW, not how it's used by Linux at the moment.
+
 > 
-> Yes, but more than that will require a closer look. Please get this
-> into next early in the cycle.
+> Signed-off-by: Andrew Chew <achew@nvidia.com>
+> ---
+>  Documentation/devicetree/bindings/timer/nvidia,tegra30-timer.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/timer/nvidia,tegra30-timer.txt b/Documentation/devicetree/bindings/timer/nvidia,tegra30-timer.txt
+> index b5082a1..e87fa70 100644
+> --- a/Documentation/devicetree/bindings/timer/nvidia,tegra30-timer.txt
+> +++ b/Documentation/devicetree/bindings/timer/nvidia,tegra30-timer.txt
+> @@ -13,6 +13,13 @@ Required properties:
+>  - clocks : Must contain one entry, for the module clock.
+>    See ../clocks/clock-bindings.txt for details.
+>  
+> +Optional properties:
+> +
+> +- nvidia,wdt-timer-id: A list of timer IDs to be used for watchdogs.
+> +    Watchdog 0 will be assigned to the first timer listed, watchdog 1 will
+> +    be assigned to the second timer listed, etc. up to the number of watchdogs
+> +    available.
 
-If you want to get this patch in early, I suggest taking it via a tree other
-than mine. I don't put my iommu queue into -next, since it goes to Joerg
-around -rc4, who then sticks it in after that.
+This sounds like a description of what software should do. Is there any
+reason this order is important?
 
-Will
+Also, it feels odd for the proerty name to be singular given it's a
+list...
+
+Thanks,
+Mark.
