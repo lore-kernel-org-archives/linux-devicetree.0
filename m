@@ -1,47 +1,150 @@
-From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: STi: add stid127 soc support
-Date: Mon, 3 Feb 2014 09:33:49 +0100
-Message-ID: <52EF546D.7070900@st.com>
-References: <1391093744-19905-1-git-send-email-patrice.chotard@st.com> <201401301939.08302.arnd@arndb.de> <52EB96BB.6070800@st.com> <201401312115.33731.arnd@arndb.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] spi: rspi: fix build error when CONFIG_OF is not set
+Date: Mon, 3 Feb 2014 09:47:25 +0100 (CET)
+Message-ID: <alpine.DEB.2.02.1402030939520.25794@ayla.of.borg>
+References: <52EEF452.4060205@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201401312115.33731.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, srinivas kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patrice CHOTARD <patrice.chotard-qxv4g6HH51o@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, maxime.coquelin-qxv4g6HH51o@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <52EEF452.4060205@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: "Shimoda, Yoshihiro" <yoshihiro.shimoda.uh@renesas.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, SH-Linux <linux-sh@vger.kernel.org>, devicetree@vger.kernel.org, Linux Kernel Development <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/31/2014 09:15 PM, Arnd Bergmann wrote:
-> On Friday 31 January 2014, srinivas kandagatla wrote:
->
->>> Sorry if I missed the initial review, but can you explain
->>> why this is needed to start with?
->> On ST SoCs the default value for L2 AUX_CTRL register is 0x0, so we  set
->> the way-size explicit here.
-> Unfortunately, we keep going back and forth on the L2 cache controller
-> setup between "it should work automatically" and "we don't want to
-> have configuration data in DT", where my personal opinion is that
-> the first one is more important here.
->
-> Now, there are a couple of properties that are defined in
-> Documentation/devicetree/bindings/arm/l2cc.txt to let some of the
-> things get set up automatically already. Can you check which bits
-> are missing there, if any? Are they better described as "configuration"
-> or "hardware" settings?
-Hi Arnd,
+	Hi Shimoda-san,
 
-Thanks for remarks. I will a have a look on it, but unfortunately not 
-before 2 weeks.
+On Mon, 3 Feb 2014, Shimoda, Yoshihiro wrote:
+> This patch fixes an issue that the following build error happens when
+> the CONFIG_OF is not set:
+> 
+> drivers/spi/spi-rspi.c: In function 'rspi_probe':
+> drivers/spi/spi-rspi.c:1203:26: error: 'rspi_of_match' undeclared (first use in this function)
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  This patch is based on the latest origin/topic/rspi branch in the spi.git.
+> 
+>  drivers/spi/spi-rspi.c |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-rspi.c b/drivers/spi/spi-rspi.c
+> index 34ad4bc..e5cfc3d 100644
+> --- a/drivers/spi/spi-rspi.c
+> +++ b/drivers/spi/spi-rspi.c
+> @@ -1164,6 +1164,7 @@ static int rspi_parse_dt(struct device *dev, struct spi_master *master)
+>  	return 0;
+>  }
+>  #else
+> +#define rspi_of_match	NULL
+>  static inline int rspi_parse_dt(struct device *dev, struct spi_master *master)
+>  {
+>  	return -EINVAL;
+> -- 
+> 1.7.1
+
+Thanks, obviously I missed that of_match_device() still uses the ID table
+parameter if CONFIG_OF=n :-(
+
+Below I have two alternative solutions:
+  1. Uses rspi_of_match() to nullify the ID table pointer, like is done in
+     the platform_driver structure,
+  2. Fixes it at the OF subsystem level, by nullifying the ID table pointer
+     inside of_match_device().
+
+If 2 is accepted, drivers don't have to care about this anymore.
+
+What do you think?
+
+>From 060b8577e95441ee3b29e966a9fdd19b2a870bdf Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
+Date: Mon, 3 Feb 2014 09:22:06 +0100
+Subject: [PATCH 1/2] spi: rspi: fix build error when CONFIG_OF is not set
+
+If CONFIG_OF=n:
+
+drivers/spi/spi-rspi.c: In function 'rspi_probe':
+drivers/spi/spi-rspi.c:1203:26: error: 'rspi_of_match' undeclared (first use in this function)
+drivers/spi/spi-rspi.c:1203:26: note: each undeclared identifier is reported only once for each function it appears in
+
+Use of_match_ptr() to fix this.
+
+Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
+---
+ drivers/spi/spi-rspi.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/spi/spi-rspi.c b/drivers/spi/spi-rspi.c
+index 1c3aed63a2e0..df637184f6f0 100644
+--- a/drivers/spi/spi-rspi.c
++++ b/drivers/spi/spi-rspi.c
+@@ -1200,7 +1200,7 @@ static int rspi_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	}
+ 
+-	of_id = of_match_device(rspi_of_match, &pdev->dev);
++	of_id = of_match_device(of_match_ptr(rspi_of_match), &pdev->dev);
+ 	if (of_id) {
+ 		ops = of_id->data;
+ 		ret = rspi_parse_dt(&pdev->dev, master);
+-- 
+1.7.9.5
 
 
-Alex.
+>From 477ab825d43524959d68c3974e6e9536bd83bcde Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
+Date: Mon, 3 Feb 2014 09:27:40 +0100
+Subject: [PATCH 2/2] [RFC] of/device: Nullify match table in
+ of_match_device() for CONFIG_OF=n
 
->
-> 	Arnd
+If the of_device_id table inside a device driver is protected by #ifdef
+CONFIG_OF, the driver still has to provide a dummy declaration of the
+table, or wrap it inside of_match_ptr(), when calling of_match_device()
+in the CONFIG_OF=n case, else the driver fails to compile with e.g.
+
+drivers/spi/spi-rspi.c: In function 'rspi_probe':
+drivers/spi/spi-rspi.c:1203:26: error: 'rspi_of_match' undeclared (first use in this function)
+drivers/spi/spi-rspi.c:1203:26: note: each undeclared identifier is reported only once for each function it appears in
+
+Make of_match_device() nullify the table pointer if CONFIG_OF=n to fix
+this.
+
+Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
+---
+ include/linux/of_device.h |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/of_device.h b/include/linux/of_device.h
+index 82ce324fdce7..dac8bd2890ca 100644
+--- a/include/linux/of_device.h
++++ b/include/linux/of_device.h
+@@ -72,11 +72,13 @@ static inline int of_device_uevent_modalias(struct device *dev,
+ 
+ static inline void of_device_node_put(struct device *dev) { }
+ 
+-static inline const struct of_device_id *of_match_device(
++static inline const struct of_device_id *__of_match_device(
+ 		const struct of_device_id *matches, const struct device *dev)
+ {
+ 	return NULL;
+ }
++#define of_match_device(matches, dev)	\
++	__of_match_device(of_match_ptr(matches), (dev))
+ 
+ static inline struct device_node *of_cpu_device_node_get(int cpu)
+ {
+-- 
+1.7.9.5
+
+Gr{oetje,eeting}s,
+
+						Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
