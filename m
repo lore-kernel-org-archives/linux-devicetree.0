@@ -1,113 +1,113 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: [PATCH] [RFC] Add AArch64 support for PCI
-Date: Mon,  3 Feb 2014 18:43:47 +0000
-Message-ID: <1391453028-23191-1-git-send-email-Liviu.Dudau@arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] pci: Add support for creating a generic host_bridge from device tree
+Date: Mon, 03 Feb 2014 19:46:10 +0100
+Message-ID: <7398333.9L5KlyFggU@wuerfel>
+References: <1391452428-22917-1-git-send-email-Liviu.Dudau@arm.com> <1391452428-22917-2-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>, LKML <linux-kernel@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1391452428-22917-2-git-send-email-Liviu.Dudau@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, linaro-kernel <linaro-kernel@lists.linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Monday 03 February 2014 18:33:48 Liviu Dudau wrote:
+> +/**
+> + * pci_host_bridge_of_get_ranges - Parse PCI host bridge resources from DT
+> + * @dev: device node of the host bridge having the range property
+> + * @resources: list where the range of resources will be added after DT parsing
+> + *
+> + * This function will parse the "ranges" property of a PCI host bridge device
+> + * node and setup the resource mapping based on its content. It is expected
+> + * that the property conforms with the Power ePAPR document.
+> + *
+> + * Each architecture will then apply their filtering based on the limitations
+> + * of each platform. One general restriction seems to be the number of IO space
+> + * ranges, the PCI framework makes intensive use of struct resource management,
+> + * and for IORESOURCE_IO types they can only be requested if they are contained
+> + * within the global ioport_resource, so that should be limited to one IO space
+> + * range.
 
-This patch adds support for PCI to AArch64. It is based on the patch posted
-here [1] that adds support for creating generic host bridge structure from
-device tree. With that in place, I was able to boot an FPGA platform that
-has PCIe host bridge support and use a PCIe network card.
+Actually we have quite a different set of restrictions around I/O space on ARM32
+at the moment: Each host bridge can have its own 64KB range in an arbitrary
+location on MMIO space, and the total must not exceed 2MB of I/O space.
 
-The API used is different from the one used by ARM architecture. There is
-no pci_common_init_dev() function and no hw_pci structure, as that is no
-longer needed. Once the last signature is added to the legal agreement, I
-will post the host bridge driver code that I am using. Meanwhile, here
-is an example of what the probe function looks like, posted as an example:
+> + */
+> +static int pci_host_bridge_of_get_ranges(struct device_node *dev,
+> +					struct list_head *resources)
+> +{
+> +	struct resource *res;
+> +	struct of_pci_range range;
+> +	struct of_pci_range_parser parser;
+> +	int err;
+> +
+> +	pr_info("PCI host bridge %s ranges:\n", dev->full_name);
+> +
+> +	/* Check for ranges property */
+> +	err = of_pci_range_parser_init(&parser, dev);
+> +	if (err)
+> +		return err;
+> +
+> +	pr_debug("Parsing ranges property...\n");
+> +	for_each_of_pci_range(&parser, &range) {
+> +		/* Read next ranges element */
+> +		pr_debug("pci_space: 0x%08x pci_addr:0x%016llx ",
+> +				range.pci_space, range.pci_addr);
+> +		pr_debug("cpu_addr:0x%016llx size:0x%016llx\n",
+> +					range.cpu_addr, range.size);
+> +
+> +		/* If we failed translation or got a zero-sized region
+> +		 * (some FW try to feed us with non sensical zero sized regions
+> +		 * such as power3 which look like some kind of attempt
+> +		 * at exposing the VGA memory hole) then skip this range
+> +		 */
+> +		if (range.cpu_addr == OF_BAD_ADDR || range.size == 0)
+> +			continue;
+> +
+> +		res = kzalloc(sizeof(struct resource), GFP_KERNEL);
+> +		if (!res) {
+> +			err = -ENOMEM;
+> +			goto bridge_ranges_nomem;
+> +		}
+> +
+> +		of_pci_range_to_resource(&range, dev, res);
+> +
+> +		pci_add_resource_offset(resources, res,
+> +				range.cpu_addr - range.pci_addr);
+> +	}
 
-static int myhostbridge_probe(struct platform_device *pdev)
-{
-	int err;
-	struct device_node *dev;
-	struct pci_host_bridge *bridge;
-	struct resource bus_range;
-	struct myhostbridge_port *pp;
-	LIST_HEAD(resources);
+I believe of_pci_range_to_resource() will return the MMIO aperture for the
+I/O space window here, which is not what you are supposed to pass into
+pci_add_resource_offset.
 
-	dev = pdev->dev.of_node;
+> +EXPORT_SYMBOL(pci_host_bridge_of_init);
 
-	if (!of_device_is_available(dev)) {
-		pr_warn("%s: disabled\n", dev->full_name);
-		return -ENODEV;
-	}
+EXPORT_SYMBOL_GPL
 
-	pp = kzalloc(sizeof(struct myhostbridge_port), GFP_KERNEL);
-	if (!pp)
-		return -ENOMEM;
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 6e34498..16febae 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1787,6 +1787,17 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
+>  	list_for_each_entry_safe(window, n, resources, list) {
+>  		list_move_tail(&window->list, &bridge->windows);
+>  		res = window->res;
+> +		/*
+> +		 * IO resources are stored in the kernel with a CPU start
+> +		 * address of zero. Adjust the data accordingly and remember
+> +		 * the offset
+> +		 */
+> +		if (resource_type(res) == IORESOURCE_IO) {
+> +			bridge->io_offset = res->start;
+> +			res->end -= res->start;
+> +			window->offset -= res->start;
+> +			res->start = 0;
+> +		}
+>  		offset = window->offset;
+>  		if (res->flags & IORESOURCE_BUS)
 
-	err = of_pci_parse_bus_range(dev, &bus_range);
-	if (err) {
-		bus_range.start = 0;
-		bus_range.end = 255;
-		bus_range.flags = IORESOURCE_BUS;
-	}
-	pci_add_resource(&resources, &bus_range);
+Won't this break all existing host bridges?
 
-	bridge = pci_host_bridge_of_init(&pdev->dev, 0, &myhostbridge_ops, pp, &resources);
-	if (!bridge) {
-		err = -EINVAL;
-		goto bridge_init_fail;
-	}
-
-	err = myhostbridge_setup(bridge->bus);
-	if (err)
-		goto bridge_init_fail;
-
-	/*
-	 * Add flags here, this is just an example
-	 */
-	pci_add_flags(PCI_ENABLE_PROC_DOMAINS | PCI_COMPAT_DOMAIN_0);
-	pci_add_flags(PCI_REASSIGN_ALL_BUS | PCI_REASSIGN_ALL_RSRC);
-
-	bus_range.end = pci_scan_child_bus(bridge->bus);
-	pci_bus_update_busn_res_end(bridge->bus, bus_range.end);
-
-	pci_assign_unassigned_bus_resources(bridge->bus);
-
-	pci_bus_add_devices(bridge->bus);
-
-	return 0;
-
-bridge_init_fail:
-	kfree(pp);
-	pci_free_resource_list(&resources);
-	return err;
-}
-
-Best regards,
-Liviu
-
-[1] http://marc.info/?l=linux-pci&m=139145254821334&w=2
-
-Liviu Dudau (1):
-  arm64: Add support for PCI
-
- arch/arm64/Kconfig            |  17 +++++++
- arch/arm64/include/asm/Kbuild |   1 +
- arch/arm64/include/asm/io.h   |   4 ++
- arch/arm64/include/asm/pci.h  |  35 +++++++++++++
- arch/arm64/kernel/Makefile    |   1 +
- arch/arm64/kernel/pci.c       | 112 ++++++++++++++++++++++++++++++++++++++++++
- 6 files changed, 170 insertions(+)
- create mode 100644 arch/arm64/include/asm/pci.h
- create mode 100644 arch/arm64/kernel/pci.c
-
--- 
-1.8.5.3
+	Arnd
