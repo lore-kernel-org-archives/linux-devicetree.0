@@ -1,66 +1,59 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] spi: rspi: fix build error when CONFIG_OF is not set
-Date: Mon, 3 Feb 2014 15:17:21 +0000
-Message-ID: <20140203151721.GA22609@sirena.org.uk>
-References: <52EEF452.4060205@renesas.com>
- <alpine.DEB.2.02.1402030939520.25794@ayla.of.borg>
+From: Kleber Sacilotto de Souza <klebers-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] of: fix PCI bus match for PCIe slots
+Date: Mon, 03 Feb 2014 13:20:00 -0200
+Message-ID: <52EFB3A0.2040407@linux.vnet.ibm.com>
+References: <1391124584-28847-1-git-send-email-klebers@linux.vnet.ibm.com> <CAL_JsqKUFBSchVZivQ-qsaX4_UtC4fKYa8-Qw2o1zJMZTyk6Fg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9989e9MCpLPr9Uiv"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1402030939520.25794-97SZ98TBZzA1xEWliksxXw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: "Shimoda, Yoshihiro" <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Development <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKUFBSchVZivQ-qsaX4_UtC4fKYa8-Qw2o1zJMZTyk6Fg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Brian King <brking-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 02/01/2014 08:54 PM, Rob Herring wrote:
+> On Thu, Jan 30, 2014 at 5:29 PM, Kleber Sacilotto de Souza
+> <klebers-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> wrote:
+>> On IBM pseries systems the device_type device-tree property of a PCIe
+>> bridge contains the string "pciex". The of_bus_pci_match() function was
+>> looking only for "pci" on this property, so in such cases the bus
+>> matching code was falling back to the default bus, causing problems on
+>> functions that should be using "assigned-addresses" for region address
+>> translation. This patch fixes the problem by also looking for "pciex" on
+>> the PCI bus match function.
+>
+> Does this need to go to stable?
 
---9989e9MCpLPr9Uiv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes, we need this fix on older kernels as well.
 
-On Mon, Feb 03, 2014 at 09:47:25AM +0100, Geert Uytterhoeven wrote:
+>
+>> Signed-off-by: Kleber Sacilotto de Souza <klebers-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+>> ---
+>>   drivers/of/address.c |    4 ++--
+>>   1 files changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/of/address.c b/drivers/of/address.c
+>> index d3dd41c..0da2c0f 100644
+>> --- a/drivers/of/address.c
+>> +++ b/drivers/of/address.c
+>> @@ -102,8 +102,8 @@ static int of_bus_pci_match(struct device_node *np)
+>>           * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
+>>           * "ht" is hypertransport
+>
+> How about a comment for who needs pciex.
 
-> Thanks, obviously I missed that of_match_device() still uses the ID table
-> parameter if CONFIG_OF=n :-(
+Ok, I will add a comment and send a v2.
 
-> Below I have two alternative solutions:
->   1. Uses rspi_of_match() to nullify the ID table pointer, like is done in
->      the platform_driver structure,
->   2. Fixes it at the OF subsystem level, by nullifying the ID table pointer
->      inside of_match_device().
 
-> If 2 is accepted, drivers don't have to care about this anymore.
+Thanks,
 
-I think if we can fix it at the subsystem level that's clearly nicer
-since it means nothing else will run into the same issue.  Your patch
-looks OK to me, I'd suggest submitting it.
+-- 
+Kleber Sacilotto de Souza
+IBM Linux Technology Center
 
---9989e9MCpLPr9Uiv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS77L+AAoJELSic+t+oim9zuoP/2cjnKAG84aAxFK/gcB7lzHd
-iPdkAwcBIgGY8dDqxaMSVJVbRQflKHO2UXimmClAf1kmU4Xg386bWrNoPHuATdy3
-5M07hQlzBnCeJkPWkizvr/0viJn3bW/HAv0eJPcVzWpHBpNSKq03U5C/WFtYS8VL
-2nBAf/qYitKX73dT2AiD3DJETr2TgtAQkA1Zfvm0JC9pZa7Ayx/OpDvrLl3wH6zg
-E4lmPVdhG14N/pYQ4EsnGLvQV3Y1wBwVvxei23yA5blgf5tu/vmHW5CS08lGNQJr
-9RyFETv45blrQQyqg9fpxw98krahGAHEDrrrdfMi+jdMCq5L4/Mr0cAQx3kkMyNs
-1C+CF/YLIakGD+WyAA2YJ+RcS0BjnP+JXjAaUR2YyasK9xs/8dW8RMto2p6mx2Ea
-dfUA4nRT47KG9WDDvk9DDuzTqikuYXHQ+n+DbOM8HYq5pdVVssKIiGvl1ZMhDctW
-CbH1LSZ/DllDa9YfCb+q+qxt8OAhBdHB5+eIj+wEwFKRWBw7ITA/NCCE6+a/pHvd
-zmV46VkjEnCFXrvJNJjMcqYqOUtgPk6352H7t2EExoLExXXmNxncdNO8RB+yq5y1
-Pv1ucKVSpYlAzIEroPsG5UjlU0hEHjTnWXeGX26vie75n0kaVjDRzf87pco0ZWIw
-eE3CanuYUNvpzTKjp6yA
-=GCNg
------END PGP SIGNATURE-----
-
---9989e9MCpLPr9Uiv--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
