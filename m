@@ -1,38 +1,45 @@
-From: Christopher Covington <cov@codeaurora.org>
-Subject: Re: [PATCH] arm: document "mach-virt" platform.
-Date: Mon, 03 Feb 2014 08:46:07 -0500
-Message-ID: <52EF9D9F.5020600@codeaurora.org>
-References: <1391098262-15944-1-git-send-email-ian.campbell@citrix.com> <52EA83D6.9050506@codeaurora.org> <20140203045638.GB4167@cbox>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: Re: [PATCH v3 3/6] misc: fuse: Add efuse driver for Tegra
+Date: Mon, 3 Feb 2014 16:15:29 +0200
+Message-ID: <20140203141529.GF19389@tbergstrom-lnx.Nvidia.com>
+References: <1390952176-30402-1-git-send-email-pdeschrijver@nvidia.com>
+ <1390952176-30402-4-git-send-email-pdeschrijver@nvidia.com>
+ <1390962378.2398.11.camel@jilin-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140203045638.GB4167@cbox>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christoffer Dall <christoffer.dall@linaro.org>
-Cc: Ian Campbell <ian.campbell@citrix.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Stefano Stabellini <stefano.stabellini@eu.citrix.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1390962378.2398.11.camel@jilin-desktop>
+Sender: linux-doc-owner@vger.kernel.org
+To: Jim Lin <jilin@nvidia.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Danny Huang <dahuang@nvidia.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Christoffer,
+On Wed, Jan 29, 2014 at 03:26:18AM +0100, Jim Lin wrote:
+> On Wed, 2014-01-29 at 07:36 +0800, Peter De Schrijver wrote:
+> > Implement fuse driver for Tegra20, Tegra30, Tegra114 and Tegra124.
+> > 
+> > Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> > ---
+> >  Documentation/ABI/testing/sysfs-driver-tegra-fuse |    8 +
+> >  drivers/misc/fuse/Makefile                        |    1 +
+> >  drivers/misc/fuse/tegra/Makefile                  |    7 +
+> >  drivers/misc/fuse/tegra/fuse-tegra.c              |  228 ++++++++++++++++
+> >  drivers/misc/fuse/tegra/fuse-tegra20.c            |  136 ++++++++++
+> >  drivers/misc/fuse/tegra/fuse-tegra30.c            |  178 +++++++++++++
+> >  drivers/misc/fuse/tegra/fuse.h                    |   82 ++++++
+> Could we move this fuse.h to other folder under /include/linux
+> (like /include/linux/platform_data)
+> for other driver to include?
 
-On 02/02/2014 11:56 PM, Christoffer Dall wrote:
-> On Thu, Jan 30, 2014 at 11:54:46AM -0500, Christopher Covington wrote:
->> I think it would be informative to provide pointers here to commonly used
->> paravirtualized devices, especially VirtIO PCI/MMIO.
-> 
-> I disagree: that would only encourage limited testing or assumptions
-> about these specific devices when really this platform is just a
-> bare-bones platform driven by device tree which should make no
-> preference, whatsoever, about which devices are used with the platform.
+I don't think we should expose everything in fuse.h to the world.
 
-I'd be all for clearly stating that no assumptions can be made. Perhaps you
-can explain though how providing less documentation will result in more
-testing? The assertion does not currently make sense to me.
+> So other driver can invoke function to read fuse data if needed.
 
-Thanks,
-Christopher
+Which functionality do you want? Just reading the fuse data exposed in
+the sysfs file from a driver? exporting tegra_fuse_readl() should do
+that I think?
 
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by the Linux Foundation.
+Cheers,
+
+Peter.
