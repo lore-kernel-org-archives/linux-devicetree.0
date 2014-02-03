@@ -1,86 +1,175 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 RESEND 2/3] ARM: dts: clps711x: Add bindings
- documentation for CLPS711X irqchip driver
-Date: Sun, 2 Feb 2014 15:48:26 -0600
-Message-ID: <CAL_JsqJPSsdT2zgXyvzQjYfyVbgZKG0Bt9b-7NGCgbT3Fuhq1A@mail.gmail.com>
-References: <1391328520-30923-1-git-send-email-shc_work@mail.ru>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v3 1/8] clk: sunxi: Add Allwinner A20/A31 GMAC
+ clock unit
+Date: Mon,  3 Feb 2014 11:32:19 +0800
+Message-ID: <1391398346-5094-2-git-send-email-wens@csie.org>
+References: <1391398346-5094-1-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1391328520-30923-1-git-send-email-shc_work-JGs/UdohzUI@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBUE3XSLQKGQEXJNZHBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1391398346-5094-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 2, 2014 at 2:08 AM, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org> wrote:
-> Add OF document for Cirrus Logic CLPS711X irqchip driver.
->
-> Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-> ---
->  .../interrupt-controller/cirrus,clps711x-intc.txt  | 41 ++++++++++++++++++++++
+The Allwinner A20/A31 clock module controls the transmit clock source
+and interface type of the GMAC ethernet controller. Model this as
+a single clock for GMAC drivers to use.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ Documentation/devicetree/bindings/clock/sunxi.txt | 26 +++++++
+ drivers/clk/sunxi/clk-sunxi.c                     | 83 +++++++++++++++++++++++
+ 2 files changed, 109 insertions(+)
 
-
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/cirrus,clps711x-intc.txt
->
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/cirrus,clps711x-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/cirrus,clps711x-intc.txt
-> new file mode 100644
-> index 0000000..759339c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/cirrus,clps711x-intc.txt
-> @@ -0,0 +1,41 @@
-> +Cirrus Logic CLPS711X Interrupt Controller
-> +
-> +Required properties:
-> +
-> +- compatible: Should be "cirrus,clps711x-intc".
-> +- reg: Specifies base physical address of the registers set.
-> +- interrupt-controller: Identifies the node as an interrupt controller.
-> +- #interrupt-cells: Specifies the number of cells needed to encode an
-> +  interrupt source. The value shall be 1.
-> +
-> +The interrupt sources are as follows:
-> +ID     Name    Description
-> +---------------------------
-> +1:     BLINT   Battery low (FIQ)
-> +3:     MCINT   Media changed (FIQ)
-> +4:     CSINT   CODEC sound
-> +5:     EINT1   External 1
-> +6:     EINT2   External 2
-> +7:     EINT3   External 3
-> +8:     TC1OI   TC1 under flow
-> +9:     TC2OI   TC2 under flow
-> +10:    RTCMI   RTC compare match
-> +11:    TINT    64Hz tick
-> +12:    UTXINT1 UART1 transmit FIFO half empty
-> +13:    URXINT1 UART1 receive FIFO half full
-> +14:    UMSINT  UART1 modem status changed
-> +15:    SSEOTI  SSI1 end of transfer
-> +16:    KBDINT  Keyboard
-> +17:    SS2RX   SSI2 receive FIFO half or greater full
-> +18:    SS2TX   SSI2 transmit FIFO less than half empty
-> +28:    UTXINT2 UART2 transmit FIFO half empty
-> +29:    URXINT2 UART2 receive FIFO half full
-> +32:    DAIINT  DAI interface (FIQ)
-> +
-> +Example:
-> +       intc: interrupt-controller {
-> +               compatible = "cirrus,clps711x-intc";
-> +               reg = <0x80000000 0x4000>;
-> +               interrupt-controller;
-> +               #interrupt-cells = <1>;
-> +       };
-> --
-> 1.8.3.2
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+index 0cf679b..f43b4c0 100644
+--- a/Documentation/devicetree/bindings/clock/sunxi.txt
++++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+@@ -37,6 +37,7 @@ Required properties:
+ 	"allwinner,sun6i-a31-apb2-gates-clk" - for the APB2 gates on A31
+ 	"allwinner,sun4i-mod0-clk" - for the module 0 family of clocks
+ 	"allwinner,sun7i-a20-out-clk" - for the external output clocks
++	"allwinner,sun7i-a20-gmac-clk" - for the GMAC clock module on A20/A31
+ 
+ Required properties for all clocks:
+ - reg : shall be the control register address for the clock.
+@@ -50,6 +51,9 @@ Required properties for all clocks:
+ 	If the clock module only has one output, the name shall be the
+ 	module name.
+ 
++For "allwinner,sun7i-a20-gmac-clk", the parent clocks shall be fixed rate
++dummy clocks at 25 MHz and 125 MHz, respectively. See example.
++
+ Clock consumers should specify the desired clocks they use with a
+ "clocks" phandle cell. Consumers that are using a gated clock should
+ provide an additional ID in their clock property. This ID is the
+@@ -96,3 +100,25 @@ mmc0_clk: clk@01c20088 {
+ 	clocks = <&osc24M>, <&pll6 1>, <&pll5 1>;
+ 	clock-output-names = "mmc0";
+ };
++
++mii_phy_tx_clk: clk@2 {
++	#clock-cells = <0>;
++	compatible = "fixed-clock";
++	clock-frequency = <25000000>;
++	clock-output-names = "mii_phy_tx";
++};
++
++gmac_int_tx_clk: clk@3 {
++	#clock-cells = <0>;
++	compatible = "fixed-clock";
++	clock-frequency = <125000000>;
++	clock-output-names = "gmac_int_tx";
++};
++
++gmac_clk: clk@01c20164 {
++	#clock-cells = <0>;
++	compatible = "allwinner,sun7i-a20-gmac-clk";
++	reg = <0x01c20164 0x4>;
++	clocks = <&mii_phy_tx_clk>, <&gmac_int_tx_clk>;
++	clock-output-names = "gmac";
++};
+diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+index 736fb60..0b361d2 100644
+--- a/drivers/clk/sunxi/clk-sunxi.c
++++ b/drivers/clk/sunxi/clk-sunxi.c
+@@ -379,6 +379,89 @@ static void sun7i_a20_get_out_factors(u32 *freq, u32 parent_rate,
+ 
+ 
+ /**
++ * sun7i_a20_gmac_clk_setup - Setup function for A20/A31 GMAC clock module
++ *
++ * This clock looks something like this
++ *                               ________________________
++ *  MII TX clock from PHY >-----|___________    _________|----> to GMAC core
++ *  GMAC Int. RGMII TX clk >----|___________\__/__gate---|----> to PHY
++ *  Ext. 125MHz RGMII TX clk >--|__divider__/            |
++ *                              |________________________|
++ *
++ * The external 125 MHz reference is optional, i.e. GMAC can use its
++ * internal TX clock just fine. The A31 GMAC clock module does not have
++ * the divider controls for the external reference.
++ *
++ * To keep it simple, let the GMAC use either the MII TX clock for MII mode,
++ * and its internal TX clock for GMII and RGMII modes. The GMAC driver should
++ * select the appropriate source and gate/ungate the output to the PHY.
++ *
++ * Only the GMAC should use this clock. Altering the clock so that it doesn't
++ * match the GMAC's operation parameters will result in the GMAC not being
++ * able to send traffic out. The GMAC driver should set the clock rate and
++ * enable/disable this clock to configure the required state. The clock
++ * driver then responds by auto-reparenting the clock.
++ */
++
++#define SUN7I_A20_GMAC_GPIT	2
++#define SUN7I_A20_GMAC_MASK	0x3
++#define SUN7I_A20_GMAC_MAX_PARENTS	2
++
++static void __init sun7i_a20_gmac_clk_setup(struct device_node *node)
++{
++	struct clk *clk;
++	struct clk_mux *mux;
++	struct clk_gate *gate;
++	const char *clk_name = node->name;
++	const char *parents[SUN7I_A20_GMAC_MAX_PARENTS];
++	void *reg;
++	int i = 0;
++
++	/* allocate mux and gate clock structs */
++	mux = kzalloc(sizeof(struct clk_mux), GFP_KERNEL);
++	if (!mux)
++		return;
++	gate = kzalloc(sizeof(struct clk_gate), GFP_KERNEL);
++	if (!gate) {
++		kfree(mux);
++		return;
++	}
++
++	reg = of_iomap(node, 0);
++
++	of_property_read_string(node, "clock-output-names", &clk_name);
++
++	while (i < SUN7I_A20_GMAC_MAX_PARENTS &&
++			(parents[i] = of_clk_get_parent_name(node, i)) != NULL)
++		i++;
++
++	/* set up gate and fixed rate properties */
++	gate->reg = reg;
++	gate->bit_idx = SUN7I_A20_GMAC_GPIT;
++	gate->lock = &clk_lock;
++	mux->reg = reg;
++	mux->mask = SUN7I_A20_GMAC_MASK;
++	mux->flags = CLK_MUX_INDEX_BIT;
++	mux->lock = &clk_lock;
++
++	clk = clk_register_composite(NULL, clk_name,
++			parents, i,
++			&mux->hw, &clk_mux_ops,
++			NULL, NULL,
++			&gate->hw, &clk_gate_ops,
++			0);
++
++	if (!IS_ERR(clk)) {
++		of_clk_add_provider(node, of_clk_src_simple_get, clk);
++		clk_register_clkdev(clk, clk_name, NULL);
++	}
++}
++CLK_OF_DECLARE(sun7i_a20_gmac, "allwinner,sun7i-a20-gmac-clk",
++		sun7i_a20_gmac_clk_setup);
++
++
++
++/**
+  * sunxi_factors_clk_setup() - Setup function for factor clocks
+  */
+ 
+-- 
+1.9.rc1
