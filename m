@@ -1,49 +1,52 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 2/3 RESEND] mfd: tc3589x: Reform device tree probing
-Date: Mon, 3 Feb 2014 11:02:01 +0000
-Message-ID: <20140203110201.GV13529@lee--X1>
-References: <1390481008-23900-1-git-send-email-linus.walleij@linaro.org>
- <20140123133141.GD8586@lee--X1>
- <CACRpkdZjRG=cmWHmmFNS+=guCwQoFpu8T3r4YHr6t_XihvmaWA@mail.gmail.com>
- <20140123151123.GE8586@lee--X1>
- <CACRpkdaX7AO3C-N+OMCqtQvFUmHmVRfMhPqGY2LciZQHT7iq+g@mail.gmail.com>
+From: Ian Campbell <Ian.Campbell@citrix.com>
+Subject: Re: [PATCH] arm: document "mach-virt" platform.
+Date: Mon, 3 Feb 2014 11:14:27 +0000
+Message-ID: <1391426067.10515.54.camel@kazak.uk.xensource.com>
+References: <1391098262-15944-1-git-send-email-ian.campbell@citrix.com>
+	 <52EA83D6.9050506@codeaurora.org> <20140203045638.GB4167@cbox>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdaX7AO3C-N+OMCqtQvFUmHmVRfMhPqGY2LciZQHT7iq+g@mail.gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linux Input <linux-input@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140203045638.GB4167@cbox>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christoffer Dall <christoffer.dall@linaro.org>
+Cc: Christopher Covington <cov@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Stefano Stabellini <stefano.stabellini@eu.citrix.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> >> > Patch looks good to me. Is there any reason why we should rush t=
-his in
-> >> > for v3.14, or is it okay to go to -next?
-> >>
-> >> No rush, but it's been on review like forever so unless there is
-> >> some noise from the DT people at -rc1 I'd be very happy if you
-> >> could apply patches 1 & 2 by then.
-> >
-> > I'm just waiting for their Ack. If I don't have it soon I'll review=
- it
-> > myself and any changes will have to come in via subsequent patch
-> > submissions.
-> >
-> > I think it's sensible to head for v3.15 for this set.
->=20
-> So now that v3.14-rc1 is out can we queue this stuff?
+On Sun, 2014-02-02 at 20:56 -0800, Christoffer Dall wrote:
+> On Thu, Jan 30, 2014 at 11:54:46AM -0500, Christopher Covington wrote:
+> > Hi Ian,
+> > 
+> > On 01/30/2014 11:11 AM, Ian Campbell wrote:
+> > > mach-virt has existed for a while but it is not written down what it actually
+> > > consists of. Although it seems a bit unusual to document a binding for an
+> > > entire platform since mach-virt is entirely virtual it is helpful to have
+> > > something to refer to in the absence of a single concrete implementation.
+> > > 
+> > > I've done my best to capture the requirements based on the git log and my
+> > > memory/understanding.
+> > > 
+> > > While here remove the xenvm dts example, the Xen tools will now build a
+> > > suitable mach-virt compatible dts when launching the guest.
+> > 
+> 
+> [...]
+> 
+> > > +The platform may also provide hypervisor specific functionality
+> > > +(e.g. PV I/O), if it does so then this functionality must be
+> > > +discoverable (directly or indirectly) via device tree.
+> > 
+> > I think it would be informative to provide pointers here to commonly used
+> > paravirtualized devices, especially VirtIO PCI/MMIO.
+> > 
+> 
+> I disagree: that would only encourage limited testing or assumptions
+> about these specific devices when really this platform is just a
+> bare-bones platform driven by device tree which should make no
+> preference, whatsoever, about which devices are used with the platform.
 
-Queued.
+Thanks, I think this is exactly what I was failing to express coherently
+last week ;-)
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ian.
