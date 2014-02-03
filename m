@@ -1,51 +1,28 @@
-From: Kleber Sacilotto de Souza <klebers-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2] of: fix PCI bus match for PCIe slots
-Date: Mon,  3 Feb 2014 13:31:03 -0200
-Message-ID: <1391441463-12461-1-git-send-email-klebers@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Brian King <brking-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kleber Sacilotto de Souza <klebers-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 09/10] watchdog: xilinx: Add missing binding
+Date: Mon, 03 Feb 2014 16:32:25 +0100
+Message-ID: <3121595.GbLMuGPlvA@wuerfel>
+References: <ed4cb31c9a549343e6b492cf62fc962d39034bd0.1391177880.git.michal.simek@xilinx.com> <201402031606.11753.arnd@arndb.de> <24ecacca-2714-4834-921c-b827c0e592a3@VA3EHSMHS003.ehs.local>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <24ecacca-2714-4834-921c-b827c0e592a3@VA3EHSMHS003.ehs.local>
+Sender: linux-doc-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, monstr@monstr.eu, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On IBM pseries systems the device_type device-tree property of a PCIe
-bridge contains the string "pciex". The of_bus_pci_match() function was
-looking only for "pci" on this property, so in such cases the bus
-matching code was falling back to the default bus, causing problems on
-functions that should be using "assigned-addresses" for region address
-translation. This patch fixes the problem by also looking for "pciex" on
-the PCI bus match function.
+On Monday 03 February 2014 16:13:47 Michal Simek wrote:
+> Intention wasn't to fix binding but document current one
+> which is in mainline for a long time.
 
-v2: added comment
+Ok, I see.
 
-Signed-off-by: Kleber Sacilotto de Souza <klebers-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
----
- drivers/of/address.c |    5 +++--
- 1 files changed, 3 insertions(+), 2 deletions(-)
+> Apart of this - yes, wdt-enable-once is nowayout and wdt-interval should be timeout
+> is seconds, and clock-frequency should go out and use CCF for getting clock.
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index d3dd41c..1a54f1f 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -99,11 +99,12 @@ static unsigned int of_bus_default_get_flags(const __be32 *addr)
- static int of_bus_pci_match(struct device_node *np)
- {
- 	/*
-+ 	 * "pciex" is PCI Express
- 	 * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
- 	 * "ht" is hypertransport
- 	 */
--	return !strcmp(np->type, "pci") || !strcmp(np->type, "vci") ||
--		!strcmp(np->type, "ht");
-+	return !strcmp(np->type, "pci") || !strcmp(np->type, "pciex") ||
-+		!strcmp(np->type, "vci") || !strcmp(np->type, "ht");
- }
- 
- static void of_bus_pci_count_cells(struct device_node *np,
--- 
-1.7.1
+Could we make a common binding then, and document that the xilinx
+watchdog can optionally provide either one?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
