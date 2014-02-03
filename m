@@ -1,273 +1,63 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH] arm64: Add architecture support for PCI
-Date: Mon, 3 Feb 2014 21:36:58 +0000
-Message-ID: <20140203213658.GA24036@e106497-lin.cambridge.arm.com>
-References: <1391453028-23191-1-git-send-email-Liviu.Dudau@arm.com>
- <21596846.kVTqp7roW4@wuerfel>
- <20140203191837.GC4889@e106497-lin.cambridge.arm.com>
- <3808209.DeG1VobanZ@wuerfel>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] spi: rspi: fix build error when CONFIG_OF is not set
+Date: Mon, 3 Feb 2014 15:45:16 -0600
+Message-ID: <CAL_JsqK7F7a5PSoE1aZTna35wP1SXs4BbpWxsSyuT5b2Cd8cQA@mail.gmail.com>
+References: <52EEF452.4060205@renesas.com>
+	<alpine.DEB.2.02.1402030939520.25794@ayla.of.borg>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3808209.DeG1VobanZ@wuerfel>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1402030939520.25794@ayla.of.borg>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "Shimoda, Yoshihiro" <yoshihiro.shimoda.uh@renesas.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Development <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 03, 2014 at 08:05:56PM +0000, Arnd Bergmann wrote:
-> On Monday 03 February 2014 19:18:38 Liviu Dudau wrote:
-> > On Mon, Feb 03, 2014 at 06:58:56PM +0000, Arnd Bergmann wrote:
-> > > On Monday 03 February 2014 18:43:48 Liviu Dudau wrote:
-> > > > diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/a=
-sm/io.h
-> > > > index 4cc813e..ce5bad2 100644
-> > > > --- a/arch/arm64/include/asm/io.h
-> > > > +++ b/arch/arm64/include/asm/io.h
-> > > > @@ -120,9 +120,13 @@ static inline u64 __raw_readq(const volati=
-le void __iomem *addr)
-> > > >  /*
-> > > >   *  I/O port access primitives.
-> > > >   */
-> > > > +#define arch_has_dev_port()	(0)
-> > >=20
-> > > Why not?
-> >=20
-> > Maybe I got it the wrong way around, but the comment in include/lin=
-ux/io.h says:
-> >=20
-> > /*
-> >  * Some systems do not have legacy ISA devices.
-> >  * /dev/port is not a valid interface on these systems.
-> >  * So for those archs, <asm/io.h> should define the following symbo=
-l.
-> >  */
-> >=20
-> > So ... defining it should mean no legacy ISA devices, right?
->=20
-> I would read that comment as referring to systems that don't have
-> any I/O space. If you have PCI, you can by definition have ISA
-> compatible devices behind a bridge. A typical example would be
-> a VGA card that supports the 03c0-03df port range.
+On Mon, Feb 3, 2014 at 2:47 AM, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>         Hi Shimoda-san,
+>
+> On Mon, 3 Feb 2014, Shimoda, Yoshihiro wrote:
+>> This patch fixes an issue that the following build error happens when
+>> the CONFIG_OF is not set:
+>>
+>> drivers/spi/spi-rspi.c: In function 'rspi_probe':
+>> drivers/spi/spi-rspi.c:1203:26: error: 'rspi_of_match' undeclared (first use in this function)
+>>
+>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+>> ---
+>>  This patch is based on the latest origin/topic/rspi branch in the spi.git.
+>>
+>>  drivers/spi/spi-rspi.c |    1 +
+>>  1 files changed, 1 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/drivers/spi/spi-rspi.c b/drivers/spi/spi-rspi.c
+>> index 34ad4bc..e5cfc3d 100644
+>> --- a/drivers/spi/spi-rspi.c
+>> +++ b/drivers/spi/spi-rspi.c
+>> @@ -1164,6 +1164,7 @@ static int rspi_parse_dt(struct device *dev, struct spi_master *master)
+>>       return 0;
+>>  }
+>>  #else
+>> +#define rspi_of_match        NULL
+>>  static inline int rspi_parse_dt(struct device *dev, struct spi_master *master)
+>>  {
+>>       return -EINVAL;
+>> --
+>> 1.7.1
+>
+> Thanks, obviously I missed that of_match_device() still uses the ID table
+> parameter if CONFIG_OF=n :-(
+>
+> Below I have two alternative solutions:
+>   1. Uses rspi_of_match() to nullify the ID table pointer, like is done in
+>      the platform_driver structure,
+>   2. Fixes it at the OF subsystem level, by nullifying the ID table pointer
+>      inside of_match_device().
+>
+> If 2 is accepted, drivers don't have to care about this anymore.
+>
+> What do you think?
 
-But if you have PCI and don't want to support ISA do you have /dev/port=
-? I guess yes.
-In that case ISA support is irrelevant here. Will update the value when=
- I send v2.
+I'll apply the 2nd one.
 
->=20
-> > >=20
-> > > >  #define IO_SPACE_LIMIT		0xffff
-> > >=20
-> > > You probably want to increase this a bit, to allow multiple host =
-bridges
-> > > to have their own I/O space.
-> >=20
-> > OK, but to what size?
->=20
-> 2 MB was a compromise on arm32 to allow up to 32 PCI host bridges but=
- not
-> take up too much virtual space. On arm64 it should be at least as big=
-=2E
-> Could be more than that, although I don't see a reason why it should =
-be,
-> unless we expect to see systems with tons of host bridges, or buses
-> that exceed 64KB of I/O space.
-
-I will increase the size to 2MB for v2.
-
->=20
-> > > > +#define ioport_map(port, nr)	(PCI_IOBASE + ((port) & IO_SPACE_=
-LIMIT))
-> > > > +#define ioport_unmap(addr)
-> > >=20
-> > > inline functions?
-> >=20
-> > Will do, thanks!
->=20
-> I suppose you can actually use the generic implementation from
-> asm-generic/io.h, and fix it by using the definition you have
-> above, since it's currently broken.
-
-Not exactly broken, but it makes the assumption that your IO space star=
-ts at
-physical address zero and you have not remapped it. It does guard the
-definition with #ifndef CONFIG_GENERIC_IOMAP after all, so it does not
-expect to be generic :)
-
->=20
-> > > > diff --git a/arch/arm64/include/asm/pci.h b/arch/arm64/include/=
-asm/pci.h
-> > > > new file mode 100644
-> > > > index 0000000..dd084a3
-> > > > --- /dev/null
-> > > > +++ b/arch/arm64/include/asm/pci.h
-> > > > @@ -0,0 +1,35 @@
-> > > > +#ifndef __ASM_PCI_H
-> > > > +#define __ASM_PCI_H
-> > > > +#ifdef __KERNEL__
-> > > > +
-> > > > +#include <linux/types.h>
-> > > > +#include <linux/slab.h>
-> > > > +#include <linux/dma-mapping.h>
-> > > > +
-> > > > +#include <asm/io.h>
-> > > > +#include <asm-generic/pci-bridge.h>
-> > > > +#include <asm-generic/pci-dma-compat.h>
-> > > > +
-> > > > +#define PCIBIOS_MIN_IO		0
-> > > > +#define PCIBIOS_MIN_MEM		0
-> > >=20
-> > > PCIBIOS_MIN_IO is normally set to 0x1000, to stay out of the ISA =
-range.
-> >=20
-> > :) No ISA support! (Die ISA, die!!)=20
->=20
-> If only it were that easy.
-
-Lets try! :)
-
-I wonder how many active devices that have an ISA slot are still suppor=
-ted
-by mainline kernel.
-
-I will update PCIBIOS_MIN_xxxx to match arch/arm for v2.
-
->=20
-> > > > diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
-> > > > new file mode 100644
-> > > > index 0000000..7b652cf
-> > > > --- /dev/null
-> > > > +++ b/arch/arm64/kernel/pci.c
-> > > > @@ -0,0 +1,112 @@
-> > >=20
-> > > None of this looks really arm64 specific, nor should it be. I thi=
-nk
-> > > we should try a little harder to move this as a default implement=
-ation
-> > > into common code, even if we start out by having all architecture=
-s
-> > > override it.
-> >=20
-> > Agree. This is the RFC version. I didn't dare to post a patch with =
-fixes
-> > for all architectures. :)
->=20
-> No need to change the other architectures. You can make it opt-in for
-> now and just put the code into a common location.
-> =20
-> An interesting question however is what the transition plan is to
-> have the code shared between arm32 and arm64: We will certainly need
-> to share at least the dw-pcie and the generic SBSA compliant pci
-> implementation.
-
-My vote would be for updating the host controllers to the new API and
-to offer the CONFIG option to choose between arch APIs. The alternative
-is to use the existing API to wrap the generic implementation.
-
-My main concern with the existing API is the requirement to have a subs=
-ys_initcall
-in your host bridge or mach code, due to the way the initialisation is =
-done (you
-need the DT code to probe your driver, but you cannot start the scannin=
-g of the=20
-PCI bus until the arch code is initialised, so it gets deferred via=20
-subsys_initcall when it calls pci_common_init). I bet that if one tries=
- to
-instantiate a Tegra PCI host bridge controller on a Marvell platform th=
-ings will
-break pretty quickly (random example here).
-
->=20
-> > > > +int pci_ioremap_io(unsigned int offset, phys_addr_t phys_addr)
-> > > > +{
-> > > > +	BUG_ON(offset + SZ_64K - 1 > IO_SPACE_LIMIT);
-> > > > +
-> > > > +	return ioremap_page_range((unsigned long)PCI_IOBASE + offset,
-> > > > +				(unsigned long)PCI_IOBASE + offset + SZ_64K,
-> > > > +				phys_addr,
-> > > > +				__pgprot(PROT_DEVICE_nGnRE));
-> > > > +}
-> > >=20
-> > > Not sure if we want to treat this one as architecture specific th=
-ough.
-> > > It certainly won't be portable to x86, but it could be shared wit=
-h
-> > > a couple of others. We may also want to redesign the interface.
-> > > I've been thinking we could make this function allocate space in =
-the
-> > > Linux virtual I/O space aperture, and pass two resources into it
-> > > (physical I/O aperture and bus I/O range), and get the actual
-> > > io_offset as the return value, or a negative error number.
-> >=20
-> > Not sure I completely follow your idea.
->=20
-> Something like this (coded in mail client, don't try to compile):
->=20
-> #define IO_SPACE_PAGES (IO_SPACE_LIMIT + 1) / PAGE_SIZE)
-> static DECLARE_BITMAP(pci_iospace, IO_SPACE_PAGES);
-> unsigned long pci_ioremap_io(const struct resource *bus, const struct=
- resource phys)
-> {
-> 	unsigned long start, len, virt_start;
-> 	int error;
->=20
-> 	/* use logical address =3D=3D bus address if possible */
-> 	start =3D bus->start / PAGE_SIZE;
-> 	if (start > IO_SPACE_LIMIT / PAGE_SIZE)
-> 		start =3D 0;
->=20
-> 	/*
-> 	 * try finding free space for the whole size first,
-> 	 * fall back to 64K if not available
-> 	 */
-> 	len =3D min(resource_size(bus), resource_size(phys);
-> 	start =3D bitmap_find_next_zero_area(pci_iospace, IO_SPACE_PAGES,
-> 				start, len / PAGE_SIZE, 0);
-> 	if (start =3D=3D IO_SPACE_PAGES && len > SZ_64K)
-> 		len =3D SZ_64K;
-> 		start =3D 0;
-> 		start =3D bitmap_find_next_zero_area(pci_iospace, IO_SPACE_PAGES,
-> 				start, len / PAGE_SIZE, 0);
-> 	}
->=20
-> 	/* no 64K area found */
-> 	if (start =3D=3D IO_SPACE_PAGES)
-> 		return -ENOMEM;
->=20
-> 	/* ioremap physical aperture to virtual aperture */
-> 	virt_start =3D start * PAGE_SIZE + (unsigned long)PCI_IOBASE;
-> 	error =3D ioremap_page_range(virt_start, virt_start + len,
-> 				    phys->start, __pgprot(PROT_DEVICE_nGnRE));
-> 	if (error)
-> 		return error;
->=20
-> 	bitmap_set(start, len / PAGE_SIZE);
->=20
-> 	/* return io_offset */
-> 	return start * PAGE_SIZE - bus->start;
-> }
-> EXPORT_SYMBOL_GPL(pci_ioremap_io);
->=20
-> 	Arnd
->=20
-
-I see. I need to think how this will change the existing code. Current =
-users of pci_ioremap_io
-ask for multiples of SZ_64K offsets regardless of the actual need.=20
-
-Best regards,
-Liviu
-
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+Rob
