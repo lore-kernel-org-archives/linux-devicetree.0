@@ -1,51 +1,110 @@
-From: Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] arm: document "mach-virt" platform.
-Date: Mon, 3 Feb 2014 09:41:25 -0800
-Message-ID: <20140203174125.GH4167@cbox>
-References: <1391098262-15944-1-git-send-email-ian.campbell@citrix.com>
- <52EA83D6.9050506@codeaurora.org>
- <20140203045638.GB4167@cbox>
- <52EF9D9F.5020600@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH] [RFC] Support for creating generic host_bridge from device tree
+Date: Mon,  3 Feb 2014 18:33:47 +0000
+Message-ID: <1391452428-22917-1-git-send-email-Liviu.Dudau@arm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52EF9D9F.5020600-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 03, 2014 at 08:46:07AM -0500, Christopher Covington wrote:
-> Hi Christoffer,
-> 
-> On 02/02/2014 11:56 PM, Christoffer Dall wrote:
-> > On Thu, Jan 30, 2014 at 11:54:46AM -0500, Christopher Covington wrote:
-> >> I think it would be informative to provide pointers here to commonly used
-> >> paravirtualized devices, especially VirtIO PCI/MMIO.
-> > 
-> > I disagree: that would only encourage limited testing or assumptions
-> > about these specific devices when really this platform is just a
-> > bare-bones platform driven by device tree which should make no
-> > preference, whatsoever, about which devices are used with the platform.
-> 
-> I'd be all for clearly stating that no assumptions can be made. Perhaps you
-> can explain though how providing less documentation will result in more
-> testing? The assertion does not currently make sense to me.
-> 
-If the documentation states that this is commonly used with virtio/xen
-pv drivers, then I'm afraid people will just assume that's the only
-devices the platform is used with.
+Following the discussion started here [1], I now have a proposal for tackling
+generic support for host bridges described via device tree. It is an initial
+stab at it, to try to get feedback and suggestions, but it is functional enough
+that I have PCI Express for arm64 working on an FPGA using the patch that I am
+also publishing that adds support for PCI for that platform.
 
-Any mention of specific devices or features steers the attention away
-from the essential point of this documentation.
+Looking at the existing architectures that fit the requirements (use of device
+tree and PCI) yields the powerpc and microblaze as generic enough to make them
+candidates for conversion. I have a tentative patch for microblaze that I can
+only compile test it, unfortunately using qemu-microblaze leads to an early
+crash in the kernel.
 
-I don't see how adding this text helps.  Such documentation should go
-elsewhere, in QEMU, or a Xen/KVM web page or something like that.
+As Bjorn has mentioned in the previous discussion, the idea is to add to
+struct pci_host_bridge enough data to be able to reduce the size or remove the
+architecture specific pci_controller structure. arm64 support actually manages
+to get rid of all the architecture static data and has no pci_controller structure
+defined. For host bridge drivers that means a change of API unless architectures
+decide to provide a compatibility layer (comments here please).
 
-Anyway, I'm not religious about this point.
+In order to initialise a host bridge with the new API, the following example
+code is sufficient for a _probe() function:
 
--Christoffer
+static int myhostbridge_probe(struct platform_device *pdev)
+{
+	int err;
+	struct device_node *dev;
+	struct pci_host_bridge *bridge;
+	struct resource bus_range;
+	struct myhostbridge_port *pp;
+	LIST_HEAD(resources);
+
+	dev = pdev->dev.of_node;
+
+	if (!of_device_is_available(dev)) {
+		pr_warn("%s: disabled\n", dev->full_name);
+		return -ENODEV;
+	}
+
+	pp = kzalloc(sizeof(struct myhostbridge_port), GFP_KERNEL);
+	if (!pp)
+		return -ENOMEM;
+
+	err = of_pci_parse_bus_range(dev, &bus_range);
+	if (err) {
+		bus_range.start = 0;
+		bus_range.end = 255;
+		bus_range.flags = IORESOURCE_BUS;
+	}
+	pci_add_resource(&resources, &bus_range);
+
+	bridge = pci_host_bridge_of_init(&pdev->dev, 0, &myhostbridge_ops, pp, &resources);
+	if (!bridge) {
+		err = -EINVAL;
+		goto bridge_init_fail;
+	}
+
+	err = myhostbridge_setup(bridge->bus);
+	if (err)
+		goto bridge_init_fail;
+
+	/*
+	 * Add flags here, this is just an example
+	 */
+	pci_add_flags(PCI_ENABLE_PROC_DOMAINS | PCI_COMPAT_DOMAIN_0);
+	pci_add_flags(PCI_REASSIGN_ALL_BUS | PCI_REASSIGN_ALL_RSRC);
+
+	bus_range.end = pci_scan_child_bus(bridge->bus);
+	pci_bus_update_busn_res_end(bridge->bus, bus_range.end);
+
+	pci_assign_unassigned_bus_resources(bridge->bus);
+
+	pci_bus_add_devices(bridge->bus);
+
+	return 0;
+
+bridge_init_fail:
+	kfree(pp);
+	pci_free_resource_list(&resources);
+	return err;
+}
+
+Best regards,
+Liviu Dudau
+
+[1] http://thread.gmane.org/gmane.linux.kernel.pci/25946
+
+Liviu Dudau (1):
+  pci: Add support for creating a generic host_bridge from device tree
+
+ drivers/pci/host-bridge.c | 92 +++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/pci/probe.c       | 11 ++++++
+ include/linux/pci.h       | 14 ++++++++
+ 3 files changed, 117 insertions(+)
+
+-- 
+1.8.5.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
