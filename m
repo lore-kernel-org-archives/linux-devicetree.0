@@ -1,7 +1,7 @@
 From: Marc Carino <marc.ceeeee@gmail.com>
-Subject: [PATCH v6 3/8] ARM: brcmstb: add debug UART for earlyprintk support
-Date: Mon,  3 Feb 2014 13:30:36 -0800
-Message-ID: <1391463041-15241-4-git-send-email-marc.ceeeee@gmail.com>
+Subject: [PATCH v6 6/8] ARM: brcmstb: add misc. DT bindings for brcmstb
+Date: Mon,  3 Feb 2014 13:30:39 -0800
+Message-ID: <1391463041-15241-7-git-send-email-marc.ceeeee@gmail.com>
 References: <1391463041-15241-1-git-send-email-marc.ceeeee@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1391463041-15241-1-git-send-email-marc.ceeeee@gmail.com>
@@ -10,60 +10,116 @@ To: Christian Daudt <bcm@fixthebug.org>, Arnd Bergmann <arnd@arndb.de>, Olof Joh
 Cc: Florian Fainelli <f.fainelli@gmail.com>, Matt Porter <matt.porter@linaro.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Marc Carino <marc.ceeeee@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the UART definitions needed to support earlyprintk on brcmstb machines.
+Document the bindings that the Broadcom STB platform needs
+for proper bootup.
 
 Signed-off-by: Marc Carino <marc.ceeeee@gmail.com>
 Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- arch/arm/Kconfig.debug |   15 ++++++++++++++-
- 1 files changed, 14 insertions(+), 1 deletions(-)
+ .../devicetree/bindings/arm/brcm-brcmstb.txt       |   95 ++++++++++++++++++++
+ 1 files changed, 95 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/brcm-brcmstb.txt
 
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index 0531da8..5d7f76b 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -125,6 +125,17 @@ choice
- 		  Say Y here if you want kernel low-level debugging support
- 		  on Marvell Berlin SoC based platforms.
- 
-+	config DEBUG_BRCMSTB_UART
-+		bool "Use BRCMSTB UART for low-level debug"
-+		depends on ARCH_BRCMSTB
-+		select DEBUG_UART_8250
-+		help
-+		  Say Y here if you want the debug print routines to direct
-+		  their output to the first serial port on these devices.
+diff --git a/Documentation/devicetree/bindings/arm/brcm-brcmstb.txt b/Documentation/devicetree/bindings/arm/brcm-brcmstb.txt
+new file mode 100644
+index 0000000..3c436cc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/brcm-brcmstb.txt
+@@ -0,0 +1,95 @@
++ARM Broadcom STB platforms Device Tree Bindings
++-----------------------------------------------
++Boards with Broadcom Brahma15 ARM-based BCMxxxx (generally BCM7xxx variants)
++SoC shall have the following DT organization:
 +
-+		  If you have a Broadcom STB chip and would like early print
-+		  messages to appear over the UART, select this option.
++Required root node properties:
++    - compatible: "brcm,bcm<chip_id>", "brcm,brcmstb"
 +
- 	config DEBUG_CLPS711X_UART1
- 		bool "Kernel low-level debugging messages via UART1"
- 		depends on ARCH_CLPS711X
-@@ -1049,6 +1060,7 @@ config DEBUG_UART_PHYS
- 	default 0xd4018000 if DEBUG_MMP_UART3
- 	default 0xe0000000 if ARCH_SPEAR13XX
- 	default 0xf0000be0 if ARCH_EBSA110
-+	default 0xf0406b00 if DEBUG_BRCMSTB_UART
- 	default 0xf1012000 if DEBUG_MVEBU_UART_ALTERNATE
- 	default 0xf1012000 if ARCH_DOVE || ARCH_KIRKWOOD || ARCH_MV78XX0 || \
- 				ARCH_ORION5X
-@@ -1083,6 +1095,7 @@ config DEBUG_UART_VIRT
- 	default 0xf8090000 if DEBUG_VEXPRESS_UART0_RS1
- 	default 0xfb009000 if DEBUG_REALVIEW_STD_PORT
- 	default 0xfb10c000 if DEBUG_REALVIEW_PB1176_PORT
-+	default 0xfc406b00 if DEBUG_BRCMSTB_UART
- 	default 0xfd000000 if ARCH_SPEAR3XX || ARCH_SPEAR6XX
- 	default 0xfd000000 if ARCH_SPEAR13XX
- 	default 0xfd012000 if ARCH_MV78XX0
-@@ -1136,7 +1149,7 @@ config DEBUG_UART_8250_WORD
- 		ARCH_KEYSTONE || \
- 		DEBUG_DAVINCI_DMx_UART0 || DEBUG_DAVINCI_DA8XX_UART1 || \
- 		DEBUG_DAVINCI_DA8XX_UART2 || DEBUG_DAVINCI_TNETV107X_UART1 || \
--		DEBUG_BCM_KONA_UART
-+		DEBUG_BCM_KONA_UART || DEBUG_BRCMSTB_UART
- 
- config DEBUG_UART_8250_FLOW_CONTROL
- 	bool "Enable flow control for 8250 UART"
++example:
++/ {
++    #address-cells = <2>;
++    #size-cells = <2>;
++    model = "Broadcom STB (bcm7445)";
++    compatible = "brcm,bcm7445", "brcm,brcmstb";
++
++Further, syscon nodes that map platform-specific registers used for general
++system control is required:
++
++    - compatible: "brcm,bcm<chip_id>-sun-top-ctrl", "syscon"
++    - compatible: "brcm,bcm<chip_id>-hif-cpubiuctrl", "syscon"
++    - compatible: "brcm,bcm<chip_id>-hif-continuation", "syscon"
++
++example:
++    rdb {
++        #address-cells = <1>;
++        #size-cells = <1>;
++        compatible = "simple-bus";
++        ranges = <0 0x00 0xf0000000 0x1000000>;
++
++        sun_top_ctrl: syscon@404000 {
++            compatible = "brcm,bcm7445-sun-top-ctrl", "syscon";
++            reg = <0x404000 0x51c>;
++        };
++
++        hif_cpubiuctrl: syscon@3e2400 {
++            compatible = "brcm,bcm7445-hif-cpubiuctrl", "syscon";
++            reg = <0x3e2400 0x5b4>;
++        };
++
++        hif_continuation: syscon@452000 {
++            compatible = "brcm,bcm7445-hif-continuation", "syscon";
++            reg = <0x452000 0x100>;
++        };
++    };
++
++Lastly, nodes that allow for support of SMP initialization and reboot are
++required:
++
++smpboot
++-------
++Required properties:
++
++    - compatible
++        The string "brcm,brcmstb-smpboot".
++
++    - syscon-cpu
++        A phandle / integer array property which lets the BSP know the location
++        of certain CPU power-on registers.
++
++        The layout of the property is as follows:
++            o a phandle to the "hif_cpubiuctrl" syscon node
++            o offset to the base CPU power zone register
++            o offset to the base CPU reset register
++
++    - syscon-cont
++        A phandle pointing to the syscon node which describes the CPU boot
++        continuation registers.
++            o a phandle to the "hif_continuation" syscon node
++
++example:
++    smpboot {
++        compatible = "brcm,brcmstb-smpboot";
++        syscon-cpu = <&hif_cpubiuctrl 0x88 0x178>;
++        syscon-cont = <&hif_continuation>;
++    };
++
++reboot
++-------
++Required properties
++
++    - compatible
++        The string property "brcm,brcmstb-reboot".
++
++    - syscon
++        A phandle / integer array that points to the syscon node which describes
++        the general system reset registers.
++            o a phandle to "sun_top_ctrl"
++            o offset to the "reset source enable" register
++            o offset to the "software master reset" register
++
++example:
++    reboot {
++        compatible = "brcm,brcmstb-reboot";
++        syscon = <&sun_top_ctrl 0x304 0x308>;
++    };
 -- 
 1.7.1
