@@ -1,40 +1,62 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 09/10] watchdog: xilinx: Add missing binding
-Date: Mon, 3 Feb 2014 16:06:11 +0100
-Message-ID: <201402031606.11753.arnd@arndb.de>
-References: <ed4cb31c9a549343e6b492cf62fc962d39034bd0.1391177880.git.michal.simek@xilinx.com> <9c721b89ed2ceb6997809bb3363f852277e67dc2.1391177880.git.michal.simek@xilinx.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH] of: add vendor prefix for Honeywell
+Date: Mon, 03 Feb 2014 07:12:38 -0800
+Message-ID: <b3bf182e-6330-488a-a7de-2a47b579606e@email.android.com>
+References: <1390685924-11877-1-git-send-email-marek@goldelico.com> <CAOesGMhFEMNFbAC4rUdccYVHM8yX9Mz+Vx73jGxBYGrSOa4Gaw@mail.gmail.com> <CAAfyv37SenewbPw9BeLyS_djbxdZf+3aizbgOhhOPNdbmUJrUg@mail.gmail.com> <CAL_Jsq++pxMmJrn+=dreFJMCT2EUxbOuhrGetBecUTb2ax4YOw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <9c721b89ed2ceb6997809bb3363f852277e67dc2.1391177880.git.michal.simek@xilinx.com>
+In-Reply-To: <CAL_Jsq++pxMmJrn+=dreFJMCT2EUxbOuhrGetBecUTb2ax4YOw@mail.gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, monstr@monstr.eu, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>
+To: Rob Herring <robherring2@gmail.com>, Belisko Marek <marek.belisko@gmail.com>, NeilBrown <neilb@suse.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 31 January 2014, Michal Simek wrote:
-> +Optional properties:
-> +- clock-frequency      : Frequency of clock in Hz
-> +- xlnx,wdt-enable-once : 0 - Watchdog can be restarted
-> +                         1 - Watchdog can be enabled just once
-> +- xlnx,wdt-interval    : Watchdog timeout interval in 2^<val> clock cycles,
-> +                         <val> is integer from 8 to 31.
-> +
 
-The latter two don't really seem to be xilinx specific, it would be
-reasonable to have a standard watchdog binding that mandates a common
-format for them.
 
-I'm not sure about the enable-once flag, which seems to just map to the
-"nowayout" watchdog option that is not a hardware feature at all
-and should probably be kept as a software setting only, rather than
-settable through DT. If it is kept, it should have a standard name and
-get turned into a boolean (present/absent) property rather than a
-0/1 integer property.
+On February 3, 2014 6:46:58 AM PST, Rob Herring <robherring2@gmail.com> wrote:
+>On Fri, Jan 31, 2014 at 3:46 PM, Belisko Marek
+><marek.belisko@gmail.com> wrote:
+>> On Fri, Jan 31, 2014 at 7:53 PM, Olof Johansson <olof@lixom.net>
+>wrote:
+>>> On Sat, Jan 25, 2014 at 1:38 PM, Marek Belisko <marek@goldelico.com>
+>wrote:
+>>>> Signed-off-by: Marek Belisko <marek@goldelico.com>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>>>>  1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>>>> index 3f900cd..b14c617 100644
+>>>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>>>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>>>> @@ -40,6 +40,7 @@ gmt   Global Mixed-mode Technology, Inc.
+>>>>  gumstix        Gumstix, Inc.
+>>>>  haoyu  Haoyu Microelectronic Co. Ltd.
+>>>>  hisilicon      Hisilicon Limited.
+>>>> +honeywell      Honeywell
+>>>
+>>> The norm has usually been to use the the stock ticker symbol of a
+>>> public company if it is available. In other words, I think the
+>prefix
+>>> here should be 'hon', since Honeywell is a publicly traded company
+>>> under that ticker.
+>> OK I didn't know about that. I just pick name from here:
+>> Documentation/devicetree/bindings/iio/magnetometer/hmc5843.txt
+>> So we need to update also compatible property in mentioned file.
+>
+>It appears this is already used in omap4-sdp dts for some time, so I'm
+>inclined to leave it as honeywell to avoid breaking old dtbs.
 
-The interval should really be specified in terms of seconds or miliseconds,
-not in clock cycles.
+Fair enough.
 
-	Arnd
+It would be good to find a way to avoid too much ambiguity around prefixes longer term but that's a discussion for another day.
+
+-Olof
+
+
+-- 
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
