@@ -1,49 +1,61 @@
-From: David =?ISO-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
-Subject: Re: [PATCH v2 0/6] ARM: sunxi: Add driver for SD/MMC
- hosts found on allwinner sunxi SOCs
-Date: Tue, 04 Feb 2014 20:37 +0100
-Message-ID: <2036604.9RXHkpag8W@dizzy-6.o2s.ch>
-References: <20140204191648.29809.14611.stgit@dizzy-6.o2s.ch>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] arm64: Add architecture support for PCI
+Date: Tue, 4 Feb 2014 20:50:43 +0100
+Message-ID: <201402042050.43837.arnd@arndb.de>
+References: <1391453028-23191-1-git-send-email-Liviu.Dudau@arm.com>
+ <13031998.NR888KZWhk@wuerfel>
+ <CAL_JsqLN4RjVzNCfZ50K44RcP61Z8zFOVnpY1+CfVFz_QnSBEg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart6914529.0bO68eztNJ"; micalg="pgp-sha1"; protocol="application/pgp-signature"
-Return-path: <linux-sunxi+bncBD2JL37LXEKRB5UCYWLQKGQEQVKKLDA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140204191648.29809.14611.stgit-GPtPHOohwllnsqa/0SyWJQ@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqLN4RjVzNCfZ50K44RcP61Z8zFOVnpY1+CfVFz_QnSBEg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, linux-pci <linux-pci@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 04 February 2014, Rob Herring wrote:
+> > Here is how a sane person would read SBSA to create a compliant
+> > implementation:
+> 
+> s/sane/software/
 
---nextPart6914529.0bO68eztNJ
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+> > Here is how a crazy person would read the same sentence in the SBSA:
+> 
+> s/crazy/hardware/
 
-Hi
-I forgot to mention that the autoparenting patch of Emilios is a crucial 
-depency...
-http://git.o2s.ch/?p=linux-next.git;a=commit;h=f8e936772672a3a6ec934558d2a7aef030c663c4
-Without it, the clock will return the wrong value and the card will refuse to 
-initialize
+Not much of a difference, apparently ...
 
-regards
-david
---nextPart6914529.0bO68eztNJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+> My money is on the latter. I think non-PCI implementations of xHCI
+> interfaces will be common. This was certainly the case at Calxeda in
+> what was believed to be a SBSA compliant SOC.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+I just looked up the EHCI and xHCI specs and am shocked to see that
+the PCI config space access for both is an optional part of the
+spec, so that assertion may well have been correct.
 
-iEYEABECAAYFAlLxQWsACgkQAeZw77btGjr+cACcCPHTHkFKjxLx6RD34E+MMR1r
-tAYAoKen1mYCa5cG4CtyTHLjNO657oN6
-=qtJ2
------END PGP SIGNATURE-----
+On the other hand, it does seem impossible to create a compliant
+AHCI implementation without making it show up as a PCI function,
+so any SBSA compliant SoC that contains AHCI already has to have
+all the bits for doing the same on USB.
 
---nextPart6914529.0bO68eztNJ--
+> However, I think PCI
+> device or not is the least of the issues and all the other examples
+> you list are the difficult ones to deal with.
+
+Agreed. But if they get the difficult problems right, it's
+trivial to also do the PCI config space either in the way
+that Jason described, or as a separate PCI domain. In the worst
+case, it could still be faked up by a secure-mode firmware
+catching all config space accesses.
+
+	Arnd
