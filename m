@@ -1,69 +1,74 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 3/5] ASoC: tda998x: add DT documentation of the
- tda998x CODEC
-Date: Tue, 4 Feb 2014 19:54:47 +0000
-Message-ID: <20140204195447.GY22609@sirena.org.uk>
-References: <cover.1391274627.git.moinejf@free.fr>
- <8e4231b7a55802f58a14dd07ac5cd8b0babb1dce.1391274628.git.moinejf@free.fr>
- <20140204181213.GO22609@sirena.org.uk>
- <20140204200239.1baf309b@armhf>
+Subject: Re: Extending OPP bindings
+Date: Tue, 4 Feb 2014 20:11:22 +0000
+Message-ID: <20140204201122.GB22609@sirena.org.uk>
+References: <52EA570A.8040501@arm.com>
+ <52EAF1CA.3040702@ti.com>
+ <20140131124620.GC2616@e102568-lin.cambridge.arm.com>
+ <CAL_Jsq+Kq9C39xr9tY8gSX+6QFkNDqwmTyC+dBhLNcxKMweCpw@mail.gmail.com>
+ <20140131180929.GH2616@e102568-lin.cambridge.arm.com>
+ <52F12AE7.904@ti.com>
+ <20140204182220.GQ22609@sirena.org.uk>
+ <52F13F54.5060000@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="aV+nM5O4EiZgYTzs"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="ssSfcPohcXNs3135"
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140204200239.1baf309b@armhf>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Dave Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+In-Reply-To: <52F13F54.5060000@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robherring2@gmail.com>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Eduardo Valentin <eduardo.valentin@ti.com>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Morten Rasmussen <Morten.Rasmussen@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>
 List-Id: devicetree@vger.kernel.org
 
 
---aV+nM5O4EiZgYTzs
+--ssSfcPohcXNs3135
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Feb 04, 2014 at 08:02:39PM +0100, Jean-Francois Moine wrote:
-> Mark Brown <broonie@kernel.org> wrote:
+On Tue, Feb 04, 2014 at 01:28:20PM -0600, Nishanth Menon wrote:
+> On 02/04/2014 12:22 PM, Mark Brown wrote:
 
-> > On Sat, Feb 01, 2014 at 05:48:49PM +0100, Jean-Francois Moine wrote:
+> > You're assuming that the frequency is a unique key here.  That may not
+> > be the case, for example two OPPs might have the same CPU clock
+> > (assuming that's the frequency you're referring to) but different bus
+> > clocking and of course the CPUs or CPU clusters might be individually
+> > scalable (this is common in big.LITTLE designs I think).
 
-> > > +	- compatible: must be "nxp,tda998x-codec".
+> Which is why OPPs are maintained per device, bus OPPs belong to bus
+> device (in TI terminology, we'd be talking of cross domain dependency
+> here for maintaining asynchronous bridge timing closure constraints -
+> but ofcourse, other SoCs may or maynot have such constraints). For
+> scaling bus frequency, we already have infrastructure in place - clock
+> notifiers - discussion of using that is much deeper topic of it's own.
 
-> > It's not clear to me why there's a separate compatible here - as far as
-> > I can see this can only appear as part of one of these devices and
-> > there's no addressing or other information that'd account for chip
-> > variation so I'd not expect to need to bind this independently of the
-> > parent.
+> for each processor that is uniquely transitioning, we'd have it's own
+> sets of OPPs - the correct representation of the device node is the
+> key there.
 
-> If there is no 'compatible', the CODEC module is not loaded, and, when
-> the module is in the core, no CODEC device can be created from the DT.
+I've seen some SoCs characterised over the whole device rather than with
+individual parts of the SoC done separately.
 
-You're confusing implementation details with device tree specification
-here.  We can easily handle loading a subdriver without having to put
-anything in the device tree, just create a platform device like we do
-with MFDs.
-
---aV+nM5O4EiZgYTzs
+--ssSfcPohcXNs3135
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJS8UWEAAoJELSic+t+oim9mBoP/iOWL3+ui3vOiZmu1ytj1RLR
-frT3ePQ+8wF2mTaDx23u8i8ijG6ZlgAslVFwZb1/jKu/2H4paCF9YGVqv0ilRGLw
-PtbEgXScTxC+M1DJyIf4b4F5h0d7PBXaBVMTRx2Hs1Mz/7/Z9TwbLslXT/txGX/G
-RfAqppgYkg6aj/DQeShW1GjzW13nG+lV5j6ShjJJ/2qkpdT536/berUmOahdgvlV
-CzbsyPYoyY07vkptX+UJDuBc495cSrdKJlNDY9CheIV+X+V8Y6sL7bn0Zv8aERXw
-GxrfF7PDiSwvCk29zFqIVTXyDktl6UuPuuG+oYm3wT8ZFY3c3hZnIT40rHOapMH7
-apjvfwK2N2d10YUsWKPlLf2ouMX/xcgxCnHwV6X30Y6SN3QrT9sfEEFoTE2Z+s9p
-Zdzv5ZfP9OwezpzdiSz4kJ4dRPbk//9QKwXmymb8MIguD0xHphbKk/u27CIEzHkb
-fhuOigpW2YGQ0I8kfxdD+V6WkwqksTi6c2Y2LxdVMac2DidieBJIMeDUMf84+mYp
-3OJfk1637Cmy99SD0NgS58lo7Fc83K9KJyoRzRSS381mjJvjdQcUEuHuKPz0hq8t
-TP/lPCHExlk55ps/pzQktTZcrJa8YRsd682RX6SUdnlf5m+WfhibDFu53J3dQLnj
-ZU3j8MOYw8Lh46UyIQbO
-=vhoH
+iQIcBAEBAgAGBQJS8UlnAAoJELSic+t+oim9DGAQAIuvf/XnadjcwtUcK/abWxs4
+Lbe1AKgJc1t/JRIR3N1VmrNGcad6+kvKqzW/oo7jWZCEARZBaF2RjUCNBCjcQCEm
+pMou6Iufydvn7NWiALGZ1nSOIi+E0Hq4hO7mXbSLhNlAXHI7SGLefdcPQ6s8UlJo
+/DrfZz+cj+lvVFoC0diFHVWuPk2Wr0BMKie5NEnQ/S7uPGLnqlbwM5jFdubQSaEn
+I1RwlZfCjhubRIBZAQFFnx2pFBRkoYqSPGBIP4I0W1uEaGRz1+37u1IxXsNtg/cz
+vo9NGCw56wmrlbZ5319Cpq1SRhN5+H1YI5/LZQ5w4/mSmWnl0WdEdtnEWf9QDw5w
+OdW6WC/9CYqbtjR9c4Coa8e7iV9nN6HnPnhE3TK+VIeF2i6PcWazPre27RlKKnCr
+8Wpzdm2aZu3wUQsQ1nmtNaId/OKnTVZZMUjARovH+OInpL1W2/wjBvidbVbdmvJm
+isx8MCiN4XYclBF9dfQtfa42euhBQLul1tlRI5XONHi7o7hWYNaUBtTxyTTpAxWE
+cEMrOGt7HYXoZbouTXD1vIfXBc78vCukdacc0Ag7x+2EHW8TenN6oSoRSjQFMnGN
+t9h+imEoaM4NOsNPajBrXxORvrK/xk4LJewRb+LAeN2zImdB6yjY3ixrpHpsUKn4
+6W9NoWdv5aEJs/3ke9qI
+=XiT+
 -----END PGP SIGNATURE-----
 
---aV+nM5O4EiZgYTzs--
+--ssSfcPohcXNs3135--
