@@ -1,60 +1,93 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] char: ti-usim: Add driver for USIM module on AM43xx
-Date: Tue, 4 Feb 2014 15:19:40 +0200
-Message-ID: <52F0E8EC.8030900@ti.com>
-References: <1390192434-19386-1-git-send-email-satish.patel@ti.com> <1390192434-19386-4-git-send-email-satish.patel@ti.com>
+From: Andrew Murray <amurray@embedded-bits.co.uk>
+Subject: Re: [PATCH] arm64: Add architecture support for PCI
+Date: Tue, 4 Feb 2014 13:23:17 +0000
+Message-ID: <CAPcvp5HN4pBysOdS5_ep_3Lp7GDDKw4YrgmKjYzBet7PtaOLUg@mail.gmail.com>
+References: <1391453028-23191-1-git-send-email-Liviu.Dudau@arm.com>
+	<1391453028-23191-2-git-send-email-Liviu.Dudau@arm.com>
+	<CAPcvp5EF_=G=VwWLfbw6mwczErTHeq4AbVALYpuAzb3c5eb2rA@mail.gmail.com>
+	<20140204122951.GC27975@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1390192434-19386-4-git-send-email-satish.patel-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Satish Patel <satish.patel-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20140204122951.GC27975@e106497-lin.cambridge.arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Andrew Murray <amurray@embedded-bits.co.uk>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Satish,
+On 4 February 2014 12:29, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+> On Mon, Feb 03, 2014 at 10:34:40PM +0000, Andrew Murray wrote:
+>> On 3 February 2014 18:43, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+>> > diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/=
+io.h
+>> > index 4cc813e..ce5bad2 100644
+>> > --- a/arch/arm64/include/asm/io.h
+>> > +++ b/arch/arm64/include/asm/io.h
+>> > @@ -120,9 +120,13 @@ static inline u64 __raw_readq(const volatile =
+void __iomem *addr)
+>> >  /*
+>> >   *  I/O port access primitives.
+>> >   */
+>> > +#define arch_has_dev_port()    (0)
+>> >  #define IO_SPACE_LIMIT         0xffff
+>> >  #define PCI_IOBASE             ((void __iomem *)(MODULES_VADDR - =
+SZ_2M))
+>> >
+>> > +#define ioport_map(port, nr)   (PCI_IOBASE + ((port) & IO_SPACE_L=
+IMIT))
+>> > +#define ioport_unmap(addr)
+>>
+>> I'm not sure that this will work. The in[bwl], out[bwl] macros in
+>> arch/arm64/include/asm/io.h already add the PCI_IOBASE offset.
+>>
+>> Instead of these two #defines, why not just enforce that
+>> GENERIC_PCI_IOMAP is enabled? Or at least wrap these defines with 'i=
+f
+>> (!config_enabled(CONFIG_GENERIC_PCI_IOMAP))' or similar.
+>
+> GENERIC_PCI_IOMAP *is* enabled for AArch64. We have select GENERIC_IO=
+MAP in
+> arch/arm64/Kconfig which in turn selects GENERIC_PCI_IOMAP in lib/Kco=
+nfig.
 
-On 01/20/2014 06:33 AM, Satish Patel wrote:
-> TI-USIM driver is a platform driver that provides a character
-> driver interface to user applications.
-> 
-> It allows user applications to call IOCTL's to
-> perform smart card operations.
-> 
-> Driver currently supports
-> - ATR
-> - T=0 & T=1 protocol
-> - clock stop mode
-> - smart card clock configuration
-> - Tx/Rx application data units (APDU) to smart card
-> - Interface to PHY using DT & phy interface
-> 
-> Validation is done with ACOS3 smart cards
-> 
-> Signed-off-by: Satish Patel <satish.patel-l0cyMroinI0@public.gmane.org>
-> ---
->  .../devicetree/bindings/ti-usim/ti-usim.txt        |   31 +
->  drivers/char/Kconfig                               |    7 +
->  drivers/char/Makefile                              |    1 +
->  drivers/char/ti-usim-hw.h                          |  863 +++++++++
->  drivers/char/ti-usim.c                             | 1859 ++++++++++++++++++++
+Sorry, it was intent to suggest using the ioport_[map|unmap] functions
+in lib/iomap.c instead of defining something similar here. I guess you
+will also need to also define CONFIG_HAS_IOPORT for this to happen.
 
-ti-usim.c is a very large driver that does everything but looks like limited to TI hardware.
-How about splitting it into generic stuff and hw specific glue logic so that most of the generic stuff
-could be used by different hardware types.
+Andrew Murray
 
->  include/linux/ti-usim.h                            |   98 +
->  6 files changed, 2859 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/ti-usim/ti-usim.txt
->  create mode 100644 drivers/char/ti-usim-hw.h
->  create mode 100644 drivers/char/ti-usim.c
->  create mode 100644 include/linux/ti-usim.h
-> 
-
-cheers,
--roger
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Best regards,
+> Liviu
+>
+>>
+>> > +
+>> >  static inline u8 inb(unsigned long addr)
+>> >  {
+>> >         return readb(addr + PCI_IOBASE);
+>>
+>>
+>> Andrew Murray
+>>
+>
+> --
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> | I would like to |
+> | fix the world,  |
+> | but they're not |
+> | giving me the   |
+>  \ source code!  /
+>   ---------------
+>     =C2=AF\_(=E3=83=84)_/=C2=AF
+>
+> -- IMPORTANT NOTICE: The contents of this email and any attachments a=
+re confidential and may also be privileged. If you are not the intended=
+ recipient, please notify the sender immediately and do not disclose th=
+e contents to any other person, use it for any purpose, or store or cop=
+y the information in any medium.  Thank you.
+>
+> ARM Limited, Registered office 110 Fulbourn Road, Cambridge CB1 9NJ, =
+Registered in England & Wales, Company No:  2557590
+> ARM Holdings plc, Registered office 110 Fulbourn Road, Cambridge CB1 =
+9NJ, Registered in England & Wales, Company No:  2548782
+>
