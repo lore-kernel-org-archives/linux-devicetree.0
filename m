@@ -1,53 +1,88 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v6 8/8] usb: ehci-exynos: Change to use phy provided by
- the generic phy framework
-Date: Tue, 04 Feb 2014 16:06:50 +0100
-Message-ID: <52F1020A.3050202@gmail.com>
-References: <Pine.LNX.4.44L0.1401291530001.23560-100000@netrider.rowland.org>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH] mmc: omap_hsmmc: Add support for Erratum 2.1.1.128 in
+ device tree boot
+Date: Tue, 4 Feb 2014 09:18:15 -0600
+Message-ID: <52F104B7.6040606@ti.com>
+References: <1390260542-22213-1-git-send-email-nm@ti.com> <52F0E098.3050404@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.44L0.1401291530001.23560-100000@netrider.rowland.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Alan Stern <stern@rowland.harvard.edu>, Kamil Debski <k.debski@samsung.com>
-Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, kishon@ti.com, t.figa@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samsung.com, gautam.vivek@samsung.com, mat.krawczuk@gmail.com, yulgon.kim@samsung.com, p.paneri@samsung.com, av.tikhomirov@samsung.com, jg1.han@samsung.com, galak@codeaurora.org, matt.porter@linaro.org, tjakobi@math.uni-bielefeld.de
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <52F0E098.3050404@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Balaji T K <balajitk@ti.com>
+Cc: Chris Ball <chris@printf.net>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alan,
-
-On 29.01.2014 21:42, Alan Stern wrote:
-> On Wed, 29 Jan 2014, Kamil Debski wrote:
->
->> Change the phy provider used from the old one using the USB phy
->> framework to a new one using the Generic phy framework.
+On 02/04/2014 06:44 AM, Balaji T K wrote:
+> On Tuesday 21 January 2014 04:59 AM, Nishanth Menon wrote:
+>> When device is booted using devicetree, platforms impacted by
+>> Erratum 2.1.1.128 is not detected easily in the mmc driver. This erratum
+>> indicates that the module cannot do multi-block transfers.
 >>
->> Signed-off-by: Kamil Debski <k.debski@samsung.com>
+>> Handle this by providing a boolean flag to indicate to driver that it is
+>> working on a hardware with mentioned limitation.
+>>
+>> Signed-off-by: Nishanth Menon <nm@ti.com>
 >> ---
->>   .../devicetree/bindings/usb/exynos-usb.txt         |   13 +++
->>   drivers/usb/host/ehci-exynos.c                     |   97 +++++++++++++-------
->>   2 files changed, 76 insertions(+), 34 deletions(-)
 >>
->> diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt b/Documentation/devicetree/bindings/usb/exynos-usb.txt
->> index d967ba1..25e199a 100644
->> --- a/Documentation/devicetree/bindings/usb/exynos-usb.txt
->> +++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
->> @@ -12,6 +12,10 @@ Required properties:
->>    - interrupts: interrupt number to the cpu.
->>    - clocks: from common clock binding: handle to usb clock.
->>    - clock-names: from common clock binding: Shall be "usbhost".
->> +  - port: if in the SoC there are EHCI phys, they should be listed here.
->> +One phy per port. Each port should have its reg entry with a consecutive
->> +number. Also it should contain phys and phy-names entries specifying the
->> +phy used by the port.
->
-> What is the reg entry number used for?  As far as I can see, it isn't
-> used for anything.  In which case, why have it at all?
+>> This explains the logs I see:
+>> OMAP3430 LDP (ES2.2):
+>> 	uImage only boot:  http://slexy.org/raw/s2YrbMAi7c
+>> 	uImage+dtb concatenated boot: http://slexy.org/raw/s20qVg17T0
+>>
+>> With the following flag set, device is now able to consistently boot with
+>> device tree supported uImage+dtb concat boot.
+>>
+>>   .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |    2 ++
+>>   drivers/mmc/host/omap_hsmmc.c                      |    3 +++
+>>   2 files changed, 5 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+>> index 8c8908a..ab36f8b 100644
+>> --- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+>> @@ -26,6 +26,8 @@ specifier is required.
+>>   dma-names: List of DMA request names. These strings correspond
+>>   1:1 with the DMA specifiers listed in dmas. The string naming is
+>>   to be "rx" and "tx" for RX and TX DMA requests, respectively.
+>> +ti,erratum-2.1.1.128: boolean, for OMAP3430/OMAP35xx platforms with broken
+>> +multiblock reads
+> 
+> Rather than ti,errata.. specific property, something like
+> caps no/disable multiblock read is more readable in my opinion, Otherwise
 
-The reg property is here to identify which EHCI port the node is 
-describing. This should be mentioned in the documentation, though, as 
-well as the whole description of port nodes should be written in a more 
-structured manner, just as other properties.
+Is'nt the better definition to state i have quirk X and allow the
+driver to do the necessary thing/things needed to handle quirk X? in
+this case, there is just one thing to do: broken multi_block_read, in
+the case of other quirks, there might be more than 1 thing to do.. let
+driver figure that out, dts just states the h/w capabilty or in this
+case, the quirk capability.
 
-Best regards,
-Tomasz
+> 
+> Acked-by: Balaji T K <balajitk@ti.com>
+> 
+>>
+>>   Examples:
+>>
+>> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+>> index 014bfe5..f2d5940 100644
+>> --- a/drivers/mmc/host/omap_hsmmc.c
+>> +++ b/drivers/mmc/host/omap_hsmmc.c
+>> @@ -1730,6 +1730,9 @@ static struct omap_mmc_platform_data *of_get_hsmmc_pdata(struct device *dev)
+>>   	if (of_find_property(np, "ti,dual-volt", NULL))
+>>   		pdata->controller_flags |= OMAP_HSMMC_SUPPORTS_DUAL_VOLT;
+>>
+>> +	if (of_find_property(np, "ti,erratum-2.1.1.128", NULL))
+>> +		pdata->controller_flags |= OMAP_HSMMC_BROKEN_MULTIBLOCK_READ;
+>> +
+>>   	/* This driver only supports 1 slot */
+>>   	pdata->nr_slots = 1;
+>>   	pdata->slots[0].switch_pin = cd_gpio;
+>>
+> 
+
+
+-- 
+Regards,
+Nishanth Menon
