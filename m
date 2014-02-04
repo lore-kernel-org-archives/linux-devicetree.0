@@ -1,73 +1,56 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH] arm64: Add architecture support for PCI
-Date: Tue, 4 Feb 2014 12:29:51 +0000
-Message-ID: <20140204122951.GC27975@e106497-lin.cambridge.arm.com>
-References: <1391453028-23191-1-git-send-email-Liviu.Dudau@arm.com>
- <1391453028-23191-2-git-send-email-Liviu.Dudau@arm.com>
- <CAPcvp5EF_=G=VwWLfbw6mwczErTHeq4AbVALYpuAzb3c5eb2rA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAPcvp5EF_=G=VwWLfbw6mwczErTHeq4AbVALYpuAzb3c5eb2rA@mail.gmail.com>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Andrew Murray <amurray@embedded-bits.co.uk>
-Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH V6] kbuild: dtbs_install: new make target
+Date: Tue, 04 Feb 2014 12:40:50 +0000
+Message-ID: <20140204124050.60C59C407C9@trevor.secretlab.ca>
+References: <1384201760-16785-1-git-send-email-jason@lakedaemon.net> < 1385942188-21831-1-git-send-email-jason@lakedaemon.net> <20140110182923. GM19878@titan.lakedaemon.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140110182923.GM19878-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 03, 2014 at 10:34:40PM +0000, Andrew Murray wrote:
-> On 3 February 2014 18:43, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
-> > diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/i=
-o.h
-> > index 4cc813e..ce5bad2 100644
-> > --- a/arch/arm64/include/asm/io.h
-> > +++ b/arch/arm64/include/asm/io.h
-> > @@ -120,9 +120,13 @@ static inline u64 __raw_readq(const volatile v=
-oid __iomem *addr)
-> >  /*
-> >   *  I/O port access primitives.
-> >   */
-> > +#define arch_has_dev_port()    (0)
-> >  #define IO_SPACE_LIMIT         0xffff
-> >  #define PCI_IOBASE             ((void __iomem *)(MODULES_VADDR - S=
-Z_2M))
-> >
-> > +#define ioport_map(port, nr)   (PCI_IOBASE + ((port) & IO_SPACE_LI=
-MIT))
-> > +#define ioport_unmap(addr)
->=20
-> I'm not sure that this will work. The in[bwl], out[bwl] macros in
-> arch/arm64/include/asm/io.h already add the PCI_IOBASE offset.
->=20
-> Instead of these two #defines, why not just enforce that
-> GENERIC_PCI_IOMAP is enabled? Or at least wrap these defines with 'if
-> (!config_enabled(CONFIG_GENERIC_PCI_IOMAP))' or similar.
+On Fri, 10 Jan 2014 13:29:23 -0500, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+> Grant,
+> 
+> On Sun, Dec 01, 2013 at 11:56:28PM +0000, Jason Cooper wrote:
+> > Unlike other build products in the Linux kernel, there is no 'make
+> > *install' mechanism to put devicetree blobs in a standard place.
+> > 
+> > This patch is an attempt to fix this problem.  Akin to 'make install',
+> > this creates a new make target, dtbs_install.  The script that gets
+> > called defers to a distribution or user supplied installdtbs binary,
+> > if found in the system.  Otherwise, the default action is to install the
+> > built dtbs into
+> > 
+> >   /lib/devicetrees/${kernel_version}/${dts_filename}.dtb
+> > 
+> > This is done to keep dtbs from different kernel versions separate until
+> > things have settled down.  Once the dtbs are stable, and not so strongly
+> > linked to the kernel version, the devicetree files will most likely move
+> > to their own repo.  Users will need to upgrade install scripts at that
+> > time.
+> > 
+> > /lib has been selected over /boot since /boot is often a FAT filesystem
+> > and a majority of the dts filenames are longer than 8+3.
+> > 
+> > Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+> > ---
+> 
+> Is this good to go?
 
-GENERIC_PCI_IOMAP *is* enabled for AArch64. We have select GENERIC_IOMA=
-P in
-arch/arm64/Kconfig which in turn selects GENERIC_PCI_IOMAP in lib/Kconf=
-ig.
+I took another look at it and did some rework. It bothered my that the
+install script didnt' have any knowledge of the actual build targets and
+just blindly copied the files it finds. I've reworked the patch to make
+each file a separate target and also fixed a few bugs in the process.
 
-Best regards,
-Liviu
+I also removed the call out to an external script. I'm not convinced a
+call out hook is the best approach when a buildroot tool can post
+process the install directory. It wouldn't be hard to add back in, but I
+don't want it to block this feature. I'll post my version in a minute.
 
->=20
-> > +
-> >  static inline u8 inb(unsigned long addr)
-> >  {
-> >         return readb(addr + PCI_IOBASE);
->=20
->=20
-> Andrew Murray
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
