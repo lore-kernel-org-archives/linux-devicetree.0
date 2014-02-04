@@ -1,55 +1,42 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 3.13 110/140] i2c: mv64xxx: Document the newly introduced Armada XP A0 compatible
-Date: Tue,  4 Feb 2014 13:11:37 -0800
-Message-ID: <20140204211040.116852581@linuxfoundation.org>
-References: <20140204211036.967663852@linuxfoundation.org>
+From: Matt Porter <mporter@linaro.org>
+Subject: Re: [PATCH 2/6] regulator: add bcm59056 pmu DT binding
+Date: Tue, 4 Feb 2014 16:16:38 -0500
+Message-ID: <20140204211638.GA16179@beef>
+References: <1391516352-32359-1-git-send-email-mporter@linaro.org>
+ <1391516352-32359-3-git-send-email-mporter@linaro.org>
+ <20140204172309.GG22609@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140204211036.967663852@linuxfoundation.org>
+Content-Disposition: inline
+In-Reply-To: <20140204172309.GG22609@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Gregory CLEMENT <gregory.clement@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>
+To: Mark Brown <broonie@kernel.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Tim Kryger <tim.kryger@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Christian Daudt <bcm@fixthebug.org>, Devicetree List <devicetree@vger.kernel.org>, Linux I2C List <linux-i2c@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-3.13-stable review patch.  If anyone has any objections, please let me know.
+On Tue, Feb 04, 2014 at 05:23:09PM +0000, Mark Brown wrote:
+> On Tue, Feb 04, 2014 at 07:19:08AM -0500, Matt Porter wrote:
+> > Add a DT binding for the BCM59056 PMU. The binding inherits from
+> > the generic regulator bindings.
+> 
+> Is this really only a regulator - does the chip have no other functions?
 
-------------------
+It's your average multi-function device with other functions as you are
+suspecting.  Buried in the the MFD driver comments is me admitting that
+I need to split this into two bindings. The base device, "bcm59056" and
+then "bcm59056-reg". So point noted, I'll updated with the appropriate
+binding for each.
 
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> > +- regulators: This is the list of child nodes that specify the regulator
+> > +  initialization data for defined regulators.  Generic regulator bindings
+> > +  are described in regulator/regulator.txt.
+> 
+> The regulators property should always be optional, the driver should be
+> able to start up and read back the hardware state without any further
+> configuration.
 
-commit f8b94beb7e6a374cb0de531b72377c49857b35ca upstream.
+Ahh, ok. I will make it so.
 
-The first variants of Armada XP SoCs (A0 stepping) have issues related
-to the i2c controller which prevent to use the offload mechanism and
-lead to a kernel hang during boot.
-
-The commit introduces a new the compatible string
-marvell,mv78230-a0-i2c for the i2c controller.
-
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-cc: devicetree@vger.kernel.org
-Fixes: 930ab3d403ae (i2c: mv64xxx: Add I2C Transaction Generator support)
-Signed-off-by: Jason Cooper <jason@lakedaemon.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
---- a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
-@@ -5,7 +5,11 @@ Required properties :
- 
-  - reg             : Offset and length of the register set for the device
-  - compatible      : Should be "marvell,mv64xxx-i2c" or "allwinner,sun4i-i2c"
--                     or "marvell,mv78230-i2c"
-+                     or "marvell,mv78230-i2c" or "marvell,mv78230-a0-i2c"
-+                     Note: Only use "marvell,mv78230-a0-i2c" for a very rare,
-+                     initial version of the SoC which had broken offload
-+                     support.  Linux auto-detects this and sets it
-+                     appropriately.
-  - interrupts      : The interrupt number
- 
- Optional properties :
+Thanks,
+Matt
