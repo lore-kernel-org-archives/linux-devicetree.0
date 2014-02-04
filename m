@@ -1,44 +1,167 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH] DT: net: document Ethernet bindings in one place
-Date: Tue, 04 Feb 2014 17:26:01 +0000
-Message-ID: <20140204172602.01420C4050F@trevor.secretlab.ca>
-References: <201401180405.07859.sergei.shtylyov@cogentembedded.com> < CAL_Jsq+oa9P=rh+p-dMZyGP8TcmpX7bTnMU0ynLvFxjxFDYbRg@mail.gmail.com> < 52DD98F7.4090202@cogentembedded.com> < CAL_JsqJXbF1-PcPHR2VP+Vi9A1aWizdsG_r3kDvRt3itXDhCGQ@mail.gmail.com> < CAGVrzcb3X3soJNJCE5+YSpQrr+EdycCRFkptPvBCgFg4CbGJ4Q@mail.gmail.com> < CAGVrzcb0dfw1orZzUt5-YkShOg-HNbUYvvo2vfmsZUZXy1Aqfg@mail.gmail.com> < 52DEE465.9000202@cogentembedded.com> <52E988FA.8040807@cogentembedded.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <52E988FA.8040807@cogentembedded.com>
-Sender: netdev-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robherring2@gmail.com>
-Cc: netdev <netdev@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: [PATCH 1/2] devicetree: Add Xilinx XADC binding documentation
+Date: Tue,  4 Feb 2014 18:24:51 +0100
+Message-ID: <1391534692-9049-1-git-send-email-lars@metafoo.de>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 30 Jan 2014 02:04:26 +0300, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com> wrote:
-> Hello.
-> 
-> On 01/22/2014 12:19 AM, Sergei Shtylyov wrote:
-> 
-> >>>>>     I'm afraid that's too late, it has spread very far, so that
-> >>>>> of_get_phy_mode() handles that property, not "phy-connection-type".
-> 
-> >>>> Uggg, I guess this is a case of a defacto standard then if the kernel
-> >>>> doesn't even support it.
-> 
-> >>> Maybe I forgot to CC you on patch sent to Grant only, I sent a patch a
-> >>> while ago for of_get_phy_mode() to look for both "phy-mode" and
-> >>> "phy-connection-type" since the former has been a Linux invention, but
-> >>> the latter is ePAPR specified.
-> 
-> >> Here is a link to the actual patch in question, not sure which tree
-> >> Grant applied it to though:
-> 
-> >> http://lkml.indiana.edu/hypermail/linux/kernel/1311.2/00048.html
-> 
-> >     It's not the patch mail, it's Grant's "applied" reply, patch is mangled in
-> > this reply, and I couldn't follow the thread. Here's the actual patch mail:
-> 
-> > http://marc.info/?l=devicetree&m=138449662807254
-> 
->     Florian, I didn't find this patch in Grant's official tree, so maybe you 
-> should ask him where is the patch already?
+The Xilinx XADC is a ADC that can be found in the series 7 FPGAs from Xilinx.
+The XADC has a DRP interface for communication. Currently two different
+frontends for the DRP interface exist. One that is only available on the ZYNQ
+family as a hardmacro in the SoC portion of the ZYNQ. The other one is available
+on all series 7 platforms and is a softmacro with a AXI interface. This binding
+document describes the bindings for both of them since the bindings are very
+similar.
 
-Sorry, I accidentally dropped it. It will be in the next merge window.
+Each of them needs:
+	* A address range where the registers are mapped
+	* An interrupt number for the device interrupt
+	* A clock. For the the ZYNQ hardmacro interface this is the modules PCAP
+	  clock, for the AXI softmacro it is the AXI bus interface clock.
 
-g.
+Additionally the bindings specify whether an external multiplexer is used and in
+which mode it is used. The devicetree bindings also describe which external
+channels are connected and in which configuration.
+
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+---
+ .../devicetree/bindings/iio/adc/xilinx-xadc.txt    | 119 +++++++++++++++++++++
+ 1 file changed, 119 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
+new file mode 100644
+index 0000000..40d97c1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
+@@ -0,0 +1,119 @@
++Xilinx XADC device driver
++
++The Xilinx XADC is a ADC that can be found in the series 7 FPGAs from Xilinx.
++The XADC has a DRP interface for communication. Currently two different
++frontends for the DRP interface exist. One that is only available on the ZYNQ
++family as a hardmacro in the SoC portion of the ZYNQ. The other one is
++available on all series 7 platforms and is a softmacro with a AXI interface.
++
++This binding document describes the bindings for both of them since the
++bindings are very similar. The Xilinx XADC is a ADC that can be found in the
++series 7 FPGAs from Xilinx. The XADC has a DRP interface for communication.
++Currently two different frontends for the DRP interface exist. One that is only
++available on the ZYNQ family as a hardmacro in the SoC portion of the ZYNQ. The
++other one is available on all series 7 platforms and is a softmacro with a AXI
++interface. This binding document describes the bindings for both of them since
++the bindings are very similar.
++
++Required properties:
++	- compatible: Should be one of
++		* "xlnx,zynq-xadc-1.00.a": When using the ZYNQ device
++		  configuration interface to interface to the XADC hardmacro.
++		* "xlnx,axi-xadc-1.00.a": When using the axi-xadc pcore to
++		  interface to the XADC hardmacro.
++	- reg: Address and length of the register set for the device
++	- interrupts: Interrupt for the XADC control interface.
++	- clocks: When using the ZYNQ this must be the ZYNQ PCAP clock,
++	  when using the AXI-XADC pcore this must be the clock that provides the
++	  clock to the AXI bus interface of the core.
++
++Optional properties:
++	- interrupt-parent: phandle to the parent interrupt controller
++	- xlnx,external-mux:
++		* "none": No external multiplexer is used, this is the default
++		  if the property is omitted.
++		* "single": External multiplexer mode is used with one
++		   multiplexer.
++		* "dual": External multiplexer mode is used with two
++		  multiplexers for simultaneous sampling.
++	- xlnx,external-mux-channel: Configures which pair of pins is used to
++	  sample data in external mux mode.
++	  Valid values for single external multiplexer mode are:
++		0: VP/VN
++		1: VAUXP[0]/VAUXN[0]
++		2: VAUXP[1]/VAUXN[1]
++		...
++		16: VAUXP[15]/VAUXN[15]
++	  Valid values for dual external multiplexer mode are:
++		1: VAUXP[0]/VAUXN[0] - VAUXP[8]/VAUXN[8]
++		2: VAUXP[1]/VAUXN[1] - VAUXP[9]/VAUXN[9]
++		...
++		8: VAUXP[7]/VAUXN[7] - VAUXP[15]/VAUXN[15]
++
++	  This property needs to be present if the device is configured for
++	  external multiplexer mode (either single or dual). If the device is
++	  not using external multiplexer mode the property is ignored.
++	- xnlx,channels: List of external channels that are connected to the ADC
++	  Required properties:
++		* #address-cells: Should be 1.
++		* #size-cells: Should be 0.
++
++	  The child nodes of this node represent the external channels which are
++	  connected to the ADC. If the property is no present no external
++	  channels will be assumed to be connected.
++
++	  Each child node represents one channel and has the following
++	  properties:
++		Required properties:
++			* reg: Pair of pins the the channel is connected to.
++				0: VP/VN
++				1: VAUXP[0]/VAUXN[0]
++				2: VAUXP[1]/VAUXN[1]
++				...
++				16: VAUXP[15]/VAUXN[15]
++			  Note each channel number should only be used at most
++			  once.
++		Optional properties:
++			* xlnx,bipolar: If set the channel is used in bipolar
++			  mode.
++
++
++Examples:
++	xadc@f8007100 {
++		compatible = "xlnx,zynq-xadc-1.00.a";
++		reg = <0xf8007100 0x20>;
++		interrupts = <0 7 4>;
++		interrupt-parent = <&gic>;
++		clocks = <&pcap_clk>;
++
++		xlnx,channels {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			channel@0 {
++				reg = <0>;
++			};
++			channel@1 {
++				reg = <1>;
++			};
++			channel@8 {
++				reg = <8>;
++			};
++		};
++	};
++
++	xadc@43200000 {
++		compatible = "xlnx,axi-xadc-1.00.a";
++		reg = <0x43200000 0x1000>;
++		interrupts = <0 53 4>;
++		interrupt-parent = <&gic>;
++		clocks = <&fpga1_clk>;
++
++		xlnx,channels {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			channel@0 {
++				reg = <0>;
++				xlnx,bipolar;
++			};
++		};
++	};
+-- 
+1.8.0
