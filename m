@@ -1,36 +1,45 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [RFC PATCH 3/9] of: mtd: add NAND timings retrieval support
-Date: Tue, 04 Feb 2014 17:02:58 +0000
-Message-ID: <20140204170258.3D4FCC4045E@trevor.secretlab.ca>
-References: <1389190924-26226-1-git-send-email-b.brezillon@overkiz.com> < 1389190924-26226-4-git-send-email-b.brezillon@overkiz.com> <20140108183418. GA12358@obsidianresearch.com> <52CDA032.3010804@overkiz.com> < 20140108191339.GB12358@obsidianresearch.com> <52CE5F82.6070802@overkiz.com> <20140109173505.GB8899@obsidianresearch.com> <52D6A48D.4080302@overkiz.com> <52D6BF45.80407@overkiz.com> <20140121225740.GP18269@obsidianresearch.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140121225740.GP18269@obsidianresearch.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, boris brezillon <b.brezillon@overkiz.com>
-Cc: devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-doc@vger.kernel.org, dev@linux-sunxi.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Rob Landley <rob@landley.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 3/6] mfd: add bcm59056 pmu driver
+Date: Tue, 4 Feb 2014 17:08:32 +0000
+Message-ID: <20140204170832.GA5196@lee--X1>
+References: <1391516352-32359-1-git-send-email-mporter@linaro.org>
+ <1391516352-32359-4-git-send-email-mporter@linaro.org>
+ <20140204132951.GE13529@lee--X1>
+ <20140204143119.GA4627@beef>
+ <20140204165906.GC22609@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140204165906.GC22609@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Matt Porter <mporter@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, Tim Kryger <tim.kryger@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Christian Daudt <bcm@fixthebug.org>, Devicetree List <devicetree@vger.kernel.org>, Linux I2C List <linux-i2c@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 Jan 2014 15:57:40 -0700, Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
-> On Wed, Jan 15, 2014 at 06:03:01PM +0100, boris brezillon wrote:
-> 
-> > >>Pick a mode value that fits all the parameters of the connected
-> > >>non-ONFI flash.
-> > >>
-> > >>This would be instead of defining each parameter
-> > >>individually.. Provide some helpers to convert from a onfi mode number
-> > >>to all the onfi defined timing parameters so that drivers can
-> > >>configure the HW..
-> > >
-> > >Are you suggesting we should provide a function that converts these
-> > >modes into a nand_timings struct, or just use the timing modes and
-> > >let the NAND controller drivers configure its IP accordingly ?
-> 
-> Either seems reasonable to me, but passing the ONFI mode directly from
-> the NAND core to the driver seems a little safer..
+> > > > +static struct i2c_driver bcm59056_i2c_driver =3D {
+> > > > +	.driver =3D {
+> > > > +		   .name =3D "bcm59056",
+> > > > +		   .owner =3D THIS_MODULE,
+> > > > +		   .of_match_table =3D of_match_ptr(bcm59056_of_match),
+>=20
+> > > No need to use of_match_ptr() here.
+>=20
+> > Will remove.
+>=20
+> What using of_match_ptr() should do is allow the compiler to figure o=
+ut
+> that the table isn't used when DT is disabled and discard it without
+> ifdefs.  Not sure if that actually works yet but that's the idea.
 
-I agree here. There are a lot of parameters being defined. If it can be
-boiled down to an ONFI mode that will make for a much more robust
-binding. Far fewer things to get wrong.
+Right, but I'm guessing that as there is no support for platform data
+then this device(s) is going to be DT only? If that's the case perhaps
+a 'depends OF' might be in order. If that's not the case then I'm more
+than happy to leave the of_match_ptr() in.
 
-g.
-
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
