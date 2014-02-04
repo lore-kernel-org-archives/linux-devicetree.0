@@ -1,79 +1,71 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v3 10/11] ARM: shmobile: koelsch dts: Add QSPI nodes
-Date: Tue,  4 Feb 2014 16:24:04 +0100
-Message-ID: <1391527445-14881-11-git-send-email-geert@linux-m68k.org>
-References: <1391527445-14881-1-git-send-email-geert@linux-m68k.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1391527445-14881-1-git-send-email-geert@linux-m68k.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-spi@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, devicetree@vger.kernel.org
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] pci: Add support for creating a generic host_bridge from device tree
+Date: Tue, 4 Feb 2014 16:56:58 +0100
+Message-ID: <201402041656.59165.arnd@arndb.de>
+References: <1391452428-22917-1-git-send-email-Liviu.Dudau@arm.com> <4524393.8AzpATULMB@wuerfel> <20140204120801.GB27975@e106497-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140204120801.GB27975-2JSQmVVBSi7ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
+On Tuesday 04 February 2014, Liviu Dudau wrote:
+> On Tue, Feb 04, 2014 at 10:09:44AM +0000, Arnd Bergmann wrote:
+> > On Monday 03 February 2014 22:17:44 Liviu Dudau wrote:
+> > > On Mon, Feb 03, 2014 at 07:31:31PM +0000, Arnd Bergmann wrote:
+> > > > The aperture here reflects the subset of the
+> > > > 4GB bus I/O space that is actually mapped into a CPU visible "physical
+> > > > I/O aperture" using an inbound mapping of the host bridge. The physical
+> > > > I/O aperture in turn gets mapped to the virtual I/O space using
+> > > > pci_ioremap_io.
+> > >
+> > > Agree.
+> > >
+> > > > The difference between a bus I/O address and a logical
+> > > > I/O address is stored in the io_offset.
+> > >
+> > > Not exactly. If that would be true that means that for an I/O range that
+> > > start at bus I/O address zero but physical I/O apperture starts at
+> > > 0x40000000 the io_offset is zero. For me, the io_offset should be 0x40000000.
+> >
+> > That's not how we do it on any of the existing host controllers.
+> > Typically the io_offset is zero for the first one, and may be
+> > either zero for all the others (meaning BARs get > 64KB values
+> > for secondary buses) or between 64KB and 2MB (meaning each bus
+> > starts at I/O port number 0).
+> 
+> In that case it is probably worth to rename my variable into phys_io_offset.
+> 
+> I need to go back over my driver code. My assumptions were probably wrong
+> wrt to meaning of the io_offset.
 
-Add pinctrl and SPI devices for QSPI on Koelsch.
-Add Spansion s25fl512s SPI FLASH and MTD partitions.
+Ok. I'd still call it 'base' rather than 'offset', although the meaning
+isn't all that different.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
-Cc: devicetree@vger.kernel.org
----
-v3:
-  - Rebased on top of renesas-devel-v3.14-rc1-20140204
-v2:
-  - No changes
+> > But there should never be an IORESOURCE_IO resource structure that is
+> > not in IO space, i.e. within ioport_resource. Doing an "adjustment"
+> > is not an operation defined on this structure. What I meant above is that
+> > the pci range parser gets this right and gives you a resource that looks
+> > like { .flags = IORESOURCE_MEM, .start = phys_base, .end = phys_base +
+> > size - 1}, while the resource we want to register is { .flags = IORESOURCE_IO,
+> > .start = log_base, .end = log_base + size -1}. In the of_pci_range struct for
+> > the I/O space, the "pci_space" is IORESOURCE_IO (for the pci_addr), while the
+> > "flags" are IORESOURCE_MEM, to go along with the cpu_addr.
+> 
+> The pci range parser gives me a range with .flags = IORESOURCE_IO for IO space. It
+> does not convert it to IORESOURCE_MEM. Hence the need for adjustment.
 
- arch/arm/boot/dts/r8a7791-koelsch.dts |   36 +++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+Ah, I see that now in the code too. This seems to be a bug in the range parser
+though: range->flags should not be initialized to
+of_bus_pci_get_flags(parser->range).
 
-diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
-index 74f098596b5c..d4b9bba38685 100644
---- a/arch/arm/boot/dts/r8a7791-koelsch.dts
-+++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
-@@ -121,8 +121,44 @@
- 		renesas,groups = "scif1_data_d";
- 		renesas,function = "scif1";
- 	};
-+
-+	qspi_pins: spi {
-+		renesas,groups = "qspi_ctrl", "qspi_data4";
-+		renesas,function = "qspi";
-+	};
- };
- 
- &sata0 {
- 	status = "okay";
- };
-+
-+&spi {
-+	pinctrl-0 = <&qspi_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+
-+	flash: flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spansion,s25fl512s";
-+		reg = <0>;
-+		spi-max-frequency = <30000000>;
-+		m25p,fast-read;
-+
-+		partition@0 {
-+			label = "loader";
-+			reg = <0x00000000 0x00080000>;
-+			read-only;
-+		};
-+		partition@80000 {
-+			label = "bootenv";
-+			reg = <0x00080000 0x00080000>;
-+			read-only;
-+		};
-+		partition@100000 {
-+			label = "data";
-+			reg = <0x00100000 0x03f00000>;
-+		};
-+	};
-+};
--- 
-1.7.9.5
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
