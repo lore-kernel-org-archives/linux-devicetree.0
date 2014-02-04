@@ -1,268 +1,253 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: restructure for_each macros to fix compile warnings
-Date: Tue, 04 Feb 2014 14:27:48 +0000
-Message-ID: <20140204142748.6A2A2C407C9@trevor.secretlab.ca>
-References: <1391469424-5245-1-git-send-email-robherring2@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1391469424-5245-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Howells <dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Matt Porter <mporter@linaro.org>
+Subject: Re: [PATCH 3/6] mfd: add bcm59056 pmu driver
+Date: Tue, 4 Feb 2014 09:31:19 -0500
+Message-ID: <20140204143119.GA4627@beef>
+References: <1391516352-32359-1-git-send-email-mporter@linaro.org>
+ <1391516352-32359-4-git-send-email-mporter@linaro.org>
+ <20140204132951.GE13529@lee--X1>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140204132951.GE13529@lee--X1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Tim Kryger <tim.kryger@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Christian Daudt <bcm@fixthebug.org>, Devicetree List <devicetree@vger.kernel.org>, Linux I2C List <linux-i2c@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon,  3 Feb 2014 17:17:04 -0600, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-> Commit 00b2c76a6a "include/linux/of.h: make for_each_child_of_node()
-> reference its args when CONFIG_OF=n" fixed warnings for unused
-> variables, but introduced variable "used uninitialized" warnings.
-> Simply initializing the variables would result in "set but not used"
-> warnings with W=1.
-> 
-> Fix both types of warnings by making all the for_each macros
-> unconditional and rely on the dummy static inline functions to
-> initialize and reference any variables.
-> 
-> Reported-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> Cc: David Howells <dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On Tue, Feb 04, 2014 at 01:29:51PM +0000, Lee Jones wrote:
+> > Add a driver for the BCM59056 PMU multi-function device. The driver
+> > initially supports regmap initialization and instantiation of the
+> > voltage regulator device function of the PMU.
+> >=20
+> > Signed-off-by: Matt Porter <mporter@linaro.org>
+> > Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
+> > Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
+> > ---
+> >  drivers/mfd/Kconfig          |   8 +++
+> >  drivers/mfd/Makefile         |   1 +
+> >  drivers/mfd/bcm59056.c       | 119 +++++++++++++++++++++++++++++++=
+++++++++++++
+> >  include/linux/mfd/bcm59056.h |  35 +++++++++++++
+> >  4 files changed, 163 insertions(+)
+> >  create mode 100644 drivers/mfd/bcm59056.c
+> >  create mode 100644 include/linux/mfd/bcm59056.h
+>=20
+> <snip>
+>=20
+> > +static struct mfd_cell bcm59056s[] =3D {
+> > +	{
+> > +		.name =3D "bcm59056-pmu",
+>=20
+> If you plan to use *->of_node in the PMU driver, which it looks like
+> you do, you should set the compatible string here.
 
-Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Ok. I missed that..I'll split bindings to reflect this as well. There's
+an error in that the regulator properties are all defined in the base
+compatible of brcm,bcm59056 atm and they'll need to be in
+brcm,bcm59056-pmu's binding.
 
-> ---
->  include/linux/of.h | 153 +++++++++++++++++++++++++++++------------------------
->  1 file changed, 84 insertions(+), 69 deletions(-)
-> 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 70c64ba..435cb99 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -169,35 +169,15 @@ static inline const char *of_node_full_name(const struct device_node *np)
->  
->  extern struct device_node *of_find_node_by_name(struct device_node *from,
->  	const char *name);
-> -#define for_each_node_by_name(dn, name) \
-> -	for (dn = of_find_node_by_name(NULL, name); dn; \
-> -	     dn = of_find_node_by_name(dn, name))
->  extern struct device_node *of_find_node_by_type(struct device_node *from,
->  	const char *type);
-> -#define for_each_node_by_type(dn, type) \
-> -	for (dn = of_find_node_by_type(NULL, type); dn; \
-> -	     dn = of_find_node_by_type(dn, type))
->  extern struct device_node *of_find_compatible_node(struct device_node *from,
->  	const char *type, const char *compat);
-> -#define for_each_compatible_node(dn, type, compatible) \
-> -	for (dn = of_find_compatible_node(NULL, type, compatible); dn; \
-> -	     dn = of_find_compatible_node(dn, type, compatible))
->  extern struct device_node *of_find_matching_node_and_match(
->  	struct device_node *from,
->  	const struct of_device_id *matches,
->  	const struct of_device_id **match);
-> -static inline struct device_node *of_find_matching_node(
-> -	struct device_node *from,
-> -	const struct of_device_id *matches)
-> -{
-> -	return of_find_matching_node_and_match(from, matches, NULL);
-> -}
-> -#define for_each_matching_node(dn, matches) \
-> -	for (dn = of_find_matching_node(NULL, matches); dn; \
-> -	     dn = of_find_matching_node(dn, matches))
-> -#define for_each_matching_node_and_match(dn, matches, match) \
-> -	for (dn = of_find_matching_node_and_match(NULL, matches, match); \
-> -	     dn; dn = of_find_matching_node_and_match(dn, matches, match))
-> +
->  extern struct device_node *of_find_node_by_path(const char *path);
->  extern struct device_node *of_find_node_by_phandle(phandle handle);
->  extern struct device_node *of_get_parent(const struct device_node *node);
-> @@ -209,43 +189,11 @@ extern struct device_node *of_get_next_available_child(
->  
->  extern struct device_node *of_get_child_by_name(const struct device_node *node,
->  					const char *name);
-> -#define for_each_child_of_node(parent, child) \
-> -	for (child = of_get_next_child(parent, NULL); child != NULL; \
-> -	     child = of_get_next_child(parent, child))
-> -
-> -#define for_each_available_child_of_node(parent, child) \
-> -	for (child = of_get_next_available_child(parent, NULL); child != NULL; \
-> -	     child = of_get_next_available_child(parent, child))
-> -
-> -static inline int of_get_child_count(const struct device_node *np)
-> -{
-> -	struct device_node *child;
-> -	int num = 0;
-> -
-> -	for_each_child_of_node(np, child)
-> -		num++;
-> -
-> -	return num;
-> -}
-> -
-> -static inline int of_get_available_child_count(const struct device_node *np)
-> -{
-> -	struct device_node *child;
-> -	int num = 0;
-> -
-> -	for_each_available_child_of_node(np, child)
-> -		num++;
-> -
-> -	return num;
-> -}
->  
->  /* cache lookup */
->  extern struct device_node *of_find_next_cache_node(const struct device_node *);
->  extern struct device_node *of_find_node_with_property(
->  	struct device_node *from, const char *prop_name);
-> -#define for_each_node_with_property(dn, prop_name) \
-> -	for (dn = of_find_node_with_property(NULL, prop_name); dn; \
-> -	     dn = of_find_node_with_property(dn, prop_name))
->  
->  extern struct property *of_find_property(const struct device_node *np,
->  					 const char *name,
-> @@ -367,42 +315,53 @@ static inline struct device_node *of_find_node_by_name(struct device_node *from,
->  	return NULL;
->  }
->  
-> -static inline struct device_node *of_get_parent(const struct device_node *node)
-> +static inline struct device_node *of_find_node_by_type(struct device_node *from,
-> +	const char *type)
->  {
->  	return NULL;
->  }
->  
-> -static inline bool of_have_populated_dt(void)
-> +static inline struct device_node *of_find_matching_node_and_match(
-> +	struct device_node *from,
-> +	const struct of_device_id *matches,
-> +	const struct of_device_id **match)
->  {
-> -	return false;
-> +	return NULL;
->  }
->  
-> -/* Kill an unused variable warning on a device_node pointer */
-> -static inline void __of_use_dn(const struct device_node *np)
-> +static inline struct device_node *of_get_parent(const struct device_node *node)
->  {
-> +	return NULL;
->  }
->  
-> -#define for_each_child_of_node(parent, child) \
-> -	while (__of_use_dn(parent), __of_use_dn(child), 0)
-> +static inline struct device_node *of_get_next_child(
-> +	const struct device_node *node, struct device_node *prev)
-> +{
-> +	return NULL;
-> +}
->  
-> -#define for_each_available_child_of_node(parent, child) \
-> -	while (0)
-> +static inline struct device_node *of_get_next_available_child(
-> +	const struct device_node *node, struct device_node *prev)
-> +{
-> +	return NULL;
-> +}
->  
-> -static inline struct device_node *of_get_child_by_name(
-> -					const struct device_node *node,
-> -					const char *name)
-> +static inline struct device_node *of_find_node_with_property(
-> +	struct device_node *from, const char *prop_name)
->  {
->  	return NULL;
->  }
->  
-> -static inline int of_get_child_count(const struct device_node *np)
-> +static inline bool of_have_populated_dt(void)
->  {
-> -	return 0;
-> +	return false;
->  }
->  
-> -static inline int of_get_available_child_count(const struct device_node *np)
-> +static inline struct device_node *of_get_child_by_name(
-> +					const struct device_node *node,
-> +					const char *name)
->  {
-> -	return 0;
-> +	return NULL;
->  }
->  
->  static inline int of_device_is_compatible(const struct device_node *device,
-> @@ -569,6 +528,13 @@ extern int of_node_to_nid(struct device_node *np);
->  static inline int of_node_to_nid(struct device_node *device) { return 0; }
->  #endif
->  
-> +static inline struct device_node *of_find_matching_node(
-> +	struct device_node *from,
-> +	const struct of_device_id *matches)
-> +{
-> +	return of_find_matching_node_and_match(from, matches, NULL);
-> +}
-> +
->  /**
->   * of_property_read_bool - Findfrom a property
->   * @np:		device node from which the property value is to be read.
-> @@ -618,6 +584,55 @@ static inline int of_property_read_u32(const struct device_node *np,
->  		s;						\
->  		s = of_prop_next_string(prop, s))
->  
-> +#define for_each_node_by_name(dn, name) \
-> +	for (dn = of_find_node_by_name(NULL, name); dn; \
-> +	     dn = of_find_node_by_name(dn, name))
-> +#define for_each_node_by_type(dn, type) \
-> +	for (dn = of_find_node_by_type(NULL, type); dn; \
-> +	     dn = of_find_node_by_type(dn, type))
-> +#define for_each_compatible_node(dn, type, compatible) \
-> +	for (dn = of_find_compatible_node(NULL, type, compatible); dn; \
-> +	     dn = of_find_compatible_node(dn, type, compatible))
-> +#define for_each_matching_node(dn, matches) \
-> +	for (dn = of_find_matching_node(NULL, matches); dn; \
-> +	     dn = of_find_matching_node(dn, matches))
-> +#define for_each_matching_node_and_match(dn, matches, match) \
-> +	for (dn = of_find_matching_node_and_match(NULL, matches, match); \
-> +	     dn; dn = of_find_matching_node_and_match(dn, matches, match))
-> +
-> +#define for_each_child_of_node(parent, child) \
-> +	for (child = of_get_next_child(parent, NULL); child != NULL; \
-> +	     child = of_get_next_child(parent, child))
-> +#define for_each_available_child_of_node(parent, child) \
-> +	for (child = of_get_next_available_child(parent, NULL); child != NULL; \
-> +	     child = of_get_next_available_child(parent, child))
-> +
-> +#define for_each_node_with_property(dn, prop_name) \
-> +	for (dn = of_find_node_with_property(NULL, prop_name); dn; \
-> +	     dn = of_find_node_with_property(dn, prop_name))
-> +
-> +static inline int of_get_child_count(const struct device_node *np)
-> +{
-> +	struct device_node *child;
-> +	int num = 0;
-> +
-> +	for_each_child_of_node(np, child)
-> +		num++;
-> +
-> +	return num;
-> +}
-> +
-> +static inline int of_get_available_child_count(const struct device_node *np)
-> +{
-> +	struct device_node *child;
-> +	int num = 0;
-> +
-> +	for_each_available_child_of_node(np, child)
-> +		num++;
-> +
-> +	return num;
-> +}
-> +
->  #if defined(CONFIG_PROC_FS) && defined(CONFIG_PROC_DEVICETREE)
->  extern void proc_device_tree_add_node(struct device_node *, struct proc_dir_entry *);
->  extern void proc_device_tree_add_prop(struct proc_dir_entry *pde, struct property *prop);
-> -- 
-> 1.8.3.2
-> 
+> > +	},
+> > +};
+> > +
+> > +static const struct regmap_config bcm59056_regmap_config =3D {
+> > +	.reg_bits	=3D 8,
+> > +	.val_bits	=3D 8,
+> > +	.max_register	=3D BCM59056_MAX_REGISTER - 1,
+>=20
+> If you've just set this manually i.e. it's not part of an enum table,
+> can't you set it a value you don't need to do math on? It's not used
+> anywhere else is it?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, I'll update this. It's not used elsewhere.
+
+>=20
+> > +	.cache_type	=3D REGCACHE_RBTREE,
+> > +};
+> > +
+> > +static int bcm59056_i2c_probe(struct i2c_client *i2c,
+> > +			      const struct i2c_device_id *id)
+> > +{
+> > +	struct bcm59056 *bcm59056;
+> > +	int chip_id =3D id->driver_data;
+>=20
+> I thought this was a DT only driver? If so, you probably want to use
+> of_match_device() instead.
+
+Correct, I'll use of_match_device()
+
+> > +	int ret =3D 0;
+> > +
+> > +	bcm59056 =3D devm_kzalloc(&i2c->dev, sizeof(*bcm59056), GFP_KERNE=
+L);
+> > +	if (!bcm59056)
+> > +		return -ENOMEM;
+> > +
+> > +	i2c_set_clientdata(i2c, bcm59056);
+> > +	bcm59056->dev =3D &i2c->dev;
+> > +	bcm59056->i2c_client =3D i2c;
+> > +	bcm59056->id =3D chip_id;
+> > +
+> > +	bcm59056->regmap =3D devm_regmap_init_i2c(i2c, &bcm59056_regmap_c=
+onfig);
+> > +	if (IS_ERR(bcm59056->regmap)) {
+> > +		ret =3D PTR_ERR(bcm59056->regmap);
+> > +		dev_err(&i2c->dev, "regmap initialization failed: %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	ret =3D mfd_add_devices(bcm59056->dev, -1,
+> > +			      bcm59056s, ARRAY_SIZE(bcm59056s),
+> > +			      NULL, 0, NULL);
+>=20
+> Are you sure you need all of your #includes?
+>=20
+> I notice that irqdomain is there, but you don't actually have one?
+
+Right, I'll do a sweep on them. In that particular case, I don't yet
+have a need to implement interrupt support so it needs to go.
+
+>=20
+> > +	if (ret < 0)
+> > +		dev_err(&i2c->dev, "mfd_add_devices failed: %d\n", ret);
+>=20
+> What if we change the name of the function? Probably better to say
+> something like "device registration failed" or thelike.
+
+Will do.
+
+>=20
+> > +	return ret;
+> > +}
+> > +
+> > +static int bcm59056_i2c_remove(struct i2c_client *i2c)
+> > +{
+> > +	struct bcm59056 *bcm59056 =3D i2c_get_clientdata(i2c);
+> > +
+> > +	mfd_remove_devices(bcm59056->dev);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct of_device_id bcm59056_of_match[] =3D {
+> > +	{ .compatible =3D "brcm,bcm59056", .data =3D (void *)BCM59056 },
+>=20
+> You've gone to the trouble of setting a device version here, but you
+> don't seem to use it?
+
+I'll drop the device version
+
+> > +	{ }
+> > +};
+> > +
+> > +static const struct i2c_device_id bcm59056_i2c_id[] =3D {
+> > +	{ "bcm59056", BCM59056 },
+> > +	{ }
+> > +};
+>=20
+> Ah, I guess this is where id->driver comes from.
+>=20
+> It's pretty silly that the I2C subsystem demands the presence of this
+> table, despite not using it if an of_device_id table is present.
+
+It does make it very difficult to follow DT enabled I2C client drivers
+:( I'll drop the BCM59056 too.
+
+> > +MODULE_DEVICE_TABLE(i2c, bcm59056_i2c_id);
+> > +
+> > +static struct i2c_driver bcm59056_i2c_driver =3D {
+> > +	.driver =3D {
+> > +		   .name =3D "bcm59056",
+> > +		   .owner =3D THIS_MODULE,
+> > +		   .of_match_table =3D of_match_ptr(bcm59056_of_match),
+>=20
+> No need to use of_match_ptr() here.
+
+Will remove.
+
+> > +	},
+> > +	.probe =3D bcm59056_i2c_probe,
+> > +	.remove =3D bcm59056_i2c_remove,
+> > +	.id_table =3D bcm59056_i2c_id,
+>=20
+> *grumble*
+
+:) Yes, unavoidable for now.
+
+> > +};
+> > +
+> > +static int __init bcm59056_init(void)
+> > +{
+> > +	return i2c_add_driver(&bcm59056_i2c_driver);
+> > +}
+> > +subsys_initcall(bcm59056_init);
+>=20
+> Really? :(
+>=20
+> Maybe you'll want to comment this, in case people do not know the bac=
+k
+> ground and attempts to clean it up.
+
+I'll add a comment. This is the old problem of needing regulators reall=
+y
+early. It's exasperated by the fact that the USB gadget framework
+drivers do not use driver probing. This means that they can not be
+deferred after i2c/mfd/regulator init...the problem is particularly
+noticeable when building in a gadget driver for nfsroot purposes.
+
+Because of this I have the regulator, MFD, and i2c drivers all using
+subsys_initcall() in this series. FWIW, there's some discussion about
+how to resolve the USB gadget driver case but it's going to take a
+while.
+
+> > +static void __exit bcm59056_exit(void)
+> > +{
+> > +	i2c_del_driver(&bcm59056_i2c_driver);
+> > +}
+> > +module_exit(bcm59056_exit);
+>=20
+> <snip>
+>=20
+> > +/* chip id */
+> > +#define BCM59056		0
+>=20
+> Lonely, oh so lonely!
+
+Understood. Will remove.
+
+> > +/* max register address */
+> > +#define BCM59056_MAX_REGISTER	0xe8
+>=20
+> Don't you have a table of registers which you care about?
+
+I placed the register defs that I actually use in the regulator driver
+itself since that is the only place they are used. I notice most MFD
+drivers centralize this in linux/mfd/*.h. However, generally chunk
+of register defs are only used in one subdriver and not shared. If
+it's preferred to move all register defs centrally I can do that.
+
+> > +/* bcm59056 chip access */
+>=20
+> Superfluous comment? Don't we all know what these containers do?
+
+Indeed, will remove.
+
+Thanks for reviewing.
+
+-Matt
+
+> > +struct bcm59056 {
+> > +	struct device *dev;
+> > +	struct i2c_client *i2c_client;
+> > +	struct regmap *regmap;
+> > +	unsigned int id;
+> > +};
+> > +
+> > +#endif /*  __LINUX_MFD_BCM59056_H */
+>=20
+> --=20
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
