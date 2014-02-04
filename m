@@ -1,71 +1,217 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] pci: Add support for creating a generic host_bridge from device tree
-Date: Tue, 4 Feb 2014 16:56:58 +0100
-Message-ID: <201402041656.59165.arnd@arndb.de>
-References: <1391452428-22917-1-git-send-email-Liviu.Dudau@arm.com> <4524393.8AzpATULMB@wuerfel> <20140204120801.GB27975@e106497-lin.cambridge.arm.com>
+From: Thomas Abraham <ta.omasab@gmail.com>
+Subject: Re: [PATCH 1/2] PM / OPP: Add support for 'boost' mode OPP
+Date: Tue, 4 Feb 2014 21:29:26 +0530
+Message-ID: <CAJuA9aimVcxwKEQnSNpsEhZ7Rf-74+r8FOz09EpAZcoVEdi6GA@mail.gmail.com>
+References: <1391506890-7335-1-git-send-email-thomas.ab@samsung.com>
+ <1391506890-7335-2-git-send-email-thomas.ab@samsung.com>
+ <52F10418.4040806@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140204120801.GB27975-2JSQmVVBSi7ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <52F10418.4040806@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nishanth Menon <nm@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lukasz Majewski <l.majewski@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-pm@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, Tomasz Figa <t.figa@samsung.com>, rjw@rjwysocki.net, Kukjin Kim <kgene.kim@samsung.com>, thomas.ab@samsung.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 04 February 2014, Liviu Dudau wrote:
-> On Tue, Feb 04, 2014 at 10:09:44AM +0000, Arnd Bergmann wrote:
-> > On Monday 03 February 2014 22:17:44 Liviu Dudau wrote:
-> > > On Mon, Feb 03, 2014 at 07:31:31PM +0000, Arnd Bergmann wrote:
-> > > > The aperture here reflects the subset of the
-> > > > 4GB bus I/O space that is actually mapped into a CPU visible "physical
-> > > > I/O aperture" using an inbound mapping of the host bridge. The physical
-> > > > I/O aperture in turn gets mapped to the virtual I/O space using
-> > > > pci_ioremap_io.
-> > >
-> > > Agree.
-> > >
-> > > > The difference between a bus I/O address and a logical
-> > > > I/O address is stored in the io_offset.
-> > >
-> > > Not exactly. If that would be true that means that for an I/O range that
-> > > start at bus I/O address zero but physical I/O apperture starts at
-> > > 0x40000000 the io_offset is zero. For me, the io_offset should be 0x40000000.
-> >
-> > That's not how we do it on any of the existing host controllers.
-> > Typically the io_offset is zero for the first one, and may be
-> > either zero for all the others (meaning BARs get > 64KB values
-> > for secondary buses) or between 64KB and 2MB (meaning each bus
-> > starts at I/O port number 0).
-> 
-> In that case it is probably worth to rename my variable into phys_io_offset.
-> 
-> I need to go back over my driver code. My assumptions were probably wrong
-> wrt to meaning of the io_offset.
+On Tue, Feb 4, 2014 at 8:45 PM, Nishanth Menon <nm@ti.com> wrote:
+> On 02/04/2014 03:41 AM, Thomas Abraham wrote:
+>> From: Thomas Abraham <thomas.ab@samsung.com>
+>>
+>> Commit 6f19efc0 ("cpufreq: Add boost frequency support in core") adds
+>> support for CPU boost mode. This patch adds support for finding available
+>> boost OPPs from device tree and marking them as usable in boost mode.
+>>
+>> Cc: Nishanth Menon <nm@ti.com>
+>> Cc: Lukasz Majewski <l.majewski@samsung.com>
+>> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
+>> ---
+>
+> Why is a cpufreq feature being pushed on to OPP library? you can very
+> well have a property boot-frequencies = < a b c > and be done with the
+> job.
 
-Ok. I'd still call it 'base' rather than 'offset', although the meaning
-isn't all that different.
+The boost-opp was not limited to be a cpu/cpufreq only feature. Any
+device (such as a bus) which has OPPs and if it can support optional
+boost OPPs, can utilize this feature. The boost OPPs also require a
+voltage to be associated with the frequency and hence the binding
+boost-frequencies would not be suffice. The code changes in this patch
+also do not have anything that is cpufreq specific.
 
-> > But there should never be an IORESOURCE_IO resource structure that is
-> > not in IO space, i.e. within ioport_resource. Doing an "adjustment"
-> > is not an operation defined on this structure. What I meant above is that
-> > the pci range parser gets this right and gives you a resource that looks
-> > like { .flags = IORESOURCE_MEM, .start = phys_base, .end = phys_base +
-> > size - 1}, while the resource we want to register is { .flags = IORESOURCE_IO,
-> > .start = log_base, .end = log_base + size -1}. In the of_pci_range struct for
-> > the I/O space, the "pci_space" is IORESOURCE_IO (for the pci_addr), while the
-> > "flags" are IORESOURCE_MEM, to go along with the cpu_addr.
-> 
-> The pci range parser gives me a range with .flags = IORESOURCE_IO for IO space. It
-> does not convert it to IORESOURCE_MEM. Hence the need for adjustment.
+>
+> I agree with Rob's comment that this is something we have to discuss
+> in wider "add features to an OPP" discussion[1].
 
-Ah, I see that now in the code too. This seems to be a bug in the range parser
-though: range->flags should not be initialized to
-of_bus_pci_get_flags(parser->range).
+Okay. I have read through the discussion in [1]. Thanks for the link.
+Assuming that the current OPP tuple format will not change, I do not
+feel the code changes in this patch will be hinder the outcome of the
+discussion in [1].
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Thomas.
+
+>
+>
+> [1] http://marc.info/?t=139108946400001&r=1&w=2
+>
+>>  drivers/base/power/opp.c |   69 +++++++++++++++++++++++++++++++++++++---------
+>>  1 file changed, 56 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/base/power/opp.c b/drivers/base/power/opp.c
+>> index 2553867..de4d52d 100644
+>> --- a/drivers/base/power/opp.c
+>> +++ b/drivers/base/power/opp.c
+>> @@ -62,6 +62,7 @@ struct dev_pm_opp {
+>>       struct list_head node;
+>>
+>>       bool available;
+>> +     bool boost;
+>>       unsigned long rate;
+>>       unsigned long u_volt;
+>>
+>> @@ -380,10 +381,12 @@ struct dev_pm_opp *dev_pm_opp_find_freq_floor(struct device *dev,
+>>  EXPORT_SYMBOL_GPL(dev_pm_opp_find_freq_floor);
+>>
+>>  /**
+>> - * dev_pm_opp_add()  - Add an OPP table from a table definitions
+>> + * dev_pm_opp_add_flags()  - Add an OPP to device OPP list with flags
+>>   * @dev:     device for which we do this operation
+>>   * @freq:    Frequency in Hz for this OPP
+>>   * @u_volt:  Voltage in uVolts for this OPP
+>> + * @available:       initial availability of the OPP with adding it to the list.
+>> + * @boost:   availability of this opp in controller's boost operating mode.
+>>   *
+>>   * This function adds an opp definition to the opp list and returns status.
+>>   * The opp is made available by default and it can be controlled using
+>> @@ -395,7 +398,8 @@ EXPORT_SYMBOL_GPL(dev_pm_opp_find_freq_floor);
+>>   * that this function is *NOT* called under RCU protection or in contexts where
+>>   * mutex cannot be locked.
+>>   */
+>> -int dev_pm_opp_add(struct device *dev, unsigned long freq, unsigned long u_volt)
+>> +static int dev_pm_opp_add_flags(struct device *dev, unsigned long freq,
+>> +                     unsigned long u_volt, bool available, bool boost)
+>>  {
+>>       struct device_opp *dev_opp = NULL;
+>>       struct dev_pm_opp *opp, *new_opp;
+>> @@ -441,7 +445,8 @@ int dev_pm_opp_add(struct device *dev, unsigned long freq, unsigned long u_volt)
+>>       new_opp->dev_opp = dev_opp;
+>>       new_opp->rate = freq;
+>>       new_opp->u_volt = u_volt;
+>> -     new_opp->available = true;
+>> +     new_opp->available = available;
+>> +     new_opp->boost = boost;
+>>
+>>       /* Insert new OPP in order of increasing frequency */
+>>       head = &dev_opp->opp_list;
+>> @@ -462,6 +467,27 @@ int dev_pm_opp_add(struct device *dev, unsigned long freq, unsigned long u_volt)
+>>       srcu_notifier_call_chain(&dev_opp->head, OPP_EVENT_ADD, new_opp);
+>>       return 0;
+>>  }
+>> +
+>> +/**
+>> + * dev_pm_opp_add()  - Add an OPP table from a table definitions
+>> + * @dev:     device for which we do this operation
+>> + * @freq:    Frequency in Hz for this OPP
+>> + * @u_volt:  Voltage in uVolts for this OPP
+>> + *
+>> + * This function adds an opp definition to the opp list and returns status.
+>> + * The opp is made available by default and it can be controlled using
+>> + * dev_pm_opp_enable/disable functions.
+>> + *
+>> + * Locking: The internal device_opp and opp structures are RCU protected.
+>> + * Hence this function internally uses RCU updater strategy with mutex locks
+>> + * to keep the integrity of the internal data structures. Callers should ensure
+>> + * that this function is *NOT* called under RCU protection or in contexts where
+>> + * mutex cannot be locked.
+>> + */
+>> +int dev_pm_opp_add(struct device *dev, unsigned long freq, unsigned long u_volt)
+>> +{
+>> +     return dev_pm_opp_add_flags(dev, freq, u_volt, true, false);
+>> +}
+>>  EXPORT_SYMBOL_GPL(dev_pm_opp_add);
+>>
+>>  /**
+>> @@ -651,7 +677,8 @@ int dev_pm_opp_init_cpufreq_table(struct device *dev,
+>>
+>>       list_for_each_entry(opp, &dev_opp->opp_list, node) {
+>>               if (opp->available) {
+>> -                     freq_table[i].driver_data = i;
+>> +                     freq_table[i].driver_data =
+>> +                             opp->boost ? CPUFREQ_BOOST_FREQ : i;
+>>                       freq_table[i].frequency = opp->rate / 1000;
+>>                       i++;
+>>               }
+>> @@ -701,19 +728,14 @@ struct srcu_notifier_head *dev_pm_opp_get_notifier(struct device *dev)
+>>  }
+>>
+>>  #ifdef CONFIG_OF
+>> -/**
+>> - * of_init_opp_table() - Initialize opp table from device tree
+>> - * @dev:     device pointer used to lookup device OPPs.
+>> - *
+>> - * Register the initial OPP table with the OPP library for given device.
+>> - */
+>> -int of_init_opp_table(struct device *dev)
+>> +static int of_parse_opp_table(struct device *dev, const char *prop_name,
+>> +                                     bool boost)
+>>  {
+>>       const struct property *prop;
+>>       const __be32 *val;
+>>       int nr;
+>>
+>> -     prop = of_find_property(dev->of_node, "operating-points", NULL);
+>> +     prop = of_find_property(dev->of_node, prop_name, NULL);
+>>       if (!prop)
+>>               return -ENODEV;
+>>       if (!prop->value)
+>> @@ -734,7 +756,7 @@ int of_init_opp_table(struct device *dev)
+>>               unsigned long freq = be32_to_cpup(val++) * 1000;
+>>               unsigned long volt = be32_to_cpup(val++);
+>>
+>> -             if (dev_pm_opp_add(dev, freq, volt)) {
+>> +             if (dev_pm_opp_add_flags(dev, freq, volt, true, boost)) {
+>>                       dev_warn(dev, "%s: Failed to add OPP %ld\n",
+>>                                __func__, freq);
+>>                       continue;
+>> @@ -744,5 +766,26 @@ int of_init_opp_table(struct device *dev)
+>>
+>>       return 0;
+>>  }
+>> +
+>> +/**
+>> + * of_init_opp_table() - Initialize opp table from device tree
+>> + * @dev:     device pointer used to lookup device OPPs.
+>> + *
+>> + * Register the initial OPP table with the OPP library for given device.
+>> + * Additional "boost" operating points of the controller, if any, are
+>> + * specified with "boost-opp" property.
+>> + */
+>> +int of_init_opp_table(struct device *dev)
+>> +{
+>> +     int ret;
+>> +
+>> +     ret = of_parse_opp_table(dev, "operating-points", false);
+>> +     if (!ret) {
+>> +             ret = of_parse_opp_table(dev, "boost-opp", true);
+>> +             if (ret == -ENODEV)
+>> +                     ret = 0;
+>> +     }
+>> +     return ret;
+>> +}
+>>  EXPORT_SYMBOL_GPL(of_init_opp_table);
+>>  #endif
+>>
+>
+>
+> --
+> Regards,
+> Nishanth Menon
