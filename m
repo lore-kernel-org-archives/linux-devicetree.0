@@ -1,77 +1,44 @@
-From: Balaji T K <balajitk@ti.com>
-Subject: Re: [PATCH] ARM: dts: omap3-ldp: fix mmc configuration
-Date: Tue, 4 Feb 2014 18:16:01 +0530
-Message-ID: <52F0E109.30801@ti.com>
-References: <1390260873-22354-1-git-send-email-nm@ti.com>
+From: Christopher Covington <cov@codeaurora.org>
+Subject: Re: [PATCH v8 0/3] mmc: sdhci-msm: Add support for Qualcomm chipsets
+Date: Tue, 04 Feb 2014 08:19:02 -0500
+Message-ID: <52F0E8C6.5090006@codeaurora.org>
+References: <1391107507-17321-1-git-send-email-gdjakov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1390260873-22354-1-git-send-email-nm@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1391107507-17321-1-git-send-email-gdjakov@mm-sol.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Georgi Djakov <gdjakov@mm-sol.com>
+Cc: linux-mmc@vger.kernel.org, cjb@laptop.org, devicetree@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 21 January 2014 05:04 AM, Nishanth Menon wrote:
-> MMC1 is the only MMC interface available on the platform. Further,
-> since the platform is based on older revision of SoC which is not
-> capable of doing multi-block writes, mark it so and add pinmux
+Hi Georgi,
 
-s/writes/read
+On 01/30/2014 01:45 PM, Georgi Djakov wrote:
+> This patchset adds basic support of the Secure Digital Host Controller
+> Interface compliant controller found in Qualcomm chipsets.
+> 
+> Tested with eMMC and various micro SD cards on APQ8074 Dragonboard.
 
-Thanks and Regards,
-Balaji T K
+[...]
 
-> to ensure that all relevant pins are configured for non-MMC boot
-> mode.
->
-> Signed-off-by: Nishanth Menon <nm@ti.com>
-> ---
-> ti,erratum-2.1.1.128 introduced in https://patchwork.kernel.org/patch/3514851/
-> hence depends on the same.
->   arch/arm/boot/dts/omap3-ldp.dts |   22 ++++++++++++++++++++++
->   1 file changed, 22 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/omap3-ldp.dts b/arch/arm/boot/dts/omap3-ldp.dts
-> index ddce0d8..bc0cc66 100644
-> --- a/arch/arm/boot/dts/omap3-ldp.dts
-> +++ b/arch/arm/boot/dts/omap3-ldp.dts
-> @@ -176,6 +176,17 @@
->   &mmc1 {
->   	vmmc-supply = <&vmmc1>;
->   	bus-width = <4>;
-> +	ti,erratum-2.1.1.128;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc1_pins>;
-> +};
-> +
-> +&mmc2 {
-> +	status="disabled";
-> +};
-> +
-> +&mmc3 {
-> +	status="disabled";
->   };
->
->   &omap3_pmx_core {
-> @@ -209,6 +220,17 @@
->   			0x174 (PIN_OUTPUT | MUX_MODE0)	/* hsusb0_stp.hsusb0_stp */
->   		>;
->   	};
-> +
-> +	mmc1_pins: pinmux_mmc1_pins {
-> +		pinctrl-single,pins = <
-> +			OMAP3_CORE1_IOPAD(0x2144, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc1_clk.mmc1_clk */
-> +			OMAP3_CORE1_IOPAD(0x2146, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc1_cmd.mmc1_cmd */
-> +			OMAP3_CORE1_IOPAD(0x2148, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc1_dat0.mmc1_dat0 */
-> +			OMAP3_CORE1_IOPAD(0x214A, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc1_dat1.mmc1_dat1 */
-> +			OMAP3_CORE1_IOPAD(0x214C, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc1_dat2.mmc1_dat2 */
-> +			OMAP3_CORE1_IOPAD(0x214e, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc1_dat3.mmc1_dat3 */
-> +		>;
-> +	};
->   };
->
->   &usb_otg_hs {
->
+>  .../devicetree/bindings/mmc/sdhci-msm.txt          |   83 ++
+>  drivers/mmc/host/Kconfig                           |   13 +
+>  drivers/mmc/host/Makefile                          |    1 +
+>  drivers/mmc/host/sdhci-msm.c                       |  938 ++++++++++++++++++++
+>  4 files changed, 1035 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>  create mode 100644 drivers/mmc/host/sdhci-msm.c
 
+You must have added entries to the Dragonboard device tree source to test
+these changes. Why not include them with this patchset? Is there a stand-alone
+patch that I've overlooked?
+
+Thanks,
+Christopher
+
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by the Linux Foundation.
