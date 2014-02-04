@@ -1,61 +1,58 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v4] of: add functions to count number of elements in a
- property
-Date: Tue, 04 Feb 2014 17:30:34 +0000
-Message-ID: <20140204173034.2D899C4050F@trevor.secretlab.ca>
-References: <27256277.YJ687suYy5@phil> <1434798.oSb68sYmYT@phil> <
- CAL_JsqJ_St=OegpexzrTGXwmOYCz4YeWk_1S+R_q6NajmmPqSA@mail.gmail.com> <
- 5115255.DrcMbtXc1P@phil> <
- CAL_JsqJord1OOjwcKk1jqF5o+XO3uw+Lc4ATtQacgwZWAoQq1g@mail.gmail.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 08/11] of: Increase MAX_PHANDLE_ARGS
+Date: Tue, 04 Feb 2014 17:33:35 +0000
+Message-ID: <20140204173335.8C7CBC40B12@trevor.secretlab.ca>
+References: <1389876263-25759-1-git-send-email-andreas.herrmann@calxeda.com>
+	<1389876263-25759-9-git-send-email-andreas.herrmann@calxeda.com>	<
+	20140117110830.GW3471@alberich>	<52E92842.3000001@amd.com> <
+	CAL_JsqLhzp5jUJPA91rNkQ07kCDYCDZLxw8LxxFEVP9b12e1Jw@mail.gmail.com>
+	< 52E93360.1000904@amd.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5995396297874994030=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqJord1OOjwcKk1jqF5o+XO3uw+Lc4ATtQacgwZWAoQq1g@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <52E93360.1000904-5C7GfCeVMHo@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Suravee Suthikulanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============5995396297874994030==
-Content-Type: text/plain
-
-On Sat, 18 Jan 2014 09:07:30 -0600, Rob Herring <robherring2@gmail.com> wrote:
-> On Sat, Jan 18, 2014 at 6:02 AM, Heiko Stübner <heiko@sntech.de> wrote:
-> > The need to know the number of array elements in a property is
-> > a common pattern. To prevent duplication of open-coded implementations
-> > add a helper static function that also centralises strict sanity
-> > checking and DTB format details, as well as a set of wrapper functions
-> > for u8, u16, u32 and u64.
-> >
-> > Suggested-by: Mark Rutland <mark.rutland@arm.com>
-> > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> > ---
+On Wed, 29 Jan 2014 10:59:12 -0600, Suravee Suthikulanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org> wrote:
+> On 1/29/2014 10:57 AM, Rob Herring wrote:
+> >>> diff --git a/include/linux/of.h b/include/linux/of.h
+> >>> >>index 276c546..24e1b28 100644
+> >>> >>--- a/include/linux/of.h
+> >>> >>+++ b/include/linux/of.h
+> >>> >>@@ -67,7 +67,7 @@ struct device_node {
+> >>> >>   #endif
+> >>> >>   };
+> >>> >>
+> >>> >>-#define MAX_PHANDLE_ARGS 8
+> >>> >>+#define MAX_PHANDLE_ARGS 16
+> >> >
+> >> >
+> >> >Since the MMU-500 specify "Number of SMRs" upto 128 registers, shouldn't
+> >> >this be changed to be able to support 128 StreamIDs as well?  Although I am
+> >> >not sure if this would be too big to have on the stack per Rob's comment in
+> >> >the previous patch set.
+> > Do you actually need 128 now? If not, then we can deal with that when
+> > we get there. There are lots of things in spec's that are not actually
+> > implemented or supported.
 > 
-> Looks good. Do you plan to convert some users to use this?
+> Actually, we are using 32 on the AMD system. So, do you think we can set 
+> this to 32 instead?
 
-I'll take that as an acked-by. Merged, thanks.
+The helper really wasn't designed for large number of arguments to a
+phandle. If the phandle args are really that large, then it may be
+better to have a parser that allocates the space needed and/or puts the
+data directly into the destination data structure.
 
 g.
-
-
-
---===============5995396297874994030==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5995396297874994030==--
