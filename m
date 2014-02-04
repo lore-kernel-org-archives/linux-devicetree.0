@@ -1,167 +1,40 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: [PATCH 1/2] devicetree: Add Xilinx XADC binding documentation
-Date: Tue,  4 Feb 2014 18:24:51 +0100
-Message-ID: <1391534692-9049-1-git-send-email-lars@metafoo.de>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: RE: [PATCH] of: fix of_update_property()
+Date: Tue, 04 Feb 2014 17:26:59 +0000
+Message-ID: <20140204172659.CEA26C4050F@trevor.secretlab.ca>
+References: <1389933996-19306-1-git-send-email-Li.Xiubo@freescale.com> < CAL_JsqJuAv8=pBuzYO5ZGzroD1kq6gjmNsTjoVyXR=vcu+-pTA@mail.gmail.com> < b61be84c13ed4056a62743e16beb70f2@BY2PR03MB505.namprd03.prod.outlook.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <b61be84c13ed4056a62743e16beb70f2-+7O3WWA3DPshjIn37xzcLOO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Xilinx XADC is a ADC that can be found in the series 7 FPGAs from Xilinx.
-The XADC has a DRP interface for communication. Currently two different
-frontends for the DRP interface exist. One that is only available on the ZYNQ
-family as a hardmacro in the SoC portion of the ZYNQ. The other one is available
-on all series 7 platforms and is a softmacro with a AXI interface. This binding
-document describes the bindings for both of them since the bindings are very
-similar.
+On Mon, 20 Jan 2014 05:50:17 +0000, "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > Subject: Re: [PATCH] of: fix of_update_property()
+> > 
+> > On Thu, Jan 16, 2014 at 10:46 PM, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > > The of_update_property() is intent to update a property in a node
+> > 
+> > s/intent/indended/
+> > 
+> > > and if the property does not exist, will add it to the node.
+> > >
+> > > The second search of the property is possibly won't be found, that
+> > > maybe removed by other thread just before the second search begain,
+> > > if so just retry it.
+> > 
+> > How did you find this problem? Actual use or some artificial stress test?
+> >
+> 
+> Some artificial stress test at home.
 
-Each of them needs:
-	* A address range where the registers are mapped
-	* An interrupt number for the device interrupt
-	* A clock. For the the ZYNQ hardmacro interface this is the modules PCAP
-	  clock, for the AXI softmacro it is the AXI bus interface clock.
+Can you reproduce those tests? It would be nice to have the selftests in
+the kernel so that we can regression test for problems like this.
 
-Additionally the bindings specify whether an external multiplexer is used and in
-which mode it is used. The devicetree bindings also describe which external
-channels are connected and in which configuration.
+g.
 
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
----
- .../devicetree/bindings/iio/adc/xilinx-xadc.txt    | 119 +++++++++++++++++++++
- 1 file changed, 119 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
-new file mode 100644
-index 0000000..40d97c1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
-@@ -0,0 +1,119 @@
-+Xilinx XADC device driver
-+
-+The Xilinx XADC is a ADC that can be found in the series 7 FPGAs from Xilinx.
-+The XADC has a DRP interface for communication. Currently two different
-+frontends for the DRP interface exist. One that is only available on the ZYNQ
-+family as a hardmacro in the SoC portion of the ZYNQ. The other one is
-+available on all series 7 platforms and is a softmacro with a AXI interface.
-+
-+This binding document describes the bindings for both of them since the
-+bindings are very similar. The Xilinx XADC is a ADC that can be found in the
-+series 7 FPGAs from Xilinx. The XADC has a DRP interface for communication.
-+Currently two different frontends for the DRP interface exist. One that is only
-+available on the ZYNQ family as a hardmacro in the SoC portion of the ZYNQ. The
-+other one is available on all series 7 platforms and is a softmacro with a AXI
-+interface. This binding document describes the bindings for both of them since
-+the bindings are very similar.
-+
-+Required properties:
-+	- compatible: Should be one of
-+		* "xlnx,zynq-xadc-1.00.a": When using the ZYNQ device
-+		  configuration interface to interface to the XADC hardmacro.
-+		* "xlnx,axi-xadc-1.00.a": When using the axi-xadc pcore to
-+		  interface to the XADC hardmacro.
-+	- reg: Address and length of the register set for the device
-+	- interrupts: Interrupt for the XADC control interface.
-+	- clocks: When using the ZYNQ this must be the ZYNQ PCAP clock,
-+	  when using the AXI-XADC pcore this must be the clock that provides the
-+	  clock to the AXI bus interface of the core.
-+
-+Optional properties:
-+	- interrupt-parent: phandle to the parent interrupt controller
-+	- xlnx,external-mux:
-+		* "none": No external multiplexer is used, this is the default
-+		  if the property is omitted.
-+		* "single": External multiplexer mode is used with one
-+		   multiplexer.
-+		* "dual": External multiplexer mode is used with two
-+		  multiplexers for simultaneous sampling.
-+	- xlnx,external-mux-channel: Configures which pair of pins is used to
-+	  sample data in external mux mode.
-+	  Valid values for single external multiplexer mode are:
-+		0: VP/VN
-+		1: VAUXP[0]/VAUXN[0]
-+		2: VAUXP[1]/VAUXN[1]
-+		...
-+		16: VAUXP[15]/VAUXN[15]
-+	  Valid values for dual external multiplexer mode are:
-+		1: VAUXP[0]/VAUXN[0] - VAUXP[8]/VAUXN[8]
-+		2: VAUXP[1]/VAUXN[1] - VAUXP[9]/VAUXN[9]
-+		...
-+		8: VAUXP[7]/VAUXN[7] - VAUXP[15]/VAUXN[15]
-+
-+	  This property needs to be present if the device is configured for
-+	  external multiplexer mode (either single or dual). If the device is
-+	  not using external multiplexer mode the property is ignored.
-+	- xnlx,channels: List of external channels that are connected to the ADC
-+	  Required properties:
-+		* #address-cells: Should be 1.
-+		* #size-cells: Should be 0.
-+
-+	  The child nodes of this node represent the external channels which are
-+	  connected to the ADC. If the property is no present no external
-+	  channels will be assumed to be connected.
-+
-+	  Each child node represents one channel and has the following
-+	  properties:
-+		Required properties:
-+			* reg: Pair of pins the the channel is connected to.
-+				0: VP/VN
-+				1: VAUXP[0]/VAUXN[0]
-+				2: VAUXP[1]/VAUXN[1]
-+				...
-+				16: VAUXP[15]/VAUXN[15]
-+			  Note each channel number should only be used at most
-+			  once.
-+		Optional properties:
-+			* xlnx,bipolar: If set the channel is used in bipolar
-+			  mode.
-+
-+
-+Examples:
-+	xadc@f8007100 {
-+		compatible = "xlnx,zynq-xadc-1.00.a";
-+		reg = <0xf8007100 0x20>;
-+		interrupts = <0 7 4>;
-+		interrupt-parent = <&gic>;
-+		clocks = <&pcap_clk>;
-+
-+		xlnx,channels {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			channel@0 {
-+				reg = <0>;
-+			};
-+			channel@1 {
-+				reg = <1>;
-+			};
-+			channel@8 {
-+				reg = <8>;
-+			};
-+		};
-+	};
-+
-+	xadc@43200000 {
-+		compatible = "xlnx,axi-xadc-1.00.a";
-+		reg = <0x43200000 0x1000>;
-+		interrupts = <0 53 4>;
-+		interrupt-parent = <&gic>;
-+		clocks = <&fpga1_clk>;
-+
-+		xlnx,channels {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			channel@0 {
-+				reg = <0>;
-+				xlnx,bipolar;
-+			};
-+		};
-+	};
--- 
-1.8.0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
