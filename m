@@ -1,49 +1,52 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 08/11] of: Increase MAX_PHANDLE_ARGS
-Date: Tue, 04 Feb 2014 17:36:47 +0000
-Message-ID: <20140204173647.4B0D6C40B12@trevor.secretlab.ca>
-References: <1389876263-25759-1-git-send-email-andreas.herrmann@calxeda.com>
-	<1389876263-25759-9-git-send-email-andreas.herrmann@calxeda.com>
-	< 20140117110830.GW3471@alberich>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] DT: net: document Ethernet bindings in one place
+Date: Tue, 04 Feb 2014 21:40:16 +0300
+Message-ID: <52F13410.8070205@cogentembedded.com>
+References: <201401180405.07859.sergei.shtylyov@cogentembedded.com> < CAL_Jsq+oa9P=rh+p-dMZyGP8TcmpX7bTnMU0ynLvFxjxFDYbRg@mail.gmail.com> < 52DD98F7.4090202@cogentembedded.com> < CAL_JsqJXbF1-PcPHR2VP+Vi9A1aWizdsG_r3kDvRt3itXDhCGQ@mail.gmail.com> < CAGVrzcb3X3soJNJCE5+YSpQrr+EdycCRFkptPvBCgFg4CbGJ4Q@mail.gmail.com> < CAGVrzcb0dfw1orZzUt5-YkShOg-HNbUYvvo2vfmsZUZXy1Aqfg@mail.gmail.com> < 52DEE465.9000202@cogentembedded.com> <52E988FA.8040807@cogentembedded.com> <20140204172602.01420C4050F@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20140117110830.GW3471@alberich>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140204172602.01420C4050F@trevor.secretlab.ca>
+Sender: linux-doc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robherring2@gmail.com>
+Cc: netdev <netdev@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 17 Jan 2014 12:08:30 +0100, Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org> wrote:
-> 
-> arm-smmu driver uses of_parse_phandle_with_args when parsing DT
-> information to determine stream IDs for a master device.
-> Thus the number of stream IDs per master device is bound by
-> MAX_PHANDLE_ARGS.
-> 
-> To support Calxeda ECX-2000 hardware arm-smmu driver requires a
-> slightly higher value for MAX_PHANDLE_ARGS as this hardware has 10
-> stream IDs for one master device.
-> 
-> Increasing it to 16 seems a reasonable choice.
-> 
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Andreas Herrmann <herrmann.der.user-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Hello.
 
-I've merged this one, but I'm not excited about making it any larger
-because this structure lives on the stack most of the time.
+On 02/04/2014 08:26 PM, Grant Likely wrote:
 
-g.
+>>>>>>>      I'm afraid that's too late, it has spread very far, so that
+>>>>>>> of_get_phy_mode() handles that property, not "phy-connection-type".
+
+>>>>>> Uggg, I guess this is a case of a defacto standard then if the kernel
+>>>>>> doesn't even support it.
+
+>>>>> Maybe I forgot to CC you on patch sent to Grant only, I sent a patch a
+>>>>> while ago for of_get_phy_mode() to look for both "phy-mode" and
+>>>>> "phy-connection-type" since the former has been a Linux invention, but
+>>>>> the latter is ePAPR specified.
+
+>>>> Here is a link to the actual patch in question, not sure which tree
+>>>> Grant applied it to though:
+
+>>>> http://lkml.indiana.edu/hypermail/linux/kernel/1311.2/00048.html
+
+>>>      It's not the patch mail, it's Grant's "applied" reply, patch is mangled in
+>>> this reply, and I couldn't follow the thread. Here's the actual patch mail:
+
+>>> http://marc.info/?l=devicetree&m=138449662807254
+
+>>      Florian, I didn't find this patch in Grant's official tree, so maybe you
+>> should ask him where is the patch already?
+
+> Sorry, I accidentally dropped it. It will be in the next merge window.
+
+    Already saw it, thanks. Would that it was in 3.14 instead of course, so 
+that I could use "phy-connection-type" in my binding...
+
+> g.
+
+WBR, Sergei
+
