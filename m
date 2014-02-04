@@ -1,123 +1,80 @@
-From: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2] dma: Add Xilinx AXI Video Direct Memory Access Engine
- driver support
-Date: Tue, 4 Feb 2014 16:05:53 +0530
-Message-ID: <CA+mB=1KWFVMhpXh_TUuYtW+B16_5eSZ7gjrvYD-7Q_Ec2K7yaA@mail.gmail.com>
-References: <1390409565-4200-1-git-send-email-sthokal@xilinx.com>
-	<1390409565-4200-2-git-send-email-sthokal@xilinx.com>
-	<52E0FC22.8060903@metafoo.de>
-	<CA+mB=1L6yvCwA3mKCwz83LQbXiVau110REV64rYrSzUhGE4ucA@mail.gmail.com>
-	<52E2698B.6070001@metafoo.de>
-	<20140126135933.GD10628@intel.com>
-	<CA+mB=1Jwjn+KSO9yFr=LNVjk3khf0b-LLQamYf+nnSF4bODGPA@mail.gmail.com>
-	<CA+mB=1LyX0_VVXZQ-=m3gR2RBeumLrnPTUW3j+Zm1nj7a4exHg@mail.gmail.com>
-	<20140204052810.GO10628@intel.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 3/5] spi: sunxi: Add Allwinner A31 SPI controller
+ driver
+Date: Tue, 4 Feb 2014 11:02:09 +0000
+Message-ID: <20140204110209.GQ22609@sirena.org.uk>
+References: <1391165752-1819-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1391165752-1819-4-git-send-email-maxime.ripard@free-electrons.com>
+ <20140131124809.GE22609@sirena.org.uk>
+ <20140131224704.GI2950@lukather>
+ <20140204002110.GP22609@sirena.org.uk>
+ <20140204090926.GI25625@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140204052810.GO10628-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="pNTAM9ZU3uJ+Foyt"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140204090926.GI25625@lukather>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 4, 2014 at 10:58 AM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
-> On Fri, Jan 31, 2014 at 12:22:52PM +0530, Srikanth Thokala wrote:
->> >>> >> [...]
->> >>> >>> +/**
->> >>> >>> + * xilinx_vdma_device_control - Configure DMA channel of the device
->> >>> >>> + * @dchan: DMA Channel pointer
->> >>> >>> + * @cmd: DMA control command
->> >>> >>> + * @arg: Channel configuration
->> >>> >>> + *
->> >>> >>> + * Return: '0' on success and failure value on error
->> >>> >>> + */
->> >>> >>> +static int xilinx_vdma_device_control(struct dma_chan *dchan,
->> >>> >>> +                                   enum dma_ctrl_cmd cmd, unsigned long arg)
->> >>> >>> +{
->> >>> >>> +     struct xilinx_vdma_chan *chan = to_xilinx_chan(dchan);
->> >>> >>> +
->> >>> >>> +     switch (cmd) {
->> >>> >>> +     case DMA_TERMINATE_ALL:
->> >>> >>> +             xilinx_vdma_terminate_all(chan);
->> >>> >>> +             return 0;
->> >>> >>> +     case DMA_SLAVE_CONFIG:
->> >>> >>> +             return xilinx_vdma_slave_config(chan,
->> >>> >>> +                                     (struct xilinx_vdma_config *)arg);
->> >>> >>
->> >>> >> You really shouldn't be overloading the generic API with your own semantics.
->> >>> >> DMA_SLAVE_CONFIG should take a dma_slave_config and nothing else.
->> >>> >
->> >>> > Ok.  The driver needs few additional configuration from the slave
->> >>> > device like Vertical
->> >>> > Size, Horizontal Size,  Stride etc., for the DMA transfers, in that case do you
->> >>> > suggest me to define a separate dma_ctrl_cmd like the one FSLDMA_EXTERNAL_START
->> >>> > defined for Freescale drivers?
->> >>>
->> >>> In my opinion it is not a good idea to have driver implement a generic API,
->> >>> but at the same time let the driver have custom semantics for those API
->> >>> calls. It's a bit like having a gpio driver that expects 23 and 42 as the
->> >>> values passed to gpio_set_value instead of 0 and 1. It completely defeats
->> >>> the purpose of a generic API, namely that you are able to write generic code
->> >>> that makes use of the API without having to know about which implementation
->> >>> API it is talking to. The dmaengine framework provides the
->> >>> dmaengine_prep_interleaved_dma() function to setup two dimensional
->> >>> transfers, e.g. take a look at sirf-dma.c or imx-dma.c.
->> >>
->> >> The question here i think would be waht this device supports? Is the hardware
->> >> capable of doing interleaved transfers, then would make sense.
->> >>
->> >> While we do try to get users use dma_slave_config, but there will always be
->> >> someone who have specfic params. If we can generalize then we might want to add
->> >> to the dma_slave_config as well
->> >
->> > There are many configuration parameters which are specific to IP and I
->> > would like to
->> > give an overview of some of parameteres here:
->> >
->> > 1) Park Mode ('cfg->park'): In Park mode, engine will park on frame
->> > referenced by
->> >     'cfg->park_frm', so user will have control on each frame in this mode.
->> >
->> > 2) Interrupt Coalesce ('cfg->coalesce'):  Used for setting interrupt
->> > threshold. This value
->> >    determines the number of frame buffers to process. To use this feature,
->> >    'cfg->frm_cnt_en' should be set.
->> >
->> > 3) Frame Synchronization Source ('cfg->ext_fsync'):  Can be an
->> > external/internal frame
->> >     synchronization source. Used to synchronize one channel (MM2S/S2MM) with
->> >     another (S2MM/MM2S) channel.
->> >
->> > 4) Genlock Synchronization ('cfg->genlock'): Used to avoid mismatch rate between
->> >     master and slave.  In master mode (cfg->master), frames are not dropped and
->> >     slave can drop frames to adjust to master frame rate.
->> >
->> > And in future, this Engine being a soft IP, we could expect some more additional
->> > parameters.  Isn't a good idea to have a private member in dma_slave_config for
->> > sharing additional configuration between slave device and dma engine? Or a new
->> > dma_ctrl_cmd like FSLDMA_EXTERNAL_START?
->
-> The idea of a generic API is that we can use it for most of the controllers. Even
-> if you are planning to support a family of controllers
->
-> ATM, lets not discuss the possiblity of private member and try to exhanust all
-> possible options. Worst case you can embed the dma_slave_config in
-> xilinx_dma_slave_config and retrieve it in dmac driver
 
-Ok.
+--pNTAM9ZU3uJ+Foyt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Srikanth
+On Tue, Feb 04, 2014 at 10:09:26AM +0100, Maxime Ripard wrote:
+> On Tue, Feb 04, 2014 at 12:21:10AM +0000, Mark Brown wrote:
 
->
-> --
-> ~Vinod
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+> > It isn't awesome, no.  Ideally the runtime PM code would do this but
+> > then you couldn't ifdef the operations which as far as I can tell is the
+> > main thing people want from disabling it and it gets complicated for
+> > devices that genuinely do power up on startup so here we are.
+
+> We discussed it with Kevin on IRC, and he suggested that we move that
+> pm_runtime initialization to the SPI core, but I guess that would also
+> mean that all drivers shouldn't ifdef the operations, so that the core
+> can call the runtime_resume callback directly.
+
+No, that's not going to be robust - it means drivers can't do any power
+sequencing of their own.
+
+> However, I don't really get why any driver should be doing so, since
+> you still need these functions to at least to the device
+> suspend/resume in the probe/remove, and you don't really want to
+> duplicate the code.
+
+I don't think it's particularly useful to support disabling runtime PM
+in the first place but some drivers do different things when doing
+runtime management to those they do on first init - for example there
+may be additional steps that only need to be done during first power up.
+
+--pNTAM9ZU3uJ+Foyt
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS8MitAAoJELSic+t+oim9xgkP/joV3euZEX/ko4Nk5pCOa1ZT
+udQL6wL0FvY8Lmzipk6YfDjpP8lQg41nSGhT+9A1RXxM6iG6VTPFAUX8Ld/uTBRt
+aM53x68YW7dRZydtW9fuw14zQ0bAGTQDds/3REM5fsAxYfyOy2mi+0OJnEho1DQK
+sAtw51OVwz5KU0IQhgRTiuzPWYmoLyT6pJeDbWekkd5Q+ytl87e0jJYJniVCUW0F
+/7p5eW/XdVyPdUnT13gh/5PQ/IepbIFQe6XF7OBHXPs9+T53lYKG2HW7mWrK8bp2
+56rhxqelfPGXoUvLuVqsBpW5ZiDCIavQPsZ1VDoIhdMi3oPOv+sZy9euLszLadL+
+3jCfrgmAUaYthERd2T7Q1oKUcjaOkkiTVGKULW2ejj1KfILdnMRmJdukeqIlmC0I
+D/zcnqt02hgTN0BLccDp/vQUp0zdz0f9VNluURDpMirSXr7ZErsc2uK0+mVIqYIj
+cCqo5f/+tATXtZAlFeXwR4lAKXdIY6RpAiHSiisAfE3mhb6sfFoKsSNG3zclVq4D
+aEsgA19N1goiCbn0PLaCl9KPe6KtMmOyU9XzIXg/AypV9mMAh4syqAzz2R01bOrM
+ht5AH80Z6AqOi6LYPMS9dgl7F0TaYlUFxSYNTBUWVf/KlxTCzRSFKy0QbQ7mNUN2
+Ymxc+tDS62ugUFI1XQSF
+=ExHT
+-----END PGP SIGNATURE-----
+
+--pNTAM9ZU3uJ+Foyt--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
