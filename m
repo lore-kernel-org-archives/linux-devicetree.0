@@ -1,61 +1,52 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: [PATCH 3.12 099/133] i2c: mv64xxx: Document the newly introduced Armada XP A0 compatible
-Date: Tue,  4 Feb 2014 13:08:20 -0800
-Message-ID: <20140204210739.834494126@linuxfoundation.org>
-References: <20140204210737.008598235@linuxfoundation.org>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH v4 1/3] clocksource: timer-keystone: introduce clocksource
+ driver for Keystone
+Date: Tue, 4 Feb 2014 17:15:39 -0500
+Message-ID: <52F1668B.9040507@ti.com>
+References: <1391513453-21140-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <1391513453-21140-2-git-send-email-ivan.khoronzhuk@ti.com>
+ <alpine.DEB.2.02.1402041715220.24986@ionos.tec.linutronix.de>
+ <52F11B5C.40407@ti.com>
+ <alpine.DEB.2.02.1402042113270.24986@ionos.tec.linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140204210737.008598235-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <alpine.DEB.2.02.1402042113270.24986@ionos.tec.linutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, daniel.lezcano@linaro.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-3.12-stable review patch.  If anyone has any objections, please let me know.
+On Tuesday 04 February 2014 03:17 PM, Thomas Gleixner wrote:
+> On Tue, 4 Feb 2014, Ivan Khoronzhuk wrote:
+> 
+> Please do not top post.
+> 
+>> It was so in v1. But it was decided to use explicit memory barriers,
+>> because we're always sure the memory barriers are there and that
+>> they're properly documented. Also in this case I don't need to add
+>> keystone readl/writel relaxed function variants and to use mixed calls of
+>> writel/writel_relaxed functions.
+>>
+>> See:
+>> http://www.spinics.net/lists/arm-kernel/msg294941.html
+> 
+> Fair enough, but we want a proper explanation for explicit barriers in
+> the code and not in some random discussion of patch version X on some
+> random mailing list.
+> 
+> Aside of that it should be iowmb(), but I might miss something ...
+> 
+Agree. __iowmb() seems to be more appropriate.
 
-------------------
-
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-
-commit f8b94beb7e6a374cb0de531b72377c49857b35ca upstream.
-
-The first variants of Armada XP SoCs (A0 stepping) have issues related
-to the i2c controller which prevent to use the offload mechanism and
-lead to a kernel hang during boot.
-
-The commit introduces a new the compatible string
-marvell,mv78230-a0-i2c for the i2c controller.
-
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Fixes: 930ab3d403ae (i2c: mv64xxx: Add I2C Transaction Generator support)
-Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-
----
- Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
---- a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
-@@ -5,7 +5,11 @@ Required properties :
- 
-  - reg             : Offset and length of the register set for the device
-  - compatible      : Should be "marvell,mv64xxx-i2c" or "allwinner,sun4i-i2c"
--                     or "marvell,mv78230-i2c"
-+                     or "marvell,mv78230-i2c" or "marvell,mv78230-a0-i2c"
-+                     Note: Only use "marvell,mv78230-a0-i2c" for a very rare,
-+                     initial version of the SoC which had broken offload
-+                     support.  Linux auto-detects this and sets it
-+                     appropriately.
-  - interrupts      : The interrupt number
- 
- Optional properties :
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Santosh
