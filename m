@@ -1,147 +1,74 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: [PATCH] kbuild: dtbs_install: new make target
-Date: Tue,  4 Feb 2014 12:41:40 +0000
-Message-ID: <1391517700-13103-1-git-send-email-grant.likely@linaro.org>
-References: <20140110182923.GM19878@titan.lakedaemon.net>
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <20140110182923.GM19878@titan.lakedaemon.net>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Cc: Jason Cooper <jason@lakedaemon.net>, Grant Likely <grant.likely@linaro.org>, Michal Marek <mmarek@suse.cz>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>
+From: Balaji T K <balajitk@ti.com>
+Subject: Re: [PATCH] mmc: omap_hsmmc: Add support for Erratum 2.1.1.128 in
+ device tree boot
+Date: Tue, 4 Feb 2014 18:14:08 +0530
+Message-ID: <52F0E098.3050404@ti.com>
+References: <1390260542-22213-1-git-send-email-nm@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1390260542-22213-1-git-send-email-nm@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Chris Ball <chris@printf.net>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jason Cooper <jason@lakedaemon.net>
+On Tuesday 21 January 2014 04:59 AM, Nishanth Menon wrote:
+> When device is booted using devicetree, platforms impacted by
+> Erratum 2.1.1.128 is not detected easily in the mmc driver. This erratum
+> indicates that the module cannot do multi-block transfers.
+>
+> Handle this by providing a boolean flag to indicate to driver that it is
+> working on a hardware with mentioned limitation.
+>
+> Signed-off-by: Nishanth Menon <nm@ti.com>
+> ---
+>
+> This explains the logs I see:
+> OMAP3430 LDP (ES2.2):
+> 	uImage only boot:  http://slexy.org/raw/s2YrbMAi7c
+> 	uImage+dtb concatenated boot: http://slexy.org/raw/s20qVg17T0
+>
+> With the following flag set, device is now able to consistently boot with
+> device tree supported uImage+dtb concat boot.
+>
+>   .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |    2 ++
+>   drivers/mmc/host/omap_hsmmc.c                      |    3 +++
+>   2 files changed, 5 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> index 8c8908a..ab36f8b 100644
+> --- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> @@ -26,6 +26,8 @@ specifier is required.
+>   dma-names: List of DMA request names. These strings correspond
+>   1:1 with the DMA specifiers listed in dmas. The string naming is
+>   to be "rx" and "tx" for RX and TX DMA requests, respectively.
+> +ti,erratum-2.1.1.128: boolean, for OMAP3430/OMAP35xx platforms with broken
+> +multiblock reads
 
-Unlike other build products in the Linux kernel, there is no 'make
-*install' mechanism to put devicetree blobs in a standard place.
+Rather than ti,errata.. specific property, something like
+caps no/disable multiblock read is more readable in my opinion, Otherwise
 
-This commit adds a new 'dtbs_install' make target which copies all of
-the dtbs into the INSTALL_DTBS_PATH directory. INSTALL_DTBS_PATH can be
-set before calling make to change the default install directory. If not
-set then it defaults to:
+Acked-by: Balaji T K <balajitk@ti.com>
 
-	$INSTALL_PATH/dtbs/$KERNELRELEASE.
-
-This is done to keep dtbs from different kernel versions separate until
-things have settled down.  Once the dtbs are stable, and not so strongly
-linked to the kernel version, the devicetree files will most likely move
-to their own repo.  Users will need to upgrade install scripts at that
-time.
-
-v7: (reworked by Grant Likely)
-- Moved rules from arch/arm/Makefile to arch/arm/boot/dts/Makefile so
-  that each dtb install could have a separate target and be reported as
-  part of the make output.
-- Fixed dependency problem to ensure $KERNELRELEASE is calculated before
-  attempting to install
-- Removed option to call external script. Copying the files should be
-  sufficient and a build system can post-process the install directory.
-  Despite the fact an external script is used for installing the kernel,
-  I don't think that is a pattern that should be encouraged. I would
-  rather see buildroot type tools post process the install directory to
-  rename or move dtb files after installing to a staging directory.
-  - Plus it is easy to add a hook after the fact without blocking the
-    rest of this feature.
-- Move the helper targets into scripts/Makefile.lib with the rest of the
-  common dtb rules
-
-Signed-off-by: Jason Cooper <jason@lakedaemon.net>
-Signed-off-by: Grant Likely <grant.likely@linaro.org>
-Cc: Michal Marek <mmarek@suse.cz>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Rob Herring <robh+dt@kernel.org>
----
- Makefile                   |  7 +++++++
- arch/arm/Makefile          |  7 ++++---
- arch/arm/boot/dts/Makefile |  4 +++-
- scripts/Makefile.lib       | 12 ++++++++++++
- 4 files changed, 26 insertions(+), 4 deletions(-)
-
-diff --git a/Makefile b/Makefile
-index 606ef7c4a544..90556da6959d 100644
---- a/Makefile
-+++ b/Makefile
-@@ -727,6 +727,13 @@ export KBUILD_IMAGE ?= vmlinux
- export	INSTALL_PATH ?= /boot
- 
- #
-+# INSTALL_DTBS_PATH specifies a prefix for relocations required by build roots.
-+# Like INSTALL_MOD_PATH, it isn't defined in the Makefile, but can be passed as
-+# an argument if needed. Otherwise it defaults to the kernel install path
-+#
-+export INSTALL_DTBS_PATH ?= $(INSTALL_PATH)/dtbs/$(KERNELRELEASE)
-+
-+#
- # INSTALL_MOD_PATH specifies a prefix to MODLIB for module directory
- # relocations required by build roots.  This is not defined in the
- # makefile but the argument can be passed to make if needed.
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index 08a9ef58d9c3..fddf4beaee45 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -310,9 +310,9 @@ $(INSTALL_TARGETS):
- %.dtb: | scripts
- 	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $(boot)/dts/$@
- 
--PHONY += dtbs
--dtbs: scripts
--	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) dtbs
-+PHONY += dtbs dtbs_install
-+dtbs dtbs_install: prepare scripts
-+	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $@
- 
- # We use MRPROPER_FILES and CLEAN_FILES now
- archclean:
-@@ -331,6 +331,7 @@ define archhelp
-   echo  '  bootpImage    - Combined zImage and initial RAM disk'
-   echo  '                  (supply initrd image via make variable INITRD=<path>)'
-   echo  '* dtbs          - Build device tree blobs for enabled boards'
-+  echo  '  dtbs_install  - Install dtbs to $(INSTALL_DTBS_PATH)'
-   echo  '  install       - Install uncompressed kernel'
-   echo  '  zinstall      - Install compressed kernel'
-   echo  '  uinstall      - Install U-Boot wrapped compressed kernel'
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b9d6a8b485e0..649c8e345ac5 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -321,7 +321,7 @@ dtb-$(CONFIG_ARCH_ZYNQ) += zynq-zc702.dtb \
- 	zynq-zc706.dtb \
- 	zynq-zed.dtb
- 
--targets += dtbs
-+targets += dtbs dtbs_install
- targets += $(dtb-y)
- endif
- 
-@@ -331,3 +331,5 @@ dtbs: $(addprefix $(obj)/, $(dtb-y))
- 	$(Q)rm -f $(obj)/../*.dtb
- 
- clean-files := *.dtb
-+
-+dtbs_install: $(addsuffix _dtbinst_, $(dtb-y))
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 49392ecbef17..d0c17a55a2f5 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -273,6 +273,18 @@ $(obj)/%.dtb: $(src)/%.dts FORCE
- 
- dtc-tmp = $(subst $(comma),_,$(dot-target).dts.tmp)
- 
-+# Helper targets for Installing DTBs into the boot directory
-+quiet_cmd_dtb_install =	INSTALL $<
-+      cmd_dtb_install =	cp $< $(2)
-+
-+_dtbinst_pre_:
-+	$(Q)if [ -d $(INSTALL_DTBS_PATH).old ]; then rm -rf $(INSTALL_DTBS_PATH).old; fi
-+	$(Q)if [ -d $(INSTALL_DTBS_PATH) ]; then mv $(INSTALL_DTBS_PATH) $(INSTALL_DTBS_PATH).old; fi
-+	$(Q)mkdir -p $(INSTALL_DTBS_PATH)
-+
-+%.dtb_dtbinst_: $(obj)/%.dtb _dtbinst_pre_
-+	$(call cmd,dtb_install,$(INSTALL_DTBS_PATH))
-+
- # Bzip2
- # ---------------------------------------------------------------------------
- 
--- 
-1.8.3.2
+>
+>   Examples:
+>
+> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+> index 014bfe5..f2d5940 100644
+> --- a/drivers/mmc/host/omap_hsmmc.c
+> +++ b/drivers/mmc/host/omap_hsmmc.c
+> @@ -1730,6 +1730,9 @@ static struct omap_mmc_platform_data *of_get_hsmmc_pdata(struct device *dev)
+>   	if (of_find_property(np, "ti,dual-volt", NULL))
+>   		pdata->controller_flags |= OMAP_HSMMC_SUPPORTS_DUAL_VOLT;
+>
+> +	if (of_find_property(np, "ti,erratum-2.1.1.128", NULL))
+> +		pdata->controller_flags |= OMAP_HSMMC_BROKEN_MULTIBLOCK_READ;
+> +
+>   	/* This driver only supports 1 slot */
+>   	pdata->nr_slots = 1;
+>   	pdata->slots[0].switch_pin = cd_gpio;
+>
 
