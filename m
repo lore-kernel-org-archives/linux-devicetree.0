@@ -1,69 +1,78 @@
-From: Matt Porter <mporter@linaro.org>
-Subject: Re: [PATCH 4/6] regulator: add bcm59056 regulator driver
-Date: Tue, 4 Feb 2014 16:29:14 -0500
-Message-ID: <20140204212914.GB16179@beef>
-References: <1391516352-32359-1-git-send-email-mporter@linaro.org>
- <1391516352-32359-5-git-send-email-mporter@linaro.org>
- <20140204172836.GH22609@sirena.org.uk>
+From: Ben Hutchings <ben@decadent.org.uk>
+Subject: Re: [PATCH V3] net/dt: Add support for overriding phy configuration
+ from device tree
+Date: Tue, 04 Feb 2014 21:40:40 +0000
+Message-ID: <1391550040.3003.28.camel@deadeye.wl.decadent.org.uk>
+References: <7510122.cayuQ6qt8r@wuerfel>
+	 <1389999459-9483-1-git-send-email-matthew.garrett@nebula.com>
+	 <CAGVrzcZ4TFd=9KP+aoG47QbmqDJ1i23WBcEWDbzNRUfGmPvZHQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-Cl4GTycUti78AzhdcRFk"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140204172836.GH22609@sirena.org.uk>
+In-Reply-To: <CAGVrzcZ4TFd=9KP+aoG47QbmqDJ1i23WBcEWDbzNRUfGmPvZHQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Tim Kryger <tim.kryger@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Christian Daudt <bcm@fixthebug.org>, Devicetree List <devicetree@vger.kernel.org>, Linux I2C List <linux-i2c@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 04, 2014 at 05:28:36PM +0000, Mark Brown wrote:
-> On Tue, Feb 04, 2014 at 07:19:10AM -0500, Matt Porter wrote:
-> 
-> > +static unsigned int bcm59056_get_mode(struct regulator_dev *dev)
-> > +{
-> > +	return REGULATOR_MODE_NORMAL;
-> > +}
-> > +
-> > +static int bcm59056_set_mode(struct regulator_dev *dev, unsigned int mode)
-> > +{
-> > +	if (mode == REGULATOR_MODE_NORMAL)
-> > +		return 0;
-> > +	else
-> > +		return -EINVAL;
-> > +}
-> 
-> These do nothing, don't implement them.
 
-Will remove. Maybe some day.
+--=-Cl4GTycUti78AzhdcRFk
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> > +	if (bcm59056->dev->of_node)
-> > +		pmu_data = bcm59056_parse_dt_reg_data(pdev,
-> > +						      &bcm59056_reg_matches);
-> 
-> It'd seem a bit neater to put the OF check into the parse function but
-> meh.
+On Tue, 2014-02-04 at 12:39 -0800, Florian Fainelli wrote:
+> 2014-01-17 Matthew Garrett <matthew.garrett@nebula.com>:
+> > Some hardware may be broken in interesting and board-specific ways, suc=
+h
+> > that various bits of functionality don't work. This patch provides a
+> > mechanism for overriding mii registers during init based on the content=
+s of
+> > the device tree data, allowing board-specific fixups without having to
+> > pollute generic code.
+>=20
+> It would be good to explain exactly how your hardware is broken
+> exactly. I really do not think that such a fine-grained setting where
+> you could disable, e.g: 100BaseT_Full, but allow 100BaseT_Half to
+> remain usable makes that much sense. In general, Gigabit might be
+> badly broken, but 100 and 10Mbits/sec should work fine. How about the
+> MASTER-SLAVE bit, is overriding it really required?
 
-On second look, I'd agree. Easy enough to clean up.
+Yes, it is entirely possible that one or other of the clock modes
+(locally generated vs recovered) is not reliable.
 
-> > +	if (!pmu_data) {
-> > +		dev_err(&pdev->dev, "Platform data not found\n");
-> > +		return -EINVAL;
-> > +	}
-> 
-> Like I said when reviewing the binding this should not cause the driver
-> to fail to load.
+> Is not a PHY fixup registered for a specific OUI the solution you are
+> looking for?
+[...]
 
-Will fix.
+The fault is in the board, not the PHY.
 
-> > +		/*
-> > +		 * Regulator API handles empty constraints but not NULL
-> > +		 * constraints
-> > +		 */
-> > +		if (!reg_data)
-> > +			continue;
-> 
-> It should do...  if not then make it so since that'd mean most drivers
-> are buggy.
+Ben.
 
-Ahh, I see there is a check for NULL in the core. Will drop.
+--=20
+Ben Hutchings
+One of the nice things about standards is that there are so many of them.
 
--Matt
+--=-Cl4GTycUti78AzhdcRFk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIVAwUAUvFeWOe/yOyVhhEJAQpirA/+PmyKReUFK6DjC7cFUusU3xKKTESbGss9
+fOMUi5Cb218mFx6bJi6AYqaK7W9EimD0SjzsV1E2NzAE+120/FcETG+nftYkhXjR
+7/Zzyoxg2HFKAx/EhRznb1pmr0zS0b0ixQAI7Yc9MvV3pLUQwqrX2I8vcWHr0eyf
+ggdTO7NRe2CQZf8WRXrY4WGfNge6bVm95LmqP2cyMknMLNL8sip3G0I0V8CW/ni8
+57d+0UTI128jNsNFtVIGgivyz5N4u727lexAFIvxStUuH3JN907YkKDTPRIJK78S
+5qf57AdJNUJfgIhpzgnKFTG1+lXXf8ZYlBzTSp1pqdcXKHf2w9D6kLg1om1ZSgdl
+bOl0PWbtdqc7FU4cVrB0lAJluEy6ABSQSzZaMDlWT4NHR8gqRu5IaY68vib+AxyS
+odynOkWwY6b+hTSV9r2JCapcCd/2mcNgQ9E5N5pepO4bSL8CNlH5/m/PQnvjlxiq
+cWdaiHxu4wOxlAPnwScM2jgeFHOksLnCdFNQNFev9TUAgye7jYOiWgk5o/7E+lM1
+hcGpA047u41ul6FLMMUuNnlbJV6aGnBNgjdEJiLqUbLYrA9MefcgJVWN90Wrcabk
+ftBseLlr/Jc8RNHr9fwPqOTaKxPotq6acquvrrsFfWsjWsTM+BI1Hs8REUTApahW
+blwiyDniAuQ=
+=fXK0
+-----END PGP SIGNATURE-----
+
+--=-Cl4GTycUti78AzhdcRFk--
