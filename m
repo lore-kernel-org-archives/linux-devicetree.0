@@ -1,160 +1,129 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] pci: Add support for creating a generic host_bridge from device tree
-Date: Tue, 04 Feb 2014 11:09:44 +0100
-Message-ID: <4524393.8AzpATULMB@wuerfel>
-References: <1391452428-22917-1-git-send-email-Liviu.Dudau@arm.com> <3523674.i9iUPinOAk@wuerfel> <20140203221743.GB24036@e106497-lin.cambridge.arm.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] clk: sunxi: Add USB clock register defintions
+Date: Tue, 04 Feb 2014 11:14:44 +0100
+Message-ID: <52F0BD94.1060601@redhat.com>
+References: <1390426587-16287-1-git-send-email-hdegoede@redhat.com> <1390426587-16287-3-git-send-email-hdegoede@redhat.com> <20140127144349.GJ3867@lukather> <52E67316.5020906@redhat.com> <20140128094427.GZ3867@lukather> <52E77FCD.5050701@redhat.com> <20140204094051.GL25625@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140203221743.GB24036@e106497-lin.cambridge.arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, linaro-kernel <linaro-kernel@lists.linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBHP3YKLQKGQEO4UZDLQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140204094051.GL25625@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 03 February 2014 22:17:44 Liviu Dudau wrote:
-> On Mon, Feb 03, 2014 at 07:31:31PM +0000, Arnd Bergmann wrote:
-> > Let's try to come up with nomenclature so we can talk about this better
-> >
-> > The ioport_resource is in "logical I/O space", which is a Linux fiction,
-> > it goes from 0 to IO_SPACE_LIMIT (2MB on ARM) and is mapped into "virtual
-> > I/O space", which start at (void __iomem *)PCI_IO_VIRT_BASE.
-> >
-> > Each PCI domain can have its own "bus I/O aperture", which is typically
-> > between 0x1000 and 0xffff and reflects the address that is used in PCI
-> > transactions and in BARs.
-> 
-> Actually, the bus I/O aperture can start from 0x0000 if you are talking about
-> PCI bus addresses.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Right.
+Hi,
 
-> > The aperture here reflects the subset of the
-> > 4GB bus I/O space that is actually mapped into a CPU visible "physical
-> > I/O aperture" using an inbound mapping of the host bridge. The physical
-> > I/O aperture in turn gets mapped to the virtual I/O space using
-> > pci_ioremap_io.
-> 
-> Agree.
-> 
-> > The difference between a bus I/O address and a logical
-> > I/O address is stored in the io_offset.
-> 
-> Not exactly. If that would be true that means that for an I/O range that
-> start at bus I/O address zero but physical I/O apperture starts at
-> 0x40000000 the io_offset is zero. For me, the io_offset should be 0x40000000.
+On 02/04/2014 10:40 AM, Maxime Ripard wrote:
+> Hi Hans,
+>=20
+> On Tue, Jan 28, 2014 at 11:00:45AM +0100, Hans de Goede wrote:
+>> -----BEGIN PGP SIGNED MESSAGE----- Hash: SHA1
+>>=20
+>> Hi,
+>>=20
+>> On 01/28/2014 10:44 AM, Maxime Ripard wrote:
+>>> On Mon, Jan 27, 2014 at 03:54:14PM +0100, Hans de Goede wrote:
+>>>>>> "allwinner,sun5i-a13-usb-gates-clk" - for usb gates + resets on A13
+>>>>>=20
+>>>>> Maybe we can just remove the gates from there? Even though they are g=
+ates, they are also (a bit) more than that.
+>>>>=20
+>>>> To be clear you mean s/usb-gates-clk/usb-clk/ right ?
+>>>=20
+>>> Yep, exactly
+>>>=20
+>>>>> I guess that means that we will have the OHCI0 gate declared with <&.=
+..-gates-clk 6>, while it's actually the first gate for this clock?
+>>>>=20
+>>>> Correct.
+>>>>=20
+>>>>> Maybe introducing an offset field in the gates_data would be a good i=
+dea, so that we always start from indexing the gates from 0 in the DT?
+>>>>=20
+>>>> Well for the other "gates" type clks we also have holes in the range, =
+and we always refer to the clk with the bit number in the reg as the clock-=
+cell value.
+>>>=20
+>>> Yes, we have holes, but I see two majors differences here: - the other =
+gates are just gates, while the usb clocks are a bit more than that.
+>>=20
+>> The usb-clk registers contain more then that, but the bits we are talkin=
+g about now are gates.
+>>=20
+>>> - the other gates' gating bits thus all start at bit 0, while - here, s=
+ince it's kind of a "mixed" clock, the gating bits start - at bit 6 (on the=
+ A20 at least)
+>>=20
+>> Right, still I believe that the consistent thing to do is keeping the bi=
+t-number for the bit in the register controlling the gate as the specifier.=
+  When adding new dts entries / reviewing existing ones I'm used to matchin=
+g the specifier to the bit-nr in the data-sheet, I think making things diff=
+erent just for this one register is counter productive.
+>=20
+> And if you turn it the other way around, it would be inconsistent that al=
+l gates indices start at 0, and we would start at 6 here :)
 
-That's not how we do it on any of the existing host controllers.
-Typically the io_offset is zero for the first one, and may be
-either zero for all the others (meaning BARs get > 64KB values
-for secondary buses) or between 64KB and 2MB (meaning each bus
-starts at I/O port number 0).
+I think the problem here is that you see the specifier part of the clk
+phandle as an index, which it is not. All devicetree docs / code talks
+about specifiers or arguments not indexes. Once you stop seeing this as
+an index, you will hopefully also stop insisting this needs to
+start at 0 :)
 
-> Let me see if I can summarise this correctly, using only CPU addresses:
-> 
-> 0x0000 - IO_SPACE_LIMIT           <-  logical I/O address
-> 0xPPPPPPPP - 0xPPPPPPPP+IO_SIZE   <-  physical address for PCI I/O space
-> 0xVVVVVVVV - 0xVVVVVVVV+IO_SPACE_LIMIT <- virtual address for I/O
-> 
-> The io_offset then is 0xPPPPPPPP - logical I/O address. At least that is
-> the intent of the io_offset variable that I introduced in pci_host_bridge.
+Also note that it already is not an index for existing sunxi clks which hav=
+e
+cells !=3D 0, as there are holes in the bits used in the gates registers an=
+d
+calling the specifier an index suggest we're dealing with an array, and
+arrays never have holes.
 
-That is highly confusing then, because we already have something called
-io_offset with a different meaning. I would call 0xPPPPPPPP the io_phys_base
-if I had to come up with a variable name for it.
+The clk specifier as currently used in sunxi clks is a 1:1 mapping of the
+gate register bit numbers, as is clearly documented in ie:
+Documentation/devicetree/bindings/clock/sunxi/sun4i-a10-gates.txt
+Where the datasheet is referenced as the source for (most) of the values
+to put in the specifier.
 
-> The bus I/O address is generated by the host bridge, I think we can ignore
-> it here as it tends to confuse the message.
+My biggest objection is that this would loose 1:1 mapping we currently
+have between the specifier and bit-nr in the register, which really is
+convenient when writing new dts bindings.
 
-No, it's important because the PCI core code has to transform between
-bus I/O address and logical I/O address when accessing the BARs.
+When we add an offset users will need to first lookup which clk they need i=
+n
+the datasheet and then look at both the dts bindings doc to find how this i=
+s
+mapped to the specifier. In my experience such an extra level of indirectio=
+n
+in documentation is a PITA, and all that just so that some random number
+(it is not an index!) can start at 0 ?
 
-> > So much for basic definitions. When a device driver calls pci_request_region,
-> > the port number it sees is the bus I/O port number adjusted using the
-> > io_offset to turn it into a logical I/O port number, which should
-> > always be within the host bridge window, which in turn is a subset
-> > of the ioport_resource.
-> 
-> My understanding is that device drivers all user port numbers that are logical
-> I/O numbers, so no io_offset needs to be applied here. It is only when one
-> wants to access the port, that the translation happens. First, inb or outb
-> will add the PCI_IO_VIRT_BASE to generate the virtual address, the MMU will
-> then convert that address to physical address and the host bridge will
-> then translate the physical address into bus address.
+To me adding an offset here and making the clk gates different form all
+our other clock gates just feels wrong.
 
-This is correct. The bus I/O number is not visible to the device driver,
-but it is what you put into the 'ranges' property in DT, and it gets
-used during PCI resource scanning.
+Regards,
 
+Hans
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-> > > And that is why the code in probe.c has been added to deal with that. It is
-> > > too early to do the adjustments here as all we have is the list of resources
-> > > and that might get culled by the architecture fixup code. Remembering the
-> > > io_offset will happen once the pci_host_bridge gets created, and the resources
-> > > are then adjusted.
-> >
-> > So you want to register an incorrect I/O resource first and then
-> > have it fixed up later, rather than registering the correct
-> > one from the start as everyone else?
-> 
-> The incorrect I/O resource is added to a temporary list of resources, it has not
-> been attached yet to the list of windows in the bridge. What gets added is the
-> I/O resource as described if it would be an ordinary resource.
+iEYEARECAAYFAlLwvZMACgkQF3VEtJrzE/sz0gCfQNwhM/RpimtbhumvKKQ4a4V+
+Vo4AoLTNKRZXlPC84hi1JInPGYvZIxuR
+=3DdA68
+-----END PGP SIGNATURE-----
 
-I'm not completely sure I'm following here, but let's work out the
-other things first, this will probably get clearer then.
-
-> > > > > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > > > > index 6e34498..16febae 100644
-> > > > > --- a/drivers/pci/probe.c
-> > > > > +++ b/drivers/pci/probe.c
-> > > > > @@ -1787,6 +1787,17 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
-> > > > >     list_for_each_entry_safe(window, n, resources, list) {
-> > > > >             list_move_tail(&window->list, &bridge->windows);
-> > > > >             res = window->res;
-> > > > > +           /*
-> > > > > +            * IO resources are stored in the kernel with a CPU start
-> > > > > +            * address of zero. Adjust the data accordingly and remember
-> > > > > +            * the offset
-> > > > > +            */
-> > > > > +           if (resource_type(res) == IORESOURCE_IO) {
-> > > > > +                   bridge->io_offset = res->start;
-> > > > > +                   res->end -= res->start;
-> > > > > +                   window->offset -= res->start;
-> > > > > +                   res->start = 0;
-> > > > > +           }
-> 
-> Here, we correct for the fact that IORESOURCE_IO is not a normal resource, because Linux wants
-> a logical I/O as start and end address, not the physical CPU address. We adjust to that and
-> remember the offset.
-
-But the offset (phys_base) doesn't actually matter to the PCI core or
-the driver. Why save it?
-
-> > > > >             offset = window->offset;
-> > > > >             if (res->flags & IORESOURCE_BUS)
-> > > >
-> > > > Won't this break all existing host bridges?
-> > >
-> > > I am not sure. I believe not, due to what I've explained earlier, but you might be right.
-> > >
-> > > The adjustment happens before the resource is added to the host bridge windows and translates
-> > > it from MMIO range into IO range.
-> >
-> > AFAICT, the resource_type of the resource you register above should be
-> > IORESOURCE_MEM, so you are not actually matching it here.
-> 
-> No, all resources are added here. For IORESOURCE_IO we do an adjustment.
-
-But there should never be an IORESOURCE_IO resource structure that is
-not in IO space, i.e. within ioport_resource. Doing an "adjustment"
-is not an operation defined on this structure. What I meant above is that
-the pci range parser gets this right and gives you a resource that looks
-like { .flags = IORESOURCE_MEM, .start = phys_base, .end = phys_base +
-size - 1}, while the resource we want to register is { .flags = IORESOURCE_IO,
-.start = log_base, .end = log_base + size -1}. In the of_pci_range struct for
-the I/O space, the "pci_space" is IORESOURCE_IO (for the pci_addr), while the
-"flags" are IORESOURCE_MEM, to go along with the cpu_addr.
-
-	Arnd
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/groups/opt_out.
