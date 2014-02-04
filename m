@@ -1,90 +1,88 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 3/5] spi: sunxi: Add Allwinner A31 SPI
- controller driver
-Date: Tue, 4 Feb 2014 10:09:26 +0100
-Message-ID: <20140204090926.GI25625@lukather>
-References: <1391165752-1819-1-git-send-email-maxime.ripard@free-electrons.com>
- <1391165752-1819-4-git-send-email-maxime.ripard@free-electrons.com>
- <20140131124809.GE22609@sirena.org.uk>
- <20140131224704.GI2950@lukather>
- <20140204002110.GP22609@sirena.org.uk>
+Subject: Re: [PATCH v3 2/8] ARM: dts: sun7i: Add GMAC clock node
+ to sun7i DTSI
+Date: Tue, 4 Feb 2014 10:13:16 +0100
+Message-ID: <20140204091316.GJ25625@lukather>
+References: <1391398346-5094-1-git-send-email-wens@csie.org>
+ <1391398346-5094-3-git-send-email-wens@csie.org>
+ <20140203193431.GD25625@lukather>
+ <CAGb2v660qoKDC6SKjoD29b-r5y9OwkeKoWZ9PWBF5tC5PgeEYQ@mail.gmail.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="a7XSrSxqzVsaECgU"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB264YKLQKGQEL7VCR7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="VSaCG/zfRnOiPJtU"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBF67YKLQKGQE2DKATDY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140204002110.GP22609-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <CAGb2v660qoKDC6SKjoD29b-r5y9OwkeKoWZ9PWBF5tC5PgeEYQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---a7XSrSxqzVsaECgU
+--VSaCG/zfRnOiPJtU
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mark,
-
-On Tue, Feb 04, 2014 at 12:21:10AM +0000, Mark Brown wrote:
-> On Fri, Jan 31, 2014 at 11:47:04PM +0100, Maxime Ripard wrote:
-> > On Fri, Jan 31, 2014 at 12:48:09PM +0000, Mark Brown wrote:
-> > > On Fri, Jan 31, 2014 at 11:55:50AM +0100, Maxime Ripard wrote:
+On Tue, Feb 04, 2014 at 11:06:24AM +0800, Chen-Yu Tsai wrote:
+> On Tue, Feb 4, 2014 at 3:34 AM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > On Mon, Feb 03, 2014 at 11:32:20AM +0800, Chen-Yu Tsai wrote:
+> >> The GMAC uses 1 of 2 sources for its transmit clock, depending on the
+> >> PHY interface mode. Add both sources as dummy clocks, and as parents
+> >> to the GMAC clock node.
+> >>
+> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> >> ---
+> >>  arch/arm/boot/dts/sun7i-a20.dtsi | 28 ++++++++++++++++++++++++++++
+> >>  1 file changed, 28 insertions(+)
+> >>
+> >> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7=
+i-a20.dtsi
+> >> index 1595e9a..fc7f470 100644
+> >> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
+> >> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+> >> @@ -314,6 +314,34 @@
+> >>               };
+> >>
+> >>               /*
+> >> +              * The following two are dummy clocks, placeholders used
+> >> +              * on gmac_tx clock. The actual frequency and availabili=
+ty
+> >> +              * depends on the external PHY, operation mode and link
+> >> +              * speed.
+> >> +              */
+> >
+> > If it depends on the external PHY, I guess that means it also depends
+> > on the board, right? Or is the GMAC supposed to always have that clock
+> > running at 25MHz, no matter what PHY is connected to it?
 >=20
-> > > > +	pm_runtime_enable(&pdev->dev);
-> > > > +	if (!pm_runtime_enabled(&pdev->dev)) {
-> > > > +		ret =3D sun6i_spi_runtime_resume(&pdev->dev);
-> > > > +		if (ret) {
-> > > > +			dev_err(&pdev->dev, "Couldn't resume the device\n");
-> > > > +			return ret;
-> > > > +		}
-> > > > +	}
+> What I meant in the comment is that we cannot control the actual clock
+> rate of the TX clock. We can only select the source, and this is what
+> gmac_tx clock does. It is just a clock mux. The 125MHz and 25MHz clock
+> rates are used by the clk_set_rate in the stmmac glue layer to do
+> auto-reparenting.
 >=20
-> > > No, as discussed don't do this - notice how other drivers aren't writ=
-ten
-> > > this way either.  Like I said leave the device powered on startup and
-> > > then let it be idled by runtime PM.
+> The board dependent factor is what _type_ of PHY it is using, i.e.
+> MII, GMII, or RGMII. If it's MII, the PHY should provide the clock.
+> If it's RGMII, the internal clock would be used. GMII is a mix of
+> both. The actual clock rate depends on the link speed.
 >=20
-> > Well, some SPI drivers are actually written like that (all the tegra
+> I should rephrase the comment along the lines of:
 >=20
-> It's not been done consistently, no - that should be fixed.
->=20
-> > SPI drivers for example). It's not an excuse, but waking up the device
-> > only to put it back in suspend right away seems kind of
->=20
-> It isn't awesome, no.  Ideally the runtime PM code would do this but
-> then you couldn't ifdef the operations which as far as I can tell is the
-> main thing people want from disabling it and it gets complicated for
-> devices that genuinely do power up on startup so here we are.
+> The following two are dummy clocks, placeholders used in the gmac_tx
+> clock. The gmac driver will choose one parent depending on the PHY
+> interface mode, using clk_set_rate auto-reparenting.
+> The actual TX clock rate is not controlled by the gmac_tx clock.
 
-We discussed it with Kevin on IRC, and he suggested that we move that
-pm_runtime initialization to the SPI core, but I guess that would also
-mean that all drivers shouldn't ifdef the operations, so that the core
-can call the runtime_resume callback directly.
+Ok, thanks for the clarification.
 
-However, I don't really get why any driver should be doing so, since
-you still need these functions to at least to the device
-suspend/resume in the probe/remove, and you don't really want to
-duplicate the code.
-
-Right now, about half of the SPI drivers using auto_runtime_pm are
-using a ifdef, the other half is not.
-
-> > inefficient. Plus, the pm_runtime_idle callback you suggested are
-> > actually calling runtime_idle, while we want to call runtime_suspend.
->=20
-> Yeah, I didn't actually check if I was looking at the right call there.
-
-I was actually wrong, it does so in its very last line.
-
-Thanks,
 Maxime
 
 --=20
@@ -92,26 +90,26 @@ Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
 
---a7XSrSxqzVsaECgU
+--VSaCG/zfRnOiPJtU
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.14 (GNU/Linux)
 
-iQIcBAEBAgAGBQJS8K5GAAoJEBx+YmzsjxAgH5QQALk76NTGMUunWeqr5XCeSoEP
-bYrpdT48kylB6f8LzNmd2gMe1eZE7HKgW/fBvCDGF7Ms0+jXQxPC87ucdvPuPBYr
-mwtRhcTjW9WLXZM7tH/Lh8K0sJHiUYqm8MZfGLzQUm1nnZ6587utxJ8Sxy89rHIy
-GAUThAcy93plh4TgkdxcBG1svn99k1kdhr+PaA0jiZ5y+yYUwGxgXOJyq5Wv68xk
-9mMQ/GYPHNSFFrJbKc7PWUC1PTES07uFv+LFzpS0BzZzqku8F0OKBmLaXlNJJLJa
-9zJ/WcpW9+2U2CuROjmXmdNmX46u2utCwGuqXT4XiodrjgjwekBMT50M7KCYctMa
-hHvy1Ldq78/eREADJOAzofjPK+p9TVNF445Mh86SPVFcsX5l1go9A3+lSeLqPUse
-8RtkwRv/Qa7+bwnyzegjru0ucXuRBPZ8hoxNPMm0FVS5bFqSS7O+MQwf6NNRSWRS
-b8fkaqL+q5P0IeYke/B/FMTYvw6anctQG6gouyX9K6YqJd8MDRUfYOrpyWV+7Ya+
-hfMf7M58uX1GrjLexWZn2YzreDC9fJTFzH0Hxyl/qQJTPKyZOGEdgPd1lgyxG5DT
-D1td6h6TxPglyjsBttyVNtX416Uxh00XCv+ufo2QPgrRPbRy8olD+7e5+TMGa70x
-ocB7Z/Fz7pY/HSS4HSBc
-=43Nn
+iQIcBAEBAgAGBQJS8K8sAAoJEBx+YmzsjxAgiPwP/1AO1R8VKNB3hj+0BogRrf/k
+7LK0/RlU1y+/hKJk4XxNOKvNcNkKCn9hoWBZ14HFJYNLjCSHKspb+9axRLtsCxLe
+g4k2Tq2ci7gNEYSXMq05yCg3hHX8o9eszNHhuQ4bfkX0qgv8mpSMA25T2d4ghB21
+kkiEymtnaeMjOw6OWwkydtX57JFTT+Yz6dS0h0XCnXEEL2FojYQbdYYq+Hz1D3Ga
+EjtowC56W+jfzotuPkhq9YPx8djyIt2e+hc4Om7Lq3r/bi2ZlIyLgvY4TCcfRiam
+xNw7bUjOjGfijsLepGseV9RPpwa4ocOLI9FljCf7IkSCEx1tyJxe4ocbq/IY+Kyk
+/Wo8QS3XE3pRs40ZuAd9yxXk+9bqX5izlaslNEG1CrQTFlf67njHYhcCrhlvtq6x
+J2R79CaS4KBMSNDCZtUcX50bwOGbZ0VJeUafEvTAb5SYVsAkZExkO15P6TzzSoUo
+9FyKXSOEsyvYCW00M8nIkMgfKtv1Yf9ZSanqSUOGp6UjVP+rRyLIZoMQYIWTAdgV
+LKmRuePoubeJ6DLk1sMY/1sCNU2FLaV6/twDi9xKzbRtHnG3BqCG/XjqyVtRj6mG
+JbcvC9q4VI1RK7D9XTBxEOOJIYXKe8xXyOvx0GVRJaFw8w4sAeXgJhz19TQoCccl
+YYtkxunK+jxWS1HMBNli
+=iFvB
 -----END PGP SIGNATURE-----
 
---a7XSrSxqzVsaECgU--
+--VSaCG/zfRnOiPJtU--
