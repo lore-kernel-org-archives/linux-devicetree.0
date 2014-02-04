@@ -1,33 +1,66 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH V3 1/4] pci: APM X-Gene PCIe controller driver
-Date: Tue, 4 Feb 2014 20:22:57 +0100
-Message-ID: <201402042022.57267.arnd@arndb.de>
-References: <1390599168-13150-1-git-send-email-tinamdar@apm.com> <4985267.LnsktRmabM@wuerfel> <20140203221559.GG2519@obsidianresearch.com>
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [Patch v4 1/2] dmaengine: add Qualcomm BAM dma driver
+Date: Tue, 4 Feb 2014 13:24:26 -0600
+Message-ID: <20140204192426.GA16943@qualcomm.com>
+References: <1391468687-4347-1-git-send-email-agross@codeaurora.org>
+ <1391468687-4347-2-git-send-email-agross@codeaurora.org>
+ <52F0D5E1.3040409@metafoo.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140203221559.GG2519@obsidianresearch.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: Tanmay Inamdar <tinamdar@apm.com>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches <patches@apm.com>, Jon Masters <jcm@redhat.com>, Liviu Dudau <Liviu.Dudau@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52F0D5E1.3040409@metafoo.de>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 03 February 2014, Jason Gunthorpe wrote:
-> On Mon, Feb 03, 2014 at 09:12:32PM +0100, Arnd Bergmann wrote:
+On Tue, Feb 04, 2014 at 12:58:25PM +0100, Lars-Peter Clausen wrote:
+> On 02/04/2014 12:04 AM, Andy Gross wrote:
+> [...]
+> >+static int bam_dma_remove(struct platform_device *pdev)
+> >+{
+> >+	struct bam_device *bdev = platform_get_drvdata(pdev);
+> >+	u32 i;
+> >+
+> >+	dma_async_device_unregister(&bdev->common);
+> >+	of_dma_controller_free(pdev->dev.of_node);
 > 
-> > Are you sure that is true for the root bridge as well? I don't
-> > remember the details, but I though that for the host bridge,
-> > we don't actually look at the BARs at all.
+> The controller should first be removed from the of lookup table,
+> then free the device.
 > 
-> That is right, but this isn't a host bridge device, it is a PCI-PCI
-> bridge with root complex registers. The root complex bridge is not the
-> same as the host bridge.
-> 
-> Unfortunately the implementation is non-conforming. :(
+Ah right, had this reversed.
 
-Ok, I see. I was probably asking the wrong question then earlier
-when I tried to find out what this is.
+> >+
+> >+	/* mask all interrupts for this execution environment */
+> >+	writel_relaxed(0, bdev->regs + BAM_IRQ_SRCS_MSK_EE(bdev->ee));
+> 
+> You still need to free the interrupt to make this race free,
+> especially on a multi-processor system. free_irq() acts as a
+> synchronization point that makes sure that interrupt handler has
+> finished running and that no new interrupt handlers are being run
+> after this point. Just masking the interrupt in the control register
+> does not provide these guarantees.
 
-	Arnd
+ok i'll just add in a devm_free_irq().  The only good thing then about using the
+devm_request_irq is the cleanup on error paths in the probe.
+
+> >+
+> >+	for (i = 0; i < bdev->num_channels; i++) {
+> >+		bam_dma_terminate_all(&bdev->channels[i]);
+> >+		tasklet_kill(&bdev->channels[i].vc.task);
+> >+	}
+> >+
+> >+	tasklet_kill(&bdev->task);
+> >+
+> >+	clk_disable_unprepare(bdev->bamclk);
+> >+
+> >+	return 0;
+> >+}
+> [...]
+> 
+
+-- 
+sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
