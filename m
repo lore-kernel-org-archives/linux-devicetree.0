@@ -1,44 +1,60 @@
-From: Christopher Covington <cov@codeaurora.org>
-Subject: Re: [PATCH v8 0/3] mmc: sdhci-msm: Add support for Qualcomm chipsets
-Date: Tue, 04 Feb 2014 08:19:02 -0500
-Message-ID: <52F0E8C6.5090006@codeaurora.org>
-References: <1391107507-17321-1-git-send-email-gdjakov@mm-sol.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] char: ti-usim: Add driver for USIM module on AM43xx
+Date: Tue, 4 Feb 2014 15:19:40 +0200
+Message-ID: <52F0E8EC.8030900@ti.com>
+References: <1390192434-19386-1-git-send-email-satish.patel@ti.com> <1390192434-19386-4-git-send-email-satish.patel@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1391107507-17321-1-git-send-email-gdjakov@mm-sol.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Georgi Djakov <gdjakov@mm-sol.com>
-Cc: linux-mmc@vger.kernel.org, cjb@laptop.org, devicetree@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1390192434-19386-4-git-send-email-satish.patel-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Satish Patel <satish.patel-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Georgi,
+Hi Satish,
 
-On 01/30/2014 01:45 PM, Georgi Djakov wrote:
-> This patchset adds basic support of the Secure Digital Host Controller
-> Interface compliant controller found in Qualcomm chipsets.
+On 01/20/2014 06:33 AM, Satish Patel wrote:
+> TI-USIM driver is a platform driver that provides a character
+> driver interface to user applications.
 > 
-> Tested with eMMC and various micro SD cards on APQ8074 Dragonboard.
+> It allows user applications to call IOCTL's to
+> perform smart card operations.
+> 
+> Driver currently supports
+> - ATR
+> - T=0 & T=1 protocol
+> - clock stop mode
+> - smart card clock configuration
+> - Tx/Rx application data units (APDU) to smart card
+> - Interface to PHY using DT & phy interface
+> 
+> Validation is done with ACOS3 smart cards
+> 
+> Signed-off-by: Satish Patel <satish.patel-l0cyMroinI0@public.gmane.org>
+> ---
+>  .../devicetree/bindings/ti-usim/ti-usim.txt        |   31 +
+>  drivers/char/Kconfig                               |    7 +
+>  drivers/char/Makefile                              |    1 +
+>  drivers/char/ti-usim-hw.h                          |  863 +++++++++
+>  drivers/char/ti-usim.c                             | 1859 ++++++++++++++++++++
 
-[...]
+ti-usim.c is a very large driver that does everything but looks like limited to TI hardware.
+How about splitting it into generic stuff and hw specific glue logic so that most of the generic stuff
+could be used by different hardware types.
 
->  .../devicetree/bindings/mmc/sdhci-msm.txt          |   83 ++
->  drivers/mmc/host/Kconfig                           |   13 +
->  drivers/mmc/host/Makefile                          |    1 +
->  drivers/mmc/host/sdhci-msm.c                       |  938 ++++++++++++++++++++
->  4 files changed, 1035 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->  create mode 100644 drivers/mmc/host/sdhci-msm.c
+>  include/linux/ti-usim.h                            |   98 +
+>  6 files changed, 2859 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/ti-usim/ti-usim.txt
+>  create mode 100644 drivers/char/ti-usim-hw.h
+>  create mode 100644 drivers/char/ti-usim.c
+>  create mode 100644 include/linux/ti-usim.h
+> 
 
-You must have added entries to the Dragonboard device tree source to test
-these changes. Why not include them with this patchset? Is there a stand-alone
-patch that I've overlooked?
+cheers,
+-roger
 
-Thanks,
-Christopher
-
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by the Linux Foundation.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
