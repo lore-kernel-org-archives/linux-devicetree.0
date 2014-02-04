@@ -1,51 +1,97 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH 1/2] devicetree: Add devicetree bindings documentation
- for the ADAU1977
-Date: Tue, 04 Feb 2014 12:48:47 +0100
-Message-ID: <52F0D39F.4080203@metafoo.de>
-References: <1391439428-3198-1-git-send-email-lars@metafoo.de> <CAMuHMdVQGZE+1YuWCnJefzy08kb6vNmRN8k+1-K82BubOBAOxQ@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] arm64: Add architecture support for PCI
+Date: Tue, 04 Feb 2014 12:54:11 +0100
+Message-ID: <27019203.VEiCA8u8iI@wuerfel>
+References: <1391453028-23191-1-git-send-email-Liviu.Dudau@arm.com>
+ <3277167.UhkSU8Sf56@wuerfel>
+ <20140204110922.GA27975@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdVQGZE+1YuWCnJefzy08kb6vNmRN8k+1-K82BubOBAOxQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140204110922.GA27975@e106497-lin.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, linux-pci <linux-pci@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/03/2014 04:15 PM, Geert Uytterhoeven wrote:
-> On Mon, Feb 3, 2014 at 3:57 PM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
->> + - adi,micbias: Configures the voltage setting for the MICBIAS pin. If not
->> +   specified the default value will be 8.5 Volts. This property is only valid
->> +   for the ADAU1977.
->> +   Valid values for this property are:
->> +       0: 5.0V
->> +       1: 5.5V
->> +       2: 6.0V
->> +       3: 6.5V
->> +       4: 7.0V
->> +       5: 7.5V
->> +       6: 8.0V
->> +       7: 8.5V
->> +       8: 9.0V
+On Tuesday 04 February 2014 11:09:22 Liviu Dudau wrote:
+> On Tue, Feb 04, 2014 at 08:44:36AM +0000, Arnd Bergmann wrote:
+
+> > Well, I/O space never starts at physical zero in reality, so it is
+> > broken in practice. The CONFIG_GENERIC_IOMAP option tries to solve
+> > the problem of I/O spaces that are not memory mapped, which is
+> > actually quite rare (x86, ia64, some rare powerpc bridges, and possibly
+> > Alpha). The norm is that if you have I/O space, it is memory mapped
+> > and you don't need GENERIC_IOMAP. I think most of the architectures
+> > selecting GENERIC_IOMAP have incorrectly copied that from x86.
+> 
+> If you are talking about CPU addresses for I/O space, then you are (mostly?) right.
+> I've seen some code in powerpc that tries to handle the case where I/O starts at zero.
 >
-> This means the casual DTS reader need to know about the meaning of
-> the values. You can avoid that by:
->    1. Using preprocessor defines. Drawback is that you have to add an
->       include file.
->    2. Using mV, and specify minimum, maximum, and incrementals in the
->       bindings, cfr.
-> Documentation/devicetree/bindings/power_supply/ti,bq24735.txt
->       Drawback is that the user can easily specify invalid values.
+> For MMIO, yes, it would be crazy to start at CPU address zero. But,
+> the ioport_map takes a port number, and those do start at zero, right?
 
+What I meant is that asm-generic/io.h assumes that the I/O ports are
+mapped at /virtual/ address zero, which is even more crazy, since that
+is normally in user space. Sorry for confusing it with physical address
+zero.
 
-Is there a preference for either of them?
+Now the GENERIC_IOMAP uses a similar fiction by defining that virtual
+address token 0x10000-0x1ffff are used to access I/O space when calling
+inb/outb, but that is something you only need to do when you have
+no memory mapped I/O port.
 
-Thanks,
-- Lars
+Some older ARM platforms (PXA for instance) also defined the I/O space
+to start at virtual address zero, and use a per-bus io_offset that was
+equal to the ioremapped I/O window. This actually works, but it means
+that the logical port numbers are all high, and you have to set
+IO_SPACE_LIMIT to ULONG_MAX, and it breaks horribly for any driver that
+tries to store a port number in a type that is shorter than 'unsigned
+long'. We definitely don't want to do this for new code.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > > My main concern with the existing API is the requirement to have a subsys_initcall
+> > > in your host bridge or mach code, due to the way the initialisation is done (you
+> > > need the DT code to probe your driver, but you cannot start the scanning of the
+> > > PCI bus until the arch code is initialised, so it gets deferred via
+> > > subsys_initcall when it calls pci_common_init). I bet that if one tries to
+> > > instantiate a Tegra PCI host bridge controller on a Marvell platform things will
+> > > break pretty quickly (random example here).
+> >
+> > I'm not following here. All the new host controller drivers should
+> > be platform drivers that only bind to the host devices in DT
+> > that are present. Both mvebu and tegra use a normal "module_platform_driver"
+> > for initialization, not a "subsys_initcall".
+> 
+> I was actually looking at mach-dove, I thought that was Marvell as well.
+
+mach-dove is going away soon, it will get merged into mach-mvebu and
+then use drivers/pci/host/pci-mvebu.c
+ 
+> But both mvebu and tegra call pci_common_init_dev. The busnr gets assigned based on
+> the registration order. I wonder if any of the host bridge code copes with having
+> assigned a bus number other than zero for its "root bus".
+
+I think all "new" host bridges now use nr_controllers=1, which means
+that you always start at but number zero and use PCI domain if
+you have multiple independent root bridges.
+
+> >
+> > Right. I guess we can support both interfaces on ARM32 for the forseeable
+> > future (renaming the new one) and just change the existing implementation
+> > to update the bitmap. Any cross-platform host controller driver would
+> > have to use the new interface however.
+> 
+> OK, I can try to add the function to my patch. Call it pci_ioremap_iores?
+
+Sounds ok, I can't think of anything better at least.
+
+	Arnd
