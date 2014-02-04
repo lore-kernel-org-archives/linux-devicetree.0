@@ -1,97 +1,266 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC] Culling traffic volume on devicetree mailing list
-Date: Tue, 04 Feb 2014 14:08:39 +0000
-Message-ID: <20140204140839.11DCFC407C9@trevor.secretlab.ca>
-References: <CAL_JsqL7SHFB2Pg6u0+1ZdeDSRaBS5S_=K8gWGcjbq3MpgyvFw@mail.gmail .com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: restructure for_each macros to fix compile warnings
+Date: Tue, 04 Feb 2014 14:27:48 +0000
+Message-ID: <20140204142748.6A2A2C407C9@trevor.secretlab.ca>
+References: <1391469424-5245-1-git-send-email-robherring2@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqL7SHFB2Pg6u0+1ZdeDSRaBS5S_=K8gWGcjbq3MpgyvFw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1391469424-5245-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Howells <dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 23 Jan 2014 08:53:34 -0600, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Jan 23, 2014 at 5:03 AM, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org> wrote:
-> > On Wed, 2014-01-22 at 10:35 -0800, Olof Johansson wrote:
-> >> > devicetree-spec: For discussing 'core' device tree bindings. ie.
-> >> > anything that would be a candidate for putting into an ePAPR type
-> >> > spec. Individual device bindings would continue to be posted to
-> >> > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, but anything affecting subsystems or
-> >> > generic patterns should be posted to this new list.
-> >>
-> >> I predict that it will be hard for someone posting a patch to tell if
-> >> they should send it to this list or some other list. It might be
-> >> convenient for you guys to ignore the high-volume list and just focus
-> >> on this one, but for the people who post patches it just makes it more
-> >> complicated. IMHO.
-> >
-> > The issue with the current list is that it is too much of a firehose of
-> > Linux patches for other non-Linux consumers of DTB e.g. BSD folks, me
-> > with my Xen hat, see [0] for the intersection of those two which
-> > prompted me to mention this on the call.
-> >
-> > The firehose means that these people don't subscribe and therefore lack
-> > visibility into what is going on with the core bindings (e.g. BSD seems
-> > to have a different binding for gic interrupts, mentioned in the linked
-> > thread).
-> >
-> > I don't think the intention of the split was/should be that "core"
-> > Linux/DTB people should only subscribe to -spec@, rather that it be a
-> > more targeted list which non-Linux/DTB folks can be involved with to
-> > discuss core binding issues and standardisation etc.
-> >
-> > It seems like devicetree@ would be the right default destination for any
-> > patch and so should be what is listed in MAINTAINERS etc.
-> >
-> > Anyone who is doing actual core/spec work appropriate to -spec@ is
-> > either going to be involved enough to know this themselves or can be
-> > asked to CC the other list too as part of the first round of review. The
-> > number of patches which would need to go to -spec should be a pretty
-> > small fraction.
-> >
+On Mon,  3 Feb 2014 17:17:04 -0600, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > 
-> One approach would be to just try to reduce the firehose a bit.
+> Commit 00b2c76a6a "include/linux/of.h: make for_each_child_of_node()
+> reference its args when CONFIG_OF=n" fixed warnings for unused
+> variables, but introduced variable "used uninitialized" warnings.
+> Simply initializing the variables would result in "set but not used"
+> warnings with W=1.
 > 
-> The list gets lots of patches which are not new bindings because we
-> trigger on any dts change and any patch with of_get_property or
-> of_match_table. I'm guessing the latter was mainly to catch missing
-> documentation, but it is clear that we are failing at that as we are
-> at about 50% documented compatible strings in a new kernel (hopefully
-> my checkpatch addition will improve that).
+> Fix both types of warnings by making all the for_each macros
+> unconditional and rely on the dummy static inline functions to
+> initialize and reference any variables.
 > 
-> I think dts files are pretty well reviewed by platform maintainers and
-> lots of changes are just new boards using existing bindings. There
-> should be little for DT maintainers to review there. This was
-> discussed and agreed to at the ARM summit.
-> 
-> So something like this:
+> Reported-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+> Cc: David Howells <dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
 Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-g.
-
+> ---
+>  include/linux/of.h | 153 +++++++++++++++++++++++++++++------------------------
+>  1 file changed, 84 insertions(+), 69 deletions(-)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 6c20792..4e485c0 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6267,8 +6267,6 @@ S:        Maintained
->  F:     drivers/of/
->  F:     include/linux/of*.h
->  F:     scripts/dtc/
-> -K:     of_get_property
-> -K:     of_match_table
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 70c64ba..435cb99 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -169,35 +169,15 @@ static inline const char *of_node_full_name(const struct device_node *np)
+>  
+>  extern struct device_node *of_find_node_by_name(struct device_node *from,
+>  	const char *name);
+> -#define for_each_node_by_name(dn, name) \
+> -	for (dn = of_find_node_by_name(NULL, name); dn; \
+> -	     dn = of_find_node_by_name(dn, name))
+>  extern struct device_node *of_find_node_by_type(struct device_node *from,
+>  	const char *type);
+> -#define for_each_node_by_type(dn, type) \
+> -	for (dn = of_find_node_by_type(NULL, type); dn; \
+> -	     dn = of_find_node_by_type(dn, type))
+>  extern struct device_node *of_find_compatible_node(struct device_node *from,
+>  	const char *type, const char *compat);
+> -#define for_each_compatible_node(dn, type, compatible) \
+> -	for (dn = of_find_compatible_node(NULL, type, compatible); dn; \
+> -	     dn = of_find_compatible_node(dn, type, compatible))
+>  extern struct device_node *of_find_matching_node_and_match(
+>  	struct device_node *from,
+>  	const struct of_device_id *matches,
+>  	const struct of_device_id **match);
+> -static inline struct device_node *of_find_matching_node(
+> -	struct device_node *from,
+> -	const struct of_device_id *matches)
+> -{
+> -	return of_find_matching_node_and_match(from, matches, NULL);
+> -}
+> -#define for_each_matching_node(dn, matches) \
+> -	for (dn = of_find_matching_node(NULL, matches); dn; \
+> -	     dn = of_find_matching_node(dn, matches))
+> -#define for_each_matching_node_and_match(dn, matches, match) \
+> -	for (dn = of_find_matching_node_and_match(NULL, matches, match); \
+> -	     dn; dn = of_find_matching_node_and_match(dn, matches, match))
+> +
+>  extern struct device_node *of_find_node_by_path(const char *path);
+>  extern struct device_node *of_find_node_by_phandle(phandle handle);
+>  extern struct device_node *of_get_parent(const struct device_node *node);
+> @@ -209,43 +189,11 @@ extern struct device_node *of_get_next_available_child(
+>  
+>  extern struct device_node *of_get_child_by_name(const struct device_node *node,
+>  					const char *name);
+> -#define for_each_child_of_node(parent, child) \
+> -	for (child = of_get_next_child(parent, NULL); child != NULL; \
+> -	     child = of_get_next_child(parent, child))
+> -
+> -#define for_each_available_child_of_node(parent, child) \
+> -	for (child = of_get_next_available_child(parent, NULL); child != NULL; \
+> -	     child = of_get_next_available_child(parent, child))
+> -
+> -static inline int of_get_child_count(const struct device_node *np)
+> -{
+> -	struct device_node *child;
+> -	int num = 0;
+> -
+> -	for_each_child_of_node(np, child)
+> -		num++;
+> -
+> -	return num;
+> -}
+> -
+> -static inline int of_get_available_child_count(const struct device_node *np)
+> -{
+> -	struct device_node *child;
+> -	int num = 0;
+> -
+> -	for_each_available_child_of_node(np, child)
+> -		num++;
+> -
+> -	return num;
+> -}
+>  
+>  /* cache lookup */
+>  extern struct device_node *of_find_next_cache_node(const struct device_node *);
+>  extern struct device_node *of_find_node_with_property(
+>  	struct device_node *from, const char *prop_name);
+> -#define for_each_node_with_property(dn, prop_name) \
+> -	for (dn = of_find_node_with_property(NULL, prop_name); dn; \
+> -	     dn = of_find_node_with_property(dn, prop_name))
+>  
+>  extern struct property *of_find_property(const struct device_node *np,
+>  					 const char *name,
+> @@ -367,42 +315,53 @@ static inline struct device_node *of_find_node_by_name(struct device_node *from,
+>  	return NULL;
+>  }
+>  
+> -static inline struct device_node *of_get_parent(const struct device_node *node)
+> +static inline struct device_node *of_find_node_by_type(struct device_node *from,
+> +	const char *type)
+>  {
+>  	return NULL;
+>  }
+>  
+> -static inline bool of_have_populated_dt(void)
+> +static inline struct device_node *of_find_matching_node_and_match(
+> +	struct device_node *from,
+> +	const struct of_device_id *matches,
+> +	const struct of_device_id **match)
+>  {
+> -	return false;
+> +	return NULL;
+>  }
+>  
+> -/* Kill an unused variable warning on a device_node pointer */
+> -static inline void __of_use_dn(const struct device_node *np)
+> +static inline struct device_node *of_get_parent(const struct device_node *node)
+>  {
+> +	return NULL;
+>  }
+>  
+> -#define for_each_child_of_node(parent, child) \
+> -	while (__of_use_dn(parent), __of_use_dn(child), 0)
+> +static inline struct device_node *of_get_next_child(
+> +	const struct device_node *node, struct device_node *prev)
+> +{
+> +	return NULL;
+> +}
+>  
+> -#define for_each_available_child_of_node(parent, child) \
+> -	while (0)
+> +static inline struct device_node *of_get_next_available_child(
+> +	const struct device_node *node, struct device_node *prev)
+> +{
+> +	return NULL;
+> +}
+>  
+> -static inline struct device_node *of_get_child_by_name(
+> -					const struct device_node *node,
+> -					const char *name)
+> +static inline struct device_node *of_find_node_with_property(
+> +	struct device_node *from, const char *prop_name)
+>  {
+>  	return NULL;
+>  }
+>  
+> -static inline int of_get_child_count(const struct device_node *np)
+> +static inline bool of_have_populated_dt(void)
+>  {
+> -	return 0;
+> +	return false;
+>  }
+>  
+> -static inline int of_get_available_child_count(const struct device_node *np)
+> +static inline struct device_node *of_get_child_by_name(
+> +					const struct device_node *node,
+> +					const char *name)
+>  {
+> -	return 0;
+> +	return NULL;
+>  }
+>  
+>  static inline int of_device_is_compatible(const struct device_node *device,
+> @@ -569,6 +528,13 @@ extern int of_node_to_nid(struct device_node *np);
+>  static inline int of_node_to_nid(struct device_node *device) { return 0; }
+>  #endif
+>  
+> +static inline struct device_node *of_find_matching_node(
+> +	struct device_node *from,
+> +	const struct of_device_id *matches)
+> +{
+> +	return of_find_matching_node_and_match(from, matches, NULL);
+> +}
+> +
+>  /**
+>   * of_property_read_bool - Findfrom a property
+>   * @np:		device node from which the property value is to be read.
+> @@ -618,6 +584,55 @@ static inline int of_property_read_u32(const struct device_node *np,
+>  		s;						\
+>  		s = of_prop_next_string(prop, s))
+>  
+> +#define for_each_node_by_name(dn, name) \
+> +	for (dn = of_find_node_by_name(NULL, name); dn; \
+> +	     dn = of_find_node_by_name(dn, name))
+> +#define for_each_node_by_type(dn, type) \
+> +	for (dn = of_find_node_by_type(NULL, type); dn; \
+> +	     dn = of_find_node_by_type(dn, type))
+> +#define for_each_compatible_node(dn, type, compatible) \
+> +	for (dn = of_find_compatible_node(NULL, type, compatible); dn; \
+> +	     dn = of_find_compatible_node(dn, type, compatible))
+> +#define for_each_matching_node(dn, matches) \
+> +	for (dn = of_find_matching_node(NULL, matches); dn; \
+> +	     dn = of_find_matching_node(dn, matches))
+> +#define for_each_matching_node_and_match(dn, matches, match) \
+> +	for (dn = of_find_matching_node_and_match(NULL, matches, match); \
+> +	     dn; dn = of_find_matching_node_and_match(dn, matches, match))
+> +
+> +#define for_each_child_of_node(parent, child) \
+> +	for (child = of_get_next_child(parent, NULL); child != NULL; \
+> +	     child = of_get_next_child(parent, child))
+> +#define for_each_available_child_of_node(parent, child) \
+> +	for (child = of_get_next_available_child(parent, NULL); child != NULL; \
+> +	     child = of_get_next_available_child(parent, child))
+> +
+> +#define for_each_node_with_property(dn, prop_name) \
+> +	for (dn = of_find_node_with_property(NULL, prop_name); dn; \
+> +	     dn = of_find_node_with_property(dn, prop_name))
+> +
+> +static inline int of_get_child_count(const struct device_node *np)
+> +{
+> +	struct device_node *child;
+> +	int num = 0;
+> +
+> +	for_each_child_of_node(np, child)
+> +		num++;
+> +
+> +	return num;
+> +}
+> +
+> +static inline int of_get_available_child_count(const struct device_node *np)
+> +{
+> +	struct device_node *child;
+> +	int num = 0;
+> +
+> +	for_each_available_child_of_node(np, child)
+> +		num++;
+> +
+> +	return num;
+> +}
+> +
+>  #if defined(CONFIG_PROC_FS) && defined(CONFIG_PROC_DEVICETREE)
+>  extern void proc_device_tree_add_node(struct device_node *, struct proc_dir_entry *);
+>  extern void proc_device_tree_add_prop(struct proc_dir_entry *pde, struct property *prop);
+> -- 
+> 1.8.3.2
 > 
->  OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
->  M:     Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> @@ -6279,7 +6277,6 @@ M:        Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->  L:     devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->  S:     Maintained
->  F:     Documentation/devicetree/
-> -F:     arch/*/boot/dts/
->  F:     include/dt-bindings/
-> 
->  OPENRISC ARCHITECTURE
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
