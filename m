@@ -1,47 +1,62 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v5 08/14] ahci-platform: "Library-ise"
- suspend / resume functionality
-Date: Tue, 04 Feb 2014 11:20:53 +0100
-Message-ID: <52F0BF05.8080607@redhat.com>
-References: <1390417489-5354-1-git-send-email-hdegoede@redhat.com> <1390417489-5354-9-git-send-email-hdegoede@redhat.com> <201402031553.46083.arnd@arndb.de>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
+Subject: Re: [PATCH net-next 1/2] dts: Add bindings for multicast hash bins
+ and perfect filter entries
+Date: Tue, 4 Feb 2014 10:58:21 +0100
+Message-ID: <52F0B9BD.7070904@st.com>
+References: <1391199356-27226-1-git-send-email-vbridgers2013@gmail.com> <1391199356-27226-2-git-send-email-vbridgers2013@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBE76YKLQKGQEJTAYPAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <201402031553.46083.arnd-r2nGTMty4D4@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1391199356-27226-2-git-send-email-vbridgers2013@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Vince Bridgers <vbridgers2013@gmail.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dinguyen@altera.com, rayagond@vayavyalabs.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello Vince
 
-On 02/03/2014 03:53 PM, Arnd Bergmann wrote:
-> On Wednesday 22 January 2014, Hans de Goede wrote:
->> --- a/include/linux/ahci_platform.h
->> +++ b/include/linux/ahci_platform.h
->> @@ -50,4 +50,11 @@ int ahci_platform_init_host(struct platform_device *pdev,
->>                             unsigned int force_port_map,
->>                             unsigned int mask_port_map);
->>  
->> +#ifdef CONFIG_PM_SLEEP
->> +int ahci_platform_suspend_host(struct device *dev);
->> +int ahci_platform_resume_host(struct device *dev);
->> +int ahci_platform_suspend(struct device *dev);
->> +int ahci_platform_resume(struct device *dev);
->> +#endif
->> +
-> 
-> Not sure if the #ifdef does any good here. Normally, we don't hide declarations
-> so we can do stuff like
+On 1/31/2014 9:15 PM, Vince Bridgers wrote:
+> This change adds bindings for the number of multicast hash bins and perfect
+> filter entries supported by the Synopsys EMAC. The Synopsys EMAC core is
+> configurable at device creation time, and can be configured for a different
+> number of multicast hash bins and a different number of perfect filter entries.
+> The device does not provide a way to query these parameters, therefore
+> parameters are required. The Altera Cyclone V SOC has support for 256
+> multicast hash bins and 128 perfect filter entries, and is different than
+> what's currently provided in the stmmac driver.
+>
 
-Thanks for the review, I'll remove the #ifdef in the next version of this patch-set.
+thanks a lot for these patches, I have just added some comment for the
+patch #2
 
-Regards,
+peppe
 
-Hans
+> Signed-off-by: Vince Bridgers <vbridgers2013@gmail.com>
+> ---
+>   Documentation/devicetree/bindings/net/stmmac.txt |    6 ++++++
+>   1 file changed, 6 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+> index 9d92d42..dbf7498 100644
+> --- a/Documentation/devicetree/bindings/net/stmmac.txt
+> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
+> @@ -34,6 +34,10 @@ Optional properties:
+>   	reset phandle is given
+>   - max-frame-size:	Maximum Transfer Unit (IEEE defined MTU), rather
+>   			than the maximum frame size.
+> +- snps,multicast-filter-bins:	Number of multicast filter hash bins
+> +				supported by this device instance
+> +- snps,perfect-filter-entries:	Number of perfect filter entries supported
+> +				by this device instance
+>
+>   Examples:
+>
+> @@ -46,4 +50,6 @@ Examples:
+>   		mac-address = [000000000000]; /* Filled in by U-Boot */
+>   		max-frame-size = <3800>;
+>   		phy-mode = "gmii";
+> +		snps,multicast-filter-bins = <256>;
+> +		snps,perfect-filter-entries = <128>;
+>   	};
+>
