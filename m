@@ -1,364 +1,63 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH] arm64: Add architecture support for PCI
-Date: Tue, 4 Feb 2014 11:09:22 +0000
-Message-ID: <20140204110922.GA27975@e106497-lin.cambridge.arm.com>
-References: <1391453028-23191-1-git-send-email-Liviu.Dudau@arm.com>
- <3808209.DeG1VobanZ@wuerfel>
- <20140203213658.GA24036@e106497-lin.cambridge.arm.com>
- <3277167.UhkSU8Sf56@wuerfel>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Subject: [PATCH v4 0/3] Introduce clocksource driver for Keystone platform
+Date: Tue, 4 Feb 2014 13:30:50 +0200
+Message-ID: <1391513453-21140-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <3277167.UhkSU8Sf56@wuerfel>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, LKML <linux-kernel@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: santosh.shilimkar@ti.com, rob@landley.net, linux@arm.linux.org.uk, galak@codeaurora.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, grygorii.strashko@ti.com, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 04, 2014 at 08:44:36AM +0000, Arnd Bergmann wrote:
-> On Monday 03 February 2014 21:36:58 Liviu Dudau wrote:
-> > On Mon, Feb 03, 2014 at 08:05:56PM +0000, Arnd Bergmann wrote:
-> > > On Monday 03 February 2014 19:18:38 Liviu Dudau wrote:
-> > > > So ... defining it should mean no legacy ISA devices, right?
-> > >=20
-> > > I would read that comment as referring to systems that don't have
-> > > any I/O space. If you have PCI, you can by definition have ISA
-> > > compatible devices behind a bridge. A typical example would be
-> > > a VGA card that supports the 03c0-03df port range.
-> >=20
-> > But if you have PCI and don't want to support ISA do you have /dev/=
-port? I guess yes.
->=20
-> Right, that is my interpretation. You could still have a tool
-> that tries to poke /dev/port from user space for any I/O BAR
-> the same way you'd use /dev/mem for memory BARs of PCI devices.
->=20
-> It's discouraged, but it's often the easiest solution for
-> a quick hack, and I'd expect tools to use this.
->=20
-> > > > > >  #define IO_SPACE_LIMIT		0xffff
-> > > > >=20
-> > > > > You probably want to increase this a bit, to allow multiple h=
-ost bridges
-> > > > > to have their own I/O space.
-> > > >=20
-> > > > OK, but to what size?
-> > >=20
-> > > 2 MB was a compromise on arm32 to allow up to 32 PCI host bridges=
- but not
-> > > take up too much virtual space. On arm64 it should be at least as=
- big.
-> > > Could be more than that, although I don't see a reason why it sho=
-uld be,
-> > > unless we expect to see systems with tons of host bridges, or bus=
-es
-> > > that exceed 64KB of I/O space.
-> >=20
-> > I will increase the size to 2MB for v2.
->=20
-> Thinking about this some more, I'd go a little higher. In case of
-> pci_mv, we already register a 1MB region for one logical host
-> (which has multiple I/O spaces behind an emulated bridge), so
-> going to 16MB or more would let us handle multiple 1MB windows
-> for some amount of future proofing.
->=20
-> Maybe Catalin can assign us some virtual address space to use,
-> with the constraints that it should be 16MB or more in an
-> area that doesn't require additional kernel page table pages.
+Add a broadcast timer64 based clockevent driver for keystone arch.
+This driver uses timer in 64-bit general purpose mode as clock event
+device.
 
-I'll pick Catalin's brain for suggestions.
+Documentation:
+    http://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
 
-> =20
-> > > > > > +#define ioport_map(port, nr)	(PCI_IOBASE + ((port) & IO_SP=
-ACE_LIMIT))
-> > > > > > +#define ioport_unmap(addr)
-> > > > >=20
-> > > > > inline functions?
-> > > >=20
-> > > > Will do, thanks!
-> > >=20
-> > > I suppose you can actually use the generic implementation from
-> > > asm-generic/io.h, and fix it by using the definition you have
-> > > above, since it's currently broken.
-> >=20
-> > Not exactly broken, but it makes the assumption that your IO space =
-starts at
-> > physical address zero and you have not remapped it. It does guard t=
-he
-> > definition with #ifndef CONFIG_GENERIC_IOMAP after all, so it does =
-not
-> > expect to be generic :)
->=20
-> Well, I/O space never starts at physical zero in reality, so it is
-> broken in practice. The CONFIG_GENERIC_IOMAP option tries to solve
-> the problem of I/O spaces that are not memory mapped, which is
-> actually quite rare (x86, ia64, some rare powerpc bridges, and possib=
-ly
-> Alpha). The norm is that if you have I/O space, it is memory mapped
-> and you don't need GENERIC_IOMAP. I think most of the architectures
-> selecting GENERIC_IOMAP have incorrectly copied that from x86.
+Based on
+git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git
+keystone/master
 
-If you are talking about CPU addresses for I/O space, then you are (mos=
-tly?) right.
-I've seen some code in powerpc that tries to handle the case where I/O =
-starts at zero.
+v3..v4:
+	rebased on latest of linux-keystone.git keystone/master
 
-=46or MMIO, yes, it would be crazy to start at CPU address zero. But, t=
-he ioport_map
-takes a port number, and those do start at zero, right?
+v2..v3:
+- clocksource: timer-keystone: introduce clocksource driver for
+	changed "u64" type to "unsigned long" for hz_period as more appropriate
+	hz_period rounded up by DIV_ROUND_UP(rate, HZ)
+	corrected comments
 
->=20
-> > > > > > diff --git a/arch/arm64/include/asm/pci.h b/arch/arm64/incl=
-ude/asm/pci.h
-> > > > > > new file mode 100644
-> > > > > > index 0000000..dd084a3
-> > > > > > --- /dev/null
-> > > > > > +++ b/arch/arm64/include/asm/pci.h
-> > > > > > @@ -0,0 +1,35 @@
-> > > > > > +#ifndef __ASM_PCI_H
-> > > > > > +#define __ASM_PCI_H
-> > > > > > +#ifdef __KERNEL__
-> > > > > > +
-> > > > > > +#include <linux/types.h>
-> > > > > > +#include <linux/slab.h>
-> > > > > > +#include <linux/dma-mapping.h>
-> > > > > > +
-> > > > > > +#include <asm/io.h>
-> > > > > > +#include <asm-generic/pci-bridge.h>
-> > > > > > +#include <asm-generic/pci-dma-compat.h>
-> > > > > > +
-> > > > > > +#define PCIBIOS_MIN_IO		0
-> > > > > > +#define PCIBIOS_MIN_MEM		0
-> > > > >=20
-> > > > > PCIBIOS_MIN_IO is normally set to 0x1000, to stay out of the =
-ISA range.
-> > > >=20
-> > > > :) No ISA support! (Die ISA, die!!)=20
-> > >=20
-> > > If only it were that easy.
-> >=20
-> > Lets try! :)
-> >=20
-> > I wonder how many active devices that have an ISA slot are still su=
-pported
-> > by mainline kernel.
->=20
-> This is missing the point, but any architecture that has a PCI
-> slot can have an ISA device behind a bridge like this:
->=20
-> http://www.altera.com/products/ip/iup/pci/m-eur-pci-to-isa.html
->=20
-> The real reason is that a lot of PCI cards for practical reasons
-> expose some non-relocatable memory and I/O BARs in ISA-compatible
-> locations. Looking at /proc/ioports on my PC, I can spot a couple
-> of things that may well show up on any ARM machine:
->=20
-> 0000-03af : PCI Bus 0000:00
->   02f8-02ff : serial
-> 03c0-03df : PCI Bus 0000:40
->   03c0-03df : PCI Bus 0000:00
->     03c0-03df : vga+
-> 03e0-0cf7 : PCI Bus 0000:00
->   03e8-03ef : serial
->   03f8-03ff : serial
->   0b00-0b0f : pnp 00:08
->     0b00-0b07 : piix4_smbus
->   0b20-0b3f : pnp 00:08
->     0b20-0b27 : piix4_smbus
->   0ca2-0ca3 : pnp 00:08
->     0ca2-0ca2 : ipmi_si
->     0ca3-0ca3 : ipmi_si
->   0cf8-0cff : PCI conf1
->=20
-> Nothing wrong with the above. Now, it's also possible that
-> someone decides to build an ARM server by using a PC south
-> bridge with integrated legacy PC peripherals, such as these:
->=20
-> 0000-03af : PCI Bus 0000:00
->   0000-001f : dma1
->   0020-0021 : pic1
->   0040-0043 : timer0
->   0050-0053 : timer1
->   0060-0060 : keyboard
->   0064-0064 : keyboard
->   0070-0071 : rtc0
->   0080-008f : dma page reg
->   00a0-00a1 : pic2
->   00b0-00b0 : APEI ERST
->   00c0-00df : dma2
->   00f0-00ff : fpu
->=20
-> There is some hope that it won't happen, but these things
-> exist and come with a regular PCIe front-end bus in some
-> cases.
->=20
-> Finally, there is the LPC bus, which can give you additional
-> ISAPnP compatible devices.
->=20
-> > I will update PCIBIOS_MIN_xxxx to match arch/arm for v2.
->=20
-> Ok.
->=20
-> > > > > > diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pc=
-i.c
-> > > > > > new file mode 100644
-> > > > > > index 0000000..7b652cf
-> > > > > > --- /dev/null
-> > > > > > +++ b/arch/arm64/kernel/pci.c
-> > > > > > @@ -0,0 +1,112 @@
-> > > > >=20
-> > > > > None of this looks really arm64 specific, nor should it be. I=
- think
-> > > > > we should try a little harder to move this as a default imple=
-mentation
-> > > > > into common code, even if we start out by having all architec=
-tures
-> > > > > override it.
-> > > >=20
-> > > > Agree. This is the RFC version. I didn't dare to post a patch w=
-ith fixes
-> > > > for all architectures. :)
-> > >=20
-> > > No need to change the other architectures. You can make it opt-in=
- for
-> > > now and just put the code into a common location.
-> > > =20
-> > > An interesting question however is what the transition plan is to
-> > > have the code shared between arm32 and arm64: We will certainly n=
-eed
-> > > to share at least the dw-pcie and the generic SBSA compliant pci
-> > > implementation.
-> >=20
-> > My vote would be for updating the host controllers to the new API a=
-nd
-> > to offer the CONFIG option to choose between arch APIs. The alterna=
-tive
-> > is to use the existing API to wrap the generic implementation.
->=20
-> The problem with an either/or CONFIG option is that it breaks
-> multiplatform support. A lot of the arm32 PCI implementations
-> are only used on platforms that are not multiplatform enabled
-> though, so we could get away by requiring all multiplatform
-> configurations to use the new API.
+v1..v2:
+- clocksource: timer-keystone: introduce clocksource driver for
+	renamed timer on "timer-keystone"
+	in keystone_timer_interrupt() evet pointer is passed via "dev_id"
+	used __relaxed variants of writel/readl and added explicit barriers
+	added "keystone_timer_disable()" for using in keystone_set_mode()
+	keystone_timer_config() is not used for disabling the timer any more
+	in case of an unsupported mode the keystone_timer_config() returns -1.
+	used request_irq() instead of setup_irq()
+	assigned irq for event_device in event_dev->irq
+	calculated timer.hz_period for CLOCK_EVT_MODE_PERIODIC at init
+	deleted spare call of keystone_timer_config() in keystone_timer_init()
+*
 
-I was thinking more in terms of catching uses of the old API in the new=
- host bridge
-driver. The added functions should be able to live beside the old API f=
-or the
-generic PCI framework, not sure how arm arch code should handle it.
+Ivan Khoronzhuk (3):
+  clocksource: timer-keystone: introduce clocksource driver for Keystone
+  clocksource: keystone: add bindings for keystone timer
+  arm: dts: keystone: add keystone timer entry
 
->=20
-> > My main concern with the existing API is the requirement to have a =
-subsys_initcall
-> > in your host bridge or mach code, due to the way the initialisation=
- is done (you
-> > need the DT code to probe your driver, but you cannot start the sca=
-nning of the=20
-> > PCI bus until the arch code is initialised, so it gets deferred via=
-=20
-> > subsys_initcall when it calls pci_common_init). I bet that if one t=
-ries to
-> > instantiate a Tegra PCI host bridge controller on a Marvell platfor=
-m things will
-> > break pretty quickly (random example here).
->=20
-> I'm not following here. All the new host controller drivers should
-> be platform drivers that only bind to the host devices in DT
-> that are present. Both mvebu and tegra use a normal "module_platform_=
-driver"
-> for initialization, not a "subsys_initcall".
+ .../bindings/timer/ti,keystone-timer.txt           |  29 +++
+ arch/arm/boot/dts/keystone-clocks.dtsi             |  10 +
+ arch/arm/boot/dts/keystone.dtsi                    |   7 +
+ drivers/clocksource/Makefile                       |   1 +
+ drivers/clocksource/timer-keystone.c               | 233 +++++++++++++++++++++
+ 5 files changed, 280 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/ti,keystone-timer.txt
+ create mode 100644 drivers/clocksource/timer-keystone.c
 
-I was actually looking at mach-dove, I thought that was Marvell as well=
-=2E
+-- 
+1.8.3.2
 
-But both mvebu and tegra call pci_common_init_dev. The busnr gets assig=
-ned based on
-the registration order. I wonder if any of the host bridge code copes w=
-ith having
-assigned a bus number other than zero for its "root bus".
-
->=20
-> > > Something like this (coded in mail client, don't try to compile):
-> > >=20
-> > > #define IO_SPACE_PAGES (IO_SPACE_LIMIT + 1) / PAGE_SIZE)
-> > > static DECLARE_BITMAP(pci_iospace, IO_SPACE_PAGES);
-> > > unsigned long pci_ioremap_io(const struct resource *bus, const st=
-ruct resource phys)
-> > > {
-> > > 	unsigned long start, len, virt_start;
-> > > 	int error;
-> > >=20
-> > > 	/* use logical address =3D=3D bus address if possible */
-> > > 	start =3D bus->start / PAGE_SIZE;
-> > > 	if (start > IO_SPACE_LIMIT / PAGE_SIZE)
-> > > 		start =3D 0;
-> > >=20
-> > > 	/*
-> > > 	 * try finding free space for the whole size first,
-> > > 	 * fall back to 64K if not available
-> > > 	 */
-> > > 	len =3D min(resource_size(bus), resource_size(phys);
-> > > 	start =3D bitmap_find_next_zero_area(pci_iospace, IO_SPACE_PAGES=
-,
-> > > 				start, len / PAGE_SIZE, 0);
-> > > 	if (start =3D=3D IO_SPACE_PAGES && len > SZ_64K)
-> > > 		len =3D SZ_64K;
-> > > 		start =3D 0;
-> > > 		start =3D bitmap_find_next_zero_area(pci_iospace, IO_SPACE_PAGE=
-S,
-> > > 				start, len / PAGE_SIZE, 0);
-> > > 	}
-> > >=20
-> > > 	/* no 64K area found */
-> > > 	if (start =3D=3D IO_SPACE_PAGES)
-> > > 		return -ENOMEM;
-> > >=20
-> > > 	/* ioremap physical aperture to virtual aperture */
-> > > 	virt_start =3D start * PAGE_SIZE + (unsigned long)PCI_IOBASE;
-> > > 	error =3D ioremap_page_range(virt_start, virt_start + len,
-> > > 				    phys->start, __pgprot(PROT_DEVICE_nGnRE));
-> > > 	if (error)
-> > > 		return error;
-> > >=20
-> > > 	bitmap_set(start, len / PAGE_SIZE);
-> > >=20
-> > > 	/* return io_offset */
-> > > 	return start * PAGE_SIZE - bus->start;
-> > > }
-> > > EXPORT_SYMBOL_GPL(pci_ioremap_io);
-> > >=20
-> > > 	Arnd
-> > >=20
-> >=20
-> > I see. I need to think how this will change the existing code. Curr=
-ent users
-> > of pci_ioremap_io  ask for multiples of SZ_64K offsets regardless o=
-f the
-> > actual need.=20
->=20
-> Right. I guess we can support both interfaces on ARM32 for the forsee=
-able
-> future (renaming the new one) and just change the existing implementa=
-tion
-> to update the bitmap. Any cross-platform host controller driver would
-> have to use the new interface however.
->=20
-> 	Arnd
-
-OK, I can try to add the function to my patch. Call it pci_ioremap_iore=
-s?
-
-Best regards,
-Liviu
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
