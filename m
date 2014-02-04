@@ -1,105 +1,59 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 2/2] of: fix of_update_property()
-Date: Tue, 04 Feb 2014 17:24:36 +0000
-Message-ID: <20140204172436.7EC3FC4050F@trevor.secretlab.ca>
-References: <1390370260-11273-1-git-send-email-Li.Xiubo@freescale.com> < 1390370260-11273-2-git-send-email-Li.Xiubo@freescale.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1390370260-11273-2-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH net-next 1/2] dts: Add bindings for multicast hash bins
+ and perfect filter entries
+Date: Tue, 4 Feb 2014 11:25:01 -0600
+Message-ID: <CAL_JsqKo6=n8NfXt-VtXEip47s6ePhcqSpTbOtk6EHECtER4aQ@mail.gmail.com>
+References: <1391199356-27226-1-git-send-email-vbridgers2013@gmail.com>
+	<1391199356-27226-2-git-send-email-vbridgers2013@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1391199356-27226-2-git-send-email-vbridgers2013@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Vince Bridgers <vbridgers2013@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, netdev <netdev@vger.kernel.org>, Giuseppe CAVALLARO <peppe.cavallaro@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Dinh Nguyen <dinguyen@altera.com>, Rayagond Kokatanur <rayagond@vayavyalabs.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 22 Jan 2014 13:57:40 +0800, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> The of_update_property() is intented to update a property in a node
-> and if the property does not exist, will add it.
-> 
-> The second search of the property is possibly won't be found, that
-> maybe removed by other thread just before the second search begain.
-> 
-> Using the __of_find_property() and __of_add_property() instead and
-> move them into lock operations.
-> 
-> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Cc: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+On Fri, Jan 31, 2014 at 2:15 PM, Vince Bridgers <vbridgers2013@gmail.com> wrote:
+> This change adds bindings for the number of multicast hash bins and perfect
+> filter entries supported by the Synopsys EMAC. The Synopsys EMAC core is
+> configurable at device creation time, and can be configured for a different
+> number of multicast hash bins and a different number of perfect filter entries.
+> The device does not provide a way to query these parameters, therefore
+> parameters are required. The Altera Cyclone V SOC has support for 256
+> multicast hash bins and 128 perfect filter entries, and is different than
+> what's currently provided in the stmmac driver.
+>
+> Signed-off-by: Vince Bridgers <vbridgers2013@gmail.com>
 
-Applied, thanks
-
-g.
+Acked-by: Rob Herring <robh@kernel.org>
 
 > ---
->  drivers/of/base.c | 36 ++++++++++++++----------------------
->  1 file changed, 14 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index b86b77a..458072d 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1573,7 +1573,7 @@ int of_update_property(struct device_node *np, struct property *newprop)
->  {
->  	struct property **next, *oldprop;
->  	unsigned long flags;
-> -	int rc, found = 0;
-> +	int rc = 0;
->  
->  	rc = of_property_notify(OF_RECONFIG_UPDATE_PROPERTY, np, newprop);
->  	if (rc)
-> @@ -1582,36 +1582,28 @@ int of_update_property(struct device_node *np, struct property *newprop)
->  	if (!newprop->name)
->  		return -EINVAL;
->  
-> -	oldprop = of_find_property(np, newprop->name, NULL);
-> -	if (!oldprop)
-> -		return of_add_property(np, newprop);
-> -
->  	raw_spin_lock_irqsave(&devtree_lock, flags);
-> -	next = &np->properties;
-> -	while (*next) {
-> -		if (*next == oldprop) {
-> -			/* found the node */
-> -			newprop->next = oldprop->next;
-> -			*next = newprop;
-> -			oldprop->next = np->deadprops;
-> -			np->deadprops = oldprop;
-> -			found = 1;
-> -			break;
-> -		}
-> -		next = &(*next)->next;
-> +	oldprop = __of_find_property(np, newprop->name, NULL);
-> +	if (!oldprop) {
-> +		/* add the node */
-> +		rc = __of_add_property(np, newprop);
-> +	} else {
-> +		/* replace the node */
-> +		next = &oldprop;
-> +		newprop->next = oldprop->next;
-> +		*next = newprop;
-> +		oldprop->next = np->deadprops;
-> +		np->deadprops = oldprop;
->  	}
->  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
->  
-> -	if (!found)
-> -		return -ENODEV;
-> -
->  #ifdef CONFIG_PROC_DEVICETREE
->  	/* try to add to proc as well if it was initialized */
-> -	if (np->pde)
-> +	if (!rc && np->pde)
->  		proc_device_tree_update_prop(np->pde, newprop, oldprop);
->  #endif /* CONFIG_PROC_DEVICETREE */
->  
-> -	return 0;
-> +	return rc;
->  }
->  
->  #if defined(CONFIG_OF_DYNAMIC)
-> -- 
-> 1.8.4
-> 
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  Documentation/devicetree/bindings/net/stmmac.txt |    6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+> index 9d92d42..dbf7498 100644
+> --- a/Documentation/devicetree/bindings/net/stmmac.txt
+> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
+> @@ -34,6 +34,10 @@ Optional properties:
+>         reset phandle is given
+>  - max-frame-size:      Maximum Transfer Unit (IEEE defined MTU), rather
+>                         than the maximum frame size.
+> +- snps,multicast-filter-bins:  Number of multicast filter hash bins
+> +                               supported by this device instance
+> +- snps,perfect-filter-entries: Number of perfect filter entries supported
+> +                               by this device instance
+>
+>  Examples:
+>
+> @@ -46,4 +50,6 @@ Examples:
+>                 mac-address = [000000000000]; /* Filled in by U-Boot */
+>                 max-frame-size = <3800>;
+>                 phy-mode = "gmii";
+> +               snps,multicast-filter-bins = <256>;
+> +               snps,perfect-filter-entries = <128>;
+>         };
+> --
+> 1.7.9.5
+>
