@@ -1,59 +1,105 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/6] regulator: add bcm59056 pmu DT binding
-Date: Tue, 4 Feb 2014 17:23:09 +0000
-Message-ID: <20140204172309.GG22609@sirena.org.uk>
-References: <1391516352-32359-1-git-send-email-mporter@linaro.org>
- <1391516352-32359-3-git-send-email-mporter@linaro.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PfY+OYVI0N/4DRLF"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1391516352-32359-3-git-send-email-mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux I2C List <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2 2/2] of: fix of_update_property()
+Date: Tue, 04 Feb 2014 17:24:36 +0000
+Message-ID: <20140204172436.7EC3FC4050F@trevor.secretlab.ca>
+References: <1390370260-11273-1-git-send-email-Li.Xiubo@freescale.com> < 1390370260-11273-2-git-send-email-Li.Xiubo@freescale.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1390370260-11273-2-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 22 Jan 2014 13:57:40 +0800, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> The of_update_property() is intented to update a property in a node
+> and if the property does not exist, will add it.
+> 
+> The second search of the property is possibly won't be found, that
+> maybe removed by other thread just before the second search begain.
+> 
+> Using the __of_find_property() and __of_add_property() instead and
+> move them into lock operations.
+> 
+> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Cc: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 
---PfY+OYVI0N/4DRLF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Applied, thanks
 
-On Tue, Feb 04, 2014 at 07:19:08AM -0500, Matt Porter wrote:
-> Add a DT binding for the BCM59056 PMU. The binding inherits from
-> the generic regulator bindings.
+g.
 
-Is this really only a regulator - does the chip have no other functions?
+> ---
+>  drivers/of/base.c | 36 ++++++++++++++----------------------
+>  1 file changed, 14 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index b86b77a..458072d 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1573,7 +1573,7 @@ int of_update_property(struct device_node *np, struct property *newprop)
+>  {
+>  	struct property **next, *oldprop;
+>  	unsigned long flags;
+> -	int rc, found = 0;
+> +	int rc = 0;
+>  
+>  	rc = of_property_notify(OF_RECONFIG_UPDATE_PROPERTY, np, newprop);
+>  	if (rc)
+> @@ -1582,36 +1582,28 @@ int of_update_property(struct device_node *np, struct property *newprop)
+>  	if (!newprop->name)
+>  		return -EINVAL;
+>  
+> -	oldprop = of_find_property(np, newprop->name, NULL);
+> -	if (!oldprop)
+> -		return of_add_property(np, newprop);
+> -
+>  	raw_spin_lock_irqsave(&devtree_lock, flags);
+> -	next = &np->properties;
+> -	while (*next) {
+> -		if (*next == oldprop) {
+> -			/* found the node */
+> -			newprop->next = oldprop->next;
+> -			*next = newprop;
+> -			oldprop->next = np->deadprops;
+> -			np->deadprops = oldprop;
+> -			found = 1;
+> -			break;
+> -		}
+> -		next = &(*next)->next;
+> +	oldprop = __of_find_property(np, newprop->name, NULL);
+> +	if (!oldprop) {
+> +		/* add the node */
+> +		rc = __of_add_property(np, newprop);
+> +	} else {
+> +		/* replace the node */
+> +		next = &oldprop;
+> +		newprop->next = oldprop->next;
+> +		*next = newprop;
+> +		oldprop->next = np->deadprops;
+> +		np->deadprops = oldprop;
+>  	}
+>  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  
+> -	if (!found)
+> -		return -ENODEV;
+> -
+>  #ifdef CONFIG_PROC_DEVICETREE
+>  	/* try to add to proc as well if it was initialized */
+> -	if (np->pde)
+> +	if (!rc && np->pde)
+>  		proc_device_tree_update_prop(np->pde, newprop, oldprop);
+>  #endif /* CONFIG_PROC_DEVICETREE */
+>  
+> -	return 0;
+> +	return rc;
+>  }
+>  
+>  #if defined(CONFIG_OF_DYNAMIC)
+> -- 
+> 1.8.4
+> 
+> 
 
-> +- regulators: This is the list of child nodes that specify the regulator
-> +  initialization data for defined regulators.  Generic regulator bindings
-> +  are described in regulator/regulator.txt.
-
-The regulators property should always be optional, the driver should be
-able to start up and read back the hardware state without any further
-configuration.
-
---PfY+OYVI0N/4DRLF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS8SH6AAoJELSic+t+oim9rsYP/1L1zj3GN9KmZgnHe+QCaAtu
-6WqNIr5o73Yird56+njBW2CXcIWh4eK1MzAiX7ahmqeBebQY5M08Zqff0kOklZZg
-JIua3A4HWFjFw9yPwc5AI/5tCwAedRVIkj/+FoMJRDuWiUb4PdzzjB9LL+U3+A14
-tIWGNDN09pp1iZQpAVUipYaI6yY2Yk4d8MkTEqBAn+wH/gxmoYzLz0CCb4oFQ++W
-MWAy+EwT/uIL3Yn9f0rGZ9PjTGhP7ZWKgMg+Ol+V7KXbLm8FnW+8DRX9kV6N1QTp
-hFqRdBUWQf8kD2hVsPAW0FrpvlSJRBoRDpGVkHq4AzO4HpLavncr0tehxfON2Uth
-OSpSr8NoaCo+hh+CfXTLB3dMJFk3zcWjdMisE4IWDBMAh8LIox8IGwPyTAMzvhSr
-scBy/oAZP9QEuxj2JG/HHS/w77cb+WkpeL2+WOmb8nFJyCisNowiXqstGv/sRecT
-Md/2DjumZSGquXl6gvtTKobdsohr938KFowsqlxvoIdBkZbqESv+61Tq8OuBYH28
-qF2ohti6LAORm4cz+CBZ2vrPxLVOOZdEJtg6TEbTaP3263iQvXWf+bUDvph02CC3
-sP/nM+dwnCTOMuPnjhARwnNklM8+4u4lQOYwFqcbW5sMCX1MMHEQZnK9GGb1cQVb
-aD3UAjGRs9AAfG5VnPoa
-=IlGD
------END PGP SIGNATURE-----
-
---PfY+OYVI0N/4DRLF--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
