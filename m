@@ -1,66 +1,61 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [PATCH] arm64: Add architecture support for PCI
-Date: Tue, 4 Feb 2014 11:15:14 -0700
-Message-ID: <20140204181514.GA25695@obsidianresearch.com>
-References: <1391453028-23191-1-git-send-email-Liviu.Dudau@arm.com>
- <CAL_JsqL+3S8w=_Fb-t0rVcq0sDiPSDM6nqn3mR2DHKw=VTffsg@mail.gmail.com>
- <20140203233137.GH2519@obsidianresearch.com>
- <13031998.NR888KZWhk@wuerfel>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: Extending OPP bindings
+Date: Tue, 4 Feb 2014 18:22:20 +0000
+Message-ID: <20140204182220.GQ22609@sirena.org.uk>
+References: <52EA570A.8040501@arm.com>
+ <52EAF1CA.3040702@ti.com>
+ <20140131124620.GC2616@e102568-lin.cambridge.arm.com>
+ <CAL_Jsq+Kq9C39xr9tY8gSX+6QFkNDqwmTyC+dBhLNcxKMweCpw@mail.gmail.com>
+ <20140131180929.GH2616@e102568-lin.cambridge.arm.com>
+ <52F12AE7.904@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cqF3yV8I+FsmjbWd"
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <13031998.NR888KZWhk@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, linux-pci <linux-pci@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <52F12AE7.904@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robherring2@gmail.com>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Eduardo Valentin <eduardo.valentin@ti.com>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Morten Rasmussen <Morten.Rasmussen@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 04, 2014 at 10:44:52AM +0100, Arnd Bergmann wrote:
 
->   Now I want to integrate the EHCI into my SoC and not waste one
->   of my precious PCIe root ports, so I have to create another PCI
->   domain with its own ECAM compliant config space to put it into.
->   Fortunately SBSA lets me add an arbitrary number of PCI domains,
->   as long as they are all strictly compliant. To software it will
+--cqF3yV8I+FsmjbWd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Just to touch on this for others who might be reading..
+On Tue, Feb 04, 2014 at 12:01:11PM -0600, Nishanth Menon wrote:
 
-IMHO any simple SOC that requires multiple domains is *broken*. A
-single domain covers all reasonable needs until you get up to
-mega-scale NUMA systems, encouraging people to design with multiple
-domains only complicates the kernel :(
+> As long as the key to the data sets are all the same (frequency),
+> information in data set #0 is maintained. It would be in our common
+> long term interest to maintain the split.
 
-SOC internal peripherals should all show up in the bus 0 config space
-of the only domain and SOC PCI-E physical ports should show up on bus
-0 as PCI-PCI bridges. This is all covered in the PCI-E specs regarding
-the root complex.
+You're assuming that the frequency is a unique key here.  That may not
+be the case, for example two OPPs might have the same CPU clock
+(assuming that's the frequency you're referring to) but different bus
+clocking and of course the CPUs or CPU clusters might be individually
+scalable (this is common in big.LITTLE designs I think).
 
-Generally I would expect the internal peripherals to still be
-internally connected with AXI, but also connected through the ECAM
-space for configuration, control, power management and address
-assignment.
+--cqF3yV8I+FsmjbWd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> 2. all address windows are set up by the boot loader, we only
->   need to know the location (IMHO this should be the
->   preferred way to do things regardless of SBSA).
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-Linux does a full address map re-assignment on boot, IIRC. You need
-more magics to inhibit that if your BAR's and bridge windows don't
-work.
+iQIcBAEBAgAGBQJS8S/YAAoJELSic+t+oim99BQP/j1FT+qQgadmqP3F7w5/IehD
+dHKamFSXu3NEMECqSE8RdQhNj/8vOXkzaCuZD4oeGtRJLffqFPfPcbT+ubkI/aT8
+5m/5xxxoFv+wB6KdTNrY2JSkEzqoBTSMvO2FxttH7AbGTePgTO9IrmZK8+uulYUx
+H3J1h2TsmPwPGpvFzIyLAuq3jjFxcgxiLAA78iPL/tEPC2ZuYuQg2nyv8LEDU89z
+nfFideyM1XS1ZViR/kOb+cwsQepCOrDIZoDVuk6JAILaIONiQrkyp59IcXYxs+2L
+aaJaMzawSu4c0zPQuWhWpM/wPK/hNQZZ4HvFvE8FpcleAd8Aldcwwc85czbS4d70
+CvOcY+8XiFZgnvrKAPta2LYJtQzjVY7X3xKb3C6f8Roxan0FkziVGUVdnoHv0JnM
+RzlUeCWHSQVnzaZ2z5E7MHoQeWdn9m+EP9m8DLZak9f3X6EoG59VZDV7A/D5fzV9
+sEKQcLVMHKfr4ItsD3qw0CL8ggulqcA+7xB+IlT0HYa29ofourgcm3cGPSNNGgcr
+UQBRJZ2kJyWmbCU4cFltw5a+gGrrkqIBzRVJdbkocU1umucx8oMbGqmzyHLgpzQE
+yxmu/JjT57rEcUX/SdDn2+MzxuAPKRt5qBLqIZ/cwwNltuyOSCADwYSUjmMZSFBj
+Ut9VEFJuJbcdX+vjKm9S
+=iHpU
+-----END PGP SIGNATURE-----
 
-Hot plug is a whole other thing..
-
-> it's possible that the designware based ones get point 4 right.
-
-The designware one's also appear to be re-purposed end point cores, so
-their config handling is somewhat bonkers. Tegra got theirs sort of
-close because they re-used knowledge/IP from their x86 south bridges -
-but even then they didn't really implement ECAM properly for an ARM
-environment.
-
-Since config space is where everyone to date has fallen down, I think
-the SBSA would have been wise to list dword by dword what a typical
-ECAM config space should look like.
-
-Jason
+--cqF3yV8I+FsmjbWd--
