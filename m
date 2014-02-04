@@ -1,57 +1,78 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v4] of: add functions to count number of elements in a property
-Date: Tue, 04 Feb 2014 19:48:17 +0100
-Message-ID: <13514940.URVnEJ4NF0@phil>
-References: <27256277.YJ687suYy5@phil> <CAL_JsqJord1OOjwcKk1jqF5o+XO3uw+Lc4ATtQacgwZWAoQq1g@mail.gmail.com> <20140204173034.2D899C4050F@trevor.secretlab.ca>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V3] net/dt: Add support for overriding phy configuration
+ from device tree
+Date: Tue, 4 Feb 2014 11:01:23 -0800
+Message-ID: <CAGVrzcbo7Ebvq1G7Gn+BJWsN622a5AiC6QkJKuhkpuX3yzUbHA@mail.gmail.com>
+References: <7510122.cayuQ6qt8r@wuerfel> <1389999459-9483-1-git-send-email-matthew.garrett@nebula.com>
+ <1390145654.16433.102.camel@deadeye.wl.decadent.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140204173034.2D899C4050F-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <1390145654.16433.102.camel-nDn/Rdv9kqW9Jme8/bJn5UCKIB8iOfG2tUK59QYPAWc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+To: Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>
+Cc: Matthew Garrett <matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+2014-01-19 Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>:
+> On Fri, 2014-01-17 at 17:57 -0500, Matthew Garrett wrote:
+>> Some hardware may be broken in interesting and board-specific ways, such
+>> that various bits of functionality don't work. This patch provides a
+>> mechanism for overriding mii registers during init based on the contents of
+>> the device tree data, allowing board-specific fixups without having to
+>> pollute generic code.
+> [...]
+>> --- a/Documentation/devicetree/bindings/net/phy.txt
+>> +++ b/Documentation/devicetree/bindings/net/phy.txt
+>> @@ -23,6 +23,21 @@ Optional Properties:
+>>    assume clause 22. The compatible list may also contain other
+>>    elements.
+>>
+>> +The following properties may be added to either the phy node or the parent
+>> +ethernet device. If not present, the hardware defaults will be used.
+>> +
+>> +- phy-mii-advertise-10half: 1 to advertise half-duplex 10MBit, 0 to disable
+>> +- phy-mii-advertise-10full: 1 to advertise full-duplex 10MBit, 0 to disable
+>> +- phy-mii-advertise-100half: 1 to advertise half-duplex 100MBit, 0 to disable
+>> +- phy-mii-advertise-100full: 1 to advertise full-duplex 100MBit, 0 to disable
+>> +- phy-mii-advertise-100base4: 1 to advertise 100base4, 0 to disable
+>> +- phy-mii-advertise-1000half: 1 to advertise half-duplex 1000MBit, 0 to disable
+>> +- phy-mii-advertise-1000full: 1 to advertise full-duplex 1000MBit, 0 to disable
+>
+> Are these really all needed?  Apparently there is a standard 'max-speed'
+> property on Ethernet devices already, which I think is probably
+> sufficient to express the actual restrictions of some boards.
 
-On Tuesday, 4. February 2014 17:30:34 Grant Likely wrote:
-> On Sat, 18 Jan 2014 09:07:30 -0600, Rob Herring <robherring2-Re5JQEeQqe8@public.gmane.org=
-m>=20
-wrote:
-> > On Sat, Jan 18, 2014 at 6:02 AM, Heiko St=C3=BCbner <heiko@sntech.d=
-e> wrote:
-> > > The need to know the number of array elements in a property is
-> > > a common pattern. To prevent duplication of open-coded implementa=
-tions
-> > > add a helper static function that also centralises strict sanity
-> > > checking and DTB format details, as well as a set of wrapper func=
-tions
-> > > for u8, u16, u32 and u64.
-> > >=20
-> > > Suggested-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> > > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> > > ---
-> >=20
-> > Looks good. Do you plan to convert some users to use this?
->=20
-> I'll take that as an acked-by. Merged, thanks.
+This is what I think as well. Maybe there is the need for something
+more fine-grained, although I really doubt it.
 
-before you taking this patch, I was planning on simply sending this as =
-part of=20
-my rockchip-smp series - as I'm currently the only user of it :-) .
+>
+>> +- phy-mii-manual-master: 1 to enable manual master/slave configuration, 0
+>> +  to disable manual master/slave configuration
+> [...]
+>
+> Although the standard calls this 'manual', if it's set in the DT it
+> won't really be a manual setting.  The description should probably
+> clarify that.
+>
+> I think the name should include 'master-slave' or 'clock-role' rather
+> than just 'master', as currently it suggests only the master role can be
+> forced.
 
-This going through your tree is most likely the better way, but now I n=
-eed it=20
-to somehow make its way into arm-soc too ... I guess some sort of stabl=
-e=20
-branch arm-soc could pull?
+Right, and this would match what 802.3-2008, Section 22.2.4.3.7 mentions.
+
+>
+> Ben.
+>
+> --
+> Ben Hutchings
+> friends: People who know you well, but like you anyway.
 
 
-Thanks
-Heiko
+
+-- 
+Florian
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
