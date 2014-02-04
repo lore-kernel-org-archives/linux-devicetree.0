@@ -1,54 +1,137 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v3 09/11] ARM: shmobile: r8a7791 dtsi: Add QSPI node
-Date: Tue,  4 Feb 2014 16:24:03 +0100
-Message-ID: <1391527445-14881-10-git-send-email-geert@linux-m68k.org>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: [PATCH v5 05/11] ARM: shmobile: r7s72100 dtsi: Add RSPI nodes
+Date: Tue,  4 Feb 2014 16:23:59 +0100
+Message-ID: <1391527445-14881-6-git-send-email-geert@linux-m68k.org>
 References: <1391527445-14881-1-git-send-email-geert@linux-m68k.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1391527445-14881-1-git-send-email-geert@linux-m68k.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1391527445-14881-1-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
+From: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
-Cc: devicetree@vger.kernel.org
+Signed-off-by: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
-v3:
+v5:
   - Rebased on top of renesas-devel-v3.14-rc1-20140204
+v4:
+  - Switch to named IRQs
+v3:
+  - No changes
 v2:
   - No changes
 
- arch/arm/boot/dts/r8a7791.dtsi |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm/boot/dts/r7s72100-genmai-reference.dts |    2 +-
+ arch/arm/boot/dts/r7s72100.dtsi                 |   75 +++++++++++++++++++++++
+ 2 files changed, 76 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-index d5cc3626dd60..240c4ece1f0c 100644
---- a/arch/arm/boot/dts/r8a7791.dtsi
-+++ b/arch/arm/boot/dts/r8a7791.dtsi
-@@ -710,4 +710,16 @@
- 			clock-output-names = "scifa3", "scifa4", "scifa5";
- 		};
+diff --git a/arch/arm/boot/dts/r7s72100-genmai-reference.dts b/arch/arm/boot/dts/r7s72100-genmai-reference.dts
+index da19c70ed82b..0849017e9d2f 100644
+--- a/arch/arm/boot/dts/r7s72100-genmai-reference.dts
++++ b/arch/arm/boot/dts/r7s72100-genmai-reference.dts
+@@ -9,7 +9,7 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "r7s72100.dtsi"
++#include "r7s72100.dtsi"
+ 
+ / {
+ 	model = "Genmai";
+diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+index 46b82aa7dc4e..9be67a16fc6f 100644
+--- a/arch/arm/boot/dts/r7s72100.dtsi
++++ b/arch/arm/boot/dts/r7s72100.dtsi
+@@ -8,12 +8,22 @@
+  * kind, whether express or implied.
+  */
+ 
++#include <dt-bindings/interrupt-controller/irq.h>
++
+ / {
+ 	compatible = "renesas,r7s72100";
+ 	interrupt-parent = <&gic>;
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+ 
++	aliases {
++		spi0 = &spi0;
++		spi1 = &spi1;
++		spi2 = &spi2;
++		spi3 = &spi3;
++		spi4 = &spi4;
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -33,4 +43,69 @@
+ 		reg = <0xe8201000 0x1000>,
+ 			<0xe8202000 0x1000>;
  	};
 +
-+	spi: spi@e6b10000 {
-+		compatible = "renesas,qspi-r8a7791", "renesas,qspi";
-+		reg = <0 0xe6b10000 0 0x2c>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 184 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp9_clks R8A7791_CLK_QSPI_MOD>;
++	spi0: spi@e800c800 {
++		compatible = "renesas,rspi-r7s72100", "renesas,rspi-rz";
++		reg = <0xe800c800 0x24>;
++		interrupts = <0 238 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 239 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 240 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "error", "rx", "tx";
++		num-cs = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	spi1: spi@e800d000 {
++		compatible = "renesas,rspi-r7s72100", "renesas,rspi-rz";
++		reg = <0xe800d000 0x24>;
++		interrupts = <0 241 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 242 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 243 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "error", "rx", "tx";
++		num-cs = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	spi2: spi@e800d800 {
++		compatible = "renesas,rspi-r7s72100", "renesas,rspi-rz";
++		reg = <0xe800d800 0x24>;
++		interrupts = <0 244 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 245 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 246 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "error", "rx", "tx";
++		num-cs = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	spi3: spi@e800e000 {
++		compatible = "renesas,rspi-r7s72100", "renesas,rspi-rz";
++		reg = <0xe800e000 0x24>;
++		interrupts = <0 247 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 248 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 249 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "error", "rx", "tx";
++		num-cs = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	spi4: spi@e800e800 {
++		compatible = "renesas,rspi-r7s72100", "renesas,rspi-rz";
++		reg = <0xe800e800 0x24>;
++		interrupts = <0 250 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 251 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 252 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "error", "rx", "tx";
 +		num-cs = <1>;
 +		#address-cells = <1>;
 +		#size-cells = <0>;
@@ -57,3 +140,8 @@ index d5cc3626dd60..240c4ece1f0c 100644
  };
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
