@@ -1,93 +1,198 @@
-From: Andrew Murray <amurray@embedded-bits.co.uk>
-Subject: Re: [PATCH] arm64: Add architecture support for PCI
-Date: Tue, 4 Feb 2014 13:23:17 +0000
-Message-ID: <CAPcvp5HN4pBysOdS5_ep_3Lp7GDDKw4YrgmKjYzBet7PtaOLUg@mail.gmail.com>
-References: <1391453028-23191-1-git-send-email-Liviu.Dudau@arm.com>
-	<1391453028-23191-2-git-send-email-Liviu.Dudau@arm.com>
-	<CAPcvp5EF_=G=VwWLfbw6mwczErTHeq4AbVALYpuAzb3c5eb2rA@mail.gmail.com>
-	<20140204122951.GC27975@e106497-lin.cambridge.arm.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 3/6] mfd: add bcm59056 pmu driver
+Date: Tue, 4 Feb 2014 13:29:51 +0000
+Message-ID: <20140204132951.GE13529@lee--X1>
+References: <1391516352-32359-1-git-send-email-mporter@linaro.org>
+ <1391516352-32359-4-git-send-email-mporter@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140204122951.GC27975@e106497-lin.cambridge.arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Andrew Murray <amurray@embedded-bits.co.uk>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1391516352-32359-4-git-send-email-mporter@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matt Porter <mporter@linaro.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Tim Kryger <tim.kryger@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Christian Daudt <bcm@fixthebug.org>, Devicetree List <devicetree@vger.kernel.org>, Linux I2C List <linux-i2c@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 4 February 2014 12:29, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
-> On Mon, Feb 03, 2014 at 10:34:40PM +0000, Andrew Murray wrote:
->> On 3 February 2014 18:43, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
->> > diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/=
-io.h
->> > index 4cc813e..ce5bad2 100644
->> > --- a/arch/arm64/include/asm/io.h
->> > +++ b/arch/arm64/include/asm/io.h
->> > @@ -120,9 +120,13 @@ static inline u64 __raw_readq(const volatile =
-void __iomem *addr)
->> >  /*
->> >   *  I/O port access primitives.
->> >   */
->> > +#define arch_has_dev_port()    (0)
->> >  #define IO_SPACE_LIMIT         0xffff
->> >  #define PCI_IOBASE             ((void __iomem *)(MODULES_VADDR - =
-SZ_2M))
->> >
->> > +#define ioport_map(port, nr)   (PCI_IOBASE + ((port) & IO_SPACE_L=
-IMIT))
->> > +#define ioport_unmap(addr)
->>
->> I'm not sure that this will work. The in[bwl], out[bwl] macros in
->> arch/arm64/include/asm/io.h already add the PCI_IOBASE offset.
->>
->> Instead of these two #defines, why not just enforce that
->> GENERIC_PCI_IOMAP is enabled? Or at least wrap these defines with 'i=
-f
->> (!config_enabled(CONFIG_GENERIC_PCI_IOMAP))' or similar.
->
-> GENERIC_PCI_IOMAP *is* enabled for AArch64. We have select GENERIC_IO=
-MAP in
-> arch/arm64/Kconfig which in turn selects GENERIC_PCI_IOMAP in lib/Kco=
-nfig.
+> Add a driver for the BCM59056 PMU multi-function device. The driver
+> initially supports regmap initialization and instantiation of the
+> voltage regulator device function of the PMU.
+>=20
+> Signed-off-by: Matt Porter <mporter@linaro.org>
+> Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
+> Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
+> ---
+>  drivers/mfd/Kconfig          |   8 +++
+>  drivers/mfd/Makefile         |   1 +
+>  drivers/mfd/bcm59056.c       | 119 +++++++++++++++++++++++++++++++++=
+++++++++++
+>  include/linux/mfd/bcm59056.h |  35 +++++++++++++
+>  4 files changed, 163 insertions(+)
+>  create mode 100644 drivers/mfd/bcm59056.c
+>  create mode 100644 include/linux/mfd/bcm59056.h
 
-Sorry, it was intent to suggest using the ioport_[map|unmap] functions
-in lib/iomap.c instead of defining something similar here. I guess you
-will also need to also define CONFIG_HAS_IOPORT for this to happen.
+<snip>
 
-Andrew Murray
+> +static struct mfd_cell bcm59056s[] =3D {
+> +	{
+> +		.name =3D "bcm59056-pmu",
 
->
-> Best regards,
-> Liviu
->
->>
->> > +
->> >  static inline u8 inb(unsigned long addr)
->> >  {
->> >         return readb(addr + PCI_IOBASE);
->>
->>
->> Andrew Murray
->>
->
-> --
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> | I would like to |
-> | fix the world,  |
-> | but they're not |
-> | giving me the   |
->  \ source code!  /
->   ---------------
->     =C2=AF\_(=E3=83=84)_/=C2=AF
->
-> -- IMPORTANT NOTICE: The contents of this email and any attachments a=
-re confidential and may also be privileged. If you are not the intended=
- recipient, please notify the sender immediately and do not disclose th=
-e contents to any other person, use it for any purpose, or store or cop=
-y the information in any medium.  Thank you.
->
-> ARM Limited, Registered office 110 Fulbourn Road, Cambridge CB1 9NJ, =
-Registered in England & Wales, Company No:  2557590
-> ARM Holdings plc, Registered office 110 Fulbourn Road, Cambridge CB1 =
-9NJ, Registered in England & Wales, Company No:  2548782
->
+If you plan to use *->of_node in the PMU driver, which it looks like
+you do, you should set the compatible string here.
+
+> +	},
+> +};
+> +
+> +static const struct regmap_config bcm59056_regmap_config =3D {
+> +	.reg_bits	=3D 8,
+> +	.val_bits	=3D 8,
+> +	.max_register	=3D BCM59056_MAX_REGISTER - 1,
+
+If you've just set this manually i.e. it's not part of an enum table,
+can't you set it a value you don't need to do math on? It's not used
+anywhere else is it?
+
+> +	.cache_type	=3D REGCACHE_RBTREE,
+> +};
+> +
+> +static int bcm59056_i2c_probe(struct i2c_client *i2c,
+> +			      const struct i2c_device_id *id)
+> +{
+> +	struct bcm59056 *bcm59056;
+> +	int chip_id =3D id->driver_data;
+
+I thought this was a DT only driver? If so, you probably want to use
+of_match_device() instead.
+
+> +	int ret =3D 0;
+> +
+> +	bcm59056 =3D devm_kzalloc(&i2c->dev, sizeof(*bcm59056), GFP_KERNEL)=
+;
+> +	if (!bcm59056)
+> +		return -ENOMEM;
+> +
+> +	i2c_set_clientdata(i2c, bcm59056);
+> +	bcm59056->dev =3D &i2c->dev;
+> +	bcm59056->i2c_client =3D i2c;
+> +	bcm59056->id =3D chip_id;
+> +
+> +	bcm59056->regmap =3D devm_regmap_init_i2c(i2c, &bcm59056_regmap_con=
+fig);
+> +	if (IS_ERR(bcm59056->regmap)) {
+> +		ret =3D PTR_ERR(bcm59056->regmap);
+> +		dev_err(&i2c->dev, "regmap initialization failed: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret =3D mfd_add_devices(bcm59056->dev, -1,
+> +			      bcm59056s, ARRAY_SIZE(bcm59056s),
+> +			      NULL, 0, NULL);
+
+Are you sure you need all of your #includes?
+
+I notice that irqdomain is there, but you don't actually have one?
+
+> +	if (ret < 0)
+> +		dev_err(&i2c->dev, "mfd_add_devices failed: %d\n", ret);
+
+What if we change the name of the function? Probably better to say
+something like "device registration failed" or thelike.
+
+> +	return ret;
+> +}
+> +
+> +static int bcm59056_i2c_remove(struct i2c_client *i2c)
+> +{
+> +	struct bcm59056 *bcm59056 =3D i2c_get_clientdata(i2c);
+> +
+> +	mfd_remove_devices(bcm59056->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id bcm59056_of_match[] =3D {
+> +	{ .compatible =3D "brcm,bcm59056", .data =3D (void *)BCM59056 },
+
+You've gone to the trouble of setting a device version here, but you
+don't seem to use it?
+
+> +	{ }
+> +};
+> +
+> +static const struct i2c_device_id bcm59056_i2c_id[] =3D {
+> +	{ "bcm59056", BCM59056 },
+> +	{ }
+> +};
+
+Ah, I guess this is where id->driver comes from.
+
+It's pretty silly that the I2C subsystem demands the presence of this
+table, despite not using it if an of_device_id table is present.
+
+> +MODULE_DEVICE_TABLE(i2c, bcm59056_i2c_id);
+> +
+> +static struct i2c_driver bcm59056_i2c_driver =3D {
+> +	.driver =3D {
+> +		   .name =3D "bcm59056",
+> +		   .owner =3D THIS_MODULE,
+> +		   .of_match_table =3D of_match_ptr(bcm59056_of_match),
+
+No need to use of_match_ptr() here.
+
+> +	},
+> +	.probe =3D bcm59056_i2c_probe,
+> +	.remove =3D bcm59056_i2c_remove,
+> +	.id_table =3D bcm59056_i2c_id,
+
+*grumble*
+
+> +};
+> +
+> +static int __init bcm59056_init(void)
+> +{
+> +	return i2c_add_driver(&bcm59056_i2c_driver);
+> +}
+> +subsys_initcall(bcm59056_init);
+
+Really? :(
+
+Maybe you'll want to comment this, in case people do not know the back
+ground and attempts to clean it up.
+
+> +static void __exit bcm59056_exit(void)
+> +{
+> +	i2c_del_driver(&bcm59056_i2c_driver);
+> +}
+> +module_exit(bcm59056_exit);
+
+<snip>
+
+> +/* chip id */
+> +#define BCM59056		0
+
+Lonely, oh so lonely!
+
+> +/* max register address */
+> +#define BCM59056_MAX_REGISTER	0xe8
+
+Don't you have a table of registers which you care about?
+
+> +/* bcm59056 chip access */
+
+Superfluous comment? Don't we all know what these containers do?
+
+> +struct bcm59056 {
+> +	struct device *dev;
+> +	struct i2c_client *i2c_client;
+> +	struct regmap *regmap;
+> +	unsigned int id;
+> +};
+> +
+> +#endif /*  __LINUX_MFD_BCM59056_H */
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
