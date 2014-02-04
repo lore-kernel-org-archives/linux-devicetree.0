@@ -1,42 +1,49 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: Extending OPP bindings
-Date: Tue, 4 Feb 2014 13:28:20 -0600
-Message-ID: <52F13F54.5060000@ti.com>
-References: <52EA570A.8040501@arm.com> <52EAF1CA.3040702@ti.com> <20140131124620.GC2616@e102568-lin.cambridge.arm.com> <CAL_Jsq+Kq9C39xr9tY8gSX+6QFkNDqwmTyC+dBhLNcxKMweCpw@mail.gmail.com> <20140131180929.GH2616@e102568-lin.cambridge.arm.com> <52F12AE7.904@ti.com> <20140204182220.GQ22609@sirena.org.uk>
+From: David =?ISO-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
+Subject: Re: [PATCH v2 0/6] ARM: sunxi: Add driver for SD/MMC
+ hosts found on allwinner sunxi SOCs
+Date: Tue, 04 Feb 2014 20:37 +0100
+Message-ID: <2036604.9RXHkpag8W@dizzy-6.o2s.ch>
+References: <20140204191648.29809.14611.stgit@dizzy-6.o2s.ch>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140204182220.GQ22609@sirena.org.uk>
-Sender: linux-pm-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robherring2@gmail.com>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mturquette@linaro.org" <mturquette@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Eduardo Valentin <eduardo.valentin@ti.com>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Morten Rasmussen <Morten.Rasmussen@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>
+Content-Type: multipart/signed; boundary="nextPart6914529.0bO68eztNJ"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Return-path: <linux-sunxi+bncBD2JL37LXEKRB5UCYWLQKGQEQVKKLDA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140204191648.29809.14611.stgit-GPtPHOohwllnsqa/0SyWJQ@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/04/2014 12:22 PM, Mark Brown wrote:
-> On Tue, Feb 04, 2014 at 12:01:11PM -0600, Nishanth Menon wrote:
-> 
->> As long as the key to the data sets are all the same (frequency),
->> information in data set #0 is maintained. It would be in our common
->> long term interest to maintain the split.
-> 
-> You're assuming that the frequency is a unique key here.  That may not
-> be the case, for example two OPPs might have the same CPU clock
-> (assuming that's the frequency you're referring to) but different bus
-> clocking and of course the CPUs or CPU clusters might be individually
-> scalable (this is common in big.LITTLE designs I think).
-> 
-Which is why OPPs are maintained per device, bus OPPs belong to bus
-device (in TI terminology, we'd be talking of cross domain dependency
-here for maintaining asynchronous bridge timing closure constraints -
-but ofcourse, other SoCs may or maynot have such constraints). For
-scaling bus frequency, we already have infrastructure in place - clock
-notifiers - discussion of using that is much deeper topic of it's own.
 
-for each processor that is uniquely transitioning, we'd have it's own
-sets of OPPs - the correct representation of the device node is the
-key there.
+--nextPart6914529.0bO68eztNJ
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
--- 
-Regards,
-Nishanth Menon
+Hi
+I forgot to mention that the autoparenting patch of Emilios is a crucial 
+depency...
+http://git.o2s.ch/?p=linux-next.git;a=commit;h=f8e936772672a3a6ec934558d2a7aef030c663c4
+Without it, the clock will return the wrong value and the card will refuse to 
+initialize
+
+regards
+david
+--nextPart6914529.0bO68eztNJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iEYEABECAAYFAlLxQWsACgkQAeZw77btGjr+cACcCPHTHkFKjxLx6RD34E+MMR1r
+tAYAoKen1mYCa5cG4CtyTHLjNO657oN6
+=qtJ2
+-----END PGP SIGNATURE-----
+
+--nextPart6914529.0bO68eztNJ--
