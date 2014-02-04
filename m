@@ -1,112 +1,72 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] dma: Add Xilinx AXI Video Direct Memory Access
- Engine driver support
-Date: Tue, 4 Feb 2014 10:58:10 +0530
-Message-ID: <20140204052810.GO10628@intel.com>
-References: <1390409565-4200-1-git-send-email-sthokal@xilinx.com>
- <1390409565-4200-2-git-send-email-sthokal@xilinx.com>
- <52E0FC22.8060903@metafoo.de>
- <CA+mB=1L6yvCwA3mKCwz83LQbXiVau110REV64rYrSzUhGE4ucA@mail.gmail.com>
- <52E2698B.6070001@metafoo.de>
- <20140126135933.GD10628@intel.com>
- <CA+mB=1Jwjn+KSO9yFr=LNVjk3khf0b-LLQamYf+nnSF4bODGPA@mail.gmail.com>
- <CA+mB=1LyX0_VVXZQ-=m3gR2RBeumLrnPTUW3j+Zm1nj7a4exHg@mail.gmail.com>
+From: "Shimoda, Yoshihiro" <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] spi: rspi: fix build error when CONFIG_OF is not set
+Date: Tue, 4 Feb 2014 14:56:40 +0900
+Message-ID: <52F08118.2080904@renesas.com>
+References: <52EEF452.4060205@renesas.com> <alpine.DEB.2.02.1402030939520.25794@ayla.of.borg>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CA+mB=1LyX0_VVXZQ-=m3gR2RBeumLrnPTUW3j+Zm1nj7a4exHg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1402030939520.25794-97SZ98TBZzA1xEWliksxXw@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Development <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 31, 2014 at 12:22:52PM +0530, Srikanth Thokala wrote:
-> >>> >> [...]
-> >>> >>> +/**
-> >>> >>> + * xilinx_vdma_device_control - Configure DMA channel of the device
-> >>> >>> + * @dchan: DMA Channel pointer
-> >>> >>> + * @cmd: DMA control command
-> >>> >>> + * @arg: Channel configuration
-> >>> >>> + *
-> >>> >>> + * Return: '0' on success and failure value on error
-> >>> >>> + */
-> >>> >>> +static int xilinx_vdma_device_control(struct dma_chan *dchan,
-> >>> >>> +                                   enum dma_ctrl_cmd cmd, unsigned long arg)
-> >>> >>> +{
-> >>> >>> +     struct xilinx_vdma_chan *chan = to_xilinx_chan(dchan);
-> >>> >>> +
-> >>> >>> +     switch (cmd) {
-> >>> >>> +     case DMA_TERMINATE_ALL:
-> >>> >>> +             xilinx_vdma_terminate_all(chan);
-> >>> >>> +             return 0;
-> >>> >>> +     case DMA_SLAVE_CONFIG:
-> >>> >>> +             return xilinx_vdma_slave_config(chan,
-> >>> >>> +                                     (struct xilinx_vdma_config *)arg);
-> >>> >>
-> >>> >> You really shouldn't be overloading the generic API with your own semantics.
-> >>> >> DMA_SLAVE_CONFIG should take a dma_slave_config and nothing else.
-> >>> >
-> >>> > Ok.  The driver needs few additional configuration from the slave
-> >>> > device like Vertical
-> >>> > Size, Horizontal Size,  Stride etc., for the DMA transfers, in that case do you
-> >>> > suggest me to define a separate dma_ctrl_cmd like the one FSLDMA_EXTERNAL_START
-> >>> > defined for Freescale drivers?
-> >>>
-> >>> In my opinion it is not a good idea to have driver implement a generic API,
-> >>> but at the same time let the driver have custom semantics for those API
-> >>> calls. It's a bit like having a gpio driver that expects 23 and 42 as the
-> >>> values passed to gpio_set_value instead of 0 and 1. It completely defeats
-> >>> the purpose of a generic API, namely that you are able to write generic code
-> >>> that makes use of the API without having to know about which implementation
-> >>> API it is talking to. The dmaengine framework provides the
-> >>> dmaengine_prep_interleaved_dma() function to setup two dimensional
-> >>> transfers, e.g. take a look at sirf-dma.c or imx-dma.c.
-> >>
-> >> The question here i think would be waht this device supports? Is the hardware
-> >> capable of doing interleaved transfers, then would make sense.
-> >>
-> >> While we do try to get users use dma_slave_config, but there will always be
-> >> someone who have specfic params. If we can generalize then we might want to add
-> >> to the dma_slave_config as well
-> >
-> > There are many configuration parameters which are specific to IP and I
-> > would like to
-> > give an overview of some of parameteres here:
-> >
-> > 1) Park Mode ('cfg->park'): In Park mode, engine will park on frame
-> > referenced by
-> >     'cfg->park_frm', so user will have control on each frame in this mode.
-> >
-> > 2) Interrupt Coalesce ('cfg->coalesce'):  Used for setting interrupt
-> > threshold. This value
-> >    determines the number of frame buffers to process. To use this feature,
-> >    'cfg->frm_cnt_en' should be set.
-> >
-> > 3) Frame Synchronization Source ('cfg->ext_fsync'):  Can be an
-> > external/internal frame
-> >     synchronization source. Used to synchronize one channel (MM2S/S2MM) with
-> >     another (S2MM/MM2S) channel.
-> >
-> > 4) Genlock Synchronization ('cfg->genlock'): Used to avoid mismatch rate between
-> >     master and slave.  In master mode (cfg->master), frames are not dropped and
-> >     slave can drop frames to adjust to master frame rate.
-> >
-> > And in future, this Engine being a soft IP, we could expect some more additional
-> > parameters.  Isn't a good idea to have a private member in dma_slave_config for
-> > sharing additional configuration between slave device and dma engine? Or a new
-> > dma_ctrl_cmd like FSLDMA_EXTERNAL_START?
+Hi Geert-san,
 
-The idea of a generic API is that we can use it for most of the controllers. Even
-if you are planning to support a family of controllers
+(2014/02/03 17:47), Geert Uytterhoeven wrote:
+> 	Hi Shimoda-san,
+> 
+> On Mon, 3 Feb 2014, Shimoda, Yoshihiro wrote:
+>> This patch fixes an issue that the following build error happens when
+>> the CONFIG_OF is not set:
+>>
+>> drivers/spi/spi-rspi.c: In function 'rspi_probe':
+>> drivers/spi/spi-rspi.c:1203:26: error: 'rspi_of_match' undeclared (first use in this function)
+>>
+>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>  This patch is based on the latest origin/topic/rspi branch in the spi.git.
+>>
+>>  drivers/spi/spi-rspi.c |    1 +
+>>  1 files changed, 1 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/drivers/spi/spi-rspi.c b/drivers/spi/spi-rspi.c
+>> index 34ad4bc..e5cfc3d 100644
+>> --- a/drivers/spi/spi-rspi.c
+>> +++ b/drivers/spi/spi-rspi.c
+>> @@ -1164,6 +1164,7 @@ static int rspi_parse_dt(struct device *dev, struct spi_master *master)
+>>  	return 0;
+>>  }
+>>  #else
+>> +#define rspi_of_match	NULL
+>>  static inline int rspi_parse_dt(struct device *dev, struct spi_master *master)
+>>  {
+>>  	return -EINVAL;
+>> -- 
+>> 1.7.1
+> 
+> Thanks, obviously I missed that of_match_device() still uses the ID table
+> parameter if CONFIG_OF=n :-(
+> 
+> Below I have two alternative solutions:
+>   1. Uses rspi_of_match() to nullify the ID table pointer, like is done in
+>      the platform_driver structure,
+>   2. Fixes it at the OF subsystem level, by nullifying the ID table pointer
+>      inside of_match_device().
+> 
+> If 2 is accepted, drivers don't have to care about this anymore.
+> 
+> What do you think?
 
-ATM, lets not discuss the possiblity of private member and try to exhanust all
-possible options. Worst case you can embed the dma_slave_config in
-xilinx_dma_slave_config and retrieve it in dmac driver
+Thank you for the reply.
+I think the 2nd one is a nice idea.
+If I applied it without my patch, the build error disappeared.
 
--- 
-~Vinod
+Best regards,
+Yoshihiro Shimoda
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
