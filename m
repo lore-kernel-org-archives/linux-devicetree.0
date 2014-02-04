@@ -1,55 +1,69 @@
-From: Tim Kryger <tim.kryger@linaro.org>
-Subject: [PATCH v2 0/5] Add Broadcom Kona PWM Support
-Date: Tue, 4 Feb 2014 11:51:38 -0800
-Message-ID: <1391543503-14773-1-git-send-email-tim.kryger@linaro.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 3/5] ASoC: tda998x: add DT documentation of the
+ tda998x CODEC
+Date: Tue, 4 Feb 2014 19:54:47 +0000
+Message-ID: <20140204195447.GY22609@sirena.org.uk>
+References: <cover.1391274627.git.moinejf@free.fr>
+ <8e4231b7a55802f58a14dd07ac5cd8b0babb1dce.1391274628.git.moinejf@free.fr>
+ <20140204181213.GO22609@sirena.org.uk>
+ <20140204200239.1baf309b@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar
- Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Grant Likely <grant.likely@linaro.org>
-Cc: Linux PWM List <linux-pwm@vger.kernel.org>, Linux Doc List <linux-doc@vger.kernel.org>, Tim Kryger <tim.kryger@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="aV+nM5O4EiZgYTzs"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140204200239.1baf309b@armhf>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Dave Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-This series introduces the driver for the Kona PWM controller found in
-Broadcom mobile SoCs like bcm281xx and updates the device tree and the
-defconfig to enable use of this hardware on the bcm28155 AP board.
 
-Changes since v1:
-  - Fixed up macros to be clearer and more complete
-  - Corrected spelling and punctuation mistakes
-  - Added support for polarity
-  - Made peripheral clock use more efficient
-  - Made prescale and duty computation clearer
-  - Moved Makefile addition to keep alphabetical
-  - Split complex lines into multiple steps
+--aV+nM5O4EiZgYTzs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Tim Kryger (5):
-  Documentation: dt: Add Kona PWM binding
-  pwm: kona: Introduce Kona PWM controller support
-  ARM: dts: Declare the PWM for bcm11351 (bcm281xx)
-  ARM: dts: Enable the PWM for bcm28155 AP board
-  ARM: bcm_defconfig: Enable PWM and Backlight
+On Tue, Feb 04, 2014 at 08:02:39PM +0100, Jean-Francois Moine wrote:
+> Mark Brown <broonie@kernel.org> wrote:
 
- .../devicetree/bindings/pwm/bcm-kona-pwm.txt       |  24 ++
- arch/arm/boot/dts/bcm11351.dtsi                    |   8 +
- arch/arm/boot/dts/bcm28155-ap.dts                  |   4 +
- arch/arm/configs/bcm_defconfig                     |   2 +
- drivers/pwm/Kconfig                                |  10 +
- drivers/pwm/Makefile                               |   1 +
- drivers/pwm/pwm-bcm-kona.c                         | 291 +++++++++++++++++++++
- 7 files changed, 340 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
- create mode 100644 drivers/pwm/pwm-bcm-kona.c
+> > On Sat, Feb 01, 2014 at 05:48:49PM +0100, Jean-Francois Moine wrote:
 
--- 
-1.8.0.1
+> > > +	- compatible: must be "nxp,tda998x-codec".
+
+> > It's not clear to me why there's a separate compatible here - as far as
+> > I can see this can only appear as part of one of these devices and
+> > there's no addressing or other information that'd account for chip
+> > variation so I'd not expect to need to bind this independently of the
+> > parent.
+
+> If there is no 'compatible', the CODEC module is not loaded, and, when
+> the module is in the core, no CODEC device can be created from the DT.
+
+You're confusing implementation details with device tree specification
+here.  We can easily handle loading a subdriver without having to put
+anything in the device tree, just create a platform device like we do
+with MFDs.
+
+--aV+nM5O4EiZgYTzs
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS8UWEAAoJELSic+t+oim9mBoP/iOWL3+ui3vOiZmu1ytj1RLR
+frT3ePQ+8wF2mTaDx23u8i8ijG6ZlgAslVFwZb1/jKu/2H4paCF9YGVqv0ilRGLw
+PtbEgXScTxC+M1DJyIf4b4F5h0d7PBXaBVMTRx2Hs1Mz/7/Z9TwbLslXT/txGX/G
+RfAqppgYkg6aj/DQeShW1GjzW13nG+lV5j6ShjJJ/2qkpdT536/berUmOahdgvlV
+CzbsyPYoyY07vkptX+UJDuBc495cSrdKJlNDY9CheIV+X+V8Y6sL7bn0Zv8aERXw
+GxrfF7PDiSwvCk29zFqIVTXyDktl6UuPuuG+oYm3wT8ZFY3c3hZnIT40rHOapMH7
+apjvfwK2N2d10YUsWKPlLf2ouMX/xcgxCnHwV6X30Y6SN3QrT9sfEEFoTE2Z+s9p
+Zdzv5ZfP9OwezpzdiSz4kJ4dRPbk//9QKwXmymb8MIguD0xHphbKk/u27CIEzHkb
+fhuOigpW2YGQ0I8kfxdD+V6WkwqksTi6c2Y2LxdVMac2DidieBJIMeDUMf84+mYp
+3OJfk1637Cmy99SD0NgS58lo7Fc83K9KJyoRzRSS381mjJvjdQcUEuHuKPz0hq8t
+TP/lPCHExlk55ps/pzQktTZcrJa8YRsd682RX6SUdnlf5m+WfhibDFu53J3dQLnj
+ZU3j8MOYw8Lh46UyIQbO
+=vhoH
+-----END PGP SIGNATURE-----
+
+--aV+nM5O4EiZgYTzs--
