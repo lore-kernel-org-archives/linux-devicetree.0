@@ -1,60 +1,56 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] of: fix PCI bus match for PCIe slots
-Date: Tue, 04 Feb 2014 14:32:38 +0000
-Message-ID: <20140204143238.E17E3C407C9@trevor.secretlab.ca>
-References: <1391441463-12461-1-git-send-email-klebers@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1391441463-12461-1-git-send-email-klebers-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Brian King <brking-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kleber Sacilotto de Souza <klebers-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/6] BCM59056 PMU regulator support
+Date: Tue, 4 Feb 2014 09:34:09 -0500
+Message-ID: <20140204143409.GB4627@beef>
+References: <1391516352-32359-1-git-send-email-mporter@linaro.org>
+ <20140204134043.GG13529@lee--X1>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140204134043.GG13529@lee--X1>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux I2C List <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon,  3 Feb 2014 13:31:03 -0200, Kleber Sacilotto de Souza <klebers-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> wrote:
-> On IBM pseries systems the device_type device-tree property of a PCIe
-> bridge contains the string "pciex". The of_bus_pci_match() function was
-> looking only for "pci" on this property, so in such cases the bus
-> matching code was falling back to the default bus, causing problems on
-> functions that should be using "assigned-addresses" for region address
-> translation. This patch fixes the problem by also looking for "pciex" on
-> the PCI bus match function.
+On Tue, Feb 04, 2014 at 01:40:43PM +0000, Lee Jones wrote:
+> > The BCM59056 is a multi-function power management unit used with the
+> > BCM281xx family of SoCs. This series adds an MFD and voltage regulator
+> > driver to support the BCM59056. The bcm28155-ap DT support is updated
+> > to enable use of regulators on the otg and sdhci peripherals.
+> > 
+> > Matt Porter (6):
+> >   i2c: bcm-kona: register with subsys_initcall
+> >   regulator: add bcm59056 pmu DT binding
+> >   mfd: add bcm59056 pmu driver
+> >   regulator: add bcm59056 regulator driver
+> >   ARM: configs: bcm_defconfig: enable bcm59056 regulator support
+> >   ARM: dts: add bcm59056 pmu support and enable for bcm28155-ap
+> > 
+> >  .../devicetree/bindings/regulator/bcm59056.txt     |  37 ++
+> >  arch/arm/boot/dts/bcm28155-ap.dts                  |  41 ++
+> >  arch/arm/boot/dts/bcm59056.dtsi                    | 158 ++++++++
+> >  arch/arm/configs/bcm_defconfig                     |   7 +
+> >  drivers/i2c/busses/i2c-bcm-kona.c                  |  14 +-
+> >  drivers/mfd/Kconfig                                |   8 +
+> >  drivers/mfd/Makefile                               |   1 +
+> >  drivers/mfd/bcm59056.c                             | 119 ++++++
+> >  drivers/regulator/Kconfig                          |   8 +
+> >  drivers/regulator/Makefile                         |   1 +
+> >  drivers/regulator/bcm59056-regulator.c             | 445 +++++++++++++++++++++
+> >  include/linux/mfd/bcm59056.h                       |  35 ++
+> >  12 files changed, 873 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/devicetree/bindings/regulator/bcm59056.txt
+> >  create mode 100644 arch/arm/boot/dts/bcm59056.dtsi
+> >  create mode 100644 drivers/mfd/bcm59056.c
+> >  create mode 100644 drivers/regulator/bcm59056-regulator.c
+> >  create mode 100644 include/linux/mfd/bcm59056.h
 > 
-> v2: added comment
-> 
-> Signed-off-by: Kleber Sacilotto de Souza <klebers-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> FYI: Mark's email address is not correct. Not sure where you pulled
+> this one up from, but he doesn't have access to it anymore.
 
-Applied, thanks.
+Thanks, I already updated (it was a stale .mutt/aliases entry here) it
+after the bounces.
 
-g.
-
-> ---
->  drivers/of/address.c |    5 +++--
->  1 files changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index d3dd41c..1a54f1f 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -99,11 +99,12 @@ static unsigned int of_bus_default_get_flags(const __be32 *addr)
->  static int of_bus_pci_match(struct device_node *np)
->  {
->  	/*
-> + 	 * "pciex" is PCI Express
->  	 * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
->  	 * "ht" is hypertransport
->  	 */
-> -	return !strcmp(np->type, "pci") || !strcmp(np->type, "vci") ||
-> -		!strcmp(np->type, "ht");
-> +	return !strcmp(np->type, "pci") || !strcmp(np->type, "pciex") ||
-> +		!strcmp(np->type, "vci") || !strcmp(np->type, "ht");
->  }
->  
->  static void of_bus_pci_count_cells(struct device_node *np,
-> -- 
-> 1.7.1
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Matt
