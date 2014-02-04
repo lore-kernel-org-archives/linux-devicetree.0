@@ -1,94 +1,68 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH] ARM: dts: omap3-ldp: fix mmc configuration
-Date: Tue, 4 Feb 2014 09:16:29 -0600
-Message-ID: <52F1044D.2020004@ti.com>
-References: <1390260873-22354-1-git-send-email-nm@ti.com>
- <52F0E109.30801@ti.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/6] mfd: add bcm59056 pmu driver
+Date: Tue, 4 Feb 2014 15:20:56 +0000
+Message-ID: <20140204152056.GB3154@lee--X1>
+References: <1391516352-32359-1-git-send-email-mporter@linaro.org>
+ <1391516352-32359-4-git-send-email-mporter@linaro.org>
+ <20140204132951.GE13529@lee--X1>
+ <20140204143119.GA4627@beef>
+ <20140204144731.GA3154@lee--X1>
+ <20140204150156.GC4627@beef>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52F0E109.30801@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Balaji T K <balajitk@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140204150156.GC4627@beef>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux I2C List <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/04/2014 06:46 AM, Balaji T K wrote:
-> On Tuesday 21 January 2014 05:04 AM, Nishanth Menon wrote:
->> MMC1 is the only MMC interface available on the platform. Further,
->> since the platform is based on older revision of SoC which is not
->> capable of doing multi-block writes, mark it so and add pinmux
-> 
-> s/writes/read
-arrgh.. yes.
+> > ... then you'll still need this.
+>=20
+> Yes, I was far too vague..I'm going to stop explicitly populating the
+> data field.
+>=20
+> static const struct of_device_id bcm59056_of_match[] =3D {
+> 	{ .compatible =3D "brcm,bcm59056"},
+> 	{ }
+> };
 
-> 
-> Thanks and Regards,
-> Balaji T K
-> 
->> to ensure that all relevant pins are configured for non-MMC boot
->> mode.
->>
->> Signed-off-by: Nishanth Menon <nm@ti.com>
->> ---
->> ti,erratum-2.1.1.128 introduced in https://patchwork.kernel.org/patch/3514851/
->> hence depends on the same.
->>   arch/arm/boot/dts/omap3-ldp.dts |   22 ++++++++++++++++++++++
->>   1 file changed, 22 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/omap3-ldp.dts b/arch/arm/boot/dts/omap3-ldp.dts
->> index ddce0d8..bc0cc66 100644
->> --- a/arch/arm/boot/dts/omap3-ldp.dts
->> +++ b/arch/arm/boot/dts/omap3-ldp.dts
->> @@ -176,6 +176,17 @@
->>   &mmc1 {
->>   	vmmc-supply = <&vmmc1>;
->>   	bus-width = <4>;
->> +	ti,erratum-2.1.1.128;
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&mmc1_pins>;
->> +};
->> +
->> +&mmc2 {
->> +	status="disabled";
->> +};
->> +
->> +&mmc3 {
->> +	status="disabled";
->>   };
->>
->>   &omap3_pmx_core {
->> @@ -209,6 +220,17 @@
->>   			0x174 (PIN_OUTPUT | MUX_MODE0)	/* hsusb0_stp.hsusb0_stp */
->>   		>;
->>   	};
->> +
->> +	mmc1_pins: pinmux_mmc1_pins {
->> +		pinctrl-single,pins = <
->> +			OMAP3_CORE1_IOPAD(0x2144, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc1_clk.mmc1_clk */
->> +			OMAP3_CORE1_IOPAD(0x2146, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc1_cmd.mmc1_cmd */
->> +			OMAP3_CORE1_IOPAD(0x2148, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc1_dat0.mmc1_dat0 */
->> +			OMAP3_CORE1_IOPAD(0x214A, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc1_dat1.mmc1_dat1 */
->> +			OMAP3_CORE1_IOPAD(0x214C, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc1_dat2.mmc1_dat2 */
->> +			OMAP3_CORE1_IOPAD(0x214e, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc1_dat3.mmc1_dat3 */
->> +		>;
->> +	};
->>   };
->>
->>   &usb_otg_hs {
->>
-> 
++1
 
+> > And I don't think you can drop this, as the I2C subsystem still
+> > insists on it.
+>=20
+> Agreed. I'm just dropping explicit population of the driver_data fiel=
+d
+> here.
+>=20
+> static const struct i2c_device_id bcm59056_i2c_id[] =3D {
+> 	{ "bcm59056" },
+> 	{ }
+> };
 
--- 
-Regards,
-Nishanth Menon
++1
+
+> > I think you need to keep this to supply the silly I2C ID table.
+> >=20
+> > I would just omit the '.data =3D (void *) VERSION' from the
+> > of_match_table until you require it.=20
+>=20
+> Well, it's not even necessary for I2C ID table. the I2C subsystem is
+> happy with just a matching entry on the i2c_device_id name field and
+> NULL driver_data. palmas is implemented in this manner.
+
+Guess what? +1 :)
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
