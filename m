@@ -1,42 +1,70 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [PATCH v3 3/5] ASoC: tda998x: add DT documentation of the
-	tda998x CODEC
-Date: Tue, 4 Feb 2014 20:02:39 +0100
-Message-ID: <20140204200239.1baf309b@armhf>
-References: <cover.1391274627.git.moinejf@free.fr>
-	<8e4231b7a55802f58a14dd07ac5cd8b0babb1dce.1391274628.git.moinejf@free.fr>
-	<20140204181213.GO22609@sirena.org.uk>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [PATCH] arm64: Add architecture support for PCI
+Date: Tue, 4 Feb 2014 12:10:55 -0700
+Message-ID: <20140204191055.GC25695@obsidianresearch.com>
+References: <1391453028-23191-1-git-send-email-Liviu.Dudau@arm.com>
+ <13031998.NR888KZWhk@wuerfel>
+ <20140204181514.GA25695@obsidianresearch.com>
+ <8676627.b6SYsazoah@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20140204181213.GO22609@sirena.org.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces@lists.freedesktop.org
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <8676627.b6SYsazoah@wuerfel>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, linux-pci <linux-pci@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCA0IEZlYiAyMDE0IDE4OjEyOjEzICswMDAwCk1hcmsgQnJvd24gPGJyb29uaWVAa2Vy
-bmVsLm9yZz4gd3JvdGU6Cgo+IE9uIFNhdCwgRmViIDAxLCAyMDE0IGF0IDA1OjQ4OjQ5UE0gKzAx
-MDAsIEplYW4tRnJhbmNvaXMgTW9pbmUgd3JvdGU6Cj4gCj4gPiArCS0gY29tcGF0aWJsZTogbXVz
-dCBiZSAibnhwLHRkYTk5OHgtY29kZWMiLgo+IAo+IEl0J3Mgbm90IGNsZWFyIHRvIG1lIHdoeSB0
-aGVyZSdzIGEgc2VwYXJhdGUgY29tcGF0aWJsZSBoZXJlIC0gYXMgZmFyIGFzCj4gSSBjYW4gc2Vl
-IHRoaXMgY2FuIG9ubHkgYXBwZWFyIGFzIHBhcnQgb2Ygb25lIG9mIHRoZXNlIGRldmljZXMgYW5k
-Cj4gdGhlcmUncyBubyBhZGRyZXNzaW5nIG9yIG90aGVyIGluZm9ybWF0aW9uIHRoYXQnZCBhY2Nv
-dW50IGZvciBjaGlwCj4gdmFyaWF0aW9uIHNvIEknZCBub3QgZXhwZWN0IHRvIG5lZWQgdG8gYmlu
-ZCB0aGlzIGluZGVwZW5kZW50bHkgb2YgdGhlCj4gcGFyZW50LgoKSWYgdGhlcmUgaXMgbm8gJ2Nv
-bXBhdGlibGUnLCB0aGUgQ09ERUMgbW9kdWxlIGlzIG5vdCBsb2FkZWQsIGFuZCwgd2hlbgp0aGUg
-bW9kdWxlIGlzIGluIHRoZSBjb3JlLCBubyBDT0RFQyBkZXZpY2UgY2FuIGJlIGNyZWF0ZWQgZnJv
-bSB0aGUgRFQuCgotLSAKS2VuIGFyIGMnaGVudGHDsQl8CSAgICAgICoqIEJyZWl6aCBoYSBMaW51
-eCBhdGF2ISAqKgpKZWYJCXwJCWh0dHA6Ly9tb2luZWpmLmZyZWUuZnIvCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Tue, Feb 04, 2014 at 07:34:50PM +0100, Arnd Bergmann wrote:
+
+> Well, the way I see it, we already have support for arbitrary
+> PCI domains in the kernel, and that works fine, so we can just
+> as well use it. That way we don't have to partition the available
+> 256 buses among the host bridges, and anything that needs a separate
+> PCI config space can live in its own world. Quite often when you
+> have multiple PCI hosts, they actually have different ways to
+> get at the config space and don't even share the same driver.
+
+> On x86, any kind of HT/PCI/PCIe/PCI-x bridge is stuffed into a
+> single domain so they can support OSs that only know the
+> traditional config space access methods, but I don't see
+> any real advantage to that for other architectures.
+
+Supporting a standard configration interface is a solid reason, but
+there is alot more going on.
+
+For instance to support peer-to-peer IO you need to have a consisent,
+non-overlapping set of bus/device/function/tag to uniquely route TLPs
+within the chip. Cross domain TLP routing in HW is non-trivial.
+
+IOMMUs (and SR-IOv) rely on the BDF to identify the originating device
+for each TLP. Multiple domains means a much more complex IOMMU
+environment.
+
+Failure to integrate on-chip devices into the PCI world also means
+thing like SR-IOv won't work sanely with on-chip devices.
+
+The only reason we should see multi-domain on a SOC is because the HW
+design was lazy. Being lazy misses the Big Picture where PCI is the
+cornerstone of many important Server/Enterprise technologies.
+
+> > SOC internal peripherals should all show up in the bus 0 config space
+> > of the only domain and SOC PCI-E physical ports should show up on bus
+> > 0 as PCI-PCI bridges. This is all covered in the PCI-E specs regarding
+> > the root complex.
+> > 
+> > Generally I would expect the internal peripherals to still be
+> > internally connected with AXI, but also connected through the ECAM
+> > space for configuration, control, power management and address
+> > assignment.
+> 
+> That would of course be very nice from a software perspective,
+> but I think that is much less likely for any practical
+> implementation.
+
+Well, all x86 implementations do this already.. It actually isn't that
+big a deal from a HW perspective, you just have to think about it
+fully, understand PCI, and position your registers accordingly.
+
+Jason
