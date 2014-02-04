@@ -1,74 +1,64 @@
-From: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v4 2/3] clocksource: keystone: add bindings for keystone timer
-Date: Tue, 4 Feb 2014 13:30:52 +0200
-Message-ID: <1391513453-21140-3-git-send-email-ivan.khoronzhuk@ti.com>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Subject: [PATCH v4 3/3] arm: dts: keystone: add keystone timer entry
+Date: Tue, 4 Feb 2014 13:30:53 +0200
+Message-ID: <1391513453-21140-4-git-send-email-ivan.khoronzhuk@ti.com>
 References: <1391513453-21140-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1391513453-21140-1-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: santosh.shilimkar-l0cyMroinI0@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1391513453-21140-1-git-send-email-ivan.khoronzhuk@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: santosh.shilimkar@ti.com, rob@landley.net, linux@arm.linux.org.uk, galak@codeaurora.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, grygorii.strashko@ti.com, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch provides bindings for the 64-bit timer in the KeyStone
-architecture devices. The timer can be configured as a general-purpose 64-bit
-timer, dual general-purpose 32-bit timers. When configured as dual 32-bit
-timers, each half can operate in conjunction (chain mode) or independently
-(unchained mode) of each other.
+Add keystone timer entry to keystone device tree.
+This 64-bit timer is used as backup clock event device.
 
-It is global timer is a free running up-counter and can generate interrupt
-when the counter reaches preset counter values.
-
-Documentation:
-http://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
-
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 ---
- .../bindings/timer/ti,keystone-timer.txt           | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/ti,keystone-timer.txt
+ arch/arm/boot/dts/keystone-clocks.dtsi | 10 ++++++++++
+ arch/arm/boot/dts/keystone.dtsi        |  7 +++++++
+ 2 files changed, 17 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/timer/ti,keystone-timer.txt b/Documentation/devicetree/bindings/timer/ti,keystone-timer.txt
-new file mode 100644
-index 0000000..5fbe361
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/ti,keystone-timer.txt
-@@ -0,0 +1,29 @@
-+* Device tree bindings for Texas instruments Keystone timer
+diff --git a/arch/arm/boot/dts/keystone-clocks.dtsi b/arch/arm/boot/dts/keystone-clocks.dtsi
+index 2363593..16d2aba 100644
+--- a/arch/arm/boot/dts/keystone-clocks.dtsi
++++ b/arch/arm/boot/dts/keystone-clocks.dtsi
+@@ -737,6 +737,16 @@ clocks {
+ 		domain-id = <0>;
+ 	};
+ 
++	clktimer15: clktimer15 {
++		#clock-cells = <0>;
++		compatible = "ti,keystone,psc-clock";
++		clocks = <&clkmodrst0>;
++		clock-output-names = "timer15";
++		reg = <0x02350000 0xb00>, <0x02350000 0x400>;
++		reg-names = "control", "domain";
++		domain-id = <0>;
++	};
 +
-+This document provides bindings for the 64-bit timer in the KeyStone
-+architecture devices. The timer can be configured as a general-purpose 64-bit
-+timer, dual general-purpose 32-bit timers. When configured as dual 32-bit
-+timers, each half can operate in conjunction (chain mode) or independently
-+(unchained mode) of each other.
+ 	clkuart0: clkuart0 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+index b420290..cac9841 100644
+--- a/arch/arm/boot/dts/keystone.dtsi
++++ b/arch/arm/boot/dts/keystone.dtsi
+@@ -208,5 +208,12 @@
+ 				usb-phy = <&usb_phy>, <&usb_phy>;
+ 			};
+ 		};
 +
-+It is global timer is a free running up-counter and can generate interrupt
-+when the counter reaches preset counter values.
-+
-+Documentation:
-+http://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
-+
-+Required properties:
-+
-+- compatible : should be "ti,keystone-timer".
-+- reg : specifies base physical address and count of the registers.
-+- interrupts : interrupt generated by the timer.
-+- clocks : the clock feeding the timer clock.
-+
-+Example:
-+
-+timer@22f0000 {
-+	compatible = "ti,keystone-timer";
-+	reg = <0x022f0000 0x80>;
-+	interrupts = <GIC_SPI 110 IRQ_TYPE_EDGE_RISING>;
-+	clocks = <&clktimer15>;
-+};
++		clock_event: timer@22f0000 {
++			compatible = "ti,keystone-timer";
++			reg = <0x022f0000 0x80>;
++			interrupts = <GIC_SPI 110 IRQ_TYPE_EDGE_RISING>;
++			clocks = <&clktimer15>;
++		};
+ 	};
+ };
 -- 
 1.8.3.2
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
