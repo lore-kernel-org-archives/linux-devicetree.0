@@ -1,50 +1,78 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH] DT: net: document Ethernet bindings in one place
-Date: Wed, 05 Feb 2014 12:08:43 +0000
-Message-ID: <20140205120843.9ED08C40A89@trevor.secretlab.ca>
-References: <201401180405.07859.sergei.shtylyov@cogentembedded.com> < CAL_Jsq+oa9P=rh+p-dMZyGP8TcmpX7bTnMU0ynLvFxjxFDYbRg@mail.gmail.com> < 52DD98F7.4090202@cogentembedded.com> < CAL_JsqJXbF1-PcPHR2VP+Vi9A1aWizdsG_r3kDvRt3itXDhCGQ@mail.gmail.com> < CAGVrzcb3X3soJNJCE5+YSpQrr+EdycCRFkptPvBCgFg4CbGJ4Q@mail.gmail.com> < CAGVrzcb0dfw1orZzUt5-YkShOg-HNbUYvvo2vfmsZUZXy1Aqfg@mail.gmail.com> < 52DEE465.9000202@cogentembedded.com> <52E988FA.8040807@cogentembedded.com> <20140204172602.01420C4050F@trevor.secretlab.ca> <52F13410.8070205@ cogentembedded.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <52F13410.8070205@cogentembedded.com>
-Sender: netdev-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robherring2@gmail.com>
-Cc: netdev <netdev@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v4] of: add functions to count number of elements in a property
+Date: Wed, 05 Feb 2014 13:45:36 +0100
+Message-ID: <8812602.o5pus1vSFK@phil>
+References: <27256277.YJ687suYy5@phil> <13514940.URVnEJ4NF0@phil> <20140205120652.9B1A7C40A89@trevor.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140205120652.9B1A7C40A89-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 04 Feb 2014 21:40:16 +0300, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com> wrote:
-> Hello.
-> 
-> On 02/04/2014 08:26 PM, Grant Likely wrote:
-> 
-> >>>>>>>      I'm afraid that's too late, it has spread very far, so that
-> >>>>>>> of_get_phy_mode() handles that property, not "phy-connection-type".
-> 
-> >>>>>> Uggg, I guess this is a case of a defacto standard then if the kernel
-> >>>>>> doesn't even support it.
-> 
-> >>>>> Maybe I forgot to CC you on patch sent to Grant only, I sent a patch a
-> >>>>> while ago for of_get_phy_mode() to look for both "phy-mode" and
-> >>>>> "phy-connection-type" since the former has been a Linux invention, but
-> >>>>> the latter is ePAPR specified.
-> 
-> >>>> Here is a link to the actual patch in question, not sure which tree
-> >>>> Grant applied it to though:
-> 
-> >>>> http://lkml.indiana.edu/hypermail/linux/kernel/1311.2/00048.html
-> 
-> >>>      It's not the patch mail, it's Grant's "applied" reply, patch is mangled in
-> >>> this reply, and I couldn't follow the thread. Here's the actual patch mail:
-> 
-> >>> http://marc.info/?l=devicetree&m=138449662807254
-> 
-> >>      Florian, I didn't find this patch in Grant's official tree, so maybe you
-> >> should ask him where is the patch already?
-> 
-> > Sorry, I accidentally dropped it. It will be in the next merge window.
-> 
->     Already saw it, thanks. Would that it was in 3.14 instead of course, so 
-> that I could use "phy-connection-type" in my binding...
+Am Mittwoch, 5. Februar 2014, 12:06:52 schrieb Grant Likely:
+> On Tue, 04 Feb 2014 19:48:17 +0100, Heiko St=C3=BCbner <heiko@sntech.=
+de> wrote:
+> > Hi Grant,
+> >=20
+> > On Tuesday, 4. February 2014 17:30:34 Grant Likely wrote:
+> > > On Sat, 18 Jan 2014 09:07:30 -0600, Rob Herring <robherring2@gmai=
+l.com>
+> >=20
+> > wrote:
+> > > > On Sat, Jan 18, 2014 at 6:02 AM, Heiko St=C3=83=C2=BCbner <heik=
+o@sntech.de>=20
+wrote:
+> > > > > The need to know the number of array elements in a property i=
+s
+> > > > > a common pattern. To prevent duplication of open-coded
+> > > > > implementations
+> > > > > add a helper static function that also centralises strict san=
+ity
+> > > > > checking and DTB format details, as well as a set of wrapper
+> > > > > functions
+> > > > > for u8, u16, u32 and u64.
+> > > > >=20
+> > > > > Suggested-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > > > > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> > > > > ---
+> > > >=20
+> > > > Looks good. Do you plan to convert some users to use this?
+> > >=20
+> > > I'll take that as an acked-by. Merged, thanks.
+> >=20
+> > before you taking this patch, I was planning on simply sending this=
+ as
+> > part of my rockchip-smp series - as I'm currently the only user of =
+it :-)
+> > .
+> >=20
+> > This going through your tree is most likely the better way, but now=
+ I need
+> > it to somehow make its way into arm-soc too ... I guess some sort o=
+f
+> > stable branch arm-soc could pull?
+>=20
+> Nah, I'll drop it from my tree. Add my acked-by and merge it via
+> arm-soc.
 
-Is 3.14 broken because of missing the patch? If so I'll get it merged as
-a bug fix.
+As I said on IRC, now it seems like you can keep this patch in your tre=
+e :-)
 
-g.
+If we're really going with reserved-memory like you suggested in the ro=
+ckchip-
+smp series it removes the need to count u32-elements in a property for =
+me, as=20
+the reserved blocks move into individual subnodes.
+
+
+Heiko
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
