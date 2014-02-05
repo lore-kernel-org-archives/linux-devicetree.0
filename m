@@ -1,43 +1,92 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v5 2/3] clocksource: keystone: add bindings for keystone timer
-Date: Wed, 5 Feb 2014 11:41:34 -0600
-Message-ID: <CAL_JsqL6YDcZJa5xziR7dP-bEt1CO4BtL1vsO8Qm+hFwgCiQ1w@mail.gmail.com>
-References: <1391608060-10760-1-git-send-email-ivan.khoronzhuk@ti.com>
-	<1391608060-10760-3-git-send-email-ivan.khoronzhuk@ti.com>
-	<CAL_JsqKVc2fdg1Q+TH6ro9kpJmUYyHw8FCwhORfm2_oj6GYM2Q@mail.gmail.com>
-	<52F26444.5090707@ti.com>
+From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Subject: [PATCH 2/8] ASoC: da9055: Add DT support for CODEC
+Date: Wed, 5 Feb 2014 17:48:33 +0000
+Message-ID: <9ec36c0633ae8291267be6802a34a469a34ae292.1391614923.git.Adam.Thomson.Opensource@diasemi.com>
+References: <cover.1391614923.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <52F26444.5090707@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <cover.1391614923.git.Adam.Thomson.Opensource@diasemi.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Alessandro Zummo <a.zummo@towertech.it>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.netg>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 5, 2014 at 10:18 AM, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com> wrote:
->
-> On 02/05/2014 04:39 PM, Rob Herring wrote:
->>
->> On Wed, Feb 5, 2014 at 7:47 AM, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
->> wrote:
->>>
->>> This patch provides bindings for the 64-bit timer in the KeyStone
->>> architecture devices. The timer can be configured as a general-purpose
->>> 64-bit
->>> timer, dual general-purpose 32-bit timers. When configured as dual 32-bit
->>> timers, each half can operate in conjunction (chain mode) or
->>> independently
->>> (unchained mode) of each other.
->>
->> This is software configurable or h/w design time configurations?
->>
->> Rob
->>
->
-> This is h/w design time configurations
 
-Then it seems like the binding should provide for describing those
-differences either with a property or different compatible strings.
+Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+---
+ Documentation/devicetree/bindings/sound/da9055.txt |   22 ++++++++++++++++++++
+ sound/soc/codecs/da9055.c                          |    8 +++++++
+ 2 files changed, 30 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/da9055.txt
 
-Rob
+diff --git a/Documentation/devicetree/bindings/sound/da9055.txt b/Documentation/devicetree/bindings/sound/da9055.txt
+new file mode 100644
+index 0000000..ed1b7cc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/da9055.txt
+@@ -0,0 +1,22 @@
++* Dialog DA9055 Audio CODEC
++
++DA9055 provides Audio CODEC support (I2C only).
++
++The Audio CODEC device in DA9055 has it's own I2C address which is configurable,
++so the device is instantiated separately from the PMIC (MFD) device.
++
++For details on accompanying PMIC I2C device, see the following:
++Documentation/devicetree/bindings/mfd/da9055.txt
++
++Required properties:
++
++  - compatible: "dlg,da9055-codec"
++  - reg: Specifies the I2C slave address
++
++
++Example:
++
++	codec: da9055-codec@1a {
++		compatible = "dlg,da9055-codec";
++		reg = <0x1a>;
++	};
+diff --git a/sound/soc/codecs/da9055.c b/sound/soc/codecs/da9055.c
+index 4228126..be31f3c 100644
+--- a/sound/soc/codecs/da9055.c
++++ b/sound/soc/codecs/da9055.c
+@@ -18,6 +18,8 @@
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
+ #include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
+ #include <sound/pcm.h>
+ #include <sound/pcm_params.h>
+ #include <sound/soc.h>
+@@ -1536,11 +1538,17 @@ static const struct i2c_device_id da9055_i2c_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, da9055_i2c_id);
+
++static const struct of_device_id da9055_of_match[] = {
++	{ .compatible = "dlg,da9055-codec", },
++	{ }
++};
++
+ /* I2C codec control layer */
+ static struct i2c_driver da9055_i2c_driver = {
+ 	.driver = {
+ 		.name = "da9055-codec",
+ 		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(da9055_of_match),
+ 	},
+ 	.probe		= da9055_i2c_probe,
+ 	.remove		= da9055_remove,
+--
+1.7.0.4
