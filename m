@@ -1,73 +1,103 @@
-From: srinivas kandagatla <srinivas.kandagatla@st.com>
-Subject: Re: [PATCH 1/4] ARM: STi: add stid127 soc support
-Date: Wed, 5 Feb 2014 11:48:24 +0000
-Message-ID: <52F22508.7080706@st.com>
-References: <1391093744-19905-1-git-send-email-patrice.chotard@st.com> <201401301939.08302.arnd@arndb.de> <52EB96BB.6070800@st.com> <201401312115.33731.arnd@arndb.de>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v7 2/7] dt-bindings: sram: describe option to reserve parts of the memory
+Date: Wed, 05 Feb 2014 13:05:14 +0100
+Message-ID: <1816961.2dvm7Iumeh@phil>
+References: <4970034.fqvMoHdOyd@phil> <1782709.QdZpsrsctf@phil> <20140205111247.476B7C40A89@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201401312115.33731.arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, kernel@stlinux.com, Linus Walleij <linus.walleij@linaro.org>, Patrice CHOTARD <patrice.chotard@st.com>, linux-kernel@vger.kernel.org, Stuart Menefy <stuart.menefy@st.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, maxime.coquelin@st.com, alexandre.torgue@st.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140205111247.476B7C40A89-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-On 31/01/14 20:15, Arnd Bergmann wrote:
-> On Friday 31 January 2014, srinivas kandagatla wrote:
-> 
->>> Sorry if I missed the initial review, but can you explain
->>> why this is needed to start with?
->>
->> On ST SoCs the default value for L2 AUX_CTRL register is 0x0, so we  set
->> the way-size explicit here.
-> 
-> Unfortunately, we keep going back and forth on the L2 cache controller
-> setup between "it should work automatically" and "we don't want to
-> have configuration data in DT", where my personal opinion is that
-> the first one is more important here.
-> 
-> Now, there are a couple of properties that are defined in
-> Documentation/devicetree/bindings/arm/l2cc.txt to let some of the
-> things get set up automatically already. Can you check which bits
-> are missing there, if any? Are they better described as "configuration"
-> or "hardware" settings?
+Am Mittwoch, 5. Februar 2014, 11:12:47 schrieb Grant Likely:
+> On Mon, 20 Jan 2014 16:42:58 +0100, Heiko St=C3=BCbner <heiko@sntech.=
+de> wrote:
+> > Some SoCs need parts of their sram for special purposes. So while b=
+eing
+> > part of the peripheral, it should not be part of the genpool contro=
+lling
+> > the sram.
+> >=20
+> > Therefore add an option mmio-sram-reserved to keep arbitrary portio=
+ns of
+> > the sram from general usage.
+> >=20
+> > Suggested-by: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> > Tested-by: Ulrich Prinz <ulrich.prinz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > ---
+> >=20
+> >  Documentation/devicetree/bindings/misc/sram.txt |    8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/misc/sram.txt
+> > b/Documentation/devicetree/bindings/misc/sram.txt index 4d0a00e..09=
+ee7a3
+> > 100644
+> > --- a/Documentation/devicetree/bindings/misc/sram.txt
+> > +++ b/Documentation/devicetree/bindings/misc/sram.txt
+> >=20
+> > @@ -8,9 +8,17 @@ Required properties:
+> >  - reg : SRAM iomem address range
+> >=20
+> > +Optional properties:
+> > +
+> > +- mmio-sram-reserved: ordered list of reserved chunks inside the s=
+ram
+> > that
+> > +  should not be used by the operating system.
+> > +  Format is <base size>, <base size>, ...; with base being relativ=
+e to
+> > the
+> > +  reg property base.
+> > +
+>=20
+> We've now got a draft binding for reserved memory. Can you use the fo=
+rmat
+> here? Basically each reserved region is a sub node with either a reg
+> property or a size property.
+>=20
+> This is specifically for sram, so I won't make a big deal about it, b=
+ut
+> it would be good to have some commonality.
 
-Currently l2cc bindings has few optional properties like.
+I guess you're talking about "[PATCH v2 0/5] reserved-memory regions/CM=
+A in=20
+devicetree, again", right?
 
-- arm,data-latency
-- arm,tag-latency
-- arm,dirty-latency
-- arm,filter-ranges
-- interrupts :
-- cache-id-part:
-- wt-override:
+In general I'm all for commonality :-). So I guess you mean it to look=20
+something like the following:
 
-These does not include properties to set "way-size", "associativity",
-"enabling prefetching", "Prefetch drop enable", "prefetch offset",
-"Double linefill" and few more in prefect control register and
-aux-control register.
+	sram: sram@10080000 {
+		compatible =3D "rockchip,rk3066-sram", "mmio-sram";
+		reg =3D <0x10080000 0x8000>;
 
-This is not just a issue with STi SOCs, having a quick look, I can see
-that few more SOCs have similar requirements to set these properties.
+		reserved-memory {
+			#address-cells =3D <1>;
+			#size-cells =3D <1>;
 
-We could do two things to get l2 setup automatically on STi SOCS.
+			smp@200 {
+				/* hmm, relative or absolute, aka 0x200 or 0x10080200? */
+				reg =3D <0x200 0x50>;
+			};
+		};
+	};
 
-1> Either define these properties case-by-case basic, which might be
-useful for other SOCs too.
-
-2> Or Add new compatible string for STi SoCs so that they can
-automatically setup these values in cache-l2x0.c
-
-Am Ok with either approaches.
+As it looks like only a slight modification of my "parsing" code this s=
+hould be=20
+doable. Do you suggest more changes to the example above?
 
 
-Thanks,
-srini
+Heiko
 
 
-> 
-> 	Arnd
-> 
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
