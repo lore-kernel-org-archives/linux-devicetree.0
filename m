@@ -1,49 +1,52 @@
-From: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: Leave sdio1 as disabled on bcm28155-ap
-Date: Tue, 4 Feb 2014 15:27:40 -0800
-Message-ID: <1391556460-24218-1-git-send-email-tim.kryger@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Linux List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 1/2] iio:as3935: Add DT binding docs for AS3935 driver
+Date: Tue,  4 Feb 2014 19:14:55 -0800
+Message-ID: <1391570096-2932-1-git-send-email-mranostay@gmail.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The sdio1 interface pins are routed to an unpopulated daughter card
-connector on the bcm28155-ap board.  Thus there is no need to mark
-this interface as enabled.
+Document compatible string, required and optional DT properties for
+AS3935 chipset driver.
 
-Signed-off-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Reviewed-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
+ .../devicetree/bindings/iio/proximity/as3935.txt   | 25 ++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/as3935.txt
 
-Changes since v1:
-  - Rebased on v3.14-rc1
-
- arch/arm/boot/dts/bcm28155-ap.dts | 5 -----
- 1 file changed, 5 deletions(-)
-
-diff --git a/arch/arm/boot/dts/bcm28155-ap.dts b/arch/arm/boot/dts/bcm28155-ap.dts
-index 5ff2382..3604554 100644
---- a/arch/arm/boot/dts/bcm28155-ap.dts
-+++ b/arch/arm/boot/dts/bcm28155-ap.dts
-@@ -49,11 +49,6 @@
- 		clock-frequency = <400000>;
- 	};
- 
--	sdio1: sdio@3f180000 {
--		max-frequency = <48000000>;
--		status = "okay";
--	};
--
- 	sdio2: sdio@3f190000 {
- 		non-removable;
- 		max-frequency = <48000000>;
+diff --git a/Documentation/devicetree/bindings/iio/proximity/as3935.txt b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
+new file mode 100644
+index 0000000..7e117cd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
+@@ -0,0 +1,25 @@
++Austrian Microsystems AS3935 Franklin lightning sensor device driver
++
++Required properties:
++	- compatible: must be "ams,as3935"
++	- reg: SPI chip select number for the device
++	- spi-cpha: SPI Mode 1
++  	- interrupt-parent : should be the phandle for the interrupt controller
++	- interrupts : interrupt mapping for GPIO IRQ
++
++Optional properties:
++	- ams,tune-cap: Calibration tuning capacitor stepping value 0 - 15.
++	  Range of 0 to 120 pF, 8pF steps. This will require using the
++	  calibration data from the manufacturer.
++
++
++Example:
++
++as3935@0 {
++	compatible = "ams,as3935";
++	reg = <0>;
++	spi-cpha;
++	interrupt-parent = <&gpio1>;
++	interrupts = <16 1>;
++	ams,tune-cap = /bits/ 8 <10>;
++};
 -- 
-1.8.0.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.3.2
