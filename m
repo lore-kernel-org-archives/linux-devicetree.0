@@ -1,67 +1,121 @@
-From: David =?ISO-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
-Subject: Re: [PATCH v2 0/6] ARM: sunxi: Add driver for SD/MMC
- hosts found on allwinner sunxi SOCs
-Date: Wed, 05 Feb 2014 14:01:33 +0100
-Message-ID: <1676482.sbjAhaSLaV@dizzy-6.o2s.ch>
-References: <20140204191648.29809.14611.stgit@dizzy-6.o2s.ch> <20140205103949.GC3192@lukather>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 1/5] clk: sunxi: Add support for PLL6 on the A31
+Date: Wed,  5 Feb 2014 14:05:03 +0100
+Message-ID: <1391605507-30981-2-git-send-email-maxime.ripard@free-electrons.com>
+References: <1391605507-30981-1-git-send-email-maxime.ripard@free-electrons.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2087342.yc2NcSH50b"; micalg="pgp-sha1"; protocol="application/pgp-signature"
-Return-path: <linux-sunxi+bncBD2JL37LXEKRBOXMZCLQKGQEGJDPZMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140205103949.GC3192@lukather>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBLHQZCLQKGQEWXYTXWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1391605507-30981-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The A31 has a slightly different PLL6 clock. Add support for this new clock in
+our driver.
 
---nextPart2087342.yc2NcSH50b
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
+ drivers/clk/sunxi/clk-sunxi.c                     | 45 +++++++++++++++++++++++
+ 2 files changed, 46 insertions(+)
 
-Hi Maxime
-> I have four comments here:
->   - Read Documentation/SubmittingPatches, especially Section 5 and 12
->     (hints, you forgot the clock maintainers for your clock patches
->     and you didn't put any signed-off-by tags)
-Oops. I added signed-offs now
->   - You ignored pretty much all the comments that were made during the
->     review of the first version. Go through
-Uh? I just fixed the commits and squashed them together for easier handling.
-I'm even using mmc_of_parse now...
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2013-December/219339.
-> html and address the comments that were made.
->   - Each of your patches should compile. Fix the order of your
->     patches.
-Done.
->   - Submit a v3, with the changes you made. Otherwise we have no way
->     of knowing what have been fixed and what didn't
-Too many patches would be bloaty.
-That's why I've squashed them into small and corrected patches.
-
-> Looking forward for the next iteration!
-Good :-)
-You can have a look at the recent status here:
-http://git.o2s.ch/?p=linux-next.git;a=shortlog;h=refs/heads/20140205
-
-cheers
-David
---nextPart2087342.yc2NcSH50b
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iEYEABECAAYFAlLyNi0ACgkQAeZw77btGjr6zwCglDPMGsllkJPtErxxWEzepqeu
-rpoAn3iqBc/AViM5Rnu45QE72zw4y7tc
-=eD5M
------END PGP SIGNATURE-----
-
---nextPart2087342.yc2NcSH50b--
+diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+index c2cb762..954845c 100644
+--- a/Documentation/devicetree/bindings/clock/sunxi.txt
++++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+@@ -11,6 +11,7 @@ Required properties:
+ 	"allwinner,sun6i-a31-pll1-clk" - for the main PLL clock on A31
+ 	"allwinner,sun4i-pll5-clk" - for the PLL5 clock
+ 	"allwinner,sun4i-pll6-clk" - for the PLL6 clock
++	"allwinner,sun6i-a31-pll6-clk" - for the PLL6 clock on A31
+ 	"allwinner,sun4i-cpu-clk" - for the CPU multiplexer clock
+ 	"allwinner,sun4i-axi-clk" - for the AXI clock
+ 	"allwinner,sun4i-axi-gates-clk" - for the AXI gates
+diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+index abb6c5a..0c05c2d 100644
+--- a/drivers/clk/sunxi/clk-sunxi.c
++++ b/drivers/clk/sunxi/clk-sunxi.c
+@@ -249,7 +249,38 @@ static void sun4i_get_pll5_factors(u32 *freq, u32 parent_rate,
+ 	*n = DIV_ROUND_UP(div, (*k+1));
+ }
+ 
++/**
++ * sun6i_a31_get_pll6_factors() - calculates n, k factors for A31 PLL6
++ * PLL6 rate is calculated as follows
++ * rate = parent_rate * n * (k + 1) / 2
++ * parent_rate is always 24Mhz
++ */
++
++static void sun6i_a31_get_pll6_factors(u32 *freq, u32 parent_rate,
++				       u8 *n, u8 *k, u8 *m, u8 *p)
++{
++	u8 div;
++
++	/*
++	 * We always have 24MHz / 2, so we can just say that our
++	 * parent clock is 12MHz.
++	 */
++	parent_rate = parent_rate / 2;
++
++	/* Normalize value to a parent_rate multiple (24M / 2) */
++	div = *freq / parent_rate;
++	*freq = parent_rate * div;
++
++	/* we were called to round the frequency, we can now return */
++	if (n == NULL)
++		return;
++
++	*k = div / 32;
++	if (*k > 3)
++		*k = 3;
+ 
++	*n = DIV_ROUND_UP(div, (*k+1));
++}
+ 
+ /**
+  * sun4i_get_apb1_factors() - calculates m, p factors for APB1
+@@ -416,6 +447,13 @@ static struct clk_factors_config sun4i_pll5_config = {
+ 	.kwidth = 2,
+ };
+ 
++static struct clk_factors_config sun6i_a31_pll6_config = {
++	.nshift	= 8,
++	.nwidth = 5,
++	.kshift = 4,
++	.kwidth = 2,
++};
++
+ static struct clk_factors_config sun4i_apb1_config = {
+ 	.mshift = 0,
+ 	.mwidth = 5,
+@@ -457,6 +495,12 @@ static const struct factors_data sun4i_pll5_data __initconst = {
+ 	.getter = sun4i_get_pll5_factors,
+ };
+ 
++static const struct factors_data sun6i_a31_pll6_data __initconst = {
++	.enable = 31,
++	.table = &sun6i_a31_pll6_config,
++	.getter = sun6i_a31_get_pll6_factors,
++};
++
+ static const struct factors_data sun4i_apb1_data __initconst = {
+ 	.table = &sun4i_apb1_config,
+ 	.getter = sun4i_get_apb1_factors,
+@@ -972,6 +1016,7 @@ free_clkdata:
+ static const struct of_device_id clk_factors_match[] __initconst = {
+ 	{.compatible = "allwinner,sun4i-pll1-clk", .data = &sun4i_pll1_data,},
+ 	{.compatible = "allwinner,sun6i-a31-pll1-clk", .data = &sun6i_a31_pll1_data,},
++	{.compatible = "allwinner,sun6i-a31-pll6-clk", .data = &sun6i_a31_pll6_data,},
+ 	{.compatible = "allwinner,sun4i-apb1-clk", .data = &sun4i_apb1_data,},
+ 	{.compatible = "allwinner,sun4i-mod0-clk", .data = &sun4i_mod0_data,},
+ 	{.compatible = "allwinner,sun7i-a20-out-clk", .data = &sun7i_a20_out_data,},
+-- 
+1.8.4.2
