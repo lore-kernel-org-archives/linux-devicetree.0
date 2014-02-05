@@ -1,42 +1,70 @@
-From: Arnd Bergmann <arnd@arndb.de>
+From: Michal Simek <monstr@monstr.eu>
 Subject: Re: [PATCH 09/10] watchdog: xilinx: Add missing binding
-Date: Wed, 5 Feb 2014 10:36:19 +0100
-Message-ID: <201402051036.19428.arnd@arndb.de>
-References: <ed4cb31c9a549343e6b492cf62fc962d39034bd0.1391177880.git.michal.simek@xilinx.com>
- <201402042027.15898.arnd@arndb.de> <52F20387.3090709@monstr.eu>
+Date: Wed, 05 Feb 2014 10:41:06 +0100
+Message-ID: <52F20732.6070209@monstr.eu>
+References: <ed4cb31c9a549343e6b492cf62fc962d39034bd0.1391177880.git.michal.simek@xilinx.com> <201402042027.15898.arnd@arndb.de> <52F20387.3090709@monstr.eu> <201402051036.19428.arnd@arndb.de>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52F20387.3090709@monstr.eu>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, monstr@monstr.eu
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, linux-doc@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="iV47Pw35bIR3Xv1MleWW58p6Q7CUJFdhR"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <201402051036.19428.arnd@arndb.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, monstr@monstr.eu, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 05 February 2014, Michal Simek wrote:
-> I am not quite sure what you mean by reports to user space.
-> If you mean to get timeout through ioctl for example - then yes it is working
-> through standard watchdog ioctl interface and timeout is calculated
-> from hardware setup.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--iV47Pw35bIR3Xv1MleWW58p6Q7CUJFdhR
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: quoted-printable
 
-Yes, that is what I meant. I believe most other watchdogs let
-you program the timeout, but I don't see anything wrong with
-having that fixed in the FPGA in your case.
+On 02/05/2014 10:36 AM, Arnd Bergmann wrote:
+> On Wednesday 05 February 2014, Michal Simek wrote:
+>> I am not quite sure what you mean by reports to user space.
+>> If you mean to get timeout through ioctl for example - then yes it is =
+working
+>> through standard watchdog ioctl interface and timeout is calculated
+>> from hardware setup.
+>=20
+> Yes, that is what I meant. I believe most other watchdogs let
+> you program the timeout, but I don't see anything wrong with
+> having that fixed in the FPGA in your case.
+>=20
+> Still, the choice of putting the timeout into DT in terms of
+> cycles rather than miliseconds wasn't ideal from an interface
+> perspective and we should change that if/when we do a generic
+> binding. I can definitely see where it's coming from for your
+> case, as the cycle count totally makes sense from an FPGA
+> tool perspective...
 
-Still, the choice of putting the timeout into DT in terms of
-cycles rather than miliseconds wasn't ideal from an interface
-perspective and we should change that if/when we do a generic
-binding. I can definitely see where it's coming from for your
-case, as the cycle count totally makes sense from an FPGA
-tool perspective...
+Thanks. I take this like ACK for this current binding description.
 
-	Arnd
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--iV47Pw35bIR3Xv1MleWW58p6Q7CUJFdhR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlLyBzIACgkQykllyylKDCEXeQCglyMKvS5UGY3Hse+7jfXrpCSH
+U94AmQHYUc38A/inV4GSGGu2HkCwZMtF
+=DWv1
+-----END PGP SIGNATURE-----
+
+--iV47Pw35bIR3Xv1MleWW58p6Q7CUJFdhR--
