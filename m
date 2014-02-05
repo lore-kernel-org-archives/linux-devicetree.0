@@ -1,98 +1,99 @@
-From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH v4 1/2] iio:as3935: Add DT binding docs for AS3935 driver
-Date: Tue, 4 Feb 2014 21:30:52 -0800
-Message-ID: <CAKzfze9=_u0CsvZ2=Mr_iaL=BxD1WOqmFPq0z3dO8jNGGk-pCA@mail.gmail.com>
-References: <1391570096-2932-1-git-send-email-mranostay@gmail.com>
-	<20140205044335.GA2172@beef>
-	<CAKzfze-mHkxmnb06jDuD=-Zg3SmhRoZo6-P0D9dReA-gDwbTnw@mail.gmail.com>
-	<20140205051730.GA3911@beef>
+Date: Wed, 05 Feb 2014 07:24:37 +0000
+Message-ID: <634e62ea-d33f-42f3-8500-6331d4de495d@email.android.com>
+References: <1391570096-2932-1-git-send-email-mranostay@gmail.com> <20140205044335.GA2172@beef>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140205051730.GA3911@beef>
+In-Reply-To: <20140205044335.GA2172@beef>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 4, 2014 at 9:17 PM, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Feb 04, 2014 at 08:52:26PM -0800, Matt Ranostay Matt Ranostay wrote:
->> On Tue, Feb 4, 2014 at 8:43 PM, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> > On Tue, Feb 04, 2014 at 07:14:55PM -0800, Matt Ranostay Matt Ranostay wrote:
->> >> Document compatible string, required and optional DT properties for
->> >> AS3935 chipset driver.
->> >>
->> >> Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> >> ---
->> >>  .../devicetree/bindings/iio/proximity/as3935.txt   | 25 ++++++++++++++++++++++
->> >>  1 file changed, 25 insertions(+)
->> >>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/as3935.txt
->> >>
->> >> diff --git a/Documentation/devicetree/bindings/iio/proximity/as3935.txt b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
->> >> new file mode 100644
->> >> index 0000000..7e117cd
->> >> --- /dev/null
->> >> +++ b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
->> >> @@ -0,0 +1,25 @@
->> >> +Austrian Microsystems AS3935 Franklin lightning sensor device driver
->> >> +
->> >> +Required properties:
->> >> +     - compatible: must be "ams,as3935"
->> >
->> > Change this to "amstaos,as3935"
->> >
->> > amstaos (AMS bought Taos) is already a registered vendor prefix in
->> > vendor-prefixes.txt
->> >
->> >> +     - reg: SPI chip select number for the device
->> >> +     - spi-cpha: SPI Mode 1
->> >
->> > When using generic binding properties, please reference the binding
->> > being used. Like:
->> >
->> >         - spi-cpha: SPI Mode 1. Refer to spi/spi-bus.txt for generic SPI
->> >           slave node bindings.
->> >
->> Noted.
->>
->> >> +     - interrupt-parent : should be the phandle for the interrupt controller
->> >> +     - interrupts : interrupt mapping for GPIO IRQ
->> >
->> >         Refer to interrupt-controller/interrupts.txt for generic
->> >         interrupt client node bindings.
->> >
->> Noted.
->>
->> >> +
->> >> +Optional properties:
->> >> +     - ams,tune-cap: Calibration tuning capacitor stepping value 0 - 15.
->> >> +       Range of 0 to 120 pF, 8pF steps. This will require using the
->> >> +       calibration data from the manufacturer.
->> >> +
->> >> +
->> >> +Example:
->> >> +
->> >> +as3935@0 {
->> >> +     compatible = "ams,as3935";
->> >> +     reg = <0>;
->> >> +     spi-cpha;
->> >> +     interrupt-parent = <&gpio1>;
->> >> +     interrupts = <16 1>;
->> >> +     ams,tune-cap = /bits/ 8 <10>;
->> >
->> > What is this? Why not just ams,tune-cap = <10>; ?
->> >
->> > It's a value between 0-15, right?
->>
->> Correct but it is using of_property_read_u8() so that requires the
->> /bits/ statement.
->> Should this just be a u32 value?
->
-> Do you really need a u8? If not just read_u32() into an int and keep
-> this syntax simple.
 
-Just me different it seems :P.  Will fix in next version waiting for
-Peter's and Jonathan's input on the rest of the code first.
+
+On February 5, 2014 4:43:35 AM GMT+00:00, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>On Tue, Feb 04, 2014 at 07:14:55PM -0800, Matt Ranostay Matt Ranostay
+>wrote:
+>> Document compatible string, required and optional DT properties for
+>> AS3935 chipset driver.
+>> 
+>> Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/iio/proximity/as3935.txt   | 25
+>++++++++++++++++++++++
+>>  1 file changed, 25 insertions(+)
+>>  create mode 100644
+>Documentation/devicetree/bindings/iio/proximity/as3935.txt
+>> 
+>> diff --git
+>a/Documentation/devicetree/bindings/iio/proximity/as3935.txt
+>b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
+>> new file mode 100644
+>> index 0000000..7e117cd
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
+>> @@ -0,0 +1,25 @@
+>> +Austrian Microsystems AS3935 Franklin lightning sensor device driver
+>> +
+>> +Required properties:
+>> +	- compatible: must be "ams,as3935"
+>
+>Change this to "amstaos,as3935"
+>
+>amstaos (AMS bought Taos) is already a registered vendor prefix in
+>vendor-prefixes.txt
+
+It is but has a rather separate presence and is not where people expect to find non light
+ sensor stuff from ams. I personally would go for a new vendor prefix and stick with ams.
 
 >
-> -Matt
+>> +	- reg: SPI chip select number for the device
+>> +	- spi-cpha: SPI Mode 1
+>
+>When using generic binding properties, please reference the binding
+>being used. Like:
+>
+>	- spi-cpha: SPI Mode 1. Refer to spi/spi-bus.txt for generic SPI
+>	  slave node bindings.
+>
+>> +  	- interrupt-parent : should be the phandle for the interrupt
+>controller
+>> +	- interrupts : interrupt mapping for GPIO IRQ
+>
+>	Refer to interrupt-controller/interrupts.txt for generic
+>	interrupt client node bindings.
+>
+>> +
+>> +Optional properties:
+>> +	- ams,tune-cap: Calibration tuning capacitor stepping value 0 - 15.
+>> +	  Range of 0 to 120 pF, 8pF steps. This will require using the
+>> +	  calibration data from the manufacturer.
+>> +
+>> +
+>> +Example:
+>> +
+>> +as3935@0 {
+>> +	compatible = "ams,as3935";
+>> +	reg = <0>;
+>> +	spi-cpha;
+>> +	interrupt-parent = <&gpio1>;
+>> +	interrupts = <16 1>;
+>> +	ams,tune-cap = /bits/ 8 <10>;
+>
+>What is this? Why not just ams,tune-cap = <10>; ?
+>
+>It's a value between 0-15, right?
+>
+>-Matt
+>--
+>To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+>the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Sent from my Android phone with K-9 Mail. Please excuse my brevity.
