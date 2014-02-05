@@ -1,103 +1,75 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v7 2/7] dt-bindings: sram: describe option to reserve parts of the memory
-Date: Wed, 05 Feb 2014 13:05:14 +0100
-Message-ID: <1816961.2dvm7Iumeh@phil>
-References: <4970034.fqvMoHdOyd@phil> <1782709.QdZpsrsctf@phil> <20140205111247.476B7C40A89@trevor.secretlab.ca>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v4] of: add functions to count number of elements in a
+ property
+Date: Wed, 05 Feb 2014 12:06:52 +0000
+Message-ID: <20140205120652.9B1A7C40A89@trevor.secretlab.ca>
+References: <27256277.YJ687suYy5@phil> <
+ CAL_JsqJord1OOjwcKk1jqF5o+XO3uw+Lc4ATtQacgwZWAoQq1g@mail.gmail.com> <
+ 20140204173034.2D899C4050F@trevor.secretlab.ca> <13514940.URVnEJ4NF0@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140205111247.476B7C40A89-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============6523141350165008624=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <13514940.URVnEJ4NF0@phil>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arm@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 5. Februar 2014, 11:12:47 schrieb Grant Likely:
-> On Mon, 20 Jan 2014 16:42:58 +0100, Heiko St=C3=BCbner <heiko@sntech.=
-de> wrote:
-> > Some SoCs need parts of their sram for special purposes. So while b=
-eing
-> > part of the peripheral, it should not be part of the genpool contro=
-lling
-> > the sram.
-> >=20
-> > Therefore add an option mmio-sram-reserved to keep arbitrary portio=
-ns of
-> > the sram from general usage.
-> >=20
-> > Suggested-by: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> > Tested-by: Ulrich Prinz <ulrich.prinz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > ---
-> >=20
-> >  Documentation/devicetree/bindings/misc/sram.txt |    8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/misc/sram.txt
-> > b/Documentation/devicetree/bindings/misc/sram.txt index 4d0a00e..09=
-ee7a3
-> > 100644
-> > --- a/Documentation/devicetree/bindings/misc/sram.txt
-> > +++ b/Documentation/devicetree/bindings/misc/sram.txt
-> >=20
-> > @@ -8,9 +8,17 @@ Required properties:
-> >  - reg : SRAM iomem address range
-> >=20
-> > +Optional properties:
-> > +
-> > +- mmio-sram-reserved: ordered list of reserved chunks inside the s=
-ram
-> > that
-> > +  should not be used by the operating system.
-> > +  Format is <base size>, <base size>, ...; with base being relativ=
-e to
-> > the
-> > +  reg property base.
-> > +
->=20
-> We've now got a draft binding for reserved memory. Can you use the fo=
-rmat
-> here? Basically each reserved region is a sub node with either a reg
-> property or a size property.
->=20
-> This is specifically for sram, so I won't make a big deal about it, b=
-ut
-> it would be good to have some commonality.
+--===============6523141350165008624==
+Content-Type: text/plain
 
-I guess you're talking about "[PATCH v2 0/5] reserved-memory regions/CM=
-A in=20
-devicetree, again", right?
+On Tue, 04 Feb 2014 19:48:17 +0100, Heiko Stübner <heiko@sntech.de> wrote:
+> Hi Grant,
+> 
+> On Tuesday, 4. February 2014 17:30:34 Grant Likely wrote:
+> > On Sat, 18 Jan 2014 09:07:30 -0600, Rob Herring <robherring2@gmail.com> 
+> wrote:
+> > > On Sat, Jan 18, 2014 at 6:02 AM, Heiko StÃ¼bner <heiko@sntech.de> wrote:
+> > > > The need to know the number of array elements in a property is
+> > > > a common pattern. To prevent duplication of open-coded implementations
+> > > > add a helper static function that also centralises strict sanity
+> > > > checking and DTB format details, as well as a set of wrapper functions
+> > > > for u8, u16, u32 and u64.
+> > > > 
+> > > > Suggested-by: Mark Rutland <mark.rutland@arm.com>
+> > > > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> > > > ---
+> > > 
+> > > Looks good. Do you plan to convert some users to use this?
+> > 
+> > I'll take that as an acked-by. Merged, thanks.
+> 
+> before you taking this patch, I was planning on simply sending this as part of 
+> my rockchip-smp series - as I'm currently the only user of it :-) .
+> 
+> This going through your tree is most likely the better way, but now I need it 
+> to somehow make its way into arm-soc too ... I guess some sort of stable 
+> branch arm-soc could pull?
 
-In general I'm all for commonality :-). So I guess you mean it to look=20
-something like the following:
+Nah, I'll drop it from my tree. Add my acked-by and merge it via
+arm-soc.
 
-	sram: sram@10080000 {
-		compatible =3D "rockchip,rk3066-sram", "mmio-sram";
-		reg =3D <0x10080000 0x8000>;
-
-		reserved-memory {
-			#address-cells =3D <1>;
-			#size-cells =3D <1>;
-
-			smp@200 {
-				/* hmm, relative or absolute, aka 0x200 or 0x10080200? */
-				reg =3D <0x200 0x50>;
-			};
-		};
-	};
-
-As it looks like only a slight modification of my "parsing" code this s=
-hould be=20
-doable. Do you suggest more changes to the example above?
+g.
 
 
-Heiko
 
+--===============6523141350165008624==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============6523141350165008624==--
