@@ -1,159 +1,69 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v4] gpio: davinci: reuse for keystone soc
-Date: Wed, 5 Feb 2014 17:47:24 +0200
-Message-ID: <1391615244-12014-1-git-send-email-grygorii.strashko@ti.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH RESEND] ARM: dts: add BeagleBone Audio Cape (Rev A) dtsi
+Date: Wed, 5 Feb 2014 08:56:34 -0600
+Message-ID: <52F25122.50400@ti.com>
+References: <1391608084-12665-1-git-send-email-ml@embed.me.uk> <52F2460C.3080908@ti.com> <20140205143800.GB22153@beef>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, santosh.shilimkar-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140205143800.GB22153@beef>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matt Porter <mporter@linaro.org>
+Cc: Jack Mitchell <ml@embed.me.uk>, bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jack Mitchell <jack@embed.me.uk>
 List-Id: devicetree@vger.kernel.org
 
-The similar GPIO HW block is used by keystone SoCs as
-in Davinci SoCs.
-Hence, reuse Davinci GPIO driver for Keystone taking into
-account that Keystone contains ARM GIC IRQ controller which
-is implemented using IRQ Chip.
+On 02/05/2014 08:38 AM, Matt Porter wrote:
+> On Wed, Feb 05, 2014 at 08:09:16AM -0600, Nishanth Menon wrote:
+>> On 02/05/2014 07:48 AM, Jack Mitchell wrote:
+[...]
+>>> + * --- a/arch/arm/boot/dts/am335x-boneblack.dts
+>>> + * +++ b/arch/arm/boot/dts/am335x-boneblack.dts
+>>> + * @@ -73,6 +74,6 @@
+>>> + *  		pinctrl-names = "default", "off";
+>>> + *  		pinctrl-0 = <&nxp_hdmi_bonelt_pins>;
+>>> + *  		pinctrl-1 = <&nxp_hdmi_bonelt_off_pins>;
+>>> + * -		status = "okay";
+>>> + * +		status = "disabled";
+>>> + *  	};
+>>> + *  };
+>>> + */
+>>> +
+>> how about making the audio-cape-reva.dts which includes and overrides
+>> parameters of boneblack.dts?
+> 
+> Yeah, that might be a little cleaner. Black makes things unfortunately
+> messy for these capes that were really intended for BBW :(
 
-Documentation:
-	http://www.ti.com/lit/ug/sprugv1/sprugv1.pdf
+yes indeed - we might have to live with more dts in such a case.
+> 
+>> Further, I see a bunch of capes in
+>> http://elinux.org/Beagleboard:BeagleBone_Capes
+>>
+>> Assuming that we dont want to discuss capebus all over again, is this
+>> the approach we'd like to consider in the interim?
+> 
+> I think that's a fair assumption...I'll note that there is work slowly
+> in progress on a very minimal implementation DT overlays upstream. But
+> that doesn't exist. We are simply interested in a sane way to use the
+> hardware we own in mainline and this approach makes it possible to build
+> a kernel+dtb from mainline that works for this configuration. If
+> there's a better way to support this hardware *today* let's discuss it.
+> One of the big benefits to having this upstream is that it's no longer
+> out of sight out of mind. It should be managed alongside all the other
+> am335x dts data.
+> 
+> Incidentally, I'm hoping to contribute a similar patch for the DVI cape
+> I have here.
 
-Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
----
-Changes in v4:
-- rebased on top of v3.14 +
-  [patch] gpio: davinci: signedness bug in davinci_gpio_irq_setup()
+If I am not mistaken, the capes are stackable (within reason), and are
+not exactly hotpluggable.. question pops up as to how do we handle
+multiple cape descriptions on the same board without having the user
+to create custom dts which includes each relevant cape dts he has on
+his/her bone? I wonder(without proper research, just thinking aloud)
+if u-boot can do some sort of merge of dtbs - assuming ofcourse eeprom
+data is used to detect the capes plugged on board?
 
- .../devicetree/bindings/gpio/gpio-davinci.txt      |    4 +-
- drivers/gpio/gpio-davinci.c                        |   48 ++++++++++++++++----
- 2 files changed, 42 insertions(+), 10 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-index a2e839d..4ce9862 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-@@ -1,7 +1,7 @@
--Davinci GPIO controller bindings
-+Davinci/Keystone GPIO controller bindings
- 
- Required Properties:
--- compatible: should be "ti,dm6441-gpio"
-+- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio"
- 
- - reg: Physical base address of the controller and the size of memory mapped
-        registers.
-diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-index b0e98d3..5c97f61 100644
---- a/drivers/gpio/gpio-davinci.c
-+++ b/drivers/gpio/gpio-davinci.c
-@@ -37,6 +37,8 @@ struct davinci_gpio_regs {
- 	u32	intstat;
- };
- 
-+typedef struct irq_chip *(*gpio_get_irq_chip_cb_t)(unsigned int irq);
-+
- #define BINTEN	0x8 /* GPIO Interrupt Per-Bank Enable Register */
- 
- #define chip2controller(chip)	\
-@@ -413,6 +415,26 @@ static const struct irq_domain_ops davinci_gpio_irq_ops = {
- 	.xlate = irq_domain_xlate_onetwocell,
- };
- 
-+static struct irq_chip *davinci_gpio_get_irq_chip(unsigned int irq)
-+{
-+	static struct irq_chip_type gpio_unbanked;
-+
-+	gpio_unbanked = *container_of(irq_get_chip(irq),
-+				      struct irq_chip_type, chip);
-+
-+	return &gpio_unbanked.chip;
-+};
-+
-+static struct irq_chip *keystone_gpio_get_irq_chip(unsigned int irq)
-+{
-+	static struct irq_chip gpio_unbanked;
-+
-+	gpio_unbanked = *irq_get_chip(irq);
-+	return &gpio_unbanked;
-+};
-+
-+static const struct of_device_id davinci_gpio_ids[];
-+
- /*
-  * NOTE:  for suspend/resume, probably best to make a platform_device with
-  * suspend_late/resume_resume calls hooking into results of the set_wake()
-@@ -434,6 +456,18 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
- 	struct davinci_gpio_regs __iomem *g;
- 	struct irq_domain	*irq_domain = NULL;
- 	int		irq;
-+	const struct of_device_id *match;
-+	struct irq_chip *irq_chip;
-+	gpio_get_irq_chip_cb_t gpio_get_irq_chip;
-+
-+	/*
-+	 * Use davinci_gpio_get_irq_chip by default to handle non DT cases
-+	 */
-+	gpio_get_irq_chip = davinci_gpio_get_irq_chip;
-+	match = of_match_device(of_match_ptr(davinci_gpio_ids),
-+				dev);
-+	if (match)
-+		gpio_get_irq_chip = (gpio_get_irq_chip_cb_t)match->data;
- 
- 	ngpio = pdata->ngpio;
- 	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-@@ -490,8 +524,6 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
- 	 * IRQ mux conflicts; gpio_irq_type_unbanked() is only for GPIOs.
- 	 */
- 	if (pdata->gpio_unbanked) {
--		static struct irq_chip_type gpio_unbanked;
--
- 		/* pass "bank 0" GPIO IRQs to AINTC */
- 		chips[0].chip.to_irq = gpio_to_irq_unbanked;
- 		chips[0].gpio_irq = bank_irq;
-@@ -500,10 +532,9 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
- 
- 		/* AINTC handles mask/unmask; GPIO handles triggering */
- 		irq = bank_irq;
--		gpio_unbanked = *container_of(irq_get_chip(irq),
--					      struct irq_chip_type, chip);
--		gpio_unbanked.chip.name = "GPIO-AINTC";
--		gpio_unbanked.chip.irq_set_type = gpio_irq_type_unbanked;
-+		irq_chip = gpio_get_irq_chip(irq);
-+		irq_chip->name = "GPIO-AINTC";
-+		irq_chip->irq_set_type = gpio_irq_type_unbanked;
- 
- 		/* default trigger: both edges */
- 		g = gpio2regs(0);
-@@ -512,7 +543,7 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
- 
- 		/* set the direct IRQs up to use that irqchip */
- 		for (gpio = 0; gpio < pdata->gpio_unbanked; gpio++, irq++) {
--			irq_set_chip(irq, &gpio_unbanked.chip);
-+			irq_set_chip(irq, irq_chip);
- 			irq_set_handler_data(irq, &chips[gpio / 32]);
- 			irq_set_status_flags(irq, IRQ_TYPE_EDGE_BOTH);
- 		}
-@@ -555,7 +586,8 @@ done:
- 
- #if IS_ENABLED(CONFIG_OF)
- static const struct of_device_id davinci_gpio_ids[] = {
--	{ .compatible = "ti,dm6441-gpio", },
-+	{ .compatible = "ti,keystone-gpio", keystone_gpio_get_irq_chip},
-+	{ .compatible = "ti,dm6441-gpio", davinci_gpio_get_irq_chip},
- 	{ /* sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, davinci_gpio_ids);
 -- 
-1.7.9.5
+Regards,
+Nishanth Menon
