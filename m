@@ -1,146 +1,79 @@
-From: Davor Joja <davorjoja-bBue3UIS71U2IjGS+8YXRQ@public.gmane.org>
-Subject: [RFC] Documentation: devicetree: bindings: drm: Xylon binding
-Date: Wed, 5 Feb 2014 16:36:28 +0100
-Message-ID: <86ffbf1d-c48f-41f5-ba10-c33c1d0d8e68@mail.xylon.local>
-References: <1391614588-2831-1-git-send-email-davorjoja@logicbricks.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 0/6] ARM: sunxi: Add driver for SD/MMC
+ hosts found on allwinner sunxi SOCs
+Date: Wed, 05 Feb 2014 16:47:35 +0100
+Message-ID: <52F25D17.9080309@redhat.com>
+References: <20140204191648.29809.14611.stgit@dizzy-6.o2s.ch> <20140205103949.GC3192@lukather> <1676482.sbjAhaSLaV@dizzy-6.o2s.ch>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1391614588-2831-1-git-send-email-davorjoja-bBue3UIS71U2IjGS+8YXRQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Davor Joja <davorjoja-bBue3UIS71U2IjGS+8YXRQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBLF2ZGLQKGQEL5IEQ7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1676482.sbjAhaSLaV-GPtPHOohwllnsqa/0SyWJQ@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: =?ISO-8859-1?Q?David_Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Xylon binding of DRM driver and logiCVC IP core.
+Hi David,
 
-Signed-off-by: Davor Joja <davorjoja-bBue3UIS71U2IjGS+8YXRQ@public.gmane.org>
----
- .../devicetree/bindings/drm/xylon/logicvc.txt      |   79 ++++++++++++++++++++
- .../devicetree/bindings/drm/xylon/xylon_drm.txt    |   24 ++++++
- 2 files changed, 103 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/drm/xylon/logicvc.txt
- create mode 100644 Documentation/devicetree/bindings/drm/xylon/xylon_drm.txt
+On 02/05/2014 02:01 PM, David Lanzend=F6rfer wrote:
+> Hi Maxime
+>> I have four comments here:
+>>    - Read Documentation/SubmittingPatches, especially Section 5 and 12
+>>      (hints, you forgot the clock maintainers for your clock patches
+>>      and you didn't put any signed-off-by tags)
+> Oops. I added signed-offs now
+>>    - You ignored pretty much all the comments that were made during the
+>>      review of the first version. Go through
+> Uh? I just fixed the commits and squashed them together for easier handli=
+ng.
+> I'm even using mmc_of_parse now...
+>> http://lists.infradead.org/pipermail/linux-arm-kernel/2013-December/2193=
+39.
+>> html and address the comments that were made.
+>>    - Each of your patches should compile. Fix the order of your
+>>      patches.
+> Done.
+>>    - Submit a v3, with the changes you made. Otherwise we have no way
+>>      of knowing what have been fixed and what didn't
+> Too many patches would be bloaty.
+> That's why I've squashed them into small and corrected patches.
 
-diff --git a/Documentation/devicetree/bindings/drm/xylon/logicvc.txt b/Documentation/devicetree/bindings/drm/xylon/logicvc.txt
-new file mode 100644
-index 0000000..505e655
---- /dev/null
-+++ b/Documentation/devicetree/bindings/drm/xylon/logicvc.txt
-@@ -0,0 +1,79 @@
-+Binding for Xylon configurable video controller logiCVC IP core
-+
-+Required properties:
-+ - compatible: value must be "xylon,logicvc-4.00.a"
-+ - reg: MMIO base address and size of the logiCVC IP core address space
-+ - interrupts-parent: the phandle for interrupt controller
-+ - interrupts: the interrupt number
-+ - background-layer-bits-per-pixel: background layer bits per pixel (16, 32)
-+      if omitted, last available layer is logiCVC standard layer, which has its
-+      own video memory of specific size, color format and specified
-+      bits per pixel
-+      if 16 or 32, last available layer is logiCVC background layer,
-+      with only specified bits per pixel value
-+ - interface: logiCVC to display physical interface
-+      (0=Parallel, 1=ITU656)
-+ - color-space: logiCVC to display physical color space
-+      (0=RGB, 1=YCbCr 4:2:2, 2=YCbCr 4:4:4)
-+ - is-readable-regs: all logiCVC registers are available for reading
-+      if omitted, only Interrupt Status, Power Control and IP Version registers
-+      are available for reading
-+ - is-size-position: logiCVC functionality for controlling on screen layer size
-+      and position is available
-+      if omitted, functionality is not available
-+ - pixel-stride: layer video memory width in pixels
-+      common for all available logiCVC standard layers
-+ - layer_0: layer has its own configuration described with below properties
-+   - bits-per-pixel: layer bits per pixel configuration (16, 32)
-+         layer is configured to be used with specific pixel width in bits
-+         pixels written to layer video memory must match in size to configured
-+         bits per pixel value
-+   - format: layer format (0=RGB, 1=YCbCr)
-+         layer is configured to be used with specific color format
-+         pixels written to layer video memory must match specified color format
-+   - transparency: layer transparency (0=Layer, 1=Pixel)
-+         logiCVC layer can be configured to have transparency control on
-+         layer or pixel level
-+         "Layer" mode enables controlling of layer transparency by changing
-+         alpha value in single logiCVC register
-+         "Pixel" mode enables controlling of pixel transparency by changing
-+         dedicated alpha bits of specific pixel in video memory
-+
-+Example:
-+
-+	logicvc_0: logicvc@40000000 {
-+		compatible = "xylon,logicvc-4.00.a";
-+		reg = <0x40000000 0x6000>;
-+		interrupt-parent = <&gic_0>;
-+		interrupts = <0 59 4>;
-+		background-layer-bits-per-pixel = <32>;
-+		interface = <0>;
-+		color-space = <1>;
-+		is-readable-regs;
-+		is-size-position;
-+		pixel-stride = <2048>;
-+		layer_0 {
-+			address = <0x30000000>;
-+			bits-per-pixel = <16>;
-+			format = <0>;
-+			transparency = <0>;
-+		};
-+		layer_1 {
-+			address = <0x30500000>;
-+			bits-per-pixel = <32>;
-+			format = <0>;
-+			transparency = <0>;
-+		};
-+		layer_2 {
-+			address = <0x30E00000>;
-+			bits-per-pixel = <32>;
-+			format = <0>;
-+			transparency = <1>;
-+		};
-+		layer_3 {
-+			address = <0x31700000>;
-+			bits-per-pixel = <16>;
-+			format = <1>;
-+			transparency = <0>;
-+		};
-+	};
-diff --git a/Documentation/devicetree/bindings/drm/xylon/xylon_drm.txt b/Documentation/devicetree/bindings/drm/xylon/xylon_drm.txt
-new file mode 100644
-index 0000000..da4940e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/drm/xylon/xylon_drm.txt
-@@ -0,0 +1,24 @@
-+Binding for Xylon DRM driver
-+
-+Xylon DRM driver supports the Xylon configurable video controller
-+logiCVC FPGA IP core device.
-+
-+On ZC702, ZC706, ZED boards, logiCVC uses SI570 CCF driver for pixel clock
-+generation, and ADV7511 DRM encoder driver to set video encoding configuration.
-+
-+Required properties:
-+ - compatible: value should be "xylon,drm-1.00.a".
-+ - clocks: the phandle for the pixel clock generator
-+ - device: the phandle for logiCVC video controller device
-+ - encoder: the phandle for the video encoder
-+ - private-plane: logiCVC layer id used for DRM driver private plane
-+
-+Example:
-+
-+	xylon_drm {
-+		compatible = "xylon,drm-1.00.a";
-+		clocks = <&si570>;
-+		device = <&logicvc_0>;
-+		encoder = <&adv7511>;
-+		private-plane = <0>;
-+	};
--- 
-1.7.9.5
+The squashing is fine, what Maxime means is that normally you would include
+a changelog in the coverletter (the [patch 0/x] mail) documenting changes
+done since the previous posting of the patchset, so for v3 that would have =
+been
+something like:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes since v1:
+-use mmc_of_parse instead of diy dt parsing
+-add nodes for all mmc controller to the dtsi files, including sofar unused
+  controllers
+
+Changes since v2:
+-Add missing Signed-off-by tags
+-stop using __raw_readl / __raw_writel so that barriers are properly used
+
+I've probably forgotten a few things, it would be good if you could send
+a reply to the:
+"[PATCH v3 0/7] ARM: sunxi: Add driver for SD/MMC hosts found on allwinner =
+sunxi SOCs"
+mail with the above changelog, amended with whatever I've forgotten to add
+to the above changelog
+
+Thanks & Regards,
+
+Hans
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/groups/opt_out.
