@@ -1,53 +1,117 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH 1/6] i2c: bcm-kona: register with subsys_initcall
-Date: Wed, 5 Feb 2014 10:08:18 +0100
-Message-ID: <20140205090818.GA2614@katana>
-References: <1391516352-32359-1-git-send-email-mporter@linaro.org>
- <1391516352-32359-2-git-send-email-mporter@linaro.org>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH 09/10] watchdog: xilinx: Add missing binding
+Date: Wed, 05 Feb 2014 10:25:27 +0100
+Message-ID: <52F20387.3090709@monstr.eu>
+References: <ed4cb31c9a549343e6b492cf62fc962d39034bd0.1391177880.git.michal.simek@xilinx.com> <3121595.GbLMuGPlvA@wuerfel> <4c4539fe-e810-4c0a-9a01-c1e4c67ea661@AM1EHSMHS007.ehs.local> <201402042027.15898.arnd@arndb.de>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1391516352-32359-2-git-send-email-mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux I2C List <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+ protocol="application/pgp-signature";
+ boundary="9CvXGtd7m7EJr2XSCF9fHIMotVRmFlMFF"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201402042027.15898.arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Michal Simek <michal.simek@xilinx.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, monstr@monstr.eu, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--9CvXGtd7m7EJr2XSCF9fHIMotVRmFlMFF
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
---nFreZHaLTZJo0R7j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 02/04/2014 08:27 PM, Arnd Bergmann wrote:
+> On Monday 03 February 2014, Michal Simek wrote:
+>> On 02/03/2014 04:32 PM, Arnd Bergmann wrote:
+>>> On Monday 03 February 2014 16:13:47 Michal Simek wrote:
+>>>> Intention wasn't to fix binding but document current one
+>>>> which is in mainline for a long time.
+>>>
+>>> Ok, I see.
+>>>
+>>>> Apart of this - yes, wdt-enable-once is nowayout and wdt-interval sh=
+ould be timeout
+>>>> is seconds, and clock-frequency should go out and use CCF for gettin=
+g clock.
+>>>
+>>> Could we make a common binding then, and document that the xilinx
+>>> watchdog can optionally provide either one?
+>>
+>> Do you mean to have 2 DT bindings?
+>>
+>> This binding is used from 2011-07.
+>> It means it was generated for all hw designs at least from this time.
+>> I would say from DT usage on Microblaze because it is not special case=
 
-On Tue, Feb 04, 2014 at 07:19:07AM -0500, Matt Porter wrote:
+>> in our dt generator.
+>=20
+> I certainly wasn't suggesting to break the binding, quite the contrary.=
 
-> Voltage regulators are needed very early due to deferred probe
-> being incompatible with built-in USB gadget drivers.
+> What I tried to say is that the properties look like they should be
+> useful for different kinds of watchdogs, not just xilinx, so it would
+> be good to have a common definition using generic strings.
+>=20
+> The xilinx driver would definitely have to keep supporting the traditio=
+nal
+> property names, but it could also support the generic names in the
+> future.
 
-What does it need to fix those instead?
+No problem with to do in future.
+
+>> xlnx,XXX are XXX parameters which you have to setup in tools
+>> and get synthesized. This is valid for all xilinx IPs. We have full
+>> IP description by generating xlnx,XXX parameters directly from tools
+>> because we know all variants which can happen.
+>>
+>> Just back to your previous post:
+>> "I'm not sure about the enable-once flag, which seems to just map to t=
+he
+>> "nowayout" watchdog option that is not a hardware feature at all"
+>> this is hw feature which you can select in tools because this is fpga.=
+ :-)
+>=20
+> Ah, so you mean the properties are not settings that the driver
+> programs into the hardware, but they are hardware properties that the
+> driver reports to user space?
+
+yes, they are hardware properties which you can choose based on your
+configuration. Every user just decides if this watchdog can be started ju=
+st
+once and how long it takes in synthesis time. There is no option to progr=
+am
+this by software.
+
+I am not quite sure what you mean by reports to user space.
+If you mean to get timeout through ioctl for example - then yes it is wor=
+king
+through standard watchdog ioctl interface and timeout is calculated
+from hardware setup.
+
+Thanks,
+Michal
 
 
---nFreZHaLTZJo0R7j
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--9CvXGtd7m7EJr2XSCF9fHIMotVRmFlMFF
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iQIcBAEBAgAGBQJS8f+CAAoJEBQN5MwUoCm2jrMP/iAt/1pOvXO6wzRAhEAkgd7+
-9CYqnCEJNQputd/wgGOcpXOrOEZBu4eNApKmBu7FErq6Ilrlj5bn/Ughu6/qRS20
-+LwvjYd0GGNpos4JOQ9aJCefMPinj6M3Yghw9rfD67a8f0qTdVjamwehk8mjDwkK
-KOiz2f0ipcL3emm32JBZDkrIG/mFj8FId0VHNS51HJP5bWyf9VITwJygy3mlH8jP
-QKQMfRtr19bVpzyKgcpxm6cT1G8skjSJY+ZJBA/FNK+LSMeQIrrwJD5JI8tviB9R
-lI+w0H9RDel15yv+uDcAcNY8AJ36rAbKTPw9VObB6CRbz3qLhPg99SA3YF2h2+3F
-/FESjXlmaZHBdTQ9iIdaIk65a0qrLIJ2HHje3hvNoKp54yjcDVugdBHfuRq/a8pU
-cH9qRauX5mHOon4oTI7q/8e4TR8LgxTeHZ2hoDfFyy8EqvHpBdlTgnR1Qt8kJku8
-7LqDbAIJrMEYmgbZmJKHopNUOEu7oUxt4XYnTxyIarxbIkGzt1fMwg+/dJSnF1uw
-CLSfwdF7Zxrh9Ms/AyBR/og3uggVKARAMIxEpj2qMTJqotaRIqIxR/WFwoA8WR9+
-+4TJC5moZH6dZFNR62Cv8b7oV3QoSzFDgkv007btur25MFMZ7oh56689KHUMXrq+
-SPVMSgHQnnB8hx8bkAxY
-=uyoI
+iEYEARECAAYFAlLyA4gACgkQykllyylKDCEZoQCgi5g0gXSqx8GgQYPNhgWgtOD9
+UNwAn2SKlTzD/1cVVKg6yYjlPzzJMVjK
+=0iPJ
 -----END PGP SIGNATURE-----
 
---nFreZHaLTZJo0R7j--
+--9CvXGtd7m7EJr2XSCF9fHIMotVRmFlMFF--
