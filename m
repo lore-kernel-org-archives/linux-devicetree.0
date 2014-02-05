@@ -1,47 +1,58 @@
-From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: Re: [PATCH v5 2/3] clocksource: keystone: add bindings for keystone
- timer
-Date: Wed, 5 Feb 2014 20:52:37 +0200
-Message-ID: <52F28875.9000200@ti.com>
-References: <1391608060-10760-1-git-send-email-ivan.khoronzhuk@ti.com>	<1391608060-10760-3-git-send-email-ivan.khoronzhuk@ti.com>	<CAL_JsqKVc2fdg1Q+TH6ro9kpJmUYyHw8FCwhORfm2_oj6GYM2Q@mail.gmail.com>	<52F26444.5090707@ti.com> <CAL_JsqL6YDcZJa5xziR7dP-bEt1CO4BtL1vsO8Qm+hFwgCiQ1w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqL6YDcZJa5xziR7dP-bEt1CO4BtL1vsO8Qm+hFwgCiQ1w@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>
+From: Matt Porter <mporter@linaro.org>
+Subject: [PATCH v3 0/6] IIO pulse capture support for TI ECAP
+Date: Wed,  5 Feb 2014 14:01:35 -0500
+Message-ID: <1391626901-31684-1-git-send-email-mporter@linaro.org>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Linux IIO List <linux-iio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linux PWM List <linux-pwm@vger.kernel.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Changes since v2:
+	- Remove various unneeded field initialization
+	- Call iio_triggered_buffer_cleanup() on remove
 
-On 02/05/2014 07:41 PM, Rob Herring wrote:
-> On Wed, Feb 5, 2014 at 10:18 AM, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com> wrote:
->> On 02/05/2014 04:39 PM, Rob Herring wrote:
->>> On Wed, Feb 5, 2014 at 7:47 AM, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
->>> wrote:
->>>> This patch provides bindings for the 64-bit timer in the KeyStone
->>>> architecture devices. The timer can be configured as a general-purpose
->>>> 64-bit
->>>> timer, dual general-purpose 32-bit timers. When configured as dual 32-bit
->>>> timers, each half can operate in conjunction (chain mode) or
->>>> independently
->>>> (unchained mode) of each other.
->>> This is software configurable or h/w design time configurations?
->>>
->>> Rob
->>>
->> This is h/w design time configurations
-> Then it seems like the binding should provide for describing those
-> differences either with a property or different compatible strings.
->
-> Rob
-Oh..sorry, seems I didn't catch, this is configurable by software.
-These configurations are like modes in which timer can work
-and they are not different hardware IPs. It depends on driver in
-which mode it should work.
+Changes since v1:
+	- Rebased to 3.14-rc1
+	- Renamed in_pulse_polarity to pulse_polarity
+	- Added ABI entries for pulse devices and TI ECAP
+
+This series adds support for PWM capture devices within IIO and
+adds a TI ECAP IIO driver.
+
+PWM capture devices are supported using a new IIO "pulse" channel type.
+
+The IIO ECAP driver implements interrupt driven triggered buffer capture
+only as raw sample reads are not applicable to this hardware.
+Initially, the driver supports a single pulse width measurement with
+configurable polarity. The ECAP hardware can support measurement of a
+complete period and duty cycle but this is not yet implemented.
+
+Matt Porter (6):
+  iio: add support for pulse width capture devices
+  iio: pulse: add TI ECAP driver
+  iio: enable selection and build of pulse drivers
+  iio: Add ABI docs for pulse capture devices
+  pwm: enable TI PWMSS if the IIO tiecap driver is selected
+  ARM: dts: AM33XX: Add ecap interrupt properties
+
+ Documentation/ABI/testing/sysfs-bus-iio            |  18 +
+ .../ABI/testing/sysfs-bus-iio-pulse-tiecap         |   9 +
+ arch/arm/boot/dts/am33xx.dtsi                      |   6 +
+ drivers/iio/Kconfig                                |   1 +
+ drivers/iio/Makefile                               |   1 +
+ drivers/iio/industrialio-core.c                    |   1 +
+ drivers/iio/pulse/Kconfig                          |  20 +
+ drivers/iio/pulse/Makefile                         |   6 +
+ drivers/iio/pulse/tiecap.c                         | 491 +++++++++++++++++++++
+ drivers/pwm/Kconfig                                |   2 +-
+ include/linux/iio/types.h                          |   1 +
+ 11 files changed, 555 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-pulse-tiecap
+ create mode 100644 drivers/iio/pulse/Kconfig
+ create mode 100644 drivers/iio/pulse/Makefile
+ create mode 100644 drivers/iio/pulse/tiecap.c
 
 -- 
-Regards,
-Ivan Khoronzhuk
+1.8.4
 
