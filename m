@@ -1,67 +1,78 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 8/8] ARM: dts: sun7i: Add ethernet alias
- for GMAC
-Date: Wed, 5 Feb 2014 12:43:18 +0800
-Message-ID: <CAGb2v659T_QTLChB0NRS0seQvwDBCmTAH6UBEghZng9Ac6uL4g@mail.gmail.com>
-References: <1391398346-5094-1-git-send-email-wens@csie.org>
- <1391398346-5094-9-git-send-email-wens@csie.org> <20140203193802.GE25625@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Matt Porter <mporter@linaro.org>
+Subject: Re: [PATCH v4 1/2] iio:as3935: Add DT binding docs for AS3935 driver
+Date: Tue, 4 Feb 2014 23:43:35 -0500
+Message-ID: <20140205044335.GA2172@beef>
+References: <1391570096-2932-1-git-send-email-mranostay@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB6UCY6LQKGQECVZZM7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20140203193802.GE25625@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1391570096-2932-1-git-send-email-mranostay@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matt Ranostay <mranostay@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 4, 2014 at 3:38 AM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Mon, Feb 03, 2014 at 11:32:26AM +0800, Chen-Yu Tsai wrote:
->> U-Boot will insert MAC address into the device tree image.
->> It looks up ethernet[0-5] aliases to find the ethernet nodes.
->> Alias GMAC as ethernet0, as it is the only ethernet controller used.
->>
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/sun7i-a20.dtsi | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
->> index 65fb8d0..c48fb11 100644
->> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
->> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
->> @@ -17,7 +17,7 @@
->>       interrupt-parent = <&gic>;
->>
->>       aliases {
->> -             ethernet0 = &emac;
->> +             ethernet0 = &gmac;
->>       };
->
-> I'm not very fond of this patch.
->
-> People might rely on the fact that ethernet0 is actually the emac, and
-> are expecting u-boot to fill the ethaddr variable to the emac, and not
-> the gmac.
->
-> Since u-boot is totally able to deal with several ethernet addresses,
-> please add it as ethernet1.
+On Tue, Feb 04, 2014 at 07:14:55PM -0800, Matt Ranostay Matt Ranostay wrote:
+> Document compatible string, required and optional DT properties for
+> AS3935 chipset driver.
+> 
+> Signed-off-by: Matt Ranostay <mranostay@gmail.com>
+> ---
+>  .../devicetree/bindings/iio/proximity/as3935.txt   | 25 ++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/as3935.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/proximity/as3935.txt b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
+> new file mode 100644
+> index 0000000..7e117cd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
+> @@ -0,0 +1,25 @@
+> +Austrian Microsystems AS3935 Franklin lightning sensor device driver
+> +
+> +Required properties:
+> +	- compatible: must be "ams,as3935"
 
-Actually I think we should override this in the board dts.
-The boards we currently support can only use emac or gmac,
-and in our u-boot tree, they have been converted to using
-gmac. If any future boards support both emac and gmac, we
-can address the ordering then. And the ordering should
-match u-boot.
+Change this to "amstaos,as3935"
 
-What do you think?
+amstaos (AMS bought Taos) is already a registered vendor prefix in
+vendor-prefixes.txt
 
+> +	- reg: SPI chip select number for the device
+> +	- spi-cpha: SPI Mode 1
 
-Cheers
-ChenYu
+When using generic binding properties, please reference the binding
+being used. Like:
+
+	- spi-cpha: SPI Mode 1. Refer to spi/spi-bus.txt for generic SPI
+	  slave node bindings.
+
+> +  	- interrupt-parent : should be the phandle for the interrupt controller
+> +	- interrupts : interrupt mapping for GPIO IRQ
+
+	Refer to interrupt-controller/interrupts.txt for generic
+	interrupt client node bindings.
+
+> +
+> +Optional properties:
+> +	- ams,tune-cap: Calibration tuning capacitor stepping value 0 - 15.
+> +	  Range of 0 to 120 pF, 8pF steps. This will require using the
+> +	  calibration data from the manufacturer.
+> +
+> +
+> +Example:
+> +
+> +as3935@0 {
+> +	compatible = "ams,as3935";
+> +	reg = <0>;
+> +	spi-cpha;
+> +	interrupt-parent = <&gpio1>;
+> +	interrupts = <16 1>;
+> +	ams,tune-cap = /bits/ 8 <10>;
+
+What is this? Why not just ams,tune-cap = <10>; ?
+
+It's a value between 0-15, right?
+
+-Matt
