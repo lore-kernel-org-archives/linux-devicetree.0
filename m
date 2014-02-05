@@ -1,153 +1,54 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v2 3/5] drivers: of: implement reserved-memory handling for cma
-Date: Wed, 05 Feb 2014 11:09:22 +0000
-Message-ID: <20140205110922.44DAAC40A89@trevor.secretlab.ca>
-References: <1391515773-6112-1-git-send-email-m.szyprowski@samsung.com> < 1391515773-6112-4-git-send-email-m.szyprowski@samsung.com>
+Subject: Re: [RFC PATCH v2 03/14] of: mtd: add documentation for nand-ecc-level property
+Date: Wed, 05 Feb 2014 11:15:00 +0000
+Message-ID: <20140205111500.B19FDC40A89@trevor.secretlab.ca>
+References: <1391006064-28890-1-git-send-email-b.brezillon.dev@gmail.com> < 1391006064-28890-4-git-send-email-b.brezillon.dev@gmail.com> < 20140129175331.GA27143@localhost>
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1391515773-6112-4-git-send-email-m.szyprowski@samsung.com>
+In-Reply-To: <20140129175331.GA27143@localhost>
 Sender: linux-doc-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@gmail.com>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>
+To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Boris BREZILLON <b.brezillon.dev@gmail.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, dev@linux-sunxi.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Pekon Gupta <pekon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 04 Feb 2014 13:09:31 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
-> From: Josh Cartwright <joshc@codeaurora.org>
+On Wed, 29 Jan 2014 14:53:32 -0300, Ezequiel Garcia <ezequiel.garcia@free-electrons.com> wrote:
+> On Wed, Jan 29, 2014 at 03:34:13PM +0100, Boris BREZILLON wrote:
+> > nand-ecc-level property statically defines NAND chip's ECC requirements.
+> > 
+> > Signed-off-by: Boris BREZILLON <b.brezillon.dev@gmail.com>
+> > ---
+> >  Documentation/devicetree/bindings/mtd/nand.txt |    3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation/devicetree/bindings/mtd/nand.txt
+> > index 03855c8..0c962296 100644
+> > --- a/Documentation/devicetree/bindings/mtd/nand.txt
+> > +++ b/Documentation/devicetree/bindings/mtd/nand.txt
+> > @@ -3,5 +3,8 @@
+> >  - nand-ecc-mode : String, operation mode of the NAND ecc mode.
+> >    Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob_first",
+> >    "soft_bch".
+> > +- nand-ecc-level : Two cells property defining the ECC level requirements.
+> > +  The first cell represent the strength and the second cell the ECC block size.
+> > +  E.g. : nand-ecc-level = <4 512>; /* 4 bits / 512 bytes */
+> >  - nand-bus-width : 8 or 16 bus width if not present 8
+> >  - nand-on-flash-bbt: boolean to enable on flash bbt option if not present false
 > 
-> Add support for handling 'shared-dma-pool' reserved-memory nodes using
-> Contiguous Memory Allocator driver.
+> Hm.. when was this proposal agreed? It seems I've missed the
+> discussion...
 > 
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Laura Abbott <lauraa@codeaurora.org>
-> Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->  drivers/of/Kconfig               |    7 ++++
->  drivers/of/Makefile              |    1 +
->  drivers/of/of_reserved_mem_cma.c |   75 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 83 insertions(+)
->  create mode 100644 drivers/of/of_reserved_mem_cma.c
+> FWIW, we've already proposed an equivalent one, but it received no
+> feedback from the devicetree maintainers:
+
+Sorry, binding review has become a huge undertaking.
+
 > 
-> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> index 7ac330473ec9..5dd3a80910d2 100644
-> --- a/drivers/of/Kconfig
-> +++ b/drivers/of/Kconfig
-> @@ -81,6 +81,13 @@ config OF_RESERVED_MEM
->  	help
->  	  Helpers to allow for reservation of memory regions
->  
-> +config OF_RESERVED_MEM_CMA
-> +	depends on OF_RESERVED_MEM
-> +	depends on DMA_CMA
-> +	def_bool y
-> +	help
-> +	  Helpers for reserving memory regions for DMA use
-> +
->  config OF_RESERVED_MEM_DMA
->  	depends on OF_RESERVED_MEM
->  	depends on HAVE_GENERIC_DMA_COHERENT
-> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-> index 6142227ca854..49b9078637b8 100644
-> --- a/drivers/of/Makefile
-> +++ b/drivers/of/Makefile
-> @@ -10,4 +10,5 @@ obj-$(CONFIG_OF_PCI)	+= of_pci.o
->  obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
->  obj-$(CONFIG_OF_MTD)	+= of_mtd.o
->  obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
-> +obj-$(CONFIG_OF_RESERVED_MEM_CMA) += of_reserved_mem_cma.o
->  obj-$(CONFIG_OF_RESERVED_MEM_DMA) += of_reserved_mem_dma.o
-> diff --git a/drivers/of/of_reserved_mem_cma.c b/drivers/of/of_reserved_mem_cma.c
-> new file mode 100644
-> index 000000000000..601d80655102
-> --- /dev/null
-> +++ b/drivers/of/of_reserved_mem_cma.c
-> @@ -0,0 +1,75 @@
-> +/*
-> + * Device tree based initialization code for DMA reserved regions.
-> + *
-> + * Copyright (c) 2013, The Linux Foundation. All Rights Reserved.
-> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-> + *		http://www.samsung.com
-> + * Author: Marek Szyprowski <m.szyprowski@samsung.com>
-> + * Author: Josh Cartwright <joshc@codeaurora.org>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation; either version 2 of the
-> + * License or (at your optional) any later version of the license.
-> + */
-> +#include <linux/err.h>
-> +#include <linux/of.h>
-> +#include <linux/of_fdt.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/mm.h>
-> +#include <linux/sizes.h>
-> +#include <linux/mm_types.h>
-> +#include <linux/dma-contiguous.h>
-> +#include <linux/of_reserved_mem.h>
-> +
-> +static void rmem_cma_device_init(struct reserved_mem *rmem,
-> +				 struct device *dev,
-> +				 struct of_phandle_args *args)
-> +{
-> +	struct cma *cma = rmem->priv;
-> +	dev_set_cma_area(dev, cma);
-> +}
-> +
-> +static const struct reserved_mem_ops rmem_cma_ops = {
-> +	.device_init	= rmem_cma_device_init,
-> +};
-> +
-> +static int __init rmem_cma_setup(struct reserved_mem *rmem,
-> +				 unsigned long node,
-> +				 const char *uname)
-> +{
-> +	struct cma *cma;
-> +	int err;
-> +
-> +	if (!of_get_flat_dt_prop(node, "reusable", NULL))
-> +		return -EINVAL;
-> +
-> +	err = of_parse_flat_dt_reg(node, uname, &rmem->base, &rmem->size);
-> +	if (!err)
-> +		goto out_done;
-> +
-> +	rmem->base = 0;
-> +	err = of_parse_flat_dt_size(node, uname, &rmem->size);
-> +	if (err)
-> +		goto out_err;
-> +
-> +out_done:
-
-Please restrict gotos for error handling. Why not the following:
-
-	err = of_parse_flat_dt_reg(node, uname, &rmem->base, &rmem->size);
-	if (err) {
-		rmem->base = 0;
-		err = of_parse_flat_dt_size(node, uname, &rmem->size);
-		if (err)
-			goto out_err;
-	}
-
-> +	err = dma_contiguous_reserve_area(rmem->size, rmem->base, 0,
-> +					  &cma);
-> +	if (err) {
-> +		pr_err("Reserved memory: unable to setup CMA region\n");
-> +		return err;
-> +	}
-> +
-> +	if (of_get_flat_dt_prop(node, "linux,cma-default", NULL))
-> +		dma_contiguous_set_default(cma);
-> +
-> +	rmem->ops = &rmem_cma_ops;
-> +	rmem->priv = cma;
-> +
-> +	return 0;
-> +out_err:
-> +	pr_err("Reseved memory: malformed node '%s'.\n", uname);
-> +	return err;
-> +}
-> +RESERVEDMEM_OF_DECLARE(cma, "shared-dma-pool", rmem_cma_setup);
-> -- 
-> 1.7.9.5
+> http://comments.gmane.org/gmane.linux.drivers.devicetree/58764
 > 
+> Maybe we can discuss about it now?
+> 
+>   nand-ecc-strength : integer ECC required strength.
+>   nand-ecc-size : integer step size associated to the ECC strength.
 
+I'm okay with either, but the above binding is indeed more readable.
+
+g.
