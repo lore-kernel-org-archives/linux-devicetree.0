@@ -1,253 +1,62 @@
-From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: [PATCH v4 2/2] memory: ti-aemif: add bindings for AEMIF driver
-Date: Wed, 5 Feb 2014 21:46:14 +0200
-Message-ID: <1391629574-18955-3-git-send-email-ivan.khoronzhuk@ti.com>
-References: <1391629574-18955-1-git-send-email-ivan.khoronzhuk@ti.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: RE: [PATCH v6 8/8] usb: ehci-exynos: Change to use phy provided by
+ the generic phy framework
+Date: Wed, 5 Feb 2014 14:55:51 -0500 (EST)
+Message-ID: <Pine.LNX.4.44L0.1402051453150.1312-100000@iolanthe.rowland.org>
+References: <054301cf228a$eb58a480$c209ed80$%debski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1391629574-18955-1-git-send-email-ivan.khoronzhuk@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: santosh.shilimkar@ti.com, rob@landley.net, linux@arm.linux.org.uk, galak@kernel.crashing.org
-Cc: devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, rob.herring@calxeda.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, grygorii.strashko@ti.com, gregkh@linuxfoundation.org, dwmw2@infradead.org, nsekhar@ti.com, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <054301cf228a$eb58a480$c209ed80$%debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mat.krawczuk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, yulgon.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, av.tikhomirov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tjakobi-o02PS0xoJP9W0yFyLvAVXMxlOr/tl8fh@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add bindings for TI Async External Memory Interface (AEMIF) controller.
+On Wed, 5 Feb 2014, Kamil Debski wrote:
 
-The Async External Memory Interface (EMIF16/AEMIF) controller is intended to
-provide a glue-less interface to a variety of asynchronous memory devices like
-ASRA M, NOR and NAND memory. A total of 256M bytes of any of these memories
-can be accessed via 4 chip selects with 64M byte access per chip select.
+> Hi Alan,
+> 
+> Thank you for your review.
 
-We are not encoding CS number in reg property, it's memory partition number.
-The CS number is encoded for Davinci NAND node using standalone property
-"ti,davinci-chipselect" and we need to provide two memory ranges to it,
-as result we can't encode CS number in "reg" for AEMIF child devices
-(NAND/NOR/etc), as it will break bindings compatibility.
+You're welcome.
 
-In this patch, NAND node is used just as an example of child node.
+> > 
+> > > Change the phy provider used from the old one using the USB phy
+> > You have removed all the OTG stuff from the driver.  This wasn't
+> > mentioned in the patch description, and it has no connection with the
+> > PHY work.
+> 
+> Maybe I'll explain more about what are we trying to achieve. The goal
+> is to replace the old phy driver with the new one. In the old driver it was
+> difficult to add support to new SoC. It also had issues with having device
+> and
+> host working together.
+> 
+> You're right that until the old phy driver is removed support for the it
+> should
+> remain. To be able to remove the old driver both new USB2 and new USB3 phy
+> drivers
+> have to be ready. The USB3 driver is written by Vivek Gautam and as I see
+> it, he
+> is also close to completion.
+> 
+> Regarding the otg part. The old phy driver is the only provider of the otg
+> structure. It sets the host field of the structure. It is then used by
+> samsung_usb2phy_init (drivers/usb/phy/phy-samsung-usb2.c) to check which
+> driver is requesting the phy (is it host or device). In the new driver this
+> is determined by the entry in device tree. So no need to check the otg
+> struct
+> and strstr (!) to check if dev_name is ehci, ohci or other, like the old
+> driver.
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
----
- .../bindings/memory-controllers/ti-aemif.txt       | 210 +++++++++++++++++++++
- 1 file changed, 210 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt
+Okay, that's fine.  But please explain this in the patch description
+next time.  Otherwise the connection between the phy driver and the otg
+structure is not at all clear; they look like two unrelated things.
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt b/Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt
-new file mode 100644
-index 0000000..d1466dc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt
-@@ -0,0 +1,210 @@
-+* Device tree bindings for Texas instruments AEMIF controller
-+
-+The Async External Memory Interface (EMIF16/AEMIF) controller is intended to
-+provide a glue-less interface to a variety of asynchronous memory devices like
-+ASRA M, NOR and NAND memory. A total of 256M bytes of any of these memories
-+can be accessed at any given time via four chip selects with 64M byte access
-+per chip select. Synchronous memories such as DDR1 SD RAM, SDR SDRAM
-+and Mobile SDR are not supported.
-+
-+Documentation:
-+Davinci DM646x - http://www.ti.com/lit/ug/sprueq7c/sprueq7c.pdf
-+OMAP-L138 (DA850) - http://www.ti.com/lit/ug/spruh77a/spruh77a.pdf
-+Kestone - http://www.ti.com/lit/ug/sprugz3a/sprugz3a.pdf
-+
-+Required properties:
-+
-+- compatible:		"ti,davinci-aemif"
-+			"ti,keystone-aemif"
-+			"ti,da850-aemif"
-+
-+- reg:			contains offset/length value for AEMIF control registers
-+			space.
-+
-+- #address-cells:	Must be 2. The partition number has to be encoded in the
-+			first address cell and it may accept values 0..N-1
-+			(N - total number of partitions). It's recommended to
-+			assign N-1 number for the control partition. The second
-+			cell is the offset into the partition.
-+
-+- #size-cells:		Must be set to 1.
-+
-+- ranges:		Contains memory regions. There are two types of
-+			ranges/partitions:
-+			- CS-specific partition/range. If continuous, must be
-+			set up to reflect the memory layout for 4 chipselects,
-+			if not then additional range/partition can be added and
-+			child device can select the proper one.
-+			- control partition which is common for all CS
-+			interfaces.
-+
-+- clocks:		the clock feeding the controller clock. Required only
-+			if clock tree data present in device tree.
-+			See clock-bindings.txt
-+
-+- clock-names:		clock name. It has to be "aemif". Required only if clock
-+			tree data present in device tree, in another case don't
-+			use it.
-+			See clock-bindings.txt
-+
-+- clock-ranges:		Empty property indicating that child nodes can inherit
-+			named clocks. Required only if clock tree data present
-+			in device tree.
-+			See clock-bindings.txt
-+
-+
-+Child chip-select (cs) nodes contain the memory devices nodes connected to
-+such as NOR (e.g. cfi-flash) and NAND (ti,davinci-nand, see davinci-nand.txt).
-+There might be board specific devices like FPGAs.
-+
-+Required child cs node properties:
-+
-+- #address-cells:	Must be 2.
-+
-+- #size-cells:		Must be 1.
-+
-+- ranges:		Empty property indicating that child nodes can inherit
-+			memory layout.
-+
-+- clock-ranges:		Empty property indicating that child nodes can inherit
-+			named clocks. Required only if clock tree data present
-+			in device tree.
-+
-+- ti,cs-chipselect:	number of chipselect. Indicates on the aemif driver
-+			which chipselect is used for accessing the memory. For
-+			compatibles "ti,davinci-aemif" and "ti,keystone-aemif"
-+			it can be in range [0-3]. For compatible
-+			"ti,da850-aemif" range is [2-5].
-+
-+Optional child cs node properties:
-+
-+- ti,bus-width:			width of the asynchronous device's data bus
-+				8 or 16 if not preset 8
-+
-+- ti,cs-ss:		enable/disable select strobe mode
-+				In select strobe mode chip select behaves as
-+				the strobe and is active only during the strobe
-+				period. If present then enable.
-+
-+- ti,cs-ew:		enable/disable extended wait mode
-+				if set, the controller monitors the EMIFWAIT pin
-+				mapped to that chip select to determine if the
-+				device wants to extend the strobe period. If
-+				present then enable.
-+
-+- ti,cs-ta:		minimum turn around time, ns
-+				Time between the end of one asynchronous memory
-+				access and the start of another asynchronous
-+				memory access. This delay is not incurred
-+				between a read followed by read or a write
-+				followed by a write to same chip select.
-+
-+- ti,cs-rsetup:		read setup width, ns
-+				Time between the beginning of a memory cycle
-+				and the activation of read strobe.
-+				Minimum value is 1 (0 treated as 1).
-+
-+- ti,cs-rstobe:		read strobe width, ns
-+				Time between the activation and deactivation of
-+				the read strobe.
-+				Minimum value is 1 (0 treated as 1).
-+
-+- ti,cs-rhold:		read hold width, ns
-+				Time between the deactivation of the read
-+				strobe and the end of the cycle (which may be
-+				either an address change or the deactivation of
-+				the chip select signal.
-+				Minimum value is 1 (0 treated as 1).
-+
-+- ti,cs-wsetup:		write setup width, ns
-+				Time between the beginning of a memory cycle
-+				and the activation of write strobe.
-+				Minimum value is 1 (0 treated as 1).
-+
-+- ti,cs-wstrobe:	write strobe width, ns
-+				Time between the activation and deactivation of
-+				the write strobe.
-+				Minimum value is 1 (0 treated as 1).
-+
-+- ti,cs-whold:		write hold width, ns
-+				Time between the deactivation of the write
-+				strobe and the end of the cycle (which may be
-+				either an address change or the deactivation of
-+				the chip select signal.
-+				Minimum value is 1 (0 treated as 1).
-+
-+If any of the above parameters are absent, current parameter value will be taken
-+from the corresponding HW reg.
-+
-+Example for aemif, davinci nand and nor flash chip select shown below.
-+
-+memory-controller@21000A00 {
-+	compatible = "ti,davinci-aemif";
-+	#address-cells = <2>;
-+	#size-cells = <1>;
-+	clocks = <&clkaemif 0>;
-+	clock-names = "aemif";
-+	clock-ranges;
-+	reg = <0x2100A00 0x00000100>;
-+	ranges = <0 0 0x70000000 0x10000000
-+		  1 0 0x21000A00 0x0000100>;
-+		  /*
-+		   * Partition0: CS-specific memory range which is
-+		   * implemented as continuous physical memory region
-+		   * Partition1: control memory range
-+		   */
-+
-+	nand:cs2 {
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		clock-ranges;
-+		ranges;
-+
-+		ti,cs-chipselect = <2>;
-+		/* all timings in nanoseconds */
-+		ti,cs-ta = <0>;
-+		ti,cs-rhold = <7>;
-+		ti,cs-rstrobe = <42>;
-+		ti,cs-rsetup = <14>;
-+		ti,cs-whold = <7>;
-+		ti,cs-wstrobe = <42>;
-+		ti,cs-wsetup = <14>;
-+
-+		nand@0,0x8000000 {
-+			compatible = "ti,davinci-nand";
-+			reg = <0 0x8000000 0x4000000
-+			       1 0x0000000 0x0000100>;
-+			/*
-+			 * Partition0, offset 0x8000000, size 0x4000000
-+			 * Partition1, offset 0x0000000, size 0x0000100
-+			 */
-+
-+			.. see davinci-nand.txt
-+		};
-+	};
-+
-+	nor:cs0 {
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		clock-ranges;
-+		ranges;
-+
-+		ti,cs-chipselect = <0>;
-+		/* all timings in nanoseconds */
-+		ti,cs-ta = <0>;
-+		ti,cs-rhold = <8>;
-+		ti,cs-rstrobe = <40>;
-+		ti,cs-rsetup = <14>;
-+		ti,cs-whold = <7>;
-+		ti,cs-wstrobe = <40>;
-+		ti,cs-wsetup = <14>;
-+		ti,cs-asize = <1>;
-+
-+		flash@0,0x0000000 {
-+			compatible = "cfi-flash";
-+			reg = <0 0x0000000 0x4000000>;
-+
-+			...
-+		};
-+	};
-+};
--- 
-1.8.3.2
+Alan Stern
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
