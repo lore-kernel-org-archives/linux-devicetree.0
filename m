@@ -1,117 +1,67 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH 09/10] watchdog: xilinx: Add missing binding
-Date: Wed, 05 Feb 2014 10:25:27 +0100
-Message-ID: <52F20387.3090709@monstr.eu>
-References: <ed4cb31c9a549343e6b492cf62fc962d39034bd0.1391177880.git.michal.simek@xilinx.com> <3121595.GbLMuGPlvA@wuerfel> <4c4539fe-e810-4c0a-9a01-c1e4c67ea661@AM1EHSMHS007.ehs.local> <201402042027.15898.arnd@arndb.de>
-Reply-To: monstr@monstr.eu
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v2 0/6] ARM: STi reset controller support
+Date: Wed, 05 Feb 2014 10:28:06 +0100
+Message-ID: <1391592486.11239.4.camel@pizza.hi.pengutronix.de>
+References: <1389696613-19683-1-git-send-email-srinivas.kandagatla@st.com>
+ <1391437665-11913-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="9CvXGtd7m7EJr2XSCF9fHIMotVRmFlMFF"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201402042027.15898.arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Michal Simek <michal.simek@xilinx.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, monstr@monstr.eu, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1391437665-11913-1-git-send-email-srinivas.kandagatla@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: srinivas.kandagatla@st.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, kernel@stlinux.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Olof Johansson <olof@lixom.net>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, stephen.gallimore@st.com, Stuart Menefy <stuart.menefy@st.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---9CvXGtd7m7EJr2XSCF9fHIMotVRmFlMFF
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Hi Srinivas,
 
-On 02/04/2014 08:27 PM, Arnd Bergmann wrote:
-> On Monday 03 February 2014, Michal Simek wrote:
->> On 02/03/2014 04:32 PM, Arnd Bergmann wrote:
->>> On Monday 03 February 2014 16:13:47 Michal Simek wrote:
->>>> Intention wasn't to fix binding but document current one
->>>> which is in mainline for a long time.
->>>
->>> Ok, I see.
->>>
->>>> Apart of this - yes, wdt-enable-once is nowayout and wdt-interval sh=
-ould be timeout
->>>> is seconds, and clock-frequency should go out and use CCF for gettin=
-g clock.
->>>
->>> Could we make a common binding then, and document that the xilinx
->>> watchdog can optionally provide either one?
->>
->> Do you mean to have 2 DT bindings?
->>
->> This binding is used from 2011-07.
->> It means it was generated for all hw designs at least from this time.
->> I would say from DT usage on Microblaze because it is not special case=
+Am Montag, den 03.02.2014, 14:27 +0000 schrieb
+srinivas.kandagatla@st.com:
+> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+> 
+> Hi All,
+> 
+> This patch series adds reset controller support for STi SOC series STiH415 and
+> STiH416. It adds support for both power down reset and soft reset controllers.
+> On STi series SOCs reset lines are wired up to system configuration registers.
+> Most of the IPs on STi SOCs are left in reset state, so this driver is very
+> important for other drivers to use the IPs.
+> 
+> Patch 01: Adds reset controller based on system configuration registers via
+> regmap.
+> 
+> Patch 02, 03: adds STiH415 and STiH416 reset controller drivers.
+> 
+> Patch 04, 05: adds STiH415 and STiH416 soft reset controllers.
+> 
+> The final patch 06 selects reset controller in mach-sti Kconfig.
+> 
+> I would like get this driver in to 3.15, so that its possible to add dt
+> support for other IPs with reset lines. Without this patchset its impossible
+> to add DT support to IPs with reset lines as reset line definition is in
+> common header file in include/dt-bindings/.
+> 
+> This reset controller will be used by gmac, i2c and st-ir drivers.
+> 
+> 
+> Comments?
 
->> in our dt generator.
->=20
-> I certainly wasn't suggesting to break the binding, quite the contrary.=
+the patchset looks good to me for the soft resets. But for the powerdown
+bits I am wondering whether the reset controller API is the right
+abstraction. Depending on whether those bits really just put the IPs
+into reset or there is some power gating / sequencing involved,
+shouldn't this rather be handled as a set of pm domains?
+I see that for example on STiH415 there are both soft resets and
+powerdown bits for USB[012].
 
-> What I tried to say is that the properties look like they should be
-> useful for different kinds of watchdogs, not just xilinx, so it would
-> be good to have a common definition using generic strings.
->=20
-> The xilinx driver would definitely have to keep supporting the traditio=
-nal
-> property names, but it could also support the generic names in the
-> future.
-
-No problem with to do in future.
-
->> xlnx,XXX are XXX parameters which you have to setup in tools
->> and get synthesized. This is valid for all xilinx IPs. We have full
->> IP description by generating xlnx,XXX parameters directly from tools
->> because we know all variants which can happen.
->>
->> Just back to your previous post:
->> "I'm not sure about the enable-once flag, which seems to just map to t=
-he
->> "nowayout" watchdog option that is not a hardware feature at all"
->> this is hw feature which you can select in tools because this is fpga.=
- :-)
->=20
-> Ah, so you mean the properties are not settings that the driver
-> programs into the hardware, but they are hardware properties that the
-> driver reports to user space?
-
-yes, they are hardware properties which you can choose based on your
-configuration. Every user just decides if this watchdog can be started ju=
-st
-once and how long it takes in synthesis time. There is no option to progr=
-am
-this by software.
-
-I am not quite sure what you mean by reports to user space.
-If you mean to get timeout through ioctl for example - then yes it is wor=
-king
-through standard watchdog ioctl interface and timeout is calculated
-from hardware setup.
-
-Thanks,
-Michal
-
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---9CvXGtd7m7EJr2XSCF9fHIMotVRmFlMFF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlLyA4gACgkQykllyylKDCEZoQCgi5g0gXSqx8GgQYPNhgWgtOD9
-UNwAn2SKlTzD/1cVVKg6yYjlPzzJMVjK
-=0iPJ
------END PGP SIGNATURE-----
-
---9CvXGtd7m7EJr2XSCF9fHIMotVRmFlMFF--
+regards
+Philipp
