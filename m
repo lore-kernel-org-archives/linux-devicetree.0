@@ -1,69 +1,58 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH RESEND] ARM: dts: add BeagleBone Audio Cape (Rev A) dtsi
-Date: Wed, 5 Feb 2014 08:56:34 -0600
-Message-ID: <52F25122.50400@ti.com>
-References: <1391608084-12665-1-git-send-email-ml@embed.me.uk> <52F2460C.3080908@ti.com> <20140205143800.GB22153@beef>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] spi: sunxi: Add Allwinner A31 SPI
+ controller driver
+Date: Wed, 5 Feb 2014 14:59:24 +0000
+Message-ID: <20140205145924.GA32298@sirena.org.uk>
+References: <1391605507-30981-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1391605507-30981-4-git-send-email-maxime.ripard@free-electrons.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140205143800.GB22153@beef>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <mporter@linaro.org>
-Cc: Jack Mitchell <ml@embed.me.uk>, bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jack Mitchell <jack@embed.me.uk>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="dDRMvlgZJXvWKvBx"
+Return-path: <linux-sunxi+bncBDQ2L75W5QGBBYNDZGLQKGQEWGKVRFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1391605507-30981-4-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/05/2014 08:38 AM, Matt Porter wrote:
-> On Wed, Feb 05, 2014 at 08:09:16AM -0600, Nishanth Menon wrote:
->> On 02/05/2014 07:48 AM, Jack Mitchell wrote:
-[...]
->>> + * --- a/arch/arm/boot/dts/am335x-boneblack.dts
->>> + * +++ b/arch/arm/boot/dts/am335x-boneblack.dts
->>> + * @@ -73,6 +74,6 @@
->>> + *  		pinctrl-names = "default", "off";
->>> + *  		pinctrl-0 = <&nxp_hdmi_bonelt_pins>;
->>> + *  		pinctrl-1 = <&nxp_hdmi_bonelt_off_pins>;
->>> + * -		status = "okay";
->>> + * +		status = "disabled";
->>> + *  	};
->>> + *  };
->>> + */
->>> +
->> how about making the audio-cape-reva.dts which includes and overrides
->> parameters of boneblack.dts?
-> 
-> Yeah, that might be a little cleaner. Black makes things unfortunately
-> messy for these capes that were really intended for BBW :(
 
-yes indeed - we might have to live with more dts in such a case.
-> 
->> Further, I see a bunch of capes in
->> http://elinux.org/Beagleboard:BeagleBone_Capes
->>
->> Assuming that we dont want to discuss capebus all over again, is this
->> the approach we'd like to consider in the interim?
-> 
-> I think that's a fair assumption...I'll note that there is work slowly
-> in progress on a very minimal implementation DT overlays upstream. But
-> that doesn't exist. We are simply interested in a sane way to use the
-> hardware we own in mainline and this approach makes it possible to build
-> a kernel+dtb from mainline that works for this configuration. If
-> there's a better way to support this hardware *today* let's discuss it.
-> One of the big benefits to having this upstream is that it's no longer
-> out of sight out of mind. It should be managed alongside all the other
-> am335x dts data.
-> 
-> Incidentally, I'm hoping to contribute a similar patch for the DVI cape
-> I have here.
+--dDRMvlgZJXvWKvBx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-If I am not mistaken, the capes are stackable (within reason), and are
-not exactly hotpluggable.. question pops up as to how do we handle
-multiple cape descriptions on the same board without having the user
-to create custom dts which includes each relevant cape dts he has on
-his/her bone? I wonder(without proper research, just thinking aloud)
-if u-boot can do some sort of merge of dtbs - assuming ofcourse eeprom
-data is used to detect the capes plugged on board?
+On Wed, Feb 05, 2014 at 02:05:05PM +0100, Maxime Ripard wrote:
+> The Allwinner A31 has a new SPI controller IP compared to the older Allwinner
+> SoCs.
 
--- 
-Regards,
-Nishanth Menon
+Looks good - applied, thanks!
+
+--dDRMvlgZJXvWKvBx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS8lHIAAoJELSic+t+oim9U0YP/3Lp8IvFOsSfD/Aj41cjxW5I
+ruD6tVrOyJkmQnONj4oPatHhvclOZdiLIYYENpXWbSHhMttV6ng65Ct6kFrxa054
+3iWVOsmGNs9sjYd+oCWYwk097+pKqPB9skjJa7+AXXU6IP9hkAImTsHPhQtCNmTW
+1CQ96/tW62miZtBkJ+UE+iunknayYlsAFJ9AsQ9tBrJ8fRaapfOwOJ3NU5jFkbM1
+Tuj5b9b932rVJEZYZn0/ZdoqdDydhwq5Ql4FpXsqPNYRukuDatI3eU5Yx+IKmUPT
+VglqIfNYk8Rk3Y+x370sYfadGp/ojgczAcCbm6oSMsk3m7ABT8oAaaINb1IvY2bZ
+0F8QmvDRpLnePiUnMGsrZLc4KC4oc0M1Xb1DOPQDe4xL1jo89dbQryjc4cYPJuwR
+7NucvvAkqFVBAML9w8Nc2VQAQuhOEyJVlWuA2JzcxOku9+fYT6TekSa86DXXGgst
+aF9zLHdPQfXiO8gDhFf4Q7pwvspUVyBM0KfaV4y2OSiGhfIk4BqwfDJ013/6RW6E
+Vt7D90f1iFlTNRuHrbKUyASyAyOCnEVKsU86mRoP5N+i0gxtlsabIC3NvWneiPGV
+jM1wIx8P95W30LsHXCINo3Wwrvqwr5PO53HfYOXUOlYcMbXVuYnHorjUI0dJsDCF
+FyIoFTZI7qrbSOAAr9QF
+=D/De
+-----END PGP SIGNATURE-----
+
+--dDRMvlgZJXvWKvBx--
