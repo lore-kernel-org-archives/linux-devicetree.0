@@ -1,99 +1,53 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] iio:as3935: Add DT binding docs for AS3935 driver
-Date: Wed, 05 Feb 2014 07:24:37 +0000
-Message-ID: <634e62ea-d33f-42f3-8500-6331d4de495d@email.android.com>
-References: <1391570096-2932-1-git-send-email-mranostay@gmail.com> <20140205044335.GA2172@beef>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH 1/6] i2c: bcm-kona: register with subsys_initcall
+Date: Wed, 5 Feb 2014 10:08:18 +0100
+Message-ID: <20140205090818.GA2614@katana>
+References: <1391516352-32359-1-git-send-email-mporter@linaro.org>
+ <1391516352-32359-2-git-send-email-mporter@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140205044335.GA2172@beef>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1391516352-32359-2-git-send-email-mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux I2C List <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
+--nFreZHaLTZJo0R7j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On February 5, 2014 4:43:35 AM GMT+00:00, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->On Tue, Feb 04, 2014 at 07:14:55PM -0800, Matt Ranostay Matt Ranostay
->wrote:
->> Document compatible string, required and optional DT properties for
->> AS3935 chipset driver.
->> 
->> Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  .../devicetree/bindings/iio/proximity/as3935.txt   | 25
->++++++++++++++++++++++
->>  1 file changed, 25 insertions(+)
->>  create mode 100644
->Documentation/devicetree/bindings/iio/proximity/as3935.txt
->> 
->> diff --git
->a/Documentation/devicetree/bindings/iio/proximity/as3935.txt
->b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
->> new file mode 100644
->> index 0000000..7e117cd
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
->> @@ -0,0 +1,25 @@
->> +Austrian Microsystems AS3935 Franklin lightning sensor device driver
->> +
->> +Required properties:
->> +	- compatible: must be "ams,as3935"
->
->Change this to "amstaos,as3935"
->
->amstaos (AMS bought Taos) is already a registered vendor prefix in
->vendor-prefixes.txt
+On Tue, Feb 04, 2014 at 07:19:07AM -0500, Matt Porter wrote:
 
-It is but has a rather separate presence and is not where people expect to find non light
- sensor stuff from ams. I personally would go for a new vendor prefix and stick with ams.
+> Voltage regulators are needed very early due to deferred probe
+> being incompatible with built-in USB gadget drivers.
 
->
->> +	- reg: SPI chip select number for the device
->> +	- spi-cpha: SPI Mode 1
->
->When using generic binding properties, please reference the binding
->being used. Like:
->
->	- spi-cpha: SPI Mode 1. Refer to spi/spi-bus.txt for generic SPI
->	  slave node bindings.
->
->> +  	- interrupt-parent : should be the phandle for the interrupt
->controller
->> +	- interrupts : interrupt mapping for GPIO IRQ
->
->	Refer to interrupt-controller/interrupts.txt for generic
->	interrupt client node bindings.
->
->> +
->> +Optional properties:
->> +	- ams,tune-cap: Calibration tuning capacitor stepping value 0 - 15.
->> +	  Range of 0 to 120 pF, 8pF steps. This will require using the
->> +	  calibration data from the manufacturer.
->> +
->> +
->> +Example:
->> +
->> +as3935@0 {
->> +	compatible = "ams,as3935";
->> +	reg = <0>;
->> +	spi-cpha;
->> +	interrupt-parent = <&gpio1>;
->> +	interrupts = <16 1>;
->> +	ams,tune-cap = /bits/ 8 <10>;
->
->What is this? Why not just ams,tune-cap = <10>; ?
->
->It's a value between 0-15, right?
->
->-Matt
->--
->To unsubscribe from this list: send the line "unsubscribe linux-iio" in
->the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->More majordomo info at  http://vger.kernel.org/majordomo-info.html
+What does it need to fix those instead?
 
--- 
-Sent from my Android phone with K-9 Mail. Please excuse my brevity.
+
+--nFreZHaLTZJo0R7j
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS8f+CAAoJEBQN5MwUoCm2jrMP/iAt/1pOvXO6wzRAhEAkgd7+
+9CYqnCEJNQputd/wgGOcpXOrOEZBu4eNApKmBu7FErq6Ilrlj5bn/Ughu6/qRS20
++LwvjYd0GGNpos4JOQ9aJCefMPinj6M3Yghw9rfD67a8f0qTdVjamwehk8mjDwkK
+KOiz2f0ipcL3emm32JBZDkrIG/mFj8FId0VHNS51HJP5bWyf9VITwJygy3mlH8jP
+QKQMfRtr19bVpzyKgcpxm6cT1G8skjSJY+ZJBA/FNK+LSMeQIrrwJD5JI8tviB9R
+lI+w0H9RDel15yv+uDcAcNY8AJ36rAbKTPw9VObB6CRbz3qLhPg99SA3YF2h2+3F
+/FESjXlmaZHBdTQ9iIdaIk65a0qrLIJ2HHje3hvNoKp54yjcDVugdBHfuRq/a8pU
+cH9qRauX5mHOon4oTI7q/8e4TR8LgxTeHZ2hoDfFyy8EqvHpBdlTgnR1Qt8kJku8
+7LqDbAIJrMEYmgbZmJKHopNUOEu7oUxt4XYnTxyIarxbIkGzt1fMwg+/dJSnF1uw
+CLSfwdF7Zxrh9Ms/AyBR/og3uggVKARAMIxEpj2qMTJqotaRIqIxR/WFwoA8WR9+
++4TJC5moZH6dZFNR62Cv8b7oV3QoSzFDgkv007btur25MFMZ7oh56689KHUMXrq+
+SPVMSgHQnnB8hx8bkAxY
+=uyoI
+-----END PGP SIGNATURE-----
+
+--nFreZHaLTZJo0R7j--
