@@ -1,38 +1,88 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v3 0/6] IIO pulse capture support for TI ECAP
-Date: Wed, 05 Feb 2014 23:23:25 +0300
-Message-ID: <52F29DBD.9050305@cogentembedded.com>
-References: <1391626901-31684-1-git-send-email-mporter@linaro.org>
+From: Josh Cartwright <joshc@codeaurora.org>
+Subject: Re: [PATCH v2 5/5] of: document bindings for reserved-memory nodes
+Date: Wed, 5 Feb 2014 13:25:02 -0600
+Message-ID: <20140205192502.GO20228@joshc.qualcomm.com>
+References: <1391515773-6112-1-git-send-email-m.szyprowski@samsung.com>
+ <1391515773-6112-6-git-send-email-m.szyprowski@samsung.com>
+ <20140205100750.58EFAC40A89@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1391626901-31684-1-git-send-email-mporter@linaro.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Matt Porter <mporter@linaro.org>, Jonathan Cameron <jic23@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robh+dt@kernel.org>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Devicetree List <devicetree@vger.kernel.org>, Linux PWM List <linux-pwm@vger.kernel.org>, Linux IIO List <linux-iio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140205100750.58EFAC40A89@trevor.secretlab.ca>
+Sender: linux-doc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@gmail.com>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Wed, Feb 05, 2014 at 10:07:50AM +0000, Grant Likely wrote:
+> On Tue, 04 Feb 2014 13:09:33 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+> > From: Grant Likely <grant.likely@linaro.org>
+> > +/reserved-memory node
+> > +---------------------
+> > +#address-cells, #size-cells (required) - standard definition
+> > +    - Should use the same values as the root node
+> > +#memory-region-cells (required) - dictates number of cells used in the child
+> > +                                  nodes memory-region specifier
+>
+> I don't think this isn't defined well enough. These reserved regions may
+> not have a driver attached to them, so there is no central agent to
+> decide what the specifier means. That leaves the interpretation of
+> the memory region in the hands of the client drivers. How do you see the
+> specifier getting parsed and used?
 
-On 02/05/2014 10:01 PM, Matt Porter wrote:
+I had a specific usecase in mind when I added it, although admittedly I
+haven't yet worked through all of the details.
 
-[...]
+On MSM chips, there is a region of memory accessible from the various
+processors on the SoC.  This region is used for (among other things)
+inter-processor communication.  Inside this region, a heap allocation
+protocol is implemented by software on all interested processors.
 
-> This series adds support for PWM capture devices within IIO and
-> adds a TI ECAP IIO driver.
+Consumers of this shared memory heap specify a 32-bit identifier and a
+size, and are either given a matching preexisting chunk (for example,
+another processor has already allocated a chunk with the corresponding
+identifier), or are allocated a new chunk for that identifier out of the
+region.
 
-> PWM capture devices are supported using a new IIO "pulse" channel type.
+Given it's shared nature, this region has some specific requirements
+about how it may be accessed by the kernel (specifically regarding
+cacheability/how it's mapped), which means it at least needs _some_
+representation in a reserved-memory node.
 
-> The IIO ECAP driver implements interrupt driven triggered buffer capture
-> only as raw sample reads are not applicable to this hardware.
-> Initially, the driver supports a single pulse width measurement with
-> configurable polarity. The ECAP hardware can support measurement of a
-> complete period and duty cycle but this is not yet implemented.
+I had envisioned expressing the shared memory/consumer relationship in
+the device tree:
 
-    How about pulse counting? I have the hardware that can also count pulses 
-in addition to measuring the periods, so I'm interested in this work 
-(initially I supported it in driver/misc/ but it got turned down for iio).
+	reserved-memory {
+		smem : smem {
+			compatible = "qcom,shared-memory";
+			reg = <...>;
+			#memory-region-cells = <2>;
+			no-map;
+		};
+	};
 
-WBR, Sergei
+	consumer {
+		/* ... */;
+		memory-region = <&smem 0xDEADBEEF 0x1000>;
+	};
 
+That is, the heap protocol implementation exists as a "driver" for the
+smem reserved-memory node, and the consumer's 2-cell specifier is a
+32-bit identifier and a size.
+
+If your concern is for the case where a "qcom,shared-memory" node is
+specified in a device tree, but the "driver" hasn't been built into the
+kernel, then the appropriate behavior would be the same as the DMA/CMA
+case: fallback to a default case of memblock_reserve/memblock_remove'ing
+the region.
+
+Would using reserved-memory in this way be outside the scope of what was
+originally intended?
+
+Thanks,
+  Josh
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
