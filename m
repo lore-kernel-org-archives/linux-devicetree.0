@@ -1,82 +1,57 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH] mmc: omap_hsmmc: Add support for Erratum 2.1.1.128 in
- device tree boot
-Date: Wed, 5 Feb 2014 08:12:28 -0600
-Message-ID: <52F246CC.6070600@ti.com>
-References: <1390260542-22213-1-git-send-email-nm@ti.com>
- <52F0E098.3050404@ti.com> <52F104B7.6040606@ti.com> <52F2465A.6060804@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] DT: net: document Ethernet bindings in one place
+Date: Wed, 05 Feb 2014 18:36:03 +0300
+Message-ID: <52F25A63.3010608@cogentembedded.com>
+References: <201401180405.07859.sergei.shtylyov@cogentembedded.com> < CAL_Jsq+oa9P=rh+p-dMZyGP8TcmpX7bTnMU0ynLvFxjxFDYbRg@mail.gmail.com> < 52DD98F7.4090202@cogentembedded.com> < CAL_JsqJXbF1-PcPHR2VP+Vi9A1aWizdsG_r3kDvRt3itXDhCGQ@mail.gmail.com> < CAGVrzcb3X3soJNJCE5+YSpQrr+EdycCRFkptPvBCgFg4CbGJ4Q@mail.gmail.com> < CAGVrzcb0dfw1orZzUt5-YkShOg-HNbUYvvo2vfmsZUZXy1Aqfg@mail.gmail.com> < 52DEE465.9000202@cogentembedded.com> <52E988FA.8040807@cogentembedded.com> <20140204172602.01420C4050F@trevor.secretlab.ca> <52F13410.8070205@ cogentembedded.com> <20140205120843.9ED08C40A89@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52F2465A.6060804@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Balaji T K <balajitk@ti.com>
-Cc: devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-mmc@vger.kernel.org, Chris Ball <chris@printf.net>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20140205120843.9ED08C40A89@trevor.secretlab.ca>
+Sender: netdev-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robherring2@gmail.com>
+Cc: netdev <netdev@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 05 Feb 2014 08:10:34 AM CST, Balaji T K wrote:
-> On Tuesday 04 February 2014 08:48 PM, Nishanth Menon wrote:
->> On 02/04/2014 06:44 AM, Balaji T K wrote:
->>> On Tuesday 21 January 2014 04:59 AM, Nishanth Menon wrote:
->>>> When device is booted using devicetree, platforms impacted by
->>>> Erratum 2.1.1.128 is not detected easily in the mmc driver. This erratum
->>>> indicates that the module cannot do multi-block transfers.
->>>>
->>>> Handle this by providing a boolean flag to indicate to driver that it is
->>>> working on a hardware with mentioned limitation.
->>>>
->>>> Signed-off-by: Nishanth Menon <nm@ti.com>
->>>> ---
->>>>
->>>> This explains the logs I see:
->>>> OMAP3430 LDP (ES2.2):
->>>> 	uImage only boot:  http://slexy.org/raw/s2YrbMAi7c
->>>> 	uImage+dtb concatenated boot: http://slexy.org/raw/s20qVg17T0
->>>>
->>>> With the following flag set, device is now able to consistently boot with
->>>> device tree supported uImage+dtb concat boot.
->>>>
->>>>    .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |    2 ++
->>>>    drivers/mmc/host/omap_hsmmc.c                      |    3 +++
->>>>    2 files changed, 5 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
->>>> index 8c8908a..ab36f8b 100644
->>>> --- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
->>>> +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
->>>> @@ -26,6 +26,8 @@ specifier is required.
->>>>    dma-names: List of DMA request names. These strings correspond
->>>>    1:1 with the DMA specifiers listed in dmas. The string naming is
->>>>    to be "rx" and "tx" for RX and TX DMA requests, respectively.
->>>> +ti,erratum-2.1.1.128: boolean, for OMAP3430/OMAP35xx platforms with broken
->>>> +multiblock reads
->>>
->>> Rather than ti,errata.. specific property, something like
->>> caps no/disable multiblock read is more readable in my opinion, Otherwise
->>
->> Is'nt the better definition to state i have quirk X and allow the
->> driver to do the necessary thing/things needed to handle quirk X? in
->> this case, there is just one thing to do: broken multi_block_read, in
->> the case of other quirks, there might be more than 1 thing to do.. let
->> driver figure that out, dts just states the h/w capabilty or in this
->> case, the quirk capability.
->>
->
-> But in this case there is only one. disable multi block read is more readable
-> than the errata reference, No strong feelings though.
+Hello.
 
-Considering this might set an precedence for other quirk description, 
-I'd like to leave it as it stands.
+On 02/05/2014 03:08 PM, Grant Likely wrote:
 
---
-Regards,
-Nishanth Menon
+>>>>>>>>>       I'm afraid that's too late, it has spread very far, so that
+>>>>>>>>> of_get_phy_mode() handles that property, not "phy-connection-type".
+
+>>>>>>>> Uggg, I guess this is a case of a defacto standard then if the kernel
+>>>>>>>> doesn't even support it.
+
+>>>>>>> Maybe I forgot to CC you on patch sent to Grant only, I sent a patch a
+>>>>>>> while ago for of_get_phy_mode() to look for both "phy-mode" and
+>>>>>>> "phy-connection-type" since the former has been a Linux invention, but
+>>>>>>> the latter is ePAPR specified.
+
+>>>>>> Here is a link to the actual patch in question, not sure which tree
+>>>>>> Grant applied it to though:
+
+>>>>>> http://lkml.indiana.edu/hypermail/linux/kernel/1311.2/00048.html
+
+>>>>>       It's not the patch mail, it's Grant's "applied" reply, patch is mangled in
+>>>>> this reply, and I couldn't follow the thread. Here's the actual patch mail:
+
+>>>>> http://marc.info/?l=devicetree&m=138449662807254
+
+>>>>       Florian, I didn't find this patch in Grant's official tree, so maybe you
+>>>> should ask him where is the patch already?
+
+>>> Sorry, I accidentally dropped it. It will be in the next merge window.
+
+>>      Already saw it, thanks. Would that it was in 3.14 instead of course, so
+>> that I could use "phy-connection-type" in my binding...
+
+> Is 3.14 broken because of missing the patch? If so I'll get it merged as
+ > a bug fix.
+
+    No, it's not. I could have used "phy-connection-type" in my binding 
+destined for 3.15 and document it as a preferred property as well.
+
+> g.
+
+WBR, Sergei
