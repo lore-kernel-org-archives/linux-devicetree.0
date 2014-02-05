@@ -1,90 +1,186 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v4] of: add functions to count number of elements in a
- property
-Date: Wed, 05 Feb 2014 13:47:39 +0000
-Message-ID: <20140205134739.52662C40A89@trevor.secretlab.ca>
-References: <27256277.YJ687suYy5@phil> <13514940.URVnEJ4NF0@phil> <
- 20140205120652.9B1A7C40A89@trevor.secretlab.ca> <8812602.o5pus1vSFK@phil>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6930976674408784459=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <8812602.o5pus1vSFK@phil>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, arm@kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Jack Mitchell <ml@embed.me.uk>
+Subject: [PATCH RESEND] ARM: dts: add BeagleBone Audio Cape (Rev A) dtsi
+Date: Wed,  5 Feb 2014 13:48:04 +0000
+Message-ID: <1391608084-12665-1-git-send-email-ml@embed.me.uk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
+Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jack Mitchell <jack@embed.me.uk>, Matt Porter <mporter@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
---===============6930976674408784459==
-Content-Type: text/plain
+From: Jack Mitchell <jack@embed.me.uk>
 
-On Wed, 05 Feb 2014 13:45:36 +0100, Heiko Stübner <heiko@sntech.de> wrote:
-> Am Mittwoch, 5. Februar 2014, 12:06:52 schrieb Grant Likely:
-> > On Tue, 04 Feb 2014 19:48:17 +0100, Heiko StÃ¼bner <heiko@sntech.de> wrote:
-> > > Hi Grant,
-> > > 
-> > > On Tuesday, 4. February 2014 17:30:34 Grant Likely wrote:
-> > > > On Sat, 18 Jan 2014 09:07:30 -0600, Rob Herring <robherring2@gmail.com>
-> > > 
-> > > wrote:
-> > > > > On Sat, Jan 18, 2014 at 6:02 AM, Heiko StÃÂ¼bner <heiko@sntech.de> 
-> wrote:
-> > > > > > The need to know the number of array elements in a property is
-> > > > > > a common pattern. To prevent duplication of open-coded
-> > > > > > implementations
-> > > > > > add a helper static function that also centralises strict sanity
-> > > > > > checking and DTB format details, as well as a set of wrapper
-> > > > > > functions
-> > > > > > for u8, u16, u32 and u64.
-> > > > > > 
-> > > > > > Suggested-by: Mark Rutland <mark.rutland@arm.com>
-> > > > > > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> > > > > > ---
-> > > > > 
-> > > > > Looks good. Do you plan to convert some users to use this?
-> > > > 
-> > > > I'll take that as an acked-by. Merged, thanks.
-> > > 
-> > > before you taking this patch, I was planning on simply sending this as
-> > > part of my rockchip-smp series - as I'm currently the only user of it :-)
-> > > .
-> > > 
-> > > This going through your tree is most likely the better way, but now I need
-> > > it to somehow make its way into arm-soc too ... I guess some sort of
-> > > stable branch arm-soc could pull?
-> > 
-> > Nah, I'll drop it from my tree. Add my acked-by and merge it via
-> > arm-soc.
-> 
-> As I said on IRC, now it seems like you can keep this patch in your tree :-)
-> 
-> If we're really going with reserved-memory like you suggested in the rockchip-
-> smp series it removes the need to count u32-elements in a property for me, as 
-> the reserved blocks move into individual subnodes.
+Devicetree include file for setting up the am335x mcasp bus, i2c-2
+bus, and audio codec required for a functioning BeagleBone Audio Cape.
 
-Right, but I'm not going to merge a patch with no users. I'll leave it
-out and it can be added to a series that converts some users to the new
-API.
+Signed-off-by: Jack Mitchell <jack@embed.me.uk>
+Signed-off-by: Matt Porter <mporter@linaro.org>
+---
+ arch/arm/boot/dts/am335x-bone-audio-cape-reva.dtsi | 124 +++++++++++++++++++++
+ arch/arm/boot/dts/am335x-bone-common.dtsi          |  14 +++
+ 2 files changed, 138 insertions(+)
+ create mode 100644 arch/arm/boot/dts/am335x-bone-audio-cape-reva.dtsi
 
-g.
-
-
-
---===============6930976674408784459==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============6930976674408784459==--
+diff --git a/arch/arm/boot/dts/am335x-bone-audio-cape-reva.dtsi b/arch/arm/boot/dts/am335x-bone-audio-cape-reva.dtsi
+new file mode 100644
+index 0000000..b8ec3dc
+--- /dev/null
++++ b/arch/arm/boot/dts/am335x-bone-audio-cape-reva.dtsi
+@@ -0,0 +1,124 @@
++/*
++ * Copyright (C) 2014 Jack Mitchell <jack@embed.me.uk>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * In order to enable the BeagleBone Audio Cape this dtsi must be
++ * incuded in the top level dts. On BeagleBone Black hardware the
++ * status of the HDMI dts node must also be set to "disabled".
++ *
++ * --- a/arch/arm/boot/dts/am335x-bone.dts
++ * +++ b/arch/arm/boot/dts/am335x-bone.dts
++ * @@ -9,6 +9,7 @@
++ *
++ *  #include "am33xx.dtsi"
++ *  #include "am335x-bone-common.dtsi"
++ * +#include "am335x-bone-audio-cape-reva.dtsi"
++ *
++ *  &ldo3_reg {
++ *  	regulator-min-microvolt = <1800000>;
++ *
++ * On BeagleBone Black hardware the status of the HDMI dts node must
++ * also be set to "disabled"
++ *
++ * --- a/arch/arm/boot/dts/am335x-boneblack.dts
++ * +++ b/arch/arm/boot/dts/am335x-boneblack.dts
++ * @@ -73,6 +74,6 @@
++ *  		pinctrl-names = "default", "off";
++ *  		pinctrl-0 = <&nxp_hdmi_bonelt_pins>;
++ *  		pinctrl-1 = <&nxp_hdmi_bonelt_off_pins>;
++ * -		status = "okay";
++ * +		status = "disabled";
++ *  	};
++ *  };
++ */
++
++/ {
++	sound {
++		compatible = "ti,da830-evm-audio";
++		ti,model = "AM335x BeagleBone Audio Cape Rev. A";
++		ti,audio-codec = <&tlv320aic3106>;
++		ti,mcasp-controller = <&mcasp0>;
++		ti,codec-clock-rate = <12000000>;
++		ti,audio-routing =
++			"Headphone Jack",       "HPLOUT",
++			"Headphone Jack",       "HPROUT",
++			"LINE1L",               "Line In",
++			"LINE1R",               "Line In";
++	};
++
++	audio-cape-gpio-leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&bone_audio_cape_led_pins>;
++
++		audio-led0 {
++			label = "audio:green:usr0";
++			gpios = <&gpio1 18 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++			default-state = "off";
++		};
++
++		audio-led1 {
++			label = "audio:green:usr1";
++			gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "mmc0";
++			default-state = "off";
++		};
++	};
++};
++
++&am33xx_pinmux {
++	bone_audio_cape_led_pins: pinmux_bone_audio_cape_led_pins {
++		pinctrl-single,pins = <
++			0x48 (PIN_OUTPUT_PULLDOWN | MUX_MODE7) /* gpmc_a2.gpio1_18 */
++			0x4c (PIN_OUTPUT_PULLDOWN | MUX_MODE7) /* gpmc_a3.gpio1_19 */
++		>;
++	};
++
++	bone_audio_cape_pins: bone_audio_cape_pins {
++		pinctrl-single,pins = <
++			0x190 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mcasp0_aclkx.mcasp0_aclkx */
++			0x194 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mcasp0_fsx.mcasp0_fsx */
++			0x19c (PIN_INPUT_PULLUP | MUX_MODE2)	/* mcasp0_ahclkr.mcasp0_axr2 */
++			0x1ac (PIN_INPUT_PULLUP | MUX_MODE2)	/* mcasp0_ahclkx.mcasp0_axr3 */
++		>;
++	};
++};
++
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins>;
++
++	status = "okay";
++	clock-frequency = <100000>;
++
++	tlv320aic3106: tlv320aic3106@1b {
++		compatible = "ti,tlv320aic3106";
++		reg = <0x1b>;
++		status = "okay";
++
++		/* Regulators */
++		AVDD-supply = <&vmmcsd_fixed>;
++		IOVDD-supply = <&vmmcsd_fixed>;
++		DRVDD-supply = <&vmmcsd_fixed>;
++		DVDD-supply = <&vdd1v8_fixed>;
++	};
++};
++
++&mcasp0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&bone_audio_cape_pins>;
++
++	status = "okay";
++
++	op-mode = <0>;      /* MCASP_IIS_MODE */
++	tdm-slots = <2>;
++	serial-dir = <      /* 0: INACTIVE, 1: TX, 2: RX */
++		0 0 2 1
++	>;
++	tx-num-evt = <1>;
++	rx-num-evt = <1>;
++};
+diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
+index e3f27ec..c1c0f74 100644
+--- a/arch/arm/boot/dts/am335x-bone-common.dtsi
++++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
+@@ -62,12 +62,26 @@
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+ 	};
++
++	vdd1v8_fixed: fixedregulator@1 {
++		compatible = "regulator-fixed";
++		regulator-name = "vdd1v8_fixed";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
+ };
+ 
+ &am33xx_pinmux {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&clkout2_pin>;
+ 
++	i2c2_pins: pinmux_i2c2_pins {
++		pinctrl-single,pins = <
++			0x178 (PIN_INPUT_PULLUP | MUX_MODE3)  /* uart1_ctsn.i2c2_sda */
++			0x17c (PIN_INPUT_PULLUP | MUX_MODE3)  /* uart1_rtsn.i2c2_scl */
++		>;
++	};
++
+ 	user_leds_s0: user_leds_s0 {
+ 		pinctrl-single,pins = <
+ 			0x54 (PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* gpmc_a5.gpio1_21 */
+-- 
+1.8.5.3
