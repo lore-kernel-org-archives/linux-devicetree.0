@@ -1,56 +1,59 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 02/20] clocksource: orion: Use atomic access for
- shared registers
-Date: Wed, 5 Feb 2014 20:19:04 -0300
-Message-ID: <20140205231903.GA30244@localhost>
-References: <1390836440-12744-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1390836440-12744-3-git-send-email-ezequiel.garcia@free-electrons.com>
- <20140205191035.GZ8533@titan.lakedaemon.net>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v5 2/3] clocksource: keystone: add bindings for keystone timer
+Date: Wed, 5 Feb 2014 17:36:29 -0600
+Message-ID: <CAL_JsqLSNrTvH2SFfA5KB8RsDqcj9zks1QaVmvYya6WQ--W7jg@mail.gmail.com>
+References: <1391608060-10760-1-git-send-email-ivan.khoronzhuk@ti.com>
+	<1391608060-10760-3-git-send-email-ivan.khoronzhuk@ti.com>
+	<CAL_JsqKVc2fdg1Q+TH6ro9kpJmUYyHw8FCwhORfm2_oj6GYM2Q@mail.gmail.com>
+	<52F26444.5090707@ti.com>
+	<CAL_JsqL6YDcZJa5xziR7dP-bEt1CO4BtL1vsO8Qm+hFwgCiQ1w@mail.gmail.com>
+	<52F28875.9000200@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140205191035.GZ8533-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <52F28875.9000200@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 05, 2014 at 02:10:35PM -0500, Jason Cooper wrote:
-> On Mon, Jan 27, 2014 at 12:27:02PM -0300, Ezequiel Garcia wrote:
-> > Replace the driver-specific thread-safe shared register API
-> > by the recently introduced atomic_io_clear_set().
-> >=20
-> > Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Tested-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> >  drivers/clocksource/time-orion.c | 28 ++++++++++------------------
-> >  1 file changed, 10 insertions(+), 18 deletions(-)
->=20
-> The MMIO patch this depends on:
->=20
->   c5ca95b507c8 ARM: 7930/1: Introduce atomic MMIO modify
->=20
-> made it in to v3.14-rc1.  It looks like this change is independent of
-> the rest of the watchdog series, so:
->=20
-> Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
->=20
+On Wed, Feb 5, 2014 at 12:52 PM, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com> wrote:
+>
+> On 02/05/2014 07:41 PM, Rob Herring wrote:
+>>
+>> On Wed, Feb 5, 2014 at 10:18 AM, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+>> wrote:
+>>>
+>>> On 02/05/2014 04:39 PM, Rob Herring wrote:
+>>>>
+>>>> On Wed, Feb 5, 2014 at 7:47 AM, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+>>>> wrote:
+>>>>>
+>>>>> This patch provides bindings for the 64-bit timer in the KeyStone
+>>>>> architecture devices. The timer can be configured as a general-purpose
+>>>>> 64-bit
+>>>>> timer, dual general-purpose 32-bit timers. When configured as dual
+>>>>> 32-bit
+>>>>> timers, each half can operate in conjunction (chain mode) or
+>>>>> independently
+>>>>> (unchained mode) of each other.
+>>>>
+>>>> This is software configurable or h/w design time configurations?
+>>>>
+>>>> Rob
+>>>>
+>>> This is h/w design time configurations
+>>
+>> Then it seems like the binding should provide for describing those
+>> differences either with a property or different compatible strings.
+>>
+>> Rob
+>
+> Oh..sorry, seems I didn't catch, this is configurable by software.
+> These configurations are like modes in which timer can work
+> and they are not different hardware IPs. It depends on driver in
+> which mode it should work.
 
-Thanks, Jason.
+In that case,
 
-Daniel: If you can pick this I'll drop it from the next watchdog patchs=
-et
-submission.
-
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
