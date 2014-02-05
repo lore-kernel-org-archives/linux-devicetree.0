@@ -1,49 +1,38 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 5/5] ARM: sunxi: Enable A31 SPI and SID in
- the defconfig
-Date: Wed,  5 Feb 2014 14:05:07 +0100
-Message-ID: <1391605507-30981-6-git-send-email-maxime.ripard@free-electrons.com>
-References: <1391605507-30981-1-git-send-email-maxime.ripard@free-electrons.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Sricharan R <r.sricharan@ti.com>
+Subject: Re: [PATCH V5 2/4] DRIVERS: IRQCHIP: CROSSBAR: Add support for Crossbar
+ IP
+Date: Wed, 5 Feb 2014 18:41:35 +0530
+Message-ID: <52F23887.9060209@ti.com>
+References: <1386066445-28245-1-git-send-email-r.sricharan@ti.com> <1386066445-28245-3-git-send-email-r.sricharan@ti.com> <52D7B2CA.8080902@ti.com> <52EF7D85.5070705@ti.com> <alpine.DEB.2.02.1402041713470.24986@ionos.tec.linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBMXQZCLQKGQE4M3ZUMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1391605507-30981-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1402041713470.24986@ionos.tec.linutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com, robherring2@gmail.com, galak@codeaurora.org, rob.herring@calxeda.com, santosh.shilimkar@ti.com, nm@ti.com, bcousson@baylibre.com, Kevin Hilman <khilman@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/configs/sunxi_defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+On Tuesday 04 February 2014 09:44 PM, Thomas Gleixner wrote:
+> On Mon, 3 Feb 2014, Sricharan R wrote:
+>>> I already have your reviewed-by tag for the first patch in this series.
+>>>
+>>> Kevin was pointing out that irqchip maintainer tag is needed for this patch as well
+>>> to be merged. We are planning to take this series through arm-soc tree.
+>>>
+>>> Can i please have your tag for this patch as well ?
+> 
+> Acked-by-me
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-diff --git a/arch/arm/configs/sunxi_defconfig b/arch/arm/configs/sunxi_defconfig
-index 3e2259b..b5df4a5 100644
---- a/arch/arm/configs/sunxi_defconfig
-+++ b/arch/arm/configs/sunxi_defconfig
-@@ -24,6 +24,7 @@ CONFIG_IP_PNP_BOOTP=y
- # CONFIG_WIRELESS is not set
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
-+CONFIG_EEPROM_SUNXI_SID=y
- CONFIG_NETDEVICES=y
- CONFIG_SUN4I_EMAC=y
- # CONFIG_NET_CADENCE is not set
-@@ -48,6 +49,8 @@ CONFIG_I2C=y
- # CONFIG_I2C_COMPAT is not set
- CONFIG_I2C_CHARDEV=y
- CONFIG_I2C_MV64XXX=y
-+CONFIG_SPI=y
-+CONFIG_SPI_SUN6I=y
- CONFIG_GPIO_SYSFS=y
- # CONFIG_HWMON is not set
- CONFIG_WATCHDOG=y
--- 
-1.8.4.2
+Thanks Thomas.
+
+Kevin,
+    I will re-send a branch based on rc1 for this.
+
+Regards,
+ Sricharan
