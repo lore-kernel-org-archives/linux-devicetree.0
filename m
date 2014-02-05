@@ -1,78 +1,129 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v5 2/3] clocksource: keystone: add bindings for keystone timer
-Date: Wed, 5 Feb 2014 08:39:04 -0600
-Message-ID: <CAL_JsqKVc2fdg1Q+TH6ro9kpJmUYyHw8FCwhORfm2_oj6GYM2Q@mail.gmail.com>
-References: <1391608060-10760-1-git-send-email-ivan.khoronzhuk@ti.com>
-	<1391608060-10760-3-git-send-email-ivan.khoronzhuk@ti.com>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/5] clk: sunxi: Add support for PLL6 on the A31
+Date: Wed, 05 Feb 2014 06:51:49 -0800
+Message-ID: <20140205145149.22158.72564@quantum>
+References: <1391605507-30981-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1391605507-30981-2-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1391608060-10760-3-git-send-email-ivan.khoronzhuk@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1391605507-30981-2-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 5, 2014 at 7:47 AM, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com> wrote:
-> This patch provides bindings for the 64-bit timer in the KeyStone
-> architecture devices. The timer can be configured as a general-purpose 64-bit
-> timer, dual general-purpose 32-bit timers. When configured as dual 32-bit
-> timers, each half can operate in conjunction (chain mode) or independently
-> (unchained mode) of each other.
+Quoting Maxime Ripard (2014-02-05 05:05:03)
+> The A31 has a slightly different PLL6 clock. Add support for this new clock in
+> our driver.
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-This is software configurable or h/w design time configurations?
+Looks good to me.
 
-Rob
+Regards,
+Mike
 
->
-> It is global timer is a free running up-counter and can generate interrupt
-> when the counter reaches preset counter values.
->
-> Documentation:
-> http://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
->
-> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 > ---
->  .../bindings/timer/ti,keystone-timer.txt           | 29 ++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/ti,keystone-timer.txt
->
-> diff --git a/Documentation/devicetree/bindings/timer/ti,keystone-timer.txt b/Documentation/devicetree/bindings/timer/ti,keystone-timer.txt
-> new file mode 100644
-> index 0000000..5fbe361
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/ti,keystone-timer.txt
-> @@ -0,0 +1,29 @@
-> +* Device tree bindings for Texas instruments Keystone timer
+>  Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
+>  drivers/clk/sunxi/clk-sunxi.c                     | 45 +++++++++++++++++++++++
+>  2 files changed, 46 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+> index c2cb762..954845c 100644
+> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
+> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+> @@ -11,6 +11,7 @@ Required properties:
+>         "allwinner,sun6i-a31-pll1-clk" - for the main PLL clock on A31
+>         "allwinner,sun4i-pll5-clk" - for the PLL5 clock
+>         "allwinner,sun4i-pll6-clk" - for the PLL6 clock
+> +       "allwinner,sun6i-a31-pll6-clk" - for the PLL6 clock on A31
+>         "allwinner,sun4i-cpu-clk" - for the CPU multiplexer clock
+>         "allwinner,sun4i-axi-clk" - for the AXI clock
+>         "allwinner,sun4i-axi-gates-clk" - for the AXI gates
+> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+> index abb6c5a..0c05c2d 100644
+> --- a/drivers/clk/sunxi/clk-sunxi.c
+> +++ b/drivers/clk/sunxi/clk-sunxi.c
+> @@ -249,7 +249,38 @@ static void sun4i_get_pll5_factors(u32 *freq, u32 parent_rate,
+>         *n = DIV_ROUND_UP(div, (*k+1));
+>  }
+>  
+> +/**
+> + * sun6i_a31_get_pll6_factors() - calculates n, k factors for A31 PLL6
+> + * PLL6 rate is calculated as follows
+> + * rate = parent_rate * n * (k + 1) / 2
+> + * parent_rate is always 24Mhz
+> + */
 > +
-> +This document provides bindings for the 64-bit timer in the KeyStone
-> +architecture devices. The timer can be configured as a general-purpose 64-bit
-> +timer, dual general-purpose 32-bit timers. When configured as dual 32-bit
-> +timers, each half can operate in conjunction (chain mode) or independently
-> +(unchained mode) of each other.
+> +static void sun6i_a31_get_pll6_factors(u32 *freq, u32 parent_rate,
+> +                                      u8 *n, u8 *k, u8 *m, u8 *p)
+> +{
+> +       u8 div;
 > +
-> +It is global timer is a free running up-counter and can generate interrupt
-> +when the counter reaches preset counter values.
+> +       /*
+> +        * We always have 24MHz / 2, so we can just say that our
+> +        * parent clock is 12MHz.
+> +        */
+> +       parent_rate = parent_rate / 2;
 > +
-> +Documentation:
-> +http://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
+> +       /* Normalize value to a parent_rate multiple (24M / 2) */
+> +       div = *freq / parent_rate;
+> +       *freq = parent_rate * div;
 > +
-> +Required properties:
+> +       /* we were called to round the frequency, we can now return */
+> +       if (n == NULL)
+> +               return;
 > +
-> +- compatible : should be "ti,keystone-timer".
-> +- reg : specifies base physical address and count of the registers.
-> +- interrupts : interrupt generated by the timer.
-> +- clocks : the clock feeding the timer clock.
-> +
-> +Example:
-> +
-> +timer@22f0000 {
-> +       compatible = "ti,keystone-timer";
-> +       reg = <0x022f0000 0x80>;
-> +       interrupts = <GIC_SPI 110 IRQ_TYPE_EDGE_RISING>;
-> +       clocks = <&clktimer15>;
+> +       *k = div / 32;
+> +       if (*k > 3)
+> +               *k = 3;
+>  
+> +       *n = DIV_ROUND_UP(div, (*k+1));
+> +}
+>  
+>  /**
+>   * sun4i_get_apb1_factors() - calculates m, p factors for APB1
+> @@ -416,6 +447,13 @@ static struct clk_factors_config sun4i_pll5_config = {
+>         .kwidth = 2,
+>  };
+>  
+> +static struct clk_factors_config sun6i_a31_pll6_config = {
+> +       .nshift = 8,
+> +       .nwidth = 5,
+> +       .kshift = 4,
+> +       .kwidth = 2,
 > +};
-> --
-> 1.8.3.2
->
+> +
+>  static struct clk_factors_config sun4i_apb1_config = {
+>         .mshift = 0,
+>         .mwidth = 5,
+> @@ -457,6 +495,12 @@ static const struct factors_data sun4i_pll5_data __initconst = {
+>         .getter = sun4i_get_pll5_factors,
+>  };
+>  
+> +static const struct factors_data sun6i_a31_pll6_data __initconst = {
+> +       .enable = 31,
+> +       .table = &sun6i_a31_pll6_config,
+> +       .getter = sun6i_a31_get_pll6_factors,
+> +};
+> +
+>  static const struct factors_data sun4i_apb1_data __initconst = {
+>         .table = &sun4i_apb1_config,
+>         .getter = sun4i_get_apb1_factors,
+> @@ -972,6 +1016,7 @@ free_clkdata:
+>  static const struct of_device_id clk_factors_match[] __initconst = {
+>         {.compatible = "allwinner,sun4i-pll1-clk", .data = &sun4i_pll1_data,},
+>         {.compatible = "allwinner,sun6i-a31-pll1-clk", .data = &sun6i_a31_pll1_data,},
+> +       {.compatible = "allwinner,sun6i-a31-pll6-clk", .data = &sun6i_a31_pll6_data,},
+>         {.compatible = "allwinner,sun4i-apb1-clk", .data = &sun4i_apb1_data,},
+>         {.compatible = "allwinner,sun4i-mod0-clk", .data = &sun4i_mod0_data,},
+>         {.compatible = "allwinner,sun7i-a20-out-clk", .data = &sun7i_a20_out_data,},
+> -- 
+> 1.8.4.2
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
