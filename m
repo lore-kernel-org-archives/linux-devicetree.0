@@ -1,38 +1,37 @@
-From: Sricharan R <r.sricharan@ti.com>
-Subject: Re: [PATCH V5 2/4] DRIVERS: IRQCHIP: CROSSBAR: Add support for Crossbar
- IP
-Date: Wed, 5 Feb 2014 18:41:35 +0530
-Message-ID: <52F23887.9060209@ti.com>
-References: <1386066445-28245-1-git-send-email-r.sricharan@ti.com> <1386066445-28245-3-git-send-email-r.sricharan@ti.com> <52D7B2CA.8080902@ti.com> <52EF7D85.5070705@ti.com> <alpine.DEB.2.02.1402041713470.24986@ionos.tec.linutronix.de>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] Phytec phyFLEX-i.MX6 : Added USB_HOST Support
+Date: Wed, 5 Feb 2014 11:14:00 -0200
+Message-ID: <CAOMZO5DKx1uWT568t9TAy48Uf6ufpa1sSznaifDG_=+hLh8mqg@mail.gmail.com>
+References: <1391488493-30662-1-git-send-email-ashutosh.s@phytec.in>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1402041713470.24986@ionos.tec.linutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com, robherring2@gmail.com, galak@codeaurora.org, rob.herring@calxeda.com, santosh.shilimkar@ti.com, nm@ti.com, bcousson@baylibre.com, Kevin Hilman <khilman@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1391488493-30662-1-git-send-email-ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ashutosh singh <ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Christian Hemp <c.hemp-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 04 February 2014 09:44 PM, Thomas Gleixner wrote:
-> On Mon, 3 Feb 2014, Sricharan R wrote:
->>> I already have your reviewed-by tag for the first patch in this series.
->>>
->>> Kevin was pointing out that irqchip maintainer tag is needed for this patch as well
->>> to be merged. We are planning to take this series through arm-soc tree.
->>>
->>> Can i please have your tag for this patch as well ?
-> 
-> Acked-by-me
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Tue, Feb 4, 2014 at 2:34 AM, Ashutosh singh <ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org> wrote:
 
-Thanks Thomas.
+> +
+> +       reg_usb_h1_vbus: regulator@1 {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "usb_h1_vbus";
+> +               regulator-min-microvolt = <5000000>;
+> +               regulator-max-microvolt = <5000000>;
+> +               gpio = <&gpio1 0 0>;
+> +               enable-active-low;
 
-Kevin,
-    I will re-send a branch based on rc1 for this.
+You should remove this 'enable-active-low' as this is not a valid property.
+
+By default the gpio is active low according to
+Documentation/devicetree/bindings/regulator/gpio-regulator.txt
 
 Regards,
- Sricharan
+
+Fabio Estevam
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
