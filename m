@@ -1,78 +1,67 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v4] of: add functions to count number of elements in a property
-Date: Wed, 05 Feb 2014 13:45:36 +0100
-Message-ID: <8812602.o5pus1vSFK@phil>
-References: <27256277.YJ687suYy5@phil> <13514940.URVnEJ4NF0@phil> <20140205120652.9B1A7C40A89@trevor.secretlab.ca>
+From: David =?ISO-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
+Subject: Re: [PATCH v2 0/6] ARM: sunxi: Add driver for SD/MMC
+ hosts found on allwinner sunxi SOCs
+Date: Wed, 05 Feb 2014 14:01:33 +0100
+Message-ID: <1676482.sbjAhaSLaV@dizzy-6.o2s.ch>
+References: <20140204191648.29809.14611.stgit@dizzy-6.o2s.ch> <20140205103949.GC3192@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140205120652.9B1A7C40A89-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Content-Type: multipart/signed; boundary="nextPart2087342.yc2NcSH50b"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Return-path: <linux-sunxi+bncBD2JL37LXEKRBOXMZCLQKGQEGJDPZMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140205103949.GC3192@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 5. Februar 2014, 12:06:52 schrieb Grant Likely:
-> On Tue, 04 Feb 2014 19:48:17 +0100, Heiko St=C3=BCbner <heiko@sntech.=
-de> wrote:
-> > Hi Grant,
-> >=20
-> > On Tuesday, 4. February 2014 17:30:34 Grant Likely wrote:
-> > > On Sat, 18 Jan 2014 09:07:30 -0600, Rob Herring <robherring2@gmai=
-l.com>
-> >=20
-> > wrote:
-> > > > On Sat, Jan 18, 2014 at 6:02 AM, Heiko St=C3=83=C2=BCbner <heik=
-o@sntech.de>=20
-wrote:
-> > > > > The need to know the number of array elements in a property i=
-s
-> > > > > a common pattern. To prevent duplication of open-coded
-> > > > > implementations
-> > > > > add a helper static function that also centralises strict san=
-ity
-> > > > > checking and DTB format details, as well as a set of wrapper
-> > > > > functions
-> > > > > for u8, u16, u32 and u64.
-> > > > >=20
-> > > > > Suggested-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> > > > > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> > > > > ---
-> > > >=20
-> > > > Looks good. Do you plan to convert some users to use this?
-> > >=20
-> > > I'll take that as an acked-by. Merged, thanks.
-> >=20
-> > before you taking this patch, I was planning on simply sending this=
- as
-> > part of my rockchip-smp series - as I'm currently the only user of =
-it :-)
-> > .
-> >=20
-> > This going through your tree is most likely the better way, but now=
- I need
-> > it to somehow make its way into arm-soc too ... I guess some sort o=
-f
-> > stable branch arm-soc could pull?
->=20
-> Nah, I'll drop it from my tree. Add my acked-by and merge it via
-> arm-soc.
 
-As I said on IRC, now it seems like you can keep this patch in your tre=
-e :-)
+--nextPart2087342.yc2NcSH50b
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-If we're really going with reserved-memory like you suggested in the ro=
-ckchip-
-smp series it removes the need to count u32-elements in a property for =
-me, as=20
-the reserved blocks move into individual subnodes.
+Hi Maxime
+> I have four comments here:
+>   - Read Documentation/SubmittingPatches, especially Section 5 and 12
+>     (hints, you forgot the clock maintainers for your clock patches
+>     and you didn't put any signed-off-by tags)
+Oops. I added signed-offs now
+>   - You ignored pretty much all the comments that were made during the
+>     review of the first version. Go through
+Uh? I just fixed the commits and squashed them together for easier handling.
+I'm even using mmc_of_parse now...
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2013-December/219339.
+> html and address the comments that were made.
+>   - Each of your patches should compile. Fix the order of your
+>     patches.
+Done.
+>   - Submit a v3, with the changes you made. Otherwise we have no way
+>     of knowing what have been fixed and what didn't
+Too many patches would be bloaty.
+That's why I've squashed them into small and corrected patches.
 
+> Looking forward for the next iteration!
+Good :-)
+You can have a look at the recent status here:
+http://git.o2s.ch/?p=linux-next.git;a=shortlog;h=refs/heads/20140205
 
-Heiko
+cheers
+David
+--nextPart2087342.yc2NcSH50b
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iEYEABECAAYFAlLyNi0ACgkQAeZw77btGjr6zwCglDPMGsllkJPtErxxWEzepqeu
+rpoAn3iqBc/AViM5Rnu45QE72zw4y7tc
+=eD5M
+-----END PGP SIGNATURE-----
+
+--nextPart2087342.yc2NcSH50b--
