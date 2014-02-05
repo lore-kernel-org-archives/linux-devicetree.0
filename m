@@ -1,57 +1,31 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/8] ASoC: da9055: Fix device registration of PMIC and
- CODEC devices
-Date: Wed, 5 Feb 2014 18:38:14 +0000
-Message-ID: <20140205183814.GI32298@sirena.org.uk>
-References: <cover.1391614923.git.Adam.Thomson.Opensource@diasemi.com>
- <6a398d176b0b2bf8792d27bd5e2995fd96afb32d.1391614923.git.Adam.Thomson.Opensource@diasemi.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v3 4/6] ARM: tegra: Add efuse bindings
+Date: Wed, 05 Feb 2014 11:42:36 -0700
+Message-ID: <52F2861C.4010109@wwwdotorg.org>
+References: <1390952176-30402-1-git-send-email-pdeschrijver@nvidia.com> <1390952176-30402-5-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="poJSiGMzRSvrLGLs"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <6a398d176b0b2bf8792d27bd5e2995fd96afb32d.1391614923.git.Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1390952176-30402-5-git-send-email-pdeschrijver@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Thierry Reding <thierry.reding@gmail.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 01/28/2014 04:36 PM, Peter De Schrijver wrote:
+> Add efuse bindings for Tegra20, Tegra30, Tegra114 and Tegra124.
 
---poJSiGMzRSvrLGLs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> diff --git a/Documentation/devicetree/bindings/fuse/fuse-tegra.txt b/Documentation/devicetree/bindings/fuse/fuse-tegra.txt
 
-On Wed, Feb 05, 2014 at 05:48:32PM +0000, Adam Thomson wrote:
-> Currently the I2C device Ids conflict for the MFD and CODEC so
-> cannot be both instantiated on one platform. This patch updates
-> the Ids and names to make them unique from each other.
+> +- clocks: Should contain a pointer to the fuse clock.
 
-Acked-by: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+I would prefer to use clock-names, and to follow the same text as all
+the other Tegra bindings that are clock clients. In other words:
 
---poJSiGMzRSvrLGLs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+  - clocks: Must contain an entry for each entry in clock-names.
+    See ../clocks/clock-bindings.txt for details.
+  - clock-names: Must include the following entries:
+    - fuse
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS8oUTAAoJELSic+t+oim96VoP/1zBrLQmM7cWSXMxK2kl+5wR
-Qz0bZD7TA0E9UMpn7MJBzFB/N6KZ2THQhl0qujW+UGa6etd+UN4v2V24ItA7Zpad
-Qko0TZn52adJpi1+iktqZqhilDf3ivvwFl9zs6cs5+sh73r/PdsvPQKVkkhjgbfF
-iF48GxW1cf9N9WHrK1nK/qXRJs5hluHC8rhaufF4tlADMR9GtdSRI1glyIrY7KCx
-uvpwRjLHZaIkHjCFP9UBzHd+ebQTguB36Y8MDUlvwZwiaiBxZ2Ta2mNi8LimJFWX
-vDPJMW8dO2qMl46xgQGMICl2Z/z9Q5YFtsAf3je2PW5ejXMilj6b3CxWBy/bLU5N
-/F0wEqKW7RG49wqJLrIsXtsR74EmYGUVNorcBEgV3hheX4jZnBF/8rKGBALalxY/
-yAApYJ/S8YPPPA2YFwLLumD4rB5okvivufIxepAPTJqZ9Eg9z+vSulOOgZROBPQD
-cImpLg1XlyRqrFbsWaBCAXguontn30mPEUo7e0/wfENurDZCZTvL0kRSXhXjS3EG
-gQmcVvQuj+WHg3rEQQ7jBiC8zmMvmBayQEt1Iisqy0+8rqqVsHg8iJcK1Wyt2qWn
-zAI/NIsY/G9lyLDd4fqeqKQf6CK0sKIZIEgsQGh22iZ84wPnO8nx91PtdMOkTDr1
-O2h5sKKkC9g/29dI3wjT
-=ZMIu
------END PGP SIGNATURE-----
-
---poJSiGMzRSvrLGLs--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+(this will allow easy future changes to the binding if required)
