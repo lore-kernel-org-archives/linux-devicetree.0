@@ -1,61 +1,155 @@
-From: David =?ISO-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
-Subject: Re: [PATCH v3 0/7] ARM: sunxi: Add driver for SD/MMC
- hosts found on allwinner sunxi SOCs
-Date: Wed, 05 Feb 2014 18:17:46 +0100
-Message-ID: <2733138.OsaPkZKnhk@dizzy-6.o2s.ch>
-References: <20140205134741.3027.50207.stgit@dizzy-6.o2s.ch>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v6 8/8] usb: ehci-exynos: Change to use phy provided by
+ the generic phy framework
+Date: Wed, 5 Feb 2014 09:30:35 -0800
+Message-ID: <CAOesGMgKVe=zBGeZnTh3jY41KS88gVVDSLFZcRPS88F3-kEMBQ@mail.gmail.com>
+References: <1391016574-25237-1-git-send-email-k.debski@samsung.com>
+	<1391016574-25237-9-git-send-email-k.debski@samsung.com>
+	<CAOesGMgKQrW=Rb6ZtpOVKAZ6dDzy82CzbmOJtKRb8x6JaS1QLg@mail.gmail.com>
+	<054501cf228a$f45c61c0$dd152540$%debski@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1438517.AOmo1C3tjv"; micalg="pgp-sha1"; protocol="application/pgp-signature"
-Return-path: <linux-sunxi+bncBD2JL37LXEKRBSHEZGLQKGQEDS6NFIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140205134741.3027.50207.stgit-GPtPHOohwllnsqa/0SyWJQ@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Emilio =?ISO-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <054501cf228a$f45c61c0$dd152540$%debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mateusz Krawczuk <mat.krawczuk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, yulgon.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, av.tikhomirov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, tjakobi-o02PS0xoJP9W0yFyLvAVXMxlOr/tl8fh@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Feb 5, 2014 at 7:57 AM, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> Hi Olof,
+>
+> Thank you for your review.
+>
+>> From: Olof Johansson [mailto:olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org]
+>> Sent: Wednesday, January 29, 2014 9:55 PM
+>>
+>> Hi,
+>>
+>> On Wed, Jan 29, 2014 at 9:29 AM, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> wrote:
+>> > Change the phy provider used from the old one using the USB phy
+>> > framework to a new one using the Generic phy framework.
+>> >
+>> > Signed-off-by: Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> > ---
+>> >  .../devicetree/bindings/usb/exynos-usb.txt         |   13 +++
+>> >  drivers/usb/host/ehci-exynos.c                     |   97
+>> +++++++++++++-------
+>> >  2 files changed, 76 insertions(+), 34 deletions(-)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt
+>> > b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+>> > index d967ba1..25e199a 100644
+>> > --- a/Documentation/devicetree/bindings/usb/exynos-usb.txt
+>> > +++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+>> > @@ -12,6 +12,10 @@ Required properties:
+>> >   - interrupts: interrupt number to the cpu.
+>> >   - clocks: from common clock binding: handle to usb clock.
+>> >   - clock-names: from common clock binding: Shall be "usbhost".
+>> > +  - port: if in the SoC there are EHCI phys, they should be listed
+>> here.
+>> > +One phy per port. Each port should have its reg entry with a
+>> > +consecutive number. Also it should contain phys and phy-names
+>> entries
+>> > +specifying the phy used by the port.
+>> >
+>> >  Optional properties:
+>> >   - samsung,vbus-gpio:  if present, specifies the GPIO that @@ -27,6
+>> > +31,15 @@ Example:
+>> >
+>> >                 clocks = <&clock 285>;
+>> >                 clock-names = "usbhost";
+>> > +
+>> > +               #address-cells = <1>;
+>> > +               #size-cells = <0>;
+>> > +               port@0 {
+>> > +                   reg = <0>;
+>> > +                   phys = <&usb2phy 1>;
+>> > +                   phy-names = "host";
+>> > +                   status = "disabled";
+>> > +               };
+>> >         };
+>> >
+>> >  OHCI
+>>
+>> [...]
+>>
+>> > @@ -102,14 +132,26 @@ static int exynos_ehci_probe(struct
+>> platform_device *pdev)
+>> >                                         "samsung,exynos5440-ehci"))
+>> >                 goto skip_phy;
+>> >
+>> > -       phy = devm_usb_get_phy(&pdev->dev, USB_PHY_TYPE_USB2);
+>> > -       if (IS_ERR(phy)) {
+>> > -               usb_put_hcd(hcd);
+>> > -               dev_warn(&pdev->dev, "no platform data or transceiver
+>> defined\n");
+>> > -               return -EPROBE_DEFER;
+>> > -       } else {
+>> > -               exynos_ehci->phy = phy;
+>> > -               exynos_ehci->otg = phy->otg;
+>> > +       for_each_available_child_of_node(pdev->dev.of_node, child) {
+>> > +               err = of_property_read_u32(child, "reg",
+>> &phy_number);
+>> > +               if (err) {
+>> > +                       dev_err(&pdev->dev, "Failed to parse device
+>> tree\n");
+>> > +                       of_node_put(child);
+>> > +                       return err;
+>> > +               }
+>> > +               if (phy_number >= PHY_NUMBER) {
+>> > +                       dev_err(&pdev->dev, "Failed to parse device
+>> tree - number out of range\n");
+>> > +                       of_node_put(child);
+>> > +                       return -EINVAL;
+>> > +               }
+>> > +               phy = devm_of_phy_get(&pdev->dev, child, 0);
+>> > +               of_node_put(child);
+>> > +               if (IS_ERR(phy)) {
+>> > +                       dev_err(&pdev->dev, "Failed to get phy number
+>> %d",
+>> > +
+>> phy_number);
+>> > +                       return PTR_ERR(phy);
+>> > +               }
+>> > +               exynos_ehci->phy[phy_number] = phy;
+>>
+>> this looks like it is now breaking older device trees, where ports
+>> might not be described. Since device tree interfaces need to be
+>> backwards compatible, you still need to handle the old case of not
+>> having ports described.
+>>
+>> There are two ways of doing this:
+>>
+>> 1. Fall back to the old behavior if there are no ports 2. Use a new
+>> compatible value for the new model with port subnodes, and if the old
+>> compatible value is used, then fall back to the old behavior.
+>>
+>> I'm guessing (1) might be easiest since you can check for the presence
+>> of #address-cells to tell if this is just an old style node, or if it's
+>> a new-style node without any ports below it.
+>
+> The ultimate goal is to remove the old phy driver. Unfortunately
+> this has to be synced with the new USB3 phy driver by Vivek Gautam. I think
+> he
+> is also close to completion. What about this case? In the end the old driver
+> will be removed and no longer be supported. Having backward compatibility in
+> mind, it is possible to have the old and the new phy driver together in one
+> kernel release. But do we want to have two drivers doing the same thing at
+> the same time?
 
---nextPart1438517.AOmo1C3tjv
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="us-ascii"
+It is mostly irrelevant if there is a new driver or not -- the old
+device tree has to keep working. In this case it would mean that the
+new driver needs to work with older device trees as well, or people
+will see functionality regressing.
 
-As Maxime has pointed out, I've forgotten to add a changelog
-in my coverletter.
-Here is, what has changed in this revision:
+The device tree is a description of the hardware, not an extension of
+the driver.
 
-Changes since v1:
-=2DUsing mmc_of_parse instead of diy dt parsing
-=2DAdding nodes for all mmc controller to the dtsi files, including sofar=
- unused
-  controllers
-=2DUsing generic GPIO slot library
-=2DAdding additional MMC device nodes into DTSI files
 
-Changes since v2:
-=2DAdd missing Signed-off-by tags
-=2DStop using __raw_readl / __raw_writel so that barriers are properly us=
-ed
-=2DAdding missing new lines
-=2DAdding missing patch for automatic reparenting of clocks
-
-cheers
-david
---nextPart1438517.AOmo1C3tjv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iEYEABECAAYFAlLycj0ACgkQAeZw77btGjq4IgCfVDzZHDDb0w0JZ2ZrHfngQxay
-Ed4AoLAsD7YPn2Biiwrp3lrn7zgmkaZG
-=2Ypc
------END PGP SIGNATURE-----
-
---nextPart1438517.AOmo1C3tjv--
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
