@@ -1,56 +1,233 @@
-From: Jim Lin <jilin@nvidia.com>
-Subject: RE: [PATCH v3 3/6] misc: fuse: Add efuse driver for Tegra
-Date: Wed, 5 Feb 2014 18:26:35 +0800
-Message-ID: <4B9C9637D5087840A465BDCB251780E9E334916736@HKMAIL02.nvidia.com>
-References: <1390952176-30402-1-git-send-email-pdeschrijver@nvidia.com>
- <1390952176-30402-4-git-send-email-pdeschrijver@nvidia.com>
- <1390962378.2398.11.camel@jilin-desktop>
- <20140203141529.GF19389@tbergstrom-lnx.Nvidia.com>
+From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 3/4] ARM: dts: Add support of STid127 Soc.
+Date: Wed, 5 Feb 2014 11:27:54 +0100
+Message-ID: <52F2122A.9080603@st.com>
+References: <1391093744-19905-1-git-send-email-patrice.chotard@st.com> <1391093744-19905-4-git-send-email-patrice.chotard@st.com> <52EB9C03.70009@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140203141529.GF19389@tbergstrom-lnx.Nvidia.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Danny Huang <dahuang@nvidia.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52EB9C03.70009-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: srinivas kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: maxime.coquelin-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Please ignore my comment.
-I will try to use exported tegra_fuse_readl().
+Hi Srinivas
 
------Original Message-----
-From: Peter De Schrijver [mailto:pdeschrijver@nvidia.com] 
-Sent: Monday, February 03, 2014 10:15 PM
-To: Jim Lin
-Cc: linux-arm-kernel@lists.infradead.org; linux-tegra@vger.kernel.org; linux-kernel@vger.kernel.org; Rob Landley; Stephen Warren; Thierry Reding; Grant Likely; Rob Herring; Danny Huang; linux-doc@vger.kernel.org; devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 3/6] misc: fuse: Add efuse driver for Tegra
+Thanks for reviewing, a V2 serie will be pushed with all required fixes.
 
-On Wed, Jan 29, 2014 at 03:26:18AM +0100, Jim Lin wrote:
-> On Wed, 2014-01-29 at 07:36 +0800, Peter De Schrijver wrote:
-> > Implement fuse driver for Tegra20, Tegra30, Tegra114 and Tegra124.
-> > 
-> > Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-> > ---
-> >  Documentation/ABI/testing/sysfs-driver-tegra-fuse |    8 +
-> >  drivers/misc/fuse/Makefile                        |    1 +
-> >  drivers/misc/fuse/tegra/Makefile                  |    7 +
-> >  drivers/misc/fuse/tegra/fuse-tegra.c              |  228 ++++++++++++++++
-> >  drivers/misc/fuse/tegra/fuse-tegra20.c            |  136 ++++++++++
-> >  drivers/misc/fuse/tegra/fuse-tegra30.c            |  178 +++++++++++++
-> >  drivers/misc/fuse/tegra/fuse.h                    |   82 ++++++
-> Could we move this fuse.h to other folder under /include/linux (like 
-> /include/linux/platform_data) for other driver to include?
+Patrice
 
-I don't think we should expose everything in fuse.h to the world.
+On 01/31/2014 01:50 PM, srinivas kandagatla wrote:
+> Hi Patrice,
+>
+> On 30/01/14 14:55, Patrice CHOTARD wrote:
+>> From: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+>>
+>> The STid127 integrates all harware components to function as a cable modem
+> s/harware/hardware/
+>
+> s/STid127/STiD127
+>
+> Please fix other instances too.
+>
+>> or, in combination with a back end device, as a Gateway set top boxe.
+> s/boxe/box/
+>> Supported devices:
+>> 	-UART0
+>> 	-UART2
+>>
+>> Signed-off-by: alexandre torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/stid127-clock.dtsi   |   31 ++++
+>>   arch/arm/boot/dts/stid127-pinctrl.dtsi |  245 ++++++++++++++++++++++++++++++++
+>>   arch/arm/boot/dts/stid127.dtsi         |  130 +++++++++++++++++
+>>   3 files changed, 406 insertions(+)
+>>   create mode 100644 arch/arm/boot/dts/stid127-clock.dtsi
+>>   create mode 100644 arch/arm/boot/dts/stid127-pinctrl.dtsi
+>>   create mode 100644 arch/arm/boot/dts/stid127.dtsi
+>>
+>> diff --git a/arch/arm/boot/dts/stid127-clock.dtsi b/arch/arm/boot/dts/stid127-clock.dtsi
+>> new file mode 100644
+>> index 0000000..c6cafa9
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/stid127-clock.dtsi
+>> @@ -0,0 +1,31 @@
+>> +/*
+>> + * Copyright (C) 2013 STMicroelectronics (R&D) Limited
+> 2014
+>
+>> + * Author(s): Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+>> + *	      Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +/ {Acked-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+>> +	clocks {
+>> +		/*
+>> +		 * ARM Peripheral clock for timers
+>> +		 */
+>> +		arm_periph_clk: arm_periph_clk {
+>> +			#clock-cells = <0>;
+>> +			compatible = "fixed-clock";
+>> +			clock-frequency = <100000000>;
+>> +		};
+>> +		/*
+>> +		 * Bootloader initialized system infrastructure clock for
+>> +		 * serial devices.
+>> +		 */
+>> +		CLK_IC_LP_HD: clockgenA0@29 {
+>> +			#clock-cells = <0>;
+>> +			compatible = "fixed-clock";
+>> +			clock-frequency = <100000000>;
+>> +			clock-output-names = "CLK_IC_LP_HD";
+>> +		};
+>> +	};
+>> +};
+>> diff --git a/arch/arm/boot/dts/stid127-pinctrl.dtsi b/arch/arm/boot/dts/stid127-pinctrl.dtsi
+>> new file mode 100644
+>> index 0000000..3fa66f3
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/stid127-pinctrl.dtsi
+>> @@ -0,0 +1,245 @@
+>> +/*
+>> + * Copyright (C) 2012 STMicroelectronics Limited.
+> 2014
+>
+>> + * Author(s): Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+>> + *	      Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * publishhed by the Free Software Foundation.
+> s/publishhed/published/
+>
+>> + */
+>> +#include "st-pincfg.h"
+>> +/ {
+>> +	aliases {
+>> +		gpio0	= &PIO0;
+>> +		gpio1	= &PIO1;
+>> +		gpio2	= &PIO2;
+>> +		gpio3	= &PIO3;
+>> +		gpio4	= &PIO4;
+>> +		gpio5	= &PIO5;
+>> +		gpio6	= &PIO6;
+>> +		gpio7	= &PIO7;
+>> +		gpio8	= &PIO8;
+>> +		gpio9	= &PIO9;
+>> +		gpio10	= &PIO10;
+>> +		gpio11	= &PIO11;
+>> +		gpio12	= &PIO12;
+>> +		gpio13	= &PIO13;
+>> +		gpio14	= &PIO14;
+>> +		gpio15	= &PIO15;
+>> +		gpio16	= &PIO16;
+>> +		gpio17	= &PIO17;
+>> +		gpio18	= &PIO18;
+>> +		gpio19	= &PIO19;
+>> +		gpio20	= &PIO20;
+>> +		gpio21	= &PIO21;
+>> +		gpio22	= &PIO22;
+>> +
+>> +	};
+>> +
+>> +	soc {
+>> +		pin-controller-pwest {
+>> +			#address-cells	= <1>;
+>> +			#size-cells	= <1>;
+>> +			compatible	= "st,stid127-pwest-pinctrl";
+>> +			st,syscfg	= <&syscfg_pwest>;
+>> +			ranges		= <0 0xfebe0000 0x8000>;
+> Can you add interrupt controller support to the pin controller.
+>
+> Patches are in : https://lkml.org/lkml/2014/1/16/342
+> All these patches are due to be in v3.15.
+>
+>> +
+>> +			PIO0: gpio@febe0000 {
+>> +				gpio-controller;
+>> +				#gpio-cells = <1>;
+>> +				reg = <0 0x100>;
+>> +				interrupts =  <0 149 0>;
+>> +				st,bank-name  = "PIO0";
+>> +			};
+>> +						rx	= <&PIO3 0 ALT2	IN>;
+>> +					};
+>> +				};
+>> +			};
+>> +
+>> +		};
+> unnecessary empty line  here.
+>
+>> diff --git a/arch/arm/boot/dts/stid127.dtsi b/arch/arm/boot/dts/stid127.dtsi
+>> new file mode 100644
+>> index 0000000..a6f0b8fe
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/stid127.dtsi
+>> @@ -0,0 +1,130 @@
+>> +/*
+>> + * Copyright (C) 2013 STMicroelectronics Limited.
+> 2014
+>> + * Author(s): Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+>> + *	      Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * publishhed by the Free Software Foundation.
+> s/publishhed/published/
+>
+>> + */
+>> +#include "stid127-pinctrl.dtsi"
+>> +#include "stid127-clock.dtsi"
+>> +/ {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <1>;
+>> +
+>> +	cpus {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		cpu@0 {
+>> +			device_type = "cpu";
+>> +			compatible = "arm,cortex-a9";
+>> +			reg = <0>;
+>> +		};
+>> +		cpu@1 {
+>> +			device_type = "cpu";
+>> +			compatible = "arm,cortex-a9";
+>> +			reg = <1>;
+>> +		};
+>> +	};
+>> +
+>> +	intc: interrupt-controller@fffe1000 {
+>> +		compatible = "arm,cortex-a9-gic";
+>> +		#interrupt-cells = <3>;
+>> +		interrupt-controller;
+>> +		reg = <0xfffe1000 0x1000>,
+>> +		      <0xfffe0100 0x100>;
+>> +	};
+>> +
+>> +	scu@fffe0000 {
+>> +		compatible = "arm,cortex-a9-scu";
+>> +		reg = <0xfffe0000 0x1000>;
+>> +	};
+>> +
+>> +	timer@fffe0200 {
+>> +			interrupt-parent = <&intc>;
+>> +			compatible = "arm,cortex-a9-global-timer";
+>> +			reg = <0xfffe0200 0x100>;
+>> +			interrupts = <1 11 0x04>;
+>> +			clocks = <&arm_periph_clk>;
+> Fix the tab spacing here.
+>
+> Thanks,
+> srini
 
-> So other driver can invoke function to read fuse data if needed.
-
-Which functionality do you want? Just reading the fuse data exposed in the sysfs file from a driver? exporting tegra_fuse_readl() should do that I think?
-
-Cheers,
-
-Peter.
-
---nvpublic
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
