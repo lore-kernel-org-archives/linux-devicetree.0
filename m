@@ -1,75 +1,50 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v4] of: add functions to count number of elements in a
- property
-Date: Wed, 05 Feb 2014 12:06:52 +0000
-Message-ID: <20140205120652.9B1A7C40A89@trevor.secretlab.ca>
-References: <27256277.YJ687suYy5@phil> <
- CAL_JsqJord1OOjwcKk1jqF5o+XO3uw+Lc4ATtQacgwZWAoQq1g@mail.gmail.com> <
- 20140204173034.2D899C4050F@trevor.secretlab.ca> <13514940.URVnEJ4NF0@phil>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6523141350165008624=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <13514940.URVnEJ4NF0@phil>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arm@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] DT: net: document Ethernet bindings in one place
+Date: Wed, 05 Feb 2014 12:08:43 +0000
+Message-ID: <20140205120843.9ED08C40A89@trevor.secretlab.ca>
+References: <201401180405.07859.sergei.shtylyov@cogentembedded.com> < CAL_Jsq+oa9P=rh+p-dMZyGP8TcmpX7bTnMU0ynLvFxjxFDYbRg@mail.gmail.com> < 52DD98F7.4090202@cogentembedded.com> < CAL_JsqJXbF1-PcPHR2VP+Vi9A1aWizdsG_r3kDvRt3itXDhCGQ@mail.gmail.com> < CAGVrzcb3X3soJNJCE5+YSpQrr+EdycCRFkptPvBCgFg4CbGJ4Q@mail.gmail.com> < CAGVrzcb0dfw1orZzUt5-YkShOg-HNbUYvvo2vfmsZUZXy1Aqfg@mail.gmail.com> < 52DEE465.9000202@cogentembedded.com> <52E988FA.8040807@cogentembedded.com> <20140204172602.01420C4050F@trevor.secretlab.ca> <52F13410.8070205@ cogentembedded.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <52F13410.8070205@cogentembedded.com>
+Sender: netdev-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robherring2@gmail.com>
+Cc: netdev <netdev@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---===============6523141350165008624==
-Content-Type: text/plain
+On Tue, 04 Feb 2014 21:40:16 +0300, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com> wrote:
+> Hello.
+> 
+> On 02/04/2014 08:26 PM, Grant Likely wrote:
+> 
+> >>>>>>>      I'm afraid that's too late, it has spread very far, so that
+> >>>>>>> of_get_phy_mode() handles that property, not "phy-connection-type".
+> 
+> >>>>>> Uggg, I guess this is a case of a defacto standard then if the kernel
+> >>>>>> doesn't even support it.
+> 
+> >>>>> Maybe I forgot to CC you on patch sent to Grant only, I sent a patch a
+> >>>>> while ago for of_get_phy_mode() to look for both "phy-mode" and
+> >>>>> "phy-connection-type" since the former has been a Linux invention, but
+> >>>>> the latter is ePAPR specified.
+> 
+> >>>> Here is a link to the actual patch in question, not sure which tree
+> >>>> Grant applied it to though:
+> 
+> >>>> http://lkml.indiana.edu/hypermail/linux/kernel/1311.2/00048.html
+> 
+> >>>      It's not the patch mail, it's Grant's "applied" reply, patch is mangled in
+> >>> this reply, and I couldn't follow the thread. Here's the actual patch mail:
+> 
+> >>> http://marc.info/?l=devicetree&m=138449662807254
+> 
+> >>      Florian, I didn't find this patch in Grant's official tree, so maybe you
+> >> should ask him where is the patch already?
+> 
+> > Sorry, I accidentally dropped it. It will be in the next merge window.
+> 
+>     Already saw it, thanks. Would that it was in 3.14 instead of course, so 
+> that I could use "phy-connection-type" in my binding...
 
-On Tue, 04 Feb 2014 19:48:17 +0100, Heiko Stübner <heiko@sntech.de> wrote:
-> Hi Grant,
-> 
-> On Tuesday, 4. February 2014 17:30:34 Grant Likely wrote:
-> > On Sat, 18 Jan 2014 09:07:30 -0600, Rob Herring <robherring2@gmail.com> 
-> wrote:
-> > > On Sat, Jan 18, 2014 at 6:02 AM, Heiko StÃ¼bner <heiko@sntech.de> wrote:
-> > > > The need to know the number of array elements in a property is
-> > > > a common pattern. To prevent duplication of open-coded implementations
-> > > > add a helper static function that also centralises strict sanity
-> > > > checking and DTB format details, as well as a set of wrapper functions
-> > > > for u8, u16, u32 and u64.
-> > > > 
-> > > > Suggested-by: Mark Rutland <mark.rutland@arm.com>
-> > > > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> > > > ---
-> > > 
-> > > Looks good. Do you plan to convert some users to use this?
-> > 
-> > I'll take that as an acked-by. Merged, thanks.
-> 
-> before you taking this patch, I was planning on simply sending this as part of 
-> my rockchip-smp series - as I'm currently the only user of it :-) .
-> 
-> This going through your tree is most likely the better way, but now I need it 
-> to somehow make its way into arm-soc too ... I guess some sort of stable 
-> branch arm-soc could pull?
-
-Nah, I'll drop it from my tree. Add my acked-by and merge it via
-arm-soc.
+Is 3.14 broken because of missing the patch? If so I'll get it merged as
+a bug fix.
 
 g.
-
-
-
---===============6523141350165008624==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============6523141350165008624==--
