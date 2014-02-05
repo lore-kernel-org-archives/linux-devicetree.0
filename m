@@ -1,80 +1,73 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v7 2/7] dt-bindings: sram: describe option to reserve
- parts of the memory
-Date: Wed, 05 Feb 2014 11:12:47 +0000
-Message-ID: <20140205111247.476B7C40A89@trevor.secretlab.ca>
-References: <4970034.fqvMoHdOyd@phil> <1782709.QdZpsrsctf@phil>
+From: srinivas kandagatla <srinivas.kandagatla@st.com>
+Subject: Re: [PATCH 1/4] ARM: STi: add stid127 soc support
+Date: Wed, 5 Feb 2014 11:48:24 +0000
+Message-ID: <52F22508.7080706@st.com>
+References: <1391093744-19905-1-git-send-email-patrice.chotard@st.com> <201401301939.08302.arnd@arndb.de> <52EB96BB.6070800@st.com> <201401312115.33731.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5710893727428569285=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1782709.QdZpsrsctf@phil>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, arm@kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201401312115.33731.arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, kernel@stlinux.com, Linus Walleij <linus.walleij@linaro.org>, Patrice CHOTARD <patrice.chotard@st.com>, linux-kernel@vger.kernel.org, Stuart Menefy <stuart.menefy@st.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, maxime.coquelin@st.com, alexandre.torgue@st.com
 List-Id: devicetree@vger.kernel.org
 
---===============5710893727428569285==
-Content-Type: text/plain
-
-On Mon, 20 Jan 2014 16:42:58 +0100, Heiko Stübner <heiko@sntech.de> wrote:
-> Some SoCs need parts of their sram for special purposes. So while being part
-> of the peripheral, it should not be part of the genpool controlling the sram.
+Hi Arnd,
+On 31/01/14 20:15, Arnd Bergmann wrote:
+> On Friday 31 January 2014, srinivas kandagatla wrote:
 > 
-> Therefore add an option mmio-sram-reserved to keep arbitrary portions of the
-> sram from general usage.
+>>> Sorry if I missed the initial review, but can you explain
+>>> why this is needed to start with?
+>>
+>> On ST SoCs the default value for L2 AUX_CTRL register is 0x0, so we  set
+>> the way-size explicit here.
 > 
-> Suggested-by: Rob Herring <robherring2@gmail.com>
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> Tested-by: Ulrich Prinz <ulrich.prinz@googlemail.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/misc/sram.txt |    8 ++++++++
->  1 file changed, 8 insertions(+)
+> Unfortunately, we keep going back and forth on the L2 cache controller
+> setup between "it should work automatically" and "we don't want to
+> have configuration data in DT", where my personal opinion is that
+> the first one is more important here.
 > 
-> diff --git a/Documentation/devicetree/bindings/misc/sram.txt b/Documentation/devicetree/bindings/misc/sram.txt
-> index 4d0a00e..09ee7a3 100644
-> --- a/Documentation/devicetree/bindings/misc/sram.txt
-> +++ b/Documentation/devicetree/bindings/misc/sram.txt
-> @@ -8,9 +8,17 @@ Required properties:
->  
->  - reg : SRAM iomem address range
->  
-> +Optional properties:
-> +
-> +- mmio-sram-reserved: ordered list of reserved chunks inside the sram that
-> +  should not be used by the operating system.
-> +  Format is <base size>, <base size>, ...; with base being relative to the
-> +  reg property base.
-> +
+> Now, there are a couple of properties that are defined in
+> Documentation/devicetree/bindings/arm/l2cc.txt to let some of the
+> things get set up automatically already. Can you check which bits
+> are missing there, if any? Are they better described as "configuration"
+> or "hardware" settings?
 
-We've now got a draft binding for reserved memory. Can you use the format
-here? Basically each reserved region is a sub node with either a reg
-property or a size property.
+Currently l2cc bindings has few optional properties like.
 
-This is specifically for sram, so I won't make a big deal about it, but
-it would be good to have some commonality.
+- arm,data-latency
+- arm,tag-latency
+- arm,dirty-latency
+- arm,filter-ranges
+- interrupts :
+- cache-id-part:
+- wt-override:
 
-g.
+These does not include properties to set "way-size", "associativity",
+"enabling prefetching", "Prefetch drop enable", "prefetch offset",
+"Double linefill" and few more in prefect control register and
+aux-control register.
+
+This is not just a issue with STi SOCs, having a quick look, I can see
+that few more SOCs have similar requirements to set these properties.
+
+We could do two things to get l2 setup automatically on STi SOCS.
+
+1> Either define these properties case-by-case basic, which might be
+useful for other SOCs too.
+
+2> Or Add new compatible string for STi SoCs so that they can
+automatically setup these values in cache-l2x0.c
+
+Am Ok with either approaches.
 
 
+Thanks,
+srini
 
---===============5710893727428569285==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5710893727428569285==--
+> 
+> 	Arnd
+> 
+> 
