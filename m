@@ -1,56 +1,102 @@
-From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/6] i2c: bcm-kona: register with subsys_initcall
-Date: Wed, 5 Feb 2014 11:19:28 -0500
-Message-ID: <20140205161928.GF22153@beef>
-References: <20140205151826.GC22153@beef>
- <Pine.LNX.4.44L0.1402051028350.1312-100000@iolanthe.rowland.org>
+From: Srikanth Thokala <sthokal@xilinx.com>
+Subject: Re: [PATCH v2] dma: Add Xilinx AXI Video Direct Memory Access Engine
+ driver support
+Date: Wed, 5 Feb 2014 21:55:02 +0530
+Message-ID: <CA+mB=1L9XFC8h_qW_-K-cv5sYondL_0NiLr=9XCFxwWRjDHn1Q@mail.gmail.com>
+References: <1390409565-4200-1-git-send-email-sthokal@xilinx.com>
+	<1390409565-4200-2-git-send-email-sthokal@xilinx.com>
+	<52E0FC22.8060903@metafoo.de>
+	<CA+mB=1L6yvCwA3mKCwz83LQbXiVau110REV64rYrSzUhGE4ucA@mail.gmail.com>
+	<52E2698B.6070001@metafoo.de>
+	<20140126135933.GD10628@intel.com>
+	<52E54849.2000208@metafoo.de>
+	<CA+mB=1JvnTcyRnuvdnW1BCeiMLSTMrrAbKwVKgwFUmWrVuXzSw@mail.gmail.com>
+	<20140128031324.GH10628@intel.com>
+	<CA+mB=1K8Cqe_c6_ce-fLyphvqcr90mhCjFdZ_d4BV-VkUk-gXw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1402051028350.1312-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux I2C List <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+mB=1K8Cqe_c6_ce-fLyphvqcr90mhCjFdZ_d4BV-VkUk-gXw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srikanth Thokala <sthokal@xilinx.com>
+Cc: Vinod Koul <vinod.koul@intel.com>, Lars-Peter Clausen <lars@metafoo.de>, dan.j.williams@intel.com, michal.simek@xilinx.com, Grant Likely <grant.likely@linaro.org>, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 05, 2014 at 10:30:29AM -0500, Alan Stern wrote:
-> On Wed, 5 Feb 2014, Matt Porter wrote:
-> 
-> > On Wed, Feb 05, 2014 at 10:08:18AM +0100, Wolfram Sang wrote:
-> > > On Tue, Feb 04, 2014 at 07:19:07AM -0500, Matt Porter wrote:
-> > > 
-> > > > Voltage regulators are needed very early due to deferred probe
-> > > > being incompatible with built-in USB gadget drivers.
-> > > 
-> > > What does it need to fix those instead?
-> > 
-> > [added Alan/Felipe for more insight]
-> > 
-> > Discussion on that topic came about from this submission:
-> > http://www.spinics.net/lists/linux-usb/msg94217.html
-> > 
-> > End of it is:
-> > http://www.spinics.net/lists/linux-usb/msg94731.html
-> > 
-> > We can either add to the many drivers that already do subsys_initcall()
-> > for similar reasons...or I can drop this from the series and add gadget
-> > probe ordering to my TODO list.
-> > 
-> > In short, it can't be a late_initcall() hack like the original post and
-> > really could be solved by converting to a real bus (and letting
-> > deferred probe do its job)..but Alan voiced concerns about that.
-> 
-> Don't worry too much about what I said.  If adding a "gadget" bus will 
-> solve the problem in an appropriate way, and if nobody else objects 
-> (particularly Felipe, who is on vacation now), then go for it.
+On Fri, Jan 31, 2014 at 12:21 PM, Srikanth Thokala <sthokal@xilinx.com> wrote:
+> Hi Vinod,
+>
+> On Tue, Jan 28, 2014 at 8:43 AM, Vinod Koul <vinod.koul@intel.com> wrote:
+>> On Mon, Jan 27, 2014 at 06:42:36PM +0530, Srikanth Thokala wrote:
+>>> Hi Lars/Vinod,
+>>> >> The question here i think would be waht this device supports? Is the hardware
+>>> >> capable of doing interleaved transfers, then would make sense.
+>>> >
+>>> > The hardware does 2D transfers. The parameters for a transfer are height,
+>>> > width and stride. That's only a subset of what interleaved transfers can be
+>>> > (xt->num_frames must be one for 2d transfers). But if I remember correctly
+>>> > there has been some discussion on this in the past and the result of that
+>>> > discussion was that using interleaved transfers for 2D transfers is
+>>> > preferred over adding a custom API for 2D transfers.
+>>>
+>>> I went through the prep_interleaved_dma API and I see only one descriptor
+>>> is prepared per API call (i.e. per frame).  As our IP supports upto 16 frame
+>>> buffers (can be more in future), isn't it less efficient compared to the
+>>> prep_slave_sg where we get a single sg list and can prepare all the descriptors
+>>> (of non-contiguous buffers) in one go?  Correct me, if am wrong and let me
+>>> know your opinions.
+>> Well the descriptor maybe one, but that can represent multiple frames, for
+>> example 16 as in your case. Can you read up the documentation of how multiple
+>> frames are passed. Pls see include/linux/dmaengine.h
+>>
+>> /**
+>>  * Interleaved Transfer Request
+>>  * ----------------------------
+>>  * A chunk is collection of contiguous bytes to be transfered.
+>>  * The gap(in bytes) between two chunks is called inter-chunk-gap(ICG).
+>>  * ICGs may or maynot change between chunks.
+>>  * A FRAME is the smallest series of contiguous {chunk,icg} pairs,
+>>  *  that when repeated an integral number of times, specifies the transfer.
+>>  * A transfer template is specification of a Frame, the number of times
+>>  *  it is to be repeated and other per-transfer attributes.
+>>  *
+>>  * Practically, a client driver would have ready a template for each
+>>  *  type of transfer it is going to need during its lifetime and
+>>  *  set only 'src_start' and 'dst_start' before submitting the requests.
+>>  *
+>>  *
+>>  *  |      Frame-1        |       Frame-2       | ~ |       Frame-'numf'  |
+>>  *  |====....==.===...=...|====....==.===...=...| ~ |====....==.===...=...|
+>>  *
+>>  *    ==  Chunk size
+>>  *    ... ICG
+>>  */
+>
+> Yes, it can handle multiple frames specified by 'numf' each of size
+> 'frame_size * sgl[0].size'.
+> But, I see it only works if all the frames' memory is contiguous and
+> in this case we
+> can just increment 'src_start' by the total frame size 'numf' number
+> of times to fill in
+> for each HW descriptor (each frame is one HW descriptor).  So, there
+> is no issue when the
+> memory is contiguous.  If the frames are non contiguous, we have to
+> call this API for each
+> frame (hence for each descriptor), as the src_start for each frame is
+> different.  Is it correct?
+>
+> FYI: This hardware has an inbuilt Scatter-Gather engine.
+>
 
-Ok, I'll take a look at what can be done and restart the conversation
-when Felipe returns.
+Ping?
 
-Wolfram: given this, as I mentioned, I'll simply drop this patch from
-the series and work around it for now. This will probably make Lee and
-Mark happy to not see subsys_initcall() in the MFD/regulator drivers as
-well.
 
--Matt
+> Srikanth
+>
+>>
+>> --
+>> ~Vinod
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Please read the FAQ at  http://www.tux.org/lkml/
