@@ -1,262 +1,84 @@
-From: Alexander Shiyan <shc_work@mail.ru>
-Subject: [PATCH v2 RESEND] pwm: Add CLPS711X PWM support
-Date: Wed,  5 Feb 2014 19:22:29 +0400
-Message-ID: <1391613749-7896-1-git-send-email-shc_work@mail.ru>
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: linux-pwm@vger.kernel.org
-Cc: Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Alexander Shiyan <shc_work@mail.ru>
+From: Matt Porter <mporter@linaro.org>
+Subject: Re: [PATCH RESEND] ARM: dts: add BeagleBone Audio Cape (Rev A) dtsi
+Date: Wed, 5 Feb 2014 10:29:40 -0500
+Message-ID: <20140205152940.GD22153@beef>
+References: <1391608084-12665-1-git-send-email-ml@embed.me.uk>
+ <52F2460C.3080908@ti.com>
+ <20140205143800.GB22153@beef>
+ <52F25122.50400@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52F25122.50400@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Jack Mitchell <ml@embed.me.uk>, bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jack Mitchell <jack@embed.me.uk>
 List-Id: devicetree@vger.kernel.org
 
-Add a new driver for the ARM CLPS711X Pulse Width Modulator (PWM) interface.
-This CPU contain two 4-bit PWM outputs with constant period, based on CPU
-PLL frequency. PWM polarity is determined by hardware by power on reset.
+On Wed, Feb 05, 2014 at 08:56:34AM -0600, Nishanth Menon wrote:
+> On 02/05/2014 08:38 AM, Matt Porter wrote:
+> > On Wed, Feb 05, 2014 at 08:09:16AM -0600, Nishanth Menon wrote:
+> >> On 02/05/2014 07:48 AM, Jack Mitchell wrote:
+> [...]
+> >>> + * --- a/arch/arm/boot/dts/am335x-boneblack.dts
+> >>> + * +++ b/arch/arm/boot/dts/am335x-boneblack.dts
+> >>> + * @@ -73,6 +74,6 @@
+> >>> + *  		pinctrl-names = "default", "off";
+> >>> + *  		pinctrl-0 = <&nxp_hdmi_bonelt_pins>;
+> >>> + *  		pinctrl-1 = <&nxp_hdmi_bonelt_off_pins>;
+> >>> + * -		status = "okay";
+> >>> + * +		status = "disabled";
+> >>> + *  	};
+> >>> + *  };
+> >>> + */
+> >>> +
+> >> how about making the audio-cape-reva.dts which includes and overrides
+> >> parameters of boneblack.dts?
+> > 
+> > Yeah, that might be a little cleaner. Black makes things unfortunately
+> > messy for these capes that were really intended for BBW :(
+> 
+> yes indeed - we might have to live with more dts in such a case.
+> > 
+> >> Further, I see a bunch of capes in
+> >> http://elinux.org/Beagleboard:BeagleBone_Capes
+> >>
+> >> Assuming that we dont want to discuss capebus all over again, is this
+> >> the approach we'd like to consider in the interim?
+> > 
+> > I think that's a fair assumption...I'll note that there is work slowly
+> > in progress on a very minimal implementation DT overlays upstream. But
+> > that doesn't exist. We are simply interested in a sane way to use the
+> > hardware we own in mainline and this approach makes it possible to build
+> > a kernel+dtb from mainline that works for this configuration. If
+> > there's a better way to support this hardware *today* let's discuss it.
+> > One of the big benefits to having this upstream is that it's no longer
+> > out of sight out of mind. It should be managed alongside all the other
+> > am335x dts data.
+> > 
+> > Incidentally, I'm hoping to contribute a similar patch for the DVI cape
+> > I have here.
+> 
+> If I am not mistaken, the capes are stackable (within reason), and are
+> not exactly hotpluggable.. question pops up as to how do we handle
+> multiple cape descriptions on the same board without having the user
+> to create custom dts which includes each relevant cape dts he has on
+> his/her bone? I wonder(without proper research, just thinking aloud)
+> if u-boot can do some sort of merge of dtbs - assuming ofcourse eeprom
+> data is used to detect the capes plugged on board?
 
-Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
----
- .../bindings/pwm/cirrus-clps711x-pwm.txt           |  15 ++
- drivers/pwm/Kconfig                                |   9 ++
- drivers/pwm/Makefile                               |   1 +
- drivers/pwm/pwm-clps711x.c                         | 176 +++++++++++++++++++++
- 4 files changed, 201 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/cirrus-clps711x-pwm.txt
- create mode 100644 drivers/pwm/pwm-clps711x.c
+Well covered in the original discussion. gcl summarizes options in
+https://lkml.org/lkml/2012/11/5/615
 
-diff --git a/Documentation/devicetree/bindings/pwm/cirrus-clps711x-pwm.txt b/Documentation/devicetree/bindings/pwm/cirrus-clps711x-pwm.txt
-new file mode 100644
-index 0000000..e252f6d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/cirrus-clps711x-pwm.txt
-@@ -0,0 +1,15 @@
-+* Cirris Logic CLPS711X PWM controller
-+
-+Required properties:
-+- compatible: Should be "cirrus,clps711x-pwm".
-+- reg: Physical base address and length of the controller's registers.
-+- clocks: phandle to the PWM reference clock.
-+- #pwm-cells: Should be 1. The cell specifies the index of the channel.
-+
-+Example:
-+	pwm: pwm@80000400 {
-+		compatible = "cirrus,clps711x-pwm";
-+		reg = <0x80000400 0x4>;
-+		clocks = <&clks 8>;
-+		#pwm-cells = <1>;
-+	};
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 22f2f28..d3a2c26 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -71,6 +71,15 @@ config PWM_BFIN
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-bfin.
- 
-+config PWM_CLPS711X
-+	tristate "CLPS711X PWM support"
-+	depends on ARCH_CLPS711X || COMPILE_TEST
-+	help
-+	  Generic PWM framework driver for Cirrus Logic CLPS711X.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-clps711x.
-+
- config PWM_EP93XX
- 	tristate "Cirrus Logic EP93xx PWM support"
- 	depends on ARCH_EP93XX
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index d8906ec..d676681 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -4,6 +4,7 @@ obj-$(CONFIG_PWM_AB8500)	+= pwm-ab8500.o
- obj-$(CONFIG_PWM_ATMEL)		+= pwm-atmel.o
- obj-$(CONFIG_PWM_ATMEL_TCB)	+= pwm-atmel-tcb.o
- obj-$(CONFIG_PWM_BFIN)		+= pwm-bfin.o
-+obj-$(CONFIG_PWM_CLPS711X)	+= pwm-clps711x.o
- obj-$(CONFIG_PWM_EP93XX)	+= pwm-ep93xx.o
- obj-$(CONFIG_PWM_IMX)		+= pwm-imx.o
- obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
-diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
-new file mode 100644
-index 0000000..fafb6a0
---- /dev/null
-+++ b/drivers/pwm/pwm-clps711x.c
-@@ -0,0 +1,176 @@
-+/*
-+ * Cirrus Logic CLPS711X PWM driver
-+ *
-+ * Copyright (C) 2014 Alexander Shiyan <shc_work@mail.ru>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+
-+struct clps711x_chip {
-+	struct pwm_chip chip;
-+	void __iomem *pmpcon;
-+	struct clk *clk;
-+	spinlock_t lock;
-+};
-+
-+static inline struct clps711x_chip *to_clps711x_chip(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct clps711x_chip, chip);
-+}
-+
-+static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
-+{
-+	/* PWM0 - bits 4..7, PWM1 - bits 8..11 */
-+	u32 shift = (n + 1) * 4;
-+	unsigned long flags;
-+	u32 tmp;
-+
-+	spin_lock_irqsave(&priv->lock, flags);
-+
-+	tmp = readl(priv->pmpcon);
-+	tmp &= ~(0xf << shift);
-+	tmp |= v << shift;
-+	writel(tmp, priv->pmpcon);
-+
-+	spin_unlock_irqrestore(&priv->lock, flags);
-+}
-+
-+static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
-+{
-+	/* Duty cycle 0..15 max */
-+	return DIV_ROUND_CLOSEST(v * 0xf, pwm_get_period(pwm));
-+}
-+
-+static int clps711x_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct clps711x_chip *priv = to_clps711x_chip(chip);
-+	unsigned int freq = clk_get_rate(priv->clk);
-+
-+	if (!freq)
-+		return -EINVAL;
-+
-+	/* Store constant period value */
-+	pwm_set_period(pwm, DIV_ROUND_CLOSEST(NSEC_PER_SEC, freq));
-+
-+	return 0;
-+}
-+
-+static int clps711x_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-+			       int duty_ns, int period_ns)
-+{
-+	struct clps711x_chip *priv = to_clps711x_chip(chip);
-+	unsigned int duty;
-+
-+	if (period_ns != pwm_get_period(pwm))
-+		return -EINVAL;
-+
-+	duty = clps711x_get_duty(pwm, duty_ns);
-+	clps711x_pwm_update_val(priv, pwm->hwpwm, duty);
-+
-+	return 0;
-+}
-+
-+static int clps711x_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct clps711x_chip *priv = to_clps711x_chip(chip);
-+	unsigned int duty;
-+
-+	duty = clps711x_get_duty(pwm, pwm_get_duty_cycle(pwm));
-+	clps711x_pwm_update_val(priv, pwm->hwpwm, duty);
-+
-+	return 0;
-+}
-+
-+static void clps711x_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct clps711x_chip *priv = to_clps711x_chip(chip);
-+
-+	clps711x_pwm_update_val(priv, pwm->hwpwm, 0);
-+}
-+
-+static const struct pwm_ops clps711x_pwm_ops = {
-+	.request = clps711x_pwm_request,
-+	.config = clps711x_pwm_config,
-+	.enable = clps711x_pwm_enable,
-+	.disable = clps711x_pwm_disable,
-+	.owner = THIS_MODULE,
-+};
-+
-+static struct pwm_device *clps711x_pwm_xlate(struct pwm_chip *chip,
-+					     const struct of_phandle_args *args)
-+{
-+	if (args->args[0] >= chip->npwm)
-+		return ERR_PTR(-EINVAL);
-+
-+	return pwm_request_from_chip(chip, args->args[0], NULL);
-+}
-+
-+static int clps711x_pwm_probe(struct platform_device *pdev)
-+{
-+	struct clps711x_chip *priv;
-+	struct resource *res;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	priv->pmpcon = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(priv->pmpcon))
-+		return PTR_ERR(priv->pmpcon);
-+
-+	priv->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(priv->clk))
-+		return PTR_ERR(priv->clk);
-+
-+	priv->chip.ops = &clps711x_pwm_ops;
-+	priv->chip.dev = &pdev->dev;
-+	priv->chip.base = -1;
-+	priv->chip.npwm = 2;
-+	priv->chip.of_xlate = clps711x_pwm_xlate;
-+	priv->chip.of_pwm_n_cells = 1;
-+
-+	spin_lock_init(&priv->lock);
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	return pwmchip_add(&priv->chip);
-+}
-+
-+static int clps711x_pwm_remove(struct platform_device *pdev)
-+{
-+	struct clps711x_chip *priv = platform_get_drvdata(pdev);
-+
-+	return pwmchip_remove(&priv->chip);
-+}
-+
-+static const struct of_device_id __maybe_unused clps711x_pwm_dt_ids[] = {
-+	{ .compatible = "cirrus,clps711x-pwm", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, clps711x_pwm_dt_ids);
-+
-+static struct platform_driver clps711x_pwm_driver = {
-+	.driver = {
-+		.name = "clps711x-pwm",
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(clps711x_pwm_dt_ids),
-+	},
-+	.probe = clps711x_pwm_probe,
-+	.remove = clps711x_pwm_remove,
-+};
-+module_platform_driver(clps711x_pwm_driver);
-+
-+MODULE_AUTHOR("Alexander Shiyan <shc_work@mail.ru>");
-+MODULE_DESCRIPTION("Cirrus Logic CLPS711X PWM driver");
-+MODULE_LICENSE("GPL");
--- 
-1.8.3.2
+Since then, the basic overlay support for the kernel is pretty much a
+done deal. It has a wide variety of users (FPGA folks) beyond this board
+specific case. The problem you describe about resource management and
+conflicts would probably need to be built on top of that. Pantelis
+had a PoC implementation with capebus/not-a-capebus but that's not part
+of what is being upstreamed. I'm not sure if there's anybody with enough
+time out of the Beagleboard community to upstream a resource manager on
+top of the basic overlay support that's in progress. However, it might
+make a nice GSoC2014 project. :)
 
+-Matt
