@@ -1,71 +1,90 @@
-From: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH v2 03/14] of: mtd: add documentation for
- nand-ecc-level property
-Date: Wed, 05 Feb 2014 14:34:44 +0100
-Message-ID: <52F23DF4.7010901@gmail.com>
-References: <1391006064-28890-1-git-send-email-b.brezillon.dev@gmail.com> < 1391006064-28890-4-git-send-email-b.brezillon.dev@gmail.com> < 20140129175331.GA27143@localhost> <20140205111500.B19FDC40A89@trevor.secretlab.ca>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v4] of: add functions to count number of elements in a
+ property
+Date: Wed, 05 Feb 2014 13:47:39 +0000
+Message-ID: <20140205134739.52662C40A89@trevor.secretlab.ca>
+References: <27256277.YJ687suYy5@phil> <13514940.URVnEJ4NF0@phil> <
+ 20140205120652.9B1A7C40A89@trevor.secretlab.ca> <8812602.o5pus1vSFK@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBDE6NB73YAMBB7H3ZCLQKGQEPVS2PIA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140205111500.B19FDC40A89-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============6930976674408784459=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <8812602.o5pus1vSFK@phil>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, arm@kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/02/2014 12:15, Grant Likely wrote:
-> On Wed, 29 Jan 2014 14:53:32 -0300, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> On Wed, Jan 29, 2014 at 03:34:13PM +0100, Boris BREZILLON wrote:
->>> nand-ecc-level property statically defines NAND chip's ECC requirements.
->>>
->>> Signed-off-by: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> ---
->>>   Documentation/devicetree/bindings/mtd/nand.txt |    3 +++
->>>   1 file changed, 3 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation/devicetree/bindings/mtd/nand.txt
->>> index 03855c8..0c962296 100644
->>> --- a/Documentation/devicetree/bindings/mtd/nand.txt
->>> +++ b/Documentation/devicetree/bindings/mtd/nand.txt
->>> @@ -3,5 +3,8 @@
->>>   - nand-ecc-mode : String, operation mode of the NAND ecc mode.
->>>     Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob_first",
->>>     "soft_bch".
->>> +- nand-ecc-level : Two cells property defining the ECC level requirements.
->>> +  The first cell represent the strength and the second cell the ECC block size.
->>> +  E.g. : nand-ecc-level = <4 512>; /* 4 bits / 512 bytes */
->>>   - nand-bus-width : 8 or 16 bus width if not present 8
->>>   - nand-on-flash-bbt: boolean to enable on flash bbt option if not present false
->> Hm.. when was this proposal agreed? It seems I've missed the
->> discussion...
->>
->> FWIW, we've already proposed an equivalent one, but it received no
->> feedback from the devicetree maintainers:
-> Sorry, binding review has become a huge undertaking.
->
->> http://comments.gmane.org/gmane.linux.drivers.devicetree/58764
->>
->> Maybe we can discuss about it now?
->>
->>    nand-ecc-strength : integer ECC required strength.
->>    nand-ecc-size : integer step size associated to the ECC strength.
-> I'm okay with either, but the above binding is indeed more readable.
+--===============6930976674408784459==
+Content-Type: text/plain
 
-That's fine by me, if everybody agrees, let's go for the
-nand-ecc-strength/nand-ecc-size couple then.
+On Wed, 05 Feb 2014 13:45:36 +0100, Heiko Stübner <heiko@sntech.de> wrote:
+> Am Mittwoch, 5. Februar 2014, 12:06:52 schrieb Grant Likely:
+> > On Tue, 04 Feb 2014 19:48:17 +0100, Heiko StÃ¼bner <heiko@sntech.de> wrote:
+> > > Hi Grant,
+> > > 
+> > > On Tuesday, 4. February 2014 17:30:34 Grant Likely wrote:
+> > > > On Sat, 18 Jan 2014 09:07:30 -0600, Rob Herring <robherring2@gmail.com>
+> > > 
+> > > wrote:
+> > > > > On Sat, Jan 18, 2014 at 6:02 AM, Heiko StÃÂ¼bner <heiko@sntech.de> 
+> wrote:
+> > > > > > The need to know the number of array elements in a property is
+> > > > > > a common pattern. To prevent duplication of open-coded
+> > > > > > implementations
+> > > > > > add a helper static function that also centralises strict sanity
+> > > > > > checking and DTB format details, as well as a set of wrapper
+> > > > > > functions
+> > > > > > for u8, u16, u32 and u64.
+> > > > > > 
+> > > > > > Suggested-by: Mark Rutland <mark.rutland@arm.com>
+> > > > > > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> > > > > > ---
+> > > > > 
+> > > > > Looks good. Do you plan to convert some users to use this?
+> > > > 
+> > > > I'll take that as an acked-by. Merged, thanks.
+> > > 
+> > > before you taking this patch, I was planning on simply sending this as
+> > > part of my rockchip-smp series - as I'm currently the only user of it :-)
+> > > .
+> > > 
+> > > This going through your tree is most likely the better way, but now I need
+> > > it to somehow make its way into arm-soc too ... I guess some sort of
+> > > stable branch arm-soc could pull?
+> > 
+> > Nah, I'll drop it from my tree. Add my acked-by and merge it via
+> > arm-soc.
+> 
+> As I said on IRC, now it seems like you can keep this patch in your tree :-)
+> 
+> If we're really going with reserved-memory like you suggested in the rockchip-
+> smp series it removes the need to count u32-elements in a property for me, as 
+> the reserved blocks move into individual subnodes.
 
-I'll rebase next version of my series on Ezequiel's patch providing
-these OF helpers.
+Right, but I'm not going to merge a patch with no users. I'll leave it
+out and it can be added to a series that converts some users to the new
+API.
 
-Best Regards,
+g.
 
-Boris
 
->
-> g.
+
+--===============6930976674408784459==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============6930976674408784459==--
