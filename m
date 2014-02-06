@@ -1,51 +1,47 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v6 18/19] ARM: mvebu: Enable watchdog support in defconfig
-Date: Thu, 6 Feb 2014 14:12:23 -0500
-Message-ID: <20140206191223.GL8533@titan.lakedaemon.net>
-References: <1391707226-18258-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1391707226-18258-19-git-send-email-ezequiel.garcia@free-electrons.com>
- <20140206175159.GI8533@titan.lakedaemon.net>
- <20140206191023.GA19328@localhost>
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH v1 1/2] leds: leds-gpio: add retain-state-suspended property
+Date: Thu, 6 Feb 2014 11:24:28 -0800
+Message-ID: <CAK5ve-Km-STOFra=Z4G6wjOFgzeguvumhaWzUq_juYUD3Gwg1A@mail.gmail.com>
+References: <1390218087-14597-1-git-send-email-b38343@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20140206191023.GA19328@localhost>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Wim Van Sebroeck <wim@iguana.be>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1390218087-14597-1-git-send-email-b38343@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Robin Gong <b38343@freescale.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, galak@codeaurora.org, Rob Landley <rob@landley.net>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Rob Herring <robherring2@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 06, 2014 at 04:10:24PM -0300, Ezequiel Garcia wrote:
-> On Thu, Feb 06, 2014 at 12:51:59PM -0500, Jason Cooper wrote:
-> > On Thu, Feb 06, 2014 at 02:20:25PM -0300, Ezequiel Garcia wrote:
-> > > Now that we have proper support for Armada 370/XP watchdog
-> > > let's enable it in the defconfig.
-> > > 
-> > > Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-> > > ---
-> > >  arch/arm/configs/mvebu_defconfig | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > 
-> > If this ends up being the last version for this series, I'll add a patch
-> > for multi_v7_defconfig.  Otherwise, please add for the next round.
-> > 
-> 
-> Oh, yes, I forgot about your request on this. Let's hope I don't forget
-> next time.
+On Mon, Jan 20, 2014 at 3:41 AM, Robin Gong <b38343@freescale.com> wrote:
+> Some gpio-leds need retain the state even in suspend, such as charger led.
+> But this property missed in devicetree, add it.
+>
 
-Yes, we found the i2c hang because of multi_v7, so it's definitely worth
-the effort.
+Good catch, I just fold these 2 patches into one patch and applied.
+Thanks,
+-Bryan
 
-thx,
 
-Jason.
+> Signed-off-by: Robin Gong <b38343@freescale.com>
+> ---
+>  drivers/leds/leds-gpio.c |    3 +++
+>  1 files changed, 3 insertions(+), 0 deletions(-)
+>
+> diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
+> index 78b0e27..1bb3f1a 100644
+> --- a/drivers/leds/leds-gpio.c
+> +++ b/drivers/leds/leds-gpio.c
+> @@ -204,6 +204,9 @@ static struct gpio_leds_priv *gpio_leds_create_of(struct platform_device *pdev)
+>                                 led.default_state = LEDS_GPIO_DEFSTATE_OFF;
+>                 }
+>
+> +               if (of_get_property(child, "retain-state-suspended", NULL))
+> +                       led.retain_state_suspended = 1;
+> +
+>                 ret = create_gpio_led(&led, &priv->leds[priv->num_leds++],
+>                                       &pdev->dev, NULL);
+>                 if (ret < 0) {
+> --
+> 1.7.5.4
+>
+>
