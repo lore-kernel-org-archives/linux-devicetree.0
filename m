@@ -1,44 +1,30 @@
 From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 2/4] DT: Vendor prefixes: Add ricoh, ssi and synology
-Date: Thu, 6 Feb 2014 10:19:34 -0500
-Message-ID: <20140206151934.GB8533@titan.lakedaemon.net>
+Subject: Re: [PATCH 3/4] DT: i2c: Trivial: Add sii,s35390a
+Date: Thu, 6 Feb 2014 10:21:48 -0500
+Message-ID: <20140206152148.GC8533@titan.lakedaemon.net>
 References: <1391634309-3123-1-git-send-email-andrew@lunn.ch>
- <1391634309-3123-3-git-send-email-andrew@lunn.ch>
+ <1391634309-3123-4-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1391634309-3123-3-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <1391634309-3123-4-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 Cc: linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
-+ devicetree ML, DT maintainers.
++ devicetree ML, DT maintainers
 
-On Wed, Feb 05, 2014 at 10:05:07PM +0100, Andrew Lunn wrote:
-> The following patches make use of vendor names ricoh, ssi and
-> synology.  Add them to the vendor prefix list.
+On Wed, Feb 05, 2014 at 10:05:08PM +0100, Andrew Lunn wrote:
+> Add the Seiko Instruments Inc S35390a to the list of trivial i2c
+> devices.
 > 
 > Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt |    3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 3f900cd51bf0..1629e8f33578 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -69,6 +69,7 @@ ralink	Mediatek/Ralink Technology Corp.
->  ramtron	Ramtron International
->  realtek Realtek Semiconductor Corp.
->  renesas	Renesas Electronics Corporation
-> +ricoh	Richoh Co. Ltd.
-
-s/Richoh/Ricoh/
-
-other than that,
+>  Documentation/devicetree/bindings/i2c/trivial-devices.txt |    1 +
+>  1 file changed, 1 insertion(+)
 
 Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 
@@ -46,23 +32,18 @@ thx,
 
 Jason.
 
->  rockchip	Fuzhou Rockchip Electronics Co., Ltd
->  samsung	Samsung Semiconductor
->  sbs	Smart Battery System
-> @@ -76,11 +77,13 @@ schindler	Schindler
->  sil	Silicon Image
->  silabs	Silicon Laboratories
->  simtek
-> +sii	Seiko Instruments, Inc.
->  sirf	SiRF Technology, Inc.
->  snps 	Synopsys, Inc.
->  st	STMicroelectronics
->  ste	ST-Ericsson
->  stericsson	ST-Ericsson
-> +synology	Synology, Inc.
->  ti	Texas Instruments
->  tlm	Trusted Logic Mobility
->  toshiba	Toshiba Corporation
+> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> index 1a1ac2e560e9..e11ed0fe770c 100644
+> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> @@ -58,6 +58,7 @@ plx,pex8648		48-Lane, 12-Port PCI Express Gen 2 (5.0 GT/s) Switch
+>  ramtron,24c64		i2c serial eeprom  (24cxx)
+>  ricoh,rs5c372a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
+>  samsung,24ad0xd1	S524AD0XF1 (128K/256K-bit Serial EEPROM for Low Power)
+> +sii,s35390a		2-wire CMOS real-time clock
+>  st-micro,24c256		i2c serial eeprom  (24cxx)
+>  stm,m41t00		Serial Access TIMEKEEPER
+>  stm,m41t62		Serial real-time clock (RTC) with alarm
 > -- 
 > 1.7.10.4
 > 
