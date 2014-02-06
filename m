@@ -1,89 +1,59 @@
-From: Gerlando Falauto <gerlando.falauto@keymile.com>
-Subject: Re: Disabling autoneg and enforcing speed/duplex
-Date: Thu, 06 Feb 2014 16:00:39 +0100
-Message-ID: <52F3A397.3090208@keymile.com>
-References: <52F3796B.8050809@keymile.com> <CAL_JsqJ=Me+MKF8DGMsh=0y4VLmekUHD7KgmQDkCpDEuKVOT+w@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 4/8] regulator: da9055: Add DT support
+Date: Thu, 6 Feb 2014 14:30:50 +0000
+Message-ID: <20140206143050.GU32298@sirena.org.uk>
+References: <cover.1391614923.git.Adam.Thomson.Opensource@diasemi.com>
+ <6d76ae40cd435eaae0323f3e806515130b06a376.1391614923.git.Adam.Thomson.Opensource@diasemi.com>
+ <20140205183642.GH32298@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A03376B7E1669@SW-EX-MBX02.diasemi.com>
+ <20140206120336.GL32298@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A03376B7E36B9@SW-EX-MBX02.diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJ=Me+MKF8DGMsh=0y4VLmekUHD7KgmQDkCpDEuKVOT+w@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "Brunck, Holger" <Holger.Brunck@keymile.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="28wbjzzu+2Xmo01Z"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2E89032DDAA8B9408CB92943514A03376B7E36B9@SW-EX-MBX02.diasemi.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
+Cc: Lee Jones <lee.jones@linaro.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-thanks for your reply.
+--28wbjzzu+2Xmo01Z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 02/06/2014 03:50 PM, Rob Herring wrote:
-> On Thu, Feb 6, 2014 at 6:00 AM, Gerlando Falauto
-> <gerlando.falauto@keymile.com> wrote:
->> Hi,
->>
->> I'm using the Kirkwood Ethernet controller (mv643xx_eth.c) with a Marvell
->> 88E3018 PHY which needs to be set in forced 100Base-TX mode.
->>
->> Thanks to Sebastian's addition of DT support to the ethernet driver, I can
->> easily set speed and duplex within the ethernet's port node, therefore
->> leaving the phy unmanaged -- this works fine (I guess this mode is set on
->> the phy by the bootloader or by strap settings).
->>
->> However, this PHY has an erratum whose workaround requires some registers be
->> written -- I believe the natural solution would be to start managing the PHY
->> (i.e. set "phy-handle") and implement the proper workaround within
->> drivers/net/phy/marvell.c. Making the PHY managed does however enable
->> autoneg and therefore break everything.
->>
->> Which brings me to my question: shouldn't there be a way to specify some
->> forced settings within the PHY's node for such cases?
->>
->> Only thing I found vaguely resembling what I'm looking for is Florian's
->> patch introducing "max-speed" in the PHY -- not quite the same thing though.
->> Which, if I understand it correctly, implements it as a property of the PHY,
->> whereas ePAPR specifies it as a property of the ethernet device (which makes
->> sense, since you might want to connect a 10/100 MII to a 10/100/1000 PHY and
->> therefore have the MII restrict the capabilities of the PHY).
->
-> You shouldn't need a property in this case. The driver knows what the
-> h/w is limited to and can configure the phy based on that.
+On Thu, Feb 06, 2014 at 12:22:13PM +0000, Opensource [Adam Thomson] wrote:
 
-I see, you're right.
+> Is what I summised but I obviously chose the wrong direction for my fix.
+> Will use platform_get_irq_byname() solely, and will make sure all works on
+> both DT and non-DT setups. If not I'll dig further.
 
-> It is when
-> both sides should support a higher speed and you need to limit it for
-> some other reason like errata or board level configuration.
+Yeah.  In general I'd say that if you've got two options for something
+like this the option that makes the driver smaller or which replaces
+more code with data is normally going to be the right way to go.
 
-Which is exactly my case. The phy should be configured to work in 
-100Base-TX mode, full duplex.
+--28wbjzzu+2Xmo01Z
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
->> Or perhaps I'm missing some important bits here?
->
-> Does this patch help you:
->
-> https://lkml.org/lkml/2014/1/15/533
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-I think so... So I guess I should jest set all
+iQIcBAEBAgAGBQJS85yWAAoJELSic+t+oim9WqwP/3LhoaOTrzYs4B99Daljki9R
+jDfHwyk2GQ/uC9yNcE6BtXF2wRO/I/R+dJtMzd6RUYZcheodcC6e6zFUxlk9wu0/
+PABtnuCc5au2KrGsYZmAz+bQ+qd0gkpNyC373XXnvczKm8rASj11u7Da7ddRlT5G
+29oBBhSFypR4wP85Vi3mPdQ8WAz9fsQR6ZOaxZbn8VB84yVy2ojG506uxwclH1+K
+J4sL2HJMy9jAjdDCw2ewuuJvPILz6JHf5fh7+SksxMZEjqxjYfVhum/hzB/rYxU3
+/rRXDl0UesMGpDOqZtFIF+v3+RQcB8sWsn1yKN1QtiidbgLc1xifbZMRX0//zJfR
+oAB+ccBRv6Q37ZdmLZdvzyDJDEmmjYJhvvFkgjdODXT18XPkGUnINNC3/5Q3MmxT
+vSwTvfnnYA0yQEz1O67Y53v+NxnFtrpH+QnMcHkw6GF8FmhEswBs4GWEqchwjx19
+VZkACXnRNtQYvLW5QDKxhRM6hoDiyNE98bBih6cfFyGgvgOdrsuL70Me1mXd2ada
+V7q1aWmCLzgzORC3fWOO7u+YHZ4IeqovbxXv2nzjDd+ZtG6ikuScEjV6GhbKP4ku
+fYjJfOkP0w+F/LMJimgcnv71c25m3ovZvSIdJjiNzacBBpYt9g47UtHOuDbX8PK4
+TBZe4jBYEEYGdGLl+EbU
+=jCP6
+-----END PGP SIGNATURE-----
 
-phy-mii-advertise-10full = <0>;
-...
-phy-mii-advertise-100full = <1>;
-...
-
-is that right?
-I'll test it and let you know.
-
-Thanks!
-Gerlando
-
->
-> Rob
->
->>
->> Thanks!
->> Gerlando
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--28wbjzzu+2Xmo01Z--
