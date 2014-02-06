@@ -1,52 +1,191 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: Kirkwood: Add support for many Synology NAS
- devices
-Date: Thu, 6 Feb 2014 12:26:55 -0500
-Message-ID: <20140206172655.GG8533@titan.lakedaemon.net>
-References: <1391634309-3123-1-git-send-email-andrew@lunn.ch>
- <20140206153939.GD8533@titan.lakedaemon.net>
- <20140206160126.GH29860@lunn.ch>
- <107057891.kz6j7UkZNk@wuerfel>
- <20140206170333.GK29860@lunn.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 2/2] mfd: max14577: Add device tree bindings document
+Date: Thu, 06 Feb 2014 18:27:21 +0100
+Message-ID: <1391707641-13543-2-git-send-email-t.figa@samsung.com>
+References: <1391707641-13543-1-git-send-email-t.figa@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140206170333.GK29860-g2DYL2Zd6BY@public.gmane.org>
+In-reply-to: <1391707641-13543-1-git-send-email-t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+To: k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 06, 2014 at 06:03:33PM +0100, Andrew Lunn wrote:
-> On Thu, Feb 06, 2014 at 05:38:28PM +0100, Arnd Bergmann wrote:
-> > On Thursday 06 February 2014 17:01:26 Andrew Lunn wrote:
-> > 
-> > > , but this is, imho,
-> > > > over-fragmenting.  I'm sure there's a reason you chose this path, but
-> > > > you haven't explained why in your commit log. So I'm left guessing...
-> > > 
-> > > Synology seem to build there devices like lego. They have two
-> > > different RTC blocks. They have three different fan alarm blocks, four
-> > > different led blocks, etc. And to build a product, the just select a
-> > > group of blocks and put them together.
-> > 
-> > I guess the Armada-370 and newer based ds213j and dsx14 will also be
-> > able to reuse some of the blocks, right?
-> 
-> Hi Arnd
-> 
-> I've not looked at any sources for those yet. I guess the RTC .dtsi
-> files should be reusable. The ethernet driver on 370 is different so
-> no re-use there. Maybe the fan controller, but the rest will depend on
-> what GPIO lines they have used, if they are compatible.
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-perhaps all of the pinctrl nodes should be moved into synology-6281,
-synology-6282, and synology-370 ?
+Add document describing device tree bindings for MAX14577 MFD driver
+(for both MAX14577 and MAX77836 chipsets).
 
-thx,
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mfd/max14577.txt |  149 ++++++++++++++++++++
+ 1 file changed, 149 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/max14577.txt
 
-Jason.
+diff --git a/Documentation/devicetree/bindings/mfd/max14577.txt b/Documentation/devicetree/bindings/mfd/max14577.txt
+new file mode 100644
+index 0000000..f59a4f3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/max14577.txt
+@@ -0,0 +1,149 @@
++Maxim MAX14577/77836 Multi-Function Device
++
++MAX14577 is a Multi-Function Device with Micro-USB Interface Circuit, Li+
++Battery Charger and SFOUT LDO output for powering USB devices. It is
++interfaced to host controller using I2C.
++
++MAX77836 additionally contains PMIC (with two LDO regulators) and Fuel Gauge.
++
++
++Required properties:
++- compatible : Must be "maxim,max14577" or "maxim,max77836".
++- reg : I2C slave address for the max14577 chip (0x25 for max14577/max77836)
++- interrupts : IRQ line for the chip.
++- interrupt-parent :  The parent interrupt controller.
++
++
++Optional nodes:
++- max14577-muic/max77836-muic :
++	Node used only by extcon consumers.
++	Required properties:
++		- compatible : "maxim,max14577-muic" or "maxim,max77836-muic"
++
++- regulators :
++	Required properties:
++		- compatible : "maxim,max14577-regulator"
++			or "maxim,max77836-regulator"
++
++	May contain a sub-node per regulator from the list below. Each
++	sub-node should contain the constraints and initialization information
++	for that regulator. See regulator.txt for a description of standard
++	properties for these sub-nodes.
++
++	List of valid regulator names:
++	- for max14577: CHARGER, SAFEOUT.
++	- for max77836: CHARGER, SAFEOUT, LDO1, LDO2.
++
++	The SAFEOUT is a fixed voltage regulator so there is no need to specify
++	voltages for it.
++
++ - charger :
++	Required properties:
++		- compatible : "maxim,max14577-charger"
++			or "maxim,max77836-charger"
++		- maxim,fast-charge-timer : Timer in hours to trigger the
++			INT3/MBCCHGERR interrupt; Valid values:
++			- 5, 6 or 7 (hours),
++			- 0 to disable.
++		- maxim,fast-charge-uamp : Current in uA for Fast Charge;
++			Valid values:
++			- for max14577: 90000 - 950000;
++			- for max77836: 45000 - 475000;
++		- maxim,eoc-uamp : Current in uA for End-Of-Charge mode;
++			Valid values:
++			- for max14577: 50000 - 200000;
++			- for max77836: 5000 - 10000;
++		- maxim,ovp-uvolt : OverVoltage Protection Threshold in uV;
++			In an overvoltage condition, INT asserts and charging
++			stops. Valid values:
++			- 6000000, 6500000, 7000000, 7500000;
++		- maxim,constant-uvolt : Battery Constant Voltage in uV;
++			Valid values:
++			- 4000000 - 4280000;
++			- 4350000;
++
++
++Example:
++
++#include <dt-bindings/interrupt-controller/irq.h>
++
++max14577@25 {
++	compatible = "maxim,max14577";
++	reg = <0x25>;
++	interrupt-parent = <&gpx1>;
++	interrupts = <5 IRQ_TYPE_NONE>;
++
++	muic: max14577-muic {
++		compatible = "maxim,max14577-muic";
++	};
++
++	regulators {
++		compatible = "maxim,max14577-regulator";
++
++		SAFEOUT {
++			regulator-name = "SAFEOUT";
++		};
++		CHARGER {
++			regulator-name = "CHARGER";
++			regulator-min-microamp = <90000>;
++			regulator-max-microamp = <950000>;
++			regulator-boot-on;
++		};
++	};
++
++	charger {
++		compatible = "maxim,max14577-charger";
++
++		maxim,fast-charge-timer = <6>;
++		maxim,constant-uvolt = <4350000>;
++		maxim,fast-charge-uamp = <450000>;
++		maxim,eoc-uamp = <50000>;
++		maxim,ovp-uvolt = <6500000>;
++	};
++};
++
++
++max77836@25 {
++	compatible = "maxim,max77836";
++	reg = <0x25>;
++	interrupt-parent = <&gpx1>;
++	interrupts = <5 IRQ_TYPE_NONE>;
++
++	muic: max77836-muic {
++		compatible = "maxim,max77836-muic";
++	};
++
++	regulators {
++		compatible = "maxim,max77836-regulator";
++
++		SAFEOUT {
++			regulator-name = "SAFEOUT";
++		};
++		CHARGER {
++			regulator-name = "CHARGER";
++			regulator-min-microamp = <90000>;
++			regulator-max-microamp = <950000>;
++			regulator-boot-on;
++		};
++		LDO1 {
++			regulator-name = "LDO1";
++			regulator-min-microvolt = <2700000>;
++			regulator-max-microvolt = <2700000>;
++		};
++		LDO2 {
++			regulator-name = "LDO2";
++			regulator-min-microvolt = <800000>;
++			regulator-max-microvolt = <3950000>;
++		};
++	};
++
++	charger {
++		compatible = "maxim,max77836-charger";
++
++		maxim,fast-charge-timer = <6>;
++		maxim,constant-uvolt = <4350000>;
++		maxim,fast-charge-uamp = <225000>;
++		maxim,eoc-uamp = <7500>;
++		maxim,ovp-uvolt = <6500000>;
++	};
++};
+-- 
+1.7.9.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
