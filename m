@@ -1,101 +1,44 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/8] regulator: da9055: Add DT support
-Date: Thu, 6 Feb 2014 12:03:36 +0000
-Message-ID: <20140206120336.GL32298@sirena.org.uk>
-References: <cover.1391614923.git.Adam.Thomson.Opensource@diasemi.com>
- <6d76ae40cd435eaae0323f3e806515130b06a376.1391614923.git.Adam.Thomson.Opensource@diasemi.com>
- <20140205183642.GH32298@sirena.org.uk>
- <2E89032DDAA8B9408CB92943514A03376B7E1669@SW-EX-MBX02.diasemi.com>
+From: Gerlando Falauto <gerlando.falauto@keymile.com>
+Subject: Disabling autoneg and enforcing speed/duplex
+Date: Thu, 06 Feb 2014 13:00:43 +0100
+Message-ID: <52F3796B.8050809@keymile.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zYjDATHXTWnytHRU"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2E89032DDAA8B9408CB92943514A03376B7E1669-68WUHU125fLzLL1Oxlh9IgLouzNaz+3S@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "Brunck, Holger" <Holger.Brunck@keymile.com>, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---zYjDATHXTWnytHRU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I'm using the Kirkwood Ethernet controller (mv643xx_eth.c) with a 
+Marvell 88E3018 PHY which needs to be set in forced 100Base-TX mode.
 
-On Thu, Feb 06, 2014 at 11:31:13AM +0000, Opensource [Adam Thomson] wrote:
-> On Wed, Feb 05, 2014 at 18:37:21PM +0000, Mark Brown wrote:
+Thanks to Sebastian's addition of DT support to the ethernet driver, I 
+can easily set speed and duplex within the ethernet's port node, 
+therefore leaving the phy unmanaged -- this works fine (I guess this 
+mode is set on the phy by the bootloader or by strap settings).
 
-> > > +	for_each_child_of_node(nproot, np) {
-> > > +		if (!of_node_cmp(np->name,
-> > > +				 regulator->info->reg_desc.name)) {
-> > > +			config->init_data = of_get_regulator_init_data(
-> > > +				&pdev->dev, np);
-> > > +			config->of_node = np;
-> > > +			break;
-> > > +		}
-> > > +	}
+However, this PHY has an erratum whose workaround requires some 
+registers be written -- I believe the natural solution would be to start 
+managing the PHY (i.e. set "phy-handle") and implement the proper 
+workaround within drivers/net/phy/marvell.c. Making the PHY managed does 
+however enable autoneg and therefore break everything.
 
-> > I think you're looking for of_regulator_match() here.
+Which brings me to my question: shouldn't there be a way to specify some 
+forced settings within the PHY's node for such cases?
 
-> Used another driver as an example for this, but if there's a better method
-> then I'm happy to use it. Will have a look.
+Only thing I found vaguely resembling what I'm looking for is Florian's 
+patch introducing "max-speed" in the PHY -- not quite the same thing 
+though. Which, if I understand it correctly, implements it as a property 
+of the PHY, whereas ePAPR specifies it as a property of the ethernet 
+device (which makes sense, since you might want to connect a 10/100 MII 
+to a 10/100/1000 PHY and therefore have the MII restrict the 
+capabilities of the PHY).
 
-That's probably an older driver - the code was factored out at some
-point but lots of drivers don't get much love.
+Or perhaps I'm missing some important bits here?
 
-> > >  	/* Only LDO 5 and 6 has got the over current interrupt */
-> > >  	if (pdev->id == DA9055_ID_LDO5 || pdev->id ==  DA9055_ID_LDO6) {
-> > > -		irq = platform_get_irq_byname(pdev, "REGULATOR");
-> > > -		irq = regmap_irq_get_virq(da9055->irq_data, irq);
-> > > +		irq = regmap_irq_get_virq(da9055->irq_data,
-> > > +					  DA9055_IRQ_REGULATOR);
-
-> > This seems like a bit of a step backwards - what happened in the MFD
-> > (and why didn't it update the users to avoid breaking bisection)?
-
-> I tested this on target, when doing tests for devicetree. What was happening was
-> that platform_get_irq_byname() was returning the VIRQ number already (368 in one
-> test case where onkey was being probed) rather than the local IRQ number for the
-> device (the resource information seemed to have been updated with the VIRQ
-> number instead of the local IRQ number). So when that was passed to
-> regmap_irq_get_virq() it would then return an incorrect IRQ number (0 in the
-> same scenario, when I enabled DEBUG in irqdomain.c, I would see the message
-> "error: hwirq 0x170 is too large for da9055_irq"). That incorrect irq was then
-> being passed to devm_request_threaded_irq() which subsequently failed. This is
-> why I made the change. Is it preferrable to use platform_get_irq_byname()
-> instead of regmap_irq_get_virq() as using them both doesn't seem to work, unless
-> I'm missing something fundamental here.
-
-What's happening here is that the MFD framework has done the lookup for
-you when passing the interrupt resource through - you should just use
-platform_get_irq_byname() and save a little code in the driver.  If it's
-behaving differently on DT and non-DT systems it seems better to figure
-out why and then make it consistent.
-
---zYjDATHXTWnytHRU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS83oVAAoJELSic+t+oim9WRQP/0zUlvuSpXXtgvzF3nSoH074
-3d9FnNNc5KXvfw3RLc++shACLtasITb3yaTjGauUwlBmowWil/Xhi05xqloy4BPt
-YQHnthNAK16qYdCDcykyBkQhG3GYtS3ATfOYPlEy9fB5uvNi37RkIjT76HCHu35/
-JMF39IvGxf5Jq0BikPc9s3BRn180OQwcV9BkecMeMa9zuN+VR+1/x+5snUAo7Owv
-XgMfEQsk5qJCzH9Q1Ura4myQt7EpMt8jOe6keDyAIu0CnBgohKSAhTVn6FSVE7JT
-Cr/bgJi9wnpcTgUKh4tSNChzKaCqeapJV90CTRzYDJloilFSzLFqKDvxZIGliU/C
-NgAhwDzEIvzwVdEOgCGy22LBVj5hw13amSgR7fO3DmqaP0VLJ5+BqVYaN/WOzUph
-tBKmcz2VYTHqvKI6DeOW3XU0APa2CWenf74dh6MlBs/53DIaJqxAXs6i8GBYcHRy
-lvtDSzMoY1WkdLGS9XPFL/hadkHr7iVQQX1YTCyPOhP3cLOJ9kWGpKqD9f4+d8Q9
-Kx5e4ww8MGtWvekgQPqtxg1KZ8Nmqc7JKst9nvKU7W9+XWN/fUAcwOLBoVyScqCr
-w8YwxKxMR6mdA7swEkN/RZlCYCY+m2PVVIkYjIYmCw768CTiY++QGtc29eoYeTEX
-rGZaS+Px0NmEl0ioPR4i
-=o/z5
------END PGP SIGNATURE-----
-
---zYjDATHXTWnytHRU--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks!
+Gerlando
