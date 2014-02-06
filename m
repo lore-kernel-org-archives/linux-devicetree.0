@@ -1,83 +1,66 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: Re: [PATCH v5 1/3] clocksource: timer-keystone: introduce
- clocksource driver for Keystone
-Date: Wed, 5 Feb 2014 18:35:26 -0600
-Message-ID: <20140206003526.GQ20228@joshc.qualcomm.com>
-References: <1391608060-10760-1-git-send-email-ivan.khoronzhuk@ti.com>
- <1391608060-10760-2-git-send-email-ivan.khoronzhuk@ti.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH 0/8] da9055: Driver initialisation fixes, add DT support
+Date: Wed, 5 Feb 2014 16:54:06 -0800
+Message-ID: <20140206005406.GC1308@roeck-us.net>
+References: <cover.1391614923.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1391608060-10760-2-git-send-email-ivan.khoronzhuk@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Cc: santosh.shilimkar@ti.com, rob@landley.net, linux@arm.linux.org.uk, galak@codeaurora.org, mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, daniel.lezcano@linaro.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <cover.1391614923.git.Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hey Ivan-
-
-On Wed, Feb 05, 2014 at 03:47:38PM +0200, Ivan Khoronzhuk wrote:
-> Add broadcast clock-event device for the Keystone arch.
+On Wed, Feb 05, 2014 at 05:48:28PM +0000, Adam Thomson wrote:
+> This patch series provides the following updates for DA9055 drivers:
 > 
-> The timer can be configured as a general-purpose 64-bit timer,
-> dual general-purpose 32-bit timers. When configured as dual 32-bit
-> timers, each half can operate in conjunction (chain mode) or
-> independently (unchained mode) of each other.
+>  - Fixes an issue with da9055 driver initialisation (conflicting device ids) of
+>    PMIC (MFD) and CODEC drivers.
+>  - Add initial DT support for DA9055 related drivers, including binding
+>    documentation.
+>  - Remove conflicting use of platform_get_irq_byname() in driver probes.
+
+Adam,
+
+You don't really explain what the problem actually is. Can you elaborate ?
+
+Also, I have been using platform_get_irq() to get the interrupt resource
+in mfd client drivers and similar situations. Wouldn't this work here as well
+if you don't want to use platform_get_irq_byname() ?
+
+Thanks,
+Guenter
+
+>  - Remove unnecessary resource structures for MFD cells as a result of removing
+>    use of platform_get_irq_byname().
 > 
-> Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
-> Acked-by: Santosh shilimkar <santosh.shilimkar@ti.com>
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-> ---
->  drivers/clocksource/Makefile         |   1 +
->  drivers/clocksource/timer-keystone.c | 233 +++++++++++++++++++++++++++++++++++
->  2 files changed, 234 insertions(+)
->  create mode 100644 drivers/clocksource/timer-keystone.c
+> Adam Thomson (8):
+>   ASoC: da9055: Fix device registration of PMIC and CODEC devices
+>   ASoC: da9055: Add DT support for CODEC
+>   mfd: da9055: Add DT support for PMIC
+>   regulator: da9055: Add DT support
+>   onkey: da9055: Remove use of platform_get_irq_byname()
+>   hwmon: da9055: Remove use of platform_get_irq_byname()
+>   rtc: da9055: Remove use of platform_get_irq_byname()
+>   mfd: da9055: Remove unused resource structures for mfd cells.
 > 
-> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-> index c7ca50a..4abe5aa 100644
-> --- a/drivers/clocksource/Makefile
-> +++ b/drivers/clocksource/Makefile
-> @@ -37,3 +37,4 @@ obj-$(CONFIG_ARM_ARCH_TIMER)		+= arm_arch_timer.o
->  obj-$(CONFIG_ARM_GLOBAL_TIMER)		+= arm_global_timer.o
->  obj-$(CONFIG_CLKSRC_METAG_GENERIC)	+= metag_generic.o
->  obj-$(CONFIG_ARCH_HAS_TICK_BROADCAST)	+= dummy_timer.o
-> +obj-$(CONFIG_ARCH_KEYSTONE)		+= timer-keystone.o
-> diff --git a/drivers/clocksource/timer-keystone.c b/drivers/clocksource/timer-keystone.c
-> new file mode 100644
-> index 0000000..2299666
-> --- /dev/null
-> +++ b/drivers/clocksource/timer-keystone.c
-> +static void __init keystone_timer_init(struct device_node *np)
-> +{
-> +	struct clock_event_device *event_dev = &timer.event_dev;
-> +	unsigned long rate;
-> +	struct clk *clk;
-> +	int irq, error;
-> +	u32 tgcr;
-> +
-> +	irq  = irq_of_parse_and_map(np, 0);
-> +	if (irq == NO_IRQ) {
-> +		pr_err("%s: failed to map interrupts\n", __func__);
-> +		return;
-> +	}
-> +
-> +	timer.base = of_iomap(np, 0);
-> +	if (!timer.base) {
-> +		pr_err("%s: failed to map registers\n", __func__);
-> +		return;
-> +	}
-> +
-> +	clk = of_clk_get(np, 0);
-> +	if (!clk) {
-
-This condition should be IS_ERR(clk).
-
-> +		pr_err("%s: failed to get clock\n", __func__);
-> +		iounmap(timer.base);
-> +		return;
-> +	}
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+>  Documentation/devicetree/bindings/mfd/da9055.txt   |   73 ++++++++++++++++++++
+>  Documentation/devicetree/bindings/sound/da9055.txt |   22 ++++++
+>  drivers/hwmon/da9055-hwmon.c                       |    7 +--
+>  drivers/input/misc/da9055_onkey.c                  |    9 +--
+>  drivers/mfd/da9055-core.c                          |   46 ------------
+>  drivers/mfd/da9055-i2c.c                           |   20 +++++-
+>  drivers/regulator/da9055-regulator.c               |   59 ++++++++++++++--
+>  drivers/rtc/rtc-da9055.c                           |    3 +-
+>  sound/soc/codecs/da9055.c                          |   19 +++++-
+>  9 files changed, 188 insertions(+), 70 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/da9055.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/da9055.txt
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
