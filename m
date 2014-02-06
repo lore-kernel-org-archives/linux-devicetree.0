@@ -1,44 +1,51 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Jason Cooper <jason@lakedaemon.net>
 Subject: Re: [PATCH v6 18/19] ARM: mvebu: Enable watchdog support in defconfig
-Date: Thu, 6 Feb 2014 16:10:24 -0300
-Message-ID: <20140206191023.GA19328@localhost>
+Date: Thu, 6 Feb 2014 14:12:23 -0500
+Message-ID: <20140206191223.GL8533@titan.lakedaemon.net>
 References: <1391707226-18258-1-git-send-email-ezequiel.garcia@free-electrons.com>
  <1391707226-18258-19-git-send-email-ezequiel.garcia@free-electrons.com>
  <20140206175159.GI8533@titan.lakedaemon.net>
+ <20140206191023.GA19328@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20140206175159.GI8533-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <20140206191023.GA19328@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Wim Van Sebroeck <wim@iguana.be>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 06, 2014 at 12:51:59PM -0500, Jason Cooper wrote:
-> On Thu, Feb 06, 2014 at 02:20:25PM -0300, Ezequiel Garcia wrote:
-> > Now that we have proper support for Armada 370/XP watchdog
-> > let's enable it in the defconfig.
-> >=20
-> > Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> >  arch/arm/configs/mvebu_defconfig | 2 ++
-> >  1 file changed, 2 insertions(+)
->=20
-> If this ends up being the last version for this series, I'll add a pa=
-tch
-> for multi_v7_defconfig.  Otherwise, please add for the next round.
->=20
+On Thu, Feb 06, 2014 at 04:10:24PM -0300, Ezequiel Garcia wrote:
+> On Thu, Feb 06, 2014 at 12:51:59PM -0500, Jason Cooper wrote:
+> > On Thu, Feb 06, 2014 at 02:20:25PM -0300, Ezequiel Garcia wrote:
+> > > Now that we have proper support for Armada 370/XP watchdog
+> > > let's enable it in the defconfig.
+> > > 
+> > > Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+> > > ---
+> > >  arch/arm/configs/mvebu_defconfig | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > 
+> > If this ends up being the last version for this series, I'll add a patch
+> > for multi_v7_defconfig.  Otherwise, please add for the next round.
+> > 
+> 
+> Oh, yes, I forgot about your request on this. Let's hope I don't forget
+> next time.
 
-Oh, yes, I forgot about your request on this. Let's hope I don't forget
-next time.
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, we found the i2c hang because of multi_v7, so it's definitely worth
+the effort.
+
+thx,
+
+Jason.
