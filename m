@@ -1,31 +1,101 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v3] sh_eth: add device tree support
-Date: Thu, 06 Feb 2014 15:52:07 +0400
-Message-ID: <52F37767.20607@cogentembedded.com>
-References: <201402060258.57025.sergei.shtylyov@cogentembedded.com> <CAMuHMdUrAJOTvUPZXVVK3ZSWL1BhE=uiZq0Yxp8XQuRaAxYnKw@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/8] regulator: da9055: Add DT support
+Date: Thu, 6 Feb 2014 12:03:36 +0000
+Message-ID: <20140206120336.GL32298@sirena.org.uk>
+References: <cover.1391614923.git.Adam.Thomson.Opensource@diasemi.com>
+ <6d76ae40cd435eaae0323f3e806515130b06a376.1391614923.git.Adam.Thomson.Opensource@diasemi.com>
+ <20140205183642.GH32298@sirena.org.uk>
+ <2E89032DDAA8B9408CB92943514A03376B7E1669@SW-EX-MBX02.diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUrAJOTvUPZXVVK3ZSWL1BhE=uiZq0Yxp8XQuRaAxYnKw@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zYjDATHXTWnytHRU"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <2E89032DDAA8B9408CB92943514A03376B7E1669-68WUHU125fLzLL1Oxlh9IgLouzNaz+3S@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
 
-On 06-02-2014 12:16, Geert Uytterhoeven wrote:
+--zYjDATHXTWnytHRU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->> +- reg: offset and length of (1) the E-DMAC/feLic register block (required),
->> +       (2) the TSU register block (optional).
+On Thu, Feb 06, 2014 at 11:31:13AM +0000, Opensource [Adam Thomson] wrote:
+> On Wed, Feb 05, 2014 at 18:37:21PM +0000, Mark Brown wrote:
 
-> As there can be 2 regions, have you considered reg-names?
+> > > +	for_each_child_of_node(nproot, np) {
+> > > +		if (!of_node_cmp(np->name,
+> > > +				 regulator->info->reg_desc.name)) {
+> > > +			config->init_data = of_get_regulator_init_data(
+> > > +				&pdev->dev, np);
+> > > +			config->of_node = np;
+> > > +			break;
+> > > +		}
+> > > +	}
 
-    I've been asked already, and so considered them and found them unneeded.
+> > I think you're looking for of_regulator_match() here.
 
-> Gr{oetje,eeting}s,
->                          Geert
+> Used another driver as an example for this, but if there's a better method
+> then I'm happy to use it. Will have a look.
 
-WBR, Sergei
+That's probably an older driver - the code was factored out at some
+point but lots of drivers don't get much love.
 
+> > >  	/* Only LDO 5 and 6 has got the over current interrupt */
+> > >  	if (pdev->id == DA9055_ID_LDO5 || pdev->id ==  DA9055_ID_LDO6) {
+> > > -		irq = platform_get_irq_byname(pdev, "REGULATOR");
+> > > -		irq = regmap_irq_get_virq(da9055->irq_data, irq);
+> > > +		irq = regmap_irq_get_virq(da9055->irq_data,
+> > > +					  DA9055_IRQ_REGULATOR);
+
+> > This seems like a bit of a step backwards - what happened in the MFD
+> > (and why didn't it update the users to avoid breaking bisection)?
+
+> I tested this on target, when doing tests for devicetree. What was happening was
+> that platform_get_irq_byname() was returning the VIRQ number already (368 in one
+> test case where onkey was being probed) rather than the local IRQ number for the
+> device (the resource information seemed to have been updated with the VIRQ
+> number instead of the local IRQ number). So when that was passed to
+> regmap_irq_get_virq() it would then return an incorrect IRQ number (0 in the
+> same scenario, when I enabled DEBUG in irqdomain.c, I would see the message
+> "error: hwirq 0x170 is too large for da9055_irq"). That incorrect irq was then
+> being passed to devm_request_threaded_irq() which subsequently failed. This is
+> why I made the change. Is it preferrable to use platform_get_irq_byname()
+> instead of regmap_irq_get_virq() as using them both doesn't seem to work, unless
+> I'm missing something fundamental here.
+
+What's happening here is that the MFD framework has done the lookup for
+you when passing the interrupt resource through - you should just use
+platform_get_irq_byname() and save a little code in the driver.  If it's
+behaving differently on DT and non-DT systems it seems better to figure
+out why and then make it consistent.
+
+--zYjDATHXTWnytHRU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS83oVAAoJELSic+t+oim9WRQP/0zUlvuSpXXtgvzF3nSoH074
+3d9FnNNc5KXvfw3RLc++shACLtasITb3yaTjGauUwlBmowWil/Xhi05xqloy4BPt
+YQHnthNAK16qYdCDcykyBkQhG3GYtS3ATfOYPlEy9fB5uvNi37RkIjT76HCHu35/
+JMF39IvGxf5Jq0BikPc9s3BRn180OQwcV9BkecMeMa9zuN+VR+1/x+5snUAo7Owv
+XgMfEQsk5qJCzH9Q1Ura4myQt7EpMt8jOe6keDyAIu0CnBgohKSAhTVn6FSVE7JT
+Cr/bgJi9wnpcTgUKh4tSNChzKaCqeapJV90CTRzYDJloilFSzLFqKDvxZIGliU/C
+NgAhwDzEIvzwVdEOgCGy22LBVj5hw13amSgR7fO3DmqaP0VLJ5+BqVYaN/WOzUph
+tBKmcz2VYTHqvKI6DeOW3XU0APa2CWenf74dh6MlBs/53DIaJqxAXs6i8GBYcHRy
+lvtDSzMoY1WkdLGS9XPFL/hadkHr7iVQQX1YTCyPOhP3cLOJ9kWGpKqD9f4+d8Q9
+Kx5e4ww8MGtWvekgQPqtxg1KZ8Nmqc7JKst9nvKU7W9+XWN/fUAcwOLBoVyScqCr
+w8YwxKxMR6mdA7swEkN/RZlCYCY+m2PVVIkYjIYmCw768CTiY++QGtc29eoYeTEX
+rGZaS+Px0NmEl0ioPR4i
+=o/z5
+-----END PGP SIGNATURE-----
+
+--zYjDATHXTWnytHRU--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
