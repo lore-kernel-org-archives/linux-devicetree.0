@@ -1,50 +1,52 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 4/4] ARM: Kirkwood: Add support for many Synology NAS
- devices
-Date: Thu, 6 Feb 2014 18:03:33 +0100
-Message-ID: <20140206170333.GK29860@lunn.ch>
-References: <1391634309-3123-1-git-send-email-andrew@lunn.ch>
- <20140206153939.GD8533@titan.lakedaemon.net>
- <20140206160126.GH29860@lunn.ch> <107057891.kz6j7UkZNk@wuerfel>
+From: Keerthy <a0393675@ti.com>
+Subject: Re: [PATCH v2 2/4] MFD: TPS65218: Add driver for the TPS65218 PMIC
+Date: Thu, 6 Feb 2014 22:39:26 +0530
+Message-ID: <52F3C1C6.5030301@ti.com>
+References: <1391665814-18814-1-git-send-email-j-keerthy@ti.com> <1391665814-18814-3-git-send-email-j-keerthy@ti.com> <20140206143700.GA14727@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <107057891.kz6j7UkZNk@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Ben Peddell <klightspeed@killerwolves.net>, Jason Cooper <jason@lakedaemon.net>, pawel.moll@arm.com, devicetree@vger.kernel.org, Ian Campbell <ijc@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140206143700.GA14727@lee--X1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Keerthy <j-keerthy@ti.com>, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, sameo@linux.intel.com, grant.likely@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 06, 2014 at 05:38:28PM +0100, Arnd Bergmann wrote:
-> On Thursday 06 February 2014 17:01:26 Andrew Lunn wrote:
-> 
-> > , but this is, imho,
-> > > over-fragmenting.  I'm sure there's a reason you chose this path, but
-> > > you haven't explained why in your commit log. So I'm left guessing...
-> > 
-> > Synology seem to build there devices like lego. They have two
-> > different RTC blocks. They have three different fan alarm blocks, four
-> > different led blocks, etc. And to build a product, the just select a
-> > group of blocks and put them together.
-> 
-> I guess the Armada-370 and newer based ds213j and dsx14 will also be
-> able to reuse some of the blocks, right?
+On Thursday 06 February 2014 08:07 PM, Lee Jones wrote:
+>> The TPS65218 chip is a power management IC for Portable Navigation Systems
+>> and Tablet Computing devices. It contains the following components:
+>>
+>>   - Regulators.
+>>   - Over Temperature warning and Shut down.
+>>
+>> This patch adds support for tps65218 mfd device. At this time only
+>> the regulator functionality is made available.
+>>
+>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+>> ---
+>>   drivers/mfd/Kconfig          |   15 +++
+>>   drivers/mfd/Makefile         |    1 +
+>>   drivers/mfd/tps65218.c       |  281 +++++++++++++++++++++++++++++++++++++++++
+> How much different is the TPS65218 to all the other TPS drivers?
+>
+> drivers/mfd/tps6105x.c
+> drivers/mfd/tps65010.c
+> drivers/mfd/tps6507x.c
+> drivers/mfd/tps65090.c
+> drivers/mfd/tps65217.c
+> drivers/mfd/tps6586x.c
+> drivers/mfd/tps65910.c
+> drivers/mfd/tps65911-comparator.c
+> drivers/mfd/tps65912-core.c
+> drivers/mfd/tps65912-i2c.c
+> drivers/mfd/tps65912-irq.c
+> drivers/mfd/tps65912-spi.c
+> drivers/mfd/tps80031.c
+>
+> Perhaps some consolidating might be in order?
 
-Hi Arnd
+Well the closest one is tps65217.c  but then register space is different
+and components are different. So a new driver.
 
-I've not looked at any sources for those yet. I guess the RTC .dtsi
-files should be reusable. The ethernet driver on 370 is different so
-no re-use there. Maybe the fan controller, but the rest will depend on
-what GPIO lines they have used, if they are compatible.
-
-     Andrew
+>
