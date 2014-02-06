@@ -1,205 +1,137 @@
-From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] mfd: max14577: Add device tree bindings document
-Date: Thu, 06 Feb 2014 18:30:48 +0100
-Message-ID: <52F3C6C8.9090900@samsung.com>
-References: <1391707641-13543-1-git-send-email-t.figa@samsung.com>
- <1391707641-13543-2-git-send-email-t.figa@samsung.com>
+From: Pratyush Anand <pratyush.anand@gmail.com>
+Subject: Re: [PATCH V4 0/8]PCI:Add SPEAr13xx PCie support
+Date: Thu, 6 Feb 2014 23:00:37 +0530
+Message-ID: <CAHM4w1mUdSHKE+zYh+ZFZe8gJGJx0s=LLUGgnxY7x0c+HEt0zQ@mail.gmail.com>
+References: <cover.1391661589.git.pratyush.anand@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1391707641-13543-2-git-send-email-t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1391661589.git.pratyush.anand@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Pratyush Anand <pratyush.anand@st.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, spear-devel <spear-devel@list.st.com>, linux-kernel@vger.kernel.org, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Arnd,
 
-Oops, I have forgotten to add suppress-cc to git send-email and the 
-series went outside the intended audience... Please disregard these patches.
+Do you see any more improvement in this series.
 
-Sorry for the noise.
+Else we will send V5 (probably the final one) with modifications for
+Kishon's comment.
 
-Best regards,
-Tomasz
+Regards
+Pratyush
 
-On 06.02.2014 18:27, Tomasz Figa wrote:
-> From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+On Thu, Feb 6, 2014 at 10:14 AM, Pratyush Anand <pratyush.anand@st.com> wrote:
+> First three patches are improvement and fixes for SPEAr13xx support.
+> Patches 4-6 add miphy40lp skelten driver and support for spear1310/40 miphy
+> wrapper. Patch 7 add support for SPEAr13xx PCIe.
 >
-> Add document describing device tree bindings for MAX14577 MFD driver
-> (for both MAX14577 and MAX77836 chipsets).
+> These pathes are tested with linux-3.14-rc1 with following patch on the top of
+> it:
+> Author: Balaji T K <balajitk@ti.com>
+> Date:   Mon Jan 20 16:41:27 2014 +0200
 >
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> ---
->   Documentation/devicetree/bindings/mfd/max14577.txt |  149 ++++++++++++++++++++
->   1 file changed, 149 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/mfd/max14577.txt
+>     ata: ahci_platform: Manage SATA PHY
 >
-> diff --git a/Documentation/devicetree/bindings/mfd/max14577.txt b/Documentation/devicetree/bindings/mfd/max14577.txt
-> new file mode 100644
-> index 0000000..f59a4f3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/max14577.txt
-> @@ -0,0 +1,149 @@
-> +Maxim MAX14577/77836 Multi-Function Device
-> +
-> +MAX14577 is a Multi-Function Device with Micro-USB Interface Circuit, Li+
-> +Battery Charger and SFOUT LDO output for powering USB devices. It is
-> +interfaced to host controller using I2C.
-> +
-> +MAX77836 additionally contains PMIC (with two LDO regulators) and Fuel Gauge.
-> +
-> +
-> +Required properties:
-> +- compatible : Must be "maxim,max14577" or "maxim,max77836".
-> +- reg : I2C slave address for the max14577 chip (0x25 for max14577/max77836)
-> +- interrupts : IRQ line for the chip.
-> +- interrupt-parent :  The parent interrupt controller.
-> +
-> +
-> +Optional nodes:
-> +- max14577-muic/max77836-muic :
-> +	Node used only by extcon consumers.
-> +	Required properties:
-> +		- compatible : "maxim,max14577-muic" or "maxim,max77836-muic"
-> +
-> +- regulators :
-> +	Required properties:
-> +		- compatible : "maxim,max14577-regulator"
-> +			or "maxim,max77836-regulator"
-> +
-> +	May contain a sub-node per regulator from the list below. Each
-> +	sub-node should contain the constraints and initialization information
-> +	for that regulator. See regulator.txt for a description of standard
-> +	properties for these sub-nodes.
-> +
-> +	List of valid regulator names:
-> +	- for max14577: CHARGER, SAFEOUT.
-> +	- for max77836: CHARGER, SAFEOUT, LDO1, LDO2.
-> +
-> +	The SAFEOUT is a fixed voltage regulator so there is no need to specify
-> +	voltages for it.
-> +
-> + - charger :
-> +	Required properties:
-> +		- compatible : "maxim,max14577-charger"
-> +			or "maxim,max77836-charger"
-> +		- maxim,fast-charge-timer : Timer in hours to trigger the
-> +			INT3/MBCCHGERR interrupt; Valid values:
-> +			- 5, 6 or 7 (hours),
-> +			- 0 to disable.
-> +		- maxim,fast-charge-uamp : Current in uA for Fast Charge;
-> +			Valid values:
-> +			- for max14577: 90000 - 950000;
-> +			- for max77836: 45000 - 475000;
-> +		- maxim,eoc-uamp : Current in uA for End-Of-Charge mode;
-> +			Valid values:
-> +			- for max14577: 50000 - 200000;
-> +			- for max77836: 5000 - 10000;
-> +		- maxim,ovp-uvolt : OverVoltage Protection Threshold in uV;
-> +			In an overvoltage condition, INT asserts and charging
-> +			stops. Valid values:
-> +			- 6000000, 6500000, 7000000, 7500000;
-> +		- maxim,constant-uvolt : Battery Constant Voltage in uV;
-> +			Valid values:
-> +			- 4000000 - 4280000;
-> +			- 4350000;
-> +
-> +
-> +Example:
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +max14577@25 {
-> +	compatible = "maxim,max14577";
-> +	reg = <0x25>;
-> +	interrupt-parent = <&gpx1>;
-> +	interrupts = <5 IRQ_TYPE_NONE>;
-> +
-> +	muic: max14577-muic {
-> +		compatible = "maxim,max14577-muic";
-> +	};
-> +
-> +	regulators {
-> +		compatible = "maxim,max14577-regulator";
-> +
-> +		SAFEOUT {
-> +			regulator-name = "SAFEOUT";
-> +		};
-> +		CHARGER {
-> +			regulator-name = "CHARGER";
-> +			regulator-min-microamp = <90000>;
-> +			regulator-max-microamp = <950000>;
-> +			regulator-boot-on;
-> +		};
-> +	};
-> +
-> +	charger {
-> +		compatible = "maxim,max14577-charger";
-> +
-> +		maxim,fast-charge-timer = <6>;
-> +		maxim,constant-uvolt = <4350000>;
-> +		maxim,fast-charge-uamp = <450000>;
-> +		maxim,eoc-uamp = <50000>;
-> +		maxim,ovp-uvolt = <6500000>;
-> +	};
-> +};
-> +
-> +
-> +max77836@25 {
-> +	compatible = "maxim,max77836";
-> +	reg = <0x25>;
-> +	interrupt-parent = <&gpx1>;
-> +	interrupts = <5 IRQ_TYPE_NONE>;
-> +
-> +	muic: max77836-muic {
-> +		compatible = "maxim,max77836-muic";
-> +	};
-> +
-> +	regulators {
-> +		compatible = "maxim,max77836-regulator";
-> +
-> +		SAFEOUT {
-> +			regulator-name = "SAFEOUT";
-> +		};
-> +		CHARGER {
-> +			regulator-name = "CHARGER";
-> +			regulator-min-microamp = <90000>;
-> +			regulator-max-microamp = <950000>;
-> +			regulator-boot-on;
-> +		};
-> +		LDO1 {
-> +			regulator-name = "LDO1";
-> +			regulator-min-microvolt = <2700000>;
-> +			regulator-max-microvolt = <2700000>;
-> +		};
-> +		LDO2 {
-> +			regulator-name = "LDO2";
-> +			regulator-min-microvolt = <800000>;
-> +			regulator-max-microvolt = <3950000>;
-> +		};
-> +	};
-> +
-> +	charger {
-> +		compatible = "maxim,max77836-charger";
-> +
-> +		maxim,fast-charge-timer = <6>;
-> +		maxim,constant-uvolt = <4350000>;
-> +		maxim,fast-charge-uamp = <225000>;
-> +		maxim,eoc-uamp = <7500>;
-> +		maxim,ovp-uvolt = <6500000>;
-> +	};
-> +};
+> Tested with SPEAr1310 evaluation board:
+>         - INTEL PRO 100/100 EP card
+>         - USB xhci gen2 card
+>         - Above cards connected through LeCROY PTC switch
 >
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Modifications for SATA are tested with SPEAr1340-evb board
+>
+> Changes since v3:
+> - Phy driver renamed to phy-miphy40lp
+> - ahci phy hook patch used as suggested by Arnd
+> - Incorporated other minor comments from v3
+>
+> Changes since v2:
+> - Incorporated comments to move SPEAr13xx PCIe and SATA phy specific routines to
+>   the phy framework
+> - Modify ahci driver to include phy hooks
+> - phy-core driver modifications for subsys_initcall()
+>
+> Changes since v1:
+> - Few patches of the series are already accepted and applied to mainline e.g.
+>  pcie designware driver improvements,fixes for IO translation bug, PCIe dw
+>  driver maintainer. So dropped these from v2.
+> - Incorporated comment to move the common/reset PCIe code to the seperate driver
+> - PCIe and SATA share common PHY configuration registers, so move SATA
+>  platform code to the system config driver
+> Fourth patch is improves pcie designware driver and fixes the IO
+> translation bug. IO translation bug fix leads to the working of PCIe EP devices
+> connected to RC through switch.
+>
+> PCIe driver support for SPEAr1310/40 platform board is added.
+>
+> These patches are tested with SPEAr1310 evaluation board:
+>         - INTEL PRO 100/100 EP card
+>         - USB xhci gen2 card
+>         - Above cards connected through LeCROY PTC switch
+>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-ide@vger.kernel.org
+> Cc: linux-pci@vger.kernel.org
+> Cc: spear-devel@list.st.com
+> Cc: linux-kernel@vger.kernel.org
+>
+> Mohit Kumar (2):
+>   SPEAr13xx: defconfig: Update
+>   MAINTAINERS: Add ST SPEAr13xx PCIe driver maintainer
+>
+> Pratyush Anand (6):
+>   clk: SPEAr13xx: Fix pcie clock name
+>   SPEAr13xx: Fix static mapping table
+>   phy: st-miphy-40lp: Add skeleton driver
+>   SPEAr13xx: Fixup: Move SPEAr1340 SATA platform code to phy driver
+>   phy: st-miphy-40lp: Add SPEAr1310 and SPEAr1340 PCIe phy support
+>   pcie: SPEAr13xx: Add designware pcie support
+>
+>  .../devicetree/bindings/arm/spear-misc.txt         |   4 +
+>  .../devicetree/bindings/pci/spear13xx-pcie.txt     |   7 +
+>  .../devicetree/bindings/phy/st-miphy40lp.txt       |  12 +
+>  MAINTAINERS                                        |   6 +
+>  arch/arm/boot/dts/spear1310-evb.dts                |   4 +
+>  arch/arm/boot/dts/spear1310.dtsi                   |  96 +++-
+>  arch/arm/boot/dts/spear1340-evb.dts                |   4 +
+>  arch/arm/boot/dts/spear1340.dtsi                   |  32 +-
+>  arch/arm/boot/dts/spear13xx.dtsi                   |  10 +-
+>  arch/arm/configs/spear13xx_defconfig               |  15 +
+>  arch/arm/mach-spear/Kconfig                        |   3 +
+>  arch/arm/mach-spear/include/mach/spear.h           |   4 +-
+>  arch/arm/mach-spear/spear1340.c                    | 127 +----
+>  arch/arm/mach-spear/spear13xx.c                    |   2 +-
+>  drivers/clk/spear/spear1310_clock.c                |   6 +-
+>  drivers/clk/spear/spear1340_clock.c                |   2 +-
+>  drivers/pci/host/Kconfig                           |   5 +
+>  drivers/pci/host/Makefile                          |   1 +
+>  drivers/pci/host/pcie-spear13xx.c                  | 414 ++++++++++++++++
+>  drivers/phy/Kconfig                                |   6 +
+>  drivers/phy/Makefile                               |   1 +
+>  drivers/phy/phy-miphy40lp.c                        | 544 +++++++++++++++++++++
+>  22 files changed, 1166 insertions(+), 139 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/spear-misc.txt
+>  create mode 100644 Documentation/devicetree/bindings/pci/spear13xx-pcie.txt
+>  create mode 100644 Documentation/devicetree/bindings/phy/st-miphy40lp.txt
+>  create mode 100644 drivers/pci/host/pcie-spear13xx.c
+>  create mode 100644 drivers/phy/phy-miphy40lp.c
+>
+> --
+> 1.8.1.2
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
