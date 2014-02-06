@@ -1,53 +1,62 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 3/4] DT: i2c: Trivial: Add sii,s35390a
-Date: Thu, 6 Feb 2014 10:21:48 -0500
-Message-ID: <20140206152148.GC8533@titan.lakedaemon.net>
-References: <1391634309-3123-1-git-send-email-andrew@lunn.ch>
- <1391634309-3123-4-git-send-email-andrew@lunn.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1391634309-3123-4-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: [PATCH 2/2] ARM: dts: MSM8974: Add pinctrl node
+Date: Thu,  6 Feb 2014 17:28:49 +0200
+Message-ID: <1391700529-11816-2-git-send-email-iivanov@mm-sol.com>
+References: <1391700529-11816-1-git-send-email-iivanov@mm-sol.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1391700529-11816-1-git-send-email-iivanov@mm-sol.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
+Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
 
-+ devicetree ML, DT maintainers
+Add the pin control node and pin definitions of SPI8.
 
-On Wed, Feb 05, 2014 at 10:05:08PM +0100, Andrew Lunn wrote:
-> Add the Seiko Instruments Inc S35390a to the list of trivial i2c
-> devices.
-> 
-> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/i2c/trivial-devices.txt |    1 +
->  1 file changed, 1 insertion(+)
+Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+---
+ arch/arm/boot/dts/qcom-msm8974.dtsi |   29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-
-thx,
-
-Jason.
-
-> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> index 1a1ac2e560e9..e11ed0fe770c 100644
-> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> @@ -58,6 +58,7 @@ plx,pex8648		48-Lane, 12-Port PCI Express Gen 2 (5.0 GT/s) Switch
->  ramtron,24c64		i2c serial eeprom  (24cxx)
->  ricoh,rs5c372a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
->  samsung,24ad0xd1	S524AD0XF1 (128K/256K-bit Serial EEPROM for Low Power)
-> +sii,s35390a		2-wire CMOS real-time clock
->  st-micro,24c256		i2c serial eeprom  (24cxx)
->  stm,m41t00		Serial Access TIMEKEEPER
->  stm,m41t62		Serial real-time clock (RTC) with alarm
-> -- 
-> 1.7.10.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+index 9e5dadb..395603f 100644
+--- a/arch/arm/boot/dts/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+@@ -117,5 +117,34 @@
+ 			clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>, <&gcc GCC_BLSP1_AHB_CLK>;
+ 			clock-names = "core", "iface";
+ 		};
++
++		msmgpio: pinctrl@fd510000 {
++			compatible = "qcom,msm8974-pinctrl";
++			reg = <0xfd510000 0x4000>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			interrupts = <0 208 0>;
++
++			spi8_default: spi8_default {
++				mosi {
++					pins = "gpio45";
++					function = "blsp_spi8";
++				};
++				miso {
++					pins = "gpio46";
++					function = "blsp_spi8";
++				};
++				cs {
++					pins = "gpio47";
++					function = "blsp_spi8";
++				};
++				clk {
++					pins = "gpio48";
++					function = "blsp_spi8";
++				};
++			};
++		};
+ 	};
+ };
+-- 
+1.7.9.5
