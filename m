@@ -1,53 +1,79 @@
 From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: Re: [PATCH v5 2/3] clocksource: keystone: add bindings for keystone
- timer
-Date: Thu, 6 Feb 2014 16:09:05 +0200
-Message-ID: <52F39781.3060405@ti.com>
-References: <1391608060-10760-1-git-send-email-ivan.khoronzhuk@ti.com>	<1391608060-10760-3-git-send-email-ivan.khoronzhuk@ti.com>	<CAL_JsqKVc2fdg1Q+TH6ro9kpJmUYyHw8FCwhORfm2_oj6GYM2Q@mail.gmail.com>	<52F26444.5090707@ti.com>	<CAL_JsqL6YDcZJa5xziR7dP-bEt1CO4BtL1vsO8Qm+hFwgCiQ1w@mail.gmail.com>	<52F28875.9000200@ti.com> <CAL_JsqLSNrTvH2SFfA5KB8RsDqcj9zks1QaVmvYya6WQ--W7jg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] clocksource: timer-keystone: introduce clocksource
+ driver for Keystone
+Date: Thu, 6 Feb 2014 16:09:41 +0200
+Message-ID: <52F397A5.8030201@ti.com>
+References: <1391608060-10760-1-git-send-email-ivan.khoronzhuk@ti.com> <1391608060-10760-2-git-send-email-ivan.khoronzhuk@ti.com> <20140206003526.GQ20228@joshc.qualcomm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLSNrTvH2SFfA5KB8RsDqcj9zks1QaVmvYya6WQ--W7jg@mail.gmail.com>
+In-Reply-To: <20140206003526.GQ20228@joshc.qualcomm.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Rob Landley <rob@landley.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>
+To: Josh Cartwright <joshc@codeaurora.org>
+Cc: santosh.shilimkar@ti.com, rob@landley.net, linux@arm.linux.org.uk, galak@codeaurora.org, mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, daniel.lezcano@linaro.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/06/2014 01:36 AM, Rob Herring wrote:
-> On Wed, Feb 5, 2014 at 12:52 PM, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com> wrote:
->> On 02/05/2014 07:41 PM, Rob Herring wrote:
->>> On Wed, Feb 5, 2014 at 10:18 AM, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
->>> wrote:
->>>> On 02/05/2014 04:39 PM, Rob Herring wrote:
->>>>> On Wed, Feb 5, 2014 at 7:47 AM, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
->>>>> wrote:
->>>>>> This patch provides bindings for the 64-bit timer in the KeyStone
->>>>>> architecture devices. The timer can be configured as a general-purpose
->>>>>> 64-bit
->>>>>> timer, dual general-purpose 32-bit timers. When configured as dual
->>>>>> 32-bit
->>>>>> timers, each half can operate in conjunction (chain mode) or
->>>>>> independently
->>>>>> (unchained mode) of each other.
->>>>> This is software configurable or h/w design time configurations?
->>>>>
->>>>> Rob
->>>>>
->>>> This is h/w design time configurations
->>> Then it seems like the binding should provide for describing those
->>> differences either with a property or different compatible strings.
->>>
->>> Rob
->> Oh..sorry, seems I didn't catch, this is configurable by software.
->> These configurations are like modes in which timer can work
->> and they are not different hardware IPs. It depends on driver in
->> which mode it should work.
-> In that case,
+On 02/06/2014 02:35 AM, Josh Cartwright wrote:
+> Hey Ivan-
 >
-> Acked-by: Rob Herring <robh@kernel.org>
+> On Wed, Feb 05, 2014 at 03:47:38PM +0200, Ivan Khoronzhuk wrote:
+>> Add broadcast clock-event device for the Keystone arch.
+>>
+>> The timer can be configured as a general-purpose 64-bit timer,
+>> dual general-purpose 32-bit timers. When configured as dual 32-bit
+>> timers, each half can operate in conjunction (chain mode) or
+>> independently (unchained mode) of each other.
+>>
+>> Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
+>> Acked-by: Santosh shilimkar <santosh.shilimkar@ti.com>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+>> ---
+>>   drivers/clocksource/Makefile         |   1 +
+>>   drivers/clocksource/timer-keystone.c | 233 +++++++++++++++++++++++++++++++++++
+>>   2 files changed, 234 insertions(+)
+>>   create mode 100644 drivers/clocksource/timer-keystone.c
+>>
+>> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+>> index c7ca50a..4abe5aa 100644
+>> --- a/drivers/clocksource/Makefile
+>> +++ b/drivers/clocksource/Makefile
+>> @@ -37,3 +37,4 @@ obj-$(CONFIG_ARM_ARCH_TIMER)		+= arm_arch_timer.o
+>>   obj-$(CONFIG_ARM_GLOBAL_TIMER)		+= arm_global_timer.o
+>>   obj-$(CONFIG_CLKSRC_METAG_GENERIC)	+= metag_generic.o
+>>   obj-$(CONFIG_ARCH_HAS_TICK_BROADCAST)	+= dummy_timer.o
+>> +obj-$(CONFIG_ARCH_KEYSTONE)		+= timer-keystone.o
+>> diff --git a/drivers/clocksource/timer-keystone.c b/drivers/clocksource/timer-keystone.c
+>> new file mode 100644
+>> index 0000000..2299666
+>> --- /dev/null
+>> +++ b/drivers/clocksource/timer-keystone.c
+>> +static void __init keystone_timer_init(struct device_node *np)
+>> +{
+>> +	struct clock_event_device *event_dev = &timer.event_dev;
+>> +	unsigned long rate;
+>> +	struct clk *clk;
+>> +	int irq, error;
+>> +	u32 tgcr;
+>> +
+>> +	irq  = irq_of_parse_and_map(np, 0);
+>> +	if (irq == NO_IRQ) {
+>> +		pr_err("%s: failed to map interrupts\n", __func__);
+>> +		return;
+>> +	}
+>> +
+>> +	timer.base = of_iomap(np, 0);
+>> +	if (!timer.base) {
+>> +		pr_err("%s: failed to map registers\n", __func__);
+>> +		return;
+>> +	}
+>> +
+>> +	clk = of_clk_get(np, 0);
+>> +	if (!clk) {
+> This condition should be IS_ERR(clk).
 
-Thanks
+Thanks Josh,
+I'll fix it.
 
 -- 
 Regards,
