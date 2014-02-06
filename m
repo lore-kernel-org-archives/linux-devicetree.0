@@ -1,49 +1,95 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH v4 4/5] Documentation: devicetree: sja1000: add reg-io-width binding
-Date: Thu,  6 Feb 2014 12:09:55 +0100
-Message-ID: <1391684996-612-5-git-send-email-mkl@pengutronix.de>
-References: <1391684996-612-1-git-send-email-mkl@pengutronix.de>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1391684996-612-1-git-send-email-mkl@pengutronix.de>
-Sender: netdev-owner@vger.kernel.org
-To: linux-can@vger.kernel.org
-Cc: netdev@vger.kernel.org, Florian Vaussard <florian.vaussard@epfl.ch>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>
+From: Mauro Carvalho Chehab <m.chehab@samsung.com>
+Subject: Re: [PATCH v2 06/15] dt: binding: add binding for ImgTec IR block
+Date: Thu, 06 Feb 2014 09:24:05 -0200
+Message-ID: <20140206092405.49170eed@samsung.com>
+References: <1389967140-20704-1-git-send-email-james.hogan@imgtec.com>
+ <1389967140-20704-7-git-send-email-james.hogan@imgtec.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <1389967140-20704-7-git-send-email-james.hogan@imgtec.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Rob Landley <rob@landley.net>, Tomasz Figa <tomasz.figa@gmail.com>
+Cc: James Hogan <james.hogan@imgtec.com>, linux-media@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Florian Vaussard <florian.vaussard@epfl.ch>
+Em Fri, 17 Jan 2014 13:58:51 +0000
+James Hogan <james.hogan@imgtec.com> escreveu:
 
-Add the reg-io-width property to describe the width of the memory
-accesses.
+> Add device tree binding for ImgTec Consumer Infrared block, specifically
+> major revision 1 of the hardware.
 
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
-Tested-by: Andreas Larsson <andreas@gaisler.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
----
- Documentation/devicetree/bindings/net/can/sja1000.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+@DT maintainers:
 
-diff --git a/Documentation/devicetree/bindings/net/can/sja1000.txt b/Documentation/devicetree/bindings/net/can/sja1000.txt
-index f2105a4..b4a6d53 100644
---- a/Documentation/devicetree/bindings/net/can/sja1000.txt
-+++ b/Documentation/devicetree/bindings/net/can/sja1000.txt
-@@ -12,6 +12,10 @@ Required properties:
- 
- Optional properties:
- 
-+- reg-io-width : Specify the size (in bytes) of the IO accesses that
-+	should be performed on the device.  Valid value is 1, 2 or 4.
-+	Default to 1 (8 bits).
-+
- - nxp,external-clock-frequency : Frequency of the external oscillator
- 	clock in Hz. Note that the internal clock frequency used by the
- 	SJA1000 is half of that value. If not specified, a default value
+ping.
+
+
+> 
+> Signed-off-by: James Hogan <james.hogan@imgtec.com>
+> Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>
+> Cc: linux-media@vger.kernel.org
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: Rob Landley <rob@landley.net>
+> Cc: linux-doc@vger.kernel.org
+> Cc: Tomasz Figa <tomasz.figa@gmail.com>
+> ---
+> v2:
+> - Future proof compatible string from "img,ir" to "img,ir1", where the 1
+>   corresponds to the major revision number of the hardware (Tomasz
+>   Figa).
+> - Added clock-names property and three specific clock names described in
+>   the manual, only one of which is used by the current driver (Tomasz
+>   Figa).
+> ---
+>  .../devicetree/bindings/media/img-ir1.txt          | 30 ++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/img-ir1.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/img-ir1.txt b/Documentation/devicetree/bindings/media/img-ir1.txt
+> new file mode 100644
+> index 0000000..ace5fd9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/img-ir1.txt
+> @@ -0,0 +1,30 @@
+> +* ImgTec Infrared (IR) decoder version 1
+> +
+> +This binding is for Imagination Technologies' Infrared decoder block,
+> +specifically major revision 1.
+> +
+> +Required properties:
+> +- compatible:		Should be "img,ir1"
+> +- reg:			Physical base address of the controller and length of
+> +			memory mapped region.
+> +- interrupts:		The interrupt specifier to the cpu.
+> +
+> +Optional properties:
+> +- clocks:		List of clock specifiers as described in standard
+> +			clock bindings.
+> +- clock-names:		List of clock names corresponding to the clocks
+> +			specified in the clocks property.
+> +			Accepted clock names are:
+> +			"core":	Core clock (defaults to 32.768KHz if omitted).
+> +			"sys":	System side (fast) clock.
+> +			"mod":	Power modulation clock.
+> +
+> +Example:
+> +
+> +	ir@02006200 {
+> +		compatible = "img,ir1";
+> +		reg = <0x02006200 0x100>;
+> +		interrupts = <29 4>;
+> +		clocks = <&clk_32khz>;
+> +		clock-names =  "core";
+> +	};
+
+
 -- 
-1.8.5.3
+
+Cheers,
+Mauro
