@@ -1,143 +1,200 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: Re: [PATCH v3 3/6] misc: fuse: Add efuse driver for Tegra
-Date: Thu, 6 Feb 2014 11:11:14 +0200
-Message-ID: <20140206091114.GK19389@tbergstrom-lnx.Nvidia.com>
-References: <1390952176-30402-1-git-send-email-pdeschrijver@nvidia.com>
- <1390952176-30402-4-git-send-email-pdeschrijver@nvidia.com>
- <52F28DE2.1040207@wwwdotorg.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v10 1/2] [media] exynos5-is: Adds DT binding
+ documentation
+Date: Thu, 6 Feb 2014 09:21:31 +0000
+Message-ID: <20140206092131.GT28338@e106331-lin.cambridge.arm.com>
+References: <1386911563-26236-1-git-send-email-arun.kk@samsung.com>
+ <1386911563-26236-2-git-send-email-arun.kk@samsung.com>
+ <CALt3h7-VBZgX-ueNa-Fer_RBiWkd-frNwrr8DsykXbvCab=h3w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <52F28DE2.1040207@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Landley <rob@landley.net>, Thierry Reding <thierry.reding@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Danny Huang <dahuang@nvidia.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <CALt3h7-VBZgX-ueNa-Fer_RBiWkd-frNwrr8DsykXbvCab=h3w@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arun Kumar K <arunkk.samsung@gmail.com>
+Cc: LMML <linux-media@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Shaik Ameer Basha <shaik.ameer@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 05, 2014 at 08:15:46PM +0100, Stephen Warren wrote:
-> On 01/28/2014 04:36 PM, Peter De Schrijver wrote:
-> > Implement fuse driver for Tegra20, Tegra30, Tegra114 and Tegra124.
-> 
-> I assume most of this code is simply cut/paste from the existing code in
-> arch/arm/mach-tegra/? If so, "git format-patch -C" would have been
-> useful to highlight what changed when duplicating the files.
-> 
+On Mon, Feb 03, 2014 at 10:13:55AM +0000, Arun Kumar K wrote:
+> Hi Mark,
 
-It also has been rewritten slightly. Also the Tegra124 speedo file is new.
+Hi Arun,
 
-> > diff --git a/Documentation/ABI/testing/sysfs-driver-tegra-fuse b/Documentation/ABI/testing/sysfs-driver-tegra-fuse
-> > +What:		/sys/devices/*/<our-device>/fuse
-> > +Date:		December 2013
-> > +Contact:	Peter De Schrijver <pdeschrijver@nvidia.com>
-> > +Description:	read-only access to the efuses on Tegra20, Tegra30, Tegra114
-> > +		and Tegra124 SoC's from NVIDIA. The efuses contain write once
-> > +		data programmed at the factory.
-> > +Users:		any user space application which wants to read the efuses on
-> > +		Tegra SoC's
 > 
-> Surely this file should describe the format of the file, since that's
-> part of the ABI too, right?
+> This patch and hence a full series of 13 patches is waiting for a long time now
+> due to your missing ack on this DT binding patch.
+> I have addressed your review comments given on earlier version -
+> http://www.spinics.net/lists/devicetree/msg11550.html
 > 
+> Please check this and give an ack if it is fine to be merged.
 
-Part of the fuse data is ODM defined so possibly board specific.
+Apologies for the delay.
 
-> > diff --git a/drivers/misc/fuse/tegra/fuse-tegra20.c b/drivers/misc/fuse/tegra/fuse-tegra20.c
+As far as I can tell this looks ok:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
 > 
-> > +static int tegra20_fuse_probe(struct platform_device *pdev)
-> ...
-> > +	sku_info.revision = tegra_revision;
-> > +	tegra20_init_speedo_data(&sku_info, &pdev->dev);
-> ...
-> > +}
+> Regards
+> Arun
+> 
+> On Fri, Dec 13, 2013 at 10:42 AM, Arun Kumar K <arun.kk@samsung.com> wrote:
+> > From: Shaik Ameer Basha <shaik.ameer@samsung.com>
+> >
+> > The patch adds the DT binding doc for exynos5 SoC camera
+> > subsystem.
+> >
+> > Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+> > Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+> > ---
+> >  .../bindings/media/exynos5250-camera.txt           |  136 ++++++++++++++++++++
+> >  1 file changed, 136 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/exynos5250-camera.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/exynos5250-camera.txt b/Documentation/devicetree/bindings/media/exynos5250-camera.txt
+> > new file mode 100644
+> > index 0000000..0c36bc4
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/exynos5250-camera.txt
+> > @@ -0,0 +1,136 @@
+> > +Samsung EXYNOS5 SoC Camera Subsystem
+> > +------------------------------------
 > > +
-> > +static struct platform_driver tegra20_fuse_driver = {
-> > +	.probe = tegra20_fuse_probe,
-> > +	.driver = {
-> > +		.name = "tegra20_fuse",
-> > +		.owner = THIS_MODULE,
-> > +		.of_match_table = tegra20_fuse_of_match,
-> > +	}
-> > +};
+> > +The Exynos5 SoC Camera subsystem comprises of multiple sub-devices
+> > +represented by separate device tree nodes. Currently this includes: FIMC-LITE,
+> > +MIPI CSIS and FIMC-IS.
 > > +
-> > +static int __init tegra20_fuse_init(void)
-> > +{
-> > +	return platform_driver_register(&tegra20_fuse_driver);
-> > +}
-> > +postcore_initcall(tegra20_fuse_init);
-> 
-> That call to tegra20_init_speedo_data() now happens much later in boot.
-> Are you sure there's nothing that relies on data it sets up between when
-> tegra_fuse_init() is called (which is where it happens before this
-> series), and the somewhat arbitrary later time when this driver probes?
-> 
-
-Will check.
-
-> > diff --git a/drivers/misc/fuse/tegra/fuse-tegra30.c b/drivers/misc/fuse/tegra/fuse-tegra30.c
-> 
-> > +postcore_initcall(tegra30_fuse_init);
+> > +The sub-device nodes are referenced using phandles in the common 'camera' node
+> > +which also includes common properties of the whole subsystem not really
+> > +specific to any single sub-device, like common camera port pins or the common
+> > +camera bus clocks.
 > > +
+> > +Common 'camera' node
+> > +--------------------
+> > +
+> > +Required properties:
+> > +
+> > +- compatible           : must be "samsung,exynos5250-fimc"
+> > +- clocks               : list of phandles and clock specifiers, corresponding
+> > +                         to entries in the clock-names property
+> > +- clock-names          : must contain "sclk_bayer" entry
+> > +- samsung,csis         : list of phandles to the mipi-csis device nodes
+> > +- samsung,fimc-lite    : list of phandles to the fimc-lite device nodes
+> > +- samsung,fimc-is      : phandle to the fimc-is device node
+> > +
+> > +The pinctrl bindings defined in ../pinctrl/pinctrl-bindings.txt must be used
+> > +to define a required pinctrl state named "default".
+> > +
+> > +'parallel-ports' node
+> > +---------------------
+> > +
+> > +This node should contain child 'port' nodes specifying active parallel video
+> > +input ports. It includes camera A, camera B and RGB bay inputs.
+> > +'reg' property in the port nodes specifies the input type:
+> > + 1 - parallel camport A
+> > + 2 - parallel camport B
+> > + 5 - RGB camera bay
+> > +
+> > +3, 4 are for MIPI CSI-2 bus and are already described in samsung-mipi-csis.txt
+> > +
+> > +Required properties:
+> > +
+> > +For describing the input type in the child nodes, the following properties
+> > +have to be present in the parallel-ports node:
+> > +- #address-cells: Must be 1
+> > +- #size-cells: Must be 0
+> > +
+> > +Image sensor nodes
+> > +------------------
+> > +
+> > +The sensor device nodes should be added to their control bus controller (e.g.
+> > +I2C0) nodes and linked to a port node in the csis or the parallel-ports node,
+> > +using the common video interfaces bindings, defined in video-interfaces.txt.
+> > +
+> > +Example:
+> > +
+> > +       aliases {
+> > +               fimc-lite0 = &fimc_lite_0
+> > +       };
+> > +
+> > +       /* Parallel bus IF sensor */
+> > +       i2c_0: i2c@13860000 {
+> > +               s5k6aa: sensor@3c {
+> > +                       compatible = "samsung,s5k6aafx";
+> > +                       reg = <0x3c>;
+> > +                       vddio-supply = <...>;
+> > +
+> > +                       clock-frequency = <24000000>;
+> > +                       clocks = <...>;
+> > +                       clock-names = "mclk";
+> > +
+> > +                       port {
+> > +                               s5k6aa_ep: endpoint {
+> > +                                       remote-endpoint = <&fimc0_ep>;
+> > +                                       bus-width = <8>;
+> > +                                       hsync-active = <0>;
+> > +                                       vsync-active = <1>;
+> > +                                       pclk-sample = <1>;
+> > +                               };
+> > +                       };
+> > +               };
+> > +       };
+> > +
+> > +       /* MIPI CSI-2 bus IF sensor */
+> > +       s5c73m3: sensor@1a {
+> > +               compatible = "samsung,s5c73m3";
+> > +               reg = <0x1a>;
+> > +               vddio-supply = <...>;
+> > +
+> > +               clock-frequency = <24000000>;
+> > +               clocks = <...>;
+> > +               clock-names = "mclk";
+> > +
+> > +               port {
+> > +                       s5c73m3_1: endpoint {
+> > +                               data-lanes = <1 2 3 4>;
+> > +                               remote-endpoint = <&csis0_ep>;
+> > +                       };
+> > +               };
+> > +       };
+> > +
+> > +       camera {
+> > +               compatible = "samsung,exynos5250-fimc";
+> > +               #address-cells = <1>;
+> > +               #size-cells = <1>;
+> > +               status = "okay";
+> > +
+> > +               pinctrl-names = "default";
+> > +               pinctrl-0 = <&cam_port_a_clk_active>;
+> > +
+> > +               samsung,csis = <&csis_0>, <&csis_1>;
+> > +               samsung,fimc-lite = <&fimc_lite_0>, <&fimc_lite_1>, <&fimc_lite_2>;
+> > +               samsung,fimc-is = <&fimc_is>;
+> > +
+> > +               /* parallel camera ports */
+> > +               parallel-ports {
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <0>;
+> > +
+> > +                       /* camera A input */
+> > +                       port@1 {
+> > +                               reg = <1>;
+> > +                               camport_a_ep: endpoint {
+> > +                                       remote-endpoint = <&s5k6aa_ep>;
+> > +                                       bus-width = <8>;
+> > +                                       hsync-active = <0>;
+> > +                                       vsync-active = <1>;
+> > +                                       pclk-sample = <1>;
+> > +                               };
+> > +                       };
+> > +               };
+> > +       };
+> > +
+> > +MIPI-CSIS device binding is defined in samsung-mipi-csis.txt, FIMC-LITE
+> > +device binding is defined in exynos-fimc-lite.txt and FIMC-IS binding
+> > +is defined in exynos5-fimc-is.txt.
+> > --
+> > 1.7.9.5
+> >
 > 
-> There's a blank line at the end of the file. I thought checkpatch warned
-> about this? But actually it doesn't seem to at least in -f mode.
-> 
-> > diff --git a/drivers/misc/fuse/tegra/fuse.h b/drivers/misc/fuse/tegra/fuse.h
-> 
-> > +struct tegra_sku_info {
-> > +	int sku_id;
-> > +	int cpu_process_id;
-> > +	int cpu_speedo_id;
-> > +	int cpu_speedo_value;
-> > +	int cpu_iddq_value;
-> > +	int core_process_id;
-> > +	int soc_speedo_id;
-> > +	int gpu_speedo_id;
-> > +	int gpu_process_id;
-> > +	int gpu_speedo_value;
-> > +	enum tegra_revision revision;
-> > +};
-> 
-> The only use of this appears to be to pass to tegra_fuse_create_sysfs()
-> which prints out the fields. Will there be more users in the future?
-> Otherwise, I'd be tempted to just print it out outside/before-calling
-> tegra_fuse_create_sysfs().
-> 
-> That said, I wonder if these values could/should be exposed in the sysfs
-> file to make it easier to interpret the fuses?
-> 
-
-That could be done I think...
-
-> > diff --git a/drivers/misc/fuse/tegra/tegra114_speedo.c b/drivers/misc/fuse/tegra/tegra114_speedo.c
-> 
-> It might be nice to make these filenames consistent with the others,
-> e.g. fuse-speedo-tegraNNN.c/speedo-tegraNNN.c, or wrap them into
-> fuse-tegraNNN.c?
-> 
-
-I expect 1 speedo file per new SoC, but at least every SoC since Tegra30 has
-used the same way of reading the fuse data. Hence I think it's better to
-keep them separate.
-
-> > diff --git a/drivers/misc/fuse/tegra/tegra30_speedo.c b/drivers/misc/fuse/tegra/tegra30_speedo.c
-> 
-> > +#define FUSE_SPEEDO_CALIB_0	0x14
-> > +#define FUSE_PACKAGE_INFO	0XFC
-> > +#define FUSE_TEST_PROG_VER	0X28
-> 
-> In arch/arm/mach-tegra/tegra30_speedo.c, those values are different:
-> 
-> #define FUSE_SPEEDO_CALIB_0	0x114
-> #define FUSE_PACKAGE_INFO	0X1FC
-> #define FUSE_TEST_PROG_VER	0X128
-> 
-> Was this change intentional? Perhaps it should be in a separate patch to
-> highlight the change, if it's an intentional bug-fix?
-
-This is intentional. The old files used the offset from the fuse IP block base
-address. The new files use the offset in the fuse array.
-
-Cheers,
-
-Peter.
