@@ -1,82 +1,133 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH] ASoC: pcm512x: Add PCM512x driver
-Date: Thu, 6 Feb 2014 13:50:15 +0000
-Message-ID: <20140206135015.GR32298@sirena.org.uk>
-References: <1391689575-4039-1-git-send-email-broonie@kernel.org>
- <s5hr47gv1yi.wl%tiwai@suse.de>
- <20140206130735.GP32298@sirena.org.uk>
- <s5hob2kv0z3.wl%tiwai@suse.de>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH 1/2 v3] i2c: exynos5: add support for HSI2C on Exynos5260
+ SoC
+Date: Thu, 06 Feb 2014 14:50:51 +0100
+Message-ID: <52F3933B.9090202@samsung.com>
+References: <1385100851-32254-1-git-send-email-ch.naveen@samsung.com>
+ <1391688408-8077-1-git-send-email-ch.naveen@samsung.com>
+ <52F38EA4.10805@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="G6ArjEZjY3m60389"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <s5hob2kv0z3.wl%tiwai-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>
-Cc: Florian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <52F38EA4.10805@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, naveenkrishna.ch@gmail.com, kgene.kim@samsung.com, grant.likely@secretlab.ca, Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org, taeggyun.ko@samsung.com, balbi@ti.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+Also, please use correct addresses of DT ML and Wolfram's e-mail (fixed 
+in this message).
 
---G6ArjEZjY3m60389
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Best regards,
+Tomasz
 
-On Thu, Feb 06, 2014 at 02:12:48PM +0100, Takashi Iwai wrote:
-> Mark Brown wrote:
-
-> > > The numbers of items in pcm512x_dsp_program_texts[] and _values[]
-> > > don't match.
-
-> > Yeah, fixed.
-
-> I'm thinking whether we can check this in the macro.
-> I thought of using BUILD_BUG_ON(), but it's unsure whether it aligns
-> there well.
-
-Yes, or changing the way we pass things in so it's an array of
-key/value.  Usability isn't great for enums in general and particularly
-poor for sparse ones.
-
-> > Hrm, it is but this points out an error in the control helpers which has
-> > been there since forever - they call that parameter max but it's not a
-> > maximum, it's the number of elements in the enumeration.  I bet we have
-> > a bunch of other enumerations which miss the last element as a result.
-
-> Yeah, the argument name is really confusing.  I had to double-check
-> the code when I reviewed your patch, too :)
-
-> Also it'd be better to have a practice to use either ARRAY_SIZE() or a
-> constant there, too.
-
-Indeed - even better would be to just remove the parameter entirely and
-use ARRAY_SIZE() on the array of strings we get passed in so there's no
-way it could be messed up.
-
---G6ArjEZjY3m60389
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS85MUAAoJELSic+t+oim9dj4P/1/kOSVCzFKd8t4ppjMVp3ky
-aC/CoyIi1cbu7JzM/jNshE86X7ODlMOcPwy/Qe/sD/cml1Wf8RFucXIqnkf/YPMg
-Hx8ByebwQlTES8h6FTIkcs8/Ga/F63GGK8hvapYS/5MuAcXylTkNUrLnNDX/VPza
-8EK32JbErgcqjejGY8G2IVOgTm4TDStK0bop7iWy+l/UQ3X/SRDGZD5tIPEJkSvk
-wggl6mi9SVEGpNlvj+6ADLARVwDexY5zssDauTglpwip/zFHSsEhtimS3mX6GoFY
-D5SXZV0Ychar/uzdkkj1HITw9lvs9DLsmX3g0NswRIb+TEp0ucXTDYbCxDHMu503
-TZzjh8XKMmRFulhKliAhh1cMF/3YTL0/K0h+55/nVjBLKNjmDLqg5wIycmdooLu2
-JyJ1Sbk+dEcO7ttZDnT0754e+X1goKKM69qjm2WEjpYPMAEurYrpXJOnJHLSCyHj
-mHE0scKyY6CfPXWqJ7eVNXEykeim96H6EPx0zLXs7ClAc9fYhBukUOv1qKKtvzoj
-SIMqOgNzBxnCuKw8X2DjdOEMSoFmmJPqyKo3Fb1htgrzQ9fY9G0bSP5Kgee+cksZ
-V0+nCx4fd4ukDxauMX1UOa8NsUQ8Rr1SVv5xuz9kClJO7fF0J4WjYvNk6FGL/mSe
-sQWwNtVCZ98X4jLgH+Y8
-=q4gJ
------END PGP SIGNATURE-----
-
---G6ArjEZjY3m60389--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 06.02.2014 14:31, Tomasz Figa wrote:
+> Hi Naveen,
+>
+> On 06.02.2014 13:06, Naveen Krishna Chatradhi wrote:
+>> This patch implements a variant struct to handle the differences
+>> (like fifo_depths) in the HSI2C modules across SoCs.
+>>
+>> Adds a new compatible to support HSI2C module on Exynos5260.
+>> Also resets the module as an init sequence (Needed by Exynos5260).
+>>
+>> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+>> ---
+>> Changes since v2:
+>> 1. Used variant struct as suggested by Tomasz Figa.
+>> 2. Change compatible strings from samsung,exynos5-hsi2c to
+>>     samsung,exynos5250-hsi2c based on the first SoC to see the feature.
+>> 3. Using reset as init sequences.
+>> 4. Merged the 2 patches into one.
+>>
+>>   .../devicetree/bindings/i2c/i2c-exynos5.txt        |    8 ++-
+>>   drivers/i2c/busses/i2c-exynos5.c                   |   64
+>> ++++++++++++++++----
+>>   2 files changed, 58 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-exynos5.txt
+>> b/Documentation/devicetree/bindings/i2c/i2c-exynos5.txt
+>> index 056732c..5bc4998 100644
+>> --- a/Documentation/devicetree/bindings/i2c/i2c-exynos5.txt
+>> +++ b/Documentation/devicetree/bindings/i2c/i2c-exynos5.txt
+>> @@ -5,7 +5,11 @@ at various speeds ranging from 100khz to 3.4Mhz.
+>>
+>>   Required properties:
+>>     - compatible: value should be.
+>> -      -> "samsung,exynos5-hsi2c", for i2c compatible with exynos5 hsi2c.
+>
+> Device tree bindings need to be backwards compatible, so you need to
+> keep this compatible string supported, just marked as (DEPRECATED).
+>
+> Driver-wise, it will use the same driver data / variant struct as
+> "samsung,exynos5250-hsi2c", just one more entry in OF match table is
+> needed.
+>
+>> +    -> "samsung,exynos5250-hsi2c", for i2c compatible with HSI2C
+>> available
+>> +                on Exynos5250 and Exynos5420 SoCs.
+>> +    -> "samsung,exynos5260-hsi2c", for i2c compatible with HSI2C
+>> available
+>> +                on Exynos5260 SoCs.
+>> +
+>>     - reg: physical base address of the controller and length of
+>> memory mapped
+>>       region.
+>>     - interrupts: interrupt number to the cpu.
+>> @@ -26,7 +30,7 @@ Optional properties:
+>>   Example:
+>>
+>>   hsi2c@12ca0000 {
+>> -    compatible = "samsung,exynos5-hsi2c";
+>> +    compatible = "samsung,exynos5250-hsi2c";
+>>       reg = <0x12ca0000 0x100>;
+>>       interrupts = <56>;
+>>       clock-frequency = <100000>;
+>
+> [snip]
+>
+>> @@ -483,6 +514,7 @@ static void exynos5_i2c_message_start(struct
+>> exynos5_i2c *i2c, int stop)
+>>       u32 i2c_auto_conf = 0;
+>>       u32 fifo_ctl;
+>>       unsigned long flags;
+>> +    unsigned short trig_lvl;
+>>
+>>       i2c_ctl = readl(i2c->regs + HSI2C_CTL);
+>>       i2c_ctl &= ~(HSI2C_TXCHON | HSI2C_RXCHON);
+>> @@ -493,13 +525,19 @@ static void exynos5_i2c_message_start(struct
+>> exynos5_i2c *i2c, int stop)
+>>
+>>           i2c_auto_conf = HSI2C_READ_WRITE;
+>>
+>> -        fifo_ctl |= HSI2C_RXFIFO_TRIGGER_LEVEL(HSI2C_DEF_TXFIFO_LVL);
+>> +        trig_lvl = (i2c->msg->len > i2c->variant->fifo_depth) ?
+>> +            (i2c->variant->fifo_depth * 3/4) : i2c->msg->len;
+>> +        fifo_ctl |= HSI2C_RXFIFO_TRIGGER_LEVEL(trig_lvl);
+>> +
+>
+> This is a rather serious semantic change, that doesn't look to belong to
+> this patch. If this is needed, it should be done in a separate patch.
+>
+>>           int_en |= (HSI2C_INT_RX_ALMOSTFULL_EN |
+>>               HSI2C_INT_TRAILING_EN);
+>>       } else {
+>>           i2c_ctl |= HSI2C_TXCHON;
+>>
+>> -        fifo_ctl |= HSI2C_TXFIFO_TRIGGER_LEVEL(HSI2C_DEF_RXFIFO_LVL);
+>> +        trig_lvl = (i2c->msg->len > i2c->variant->fifo_depth) ?
+>> +            (i2c->variant->fifo_depth * 1/4) : i2c->msg->len;
+>> +        fifo_ctl |= HSI2C_TXFIFO_TRIGGER_LEVEL(trig_lvl);
+>> +
+>
+> Ditto.
+>
+> Best regards,
+> Tomasz
+> --
+> To unsubscribe from this list: send the line "unsubscribe
+> linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
