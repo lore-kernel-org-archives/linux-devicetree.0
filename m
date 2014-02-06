@@ -1,79 +1,170 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 2/2] ARM: shmobile: koelsch: add Ether DT support
-Date: Fri, 7 Feb 2014 01:14:26 +0300
-Message-ID: <201402070114.27279.sergei.shtylyov@cogentembedded.com>
-References: <201402070110.18561.sergei.shtylyov@cogentembedded.com>
+From: Laura Abbott <lauraa@codeaurora.org>
+Subject: Re: [PATCH v2 1/5] drivers: of: add initialization code for reserved
+ memory
+Date: Thu, 06 Feb 2014 14:08:37 -0800
+Message-ID: <52F407E5.5080806@codeaurora.org>
+References: <1391515773-6112-1-git-send-email-m.szyprowski@samsung.com> <1391515773-6112-2-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <201402070110.18561.sergei.shtylyov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1391515773-6112-2-git-send-email-m.szyprowski@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Josh Cartwright <joshc@codeaurora.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Tomasz Figa <t.figa@samsung.com>, Olof Johansson <olof@lixom.net>, Tomasz Figa <tomasz.figa@gmail.com>, Michal Nazarewicz <mina86@mina86.com>, Rob Herring <robh+dt@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ian.campbell@citrix.com>, Nishanth Peethambaran <nishanth.p@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Marc <marc.ceeeee@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Define the Koelsch board dependent part of the Ether device node. 
+Hi,
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+On 2/4/2014 4:09 AM, Marek Szyprowski wrote:
+...
+> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+> index efd05102c405..ed9660adad77 100644
+> --- a/drivers/of/Makefile
+> +++ b/drivers/of/Makefile
+> @@ -9,3 +9,4 @@ obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
+>   obj-$(CONFIG_OF_PCI)	+= of_pci.o
+>   obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+>   obj-$(CONFIG_OF_MTD)	+= of_mtd.o
+> +obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
+> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+> new file mode 100644
+> index 000000000000..f17cd56e68d9
+> --- /dev/null
+> +++ b/drivers/of/of_reserved_mem.c
+> @@ -0,0 +1,219 @@
+> +/*
+> + * Device tree based initialization code for reserved memory.
+> + *
+> + * Copyright (c) 2013, The Linux Foundation. All Rights Reserved.
+> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
+> + *		http://www.samsung.com
+> + * Author: Marek Szyprowski <m.szyprowski@samsung.com>
+> + * Author: Josh Cartwright <joshc@codeaurora.org>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation; either version 2 of the
+> + * License or (at your optional) any later version of the license.
+> + */
+> +#include <linux/memblock.h>
+> +#include <linux/err.h>
+> +#include <linux/of.h>
+> +#include <linux/of_fdt.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/mm.h>
+> +#include <linux/sizes.h>
+> +#include <linux/of_reserved_mem.h>
+> +
+> +#define MAX_RESERVED_REGIONS	16
 
----
- arch/arm/boot/dts/r8a7791-koelsch.dts |   31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+Make this a config option?
 
-Index: renesas/arch/arm/boot/dts/r8a7791-koelsch.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7791-koelsch.dts
-+++ renesas/arch/arm/boot/dts/r8a7791-koelsch.dts
-@@ -2,7 +2,8 @@
-  * Device Tree Source for the Koelsch board
-  *
-  * Copyright (C) 2013 Renesas Electronics Corporation
-- * Copyright (C) 2013 Renesas Solutions Corp.
-+ * Copyright (C) 2013-2014 Renesas Solutions Corp.
-+ * Copyright (C) 2014 Cogent Embedded, Inc.
-  *
-  * This file is licensed under the terms of the GNU General Public License
-  * version 2.  This program is licensed "as is" without any warranty of any
-@@ -122,12 +123,40 @@
- 		renesas,function = "scif1";
- 	};
- 
-+	ether_pins: ether {
-+		renesas,groups = "eth_link", "eth_mdio", "eth_rmii";
-+		renesas,function = "eth";
-+	};
-+
-+	phy1_pins: phy1 {
-+		renesas,groups = "intc_irq0";
-+		renesas,function = "intc";
-+	};
-+
- 	qspi_pins: spi {
- 		renesas,groups = "qspi_ctrl", "qspi_data4";
- 		renesas,function = "qspi";
- 	};
- };
- 
-+&ether {
-+	pinctrl-0 = <&ether_pins>;
-+	pinctrl-names = "default";
-+
-+	phy-handle = <&phy1>;
-+	renesas,ether-link-active-low;
-+	status = "ok";
-+
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+		interrupt-parent = <&irqc0>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+
-+		pinctrl-0 = <&phy1_pins>;
-+		pinctrl-names = "default";
-+	};
-+};
-+
- &sata0 {
- 	status = "okay";
- };
+> +static struct reserved_mem reserved_mem[MAX_RESERVED_REGIONS];
+> +static int reserved_mem_count;
+> +
+> +int __init of_parse_flat_dt_reg(unsigned long node, const char *uname,
+> +				   phys_addr_t *base, phys_addr_t *size)
+> +{
+> +	unsigned long len;
+> +	__be32 *prop;
+> +
+> +	prop = of_get_flat_dt_prop(node, "reg", &len);
+> +	if (!prop)
+> +		return -EINVAL;
+> +
+> +	if (len < (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32)) {
+> +		pr_err("Reserved memory: invalid reg property in '%s' node.\n",
+> +				uname);
+> +		return -EINVAL;
+> +	}
+> +
+> +	*base = dt_mem_next_cell(dt_root_addr_cells, &prop);
+> +	*size = dt_mem_next_cell(dt_root_size_cells, &prop);
+> +	return 0;
+> +}
+> +
+> +int __init of_parse_flat_dt_size(unsigned long node, const char *uname,
+> +				    phys_addr_t *size)
+> +{
+> +	unsigned long len;
+> +	__be32 *prop;
+> +
+> +	prop = of_get_flat_dt_prop(node, "size", &len);
+> +	if (!prop)
+> +		return -EINVAL;
+> +
+> +	if (len < dt_root_size_cells * sizeof(__be32)) {
+> +		pr_err("Reserved memory: invalid size property in '%s' node.\n",
+> +				uname);
+> +		return -EINVAL;
+> +	}
+> +
+> +	*size = dt_mem_next_cell(dt_root_size_cells, &prop);
+> +	return 0;
+> +}
+> +
+> +static int __init rmem_default_early_setup(struct reserved_mem *rmem,
+> +					   unsigned long node,
+> +					   const char *uname)
+> +{
+> +	int err;
+> +
+> +	if (of_get_flat_dt_prop(node, "compatible", NULL))
+> +		return -EINVAL;
+> +
+> +	err = of_parse_flat_dt_reg(node, uname, &rmem->base, &rmem->size);
+> +	if (err)
+> +		return err;
+> +
+> +	if (of_get_flat_dt_prop(node, "no-map", NULL))
+> +		err = memblock_remove(rmem->base, rmem->size);
+> +	else
+> +		err = memblock_reserve(rmem->base, rmem->size);
+> +
+
+The CMA code aligns to pageblock size, do we need to do something 
+similar here as well? With reserved it might not be much of an issue but 
+we've hit issues before with non-pageblock aligned memblock_removed 
+memory because the page structures are not initialized.
+
+> +	if (err == 0)
+> +		pr_info("Reserved memory: found '%s', memory base %pa, size %ld MiB\n",
+> +			uname, &rmem->base, (unsigned long)rmem->size / SZ_1M);
+> +
+> +	return err;
+> +}
+> +
+> +static const struct of_device_id rmem_default_id
+> +	__used __section(__reservedmem_of_table_end) = {
+> +	.data		= rmem_default_early_setup,
+> +};
+> +
+> +static int __init fdt_scan_reserved_mem(unsigned long node, const char *uname,
+> +					int depth, void *data)
+> +{
+> +	struct reserved_mem *rmem = &reserved_mem[reserved_mem_count];
+> +	extern const struct of_device_id __reservedmem_of_table[];
+> +	const struct of_device_id *id;
+> +	const char *status;
+> +
+> +	if (reserved_mem_count == ARRAY_SIZE(reserved_mem)) {
+> +		pr_err("Reserved memory: not enough space all defined regions.\n");
+> +		return -ENOSPC;
+> +	}
+> +
+> +	status = of_get_flat_dt_prop(node, "status", NULL);
+> +	if (status && strcmp(status, "okay") != 0)
+> +		return 0;
+> +
+
+strncmp(status, "ok", 2) to handle alternate spellings
+
+>
+
+Thanks,
+Laura
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
