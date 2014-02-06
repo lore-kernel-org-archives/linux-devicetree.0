@@ -1,35 +1,169 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Subject: RE: [PATCH 0/8] da9055: Driver initialisation fixes, add DT support
-Date: Thu, 6 Feb 2014 13:31:22 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A03376B7E36D8@SW-EX-MBX02.diasemi.com>
-References: <cover.1391614923.git.Adam.Thomson.Opensource@diasemi.com>
- <20140206005406.GC1308@roeck-us.net>
- <2E89032DDAA8B9408CB92943514A03376B7E368A@SW-EX-MBX02.diasemi.com>
- <52F38CA1.8020806@roeck-us.net>
+From: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2] dma: Add Xilinx AXI Video Direct Memory Access Engine
+ driver support
+Date: Thu, 6 Feb 2014 19:04:17 +0530
+Message-ID: <CA+mB=1JX5K9Cu=9WGyr_e9tUtVz6ypT9UxhJU9BNJbQA9eaRKA@mail.gmail.com>
+References: <1390409565-4200-1-git-send-email-sthokal@xilinx.com>
+	<1390409565-4200-2-git-send-email-sthokal@xilinx.com>
+	<52E0FC22.8060903@metafoo.de>
+	<CA+mB=1L6yvCwA3mKCwz83LQbXiVau110REV64rYrSzUhGE4ucA@mail.gmail.com>
+	<52E2698B.6070001@metafoo.de>
+	<20140126135933.GD10628@intel.com>
+	<52E54849.2000208@metafoo.de>
+	<CA+mB=1JvnTcyRnuvdnW1BCeiMLSTMrrAbKwVKgwFUmWrVuXzSw@mail.gmail.com>
+	<20140128031324.GH10628@intel.com>
+	<CA+mB=1K8Cqe_c6_ce-fLyphvqcr90mhCjFdZ_d4BV-VkUk-gXw@mail.gmail.com>
+	<CA+mB=1L9XFC8h_qW_-K-cv5sYondL_0NiLr=9XCFxwWRjDHn1Q@mail.gmail.com>
+	<52F26716.3010203@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <52F38CA1.8020806@roeck-us.net>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Cc: Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52F26716.3010203-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBGZWIgMDYsIDIwMTQgYXQgMTM6MjM6NDdQTSArMDAwMCwgR3VlbnRlciBSb2VjayB3
-cm90ZToNCg0KPiA+IFdoYXQgSSBjb3VsZCd2ZSBkb25lIGlzIHVzZSBwbGF0Zm9ybV9nZXRfaXJx
-X2J5bmFtZSgpIGFuZCBhdm9pZGVkIHVzaW5nDQo+ID4gcmVnbWFwX2lycV9nZXRfdmlycSgpIGFz
-IEkgd291bGQgYWxyZWFkeSBoYXZlIHRoZSBjb3JyZWN0IFZJUlEgdG8gcGFzcyB0bw0KPiA+IHJl
-cXVlc3RfdGhyZWFkZWRfaXJxKCksIGJ1dCBJIGZpZ3VyZWQgdGhhdCB1c2luZyByZWdtYXBfaXJx
-X2dldF92aXJxKCkgbWFkZQ0KPiA+IG1vcmUgc2Vuc2UgYXQgdGhlIHRpbWUsIGFuZCB3YXMgdW5h
-YmxlIHRvIHVzZSBib3RoLg0KPiA+DQo+IA0KPiBJIG1heSBiZSBtaXNzaW5nIHNvbWV0aGluZywg
-YnV0IEkgdGhpbmsgdGhlIHByb2JsZW0gbWF5IGJlIHRoYXQgeW91IGFyZQ0KPiBkb2luZyB0d28g
-bWFwcGluZ3MgaW5zdGVhZCBvZiBqdXN0IG9uZS4gSSBkb24ndCB0aGluayB5b3UgbmVlZCB0byBj
-YWxsDQo+IHJlZ21hcF9pcnFfZ2V0X3ZpcnEoKSBhdCBhbGwuDQoNClllcywgeW91J3JlIGNvcnJl
-Y3QuIFRoZSBpc3N1ZSB3YXMgYWxyZWFkeSB0aGVyZSBpbiB0aGUgY29kZSBhbmQgSSB3YXMNCmF0
-dGVtcHRpbmcgdG8gZml4IGl0LiBXaGVuIEkgbWFkZSB0aGUgY2hhbmdlIEkgZmlndXJlZCB1c2lu
-ZyBvbmx5DQpyZWdtYXBfaXJxX2dldF92aXJxKCkgd2FzIHRoZSB3YXkgdG8gZ28sIGJ1dCBzZWVt
-cyBsaWtlIEkgY2hvc2UgdGhlIHdyb25nDQpvcHRpb24uIFdpbGwgbWFrZSB0aGUgY2hhbmdlcyAo
-cmVtb3ZlIHJlZ21hcF9pcnFfZ2V0X3ZpcnEoKSksIHRlc3Qgb24gYm90aCBEVA0KYW5kIG5vbi1E
-VCBwbGF0Zm9ybXMsIGFuZCB0aGVuIHdpbGwgcmUtc3VibWl0IHRoZSBwYXRjaGVzLg0K
+On Wed, Feb 5, 2014 at 10:00 PM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
+> On 02/05/2014 05:25 PM, Srikanth Thokala wrote:
+>>
+>> On Fri, Jan 31, 2014 at 12:21 PM, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>> wrote:
+>>>
+>>> Hi Vinod,
+>>>
+>>> On Tue, Jan 28, 2014 at 8:43 AM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+>>>>
+>>>> On Mon, Jan 27, 2014 at 06:42:36PM +0530, Srikanth Thokala wrote:
+>>>>>
+>>>>> Hi Lars/Vinod,
+>>>>>>>
+>>>>>>> The question here i think would be waht this device supports? Is the
+>>>>>>> hardware
+>>>>>>> capable of doing interleaved transfers, then would make sense.
+>>>>>>
+>>>>>>
+>>>>>> The hardware does 2D transfers. The parameters for a transfer are
+>>>>>> height,
+>>>>>> width and stride. That's only a subset of what interleaved transfers
+>>>>>> can be
+>>>>>> (xt->num_frames must be one for 2d transfers). But if I remember
+>>>>>> correctly
+>>>>>> there has been some discussion on this in the past and the result of
+>>>>>> that
+>>>>>> discussion was that using interleaved transfers for 2D transfers is
+>>>>>> preferred over adding a custom API for 2D transfers.
+>>>>>
+>>>>>
+>>>>> I went through the prep_interleaved_dma API and I see only one
+>>>>> descriptor
+>>>>> is prepared per API call (i.e. per frame).  As our IP supports upto 16
+>>>>> frame
+>>>>> buffers (can be more in future), isn't it less efficient compared to
+>>>>> the
+>>>>> prep_slave_sg where we get a single sg list and can prepare all the
+>>>>> descriptors
+>>>>> (of non-contiguous buffers) in one go?  Correct me, if am wrong and let
+>>>>> me
+>>>>> know your opinions.
+>>>>
+>>>> Well the descriptor maybe one, but that can represent multiple frames,
+>>>> for
+>>>> example 16 as in your case. Can you read up the documentation of how
+>>>> multiple
+>>>> frames are passed. Pls see include/linux/dmaengine.h
+>>>>
+>>>> /**
+>>>>   * Interleaved Transfer Request
+>>>>   * ----------------------------
+>>>>   * A chunk is collection of contiguous bytes to be transfered.
+>>>>   * The gap(in bytes) between two chunks is called inter-chunk-gap(ICG).
+>>>>   * ICGs may or maynot change between chunks.
+>>>>   * A FRAME is the smallest series of contiguous {chunk,icg} pairs,
+>>>>   *  that when repeated an integral number of times, specifies the
+>>>> transfer.
+>>>>   * A transfer template is specification of a Frame, the number of times
+>>>>   *  it is to be repeated and other per-transfer attributes.
+>>>>   *
+>>>>   * Practically, a client driver would have ready a template for each
+>>>>   *  type of transfer it is going to need during its lifetime and
+>>>>   *  set only 'src_start' and 'dst_start' before submitting the
+>>>> requests.
+>>>>   *
+>>>>   *
+>>>>   *  |      Frame-1        |       Frame-2       | ~ |
+>>>> Frame-'numf'  |
+>>>>   *  |====....==.===...=...|====....==.===...=...| ~
+>>>> |====....==.===...=...|
+>>>>   *
+>>>>   *    ==  Chunk size
+>>>>   *    ... ICG
+>>>>   */
+>>>
+>>>
+>>> Yes, it can handle multiple frames specified by 'numf' each of size
+>>> 'frame_size * sgl[0].size'.
+>>> But, I see it only works if all the frames' memory is contiguous and
+>>> in this case we
+>>> can just increment 'src_start' by the total frame size 'numf' number
+>>> of times to fill in
+>>> for each HW descriptor (each frame is one HW descriptor).  So, there
+>>> is no issue when the
+>>> memory is contiguous.  If the frames are non contiguous, we have to
+>>> call this API for each
+>>> frame (hence for each descriptor), as the src_start for each frame is
+>>> different.  Is it correct?
+>>>
+>>> FYI: This hardware has an inbuilt Scatter-Gather engine.
+>>>
+>>
+>> Ping?
+>
+>
+> If you want to submit multiple frames at once I think you should look at how
+> the current dmaengine API can be extended to allow that. And also provide an
+> explanation on how this is superior over submitting them one by one.
+
+
+Sure.  I would start with explaning the current implementation of this driver.
+
+Using prep_slave_sg(), we can define multiple segments in a
+async_tx_descriptor where each frame is defined by a segment (a sg
+list entry).  So, the slave device could DMA the data (of multiple
+frames) with a descriptor by calling tx_submit in a transaction i.e.,
+
+prep_slave_sg(16)  -> tx_submit(1) -> interrupt  (16 frames)
+
+Using interleaved_dma(), we could not divide into segments when we
+have scattered memory (for the reasons mentioned in above thread).
+This implies we are restricting the slave device to process frame by
+frame i.e.,
+
+interleaved_dma(1) -> tx_submit(1) -> interrupt -> interleaved_dma(2)
+-> tx_submit (2) -> interrupt -> ........ tx_submit(16) -> interrupt
+
+This implementation makes the hardware to wait until the next frame is
+submitted.
+
+To overcome this, I feel it would be a good option if we could extend
+interleaved_dma template to modify src_start/dest_start to be a
+pointer to an array of addresses.  Here, number of addresses will be
+defined by numf. The other option would be to include scatterlist in
+the interleaved template. This way we can handle scattered memory
+using this API.
+
+Srikanth
+
+>
+> - Lars
+>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
