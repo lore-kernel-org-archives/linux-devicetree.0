@@ -1,53 +1,44 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC] dt-bindings: configuration of parent clocks and clock frequency
-Date: Thu, 06 Feb 2014 08:43:05 -0800
-Message-ID: <20140206164305.22158.43488@quantum>
-References: <52DE6CAB.10008@samsung.com> <20140201030614.9977.80501@quantum>
- <52F0DA07.6050903@samsung.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v3 3/6] misc: fuse: Add efuse driver for Tegra
+Date: Thu, 06 Feb 2014 09:45:53 -0700
+Message-ID: <52F3BC41.1030901@wwwdotorg.org>
+References: <1390952176-30402-1-git-send-email-pdeschrijver@nvidia.com> <1390952176-30402-4-git-send-email-pdeschrijver@nvidia.com> <52F28DE2.1040207@wwwdotorg.org> <20140206091114.GK19389@tbergstrom-lnx.Nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52F0DA07.6050903-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20140206091114.GK19389-Rysk9IDjsxmJz7etNGeUX8VPkgjIgRvpAL8bYrjMMd8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Danny Huang <dahuang-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Marek Szyprowski (2014-02-04 04:16:07)
-> Hello,
-> 
-> On 2014-02-01 04:06, Mike Turquette wrote:
-> > Quoting Sylwester Nawrocki (2014-01-21 04:48:43)
-> > > 5. Similarly to the regulator bindings the clock names could be appended
-> > >   to name of a DT property:
-> > >
-> > >  [clk_name]-assigned-clock-parent = <...>;
-> > >  [clk_name]-assigned-clock-rate = <...>;
-> >
-> > I have always been partial to the way that the reg framework does its
-> > [reg_name]-supply. We could shorten it to something like:
-> >
-> > [clk-name]-asn-parent = ....
-> > [clk-name]-asn-rate = ...
-> >
-> > This is actually the format that was discussed at the ARM kernel summit
-> > IIRC.
-> 
-> I think that "[clk-name]-clk-parent" and "[clk-name]-clk-rate" will be a bit
-> more descriptive names instead of quite ambiguous "asn".
+On 02/06/2014 02:11 AM, Peter De Schrijver wrote:
+> On Wed, Feb 05, 2014 at 08:15:46PM +0100, Stephen Warren wrote:
+>> On 01/28/2014 04:36 PM, Peter De Schrijver wrote:
+>>> Implement fuse driver for Tegra20, Tegra30, Tegra114 and Tegra124.
 
-+1
-
-Regards,
-Mike
-
+>>> diff --git a/Documentation/ABI/testing/sysfs-driver-tegra-fuse b/Documentation/ABI/testing/sysfs-driver-tegra-fuse
+>>> +What:		/sys/devices/*/<our-device>/fuse
+>>> +Date:		December 2013
+>>> +Contact:	Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>> +Description:	read-only access to the efuses on Tegra20, Tegra30, Tegra114
+>>> +		and Tegra124 SoC's from NVIDIA. The efuses contain write once
+>>> +		data programmed at the factory.
+>>> +Users:		any user space application which wants to read the efuses on
+>>> +		Tegra SoC's
+>>
+>> Surely this file should describe the format of the file, since that's
+>> part of the ABI too, right?
+>>
 > 
-> Best regards
-> -- 
-> Marek Szyprowski, PhD
-> Samsung R&D Institute Poland
-> 
+> Part of the fuse data is ODM defined so possibly board specific.
+
+I didn't mean the interpretation of which fuses mean what semantically,
+but rather the data format of the file. IIRC looking at the code, it's
+just a binary dump of the fuses, but it might be worth spelling out that
+it's a byte-oriented binary file, with fuse 0 in bit 0 of byte 0 etc.?
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
