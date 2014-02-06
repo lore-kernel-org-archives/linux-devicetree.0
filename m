@@ -1,7 +1,7 @@
 From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v6 15/19] ARM: kirkwood: Add RSTOUT 'reg' entry to devicetree
-Date: Thu,  6 Feb 2014 14:20:22 -0300
-Message-ID: <1391707226-18258-16-git-send-email-ezequiel.garcia@free-electrons.com>
+Subject: [PATCH v6 16/19] ARM: dove: Enable Dove watchdog in the devicetree
+Date: Thu,  6 Feb 2014 14:20:23 -0300
+Message-ID: <1391707226-18258-17-git-send-email-ezequiel.garcia@free-electrons.com>
 References: <1391707226-18258-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1391707226-18258-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,29 +10,33 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreC
 Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-In order to support multiplatform builds the watchdog devicetree binding
-was modified and now the 'reg' property is specified to need two
-entries. This commit adds the second entry as-per the new specification.
+Add the devicetree node to enable watchdog support available in Dove SoCs.
 
-Tested-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Tested-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/kirkwood.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/dove.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
-index 6abf44d..85542c2 100644
---- a/arch/arm/boot/dts/kirkwood.dtsi
-+++ b/arch/arm/boot/dts/kirkwood.dtsi
-@@ -178,7 +178,7 @@
+diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
+index 2b76524..a88ed73 100644
+--- a/arch/arm/boot/dts/dove.dtsi
++++ b/arch/arm/boot/dts/dove.dtsi
+@@ -210,6 +210,14 @@
+ 				clocks = <&core_clk 0>;
+ 			};
  
- 		wdt: watchdog-timer@20300 {
- 			compatible = "marvell,orion-wdt";
--			reg = <0x20300 0x28>;
-+			reg = <0x20300 0x28>, <0x20108 0x4>;
- 			interrupt-parent = <&bridge_intc>;
- 			interrupts = <3>;
- 			clocks = <&gate_clk 7>;
++			watchdog@20300 {
++				compatible = "marvell,orion-wdt";
++				reg = <0x20300 0x28>, <0x20108 0x4>;
++				interrupt-parent = <&bridge_intc>;
++				interrupts = <3>;
++				clocks = <&core_clk 0>;
++			};
++
+ 			crypto: crypto-engine@30000 {
+ 				compatible = "marvell,orion-crypto";
+ 				reg = <0x30000 0x10000>,
 -- 
 1.8.1.5
 
