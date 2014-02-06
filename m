@@ -1,183 +1,162 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v2] dma: Add Xilinx AXI Video Direct Memory Access Engine
- driver support
-Date: Thu, 06 Feb 2014 16:53:59 +0100
-Message-ID: <52F3B017.5030100@metafoo.de>
-References: <1390409565-4200-1-git-send-email-sthokal@xilinx.com> <1390409565-4200-2-git-send-email-sthokal@xilinx.com> <52E0FC22.8060903@metafoo.de> <CA+mB=1L6yvCwA3mKCwz83LQbXiVau110REV64rYrSzUhGE4ucA@mail.gmail.com> <52E2698B.6070001@metafoo.de> <20140126135933.GD10628@intel.com> <52E54849.2000208@metafoo.de> <CA+mB=1JvnTcyRnuvdnW1BCeiMLSTMrrAbKwVKgwFUmWrVuXzSw@mail.gmail.com> <20140128031324.GH10628@intel.com> <CA+mB=1K8Cqe_c6_ce-fLyphvqcr90mhCjFdZ_d4BV-VkUk-gXw@mail.gmail.com> <CA+mB=1L9XFC8h_qW_-K-cv5sYondL_0NiLr=9XCFxwWRjDHn1Q@mail.gmail.com> <52F26716.3010203@metafoo.de> <CA+mB=1JX5K9Cu=9WGyr_e9tUtVz6ypT9UxhJU9BNJbQA9eaRKA@mail.gmail.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 4/4] ARM: Kirkwood: Add support for many Synology NAS
+ devices
+Date: Thu, 6 Feb 2014 17:01:26 +0100
+Message-ID: <20140206160126.GH29860@lunn.ch>
+References: <1391634309-3123-1-git-send-email-andrew@lunn.ch>
+ <1391634309-3123-5-git-send-email-andrew@lunn.ch>
+ <20140206153939.GD8533@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+mB=1JX5K9Cu=9WGyr_e9tUtVz6ypT9UxhJU9BNJbQA9eaRKA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20140206153939.GD8533@titan.lakedaemon.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Ben Peddell <klightspeed@killerwolves.net>, pawel.moll@arm.com, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc@hellion.org.uk>, linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/06/2014 02:34 PM, Srikanth Thokala wrote:
-> On Wed, Feb 5, 2014 at 10:00 PM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
->> On 02/05/2014 05:25 PM, Srikanth Thokala wrote:
->>>
->>> On Fri, Jan 31, 2014 at 12:21 PM, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->>> wrote:
->>>>
->>>> Hi Vinod,
->>>>
->>>> On Tue, Jan 28, 2014 at 8:43 AM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
->>>>>
->>>>> On Mon, Jan 27, 2014 at 06:42:36PM +0530, Srikanth Thokala wrote:
->>>>>>
->>>>>> Hi Lars/Vinod,
->>>>>>>>
->>>>>>>> The question here i think would be waht this device supports? Is the
->>>>>>>> hardware
->>>>>>>> capable of doing interleaved transfers, then would make sense.
->>>>>>>
->>>>>>>
->>>>>>> The hardware does 2D transfers. The parameters for a transfer are
->>>>>>> height,
->>>>>>> width and stride. That's only a subset of what interleaved transfers
->>>>>>> can be
->>>>>>> (xt->num_frames must be one for 2d transfers). But if I remember
->>>>>>> correctly
->>>>>>> there has been some discussion on this in the past and the result of
->>>>>>> that
->>>>>>> discussion was that using interleaved transfers for 2D transfers is
->>>>>>> preferred over adding a custom API for 2D transfers.
->>>>>>
->>>>>>
->>>>>> I went through the prep_interleaved_dma API and I see only one
->>>>>> descriptor
->>>>>> is prepared per API call (i.e. per frame).  As our IP supports upto 16
->>>>>> frame
->>>>>> buffers (can be more in future), isn't it less efficient compared to
->>>>>> the
->>>>>> prep_slave_sg where we get a single sg list and can prepare all the
->>>>>> descriptors
->>>>>> (of non-contiguous buffers) in one go?  Correct me, if am wrong and let
->>>>>> me
->>>>>> know your opinions.
->>>>>
->>>>> Well the descriptor maybe one, but that can represent multiple frames,
->>>>> for
->>>>> example 16 as in your case. Can you read up the documentation of how
->>>>> multiple
->>>>> frames are passed. Pls see include/linux/dmaengine.h
->>>>>
->>>>> /**
->>>>>    * Interleaved Transfer Request
->>>>>    * ----------------------------
->>>>>    * A chunk is collection of contiguous bytes to be transfered.
->>>>>    * The gap(in bytes) between two chunks is called inter-chunk-gap(ICG).
->>>>>    * ICGs may or maynot change between chunks.
->>>>>    * A FRAME is the smallest series of contiguous {chunk,icg} pairs,
->>>>>    *  that when repeated an integral number of times, specifies the
->>>>> transfer.
->>>>>    * A transfer template is specification of a Frame, the number of times
->>>>>    *  it is to be repeated and other per-transfer attributes.
->>>>>    *
->>>>>    * Practically, a client driver would have ready a template for each
->>>>>    *  type of transfer it is going to need during its lifetime and
->>>>>    *  set only 'src_start' and 'dst_start' before submitting the
->>>>> requests.
->>>>>    *
->>>>>    *
->>>>>    *  |      Frame-1        |       Frame-2       | ~ |
->>>>> Frame-'numf'  |
->>>>>    *  |====....==.===...=...|====....==.===...=...| ~
->>>>> |====....==.===...=...|
->>>>>    *
->>>>>    *    ==  Chunk size
->>>>>    *    ... ICG
->>>>>    */
->>>>
->>>>
->>>> Yes, it can handle multiple frames specified by 'numf' each of size
->>>> 'frame_size * sgl[0].size'.
->>>> But, I see it only works if all the frames' memory is contiguous and
->>>> in this case we
->>>> can just increment 'src_start' by the total frame size 'numf' number
->>>> of times to fill in
->>>> for each HW descriptor (each frame is one HW descriptor).  So, there
->>>> is no issue when the
->>>> memory is contiguous.  If the frames are non contiguous, we have to
->>>> call this API for each
->>>> frame (hence for each descriptor), as the src_start for each frame is
->>>> different.  Is it correct?
->>>>
->>>> FYI: This hardware has an inbuilt Scatter-Gather engine.
->>>>
->>>
->>> Ping?
->>
->>
->> If you want to submit multiple frames at once I think you should look at how
->> the current dmaengine API can be extended to allow that. And also provide an
->> explanation on how this is superior over submitting them one by one.
->
->
-> Sure.  I would start with explaning the current implementation of this driver.
->
-> Using prep_slave_sg(), we can define multiple segments in a
-> async_tx_descriptor where each frame is defined by a segment (a sg
-> list entry).  So, the slave device could DMA the data (of multiple
-> frames) with a descriptor by calling tx_submit in a transaction i.e.,
->
-> prep_slave_sg(16)  -> tx_submit(1) -> interrupt  (16 frames)
->
-> Using interleaved_dma(), we could not divide into segments when we
-> have scattered memory (for the reasons mentioned in above thread).
-> This implies we are restricting the slave device to process frame by
-> frame i.e.,
->
-> interleaved_dma(1) -> tx_submit(1) -> interrupt -> interleaved_dma(2)
-> -> tx_submit (2) -> interrupt -> ........ tx_submit(16) -> interrupt
->
+On Thu, Feb 06, 2014 at 10:39:39AM -0500, Jason Cooper wrote:
+> 
+> + devicetree ML, DT maintainers
+> 
+> On Wed, Feb 05, 2014 at 10:05:09PM +0100, Andrew Lunn wrote:
+> > Add device tree fragments and files to support many of the kirkwood
+> > based Synology NAS devices. This is a translation of the board setup
+> > file maintained by Ben Peddell <klightspeed@killerwolves.net>
+> > 
+> > Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+> > Tested by Ben Peddell <klightspeed@killerwolves.net>
+> > cc: Ben Peddell <klightspeed@killerwolves.net>
+> > ---
+> > 
+> > v2:
+> > Fix gpio's which should be gpo.
+> > Rebase onto v3-14-rc1
+> > Update RTC nodes with vendor name.
+> > Update SPI flash node with vendor name.
+> > ---
+> >  arch/arm/boot/dts/Makefile                     |   15 ++++
+> >  arch/arm/boot/dts/kirkwood-ds109.dts           |   33 +++++++
+> >  arch/arm/boot/dts/kirkwood-ds110jv10.dts       |   33 +++++++
+> >  arch/arm/boot/dts/kirkwood-ds111.dts           |   33 +++++++
+> >  arch/arm/boot/dts/kirkwood-ds112.dts           |   34 +++++++
+> >  arch/arm/boot/dts/kirkwood-ds209.dts           |   33 +++++++
+> >  arch/arm/boot/dts/kirkwood-ds210.dts           |   35 ++++++++
+> >  arch/arm/boot/dts/kirkwood-ds212.dts           |   37 ++++++++
+> >  arch/arm/boot/dts/kirkwood-ds212j.dts          |   34 +++++++
+> >  arch/arm/boot/dts/kirkwood-ds409.dts           |   34 +++++++
+> >  arch/arm/boot/dts/kirkwood-ds409slim.dts       |   32 +++++++
+> >  arch/arm/boot/dts/kirkwood-ds411.dts           |   35 ++++++++
+> >  arch/arm/boot/dts/kirkwood-ds411j.dts          |   34 +++++++
+> >  arch/arm/boot/dts/kirkwood-ds411slim.dts       |   34 +++++++
+> >  arch/arm/boot/dts/kirkwood-rs212.dts           |   34 +++++++
+> >  arch/arm/boot/dts/kirkwood-rs409.dts           |   33 +++++++
+> >  arch/arm/boot/dts/kirkwood-rs411.dts           |   34 +++++++
+> >  arch/arm/boot/dts/synology/alarm-led-12.dtsi   |   28 ++++++
+> >  arch/arm/boot/dts/synology/common.dtsi         |  112 ++++++++++++++++++++++++
+> >  arch/arm/boot/dts/synology/ethernet-1.dtsi     |   15 ++++
+> >  arch/arm/boot/dts/synology/fan-alarm-18.dtsi   |   22 +++++
+> >  arch/arm/boot/dts/synology/fan-alarm-35-1.dtsi |   22 +++++
+> >  arch/arm/boot/dts/synology/fan-alarm-35-3.dtsi |   32 +++++++
+> >  arch/arm/boot/dts/synology/fan-gpios-15.dtsi   |   34 +++++++
+> >  arch/arm/boot/dts/synology/fan-gpios-32.dtsi   |   34 +++++++
+> >  arch/arm/boot/dts/synology/fan-speed-100.dtsi  |   20 +++++
+> >  arch/arm/boot/dts/synology/fan-speed-120.dtsi  |   20 +++++
+> >  arch/arm/boot/dts/synology/fan-speed-150.dtsi  |   20 +++++
+> >  arch/arm/boot/dts/synology/hdd-leds-20.dtsi    |   90 +++++++++++++++++++
+> >  arch/arm/boot/dts/synology/hdd-leds-21-1.dtsi  |   36 ++++++++
+> >  arch/arm/boot/dts/synology/hdd-leds-21-2.dtsi  |   52 +++++++++++
+> >  arch/arm/boot/dts/synology/hdd-leds-36.dtsi    |  103 ++++++++++++++++++++++
+> >  arch/arm/boot/dts/synology/hdd-leds-38.dtsi    |   52 +++++++++++
+> >  arch/arm/boot/dts/synology/hdd-power-29.dtsi   |   56 ++++++++++++
+> >  arch/arm/boot/dts/synology/hdd-power-30-1.dtsi |   40 +++++++++
+> >  arch/arm/boot/dts/synology/hdd-power-30-2.dtsi |   56 ++++++++++++
+> >  arch/arm/boot/dts/synology/hdd-power-30-4.dtsi |   89 +++++++++++++++++++
+> >  arch/arm/boot/dts/synology/hdd-power-31.dtsi   |   40 +++++++++
+> >  arch/arm/boot/dts/synology/hdd-power-34.dtsi   |   73 +++++++++++++++
+> >  arch/arm/boot/dts/synology/i2c-rtc-ricoh.dtsi  |   18 ++++
+> >  arch/arm/boot/dts/synology/i2c-rtc-seiko.dtsi  |   18 ++++
+> >  arch/arm/boot/dts/synology/pcie-2.dtsi         |   19 ++++
+> >  42 files changed, 1658 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/kirkwood-ds109.dts
+> >  create mode 100644 arch/arm/boot/dts/kirkwood-ds110jv10.dts
+> >  create mode 100644 arch/arm/boot/dts/kirkwood-ds111.dts
+> >  create mode 100644 arch/arm/boot/dts/kirkwood-ds112.dts
+> >  create mode 100644 arch/arm/boot/dts/kirkwood-ds209.dts
+> >  create mode 100644 arch/arm/boot/dts/kirkwood-ds210.dts
+> >  create mode 100644 arch/arm/boot/dts/kirkwood-ds212.dts
+> >  create mode 100644 arch/arm/boot/dts/kirkwood-ds212j.dts
+> >  create mode 100644 arch/arm/boot/dts/kirkwood-ds409.dts
+> >  create mode 100644 arch/arm/boot/dts/kirkwood-ds409slim.dts
+> >  create mode 100644 arch/arm/boot/dts/kirkwood-ds411.dts
+> >  create mode 100644 arch/arm/boot/dts/kirkwood-ds411j.dts
+> >  create mode 100644 arch/arm/boot/dts/kirkwood-ds411slim.dts
+> >  create mode 100644 arch/arm/boot/dts/kirkwood-rs212.dts
+> >  create mode 100644 arch/arm/boot/dts/kirkwood-rs409.dts
+> >  create mode 100644 arch/arm/boot/dts/kirkwood-rs411.dts
+> >  create mode 100644 arch/arm/boot/dts/synology/alarm-led-12.dtsi
+> >  create mode 100644 arch/arm/boot/dts/synology/common.dtsi
+> >  create mode 100644 arch/arm/boot/dts/synology/ethernet-1.dtsi
+> >  create mode 100644 arch/arm/boot/dts/synology/fan-alarm-18.dtsi
+> >  create mode 100644 arch/arm/boot/dts/synology/fan-alarm-35-1.dtsi
+> >  create mode 100644 arch/arm/boot/dts/synology/fan-alarm-35-3.dtsi
+> >  create mode 100644 arch/arm/boot/dts/synology/fan-gpios-15.dtsi
+> >  create mode 100644 arch/arm/boot/dts/synology/fan-gpios-32.dtsi
+> >  create mode 100644 arch/arm/boot/dts/synology/fan-speed-100.dtsi
+> >  create mode 100644 arch/arm/boot/dts/synology/fan-speed-120.dtsi
+> >  create mode 100644 arch/arm/boot/dts/synology/fan-speed-150.dtsi
+> >  create mode 100644 arch/arm/boot/dts/synology/hdd-leds-20.dtsi
+> >  create mode 100644 arch/arm/boot/dts/synology/hdd-leds-21-1.dtsi
+> >  create mode 100644 arch/arm/boot/dts/synology/hdd-leds-21-2.dtsi
+> >  create mode 100644 arch/arm/boot/dts/synology/hdd-leds-36.dtsi
+> >  create mode 100644 arch/arm/boot/dts/synology/hdd-leds-38.dtsi
+> >  create mode 100644 arch/arm/boot/dts/synology/hdd-power-29.dtsi
+> >  create mode 100644 arch/arm/boot/dts/synology/hdd-power-30-1.dtsi
+> >  create mode 100644 arch/arm/boot/dts/synology/hdd-power-30-2.dtsi
+> >  create mode 100644 arch/arm/boot/dts/synology/hdd-power-30-4.dtsi
+> >  create mode 100644 arch/arm/boot/dts/synology/hdd-power-31.dtsi
+> >  create mode 100644 arch/arm/boot/dts/synology/hdd-power-34.dtsi
+> >  create mode 100644 arch/arm/boot/dts/synology/i2c-rtc-ricoh.dtsi
+> >  create mode 100644 arch/arm/boot/dts/synology/i2c-rtc-seiko.dtsi
+> >  create mode 100644 arch/arm/boot/dts/synology/pcie-2.dtsi
+> 
+> Holy sh*t!  I know we're adding 15 boards
 
-The API allows you to create and submit multiple interleaved descriptors 
-before you have to issue them.
+More than 15 actually. Most .dts files support multiple devices. So
+there should be about 30 devices supported by these .dts files.
 
-interleaved_dma(1) -> tx_submit(1) -> interleaved_dma(2) -> tx_submit(2) -> 
-... -> issue_pending() -> interrupt
+, but this is, imho,
+> over-fragmenting.  I'm sure there's a reason you chose this path, but
+> you haven't explained why in your commit log. So I'm left guessing...
 
-> This implementation makes the hardware to wait until the next frame is
-> submitted.
->
-> To overcome this, I feel it would be a good option if we could extend
-> interleaved_dma template to modify src_start/dest_start to be a
-> pointer to an array of addresses.  Here, number of addresses will be
-> defined by numf. The other option would be to include scatterlist in
-> the interleaved template. This way we can handle scattered memory
-> using this API.
+Synology seem to build there devices like lego. They have two
+different RTC blocks. They have three different fan alarm blocks, four
+different led blocks, etc. And to build a product, the just select a
+group of blocks and put them together.
 
-Each "frame" in a interleaved transfer describes a single line in your video 
-frame (size = width, icg = stride). numf is the number of lines per video 
-frame. So the suggested change does not make that much sense. If you want to 
-submit multiple video frames in one batch the best option is in my opinion 
-to allow to pass an array of dma_interleaved_template structs instead of a 
-single one.
+The board setup code which Ben Peddell wrote has a somewhat similar
+structure:
 
-- Lars
+http://klightspeed.killerwolves.net/synology/linux-3.4-synology-0.1.patch
 
->
-> Srikanth
->
->>
->> - Lars
->>
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->> Please read the FAQ at  http://www.tux.org/lkml/
-> --
-> To unsubscribe from this list: send the line "unsubscribe dmaengine" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
+It has a set of functions which add platform devices. And a table
+driven piece of code which based on the product name calls these
+functions to add the needed platform devices. Take a look at the table
+to get a better idea of the re-use factor of the blocks.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In this DT version, i have a dtsi file for each function, and a dti
+file for each table entry.
+
+I will add to the changelog in the next version.
+
+  Andrew
