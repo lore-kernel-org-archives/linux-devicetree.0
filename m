@@ -1,53 +1,82 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5 1/3] clocksource: timer-keystone: introduce clocksource
- driver for Keystone
-Date: Thu, 6 Feb 2014 15:21:36 +0100 (CET)
-Message-ID: <alpine.DEB.2.02.1402061521190.21991@ionos.tec.linutronix.de>
-References: <1391608060-10760-1-git-send-email-ivan.khoronzhuk@ti.com> <1391608060-10760-2-git-send-email-ivan.khoronzhuk@ti.com> <alpine.DEB.2.02.1402052123560.24986@ionos.tec.linutronix.de> <52F3975B.2080806@ti.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2 06/15] dt: binding: add binding for ImgTec IR block
+Date: Thu, 6 Feb 2014 08:33:17 -0600
+Message-ID: <CAL_Jsq+wk6_9Da5Xj3Ys-MZYPTpu6V3pAEpGFv44148BodmmrQ@mail.gmail.com>
+References: <1389967140-20704-1-git-send-email-james.hogan@imgtec.com>
+	<1389967140-20704-7-git-send-email-james.hogan@imgtec.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <52F3975B.2080806@ti.com>
+In-Reply-To: <1389967140-20704-7-git-send-email-james.hogan@imgtec.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Cc: santosh.shilimkar@ti.com, rob@landley.net, linux@arm.linux.org.uk, galak@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, daniel.lezcano@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, grygorii.strashko@ti.com
+To: James Hogan <james.hogan@imgtec.com>
+Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 6 Feb 2014, Ivan Khoronzhuk wrote:
-> On 02/05/2014 10:27 PM, Thomas Gleixner wrote:
-> > On Wed, 5 Feb 2014, Ivan Khoronzhuk wrote:
-> > > +	/* here we have to be sure the timer has been disabled */
-> > Sigh. This is not a proper explanation for a barrier, really. You want
-> > to explain what it serializes against what. i.e. you want to explain
-> > why you are using the relaxed functions and avoid a separate non
-> > relaxed variant in favour of an explicit barrier.
-> > 
-> > > +	__iowmb();
-> > The proper thing is to have an inline function key_stone_barrier() and
-> > a full explanation of the issue in exactly that place instead of
-> > handwaving comments here and there.
-> > 
-> > Thanks,
-> > 
-> > 	tglx
-> 
-> I can add new inline function like:
-> 
-> /**
->  * keystone_timer_barrier: write memory barrier
->  * use explicit barrier to avoid using readl/writel non relaxed function
->  * variants, because in our case relaxed variants hide the true places
->  * where barrier is needed.
->  */
-> static inline void keystone_timer_barrier(void)
-> {
->     __iowmb();
-> }
-> 
-> and use it where it is needed.
-> Are you OK with it?
-> 
-> And I propose to leave comments under the barriers in order to be
-> able to understand why they are used.
+On Fri, Jan 17, 2014 at 7:58 AM, James Hogan <james.hogan@imgtec.com> wrote:
+> Add device tree binding for ImgTec Consumer Infrared block, specifically
+> major revision 1 of the hardware.
+>
+> Signed-off-by: James Hogan <james.hogan@imgtec.com>
+> Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>
+> Cc: linux-media@vger.kernel.org
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: Rob Landley <rob@landley.net>
+> Cc: linux-doc@vger.kernel.org
+> Cc: Tomasz Figa <tomasz.figa@gmail.com>
+> ---
+> v2:
+> - Future proof compatible string from "img,ir" to "img,ir1", where the 1
+>   corresponds to the major revision number of the hardware (Tomasz
+>   Figa).
+> - Added clock-names property and three specific clock names described in
+>   the manual, only one of which is used by the current driver (Tomasz
+>   Figa).
+> ---
+>  .../devicetree/bindings/media/img-ir1.txt          | 30 ++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/img-ir1.txt
+>
+> diff --git a/Documentation/devicetree/bindings/media/img-ir1.txt b/Documentation/devicetree/bindings/media/img-ir1.txt
+> new file mode 100644
+> index 0000000..ace5fd9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/img-ir1.txt
+> @@ -0,0 +1,30 @@
+> +* ImgTec Infrared (IR) decoder version 1
+> +
+> +This binding is for Imagination Technologies' Infrared decoder block,
+> +specifically major revision 1.
+> +
+> +Required properties:
+> +- compatible:          Should be "img,ir1"
 
-Sounds good.
+Kind of short for a name. I don't have anything much better, but how
+about img,ir-rev1.
+
+> +- reg:                 Physical base address of the controller and length of
+> +                       memory mapped region.
+> +- interrupts:          The interrupt specifier to the cpu.
+> +
+> +Optional properties:
+> +- clocks:              List of clock specifiers as described in standard
+> +                       clock bindings.
+> +- clock-names:         List of clock names corresponding to the clocks
+> +                       specified in the clocks property.
+> +                       Accepted clock names are:
+> +                       "core": Core clock (defaults to 32.768KHz if omitted).
+> +                       "sys":  System side (fast) clock.
+> +                       "mod":  Power modulation clock.
+
+You need to define the order of clocks including how they are
+interpreted with different number of clocks (not relying on the name).
+Although, if the h/w block really has different number of clock
+inputs, then it is a different h/w block and should have a different
+compatible string.
+
+Rob
