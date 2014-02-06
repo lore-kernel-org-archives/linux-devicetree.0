@@ -1,7 +1,7 @@
 From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v6 12/19] watchdog: orion: Add per-compatible watchdog start implementation
-Date: Thu,  6 Feb 2014 14:20:19 -0300
-Message-ID: <1391707226-18258-13-git-send-email-ezequiel.garcia@free-electrons.com>
+Subject: [PATCH v6 14/19] ARM: mvebu: Enable Armada 370/XP watchdog in the devicetree
+Date: Thu,  6 Feb 2014 14:20:21 -0300
+Message-ID: <1391707226-18258-15-git-send-email-ezequiel.garcia@free-electrons.com>
 References: <1391707226-18258-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1391707226-18258-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,62 +10,65 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreC
 Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-To handle differences between SoCs this commit adds per-compatible
-string start() function for the watchdog kick-off. This is preparation
-work and makes no functionality changes to the current driver.
+Add the DT nodes to enable watchdog support available in Armada 370
+and Armada XP SoCs.
 
-Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Tested-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Tested-by: Willy Tarreau <w@1wt.eu>
 Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/watchdog/orion_wdt.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/armada-370-xp.dtsi | 4 ++++
+ arch/arm/boot/dts/armada-370.dtsi    | 5 +++++
+ arch/arm/boot/dts/armada-xp.dtsi     | 6 ++++++
+ 3 files changed, 15 insertions(+)
 
-diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
-index de7a10b..ce0c365 100644
---- a/drivers/watchdog/orion_wdt.c
-+++ b/drivers/watchdog/orion_wdt.c
-@@ -50,6 +50,7 @@ struct orion_watchdog_data {
- 	int rstout_enable_bit;
- 	int (*clock_init)(struct platform_device *,
- 			  struct orion_watchdog *);
-+	int (*start)(struct watchdog_device *);
- };
+diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
+index 74b5964..7bbc4ac 100644
+--- a/arch/arm/boot/dts/armada-370-xp.dtsi
++++ b/arch/arm/boot/dts/armada-370-xp.dtsi
+@@ -199,6 +199,10 @@
+ 				interrupts = <37>, <38>, <39>, <40>, <5>, <6>;
+ 			};
  
- struct orion_watchdog {
-@@ -86,7 +87,7 @@ static int orion_wdt_ping(struct watchdog_device *wdt_dev)
- 	return 0;
- }
- 
--static int orion_wdt_start(struct watchdog_device *wdt_dev)
-+static int orion_start(struct watchdog_device *wdt_dev)
- {
- 	struct orion_watchdog *dev = watchdog_get_drvdata(wdt_dev);
- 
-@@ -105,6 +106,14 @@ static int orion_wdt_start(struct watchdog_device *wdt_dev)
- 	return 0;
- }
- 
-+static int orion_wdt_start(struct watchdog_device *wdt_dev)
-+{
-+	struct orion_watchdog *dev = watchdog_get_drvdata(wdt_dev);
++			watchdog@20300 {
++				reg = <0x20300 0x34>, <0x20704 0x4>;
++			};
 +
-+	/* There are some per-SoC quirks to handle */
-+	return dev->data->start(wdt_dev);
-+}
-+
- static int orion_wdt_stop(struct watchdog_device *wdt_dev)
- {
- 	struct orion_watchdog *dev = watchdog_get_drvdata(wdt_dev);
-@@ -183,6 +192,7 @@ static const struct orion_watchdog_data orion_data = {
- 	.wdt_enable_bit = BIT(4),
- 	.wdt_counter_offset = 0x24,
- 	.clock_init = orion_wdt_clock_init,
-+	.start = orion_start,
- };
+ 			usb@50000 {
+ 				compatible = "marvell,orion-ehci";
+ 				reg = <0x50000 0x500>;
+diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
+index 0d8530c..b7759b2 100644
+--- a/arch/arm/boot/dts/armada-370.dtsi
++++ b/arch/arm/boot/dts/armada-370.dtsi
+@@ -196,6 +196,11 @@
+ 				clocks = <&coreclk 2>;
+ 			};
  
- static const struct of_device_id orion_wdt_of_match_table[] = {
++			watchdog@20300 {
++				compatible = "marvell,armada-370-wdt";
++				clocks = <&coreclk 2>;
++			};
++
+ 			usb@50000 {
+ 				clocks = <&coreclk 0>;
+ 			};
+diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
+index b8b84a2..abb9f9d 100644
+--- a/arch/arm/boot/dts/armada-xp.dtsi
++++ b/arch/arm/boot/dts/armada-xp.dtsi
+@@ -111,6 +111,12 @@
+ 				clock-names = "nbclk", "fixed";
+ 			};
+ 
++			watchdog@20300 {
++				compatible = "marvell,armada-xp-wdt";
++				clocks = <&coreclk 2>, <&refclk>;
++				clock-names = "nbclk", "fixed";
++			};
++
+ 			armada-370-xp-pmsu@22000 {
+ 				compatible = "marvell,armada-370-xp-pmsu";
+ 				reg = <0x22100 0x400>, <0x20800 0x20>;
 -- 
 1.8.1.5
 
