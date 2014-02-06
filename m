@@ -1,55 +1,79 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 1/2] ARM: shmobile: r8a7791: add Ether DT support
-Date: Fri, 7 Feb 2014 01:12:47 +0300
-Message-ID: <201402070112.48304.sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 2/2] ARM: shmobile: koelsch: add Ether DT support
+Date: Fri, 7 Feb 2014 01:14:26 +0300
+Message-ID: <201402070114.27279.sergei.shtylyov@cogentembedded.com>
+References: <201402070110.18561.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
   charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <201402070110.18561.sergei.shtylyov@cogentembedded.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+To: horms@verge.net.au, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Define the generic R8A7791 part of the Ether device node. 
+Define the Koelsch board dependent part of the Ether device node. 
 
 Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
 ---
- arch/arm/boot/dts/r8a7791.dtsi |   15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/r8a7791-koelsch.dts |   31 ++++++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
 
-Index: renesas/arch/arm/boot/dts/r8a7791.dtsi
+Index: renesas/arch/arm/boot/dts/r8a7791-koelsch.dts
 ===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7791.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7791.dtsi
+--- renesas.orig/arch/arm/boot/dts/r8a7791-koelsch.dts
++++ renesas/arch/arm/boot/dts/r8a7791-koelsch.dts
 @@ -2,7 +2,8 @@
-  * Device Tree Source for the r8a7791 SoC
+  * Device Tree Source for the Koelsch board
   *
   * Copyright (C) 2013 Renesas Electronics Corporation
 - * Copyright (C) 2013 Renesas Solutions Corp.
 + * Copyright (C) 2013-2014 Renesas Solutions Corp.
-+ * Copyright (C) 2014 Cogent Embedded Inc.
++ * Copyright (C) 2014 Cogent Embedded, Inc.
   *
   * This file is licensed under the terms of the GNU General Public License
   * version 2.  This program is licensed "as is" without any warranty of any
-@@ -366,6 +367,18 @@
- 		status = "disabled";
+@@ -122,12 +123,40 @@
+ 		renesas,function = "scif1";
  	};
  
-+	ether: ethernet@ee700000 {
-+		compatible = "renesas,ether-r8a7791";
-+		reg = <0 0xee700000 0 0x400>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 162 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp8_clks R8A7791_CLK_ETHER>;
-+		phy-mode = "rmii";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
++	ether_pins: ether {
++		renesas,groups = "eth_link", "eth_mdio", "eth_rmii";
++		renesas,function = "eth";
 +	};
 +
- 	sata0: sata@ee300000 {
- 		compatible = "renesas,sata-r8a7791";
- 		reg = <0 0xee300000 0 0x2000>;
++	phy1_pins: phy1 {
++		renesas,groups = "intc_irq0";
++		renesas,function = "intc";
++	};
++
+ 	qspi_pins: spi {
+ 		renesas,groups = "qspi_ctrl", "qspi_data4";
+ 		renesas,function = "qspi";
+ 	};
+ };
+ 
++&ether {
++	pinctrl-0 = <&ether_pins>;
++	pinctrl-names = "default";
++
++	phy-handle = <&phy1>;
++	renesas,ether-link-active-low;
++	status = "ok";
++
++	phy1: ethernet-phy@1 {
++		reg = <1>;
++		interrupt-parent = <&irqc0>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++
++		pinctrl-0 = <&phy1_pins>;
++		pinctrl-names = "default";
++	};
++};
++
+ &sata0 {
+ 	status = "okay";
+ };
