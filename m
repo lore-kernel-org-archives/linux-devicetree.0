@@ -1,43 +1,87 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 3/9 v5] crypto:s5p-sss: Add support for SSS module on Exynos
-Date: Thu, 06 Feb 2014 15:39:44 +0100
-Message-ID: <52F39EB0.4050702@samsung.com>
-References: <1389243569-13161-1-git-send-email-ch.naveen@samsung.com>
- <1390987294-18628-1-git-send-email-ch.naveen@samsung.com>
+From: James Hogan <james.hogan@imgtec.com>
+Subject: Re: [PATCH v2 06/15] dt: binding: add binding for ImgTec IR block
+Date: Thu, 6 Feb 2014 14:41:52 +0000
+Message-ID: <52F39F30.70104@imgtec.com>
+References: <1389967140-20704-1-git-send-email-james.hogan@imgtec.com> <1389967140-20704-7-git-send-email-james.hogan@imgtec.com> <CAL_Jsq+wk6_9Da5Xj3Ys-MZYPTpu6V3pAEpGFv44148BodmmrQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-reply-to: <1390987294-18628-1-git-send-email-ch.naveen@samsung.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, vzapolskiy@gmail.com, herbert@gondor.apana.org.au, naveenkrishna.ch@gmail.com, cpgs@samsung.com, devicetree@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="L03ftL0pIiPVemqqKAGGbThAa35xuOQ4J"
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+wk6_9Da5Xj3Ys-MZYPTpu6V3pAEpGFv44148BodmmrQ@mail.gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Naveen,
+--L03ftL0pIiPVemqqKAGGbThAa35xuOQ4J
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On 29.01.2014 10:21, Naveen Krishna Chatradhi wrote:
-> This patch adds new compatible and variant struct to support the SSS
-> module on Exynos4 (Exynos4210), Exynos5 (Exynos5420 and Exynos5250)
-> for which
-> 1. AES register are at an offset of 0x200 and
-> 2. hash interrupt is not available
->
-> Signed-off-by: Naveen Krishna Ch <ch.naveen@samsung.com>
-> CC: Herbert Xu <herbert@gondor.apana.org.au>
-> CC: David S. Miller <davem@davemloft.net>
-> CC: Vladimir Zapolskiy <vzapolskiy@gmail.com>
-> TO: <linux-crypto@vger.kernel.org>
-> CC: <linux-samsung-soc@vger.kernel.org>
-> ---
-> Changes since v4:
-> Fix rebase error because of the patch 2/9
->
->   .../devicetree/bindings/crypto/samsung-sss.txt     |   21 +++-
->   drivers/crypto/s5p-sss.c                           |  107 +++++++++++++++-----
->   2 files changed, 103 insertions(+), 25 deletions(-)
+Hi Rob,
 
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+On 06/02/14 14:33, Rob Herring wrote:
+> On Fri, Jan 17, 2014 at 7:58 AM, James Hogan <james.hogan@imgtec.com> w=
+rote:
+>> +Required properties:
+>> +- compatible:          Should be "img,ir1"
+>=20
+> Kind of short for a name. I don't have anything much better, but how
+> about img,ir-rev1.
 
-Best regards,
-Tomasz
+Okay, that sounds reasonable.
+
+>> +Optional properties:
+>> +- clocks:              List of clock specifiers as described in stand=
+ard
+>> +                       clock bindings.
+>> +- clock-names:         List of clock names corresponding to the clock=
+s
+>> +                       specified in the clocks property.
+>> +                       Accepted clock names are:
+>> +                       "core": Core clock (defaults to 32.768KHz if o=
+mitted).
+>> +                       "sys":  System side (fast) clock.
+>> +                       "mod":  Power modulation clock.
+>=20
+> You need to define the order of clocks including how they are
+> interpreted with different number of clocks (not relying on the name).
+
+Would it be sufficient to specify that "clock-names" is required if
+"clocks" is provided (i.e. unnamed clocks aren't used), or is there some
+other reason that clock-names shouldn't be relied upon?
+
+Thanks for reviewing,
+
+Cheers
+James
+
+> Although, if the h/w block really has different number of clock
+> inputs, then it is a different h/w block and should have a different
+> compatible string.
+
+
+--L03ftL0pIiPVemqqKAGGbThAa35xuOQ4J
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.13 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS8583AAoJEKHZs+irPybfUK0QAKX5HgxxdKV+Hu0wszAKeSn2
+mqTEXNw7ywyxJMsczbn5ME2S8b7tx9yRjfvaIdZB/Qz6AHOR1xw3EHS/q4P9DR/P
+WiOGWrhJrqiFJP5OC18b4Qx9RA/cU80vX4n1MkW/D5C/eef0G13imxFedF/WgWmC
+PTg6+shbk+TBOGF0EY7wlg9kVxzvBsts5kK4/af/2uGhxHz6bS31nyKbEZRfdIxQ
+xjbrmvY3p5dzIb0rKmIoxuGoef3FItXbNDD9dQ4G4uw3yGv4M4UtXl6DJ2QRBAYJ
+U9SKI6EubsGAEFTDdtMHIpMaMuQ7R2t356gsu0UR6oHF4opCpJ1iXsY5ExTQgoVT
+/+gQRevuf7lgcu9eULk9I5t8DjZ3hc16OrPOF88+ftaN1u7JZwXDKlMlxS+z2Bb2
+ABnCEe1nbLnfKC/KI5fGnAs5lOs3vOsWbmUBsJhXeb7EHa92n9zp27f7fbwBoGsN
+gSpbSBE4g1ACAm4fxal0WggVMDjErTfrlzFCab0PoNbmNr6wtuEoWfab/vVJqcAW
+o3LZKq/i66dMMauIjjFPoriEHHJu08HW4y+JQPbHlUv571S9ZUO7SK49MnA8ghaX
+iWanmdYJBF8rsQaFQaGzdFkqrrq/wrBolUXUx/nRBDgJnje6QHnp0nwfKD4AuRHo
+wGmlDpX1uYoWAjTAwp/L
+=c4KR
+-----END PGP SIGNATURE-----
+
+--L03ftL0pIiPVemqqKAGGbThAa35xuOQ4J--
