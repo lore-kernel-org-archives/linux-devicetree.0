@@ -1,133 +1,67 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 1/2 v3] i2c: exynos5: add support for HSI2C on Exynos5260
- SoC
-Date: Thu, 06 Feb 2014 14:50:51 +0100
-Message-ID: <52F3933B.9090202@samsung.com>
-References: <1385100851-32254-1-git-send-email-ch.naveen@samsung.com>
- <1391688408-8077-1-git-send-email-ch.naveen@samsung.com>
- <52F38EA4.10805@samsung.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] DT: net: document Ethernet bindings in one place
+Date: Thu, 06 Feb 2014 18:06:22 +0400
+Message-ID: <52F396DE.8010306@cogentembedded.com>
+References: <201401180405.07859.sergei.shtylyov@cogentembedded.com> < CAL_Jsq+oa9P=rh+p-dMZyGP8TcmpX7bTnMU0ynLvFxjxFDYbRg@mail.gmail.com> < 52DD98F7.4090202@cogentembedded.com> < CAL_JsqJXbF1-PcPHR2VP+Vi9A1aWizdsG_r3kDvRt3itXDhCGQ@mail.gmail.com> < CAGVrzcb3X3soJNJCE5+YSpQrr+EdycCRFkptPvBCgFg4CbGJ4Q@mail.gmail.com> < CAGVrzcb0dfw1orZzUt5-YkShOg-HNbUYvvo2vfmsZUZXy1Aqfg@mail.gmail.com> < 52DEE465.9000202@cogentembedded.com> <52E988FA.8040807@cogentembedded.com> <20140204172602.01420C4050F@trevor.secretlab.ca> <52F13410.8070205@ cogentembedded.com> <20140205120843.9ED08C40A89@trevor.secretlab.ca> < 52F25A63.3010608@cogentembedded.com> <20140206094301.03572C40B6A@trevor.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <52F38EA4.10805@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, naveenkrishna.ch@gmail.com, kgene.kim@samsung.com, grant.likely@secretlab.ca, Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org, taeggyun.ko@samsung.com, balbi@ti.com, cpgs@samsung.com
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140206094301.03572C40B6A@trevor.secretlab.ca>
+Sender: linux-doc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robherring2@gmail.com>
+Cc: netdev <netdev@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Also, please use correct addresses of DT ML and Wolfram's e-mail (fixed 
-in this message).
+Hello.
 
-Best regards,
-Tomasz
+On 06-02-2014 13:43, Grant Likely wrote:
 
-On 06.02.2014 14:31, Tomasz Figa wrote:
-> Hi Naveen,
->
-> On 06.02.2014 13:06, Naveen Krishna Chatradhi wrote:
->> This patch implements a variant struct to handle the differences
->> (like fifo_depths) in the HSI2C modules across SoCs.
->>
->> Adds a new compatible to support HSI2C module on Exynos5260.
->> Also resets the module as an init sequence (Needed by Exynos5260).
->>
->> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
->> ---
->> Changes since v2:
->> 1. Used variant struct as suggested by Tomasz Figa.
->> 2. Change compatible strings from samsung,exynos5-hsi2c to
->>     samsung,exynos5250-hsi2c based on the first SoC to see the feature.
->> 3. Using reset as init sequences.
->> 4. Merged the 2 patches into one.
->>
->>   .../devicetree/bindings/i2c/i2c-exynos5.txt        |    8 ++-
->>   drivers/i2c/busses/i2c-exynos5.c                   |   64
->> ++++++++++++++++----
->>   2 files changed, 58 insertions(+), 14 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/i2c/i2c-exynos5.txt
->> b/Documentation/devicetree/bindings/i2c/i2c-exynos5.txt
->> index 056732c..5bc4998 100644
->> --- a/Documentation/devicetree/bindings/i2c/i2c-exynos5.txt
->> +++ b/Documentation/devicetree/bindings/i2c/i2c-exynos5.txt
->> @@ -5,7 +5,11 @@ at various speeds ranging from 100khz to 3.4Mhz.
->>
->>   Required properties:
->>     - compatible: value should be.
->> -      -> "samsung,exynos5-hsi2c", for i2c compatible with exynos5 hsi2c.
->
-> Device tree bindings need to be backwards compatible, so you need to
-> keep this compatible string supported, just marked as (DEPRECATED).
->
-> Driver-wise, it will use the same driver data / variant struct as
-> "samsung,exynos5250-hsi2c", just one more entry in OF match table is
-> needed.
->
->> +    -> "samsung,exynos5250-hsi2c", for i2c compatible with HSI2C
->> available
->> +                on Exynos5250 and Exynos5420 SoCs.
->> +    -> "samsung,exynos5260-hsi2c", for i2c compatible with HSI2C
->> available
->> +                on Exynos5260 SoCs.
->> +
->>     - reg: physical base address of the controller and length of
->> memory mapped
->>       region.
->>     - interrupts: interrupt number to the cpu.
->> @@ -26,7 +30,7 @@ Optional properties:
->>   Example:
->>
->>   hsi2c@12ca0000 {
->> -    compatible = "samsung,exynos5-hsi2c";
->> +    compatible = "samsung,exynos5250-hsi2c";
->>       reg = <0x12ca0000 0x100>;
->>       interrupts = <56>;
->>       clock-frequency = <100000>;
->
-> [snip]
->
->> @@ -483,6 +514,7 @@ static void exynos5_i2c_message_start(struct
->> exynos5_i2c *i2c, int stop)
->>       u32 i2c_auto_conf = 0;
->>       u32 fifo_ctl;
->>       unsigned long flags;
->> +    unsigned short trig_lvl;
->>
->>       i2c_ctl = readl(i2c->regs + HSI2C_CTL);
->>       i2c_ctl &= ~(HSI2C_TXCHON | HSI2C_RXCHON);
->> @@ -493,13 +525,19 @@ static void exynos5_i2c_message_start(struct
->> exynos5_i2c *i2c, int stop)
->>
->>           i2c_auto_conf = HSI2C_READ_WRITE;
->>
->> -        fifo_ctl |= HSI2C_RXFIFO_TRIGGER_LEVEL(HSI2C_DEF_TXFIFO_LVL);
->> +        trig_lvl = (i2c->msg->len > i2c->variant->fifo_depth) ?
->> +            (i2c->variant->fifo_depth * 3/4) : i2c->msg->len;
->> +        fifo_ctl |= HSI2C_RXFIFO_TRIGGER_LEVEL(trig_lvl);
->> +
->
-> This is a rather serious semantic change, that doesn't look to belong to
-> this patch. If this is needed, it should be done in a separate patch.
->
->>           int_en |= (HSI2C_INT_RX_ALMOSTFULL_EN |
->>               HSI2C_INT_TRAILING_EN);
->>       } else {
->>           i2c_ctl |= HSI2C_TXCHON;
->>
->> -        fifo_ctl |= HSI2C_TXFIFO_TRIGGER_LEVEL(HSI2C_DEF_RXFIFO_LVL);
->> +        trig_lvl = (i2c->msg->len > i2c->variant->fifo_depth) ?
->> +            (i2c->variant->fifo_depth * 1/4) : i2c->msg->len;
->> +        fifo_ctl |= HSI2C_TXFIFO_TRIGGER_LEVEL(trig_lvl);
->> +
->
-> Ditto.
->
-> Best regards,
-> Tomasz
-> --
-> To unsubscribe from this list: send the line "unsubscribe
-> linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
+>>>>>>>>>>>        I'm afraid that's too late, it has spread very far, so that
+>>>>>>>>>>> of_get_phy_mode() handles that property, not "phy-connection-type".
+
+>>>>>>>>>> Uggg, I guess this is a case of a defacto standard then if the kernel
+>>>>>>>>>> doesn't even support it.
+
+>>>>>>>>> Maybe I forgot to CC you on patch sent to Grant only, I sent a patch a
+>>>>>>>>> while ago for of_get_phy_mode() to look for both "phy-mode" and
+>>>>>>>>> "phy-connection-type" since the former has been a Linux invention, but
+>>>>>>>>> the latter is ePAPR specified.
+
+>>>>>>>> Here is a link to the actual patch in question, not sure which tree
+>>>>>>>> Grant applied it to though:
+
+>>>>>>>> http://lkml.indiana.edu/hypermail/linux/kernel/1311.2/00048.html
+
+>>>>>>>        It's not the patch mail, it's Grant's "applied" reply, patch is mangled in
+>>>>>>> this reply, and I couldn't follow the thread. Here's the actual patch mail:
+
+>>>>>>> http://marc.info/?l=devicetree&m=138449662807254
+
+>>>>>>        Florian, I didn't find this patch in Grant's official tree, so maybe you
+>>>>>> should ask him where is the patch already?
+
+>>>>> Sorry, I accidentally dropped it. It will be in the next merge window.
+
+>>>>       Already saw it, thanks. Would that it was in 3.14 instead of course, so
+>>>> that I could use "phy-connection-type" in my binding...
+
+>>> Is 3.14 broken because of missing the patch? If so I'll get it merged as
+>>   > a bug fix.
+
+>>      No, it's not. I could have used "phy-connection-type" in my binding
+>> destined for 3.15 and document it as a preferred property as well.
+
+> You still can. We just need to make sure that your patch is applied on
+
+    Patches.
+
+> top of the phy-connection-type patch.
+
+    I'm not sure this trick is possible if the patches are merged via the 
+different trees...
+
+> g.
+
+WBR, Sergei
+
