@@ -1,91 +1,70 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v9 4/4] ehci-platform: Add support for
- controllers with big-endian regs / descriptors
-Date: Fri,  7 Feb 2014 16:36:43 +0100
-Message-ID: <1391787403-20961-5-git-send-email-hdegoede@redhat.com>
-References: <1391787403-20961-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Thomas Abraham <ta.omasab@gmail.com>
+Subject: Re: [PATCH v2 2/2] Documentation: devicetree: Add boost-frequency
+ binding to list boost mode frequency
+Date: Fri, 7 Feb 2014 21:08:54 +0530
+Message-ID: <CAJuA9ai0kk+i6sFfmw9vBDCnFPV67W5oMJqHUb7rUwS5iFgOMQ@mail.gmail.com>
+References: <1391786342-11812-1-git-send-email-thomas.ab@samsung.com>
+	<1391786342-11812-3-git-send-email-thomas.ab@samsung.com>
+	<CAGo_u6rymex=EZf0jj6rs2SpRARz2tA5F5jtT0+D-8BnSrfi9A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBHP32OLQKGQEO34T77Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1391787403-20961-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAGo_u6rymex=EZf0jj6rs2SpRARz2tA5F5jtT0+D-8BnSrfi9A@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: linux-pm@vger.kernel.org, dt list <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, rjw@rjwysocki.net, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Viresh Kumar <viresh.kumar@linaro.org>, thomas.ab@samsung.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-This uses the already documented devicetree booleans for this, see:
-Documentation/devicetree/bindings/usb/usb-ehci.txt
+On Fri, Feb 7, 2014 at 8:57 PM, Nishanth Menon <nm@ti.com> wrote:
+> On Fri, Feb 7, 2014 at 9:19 AM, Thomas Abraham <ta.omasab@gmail.com> wrote:
+>> From: Thomas Abraham <thomas.ab@samsung.com>
+>>
+>> Add a new optional boost-frequency binding for specifying the frequencies
+>> usable in boost mode.
+>>
+>> Cc: Nishanth Menon <nm@ti.com>
+>> Cc: Lukasz Majewski <l.majewski@samsung.com>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Pawel Moll <pawel.moll@arm.com>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+>> Cc: Kumar Gala <galak@codeaurora.org>
+>> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
+>> ---
+>>  Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt |   11 +++++++++++
+>>  1 file changed, 11 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
+>> new file mode 100644
+>> index 0000000..d925e38
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
+>> @@ -0,0 +1,11 @@
+>> +* Device tree binding for CPU boost frequency (aka over-clocking)
+>> +
+>> +Certain CPU's can be operated in optional 'boost' mode (or sometimes referred as
+>> +overclocking) in which the CPU can operate in frequencies beyond the normal
+>> +operating conditions.
+>> +
+>> +Optional Properties:
+>> +- boost-frequency: list of frequencies in KHz to be used only in boost mode.
+>
+> boost-frequencies?
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- drivers/usb/host/ehci-platform.c | 33 +++++++++++++++++++++++++++++++--
- 1 file changed, 31 insertions(+), 2 deletions(-)
+Okay, I will change it.
 
-diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
-index 5ebd0b7..8fde649 100644
---- a/drivers/usb/host/ehci-platform.c
-+++ b/drivers/usb/host/ehci-platform.c
-@@ -55,8 +55,10 @@ static int ehci_platform_reset(struct usb_hcd *hcd)
- 
- 	hcd->has_tt = pdata->has_tt;
- 	ehci->has_synopsys_hc_bug = pdata->has_synopsys_hc_bug;
--	ehci->big_endian_desc = pdata->big_endian_desc;
--	ehci->big_endian_mmio = pdata->big_endian_mmio;
-+	if (pdata->big_endian_desc)
-+		ehci->big_endian_desc = 1;
-+	if (pdata->big_endian_mmio)
-+		ehci->big_endian_mmio = 1;
- 
- 	if (pdata->pre_setup) {
- 		retval = pdata->pre_setup(hcd);
-@@ -142,6 +144,7 @@ static int ehci_platform_probe(struct platform_device *dev)
- 	struct resource *res_mem;
- 	struct usb_ehci_pdata *pdata = dev_get_platdata(&dev->dev);
- 	struct ehci_platform_priv *priv;
-+	struct ehci_hcd *ehci;
- 	int err, irq, clk = 0;
- 
- 	if (usb_disabled())
-@@ -177,8 +180,34 @@ static int ehci_platform_probe(struct platform_device *dev)
- 	platform_set_drvdata(dev, hcd);
- 	dev->dev.platform_data = pdata;
- 	priv = hcd_to_ehci_priv(hcd);
-+	ehci = hcd_to_ehci(hcd);
- 
- 	if (pdata == &ehci_platform_defaults && dev->dev.of_node) {
-+		if (of_property_read_bool(dev->dev.of_node, "big-endian-regs"))
-+			ehci->big_endian_mmio = 1;
-+
-+		if (of_property_read_bool(dev->dev.of_node, "big-endian-desc"))
-+			ehci->big_endian_desc = 1;
-+
-+		if (of_property_read_bool(dev->dev.of_node, "big-endian"))
-+			ehci->big_endian_mmio = ehci->big_endian_desc = 1;
-+
-+#ifndef CONFIG_USB_EHCI_BIG_ENDIAN_MMIO
-+		if (ehci->big_endian_mmio) {
-+			dev_err(&dev->dev,
-+				"Error big-endian-regs not compiled in\n");
-+			err = -EINVAL;
-+			goto err_put_hcd;
-+		}
-+#endif
-+#ifndef CONFIG_USB_EHCI_BIG_ENDIAN_DESC
-+		if (ehci->big_endian_desc) {
-+			dev_err(&dev->dev,
-+				"Error big-endian-desc not compiled in\n");
-+			err = -EINVAL;
-+			goto err_put_hcd;
-+		}
-+#endif
- 		priv->phy = devm_phy_get(&dev->dev, "usb");
- 		if (IS_ERR(priv->phy)) {
- 			err = PTR_ERR(priv->phy);
--- 
-1.8.4.2
+Thanks,
+Thomas.
+
+>
+>> +  This list should be a subset of frequencies listed in "operating-points"
+>> +  property. Refer to Documentation/devicetree/bindings/power/opp.txt for
+>> +  details about "operating-points" property.
+>> --
+>> 1.7.10.4
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
