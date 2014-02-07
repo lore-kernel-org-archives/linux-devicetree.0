@@ -1,73 +1,74 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH v2 2/2] Documentation: devicetree: Add boost-frequency
- binding to list boost mode frequency
-Date: Fri, 7 Feb 2014 10:43:39 -0600
-Message-ID: <CAGo_u6raZY0sKdDn4d92SKpi=eqUpf23vW8K_bEi-v62V2jdPA@mail.gmail.com>
-References: <1391786342-11812-1-git-send-email-thomas.ab@samsung.com>
-	<1391786342-11812-3-git-send-email-thomas.ab@samsung.com>
-	<52F50698.4060305@arm.com>
-	<52F509BD.70903@arm.com>
+From: Josh Cartwright <joshc@codeaurora.org>
+Subject: Re: [PATCH 2/2] spi: Add Qualcomm QUP SPI controller support
+Date: Fri, 7 Feb 2014 10:51:27 -0600
+Message-ID: <20140207165127.GV20228@joshc.qualcomm.com>
+References: <1391705868-20091-1-git-send-email-iivanov@mm-sol.com>
+ <1391705868-20091-3-git-send-email-iivanov@mm-sol.com>
+ <20140207073952.GA2610@qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <52F509BD.70903@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sudeep Holla <Sudeep.Holla@arm.com>
-Cc: Thomas Abraham <ta.omasab@gmail.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "t.figa@samsung.com" <t.figa@samsung.com>, "l.majewski@samsung.com" <l.majewski@samsung.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "thomas.ab@samsung.com" <thomas.ab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140207073952.GA2610@qualcomm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Alok Chauhan <alokc@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Kiran Gunda <kgunda@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>, Andy Gross <agross@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 7, 2014 at 10:28 AM, Sudeep Holla <Sudeep.Holla@arm.com> wrote:
-> On 07/02/14 16:15, Sudeep Holla wrote:
->> On 07/02/14 15:19, Thomas Abraham wrote:
->>> From: Thomas Abraham <thomas.ab@samsung.com>
->>>
->>> Add a new optional boost-frequency binding for specifying the frequencies
->>> usable in boost mode.
->>>
->>> Cc: Nishanth Menon <nm@ti.com>
->>> Cc: Lukasz Majewski <l.majewski@samsung.com>
->>> Cc: Rob Herring <robh+dt@kernel.org>
->>> Cc: Pawel Moll <pawel.moll@arm.com>
->>> Cc: Mark Rutland <mark.rutland@arm.com>
->>> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
->>> Cc: Kumar Gala <galak@codeaurora.org>
->>> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
->>> ---
->>>  Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt |   11 +++++++++++
->>>  1 file changed, 11 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
->>> new file mode 100644
->>> index 0000000..d925e38
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
->>> @@ -0,0 +1,11 @@
->>> +* Device tree binding for CPU boost frequency (aka over-clocking)
->>> +
->>> +Certain CPU's can be operated in optional 'boost' mode (or sometimes referred as
->>> +overclocking) in which the CPU can operate in frequencies beyond the normal
->>> +operating conditions.
->>> +
->>> +Optional Properties:
->>> +- boost-frequency: list of frequencies in KHz to be used only in boost mode.
->>> +  This list should be a subset of frequencies listed in "operating-points"
->>> +  property. Refer to Documentation/devicetree/bindings/power/opp.txt for
->>> +  details about "operating-points" property.
->>>
->>
->> Won't single entry for boost frequency suffice which would be the starting
->> frequency in the boost range. IOW will there be OPP list with frequencies:
->> A > B > C > D, but only B and C are boost frequency. That seems little odd,
->> unless it's some configuration chosen purely on software basis rather than
->> hardware. For me B marks the beginning of over-clocking.
->>
-> Ah, I meant A < B < C < D in the above example.
-Should'nt we let the SoC dts define that - traditionally, yes, but
-consider the following:
-A, B, C uses clk_parent X which describes B, C as overclocked.
-and say D uses clk_parent Y which is not "over clocked", then you have
-the scenario that on the first look seems counter-intutive.
+On Fri, Feb 07, 2014 at 01:39:52AM -0600, Andy Gross wrote:
+> On Thu, Feb 06, 2014 at 06:57:48PM +0200, Ivan T. Ivanov wrote:
+> > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+> > 
+> > Qualcomm Universal Peripheral (QUP) core is an AHB slave that
+> > provides a common data path (an output FIFO and an input FIFO)
+> > for serial peripheral interface (SPI) mini-core. SPI in master mode
+> > support up to 50MHz, up to four chip selects, and a programmable
+> > data path from 4 bits to 32 bits; MODE0..3 protocols
+> > 
+> > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+> > Cc: Alok Chauhan <alokc@codeaurora.org>
+> > Cc: Gilad Avidov <gavidov@codeaurora.org>
+> > Cc: Kiran Gunda <kgunda@codeaurora.org>
+> > Cc: Sagar Dharia <sdharia@codeaurora.org>
+> > ---
+> >  drivers/spi/Kconfig   |   14 +
+> >  drivers/spi/Makefile  |    1 +
+> >  drivers/spi/spi-qup.c |  898 +++++++++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 913 insertions(+)
+> >  create mode 100644 drivers/spi/spi-qup.c
+> > 
+> > diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+> > index ba9310b..bf8ce6b 100644
+> > --- a/drivers/spi/Kconfig
+> > +++ b/drivers/spi/Kconfig
+> > @@ -381,6 +381,20 @@ config SPI_RSPI
+> >  	help
+> >  	  SPI driver for Renesas RSPI blocks.
+> >  
+> > +config SPI_QUP
+> > +	tristate "Qualcomm SPI Support with QUP interface"
+> > +	depends on ARCH_MSM
+> 
+> I'd change to ARCH_MSM_DT.  This ensures the OF component is there.
 
-Regards,
-Nishanth Menon
+I'd rather explicitly include the CONFIG_OF dependency, but I'm not too
+opinionated.
+
+	config SPI_QUP
+		tristate "Qualcomm SPI Support with QUP interface"
+		depends on OF
+		depends on ARM
+		depends on ARCH_MSM_DT || COMPILE_TEST
+
+With Kumar's pending the ARCH_MSM_DT -> ARCH_QCOM rename, we'll
+introduce a arm-soc/spi tree dependency here that we'll need to keep
+track of.
+
+Kumar-
+
+How would you like to handle this?  Would it make sense for this to go
+through the SPI tree with depending on ARCH_QCOM instead of ARCH_MSM_DT?
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
