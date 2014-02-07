@@ -1,68 +1,249 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 02/20] clocksource: orion: Use atomic access for shared
- registers
-Date: Thu, 06 Feb 2014 23:47:33 +0000
-Message-ID: <52F41F15.307@linaro.org>
-References: <1390836440-12744-1-git-send-email-ezequiel.garcia@free-electrons.com> <1390836440-12744-3-git-send-email-ezequiel.garcia@free-electrons.com> <20140205191035.GZ8533@titan.lakedaemon.net> <20140205231903.GA30244@localhost>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3] sh_eth: add device tree support
+Date: Fri, 7 Feb 2014 10:29:02 +0900
+Message-ID: <20140207012902.GH19799@verge.net.au>
+References: <201402060258.57025.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140205231903.GA30244@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201402060258.57025.sergei.shtylyov@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nobuhiro.iwamatsu.yj@renesas.com, rob@landley.net, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/05/2014 11:19 PM, Ezequiel Garcia wrote:
-> On Wed, Feb 05, 2014 at 02:10:35PM -0500, Jason Cooper wrote:
->> On Mon, Jan 27, 2014 at 12:27:02PM -0300, Ezequiel Garcia wrote:
->>> Replace the driver-specific thread-safe shared register API
->>> by the recently introduced atomic_io_clear_set().
->>>
->>> Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> Tested-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>> ---
->>>   drivers/clocksource/time-orion.c | 28 ++++++++++-----------------=
--
->>>   1 file changed, 10 insertions(+), 18 deletions(-)
->>
->> The MMIO patch this depends on:
->>
->>    c5ca95b507c8 ARM: 7930/1: Introduce atomic MMIO modify
->>
->> made it in to v3.14-rc1.  It looks like this change is independent o=
-f
->> the rest of the watchdog series, so:
->>
->> Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
->>
->
-> Thanks, Jason.
->
-> Daniel: If you can pick this I'll drop it from the next watchdog patc=
-hset
-> submission.
+On Thu, Feb 06, 2014 at 02:58:56AM +0300, Sergei Shtylyov wrote:
+> Add support of the device tree probing for the Renesas SH-Mobile SoCs
+> documenting the device tree binding as necessary.
+> 
+> This work is loosely based on the original patch by Nobuhiro Iwamatsu
+> <nobuhiro.iwamatsu.yj@renesas.com>.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Yep, ok. I am out of the office for the moment, I will take care of it=20
-Monday.
-
-Thanks
-   -- Daniel
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
 
 
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
+> ---
+> This patch is against DaveM's 'net-next.git' repo but should also apply to the
+> recent 'renesas.git' repo's 'devel' branch. It assumes the patch documenting all
+> Ethernet bindings in one file to be applied as well.
+> Not posting it to netdev@vger.kernel.org this time, or Dave will scold me. :-)
 
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+I would prefer if such orthogonal dependencies weren't introduced.
+I'm quite fine if you want to refactor things, but from my point
+of view it would be nice to tackle such projects after merging new features.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Changes in version 3:
+> - added probing for R8A7791 and R7S72100;
+> - added irq_of_parse_and_map() call to read PHY IRQ from device tree;
+> - removed '!phy' check before reading the PHY node's "reg" property;
+> - replaced "phy-handle" and "phy-mode" property descriptions with references to
+>   the common Ethernet bindings file;
+> - added "clocks" required property; 
+> - removed "local-mac-address" optional property; 
+> - replaced Armadiallo800EVA board with Lager board in the binding example;
+> - updated driver's copyrights;
+> - refreshed the patch.
+> 
+> Changes in version 2:
+> - added sh_eth_match_table[] entry for "renesas,ether-r8a7778", documented it;
+> - clarified descriptions of the "reg" and "interrupt" properties;
+> - moved "interrupt-parent" from required properties to optional;
+> - mentioned the necessary PHY subnode to the "phy-handle" property description,
+>   documented the requered "#address-cells" and "#size-cells" properties;
+> - clarified the types/descriptions of the Renesas specific properties;
+> - refreshed the patch.
+> 
+>  Documentation/devicetree/bindings/net/sh_eth.txt |   55 ++++++++++++++++
+>  drivers/net/ethernet/renesas/sh_eth.c            |   75 ++++++++++++++++++++++-
+>  2 files changed, 127 insertions(+), 3 deletions(-)
+> 
+> Index: net-next/Documentation/devicetree/bindings/net/sh_eth.txt
+> ===================================================================
+> --- /dev/null
+> +++ net-next/Documentation/devicetree/bindings/net/sh_eth.txt
+> @@ -0,0 +1,55 @@
+> +* Renesas Electronics SH EtherMAC
+> +
+> +This file provides information on what the device node for the SH EtherMAC
+> +interface contains.
+> +
+> +Required properties:
+> +- compatible: "renesas,gether-r8a7740" if the device is a part of R8A7740 SoC.
+> +	      "renesas,ether-r8a7778"  if the device is a part of R8A7778 SoC.
+> +	      "renesas,ether-r8a7779"  if the device is a part of R8A7779 SoC.
+> +	      "renesas,ether-r8a7790"  if the device is a part of R8A7790 SoC.
+> +	      "renesas,ether-r8a7791"  if the device is a part of R8A7791 SoC.
+> +	      "renesas,ether-r7s72100" if the device is a part of R7S72100 SoC.
+> +- reg: offset and length of (1) the E-DMAC/feLic register block (required),
+> +       (2) the TSU register block (optional).
+> +- interrupts: interrupt specifier for the sole interrupt.
+> +- phy-mode: see ethernet.txt file in the same directory.
+> +- phy-handle: see ethernet.txt file in the same directory.
+> +- #address-cells: number of address cells for the MDIO bus, must be equal to 1.
+> +- #size-cells: number of size cells on the MDIO bus, must be equal to 0.
+> +- clocks: clock phandle and specifier pair.
+> +- pinctrl-0: phandle, referring to a default pin configuration node.
+> +
+> +Optional properties:
+> +- interrupt-parent: the phandle for the interrupt controller that services
+> +		    interrupts for this device.
+> +- pinctrl-names: pin configuration state name ("default").
+> +- renesas,no-ether-link: boolean, specify when a board does not provide a proper
+> +			 Ether LINK signal.
+> +- renesas,ether-link-active-low: boolean, specify when the Ether LINK signal is
+> +				 active-low instead of normal active-high.
+> +
+> +Example (Lager board):
+> +
+> +	ethernet@ee700000 {
+> +		compatible = "renesas,ether-r8a7790";
+> +		reg = <0 0xee700000 0 0x400>;
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <0 162 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&mstp8_clks R8A7790_CLK_ETHER>;
+> +		phy-mode = "rmii";
+> +		phy-handle = <&phy1>;
+> +		pinctrl-0 = <&ether_pins>;
+> +		pinctrl-names = "default";
+> +		renesas,ether-link-active-low;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		phy1: ethernet-phy@1 {
+> +			reg = <1>;
+> +			interrupt-parent = <&irqc0>;
+> +			interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+> +			pinctrl-0 = <&phy1_pins>;
+> +			pinctrl-names = "default";
+> +		};
+> +	};
+> Index: net-next/drivers/net/ethernet/renesas/sh_eth.c
+> ===================================================================
+> --- net-next.orig/drivers/net/ethernet/renesas/sh_eth.c
+> +++ net-next/drivers/net/ethernet/renesas/sh_eth.c
+> @@ -1,8 +1,8 @@
+>  /*  SuperH Ethernet device driver
+>   *
+>   *  Copyright (C) 2006-2012 Nobuhiro Iwamatsu
+> - *  Copyright (C) 2008-2013 Renesas Solutions Corp.
+> - *  Copyright (C) 2013 Cogent Embedded, Inc.
+> + *  Copyright (C) 2008-2014 Renesas Solutions Corp.
+> + *  Copyright (C) 2013-2014 Cogent Embedded, Inc.
+>   *
+>   *  This program is free software; you can redistribute it and/or modify it
+>   *  under the terms and conditions of the GNU General Public License,
+> @@ -27,6 +27,10 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/mdio-bitbang.h>
+>  #include <linux/netdevice.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_net.h>
+>  #include <linux/phy.h>
+>  #include <linux/cache.h>
+>  #include <linux/io.h>
+> @@ -2710,6 +2714,56 @@ static const struct net_device_ops sh_et
+>  	.ndo_change_mtu		= eth_change_mtu,
+>  };
+>  
+> +#ifdef CONFIG_OF
+> +static struct sh_eth_plat_data *sh_eth_parse_dt(struct device *dev)
+> +{
+> +	struct device_node *np = dev->of_node;
+> +	struct sh_eth_plat_data *pdata;
+> +	struct device_node *phy;
+> +	const char *mac_addr;
+> +
+> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
+> +		return NULL;
+> +
+> +	pdata->phy_interface = of_get_phy_mode(np);
+> +
+> +	phy = of_parse_phandle(np, "phy-handle", 0);
+> +	if (of_property_read_u32(phy, "reg", &pdata->phy)) {
+> +		devm_kfree(dev, pdata);
+> +		return NULL;
+> +	}
+> +	pdata->phy_irq = irq_of_parse_and_map(phy, 0);
+> +
+> +	mac_addr = of_get_mac_address(np);
+> +	if (mac_addr)
+> +		memcpy(pdata->mac_addr, mac_addr, ETH_ALEN);
+> +
+> +	pdata->no_ether_link =
+> +		of_property_read_bool(np, "renesas,no-ether-link");
+> +	pdata->ether_link_active_low =
+> +		of_property_read_bool(np, "renesas,ether-link-active-low");
+> +
+> +	return pdata;
+> +}
+> +
+> +static const struct of_device_id sh_eth_match_table[] = {
+> +	{ .compatible = "renesas,gether-r8a7740", .data = &r8a7740_data },
+> +	{ .compatible = "renesas,ether-r8a7778", .data = &r8a777x_data },
+> +	{ .compatible = "renesas,ether-r8a7779", .data = &r8a777x_data },
+> +	{ .compatible = "renesas,ether-r8a7790", .data = &r8a779x_data },
+> +	{ .compatible = "renesas,ether-r8a7791", .data = &r8a779x_data },
+> +	{ .compatible = "renesas,ether-r7s72100", .data = &r7s72100_data },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, sh_eth_match_table);
+> +#else
+> +static inline struct sh_eth_plat_data *sh_eth_parse_dt(struct device *dev)
+> +{
+> +	return NULL;
+> +}
+> +#endif
+> +
+>  static int sh_eth_drv_probe(struct platform_device *pdev)
+>  {
+>  	int ret, devno = 0;
+> @@ -2763,6 +2817,8 @@ static int sh_eth_drv_probe(struct platf
+>  	pm_runtime_enable(&pdev->dev);
+>  	pm_runtime_resume(&pdev->dev);
+>  
+> +	if (pdev->dev.of_node)
+> +		pd = sh_eth_parse_dt(&pdev->dev);
+>  	if (!pd) {
+>  		dev_err(&pdev->dev, "no platform data\n");
+>  		ret = -EINVAL;
+> @@ -2778,7 +2834,19 @@ static int sh_eth_drv_probe(struct platf
+>  	mdp->ether_link_active_low = pd->ether_link_active_low;
+>  
+>  	/* set cpu data */
+> -	mdp->cd = (struct sh_eth_cpu_data *)id->driver_data;
+> +	if (id) {
+> +		mdp->cd = (struct sh_eth_cpu_data *)id->driver_data;
+> +	} else	{
+> +		const struct of_device_id *match;
+> +
+> +		match = of_match_device(of_match_ptr(sh_eth_match_table),
+> +					&pdev->dev);
+> +		if (!match) {
+> +			ret = -EINVAL;
+> +			goto out_release;
+> +		}
+> +		mdp->cd = (struct sh_eth_cpu_data *)match->data;
+> +	}
+>  	mdp->reg_offset = sh_eth_get_register_offset(mdp->cd->register_type);
+>  	sh_eth_set_default_cpu_data(mdp->cd);
+>  
+> @@ -2920,6 +2988,7 @@ static struct platform_driver sh_eth_dri
+>  	.driver = {
+>  		   .name = CARDNAME,
+>  		   .pm = SH_ETH_PM_OPS,
+> +		   .of_match_table = of_match_ptr(sh_eth_match_table),
+>  	},
+>  };
+>  
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
