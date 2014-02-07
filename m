@@ -1,71 +1,37 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: Devicetree Maintenance in barebox
-Date: Fri, 7 Feb 2014 09:10:28 -0500
-Message-ID: <20140207141028.GT8533@titan.lakedaemon.net>
-References: <20140207071332.GE16215@pengutronix.de>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 0/5] clk: sunxi usb clks support
+Date: Fri,  7 Feb 2014 15:32:28 +0100
+Message-ID: <1391783553-8096-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140207071332.GE16215-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: barebox-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBDG52OLQKGQE55FIUGQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sascha,
+Hi All,
 
-+ Grant Likely, Ian Campbell, devicetree ML
+Here is v3 of my sunxi usb clks support series.
 
-This discussion started on the barebox bootloader mailinglist
+Changes since v2:
+-rename the compatibilty strings from foo-usb-gates-clk to foo-usb-clk
 
-On Fri, Feb 07, 2014 at 08:13:32AM +0100, Sascha Hauer wrote:
-> It's becoming more obvious that devicetree maintenance is painful
-> because we have to sync them to the kernel regularly. My hope was that
-> this would get simpler once the devicetrees get their own repository
-> outside the kernel, but it seems that won't happen anytime soon.
+Note the dts bits (patches 3-5) of this series depends on Chen-Yu Tsai's clk
+rename series.
 
-hmm.  Ian Campbell has a tree he is working on:
+Emilio, should Mike pick patches 1-2 up directly, or should they go through
+your tree?
 
-  git://xenbits.xen.org/people/ianc/device-tree-rebasing.git
+Maxime, can you please add patches 3-5 to your dts tree ? Assuming that
+wens clk rename patches are already there.
 
-Also, In the DT meeting earlier this week, Grant Likely said he has the
-request in to create a separate mailinglist for collaboration between
-the different devicetree users (BSD, Linux, etc).
+Thanks & Regards,
 
-> So my current idea to continue with barebox devicetrees is:
-> 
-> - Maintain a kernel branch which has all devicetree changes we need in
->   barebox in a clean step-by-step series
-> - rebase this branch regularly on the newer kernel
-> - Copy the resulting devicetrees to barebox
-> 
-> The upside is that we have up to date devicetrees in barebox without
-> having to resync them by hand on a per SoC basis.  Of course this also
-> means that we lose the devicetree history and breakage may be introduced
-> with some huge commits saying "Update devicetrees to Linux-3.x".
-> 
-> Any better ideas? I think we have to do something.
-
-I think the proper solution will percolate out of the first
-cross-project discussions on the new ML.
-
-imho, the goal is to not have any project tied to a specific version of
-the devicetree.  iow, we don't break backwards compatibility in the
-devicetrees, and projects should revert to default behavior if new dt
-parameters are missing.  This means Linux and BSD shouldn't need to keep
-a current copy of the devicetree in their trees.  However, building the
-bootloader is a different animal.  It needs to provide the dt blob...
-
-Definitely fodder for the new ML.
-
-Grant, can you please add Sascha to the list of folks to notify when the
-new ML is ready?
-
-thx,
-
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hans
