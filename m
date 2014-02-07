@@ -1,50 +1,62 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 5/5] ARM: sun7i: dt: Add bindings for USB clocks
-Date: Fri,  7 Feb 2014 16:21:53 +0100
-Message-ID: <1391786513-20780-6-git-send-email-hdegoede@redhat.com>
-References: <1391786513-20780-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH v2 2/2] Documentation: devicetree: Add boost-frequency
+ binding to list boost mode frequency
+Date: Fri, 7 Feb 2014 09:27:23 -0600
+Message-ID: <CAGo_u6rymex=EZf0jj6rs2SpRARz2tA5F5jtT0+D-8BnSrfi9A@mail.gmail.com>
+References: <1391786342-11812-1-git-send-email-thomas.ab@samsung.com>
+	<1391786342-11812-3-git-send-email-thomas.ab@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBK7U2OLQKGQEGI6ZD5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1391786513-20780-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1391786342-11812-3-git-send-email-thomas.ab@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <ta.omasab@gmail.com>
+Cc: linux-pm@vger.kernel.org, dt list <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, rjw@rjwysocki.net, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Viresh Kumar <viresh.kumar@linaro.org>, thomas.ab@samsung.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Fri, Feb 7, 2014 at 9:19 AM, Thomas Abraham <ta.omasab@gmail.com> wrote:
+> From: Thomas Abraham <thomas.ab@samsung.com>
+>
+> Add a new optional boost-frequency binding for specifying the frequencies
+> usable in boost mode.
+>
+> Cc: Nishanth Menon <nm@ti.com>
+> Cc: Lukasz Majewski <l.majewski@samsung.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
+> ---
+>  Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt |   11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
+>
+> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
+> new file mode 100644
+> index 0000000..d925e38
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
+> @@ -0,0 +1,11 @@
+> +* Device tree binding for CPU boost frequency (aka over-clocking)
+> +
+> +Certain CPU's can be operated in optional 'boost' mode (or sometimes referred as
+> +overclocking) in which the CPU can operate in frequencies beyond the normal
+> +operating conditions.
+> +
+> +Optional Properties:
+> +- boost-frequency: list of frequencies in KHz to be used only in boost mode.
 
-Signed-off-by: Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+boost-frequencies?
 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 316cab8..14d9696 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -289,6 +289,15 @@
- 			clock-output-names = "ir1";
- 		};
- 
-+		usb_clk: clk@01c200cc {
-+			#clock-cells = <1>;
-+		        #reset-cells = <1>;
-+			compatible = "allwinner,sun4i-a10-usb-clk";
-+			reg = <0x01c200cc 0x4>;
-+			clocks = <&pll6 1>;
-+			clock-output-names = "usb_ohci0", "usb_ohci1", "usb_phy";
-+		};
-+
- 		spi3_clk: clk@01c200d4 {
- 			#clock-cells = <0>;
- 			compatible = "allwinner,sun4i-mod0-clk";
--- 
-1.8.4.2
+> +  This list should be a subset of frequencies listed in "operating-points"
+> +  property. Refer to Documentation/devicetree/bindings/power/opp.txt for
+> +  details about "operating-points" property.
+> --
+> 1.7.10.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
