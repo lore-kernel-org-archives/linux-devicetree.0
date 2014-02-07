@@ -1,114 +1,30 @@
-From: Thomas Abraham <ta.omasab@gmail.com>
-Subject: Re: [PATCH v2 1/2] PM / OPP: Allow boost frequency to be looked up
- from device tree
-Date: Fri, 7 Feb 2014 21:08:03 +0530
-Message-ID: <CAJuA9aiEDXyK8ABNznbzjk7s2uMfwo_diRpmLNsKBFd+pH=ffQ@mail.gmail.com>
-References: <1391786342-11812-1-git-send-email-thomas.ab@samsung.com>
-	<1391786342-11812-2-git-send-email-thomas.ab@samsung.com>
-	<CAGo_u6qsh0wVLGjvqKmaXjDGVyy2tKgSzkh-t9RZCQS-JJND8g@mail.gmail.com>
+From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v2 3/8] mfd: da9055: Add DT support for PMIC
+Date: Fri, 7 Feb 2014 15:45:11 +0000
+Message-ID: <2E89032DDAA8B9408CB92943514A03376BACFBC6@SW-EX-MBX01.diasemi.com>
+References: <cover.1391705989.git.Adam.Thomson.Opensource@diasemi.com>
+ <46f41a14205ac39de3adb8c87d2a6dba557ad8d1.1391705989.git.Adam.Thomson.Opensource@diasemi.com>
+ <20140207110320.GM14727@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAGo_u6qsh0wVLGjvqKmaXjDGVyy2tKgSzkh-t9RZCQS-JJND8g@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: linux-pm@vger.kernel.org, dt list <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, rjw@rjwysocki.net, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Viresh Kumar <viresh.kumar@linaro.org>, thomas.ab@samsung.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140207110320.GM14727@lee--X1>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 7, 2014 at 8:59 PM, Nishanth Menon <nm@ti.com> wrote:
-> On Fri, Feb 7, 2014 at 9:19 AM, Thomas Abraham <ta.omasab@gmail.com> wrote:
->> From: Thomas Abraham <thomas.ab@samsung.com>
->>
->> Commit 6f19efc0 ("cpufreq: Add boost frequency support in core") adds
->> support for CPU boost mode. This patch adds support for finding available
->> boost frequencies from device tree and marking them as usable in boost mode.
->>
->> Cc: Nishanth Menon <nm@ti.com>
->> Cc: Lukasz Majewski <l.majewski@samsung.com>
->> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
->> ---
->>  drivers/base/power/opp.c |   34 +++++++++++++++++++++++++++++++++-
->>  1 file changed, 33 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/base/power/opp.c b/drivers/base/power/opp.c
->> index fa41874..b636826 100644
->> --- a/drivers/base/power/opp.c
->> +++ b/drivers/base/power/opp.c
->> @@ -628,7 +628,8 @@ int dev_pm_opp_init_cpufreq_table(struct device *dev,
->>         struct device_opp *dev_opp;
->>         struct dev_pm_opp *opp;
->>         struct cpufreq_frequency_table *freq_table;
->> -       int i = 0;
->> +       int i = 0, j, len, ret;
->> +       u32 *boost_freqs = NULL;
->>
->>         /* Pretend as if I am an updater */
->>         mutex_lock(&dev_opp_list_lock);
->> @@ -650,10 +651,35 @@ int dev_pm_opp_init_cpufreq_table(struct device *dev,
->>                 return -ENOMEM;
->>         }
->>
->> +       if (of_find_property(dev->of_node, "boost-frequency", &len)) {
->> +               if (len == 0 || (len & (sizeof(u32) - 1)) != 0) {
->> +                       dev_err(dev, "%s: invalid boost frequency\n", __func__);
->> +                       ret = -EINVAL;
->> +                       goto err_boost;
->> +               }
->> +
->> +               boost_freqs = kzalloc(len, GFP_KERNEL);
->> +               if (!boost_freqs) {
->> +                       dev_warn(dev, "%s: no memory for boost freq table\n",
->> +                                       __func__);
->> +                       ret = -ENOMEM;
->> +                       goto err_boost;
->> +               }
->> +               of_property_read_u32_array(dev->of_node, "boost-frequency",
->> +                       boost_freqs, len / sizeof(u32));
->> +       }
->> +
->>         list_for_each_entry(opp, &dev_opp->opp_list, node) {
->>                 if (opp->available) {
->>                         freq_table[i].driver_data = i;
->>                         freq_table[i].frequency = opp->rate / 1000;
->> +                       for (j = 0; j < len / sizeof(u32) && boost_freqs; j++) {
->> +                               if (boost_freqs[j] == freq_table[i].frequency) {
->> +                                       freq_table[i].driver_data =
->> +                                                       CPUFREQ_BOOST_FREQ;
->> +                                       break;
->> +                               }
->> +                       }
->
-> What if any one of the boost_freqs are not contained in the enabled frequencies?
-
-It is not used as a boost frequency because its corresponding voltage
-is not known. If required a warning can be printed out for the same.
-
-Thanks,
-Thomas.
-
->
->>                         i++;
->>                 }
->>         }
->> @@ -663,8 +689,14 @@ int dev_pm_opp_init_cpufreq_table(struct device *dev,
->>         freq_table[i].frequency = CPUFREQ_TABLE_END;
->>
->>         *table = &freq_table[0];
->> +       kfree(boost_freqs);
->>
->>         return 0;
->> +
->> +err_boost:
->> +       kfree(freq_table);
->> +       mutex_unlock(&dev_opp_list_lock);
->> +       return ret;
->>  }
->>  EXPORT_SYMBOL_GPL(dev_pm_opp_init_cpufreq_table);
->>
->> --
->> 1.7.10.4
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBGZWIgMDcsIDIwMTQgYXQgMTE6MDM6MThBTSArMDAwMCwgTGVlIEpvbmVzIHdyb3Rl
+Og0KDQo+IA0KPiBDYW4geW91IGJyZWFrIHRoaXMgdXAgcGxlYXNlLg0KPiANCj4gQmluZGluZ3Mg
+c2hvdWxkIGJlIHNlcGFyYXRlIHRvIHRoZSBiaW5kaW5nIGRvY3VtZW50Lg0KDQpSaWdodCwgZmlu
+ZS4gRmlndXJlZCBhcyB0aGV5IHdlcmUgZGlyZWN0bHkgcmVsYXRlZCB0aGV5IHNob3VsZCBiZSBp
+biBvbmUgcGF0Y2gNCmJ1dCB3aWxsIHNlcGFyYXRlIHRoZW0uDQoNCj4gRW50YW5nbGluZyB0aGUg
+aTJjX2RldmljZV9pZCB0YWJsZSB3aXRoIHRoZSBvZl9kZXZpY2VfaWQgdGFibGUgc291bmRzDQo+
+IGEgYml0IHRvbyB3YWNreSBmb3IgbXkgbGlraW5nLiBXaGVyZSBkbyB5b3UgZXZlbiB1c2UgaXQ/
+DQo+IA0KDQpZb3UncmUgcmlnaHQuIElzIG5vdCB1c2VkIHNvIGNhbiByZW1vdmUgaXQuDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
