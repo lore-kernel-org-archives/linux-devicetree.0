@@ -1,74 +1,126 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: Re: [PATCH 2/2] spi: Add Qualcomm QUP SPI controller support
-Date: Fri, 7 Feb 2014 10:51:27 -0600
-Message-ID: <20140207165127.GV20228@joshc.qualcomm.com>
-References: <1391705868-20091-1-git-send-email-iivanov@mm-sol.com>
- <1391705868-20091-3-git-send-email-iivanov@mm-sol.com>
- <20140207073952.GA2610@qualcomm.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v6 05/19] watchdog: orion: Make sure the watchdog is
+ initially stopped
+Date: Fri, 7 Feb 2014 08:55:22 -0800
+Message-ID: <20140207165522.GA9158@roeck-us.net>
+References: <1391707226-18258-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1391707226-18258-6-git-send-email-ezequiel.garcia@free-electrons.com>
+ <52F43ED0.4050808@roeck-us.net>
+ <20140207104044.GA11063@localhost>
+ <52F4E1C1.4010805@roeck-us.net>
+ <20140207151727.GB8218@localhost>
+ <20140207154453.GA8533@titan.lakedaemon.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140207073952.GA2610@qualcomm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Alok Chauhan <alokc@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Kiran Gunda <kgunda@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>, Andy Gross <agross@codeaurora.org>
+In-Reply-To: <20140207154453.GA8533-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 07, 2014 at 01:39:52AM -0600, Andy Gross wrote:
-> On Thu, Feb 06, 2014 at 06:57:48PM +0200, Ivan T. Ivanov wrote:
-> > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-> > 
-> > Qualcomm Universal Peripheral (QUP) core is an AHB slave that
-> > provides a common data path (an output FIFO and an input FIFO)
-> > for serial peripheral interface (SPI) mini-core. SPI in master mode
-> > support up to 50MHz, up to four chip selects, and a programmable
-> > data path from 4 bits to 32 bits; MODE0..3 protocols
-> > 
-> > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> > Cc: Alok Chauhan <alokc@codeaurora.org>
-> > Cc: Gilad Avidov <gavidov@codeaurora.org>
-> > Cc: Kiran Gunda <kgunda@codeaurora.org>
-> > Cc: Sagar Dharia <sdharia@codeaurora.org>
-> > ---
-> >  drivers/spi/Kconfig   |   14 +
-> >  drivers/spi/Makefile  |    1 +
-> >  drivers/spi/spi-qup.c |  898 +++++++++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 913 insertions(+)
-> >  create mode 100644 drivers/spi/spi-qup.c
-> > 
-> > diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-> > index ba9310b..bf8ce6b 100644
-> > --- a/drivers/spi/Kconfig
-> > +++ b/drivers/spi/Kconfig
-> > @@ -381,6 +381,20 @@ config SPI_RSPI
-> >  	help
-> >  	  SPI driver for Renesas RSPI blocks.
-> >  
-> > +config SPI_QUP
-> > +	tristate "Qualcomm SPI Support with QUP interface"
-> > +	depends on ARCH_MSM
+On Fri, Feb 07, 2014 at 10:44:53AM -0500, Jason Cooper wrote:
+> On Fri, Feb 07, 2014 at 12:17:28PM -0300, Ezequiel Garcia wrote:
+> > On Fri, Feb 07, 2014 at 05:38:09AM -0800, Guenter Roeck wrote:
+> > > On 02/07/2014 02:40 AM, Ezequiel Garcia wrote:
+> > > > On Thu, Feb 06, 2014 at 06:02:56PM -0800, Guenter Roeck wrote:
+> > > >> On 02/06/2014 09:20 AM, Ezequiel Garcia wrote:
+> > > >>> Having the watchdog initially fully stopped is important to avoid
+> > > >>> any spurious watchdog triggers, in case the registers are not in
+> > > >>> its reset state.
+> > > >>>
+> > > >>> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> > > >>> Tested-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > >>> Tested-by: Willy Tarreau <w@1wt.eu>
+> > > >>> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > > >>> ---
+> > > >>>    drivers/watchdog/orion_wdt.c | 3 +++
+> > > >>>    1 file changed, 3 insertions(+)
+> > > >>>
+> > > >>> diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
+> > > >>> index 6746033..2dbeee9 100644
+> > > >>> --- a/drivers/watchdog/orion_wdt.c
+> > > >>> +++ b/drivers/watchdog/orion_wdt.c
+> > > >>> @@ -142,6 +142,9 @@ static int orion_wdt_probe(struct platform_device *pdev)
+> > > >>>    	orion_wdt.max_timeout = wdt_max_duration;
+> > > >>>    	watchdog_init_timeout(&orion_wdt, heartbeat, &pdev->dev);
+> > > >>>
+> > > >>> +	/* Let's make sure the watchdog is fully stopped */
+> > > >>> +	orion_wdt_stop(&orion_wdt);
+> > > >>> +
+> > > >>
+> > > >> Actually we just had that in another driver, and I stumbled over it there.
+> > > >>
+> > > >> Problem with stopping the watchdog in probe unconditionally is that you can
+> > > >> use it to defeat nowayout: unload the module, then load it again,
+> > > >> and the watchdog is stopped even if nowayout is true.
+> > > >>
 > 
-> I'd change to ARCH_MSM_DT.  This ensures the OF component is there.
+> How often would a user legitimately want to unload/load the watchdog
+> module?
+> 
+Not sure what you are saying here. If you don't think the nowayout option
+should be supported, drop it. Don't claim it is supported when it isn't.
 
-I'd rather explicitly include the CONFIG_OF dependency, but I'm not too
-opinionated.
+> > > >
+> > > > Hm... I see.
+> > > >
+> > > >> Is this really what you want ? Or, in other words, what is the problem
+> > > >> you are trying to solve ?
+> > > >>
+> > > >
+> > > > Well, this is related to the discussion about the bootloader not
+> > > > reseting the watchdog properly, provoking spurious watchdog triggering.
+> > > >
+> > > > Jason Gunthorpe explained [1] that we needed a particular sequence:
+> > > >
+> > > >   1. Disable WDT
+> > > >   2. Clear bridge
+> > > >   3. Enable WDT
+> > > >
+> > > > We added the irq handling to satisfy (2), and the watchdog stop for (1).
+> > > >
+> > > > The watchdog stop was agreed specifically [2].
+> > > >
+> > > > Ideas?
+> > > >
+> > > 
+> > > Other drivers assume that if the watchdog is running, it is supposed
+> > > to be running. The more common approach in such cases is to ping the
+> > > watchdog once to give userspace more time to get ready, but leave
+> > > it enabled. So you could check if the watchdog is enabled, and if
+> > > it was enabled re-enable it after initialization is complete
+> > > (and maybe log a message stating that the watchdog is enabled).
+> > > 
+> > > If you don't want to do that, and if you are defeating nowayout
+> > > on purpose to fix a problem with a broken bootloader,
+> > > you should at least put in comment describing the problem you are
+> > > trying to solve, and that you accept breaking nowayout with your fix.
+> 
+> Yes, this should be commented.
+> 
+> > I'm not fond of not having "nowayout" option on our driver, given I'm sure
+> > it's a watchdog feature for a good reason.
+> > 
+> > On the other side, I can't see how can we distinguish a previously
+> > and explicitly enabled watchdog, from a spurious enable by broken bootloader.
+> 
+> How about we just don't define module_exit() and leave a comment as
+> such?  It's not unprecedented, a couple of the atm drivers are
+> explicitly setup like this (uPD98402.c, zatm.c, eni.c).
+> 
+Or don't support tristate in the first place. There was some argument from
+others earlier that a watchdog should never be optional. Or drop the nowayout
+option from the driver.
 
-	config SPI_QUP
-		tristate "Qualcomm SPI Support with QUP interface"
-		depends on OF
-		depends on ARM
-		depends on ARCH_MSM_DT || COMPILE_TEST
+There is one problem, though, if you don't support a pre-enabled watchdog:
+If the system dies before the watchdog application starts running, it will
+hang. This is the reason why the watchdog is enabled on purpose by some
+boot loaders.
 
-With Kumar's pending the ARCH_MSM_DT -> ARCH_QCOM rename, we'll
-introduce a arm-soc/spi tree dependency here that we'll need to keep
-track of.
-
-Kumar-
-
-How would you like to handle this?  Would it make sense for this to go
-through the SPI tree with depending on ARCH_QCOM instead of ARCH_MSM_DT?
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Guenter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
