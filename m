@@ -1,44 +1,88 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH v2 2/2] Documentation: devicetree: Add boost-frequency
- binding to list boost mode frequency
-Date: Fri, 7 Feb 2014 11:40:37 -0600
-Message-ID: <CAGo_u6pJtCe_j-xfO4wNHRHqdg4kC_1bsyfiFbHS2fuMiiY+2w@mail.gmail.com>
-References: <1391786342-11812-1-git-send-email-thomas.ab@samsung.com>
-	<1391786342-11812-3-git-send-email-thomas.ab@samsung.com>
-	<52F50698.4060305@arm.com>
-	<52F509BD.70903@arm.com>
-	<CAGo_u6raZY0sKdDn4d92SKpi=eqUpf23vW8K_bEi-v62V2jdPA@mail.gmail.com>
-	<52F51888.5010608@arm.com>
-	<CAGo_u6ofC4NNPiTNcSnXUvT3RZJo54=XyjetR-ok5hCBrVZkKg@mail.gmail.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v6 05/19] watchdog: orion: Make sure the watchdog is
+ initially stopped
+Date: Fri, 7 Feb 2014 10:43:14 -0700
+Message-ID: <20140207174314.GB16263@obsidianresearch.com>
+References: <1391707226-18258-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1391707226-18258-6-git-send-email-ezequiel.garcia@free-electrons.com>
+ <52F43ED0.4050808@roeck-us.net>
+ <20140207104044.GA11063@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAGo_u6ofC4NNPiTNcSnXUvT3RZJo54=XyjetR-ok5hCBrVZkKg@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sudeep Holla <Sudeep.Holla@arm.com>
-Cc: Thomas Abraham <ta.omasab@gmail.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "t.figa@samsung.com" <t.figa@samsung.com>, "l.majewski@samsung.com" <l.majewski@samsung.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "thomas.ab@samsung.com" <thomas.ab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140207104044.GA11063@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 7, 2014 at 11:37 AM, Nishanth Menon <nm@ti.com> wrote:
-> On Fri, Feb 7, 2014 at 11:31 AM, Sudeep Holla <Sudeep.Holla@arm.com> wrote:
->>
->> Yes I thought of exactly similar clock setup, but was not convinced that it
->> should be part of OPP. In that case it looks like we are trying to represent
->> clock internals through some OPP bindings.
->
-> And this series (rightly) does not make it an OPP behavior. instead
-> all it does is to list the boost-frequencies and mark those in cpufreq
-> table. the description is left to the dts and implementation to the
-> clock drivers involved.
+On Fri, Feb 07, 2014 at 07:40:45AM -0300, Ezequiel Garcia wrote:
 
+> Well, this is related to the discussion about the bootloader not
+> reseting the watchdog properly, provoking spurious watchdog triggering.
+> 
+> Jason Gunthorpe explained [1] that we needed a particular sequence:
+> 
+>  1. Disable WDT
+>  2. Clear bridge
+>  3. Enable WDT
+> 
+> We added the irq handling to satisfy (2), and the watchdog stop for (1).
 
-One more thing, before I forget -> currently
-dev_pm_opp_[init|free]_cpufreq_table is in drivers/base/power/opp.c ->
-this probably should go away to drivers/cpufreq to keep opp.c
-independent of frameworks using it. i dont see any code that is
-introduced in the mentioned functions as being OPP behavior specific,
-instead, I consider them as cpufreq+opp behaviors, which this change
-fits into.
+The issue here is the driver configures two 'machine kill' elements:
+the PANIC IRQ and the RstOut setup.
 
-Regards,
-Nishanth Menon
+Before configuring either of those the driver needs to ensure that any
+old watchdog events are cleared out of the HW. We must not get a
+spurious event. 
+
+I agree not disabling an already functional and properly configured
+counter from the bootloader is desirable.
+
+So lets break it down a bit..
+
+1) The IRQ:
+  It looks like the cause bit latches high on watchdog timer
+  expiration but has no side effect unless it is unmasked.
+
+  The new IRQ flow code ensures the bit is cleared during request_irq
+  so no old events can trigger the IRQ. Thus it is solved now.
+
+2) The RstOut:
+  It is a bit unspecific, but I think this signal latches high when
+  any unmasked rst event occurs and stays high until the RstIn pin
+  is asserted.
+
+  So we don't need to worry about clearing old events from here
+
+  Alternatively the WDRstOutEn routes the Cause bit into the RstOut
+  pin.
+
+3) The timer itself:
+  The WDT is just a general timer with an optional hookup to the
+  rst control. If it is harmlessly counting but not resetting we need
+  to stop that before enabling rst out.
+
+So, how about this for psuedo-code in probe:
+
+if (readl(RSTOUTn) & WDRstOutEn)
+{
+    /* Watchdog is configured and may be down counting,
+       don't touch it */
+    request_irq(..);
+}
+else
+{
+    /* Watchdog is not configured, fully disable the timer
+       and configure for watchdog operation. */
+    disable_watchdog();
+    request_irq();
+    writel(RSTOUTn), .. WDRstOutEn);
+}
+
+Jason
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
