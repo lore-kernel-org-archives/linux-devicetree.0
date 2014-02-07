@@ -1,51 +1,60 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: Re: [PATCH 2/2] spi: Add Qualcomm QUP SPI controller support
-Date: Fri, 7 Feb 2014 11:20:51 -0600
-Message-ID: <20140207172051.GW20228@joshc.qualcomm.com>
-References: <1391705868-20091-1-git-send-email-iivanov@mm-sol.com>
- <1391705868-20091-3-git-send-email-iivanov@mm-sol.com>
- <20140207073952.GA2610@qualcomm.com>
- <20140207165127.GV20228@joshc.qualcomm.com>
- <20140207171834.GF1757@sirena.org.uk>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] Regulators: TPS65218: Add Regulator driver for
+ TPS65218 PMIC
+Date: Fri, 7 Feb 2014 17:27:03 +0000
+Message-ID: <20140207172703.GG1757@sirena.org.uk>
+References: <1391665814-18814-1-git-send-email-j-keerthy@ti.com>
+ <1391665814-18814-4-git-send-email-j-keerthy@ti.com>
+ <52F4E685.4060605@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="fCcDWlUEdh43YKr8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140207171834.GF1757@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Kumar Gala <galak@codeaurora.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Alok Chauhan <alokc@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Kiran Gunda <kgunda@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>, Andy Gross <agross@codeaurora.org>
+In-Reply-To: <52F4E685.4060605-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
+Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hey Mark-
 
-On Fri, Feb 07, 2014 at 05:18:34PM +0000, Mark Brown wrote:
-> On Fri, Feb 07, 2014 at 10:51:27AM -0600, Josh Cartwright wrote:
-> 
-> > 	config SPI_QUP
-> > 		tristate "Qualcomm SPI Support with QUP interface"
-> > 		depends on OF
-> > 		depends on ARM
-> 
-> Does this really depend on ARM?  If so why?
+--fCcDWlUEdh43YKr8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The ARM dependency is there for the use of _relaxed io accessor
-variants.
+On Fri, Feb 07, 2014 at 07:28:29PM +0530, Keerthy wrote:
+> On Thursday 06 February 2014 11:20 AM, Keerthy wrote:
 
-> > 		depends on ARCH_MSM_DT || COMPILE_TEST
-> 
-> > With Kumar's pending the ARCH_MSM_DT -> ARCH_QCOM rename, we'll
-> > introduce a arm-soc/spi tree dependency here that we'll need to keep
-> > track of.
-> 
-> It seems simpler to just depend on MSM_DT || ARCH_QCOM or whatever.
+> If there are no further comments on this could you
+> please pull this?
 
-ARCH_MSM_DT is going away, so maybe this is the best option for the
-short term (a later patch can remove ARCH_MSM_DT from here at some point
-in the future).
+You've sent this mail a day after sending the original patch, don't do
+that.
 
-  Josh
+--fCcDWlUEdh43YKr8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS9RdkAAoJELSic+t+oim9LpEQAJBYAfrP5QO4bf15y7r2nTfi
+csYEV+PcP6TGxWReUHYpzuyIQuf+LFQb0WGYYORGsNUCCS+Ke3OvVJzwBKJ+0TPk
+qRdyO4jkwNBHVbeGew2oCKMhQhUFvcvzk6QY35YDXSEGOi0kJ/SvRbg6bVRpZxnT
+wNEwpLQiWlHP0+fC2YlnnXyrl6MagK6FsDuTyNZwQ9YgFEl7/ZXnOCsp+BczNPq+
+s3e+P9r2x9Dw3tYdSVsBxhlFfn9C44tvDmuIICS27CfH9Zgkj6TFteHtYOM5E5bu
+JFqQAm1KAhKQqBVn+52YAcdN/2Sm2XADu+I04n2jVFAsYbHXkL7MGl/T+GcVSZo5
+CLzNMm11ioWVkpBkfyG85lXReuOgCqtpQbPI7PJE9MddVgSlP+c2Iqs94YvWmeiV
+dNcnnQc5AoatXBYAJ/WlDOZDKrZmu8YNC6Febe8XBF/eey/P2ALIcjDKzUrbtQ8e
+Am3aHKlKmsntvQKv0+G6XDTOOVQHraGQA+NdEf0rVlcULIDVRE/bC7rev29iLi9h
+HGOw3GNr85B6SXmCzd0UFq7yVv1w/8tN+YghlNYcdMlCmpsTuGoQDlHqA/AIExx+
+yKF0XXOKHRtlzINWhEHgv1uSiMubAy4T6oRCrCD8myCtL7snraSfURjkf1WIize4
+QwsSChkdTnfdRpa+zR2w
+=ZEDO
+-----END PGP SIGNATURE-----
+
+--fCcDWlUEdh43YKr8--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
