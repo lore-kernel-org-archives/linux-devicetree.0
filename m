@@ -1,39 +1,68 @@
-From: Sudeep Holla <Sudeep.Holla@arm.com>
-Subject: Re: [PATCH v2 2/2] Documentation: devicetree: Add boost-frequency
- binding to list boost mode frequency
-Date: Fri, 07 Feb 2014 18:02:53 +0000
-Message-ID: <52F51FCD.5000009@arm.com>
-References: <1391786342-11812-1-git-send-email-thomas.ab@samsung.com>	<1391786342-11812-3-git-send-email-thomas.ab@samsung.com>	<52F50698.4060305@arm.com>	<52F509BD.70903@arm.com>	<CAGo_u6raZY0sKdDn4d92SKpi=eqUpf23vW8K_bEi-v62V2jdPA@mail.gmail.com>	<52F51888.5010608@arm.com> <CAGo_u6ofC4NNPiTNcSnXUvT3RZJo54=XyjetR-ok5hCBrVZkKg@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] spi: Add Qualcomm QUP SPI controller support
+Date: Fri, 7 Feb 2014 17:57:08 +0000
+Message-ID: <20140207175708.GK1757@sirena.org.uk>
+References: <1391705868-20091-1-git-send-email-iivanov@mm-sol.com>
+ <1391705868-20091-3-git-send-email-iivanov@mm-sol.com>
+ <20140207073952.GA2610@qualcomm.com>
+ <20140207165127.GV20228@joshc.qualcomm.com>
+ <20140207171834.GF1757@sirena.org.uk>
+ <20140207172051.GW20228@joshc.qualcomm.com>
+ <20140207173108.GH1757@sirena.org.uk>
+ <20140207174643.GX20228@joshc.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAGo_u6ofC4NNPiTNcSnXUvT3RZJo54=XyjetR-ok5hCBrVZkKg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Sudeep.Holla@arm.com, Thomas Abraham <ta.omasab@gmail.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "t.figa@samsung.com" <t.figa@samsung.com>, "l.majewski@samsung.com" <l.majewski@samsung.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "thomas.ab@samsung.com" <thomas.ab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="VJJoKLVEFXdmHQwR"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140207174643.GX20228@joshc.qualcomm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Josh Cartwright <joshc@codeaurora.org>
+Cc: Kumar Gala <galak@codeaurora.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Alok Chauhan <alokc@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Kiran Gunda <kgunda@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>, Andy Gross <agross@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/02/14 17:37, Nishanth Menon wrote:
-> On Fri, Feb 7, 2014 at 11:31 AM, Sudeep Holla <Sudeep.Holla@arm.com> wrote:
 
-[...]
+--VJJoKLVEFXdmHQwR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->> Yes I think its counter-intuitive as it's visible to the userspace(list of
->> frequencies and the boost parameters are exposed through sysfs)
-> 
-> That will be a different problem -> as currently every single
-> frequency in the cpufreq list has ability to be marked as boost
-> frequency - if userspace does not maintain that, then, IMHO, fix the
-> userspace :D
-> 
+On Fri, Feb 07, 2014 at 11:46:43AM -0600, Josh Cartwright wrote:
+> On Fri, Feb 07, 2014 at 05:31:08PM +0000, Mark Brown wrote:
 
-/sys/devices/system/cpu/cpu*/cpufreq/scaling_available_frequencies gives
-the list of frequencies based on the state of the boost feature at anytime.
+> > That's not ARM only and I thought we were getting generic versions of it
+> > anyway?  ARMv8, MIPS, Microblaze, Hexagon and SH also define it.
 
-Intuitively the list without boost shouldn't have any frequency above the range
-when it's enabled :), that's what I was referring to. So I am not talking about
-any issue with user-space maintenance.
+> Okay, that's fair.  I'm only vaguely familiar with the generic _relaxed
+> variants, but until they land, how do we appropriately declare the
+> dependency to prevent breaking COMPILE_TEST builds on architectures that
+> don't have them?  Or should we either bother?
 
-Regards,
-Sudeep
+> Do we need to introduce a HAVE_RELAXED_IO_ACCESSORS selected by those
+> architectures with support?
+
+I think that or just getting generic versions done would be the way
+forwards.  Right now it's a bit of a shambles.
+
+--VJJoKLVEFXdmHQwR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS9R5wAAoJELSic+t+oim9Hy4P+gKNAZOVgTiqUkpUzJAW36n1
+0s/00KzbZPD5/Tq1buJgjgSQhSCq3wPnLFAJyMVu6Us3lhcto7Dem+qrBvBRgfJf
+V7pYNlFDAEkYWfAaXupmyEl+4EKCqJhkIvm4lyWsik5zELnLSFVXadT+6AqYWg1v
+zdqDNB1DFXfmk/qFxO9ozcP1i22ywDA35shVtmHJ4HLO7c8P+9T7y6YMJ8CLVusK
+KTrbNBzO7x9bOC33CfZMP9KloEt4LjCJf+m7sZx04CZcw87Abya7m7L4kwbt1HZc
+RKjFF2VkdRitCubOq8tdINsCzaRNZzINXIA3sIQXUPJcaK+qfzNeJfofhQquPEXS
+jrMqt85X9769XNaI9lbTv92mwbnSE/0YJrVAgo//ynBCY69NqJl4mSbqQB7Ky/7E
+pLVaAn4A6Ig+Rrcdbee6389t46+F0ugfzILN4cap49lyGIIrhshlQiu7HgjpoPkD
+M1hbHXXD9StFabjj2YgkrcbsmxfQibsu27S4sSdQDQGMw26FfdoELLKyuueMKKqQ
+XAgebKNElfxh2ZP4LupvfCoSwmbji/jtXFCet4wl5vY1xO366isZF4alatzKgTtW
++Gm1XPyxdBDO+ny+RjwAnaJt53m8dRqQD6Sq1/5WMWbc4CkmZpD6MrZykaDqRQVM
++y0xkxNC4353rPhMMBq/
+=Fyb+
+-----END PGP SIGNATURE-----
+
+--VJJoKLVEFXdmHQwR--
