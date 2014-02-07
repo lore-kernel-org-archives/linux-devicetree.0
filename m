@@ -1,49 +1,90 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH] ARM: at91/dt: fix sama5d3 ohci hclk clock reference
-Date: Fri, 7 Feb 2014 16:46:27 +0100
-Message-ID: <52F4FFD3.3070602@atmel.com>
-References: <1389885934-26119-1-git-send-email-b.brezillon@overkiz.com>
+From: James Hogan <james.hogan@imgtec.com>
+Subject: [PATCH v3 06/15] dt: binding: add binding for ImgTec IR block
+Date: Fri, 7 Feb 2014 15:49:15 +0000
+Message-ID: <1391788155-29191-1-git-send-email-james.hogan@imgtec.com>
+References: <CAL_JsqLL6MbwajCUAm+NJk=ofL5OHq8b0zwO3LFb-TKY6UtVMQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1389885934-26119-1-git-send-email-b.brezillon@overkiz.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris BREZILLON <b.brezillon@overkiz.com>
-Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLL6MbwajCUAm+NJk=ofL5OHq8b0zwO3LFb-TKY6UtVMQ@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <m.chehab@samsung.com>, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Cc: James Hogan <james.hogan@imgtec.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 16/01/2014 16:25, Boris BREZILLON :
-> The hclk clock of the ohci node is referencing udphs_clk instead of
-> uhphs_clk.
-> 
-> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+Add device tree binding for ImgTec Consumer Infrared block, specifically
+major revision 1 of the hardware.
 
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+Signed-off-by: James Hogan <james.hogan@imgtec.com>
+Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>
+Cc: linux-media@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org
+Cc: Rob Landley <rob@landley.net>
+Cc: linux-doc@vger.kernel.org
+Cc: Tomasz Figa <tomasz.figa@gmail.com>
+---
+v3:
+- Rename compatible string to "img,ir-rev1" (Rob Herring).
+- Specify ordering of clocks explicitly (Rob Herring).
 
-Added to at91-3.14-fixes
+v2:
+- Future proof compatible string from "img,ir" to "img,ir1", where the 1
+  corresponds to the major revision number of the hardware (Tomasz
+  Figa).
+- Added clock-names property and three specific clock names described in
+  the manual, only one of which is used by the current driver (Tomasz
+  Figa).
+---
+ .../devicetree/bindings/media/img-ir-rev1.txt      | 34 ++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/img-ir-rev1.txt
 
-Thanks,
-
-> ---
->  arch/arm/boot/dts/sama5d3.dtsi |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-> index e398e5d..31356e2 100644
-> --- a/arch/arm/boot/dts/sama5d3.dtsi
-> +++ b/arch/arm/boot/dts/sama5d3.dtsi
-> @@ -1195,7 +1195,7 @@
->  			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
->  			reg = <0x00600000 0x100000>;
->  			interrupts = <32 IRQ_TYPE_LEVEL_HIGH 2>;
-> -			clocks = <&usb>, <&uhphs_clk>, <&udphs_clk>,
-> +			clocks = <&usb>, <&uhphs_clk>, <&uhphs_clk>,
->  				 <&uhpck>;
->  			clock-names = "usb_clk", "ohci_clk", "hclk", "uhpck";
->  			status = "disabled";
-> 
-
-
+diff --git a/Documentation/devicetree/bindings/media/img-ir-rev1.txt b/Documentation/devicetree/bindings/media/img-ir-rev1.txt
+new file mode 100644
+index 000000000000..5434ce61b925
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/img-ir-rev1.txt
+@@ -0,0 +1,34 @@
++* ImgTec Infrared (IR) decoder version 1
++
++This binding is for Imagination Technologies' Infrared decoder block,
++specifically major revision 1.
++
++Required properties:
++- compatible:		Should be "img,ir-rev1"
++- reg:			Physical base address of the controller and length of
++			memory mapped region.
++- interrupts:		The interrupt specifier to the cpu.
++
++Optional properties:
++- clocks:		List of clock specifiers as described in standard
++			clock bindings.
++			Up to 3 clocks may be specified in the following order:
++			1st:	Core clock (defaults to 32.768KHz if omitted).
++			2nd:	System side (fast) clock.
++			3rd:	Power modulation clock.
++- clock-names:		List of clock names corresponding to the clocks
++			specified in the clocks property.
++			Accepted clock names are:
++			"core":	Core clock.
++			"sys":	System clock.
++			"mod":	Power modulation clock.
++
++Example:
++
++	ir@02006200 {
++		compatible = "img,ir-rev1";
++		reg = <0x02006200 0x100>;
++		interrupts = <29 4>;
++		clocks = <&clk_32khz>;
++		clock-names =  "core";
++	};
 -- 
-Nicolas Ferre
+1.8.1.2
+
+
