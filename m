@@ -1,50 +1,40 @@
-From: Thomas Abraham <ta.omasab@gmail.com>
-Subject: [PATCH v2 2/2] Documentation: devicetree: Add boost-frequency binding to list boost mode frequency
-Date: Fri,  7 Feb 2014 20:49:02 +0530
-Message-ID: <1391786342-11812-3-git-send-email-thomas.ab@samsung.com>
-References: <1391786342-11812-1-git-send-email-thomas.ab@samsung.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1391786342-11812-1-git-send-email-thomas.ab@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: rjw@rjwysocki.net, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, t.figa@samsung.com, l.majewski@samsung.com, viresh.kumar@linaro.org, thomas.ab@samsung.com, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v4 0/5] clk: sunxi usb clks support
+Date: Fri,  7 Feb 2014 16:21:48 +0100
+Message-ID: <1391786513-20780-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBG7U2OLQKGQEFQ5NUXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Thomas Abraham <thomas.ab@samsung.com>
+Hi All,
 
-Add a new optional boost-frequency binding for specifying the frequencies
-usable in boost mode.
+And here is v4 of my sunxi usb clks support series.
 
-Cc: Nishanth Menon <nm@ti.com>
-Cc: Lukasz Majewski <l.majewski@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
----
- Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt |   11 +++++++++++
- 1 file changed, 11 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
+Changes since v2:
+-rename the compatibilty strings from foo-usb-gates-clk to foo-usb-clk
 
-diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
-new file mode 100644
-index 0000000..d925e38
---- /dev/null
-+++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
-@@ -0,0 +1,11 @@
-+* Device tree binding for CPU boost frequency (aka over-clocking)
-+
-+Certain CPU's can be operated in optional 'boost' mode (or sometimes referred as
-+overclocking) in which the CPU can operate in frequencies beyond the normal
-+operating conditions.
-+
-+Optional Properties:
-+- boost-frequency: list of frequencies in KHz to be used only in boost mode.
-+  This list should be a subset of frequencies listed in "operating-points"
-+  property. Refer to Documentation/devicetree/bindings/power/opp.txt for
-+  details about "operating-points" property.
--- 
-1.7.10.4
+Changes since v3:
+-rename the compatibilty string for sun4i-usb-clk to sun4i-a10-usb-clk
 
+Note the dts bits (patches 3-5) of this series depends on Chen-Yu Tsai's clk
+rename series.
+
+Emilio, should Mike pick patches 1-2 up directly, or should they go through
+your tree?
+
+Maxime, can you please add patches 3-5 to your dts tree ? Assuming that
+wens clk rename patches are already there.
+
+Thanks & Regards,
+
+Hans
