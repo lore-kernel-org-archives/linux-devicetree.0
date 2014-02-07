@@ -1,88 +1,39 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: Devicetree Maintenance in barebox
-Date: Fri, 7 Feb 2014 18:51:14 +0100
-Message-ID: <20140207175114.GL9671@ns203013.ovh.net>
-References: <20140207071332.GE16215@pengutronix.de>
- <20140207141028.GT8533@titan.lakedaemon.net>
+From: Sudeep Holla <Sudeep.Holla@arm.com>
+Subject: Re: [PATCH v2 2/2] Documentation: devicetree: Add boost-frequency
+ binding to list boost mode frequency
+Date: Fri, 07 Feb 2014 18:02:53 +0000
+Message-ID: <52F51FCD.5000009@arm.com>
+References: <1391786342-11812-1-git-send-email-thomas.ab@samsung.com>	<1391786342-11812-3-git-send-email-thomas.ab@samsung.com>	<52F50698.4060305@arm.com>	<52F509BD.70903@arm.com>	<CAGo_u6raZY0sKdDn4d92SKpi=eqUpf23vW8K_bEi-v62V2jdPA@mail.gmail.com>	<52F51888.5010608@arm.com> <CAGo_u6ofC4NNPiTNcSnXUvT3RZJo54=XyjetR-ok5hCBrVZkKg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <barebox-bounces+gcbb-barebox=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140207141028.GT8533-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/barebox>,
- <mailto:barebox-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/barebox/>
-List-Post: <mailto:barebox-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:barebox-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/barebox>,
- <mailto:barebox-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "barebox" <barebox-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: barebox-bounces+gcbb-barebox=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, barebox-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAGo_u6ofC4NNPiTNcSnXUvT3RZJo54=XyjetR-ok5hCBrVZkKg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Sudeep.Holla@arm.com, Thomas Abraham <ta.omasab@gmail.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "t.figa@samsung.com" <t.figa@samsung.com>, "l.majewski@samsung.com" <l.majewski@samsung.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "thomas.ab@samsung.com" <thomas.ab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09:10 Fri 07 Feb     , Jason Cooper wrote:
-> Hi Sascha,
-> 
-> + Grant Likely, Ian Campbell, devicetree ML
-> 
-> This discussion started on the barebox bootloader mailinglist
-> 
-> On Fri, Feb 07, 2014 at 08:13:32AM +0100, Sascha Hauer wrote:
-> > It's becoming more obvious that devicetree maintenance is painful
-> > because we have to sync them to the kernel regularly. My hope was that
-> > this would get simpler once the devicetrees get their own repository
-> > outside the kernel, but it seems that won't happen anytime soon.
-> 
-> hmm.  Ian Campbell has a tree he is working on:
-> 
->   git://xenbits.xen.org/people/ianc/device-tree-rebasing.git
-> 
-> Also, In the DT meeting earlier this week, Grant Likely said he has the
-> request in to create a separate mailinglist for collaboration between
-> the different devicetree users (BSD, Linux, etc).
-> 
-> > So my current idea to continue with barebox devicetrees is:
-> > 
-> > - Maintain a kernel branch which has all devicetree changes we need in
-> >   barebox in a clean step-by-step series
-> > - rebase this branch regularly on the newer kernel
-> > - Copy the resulting devicetrees to barebox
-> > 
-> > The upside is that we have up to date devicetrees in barebox without
-> > having to resync them by hand on a per SoC basis.  Of course this also
-> > means that we lose the devicetree history and breakage may be introduced
-> > with some huge commits saying "Update devicetrees to Linux-3.x".
-> > 
-> > Any better ideas? I think we have to do something.
-> 
-> I think the proper solution will percolate out of the first
-> cross-project discussions on the new ML.
-> 
-> imho, the goal is to not have any project tied to a specific version of
-> the devicetree.  iow, we don't break backwards compatibility in the
-> devicetrees, and projects should revert to default behavior if new dt
-> parameters are missing.  This means Linux and BSD shouldn't need to keep
-> a current copy of the devicetree in their trees.  However, building the
-> bootloader is a different animal.  It needs to provide the dt blob...
-> 
-> Definitely fodder for the new ML.
-> 
-> Grant, can you please add Sascha to the list of folks to notify when the
-> new ML is ready?
+On 07/02/14 17:37, Nishanth Menon wrote:
+> On Fri, Feb 7, 2014 at 11:31 AM, Sudeep Holla <Sudeep.Holla@arm.com> wrote:
 
-Yes we do need to split the DT ASAP
+[...]
 
-Best Regards,
-J.
+>> Yes I think its counter-intuitive as it's visible to the userspace(list of
+>> frequencies and the boost parameters are exposed through sysfs)
 > 
-> thx,
+> That will be a different problem -> as currently every single
+> frequency in the cpufreq list has ability to be marked as boost
+> frequency - if userspace does not maintain that, then, IMHO, fix the
+> userspace :D
 > 
-> Jason.
-> 
-> _______________________________________________
-> barebox mailing list
-> barebox-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/barebox
+
+/sys/devices/system/cpu/cpu*/cpufreq/scaling_available_frequencies gives
+the list of frequencies based on the state of the boost feature at anytime.
+
+Intuitively the list without boost shouldn't have any frequency above the range
+when it's enabled :), that's what I was referring to. So I am not talking about
+any issue with user-space maintenance.
+
+Regards,
+Sudeep
