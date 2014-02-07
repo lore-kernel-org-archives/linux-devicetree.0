@@ -1,58 +1,99 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V3] net/dt: Add support for overriding phy configuration
- from device tree
-Date: Fri, 7 Feb 2014 14:43:15 -0800
-Message-ID: <CAGVrzcaht=ZVF9uu=VTaGBk4-ayRkYhOEpoWA4b2sprCaVrbKA@mail.gmail.com>
-References: <7510122.cayuQ6qt8r@wuerfel> <1389999459-9483-1-git-send-email-matthew.garrett@nebula.com>
- <CAGVrzcZ4TFd=9KP+aoG47QbmqDJ1i23WBcEWDbzNRUfGmPvZHQ@mail.gmail.com> <063D6719AE5E284EB5DD2968C1650D6D0F6B8BCA@AcuExch.aculab.com>
+From: Bjorn Andersson <bjorn@kryo.se>
+Subject: Re: [PATCHv4 4/7] hwspinlock/core: add common OF helpers
+Date: Fri, 7 Feb 2014 14:49:07 -0800
+Message-ID: <CAJAp7Oi7wD+VsMAd37gT04yZ4TH4ygXFmheDhvmWuanUjpBmVQ@mail.gmail.com>
+References: <1389658764-39199-1-git-send-email-s-anna@ti.com>
+	<1389658764-39199-5-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <063D6719AE5E284EB5DD2968C1650D6D0F6B8BCA-VkEWCZq2GCInGFn1LkZF6NBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Laight <David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org>
-Cc: Matthew Garrett <matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1389658764-39199-5-git-send-email-s-anna@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Suman Anna <s-anna@ti.com>
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-02-05 David Laight <David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org>:
-> From: Florian Fainelli
->> It would be good to explain exactly how your hardware is broken
->> exactly. I really do not think that such a fine-grained setting where
->> you could disable, e.g: 100BaseT_Full, but allow 100BaseT_Half to
->> remain usable makes that much sense. In general, Gigabit might be
->> badly broken, but 100 and 10Mbits/sec should work fine. How about the
->> MASTER-SLAVE bit, is overriding it really required?
->
-> There are plenty of systems out there where you'd want to disable
-> either HDX or FDX modes.
-> The MAC unit has to know whether the PHY is in HDX or FDX in order
-> to work properly. Many do not need to know the speed - since the
-> PHY is responsible for the tx/rx fifo clock.
-> Getting the negotiated speed out of the PHY can be difficult, while
-> the ANAR can easily be set.
-> Unfortunately it is usually impossible to disable the 'fall-back'
-> 10M HDX.
+On Mon, Jan 13, 2014 at 4:19 PM, Suman Anna <s-anna@ti.com> wrote:
+> This patch adds three new OF helper functions to use/request
+> locks from a hwspinlock device instantiated through a
+> device-tree blob.
 
-The problem that I have with that approach in general is that:
+Nice, I ran in to the problem of needing a probe deferral on a
+hwspinlock earlier this week so I implemented this yesterday...then I
+got a pointer to your series.
 
-- it bloats the code for a set of properties that are going to be used
-by hopefully a few percentage of the actual Device Trees out there
-- it puts no limits on what is acceptable/best-practice to be put in
-terms of configuration in the Device Tree, how about the 16x16 other
-register values out there which are standardized?
-- a PHY fixup should be registered based on the top-level compatible
-property for a given board where the specific PHY on a specific board
-is known to be broken
-- make things incredibly harder to debug than they are today
+[snip]
+>  /**
+> + * of_hwspin_lock_request_specific() - request a OF phandle-based specific lock
+> + * @np: device node from which to request the specific hwlock
+> + * @propname: property name containing hwlock specifier(s)
+> + * @index: index of the hwlock
+> + *
+> + * This function is the OF equivalent of hwspin_lock_request_specific(). This
+> + * function provides a means for users of the hwspinlock module to request a
+> + * specific hwspinlock using the phandle of the hwspinlock device. The requested
+> + * lock number is indexed relative to the hwspinlock device, unlike the
+> + * hwspin_lock_request_specific() which is an absolute lock number.
+> + *
+> + * Returns the address of the assigned hwspinlock, or NULL on error
+> + */
+> +struct hwspinlock *of_hwspin_lock_request_specific(struct device_node *np,
+> +                                       const char *propname, int index)
+> +{
+> +       struct hwspinlock_device *bank;
+> +       struct of_phandle_args args;
+> +       int id;
+> +       int ret;
+> +
+> +       ret = of_parse_phandle_with_args(np, propname, "#hwlock-cells", index,
+> +                                        &args);
+> +       if (ret) {
+> +               pr_warn("%s: can't parse hwlocks property of node '%s[%d]' ret = %d\n",
+> +                       __func__, np->full_name, index, ret);
+> +               return NULL;
+> +       }
 
-I do acknowledge the need to have a solution to these problems, but
-this seems to duplicate existing mechanisms available (e.g: PHY
-fixups) without leveraging information that should be properly flagged
-in the Device Tree (board model, root-node compatible string etc...)
-to allow software to take corrective measures.
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+of_parse_phandle_with_args() already does pr_err if it can't find the
+phandle and on some of the issues related to arguments. So please
+remove this pr_warn().
+
+It seems to be standard practice to pass the error value back to the
+consumer, so you should
+return ERR_PTR(ret); here instead of the NULL...
+
+> +
+> +       mutex_lock(&hwspinlock_tree_lock);
+> +       list_for_each_entry(bank, &hwspinlock_devices, list)
+> +               if (bank->dev->of_node == args.np)
+> +                       break;
+> +       mutex_unlock(&hwspinlock_tree_lock);
+> +       if (&bank->list == &hwspinlock_devices) {
+> +               pr_warn("%s: requested hwspinlock device %s is not registered\n",
+> +                       __func__, args.np->full_name);
+> +               return NULL;
+
+...especially since you want the consumer to have the ability to
+identify this error. Here you should
+return ERR_PTR(-EPROBE_DEFER); so that the consumer knows that this
+lock is not _yet_ registered, but will be in the future.
+
+You should remove this pr_warn as well. The standard use of this
+function would be in a probe() and just returning this error value
+from that probe will give you a line in the log indicating that this
+was in fact the issue.
+
+> +       }
+> +
+> +       id = bank->ops->of_xlate(bank, &args);
+> +       if (id < 0 || id >= bank->num_locks) {
+> +               pr_warn("%s: requested lock %d is either out of range [0, %d] or failed translation\n",
+> +                       __func__, id, bank->num_locks - 1);
+> +               return NULL;
+
+Please return ERR_PTR(-EINVAL); here.
+
+
+Looking forward to your next spin, as I will actually use this interface :)
+
+Regards,
+Bjorn
