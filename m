@@ -1,55 +1,43 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v5 00/14] Add support for MSM's mmio clock/reset
- controller
-Date: Fri, 07 Feb 2014 12:51:58 -0800
-Message-ID: <1391806318.28199.6.camel@joe-AO722>
-References: <1389811654-21397-1-git-send-email-sboyd@codeaurora.org>
-	 <52F45DEE.8020400@gmail.com> <1391749891.15777.31.camel@joe-AO722>
-	 <52F53642.3030606@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <52F53642.3030606@gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: frowand.list@gmail.com
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Saravana Kannan <skannan@codeaurora.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: [PATCH v3 6/7] devicetree: bindings: Document Krait performance monitor units (PMU)
+Date: Fri,  7 Feb 2014 13:01:24 -0800
+Message-ID: <1391806885-24210-7-git-send-email-sboyd@codeaurora.org>
+References: <1391806885-24210-1-git-send-email-sboyd@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1391806885-24210-1-git-send-email-sboyd@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2014-02-07 at 11:38 -0800, Frank Rowand wrote:
-> On 2/6/2014 9:11 PM, Joe Perches wrote:
-> > For patch 1, what checkpatch bug might that be?
-[]
-> Sorry, it is patch 2, not patch 1 ("[PATCH v5 02/14] clk: Add set_rate_and_parent() op"):
-> 
->    WARNING: Multiple spaces after return type
->    #188: FILE: include/linux/clk-provider.h:154:
->    +       int             (*set_rate_and_parent)(struct clk_hw *hw,
-> 
->    total: 0 errors, 1 warnings, 152 lines checked
+Document the Krait PMU compatible string.
 
-Yup, that one might be a bit aggressive.
+Cc: <devicetree@vger.kernel.org>
+Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+---
+ Documentation/devicetree/bindings/arm/pmu.txt | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-It's a complaint about function pointer declaration style.
-
-from checkpatch:
-------------------------------------------------------
-# unnecessary space "type  (*funcptr)(args...)"
-			elsif ($declare =~ /\s{2,}$/) {
-				WARN("SPACING",
-				     "Multiple spaces after return type\n" . $herecurr);
-			}
-------------------------------------------------------
-
-This is warning about style equivalent to declarations like:
-
-int		foo(int bar);
-
-checkpatch doesn't warn about declarations of that style,
-so likely checkpatch shouldn't warn about multiple spaces
-after a function pointer return type either.
-
-I don't have a strong opinion one way or another about it.
-
-If you think it should be silenced, it could be either
-downgraded to a CHK or removed altogether.
+diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Documentation/devicetree/bindings/arm/pmu.txt
+index 3e1e498fea96..ce731441e64f 100644
+--- a/Documentation/devicetree/bindings/arm/pmu.txt
++++ b/Documentation/devicetree/bindings/arm/pmu.txt
+@@ -16,7 +16,14 @@ Required properties:
+ 	"arm,arm11mpcore-pmu"
+ 	"arm,arm1176-pmu"
+ 	"arm,arm1136-pmu"
+-- interrupts : 1 combined interrupt or 1 per core.
++	"qcom,krait-pmu"
++- interrupts : 1 combined interrupt or 1 per core. If the interrupt is a per-cpu
++               interrupt (PPI) then 1 interrupt should be specified.
++
++Optional properties:
++
++- qcom,no-pc-write : Indicates that this PMU doesn't support the 0xc and 0xd
++                     events.
+ 
+ Example:
+ 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
