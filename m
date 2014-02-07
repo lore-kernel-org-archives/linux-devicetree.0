@@ -1,138 +1,381 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] clk: sunxi: Add USB clock register defintions
-Date: Fri, 07 Feb 2014 14:53:48 +0100
-Message-ID: <52F4E56C.4030500@redhat.com>
-References: <1390426587-16287-1-git-send-email-hdegoede@redhat.com> <1390426587-16287-3-git-send-email-hdegoede@redhat.com> <20140127144349.GJ3867@lukather> <52E67316.5020906@redhat.com> <20140128094427.GZ3867@lukather> <52E77FCD.5050701@redhat.com> <20140204094051.GL25625@lukather> <52F0BD94.1060601@redhat.com> <20140207134831.GJ3192@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Keerthy <a0393675@ti.com>
+Subject: Re: [PATCH v2 3/4] Regulators: TPS65218: Add Regulator driver for
+ TPS65218 PMIC
+Date: Fri, 7 Feb 2014 19:28:29 +0530
+Message-ID: <52F4E685.4060605@ti.com>
+References: <1391665814-18814-1-git-send-email-j-keerthy@ti.com> <1391665814-18814-4-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRB5GK2OLQKGQEDVE5N6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140207134831.GJ3192@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1391665814-18814-4-git-send-email-j-keerthy@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, sameo@linux.intel.com, lee.jones@linaro.org, grant.likely@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Mark,
 
-On 02/07/2014 02:48 PM, Maxime Ripard wrote:
-> On Tue, Feb 04, 2014 at 11:14:44AM +0100, Hans de Goede wrote:
->> -----BEGIN PGP SIGNED MESSAGE-----
->> Hash: SHA1
->>
->> Hi,
->>
->> On 02/04/2014 10:40 AM, Maxime Ripard wrote:
->>> Hi Hans,
->>>
->>> On Tue, Jan 28, 2014 at 11:00:45AM +0100, Hans de Goede wrote:
->>>> -----BEGIN PGP SIGNED MESSAGE----- Hash: SHA1
->>>>
->>>> Hi,
->>>>
->>>> On 01/28/2014 10:44 AM, Maxime Ripard wrote:
->>>>> On Mon, Jan 27, 2014 at 03:54:14PM +0100, Hans de Goede wrote:
->>>>>>>> "allwinner,sun5i-a13-usb-gates-clk" - for usb gates + resets on A1=
-3
->>>>>>>
->>>>>>> Maybe we can just remove the gates from there? Even though they are=
- gates, they are also (a bit) more than that.
->>>>>>
->>>>>> To be clear you mean s/usb-gates-clk/usb-clk/ right ?
->>>>>
->>>>> Yep, exactly
->>>>>
->>>>>>> I guess that means that we will have the OHCI0 gate declared with <=
-&...-gates-clk 6>, while it's actually the first gate for this clock?
->>>>>>
->>>>>> Correct.
->>>>>>
->>>>>>> Maybe introducing an offset field in the gates_data would be a good=
- idea, so that we always start from indexing the gates from 0 in the DT?
->>>>>>
->>>>>> Well for the other "gates" type clks we also have holes in the range=
-, and we always refer to the clk with the bit number in the reg as the cloc=
-k-cell value.
->>>>>
->>>>> Yes, we have holes, but I see two majors differences here: - the othe=
-r gates are just gates, while the usb clocks are a bit more than that.
->>>>
->>>> The usb-clk registers contain more then that, but the bits we are talk=
-ing about now are gates.
->>>>
->>>>> - the other gates' gating bits thus all start at bit 0, while - here,=
- since it's kind of a "mixed" clock, the gating bits start - at bit 6 (on t=
-he A20 at least)
->>>>
->>>> Right, still I believe that the consistent thing to do is keeping the =
-bit-number for the bit in the register controlling the gate as the specifie=
-r.  When adding new dts entries / reviewing existing ones I'm used to match=
-ing the specifier to the bit-nr in the data-sheet, I think making things di=
-fferent just for this one register is counter productive.
->>>
->>> And if you turn it the other way around, it would be inconsistent that =
-all gates indices start at 0, and we would start at 6 here :)
->>
->> I think the problem here is that you see the specifier part of the clk
->> phandle as an index, which it is not. All devicetree docs / code talks
->> about specifiers or arguments not indexes. Once you stop seeing this as
->> an index, you will hopefully also stop insisting this needs to
->> start at 0 :)
->>
->> Also note that it already is not an index for existing sunxi clks which =
-have
->> cells !=3D 0, as there are holes in the bits used in the gates registers=
- and
->> calling the specifier an index suggest we're dealing with an array, and
->> arrays never have holes.
->>
->> The clk specifier as currently used in sunxi clks is a 1:1 mapping of th=
-e
->> gate register bit numbers, as is clearly documented in ie:
->> Documentation/devicetree/bindings/clock/sunxi/sun4i-a10-gates.txt
->> Where the datasheet is referenced as the source for (most) of the values
->> to put in the specifier.
->>
->> My biggest objection is that this would loose 1:1 mapping we currently
->> have between the specifier and bit-nr in the register, which really is
->> convenient when writing new dts bindings.
->>
->> When we add an offset users will need to first lookup which clk they nee=
-d in
->> the datasheet and then look at both the dts bindings doc to find how thi=
-s is
->> mapped to the specifier. In my experience such an extra level of indirec=
-tion
->> in documentation is a PITA, and all that just so that some random number
->> (it is not an index!) can start at 0 ?
->>
->> To me adding an offset here and making the clk gates different form all
->> our other clock gates just feels wrong.
+On Thursday 06 February 2014 11:20 AM, Keerthy wrote:
+> This patch adds support for TPS65218 PMIC regulators.
 >
-> Emilio pretty much share your feeling. I won't get in the way then :)
->
-> I only had the compatible name comment left then.
+> The regulators set consists of 6 DCDCs and 1 LDO. The output
+> voltages are configurable and are meant to supply power to the
+> main processor and other components.
 
-Yes I've already fixed that in my latest sunxi-devel tree:
-https://github.com/linux-sunxi/linux-sunxi/commits/sunxi-devel
-
-Which is also rebased to 3.14-rc1 for those interested, I'll resend
-the usb-clk patches with this + Emilio's reverted remark fixed soon-ish
-then.
+If there are no further comments on this could you
+please pull this?
 
 Regards,
+Keerthy
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> ---
+>   drivers/regulator/Kconfig              |    9 +
+>   drivers/regulator/Makefile             |    1 +
+>   drivers/regulator/tps65218-regulator.c |  304 ++++++++++++++++++++++++++++++++
+>   3 files changed, 314 insertions(+)
+>   create mode 100644 drivers/regulator/tps65218-regulator.c
+>
+> diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+> index 6a79328..b05da880 100644
+> --- a/drivers/regulator/Kconfig
+> +++ b/drivers/regulator/Kconfig
+> @@ -513,6 +513,15 @@ config REGULATOR_TPS65217
+>   	  voltage regulators. It supports software based voltage control
+>   	  for different voltage domains
+>   
+> +config REGULATOR_TPS65218
+> +	tristate "TI TPS65218 Power regulators"
+> +	depends on MFD_TPS65218
+> +	help
+> +	  This driver supports TPS65218 voltage regulator chips. TPS65218
+> +	  provides six step-down converters and one general-purpose LDO
+> +	  voltage regulators. It supports software based voltage control
+> +	  for different voltage domains
+> +
+>   config REGULATOR_TPS6524X
+>   	tristate "TI TPS6524X Power regulators"
+>   	depends on SPI
+> diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+> index 979f9dd..ba801a5 100644
+> --- a/drivers/regulator/Makefile
+> +++ b/drivers/regulator/Makefile
+> @@ -67,6 +67,7 @@ obj-$(CONFIG_REGULATOR_TPS65023) += tps65023-regulator.o
+>   obj-$(CONFIG_REGULATOR_TPS6507X) += tps6507x-regulator.o
+>   obj-$(CONFIG_REGULATOR_TPS65090) += tps65090-regulator.o
+>   obj-$(CONFIG_REGULATOR_TPS65217) += tps65217-regulator.o
+> +obj-$(CONFIG_REGULATOR_TPS65218) += tps65218-regulator.o
+>   obj-$(CONFIG_REGULATOR_TPS6524X) += tps6524x-regulator.o
+>   obj-$(CONFIG_REGULATOR_TPS6586X) += tps6586x-regulator.o
+>   obj-$(CONFIG_REGULATOR_TPS65910) += tps65910-regulator.o
+> diff --git a/drivers/regulator/tps65218-regulator.c b/drivers/regulator/tps65218-regulator.c
+> new file mode 100644
+> index 0000000..39fb189
+> --- /dev/null
+> +++ b/drivers/regulator/tps65218-regulator.c
+> @@ -0,0 +1,304 @@
+> +/*
+> + * tps65218-regulator.c
+> + *
+> + * Regulator driver for TPS65218 PMIC
+> + *
+> + * Copyright (C) 2014 Texas Instruments Incorporated - http://www.ti.com/
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+> + * kind, whether expressed or implied; without even the implied warranty
+> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License version 2 for more details.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/device.h>
+> +#include <linux/init.h>
+> +#include <linux/err.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of_device.h>
+> +#include <linux/regulator/of_regulator.h>
+> +#include <linux/regulator/driver.h>
+> +#include <linux/regulator/machine.h>
+> +#include <linux/mfd/tps65218.h>
+> +
+> +static unsigned int tps65218_ramp_delay = 4000;
+> +
+> +enum tps65218_regulators { DCDC1, DCDC2, DCDC3, DCDC4, DCDC5, DCDC6, LDO1 };
+> +
+> +#define TPS65218_REGULATOR(_name, _id, _ops, _n, _vr, _vm, _er, _em, _t, \
+> +			    _lr, _nlr)				\
+> +	{							\
+> +		.name			= _name,		\
+> +		.id			= _id,			\
+> +		.ops			= &_ops,		\
+> +		.n_voltages		= _n,			\
+> +		.type			= REGULATOR_VOLTAGE,	\
+> +		.owner			= THIS_MODULE,		\
+> +		.vsel_reg		= _vr,			\
+> +		.vsel_mask		= _vm,			\
+> +		.enable_reg		= _er,			\
+> +		.enable_mask		= _em,			\
+> +		.volt_table		= _t,			\
+> +		.linear_ranges		= _lr,			\
+> +		.n_linear_ranges	= _nlr,			\
+> +	}							\
+> +
+> +#define TPS65218_INFO(_id, _nm, _min, _max)	\
+> +	{						\
+> +		.id		= _id,			\
+> +		.name		= _nm,			\
+> +		.min_uV		= _min,			\
+> +		.max_uV		= _max,			\
+> +	}
+> +
+> +static const struct regulator_linear_range dcdc1_dcdc2_ranges[] = {
+> +	REGULATOR_LINEAR_RANGE(850000, 0x0, 0x32, 10000),
+> +	REGULATOR_LINEAR_RANGE(1375000, 0x33, 0x3f, 25000),
+> +};
+> +
+> +static const struct regulator_linear_range ldo1_dcdc3_ranges[] = {
+> +	REGULATOR_LINEAR_RANGE(900000, 0x0, 0x1a, 25000),
+> +	REGULATOR_LINEAR_RANGE(1600000, 0x1b, 0x3f, 50000),
+> +};
+> +
+> +static const struct regulator_linear_range dcdc4_ranges[] = {
+> +	REGULATOR_LINEAR_RANGE(1175000, 0x0, 0xf, 25000),
+> +	REGULATOR_LINEAR_RANGE(1550000, 0x10, 0x34, 50000),
+> +};
+> +
+> +static struct tps_info tps65218_pmic_regs[] = {
+> +	TPS65218_INFO(0, "DCDC1", 850000, 167500),
+> +	TPS65218_INFO(1, "DCDC2", 850000, 1675000),
+> +	TPS65218_INFO(2, "DCDC3", 900000, 3400000),
+> +	TPS65218_INFO(3, "DCDC4", 1175000, 3400000),
+> +	TPS65218_INFO(4, "DCDC5", 1000000, 1000000),
+> +	TPS65218_INFO(5, "DCDC6", 1800000, 1800000),
+> +	TPS65218_INFO(6, "LDO1", 900000, 3400000),
+> +};
+> +
+> +#define TPS65218_OF_MATCH(comp, label) \
+> +	{ \
+> +		.compatible = comp, \
+> +		.data = &label, \
+> +	}
+> +
+> +static const struct of_device_id tps65218_of_match[] = {
+> +	TPS65218_OF_MATCH("ti,tps65218-dcdc1", tps65218_pmic_regs[DCDC1]),
+> +	TPS65218_OF_MATCH("ti,tps65218-dcdc2", tps65218_pmic_regs[DCDC2]),
+> +	TPS65218_OF_MATCH("ti,tps65218-dcdc3", tps65218_pmic_regs[DCDC3]),
+> +	TPS65218_OF_MATCH("ti,tps65218-dcdc4", tps65218_pmic_regs[DCDC4]),
+> +	TPS65218_OF_MATCH("ti,tps65218-dcdc5", tps65218_pmic_regs[DCDC5]),
+> +	TPS65218_OF_MATCH("ti,tps65218-dcdc6", tps65218_pmic_regs[DCDC6]),
+> +	TPS65218_OF_MATCH("ti,tps65218-ldo1", tps65218_pmic_regs[LDO1]),
+> +};
+> +MODULE_DEVICE_TABLE(of, tps65218_of_match);
+> +
+> +static int tps65218_pmic_set_voltage_sel(struct regulator_dev *dev,
+> +					 unsigned selector)
+> +{
+> +	int ret;
+> +	struct tps65218 *tps = rdev_get_drvdata(dev);
+> +	unsigned int rid = rdev_get_id(dev);
+> +
+> +	/* Set the voltage based on vsel value and write protect level is 2 */
+> +	ret = tps65218_set_bits(tps, dev->desc->vsel_reg, dev->desc->vsel_mask,
+> +				selector, TPS65218_PROTECT_L1);
+> +
+> +	/* Set GO bit for DCDC1/2 to initiate voltage transistion */
+> +	switch (rid) {
+> +	case TPS65218_DCDC_1:
+> +	case TPS65218_DCDC_2:
+> +		ret = tps65218_set_bits(tps, TPS65218_REG_CONTRL_SLEW_RATE,
+> +					TPS65218_SLEW_RATE_GO,
+> +					TPS65218_SLEW_RATE_GO,
+> +					TPS65218_PROTECT_L1);
+> +		break;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int tps65218_pmic_enable(struct regulator_dev *dev)
+> +{
+> +	struct tps65218 *tps = rdev_get_drvdata(dev);
+> +	unsigned int rid = rdev_get_id(dev);
+> +
+> +	if (rid < TPS65218_DCDC_1 || rid > TPS65218_LDO_1)
+> +		return -EINVAL;
+> +
+> +	/* Enable the regulator and password protection is level 1 */
+> +	return tps65218_set_bits(tps, dev->desc->enable_reg,
+> +				 dev->desc->enable_mask, dev->desc->enable_mask,
+> +				 TPS65218_PROTECT_L1);
+> +}
+> +
+> +static int tps65218_pmic_disable(struct regulator_dev *dev)
+> +{
+> +	struct tps65218 *tps = rdev_get_drvdata(dev);
+> +	unsigned int rid = rdev_get_id(dev);
+> +
+> +	if (rid < TPS65218_DCDC_1 || rid > TPS65218_LDO_1)
+> +		return -EINVAL;
+> +
+> +	/* Disable the regulator and password protection is level 1 */
+> +	return tps65218_clear_bits(tps, dev->desc->enable_reg,
+> +				   dev->desc->enable_mask, TPS65218_PROTECT_L1);
+> +}
+> +
+> +static int tps65218_set_voltage_time_sel(struct regulator_dev *rdev,
+> +	unsigned int old_selector, unsigned int new_selector)
+> +{
+> +	int old_uv, new_uv;
+> +
+> +	old_uv = regulator_list_voltage_linear_range(rdev, old_selector);
+> +	if (old_uv < 0)
+> +		return old_uv;
+> +
+> +	new_uv = regulator_list_voltage_linear_range(rdev, new_selector);
+> +	if (new_uv < 0)
+> +		return new_uv;
+> +
+> +	return DIV_ROUND_UP(abs(old_uv - new_uv), tps65218_ramp_delay);
+> +}
+> +
+> +/* Operations permitted on DCDC1, DCDC2 */
+> +static struct regulator_ops tps65218_dcdc12_ops = {
+> +	.is_enabled		= regulator_is_enabled_regmap,
+> +	.enable			= tps65218_pmic_enable,
+> +	.disable		= tps65218_pmic_disable,
+> +	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
+> +	.set_voltage_sel	= tps65218_pmic_set_voltage_sel,
+> +	.list_voltage		= regulator_list_voltage_linear_range,
+> +	.map_voltage		= regulator_map_voltage_linear_range,
+> +	.set_voltage_time_sel	= tps65218_set_voltage_time_sel,
+> +};
+> +
+> +/* Operations permitted on DCDC3, DCDC4 and LDO1 */
+> +static struct regulator_ops tps65218_ldo1_dcdc34_ops = {
+> +	.is_enabled		= regulator_is_enabled_regmap,
+> +	.enable			= tps65218_pmic_enable,
+> +	.disable		= tps65218_pmic_disable,
+> +	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
+> +	.set_voltage_sel	= tps65218_pmic_set_voltage_sel,
+> +	.list_voltage		= regulator_list_voltage_linear_range,
+> +	.map_voltage		= regulator_map_voltage_linear_range,
+> +};
+> +
+> +/* Operations permitted on DCDC5, DCDC6 */
+> +static struct regulator_ops tps65218_dcdc56_pmic_ops = {
+> +	.is_enabled		= regulator_is_enabled_regmap,
+> +	.enable			= tps65218_pmic_enable,
+> +	.disable		= tps65218_pmic_disable,
+> +};
+> +
+> +static const struct regulator_desc regulators[] = {
+> +	TPS65218_REGULATOR("DCDC1", TPS65218_DCDC_1, tps65218_dcdc12_ops, 64,
+> +			   TPS65218_REG_CONTROL_DCDC1,
+> +			   TPS65218_CONTROL_DCDC1_MASK,
+> +			   TPS65218_REG_ENABLE1, TPS65218_ENABLE1_DC1_EN, NULL,
+> +			   dcdc1_dcdc2_ranges, 2),
+> +	TPS65218_REGULATOR("DCDC2", TPS65218_DCDC_2, tps65218_dcdc12_ops, 64,
+> +			   TPS65218_REG_CONTROL_DCDC2,
+> +			   TPS65218_CONTROL_DCDC2_MASK,
+> +			   TPS65218_REG_ENABLE1, TPS65218_ENABLE1_DC2_EN, NULL,
+> +			   dcdc1_dcdc2_ranges, 2),
+> +	TPS65218_REGULATOR("DCDC3", TPS65218_DCDC_3, tps65218_ldo1_dcdc34_ops,
+> +			   64, TPS65218_REG_CONTROL_DCDC3,
+> +			   TPS65218_CONTROL_DCDC3_MASK, TPS65218_REG_ENABLE1,
+> +			   TPS65218_ENABLE1_DC3_EN, NULL,
+> +			   ldo1_dcdc3_ranges, 2),
+> +	TPS65218_REGULATOR("DCDC4", TPS65218_DCDC_4, tps65218_ldo1_dcdc34_ops,
+> +			   53, TPS65218_REG_CONTROL_DCDC4,
+> +			   TPS65218_CONTROL_DCDC4_MASK,
+> +			   TPS65218_REG_ENABLE1, TPS65218_ENABLE1_DC4_EN, NULL,
+> +			   dcdc4_ranges, 2),
+> +	TPS65218_REGULATOR("DCDC5", TPS65218_DCDC_5, tps65218_dcdc56_pmic_ops,
+> +			   1, -1, -1, TPS65218_REG_ENABLE1,
+> +			   TPS65218_ENABLE1_DC5_EN, NULL, NULL, 0),
+> +	TPS65218_REGULATOR("DCDC6", TPS65218_DCDC_6, tps65218_dcdc56_pmic_ops,
+> +			   1, -1, -1, TPS65218_REG_ENABLE1,
+> +			   TPS65218_ENABLE1_DC6_EN, NULL, NULL, 0),
+> +	TPS65218_REGULATOR("LDO1", TPS65218_LDO_1, tps65218_ldo1_dcdc34_ops, 64,
+> +			   TPS65218_REG_CONTROL_DCDC4,
+> +			   TPS65218_CONTROL_LDO1_MASK, TPS65218_REG_ENABLE2,
+> +			   TPS65218_ENABLE2_LDO1_EN, NULL, ldo1_dcdc3_ranges,
+> +			   2),
+> +};
+> +
+> +static int tps65218_regulator_probe(struct platform_device *pdev)
+> +{
+> +	struct tps65218 *tps = dev_get_drvdata(pdev->dev.parent);
+> +	struct regulator_init_data *init_data;
+> +	const struct tps_info	*template;
+> +	struct regulator_dev *rdev;
+> +	const struct of_device_id	*match;
+> +	struct regulator_config config = { };
+> +	int id;
+> +
+> +	match = of_match_device(tps65218_of_match, &pdev->dev);
+> +	if (match) {
+> +		template = match->data;
+> +		id = template->id;
+> +		init_data = of_get_regulator_init_data(&pdev->dev,
+> +						      pdev->dev.of_node);
+> +	} else {
+> +		return -ENODEV;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, tps);
+> +
+> +	tps->info[id] = &tps65218_pmic_regs[id];
+> +	config.dev = &pdev->dev;
+> +	config.init_data = init_data;
+> +	config.driver_data = tps;
+> +	config.regmap = tps->regmap;
+> +
+> +	rdev = devm_regulator_register(&pdev->dev, &regulators[id], &config);
+> +	if (IS_ERR(rdev)) {
+> +		dev_err(tps->dev, "failed to register %s regulator\n",
+> +			pdev->name);
+> +		return PTR_ERR(rdev);
+> +	}
+> +
+> +	/* Save regulator */
+> +	tps->rdev[id] = rdev;
+> +
+> +	return 0;
+> +}
+> +
+> +static int tps65218_regulator_remove(struct platform_device *pdev)
+> +{
+> +	struct tps65218 *tps = platform_get_drvdata(pdev);
+> +	const struct of_device_id	*match;
+> +	const struct tps_info		*template;
+> +
+> +	match = of_match_device(tps65218_of_match, &pdev->dev);
+> +	template = match->data;
+> +	regulator_unregister(tps->rdev[template->id]);
+> +	platform_set_drvdata(pdev, NULL);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver tps65218_regulator_driver = {
+> +	.driver = {
+> +		.name = "tps65218-pmic",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = of_match_ptr(tps65218_of_match),
+> +	},
+> +	.probe = tps65218_regulator_probe,
+> +	.remove = tps65218_regulator_remove,
+> +};
+> +
+> +module_platform_driver(tps65218_regulator_driver);
+> +
+> +MODULE_AUTHOR("J Keerthy <j-keerthy@ti.com>");
+> +MODULE_DESCRIPTION("TPS65218 voltage regulator driver");
+> +MODULE_ALIAS("platform:tps65218-pmic");
+> +MODULE_LICENSE("GPL v2");
 
-Hans
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/groups/opt_out.
