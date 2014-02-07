@@ -1,47 +1,34 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v6 17/19] watchdog: orion: Enable the build on ARCH_MVEBU
-Date: Thu, 06 Feb 2014 18:07:08 -0800
-Message-ID: <52F43FCC.5090109@roeck-us.net>
-References: <1391707226-18258-1-git-send-email-ezequiel.garcia@free-electrons.com> <1391707226-18258-18-git-send-email-ezequiel.garcia@free-electrons.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v1 1/3] net: stmmac:sti: Add STi SOC glue driver.
+Date: Thu, 06 Feb 2014 19:53:42 -0800 (PST)
+Message-ID: <20140206.195342.1998479313077409827.davem@davemloft.net>
+References: <1391428787-27143-1-git-send-email-srinivas.kandagatla@st.com>
+	<1391428868-27245-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1391707226-18258-18-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1391428868-27245-1-git-send-email-srinivas.kandagatla@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: srinivas.kandagatla@st.com
+Cc: netdev@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, stuart.menefy@st.com, peppe.cavallaro@st.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-On 02/06/2014 09:20 AM, Ezequiel Garcia wrote:
-> After adding support for Armada 370/XP SoC let's enable the build on
-> these platforms.
->
-> Tested-by: Willy Tarreau <w@1wt.eu>
-> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: <srinivas.kandagatla@st.com>
+Date: Mon, 3 Feb 2014 12:01:08 +0000
 
-Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> +	res = platform_get_resource_byname(pdev,
+> +				IORESOURCE_MEM, "sti-ethconf");
 
-> ---
->   drivers/watchdog/Kconfig | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 4c4c566..2dda6c0 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -291,7 +291,7 @@ config DAVINCI_WATCHDOG
->
->   config ORION_WATCHDOG
->   	tristate "Orion watchdog"
-> -	depends on ARCH_ORION5X || ARCH_KIRKWOOD || ARCH_DOVE
-> +	depends on ARCH_ORION5X || ARCH_KIRKWOOD || ARCH_DOVE || ARCH_MVEBU
->   	select WATCHDOG_CORE
->   	help
->   	  Say Y here if to include support for the watchdog timer
->
+This is not the correct way to format multi-line function calls,
+you'll need to fix this up in this entire series.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The arguments on the second and subsequent lines must start at
+the first column after the openning parenthesis of the function
+call.  You must use the appropriate number of both space and
+TAB characters necessary to do so.
+
+If you're only using TAB characters to indent, you're doing it
+wrong.
+
+Thank you.
