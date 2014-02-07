@@ -1,99 +1,39 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCHv4 4/7] hwspinlock/core: add common OF helpers
-Date: Fri, 7 Feb 2014 14:49:07 -0800
-Message-ID: <CAJAp7Oi7wD+VsMAd37gT04yZ4TH4ygXFmheDhvmWuanUjpBmVQ@mail.gmail.com>
-References: <1389658764-39199-1-git-send-email-s-anna@ti.com>
-	<1389658764-39199-5-git-send-email-s-anna@ti.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v9 0/4] ohci-platform and ehci-plaform
+ patches rebased on 3.14-rc1
+Date: Sat, 08 Feb 2014 00:05:59 +0100
+Message-ID: <52F566D7.7010406@redhat.com>
+References: <1391787403-20961-1-git-send-email-hdegoede@redhat.com> <20140207223101.GA21062@kroah.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1389658764-39199-5-git-send-email-s-anna@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBY6N2WLQKGQEXW3XHWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140207223101.GA21062-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 13, 2014 at 4:19 PM, Suman Anna <s-anna@ti.com> wrote:
-> This patch adds three new OF helper functions to use/request
-> locks from a hwspinlock device instantiated through a
-> device-tree blob.
+Hi,
 
-Nice, I ran in to the problem of needing a probe deferral on a
-hwspinlock earlier this week so I implemented this yesterday...then I
-got a pointer to your series.
+On 02/07/2014 11:31 PM, Greg Kroah-Hartman wrote:
+> On Fri, Feb 07, 2014 at 04:36:39PM +0100, Hans de Goede wrote:
+>> Hi Greg,
+>>
+>> Here is v9 of my ohci-platform and ehci-platform patchset, It is just a
+>> rebase (with some manual conflict resolution), to make it easier for you
+>> to throw this into usb-next, there are no other changes.
+>
+> I've applied these, thanks.  I saw a number of older series and
+> revisions, and I assumed this was the latest, right?
 
-[snip]
->  /**
-> + * of_hwspin_lock_request_specific() - request a OF phandle-based specific lock
-> + * @np: device node from which to request the specific hwlock
-> + * @propname: property name containing hwlock specifier(s)
-> + * @index: index of the hwlock
-> + *
-> + * This function is the OF equivalent of hwspin_lock_request_specific(). This
-> + * function provides a means for users of the hwspinlock module to request a
-> + * specific hwspinlock using the phandle of the hwspinlock device. The requested
-> + * lock number is indexed relative to the hwspinlock device, unlike the
-> + * hwspin_lock_request_specific() which is an absolute lock number.
-> + *
-> + * Returns the address of the assigned hwspinlock, or NULL on error
-> + */
-> +struct hwspinlock *of_hwspin_lock_request_specific(struct device_node *np,
-> +                                       const char *propname, int index)
-> +{
-> +       struct hwspinlock_device *bank;
-> +       struct of_phandle_args args;
-> +       int id;
-> +       int ret;
-> +
-> +       ret = of_parse_phandle_with_args(np, propname, "#hwlock-cells", index,
-> +                                        &args);
-> +       if (ret) {
-> +               pr_warn("%s: can't parse hwlocks property of node '%s[%d]' ret = %d\n",
-> +                       __func__, np->full_name, index, ret);
-> +               return NULL;
-> +       }
-
-of_parse_phandle_with_args() already does pr_err if it can't find the
-phandle and on some of the issues related to arguments. So please
-remove this pr_warn().
-
-It seems to be standard practice to pass the error value back to the
-consumer, so you should
-return ERR_PTR(ret); here instead of the NULL...
-
-> +
-> +       mutex_lock(&hwspinlock_tree_lock);
-> +       list_for_each_entry(bank, &hwspinlock_devices, list)
-> +               if (bank->dev->of_node == args.np)
-> +                       break;
-> +       mutex_unlock(&hwspinlock_tree_lock);
-> +       if (&bank->list == &hwspinlock_devices) {
-> +               pr_warn("%s: requested hwspinlock device %s is not registered\n",
-> +                       __func__, args.np->full_name);
-> +               return NULL;
-
-...especially since you want the consumer to have the ability to
-identify this error. Here you should
-return ERR_PTR(-EPROBE_DEFER); so that the consumer knows that this
-lock is not _yet_ registered, but will be in the future.
-
-You should remove this pr_warn as well. The standard use of this
-function would be in a probe() and just returning this error value
-from that probe will give you a line in the log indicating that this
-was in fact the issue.
-
-> +       }
-> +
-> +       id = bank->ops->of_xlate(bank, &args);
-> +       if (id < 0 || id >= bank->num_locks) {
-> +               pr_warn("%s: requested lock %d is either out of range [0, %d] or failed translation\n",
-> +                       __func__, id, bank->num_locks - 1);
-> +               return NULL;
-
-Please return ERR_PTR(-EINVAL); here.
-
-
-Looking forward to your next spin, as I will actually use this interface :)
+Yes this was the latest.
 
 Regards,
-Bjorn
+
+Hans
