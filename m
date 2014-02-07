@@ -1,90 +1,56 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 06/15] dt: binding: add binding for ImgTec IR block
-Date: Fri, 7 Feb 2014 14:50:53 +0000
-Message-ID: <20140207145053.GF25314@e106331-lin.cambridge.arm.com>
-References: <1389967140-20704-1-git-send-email-james.hogan@imgtec.com>
- <1389967140-20704-7-git-send-email-james.hogan@imgtec.com>
- <CAL_Jsq+wk6_9Da5Xj3Ys-MZYPTpu6V3pAEpGFv44148BodmmrQ@mail.gmail.com>
- <52F39F30.70104@imgtec.com>
- <CAL_JsqLL6MbwajCUAm+NJk=ofL5OHq8b0zwO3LFb-TKY6UtVMQ@mail.gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] clk: sunxi: Add USB clock register defintions
+Date: Fri, 07 Feb 2014 16:06:37 +0100
+Message-ID: <52F4F67D.7080407@redhat.com>
+References: <1391783553-8096-1-git-send-email-hdegoede@redhat.com> <1391783553-8096-3-git-send-email-hdegoede@redhat.com> <20140207144441.GK3192@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLL6MbwajCUAm+NJk=ofL5OHq8b0zwO3LFb-TKY6UtVMQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: James Hogan <james.hogan@imgtec.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBBXN2OLQKGQEN52RSPI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140207144441.GK3192@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi,
 
-On Fri, Feb 07, 2014 at 02:33:27PM +0000, Rob Herring wrote:
-> On Thu, Feb 6, 2014 at 8:41 AM, James Hogan <james.hogan@imgtec.com> wrote:
-> > Hi Rob,
-> >
-> > On 06/02/14 14:33, Rob Herring wrote:
-> >> On Fri, Jan 17, 2014 at 7:58 AM, James Hogan <james.hogan@imgtec.com> wrote:
-> >>> +Required properties:
-> >>> +- compatible:          Should be "img,ir1"
-> >>
-> >> Kind of short for a name. I don't have anything much better, but how
-> >> about img,ir-rev1.
-> >
-> > Okay, that sounds reasonable.
-> >
-> >>> +Optional properties:
-> >>> +- clocks:              List of clock specifiers as described in standard
-> >>> +                       clock bindings.
-> >>> +- clock-names:         List of clock names corresponding to the clocks
-> >>> +                       specified in the clocks property.
-> >>> +                       Accepted clock names are:
-> >>> +                       "core": Core clock (defaults to 32.768KHz if omitted).
-> >>> +                       "sys":  System side (fast) clock.
-> >>> +                       "mod":  Power modulation clock.
-> >>
-> >> You need to define the order of clocks including how they are
-> >> interpreted with different number of clocks (not relying on the name).
-> >
-> > Would it be sufficient to specify that "clock-names" is required if
-> > "clocks" is provided (i.e. unnamed clocks aren't used), or is there some
-> > other reason that clock-names shouldn't be relied upon?
-> 
-> irq-names, reg-names, clock-names, etc. are considered optional to
-> their associated property and the order is supposed to be defined.
-> clock-names is a bit different in that clk_get needs a name, so it
-> effectively is required by Linux when there is more than 1 clock.
-> Really, we should fix Linux.
+On 02/07/2014 03:44 PM, Maxime Ripard wrote:
+> Hi,
+>
+> On Fri, Feb 07, 2014 at 03:32:30PM +0100, Hans de Goede wrote:
+>> From: Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>
+>> Add register definitions for the usb-clk register found on sun4i, sun5i and
+>> sun7i SoCs.
+>>
+>> Signed-off-by: Roman Byshko <rbyshko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>   Documentation/devicetree/bindings/clock/sunxi.txt |  5 +++++
+>>   drivers/clk/sunxi/clk-sunxi.c                     | 12 ++++++++++++
+>>   2 files changed, 17 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+>> index 27f19f1..e368a86c 100644
+>> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
+>> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+>> @@ -38,6 +38,8 @@ Required properties:
+>>   	"allwinner,sun4i-mod0-clk" - for the module 0 family of clocks
+>>   	"allwinner,sun7i-a20-out-clk" - for the external output clocks
+>>   	"allwinner,sun7i-a20-gmac-clk" - for the GMAC clock module on A20/A31
+>> +	"allwinner,sun4i-usb-clk" - for usb gates + resets on A10 / A20
+>
+> I know I asked you otherwise, but since we're moving to sun4i-a10-*
+> compatibles, can you do it here too ? :)
 
-If they're optional then you can't handle optional entries (i.e.  when
-nothing's wired to an input), and this is counter to the style I've been
-recommending to people (defining clocks in terms of clock-names).
+Sure can do, v4 coming up.
 
-I really don't see the point in any *-names property if they don't
-define the list and allow for optional / reordered lists. Why does the
-order have to be fixed rather than using the -names properties? It's
-already a de-facto standard.
+Regards,
 
-> 
-> Regardless, my other point is still valid. A given h/w block has a
-> fixed number of clocks. You may have them all connected to the same
-> source in some cases, but that does not change the number of inputs.
-> Defining what are the valid combinations needs to be done. Seems like
-> this could be:
-> 
-> <none> - default to 32KHz
-> <core> - only a "baud" clock
-> <core>, <sys>, <mod> - all clocks
-
-For more complex IP blocks you might have more inputs than you actually
-have clocks wired to.
-
-How do you handle an unwired input in the middle of the list, or a new
-revision of the IP block that got rid of the first clock input from the
-list but is otherwise compatible?
-
-I really don't think it makes sense to say that clock-names doesn't
-define the list.
-
-Thanks,
-Mark.
+Hans
