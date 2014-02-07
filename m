@@ -1,34 +1,36 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v1 1/3] net: stmmac:sti: Add STi SOC glue driver.
-Date: Thu, 06 Feb 2014 19:53:42 -0800 (PST)
-Message-ID: <20140206.195342.1998479313077409827.davem@davemloft.net>
-References: <1391428787-27143-1-git-send-email-srinivas.kandagatla@st.com>
-	<1391428868-27245-1-git-send-email-srinivas.kandagatla@st.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v5 00/14] Add support for MSM's mmio clock/reset controller
+Date: Thu, 06 Feb 2014 20:15:42 -0800
+Message-ID: <52F45DEE.8020400@gmail.com>
+References: <1389811654-21397-1-git-send-email-sboyd@codeaurora.org>
+Reply-To: frowand.list@gmail.com
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1391428868-27245-1-git-send-email-srinivas.kandagatla@st.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: srinivas.kandagatla@st.com
-Cc: netdev@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, stuart.menefy@st.com, peppe.cavallaro@st.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1389811654-21397-1-git-send-email-sboyd@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Mike Turquette <mturquette@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Saravana Kannan <skannan@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: <srinivas.kandagatla@st.com>
-Date: Mon, 3 Feb 2014 12:01:08 +0000
+On 1/15/2014 10:47 AM, Stephen Boyd wrote:
+> The first breaks a reset-controller include ordering requirement. It got
+> an ack so I think we're ok for it to go through the clock tree.
+> 
 
-> +	res = platform_get_resource_byname(pdev,
-> +				IORESOURCE_MEM, "sti-ethconf");
+< snip >
 
-This is not the correct way to format multi-line function calls,
-you'll need to fix this up in this entire series.
+checkpatch is whining about patches
 
-The arguments on the second and subsequent lines must start at
-the first column after the openning parenthesis of the function
-call.  You must use the appropriate number of both space and
-TAB characters necessary to do so.
+  4
+  5
+  6
+  7
+  8
 
-If you're only using TAB characters to indent, you're doing it
-wrong.
+(Just for completeness if someone thinks I did not check all the patches,
+it also whines about patch 11, but I think the whining should be ignored,
+and it whines about patch 1 but I think that might be a checkpatch bug.)
 
-Thank you.
+-Frank
