@@ -1,53 +1,32 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 2/4] MFD: TPS65218: Add driver for the TPS65218 PMIC
-Date: Fri, 7 Feb 2014 11:12:29 +0000
-Message-ID: <20140207111229.GN14727@lee--X1>
-References: <1391665814-18814-1-git-send-email-j-keerthy@ti.com>
- <1391665814-18814-3-git-send-email-j-keerthy@ti.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v3 1/2] regulator: s5m8767: Use GPIO for controlling
+ Buck9/eMMC
+Date: Fri, 07 Feb 2014 13:40:33 +0100
+Message-ID: <1391776833.16500.1.camel@AMDC1943>
+References: <1390570678-30686-1-git-send-email-k.kozlowski@samsung.com>
+ <1390570678-30686-2-git-send-email-k.kozlowski@samsung.com>
+ <20140127202524.GQ11841@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1391665814-18814-3-git-send-email-j-keerthy@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, sameo@linux.intel.com, grant.likely@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20140127202524.GQ11841@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Sangbeom Kim <sbkim73@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Sachin Kamat <sachin.kamat@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 06 Feb 2014, Keerthy wrote:
+Hi Mark,
 
-> The TPS65218 chip is a power management IC for Portable Navigation Sy=
-stems
-> and Tablet Computing devices. It contains the following components:
->=20
->  - Regulators.
->  - Over Temperature warning and Shut down.
->=20
-> This patch adds support for tps65218 mfd device. At this time only
-> the regulator functionality is made available.
->=20
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> ---
->  drivers/mfd/Kconfig          |   15 +++
->  drivers/mfd/Makefile         |    1 +
->  drivers/mfd/tps65218.c       |  281 ++++++++++++++++++++++++++++++++=
-+++++++++
->  include/linux/mfd/tps65218.h |  284 ++++++++++++++++++++++++++++++++=
-++++++++++
->  4 files changed, 581 insertions(+)
->  create mode 100644 drivers/mfd/tps65218.c
->  create mode 100644 include/linux/mfd/tps65218.h
+On Mon, 2014-01-27 at 20:25 +0000, Mark Brown wrote:
+> On Fri, Jan 24, 2014 at 02:37:57PM +0100, Krzysztof Kozlowski wrote:
+> > Add support for GPIO control (enable/disable) over Buck9. The Buck9
+> > Converter is used as a supply for eMMC Host Controller.
+> 
+> Applied, thanks.
 
-Applied, thanks.
+I can't find these patches in your tree. Did you applied them or am I
+missing something?
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
