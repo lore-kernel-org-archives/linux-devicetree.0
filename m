@@ -1,124 +1,76 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/8] ASoC: da9055: Fix device registration of PMIC and
- CODEC devices
-Date: Fri, 7 Feb 2014 10:56:57 +0000
-Message-ID: <20140207105657.GL14727@lee--X1>
-References: <cover.1391705989.git.Adam.Thomson.Opensource@diasemi.com>
- <6a398d176b0b2bf8792d27bd5e2995fd96afb32d.1391705989.git.Adam.Thomson.Opensource@diasemi.com>
+From: <srinivas.kandagatla@st.com>
+Subject: [PATCH v2 0/3] net: stmmac: Add STi GMAC ethernet
+Date: Fri, 7 Feb 2014 10:54:15 +0000
+Message-ID: <1391770455-24291-1-git-send-email-srinivas.kandagatla@st.com>
+References: <1391428787-27143-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <6a398d176b0b2bf8792d27bd5e2995fd96afb32d.1391705989.git.Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1391428787-27143-1-git-send-email-srinivas.kandagatla@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: netdev@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, kernel@stlinux.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Stuart Menefy <stuart.menefy@st.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> Currently the I2C device Ids conflict for the MFD and CODEC so
-> cannot be both instantiated on one platform. This patch updates
-> the Ids and names to make them unique from each other.
->=20
-> It should be noted that the I2C addresses for both PMIC and CODEC
-> are modifiable so instantiation of the two are kept as separate
-> devices, rather than instantiating the CODEC from the MFD code.
->=20
-> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/mfd/da9055-i2c.c  |   12 ++++++++++--
->  sound/soc/codecs/da9055.c |   11 +++++++++--
->  2 files changed, 19 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/mfd/da9055-i2c.c b/drivers/mfd/da9055-i2c.c
-> index 13af7e5..8103e43 100644
-> --- a/drivers/mfd/da9055-i2c.c
-> +++ b/drivers/mfd/da9055-i2c.c
-> @@ -53,17 +53,25 @@ static int da9055_i2c_remove(struct i2c_client *i=
-2c)
->  	return 0;
->  }
->=20
-> +/*
-> + * DO NOT change the device Ids. The naming is intentionally specifi=
-c as both
-> + * the PMIC and CODEC parts of this chip are instantiated separately=
- as I2C
-> + * devices (both have configurable I2C addresses, and are to all int=
-ents and
-> + * purposes separate). As a result there are specific DA9055 ids for=
- PMIC
-> + * and CODEC, which must be different to operate together.
-> + */
+From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
 
-I'm not sure this comment is required.
+Hi All,
 
-Most device IDs are named this way.
+This patch series adds Ethernet support to STi series SOCs STiH415 and STiH416.
+STi SOC series integrates dwmac IP from synopsis, however there is a hardware
+glue on top of this standard IP, this glue needs to configured before the
+actual dwmac can be used.  Also the glue logic needs re-configuring when the
+link speed changes, This is because the clk source can change as the link
+speed changes.
 
->  static struct i2c_device_id da9055_i2c_id[] =3D {
-> -	{"da9055", 0},
-> +	{"da9055-pmic", 0},
->  	{ }
->  };
-> +MODULE_DEVICE_TABLE(i2c, da9055_i2c_id);
->=20
->  static struct i2c_driver da9055_i2c_driver =3D {
->  	.probe =3D da9055_i2c_probe,
->  	.remove =3D da9055_i2c_remove,
->  	.id_table =3D da9055_i2c_id,
->  	.driver =3D {
-> -		.name =3D "da9055",
-> +		.name =3D "da9055-pmic",
->  		.owner =3D THIS_MODULE,
->  	},
->  };
-> diff --git a/sound/soc/codecs/da9055.c b/sound/soc/codecs/da9055.c
-> index 52b79a4..4228126 100644
-> --- a/sound/soc/codecs/da9055.c
-> +++ b/sound/soc/codecs/da9055.c
-> @@ -1523,8 +1523,15 @@ static int da9055_remove(struct i2c_client *cl=
-ient)
->  	return 0;
->  }
->=20
-> +/*
-> + * DO NOT change the device Ids. The naming is intentionally specifi=
-c as both
-> + * the CODEC and PMIC parts of this chip are instantiated separately=
- as I2C
-> + * devices (both have configurable I2C addresses, and are to all int=
-ents and
-> + * purposes separate). As a result there are specific DA9055 Ids for=
- CODEC
-> + * and PMIC, which must be different to operate together.
-> + */
+This patch just adds STi specific callbacks into of_data for configuring the
+glue layer.
 
-And here, really, no need.
+I have rebased my original patches (http://lkml.org/lkml/2013/11/12/243)
+to latest stmmac which updates callbacks to suit glue drivers like this.
 
->  static const struct i2c_device_id da9055_i2c_id[] =3D {
-> -	{ "da9055", 0 },
-> +	{ "da9055-codec", 0 },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(i2c, da9055_i2c_id);
-> @@ -1532,7 +1539,7 @@ MODULE_DEVICE_TABLE(i2c, da9055_i2c_id);
->  /* I2C codec control layer */
->  static struct i2c_driver da9055_i2c_driver =3D {
->  	.driver =3D {
-> -		.name =3D "da9055",
-> +		.name =3D "da9055-codec",
->  		.owner =3D THIS_MODULE,
->  	},
->  	.probe		=3D da9055_i2c_probe,
+These patches are tested on b2000 and B2020 with STiH415 and STiH416.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes since v1:
+	- fixed multi-line function call format as suggested by David Miller.
+
+Dave, Can I request you to take the first patch via net tree for v3.15, I can
+request Arnd or Olof to take the DT patches via the arm-soc tree for v3.15.
+
+Thanks,
+srini
+
+Srinivas Kandagatla (3):
+  net: stmmac:sti: Add STi SOC glue driver.
+  ARM: STi: Add STiH415 ethernet support.
+  ARM: STi: Add STiH416 ethernet support.
+
+ .../devicetree/bindings/net/sti-dwmac.txt          |   58 ++++
+ arch/arm/boot/dts/stih415-clock.dtsi               |   14 +
+ arch/arm/boot/dts/stih415-pinctrl.dtsi             |  121 +++++++
+ arch/arm/boot/dts/stih415.dtsi                     |   48 +++
+ arch/arm/boot/dts/stih416-clock.dtsi               |   14 +
+ arch/arm/boot/dts/stih416-pinctrl.dtsi             |  109 +++++++
+ arch/arm/boot/dts/stih416.dtsi                     |   44 +++
+ arch/arm/boot/dts/stih41x-b2000.dtsi               |   22 ++
+ arch/arm/boot/dts/stih41x-b2020.dtsi               |   26 ++
+ drivers/net/ethernet/stmicro/stmmac/Kconfig        |   11 +
+ drivers/net/ethernet/stmicro/stmmac/Makefile       |    1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sti.c    |  331 ++++++++++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h       |    3 +
+ .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |    5 +
+ 14 files changed, 807 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/sti-dwmac.txt
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-sti.c
+
+-- 
+1.7.9.5
