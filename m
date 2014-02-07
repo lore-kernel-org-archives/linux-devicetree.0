@@ -1,69 +1,82 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/8] ASoC: da9055: Fix device registration of PMIC and
- CODEC devices
-Date: Fri, 7 Feb 2014 12:58:31 +0000
-Message-ID: <20140207125831.GL32298@sirena.org.uk>
-References: <cover.1391705989.git.Adam.Thomson.Opensource@diasemi.com>
- <6a398d176b0b2bf8792d27bd5e2995fd96afb32d.1391705989.git.Adam.Thomson.Opensource@diasemi.com>
- <20140207105657.GL14727@lee--X1>
+From: srinivas kandagatla <srinivas.kandagatla@st.com>
+Subject: Re: [PATCH v2 0/6] ARM: STi reset controller support
+Date: Fri, 7 Feb 2014 12:54:07 +0000
+Message-ID: <52F4D76F.8070301@st.com>
+References: <1389696613-19683-1-git-send-email-srinivas.kandagatla@st.com>	
+ <1391437665-11913-1-git-send-email-srinivas.kandagatla@st.com>
+ <1391592486.11239.4.camel@pizza.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+IojnoBMdP/qo3gc"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140207105657.GL14727@lee--X1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1391592486.11239.4.camel@pizza.hi.pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, kernel@stlinux.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Olof Johansson <olof@lixom.net>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, stephen.gallimore@st.com, Stuart Menefy <stuart.menefy@st.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Philipp,
+Thankyou for looking at the patches.
 
---+IojnoBMdP/qo3gc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Fri, Feb 07, 2014 at 10:56:57AM +0000, Lee Jones wrote:
+On 05/02/14 09:28, Philipp Zabel wrote:
+> Hi Srinivas,
+> 
+...
+> 
+> the patchset looks good to me for the soft resets. But for the powerdown
+> bits I am wondering whether the reset controller API is the right
+> abstraction. Depending on whether those bits really just put the IPs
+> into reset or there is some power gating / sequencing involved,
+> shouldn't this rather be handled as a set of pm domains?
 
-> > +/*
-> > + * DO NOT change the device Ids. The naming is intentionally specific as both
-> > + * the PMIC and CODEC parts of this chip are instantiated separately as I2C
-> > + * devices (both have configurable I2C addresses, and are to all intents and
-> > + * purposes separate). As a result there are specific DA9055 ids for PMIC
-> > + * and CODEC, which must be different to operate together.
-> > + */
+The hardware name of these control signals into the devices is
+slightly unfortunate and a bit misleading. We do not generally
+have separate power domains for peripheral devices in our
+current STB SoCs, in the sense that the voltage cannot actually be
+removed from individual devices. In the USB case we believe the
+powerdown signals internally gate off two of the three
+incoming clocks to most of the USB controller's logic blocks,
+essentially holding the device in a disabled (enable/disable
+might have been a better name for the signal) state.
 
-> I'm not sure this comment is required.
+The primary requirement to manipulate these signals is to bring
+the device out of its cold boot default powerdown/disabled/reset
+(whatever you want to call it) state when the device is probed or
+after a SoC wide power loss when resuming from PM_SUSPEND_MEM.
 
-They are, we've already had the suffixes removed from both PMIC and
-CODEC drivers by people doing code review causing the drivers to fail to
-load for several kernel releases (this should be tagged to stable as a
-result).
 
-> Most device IDs are named this way.
+> I see that for example on STiH415 there are both soft resets and
+> powerdown bits for USB[012].
 
-Having the suffix on a subdevice would be normal but it's not normal for
-the primary I2C device, usually you can just put the part number in.
+Our IPs typically have two or sometimes three signals going into
+them, controlled from outside of the IP block itself (typically using
+SoC global system configuration registers) that you could view
+as "reset-a-like"; that is toggling each of the signals puts the IP
+into a state where it is in some way unusable and then back to
+being useable again. The reset controller API appeared to be the
+natural abstraction for the drivers to be given access to such control
+signals, regardless of the precise effect the signals have on the
+device's internal state.
 
---+IojnoBMdP/qo3gc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+With regards to sequencing between these signals; it is the case that
+there is a likely sequencing because at least in the USB case it is
+thought that the "powerdown" stops the clock going to the reset chain
+logic. But we did not see that as an issue as the reset controller
+framework allows for multiple named "reset" lines being defined for
+a device through its DT attributes. The driver knows which signal
+is which and what each does, because it asks for them by name;
+therefore, it knows how to impose any required ordering when changing
+the state of those signals.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJS9Nh0AAoJELSic+t+oim99loP/ij+WZiRpWPTJR3oSmGFkKko
-p89l4D93sB+ovRJaq8g6Rs7+ArknmFv8UW7UcAuTPWS1P99JAJi9+XSmLhz7i2rB
-bwWPIFPnwb8UMR1OeVlb8Ph2Ej+5CC4iPctoeaWsxPvNnrVp0bUiY0sGwLK/Z2hQ
-PhVQFH1OgcPMK48ISHtOaT1ENDWWS2znF/Aj9FY4q4zgMym/2eAGezxoDH3Z7H+w
-7Bvzy6W6azWwmqPR+0MRzkwu3JjUCrt2fOBfVclGs8XEuUHENNqyDND7/uuv/Ny7
-AQwRa128efWSovKbE89uGiVG/crvjdslFrf+f3AsxVrsAWWNeHtzcs3eEF+HMDOa
-HOMquXXCEj4xJjcjqgynO1KVywjkPu1PJneQ2hINVvB4rf5ci+ByvBkRUpJd+tIF
-pIpOODsmUICpJYZoyZE6V0SH2RgPjYkIYE5a4kfe9K7JM7KHQNT8nHIfNZm9rYqc
-HxGVvh7q0BHLevFFk/ka71wNWbR0yZ9Iw5NNWQbxwwYLBPeAOep/BhOTVZ79bpbL
-Xnu+QU1BlnYmmm9BuqYPHpASFrI/kRVxqLk6X2PEvFytvXUqCUJmc4U0KUeko8Z3
-zn1/gBhH+B0pV9FjvSMeL4Y/ZR6jDGy8W2pQDHoYefGxWpYFaRZYDVvkxKQZLYHm
-kwzJGtJZpfxmBfBD2TGh
-=DYFT
------END PGP SIGNATURE-----
-
---+IojnoBMdP/qo3gc--
+Thanks,
+srini
