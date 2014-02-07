@@ -1,55 +1,37 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4] gpio: davinci: reuse for keystone soc
-Date: Fri, 7 Feb 2014 18:55:54 +0530
-Message-ID: <52F4DEE2.7030004@ti.com>
-References: <1391615244-12014-1-git-send-email-grygorii.strashko@ti.com>
-	<CACRpkdbgteBtuwdEn+Bg+kA1JnEHus2FOfTbj-hm5fKBsw7XeA@mail.gmail.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH RESEND 1/2] spi: qup: Add device tree bindings
+ information
+Date: Fri, 07 Feb 2014 15:35:18 +0200
+Message-ID: <1391780118.27491.62.camel@iivanov-dev>
+References: <20140206175059.GW32298@sirena.org.uk>
+	 <1391759007-25305-1-git-send-email-iivanov@mm-sol.com>
+	 <20140207122716.GH32298@sirena.org.uk>
+	 <1391778043.27491.61.camel@iivanov-dev>
+	 <20140207131359.GM32298@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <CACRpkdbgteBtuwdEn+Bg+kA1JnEHus2FOfTbj-hm5fKBsw7XeA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20140207131359.GM32298@sirena.org.uk>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-
-On Thursday 06 February 2014 06:50 PM, Linus Walleij wrote:
-> On Wed, Feb 5, 2014 at 4:47 PM, Grygorii Strashko
-> <grygorii.strashko-l0cyMroinI0@public.gmane.org> wrote:
+On Fri, 2014-02-07 at 13:13 +0000, Mark Brown wrote: 
+> On Fri, Feb 07, 2014 at 03:00:43PM +0200, Ivan T. Ivanov wrote:
+> > On Fri, 2014-02-07 at 12:27 +0000, Mark Brown wrote: 
 > 
->> The similar GPIO HW block is used by keystone SoCs as
->> in Davinci SoCs.
->> Hence, reuse Davinci GPIO driver for Keystone taking into
->> account that Keystone contains ARM GIC IRQ controller which
->> is implemented using IRQ Chip.
->>
->> Documentation:
->>         http://www.ti.com/lit/ug/sprugv1/sprugv1.pdf
->>
->> Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
->> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
->> ---
->> Changes in v4:
->> - rebased on top of v3.14 +
->>   [patch] gpio: davinci: signedness bug in davinci_gpio_irq_setup()
+> > > Please fix the formatting of this document so the lines are less than 80
+> > > columns, it's hard to read as is.  Otherwise this is fine.
 > 
-> Are you taking this through ARM SoC or is this something
-> I should be merging?
+> > File is looking fine in editor with smart tab support
+> 
+> I don't know what "smart tab support" is intended to be in this context
+> but whatever it is it's not working well in the e-mail you sent, bear in
+> mind that you're looking for a readable patch.
 
-Can you please merge this through your tree as there aren't any
-dependencies with mach-davinci anymore.
+Right. will fix it.
 
-Thanks,
-Sekhar
+Regards,
+Ivan
