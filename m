@@ -1,70 +1,100 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH v2 10/9] ARM: msm: Remove board-dt.c
-Date: Fri,  7 Feb 2014 13:13:55 -0800
-Message-ID: <1391807635-27038-1-git-send-email-sboyd@codeaurora.org>
-References: <1387845593-10050-1-git-send-email-sboyd@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1387845593-10050-1-git-send-email-sboyd@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Rohit Vaswani <rvaswani@codeaurora.org>, David Brown <davidb@codeaurora.org>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>
+From: David =?utf-8?q?Lanzend=C3=B6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
+Subject: [PATCH v4 0/7] ARM: sunxi: Add driver for SD/MMC hosts
+ found on allwinner sunxi SOCs
+Date: Fri, 07 Feb 2014 22:32:24 +0100
+Message-ID: <20140207212709.24624.58619.stgit@dizzy-6.o2s.ch>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBD2JL37LXEKRB45B2WLQKGQEPUZRBUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Emilio =?utf-8?b?TMOzcGV6?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The default machine descriptor satisfies our needs now that the
-SMP ops are set based on the enable-method in devicetree and we're
-part of the multiplatform kernel. Drop this file.
+Hello
+The following patchset adds support for the SD/MMC host found in the Allwin=
+ner SoCs.
+It contains all the necessary modifications for clock environment and also =
+the device
+tree script modification which add it to all the boards using it.
+The clock environment function needed for phase offset configuration has
+been proposed and implemented by Emilio.
+A lot of work and cleanup has been done by Hans de Goede. Special thanks to=
+ him!
+This patchset is the 4th attempt to send this driver upstream.
 
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+Changes since v1:
+-Using mmc_of_parse instead of diy dt parsing
+-Adding nodes for all mmc controller to the dtsi files,
+ including sofar unused controllers
+-Using generic GPIO slot library for WP/CD
+-Adding additional MMC device nodes into DTSI files
+
+Changes since v2:
+-Add missing Signed-off-by tags
+-Stop using __raw_readl / __raw_writel so that barriers are properly used
+-Adding missing new lines
+-Adding missing patch for automatic reparenting of clocks
+
+Changes since v3:
+-Move clk_enable / disable into host_init / exit (Hans)
+-Fix hang on boot caused by irq storm (Hans)
+
+regards
+David
 ---
- arch/arm/mach-msm/Makefile   |  1 -
- arch/arm/mach-msm/board-dt.c | 27 ---------------------------
- 2 files changed, 28 deletions(-)
- delete mode 100644 arch/arm/mach-msm/board-dt.c
 
-diff --git a/arch/arm/mach-msm/Makefile b/arch/arm/mach-msm/Makefile
-index 721f27f50d96..e6b33cca67c2 100644
---- a/arch/arm/mach-msm/Makefile
-+++ b/arch/arm/mach-msm/Makefile
-@@ -26,6 +26,5 @@ obj-$(CONFIG_MACH_TROUT) += board-trout.o board-trout-gpio.o board-trout-mmc.o b
- obj-$(CONFIG_MACH_HALIBUT) += board-halibut.o devices-msm7x00.o
- obj-$(CONFIG_ARCH_MSM7X30) += board-msm7x30.o devices-msm7x30.o
- obj-$(CONFIG_ARCH_QSD8X50) += board-qsd8x50.o devices-qsd8x50.o
--obj-$(CONFIG_ARCH_MSM_DT) += board-dt.o
- obj-$(CONFIG_MSM_GPIOMUX) += gpiomux.o
- obj-$(CONFIG_ARCH_QSD8X50) += gpiomux-8x50.o
-diff --git a/arch/arm/mach-msm/board-dt.c b/arch/arm/mach-msm/board-dt.c
-deleted file mode 100644
-index 1e3af2ba9981..000000000000
---- a/arch/arm/mach-msm/board-dt.c
-+++ /dev/null
-@@ -1,27 +0,0 @@
--/* Copyright (c) 2010-2012,2013 The Linux Foundation. All rights reserved.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 and
-- * only version 2 as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- */
--
--#include <linux/init.h>
--
--#include <asm/mach/arch.h>
--
--static const char * const msm_dt_match[] __initconst = {
--	"qcom,msm8660-fluid",
--	"qcom,msm8660-surf",
--	"qcom,msm8960-cdp",
--	"qcom,apq8074-dragonboard",
--	NULL
--};
--
--DT_MACHINE_START(MSM_DT, "Qualcomm MSM (Flattened Device Tree)")
--	.dt_compat = msm_dt_match,
--MACHINE_END
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+David Lanzend=C3=B6rfer (4):
+      ARM: sunxi: Add driver for SD/MMC hosts found on Allwinner sunxi SoCs
+      ARM: dts: sun7i: Add support for mmc
+      ARM: dts: sun4i: Add support for mmc
+      ARM: dts: sun5i: Add support for mmc
+
+Emilio L=C3=B3pez (2):
+      clk: sunxi: factors: automatic reparenting support
+      clk: sunxi: Implement MMC phase control
+
+Hans de Goede (1):
+      ARM: sunxi: clk: export clk_sunxi_mmc_phase_control
+
+
+ arch/arm/boot/dts/sun4i-a10-a1000.dts            |    8=20
+ arch/arm/boot/dts/sun4i-a10-cubieboard.dts       |    8=20
+ arch/arm/boot/dts/sun4i-a10.dtsi                 |   54 +
+ arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts |   30 +
+ arch/arm/boot/dts/sun5i-a10s.dtsi                |   44 +
+ arch/arm/boot/dts/sun5i-a13-olinuxino-micro.dts  |   15=20
+ arch/arm/boot/dts/sun5i-a13-olinuxino.dts        |   15=20
+ arch/arm/boot/dts/sun5i-a13.dtsi                 |   37 +
+ arch/arm/boot/dts/sun7i-a20-cubieboard2.dts      |    8=20
+ arch/arm/boot/dts/sun7i-a20-cubietruck.dts       |    8=20
+ arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts  |   23 +
+ arch/arm/boot/dts/sun7i-a20.dtsi                 |   61 ++
+ drivers/clk/sunxi/clk-factors.c                  |   36 +
+ drivers/clk/sunxi/clk-sunxi.c                    |   35 +
+ drivers/mmc/host/Kconfig                         |    7=20
+ drivers/mmc/host/Makefile                        |    2=20
+ drivers/mmc/host/sunxi-mci.c                     |  871 ++++++++++++++++++=
+++++
+ drivers/mmc/host/sunxi-mci.h                     |  239 ++++++
+ include/linux/clk/sunxi.h                        |   22 +
+ 19 files changed, 1523 insertions(+)
+ create mode 100644 drivers/mmc/host/sunxi-mci.c
+ create mode 100644 drivers/mmc/host/sunxi-mci.h
+ create mode 100644 include/linux/clk/sunxi.h
+
+--=20
+Signature
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/groups/opt_out.
