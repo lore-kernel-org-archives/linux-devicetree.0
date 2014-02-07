@@ -1,126 +1,192 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v6 05/19] watchdog: orion: Make sure the watchdog is
- initially stopped
-Date: Fri, 7 Feb 2014 08:55:22 -0800
-Message-ID: <20140207165522.GA9158@roeck-us.net>
-References: <1391707226-18258-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1391707226-18258-6-git-send-email-ezequiel.garcia@free-electrons.com>
- <52F43ED0.4050808@roeck-us.net>
- <20140207104044.GA11063@localhost>
- <52F4E1C1.4010805@roeck-us.net>
- <20140207151727.GB8218@localhost>
- <20140207154453.GA8533@titan.lakedaemon.net>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] spi: Add Qualcomm QUP SPI controller support
+Date: Fri, 7 Feb 2014 17:12:02 +0000
+Message-ID: <20140207171202.GD1757@sirena.org.uk>
+References: <1391705868-20091-1-git-send-email-iivanov@mm-sol.com>
+ <1391705868-20091-3-git-send-email-iivanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="M38YqGLZlgb6RLPS"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140207154453.GA8533-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <1391705868-20091-3-git-send-email-iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alok Chauhan <alokc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gilad Avidov <gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kiran Gunda <kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 07, 2014 at 10:44:53AM -0500, Jason Cooper wrote:
-> On Fri, Feb 07, 2014 at 12:17:28PM -0300, Ezequiel Garcia wrote:
-> > On Fri, Feb 07, 2014 at 05:38:09AM -0800, Guenter Roeck wrote:
-> > > On 02/07/2014 02:40 AM, Ezequiel Garcia wrote:
-> > > > On Thu, Feb 06, 2014 at 06:02:56PM -0800, Guenter Roeck wrote:
-> > > >> On 02/06/2014 09:20 AM, Ezequiel Garcia wrote:
-> > > >>> Having the watchdog initially fully stopped is important to avoid
-> > > >>> any spurious watchdog triggers, in case the registers are not in
-> > > >>> its reset state.
-> > > >>>
-> > > >>> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> > > >>> Tested-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > >>> Tested-by: Willy Tarreau <w@1wt.eu>
-> > > >>> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > > >>> ---
-> > > >>>    drivers/watchdog/orion_wdt.c | 3 +++
-> > > >>>    1 file changed, 3 insertions(+)
-> > > >>>
-> > > >>> diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
-> > > >>> index 6746033..2dbeee9 100644
-> > > >>> --- a/drivers/watchdog/orion_wdt.c
-> > > >>> +++ b/drivers/watchdog/orion_wdt.c
-> > > >>> @@ -142,6 +142,9 @@ static int orion_wdt_probe(struct platform_device *pdev)
-> > > >>>    	orion_wdt.max_timeout = wdt_max_duration;
-> > > >>>    	watchdog_init_timeout(&orion_wdt, heartbeat, &pdev->dev);
-> > > >>>
-> > > >>> +	/* Let's make sure the watchdog is fully stopped */
-> > > >>> +	orion_wdt_stop(&orion_wdt);
-> > > >>> +
-> > > >>
-> > > >> Actually we just had that in another driver, and I stumbled over it there.
-> > > >>
-> > > >> Problem with stopping the watchdog in probe unconditionally is that you can
-> > > >> use it to defeat nowayout: unload the module, then load it again,
-> > > >> and the watchdog is stopped even if nowayout is true.
-> > > >>
-> 
-> How often would a user legitimately want to unload/load the watchdog
-> module?
-> 
-Not sure what you are saying here. If you don't think the nowayout option
-should be supported, drop it. Don't claim it is supported when it isn't.
 
-> > > >
-> > > > Hm... I see.
-> > > >
-> > > >> Is this really what you want ? Or, in other words, what is the problem
-> > > >> you are trying to solve ?
-> > > >>
-> > > >
-> > > > Well, this is related to the discussion about the bootloader not
-> > > > reseting the watchdog properly, provoking spurious watchdog triggering.
-> > > >
-> > > > Jason Gunthorpe explained [1] that we needed a particular sequence:
-> > > >
-> > > >   1. Disable WDT
-> > > >   2. Clear bridge
-> > > >   3. Enable WDT
-> > > >
-> > > > We added the irq handling to satisfy (2), and the watchdog stop for (1).
-> > > >
-> > > > The watchdog stop was agreed specifically [2].
-> > > >
-> > > > Ideas?
-> > > >
-> > > 
-> > > Other drivers assume that if the watchdog is running, it is supposed
-> > > to be running. The more common approach in such cases is to ping the
-> > > watchdog once to give userspace more time to get ready, but leave
-> > > it enabled. So you could check if the watchdog is enabled, and if
-> > > it was enabled re-enable it after initialization is complete
-> > > (and maybe log a message stating that the watchdog is enabled).
-> > > 
-> > > If you don't want to do that, and if you are defeating nowayout
-> > > on purpose to fix a problem with a broken bootloader,
-> > > you should at least put in comment describing the problem you are
-> > > trying to solve, and that you accept breaking nowayout with your fix.
-> 
-> Yes, this should be commented.
-> 
-> > I'm not fond of not having "nowayout" option on our driver, given I'm sure
-> > it's a watchdog feature for a good reason.
-> > 
-> > On the other side, I can't see how can we distinguish a previously
-> > and explicitly enabled watchdog, from a spurious enable by broken bootloader.
-> 
-> How about we just don't define module_exit() and leave a comment as
-> such?  It's not unprecedented, a couple of the atm drivers are
-> explicitly setup like this (uPD98402.c, zatm.c, eni.c).
-> 
-Or don't support tristate in the first place. There was some argument from
-others earlier that a watchdog should never be optional. Or drop the nowayout
-option from the driver.
+--M38YqGLZlgb6RLPS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-There is one problem, though, if you don't support a pre-enabled watchdog:
-If the system dies before the watchdog application starts running, it will
-hang. This is the reason why the watchdog is enabled on purpose by some
-boot loaders.
+On Thu, Feb 06, 2014 at 06:57:48PM +0200, Ivan T. Ivanov wrote:
 
-Guenter
+This looks mostly good, there's a few odd things and missing use of
+framework features.
+
+> Qualcomm Universal Peripheral (QUP) core is an AHB slave that
+> provides a common data path (an output FIFO and an input FIFO)
+> for serial peripheral interface (SPI) mini-core. SPI in master mode
+> support up to 50MHz, up to four chip selects, and a programmable
+> data path from 4 bits to 32 bits; MODE0..3 protocols
+
+The grammar in this and the Kconfig text is a bit garbled, might want to
+give it a once over (support -> supports for example).
+
+> +static void spi_qup_deassert_cs(struct spi_qup *controller,
+> +				struct spi_qup_device *chip)
+> +{
+
+
+> +	if (chip->mode & SPI_CS_HIGH)
+> +		iocontol &= ~mask;
+> +	else
+> +		iocontol |= mask;
+
+Implement a set_cs() operation and let the core worry about all this
+for you as well as saving two implementations.
+
+> +		word = 0;
+> +		for (idx = 0; idx < controller->bytes_per_word &&
+> +		     controller->tx_bytes < xfer->len; idx++,
+> +		     controller->tx_bytes++) {
+> +
+> +			if (!tx_buf)
+> +				continue;
+
+Do you need to set the _MUST_TX flag?
+
+> +	qup_err = readl_relaxed(controller->base + QUP_ERROR_FLAGS);
+> +	spi_err = readl_relaxed(controller->base + SPI_ERROR_FLAGS);
+> +	opflags = readl_relaxed(controller->base + QUP_OPERATIONAL);
+> +
+> +	writel_relaxed(qup_err, controller->base + QUP_ERROR_FLAGS);
+> +	writel_relaxed(spi_err, controller->base + SPI_ERROR_FLAGS);
+> +	writel_relaxed(opflags, controller->base + QUP_OPERATIONAL);
+> +
+> +	if (!xfer)
+> +		return IRQ_HANDLED;
+
+Are you sure?  It seems wrong to just ignore interrupts, some comments
+would help explain why.
+
+> +static int spi_qup_transfer_do(struct spi_qup *controller,
+> +			       struct spi_qup_device *chip,
+> +			       struct spi_transfer *xfer)
+
+This looks like a transfer_one() function, please use the framework
+features where you can.
+
+> +	if (controller->speed_hz != chip->speed_hz) {
+> +		ret = clk_set_rate(controller->cclk, chip->speed_hz);
+> +		if (ret) {
+> +			dev_err(controller->dev, "fail to set frequency %d",
+> +				chip->speed_hz);
+> +			return -EIO;
+> +		}
+> +	}
+
+Is calling into the clock framework really so expensive that we need to
+avoid doing it?  You also shouldn't be interacting with the hardware in
+setup().
+
+> +	if (chip->bits_per_word <= 8)
+> +		controller->bytes_per_word = 1;
+> +	else if (chip->bits_per_word <= 16)
+> +		controller->bytes_per_word = 2;
+> +	else
+> +		controller->bytes_per_word = 4;
+
+This looks like a switch statement, and looking at the above it's not
+clear that the device actually supports anything other than whole bytes.
+I'm not sure what that would mean from an API point of view.
+
+> +static int spi_qup_transfer_one(struct spi_master *master,
+> +				struct spi_message *msg)
+> +{
+
+This entire function can be removed, the core can do it for you.
+
+> +	if (of_property_read_u32(dev->of_node, "spi-max-frequency", &max_freq))
+> +		max_freq = 19200000;
+> +
+> +	if (!max_freq) {
+> +		dev_err(dev, "invalid clock frequency %d\n", max_freq);
+> +		return -ENXIO;
+> +	}
+> +
+> +	ret = clk_set_rate(cclk, max_freq);
+> +	if (ret)
+> +		dev_warn(dev, "fail to set SPI frequency %d\n", max_freq);
+
+You set the clock rate per transfer so why bother setting it here,
+perhaps we support the rate the devices request but not this maximum
+rate?
+
+> +	master->num_chipselect = SPI_NUM_CHIPSELECTS;
+> +	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(4, 32);
+
+Are you *sure* the device supports anything other than whole bytes?
+
+> +	ret = devm_spi_register_master(dev, master);
+> +	if (!ret) {
+> +		pm_runtime_set_autosuspend_delay(dev, MSEC_PER_SEC);
+> +		pm_runtime_use_autosuspend(dev);
+> +		pm_runtime_set_active(dev);
+> +		pm_runtime_enable(dev);
+> +		return ret;
+> +	}
+
+This is really unclearly written, the success case looks like error
+handling.
+
+> +#ifdef CONFIG_PM_RUNTIME
+> +static int spi_qup_pm_suspend_runtime(struct device *device)
+> +{
+> +	struct spi_master *master = dev_get_drvdata(device);
+> +	struct spi_qup *controller = spi_master_get_devdata(master);
+> +
+> +	disable_irq(controller->irq);
+
+Why do you need to disable the interrupt?  Will the hardware generate
+spurious interrupts, if so some documentation is in order.
+
+> +static int spi_qup_pm_resume_runtime(struct device *device)
+> +{
+> +	struct spi_master *master = dev_get_drvdata(device);
+> +	struct spi_qup *controller = spi_master_get_devdata(master);
+> +
+> +	clk_prepare_enable(controller->cclk);
+> +	clk_prepare_enable(controller->iclk);
+> +	enable_irq(controller->irq);
+
+No error checking here...
+
+--M38YqGLZlgb6RLPS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS9RPfAAoJELSic+t+oim9C1IP/jkaeqsJ8MiBedYpgVpTKx6O
+hIE8EqUN0e3HrSqkYjc80EsrnBuvVu+kT2L5Hpi3eWZAqmKYUyThZv12UnPhA5xs
+xFgO91CCmeud7V7YwfB5b+5BCjrhY+lBLuE0ZiHFdThyqykPH7oBAS2YPrYxZJJ4
+cNTXkSSV5zpJOu81Sx12RCjFPtdYoJEbLrOav733QAtSesODb6fkiXB+VglygtPd
+Ri0m6LDKqnz5wzF7oyaE/Ik+4jk6opc4HES5/aCm6rNdffvElEYx/2NdqPEtSXUV
+Udbp6gVvSIypBb1QgbHExBICYJ/hu4qZrxN9e6LHiiwW0XwQc2Gss8CLvFrTSmLi
+zPO6Ks5ZQ+AZ3uny46O/Zt27rL1EdhO3Ff8aSvr6epHPBaQjIvgJ95On1elSrOJs
+Ih8S1HpfO7e10uRiQsMeIxKXtB9cMUxftWhKyTgdO823HTgl3aQO01v3VfkuCamO
+bozUKmrsHK5WBSO2z57ZmYlLgs35Yw8o/0/MWf1tpbO6YWNQ8KI21W44DX+49MQr
+xfQZxPU26LaA3mfjV4Vnj7TKBqdx3E7inucHA/CagefuCN/OMFcouDaQLNNzdNlk
+k02Se18c/HnPJcF2/L6VQMSWgfO9DnLQhtFw1arVodRog3LA1gu1j2ejMu87UlKv
+oZ6iDmN3GXZKj05thder
+=APuf
+-----END PGP SIGNATURE-----
+
+--M38YqGLZlgb6RLPS--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
