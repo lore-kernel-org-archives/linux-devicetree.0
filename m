@@ -1,141 +1,189 @@
-From: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] spi: qup: Add device tree bindings information
-Date: Fri, 7 Feb 2014 01:43:20 -0600
-Message-ID: <20140207074320.GB2610@qualcomm.com>
-References: <1391705868-20091-1-git-send-email-iivanov@mm-sol.com>
- <1391705868-20091-2-git-send-email-iivanov@mm-sol.com>
+From: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
+Subject: Re: [PATCH 4/4] ARM: Kirkwood: Add support for many Synology NAS
+ devices
+Date: Fri, 07 Feb 2014 17:44:08 +1000
+Message-ID: <52F48EC8.9020306@killerwolves.net>
+References: <1391634309-3123-1-git-send-email-andrew@lunn.ch> <1391634309-3123-5-git-send-email-andrew@lunn.ch> <20140206153939.GD8533@titan.lakedaemon.net> <20140206160126.GH29860@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1391705868-20091-2-git-send-email-iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20140206160126.GH29860-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 06, 2014 at 06:57:47PM +0200, Ivan T. Ivanov wrote:
-> From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-> 
-> The Qualcomm Universal Peripheral (QUP) core is an
-> AHB slave that provides a common data path (an output
-> FIFO and an input FIFO) for serial peripheral interface
-> (SPI) mini-core.
-> 
-> Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../devicetree/bindings/spi/qcom,spi-qup.txt       |   86 ++++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/qcom,spi-qup.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/qcom,spi-qup.txt b/Documentation/devicetree/bindings/spi/qcom,spi-qup.txt
-> new file mode 100644
-> index 0000000..74565f1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/qcom,spi-qup.txt
-> @@ -0,0 +1,86 @@
-> +Qualcomm Universal Peripheral (QUP) Serial Peripheral Interface (SPI)
-> +
-> +The QUP core is an AHB slave that provides a common data path (an output FIFO
-> +and an input FIFO) for serial peripheral interface (SPI) mini-core.
-> +
-> +SPI in master mode support up to 50MHz, up to four chip selects, and a
-> +programmable data path from 4 bits to 32 bits; supports numerous protocol
-> +variants.
-> +
-> +Required properties:
-> +- compatible: 		Should contain "qcom,spi-qup-v2".
+On 7/02/2014 2:01 AM, Andrew Lunn wrote:
+> On Thu, Feb 06, 2014 at 10:39:39AM -0500, Jason Cooper wrote:
+>>
+>> + devicetree ML, DT maintainers
+>>
+>> On Wed, Feb 05, 2014 at 10:05:09PM +0100, Andrew Lunn wrote:
+>>> Add device tree fragments and files to support many of the kirkwood
+>>> based Synology NAS devices. This is a translation of the board setup
+>>> file maintained by Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
+>>>
+>>> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+>>> Tested by Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
+>>> cc: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
+>>> ---
+>>>
+>>> v2:
+>>> Fix gpio's which should be gpo.
+>>> Rebase onto v3-14-rc1
+>>> Update RTC nodes with vendor name.
+>>> Update SPI flash node with vendor name.
+>>> ---
+>>>  arch/arm/boot/dts/Makefile                     |   15 ++++
+>>>  arch/arm/boot/dts/kirkwood-ds109.dts           |   33 +++++++
+>>>  arch/arm/boot/dts/kirkwood-ds110jv10.dts       |   33 +++++++
+>>>  arch/arm/boot/dts/kirkwood-ds111.dts           |   33 +++++++
+>>>  arch/arm/boot/dts/kirkwood-ds112.dts           |   34 +++++++
+>>>  arch/arm/boot/dts/kirkwood-ds209.dts           |   33 +++++++
+>>>  arch/arm/boot/dts/kirkwood-ds210.dts           |   35 ++++++++
+>>>  arch/arm/boot/dts/kirkwood-ds212.dts           |   37 ++++++++
+>>>  arch/arm/boot/dts/kirkwood-ds212j.dts          |   34 +++++++
+>>>  arch/arm/boot/dts/kirkwood-ds409.dts           |   34 +++++++
+>>>  arch/arm/boot/dts/kirkwood-ds409slim.dts       |   32 +++++++
+>>>  arch/arm/boot/dts/kirkwood-ds411.dts           |   35 ++++++++
+>>>  arch/arm/boot/dts/kirkwood-ds411j.dts          |   34 +++++++
+>>>  arch/arm/boot/dts/kirkwood-ds411slim.dts       |   34 +++++++
+>>>  arch/arm/boot/dts/kirkwood-rs212.dts           |   34 +++++++
+>>>  arch/arm/boot/dts/kirkwood-rs409.dts           |   33 +++++++
+>>>  arch/arm/boot/dts/kirkwood-rs411.dts           |   34 +++++++
+>>>  arch/arm/boot/dts/synology/alarm-led-12.dtsi   |   28 ++++++
+>>>  arch/arm/boot/dts/synology/common.dtsi         |  112 ++++++++++++++++++++++++
+>>>  arch/arm/boot/dts/synology/ethernet-1.dtsi     |   15 ++++
+>>>  arch/arm/boot/dts/synology/fan-alarm-18.dtsi   |   22 +++++
+>>>  arch/arm/boot/dts/synology/fan-alarm-35-1.dtsi |   22 +++++
+>>>  arch/arm/boot/dts/synology/fan-alarm-35-3.dtsi |   32 +++++++
+>>>  arch/arm/boot/dts/synology/fan-gpios-15.dtsi   |   34 +++++++
+>>>  arch/arm/boot/dts/synology/fan-gpios-32.dtsi   |   34 +++++++
+>>>  arch/arm/boot/dts/synology/fan-speed-100.dtsi  |   20 +++++
+>>>  arch/arm/boot/dts/synology/fan-speed-120.dtsi  |   20 +++++
+>>>  arch/arm/boot/dts/synology/fan-speed-150.dtsi  |   20 +++++
+>>>  arch/arm/boot/dts/synology/hdd-leds-20.dtsi    |   90 +++++++++++++++++++
+>>>  arch/arm/boot/dts/synology/hdd-leds-21-1.dtsi  |   36 ++++++++
+>>>  arch/arm/boot/dts/synology/hdd-leds-21-2.dtsi  |   52 +++++++++++
+>>>  arch/arm/boot/dts/synology/hdd-leds-36.dtsi    |  103 ++++++++++++++++++++++
+>>>  arch/arm/boot/dts/synology/hdd-leds-38.dtsi    |   52 +++++++++++
+>>>  arch/arm/boot/dts/synology/hdd-power-29.dtsi   |   56 ++++++++++++
+>>>  arch/arm/boot/dts/synology/hdd-power-30-1.dtsi |   40 +++++++++
+>>>  arch/arm/boot/dts/synology/hdd-power-30-2.dtsi |   56 ++++++++++++
+>>>  arch/arm/boot/dts/synology/hdd-power-30-4.dtsi |   89 +++++++++++++++++++
+>>>  arch/arm/boot/dts/synology/hdd-power-31.dtsi   |   40 +++++++++
+>>>  arch/arm/boot/dts/synology/hdd-power-34.dtsi   |   73 +++++++++++++++
+>>>  arch/arm/boot/dts/synology/i2c-rtc-ricoh.dtsi  |   18 ++++
+>>>  arch/arm/boot/dts/synology/i2c-rtc-seiko.dtsi  |   18 ++++
+>>>  arch/arm/boot/dts/synology/pcie-2.dtsi         |   19 ++++
+>>>  42 files changed, 1658 insertions(+)
+>>>  create mode 100644 arch/arm/boot/dts/kirkwood-ds109.dts
+>>>  create mode 100644 arch/arm/boot/dts/kirkwood-ds110jv10.dts
+>>>  create mode 100644 arch/arm/boot/dts/kirkwood-ds111.dts
+>>>  create mode 100644 arch/arm/boot/dts/kirkwood-ds112.dts
+>>>  create mode 100644 arch/arm/boot/dts/kirkwood-ds209.dts
+>>>  create mode 100644 arch/arm/boot/dts/kirkwood-ds210.dts
+>>>  create mode 100644 arch/arm/boot/dts/kirkwood-ds212.dts
+>>>  create mode 100644 arch/arm/boot/dts/kirkwood-ds212j.dts
+>>>  create mode 100644 arch/arm/boot/dts/kirkwood-ds409.dts
+>>>  create mode 100644 arch/arm/boot/dts/kirkwood-ds409slim.dts
+>>>  create mode 100644 arch/arm/boot/dts/kirkwood-ds411.dts
+>>>  create mode 100644 arch/arm/boot/dts/kirkwood-ds411j.dts
+>>>  create mode 100644 arch/arm/boot/dts/kirkwood-ds411slim.dts
+>>>  create mode 100644 arch/arm/boot/dts/kirkwood-rs212.dts
+>>>  create mode 100644 arch/arm/boot/dts/kirkwood-rs409.dts
+>>>  create mode 100644 arch/arm/boot/dts/kirkwood-rs411.dts
+>>>  create mode 100644 arch/arm/boot/dts/synology/alarm-led-12.dtsi
+>>>  create mode 100644 arch/arm/boot/dts/synology/common.dtsi
+>>>  create mode 100644 arch/arm/boot/dts/synology/ethernet-1.dtsi
+>>>  create mode 100644 arch/arm/boot/dts/synology/fan-alarm-18.dtsi
+>>>  create mode 100644 arch/arm/boot/dts/synology/fan-alarm-35-1.dtsi
+>>>  create mode 100644 arch/arm/boot/dts/synology/fan-alarm-35-3.dtsi
+>>>  create mode 100644 arch/arm/boot/dts/synology/fan-gpios-15.dtsi
+>>>  create mode 100644 arch/arm/boot/dts/synology/fan-gpios-32.dtsi
+>>>  create mode 100644 arch/arm/boot/dts/synology/fan-speed-100.dtsi
+>>>  create mode 100644 arch/arm/boot/dts/synology/fan-speed-120.dtsi
+>>>  create mode 100644 arch/arm/boot/dts/synology/fan-speed-150.dtsi
 
-Could be more descriptive.  qcom,spi-qup-v2.1.1 for MSM8974 v1 and
-qcom,spi-qup-v2.2.1 for MSM8974 v2.
+If we're not worried about the non-linearity of the 150R+120R+100R and
+182R+150R+100R fan controllers (vs the 150R/100R/33R ones), these fan
+speed blocks could be collapsed into common.dtsi.
 
-> +- reg: 				Should contain base register location and length
-> +- interrupts: 		Interrupt number used by this controller
-> +
-> +- clocks: 			Should contain the core clock and the AHB clock.
-> +- clock-names: 		Should be "core" for the core clock and "iface" for the
-> +                	AHB clock.
-> +
-> +- #address-cells: 	Number of cells required to define a chip select
-> +					address on the SPI bus. Should be set to 1.
-> +- #size-cells: 		Should be zero.
-> +
-> +Optional properties:
-> +- spi-max-frequency: Specifies maximum SPI clock frequency, Units - Hz. Definition
-> +                    as per Documentation/devicetree/bindings/spi/spi-bus.txt
-> +
-> +SPI slave nodes must be children of the SPI master node and can
-> +contain properties described in Documentation/devicetree/bindings/spi/spi-bus.txt
-> +
-> +Example:
-> +
-> +	spi_8: spi@f9964000 { /* BLSP2 QUP2 */
-> +
-> +		compatible = "qcom,spi-qup-v2";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0xf9964000 0x1000>;
-> +		interrupts = <0 102 0>;
-> +		spi-max-frequency = <19200000>;
-> +
-> +		clocks = <&gcc GCC_BLSP2_QUP2_SPI_APPS_CLK>, <&gcc GCC_BLSP2_AHB_CLK>;
-> +		clock-names = "core", "iface";
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&spi8_default>;
-> +
-> +		device@0 {
-> +			compatible = "arm,pl022-dummy";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			reg = <0>; /* Chip select 0 */
-> +			spi-max-frequency = <19200000>;
-> +			spi-cpol;
-> +		};
-> +
-> +		device@1 {
-> +			compatible = "arm,pl022-dummy";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			reg = <1>; /* Chip select 1 */
-> +			spi-max-frequency = <9600000>;
-> +			spi-cpha;
-> +		};
-> +
-> +		device@2 {
-> +			compatible = "arm,pl022-dummy";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			reg = <2>; /* Chip select 2 */
-> +			spi-max-frequency = <19200000>;
-> +			spi-cpol;
-> +			spi-cpha;
-> +		};
-> +
-> +		device@3 {
-> +			compatible = "arm,pl022-dummy";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			reg = <3>; /* Chip select 3 */
-> +			spi-max-frequency = <19200000>;
-> +			spi-cpol;
-> +			spi-cpha;
-> +			spi-cs-high;
-> +		};
-> +	};
-> +
-> -- 
-> 1.7.9.5
+>>>  create mode 100644 arch/arm/boot/dts/synology/hdd-leds-20.dtsi
+>>>  create mode 100644 arch/arm/boot/dts/synology/hdd-leds-21-1.dtsi
+>>>  create mode 100644 arch/arm/boot/dts/synology/hdd-leds-21-2.dtsi
+>>>  create mode 100644 arch/arm/boot/dts/synology/hdd-leds-36.dtsi
+>>>  create mode 100644 arch/arm/boot/dts/synology/hdd-leds-38.dtsi
+>>>  create mode 100644 arch/arm/boot/dts/synology/hdd-power-29.dtsi
+>>>  create mode 100644 arch/arm/boot/dts/synology/hdd-power-30-1.dtsi
+>>>  create mode 100644 arch/arm/boot/dts/synology/hdd-power-30-2.dtsi
+>>>  create mode 100644 arch/arm/boot/dts/synology/hdd-power-30-4.dtsi
+>>>  create mode 100644 arch/arm/boot/dts/synology/hdd-power-31.dtsi
+>>>  create mode 100644 arch/arm/boot/dts/synology/hdd-power-34.dtsi
+>>>  create mode 100644 arch/arm/boot/dts/synology/i2c-rtc-ricoh.dtsi
+>>>  create mode 100644 arch/arm/boot/dts/synology/i2c-rtc-seiko.dtsi
+>>>  create mode 100644 arch/arm/boot/dts/synology/pcie-2.dtsi
+>>
+>> Holy sh*t!  I know we're adding 15 boards
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> More than 15 actually. Most .dts files support multiple devices. So
+> there should be about 30 devices supported by these .dts files.
+> 
+>> , but this is, imho,
+>> over-fragmenting.  I'm sure there's a reason you chose this path, but
+>> you haven't explained why in your commit log. So I'm left guessing...
+> 
+> Synology seem to build there devices like lego. They have two
+> different RTC blocks. They have three different fan alarm blocks, four
+> different led blocks, etc. And to build a product, the just select a
+> group of blocks and put them together.
+
+The Ricoh RTC seems to be only used in the pre-2010 units.  Everything
+else uses the Seiko RTC.
+
+Most of the 1-bay and 2-bay units use the GPIOs that are multiplexed
+with the built-in SATA interface activity/presence pins on mpp 20-23,
+while the 4-bay units use ge01 and a PCIe SATA controller, and put the
+software controlled HDD leds on mpp 36-43.
+
+Most of the 6281 units with HDD power controls use mpp 29 and 31, while
+most of the 6282 units with HDD power controls use mpp 30, 34, 44 and 45
+and provide a model ID on mpp 28, 29, 46 and 47.  Pre-2012 units and
+4-bay units didn't have a separate power control for HDD1.  These power
+controls are presumably to limit startup current from the 12V brick
+power supply.
+
+From
+http://forum.synology.com/wiki/index.php/What_kind_of_CPU_does_my_NAS_have,
+it doesn't look like there are any new 6281 or 6282 models for 2014.
+
+> 
+> The board setup code which Ben Peddell wrote has a somewhat similar
+> structure:
+> 
+> http://klightspeed.killerwolves.net/synology/linux-3.4-synology-0.1.patch
+
+A more up-to-date version is at:
+http://klightspeed.killerwolves.net/synology/linux-3.7-synology-0.2.patch
+
+> 
+> It has a set of functions which add platform devices. And a table
+> driven piece of code which based on the product name calls these
+> functions to add the needed platform devices. Take a look at the table
+> to get a better idea of the re-use factor of the blocks.
+> 
+> In this DT version, i have a dtsi file for each function, and a dti
+> file for each table entry.
+> 
+> I will add to the changelog in the next version.
+
+
 
 -- 
-sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+Ben Peddell
+IT Support Bowen, Collinsville and Proserpine Catholic schools
+http://klightspeed.killerwolves.net/
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
