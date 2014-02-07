@@ -1,33 +1,63 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2 v3] i2c: exynos5: add support for HSI2C on Exynos5260
- SoC
-Date: Fri, 07 Feb 2014 11:21:48 +0100
-Message-ID: <52F4B3BC.6080907@gmail.com>
-References: <1385100851-32254-1-git-send-email-ch.naveen@samsung.com> <1391688408-8077-1-git-send-email-ch.naveen@samsung.com> <52F38EA4.10805@samsung.com> <52F3933B.9090202@samsung.com> <20140207101747.GA2621@katana>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [RFC PATCH 08/15] ata: ahci_platform: Manage SATA PHY
+Date: Fri, 7 Feb 2014 12:33:38 +0200
+Message-ID: <52F4B682.2000201@ti.com>
+References: <1379595943-14622-1-git-send-email-rogerq@ti.com> <1379595943-14622-9-git-send-email-rogerq@ti.com> <20130922165817.GD30946@htj.dyndns.org> <523F35E4.6050707@cogentembedded.com> <20130922215107.GD27616@mtj.dyndns.org> <523FEFC2.801@ti.com> <52403B4F.3070406@cogentembedded.com> <5240492D.6060204@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140207101747.GA2621@katana>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, taeggyun.ko-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <5240492D.6060204@ti.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, kishon@ti.com
+Cc: Tejun Heo <tj@kernel.org>, balbi@ti.com, bcousson@baylibre.com, tony@atomide.com, balajitk@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07.02.2014 11:17, Wolfram Sang wrote:
-> On Thu, Feb 06, 2014 at 02:50:51PM +0100, Tomasz Figa wrote:
->> Also, please use correct addresses of DT ML and Wolfram's e-mail
->> (fixed in this message).
->
-> And please don't use In-Reply-To when sending new versions of patches.
-> The message threading became hard to read here...
->
+Hi,
 
-+1
+On 09/23/2013 04:59 PM, Roger Quadros wrote:
+> On 09/23/2013 03:59 PM, Sergei Shtylyov wrote:
+>> Hello.
+>>
+>> On 23-09-2013 11:37, Roger Quadros wrote:
+>>
+>>>>>     Not sure why you asked -- I'm not using this driver, neither I'm
+>>
+>>>> Well, you have better grip of what's going on in the embedded world
+>>>> than me.  I'm mostly curious whether adding dependency on PHY is okay.
+>>
+>>> There is no hard dependency on presence of PHY. The driver will continue
+>>> as usual if devm_phy_get() fails.
+>>> I hope selecting GENERIC_PHY in Kconfig is not an issue.
+>>
+>>    Selecting in the AHCI_PLATFORM section? It seems I have overlooked it. No, I don't think it's a good idea. The generic PHY functions seem to be stubbed when GENERIC_PHY=n.
+>>
+> OK I will remove the select then.
 
-It's hard to follow new versions of series that show up under the thread 
-of old version. If you want to keep reference to old versions, you can 
-add links to respective threads to change log entries in cover letter.
+If I remove the select then build fails like so if we set CONFIG_GENERIC_PHY to 'm' and CONFIG_SATA_AHCI_PLATFORM to 'y'
 
-Best regards,
-Tomasz
+drivers/built-in.o: In function `ahci_platform_enable_resources':
+(.text+0x162647): undefined reference to `phy_init'
+drivers/built-in.o: In function `ahci_platform_enable_resources':
+(.text+0x16267c): undefined reference to `phy_power_on'
+drivers/built-in.o: In function `ahci_platform_enable_resources':
+(.text+0x162694): undefined reference to `phy_exit'
+drivers/built-in.o: In function `ahci_platform_disable_resources':
+(.text+0x1626af): undefined reference to `phy_power_off'
+drivers/built-in.o: In function `ahci_platform_disable_resources':
+(.text+0x1626b7): undefined reference to `phy_exit'
+drivers/built-in.o: In function `ahci_platform_get_resources':
+(.text+0x162768): undefined reference to `devm_phy_get'
+make: *** [vmlinux] Error 1
+
+This means we need to make CONFIG_SATA_AHCI_PLATFORM depend on CONFIG_GENERIC_PHY or
+select it.
+
+OR
+
+Generic PHY layer must be fixed so that the API's are always built in.
+
+What is the better option? I believe making the PHY API's always built in is the better option.
+
+cheers,
+-roger
