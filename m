@@ -1,236 +1,161 @@
-From: <srinivas.kandagatla@st.com>
-Subject: [PATCH v2 3/3] ARM: STi: Add STiH416 ethernet support.
-Date: Fri, 7 Feb 2014 10:55:57 +0000
-Message-ID: <1391770558-24434-1-git-send-email-srinivas.kandagatla@st.com>
-References: <1391770455-24291-1-git-send-email-srinivas.kandagatla@st.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 3/8] mfd: da9055: Add DT support for PMIC
+Date: Fri, 7 Feb 2014 11:03:20 +0000
+Message-ID: <20140207110320.GM14727@lee--X1>
+References: <cover.1391705989.git.Adam.Thomson.Opensource@diasemi.com>
+ <46f41a14205ac39de3adb8c87d2a6dba557ad8d1.1391705989.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1391770455-24291-1-git-send-email-srinivas.kandagatla@st.com>
+Content-Disposition: inline
+In-Reply-To: <46f41a14205ac39de3adb8c87d2a6dba557ad8d1.1391705989.git.Adam.Thomson.Opensource@diasemi.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, davem@davemloft.net
+To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc: Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/da9055.txt |   73 ++++++++++++=
+++++++++++
+>  drivers/mfd/da9055-i2c.c                         |    8 +++
 
-This patch adds support to STiH416 SOC, which has two ethernet
-snps,dwmac controllers version 3.710. With this patch B2000 and B2020
-boards can boot with ethernet in MII and RGMII modes.
+Can you break this up please.
 
-Tested on both B2020 and B2000.
+Bindings should be separate to the binding document.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
----
- arch/arm/boot/dts/stih416-clock.dtsi   |   14 ++++
- arch/arm/boot/dts/stih416-pinctrl.dtsi |  109 ++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/stih416.dtsi         |   44 +++++++++++++
- 3 files changed, 167 insertions(+)
+>  2 files changed, 81 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/da9055.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/da9055.txt b/Docum=
+entation/devicetree/bindings/mfd/da9055.txt
+> new file mode 100644
+> index 0000000..f903c3f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/da9055.txt
+> @@ -0,0 +1,73 @@
+> +* Dialog DA9055 Power Management Integrated Circuit (PMIC)
+> +
+> +DA9055 consists of a large and varied group of sub-devices (I2C Only=
+):
+> +
+> +Device			 Supply Names	 Description
+> +------			 ------------	 -----------
+> +da9055-gpio		:		: GPIOs
+> +da9055-regulator	:		: Regulators
+> +da9055-onkey		:		: On key
+> +da9055-rtc		:		: RTC
+> +da9055-hwmon		:		: ADC
+> +da9055-watchdog		:		: Watchdog
+> +
+> +The CODEC device in DA9055 has a separate, configurable I2C address =
+and so
+> +is instantiated separately from the PMIC.
+> +
+> +For details on accompanying CODEC I2C device, see the following:
+> +Documentation/devicetree/bindings/sound/da9055.txt
+> +
+> +=3D=3D=3D=3D=3D=3D
+> +
+> +Required properties:
+> +- compatible : Should be "dlg,da9055-pmic"
+> +- reg: Specifies the I2C slave address (defaults to 0x5a but can be =
+modified)
+> +- interrupt-parent: Specifies the phandle of the interrupt controlle=
+r to which
+> +  the IRQs from da9055 are delivered to.
+> +- interrupts: IRQ line info for da9055 chip.
+> +- interrupt-controller: da9055 has internal IRQs (has own IRQ domain=
+).
+> +- #interrupt-cells: Should be 1, is the local IRQ number for da9055.
+> +
+> +Sub-nodes:
+> +- regulators : Contain the regulator nodes. The DA9055 regulators ar=
+e
+> +  bound using their names as listed below:
+> +
+> +    buck1     : regulator BUCK1
+> +    buck2     : regulator BUCK2
+> +    ldo1      : regulator LDO1
+> +    ldo2      : regulator LDO2
+> +    ldo3      : regulator LDO3
+> +    ldo4      : regulator LDO4
+> +    ldo5      : regulator LDO5
+> +    ldo6      : regulator LDO6
+> +
+> +  The bindings details of individual regulator device can be found i=
+n:
+> +  Documentation/devicetree/bindings/regulator/regulator.txt
+> +
+> +
+> +Example:
+> +
+> +	pmic: da9055-pmic@5a {
+> +		compatible =3D "dlg,da9055-pmic";
+> +		reg =3D <0x5a>;
+> +		interrupt-parent =3D <&intc>;
+> +		interrupts =3D <5 0x8>;
+> +		interrupt-controller;
+> +		#interrupt-cells =3D <1>;
+> +
+> +		regulators {
+> +			buck1: BUCK1 {
+> +				regulator-min-microvolt =3D <725000>;
+> +				regulator-max-microvolt =3D <2075000>;
+> +			};
+> +
+> +			buck2: BUCK2 {
+> +				regulator-min-microvolt =3D <925000>;
+> +				regulator-max-microvolt =3D <2500000>;
+> +			};
+> +			ldo1: LDO1 {
+> +				regulator-min-microvolt =3D <900000>;
+> +				regulator-max-microvolt =3D <3300000>;
+> +			};
+> +		};
+> +	};
+> diff --git a/drivers/mfd/da9055-i2c.c b/drivers/mfd/da9055-i2c.c
+> index 8103e43..366a3e2 100644
+> --- a/drivers/mfd/da9055-i2c.c
+> +++ b/drivers/mfd/da9055-i2c.c
+> @@ -15,6 +15,8 @@
+>  #include <linux/device.h>
+>  #include <linux/i2c.h>
+>  #include <linux/err.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+>=20
+>  #include <linux/mfd/da9055/core.h>
+>=20
+> @@ -66,6 +68,11 @@ static struct i2c_device_id da9055_i2c_id[] =3D {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, da9055_i2c_id);
+>=20
+> +static const struct of_device_id da9055_of_match[] =3D {
+> +	{ .compatible =3D "dlg,da9055-pmic", .data =3D (void *)&da9055_i2c_=
+id[0] },
 
-diff --git a/arch/arm/boot/dts/stih416-clock.dtsi b/arch/arm/boot/dts/stih416-clock.dtsi
-index 7026bf1..a6942c7 100644
---- a/arch/arm/boot/dts/stih416-clock.dtsi
-+++ b/arch/arm/boot/dts/stih416-clock.dtsi
-@@ -37,5 +37,19 @@
- 			clock-frequency = <100000000>;
- 			clock-output-names = "CLK_S_ICN_REG_0";
- 		};
-+
-+		CLK_S_GMAC0_PHY: clockgenA1@7 {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <25000000>;
-+			clock-output-names = "CLK_S_GMAC0_PHY";
-+		};
-+
-+		CLK_S_ETH1_PHY: clockgenA0@7 {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <25000000>;
-+			clock-output-names = "CLK_S_ETH1_PHY";
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/stih416-pinctrl.dtsi b/arch/arm/boot/dts/stih416-pinctrl.dtsi
-index 8863c38..c4beef2 100644
---- a/arch/arm/boot/dts/stih416-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stih416-pinctrl.dtsi
-@@ -132,6 +132,58 @@
- 					};
- 				};
- 			};
-+
-+			gmac1 {
-+				pinctrl_mii1: mii1 {
-+					st,pins {
-+						txd0 = <&PIO0 0 ALT1 OUT SE_NICLK_IO 0 CLK_A>;
-+						txd1 = <&PIO0 1 ALT1 OUT SE_NICLK_IO 0 CLK_A>;
-+						txd2 = <&PIO0 2 ALT1 OUT SE_NICLK_IO 0 CLK_A>;
-+						txd3 = <&PIO0 3 ALT1 OUT SE_NICLK_IO 0 CLK_A>;
-+						txer = <&PIO0 4 ALT1 OUT SE_NICLK_IO 0 CLK_A>;
-+						txen = <&PIO0 5 ALT1 OUT SE_NICLK_IO 0 CLK_A>;
-+						txclk = <&PIO0 6 ALT1 IN NICLK 0 CLK_A>;
-+						col =   <&PIO0 7 ALT1 IN BYPASS 1000>;
-+
-+						mdio =  <&PIO1 0 ALT1 OUT BYPASS 1500>;
-+						mdc =   <&PIO1 1 ALT1 OUT NICLK 0 CLK_A>;
-+						crs =   <&PIO1 2 ALT1 IN BYPASS 1000>;
-+						mdint = <&PIO1 3 ALT1 IN BYPASS 0>;
-+						rxd0 =  <&PIO1 4 ALT1 IN SE_NICLK_IO 0 CLK_A>;
-+						rxd1 =  <&PIO1 5 ALT1 IN SE_NICLK_IO 0 CLK_A>;
-+						rxd2 =  <&PIO1 6 ALT1 IN SE_NICLK_IO 0 CLK_A>;
-+						rxd3 =  <&PIO1 7 ALT1 IN SE_NICLK_IO 0 CLK_A>;
-+
-+						rxdv =  <&PIO2 0 ALT1 IN SE_NICLK_IO 0 CLK_A>;
-+						rx_er = <&PIO2 1 ALT1 IN SE_NICLK_IO 0 CLK_A>;
-+						rxclk = <&PIO2 2 ALT1 IN NICLK 0 CLK_A>;
-+					 	phyclk = <&PIO2 3 ALT1 OUT NICLK 0 CLK_A>;
-+					};
-+				};
-+				pinctrl_rgmii1: rgmii1-0 {
-+					st,pins {
-+						txd0 =  <&PIO0 0 ALT1 OUT DE_IO 500 CLK_A>;
-+						txd1 =  <&PIO0 1 ALT1 OUT DE_IO 500 CLK_A>;
-+						txd2 =  <&PIO0 2 ALT1 OUT DE_IO 500 CLK_A>;
-+						txd3 =  <&PIO0 3 ALT1 OUT DE_IO 500 CLK_A>;
-+						txen =  <&PIO0 5 ALT1 OUT DE_IO 0   CLK_A>;
-+						txclk = <&PIO0 6 ALT1 IN  NICLK 0   CLK_A>;
-+
-+						mdio = <&PIO1 0 ALT1 OUT BYPASS 0>;
-+						mdc  = <&PIO1 1 ALT1 OUT NICLK  0 CLK_A>;
-+						rxd0 = <&PIO1 4 ALT1 IN DE_IO 500 CLK_A>;
-+						rxd1 = <&PIO1 5 ALT1 IN DE_IO 500 CLK_A>;
-+						rxd2 = <&PIO1 6 ALT1 IN DE_IO 500 CLK_A>;
-+						rxd3 = <&PIO1 7 ALT1 IN DE_IO 500 CLK_A>;
-+
-+						rxdv   = <&PIO2 0 ALT1 IN  DE_IO 500 CLK_A>;
-+						rxclk  = <&PIO2 2 ALT1 IN  NICLK 0   CLK_A>;
-+						phyclk = <&PIO2 3 ALT4 OUT NICLK 0   CLK_B>;
-+
-+						clk125= <&PIO3 7 ALT4 IN NICLK 0 CLK_A>;
-+					};
-+				};
-+			};
- 		};
- 
- 		pin-controller-front {
-@@ -322,6 +374,63 @@
- 					};
- 				};
- 			};
-+
-+			gmac0 {
-+				pinctrl_mii0: mii0 {
-+					st,pins {
-+						mdint = <&PIO13 6 ALT2 IN  BYPASS      0>;
-+						txen =  <&PIO13 7 ALT2 OUT SE_NICLK_IO 0 CLK_A>;
-+						txd0 =  <&PIO14 0 ALT2 OUT SE_NICLK_IO 0 CLK_A>;
-+						txd1 =  <&PIO14 1 ALT2 OUT SE_NICLK_IO 0 CLK_A>;
-+						txd2 =  <&PIO14 2 ALT2 OUT SE_NICLK_IO 0 CLK_B>;
-+						txd3 =  <&PIO14 3 ALT2 OUT SE_NICLK_IO 0 CLK_B>;
-+
-+						txclk = <&PIO15 0 ALT2 IN  NICLK       0 CLK_A>;
-+						txer =  <&PIO15 1 ALT2 OUT SE_NICLK_IO 0 CLK_A>;
-+						crs = <&PIO15 2 ALT2 IN  BYPASS 1000>;
-+						col = <&PIO15 3 ALT2 IN  BYPASS 1000>;
-+						mdio= <&PIO15 4 ALT2 OUT BYPASS 1500>;
-+						mdc = <&PIO15 5 ALT2 OUT NICLK  0    CLK_B>;
-+
-+						rxd0 =  <&PIO16 0 ALT2 IN SE_NICLK_IO 0 CLK_A>;
-+						rxd1 =  <&PIO16 1 ALT2 IN SE_NICLK_IO 0 CLK_A>;
-+						rxd2 =  <&PIO16 2 ALT2 IN SE_NICLK_IO 0 CLK_A>;
-+						rxd3 =  <&PIO16 3 ALT2 IN SE_NICLK_IO 0 CLK_A>;
-+						rxdv =  <&PIO15 6 ALT2 IN SE_NICLK_IO 0 CLK_A>;
-+						rx_er = <&PIO15 7 ALT2 IN SE_NICLK_IO 0 CLK_A>;
-+						rxclk = <&PIO17 0 ALT2 IN NICLK 0 CLK_A>;
-+					 	phyclk = <&PIO13 5 ALT2 OUT NICLK 0 CLK_B>;
-+					};
-+				};
-+
-+				pinctrl_gmii0: gmii0 {
-+					st,pins {
-+						};
-+				};
-+				pinctrl_rgmii0: rgmii0 {
-+					st,pins {
-+						 phyclk = <&PIO13  5 ALT4 OUT NICLK 0 CLK_B>;
-+						 txen = <&PIO13 7 ALT2 OUT DE_IO 0 CLK_A>;
-+						 txd0  = <&PIO14 0 ALT2 OUT DE_IO 500 CLK_A>;
-+						 txd1  = <&PIO14 1 ALT2 OUT DE_IO 500 CLK_A>;
-+						 txd2  = <&PIO14 2 ALT2 OUT DE_IO 500 CLK_B>;
-+						 txd3  = <&PIO14 3 ALT2 OUT DE_IO 500 CLK_B>;
-+						 txclk = <&PIO15 0 ALT2 IN NICLK 0 CLK_A>;
-+
-+						 mdio = <&PIO15 4 ALT2 OUT BYPASS 0>;
-+						 mdc = <&PIO15 5 ALT2 OUT NICLK 0 CLK_B>;
-+
-+						 rxdv = <&PIO15 6 ALT2 IN DE_IO 500 CLK_A>;
-+						 rxd0 =<&PIO16 0 ALT2 IN DE_IO	500 CLK_A>;
-+						 rxd1 =<&PIO16 1 ALT2 IN DE_IO	500 CLK_A>;
-+						 rxd2 =<&PIO16 2 ALT2 IN DE_IO	500 CLK_A>;
-+						 rxd3  =<&PIO16 3 ALT2 IN DE_IO 500 CLK_A>;
-+						 rxclk =<&PIO17 0 ALT2 IN NICLK 0 CLK_A>;
-+
-+						 clk125=<&PIO17 6 ALT1 IN NICLK 0 CLK_A>;
-+					};
-+				};
-+			};
- 		};
- 
- 		pin-controller-fvdp-fe {
-diff --git a/arch/arm/boot/dts/stih416.dtsi b/arch/arm/boot/dts/stih416.dtsi
-index 788ba5b..a96055b 100644
---- a/arch/arm/boot/dts/stih416.dtsi
-+++ b/arch/arm/boot/dts/stih416.dtsi
-@@ -156,5 +156,49 @@
- 
- 			status		= "disabled";
- 		};
-+
-+		ethernet0: dwmac@fe810000 {
-+			device_type 	= "network";
-+			compatible	= "st,stih416-dwmac", "snps,dwmac", "snps,dwmac-3.710";
-+			status 		= "disabled";
-+			reg 		= <0xfe810000 0x8000>, <0x8bc 0x4>;
-+			reg-names	= "stmmaceth", "sti-ethconf";
-+
-+			interrupts = <0 133 0>, <0 134 0>, <0 135 0>;
-+			interrupt-names = "macirq", "eth_wake_irq", "eth_lpi";
-+
-+			snps,pbl 	= <32>;
-+			snps,mixed-burst;
-+
-+			st,syscon		= <&syscfg_rear>;
-+			resets			= <&softreset STIH416_ETH0_SOFTRESET>;
-+			reset-names		= "stmmaceth";
-+			pinctrl-names 	= "default";
-+			pinctrl-0	= <&pinctrl_mii0>;
-+			clock-names	= "stmmaceth";
-+			clocks		= <&CLK_S_GMAC0_PHY>;
-+		};
-+
-+		ethernet1: dwmac@fef08000 {
-+			device_type = "network";
-+			compatible		= "st,stih416-dwmac", "snps,dwmac", "snps,dwmac-3.710";
-+			status 		= "disabled";
-+			reg		= <0xfef08000 0x8000>, <0x7f0 0x4>;
-+			reg-names	= "stmmaceth", "sti-ethconf";
-+			interrupts = <0 136 0>, <0 137 0>, <0 138 0>;
-+			interrupt-names = "macirq", "eth_wake_irq", "eth_lpi";
-+
-+			snps,pbl	= <32>;
-+			snps,mixed-burst;
-+
-+			st,syscon	= <&syscfg_sbc>;
-+
-+			resets		= <&softreset STIH416_ETH1_SOFTRESET>;
-+			reset-names	= "stmmaceth";
-+			pinctrl-names 	= "default";
-+			pinctrl-0	= <&pinctrl_mii1>;
-+			clock-names	= "stmmaceth";
-+			clocks		= <&CLK_S_ETH1_PHY>;
-+		};
- 	};
- };
--- 
-1.7.9.5
+Entangling the i2c_device_id table with the of_device_id table sounds
+a bit too wacky for my liking. Where do you even use it?
+
+> +	{ }
+> +};
+> +
+>  static struct i2c_driver da9055_i2c_driver =3D {
+>  	.probe =3D da9055_i2c_probe,
+>  	.remove =3D da9055_i2c_remove,
+> @@ -73,6 +80,7 @@ static struct i2c_driver da9055_i2c_driver =3D {
+>  	.driver =3D {
+>  		.name =3D "da9055-pmic",
+>  		.owner =3D THIS_MODULE,
+> +		.of_match_table =3D of_match_ptr(da9055_of_match),
+>  	},
+>  };
+>=20
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
