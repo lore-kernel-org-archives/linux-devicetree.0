@@ -1,118 +1,36 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v6 05/19] watchdog: orion: Make sure the watchdog is
- initially stopped
-Date: Fri, 7 Feb 2014 12:17:28 -0300
-Message-ID: <20140207151727.GB8218@localhost>
-References: <1391707226-18258-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1391707226-18258-6-git-send-email-ezequiel.garcia@free-electrons.com>
- <52F43ED0.4050808@roeck-us.net>
- <20140207104044.GA11063@localhost>
- <52F4E1C1.4010805@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52F4E1C1.4010805-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+From: Thomas Abraham <ta.omasab@gmail.com>
+Subject: [PATCH v2 0/2] Add device tree based lookup of boost mode frequency
+Date: Fri,  7 Feb 2014 20:49:00 +0530
+Message-ID: <1391786342-11812-1-git-send-email-thomas.ab@samsung.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: rjw@rjwysocki.net, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, t.figa@samsung.com, l.majewski@samsung.com, viresh.kumar@linaro.org, thomas.ab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 07, 2014 at 05:38:09AM -0800, Guenter Roeck wrote:
-> On 02/07/2014 02:40 AM, Ezequiel Garcia wrote:
-> > On Thu, Feb 06, 2014 at 06:02:56PM -0800, Guenter Roeck wrote:
-> >> On 02/06/2014 09:20 AM, Ezequiel Garcia wrote:
-> >>> Having the watchdog initially fully stopped is important to avoid
-> >>> any spurious watchdog triggers, in case the registers are not in
-> >>> its reset state.
-> >>>
-> >>> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> >>> Tested-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org=
->
-> >>> Tested-by: Willy Tarreau <w@1wt.eu>
-> >>> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTGGXanvQGlWp@public.gmane.org=
-m>
-> >>> ---
-> >>>    drivers/watchdog/orion_wdt.c | 3 +++
-> >>>    1 file changed, 3 insertions(+)
-> >>>
-> >>> diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orio=
-n_wdt.c
-> >>> index 6746033..2dbeee9 100644
-> >>> --- a/drivers/watchdog/orion_wdt.c
-> >>> +++ b/drivers/watchdog/orion_wdt.c
-> >>> @@ -142,6 +142,9 @@ static int orion_wdt_probe(struct platform_de=
-vice *pdev)
-> >>>    	orion_wdt.max_timeout =3D wdt_max_duration;
-> >>>    	watchdog_init_timeout(&orion_wdt, heartbeat, &pdev->dev);
-> >>>
-> >>> +	/* Let's make sure the watchdog is fully stopped */
-> >>> +	orion_wdt_stop(&orion_wdt);
-> >>> +
-> >>
-> >> Actually we just had that in another driver, and I stumbled over i=
-t there.
-> >>
-> >> Problem with stopping the watchdog in probe unconditionally is tha=
-t you can
-> >> use it to defeat nowayout: unload the module, then load it again,
-> >> and the watchdog is stopped even if nowayout is true.
-> >>
-> >
-> > Hm... I see.
-> >
-> >> Is this really what you want ? Or, in other words, what is the pro=
-blem
-> >> you are trying to solve ?
-> >>
-> >
-> > Well, this is related to the discussion about the bootloader not
-> > reseting the watchdog properly, provoking spurious watchdog trigger=
-ing.
-> >
-> > Jason Gunthorpe explained [1] that we needed a particular sequence:
-> >
-> >   1. Disable WDT
-> >   2. Clear bridge
-> >   3. Enable WDT
-> >
-> > We added the irq handling to satisfy (2), and the watchdog stop for=
- (1).
-> >
-> > The watchdog stop was agreed specifically [2].
-> >
-> > Ideas?
-> >
->=20
-> Other drivers assume that if the watchdog is running, it is supposed
-> to be running. The more common approach in such cases is to ping the
-> watchdog once to give userspace more time to get ready, but leave
-> it enabled. So you could check if the watchdog is enabled, and if
-> it was enabled re-enable it after initialization is complete
-> (and maybe log a message stating that the watchdog is enabled).
->=20
-> If you don't want to do that, and if you are defeating nowayout
-> on purpose to fix a problem with a broken bootloader,
-> you should at least put in comment describing the problem you are
-> trying to solve, and that you accept breaking nowayout with your fix.
->=20
+Changes since v1:
+- Boost mode frequencies are specfied as a set of frequencies instead of
+  specifying them as OPPs. Thanks to Nishanth, Lukasz and Rob for the
+  feedback.
 
-I'm not fond of not having "nowayout" option on our driver, given I'm s=
-ure
-it's a watchdog feature for a good reason.
+Commit 6f19efc0 ("cpufreq: Add boost frequency support in core") adds
+support for CPU boost mode for CPUfreq drivers. To use the new boost
+mode, CPUfreq drivers have to specify the boost mode frequency and
+voltage within the CPUfreq driver, which is the case for Exynos4x12
+CPUfreq driver.
 
-On the other side, I can't see how can we distinguish a previously
-and explicitly enabled watchdog, from a spurious enable by broken bootl=
-oader.
+But for CPUfreq drivers which obtain the OPPs from cpus node, this
+patch series adds support to specify boost mode frequencies in the
+cpu device tree node. This requirement came up when Lukasz pointed
+out the regression caused by the Exynos CPUfreq driver consolidation
+patches.
 
-Jason, what do you say?
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thomas Abraham (2):
+  PM / OPP: Allow boost frequency to be looked up from device tree
+  Documentation: devicetree: Add boost-frequency binding to list boost mode frequency
+
+ .../devicetree/bindings/cpufreq/cpufreq-boost.txt  |   11 +++++++
+ drivers/base/power/opp.c                           |   34 +++++++++++++++++++-
+ 2 files changed, 44 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
+
