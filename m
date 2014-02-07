@@ -1,87 +1,148 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH v2 1/2] PM / OPP: Allow boost frequency to be looked up
- from device tree
-Date: Fri, 7 Feb 2014 09:52:07 -0600
-Message-ID: <52F50127.606@ti.com>
-References: <1391786342-11812-1-git-send-email-thomas.ab@samsung.com>	<1391786342-11812-2-git-send-email-thomas.ab@samsung.com>	<CAGo_u6qsh0wVLGjvqKmaXjDGVyy2tKgSzkh-t9RZCQS-JJND8g@mail.gmail.com>
- <CAJuA9aiEDXyK8ABNznbzjk7s2uMfwo_diRpmLNsKBFd+pH=ffQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAJuA9aiEDXyK8ABNznbzjk7s2uMfwo_diRpmLNsKBFd+pH=ffQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Abraham <ta.omasab@gmail.com>
-Cc: dt list <devicetree@vger.kernel.org>, Lukasz Majewski <l.majewski@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-pm@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, Tomasz Figa <t.figa@samsung.com>, rjw@rjwysocki.net, Kukjin Kim <kgene.kim@samsung.com>, thomas.ab@samsung.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Thomas Abraham <ta.omasab@gmail.com>
+Subject: [PATCH v3 3/7] Documentation: devicetree: add cpu clock configuration data binding for Exynos4/5
+Date: Fri,  7 Feb 2014 21:25:44 +0530
+Message-ID: <1391788548-13056-4-git-send-email-thomas.ab@samsung.com>
+References: <1391788548-13056-1-git-send-email-thomas.ab@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1391788548-13056-1-git-send-email-thomas.ab@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: cpufreq@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org, mturquette@linaro.org, shawn.guo@linaro.org, kgene.kim@samsung.com, t.figa@samsung.com, l.majewski@samsung.com, viresh.kumar@linaro.org, thomas.ab@samsung.com, heiko@sntech.de, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/07/2014 09:38 AM, Thomas Abraham wrote:
-[...]
->>> diff --git a/drivers/base/power/opp.c b/drivers/base/power/opp.c
->>> index fa41874..b636826 100644
->>> --- a/drivers/base/power/opp.c
->>> +++ b/drivers/base/power/opp.c
->>> @@ -628,7 +628,8 @@ int dev_pm_opp_init_cpufreq_table(struct device *dev,
->>>         struct device_opp *dev_opp;
->>>         struct dev_pm_opp *opp;
->>>         struct cpufreq_frequency_table *freq_table;
->>> -       int i = 0;
->>> +       int i = 0, j, len, ret;
->>> +       u32 *boost_freqs = NULL;
->>>
->>>         /* Pretend as if I am an updater */
->>>         mutex_lock(&dev_opp_list_lock);
->>> @@ -650,10 +651,35 @@ int dev_pm_opp_init_cpufreq_table(struct device *dev,
->>>                 return -ENOMEM;
->>>         }
->>>
->>> +       if (of_find_property(dev->of_node, "boost-frequency", &len)) {
->>> +               if (len == 0 || (len & (sizeof(u32) - 1)) != 0) {
->>> +                       dev_err(dev, "%s: invalid boost frequency\n", __func__);
->>> +                       ret = -EINVAL;
->>> +                       goto err_boost;
->>> +               }
->>> +
->>> +               boost_freqs = kzalloc(len, GFP_KERNEL);
->>> +               if (!boost_freqs) {
->>> +                       dev_warn(dev, "%s: no memory for boost freq table\n",
->>> +                                       __func__);
->>> +                       ret = -ENOMEM;
->>> +                       goto err_boost;
->>> +               }
->>> +               of_property_read_u32_array(dev->of_node, "boost-frequency",
->>> +                       boost_freqs, len / sizeof(u32));
->>> +       }
->>> +
->>>         list_for_each_entry(opp, &dev_opp->opp_list, node) {
->>>                 if (opp->available) {
->>>                         freq_table[i].driver_data = i;
->>>                         freq_table[i].frequency = opp->rate / 1000;
->>> +                       for (j = 0; j < len / sizeof(u32) && boost_freqs; j++) {
->>> +                               if (boost_freqs[j] == freq_table[i].frequency) {
->>> +                                       freq_table[i].driver_data =
->>> +                                                       CPUFREQ_BOOST_FREQ;
->>> +                                       break;
->>> +                               }
->>> +                       }
->>
->> What if any one of the boost_freqs are not contained in the enabled frequencies?
-> 
-> It is not used as a boost frequency because its corresponding voltage
-> is not known. If required a warning can be printed out for the same.
+From: Thomas Abraham <thomas.ab@samsung.com>
 
-yes - that would be good, as it helps debug if there are developer
-errors in dts.
+The clock blocks within the CMU_CPU clock domain are put together into a
+new composite clock type called the cpu clock. This clock type requires
+configuration data that will be atomically programmed in the multiple
+clock blocks encapsulated within the cpu clock type when the parent clock
+frequency is changed. This configuration data is held in the clock controller
+node. Update clock binding documentation about this configuration data format
+for Samsung Exynos4 and Exynos5 platforms.
 
+Cc: Tomasz Figa <t.figa@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: <devicetree@vger.kernel.org>
+Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
+---
+ .../devicetree/bindings/clock/exynos4-clock.txt    |   37 +++++++++++++++++++
+ .../devicetree/bindings/clock/exynos5250-clock.txt |   38 ++++++++++++++++++++
+ 2 files changed, 75 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/clock/exynos4-clock.txt b/Documentation/devicetree/bindings/clock/exynos4-clock.txt
+index a2ac2d9..b505e17 100644
+--- a/Documentation/devicetree/bindings/clock/exynos4-clock.txt
++++ b/Documentation/devicetree/bindings/clock/exynos4-clock.txt
+@@ -15,6 +15,35 @@ Required Properties:
+ 
+ - #clock-cells: should be 1.
+ 
++- samsung,armclk-divider-table: when the frequency of the APLL is changed
++  the divider clocks in CMU_CPU clock domain also need to be updated. These
++  divider clocks have SoC specific divider clock output requirements for a
++  specific APLL clock speeds. When APLL clock rate is changed, these divider
++  clocks are reprogrammed with pre-determined values in order to maintain the
++  SoC specific divider clock outputs. This property lists the divider values
++  for divider clocks in the CMU_CPU block for supported APLL clock speeds.
++  The format of each entry included in the arm-frequency-table should be
++  as defined below
++
++  - for Exynos4210 and Exynos4212 based platforms:
++      cell #1: arm clock parent frequency
++      cell #2 ~ cell 9#: value of clock divider in the following order
++	        corem0_ratio, corem1_ratio, periph_ratio, atb_ratio,
++		pclk_dbg_ratio, apll_ratio, copy_ratio, hpm_ratio.
++
++  - for Exynos4412 based platforms:
++      cell #1: expected arm clock parent frequency
++      cell #2 ~ cell #10: value of clock divider in the following order
++	       corem0_ratio, corem1_ratio, periph_ratio, atb_ratio,
++               pclk_dbg_ratio, apll_ratio, copy_ratio, hpm_ratio, cores_ratio
++
++- samsung,armclk-cells: defines the number of cells in
++  samsung,armclk-divider-table property. The value of this property depends on
++  the SoC type.
++
++  - for Exynos4210 and Exynos4212: the value should be 9.
++  - for Exynos4412: the value should be 10.
++
+ The following is the list of clocks generated by the controller. Each clock is
+ assigned an identifier and client nodes use this identifier to specify the
+ clock which they consume. Some of the clocks are available only on a particular
+@@ -275,6 +304,14 @@ Example 1: An example of a clock controller node is listed below.
+ 		compatible = "samsung,exynos4210-clock";
+ 		reg = <0x10030000 0x20000>;
+ 		#clock-cells = <1>;
++
++		samsung,armclk-cells = <9>;
++		samsung,armclk-divider-table = <1200000 3 7 3 4 1 7 5 0>,
++					       <1000000 3 7 3 4 1 7 4 0>,
++					       < 800000 3 7 3 3 1 7 3 0>,
++					       < 500000 3 7 3 3 1 7 3 0>,
++					       < 400000 3 7 3 3 1 7 3 0>,
++					       < 200000 1 3 1 1 1 0 3 0>;
+ 	};
+ 
+ Example 2: UART controller node that consumes the clock generated by the clock
+diff --git a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
+index 72ce617..9ca818e 100644
+--- a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
++++ b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
+@@ -13,6 +13,25 @@ Required Properties:
+ 
+ - #clock-cells: should be 1.
+ 
++- samsung,armclk-divider-table: when the frequency of the APLL is changed
++  the divider clocks in CMU_CPU clock domain also need to be updated. These
++  divider clocks have SoC specific divider clock output requirements for a
++  specific APLL clock speeds. When APLL clock rate is changed, these divider
++  clocks are reprogrammed with pre-determined values in order to maintain the
++  SoC specific divider clock outputs. This property lists the divider values
++  for divider clocks in the CMU_CPU block for supported APLL clock speeds.
++  The format of each entry included in the arm-frequency-table should be
++  as defined below
++
++      cell #1: expected arm clock parent frequency
++      cell #2 ~ cell #9: value of clock divider in the following order
++	       cpud_ratio, acp_ratio, periph_ratio, atb_ratio,
++               pclk_dbg_ratio, apll_ratio, copy_ratio, hpm_ratio
++
++- samsung,armclk-cells: defines the number of cells in
++  samsung,armclk-divider-table property. The value of this property should be 9.
++
++
+ The following is the list of clocks generated by the controller. Each clock is
+ assigned an identifier and client nodes use this identifier to specify the
+ clock which they consume.
+@@ -177,6 +196,25 @@ Example 1: An example of a clock controller node is listed below.
+ 		compatible = "samsung,exynos5250-clock";
+ 		reg = <0x10010000 0x30000>;
+ 		#clock-cells = <1>;
++
++		samsung,armclk-cells = <9>;
++		samsung,armclk-divider-table = <1700000 3 7 7 7 3 5 0 2>,
++					       <1600000 3 7 7 7 1 4 0 2>,
++					       <1500000 2 7 7 7 1 4 0 2>,
++					       <1400000 2 7 7 6 1 4 0 2>,
++					       <1300000 2 7 7 6 1 3 0 2>,
++					       <1200000 2 7 7 5 1 3 0 2>,
++					       <1100000 3 7 7 5 1 3 0 2>,
++					       <1000000 1 7 7 4 1 2 0 2>,
++					       < 900000 1 7 7 4 1 2 0 2>,
++					       < 800000 1 7 7 4 1 2 0 2>,
++					       < 700000 1 7 7 3 1 1 0 2>,
++					       < 600000 1 7 7 3 1 1 0 2>,
++					       < 500000 1 7 7 2 1 1 0 2>,
++					       < 400000 1 7 7 2 1 1 0 2>,
++					       < 300000 1 7 7 1 1 1 0 2>,
++					       < 200000 1 7 7 1 1 1 0 2>;
++
+ 	};
+ 
+ Example 2: UART controller node that consumes the clock generated by the clock
 -- 
-Regards,
-Nishanth Menon
+1.7.10.4
