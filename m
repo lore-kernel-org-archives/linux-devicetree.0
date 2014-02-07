@@ -1,119 +1,54 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: [PATCH RESEND 1/2] spi: qup: Add device tree bindings information
-Date: Fri,  7 Feb 2014 09:43:27 +0200
-Message-ID: <1391759007-25305-1-git-send-email-iivanov@mm-sol.com>
-References: <20140206175059.GW32298@sirena.org.uk>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140206175059.GW32298@sirena.org.uk>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>
-Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+From: srinivas kandagatla <srinivas.kandagatla@st.com>
+Subject: Re: [PATCH v1 1/3] net: stmmac:sti: Add STi SOC glue driver.
+Date: Fri, 7 Feb 2014 07:54:18 +0000
+Message-ID: <52F4912A.4040008@st.com>
+References: <1391428787-27143-1-git-send-email-srinivas.kandagatla@st.com>	<1391428868-27245-1-git-send-email-srinivas.kandagatla@st.com>
+ <20140206.195342.1998479313077409827.davem@davemloft.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140206.195342.1998479313077409827.davem@davemloft.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Miller <davem@davemloft.net>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, kernel@stlinux.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, netdev@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, stuart.menefy@st.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, peppe.cavallaro@st.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Thankyou Dave,
 
-The Qualcomm Universal Peripheral (QUP) core is an
-AHB slave that provides a common data path (an output
-FIFO and an input FIFO) for serial peripheral interface
-(SPI) mini-core.
+On 07/02/14 03:53, David Miller wrote:
+> From: <srinivas.kandagatla@st.com>
+> Date: Mon, 3 Feb 2014 12:01:08 +0000
+> 
+>> +	res = platform_get_resource_byname(pdev,
+>> +				IORESOURCE_MEM, "sti-ethconf");
+> 
+> This is not the correct way to format multi-line function calls,
+> you'll need to fix this up in this entire series.
 
-Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
----
- .../devicetree/bindings/spi/qcom,spi-qup.txt       |   86 ++++++++++++++++++++
- 1 file changed, 86 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/qcom,spi-qup.txt
+I will fix this in next version.
 
-diff --git a/Documentation/devicetree/bindings/spi/qcom,spi-qup.txt b/Documentation/devicetree/bindings/spi/qcom,spi-qup.txt
-new file mode 100644
-index 0000000..74565f1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/qcom,spi-qup.txt
-@@ -0,0 +1,86 @@
-+Qualcomm Universal Peripheral (QUP) Serial Peripheral Interface (SPI)
-+
-+The QUP core is an AHB slave that provides a common data path (an output FIFO
-+and an input FIFO) for serial peripheral interface (SPI) mini-core.
-+
-+SPI in master mode support up to 50MHz, up to four chip selects, and a
-+programmable data path from 4 bits to 32 bits; supports numerous protocol
-+variants.
-+
-+Required properties:
-+- compatible: 		Should contain "qcom,spi-qup-v2".
-+- reg: 				Should contain base register location and length
-+- interrupts: 		Interrupt number used by this controller
-+
-+- clocks: 			Should contain the core clock and the AHB clock.
-+- clock-names: 		Should be "core" for the core clock and "iface" for the
-+                	AHB clock.
-+
-+- #address-cells: 	Number of cells required to define a chip select
-+					address on the SPI bus. Should be set to 1.
-+- #size-cells: 		Should be zero.
-+
-+Optional properties:
-+- spi-max-frequency: Specifies maximum SPI clock frequency, Units - Hz. Definition
-+                    as per Documentation/devicetree/bindings/spi/spi-bus.txt
-+
-+SPI slave nodes must be children of the SPI master node and can
-+contain properties described in Documentation/devicetree/bindings/spi/spi-bus.txt
-+
-+Example:
-+
-+	spi_8: spi@f9964000 { /* BLSP2 QUP2 */
-+
-+		compatible = "qcom,spi-qup-v2";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0xf9964000 0x1000>;
-+		interrupts = <0 102 0>;
-+		spi-max-frequency = <19200000>;
-+
-+		clocks = <&gcc GCC_BLSP2_QUP2_SPI_APPS_CLK>, <&gcc GCC_BLSP2_AHB_CLK>;
-+		clock-names = "core", "iface";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&spi8_default>;
-+
-+		device@0 {
-+			compatible = "arm,pl022-dummy";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			reg = <0>; /* Chip select 0 */
-+			spi-max-frequency = <19200000>;
-+			spi-cpol;
-+		};
-+
-+		device@1 {
-+			compatible = "arm,pl022-dummy";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			reg = <1>; /* Chip select 1 */
-+			spi-max-frequency = <9600000>;
-+			spi-cpha;
-+		};
-+
-+		device@2 {
-+			compatible = "arm,pl022-dummy";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			reg = <2>; /* Chip select 2 */
-+			spi-max-frequency = <19200000>;
-+			spi-cpol;
-+			spi-cpha;
-+		};
-+
-+		device@3 {
-+			compatible = "arm,pl022-dummy";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			reg = <3>; /* Chip select 3 */
-+			spi-max-frequency = <19200000>;
-+			spi-cpol;
-+			spi-cpha;
-+			spi-cs-high;
-+		};
-+	};
-+
--- 
-1.7.9.5
+
+> 
+> The arguments on the second and subsequent lines must start at
+> the first column after the openning parenthesis of the function
+> call.  You must use the appropriate number of both space and
+> TAB characters necessary to do so.
+> 
+> If you're only using TAB characters to indent, you're doing it
+> wrong.
+> 
+> Thank you.
+> 
+> 
+
+Thanks,
+srini
