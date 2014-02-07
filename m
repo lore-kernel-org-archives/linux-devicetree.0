@@ -1,431 +1,1003 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2] ARM: sunxi: Add driver for sunxi usb phy
-Date: Fri,  7 Feb 2014 17:33:21 +0100
-Message-ID: <1391790801-27864-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: dsneddon@codeaurora.org
+Subject: Re: Fwd: [PATCH 2/2] spi: Add Qualcomm QUP SPI controller support
+Date: Fri, 7 Feb 2014 16:34:25 -0000
+Message-ID: <214fe9fc7e62ab30bdfbb4ac5d1ee250.squirrel@www.codeaurora.org>
+References: <1391705868-20091-1-git-send-email-iivanov@mm-sol.com>
+    <1391705868-20091-3-git-send-email-iivanov@mm-sol.com>
+    <CACceFXdUobQvN2hcv5kh+QL=o8bWM_PVkAtrOx+euZSeVDm8hQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBYEV2SLQKGQESKIQAYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CACceFXdUobQvN2hcv5kh+QL=o8bWM_PVkAtrOx+euZSeVDm8hQ@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: iivanov@mm-sol.com, broonie@kernel.org, grant.likely@linaro.org, robh+dt@kernel.org
+Cc: linux-spi@vger.kernel.org, linux-arm-msm@vger.kernel.org, inux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alokc@codeaurora.org, gavidov@codeaurora.org, kgunda@codeaurora.org, sdharia@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-The Allwinner A1x / A2x SoCs have 2 or 3 usb phys which are all accessed
-through a single set of registers. Besides this there are also some other
-phy related bits which need poking, which are per phy, but shared between the
-ohci and ehci controllers, so these are also controlled from this new phy
-driver.
-
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- .../devicetree/bindings/phy/sun4i-usb-phy.txt      |  28 ++
- drivers/phy/Kconfig                                |  11 +
- drivers/phy/Makefile                               |   1 +
- drivers/phy/phy-sun4i-usb.c                        | 326 +++++++++++++++++++++
- 4 files changed, 366 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
- create mode 100644 drivers/phy/phy-sun4i-usb.c
-
-diff --git a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-new file mode 100644
-index 0000000..f7eccb2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-@@ -0,0 +1,28 @@
-+Allwinner sun4i USB PHY
-+-----------------------
-+
-+Required properties:
-+- compatible : should be one of "allwinner,sun4i-a10-usb-phy",
-+  "allwinner,sun5i-a13-usb-phy" or "allwinner,sun7i-a20-usb-phy"
-+- reg : a list of offset + length pairs, the 1st list entry should point to
-+  the phy base regs, the 2nd entry to the pmu reg for phy1, and the 3th
-+  entry to the pmu reg of phy2 (for devices which have a phy2).
-+- #phy-cells : from the generic phy bindings, must be 1
-+
-+Optional properties:
-+- clocks : phandle + clock specifier for the phy clock
-+- clock-names : "usb_phy"
-+- resets : a list of phandle + reset specifier pairs
-+- reset-names : "usb0_reset", "usb1_reset", and / or "usb2_reset"
-+
-+Example:
-+	usbphy: phy@0x01c13400 {
-+		#phy-cells = <1>;
-+		compatible = "allwinner,sun4i-a10-usb-phy";
-+		/* phy base regs, phy1 pmu reg, phy2 pmu reg */
-+		reg = <0x01c13400 0x10 0x01c14800 0x4 0x01c1c800 0x4>;
-+		clocks = <&usb_clk 8>;
-+		clock-names = "usb_phy";
-+		resets = <&usb_clk 1>, <&usb_clk 2>;
-+		reset-names = "usb1_reset", "usb2_reset";
-+	};
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index afa2354..6070c99 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -64,4 +64,15 @@ config BCM_KONA_USB2_PHY
- 	help
- 	  Enable this to support the Broadcom Kona USB 2.0 PHY.
- 
-+config PHY_SUN4I_USB
-+	tristate "Allwinner sunxi SoC USB PHY driver"
-+	depends on ARCH_SUNXI
-+	select GENERIC_PHY
-+	help
-+	  Enable this to support the transceiver that is part of Allwinner
-+	  sunxi SoCs.
-+
-+	  This driver controls the entire USB PHY block, both the USB OTG
-+	  parts, as well as the 2 regular USB 2 host PHYs.
-+
- endmenu
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index b57c253..9d4f8bb 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -9,3 +9,4 @@ obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
- obj-$(CONFIG_PHY_MVEBU_SATA)		+= phy-mvebu-sata.o
- obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
- obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
-+obj-$(CONFIG_PHY_SUN4I_USB)		+= phy-sun4i-usb.o
-diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
-new file mode 100644
-index 0000000..bd9cb7fa
---- /dev/null
-+++ b/drivers/phy/phy-sun4i-usb.c
-@@ -0,0 +1,326 @@
-+/*
-+ * Allwinner sun4i USB phy driver
-+ *
-+ * Copyright (C) 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * Based on code from
-+ * Allwinner Technology Co., Ltd. <www.allwinnertech.com>
-+ *
-+ * Modelled after: Samsung S5P/EXYNOS SoC series MIPI CSIS/DSIM DPHY driver
-+ * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-+ * Author: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/reset.h>
-+
-+#define REG_ISCR			0x00
-+#define REG_PHYCTL			0x04
-+#define REG_PHYBIST			0x08
-+#define REG_PHYTUNE			0x0c
-+
-+#define SUNXI_AHB_ICHR8_EN		BIT(10)
-+#define SUNXI_AHB_INCR4_BURST_EN	BIT(9)
-+#define SUNXI_AHB_INCRX_ALIGN_EN	BIT(8)
-+#define SUNXI_ULPI_BYPASS_EN		BIT(0)
-+
-+/* Common Control Bits for Both PHYs */
-+#define PHY_PLL_BW			0x03
-+#define PHY_RES45_CAL_EN		0x0c
-+
-+/* Private Control Bits for Each PHY */
-+#define PHY_TX_AMPLITUDE_TUNE		0x20
-+#define PHY_TX_SLEWRATE_TUNE		0x22
-+#define PHY_VBUSVALID_TH_SEL		0x25
-+#define PHY_PULLUP_RES_SEL		0x27
-+#define PHY_OTG_FUNC_EN			0x28
-+#define PHY_VBUS_DET_EN			0x29
-+#define PHY_DISCON_TH_SEL		0x2a
-+
-+#define MAX_PHYS			3
-+
-+struct sun4i_usb_phy_data {
-+	struct clk *clk;
-+	void __iomem *base;
-+	struct mutex mutex;
-+	int num_phys;
-+	u32 disc_thresh;
-+	struct sun4i_usb_phy {
-+		struct phy *phy;
-+		void __iomem *pmu;
-+		struct regulator *vbus;
-+		struct reset_control *reset;
-+		int index;
-+	} phys[MAX_PHYS];
-+};
-+
-+#define to_sun4i_usb_phy_data(phy) \
-+	container_of((phy), struct sun4i_usb_phy_data, phys[(phy)->index])
-+
-+static void sun4i_usb_phy_write(struct sun4i_usb_phy *phy, u32 addr, u32 data,
-+				int len)
-+{
-+	struct sun4i_usb_phy_data *phy_data = to_sun4i_usb_phy_data(phy);
-+	u32 temp, usbc_bit = BIT(phy->index * 2);
-+	int i;
-+
-+	mutex_lock(&phy_data->mutex);
-+
-+	for (i = 0; i < len; i++) {
-+		temp = readl(phy_data->base + REG_PHYCTL);
-+
-+		/* clear the address portion */
-+		temp &= ~(0xff << 8);
-+
-+		/* set the address */
-+		temp |= ((addr + i) << 8);
-+		writel(temp, phy_data->base + REG_PHYCTL);
-+
-+		/* set the data bit and clear usbc bit*/
-+		temp = readb(phy_data->base + REG_PHYCTL);
-+		if (data & 0x1)
-+			temp |= BIT(7);
-+		else
-+			temp &= ~BIT(7);
-+		temp &= ~usbc_bit;
-+		writeb(temp, phy_data->base + REG_PHYCTL);
-+
-+		/* pulse usbc_bit */
-+		temp = readb(phy_data->base + REG_PHYCTL);
-+		temp |= usbc_bit;
-+		writeb(temp, phy_data->base + REG_PHYCTL);
-+
-+		temp = readb(phy_data->base + REG_PHYCTL);
-+		temp &= ~usbc_bit;
-+		writeb(temp, phy_data->base + REG_PHYCTL);
-+
-+		data >>= 1;
-+	}
-+	mutex_unlock(&phy_data->mutex);
-+}
-+
-+static void sun4i_usb_phy_passby(struct sun4i_usb_phy *phy, int enable)
-+{
-+	u32 bits, reg_value;
-+
-+	if (!phy->pmu)
-+		return;
-+
-+	bits = SUNXI_AHB_ICHR8_EN | SUNXI_AHB_INCR4_BURST_EN |
-+		SUNXI_AHB_INCRX_ALIGN_EN | SUNXI_ULPI_BYPASS_EN;
-+
-+	reg_value = readl(phy->pmu);
-+
-+	if (enable)
-+		reg_value |= bits;
-+	else
-+		reg_value &= ~bits;
-+
-+	writel(reg_value, phy->pmu);
-+}
-+
-+static int sun4i_usb_phy_init(struct phy *_phy)
-+{
-+	struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
-+	struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
-+	int ret;
-+
-+	ret = clk_prepare_enable(data->clk);
-+	if (ret)
-+		return ret;
-+
-+	ret = reset_control_deassert(phy->reset);
-+	if (ret) {
-+		clk_disable_unprepare(data->clk);
-+		return ret;
-+	}
-+
-+	/* Adjust PHY's magnitude and rate */
-+	sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
-+
-+	/* Disconnect threshold adjustment */
-+	sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL, data->disc_thresh, 2);
-+
-+	sun4i_usb_phy_passby(phy, 1);
-+
-+	return 0;
-+}
-+
-+static int sun4i_usb_phy_exit(struct phy *_phy)
-+{
-+	struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
-+	struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
-+
-+	sun4i_usb_phy_passby(phy, 0);
-+	reset_control_assert(phy->reset);
-+	clk_disable_unprepare(data->clk);
-+
-+	return 0;
-+}
-+
-+static int sun4i_usb_phy_power_on(struct phy *_phy)
-+{
-+	struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
-+	int ret = 0;
-+
-+	if (phy->vbus)
-+		ret = regulator_enable(phy->vbus);
-+
-+	return ret;
-+}
-+
-+static int sun4i_usb_phy_power_off(struct phy *_phy)
-+{
-+	struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
-+
-+	if (phy->vbus)
-+		regulator_disable(phy->vbus);
-+
-+	return 0;
-+}
-+
-+static struct phy_ops sun4i_usb_phy_ops = {
-+	.init		= sun4i_usb_phy_init,
-+	.exit		= sun4i_usb_phy_exit,
-+	.power_on	= sun4i_usb_phy_power_on,
-+	.power_off	= sun4i_usb_phy_power_off,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static struct phy *sun4i_usb_phy_xlate(struct device *dev,
-+					struct of_phandle_args *args)
-+{
-+	struct sun4i_usb_phy_data *data = dev_get_drvdata(dev);
-+
-+	if (WARN_ON(args->args[0] == 0 || args->args[0] >= data->num_phys))
-+		return ERR_PTR(-ENODEV);
-+
-+	return data->phys[args->args[0]].phy;
-+}
-+
-+static int sun4i_usb_phy_probe(struct platform_device *pdev)
-+{
-+	struct sun4i_usb_phy_data *data;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	void __iomem *pmu = NULL;
-+	struct phy_provider *phy_provider;
-+	struct reset_control *reset;
-+	struct regulator *vbus;
-+	struct phy *phy;
-+	char name[16];
-+	int i;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	mutex_init(&data->mutex);
-+
-+	if (of_device_is_compatible(np, "allwinner,sun5i-a13-usb-phy"))
-+		data->num_phys = 2;
-+	else
-+		data->num_phys = 3;
-+
-+	if (of_device_is_compatible(np, "allwinner,sun4i-a10-usb-phy"))
-+		data->disc_thresh = 3;
-+	else
-+		data->disc_thresh = 2;
-+
-+	data->clk = devm_clk_get(dev, "usb_phy");
-+	if (IS_ERR(data->clk)) {
-+		dev_err(dev, "could not get usb_phy clock\n");
-+		return PTR_ERR(data->clk);
-+	}
-+
-+	/* Skip 0, 0 is the phy for otg which is not yet supported. */
-+	for (i = 1; i < data->num_phys; i++) {
-+		snprintf(name, sizeof(name), "usb%d_vbus", i);
-+		vbus = devm_regulator_get_optional(dev, name);
-+		if (IS_ERR(vbus)) {
-+			if (PTR_ERR(vbus) == -EPROBE_DEFER)
-+				return -EPROBE_DEFER;
-+			vbus = NULL;
-+		}
-+
-+		snprintf(name, sizeof(name), "usb%d_reset", i);
-+		reset = devm_reset_control_get(dev, name);
-+		if (IS_ERR(phy)) {
-+			dev_err(dev, "failed to get reset %s\n", name);
-+			return PTR_ERR(phy);
-+		}
-+
-+		if (i) { /* No pmu for usbc0 */
-+			pmu = devm_ioremap_resource(dev,
-+			      platform_get_resource(pdev, IORESOURCE_MEM, i));
-+			if (IS_ERR(pmu))
-+				return PTR_ERR(pmu);
-+		}
-+
-+		phy = devm_phy_create(dev, &sun4i_usb_phy_ops, NULL);
-+		if (IS_ERR(phy)) {
-+			dev_err(dev, "failed to create PHY %d\n", i);
-+			return PTR_ERR(phy);
-+		}
-+
-+		data->phys[i].phy = phy;
-+		data->phys[i].pmu = pmu;
-+		data->phys[i].vbus = vbus;
-+		data->phys[i].reset = reset;
-+		data->phys[i].index = i;
-+		phy_set_drvdata(phy, &data->phys[i]);
-+	}
-+
-+	data->base = devm_ioremap_resource(dev,
-+			platform_get_resource(pdev, IORESOURCE_MEM, 0));
-+	if (IS_ERR(data->base))
-+		return PTR_ERR(data->base);
-+
-+	dev_set_drvdata(dev, data);
-+	phy_provider = devm_of_phy_provider_register(dev, sun4i_usb_phy_xlate);
-+	if (IS_ERR(phy_provider))
-+		return PTR_ERR(phy_provider);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id sun4i_usb_phy_of_match[] = {
-+	{ .compatible = "allwinner,sun4i-a10-usb-phy" },
-+	{ .compatible = "allwinner,sun5i-a13-usb-phy" },
-+	{ .compatible = "allwinner,sun7i-a20-usb-phy" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, sun4i_usb_phy_of_match);
-+
-+static struct platform_driver sun4i_usb_phy_driver = {
-+	.probe	= sun4i_usb_phy_probe,
-+	.driver = {
-+		.of_match_table	= sun4i_usb_phy_of_match,
-+		.name  = "sun4i-usb-phy",
-+		.owner = THIS_MODULE,
-+	}
-+};
-+module_platform_driver(sun4i_usb_phy_driver);
-+
-+MODULE_DESCRIPTION("Allwinner sun4i USB phy driver");
-+MODULE_AUTHOR("Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>");
-+MODULE_LICENSE("GPL v2");
--- 
-1.8.4.2
+> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+>
+> Qualcomm Universal Peripheral (QUP) core is an AHB slave that
+> provides a common data path (an output FIFO and an input FIFO)
+> for serial peripheral interface (SPI) mini-core. SPI in master mode
+> support up to 50MHz, up to four chip selects, and a programmable
+> data path from 4 bits to 32 bits; MODE0..3 protocols
+>
+> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+> Cc: Alok Chauhan <alokc@codeaurora.org>
+> Cc: Gilad Avidov <gavidov@codeaurora.org>
+> Cc: Kiran Gunda <kgunda@codeaurora.org>
+> Cc: Sagar Dharia <sdharia@codeaurora.org>
+> ---
+>  drivers/spi/Kconfig   |   14 +
+>  drivers/spi/Makefile  |    1 +
+>  drivers/spi/spi-qup.c |  898
+> +++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 913 insertions(+)
+>  create mode 100644 drivers/spi/spi-qup.c
+>
+> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+> index ba9310b..bf8ce6b 100644
+> --- a/drivers/spi/Kconfig
+> +++ b/drivers/spi/Kconfig
+> @@ -381,6 +381,20 @@ config SPI_RSPI
+>         help
+>           SPI driver for Renesas RSPI blocks.
+>
+> +config SPI_QUP
+> +       tristate "Qualcomm SPI Support with QUP interface"
+> +       depends on ARCH_MSM
+> +       help
+> +         Qualcomm Universal Peripheral (QUP) core is an AHB slave that
+> +         provides a common data path (an output FIFO and an input FIFO)
+> +         for serial peripheral interface (SPI) mini-core. SPI in master
+> +         mode support up to 50MHz, up to four chip selects, and a
+> +         programmable data path from 4 bits to 32 bits; supports numerous
+> +         protocol variants.
+> +
+> +         This driver can also be built as a module.  If so, the module
+> +         will be called spi_qup.
+> +
+>  config SPI_S3C24XX
+>         tristate "Samsung S3C24XX series SPI"
+>         depends on ARCH_S3C24XX
+> diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
+> index 95af48d..e598147 100644
+> --- a/drivers/spi/Makefile
+> +++ b/drivers/spi/Makefile
+> @@ -59,6 +59,7 @@ spi-pxa2xx-platform-$(CONFIG_SPI_PXA2XX_PXADMA)       +=
+> spi-pxa2xx-pxadma.o
+>  spi-pxa2xx-platform-$(CONFIG_SPI_PXA2XX_DMA)   += spi-pxa2xx-dma.o
+>  obj-$(CONFIG_SPI_PXA2XX)               += spi-pxa2xx-platform.o
+>  obj-$(CONFIG_SPI_PXA2XX_PCI)           += spi-pxa2xx-pci.o
+> +obj-$(CONFIG_SPI_QUP)                  += spi-qup.o
+>  obj-$(CONFIG_SPI_RSPI)                 += spi-rspi.o
+>  obj-$(CONFIG_SPI_S3C24XX)              += spi-s3c24xx-hw.o
+>  spi-s3c24xx-hw-y                       := spi-s3c24xx.o
+> diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
+> new file mode 100644
+> index 0000000..5eb5e8f
+> --- /dev/null
+> +++ b/drivers/spi/spi-qup.c
+> @@ -0,0 +1,898 @@
+> +/*
+> + * Copyright (c) 2008-2014, The Linux foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License rev 2 and
+> + * only rev 2 as published by the free Software foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or fITNESS fOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/list.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/spi/spi.h>
+> +
+> +#define QUP_CONFIG                     0x0000
+> +#define QUP_STATE                      0x0004
+> +#define QUP_IO_M_MODES                 0x0008
+> +#define QUP_SW_RESET                   0x000c
+> +#define QUP_OPERATIONAL                        0x0018
+> +#define QUP_ERROR_FLAGS                        0x001c
+> +#define QUP_ERROR_FLAGS_EN             0x0020
+> +#define QUP_OPERATIONAL_MASK           0x0028
+> +#define QUP_HW_VERSION                 0x0030
+> +#define QUP_MX_OUTPUT_CNT              0x0100
+> +#define QUP_OUTPUT_FIFO                        0x0110
+> +#define QUP_MX_WRITE_CNT               0x0150
+> +#define QUP_MX_INPUT_CNT               0x0200
+> +#define QUP_MX_READ_CNT                        0x0208
+> +#define QUP_INPUT_FIFO                 0x0218
+> +
+> +#define SPI_CONFIG                     0x0300
+> +#define SPI_IO_CONTROL                 0x0304
+> +#define SPI_ERROR_FLAGS                        0x0308
+> +#define SPI_ERROR_FLAGS_EN             0x030c
+> +
+> +/* QUP_CONFIG fields */
+> +#define QUP_CONFIG_SPI_MODE            (1 << 8)
+> +#define QUP_CONFIG_NO_INPUT            BIT(7)
+> +#define QUP_CONFIG_NO_OUTPUT           BIT(6)
+> +#define QUP_CONFIG_N                   0x001f
+> +
+> +/* QUP_STATE fields */
+> +#define QUP_STATE_VALID                        BIT(2)
+> +#define QUP_STATE_RESET                        0
+> +#define QUP_STATE_RUN                  1
+> +#define QUP_STATE_PAUSE                        3
+> +#define QUP_STATE_MASK                 3
+> +#define QUP_STATE_CLEAR                        2
+> +
+> +#define QUP_HW_VERSION_2_1_1           0x20010001
+> +
+> +/* QUP_IO_M_MODES fields */
+> +#define QUP_IO_M_PACK_EN               BIT(15)
+> +#define QUP_IO_M_UNPACK_EN             BIT(14)
+> +#define QUP_IO_M_INPUT_MODE_MASK_SHIFT 12
+> +#define QUP_IO_M_OUTPUT_MODE_MASK_SHIFT        10
+> +#define QUP_IO_M_INPUT_MODE_MASK       (3 <<
+> QUP_IO_M_INPUT_MODE_MASK_SHIFT)
+> +#define QUP_IO_M_OUTPUT_MODE_MASK      (3 <<
+> QUP_IO_M_OUTPUT_MODE_MASK_SHIFT)
+> +
+> +#define QUP_IO_M_OUTPUT_BLOCK_SIZE(x)  (((x) & (0x03 << 0)) >> 0)
+> +#define QUP_IO_M_OUTPUT_FIFO_SIZE(x)   (((x) & (0x07 << 2)) >> 2)
+> +#define QUP_IO_M_INPUT_BLOCK_SIZE(x)   (((x) & (0x03 << 5)) >> 5)
+> +#define QUP_IO_M_INPUT_FIFO_SIZE(x)    (((x) & (0x07 << 7)) >> 7)
+> +
+> +#define QUP_IO_M_MODE_FIFO             0
+> +#define QUP_IO_M_MODE_BLOCK            1
+> +#define QUP_IO_M_MODE_DMOV             2
+> +#define QUP_IO_M_MODE_BAM              3
+> +
+> +/* QUP_OPERATIONAL fields */
+> +#define QUP_OP_MAX_INPUT_DONE_FLAG     BIT(11)
+> +#define QUP_OP_MAX_OUTPUT_DONE_FLAG    BIT(10)
+> +#define QUP_OP_IN_SERVICE_FLAG         BIT(9)
+> +#define QUP_OP_OUT_SERVICE_FLAG                BIT(8)
+> +#define QUP_OP_IN_FIFO_FULL            BIT(7)
+> +#define QUP_OP_OUT_FIFO_FULL           BIT(6)
+> +#define QUP_OP_IN_FIFO_NOT_EMPTY       BIT(5)
+> +#define QUP_OP_OUT_FIFO_NOT_EMPTY      BIT(4)
+> +
+> +/* QUP_ERROR_FLAGS and QUP_ERROR_FLAGS_EN fields */
+> +#define QUP_ERROR_OUTPUT_OVER_RUN      BIT(5)
+> +#define QUP_ERROR_INPUT_UNDER_RUN      BIT(4)
+> +#define QUP_ERROR_OUTPUT_UNDER_RUN     BIT(3)
+> +#define QUP_ERROR_INPUT_OVER_RUN       BIT(2)
+> +
+> +/* SPI_CONFIG fields */
+> +#define SPI_CONFIG_HS_MODE             BIT(10)
+> +#define SPI_CONFIG_INPUT_FIRST         BIT(9)
+> +#define SPI_CONFIG_LOOPBACK            BIT(8)
+> +
+> +/* SPI_IO_CONTROL fields */
+> +#define SPI_IO_C_FORCE_CS              BIT(11)
+> +#define SPI_IO_C_CLK_IDLE_HIGH         BIT(10)
+> +#define SPI_IO_C_MX_CS_MODE            BIT(8)
+> +#define SPI_IO_C_CS_N_POLARITY_0       BIT(4)
+> +#define SPI_IO_C_CS_SELECT(x)          (((x) & 3) << 2)
+> +#define SPI_IO_C_CS_SELECT_MASK                0x000c
+> +#define SPI_IO_C_TRISTATE_CS           BIT(1)
+> +#define SPI_IO_C_NO_TRI_STATE          BIT(0)
+> +
+> +/* SPI_ERROR_FLAGS and SPI_ERROR_FLAGS_EN fields */
+> +#define SPI_ERROR_CLK_OVER_RUN         BIT(1)
+> +#define SPI_ERROR_CLK_UNDER_RUN                BIT(0)
+> +
+> +#define SPI_NUM_CHIPSELECTS            4
+> +
+> +/* high speed mode is when bus rate is greater then 26MHz */
+> +#define SPI_HS_MIN_RATE                        26000000
+> +
+> +#define SPI_DELAY_THRESHOLD            1
+> +#define SPI_DELAY_RETRY                        10
+> +
+> +struct spi_qup_device {
+> +       int bits_per_word;
+> +       int chip_select;
+> +       int speed_hz;
+> +       u16 mode;
+> +};
+> +
+> +struct spi_qup {
+> +       void __iomem            *base;
+> +       struct device           *dev;
+> +       struct clk              *cclk;  /* core clock */
+> +       struct clk              *iclk;  /* interface clock */
+> +       int                     irq;
+> +       u32                     max_speed_hz;
+> +       u32                     speed_hz;
+> +
+> +       int                     in_fifo_sz;
+> +       int                     out_fifo_sz;
+> +       int                     in_blk_sz;
+> +       int                     out_blk_sz;
+> +
+> +       struct spi_transfer     *xfer;
+> +       struct completion       done;
+> +       int                     error;
+> +       int                     bytes_per_word;
+> +       int                     tx_bytes;
+> +       int                     rx_bytes;
+> +};
+> +
+> +
+> +static inline bool spi_qup_is_valid_state(struct spi_qup *controller)
+> +{
+> +       u32 opstate = readl_relaxed(controller->base + QUP_STATE);
+> +
+> +       return opstate & QUP_STATE_VALID;
+> +}
+> +
+> +static int spi_qup_set_state(struct spi_qup *controller, u32 state)
+> +{
+> +       unsigned long loop = 0;
+> +       u32 cur_state;
+> +
+> +       cur_state = readl_relaxed(controller->base + QUP_STATE);
+Make sure the state is valid before you read the current state.
+> +       /*
+> +        * Per spec: for PAUSE_STATE to RESET_STATE, two writes
+> +        * of (b10) are required
+> +        */
+> +       if (((cur_state & QUP_STATE_MASK) == QUP_STATE_PAUSE) &&
+> +           (state == QUP_STATE_RESET)) {
+> +               writel_relaxed(QUP_STATE_CLEAR, controller->base +
+> QUP_STATE);
+> +               writel_relaxed(QUP_STATE_CLEAR, controller->base +
+> QUP_STATE);
+> +       } else {
+Make sure you don't transition from RESET to PAUSE.
+> +               cur_state &= ~QUP_STATE_MASK;
+> +               cur_state |= state;
+> +               writel_relaxed(cur_state, controller->base + QUP_STATE);
+> +       }
+> +
+> +       while (!spi_qup_is_valid_state(controller)) {
+> +
+> +               usleep_range(SPI_DELAY_THRESHOLD, SPI_DELAY_THRESHOLD *
+> 2);
+> +
+> +               if (++loop > SPI_DELAY_RETRY)
+> +                       return -EIO;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static void spi_qup_deassert_cs(struct spi_qup *controller,
+> +                               struct spi_qup_device *chip)
+> +{
+> +       u32 iocontol, mask;
+> +
+> +       iocontol = readl_relaxed(controller->base + SPI_IO_CONTROL);
+> +
+> +       /* Disable auto CS toggle and use manual */
+> +       iocontol &= ~SPI_IO_C_MX_CS_MODE;
+> +       iocontol |= SPI_IO_C_FORCE_CS;
+> +
+> +       iocontol &= ~SPI_IO_C_CS_SELECT_MASK;
+> +       iocontol |= SPI_IO_C_CS_SELECT(chip->chip_select);
+> +
+> +       mask = SPI_IO_C_CS_N_POLARITY_0 << chip->chip_select;
+> +
+> +       if (chip->mode & SPI_CS_HIGH)
+> +               iocontol &= ~mask;
+> +       else
+> +               iocontol |= mask;
+> +
+> +       writel_relaxed(iocontol, controller->base + SPI_IO_CONTROL);
+> +}
+> +
+> +static void spi_qup_assert_cs(struct spi_qup *controller,
+> +                             struct spi_qup_device *chip)
+> +{
+> +       u32 iocontol, mask;
+> +
+> +       iocontol = readl_relaxed(controller->base + SPI_IO_CONTROL);
+> +
+> +       /* Disable auto CS toggle and use manual */
+> +       iocontol &= ~SPI_IO_C_MX_CS_MODE;
+> +       iocontol |= SPI_IO_C_FORCE_CS;
+> +
+> +       iocontol &= ~SPI_IO_C_CS_SELECT_MASK;
+> +       iocontol |= SPI_IO_C_CS_SELECT(chip->chip_select);
+> +
+> +       mask = SPI_IO_C_CS_N_POLARITY_0 << chip->chip_select;
+> +
+> +       if (chip->mode & SPI_CS_HIGH)
+> +               iocontol |= mask;
+> +       else
+> +               iocontol &= ~mask;
+> +
+> +       writel_relaxed(iocontol, controller->base + SPI_IO_CONTROL);
+> +}
+> +
+> +static void spi_qup_fifo_read(struct spi_qup *controller,
+> +                             struct spi_transfer *xfer)
+> +{
+> +       u8 *rx_buf = xfer->rx_buf;
+> +       u32 word, state;
+> +       int idx, shift;
+> +
+> +       while (controller->rx_bytes < xfer->len) {
+> +
+> +               state = readl_relaxed(controller->base + QUP_OPERATIONAL);
+> +               if (0 == (state & QUP_OP_IN_FIFO_NOT_EMPTY))
+> +                       break;
+> +
+> +               word = readl_relaxed(controller->base + QUP_INPUT_FIFO);
+> +
+> +               for (idx = 0; idx < controller->bytes_per_word &&
+> +                    controller->rx_bytes < xfer->len; idx++,
+> +                    controller->rx_bytes++) {
+> +
+> +                       if (!rx_buf)
+> +                               continue;
+If there is no rx_buf just set rx_bytes to xfer->len and skip the loop
+entirely.
+> +                       /*
+> +                        * The data format depends on bytes_per_word:
+> +                        *  4 bytes: 0x12345678
+> +                        *  2 bytes: 0x00001234
+> +                        *  1 byte : 0x00000012
+> +                        */
+> +                       shift = BITS_PER_BYTE;
+> +                       shift *= (controller->bytes_per_word - idx - 1);
+> +                       rx_buf[controller->rx_bytes] = word >> shift;
+> +               }
+> +       }
+> +}
+> +
+> +static void spi_qup_fifo_write(struct spi_qup *controller,
+> +                              struct spi_transfer *xfer)
+> +{
+> +       const u8 *tx_buf = xfer->tx_buf;
+> +       u32 word, state, data;
+> +       int idx;
+> +
+> +       while (controller->tx_bytes < xfer->len) {
+> +
+> +               state = readl_relaxed(controller->base + QUP_OPERATIONAL);
+> +               if (state & QUP_OP_OUT_FIFO_FULL)
+> +                       break;
+> +
+> +               word = 0;
+> +               for (idx = 0; idx < controller->bytes_per_word &&
+> +                    controller->tx_bytes < xfer->len; idx++,
+> +                    controller->tx_bytes++) {
+> +
+> +                       if (!tx_buf)
+> +                               continue;
+Just set tx_bytes to xfer->len and return prior to entering loop.
+> +
+> +                       data = tx_buf[controller->tx_bytes];
+> +                       word |= data << (BITS_PER_BYTE * (3 - idx));
+> +               }
+> +
+> +               writel_relaxed(word, controller->base + QUP_OUTPUT_FIFO);
+> +       }
+> +}
+> +
+> +static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
+> +{
+> +       struct spi_qup *controller = dev_id;
+> +       struct spi_transfer *xfer;
+> +       u32 opflags, qup_err, spi_err;
+> +
+> +       xfer = controller->xfer;
+> +
+> +       qup_err = readl_relaxed(controller->base + QUP_ERROR_FLAGS);
+> +       spi_err = readl_relaxed(controller->base + SPI_ERROR_FLAGS);
+> +       opflags = readl_relaxed(controller->base + QUP_OPERATIONAL);
+> +
+> +       writel_relaxed(qup_err, controller->base + QUP_ERROR_FLAGS);
+> +       writel_relaxed(spi_err, controller->base + SPI_ERROR_FLAGS);
+> +       writel_relaxed(opflags, controller->base + QUP_OPERATIONAL);
+> +
+> +       if (!xfer)
+> +               return IRQ_HANDLED;
+> +
+> +       if (qup_err) {
+> +               if (qup_err & QUP_ERROR_OUTPUT_OVER_RUN)
+> +                       dev_warn(controller->dev, "OUTPUT_OVER_RUN\n");
+> +               if (qup_err & QUP_ERROR_INPUT_UNDER_RUN)
+> +                       dev_warn(controller->dev, "INPUT_UNDER_RUN\n");
+> +               if (qup_err & QUP_ERROR_OUTPUT_UNDER_RUN)
+> +                       dev_warn(controller->dev, "OUTPUT_UNDER_RUN\n");
+> +               if (qup_err & QUP_ERROR_INPUT_OVER_RUN)
+> +                       dev_warn(controller->dev, "INPUT_OVER_RUN\n");
+> +
+> +               controller->error = -EIO;
+> +       }
+> +
+> +       if (spi_err) {
+> +               if (spi_err & SPI_ERROR_CLK_OVER_RUN)
+> +                       dev_warn(controller->dev, "CLK_OVER_RUN\n");
+> +               if (spi_err & SPI_ERROR_CLK_UNDER_RUN)
+> +                       dev_warn(controller->dev, "CLK_UNDER_RUN\n");
+> +
+> +               controller->error = -EIO;
+> +       }
+> +
+> +       if (opflags & QUP_OP_IN_SERVICE_FLAG) {
+> +               writel_relaxed(QUP_OP_IN_SERVICE_FLAG,
+> +                      controller->base + QUP_OPERATIONAL);
+Write is not necessary since already cleared above.
+> +               spi_qup_fifo_read(controller, xfer);
+> +       }
+> +
+> +       if (opflags & QUP_OP_OUT_SERVICE_FLAG) {
+> +               writel_relaxed(QUP_OP_OUT_SERVICE_FLAG,
+> +                      controller->base + QUP_OPERATIONAL);
+Write is not necessary since already cleared above.
+> +               spi_qup_fifo_write(controller, xfer);
+> +       }
+> +
+> +       if (controller->rx_bytes == xfer->len ||
+> +           controller->error)
+> +               complete(&controller->done);
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static int spi_qup_transfer_do(struct spi_qup *controller,
+> +                              struct spi_qup_device *chip,
+> +                              struct spi_transfer *xfer)
+> +{
+> +       unsigned long timeout;
+> +       int ret = -EIO;
+> +
+> +       reinit_completion(&controller->done);
+> +
+> +       timeout = DIV_ROUND_UP(controller->speed_hz, MSEC_PER_SEC);
+> +       timeout = DIV_ROUND_UP(xfer->len * 8, timeout);
+> +       timeout = 100 * msecs_to_jiffies(timeout);
+> +
+> +       controller->rx_bytes = 0;
+> +       controller->tx_bytes = 0;
+> +       controller->error = 0;
+> +       controller->xfer = xfer;
+> +
+> +       if (spi_qup_set_state(controller, QUP_STATE_RUN)) {
+> +               dev_warn(controller->dev, "cannot set RUN state\n");
+> +               goto exit;
+> +       }
+> +
+> +       if (spi_qup_set_state(controller, QUP_STATE_PAUSE)) {
+> +               dev_warn(controller->dev, "cannot set PAUSE state\n");
+> +               goto exit;
+> +       }
+> +
+> +       spi_qup_fifo_write(controller, xfer);
+> +
+> +       if (spi_qup_set_state(controller, QUP_STATE_RUN)) {
+> +               dev_warn(controller->dev, "cannot set EXECUTE state\n");
+> +               goto exit;
+> +       }
+> +
+> +       if (!wait_for_completion_timeout(&controller->done, timeout))
+> +               ret = -ETIMEDOUT;
+> +       else
+> +               ret = controller->error;
+> +exit:
+> +       controller->xfer = NULL;
+> +       controller->error = 0;
+> +       controller->rx_bytes = 0;
+> +       controller->tx_bytes = 0;
+> +       spi_qup_set_state(controller, QUP_STATE_RESET);
+> +       return ret;
+> +}
+> +
+> +static int spi_qup_setup(struct spi_device *spi)
+> +{
+> +       struct spi_qup *controller = spi_master_get_devdata(spi->master);
+> +       struct spi_qup_device *chip = spi_get_ctldata(spi);
+> +
+> +       if (spi->chip_select >= spi->master->num_chipselect) {
+> +               dev_err(controller->dev, "invalid chip_select %d\n",
+> +                       spi->chip_select);
+> +               return -EINVAL;
+> +       }
+> +
+> +       if (spi->max_speed_hz > controller->max_speed_hz) {
+> +               dev_err(controller->dev, "invalid max_speed_hz %d\n",
+> +                       spi->max_speed_hz);
+> +               return -EINVAL;
+> +       }
+> +
+> +       if (!chip) {
+> +               /* First setup */
+> +               chip = kzalloc(sizeof(*chip), GFP_KERNEL);
+> +               if (!chip) {
+> +                       dev_err(controller->dev, "no memory for chip
+> data\n");
+> +                       return -ENOMEM;
+> +               }
+> +
+> +               spi_set_ctldata(spi, chip);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static void spi_qup_cleanup(struct spi_device *spi)
+> +{
+> +       struct spi_qup_device *chip = spi_get_ctldata(spi);
+> +
+> +       if (!chip)
+> +               return;
+> +
+> +       spi_set_ctldata(spi, NULL);
+> +       kfree(chip);
+> +}
+> +
+> +/* set clock freq, clock ramp, bits per work */
+> +static int spi_qup_io_setup(struct spi_device *spi,
+> +                         struct spi_transfer *xfer)
+> +{
+> +       struct spi_qup *controller = spi_master_get_devdata(spi->master);
+> +       struct spi_qup_device *chip = spi_get_ctldata(spi);
+> +       u32 iocontol, config, iomode, mode;
+> +       int ret, n_words;
+> +
+> +       if (spi->mode & SPI_LOOP && xfer->len > controller->in_fifo_sz) {
+> +               dev_err(controller->dev, "too big size for loopback %d >
+> %d\n",
+> +                       xfer->len, controller->in_fifo_sz);
+> +               return -EIO;
+> +       }
+> +
+> +       chip->mode = spi->mode;
+> +       chip->speed_hz = spi->max_speed_hz;
+> +       if (xfer->speed_hz)
+> +               chip->speed_hz = xfer->speed_hz;
+> +
+> +       if (controller->speed_hz != chip->speed_hz) {
+> +               ret = clk_set_rate(controller->cclk, chip->speed_hz);
+> +               if (ret) {
+> +                       dev_err(controller->dev, "fail to set frequency
+> %d",
+> +                               chip->speed_hz);
+> +                       return -EIO;
+> +               }
+> +       }
+> +
+> +       controller->speed_hz = chip->speed_hz;
+> +
+> +       chip->bits_per_word = spi->bits_per_word;
+> +       if (xfer->bits_per_word)
+> +               chip->bits_per_word = xfer->bits_per_word;
+> +
+> +       if (chip->bits_per_word <= 8)
+> +               controller->bytes_per_word = 1;
+> +       else if (chip->bits_per_word <= 16)
+> +               controller->bytes_per_word = 2;
+> +       else
+> +               controller->bytes_per_word = 4;
+> +
+> +       if (controller->bytes_per_word > xfer->len ||
+> +           xfer->len % controller->bytes_per_word != 0){
+> +               /* No partial transfers */
+> +               dev_err(controller->dev, "invalid len %d for %d bits\n",
+> +                       xfer->len, chip->bits_per_word);
+> +               return -EIO;
+> +       }
+> +
+> +       n_words = xfer->len / controller->bytes_per_word;
+> +
+> +       if (spi_qup_set_state(controller, QUP_STATE_RESET)) {
+> +               dev_err(controller->dev, "cannot set RESET state\n");
+> +               return -EIO;
+> +       }
+> +
+> +       if (n_words <= controller->in_fifo_sz) {
+> +               mode = QUP_IO_M_MODE_FIFO;
+> +               writel_relaxed(n_words, controller->base +
+> QUP_MX_READ_CNT);
+> +               writel_relaxed(n_words, controller->base +
+> QUP_MX_WRITE_CNT);
+> +               /* must be zero for FIFO */
+> +               writel_relaxed(0, controller->base + QUP_MX_INPUT_CNT);
+> +               writel_relaxed(0, controller->base + QUP_MX_OUTPUT_CNT);
+> +       } else {
+> +               mode = QUP_IO_M_MODE_BLOCK;
+> +               writel_relaxed(n_words, controller->base +
+> QUP_MX_INPUT_CNT);
+> +               writel_relaxed(n_words, controller->base +
+> QUP_MX_OUTPUT_CNT);
+> +               /* must be zero for BLOCK and BAM */
+> +               writel_relaxed(0, controller->base + QUP_MX_READ_CNT);
+> +               writel_relaxed(0, controller->base + QUP_MX_WRITE_CNT);
+> +       }
+> +
+> +       iomode = readl_relaxed(controller->base + QUP_IO_M_MODES);
+> +       /* Set input and output transfer mode */
+> +       iomode &= ~(QUP_IO_M_INPUT_MODE_MASK | QUP_IO_M_OUTPUT_MODE_MASK);
+> +       iomode &= ~(QUP_IO_M_PACK_EN | QUP_IO_M_UNPACK_EN);
+> +       iomode |= (mode << QUP_IO_M_OUTPUT_MODE_MASK_SHIFT);
+> +       iomode |= (mode << QUP_IO_M_INPUT_MODE_MASK_SHIFT);
+> +
+> +       writel_relaxed(iomode, controller->base + QUP_IO_M_MODES);
+> +
+> +       config = readl_relaxed(controller->base + SPI_CONFIG);
+> +
+> +       if (chip->mode & SPI_LOOP)
+> +               config |= SPI_CONFIG_LOOPBACK;
+> +       else
+> +               config &= ~SPI_CONFIG_LOOPBACK;
+> +
+> +       if (chip->mode & SPI_CPHA)
+> +               config &= ~SPI_CONFIG_INPUT_FIRST;
+> +       else
+> +               config |= SPI_CONFIG_INPUT_FIRST;
+> +
+> +       /*
+> +        * HS_MODE improves signal stability for spi-clk high rates
+> +        * but is invalid in loop back mode.
+> +        */
+> +       if ((controller->speed_hz >= SPI_HS_MIN_RATE) &&
+> +           !(chip->mode & SPI_LOOP))
+> +               config |= SPI_CONFIG_HS_MODE;
+> +       else
+> +               config &= ~SPI_CONFIG_HS_MODE;
+> +
+> +       writel_relaxed(config, controller->base + SPI_CONFIG);
+> +
+> +       config = readl_relaxed(controller->base + QUP_CONFIG);
+> +       config &= ~(QUP_CONFIG_NO_INPUT | QUP_CONFIG_NO_OUTPUT |
+> QUP_CONFIG_N);
+> +       config |= chip->bits_per_word - 1;
+> +       config |= QUP_CONFIG_SPI_MODE;
+> +       writel_relaxed(config, controller->base + QUP_CONFIG);
+> +
+> +       iocontol = readl_relaxed(controller->base + SPI_IO_CONTROL);
+> +
+> +       /* Disable auto CS toggle */
+> +       iocontol &= ~SPI_IO_C_MX_CS_MODE;
+> +
+> +       if (chip->mode & SPI_CPOL)
+> +               iocontol |= SPI_IO_C_CLK_IDLE_HIGH;
+> +       else
+> +               iocontol &= ~SPI_IO_C_CLK_IDLE_HIGH;
+> +
+> +       writel_relaxed(iocontol, controller->base + SPI_IO_CONTROL);
+> +
+> +       /*
+> +        * TODO: In BAM mode mask INPUT and OUTPUT service flags in
+> +        * to prevent IRQs on FIFO status change.
+> +        */
+Remove TODO
+> +       writel_relaxed(0, controller->base + QUP_OPERATIONAL_MASK);
+> +
+> +       return 0;
+> +}
+> +
+> +static int spi_qup_transfer_one(struct spi_master *master,
+> +                               struct spi_message *msg)
+> +{
+> +       struct spi_qup *controller = spi_master_get_devdata(master);
+> +       struct spi_qup_device *chip = spi_get_ctldata(msg->spi);
+> +       struct spi_transfer *xfer;
+> +       struct spi_device *spi;
+> +       unsigned cs_change;
+> +       int status;
+> +
+> +       spi = msg->spi;
+> +       cs_change = 1;
+> +       status = 0;
+> +
+> +       list_for_each_entry(xfer, &msg->transfers, transfer_list) {
+> +
+> +               status = spi_qup_io_setup(spi, xfer);
+> +               if (status)
+> +                       break;
+> +
+> +               if (cs_change)
+> +                       spi_qup_assert_cs(controller, chip);
+> +
+> +               cs_change = xfer->cs_change;
+> +
+> +               /* Do actual transfer */
+> +               status = spi_qup_transfer_do(controller, chip, xfer);
+> +               if (status)
+> +                       break;
+> +
+> +               msg->actual_length += xfer->len;
+> +
+> +               if (xfer->delay_usecs)
+> +                       udelay(xfer->delay_usecs);
+> +
+> +               if (cs_change)
+> +                       spi_qup_deassert_cs(controller, chip);
+> +       }
+> +
+> +       if (status || !cs_change)
+> +               spi_qup_deassert_cs(controller, chip);
+> +
+> +       msg->status = status;
+> +       spi_finalize_current_message(master);
+> +       return status;
+> +}
+> +
+> +static int spi_qup_probe(struct platform_device *pdev)
+> +{
+> +       struct spi_master *master;
+> +       struct clk *iclk, *cclk;
+> +       struct spi_qup *controller;
+> +       struct resource *res;
+> +       struct device *dev;
+> +       void __iomem *base;
+> +       u32 data, max_freq, iomode;
+> +       int ret, irq, size;
+> +
+> +       dev = &pdev->dev;
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       base = devm_ioremap_resource(dev, res);
+> +       if (IS_ERR(base))
+> +               return PTR_ERR(base);
+> +
+> +       irq = platform_get_irq(pdev, 0);
+> +
+> +       if (irq < 0)
+> +               return irq;
+> +
+> +       cclk = devm_clk_get(dev, "core");
+> +       if (IS_ERR(cclk)) {
+> +               dev_err(dev, "cannot get core clock\n");
+> +               return PTR_ERR(cclk);
+> +       }
+> +
+> +       iclk = devm_clk_get(dev, "iface");
+> +       if (IS_ERR(iclk)) {
+> +               dev_err(dev, "cannot get iface clock\n");
+> +               return PTR_ERR(iclk);
+> +       }
+> +
+> +       if (of_property_read_u32(dev->of_node, "spi-max-frequency",
+> &max_freq))
+> +               max_freq = 19200000;
+> +
+> +       if (!max_freq) {
+> +               dev_err(dev, "invalid clock frequency %d\n", max_freq);
+> +               return -ENXIO;
+> +       }
+> +
+> +       ret = clk_set_rate(cclk, max_freq);
+> +       if (ret)
+> +               dev_warn(dev, "fail to set SPI frequency %d\n", max_freq);
+> +
+> +       ret = clk_prepare_enable(cclk);
+> +       if (ret) {
+> +               dev_err(dev, "cannot enable core clock\n");
+> +               return ret;
+> +       }
+> +
+> +       ret = clk_prepare_enable(iclk);
+> +       if (ret) {
+> +               clk_disable_unprepare(cclk);
+> +               dev_err(dev, "cannot enable iface clock\n");
+> +               return ret;
+> +       }
+> +
+> +       data = readl_relaxed(base + QUP_HW_VERSION);
+> +
+> +       if (data < QUP_HW_VERSION_2_1_1) {
+> +               clk_disable_unprepare(cclk);
+> +               clk_disable_unprepare(iclk);
+> +               dev_err(dev, "v.%08x is not supported\n", data);
+> +               return -ENXIO;
+> +       }
+> +
+> +       master = spi_alloc_master(dev, sizeof(struct spi_qup));
+> +       if (!master) {
+> +               clk_disable_unprepare(cclk);
+> +               clk_disable_unprepare(iclk);
+> +               dev_err(dev, "cannot allocate master\n");
+> +               return -ENOMEM;
+> +       }
+> +
+> +       master->bus_num = pdev->id;
+> +       master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH | SPI_LOOP;
+> +       master->num_chipselect = SPI_NUM_CHIPSELECTS;
+> +       master->bits_per_word_mask = SPI_BPW_RANGE_MASK(4, 32);
+> +       master->setup = spi_qup_setup;
+> +       master->cleanup = spi_qup_cleanup;
+> +       master->transfer_one_message = spi_qup_transfer_one;
+> +       master->dev.of_node = pdev->dev.of_node;
+> +       master->auto_runtime_pm = true;
+> +
+> +       platform_set_drvdata(pdev, master);
+> +
+> +       controller = spi_master_get_devdata(master);
+> +
+> +       controller->dev  = dev;
+> +       controller->base = base;
+> +       controller->iclk = iclk;
+> +       controller->cclk = cclk;
+> +       controller->irq  = irq;
+> +       controller->max_speed_hz = clk_get_rate(cclk);
+> +       controller->speed_hz = controller->max_speed_hz;
+> +
+> +       init_completion(&controller->done);
+> +
+> +       iomode = readl_relaxed(base + QUP_IO_M_MODES);
+> +
+> +       size = QUP_IO_M_OUTPUT_BLOCK_SIZE(iomode);
+> +       if (size)
+> +               controller->out_blk_sz = size * 16;
+> +       else
+> +               controller->out_blk_sz = 4;
+> +
+> +       size = QUP_IO_M_INPUT_BLOCK_SIZE(iomode);
+> +       if (size)
+> +               controller->in_blk_sz = size * 16;
+> +       else
+> +               controller->in_blk_sz = 4;
+> +
+> +       size = QUP_IO_M_OUTPUT_FIFO_SIZE(iomode);
+> +       controller->out_fifo_sz = controller->out_blk_sz * (2 << size);
+> +
+> +       size = QUP_IO_M_INPUT_FIFO_SIZE(iomode);
+> +       controller->in_fifo_sz = controller->in_blk_sz * (2 << size);
+> +
+> +       dev_info(dev, "v.%08x IN:block:%d, fifo:%d, OUT:block:%d,
+> fifo:%d\n",
+> +                data, controller->in_blk_sz, controller->in_fifo_sz,
+> +                controller->out_blk_sz, controller->out_fifo_sz);
+> +
+> +       writel_relaxed(1, base + QUP_SW_RESET);
+> +
+> +       ret = spi_qup_set_state(controller, QUP_STATE_RESET);
+> +       if (ret) {
+> +               dev_err(dev, "cannot set RESET state\n");
+> +               goto error;
+> +       }
+> +
+> +       writel_relaxed(0, base + QUP_OPERATIONAL);
+> +       writel_relaxed(0, base + QUP_IO_M_MODES);
+> +       writel_relaxed(0, base + QUP_OPERATIONAL_MASK);
+> +       writel_relaxed(SPI_ERROR_CLK_UNDER_RUN | SPI_ERROR_CLK_OVER_RUN,
+> +                      base + SPI_ERROR_FLAGS_EN);
+> +
+> +       writel_relaxed(0, base + SPI_CONFIG);
+> +       writel_relaxed(SPI_IO_C_NO_TRI_STATE, base + SPI_IO_CONTROL);
+> +
+> +       ret = devm_request_irq(dev, irq, spi_qup_qup_irq,
+> +                              IRQF_TRIGGER_HIGH, pdev->name, controller);
+> +       if (ret) {
+> +               dev_err(dev, "cannot request IRQ %d\n", irq);
+> +               goto error;
+> +       }
+> +
+> +       ret = devm_spi_register_master(dev, master);
+> +       if (!ret) {
+> +               pm_runtime_set_autosuspend_delay(dev, MSEC_PER_SEC);
+> +               pm_runtime_use_autosuspend(dev);
+> +               pm_runtime_set_active(dev);
+> +               pm_runtime_enable(dev);
+> +               return ret;
+> +       }
+> +error:
+> +       clk_disable_unprepare(cclk);
+> +       clk_disable_unprepare(iclk);
+> +       spi_master_put(master);
+> +       return ret;
+> +}
+> +
+> +#ifdef CONFIG_PM_RUNTIME
+> +static int spi_qup_pm_suspend_runtime(struct device *device)
+> +{
+> +       struct spi_master *master = dev_get_drvdata(device);
+> +       struct spi_qup *controller = spi_master_get_devdata(master);
+> +
+> +       disable_irq(controller->irq);
+> +       clk_disable_unprepare(controller->cclk);
+> +       clk_disable_unprepare(controller->iclk);
+> +       dev_dbg(device, "suspend runtime\n");
+> +       return 0;
+> +}
+> +
+> +static int spi_qup_pm_resume_runtime(struct device *device)
+> +{
+> +       struct spi_master *master = dev_get_drvdata(device);
+> +       struct spi_qup *controller = spi_master_get_devdata(master);
+> +
+> +       clk_prepare_enable(controller->cclk);
+> +       clk_prepare_enable(controller->iclk);
+> +       enable_irq(controller->irq);
+> +       dev_dbg(device, "resume runtime\n");
+> +       return 0;
+> +}
+> +#endif /* CONFIG_PM_RUNTIME */
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int spi_qup_suspend(struct device *device)
+> +{
+> +       struct spi_master *master = dev_get_drvdata(device);
+> +       struct spi_qup *controller = spi_master_get_devdata(master);
+> +       int status;
+> +
+> +       status = spi_master_suspend(master);
+> +       if (!status) {
+> +               disable_irq(controller->irq);
+> +               clk_disable_unprepare(controller->cclk);
+> +               clk_disable_unprepare(controller->iclk);
+> +       }
+> +
+> +       dev_dbg(device, "system suspend %d\n", status);
+> +       return status;
+> +}
+> +
+> +static int spi_qup_resume(struct device *device)
+> +{
+> +       struct spi_master *master = dev_get_drvdata(device);
+> +       struct spi_qup *controller = spi_master_get_devdata(master);
+> +       int status;
+> +
+> +       clk_prepare_enable(controller->cclk);
+> +       clk_prepare_enable(controller->iclk);
+> +
+> +       status = spi_master_resume(master);
+> +
+> +       dev_dbg(device, "system resume %d\n", status);
+> +       return status;
+> +}
+> +#endif /* CONFIG_PM_SLEEP */
+> +
+> +static int spi_qup_remove(struct platform_device *pdev)
+> +{
+> +       struct spi_master *master = dev_get_drvdata(&pdev->dev);
+> +       struct spi_qup *controller = spi_master_get_devdata(master);
+> +
+> +       pm_runtime_get_sync(&pdev->dev);
+> +
+> +       clk_disable_unprepare(controller->cclk);
+> +       clk_disable_unprepare(controller->iclk);
+> +
+> +       pm_runtime_put_noidle(&pdev->dev);
+> +       pm_runtime_disable(&pdev->dev);
+> +       return 0;
+> +}
+> +
+> +static struct of_device_id spi_qup_dt_match[] = {
+> +       { .compatible = "qcom,spi-qup-v2", },
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(of, spi_qup_dt_match);
+> +
+> +static const struct dev_pm_ops spi_qup_dev_pm_ops = {
+> +       SET_SYSTEM_SLEEP_PM_OPS(spi_qup_suspend, spi_qup_resume)
+> +       SET_RUNTIME_PM_OPS(spi_qup_pm_suspend_runtime,
+> +                          spi_qup_pm_resume_runtime,
+> +                          NULL)
+> +};
+> +
+> +static struct platform_driver spi_qup_driver = {
+> +       .driver = {
+> +               .name           = "spi_qup",
+> +               .owner          = THIS_MODULE,
+> +               .pm             = &spi_qup_dev_pm_ops,
+> +               .of_match_table = spi_qup_dt_match,
+> +       },
+> +       .probe = spi_qup_probe,
+> +       .remove = spi_qup_remove,
+> +};
+> +module_platform_driver(spi_qup_driver);
+> +
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_VERSION("0.4");
+> +MODULE_ALIAS("platform:spi_qup");
