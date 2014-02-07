@@ -1,44 +1,91 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH 08/15] ata: ahci_platform: Manage SATA PHY
-Date: Fri, 07 Feb 2014 11:39:03 +0100
-Message-ID: <463926864.ALblgUKdgH@wuerfel>
-References: <1379595943-14622-1-git-send-email-rogerq@ti.com>
- <5240492D.6060204@ti.com> <52F4B682.2000201@ti.com>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 05/19] watchdog: orion: Make sure the watchdog is
+ initially stopped
+Date: Fri, 7 Feb 2014 07:40:45 -0300
+Message-ID: <20140207104044.GA11063@localhost>
+References: <1391707226-18258-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1391707226-18258-6-git-send-email-ezequiel.garcia@free-electrons.com>
+ <52F43ED0.4050808@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52F4B682.2000201@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: devicetree@vger.kernel.org, balajitk@ti.com, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Hans de Goede <hdegoede@redhat.com>, tony@atomide.com, linux-kernel@vger.kernel.org, balbi@ti.com, kishon@ti.com, linux-ide@vger.kernel.org, bcousson@baylibre.com, Tejun Heo <tj@kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52F43ED0.4050808-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 07 February 2014 12:33:38 Roger Quadros wrote:
-> 
-> This means we need to make CONFIG_SATA_AHCI_PLATFORM depend on CONFIG_GENERIC_PHY or
-> select it.
-> 
-> OR
-> 
-> Generic PHY layer must be fixed so that the API's are always built in.
-> 
-> What is the better option? I believe making the PHY API's always built in is the better option.
-> 
+On Thu, Feb 06, 2014 at 06:02:56PM -0800, Guenter Roeck wrote:
+> On 02/06/2014 09:20 AM, Ezequiel Garcia wrote:
+> > Having the watchdog initially fully stopped is important to avoid
+> > any spurious watchdog triggers, in case the registers are not in
+> > its reset state.
+> >
+> > Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> > Tested-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Tested-by: Willy Tarreau <w@1wt.eu>
+> > Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >   drivers/watchdog/orion_wdt.c | 3 +++
+> >   1 file changed, 3 insertions(+)
+> >
+> > diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_=
+wdt.c
+> > index 6746033..2dbeee9 100644
+> > --- a/drivers/watchdog/orion_wdt.c
+> > +++ b/drivers/watchdog/orion_wdt.c
+> > @@ -142,6 +142,9 @@ static int orion_wdt_probe(struct platform_devi=
+ce *pdev)
+> >   	orion_wdt.max_timeout =3D wdt_max_duration;
+> >   	watchdog_init_timeout(&orion_wdt, heartbeat, &pdev->dev);
+> >
+> > +	/* Let's make sure the watchdog is fully stopped */
+> > +	orion_wdt_stop(&orion_wdt);
+> > +
+>=20
+> Actually we just had that in another driver, and I stumbled over it t=
+here.
+>=20
+> Problem with stopping the watchdog in probe unconditionally is that y=
+ou can
+> use it to defeat nowayout: unload the module, then load it again,
+> and the watchdog is stopped even if nowayout is true.
+>=20
 
-CONFIG_SATA_AHCI_PLATFORM should do
+Hm... I see.
 
-	"depends on CONFIG_GENERIC_PHY || !CONFIG_GENERIC_PHY"
+> Is this really what you want ? Or, in other words, what is the proble=
+m
+> you are trying to solve ?
+>=20
 
-which is the Kconfig way of saying that if CONFIG_GENERIC_PHY is a module,
-CONFIG_SATA_AHCI_PLATFORM needs to be a module as well.
+Well, this is related to the discussion about the bootloader not
+reseting the watchdog properly, provoking spurious watchdog triggering.
 
-	Arnd
+Jason Gunthorpe explained [1] that we needed a particular sequence:
+
+ 1. Disable WDT
+ 2. Clear bridge
+ 3. Enable WDT
+
+We added the irq handling to satisfy (2), and the watchdog stop for (1)=
+=2E
+
+The watchdog stop was agreed specifically [2].
+
+Ideas?
+
+[1] http://www.spinics.net/lists/arm-kernel/msg302340.html
+[2] http://www.spinics.net/lists/arm-kernel/msg302507.html
+
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
