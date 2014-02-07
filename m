@@ -1,63 +1,145 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/8] ASoC: da9055: Add DT support for CODEC
-Date: Fri, 7 Feb 2014 16:26:49 +0000
-Message-ID: <20140207162649.GQ32298@sirena.org.uk>
-References: <cover.1391705989.git.Adam.Thomson.Opensource@diasemi.com>
- <9ec36c0633ae8291267be6802a34a469a34ae292.1391705989.git.Adam.Thomson.Opensource@diasemi.com>
- <20140207162504.GP32298@sirena.org.uk>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v4 1/5] clk: sunxi: Add support for USB
+ clock-register reset bits
+Date: Fri, 07 Feb 2014 17:27:32 +0100
+Message-ID: <1391790452.5442.0.camel@pizza.hi.pengutronix.de>
+References: <1391786513-20780-1-git-send-email-hdegoede@redhat.com>
+	 <1391786513-20780-2-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/OC9VIUhC1tLvmgX"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140207162504.GP32298-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCLMRFWKZAIBBAET2SLQKGQEMV2YAWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1391786513-20780-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Emilio =?ISO-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Am Freitag, den 07.02.2014, 16:21 +0100 schrieb Hans de Goede:
+> The usb-clk register is special in that it not only contains clk gate bits,
+> but also has a few reset bits. This commit adds support for this by allowing
+> gates type sunxi clks to also register a reset controller.
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
---/OC9VIUhC1tLvmgX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-On Fri, Feb 07, 2014 at 04:25:04PM +0000, Mark Brown wrote:
-> On Thu, Feb 06, 2014 at 06:03:09PM +0000, Adam Thomson wrote:
-> > Signed-off-by: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
->=20
-> This doesn't apply against my current for-next or v3.14-rc1, can you
-> please check and resend?
-
-Ugh, sorry - it'll be due to patch 1 of course which I'd skipped due to
-the MFD bit.  If you need to resend it's probably easier all round to
-just send the MFD and ASoC bits of that separately since there's no
-direct dependency.
-
---/OC9VIUhC1tLvmgX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS9QlFAAoJELSic+t+oim9bbAQAIWHlSl/4fPwKL0+LfDkDNE3
-a98gt5tuWOdWH0U6n+s7s0D6y9cBcd+rlyBfQ3KfWXJmwzaZ/23yHtarPTimiHsp
-QU1ANvN054dnAydl258CQpJmaaEcMRMz4c3p8qR9TG25r9hH/5lAn/bYZRNlgf1D
-/7dpNQenDEV7aORQbmj2I8y1zoRpToao7jMzHklU/9cEzG2OjLH+HFMyGNmf1dcA
-001EXJ6AhxFqCM0jKHSCnL94M8ntYqcypVhf6KyQwTlMsXJQpbgbnyZNJUuvP01D
-D17C9rROMIRMnRr5HNS3d14N4YgTm5UnXG8/1rvd5RFJJOVcASFB67HXEcv3hpMi
-XmqRaTOx+EVowYaFEl5b+wgL6plHO2fgpClLC0U+pDJf5glDELUBXDF6IFtdu0th
-daasBuGdNw+bQfTv+KX57StcrP++g+82ZxtR1m4UiMI2A4oP1r0COTqZrFkvI8vo
-CkgqvS47zzpbfO1FuRLUdu+cnX/tkasdm/UDAZjeagPczXsayPQL0vuf+DS11nZ1
-g/ENcSy5EiPGnIvTx31lDVY1fzCrliCMszec1hYZBGG2IoBEdkzYk3xwfBbz0hnK
-6tz5HzxCVqb8RSZGm1aE91AF7x12zfkAgv2/Lmq7RrM1BgnD3hntEIgnpfaRS24f
-tnlB+yxuHEjyK5HWdDLc
-=OSvq
------END PGP SIGNATURE-----
-
---/OC9VIUhC1tLvmgX--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  drivers/clk/sunxi/clk-sunxi.c | 71 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 71 insertions(+)
+> 
+> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+> index 64bda21..1e15e4c 100644
+> --- a/drivers/clk/sunxi/clk-sunxi.c
+> +++ b/drivers/clk/sunxi/clk-sunxi.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/clkdev.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+> +#include <linux/reset-controller.h>
+>  
+>  #include "clk-factors.h"
+>  
+> @@ -838,6 +839,59 @@ static void __init sunxi_divider_clk_setup(struct device_node *node,
+>  
+> 
+>  /**
+> + * sunxi_gates_reset... - reset bits in leaf gate clk registers handling
+> + */
+> +
+> +struct gates_reset_data {
+> +	void __iomem			*reg;
+> +	spinlock_t			*lock;
+> +	struct reset_controller_dev	rcdev;
+> +};
+> +
+> +static int sunxi_gates_reset_assert(struct reset_controller_dev *rcdev,
+> +			      unsigned long id)
+> +{
+> +	struct gates_reset_data *data = container_of(rcdev,
+> +						     struct gates_reset_data,
+> +						     rcdev);
+> +	unsigned long flags;
+> +	u32 reg;
+> +
+> +	spin_lock_irqsave(data->lock, flags);
+> +
+> +	reg = readl(data->reg);
+> +	writel(reg & ~BIT(id), data->reg);
+> +
+> +	spin_unlock_irqrestore(data->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static int sunxi_gates_reset_deassert(struct reset_controller_dev *rcdev,
+> +				unsigned long id)
+> +{
+> +	struct gates_reset_data *data = container_of(rcdev,
+> +						     struct gates_reset_data,
+> +						     rcdev);
+> +	unsigned long flags;
+> +	u32 reg;
+> +
+> +	spin_lock_irqsave(data->lock, flags);
+> +
+> +	reg = readl(data->reg);
+> +	writel(reg | BIT(id), data->reg);
+> +
+> +	spin_unlock_irqrestore(data->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct reset_control_ops sunxi_gates_reset_ops = {
+> +	.assert		= sunxi_gates_reset_assert,
+> +	.deassert	= sunxi_gates_reset_deassert,
+> +};
+> +
+> +/**
+>   * sunxi_gates_clk_setup() - Setup function for leaf gates on clocks
+>   */
+>  
+> @@ -845,6 +899,7 @@ static void __init sunxi_divider_clk_setup(struct device_node *node,
+>  
+>  struct gates_data {
+>  	DECLARE_BITMAP(mask, SUNXI_GATES_MAX_SIZE);
+> +	u32 reset_mask;
+>  };
+>  
+>  static const struct gates_data sun4i_axi_gates_data __initconst = {
+> @@ -915,6 +970,7 @@ static void __init sunxi_gates_clk_setup(struct device_node *node,
+>  					 struct gates_data *data)
+>  {
+>  	struct clk_onecell_data *clk_data;
+> +	struct gates_reset_data *reset_data;
+>  	const char *clk_parent;
+>  	const char *clk_name;
+>  	void *reg;
+> @@ -958,6 +1014,21 @@ static void __init sunxi_gates_clk_setup(struct device_node *node,
+>  	clk_data->clk_num = i;
+>  
+>  	of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
+> +
+> +	/* Register a reset controler for gates with reset bits */
+> +	if (data->reset_mask == 0)
+> +		return;
+> +
+> +	reset_data = kzalloc(sizeof(*reset_data), GFP_KERNEL);
+> +	if (!reset_data)
+> +		return;
+> +
+> +	reset_data->reg = reg;
+> +	reset_data->lock = &clk_lock;
+> +	reset_data->rcdev.nr_resets = __fls(data->reset_mask) + 1;
+> +	reset_data->rcdev.ops = &sunxi_gates_reset_ops;
+> +	reset_data->rcdev.of_node = node;
+> +	reset_controller_register(&reset_data->rcdev);
+>  }
+>  
+> 
