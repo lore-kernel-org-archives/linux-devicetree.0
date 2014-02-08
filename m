@@ -1,94 +1,260 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [Patch v5 1/2] dmaengine: add Qualcomm BAM dma driver
-Date: Fri, 7 Feb 2014 18:42:54 -0800
-Message-ID: <20140208024254.GA10784@codeaurora.org>
-References: <1391546556-27702-1-git-send-email-agross@codeaurora.org>
- <1391546556-27702-2-git-send-email-agross@codeaurora.org>
+Subject: Re: [PATCH v8 3/3] mmc: sdhci-msm: Add platform_execute_tunning
+ implementation
+Date: Fri, 7 Feb 2014 19:23:15 -0800
+Message-ID: <20140208032315.GB10784@codeaurora.org>
+References: <1391107507-17321-1-git-send-email-gdjakov@mm-sol.com>
+ <1391107507-17321-4-git-send-email-gdjakov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1391546556-27702-2-git-send-email-agross@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andy Gross <agross@codeaurora.org>
-Cc: devicetree@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1391107507-17321-4-git-send-email-gdjakov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Georgi Djakov <gdjakov@mm-sol.com>
+Cc: linux-mmc@vger.kernel.org, cjb@laptop.org, devicetree@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/04, Andy Gross wrote:
-> diff --git a/drivers/dma/qcom_bam_dma.c b/drivers/dma/qcom_bam_dma.c
-> new file mode 100644
-> index 0000000..214250c
-> --- /dev/null
-> +++ b/drivers/dma/qcom_bam_dma.c
-> @@ -0,0 +1,1066 @@
-> +/*
-> + * QCOM BAM DMA engine driver
+On 01/30, Georgi Djakov wrote:
+> @@ -75,17 +110,389 @@ struct sdhci_msm_host {
+>  };
+>  
+>  /* MSM platform specific tuning */
+> -int sdhci_msm_execute_tuning(struct sdhci_host *host, u32 opcode)
+> +static inline int msm_dll_poll_ck_out_en(struct sdhci_host *host, u8 poll)
+> +{
+> +	u32 wait_cnt = 50;
+> +	u8 ck_out_en = 0;
 
-Can you please move this down into the comment below?
+Looks like a useless assignment.
 
-> + *
-> + * Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
+> +	struct mmc_host *mmc = host->mmc;
+> +
+> +	/* poll for CK_OUT_EN bit.  max. poll time = 50us */
+> +	ck_out_en = !!(readl_relaxed(host->ioaddr + CORE_DLL_CONFIG) &
+> +			CORE_CK_OUT_EN);
+> +
+> +	while (ck_out_en != poll) {
+> +		if (--wait_cnt == 0) {
+> +			dev_err(mmc_dev(mmc), "%s: CK_OUT_EN bit is not %d\n",
+> +			       mmc_hostname(mmc), poll);
+> +			return -ETIMEDOUT;
+> +		}
+> +		udelay(1);
+> +
+> +		ck_out_en = !!(readl_relaxed(host->ioaddr + CORE_DLL_CONFIG) &
+> +				CORE_CK_OUT_EN);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int msm_config_cm_dll_phase(struct sdhci_host *host, u8 phase)
+> +{
+> +	int rc = 0;
 
-And split this out into its own comment block? I think this will
-make the lawyers happier.
+Looks like a useless assignment.
 
-> + *
-> + * QCOM BAM DMA blocks are distributed amongst a number of the on-chip
-> + * peripherals on the MSM 8x74.  The configuration of the channels are dependent
-> + * on the way they are hard wired to that specific peripheral.  The peripheral
-> + * device tree entries specify the configuration of each channel.
-> + *
-> + * The DMA controller requires the use of external memory for storage of the
-> + * hardware descriptors for each channel.  The descriptor FIFO is accessed as a
-> + * circular buffer and operations are managed according to the offset within the
-> + * FIFO.  After pipe/channel reset, all of the pipe registers and internal state
-> + * are back to defaults.
-> + *
-> + * During DMA operations, we write descriptors to the FIFO, being careful to
-> + * handle wrapping and then write the last FIFO offset to that channel's
-> + * P_EVNT_REG register to kick off the transaction.  The P_SW_OFSTS register
-> + * indicates the current FIFO offset that is being processed, so there is some
-> + * indication of where the hardware is currently working.
-> + */
+> +	u8 grey_coded_phase_table[] = {
+> +		0x0, 0x1, 0x3, 0x2, 0x6, 0x7, 0x5, 0x4,
+> +		0xc, 0xd, 0xf, 0xe, 0xa, 0xb, 0x9, 0x8
+> +	};
+
+This could be static const?
+
+> +	unsigned long flags;
+> +	u32 config;
+> +	struct mmc_host *mmc = host->mmc;
+> +
+> +	spin_lock_irqsave(&host->lock, flags);
+> +
+> +	config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
+> +	config &= ~(CORE_CDR_EN | CORE_CK_OUT_EN);
+> +	config |= (CORE_CDR_EXT_EN | CORE_DLL_EN);
+> +	writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
+> +
+> +	/* Wait until CK_OUT_EN bit of DLL_CONFIG register becomes '0' */
+> +	rc = msm_dll_poll_ck_out_en(host, 0);
+> +	if (rc)
+> +		goto err_out;
+> +
+> +	/*
+> +	 * Write the selected DLL clock output phase (0 ... 15)
+> +	 * to CDR_SELEXT bit field of DLL_CONFIG register.
+> +	 */
+> +	writel_relaxed(((readl_relaxed(host->ioaddr + CORE_DLL_CONFIG)
+> +			 & ~(0xF << 20))
+> +			| (grey_coded_phase_table[phase] << 20)),
+> +		       host->ioaddr + CORE_DLL_CONFIG);
+
+Wow this is complicated. Can we please break this up into
+multiple lines? What does 0xf << 20 mean?
+
+> +
+> +	/* Set CK_OUT_EN bit of DLL_CONFIG register to 1. */
+> +	writel_relaxed((readl_relaxed(host->ioaddr + CORE_DLL_CONFIG)
+> +			| CORE_CK_OUT_EN), host->ioaddr + CORE_DLL_CONFIG);
+> +
+[...]
+> +}
+> +
+> +static int msm_find_most_appropriate_phase(struct sdhci_host *host,
+> +					   u8 *phase_table, u8 total_phases)
+> +{
 [...]
 > +
-> +/* PIPE CTRL */
-> +#define	P_EN			BIT(1)
+> +	for (cnt = 0; cnt <= row_index; cnt++) {
+> +		if (phases_per_row[cnt] > curr_max) {
+> +			curr_max = phases_per_row[cnt];
+> +			selected_row_index = cnt;
+> +		}
+> +	}
+> +
+> +	i = ((curr_max * 3) / 4);
 
-           ^^^^
-Nitpick: Weird tab here?
+Unnecessary extra parentheses here.
+
+> +	if (i)
+> +		i--;
+> +
+> +	ret = (int)ranges[selected_row_index][i];
+
+Is this cast necessary?
 
 > +
-> +/**
-> + * bam_start_dma - start next transaction
-> + * @bchan - bam dma channel
-> + *
-> + * Note: must hold bam dma channel vc.lock
+> +	if (ret >= MAX_PHASES) {
+> +		ret = -EINVAL;
+> +		dev_err(mmc_dev(mmc), "%s: invalid phase selected=%d\n",
+> +		       mmc_hostname(mmc), ret);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static inline void msm_cm_dll_set_freq(struct sdhci_host *host)
+> +{
+> +	u32 mclk_freq = 0;
+> +
+> +	/* Program the MCLK value to MCLK_FREQ bit field */
+> +	if (host->clock <= 112000000)
+> +		mclk_freq = 0;
+> +	else if (host->clock <= 125000000)
+> +		mclk_freq = 1;
+> +	else if (host->clock <= 137000000)
+> +		mclk_freq = 2;
+> +	else if (host->clock <= 150000000)
+> +		mclk_freq = 3;
+> +	else if (host->clock <= 162000000)
+> +		mclk_freq = 4;
+> +	else if (host->clock <= 175000000)
+> +		mclk_freq = 5;
+> +	else if (host->clock <= 187000000)
+> +		mclk_freq = 6;
+> +	else if (host->clock <= 200000000)
+> +		mclk_freq = 7;
 
-You can use lockdep_assert_held() here to document this
-requirement and test for it at runtime.
+This could be a case statement but I'm not sure it's any clearer.
+At least the range is specified.
 
-> + */
-> +static void bam_start_dma(struct bam_chan *bchan)
+	switch (host->clock) {
+	case 0 ... 112000000:
+		mclk_freq = 0;
+		break;
+	case 112000001 ...  125000000:
+		mclk_freq = 1;
+		break;
+	...
+
+> +
+> +	writel_relaxed(((readl_relaxed(host->ioaddr + CORE_DLL_CONFIG)
+> +			 & ~(7 << 24)) | (mclk_freq << 24)),
+> +		       host->ioaddr + CORE_DLL_CONFIG);
+
+This is also complicated. Can you split this up into multiple lines?
+
+> +int sdhci_msm_execute_tuning(struct sdhci_host *host, u32 opcode)
+> +{
+[...]
+> +	do {
+> +		struct mmc_command cmd = { 0 };
+> +		struct mmc_data data = { 0 };
+> +		struct mmc_request mrq = {
+> +			.cmd = &cmd,
+> +			.data = &data
+> +		};
+> +		struct scatterlist sg;
+> +
+> +		/* set the phase in delay line hw block */
+> +		rc = msm_config_cm_dll_phase(host, phase);
+> +		if (rc)
+> +			goto out;
+> +
+> +		cmd.opcode = opcode;
+> +		cmd.flags = MMC_RSP_R1 | MMC_CMD_ADTC;
+> +
+> +		data.blksz = size;
+> +		data.blocks = 1;
+> +		data.flags = MMC_DATA_READ;
+> +		data.timeout_ns = 1000 * 1000 * 1000;	/* 1 sec */
+
+NSEC_PER_SEC?
+
+> +
+> +		data.sg = &sg;
+> +		data.sg_len = 1;
+> +		sg_init_one(&sg, data_buf, sizeof(data_buf));
+> +		memset(data_buf, 0, sizeof(data_buf));
+> +		mmc_wait_for_req(mmc, &mrq);
+> +
+> +		if (!cmd.error && !data.error &&
+> +		    !memcmp(data_buf, tuning_block_pattern, sizeof(data_buf))) {
+> +			/* tuning is successful at this tuning point */
+> +			tuned_phases[tuned_phase_cnt++] = phase;
+> +			dev_dbg(mmc_dev(mmc), "%s: found good phase = %d\n",
+> +				 mmc_hostname(mmc), phase);
+> +		}
+> +	} while (++phase < 16);
+
+++phase < ARRAY_SIZE(tuned_phases) ?
+
+> +
+> +	if (tuned_phase_cnt) {
+> +		rc = msm_find_most_appropriate_phase(host, tuned_phases,
+> +						     tuned_phase_cnt);
+> +		if (rc < 0)
+> +			goto out;
+> +		else
+> +			phase = (u8) rc;
+
+Unnecessary cast?
+
+> +
+> +		/*
+> +		 * Finally set the selected phase in delay
+> +		 * line hw block.
+> +		 */
+> +		rc = msm_config_cm_dll_phase(host, phase);
+> +		if (rc)
+> +			goto out;
+> +		dev_dbg(mmc_dev(mmc), "%s: setting the tuning phase to %d\n",
+> +			 mmc_hostname(mmc), phase);
+> +	} else {
+> +		if (--tuning_seq_cnt)
+> +			goto retry;
+> +		/* tuning failed */
+> +		dev_dbg(mmc_dev(mmc), "%s: no tuning point found\n",
+> +		       mmc_hostname(mmc));
+> +		rc = -EIO;
+> +	}
+> +
+> +out:
+> +	kfree(data_buf);
+> +	return rc;
+> +}
+> +
+>  #define MAX_PROP_SIZE 32
+>  static int sdhci_msm_dt_parse_vreg_info(struct device *dev,
+>  			struct sdhci_msm_reg_data *vreg, const char *vreg_name)
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
