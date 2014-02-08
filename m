@@ -1,97 +1,71 @@
-From: Thomas Abraham <ta.omasab@gmail.com>
-Subject: Re: [PATCH v2 1/2] PM / OPP: Allow boost frequency to be looked up
- from device tree
-Date: Sat, 8 Feb 2014 10:40:01 +0530
-Message-ID: <CAJuA9agT4PC6YOmhCwKQ=58qaGEr1qSuhTpX57ro1pEuk++Miw@mail.gmail.com>
-References: <1391786342-11812-1-git-send-email-thomas.ab@samsung.com>
-	<1391786342-11812-2-git-send-email-thomas.ab@samsung.com>
-	<52F50346.7040707@arm.com>
+From: Bill Fink <billfink@mindspring.com>
+Subject: Re: [PATCH] net: rfkill-regulator: Add devicetree support.
+Date: Sat, 8 Feb 2014 01:22:25 -0500
+Message-ID: <20140208012225.d7a311c7.billfink@mindspring.com>
+References: <1391802529-29861-1-git-send-email-marek@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <52F50346.7040707@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sudeep Holla <Sudeep.Holla@arm.com>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "t.figa@samsung.com" <t.figa@samsung.com>, "l.majewski@samsung.com" <l.majewski@samsung.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "thomas.ab@samsung.com" <thomas.ab@samsung.com>, Nishanth Menon <nm@ti.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1391802529-29861-1-git-send-email-marek@goldelico.com>
+Sender: netdev-owner@vger.kernel.org
+To: Marek Belisko <marek@goldelico.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linville@tuxdriver.com, johannes@sipsolutions.net, davem@davemloft.net, grant.likely@linaro.org, neilb@suse.de, hns@goldelico.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 7, 2014 at 9:31 PM, Sudeep Holla <Sudeep.Holla@arm.com> wrote:
-> On 07/02/14 15:19, Thomas Abraham wrote:
->> From: Thomas Abraham <thomas.ab@samsung.com>
->>
->> Commit 6f19efc0 ("cpufreq: Add boost frequency support in core") adds
->> support for CPU boost mode. This patch adds support for finding available
->> boost frequencies from device tree and marking them as usable in boost mode.
->>
->> Cc: Nishanth Menon <nm@ti.com>
->> Cc: Lukasz Majewski <l.majewski@samsung.com>
->> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
->> ---
->>  drivers/base/power/opp.c |   34 +++++++++++++++++++++++++++++++++-
->>  1 file changed, 33 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/base/power/opp.c b/drivers/base/power/opp.c
->> index fa41874..b636826 100644
->> --- a/drivers/base/power/opp.c
->> +++ b/drivers/base/power/opp.c
->> @@ -628,7 +628,8 @@ int dev_pm_opp_init_cpufreq_table(struct device *dev,
->>       struct device_opp *dev_opp;
->>       struct dev_pm_opp *opp;
->>       struct cpufreq_frequency_table *freq_table;
->> -     int i = 0;
->> +     int i = 0, j, len, ret;
->> +     u32 *boost_freqs = NULL;
->>
->>       /* Pretend as if I am an updater */
->>       mutex_lock(&dev_opp_list_lock);
->> @@ -650,10 +651,35 @@ int dev_pm_opp_init_cpufreq_table(struct device *dev,
->>               return -ENOMEM;
->>       }
->>
->> +     if (of_find_property(dev->of_node, "boost-frequency", &len)) {
->> +             if (len == 0 || (len & (sizeof(u32) - 1)) != 0) {
->> +                     dev_err(dev, "%s: invalid boost frequency\n", __func__);
->> +                     ret = -EINVAL;
->> +                     goto err_boost;
->> +             }
->> +
->> +             boost_freqs = kzalloc(len, GFP_KERNEL);
->> +             if (!boost_freqs) {
->> +                     dev_warn(dev, "%s: no memory for boost freq table\n",
->> +                                     __func__);
->> +                     ret = -ENOMEM;
->> +                     goto err_boost;
->> +             }
->> +             of_property_read_u32_array(dev->of_node, "boost-frequency",
->> +                     boost_freqs, len / sizeof(u32));
->> +     }
->> +
->>       list_for_each_entry(opp, &dev_opp->opp_list, node) {
->>               if (opp->available) {
->>                       freq_table[i].driver_data = i;
->>                       freq_table[i].frequency = opp->rate / 1000;
->> +                     for (j = 0; j < len / sizeof(u32) && boost_freqs; j++) {
->> +                             if (boost_freqs[j] == freq_table[i].frequency) {
->> +                                     freq_table[i].driver_data =
->> +                                                     CPUFREQ_BOOST_FREQ;
->> +                                     break;
->> +                             }
->> +                     }
->>                       i++;
->>               }
->>       }
-> IIRC you had mentioned that the boost-opp was not limited to be a cpufreq, but
-> this change seems to be cpufreq only.
+On Fri,  7 Feb 2014, Marek Belisko wrote:
 
-Yes, but as you have initiated the discussion on extending the OPP
-binding, this has been limited to cpufreq only. If the new OPP library
-has support for listing boost frequency, this can be migrated to the
-new OPP libaray.
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> Signed-off-by: Marek Belisko <marek@goldelico.com>
+> ---
+> Based on Neil's patch and extend for documentation and bindings include.
+> 
+>  .../bindings/net/rfkill/rfkill-relugator.txt       | 28 ++++++++++++++++
 
-Thanks,
-Thomas.
+                                  ^^^^^^^^^
+                                  Typo in file name.
 
->
-> Regards,
-> Sudeep
->
+					-Bill
+
+
+
+>  include/dt-bindings/net/rfkill-regulator.h         | 23 +++++++++++++
+>  net/rfkill/rfkill-regulator.c                      | 38 ++++++++++++++++++++++
+>  3 files changed, 89 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/rfkill/rfkill-relugator.txt
+>  create mode 100644 include/dt-bindings/net/rfkill-regulator.h
+> 
+> diff --git a/Documentation/devicetree/bindings/net/rfkill/rfkill-relugator.txt b/Documentation/devicetree/bindings/net/rfkill/rfkill-relugator.txt
+> new file mode 100644
+> index 0000000..cdb7dd7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/rfkill/rfkill-relugator.txt
+> @@ -0,0 +1,28 @@
+> +Regulator consumer for rfkill devices
+> +
+> +Required properties:
+> +- compatible   : Must be "rfkill-regulator".
+> +- label  : Name of rfkill device.
+> +- type  : Type of rfkill device.
+> +
+> +Possible values (defined in include/dt-bindings/net/rfkill-regulator.h):
+> +	RFKILL_TYPE_ALL
+> +	RFKILL_TYPE_WLAN
+> +	RFKILL_TYPE_BLUETOOTH
+> +	RFKILL_TYPE_UWB
+> +	RFKILL_TYPE_WIMAX
+> +	RFKILL_TYPE_WWAN
+> +	RFKILL_TYPE_GPS
+> +	RFKILL_TYPE_FM
+> +	RFKILL_TYPE_NFC
+> +
+> +- vrfkill-supply - regulator device.
+> +
+> +Example:
+> +	gps-rfkill {
+> +		compatible = "rfkill-regulator";
+> +		label = "GPS";
+> +		type = <RFKILL_TYPE_GPS>;
+> +		vrfkill-supply = <&reg>;
+> +	};
+> +
