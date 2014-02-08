@@ -1,71 +1,54 @@
-From: Bill Fink <billfink@mindspring.com>
-Subject: Re: [PATCH] net: rfkill-regulator: Add devicetree support.
-Date: Sat, 8 Feb 2014 01:22:25 -0500
-Message-ID: <20140208012225.d7a311c7.billfink@mindspring.com>
-References: <1391802529-29861-1-git-send-email-marek@goldelico.com>
+From: Thomas Abraham <ta.omasab@gmail.com>
+Subject: Re: [PATCH v2 2/2] Documentation: devicetree: Add boost-frequency
+ binding to list boost mode frequency
+Date: Sat, 8 Feb 2014 12:17:09 +0530
+Message-ID: <CAJuA9agcpbKYocaQUBr2-VCXcXAo3r3urFF=+G_+ib2jCZqvwg@mail.gmail.com>
+References: <1391786342-11812-1-git-send-email-thomas.ab@samsung.com>
+	<1391786342-11812-3-git-send-email-thomas.ab@samsung.com>
+	<52F50698.4060305@arm.com>
+	<52F509BD.70903@arm.com>
+	<CAGo_u6raZY0sKdDn4d92SKpi=eqUpf23vW8K_bEi-v62V2jdPA@mail.gmail.com>
+	<52F51888.5010608@arm.com>
+	<CAGo_u6ofC4NNPiTNcSnXUvT3RZJo54=XyjetR-ok5hCBrVZkKg@mail.gmail.com>
+	<52F51FCD.5000009@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1391802529-29861-1-git-send-email-marek@goldelico.com>
-Sender: netdev-owner@vger.kernel.org
-To: Marek Belisko <marek@goldelico.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linville@tuxdriver.com, johannes@sipsolutions.net, davem@davemloft.net, grant.likely@linaro.org, neilb@suse.de, hns@goldelico.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <52F51FCD.5000009@arm.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sudeep Holla <Sudeep.Holla@arm.com>
+Cc: Nishanth Menon <nm@ti.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "t.figa@samsung.com" <t.figa@samsung.com>, "l.majewski@samsung.com" <l.majewski@samsung.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "thomas.ab@samsung.com" <thomas.ab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri,  7 Feb 2014, Marek Belisko wrote:
+On Fri, Feb 7, 2014 at 11:32 PM, Sudeep Holla <Sudeep.Holla@arm.com> wrote:
+> On 07/02/14 17:37, Nishanth Menon wrote:
+>> On Fri, Feb 7, 2014 at 11:31 AM, Sudeep Holla <Sudeep.Holla@arm.com> wrote:
+>
+> [...]
+>
+>>> Yes I think its counter-intuitive as it's visible to the userspace(list of
+>>> frequencies and the boost parameters are exposed through sysfs)
+>>
+>> That will be a different problem -> as currently every single
+>> frequency in the cpufreq list has ability to be marked as boost
+>> frequency - if userspace does not maintain that, then, IMHO, fix the
+>> userspace :D
+>>
+>
+> /sys/devices/system/cpu/cpu*/cpufreq/scaling_available_frequencies gives
+> the list of frequencies based on the state of the boost feature at anytime.
 
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> Signed-off-by: Marek Belisko <marek@goldelico.com>
-> ---
-> Based on Neil's patch and extend for documentation and bindings include.
-> 
->  .../bindings/net/rfkill/rfkill-relugator.txt       | 28 ++++++++++++++++
+The list of frequencies in
+/sys/devices/system/cpu/cpu*/cpufreq/scaling_available_frequencies
+does not change based in the state of the boost feature (enabled or
+disabled). But the scaling_max_frequency and scaling_min_frequency are
+updated based on the set of available + boost frequencies available.
 
-                                  ^^^^^^^^^
-                                  Typo in file name.
-
-					-Bill
-
-
-
->  include/dt-bindings/net/rfkill-regulator.h         | 23 +++++++++++++
->  net/rfkill/rfkill-regulator.c                      | 38 ++++++++++++++++++++++
->  3 files changed, 89 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/rfkill/rfkill-relugator.txt
->  create mode 100644 include/dt-bindings/net/rfkill-regulator.h
-> 
-> diff --git a/Documentation/devicetree/bindings/net/rfkill/rfkill-relugator.txt b/Documentation/devicetree/bindings/net/rfkill/rfkill-relugator.txt
-> new file mode 100644
-> index 0000000..cdb7dd7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/rfkill/rfkill-relugator.txt
-> @@ -0,0 +1,28 @@
-> +Regulator consumer for rfkill devices
-> +
-> +Required properties:
-> +- compatible   : Must be "rfkill-regulator".
-> +- label  : Name of rfkill device.
-> +- type  : Type of rfkill device.
-> +
-> +Possible values (defined in include/dt-bindings/net/rfkill-regulator.h):
-> +	RFKILL_TYPE_ALL
-> +	RFKILL_TYPE_WLAN
-> +	RFKILL_TYPE_BLUETOOTH
-> +	RFKILL_TYPE_UWB
-> +	RFKILL_TYPE_WIMAX
-> +	RFKILL_TYPE_WWAN
-> +	RFKILL_TYPE_GPS
-> +	RFKILL_TYPE_FM
-> +	RFKILL_TYPE_NFC
-> +
-> +- vrfkill-supply - regulator device.
-> +
-> +Example:
-> +	gps-rfkill {
-> +		compatible = "rfkill-regulator";
-> +		label = "GPS";
-> +		type = <RFKILL_TYPE_GPS>;
-> +		vrfkill-supply = <&reg>;
-> +	};
-> +
+>
+> Intuitively the list without boost shouldn't have any frequency above the range
+> when it's enabled :), that's what I was referring to. So I am not talking about
+> any issue with user-space maintenance.
+>
+> Regards,
+> Sudeep
+>
