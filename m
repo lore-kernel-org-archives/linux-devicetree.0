@@ -1,385 +1,97 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: sunxi: Add driver for sunxi usb phy
-Date: Sat, 8 Feb 2014 12:32:00 +0800
-Message-ID: <CAGb2v67L1X63Pp10H6MFApkLzCvwOokxSW+fH6KquDnqaRGRmQ@mail.gmail.com>
-References: <1391790801-27864-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Thomas Abraham <ta.omasab@gmail.com>
+Subject: Re: [PATCH v2 1/2] PM / OPP: Allow boost frequency to be looked up
+ from device tree
+Date: Sat, 8 Feb 2014 10:40:01 +0530
+Message-ID: <CAJuA9agT4PC6YOmhCwKQ=58qaGEr1qSuhTpX57ro1pEuk++Miw@mail.gmail.com>
+References: <1391786342-11812-1-git-send-email-thomas.ab@samsung.com>
+	<1391786342-11812-2-git-send-email-thomas.ab@samsung.com>
+	<52F50346.7040707@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBVPG22LQKGQETSA5DOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1391790801-27864-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <52F50346.7040707@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sudeep Holla <Sudeep.Holla@arm.com>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "t.figa@samsung.com" <t.figa@samsung.com>, "l.majewski@samsung.com" <l.majewski@samsung.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "thomas.ab@samsung.com" <thomas.ab@samsung.com>, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 8, 2014 at 12:33 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> The Allwinner A1x / A2x SoCs have 2 or 3 usb phys which are all accessed
-> through a single set of registers. Besides this there are also some other
-> phy related bits which need poking, which are per phy, but shared between the
-> ohci and ehci controllers, so these are also controlled from this new phy
-> driver.
+On Fri, Feb 7, 2014 at 9:31 PM, Sudeep Holla <Sudeep.Holla@arm.com> wrote:
+> On 07/02/14 15:19, Thomas Abraham wrote:
+>> From: Thomas Abraham <thomas.ab@samsung.com>
+>>
+>> Commit 6f19efc0 ("cpufreq: Add boost frequency support in core") adds
+>> support for CPU boost mode. This patch adds support for finding available
+>> boost frequencies from device tree and marking them as usable in boost mode.
+>>
+>> Cc: Nishanth Menon <nm@ti.com>
+>> Cc: Lukasz Majewski <l.majewski@samsung.com>
+>> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
+>> ---
+>>  drivers/base/power/opp.c |   34 +++++++++++++++++++++++++++++++++-
+>>  1 file changed, 33 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/base/power/opp.c b/drivers/base/power/opp.c
+>> index fa41874..b636826 100644
+>> --- a/drivers/base/power/opp.c
+>> +++ b/drivers/base/power/opp.c
+>> @@ -628,7 +628,8 @@ int dev_pm_opp_init_cpufreq_table(struct device *dev,
+>>       struct device_opp *dev_opp;
+>>       struct dev_pm_opp *opp;
+>>       struct cpufreq_frequency_table *freq_table;
+>> -     int i = 0;
+>> +     int i = 0, j, len, ret;
+>> +     u32 *boost_freqs = NULL;
+>>
+>>       /* Pretend as if I am an updater */
+>>       mutex_lock(&dev_opp_list_lock);
+>> @@ -650,10 +651,35 @@ int dev_pm_opp_init_cpufreq_table(struct device *dev,
+>>               return -ENOMEM;
+>>       }
+>>
+>> +     if (of_find_property(dev->of_node, "boost-frequency", &len)) {
+>> +             if (len == 0 || (len & (sizeof(u32) - 1)) != 0) {
+>> +                     dev_err(dev, "%s: invalid boost frequency\n", __func__);
+>> +                     ret = -EINVAL;
+>> +                     goto err_boost;
+>> +             }
+>> +
+>> +             boost_freqs = kzalloc(len, GFP_KERNEL);
+>> +             if (!boost_freqs) {
+>> +                     dev_warn(dev, "%s: no memory for boost freq table\n",
+>> +                                     __func__);
+>> +                     ret = -ENOMEM;
+>> +                     goto err_boost;
+>> +             }
+>> +             of_property_read_u32_array(dev->of_node, "boost-frequency",
+>> +                     boost_freqs, len / sizeof(u32));
+>> +     }
+>> +
+>>       list_for_each_entry(opp, &dev_opp->opp_list, node) {
+>>               if (opp->available) {
+>>                       freq_table[i].driver_data = i;
+>>                       freq_table[i].frequency = opp->rate / 1000;
+>> +                     for (j = 0; j < len / sizeof(u32) && boost_freqs; j++) {
+>> +                             if (boost_freqs[j] == freq_table[i].frequency) {
+>> +                                     freq_table[i].driver_data =
+>> +                                                     CPUFREQ_BOOST_FREQ;
+>> +                                     break;
+>> +                             }
+>> +                     }
+>>                       i++;
+>>               }
+>>       }
+> IIRC you had mentioned that the boost-opp was not limited to be a cpufreq, but
+> this change seems to be cpufreq only.
+
+Yes, but as you have initiated the discussion on extending the OPP
+binding, this has been limited to cpufreq only. If the new OPP library
+has support for listing boost frequency, this can be migrated to the
+new OPP libaray.
+
+Thanks,
+Thomas.
+
 >
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../devicetree/bindings/phy/sun4i-usb-phy.txt      |  28 ++
->  drivers/phy/Kconfig                                |  11 +
->  drivers/phy/Makefile                               |   1 +
->  drivers/phy/phy-sun4i-usb.c                        | 326 +++++++++++++++++++++
->  4 files changed, 366 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
->  create mode 100644 drivers/phy/phy-sun4i-usb.c
+> Regards,
+> Sudeep
 >
-[...]
-> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
-> new file mode 100644
-> index 0000000..bd9cb7fa
-> --- /dev/null
-> +++ b/drivers/phy/phy-sun4i-usb.c
-> @@ -0,0 +1,326 @@
-> +/*
-> + * Allwinner sun4i USB phy driver
-> + *
-> + * Copyright (C) 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> + *
-> + * Based on code from
-> + * Allwinner Technology Co., Ltd. <www.allwinnertech.com>
-> + *
-> + * Modelled after: Samsung S5P/EXYNOS SoC series MIPI CSIS/DSIM DPHY driver
-> + * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-> + * Author: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/reset.h>
-> +
-> +#define REG_ISCR                       0x00
-> +#define REG_PHYCTL                     0x04
-> +#define REG_PHYBIST                    0x08
-> +#define REG_PHYTUNE                    0x0c
-> +
-> +#define SUNXI_AHB_ICHR8_EN             BIT(10)
-> +#define SUNXI_AHB_INCR4_BURST_EN       BIT(9)
-> +#define SUNXI_AHB_INCRX_ALIGN_EN       BIT(8)
-> +#define SUNXI_ULPI_BYPASS_EN           BIT(0)
-> +
-> +/* Common Control Bits for Both PHYs */
-> +#define PHY_PLL_BW                     0x03
-> +#define PHY_RES45_CAL_EN               0x0c
-> +
-> +/* Private Control Bits for Each PHY */
-> +#define PHY_TX_AMPLITUDE_TUNE          0x20
-> +#define PHY_TX_SLEWRATE_TUNE           0x22
-> +#define PHY_VBUSVALID_TH_SEL           0x25
-> +#define PHY_PULLUP_RES_SEL             0x27
-> +#define PHY_OTG_FUNC_EN                        0x28
-> +#define PHY_VBUS_DET_EN                        0x29
-> +#define PHY_DISCON_TH_SEL              0x2a
-> +
-> +#define MAX_PHYS                       3
-> +
-> +struct sun4i_usb_phy_data {
-> +       struct clk *clk;
-> +       void __iomem *base;
-> +       struct mutex mutex;
-> +       int num_phys;
-> +       u32 disc_thresh;
-> +       struct sun4i_usb_phy {
-> +               struct phy *phy;
-> +               void __iomem *pmu;
-> +               struct regulator *vbus;
-> +               struct reset_control *reset;
-> +               int index;
-> +       } phys[MAX_PHYS];
-> +};
-> +
-> +#define to_sun4i_usb_phy_data(phy) \
-> +       container_of((phy), struct sun4i_usb_phy_data, phys[(phy)->index])
-> +
-> +static void sun4i_usb_phy_write(struct sun4i_usb_phy *phy, u32 addr, u32 data,
-> +                               int len)
-> +{
-> +       struct sun4i_usb_phy_data *phy_data = to_sun4i_usb_phy_data(phy);
-> +       u32 temp, usbc_bit = BIT(phy->index * 2);
-> +       int i;
-> +
-> +       mutex_lock(&phy_data->mutex);
-> +
-> +       for (i = 0; i < len; i++) {
-> +               temp = readl(phy_data->base + REG_PHYCTL);
-> +
-> +               /* clear the address portion */
-> +               temp &= ~(0xff << 8);
-> +
-> +               /* set the address */
-> +               temp |= ((addr + i) << 8);
-> +               writel(temp, phy_data->base + REG_PHYCTL);
-> +
-> +               /* set the data bit and clear usbc bit*/
-> +               temp = readb(phy_data->base + REG_PHYCTL);
-> +               if (data & 0x1)
-> +                       temp |= BIT(7);
-> +               else
-> +                       temp &= ~BIT(7);
-> +               temp &= ~usbc_bit;
-> +               writeb(temp, phy_data->base + REG_PHYCTL);
-> +
-> +               /* pulse usbc_bit */
-> +               temp = readb(phy_data->base + REG_PHYCTL);
-> +               temp |= usbc_bit;
-> +               writeb(temp, phy_data->base + REG_PHYCTL);
-> +
-> +               temp = readb(phy_data->base + REG_PHYCTL);
-> +               temp &= ~usbc_bit;
-> +               writeb(temp, phy_data->base + REG_PHYCTL);
-> +
-> +               data >>= 1;
-> +       }
-> +       mutex_unlock(&phy_data->mutex);
-> +}
-> +
-> +static void sun4i_usb_phy_passby(struct sun4i_usb_phy *phy, int enable)
-> +{
-> +       u32 bits, reg_value;
-> +
-> +       if (!phy->pmu)
-> +               return;
-> +
-> +       bits = SUNXI_AHB_ICHR8_EN | SUNXI_AHB_INCR4_BURST_EN |
-> +               SUNXI_AHB_INCRX_ALIGN_EN | SUNXI_ULPI_BYPASS_EN;
-> +
-> +       reg_value = readl(phy->pmu);
-> +
-> +       if (enable)
-> +               reg_value |= bits;
-> +       else
-> +               reg_value &= ~bits;
-> +
-> +       writel(reg_value, phy->pmu);
-> +}
-> +
-> +static int sun4i_usb_phy_init(struct phy *_phy)
-> +{
-> +       struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
-> +       struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
-> +       int ret;
-> +
-> +       ret = clk_prepare_enable(data->clk);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret = reset_control_deassert(phy->reset);
-> +       if (ret) {
-> +               clk_disable_unprepare(data->clk);
-> +               return ret;
-> +       }
-> +
-> +       /* Adjust PHY's magnitude and rate */
-> +       sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
-> +
-> +       /* Disconnect threshold adjustment */
-> +       sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL, data->disc_thresh, 2);
-> +
-> +       sun4i_usb_phy_passby(phy, 1);
-> +
-> +       return 0;
-> +}
-> +
-> +static int sun4i_usb_phy_exit(struct phy *_phy)
-> +{
-> +       struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
-> +       struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
-> +
-> +       sun4i_usb_phy_passby(phy, 0);
-> +       reset_control_assert(phy->reset);
-> +       clk_disable_unprepare(data->clk);
-> +
-> +       return 0;
-> +}
-> +
-> +static int sun4i_usb_phy_power_on(struct phy *_phy)
-> +{
-> +       struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
-> +       int ret = 0;
-> +
-> +       if (phy->vbus)
-> +               ret = regulator_enable(phy->vbus);
-> +
-> +       return ret;
-> +}
-> +
-> +static int sun4i_usb_phy_power_off(struct phy *_phy)
-> +{
-> +       struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
-> +
-> +       if (phy->vbus)
-> +               regulator_disable(phy->vbus);
-> +
-> +       return 0;
-> +}
-> +
-> +static struct phy_ops sun4i_usb_phy_ops = {
-> +       .init           = sun4i_usb_phy_init,
-> +       .exit           = sun4i_usb_phy_exit,
-> +       .power_on       = sun4i_usb_phy_power_on,
-> +       .power_off      = sun4i_usb_phy_power_off,
-> +       .owner          = THIS_MODULE,
-> +};
-> +
-> +static struct phy *sun4i_usb_phy_xlate(struct device *dev,
-> +                                       struct of_phandle_args *args)
-> +{
-> +       struct sun4i_usb_phy_data *data = dev_get_drvdata(dev);
-> +
-> +       if (WARN_ON(args->args[0] == 0 || args->args[0] >= data->num_phys))
-> +               return ERR_PTR(-ENODEV);
-> +
-> +       return data->phys[args->args[0]].phy;
-> +}
-> +
-> +static int sun4i_usb_phy_probe(struct platform_device *pdev)
-> +{
-> +       struct sun4i_usb_phy_data *data;
-> +       struct device *dev = &pdev->dev;
-> +       struct device_node *np = dev->of_node;
-> +       void __iomem *pmu = NULL;
-> +       struct phy_provider *phy_provider;
-> +       struct reset_control *reset;
-> +       struct regulator *vbus;
-> +       struct phy *phy;
-> +       char name[16];
-> +       int i;
-> +
-> +       data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-> +       if (!data)
-> +               return -ENOMEM;
-> +
-> +       mutex_init(&data->mutex);
-> +
-> +       if (of_device_is_compatible(np, "allwinner,sun5i-a13-usb-phy"))
-> +               data->num_phys = 2;
-> +       else
-> +               data->num_phys = 3;
-> +
-> +       if (of_device_is_compatible(np, "allwinner,sun4i-a10-usb-phy"))
-> +               data->disc_thresh = 3;
-> +       else
-> +               data->disc_thresh = 2;
-> +
-> +       data->clk = devm_clk_get(dev, "usb_phy");
-> +       if (IS_ERR(data->clk)) {
-> +               dev_err(dev, "could not get usb_phy clock\n");
-> +               return PTR_ERR(data->clk);
-> +       }
-> +
-> +       /* Skip 0, 0 is the phy for otg which is not yet supported. */
-> +       for (i = 1; i < data->num_phys; i++) {
-> +               snprintf(name, sizeof(name), "usb%d_vbus", i);
-> +               vbus = devm_regulator_get_optional(dev, name);
-> +               if (IS_ERR(vbus)) {
-> +                       if (PTR_ERR(vbus) == -EPROBE_DEFER)
-> +                               return -EPROBE_DEFER;
-> +                       vbus = NULL;
-> +               }
-> +
-
-> +               snprintf(name, sizeof(name), "usb%d_reset", i);
-> +               reset = devm_reset_control_get(dev, name);
-> +               if (IS_ERR(phy)) {
-> +                       dev_err(dev, "failed to get reset %s\n", name);
-> +                       return PTR_ERR(phy);
-> +               }
-
-Wrong variable checked for error here that I pointed out before is still wrong.
-
-
-Cheers
-ChenYu
-
-> +
-> +               if (i) { /* No pmu for usbc0 */
-> +                       pmu = devm_ioremap_resource(dev,
-> +                             platform_get_resource(pdev, IORESOURCE_MEM, i));
-> +                       if (IS_ERR(pmu))
-> +                               return PTR_ERR(pmu);
-> +               }
-> +
-> +               phy = devm_phy_create(dev, &sun4i_usb_phy_ops, NULL);
-> +               if (IS_ERR(phy)) {
-> +                       dev_err(dev, "failed to create PHY %d\n", i);
-> +                       return PTR_ERR(phy);
-> +               }
-> +
-> +               data->phys[i].phy = phy;
-> +               data->phys[i].pmu = pmu;
-> +               data->phys[i].vbus = vbus;
-> +               data->phys[i].reset = reset;
-> +               data->phys[i].index = i;
-> +               phy_set_drvdata(phy, &data->phys[i]);
-> +       }
-> +
-> +       data->base = devm_ioremap_resource(dev,
-> +                       platform_get_resource(pdev, IORESOURCE_MEM, 0));
-> +       if (IS_ERR(data->base))
-> +               return PTR_ERR(data->base);
-> +
-> +       dev_set_drvdata(dev, data);
-> +       phy_provider = devm_of_phy_provider_register(dev, sun4i_usb_phy_xlate);
-> +       if (IS_ERR(phy_provider))
-> +               return PTR_ERR(phy_provider);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id sun4i_usb_phy_of_match[] = {
-> +       { .compatible = "allwinner,sun4i-a10-usb-phy" },
-> +       { .compatible = "allwinner,sun5i-a13-usb-phy" },
-> +       { .compatible = "allwinner,sun7i-a20-usb-phy" },
-> +       { },
-> +};
-> +MODULE_DEVICE_TABLE(of, sun4i_usb_phy_of_match);
-> +
-> +static struct platform_driver sun4i_usb_phy_driver = {
-> +       .probe  = sun4i_usb_phy_probe,
-> +       .driver = {
-> +               .of_match_table = sun4i_usb_phy_of_match,
-> +               .name  = "sun4i-usb-phy",
-> +               .owner = THIS_MODULE,
-> +       }
-> +};
-> +module_platform_driver(sun4i_usb_phy_driver);
-> +
-> +MODULE_DESCRIPTION("Allwinner sun4i USB phy driver");
-> +MODULE_AUTHOR("Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 1.8.4.2
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/groups/opt_out.
