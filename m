@@ -1,287 +1,313 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH] pci: Add support for creating a generic host_bridge from
- device tree
-Date: Sat, 8 Feb 2014 14:22:08 +0000
-Message-ID: <20140208142207.GR4993@e106497-lin.cambridge.arm.com>
-References: <1391452428-22917-1-git-send-email-Liviu.Dudau@arm.com>
- <1391452428-22917-2-git-send-email-Liviu.Dudau@arm.com>
- <7398333.9L5KlyFggU@wuerfel>
- <CACoXjckKRQfR3CbC1JpgbhOumED+OqiMh1_Y73-h6q=ByMNanw@mail.gmail.com>
- <20140206101814.GA4993@e106497-lin.cambridge.arm.com>
- <CACoXjcnTHgtBDesqFUOca1nf34HvNGAV0vP9AEB5xV1mvcRGfw@mail.gmail.com>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH 1/3] sound: soc: codecs: Add es8328 codec
+Date: Sat, 08 Feb 2014 17:06:39 +0100
+Message-ID: <52F6560F.7060606@metafoo.de>
+References: <1391749517-11787-1-git-send-email-xobs@kosagi.com> <1391749517-11787-2-git-send-email-xobs@kosagi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CACoXjcnTHgtBDesqFUOca1nf34HvNGAV0vP9AEB5xV1mvcRGfw@mail.gmail.com>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Tanmay Inamdar <tinamdar@apm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, linux-pci <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1391749517-11787-2-git-send-email-xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 08, 2014 at 12:21:56AM +0000, Tanmay Inamdar wrote:
-> On Thu, Feb 6, 2014 at 2:18 AM, Liviu Dudau <Liviu.Dudau@arm.com> wro=
-te:
-> > On Wed, Feb 05, 2014 at 10:26:27PM +0000, Tanmay Inamdar wrote:
-> >> Hello Liviu,
-> >>
-> >> I did not get the first email of this particular patch on any of
-> >> subscribed mailing lists (don't know why), hence replying here.
-> >
-> > Strange, it shows in the MARC and GMANE archive for linux-pci, prob=
-ably
-> > a hickup on your receiving side?
-> >
-> >>
-> >> +struct pci_host_bridge *
-> >> +pci_host_bridge_of_init(struct device *parent, int busno, struct =
-pci_ops *ops,
-> >> + void *host_data, struct list_head *resources)
-> >> +{
-> >> + struct pci_bus *root_bus;
-> >> + struct pci_host_bridge *bridge;
-> >> +
-> >> + /* first parse the host bridge bus ranges */
-> >> + if (pci_host_bridge_of_get_ranges(parent->of_node, resources))
-> >> + return NULL;
-> >> +
-> >> + /* then create the root bus */
-> >> + root_bus =3D pci_create_root_bus(parent, busno, ops, host_data, =
-resources);
-> >> + if (!root_bus)
-> >> + return NULL;
-> >> +
-> >> + bridge =3D to_pci_host_bridge(root_bus->bridge);
-> >> +
-> >> + return bridge;
-> >> +}
-> >>
-> >> You are keeping the domain_nr inside pci_host_bridge structure. In
-> >> above API, domain_nr is required in 'pci_find_bus' function called
-> >> from 'pci_create_root_bus'. Since the bridge is allocated after
-> >> creating root bus, 'pci_find_bus' always gets domain_nr as 0. This
-> >> will cause problem for scanning multiple domains.
-> >
-> > Good catch. I was switching between creating a pci_controller in ar=
-ch/arm64 and
-> > adding the needed bits in pci_host_bridge. After internal review I'=
-ve decided to
-> > add the domain_nr to pci_host_bridge, but forgot to update the code=
- everywhere.
-> >
-> > Thanks for reviewing this, will fix in v2.
-> >
-> > Do you find porting to the new API straight forward?
->=20
-> It is quite straight forward for MEM regions but for IO regions it is
-> not. You always assume IO resource starting at 0x0. IMO, this will
-> cause problem for systems with multiple ports / IO windows. You can
-> take a look at 'drivers/pci/host/pcie-designware.c'.
->=20
-> Also the manipulations of addresses for IO_RESOURCES can be dangerous=
-=2E
-> It can make some value negative. For example if my PCI IO range start=
-s
-> in 32 bit address range say 0x8000_0000 with CPU address
-> 0xb0_8000_0000, window->offset after manipulation will become
-> negative.
->=20
-> Personally I would like to do get all the PCI and CPU addresses from
-> my device tree as is and do the 'pci_add_resource_offset'. This will
-> help me setup my regions correctly without any further arithmetic.
-> Please let me know what you think.
+On 02/07/2014 06:05 AM, Sean Cross wrote:
+> Add support for the ES8328 audio codec.
 
-Yes, that parsing code of ranges is incorrect in light of the current d=
-iscussion. I
-will try to propose a fix in the v2 series.
+Hi,
 
-Regarding your PCI IO range: if your bus address starts at 0x8000_0000,=
- would
-that not cause problems with devices that use less than 32bits for addr=
-ess
-decoding? It is a rather unusual setup, I believe the x86 world (even P=
-CI spec?)
-mandates IO bus ranges in the first 16MB of address range?
+a couple of minor coments. Also when submitting a patch it is a good idea to 
+run scripts/checkpatch.pl on the patch itself and `make C=2` and `make C=2 
+CHECK=scripts/coccicheck` on your driver module (E.g. in your case `make C=2 
+sound/soc/codecs/es8328.o`). These tools check your driver for a couple of 
+known issues. Fixing those before the submission will make the reviews job 
+easier.
+> [...]
+> +uint8_t sample_ratios[] = {
 
-Best regards,
-Liviu
+static const
 
->=20
-> >
-> > Best regards,
-> > Liviu
-> >
-> >>
-> >>
-> >> On Mon, Feb 3, 2014 at 10:46 AM, Arnd Bergmann <arnd@arndb.de> wro=
-te:
-> >> > On Monday 03 February 2014 18:33:48 Liviu Dudau wrote:
-> >> >> +/**
-> >> >> + * pci_host_bridge_of_get_ranges - Parse PCI host bridge resou=
-rces from DT
-> >> >> + * @dev: device node of the host bridge having the range prope=
-rty
-> >> >> + * @resources: list where the range of resources will be added=
- after DT parsing
-> >> >> + *
-> >> >> + * This function will parse the "ranges" property of a PCI hos=
-t bridge device
-> >> >> + * node and setup the resource mapping based on its content. I=
-t is expected
-> >> >> + * that the property conforms with the Power ePAPR document.
-> >> >> + *
-> >> >> + * Each architecture will then apply their filtering based on =
-the limitations
-> >> >> + * of each platform. One general restriction seems to be the n=
-umber of IO space
-> >> >> + * ranges, the PCI framework makes intensive use of struct res=
-ource management,
-> >> >> + * and for IORESOURCE_IO types they can only be requested if t=
-hey are contained
-> >> >> + * within the global ioport_resource, so that should be limite=
-d to one IO space
-> >> >> + * range.
-> >> >
-> >> > Actually we have quite a different set of restrictions around I/=
-O space on ARM32
-> >> > at the moment: Each host bridge can have its own 64KB range in a=
-n arbitrary
-> >> > location on MMIO space, and the total must not exceed 2MB of I/O=
- space.
-> >> >
-> >> >> + */
-> >> >> +static int pci_host_bridge_of_get_ranges(struct device_node *d=
-ev,
-> >> >> +                                     struct list_head *resourc=
-es)
-> >> >> +{
-> >> >> +     struct resource *res;
-> >> >> +     struct of_pci_range range;
-> >> >> +     struct of_pci_range_parser parser;
-> >> >> +     int err;
-> >> >> +
-> >> >> +     pr_info("PCI host bridge %s ranges:\n", dev->full_name);
-> >> >> +
-> >> >> +     /* Check for ranges property */
-> >> >> +     err =3D of_pci_range_parser_init(&parser, dev);
-> >> >> +     if (err)
-> >> >> +             return err;
-> >> >> +
-> >> >> +     pr_debug("Parsing ranges property...\n");
-> >> >> +     for_each_of_pci_range(&parser, &range) {
-> >> >> +             /* Read next ranges element */
-> >> >> +             pr_debug("pci_space: 0x%08x pci_addr:0x%016llx ",
-> >> >> +                             range.pci_space, range.pci_addr);
-> >> >> +             pr_debug("cpu_addr:0x%016llx size:0x%016llx\n",
-> >> >> +                                     range.cpu_addr, range.siz=
-e);
-> >> >> +
-> >> >> +             /* If we failed translation or got a zero-sized r=
-egion
-> >> >> +              * (some FW try to feed us with non sensical zero=
- sized regions
-> >> >> +              * such as power3 which look like some kind of at=
-tempt
-> >> >> +              * at exposing the VGA memory hole) then skip thi=
-s range
-> >> >> +              */
-> >> >> +             if (range.cpu_addr =3D=3D OF_BAD_ADDR || range.si=
-ze =3D=3D 0)
-> >> >> +                     continue;
-> >> >> +
-> >> >> +             res =3D kzalloc(sizeof(struct resource), GFP_KERN=
-EL);
-> >> >> +             if (!res) {
-> >> >> +                     err =3D -ENOMEM;
-> >> >> +                     goto bridge_ranges_nomem;
-> >> >> +             }
-> >> >> +
-> >> >> +             of_pci_range_to_resource(&range, dev, res);
-> >> >> +
-> >> >> +             pci_add_resource_offset(resources, res,
-> >> >> +                             range.cpu_addr - range.pci_addr);
-> >> >> +     }
-> >> >
-> >> > I believe of_pci_range_to_resource() will return the MMIO apertu=
-re for the
-> >> > I/O space window here, which is not what you are supposed to pas=
-s into
-> >> > pci_add_resource_offset.
-> >> >
-> >> >> +EXPORT_SYMBOL(pci_host_bridge_of_init);
-> >> >
-> >> > EXPORT_SYMBOL_GPL
-> >> >
-> >> >> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> >> >> index 6e34498..16febae 100644
-> >> >> --- a/drivers/pci/probe.c
-> >> >> +++ b/drivers/pci/probe.c
-> >> >> @@ -1787,6 +1787,17 @@ struct pci_bus *pci_create_root_bus(stru=
-ct device *parent, int bus,
-> >> >>       list_for_each_entry_safe(window, n, resources, list) {
-> >> >>               list_move_tail(&window->list, &bridge->windows);
-> >> >>               res =3D window->res;
-> >> >> +             /*
-> >> >> +              * IO resources are stored in the kernel with a C=
-PU start
-> >> >> +              * address of zero. Adjust the data accordingly a=
-nd remember
-> >> >> +              * the offset
-> >> >> +              */
-> >> >> +             if (resource_type(res) =3D=3D IORESOURCE_IO) {
-> >> >> +                     bridge->io_offset =3D res->start;
-> >> >> +                     res->end -=3D res->start;
-> >> >> +                     window->offset -=3D res->start;
-> >> >> +                     res->start =3D 0;
-> >> >> +             }
-> >> >>               offset =3D window->offset;
-> >> >>               if (res->flags & IORESOURCE_BUS)
-> >> >
-> >> > Won't this break all existing host bridges?
-> >> >
-> >> >         Arnd
-> >> >
-> >> > _______________________________________________
-> >> > linux-arm-kernel mailing list
-> >> > linux-arm-kernel@lists.infradead.org
-> >> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> >>
-> >
-> > --
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > | I would like to |
-> > | fix the world,  |
-> > | but they're not |
-> > | giving me the   |
-> >  \ source code!  /
-> >   ---------------
-> >     =C2=AF\_(=E3=83=84)_/=C2=AF
-> >
-> > -- IMPORTANT NOTICE: The contents of this email and any attachments=
- are confidential and may also be privileged. If you are not the intend=
-ed recipient, please notify the sender immediately and do not disclose =
-the contents to any other person, use it for any purpose, or store or c=
-opy the information in any medium.  Thank you.
-> >
-> > ARM Limited, Registered office 110 Fulbourn Road, Cambridge CB1 9NJ=
-, Registered in England & Wales, Company No:  2557590
-> > ARM Holdings plc, Registered office 110 Fulbourn Road, Cambridge CB=
-1 9NJ, Registered in England & Wales, Company No:  2548782
-> >
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" =
-in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
+> +	[ES8328_RATE_8019 ] = 0x9,
+> +	[ES8328_RATE_11025] = 0x7,
+> +	[ES8328_RATE_22050] = 0x4,
+> +	[ES8328_RATE_44100] = 0x2,
+> +};
+> [...]
+> +
+> +static int es8328_hw_params(struct snd_pcm_substream *substream,
+> +	struct snd_pcm_hw_params *params,
+> +	struct snd_soc_dai *dai)
+> +{
+> +	struct snd_soc_codec *codec = dai->codec;
+> +
+> +	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+> +		u8 dac = snd_soc_read(codec, ES8328_DACCONTROL2);
+> +		dac &= ~ES8328_DACCONTROL2_RATEMASK;
+> +
+> +		switch (params_rate(params)) {
+> +		case 8000:
+> +			dac |= sample_ratios[ES8328_RATE_8019];
+> +			break;
+> +		case 11025:
+> +			dac |= sample_ratios[ES8328_RATE_11025];
+> +			break;
+> +		case 22050:
+> +			dac |= sample_ratios[ES8328_RATE_22050];
+> +			break;
+> +		case 44100:
+> +			dac |= sample_ratios[ES8328_RATE_44100];
+> +			break;
+> +		default:
+> +			dev_err(codec->dev, "%s: unknown rate %d\n",
+> +				 __func__, params_rate(params));
+> +			return -EINVAL;
+> +		}
+> +		snd_soc_write(codec, ES8328_DACCONTROL2, dac);
+> +	}
+> +
+> +	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE) {
+> +		u8 adc = snd_soc_read(codec, ES8328_ADCCONTROL5);
+> +		adc &= ~ES8328_ADCCONTROL5_RATEMASK;
+> +
+> +		switch (params_rate(params)) {
+> +		case 8000:
+> +			adc |= sample_ratios[ES8328_RATE_8019];
+> +			break;
+> +		case 11025:
+> +			adc |= sample_ratios[ES8328_RATE_11025];
+> +			break;
+> +		case 22050:
+> +			adc |= sample_ratios[ES8328_RATE_22050];
+> +			break;
+> +		case 44100:
+> +			adc |= sample_ratios[ES8328_RATE_44100];
+> +			break;
+> +		default:
+> +			dev_err(codec->dev, "%s: unknown rate %d\n",
+> +				 __func__, params_rate(params));
+> +			return -EINVAL;
+> +		}
+> +		snd_soc_write(codec, ES8328_ADCCONTROL5, adc);
+> +	}
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+The only difference between the capture and the playback path seems to be 
+the register that's written two. By adding a variable that holds the 
+register number and gets initialized based on the direction you can elimate 
+about half of the code in this function.
+
+> +
+> +	return 0;
+[...]
+> +static int es8328_set_dai_sysclk(struct snd_soc_dai *codec_dai,
+> +			         int clk_id, unsigned int freq, int dir)
+> +{
+> +	struct snd_soc_codec *codec = codec_dai->codec;
+> +	struct es8328_priv *es8328 = snd_soc_codec_get_drvdata(codec);
+> +
+> +	switch (clk_id) {
+> +	case 0:
+> +		es8328->sysclk = freq;
+
+es8328->sysclk seems to be unused. I guess it might be used if you add 
+support for different base clock rates. For now you should probably return 
+an error if freq != 22579200.
+
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+[...]
+> +static int es8328_dac_enable(struct snd_soc_codec *codec)
+> +{
+> +	u16 old_volumes[4];
+> +	u16 reg;
+> +	int i;
+> +
+> +	for (i = 0; i < 4; i++) {
+> +		old_volumes[i] = snd_soc_read(codec, i + ES8328_DACCONTROL24);
+> +		snd_soc_write(codec, i + ES8328_DACCONTROL24, 0);
+> +	}
+
+This looks like a job for AUTOMUTE controls. They'll set the volume to zero 
+before the DAC is powered down and restore the original value after the DAC 
+was powered up.
+
+> +
+> +	/* Power up LOUT2 ROUT2, and power down xOUT1 */
+> +	snd_soc_write(codec, ES8328_DACPOWER,
+> +			ES8328_DACPOWER_ROUT2_ON |
+> +			ES8328_DACPOWER_LOUT2_ON);
+> +
+> +	/* Enable click-free power up */
+> +	snd_soc_write(codec, ES8328_DACCONTROL6, ES8328_DACCONTROL6_CLICKFREE);
+> +	snd_soc_write(codec, ES8328_DACCONTROL3, 0x36);
+> +
+> +	/* Set I2S to 16-bit mode */
+> +	snd_soc_write(codec, ES8328_DACCONTROL1, ES8328_DACCONTROL1_DACWL_16);
+> +
+> +	/* No attenuation */
+> +	snd_soc_write(codec, ES8328_DACCONTROL4, 0x00);
+> +	snd_soc_write(codec, ES8328_DACCONTROL5, 0x00);
+> +
+> +	/* Set LIN2 for the output mixer */
+> +	snd_soc_write(codec, ES8328_DACCONTROL16,
+> +			ES8328_DACCONTROL16_RMIXSEL_RIN2 |
+> +			ES8328_DACCONTROL16_LMIXSEL_LIN2);
+> +
+> +	/* Point the left DAC at the left mixer */
+> +	snd_soc_write(codec, ES8328_DACCONTROL17, ES8328_DACCONTROL17_LD2LO);
+> +	/* Point the right DAC at the right mixer */
+> +	snd_soc_write(codec, ES8328_DACCONTROL20, ES8328_DACCONTROL20_RD2RO);
+> +
+> +	/* Disable all other outputs */
+> +	snd_soc_write(codec, ES8328_DACCONTROL18, 0x00);
+> +	snd_soc_write(codec, ES8328_DACCONTROL19, 0x00);
+> +
+> +
+> +	/* Disable mono mode for DACL, and mute DACR */
+> +	snd_soc_write(codec, ES8328_DACCONTROL7, 0x00);
+> +
+> +	for (i = 0; i < 4; i++)
+> +		snd_soc_write(codec, i + ES8328_DACCONTROL24, old_volumes[i]);
+> +
+> +	reg = snd_soc_read(codec, ES8328_CHIPPOWER);
+> +	reg &= ~(ES8328_CHIPPOWER_DACVREF_OFF |
+> +		 ES8328_CHIPPOWER_DACPLL_OFF |
+> +		 ES8328_CHIPPOWER_DACSTM_RESET |
+> +		 ES8328_CHIPPOWER_DACDIG_OFF);
+> +	snd_soc_write(codec, ES8328_CHIPPOWER, reg);
+> +	snd_soc_write(codec, ES8328_DACCONTROL3, 0x32);
+> +
+> +	return 0;
+> +}
+[...]
+> +static int es8328_suspend(struct snd_soc_codec *codec)
+> +{
+> +	return 0;
+> +}
+> +
+
+If you don't do anything in suspend there is no need to provide a callback 
+function.
+
+> +static int es8328_resume(struct snd_soc_codec *codec)
+> +{
+> +	es8328_init(codec);
+> +	return 0;
+> +}
+> +
+> +static int es8328_probe(struct snd_soc_codec *codec)
+> +{
+> +	int ret;
+> +	struct device *dev = codec->dev;
+> +
+> +	ret = snd_soc_codec_set_cache_io(codec, 7, 9, SND_SOC_REGMAP);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to configure cache I/O: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* power on device */
+> +	es8328_init(codec);
+> +
+> +	return 0;
+> +}
+> +
+> +static int es8328_remove(struct snd_soc_codec *codec)
+> +{
+> +	/* Power everything down and reset the cip */
+> +	snd_soc_write(codec, ES8328_CHIPPOWER,
+> +			ES8328_CHIPPOWER_DACSTM_RESET |
+> +			ES8328_CHIPPOWER_ADCSTM_RESET |
+> +			ES8328_CHIPPOWER_DACDIG_OFF |
+> +			ES8328_CHIPPOWER_ADCDIG_OFF |
+> +			ES8328_CHIPPOWER_DACVREF_OFF |
+> +			ES8328_CHIPPOWER_ADCVREF_OFF);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct snd_soc_codec_driver soc_codec_dev_es8328 = {
+
+es8328_codec_driver is a better name.
+
+THe soc_codec_dev_... naming scheme you see in some drivers comes from a pre 
+multi-component era where it was more firt
+
+> +	.probe =		es8328_probe,
+> +	.remove =		es8328_remove,
+> +	.suspend =		es8328_suspend,
+> +	.resume =		es8328_resume,
+> +	.controls =		es8328_snd_controls,
+> +	.num_controls =		ARRAY_SIZE(es8328_snd_controls),
+> +	.dapm_widgets =		es8328_dapm_widgets,
+> +	.num_dapm_widgets =	ARRAY_SIZE(es8328_dapm_widgets),
+> +	.dapm_routes =		es8328_intercon,
+> +	.num_dapm_routes =	ARRAY_SIZE(es8328_intercon),
+> +};
+[...]
+> +#if defined(CONFIG_SPI_MASTER)
+> +static int es8328_spi_probe(struct spi_device *spi)
+> +{
+> +	struct es8328_priv *es8328;
+> +	int ret;
+> +
+> +	es8328 = devm_kzalloc(&spi->dev, sizeof(struct es8328_priv),
+> +			      GFP_KERNEL);
+
+sizeof(*es8328) is the preferred style for kernel code.
+
+> +	if (es8328 == NULL)
+> +		return -ENOMEM;
+> +
+> +	es8328->regmap = devm_regmap_init_spi(spi, &es8328_regmap);
+> +	if (IS_ERR(es8328->regmap))
+> +		return PTR_ERR(es8328->regmap);
+> +
+> +	spi_set_drvdata(spi, es8328);
+> +
+> +	ret = snd_soc_register_codec(&spi->dev,
+> +			&soc_codec_dev_es8328, &es8328_dai, 1);
+> +	if (ret < 0)
+> +		dev_err(&spi->dev, "unable to register codec: %d\n", ret);
+> +
+> +	return ret;
+> +}
+[...]
+> +#if defined(CONFIG_I2C) || defined(CONFIG_I2C_MODULE)
+> +static int es8328_i2c_probe(struct i2c_client *i2c,
+> +			    const struct i2c_device_id *id)
+> +{
+> +	struct es8328_priv *es8328;
+> +	int ret;
+> +
+> +	es8328 = devm_kzalloc(&i2c->dev, sizeof(struct es8328_priv),
+> +			      GFP_KERNEL);
+
+same here.
+
+> +	if (es8328 == NULL)
+> +		return -ENOMEM;
+> +
+> +	es8328->regmap = devm_regmap_init_i2c(i2c, &es8328_regmap);
+> +	if (IS_ERR(es8328->regmap))
+> +		return PTR_ERR(es8328->regmap);
+> +
+> +	i2c_set_clientdata(i2c, es8328);
+> +
+> +	ret =  snd_soc_register_codec(&i2c->dev,
+> +			&soc_codec_dev_es8328, &es8328_dai, 1);
+> +
+> +	return ret;
+> +}
+> +
+[...]
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
