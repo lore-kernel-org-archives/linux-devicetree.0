@@ -1,72 +1,95 @@
-From: Courtney Cavin <courtney.cavin@sonymobile.com>
-Subject: [RFC 2/6] mailbox: document bindings
-Date: Fri, 7 Feb 2014 16:50:15 -0800
-Message-ID: <1391820619-25487-3-git-send-email-courtney.cavin@sonymobile.com>
-References: <1391820619-25487-1-git-send-email-courtney.cavin@sonymobile.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [Patch v5 1/2] dmaengine: add Qualcomm BAM dma driver
+Date: Fri, 7 Feb 2014 18:42:54 -0800
+Message-ID: <20140208024254.GA10784@codeaurora.org>
+References: <1391546556-27702-1-git-send-email-agross@codeaurora.org>
+ <1391546556-27702-2-git-send-email-agross@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1391820619-25487-1-git-send-email-courtney.cavin@sonymobile.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: s-anna@ti.com, rob.herring@calxeda.com, rafael.j.wysocki@intel.com, mark.langsdorf@calxeda.com, tony@atomide.com, omar.ramirez@copitl.com
-Cc: gregkh@linuxfoundation.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1391546556-27702-2-git-send-email-agross@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andy Gross <agross@codeaurora.org>
+Cc: devicetree@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Courtney Cavin <courtney.cavin@sonymobile.com>
----
- .../devicetree/bindings/mailbox/mailbox.txt        | 44 ++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/mailbox.txt
+On 02/04, Andy Gross wrote:
+> diff --git a/drivers/dma/qcom_bam_dma.c b/drivers/dma/qcom_bam_dma.c
+> new file mode 100644
+> index 0000000..214250c
+> --- /dev/null
+> +++ b/drivers/dma/qcom_bam_dma.c
+> @@ -0,0 +1,1066 @@
+> +/*
+> + * QCOM BAM DMA engine driver
 
-diff --git a/Documentation/devicetree/bindings/mailbox/mailbox.txt b/Documentation/devicetree/bindings/mailbox/mailbox.txt
-new file mode 100644
-index 0000000..846eb49
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/mailbox.txt
-@@ -0,0 +1,44 @@
-+Binding documentation for mailbox providers and consumers
-+--
-+
-+Mailbox providers may be represented by any node in a device tree.  These
-+nodes are designated as mailbox providers.  Consumers can then use a phandle
-+to a mailbox provider, along with channel specifier information in order to
-+get a mailbox.
-+
-+MAILBOX PROVIDERS
-+
-+#mbox-cells:
-+	Usage: required
-+	Type: u32
-+	Desc: Number of cells in a mailbox specifier; Typically 1 for nodes
-+	      which only need a channel index.
-+
-+
-+Example:
-+	mailbox: mailbox {
-+		#mbox-cells = <1>;
-+		...
-+	};
-+
-+
-+MAILBOX CONSUMERS
-+
-+mbox:
-+	Usage: required
-+	Type: < [phandle] [mailbox-specifier] >
-+	Desc: List of phandle and mailbox specifier pairs, matching provider's
-+	      #mbox-cells property
-+
-+mbox-names:
-+	Usage: optional
-+	Type: string array
-+	Desc: List of mailbox input name strings sorted in the same order as
-+	      the mbox property.  Consumer drivers should use mbox-names
-+	      to match mailbox input names with mailbox specifiers.
-+
-+Example:
-+	consumer {
-+		mbox-names = "comms";
-+		mbox = <&mailbox 0>;
-+	};
+Can you please move this down into the comment below?
+
+> + *
+> + * Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+
+And split this out into its own comment block? I think this will
+make the lawyers happier.
+
+> + *
+> + * QCOM BAM DMA blocks are distributed amongst a number of the on-chip
+> + * peripherals on the MSM 8x74.  The configuration of the channels are dependent
+> + * on the way they are hard wired to that specific peripheral.  The peripheral
+> + * device tree entries specify the configuration of each channel.
+> + *
+> + * The DMA controller requires the use of external memory for storage of the
+> + * hardware descriptors for each channel.  The descriptor FIFO is accessed as a
+> + * circular buffer and operations are managed according to the offset within the
+> + * FIFO.  After pipe/channel reset, all of the pipe registers and internal state
+> + * are back to defaults.
+> + *
+> + * During DMA operations, we write descriptors to the FIFO, being careful to
+> + * handle wrapping and then write the last FIFO offset to that channel's
+> + * P_EVNT_REG register to kick off the transaction.  The P_SW_OFSTS register
+> + * indicates the current FIFO offset that is being processed, so there is some
+> + * indication of where the hardware is currently working.
+> + */
+[...]
+> +
+> +/* PIPE CTRL */
+> +#define	P_EN			BIT(1)
+
+           ^^^^
+Nitpick: Weird tab here?
+
+> +
+> +/**
+> + * bam_start_dma - start next transaction
+> + * @bchan - bam dma channel
+> + *
+> + * Note: must hold bam dma channel vc.lock
+
+You can use lockdep_assert_held() here to document this
+requirement and test for it at runtime.
+
+> + */
+> +static void bam_start_dma(struct bam_chan *bchan)
+
 -- 
-1.8.1.5
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
