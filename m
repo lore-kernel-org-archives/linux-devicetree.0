@@ -1,153 +1,176 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/2] OF: update stdout-path parsing
-Date: Sat,  8 Feb 2014 12:53:52 +0100
-Message-ID: <1391860433-5343-1-git-send-email-plagnioj@jcrosoft.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] devicetree: Add Xilinx XADC binding documentation
+Date: Sat, 08 Feb 2014 12:26:47 +0000
+Message-ID: <52F62287.9020309@kernel.org>
+References: <1391534692-9049-1-git-send-email-lars@metafoo.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1391534692-9049-1-git-send-email-lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Today we only check if the linux,stdout-path property is present and retreive
-the node. But the DT specification allow to pass the serial options too as
-this
-	linux,stdout-path = &UART0;
-
-or with options
-
-	inux,stdout-path = "/plb@0/serial@84000000:115200";
-
-So update the parsing to support and also the backward compatible stdout-path
-property.
-
-Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
----
- drivers/of/base.c  | 57 +++++++++++++++++++++++++++++++++++++++++++++---------
- include/linux/of.h |  4 ++--
- 2 files changed, 50 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index ff85450..ab9ff2f 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -34,6 +34,7 @@ EXPORT_SYMBOL(of_allnodes);
- struct device_node *of_chosen;
- struct device_node *of_aliases;
- static struct device_node *of_stdout;
-+static char *of_stdout_option;
- 
- DEFINE_MUTEX(of_aliases_mutex);
- 
-@@ -1783,6 +1784,45 @@ static void of_alias_add(struct alias_prop *ap, struct device_node *np,
- }
- 
- /**
-+ * of_stdout_path_scan - check if a device node matches the
-+ *                           linux,stdout-path property and parse it
-+ */
-+static void of_stdout_path_scan(void)
-+{
-+	const char *name;
-+	const char *tmp;
-+	const char *tmp_option;
-+
-+	name = of_get_property(of_chosen, "linux,stdout-path", NULL);
-+	if (!name)
-+		name = of_get_property(of_chosen, "stdout-path", NULL);
-+
-+	if (!name)
-+		return;
-+
-+	tmp_option = strchr(name, ':');
-+
-+	if (!tmp_option) {
-+		of_stdout = of_find_node_by_path(name);
-+		return;
-+	}
-+
-+	tmp = kstrndup(name, strlen(name) - strlen(tmp_option), GFP_KERNEL);
-+	if (!tmp)
-+		return;
-+
-+	of_stdout = of_find_node_by_path(tmp);
-+	if (!of_stdout)
-+		goto out;
-+
-+	tmp_option++;
-+	of_stdout_option = kstrdup(tmp_option, GFP_KERNEL);
-+
-+out:
-+	kfree(tmp);
-+}
-+
-+/**
-  * of_alias_scan - Scan all properties of 'aliases' node
-  *
-  * The function scans all the properties of 'aliases' node and populate
-@@ -1800,13 +1840,8 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
- 	if (of_chosen == NULL)
- 		of_chosen = of_find_node_by_path("/chosen@0");
- 
--	if (of_chosen) {
--		const char *name;
--
--		name = of_get_property(of_chosen, "linux,stdout-path", NULL);
--		if (name)
--			of_stdout = of_find_node_by_path(name);
--	}
-+	if (of_chosen)
-+		of_stdout_path_scan();
- 
- 	of_aliases = of_find_node_by_path("/aliases");
- 	if (!of_aliases)
-@@ -1923,13 +1958,17 @@ EXPORT_SYMBOL_GPL(of_prop_next_string);
-  *                            linux,stdout-path property
-  *
-  * Check if this device node matches the linux,stdout-path property
-- * in the chosen node. return true if yes, false otherwise.
-+ * in the chosen node. return true if yes, false otherwise with the option if
-+ * requested.
-  */
--int of_device_is_stdout_path(struct device_node *dn)
-+int of_device_is_stdout_path(struct device_node *dn, char** option)
- {
- 	if (!of_stdout)
- 		return false;
- 
-+	if (option)
-+		*option = of_stdout_option;
-+
- 	return of_stdout == dn;
- }
- EXPORT_SYMBOL_GPL(of_device_is_stdout_path);
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 70c64ba..a8afe44 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -352,7 +352,7 @@ const __be32 *of_prop_next_u32(struct property *prop, const __be32 *cur,
-  */
- const char *of_prop_next_string(struct property *prop, const char *cur);
- 
--int of_device_is_stdout_path(struct device_node *dn);
-+int of_device_is_stdout_path(struct device_node *dn, char** option);
- 
- #else /* CONFIG_OF */
- 
-@@ -542,7 +542,7 @@ static inline int of_machine_is_compatible(const char *compat)
- 	return 0;
- }
- 
--static inline int of_device_is_stdout_path(struct device_node *dn)
-+static inline int of_device_is_stdout_path(struct device_node *dn, char** option)
- {
- 	return 0;
- }
--- 
-1.9.rc1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 04/02/14 17:24, Lars-Peter Clausen wrote:
+> The Xilinx XADC is a ADC that can be found in the series 7 FPGAs from Xilinx.
+> The XADC has a DRP interface for communication. Currently two different
+> frontends for the DRP interface exist. One that is only available on the ZYNQ
+> family as a hardmacro in the SoC portion of the ZYNQ. The other one is available
+> on all series 7 platforms and is a softmacro with a AXI interface. This binding
+> document describes the bindings for both of them since the bindings are very
+> similar.
+>
+> Each of them needs:
+> 	* A address range where the registers are mapped
+> 	* An interrupt number for the device interrupt
+> 	* A clock. For the the ZYNQ hardmacro interface this is the modules PCAP
+> 	  clock, for the AXI softmacro it is the AXI bus interface clock.
+>
+> Additionally the bindings specify whether an external multiplexer is used and in
+> which mode it is used. The devicetree bindings also describe which external
+> channels are connected and in which configuration.
+>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+A couple of little bits below.
+> ---
+>   .../devicetree/bindings/iio/adc/xilinx-xadc.txt    | 119 +++++++++++++++++++++
+>   1 file changed, 119 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
+>
+> diff --git a/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
+> new file mode 100644
+> index 0000000..40d97c1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
+> @@ -0,0 +1,119 @@
+> +Xilinx XADC device driver
+> +
+Err, you repeat yourself rather a lot in this description!  You might want to state
+this paragraph only once ;)
+> +The Xilinx XADC is a ADC that can be found in the series 7 FPGAs from Xilinx.
+> +The XADC has a DRP interface for communication. Currently two different
+> +frontends for the DRP interface exist. One that is only available on the ZYNQ
+> +family as a hardmacro in the SoC portion of the ZYNQ. The other one is
+> +available on all series 7 platforms and is a softmacro with a AXI interface.
+> +
+> +This binding document describes the bindings for both of them since the
+> +bindings are very similar. The Xilinx XADC is a ADC that can be found in the
+> +series 7 FPGAs from Xilinx. The XADC has a DRP interface for communication.
+> +Currently two different frontends for the DRP interface exist. One that is only
+> +available on the ZYNQ family as a hardmacro in the SoC portion of the ZYNQ. The
+> +other one is available on all series 7 platforms and is a softmacro with a AXI
+> +interface. This binding document describes the bindings for both of them since
+> +the bindings are very similar.
+> +
+> +Required properties:
+> +	- compatible: Should be one of
+> +		* "xlnx,zynq-xadc-1.00.a": When using the ZYNQ device
+> +		  configuration interface to interface to the XADC hardmacro.
+> +		* "xlnx,axi-xadc-1.00.a": When using the axi-xadc pcore to
+> +		  interface to the XADC hardmacro.
+> +	- reg: Address and length of the register set for the device
+> +	- interrupts: Interrupt for the XADC control interface.
+> +	- clocks: When using the ZYNQ this must be the ZYNQ PCAP clock,
+> +	  when using the AXI-XADC pcore this must be the clock that provides the
+> +	  clock to the AXI bus interface of the core.
+> +
+> +Optional properties:
+> +	- interrupt-parent: phandle to the parent interrupt controller
+> +	- xlnx,external-mux:
+> +		* "none": No external multiplexer is used, this is the default
+> +		  if the property is omitted.
+> +		* "single": External multiplexer mode is used with one
+> +		   multiplexer.
+> +		* "dual": External multiplexer mode is used with two
+> +		  multiplexers for simultaneous sampling.
+> +	- xlnx,external-mux-channel: Configures which pair of pins is used to
+> +	  sample data in external mux mode.
+> +	  Valid values for single external multiplexer mode are:
+> +		0: VP/VN
+> +		1: VAUXP[0]/VAUXN[0]
+> +		2: VAUXP[1]/VAUXN[1]
+> +		...
+> +		16: VAUXP[15]/VAUXN[15]
+> +	  Valid values for dual external multiplexer mode are:
+> +		1: VAUXP[0]/VAUXN[0] - VAUXP[8]/VAUXN[8]
+> +		2: VAUXP[1]/VAUXN[1] - VAUXP[9]/VAUXN[9]
+> +		...
+> +		8: VAUXP[7]/VAUXN[7] - VAUXP[15]/VAUXN[15]
+> +
+> +	  This property needs to be present if the device is configured for
+> +	  external multiplexer mode (either single or dual). If the device is
+> +	  not using external multiplexer mode the property is ignored.
+> +	- xnlx,channels: List of external channels that are connected to the ADC
+> +	  Required properties:
+> +		* #address-cells: Should be 1.
+> +		* #size-cells: Should be 0.
+> +
+> +	  The child nodes of this node represent the external channels which are
+not present
+> +	  connected to the ADC. If the property is no present no external
+> +	  channels will be assumed to be connected.
+> +
+> +	  Each child node represents one channel and has the following
+> +	  properties:
+> +		Required properties:
+> +			* reg: Pair of pins the the channel is connected to.
+> +				0: VP/VN
+> +				1: VAUXP[0]/VAUXN[0]
+> +				2: VAUXP[1]/VAUXN[1]
+> +				...
+> +				16: VAUXP[15]/VAUXN[15]
+> +			  Note each channel number should only be used at most
+> +			  once.
+> +		Optional properties:
+> +			* xlnx,bipolar: If set the channel is used in bipolar
+> +			  mode.
+> +
+> +
+> +Examples:
+> +	xadc@f8007100 {
+> +		compatible = "xlnx,zynq-xadc-1.00.a";
+> +		reg = <0xf8007100 0x20>;
+> +		interrupts = <0 7 4>;
+> +		interrupt-parent = <&gic>;
+> +		clocks = <&pcap_clk>;
+> +
+> +		xlnx,channels {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			channel@0 {
+> +				reg = <0>;
+> +			};
+> +			channel@1 {
+> +				reg = <1>;
+> +			};
+> +			channel@8 {
+> +				reg = <8>;
+> +			};
+> +		};
+> +	};
+> +
+> +	xadc@43200000 {
+> +		compatible = "xlnx,axi-xadc-1.00.a";
+> +		reg = <0x43200000 0x1000>;
+> +		interrupts = <0 53 4>;
+> +		interrupt-parent = <&gic>;
+> +		clocks = <&fpga1_clk>;
+> +
+> +		xlnx,channels {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			channel@0 {
+> +				reg = <0>;
+> +				xlnx,bipolar;
+> +			};
+> +		};
+> +	};
+>
