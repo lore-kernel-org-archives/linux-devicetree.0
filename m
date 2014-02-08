@@ -1,64 +1,31 @@
-From: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/3] sound: soc: fsl: Add support for Novena onboard audio
-Date: Sat, 08 Feb 2014 16:27:19 +0800
-Message-ID: <52F5EA67.1080008@kosagi.com>
-References: <1391749517-11787-1-git-send-email-xobs@kosagi.com> <1391749517-11787-3-git-send-email-xobs@kosagi.com> <20140207181433.GM1757@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140207181433.GM1757-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Laszlo Papp <lpapp@kde.org>
+Subject: [PATCH] usage-model.txt: fix a typo
+Date: Sat,  8 Feb 2014 08:50:18 +0000
+Message-ID: <1391849418-5125-1-git-send-email-lpapp@kde.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: grant.likely@secretlab.ca, rob@landley.net
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Laszlo Papp <lpapp@kde.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8/2/14 2:14 AM, Mark Brown wrote:
-> On Fri, Feb 07, 2014 at 01:05:16PM +0800, Sean Cross wrote:
->> Novena uses an ES8328 audio codec connected via I2S.
-> 
-> The CODEC looked pretty simple, can this use simple-card?
+Signed-off-by: Laszlo Papp <lpapp@kde.org>
+---
+ Documentation/devicetree/usage-model.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I had never heard of simple-card.  It doesn't look like it supports
-device tree.  Novena doesn't have a platform definition, and we run
-entirely using DT.  If simple-card can work without a platform
-definition, then we can use it.  Otherwise, it's nearly identical to
-imx-sgtl5000.c, with the exception of the code you called out.
+diff --git a/Documentation/devicetree/usage-model.txt b/Documentation/devicetree/usage-model.txt
+index 2b6b3d3..cd2eae5 100644
+--- a/Documentation/devicetree/usage-model.txt
++++ b/Documentation/devicetree/usage-model.txt
+@@ -123,7 +123,7 @@ successor, the BeagleBoard xM board might look like, respectively:
+ 	compatible = "ti,omap3-beagleboard-xm", "ti,omap3450", "ti,omap3";
+ 
+ Where "ti,omap3-beagleboard-xm" specifies the exact model, it also
+-claims that it compatible with the OMAP 3450 SoC, and the omap3 family
++claims that it is compatible with the OMAP 3450 SoC, and the omap3 family
+ of SoCs in general.  You'll notice that the list is sorted from most
+ specific (exact board) to least specific (SoC family).
+ 
+-- 
+1.8.5.4
 
->> +	/* Headphone jack detection */ +	if
->> (gpio_is_valid(data->jack_gpio)) { +		ret =
->> snd_soc_jack_new(rtd->codec, "Headset", +
->> SND_JACK_HEADSET | SND_JACK_BTN_0, +				       &headset_jack); +
->> if (ret) +			return ret; + +		headset_jack_gpios[0].gpio =
->> data->jack_gpio; +		ret = snd_soc_jack_add_gpios(&headset_jack, +
->> ARRAY_SIZE(headset_jack_gpios), +					     headset_jack_gpios); +
->> }
-> 
-> We'd need to add support for this but that shouldn't be too hard.
-
-It does seem simple.  I could imagine specifying the jack in a device
-tree file, and mapping it to a GPIO.
-
-Can you think of why this would oops on removal?  If I disable
-headphone jack detection (by simply making data->jack_gpio an invalid
-gpio), the module removes cleanly.
-
->> +static int imx_set_frequency(struct imx_novena_data *data, int
->> freq) { +	int ret; + +	ret = clk_set_parent(data->system_cko,
->> data->codec_clk); +	if (ret) { +		dev_err(data->dev, "unable to
->> set clk output"); +		return ret; +	} + +	ret =
->> clk_set_parent(data->codec_clk_sel, data->codec_clk_post_div); +
->> if (ret) { +		dev_err(data->dev, "unable to set clk parent"); +
->> return ret; +	}
-> 
-> There's supposed to be support for this sort of thing going into
-> the clock API with some sort of generic binding.
-
-Can you direct me to this patch?  Is it supposed to be defined in the
-device tree file?  As of right now, the clock is hardcoded to 24 MHz
-in clk-imx6q.c, which is why we need to change it here.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
