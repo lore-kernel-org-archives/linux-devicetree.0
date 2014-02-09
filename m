@@ -1,43 +1,49 @@
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
-Subject: [PATCH 2/2] ARM: dts: N900: add missing compatible property
-Date: Sun,  9 Feb 2014 14:12:36 +0200
-Message-ID: <1391947956-24462-2-git-send-email-aaro.koskinen@iki.fi>
-References: <1391947956-24462-1-git-send-email-aaro.koskinen@iki.fi>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1391947956-24462-1-git-send-email-aaro.koskinen@iki.fi>
-Sender: linux-omap-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: sunxi: Add driver for sunxi usb phy
+Date: Sun, 09 Feb 2014 14:29:14 +0100
+Message-ID: <52F782AA.5010207@redhat.com>
+References: <1391790801-27864-1-git-send-email-hdegoede@redhat.com> <CAGb2v67L1X63Pp10H6MFApkLzCvwOokxSW+fH6KquDnqaRGRmQ@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBS4F32LQKGQEEU2XXHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAGb2v67L1X63Pp10H6MFApkLzCvwOokxSW+fH6KquDnqaRGRmQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add missing compatible property to avoid problems in the future.
+Hi,
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
----
- arch/arm/boot/dts/omap3-n900.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 02/08/2014 05:32 AM, Chen-Yu Tsai wrote:
+> On Sat, Feb 8, 2014 at 12:33 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> The Allwinner A1x / A2x SoCs have 2 or 3 usb phys which are all accessed
+>> through a single set of registers. Besides this there are also some other
+>> phy related bits which need poking, which are per phy, but shared between the
+>> ohci and ehci controllers, so these are also controlled from this new phy
+>> driver.
+>>
 
-diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-index 6fc85f963530..0bf40c90faba 100644
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -1,6 +1,6 @@
- /*
-  * Copyright (C) 2013 Pavel Machek <pavel@ucw.cz>
-- * Copyright 2013 Aaro Koskinen <aaro.koskinen@iki.fi>
-+ * Copyright (C) 2013-2014 Aaro Koskinen <aaro.koskinen@iki.fi>
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 (or later) as
-@@ -13,7 +13,7 @@
- 
- / {
- 	model = "Nokia N900";
--	compatible = "nokia,omap3-n900", "ti,omap3";
-+	compatible = "nokia,omap3-n900", "ti,omap3430", "ti,omap3";
- 
- 	cpus {
- 		cpu@0 {
--- 
-1.8.5.3
+<snip>
 
+>> +               snprintf(name, sizeof(name), "usb%d_reset", i);
+>> +               reset = devm_reset_control_get(dev, name);
+>> +               if (IS_ERR(phy)) {
+>> +                       dev_err(dev, "failed to get reset %s\n", name);
+>> +                       return PTR_ERR(phy);
+>> +               }
+>
+> Wrong variable checked for error here that I pointed out before is still wrong.
+
+Ah, yes my bad, I'll do a v3 fixing this, and switching to using register names as
+Maxime requested. Don't know whether I'll be able to send v3 today as I'm currently
+on the road. If not I'll try to get it out the door tomorrow.
+
+Regards,
+
+Hans
