@@ -1,91 +1,74 @@
-From: Belisko Marek <marek.belisko@gmail.com>
-Subject: Re: [PATCH] net: rfkill-regulator: Add devicetree support.
-Date: Sat, 8 Feb 2014 21:42:33 +0100
-Message-ID: <CAAfyv34gykgnR6aTXwkH80A7CSphY-a99Ds7PgpNAO7t3cwxjg@mail.gmail.com>
-References: <1391802529-29861-1-git-send-email-marek@goldelico.com>
-	<20140208012225.d7a311c7.billfink@mindspring.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 02/12] dt-bindings: document s3c24xx controller for external
+ clock output
+Date: Sun, 09 Feb 2014 02:54:40 +0100
+Message-ID: <52F6DFE0.7030508@gmail.com>
+References: <201312131356.40755.heiko@sntech.de> <201312131359.00450.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20140208012225.d7a311c7.billfink@mindspring.com>
-Sender: netdev-owner@vger.kernel.org
-To: Bill Fink <billfink@mindspring.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linville <linville@tuxdriver.com>, johannes <johannes@sipsolutions.net>, davem <davem@davemloft.net>, Grant Likely <grant.likely@linaro.org>, NeilBrown <neilb@suse.de>, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-wireless@vger.kernel.org, netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <201312131359.00450.heiko@sntech.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>, Kukjin Kim <kgene.kim@samsung.com>
+Cc: t.figa@samsung.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 8, 2014 at 7:22 AM, Bill Fink <billfink@mindspring.com> wrote:
-> On Fri,  7 Feb 2014, Marek Belisko wrote:
->
->> Signed-off-by: NeilBrown <neilb@suse.de>
->> Signed-off-by: Marek Belisko <marek@goldelico.com>
->> ---
->> Based on Neil's patch and extend for documentation and bindings include.
->>
->>  .../bindings/net/rfkill/rfkill-relugator.txt       | 28 ++++++++++++++++
->
->                                   ^^^^^^^^^
->                                   Typo in file name.
-Ah. Right. Thanks.
->
->                                         -Bill
->
->
->
->>  include/dt-bindings/net/rfkill-regulator.h         | 23 +++++++++++++
-I also think this should be renamed to rfkill.h because same defines
-could be used for rfkill-gpio driver.
->>  net/rfkill/rfkill-regulator.c                      | 38 ++++++++++++++++++++++
->>  3 files changed, 89 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/net/rfkill/rfkill-relugator.txt
->>  create mode 100644 include/dt-bindings/net/rfkill-regulator.h
->>
->> diff --git a/Documentation/devicetree/bindings/net/rfkill/rfkill-relugator.txt b/Documentation/devicetree/bindings/net/rfkill/rfkill-relugator.txt
->> new file mode 100644
->> index 0000000..cdb7dd7
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/rfkill/rfkill-relugator.txt
->> @@ -0,0 +1,28 @@
->> +Regulator consumer for rfkill devices
->> +
->> +Required properties:
->> +- compatible   : Must be "rfkill-regulator".
->> +- label  : Name of rfkill device.
->> +- type  : Type of rfkill device.
->> +
->> +Possible values (defined in include/dt-bindings/net/rfkill-regulator.h):
->> +     RFKILL_TYPE_ALL
->> +     RFKILL_TYPE_WLAN
->> +     RFKILL_TYPE_BLUETOOTH
->> +     RFKILL_TYPE_UWB
->> +     RFKILL_TYPE_WIMAX
->> +     RFKILL_TYPE_WWAN
->> +     RFKILL_TYPE_GPS
->> +     RFKILL_TYPE_FM
->> +     RFKILL_TYPE_NFC
->> +
->> +- vrfkill-supply - regulator device.
->> +
->> +Example:
->> +     gps-rfkill {
->> +             compatible = "rfkill-regulator";
->> +             label = "GPS";
->> +             type = <RFKILL_TYPE_GPS>;
->> +             vrfkill-supply = <&reg>;
->> +     };
->> +
+Hi Heiko,
 
-BR,
+On 13.12.2013 13:59, Heiko St=C3=BCbner wrote:
+> The clock settings are distributed over a regular register and parts
+> of the misccr register.
+>
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> ---
+>   .../bindings/clock/samsung,s3c2410-dclk.txt        |   53 +++++++++=
++++++++++++
+>   1 file changed, 53 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/clock/samsung,=
+s3c2410-dclk.txt
+>
+> diff --git a/Documentation/devicetree/bindings/clock/samsung,s3c2410-=
+dclk.txt b/Documentation/devicetree/bindings/clock/samsung,s3c2410-dclk=
+=2Etxt
+> new file mode 100644
+> index 0000000..0a1f7b1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/samsung,s3c2410-dclk.tx=
+t
+> @@ -0,0 +1,53 @@
+> +* Samsung S3C24XX External Clock Output Controller
+> +
+> +The S3C24XX series can generate clock signals on two clock output pa=
+ds.
+> +The clock binding described here is applicable to all SoCs in
+> +the s3c24x family.
+> +
+> +Required Properties:
+> +
+> +- compatible: should be one of the following.
+> +  - "samsung,s3c2410-dclk" - controller in S3C2410 SoCs.
+> +  - "samsung,s3c2412-dclk" - controller in S3C2412 SoCs.
+> +  - "samsung,s3c2440-dclk" - controller in S3C2440 and S3C2442 SoCs.
+> +  - "samsung,s3c2443-dclk" - controller in S3C2443 and later SoCs.
+> +- reg: physical base address of the controller and length of memory =
+mapped
+> +  region.
+> +- #clock-cells: should be 1.
+> +- samsung,misccr: phandle to the syscon managing the misccr register=
+, which
+> +  holds configuration settings for different soc-components (clocks,=
+ usb, ...).
 
-marek
+Hmm, looking at the datasheet, DCLK and CLKOUT registers seem to be par=
+t=20
+of the pin controller. I wonder if there is really a need for different=
+=20
+driver and device node to handle them.
 
--- 
-as simple and primitive as possible
--------------------------------------------------
-Marek Belisko - OPEN-NANDRA
-Freelance Developer
+Could this be simply made a part of the s3c24xx pinctrl driver,=20
+extending it to register also a clock provider under the same DT node?
 
-Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
-Tel: +421 915 052 184
-skype: marekwhite
-twitter: #opennandra
-web: http://open-nandra.com
+Best regards,
+Tomasz
