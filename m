@@ -1,296 +1,60 @@
-From: <dinguyen@altera.com>
-Subject: [PATCHv3 2/2] dts: socfpga: Add DTS entry for adding the stmmac glue layer for stmmac.
-Date: Mon, 10 Feb 2014 13:48:17 -0600
-Message-ID: <1392061697-20193-2-git-send-email-dinguyen@altera.com>
-References: <1392061697-20193-1-git-send-email-dinguyen@altera.com>
+From: Courtney Cavin <courtney.cavin@sonymobile.com>
+Subject: Re: [RFC 1/6] mailbox: add core framework
+Date: Mon, 10 Feb 2014 11:59:14 -0800
+Message-ID: <20140210195914.GU1706@sonymobile.com>
+References: <1391820619-25487-1-git-send-email-courtney.cavin@sonymobile.com>
+ <1391820619-25487-2-git-send-email-courtney.cavin@sonymobile.com>
+ <4706525.lB7VmvWQMJ@wuerfel>
+ <CAL_JsqKa6nyPOa0M67svUR20Y3JNZcFhsTZE=ooV-eg6_ZBaMw@mail.gmail.com>
+ <20140210190934.GA841@joshc.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1392061697-20193-1-git-send-email-dinguyen@altera.com>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: dinh.linux@gmail.com, Dinh Nguyen <dinguyen@altera.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vince Bridgers <vbridgers2013@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140210190934.GA841@joshc.qualcomm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Josh Cartwright <joshc@codeaurora.org>
+Cc: Rob Herring <robherring2@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "s-anna@ti.com" <s-anna@ti.com>, Rob Herring <rob.herring@calxeda.com>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, Mark Langsdorf <mark.langsdorf@calxeda.com>, Tony Lindgren <tony@atomide.com>, "omar.ramirez@copitl.com" <omar.ramirez@copitl.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen@altera.com>
+On Mon, Feb 10, 2014 at 08:09:34PM +0100, Josh Cartwright wrote:
+> On Mon, Feb 10, 2014 at 11:52:05AM -0600, Rob Herring wrote:
+> > On Mon, Feb 10, 2014 at 8:11 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > > On Friday 07 February 2014 16:50:14 Courtney Cavin wrote:
+> [..]
+> > >> +int mbox_channel_notify(struct mbox_channel *chan,
+> > >> +             const void *data, unsigned int len)
+> > >> +{
+> > >> +     return atomic_notifier_call_chain(&chan->notifier, len, (void *)data);
+> > >> +}
+> > >> +EXPORT_SYMBOL(mbox_channel_notify);
+> > >
+> > > What is the reason to use a notifier chain here? Isn't a simple
+> > > callback function pointer enough? I would expect that each mailbox
+> > > can have exactly one consumer, not multiple ones.
+> > 
+> > It probably can be a callback, but there can be multiple consumers. It
+> > was only a notifier on the pl320 as there was no framework at the time
+> > and to avoid creating custom interfaces between drivers. On highbank
+> > for example, we can asynchronously receive the events for temperature
+> > change, power off, and reset. So either there needs to be an event
+> > demux somewhere or callbacks have to return whether they handled an
+> > event or not.
+> 
+> I'm not familiar with highbank IPC, but with these requirements should
+> the mailbox core even bother with asynchronous notifier chain?  It
+> sounds like a better fit might be for the mailbox core to implement a
+> proper adapter-specific irqdomain and used a chained irq handler to
+> demux (or have consumers request with IRQF_SHARED in the shared case).
 
-This patch adds the dts bindings documenation for the Altera SOCFPGA glue
-layer for the Synopsys STMMAC ethernet driver.
+Although modeling this using irqdomains makes sense for the notification
+bit, and would probably suit most adapters, there's the issue of data
+being passed around which doesn't quite fit.  "Ok, I have mail... where
+is it?"  Did you have something in mind for that?
 
-Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Vince Bridgers <vbridgers2013@gmail.com>
----
-v3: Remove stray empty line at end of socfpga_cyclone5_socdk.dts
-v2: Use the dwmac-sti as an example for a glue layer and split patch up
-to have dts as a separate patch. Also cc dts maintainers since there is
-a new binding.
----
- .../devicetree/bindings/net/socfpga-dwmac.txt      |   35 ++++++++++++++
- arch/arm/boot/dts/socfpga.dtsi                     |   51 +++++++++++++-------
- arch/arm/boot/dts/socfpga_arria5_socdk.dts         |   24 +++++++++
- arch/arm/boot/dts/socfpga_cyclone5.dtsi            |    6 ---
- arch/arm/boot/dts/socfpga_cyclone5_socdk.dts       |   17 +++++++
- arch/arm/boot/dts/socfpga_cyclone5_sockit.dts      |   22 ++++++++-
- arch/arm/boot/dts/socfpga_vt.dts                   |   13 +++--
- 7 files changed, 139 insertions(+), 29 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/socfpga-dwmac.txt
+Frankly, I don't see the notifier chain as being extraneous or
+over-complicated here core-wise or implementation-wise, and unless I
+understand Rob incorrectly, should suit the existing use-cases.  Am I
+missing something?
 
-diff --git a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-new file mode 100644
-index 0000000..d53d376
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-@@ -0,0 +1,35 @@
-+Altera SOCFPGA SoC DWMAC controller
-+
-+The device node has following properties.
-+
-+Required properties:
-+ - compatible	: Should contain "altr,socfpga-stmmac"
-+ - altr,sysmgr-syscon : Should be the phandle to the system manager node that
-+   encompasses the glue register, and the register offset.
-+
-+Sub-nodes:
-+The dwmac core should be added as subnode to SOCFPGA dwmac glue.
-+- dwmac :	The binding details of dwmac can be found in
-+  Documentation/devicetree/bindings/net/stmmac.txt
-+
-+Example:
-+
-+ethernet0: ethernet0 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	compatible = "altr,socfpga-stmmac";
-+	altr,sysmgr-syscon = <&sysmgr 0x60>;
-+	status = "disabled";
-+	ranges;
-+
-+	gmac0: gmac0@ff700000 {
-+		compatible = "snps,dwmac-3.70a", "snps,dwmac";
-+		reg = <0xff700000 0x2000>;
-+		interrupts = <0 115 4>;
-+		interrupt-names = "macirq";
-+		mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
-+		clocks = <&emac0_clk>;
-+		clock-names = "stmmaceth";
-+	};
-+};
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 8c4adb7..ebf6113 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -442,26 +442,43 @@
- 				};
- 			};
- 
--		gmac0: ethernet@ff700000 {
--			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.70a", "snps,dwmac";
--			reg = <0xff700000 0x2000>;
--			interrupts = <0 115 4>;
--			interrupt-names = "macirq";
--			mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
--			clocks = <&emac0_clk>;
--			clock-names = "stmmaceth";
-+		ethernet0: ethernet0 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "altr,socfpga-stmmac";
-+			altr,sysmgr-syscon = <&sysmgr 0x60>;
- 			status = "disabled";
-+			ranges;
-+
-+			gmac0: gmac0@ff700000 {
-+				compatible = "snps,dwmac-3.70a", "snps,dwmac";
-+				reg = <0xff700000 0x2000>;
-+				interrupts = <0 115 4>;
-+				interrupt-names = "macirq";
-+				mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
-+				clocks = <&emac0_clk>;
-+				clock-names = "stmmaceth";
-+			};
- 		};
- 
--		gmac1: ethernet@ff702000 {
--			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.70a", "snps,dwmac";
--			reg = <0xff702000 0x2000>;
--			interrupts = <0 120 4>;
--			interrupt-names = "macirq";
--			mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
--			clocks = <&emac1_clk>;
--			clock-names = "stmmaceth";
-+		ethernet1: ethernet1 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "altr,socfpga-stmmac";
-+			altr,sysmgr-syscon = <&sysmgr 0x60>;
- 			status = "disabled";
-+			ranges;
-+
-+			gmac1: gmac1@ff702000 {
-+				device_type = "network";
-+				compatible = "snps,dwmac-3.70a", "snps,dwmac";
-+				reg = <0xff702000 0x2000>;
-+				interrupts = <0 120 4>;
-+				interrupt-names = "macirq";
-+				mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
-+				clocks = <&emac1_clk>;
-+				clock-names = "stmmaceth";
-+			};
- 		};
- 
- 		L2: l2-cache@fffef000 {
-@@ -538,7 +555,7 @@
- 			reg = <0xffd05000 0x1000>;
- 		};
- 
--		sysmgr@ffd08000 {
-+		sysmgr: sysmgr@ffd08000 {
- 				compatible = "altr,sys-mgr", "syscon";
- 				reg = <0xffd08000 0x4000>;
- 			};
-diff --git a/arch/arm/boot/dts/socfpga_arria5_socdk.dts b/arch/arm/boot/dts/socfpga_arria5_socdk.dts
-index 5beffb2..2d6b38b 100644
---- a/arch/arm/boot/dts/socfpga_arria5_socdk.dts
-+++ b/arch/arm/boot/dts/socfpga_arria5_socdk.dts
-@@ -37,4 +37,28 @@
- 		*/
- 		ethernet0 = &gmac1;
- 	};
-+
-+	aliases {
-+		/* this allow the ethaddr uboot environmnet variable contents
-+		 * to be added to the gmac1 device tree blob.
-+		 */
-+		ethernet0 = &gmac1;
-+	};
-+};
-+
-+&ethernet1 {
-+	status = "okay";
-+};
-+
-+&gmac1 {
-+	phy-mode = "rgmii";
-+
-+	rxd0-skew-ps = <0>;
-+	rxd1-skew-ps = <0>;
-+	rxd2-skew-ps = <0>;
-+	rxd3-skew-ps = <0>;
-+	txen-skew-ps = <0>;
-+	txc-skew-ps = <2600>;
-+	rxdv-skew-ps = <0>;
-+	rxc-skew-ps = <2000>;
- };
-diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dtsi b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
-index ca41b0e..454148d 100644
---- a/arch/arm/boot/dts/socfpga_cyclone5.dtsi
-+++ b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
-@@ -39,12 +39,6 @@
- 			};
- 		};
- 
--		ethernet@ff702000 {
--			phy-mode = "rgmii";
--			phy-addr = <0xffffffff>; /* probe for phy addr */
--			status = "okay";
--		};
--
- 		timer0@ffc08000 {
- 			clock-frequency = <100000000>;
- 		};
-diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
-index 2ee52ab..26c63a0 100644
---- a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
-+++ b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
-@@ -38,3 +38,20 @@
- 		ethernet0 = &gmac1;
- 	};
- };
-+
-+&ethernet1 {
-+	status = "okay";
-+};
-+
-+&gmac1 {
-+	phy-mode = "rgmii";
-+
-+	rxd0-skew-ps = <0>;
-+	rxd1-skew-ps = <0>;
-+	rxd2-skew-ps = <0>;
-+	rxd3-skew-ps = <0>;
-+	txen-skew-ps = <0>;
-+	txc-skew-ps = <2600>;
-+	rxdv-skew-ps = <0>;
-+	rxc-skew-ps = <2000>;
-+};
-diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
-index 50b99a2..469bb5c 100644
---- a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
-+++ b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
-@@ -30,8 +30,28 @@
- 		device_type = "memory";
- 		reg = <0x0 0x40000000>; /* 1GB */
- 	};
-+
-+	aliases {
-+		/* this allow the ethaddr uboot environmnet variable contents
-+		 * to be added to the gmac1 device tree blob.
-+		 */
-+		ethernet0 = &gmac1;
-+	};
- };
- 
--&gmac1 {
-+&ethernet1 {
- 	status = "okay";
- };
-+
-+&gmac1 {
-+	phy-mode = "rgmii";
-+
-+	rxd0-skew-ps = <0>;
-+	rxd1-skew-ps = <0>;
-+	rxd2-skew-ps = <0>;
-+	rxd3-skew-ps = <0>;
-+	txen-skew-ps = <0>;
-+	txc-skew-ps = <2600>;
-+	rxdv-skew-ps = <0>;
-+	rxc-skew-ps = <2000>;
-+};
-diff --git a/arch/arm/boot/dts/socfpga_vt.dts b/arch/arm/boot/dts/socfpga_vt.dts
-index 222313f..418472c 100644
---- a/arch/arm/boot/dts/socfpga_vt.dts
-+++ b/arch/arm/boot/dts/socfpga_vt.dts
-@@ -52,11 +52,6 @@
- 			};
- 		};
- 
--		ethernet@ff700000 {
--			phy-mode = "gmii";
--			status = "okay";
--		};
--
- 		timer0@ffc08000 {
- 			clock-frequency = <7000000>;
- 		};
-@@ -86,3 +81,11 @@
- 		};
- 	};
- };
-+
-+&ethernet0 {
-+        status = "okay";
-+};
-+
-+&gmac0 {
-+	phy-mode = "gmii";
-+};
--- 
-1.7.9.5
+-Courtney
