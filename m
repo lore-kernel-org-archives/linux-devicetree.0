@@ -1,113 +1,57 @@
-From: Sudeep Holla <Sudeep.Holla@arm.com>
-Subject: Re: [PATCH v2 2/2] Documentation: devicetree: Add boost-frequency
- binding to list boost mode frequency
-Date: Mon, 10 Feb 2014 11:20:37 +0000
-Message-ID: <52F8B605.6020108@arm.com>
-References: <1391786342-11812-1-git-send-email-thomas.ab@samsung.com> <1391786342-11812-3-git-send-email-thomas.ab@samsung.com> <52F50698.4060305@arm.com> <52F509BD.70903@arm.com> <CAGo_u6raZY0sKdDn4d92SKpi=eqUpf23vW8K_bEi-v62V2jdPA@mail.gmail.com> <52F51888.5010608@arm.com> <CAGo_u6ofC4NNPiTNcSnXUvT3RZJo54=XyjetR-ok5hCBrVZkKg@mail.gmail.com> <52F51FCD.5000009@arm.com> <CAGo_u6quxExJOyY8mvCw5sDSuz=_j0YqJ6FJW+FAdaxUeqzN9Q@mail.gmail.com> <CAJuA9aj-LsdBiS2msOVmNRSe6mNj9QJsys9KjHZAk=9hrZOLzA@mail.gmail.com> <20140210085305.641e6de5@amdc2363>
+From: David =?ISO-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
+Subject: Re: [PATCH v4 4/7] ARM: sunxi: Add driver for SD/MMC hosts found on Allwinner sunxi SoCs
+Date: Mon, 10 Feb 2014 12:35:13 +0100
+Message-ID: <7779575.QASLIT4FqB__29785.1470917978$1392032150$gmane$org@dizzy-6.o2s.ch>
+References: <20140207212709.24624.58619.stgit@dizzy-6.o2s.ch> <20140207213316.24624.28705.stgit@dizzy-6.o2s.ch> <dac5ec28-3a6d-428f-8ab6-c8f2bb53168f@googlegroups.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140210085305.641e6de5@amdc2363>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Lukasz Majewski <l.majewski@samsung.com>, Thomas Abraham <ta.omasab@gmail.com>
-Cc: Sudeep.Holla@arm.com, Nishanth Menon <nm@ti.com>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "t.figa@samsung.com" <t.figa@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "thomas.ab@samsung.com" <thomas.ab@samsung.com>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; boundary="nextPart2134609.aEC1CZKHjS"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <dac5ec28-3a6d-428f-8ab6-c8f2bb53168f-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Emilio =?ISO-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/02/14 07:53, Lukasz Majewski wrote:
-> Hi Thomas, Sudeep,
-> 
->> On Sat, Feb 8, 2014 at 1:11 AM, Nishanth Menon <nm@ti.com> wrote:
->>> On Fri, Feb 7, 2014 at 12:02 PM, Sudeep Holla
->>> <Sudeep.Holla@arm.com> wrote:
->>>> On 07/02/14 17:37, Nishanth Menon wrote:
->>>>> On Fri, Feb 7, 2014 at 11:31 AM, Sudeep Holla
->>>>> <Sudeep.Holla@arm.com> wrote:
->>>>
->>>> [...]
->>>>
->>>>>> Yes I think its counter-intuitive as it's visible to the
->>>>>> userspace(list of frequencies and the boost parameters are
->>>>>> exposed through sysfs)
->>>>>
->>>>> That will be a different problem -> as currently every single
->>>>> frequency in the cpufreq list has ability to be marked as boost
->>>>> frequency - if userspace does not maintain that, then, IMHO, fix
->>>>> the userspace :D
->>>>>
->>>>
->>>> /sys/devices/system/cpu/cpu*/cpufreq/scaling_available_frequencies
->>>> gives the list of frequencies based on the state of the boost
->>>> feature at anytime.
->>>>
->>>> Intuitively the list without boost shouldn't have any frequency
->>>> above the range when it's enabled :), that's what I was referring
->>>> to. So I am not talking about any issue with user-space
->>>> maintenance.
->>> Fair enough - but i still think it has nothing to do with dt binding
->>> itself -> and i think the discussion we've had should be good for
->>> the binding provided in this patch.. I hope.. if documentation
->>> needs a bit of better explanation to prevent a repeat of the same
->>> discussion at a later point of time, now might be a good time to
->>> add it in.
->>
-Nishanth, though I am not convinced that it should be list, since you have a
-valid point that this should not prevent in having this feature, I am fine with
-the list.
 
->> The term boost and over-clocking have been described in the bindings
->> document as being the same. Since the term over-clocking refers to
->> running a CPU beyond normal operating frequencies, I tend to agree
->> with Sudeep that it is not intuitive if a normal operating frequency
->> is greater than a boost mode frequency.
->>
->> Otherwise, when userspace does "echo 1 >
->> /sys/devices/system/cpu/cpufreq/boost", what is it supposed to mean. I
->> think the original intent of boost mode patches was to allow CPU to
->> operate at frequencies greater than the normal operating frequencies.
->>
->> Lukasz, how would you want this to be handled?
-> 
-> Please consider an example:
-> 
-> normal-freqs: 1400000, 1200000, 1000000, 800000, 600000, 400000, 200000
-> [1]
-> boost-freqs: 1700000, 1600000, 1500000. [2]
-> 
-> All those freqs shall be represented as OPPs freq and voltage tuple.
-> 
-> Best would be to specify all the boost-freqs as:
-> boost-freqs = <1700000 1600000 1500000> to be prepared for future
-> quirks or problems (or special cases which might show up latter).
-> If anybody can foresee any potential threads - like platform on which
-> boost freqs are 1700000 and 1500000, but not 1600000, then please share
-> this information.
-> 
-If that's the case then why should it be included in the list of OPPs.
-I know Nishanth had a valid point in other thread previously(like including
-SoC.dtsi having OPPs in platform files), but that's different problem.
+--nextPart2134609.aEC1CZKHjS
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-> However, I think that it would be also acceptable to specify only:
-> boost-freq = <1500000> and mark all freqs greater or equal to it as
-> CPUFREQ_BOOST_FREQ.
-> 
-> If there aren't any potential problems, then I think the second option
-> would be a good solution (we would have only one BOOST attribute stored
-> at CPUs DTS node).
-> 
+Hi
+> > +            (cmd->opcode == 5 || cmd->opcode == 52))
+> Aren't these the ones defined in linux/mmc/sdio.h:
+> 5  - SD_IO_SEND_OP_COND
+> 52 - SD_IO_RW_DIRECT
+Yes. They are...
+Changed that.
+Also I removed the camel cases and the defines within the struct definition.
 
-Yes I prefer this to keep it simple and as per the definition of overclocking
-or turbo boost in hardware terms if possible.
+> > +struct sunxi_mmc_clk_dly {
+> > +    u32 mode;
+> > +    u32 oclk_dly;
+> > +    u32 sclk_dly;
+> Do these members have to be u32? They all seem to be smaller than 10.
+Yes. Because of situations where it gets used in bit operations, and shorter
+types mess things up and prevent the driver from working ;-)
 
-Just another thought, not sure how much this is true for real platforms, sharing
-it anyway. IIUC these boost frequencies have certain constraints like thermal
-and can't be sustained all the processors for long time.
+cheer
+david
+--nextPart2134609.aEC1CZKHjS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
-So does it make sense to specify normal max frequency instead of boost-frequency
-which by definition would be: "The maximum frequency that all processors are can
-sustain simultaneously without any thermal constraints".
-Ignore this if this is not the definition of boost on real platforms.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
+iEYEABECAAYFAlL4uXQACgkQAeZw77btGjovpgCgrjjxftD8MfEMous18vmmBe4v
+/AgAn2+dxNZXiX4DmmpIMEKaqVh0yEwi
+=AKAv
+-----END PGP SIGNATURE-----
 
-Regards,
-Sudeep
+--nextPart2134609.aEC1CZKHjS--
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
