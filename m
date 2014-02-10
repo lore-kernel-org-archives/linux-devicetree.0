@@ -1,62 +1,99 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/8] ASoC: da9055: Fix device registration of PMIC and
- CODEC devices
-Date: Mon, 10 Feb 2014 14:51:45 +0000
-Message-ID: <20140210145145.GO1757@sirena.org.uk>
-References: <cover.1391705989.git.Adam.Thomson.Opensource@diasemi.com>
- <6a398d176b0b2bf8792d27bd5e2995fd96afb32d.1391705989.git.Adam.Thomson.Opensource@diasemi.com>
- <20140210134310.GH1757@sirena.org.uk>
- <20140210135939.GA23141@lee--X1>
- <20140210141400.GJ1757@sirena.org.uk>
- <20140210144234.GB26697@lee--X1>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: Devicetree Maintenance in barebox
+Date: Mon, 10 Feb 2014 10:06:34 -0500
+Message-ID: <20140210150634.GM8533@titan.lakedaemon.net>
+References: <20140207071332.GE16215@pengutronix.de>
+ <20140207141028.GT8533@titan.lakedaemon.net>
+ <E1WCYdq-0004eu-Gr@jdl.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2wyf/X6i9kneRjiV"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140210144234.GB26697@lee--X1>
+In-Reply-To: <E1WCYdq-0004eu-Gr-CYoMK+44s/E@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, barebox-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Sun, Feb 09, 2014 at 11:58:06AM -0600, Jon Loeliger wrote:
+> > Hi Sascha,
+> > 
+> > + Grant Likely, Ian Campbell, devicetree ML
+> > 
+> > Also, In the DT meeting earlier this week, Grant Likely said he has the
+> > request in to create a separate mailinglist for collaboration between
+> > the different devicetree users (BSD, Linux, etc).
+> 
+> ...
+> 
+> > I think the proper solution will percolate out of the first
+> > cross-project discussions on the new ML.
+> 
+> ...
+> 
+> > Definitely fodder for the new ML.
+> > 
+> > Grant, can you please add Sascha to the list of folks to notify when
+> > the new ML is ready?
+> 
+> I don't think there needs to be a different mailing list
+> in order to combine or discuss other OS's use of the device
+> tree compiler.  The  DTC is OS and Use-agnostic.  Discussions
+> of DTC needs for FreeBSD can happen right here as the orginal
+> purpose of this list was DTC discussion.
 
---2wyf/X6i9kneRjiV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Sorry, I wasn't clear.  I was referring to the devicetree bindings
+currently being created in the linux tree, and the dts files for the
+boards Linux supports.
 
-On Mon, Feb 10, 2014 at 02:42:34PM +0000, Lee Jones wrote:
+And by 'here', I presume you me devicetree-u79uwXL29TaiAVqoAR/hOK1cXZ9k6wlg@public.gmane.org
 
-> > OK, but it does need to go in as a fix targetted for stable.
+> Are you, and Grant(?), suggesting that a separate list
+> should be created for FreeBSD use of DTS-file contents?
+> Or that DTS-file-content related discussions should be
+> separated from DTC discussions?
 
-> Ah, in which case there's no need, as I don't have anything in my
-> -fixes branch with touches this file. Simply take it in, no problem.
+As Ian mentioned, the separate list is to engage other consumers of
+devicetree bindings/dts files/dtc use without the firehose of Linux
+patches.
 
-I'll do that - thanks for confirming.
+> > imho, the goal is to not have any project tied to a specific version
+> > of the devicetree.
+> >
+> > iow, we don't break backwards compatibility in the
+> > devicetrees, and projects should revert to default behavior if new dt
+> > parameters are missing.  This means Linux and BSD shouldn't need to keep
+> > a current copy of the devicetree in their trees.  However, building the
+> > bootloader is a different animal.  It needs to provide the dt blob...
+> 
+> The devicetree source file format hasn't changed in years.
+> Yes, it is enhanced, but compatibly.  Or do you mean the
+> contents of the DTB for some specific platform?
 
---2wyf/X6i9kneRjiV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+I was referring specifically to dt bindings for new IP blocks, and new
+versions of the same.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+One problem we occasionally run into with kirkwood/dove/mvebu is that
+it is very convenient having the dts tree in the linux tree.  It's
+tempting to keep tying the dtb to the linux kernel version.  Which makes
+it a lot harder to maintain backwards compatibility.
 
-iQIcBAEBAgAGBQJS+Od9AAoJELSic+t+oim9i0YP/2vivd6xlOa6KrlEZrOTWnjI
-gt0wy3dcpFavwlzW6HDColIOmHN5QAP+j5n3sf52mCN3mC4MsIwyatq9Xu88YERf
-SS4EU0vGzn30N2BSGg6HYsz6XqR2Dw0yesttiRDqHsqP0IHBDtgkz3nbi69B3EGr
-pfgqFmPE95Y1KzGJvmMcbtM0Pg5Vg0E+hO/gpr8OK9GbY3M67Kn3e4z88IS6BnI/
-u66XfmaBr8CxehCJfK0qbtAXPQad60WS2ynOXvIgxGcj3L+g+oNk3IyNWxc1YS1c
-mw26EMiNDARy2fw6Px8mhGjQ3CAAziRyIgkJtWaZyJBIRZjdNwwPjHVTMi/GaD7M
-lLEbQ1TsCXP0urA8vs95FyWmeDeAS1bX5jIosJ9LaZ79YIf5yDTWNN2xZy8Pl1+J
-v2+ec+pfpGVdgrxsuQKSffxQjRs/gsJuD1b++igMIve03L9ACSRocLH2JNxLzdr1
-oEmHK+fyp7vZqRLtK0QzMu48PPYZGHg88j1cbElBXChTFgp8AF+a9GW5KLbUD6iy
-4MKhehdda2XXGhZDNAGw4XcgvUZR6oqOOv2aRHDHcWbgPB9SetvKEisMNW7Isyn6
-X4dLIfgOZ9al1LrUH+WxB3TaPXmHpE84UNQ+qoU+wlrvuHqrE+DMdXd/Gaw7XsHw
-+OOijylmSsi8d2d6DspJ
-=6NX5
------END PGP SIGNATURE-----
+That gets a lot easier once the bindings and the dts files have their
+own tree with their own release cycle.  Then, patch submitters would be
+forced to consider how changing a binding affects the driver and vice
+versa.  The concept of 'deployed dtbs' without the new whizbang bindings
+would have to be considered and properly handled.
 
---2wyf/X6i9kneRjiV--
+Don't get me wrong, all of us are trying very hard to do this now.  But
+I think it's more like running it in qemu vice running on real hardware.
+We're simulating in our heads what we think the problems will be, as
+opposed to experiencing them and avoiding them.
+
+imho, the sooner we have a separate tree for dts/bindings, the better.
+
+thx,
+
+Jason.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
