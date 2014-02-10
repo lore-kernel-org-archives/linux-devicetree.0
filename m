@@ -1,137 +1,107 @@
-From: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
-Subject: Re: [PATCH v6 05/19] watchdog: orion: Make sure the watchdog is
- initially stopped
-Date: Mon, 10 Feb 2014 10:57:00 -0600
-Message-ID: <20140210105700.16955eu5u42a9xoo@67.228.131.205>
-References: <1391707226-18258-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1391707226-18258-6-git-send-email-ezequiel.garcia@free-electrons.com>
- <52F43ED0.4050808@roeck-us.net> <20140207104044.GA11063@localhost>
- <20140207174314.GB16263@obsidianresearch.com>
- <20140210122223.GF10872@localhost>
- <20140210104850.48324szjwjihb7cw@67.228.131.205>
- <20140210165405.GF15607@localhost>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] spi: Add Qualcomm QUP SPI controller support
+Date: Mon, 10 Feb 2014 17:09:00 +0000
+Message-ID: <20140210170900.GC13533@sirena.org.uk>
+References: <1391705868-20091-1-git-send-email-iivanov@mm-sol.com>
+ <1391705868-20091-3-git-send-email-iivanov@mm-sol.com>
+ <20140207171202.GD1757@sirena.org.uk>
+ <1392049766.2853.43.camel@iivanov-dev>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=ISO-8859-1;
- DelSp="Yes";
- format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140210165405.GF15607@localhost>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="5QAgd0e35j3NYeGe"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <1392049766.2853.43.camel@iivanov-dev>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alok Chauhan <alokc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gilad Avidov <gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kiran Gunda <kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
 
-> On Mon, Feb 10, 2014 at 10:48:50AM -0600, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org wrote:
->> Quoting Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
->>
->> > On Fri, Feb 07, 2014 at 10:43:14AM -0700, Jason Gunthorpe wrote:
->> >> On Fri, Feb 07, 2014 at 07:40:45AM -0300, Ezequiel Garcia wrote:
->> >>
->> >> > Well, this is related to the discussion about the bootloader not
->> >> > reseting the watchdog properly, provoking spurious watchdog triggering.
->> >> >
->> >> > Jason Gunthorpe explained [1] that we needed a particular sequence:
->> >> >
->> >> >  1. Disable WDT
->> >> >  2. Clear bridge
->> >> >  3. Enable WDT
->> >> >
->> >> > We added the irq handling to satisfy (2), and the watchdog  
->> stop for (1).
->> >>
->> >> The issue here is the driver configures two 'machine kill' elements:
->> >> the PANIC IRQ and the RstOut setup.
->> >>
->> >> Before configuring either of those the driver needs to ensure that any
->> >> old watchdog events are cleared out of the HW. We must not get a
->> >> spurious event.
->> >>
->> >> I agree not disabling an already functional and properly configured
->> >> counter from the bootloader is desirable.
->> >>
->> >> So lets break it down a bit..
->> >>
->> >> 1) The IRQ:
->> >>   It looks like the cause bit latches high on watchdog timer
->> >>   expiration but has no side effect unless it is unmasked.
->> >>
->> >>   The new IRQ flow code ensures the bit is cleared during request_irq
->> >>   so no old events can trigger the IRQ. Thus it is solved now.
->> >>
->> >
->> > Agreed.
->> >
->> >> 3) The timer itself:
->> >>   The WDT is just a general timer with an optional hookup to the
->> >>   rst control. If it is harmlessly counting but not resetting we need
->> >>   to stop that before enabling rst out.
->> >>
->> >
->> > Actually, the current flow is to:
->> >
->> > 1. Disable rst out and then disable the counter, in probe().
->> >
->> > 2. Enable the counter, and then enable rst out, in start().
->> >
->> >> So, how about this for psuedo-code in probe:
->> >>
->> >> if (readl(RSTOUTn) & WDRstOutEn)
->> >> {
->> >>     /* Watchdog is configured and may be down counting,
->> >>        don't touch it */
->> >>     request_irq(..);
->> >> }
->> >> else
->> >> {
->> >>     /* Watchdog is not configured, fully disable the timer
->> >>        and configure for watchdog operation. */
->> >>     disable_watchdog();
->> >>     request_irq();
->> >>     writel(RSTOUTn), .. WDRstOutEn);
->> >> }
->> >>
->> >
->> > Sounds good, although it seems to me it's actually simpler:
->> >
->> >   /* Let's make sure the watchdog is fully stopped, unless
->> >    * it's explicitly enabled and running
->> >    */
->> >   if ( !(wdt_rst_out_en && wdt_timer_enabled) ) {
->> >     watchdog_stop();
->> >   }
->> >
->>
->>      if (!wdt_rst_out_en || !wdt_timer_enabled)
->>          watchdog_stop();
->>
->> seems to be a bit easier to understand.
->>
->
-> Yeah, I was actually planning to have a orion_wdt_enabled() function
-> to get the running and enabled status. Looks cleaner I think.
->
-> 	if (!orion_wdt_enabled())
-> 		watchdog_stop();
->
-> So the idea is OK?
->
-Sounds good to me.
+--5QAgd0e35j3NYeGe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> I'll push the new series in a short while. Unfortunately, this change
-> means I have to rebase almost all the series, because I introduce the
-> orion watchdog struct :-(
+On Mon, Feb 10, 2014 at 06:29:26PM +0200, Ivan T. Ivanov wrote:
+> On Fri, 2014-02-07 at 17:12 +0000, Mark Brown wrote:=20
 
-Just trying to keep you busy :-)
+> > > +	if (!xfer)
+> > > +		return IRQ_HANDLED;
 
-Guenter
+> > Are you sure?  It seems wrong to just ignore interrupts, some comments
+> > would help explain why.
 
+> Of course this should never happen. This was left from initial stage
+> of the implementation.
 
+OK, so reporting them as errors seems better then.
+
+> > > +	if (controller->speed_hz !=3D chip->speed_hz) {
+> > > +		ret =3D clk_set_rate(controller->cclk, chip->speed_hz);
+> > > +		if (ret) {
+> > > +			dev_err(controller->dev, "fail to set frequency %d",
+> > > +				chip->speed_hz);
+> > > +			return -EIO;
+> > > +		}
+> > > +	}
+
+> > Is calling into the clock framework really so expensive that we need to
+> > avoid doing it? =20
+
+> Probably not. But why to call it if the frequency is the same.
+
+It's less code that could go wrong and the check is already there in the
+clock framework hopefully.
+
+> > You also shouldn't be interacting with the hardware in
+> > setup().
+
+> This is internal hw-setup, not master::setup() or I am
+> missing something?
+
+The naming could probably be clearer then - config or something.
+
+> > > +	if (chip->bits_per_word <=3D 8)
+> > > +		controller->bytes_per_word =3D 1;
+> > > +	else if (chip->bits_per_word <=3D 16)
+> > > +		controller->bytes_per_word =3D 2;
+> > > +	else
+> > > +		controller->bytes_per_word =3D 4;
+
+> > This looks like a switch statement, and looking at the above it's not
+> > clear that the device actually supports anything other than whole bytes.
+> > I'm not sure what that would mean from an API point of view.
+
+> SPI API didn't validate struct spi_transfer::len field.
+
+It's supposed to; if the validation is incomplete then that should be
+fixed.
+
+--5QAgd0e35j3NYeGe
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS+QepAAoJELSic+t+oim98m8P/1CnfiS2JrsBUDbqMteVfjQ6
+s1rS7R3SU7gNCvuq7wOD2uNmS2CFK1EeSQirPzot1tS3rNeZx6AuRieortYPJfJb
+Z894ofWT8thXHOWNDX2QGKDUS6XZAvsp5y5HOl8b/4R4xwRT7dYqXOjv84KAwa3l
+ONdiWw+z+jjvdwQupSlpGOpN+lgp5CTtlo4k/oQ35VaZ6VdQAcma2psdJamdAzCK
+ayovd01VwhL9s1d81Jd6Hp4+erQONHPWA3v6CBElkyXnCLvXnMTGvDCn4A9dud3q
+WAucQ+xgYPqII4ZnexDyfF2rvp0Cad9536OY8Sw5zx94PipXxW1xbbpGIBUtbFr4
+9/+xU2gr8zMBBWGaQzQb5bIeAmb4q9Ly+vPi9eBMcRgsIDVA0fAPbSrQ0U0xIyVx
+vqoDRKRhCO8gnNwGeTSVCrRx0SnZP9WbPzdCw0pk8t3FABL1jFQFeUql4UJCrfkj
+KSKnPBoRsy4FwL8Bbx+gr7fPcQX/bB/sTNi/+u7wcgK5KAHN9f3C4po5Qstedz3Z
+qC5Kc4MMVM0Utlze66a2mUWxlD59UM/xgHX7ZFkvMl/fgq8JGnC5WZmRc7d/Mai0
+DSJgS6E2asUDd+Bkiv7Ac1O+2Ngwch289970P6AOqY38ZEi7+/XtL41juJfyEZxD
+gTftlYdakcZxbAIWQ3Pl
+=7/+x
+-----END PGP SIGNATURE-----
+
+--5QAgd0e35j3NYeGe--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
