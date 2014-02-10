@@ -1,57 +1,41 @@
-From: Alexander Shiyan <shc_work@mail.ru>
-Subject: [PATCH v2 2/2] input: clps711x-keypad: dts: Add bindings documentation
-Date: Mon, 10 Feb 2014 08:22:14 +0400
-Message-ID: <1392006134-10265-1-git-send-email-shc_work@mail.ru>
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-input@vger.kernel.org
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Alexander Shiyan <shc_work@mail.ru>
+From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v6 0/2] AS3935 lightning sensor support
+Date: Sun,  9 Feb 2014 20:27:29 -0800
+Message-ID: <1392006451-7818-1-git-send-email-mranostay@gmail.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the devicetree documentation for the Cirrus Logic
-CLPS711X keypad.
+This series adds support for the AMS AS3935 lightning sensor that allows
+reporting back estimated storm distance and strike events.
 
-Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
----
- .../devicetree/bindings/input/clps711x-keypad.txt  | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/clps711x-keypad.txt
+Changes from v5
 
-diff --git a/Documentation/devicetree/bindings/input/clps711x-keypad.txt b/Documentation/devicetree/bindings/input/clps711x-keypad.txt
-new file mode 100644
-index 0000000..bcf5f02
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/clps711x-keypad.txt
-@@ -0,0 +1,29 @@
-+* Cirrus Logic CLPS711X matrix keypad device tree bindings
-+
-+Required Properties:
-+- compatible:    Should be "cirrus,clps711x-keypad".
-+- syscon:        phandle to syscon device node which control keypad (SYSCON1).
-+- row-gpios:     List of GPIOs used as row lines.
-+- poll-interval: Poll interval time in milliseconds.
-+- linux,keymap:  The definition can be found at
-+                 bindings/input/matrix-keymap.txt.
-+
-+Optional Properties:
-+- autorepeat:    Enable autorepeat feature.
-+
-+Example:
-+	keypad {
-+		compatible = "cirrus,clps711x-keypad";
-+		syscon = <&syscon1>;
-+		autorepeat;
-+		poll-interval = <120>;
-+		row-gpios = <&porta 0 0>,
-+			    <&porta 1 0>;
-+
-+		linux,keymap = <
-+			MATRIX_KEY(0, 0, KEY_UP)
-+			MATRIX_KEY(0, 1, KEY_DOWN)
-+			MATRIX_KEY(1, 0, KEY_LEFT)
-+			MATRIX_KEY(1, 1, KEY_RIGHT)
-+		>;
-+	};
+* SPI write cache-aligned issues fixed 
+* Fixed mutex_unlock's being missed
+* Reports distance in meters instead of kilometers (1km steps)
+* tune_cap is now in picofarads and not a register value
+
+Matt Ranostay (2):
+  iio:as3935: Add DT binding docs for AS3935 driver
+  iio: Add AS3935 lightning sensor support
+
+ .../ABI/testing/sysfs-bus-iio-proximity-as3935     |  18 +
+ .../devicetree/bindings/iio/proximity/as3935.txt   |  27 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ drivers/iio/Kconfig                                |   1 +
+ drivers/iio/Makefile                               |   1 +
+ drivers/iio/proximity/Kconfig                      |  19 +
+ drivers/iio/proximity/Makefile                     |   6 +
+ drivers/iio/proximity/as3935.c                     | 443 +++++++++++++++++++++
+ 8 files changed, 516 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-proximity-as3935
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/as3935.txt
+ create mode 100644 drivers/iio/proximity/Kconfig
+ create mode 100644 drivers/iio/proximity/Makefile
+ create mode 100644 drivers/iio/proximity/as3935.c
+
 -- 
 1.8.3.2
-
