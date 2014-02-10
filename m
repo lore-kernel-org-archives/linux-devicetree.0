@@ -1,60 +1,59 @@
-From: Courtney Cavin <courtney.cavin@sonymobile.com>
-Subject: Re: [RFC 1/6] mailbox: add core framework
-Date: Mon, 10 Feb 2014 11:59:14 -0800
-Message-ID: <20140210195914.GU1706@sonymobile.com>
-References: <1391820619-25487-1-git-send-email-courtney.cavin@sonymobile.com>
- <1391820619-25487-2-git-send-email-courtney.cavin@sonymobile.com>
- <4706525.lB7VmvWQMJ@wuerfel>
- <CAL_JsqKa6nyPOa0M67svUR20Y3JNZcFhsTZE=ooV-eg6_ZBaMw@mail.gmail.com>
- <20140210190934.GA841@joshc.qualcomm.com>
+From: Belisko Marek <marek.belisko@gmail.com>
+Subject: Re: [PATCH] net: rfkill-regulator: Add devicetree support.
+Date: Mon, 10 Feb 2014 21:05:31 +0100
+Message-ID: <CAAfyv354SPRvqmN-AO0GmwNVcDG-6Pxenn8_gt+ta8HY8kJ9vQ@mail.gmail.com>
+References: <1391802529-29861-1-git-send-email-marek@goldelico.com>
+	<1392020862.4128.1.camel@jlt4.sipsolutions.net>
+	<BF9457FD-CEED-4290-9150-57F51F6E42FC@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140210190934.GA841@joshc.qualcomm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Josh Cartwright <joshc@codeaurora.org>
-Cc: Rob Herring <robherring2@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "s-anna@ti.com" <s-anna@ti.com>, Rob Herring <rob.herring@calxeda.com>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, Mark Langsdorf <mark.langsdorf@calxeda.com>, Tony Lindgren <tony@atomide.com>, "omar.ramirez@copitl.com" <omar.ramirez@copitl.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <BF9457FD-CEED-4290-9150-57F51F6E42FC@goldelico.com>
+Sender: netdev-owner@vger.kernel.org
+To: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "John W. Linville" <linville@tuxdriver.com>, David Miller <davem@davemloft.net>, Grant Likely <grant.likely@linaro.org>, NeilBrown Brown <neilb@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-wireless@vger.kernel.org, netdev <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 10, 2014 at 08:09:34PM +0100, Josh Cartwright wrote:
-> On Mon, Feb 10, 2014 at 11:52:05AM -0600, Rob Herring wrote:
-> > On Mon, Feb 10, 2014 at 8:11 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > On Friday 07 February 2014 16:50:14 Courtney Cavin wrote:
-> [..]
-> > >> +int mbox_channel_notify(struct mbox_channel *chan,
-> > >> +             const void *data, unsigned int len)
-> > >> +{
-> > >> +     return atomic_notifier_call_chain(&chan->notifier, len, (void *)data);
-> > >> +}
-> > >> +EXPORT_SYMBOL(mbox_channel_notify);
-> > >
-> > > What is the reason to use a notifier chain here? Isn't a simple
-> > > callback function pointer enough? I would expect that each mailbox
-> > > can have exactly one consumer, not multiple ones.
-> > 
-> > It probably can be a callback, but there can be multiple consumers. It
-> > was only a notifier on the pl320 as there was no framework at the time
-> > and to avoid creating custom interfaces between drivers. On highbank
-> > for example, we can asynchronously receive the events for temperature
-> > change, power off, and reset. So either there needs to be an event
-> > demux somewhere or callbacks have to return whether they handled an
-> > event or not.
-> 
-> I'm not familiar with highbank IPC, but with these requirements should
-> the mailbox core even bother with asynchronous notifier chain?  It
-> sounds like a better fit might be for the mailbox core to implement a
-> proper adapter-specific irqdomain and used a chained irq handler to
-> demux (or have consumers request with IRQF_SHARED in the shared case).
+On Mon, Feb 10, 2014 at 9:54 AM, Dr. H. Nikolaus Schaller
+<hns@goldelico.com> wrote:
+> Am 10.02.2014 um 09:27 schrieb Johannes Berg:
+>
+>> On Fri, 2014-02-07 at 20:48 +0100, Marek Belisko wrote:
+>>
+>>> +#define RFKILL_TYPE_ALL             (0)
+>>> +#define RFKILL_TYPE_WLAN    (1)
+>>> +#define RFKILL_TYPE_BLUETOOTH       (2)
+>>> +#define RFKILL_TYPE_UWB             (3)
+>>> +#define RFKILL_TYPE_WIMAX   (4)
+>>> +#define RFKILL_TYPE_WWAN    (5)
+>>> +#define RFKILL_TYPE_GPS             (6)
+>>> +#define RFKILL_TYPE_FM              (7)
+>>> +#define RFKILL_TYPE_NFC             (8)
+>>
+>> This seems like a bad idea since there's an enum elsewhere in userspace
+>> API already.
+I know this is duplicate but in device tree we cannot use enums
+(AFAIU include/dt-bindings are defines used in device tree files)
+>
+> Yes,
+> you are right. It is defined in include/uapi/linux/rfkill.h
+>
+> Tnx,
+> Nikolaus
+>
 
-Although modeling this using irqdomains makes sense for the notification
-bit, and would probably suit most adapters, there's the issue of data
-being passed around which doesn't quite fit.  "Ok, I have mail... where
-is it?"  Did you have something in mind for that?
+BR,
 
-Frankly, I don't see the notifier chain as being extraneous or
-over-complicated here core-wise or implementation-wise, and unless I
-understand Rob incorrectly, should suit the existing use-cases.  Am I
-missing something?
+marek
 
--Courtney
+-- 
+as simple and primitive as possible
+-------------------------------------------------
+Marek Belisko - OPEN-NANDRA
+Freelance Developer
+
+Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
+Tel: +421 915 052 184
+skype: marekwhite
+twitter: #opennandra
+web: http://open-nandra.com
