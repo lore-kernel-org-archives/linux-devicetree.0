@@ -1,90 +1,70 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: regression(ti platforms): next-20140210 (ehci?)
-Date: Mon, 10 Feb 2014 13:33:14 -0600
-Message-ID: <52F9297A.1080206@ti.com>
-References: <52F8F77B.70605@ti.com> <52F9117C.8000405@ti.com> <7h61omakk9.fsf@paris.lan>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 1/8] clk: sunxi: Add Allwinner A20/A31
+ GMAC clock unit
+Date: Mon, 10 Feb 2014 20:48:43 +0100
+Message-ID: <20140210194843.GZ3192@lukather>
+References: <1392028554-32545-1-git-send-email-wens@csie.org>
+ <1392028554-32545-2-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <7h61omakk9.fsf@paris.lan>
-Sender: linux-omap-owner@vger.kernel.org
-To: Kevin Hilman <khilman@linaro.org>, Roger Quadros <rogerq@ti.com>
-Cc: linux-omap <linux-omap@vger.kernel.org>, linux-usb@vger.kernel.org, "Balbi, Felipe" <balbi@ti.com>, linux-next@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="I/+EtO164iqGPpU0"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB2624SLQKGQE2H424EY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1392028554-32545-2-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/10/2014 12:28 PM, Kevin Hilman wrote:
-> Roger Quadros <rogerq@ti.com> writes:
-> 
->> +devicetree
->>
->> On 02/10/2014 05:59 PM, Nishanth Menon wrote:
->>> Hi,
->>>
->>> A quick note to report that I saw regression in today's next tag (logs
->>> indicate around EHCI) boot on various TI platforms:
->>>
->>> Note: crane and sdp2430 are not expected to pass with
->>> multi_v7_defconfig (note: omap2plus_defconfig boot seems to be sane
->>> but USB is disabled there)
->>>
->>> next-20140210-multi_v7_defconfig
->>>  1: am335x-evm:  Boot PASS: http://slexy.org/raw/s2zYHdPb94
->>>  2:  am335x-sk:  Boot PASS: http://slexy.org/raw/s2UChLyzSE
->>>  3: am3517-evm:  Boot FAIL: http://slexy.org/raw/s20Br9XLO1
->>> around ehci
->>>
->>>  4:  am37x-evm:  Boot FAIL: http://slexy.org/raw/s20mVz9Wc7
->>> around ehci
->>>
->>>  5: am43xx-epos:  Boot PASS: http://slexy.org/raw/s2byveBYtT
->>>  6: BeagleBoard-XM:  Boot FAIL: http://slexy.org/raw/s21sOgJNwK
->>> around ehci
->>>
->>>  7: BeagleBone-Black:  Boot PASS: http://slexy.org/raw/s2ovVNAmO7
->>>  8:      crane: No Image built - Missing platform support?:
->>>  9:       dra7:  Boot PASS: http://slexy.org/raw/s217qwaXsM
->>> 10:        ldp:  Boot FAIL: http://slexy.org/raw/s203IvjE23
->>> around ehci
->>>
->>> 11: PandaBoard-ES:  Boot FAIL: http://slexy.org/raw/s2NvkRx2YJ
->>> around ehci
->>
->> I think the problem is that ehci-platform driver gets loaded instead of ehci-omap.
->>
->> In the DT node we have compatible ids for both. e.g. for omap4.dtsi
->>
->>                         usbhsehci: ehci@4a064c00 {
->>                                 compatible = "ti,ehci-omap", "usb-ehci";
->>                                 reg = <0x4a064c00 0x400>;
->>                                 interrupt-parent = <&gic>;
->>                                 interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
->>                         };
->>
->> Shouldn't ehci-omap driver be getting a higher priority than usb-ehci?
->>
->> A quick fix would be to eliminate "usb-ehci" from the DT node of all failing platforms.
-> 
-> I can confirm that simply remvoing usb-ehci from omap[34].dtsi nodes
-> fixed the problem for me on 3530/overo, 3730/beagle-xM and
-> 4460/panda-es.  But I don't think that's the right fix.  First we have
-> to figure out why ehci-omap stopped getting loaded first.
 
-Wont that depend on driver probe order? of_match_device is fairly
-simple compatible walk through without looking at other drivers which
-might also be compatible, but not yet probed?
+--I/+EtO164iqGPpU0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The issue started I think with the following patch getting merged:
-ehci-platform: Add support for clks and phy passed through devicetree
-some version of http://www.spinics.net/lists/linux-usb/msg101061.html
-introduced { .compatible = "usb-ehci", },
+On Mon, Feb 10, 2014 at 06:35:47PM +0800, Chen-Yu Tsai wrote:
+> The Allwinner A20/A31 clock module controls the transmit clock source
+> and interface type of the GMAC ethernet controller. Model this as
+> a single clock for GMAC drivers to use.
+>=20
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-Now, in the build we have two drivers which dts claims compatibility
-with, but only 1 driver actually works (drivers/usb/host/ehci-omap.c)
-for the platform. Thinking that way, in fact, the current
-compatibility even matches drivers/usb/host/ehci-ppc-of.c which
-obviously wont work either.
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
--- 
-Regards,
-Nishanth Menon
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--I/+EtO164iqGPpU0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS+S0bAAoJEBx+YmzsjxAgl00QAKbDnkF9DK+f40GI5fLY1sUP
+OaYqR8o7y4TqNFk3qk+ZOpqdptBNJKy9cBpa7vz3pXoBj7ldE2vmrIPIjuDvM0Xe
+QjXs4sSO9SUTcm1jXtW+qRtxXndVqvcmqxRxyLJqp2UOteG/o8NgeWWtJjand/yv
+RHOXvvQPPHMZkak6BciB91ba6tAU5IA5kwh3pF+0bjlX29EtfZcgP86JTCOyRqgE
+yVlogFLxUbrdJZX0gguo0jjyi1lP6ikl2X+sGBFOkq2Dx0tMU8hCdmzBgNBZUL32
+C/JwD3PI+aAnDOSTwxLQUm47EK0ZQr+LN8IWBMoM5eh9rdAl28Zz9V7EGpUZMhGs
+02jiCmot9k2ywO4d1XQwJghKzFmAdD/ZRBfx6By0oZ/m0f1m/eaAqxh5l/LES944
+cMxnusdEeVS1tl9AcPLR9RGtlauJR4iiG9zLi71ZcgTSM+P5l81SMXSTGZE4NNIT
++Q7/DELA+1bSueCd9MbiZJ9J71rShhkTfhfRm6m0z0vJaaThQRD+pDRGuUNenfJh
+iJQv7Ceg7oXySE3E6qmyNbwcyK2FP+M/VWYR3NVpcsvxInQ69naWrwVNHpa/Cvnw
+YumGo+Dv5EtsppRDxbDEt/2PCvctSIVS6ubE4cxCS7WwxJowZyFpq6W295OePoET
+JycFkmnGyPDOdhVJr+sz
+=QYQ0
+-----END PGP SIGNATURE-----
+
+--I/+EtO164iqGPpU0--
