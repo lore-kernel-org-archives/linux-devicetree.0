@@ -1,45 +1,38 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC 1/6] mailbox: add core framework
-Date: Mon, 10 Feb 2014 11:52:05 -0600
-Message-ID: <CAL_JsqKa6nyPOa0M67svUR20Y3JNZcFhsTZE=ooV-eg6_ZBaMw@mail.gmail.com>
-References: <1391820619-25487-1-git-send-email-courtney.cavin@sonymobile.com>
-	<1391820619-25487-2-git-send-email-courtney.cavin@sonymobile.com>
-	<4706525.lB7VmvWQMJ@wuerfel>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 6/6] dt: Update binding information for mvebu gating
+ clocks with Armada 380/385
+Date: Mon, 10 Feb 2014 18:53:50 +0100
+Message-ID: <20140210175350.GD9995@lunn.ch>
+References: <1392053569-28037-1-git-send-email-gregory.clement@free-electrons.com>
+ <1392053569-28037-7-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <4706525.lB7VmvWQMJ@wuerfel>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Courtney Cavin <courtney.cavin@sonymobile.com>, s-anna@ti.com, Rob Herring <rob.herring@calxeda.com>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, Mark Langsdorf <mark.langsdorf@calxeda.com>, Tony Lindgren <tony@atomide.com>, omar.ramirez@copitl.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1392053569-28037-7-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 10, 2014 at 8:11 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Friday 07 February 2014 16:50:14 Courtney Cavin wrote:
->> The mailbox drivers are fragmented, and some implement their own core.
->> Unify the drivers and implement common functionality in a framework.
->>
->> Signed-off-by: Courtney Cavin <courtney.cavin@sonymobile.com>
+> +The following is a list of provided IDs for Armada 380/385:
+> +ID	Clock		Peripheral
+> +-----------------------------------
+> +0	audio		Audio
+> +2	ge2		Gigabit Ethernet 2
+> +3	ge1		Gigabit Ethernet 1
+> +4	ge0		Gigabit Ethernet 0
+> +5	pex1		PCIe 1
+> +6	pex2		PCIe 2
+> +7	pex3		PCIe 3
+> +8	pex4		PCIe 0
 
-[snip]
+Is that last one a typo? It at least looks a bit odd.
 
->> +int mbox_channel_notify(struct mbox_channel *chan,
->> +             const void *data, unsigned int len)
->> +{
->> +     return atomic_notifier_call_chain(&chan->notifier, len, (void *)data);
->> +}
->> +EXPORT_SYMBOL(mbox_channel_notify);
->
-> What is the reason to use a notifier chain here? Isn't a simple
-> callback function pointer enough? I would expect that each mailbox
-> can have exactly one consumer, not multiple ones.
+Thanks
+	Andrew
 
-It probably can be a callback, but there can be multiple consumers. It
-was only a notifier on the pl320 as there was no framework at the time
-and to avoid creating custom interfaces between drivers. On highbank
-for example, we can asynchronously receive the events for temperature
-change, power off, and reset. So either there needs to be an event
-demux somewhere or callbacks have to return whether they handled an
-event or not.
-
-Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
