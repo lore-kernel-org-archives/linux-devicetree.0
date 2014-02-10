@@ -1,177 +1,137 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH 2/2] spi: Add Qualcomm QUP SPI controller support
-Date: Mon, 10 Feb 2014 18:55:02 +0200
-Message-ID: <1392051302.2853.56.camel@iivanov-dev>
-References: <1391705868-20091-1-git-send-email-iivanov@mm-sol.com>
-	 <1391705868-20091-3-git-send-email-iivanov@mm-sol.com>
-	 <20140207073952.GA2610@qualcomm.com>
-	 <1391766753.27491.60.camel@iivanov-dev>
-	 <20140207173207.GA19974@qualcomm.com>
+From: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
+Subject: Re: [PATCH v6 05/19] watchdog: orion: Make sure the watchdog is
+ initially stopped
+Date: Mon, 10 Feb 2014 10:57:00 -0600
+Message-ID: <20140210105700.16955eu5u42a9xoo@67.228.131.205>
+References: <1391707226-18258-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1391707226-18258-6-git-send-email-ezequiel.garcia@free-electrons.com>
+ <52F43ED0.4050808@roeck-us.net> <20140207104044.GA11063@localhost>
+ <20140207174314.GB16263@obsidianresearch.com>
+ <20140210122223.GF10872@localhost>
+ <20140210104850.48324szjwjihb7cw@67.228.131.205>
+ <20140210165405.GF15607@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain;
+ charset=ISO-8859-1;
+ DelSp="Yes";
+ format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140207173207.GA19974@qualcomm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <agross@codeaurora.org>
-Cc: Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Alok Chauhan <alokc@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Kiran Gunda <kgunda@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140210165405.GF15607@localhost>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Quoting Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
 
-Hi Andy,
+> On Mon, Feb 10, 2014 at 10:48:50AM -0600, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org wrote:
+>> Quoting Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+>>
+>> > On Fri, Feb 07, 2014 at 10:43:14AM -0700, Jason Gunthorpe wrote:
+>> >> On Fri, Feb 07, 2014 at 07:40:45AM -0300, Ezequiel Garcia wrote:
+>> >>
+>> >> > Well, this is related to the discussion about the bootloader not
+>> >> > reseting the watchdog properly, provoking spurious watchdog triggering.
+>> >> >
+>> >> > Jason Gunthorpe explained [1] that we needed a particular sequence:
+>> >> >
+>> >> >  1. Disable WDT
+>> >> >  2. Clear bridge
+>> >> >  3. Enable WDT
+>> >> >
+>> >> > We added the irq handling to satisfy (2), and the watchdog  
+>> stop for (1).
+>> >>
+>> >> The issue here is the driver configures two 'machine kill' elements:
+>> >> the PANIC IRQ and the RstOut setup.
+>> >>
+>> >> Before configuring either of those the driver needs to ensure that any
+>> >> old watchdog events are cleared out of the HW. We must not get a
+>> >> spurious event.
+>> >>
+>> >> I agree not disabling an already functional and properly configured
+>> >> counter from the bootloader is desirable.
+>> >>
+>> >> So lets break it down a bit..
+>> >>
+>> >> 1) The IRQ:
+>> >>   It looks like the cause bit latches high on watchdog timer
+>> >>   expiration but has no side effect unless it is unmasked.
+>> >>
+>> >>   The new IRQ flow code ensures the bit is cleared during request_irq
+>> >>   so no old events can trigger the IRQ. Thus it is solved now.
+>> >>
+>> >
+>> > Agreed.
+>> >
+>> >> 3) The timer itself:
+>> >>   The WDT is just a general timer with an optional hookup to the
+>> >>   rst control. If it is harmlessly counting but not resetting we need
+>> >>   to stop that before enabling rst out.
+>> >>
+>> >
+>> > Actually, the current flow is to:
+>> >
+>> > 1. Disable rst out and then disable the counter, in probe().
+>> >
+>> > 2. Enable the counter, and then enable rst out, in start().
+>> >
+>> >> So, how about this for psuedo-code in probe:
+>> >>
+>> >> if (readl(RSTOUTn) & WDRstOutEn)
+>> >> {
+>> >>     /* Watchdog is configured and may be down counting,
+>> >>        don't touch it */
+>> >>     request_irq(..);
+>> >> }
+>> >> else
+>> >> {
+>> >>     /* Watchdog is not configured, fully disable the timer
+>> >>        and configure for watchdog operation. */
+>> >>     disable_watchdog();
+>> >>     request_irq();
+>> >>     writel(RSTOUTn), .. WDRstOutEn);
+>> >> }
+>> >>
+>> >
+>> > Sounds good, although it seems to me it's actually simpler:
+>> >
+>> >   /* Let's make sure the watchdog is fully stopped, unless
+>> >    * it's explicitly enabled and running
+>> >    */
+>> >   if ( !(wdt_rst_out_en && wdt_timer_enabled) ) {
+>> >     watchdog_stop();
+>> >   }
+>> >
+>>
+>>      if (!wdt_rst_out_en || !wdt_timer_enabled)
+>>          watchdog_stop();
+>>
+>> seems to be a bit easier to understand.
+>>
+>
+> Yeah, I was actually planning to have a orion_wdt_enabled() function
+> to get the running and enabled status. Looks cleaner I think.
+>
+> 	if (!orion_wdt_enabled())
+> 		watchdog_stop();
+>
+> So the idea is OK?
+>
+Sounds good to me.
 
-On Fri, 2014-02-07 at 11:32 -0600, Andy Gross wrote: 
-> On Fri, Feb 07, 2014 at 11:52:33AM +0200, Ivan T. Ivanov wrote:
-> > 
+> I'll push the new series in a short while. Unfortunately, this change
+> means I have to rebase almost all the series, because I introduce the
+> orion watchdog struct :-(
 
-<snip>
+Just trying to keep you busy :-)
 
-> > > > +static int spi_qup_transfer_do(struct spi_qup *controller,
-> > > > +			       struct spi_qup_device *chip,
-> > > > +			       struct spi_transfer *xfer)
-> > > > +{
-> > > > +	unsigned long timeout;
-> > > > +	int ret = -EIO;
-> > > > +
-> > > > +	reinit_completion(&controller->done);
-> > > > +
-> > > > +	timeout = DIV_ROUND_UP(controller->speed_hz, MSEC_PER_SEC);
-> > > > +	timeout = DIV_ROUND_UP(xfer->len * 8, timeout);
-> > > > +	timeout = 100 * msecs_to_jiffies(timeout);
-> > > > +
-> > > > +	controller->rx_bytes = 0;
-> > > > +	controller->tx_bytes = 0;
-> > > > +	controller->error = 0;
-> > > > +	controller->xfer = xfer;
-> > > > +
-> > > > +	if (spi_qup_set_state(controller, QUP_STATE_RUN)) {
-> > > > +		dev_warn(controller->dev, "cannot set RUN state\n");
-> > > > +		goto exit;
-> > > > +	}
-> > > > +
-> > > > +	if (spi_qup_set_state(controller, QUP_STATE_PAUSE)) {
-> > > > +		dev_warn(controller->dev, "cannot set PAUSE state\n");
-> > > > +		goto exit;
-> > > > +	}
-> > > > +
-> > > > +	spi_qup_fifo_write(controller, xfer);
-> > > > +
-> > > > +	if (spi_qup_set_state(controller, QUP_STATE_RUN)) {
-> > > > +		dev_warn(controller->dev, "cannot set EXECUTE state\n");
-> > > > +		goto exit;
-> > > > +	}
-> > > > +
-> > > > +	if (!wait_for_completion_timeout(&controller->done, timeout))
-> > > > +		ret = -ETIMEDOUT;
-> > > > +	else
-> > > > +		ret = controller->error;
-> > > > +exit:
-> > > > +	controller->xfer = NULL;
-> > > 
-> > > Should the manipulation of controller->xfer be protected by spinlock?
-> > 
-> > :-). Probably. I am wondering, could I avoid locking if firstly place
-> > QUP into RESET state and then access these field. This should stop
-> > all activities in it, right?
-> 
-> It's generally safest to not assume the hardware is going to do sane things.
-> I'm concerned about spurious IRQs.
-
-Ok, will add protection. 
-
-<snip>
-
-> > > > +
-> > > > +	if (of_property_read_u32(dev->of_node, "spi-max-frequency", &max_freq))
-> > > > +		max_freq = 19200000;
-> > > 
-> > > I'd set the default to 50MHz as that is the max supported by hardware.  I'd just
-> > > set max_freq declaration to 50MHz and then check the value if it is changed via
-> > > DT.
-> > 
-> > 50MHz doesn't seems to be supported on all chip sets. Currently common
-> > denominator on all chip sets, that I can see, is 19.2MHz. I have tried 
-> > to test it with more than 19.2MHz on APQ8074 and it fails.
-> > 
-> 
-> I guess my stance is to set it to the hardware max supported frequency if it is
-> not specified.  If that needs to be lower on a board because of whatever reason,
-> they override it.
-
-Ok, I will do in this way.
-
-<snip>
-
-> > > 
-> > > > +
-> > > > +	ret = clk_set_rate(cclk, max_freq);
-> > > > +	if (ret)
-> > > > +		dev_warn(dev, "fail to set SPI frequency %d\n", max_freq);
-> > > 
-> > > Bail here?
-> > 
-> > I don't know. What will be the consequences if controller continue to
-> > operate on its default rate?
-> > 
-> 
-> It is unclear.  But if you can't set the rate that is configured or if there is
-> a misconfiguration, it's probably better to exit the probe and catch it here.
+Guenter
 
 
-My preference is to delay clock speed change till first
-SPI transfer. And use wherever transfer itself mandate.
-
-<snip>
-
-> > > > +
-> > > > +static int spi_qup_remove(struct platform_device *pdev)
-> > > > +{
-> > > > +	struct spi_master *master = dev_get_drvdata(&pdev->dev);
-> > > > +	struct spi_qup *controller = spi_master_get_devdata(master);
-> > > > +
-> > > > +	pm_runtime_get_sync(&pdev->dev);
-> > > > +
-> > > 
-> > > Do we need to wait for any current transactions to complete
-> > > and do a devm_free_irq()?
-> > > 
-> > > > +	clk_disable_unprepare(controller->cclk);
-> > > > +	clk_disable_unprepare(controller->iclk);
-> > 
-> > My understanding is:
-> > 
-> > Disabling clocks will timeout transaction, if any. Core Device driver
-> > will call: devm_spi_unregister(), which will wait pending transactions
-> > to complete and then remove the SPI master.
-> 
-> Disabling clocks will confuse the hardware.  We cannot disable clocks while the
-> spi core is active and transferring data.
-
-I could follow approach taken by other SPI drivers, just reset
-controller and disable clocks.
-
-> 
-> > 
-> > > > +
-> > > > +	pm_runtime_put_noidle(&pdev->dev);
-> > > > +	pm_runtime_disable(&pdev->dev);
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +static struct of_device_id spi_qup_dt_match[] = {
-> > > > +	{ .compatible = "qcom,spi-qup-v2", },
-> > > 
-> > > Need compatible tags of qcom,spi-qup-v2.1.1 (msm8974 v1) or qcom,spi-qup-v2.2.1
-> > > (msm8974 v2)
-> > 
-> > I am not aware of the difference. My board report v.20020000. 
-> > Is there difference of handling these controllers?
-> 
-> There were some bug fixes between versions.  None of those affect SPI (that I
-> can tell), but it's better to be more descriptive and use the full versions in
-> the compatible tags.
-
-No strong preference here. Should I add qcom,spi-qup-v2.2.0, then? :-)
-
-Regards,
-Ivan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
