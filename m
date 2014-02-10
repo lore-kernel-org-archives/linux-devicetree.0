@@ -1,60 +1,73 @@
-From: David Daney <ddaney.cavm@gmail.com>
-Subject: [PATCH] of/gpio: Define OF_GPIO_OPEN_DRAIN flag for Open Drain outputs.
-Date: Mon, 10 Feb 2014 14:05:08 -0800
-Message-ID: <1392069908-22017-1-git-send-email-ddaney.cavm@gmail.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH] DT: net: document Ethernet bindings in one place
+Date: Mon, 10 Feb 2014 22:05:41 +0000
+Message-ID: <20140210220541.C7A56C408F7@trevor.secretlab.ca>
+References: <201401180405.07859.sergei.shtylyov@cogentembedded.com> < CAL_Jsq+oa9P=rh+p-dMZyGP8TcmpX7bTnMU0ynLvFxjxFDYbRg@mail.gmail.com> < 52DD98F7.4090202@cogentembedded.com> < CAL_JsqJXbF1-PcPHR2VP+Vi9A1aWizdsG_r3kDvRt3itXDhCGQ@mail.gmail.com> < CAGVrzcb3X3soJNJCE5+YSpQrr+EdycCRFkptPvBCgFg4CbGJ4Q@mail.gmail.com> < CAGVrzcb0dfw1orZzUt5-YkShOg-HNbUYvvo2vfmsZUZXy1Aqfg@mail.gmail.com> < 52DEE465.9000202@cogentembedded.com> <52E988FA.8040807@cogentembedded.com> <20140204172602.01420C4050F@trevor.secretlab.ca> <52F13410.8070205@ cogentembedded.com> <20140205120843.9ED08C40A89@trevor.secretlab.ca> < 52F25A63.3010608@cogentembedded.com> <20140206094301.03572C40B6A@trevor. secretlab.ca> <52F396DE.8010306@cogentembedded.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <52F396DE.8010306@cogentembedded.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robherring2@gmail.com>
+Cc: netdev <netdev@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <david.daney@cavium.com>
+On Thu, 06 Feb 2014 18:06:22 +0400, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com> wrote:
+> Hello.
+> 
+> On 06-02-2014 13:43, Grant Likely wrote:
+> 
+> >>>>>>>>>>>        I'm afraid that's too late, it has spread very far, so that
+> >>>>>>>>>>> of_get_phy_mode() handles that property, not "phy-connection-type".
+> 
+> >>>>>>>>>> Uggg, I guess this is a case of a defacto standard then if the kernel
+> >>>>>>>>>> doesn't even support it.
+> 
+> >>>>>>>>> Maybe I forgot to CC you on patch sent to Grant only, I sent a patch a
+> >>>>>>>>> while ago for of_get_phy_mode() to look for both "phy-mode" and
+> >>>>>>>>> "phy-connection-type" since the former has been a Linux invention, but
+> >>>>>>>>> the latter is ePAPR specified.
+> 
+> >>>>>>>> Here is a link to the actual patch in question, not sure which tree
+> >>>>>>>> Grant applied it to though:
+> 
+> >>>>>>>> http://lkml.indiana.edu/hypermail/linux/kernel/1311.2/00048.html
+> 
+> >>>>>>>        It's not the patch mail, it's Grant's "applied" reply, patch is mangled in
+> >>>>>>> this reply, and I couldn't follow the thread. Here's the actual patch mail:
+> 
+> >>>>>>> http://marc.info/?l=devicetree&m=138449662807254
+> 
+> >>>>>>        Florian, I didn't find this patch in Grant's official tree, so maybe you
+> >>>>>> should ask him where is the patch already?
+> 
+> >>>>> Sorry, I accidentally dropped it. It will be in the next merge window.
+> 
+> >>>>       Already saw it, thanks. Would that it was in 3.14 instead of course, so
+> >>>> that I could use "phy-connection-type" in my binding...
+> 
+> >>> Is 3.14 broken because of missing the patch? If so I'll get it merged as
+> >>   > a bug fix.
+> 
+> >>      No, it's not. I could have used "phy-connection-type" in my binding
+> >> destined for 3.15 and document it as a preferred property as well.
+> 
+> > You still can. We just need to make sure that your patch is applied on
+> 
+>     Patches.
+> 
+> > top of the phy-connection-type patch.
+> 
+>     I'm not sure this trick is possible if the patches are merged via the 
+> different trees...
 
-When we have a GPIO pin connected to an open-drain network, we want a
-standard way of specifying this in the device tree.  So we choose bit
-1 of the flag field to indicate open drain.
+There are two ways to do it. A) by having a common merge commit
+containing that patch and merged into both branches, or B) just merging
+the patch in the same tree.
 
-A typical use case would be something like:
+Normally I'd suggest B), but I've already picked up the patch and I try
+very hard not to rebase my commit tree. However, since the branch is
+stable, you can ask for my branch to be merged into the net branch
+before applying the dependant patches. The relevant commit id is
+cf4c9eb5a4, and it is in my devicetree/next branch on
+git://git.secretlab.ca/git/linux
 
-	enum of_gpio_flags f;
-	.
-	.
-	.
-	reset_gpio = of_get_named_gpio_flags(node, "reset", 0, &f);
-	.
-	.
-	.
-	ret = gpio_request_one(reset_gpio,
-		(f & OF_GPIO_OPEN_DRAIN) ? GPIOF_OPEN_DRAIN : 0,
-		 "reset");
-	.
-	.
-	.
-	gpio_direction_output(reset_gpio, 1);
-	gpio_set_value(reset_gpio, 0);
-	msleep(20);
-	gpio_set_value(reset_gpio, 1);
-	.
-	.
-	.
-
-Signed-off-by: David Daney <david.daney@cavium.com>
----
- include/linux/of_gpio.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
-index f14123a..0e374774 100644
---- a/include/linux/of_gpio.h
-+++ b/include/linux/of_gpio.h
-@@ -30,6 +30,7 @@ struct device_node;
-  */
- enum of_gpio_flags {
- 	OF_GPIO_ACTIVE_LOW = 0x1,
-+	OF_GPIO_OPEN_DRAIN = 0x2,
- };
- 
- #ifdef CONFIG_OF_GPIO
--- 
-1.7.11.7
-
+g.
