@@ -1,31 +1,161 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Subject: RE: [PATCH v2 2/8] ASoC: da9055: Add DT support for CODEC
-Date: Mon, 10 Feb 2014 10:48:09 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A03376BAD0C9F@SW-EX-MBX01.diasemi.com>
-References: <cover.1391705989.git.Adam.Thomson.Opensource@diasemi.com>
- <9ec36c0633ae8291267be6802a34a469a34ae292.1391705989.git.Adam.Thomson.Opensource@diasemi.com>
- <20140207162504.GP32298@sirena.org.uk> <20140207162649.GQ32298@sirena.org.uk>
+From: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+Subject: Re: [PATCH] thermal: exynos: handle gate clock for misplaced TRIMINFO register
+Date: Mon, 10 Feb 2014 16:20:01 +0530
+Message-ID: <CAHfPSqANMKSW=dFKUXXM1pXAr3+rmFz8v3rpksbf4Bzc+XSNOw@mail.gmail.com>
+References: <1383828154-428-1-git-send-email-ch.naveen@samsung.com> <20140210103354.GT25314@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140207162649.GQ32298@sirena.org.uk>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Cc: Lee Jones <lee.jones@linaro.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20140210103354.GT25314@e106331-lin.cambridge.arm.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "eduardo.valentin@ti.com" <eduardo.valentin@ti.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "amit.daniel@samsung.com" <amit.daniel@samsung.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>, "cpgs@samsung.com" <cpgs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBGZWIgMDcsIDIwMTQgYXQgMDQ6Mjc6MTdQTSArMDAwMCwgTWFyayBCcm93biB3cm90
-ZToNCg0KPiBPbiBGcmksIEZlYiAwNywgMjAxNCBhdCAwNDoyNTowNFBNICswMDAwLCBNYXJrIEJy
-b3duIHdyb3RlOg0KPiA+IE9uIFRodSwgRmViIDA2LCAyMDE0IGF0IDA2OjAzOjA5UE0gKzAwMDAs
-IEFkYW0gVGhvbXNvbiB3cm90ZToNCj4gPiA+IFNpZ25lZC1vZmYtYnk6IEFkYW0gVGhvbXNvbiA8
-QWRhbS5UaG9tc29uLk9wZW5zb3VyY2VAZGlhc2VtaS5jb20+DQo+ID4NCj4gPiBUaGlzIGRvZXNu
-J3QgYXBwbHkgYWdhaW5zdCBteSBjdXJyZW50IGZvci1uZXh0IG9yIHYzLjE0LXJjMSwgY2FuIHlv
-dQ0KPiA+IHBsZWFzZSBjaGVjayBhbmQgcmVzZW5kPw0KPiANCj4gVWdoLCBzb3JyeSAtIGl0J2xs
-IGJlIGR1ZSB0byBwYXRjaCAxIG9mIGNvdXJzZSB3aGljaCBJJ2Qgc2tpcHBlZCBkdWUgdG8NCj4g
-dGhlIE1GRCBiaXQuICBJZiB5b3UgbmVlZCB0byByZXNlbmQgaXQncyBwcm9iYWJseSBlYXNpZXIg
-YWxsIHJvdW5kIHRvDQo+IGp1c3Qgc2VuZCB0aGUgTUZEIGFuZCBBU29DIGJpdHMgb2YgdGhhdCBz
-ZXBhcmF0ZWx5IHNpbmNlIHRoZXJlJ3Mgbm8NCj4gZGlyZWN0IGRlcGVuZGVuY3kuDQoNCk9rLCBu
-byBwcm9ibGVtLiBXaWxsIHNlZSB3aGF0IExlZSBjb21lcyBiYWNrIGFuZCBnbyBmcm9tIHRoZXJl
-Lg0K
+Hello Mark,
+
+On 10 February 2014 16:03, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Thu, Nov 07, 2013 at 12:42:34PM +0000, Naveen Krishna Chatradhi wrote:
+>> On Exynos5420 the TMU(4) for GPU has a seperate clock enable bit from
+>> the other TMU channels(0 ~ 3). Hence, accessing TRIMINFO for base_second
+>> should be acompanied by enabling the respective clock.
+>>
+>> This patch which allow for a "clk_sec" clock to be specified in the
+>> device-tree which will be ungated when accessing the TRIMINFO register.
+>
+> Missing binding document update? Or was "clk_sec" originally in the
+> binding but unused?
+>
+> The code seems to expect "tmu_apbif_sec" as the clock name in the DT,
+> but this isn't mentioned in the commit message.
+>
+> I grepped Documentation/devicetree in mainline, but found no reference
+> of either.
+>
+> Thanks,
+> Mark.
+This CL is to be abandoned.
+
+As mentioned in the previous replies to this patch.
+The changes in this patched were merged with
+http://www.spinics.net/lists/devicetree/msg15165.html
+
+The latest patch set can be found at.
+1. http://www.spinics.net/lists/devicetree/msg15163.html
+2. http://www.spinics.net/lists/devicetree/msg15164.html
+3. http://www.spinics.net/lists/devicetree/msg15165.html
+4. http://www.spinics.net/lists/devicetree/msg15165.html
+
+Thanks for your time.
+>
+>>
+>> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+>> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+>> ---
+>>  drivers/thermal/samsung/exynos_tmu.c |   24 +++++++++++++++++++++++-
+>>  1 file changed, 23 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
+>> index b54825a..33edd1a 100644
+>> --- a/drivers/thermal/samsung/exynos_tmu.c
+>> +++ b/drivers/thermal/samsung/exynos_tmu.c
+>> @@ -47,6 +47,7 @@
+>>   * @irq_work: pointer to the irq work structure.
+>>   * @lock: lock to implement synchronization.
+>>   * @clk: pointer to the clock structure.
+>> + * @clk_sec: pointer to the clock structure for accessing the base_second.
+>>   * @temp_error1: fused value of the first point trim.
+>>   * @temp_error2: fused value of the second point trim.
+>>   * @regulator: pointer to the TMU regulator structure.
+>> @@ -61,7 +62,7 @@ struct exynos_tmu_data {
+>>       enum soc_type soc;
+>>       struct work_struct irq_work;
+>>       struct mutex lock;
+>> -     struct clk *clk;
+>> +     struct clk *clk, *clk_sec;
+>>       u8 temp_error1, temp_error2;
+>>       struct regulator *regulator;
+>>       struct thermal_sensor_conf *reg_conf;
+>> @@ -152,6 +153,8 @@ static int exynos_tmu_initialize(struct platform_device *pdev)
+>>
+>>       mutex_lock(&data->lock);
+>>       clk_enable(data->clk);
+>> +     if (!IS_ERR(data->clk_sec))
+>> +             clk_enable(data->clk_sec);
+>>
+>>       if (TMU_SUPPORTS(pdata, READY_STATUS)) {
+>>               status = readb(data->base + reg->tmu_status);
+>> @@ -306,6 +309,8 @@ skip_calib_data:
+>>  out:
+>>       clk_disable(data->clk);
+>>       mutex_unlock(&data->lock);
+>> +     if (!IS_ERR(data->clk_sec))
+>> +             clk_disable(data->clk_sec);
+>>
+>>       return ret;
+>>  }
+>> @@ -457,12 +462,16 @@ static void exynos_tmu_work(struct work_struct *work)
+>>       const struct exynos_tmu_registers *reg = pdata->registers;
+>>       unsigned int val_irq, val_type;
+>>
+>> +     if (!IS_ERR(data->clk_sec))
+>> +             clk_enable(data->clk_sec);
+>>       /* Find which sensor generated this interrupt */
+>>       if (reg->tmu_irqstatus) {
+>>               val_type = readl(data->base_second + reg->tmu_irqstatus);
+>>               if (!((val_type >> data->id) & 0x1))
+>>                       goto out;
+>>       }
+>> +     if (!IS_ERR(data->clk_sec))
+>> +             clk_disable(data->clk_sec);
+>>
+>>       exynos_report_trigger(data->reg_conf);
+>>       mutex_lock(&data->lock);
+>> @@ -641,6 +650,15 @@ static int exynos_tmu_probe(struct platform_device *pdev)
+>>       if (ret)
+>>               return ret;
+>>
+>> +     data->clk_sec = devm_clk_get(&pdev->dev, "tmu_apbif_sec");
+>> +     if (!IS_ERR(data->clk_sec)) {
+>> +             ret = clk_prepare(data->clk_sec);
+>> +             if (ret) {
+>> +                     dev_err(&pdev->dev, "Failed to get clock\n");
+>> +                     return  PTR_ERR(data->clk_sec);
+>> +             }
+>> +     }
+>> +
+>>       if (pdata->type == SOC_ARCH_EXYNOS4210 ||
+>>           pdata->type == SOC_ARCH_EXYNOS4412 ||
+>>           pdata->type == SOC_ARCH_EXYNOS5250 ||
+>> @@ -713,6 +731,8 @@ static int exynos_tmu_probe(struct platform_device *pdev)
+>>       return 0;
+>>  err_clk:
+>>       clk_unprepare(data->clk);
+>> +     if (!IS_ERR(data->clk_sec))
+>> +             clk_unprepare(data->clk_sec);
+>>       return ret;
+>>  }
+>>
+>> @@ -725,6 +745,8 @@ static int exynos_tmu_remove(struct platform_device *pdev)
+>>       exynos_unregister_thermal(data->reg_conf);
+>>
+>>       clk_unprepare(data->clk);
+>> +     if (!IS_ERR(data->clk_sec))
+>> +             clk_unprepare(data->clk_sec);
+>>
+>>       if (!IS_ERR(data->regulator))
+>>               regulator_disable(data->regulator);
+>> --
+>> 1.7.10.4
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+
+
+
+-- 
+Shine bright,
+(: Nav :)
