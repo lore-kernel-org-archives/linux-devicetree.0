@@ -1,66 +1,97 @@
-From: Sudeep Holla <Sudeep.Holla@arm.com>
-Subject: Re: [PATCH v2 2/2] Documentation: devicetree: Add boost-frequency
- binding to list boost mode frequency
-Date: Mon, 10 Feb 2014 10:51:51 +0000
-Message-ID: <52F8AF47.3080508@arm.com>
-References: <1391786342-11812-1-git-send-email-thomas.ab@samsung.com> <1391786342-11812-3-git-send-email-thomas.ab@samsung.com> <52F50698.4060305@arm.com> <52F509BD.70903@arm.com> <CAGo_u6raZY0sKdDn4d92SKpi=eqUpf23vW8K_bEi-v62V2jdPA@mail.gmail.com> <52F51888.5010608@arm.com> <CAGo_u6ofC4NNPiTNcSnXUvT3RZJo54=XyjetR-ok5hCBrVZkKg@mail.gmail.com> <52F51FCD.5000009@arm.com> <CAJuA9agcpbKYocaQUBr2-VCXcXAo3r3urFF=+G_+ib2jCZqvwg@mail.gmail.com> <20140210083836.44b519bf@amdc2363>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6 1/2] iio:as3935: Add DT binding docs for AS3935
+ driver
+Date: Mon, 10 Feb 2014 10:58:08 +0000
+Message-ID: <20140210105807.GU25314@e106331-lin.cambridge.arm.com>
+References: <1392006451-7818-1-git-send-email-mranostay@gmail.com>
+ <1392006451-7818-2-git-send-email-mranostay@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140210083836.44b519bf@amdc2363>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Lukasz Majewski <l.majewski@samsung.com>, Thomas Abraham <ta.omasab@gmail.com>
-Cc: Sudeep.Holla@arm.com, Nishanth Menon <nm@ti.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "t.figa@samsung.com" <t.figa@samsung.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "thomas.ab@samsung.com" <thomas.ab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1392006451-7818-2-git-send-email-mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/02/14 07:38, Lukasz Majewski wrote:
-> Hi Thomas, Sudeep,
+On Mon, Feb 10, 2014 at 04:27:30AM +0000, Matt Ranostay wrote:
+> Document compatible string, required and optional DT properties for
+> AS3935 chipset driver.
 > 
->> On Fri, Feb 7, 2014 at 11:32 PM, Sudeep Holla <Sudeep.Holla@arm.com>
->> wrote:
->>> On 07/02/14 17:37, Nishanth Menon wrote:
->>>> On Fri, Feb 7, 2014 at 11:31 AM, Sudeep Holla
->>>> <Sudeep.Holla@arm.com> wrote:
->>>
->>> [...]
->>>
->>>>> Yes I think its counter-intuitive as it's visible to the
->>>>> userspace(list of frequencies and the boost parameters are
->>>>> exposed through sysfs)
->>>>
->>>> That will be a different problem -> as currently every single
->>>> frequency in the cpufreq list has ability to be marked as boost
->>>> frequency - if userspace does not maintain that, then, IMHO, fix
->>>> the userspace :D
->>>>
->>>
->>> /sys/devices/system/cpu/cpu*/cpufreq/scaling_available_frequencies
->>> gives the list of frequencies based on the state of the boost
->>> feature at anytime.
->>
->> The list of frequencies in
->> /sys/devices/system/cpu/cpu*/cpufreq/scaling_available_frequencies
->> does not change based in the state of the boost feature (enabled or
->> disabled). But the scaling_max_frequency and scaling_min_frequency are
->> updated based on the set of available + boost frequencies available.
+> Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/iio/proximity/as3935.txt   | 27 ++++++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>  2 files changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/as3935.txt
 > 
-> With boost intended behavior is as follow:
-> 
-> /sys/devices/system/cpu/cpu*/cpufreq/scaling_available_frequencies [1]
-> 
-> shows the non boost frequencies no matter if boost is enabled or not.
-> Those are the "normal" frequencies.
-> 
-> When boost is supported (by enabling the CONFIG_CPU_FREQ_BOOST_SW)
-> extra sysfs attribute shows up:
-> 
-> /sys/devices/system/cpu/cpu0/cpufreq/scaling_boost_frequencies [2]
-> in which are listed only the boost frequencies.
-> 
+> diff --git a/Documentation/devicetree/bindings/iio/proximity/as3935.txt b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
+> new file mode 100644
+> index 0000000..0453254
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
+> @@ -0,0 +1,27 @@
+> +Austrian Microsystems AS3935 Franklin lightning sensor device driver
+> +
+> +Required properties:
+> +	- compatible: must be "ams,as3935"
+> +	- reg: SPI chip select number for the device
+> +	- spi-cpha: SPI Mode 1. Refer to spi/spi-bus.txt for generic SPI
+> +	slave node bindings.
+> +	- interrupt-parent : should be the phandle for the interrupt controller
+> +	- interrupts : interrupt mapping
 
-Correct, sorry I misunderstood this to dynamic change in
-scaling_available_frequencies based on state of boot.
+Nit: Please don't use the term "interrupt mapping", as it's undefined
+and clashes with the "interrupt-map" property on an interrupt nexus.
+There are a lot of bindings using it, and it would be nice to get them
+fixed up too.
 
-Regards,
-Sudeep
+As interrupts can be described in a couple of ways it probably doesn't
+make sense to state the exact format here, but could this be something
+like the following instead:
+
+- interrupts: the sole interrupt generated by the device.
+
+> +
+> +	Refer to interrupt-controller/interrupts.txt for generic
+> +	interrupt client node bindings.
+> +
+> +Optional properties:
+> +	- ams,tune-cap: Calibration tuning capacitor stepping value 0 - 120pF.
+> +	  This will require using the calibration data from the manufacturer.
+
+I think "tune-cap" is a little terse. Also "cap" is used as an
+abbreviation for "capability" elsewhere, and it would be nice to make
+it clear that in this case it means "capacitor".
+
+Could this be "ams,tuning-capacitor-pf" instead? That would make it
+clear at a glance what the value is and the units (though people would
+still ahve to refer to documentation to figure out precisely what this
+means).
+
+> +
+> +Example:
+> +
+> +as3935@0 {
+> +	compatible = "ams,as3935";
+> +	reg = <0>;
+> +	spi-cpha;
+> +	interrupt-parent = <&gpio1>;
+> +	interrupts = <16 1>;
+> +	ams,tune-cap = <80>;
+> +};
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index e9d19e2..03e50ff 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -11,6 +11,7 @@ ak	Asahi Kasei Corp.
+>  allwinner	Allwinner Technology Co., Ltd.
+>  altr	Altera Corp.
+>  amcc	Applied Micro Circuits Corporation (APM, formally AMCC)
+> +ams	AMS AG
+
+The vendor-prefix addition looks fine to me.	
+
+Thanks,
+Mark.
