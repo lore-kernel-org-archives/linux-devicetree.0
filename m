@@ -1,313 +1,72 @@
-From: Tanmay Inamdar <tinamdar@apm.com>
-Subject: Re: [PATCH] pci: Add support for creating a generic host_bridge from
- device tree
-Date: Mon, 10 Feb 2014 10:06:01 -0800
-Message-ID: <CACoXjck_yhsp8fSfPe4=XR+-YmuVZEKFs-SXhdzJdvTEpNKsxw@mail.gmail.com>
-References: <1391452428-22917-1-git-send-email-Liviu.Dudau@arm.com>
-	<1391452428-22917-2-git-send-email-Liviu.Dudau@arm.com>
-	<7398333.9L5KlyFggU@wuerfel>
-	<CACoXjckKRQfR3CbC1JpgbhOumED+OqiMh1_Y73-h6q=ByMNanw@mail.gmail.com>
-	<20140206101814.GA4993@e106497-lin.cambridge.arm.com>
-	<CACoXjcnTHgtBDesqFUOca1nf34HvNGAV0vP9AEB5xV1mvcRGfw@mail.gmail.com>
-	<20140208142207.GR4993@e106497-lin.cambridge.arm.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] ARM: dts: OMAP2+: Fix boot with multi_v7_defconfig
+Date: Mon, 10 Feb 2014 20:10:35 +0200
+Message-ID: <1392055835-6494-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140208142207.GR4993@e106497-lin.cambridge.arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Tanmay Inamdar <tinamdar@apm.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, linux-pci <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 8, 2014 at 6:22 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote=
-:
-> On Sat, Feb 08, 2014 at 12:21:56AM +0000, Tanmay Inamdar wrote:
->> On Thu, Feb 6, 2014 at 2:18 AM, Liviu Dudau <Liviu.Dudau@arm.com> wr=
-ote:
->> > On Wed, Feb 05, 2014 at 10:26:27PM +0000, Tanmay Inamdar wrote:
->> >> Hello Liviu,
->> >>
->> >> I did not get the first email of this particular patch on any of
->> >> subscribed mailing lists (don't know why), hence replying here.
->> >
->> > Strange, it shows in the MARC and GMANE archive for linux-pci, pro=
-bably
->> > a hickup on your receiving side?
->> >
->> >>
->> >> +struct pci_host_bridge *
->> >> +pci_host_bridge_of_init(struct device *parent, int busno, struct=
- pci_ops *ops,
->> >> + void *host_data, struct list_head *resources)
->> >> +{
->> >> + struct pci_bus *root_bus;
->> >> + struct pci_host_bridge *bridge;
->> >> +
->> >> + /* first parse the host bridge bus ranges */
->> >> + if (pci_host_bridge_of_get_ranges(parent->of_node, resources))
->> >> + return NULL;
->> >> +
->> >> + /* then create the root bus */
->> >> + root_bus =3D pci_create_root_bus(parent, busno, ops, host_data,=
- resources);
->> >> + if (!root_bus)
->> >> + return NULL;
->> >> +
->> >> + bridge =3D to_pci_host_bridge(root_bus->bridge);
->> >> +
->> >> + return bridge;
->> >> +}
->> >>
->> >> You are keeping the domain_nr inside pci_host_bridge structure. I=
-n
->> >> above API, domain_nr is required in 'pci_find_bus' function calle=
-d
->> >> from 'pci_create_root_bus'. Since the bridge is allocated after
->> >> creating root bus, 'pci_find_bus' always gets domain_nr as 0. Thi=
-s
->> >> will cause problem for scanning multiple domains.
->> >
->> > Good catch. I was switching between creating a pci_controller in a=
-rch/arm64 and
->> > adding the needed bits in pci_host_bridge. After internal review I=
-'ve decided to
->> > add the domain_nr to pci_host_bridge, but forgot to update the cod=
-e everywhere.
->> >
->> > Thanks for reviewing this, will fix in v2.
->> >
->> > Do you find porting to the new API straight forward?
->>
->> It is quite straight forward for MEM regions but for IO regions it i=
-s
->> not. You always assume IO resource starting at 0x0. IMO, this will
->> cause problem for systems with multiple ports / IO windows. You can
->> take a look at 'drivers/pci/host/pcie-designware.c'.
->>
->> Also the manipulations of addresses for IO_RESOURCES can be dangerou=
-s.
->> It can make some value negative. For example if my PCI IO range star=
-ts
->> in 32 bit address range say 0x8000_0000 with CPU address
->> 0xb0_8000_0000, window->offset after manipulation will become
->> negative.
->>
->> Personally I would like to do get all the PCI and CPU addresses from
->> my device tree as is and do the 'pci_add_resource_offset'. This will
->> help me setup my regions correctly without any further arithmetic.
->> Please let me know what you think.
->
-> Yes, that parsing code of ranges is incorrect in light of the current=
- discussion. I
-> will try to propose a fix in the v2 series.
+The OMAP EHCI controller is not compatible with the EHCI
+platform HCD driver so don't claim that we are.
 
-Okay. Thanks.
->
-> Regarding your PCI IO range: if your bus address starts at 0x8000_000=
-0, would
-> that not cause problems with devices that use less than 32bits for ad=
-dress
-> decoding? It is a rather unusual setup, I believe the x86 world (even=
- PCI spec?)
-> mandates IO bus ranges in the first 16MB of address range?
->
+This fixes boot on OMAP platforms with CONFIG_USB_EHCI_HCD_PLATFORM=y
+e.g. multi_v7_defconfig
 
-Yes. It will cause problem with few devices. Anyways it was just an exa=
-mple.
+Reported-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/omap3.dtsi | 2 +-
+ arch/arm/boot/dts/omap4.dtsi | 2 +-
+ arch/arm/boot/dts/omap5.dtsi | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-> Best regards,
-> Liviu
->
->>
->> >
->> > Best regards,
->> > Liviu
->> >
->> >>
->> >>
->> >> On Mon, Feb 3, 2014 at 10:46 AM, Arnd Bergmann <arnd@arndb.de> wr=
-ote:
->> >> > On Monday 03 February 2014 18:33:48 Liviu Dudau wrote:
->> >> >> +/**
->> >> >> + * pci_host_bridge_of_get_ranges - Parse PCI host bridge reso=
-urces from DT
->> >> >> + * @dev: device node of the host bridge having the range prop=
-erty
->> >> >> + * @resources: list where the range of resources will be adde=
-d after DT parsing
->> >> >> + *
->> >> >> + * This function will parse the "ranges" property of a PCI ho=
-st bridge device
->> >> >> + * node and setup the resource mapping based on its content. =
-It is expected
->> >> >> + * that the property conforms with the Power ePAPR document.
->> >> >> + *
->> >> >> + * Each architecture will then apply their filtering based on=
- the limitations
->> >> >> + * of each platform. One general restriction seems to be the =
-number of IO space
->> >> >> + * ranges, the PCI framework makes intensive use of struct re=
-source management,
->> >> >> + * and for IORESOURCE_IO types they can only be requested if =
-they are contained
->> >> >> + * within the global ioport_resource, so that should be limit=
-ed to one IO space
->> >> >> + * range.
->> >> >
->> >> > Actually we have quite a different set of restrictions around I=
-/O space on ARM32
->> >> > at the moment: Each host bridge can have its own 64KB range in =
-an arbitrary
->> >> > location on MMIO space, and the total must not exceed 2MB of I/=
-O space.
->> >> >
->> >> >> + */
->> >> >> +static int pci_host_bridge_of_get_ranges(struct device_node *=
-dev,
->> >> >> +                                     struct list_head *resour=
-ces)
->> >> >> +{
->> >> >> +     struct resource *res;
->> >> >> +     struct of_pci_range range;
->> >> >> +     struct of_pci_range_parser parser;
->> >> >> +     int err;
->> >> >> +
->> >> >> +     pr_info("PCI host bridge %s ranges:\n", dev->full_name);
->> >> >> +
->> >> >> +     /* Check for ranges property */
->> >> >> +     err =3D of_pci_range_parser_init(&parser, dev);
->> >> >> +     if (err)
->> >> >> +             return err;
->> >> >> +
->> >> >> +     pr_debug("Parsing ranges property...\n");
->> >> >> +     for_each_of_pci_range(&parser, &range) {
->> >> >> +             /* Read next ranges element */
->> >> >> +             pr_debug("pci_space: 0x%08x pci_addr:0x%016llx "=
-,
->> >> >> +                             range.pci_space, range.pci_addr)=
-;
->> >> >> +             pr_debug("cpu_addr:0x%016llx size:0x%016llx\n",
->> >> >> +                                     range.cpu_addr, range.si=
-ze);
->> >> >> +
->> >> >> +             /* If we failed translation or got a zero-sized =
-region
->> >> >> +              * (some FW try to feed us with non sensical zer=
-o sized regions
->> >> >> +              * such as power3 which look like some kind of a=
-ttempt
->> >> >> +              * at exposing the VGA memory hole) then skip th=
-is range
->> >> >> +              */
->> >> >> +             if (range.cpu_addr =3D=3D OF_BAD_ADDR || range.s=
-ize =3D=3D 0)
->> >> >> +                     continue;
->> >> >> +
->> >> >> +             res =3D kzalloc(sizeof(struct resource), GFP_KER=
-NEL);
->> >> >> +             if (!res) {
->> >> >> +                     err =3D -ENOMEM;
->> >> >> +                     goto bridge_ranges_nomem;
->> >> >> +             }
->> >> >> +
->> >> >> +             of_pci_range_to_resource(&range, dev, res);
->> >> >> +
->> >> >> +             pci_add_resource_offset(resources, res,
->> >> >> +                             range.cpu_addr - range.pci_addr)=
-;
->> >> >> +     }
->> >> >
->> >> > I believe of_pci_range_to_resource() will return the MMIO apert=
-ure for the
->> >> > I/O space window here, which is not what you are supposed to pa=
-ss into
->> >> > pci_add_resource_offset.
->> >> >
->> >> >> +EXPORT_SYMBOL(pci_host_bridge_of_init);
->> >> >
->> >> > EXPORT_SYMBOL_GPL
->> >> >
->> >> >> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
->> >> >> index 6e34498..16febae 100644
->> >> >> --- a/drivers/pci/probe.c
->> >> >> +++ b/drivers/pci/probe.c
->> >> >> @@ -1787,6 +1787,17 @@ struct pci_bus *pci_create_root_bus(str=
-uct device *parent, int bus,
->> >> >>       list_for_each_entry_safe(window, n, resources, list) {
->> >> >>               list_move_tail(&window->list, &bridge->windows);
->> >> >>               res =3D window->res;
->> >> >> +             /*
->> >> >> +              * IO resources are stored in the kernel with a =
-CPU start
->> >> >> +              * address of zero. Adjust the data accordingly =
-and remember
->> >> >> +              * the offset
->> >> >> +              */
->> >> >> +             if (resource_type(res) =3D=3D IORESOURCE_IO) {
->> >> >> +                     bridge->io_offset =3D res->start;
->> >> >> +                     res->end -=3D res->start;
->> >> >> +                     window->offset -=3D res->start;
->> >> >> +                     res->start =3D 0;
->> >> >> +             }
->> >> >>               offset =3D window->offset;
->> >> >>               if (res->flags & IORESOURCE_BUS)
->> >> >
->> >> > Won't this break all existing host bridges?
->> >> >
->> >> >         Arnd
->> >> >
->> >> > _______________________________________________
->> >> > linux-arm-kernel mailing list
->> >> > linux-arm-kernel@lists.infradead.org
->> >> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->> >>
->> >
->> > --
->> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> > | I would like to |
->> > | fix the world,  |
->> > | but they're not |
->> > | giving me the   |
->> >  \ source code!  /
->> >   ---------------
->> >     =C2=AF\_(=E3=83=84)_/=C2=AF
->> >
->> > -- IMPORTANT NOTICE: The contents of this email and any attachment=
-s are confidential and may also be privileged. If you are not the inten=
-ded recipient, please notify the sender immediately and do not disclose=
- the contents to any other person, use it for any purpose, or store or =
-copy the information in any medium.  Thank you.
->> >
->> > ARM Limited, Registered office 110 Fulbourn Road, Cambridge CB1 9N=
-J, Registered in England & Wales, Company No:  2557590
->> > ARM Holdings plc, Registered office 110 Fulbourn Road, Cambridge C=
-B1 9NJ, Registered in England & Wales, Company No:  2548782
->> >
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-pci"=
- in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
->
-> --
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> | I would like to |
-> | fix the world,  |
-> | but they're not |
-> | giving me the   |
->  \ source code!  /
->   ---------------
->     =C2=AF\_(=E3=83=84)_/=C2=AF
->
-> -- IMPORTANT NOTICE: The contents of this email and any attachments a=
-re confidential and may also be privileged. If you are not the intended=
- recipient, please notify the sender immediately and do not disclose th=
-e contents to any other person, use it for any purpose, or store or cop=
-y the information in any medium.  Thank you.
->
-> ARM Limited, Registered office 110 Fulbourn Road, Cambridge CB1 9NJ, =
-Registered in England & Wales, Company No:  2557590
-> ARM Holdings plc, Registered office 110 Fulbourn Road, Cambridge CB1 =
-9NJ, Registered in England & Wales, Company No:  2548782
->
+diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+index a5fc83b..6b5dbf8 100644
+--- a/arch/arm/boot/dts/omap3.dtsi
++++ b/arch/arm/boot/dts/omap3.dtsi
+@@ -641,7 +641,7 @@
+ 			};
+ 
+ 			usbhsehci: ehci@48064800 {
+-				compatible = "ti,ehci-omap", "usb-ehci";
++				compatible = "ti,ehci-omap";
+ 				reg = <0x48064800 0x400>;
+ 				interrupt-parent = <&intc>;
+ 				interrupts = <77>;
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+index d3f8a6e..f5d754b 100644
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -706,7 +706,7 @@
+ 			};
+ 
+ 			usbhsehci: ehci@4a064c00 {
+-				compatible = "ti,ehci-omap", "usb-ehci";
++				compatible = "ti,ehci-omap";
+ 				reg = <0x4a064c00 0x400>;
+ 				interrupt-parent = <&gic>;
+ 				interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+index a72813a..42fcffd 100644
+--- a/arch/arm/boot/dts/omap5.dtsi
++++ b/arch/arm/boot/dts/omap5.dtsi
+@@ -784,7 +784,7 @@
+ 			};
+ 
+ 			usbhsehci: ehci@4a064c00 {
+-				compatible = "ti,ehci-omap", "usb-ehci";
++				compatible = "ti,ehci-omap";
+ 				reg = <0x4a064c00 0x400>;
+ 				interrupt-parent = <&gic>;
+ 				interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+-- 
+1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
