@@ -1,108 +1,62 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v6 05/19] watchdog: orion: Make sure the watchdog is
- initially stopped
-Date: Mon, 10 Feb 2014 09:22:24 -0300
-Message-ID: <20140210122223.GF10872@localhost>
-References: <1391707226-18258-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1391707226-18258-6-git-send-email-ezequiel.garcia@free-electrons.com>
- <52F43ED0.4050808@roeck-us.net>
- <20140207104044.GA11063@localhost>
- <20140207174314.GB16263@obsidianresearch.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: [PATCH RFC v2 14/35] imx-drm: update and fix imx6 DT descriptions for
+ v3 HDMI driver
+Date: Mon, 10 Feb 2014 12:29:58 +0000
+Message-ID: <E1WCpzq-0007O5-FC@rmk-PC.arm.linux.org.uk>
+References: <20140210122802.GS26684@n2100.arm.linux.org.uk>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140207174314.GB16263-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <20140210122802.GS26684-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+To: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 07, 2014 at 10:43:14AM -0700, Jason Gunthorpe wrote:
-> On Fri, Feb 07, 2014 at 07:40:45AM -0300, Ezequiel Garcia wrote:
->=20
-> > Well, this is related to the discussion about the bootloader not
-> > reseting the watchdog properly, provoking spurious watchdog trigger=
-ing.
-> >=20
-> > Jason Gunthorpe explained [1] that we needed a particular sequence:
-> >=20
-> >  1. Disable WDT
-> >  2. Clear bridge
-> >  3. Enable WDT
-> >=20
-> > We added the irq handling to satisfy (2), and the watchdog stop for=
- (1).
->=20
-> The issue here is the driver configures two 'machine kill' elements:
-> the PANIC IRQ and the RstOut setup.
->=20
-> Before configuring either of those the driver needs to ensure that an=
-y
-> old watchdog events are cleared out of the HW. We must not get a
-> spurious event.=20
->=20
-> I agree not disabling an already functional and properly configured
-> counter from the bootloader is desirable.
->=20
-> So lets break it down a bit..
->=20
-> 1) The IRQ:
->   It looks like the cause bit latches high on watchdog timer
->   expiration but has no side effect unless it is unmasked.
->=20
->   The new IRQ flow code ensures the bit is cleared during request_irq
->   so no old events can trigger the IRQ. Thus it is solved now.
->=20
+Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6dl.dtsi  | 3 ++-
+ arch/arm/boot/dts/imx6q.dtsi   | 1 +
+ arch/arm/boot/dts/imx6qdl.dtsi | 1 -
+ 3 files changed, 3 insertions(+), 2 deletions(-)
 
-Agreed.
+diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
+index 65e54b4529c5..6dc397022214 100644
+--- a/arch/arm/boot/dts/imx6dl.dtsi
++++ b/arch/arm/boot/dts/imx6dl.dtsi
+@@ -90,5 +90,6 @@
+ };
+ 
+ &hdmi {
++	compatible = "fsl,imx6dl-hdmi";
+ 	crtcs = <&ipu1 0>, <&ipu1 1>;
+-}
++};
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index d2467f532de6..187fe33ba515 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -161,5 +161,6 @@
+ };
+ 
+ &hdmi {
++	compatible = "fsl,imx6q-hdmi";
+ 	crtcs = <&ipu1 0>, <&ipu1 1>, <&ipu2 0>, <&ipu2 1>;
+ };
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 400bbc624f25..930ebe0c2937 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -1369,7 +1369,6 @@
+ 			};
+ 
+ 			hdmi: hdmi@0120000 {
+-				compatible = "fsl,imx6q-hdmi";
+ 				reg = <0x00120000 0x9000>;
+ 				interrupts = <0 115 0x04>;
+ 				gpr = <&gpr>;
+-- 
+1.8.3.1
 
-> 3) The timer itself:
->   The WDT is just a general timer with an optional hookup to the
->   rst control. If it is harmlessly counting but not resetting we need
->   to stop that before enabling rst out.
->=20
-
-Actually, the current flow is to:
-
-1. Disable rst out and then disable the counter, in probe().
-
-2. Enable the counter, and then enable rst out, in start().
-
-> So, how about this for psuedo-code in probe:
->=20
-> if (readl(RSTOUTn) & WDRstOutEn)
-> {
->     /* Watchdog is configured and may be down counting,
->        don't touch it */
->     request_irq(..);
-> }
-> else
-> {
->     /* Watchdog is not configured, fully disable the timer
->        and configure for watchdog operation. */
->     disable_watchdog();
->     request_irq();
->     writel(RSTOUTn), .. WDRstOutEn);
-> }
->=20
-
-Sounds good, although it seems to me it's actually simpler:
-
-  /* Let's make sure the watchdog is fully stopped, unless
-   * it's explicitly enabled and running
-   */
-  if ( !(wdt_rst_out_en && wdt_timer_enabled) ) {
-    watchdog_stop();
-  }
-
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
