@@ -1,55 +1,72 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC 3/6] mailbox: pl320: migrate to mbox framework
-Date: Mon, 10 Feb 2014 12:28:54 -0600
-Message-ID: <CAL_JsqL7Ba2KJCP7YoUU-Z-rdq6zzWiRM3E3gbs7wgDZxVCtww@mail.gmail.com>
-References: <1391820619-25487-1-git-send-email-courtney.cavin@sonymobile.com>
-	<1391820619-25487-4-git-send-email-courtney.cavin@sonymobile.com>
+From: Kevin Hilman <khilman@linaro.org>
+Subject: Re: regression(ti platforms): next-20140210 (ehci?)
+Date: Mon, 10 Feb 2014 10:28:54 -0800
+Message-ID: <7h61omakk9.fsf@paris.lan>
+References: <52F8F77B.70605@ti.com> <52F9117C.8000405@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1391820619-25487-4-git-send-email-courtney.cavin@sonymobile.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Courtney Cavin <courtney.cavin@sonymobile.com>
-Cc: s-anna@ti.com, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, Tony Lindgren <tony@atomide.com>, omar.ramirez@copitl.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Langsdorf <mark.langsdorf@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52F9117C.8000405@ti.com> (Roger Quadros's message of "Mon, 10
+	Feb 2014 19:50:52 +0200")
+Sender: linux-omap-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, linux-omap <linux-omap@vger.kernel.org>, linux-usb@vger.kernel.org, "Balbi, Felipe" <balbi@ti.com>, linux-next@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 7, 2014 at 6:50 PM, Courtney Cavin
-<courtney.cavin@sonymobile.com> wrote:
-> We don't remove the legacy methods here, but we mark them as deprecated
-> in the hopes that people with the ability to properly test modifications
-> can adapt its users.
+Roger Quadros <rogerq@ti.com> writes:
 
-The DT for highbank is pretty much fixed at this point. So adopting
-this will need a way to register without DT. Unfortunately, I don't
-have access to h/w either ATM.
+> +devicetree
+>
+> On 02/10/2014 05:59 PM, Nishanth Menon wrote:
+>> Hi,
+>> 
+>> A quick note to report that I saw regression in today's next tag (logs
+>> indicate around EHCI) boot on various TI platforms:
+>> 
+>> Note: crane and sdp2430 are not expected to pass with
+>> multi_v7_defconfig (note: omap2plus_defconfig boot seems to be sane
+>> but USB is disabled there)
+>> 
+>> next-20140210-multi_v7_defconfig
+>>  1: am335x-evm:  Boot PASS: http://slexy.org/raw/s2zYHdPb94
+>>  2:  am335x-sk:  Boot PASS: http://slexy.org/raw/s2UChLyzSE
+>>  3: am3517-evm:  Boot FAIL: http://slexy.org/raw/s20Br9XLO1
+>> around ehci
+>> 
+>>  4:  am37x-evm:  Boot FAIL: http://slexy.org/raw/s20mVz9Wc7
+>> around ehci
+>> 
+>>  5: am43xx-epos:  Boot PASS: http://slexy.org/raw/s2byveBYtT
+>>  6: BeagleBoard-XM:  Boot FAIL: http://slexy.org/raw/s21sOgJNwK
+>> around ehci
+>> 
+>>  7: BeagleBone-Black:  Boot PASS: http://slexy.org/raw/s2ovVNAmO7
+>>  8:      crane: No Image built - Missing platform support?:
+>>  9:       dra7:  Boot PASS: http://slexy.org/raw/s217qwaXsM
+>> 10:        ldp:  Boot FAIL: http://slexy.org/raw/s203IvjE23
+>> around ehci
+>> 
+>> 11: PandaBoard-ES:  Boot FAIL: http://slexy.org/raw/s2NvkRx2YJ
+>> around ehci
+>
+> I think the problem is that ehci-platform driver gets loaded instead of ehci-omap.
+>
+> In the DT node we have compatible ids for both. e.g. for omap4.dtsi
+>
+>                         usbhsehci: ehci@4a064c00 {
+>                                 compatible = "ti,ehci-omap", "usb-ehci";
+>                                 reg = <0x4a064c00 0x400>;
+>                                 interrupt-parent = <&gic>;
+>                                 interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+>                         };
+>
+> Shouldn't ehci-omap driver be getting a higher priority than usb-ehci?
+>
+> A quick fix would be to eliminate "usb-ehci" from the DT node of all failing platforms.
 
-I should note that this driver is very much highbank specific and not
-really a generic pl320 driver. The pl320 has up to 8 mailboxes and 8
-interrupts. How it is used from there is a software decision. I've
-never seen any other user, but it could be done quite differently from
-how it is used in highbank. In the case of highbank, we assigned a tx
-and rx mailbox. While both the management core and linux side have all
-8 interrupts wired up, we have assigned an interrupt to each side. I
-suppose you could have the interrupt tied to each mailbox, but really
-they are unrelated in the pl320 as each mailbox message could have
-multiple targets (interrupts). Probably splitting this between a pl320
-lib and platform specific drivers would be the right split if there
-are ever other users.
+I can confirm that simply remvoing usb-ehci from omap[34].dtsi nodes
+fixed the problem for me on 3530/overo, 3730/beagle-xM and
+4460/panda-es.  But I don't think that's the right fix.  First we have
+to figure out why ehci-omap stopped getting loaded first.
 
-
-> -       ipc_irq = adev->irq[0];
-> -       ret = request_irq(ipc_irq, ipc_handler, 0, dev_name(&adev->dev), NULL);
-> +       pl->adapter.dev = &adev->dev;
-> +       pl->adapter.ops = &pl320_mbox_ops;
-> +       pl->adapter.nchannels = 1;
-
-Shouldn't this be 2? The 2 channels here are not a single
-bi-directional channel in any way. They are completely independent and
-have unrelated events. For example we originally defined having 3
-mailboxes where we had 2 tx mailboxes for fast and slow messages, but
-we ultimately decided everything could be a single tx mailbox. Event
-completion is handled synchronously via the pl320's handshake
-mechanism. I'd imagine you could have a protocol where you have async
-completions via an rx mailbox instead.
-
-Rob
+Kevin
