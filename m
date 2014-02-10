@@ -1,69 +1,55 @@
-From: linux@roeck-us.net
-Subject: Re: [PATCH 01/17] Documentation: i2c: describe devicetree method
- for instantiating devices
-Date: Mon, 10 Feb 2014 12:21:19 -0600
-Message-ID: <20140210122119.115858a7ntu4lr40@67.228.131.205>
-References: <1392026654-5343-1-git-send-email-wsa@the-dreams.de>
- <1392026654-5343-2-git-send-email-wsa@the-dreams.de>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC 3/6] mailbox: pl320: migrate to mbox framework
+Date: Mon, 10 Feb 2014 12:28:54 -0600
+Message-ID: <CAL_JsqL7Ba2KJCP7YoUU-Z-rdq6zzWiRM3E3gbs7wgDZxVCtww@mail.gmail.com>
+References: <1391820619-25487-1-git-send-email-courtney.cavin@sonymobile.com>
+	<1391820619-25487-4-git-send-email-courtney.cavin@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=ISO-8859-1;
- DelSp="Yes";
- format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1392026654-5343-2-git-send-email-wsa@the-dreams.de>
-Content-Disposition: inline
+In-Reply-To: <1391820619-25487-4-git-send-email-courtney.cavin@sonymobile.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Courtney Cavin <courtney.cavin@sonymobile.com>
+Cc: s-anna@ti.com, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, Tony Lindgren <tony@atomide.com>, omar.ramirez@copitl.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Langsdorf <mark.langsdorf@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Wolfram Sang <wsa@the-dreams.de>:
+On Fri, Feb 7, 2014 at 6:50 PM, Courtney Cavin
+<courtney.cavin@sonymobile.com> wrote:
+> We don't remove the legacy methods here, but we mark them as deprecated
+> in the hopes that people with the ability to properly test modifications
+> can adapt its users.
 
-> Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> ---
->
->  Documentation/i2c/instantiating-devices | 34  
-> +++++++++++++++++++++++++++++++--
->  1 file changed, 32 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/i2c/instantiating-devices  
-> b/Documentation/i2c/instantiating-devices
-> index c70e7a7..6df095a 100644
-> --- a/Documentation/i2c/instantiating-devices
-> +++ b/Documentation/i2c/instantiating-devices
-> @@ -8,8 +8,8 @@ reason, the kernel code must instantiate I2C devices  
-> explicitly. There are
->  several ways to achieve this, depending on the context and requirements.
->
->
-> -Method 1: Declare the I2C devices by bus number
-> ------------------------------------------------
-> +Method 1a: Declare the I2C devices by bus number
-> +------------------------------------------------
->
->  This method is appropriate when the I2C bus is a system bus as is the case
->  for many embedded systems. On such systems, each I2C bus has a number
-> @@ -51,6 +51,36 @@ The devices will be automatically unbound and  
-> destroyed when the I2C bus
->  they sit on goes away (if ever.)
->
->
-> +Method 1b: Declare the I2C devices via devicetree
-> +-------------------------------------------------
-> +
+The DT for highbank is pretty much fixed at this point. So adopting
+this will need a way to register without DT. Unfortunately, I don't
+have access to h/w either ATM.
 
-Hi Wolfram,
+I should note that this driver is very much highbank specific and not
+really a generic pl320 driver. The pl320 has up to 8 mailboxes and 8
+interrupts. How it is used from there is a software decision. I've
+never seen any other user, but it could be done quite differently from
+how it is used in highbank. In the case of highbank, we assigned a tx
+and rx mailbox. While both the management core and linux side have all
+8 interrupts wired up, we have assigned an interrupt to each side. I
+suppose you could have the interrupt tied to each mailbox, but really
+they are unrelated in the pl320 as each mailbox message could have
+multiple targets (interrupts). Probably splitting this between a pl320
+lib and platform specific drivers would be the right split if there
+are ever other users.
 
-There is now also a means to instantiate I2C devices through
-ACPI. This is documented in Documentation/acpi/enumeration.txt.
 
-Might be worthwhile to reference it from instantiating-devices.
-I guess that would be a separate patch though.
+> -       ipc_irq = adev->irq[0];
+> -       ret = request_irq(ipc_irq, ipc_handler, 0, dev_name(&adev->dev), NULL);
+> +       pl->adapter.dev = &adev->dev;
+> +       pl->adapter.ops = &pl320_mbox_ops;
+> +       pl->adapter.nchannels = 1;
 
-Thanks,
-Guenter
+Shouldn't this be 2? The 2 channels here are not a single
+bi-directional channel in any way. They are completely independent and
+have unrelated events. For example we originally defined having 3
+mailboxes where we had 2 tx mailboxes for fast and slow messages, but
+we ultimately decided everything could be a single tx mailbox. Event
+completion is handled synchronously via the pl320's handshake
+mechanism. I'd imagine you could have a protocol where you have async
+completions via an rx mailbox instead.
 
+Rob
