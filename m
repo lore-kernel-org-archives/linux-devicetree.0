@@ -1,78 +1,141 @@
-From: Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCHv2 0/4] Add DT support for fixed PHYs
-Date: Mon, 10 Feb 2014 11:30:30 +0100
-Message-ID: <CAH9NwWfutp6MitSuG-LNH=0Y0ffewuSawLXJOe2JUL7=tz7BWQ@mail.gmail.com>
-References: <1378480701-12908-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <20130911064248.GI30088@pengutronix.de> <CAH9NwWfBGHmZ+HfUndeh18NW+HyZ=c82W=O_4hJSOH-oZuM9jA@mail.gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] thermal: exynos: handle gate clock for misplaced
+ TRIMINFO register
+Date: Mon, 10 Feb 2014 10:33:54 +0000
+Message-ID: <20140210103354.GT25314@e106331-lin.cambridge.arm.com>
+References: <1383828154-428-1-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAH9NwWfBGHmZ+HfUndeh18NW+HyZ=c82W=O_4hJSOH-oZuM9jA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1383828154-428-1-git-send-email-ch.naveen@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "naveenkrishna.ch@gmail.com" <naveenkrishna.ch@gmail.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "eduardo.valentin@ti.com" <eduardo.valentin@ti.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "amit.daniel@samsung.com" <amit.daniel@samsung.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>, "cpgs@samsung.com" <cpgs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-2013-09-25 9:12 GMT+02:00 Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> Hi
->
->>> Hello,
->>>
->>> Here is a second version of the patch set that adds a Device Tree
->>> binding and the related code to support fixed PHYs. Marked as RFC,
->>> this patch set is obviously not intended for merging in 3.12.
->>>
->>> Since the first version, the changes have been:
->>>
->>>  * Instead of using a 'fixed-link' property inside the Ethernet device
->>>    DT node, with a fairly cryptic succession of integer values, we now
->>>    use a PHY subnode under the Ethernet device DT node, with explicit
->>>    properties to configure the duplex, speed, pause and other PHY
->>>    properties.
->>>
->>>  * The PHY address is automatically allocated by the kernel and no
->>>    longer visible in the Device Tree binding.
->>>
->>>  * The PHY device is created directly when the network driver calls
->>>    of_phy_connect_fixed_link(), and associated to the PHY DT node,
->>>    which allows the existing of_phy_connect() function to work,
->>>    without the need to use the deprecated of_phy_connect_fixed_link().
->>>
->>> The things I am not entirely happy with yet are:
->>>
->>>  * The PHY ID is hardcoded to 0xdeadbeef. Ideally, it should be a
->>>    properly reserved vendor/device identifier, but it isn't clear how
->>>    to get one allocated for this purpose.
->>>
->>>  * The fixed_phy_register() function in drivers/net/phy/fixed.c has
->>>    some OF references. So ideally, I would have preferred to put this
->>>    code in drivers/of/of_mdio.c, but to call get_phy_device(), we need
->>>    a reference to the mii_bus structure that represents the fixed MDIO
->>>    bus.
->>>
->>>  * There is some error management missing in fixed_phy_register(), but
->>>    it can certainly be added easily. This RFC is meant to sort out the
->>>    general idea.
->>
->> +1 for the general idea. This really looks good now. I've not much more
->> to say. Maybe someone from the devicetree corner has a few words for the
->> binding?
->>
->
-> I tested the whole series with an I.MX6D board with the FEC driver:
-> fec 2188000.ethernet eth0: Freescale FEC PHY driver [Generic PHY]
-> (mii_bus:phy_addr=fixed-0:00, irq=-1)
->
-> For me binding looks nice and I hope to see this patch series in 3.13.
->
-> Tested-by: Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Thu, Nov 07, 2013 at 12:42:34PM +0000, Naveen Krishna Chatradhi wrote:
+> On Exynos5420 the TMU(4) for GPU has a seperate clock enable bit from
+> the other TMU channels(0 ~ 3). Hence, accessing TRIMINFO for base_second
+> should be acompanied by enabling the respective clock.
+> 
+> This patch which allow for a "clk_sec" clock to be specified in the
+> device-tree which will be ungated when accessing the TRIMINFO register.
 
-Is there any update on this patch series?
+Missing binding document update? Or was "clk_sec" originally in the
+binding but unused? 
 
---
-Christian Gmeiner, MSc
+The code seems to expect "tmu_apbif_sec" as the clock name in the DT,
+but this isn't mentioned in the commit message. 
 
-https://soundcloud.com/christian-gmeiner
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I grepped Documentation/devicetree in mainline, but found no reference
+of either.
+
+Thanks,
+Mark.
+
+> 
+> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+> ---
+>  drivers/thermal/samsung/exynos_tmu.c |   24 +++++++++++++++++++++++-
+>  1 file changed, 23 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
+> index b54825a..33edd1a 100644
+> --- a/drivers/thermal/samsung/exynos_tmu.c
+> +++ b/drivers/thermal/samsung/exynos_tmu.c
+> @@ -47,6 +47,7 @@
+>   * @irq_work: pointer to the irq work structure.
+>   * @lock: lock to implement synchronization.
+>   * @clk: pointer to the clock structure.
+> + * @clk_sec: pointer to the clock structure for accessing the base_second.
+>   * @temp_error1: fused value of the first point trim.
+>   * @temp_error2: fused value of the second point trim.
+>   * @regulator: pointer to the TMU regulator structure.
+> @@ -61,7 +62,7 @@ struct exynos_tmu_data {
+>  	enum soc_type soc;
+>  	struct work_struct irq_work;
+>  	struct mutex lock;
+> -	struct clk *clk;
+> +	struct clk *clk, *clk_sec;
+>  	u8 temp_error1, temp_error2;
+>  	struct regulator *regulator;
+>  	struct thermal_sensor_conf *reg_conf;
+> @@ -152,6 +153,8 @@ static int exynos_tmu_initialize(struct platform_device *pdev)
+>  
+>  	mutex_lock(&data->lock);
+>  	clk_enable(data->clk);
+> +	if (!IS_ERR(data->clk_sec))
+> +		clk_enable(data->clk_sec);
+>  
+>  	if (TMU_SUPPORTS(pdata, READY_STATUS)) {
+>  		status = readb(data->base + reg->tmu_status);
+> @@ -306,6 +309,8 @@ skip_calib_data:
+>  out:
+>  	clk_disable(data->clk);
+>  	mutex_unlock(&data->lock);
+> +	if (!IS_ERR(data->clk_sec))
+> +		clk_disable(data->clk_sec);
+>  
+>  	return ret;
+>  }
+> @@ -457,12 +462,16 @@ static void exynos_tmu_work(struct work_struct *work)
+>  	const struct exynos_tmu_registers *reg = pdata->registers;
+>  	unsigned int val_irq, val_type;
+>  
+> +	if (!IS_ERR(data->clk_sec))
+> +		clk_enable(data->clk_sec);
+>  	/* Find which sensor generated this interrupt */
+>  	if (reg->tmu_irqstatus) {
+>  		val_type = readl(data->base_second + reg->tmu_irqstatus);
+>  		if (!((val_type >> data->id) & 0x1))
+>  			goto out;
+>  	}
+> +	if (!IS_ERR(data->clk_sec))
+> +		clk_disable(data->clk_sec);
+>  
+>  	exynos_report_trigger(data->reg_conf);
+>  	mutex_lock(&data->lock);
+> @@ -641,6 +650,15 @@ static int exynos_tmu_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	data->clk_sec = devm_clk_get(&pdev->dev, "tmu_apbif_sec");
+> +	if (!IS_ERR(data->clk_sec)) {
+> +		ret = clk_prepare(data->clk_sec);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "Failed to get clock\n");
+> +			return  PTR_ERR(data->clk_sec);
+> +		}
+> +	}
+> +
+>  	if (pdata->type == SOC_ARCH_EXYNOS4210 ||
+>  	    pdata->type == SOC_ARCH_EXYNOS4412 ||
+>  	    pdata->type == SOC_ARCH_EXYNOS5250 ||
+> @@ -713,6 +731,8 @@ static int exynos_tmu_probe(struct platform_device *pdev)
+>  	return 0;
+>  err_clk:
+>  	clk_unprepare(data->clk);
+> +	if (!IS_ERR(data->clk_sec))
+> +		clk_unprepare(data->clk_sec);
+>  	return ret;
+>  }
+>  
+> @@ -725,6 +745,8 @@ static int exynos_tmu_remove(struct platform_device *pdev)
+>  	exynos_unregister_thermal(data->reg_conf);
+>  
+>  	clk_unprepare(data->clk);
+> +	if (!IS_ERR(data->clk_sec))
+> +		clk_unprepare(data->clk_sec);
+>  
+>  	if (!IS_ERR(data->regulator))
+>  		regulator_disable(data->regulator);
+> -- 
+> 1.7.10.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
