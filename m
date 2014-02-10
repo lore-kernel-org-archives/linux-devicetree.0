@@ -1,59 +1,56 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: [PATCH v3 2/2] Binding: atmel-ssc: add option to
-	choose clock
-Date: Mon, 10 Feb 2014 14:09:46 +0800
-Message-ID: <1392012586-30790-3-git-send-email-voice.shen@atmel.com>
-References: <1392012586-30790-1-git-send-email-voice.shen@atmel.com>
+From: Liu Ying <Ying.Liu@freescale.com>
+Subject: Re: [PATCH] ARM: dts: i.MX51 babbage: Support diagnostic LED
+Date: Mon, 10 Feb 2014 14:24:07 +0800
+Message-ID: <52F87087.4000908@freescale.com>
+References: <1391522263-17877-1-git-send-email-Ying.Liu@freescale.com>
+ <20140210030214.GB9628@S2101-09.ap.freescale.net>
+ <1392006579.703394606@f357.i.mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1392012586-30790-1-git-send-email-voice.shen@atmel.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: broonie@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Rob Landley <rob@landley.net>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Richard Genoud <richard.genoud@gmail.com>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, nicolas.ferre@atmel.com, Mark Brown <broonie@linaro.org>, linux-sound@vger.kernel.org, linux-doc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Bo Shen <voice.shen@atmel.com>, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1392006579.703394606@f357.i.mail.ru>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: devicetree@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Add the option to choose clock on which pin input to SSC (as slave).
-Default is on TK pin to SSC, add "atmel,clk-from-rk-pin" option to
-specify the clock is on RK pin to SSC.
-
-Signed-off-by: Bo Shen <voice.shen@atmel.com>
----
-Changes in v3:
-  - None
-Series-changes: 2
-  - using "-" replace "_" in binding document
-
- Documentation/devicetree/bindings/misc/atmel-ssc.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/misc/atmel-ssc.txt b/Documentation/devicetree/bindings/misc/atmel-ssc.txt
-index a45ae08..5c1e14e 100644
---- a/Documentation/devicetree/bindings/misc/atmel-ssc.txt
-+++ b/Documentation/devicetree/bindings/misc/atmel-ssc.txt
-@@ -14,6 +14,14 @@ Required properties for devices compatible with "atmel,at91sam9g45-ssc":
-   See Documentation/devicetree/bindings/dma/atmel-dma.txt for details.
- - dma-names: Must be "tx", "rx".
- 
-+Optional properties:
-+  - atmel,clk-from-rk-pin: bool property.
-+     - When SSC works in slave mode, according to the hardware design, the
-+       clock can get from TK pin, and also can get from RK pin. So, add
-+       this parameter to choose where the clock from.
-+     - By default the clock is from TK pin, if the clock from RK pin, this
-+       property is needed.
-+
- Examples:
- - PDC transfer:
- ssc0: ssc@fffbc000 {
--- 
-1.8.5.2
+T24gMDIvMTAvMjAxNCAxMjoyOSBQTSwgQWxleGFuZGVyIFNoaXlhbiB3cm90ZToKPiDQn9C+0L3Q
+tdC00LXQu9GM0L3QuNC6LCAxMCDRhNC10LLRgNCw0LvRjyAyMDE0LCAxMTowMiArMDg6MDAg0L7R
+giBTaGF3biBHdW8gPHNoYXduLmd1b0BsaW5hcm8ub3JnPjoKPj4gT24gVHVlLCBGZWIgMDQsIDIw
+MTQgYXQgMDk6NTc6NDJQTSArMDgwMCwgTGl1IFlpbmcgd3JvdGU6Cj4+PiBUaGUgRDI1IExFRCBj
+b250cm9sbGVkIGJ5IGdwaW8gb24gdGhlIGkuTVg1MSBiYWJiYWdlCj4+PiBib2FyZCBpcyBhIGRp
+YWdub3N0aWMgTEVEIGFjY29yZGluZyB0byB0aGUgYm9hcmQgZGVzaWduLgo+Pj4gVGhpcyBwYXRj
+aCBhZGRzIHRoZSByZWxldmFudCBkZXZpY2UgdHJlZSBub2RlcyB0byB0aGUKPj4+IGkuTVg1MSBi
+YWJiYWdlIGRldmljZSB0cmVlIGZpbGUgdG8gc3VwcG9ydCB0aGlzIExFRC4KPj4+Cj4+PiBTaWdu
+ZWQtb2ZmLWJ5OiBMaXUgWWluZyA8WWluZy5MaXVAZnJlZXNjYWxlLmNvbT4KPj4+IC0tLQo+Pj4g
+IGFyY2gvYXJtL2Jvb3QvZHRzL2lteDUxLWJhYmJhZ2UuZHRzIHwgICAxNyArKysrKysrKysrKysr
+KysrKwo+Pj4gIDEgZmlsZSBjaGFuZ2VkLCAxNyBpbnNlcnRpb25zKCspCj4+Pgo+Pj4gZGlmZiAt
+LWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDUxLWJhYmJhZ2UuZHRzCj4+IGIvYXJjaC9hcm0v
+Ym9vdC9kdHMvaW14NTEtYmFiYmFnZS5kdHMKPj4+IGluZGV4IGJlMTQwN2MuLjhkNmE3NGIgMTAw
+NjQ0Cj4+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg1MS1iYWJiYWdlLmR0cwo+Pj4gKysr
+IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NTEtYmFiYmFnZS5kdHMKPj4+IEBAIC04MSw2ICs4MSwx
+NyBAQAo+Pj4gIAkJfTsKPj4+ICAJfTsKPj4+ICAKPj4+ICsJbGVkcyB7Cj4+PiArCQljb21wYXRp
+YmxlID0gImdwaW8tbGVkcyI7Cj4+PiArCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+Pj4g
+KwkJcGluY3RybC0wID0gPCZsZWRfcGluX2dwaW8yXzY+Owo+Pj4gKwo+Pj4gKwkJbGVkLWRpYWdu
+b3N0aWMgewo+Pj4gKwkJCWxhYmVsID0gImRpYWdub3N0aWMiOwo+Pj4gKwkJCWdwaW9zID0gPCZn
+cGlvMiA2IDA+Owo+Pgo+PiBKdXN0IG91dCBvZiBjdXJpb3NpdHksIGhvdyB3aWxsIHlvdSB1c2Uv
+dHJpZ2dlciB0aGUgbGVkPwo+IAo+IEFuZCBHUElPIGJpbmRpbmdzIHNob3VsZCBiZSB1c2VkIHRv
+IHNwZWNpZnkgYWN0aXZlIGxldmVsLAo+IEdQSU9fQUNUSVZFX0hJR0ggaW4gdGhpcyBjYXNlLgoK
+QmFzZWQgb24gTGludXggMy4xNC1yYzIsIHRoaXMgZ2l2ZXMgbWUgbm8gc2luZ2xlIG91dHB1dDoK
+Z3JlcCBHUElPX0FDVElWRSBhcmNoL2FybS9ib290L2R0cy8gLW5yIHwgZ3JlcCBpbXgKClNvLCB0
+aGlzIHBhdGNoIGZvbGxvd3MgdGhlIG9sZCBhcHByb2FjaC4KCkkgYWdyZWUgdG8gdXNlIEdQSU9f
+QUNUSVZFX0hJR0gvR1BJT19BQ1RJVkVfTE9XIG1hY3Jvcy4KSG93IGFib3V0IGdlbmVyYXRpbmcg
+ZGVkaWNhdGVkIHBhdGNoIHNldHMgZm9yIHRoaXMgcHVycG9zZT8KQWN0dWFsbHksIEkgaGFkIG9u
+ZSBzZXQgZm9yIGkuTVg1MSBwbGF0Zm9ybXMuCgpSZWdhcmRzLApMaXUgWWluZwoKCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwg
+bWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
+bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
