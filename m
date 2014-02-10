@@ -1,60 +1,74 @@
-From: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/3] sound: soc: codecs: Add es8328 codec
-Date: Mon, 10 Feb 2014 17:24:47 +0800
-Message-ID: <52F89ADF.8020305@kosagi.com>
-References: <1391749517-11787-1-git-send-email-xobs@kosagi.com> <1391749517-11787-2-git-send-email-xobs@kosagi.com> <20140207181238.GL1757@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140207181238.GL1757-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: [PATCH 01/17] Documentation: i2c: describe devicetree method for instantiating devices
+Date: Mon, 10 Feb 2014 11:03:55 +0100
+Message-ID: <1392026654-5343-2-git-send-email-wsa@the-dreams.de>
+References: <1392026654-5343-1-git-send-email-wsa@the-dreams.de>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392026654-5343-1-git-send-email-wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 8/2/14 2:12 AM, Mark Brown wrote:
-> On Fri, Feb 07, 2014 at 01:05:15PM +0800, Sean Cross wrote:
-> 
-> Please use subject likes matching the style for the subsystem.  If your
-> changelog looks different to others in the same area it probably needs
-> an update.
-> 
-> In general this looks like it should be making much more use of the
-> framework rather than open coding, it looks like it's very much hard
-> coded for one use cae.
+Signed-off-by: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+---
 
-I've tried to simplify the code somewhat, but I'm still unclear about
-how much of the DAPM code functions.  I'm running into two problems:
-Mapping the codec names "OUT1" and "OUT2" onto "Speaker" and "Headphone"
-respectively, and accommodating this codec's one DAC / two outputs
-architecture.
+ Documentation/i2c/instantiating-devices | 34 +++++++++++++++++++++++++++++++--
+ 1 file changed, 32 insertions(+), 2 deletions(-)
 
-First, this particular codec doesn't specify what the outputs are used
-for, it only specifies the names OUT1 and OUT2.  It is permitted to
-connect either a speaker or headphones to either output.  In the initial
-patch, I hardcoded OUT1 to be named "Speaker", and OUT2 to "Headphone".
- However, I've genericised the codec and changed them back to "OUT1" and
-"OUT2".  Inthe board definition I've added DAPM routes that map
-"Speaker" and "Headphone" back onto these names.  amixer still shows
-OUT1 and OUT2.
-
-There seems to be some overlap between DAPM and kcontrols.  How can I
-specify in the board definition file that OUT1 should have a kcontrol
-named "Speaker" and OUT2 should be named "Headphone"?  Tracing shows
-that DAPM at least recognizes the naming: e.g. "snd_soc_dapm_input_path:
-*Speaker <- (direct) <- ROUT1"
-
-Second, I'm having trouble getting the DAPM routing to function
-properly.  There is one DAC that routes to two outputs, OUT1 and OUT2.
-Both OUT1 and OUT2 have their own volume controls as well, but the main
-state machine and amplification comes from the DAC.  This doesn't seem
-to be very common.  Are there any codecs I can use as an example that
-have one DAC routing to two outputs?
-
-
-Sean
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/i2c/instantiating-devices b/Documentation/i2c/instantiating-devices
+index c70e7a7..6df095a 100644
+--- a/Documentation/i2c/instantiating-devices
++++ b/Documentation/i2c/instantiating-devices
+@@ -8,8 +8,8 @@ reason, the kernel code must instantiate I2C devices explicitly. There are
+ several ways to achieve this, depending on the context and requirements.
+ 
+ 
+-Method 1: Declare the I2C devices by bus number
+------------------------------------------------
++Method 1a: Declare the I2C devices by bus number
++------------------------------------------------
+ 
+ This method is appropriate when the I2C bus is a system bus as is the case
+ for many embedded systems. On such systems, each I2C bus has a number
+@@ -51,6 +51,36 @@ The devices will be automatically unbound and destroyed when the I2C bus
+ they sit on goes away (if ever.)
+ 
+ 
++Method 1b: Declare the I2C devices via devicetree
++-------------------------------------------------
++
++This method has the same implications as method 1a. The declaration of I2C
++devices is here done via devicetree as subnodes of the master controller.
++
++Example:
++
++	i2c1: i2c@400a0000 {
++		/* ... master properties skipped ... */
++		clock-frequency = <100000>;
++
++		flash@50 {
++			compatible = "atmel,24c256";
++			reg = <0x50>;
++		};
++
++		pca9532: gpio@60 {
++			compatible = "nxp,pca9532";
++			gpio-controller;
++			#gpio-cells = <2>;
++			reg = <0x60>;
++		};
++	};
++
++Here, two devices are attached to the bus using a speed of 100kHz. For
++additional properties which might be needed to set up the device, please refer
++to its devicetree documentation in Documentation/devicetree/bindings/.
++
++
+ Method 2: Instantiate the devices explicitly
+ --------------------------------------------
+ 
+-- 
+1.8.5.1
