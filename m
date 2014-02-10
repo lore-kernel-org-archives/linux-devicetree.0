@@ -1,26 +1,88 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCHv2 1/2] net: stmmac: Add SOCFPGA glue driver
-Date: Sun, 09 Feb 2014 18:06:42 -0800 (PST)
-Message-ID: <20140209.180642.1194468196963903290.davem@davemloft.net>
-References: <1391728795-30435-1-git-send-email-dinguyen@altera.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH] ARM: dts: i.MX51 babbage: Support diagnostic LED
+Date: Mon, 10 Feb 2014 11:02:17 +0800
+Message-ID: <20140210030214.GB9628@S2101-09.ap.freescale.net>
+References: <1391522263-17877-1-git-send-email-Ying.Liu@freescale.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1391728795-30435-1-git-send-email-dinguyen@altera.com>
-Sender: netdev-owner@vger.kernel.org
-To: dinguyen@altera.com
-Cc: netdev@vger.kernel.org, dinh.linux@gmail.com, devicetree@vger.kernel.org, peppe.cavallaro@st.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, vbridgers2013@gmail.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1391522263-17877-1-git-send-email-Ying.Liu@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Liu Ying <Ying.Liu@freescale.com>
+Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: <dinguyen@altera.com>
-Date: Thu, 6 Feb 2014 17:19:54 -0600
-
-> +MODULE_ALIAS("platform:socfpga-dwmac");
-> +MODULE_AUTHOR("Dinh Nguyen <dinguyen@altera.com>");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("Altera SOCFPGA DWMAC Glue Layer");
+On Tue, Feb 04, 2014 at 09:57:42PM +0800, Liu Ying wrote:
+> The D25 LED controlled by gpio on the i.MX51 babbage
+> board is a diagnostic LED according to the board design.
+> This patch adds the relevant device tree nodes to the
+> i.MX51 babbage device tree file to support this LED.
+> 
+> Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
+> ---
+>  arch/arm/boot/dts/imx51-babbage.dts |   17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx51-babbage.dts b/arch/arm/boot/dts/imx51-babbage.dts
+> index be1407c..8d6a74b 100644
+> --- a/arch/arm/boot/dts/imx51-babbage.dts
+> +++ b/arch/arm/boot/dts/imx51-babbage.dts
+> @@ -81,6 +81,17 @@
+>  		};
+>  	};
+>  
+> +	leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&led_pin_gpio2_6>;
 > +
+> +		led-diagnostic {
+> +			label = "diagnostic";
+> +			gpios = <&gpio2 6 0>;
 
-Do not add stray empty lines at the end of files.  Your second patch
-has this problem is a few places too.
+Just out of curiosity, how will you use/trigger the led?
+
+> +		};
+> +	};
+> +
+>  	sound {
+>  		compatible = "fsl,imx51-babbage-sgtl5000",
+>  			     "fsl,imx-audio-sgtl5000";
+> @@ -280,6 +291,12 @@
+>  				MX51_PAD_CSPI1_RDY__GPIO4_26 0x80000000
+>  			>;
+>  		};
+> +
+> +		led_pin_gpio2_6: led_gpio2_6 {
+
+This might be copied from some existing file, but I would hope the name
+can be more generic, something like the following
+
+	pinctrl_gpio_leds: gpioledsgrp {
+
+, so that when we have more gpio controlled leds to add, we can just add
+more pins into the same group without concerning the name.
+
+Shawn
+
+> +			fsl,pins = <
+> +				MX51_PAD_EIM_D22__GPIO2_6 0x80000000
+> +			>;
+> +		};
+>  	};
+>  };
+>  
+> -- 
+> 1.7.9.5
+> 
+> 
