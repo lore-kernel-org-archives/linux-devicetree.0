@@ -1,145 +1,176 @@
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Fwd: [PATCH 2/2] spi: Add Qualcomm QUP SPI controller support
-Date: Mon, 10 Feb 2014 19:11:56 +0200
-Message-ID: <1392052316.2853.67.camel@iivanov-dev>
-References: <1391705868-20091-1-git-send-email-iivanov@mm-sol.com>
-	 <1391705868-20091-3-git-send-email-iivanov@mm-sol.com>
-	 <CACceFXdUobQvN2hcv5kh+QL=o8bWM_PVkAtrOx+euZSeVDm8hQ@mail.gmail.com>
-	 <214fe9fc7e62ab30bdfbb4ac5d1ee250.squirrel@www.codeaurora.org>
-	 <1392047651.2853.19.camel@iivanov-dev>
-	 <3388d68dc907e9190d997fad95830d74.squirrel@www.codeaurora.org>
+From: Courtney Cavin <courtney.cavin@sonymobile.com>
+Subject: Re: [RFC 1/6] mailbox: add core framework
+Date: Mon, 10 Feb 2014 09:17:06 -0800
+Message-ID: <20140210171706.GR1706@sonymobile.com>
+References: <1391820619-25487-1-git-send-email-courtney.cavin@sonymobile.com>
+ <1391820619-25487-2-git-send-email-courtney.cavin@sonymobile.com>
+ <4706525.lB7VmvWQMJ@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3388d68dc907e9190d997fad95830d74.squirrel-mMfbam+mt9083fI46fginR2eb7JE58TQ@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dsneddon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, inux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alokc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4706525.lB7VmvWQMJ@wuerfel>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "s-anna@ti.com" <s-anna@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>, "mark.langsdorf@calxeda.com" <mark.langsdorf@calxeda.com>, "tony@atomide.com" <tony@atomide.com>, "omar.ramirez@copitl.com" <omar.ramirez@copitl.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-Hi Dan, 
-
-On Mon, 2014-02-10 at 16:21 +0000, dsneddon-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org wrote: 
-> Hi Ivan,
-> >
-> >> > +
-> >> > +static int spi_qup_set_state(struct spi_qup *controller, u32 state)
-> >> > +{
-> >> > +       unsigned long loop = 0;
-> >> > +       u32 cur_state;
-> >> > +
-> >> > +       cur_state = readl_relaxed(controller->base + QUP_STATE);
-> >> Make sure the state is valid before you read the current state.
-> >
-> > Why? Controller is always left in valid state (after probe and every
-> > transaction)? I know that CAF code contain this check, but now driver
-> > is little bit different. I have made some tests and controller is
-> > always in valid state in this point.
+On Mon, Feb 10, 2014 at 03:11:00PM +0100, Arnd Bergmann wrote:
+> On Friday 07 February 2014 16:50:14 Courtney Cavin wrote:
+> > The mailbox drivers are fragmented, and some implement their own core.
+> > Unify the drivers and implement common functionality in a framework.
+> > 
+> > Signed-off-by: Courtney Cavin <courtney.cavin@sonymobile.com>
 > 
-> The hardware programming guide we recommends doing this.  I'd have to talk
-> to the hardware designers to know exactly the reason why.  I can follow up
-> on this if you'd like.
+> This seems pretty cool overall, great to see someone getting at it@
+
+I'm glad to hear that there's some interest!
+
+> > +static void of_mbox_adapter_add(struct mbox_adapter *adap)
+> > +{
+> > +	if (!adap->dev)
+> > +		return;
+> > +
+> > +	if (!adap->of_xlate) {
+> > +		adap->of_xlate = of_mbox_simple_xlate;
+> > +		adap->of_n_cells = 1;
+> > +	}
+> > +
+> > +	of_node_get(adap->dev->of_node);
+> > +}
 > 
+> You should probably check if of_n_cells matches the device node
+> #mbox-cells value, otherwise the xlate function will get confused.
 
-Ok, thanks. I could add it back. Please, could you point me to place
-in driver where this could happen.
+Ok.  I was under the impression that the adapter implementations would
+add something like that, but I see no reason why putting it here would
+hurt.
 
-
-> >
-> >> > +       /*
-> >> > +        * Per spec: for PAUSE_STATE to RESET_STATE, two writes
-> >> > +        * of (b10) are required
-> >> > +        */
-> >> > +       if (((cur_state & QUP_STATE_MASK) == QUP_STATE_PAUSE) &&
-> >> > +           (state == QUP_STATE_RESET)) {
-> >> > +               writel_relaxed(QUP_STATE_CLEAR, controller->base +
-> >> > QUP_STATE);
-> >> > +               writel_relaxed(QUP_STATE_CLEAR, controller->base +
-> >> > QUP_STATE);
-> >> > +       } else {
-> >> Make sure you don't transition from RESET to PAUSE.
-> >
-> > I don't see this to be handled in CAF code. Could you give me
-> > more details, please?
-> >
-> > Right now possible state transactions are:
-> >
-> > * if everything is fine:
-> >   RESET -> RUN -> PAUSE -> RUN -> RESET
-> > * in case of error:
-> >   RESET -> RUN -> RESET
-> >   RESET -> RUN -> PAUSE -> RESET
-> >
-> > Please correct me if I am wrong.
+> > +
+> > +	mutex_lock(&mbox_lock);
+> > +	list_add(&adap->list, &mbox_adapters);
+> > +
+> > +	of_mbox_adapter_add(adap);
+> > +	mutex_unlock(&mbox_lock);
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL(mbox_adapter_add);
 > 
-> According to the hardware documentation if the hardware is in the RESET
-> state and we try to transition to the PAUSE state the hardware behavior is
-> "undefined", which usually means bad things will happen.  Admittedly, if
-> the driver always follows the "valid" rules (the ones you've listed above)
-> it _should_ never happen.  However, it is _possible_ the hardware is in
-> the RESET state while the driver thinks it's in the RUN state and the
-> driver tries to put is in the PAUSE state.  In other words, I'd like to
-> err on the side of caution since the check doesn't really cost us
-> anything.
+> Please use EXPORT_SYMBOL_GPL here and elsewhere.
 
-Ok that is fine, but did you see where/how this could happen in
-the current implementation. If this could happen I will like to fix it.
+Ok.
+
+> > +/**
+> > + * mbox_channel_notify() - notify the core that a channel has a message
+> > + * @chan: the channel which has data
+> > + * @data: the location of said data
+> > + * @len: the length of specified data
+> > + *
+> > + * This function may be called from interrupt/no-sleep context.
+> > + */
+> > +int mbox_channel_notify(struct mbox_channel *chan,
+> > +		const void *data, unsigned int len)
+> > +{
+> > +	return atomic_notifier_call_chain(&chan->notifier, len, (void *)data);
+> > +}
+> > +EXPORT_SYMBOL(mbox_channel_notify);
+> 
+> What is the reason to use a notifier chain here? Isn't a simple
+> callback function pointer enough? I would expect that each mailbox
+> can have exactly one consumer, not multiple ones.
+
+Mostly because I didn't see a reason not to.  While a callback function
+(and private data) would probably be sufficient, I don't see a specific
+reason why a mailbox cannot have multiple consumers, and the API
+currently is designed around that concept.
+
+> > +/**
+> > + * mbox_add_table() - add a lookup table for adapter consumers
+> > + * @table: array of consumers to register
+> > + * @num: number of consumers in array
+> > + */
+> > +void __init mbox_add_table(struct mbox_lookup *table, unsigned int num)
+> > +{
+> > +	mutex_lock(&mbox_lookup_lock);
+> > +	while (num--) {
+> > +		if (table->provider && (table->dev_id || table->con_id))
+> > +			list_add_tail(&table->list, &mbox_lookup_list);
+> > +		table++;
+> > +	}
+> > +	mutex_unlock(&mbox_lookup_lock);
+> > +}
+> > +EXPORT_SYMBOL(mbox_add_table);
+> 
+> I don't understand this part of the API. Why do you need a separate
+> lookup table here? Isn't that what the DT lookup does already?
+
+It is.  The lookup/table stuff here is specifically for non-DT-based
+mailboxes.
+
+> > +/**
+> > + * mbox_request() - lookup and request a MBOX channel
+> > + * @dev: device for channel consumer
+> > + * @con_id: consumer name
+> > + * @nb: notifier block used for receiving messages
+> > + *
+> > + * The notifier is called as atomic on new messages, so you may not sleep
+> > + * in the notifier callback function.
+> > + */
+> > +struct mbox *mbox_request(struct device *dev, const char *con_id,
+> > +		struct notifier_block *nb)
+> > +{
+> > +	struct mbox_adapter *adap;
+> > +	struct mbox_channel *chan;
+> > +	struct mbox *mbox;
+> > +	int index = 0;
+> > +
+> > +	if (IS_ENABLED(CONFIG_OF) && dev && dev->of_node)
+> > +		return of_mbox_request(dev->of_node, con_id, nb);
+> 
+> What use case do you have in mind for !CONFIG_OF?
+
+None particularly, except for the existing implementations in
+drivers/mailbox.  I simply presumed it wouldn't hurt to implement lookup
+tables similar to those the pwm core.
+
+> > +/**
+> > + * struct mbox_adapter_ops - MBOX adapter operations
+> > + * @put_message: hook for putting messages in the channels MBOX
+> > + * @request: optional hook for requesting an MBOX channel
+> > + * @release: optional hook for releasing an MBOX channel
+> > + * @owner: helps prevent removal of modules exporting active MBOX channels
+> > + */
+> > +struct mbox_adapter_ops {
+> > +	int (*put_message)(struct mbox_adapter *, struct mbox_channel *,
+> > +				const void *, unsigned int);
+> > +	int (*request)(struct mbox_adapter *, struct mbox_channel *);
+> > +	int (*release)(struct mbox_adapter *, struct mbox_channel *);
+> > +	struct module *owner;
+> > +};
+> 
+> I think we will need a peek_message() callback for the upcoming
+> QMTM driver, to allow client drivers to get a message out before
+> the mailbox driver gets an IRQ. This will be used for IRQ mitigation
+> in the network driver.
+
+Eeek!  I'm not very fond of 'peek' functions, but I guess I can see a
+reason for IRQ mitigation here.  I still cannot help but to try to think
+my way out of implementing peek.
+
+What would be the callback flow here?  There's no guarantee that a
+mailbox implementation isn't implemented over a sleepy bus, which would
+render peek somewhat useless.  Additionally, we have the adapter
+protection mutex which can sleep anyway.  This means that a consumer can
+not call peek from anywhere atomic, including a notifier, which I think
+is your use-case.
+
+Perhaps a FEED_ME return from a notifier, requesting more 'mail' if
+available?
 
 > 
-> >
-> >> > +
-> >> > +static void spi_qup_fifo_read(struct spi_qup *controller,
-> >> > +                             struct spi_transfer *xfer)
-> >> > +{
-> >> > +       u8 *rx_buf = xfer->rx_buf;
-> >> > +       u32 word, state;
-> >> > +       int idx, shift;
-> >> > +
-> >> > +       while (controller->rx_bytes < xfer->len) {
-> >> > +
-> >> > +               state = readl_relaxed(controller->base +
-> >> QUP_OPERATIONAL);
-> >> > +               if (0 == (state & QUP_OP_IN_FIFO_NOT_EMPTY))
-> >> > +                       break;
-> >> > +
-> >> > +               word = readl_relaxed(controller->base +
-> >> QUP_INPUT_FIFO);
-> >> > +
-> >> > +               for (idx = 0; idx < controller->bytes_per_word &&
-> >> > +                    controller->rx_bytes < xfer->len; idx++,
-> >> > +                    controller->rx_bytes++) {
-> >> > +
-> >> > +                       if (!rx_buf)
-> >> > +                               continue;
-> >> If there is no rx_buf just set rx_bytes to xfer->len and skip the loop
-> >> entirely.
-> >
-> > Well, FIFO buffer still should be drained, right?
-> > Anyway. I am looking for better way to handle this.
-> > Same applies for filling FIFO buffer.
-> >
-> 
-> Yes.  Still read from the FIFO but skip the for loop since we're just
-> adding bytes_per_word to the total rx_byte count one iteration at a time
-> and not doing anything with the data.
-> 
+> 	Arnd
 
-My point was: If I made rx_bytes equal xfer->len, outer while loop will
-be terminated before FIFO was drained :-). I will see how to handle
-this better.
+Thanks for looking!  I appreciate the feedback.
 
-Thanks,
-Ivan
-
-> Thanks,
-> Dan
-> 
-> 
-
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Courtney
