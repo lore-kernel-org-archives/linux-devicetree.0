@@ -1,50 +1,123 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: Re: [RFC 1/6] mailbox: add core framework
-Date: Mon, 10 Feb 2014 13:09:34 -0600
-Message-ID: <20140210190934.GA841@joshc.qualcomm.com>
-References: <1391820619-25487-1-git-send-email-courtney.cavin@sonymobile.com>
- <1391820619-25487-2-git-send-email-courtney.cavin@sonymobile.com>
- <4706525.lB7VmvWQMJ@wuerfel>
- <CAL_JsqKa6nyPOa0M67svUR20Y3JNZcFhsTZE=ooV-eg6_ZBaMw@mail.gmail.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCHv4 4/7] hwspinlock/core: add common OF helpers
+Date: Mon, 10 Feb 2014 13:14:44 -0600
+Message-ID: <52F92524.3080402@ti.com>
+References: <1389658764-39199-1-git-send-email-s-anna@ti.com>	<1389658764-39199-5-git-send-email-s-anna@ti.com> <CAJAp7Oi7wD+VsMAd37gT04yZ4TH4ygXFmheDhvmWuanUjpBmVQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKa6nyPOa0M67svUR20Y3JNZcFhsTZE=ooV-eg6_ZBaMw@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Courtney Cavin <courtney.cavin@sonymobile.com>, s-anna@ti.com, Rob Herring <rob.herring@calxeda.com>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, Mark Langsdorf <mark.langsdorf@calxeda.com>, Tony Lindgren <tony@atomide.com>, omar.ramirez@copitl.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CAJAp7Oi7wD+VsMAd37gT04yZ4TH4ygXFmheDhvmWuanUjpBmVQ@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn@kryo.se>, Ohad Ben-Cohen <ohad@wizery.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 10, 2014 at 11:52:05AM -0600, Rob Herring wrote:
-> On Mon, Feb 10, 2014 at 8:11 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Friday 07 February 2014 16:50:14 Courtney Cavin wrote:
-[..]
-> >> +int mbox_channel_notify(struct mbox_channel *chan,
-> >> +             const void *data, unsigned int len)
-> >> +{
-> >> +     return atomic_notifier_call_chain(&chan->notifier, len, (void *)data);
-> >> +}
-> >> +EXPORT_SYMBOL(mbox_channel_notify);
-> >
-> > What is the reason to use a notifier chain here? Isn't a simple
-> > callback function pointer enough? I would expect that each mailbox
-> > can have exactly one consumer, not multiple ones.
-> 
-> It probably can be a callback, but there can be multiple consumers. It
-> was only a notifier on the pl320 as there was no framework at the time
-> and to avoid creating custom interfaces between drivers. On highbank
-> for example, we can asynchronously receive the events for temperature
-> change, power off, and reset. So either there needs to be an event
-> demux somewhere or callbacks have to return whether they handled an
-> event or not.
+Bjorn,
 
-I'm not familiar with highbank IPC, but with these requirements should
-the mailbox core even bother with asynchronous notifier chain?  It
-sounds like a better fit might be for the mailbox core to implement a
-proper adapter-specific irqdomain and used a chained irq handler to
-demux (or have consumers request with IRQF_SHARED in the shared case).
+On 02/07/2014 04:49 PM, Bjorn Andersson wrote:
+> On Mon, Jan 13, 2014 at 4:19 PM, Suman Anna <s-anna@ti.com> wrote:
+>> This patch adds three new OF helper functions to use/request
+>> locks from a hwspinlock device instantiated through a
+>> device-tree blob.
+>
+> Nice, I ran in to the problem of needing a probe deferral on a
+> hwspinlock earlier this week so I implemented this yesterday...then I
+> got a pointer to your series.
+>
+> [snip]
+>>   /**
+>> + * of_hwspin_lock_request_specific() - request a OF phandle-based specific lock
+>> + * @np: device node from which to request the specific hwlock
+>> + * @propname: property name containing hwlock specifier(s)
+>> + * @index: index of the hwlock
+>> + *
+>> + * This function is the OF equivalent of hwspin_lock_request_specific(). This
+>> + * function provides a means for users of the hwspinlock module to request a
+>> + * specific hwspinlock using the phandle of the hwspinlock device. The requested
+>> + * lock number is indexed relative to the hwspinlock device, unlike the
+>> + * hwspin_lock_request_specific() which is an absolute lock number.
+>> + *
+>> + * Returns the address of the assigned hwspinlock, or NULL on error
+>> + */
+>> +struct hwspinlock *of_hwspin_lock_request_specific(struct device_node *np,
+>> +                                       const char *propname, int index)
+>> +{
+>> +       struct hwspinlock_device *bank;
+>> +       struct of_phandle_args args;
+>> +       int id;
+>> +       int ret;
+>> +
+>> +       ret = of_parse_phandle_with_args(np, propname, "#hwlock-cells", index,
+>> +                                        &args);
+>> +       if (ret) {
+>> +               pr_warn("%s: can't parse hwlocks property of node '%s[%d]' ret = %d\n",
+>> +                       __func__, np->full_name, index, ret);
+>> +               return NULL;
+>> +       }
+>
+> of_parse_phandle_with_args() already does pr_err if it can't find the
+> phandle and on some of the issues related to arguments. So please
+> remove this pr_warn().
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Yes, I will clean this up.
+
+>
+> It seems to be standard practice to pass the error value back to the
+> consumer, so you should
+> return ERR_PTR(ret); here instead of the NULL...
+
+I have modelled the return values in this function based on the return 
+values in the existing hwspin_lock_request interfaces. I would need to
+change those functions as well.
+
+Ohad,
+Do you have any objections to the return code convention change? I agree 
+with Bjorn on the changes. If you are ok, then I will add a separate 
+patch for the existing functions and revise this patch as well.
+
+>
+>> +
+>> +       mutex_lock(&hwspinlock_tree_lock);
+>> +       list_for_each_entry(bank, &hwspinlock_devices, list)
+>> +               if (bank->dev->of_node == args.np)
+>> +                       break;
+>> +       mutex_unlock(&hwspinlock_tree_lock);
+>> +       if (&bank->list == &hwspinlock_devices) {
+>> +               pr_warn("%s: requested hwspinlock device %s is not registered\n",
+>> +                       __func__, args.np->full_name);
+>> +               return NULL;
+>
+> ...especially since you want the consumer to have the ability to
+> identify this error. Here you should
+> return ERR_PTR(-EPROBE_DEFER); so that the consumer knows that this
+> lock is not _yet_ registered, but will be in the future.
+>
+> You should remove this pr_warn as well. The standard use of this
+> function would be in a probe() and just returning this error value
+> from that probe will give you a line in the log indicating that this
+> was in fact the issue.
+
+OK.
+
+>
+>> +       }
+>> +
+>> +       id = bank->ops->of_xlate(bank, &args);
+>> +       if (id < 0 || id >= bank->num_locks) {
+>> +               pr_warn("%s: requested lock %d is either out of range [0, %d] or failed translation\n",
+>> +                       __func__, id, bank->num_locks - 1);
+>> +               return NULL;
+>
+> Please return ERR_PTR(-EINVAL); here.
+
+OK, will change this based on Ohad's ack/nack.
+
+>
+> Looking forward to your next spin, as I will actually use this interface :)
+
+Thanks for your comments. I will wait to see if there are any additional 
+comments before I refresh the series later this week.
+
+regards
+Suman
