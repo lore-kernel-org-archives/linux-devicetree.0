@@ -1,134 +1,59 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC 1/6] mailbox: add core framework
-Date: Mon, 10 Feb 2014 15:11 +0100
-Message-ID: <4706525.lB7VmvWQMJ@wuerfel>
-References: <1391820619-25487-1-git-send-email-courtney.cavin@sonymobile.com> <1391820619-25487-2-git-send-email-courtney.cavin@sonymobile.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 1/8] ASoC: da9055: Fix device registration of PMIC and
+ CODEC devices
+Date: Mon, 10 Feb 2014 14:14:00 +0000
+Message-ID: <20140210141400.GJ1757@sirena.org.uk>
+References: <cover.1391705989.git.Adam.Thomson.Opensource@diasemi.com>
+ <6a398d176b0b2bf8792d27bd5e2995fd96afb32d.1391705989.git.Adam.Thomson.Opensource@diasemi.com>
+ <20140210134310.GH1757@sirena.org.uk>
+ <20140210135939.GA23141@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1391820619-25487-2-git-send-email-courtney.cavin@sonymobile.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Courtney Cavin <courtney.cavin@sonymobile.com>
-Cc: s-anna@ti.com, rob.herring@calxeda.com, rafael.j.wysocki@intel.com, mark.langsdorf@calxeda.com, tony@atomide.com, omar.ramirez@copitl.com, gregkh@linuxfoundation.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="QFO1zB2dwAkGraMW"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140210135939.GA23141@lee--X1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 07 February 2014 16:50:14 Courtney Cavin wrote:
-> The mailbox drivers are fragmented, and some implement their own core.
-> Unify the drivers and implement common functionality in a framework.
-> 
-> Signed-off-by: Courtney Cavin <courtney.cavin@sonymobile.com>
 
-This seems pretty cool overall, great to see someone getting at it@
+--QFO1zB2dwAkGraMW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +static void of_mbox_adapter_add(struct mbox_adapter *adap)
-> +{
-> +	if (!adap->dev)
-> +		return;
-> +
-> +	if (!adap->of_xlate) {
-> +		adap->of_xlate = of_mbox_simple_xlate;
-> +		adap->of_n_cells = 1;
-> +	}
-> +
-> +	of_node_get(adap->dev->of_node);
-> +}
+On Mon, Feb 10, 2014 at 01:59:39PM +0000, Lee Jones wrote:
 
-You should probably check if of_n_cells matches the device node
-#mbox-cells value, otherwise the xlate function will get confused.
+> > Applied, thanks.
 
-> +
-> +	mutex_lock(&mbox_lock);
-> +	list_add(&adap->list, &mbox_adapters);
-> +
-> +	of_mbox_adapter_add(adap);
-> +	mutex_unlock(&mbox_lock);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(mbox_adapter_add);
+> Actually, do you mind if I take this and apply it to an immutable?
 
-Please use EXPORT_SYMBOL_GPL here and elsewhere.
+> I'd rather not be on the wrong end of some wrath, due to not playing
+> the game properly.
 
-> +/**
-> + * mbox_channel_notify() - notify the core that a channel has a message
-> + * @chan: the channel which has data
-> + * @data: the location of said data
-> + * @len: the length of specified data
-> + *
-> + * This function may be called from interrupt/no-sleep context.
-> + */
-> +int mbox_channel_notify(struct mbox_channel *chan,
-> +		const void *data, unsigned int len)
-> +{
-> +	return atomic_notifier_call_chain(&chan->notifier, len, (void *)data);
-> +}
-> +EXPORT_SYMBOL(mbox_channel_notify);
+OK, but it does need to go in as a fix targetted for stable.
 
-What is the reason to use a notifier chain here? Isn't a simple
-callback function pointer enough? I would expect that each mailbox
-can have exactly one consumer, not multiple ones.
+--QFO1zB2dwAkGraMW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +/**
-> + * mbox_add_table() - add a lookup table for adapter consumers
-> + * @table: array of consumers to register
-> + * @num: number of consumers in array
-> + */
-> +void __init mbox_add_table(struct mbox_lookup *table, unsigned int num)
-> +{
-> +	mutex_lock(&mbox_lookup_lock);
-> +	while (num--) {
-> +		if (table->provider && (table->dev_id || table->con_id))
-> +			list_add_tail(&table->list, &mbox_lookup_list);
-> +		table++;
-> +	}
-> +	mutex_unlock(&mbox_lookup_lock);
-> +}
-> +EXPORT_SYMBOL(mbox_add_table);
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-I don't understand this part of the API. Why do you need a separate
-lookup table here? Isn't that what the DT lookup does already?
+iQIcBAEBAgAGBQJS+N6kAAoJELSic+t+oim9GMEP/RUikxwwk3i8Xwj/zR85LUI+
+GvPKRyXt+zHnmz6Zsq12Y+y9wM8edVFtKJXUCSH4RRCxhSCIazMecYC+2AXPTcrt
+DLPm19vaB8jTMHh7MOjcMf820sZHmgXt2Xj01DulNAxbQxi09iY4RK6+svKOz2up
+hF0cGSvGu4mtEXetrBgDLFKpY4V4d2rmZ8iHaFqwBJYVO07TeylQyi+msr361cCc
+zeIgg+Iv+Q7I/y9Vf+B1x6gW7sH1ap2scPebZSk4corwBD4g9yePZLRHAwp6N9Zl
+r+Uev+Htwa9ta3ZbAayu3x04tPvvETnqyLuau6WIJPWEA9UzHbukFSTP8SS3mJDo
+ZKB2olrDrlnJC/b0nBnW7c1ebksWQlgSebeix3hNdw7ryrN9jXDCpysmVJPFZ9Nv
+i8ghPMu+C9ZfNmrAkhpFMCYT0yJfW4mNiucj1QQkaVyg5tIjoMx+oKjvSqCWK5ff
+XO4zXLjLN/24zuS9d18lzW4ez5CPj4IGGvjom2A4mjyS+mp7cV8P5weNQWIUd3YD
+fEhY0hlOPlgCNUm1jcgYMYUMMgrXx11Vu9y5XjCtCBuFrDAxkQrKvG8Jia4rG4YW
+zyb5yN8swT3/s3Eb6d7ukotHDigDlLmK6NBH7K7nmdFhjv3ODxcA10CxXNf/2eJy
+NQydh4//9hYJyoHdaeyQ
+=F0Fw
+-----END PGP SIGNATURE-----
 
-> +/**
-> + * mbox_request() - lookup and request a MBOX channel
-> + * @dev: device for channel consumer
-> + * @con_id: consumer name
-> + * @nb: notifier block used for receiving messages
-> + *
-> + * The notifier is called as atomic on new messages, so you may not sleep
-> + * in the notifier callback function.
-> + */
-> +struct mbox *mbox_request(struct device *dev, const char *con_id,
-> +		struct notifier_block *nb)
-> +{
-> +	struct mbox_adapter *adap;
-> +	struct mbox_channel *chan;
-> +	struct mbox *mbox;
-> +	int index = 0;
-> +
-> +	if (IS_ENABLED(CONFIG_OF) && dev && dev->of_node)
-> +		return of_mbox_request(dev->of_node, con_id, nb);
-
-What use case do you have in mind for !CONFIG_OF?
-
-> +/**
-> + * struct mbox_adapter_ops - MBOX adapter operations
-> + * @put_message: hook for putting messages in the channels MBOX
-> + * @request: optional hook for requesting an MBOX channel
-> + * @release: optional hook for releasing an MBOX channel
-> + * @owner: helps prevent removal of modules exporting active MBOX channels
-> + */
-> +struct mbox_adapter_ops {
-> +	int (*put_message)(struct mbox_adapter *, struct mbox_channel *,
-> +				const void *, unsigned int);
-> +	int (*request)(struct mbox_adapter *, struct mbox_channel *);
-> +	int (*release)(struct mbox_adapter *, struct mbox_channel *);
-> +	struct module *owner;
-> +};
-
-I think we will need a peek_message() callback for the upcoming
-QMTM driver, to allow client drivers to get a message out before
-the mailbox driver gets an IRQ. This will be used for IRQ mitigation
-in the network driver.
-
-	Arnd
+--QFO1zB2dwAkGraMW--
