@@ -1,40 +1,134 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/8] ASoC: da9055: Fix device registration of PMIC and
- CODEC devices
-Date: Mon, 10 Feb 2014 13:59:39 +0000
-Message-ID: <20140210135939.GA23141@lee--X1>
-References: <cover.1391705989.git.Adam.Thomson.Opensource@diasemi.com>
- <6a398d176b0b2bf8792d27bd5e2995fd96afb32d.1391705989.git.Adam.Thomson.Opensource@diasemi.com>
- <20140210134310.GH1757@sirena.org.uk>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC 1/6] mailbox: add core framework
+Date: Mon, 10 Feb 2014 15:11 +0100
+Message-ID: <4706525.lB7VmvWQMJ@wuerfel>
+References: <1391820619-25487-1-git-send-email-courtney.cavin@sonymobile.com> <1391820619-25487-2-git-send-email-courtney.cavin@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140210134310.GH1757-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1391820619-25487-2-git-send-email-courtney.cavin@sonymobile.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Courtney Cavin <courtney.cavin@sonymobile.com>
+Cc: s-anna@ti.com, rob.herring@calxeda.com, rafael.j.wysocki@intel.com, mark.langsdorf@calxeda.com, tony@atomide.com, omar.ramirez@copitl.com, gregkh@linuxfoundation.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> > Currently the I2C device Ids conflict for the MFD and CODEC so
-> > cannot be both instantiated on one platform. This patch updates
-> > the Ids and names to make them unique from each other.
->=20
-> Applied, thanks.
+On Friday 07 February 2014 16:50:14 Courtney Cavin wrote:
+> The mailbox drivers are fragmented, and some implement their own core.
+> Unify the drivers and implement common functionality in a framework.
+> 
+> Signed-off-by: Courtney Cavin <courtney.cavin@sonymobile.com>
 
-Actually, do you mind if I take this and apply it to an immutable?
+This seems pretty cool overall, great to see someone getting at it@
 
-I'd rather not be on the wrong end of some wrath, due to not playing
-the game properly.
+> +static void of_mbox_adapter_add(struct mbox_adapter *adap)
+> +{
+> +	if (!adap->dev)
+> +		return;
+> +
+> +	if (!adap->of_xlate) {
+> +		adap->of_xlate = of_mbox_simple_xlate;
+> +		adap->of_n_cells = 1;
+> +	}
+> +
+> +	of_node_get(adap->dev->of_node);
+> +}
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You should probably check if of_n_cells matches the device node
+#mbox-cells value, otherwise the xlate function will get confused.
+
+> +
+> +	mutex_lock(&mbox_lock);
+> +	list_add(&adap->list, &mbox_adapters);
+> +
+> +	of_mbox_adapter_add(adap);
+> +	mutex_unlock(&mbox_lock);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(mbox_adapter_add);
+
+Please use EXPORT_SYMBOL_GPL here and elsewhere.
+
+> +/**
+> + * mbox_channel_notify() - notify the core that a channel has a message
+> + * @chan: the channel which has data
+> + * @data: the location of said data
+> + * @len: the length of specified data
+> + *
+> + * This function may be called from interrupt/no-sleep context.
+> + */
+> +int mbox_channel_notify(struct mbox_channel *chan,
+> +		const void *data, unsigned int len)
+> +{
+> +	return atomic_notifier_call_chain(&chan->notifier, len, (void *)data);
+> +}
+> +EXPORT_SYMBOL(mbox_channel_notify);
+
+What is the reason to use a notifier chain here? Isn't a simple
+callback function pointer enough? I would expect that each mailbox
+can have exactly one consumer, not multiple ones.
+
+> +/**
+> + * mbox_add_table() - add a lookup table for adapter consumers
+> + * @table: array of consumers to register
+> + * @num: number of consumers in array
+> + */
+> +void __init mbox_add_table(struct mbox_lookup *table, unsigned int num)
+> +{
+> +	mutex_lock(&mbox_lookup_lock);
+> +	while (num--) {
+> +		if (table->provider && (table->dev_id || table->con_id))
+> +			list_add_tail(&table->list, &mbox_lookup_list);
+> +		table++;
+> +	}
+> +	mutex_unlock(&mbox_lookup_lock);
+> +}
+> +EXPORT_SYMBOL(mbox_add_table);
+
+I don't understand this part of the API. Why do you need a separate
+lookup table here? Isn't that what the DT lookup does already?
+
+> +/**
+> + * mbox_request() - lookup and request a MBOX channel
+> + * @dev: device for channel consumer
+> + * @con_id: consumer name
+> + * @nb: notifier block used for receiving messages
+> + *
+> + * The notifier is called as atomic on new messages, so you may not sleep
+> + * in the notifier callback function.
+> + */
+> +struct mbox *mbox_request(struct device *dev, const char *con_id,
+> +		struct notifier_block *nb)
+> +{
+> +	struct mbox_adapter *adap;
+> +	struct mbox_channel *chan;
+> +	struct mbox *mbox;
+> +	int index = 0;
+> +
+> +	if (IS_ENABLED(CONFIG_OF) && dev && dev->of_node)
+> +		return of_mbox_request(dev->of_node, con_id, nb);
+
+What use case do you have in mind for !CONFIG_OF?
+
+> +/**
+> + * struct mbox_adapter_ops - MBOX adapter operations
+> + * @put_message: hook for putting messages in the channels MBOX
+> + * @request: optional hook for requesting an MBOX channel
+> + * @release: optional hook for releasing an MBOX channel
+> + * @owner: helps prevent removal of modules exporting active MBOX channels
+> + */
+> +struct mbox_adapter_ops {
+> +	int (*put_message)(struct mbox_adapter *, struct mbox_channel *,
+> +				const void *, unsigned int);
+> +	int (*request)(struct mbox_adapter *, struct mbox_channel *);
+> +	int (*release)(struct mbox_adapter *, struct mbox_channel *);
+> +	struct module *owner;
+> +};
+
+I think we will need a peek_message() callback for the upcoming
+QMTM driver, to allow client drivers to get a message out before
+the mailbox driver gets an IRQ. This will be used for IRQ mitigation
+in the network driver.
+
+	Arnd
