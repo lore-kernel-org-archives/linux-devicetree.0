@@ -1,39 +1,85 @@
-From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv2 1/2] net: stmmac: Add SOCFPGA glue driver
-Date: Mon, 10 Feb 2014 09:52:36 -0600
-Message-ID: <1392047556.17499.0.camel@linux-builds1>
-References: <1391728795-30435-1-git-send-email-dinguyen@altera.com>
-	 <20140209.180642.1194468196963903290.davem@davemloft.net>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH V5 4/8] phy: st-miphy-40lp: Add skeleton driver
+Date: Mon, 10 Feb 2014 16:54:21 +0100
+Message-ID: <201402101654.22187.arnd@arndb.de>
+References: <cover.1391871170.git.pratyush.anand@st.com> <fb505abd332645671d9ad125003d8253b6346715.1391871170.git.pratyush.anand@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140209.180642.1194468196963903290.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+In-Reply-To: <fb505abd332645671d9ad125003d8253b6346715.1391871170.git.pratyush.anand-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vbridgers2013-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
+Cc: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2014-02-09 at 18:06 -0800, David Miller wrote:
-> From: <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-> Date: Thu, 6 Feb 2014 17:19:54 -0600
-> 
-> > +MODULE_ALIAS("platform:socfpga-dwmac");
-> > +MODULE_AUTHOR("Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>");
-> > +MODULE_LICENSE("GPL v2");
-> > +MODULE_DESCRIPTION("Altera SOCFPGA DWMAC Glue Layer");
-> > +
-> 
-> Do not add stray empty lines at the end of files.  Your second patch
-> has this problem is a few places too.
-> 
+On Monday 10 February 2014, Mohit Kumar wrote:
+> diff --git a/Documentation/devicetree/bindings/phy/st-miphy40lp.txt b/Documentation/devicetree/bindings/phy/st-miphy40lp.txt
+> new file mode 100644
+> index 0000000..d0c7096
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/st-miphy40lp.txt
+> @@ -0,0 +1,12 @@
+> +Required properties:
+> +- compatible : should be "st,miphy40lp-phy"
+> +	Other supported soc specific compatible:
+> +		"st,spear1310-miphy"
+> +		"st,spear1340-miphy"
+> +- reg : offset and length of the PHY register set.
+> +- misc: phandle for the syscon node to access misc registers
+> +- phy-id: Instance id of the phy.
+> +- #phy-cells : from the generic PHY bindings, must be 1.
+> +	- 1st cell: phandle to the phy node.
+> +	- 2nd cell: 0 if phy (in 1st cell) is to be used for SATA, 1 for PCIe
+> +	  and 2 for Super Speed USB.
 
-Will fix in v3.
+It's common to start this file with a small header explaining what this
+hardware is.
 
-Thanks,
-Dinh
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index afa2354..2f58993 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -64,4 +64,10 @@ config BCM_KONA_USB2_PHY
+>  	help
+>  	  Enable this to support the Broadcom Kona USB 2.0 PHY.
+>  
+> +config PHY_ST_MIPHY40LP
+> +	tristate "ST MIPHY 40LP driver"
+> +	help
+> +	  Support for ST MIPHY 40LP which can be used for PCIe, SATA and Super Speed USB.
+> +	select GENERIC_PHY
+> +
+>  endmenu
 
+The 'select' statement should come before 'help', for consistency with the
+rest of the kernel. Maybe mention that this phy is used inside the
+spear13xx SoC here rather than a standalone phy.
 
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv) {
+> +		dev_err(dev, "can't alloc miphy40lp private date memory\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	priv->plat_ops = (struct miphy40lp_plat_ops *)of_id->data;
+
+The cast would incorrectly remove the 'const' attribute of the pointer.
+Better remove the cast and make priv->plat_ops const.
+
+> +static int __init miphy40lp_phy_init(void)
+> +{
+> +
+> +	return platform_driver_probe(&miphy40lp_driver,
+> +				miphy40lp_probe);
+> +}
+> +module_init(miphy40lp_phy_init);
+
+There should certainly be a module_exit() function here so you can unload the
+driver.
+
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
