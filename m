@@ -1,82 +1,31 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: [PATCH 4/7] ARM: shmobile: lager dts: Add QSPI nodes
-Date: Mon, 10 Feb 2014 11:47:30 +0100
-Message-ID: <1392029254-15400-5-git-send-email-geert@linux-m68k.org>
-References: <1392029254-15400-1-git-send-email-geert@linux-m68k.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392029254-15400-1-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
+Subject: RE: [PATCH v2 2/8] ASoC: da9055: Add DT support for CODEC
+Date: Mon, 10 Feb 2014 10:48:09 +0000
+Message-ID: <2E89032DDAA8B9408CB92943514A03376BAD0C9F@SW-EX-MBX01.diasemi.com>
+References: <cover.1391705989.git.Adam.Thomson.Opensource@diasemi.com>
+ <9ec36c0633ae8291267be6802a34a469a34ae292.1391705989.git.Adam.Thomson.Opensource@diasemi.com>
+ <20140207162504.GP32298@sirena.org.uk> <20140207162649.GQ32298@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140207162649.GQ32298@sirena.org.uk>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
+Cc: Lee Jones <lee.jones@linaro.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-
-Add pinctrl and SPI devices for QSPI on Lager.
-Add Spansion s25fl512s SPI FLASH and MTD partitions.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- arch/arm/boot/dts/r8a7790-lager.dts |   36 +++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
-index 1081c5e91ac4..adff2dc4012d 100644
---- a/arch/arm/boot/dts/r8a7790-lager.dts
-+++ b/arch/arm/boot/dts/r8a7790-lager.dts
-@@ -80,6 +80,11 @@
- 		renesas,groups = "mmc1_data8", "mmc1_ctrl";
- 		renesas,function = "mmc1";
- 	};
-+
-+	qspi_pins: spi {
-+		renesas,groups = "qspi_ctrl", "qspi_data4";
-+		renesas,function = "qspi";
-+	};
- };
- 
- &mmcif1 {
-@@ -95,3 +100,34 @@
- &sata1 {
- 	status = "okay";
- };
-+
-+&spi {
-+	pinctrl-0 = <&qspi_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+
-+	flash: flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spansion,s25fl512s";
-+		reg = <0>;
-+		spi-max-frequency = <30000000>;
-+		m25p,fast-read;
-+
-+		partition@0 {
-+			label = "loader";
-+			reg = <0x00000000 0x00040000>;
-+			read-only;
-+		};
-+		partition@40000 {
-+			label = "user";
-+			reg = <0x00040000 0x00400000>;
-+			read-only;
-+		};
-+		partition@440000 {
-+			label = "flash";
-+			reg = <0x00440000 0x03bc0000>;
-+		};
-+	};
-+};
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBGZWIgMDcsIDIwMTQgYXQgMDQ6Mjc6MTdQTSArMDAwMCwgTWFyayBCcm93biB3cm90
+ZToNCg0KPiBPbiBGcmksIEZlYiAwNywgMjAxNCBhdCAwNDoyNTowNFBNICswMDAwLCBNYXJrIEJy
+b3duIHdyb3RlOg0KPiA+IE9uIFRodSwgRmViIDA2LCAyMDE0IGF0IDA2OjAzOjA5UE0gKzAwMDAs
+IEFkYW0gVGhvbXNvbiB3cm90ZToNCj4gPiA+IFNpZ25lZC1vZmYtYnk6IEFkYW0gVGhvbXNvbiA8
+QWRhbS5UaG9tc29uLk9wZW5zb3VyY2VAZGlhc2VtaS5jb20+DQo+ID4NCj4gPiBUaGlzIGRvZXNu
+J3QgYXBwbHkgYWdhaW5zdCBteSBjdXJyZW50IGZvci1uZXh0IG9yIHYzLjE0LXJjMSwgY2FuIHlv
+dQ0KPiA+IHBsZWFzZSBjaGVjayBhbmQgcmVzZW5kPw0KPiANCj4gVWdoLCBzb3JyeSAtIGl0J2xs
+IGJlIGR1ZSB0byBwYXRjaCAxIG9mIGNvdXJzZSB3aGljaCBJJ2Qgc2tpcHBlZCBkdWUgdG8NCj4g
+dGhlIE1GRCBiaXQuICBJZiB5b3UgbmVlZCB0byByZXNlbmQgaXQncyBwcm9iYWJseSBlYXNpZXIg
+YWxsIHJvdW5kIHRvDQo+IGp1c3Qgc2VuZCB0aGUgTUZEIGFuZCBBU29DIGJpdHMgb2YgdGhhdCBz
+ZXBhcmF0ZWx5IHNpbmNlIHRoZXJlJ3Mgbm8NCj4gZGlyZWN0IGRlcGVuZGVuY3kuDQoNCk9rLCBu
+byBwcm9ibGVtLiBXaWxsIHNlZSB3aGF0IExlZSBjb21lcyBiYWNrIGFuZCBnbyBmcm9tIHRoZXJl
+Lg0K
