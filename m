@@ -1,72 +1,76 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] spi: Add Qualcomm QUP SPI controller support
-Date: Mon, 10 Feb 2014 21:40:35 +0000
-Message-ID: <20140210214035.GF13533@sirena.org.uk>
-References: <1391705868-20091-1-git-send-email-iivanov@mm-sol.com>
- <1391705868-20091-3-git-send-email-iivanov@mm-sol.com>
- <20140207073952.GA2610@qualcomm.com>
- <1391766753.27491.60.camel@iivanov-dev>
- <20140207173207.GA19974@qualcomm.com>
- <1392051302.2853.56.camel@iivanov-dev>
- <20140210174738.GA31596@qualcomm.com>
- <1392061304.24621.17.camel@violet>
- <20140210202926.GV1706@sonymobile.com>
- <1392065994.32668.1.camel@violet>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="rWhLK7VZz0iBluhq"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1392065994.32668.1.camel@violet>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Cc: Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alok Chauhan <alokc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gilad Avidov <gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kiran Gunda <kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v2 4/5] ARM: init: add support for reserved memory defined by device tree
+Date: Mon, 10 Feb 2014 21:59:29 +0000
+Message-ID: <20140210215929.4473BC408F7@trevor.secretlab.ca>
+References: <1391515773-6112-1-git-send-email-m.szyprowski@samsung.com> < 1391515773-6112-5-git-send-email-m.szyprowski@samsung.com> <20140205101510. 59A95C40A89@trevor.secretlab.ca> <52F38D75.4030704@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <52F38D75.4030704@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@gmail.com>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 06 Feb 2014 14:26:13 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+> Hello,
+> 
+> On 2014-02-05 11:15, Grant Likely wrote:
+> > On Tue, 04 Feb 2014 13:09:32 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+> > > Enable reserved memory initialization from device tree.
+> > >
+> > > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > > Cc: Laura Abbott <lauraa@codeaurora.org>
+> > > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > > ---
+> > >  arch/arm/mm/init.c |    3 +++
+> > >  1 file changed, 3 insertions(+)
+> > >
+> > > diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+> > > index 804d61566a53..ebafdb479410 100644
+> > > --- a/arch/arm/mm/init.c
+> > > +++ b/arch/arm/mm/init.c
+> > > @@ -17,6 +17,7 @@
+> > >  #include <linux/nodemask.h>
+> > >  #include <linux/initrd.h>
+> > >  #include <linux/of_fdt.h>
+> > > +#include <linux/of_reserved_mem.h>
+> > >  #include <linux/highmem.h>
+> > >  #include <linux/gfp.h>
+> > >  #include <linux/memblock.h>
+> > > @@ -323,6 +324,8 @@ void __init arm_memblock_init(struct meminfo *mi,
+> > >  	if (mdesc->reserve)
+> > >  		mdesc->reserve();
+> > >
+> > > +	early_init_dt_scan_reserved_mem();
+> > > +
+> >
+> > The new binding is being made fundamental. If the reserved-memory node
+> > is present, then it needs to be honored, even if the kernel doesn't know
+> > how to use the regions. Therefore, This needs to be unconditional for
+> > all architectures. The hook should be called in early_init_dt_scan()
+> > (drivers/of/fdt.c) immediately after the early_init_dt_scan_memory()
+> > hook.
+> 
+> In theory this will be the best solution, but it practice there is a
+> problem. early_init_dt_scan() is called as the first function from kernel
+> booting code. That time there is no memory yet added to the system, so it
+> would be really hard to reserve anything. Memory nodes are being added
+> later either with memblock_add() or by some other arch specific way.
 
---rWhLK7VZz0iBluhq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hmmm, depends on the architecture. On ARM the memory is loaded into the
+meminfo structure first, and it isn't until arm_memblock_init() that
+memblock_add() gets called on all the regions. Some architectures do the
+memblock_add() directly from early_init_dt_add_memory_arch() function.
 
-On Mon, Feb 10, 2014 at 10:59:54PM +0200, Ivan T. Ivanov wrote:
-> On Mon, 2014-02-10 at 12:29 -0800, Courtney Cavin wrote:
+The default early_init_dt_add_memory_arch() in drivers/of/fdt.c is
+overridden by ARM and a number of other architectures. However...
 
-> > A developer doesn't have to have much skill at all to copy-paste DT
-> > configurations around and muck with numbers....  I agree with Andy here,
-> > early validation is a good idea here, at the very least, some sanity
-> > checks.
+> Finally, once all memory has been added to the system we can parse and
+> reserve all regions defined in the device tree. This really requires
+> creating another function which will be called by arch specific code.
 
-> So, probably first variant with just warning will be good enough?=20
+...Or it means getting rid of meminfo entirely so that memblock is
+available earlier. Laura Abbott has just posted v2 of her series to do
+exactly that. If you base on that then you should be able to do exactly
+what I suggested.
 
-I'm not sure it actually adds anything meaningful here - if the error
-reporting isn't clear enough on use then that's probably an issue anyway
-and we may never even use the default.
-
---rWhLK7VZz0iBluhq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS+UdQAAoJELSic+t+oim9zwUP/izudJhWCEfA5lGLy3AIuXDo
-jGKqtDZrVXqoAY0sLtpCCWRLz3lJxfy/U6+LRxpiFJdCMun8im0We0kgWL3MTaNj
-wMZ9xBAXOrGxpFtgB7wmC4BnQsUXMmmaHRUBre4pRfPtjGbPtN2KrFsApehgR5JZ
-LlmYB7RchVlQQvWUE9ADNfqAMZG+AJVGYRxGXMXELibUr24614zE/VFpbRRxi+8M
-IEKMzmHxnpyM7MxJnau0Q/QMgnTm29iLadaQz8ge+1EDjgCuRi9XnKbnknj8lYui
-Y0Qrfe6uAjobIL/U1CsvboUd2HlOko3b+y/iPDkqto7DkWf6ieJ4F0ZrXCVbs8HB
-y1qPEqk56BdxD8Gdaltz5paiCRQ+u6uISaj3fPa8XrVqlbPDsj/MrGBxkfqC1Yii
-Bqh//ytyvZJy9zv5/R8SUm9Cu1M/gVRc020Y5vJgDJBxmWLqJmDiFmeS4EdoZjj4
-Xu6p8MzyNDgLxgQOWBh1Cqn1GZSJWVBCy+iaxJfr8xh2z39L3Vfe61vgUBwqM6Gd
-rCmyj3CjxpHOjB/7MwQhamiszM1Krk0SQLr1V8PsxTWadYsB4Y5A+bcs6vjvQI3s
-oVCGxRWfvIs/U434Fllv45wWMdid/7PoIXOpxc0RavVemzyBh+3rxV2nH23/Fgpp
-o/hRQ7c4bMvwVfWaaKBe
-=P01a
------END PGP SIGNATURE-----
-
---rWhLK7VZz0iBluhq--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+g.
