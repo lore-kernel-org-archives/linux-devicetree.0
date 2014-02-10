@@ -1,56 +1,57 @@
-From: Liu Ying <Ying.Liu@freescale.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH] ARM: dts: i.MX51 babbage: Support diagnostic LED
-Date: Mon, 10 Feb 2014 14:24:07 +0800
-Message-ID: <52F87087.4000908@freescale.com>
+Date: Mon, 10 Feb 2014 14:31:20 +0800
+Message-ID: <20140210063118.GJ9628@S2101-09.ap.freescale.net>
 References: <1391522263-17877-1-git-send-email-Ying.Liu@freescale.com>
  <20140210030214.GB9628@S2101-09.ap.freescale.net>
  <1392006579.703394606@f357.i.mail.ru>
+ <52F87087.4000908@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1392006579.703394606@f357.i.mail.ru>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: devicetree@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52F87087.4000908-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDIvMTAvMjAxNCAxMjoyOSBQTSwgQWxleGFuZGVyIFNoaXlhbiB3cm90ZToKPiDQn9C+0L3Q
-tdC00LXQu9GM0L3QuNC6LCAxMCDRhNC10LLRgNCw0LvRjyAyMDE0LCAxMTowMiArMDg6MDAg0L7R
-giBTaGF3biBHdW8gPHNoYXduLmd1b0BsaW5hcm8ub3JnPjoKPj4gT24gVHVlLCBGZWIgMDQsIDIw
-MTQgYXQgMDk6NTc6NDJQTSArMDgwMCwgTGl1IFlpbmcgd3JvdGU6Cj4+PiBUaGUgRDI1IExFRCBj
-b250cm9sbGVkIGJ5IGdwaW8gb24gdGhlIGkuTVg1MSBiYWJiYWdlCj4+PiBib2FyZCBpcyBhIGRp
-YWdub3N0aWMgTEVEIGFjY29yZGluZyB0byB0aGUgYm9hcmQgZGVzaWduLgo+Pj4gVGhpcyBwYXRj
-aCBhZGRzIHRoZSByZWxldmFudCBkZXZpY2UgdHJlZSBub2RlcyB0byB0aGUKPj4+IGkuTVg1MSBi
-YWJiYWdlIGRldmljZSB0cmVlIGZpbGUgdG8gc3VwcG9ydCB0aGlzIExFRC4KPj4+Cj4+PiBTaWdu
-ZWQtb2ZmLWJ5OiBMaXUgWWluZyA8WWluZy5MaXVAZnJlZXNjYWxlLmNvbT4KPj4+IC0tLQo+Pj4g
-IGFyY2gvYXJtL2Jvb3QvZHRzL2lteDUxLWJhYmJhZ2UuZHRzIHwgICAxNyArKysrKysrKysrKysr
-KysrKwo+Pj4gIDEgZmlsZSBjaGFuZ2VkLCAxNyBpbnNlcnRpb25zKCspCj4+Pgo+Pj4gZGlmZiAt
-LWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDUxLWJhYmJhZ2UuZHRzCj4+IGIvYXJjaC9hcm0v
-Ym9vdC9kdHMvaW14NTEtYmFiYmFnZS5kdHMKPj4+IGluZGV4IGJlMTQwN2MuLjhkNmE3NGIgMTAw
-NjQ0Cj4+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg1MS1iYWJiYWdlLmR0cwo+Pj4gKysr
-IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NTEtYmFiYmFnZS5kdHMKPj4+IEBAIC04MSw2ICs4MSwx
-NyBAQAo+Pj4gIAkJfTsKPj4+ICAJfTsKPj4+ICAKPj4+ICsJbGVkcyB7Cj4+PiArCQljb21wYXRp
-YmxlID0gImdwaW8tbGVkcyI7Cj4+PiArCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+Pj4g
-KwkJcGluY3RybC0wID0gPCZsZWRfcGluX2dwaW8yXzY+Owo+Pj4gKwo+Pj4gKwkJbGVkLWRpYWdu
-b3N0aWMgewo+Pj4gKwkJCWxhYmVsID0gImRpYWdub3N0aWMiOwo+Pj4gKwkJCWdwaW9zID0gPCZn
-cGlvMiA2IDA+Owo+Pgo+PiBKdXN0IG91dCBvZiBjdXJpb3NpdHksIGhvdyB3aWxsIHlvdSB1c2Uv
-dHJpZ2dlciB0aGUgbGVkPwo+IAo+IEFuZCBHUElPIGJpbmRpbmdzIHNob3VsZCBiZSB1c2VkIHRv
-IHNwZWNpZnkgYWN0aXZlIGxldmVsLAo+IEdQSU9fQUNUSVZFX0hJR0ggaW4gdGhpcyBjYXNlLgoK
-QmFzZWQgb24gTGludXggMy4xNC1yYzIsIHRoaXMgZ2l2ZXMgbWUgbm8gc2luZ2xlIG91dHB1dDoK
-Z3JlcCBHUElPX0FDVElWRSBhcmNoL2FybS9ib290L2R0cy8gLW5yIHwgZ3JlcCBpbXgKClNvLCB0
-aGlzIHBhdGNoIGZvbGxvd3MgdGhlIG9sZCBhcHByb2FjaC4KCkkgYWdyZWUgdG8gdXNlIEdQSU9f
-QUNUSVZFX0hJR0gvR1BJT19BQ1RJVkVfTE9XIG1hY3Jvcy4KSG93IGFib3V0IGdlbmVyYXRpbmcg
-ZGVkaWNhdGVkIHBhdGNoIHNldHMgZm9yIHRoaXMgcHVycG9zZT8KQWN0dWFsbHksIEkgaGFkIG9u
-ZSBzZXQgZm9yIGkuTVg1MSBwbGF0Zm9ybXMuCgpSZWdhcmRzLApMaXUgWWluZwoKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwg
-bWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Mon, Feb 10, 2014 at 02:24:07PM +0800, Liu Ying wrote:
+> >>> @@ -81,6 +81,17 @@
+> >>>  		};
+> >>>  	};
+> >>>  
+> >>> +	leds {
+> >>> +		compatible = "gpio-leds";
+> >>> +		pinctrl-names = "default";
+> >>> +		pinctrl-0 = <&led_pin_gpio2_6>;
+> >>> +
+> >>> +		led-diagnostic {
+> >>> +			label = "diagnostic";
+> >>> +			gpios = <&gpio2 6 0>;
+> >>
+> >> Just out of curiosity, how will you use/trigger the led?
+> > 
+> > And GPIO bindings should be used to specify active level,
+> > GPIO_ACTIVE_HIGH in this case.
+> 
+> Based on Linux 3.14-rc2, this gives me no single output:
+> grep GPIO_ACTIVE arch/arm/boot/dts/ -nr | grep imx
+
+If you grep linux-next, you will find quite a few.
+
+> 
+> So, this patch follows the old approach.
+> 
+> I agree to use GPIO_ACTIVE_HIGH/GPIO_ACTIVE_LOW macros.
+> How about generating dedicated patch sets for this purpose?
+> Actually, I had one set for i.MX51 platforms.
+
+I prefer to have this change in the same patch.
+
+Shawn
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
