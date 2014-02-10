@@ -1,89 +1,45 @@
-From: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [RFC] dt: bindings: add bindings for Broadcom bcm43xx sdio devices
-Date: Mon, 10 Feb 2014 20:17:48 +0100
-Message-ID: <1392059868-8782-1-git-send-email-arend@broadcom.com>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv4 0/7] omap hwspinlock dt support
+Date: Mon, 10 Feb 2014 13:27:39 -0600
+Message-ID: <52F9282B.5000702@ti.com>
+References: <1389658764-39199-1-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1389658764-39199-1-git-send-email-s-anna-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Broadcom bcm43xx sdio devices are fullmac devices that may be
-integrated in ARM platforms. Currently, the brcmfmac driver for
-these devices support use of platform data. This patch specifies
-the bindings that allow this platform data to be expressed in the
-devicetree.
+Mark,
 
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Reviewed-by: Hante Meuleman <meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Pieter-Paul Giesberts <pieterpg-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
----
-This devicetree binding proposal is intended for platforms with
-Broadcom wireless device in MMC sdio slot. These devices may
-have their own interrupt and power line. Also the SDIO drive
-strength is often hardware dependent and expressed in this
-binding.
+On 01/13/2014 06:19 PM, Suman Anna wrote:
+> Hi,
+>
+> This is an updated series mainly addressing Mark Rutland's comments
+> about hwlock specifier being always one-cell. The series adds the
+> support for #hwlock-cells property and adds a simple default OF
+> translate function.
+>
+> The DTS patches from previous series have already been merged, and
+> needs this property to be added. This is handled in a separate series
+> that only deals with OMAP hwspinlock DTS patches.
+>
+> The series, along with the DTS patches, is tested on top of v3.13-rc8
+> plus Tero's v13 clock DT series and Tony's 3.14 staged branches. The
+> validation on OMAP5, DRA7, AM437 requires Tero's series with couple of
+> additional base patches for AM43xx. AM43xx functionality needs a hwmod
+> fix [1] for creating the associated omap_device as well.
+>
 
-Not sure if this should go in staging or not. Feel free to
-comment on this proposal.
+Can you please take a look at this series and give your ack on the 
+bindings if you do not have any further comments? The only comments so 
+far are from Bjorn on the OF helpers.
 
-Regards,
-Arend
----
- .../staging/net/wireless/brcm,bcm43xx-fmac.txt     |   37 ++++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/staging/net/wireless/brcm,bcm43xx-fmac.txt
-
-diff --git a/Documentation/devicetree/bindings/staging/net/wireless/brcm,bcm43xx-fmac.txt b/Documentation/devicetree/bindings/staging/net/wireless/brcm,bcm43xx-fmac.txt
-new file mode 100644
-index 0000000..535f343
---- /dev/null
-+++ b/Documentation/devicetree/bindings/staging/net/wireless/brcm,bcm43xx-fmac.txt
-@@ -0,0 +1,37 @@
-+Broadcom BCM43xx Fullmac wireless SDIO devices
-+
-+This node provides properties for controlling the Broadcom wireless device. The
-+node is expected to be specified as a child node to the MMC controller that
-+connects the device to the system.
-+
-+Required properties:
-+
-+ - compatible : Should be "brcm,bcm43xx-fmac".
-+ - wlan-supply : phandle for fixed regulator used to control power for
-+	the device/module.
-+
-+Optional properties:
-+ - drive-strength : drive strength used for SDIO pins on device (default = 6mA).
-+ - interrupt-parent : the phandle for the interrupt controller to which the
-+	device interrupt (HOST_WAKE) is connected.
-+ - interrupts : interrupt specifier encoded according the interrupt controller
-+	specified by interrupt-parent property.
-+
-+Example:
-+
-+mmc3: mmc@01c20000 {
-+	pinctrl-0 = <&mmc3_pins>;
-+	pinctrl-1 = <&wifi_host_wake>;
-+	vmmc-supply = <&mmc3_supply>;
-+	bus-width = <4>;
-+
-+	bcm4335: bcm4335@0 {
-+		compatible = "brcm,bcm43xx-fmac";
-+		wlan-supply = <&wlan-reg>;
-+		drive-strength = <4>;
-+		interrupt-parent = <&gpx2>;
-+		interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "HOST_WAKE";
-+	};
-+};
-+
--- 
-1.7.10.4
-
+regards
+Suman
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
