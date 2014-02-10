@@ -1,67 +1,69 @@
-From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: [PATCH 8/8] serial: max310x: Add bindings documentation for the MAX310X UARTs
-Date: Mon, 10 Feb 2014 22:17:47 +0400
-Message-ID: <1392056267-13806-1-git-send-email-shc_work@mail.ru>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+From: linux@roeck-us.net
+Subject: Re: [PATCH 01/17] Documentation: i2c: describe devicetree method
+ for instantiating devices
+Date: Mon, 10 Feb 2014 12:21:19 -0600
+Message-ID: <20140210122119.115858a7ntu4lr40@67.228.131.205>
+References: <1392026654-5343-1-git-send-email-wsa@the-dreams.de>
+ <1392026654-5343-2-git-send-email-wsa@the-dreams.de>
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=ISO-8859-1;
+ DelSp="Yes";
+ format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1392026654-5343-2-git-send-email-wsa@the-dreams.de>
+Content-Disposition: inline
+Sender: linux-doc-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the devicetree documentation for the Maxim MAX310X UARTs.
+Quoting Wolfram Sang <wsa@the-dreams.de>:
 
-Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
----
- .../devicetree/bindings/serial/maxim,max310x.txt   | 36 ++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/maxim,max310x.txt
+> Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> ---
+>
+>  Documentation/i2c/instantiating-devices | 34  
+> +++++++++++++++++++++++++++++++--
+>  1 file changed, 32 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/i2c/instantiating-devices  
+> b/Documentation/i2c/instantiating-devices
+> index c70e7a7..6df095a 100644
+> --- a/Documentation/i2c/instantiating-devices
+> +++ b/Documentation/i2c/instantiating-devices
+> @@ -8,8 +8,8 @@ reason, the kernel code must instantiate I2C devices  
+> explicitly. There are
+>  several ways to achieve this, depending on the context and requirements.
+>
+>
+> -Method 1: Declare the I2C devices by bus number
+> ------------------------------------------------
+> +Method 1a: Declare the I2C devices by bus number
+> +------------------------------------------------
+>
+>  This method is appropriate when the I2C bus is a system bus as is the case
+>  for many embedded systems. On such systems, each I2C bus has a number
+> @@ -51,6 +51,36 @@ The devices will be automatically unbound and  
+> destroyed when the I2C bus
+>  they sit on goes away (if ever.)
+>
+>
+> +Method 1b: Declare the I2C devices via devicetree
+> +-------------------------------------------------
+> +
 
-diff --git a/Documentation/devicetree/bindings/serial/maxim,max310x.txt b/Documentation/devicetree/bindings/serial/maxim,max310x.txt
-new file mode 100644
-index 0000000..0daf780
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/maxim,max310x.txt
-@@ -0,0 +1,36 @@
-+* Maxim MAX310X advanced Universal Asynchronous Receiver-Transmitter (UART)
-+
-+Required properties:
-+- compatible: Should be one of the following:
-+  - "maxim,max3107" for Maxim MAX3107,
-+  - "maxim,max3108" for Maxim MAX3108,
-+  - "maxim,max3109" for Maxim MAX3109,
-+  - "maxim,max14830" for Maxim MAX14830.
-+- reg: SPI chip select number.
-+- interrupt-parent: The phandle for the interrupt controller that
-+  services interrupts for this IC.
-+- interrupts: Specifies the interrupt source of the parent interrupt
-+  controller. The format of the interrupt specifier depends on the
-+  parent interrupt controller.
-+- clocks: phandle to the IC source clock.
-+- clock-names: Should be "osc" if clock is an external crystal or
-+  "xtal" if an external clock source is used.
-+
-+Optional properties:
-+- gpio-controller: Marks the device node as a GPIO controller.
-+- #gpio-cells: Should be two. The first cell is the GPIO number and
-+  the second cell is used to specify the GPIO polarity:
-+    0 = active high,
-+    1 = active low.
-+
-+Example:
-+	max14830: max14830@0 {
-+		compatible = "maxim,max14830";
-+		reg = <0>;
-+		clocks = <&clk20m>;
-+		clock-names = "osc";
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
--- 
-1.8.3.2
+Hi Wolfram,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+There is now also a means to instantiate I2C devices through
+ACPI. This is documented in Documentation/acpi/enumeration.txt.
+
+Might be worthwhile to reference it from instantiating-devices.
+I guess that would be a separate patch though.
+
+Thanks,
+Guenter
+
