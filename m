@@ -1,94 +1,246 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH v6 1/3] ARM: EXYNOS: Add support for EXYNOS5410 SoC
-Date: Mon, 10 Feb 2014 15:56:37 +0530
-Message-ID: <CAK9yfHzLfVi2S_Qfb_bFE199g0G6J2-y4_9z9m5_jg7+FEzZzQ@mail.gmail.com>
-References: <1392026911-21308-1-git-send-email-t.dakhran@samsung.com>
-	<1392026911-21308-2-git-send-email-t.dakhran@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1392026911-21308-2-git-send-email-t.dakhran@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tarek Dakhran <t.dakhran@samsung.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Tomasz Figa <t.figa@samsung.com>, Mike Turquette <mturquette@linaro.org>, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, Heiko Stuebner <heiko@sntech.de>, Romain Naour <romain.naour@openwide.fr>, Chander Kashyap <chander.kashyap@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kerne>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH] ARM: zynq: Add support for SOC_BUS
+Date: Mon, 10 Feb 2014 11:30:22 +0100
+Message-ID: <279a88555538534075921b0a8a26ff9b0c49317d.1392028209.git.michal.simek@xilinx.com>
+Content-Type: multipart/signed;
+    boundary="=_mimegpg-monstr-desktop-21142-1392028222-0001";
+    micalg=pgp-sha1; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: monstr@monstr.eu, Josh Cartwright <josh.cartwright@ni.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tarek,
+This is a MIME GnuPG-signed message.  If you see this text, it means that
+your E-mail or Usenet software does not support MIME signed messages.
+The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
+To open this message correctly you will need to install E-mail or Usenet
+software that supports modern Internet standards.
 
-Nothing in specific about the patch, but to just make you aware that
-some clean up
-patches haves been proposed which might cause conflicts with this patch. Please
-see inline for details.
+--=_mimegpg-monstr-desktop-21142-1392028222-0001
 
-On 10 February 2014 15:38, Tarek Dakhran <t.dakhran@samsung.com> wrote:
-> EXYNOS5410 is SoC in Samsung's Exynos5 SoC series.
-> Add initial support for this SoC.
->
-> Signed-off-by: Tarek Dakhran <t.dakhran@samsung.com>
-> Signed-off-by: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
-> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
-> ---
->  arch/arm/mach-exynos/Kconfig                 |   10 ++++++++++
->  arch/arm/mach-exynos/common.c                |   18 ++++++++++++++++++
->  arch/arm/mach-exynos/include/mach/map.h      |    1 +
->  arch/arm/mach-exynos/mach-exynos5-dt.c       |    1 +
->  arch/arm/mach-exynos/platsmp.c               |    2 ++
->  arch/arm/plat-samsung/include/plat/cpu.h     |    8 ++++++++
->  arch/arm/plat-samsung/include/plat/map-s5p.h |    3 +++
->  7 files changed, 43 insertions(+)
->
-> diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
-> index 4c414af..97a06c3 100644
-> --- a/arch/arm/mach-exynos/Kconfig
-> +++ b/arch/arm/mach-exynos/Kconfig
-> @@ -91,6 +91,16 @@ config SOC_EXYNOS5250
->         help
->           Enable EXYNOS5250 SoC support
->
-> +config SOC_EXYNOS5410
-> +       bool "SAMSUNG EXYNOS5410"
-> +       default y
-> +       depends on ARCH_EXYNOS5
-> +       select PM_GENERIC_DOMAINS if PM
-> +       select S5P_PM if PM_SLEEP
-> +       select S5P_SLEEP if PM_SLEEP
-> +       help
-> +         Enable EXYNOS5410 SoC support
-> +
+Provide information through SOC_BUS to user space.
+Silicon revision is provided through devcfg device.
 
-Per SoC Kconfig entries are proposed to be removed. Please see [1].
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
->  config SOC_EXYNOS5420
->         bool "SAMSUNG EXYNOS5420"
->         default y
-> diff --git a/arch/arm/mach-exynos/common.c b/arch/arm/mach-exynos/common.c
-> index f18be40..f1483bd 100644
-> --- a/arch/arm/mach-exynos/common.c
-> +++ b/arch/arm/mach-exynos/common.c
-> @@ -52,6 +52,7 @@ static const char name_exynos4210[] = "EXYNOS4210";
->  static const char name_exynos4212[] = "EXYNOS4212";
->  static const char name_exynos4412[] = "EXYNOS4412";
->  static const char name_exynos5250[] = "EXYNOS5250";
-> +static const char name_exynos5410[] = "EXYNOS5410";
->  static const char name_exynos5420[] = "EXYNOS5420";
->  static const char name_exynos5440[] = "EXYNOS5440";
->
-> @@ -85,6 +86,12 @@ static struct cpu_table cpu_ids[] __initdata = {
->                 .init           = exynos_init,
->                 .name           = name_exynos5250,
->         }, {
-> +               .idcode         = EXYNOS5410_SOC_ID,
-> +               .idmask         = EXYNOS5_SOC_MASK,
-> +               .map_io         = exynos5_map_io,
-> +               .init           = exynos_init,
-> +               .name           = name_exynos5410,
-> +       }, {
+Based on zynq/cleanup branch
 
-This is also proposed to be removed. Please see [2].
+---
+ arch/arm/boot/dts/zynq-7000.dtsi |  5 +++
+ arch/arm/mach-zynq/Kconfig       |  1 +
+ arch/arm/mach-zynq/common.c      | 72 +++++++++++++++++++++++++++++++++++++++-
+ arch/arm/mach-zynq/common.h      |  1 +
+ arch/arm/mach-zynq/slcr.c        | 19 +++++++++++
+ 5 files changed, 97 insertions(+), 1 deletion(-)
 
-[1] http://comments.gmane.org/gmane.linux.kernel.samsung-soc/26800
-[2] http://comments.gmane.org/gmane.linux.kernel.samsung-soc/26560
+diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+index 116f83b5..7284499 100644
+--- a/arch/arm/boot/dts/zynq-7000.dtsi
++++ b/arch/arm/boot/dts/zynq-7000.dtsi
+@@ -155,6 +155,11 @@
+ 			};
+ 		};
 
--- 
-With warm regards,
-Sachin
++		devcfg: devcfg@f8007000 {
++			compatible = "xlnx,zynq-devcfg-1.00.a";
++			reg = <0xf8007000 0x100>;
++		} ;
++
+ 		global_timer: timer@f8f00200 {
+ 			compatible = "arm,cortex-a9-global-timer";
+ 			reg = <0xf8f00200 0x20>;
+diff --git a/arch/arm/mach-zynq/Kconfig b/arch/arm/mach-zynq/Kconfig
+index f3e6ce4..16ba63f 100644
+--- a/arch/arm/mach-zynq/Kconfig
++++ b/arch/arm/mach-zynq/Kconfig
+@@ -16,5 +16,6 @@ config ARCH_ZYNQ
+ 	select ARM_GLOBAL_TIMER
+ 	select MFD_SYSCON
+ 	select GENERIC_ALLOCATOR
++	select SOC_BUS
+ 	help
+ 	  Support for Xilinx Zynq ARM Cortex A9 Platform
+diff --git a/arch/arm/mach-zynq/common.c b/arch/arm/mach-zynq/common.c
+index 5755129..9d3c88e 100644
+--- a/arch/arm/mach-zynq/common.c
++++ b/arch/arm/mach-zynq/common.c
+@@ -28,6 +28,8 @@
+ #include <linux/of.h>
+ #include <linux/irqchip.h>
+ #include <linux/irqchip/arm-gic.h>
++#include <linux/slab.h>
++#include <linux/sys_soc.h>
+
+ #include <asm/mach/arch.h>
+ #include <asm/mach/map.h>
+@@ -36,10 +38,15 @@
+ #include <asm/page.h>
+ #include <asm/pgtable.h>
+ #include <asm/smp_scu.h>
++#include <asm/system_info.h>
+ #include <asm/hardware/cache-l2x0.h>
+
+ #include "common.h"
+
++#define ZYNQ_DEVCFG_MCTRL		0x80
++#define ZYNQ_DEVCFG_PS_VERSION_SHIFT	28
++#define ZYNQ_DEVCFG_PS_VERSION_MASK	0xF
++
+ void __iomem *zynq_scu_base;
+
+ static struct platform_device zynq_cpuidle_device = {
+@@ -47,17 +54,80 @@ static struct platform_device zynq_cpuidle_device = {
+ };
+
+ /**
++ * zynq_get_revision - Get Zynq silicon revision
++ *
++ * Return: Silicon version or -1 otherwise
++ */
++static int __init zynq_get_revision(void)
++{
++	struct device_node *np;
++	void __iomem *zynq_devcfg_base;
++	u32 revision;
++
++	np = of_find_compatible_node(NULL, NULL, "xlnx,zynq-devcfg-1.00.a");
++	if (!np) {
++		pr_err("%s: no devcfg node found\n", __func__);
++		return -1;
++	}
++
++	zynq_devcfg_base = of_iomap(np, 0);
++	if (!zynq_devcfg_base) {
++		pr_err("%s: Unable to map I/O memory\n", __func__);
++		return -1;
++	}
++
++	revision = readl(zynq_devcfg_base + ZYNQ_DEVCFG_MCTRL);
++	revision >>= ZYNQ_DEVCFG_PS_VERSION_SHIFT;
++	revision &= ZYNQ_DEVCFG_PS_VERSION_MASK;
++
++	iounmap(zynq_devcfg_base);
++
++	return revision;
++}
++
++/**
+  * zynq_init_machine - System specific initialization, intended to be
+  *		       called from board specific initialization.
+  */
+ static void __init zynq_init_machine(void)
+ {
++	struct soc_device_attribute *soc_dev_attr;
++	struct soc_device *soc_dev;
++	struct device *parent = NULL;
++
+ 	/*
+ 	 * 64KB way size, 8-way associativity, parity disabled
+ 	 */
+ 	l2x0_of_init(0x02060000, 0xF0F0FFFF);
+
+-	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
++	soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
++	if (!soc_dev_attr)
++		goto out;
++
++	system_rev = zynq_get_revision();
++
++	soc_dev_attr->family = kasprintf(GFP_KERNEL, "Xilinx Zynq");
++	soc_dev_attr->revision = kasprintf(GFP_KERNEL, "0x%x", system_rev);
++	soc_dev_attr->soc_id = kasprintf(GFP_KERNEL, "0x%x",
++					 zynq_slcr_get_device_id());
++
++	soc_dev = soc_device_register(soc_dev_attr);
++	if (IS_ERR(soc_dev)) {
++		kfree(soc_dev_attr->family);
++		kfree(soc_dev_attr->revision);
++		kfree(soc_dev_attr->soc_id);
++		kfree(soc_dev_attr);
++		goto out;
++	}
++
++	parent = soc_device_to_device(soc_dev);
++
++out:
++	/*
++	 * Finished with the static registrations now; fill in the missing
++	 * devices
++	 */
++	of_platform_populate(NULL, of_default_bus_match_table, NULL, parent);
+
+ 	platform_device_register(&zynq_cpuidle_device);
+
+diff --git a/arch/arm/mach-zynq/common.h b/arch/arm/mach-zynq/common.h
+index 953f6a1..26a23fe 100644
+--- a/arch/arm/mach-zynq/common.h
++++ b/arch/arm/mach-zynq/common.h
+@@ -25,6 +25,7 @@ extern void zynq_slcr_system_reset(void);
+ extern void zynq_slcr_cpu_stop(int cpu);
+ extern void zynq_slcr_cpu_start(int cpu);
+ extern u32 zynq_slcr_get_ocm_config(void);
++extern u32 zynq_slcr_get_device_id(void);
+
+ #ifdef CONFIG_SMP
+ extern void secondary_startup(void);
+diff --git a/arch/arm/mach-zynq/slcr.c b/arch/arm/mach-zynq/slcr.c
+index f310081..594b280 100644
+--- a/arch/arm/mach-zynq/slcr.c
++++ b/arch/arm/mach-zynq/slcr.c
+@@ -26,11 +26,14 @@
+ #define SLCR_PS_RST_CTRL_OFFSET		0x200 /* PS Software Reset Control */
+ #define SLCR_A9_CPU_RST_CTRL_OFFSET	0x244 /* CPU Software Reset Control */
+ #define SLCR_REBOOT_STATUS_OFFSET	0x258 /* PS Reboot Status */
++#define SLCR_PSS_IDCODE			0x530 /* PS IDCODE */
+ #define SLCR_OCM_CFG_OFFSET		0x910 /* OCM Address Mapping */
+
+ #define SLCR_UNLOCK_MAGIC		0xDF0D
+ #define SLCR_A9_CPU_CLKSTOP		0x10
+ #define SLCR_A9_CPU_RST			0x1
++#define SLCR_PSS_IDCODE_DEVICE_SHIFT	12
++#define SLCR_PSS_IDCODE_DEVICE_MASK	0x1F
+
+ static void __iomem *zynq_slcr_base;
+ static struct regmap *zynq_slcr_regmap;
+@@ -84,6 +87,22 @@ static inline int zynq_slcr_unlock(void)
+ }
+
+ /**
++ * zynq_slcr_get_device_id - Read device code id
++ *
++ * Return:	Device code id
++ */
++u32 zynq_slcr_get_device_id(void)
++{
++	u32 val;
++
++	zynq_slcr_read(&val, SLCR_PSS_IDCODE);
++	val >>= SLCR_PSS_IDCODE_DEVICE_SHIFT;
++	val &= SLCR_PSS_IDCODE_DEVICE_MASK;
++
++	return val;
++}
++
++/**
+  * zynq_slcr_system_reset - Reset the entire system.
+  */
+ void zynq_slcr_system_reset(void)
+--
+1.8.2.3
+
+
+--=_mimegpg-monstr-desktop-21142-1392028222-0001
+Content-Type: application/pgp-signature
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEABECAAYFAlL4qj4ACgkQykllyylKDCGKcQCZAWktN+dhuS9XaMH3Rws/fylf
+YC0AnAzYwMX5PNo4IU49UKFe7xT8+P/W
+=kxfl
+-----END PGP SIGNATURE-----
+
+--=_mimegpg-monstr-desktop-21142-1392028222-0001--
