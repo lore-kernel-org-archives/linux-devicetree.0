@@ -1,99 +1,78 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: Devicetree Maintenance in barebox
-Date: Mon, 10 Feb 2014 10:06:34 -0500
-Message-ID: <20140210150634.GM8533@titan.lakedaemon.net>
-References: <20140207071332.GE16215@pengutronix.de>
- <20140207141028.GT8533@titan.lakedaemon.net>
- <E1WCYdq-0004eu-Gr@jdl.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [RFC PATCH 0/3] Syscon early initialization
+Date: Mon, 10 Feb 2014 16:22:32 +0100
+Message-ID: <cover.1392045742.git.michal.simek@xilinx.com>
+Content-Type: multipart/signed;
+    boundary="=_mimegpg-monstr-desktop-27070-1392045755-0001";
+    micalg=pgp-sha1; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <E1WCYdq-0004eu-Gr-CYoMK+44s/E@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, barebox-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Felipe Pena <felipensp-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 09, 2014 at 11:58:06AM -0600, Jon Loeliger wrote:
-> > Hi Sascha,
-> > 
-> > + Grant Likely, Ian Campbell, devicetree ML
-> > 
-> > Also, In the DT meeting earlier this week, Grant Likely said he has the
-> > request in to create a separate mailinglist for collaboration between
-> > the different devicetree users (BSD, Linux, etc).
-> 
-> ...
-> 
-> > I think the proper solution will percolate out of the first
-> > cross-project discussions on the new ML.
-> 
-> ...
-> 
-> > Definitely fodder for the new ML.
-> > 
-> > Grant, can you please add Sascha to the list of folks to notify when
-> > the new ML is ready?
-> 
-> I don't think there needs to be a different mailing list
-> in order to combine or discuss other OS's use of the device
-> tree compiler.  The  DTC is OS and Use-agnostic.  Discussions
-> of DTC needs for FreeBSD can happen right here as the orginal
-> purpose of this list was DTC discussion.
+This is a MIME GnuPG-signed message.  If you see this text, it means that
+your E-mail or Usenet software does not support MIME signed messages.
+The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
+To open this message correctly you will need to install E-mail or Usenet
+software that supports modern Internet standards.
 
-Sorry, I wasn't clear.  I was referring to the devicetree bindings
-currently being created in the linux tree, and the dts files for the
-boards Linux supports.
+--=_mimegpg-monstr-desktop-27070-1392045755-0001
 
-And by 'here', I presume you me devicetree-u79uwXL29TaiAVqoAR/hOK1cXZ9k6wlg@public.gmane.org
+Hi,
 
-> Are you, and Grant(?), suggesting that a separate list
-> should be created for FreeBSD use of DTS-file contents?
-> Or that DTS-file-content related discussions should be
-> separated from DTC discussions?
+this series come from my discussion with Arnd at KS and then
+on some other threads/IRCs(Arnd and Mark) that SoC vendors
+are more and more try to add misc functionality to
+one memory region. For this purpose syscon driver is in the kernel.
+But regular syscon driver is initialized too late
+and platforms are trying to create specific code to handle it.
 
-As Ian mentioned, the separate list is to engage other consumers of
-devicetree bindings/dts files/dtc use without the firehose of Linux
-patches.
+For this purpose the series have been created to provide
+early syscon initialization and regmap creation first
+and then attaching device.
 
-> > imho, the goal is to not have any project tied to a specific version
-> > of the devicetree.
-> >
-> > iow, we don't break backwards compatibility in the
-> > devicetrees, and projects should revert to default behavior if new dt
-> > parameters are missing.  This means Linux and BSD shouldn't need to keep
-> > a current copy of the devicetree in their trees.  However, building the
-> > bootloader is a different animal.  It needs to provide the dt blob...
-> 
-> The devicetree source file format hasn't changed in years.
-> Yes, it is enhanced, but compatibly.  Or do you mean the
-> contents of the DTB for some specific platform?
+The last patch is zynq specific patch to clear slcr driver
+and clock driver can profit from it too when clk regmap is ready.
 
-I was referring specifically to dt bindings for new IP blocks, and new
-versions of the same.
+Also moving syscon driver from mfs should be consider.
 
-One problem we occasionally run into with kirkwood/dove/mvebu is that
-it is very convenient having the dts tree in the linux tree.  It's
-tempting to keep tying the dtb to the linux kernel version.  Which makes
-it a lot harder to maintain backwards compatibility.
+Thanks for your comments,
+Michal
 
-That gets a lot easier once the bindings and the dts files have their
-own tree with their own release cycle.  Then, patch submitters would be
-forced to consider how changing a binding affects the driver and vice
-versa.  The concept of 'deployed dtbs' without the new whizbang bindings
-would have to be considered and properly handled.
 
-Don't get me wrong, all of us are trying very hard to do this now.  But
-I think it's more like running it in qemu vice running on real hardware.
-We're simulating in our heads what we think the problems will be, as
-opposed to experiencing them and avoiding them.
+Michal Simek (3):
+  regmap: Separate regmap dev initialization
+  mfd: syscon: Support early initialization
+  ARM: zynq: Use early syscon initialization
 
-imho, the sooner we have a separate tree for dts/bindings, the better.
+ arch/arm/boot/dts/zynq-7000.dtsi |   1 +
+ arch/arm/mach-zynq/common.c      |   6 +-
+ arch/arm/mach-zynq/slcr.c        |  42 +------------
+ drivers/base/regmap/regmap.c     |  41 +++++++++----
+ drivers/clk/zynq/clkc.c          |  57 ++++++------------
+ drivers/mfd/syscon.c             | 126 +++++++++++++++++++++++++++++++++------
+ include/linux/mfd/syscon.h       |  11 ++++
+ include/linux/regmap.h           |   2 +
+ 8 files changed, 173 insertions(+), 113 deletions(-)
 
-thx,
+--
+1.8.2.3
 
-Jason.
+
+--=_mimegpg-monstr-desktop-27070-1392045755-0001
+Content-Type: application/pgp-signature
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEABECAAYFAlL47rsACgkQykllyylKDCHNlwCeJZDKdIvWVtpIym3PobzdOuut
+X+gAn0QxMBEPBpjidSLTCINWWPWAmdka
+=Vq2x
+-----END PGP SIGNATURE-----
+
+--=_mimegpg-monstr-desktop-27070-1392045755-0001--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
