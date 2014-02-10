@@ -1,55 +1,68 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: i.MX51 babbage: Support diagnostic LED
-Date: Mon, 10 Feb 2014 14:31:20 +0800
-Message-ID: <20140210063118.GJ9628@S2101-09.ap.freescale.net>
-References: <1391522263-17877-1-git-send-email-Ying.Liu@freescale.com>
- <20140210030214.GB9628@S2101-09.ap.freescale.net>
- <1392006579.703394606@f357.i.mail.ru>
- <52F87087.4000908@freescale.com>
+From: Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: i.MX51 babbage: Support diagnostic LED
+Date: Mon, 10 Feb 2014 15:05:46 +0800
+Message-ID: <1392015946-22419-1-git-send-email-Ying.Liu@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52F87087.4000908-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shc_work-JGs/UdohzUI@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 10, 2014 at 02:24:07PM +0800, Liu Ying wrote:
-> >>> @@ -81,6 +81,17 @@
-> >>>  		};
-> >>>  	};
-> >>>  
-> >>> +	leds {
-> >>> +		compatible = "gpio-leds";
-> >>> +		pinctrl-names = "default";
-> >>> +		pinctrl-0 = <&led_pin_gpio2_6>;
-> >>> +
-> >>> +		led-diagnostic {
-> >>> +			label = "diagnostic";
-> >>> +			gpios = <&gpio2 6 0>;
-> >>
-> >> Just out of curiosity, how will you use/trigger the led?
-> > 
-> > And GPIO bindings should be used to specify active level,
-> > GPIO_ACTIVE_HIGH in this case.
-> 
-> Based on Linux 3.14-rc2, this gives me no single output:
-> grep GPIO_ACTIVE arch/arm/boot/dts/ -nr | grep imx
+The D25 LED controlled by gpio on the i.MX51 babbage
+board is a diagnostic LED according to the board design.
+This patch adds the relevant device tree nodes to the
+i.MX51 babbage device tree file to support this LED.
 
-If you grep linux-next, you will find quite a few.
+Signed-off-by: Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+v1->v2:
+* Rebase the patch from 3.14-rc2 to linux-next(d371ca32be).
+* Rename the pinctrl name for the LED to be more generic.
+* Switch to use the standard GPIO flag GPIO_ACTIVE_HIGH.
 
-> 
-> So, this patch follows the old approach.
-> 
-> I agree to use GPIO_ACTIVE_HIGH/GPIO_ACTIVE_LOW macros.
-> How about generating dedicated patch sets for this purpose?
-> Actually, I had one set for i.MX51 platforms.
+ arch/arm/boot/dts/imx51-babbage.dts |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-I prefer to have this change in the same patch.
+diff --git a/arch/arm/boot/dts/imx51-babbage.dts b/arch/arm/boot/dts/imx51-babbage.dts
+index ea5c67e..121dadd 100644
+--- a/arch/arm/boot/dts/imx51-babbage.dts
++++ b/arch/arm/boot/dts/imx51-babbage.dts
+@@ -81,6 +81,17 @@
+ 		};
+ 	};
+ 
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpio_leds>;
++
++		led-diagnostic {
++			label = "diagnostic";
++			gpios = <&gpio2 6 GPIO_ACTIVE_HIGH>;
++		};
++	};
++
+ 	sound {
+ 		compatible = "fsl,imx51-babbage-sgtl5000",
+ 			     "fsl,imx-audio-sgtl5000";
+@@ -344,6 +355,12 @@
+ 			>;
+ 		};
+ 
++		pinctrl_gpio_leds: gpioledsgrp {
++			fsl,pins = <
++				MX51_PAD_EIM_D22__GPIO2_6		0x80000000
++			>;
++		};
++
+ 		pinctrl_i2c2: i2c2grp {
+ 			fsl,pins = <
+ 				MX51_PAD_KEY_COL4__I2C2_SCL		0x400001ed
+-- 
+1.7.9.5
 
-Shawn
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
