@@ -1,76 +1,60 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v2 4/5] ARM: init: add support for reserved memory defined by device tree
-Date: Mon, 10 Feb 2014 21:59:29 +0000
-Message-ID: <20140210215929.4473BC408F7@trevor.secretlab.ca>
-References: <1391515773-6112-1-git-send-email-m.szyprowski@samsung.com> < 1391515773-6112-5-git-send-email-m.szyprowski@samsung.com> <20140205101510. 59A95C40A89@trevor.secretlab.ca> <52F38D75.4030704@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <52F38D75.4030704@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: Kyungmin Park <kyungmin.park@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@gmail.com>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: [PATCH] of/gpio: Define OF_GPIO_OPEN_DRAIN flag for Open Drain outputs.
+Date: Mon, 10 Feb 2014 14:05:08 -0800
+Message-ID: <1392069908-22017-1-git-send-email-ddaney.cavm@gmail.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 06 Feb 2014 14:26:13 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
-> Hello,
-> 
-> On 2014-02-05 11:15, Grant Likely wrote:
-> > On Tue, 04 Feb 2014 13:09:32 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
-> > > Enable reserved memory initialization from device tree.
-> > >
-> > > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> > > Cc: Laura Abbott <lauraa@codeaurora.org>
-> > > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > > ---
-> > >  arch/arm/mm/init.c |    3 +++
-> > >  1 file changed, 3 insertions(+)
-> > >
-> > > diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-> > > index 804d61566a53..ebafdb479410 100644
-> > > --- a/arch/arm/mm/init.c
-> > > +++ b/arch/arm/mm/init.c
-> > > @@ -17,6 +17,7 @@
-> > >  #include <linux/nodemask.h>
-> > >  #include <linux/initrd.h>
-> > >  #include <linux/of_fdt.h>
-> > > +#include <linux/of_reserved_mem.h>
-> > >  #include <linux/highmem.h>
-> > >  #include <linux/gfp.h>
-> > >  #include <linux/memblock.h>
-> > > @@ -323,6 +324,8 @@ void __init arm_memblock_init(struct meminfo *mi,
-> > >  	if (mdesc->reserve)
-> > >  		mdesc->reserve();
-> > >
-> > > +	early_init_dt_scan_reserved_mem();
-> > > +
-> >
-> > The new binding is being made fundamental. If the reserved-memory node
-> > is present, then it needs to be honored, even if the kernel doesn't know
-> > how to use the regions. Therefore, This needs to be unconditional for
-> > all architectures. The hook should be called in early_init_dt_scan()
-> > (drivers/of/fdt.c) immediately after the early_init_dt_scan_memory()
-> > hook.
-> 
-> In theory this will be the best solution, but it practice there is a
-> problem. early_init_dt_scan() is called as the first function from kernel
-> booting code. That time there is no memory yet added to the system, so it
-> would be really hard to reserve anything. Memory nodes are being added
-> later either with memblock_add() or by some other arch specific way.
+From: David Daney <david.daney@cavium.com>
 
-Hmmm, depends on the architecture. On ARM the memory is loaded into the
-meminfo structure first, and it isn't until arm_memblock_init() that
-memblock_add() gets called on all the regions. Some architectures do the
-memblock_add() directly from early_init_dt_add_memory_arch() function.
+When we have a GPIO pin connected to an open-drain network, we want a
+standard way of specifying this in the device tree.  So we choose bit
+1 of the flag field to indicate open drain.
 
-The default early_init_dt_add_memory_arch() in drivers/of/fdt.c is
-overridden by ARM and a number of other architectures. However...
+A typical use case would be something like:
 
-> Finally, once all memory has been added to the system we can parse and
-> reserve all regions defined in the device tree. This really requires
-> creating another function which will be called by arch specific code.
+	enum of_gpio_flags f;
+	.
+	.
+	.
+	reset_gpio = of_get_named_gpio_flags(node, "reset", 0, &f);
+	.
+	.
+	.
+	ret = gpio_request_one(reset_gpio,
+		(f & OF_GPIO_OPEN_DRAIN) ? GPIOF_OPEN_DRAIN : 0,
+		 "reset");
+	.
+	.
+	.
+	gpio_direction_output(reset_gpio, 1);
+	gpio_set_value(reset_gpio, 0);
+	msleep(20);
+	gpio_set_value(reset_gpio, 1);
+	.
+	.
+	.
 
-...Or it means getting rid of meminfo entirely so that memblock is
-available earlier. Laura Abbott has just posted v2 of her series to do
-exactly that. If you base on that then you should be able to do exactly
-what I suggested.
+Signed-off-by: David Daney <david.daney@cavium.com>
+---
+ include/linux/of_gpio.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-g.
+diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
+index f14123a..0e374774 100644
+--- a/include/linux/of_gpio.h
++++ b/include/linux/of_gpio.h
+@@ -30,6 +30,7 @@ struct device_node;
+  */
+ enum of_gpio_flags {
+ 	OF_GPIO_ACTIVE_LOW = 0x1,
++	OF_GPIO_OPEN_DRAIN = 0x2,
+ };
+ 
+ #ifdef CONFIG_OF_GPIO
+-- 
+1.7.11.7
+
