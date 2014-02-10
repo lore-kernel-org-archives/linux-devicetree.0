@@ -1,88 +1,35 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH] ARM: dts: i.MX51 babbage: Support diagnostic LED
-Date: Mon, 10 Feb 2014 11:02:17 +0800
-Message-ID: <20140210030214.GB9628@S2101-09.ap.freescale.net>
-References: <1391522263-17877-1-git-send-email-Ying.Liu@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1391522263-17877-1-git-send-email-Ying.Liu@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Liu Ying <Ying.Liu@freescale.com>
-Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
+From: Alexander Shiyan <shc_work@mail.ru>
+Subject: [PATCH RESEND] input: Add commonly used event types
+Date: Mon, 10 Feb 2014 08:21:49 +0400
+Message-ID: <1392006109-10113-1-git-send-email-shc_work@mail.ru>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: linux-input@vger.kernel.org
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Alexander Shiyan <shc_work@mail.ru>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 04, 2014 at 09:57:42PM +0800, Liu Ying wrote:
-> The D25 LED controlled by gpio on the i.MX51 babbage
-> board is a diagnostic LED according to the board design.
-> This patch adds the relevant device tree nodes to the
-> i.MX51 babbage device tree file to support this LED.
-> 
-> Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
-> ---
->  arch/arm/boot/dts/imx51-babbage.dts |   17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx51-babbage.dts b/arch/arm/boot/dts/imx51-babbage.dts
-> index be1407c..8d6a74b 100644
-> --- a/arch/arm/boot/dts/imx51-babbage.dts
-> +++ b/arch/arm/boot/dts/imx51-babbage.dts
-> @@ -81,6 +81,17 @@
->  		};
->  	};
->  
-> +	leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&led_pin_gpio2_6>;
-> +
-> +		led-diagnostic {
-> +			label = "diagnostic";
-> +			gpios = <&gpio2 6 0>;
+Patch adds commonly used event types (EV_KEY and EV_SW) to
+devicetree bindings header for input subsystem.
 
-Just out of curiosity, how will you use/trigger the led?
+Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+---
+ include/dt-bindings/input/input.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> +		};
-> +	};
-> +
->  	sound {
->  		compatible = "fsl,imx51-babbage-sgtl5000",
->  			     "fsl,imx-audio-sgtl5000";
-> @@ -280,6 +291,12 @@
->  				MX51_PAD_CSPI1_RDY__GPIO4_26 0x80000000
->  			>;
->  		};
-> +
-> +		led_pin_gpio2_6: led_gpio2_6 {
+diff --git a/include/dt-bindings/input/input.h b/include/dt-bindings/input/input.h
+index 042e7b3..3a141d92 100644
+--- a/include/dt-bindings/input/input.h
++++ b/include/dt-bindings/input/input.h
+@@ -9,6 +9,9 @@
+ #ifndef _DT_BINDINGS_INPUT_INPUT_H
+ #define _DT_BINDINGS_INPUT_INPUT_H
+ 
++#define EV_KEY			0x01
++#define EV_SW			0x05
++
+ #define KEY_RESERVED		0
+ #define KEY_ESC			1
+ #define KEY_1			2
+-- 
+1.8.3.2
 
-This might be copied from some existing file, but I would hope the name
-can be more generic, something like the following
-
-	pinctrl_gpio_leds: gpioledsgrp {
-
-, so that when we have more gpio controlled leds to add, we can just add
-more pins into the same group without concerning the name.
-
-Shawn
-
-> +			fsl,pins = <
-> +				MX51_PAD_EIM_D22__GPIO2_6 0x80000000
-> +			>;
-> +		};
->  	};
->  };
->  
-> -- 
-> 1.7.9.5
-> 
-> 
