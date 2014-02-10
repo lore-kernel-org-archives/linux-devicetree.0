@@ -1,40 +1,69 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v3 3/4] ARM: keystone_defconfig: enable gpio support
-Date: Mon, 10 Feb 2014 18:41:20 +0200
-Message-ID: <1392050481-19086-4-git-send-email-grygorii.strashko@ti.com>
-References: <1392050481-19086-1-git-send-email-grygorii.strashko@ti.com>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH v6 0/3] Introduce clocksource driver for Keystone platform
+Date: Mon, 10 Feb 2014 10:50:50 -0500
+Message-ID: <52F8F55A.2090903@ti.com>
+References: <1392027058-11680-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392050481-19086-1-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: santosh.shilimkar-l0cyMroinI0@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ivan.khoronzhuk-l0cyMroinI0@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1392027058-11680-1-git-send-email-ivan.khoronzhuk@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: daniel.lezcano@linaro.org
+Cc: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, rob@landley.net, linux@arm.linux.org.uk, galak@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, tglx@linutronix.de, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, grygorii.strashko@ti.com, joshc@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Enable enable GPIO support for Keystone by setting CONFIG_GPIOLIB and
-CONFIG_GPIO_DAVINCI options in keystone_defconfig.
+Daniel,
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
----
- arch/arm/configs/keystone_defconfig |    3 +++
- 1 file changed, 3 insertions(+)
+On Monday 10 February 2014 05:10 AM, Ivan Khoronzhuk wrote:
+> Add a broadcast timer64 based clockevent driver for keystone arch.
+> This driver uses timer in 64-bit general purpose mode as clock event
+> device.
+> 
+> Documentation:
+>     http://www.ti.com/lit/ug/sprugv5a/sprugv5a.pdf
+> 
+> Based on
+> git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git
+> keystone/master
+> 
+> v5..v6:
+> 	added function to encapsulate __iowmb().
+> 
+> v4..v5:
+> 	used __iowmb() insted of wmb()
+> 
+> v3..v4:
+> 	rebased on latest of linux-keystone.git keystone/master
+> 
+> v2..v3:
+> - clocksource: timer-keystone: introduce clocksource driver for
+> 	changed "u64" type to "unsigned long" for hz_period as more appropriate
+> 	hz_period rounded up by DIV_ROUND_UP(rate, HZ)
+> 	corrected comments
+> 
+> v1..v2:
+> - clocksource: timer-keystone: introduce clocksource driver for
+> 	renamed timer on "timer-keystone"
+> 	in keystone_timer_interrupt() evet pointer is passed via "dev_id"
+> 	used __relaxed variants of writel/readl and added explicit barriers
+> 	added "keystone_timer_disable()" for using in keystone_set_mode()
+> 	keystone_timer_config() is not used for disabling the timer any more
+> 	in case of an unsupported mode the keystone_timer_config() returns -1.
+> 	used request_irq() instead of setup_irq()
+> 	assigned irq for event_device in event_dev->irq
+> 	calculated timer.hz_period for CLOCK_EVT_MODE_PERIODIC at init
+> 	deleted spare call of keystone_timer_config() in keystone_timer_init()
+> 
+> Ivan Khoronzhuk (3):
+>   clocksource: timer-keystone: introduce clocksource driver for Keystone
+>   clocksource: keystone: add bindings for keystone timer
+>   arm: dts: keystone: add keystone timer entry
+> 
+Can you queue the first two patches from the series ?
+I will queue the dts patch via my tree.
 
-diff --git a/arch/arm/configs/keystone_defconfig b/arch/arm/configs/keystone_defconfig
-index 332ca72..f9467ad 100644
---- a/arch/arm/configs/keystone_defconfig
-+++ b/arch/arm/configs/keystone_defconfig
-@@ -179,3 +179,6 @@ CONFIG_CRYPTO_DES=y
- CONFIG_CRYPTO_ANSI_CPRNG=y
- CONFIG_CRYPTO_USER_API_HASH=y
- CONFIG_CRYPTO_USER_API_SKCIPHER=y
-+CONFIG_GPIOLIB=y
-+CONFIG_GPIO_SYSFS=y
-+CONFIG_GPIO_DAVINCI=y
--- 
-1.7.9.5
+Regards,
+Santosh
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
