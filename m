@@ -1,49 +1,70 @@
-From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dp83640: Get gpio and master/slave configuration from DT
-Date: Mon, 10 Feb 2014 19:46:05 +0100
-Message-ID: <20140210184604.GA4296@netboy>
-References: <1392037240-30913-1-git-send-email-stefan.sorensen@spectralink.com>
+From: Bjorn Andersson <bjorn@kryo.se>
+Subject: Re: [PATCH 2/2] ARM: dts: MSM8974: Add pinctrl node
+Date: Mon, 10 Feb 2014 10:55:34 -0800
+Message-ID: <CAJAp7OhEE0rTv2KRjajU361wrMh0VqOwCH4u4vC3+F4KMcU0GQ@mail.gmail.com>
+References: <1391700529-11816-1-git-send-email-iivanov@mm-sol.com>
+	<1391700529-11816-2-git-send-email-iivanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1392037240-30913-1-git-send-email-stefan.sorensen-usnHOLptxrsHrNJx0XZkJA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan =?iso-8859-1?Q?S=F8rensen?= <stefan.sorensen-usnHOLptxrsHrNJx0XZkJA@public.gmane.org>
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1391700529-11816-2-git-send-email-iivanov@mm-sol.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 10, 2014 at 02:00:40PM +0100, Stefan S=F8rensen wrote:
-> This patch removes the module parameters gpio_tab and chosen_phy in f=
-avour of
-> retrieving the configuration from DT through the properties
+On Thu, Feb 6, 2014 at 7:28 AM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
+> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+>
+> Add the pin control node and pin definitions of SPI8.
+>
+> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+> ---
+>  arch/arm/boot/dts/qcom-msm8974.dtsi |   29 +++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> index 9e5dadb..395603f 100644
+> --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
+> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> @@ -117,5 +117,34 @@
+>                         clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>, <&gcc GCC_BLSP1_AHB_CLK>;
+>                         clock-names = "core", "iface";
+>                 };
+> +
+> +               msmgpio: pinctrl@fd510000 {
+> +                       compatible = "qcom,msm8974-pinctrl";
+> +                       reg = <0xfd510000 0x4000>;
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       interrupt-controller;
+> +                       #interrupt-cells = <2>;
+> +                       interrupts = <0 208 0>;
+> +
+> +                       spi8_default: spi8_default {
+> +                               mosi {
+> +                                       pins = "gpio45";
+> +                                       function = "blsp_spi8";
+> +                               };
+> +                               miso {
+> +                                       pins = "gpio46";
+> +                                       function = "blsp_spi8";
+> +                               };
+> +                               cs {
+> +                                       pins = "gpio47";
+> +                                       function = "blsp_spi8";
+> +                               };
+> +                               clk {
+> +                                       pins = "gpio48";
+> +                                       function = "blsp_spi8";
+> +                               };
+> +                       };
+> +               };
+>         };
+>  };
 
-Can we please keep the module parameters? I have two platforms with
-phyters neither of which will ever support DT, namely ixp and m68k,
-and I want to run recent kernels on them.
+Nice, listing it like this makes it easy to add the electrical
+properties when inheriting these nodes, closer to the product dts
+files.
 
-Are module parameters even considered user ABI?
-
-Even if not, still I want to retain the module params until there is
-an alternative for non-DT platforms.
-
-> 	dp83640,slave
-> 	dp83640,calibrate-gpio
-> 	dp83640,perout-gpios
-> 	dp83640,extts-gpios
-> The configuration is now stored for each master clock device, allowin=
-g different=20
-> gpio setups for each master.
-
-What do you mean by "each master"? Do you mean each individual PHY devi=
-ce
-or each group of PHYs on the same MDIO bus?
-
-Thanks,
-Richard
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
