@@ -1,83 +1,43 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] dp83640: Get gpio and master/slave configuration from
- DT
-Date: Mon, 10 Feb 2014 15:39:01 +0000
-Message-ID: <20140210153901.GH29080@e106331-lin.cambridge.arm.com>
-References: <1392037240-30913-1-git-send-email-stefan.sorensen@spectralink.com>
- <20140210134237.GF29080@e106331-lin.cambridge.arm.com>
- <1392045915.30419.6.camel@e37108.spectralink.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v3 0/4] ARM: keystone: enable gpio support
+Date: Mon, 10 Feb 2014 18:41:17 +0200
+Message-ID: <1392050481-19086-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1392045915.30419.6.camel@e37108.spectralink.com>
-Sender: netdev-owner@vger.kernel.org
-To: Stefan =?utf-8?B?U8O4cmVuc2Vu?= <stefan.sorensen@spectralink.com>
-Cc: "richardcochran@gmail.com" <richardcochran@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: santosh.shilimkar-l0cyMroinI0@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ivan.khoronzhuk-l0cyMroinI0@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 10, 2014 at 03:25:15PM +0000, Stefan S=C3=B8rensen wrote:
-> On Mon, 2014-02-10 at 13:42 +0000, Mark Rutland wrote:
->=20
-> > Binding document please.
->=20
-> Dang, I somehow managed to drop that from the patch. I will fix for t=
-he
-> next version.
+This series adds Keystone GPIO IP definition in DT and enable GPIO support in
+Keystone configuration file.
 
-Cheers.
+Also, it enables LEDs support for Keystone 2 K2H EVM as specified in board 
+schematic. For more information see:
+- http://www.advantech.com/Support/TI-EVM/EVMK2HX.aspx 
 
->=20
-> > > +	if (of_find_property(node, "dp83640,slave", NULL))
-> > > +		dp83640->slave =3D true;
-> >=20
-> > Use of_property_read_bool.
->=20
-> Fixed.
->=20
-> > > +	prop =3D of_find_property(node, "dp83640,perout-gpios", &prople=
-n);
-> > > +	if (prop) {
-> > > +		if (dp83640->slave) {
-> > > +			pr_err("dp83640,perout-gpios property can not be set together=
- with dp83640,slave");
-> > > +			return -EINVAL;
-> > > +		}
-> > > +
-> > > +		clock->caps.n_per_out =3D proplen / sizeof(u32);
-> > > +		if (clock->caps.n_per_out > N_EXT) {
-> > > +			pr_err("dp83640,perout-gpios may not have more than %d entrie=
-s",
-> > > +			       N_EXT);
-> > > +			return -EINVAL;
-> > > +		}
-> > > +		err =3D of_property_read_u32_array(node, "dp83640,perout-gpios=
-",
-> > > +						 clock->perout_gpios,
-> > > +						 clock->caps.n_per_out);
-> > > +		if (err < 0)
-> > > +			return err;
-> > > +	}
-> >=20
-> > This looks nothing like the standard gpio bindings. What _exactly_ =
-is
-> > this property describing?
->=20
-> The dp83640 has a number of pins of which 8 of them can be used for
-> either timestamping events or triggering changes at programmed
-> intervals. These properties are used to configure which pins get
-> assigned to what function.
+Changes in v3:
+ - rebased on top 3.14 + "[PATCH v2] arm: dts: keystone: add watchdog entry"
+   http://www.spinics.net/lists/devicetree/msg20211.html
 
-Ok.
+[v1-v2] http://www.spinics.net/lists/arm-kernel/msg294655.html
 
->=20
-> > If this is not using the standard gpio bindings then this should be
-> > renamed.
->=20
-> Maybe a gpio->pin renaming?
+Grygorii Strashko (4):
+  ARM: dts: keystone: add gpio device entry
+  ARM: dts: keystone-evm: add leds supports
+  ARM: keystone_defconfig: enable gpio support
+  ARM: keystone_defconfig: enable led support
 
-That sounds good to me.
+ arch/arm/boot/dts/k2hk-evm.dts      |   23 ++++++++++++++++++
+ arch/arm/boot/dts/keystone.dtsi     |   45 +++++++++++++++++++++++++++++++++++
+ arch/arm/configs/keystone_defconfig |   11 +++++++++
+ 3 files changed, 79 insertions(+)
 
-Thanks,
-Mark.
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
