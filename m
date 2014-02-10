@@ -1,7 +1,7 @@
 From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v3 1/4] ARM: dts: keystone: add gpio device entry
-Date: Mon, 10 Feb 2014 18:41:18 +0200
-Message-ID: <1392050481-19086-2-git-send-email-grygorii.strashko@ti.com>
+Subject: [PATCH v3 2/4] ARM: dts: keystone-evm: add leds supports
+Date: Mon, 10 Feb 2014 18:41:19 +0200
+Message-ID: <1392050481-19086-3-git-send-email-grygorii.strashko@ti.com>
 References: <1392050481-19086-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,80 +12,56 @@ To: santosh.shilimkar-l0cyMroinI0@public.gmane.org
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ivan.khoronzhuk-l0cyMroinI0@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds Keystone GPIO IP device definitions in DT which supports
-up to 32 GPIO lines and each GPIO line can be configured as separate
-interrupt source (so called "unbanked" IRQ).
+Keystone EVMK2HX supports 4 debug LEDs controlled by GPIO lines as
+following (active level is high);
 
-For more information see:
- http://www.ti.com/lit/ug/sprugv1/sprugv1.pdf
+DBG_D1 green gpio12
+DBG_D1 red   gpio13
+DBG_D1 blue  gpio14
+DBG_D1 blue  gpio15
+
+For more information see schematics:
+ http://wfcache.advantech.com/www/support/TI-EVM/download/Schematics/PDF/K2H_K2EVM-HK_SCH_A102_Rev1_0.pdf
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 ---
- arch/arm/boot/dts/keystone.dtsi |   45 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+ arch/arm/boot/dts/k2hk-evm.dts |   23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-index 3a83ffe..0f82bb9 100644
---- a/arch/arm/boot/dts/keystone.dtsi
-+++ b/arch/arm/boot/dts/keystone.dtsi
-@@ -7,6 +7,7 @@
-  */
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/gpio/gpio.h>
- 
- #include "skeleton.dtsi"
- 
-@@ -214,5 +215,49 @@
- 			reg = <0x022f0080 0x80>;
- 			clocks = <&clkwdtimer0>;
+diff --git a/arch/arm/boot/dts/k2hk-evm.dts b/arch/arm/boot/dts/k2hk-evm.dts
+index eaefdfe..3513f8b 100644
+--- a/arch/arm/boot/dts/k2hk-evm.dts
++++ b/arch/arm/boot/dts/k2hk-evm.dts
+@@ -52,6 +52,29 @@
+ 			};
  		};
-+
-+		gpio0: gpio@260bf00 {
-+			compatible = "ti,keystone-gpio";
-+			reg = <0x0260bf00 0x100>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			/* HW Interrupts mapped to GPIO pins */
-+			interrupts = <GIC_SPI 120 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 121 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 122 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 123 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 124 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 125 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 126 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 127 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 128 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 129 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 130 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 131 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 132 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 133 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 134 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 135 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 136 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 137 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 138 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 139 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 140 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 141 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 142 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 143 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 144 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 145 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 146 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 147 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 148 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 149 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 150 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 151 IRQ_TYPE_EDGE_RISING>;
-+			clocks = <&clkgpio>;
-+			clock-names = "gpio";
-+			ti,ngpio = <32>;
-+			ti,davinci-gpio-unbanked = <32>;
-+		};
  	};
++
++	leds {
++		compatible = "gpio-leds";
++		debug1_1 {
++			label = "keystone:green:debug1";
++			gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>; /* 12 */
++		};
++
++		debug1_2 {
++			label = "keystone:red:debug1";
++			gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>; /* 13 */
++		};
++
++		debug2 {
++			label = "keystone:blue:debug2";
++			gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>; /* 14 */
++		};
++
++		debug3 {
++			label = "keystone:blue:debug3";
++			gpios = <&gpio0 15 GPIO_ACTIVE_HIGH>; /* 15 */
++		};
++	};
  };
+ 
+ &usb_phy {
 -- 
 1.7.9.5
 
