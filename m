@@ -1,260 +1,115 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v4 2/2] memory: ti-aemif: add bindings for AEMIF driver
-Date: Mon, 10 Feb 2014 11:14:41 -0500
-Message-ID: <52F8FAF1.9030505@ti.com>
-References: <1391629574-18955-1-git-send-email-ivan.khoronzhuk@ti.com> <1391629574-18955-3-git-send-email-ivan.khoronzhuk@ti.com>
+From: dsneddon@codeaurora.org
+Subject: Re: Fwd: [PATCH 2/2] spi: Add Qualcomm QUP SPI controller support
+Date: Mon, 10 Feb 2014 16:21:32 -0000
+Message-ID: <3388d68dc907e9190d997fad95830d74.squirrel@www.codeaurora.org>
+References: <1391705868-20091-1-git-send-email-iivanov@mm-sol.com>
+    <1391705868-20091-3-git-send-email-iivanov@mm-sol.com>
+    <CACceFXdUobQvN2hcv5kh+QL=o8bWM_PVkAtrOx+euZSeVDm8hQ@mail.gmail.com>
+    <214fe9fc7e62ab30bdfbb4ac5d1ee250.squirrel@www.codeaurora.org>
+    <1392047651.2853.19.camel@iivanov-dev>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1391629574-18955-3-git-send-email-ivan.khoronzhuk@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, galak@kernel.crashing.org
-Cc: rob@landley.net, linux@arm.linux.org.uk, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, rob.herring@calxeda.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, grygorii.strashko@ti.com, gregkh@linuxfoundation.org, dwmw2@infradead.org, nsekhar@ti.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1392047651.2853.19.camel@iivanov-dev>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: dsneddon@codeaurora.org, broonie@kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, linux-spi@vger.kernel.org, linux-arm-msm@vger.kernel.org, inux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alokc@codeaurora.org, gavidov@codeaurora.org, kgunda@codeaurora.org, sdharia@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Kumar,
+Hi Ivan,
+>
+>> > +
+>> > +static int spi_qup_set_state(struct spi_qup *controller, u32 state)
+>> > +{
+>> > +       unsigned long loop = 0;
+>> > +       u32 cur_state;
+>> > +
+>> > +       cur_state = readl_relaxed(controller->base + QUP_STATE);
+>> Make sure the state is valid before you read the current state.
+>
+> Why? Controller is always left in valid state (after probe and every
+> transaction)? I know that CAF code contain this check, but now driver
+> is little bit different. I have made some tests and controller is
+> always in valid state in this point.
 
-On Wednesday 05 February 2014 02:46 PM, Ivan Khoronzhuk wrote:
-> Add bindings for TI Async External Memory Interface (AEMIF) controller.
-> 
-> The Async External Memory Interface (EMIF16/AEMIF) controller is intended to
-> provide a glue-less interface to a variety of asynchronous memory devices like
-> ASRA M, NOR and NAND memory. A total of 256M bytes of any of these memories
-> can be accessed via 4 chip selects with 64M byte access per chip select.
-> 
-> We are not encoding CS number in reg property, it's memory partition number.
-> The CS number is encoded for Davinci NAND node using standalone property
-> "ti,davinci-chipselect" and we need to provide two memory ranges to it,
-> as result we can't encode CS number in "reg" for AEMIF child devices
-> (NAND/NOR/etc), as it will break bindings compatibility.
-> 
-> In this patch, NAND node is used just as an example of child node.
-> 
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-> ---
-Can you please have a look at the binding which we discussed in previous
-versions ? I want to queue these for 3.15 via Greg's tree but need
-your ack on DT part at least.
+The hardware programming guide we recommends doing this.  I'd have to talk
+to the hardware designers to know exactly the reason why.  I can follow up
+on this if you'd like.
 
->  .../bindings/memory-controllers/ti-aemif.txt       | 210 +++++++++++++++++++++
->  1 file changed, 210 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt b/Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt
-> new file mode 100644
-> index 0000000..d1466dc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt
-> @@ -0,0 +1,210 @@
-> +* Device tree bindings for Texas instruments AEMIF controller
-> +
-> +The Async External Memory Interface (EMIF16/AEMIF) controller is intended to
-> +provide a glue-less interface to a variety of asynchronous memory devices like
-> +ASRA M, NOR and NAND memory. A total of 256M bytes of any of these memories
-> +can be accessed at any given time via four chip selects with 64M byte access
-> +per chip select. Synchronous memories such as DDR1 SD RAM, SDR SDRAM
-> +and Mobile SDR are not supported.
-> +
-> +Documentation:
-> +Davinci DM646x - http://www.ti.com/lit/ug/sprueq7c/sprueq7c.pdf
-> +OMAP-L138 (DA850) - http://www.ti.com/lit/ug/spruh77a/spruh77a.pdf
-> +Kestone - http://www.ti.com/lit/ug/sprugz3a/sprugz3a.pdf
-> +
-> +Required properties:
-> +
-> +- compatible:		"ti,davinci-aemif"
-> +			"ti,keystone-aemif"
-> +			"ti,da850-aemif"
-> +
-> +- reg:			contains offset/length value for AEMIF control registers
-> +			space.
-> +
-> +- #address-cells:	Must be 2. The partition number has to be encoded in the
-> +			first address cell and it may accept values 0..N-1
-> +			(N - total number of partitions). It's recommended to
-> +			assign N-1 number for the control partition. The second
-> +			cell is the offset into the partition.
-> +
-> +- #size-cells:		Must be set to 1.
-> +
-> +- ranges:		Contains memory regions. There are two types of
-> +			ranges/partitions:
-> +			- CS-specific partition/range. If continuous, must be
-> +			set up to reflect the memory layout for 4 chipselects,
-> +			if not then additional range/partition can be added and
-> +			child device can select the proper one.
-> +			- control partition which is common for all CS
-> +			interfaces.
-> +
-> +- clocks:		the clock feeding the controller clock. Required only
-> +			if clock tree data present in device tree.
-> +			See clock-bindings.txt
-> +
-> +- clock-names:		clock name. It has to be "aemif". Required only if clock
-> +			tree data present in device tree, in another case don't
-> +			use it.
-> +			See clock-bindings.txt
-> +
-> +- clock-ranges:		Empty property indicating that child nodes can inherit
-> +			named clocks. Required only if clock tree data present
-> +			in device tree.
-> +			See clock-bindings.txt
-> +
-> +
-> +Child chip-select (cs) nodes contain the memory devices nodes connected to
-> +such as NOR (e.g. cfi-flash) and NAND (ti,davinci-nand, see davinci-nand.txt).
-> +There might be board specific devices like FPGAs.
-> +
-> +Required child cs node properties:
-> +
-> +- #address-cells:	Must be 2.
-> +
-> +- #size-cells:		Must be 1.
-> +
-> +- ranges:		Empty property indicating that child nodes can inherit
-> +			memory layout.
-> +
-> +- clock-ranges:		Empty property indicating that child nodes can inherit
-> +			named clocks. Required only if clock tree data present
-> +			in device tree.
-> +
-> +- ti,cs-chipselect:	number of chipselect. Indicates on the aemif driver
-> +			which chipselect is used for accessing the memory. For
-> +			compatibles "ti,davinci-aemif" and "ti,keystone-aemif"
-> +			it can be in range [0-3]. For compatible
-> +			"ti,da850-aemif" range is [2-5].
-> +
-> +Optional child cs node properties:
-> +
-> +- ti,bus-width:			width of the asynchronous device's data bus
-> +				8 or 16 if not preset 8
-> +
-> +- ti,cs-ss:		enable/disable select strobe mode
-> +				In select strobe mode chip select behaves as
-> +				the strobe and is active only during the strobe
-> +				period. If present then enable.
-> +
-> +- ti,cs-ew:		enable/disable extended wait mode
-> +				if set, the controller monitors the EMIFWAIT pin
-> +				mapped to that chip select to determine if the
-> +				device wants to extend the strobe period. If
-> +				present then enable.
-> +
-> +- ti,cs-ta:		minimum turn around time, ns
-> +				Time between the end of one asynchronous memory
-> +				access and the start of another asynchronous
-> +				memory access. This delay is not incurred
-> +				between a read followed by read or a write
-> +				followed by a write to same chip select.
-> +
-> +- ti,cs-rsetup:		read setup width, ns
-> +				Time between the beginning of a memory cycle
-> +				and the activation of read strobe.
-> +				Minimum value is 1 (0 treated as 1).
-> +
-> +- ti,cs-rstobe:		read strobe width, ns
-> +				Time between the activation and deactivation of
-> +				the read strobe.
-> +				Minimum value is 1 (0 treated as 1).
-> +
-> +- ti,cs-rhold:		read hold width, ns
-> +				Time between the deactivation of the read
-> +				strobe and the end of the cycle (which may be
-> +				either an address change or the deactivation of
-> +				the chip select signal.
-> +				Minimum value is 1 (0 treated as 1).
-> +
-> +- ti,cs-wsetup:		write setup width, ns
-> +				Time between the beginning of a memory cycle
-> +				and the activation of write strobe.
-> +				Minimum value is 1 (0 treated as 1).
-> +
-> +- ti,cs-wstrobe:	write strobe width, ns
-> +				Time between the activation and deactivation of
-> +				the write strobe.
-> +				Minimum value is 1 (0 treated as 1).
-> +
-> +- ti,cs-whold:		write hold width, ns
-> +				Time between the deactivation of the write
-> +				strobe and the end of the cycle (which may be
-> +				either an address change or the deactivation of
-> +				the chip select signal.
-> +				Minimum value is 1 (0 treated as 1).
-> +
-> +If any of the above parameters are absent, current parameter value will be taken
-> +from the corresponding HW reg.
-> +
-> +Example for aemif, davinci nand and nor flash chip select shown below.
-> +
-> +memory-controller@21000A00 {
-> +	compatible = "ti,davinci-aemif";
-> +	#address-cells = <2>;
-> +	#size-cells = <1>;
-> +	clocks = <&clkaemif 0>;
-> +	clock-names = "aemif";
-> +	clock-ranges;
-> +	reg = <0x2100A00 0x00000100>;
-> +	ranges = <0 0 0x70000000 0x10000000
-> +		  1 0 0x21000A00 0x0000100>;
-> +		  /*
-> +		   * Partition0: CS-specific memory range which is
-> +		   * implemented as continuous physical memory region
-> +		   * Partition1: control memory range
-> +		   */
-> +
-> +	nand:cs2 {
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		clock-ranges;
-> +		ranges;
-> +
-> +		ti,cs-chipselect = <2>;
-> +		/* all timings in nanoseconds */
-> +		ti,cs-ta = <0>;
-> +		ti,cs-rhold = <7>;
-> +		ti,cs-rstrobe = <42>;
-> +		ti,cs-rsetup = <14>;
-> +		ti,cs-whold = <7>;
-> +		ti,cs-wstrobe = <42>;
-> +		ti,cs-wsetup = <14>;
-> +
-> +		nand@0,0x8000000 {
-> +			compatible = "ti,davinci-nand";
-> +			reg = <0 0x8000000 0x4000000
-> +			       1 0x0000000 0x0000100>;
-> +			/*
-> +			 * Partition0, offset 0x8000000, size 0x4000000
-> +			 * Partition1, offset 0x0000000, size 0x0000100
-> +			 */
-> +
-> +			.. see davinci-nand.txt
-> +		};
-> +	};
-> +
-> +	nor:cs0 {
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		clock-ranges;
-> +		ranges;
-> +
-> +		ti,cs-chipselect = <0>;
-> +		/* all timings in nanoseconds */
-> +		ti,cs-ta = <0>;
-> +		ti,cs-rhold = <8>;
-> +		ti,cs-rstrobe = <40>;
-> +		ti,cs-rsetup = <14>;
-> +		ti,cs-whold = <7>;
-> +		ti,cs-wstrobe = <40>;
-> +		ti,cs-wsetup = <14>;
-> +		ti,cs-asize = <1>;
-> +
-> +		flash@0,0x0000000 {
-> +			compatible = "cfi-flash";
-> +			reg = <0 0x0000000 0x4000000>;
-> +
-> +			...
-> +		};
-> +	};
-> +};
-> 
+>
+>> > +       /*
+>> > +        * Per spec: for PAUSE_STATE to RESET_STATE, two writes
+>> > +        * of (b10) are required
+>> > +        */
+>> > +       if (((cur_state & QUP_STATE_MASK) == QUP_STATE_PAUSE) &&
+>> > +           (state == QUP_STATE_RESET)) {
+>> > +               writel_relaxed(QUP_STATE_CLEAR, controller->base +
+>> > QUP_STATE);
+>> > +               writel_relaxed(QUP_STATE_CLEAR, controller->base +
+>> > QUP_STATE);
+>> > +       } else {
+>> Make sure you don't transition from RESET to PAUSE.
+>
+> I don't see this to be handled in CAF code. Could you give me
+> more details, please?
+>
+> Right now possible state transactions are:
+>
+> * if everything is fine:
+>   RESET -> RUN -> PAUSE -> RUN -> RESET
+> * in case of error:
+>   RESET -> RUN -> RESET
+>   RESET -> RUN -> PAUSE -> RESET
+>
+> Please correct me if I am wrong.
+
+According to the hardware documentation if the hardware is in the RESET
+state and we try to transition to the PAUSE state the hardware behavior is
+"undefined", which usually means bad things will happen.  Admittedly, if
+the driver always follows the "valid" rules (the ones you've listed above)
+it _should_ never happen.  However, it is _possible_ the hardware is in
+the RESET state while the driver thinks it's in the RUN state and the
+driver tries to put is in the PAUSE state.  In other words, I'd like to
+err on the side of caution since the check doesn't really cost us
+anything.
+
+>
+>> > +
+>> > +static void spi_qup_fifo_read(struct spi_qup *controller,
+>> > +                             struct spi_transfer *xfer)
+>> > +{
+>> > +       u8 *rx_buf = xfer->rx_buf;
+>> > +       u32 word, state;
+>> > +       int idx, shift;
+>> > +
+>> > +       while (controller->rx_bytes < xfer->len) {
+>> > +
+>> > +               state = readl_relaxed(controller->base +
+>> QUP_OPERATIONAL);
+>> > +               if (0 == (state & QUP_OP_IN_FIFO_NOT_EMPTY))
+>> > +                       break;
+>> > +
+>> > +               word = readl_relaxed(controller->base +
+>> QUP_INPUT_FIFO);
+>> > +
+>> > +               for (idx = 0; idx < controller->bytes_per_word &&
+>> > +                    controller->rx_bytes < xfer->len; idx++,
+>> > +                    controller->rx_bytes++) {
+>> > +
+>> > +                       if (!rx_buf)
+>> > +                               continue;
+>> If there is no rx_buf just set rx_bytes to xfer->len and skip the loop
+>> entirely.
+>
+> Well, FIFO buffer still should be drained, right?
+> Anyway. I am looking for better way to handle this.
+> Same applies for filling FIFO buffer.
+>
+
+Yes.  Still read from the FIFO but skip the for loop since we're just
+adding bytes_per_word to the total rx_byte count one iteration at a time
+and not doing anything with the data.
+
+Thanks,
+Dan
