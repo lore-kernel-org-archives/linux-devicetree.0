@@ -1,72 +1,49 @@
-From: Kevin Hilman <khilman@linaro.org>
-Subject: Re: regression(ti platforms): next-20140210 (ehci?)
-Date: Mon, 10 Feb 2014 10:28:54 -0800
-Message-ID: <7h61omakk9.fsf@paris.lan>
-References: <52F8F77B.70605@ti.com> <52F9117C.8000405@ti.com>
+From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] dp83640: Get gpio and master/slave configuration from DT
+Date: Mon, 10 Feb 2014 19:46:05 +0100
+Message-ID: <20140210184604.GA4296@netboy>
+References: <1392037240-30913-1-git-send-email-stefan.sorensen@spectralink.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <52F9117C.8000405@ti.com> (Roger Quadros's message of "Mon, 10
-	Feb 2014 19:50:52 +0200")
-Sender: linux-omap-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: Nishanth Menon <nm@ti.com>, linux-omap <linux-omap@vger.kernel.org>, linux-usb@vger.kernel.org, "Balbi, Felipe" <balbi@ti.com>, linux-next@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1392037240-30913-1-git-send-email-stefan.sorensen-usnHOLptxrsHrNJx0XZkJA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan =?iso-8859-1?Q?S=F8rensen?= <stefan.sorensen-usnHOLptxrsHrNJx0XZkJA@public.gmane.org>
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Roger Quadros <rogerq@ti.com> writes:
+On Mon, Feb 10, 2014 at 02:00:40PM +0100, Stefan S=F8rensen wrote:
+> This patch removes the module parameters gpio_tab and chosen_phy in f=
+avour of
+> retrieving the configuration from DT through the properties
 
-> +devicetree
->
-> On 02/10/2014 05:59 PM, Nishanth Menon wrote:
->> Hi,
->> 
->> A quick note to report that I saw regression in today's next tag (logs
->> indicate around EHCI) boot on various TI platforms:
->> 
->> Note: crane and sdp2430 are not expected to pass with
->> multi_v7_defconfig (note: omap2plus_defconfig boot seems to be sane
->> but USB is disabled there)
->> 
->> next-20140210-multi_v7_defconfig
->>  1: am335x-evm:  Boot PASS: http://slexy.org/raw/s2zYHdPb94
->>  2:  am335x-sk:  Boot PASS: http://slexy.org/raw/s2UChLyzSE
->>  3: am3517-evm:  Boot FAIL: http://slexy.org/raw/s20Br9XLO1
->> around ehci
->> 
->>  4:  am37x-evm:  Boot FAIL: http://slexy.org/raw/s20mVz9Wc7
->> around ehci
->> 
->>  5: am43xx-epos:  Boot PASS: http://slexy.org/raw/s2byveBYtT
->>  6: BeagleBoard-XM:  Boot FAIL: http://slexy.org/raw/s21sOgJNwK
->> around ehci
->> 
->>  7: BeagleBone-Black:  Boot PASS: http://slexy.org/raw/s2ovVNAmO7
->>  8:      crane: No Image built - Missing platform support?:
->>  9:       dra7:  Boot PASS: http://slexy.org/raw/s217qwaXsM
->> 10:        ldp:  Boot FAIL: http://slexy.org/raw/s203IvjE23
->> around ehci
->> 
->> 11: PandaBoard-ES:  Boot FAIL: http://slexy.org/raw/s2NvkRx2YJ
->> around ehci
->
-> I think the problem is that ehci-platform driver gets loaded instead of ehci-omap.
->
-> In the DT node we have compatible ids for both. e.g. for omap4.dtsi
->
->                         usbhsehci: ehci@4a064c00 {
->                                 compatible = "ti,ehci-omap", "usb-ehci";
->                                 reg = <0x4a064c00 0x400>;
->                                 interrupt-parent = <&gic>;
->                                 interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
->                         };
->
-> Shouldn't ehci-omap driver be getting a higher priority than usb-ehci?
->
-> A quick fix would be to eliminate "usb-ehci" from the DT node of all failing platforms.
+Can we please keep the module parameters? I have two platforms with
+phyters neither of which will ever support DT, namely ixp and m68k,
+and I want to run recent kernels on them.
 
-I can confirm that simply remvoing usb-ehci from omap[34].dtsi nodes
-fixed the problem for me on 3530/overo, 3730/beagle-xM and
-4460/panda-es.  But I don't think that's the right fix.  First we have
-to figure out why ehci-omap stopped getting loaded first.
+Are module parameters even considered user ABI?
 
-Kevin
+Even if not, still I want to retain the module params until there is
+an alternative for non-DT platforms.
+
+> 	dp83640,slave
+> 	dp83640,calibrate-gpio
+> 	dp83640,perout-gpios
+> 	dp83640,extts-gpios
+> The configuration is now stored for each master clock device, allowin=
+g different=20
+> gpio setups for each master.
+
+What do you mean by "each master"? Do you mean each individual PHY devi=
+ce
+or each group of PHYs on the same MDIO bus?
+
+Thanks,
+Richard
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
