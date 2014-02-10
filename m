@@ -1,50 +1,39 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 6/6] dt: Update binding information for mvebu gating
- clocks with Armada 380/385
-Date: Mon, 10 Feb 2014 18:59:08 +0100
-Message-ID: <20140210185908.3374eaf6@skate>
-References: <1392053569-28037-1-git-send-email-gregory.clement@free-electrons.com>
-	<1392053569-28037-7-git-send-email-gregory.clement@free-electrons.com>
-	<20140210175350.GD9995@lunn.ch>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: regression(ti platforms): next-20140210 (ehci?)
+Date: Mon, 10 Feb 2014 12:02:57 -0600
+Message-ID: <52F91451.8050802@ti.com>
+References: <52F8F77B.70605@ti.com> <52F9117C.8000405@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140210175350.GD9995-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-next-owner@vger.kernel.org>
+In-Reply-To: <52F9117C.8000405@ti.com>
+Sender: linux-next-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>, linux-omap <linux-omap@vger.kernel.org>, linux-usb@vger.kernel.org, "Balbi, Felipe" <balbi@ti.com>
+Cc: linux-next@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Andrew Lunn,
-
-On Mon, 10 Feb 2014 18:53:50 +0100, Andrew Lunn wrote:
-> > +The following is a list of provided IDs for Armada 380/385:
-> > +ID	Clock		Peripheral
-> > +-----------------------------------
-> > +0	audio		Audio
-> > +2	ge2		Gigabit Ethernet 2
-> > +3	ge1		Gigabit Ethernet 1
-> > +4	ge0		Gigabit Ethernet 0
-> > +5	pex1		PCIe 1
-> > +6	pex2		PCIe 2
-> > +7	pex3		PCIe 3
-> > +8	pex4		PCIe 0
+On 02/10/2014 11:50 AM, Roger Quadros wrote:
+> +devicetree
 > 
-> Is that last one a typo? It at least looks a bit odd.
+[...]
+> In the DT node we have compatible ids for both. e.g. for omap4.dtsi
+> 
+>                         usbhsehci: ehci@4a064c00 {
+>                                 compatible = "ti,ehci-omap", "usb-ehci";
+>                                 reg = <0x4a064c00 0x400>;
+>                                 interrupt-parent = <&gic>;
+>                                 interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+>                         };
+> 
+> Shouldn't ehci-omap driver be getting a higher priority than usb-ehci?
+> 
+> A quick fix would be to eliminate "usb-ehci" from the DT node of all failing platforms.
 
-Right, this should be:
+If the driver is not compatible with "usb-ehci", not sure why do we
+even state that in dts node?
 
-	8	pex0		PCIe 0
 
-(just checked again in the datasheet)
-
-Thomas
 -- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Nishanth Menon
