@@ -1,97 +1,54 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 1/2] iio:as3935: Add DT binding docs for AS3935
- driver
-Date: Mon, 10 Feb 2014 10:58:08 +0000
-Message-ID: <20140210105807.GU25314@e106331-lin.cambridge.arm.com>
-References: <1392006451-7818-1-git-send-email-mranostay@gmail.com>
- <1392006451-7818-2-git-send-email-mranostay@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v11] gpio: add a driver for the Synopsys DesignWare APB
+ GPIO block
+Date: Mon, 10 Feb 2014 12:06:44 +0100
+Message-ID: <CACRpkdYiC=nzVG4_nQuRVSNP9TB4W=3VL9QhBQjmqvLvmP6McA@mail.gmail.com>
+References: <1391724370-30589-1-git-send-email-delicious.quinoa@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1392006451-7818-2-git-send-email-mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1391724370-30589-1-git-send-email-delicious.quinoa@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Alan Tull <delicious.quinoa@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Jamie Iles <jamie@jamieiles.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Yves Vandervennet <rocket.yvanderv@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 10, 2014 at 04:27:30AM +0000, Matt Ranostay wrote:
-> Document compatible string, required and optional DT properties for
-> AS3935 chipset driver.
-> 
-> Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/iio/proximity/as3935.txt   | 27 ++++++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->  2 files changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/as3935.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/as3935.txt b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
-> new file mode 100644
-> index 0000000..0453254
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
-> @@ -0,0 +1,27 @@
-> +Austrian Microsystems AS3935 Franklin lightning sensor device driver
+Hi Alan, this is starting to look good. I's like an ACK from a DT
+maintainer on the bindings but can't see anything really controversial
+about them.
+
+On Thu, Feb 6, 2014 at 11:06 PM, Alan Tull <delicious.quinoa@gmail.com> wrote:
+
+> +static int dwapb_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
+> +{
+> +       struct bgpio_chip *bgc = to_bgpio_chip(gc);
+> +       struct dwapb_gpio_port *port = container_of(bgc, struct
+> +                                                   dwapb_gpio_port, bgc);
+> +       struct dwapb_gpio *gpio = port->gpio;
 > +
-> +Required properties:
-> +	- compatible: must be "ams,as3935"
-> +	- reg: SPI chip select number for the device
-> +	- spi-cpha: SPI Mode 1. Refer to spi/spi-bus.txt for generic SPI
-> +	slave node bindings.
-> +	- interrupt-parent : should be the phandle for the interrupt controller
-> +	- interrupts : interrupt mapping
+> +       return irq_create_mapping(gpio->domain, offset);
+> +}
 
-Nit: Please don't use the term "interrupt mapping", as it's undefined
-and clashes with the "interrupt-map" property on an interrupt nexus.
-There are a lot of bindings using it, and it would be nice to get them
-fixed up too.
+I think you want to call irq_find_mapping() here. irq_create_mapping()
+should be called for all valid IRQs on probe() instead.
 
-As interrupts can be described in a couple of ways it probably doesn't
-make sense to state the exact format here, but could this be something
-like the following instead:
+> +               ct = irq_gc->chip_types;
+> +               ct->chip.irq_ack = irq_gc_ack_set_bit;
+> +               ct->chip.irq_mask = irq_gc_mask_set_bit;
+> +               ct->chip.irq_unmask = irq_gc_mask_clr_bit;
+> +               ct->chip.irq_set_type = dwapb_irq_set_type;
+> +               ct->chip.irq_enable = dwapb_irq_enable;
+> +               ct->chip.irq_disable = dwapb_irq_disable;
+> +               ct->regs.ack = GPIO_PORTA_EOI;
+> +               ct->regs.mask = GPIO_INTMASK;
 
-- interrupts: the sole interrupt generated by the device.
+Please add .startup() and .shutdown() callbacks marking the
+respective lines as IRQs, compare to recent patches in the
+GPIO subsystem such as this:
+http://marc.info/?l=linux-gpio&m=138546100215235&w=2
 
-> +
-> +	Refer to interrupt-controller/interrupts.txt for generic
-> +	interrupt client node bindings.
-> +
-> +Optional properties:
-> +	- ams,tune-cap: Calibration tuning capacitor stepping value 0 - 120pF.
-> +	  This will require using the calibration data from the manufacturer.
+You probably want to call irq_create_mapping() for each
+valid IRQ after registering the chip in this function.
 
-I think "tune-cap" is a little terse. Also "cap" is used as an
-abbreviation for "capability" elsewhere, and it would be nice to make
-it clear that in this case it means "capacitor".
-
-Could this be "ams,tuning-capacitor-pf" instead? That would make it
-clear at a glance what the value is and the units (though people would
-still ahve to refer to documentation to figure out precisely what this
-means).
-
-> +
-> +Example:
-> +
-> +as3935@0 {
-> +	compatible = "ams,as3935";
-> +	reg = <0>;
-> +	spi-cpha;
-> +	interrupt-parent = <&gpio1>;
-> +	interrupts = <16 1>;
-> +	ams,tune-cap = <80>;
-> +};
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index e9d19e2..03e50ff 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -11,6 +11,7 @@ ak	Asahi Kasei Corp.
->  allwinner	Allwinner Technology Co., Ltd.
->  altr	Altera Corp.
->  amcc	Applied Micro Circuits Corporation (APM, formally AMCC)
-> +ams	AMS AG
-
-The vendor-prefix addition looks fine to me.	
-
-Thanks,
-Mark.
+Yours,
+Linus Walleij
