@@ -1,240 +1,97 @@
-From: <dinguyen@altera.com>
-Subject: [PATCHv3 1/2] net: stmmac: Add SOCFPGA glue driver
-Date: Mon, 10 Feb 2014 13:48:16 -0600
-Message-ID: <1392061697-20193-1-git-send-email-dinguyen@altera.com>
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/2] spi: Add Qualcomm QUP SPI controller support
+Date: Mon, 10 Feb 2014 21:41:44 +0200
+Message-ID: <1392061304.24621.17.camel@violet>
+References: <1391705868-20091-1-git-send-email-iivanov@mm-sol.com>
+	 <1391705868-20091-3-git-send-email-iivanov@mm-sol.com>
+	 <20140207073952.GA2610@qualcomm.com>
+	 <1391766753.27491.60.camel@iivanov-dev>
+	 <20140207173207.GA19974@qualcomm.com>
+	 <1392051302.2853.56.camel@iivanov-dev>
+	 <20140210174738.GA31596@qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: dinh.linux@gmail.com, Dinh Nguyen <dinguyen@altera.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vince Bridgers <vbridgers2013@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140210174738.GA31596-zC7DfRvBq/JWk0Htik3J/w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alok Chauhan <alokc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gilad Avidov <gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kiran Gunda <kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen@altera.com>
 
-Like the STi series SOCs, Altera's SOCFPGA also needs a glue layer on top of the
-Synopsys gmac IP.
+Hi,
 
-This patch adds the platform driver for the glue layer which configures the IP
-before the generic STMMAC driver takes over.
+On Mon, 2014-02-10 at 11:47 -0600, Andy Gross wrote:
+> On Mon, Feb 10, 2014 at 06:55:02PM +0200, Ivan T. Ivanov wrote:
+> 
+> [....]
+> 
+> > > > > Bail here?
+> > > > 
+> > > > I don't know. What will be the consequences if controller continue to
+> > > > operate on its default rate?
+> > > > 
+> > > 
+> > > It is unclear.  But if you can't set the rate that is configured or if there is
+> > > a misconfiguration, it's probably better to exit the probe and catch it here.
+> > 
+> > 
+> > My preference is to delay clock speed change till first
+> > SPI transfer. And use wherever transfer itself mandate.
+> > 
+> 
+> That works.  My only concern is that it might be nice to catch a configuration
+> problem early rather than wait for the SPI transfer to fail continuously.
 
-Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Vince Bridgers <vbridgers2013@gmail.com>
----
-v3: Remove stray empty line at end of dwmac-socfpga.c.
-v2: Use the dwmac-sti as an example for a glue layer and split patch up
-to have dts as a separate patch. Also cc dts maintainers since there is
-a new binding.
----
- drivers/net/ethernet/stmicro/stmmac/Makefile       |    1 +
- .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c    |  183 ++++++++++++++++++++
- 2 files changed, 184 insertions(+)
- create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
+If developer is skilled enough to know which version controller is,
+(s)he will be able to put the right frequency constrain here :-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/Makefile b/drivers/net/ethernet/stmicro/stmmac/Makefile
-index ecadece..73df8b6 100644
---- a/drivers/net/ethernet/stmicro/stmmac/Makefile
-+++ b/drivers/net/ethernet/stmicro/stmmac/Makefile
-@@ -1,4 +1,5 @@
- obj-$(CONFIG_STMMAC_ETH) += stmmac.o
-+stmmac-$(CONFIG_ARCH_SOCFPGA) += dwmac-socfpga.o
- stmmac-$(CONFIG_STMMAC_PLATFORM) += stmmac_platform.o
- stmmac-$(CONFIG_STMMAC_PCI) += stmmac_pci.o
- stmmac-$(CONFIG_DWMAC_SUNXI) += dwmac-sunxi.o
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-new file mode 100644
-index 0000000..c7f034b
---- /dev/null
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-@@ -0,0 +1,183 @@
-+/*  Copyright (C) 2014 Altera Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ *
-+ * Adopted from dwmac-sti.c
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_net.h>
-+#include <linux/of_platform.h>
-+#include <linux/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/stmmac.h>
-+
-+#define SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_GMII_MII 0x0
-+#define SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_RGMII 0x1
-+#define SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_RMII 0x2
-+#define SYSMGR_EMACGRP_CTRL_PHYSEL_WIDTH 2
-+#define SYSMGR_EMACGRP_CTRL_PHYSEL_MASK 0x00000003
-+
-+struct socfpga_dwmac {
-+	int	interface;
-+	u32	reg_offset;
-+	struct	device *dev;
-+	struct regmap *sys_mgr_base_addr;
-+	struct	device_node *dwmac_np;
-+};
-+
-+static int socfpga_dwmac_parse_data(struct socfpga_dwmac *dwmac, struct device *dev)
-+{
-+	struct device_node *np	= dev->of_node;
-+	struct device_node *stmmac_np;
-+	struct regmap *sys_mgr_base_addr;
-+	u32 reg_offset;
-+	int ret;
-+
-+	stmmac_np = of_get_next_available_child(np, NULL);
-+	if (!stmmac_np) {
-+		dev_info(dev, "No dwmac node found\n");
-+		return -EINVAL;
-+	}
-+
-+	if (!of_device_is_compatible(stmmac_np, "snps,dwmac")) {
-+		dev_info(dev, "dwmac node isn't compatible with snps,dwmac\n");
-+		return -EINVAL;
-+	}
-+
-+	dwmac->interface = of_get_phy_mode(stmmac_np);
-+	of_node_put(stmmac_np);
-+
-+	sys_mgr_base_addr = syscon_regmap_lookup_by_phandle(np, "altr,sysmgr-syscon");
-+	if (IS_ERR(sys_mgr_base_addr)) {
-+		dev_info(dev, "No sysmgr-syscon node found\n");
-+		return PTR_ERR(sys_mgr_base_addr);
-+	}
-+
-+	ret = of_property_read_u32_index(np, "altr,sysmgr-syscon", 1, &reg_offset);
-+	if (ret) {
-+		dev_info(dev, "Could not reg_offset into sysmgr-syscon!\n");
-+		return -EINVAL;
-+	}
-+
-+	dwmac->reg_offset = reg_offset;
-+	dwmac->sys_mgr_base_addr = sys_mgr_base_addr;
-+	dwmac->dwmac_np = stmmac_np;
-+	dwmac->dev = dev;
-+
-+	return 0;
-+}
-+
-+static int socfpga_dwmac_setup(struct socfpga_dwmac *dwmac)
-+{
-+	struct regmap *sys_mgr_base_addr = dwmac->sys_mgr_base_addr;
-+	int phymode = dwmac->interface;
-+	u32 reg_offset = dwmac->reg_offset;
-+	u32 ctrl, val, shift = 0;
-+
-+	if (of_machine_is_compatible("altr,socfpga-vt"))
-+		return 0;
-+
-+	switch (phymode) {
-+	case PHY_INTERFACE_MODE_RGMII:
-+		val = SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_RGMII;
-+		break;
-+	case PHY_INTERFACE_MODE_MII:
-+	case PHY_INTERFACE_MODE_GMII:
-+		val = SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_GMII_MII;
-+		break;
-+	default:
-+		dev_err(dwmac->dev, "bad phy mode %d\n", phymode);
-+		return -EINVAL;
-+	}
-+
-+	regmap_read(sys_mgr_base_addr, reg_offset, &ctrl);
-+	ctrl &= ~(SYSMGR_EMACGRP_CTRL_PHYSEL_MASK << shift);
-+	ctrl |= val << shift;
-+
-+	regmap_write(sys_mgr_base_addr, reg_offset, ctrl);
-+	return 0;
-+}
-+
-+static int socfpga_dwmac_probe(struct platform_device *pdev)
-+{
-+	struct device		*dev = &pdev->dev;
-+	struct device_node	*node = dev->of_node;
-+	int			ret = -ENOMEM;
-+	struct socfpga_dwmac	*dwmac;
-+
-+	dwmac = devm_kzalloc(dev, sizeof(*dwmac), GFP_KERNEL);
-+	if (!dwmac)
-+		return -ENOMEM;
-+
-+	ret = socfpga_dwmac_parse_data(dwmac, dev);
-+	if (ret) {
-+		dev_err(dev, "Unable to parse OF data\n");
-+		return ret;
-+	}
-+
-+	ret = socfpga_dwmac_setup(dwmac);
-+	if (ret) {
-+		dev_err(dev, "couldn't setup SoC glue (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	if (node) {
-+		ret = of_platform_populate(node, NULL, NULL, dev);
-+		if (ret) {
-+			dev_err(dev, "failed to add dwmac core\n");
-+			return ret;
-+		}
-+	} else {
-+		dev_err(dev, "no device node, failed to add dwmac core\n");
-+		return -ENODEV;
-+	}
-+
-+	platform_set_drvdata(pdev, dwmac);
-+
-+	return 0;
-+}
-+
-+static int socfpga_dwmac_remove(struct platform_device *pdev)
-+{
-+	return 0;
-+}
-+
-+static const struct of_device_id socfpga_dwmac_match[] = {
-+	{ .compatible = "altr,socfpga-stmmac" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, socfpga_dwmac_match);
-+
-+static struct platform_driver socfpga_dwmac_driver = {
-+	.probe		= socfpga_dwmac_probe,
-+	.remove		= socfpga_dwmac_remove,
-+	.driver		= {
-+		.name	= "socfpga-dwmac",
-+		.of_match_table = of_match_ptr(socfpga_dwmac_match),
-+	},
-+};
-+
-+module_platform_driver(socfpga_dwmac_driver);
-+
-+MODULE_ALIAS("platform:socfpga-dwmac");
-+MODULE_AUTHOR("Dinh Nguyen <dinguyen@altera.com>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Altera SOCFPGA DWMAC Glue Layer");
--- 
-1.7.9.5
+> 
+> [....]
+> 
+> > > > My understanding is:
+> > > > 
+> > > > Disabling clocks will timeout transaction, if any. Core Device driver
+> > > > will call: devm_spi_unregister(), which will wait pending transactions
+> > > > to complete and then remove the SPI master.
+> > > 
+> > > Disabling clocks will confuse the hardware.  We cannot disable clocks while the
+> > > spi core is active and transferring data.
+> > 
+> > I could follow approach taken by other SPI drivers, just reset
+> > controller and disable clocks.
+> 
+> You have to wait until the hardware is in a sane state.  For the QUP, that means
+> in a RUN/PAUSE/RESET state.  It cannot be in transition when you cut the clocks.
+> The safest thing to do is to get the QUP into the RESET state and then cut the
+> clocks.
+> 
+
+Sure. will do.
+
+> [.....]
+> 
+> > > > I am not aware of the difference. My board report v.20020000. 
+> > > > Is there difference of handling these controllers?
+> > > 
+> > > There were some bug fixes between versions.  None of those affect SPI (that I
+> > > can tell), but it's better to be more descriptive and use the full versions in
+> > > the compatible tags.
+> > 
+> > No strong preference here. Should I add qcom,spi-qup-v2.2.0, then? :-)
+> 
+> According to the documentation, there is no v2.2.0.  It appears there is some
+> disconnect between the specific HW revision and the documentation.  I'll see if
+> I can get some clarification from the hardware guys.  For now, I think the 2.1.1
+> and 2.2.1 tags are fine.
+
+Ok. Thanks,
+Ivan
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
