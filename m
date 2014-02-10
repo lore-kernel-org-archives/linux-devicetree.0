@@ -1,70 +1,129 @@
-From: Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: i.MX51 babbage: Support diagnostic LED
-Date: Mon, 10 Feb 2014 15:05:46 +0800
-Message-ID: <1392015946-22419-1-git-send-email-Ying.Liu@freescale.com>
+From: Lukasz Majewski <l.majewski@samsung.com>
+Subject: Re: [PATCH v2 1/2] PM / OPP: Allow boost frequency to be looked up
+ from device tree
+Date: Mon, 10 Feb 2014 08:10:51 +0100
+Message-ID: <20140210081051.05da33bd@amdc2363>
+References: <1391786342-11812-1-git-send-email-thomas.ab@samsung.com>
+ <1391786342-11812-2-git-send-email-thomas.ab@samsung.com>
+ <52F50346.7040707@arm.com>
+ <CAJuA9agT4PC6YOmhCwKQ=58qaGEr1qSuhTpX57ro1pEuk++Miw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shc_work-JGs/UdohzUI@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAJuA9agT4PC6YOmhCwKQ=58qaGEr1qSuhTpX57ro1pEuk++Miw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <ta.omasab@gmail.com>, Sudeep Holla <Sudeep.Holla@arm.com>
+Cc: Nishanth Menon <nm@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "t.figa@samsung.com" <t.figa@samsung.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "thomas.ab@samsung.com" <thomas.ab@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The D25 LED controlled by gpio on the i.MX51 babbage
-board is a diagnostic LED according to the board design.
-This patch adds the relevant device tree nodes to the
-i.MX51 babbage device tree file to support this LED.
+Hi Thomas, Sudeep
 
-Signed-off-by: Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
-v1->v2:
-* Rebase the patch from 3.14-rc2 to linux-next(d371ca32be).
-* Rename the pinctrl name for the LED to be more generic.
-* Switch to use the standard GPIO flag GPIO_ACTIVE_HIGH.
+> On Fri, Feb 7, 2014 at 9:31 PM, Sudeep Holla <Sudeep.Holla@arm.com>
+> wrote:
+> > On 07/02/14 15:19, Thomas Abraham wrote:
+> >> From: Thomas Abraham <thomas.ab@samsung.com>
+> >>
+> >> Commit 6f19efc0 ("cpufreq: Add boost frequency support in core")
+> >> adds support for CPU boost mode. This patch adds support for
+> >> finding available boost frequencies from device tree and marking
+> >> them as usable in boost mode.
+> >>
+> >> Cc: Nishanth Menon <nm@ti.com>
+> >> Cc: Lukasz Majewski <l.majewski@samsung.com>
+> >> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
+> >> ---
+> >>  drivers/base/power/opp.c |   34 +++++++++++++++++++++++++++++++++-
+> >>  1 file changed, 33 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/base/power/opp.c b/drivers/base/power/opp.c
+> >> index fa41874..b636826 100644
+> >> --- a/drivers/base/power/opp.c
+> >> +++ b/drivers/base/power/opp.c
+> >> @@ -628,7 +628,8 @@ int dev_pm_opp_init_cpufreq_table(struct
+> >> device *dev, struct device_opp *dev_opp;
+> >>       struct dev_pm_opp *opp;
+> >>       struct cpufreq_frequency_table *freq_table;
+> >> -     int i = 0;
+> >> +     int i = 0, j, len, ret;
+> >> +     u32 *boost_freqs = NULL;
+> >>
+> >>       /* Pretend as if I am an updater */
+> >>       mutex_lock(&dev_opp_list_lock);
+> >> @@ -650,10 +651,35 @@ int dev_pm_opp_init_cpufreq_table(struct
+> >> device *dev, return -ENOMEM;
+> >>       }
+> >>
+> >> +     if (of_find_property(dev->of_node, "boost-frequency", &len))
+> >> {
+> >> +             if (len == 0 || (len & (sizeof(u32) - 1)) != 0) {
+> >> +                     dev_err(dev, "%s: invalid boost
+> >> frequency\n", __func__);
+> >> +                     ret = -EINVAL;
+> >> +                     goto err_boost;
+> >> +             }
+> >> +
+> >> +             boost_freqs = kzalloc(len, GFP_KERNEL);
+> >> +             if (!boost_freqs) {
+> >> +                     dev_warn(dev, "%s: no memory for boost freq
+> >> table\n",
+> >> +                                     __func__);
+> >> +                     ret = -ENOMEM;
+> >> +                     goto err_boost;
+> >> +             }
+> >> +             of_property_read_u32_array(dev->of_node,
+> >> "boost-frequency",
+> >> +                     boost_freqs, len / sizeof(u32));
+> >> +     }
+> >> +
+> >>       list_for_each_entry(opp, &dev_opp->opp_list, node) {
+> >>               if (opp->available) {
+> >>                       freq_table[i].driver_data = i;
+> >>                       freq_table[i].frequency = opp->rate / 1000;
+> >> +                     for (j = 0; j < len / sizeof(u32) &&
+> >> boost_freqs; j++) {
+> >> +                             if (boost_freqs[j] ==
+> >> freq_table[i].frequency) {
+> >> +                                     freq_table[i].driver_data =
+> >> +
+> >> CPUFREQ_BOOST_FREQ;
+> >> +                                     break;
+> >> +                             }
+> >> +                     }
+> >>                       i++;
+> >>               }
+> >>       }
+> > IIRC you had mentioned that the boost-opp was not limited to be a
+> > cpufreq, but this change seems to be cpufreq only.
+> 
+> Yes, but as you have initiated the discussion on extending the OPP
+> binding, this has been limited to cpufreq only. If the new OPP library
+> has support for listing boost frequency, this can be migrated to the
+> new OPP libaray.
 
- arch/arm/boot/dts/imx51-babbage.dts |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+I agree here with Thomas. Since we are fixing regression here, we shall
+use the existing OPP API. When agreement for the future OPPs format is
+in place, we will port the boost OPPs to it.
 
-diff --git a/arch/arm/boot/dts/imx51-babbage.dts b/arch/arm/boot/dts/imx51-babbage.dts
-index ea5c67e..121dadd 100644
---- a/arch/arm/boot/dts/imx51-babbage.dts
-+++ b/arch/arm/boot/dts/imx51-babbage.dts
-@@ -81,6 +81,17 @@
- 		};
- 	};
- 
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_leds>;
-+
-+		led-diagnostic {
-+			label = "diagnostic";
-+			gpios = <&gpio2 6 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
- 	sound {
- 		compatible = "fsl,imx51-babbage-sgtl5000",
- 			     "fsl,imx-audio-sgtl5000";
-@@ -344,6 +355,12 @@
- 			>;
- 		};
- 
-+		pinctrl_gpio_leds: gpioledsgrp {
-+			fsl,pins = <
-+				MX51_PAD_EIM_D22__GPIO2_6		0x80000000
-+			>;
-+		};
-+
- 		pinctrl_i2c2: i2c2grp {
- 			fsl,pins = <
- 				MX51_PAD_KEY_COL4__I2C2_SCL		0x400001ed
+> 
+> Thanks,
+> Thomas.
+> 
+> >
+> > Regards,
+> > Sudeep
+> >
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
+
 -- 
-1.7.9.5
+Best regards,
 
+Lukasz Majewski
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
