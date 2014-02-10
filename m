@@ -1,115 +1,97 @@
-From: dsneddon@codeaurora.org
-Subject: Re: Fwd: [PATCH 2/2] spi: Add Qualcomm QUP SPI controller support
-Date: Mon, 10 Feb 2014 16:21:32 -0000
-Message-ID: <3388d68dc907e9190d997fad95830d74.squirrel@www.codeaurora.org>
-References: <1391705868-20091-1-git-send-email-iivanov@mm-sol.com>
-    <1391705868-20091-3-git-send-email-iivanov@mm-sol.com>
-    <CACceFXdUobQvN2hcv5kh+QL=o8bWM_PVkAtrOx+euZSeVDm8hQ@mail.gmail.com>
-    <214fe9fc7e62ab30bdfbb4ac5d1ee250.squirrel@www.codeaurora.org>
-    <1392047651.2853.19.camel@iivanov-dev>
+From: Gerlando Falauto <gerlando.falauto@keymile.com>
+Subject: Re: [PATCH V3] net/dt: Add support for overriding phy configuration
+ from device tree
+Date: Mon, 10 Feb 2014 17:14:59 +0100
+Message-ID: <52F8FB03.6040606@keymile.com>
+References: <7510122.cayuQ6qt8r@wuerfel> <1389999459-9483-1-git-send-email-matthew.garrett@nebula.com> <CAGVrzcZ4TFd=9KP+aoG47QbmqDJ1i23WBcEWDbzNRUfGmPvZHQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1392047651.2853.19.camel@iivanov-dev>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: dsneddon@codeaurora.org, broonie@kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, linux-spi@vger.kernel.org, linux-arm-msm@vger.kernel.org, inux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alokc@codeaurora.org, gavidov@codeaurora.org, kgunda@codeaurora.org, sdharia@codeaurora.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGVrzcZ4TFd=9KP+aoG47QbmqDJ1i23WBcEWDbzNRUfGmPvZHQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Matthew Garrett <matthew.garrett@nebula.com>
+Cc: netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ivan,
->
->> > +
->> > +static int spi_qup_set_state(struct spi_qup *controller, u32 state)
->> > +{
->> > +       unsigned long loop = 0;
->> > +       u32 cur_state;
->> > +
->> > +       cur_state = readl_relaxed(controller->base + QUP_STATE);
->> Make sure the state is valid before you read the current state.
->
-> Why? Controller is always left in valid state (after probe and every
-> transaction)? I know that CAF code contain this check, but now driver
-> is little bit different. I have made some tests and controller is
-> always in valid state in this point.
+Hi,
 
-The hardware programming guide we recommends doing this.  I'd have to talk
-to the hardware designers to know exactly the reason why.  I can follow up
-on this if you'd like.
+I'm currently trying to fix an issue for which this patch provides a 
+partial solution, so apologies in advance for jumping into the 
+discussion for my own purposes...
 
->
->> > +       /*
->> > +        * Per spec: for PAUSE_STATE to RESET_STATE, two writes
->> > +        * of (b10) are required
->> > +        */
->> > +       if (((cur_state & QUP_STATE_MASK) == QUP_STATE_PAUSE) &&
->> > +           (state == QUP_STATE_RESET)) {
->> > +               writel_relaxed(QUP_STATE_CLEAR, controller->base +
->> > QUP_STATE);
->> > +               writel_relaxed(QUP_STATE_CLEAR, controller->base +
->> > QUP_STATE);
->> > +       } else {
->> Make sure you don't transition from RESET to PAUSE.
->
-> I don't see this to be handled in CAF code. Could you give me
-> more details, please?
->
-> Right now possible state transactions are:
->
-> * if everything is fine:
->   RESET -> RUN -> PAUSE -> RUN -> RESET
-> * in case of error:
->   RESET -> RUN -> RESET
->   RESET -> RUN -> PAUSE -> RESET
->
-> Please correct me if I am wrong.
+On 02/04/2014 09:39 PM, Florian Fainelli wrote:> 2014-01-17 Matthew 
+Garrett <matthew.garrett@nebula.com>:
+ >> Some hardware may be broken in interesting and board-specific ways, such
+ >> that various bits of functionality don't work. This patch provides a
+ >> mechanism for overriding mii registers during init based on the 
+contents of
+ >> the device tree data, allowing board-specific fixups without having to
+ >> pollute generic code.
+ >
+ > It would be good to explain exactly how your hardware is broken
+ > exactly. I really do not think that such a fine-grained setting where
+ > you could disable, e.g: 100BaseT_Full, but allow 100BaseT_Half to
+ > remain usable makes that much sense. In general, Gigabit might be
+ > badly broken, but 100 and 10Mbits/sec should work fine. How about the
+ > MASTER-SLAVE bit, is overriding it really required?
+ >
+ > Is not a PHY fixup registered for a specific OUI the solution you are
+ > looking for? I am also concerned that this creates PHY troubleshooting
+ > issues much harder to debug than before as we may have no idea about
+ > how much information has been put in Device Tree to override that.
+ >
+ > Finally, how about making this more general just like the BCM87xx PHY
+ > driver, which is supplied value/reg pairs directly? There are 16
+ > common MII registers, and 16 others for vendor specific registers,
+ > this is just covering for about 2% of the possible changes.
 
-According to the hardware documentation if the hardware is in the RESET
-state and we try to transition to the PAUSE state the hardware behavior is
-"undefined", which usually means bad things will happen.  Admittedly, if
-the driver always follows the "valid" rules (the ones you've listed above)
-it _should_ never happen.  However, it is _possible_ the hardware is in
-the RESET state while the driver thinks it's in the RUN state and the
-driver tries to put is in the PAUSE state.  In other words, I'd like to
-err on the side of caution since the check doesn't really cost us
-anything.
+Good point. That would easily help me with my current issue, which 
+requires autoneg to be disabled to begin with (by clearing BMCR_ANENABLE 
+from register 0).
+This would not however fix it entirely (I tried a quick hardwired 
+implementation), as the whole PHY machinery would not take that into 
+account and would re-enable autoneg anyway.
+I also tried changing the patch so that phydev->support gets updated 
+(instead of phydev->advertising):
 
->
->> > +
->> > +static void spi_qup_fifo_read(struct spi_qup *controller,
->> > +                             struct spi_transfer *xfer)
->> > +{
->> > +       u8 *rx_buf = xfer->rx_buf;
->> > +       u32 word, state;
->> > +       int idx, shift;
->> > +
->> > +       while (controller->rx_bytes < xfer->len) {
->> > +
->> > +               state = readl_relaxed(controller->base +
->> QUP_OPERATIONAL);
->> > +               if (0 == (state & QUP_OP_IN_FIFO_NOT_EMPTY))
->> > +                       break;
->> > +
->> > +               word = readl_relaxed(controller->base +
->> QUP_INPUT_FIFO);
->> > +
->> > +               for (idx = 0; idx < controller->bytes_per_word &&
->> > +                    controller->rx_bytes < xfer->len; idx++,
->> > +                    controller->rx_bytes++) {
->> > +
->> > +                       if (!rx_buf)
->> > +                               continue;
->> If there is no rx_buf just set rx_bytes to xfer->len and skip the loop
->> entirely.
->
-> Well, FIFO buffer still should be drained, right?
-> Anyway. I am looking for better way to handle this.
-> Same applies for filling FIFO buffer.
->
+ >> +               if (!of_property_read_u32(np, override->prop, &tmp)) {
+ >> +                       if (tmp) {
+ >> +                               *val |= override->value;
+ >> +                               phydev->advertising |= 
+override->supported;
+ >> +                       } else {
+ >> +                               phydev->advertising &= 
+~(override->supported);
+ >> +                       }
+ >> +
+ >> +                       *mask |= override->value;
 
-Yes.  Still read from the FIFO but skip the for loop since we're just
-adding bytes_per_word to the total rx_byte count one iteration at a time
-and not doing anything with the data.
+What I find weird is that the only way phydev->autoneg could ever be set 
+to disabled is from here (phy.c):
 
-Thanks,
-Dan
+static void phy_sanitize_settings(struct phy_device *phydev)
+{
+	u32 features = phydev->supported;
+	int idx;
+
+	/* Sanitize settings based on PHY capabilities */
+	if ((features & SUPPORTED_Autoneg) == 0)
+		phydev->autoneg = AUTONEG_DISABLE;
+
+which is in turn only called when phydev->autoneg is set to 
+AUTONEG_DISABLE to begin with:
+
+int phy_start_aneg(struct phy_device *phydev)
+{
+	int err;
+
+	mutex_lock(&phydev->lock);
+
+	if (AUTONEG_DISABLE == phydev->autoneg)
+		phy_sanitize_settings(phydev);
+
+So could someone please help me figure out what I'm missing here?
+
+Thanks!
+Gerlando
