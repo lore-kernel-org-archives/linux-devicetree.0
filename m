@@ -1,59 +1,39 @@
-From: Mark Brown <broonie@kernel.org>
+From: Lee Jones <lee.jones@linaro.org>
 Subject: Re: [PATCH v2 1/8] ASoC: da9055: Fix device registration of PMIC and
  CODEC devices
-Date: Mon, 10 Feb 2014 14:14:00 +0000
-Message-ID: <20140210141400.GJ1757@sirena.org.uk>
+Date: Mon, 10 Feb 2014 14:42:34 +0000
+Message-ID: <20140210144234.GB26697@lee--X1>
 References: <cover.1391705989.git.Adam.Thomson.Opensource@diasemi.com>
  <6a398d176b0b2bf8792d27bd5e2995fd96afb32d.1391705989.git.Adam.Thomson.Opensource@diasemi.com>
  <20140210134310.GH1757@sirena.org.uk>
  <20140210135939.GA23141@lee--X1>
+ <20140210141400.GJ1757@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="QFO1zB2dwAkGraMW"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140210135939.GA23141@lee--X1>
+In-Reply-To: <20140210141400.GJ1757@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
+To: Mark Brown <broonie@kernel.org>
 Cc: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
+> > > Applied, thanks.
+>=20
+> > Actually, do you mind if I take this and apply it to an immutable?
+>=20
+> > I'd rather not be on the wrong end of some wrath, due to not playin=
+g
+> > the game properly.
+>=20
+> OK, but it does need to go in as a fix targetted for stable.
 
---QFO1zB2dwAkGraMW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ah, in which case there's no need, as I don't have anything in my
+-fixes branch with touches this file. Simply take it in, no problem.
 
-On Mon, Feb 10, 2014 at 01:59:39PM +0000, Lee Jones wrote:
-
-> > Applied, thanks.
-
-> Actually, do you mind if I take this and apply it to an immutable?
-
-> I'd rather not be on the wrong end of some wrath, due to not playing
-> the game properly.
-
-OK, but it does need to go in as a fix targetted for stable.
-
---QFO1zB2dwAkGraMW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS+N6kAAoJELSic+t+oim9GMEP/RUikxwwk3i8Xwj/zR85LUI+
-GvPKRyXt+zHnmz6Zsq12Y+y9wM8edVFtKJXUCSH4RRCxhSCIazMecYC+2AXPTcrt
-DLPm19vaB8jTMHh7MOjcMf820sZHmgXt2Xj01DulNAxbQxi09iY4RK6+svKOz2up
-hF0cGSvGu4mtEXetrBgDLFKpY4V4d2rmZ8iHaFqwBJYVO07TeylQyi+msr361cCc
-zeIgg+Iv+Q7I/y9Vf+B1x6gW7sH1ap2scPebZSk4corwBD4g9yePZLRHAwp6N9Zl
-r+Uev+Htwa9ta3ZbAayu3x04tPvvETnqyLuau6WIJPWEA9UzHbukFSTP8SS3mJDo
-ZKB2olrDrlnJC/b0nBnW7c1ebksWQlgSebeix3hNdw7ryrN9jXDCpysmVJPFZ9Nv
-i8ghPMu+C9ZfNmrAkhpFMCYT0yJfW4mNiucj1QQkaVyg5tIjoMx+oKjvSqCWK5ff
-XO4zXLjLN/24zuS9d18lzW4ez5CPj4IGGvjom2A4mjyS+mp7cV8P5weNQWIUd3YD
-fEhY0hlOPlgCNUm1jcgYMYUMMgrXx11Vu9y5XjCtCBuFrDAxkQrKvG8Jia4rG4YW
-zyb5yN8swT3/s3Eb6d7ukotHDigDlLmK6NBH7K7nmdFhjv3ODxcA10CxXNf/2eJy
-NQydh4//9hYJyoHdaeyQ
-=F0Fw
------END PGP SIGNATURE-----
-
---QFO1zB2dwAkGraMW--
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
