@@ -1,7 +1,8 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v4 8/8] ARM: dts: sun7i: Add ethernet alias for GMAC
-Date: Mon, 10 Feb 2014 18:35:54 +0800
-Message-ID: <1392028554-32545-9-git-send-email-wens@csie.org>
+Subject: [PATCH v4 6/8] ARM: dts: sun7i: cubieboard2: Enable
+ GMAC instead of EMAC
+Date: Mon, 10 Feb 2014 18:35:52 +0800
+Message-ID: <1392028554-32545-7-git-send-email-wens@csie.org>
 References: <1392028554-32545-1-git-send-email-wens@csie.org>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
@@ -18,28 +19,58 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-All Allwinner A20 boards we support can only use either EMAC or GMAC,
-as they share the same pins. As we have switched all supported to
-GMAC, we should alias GMAC (the active controller) as ethernet0,
-so u-boot will insert the MAC address for the correct controller.
+GMAC has better performance and fewer hardware issues.
+Use the GMAC in MII mode for ethernet instead of the EMAC.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/boot/dts/sun7i-a20.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/sun7i-a20-cubieboard2.dts | 27 ++++++++++++---------------
+ 1 file changed, 12 insertions(+), 15 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 68c889c..1b5fb88 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -17,7 +17,7 @@
- 	interrupt-parent = <&gic>;
+diff --git a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
+index 5c51cb8..7bf4935 100644
+--- a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
++++ b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
+@@ -19,21 +19,6 @@
+ 	compatible = "cubietech,cubieboard2", "allwinner,sun7i-a20";
  
- 	aliases {
--		ethernet0 = &emac;
-+		ethernet0 = &gmac;
- 		serial0 = &uart0;
- 		serial1 = &uart1;
- 		serial2 = &uart2;
+ 	soc@01c00000 {
+-		emac: ethernet@01c0b000 {
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&emac_pins_a>;
+-			phy = <&phy1>;
+-			status = "okay";
+-		};
+-
+-		mdio@01c0b080 {
+-			status = "okay";
+-
+-			phy1: ethernet-phy@1 {
+-				reg = <1>;
+-			};
+-		};
+-
+ 		pinctrl@01c20800 {
+ 			led_pins_cubieboard2: led_pins@0 {
+ 				allwinner,pins = "PH20", "PH21";
+@@ -60,6 +45,18 @@
+ 			pinctrl-0 = <&i2c1_pins_a>;
+ 			status = "okay";
+ 		};
++
++		gmac: ethernet@01c50000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&gmac_pins_mii_a>;
++			phy = <&phy1>;
++			phy-mode = "mii";
++			status = "okay";
++
++			phy1: ethernet-phy@1 {
++				reg = <1>;
++			};
++		};
+ 	};
+ 
+ 	leds {
 -- 
 1.9.rc1
