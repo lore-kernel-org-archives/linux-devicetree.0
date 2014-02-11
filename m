@@ -1,69 +1,74 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: Re: [PATCH] of: Turn of_match_node into a static inline when
- CONFIG_OF isn't set
-Date: Tue, 11 Feb 2014 10:48:26 -0600
-Message-ID: <20140211164825.GC841@joshc.qualcomm.com>
-References: <1392122211-11422-1-git-send-email-laurent.pinchart@ideasonboard.com>
- <20140211144108.GB841@joshc.qualcomm.com>
- <1596542.hkJp71u3OJ@avalon>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 4/8] ARM: mvebu: make use of
+ of_find_matching_node_and_match
+Date: Tue, 11 Feb 2014 11:53:14 -0500
+Message-ID: <20140211165314.GA8533@titan.lakedaemon.net>
+References: <1392135847-30791-1-git-send-email-joshc@codeaurora.org>
+ <1392135847-30791-5-git-send-email-joshc@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1596542.hkJp71u3OJ@avalon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
+In-Reply-To: <1392135847-30791-5-git-send-email-joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 11, 2014 at 03:55:35PM +0100, Laurent Pinchart wrote:
-> Hi Josh,
+On Tue, Feb 11, 2014 at 10:24:02AM -0600, Josh Cartwright wrote:
+> Instead of the of_find_matching_node()/of_match_node() pair, which requires two
+> iterations through the match table, make use of of_find_matching_node_and_match(),
+> which only iterates through the table once.
 > 
-> On Tuesday 11 February 2014 08:41:08 Josh Cartwright wrote:
-> > On Tue, Feb 11, 2014 at 01:36:51PM +0100, Laurent Pinchart wrote:
-> > > when CONFIG_OF is disabled of_match_node is defined as a macro that
-> > > evaluates to NULL. This breaks compilation of drivers that dereference
-> > > the function's return value directly. Fix it by turning the macro into a
-> > > static inline function that returns NULL.
-> > 
-> > Just this past week I did the same thing, but noticed that it breaks the
-> > following usecase:
-> > 
-> > 	#ifdef CONFIG_OF
-> > 	static const struct of_device_id foobar_matches[] = {
-> > 		{ .compatible = "foobar,whatsit", },
-> > 		{ },
-> > 	};
-> > 	#endif
-> > 
-> > 	static int probeme(struct platform_device *pdev)
-> > 	{
-> > 		struct of_device_id *id;
-> > 
-> > 		id = of_match_node(foobar_matches, pdev->dev.of_node);
-> > 		if (id) {
-> > 			/* ... */
-> > 		}
-> > 		return 0;
-> > 	}
-> > 
-> > When !CONFIG_OF and with your change, this will fail to build due to
-> > foobar_matches being undefined.
+> While we're here, mark the of_system_controller table const.
 > 
-> Good point. What would you think about
+> Signed-off-by: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  arch/arm/mach-mvebu/system-controller.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
 > 
-> #define of_match_node(_matches, _node)  ((const struct of_device_id *)NULL)
+> diff --git a/arch/arm/mach-mvebu/system-controller.c b/arch/arm/mach-mvebu/system-controller.c
+> index a7fb89a..e6e300a 100644
+> --- a/arch/arm/mach-mvebu/system-controller.c
+> +++ b/arch/arm/mach-mvebu/system-controller.c
+> @@ -54,7 +54,7 @@ static const struct mvebu_system_controller orion_system_controller = {
+>  	.system_soft_reset = 0x1,
+>  };
+>  
+> -static struct of_device_id of_system_controller_table[] = {
+> +static const struct of_device_id of_system_controller_table[] = {
+>  	{
+>  		.compatible = "marvell,orion-system-controller",
+>  		.data = (void *) &orion_system_controller,
+> @@ -90,13 +90,12 @@ void mvebu_restart(enum reboot_mode mode, const char *cmd)
+>  
+>  static int __init mvebu_system_controller_init(void)
+>  {
+> +	const struct of_device_id *match;
+>  	struct device_node *np;
+>  
+> -	np = of_find_matching_node(NULL, of_system_controller_table);
+> +	np = of_find_matching_node_and_match(NULL, of_system_controller_table,
+> +					     &match);
+>  	if (np) {
+> -		const struct of_device_id *match =
+> -		    of_match_node(of_system_controller_table, np);
 
-I've just sent out a patchset that cleans up at least a couple of users
-that directly do of_match_node(matches, np)->data using
-of_find_matching_node_and_match.  Not sure if that will fix the usage
-you have in mind, though.
 
-I am a bit weary about having an of_match_node() user that both directly
-dereferences the result (i.e. of_match_node(matches, np)->data) _and_
-builds when !CONFIG_OF; most likely due to a traumatic childhood event
-where demons flew out my nose.
+> -		BUG_ON(!match);
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Gregory, is it ok to remove this?  It was added with the original code
+submission for mach-mvebu.  mvebu_restart() will handle this
+gracefully...
+
+>  		system_controller_base = of_iomap(np, 0);
+>  		mvebu_sc = (struct mvebu_system_controller *)match->data;
+>  		of_node_put(np);
+
+thx,
+
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
