@@ -1,42 +1,77 @@
-From: "Gupta, Pekon" <pekon-l0cyMroinI0@public.gmane.org>
-Subject: RE: [RFC/PATCH 1/1] mtd: nand: Add a devicetree binding for ECC
- strength and ECC step size
-Date: Tue, 11 Feb 2014 15:49:24 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA6F815@DBDE04.ent.ti.com>
-References: <1389960820-18696-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1389960820-18696-2-git-send-email-ezequiel.garcia@free-electrons.com>
- <20140211141914.GC23150@localhost>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: DeviceTree fixes for 3.14
+Date: Tue, 11 Feb 2014 09:52:51 -0600
+Message-ID: <CAL_JsqLW7YzMTcMw1bMqQ4bJeG6W61GgRNBwCiciyBMW5wU5uQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140211141914.GC23150@localhost>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Seif Mazareeb <seif-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRXplcXVpZWwsDQoNCj5Gcm9tOiBFemVxdWllbCBHYXJjaWEgW21haWx0bzplemVxdWllbC5n
-YXJjaWFAZnJlZS1lbGVjdHJvbnMuY29tXQ0KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvbmFuZC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvbXRkL25hbmQudHh0DQo+PiBpbmRleCAwMzg1NWM4Li42ODNhMzEwIDEwMDY0
-NA0KPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9uYW5kLnR4
-dA0KPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9uYW5kLnR4
-dA0KPj4gQEAgLTMsNSArMyw5IEBADQo+PiAgLSBuYW5kLWVjYy1tb2RlIDogU3RyaW5nLCBvcGVy
-YXRpb24gbW9kZSBvZiB0aGUgTkFORCBlY2MgbW9kZS4NCj4+ICAgIFN1cHBvcnRlZCB2YWx1ZXMg
-YXJlOiAibm9uZSIsICJzb2Z0IiwgImh3IiwgImh3X3N5bmRyb21lIiwgImh3X29vYl9maXJzdCIs
-DQo+PiAgICAic29mdF9iY2giLg0KPj4NClNob3VsZCBuYW5kLWVjYy1tb2RlIGFsc28gYmUgbWFy
-a2VkIGFzIDxkZXByZWNhdGVkPiwgYW5kIGJ1dCB3ZSBjb250aW51ZQ0Kc3VwcG9ydGluZyBpdCBp
-biBrZXJuZWwgY29kZSA/IElmIHllcywgdGhlbiB3aGF0IGlzIHRoZSBsaWZlLXRpbWUgb2YgdGhl
-c2UNCjxkZXByZWNhdGVkPiBiaW5kaW5ncy4gSSBtZWFuIGV4YWN0bHkgaG93IG1hbnkga2VybmVs
-IHZlcnNpb25zIHNob3VsZA0KY29udGludWUgc3VwcG9ydCBkZXByZWNhdGVkIGJpbmRpbmdzID8N
-Cg0KPj4gKy0gbmFuZC1lY2Mtc3RyZW5ndGggOiBpbnRlZ2VyIEVDQyByZXF1aXJlZCBzdHJlbmd0
-aC4NCg0KV2l0aCByZWNlbnQgcGF0Y2hlcyBmcm9tICdCb3JpcyBCUkVaSUxMT04gPGIuYnJlemls
-bG9uLmRldkBnbWFpbC5jb20+Jw0KIltSRkMgUEFUQ0hdIG10ZDogYWRkIHBlciBOQU5EIHBhcnRp
-dGlvbiBFQ0MgY29uZmlnIg0KV291bGQgeW91IGxpa2UgJ25hbmQtZWNjLXN0cmVuZ3RoJyB0byBi
-ZSBwZXIgcGFydGl0aW9uIGJhc2VkID8NCg0Kd2l0aCByZWdhcmRzLCBwZWtvbg0K
+Linus,
+
+Please pull DT fixes for 3.14.
+
+Rob
+
+The following changes since commit 38dbfb59d1175ef458d006556061adeaa875=
+1b72:
+
+  Linus 3.14-rc1 (2014-02-02 16:42:13 -0800)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+tags/dt-fixes-for-3.14
+
+for you to fetch changes up to 860a445c25aa2f99aa5881603a1f4ed2cec64025=
+:
+
+  DT: Add vendor prefix for Spansion Inc. (2014-02-05 10:39:17 -0600)
+
+----------------------------------------------------------------
+DeviceTree fixes for 3.14:
+
+- Fix compile error drivers/spi/spi-rspi.c with !CONFIG_OF
+- Fix warnings for unused/uninitialized variables with !CONFIG_OF
+- Fix PCIe bus matching for powerpc
+- Add documentation for various vendor strings
+
+----------------------------------------------------------------
+Emilio L=F3pez (1):
+      of: add vendor prefix for Allwinner Technology
+
+Geert Uytterhoeven (2):
+      of/device: Nullify match table in of_match_device() for CONFIG_OF=
+=3Dn
+      DT: Add vendor prefix for Spansion Inc.
+
+Heiko Stuebner (1):
+      dt-bindings: add vendor-prefix for neonode
+
+Kleber Sacilotto de Souza (1):
+      of: fix PCI bus match for PCIe slots
+
+Kumar Gala (1):
+      of: Update qcom vendor prefix description
+
+Marek Belisko (1):
+      of: add vendor prefix for Honeywell
+
+Rob Herring (1):
+      of: restructure for_each macros to fix compile warnings
+
+ .../devicetree/bindings/vendor-prefixes.txt        |   6 +-
+ drivers/of/address.c                               |   5 +-
+ include/linux/of.h                                 | 153 +++++++++++--=
+--------
+ include/linux/of_device.h                          |   4 +-
+ 4 files changed, 95 insertions(+), 73 deletions(-)
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
