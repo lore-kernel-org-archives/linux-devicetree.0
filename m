@@ -1,54 +1,53 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: [PATCH 2/2] ARM: shmobile: bockw reference dts: Add SPI FLASH
-Date: Tue, 11 Feb 2014 09:56:48 +0100
-Message-ID: <1392109008-29941-2-git-send-email-geert@linux-m68k.org>
-References: <1392109008-29941-1-git-send-email-geert@linux-m68k.org>
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392109008-29941-1-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+From: srinivas kandagatla <srinivas.kandagatla@st.com>
+Subject: Re: [PATCH v2 1/3] net: stmmac:sti: Add STi SOC glue driver.
+Date: Tue, 11 Feb 2014 09:01:01 +0000
+Message-ID: <52F9E6CD.7040204@st.com>
+References: <1391770455-24291-1-git-send-email-srinivas.kandagatla@st.com>	<1391770525-24349-1-git-send-email-srinivas.kandagatla@st.com> <20140210.144054.2066120014050984537.davem@davemloft.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140210.144054.2066120014050984537.davem@davemloft.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: netdev@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, stuart.menefy@st.com, peppe.cavallaro@st.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Thankyou Dave,
+I will fix these in next version.
 
-Add Spansion s25fl008k SPI FLASH and MTD partition, based on bockw legacy
-board code.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
----
-Untested due to lack of hardware
+On 10/02/14 22:40, David Miller wrote:
+> From: <srinivas.kandagatla@st.com>
+> Date: Fri, 7 Feb 2014 10:55:25 +0000
+> 
+>> +		if (dwmac->interface == PHY_INTERFACE_MODE_MII ||
+>> +			dwmac->interface == PHY_INTERFACE_MODE_GMII) {
+> 
+> This is not indented correctly, the first character on the second line should
+> line up exactly at the column after the openning parenthesis on the first
+> line.
+> 
+> The objective is not to indent using only TAB characters, which you
+> are doing here.
+> 
+> Rather, the objective is to use the appropriate number of TAB _and_
+> space characters necessary to reach the proper column.
+> 
+>> +		const char *rs;
+>> +		err = of_property_read_string(np, "st,tx-retime-src", &rs);
+> 
+> Please add an empty line after the local variable declaration.
+> 
+>> +		if (!strcasecmp(rs, "clk_125"))
+>> +			dwmac->is_tx_retime_src_clk_125 = true;
+>> +
+>> +	}
+> 
+> That empty line is superfluous, please delete it.
+> 
+> 
 
- arch/arm/boot/dts/r8a7778-bockw-reference.dts |   14 ++++++++++++++
- 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7778-bockw-reference.dts b/arch/arm/boot/dts/r8a7778-bockw-reference.dts
-index 06cda19dac6a..f76f6ec01e19 100644
---- a/arch/arm/boot/dts/r8a7778-bockw-reference.dts
-+++ b/arch/arm/boot/dts/r8a7778-bockw-reference.dts
-@@ -109,4 +109,18 @@
- 	pinctrl-0 = <&hspi0_pins>;
- 	pinctrl-names = "default";
- 	status = "okay";
-+
-+	flash: flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spansion,s25fl008k";
-+		reg = <0>;
-+		spi-max-frequency = <104000000>;
-+		m25p,fast-read;
-+
-+		partition@0 {
-+			label = "data(spi)";
-+			reg = <0x00000000 0x00100000>;
-+		};
-+	};
- };
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+srini
