@@ -1,78 +1,55 @@
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/2] spi: Add Qualcomm QUP SPI controller support
-Date: Tue, 11 Feb 2014 17:46:27 +0200
-Message-ID: <1392133587.12787.32.camel@iivanov-dev>
-References: <1391705868-20091-1-git-send-email-iivanov@mm-sol.com>
-	 <1391705868-20091-3-git-send-email-iivanov@mm-sol.com>
-	 <20140207073952.GA2610@qualcomm.com>
-	 <1391766753.27491.60.camel@iivanov-dev>
-	 <20140207173207.GA19974@qualcomm.com>
-	 <1392051302.2853.56.camel@iivanov-dev>
-	 <20140210174738.GA31596@qualcomm.com> <1392061304.24621.17.camel@violet>
-	 <20140210202926.GV1706@sonymobile.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 4/7] spi: pl022: attempt to get sspclk by name
+Date: Tue, 11 Feb 2014 16:48:29 +0100
+Message-ID: <33149723.ycUmvZkobH@wuerfel>
+References: <1392118632-11312-1-git-send-email-mark.rutland@arm.com> <201402111508.06267.arnd@arndb.de> <20140211150438.GJ26684@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140210202926.GV1706-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Cc: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alok Chauhan <alokc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gilad Avidov <gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kiran Gunda <kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140211150438.GJ26684-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-Hi, 
-
-On Mon, 2014-02-10 at 12:29 -0800, Courtney Cavin wrote: 
-> On Mon, Feb 10, 2014 at 08:41:44PM +0100, Ivan T. Ivanov wrote:
-> > 
-> > Hi,
-> > 
-> > On Mon, 2014-02-10 at 11:47 -0600, Andy Gross wrote:
-> > > On Mon, Feb 10, 2014 at 06:55:02PM +0200, Ivan T. Ivanov wrote:
+On Tuesday 11 February 2014 15:04:38 Russell King - ARM Linux wrote:
+> On Tue, Feb 11, 2014 at 03:08:06PM +0100, Arnd Bergmann wrote:
+> > On Tuesday 11 February 2014, Mark Brown wrote:
+> > > On Tue, Feb 11, 2014 at 11:37:09AM +0000, Mark Rutland wrote:
 > > > 
-> > > [....]
+> > > > -     pl022->clk = devm_clk_get(&adev->dev, NULL);
+> > > > +     /*
+> > > > +      * For compatibility with old DTBs and platform data, fall back to the
+> > > > +      * first clock if there's not an explicitly named "sspclk" entry.
+> > > > +      */
+> > > > +     pl022->clk = devm_clk_get(&adev->dev, "sspclk");
+> > > > +     if (IS_ERR(pl022->clk))
+> > > > +             pl022->clk = devm_clk_get(&adev->dev, NULL);
+> > > > +
 > > > 
-> > > > > > > Bail here?
-> > > > > > 
-> > > > > > I don't know. What will be the consequences if controller continue to
-> > > > > > operate on its default rate?
-> > > > > > 
-> > > > > 
-> > > > > It is unclear.  But if you can't set the rate that is configured or if there is
-> > > > > a misconfiguration, it's probably better to exit the probe and catch it here.
-> > > > 
-> > > > 
-> > > > My preference is to delay clock speed change till first
-> > > > SPI transfer. And use wherever transfer itself mandate.
-> > > > 
-> > > 
-> > > That works.  My only concern is that it might be nice to catch a configuration
-> > > problem early rather than wait for the SPI transfer to fail continuously.
+> > > I'll just have a bit of a grumble here and point out that this sort of
+> > > stuff always worries me with the convention of using nameless clocks -
+> > > it causes hassle adding further clocks.
 > > 
-> > If developer is skilled enough to know which version controller is,
-> > (s)he will be able to put the right frequency constrain here :-)
+> > I think the best solution for this is to continue with anonymous clocks
+> > rather than adding names after the fact. This could be done (for DT-only
+> > drivers) using the of_clk_get() interface that takes an index, or
+> > we could add a generic dev_clk_get_index() or similar interface that
+> > has the same behavior but also works for clkdev.
 > 
-> A developer doesn't have to have much skill at all to copy-paste DT
-> configurations around and muck with numbers....  I agree with Andy here,
-> early validation is a good idea here, at the very least, some sanity
-> checks.
+> Mixing devm_* and non-devm_* interfaces doesn't work.  If you want to do
+> that, devm_of_clk_get() would be a prerequisit.
 
-Actually, thinking more on this. Supplying SPI controller with, 
-let say 50MHz, which is what success of clk_set_rate() means, doesn't
-necessarily guaranteer that controller will be able to do transfers
-properly, right? Setting frequency at this point didn't bring any
-benefit. 
+Yes, good point. So if we want to do it, we would have to add a new
+function anyway, there is just the question whether it should be
+devm_of_clk_get() or devm_clk_get_index() if that can also work for
+non-DT devices. Do you think the latter actually makes sense in
+the clkdev interfaces? I'm not familiar enough with the code to
+tell how that would be implemented in a reasonable way.
 
-Regards,
-Ivan
-
-
-> 
-> -Courtney
-
-
+	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
