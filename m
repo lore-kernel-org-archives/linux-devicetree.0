@@ -1,172 +1,184 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: [PATCH] bus: imx-weim: support weim-cs-gpr for imx6q-weim
-Date: Tue, 11 Feb 2014 10:50:11 +0800
-Message-ID: <1392087011-31629-1-git-send-email-shawn.guo@linaro.org>
+From: Zhou Zhu <zzhu3-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] video: mmp: add device tree support
+Date: Tue, 11 Feb 2014 11:27:51 +0800
+Message-ID: <52F998B7.7060203@marvell.com>
+References: <1389698184-28761-1-git-send-email-zzhu3@marvell.com> <1389698184-28761-5-git-send-email-zzhu3@marvell.com> <52F8C96F.7050107@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Huang Shijie <b32955@freescale.com>, Philippe De Muyter <phdm@macq.eu>, Shawn Guo <shawn.guo@linaro.org>, kernel@pengutronix.de, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52F8C96F.7050107-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chao Xie <cxie4-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Guoqing Li <ligq-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-For imx6q-weim type of device, there might a WEIM CS space configuration
-register in General Purpose Register controller, e.g. IOMUXC_GPR1 on
-i.MX6Q.
+On 02/10/2014 08:43 PM, Tomi Valkeinen wrote:
+> On 14/01/14 13:16, Zhou Zhu wrote:
+>> add device tree support for mmp fb/controller
+>> the description of DT config is at
+>> Documentation/devicetree/bindings/fb/mmp-disp.txt
+>>
+>> Signed-off-by: Zhou Zhu <zzhu3-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>   Documentation/devicetree/bindings/fb/mmp-disp.txt |   60 ++++++++
+>>   drivers/video/mmp/fb/mmpfb.c                      |   73 ++++++----
+>>   drivers/video/mmp/hw/mmp_ctrl.c                   |  160 ++++++++++++++++-----
+>>   3 files changed, 235 insertions(+), 58 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/fb/mmp-disp.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/fb/mmp-disp.txt b/Documentation/devicetree/bindings/fb/mmp-disp.txt
+>> new file mode 100644
+>> index 0000000..80702f5
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/fb/mmp-disp.txt
+>> @@ -0,0 +1,60 @@
+>> +* Marvell MMP Display (MMP_DISP)
+>> +
+>> +To config mmp display, 3 parts are required to be set in dts:
+>> +1. mmp fb
+>> +Required properties:
+>> +- compatible: Should be "marvell,<soc>-fb".
+>> +- marvell,path: Should be the path this fb connecting to.
+>> +- marvell,overlay-id: Should be the id of overlay this fb is on.
+>> +- marvell,dmafetch-id: Should be the dma fetch id this fb using.
+>> +- marvell,default-pixfmt: Should be the default pixel format when this fb is
+>> +turned on.
+>> +
+>> +2. mmp controller
+>> +Required properties:
+>> +- compatible: Should be "marvell,<soc>-disp".
+>> +- reg: Should be address and length of the register set for this controller.
+>> +- interrupts: Should be interrupt of this controller.
+>> +
+>> +Required sub-node:
+>> +- path:
+>> +Required properties in this sub-node:
+>> +-- marvell,overlay_num: Should be number of overlay this path has.
+>
+> If that one tells how many overlays there are, maybe "num_overlays"
+> would be better.
+I will update it in next version.
+>
+>> +-- marvell,output-type: Should be output-type settings
+>> +-- marvell,path-config: Should be path-config settings
+>> +-- marvell,link-config: Should be link-config settings
+>> +-- marvell,rbswap: Should be rbswap settings
+>
+> If these terms (output-type, path-config, ...) are straight from the HW
+> manual, then fine. But if they are not clear, or are driver specific,
+> the values these can have should be documented here.
+Yes, it's straight from HW manual.
+>
+>> +
+>> +3. panel
+>> +Required properties:
+>> +- marvell,path: Should be path that this panel connected to.
+>> +- other properties each panel has.
+>> +
+>> +Examples:
+>> +
+>> +fb: mmp-fb {
+>> +	compatible = "marvell,pxa988-fb";
+>> +	marvell,path = <&path1>;
+>> +	marvell,overlay-id = <0>;
+>> +	marvell,dmafetch-id = <1>;
+>> +	marvell,default-pixfmt = <0x108>;
+>> +};
+>> +
+>> +disp: mmp-disp@d420b000 {
+>> +	compatible = "marvell,pxa988-disp";
+>> +	reg = <0xd420b000 0x1fc>;
+>> +	interrupts = <0 41 0x4>;
+>> +	path1: mmp-pnpath {
+>> +		marvell,overlay-num = <2>;
+>> +		marvell,output-type = <0>;
+>> +		marvell,path-config = <0x20000000>;
+>> +		marvell,link-config = <0x60000001>;
+>> +		marvell,rbswap = <0>;
+>> +	};
+>> +};
+>> +
+>> +panel: <panel-name> {
+>
+> How is the panel linked to all this? The nodes above do not refer to the
+> panel.
+We are making panel refer to path, so when panel dev probe, it could 
+register to related path.
+The reason we not link from path to panel is our customer sometimes 
+asked us to use same image pack (include dts) for different panel types 
+in product. We could only add all these panels in dts and detect panel 
+dynamically when boot. So moving panel out and making path not link to 
+panel but panel link to path would be more straight forward.
+>
+>> +	...
+>> +	marvell,path = <&path1>;
+>> +	...
+>> +};
+>
+> It's a bit difficult to say much about this, as I have no knowledge
+> about mmp.
+>
+> But I don't quite understand what the pxa988-fb is. Is that some kind of
+> virtual device, only used to set up fbdev side? And pxa988-disp is the
+> actual hardware device?
+>
+> If so, I don't really think pxa988-fb should exist in the DT data at
+> all, as it's not a hardware device.
+Yes, fb is a virtual device for fbdev side.
+In our platforms we may use more than one fb for different paths/output 
+panel or multi overlays on same path for composition. So we need to 
+configure fb settings like which path/overlay/dmafetch it connected to 
+for one or more fbdev.
+Besides, some more configures like yres_virtual size or fixed fb mem 
+reserved rather than allocated which depends on platforms are also 
+needed although these features are not upstreamed yet.
+So we put fb as a dt node here for these configures.
+>
+> Why isn't there just one node for pxa988-disp, which would contain all
+> the above information?
+We have moved out fb/panel from path due to several reasons:
+1. To simplify the node. If moved these nodes in, it might be:
+disp {
+	...
+	path1 {
+		...
+		panel-xxx {
+		}
+		panel-yyy {
+		}
+		...
+		fb0 {
+		}
+		fb1 {
+		}
+	}
+	path2 {
+		...
+		panel-zzz {
+		}
+		fb3 {
+		}
+	}
+}
+Also due to child node type might be different, we could even not 
+directly check child of node. The code would be complex.
+2. the path of node would be too long and not so common.
+e.g. the panel node in dts would be /soc/axi/disp/path1/panel-xxx, and 
+in sysfs, node would be /sys/devices/platform/soc/axi/path1/panel-xxx. 
+It would be complex and not compatible for platforms when our 
+bootloader/user app doing some operations to these nodes.
+If we moved them out, we could move fb/panel out of soc directory so the 
+node would be /panel-xxx or /fb1 and simpler and compatible.
+>
+>   Tomi
+>
+>
 
-Depending on which configuration of the following 4 is chosen for given
-system, IOMUXC_GPR1[11:0] should be set up as 0x5, 0x1b, 0x4b or 0x249
-correspondingly.
 
-	CS0(128M) CS1(0M)  CS2(0M)  CS3(0M)
-	CS0(64M)  CS1(64M) CS2(0M)  CS3(0M)
-	CS0(64M)  CS1(32M) CS2(32M) CS3(0M)
-	CS0(32M)  CS1(32M) CS2(32M) CS3(32M)
-
-The patch creates a table in the driver for above configurations, and
-detects which one is being used for the booting system by looking at
-'ranges' property of WEIM node.  Thus the WEIM CS GPR can be set up
-automatically at boot time.
-
-Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
----
- Documentation/devicetree/bindings/bus/imx-weim.txt |    6 ++
- drivers/bus/imx-weim.c                             |   83 ++++++++++++++++++++
- 2 files changed, 89 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/bus/imx-weim.txt b/Documentation/devicetree/bindings/bus/imx-weim.txt
-index 0fd76c4..d114460f 100644
---- a/Documentation/devicetree/bindings/bus/imx-weim.txt
-+++ b/Documentation/devicetree/bindings/bus/imx-weim.txt
-@@ -19,6 +19,12 @@ Required properties:
- 
- 			   <cs-number> 0 <physical address of mapping> <size>
- 
-+Optional properties:
-+
-+ - fsl,weim-cs-gpr:	Should be the phandle to the General Purpose Register
-+			controller that contains WEIM CS GPR register, e.g.
-+			IOMUXC_GPR1 on i.MX6Q.
-+
- Timing property for child nodes. It is mandatory, not optional.
- 
-  - fsl,weim-cs-timing:	The timing array, contains timing values for the
-diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
-index 3ef58c8..9c8a522 100644
---- a/drivers/bus/imx-weim.c
-+++ b/drivers/bus/imx-weim.c
-@@ -11,6 +11,9 @@
- #include <linux/clk.h>
- #include <linux/io.h>
- #include <linux/of_device.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
-+#include <linux/regmap.h>
- 
- struct imx_weim_devtype {
- 	unsigned int	cs_count;
-@@ -56,6 +59,83 @@ static const struct of_device_id weim_id_table[] = {
- };
- MODULE_DEVICE_TABLE(of, weim_id_table);
- 
-+struct imx6q_weim_gpr {
-+	u32 cssize[4];
-+	u32 gprval;
-+};
-+
-+static const struct imx6q_weim_gpr imx6q_weim_gpr_data[] __initconst = {
-+	{
-+		/* CS0(128M) CS1(0M) CS2(0M) CS3(0M) */
-+		.cssize = { 128, 0, 0, 0 },
-+		.gprval = 0x5,
-+	}, {
-+		/* CS0(64M) CS1(64M) CS2(0M) CS3(0M) */
-+		.cssize = { 64, 64, 0, 0 },
-+		.gprval = 0x1b,
-+	}, {
-+		/* CS0(64M) CS1(32M) CS2(32M) CS3(0M) */
-+		.cssize = { 64, 32, 32, 0 },
-+		.gprval = 0x4b,
-+	}, {
-+		/* CS0(64M) CS1(32M) CS2(32M) CS3(0M) */
-+		.cssize = { 32, 32, 32, 32 },
-+		.gprval = 0x249,
-+	},
-+};
-+
-+static int __init imx6q_weim_gpr_setup(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	const struct property *prop;
-+	struct regmap *gpr;
-+	u32 cssize[4] = { 0, 0, 0, 0 };
-+	int len;
-+	int ret;
-+	int i;
-+
-+	gpr = syscon_regmap_lookup_by_phandle(np, "fsl,weim-cs-gpr");
-+	if (IS_ERR(gpr)) {
-+		dev_dbg(&pdev->dev, "No weim-cs-gpr to set up\n");
-+		return 0;
-+	}
-+
-+	prop = of_find_property(np, "ranges", &len);
-+	if (prop == NULL)
-+		return -ENOENT;
-+	if (len % (sizeof(u32) * 4))
-+		return -EINVAL;
-+
-+	for (i = 0; i < len / (sizeof(u32) * 4); i++) {
-+		int cs;
-+		/* read cs index */
-+		ret = of_property_read_u32_index(np, "ranges", i * 4, &cs);
-+		if (ret)
-+			return ret;
-+		/* read cs size */
-+		ret = of_property_read_u32_index(np, "ranges", i * 4 + 3,
-+						 &cssize[cs]);
-+		if (ret)
-+			return ret;
-+		/* turn to MB */
-+		cssize[cs] >>= 20;
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(imx6q_weim_gpr_data); i++) {
-+		ret = memcmp(cssize, imx6q_weim_gpr_data[i].cssize,
-+			     sizeof(cssize));
-+		if (ret == 0) {
-+			/* Find it. Set up IOMUXC_GPR1[11:0] with the gprval. */
-+			regmap_update_bits(gpr, IOMUXC_GPR1, 0xfff,
-+					   imx6q_weim_gpr_data[i].gprval);
-+			return 0;
-+		}
-+	}
-+
-+	dev_err(&pdev->dev, "Invalid 'ranges' configuration\n");
-+	return -EINVAL;
-+}
-+
- /* Parse and set the timing for this device. */
- static int __init weim_timing_setup(struct device_node *np, void __iomem *base,
- 				    const struct imx_weim_devtype *devtype)
-@@ -92,6 +172,9 @@ static int __init weim_parse_dt(struct platform_device *pdev,
- 	struct device_node *child;
- 	int ret;
- 
-+	if (of_device_is_compatible(pdev->dev.of_node, "fsl,imx6q-weim"))
-+		imx6q_weim_gpr_setup(pdev);
-+
- 	for_each_child_of_node(pdev->dev.of_node, child) {
- 		if (!child->name)
- 			continue;
 -- 
-1.7.9.5
+Thanks, -Zhou
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
