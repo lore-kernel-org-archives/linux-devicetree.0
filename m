@@ -1,37 +1,51 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH 1/2] uhci-platform: Change compatible string
- from platform-uhci to generic-uhci
-Date: Tue, 11 Feb 2014 12:07:48 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1402111207260.1209-100000@iolanthe.rowland.org>
-References: <1392137686-6562-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 4/8] ARM: mvebu: make use of
+ of_find_matching_node_and_match
+Date: Tue, 11 Feb 2014 18:10:48 +0100
+Message-ID: <20140211181048.6934bdd3@skate>
+References: <1392135847-30791-1-git-send-email-joshc@codeaurora.org>
+	<1392135847-30791-5-git-send-email-joshc@codeaurora.org>
+	<20140211165314.GA8533@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBD6LRVPZ6YGRBZVR5GLQKGQEBVIAT3I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1392137686-6562-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140211165314.GA8533-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Feb 2014, Hans de Goede wrote:
+Dear Jason Cooper,
 
-> This brings the uhci-platform bindings in sync with what we've done for
-> the ohci- and ehci-platform drivers. As discussed there using platform as a
-> prefix is a bit weird as the platform bus is a Linux specific thing and
-> the bindings are supposed to be OS agnostic.
-> 
-> Note that the old platform-uhci compatible string is kept around for, well,
-> compatibility reasons.
-> 
-> While at it rename the bindings txt file to match the name of all the
-> other ?hci-platform bindings docs.
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+On Tue, 11 Feb 2014 11:53:14 -0500, Jason Cooper wrote:
 
-Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+> > -	np = of_find_matching_node(NULL, of_system_controller_table);
+> > +	np = of_find_matching_node_and_match(NULL, of_system_controller_table,
+> > +					     &match);
+> >  	if (np) {
+> > -		const struct of_device_id *match =
+> > -		    of_match_node(of_system_controller_table, np);
+> 
+> 
+> > -		BUG_ON(!match);
+> 
+> Gregory, is it ok to remove this?  It was added with the original code
+> submission for mach-mvebu.  mvebu_restart() will handle this
+> gracefully...
+
+The BUG_ON here can normally never be reached. If
+of_find_matching_node() returns a non-NULL result, then of_match_node()
+should also return a non-NULL result.
+
+Or I'm missing something :)
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
