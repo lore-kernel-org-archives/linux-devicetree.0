@@ -1,84 +1,78 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH 2/2] ARM: dts: MSM8974: Add pinctrl node
-Date: Tue, 11 Feb 2014 14:28:57 -0600
-Message-ID: <41801E64-243A-47DF-9AED-F8594373EC10@codeaurora.org>
-References: <1391700529-11816-1-git-send-email-iivanov@mm-sol.com> <1391700529-11816-2-git-send-email-iivanov@mm-sol.com> <CAJAp7OhEE0rTv2KRjajU361wrMh0VqOwCH4u4vC3+F4KMcU0GQ@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.1 \(1827\))
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] ARM: tegra: dalmore: fix irq trigger type
+Date: Tue, 11 Feb 2014 21:47:39 +0100
+Message-ID: <20140211204737.GA1895@mithrandir>
+References: <4fcfcfdbc86c37c6d47ec32cdbd987f3b406e9b5.1392147256.git.stefan@agner.ch>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="uAKRQypu60I7Lcqm"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJAp7OhEE0rTv2KRjajU361wrMh0VqOwCH4u4vC3+F4KMcU0GQ@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <4fcfcfdbc86c37c6d47ec32cdbd987f3b406e9b5.1392147256.git.stefan@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn@kryo.se>
+To: Stefan Agner <stefan@agner.ch>
+Cc: swarren@wwwdotorg.org, josephl@nvidia.com, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-On Feb 10, 2014, at 12:55 PM, Bjorn Andersson <bjorn@kryo.se> wrote:
+--uAKRQypu60I7Lcqm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Thu, Feb 6, 2014 at 7:28 AM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
->> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
->> 
->> Add the pin control node and pin definitions of SPI8.
->> 
->> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
->> ---
->> arch/arm/boot/dts/qcom-msm8974.dtsi |   29 +++++++++++++++++++++++++++++
->> 1 file changed, 29 insertions(+)
->> 
->> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
->> index 9e5dadb..395603f 100644
->> --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
->> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
->> @@ -117,5 +117,34 @@
->>                        clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>, <&gcc GCC_BLSP1_AHB_CLK>;
->>                        clock-names = "core", "iface";
->>                };
->> +
->> +               msmgpio: pinctrl@fd510000 {
->> +                       compatible = "qcom,msm8974-pinctrl";
->> +                       reg = <0xfd510000 0x4000>;
->> +                       gpio-controller;
->> +                       #gpio-cells = <2>;
->> +                       interrupt-controller;
->> +                       #interrupt-cells = <2>;
->> +                       interrupts = <0 208 0>;
->> +
->> +                       spi8_default: spi8_default {
->> +                               mosi {
->> +                                       pins = "gpio45";
->> +                                       function = "blsp_spi8";
->> +                               };
->> +                               miso {
->> +                                       pins = "gpio46";
->> +                                       function = "blsp_spi8";
->> +                               };
->> +                               cs {
->> +                                       pins = "gpio47";
->> +                                       function = "blsp_spi8";
->> +                               };
->> +                               clk {
->> +                                       pins = "gpio48";
->> +                                       function = "blsp_spi8";
->> +                               };
->> +                       };
->> +               };
->>        };
->> };
-> 
-> Nice, listing it like this makes it easy to add the electrical
-> properties when inheriting these nodes, closer to the product dts
-> files.
-> 
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+On Tue, Feb 11, 2014 at 09:11:32PM +0100, Stefan Agner wrote:
+> Trigger type needs to be IRQ_TYPE_LEVEL_HIGH since the interrupt
+> signal gets inverted by the PMC (configured by the invert-interrupt
+> property).
 
-Linus,
+Isn't the reason the other way around? The PMIC generates a low-level
+interrupt, but the GIC can only be configured to accept high-level (or
+rising edge) and therefore the nvidia,invert-interrupt property needs to
+be set in the PMC node?
 
-I can take the .dts patch via the linux-qcom tree to keep it with other DT changes if you want to provide an ack.
+One nitpick below.
 
-- k
+> diff --git a/arch/arm/boot/dts/tegra114-dalmore.dts b/arch/arm/boot/dts/t=
+egra114-dalmore.dts
+[...]
+> @@ -888,8 +888,9 @@
+>  		palmas: tps65913@58 {
+>  			compatible =3D "ti,palmas";
+>  			reg =3D <0x58>;
+> -			interrupts =3D <0 86 IRQ_TYPE_LEVEL_LOW>;
+> =20
+> +			/* active-low configured by PMC invert-interrupt */
+> +			interrupts =3D <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
 
+I'd prefer to keep the properties grouped as before. interrupts is a
+"client" property, whereas #interrupt-cells and interrupt-controller
+are "provider" properties.
 
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+And I think the comment would be more appropriate in the pmc node, for
+the same reason that I think the commit description isn't entirely
+accurate.
+
+Thierry
+
+--uAKRQypu60I7Lcqm
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS+oxpAAoJEN0jrNd/PrOhdU8P/03MrFNVoZ5aaZmL5j3PaeRg
+WuF5umaGFo9/LJ5fouFq4RtLEPlTIApQPZnn53r+OmlcTy+iVOQHbrs4/RHXocVz
+7+2D67jE5/J/lURtvrB/6GnMGeoTEqT+EhdTboIBZ9xHtAScU3BXXtvQs1NVmAEX
+XYPU2TVKkusajqtBjSeD97I+Zy+v+j2kVUV+Cv7L5ynrat93HEGsbV940bztcSUT
+Y1N+IPoankMa1qV0a4yNfM13LF0mR09JZ/eWearqjPa+4nmggUPp/7yVE+Nksgnn
+6tZydw3keR2FqYzkxda3tknCtdoQ9mfKEJWHkJxmHEUYTh/D9eF5HgeBomWrAHZC
+XRPuA40H7VuO8buSi7XeU+v0a4UXbNiaJEZUkGvQZVa/cseZS6vZBhuBBIPdIGiF
+X6CjF/F1r4hhtlazUmcGKCSljuxxISOagmdiMux83MFrfGiEvEvtqEfEw66sD65n
+d2sZSK7UBd93re3QYgHhCD4dYJ8uqtSQkAxf13YsPW99li6zBDy4fvOGQWuc/k6L
+GMpWCu3Y10pI6dpwJQpu4oS+v7WLdjeDNj7XnrSMCTkEWSX2olBmxnWyNUdgAXvA
+qnSLEQYxgldmFFt3G8YXpH1r31dL41Lh8m/gENoQq5033f85g+/sqB9H/DGrobSC
+/wejX6EFUwDBqVaUo1y7
+=hSq5
+-----END PGP SIGNATURE-----
+
+--uAKRQypu60I7Lcqm--
