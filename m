@@ -1,42 +1,49 @@
-From: Stefan =?ISO-8859-1?Q?S=F8rensen?=
-	<stefan.sorensen@spectralink.com>
-Subject: Re: [PATCH] dp83640: Get gpio and master/slave configuration from DT
-Date: Tue, 11 Feb 2014 09:01:25 +0100
-Message-ID: <1392105685.2133.2.camel@e37108.spectralink.com>
-References: <1392037240-30913-1-git-send-email-stefan.sorensen@spectralink.com>
-	 <20140210184604.GA4296@netboy>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 01/19] clocksource: orion: Use atomic access for
+ shared registers
+Date: Tue, 11 Feb 2014 05:30:25 -0300
+Message-ID: <20140211083024.GA3687@localhost>
+References: <1391707226-18258-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1391707226-18258-2-git-send-email-ezequiel.garcia@free-electrons.com>
+ <52F96993.9090007@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20140210184604.GA4296@netboy>
-Sender: netdev-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: grant.likely@linaro.org, robh+dt@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52F96993.9090007-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2014-02-10 at 19:46 +0100, Richard Cochran wrote:
-> On Mon, Feb 10, 2014 at 02:00:40PM +0100, Stefan S=C3=B8rensen wrote:
-> > This patch removes the module parameters gpio_tab and chosen_phy in=
- favour of
-> > retrieving the configuration from DT through the properties
+On Tue, Feb 11, 2014 at 01:06:43AM +0100, Daniel Lezcano wrote:
+> On 02/06/2014 06:20 PM, Ezequiel Garcia wrote:
+> > Replace the driver-specific thread-safe shared register API
+> > by the recently introduced atomic_io_clear_set().
+> >
+> > Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Tested-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Tested-by: Willy Tarreau <w@1wt.eu>
+> > Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+> > Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 >=20
-> Can we please keep the module parameters? I have two platforms with
-> phyters neither of which will ever support DT, namely ixp and m68k,
-> and I want to run recent kernels on them.
-
-I will keep the module parameters as fallback. Will it be OK to split
-the gpio_tab parameter into separate calibrate-pin, perout-pins and
-extts-pins parameters?
-
-> > The configuration is now stored for each master clock device, allow=
-ing different=20
-> > gpio setups for each master.
+> The patch looks good for me.
 >=20
-> What do you mean by "each master"? Do you mean each individual PHY de=
-vice
-> or each group of PHYs on the same MDIO bus?
+> Acked-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>=20
 
-I mean each group of PHYs. I will reword that.
+Daniel,
 
-Stefan
+Jason acked this patch for you to take it. Or do you prefer that we
+merge it with the rest of the watchdog series?
+
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
