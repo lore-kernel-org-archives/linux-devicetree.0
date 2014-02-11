@@ -1,144 +1,80 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH V2 2/3] ARM: dts: add dts files for exynos5260 SoC
-Date: Tue, 11 Feb 2014 11:04:13 +0100
-Message-ID: <52F9F59D.1090905@gmail.com>
-References: <1391577375-17625-1-git-send-email-rahul.sharma@samsung.com>	<1391577375-17625-3-git-send-email-rahul.sharma@samsung.com>	<52F38C42.5030508@samsung.com> <CAPdUM4NBwXcnL2KK9Rsi46GWQz_KQsXF0EEeSmCb=wB8WfgUKQ@mail.gmail.com>
+From: <srinivas.kandagatla@st.com>
+Subject: [PATCH v3 0/3] net: stmmac: Add STi GMAC ethernet
+Date: Tue, 11 Feb 2014 09:58:36 +0000
+Message-ID: <1392112716-30803-1-git-send-email-srinivas.kandagatla@st.com>
+References: <1391770455-24291-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAPdUM4NBwXcnL2KK9Rsi46GWQz_KQsXF0EEeSmCb=wB8WfgUKQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <r.sh.open@gmail.com>, Tomasz Figa <t.figa@samsung.com>
-Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, sunil joshi <joshi@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1391770455-24291-1-git-send-email-srinivas.kandagatla@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: netdev@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, kernel@stlinux.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Stuart Menefy <stuart.menefy@st.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rahul,
+From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
 
-On 11.02.2014 06:22, Rahul Sharma wrote:
-> Hi Tomasz,
->
-> On 6 February 2014 18:51, Tomasz Figa <t.figa@samsung.com> wrote:
->> Hi Rahul, Pankaj, Arun,
->>
->> [adding linux-arm-kernel, devicetree MLs and DT people on Cc]
->>
->> I think it's good time to stop accepting DTS files like this and force new
->> ones to use the proper structure with soc node, labels for every node and
->> node references.
->
-> I am unable to find information on SoC node and grouping inside SoC node. Please
-> share some pointers.
+Hi All,
 
-Well, there is not much information needed about this. Basically all the 
-devices built into the SoC should be listed under respective bus nodes 
-or a single soc node, instead of root level. Such node should be a 
-"simple-bus" and just group the components together to separate 
-board-specific devices (which are still at root level) from SoC devices.
+This patch series adds Ethernet support to STi series SOCs STiH415 and STiH416.
+STi SOC series integrates dwmac IP from synopsis, however there is a hardware
+glue on top of this standard IP, this glue needs to configured before the
+actual dwmac can be used.  Also the glue logic needs re-configuring when the
+link speed changes, This is because the clk source can change as the link
+speed changes.
 
-Even though it might seem useless, it improves DT readability a bit and 
-still most of the platforms use this approach, so for consistency, 
-Exynos should use too.
+This patch just adds STi specific callbacks into of_data for configuring the
+glue layer.
 
-Just for reference, back in April 2013, in his review of S3C64xx DT 
-series [1], Rob Herring requested that we don't submit any new device 
-trees using flat approach and start using bus hierarchy.
+I have rebased my original patches (http://lkml.org/lkml/2013/11/12/243)
+to latest stmmac which updates callbacks to suit glue drivers like this.
 
-[1] 
-http://lists.infradead.org/pipermail/linux-arm-kernel/2013-April/163659.html
+These patches are tested on b2000 and B2020 with STiH415 and STiH416.
 
->>
->>> +               spi0_bus: spi0-bus {
->>> +                       samsung,pins = "gpa2-0", "gpa2-1", "gpa2-2",
->>> "gpa2-3";
->>
->>
->> What is the reason for SPI0 to have 4 pins, while SPI1 has just 3?
->>
->
-> I should align SPI1 with SPI0.
->
+Changes since v1:
+ - fixed multi-line function call format as suggested by David Miller.
 
-Are you sure that SPI0 is the correct one? SPI usually uses four pins - 
-SDI, SDO, SCK and nCS, but we always used to treat nCS as a simple GPIO, 
-due to the fact that the controller can only support one dedicated chip 
-select and with direct GPIO control you can have more.
+Changes since v2:
+ - fix indenting issues & superfluous empty lines as suggested by David Miller.
+ - Run the code through scripts/Lindent.
 
-What is the fourth pin here?
+Dave, Can I request you to take the first patch via net tree for v3.15, I can
+request Arnd or Olof to take the DT patches via the arm-soc tree for v3.15.
 
->>
->>> +               cpu@1 {
->>> +                       device_type = "cpu";
->>> +                       compatible = "arm,cortex-a15";
->>> +                       reg = <1>;
->>> +                       cci-control-port = <&cci_control1>;
->>> +               };
->>> +               cpu@100 {
->>> +                       device_type = "cpu";
->>> +                       compatible = "arm,cortex-a7";
->>> +                       reg = <0x100>;
->>> +                       cci-control-port = <&cci_control0>;
->>> +               };
->>> +               cpu@101 {
->>> +                       device_type = "cpu";
->>> +                       compatible = "arm,cortex-a7";
->>> +                       reg = <0x101>;
->>> +                       cci-control-port = <&cci_control0>;
->>> +               };
->>> +               cpu@102 {
->>> +                       device_type = "cpu";
->>> +                       compatible = "arm,cortex-a7";
->>> +                       reg = <0x102>;
->>> +                       cci-control-port = <&cci_control0>;
->>> +               };
->>> +               cpu@103 {
->>> +                       device_type = "cpu";
->>> +                       compatible = "arm,cortex-a7";
->>> +                       reg = <0x103>;
->>> +                       cci-control-port = <&cci_control0>;
->>> +               };
->>> +       };
->>> +
->>> +       cmus {
->>> +               #address-cells = <1>;
->>> +               #size-cells = <1>;
->>> +               ranges;
->>> +
->>
->>
->> I don't think there is a need to group these nodes under a parent node that
->> doesn't give any additional information, especially when the CMUs are
->> scattered trough the whole address space, while we'd like to keep the nodes
->> ordered by their addresses, as most platforms do.
->>
->
-> This is exactly the same case as "cpus". I mean, "cpus" also doesn't provide
-> any common information about child cpu nodes. This looks to me as a logical
-> grouping and I have implemented same thing for cmu nodes.
-> I am ok with removing this grouping Just want to understand the rational behind
-> grouping cpus which seems similar to cmus.
+Thanks,
+srini
 
-The "cpus" node is a defined standard node that should be present at 
-root of device tree and include subnodes for all CPUs. This is a 
-standard binding defined for low level code to be able to simply find 
-nodes of all CPUs in the system - so they can expect that at /cpus node 
-all the subnodes are subsequent CPUs.
+Srinivas Kandagatla (3):
+  net: stmmac:sti: Add STi SOC glue driver.
+  ARM: STi: Add STiH415 ethernet support.
+  ARM: STi: Add STiH416 ethernet support.
 
-> Similarly "soc" is just a logical entity used to group SoC elements which looks
-> optional to me. What are we achieving with this? Please help me in understanding
-> this better.
+ .../devicetree/bindings/net/sti-dwmac.txt          |   58 ++++
+ arch/arm/boot/dts/stih415-clock.dtsi               |   14 +
+ arch/arm/boot/dts/stih415-pinctrl.dtsi             |  121 +++++++
+ arch/arm/boot/dts/stih415.dtsi                     |   48 +++
+ arch/arm/boot/dts/stih416-clock.dtsi               |   14 +
+ arch/arm/boot/dts/stih416-pinctrl.dtsi             |  109 +++++++
+ arch/arm/boot/dts/stih416.dtsi                     |   44 +++
+ arch/arm/boot/dts/stih41x-b2000.dtsi               |   22 ++
+ arch/arm/boot/dts/stih41x-b2020.dtsi               |   26 ++
+ drivers/net/ethernet/stmicro/stmmac/Kconfig        |   11 +
+ drivers/net/ethernet/stmicro/stmmac/Makefile       |    1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sti.c    |  330 ++++++++++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h       |    3 +
+ .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |    5 +
+ 14 files changed, 806 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/sti-dwmac.txt
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-sti.c
 
-Also "soc" has a slightly wider meaning. It is a node grouping all nodes 
-from a single address space - the node specifies #address-cells and 
-#size-cells of this address space and all the devices under this 
-"simple-bus" can be accessed using addresses in this format. In 
-addition, it separates board-level devices from generic SoC devices.
-
-Now, in case of "cmus", the only purpose is to group all CMU nodes 
-together and, while this improves readability a bit, it doesn't make the 
-DT better express the hardware topology, because the CMUs in the 
-hardware are in fact scattered through the whole address space, not 
-under a contiguous block of it, as the grouping would suggest.
-
-Best regards,
-Tomasz
+-- 
+1.7.9.5
