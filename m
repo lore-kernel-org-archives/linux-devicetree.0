@@ -1,259 +1,106 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH 45/47] adv7604: Add DT support
-Date: Tue, 11 Feb 2014 10:23:03 +0100
-Message-ID: <52F9EBF7.5020000@xs4all.nl>
-References: <1391618558-5580-1-git-send-email-laurent.pinchart@ideasonboard.com> <1391618558-5580-46-git-send-email-laurent.pinchart@ideasonboard.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 7/7] devicetree: bindings: Document PM8921/8058 PMICs
+Date: Tue, 11 Feb 2014 09:29:37 +0000
+Message-ID: <20140211092937.GG32042@lee--X1>
+References: <1389206270-3728-1-git-send-email-sboyd@codeaurora.org>
+ <1389206270-3728-8-git-send-email-sboyd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1391618558-5580-46-git-send-email-laurent.pinchart@ideasonboard.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1389206270-3728-8-git-send-email-sboyd@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/05/14 17:42, Laurent Pinchart wrote:
-> Parse the device tree node to populate platform data.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> PM8921 and PM8058 are PMICs found paired with MSM8960 and MSM8660
+> devices respectively. They contain subdevices such as keypads,
+> RTCs, regulators, clocks, etc.
+>=20
+> Cc: <devicetree@vger.kernel.org>
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
 > ---
->  .../devicetree/bindings/media/i2c/adv7604.txt      |  56 ++++++++++++
->  drivers/media/i2c/adv7604.c                        | 101 ++++++++++++++++++---
->  2 files changed, 143 insertions(+), 14 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+>  .../devicetree/bindings/mfd/qcom,pm8xxx.txt        | 63 ++++++++++++=
+++++++++++
+>  1 file changed, 63 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/qcom,pm8xxx=
+=2Etxt
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt b/=
+Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt
 > new file mode 100644
-> index 0000000..0845c50
+> index 000000000000..e3fe625ffd58
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> @@ -0,0 +1,56 @@
-> +* Analog Devices ADV7604/11 video decoder with HDMI receiver
+> +++ b/Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt
+> @@ -0,0 +1,63 @@
+
+<snip>
+
+> +- interrupts:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+
+Either provide an example or a comment to see the description of
+#interrupt-cells=20
+
+> +	Definition: specifies the interrupt that indicates a subdevice
+> +		    has generated an interrupt (summary interrupt). The
+> +		    format of the specifier is defined by the binding document
+> +		    describing the node's interrupt parent.
 > +
-> +The ADV7604 and ADV7611 are multiformat video decoders with an integrated HDMI
-> +receiver. The ADV7604 has four multiplexed HDMI inputs and one analog input,
-> +and the ADV7611 has one HDMI input and no analog input.
+> +- #interrupt-cells:
+> +	Usage: required
+> +	Value type : <u32>
+> +	Definition: must be 2. Specifies the number of cells needed to enco=
+de
+> +		    an interrupt source. The 1st cell contains the interrupt
+> +		    number. The 2nd cell is the trigger type and level flags
+> +		    encoded as follows:
 > +
-> +Required Properties:
+> +			1 =3D low-to-high edge triggered
+> +			2 =3D high-to-low edge triggered
+> +			4 =3D active high level-sensitive
+> +			8 =3D active low level-sensitive
+
+Actually I'd prefer if you used the definitions in:
+  dt-bindings/interrupt-controller/irq.h
+
+> +- interrupt-controller:
+> +	Usage: required
+> +	Value type: <empty>
+> +	Definition: identifies this node as an interrupt controller
 > +
-> +  - compatible: Must contain one of the following
-> +    - "adi,adv7604" for the ADV7604
-> +    - "adi,adv7611" for the ADV7611
+> +EXAMPLE
 > +
-> +  - reg: I2C slave address
+> +	pmicintc: pmic@0 {
+> +		compatible =3D "qcom,pm8921";
+> +		interrupts =3D <104 8>;
+
+As above.
+
+> +		#interrupt-cells =3D <2>;
+> +		interrupt-controller;
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
 > +
-> +  - hpd-gpios: References to the GPIOs that control the HDMI hot-plug
-> +    detection pins, one per HDMI input. The active flag indicates the GPIO
-> +    level that enables hot-plug detection.
-> +
-> +Optional Properties:
-> +
-> +  - reset-gpios: Reference to the GPIO connected to the device's reset pin.
-> +
-> +  - adi,default-input: Index of the input to be configured as default. Valid
-> +    values are 0..5 for the ADV7604 and 0 for the ADV7611.
-> +
-> +  - adi,disable-power-down: Boolean property. When set forces the device to
-> +    ignore the power-down pin. The property is valid for the ADV7604 only as
-> +    the ADV7611 has no power-down pin.
-> +
-> +  - adi,disable-cable-reset: Boolean property. When set disables the HDMI
-> +    receiver automatic reset when the HDMI cable is unplugged.
-> +
-> +Example:
-> +
-> +	hdmi_receiver@4c {
-> +		compatible = "adi,adv7611";
-> +		reg = <0x4c>;
-> +
-> +		reset-gpios = <&ioexp 0 GPIO_ACTIVE_LOW>;
-> +		hpd-gpios = <&ioexp 2 GPIO_ACTIVE_HIGH>;
-> +
-> +		adi,default-input = <0>;
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		port@0 {
-> +			reg = <0>;
-> +		};
-> +		port@1 {
-> +			reg = <1>;
-> +			hdmi_in: endpoint {
-> +				remote-endpoint = <&ccdc_in>;
-> +			};
+> +		pwrkey {
+> +			compatible =3D "qcom,pm8921-pwrkey";
+> +			interrupt-parent =3D <&pmicintc>;
+> +			interrupts =3D <50 1>, <51 1>;
+
+As above.
+
 > +		};
 > +	};
-> diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
-> index e586c1c..cd8a2dc 100644
-> --- a/drivers/media/i2c/adv7604.c
-> +++ b/drivers/media/i2c/adv7604.c
-> @@ -32,6 +32,7 @@
->  #include <linux/i2c.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> +#include <linux/of_gpio.h>
->  #include <linux/slab.h>
->  #include <linux/v4l2-dv-timings.h>
->  #include <linux/videodev2.h>
-> @@ -2641,13 +2642,83 @@ static const struct adv7604_chip_info adv7604_chip_info[] = {
->  	},
->  };
->  
-> +static struct i2c_device_id adv7604_i2c_id[] = {
-> +	{ "adv7604", (kernel_ulong_t)&adv7604_chip_info[ADV7604] },
-> +	{ "adv7611", (kernel_ulong_t)&adv7604_chip_info[ADV7611] },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, adv7604_i2c_id);
-> +
-> +static struct of_device_id adv7604_of_id[] = {
-> +	{ .compatible = "adi,adv7604", .data = &adv7604_chip_info[ADV7604] },
-> +	{ .compatible = "adi,adv7611", .data = &adv7604_chip_info[ADV7611] },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, adv7604_of_id);
-> +
-> +static int adv7604_parse_dt(struct adv7604_state *state)
+> --=20
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora F=
+orum,
+> hosted by The Linux Foundation
 
-Put this under #ifdef CONFIG_OF. It fails to compile if CONFIG_OF is not set
-(as it is in my case since this driver is used with a PCIe card).
-
-Regards,
-
-	Hans
-
-> +{
-> +	struct device_node *np;
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	np = state->i2c_clients[ADV7604_PAGE_IO]->dev.of_node;
-> +	state->info = of_match_node(adv7604_of_id, np)->data;
-> +
-> +	state->pdata.disable_pwrdnb =
-> +		of_property_read_bool(np, "adi,disable-power-down");
-> +	state->pdata.disable_cable_det_rst =
-> +		of_property_read_bool(np, "adi,disable-cable-reset");
-> +
-> +	ret = of_property_read_u32(np, "adi,default-input",
-> +				   &state->pdata.default_input);
-> +	if (ret < 0)
-> +		state->pdata.default_input = -1;
-> +
-> +	for (i = 0; i < state->info->num_dv_ports; ++i) {
-> +		enum of_gpio_flags flags;
-> +
-> +		state->pdata.hpd_gpio[i] =
-> +			of_get_named_gpio_flags(np, "hpd-gpios", i, &flags);
-> +		if (IS_ERR_VALUE(state->pdata.hpd_gpio[i]))
-> +			continue;
-> +
-> +		state->pdata.hpd_gpio_low[i] = flags == OF_GPIO_ACTIVE_LOW;
-> +	}
-> +
-> +	/* Disable the interrupt for now as no DT-based board uses it. */
-> +	state->pdata.int1_config = ADV7604_INT1_CONFIG_DISABLED;
-> +
-> +	/* Use the default I2C addresses. */
-> +	state->pdata.i2c_addresses[ADV7604_PAGE_AVLINK] = 0x42;
-> +	state->pdata.i2c_addresses[ADV7604_PAGE_CEC] = 0x40;
-> +	state->pdata.i2c_addresses[ADV7604_PAGE_INFOFRAME] = 0x3e;
-> +	state->pdata.i2c_addresses[ADV7604_PAGE_ESDP] = 0x38;
-> +	state->pdata.i2c_addresses[ADV7604_PAGE_DPP] = 0x3c;
-> +	state->pdata.i2c_addresses[ADV7604_PAGE_AFE] = 0x26;
-> +	state->pdata.i2c_addresses[ADV7604_PAGE_REP] = 0x32;
-> +	state->pdata.i2c_addresses[ADV7604_PAGE_EDID] = 0x36;
-> +	state->pdata.i2c_addresses[ADV7604_PAGE_HDMI] = 0x34;
-> +	state->pdata.i2c_addresses[ADV7604_PAGE_TEST] = 0x30;
-> +	state->pdata.i2c_addresses[ADV7604_PAGE_CP] = 0x22;
-> +	state->pdata.i2c_addresses[ADV7604_PAGE_VDP] = 0x24;
-> +
-> +	/* HACK: Hardcode the remaining platform data fields. */
-> +	state->pdata.blank_data = 1;
-> +	state->pdata.op_656_range = 1;
-> +	state->pdata.alt_data_sat = 1;
-> +	state->pdata.insert_av_codes = 1;
-> +	state->pdata.op_format_mode_sel = ADV7604_OP_FORMAT_MODE0;
-> +
-> +	return 0;
-> +}
-> +
->  static int adv7604_probe(struct i2c_client *client,
->  			 const struct i2c_device_id *id)
->  {
->  	static const struct v4l2_dv_timings cea640x480 =
->  		V4L2_DV_BT_CEA_640X480P59_94;
->  	struct adv7604_state *state;
-> -	struct adv7604_platform_data *pdata = client->dev.platform_data;
->  	struct v4l2_ctrl_handler *hdl;
->  	struct v4l2_subdev *sd;
->  	unsigned int i;
-> @@ -2666,19 +2737,27 @@ static int adv7604_probe(struct i2c_client *client,
->  		return -ENOMEM;
->  	}
->  
-> -	state->info = &adv7604_chip_info[id->driver_data];
->  	state->i2c_clients[ADV7604_PAGE_IO] = client;
->  
->  	/* initialize variables */
->  	state->restart_stdi_once = true;
->  	state->selected_input = ~0;
->  
-> -	/* platform data */
-> -	if (!pdata) {
-> +	if (client->dev.of_node) {
-> +		err = adv7604_parse_dt(state);
-> +		if (err < 0) {
-> +			v4l_err(client, "DT parsing error\n");
-> +			return err;
-> +		}
-> +	} else if (client->dev.platform_data) {
-> +		struct adv7604_platform_data *pdata = client->dev.platform_data;
-> +
-> +		state->info = (const struct adv7604_chip_info *)id->driver_data;
-> +		state->pdata = *pdata;
-> +	} else {
->  		v4l_err(client, "No platform data!\n");
->  		return -ENODEV;
->  	}
-> -	state->pdata = *pdata;
->  
->  	/* Request GPIOs. */
->  	for (i = 0; i < state->info->num_dv_ports; ++i) {
-> @@ -2786,7 +2865,7 @@ static int adv7604_probe(struct i2c_client *client,
->  			continue;
->  
->  		state->i2c_clients[i] =
-> -			adv7604_dummy_client(sd, pdata->i2c_addresses[i],
-> +			adv7604_dummy_client(sd, state->pdata.i2c_addresses[i],
->  					     0xf2 + i);
->  		if (state->i2c_clients[i] == NULL) {
->  			err = -ENOMEM;
-> @@ -2860,21 +2939,15 @@ static int adv7604_remove(struct i2c_client *client)
->  
->  /* ----------------------------------------------------------------------- */
->  
-> -static struct i2c_device_id adv7604_id[] = {
-> -	{ "adv7604", ADV7604 },
-> -	{ "adv7611", ADV7611 },
-> -	{ }
-> -};
-> -MODULE_DEVICE_TABLE(i2c, adv7604_id);
-> -
->  static struct i2c_driver adv7604_driver = {
->  	.driver = {
->  		.owner = THIS_MODULE,
->  		.name = "adv7604",
-> +		.of_match_table = of_match_ptr(adv7604_of_id),
->  	},
->  	.probe = adv7604_probe,
->  	.remove = adv7604_remove,
-> -	.id_table = adv7604_id,
-> +	.id_table = adv7604_i2c_id,
->  };
->  
->  module_i2c_driver(adv7604_driver);
-> 
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
