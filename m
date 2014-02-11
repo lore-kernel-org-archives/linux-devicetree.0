@@ -1,99 +1,101 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v9 2/4] ehci-platform: Add support for clks
- and phy passed through devicetree
-Date: Tue, 11 Feb 2014 11:13:07 +0100
-Message-ID: <52F9F7B3.6080802@redhat.com>
-References: <1391787403-20961-1-git-send-email-hdegoede@redhat.com> <1391787403-20961-3-git-send-email-hdegoede@redhat.com> <52F9E98B.90407@ti.com> <52F9EE06.3070003@redhat.com> <52F9F4C6.6080201@ti.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH v2 4/5] ARM: init: add support for reserved memory defined
+ by device tree
+Date: Tue, 11 Feb 2014 11:52:42 +0100
+Message-ID: <52FA00FA.1090400@samsung.com>
+References: <1391515773-6112-1-git-send-email-m.szyprowski@samsung.com>
+ <1391515773-6112-5-git-send-email-m.szyprowski@samsung.com>
+ <20140205101510.59A95C40A89@trevor.secretlab.ca>
+ <52F38D75.4030704@samsung.com> <20140210215929.4473BC408F7@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBP7P46LQKGQEB5X6V4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <52F9F4C6.6080201-l0cyMroinI0@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Menon, Nishanth" <nm-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <20140210215929.4473BC408F7@trevor.secretlab.ca>
+Sender: linux-doc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@gmail.com>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 02/11/2014 11:00 AM, Roger Quadros wrote:
-> On 02/11/2014 11:31 AM, Hans de Goede wrote:
->> Hi,
->>
->> On 02/11/2014 10:12 AM, Roger Quadros wrote:
->>> Hi Hans,
->>>
->>> On 02/07/2014 05:36 PM, Hans de Goede wrote:
->>>> Currently ehci-platform is only used in combination with devicetree when used
->>>> with some Via socs. By extending it to (optionally) get clks and a phy from
->>>> devicetree, and enabling / disabling those on power_on / off, it can be used
->>>> more generically. Specifically after this commit it can be used for the
->>>> ehci controller on Allwinner sunxi SoCs.
->>>>
->>>> Since ehci-platform is intended to handle any generic enough non pci ehci
->>>> device, add a "usb-ehci" compatibility string.
->>>>
->>>> There already is a usb-ehci device-tree bindings document, update this
->>>> with clks and phy bindings info.
->>>>
->>>> Although actually quite generic so far the via,vt8500 compatibilty string
->>>> had its own bindings document. Somehow we even ended up with 2 of them. Since
->>>> these provide no extra information over the generic usb-ehci documentation,
->>>> this patch removes them.
->>>>
->>>> The ehci-ppc-of.c driver also claims the usb-ehci compatibility string,
->>>> even though it mostly is ibm,usb-ehci-440epx specific. ehci-platform.c is
->>>> not needed on ppc platforms, so add a !PPC_OF dependency to it to avoid
->>>> 2 drivers claiming the same compatibility string getting build on ppc.
->>>>
->>>
->>> This breaks all OMAP platforms on linux-next for the exact same reason. see [1].
->>>
->>> ./arch/arm/boot/dts/omap4.dtsi:				compatible = "ti,ehci-omap", "usb-ehci";
->>> ./arch/arm/boot/dts/omap3.dtsi:				compatible = "ti,ehci-omap", "usb-ehci";
->>> ./arch/arm/boot/dts/omap5.dtsi:				compatible = "ti,ehci-omap", "usb-ehci";
->>
->> That should not be the case, the driver core should try to find a driver matching
->> the compatibility string from left to right, or in other words from most specific
->> to least specific. This is part of the whole devicetree design.
->>
->> So as long as the driver claiming "ti,ehci-omap" is available at probe time that
->> one should get used and things should work fine. Now if ehci-platform is built-in
->> and ehci-omap is a module, then I guess one could see the described breakage.
->>
->> If the driver is built-in and things are not working, then we will need to do some
->> debugging as to why the left to right matching is not working as expected.
-> 
-> Both ehci_platform and ehci_omap were built-in and still the ehci_platform driver got
-> probe preference. So it looks like the left to right compatible list priority probing
-> feature doesn't work.
+On 2014-02-10 22:59, Grant Likely wrote:
+> On Thu, 06 Feb 2014 14:26:13 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+> > Hello,
+> >
+> > On 2014-02-05 11:15, Grant Likely wrote:
+> > > On Tue, 04 Feb 2014 13:09:32 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+> > > > Enable reserved memory initialization from device tree.
+> > > >
+> > > > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > > > Cc: Laura Abbott <lauraa@codeaurora.org>
+> > > > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > > > ---
+> > > >  arch/arm/mm/init.c |    3 +++
+> > > >  1 file changed, 3 insertions(+)
+> > > >
+> > > > diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+> > > > index 804d61566a53..ebafdb479410 100644
+> > > > --- a/arch/arm/mm/init.c
+> > > > +++ b/arch/arm/mm/init.c
+> > > > @@ -17,6 +17,7 @@
+> > > >  #include <linux/nodemask.h>
+> > > >  #include <linux/initrd.h>
+> > > >  #include <linux/of_fdt.h>
+> > > > +#include <linux/of_reserved_mem.h>
+> > > >  #include <linux/highmem.h>
+> > > >  #include <linux/gfp.h>
+> > > >  #include <linux/memblock.h>
+> > > > @@ -323,6 +324,8 @@ void __init arm_memblock_init(struct meminfo *mi,
+> > > >  	if (mdesc->reserve)
+> > > >  		mdesc->reserve();
+> > > >
+> > > > +	early_init_dt_scan_reserved_mem();
+> > > > +
+> > >
+> > > The new binding is being made fundamental. If the reserved-memory node
+> > > is present, then it needs to be honored, even if the kernel doesn't know
+> > > how to use the regions. Therefore, This needs to be unconditional for
+> > > all architectures. The hook should be called in early_init_dt_scan()
+> > > (drivers/of/fdt.c) immediately after the early_init_dt_scan_memory()
+> > > hook.
+> >
+> > In theory this will be the best solution, but it practice there is a
+> > problem. early_init_dt_scan() is called as the first function from kernel
+> > booting code. That time there is no memory yet added to the system, so it
+> > would be really hard to reserve anything. Memory nodes are being added
+> > later either with memblock_add() or by some other arch specific way.
+>
+> Hmmm, depends on the architecture. On ARM the memory is loaded into the
+> meminfo structure first, and it isn't until arm_memblock_init() that
+> memblock_add() gets called on all the regions. Some architectures do the
+> memblock_add() directly from early_init_dt_add_memory_arch() function.
+>
+> The default early_init_dt_add_memory_arch() in drivers/of/fdt.c is
+> overridden by ARM and a number of other architectures. However...
+>
+> > Finally, once all memory has been added to the system we can parse and
+> > reserve all regions defined in the device tree. This really requires
+> > creating another function which will be called by arch specific code.
+>
+> ...Or it means getting rid of meminfo entirely so that memblock is
+> available earlier. Laura Abbott has just posted v2 of her series to do
+> exactly that. If you base on that then you should be able to do exactly
+> what I suggested.
 
-Oops, I guess nothing relies on it sofar. Well we could go and debug and fix this but...
+I've checked Laura's patches and in fact it is possible to do memory
+reservation as a last step in early_init_dt_scan_memory(). However still
+see some problem which I have no idea how to resolve. Right now I focus
+only on ARM, so I have no idea how it is solved by other architectures.
+On of the key features of the new binding is the ability to automatically
+allocate reserved regions of the given size. However kernel, initrd, dt
+and other sub-arch specific critical regions are marked/allocated in
+arm_memblock_init(), which is called after setup_machine_fdt(). This
+might lead to some serious failures when automatically reserved region
+overlaps with some critical resources. Do you have any idea how to solve
+this without a new callback?
 
-> 
->>
->> I must admit I'm not sure what happens if both are a module, the kernel direct
->> module load will likely fail due to lack of a rootfs at that point, and then
->> the module will later get loaded by udev I assume, at which point there are no
->> loading ordering guarantees.
->>
->> The easiest solution to ensure that "ti,ehci-omap" is available at probe time
->> (if enabled) seems to be to change USB_EHCI_HCD_OMAP to a boolean.
-> 
-> That is a limitation I don't like to have for USB_EHCI_HCD_OMAP.
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-I completely understand, thinking more about this I'm simply going to change the
-compatibility string for ohci- and ehci-platform to be "ohci-platform" resp.
-"ehci-platform". I know there are some people who don't like the -platform
-suffix, but though luck, as the above clearly shows using the generic "usb-ohci" /
-"usb-ehci" they were advocating for leads to a ton of issues, and we already
-have a precedent for ?hci-platform in the form of "xhci-platform".
-
-Regards,
-
-Hans
