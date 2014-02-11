@@ -1,56 +1,51 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: regression(ti platforms): next-20140210 (ehci?)
-Date: Tue, 11 Feb 2014 10:21:13 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1402111017440.1209-100000@iolanthe.rowland.org>
-References: <7h38jq8nk9.fsf@paris.lan>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core to drivers/of
+Date: Tue, 11 Feb 2014 16:23:56 +0100
+Message-ID: <8648675.AIXYyYlgXy@avalon>
+References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> <CAL_Jsq+U9zU1i+STLHMBjY5BeEP6djYnJVE5X1ix-D2q_zWztQ@mail.gmail.com> <20140211145248.GI26684@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7h38jq8nk9.fsf-4poPxKt068f/PtFMR13I2A@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>, linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140211145248.GI26684@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Rob Herring <robherring2@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Feb 2014, Kevin Hilman wrote:
+Hi Russell,
 
-> > The issue started I think with the following patch getting merged:
-> > ehci-platform: Add support for clks and phy passed through devicetree
-> > some version of http://www.spinics.net/lists/linux-usb/msg101061.html
-> > introduced { .compatible = "usb-ehci", },
+On Tuesday 11 February 2014 14:52:48 Russell King - ARM Linux wrote:
+> On Tue, Feb 11, 2014 at 07:56:33AM -0600, Rob Herring wrote:
+> > On Tue, Feb 11, 2014 at 5:45 AM, Philipp Zabel wrote:
+> > > This allows to reuse the same parser code from outside the V4L2
+> > > framework, most importantly from display drivers. There have been
+> > > patches that duplicate the code (and I am going to send one of my own),
+> > > such as
+> > > http://lists.freedesktop.org/archives/dri-devel/2013-August/043308.html
+> > > and others that parse the same binding in a different way:
+> > > https://www.mail-archive.com/linux-omap@vger.kernel.org/msg100761.html
+> > > 
+> > > I think that all common video interface parsing helpers should be moved
+> > > to a single place, outside of the specific subsystems, so that it can
+> > > be reused by all drivers.
+> > 
+> > Perhaps that should be done rather than moving to drivers/of now and
+> > then again to somewhere else.
 > 
-> This is what I was getting at: an understanding of what caused the
-> failue in the first place.
+> Do you have a better suggestion where it should move to?
 > 
-> > Now, in the build we have two drivers which dts claims compatibility
-> > with, but only 1 driver actually works (drivers/usb/host/ehci-omap.c)
-> > for the platform. Thinking that way, in fact, the current
-> > compatibility even matches drivers/usb/host/ehci-ppc-of.c which
-> > obviously wont work either.
-> 
-> Right, so I agree that it makes sense to remove a compatible string
-> where there is no compatability, but a couple other things should happen
-> here.
-> 
-> 1) changelog should describe why this compatible string is in the omap
-> dtsi files in first place.
-> 
-> 2) investigation into the patch that introduced this change to double
-> check it's not introducing other breakage as well.
+> drivers/gpu/drm - no, because v4l2 wants to use it
+> drivers/media/video - no, because DRM drivers want to use it
+> drivers/video - no, because v4l2 and drm drivers want to use it
 
-Oddly enough, it was Roger who introduced this incorrect compatibility 
-string in commit f17c89948dcd6 (ARM: dts: OMAP4: Add HS USB Host IP 
-nodes).  There is no explanation in the commit log of why the string is 
-there.
+Just pointing out a missing location (which might be rejected due to similar 
+concerns), there's also drivers/media, which isn't V4L-specific.
 
-We better remove it from all the files where it doesn't belong.  Of
-course, this won't help existing hardware.  It will still be necessary 
-to change the compatibility string used for the generic platform 
-drivers.
+> Maybe drivers/of-graph/ ?  Or maybe it's just as good a place to move it
+> into drivers/of ?
 
-Alan Stern
+-- 
+Regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
