@@ -1,70 +1,39 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH] ARM: dts: omap3-n9 family: mark proper OMAP version
-Date: Tue, 11 Feb 2014 09:29:01 -0600
-Message-ID: <1392132541-25340-1-git-send-email-nm@ti.com>
+From: =?UTF-8?q?Stefan=20S=C3=B8rensen?=
+	<stefan.sorensen@spectralink.com>
+Subject: [PATCH v2 0/2] dp83640: Get pin and master/slave configuration from DT
+Date: Tue, 11 Feb 2014 16:29:20 +0100
+Message-ID: <1392132562-23644-1-git-send-email-stefan.sorensen@spectralink.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Nishanth Menon <nm@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>
+To: richardcochran@gmail.com, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: =?UTF-8?q?Stefan=20S=C3=B8rensen?= <stefan.sorensen@spectralink.com>
 List-Id: devicetree@vger.kernel.org
 
-Nokia N900 uses OMAP3430 and N9/N950 uses OMAP3630. Mark SoC compatibilty
-as per Documentation/devicetree/bindings/arm/omap/omap.txt else
-N9/N950 will be probed as a OMAP3430 type device, since default ti,omap3
-maps to OMAP3430 compatibility.
+This patch series add DT configuration to the DP83640 PHY driver and ma=
+kes
+the configuration of periodic output pins dynamic.
 
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
+Changes since v1:
+ - Add bindings documentation
+ - Keep module parameters
+ - Rename gpio->pin
+ - Split patch into DT part and dynamic periodic output support
 
-just build tested. but given examples such as 
-http://thread.gmane.org/gmane.linux.ports.arm.omap/110006
+Stefan
 
-I guess, some form of failure is expected.
 
-based on v3.14-rc2
+Stefan S=C3=B8rensen (2):
+  dp83640: Support a configurable number of periodic outputs
+  dp83640: Get pin and master/slave configuration from DT
 
- arch/arm/boot/dts/omap3-n9.dts   |    2 +-
- arch/arm/boot/dts/omap3-n900.dts |    2 +-
- arch/arm/boot/dts/omap3-n950.dts |    2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/net/dp83640.txt |  29 +++
+ drivers/net/phy/dp83640.c                         | 205 ++++++++++++++=
++-------
+ 2 files changed, 175 insertions(+), 59 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/dp83640.txt
 
-diff --git a/arch/arm/boot/dts/omap3-n9.dts b/arch/arm/boot/dts/omap3-n9.dts
-index 39828ce..9938b5d 100644
---- a/arch/arm/boot/dts/omap3-n9.dts
-+++ b/arch/arm/boot/dts/omap3-n9.dts
-@@ -14,5 +14,5 @@
- 
- / {
- 	model = "Nokia N9";
--	compatible = "nokia,omap3-n9", "ti,omap3";
-+	compatible = "nokia,omap3-n9", "ti,omap36xx", "ti,omap3";
- };
-diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-index 6fc85f9..97db027 100644
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -13,7 +13,7 @@
- 
- / {
- 	model = "Nokia N900";
--	compatible = "nokia,omap3-n900", "ti,omap3";
-+	compatible = "nokia,omap3-n900", "ti,omap3430", "ti,omap3";
- 
- 	cpus {
- 		cpu@0 {
-diff --git a/arch/arm/boot/dts/omap3-n950.dts b/arch/arm/boot/dts/omap3-n950.dts
-index b076a52..261c558 100644
---- a/arch/arm/boot/dts/omap3-n950.dts
-+++ b/arch/arm/boot/dts/omap3-n950.dts
-@@ -14,5 +14,5 @@
- 
- / {
- 	model = "Nokia N950";
--	compatible = "nokia,omap3-n950", "ti,omap3";
-+	compatible = "nokia,omap3-n950", "ti,omap36xx", "ti,omap3";
- };
--- 
-1.7.9.5
+--=20
+1.8.5.3
