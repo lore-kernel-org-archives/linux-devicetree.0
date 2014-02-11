@@ -1,72 +1,78 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC 1/6] mailbox: add core framework
-Date: Tue, 11 Feb 2014 09:35:01 +0100
-Message-ID: <1765844.1kjKsO2Rzo@wuerfel>
-References: <1391820619-25487-1-git-send-email-courtney.cavin@sonymobile.com> <CAL_JsqK0YoVu0BfKSUfBQGoriCa4z-teXUQe6RPpjM2KKpeMAw@mail.gmail.com> <20140211002347.GW1706@sonymobile.com>
+From: Marc Dietrich <marvin24@gmx.de>
+Subject: Re: [PATCH] net: rfkill-regulator: Add devicetree support.
+Date: Tue, 11 Feb 2014 09:42 +0100
+Message-ID: <1905162.oG8AgdvPKu@fb07-iapwap2>
+References: <1391802529-29861-1-git-send-email-marek@goldelico.com> <20140210101842.GS25314@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140211002347.GW1706@sonymobile.com>
+In-Reply-To: <20140210101842.GS25314@e106331-lin.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Courtney Cavin <courtney.cavin@sonymobile.com>
-Cc: Rob Herring <robherring2@gmail.com>, Josh Cartwright <joshc@codeaurora.org>, "s-anna@ti.com" <s-anna@ti.com>, Rob Herring <rob.herring@calxeda.com>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, Mark Langsdorf <mark.langsdorf@calxeda.com>, Tony Lindgren <tony@atomide.com>, "omar.ramirez@copitl.com" <omar.ramirez@copitl.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Marek Belisko <marek@goldelico.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "linville@tuxdriver.com" <linville@tuxdriver.com>, "johannes@sipsolutions.net" <johannes@sipsolutions.net>, "davem@davemloft.net" <davem@davemloft.net>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "neilb@suse.de" <neilb@suse.de>, "hns@goldelico.com" <hns@goldelico.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 10 February 2014 16:23:48 Courtney Cavin wrote:
+Am Montag, 10. Februar 2014, 10:18:42 schrieb Mark Rutland:
+> On Fri, Feb 07, 2014 at 07:48:49PM +0000, Marek Belisko wrote:
+> > Signed-off-by: NeilBrown <neilb@suse.de>
+> > Signed-off-by: Marek Belisko <marek@goldelico.com>
+> > ---
+> > Based on Neil's patch and extend for documentation and bindings include.
+> > 
+> >  .../bindings/net/rfkill/rfkill-relugator.txt       | 28 ++++++++++++++++
+> >  include/dt-bindings/net/rfkill-regulator.h         | 23 +++++++++++++
+> >  net/rfkill/rfkill-regulator.c                      | 38
+> >  ++++++++++++++++++++++ 3 files changed, 89 insertions(+)
+> >  create mode 100644
+> >  Documentation/devicetree/bindings/net/rfkill/rfkill-relugator.txt create
+> >  mode 100644 include/dt-bindings/net/rfkill-regulator.h
+> > 
+> > diff --git
+> > a/Documentation/devicetree/bindings/net/rfkill/rfkill-relugator.txt
+> > b/Documentation/devicetree/bindings/net/rfkill/rfkill-relugator.txt new
+> > file mode 100644
+> > index 0000000..cdb7dd7
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/rfkill/rfkill-relugator.txt
+> > @@ -0,0 +1,28 @@
+> > +Regulator consumer for rfkill devices
+> 
+> What exactly is an "rfkill" device? How is it used? How does it relate
+> to other devices in the DT?
+> 
+> To me, this looks like a leak of a Linux abstraction.
+> 
+> > +
+> > +Required properties:
+> > +- compatible   : Must be "rfkill-regulator".
+> > +- label  : Name of rfkill device.
+> 
+> What's this for? Why does this need a label in the DT? Surely this can
+> be implied by the relationship to a particular radio device?
+> 
+> > +- type  : Type of rfkill device.
+> > +
+> > +Possible values (defined in include/dt-bindings/net/rfkill-regulator.h):
+> > +	RFKILL_TYPE_ALL
+> > +	RFKILL_TYPE_WLAN
+> > +	RFKILL_TYPE_BLUETOOTH
+> > +	RFKILL_TYPE_UWB
+> > +	RFKILL_TYPE_WIMAX
+> > +	RFKILL_TYPE_WWAN
+> > +	RFKILL_TYPE_GPS
+> > +	RFKILL_TYPE_FM
+> > +	RFKILL_TYPE_NFC
+> 
+> What do these mean? Why can these not be implied by a relationship to
+> any devices of these particular types?
 
-> While I'm not sure the dislike of notifiers entirely justifies not using
-> them here, where they seem to make sense, I can understand that they
-> might not fully implement what we need to expose.
+This problem comes up from time to time. rfkill-gpio has a similar problem, 
+btw. You can of course list an rfkill property inside the device node where it 
+is connected to, but what are you going to to if there is no device node, e.g. 
+the device is enumerated on a bus (e.g. usb, pci, ...)?
 
-I think we need to look at a few more examples of things that people
-want to with the framework to come up with a good interface. It's
-possible that we end up with multiple alternative notification
-methods, but it would be good to come up with one that works well
-for everyone.
+In such cases it may be better to define a standalone rfkill node similar to 
+the "backlight" device, even if it just contains a gpio or regulator.
 
-> Regarding handlers running in IRQ context: currently the API is designed
-> to do just that.  From the use-cases I've found, most message handlers
-> simply queue something to happen at a later point.  This is logical, as
-> the callback will be async, so you'll need to swap contexts or add locks
-> in your consumer anyway.
-
-Right. You may also have some handlers that need to run with extreme
-latency constraints, so we need at least the option of getting the
-callback from hardirq context, or possibly from softirq/tasklet
-as in the dmaengine case.
-
-> The dma engine is large and confused, so I'm not sure entirely which
-> part you are refering to.  I've looked at having async completion going
-> both ways, but what I see every time is code complication in both the
-> adapter and in the consumers in the simple use-case.  It doesn't really
-> make sense to make an API which makes things so generic that it becomes
-> hard to use.  What I tried to follow here when designing the API was
-> what I saw in the actual implementations, not what was future-proof:
-> 	- Message receive callbacks may be called from IRQ context
-> 	- Message send implementations may sleep
-
-I can imagine cases where you want to send messages from softirq
-context, or from the same context in which you received the incoming
-mail, so it would be good to have the API flexible enough to deal
-with that. As a first step, always allowing send to sleep seems
-fine. Alternatively, we could have a 'sync' flag in the send
-API, to choose between "arrange this message to be sent out as
-soon as possible, but don't sleep" and "send this message and
-make sure it has arrived at the other end" as you do now.
-
-> What I can do is try to alleviate implementation efforts of future
-> requirements--as honestly, we can't really say exactly what they are--by
-> turning the messages into structs themselves, so at a later point flags,
-> ack callbacks, and rainbows can be added.  I can then stop using
-> notifiers, and re-invent that functionality with a mbox_ prefix.
-
-I don't think there is a point in reimplementing notifiers under a
-different name. The question is rather how we want to deal with
-the 'multiple listener' case. If this case is the exception rather
-than the rule, I'd prefer making the callback API handle only
-single listeners and adding higher-level abstractions for the
-cases where we do need multiple listeners, but it really depends
-on what people need.
-
-	Arnd
+Marc
