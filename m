@@ -1,78 +1,97 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] ARM: tegra: dalmore: fix irq trigger type
-Date: Tue, 11 Feb 2014 21:47:39 +0100
-Message-ID: <20140211204737.GA1895@mithrandir>
-References: <4fcfcfdbc86c37c6d47ec32cdbd987f3b406e9b5.1392147256.git.stefan@agner.ch>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="uAKRQypu60I7Lcqm"
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [Patch v5 2/2] dmaengine: qcom_bam_dma: Add device tree binding
+Date: Tue, 11 Feb 2014 14:56:48 -0600
+Message-ID: <C8E65D93-F685-40C7-A482-C3E85D9F0558@codeaurora.org>
+References: <1391546556-27702-1-git-send-email-agross@codeaurora.org> <1391546556-27702-3-git-send-email-agross@codeaurora.org>
+Mime-Version: 1.0 (Mac OS X Mail 7.1 \(1827\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4fcfcfdbc86c37c6d47ec32cdbd987f3b406e9b5.1392147256.git.stefan@agner.ch>
+In-Reply-To: <1391546556-27702-3-git-send-email-agross@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: swarren@wwwdotorg.org, josephl@nvidia.com, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Andy Gross <agross@codeaurora.org>
+Cc: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine <dmaengine@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
---uAKRQypu60I7Lcqm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Feb 4, 2014, at 2:42 PM, Andy Gross <agross@codeaurora.org> wrote:
 
-On Tue, Feb 11, 2014 at 09:11:32PM +0100, Stefan Agner wrote:
-> Trigger type needs to be IRQ_TYPE_LEVEL_HIGH since the interrupt
-> signal gets inverted by the PMC (configured by the invert-interrupt
-> property).
+> Add device tree binding support for the QCOM BAM DMA driver.
+> 
+> Signed-off-by: Andy Gross <agross@codeaurora.org>
+> ---
+> .../devicetree/bindings/dma/qcom_bam_dma.txt       |   48 ++++++++++++++++++++
+> 1 file changed, 48 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
 
-Isn't the reason the other way around? The PMIC generates a low-level
-interrupt, but the GIC can only be configured to accept high-level (or
-rising edge) and therefore the nvidia,invert-interrupt property needs to
-be set in the PMC node?
+Acked-by: Kumar Gala <galak@codeaurora.org>
 
-One nitpick below.
+- k
 
-> diff --git a/arch/arm/boot/dts/tegra114-dalmore.dts b/arch/arm/boot/dts/t=
-egra114-dalmore.dts
-[...]
-> @@ -888,8 +888,9 @@
->  		palmas: tps65913@58 {
->  			compatible =3D "ti,palmas";
->  			reg =3D <0x58>;
-> -			interrupts =3D <0 86 IRQ_TYPE_LEVEL_LOW>;
-> =20
-> +			/* active-low configured by PMC invert-interrupt */
-> +			interrupts =3D <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+> new file mode 100644
+> index 0000000..86344f1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+> @@ -0,0 +1,48 @@
+> +QCOM BAM DMA controller
+> +
+> +Required properties:
+> +- compatible:	Must be "qcom,bam-v1.4.0" for MSM8974 V1
+> +		Must be "qcom,bam-v1.4.1" for MSM8974 V2
+> +- reg: Address range for DMA registers
+> +- interrupts: single interrupt for this controller
+> +- #dma-cells: must be <1>
+> +- clocks: required clock
+> +- clock-names: name of clock
+> +- qcom,ee : indicates the active Execution Environment identifier (0-7)
+> +
+> +Example:
+> +
+> +	uart-bam: dma@f9984000 = {
+> +		compatible = "qcom,bam-v1.4.1";
+> +		reg = <0xf9984000 0x15000>;
+> +		interrupts = <0 94 0>;
+> +		clocks = <&gcc GCC_BAM_DMA_AHB_CLK>;
+> +		clock-names = "bam_clk";
+> +		#dma-cells = <1>;
+> +		qcom,ee = <0>;
+> +	};
+> +
+> +Client:
+> +Required properties:
+> +- dmas: List of dma channel requests
+> +- dma-names: Names of aforementioned requested channels
+> +
+> +Clients must use the format described in the dma.txt file, using a two cell
+> +specifier for each channel.
+> +
+> +The three cells in order are:
+> +  1. A phandle pointing to the DMA controller
+> +  2. The channel number
+> +
+> +Example:
+> +	serial@f991e000 {
+> +		compatible = "qcom,msm-uart";
+> +		reg = <0xf991e000 0x1000>
+> +			<0xf9944000 0x19000>;
+> +		interrupts = <0 108 0>;
+> +		clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>, <&gcc GCC_BLSP1_AHB_CLK>;
+> +		clock-names = "core", "iface";
+> +
+> +		dmas = <&uart-bam 0>, <&uart-bam 1>;
+> +		dma-names = "rx", "tx";
+> +	};
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> hosted by The Linux Foundation
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-I'd prefer to keep the properties grouped as before. interrupts is a
-"client" property, whereas #interrupt-cells and interrupt-controller
-are "provider" properties.
-
-And I think the comment would be more appropriate in the pmc node, for
-the same reason that I think the commit description isn't entirely
-accurate.
-
-Thierry
-
---uAKRQypu60I7Lcqm
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS+oxpAAoJEN0jrNd/PrOhdU8P/03MrFNVoZ5aaZmL5j3PaeRg
-WuF5umaGFo9/LJ5fouFq4RtLEPlTIApQPZnn53r+OmlcTy+iVOQHbrs4/RHXocVz
-7+2D67jE5/J/lURtvrB/6GnMGeoTEqT+EhdTboIBZ9xHtAScU3BXXtvQs1NVmAEX
-XYPU2TVKkusajqtBjSeD97I+Zy+v+j2kVUV+Cv7L5ynrat93HEGsbV940bztcSUT
-Y1N+IPoankMa1qV0a4yNfM13LF0mR09JZ/eWearqjPa+4nmggUPp/7yVE+Nksgnn
-6tZydw3keR2FqYzkxda3tknCtdoQ9mfKEJWHkJxmHEUYTh/D9eF5HgeBomWrAHZC
-XRPuA40H7VuO8buSi7XeU+v0a4UXbNiaJEZUkGvQZVa/cseZS6vZBhuBBIPdIGiF
-X6CjF/F1r4hhtlazUmcGKCSljuxxISOagmdiMux83MFrfGiEvEvtqEfEw66sD65n
-d2sZSK7UBd93re3QYgHhCD4dYJ8uqtSQkAxf13YsPW99li6zBDy4fvOGQWuc/k6L
-GMpWCu3Y10pI6dpwJQpu4oS+v7WLdjeDNj7XnrSMCTkEWSX2olBmxnWyNUdgAXvA
-qnSLEQYxgldmFFt3G8YXpH1r31dL41Lh8m/gENoQq5033f85g+/sqB9H/DGrobSC
-/wejX6EFUwDBqVaUo1y7
-=hSq5
------END PGP SIGNATURE-----
-
---uAKRQypu60I7Lcqm--
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
