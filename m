@@ -1,50 +1,238 @@
-From: Valentin Longchamp <valentin.longchamp@keymile.com>
-Subject: [PATCH v2 1/2] devicetree: bindings: add Zarlink to the vendor
- prefixes
-Date: Tue, 11 Feb 2014 12:50:06 +0100
-Message-ID: <1392119407-29490-2-git-send-email-valentin.longchamp@keymile.com>
-References: <1392119407-29490-1-git-send-email-valentin.longchamp@keymile.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v5] clk: sunxi: Add Allwinner A20/A31 GMAC clock unit
+Date: Tue, 11 Feb 2014 19:53:21 +0800
+Message-ID: <1392119601-1564-1-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1392119407-29490-1-git-send-email-valentin.longchamp@keymile.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Scott Wood <scottwood@freescale.com>, linuxppc-dev@lists.ozlabs.org
-Cc: Valentin Longchamp <valentin.longchamp@keymile.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBV465CLQKGQEZ3DGCUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Even though the company belongs to Microsemi, many chips are still
-labeled as Zarlink. Among them is the family of network clock generators,
-the zl3034x.
+The Allwinner A20/A31 clock module controls the transmit clock source
+and interface type of the GMAC ethernet controller. Model this as
+a single clock for GMAC drivers to use.
 
-Signed-off-by: Valentin Longchamp <valentin.longchamp@keymile.com>
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
 
+Hi,
+
+This is v5 of the Allwinner A20 GMAC clock patch. Hans noted a
+compiler warning: unused variable in the previous version.
+The DT bits remain the same, and Maxime has already taken them.
+
+The Allwinner A20 SoC integrates an early version of dwmac
+IP from Synopsys. On top of that is a hardware glue layer.
+This layer needs to be configured before the dwmac can be
+used.
+
+Part of the glue layer is a clock mux, which controls the
+source and direction of the TX clock used by GMAC.
+
+Changes since v4:
+
+  * Removed unused variable in GMAC clock driver left over from v3
+
+Changes since v3:
+
+  * Rework error checking in GMAC clock driver
+  * Clarify required parent clock order for GMAC clock in DT bindings
+  * Rewrite commit log for "ARM: dts: sun7i: Add ethernet alias for GMAC"
+  * Corrected "a20-olinuxino-micro" in commit message
+  * Rewrite comments in sun7i dtsi to clarify purpose of dummy clocks
+  * Rebase onto Maxime's sunxi-next branch
+
+Changes since v2:
+
+  * Added more comments on GMAC clock driver
+  * Drop CLK_SET_PARENT_GATE in GMAC clock driver
+  * Use macro for max clock parents
+  * Line wrapping
+
+Changes since v1:
+
+  * Added optional reset control to stmmac driver core
+  * Added non CONFIG_RESET_CONROLLER routines for the above change
+  * Extended callback API, as discussed with Srinivas
+  * Used new stmmac_of_data to pass features and callbacks,
+    instead of platform data, as discussed
+  * Seperated clock module glue layer into clock driver
+
+
+Cheers
+ChenYu
 
 ---
-Changes in v2:
-- add a patch so that the Zarlink vendor prefix is defined
+ Documentation/devicetree/bindings/clock/sunxi.txt | 30 +++++++
+ drivers/clk/sunxi/clk-sunxi.c                     | 96 +++++++++++++++++++++++
+ 2 files changed, 126 insertions(+)
 
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index edbb8d8..35f1c9b 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -81,3 +81,4 @@ winbond Winbond Electronics corp.
- wlf	Wolfson Microelectronics
- wm	Wondermedia Technologies, Inc.
- xlnx	Xilinx
-+zarlink	Zarlink Semiconductor
+diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+index 0cf679b..28421d2 100644
+--- a/Documentation/devicetree/bindings/clock/sunxi.txt
++++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+@@ -37,6 +37,7 @@ Required properties:
+ 	"allwinner,sun6i-a31-apb2-gates-clk" - for the APB2 gates on A31
+ 	"allwinner,sun4i-mod0-clk" - for the module 0 family of clocks
+ 	"allwinner,sun7i-a20-out-clk" - for the external output clocks
++	"allwinner,sun7i-a20-gmac-clk" - for the GMAC clock module on A20/A31
+ 
+ Required properties for all clocks:
+ - reg : shall be the control register address for the clock.
+@@ -50,6 +51,9 @@ Required properties for all clocks:
+ 	If the clock module only has one output, the name shall be the
+ 	module name.
+ 
++For "allwinner,sun7i-a20-gmac-clk", the parent clocks shall be fixed rate
++dummy clocks at 25 MHz and 125 MHz, respectively. See example.
++
+ Clock consumers should specify the desired clocks they use with a
+ "clocks" phandle cell. Consumers that are using a gated clock should
+ provide an additional ID in their clock property. This ID is the
+@@ -96,3 +100,29 @@ mmc0_clk: clk@01c20088 {
+ 	clocks = <&osc24M>, <&pll6 1>, <&pll5 1>;
+ 	clock-output-names = "mmc0";
+ };
++
++mii_phy_tx_clk: clk@2 {
++	#clock-cells = <0>;
++	compatible = "fixed-clock";
++	clock-frequency = <25000000>;
++	clock-output-names = "mii_phy_tx";
++};
++
++gmac_int_tx_clk: clk@3 {
++	#clock-cells = <0>;
++	compatible = "fixed-clock";
++	clock-frequency = <125000000>;
++	clock-output-names = "gmac_int_tx";
++};
++
++gmac_clk: clk@01c20164 {
++	#clock-cells = <0>;
++	compatible = "allwinner,sun7i-a20-gmac-clk";
++	reg = <0x01c20164 0x4>;
++	/*
++	 * The first clock must be fixed at 25MHz;
++	 * the second clock must be fixed at 125MHz
++	 */
++	clocks = <&mii_phy_tx_clk>, <&gmac_int_tx_clk>;
++	clock-output-names = "gmac";
++};
+diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+index 736fb60..54a5d55 100644
+--- a/drivers/clk/sunxi/clk-sunxi.c
++++ b/drivers/clk/sunxi/clk-sunxi.c
+@@ -379,6 +379,102 @@ static void sun7i_a20_get_out_factors(u32 *freq, u32 parent_rate,
+ 
+ 
+ /**
++ * sun7i_a20_gmac_clk_setup - Setup function for A20/A31 GMAC clock module
++ *
++ * This clock looks something like this
++ *                               ________________________
++ *  MII TX clock from PHY >-----|___________    _________|----> to GMAC core
++ *  GMAC Int. RGMII TX clk >----|___________\__/__gate---|----> to PHY
++ *  Ext. 125MHz RGMII TX clk >--|__divider__/            |
++ *                              |________________________|
++ *
++ * The external 125 MHz reference is optional, i.e. GMAC can use its
++ * internal TX clock just fine. The A31 GMAC clock module does not have
++ * the divider controls for the external reference.
++ *
++ * To keep it simple, let the GMAC use either the MII TX clock for MII mode,
++ * and its internal TX clock for GMII and RGMII modes. The GMAC driver should
++ * select the appropriate source and gate/ungate the output to the PHY.
++ *
++ * Only the GMAC should use this clock. Altering the clock so that it doesn't
++ * match the GMAC's operation parameters will result in the GMAC not being
++ * able to send traffic out. The GMAC driver should set the clock rate and
++ * enable/disable this clock to configure the required state. The clock
++ * driver then responds by auto-reparenting the clock.
++ */
++
++#define SUN7I_A20_GMAC_GPIT	2
++#define SUN7I_A20_GMAC_MASK	0x3
++#define SUN7I_A20_GMAC_PARENTS	2
++
++static void __init sun7i_a20_gmac_clk_setup(struct device_node *node)
++{
++	struct clk *clk;
++	struct clk_mux *mux;
++	struct clk_gate *gate;
++	const char *clk_name = node->name;
++	const char *parents[SUN7I_A20_GMAC_PARENTS];
++	void *reg;
++
++	if (of_property_read_string(node, "clock-output-names", &clk_name))
++		return;
++
++	/* allocate mux and gate clock structs */
++	mux = kzalloc(sizeof(struct clk_mux), GFP_KERNEL);
++	if (!mux)
++		return;
++
++	gate = kzalloc(sizeof(struct clk_gate), GFP_KERNEL);
++	if (!gate)
++		goto free_mux;
++
++	/* gmac clock requires exactly 2 parents */
++	parents[0] = of_clk_get_parent_name(node, 0);
++	parents[1] = of_clk_get_parent_name(node, 1);
++	if (!parents[0] || !parents[1])
++		goto free_gate;
++
++	reg = of_iomap(node, 0);
++	if (!reg)
++		goto free_gate;
++
++	/* set up gate and fixed rate properties */
++	gate->reg = reg;
++	gate->bit_idx = SUN7I_A20_GMAC_GPIT;
++	gate->lock = &clk_lock;
++	mux->reg = reg;
++	mux->mask = SUN7I_A20_GMAC_MASK;
++	mux->flags = CLK_MUX_INDEX_BIT;
++	mux->lock = &clk_lock;
++
++	clk = clk_register_composite(NULL, clk_name,
++			parents, SUN7I_A20_GMAC_PARENTS,
++			&mux->hw, &clk_mux_ops,
++			NULL, NULL,
++			&gate->hw, &clk_gate_ops,
++			0);
++
++	if (IS_ERR(clk))
++		goto iounmap_reg;
++
++	of_clk_add_provider(node, of_clk_src_simple_get, clk);
++	clk_register_clkdev(clk, clk_name, NULL);
++
++	return;
++
++iounmap_reg:
++	iounmap(reg);
++free_gate:
++	kfree(gate);
++free_mux:
++	kfree(mux);
++}
++CLK_OF_DECLARE(sun7i_a20_gmac, "allwinner,sun7i-a20-gmac-clk",
++		sun7i_a20_gmac_clk_setup);
++
++
++
++/**
+  * sunxi_factors_clk_setup() - Setup function for factor clocks
+  */
+ 
 -- 
-1.8.0.1
+1.9.0.rc3
