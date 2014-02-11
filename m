@@ -1,78 +1,165 @@
-From: Marc Dietrich <marvin24@gmx.de>
-Subject: Re: [PATCH] net: rfkill-regulator: Add devicetree support.
-Date: Tue, 11 Feb 2014 09:42 +0100
-Message-ID: <1905162.oG8AgdvPKu@fb07-iapwap2>
-References: <1391802529-29861-1-git-send-email-marek@goldelico.com> <20140210101842.GS25314@e106331-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140210101842.GS25314@e106331-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Marek Belisko <marek@goldelico.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "linville@tuxdriver.com" <linville@tuxdriver.com>, "johannes@sipsolutions.net" <johannes@sipsolutions.net>, "davem@davemloft.net" <davem@davemloft.net>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "neilb@suse.de" <neilb@suse.de>, "hns@goldelico.com" <hns@goldelico.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: [PATCH 1/2] ARM: shmobile: r8a7778/r8a7779 dtsi: Improve and correct HSPI bindings
+Date: Tue, 11 Feb 2014 09:56:47 +0100
+Message-ID: <1392109008-29941-1-git-send-email-geert@linux-m68k.org>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 10. Februar 2014, 10:18:42 schrieb Mark Rutland:
-> On Fri, Feb 07, 2014 at 07:48:49PM +0000, Marek Belisko wrote:
-> > Signed-off-by: NeilBrown <neilb@suse.de>
-> > Signed-off-by: Marek Belisko <marek@goldelico.com>
-> > ---
-> > Based on Neil's patch and extend for documentation and bindings include.
-> > 
-> >  .../bindings/net/rfkill/rfkill-relugator.txt       | 28 ++++++++++++++++
-> >  include/dt-bindings/net/rfkill-regulator.h         | 23 +++++++++++++
-> >  net/rfkill/rfkill-regulator.c                      | 38
-> >  ++++++++++++++++++++++ 3 files changed, 89 insertions(+)
-> >  create mode 100644
-> >  Documentation/devicetree/bindings/net/rfkill/rfkill-relugator.txt create
-> >  mode 100644 include/dt-bindings/net/rfkill-regulator.h
-> > 
-> > diff --git
-> > a/Documentation/devicetree/bindings/net/rfkill/rfkill-relugator.txt
-> > b/Documentation/devicetree/bindings/net/rfkill/rfkill-relugator.txt new
-> > file mode 100644
-> > index 0000000..cdb7dd7
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/rfkill/rfkill-relugator.txt
-> > @@ -0,0 +1,28 @@
-> > +Regulator consumer for rfkill devices
-> 
-> What exactly is an "rfkill" device? How is it used? How does it relate
-> to other devices in the DT?
-> 
-> To me, this looks like a leak of a Linux abstraction.
-> 
-> > +
-> > +Required properties:
-> > +- compatible   : Must be "rfkill-regulator".
-> > +- label  : Name of rfkill device.
-> 
-> What's this for? Why does this need a label in the DT? Surely this can
-> be implied by the relationship to a particular radio device?
-> 
-> > +- type  : Type of rfkill device.
-> > +
-> > +Possible values (defined in include/dt-bindings/net/rfkill-regulator.h):
-> > +	RFKILL_TYPE_ALL
-> > +	RFKILL_TYPE_WLAN
-> > +	RFKILL_TYPE_BLUETOOTH
-> > +	RFKILL_TYPE_UWB
-> > +	RFKILL_TYPE_WIMAX
-> > +	RFKILL_TYPE_WWAN
-> > +	RFKILL_TYPE_GPS
-> > +	RFKILL_TYPE_FM
-> > +	RFKILL_TYPE_NFC
-> 
-> What do these mean? Why can these not be implied by a relationship to
-> any devices of these particular types?
+From: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 
-This problem comes up from time to time. rfkill-gpio has a similar problem, 
-btw. You can of course list an rfkill property inside the device node where it 
-is connected to, but what are you going to to if there is no device node, e.g. 
-the device is enumerated on a bus (e.g. usb, pci, ...)?
+Binding documentation:
+  - Add future-proof "renesas,hspi-<soctype>" compatible values,
+  - Add "interrupt-parent", "#address-cells" and "#size-cells" properties,
+  - Add reference to pinctrl documentation,
+  - Add example bindings.
 
-In such cases it may be better to define a standalone rfkill node similar to 
-the "backlight" device, even if it just contains a gpio or regulator.
+r8a7778 and r8a7779 dtsi:
+  - Add "renesas,hspi-r8a7778" resp. "renesas,hspi-r8a7779" compatible
+    values,
+  - Correct reference to parent interrupt controller
+    (use "interrupt-parent" instead of "interrupt-controller"),
+  - Add missing "#address-cells" and "#size-cells" properties, which are
+    needed when populating the SPI buses.
 
-Marc
+Signed-off-by: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+Untested due to lack of hardware
+
+ Documentation/devicetree/bindings/spi/sh-hspi.txt |   27 ++++++++++++++++++---
+ arch/arm/boot/dts/r8a7778.dtsi                    |   18 +++++++++-----
+ arch/arm/boot/dts/r8a7779.dtsi                    |   18 +++++++++-----
+ 3 files changed, 48 insertions(+), 15 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/spi/sh-hspi.txt b/Documentation/devicetree/bindings/spi/sh-hspi.txt
+index 30b57b1c8a13..d43080eb6b3a 100644
+--- a/Documentation/devicetree/bindings/spi/sh-hspi.txt
++++ b/Documentation/devicetree/bindings/spi/sh-hspi.txt
+@@ -1,7 +1,28 @@
+ Renesas HSPI.
+ 
+ Required properties:
+-- compatible : 	"renesas,hspi"
+-- reg : Offset and length of the register set for the device
+-- interrupts : interrupt line used by HSPI
++- compatible       : "renesas,hspi-<soctype>", "renesas,hspi" as fallback.
++		     Examples of valid soctypes are "r8a7778" (R-Car M1),
++		     and "r8a7779" (R-Car H1)
++- reg              : Offset and length of the register set for the device
++- interrupt-parent : The phandle for the interrupt controller that
++		     services interrupts for this device
++- interrupts       : Interrupt specifier
++- #address-cells   : Must be <1>
++- #size-cells      : Must be <0>
++
++Pinctrl properties might be needed, too.  See
++Documentation/devicetree/bindings/pinctrl/renesas,*.
++
++Example:
++
++	hspi0: spi@fffc7000 {
++		compatible = "renesas,hspi-r8a7778", "renesas,hspi";
++		reg = <0xfffc7000 0x18>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 63 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
+ 
+diff --git a/arch/arm/boot/dts/r8a7778.dtsi b/arch/arm/boot/dts/r8a7778.dtsi
+index 85c5b3b99f5e..3c6fab5c9702 100644
+--- a/arch/arm/boot/dts/r8a7778.dtsi
++++ b/arch/arm/boot/dts/r8a7778.dtsi
+@@ -204,26 +204,32 @@
+ 	};
+ 
+ 	hspi0: spi@fffc7000 {
+-		compatible = "renesas,hspi";
++		compatible = "renesas,hspi-r8a7778", "renesas,hspi";
+ 		reg = <0xfffc7000 0x18>;
+-		interrupt-controller = <&gic>;
++		interrupt-parent = <&gic>;
+ 		interrupts = <0 63 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
+ 		status = "disabled";
+ 	};
+ 
+ 	hspi1: spi@fffc8000 {
+-		compatible = "renesas,hspi";
++		compatible = "renesas,hspi-r8a7778", "renesas,hspi";
+ 		reg = <0xfffc8000 0x18>;
+-		interrupt-controller = <&gic>;
++		interrupt-parent = <&gic>;
+ 		interrupts = <0 84 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
+ 		status = "disabled";
+ 	};
+ 
+ 	hspi2: spi@fffc6000 {
+-		compatible = "renesas,hspi";
++		compatible = "renesas,hspi-r8a7778", "renesas,hspi";
+ 		reg = <0xfffc6000 0x18>;
+-		interrupt-controller = <&gic>;
++		interrupt-parent = <&gic>;
+ 		interrupts = <0 85 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
+ 		status = "disabled";
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+index d0561d4c7c46..8b1a336ee401 100644
+--- a/arch/arm/boot/dts/r8a7779.dtsi
++++ b/arch/arm/boot/dts/r8a7779.dtsi
+@@ -256,26 +256,32 @@
+ 	};
+ 
+ 	hspi0: spi@fffc7000 {
+-		compatible = "renesas,hspi";
++		compatible = "renesas,hspi-r8a7779", "renesas,hspi";
+ 		reg = <0xfffc7000 0x18>;
+-		interrupt-controller = <&gic>;
++		interrupt-parent = <&gic>;
+ 		interrupts = <0 73 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
+ 		status = "disabled";
+ 	};
+ 
+ 	hspi1: spi@fffc8000 {
+-		compatible = "renesas,hspi";
++		compatible = "renesas,hspi-r8a7779", "renesas,hspi";
+ 		reg = <0xfffc8000 0x18>;
+-		interrupt-controller = <&gic>;
++		interrupt-parent = <&gic>;
+ 		interrupts = <0 74 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
+ 		status = "disabled";
+ 	};
+ 
+ 	hspi2: spi@fffc6000 {
+-		compatible = "renesas,hspi";
++		compatible = "renesas,hspi-r8a7779", "renesas,hspi";
+ 		reg = <0xfffc6000 0x18>;
+-		interrupt-controller = <&gic>;
++		interrupt-parent = <&gic>;
+ 		interrupts = <0 75 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
+ 		status = "disabled";
+ 	};
+ };
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
