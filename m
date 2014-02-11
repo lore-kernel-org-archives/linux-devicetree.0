@@ -1,44 +1,59 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 4/7] spi: pl022: attempt to get sspclk by name
-Date: Tue, 11 Feb 2014 15:08:06 +0100
-Message-ID: <201402111508.06267.arnd@arndb.de>
-References: <1392118632-11312-1-git-send-email-mark.rutland@arm.com> <1392118632-11312-5-git-send-email-mark.rutland@arm.com> <20140211120645.GH13533@sirena.org.uk>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: ohci-/ehci-platform: Change compatible string to ?hci-platform
+Date: Tue, 11 Feb 2014 15:10:24 +0100
+Message-ID: <1392127826-31290-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140211120645.GH13533-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBXW65CLQKGQE2GAY5DI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 11 February 2014, Mark Brown wrote:
-> On Tue, Feb 11, 2014 at 11:37:09AM +0000, Mark Rutland wrote:
-> 
-> > -     pl022->clk = devm_clk_get(&adev->dev, NULL);
-> > +     /*
-> > +      * For compatibility with old DTBs and platform data, fall back to the
-> > +      * first clock if there's not an explicitly named "sspclk" entry.
-> > +      */
-> > +     pl022->clk = devm_clk_get(&adev->dev, "sspclk");
-> > +     if (IS_ERR(pl022->clk))
-> > +             pl022->clk = devm_clk_get(&adev->dev, NULL);
-> > +
-> 
-> I'll just have a bit of a grumble here and point out that this sort of
-> stuff always worries me with the convention of using nameless clocks -
-> it causes hassle adding further clocks.
+Hi Greg,
 
-I think the best solution for this is to continue with anonymous clocks
-rather than adding names after the fact. This could be done (for DT-only
-drivers) using the of_clk_get() interface that takes an index, or
-we could add a generic dev_clk_get_index() or similar interface that
-has the same behavior but also works for clkdev.
+Can you please add these 2 patches to usb-next, to unbreak usb on various
+ARM platforms?
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+These 2 patches can either be squashed into the first 2 patches of my previous
+set or added as is to preserve history, either way is fine with me.
+
+The 2nd patch also fixes one of the Kconfig issues and I've a better plan
+for the 2nd Kconfig issue too, so please consider this a self-nack for my
+drivers/usb/host/Kconfig patches.
+
+Here is a copy of the echi-platform commit-msg to explain the rationale of
+these changes, as well as how the breakage happened in the first place:
+
+The initial versions of the devicetree enablement patches for ehci-platform
+used "ehci-platform" as compatible string. However this was disliked by various
+reviewers because the platform bus is a Linux invention and devicetree is
+supposed to be OS agnostic. After much discussion I gave up, added a:
+"depends on !PPC_OF" to Kconfig to avoid a known conflict with PPC-OF platforms
+and went with the generic usb-ehci as requested.
+
+In retro-spect I should have stuck to my guns, because the dts files for many
+existing boards already claim to be compatible with "usb-ehci", ie they have:
+
+	compatible = "ti,ehci-omap", "usb-ehci";
+
+In theory this should not be a problem since the "ti,ehci-omap" entry takes
+presedence, but in practice using a conflicting compatible string is an issue,
+because it makes which driver gets used depend on driver registration order.
+
+This patch changes the compatible string claimed by ehci-platform (back) to
+"ehci-platform", avoiding the driver registration / module loading ordering
+problems, and removes the "depends on !PPC_OF" workaround.
+
+Note that there already is a precedent for using ?hci-platform, in the form
+of xhci-platform.c using "xhci-platfrom" as compatible string.
+
+Thanks & Regards,
+
+Hans
