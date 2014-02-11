@@ -1,47 +1,69 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ohci-platform: Change compatible
- string from usb-ohci to generic-ohci
-Date: Tue, 11 Feb 2014 11:43:00 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1402111142260.1209-100000@iolanthe.rowland.org>
-References: <1392136529-5060-2-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Josh Cartwright <joshc@codeaurora.org>
+Subject: Re: [PATCH] of: Turn of_match_node into a static inline when
+ CONFIG_OF isn't set
+Date: Tue, 11 Feb 2014 10:48:26 -0600
+Message-ID: <20140211164825.GC841@joshc.qualcomm.com>
+References: <1392122211-11422-1-git-send-email-laurent.pinchart@ideasonboard.com>
+ <20140211144108.GB841@joshc.qualcomm.com>
+ <1596542.hkJp71u3OJ@avalon>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBD6LRVPZ6YGRBFNG5GLQKGQETEJLP7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1392136529-5060-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1596542.hkJp71u3OJ@avalon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Feb 2014, Hans de Goede wrote:
+On Tue, Feb 11, 2014 at 03:55:35PM +0100, Laurent Pinchart wrote:
+> Hi Josh,
+> 
+> On Tuesday 11 February 2014 08:41:08 Josh Cartwright wrote:
+> > On Tue, Feb 11, 2014 at 01:36:51PM +0100, Laurent Pinchart wrote:
+> > > when CONFIG_OF is disabled of_match_node is defined as a macro that
+> > > evaluates to NULL. This breaks compilation of drivers that dereference
+> > > the function's return value directly. Fix it by turning the macro into a
+> > > static inline function that returns NULL.
+> > 
+> > Just this past week I did the same thing, but noticed that it breaks the
+> > following usecase:
+> > 
+> > 	#ifdef CONFIG_OF
+> > 	static const struct of_device_id foobar_matches[] = {
+> > 		{ .compatible = "foobar,whatsit", },
+> > 		{ },
+> > 	};
+> > 	#endif
+> > 
+> > 	static int probeme(struct platform_device *pdev)
+> > 	{
+> > 		struct of_device_id *id;
+> > 
+> > 		id = of_match_node(foobar_matches, pdev->dev.of_node);
+> > 		if (id) {
+> > 			/* ... */
+> > 		}
+> > 		return 0;
+> > 	}
+> > 
+> > When !CONFIG_OF and with your change, this will fail to build due to
+> > foobar_matches being undefined.
+> 
+> Good point. What would you think about
+> 
+> #define of_match_node(_matches, _node)  ((const struct of_device_id *)NULL)
 
-> The initial versions of the devicetree enablement patches for ohci-platform
-> used "ohci-platform" as compatible string. However this was disliked by various
-> reviewers because the platform bus is a Linux invention and devicetree is
-> supposed to be OS agnostic. After much discussion I gave up and went with
-> the generic usb-ohci as requested.
-> 
-> In retro-spect I should have chosen something different, the dts files for many
-> existing boards already claim to be compatible with "usb-ohci", ie they have:
-> 
-> 	compatible = "ti,ohci-omap3", "usb-ohci";
-> 
-> In theory this should not be a problem since the "ti,ohci-omap3" entry takes
-> presedence, but in practice using a conflicting compatible string is an issue,
-> because it makes which driver gets used depend on driver registration order.
-> 
-> This patch changes the compatible string claimed by ohci-platform to
-> "generic-ohci", avoiding the driver registration / module loading ordering
-> problems.
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+I've just sent out a patchset that cleans up at least a couple of users
+that directly do of_match_node(matches, np)->data using
+of_find_matching_node_and_match.  Not sure if that will fix the usage
+you have in mind, though.
 
-For both v2 patches:
+I am a bit weary about having an of_match_node() user that both directly
+dereferences the result (i.e. of_match_node(matches, np)->data) _and_
+builds when !CONFIG_OF; most likely due to a traumatic childhood event
+where demons flew out my nose.
 
-Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
