@@ -1,61 +1,73 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH] ARM: tegra: dalmore: fix irq trigger type
-Date: Tue, 11 Feb 2014 22:21:15 +0100
-Message-ID: <30f0db808e7543d9ab6b077aa5e239f2@agner.ch>
-References: <4fcfcfdbc86c37c6d47ec32cdbd987f3b406e9b5.1392147256.git.stefan@agner.ch>
- <20140211204737.GA1895@mithrandir>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: Turn of_match_node into a static inline when
+ CONFIG_OF isn't set
+Date: Tue, 11 Feb 2014 15:30:33 -0600
+Message-ID: <CAL_JsqKnsr-9nSjCGvroC0nDK36vQUnwMWj=cPjvUbRymmHFOQ@mail.gmail.com>
+References: <1392122211-11422-1-git-send-email-laurent.pinchart@ideasonboard.com>
+	<1596542.hkJp71u3OJ@avalon>
+	<20140211164825.GC841@joshc.qualcomm.com>
+	<6446980.WMjvBYStRY@avalon>
+	<20140211180845.GG841@joshc.qualcomm.com>
+	<CAMuHMdVkPLe5986hYPApoQr7oJSb6U2P71=nP+9mtvtaskdHXg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140211204737.GA1895@mithrandir>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdVkPLe5986hYPApoQr7oJSb6U2P71=nP+9mtvtaskdHXg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 2014-02-11 21:47, schrieb Thierry Reding:
-> On Tue, Feb 11, 2014 at 09:11:32PM +0100, Stefan Agner wrote:
->> Trigger type needs to be IRQ_TYPE_LEVEL_HIGH since the interrupt
->> signal gets inverted by the PMC (configured by the invert-interrupt
->> property).
-> 
-> Isn't the reason the other way around? The PMIC generates a low-level
-> interrupt, but the GIC can only be configured to accept high-level (or
-> rising edge) and therefore the nvidia,invert-interrupt property needs to
-> be set in the PMC node?
-Hm yes agreed. I should also write the whole story here, maybe this:
+On Tue, Feb 11, 2014 at 12:29 PM, Geert Uytterhoeven
+<geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> On Tue, Feb 11, 2014 at 7:08 PM, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>> It sure would be convenient if platform_device had a 'const struct
+>> of_device_id *of_id_entry' member similar to the existing struct
+>> platform_device_id one, that was set up during platform device matching.
+>> Most platform_driver users of of_match_node() would simply go away.
+>
+> Can't the entry be shared for both platform_device_id and of_device_id?
+> Only one of them can be valid at the same time, right?
+>
+> Ideally, all xxx_device_id look like
+>
+>     struct xxx_device_id {
+>             ... /* bus-specific ID information */
+>             kernel_ulong_t driver_data;
+>     };
+>
+> This may be formalized in some way, using a base class, but thay may
+> require reordering the fields, like:
+>
+>     struct base_device_id {
+>             kernel_ulong_t driver_data;
+>             long id[0];
+>     };
+>
 
-The GIC only support high-active interrupts. When using a PMIC with
-low-active interrupt, the PMC has to be configured by using the
-nvidia,invert-interrupt property in its node.
+I believe this is the reason drivers have to call of_match_device:
 
-This fix sets the GIC back to high-active and reverts commit
-eca8f98e404934027f84f72882c5e92ffbd9e5f5.
+commit b1608d69cb804e414d0887140ba08a9398e4e638
+Author: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Date:   Wed May 18 11:19:24 2011 -0600
 
-> One nitpick below.
-> 
->> diff --git a/arch/arm/boot/dts/tegra114-dalmore.dts b/arch/arm/boot/dts/tegra114-dalmore.dts
-> [...]
->> @@ -888,8 +888,9 @@
->>  		palmas: tps65913@58 {
->>  			compatible = "ti,palmas";
->>  			reg = <0x58>;
->> -			interrupts = <0 86 IRQ_TYPE_LEVEL_LOW>;
->>
->> +			/* active-low configured by PMC invert-interrupt */
->> +			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-> 
-> I'd prefer to keep the properties grouped as before. interrupts is a
-> "client" property, whereas #interrupt-cells and interrupt-controller
-> are "provider" properties.
-> 
-> And I think the comment would be more appropriate in the pmc node, for
-> the same reason that I think the commit description isn't entirely
-> accurate.
-Well, its kind a question where you are coming from. I read the data
-sheet/schemata, and saw that its low-active. Then I went to the PMIC
-node and checked how that interrupt is configured, and what you see is
-HIGH_ACTIVE. You then think you've found the bug and fix it by setting
-it to IRQ_TYPE_LEVEL_LOW. What you don't know is that PMC is in between
-and alters the polarity...
+    drivercore: revert addition of of_match to struct device
+
+    Commit b826291c, "drivercore/dt: add a match table pointer to struct
+    device" added an of_match pointer to struct device to cache the
+    of_match_table entry discovered at driver match time.  This was unsafe
+    because matching is not an atomic operation with probing a driver.  If
+    two or more drivers are attempted to be matched to a driver at the
+    same time, then the cached matching entry pointer could get
+    overwritten.
+
+    This patch reverts the of_match cache pointer and reworks all users to
+    call of_match_device() directly instead.
+
+    Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
