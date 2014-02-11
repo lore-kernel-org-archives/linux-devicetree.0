@@ -1,51 +1,37 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: [PATCH 6/8] ARM: l2x0: make use of of_find_matching_node_and_match
-Date: Tue, 11 Feb 2014 10:24:04 -0600
-Message-ID: <1392135847-30791-7-git-send-email-joshc@codeaurora.org>
-References: <1392135847-30791-1-git-send-email-joshc@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1392135847-30791-1-git-send-email-joshc@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 0/2] ohci-/ehci-platform: Change compatible
+ string to generic-?hci
+Date: Tue, 11 Feb 2014 17:35:27 +0100
+Message-ID: <1392136529-5060-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBZVC5GLQKGQEE3JI2GI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Instead of the of_find_matching_node()/of_match_node() pair, which requires two
-iterations through the match table, make use of of_find_matching_node_and_match(),
-which only iterates through the table once.
+Hi Greg,
 
-Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
----
- arch/arm/mm/cache-l2x0.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+And here is v2 of my ohci-/ehci-platform fixes for the regression of USB
+support on various ARM boards I caused in linux-next.
 
-diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-index 7abde2c..e35fff3 100644
---- a/arch/arm/mm/cache-l2x0.c
-+++ b/arch/arm/mm/cache-l2x0.c
-@@ -970,11 +970,12 @@ static const struct of_device_id l2x0_ids[] __initconst = {
- 
- int __init l2x0_of_init(u32 aux_val, u32 aux_mask)
- {
-+	const struct of_device_id *match;
- 	struct device_node *np;
- 	const struct l2x0_of_data *data;
- 	struct resource res;
- 
--	np = of_find_matching_node(NULL, l2x0_ids);
-+	np = of_find_matching_node_and_match(NULL, l2x0_ids, &match);
- 	if (!np)
- 		return -ENODEV;
- 
-@@ -987,7 +988,7 @@ int __init l2x0_of_init(u32 aux_val, u32 aux_mask)
- 
- 	l2x0_saved_regs.phy_base = res.start;
- 
--	data = of_match_node(l2x0_ids, np)->data;
-+	data = match->data;
- 
- 	/* L2 configuration can only be changed if the cache is disabled */
- 	if (!(readl_relaxed(l2x0_base + L2X0_CTRL) & L2X0_CTRL_EN)) {
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+As expected some people still did not like the ?hci-platform compatible
+string I went for in v1, hence this v2. The good news is it seems everyone
+seems to be able to live with generic-?hci as compatible now, so it seems this
+issue is finally settled.
+
+Please add these 2 patches to your usb-next tree, as said in the cover-letter
+of v1, I'm fine with you squashing these into the first 2 patches of my
+original series, but if you want them separate to preserve history that is
+fine too.
+
+Thanks & Regards,
+
+Hans
