@@ -1,45 +1,65 @@
-From: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 0/2] ohci-/ehci-platform: Change
- compatible string to generic-?hci
-Date: Tue, 11 Feb 2014 09:53:15 -0800
-Message-ID: <7h7g917cz8.fsf@paris.lan>
-References: <1392136529-5060-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [Patch v5 1/2] dmaengine: add Qualcomm BAM dma driver
+Date: Tue, 11 Feb 2014 23:33:44 +0530
+Message-ID: <20140211180344.GS10628@intel.com>
+References: <1391546556-27702-1-git-send-email-agross@codeaurora.org>
+ <1391546556-27702-2-git-send-email-agross@codeaurora.org>
+ <20140211173048.GP10628@intel.com>
+ <20140211174910.GE841@joshc.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDU4XO4JWMDBBDOH5GLQKGQEM6YUAJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1392136529-5060-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> (Hans de
-	Goede's message of "Tue, 11 Feb 2014 17:35:27 +0100")
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140211174910.GE841@joshc.qualcomm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Josh Cartwright <joshc@codeaurora.org>
+Cc: Andy Gross <agross@codeaurora.org>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> writes:
+On Tue, Feb 11, 2014 at 11:49:10AM -0600, Josh Cartwright wrote:
+> On Tue, Feb 11, 2014 at 11:00:48PM +0530, Vinod Koul wrote:
+> > On Tue, Feb 04, 2014 at 02:42:35PM -0600, Andy Gross wrote:
+> > > Add the DMA engine driver for the QCOM Bus Access Manager (BAM) DMA controller
+> > > found in the MSM 8x74 platforms.
+> > > 
+> > > Each BAM DMA device is associated with a specific on-chip peripheral.  Each
+> > > channel provides a uni-directional data transfer engine that is capable of
+> > > transferring data between the peripheral and system memory (System mode), or
+> > > between two peripherals (BAM2BAM).
+> > > 
+> > > The initial release of this driver only supports slave transfers between
+> > > peripherals and system memory.
+> > > 
+> > > Signed-off-by: Andy Gross <agross@codeaurora.org>
+> >
+> > > +++ b/drivers/dma/qcom_bam_dma.c
+> [..]
+> > > +static void bam_reset_channel(struct bam_chan *bchan)
+> > > +{
+> > > +	struct bam_device *bdev = bchan->bdev;
+> > > +
+> > > +	/* reset channel */
+> > > +	writel_relaxed(1, bdev->regs + BAM_P_RST(bchan->id));
+> > > +	writel_relaxed(0, bdev->regs + BAM_P_RST(bchan->id));
+> > > +
+> > > +	/* don't allow reorder of the channel reset */
+> > > +	wmb();
+> > Documentation/memory-barriers.txt describes wmb() as a CPU barier but based on
+> > above you want it to be a compiler barrier then you should do 1st write,
+> > barrier(), second write.
+> 
+> It could also be that the intent was to prevent these writes from being
+> ordered before setting the initialized flag below, either way the
+> comment could be made clearer.
+yes for that case, but i am suspecting the comment is correct as it would make
+sense to ensure reset is in sequence...
 
-> Hi Greg,
->
-> And here is v2 of my ohci-/ehci-platform fixes for the regression of USB
-> support on various ARM boards I caused in linux-next.
->
-> As expected some people still did not like the ?hci-platform compatible
-> string I went for in v1, hence this v2. The good news is it seems everyone
-> seems to be able to live with generic-?hci as compatible now, so it seems this
-> issue is finally settled.
->
-> Please add these 2 patches to your usb-next tree, as said in the cover-letter
-> of v1, I'm fine with you squashing these into the first 2 patches of my
-> original series, but if you want them separate to preserve history that is
-> fine too.
-
-I tested this series on top of next-20140211 on the OMAP platforms where
-I noticed the regressions, and confirm it fixes the problem.
-
-Tested-by: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-Kevin
+-- 
+~Vinod
+> 
+> > > +
+> > > +	/* make sure hw is initialized when channel is used the first time  */
+> > > +	bchan->initialized = 0;
+> > > +}
+> 
+-- 
