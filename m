@@ -1,45 +1,55 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: [PATCH 8/8] cpufreq: ppc: make use of of_find_matching_node_and_match
-Date: Tue, 11 Feb 2014 10:24:06 -0600
-Message-ID: <1392135847-30791-9-git-send-email-joshc@codeaurora.org>
-References: <1392135847-30791-1-git-send-email-joshc@codeaurora.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC PATCH] [media]: of: move graph helpers from
+ drivers/media/v4l2-core to drivers/of
+Date: Tue, 11 Feb 2014 10:30:57 -0600
+Message-ID: <CAL_Jsq+_81fUgio9mwscv__-4P6rUy-nHesnzCCUmdu+amhYPg@mail.gmail.com>
+References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de>
+	<CAL_Jsq+U9zU1i+STLHMBjY5BeEP6djYnJVE5X1ix-D2q_zWztQ@mail.gmail.com>
+	<20140211145248.GI26684@n2100.arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1392135847-30791-1-git-send-email-joshc@codeaurora.org>
+In-Reply-To: <20140211145248.GI26684@n2100.arm.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Instead of the of_find_matching_node()/of_match_node() pair, which requires two
-iterations through the match table, make use of of_find_matching_node_and_match(),
-which only iterates through the table once.
+On Tue, Feb 11, 2014 at 8:52 AM, Russell King - ARM Linux
+<linux@arm.linux.org.uk> wrote:
+> On Tue, Feb 11, 2014 at 07:56:33AM -0600, Rob Herring wrote:
+>> On Tue, Feb 11, 2014 at 5:45 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+>> > This allows to reuse the same parser code from outside the V4L2 framework,
+>> > most importantly from display drivers. There have been patches that duplicate
+>> > the code (and I am going to send one of my own), such as
+>> > http://lists.freedesktop.org/archives/dri-devel/2013-August/043308.html
+>> > and others that parse the same binding in a different way:
+>> > https://www.mail-archive.com/linux-omap@vger.kernel.org/msg100761.html
+>> >
+>> > I think that all common video interface parsing helpers should be moved to a
+>> > single place, outside of the specific subsystems, so that it can be reused
+>> > by all drivers.
+>>
+>> Perhaps that should be done rather than moving to drivers/of now and
+>> then again to somewhere else.
+>
+> Do you have a better suggestion where it should move to?
 
-Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
----
- drivers/cpufreq/ppc-corenet-cpufreq.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+No.
 
-diff --git a/drivers/cpufreq/ppc-corenet-cpufreq.c b/drivers/cpufreq/ppc-corenet-cpufreq.c
-index 051000f..041ef3a 100644
---- a/drivers/cpufreq/ppc-corenet-cpufreq.c
-+++ b/drivers/cpufreq/ppc-corenet-cpufreq.c
-@@ -278,7 +278,7 @@ static int __init ppc_corenet_cpufreq_init(void)
- 	const struct soc_data *data;
- 	unsigned int cpu;
- 
--	np = of_find_matching_node(NULL, node_matches);
-+	np = of_find_matching_node_and_match(NULL, node_matches, &match);
- 	if (!np)
- 		return -ENODEV;
- 
-@@ -288,7 +288,6 @@ static int __init ppc_corenet_cpufreq_init(void)
- 		cpumask_copy(per_cpu(cpu_mask, cpu), cpu_core_mask(cpu));
- 	}
- 
--	match = of_match_node(node_matches, np);
- 	data = match->data;
- 	if (data) {
- 		if (data->flag)
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+> drivers/gpu/drm - no, because v4l2 wants to use it
+> drivers/media/video - no, because DRM drivers want to use it
+> drivers/video - no, because v4l2 and drm drivers want to use it
+
+I don't believe it exists currently, so it would need to be created.
+Perhaps adding a layer of directory to combine these. This patch alone
+is not enough to really justify that, but if there's a lot more shared
+code possible then it would be the right direction.
+
+> Maybe drivers/of-graph/ ?  Or maybe it's just as good a place to move it
+> into drivers/of ?
+
+I assume you weren't serious, but no for /of-graph. If a better place
+can't be found/made, I'll take it.
+
+Rob
