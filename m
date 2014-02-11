@@ -1,184 +1,124 @@
-From: Zhou Zhu <zzhu3-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] video: mmp: add device tree support
-Date: Tue, 11 Feb 2014 11:27:51 +0800
-Message-ID: <52F998B7.7060203@marvell.com>
-References: <1389698184-28761-1-git-send-email-zzhu3@marvell.com> <1389698184-28761-5-git-send-email-zzhu3@marvell.com> <52F8C96F.7050107@ti.com>
+From: Mohit KUMAR DCG <Mohit.KUMAR@st.com>
+Subject: RE: [PATCH V5 4/8] phy: st-miphy-40lp: Add skeleton driver
+Date: Tue, 11 Feb 2014 11:57:46 +0800
+Message-ID: <2CC2A0A4A178534D93D5159BF3BCB66189FD2CAA9B@EAPEX1MAIL1.st.com>
+References: <cover.1391871170.git.pratyush.anand@st.com>
+ <fb505abd332645671d9ad125003d8253b6346715.1391871170.git.pratyush.anand@st.com>
+ <201402101654.22187.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52F8C96F.7050107-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chao Xie <cxie4-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Guoqing Li <ligq-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201402101654.22187.arnd@arndb.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Pratyush ANAND <pratyush.anand@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, spear-devel <spear-devel@list.st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/10/2014 08:43 PM, Tomi Valkeinen wrote:
-> On 14/01/14 13:16, Zhou Zhu wrote:
->> add device tree support for mmp fb/controller
->> the description of DT config is at
->> Documentation/devicetree/bindings/fb/mmp-disp.txt
->>
->> Signed-off-by: Zhou Zhu <zzhu3-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
->> ---
->>   Documentation/devicetree/bindings/fb/mmp-disp.txt |   60 ++++++++
->>   drivers/video/mmp/fb/mmpfb.c                      |   73 ++++++----
->>   drivers/video/mmp/hw/mmp_ctrl.c                   |  160 ++++++++++++++++-----
->>   3 files changed, 235 insertions(+), 58 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/fb/mmp-disp.txt
->>
->> diff --git a/Documentation/devicetree/bindings/fb/mmp-disp.txt b/Documentation/devicetree/bindings/fb/mmp-disp.txt
->> new file mode 100644
->> index 0000000..80702f5
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/fb/mmp-disp.txt
->> @@ -0,0 +1,60 @@
->> +* Marvell MMP Display (MMP_DISP)
->> +
->> +To config mmp display, 3 parts are required to be set in dts:
->> +1. mmp fb
->> +Required properties:
->> +- compatible: Should be "marvell,<soc>-fb".
->> +- marvell,path: Should be the path this fb connecting to.
->> +- marvell,overlay-id: Should be the id of overlay this fb is on.
->> +- marvell,dmafetch-id: Should be the dma fetch id this fb using.
->> +- marvell,default-pixfmt: Should be the default pixel format when this fb is
->> +turned on.
->> +
->> +2. mmp controller
->> +Required properties:
->> +- compatible: Should be "marvell,<soc>-disp".
->> +- reg: Should be address and length of the register set for this controller.
->> +- interrupts: Should be interrupt of this controller.
->> +
->> +Required sub-node:
->> +- path:
->> +Required properties in this sub-node:
->> +-- marvell,overlay_num: Should be number of overlay this path has.
->
-> If that one tells how many overlays there are, maybe "num_overlays"
-> would be better.
-I will update it in next version.
->
->> +-- marvell,output-type: Should be output-type settings
->> +-- marvell,path-config: Should be path-config settings
->> +-- marvell,link-config: Should be link-config settings
->> +-- marvell,rbswap: Should be rbswap settings
->
-> If these terms (output-type, path-config, ...) are straight from the HW
-> manual, then fine. But if they are not clear, or are driver specific,
-> the values these can have should be documented here.
-Yes, it's straight from HW manual.
->
->> +
->> +3. panel
->> +Required properties:
->> +- marvell,path: Should be path that this panel connected to.
->> +- other properties each panel has.
->> +
->> +Examples:
->> +
->> +fb: mmp-fb {
->> +	compatible = "marvell,pxa988-fb";
->> +	marvell,path = <&path1>;
->> +	marvell,overlay-id = <0>;
->> +	marvell,dmafetch-id = <1>;
->> +	marvell,default-pixfmt = <0x108>;
->> +};
->> +
->> +disp: mmp-disp@d420b000 {
->> +	compatible = "marvell,pxa988-disp";
->> +	reg = <0xd420b000 0x1fc>;
->> +	interrupts = <0 41 0x4>;
->> +	path1: mmp-pnpath {
->> +		marvell,overlay-num = <2>;
->> +		marvell,output-type = <0>;
->> +		marvell,path-config = <0x20000000>;
->> +		marvell,link-config = <0x60000001>;
->> +		marvell,rbswap = <0>;
->> +	};
->> +};
->> +
->> +panel: <panel-name> {
->
-> How is the panel linked to all this? The nodes above do not refer to the
-> panel.
-We are making panel refer to path, so when panel dev probe, it could 
-register to related path.
-The reason we not link from path to panel is our customer sometimes 
-asked us to use same image pack (include dts) for different panel types 
-in product. We could only add all these panels in dts and detect panel 
-dynamically when boot. So moving panel out and making path not link to 
-panel but panel link to path would be more straight forward.
->
->> +	...
->> +	marvell,path = <&path1>;
->> +	...
->> +};
->
-> It's a bit difficult to say much about this, as I have no knowledge
-> about mmp.
->
-> But I don't quite understand what the pxa988-fb is. Is that some kind of
-> virtual device, only used to set up fbdev side? And pxa988-disp is the
-> actual hardware device?
->
-> If so, I don't really think pxa988-fb should exist in the DT data at
-> all, as it's not a hardware device.
-Yes, fb is a virtual device for fbdev side.
-In our platforms we may use more than one fb for different paths/output 
-panel or multi overlays on same path for composition. So we need to 
-configure fb settings like which path/overlay/dmafetch it connected to 
-for one or more fbdev.
-Besides, some more configures like yres_virtual size or fixed fb mem 
-reserved rather than allocated which depends on platforms are also 
-needed although these features are not upstreamed yet.
-So we put fb as a dt node here for these configures.
->
-> Why isn't there just one node for pxa988-disp, which would contain all
-> the above information?
-We have moved out fb/panel from path due to several reasons:
-1. To simplify the node. If moved these nodes in, it might be:
-disp {
-	...
-	path1 {
-		...
-		panel-xxx {
-		}
-		panel-yyy {
-		}
-		...
-		fb0 {
-		}
-		fb1 {
-		}
-	}
-	path2 {
-		...
-		panel-zzz {
-		}
-		fb3 {
-		}
-	}
-}
-Also due to child node type might be different, we could even not 
-directly check child of node. The code would be complex.
-2. the path of node would be too long and not so common.
-e.g. the panel node in dts would be /soc/axi/disp/path1/panel-xxx, and 
-in sysfs, node would be /sys/devices/platform/soc/axi/path1/panel-xxx. 
-It would be complex and not compatible for platforms when our 
-bootloader/user app doing some operations to these nodes.
-If we moved them out, we could move fb/panel out of soc directory so the 
-node would be /panel-xxx or /fb1 and simpler and compatible.
->
->   Tomi
->
->
+Hello Arnd,
 
+> -----Original Message-----
+> From: Arnd Bergmann [mailto:arnd@arndb.de]
+> Sent: Monday, February 10, 2014 9:24 PM
+> To: Mohit KUMAR DCG
+> Cc: Pratyush ANAND; Kishon Vijay Abraham I; spear-devel; linux-arm-
+> kernel@lists.infradead.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Subject: Re: [PATCH V5 4/8] phy: st-miphy-40lp: Add skeleton driver
+> 
+> On Monday 10 February 2014, Mohit Kumar wrote:
+> > diff --git a/Documentation/devicetree/bindings/phy/st-miphy40lp.txt
+> > b/Documentation/devicetree/bindings/phy/st-miphy40lp.txt
+> > new file mode 100644
+> > index 0000000..d0c7096
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/st-miphy40lp.txt
+> > @@ -0,0 +1,12 @@
+> > +Required properties:
+> > +- compatible : should be "st,miphy40lp-phy"
+> > +	Other supported soc specific compatible:
+> > +		"st,spear1310-miphy"
+> > +		"st,spear1340-miphy"
+> > +- reg : offset and length of the PHY register set.
+> > +- misc: phandle for the syscon node to access misc registers
+> > +- phy-id: Instance id of the phy.
+> > +- #phy-cells : from the generic PHY bindings, must be 1.
+> > +	- 1st cell: phandle to the phy node.
+> > +	- 2nd cell: 0 if phy (in 1st cell) is to be used for SATA, 1 for PCIe
+> > +	  and 2 for Super Speed USB.
+> 
+> It's common to start this file with a small header explaining what this
+> hardware is.
 
--- 
-Thanks, -Zhou
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- OK
+
+> 
+> > diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig index
+> > afa2354..2f58993 100644
+> > --- a/drivers/phy/Kconfig
+> > +++ b/drivers/phy/Kconfig
+> > @@ -64,4 +64,10 @@ config BCM_KONA_USB2_PHY
+> >  	help
+> >  	  Enable this to support the Broadcom Kona USB 2.0 PHY.
+> >
+> > +config PHY_ST_MIPHY40LP
+> > +	tristate "ST MIPHY 40LP driver"
+> > +	help
+> > +	  Support for ST MIPHY 40LP which can be used for PCIe, SATA and
+> Super Speed USB.
+> > +	select GENERIC_PHY
+> > +
+> >  endmenu
+> 
+> The 'select' statement should come before 'help', for consistency with the
+> rest of the kernel.
+
+- OK
+
+> Maybe mention that this phy is used inside the spear13xx
+> SoC here rather than a standalone phy.
+
+- Yes, for spear13xx its used internally. Do you think that it requires to be mentioned here? 
+We have few prototype boards that uses this as external phy.
+
+> > +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> > +	if (!priv) {
+> > +		dev_err(dev, "can't alloc miphy40lp private date
+> memory\n");
+> > +		return -ENOMEM;
+> > +	}
+> > +
+> > +	priv->plat_ops = (struct miphy40lp_plat_ops *)of_id->data;
+> 
+> The cast would incorrectly remove the 'const' attribute of the pointer.
+> Better remove the cast and make priv->plat_ops const.
+
+- OK
+
+> 
+> > +static int __init miphy40lp_phy_init(void) {
+> > +
+> > +	return platform_driver_probe(&miphy40lp_driver,
+> > +				miphy40lp_probe);
+> > +}
+> > +module_init(miphy40lp_phy_init);
+> 
+> There should certainly be a module_exit() function here so you can unload
+> the driver.
+
+- yes, will add it in v6.
+
+Thanks
+Mohit
+
+> 
+> 	Arnd
