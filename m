@@ -1,67 +1,37 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH 10/14] Documentation: mfd: s2mps11: Document support for S2MPS14
-Date: Tue, 11 Feb 2014 14:03:53 +0100
-Message-ID: <1392123837-5517-11-git-send-email-k.kozlowski@samsung.com>
-References: <1392123837-5517-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1392123837-5517-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sangbeom Kim <sbkim73@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Tomasz Figa <t.figa@samsung.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: New mailing lists
+Date: Tue, 11 Feb 2014 13:13:01 +0000
+Message-ID: <CACxGe6sj2wKg_V6ey6f2wKCZMwOR6RbXqr+FMLTakM=QH6dYxg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Yoder Stuart-B08248 <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add bindings documentation for S2MPS14 device to the s2mps11 driver.
+Hi all,
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Tomasz Figa <t.figa@samsung.com>
-Cc: devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
----
- Documentation/devicetree/bindings/mfd/s2mps11.txt |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+As per the discussion two weeks ago[1], I've requested two new mailing
+lists; devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org and
+devicetree-compiler-u79uwXL29TaiAVqoAR/hOA@public.gmane.org The lists were created to help
+filter out the noise for specific device tree topics. The -compiler
+list is for discussion specifically related to dtc and other tools.
+The -spec list is for "core" binding discussions, so anything that
+affects entire subsystems or the kinds of things that would make sense
+to be added to ePAPR.
 
-diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-index 15ee89c3cc7b..f69bec294f02 100644
---- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
-+++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-@@ -1,5 +1,5 @@
- 
--* Samsung S2MPS11 Voltage and Current Regulator
-+* Samsung S2MPS11 and S2MPS14 Voltage and Current Regulator
- 
- The Samsung S2MPS11 is a multi-function device which includes voltage and
- current regulators, RTC, charger controller and other sub-blocks. It is
-@@ -7,7 +7,7 @@ interfaced to the host controller using an I2C interface. Each sub-block is
- addressed by the host system using different I2C slave addresses.
- 
- Required properties:
--- compatible: Should be "samsung,s2mps11-pmic".
-+- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-pmic".
- - reg: Specifies the I2C slave address of the pmic block. It should be 0x66.
- 
- Optional properties:
-@@ -59,10 +59,14 @@ supports. Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
- as per the datasheet of s2mps11.
- 
- 	- LDOn
--		  - valid values for n are 1 to 38
-+		  - valid values for n are:
-+			- S2MPS11: 1 to 38
-+			- S2MPS14: 1 to 25
- 		  - Example: LDO1, LD02, LDO28
- 	- BUCKn
--		  - valid values for n are 1 to 10.
-+		  - valid values for n are:
-+			- S2MPS11: 1 to 10
-+			- S2MPS14: 1 to 5
- 		  - Example: BUCK1, BUCK2, BUCK9
- 
- Example:
--- 
-1.7.9.5
+Here are the subscribe links:
+http://vger.kernel.org/vger-lists.html#devicetree-compiler
+http://vger.kernel.org/vger-lists.html#devicetree-spec
+
+Archives for all devicetree lists can be found here:
+http://gmane.org/find.php?list=devicetree
+
+g.
+
+[1] http://www.spinics.net/lists/devicetree/msg19209.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
