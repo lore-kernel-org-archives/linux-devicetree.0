@@ -1,55 +1,67 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC PATCH] [media]: of: move graph helpers from
- drivers/media/v4l2-core to drivers/of
-Date: Tue, 11 Feb 2014 10:30:57 -0600
-Message-ID: <CAL_Jsq+_81fUgio9mwscv__-4P6rUy-nHesnzCCUmdu+amhYPg@mail.gmail.com>
-References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de>
-	<CAL_Jsq+U9zU1i+STLHMBjY5BeEP6djYnJVE5X1ix-D2q_zWztQ@mail.gmail.com>
-	<20140211145248.GI26684@n2100.arm.linux.org.uk>
+From: Josh Cartwright <joshc@codeaurora.org>
+Subject: [PATCH 4/8] ARM: mvebu: make use of of_find_matching_node_and_match
+Date: Tue, 11 Feb 2014 10:24:02 -0600
+Message-ID: <1392135847-30791-5-git-send-email-joshc@codeaurora.org>
+References: <1392135847-30791-1-git-send-email-joshc@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140211145248.GI26684@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1392135847-30791-1-git-send-email-joshc@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 11, 2014 at 8:52 AM, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
-> On Tue, Feb 11, 2014 at 07:56:33AM -0600, Rob Herring wrote:
->> On Tue, Feb 11, 2014 at 5:45 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
->> > This allows to reuse the same parser code from outside the V4L2 framework,
->> > most importantly from display drivers. There have been patches that duplicate
->> > the code (and I am going to send one of my own), such as
->> > http://lists.freedesktop.org/archives/dri-devel/2013-August/043308.html
->> > and others that parse the same binding in a different way:
->> > https://www.mail-archive.com/linux-omap@vger.kernel.org/msg100761.html
->> >
->> > I think that all common video interface parsing helpers should be moved to a
->> > single place, outside of the specific subsystems, so that it can be reused
->> > by all drivers.
->>
->> Perhaps that should be done rather than moving to drivers/of now and
->> then again to somewhere else.
->
-> Do you have a better suggestion where it should move to?
+Instead of the of_find_matching_node()/of_match_node() pair, which requires two
+iterations through the match table, make use of of_find_matching_node_and_match(),
+which only iterates through the table once.
 
-No.
+While we're here, mark the of_system_controller table const.
 
-> drivers/gpu/drm - no, because v4l2 wants to use it
-> drivers/media/video - no, because DRM drivers want to use it
-> drivers/video - no, because v4l2 and drm drivers want to use it
+Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
+---
+ arch/arm/mach-mvebu/system-controller.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-I don't believe it exists currently, so it would need to be created.
-Perhaps adding a layer of directory to combine these. This patch alone
-is not enough to really justify that, but if there's a lot more shared
-code possible then it would be the right direction.
-
-> Maybe drivers/of-graph/ ?  Or maybe it's just as good a place to move it
-> into drivers/of ?
-
-I assume you weren't serious, but no for /of-graph. If a better place
-can't be found/made, I'll take it.
-
-Rob
+diff --git a/arch/arm/mach-mvebu/system-controller.c b/arch/arm/mach-mvebu/system-controller.c
+index a7fb89a..e6e300a 100644
+--- a/arch/arm/mach-mvebu/system-controller.c
++++ b/arch/arm/mach-mvebu/system-controller.c
+@@ -54,7 +54,7 @@ static const struct mvebu_system_controller orion_system_controller = {
+ 	.system_soft_reset = 0x1,
+ };
+ 
+-static struct of_device_id of_system_controller_table[] = {
++static const struct of_device_id of_system_controller_table[] = {
+ 	{
+ 		.compatible = "marvell,orion-system-controller",
+ 		.data = (void *) &orion_system_controller,
+@@ -90,13 +90,12 @@ void mvebu_restart(enum reboot_mode mode, const char *cmd)
+ 
+ static int __init mvebu_system_controller_init(void)
+ {
++	const struct of_device_id *match;
+ 	struct device_node *np;
+ 
+-	np = of_find_matching_node(NULL, of_system_controller_table);
++	np = of_find_matching_node_and_match(NULL, of_system_controller_table,
++					     &match);
+ 	if (np) {
+-		const struct of_device_id *match =
+-		    of_match_node(of_system_controller_table, np);
+-		BUG_ON(!match);
+ 		system_controller_base = of_iomap(np, 0);
+ 		mvebu_sc = (struct mvebu_system_controller *)match->data;
+ 		of_node_put(np);
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
