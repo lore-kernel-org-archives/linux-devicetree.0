@@ -1,83 +1,59 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 1/2] ohci-platform: Change compatible string
- from usb-ohci to generic-ohci
-Date: Tue, 11 Feb 2014 17:35:28 +0100
-Message-ID: <1392136529-5060-2-git-send-email-hdegoede@redhat.com>
-References: <1392136529-5060-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [RFC PATCH] [media]: of: move graph helpers from
+ drivers/media/v4l2-core to drivers/of
+Date: Tue, 11 Feb 2014 17:36:57 +0100
+Message-ID: <1392136617.6943.33.camel@pizza.hi.pengutronix.de>
+References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de>
+	 <CAL_Jsq+U9zU1i+STLHMBjY5BeEP6djYnJVE5X1ix-D2q_zWztQ@mail.gmail.com>
+	 <20140211145248.GI26684@n2100.arm.linux.org.uk> <8648675.AIXYyYlgXy@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRB2VC5GLQKGQEZHACLKA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1392136529-5060-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8648675.AIXYyYlgXy@avalon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <robherring2@gmail.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The initial versions of the devicetree enablement patches for ohci-platform
-used "ohci-platform" as compatible string. However this was disliked by various
-reviewers because the platform bus is a Linux invention and devicetree is
-supposed to be OS agnostic. After much discussion I gave up and went with
-the generic usb-ohci as requested.
+Am Dienstag, den 11.02.2014, 16:23 +0100 schrieb Laurent Pinchart:
+> Hi Russell,
+> 
+> On Tuesday 11 February 2014 14:52:48 Russell King - ARM Linux wrote:
+> > On Tue, Feb 11, 2014 at 07:56:33AM -0600, Rob Herring wrote:
+> > > On Tue, Feb 11, 2014 at 5:45 AM, Philipp Zabel wrote:
+> > > > This allows to reuse the same parser code from outside the V4L2
+> > > > framework, most importantly from display drivers. There have been
+> > > > patches that duplicate the code (and I am going to send one of my own),
+> > > > such as
+> > > > http://lists.freedesktop.org/archives/dri-devel/2013-August/043308.html
+> > > > and others that parse the same binding in a different way:
+> > > > https://www.mail-archive.com/linux-omap@vger.kernel.org/msg100761.html
+> > > > 
+> > > > I think that all common video interface parsing helpers should be moved
+> > > > to a single place, outside of the specific subsystems, so that it can
+> > > > be reused by all drivers.
+> > > 
+> > > Perhaps that should be done rather than moving to drivers/of now and
+> > > then again to somewhere else.
+> > 
+> > Do you have a better suggestion where it should move to?
+> > 
+> > drivers/gpu/drm - no, because v4l2 wants to use it
+> > drivers/media/video - no, because DRM drivers want to use it
+> > drivers/video - no, because v4l2 and drm drivers want to use it
+> 
+> Just pointing out a missing location (which might be rejected due to similar 
+> concerns), there's also drivers/media, which isn't V4L-specific.
 
-In retro-spect I should have chosen something different, the dts files for many
-existing boards already claim to be compatible with "usb-ohci", ie they have:
+Since drivers/Makefile has media/ in obj-y, moving the graph helpers to
+drivers/media should technically work.
 
-	compatible = "ti,ohci-omap3", "usb-ohci";
+> > Maybe drivers/of-graph/ ?  Or maybe it's just as good a place to move it
+> > into drivers/of ?
 
-In theory this should not be a problem since the "ti,ohci-omap3" entry takes
-presedence, but in practice using a conflicting compatible string is an issue,
-because it makes which driver gets used depend on driver registration order.
+include/media/of_graph.h,
+drivers/media/of_graph.c?
 
-This patch changes the compatible string claimed by ohci-platform to
-"generic-ohci", avoiding the driver registration / module loading ordering
-problems.
-
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- Documentation/devicetree/bindings/usb/usb-ohci.txt | 4 ++--
- drivers/usb/host/ohci-platform.c                   | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/usb/usb-ohci.txt b/Documentation/devicetree/bindings/usb/usb-ohci.txt
-index 6933b0c..45f67d9 100644
---- a/Documentation/devicetree/bindings/usb/usb-ohci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-ohci.txt
-@@ -1,7 +1,7 @@
- USB OHCI controllers
- 
- Required properties:
--- compatible : "usb-ohci"
-+- compatible : "generic-ohci"
- - reg : ohci controller register range (address and length)
- - interrupts : ohci controller interrupt
- 
-@@ -16,7 +16,7 @@ Optional properties:
- Example:
- 
- 	ohci0: usb@01c14400 {
--		compatible = "allwinner,sun4i-a10-ohci", "usb-ohci";
-+		compatible = "allwinner,sun4i-a10-ohci", "generic-ohci";
- 		reg = <0x01c14400 0x100>;
- 		interrupts = <64>;
- 		clocks = <&usb_clk 6>, <&ahb_gates 2>;
-diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
-index e2c28fd..b6ca0b2 100644
---- a/drivers/usb/host/ohci-platform.c
-+++ b/drivers/usb/host/ohci-platform.c
-@@ -319,7 +319,7 @@ static int ohci_platform_resume(struct device *dev)
- #endif /* CONFIG_PM */
- 
- static const struct of_device_id ohci_platform_ids[] = {
--	{ .compatible = "usb-ohci", },
-+	{ .compatible = "generic-ohci", },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, ohci_platform_ids);
--- 
-1.8.5.3
+regards
+Philipp
