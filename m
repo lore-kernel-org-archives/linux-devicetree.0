@@ -1,104 +1,102 @@
-From: Kevin Hilman <khilman@linaro.org>
-Subject: Re: regression(ti platforms): next-20140210 (ehci?)
-Date: Mon, 10 Feb 2014 17:07:02 -0800
-Message-ID: <7h38jq8nk9.fsf@paris.lan>
-References: <52F8F77B.70605@ti.com> <52F9117C.8000405@ti.com>
-	<7h61omakk9.fsf@paris.lan> <52F9297A.1080206@ti.com>
+From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 1/2] iio:as3935: Add DT binding docs for AS3935 driver
+Date: Mon, 10 Feb 2014 17:26:03 -0800
+Message-ID: <CAKzfze9gYNk40fJHhanrbNtM1nKHGBQwLhRyGrR59mXN3j-7gA@mail.gmail.com>
+References: <1392006451-7818-1-git-send-email-mranostay@gmail.com>
+	<1392006451-7818-2-git-send-email-mranostay@gmail.com>
+	<20140210105807.GU25314@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-next-owner@vger.kernel.org>
-In-Reply-To: <52F9297A.1080206@ti.com> (Nishanth Menon's message of "Mon, 10
-	Feb 2014 13:33:14 -0600")
-Sender: linux-next-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Roger Quadros <rogerq@ti.com>, linux-omap <linux-omap@vger.kernel.org>, linux-usb@vger.kernel.org, "Balbi, Felipe" <balbi@ti.com>, linux-next@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140210105807.GU25314-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Nishanth Menon <nm@ti.com> writes:
-
-> On 02/10/2014 12:28 PM, Kevin Hilman wrote:
->> Roger Quadros <rogerq@ti.com> writes:
->> 
->>> +devicetree
->>>
->>> On 02/10/2014 05:59 PM, Nishanth Menon wrote:
->>>> Hi,
->>>>
->>>> A quick note to report that I saw regression in today's next tag (logs
->>>> indicate around EHCI) boot on various TI platforms:
->>>>
->>>> Note: crane and sdp2430 are not expected to pass with
->>>> multi_v7_defconfig (note: omap2plus_defconfig boot seems to be sane
->>>> but USB is disabled there)
->>>>
->>>> next-20140210-multi_v7_defconfig
->>>>  1: am335x-evm:  Boot PASS: http://slexy.org/raw/s2zYHdPb94
->>>>  2:  am335x-sk:  Boot PASS: http://slexy.org/raw/s2UChLyzSE
->>>>  3: am3517-evm:  Boot FAIL: http://slexy.org/raw/s20Br9XLO1
->>>> around ehci
->>>>
->>>>  4:  am37x-evm:  Boot FAIL: http://slexy.org/raw/s20mVz9Wc7
->>>> around ehci
->>>>
->>>>  5: am43xx-epos:  Boot PASS: http://slexy.org/raw/s2byveBYtT
->>>>  6: BeagleBoard-XM:  Boot FAIL: http://slexy.org/raw/s21sOgJNwK
->>>> around ehci
->>>>
->>>>  7: BeagleBone-Black:  Boot PASS: http://slexy.org/raw/s2ovVNAmO7
->>>>  8:      crane: No Image built - Missing platform support?:
->>>>  9:       dra7:  Boot PASS: http://slexy.org/raw/s217qwaXsM
->>>> 10:        ldp:  Boot FAIL: http://slexy.org/raw/s203IvjE23
->>>> around ehci
->>>>
->>>> 11: PandaBoard-ES:  Boot FAIL: http://slexy.org/raw/s2NvkRx2YJ
->>>> around ehci
->>>
->>> I think the problem is that ehci-platform driver gets loaded instead of ehci-omap.
->>>
->>> In the DT node we have compatible ids for both. e.g. for omap4.dtsi
->>>
->>>                         usbhsehci: ehci@4a064c00 {
->>>                                 compatible = "ti,ehci-omap", "usb-ehci";
->>>                                 reg = <0x4a064c00 0x400>;
->>>                                 interrupt-parent = <&gic>;
->>>                                 interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
->>>                         };
->>>
->>> Shouldn't ehci-omap driver be getting a higher priority than usb-ehci?
->>>
->>> A quick fix would be to eliminate "usb-ehci" from the DT node of all failing platforms.
->> 
->> I can confirm that simply remvoing usb-ehci from omap[34].dtsi nodes
->> fixed the problem for me on 3530/overo, 3730/beagle-xM and
->> 4460/panda-es.  But I don't think that's the right fix.  First we have
->> to figure out why ehci-omap stopped getting loaded first.
+On Mon, Feb 10, 2014 at 2:58 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Mon, Feb 10, 2014 at 04:27:30AM +0000, Matt Ranostay wrote:
+>> Document compatible string, required and optional DT properties for
+>> AS3935 chipset driver.
+>>
+>> Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/iio/proximity/as3935.txt   | 27 ++++++++++++++++++++++
+>>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>>  2 files changed, 28 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/as3935.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/proximity/as3935.txt b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
+>> new file mode 100644
+>> index 0000000..0453254
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
+>> @@ -0,0 +1,27 @@
+>> +Austrian Microsystems AS3935 Franklin lightning sensor device driver
+>> +
+>> +Required properties:
+>> +     - compatible: must be "ams,as3935"
+>> +     - reg: SPI chip select number for the device
+>> +     - spi-cpha: SPI Mode 1. Refer to spi/spi-bus.txt for generic SPI
+>> +     slave node bindings.
+>> +     - interrupt-parent : should be the phandle for the interrupt controller
+>> +     - interrupts : interrupt mapping
 >
-> Wont that depend on driver probe order? of_match_device is fairly
-> simple compatible walk through without looking at other drivers which
-> might also be compatible, but not yet probed?
+> Nit: Please don't use the term "interrupt mapping", as it's undefined
+> and clashes with the "interrupt-map" property on an interrupt nexus.
+> There are a lot of bindings using it, and it would be nice to get them
+> fixed up too.
 >
-> The issue started I think with the following patch getting merged:
-> ehci-platform: Add support for clks and phy passed through devicetree
-> some version of http://www.spinics.net/lists/linux-usb/msg101061.html
-> introduced { .compatible = "usb-ehci", },
+> As interrupts can be described in a couple of ways it probably doesn't
+> make sense to state the exact format here, but could this be something
+> like the following instead:
+>
+> - interrupts: the sole interrupt generated by the device.
+>
 
-This is what I was getting at: an understanding of what caused the
-failue in the first place.
+Noted.
 
-> Now, in the build we have two drivers which dts claims compatibility
-> with, but only 1 driver actually works (drivers/usb/host/ehci-omap.c)
-> for the platform. Thinking that way, in fact, the current
-> compatibility even matches drivers/usb/host/ehci-ppc-of.c which
-> obviously wont work either.
+>> +
+>> +     Refer to interrupt-controller/interrupts.txt for generic
+>> +     interrupt client node bindings.
+>> +
+>> +Optional properties:
+>> +     - ams,tune-cap: Calibration tuning capacitor stepping value 0 - 120pF.
+>> +       This will require using the calibration data from the manufacturer.
+>
+> I think "tune-cap" is a little terse. Also "cap" is used as an
+> abbreviation for "capability" elsewhere, and it would be nice to make
+> it clear that in this case it means "capacitor".
+>
+> Could this be "ams,tuning-capacitor-pf" instead? That would make it
+> clear at a glance what the value is and the units (though people would
+> still ahve to refer to documentation to figure out precisely what this
+> means).
+>
+Yeah that would be a lot more clear. Noted for next version.
 
-Right, so I agree that it makes sense to remove a compatible string
-where there is no compatability, but a couple other things should happen
-here.
-
-1) changelog should describe why this compatible string is in the omap
-dtsi files in first place.
-
-2) investigation into the patch that introduced this change to double
-check it's not introducing other breakage as well.
-
-Kevin
+>> +
+>> +Example:
+>> +
+>> +as3935@0 {
+>> +     compatible = "ams,as3935";
+>> +     reg = <0>;
+>> +     spi-cpha;
+>> +     interrupt-parent = <&gpio1>;
+>> +     interrupts = <16 1>;
+>> +     ams,tune-cap = <80>;
+>> +};
+>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> index e9d19e2..03e50ff 100644
+>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> @@ -11,6 +11,7 @@ ak  Asahi Kasei Corp.
+>>  allwinner    Allwinner Technology Co., Ltd.
+>>  altr Altera Corp.
+>>  amcc Applied Micro Circuits Corporation (APM, formally AMCC)
+>> +ams  AMS AG
+>
+> The vendor-prefix addition looks fine to me.
+>
+> Thanks,
+> Mark.
