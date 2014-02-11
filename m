@@ -1,97 +1,61 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core
- to drivers/of
-Date: Tue, 11 Feb 2014 22:00:04 +0100 (CET)
-Message-ID: <Pine.LNX.4.64.1402112158230.521@axis700.grange>
-References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de>
- <CAL_Jsq+U9zU1i+STLHMBjY5BeEP6djYnJVE5X1ix-D2q_zWztQ@mail.gmail.com>
- <20140211145248.GI26684@n2100.arm.linux.org.uk> <8648675.AIXYyYlgXy@avalon>
- <1392136617.6943.33.camel@pizza.hi.pengutronix.de> <52FA5C5A.1090008@samsung.com>
- <20140212024119.7fc96f30.m.chehab@samsung.com>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: dalmore: fix irq trigger type
+Date: Tue, 11 Feb 2014 22:21:15 +0100
+Message-ID: <30f0db808e7543d9ab6b077aa5e239f2@agner.ch>
+References: <4fcfcfdbc86c37c6d47ec32cdbd987f3b406e9b5.1392147256.git.stefan@agner.ch>
+ <20140211204737.GA1895@mithrandir>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140212024119.7fc96f30.m.chehab@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <m.chehab@samsung.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Philipp Zabel <p.zabel@pengutronix.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140211204737.GA1895@mithrandir>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Feb 2014, Mauro Carvalho Chehab wrote:
-
-> Em Tue, 11 Feb 2014 18:22:34 +0100
-> Sylwester Nawrocki <s.nawrocki@samsung.com> escreveu:
+Am 2014-02-11 21:47, schrieb Thierry Reding:
+> On Tue, Feb 11, 2014 at 09:11:32PM +0100, Stefan Agner wrote:
+>> Trigger type needs to be IRQ_TYPE_LEVEL_HIGH since the interrupt
+>> signal gets inverted by the PMC (configured by the invert-interrupt
+>> property).
 > 
-> > (adding Guennadi to Cc)
-> > 
-> > On 11/02/14 17:36, Philipp Zabel wrote:
-> > > Am Dienstag, den 11.02.2014, 16:23 +0100 schrieb Laurent Pinchart:
-> > >> Hi Russell,
-> > >>
-> > >> On Tuesday 11 February 2014 14:52:48 Russell King - ARM Linux wrote:
-> > >>> On Tue, Feb 11, 2014 at 07:56:33AM -0600, Rob Herring wrote:
-> > >>>> On Tue, Feb 11, 2014 at 5:45 AM, Philipp Zabel wrote:
-> > >>>>> This allows to reuse the same parser code from outside the V4L2
-> > >>>>> framework, most importantly from display drivers. There have been
-> > >>>>> patches that duplicate the code (and I am going to send one of my own),
-> > >>>>> such as
-> > >>>>> http://lists.freedesktop.org/archives/dri-devel/2013-August/043308.html
-> > >>>>> and others that parse the same binding in a different way:
-> > >>>>> https://www.mail-archive.com/linux-omap@vger.kernel.org/msg100761.html
-> > >>>>>
-> > >>>>> I think that all common video interface parsing helpers should be moved
-> > >>>>> to a single place, outside of the specific subsystems, so that it can
-> > >>>>> be reused by all drivers.
-> > >>>>
-> > >>>> Perhaps that should be done rather than moving to drivers/of now and
-> > >>>> then again to somewhere else.
-> > >>>
-> > >>> Do you have a better suggestion where it should move to?
-> > >>>
-> > >>> drivers/gpu/drm - no, because v4l2 wants to use it
-> > >>> drivers/media/video - no, because DRM drivers want to use it
-> > >>> drivers/video - no, because v4l2 and drm drivers want to use it
-> > >>
-> > >> Just pointing out a missing location (which might be rejected due to similar 
-> > >> concerns), there's also drivers/media, which isn't V4L-specific.
-> > > 
-> > > Since drivers/Makefile has media/ in obj-y, moving the graph helpers to
-> > > drivers/media should technically work.
-> > > 
-> > >>> Maybe drivers/of-graph/ ?  Or maybe it's just as good a place to move it
-> > >>> into drivers/of ?
-> > > 
-> > > include/media/of_graph.h,
-> > > drivers/media/of_graph.c?
-> > 
-> > drivers/media sounds like a good alternative to me.
-> 
-> From my side, I'm ok with putting them at drivers/media. You may add my acked-by
-> for such change:
-> 
-> Acked-by: Mauro Carvalho Chehab <m.chehab@samsung.com>
+> Isn't the reason the other way around? The PMIC generates a low-level
+> interrupt, but the GIC can only be configured to accept high-level (or
+> rising edge) and therefore the nvidia,invert-interrupt property needs to
+> be set in the PMC node?
+Hm yes agreed. I should also write the whole story here, maybe this:
 
-Cannot see any problems with this
+The GIC only support high-active interrupts. When using a PMIC with
+low-active interrupt, the PMC has to be configured by using the
+nvidia,invert-interrupt property in its node.
 
-Acked-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+This fix sets the GIC back to high-active and reverts commit
+eca8f98e404934027f84f72882c5e92ffbd9e5f5.
 
-Thanks
-Guennadi
-
-> > I would just remove also v4l2_of_{parse/get}* and update the users
-> > to call of_graph_* directly, there should not be many of them.
-> > 
-> > --
-> > Thanks,
-> > Sylwester
+> One nitpick below.
 > 
-> -- 
+>> diff --git a/arch/arm/boot/dts/tegra114-dalmore.dts b/arch/arm/boot/dts/tegra114-dalmore.dts
+> [...]
+>> @@ -888,8 +888,9 @@
+>>  		palmas: tps65913@58 {
+>>  			compatible = "ti,palmas";
+>>  			reg = <0x58>;
+>> -			interrupts = <0 86 IRQ_TYPE_LEVEL_LOW>;
+>>
+>> +			/* active-low configured by PMC invert-interrupt */
+>> +			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
 > 
-> Cheers,
-> Mauro
+> I'd prefer to keep the properties grouped as before. interrupts is a
+> "client" property, whereas #interrupt-cells and interrupt-controller
+> are "provider" properties.
 > 
-
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+> And I think the comment would be more appropriate in the pmc node, for
+> the same reason that I think the commit description isn't entirely
+> accurate.
+Well, its kind a question where you are coming from. I read the data
+sheet/schemata, and saw that its low-active. Then I went to the PMIC
+node and checked how that interrupt is configured, and what you see is
+HIGH_ACTIVE. You then think you've found the bug and fix it by setting
+it to IRQ_TYPE_LEVEL_LOW. What you don't know is that PMC is in between
+and alters the polarity...
