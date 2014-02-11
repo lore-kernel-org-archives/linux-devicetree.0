@@ -1,159 +1,236 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v2 1/5] drivers: of: add initialization code for reserved memory
-Date: Tue, 11 Feb 2014 12:13:16 +0000
-Message-ID: <20140211121316.24032C40C4D@trevor.secretlab.ca>
-References: <1391515773-6112-1-git-send-email-m.szyprowski@samsung.com> < 1391515773-6112-2-git-send-email-m.szyprowski@samsung.com> <20140205110538. 99E47C40A89@trevor.secretlab.ca> <52FA0D6E.9090304@samsung.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <52FA0D6E.9090304@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: Kyungmin Park <kyungmin.park@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@gmail.com>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>
+From: Hans Verkuil <hansverk@cisco.com>
+Subject: Re: [PATCH 45/47] adv7604: Add DT support
+Date: Tue, 11 Feb 2014 13:14:07 +0100
+Message-ID: <52FA140F.9060200@cisco.com>
+References: <1391618558-5580-1-git-send-email-laurent.pinchart@ideasonboard.com> <1391618558-5580-46-git-send-email-laurent.pinchart@ideasonboard.com> <52F9EBF7.5020000@xs4all.nl> <2643485.CLBhVGBayq@avalon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <2643485.CLBhVGBayq@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Feb 2014 12:45:50 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
-> Hello,
-> 
-> On 2014-02-05 12:05, Grant Likely wrote:
-> > On Tue, 04 Feb 2014 13:09:29 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
-> > > This patch adds device tree support for contiguous and reserved memory
-> > > regions defined in device tree.
-> > >
-> > > Large memory blocks can be reliably reserved only during early boot.
-> > > This must happen before the whole memory management subsystem is
-> > > initialized, because we need to ensure that the given contiguous blocks
-> > > are not yet allocated by kernel. Also it must happen before kernel
-> > > mappings for the whole low memory are created, to ensure that there will
-> > > be no mappings (for reserved blocks) or mapping with special properties
-> > > can be created (for CMA blocks). This all happens before device tree
-> > > structures are unflattened, so we need to get reserved memory layout
-> > > directly from fdt.
-> > >
-> > > Later, those reserved memory regions are assigned to devices on each
-> > > device structure initialization.
-> > >
-> > > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> > > Cc: Laura Abbott <lauraa@codeaurora.org>
-> > > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > > [joshc: rework to implement new DT binding, provide mechanism for
-> > >  plugging in new reserved-memory node handlers via
-> > >  RESERVEDMEM_OF_DECLARE]
-> > > Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
-> > > [mszyprow: little code cleanup]
-> > > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > > ---
-> > >  drivers/of/Kconfig                |    6 +
-> > >  drivers/of/Makefile               |    1 +
-> > >  drivers/of/of_reserved_mem.c      |  219 +++++++++++++++++++++++++++++++++++++
-> > >  drivers/of/platform.c             |    7 ++
-> > >  include/asm-generic/vmlinux.lds.h |   11 ++
-> > >  include/linux/of_reserved_mem.h   |   62 +++++++++++
-> > >  6 files changed, 306 insertions(+)
-> > >  create mode 100644 drivers/of/of_reserved_mem.c
-> > >  create mode 100644 include/linux/of_reserved_mem.h
-> > >
-> > > diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> > > index c6973f101a3e..aba13df56f3a 100644
-> > > --- a/drivers/of/Kconfig
-> > > +++ b/drivers/of/Kconfig
-> > > @@ -75,4 +75,10 @@ config OF_MTD
-> > >  	depends on MTD
-> > >  	def_bool y
-> > >
-> > > +config OF_RESERVED_MEM
-> > > +	depends on HAVE_MEMBLOCK
-> > > +	def_bool y
-> > > +	help
-> > > +	  Helpers to allow for reservation of memory regions
-> > > +
-> > >  endmenu # OF
-> > > diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-> > > index efd05102c405..ed9660adad77 100644
-> > > --- a/drivers/of/Makefile
-> > > +++ b/drivers/of/Makefile
-> > > @@ -9,3 +9,4 @@ obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
-> > >  obj-$(CONFIG_OF_PCI)	+= of_pci.o
-> > >  obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
-> > >  obj-$(CONFIG_OF_MTD)	+= of_mtd.o
-> > > +obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
-> > > diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-> > > new file mode 100644
-> > > index 000000000000..f17cd56e68d9
-> > > --- /dev/null
-> > > +++ b/drivers/of/of_reserved_mem.c
-> > > @@ -0,0 +1,219 @@
-> > > +/*
-> > > + * Device tree based initialization code for reserved memory.
-> > > + *
-> > > + * Copyright (c) 2013, The Linux Foundation. All Rights Reserved.
-> > > + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-> > > + *		http://www.samsung.com
-> > > + * Author: Marek Szyprowski <m.szyprowski@samsung.com>
-> > > + * Author: Josh Cartwright <joshc@codeaurora.org>
-> > > + *
-> > > + * This program is free software; you can redistribute it and/or
-> > > + * modify it under the terms of the GNU General Public License as
-> > > + * published by the Free Software Foundation; either version 2 of the
-> > > + * License or (at your optional) any later version of the license.
-> > > + */
-> > > +#include <linux/memblock.h>
-> > > +#include <linux/err.h>
-> > > +#include <linux/of.h>
-> > > +#include <linux/of_fdt.h>
-> > > +#include <linux/of_platform.h>
-> > > +#include <linux/mm.h>
-> > > +#include <linux/sizes.h>
-> > > +#include <linux/of_reserved_mem.h>
-> > > +
-> > > +#define MAX_RESERVED_REGIONS	16
-> > > +static struct reserved_mem reserved_mem[MAX_RESERVED_REGIONS];
-> > > +static int reserved_mem_count;
-> > > +
-> > > +int __init of_parse_flat_dt_reg(unsigned long node, const char *uname,
-> > > +				   phys_addr_t *base, phys_addr_t *size)
-> >
-> > Useful utility function; move to drivers/of/fdt.c
-> >
-> > > +{
-> > > +	unsigned long len;
-> > > +	__be32 *prop;
-> > > +
-> > > +	prop = of_get_flat_dt_prop(node, "reg", &len);
-> > > +	if (!prop)
-> > > +		return -EINVAL;
-> > > +
-> > > +	if (len < (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32)) {
-> > > +		pr_err("Reserved memory: invalid reg property in '%s' node.\n",
-> > > +				uname);
-> > > +		return -EINVAL;
-> > > +	}
-> >
-> > This is /okay/ for an initial implementation, but it is naive. While I
-> > suggested making #address-cells and #size-cells equal the root node
-> > values for the purpose of simplicity, it should still be perfectly valid
-> > to have different values if the ranges property is correctly formed.
-> >
-> > > +
-> > > +	*base = dt_mem_next_cell(dt_root_addr_cells, &prop);
-> > > +	*size = dt_mem_next_cell(dt_root_size_cells, &prop);
-> >
-> > Future enhancement; allow for parsing more than just the first reg
-> > tuple.
-> 
-> One more question. Does it really makes any sense to support more than
-> one tuple for reg property? For consistency we should also allow more
-> than one entry in size, align and alloc-ranges property, but I don't
-> see any benefits for defining more than one range for a single region.
-> Same can be achieved by defining more regions instead if one really
-> needs such configuration.
 
-Yes, if only because it is an define usage of the reg property. If a
-devtree has multiple tuples in reg, then all of those tuples should be
-treated as reserved, even if the kernel doesn't know how to use them.
 
-I would not do the same for size/align/alloc-ranges unless there is a
-very specific use case that you can define. These ones are different
-from the static regions because they aren't ever used to protect
-something that already exists in the memory.
+On 02/11/14 13:08, Laurent Pinchart wrote:
+> Hi Hans,
+>=20
+> On Tuesday 11 February 2014 10:23:03 Hans Verkuil wrote:
+>> On 02/05/14 17:42, Laurent Pinchart wrote:
+>>> Parse the device tree node to populate platform data.
+>>>
+>>> Cc: devicetree@vger.kernel.org
+>>> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>>> ---
+>>>
+>>>  .../devicetree/bindings/media/i2c/adv7604.txt      |  56 +++++++++=
++++
+>>>  drivers/media/i2c/adv7604.c                        | 101 +++++++++=
++++++--
+>>>  2 files changed, 143 insertions(+), 14 deletions(-)
+>>>  create mode 100644
+>>>  Documentation/devicetree/bindings/media/i2c/adv7604.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.tx=
+t
+>>> b/Documentation/devicetree/bindings/media/i2c/adv7604.txt new file =
+mode
+>>> 100644
+>>> index 0000000..0845c50
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+>>> @@ -0,0 +1,56 @@
+>>> +* Analog Devices ADV7604/11 video decoder with HDMI receiver
+>>> +
+>>> +The ADV7604 and ADV7611 are multiformat video decoders with an int=
+egrated
+>>> HDMI +receiver. The ADV7604 has four multiplexed HDMI inputs and on=
+e
+>>> analog input, +and the ADV7611 has one HDMI input and no analog inp=
+ut.
+>>> +
+>>> +Required Properties:
+>>> +
+>>> +  - compatible: Must contain one of the following
+>>> +    - "adi,adv7604" for the ADV7604
+>>> +    - "adi,adv7611" for the ADV7611
+>>> +
+>>> +  - reg: I2C slave address
+>>> +
+>>> +  - hpd-gpios: References to the GPIOs that control the HDMI hot-p=
+lug
+>>> +    detection pins, one per HDMI input. The active flag indicates =
+the
+>>> GPIO
+>>> +    level that enables hot-plug detection.
+>>> +
+>>> +Optional Properties:
+>>> +
+>>> +  - reset-gpios: Reference to the GPIO connected to the device's r=
+eset
+>>> pin. +
+>>> +  - adi,default-input: Index of the input to be configured as defa=
+ult.
+>>> Valid +    values are 0..5 for the ADV7604 and 0 for the ADV7611.
+>>> +
+>>> +  - adi,disable-power-down: Boolean property. When set forces the =
+device
+>>> to +    ignore the power-down pin. The property is valid for the AD=
+V7604
+>>> only as +    the ADV7611 has no power-down pin.
+>>> +
+>>> +  - adi,disable-cable-reset: Boolean property. When set disables t=
+he HDMI
+>>> +    receiver automatic reset when the HDMI cable is unplugged.
+>>> +
+>>> +Example:
+>>> +
+>>> +	hdmi_receiver@4c {
+>>> +		compatible =3D "adi,adv7611";
+>>> +		reg =3D <0x4c>;
+>>> +
+>>> +		reset-gpios =3D <&ioexp 0 GPIO_ACTIVE_LOW>;
+>>> +		hpd-gpios =3D <&ioexp 2 GPIO_ACTIVE_HIGH>;
+>>> +
+>>> +		adi,default-input =3D <0>;
+>>> +
+>>> +		#address-cells =3D <1>;
+>>> +		#size-cells =3D <0>;
+>>> +
+>>> +		port@0 {
+>>> +			reg =3D <0>;
+>>> +		};
+>>> +		port@1 {
+>>> +			reg =3D <1>;
+>>> +			hdmi_in: endpoint {
+>>> +				remote-endpoint =3D <&ccdc_in>;
+>>> +			};
+>>> +		};
+>>> +	};
+>>> diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv760=
+4.c
+>>> index e586c1c..cd8a2dc 100644
+>>> --- a/drivers/media/i2c/adv7604.c
+>>> +++ b/drivers/media/i2c/adv7604.c
+>>> @@ -32,6 +32,7 @@
+>>>
+>>>  #include <linux/i2c.h>
+>>>  #include <linux/kernel.h>
+>>>  #include <linux/module.h>
+>>>
+>>> +#include <linux/of_gpio.h>
+>>>
+>>>  #include <linux/slab.h>
+>>>  #include <linux/v4l2-dv-timings.h>
+>>>  #include <linux/videodev2.h>
+>>>
+>>> @@ -2641,13 +2642,83 @@ static const struct adv7604_chip_info
+>>> adv7604_chip_info[] =3D {>=20
+>>>  	},
+>>> =20
+>>>  };
+>>>
+>>> +static struct i2c_device_id adv7604_i2c_id[] =3D {
+>>> +	{ "adv7604", (kernel_ulong_t)&adv7604_chip_info[ADV7604] },
+>>> +	{ "adv7611", (kernel_ulong_t)&adv7604_chip_info[ADV7611] },
+>>> +	{ }
+>>> +};
+>>> +MODULE_DEVICE_TABLE(i2c, adv7604_i2c_id);
+>>> +
+>>> +static struct of_device_id adv7604_of_id[] =3D {
+>>> +	{ .compatible =3D "adi,adv7604", .data =3D &adv7604_chip_info[ADV=
+7604] },
+>>> +	{ .compatible =3D "adi,adv7611", .data =3D &adv7604_chip_info[ADV=
+7611] },
+>>> +	{ }
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, adv7604_of_id);
+>>> +
+>>> +static int adv7604_parse_dt(struct adv7604_state *state)
+>>
+>> Put this under #ifdef CONFIG_OF.
+>=20
+> #ifdef CONFIG_OF has been discouraged. I'll add an IS_ENABLED(CONFIG_=
+OF) to=20
+> condition the call of adv7604_parse_dt() and let the compiler optimiz=
+e the=20
+> function out, but I've been recommended to fix compilation errors ins=
+tead of=20
+> using conditional compilation.
+>=20
+>> It fails to compile if CONFIG_OF is not set (as it is in my case sin=
+ce this
+>> driver is used with a PCIe card).
+>=20
+> What's the compilation failure ?
 
-g.
+drivers/media/i2c/adv7604.c: In function =91adv7604_parse_dt=92:
+drivers/media/i2c/adv7604.c:2671:48: warning: dereferencing =91void *=92=
+ pointer [enabled by default]
+  state->info =3D of_match_node(adv7604_of_id, np)->data;
+                                                ^
+drivers/media/i2c/adv7604.c:2671:48: error: request for member =91data=92=
+ in something not a structure or union
+make[3]: *** [drivers/media/i2c/adv7604.o] Error 1
 
+>=20
+>>> +{
+>>> +	struct device_node *np;
+>>> +	unsigned int i;
+>>> +	int ret;
+>>> +
+>>> +	np =3D state->i2c_clients[ADV7604_PAGE_IO]->dev.of_node;
+>>> +	state->info =3D of_match_node(adv7604_of_id, np)->data;
+>>> +
+>>> +	state->pdata.disable_pwrdnb =3D
+>>> +		of_property_read_bool(np, "adi,disable-power-down");
+>>> +	state->pdata.disable_cable_det_rst =3D
+>>> +		of_property_read_bool(np, "adi,disable-cable-reset");
+>>> +
+>>> +	ret =3D of_property_read_u32(np, "adi,default-input",
+>>> +				   &state->pdata.default_input);
+>>> +	if (ret < 0)
+>>> +		state->pdata.default_input =3D -1;
+>>> +
+>>> +	for (i =3D 0; i < state->info->num_dv_ports; ++i) {
+>>> +		enum of_gpio_flags flags;
+>>> +
+>>> +		state->pdata.hpd_gpio[i] =3D
+>>> +			of_get_named_gpio_flags(np, "hpd-gpios", i, &flags);
+>>> +		if (IS_ERR_VALUE(state->pdata.hpd_gpio[i]))
+>>> +			continue;
+>>> +
+>>> +		state->pdata.hpd_gpio_low[i] =3D flags =3D=3D OF_GPIO_ACTIVE_LOW=
+;
+>>> +	}
+>>> +
+>>> +	/* Disable the interrupt for now as no DT-based board uses it. */
+>>> +	state->pdata.int1_config =3D ADV7604_INT1_CONFIG_DISABLED;
+>>> +
+>>> +	/* Use the default I2C addresses. */
+>>> +	state->pdata.i2c_addresses[ADV7604_PAGE_AVLINK] =3D 0x42;
+>>> +	state->pdata.i2c_addresses[ADV7604_PAGE_CEC] =3D 0x40;
+>>> +	state->pdata.i2c_addresses[ADV7604_PAGE_INFOFRAME] =3D 0x3e;
+>>> +	state->pdata.i2c_addresses[ADV7604_PAGE_ESDP] =3D 0x38;
+>>> +	state->pdata.i2c_addresses[ADV7604_PAGE_DPP] =3D 0x3c;
+>>> +	state->pdata.i2c_addresses[ADV7604_PAGE_AFE] =3D 0x26;
+>>> +	state->pdata.i2c_addresses[ADV7604_PAGE_REP] =3D 0x32;
+>>> +	state->pdata.i2c_addresses[ADV7604_PAGE_EDID] =3D 0x36;
+>>> +	state->pdata.i2c_addresses[ADV7604_PAGE_HDMI] =3D 0x34;
+>>> +	state->pdata.i2c_addresses[ADV7604_PAGE_TEST] =3D 0x30;
+>>> +	state->pdata.i2c_addresses[ADV7604_PAGE_CP] =3D 0x22;
+>>> +	state->pdata.i2c_addresses[ADV7604_PAGE_VDP] =3D 0x24;
+>>> +
+>>> +	/* HACK: Hardcode the remaining platform data fields. */
+>>> +	state->pdata.blank_data =3D 1;
+>>> +	state->pdata.op_656_range =3D 1;
+>>> +	state->pdata.alt_data_sat =3D 1;
+>>> +	state->pdata.insert_av_codes =3D 1;
+>>> +	state->pdata.op_format_mode_sel =3D ADV7604_OP_FORMAT_MODE0;
+>>> +
+>>> +	return 0;
+>>> +}
+>=20
