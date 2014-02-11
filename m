@@ -1,104 +1,94 @@
-From: Courtney Cavin <courtney.cavin@sonymobile.com>
-Subject: Re: [RFC 1/6] mailbox: add core framework
-Date: Mon, 10 Feb 2014 16:23:48 -0800
-Message-ID: <20140211002347.GW1706@sonymobile.com>
-References: <1391820619-25487-1-git-send-email-courtney.cavin@sonymobile.com>
- <1391820619-25487-2-git-send-email-courtney.cavin@sonymobile.com>
- <4706525.lB7VmvWQMJ@wuerfel>
- <CAL_JsqKa6nyPOa0M67svUR20Y3JNZcFhsTZE=ooV-eg6_ZBaMw@mail.gmail.com>
- <20140210190934.GA841@joshc.qualcomm.com>
- <20140210195914.GU1706@sonymobile.com>
- <CAL_JsqK0YoVu0BfKSUfBQGoriCa4z-teXUQe6RPpjM2KKpeMAw@mail.gmail.com>
+From: Zhou Zhu <zzhu3-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] video: mmp: add devm_mmp_get_path_by_phandle for
+ DT
+Date: Tue, 11 Feb 2014 09:03:21 +0800
+Message-ID: <52F976D9.4050504@marvell.com>
+References: <1389698184-28761-1-git-send-email-zzhu3@marvell.com> <1389698184-28761-4-git-send-email-zzhu3@marvell.com> <52F8C6F6.5000200@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqK0YoVu0BfKSUfBQGoriCa4z-teXUQe6RPpjM2KKpeMAw@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Josh Cartwright <joshc@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, "s-anna@ti.com" <s-anna@ti.com>, Rob Herring <rob.herring@calxeda.com>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, Mark Langsdorf <mark.langsdorf@calxeda.com>, Tony Lindgren <tony@atomide.com>, "omar.ramirez@copitl.com" <omar.ramirez@copitl.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52F8C6F6.5000200-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chao Xie <cxie4-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Guoqing Li <ligq-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 10, 2014 at 09:45:07PM +0100, Rob Herring wrote:
-> On Mon, Feb 10, 2014 at 1:59 PM, Courtney Cavin
-> <courtney.cavin@sonymobile.com> wrote:
-> > On Mon, Feb 10, 2014 at 08:09:34PM +0100, Josh Cartwright wrote:
-> >> On Mon, Feb 10, 2014 at 11:52:05AM -0600, Rob Herring wrote:
-> >> > On Mon, Feb 10, 2014 at 8:11 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> >> > > On Friday 07 February 2014 16:50:14 Courtney Cavin wrote:
-> >> [..]
-> >> > >> +int mbox_channel_notify(struct mbox_channel *chan,
-> >> > >> +             const void *data, unsigned int len)
-> >> > >> +{
-> >> > >> +     return atomic_notifier_call_chain(&chan->notifier, len, (void *)data);
-> >> > >> +}
-> >> > >> +EXPORT_SYMBOL(mbox_channel_notify);
-> >> > >
-> >> > > What is the reason to use a notifier chain here? Isn't a simple
-> >> > > callback function pointer enough? I would expect that each mailbox
-> >> > > can have exactly one consumer, not multiple ones.
-> >> >
-> >> > It probably can be a callback, but there can be multiple consumers. It
-> >> > was only a notifier on the pl320 as there was no framework at the time
-> >> > and to avoid creating custom interfaces between drivers. On highbank
-> >> > for example, we can asynchronously receive the events for temperature
-> >> > change, power off, and reset. So either there needs to be an event
-> >> > demux somewhere or callbacks have to return whether they handled an
-> >> > event or not.
-> >>
-> >> I'm not familiar with highbank IPC, but with these requirements should
-> >> the mailbox core even bother with asynchronous notifier chain?  It
-> >> sounds like a better fit might be for the mailbox core to implement a
-> >> proper adapter-specific irqdomain and used a chained irq handler to
-> >> demux (or have consumers request with IRQF_SHARED in the shared case).
-> >
-> > Although modeling this using irqdomains makes sense for the notification
-> > bit, and would probably suit most adapters, there's the issue of data
-> > being passed around which doesn't quite fit.  "Ok, I have mail... where
-> > is it?"  Did you have something in mind for that?
-> >
-> > Frankly, I don't see the notifier chain as being extraneous or
-> > over-complicated here core-wise or implementation-wise, and unless I
-> > understand Rob incorrectly, should suit the existing use-cases.  Am I
-> > missing something?
-> 
-> Well, I think notifiers are not liked very much. I don't know that irq
-> handlers would be the right answer either as these are not h/w events
-> really and we may not want handlers to run in irq context. I would say
-> a callback similar to how the dma engine framework works is the right
-> answer. On the send side, you may want to have completion callbacks as
-> well.
+On 02/10/2014 08:32 PM, Tomi Valkeinen wrote:
+> On 14/01/14 13:16, Zhou Zhu wrote:
+>> add devm_mmp_get_path_by_phandle to replace mmp_get_path
+>> for DT usage
+>>
+>> Signed-off-by: Zhou Zhu <zzhu3-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>   drivers/video/mmp/core.c |   35 +++++++++++++++++++++++++++++++++++
+>>   include/video/mmp_disp.h |    2 ++
+>>   2 files changed, 37 insertions(+)
+>>
+>> diff --git a/drivers/video/mmp/core.c b/drivers/video/mmp/core.c
+>> index b563b92..0538458 100644
+>> --- a/drivers/video/mmp/core.c
+>> +++ b/drivers/video/mmp/core.c
+>> @@ -23,6 +23,7 @@
+>>   #include <linux/slab.h>
+>>   #include <linux/dma-mapping.h>
+>>   #include <linux/export.h>
+>> +#include <linux/of.h>
+>>   #include <video/mmp_disp.h>
+>>
+>>   static struct mmp_overlay *path_get_overlay(struct mmp_path *path,
+>> @@ -156,6 +157,40 @@ struct mmp_path *mmp_get_path(const char *name)
+>>   EXPORT_SYMBOL_GPL(mmp_get_path);
+>>
+>>   /*
+>> + * devm_mmp_get_path_by_phandle - get path by phandle
+>> + * @dev: device that want to get path
+>> + * @phandle: name of phandle in device node that want to get path
+>> + *
+>> + * this function gets path according to node pointed by phandle
+>> + * return NULL if no matching path
+>> + */
+>> +struct mmp_path *devm_mmp_get_path_by_phandle(struct device *dev,
+>> +	const char *phandle)
+>> +{
+>> +	struct mmp_path *path;
+>> +	struct device_node *node;
+>> +
+>> +	if (!dev->of_node) {
+>> +		dev_err(dev, "device does not have a device node entry\n");
+>> +		return NULL;
+>> +	}
+>> +
+>> +	node = of_parse_phandle(dev->of_node, phandle, 0);
+>> +	if (!node) {
+>> +		dev_err(dev, "failed to get %s phandle in %s node\n", phandle,
+>> +			dev->of_node->name);
+>> +		return NULL;
+>> +	}
+>> +
+>> +	path = mmp_get_path(node->name);
+>> +
+>> +	of_node_put(node);
+>> +
+>> +	return path;
+>> +}
+>> +EXPORT_SYMBOL_GPL(devm_mmp_get_path_by_phandle);
+>
+> Why is this function "devm_"? devm_ functions are supposed to
+> automatically free resources when the device is removed, I don't see
+> anything like that here.
 
-While I'm not sure the dislike of notifiers entirely justifies not using
-them here, where they seem to make sense, I can understand that they
-might not fully implement what we need to expose.
+Thank you for your review, I will remove "devm_" in next version.
 
-Regarding handlers running in IRQ context: currently the API is designed
-to do just that.  From the use-cases I've found, most message handlers
-simply queue something to happen at a later point.  This is logical, as
-the callback will be async, so you'll need to swap contexts or add locks
-in your consumer anyway.
+>
+>   Tomi
+>
+>
 
-The dma engine is large and confused, so I'm not sure entirely which
-part you are refering to.  I've looked at having async completion going
-both ways, but what I see every time is code complication in both the
-adapter and in the consumers in the simple use-case.  It doesn't really
-make sense to make an API which makes things so generic that it becomes
-hard to use.  What I tried to follow here when designing the API was
-what I saw in the actual implementations, not what was future-proof:
-	- Message receive callbacks may be called from IRQ context
-	- Message send implementations may sleep
 
-I think that these allowances enable the simple use-case to be very easy
-to write, and the more complex use-cases still possible--albiet
-sometimes at a higher level.
-
-What I can do is try to alleviate implementation efforts of future
-requirements--as honestly, we can't really say exactly what they are--by
-turning the messages into structs themselves, so at a later point flags,
-ack callbacks, and rainbows can be added.  I can then stop using
-notifiers, and re-invent that functionality with a mbox_ prefix.
-
-Comments?
-
--Courtney
+-- 
+Thanks, -Zhou
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
