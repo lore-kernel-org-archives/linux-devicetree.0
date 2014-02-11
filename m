@@ -1,228 +1,259 @@
-From: Gerlando Falauto <gerlando.falauto@keymile.com>
-Subject: Re: [PATCH V3] net/dt: Add support for overriding phy configuration
- from device tree
-Date: Tue, 11 Feb 2014 10:09:58 +0100
-Message-ID: <52F9E8E6.1090006@keymile.com>
-References: <7510122.cayuQ6qt8r@wuerfel> <CAGVrzcZ4TFd=9KP+aoG47QbmqDJ1i23WBcEWDbzNRUfGmPvZHQ@mail.gmail.com> <52F8FB03.6040606@keymile.com> <29007785.iYrLORbRAN@lenovo>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH 45/47] adv7604: Add DT support
+Date: Tue, 11 Feb 2014 10:23:03 +0100
+Message-ID: <52F9EBF7.5020000@xs4all.nl>
+References: <1391618558-5580-1-git-send-email-laurent.pinchart@ideasonboard.com> <1391618558-5580-46-git-send-email-laurent.pinchart@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <29007785.iYrLORbRAN@lenovo>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1391618558-5580-46-git-send-email-laurent.pinchart@ideasonboard.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
+On 02/05/14 17:42, Laurent Pinchart wrote:
+> Parse the device tree node to populate platform data.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> ---
+>  .../devicetree/bindings/media/i2c/adv7604.txt      |  56 ++++++++++++
+>  drivers/media/i2c/adv7604.c                        | 101 ++++++++++++++++++---
+>  2 files changed, 143 insertions(+), 14 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> new file mode 100644
+> index 0000000..0845c50
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> @@ -0,0 +1,56 @@
+> +* Analog Devices ADV7604/11 video decoder with HDMI receiver
+> +
+> +The ADV7604 and ADV7611 are multiformat video decoders with an integrated HDMI
+> +receiver. The ADV7604 has four multiplexed HDMI inputs and one analog input,
+> +and the ADV7611 has one HDMI input and no analog input.
+> +
+> +Required Properties:
+> +
+> +  - compatible: Must contain one of the following
+> +    - "adi,adv7604" for the ADV7604
+> +    - "adi,adv7611" for the ADV7611
+> +
+> +  - reg: I2C slave address
+> +
+> +  - hpd-gpios: References to the GPIOs that control the HDMI hot-plug
+> +    detection pins, one per HDMI input. The active flag indicates the GPIO
+> +    level that enables hot-plug detection.
+> +
+> +Optional Properties:
+> +
+> +  - reset-gpios: Reference to the GPIO connected to the device's reset pin.
+> +
+> +  - adi,default-input: Index of the input to be configured as default. Valid
+> +    values are 0..5 for the ADV7604 and 0 for the ADV7611.
+> +
+> +  - adi,disable-power-down: Boolean property. When set forces the device to
+> +    ignore the power-down pin. The property is valid for the ADV7604 only as
+> +    the ADV7611 has no power-down pin.
+> +
+> +  - adi,disable-cable-reset: Boolean property. When set disables the HDMI
+> +    receiver automatic reset when the HDMI cable is unplugged.
+> +
+> +Example:
+> +
+> +	hdmi_receiver@4c {
+> +		compatible = "adi,adv7611";
+> +		reg = <0x4c>;
+> +
+> +		reset-gpios = <&ioexp 0 GPIO_ACTIVE_LOW>;
+> +		hpd-gpios = <&ioexp 2 GPIO_ACTIVE_HIGH>;
+> +
+> +		adi,default-input = <0>;
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +		};
+> +		port@1 {
+> +			reg = <1>;
+> +			hdmi_in: endpoint {
+> +				remote-endpoint = <&ccdc_in>;
+> +			};
+> +		};
+> +	};
+> diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
+> index e586c1c..cd8a2dc 100644
+> --- a/drivers/media/i2c/adv7604.c
+> +++ b/drivers/media/i2c/adv7604.c
+> @@ -32,6 +32,7 @@
+>  #include <linux/i2c.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/of_gpio.h>
+>  #include <linux/slab.h>
+>  #include <linux/v4l2-dv-timings.h>
+>  #include <linux/videodev2.h>
+> @@ -2641,13 +2642,83 @@ static const struct adv7604_chip_info adv7604_chip_info[] = {
+>  	},
+>  };
+>  
+> +static struct i2c_device_id adv7604_i2c_id[] = {
+> +	{ "adv7604", (kernel_ulong_t)&adv7604_chip_info[ADV7604] },
+> +	{ "adv7611", (kernel_ulong_t)&adv7604_chip_info[ADV7611] },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, adv7604_i2c_id);
+> +
+> +static struct of_device_id adv7604_of_id[] = {
+> +	{ .compatible = "adi,adv7604", .data = &adv7604_chip_info[ADV7604] },
+> +	{ .compatible = "adi,adv7611", .data = &adv7604_chip_info[ADV7611] },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, adv7604_of_id);
+> +
+> +static int adv7604_parse_dt(struct adv7604_state *state)
 
-first of all, thank you for your answer.
+Put this under #ifdef CONFIG_OF. It fails to compile if CONFIG_OF is not set
+(as it is in my case since this driver is used with a PCIe card).
 
-On 02/10/2014 06:09 PM, Florian Fainelli wrote:
-> Hi Gerlando,
->
-> Le lundi 10 f=E9vrier 2014, 17:14:59 Gerlando Falauto a =E9crit :
->> Hi,
->>
->> I'm currently trying to fix an issue for which this patch provides a
->> partial solution, so apologies in advance for jumping into the
->> discussion for my own purposes...
->>
->> On 02/04/2014 09:39 PM, Florian Fainelli wrote:> 2014-01-17 Matthew
->>
->> Garrett <matthew.garrett@nebula.com>:
->>   >> Some hardware may be broken in interesting and board-specific w=
-ays, such
->>   >> that various bits of functionality don't work. This patch provi=
-des a
->>   >> mechanism for overriding mii registers during init based on the
->>
->> contents of
->>
->>   >> the device tree data, allowing board-specific fixups without ha=
-ving to
->>   >> pollute generic code.
->>   >
->>   > It would be good to explain exactly how your hardware is broken
->>   > exactly. I really do not think that such a fine-grained setting =
-where
->>   > you could disable, e.g: 100BaseT_Full, but allow 100BaseT_Half t=
-o
->>   > remain usable makes that much sense. In general, Gigabit might b=
-e
->>   > badly broken, but 100 and 10Mbits/sec should work fine. How abou=
-t the
->>   > MASTER-SLAVE bit, is overriding it really required?
->>   >
->>   > Is not a PHY fixup registered for a specific OUI the solution yo=
-u are
->>   > looking for? I am also concerned that this creates PHY troublesh=
-ooting
->>   > issues much harder to debug than before as we may have no idea a=
-bout
->>   > how much information has been put in Device Tree to override tha=
-t.
->>   >
->>   > Finally, how about making this more general just like the BCM87x=
-x PHY
->>   > driver, which is supplied value/reg pairs directly? There are 16
->>   > common MII registers, and 16 others for vendor specific register=
-s,
->>   > this is just covering for about 2% of the possible changes.
->>
->> Good point. That would easily help me with my current issue, which
->> requires autoneg to be disabled to begin with (by clearing BMCR_ANEN=
-ABLE
->> from register 0).
->
-> Is there a point in time (e.g: after some specific initial configurat=
-ion has
-> been made) where BMCR_ANENABLE can be used?
+Regards,
 
-What do you mean? In my case, for some HW-related reason (due to the PH=
-Y=20
-counterpart I guess) autoneg needs to be disabled.
-This is currently done by the bootloader code (which clears the bit).
-What I'm looking for is some way for the kernel to either reinforce thi=
-s=20
-setting, or just take that into account and skip autoneg.
-On top of that, there's a HW errata about that particular PHY, which=20
-requires certain operations to be performed on the PHY as a workaround=20
-*WHEN AUTONEG IS DISABLED*. That I'd implement on a PHY-specif driver.
+	Hans
 
->> This would not however fix it entirely (I tried a quick hardwired
->> implementation), as the whole PHY machinery would not take that into
->> account and would re-enable autoneg anyway.
->> I also tried changing the patch so that phydev->support gets updated
->
-> There are multiple things that you could try doing here:
->
-> - override the PHY state machine in your read_status callback to make=
- sure
-> that you always set phydev->autoneg set to AUTONEG_ENABLE
-
-[you mean AUTONEG_DISABLE, right?]
-Uhm, but I don't want to implement a driver for that PHY that always=20
-disables autoneg. I only want to disable autoneg for that particular=20
-board. I figure I might register a fixup for that board, but that kindo=
-f=20
-makes everything more complicated and less clear. Plus, what should be=20
-the criterion to determine whether we're running on that particular=20
-hardware?
-
-> - clear the SUPPORTED_Autoneg bits from phydev->supported right after=
- PHY
-> registration and before the call to phy_start()
-
-I actually tried clearing it by tweaking the patch on this thread, but=20
-the end result is that it does not produce any effect (see further=20
-comments below). Only thing that seems to play a role here is explictly=
-=20
-setting phydev->autoneg =3D AUTONEG_DISABLE.
-
-> - set the PHY_HAS_MAGICANEG bit in your PHY driver flag
-
-Again, this seems to play no role whatsoever here:
-
-			} else if (0 =3D=3D phydev->link_timeout--) {
-				needs_aneg =3D 1;
-				/* If we have the magic_aneg bit,
-				 * we try again */
-				if (phydev->drv->flags & PHY_HAS_MAGICANEG)
-					break;
-			}
-			break;
-		case PHY_NOLINK:
-
-This code might have made sense when it was written in 2006 -- back=20
-then, the break statement was skipping some fallback code. But now it=20
-seems to do nothing.
-
->
->>
->> (instead of phydev->advertising):
->>   >> +               if (!of_property_read_u32(np, override->prop, &=
-tmp)) {
->>   >> +                       if (tmp) {
->>   >> +                               *val |=3D override->value;
->>   >> +                               phydev->advertising |=3D
->>
->> override->supported;
->>
->>   >> +                       } else {
->>   >> +                               phydev->advertising &=3D
->>
->> ~(override->supported);
->>
->>   >> +                       }
->>   >> +
->>   >> +                       *mask |=3D override->value;
->>
->> What I find weird is that the only way phydev->autoneg could ever be=
- set
->> to disabled is from here (phy.c):
->>
->> static void phy_sanitize_settings(struct phy_device *phydev)
->> {
->> 	u32 features =3D phydev->supported;
->> 	int idx;
->>
->> 	/* Sanitize settings based on PHY capabilities */
->> 	if ((features & SUPPORTED_Autoneg) =3D=3D 0)
->> 		phydev->autoneg =3D AUTONEG_DISABLE;
->>
->> which is in turn only called when phydev->autoneg is set to
->> AUTONEG_DISABLE to begin with:
->>
->> int phy_start_aneg(struct phy_device *phydev)
->> {
->> 	int err;
->>
->> 	mutex_lock(&phydev->lock);
->>
->> 	if (AUTONEG_DISABLE =3D=3D phydev->autoneg)
->> 		phy_sanitize_settings(phydev);
->>
->> So could someone please help me figure out what I'm missing here?
->
-> At first glance it looks like the PHY driver should be reading the ph=
-ydev-
->> autoneg value when the PHY driver config_aneg() callback is called t=
-o be
-> allowed to set the forced speed and settings.
->
-> The way phy_sanitize_settings() is coded does not make it return a ma=
-sk of
-> features, but only the forced supported speed and duplex. Then when t=
-he link
-> is forced but we are having some issues getting a link status, libphy=
- tries
-> lower speeds and this function is used again to provide the next spee=
-d/duplex
-> pair to try.
->
-
-What I was trying to say is that phy_sanitize_settings() is only called=
-=20
-when phydev->autoneg =3D=3D AUTONEG_DISABLE, and in turn it's the only=20
-generic function setting phydev->autoneg =3D AUTONEG_DISABLE.
-So perhaps the condition should read:
-
-- 	if (AUTONEG_DISABLE =3D=3D phydev->autoneg)
-+ 	if ((features & SUPPORTED_Autoneg) =3D=3D 0)
-  		phy_sanitize_settings(phydev);
-
-Or else, some other parts of the generic code should take care of=20
-setting it to AUTONEG_DISABLE, depending on whether the feature is=20
-supported or not.
-What I found weird is explicitly setting a value (phydev->autoneg =3D=20
-AUTONEG_DISABLE), from a static function which is only called when that=
-=20
-condition is already true.
-
-BTW, I feel like disabling autoneg from the start has never been a use=20
-case before, am I right?
-
-Thanks!
-Gerlando
+> +{
+> +	struct device_node *np;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	np = state->i2c_clients[ADV7604_PAGE_IO]->dev.of_node;
+> +	state->info = of_match_node(adv7604_of_id, np)->data;
+> +
+> +	state->pdata.disable_pwrdnb =
+> +		of_property_read_bool(np, "adi,disable-power-down");
+> +	state->pdata.disable_cable_det_rst =
+> +		of_property_read_bool(np, "adi,disable-cable-reset");
+> +
+> +	ret = of_property_read_u32(np, "adi,default-input",
+> +				   &state->pdata.default_input);
+> +	if (ret < 0)
+> +		state->pdata.default_input = -1;
+> +
+> +	for (i = 0; i < state->info->num_dv_ports; ++i) {
+> +		enum of_gpio_flags flags;
+> +
+> +		state->pdata.hpd_gpio[i] =
+> +			of_get_named_gpio_flags(np, "hpd-gpios", i, &flags);
+> +		if (IS_ERR_VALUE(state->pdata.hpd_gpio[i]))
+> +			continue;
+> +
+> +		state->pdata.hpd_gpio_low[i] = flags == OF_GPIO_ACTIVE_LOW;
+> +	}
+> +
+> +	/* Disable the interrupt for now as no DT-based board uses it. */
+> +	state->pdata.int1_config = ADV7604_INT1_CONFIG_DISABLED;
+> +
+> +	/* Use the default I2C addresses. */
+> +	state->pdata.i2c_addresses[ADV7604_PAGE_AVLINK] = 0x42;
+> +	state->pdata.i2c_addresses[ADV7604_PAGE_CEC] = 0x40;
+> +	state->pdata.i2c_addresses[ADV7604_PAGE_INFOFRAME] = 0x3e;
+> +	state->pdata.i2c_addresses[ADV7604_PAGE_ESDP] = 0x38;
+> +	state->pdata.i2c_addresses[ADV7604_PAGE_DPP] = 0x3c;
+> +	state->pdata.i2c_addresses[ADV7604_PAGE_AFE] = 0x26;
+> +	state->pdata.i2c_addresses[ADV7604_PAGE_REP] = 0x32;
+> +	state->pdata.i2c_addresses[ADV7604_PAGE_EDID] = 0x36;
+> +	state->pdata.i2c_addresses[ADV7604_PAGE_HDMI] = 0x34;
+> +	state->pdata.i2c_addresses[ADV7604_PAGE_TEST] = 0x30;
+> +	state->pdata.i2c_addresses[ADV7604_PAGE_CP] = 0x22;
+> +	state->pdata.i2c_addresses[ADV7604_PAGE_VDP] = 0x24;
+> +
+> +	/* HACK: Hardcode the remaining platform data fields. */
+> +	state->pdata.blank_data = 1;
+> +	state->pdata.op_656_range = 1;
+> +	state->pdata.alt_data_sat = 1;
+> +	state->pdata.insert_av_codes = 1;
+> +	state->pdata.op_format_mode_sel = ADV7604_OP_FORMAT_MODE0;
+> +
+> +	return 0;
+> +}
+> +
+>  static int adv7604_probe(struct i2c_client *client,
+>  			 const struct i2c_device_id *id)
+>  {
+>  	static const struct v4l2_dv_timings cea640x480 =
+>  		V4L2_DV_BT_CEA_640X480P59_94;
+>  	struct adv7604_state *state;
+> -	struct adv7604_platform_data *pdata = client->dev.platform_data;
+>  	struct v4l2_ctrl_handler *hdl;
+>  	struct v4l2_subdev *sd;
+>  	unsigned int i;
+> @@ -2666,19 +2737,27 @@ static int adv7604_probe(struct i2c_client *client,
+>  		return -ENOMEM;
+>  	}
+>  
+> -	state->info = &adv7604_chip_info[id->driver_data];
+>  	state->i2c_clients[ADV7604_PAGE_IO] = client;
+>  
+>  	/* initialize variables */
+>  	state->restart_stdi_once = true;
+>  	state->selected_input = ~0;
+>  
+> -	/* platform data */
+> -	if (!pdata) {
+> +	if (client->dev.of_node) {
+> +		err = adv7604_parse_dt(state);
+> +		if (err < 0) {
+> +			v4l_err(client, "DT parsing error\n");
+> +			return err;
+> +		}
+> +	} else if (client->dev.platform_data) {
+> +		struct adv7604_platform_data *pdata = client->dev.platform_data;
+> +
+> +		state->info = (const struct adv7604_chip_info *)id->driver_data;
+> +		state->pdata = *pdata;
+> +	} else {
+>  		v4l_err(client, "No platform data!\n");
+>  		return -ENODEV;
+>  	}
+> -	state->pdata = *pdata;
+>  
+>  	/* Request GPIOs. */
+>  	for (i = 0; i < state->info->num_dv_ports; ++i) {
+> @@ -2786,7 +2865,7 @@ static int adv7604_probe(struct i2c_client *client,
+>  			continue;
+>  
+>  		state->i2c_clients[i] =
+> -			adv7604_dummy_client(sd, pdata->i2c_addresses[i],
+> +			adv7604_dummy_client(sd, state->pdata.i2c_addresses[i],
+>  					     0xf2 + i);
+>  		if (state->i2c_clients[i] == NULL) {
+>  			err = -ENOMEM;
+> @@ -2860,21 +2939,15 @@ static int adv7604_remove(struct i2c_client *client)
+>  
+>  /* ----------------------------------------------------------------------- */
+>  
+> -static struct i2c_device_id adv7604_id[] = {
+> -	{ "adv7604", ADV7604 },
+> -	{ "adv7611", ADV7611 },
+> -	{ }
+> -};
+> -MODULE_DEVICE_TABLE(i2c, adv7604_id);
+> -
+>  static struct i2c_driver adv7604_driver = {
+>  	.driver = {
+>  		.owner = THIS_MODULE,
+>  		.name = "adv7604",
+> +		.of_match_table = of_match_ptr(adv7604_of_id),
+>  	},
+>  	.probe = adv7604_probe,
+>  	.remove = adv7604_remove,
+> -	.id_table = adv7604_id,
+> +	.id_table = adv7604_i2c_id,
+>  };
+>  
+>  module_i2c_driver(adv7604_driver);
+> 
