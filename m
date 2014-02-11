@@ -1,70 +1,102 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/2] xhci-platform: Change compatible string
- from xhci-platform to generic-xhci
-Date: Tue, 11 Feb 2014 17:54:46 +0100
-Message-ID: <1392137686-6562-2-git-send-email-hdegoede@redhat.com>
-References: <1392137686-6562-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 2/2] ARM: shmobile: koelsch: add Ether DT support
+Date: Tue, 11 Feb 2014 18:01:25 +0100
+Message-ID: <2679079.Rucv1O0jLA@avalon>
+References: <201402070110.18561.sergei.shtylyov@cogentembedded.com> <201402070114.27279.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBZNL5GLQKGQER3CNDOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1392137686-6562-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <201402070114.27279.sergei.shtylyov@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: horms@verge.net.au, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This brings the xhci-platform bindings in sync with what we've done for
-the ohci- and ehci-platform drivers. As discussed there using platform as a
-postfix is a bit weird as the platform bus is a Linux specific thing and
-the bindings are supposed to be OS agnostic.
+Hi Sergei,
 
-Note that the old xhci-platform compatible string is kept around for, well,
-compatibility reasons.
+Thanks a lot for the patch.
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- Documentation/devicetree/bindings/usb/usb-xhci.txt | 4 ++--
- drivers/usb/host/xhci-plat.c                       | 1 +
- 2 files changed, 3 insertions(+), 2 deletions(-)
+On Friday 07 February 2014 01:14:26 Sergei Shtylyov wrote:
+> Define the Koelsch board dependent part of the Ether device node.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> ---
+>  arch/arm/boot/dts/r8a7791-koelsch.dts |   31 +++++++++++++++++++++++++++++-
+>  1 file changed, 30 insertions(+), 1 deletion(-)
+> 
+> Index: renesas/arch/arm/boot/dts/r8a7791-koelsch.dts
+> ===================================================================
+> --- renesas.orig/arch/arm/boot/dts/r8a7791-koelsch.dts
+> +++ renesas/arch/arm/boot/dts/r8a7791-koelsch.dts
+> @@ -2,7 +2,8 @@
+>   * Device Tree Source for the Koelsch board
+>   *
+>   * Copyright (C) 2013 Renesas Electronics Corporation
+> - * Copyright (C) 2013 Renesas Solutions Corp.
+> + * Copyright (C) 2013-2014 Renesas Solutions Corp.
+> + * Copyright (C) 2014 Cogent Embedded, Inc.
+>   *
+>   * This file is licensed under the terms of the GNU General Public License
+>   * version 2.  This program is licensed "as is" without any warranty of any
+> @@ -122,12 +123,40 @@
+>  		renesas,function = "scif1";
+>  	};
+> 
+> +	ether_pins: ether {
+> +		renesas,groups = "eth_link", "eth_mdio", "eth_rmii";
+> +		renesas,function = "eth";
+> +	};
+> +
+> +	phy1_pins: phy1 {
+> +		renesas,groups = "intc_irq0";
+> +		renesas,function = "intc";
+> +	};
+> +
+>  	qspi_pins: spi {
+>  		renesas,groups = "qspi_ctrl", "qspi_data4";
+>  		renesas,function = "qspi";
+>  	};
+>  };
+> 
+> +&ether {
+> +	pinctrl-0 = <&ether_pins>;
+> +	pinctrl-names = "default";
+> +
+> +	phy-handle = <&phy1>;
+> +	renesas,ether-link-active-low;
+> +	status = "ok";
+> +
+> +	phy1: ethernet-phy@1 {
+> +		reg = <1>;
+> +		interrupt-parent = <&irqc0>;
+> +		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+> +
+> +		pinctrl-0 = <&phy1_pins>;
+> +		pinctrl-names = "default";
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-index 5752df0..90f8f60 100644
---- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-@@ -1,14 +1,14 @@
- USB xHCI controllers
- 
- Required properties:
--  - compatible: should be "xhci-platform".
-+  - compatible: should be "generic-xhci" (deprecated: "xhci-platform").
-   - reg: should contain address and length of the standard XHCI
-     register set for the device.
-   - interrupts: one XHCI interrupt should be described here.
- 
- Example:
- 	usb@f0931000 {
--		compatible = "xhci-platform";
-+		compatible = "generic-xhci";
- 		reg = <0xf0931000 0x8c8>;
- 		interrupts = <0x0 0x4e 0x0>;
- 	};
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index 8abda5c..8affef9 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -226,6 +226,7 @@ static const struct dev_pm_ops xhci_plat_pm_ops = {
- 
- #ifdef CONFIG_OF
- static const struct of_device_id usb_xhci_of_match[] = {
-+	{ .compatible = "generic-xhci" },
- 	{ .compatible = "xhci-platform" },
- 	{ },
- };
+I think the PHY pins should be moved to the ethernet device. The reason for 
+this is that the PHY device is discovered dynamically at runtime, and has thus 
+no DT node associated with its struct device to control pinctrl automatically. 
+This should probably be fixed, but in the meantime moving the PHY pins to the 
+ethernet device should fix the problem.
+
+As a last step we're missing a DT equivalent to our board code 
+koelsch_ksz8041_fixup() workaround. Adding a property to specify LEDs usage to 
+the PHY DT node shouldn't be difficult, but associating that node to the PHY 
+device and handling the property in the PHY driver will require a bit of work. 
+Is this on your to-do list ?
+
+> +	};
+> +};
+> +
+>  &sata0 {
+>  	status = "okay";
+>  };
+
 -- 
-1.8.5.3
+Regards,
+
+Laurent Pinchart
+
