@@ -1,40 +1,55 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2 07/11] watchdog: xilinx: Use of_property_read_u32
-Date: Tue, 11 Feb 2014 12:20:38 -0800
-Message-ID: <20140211202038.GC11798@roeck-us.net>
-References: <f298edd222c57b0ce1ebad3ae50c3f715406c631.1392101734.git.michal.simek@xilinx.com>
- <7aa6e41032ebad0ffb2e1df20beb4f00e38d29e2.1392101734.git.michal.simek@xilinx.com>
+From: Josh Cartwright <joshc@codeaurora.org>
+Subject: Re: [PATCH v2 1/5] drivers: of: add initialization code for reserved
+ memory
+Date: Tue, 11 Feb 2014 14:19:33 -0600
+Message-ID: <20140211201933.GI841@joshc.qualcomm.com>
+References: <1391515773-6112-1-git-send-email-m.szyprowski@samsung.com>
+ <1391515773-6112-2-git-send-email-m.szyprowski@samsung.com>
+ <20140205110538.99E47C40A89@trevor.secretlab.ca>
+ <52FA0D6E.9090304@samsung.com>
+ <20140211121316.24032C40C4D@trevor.secretlab.ca>
+ <52FA33E2.4050004@samsung.com>
+ <20140211190104.7E6C5C4140E@trevor.secretlab.ca>
+ <1392148971.3835.15.camel@pasglop>
+ <52FA8245.5050707@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <7aa6e41032ebad0ffb2e1df20beb4f00e38d29e2.1392101734.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <52FA8245.5050707@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Grant Likely <grant.likely@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@gmail.com>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 11, 2014 at 07:55:50AM +0100, Michal Simek wrote:
-> Use of_property_read_u32 functions to clean probe function.
+On Tue, Feb 11, 2014 at 09:04:21PM +0100, Tomasz Figa wrote:
 > 
-> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
 > 
-[ ... ]
+> On 11.02.2014 21:02, Benjamin Herrenschmidt wrote:
+> >On Tue, 2014-02-11 at 19:01 +0000, Grant Likely wrote:
+> >
+> >>>except that the former IMHO better suits the definition of memory
+> >>>region, which I see as a single contiguous range of memory and can be
+> >>>simplified to have a single reg entry per region.
+> >>
+> >>My point is rather if multiple reg tuples are found in a reserved memory
+> >>node, the kernel must respect them and reserve the memory. I'm not
+> >>arguing about whether or not that makes for a good binding.
+> >
+> >agreed.
+> 
+> My point is why, if the binding defines that just a single tuple should be
+> provided.
 
-> +
-> +	if (enable_once)
->  		watchdog_set_nowayout(xilinx_wdt_wdd, true);
-> -	}
+FWIW, the usecase I had mentioned in reply to Grant in the patch 5/5
+thread [1] could make use of this.  The shared memory region is split
+into a main chunk and several "auxiliary" chunk, but collectively these
+regions all share the same heap state.
 
-	watchdog_set_nowayout(xilinx_wdt_wdd, enable_once);
+  Josh
 
-would probably do as well (the function checks the flag as well).
+1: http://lkml.kernel.org/r/20140205192502.GO20228@joshc.qualcomm.com
 
-Nitpick, so
-
-Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
