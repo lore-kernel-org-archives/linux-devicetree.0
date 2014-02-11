@@ -1,81 +1,56 @@
 From: Josh Cartwright <joshc@codeaurora.org>
-Subject: [PATCH 3/8] ARM: at91: make use of of_find_matching_node_and_match
-Date: Tue, 11 Feb 2014 10:24:01 -0600
-Message-ID: <1392135847-30791-4-git-send-email-joshc@codeaurora.org>
+Subject: [PATCH 7/8] C6X: make use of of_find_matching_node_and_match
+Date: Tue, 11 Feb 2014 10:24:05 -0600
+Message-ID: <1392135847-30791-8-git-send-email-joshc@codeaurora.org>
 References: <1392135847-30791-1-git-send-email-joshc@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1392135847-30791-1-git-send-email-joshc@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
+To: Mark Salter <msalter@redhat.com>, Aurelien Jacquiot <a-jacquiot@ti.com>, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-c6x-dev@linux-c6x.org
 List-Id: devicetree@vger.kernel.org
 
 Instead of the of_find_matching_node()/of_match_node() pair, which requires two
 iterations through the match table, make use of of_find_matching_node_and_match(),
 which only iterates through the table once.
 
-While we're here, mark the rtsc id table const.
-
 Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
 ---
- arch/arm/mach-at91/setup.c | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
+ arch/c6x/platforms/plldata.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/mach-at91/setup.c b/arch/arm/mach-at91/setup.c
-index f7ca97b..e884de8 100644
---- a/arch/arm/mach-at91/setup.c
-+++ b/arch/arm/mach-at91/setup.c
-@@ -352,7 +352,7 @@ void __init at91_ioremap_matrix(u32 base_addr)
+diff --git a/arch/c6x/platforms/plldata.c b/arch/c6x/platforms/plldata.c
+index 755359e..8fddc46 100644
+--- a/arch/c6x/platforms/plldata.c
++++ b/arch/c6x/platforms/plldata.c
+@@ -397,7 +397,7 @@ static void __init c6678_setup_clocks(struct device_node *node)
  }
+ #endif /* CONFIG_SOC_TMS320C6678 */
  
- #if defined(CONFIG_OF)
--static struct of_device_id rstc_ids[] = {
-+static const struct of_device_id rstc_ids[] = {
- 	{ .compatible = "atmel,at91sam9260-rstc", .data = at91sam9_alt_restart },
- 	{ .compatible = "atmel,at91sam9g45-rstc", .data = at91sam9g45_restart },
- 	{ /*sentinel*/ }
-@@ -363,7 +363,7 @@ static void at91_dt_rstc(void)
- 	struct device_node *np;
- 	const struct of_device_id *of_id;
+-static struct of_device_id c6x_clkc_match[] __initdata = {
++static const struct of_device_id c6x_clkc_match[] __initdata = {
+ #ifdef CONFIG_SOC_TMS320C6455
+ 	{ .compatible = "ti,c6455-pll", .data = c6455_setup_clocks },
+ #endif
+@@ -426,7 +426,7 @@ void __init c64x_setup_clocks(void)
+ 	int err;
+ 	u32 val;
  
--	np = of_find_matching_node(NULL, rstc_ids);
-+	np = of_find_matching_node_and_match(NULL, rstc_ids, &of_id);
- 	if (!np)
- 		panic("unable to find compatible rstc node in dtb\n");
+-	node = of_find_matching_node(NULL, c6x_clkc_match);
++	node = of_find_matching_node_and_match(NULL, c6x_clkc_match, &id);
+ 	if (!node)
+ 		return;
  
-@@ -371,10 +371,6 @@ static void at91_dt_rstc(void)
- 	if (!at91_rstc_base)
- 		panic("unable to map rstc cpu registers\n");
+@@ -458,8 +458,7 @@ void __init c64x_setup_clocks(void)
+ 	pll->lock_delay = val;
  
--	of_id = of_match_node(rstc_ids, np);
--	if (!of_id)
--		panic("AT91: rtsc no restart function available\n");
--
- 	arm_pm_restart = of_id->data;
- 
- 	of_node_put(np);
-@@ -392,7 +388,7 @@ static void at91_dt_ramc(void)
- 	struct device_node *np;
- 	const struct of_device_id *of_id;
- 
--	np = of_find_matching_node(NULL, ramc_ids);
-+	np = of_find_matching_node_and_match(NULL, ramc_ids, &of_id);
- 	if (!np)
- 		panic("unable to find compatible ram controller node in dtb\n");
- 
-@@ -402,11 +398,7 @@ static void at91_dt_ramc(void)
- 	/* the controller may have 2 banks */
- 	at91_ramc_base[1] = of_iomap(np, 1);
- 
--	of_id = of_match_node(ramc_ids, np);
--	if (!of_id)
--		pr_warn("AT91: ramc no standby function available\n");
--	else
--		at91_pm_set_standby(of_id->data);
-+	at91_pm_set_standby(of_id->data);
- 
- 	of_node_put(np);
- }
+ 	/* id->data is a pointer to SoC-specific setup */
+-	id = of_match_node(c6x_clkc_match, node);
+-	if (id && id->data) {
++	if (id->data) {
+ 		__setup_clocks = id->data;
+ 		__setup_clocks(node);
+ 	}
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 hosted by The Linux Foundation
