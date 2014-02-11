@@ -1,40 +1,91 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] can: xilinx CAN controller support.
-Date: Tue, 11 Feb 2014 15:12:45 +0100
-Message-ID: <201402111512.45678.arnd@arndb.de>
-References: <6c2bcce0-9897-4d1d-a8b9-47924e40f73c@VA3EHSMHS008.ehs.local> <52FA1910.2060101@pengutronix.de> <52FA2419.70102@monstr.eu>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <52FA2419.70102@monstr.eu>
-Sender: linux-can-owner@vger.kernel.org
-To: monstr@monstr.eu
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>, Michal Simek <michal.simek@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>, "wg@grandegger.com" <wg@grandegger.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH RFC v3 0/3] ARM: defining idle states DT bindings
+Date: Tue, 11 Feb 2014 14:17:50 +0000
+Message-ID: <1392128273-8614-1-git-send-email-lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Dave Martin <dave.martin@arm.com>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Grant Likely <grant.likely@linaro.org>, Kumar Gala <galak@codeaurora.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Russell King <linux@arm.linux.org.uk>, Mark Hambleton <mark.hambleton@broadcom.com>, Hanjun Guo <hanjun.guo@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <t.figa@samsung.com>, Kevin
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 11 February 2014, Michal Simek wrote:
-> >> The only remaining question is if we should create generic DT binding
-> >> for fifo depth. Arnd, Rob: Any opinion about it?
-> >> Definitely will be worth to have one generic binding if this is generic feature.
-> >> But if this is just specific feature for us then current properties should
-> >> be fine.
-> >>
-> >> In general all these xlnx,XXX properties just reflect all configurable options
-> >> which you can setup in design tool which means that provide full hw description
-> >> with all variants and they are automatically generated from tools.
-> >>
-> >> Please let me know what you think.
-> > 
-> > I like:
-> > 
-> >     rx-fifo-depth
-> >     tx-fifo-depth
-> 
-> No problem with that. Let Kedar to fix it according this and he will send v2 with this.
-> 
+This is v3 of a previous posting:
 
-Sounds reasonable to me too.
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-January/226901.h=
+tml
 
-	Arnd
+This patchset depends on the following bindings to be approved and augmente=
+d
+to cater for hierarchical power domains in DT:
+
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-January/224928.h=
+tml
+
+Changes in v3:
+
+- Renamed C-states to "idle states" in patches and cover letter
+- Added SBSA definitions
+- Added power_state parameter to PSCI
+- Removed OPP dependency
+- Split latency into entry/exit latencies
+- Reintroduced processor and cache retention boolean
+- Made power_state generic parameter for all entry methods
+- Redefined idle state hierarchy
+
+Changes in v2:
+
+- Updated cache bindings according to review
+- Added power domain phandle to cache bindings
+- Added power domains to C-states bindings
+- Removed useless reg property from C-states bindings
+- Removed cpu-map references from C-states bindings
+- Added dependency on OPP in C-states parameters
+- Added C-state state hierarchy
+
+ARM based systems embed power management HW that allows SW to enter
+low-power states according to run-time criteria based on parameters (eg
+power state entry/exit latency) that define how an idle state has to be
+managed and its respective properties. ARM partners implement HW power
+management schemes through custom HW, with power controllers and relative
+control mechanisms differing on both HW implementations and the way SW can
+control them. This differentiation forces PM software in the kernel to cope
+with states differences in power management drivers, which cause code
+fragmentation and duplication of functionality.
+
+Most of the power control scheme HW parameters are not probeable on ARM
+platforms from a SW point of view, hence, in order to tackle the drivers
+fragmentation problem, this patch series defines device tree bindings to
+describe idle states parameters on ARM platforms.
+
+Device tree bindings for idle states also require the introduction of devic=
+e
+tree bindings for processor caches, since idle states entry/exit require
+SW cache maintainance; in some ARM systems, where firmware does not
+support power down interfaces, cache maintainance must be carried out in th=
+e
+OS power management layer, which then requires a description of the cache
+topology through device tree nodes.
+
+Idle states device tree standardization shares most of the concepts and
+definitions with the ongoing ACPI ARM C-state bindings proposal so that
+both standards can contain a coherent set of parameters, simplifying the
+way SW will have to handle the respective device drivers.
+
+Lorenzo Pieralisi (3):
+  Documentation: devicetree: psci: define CPU suspend parameter
+  Documentation: arm: add cache DT bindings
+  Documentation: arm: define DT idle states bindings
+
+ Documentation/devicetree/bindings/arm/cache.txt       | 165 +++
+ Documentation/devicetree/bindings/arm/cpus.txt        |  10 +
+ Documentation/devicetree/bindings/arm/idle-states.txt | 690 ++++++++++
+ Documentation/devicetree/bindings/arm/psci.txt        |   7 +
+ 4 files changed, 872 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/cache.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/idle-states.txt
+
+--=20
+1.8.4
+
+
