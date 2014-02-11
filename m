@@ -1,646 +1,133 @@
-From: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] [media] of: move graph helpers from
- drivers/media/v4l2-core to drivers/media
-Date: Wed, 12 Feb 2014 06:53:06 +0900
-Message-ID: <20140212065306.36a03e82.m.chehab@samsung.com>
-References: <1392154905-12007-1-git-send-email-p.zabel@pengutronix.de>
+From: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] of: Turn of_match_node into a static inline when
+ CONFIG_OF isn't set
+Date: Tue, 11 Feb 2014 15:55:19 -0600
+Message-ID: <20140211215519.GJ841@joshc.qualcomm.com>
+References: <1392122211-11422-1-git-send-email-laurent.pinchart@ideasonboard.com>
+ <1596542.hkJp71u3OJ@avalon>
+ <20140211164825.GC841@joshc.qualcomm.com>
+ <6446980.WMjvBYStRY@avalon>
+ <20140211180845.GG841@joshc.qualcomm.com>
+ <CAMuHMdVkPLe5986hYPApoQr7oJSb6U2P71=nP+9mtvtaskdHXg@mail.gmail.com>
+ <CAL_JsqKnsr-9nSjCGvroC0nDK36vQUnwMWj=cPjvUbRymmHFOQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1392154905-12007-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKnsr-9nSjCGvroC0nDK36vQUnwMWj=cPjvUbRymmHFOQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Em Tue, 11 Feb 2014 22:41:45 +0100
-Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> escreveu:
-
-> From: Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Tue, Feb 11, 2014 at 03:30:33PM -0600, Rob Herring wrote:
+> On Tue, Feb 11, 2014 at 12:29 PM, Geert Uytterhoeven
+> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> > On Tue, Feb 11, 2014 at 7:08 PM, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> >> It sure would be convenient if platform_device had a 'const struct
+> >> of_device_id *of_id_entry' member similar to the existing struct
+> >> platform_device_id one, that was set up during platform device matching.
+> >> Most platform_driver users of of_match_node() would simply go away.
+> >
+> > Can't the entry be shared for both platform_device_id and of_device_id?
+> > Only one of them can be valid at the same time, right?
+> >
+[..]
 > 
-> This patch moves the parsing helpers used to parse connected graphs
-> in the device tree, like the video interface bindings documented in
-> Documentation/devicetree/bindings/media/video-interfaces.txt, from
-> drivers/media/v4l2-core to drivers/media.
+> I believe this is the reason drivers have to call of_match_device:
 > 
-> This allows to reuse the same parser code from outside the V4L2
-> framework, most importantly from display drivers.
-> The functions v4l2_of_get_next_endpoint, v4l2_of_get_remote_port,
-> and v4l2_of_get_remote_port_parent are moved. They are renamed to
-> of_graph_get_next_endpoint, of_graph_get_remote_port, and
-> of_graph_get_remote_port_parent, respectively.
-> Since there are not that many current users, switch all of them
-> to the new functions right away.
-> 
-> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Acked-by: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-> ---
-> Changes since v1:
->  - Moved to drivers/media instead of drives/of
->  - Removed v4l2_of_get_ functions and changed all users in one step
->  - Keep providing stubs for !OF case
-> ---
->  drivers/media/Kconfig                         |   4 +
->  drivers/media/Makefile                        |   2 +
->  drivers/media/i2c/adv7343.c                   |   4 +-
->  drivers/media/i2c/mt9p031.c                   |   4 +-
->  drivers/media/i2c/s5k5baf.c                   |   3 +-
->  drivers/media/i2c/tvp514x.c                   |   3 +-
->  drivers/media/i2c/tvp7002.c                   |   3 +-
->  drivers/media/of_graph.c                      | 133 ++++++++++++++++++++++++++
->  drivers/media/platform/exynos4-is/fimc-is.c   |   6 +-
->  drivers/media/platform/exynos4-is/media-dev.c |   3 +-
->  drivers/media/platform/exynos4-is/mipi-csis.c |   3 +-
->  drivers/media/v4l2-core/v4l2-of.c             | 117 ----------------------
->  include/media/of_graph.h                      |  46 +++++++++
->  include/media/v4l2-of.h                       |  24 -----
->  14 files changed, 202 insertions(+), 153 deletions(-)
->  create mode 100644 drivers/media/of_graph.c
->  create mode 100644 include/media/of_graph.h
-> 
-> diff --git a/drivers/media/Kconfig b/drivers/media/Kconfig
-> index 1d0758a..7681026 100644
-> --- a/drivers/media/Kconfig
-> +++ b/drivers/media/Kconfig
-> @@ -96,6 +96,7 @@ config VIDEO_DEV
->  	tristate
->  	depends on MEDIA_SUPPORT
->  	depends on MEDIA_CAMERA_SUPPORT || MEDIA_ANALOG_TV_SUPPORT || MEDIA_RADIO_SUPPORT
-> +	select OF_GRAPH if OF
->  	default y
->  
->  config VIDEO_V4L2_SUBDEV_API
-> @@ -203,3 +204,6 @@ source "drivers/media/tuners/Kconfig"
->  source "drivers/media/dvb-frontends/Kconfig"
->  
->  endif # MEDIA_SUPPORT
-> +
-> +config OF_GRAPH
-> +        bool
-> diff --git a/drivers/media/Makefile b/drivers/media/Makefile
-> index 620f275..ff980bd 100644
-> --- a/drivers/media/Makefile
-> +++ b/drivers/media/Makefile
-> @@ -18,6 +18,8 @@ ifeq ($(CONFIG_MEDIA_CONTROLLER),y)
->    obj-$(CONFIG_MEDIA_SUPPORT) += media.o
->  endif
->  
-> +obj-$(CONFIG_OF_GRAPH)  += of_graph.o
-> +
->  obj-$(CONFIG_VIDEO_DEV) += v4l2-core/
->  obj-$(CONFIG_DVB_CORE)  += dvb-core/
->  
-> diff --git a/drivers/media/i2c/adv7343.c b/drivers/media/i2c/adv7343.c
-> index d4e15a6..74a1507 100644
-> --- a/drivers/media/i2c/adv7343.c
-> +++ b/drivers/media/i2c/adv7343.c
-> @@ -28,10 +28,10 @@
->  #include <linux/of.h>
->  
->  #include <media/adv7343.h>
-> +#include <media/of_graph.h>
->  #include <media/v4l2-async.h>
->  #include <media/v4l2-device.h>
->  #include <media/v4l2-ctrls.h>
-> -#include <media/v4l2-of.h>
->  
->  #include "adv7343_regs.h"
->  
-> @@ -410,7 +410,7 @@ adv7343_get_pdata(struct i2c_client *client)
->  	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
->  		return client->dev.platform_data;
->  
-> -	np = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
-> +	np = of_graph_get_next_endpoint(client->dev.of_node, NULL);
->  	if (!np)
->  		return NULL;
->  
-> diff --git a/drivers/media/i2c/mt9p031.c b/drivers/media/i2c/mt9p031.c
-> index e5ddf47..60f36dc 100644
-> --- a/drivers/media/i2c/mt9p031.c
-> +++ b/drivers/media/i2c/mt9p031.c
-> @@ -27,9 +27,9 @@
->  #include <linux/videodev2.h>
->  
->  #include <media/mt9p031.h>
-> +#include <media/of_graph.h>
->  #include <media/v4l2-ctrls.h>
->  #include <media/v4l2-device.h>
-> -#include <media/v4l2-of.h>
->  #include <media/v4l2-subdev.h>
->  
->  #include "aptina-pll.h"
-> @@ -943,7 +943,7 @@ mt9p031_get_pdata(struct i2c_client *client)
->  	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
->  		return client->dev.platform_data;
->  
-> -	np = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
-> +	np = of_graph_get_next_endpoint(client->dev.of_node, NULL);
->  	if (!np)
->  		return NULL;
->  
-> diff --git a/drivers/media/i2c/s5k5baf.c b/drivers/media/i2c/s5k5baf.c
-> index 77e10e0..06261ee 100644
-> --- a/drivers/media/i2c/s5k5baf.c
-> +++ b/drivers/media/i2c/s5k5baf.c
-> @@ -25,6 +25,7 @@
->  #include <linux/slab.h>
->  
->  #include <media/media-entity.h>
-> +#include <media/of_graph.h>
->  #include <media/v4l2-ctrls.h>
->  #include <media/v4l2-device.h>
->  #include <media/v4l2-subdev.h>
-> @@ -1855,7 +1856,7 @@ static int s5k5baf_parse_device_node(struct s5k5baf *state, struct device *dev)
->  	if (ret < 0)
->  		return ret;
->  
-> -	node_ep = v4l2_of_get_next_endpoint(node, NULL);
-> +	node_ep = of_graph_get_next_endpoint(node, NULL);
->  	if (!node_ep) {
->  		dev_err(dev, "no endpoint defined at node %s\n",
->  			node->full_name);
-> diff --git a/drivers/media/i2c/tvp514x.c b/drivers/media/i2c/tvp514x.c
-> index 83d85df..50062d2 100644
-> --- a/drivers/media/i2c/tvp514x.c
-> +++ b/drivers/media/i2c/tvp514x.c
-> @@ -37,6 +37,7 @@
->  #include <linux/v4l2-mediabus.h>
->  #include <linux/of.h>
->  
-> +#include <media/of_graph.h>
->  #include <media/v4l2-async.h>
->  #include <media/v4l2-device.h>
->  #include <media/v4l2-common.h>
-> @@ -1068,7 +1069,7 @@ tvp514x_get_pdata(struct i2c_client *client)
->  	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
->  		return client->dev.platform_data;
->  
-> -	endpoint = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
-> +	endpoint = of_graph_get_next_endpoint(client->dev.of_node, NULL);
->  	if (!endpoint)
->  		return NULL;
->  
-> diff --git a/drivers/media/i2c/tvp7002.c b/drivers/media/i2c/tvp7002.c
-> index 912e1cc..7b3201b 100644
-> --- a/drivers/media/i2c/tvp7002.c
-> +++ b/drivers/media/i2c/tvp7002.c
-> @@ -31,6 +31,7 @@
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/v4l2-dv-timings.h>
-> +#include <media/of_graph.h>
->  #include <media/tvp7002.h>
->  #include <media/v4l2-async.h>
->  #include <media/v4l2-device.h>
-> @@ -957,7 +958,7 @@ tvp7002_get_pdata(struct i2c_client *client)
->  	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
->  		return client->dev.platform_data;
->  
-> -	endpoint = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
-> +	endpoint = of_graph_get_next_endpoint(client->dev.of_node, NULL);
->  	if (!endpoint)
->  		return NULL;
->  
-> diff --git a/drivers/media/of_graph.c b/drivers/media/of_graph.c
-> new file mode 100644
-> index 0000000..aa526d7
-> --- /dev/null
-> +++ b/drivers/media/of_graph.c
-> @@ -0,0 +1,133 @@
-> +/*
-> + * OF graph binding parsing library
-> + *
-> + * Copyright (C) 2012 - 2013 Samsung Electronics Co., Ltd.
-> + * Author: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> + *
-> + * Copyright (C) 2012 Renesas Electronics Corp.
-> + * Author: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of version 2 of the GNU General Public License as
-> + * published by the Free Software Foundation.
-> + */
-> +#include <linux/kernel.h>
-> +#include <linux/of.h>
-> +#include <linux/types.h>
-> +
-> +/**
-> + * of_graph_get_next_endpoint() - get next endpoint node
-> + * @parent: pointer to the parent device node
-> + * @prev: previous endpoint node, or NULL to get first
-> + *
-> + * Return: An 'endpoint' node pointer with refcount incremented. Refcount
-> + * of the passed @prev node is not decremented, the caller have to use
-> + * of_node_put() on it when done.
-> + */
-> +struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
-> +					struct device_node *prev)
-> +{
-> +	struct device_node *endpoint;
-> +	struct device_node *port = NULL;
-> +
-> +	if (!parent)
-> +		return NULL;
-> +
-> +	if (!prev) {
-> +		struct device_node *node;
-> +		/*
-> +		 * It's the first call, we have to find a port subnode
-> +		 * within this node or within an optional 'ports' node.
-> +		 */
-> +		node = of_get_child_by_name(parent, "ports");
-> +		if (node)
-> +			parent = node;
-> +
-> +		port = of_get_child_by_name(parent, "port");
-> +
-> +		if (port) {
-> +			/* Found a port, get an endpoint. */
-> +			endpoint = of_get_next_child(port, NULL);
-> +			of_node_put(port);
-> +		} else {
-> +			endpoint = NULL;
-> +		}
-> +
-> +		if (!endpoint)
-> +			pr_err("%s(): no endpoint nodes specified for %s\n",
-> +			       __func__, parent->full_name);
-> +		of_node_put(node);
-> +	} else {
-> +		port = of_get_parent(prev);
-> +		if (!port)
-> +			/* Hm, has someone given us the root node ?... */
-> +			return NULL;
-> +
-> +		/* Avoid dropping prev node refcount to 0. */
-> +		of_node_get(prev);
-> +		endpoint = of_get_next_child(port, prev);
-> +		if (endpoint) {
-> +			of_node_put(port);
-> +			return endpoint;
-> +		}
-> +
-> +		/* No more endpoints under this port, try the next one. */
-> +		do {
-> +			port = of_get_next_child(parent, port);
-> +			if (!port)
-> +				return NULL;
-> +		} while (of_node_cmp(port->name, "port"));
-> +
-> +		/* Pick up the first endpoint in this port. */
-> +		endpoint = of_get_next_child(port, NULL);
-> +		of_node_put(port);
-> +	}
-> +
-> +	return endpoint;
-> +}
-> +EXPORT_SYMBOL(of_graph_get_next_endpoint);
-> +
-> +/**
-> + * of_graph_get_remote_port_parent() - get remote port's parent node
-> + * @node: pointer to a local endpoint device_node
-> + *
-> + * Return: Remote device node associated with remote endpoint node linked
-> + *	   to @node. Use of_node_put() on it when done.
-> + */
-> +struct device_node *of_graph_get_remote_port_parent(
-> +			       const struct device_node *node)
-> +{
-> +	struct device_node *np;
-> +	unsigned int depth;
-> +
-> +	/* Get remote endpoint node. */
-> +	np = of_parse_phandle(node, "remote-endpoint", 0);
-> +
-> +	/* Walk 3 levels up only if there is 'ports' node. */
-> +	for (depth = 3; depth && np; depth--) {
-> +		np = of_get_next_parent(np);
-> +		if (depth == 2 && of_node_cmp(np->name, "ports"))
-> +			break;
-> +	}
-> +	return np;
-> +}
-> +EXPORT_SYMBOL(of_graph_get_remote_port_parent);
-> +
-> +/**
-> + * of_graph_get_remote_port() - get remote port node
-> + * @node: pointer to a local endpoint device_node
-> + *
-> + * Return: Remote port node associated with remote endpoint node linked
-> + *	   to @node. Use of_node_put() on it when done.
-> + */
-> +struct device_node *of_graph_get_remote_port(const struct device_node *node)
-> +{
-> +	struct device_node *np;
-> +
-> +	/* Get remote endpoint node. */
-> +	np = of_parse_phandle(node, "remote-endpoint", 0);
-> +	if (!np)
-> +		return NULL;
-> +	return of_get_next_parent(np);
-> +}
-> +EXPORT_SYMBOL(of_graph_get_remote_port);
-> diff --git a/drivers/media/platform/exynos4-is/fimc-is.c b/drivers/media/platform/exynos4-is/fimc-is.c
-> index 13a4228..6405268 100644
-> --- a/drivers/media/platform/exynos4-is/fimc-is.c
-> +++ b/drivers/media/platform/exynos4-is/fimc-is.c
-> @@ -30,7 +30,7 @@
->  #include <linux/slab.h>
->  #include <linux/types.h>
->  #include <linux/videodev2.h>
-> -#include <media/v4l2-of.h>
-> +#include <media/of_graph.h>
->  #include <media/videobuf2-dma-contig.h>
->  
->  #include "media-dev.h"
-> @@ -167,10 +167,10 @@ static int fimc_is_parse_sensor_config(struct fimc_is_sensor *sensor,
->  	u32 tmp = 0;
->  	int ret;
->  
-> -	np = v4l2_of_get_next_endpoint(np, NULL);
-> +	np = of_graph_get_next_endpoint(np, NULL);
->  	if (!np)
->  		return -ENXIO;
-> -	np = v4l2_of_get_remote_port(np);
-> +	np = of_graph_get_remote_port(np);
->  	if (!np)
->  		return -ENXIO;
->  
-> diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
-> index c1bce17..11219e2 100644
-> --- a/drivers/media/platform/exynos4-is/media-dev.c
-> +++ b/drivers/media/platform/exynos4-is/media-dev.c
-> @@ -24,6 +24,7 @@
->  #include <linux/pm_runtime.h>
->  #include <linux/types.h>
->  #include <linux/slab.h>
-> +#include <media/of_graph.h>
->  #include <media/v4l2-ctrls.h>
->  #include <media/v4l2-of.h>
->  #include <media/media-device.h>
-> @@ -473,7 +474,7 @@ static int fimc_md_parse_port_node(struct fimc_md *fmd,
->  
->  	pd->mux_id = (endpoint.port - 1) & 0x1;
->  
-> -	rem = v4l2_of_get_remote_port_parent(ep);
-> +	rem = of_graph_get_remote_port_parent(ep);
->  	of_node_put(ep);
->  	if (rem == NULL) {
->  		v4l2_info(&fmd->v4l2_dev, "Remote device at %s not found\n",
-> diff --git a/drivers/media/platform/exynos4-is/mipi-csis.c b/drivers/media/platform/exynos4-is/mipi-csis.c
-> index f3c3591..7211523 100644
-> --- a/drivers/media/platform/exynos4-is/mipi-csis.c
-> +++ b/drivers/media/platform/exynos4-is/mipi-csis.c
-> @@ -28,6 +28,7 @@
->  #include <linux/slab.h>
->  #include <linux/spinlock.h>
->  #include <linux/videodev2.h>
-> +#include <media/of_graph.h>
->  #include <media/s5p_fimc.h>
->  #include <media/v4l2-of.h>
->  #include <media/v4l2-subdev.h>
-> @@ -762,7 +763,7 @@ static int s5pcsis_parse_dt(struct platform_device *pdev,
->  				 &state->max_num_lanes))
->  		return -EINVAL;
->  
-> -	node = v4l2_of_get_next_endpoint(node, NULL);
-> +	node = of_graph_get_next_endpoint(node, NULL);
->  	if (!node) {
->  		dev_err(&pdev->dev, "No port node at %s\n",
->  				pdev->dev.of_node->full_name);
-> diff --git a/drivers/media/v4l2-core/v4l2-of.c b/drivers/media/v4l2-core/v4l2-of.c
-> index 42e3e8a..f919db3 100644
-> --- a/drivers/media/v4l2-core/v4l2-of.c
-> +++ b/drivers/media/v4l2-core/v4l2-of.c
-> @@ -152,120 +152,3 @@ int v4l2_of_parse_endpoint(const struct device_node *node,
->  	return 0;
->  }
->  EXPORT_SYMBOL(v4l2_of_parse_endpoint);
-> -
-> -/**
-> - * v4l2_of_get_next_endpoint() - get next endpoint node
-> - * @parent: pointer to the parent device node
-> - * @prev: previous endpoint node, or NULL to get first
-> - *
-> - * Return: An 'endpoint' node pointer with refcount incremented. Refcount
-> - * of the passed @prev node is not decremented, the caller have to use
-> - * of_node_put() on it when done.
-> - */
-> -struct device_node *v4l2_of_get_next_endpoint(const struct device_node *parent,
-> -					struct device_node *prev)
-> -{
-> -	struct device_node *endpoint;
-> -	struct device_node *port = NULL;
-> -
-> -	if (!parent)
-> -		return NULL;
-> -
-> -	if (!prev) {
-> -		struct device_node *node;
-> -		/*
-> -		 * It's the first call, we have to find a port subnode
-> -		 * within this node or within an optional 'ports' node.
-> -		 */
-> -		node = of_get_child_by_name(parent, "ports");
-> -		if (node)
-> -			parent = node;
-> -
-> -		port = of_get_child_by_name(parent, "port");
-> -
-> -		if (port) {
-> -			/* Found a port, get an endpoint. */
-> -			endpoint = of_get_next_child(port, NULL);
-> -			of_node_put(port);
-> -		} else {
-> -			endpoint = NULL;
-> -		}
-> -
-> -		if (!endpoint)
-> -			pr_err("%s(): no endpoint nodes specified for %s\n",
-> -			       __func__, parent->full_name);
-> -		of_node_put(node);
-> -	} else {
-> -		port = of_get_parent(prev);
-> -		if (!port)
-> -			/* Hm, has someone given us the root node ?... */
-> -			return NULL;
-> -
-> -		/* Avoid dropping prev node refcount to 0. */
-> -		of_node_get(prev);
-> -		endpoint = of_get_next_child(port, prev);
-> -		if (endpoint) {
-> -			of_node_put(port);
-> -			return endpoint;
-> -		}
-> -
-> -		/* No more endpoints under this port, try the next one. */
-> -		do {
-> -			port = of_get_next_child(parent, port);
-> -			if (!port)
-> -				return NULL;
-> -		} while (of_node_cmp(port->name, "port"));
-> -
-> -		/* Pick up the first endpoint in this port. */
-> -		endpoint = of_get_next_child(port, NULL);
-> -		of_node_put(port);
-> -	}
-> -
-> -	return endpoint;
-> -}
-> -EXPORT_SYMBOL(v4l2_of_get_next_endpoint);
-> -
-> -/**
-> - * v4l2_of_get_remote_port_parent() - get remote port's parent node
-> - * @node: pointer to a local endpoint device_node
-> - *
-> - * Return: Remote device node associated with remote endpoint node linked
-> - *	   to @node. Use of_node_put() on it when done.
-> - */
-> -struct device_node *v4l2_of_get_remote_port_parent(
-> -			       const struct device_node *node)
-> -{
-> -	struct device_node *np;
-> -	unsigned int depth;
-> -
-> -	/* Get remote endpoint node. */
-> -	np = of_parse_phandle(node, "remote-endpoint", 0);
-> -
-> -	/* Walk 3 levels up only if there is 'ports' node. */
-> -	for (depth = 3; depth && np; depth--) {
-> -		np = of_get_next_parent(np);
-> -		if (depth == 2 && of_node_cmp(np->name, "ports"))
-> -			break;
-> -	}
-> -	return np;
-> -}
-> -EXPORT_SYMBOL(v4l2_of_get_remote_port_parent);
-> -
-> -/**
-> - * v4l2_of_get_remote_port() - get remote port node
-> - * @node: pointer to a local endpoint device_node
-> - *
-> - * Return: Remote port node associated with remote endpoint node linked
-> - *	   to @node. Use of_node_put() on it when done.
-> - */
-> -struct device_node *v4l2_of_get_remote_port(const struct device_node *node)
-> -{
-> -	struct device_node *np;
-> -
-> -	/* Get remote endpoint node. */
-> -	np = of_parse_phandle(node, "remote-endpoint", 0);
-> -	if (!np)
-> -		return NULL;
-> -	return of_get_next_parent(np);
-> -}
-> -EXPORT_SYMBOL(v4l2_of_get_remote_port);
-> diff --git a/include/media/of_graph.h b/include/media/of_graph.h
-> new file mode 100644
-> index 0000000..3bbeb60
-> --- /dev/null
-> +++ b/include/media/of_graph.h
-> @@ -0,0 +1,46 @@
-> +/*
-> + * OF graph binding parsing helpers
-> + *
-> + * Copyright (C) 2012 - 2013 Samsung Electronics Co., Ltd.
-> + * Author: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> + *
-> + * Copyright (C) 2012 Renesas Electronics Corp.
-> + * Author: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of version 2 of the GNU General Public License as
-> + * published by the Free Software Foundation.
-> + */
-> +#ifndef __LINUX_OF_GRAPH_H
-> +#define __LINUX_OF_GRAPH_H
-> +
-> +#ifdef CONFIG_OF
+> commit b1608d69cb804e414d0887140ba08a9398e4e638
+> Author: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Date:   Wed May 18 11:19:24 2011 -0600
+>
+>     drivercore: revert addition of of_match to struct device
+>
+>     Commit b826291c, "drivercore/dt: add a match table pointer to struct
+>     device" added an of_match pointer to struct device to cache the
+>     of_match_table entry discovered at driver match time.  This was unsafe
+>     because matching is not an atomic operation with probing a driver.  If
+>     two or more drivers are attempted to be matched to a driver at the
+>     same time, then the cached matching entry pointer could get
+>     overwritten.
+>
+>     This patch reverts the of_match cache pointer and reworks all users to
+>     call of_match_device() directly instead.
+>
+>     Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-As a matter of consistency, it would be better to test here for
-CONFIG_OF_GRAPH instead, to reflect the same symbol that enables such
-functions as used on Kconfig/Makefile.
+Interesting, thanks for the history!  I'm wondering if this same problem
+exists for the existing platform_device_id cached pointer as well.
 
-> +struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
-> +					struct device_node *previous);
-> +struct device_node *of_graph_get_remote_port_parent(
-> +					const struct device_node *node);
-> +struct device_node *of_graph_get_remote_port(const struct device_node *node);
-> +#else
-> +
-> +static inline struct device_node *of_graph_get_next_endpoint(
-> +					const struct device_node *parent,
-> +					struct device_node *previous)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline struct device_node *of_graph_get_remote_port_parent(
-> +					const struct device_node *node)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline struct device_node *of_graph_get_remote_port(
-> +					const struct device_node *node)
-> +{
-> +	return NULL;
-> +}
-> +
-> +#endif /* CONFIG_OF */
-> +
-> +#endif /* __LINUX_OF_GRAPH_H */
-> diff --git a/include/media/v4l2-of.h b/include/media/v4l2-of.h
-> index 541cea4..8174282 100644
-> --- a/include/media/v4l2-of.h
-> +++ b/include/media/v4l2-of.h
-> @@ -72,11 +72,6 @@ struct v4l2_of_endpoint {
->  #ifdef CONFIG_OF
->  int v4l2_of_parse_endpoint(const struct device_node *node,
->  			   struct v4l2_of_endpoint *endpoint);
-> -struct device_node *v4l2_of_get_next_endpoint(const struct device_node *parent,
-> -					struct device_node *previous);
-> -struct device_node *v4l2_of_get_remote_port_parent(
-> -					const struct device_node *node);
-> -struct device_node *v4l2_of_get_remote_port(const struct device_node *node);
->  #else /* CONFIG_OF */
->  
->  static inline int v4l2_of_parse_endpoint(const struct device_node *node,
-> @@ -85,25 +80,6 @@ static inline int v4l2_of_parse_endpoint(const struct device_node *node,
->  	return -ENOSYS;
->  }
->  
-> -static inline struct device_node *v4l2_of_get_next_endpoint(
-> -					const struct device_node *parent,
-> -					struct device_node *previous)
-> -{
-> -	return NULL;
-> -}
-> -
-> -static inline struct device_node *v4l2_of_get_remote_port_parent(
-> -					const struct device_node *node)
-> -{
-> -	return NULL;
-> -}
-> -
-> -static inline struct device_node *v4l2_of_get_remote_port(
-> -					const struct device_node *node)
-> -{
-> -	return NULL;
-> -}
-> -
->  #endif /* CONFIG_OF */
->  
->  #endif /* _V4L2_OF_H */
+Okay, so maybe caching a pointer in the device isn't the best option,
+what if we considered extending the platform_driver callbacks to include
+a set of per-method (?) probe callbacks which do provide a handle to
+matched identifiers.
 
+In the case of a totally contrived platform_driver supporting ACPI, OF,
+and !OF configurations, it might look something like:
+
+	static const struct of_device_id acme_of_table[] = {
+		/* ... */
+		{ },
+	};
+	MODULE_DEVICE_TABLE(of, acme_of_table);
+
+	static int acme_probe_of(struct platform_device *pdev,
+				 const struct of_device_id *id)
+	{
+		/* ... */
+		return 0;
+	}
+
+	static const struct acpi_device_id acme_acpi_table[] = {
+		/* ... */
+		{ },
+	};
+	MODULE_DEVICE_TABLE(acpi, acme_acpi_table);
+
+	static int acme_probe_acpi(struct platform_device *pdev,
+				   const struct acpi_device_id *id)
+	{
+		/* ... */
+		return 0;
+	}
+
+	static const struct platform_device_id acme_platform_table[] = {
+		/* ... */
+		{ },
+	};
+	MODULE_DEVICE_TABLE(platform, acme_platform_table);
+
+	static int acme_probe_acpi(struct platform_device *pdev,
+				   const struct platform_device_id *id)
+	{
+		/* ... */
+		return 0;
+	}
+
+	static int acme_probe_name(struct platform_device *pdev)
+	{
+		/* ... */
+		return 0;
+	}
+
+	static struct platform_driver acme_driver = {
+		.probe_of	= acme_probe_of,
+		.probe_acpi	= acme_probe_acpi,
+		.probe_platform	= acme_probe_platform,
+		.probe_name	= acme_probe_name,
+		.remove		= acme_remove,
+		.driver		= {
+			.name			= "acme",
+			.of_match_table		= of_match_ptr(acme_of_table),
+			.acpi_match_table	= ACPI_PTR(acme_acpi_table),
+		},
+	};
+	module_platform_driver(acme_driver);
 
 -- 
-
-Cheers,
-Mauro
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
