@@ -1,78 +1,201 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [RFC/PATCH 1/1] mtd: nand: Add a devicetree binding for ECC
- strength and ECC step size
-Date: Tue, 11 Feb 2014 11:19:15 -0300
-Message-ID: <20140211141914.GC23150@localhost>
-References: <1389960820-18696-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1389960820-18696-2-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH v2 1/5] drivers: of: add initialization code for reserved
+ memory
+Date: Tue, 11 Feb 2014 15:29:54 +0100
+Message-ID: <52FA33E2.4050004@samsung.com>
+References: <1391515773-6112-1-git-send-email-m.szyprowski@samsung.com>
+ <1391515773-6112-2-git-send-email-m.szyprowski@samsung.com>
+ <20140205110538.99E47C40A89@trevor.secretlab.ca>
+ <52FA0D6E.9090304@samsung.com> <20140211121316.24032C40C4D@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1389960820-18696-2-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Seif Mazareeb <seif-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <20140211121316.24032C40C4D@trevor.secretlab.ca>
+Sender: linux-doc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@gmail.com>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 17, 2014 at 09:13:40AM -0300, Ezequiel Garcia wrote:
-> Some flashes can only be properly accessed when the ECC mode is
-> specified, and a way to describe such mode is required.
->=20
-> Such ECC mode is completely driver-specific so instead of having one =
-binding
-> per compatible-string, let's add generic ECC strength and ECC step si=
-ze.
-> Driver's can choose the appropriate ECC mode, based on this specifica=
-tion.
->=20
-> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mtd/nand.txt | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documen=
-tation/devicetree/bindings/mtd/nand.txt
-> index 03855c8..683a310 100644
-> --- a/Documentation/devicetree/bindings/mtd/nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/nand.txt
-> @@ -3,5 +3,9 @@
->  - nand-ecc-mode : String, operation mode of the NAND ecc mode.
->    Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob=
-_first",
->    "soft_bch".
-> +- nand-ecc-strength : integer ECC required strength.
-> +- nand-ecc-size : integer step size associated to the ECC strength.
-> +  The exact meaning of the ECC strength and ECC size parameters is c=
-ompletely
-> +  driver-specific.
->  - nand-bus-width : 8 or 16 bus width if not present 8
->  - nand-on-flash-bbt: boolean to enable on flash bbt option if not pr=
-esent false
-> --=20
-> 1.8.1.5
->=20
+Hi,
 
-Brian, do you agree (as MTD maintainer) with this new binding?
+On 11.02.2014 13:13, Grant Likely wrote:
+> On Tue, 11 Feb 2014 12:45:50 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+>> Hello,
+>>
+>> On 2014-02-05 12:05, Grant Likely wrote:
+>>> On Tue, 04 Feb 2014 13:09:29 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+>>>> This patch adds device tree support for contiguous and reserved memory
+>>>> regions defined in device tree.
+>>>>
+>>>> Large memory blocks can be reliably reserved only during early boot.
+>>>> This must happen before the whole memory management subsystem is
+>>>> initialized, because we need to ensure that the given contiguous blocks
+>>>> are not yet allocated by kernel. Also it must happen before kernel
+>>>> mappings for the whole low memory are created, to ensure that there will
+>>>> be no mappings (for reserved blocks) or mapping with special properties
+>>>> can be created (for CMA blocks). This all happens before device tree
+>>>> structures are unflattened, so we need to get reserved memory layout
+>>>> directly from fdt.
+>>>>
+>>>> Later, those reserved memory regions are assigned to devices on each
+>>>> device structure initialization.
+>>>>
+>>>> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+>>>> Cc: Laura Abbott <lauraa@codeaurora.org>
+>>>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>>>> [joshc: rework to implement new DT binding, provide mechanism for
+>>>>   plugging in new reserved-memory node handlers via
+>>>>   RESERVEDMEM_OF_DECLARE]
+>>>> Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
+>>>> [mszyprow: little code cleanup]
+>>>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>>>> ---
+>>>>   drivers/of/Kconfig                |    6 +
+>>>>   drivers/of/Makefile               |    1 +
+>>>>   drivers/of/of_reserved_mem.c      |  219 +++++++++++++++++++++++++++++++++++++
+>>>>   drivers/of/platform.c             |    7 ++
+>>>>   include/asm-generic/vmlinux.lds.h |   11 ++
+>>>>   include/linux/of_reserved_mem.h   |   62 +++++++++++
+>>>>   6 files changed, 306 insertions(+)
+>>>>   create mode 100644 drivers/of/of_reserved_mem.c
+>>>>   create mode 100644 include/linux/of_reserved_mem.h
+>>>>
+>>>> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+>>>> index c6973f101a3e..aba13df56f3a 100644
+>>>> --- a/drivers/of/Kconfig
+>>>> +++ b/drivers/of/Kconfig
+>>>> @@ -75,4 +75,10 @@ config OF_MTD
+>>>>   	depends on MTD
+>>>>   	def_bool y
+>>>>
+>>>> +config OF_RESERVED_MEM
+>>>> +	depends on HAVE_MEMBLOCK
+>>>> +	def_bool y
+>>>> +	help
+>>>> +	  Helpers to allow for reservation of memory regions
+>>>> +
+>>>>   endmenu # OF
+>>>> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+>>>> index efd05102c405..ed9660adad77 100644
+>>>> --- a/drivers/of/Makefile
+>>>> +++ b/drivers/of/Makefile
+>>>> @@ -9,3 +9,4 @@ obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
+>>>>   obj-$(CONFIG_OF_PCI)	+= of_pci.o
+>>>>   obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+>>>>   obj-$(CONFIG_OF_MTD)	+= of_mtd.o
+>>>> +obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
+>>>> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+>>>> new file mode 100644
+>>>> index 000000000000..f17cd56e68d9
+>>>> --- /dev/null
+>>>> +++ b/drivers/of/of_reserved_mem.c
+>>>> @@ -0,0 +1,219 @@
+>>>> +/*
+>>>> + * Device tree based initialization code for reserved memory.
+>>>> + *
+>>>> + * Copyright (c) 2013, The Linux Foundation. All Rights Reserved.
+>>>> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
+>>>> + *		http://www.samsung.com
+>>>> + * Author: Marek Szyprowski <m.szyprowski@samsung.com>
+>>>> + * Author: Josh Cartwright <joshc@codeaurora.org>
+>>>> + *
+>>>> + * This program is free software; you can redistribute it and/or
+>>>> + * modify it under the terms of the GNU General Public License as
+>>>> + * published by the Free Software Foundation; either version 2 of the
+>>>> + * License or (at your optional) any later version of the license.
+>>>> + */
+>>>> +#include <linux/memblock.h>
+>>>> +#include <linux/err.h>
+>>>> +#include <linux/of.h>
+>>>> +#include <linux/of_fdt.h>
+>>>> +#include <linux/of_platform.h>
+>>>> +#include <linux/mm.h>
+>>>> +#include <linux/sizes.h>
+>>>> +#include <linux/of_reserved_mem.h>
+>>>> +
+>>>> +#define MAX_RESERVED_REGIONS	16
+>>>> +static struct reserved_mem reserved_mem[MAX_RESERVED_REGIONS];
+>>>> +static int reserved_mem_count;
+>>>> +
+>>>> +int __init of_parse_flat_dt_reg(unsigned long node, const char *uname,
+>>>> +				   phys_addr_t *base, phys_addr_t *size)
+>>>
+>>> Useful utility function; move to drivers/of/fdt.c
+>>>
+>>>> +{
+>>>> +	unsigned long len;
+>>>> +	__be32 *prop;
+>>>> +
+>>>> +	prop = of_get_flat_dt_prop(node, "reg", &len);
+>>>> +	if (!prop)
+>>>> +		return -EINVAL;
+>>>> +
+>>>> +	if (len < (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32)) {
+>>>> +		pr_err("Reserved memory: invalid reg property in '%s' node.\n",
+>>>> +				uname);
+>>>> +		return -EINVAL;
+>>>> +	}
+>>>
+>>> This is /okay/ for an initial implementation, but it is naive. While I
+>>> suggested making #address-cells and #size-cells equal the root node
+>>> values for the purpose of simplicity, it should still be perfectly valid
+>>> to have different values if the ranges property is correctly formed.
+>>>
+>>>> +
+>>>> +	*base = dt_mem_next_cell(dt_root_addr_cells, &prop);
+>>>> +	*size = dt_mem_next_cell(dt_root_size_cells, &prop);
+>>>
+>>> Future enhancement; allow for parsing more than just the first reg
+>>> tuple.
+>>
+>> One more question. Does it really makes any sense to support more than
+>> one tuple for reg property? For consistency we should also allow more
+>> than one entry in size, align and alloc-ranges property, but I don't
+>> see any benefits for defining more than one range for a single region.
+>> Same can be achieved by defining more regions instead if one really
+>> needs such configuration.
+>
+> Yes, if only because it is an define usage of the reg property. If a
+> devtree has multiple tuples in reg, then all of those tuples should be
+> treated as reserved, even if the kernel doesn't know how to use them.
+>
+> I would not do the same for size/align/alloc-ranges unless there is a
+> very specific use case that you can define. These ones are different
+> from the static regions because they aren't ever used to protect
+> something that already exists in the memory.
 
-Can we get any Acks from a devicetree binding maintainer? Grant has alr=
-eady
-given his (informal) approval [1], but I'd rather have a formal ack fro=
-m
-binding maintainer.
+Is there a reason why multiple regions could not be used for this 
+purpose, instead of adding extra complexity of having multiple reg 
+entries per region?
 
-Once this binding gets accepted, I'll submit an of_helper patch, and a =
-patch
-for pxa3xx-nand to use it.
+I.e. I don't see a difference between
 
-[1] http://www.spinics.net/lists/devicetree/msg20534.html
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+reg1: region@00000000 {
+	reg = <0x00000000 0x1000>;
+};
+
+reg2: region@10000000 {
+	reg = <0x10000000 0x1000>;
+};
+
+user {
+	regions = <&reg1>, <&reg2>;
+};
+
+and
+
+reg: region@00000000 {
+	reg = <0x00000000 0x1000>, <0x10000000 0x1000>;
+};
+
+user {
+	regions = <&reg>;
+};
+
+except that the former IMHO better suits the definition of memory 
+region, which I see as a single contiguous range of memory and can be 
+simplified to have a single reg entry per region.
+
+Best regards,
+Tomasz
