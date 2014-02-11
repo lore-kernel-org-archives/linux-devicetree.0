@@ -1,70 +1,113 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: ohci-/ehci-platform: Change compatible string to ?hci-platform
-Date: Tue, 11 Feb 2014 10:27:12 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1402111023240.1209-100000@iolanthe.rowland.org>
-References: <1392127826-31290-1-git-send-email-hdegoede@redhat.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [RFC PATCH] [media]: of: move graph helpers from
+ drivers/media/v4l2-core to drivers/of
+Date: Tue, 11 Feb 2014 16:27:45 +0100
+Message-ID: <1392132465.6943.19.camel@pizza.hi.pengutronix.de>
+References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de>
+	 <CAL_Jsq+U9zU1i+STLHMBjY5BeEP6djYnJVE5X1ix-D2q_zWztQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392127826-31290-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+U9zU1i+STLHMBjY5BeEP6djYnJVE5X1ix-D2q_zWztQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Feb 2014, Hans de Goede wrote:
+Hi Rob,
 
-> Hi Greg,
+Am Dienstag, den 11.02.2014, 07:56 -0600 schrieb Rob Herring:
+> On Tue, Feb 11, 2014 at 5:45 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> > From: Philipp Zabel <philipp.zabel@gmail.com>
+> >
+> > This patch moves the parsing helpers used to parse connected graphs
+> > in the device tree, like the video interface bindings documented in
+> > Documentation/devicetree/bindings/media/video-interfaces.txt, from
+> > drivers/media/v4l2-core to drivers/of.
 > 
-> Can you please add these 2 patches to usb-next, to unbreak usb on various
-> ARM platforms?
-> 
-> These 2 patches can either be squashed into the first 2 patches of my previous
-> set or added as is to preserve history, either way is fine with me.
-> 
-> The 2nd patch also fixes one of the Kconfig issues and I've a better plan
-> for the 2nd Kconfig issue too, so please consider this a self-nack for my
-> drivers/usb/host/Kconfig patches.
-> 
-> Here is a copy of the echi-platform commit-msg to explain the rationale of
-> these changes, as well as how the breakage happened in the first place:
-> 
-> The initial versions of the devicetree enablement patches for ehci-platform
-> used "ehci-platform" as compatible string. However this was disliked by various
-> reviewers because the platform bus is a Linux invention and devicetree is
-> supposed to be OS agnostic. After much discussion I gave up, added a:
-> "depends on !PPC_OF" to Kconfig to avoid a known conflict with PPC-OF platforms
-> and went with the generic usb-ehci as requested.
-> 
-> In retro-spect I should have stuck to my guns, because the dts files for many
-> existing boards already claim to be compatible with "usb-ehci", ie they have:
-> 
-> 	compatible = "ti,ehci-omap", "usb-ehci";
-> 
-> In theory this should not be a problem since the "ti,ehci-omap" entry takes
-> presedence, but in practice using a conflicting compatible string is an issue,
-> because it makes which driver gets used depend on driver registration order.
-> 
-> This patch changes the compatible string claimed by ehci-platform (back) to
-> "ehci-platform", avoiding the driver registration / module loading ordering
-> problems, and removes the "depends on !PPC_OF" workaround.
-> 
-> Note that there already is a precedent for using ?hci-platform, in the form
-> of xhci-platform.c using "xhci-platfrom" as compatible string.
+> This is the opposite direction things have been moving...
 
-I still think that "ehci-generic" would be better than "ehci-platform"  
-(and the same for ohci).  The reason is that "-platform" is essentially
-meaningless, whereas "-generic" strongly suggests that the hardware
-matches the specification with no special features or requirements.  
-Since the compatibility string -- like everything else in DT -- is
-supposed to be a description of the hardware, this seems only logical.
+I understand subsystem specific functionality is moving from drivers/of
+into the subsystems. In this case three subsystems all could benefit
+from the same set of parsing functions, so it is not clear to me where
+if not drivers/of would be the correct place for this code.
 
-It might even be a good idea to change the "xhci-platform" string to 
-match, it that doesn't cause too much trouble.
+> > This allows to reuse the same parser code from outside the V4L2 framework,
+> > most importantly from display drivers. There have been patches that duplicate
+> > the code (and I am going to send one of my own), such as
+> > http://lists.freedesktop.org/archives/dri-devel/2013-August/043308.html
+> > and others that parse the same binding in a different way:
+> > https://www.mail-archive.com/linux-omap@vger.kernel.org/msg100761.html
+> >
+> > I think that all common video interface parsing helpers should be moved to a
+> > single place, outside of the specific subsystems, so that it can be reused
+> > by all drivers.
+> 
+> Perhaps that should be done rather than moving to drivers/of now and
+> then again to somewhere else.
+>
+> > I moved v4l2_of_get_next_endpoint, v4l2_of_get_remote_port,
+> > and v4l2_of_get_remote_port_parent. They are renamed to
+> > of_graph_get_next_endpoint, of_graph_get_remote_port, and
+> > of_graph_get_remote_port_parent, respectively.
+> >
+> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > ---
+> >  drivers/media/Kconfig             |   1 +
+> >  drivers/media/v4l2-core/v4l2-of.c | 117 ---------------------------------
+> >  drivers/of/Kconfig                |   3 +
+> >  drivers/of/Makefile               |   1 +
+> >  drivers/of/of_graph.c             | 133 ++++++++++++++++++++++++++++++++++++++
+> >  include/linux/of_graph.h          |  23 +++++++
+> >  include/media/v4l2-of.h           |  16 ++---
+> >  7 files changed, 167 insertions(+), 127 deletions(-)
+> >  create mode 100644 drivers/of/of_graph.c
+> >  create mode 100644 include/linux/of_graph.h
+> 
+> [snip]
+> 
+> > diff --git a/include/media/v4l2-of.h b/include/media/v4l2-of.h
+> > index 541cea4..404a493 100644
+> > --- a/include/media/v4l2-of.h
+> > +++ b/include/media/v4l2-of.h
+> > @@ -17,6 +17,7 @@
+> >  #include <linux/list.h>
+> >  #include <linux/types.h>
+> >  #include <linux/errno.h>
+> > +#include <linux/of_graph.h>
+> >
+> >  #include <media/v4l2-mediabus.h>
+> >
+> > @@ -72,11 +73,6 @@ struct v4l2_of_endpoint {
+> >  #ifdef CONFIG_OF
+> >  int v4l2_of_parse_endpoint(const struct device_node *node,
+> >                            struct v4l2_of_endpoint *endpoint);
+> > -struct device_node *v4l2_of_get_next_endpoint(const struct device_node *parent,
+> > -                                       struct device_node *previous);
+> > -struct device_node *v4l2_of_get_remote_port_parent(
+> > -                                       const struct device_node *node);
+> > -struct device_node *v4l2_of_get_remote_port(const struct device_node *node);
+> >  #else /* CONFIG_OF */
+> >
+> >  static inline int v4l2_of_parse_endpoint(const struct device_node *node,
+> > @@ -85,25 +81,25 @@ static inline int v4l2_of_parse_endpoint(const struct device_node *node,
+> >         return -ENOSYS;
+> >  }
+> >
+> > +#endif /* CONFIG_OF */
+> > +
+> >  static inline struct device_node *v4l2_of_get_next_endpoint(
+> >                                         const struct device_node *parent,
+> >                                         struct device_node *previous)
+> >  {
+> > -       return NULL;
+> > +       return of_graph_get_next_endpoint(parent, previous);
+> 
+> Won't this break for !OF?
 
-Alan Stern
+It will. The of_graph_* functions should get their own stubs for that
+case.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards
+Philipp
