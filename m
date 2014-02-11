@@ -1,102 +1,47 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/2] ARM: shmobile: koelsch: add Ether DT support
-Date: Tue, 11 Feb 2014 18:01:25 +0100
-Message-ID: <2679079.Rucv1O0jLA@avalon>
-References: <201402070110.18561.sergei.shtylyov@cogentembedded.com> <201402070114.27279.sergei.shtylyov@cogentembedded.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: ohci-/ehci-platform: Change compatible string to ?hci-platform
+Date: Tue, 11 Feb 2014 09:01:27 -0800
+Message-ID: <4195343.2rfzYCCiXV@lenovo>
+References: <Pine.LNX.4.44L0.1402111023240.1209-100000@iolanthe.rowland.org> <1635726.gc3dEs0zOi@wuerfel>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <201402070114.27279.sergei.shtylyov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: horms@verge.net.au, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCH67JWTV4DBB3FO5GLQKGQEVPTBBYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1635726.gc3dEs0zOi@wuerfel>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+Le mardi 11 f=E9vrier 2014, 16:43:37 Arnd Bergmann a =E9crit :
+> On Tuesday 11 February 2014 10:27:12 Alan Stern wrote:
+> > It might even be a good idea to change the "xhci-platform" string to
+> > match, it that doesn't cause too much trouble.
+>=20
+> The original xhci binding was contributed by Al Cooper, but I don't
+> see any dts files using it. I agree that xhci-generic is a better
+> name than xhci-platform, and I think we should make that the recommended
+> string. If Al or someone thinks the xhci-generic string might already
+> be used in production devices, we should however allow both names
+> in the binding and in the driver.
 
-Thanks a lot for the patch.
+The platform on which "xhci-platform" is currently used is Broadcom STB for=
+=20
+which Marc submitted the base support recently. The BCM7445 reference DTS w=
+ill=20
+probably be updated at some point to reflect that.
+--=20
+Florian
 
-On Friday 07 February 2014 01:14:26 Sergei Shtylyov wrote:
-> Define the Koelsch board dependent part of the Ether device node.
-> 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> ---
->  arch/arm/boot/dts/r8a7791-koelsch.dts |   31 +++++++++++++++++++++++++++++-
->  1 file changed, 30 insertions(+), 1 deletion(-)
-> 
-> Index: renesas/arch/arm/boot/dts/r8a7791-koelsch.dts
-> ===================================================================
-> --- renesas.orig/arch/arm/boot/dts/r8a7791-koelsch.dts
-> +++ renesas/arch/arm/boot/dts/r8a7791-koelsch.dts
-> @@ -2,7 +2,8 @@
->   * Device Tree Source for the Koelsch board
->   *
->   * Copyright (C) 2013 Renesas Electronics Corporation
-> - * Copyright (C) 2013 Renesas Solutions Corp.
-> + * Copyright (C) 2013-2014 Renesas Solutions Corp.
-> + * Copyright (C) 2014 Cogent Embedded, Inc.
->   *
->   * This file is licensed under the terms of the GNU General Public License
->   * version 2.  This program is licensed "as is" without any warranty of any
-> @@ -122,12 +123,40 @@
->  		renesas,function = "scif1";
->  	};
-> 
-> +	ether_pins: ether {
-> +		renesas,groups = "eth_link", "eth_mdio", "eth_rmii";
-> +		renesas,function = "eth";
-> +	};
-> +
-> +	phy1_pins: phy1 {
-> +		renesas,groups = "intc_irq0";
-> +		renesas,function = "intc";
-> +	};
-> +
->  	qspi_pins: spi {
->  		renesas,groups = "qspi_ctrl", "qspi_data4";
->  		renesas,function = "qspi";
->  	};
->  };
-> 
-> +&ether {
-> +	pinctrl-0 = <&ether_pins>;
-> +	pinctrl-names = "default";
-> +
-> +	phy-handle = <&phy1>;
-> +	renesas,ether-link-active-low;
-> +	status = "ok";
-> +
-> +	phy1: ethernet-phy@1 {
-> +		reg = <1>;
-> +		interrupt-parent = <&irqc0>;
-> +		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-> +
-> +		pinctrl-0 = <&phy1_pins>;
-> +		pinctrl-names = "default";
-
-I think the PHY pins should be moved to the ethernet device. The reason for 
-this is that the PHY device is discovered dynamically at runtime, and has thus 
-no DT node associated with its struct device to control pinctrl automatically. 
-This should probably be fixed, but in the meantime moving the PHY pins to the 
-ethernet device should fix the problem.
-
-As a last step we're missing a DT equivalent to our board code 
-koelsch_ksz8041_fixup() workaround. Adding a property to specify LEDs usage to 
-the PHY DT node shouldn't be difficult, but associating that node to the PHY 
-device and handling the property in the PHY driver will require a bit of work. 
-Is this on your to-do list ?
-
-> +	};
-> +};
-> +
->  &sata0 {
->  	status = "okay";
->  };
-
--- 
-Regards,
-
-Laurent Pinchart
-
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/groups/opt_out.
