@@ -1,40 +1,54 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH] ARM: tegra: dalmore: fix irq trigger type
-Date: Tue, 11 Feb 2014 21:11:32 +0100
-Message-ID: <4fcfcfdbc86c37c6d47ec32cdbd987f3b406e9b5.1392147256.git.stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: swarren@wwwdotorg.org, thierry.reding@gmail.com, josephl@nvidia.com
-Cc: linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH 1/2] ARM: dts: N9/N950: fix boot hang with 3.14-rc1
+Date: Tue, 11 Feb 2014 14:11:10 -0600
+Message-ID: <52FA83DE.70504@ti.com>
+References: <1391947956-24462-1-git-send-email-aaro.koskinen@iki.fi>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1391947956-24462-1-git-send-email-aaro.koskinen@iki.fi>
+Sender: linux-omap-owner@vger.kernel.org
+To: Aaro Koskinen <aaro.koskinen@iki.fi>, =?ISO-8859-1?Q?Beno=EEt_Couss?= =?ISO-8859-1?Q?on?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Trigger type needs to be IRQ_TYPE_LEVEL_HIGH since the interrupt
-signal gets inverted by the PMC (configured by the invert-interrupt
-property).
+On 02/09/2014 06:12 AM, Aaro Koskinen wrote:
+> N9/N950 does not boot anymore with 3.14-rc1, because SoC compatible
+> property is missing. Fix that.
+> 
+> Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
-I could not test that patch since I don't have such hardware.
-However, I stumbled on that error while tracing a similar error
-on Colibri T30.
+Reviewed-by: Nishanth Menon <nm@ti.com>
+> ---
+>  arch/arm/boot/dts/omap3-n9.dts   | 2 +-
+>  arch/arm/boot/dts/omap3-n950.dts | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/omap3-n9.dts b/arch/arm/boot/dts/omap3-n9.dts
+> index 39828ce464ee..9938b5dc1909 100644
+> --- a/arch/arm/boot/dts/omap3-n9.dts
+> +++ b/arch/arm/boot/dts/omap3-n9.dts
+> @@ -14,5 +14,5 @@
+>  
+>  / {
+>  	model = "Nokia N9";
+> -	compatible = "nokia,omap3-n9", "ti,omap3";
+> +	compatible = "nokia,omap3-n9", "ti,omap36xx", "ti,omap3";
+>  };
+> diff --git a/arch/arm/boot/dts/omap3-n950.dts b/arch/arm/boot/dts/omap3-n950.dts
+> index b076a526b999..261c5589bfa3 100644
+> --- a/arch/arm/boot/dts/omap3-n950.dts
+> +++ b/arch/arm/boot/dts/omap3-n950.dts
+> @@ -14,5 +14,5 @@
+>  
+>  / {
+>  	model = "Nokia N950";
+> -	compatible = "nokia,omap3-n950", "ti,omap3";
+> +	compatible = "nokia,omap3-n950", "ti,omap36xx", "ti,omap3";
+>  };
+> 
 
- arch/arm/boot/dts/tegra114-dalmore.dts | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/tegra114-dalmore.dts b/arch/arm/boot/dts/tegra114-dalmore.dts
-index 73aecfb..f5025fc 100644
---- a/arch/arm/boot/dts/tegra114-dalmore.dts
-+++ b/arch/arm/boot/dts/tegra114-dalmore.dts
-@@ -888,8 +888,9 @@
- 		palmas: tps65913@58 {
- 			compatible = "ti,palmas";
- 			reg = <0x58>;
--			interrupts = <0 86 IRQ_TYPE_LEVEL_LOW>;
- 
-+			/* active-low configured by PMC invert-interrupt */
-+			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
- 			#interrupt-cells = <2>;
- 			interrupt-controller;
- 
 -- 
-1.8.5.4
+Regards,
+Nishanth Menon
