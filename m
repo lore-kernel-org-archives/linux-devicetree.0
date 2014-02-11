@@ -1,200 +1,114 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH] can: xilinx CAN controller support.
-Date: Tue, 11 Feb 2014 14:22:33 +0100
-Message-ID: <52FA2419.70102@monstr.eu>
-References: <6c2bcce0-9897-4d1d-a8b9-47924e40f73c@VA3EHSMHS008.ehs.local> <52F382D5.6090706@pengutronix.de> <8b4dad82-c72a-4e1f-b1af-b8c7964bbf24@TX2EHSMHS043.ehs.local> <52F4A960.10809@pengutronix.de> <da80c522-5524-4f53-9373-3f2bb6f81ddc@CO9EHSMHS015.ehs.local> <52FA1910.2060101@pengutronix.de>
-Reply-To: monstr@monstr.eu
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: regression(ti platforms): next-20140210 (ehci?)
+Date: Tue, 11 Feb 2014 07:27:05 -0600
+Message-ID: <52FA2529.1010506@ti.com>
+References: <52F8F77B.70605@ti.com> <52F9117C.8000405@ti.com>	<7h61omakk9.fsf@paris.lan> <52F9297A.1080206@ti.com> <7h38jq8nk9.fsf@paris.lan>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="hjpfTfliEGdB02KKQBhcv4U3qXDB4SDcb"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <52FA1910.2060101@pengutronix.de>
-Sender: linux-can-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Michal Simek <michal.simek@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>, "wg@grandegger.com" <wg@grandegger.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-next-owner@vger.kernel.org>
+In-Reply-To: <7h38jq8nk9.fsf@paris.lan>
+Sender: linux-next-owner@vger.kernel.org
+To: Kevin Hilman <khilman@linaro.org>
+Cc: Roger Quadros <rogerq@ti.com>, linux-omap <linux-omap@vger.kernel.org>, linux-usb@vger.kernel.org, "Balbi, Felipe" <balbi@ti.com>, linux-next@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---hjpfTfliEGdB02KKQBhcv4U3qXDB4SDcb
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-On 02/11/2014 01:35 PM, Marc Kleine-Budde wrote:
-> On 02/11/2014 12:45 PM, Michal Simek wrote:
->> Hi Marc,
->>
->> On 02/07/2014 10:37 AM, Marc Kleine-Budde wrote:
->>> On 02/07/2014 09:42 AM, Appana Durga Kedareswara Rao wrote:
->>>>>> ---
->>>>>> This patch is rebased on the 3.14 rc1 kernel.
->>>>>> ---
->>>>>>  .../devicetree/bindings/net/can/xilinx_can.txt     |   43 +
->>>>>>  drivers/net/can/Kconfig                            |    8 +
->>>>>>  drivers/net/can/Makefile                           |    1 +
->>>>>>  drivers/net/can/xilinx_can.c                       | 1150 +++++++=
-+++++++++++++
->>>>>>  4 files changed, 1202 insertions(+), 0 deletions(-)  create mode
->>>>>> 100644 Documentation/devicetree/bindings/net/can/xilinx_can.txt
->>>>>>  create mode 100644 drivers/net/can/xilinx_can.c
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/net/can/xilinx_can.=
-txt
->>>>>> b/Documentation/devicetree/bindings/net/can/xilinx_can.txt
->>>>>> new file mode 100644
->>>>>> index 0000000..34f9643
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/net/can/xilinx_can.txt
->>>>>> @@ -0,0 +1,43 @@
->>>>>> +Xilinx Axi CAN/Zynq CANPS controller Device Tree Bindings
->>>>>> +---------------------------------------------------------
->>>>>> +
->>>>>> +Required properties:
->>>>>> +- compatible               : Should be "xlnx,zynq-can-1.00.a" for=
- Zynq
->>>>> CAN
->>>>>> +                     controllers and "xlnx,axi-can-1.00.a" for Ax=
-i CAN
->>>>>> +                     controllers.
->>>>>> +- reg                      : Physical base address and size of th=
-e Axi CAN/Zynq
->>>>>> +                     CANPS registers map.
->>>>>> +- interrupts               : Property with a value describing the=
- interrupt
->>>>>> +                     number.
->>>>>> +- interrupt-parent : Must be core interrupt controller
->>>>>> +- clock-names              : List of input clock names - "ref_clk=
-",
->>>>> "aper_clk"
->>>>>> +                     (See clock bindings for details. Two clocks =
-are
->>>>>> +                      required for Zynq CAN. For Axi CAN
->>>>>> +                      case it is one(ref_clk)).
->>>>>> +- clocks           : Clock phandles (see clock bindings for detai=
-ls).
->>>>>> +- xlnx,can-tx-dpth : Can Tx fifo depth (Required for Axi CAN).
->>>>>> +- xlnx,can-rx-dpth : Can Rx fifo depth (Required for Axi CAN).
->>>>>> +
->>>>>> +
->>>>>> +Example:
->>>>>> +
->>>>>> +For Zynq CANPS Dts file:
->>>>>> +   zynq_can_0: zynq-can@e0008000 {
->>>>>> +                   compatible =3D "xlnx,zynq-can-1.00.a";
->>>>>> +                   clocks =3D <&clkc 19>, <&clkc 36>;
->>>>>> +                   clock-names =3D "ref_clk", "aper_clk";
->>>>>> +                   reg =3D <0xe0008000 0x1000>;
->>>>>> +                   interrupts =3D <0 28 4>;
->>>>>> +                   interrupt-parent =3D <&intc>;
->>>>>
->>>>> Above xlnx,can-{rx,tx}-dpth is mentioned as required, but it's not =
-in the
->>>>> Zynq example.
->>>>
->>>> One of the Difference b/w the AXI CAN and zynq CAN is in AXI CAN the=
- fifo depth(tx,rx)
->>>> Is user configurable. But in case of ZYNQ CAN  the fifo depth  is fi=
-xed for tx and rx fifo's(64)
->>>> Xlnx,can-{rx,tx}-dpth is required only for AXI CAN case it is not re=
-quired for zynq CAN.
->>>> That's why didn't putted that property in device tree.
+On 02/10/2014 07:07 PM, Kevin Hilman wrote:
+> Nishanth Menon <nm@ti.com> writes:
+> 
+>> On 02/10/2014 12:28 PM, Kevin Hilman wrote:
+>>> Roger Quadros <rogerq@ti.com> writes:
 >>>
->>> The device tree should be a hardware only description and should not
->>> hold any user configurable data. Please split your patch into two
->>> patches. The first one should add the driver with a fixed fifo size
->>> (e.g. 0x40) for the AXI, too. The second patch should make the fifo
->>> configurable via device tree.
+>>>> +devicetree
+>>>>
+>>>> On 02/10/2014 05:59 PM, Nishanth Menon wrote:
+>>>>> Hi,
+>>>>>
+>>>>> A quick note to report that I saw regression in today's next tag (logs
+>>>>> indicate around EHCI) boot on various TI platforms:
+>>>>>
+>>>>> Note: crane and sdp2430 are not expected to pass with
+>>>>> multi_v7_defconfig (note: omap2plus_defconfig boot seems to be sane
+>>>>> but USB is disabled there)
+>>>>>
+>>>>> next-20140210-multi_v7_defconfig
+>>>>>  1: am335x-evm:  Boot PASS: http://slexy.org/raw/s2zYHdPb94
+>>>>>  2:  am335x-sk:  Boot PASS: http://slexy.org/raw/s2UChLyzSE
+>>>>>  3: am3517-evm:  Boot FAIL: http://slexy.org/raw/s20Br9XLO1
+>>>>> around ehci
+>>>>>
+>>>>>  4:  am37x-evm:  Boot FAIL: http://slexy.org/raw/s20mVz9Wc7
+>>>>> around ehci
+>>>>>
+>>>>>  5: am43xx-epos:  Boot PASS: http://slexy.org/raw/s2byveBYtT
+>>>>>  6: BeagleBoard-XM:  Boot FAIL: http://slexy.org/raw/s21sOgJNwK
+>>>>> around ehci
+>>>>>
+>>>>>  7: BeagleBone-Black:  Boot PASS: http://slexy.org/raw/s2ovVNAmO7
+>>>>>  8:      crane: No Image built - Missing platform support?:
+>>>>>  9:       dra7:  Boot PASS: http://slexy.org/raw/s217qwaXsM
+>>>>> 10:        ldp:  Boot FAIL: http://slexy.org/raw/s203IvjE23
+>>>>> around ehci
+>>>>>
+>>>>> 11: PandaBoard-ES:  Boot FAIL: http://slexy.org/raw/s2NvkRx2YJ
+>>>>> around ehci
+>>>>
+>>>> I think the problem is that ehci-platform driver gets loaded instead of ehci-omap.
+>>>>
+>>>> In the DT node we have compatible ids for both. e.g. for omap4.dtsi
+>>>>
+>>>>                         usbhsehci: ehci@4a064c00 {
+>>>>                                 compatible = "ti,ehci-omap", "usb-ehci";
+>>>>                                 reg = <0x4a064c00 0x400>;
+>>>>                                 interrupt-parent = <&gic>;
+>>>>                                 interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+>>>>                         };
+>>>>
+>>>> Shouldn't ehci-omap driver be getting a higher priority than usb-ehci?
+>>>>
+>>>> A quick fix would be to eliminate "usb-ehci" from the DT node of all failing platforms.
+>>>
+>>> I can confirm that simply remvoing usb-ehci from omap[34].dtsi nodes
+>>> fixed the problem for me on 3530/overo, 3730/beagle-xM and
+>>> 4460/panda-es.  But I don't think that's the right fix.  First we have
+>>> to figure out why ehci-omap stopped getting loaded first.
 >>
->> can-rx/tx-dpth is not user configurable data as you think.
->> This is FPGA where you can configure this parameter in design tools.
->> It means these 2 values just describe real hardware and user can't jus=
-t change it
->> for different software behaviour.
->=20
-> I see, thanks for the clarification. I had a short grep over the
-> arm/boot/dts folder and it seems that fifo-depth is a more or less
-> common property. I think it should be called {rx,tx}-fifo-depth. I'm
-> unsure whether we need the xlnx or not.
-
-We are using xlnx prefix for all generated properties that's why
-Kedar just kept it there.
-
-
->> Also I don't think it is worth to create 2 patches for the same driver=
-
->> where the first one is useless for axi can device. But if you think
->> that it is worth to do we can create 2 patches as you suggested.
+>> Wont that depend on driver probe order? of_match_device is fairly
+>> simple compatible walk through without looking at other drivers which
+>> might also be compatible, but not yet probed?
 >>
->> Also what we can do is to define that this property is required also
->> for zynq which is 0x40 and change code according too.
->=20
-> Good idea, I think this would make the driver more uniform.
+>> The issue started I think with the following patch getting merged:
+>> ehci-platform: Add support for clks and phy passed through devicetree
+>> some version of http://www.spinics.net/lists/linux-usb/msg101061.html
+>> introduced { .compatible = "usb-ehci", },
+> 
+> This is what I was getting at: an understanding of what caused the
+> failue in the first place.
+> 
+>> Now, in the build we have two drivers which dts claims compatibility
+>> with, but only 1 driver actually works (drivers/usb/host/ehci-omap.c)
+>> for the platform. Thinking that way, in fact, the current
+>> compatibility even matches drivers/usb/host/ehci-ppc-of.c which
+>> obviously wont work either.
+> 
+> Right, so I agree that it makes sense to remove a compatible string
+> where there is no compatability, but a couple other things should happen
+> here.
+> 
+> 1) changelog should describe why this compatible string is in the omap
+> dtsi files in first place.
+> 
 
-ok.
+Agreed: I had commented the same on
+https://patchwork.kernel.org/patch/3621811/
 
+> 2) investigation into the patch that introduced this change to double
+> check it's not introducing other breakage as well.
 
->>> If it's acceptable to describe the fifo usage by device tree, I'd lik=
-e
->>> to make it a generic CAN driver option. But we have to look around, e=
-=2Eg.
->>> what the Ethernet driver use to configure their hardware.
->>
->> I think the real question is not if this is acceptable or not. It is j=
-ust
->> reality that we can setup hardware fifo depth and driver has to reflec=
-t this
->> because without it driver just doesn't work for axi can.
->>
->> The only remaining question is if we should create generic DT binding
->> for fifo depth. Arnd, Rob: Any opinion about it?
->> Definitely will be worth to have one generic binding if this is generi=
-c feature.
->> But if this is just specific feature for us then current properties sh=
-ould
->> be fine.
->>
->> In general all these xlnx,XXX properties just reflect all configurable=
- options
->> which you can setup in design tool which means that provide full hw de=
-scription
->> with all variants and they are automatically generated from tools.
->>
->> Please let me know what you think.
->=20
-> I like:
->=20
->     rx-fifo-depth
->     tx-fifo-depth
-
-No problem with that. Let Kedar to fix it according this and he will send=
- v2 with this.
-
-Thanks,
-Michal
+discussion is now on the relevant patch generating the break:
+http://marc.info/?t=139178752000003&r=1&w=2
 
 
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---hjpfTfliEGdB02KKQBhcv4U3qXDB4SDcb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlL6JBkACgkQykllyylKDCFgPACfR2Jzw7gwJ3lLQ5y/OWVSSJNy
-xzEAn2Z4wvwW7Xxy+9bVcMrXn8YoMXzp
-=VtUH
------END PGP SIGNATURE-----
-
---hjpfTfliEGdB02KKQBhcv4U3qXDB4SDcb--
+-- 
+Regards,
+Nishanth Menon
