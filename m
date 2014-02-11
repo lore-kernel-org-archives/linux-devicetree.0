@@ -1,101 +1,87 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v2 4/5] ARM: init: add support for reserved memory defined
- by device tree
-Date: Tue, 11 Feb 2014 11:52:42 +0100
-Message-ID: <52FA00FA.1090400@samsung.com>
-References: <1391515773-6112-1-git-send-email-m.szyprowski@samsung.com>
- <1391515773-6112-5-git-send-email-m.szyprowski@samsung.com>
- <20140205101510.59A95C40A89@trevor.secretlab.ca>
- <52F38D75.4030704@samsung.com> <20140210215929.4473BC408F7@trevor.secretlab.ca>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH 0/7] primecell: make correct clock parsing possible
+Date: Tue, 11 Feb 2014 11:37:05 +0000
+Message-ID: <1392118632-11312-1-git-send-email-mark.rutland@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <20140210215929.4473BC408F7@trevor.secretlab.ca>
-Sender: linux-doc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: Kyungmin Park <kyungmin.park@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@gmail.com>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, robh+dt@kernel.org, pawel.moll@arm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Currently either the drivers for primecell peripherals and their bindings
+disagree, or those bindings disagree with the primecell binding which they
+derive from. It is impossible in some cases to meet the requirements of both
+bindings and drivers.
 
-On 2014-02-10 22:59, Grant Likely wrote:
-> On Thu, 06 Feb 2014 14:26:13 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
-> > Hello,
-> >
-> > On 2014-02-05 11:15, Grant Likely wrote:
-> > > On Tue, 04 Feb 2014 13:09:32 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
-> > > > Enable reserved memory initialization from device tree.
-> > > >
-> > > > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> > > > Cc: Laura Abbott <lauraa@codeaurora.org>
-> > > > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > > > ---
-> > > >  arch/arm/mm/init.c |    3 +++
-> > > >  1 file changed, 3 insertions(+)
-> > > >
-> > > > diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-> > > > index 804d61566a53..ebafdb479410 100644
-> > > > --- a/arch/arm/mm/init.c
-> > > > +++ b/arch/arm/mm/init.c
-> > > > @@ -17,6 +17,7 @@
-> > > >  #include <linux/nodemask.h>
-> > > >  #include <linux/initrd.h>
-> > > >  #include <linux/of_fdt.h>
-> > > > +#include <linux/of_reserved_mem.h>
-> > > >  #include <linux/highmem.h>
-> > > >  #include <linux/gfp.h>
-> > > >  #include <linux/memblock.h>
-> > > > @@ -323,6 +324,8 @@ void __init arm_memblock_init(struct meminfo *mi,
-> > > >  	if (mdesc->reserve)
-> > > >  		mdesc->reserve();
-> > > >
-> > > > +	early_init_dt_scan_reserved_mem();
-> > > > +
-> > >
-> > > The new binding is being made fundamental. If the reserved-memory node
-> > > is present, then it needs to be honored, even if the kernel doesn't know
-> > > how to use the regions. Therefore, This needs to be unconditional for
-> > > all architectures. The hook should be called in early_init_dt_scan()
-> > > (drivers/of/fdt.c) immediately after the early_init_dt_scan_memory()
-> > > hook.
-> >
-> > In theory this will be the best solution, but it practice there is a
-> > problem. early_init_dt_scan() is called as the first function from kernel
-> > booting code. That time there is no memory yet added to the system, so it
-> > would be really hard to reserve anything. Memory nodes are being added
-> > later either with memblock_add() or by some other arch specific way.
->
-> Hmmm, depends on the architecture. On ARM the memory is loaded into the
-> meminfo structure first, and it isn't until arm_memblock_init() that
-> memblock_add() gets called on all the regions. Some architectures do the
-> memblock_add() directly from early_init_dt_add_memory_arch() function.
->
-> The default early_init_dt_add_memory_arch() in drivers/of/fdt.c is
-> overridden by ARM and a number of other architectures. However...
->
-> > Finally, once all memory has been added to the system we can parse and
-> > reserve all regions defined in the device tree. This really requires
-> > creating another function which will be called by arch specific code.
->
-> ...Or it means getting rid of meminfo entirely so that memblock is
-> available earlier. Laura Abbott has just posted v2 of her series to do
-> exactly that. If you base on that then you should be able to do exactly
-> what I suggested.
+These patches attempt to harmonize the bindings and the drivers with what's in
+use today, in a backwards compatible fashion, relieving us of our present
+Kafkaesque nightmare. Each peripheral's clock(s) are given explicit names which
+can be used, though code will fall back to the existing behaviour if said names
+are not provided. Additionally the currently unmet ordering requirement of
+apb_pclk is dropped, given all existing that code requires this to be named
+anyway.
 
-I've checked Laura's patches and in fact it is possible to do memory
-reservation as a last step in early_init_dt_scan_memory(). However still
-see some problem which I have no idea how to resolve. Right now I focus
-only on ARM, so I have no idea how it is solved by other architectures.
-On of the key features of the new binding is the ability to automatically
-allocate reserved regions of the given size. However kernel, initrd, dt
-and other sub-arch specific critical regions are marked/allocated in
-arm_memblock_init(), which is called after setup_machine_fdt(). This
-might lead to some serious failures when automatically reserved region
-overlaps with some critical resources. Do you have any idea how to solve
-this without a new callback?
+I've used IS_ERR to test is a clock wasn't provided by name, but this isn't
+always right. In the case of a dodgy clock specifier we might get an error,
+even if the expected name was provided explicitly in clock-names. For that case
+it would be nice to fail rather than grabbing an almost certainly incorrect
+clock. I'm not entirely sure how to check for that with the current
+infrastructure though, and while it's possible to use of_property_match_string
+to achieve the desired effect, it feels like working around the abstraction we
+have in place today.
 
-Best regards
+There are some other issues in the area which remain:
+
+* The pl041 exists in DTs, but has no binding.
+
+* Both pl110 and pl111 have no binding, but appear to be in use on OF
+  platforms, with the nspire code proving some sideband data via
+  OF_DEV_AUXDATA. The driver grabs a clock (CLCDCLK) without using a name.
+
+* I'm not sure what to do with sp804. The bindings imply a given set of names
+  with a specific ordering, but all the dts do something different and the
+  driver doesn't bother with names. The given binding is incompatible with the
+  primecell binding's ordering requirement for apb_plck.
+
+* There's no binding for the sp805, which grabs a clock with no name.
+
+* There's no binding for the pl341 or pl354. Both seem to be unused yet exist
+  in DTs.
+
+* The PL330 docs don't mention clocks at all, though the apb_pclk is required.
+  Use of PCLKEN isn't supported, but this doesn't seem to be a problem so far.
+
+Thanks,
+Mark.
+
+Mark Rutland (7):
+  Documentation: devicetree: fix up pl011 clocks
+  serial: amba-pl011: attempt to get uartclk by name
+  Documentation: devicetree: fix up pl022 clocks
+  spi: pl022: attempt to get sspclk by name
+  Documentation: devicetree: fix up pl18x clocks
+  mmc: arm-mmci: attempt to get mclk by name
+  Documentation: devicetree: loosen primecell clock requirements
+
+ Documentation/devicetree/bindings/arm/primecell.txt | 11 ++++++-----
+ Documentation/devicetree/bindings/mmc/mmci.txt      |  4 ++++
+ Documentation/devicetree/bindings/serial/pl011.txt  |  6 ++++--
+ Documentation/devicetree/bindings/spi/spi_pl022.txt |  2 ++
+ drivers/mmc/host/mmci.c                             |  9 ++++++++-
+ drivers/spi/spi-pl022.c                             |  9 ++++++++-
+ drivers/tty/serial/amba-pl011.c                     |  9 ++++++++-
+ 7 files changed, 40 insertions(+), 10 deletions(-)
+
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+1.8.1.1
