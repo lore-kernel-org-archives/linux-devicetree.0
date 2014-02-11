@@ -1,64 +1,72 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] drivers: of: add initialization code for reserved memory
-Date: Tue, 11 Feb 2014 19:01:04 +0000
-Message-ID: <20140211190104.7E6C5C4140E@trevor.secretlab.ca>
-References: <1391515773-6112-1-git-send-email-m.szyprowski@samsung.com> < 1391515773-6112-2-git-send-email-m.szyprowski@samsung.com> <20140205110538. 99E47C40A89@trevor.secretlab.ca> <52FA0D6E.9090304@samsung.com> < 20140211121316.24032C40C4D@trevor.secretlab.ca> <52FA33E2.4050004@samsung. com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52FA33E2.4050004-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH 6/6] dt: Update binding information for mvebu gating
+ clocks with Armada 380/385
+Date: Tue, 11 Feb 2014 14:06:32 -0500
+Message-ID: <20140211190632.GE27395@titan.lakedaemon.net>
+References: <1392053569-28037-1-git-send-email-gregory.clement@free-electrons.com>
+ <1392053569-28037-7-git-send-email-gregory.clement@free-electrons.com>
+ <20140210175350.GD9995@lunn.ch> <20140210185908.3374eaf6@skate>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20140210185908.3374eaf6@skate>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Mike Turquette <mturquette@linaro.org>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Feb 2014 15:29:54 +0100, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> > Yes, if only because it is an define usage of the reg property. If a
-> > devtree has multiple tuples in reg, then all of those tuples should be
-> > treated as reserved, even if the kernel doesn't know how to use them.
-> >
-> > I would not do the same for size/align/alloc-ranges unless there is a
-> > very specific use case that you can define. These ones are different
-> > from the static regions because they aren't ever used to protect
-> > something that already exists in the memory.
+On Mon, Feb 10, 2014 at 06:59:08PM +0100, Thomas Petazzoni wrote:
+> Dear Andrew Lunn,
 > 
-> Is there a reason why multiple regions could not be used for this 
-> purpose, instead of adding extra complexity of having multiple reg 
-> entries per region?
+> On Mon, 10 Feb 2014 18:53:50 +0100, Andrew Lunn wrote:
+> > > +The following is a list of provided IDs for Armada 380/385:
+> > > +ID	Clock		Peripheral
+> > > +-----------------------------------
+> > > +0	audio		Audio
+> > > +2	ge2		Gigabit Ethernet 2
+> > > +3	ge1		Gigabit Ethernet 1
+> > > +4	ge0		Gigabit Ethernet 0
+> > > +5	pex1		PCIe 1
+> > > +6	pex2		PCIe 2
+> > > +7	pex3		PCIe 3
+> > > +8	pex4		PCIe 0
+> > 
+> > Is that last one a typo? It at least looks a bit odd.
 > 
-> I.e. I don't see a difference between
+> Right, this should be:
 > 
-> reg1: region@00000000 {
-> 	reg = <0x00000000 0x1000>;
-> };
+> 	8	pex0		PCIe 0
 > 
-> reg2: region@10000000 {
-> 	reg = <0x10000000 0x1000>;
-> };
-> 
-> user {
-> 	regions = <&reg1>, <&reg2>;
-> };
-> 
-> and
-> 
-> reg: region@00000000 {
-> 	reg = <0x00000000 0x1000>, <0x10000000 0x1000>;
-> };
-> 
-> user {
-> 	regions = <&reg>;
-> };
-> 
-> except that the former IMHO better suits the definition of memory 
-> region, which I see as a single contiguous range of memory and can be 
-> simplified to have a single reg entry per region.
+> (just checked again in the datasheet)
 
-My point is rather if multiple reg tuples are found in a reserved memory
-node, the kernel must respect them and reserve the memory. I'm not
-arguing about whether or not that makes for a good binding.
+I can fix this up when I pull it in for Mike.  No need to redo the
+series just for this.
 
-g.
+I'll let it sit for a day or two more before I pull it to give everyone
+a chance to look it over.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+thx,
+
+Jason.
+
+> 
+> Thomas
+> -- 
+> Thomas Petazzoni, CTO, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
