@@ -1,59 +1,36 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH] of/gpio: Define OF_GPIO_OPEN_DRAIN flag for Open Drain
- outputs.
-Date: Tue, 11 Feb 2014 10:51:51 -0800
-Message-ID: <52FA7147.20607@caviumnetworks.com>
-References: <1392069908-22017-1-git-send-email-ddaney.cavm@gmail.com> <CAAVeFu+_WKzLdhWcB_km3iDj419OhtMXEKzz_yWoL3WUm+7kQQ@mail.gmail.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v2 1/5] drivers: of: add initialization code for reserved
+ memory
+Date: Tue, 11 Feb 2014 21:04:21 +0100
+Message-ID: <52FA8245.5050707@gmail.com>
+References: <1391515773-6112-1-git-send-email-m.szyprowski@samsung.com>	 < 1391515773-6112-2-git-send-email-m.szyprowski@samsung.com>	 <20140205110538. 99E47C40A89@trevor.secretlab.ca>	 <52FA0D6E.9090304@samsung.com>	 < 20140211121316.24032C40C4D@trevor.secretlab.ca>	 <52FA33E2.4050004@samsung. com>	 <20140211190104.7E6C5C4140E@trevor.secretlab.ca> <1392148971.3835.15.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAVeFu+_WKzLdhWcB_km3iDj419OhtMXEKzz_yWoL3WUm+7kQQ@mail.gmail.com>
+In-Reply-To: <1392148971.3835.15.camel@pasglop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Courbot <gnurou@gmail.com>
-Cc: David Daney <ddaney.cavm@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Daney <david.daney@cavium.com>
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Grant Likely <grant.likely@linaro.org>
+Cc: Tomasz Figa <t.figa@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@gmail.com>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/10/2014 08:31 PM, Alexandre Courbot wrote:
-> On Tue, Feb 11, 2014 at 7:05 AM, David Daney <ddaney.cavm@gmail.com> wrote:
->> From: David Daney <david.daney@cavium.com>
->>
->> When we have a GPIO pin connected to an open-drain network, we want a
->> standard way of specifying this in the device tree.  So we choose bit
->> 1 of the flag field to indicate open drain.
->>
->> A typical use case would be something like:
->>
->>          enum of_gpio_flags f;
->>          .
->>          .
->>          .
->>          reset_gpio = of_get_named_gpio_flags(node, "reset", 0, &f);
->>          .
->>          .
->>          .
->>          ret = gpio_request_one(reset_gpio,
->>                  (f & OF_GPIO_OPEN_DRAIN) ? GPIOF_OPEN_DRAIN : 0,
->>                   "reset");
->>          .
->>          .
->>          .
->>          gpio_direction_output(reset_gpio, 1);
->>          gpio_set_value(reset_gpio, 0);
->>          msleep(20);
->>          gpio_set_value(reset_gpio, 1);
->
-> This is also useful for gpiod_get(). However, while you are at it,
-> could you also add a flag for the OF_GPIO_OPEN_SOURCE property? My joy
-> would be complete if you could also take the time to update
-> of_find_gpio() to pass these new flags back to the caller as it
-> already does for OF_GPIO_ACTIVE_LOW.
->
-> Then you could even switch your use-case to the gpiod interface and
-> not bother with passing these flags by yourself anymore. Just sayin'.
-> ;)
 
-Thanks for the suggestion.  I will send a revised patch set for your 
-consideration.
 
-David Daney
+On 11.02.2014 21:02, Benjamin Herrenschmidt wrote:
+> On Tue, 2014-02-11 at 19:01 +0000, Grant Likely wrote:
+>
+>>> except that the former IMHO better suits the definition of memory
+>>> region, which I see as a single contiguous range of memory and can be
+>>> simplified to have a single reg entry per region.
+>>
+>> My point is rather if multiple reg tuples are found in a reserved memory
+>> node, the kernel must respect them and reserve the memory. I'm not
+>> arguing about whether or not that makes for a good binding.
+>
+> agreed.
+
+My point is why, if the binding defines that just a single tuple should 
+be provided.
+
+Best regards,
+Tomasz
