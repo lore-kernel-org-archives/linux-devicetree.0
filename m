@@ -1,66 +1,60 @@
-From: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC/PATCH 1/1] mtd: nand: Add a devicetree binding for ECC strength
- and ECC step size
-Date: Tue, 11 Feb 2014 16:56:33 +0100
-Message-ID: <52FA4831.20504@gmail.com>
-References: <1389960820-18696-1-git-send-email-ezequiel.garcia@free-electrons.com> <1389960820-18696-2-git-send-email-ezequiel.garcia@free-electrons.com> <20140211141914.GC23150@localhost> <20980858CB6D3A4BAE95CA194937D5E73EA6F815@DBDE04.ent.ti.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] phy-core: Don't allow building phy-core as a module
+Date: Tue, 11 Feb 2014 17:03:51 +0100
+Message-ID: <1392134631-32030-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73EA6F815-yXqyApvAXouIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Gupta, Pekon" <pekon-l0cyMroinI0@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Seif Mazareeb <seif-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRB3UT5GLQKGQEWAPBOBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Gupta,
+include/phy/phy.h has stub code in there for when building without the
+phy-core enabled. This is useful for generic drivers such as ahci-platform,
+ehci-platoform and ohci-platform which have support for driving an optional
+phy passed to them through the devicetree.
 
-On 11/02/2014 16:49, Gupta, Pekon wrote:
-> Hi Ezequiel,
->
->> From: Ezequiel Garcia [mailto:ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org]
->>> diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation/devicetree/bindings/mtd/nand.txt
->>> index 03855c8..683a310 100644
->>> --- a/Documentation/devicetree/bindings/mtd/nand.txt
->>> +++ b/Documentation/devicetree/bindings/mtd/nand.txt
->>> @@ -3,5 +3,9 @@
->>>   - nand-ecc-mode : String, operation mode of the NAND ecc mode.
->>>     Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob_first",
->>>     "soft_bch".
->>>
-> Should nand-ecc-mode also be marked as <deprecated>, and but we continue
-> supporting it in kernel code ? If yes, then what is the life-time of these
-> <deprecated> bindings. I mean exactly how many kernel versions should
-> continue support deprecated bindings ?
+Since on some boards this phy functionality is not needed, being able to
+disable the phy subsystem without needing a lot of #ifdef magic in the
+driver using it is quite useful.
 
-What do you mean by deprecated ? How would a NAND flash controller 
-driver choose amongs
-its supported NAND ecc modes if we remove this property ?
+However this breaks when the module using the phy subsystem is build-in and
+the phy-core is not, which leads to the build failing with missing symbol
+errors in the linking stage of the zImage.
 
-Is there another patch series removing this property in the wild ?
+Which leads to gems such as this being added to the Kconfig for achi_platform:
 
->
->>> +- nand-ecc-strength : integer ECC required strength.
-> With recent patches from 'Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>'
-> "[RFC PATCH] mtd: add per NAND partition ECC config"
-> Would you like 'nand-ecc-strength' to be per partition based ?
+	depends on GENERIC_PHY || !GENERIC_PHY
 
-I don't think we should rely on this for the moment: I'm still working 
-on it but it's far from stable.
+Rather then duplicating this code in a lot of places using the phy-core,
+I believe it is better to simply not allow the phy-core to be built as a
+module. The phy core is quite small and has no external dependencies, so
+always building it in when enabling it should not be an issue.
 
-Moreover, we can keep a default ecc mode for the NAND chip and 
-partitions will inherit this ECC
-mode when they do not specify any specific ECC config.
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/phy/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Best Regards,
-
-Boris
-
->
-> with regards, pekon
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+index 6070c99..6e336b4 100644
+--- a/drivers/phy/Kconfig
++++ b/drivers/phy/Kconfig
+@@ -5,7 +5,7 @@
+ menu "PHY Subsystem"
+ 
+ config GENERIC_PHY
+-	tristate "PHY Core"
++	bool "PHY Core"
+ 	help
+ 	  Generic PHY support.
+ 
+-- 
+1.8.5.3
