@@ -1,106 +1,63 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 7/7] devicetree: bindings: Document PM8921/8058 PMICs
-Date: Tue, 11 Feb 2014 09:29:37 +0000
-Message-ID: <20140211092937.GG32042@lee--X1>
-References: <1389206270-3728-1-git-send-email-sboyd@codeaurora.org>
- <1389206270-3728-8-git-send-email-sboyd@codeaurora.org>
+From: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH V6 03/12] phy: st-miphy40lp: Add binding information
+Date: Tue, 11 Feb 2014 14:59:59 +0530
+Message-ID: <af50da74226a244dfc05aed3dc9d28b896d166a4.1392109054.git.mohit.kumar@st.com>
+References: <cover.1392109054.git.mohit.kumar@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1389206270-3728-8-git-send-email-sboyd@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1392109054.git.mohit.kumar-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org
+Cc: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>, Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> PM8921 and PM8058 are PMICs found paired with MSM8960 and MSM8660
-> devices respectively. They contain subdevices such as keypads,
-> RTCs, regulators, clocks, etc.
->=20
-> Cc: <devicetree@vger.kernel.org>
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> ---
->  .../devicetree/bindings/mfd/qcom,pm8xxx.txt        | 63 ++++++++++++=
-++++++++++
->  1 file changed, 63 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/qcom,pm8xxx=
-=2Etxt
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt b/=
-Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt
-> new file mode 100644
-> index 000000000000..e3fe625ffd58
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt
-> @@ -0,0 +1,63 @@
+From: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
 
-<snip>
+ST miphy40lp can be used with PCIe, SATA and Super Speed USB
+controllers. SPEAr13XX SoCs use this phy for PCIe and SATA.
 
-> +- interrupts:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
+Signed-off-by: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
+Cc: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ .../devicetree/bindings/phy/st-miphy40lp.txt       |   18 ++++++++++++++++++
+ 1 files changed, 18 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/st-miphy40lp.txt
 
-Either provide an example or a comment to see the description of
-#interrupt-cells=20
+diff --git a/Documentation/devicetree/bindings/phy/st-miphy40lp.txt b/Documentation/devicetree/bindings/phy/st-miphy40lp.txt
+new file mode 100644
+index 0000000..1c8d04c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/st-miphy40lp.txt
+@@ -0,0 +1,18 @@
++ST miphy40lp DT detail
++===================================
++
++miphy40lp is a phy controller from ST Microelectronics which supports PCIe,
++SATA and Super Speed USB host and devices. It has been used in SPEAr13xx SOCs.
++
++Required properties:
++- compatible : should be "st,miphy40lp-phy"
++	Other supported soc specific compatible:
++		"st,spear1310-miphy"
++		"st,spear1340-miphy"
++- reg : offset and length of the PHY register set.
++- misc: phandle for the syscon node to access misc registers
++- phy-id: Instance id of the phy.
++- #phy-cells : from the generic PHY bindings, must be 1.
++	- 1st cell: phandle to the phy node.
++	- 2nd cell: 0 if phy (in 1st cell) is to be used for SATA, 1 for PCIe
++	  and 2 for Super Speed USB.
+-- 
+1.7.0.1
 
-> +	Definition: specifies the interrupt that indicates a subdevice
-> +		    has generated an interrupt (summary interrupt). The
-> +		    format of the specifier is defined by the binding document
-> +		    describing the node's interrupt parent.
-> +
-> +- #interrupt-cells:
-> +	Usage: required
-> +	Value type : <u32>
-> +	Definition: must be 2. Specifies the number of cells needed to enco=
-de
-> +		    an interrupt source. The 1st cell contains the interrupt
-> +		    number. The 2nd cell is the trigger type and level flags
-> +		    encoded as follows:
-> +
-> +			1 =3D low-to-high edge triggered
-> +			2 =3D high-to-low edge triggered
-> +			4 =3D active high level-sensitive
-> +			8 =3D active low level-sensitive
-
-Actually I'd prefer if you used the definitions in:
-  dt-bindings/interrupt-controller/irq.h
-
-> +- interrupt-controller:
-> +	Usage: required
-> +	Value type: <empty>
-> +	Definition: identifies this node as an interrupt controller
-> +
-> +EXAMPLE
-> +
-> +	pmicintc: pmic@0 {
-> +		compatible =3D "qcom,pm8921";
-> +		interrupts =3D <104 8>;
-
-As above.
-
-> +		#interrupt-cells =3D <2>;
-> +		interrupt-controller;
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <0>;
-> +
-> +		pwrkey {
-> +			compatible =3D "qcom,pm8921-pwrkey";
-> +			interrupt-parent =3D <&pmicintc>;
-> +			interrupts =3D <50 1>, <51 1>;
-
-As above.
-
-> +		};
-> +	};
-> --=20
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora F=
-orum,
-> hosted by The Linux Foundation
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
