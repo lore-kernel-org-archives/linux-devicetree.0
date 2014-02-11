@@ -1,59 +1,66 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: ohci-/ehci-platform: Change compatible string to ?hci-platform
-Date: Tue, 11 Feb 2014 16:54:28 +0100
-Message-ID: <52FA47B4.50507@redhat.com>
-References: <Pine.LNX.4.44L0.1402111023240.1209-100000@iolanthe.rowland.org> <1635726.gc3dEs0zOi@wuerfel>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC/PATCH 1/1] mtd: nand: Add a devicetree binding for ECC strength
+ and ECC step size
+Date: Tue, 11 Feb 2014 16:56:33 +0100
+Message-ID: <52FA4831.20504@gmail.com>
+References: <1389960820-18696-1-git-send-email-ezequiel.garcia@free-electrons.com> <1389960820-18696-2-git-send-email-ezequiel.garcia@free-electrons.com> <20140211141914.GC23150@localhost> <20980858CB6D3A4BAE95CA194937D5E73EA6F815@DBDE04.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBQ4P5GLQKGQE4GEXB5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1635726.gc3dEs0zOi@wuerfel>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73EA6F815-yXqyApvAXouIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Gupta, Pekon" <pekon-l0cyMroinI0@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Seif Mazareeb <seif-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Gupta,
 
-On 02/11/2014 04:43 PM, Arnd Bergmann wrote:
-> On Tuesday 11 February 2014 10:27:12 Alan Stern wrote:
->>
->> It might even be a good idea to change the "xhci-platform" string to 
->> match, it that doesn't cause too much trouble.
-> 
-> The original xhci binding was contributed by Al Cooper, but I don't
-> see any dts files using it. I agree that xhci-generic is a better
-> name than xhci-platform, and I think we should make that the recommended
-> string. If Al or someone thinks the xhci-generic string might already
-> be used in production devices, we should however allow both names
-> in the binding and in the driver.
+On 11/02/2014 16:49, Gupta, Pekon wrote:
+> Hi Ezequiel,
+>
+>> From: Ezequiel Garcia [mailto:ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org]
+>>> diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation/devicetree/bindings/mtd/nand.txt
+>>> index 03855c8..683a310 100644
+>>> --- a/Documentation/devicetree/bindings/mtd/nand.txt
+>>> +++ b/Documentation/devicetree/bindings/mtd/nand.txt
+>>> @@ -3,5 +3,9 @@
+>>>   - nand-ecc-mode : String, operation mode of the NAND ecc mode.
+>>>     Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob_first",
+>>>     "soft_bch".
+>>>
+> Should nand-ecc-mode also be marked as <deprecated>, and but we continue
+> supporting it in kernel code ? If yes, then what is the life-time of these
+> <deprecated> bindings. I mean exactly how many kernel versions should
+> continue support deprecated bindings ?
 
-I can live with generic as pre/post fix. Looking at what seems to
-be the common trend I believe it should be a pre-fix and nost a post-fix
-though.
+What do you mean by deprecated ? How would a NAND flash controller 
+driver choose amongs
+its supported NAND ecc modes if we remove this property ?
 
-The common way to build a compatible string seems to be:
-vendor,soc_model-function. We have a few deviations from this in the
-usb bindings, but ie the interrupt-controller bindings use this
-structure for the compatible strings everywhere.
+Is there another patch series removing this property in the wild ?
 
-So since generic has no vendor, we fill just the soc_model-function
-part leading to:
-generic-ohci
-generic-ehci
+>
+>>> +- nand-ecc-strength : integer ECC required strength.
+> With recent patches from 'Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>'
+> "[RFC PATCH] mtd: add per NAND partition ECC config"
+> Would you like 'nand-ecc-strength' to be per partition based ?
 
-And possible also:
-generic-uhci
-generic-xhci
+I don't think we should rely on this for the moment: I'm still working 
+on it but it's far from stable.
 
-So I'm going to respin my 2 fixup patches to move from ?hci-platform
-to generic-?hci.
+Moreover, we can keep a default ecc mode for the NAND chip and 
+partitions will inherit this ECC
+mode when they do not specify any specific ECC config.
 
-Regards,
+Best Regards,
 
-Hans
+Boris
+
+>
+> with regards, pekon
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
