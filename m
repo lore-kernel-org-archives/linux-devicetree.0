@@ -1,32 +1,83 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v3 0/7] Modernize pm8921 with irqdomains, regmap, DT
-Date: Mon, 10 Feb 2014 22:35:46 -0800
-Message-ID: <20140211063546.GF10784@codeaurora.org>
-References: <1389206270-3728-1-git-send-email-sboyd@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1389206270-3728-1-git-send-email-sboyd@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, Samuel Ortiz <sameo@linux.intel.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH v2 09/11] watchdog: xilinx: Add missing binding
+Date: Tue, 11 Feb 2014 07:55:52 +0100
+Message-ID: <85fbb492f75b17b916be694744bb053448e9db96.1392101734.git.michal.simek@xilinx.com>
+References: <f298edd222c57b0ce1ebad3ae50c3f715406c631.1392101734.git.michal.simek@xilinx.com>
+Content-Type: multipart/signed;
+    boundary="=_mimegpg-monstr-desktop-9583-1392101779-0001";
+    micalg=pgp-sha1; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f298edd222c57b0ce1ebad3ae50c3f715406c631.1392101734.git.michal.simek@xilinx.com>
+In-Reply-To: <f298edd222c57b0ce1ebad3ae50c3f715406c631.1392101734.git.michal.simek@xilinx.com>
+References: <f298edd222c57b0ce1ebad3ae50c3f715406c631.1392101734.git.michal.simek@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, monstr@monstr.eu
+Cc: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/08, Stephen Boyd wrote:
-> These patches lay the groundwork for converting the pm8921 sub-devices
-> to devicetree as well as simplify the API by migrating the core code
-> to use the regmap API instead of the custom pm8xxx read/write wrapper.
+This is a MIME GnuPG-signed message.  If you see this text, it means that
+your E-mail or Usenet software does not support MIME signed messages.
+The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
+To open this message correctly you will need to install E-mail or Usenet
+software that supports modern Internet standards.
 
-Lee,
+--=_mimegpg-monstr-desktop-9583-1392101779-0001
 
-Can you pick up these patches now? I don't think we're going to
-get an ack from the DT reviewers. Its been over a month and
-according to the documentation[1] I think we've done our due
-diligence.
+Document current driver binding.
 
-[1] Documentation/devicetree/bindings/submitting-patches.txt
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+---
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Changes in v2: None
+
+ .../devicetree/bindings/watchdog/of-xilinx-wdt.txt | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
+
+diff --git a/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt b/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
+new file mode 100644
+index 0000000..6d63782
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
+@@ -0,0 +1,23 @@
++Xilinx AXI/PLB soft-core watchdog Device Tree Bindings
++---------------------------------------------------------
++
++Required properties:
++- compatible		: Should be "xlnx,xps-timebase-wdt-1.00.a" or
++			  "xlnx,xps-timebase-wdt-1.01.a".
++- reg			: Physical base address and size
++
++Optional properties:
++- clock-frequency	: Frequency of clock in Hz
++- xlnx,wdt-enable-once	: 0 - Watchdog can be restarted
++			  1 - Watchdog can be enabled just once
++- xlnx,wdt-interval	: Watchdog timeout interval in 2^<val> clock cycles,
++			  <val> is integer from 8 to 31.
++
++Example:
++axi-timebase-wdt@40100000 {
++	clock-frequency = <50000000>;
++	compatible = "xlnx,xps-timebase-wdt-1.00.a";
++	reg = <0x40100000 0x10000>;
++	xlnx,wdt-enable-once = <0x0>;
++	xlnx,wdt-interval = <0x1b>;
++} ;
+--
+1.8.2.3
+
+
+--=_mimegpg-monstr-desktop-9583-1392101779-0001
+Content-Type: application/pgp-signature
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEABECAAYFAlL5yZMACgkQykllyylKDCHhSACeIml2Vfq0xoGN7eRqMrc4RV2X
+1E4Ani+WE0hw6ET3Iz0D8ftm5qdOOYOo
+=7aWg
+-----END PGP SIGNATURE-----
+
+--=_mimegpg-monstr-desktop-9583-1392101779-0001--
