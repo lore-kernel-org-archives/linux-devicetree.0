@@ -1,105 +1,50 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v2 4/5] ARM: init: add support for reserved memory defined by device tree
-Date: Tue, 11 Feb 2014 11:50:51 +0000
-Message-ID: <20140211115051.85084C40C4D@trevor.secretlab.ca>
-References: <1391515773-6112-1-git-send-email-m.szyprowski@samsung.com> < 1391515773-6112-5-git-send-email-m.szyprowski@samsung.com> <20140205101510. 59A95C40A89@trevor.secretlab.ca> <52F38D75.4030704@samsung.com> < 20140210215929.4473BC408F7@trevor.secretlab.ca> <52FA00FA.1090400@samsung. com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <52FA00FA.1090400@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: Kyungmin Park <kyungmin.park@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@gmail.com>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>
+From: Valentin Longchamp <valentin.longchamp@keymile.com>
+Subject: [PATCH v2 1/2] devicetree: bindings: add Zarlink to the vendor
+ prefixes
+Date: Tue, 11 Feb 2014 12:50:06 +0100
+Message-ID: <1392119407-29490-2-git-send-email-valentin.longchamp@keymile.com>
+References: <1392119407-29490-1-git-send-email-valentin.longchamp@keymile.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1392119407-29490-1-git-send-email-valentin.longchamp@keymile.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Scott Wood <scottwood@freescale.com>, linuxppc-dev@lists.ozlabs.org
+Cc: Valentin Longchamp <valentin.longchamp@keymile.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Feb 2014 11:52:42 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
-> 
-> On 2014-02-10 22:59, Grant Likely wrote:
-> > On Thu, 06 Feb 2014 14:26:13 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
-> > > Hello,
-> > >
-> > > On 2014-02-05 11:15, Grant Likely wrote:
-> > > > On Tue, 04 Feb 2014 13:09:32 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
-> > > > > Enable reserved memory initialization from device tree.
-> > > > >
-> > > > > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> > > > > Cc: Laura Abbott <lauraa@codeaurora.org>
-> > > > > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > > > > ---
-> > > > >  arch/arm/mm/init.c |    3 +++
-> > > > >  1 file changed, 3 insertions(+)
-> > > > >
-> > > > > diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-> > > > > index 804d61566a53..ebafdb479410 100644
-> > > > > --- a/arch/arm/mm/init.c
-> > > > > +++ b/arch/arm/mm/init.c
-> > > > > @@ -17,6 +17,7 @@
-> > > > >  #include <linux/nodemask.h>
-> > > > >  #include <linux/initrd.h>
-> > > > >  #include <linux/of_fdt.h>
-> > > > > +#include <linux/of_reserved_mem.h>
-> > > > >  #include <linux/highmem.h>
-> > > > >  #include <linux/gfp.h>
-> > > > >  #include <linux/memblock.h>
-> > > > > @@ -323,6 +324,8 @@ void __init arm_memblock_init(struct meminfo *mi,
-> > > > >  	if (mdesc->reserve)
-> > > > >  		mdesc->reserve();
-> > > > >
-> > > > > +	early_init_dt_scan_reserved_mem();
-> > > > > +
-> > > >
-> > > > The new binding is being made fundamental. If the reserved-memory node
-> > > > is present, then it needs to be honored, even if the kernel doesn't know
-> > > > how to use the regions. Therefore, This needs to be unconditional for
-> > > > all architectures. The hook should be called in early_init_dt_scan()
-> > > > (drivers/of/fdt.c) immediately after the early_init_dt_scan_memory()
-> > > > hook.
-> > >
-> > > In theory this will be the best solution, but it practice there is a
-> > > problem. early_init_dt_scan() is called as the first function from kernel
-> > > booting code. That time there is no memory yet added to the system, so it
-> > > would be really hard to reserve anything. Memory nodes are being added
-> > > later either with memblock_add() or by some other arch specific way.
-> >
-> > Hmmm, depends on the architecture. On ARM the memory is loaded into the
-> > meminfo structure first, and it isn't until arm_memblock_init() that
-> > memblock_add() gets called on all the regions. Some architectures do the
-> > memblock_add() directly from early_init_dt_add_memory_arch() function.
-> >
-> > The default early_init_dt_add_memory_arch() in drivers/of/fdt.c is
-> > overridden by ARM and a number of other architectures. However...
-> >
-> > > Finally, once all memory has been added to the system we can parse and
-> > > reserve all regions defined in the device tree. This really requires
-> > > creating another function which will be called by arch specific code.
-> >
-> > ...Or it means getting rid of meminfo entirely so that memblock is
-> > available earlier. Laura Abbott has just posted v2 of her series to do
-> > exactly that. If you base on that then you should be able to do exactly
-> > what I suggested.
-> 
-> I've checked Laura's patches and in fact it is possible to do memory
-> reservation as a last step in early_init_dt_scan_memory(). However still
-> see some problem which I have no idea how to resolve. Right now I focus
-> only on ARM, so I have no idea how it is solved by other architectures.
+Even though the company belongs to Microsemi, many chips are still
+labeled as Zarlink. Among them is the family of network clock generators,
+the zl3034x.
 
-It isn't at the moment because no other architectures are doing dynamic
-allocation of regions in this way.
+Signed-off-by: Valentin Longchamp <valentin.longchamp@keymile.com>
 
-> On of the key features of the new binding is the ability to automatically
-> allocate reserved regions of the given size. However kernel, initrd, dt
-> and other sub-arch specific critical regions are marked/allocated in
-> arm_memblock_init(), which is called after setup_machine_fdt(). This
-> might lead to some serious failures when automatically reserved region
-> overlaps with some critical resources. Do you have any idea how to solve
-> this without a new callback?
 
-Not without moving the kernel/initrd/fdt reservation earlier, which can
-certainly be done after Laura's series is applied. It would also be
-possible to split up the fixed regions from the dynamic regions so that
-the dynamic stuff would be done later.
+---
+Changes in v2:
+- add a patch so that the Zarlink vendor prefix is defined
 
-However, I don't want to block this series on Laura's rework. Go ahead
-and keep it as a separate hook, but make the other changes I suggested,
-particularly with regard to making the hook architecture independent.
-Further rework can be done later after Laura's series is merged.
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-g.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index edbb8d8..35f1c9b 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -81,3 +81,4 @@ winbond Winbond Electronics corp.
+ wlf	Wolfson Microelectronics
+ wm	Wondermedia Technologies, Inc.
+ xlnx	Xilinx
++zarlink	Zarlink Semiconductor
+-- 
+1.8.0.1
