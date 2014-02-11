@@ -1,36 +1,80 @@
-From: Christopher Covington <cov@codeaurora.org>
-Subject: Re: [PATCH 1/3] driver core & of: Mark of_nodes of added device as
- populated
-Date: Tue, 11 Feb 2014 12:32:36 -0500
-Message-ID: <52FA5EB4.7080008@codeaurora.org>
-References: <1392137610-27842-1-git-send-email-pawel.moll@arm.com> <1392137610-27842-2-git-send-email-pawel.moll@arm.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 4/8] ARM: mvebu: make use of
+ of_find_matching_node_and_match
+Date: Tue, 11 Feb 2014 12:34:46 -0500
+Message-ID: <20140211173446.GC27395@titan.lakedaemon.net>
+References: <1392135847-30791-1-git-send-email-joshc@codeaurora.org>
+ <1392135847-30791-5-git-send-email-joshc@codeaurora.org>
+ <20140211165314.GA8533@titan.lakedaemon.net>
+ <20140211181048.6934bdd3@skate>
+ <52FA5E75.7030402@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1392137610-27842-2-git-send-email-pawel.moll@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Moll <pawel.moll@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, arm@kernel.org, Mark Rutland <mark.rutland@arm.com>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Guenter Roeck <linux@roeck-us.net>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Lee Jones <lee.jones@linaro.org>, David Woodhouse <dwmw2@infradead.org>, Jean Delvare <jdelvare@suse.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52FA5E75.7030402-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pawel,
+On Tue, Feb 11, 2014 at 06:31:33PM +0100, Gregory CLEMENT wrote:
+> On 11/02/2014 18:10, Thomas Petazzoni wrote:
+> > Dear Jason Cooper,
+> > 
+> > On Tue, 11 Feb 2014 11:53:14 -0500, Jason Cooper wrote:
+> > 
+> >>> -	np = of_find_matching_node(NULL, of_system_controller_table);
+> >>> +	np = of_find_matching_node_and_match(NULL, of_system_controller_table,
+> >>> +					     &match);
+> >>>  	if (np) {
+> >>> -		const struct of_device_id *match =
+> >>> -		    of_match_node(of_system_controller_table, np);
+> >>
+> >>
+> >>> -		BUG_ON(!match);
+> >>
+> >> Gregory, is it ok to remove this?  It was added with the original code
+> >> submission for mach-mvebu.  mvebu_restart() will handle this
+> >> gracefully...
+> > 
+> > The BUG_ON here can normally never be reached. If
+> > of_find_matching_node() returns a non-NULL result, then of_match_node()
+> > should also return a non-NULL result.
+> > 
+> > Or I'm missing something :)
+> 
+> No you're almost right!
+> 
+> The only case we can get it, would be if we were declaring something like:
+> 
+> static struct of_device_id of_system_controller_table[] = {
+> 	{
+> 		.compatible = "foo,bar-controller",
+> 	},
+> [...]
+> 
+> instead of
+> 
+> static struct of_device_id of_system_controller_table[] = {
+> 	{
+> 		.compatible = "foo,bar",
+> 		.data = (void *) &bar_controller,
+> 	},
+> [...]
+> 
+> This test is very paranoid, so I agree to remove it.
+> 
+> 
+> Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-On 02/11/2014 11:53 AM, Pawel Moll wrote:
-> This patch tries to solve that issue in a generic way,
-> adding a "populated" flag which is set in the device_node
-> structure when a device is being created in the core.
-> Later, of_platform_populate() skips such nodes (and
-> its children) in a similar way to the non-available ones.
+Ok, great!  Josh, do you want us to take the two mvebu patches through
+mvebu/arm-soc?  Or would you prefer to take them?
 
-Will there never be a case where it is useful for a parent node to be created
-early, but not necessarily the child nodes? Might only skipping nodes
-explicitly marked as populated be a more universal solution?
+thx,
 
-Regards,
-Christopher
-
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by the Linux Foundation.
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
