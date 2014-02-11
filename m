@@ -1,54 +1,41 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 4/7] spi: pl022: attempt to get sspclk by name
-Date: Tue, 11 Feb 2014 16:48:29 +0100
-Message-ID: <33149723.ycUmvZkobH@wuerfel>
-References: <1392118632-11312-1-git-send-email-mark.rutland@arm.com> <201402111508.06267.arnd@arndb.de> <20140211150438.GJ26684@n2100.arm.linux.org.uk>
+From: "Gupta, Pekon" <pekon-l0cyMroinI0@public.gmane.org>
+Subject: RE: [RFC/PATCH 1/1] mtd: nand: Add a devicetree binding for ECC
+ strength and ECC step size
+Date: Tue, 11 Feb 2014 15:49:24 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA6F815@DBDE04.ent.ti.com>
+References: <1389960820-18696-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1389960820-18696-2-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20140211141914.GC23150@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140211150438.GJ26684-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+In-Reply-To: <20140211141914.GC23150@localhost>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Seif Mazareeb <seif-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 11 February 2014 15:04:38 Russell King - ARM Linux wrote:
-> On Tue, Feb 11, 2014 at 03:08:06PM +0100, Arnd Bergmann wrote:
-> > On Tuesday 11 February 2014, Mark Brown wrote:
-> > > On Tue, Feb 11, 2014 at 11:37:09AM +0000, Mark Rutland wrote:
-> > > 
-> > > > -     pl022->clk = devm_clk_get(&adev->dev, NULL);
-> > > > +     /*
-> > > > +      * For compatibility with old DTBs and platform data, fall back to the
-> > > > +      * first clock if there's not an explicitly named "sspclk" entry.
-> > > > +      */
-> > > > +     pl022->clk = devm_clk_get(&adev->dev, "sspclk");
-> > > > +     if (IS_ERR(pl022->clk))
-> > > > +             pl022->clk = devm_clk_get(&adev->dev, NULL);
-> > > > +
-> > > 
-> > > I'll just have a bit of a grumble here and point out that this sort of
-> > > stuff always worries me with the convention of using nameless clocks -
-> > > it causes hassle adding further clocks.
-> > 
-> > I think the best solution for this is to continue with anonymous clocks
-> > rather than adding names after the fact. This could be done (for DT-only
-> > drivers) using the of_clk_get() interface that takes an index, or
-> > we could add a generic dev_clk_get_index() or similar interface that
-> > has the same behavior but also works for clkdev.
-> 
-> Mixing devm_* and non-devm_* interfaces doesn't work.  If you want to do
-> that, devm_of_clk_get() would be a prerequisit.
-
-Yes, good point. So if we want to do it, we would have to add a new
-function anyway, there is just the question whether it should be
-devm_of_clk_get() or devm_clk_get_index() if that can also work for
-non-DT devices. Do you think the latter actually makes sense in
-the clkdev interfaces? I'm not familiar enough with the code to
-tell how that would be implemented in a reasonable way.
-
-	Arnd
+SGkgRXplcXVpZWwsDQoNCj5Gcm9tOiBFemVxdWllbCBHYXJjaWEgW21haWx0bzplemVxdWllbC5n
+YXJjaWFAZnJlZS1lbGVjdHJvbnMuY29tXQ0KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvbmFuZC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvbXRkL25hbmQudHh0DQo+PiBpbmRleCAwMzg1NWM4Li42ODNhMzEwIDEwMDY0
+NA0KPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9uYW5kLnR4
+dA0KPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9uYW5kLnR4
+dA0KPj4gQEAgLTMsNSArMyw5IEBADQo+PiAgLSBuYW5kLWVjYy1tb2RlIDogU3RyaW5nLCBvcGVy
+YXRpb24gbW9kZSBvZiB0aGUgTkFORCBlY2MgbW9kZS4NCj4+ICAgIFN1cHBvcnRlZCB2YWx1ZXMg
+YXJlOiAibm9uZSIsICJzb2Z0IiwgImh3IiwgImh3X3N5bmRyb21lIiwgImh3X29vYl9maXJzdCIs
+DQo+PiAgICAic29mdF9iY2giLg0KPj4NClNob3VsZCBuYW5kLWVjYy1tb2RlIGFsc28gYmUgbWFy
+a2VkIGFzIDxkZXByZWNhdGVkPiwgYW5kIGJ1dCB3ZSBjb250aW51ZQ0Kc3VwcG9ydGluZyBpdCBp
+biBrZXJuZWwgY29kZSA/IElmIHllcywgdGhlbiB3aGF0IGlzIHRoZSBsaWZlLXRpbWUgb2YgdGhl
+c2UNCjxkZXByZWNhdGVkPiBiaW5kaW5ncy4gSSBtZWFuIGV4YWN0bHkgaG93IG1hbnkga2VybmVs
+IHZlcnNpb25zIHNob3VsZA0KY29udGludWUgc3VwcG9ydCBkZXByZWNhdGVkIGJpbmRpbmdzID8N
+Cg0KPj4gKy0gbmFuZC1lY2Mtc3RyZW5ndGggOiBpbnRlZ2VyIEVDQyByZXF1aXJlZCBzdHJlbmd0
+aC4NCg0KV2l0aCByZWNlbnQgcGF0Y2hlcyBmcm9tICdCb3JpcyBCUkVaSUxMT04gPGIuYnJlemls
+bG9uLmRldkBnbWFpbC5jb20+Jw0KIltSRkMgUEFUQ0hdIG10ZDogYWRkIHBlciBOQU5EIHBhcnRp
+dGlvbiBFQ0MgY29uZmlnIg0KV291bGQgeW91IGxpa2UgJ25hbmQtZWNjLXN0cmVuZ3RoJyB0byBi
+ZSBwZXIgcGFydGl0aW9uIGJhc2VkID8NCg0Kd2l0aCByZWdhcmRzLCBwZWtvbg0K
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
