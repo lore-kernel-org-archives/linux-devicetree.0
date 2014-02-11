@@ -1,133 +1,67 @@
-From: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] of: Turn of_match_node into a static inline when
- CONFIG_OF isn't set
-Date: Tue, 11 Feb 2014 15:55:19 -0600
-Message-ID: <20140211215519.GJ841@joshc.qualcomm.com>
-References: <1392122211-11422-1-git-send-email-laurent.pinchart@ideasonboard.com>
- <1596542.hkJp71u3OJ@avalon>
- <20140211164825.GC841@joshc.qualcomm.com>
- <6446980.WMjvBYStRY@avalon>
- <20140211180845.GG841@joshc.qualcomm.com>
- <CAMuHMdVkPLe5986hYPApoQr7oJSb6U2P71=nP+9mtvtaskdHXg@mail.gmail.com>
- <CAL_JsqKnsr-9nSjCGvroC0nDK36vQUnwMWj=cPjvUbRymmHFOQ@mail.gmail.com>
-Mime-Version: 1.0
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: Linux-3.14-rc2: Order of serial node compatibles in DTS files.
+Date: Tue, 11 Feb 2014 16:33:55 -0600
+Message-ID: <63AEBD99-AA87-4FD7-BBDA-0CE419959F14@kernel.crashing.org>
+References: <OF784BA598.ACFE9DA4-ONCA257C76.00827472-CA257C77.000BCFAD@csc.com> <20140206082635.GA7048@visitor2.iram.es> <OFA4C1AF9F.B23E83EC-ONCA257C78.00044235-CA257C78.00080D50@csc.com> <20140207101036.GA823@visitor2.iram.es> <alpine.LRH.2.00.1402071348380.10318@ra8135-ec1.am.freescale.net> <20140210110342.GA15806@visitor2.iram.es> <alpine.LRH.2.00.1402101056410.10318@ra8135-ec1.am.freescale.net> <20140211072606.GA26514@visitor2.iram.es> <OF6F6A0029.3B20EF5B-ONCA257C7C.0071BFDA-CA257C7C.00732AD3@csc.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.1 \(1827\))
 Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKnsr-9nSjCGvroC0nDK36vQUnwMWj=cPjvUbRymmHFOQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <OF6F6A0029.3B20EF5B-ONCA257C7C.0071BFDA-CA257C7C.00732AD3-SmukeSwxQOQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Stephen N Chivers <schivers-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Chris Proctor <cproctor-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 11, 2014 at 03:30:33PM -0600, Rob Herring wrote:
-> On Tue, Feb 11, 2014 at 12:29 PM, Geert Uytterhoeven
-> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
-> > On Tue, Feb 11, 2014 at 7:08 PM, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> >> It sure would be convenient if platform_device had a 'const struct
-> >> of_device_id *of_id_entry' member similar to the existing struct
-> >> platform_device_id one, that was set up during platform device matching.
-> >> Most platform_driver users of of_match_node() would simply go away.
-> >
-> > Can't the entry be shared for both platform_device_id and of_device_id?
-> > Only one of them can be valid at the same time, right?
-> >
-[..]
+
+On Feb 11, 2014, at 2:57 PM, Stephen N Chivers <schivers-znpAAEhiOVUQrrorzV6ljw@public.gmane.org> wrote:
+
+> I have been trial booting a 3.14-rc2 kernel for a 85xx platform 
+> (dtbImage).
 > 
-> I believe this is the reason drivers have to call of_match_device:
+> After mounting the root filesystem there are no messages from the init 
+> scripts
+> and the serial console is not available for login.
 > 
-> commit b1608d69cb804e414d0887140ba08a9398e4e638
-> Author: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Date:   Wed May 18 11:19:24 2011 -0600
->
->     drivercore: revert addition of of_match to struct device
->
->     Commit b826291c, "drivercore/dt: add a match table pointer to struct
->     device" added an of_match pointer to struct device to cache the
->     of_match_table entry discovered at driver match time.  This was unsafe
->     because matching is not an atomic operation with probing a driver.  If
->     two or more drivers are attempted to be matched to a driver at the
->     same time, then the cached matching entry pointer could get
->     overwritten.
->
->     This patch reverts the of_match cache pointer and reworks all users to
->     call of_match_device() directly instead.
->
->     Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> In the kernel log messages there is:
+> 
+> of_serial f1004500.serial: Unknown serial port found, ignored.
+> 
+> The serial nodes in boards dts file are specified as:
+> 
+>        serial0: serial@4500 {
+>                        cell-index = <0>;
+>                        device_type = "serial";
+>                        compatible = "fsl,ns16550", "ns16550";
+>                        reg = <0x4500 0x100>;
+>                        clock-frequency = <0>;
+>                        interrupts = <0x2a 0x2>;
+>                        interrupt-parent = <&mpic>;
+>                };
+> 
+> Reversing the order of the compatible:
+> 
+>        compatible = "ns16550", "fsl,ns16550";
+> 
+> restores the serial console.
+> 
+> Linux-3.13 does not have this behaviour.
+> 
+> There are 49 dts files in Linux-3.14-rc2 that have the fsl,ns16550 
+> compatible first.
 
-Interesting, thanks for the history!  I'm wondering if this same problem
-exists for the existing platform_device_id cached pointer as well.
+Hmm,
 
-Okay, so maybe caching a pointer in the device isn't the best option,
-what if we considered extending the platform_driver callbacks to include
-a set of per-method (?) probe callbacks which do provide a handle to
-matched identifiers.
+Wondering if this caused the issue:
 
-In the case of a totally contrived platform_driver supporting ACPI, OF,
-and !OF configurations, it might look something like:
+commit 105353145eafb3ea919f5cdeb652a9d8f270228e
+Author: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Date:   Tue Dec 3 14:52:00 2013 +0100
 
-	static const struct of_device_id acme_of_table[] = {
-		/* ... */
-		{ },
-	};
-	MODULE_DEVICE_TABLE(of, acme_of_table);
+    OF: base: match each node compatible against all given matches first
 
-	static int acme_probe_of(struct platform_device *pdev,
-				 const struct of_device_id *id)
-	{
-		/* ... */
-		return 0;
-	}
 
-	static const struct acpi_device_id acme_acpi_table[] = {
-		/* ... */
-		{ },
-	};
-	MODULE_DEVICE_TABLE(acpi, acme_acpi_table);
-
-	static int acme_probe_acpi(struct platform_device *pdev,
-				   const struct acpi_device_id *id)
-	{
-		/* ... */
-		return 0;
-	}
-
-	static const struct platform_device_id acme_platform_table[] = {
-		/* ... */
-		{ },
-	};
-	MODULE_DEVICE_TABLE(platform, acme_platform_table);
-
-	static int acme_probe_acpi(struct platform_device *pdev,
-				   const struct platform_device_id *id)
-	{
-		/* ... */
-		return 0;
-	}
-
-	static int acme_probe_name(struct platform_device *pdev)
-	{
-		/* ... */
-		return 0;
-	}
-
-	static struct platform_driver acme_driver = {
-		.probe_of	= acme_probe_of,
-		.probe_acpi	= acme_probe_acpi,
-		.probe_platform	= acme_probe_platform,
-		.probe_name	= acme_probe_name,
-		.remove		= acme_remove,
-		.driver		= {
-			.name			= "acme",
-			.of_match_table		= of_match_ptr(acme_of_table),
-			.acpi_match_table	= ACPI_PTR(acme_acpi_table),
-		},
-	};
-	module_platform_driver(acme_driver);
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+- k
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
