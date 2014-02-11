@@ -1,51 +1,76 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH 2/2] ARM: dts: N900: add missing compatible property
-Date: Tue, 11 Feb 2014 14:11:23 -0600
-Message-ID: <52FA83EB.2080605@ti.com>
-References: <1391947956-24462-1-git-send-email-aaro.koskinen@iki.fi> <1391947956-24462-2-git-send-email-aaro.koskinen@iki.fi>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH v2 2/2] dp83640: Get pin and master/slave configuration
+ from DT
+Date: Tue, 11 Feb 2014 21:19:18 +0100
+Message-ID: <20140211201917.GB4254@netboy>
+References: <1392132562-23644-1-git-send-email-stefan.sorensen@spectralink.com>
+ <1392132562-23644-3-git-send-email-stefan.sorensen@spectralink.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1391947956-24462-2-git-send-email-aaro.koskinen@iki.fi>
-Sender: linux-omap-owner@vger.kernel.org
-To: Aaro Koskinen <aaro.koskinen@iki.fi>, =?ISO-8859-1?Q?Beno=EEt_Couss?= =?ISO-8859-1?Q?on?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1392132562-23644-3-git-send-email-stefan.sorensen@spectralink.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan =?iso-8859-1?Q?S=F8rensen?= <stefan.sorensen@spectralink.com>
+Cc: grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/09/2014 06:12 AM, Aaro Koskinen wrote:
-> Add missing compatible property to avoid problems in the future.
-> 
-> Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-Reviewed-by: Nishanth Menon <nm@ti.com>
+On Tue, Feb 11, 2014 at 04:29:22PM +0100, Stefan S=F8rensen wrote:
 
-> ---
->  arch/arm/boot/dts/omap3-n900.dts | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-> index 6fc85f963530..0bf40c90faba 100644
-> --- a/arch/arm/boot/dts/omap3-n900.dts
-> +++ b/arch/arm/boot/dts/omap3-n900.dts
-> @@ -1,6 +1,6 @@
->  /*
->   * Copyright (C) 2013 Pavel Machek <pavel@ucw.cz>
-> - * Copyright 2013 Aaro Koskinen <aaro.koskinen@iki.fi>
-> + * Copyright (C) 2013-2014 Aaro Koskinen <aaro.koskinen@iki.fi>
->   *
->   * This program is free software; you can redistribute it and/or modify
->   * it under the terms of the GNU General Public License version 2 (or later) as
-> @@ -13,7 +13,7 @@
->  
->  / {
->  	model = "Nokia N900";
-> -	compatible = "nokia,omap3-n900", "ti,omap3";
-> +	compatible = "nokia,omap3-n900", "ti,omap3430", "ti,omap3";
->  
->  	cpus {
->  		cpu@0 {
-> 
+> diff --git a/Documentation/devicetree/bindings/net/dp83640.txt b/Docu=
+mentation/devicetree/bindings/net/dp83640.txt
+> new file mode 100644
+> index 0000000..b9a57c0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/dp83640.txt
+> @@ -0,0 +1,29 @@
+> +Required properties for the National DP83640 ethernet phy:
+> +
+> +- compatible : Must contain "national,dp83640"
+> +
+> +Optional properties:
+> +
+> +- dp83640,slave: If present, this phy will be slave to another dp836=
+40
+> +  on the same mdio bus.
 
+Wouldn't it be more natural to have one "dp83640,master" property
+rather than multiple slave properties?
 
--- 
-Regards,
-Nishanth Menon
+> @@ -949,6 +940,95 @@ static void dp83640_clock_put(struct dp83640_clo=
+ck *clock)
+>  	mutex_unlock(&clock->clock_lock);
+>  }
+> =20
+> +#ifdef CONFIG_OF
+> +static int dp83640_probe_dt(struct device_node *node,
+> +			    struct dp83640_private *dp83640)
+> +{
+> +	struct dp83640_clock *clock =3D dp83640->clock;
+> +	struct property *prop;
+> +	int err, proplen;
+> +
+> +	dp83640->slave =3D of_property_read_bool(node, "dp83640,slave");
+> +	if (!dp83640->slave && clock->chosen) {
+> +		pr_err("dp83640,slave must be set if more than one device on the s=
+ame bus");
+
+Most of these pr_err lines are a bit _way_ too long for coding style.
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	prop =3D of_find_property(node, "dp83640,perout-pins", &proplen);
+> +	if (prop) {
+> +		if (dp83640->slave) {
+> +			pr_err("dp83640,perout-pins property can not be set together with=
+ dp83640,slave");
+
+(Here especially and in the code that followed.)
+
+Overall the series is looking better. I will try to test the non-DT
+case later on this week.
+
+Thanks,
+Richard
