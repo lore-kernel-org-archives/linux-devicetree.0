@@ -1,59 +1,36 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [RFC PATCH] [media]: of: move graph helpers from
- drivers/media/v4l2-core to drivers/of
-Date: Tue, 11 Feb 2014 17:36:57 +0100
-Message-ID: <1392136617.6943.33.camel@pizza.hi.pengutronix.de>
-References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de>
-	 <CAL_Jsq+U9zU1i+STLHMBjY5BeEP6djYnJVE5X1ix-D2q_zWztQ@mail.gmail.com>
-	 <20140211145248.GI26684@n2100.arm.linux.org.uk> <8648675.AIXYyYlgXy@avalon>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 2/8] bus: mvebu-mbus: make use of
+ of_find_matching_node_and_match
+Date: Tue, 11 Feb 2014 11:39:53 -0500
+Message-ID: <20140211163953.GZ8533@titan.lakedaemon.net>
+References: <1392135847-30791-1-git-send-email-joshc@codeaurora.org>
+ <1392135847-30791-3-git-send-email-joshc@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8648675.AIXYyYlgXy@avalon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <robherring2@gmail.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1392135847-30791-3-git-send-email-joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 11.02.2014, 16:23 +0100 schrieb Laurent Pinchart:
-> Hi Russell,
+On Tue, Feb 11, 2014 at 10:24:00AM -0600, Josh Cartwright wrote:
+> Instead of the of_find_matching_node()/of_match_node() pair, which requires two
+> iterations through the match table, make use of of_find_matching_node_and_match(),
+> which only iterates through the table once.
 > 
-> On Tuesday 11 February 2014 14:52:48 Russell King - ARM Linux wrote:
-> > On Tue, Feb 11, 2014 at 07:56:33AM -0600, Rob Herring wrote:
-> > > On Tue, Feb 11, 2014 at 5:45 AM, Philipp Zabel wrote:
-> > > > This allows to reuse the same parser code from outside the V4L2
-> > > > framework, most importantly from display drivers. There have been
-> > > > patches that duplicate the code (and I am going to send one of my own),
-> > > > such as
-> > > > http://lists.freedesktop.org/archives/dri-devel/2013-August/043308.html
-> > > > and others that parse the same binding in a different way:
-> > > > https://www.mail-archive.com/linux-omap@vger.kernel.org/msg100761.html
-> > > > 
-> > > > I think that all common video interface parsing helpers should be moved
-> > > > to a single place, outside of the specific subsystems, so that it can
-> > > > be reused by all drivers.
-> > > 
-> > > Perhaps that should be done rather than moving to drivers/of now and
-> > > then again to somewhere else.
-> > 
-> > Do you have a better suggestion where it should move to?
-> > 
-> > drivers/gpu/drm - no, because v4l2 wants to use it
-> > drivers/media/video - no, because DRM drivers want to use it
-> > drivers/video - no, because v4l2 and drm drivers want to use it
-> 
-> Just pointing out a missing location (which might be rejected due to similar 
-> concerns), there's also drivers/media, which isn't V4L-specific.
+> Signed-off-by: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  drivers/bus/mvebu-mbus.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 
-Since drivers/Makefile has media/ in obj-y, moving the graph helpers to
-drivers/media should technically work.
+Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 
-> > Maybe drivers/of-graph/ ?  Or maybe it's just as good a place to move it
-> > into drivers/of ?
+thx,
 
-include/media/of_graph.h,
-drivers/media/of_graph.c?
-
-regards
-Philipp
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
