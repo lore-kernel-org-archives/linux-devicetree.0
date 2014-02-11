@@ -1,74 +1,66 @@
-From: David =?utf-8?q?Lanzend=C3=B6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
-Subject: [PATCH v5 8/8] ARM: sunxi: Add documentation for driver
- for SD/MMC hosts found on Allwinner sunxi SoCs
-Date: Tue, 11 Feb 2014 20:34:51 +0100
-Message-ID: <20140211193450.4568.69759.stgit@dizzy-6.o2s.ch>
-References: <20140211190543.4568.83517.stgit@dizzy-6.o2s.ch>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBD2JL37LXEKRBZHW5GLQKGQE7DFHPSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140211190543.4568.83517.stgit-GPtPHOohwllnsqa/0SyWJQ@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Emilio =?utf-8?b?TMOzcGV6?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: [PATCH v2 1/2] of/gpio: Define OF_GPIO_OPEN_DRAIN and OF_GPIO_OPEN_SOURCE flags.
+Date: Tue, 11 Feb 2014 11:49:59 -0800
+Message-ID: <1392148200-5393-2-git-send-email-ddaney.cavm@gmail.com>
+References: <1392148200-5393-1-git-send-email-ddaney.cavm@gmail.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1392148200-5393-1-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: David Lanzend=C3=B6rfer <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
+From: David Daney <david.daney@cavium.com>
+
+When we have a GPIO pin connected to an open-drain network, we want a
+standard way of specifying this in the device tree.  So we choose bit
+1 of the flag field to indicate open drain.
+
+A typical use case would be something like:
+
+	enum of_gpio_flags f;
+	.
+	.
+	.
+	reset_gpio = of_get_named_gpio_flags(node, "reset", 0, &f);
+	.
+	.
+	.
+	ret = gpio_request_one(reset_gpio,
+		(f & OF_GPIO_OPEN_DRAIN) ? GPIOF_OPEN_DRAIN : 0,
+		 "reset");
+	.
+	.
+	.
+	gpio_direction_output(reset_gpio, 1);
+	gpio_set_value(reset_gpio, 0);
+	msleep(20);
+	gpio_set_value(reset_gpio, 1);
+	.
+	.
+	.
+
+Since the same arguments hold for open-source configurations, add a
+definition for OF_GPIO_OPEN_SOURCE as well.
+
+Signed-off-by: David Daney <david.daney@cavium.com>
 ---
- .../devicetree/bindings/mmc/sunxi-mmc.txt          |   32 ++++++++++++++++=
-++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
+ include/linux/of_gpio.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt b/Document=
-ation/devicetree/bindings/mmc/sunxi-mmc.txt
-new file mode 100644
-index 0000000..2ebd8af
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
-@@ -0,0 +1,32 @@
-+* Allwinner sunxi MMC controller
-+
-+The highspeed MMC host controller on Allwinner SoCs provides an interface
-+for MMC, SD and SDIO types of memory cards.
-+
-+Supported maximum speeds are the ones of the eMMC standard 4.5 as well
-+as the speed of SD standard 3.0.
-+Absolute maximum transfer rate is 200MB/s
-+
-+Required properties:
-+- compatible: Should be "allwinner,<revision>-<chip>-mmc".
-+  The supported chips include a10,a10s,13,a20 and a31,.
-+- base registers are 0x1000 appart, so the base of mmc1
-+  would be 0x01c0f000+0x1000=3D0x01c10000(see example)
-+  and so on.
-+- clocks requires the reference at the ahb clock gate
-+  with the correct index (mmc0 -> 8, mmc1 -> 9, and so on)
-+  as well as the reference to the correct mod0 clock.
-+- interrupts requires the correct IRQ line
-+  (mmc0 -> 32, mmc1 -> 33, and so on)
-+
-+Examples:
-+
-+mmc0: mmc@01c0f000 {
-+	compatible =3D "allwinner,sun5i-a13-mmc";
-+	reg =3D <0x01c0f000 0x1000>;
-+	clocks =3D <&ahb_gates 8>, <&mmc0_clk>;
-+	clock-names =3D "ahb", "mod";
-+	interrupts =3D <0 32 4>;
-+	bus-width =3D <4>;
-+	status =3D "disabled";
-+};
+diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
+index f14123a..cfacf5875 100644
+--- a/include/linux/of_gpio.h
++++ b/include/linux/of_gpio.h
+@@ -30,6 +30,8 @@ struct device_node;
+  */
+ enum of_gpio_flags {
+ 	OF_GPIO_ACTIVE_LOW = 0x1,
++	OF_GPIO_OPEN_DRAIN = 0x2,
++	OF_GPIO_OPEN_SOURCE = 0x4,
+ };
+ 
+ #ifdef CONFIG_OF_GPIO
+-- 
+1.7.11.7
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/groups/opt_out.
