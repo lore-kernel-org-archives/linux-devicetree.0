@@ -1,107 +1,79 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v9 2/4] ehci-platform: Add support for clks
- and phy passed through devicetree
-Date: Tue, 11 Feb 2014 15:42:01 +0200
-Message-ID: <52FA28A9.8010900@ti.com>
-References: <1391787403-20961-1-git-send-email-hdegoede@redhat.com> <1391787403-20961-3-git-send-email-hdegoede@redhat.com> <52F9E98B.90407@ti.com> <52F9EE06.3070003@redhat.com> <52F9F4C6.6080201@ti.com> <52F9F7B3.6080802@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH] ARM: dts: OMAP2+: Fix boot with multi_v7_defconfig
+Date: Tue, 11 Feb 2014 15:53:19 +0200
+Message-ID: <52FA2B4F.3010408@ti.com>
+References: <1392055835-6494-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBD45J6OZZMOBBMGR5CLQKGQEYDCZLAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <52F9F7B3.6080802-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Menon, Nishanth" <nm-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1392055835-6494-1-git-send-email-rogerq@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: tony@atomide.com
+Cc: bcousson@baylibre.com, balbi@ti.com, nm@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/11/2014 12:13 PM, Hans de Goede wrote:
-> Hi,
+On 02/10/2014 08:10 PM, Roger Quadros wrote:
+> The OMAP EHCI controller is not compatible with the EHCI
+> platform HCD driver so don't claim that we are.
 > 
-> On 02/11/2014 11:00 AM, Roger Quadros wrote:
->> On 02/11/2014 11:31 AM, Hans de Goede wrote:
->>> Hi,
->>>
->>> On 02/11/2014 10:12 AM, Roger Quadros wrote:
->>>> Hi Hans,
->>>>
->>>> On 02/07/2014 05:36 PM, Hans de Goede wrote:
->>>>> Currently ehci-platform is only used in combination with devicetree when used
->>>>> with some Via socs. By extending it to (optionally) get clks and a phy from
->>>>> devicetree, and enabling / disabling those on power_on / off, it can be used
->>>>> more generically. Specifically after this commit it can be used for the
->>>>> ehci controller on Allwinner sunxi SoCs.
->>>>>
->>>>> Since ehci-platform is intended to handle any generic enough non pci ehci
->>>>> device, add a "usb-ehci" compatibility string.
->>>>>
->>>>> There already is a usb-ehci device-tree bindings document, update this
->>>>> with clks and phy bindings info.
->>>>>
->>>>> Although actually quite generic so far the via,vt8500 compatibilty string
->>>>> had its own bindings document. Somehow we even ended up with 2 of them. Since
->>>>> these provide no extra information over the generic usb-ehci documentation,
->>>>> this patch removes them.
->>>>>
->>>>> The ehci-ppc-of.c driver also claims the usb-ehci compatibility string,
->>>>> even though it mostly is ibm,usb-ehci-440epx specific. ehci-platform.c is
->>>>> not needed on ppc platforms, so add a !PPC_OF dependency to it to avoid
->>>>> 2 drivers claiming the same compatibility string getting build on ppc.
->>>>>
->>>>
->>>> This breaks all OMAP platforms on linux-next for the exact same reason. see [1].
->>>>
->>>> ./arch/arm/boot/dts/omap4.dtsi:				compatible = "ti,ehci-omap", "usb-ehci";
->>>> ./arch/arm/boot/dts/omap3.dtsi:				compatible = "ti,ehci-omap", "usb-ehci";
->>>> ./arch/arm/boot/dts/omap5.dtsi:				compatible = "ti,ehci-omap", "usb-ehci";
->>>
->>> That should not be the case, the driver core should try to find a driver matching
->>> the compatibility string from left to right, or in other words from most specific
->>> to least specific. This is part of the whole devicetree design.
->>>
->>> So as long as the driver claiming "ti,ehci-omap" is available at probe time that
->>> one should get used and things should work fine. Now if ehci-platform is built-in
->>> and ehci-omap is a module, then I guess one could see the described breakage.
->>>
->>> If the driver is built-in and things are not working, then we will need to do some
->>> debugging as to why the left to right matching is not working as expected.
->>
->> Both ehci_platform and ehci_omap were built-in and still the ehci_platform driver got
->> probe preference. So it looks like the left to right compatible list priority probing
->> feature doesn't work.
+> This fixes boot on OMAP platforms with CONFIG_USB_EHCI_HCD_PLATFORM=y
+> e.g. multi_v7_defconfig
 > 
-> Oops, I guess nothing relies on it sofar. Well we could go and debug and fix this but...
-> 
+> Reported-by: Nishanth Menon <nm@ti.com>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
 
-I think we have a misunderstanding. The compatible list priority probing is only for the
-platform identification compatible. I don't think it is meant to work with driver core yet.
+Please ignore this patch as Hans has agreed to do a more proper fix in
 
-http://lxr.free-electrons.com/source/Documentation/devicetree/usage-model.txt#L116
-
->>
->>>
->>> I must admit I'm not sure what happens if both are a module, the kernel direct
->>> module load will likely fail due to lack of a rootfs at that point, and then
->>> the module will later get loaded by udev I assume, at which point there are no
->>> loading ordering guarantees.
->>>
->>> The easiest solution to ensure that "ti,ehci-omap" is available at probe time
->>> (if enabled) seems to be to change USB_EHCI_HCD_OMAP to a boolean.
->>
->> That is a limitation I don't like to have for USB_EHCI_HCD_OMAP.
-> 
-> I completely understand, thinking more about this I'm simply going to change the
-> compatibility string for ohci- and ehci-platform to be "ohci-platform" resp.
-> "ehci-platform". I know there are some people who don't like the -platform
-> suffix, but though luck, as the above clearly shows using the generic "usb-ohci" /
-> "usb-ehci" they were advocating for leads to a ton of issues, and we already
-> have a precedent for ?hci-platform in the form of "xhci-platform".
-
-+1
+http://article.gmane.org/gmane.comp.hardware.netbook.arm.sunxi/7015
 
 cheers,
 -roger
+
+> ---
+>  arch/arm/boot/dts/omap3.dtsi | 2 +-
+>  arch/arm/boot/dts/omap4.dtsi | 2 +-
+>  arch/arm/boot/dts/omap5.dtsi | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+> index a5fc83b..6b5dbf8 100644
+> --- a/arch/arm/boot/dts/omap3.dtsi
+> +++ b/arch/arm/boot/dts/omap3.dtsi
+> @@ -641,7 +641,7 @@
+>  			};
+>  
+>  			usbhsehci: ehci@48064800 {
+> -				compatible = "ti,ehci-omap", "usb-ehci";
+> +				compatible = "ti,ehci-omap";
+>  				reg = <0x48064800 0x400>;
+>  				interrupt-parent = <&intc>;
+>  				interrupts = <77>;
+> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+> index d3f8a6e..f5d754b 100644
+> --- a/arch/arm/boot/dts/omap4.dtsi
+> +++ b/arch/arm/boot/dts/omap4.dtsi
+> @@ -706,7 +706,7 @@
+>  			};
+>  
+>  			usbhsehci: ehci@4a064c00 {
+> -				compatible = "ti,ehci-omap", "usb-ehci";
+> +				compatible = "ti,ehci-omap";
+>  				reg = <0x4a064c00 0x400>;
+>  				interrupt-parent = <&gic>;
+>  				interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+> index a72813a..42fcffd 100644
+> --- a/arch/arm/boot/dts/omap5.dtsi
+> +++ b/arch/arm/boot/dts/omap5.dtsi
+> @@ -784,7 +784,7 @@
+>  			};
+>  
+>  			usbhsehci: ehci@4a064c00 {
+> -				compatible = "ti,ehci-omap", "usb-ehci";
+> +				compatible = "ti,ehci-omap";
+>  				reg = <0x4a064c00 0x400>;
+>  				interrupt-parent = <&gic>;
+>  				interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+> 
+
