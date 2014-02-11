@@ -1,189 +1,58 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 1/2] OF: update stdout-path parsing
-Date: Tue, 11 Feb 2014 14:54:01 +0000
-Message-ID: <20140211145401.4BA4CC4140E@trevor.secretlab.ca>
-References: <1391860433-5343-1-git-send-email-plagnioj@jcrosoft.com>
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1391860433-5343-1-git-send-email-plagnioj@jcrosoft.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, linux-serial@vger.kernel.org
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] of: Turn of_match_node into a static inline when CONFIG_OF isn't set
+Date: Tue, 11 Feb 2014 15:55:35 +0100
+Message-ID: <1596542.hkJp71u3OJ@avalon>
+References: <1392122211-11422-1-git-send-email-laurent.pinchart@ideasonboard.com> <20140211144108.GB841@joshc.qualcomm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140211144108.GB841@joshc.qualcomm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Josh Cartwright <joshc@codeaurora.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat,  8 Feb 2014 12:53:52 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com> wrote:
-> Today we only check if the linux,stdout-path property is present and retreive
-> the node. But the DT specification allow to pass the serial options too as
-> this
-> 	linux,stdout-path = &UART0;
+Hi Josh,
+
+On Tuesday 11 February 2014 08:41:08 Josh Cartwright wrote:
+> On Tue, Feb 11, 2014 at 01:36:51PM +0100, Laurent Pinchart wrote:
+> > when CONFIG_OF is disabled of_match_node is defined as a macro that
+> > evaluates to NULL. This breaks compilation of drivers that dereference
+> > the function's return value directly. Fix it by turning the macro into a
+> > static inline function that returns NULL.
 > 
-> or with options
+> Just this past week I did the same thing, but noticed that it breaks the
+> following usecase:
 > 
-> 	inux,stdout-path = "/plb@0/serial@84000000:115200";
-
-typo.  :-)
-
+> 	#ifdef CONFIG_OF
+> 	static const struct of_device_id foobar_matches[] = {
+> 		{ .compatible = "foobar,whatsit", },
+> 		{ },
+> 	};
+> 	#endif
 > 
-> So update the parsing to support and also the backward compatible stdout-path
-> property.
-
-Looks reasonable to me. Comment below, but otherwise:
-
-Acked-by: Grant Likely <grant.likely@linaro.org>
-
+> 	static int probeme(struct platform_device *pdev)
+> 	{
+> 		struct of_device_id *id;
 > 
-> Cc: linux-serial@vger.kernel.org
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-> ---
->  drivers/of/base.c  | 57 +++++++++++++++++++++++++++++++++++++++++++++---------
->  include/linux/of.h |  4 ++--
->  2 files changed, 50 insertions(+), 11 deletions(-)
+> 		id = of_match_node(foobar_matches, pdev->dev.of_node);
+> 		if (id) {
+> 			/* ... */
+> 		}
+> 		return 0;
+> 	}
 > 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index ff85450..ab9ff2f 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -34,6 +34,7 @@ EXPORT_SYMBOL(of_allnodes);
->  struct device_node *of_chosen;
->  struct device_node *of_aliases;
->  static struct device_node *of_stdout;
-> +static char *of_stdout_option;
->  
->  DEFINE_MUTEX(of_aliases_mutex);
->  
-> @@ -1783,6 +1784,45 @@ static void of_alias_add(struct alias_prop *ap, struct device_node *np,
->  }
->  
->  /**
-> + * of_stdout_path_scan - check if a device node matches the
-> + *                           linux,stdout-path property and parse it
-> + */
-> +static void of_stdout_path_scan(void)
-> +{
-> +	const char *name;
-> +	const char *tmp;
-> +	const char *tmp_option;
-> +
-> +	name = of_get_property(of_chosen, "linux,stdout-path", NULL);
-> +	if (!name)
-> +		name = of_get_property(of_chosen, "stdout-path", NULL);
+> When !CONFIG_OF and with your change, this will fail to build due to
+> foobar_matches being undefined.
 
-Should protect against unterminated strings. Use of_property_read_string()
+Good point. What would you think about
 
-> +
-> +	if (!name)
-> +		return;
-> +
-> +	tmp_option = strchr(name, ':');
-> +
-> +	if (!tmp_option) {
-> +		of_stdout = of_find_node_by_path(name);
-> +		return;
-> +	}
-> +
-> +	tmp = kstrndup(name, strlen(name) - strlen(tmp_option), GFP_KERNEL);
-> +	if (!tmp)
-> +		return;
+#define of_match_node(_matches, _node)  ((const struct of_device_id *)NULL)
 
-Having to do a strdup is kind of ugly and expensive when the only
-problem is the terminating colon. I would rather see
-of_find_node_by_path modified to do the right thing by ignoring the
-colon which is illegal in path names anyway.
+?
 
-> +
-> +	of_stdout = of_find_node_by_path(tmp);
-> +	if (!of_stdout)
-> +		goto out;
-> +
-> +	tmp_option++;
-> +	of_stdout_option = kstrdup(tmp_option, GFP_KERNEL);
+-- 
+Regards,
 
-The strdup is unnecessary. tmp_option is already null terminated, is
-immutable, and contains the data you need.
-
-> +
-> +out:
-> +	kfree(tmp);
-
-Please reverse the to eliminate the non-error goto:
-	of_stdout = of_find_node_by_path(tmp);
-	if (of_stdout)
-		of_stdout_option = tmp_option++;
-	kfree(tmp);
-
-> +}
-> +
-> +/**
->   * of_alias_scan - Scan all properties of 'aliases' node
->   *
->   * The function scans all the properties of 'aliases' node and populate
-> @@ -1800,13 +1840,8 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
->  	if (of_chosen == NULL)
->  		of_chosen = of_find_node_by_path("/chosen@0");
->  
-> -	if (of_chosen) {
-> -		const char *name;
-> -
-> -		name = of_get_property(of_chosen, "linux,stdout-path", NULL);
-> -		if (name)
-> -			of_stdout = of_find_node_by_path(name);
-> -	}
-> +	if (of_chosen)
-> +		of_stdout_path_scan();
-
-Move the of_chosen check directly into the function.
-
->  
->  	of_aliases = of_find_node_by_path("/aliases");
->  	if (!of_aliases)
-> @@ -1923,13 +1958,17 @@ EXPORT_SYMBOL_GPL(of_prop_next_string);
->   *                            linux,stdout-path property
->   *
->   * Check if this device node matches the linux,stdout-path property
-> - * in the chosen node. return true if yes, false otherwise.
-> + * in the chosen node. return true if yes, false otherwise with the option if
-> + * requested.
->   */
-> -int of_device_is_stdout_path(struct device_node *dn)
-> +int of_device_is_stdout_path(struct device_node *dn, char** option)
->  {
->  	if (!of_stdout)
->  		return false;
->  
-> +	if (option)
-> +		*option = of_stdout_option;
-> +
->  	return of_stdout == dn;
->  }
->  EXPORT_SYMBOL_GPL(of_device_is_stdout_path);
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 70c64ba..a8afe44 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -352,7 +352,7 @@ const __be32 *of_prop_next_u32(struct property *prop, const __be32 *cur,
->   */
->  const char *of_prop_next_string(struct property *prop, const char *cur);
->  
-> -int of_device_is_stdout_path(struct device_node *dn);
-> +int of_device_is_stdout_path(struct device_node *dn, char** option);
->  
->  #else /* CONFIG_OF */
->  
-> @@ -542,7 +542,7 @@ static inline int of_machine_is_compatible(const char *compat)
->  	return 0;
->  }
->  
-> -static inline int of_device_is_stdout_path(struct device_node *dn)
-> +static inline int of_device_is_stdout_path(struct device_node *dn, char** option)
->  {
->  	return 0;
->  }
-> -- 
-> 1.9.rc1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
+Laurent Pinchart
