@@ -1,43 +1,46 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2 1/3] net: stmmac:sti: Add STi SOC glue driver.
-Date: Mon, 10 Feb 2014 14:40:54 -0800 (PST)
-Message-ID: <20140210.144054.2066120014050984537.davem@davemloft.net>
-References: <1391770455-24291-1-git-send-email-srinivas.kandagatla@st.com>
-	<1391770525-24349-1-git-send-email-srinivas.kandagatla@st.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 01/19] clocksource: orion: Use atomic access for shared
+ registers
+Date: Tue, 11 Feb 2014 01:06:43 +0100
+Message-ID: <52F96993.9090007@linaro.org>
+References: <1391707226-18258-1-git-send-email-ezequiel.garcia@free-electrons.com> <1391707226-18258-2-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1391770525-24349-1-git-send-email-srinivas.kandagatla@st.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: srinivas.kandagatla@st.com
-Cc: netdev@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, stuart.menefy@st.com, peppe.cavallaro@st.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1391707226-18258-2-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: <srinivas.kandagatla@st.com>
-Date: Fri, 7 Feb 2014 10:55:25 +0000
+On 02/06/2014 06:20 PM, Ezequiel Garcia wrote:
+> Replace the driver-specific thread-safe shared register API
+> by the recently introduced atomic_io_clear_set().
+>
+> Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Tested-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Tested-by: Willy Tarreau <w@1wt.eu>
+> Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-> +		if (dwmac->interface == PHY_INTERFACE_MODE_MII ||
-> +			dwmac->interface == PHY_INTERFACE_MODE_GMII) {
+The patch looks good for me.
 
-This is not indented correctly, the first character on the second line should
-line up exactly at the column after the openning parenthesis on the first
-line.
+Acked-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-The objective is not to indent using only TAB characters, which you
-are doing here.
 
-Rather, the objective is to use the appropriate number of TAB _and_
-space characters necessary to reach the proper column.
 
-> +		const char *rs;
-> +		err = of_property_read_string(np, "st,tx-retime-src", &rs);
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
 
-Please add an empty line after the local variable declaration.
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
-> +		if (!strcasecmp(rs, "clk_125"))
-> +			dwmac->is_tx_retime_src_clk_125 = true;
-> +
-> +	}
-
-That empty line is superfluous, please delete it.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
