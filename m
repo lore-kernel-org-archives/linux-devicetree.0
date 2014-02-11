@@ -1,55 +1,84 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v2 1/5] drivers: of: add initialization code for reserved
- memory
-Date: Tue, 11 Feb 2014 21:27:36 +0100
-Message-ID: <52FA87B8.8040203@gmail.com>
-References: <1391515773-6112-1-git-send-email-m.szyprowski@samsung.com> <1391515773-6112-2-git-send-email-m.szyprowski@samsung.com> <20140205110538.99E47C40A89@trevor.secretlab.ca> <52FA0D6E.9090304@samsung.com> <20140211121316.24032C40C4D@trevor.secretlab.ca> <52FA33E2.4050004@samsung.com> <20140211190104.7E6C5C4140E@trevor.secretlab.ca> <1392148971.3835.15.camel@pasglop> <52FA8245.5050707@gmail.com> <20140211201933.GI841@joshc.qualcomm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH 2/2] ARM: dts: MSM8974: Add pinctrl node
+Date: Tue, 11 Feb 2014 14:28:57 -0600
+Message-ID: <41801E64-243A-47DF-9AED-F8594373EC10@codeaurora.org>
+References: <1391700529-11816-1-git-send-email-iivanov@mm-sol.com> <1391700529-11816-2-git-send-email-iivanov@mm-sol.com> <CAJAp7OhEE0rTv2KRjajU361wrMh0VqOwCH4u4vC3+F4KMcU0GQ@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.1 \(1827\))
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140211201933.GI841@joshc.qualcomm.com>
+In-Reply-To: <CAJAp7OhEE0rTv2KRjajU361wrMh0VqOwCH4u4vC3+F4KMcU0GQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Josh Cartwright <joshc@codeaurora.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Grant Likely <grant.likely@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@gmail.com>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn@kryo.se>
 List-Id: devicetree@vger.kernel.org
 
 
+On Feb 10, 2014, at 12:55 PM, Bjorn Andersson <bjorn@kryo.se> wrote:
 
-On 11.02.2014 21:19, Josh Cartwright wrote:
-> On Tue, Feb 11, 2014 at 09:04:21PM +0100, Tomasz Figa wrote:
->>
->>
->> On 11.02.2014 21:02, Benjamin Herrenschmidt wrote:
->>> On Tue, 2014-02-11 at 19:01 +0000, Grant Likely wrote:
->>>
->>>>> except that the former IMHO better suits the definition of memory
->>>>> region, which I see as a single contiguous range of memory and can be
->>>>> simplified to have a single reg entry per region.
->>>>
->>>> My point is rather if multiple reg tuples are found in a reserved memory
->>>> node, the kernel must respect them and reserve the memory. I'm not
->>>> arguing about whether or not that makes for a good binding.
->>>
->>> agreed.
->>
->> My point is why, if the binding defines that just a single tuple should be
->> provided.
->
-> FWIW, the usecase I had mentioned in reply to Grant in the patch 5/5
-> thread [1] could make use of this.  The shared memory region is split
-> into a main chunk and several "auxiliary" chunk, but collectively these
-> regions all share the same heap state.
->
->    Josh
->
-> 1: http://lkml.kernel.org/r/20140205192502.GO20228@joshc.qualcomm.com
->
+> On Thu, Feb 6, 2014 at 7:28 AM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
+>> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+>> 
+>> Add the pin control node and pin definitions of SPI8.
+>> 
+>> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+>> ---
+>> arch/arm/boot/dts/qcom-msm8974.dtsi |   29 +++++++++++++++++++++++++++++
+>> 1 file changed, 29 insertions(+)
+>> 
+>> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+>> index 9e5dadb..395603f 100644
+>> --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
+>> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+>> @@ -117,5 +117,34 @@
+>>                        clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>, <&gcc GCC_BLSP1_AHB_CLK>;
+>>                        clock-names = "core", "iface";
+>>                };
+>> +
+>> +               msmgpio: pinctrl@fd510000 {
+>> +                       compatible = "qcom,msm8974-pinctrl";
+>> +                       reg = <0xfd510000 0x4000>;
+>> +                       gpio-controller;
+>> +                       #gpio-cells = <2>;
+>> +                       interrupt-controller;
+>> +                       #interrupt-cells = <2>;
+>> +                       interrupts = <0 208 0>;
+>> +
+>> +                       spi8_default: spi8_default {
+>> +                               mosi {
+>> +                                       pins = "gpio45";
+>> +                                       function = "blsp_spi8";
+>> +                               };
+>> +                               miso {
+>> +                                       pins = "gpio46";
+>> +                                       function = "blsp_spi8";
+>> +                               };
+>> +                               cs {
+>> +                                       pins = "gpio47";
+>> +                                       function = "blsp_spi8";
+>> +                               };
+>> +                               clk {
+>> +                                       pins = "gpio48";
+>> +                                       function = "blsp_spi8";
+>> +                               };
+>> +                       };
+>> +               };
+>>        };
+>> };
+> 
+> Nice, listing it like this makes it easy to add the electrical
+> properties when inheriting these nodes, closer to the product dts
+> files.
+> 
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 
-The use case seems fine, but I believe it could be properly represented 
-in device tree using multiple single-reg regions as well, unless the 
-consumer can request a block of memory that crosses boundary of two 
-sub-regions specified by reg entries of single region.
+Linus,
 
-Best regards,
-Tomasz
+I can take the .dts patch via the linux-qcom tree to keep it with other DT changes if you want to provide an ack.
+
+- k
+
+
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
