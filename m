@@ -1,236 +1,186 @@
-From: Hans Verkuil <hansverk@cisco.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
 Subject: Re: [PATCH 45/47] adv7604: Add DT support
-Date: Tue, 11 Feb 2014 13:14:07 +0100
-Message-ID: <52FA140F.9060200@cisco.com>
-References: <1391618558-5580-1-git-send-email-laurent.pinchart@ideasonboard.com> <1391618558-5580-46-git-send-email-laurent.pinchart@ideasonboard.com> <52F9EBF7.5020000@xs4all.nl> <2643485.CLBhVGBayq@avalon>
+Date: Tue, 11 Feb 2014 13:21:56 +0100
+Message-ID: <52FA15E4.50001@metafoo.de>
+References: <1391618558-5580-1-git-send-email-laurent.pinchart@ideasonboard.com> <1391618558-5580-46-git-send-email-laurent.pinchart@ideasonboard.com> <52F9EBF7.5020000@xs4all.nl> <2643485.CLBhVGBayq@avalon> <52FA140F.9060200@cisco.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <2643485.CLBhVGBayq@avalon>
+In-Reply-To: <52FA140F.9060200@cisco.com>
 Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org
+To: Hans Verkuil <hansverk@cisco.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 02/11/14 13:08, Laurent Pinchart wrote:
-> Hi Hans,
->=20
-> On Tuesday 11 February 2014 10:23:03 Hans Verkuil wrote:
->> On 02/05/14 17:42, Laurent Pinchart wrote:
->>> Parse the device tree node to populate platform data.
->>>
->>> Cc: devicetree@vger.kernel.org
->>> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->>> ---
->>>
->>>  .../devicetree/bindings/media/i2c/adv7604.txt      |  56 +++++++++=
-+++
->>>  drivers/media/i2c/adv7604.c                        | 101 +++++++++=
-+++++--
->>>  2 files changed, 143 insertions(+), 14 deletions(-)
->>>  create mode 100644
->>>  Documentation/devicetree/bindings/media/i2c/adv7604.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.tx=
-t
->>> b/Documentation/devicetree/bindings/media/i2c/adv7604.txt new file =
-mode
->>> 100644
->>> index 0000000..0845c50
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
->>> @@ -0,0 +1,56 @@
->>> +* Analog Devices ADV7604/11 video decoder with HDMI receiver
->>> +
->>> +The ADV7604 and ADV7611 are multiformat video decoders with an int=
-egrated
->>> HDMI +receiver. The ADV7604 has four multiplexed HDMI inputs and on=
-e
->>> analog input, +and the ADV7611 has one HDMI input and no analog inp=
-ut.
->>> +
->>> +Required Properties:
->>> +
->>> +  - compatible: Must contain one of the following
->>> +    - "adi,adv7604" for the ADV7604
->>> +    - "adi,adv7611" for the ADV7611
->>> +
->>> +  - reg: I2C slave address
->>> +
->>> +  - hpd-gpios: References to the GPIOs that control the HDMI hot-p=
-lug
->>> +    detection pins, one per HDMI input. The active flag indicates =
-the
->>> GPIO
->>> +    level that enables hot-plug detection.
->>> +
->>> +Optional Properties:
->>> +
->>> +  - reset-gpios: Reference to the GPIO connected to the device's r=
-eset
->>> pin. +
->>> +  - adi,default-input: Index of the input to be configured as defa=
-ult.
->>> Valid +    values are 0..5 for the ADV7604 and 0 for the ADV7611.
->>> +
->>> +  - adi,disable-power-down: Boolean property. When set forces the =
-device
->>> to +    ignore the power-down pin. The property is valid for the AD=
-V7604
->>> only as +    the ADV7611 has no power-down pin.
->>> +
->>> +  - adi,disable-cable-reset: Boolean property. When set disables t=
-he HDMI
->>> +    receiver automatic reset when the HDMI cable is unplugged.
->>> +
->>> +Example:
->>> +
->>> +	hdmi_receiver@4c {
->>> +		compatible =3D "adi,adv7611";
->>> +		reg =3D <0x4c>;
->>> +
->>> +		reset-gpios =3D <&ioexp 0 GPIO_ACTIVE_LOW>;
->>> +		hpd-gpios =3D <&ioexp 2 GPIO_ACTIVE_HIGH>;
->>> +
->>> +		adi,default-input =3D <0>;
->>> +
->>> +		#address-cells =3D <1>;
->>> +		#size-cells =3D <0>;
->>> +
->>> +		port@0 {
->>> +			reg =3D <0>;
->>> +		};
->>> +		port@1 {
->>> +			reg =3D <1>;
->>> +			hdmi_in: endpoint {
->>> +				remote-endpoint =3D <&ccdc_in>;
->>> +			};
->>> +		};
->>> +	};
->>> diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv760=
-4.c
->>> index e586c1c..cd8a2dc 100644
->>> --- a/drivers/media/i2c/adv7604.c
->>> +++ b/drivers/media/i2c/adv7604.c
->>> @@ -32,6 +32,7 @@
->>>
->>>  #include <linux/i2c.h>
->>>  #include <linux/kernel.h>
->>>  #include <linux/module.h>
->>>
->>> +#include <linux/of_gpio.h>
->>>
->>>  #include <linux/slab.h>
->>>  #include <linux/v4l2-dv-timings.h>
->>>  #include <linux/videodev2.h>
->>>
->>> @@ -2641,13 +2642,83 @@ static const struct adv7604_chip_info
->>> adv7604_chip_info[] =3D {>=20
->>>  	},
->>> =20
->>>  };
->>>
->>> +static struct i2c_device_id adv7604_i2c_id[] =3D {
->>> +	{ "adv7604", (kernel_ulong_t)&adv7604_chip_info[ADV7604] },
->>> +	{ "adv7611", (kernel_ulong_t)&adv7604_chip_info[ADV7611] },
->>> +	{ }
->>> +};
->>> +MODULE_DEVICE_TABLE(i2c, adv7604_i2c_id);
->>> +
->>> +static struct of_device_id adv7604_of_id[] =3D {
->>> +	{ .compatible =3D "adi,adv7604", .data =3D &adv7604_chip_info[ADV=
-7604] },
->>> +	{ .compatible =3D "adi,adv7611", .data =3D &adv7604_chip_info[ADV=
-7611] },
->>> +	{ }
->>> +};
->>> +MODULE_DEVICE_TABLE(of, adv7604_of_id);
->>> +
->>> +static int adv7604_parse_dt(struct adv7604_state *state)
+On 02/11/2014 01:14 PM, Hans Verkuil wrote:
+>
+>
+> On 02/11/14 13:08, Laurent Pinchart wrote:
+>> Hi Hans,
 >>
->> Put this under #ifdef CONFIG_OF.
->=20
-> #ifdef CONFIG_OF has been discouraged. I'll add an IS_ENABLED(CONFIG_=
-OF) to=20
-> condition the call of adv7604_parse_dt() and let the compiler optimiz=
-e the=20
-> function out, but I've been recommended to fix compilation errors ins=
-tead of=20
-> using conditional compilation.
->=20
->> It fails to compile if CONFIG_OF is not set (as it is in my case sin=
-ce this
->> driver is used with a PCIe card).
->=20
-> What's the compilation failure ?
+>> On Tuesday 11 February 2014 10:23:03 Hans Verkuil wrote:
+>>> On 02/05/14 17:42, Laurent Pinchart wrote:
+>>>> Parse the device tree node to populate platform data.
+>>>>
+>>>> Cc: devicetree@vger.kernel.org
+>>>> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com=
+>
+>>>> ---
+>>>>
+>>>>   .../devicetree/bindings/media/i2c/adv7604.txt      |  56 +++++++=
++++++
+>>>>   drivers/media/i2c/adv7604.c                        | 101 +++++++=
++++++++--
+>>>>   2 files changed, 143 insertions(+), 14 deletions(-)
+>>>>   create mode 100644
+>>>>   Documentation/devicetree/bindings/media/i2c/adv7604.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.t=
+xt
+>>>> b/Documentation/devicetree/bindings/media/i2c/adv7604.txt new file=
+ mode
+>>>> 100644
+>>>> index 0000000..0845c50
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+>>>> @@ -0,0 +1,56 @@
+>>>> +* Analog Devices ADV7604/11 video decoder with HDMI receiver
+>>>> +
+>>>> +The ADV7604 and ADV7611 are multiformat video decoders with an in=
+tegrated
+>>>> HDMI +receiver. The ADV7604 has four multiplexed HDMI inputs and o=
+ne
+>>>> analog input, +and the ADV7611 has one HDMI input and no analog in=
+put.
+>>>> +
+>>>> +Required Properties:
+>>>> +
+>>>> +  - compatible: Must contain one of the following
+>>>> +    - "adi,adv7604" for the ADV7604
+>>>> +    - "adi,adv7611" for the ADV7611
+>>>> +
+>>>> +  - reg: I2C slave address
+>>>> +
+>>>> +  - hpd-gpios: References to the GPIOs that control the HDMI hot-=
+plug
+>>>> +    detection pins, one per HDMI input. The active flag indicates=
+ the
+>>>> GPIO
+>>>> +    level that enables hot-plug detection.
+>>>> +
+>>>> +Optional Properties:
+>>>> +
+>>>> +  - reset-gpios: Reference to the GPIO connected to the device's =
+reset
+>>>> pin. +
+>>>> +  - adi,default-input: Index of the input to be configured as def=
+ault.
+>>>> Valid +    values are 0..5 for the ADV7604 and 0 for the ADV7611.
+>>>> +
+>>>> +  - adi,disable-power-down: Boolean property. When set forces the=
+ device
+>>>> to +    ignore the power-down pin. The property is valid for the A=
+DV7604
+>>>> only as +    the ADV7611 has no power-down pin.
+>>>> +
+>>>> +  - adi,disable-cable-reset: Boolean property. When set disables =
+the HDMI
+>>>> +    receiver automatic reset when the HDMI cable is unplugged.
+>>>> +
+>>>> +Example:
+>>>> +
+>>>> +	hdmi_receiver@4c {
+>>>> +		compatible =3D "adi,adv7611";
+>>>> +		reg =3D <0x4c>;
+>>>> +
+>>>> +		reset-gpios =3D <&ioexp 0 GPIO_ACTIVE_LOW>;
+>>>> +		hpd-gpios =3D <&ioexp 2 GPIO_ACTIVE_HIGH>;
+>>>> +
+>>>> +		adi,default-input =3D <0>;
+>>>> +
+>>>> +		#address-cells =3D <1>;
+>>>> +		#size-cells =3D <0>;
+>>>> +
+>>>> +		port@0 {
+>>>> +			reg =3D <0>;
+>>>> +		};
+>>>> +		port@1 {
+>>>> +			reg =3D <1>;
+>>>> +			hdmi_in: endpoint {
+>>>> +				remote-endpoint =3D <&ccdc_in>;
+>>>> +			};
+>>>> +		};
+>>>> +	};
+>>>> diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv76=
+04.c
+>>>> index e586c1c..cd8a2dc 100644
+>>>> --- a/drivers/media/i2c/adv7604.c
+>>>> +++ b/drivers/media/i2c/adv7604.c
+>>>> @@ -32,6 +32,7 @@
+>>>>
+>>>>   #include <linux/i2c.h>
+>>>>   #include <linux/kernel.h>
+>>>>   #include <linux/module.h>
+>>>>
+>>>> +#include <linux/of_gpio.h>
+>>>>
+>>>>   #include <linux/slab.h>
+>>>>   #include <linux/v4l2-dv-timings.h>
+>>>>   #include <linux/videodev2.h>
+>>>>
+>>>> @@ -2641,13 +2642,83 @@ static const struct adv7604_chip_info
+>>>> adv7604_chip_info[] =3D {>
+>>>>   	},
+>>>>
+>>>>   };
+>>>>
+>>>> +static struct i2c_device_id adv7604_i2c_id[] =3D {
+>>>> +	{ "adv7604", (kernel_ulong_t)&adv7604_chip_info[ADV7604] },
+>>>> +	{ "adv7611", (kernel_ulong_t)&adv7604_chip_info[ADV7611] },
+>>>> +	{ }
+>>>> +};
+>>>> +MODULE_DEVICE_TABLE(i2c, adv7604_i2c_id);
+>>>> +
+>>>> +static struct of_device_id adv7604_of_id[] =3D {
+>>>> +	{ .compatible =3D "adi,adv7604", .data =3D &adv7604_chip_info[AD=
+V7604] },
+>>>> +	{ .compatible =3D "adi,adv7611", .data =3D &adv7604_chip_info[AD=
+V7611] },
+>>>> +	{ }
+>>>> +};
+>>>> +MODULE_DEVICE_TABLE(of, adv7604_of_id);
+>>>> +
+>>>> +static int adv7604_parse_dt(struct adv7604_state *state)
+>>>
+>>> Put this under #ifdef CONFIG_OF.
+>>
+>> #ifdef CONFIG_OF has been discouraged. I'll add an IS_ENABLED(CONFIG=
+_OF) to
+>> condition the call of adv7604_parse_dt() and let the compiler optimi=
+ze the
+>> function out, but I've been recommended to fix compilation errors in=
+stead of
+>> using conditional compilation.
+>>
+>>> It fails to compile if CONFIG_OF is not set (as it is in my case si=
+nce this
+>>> driver is used with a PCIe card).
+>>
+>> What's the compilation failure ?
+>
+> drivers/media/i2c/adv7604.c: In function =91adv7604_parse_dt=92:
+> drivers/media/i2c/adv7604.c:2671:48: warning: dereferencing =91void *=
+=92 pointer [enabled by default]
+>    state->info =3D of_match_node(adv7604_of_id, np)->data;
+>                                                  ^
+> drivers/media/i2c/adv7604.c:2671:48: error: request for member =91dat=
+a=92 in something not a structure or union
+> make[3]: *** [drivers/media/i2c/adv7604.o] Error 1
 
-drivers/media/i2c/adv7604.c: In function =91adv7604_parse_dt=92:
-drivers/media/i2c/adv7604.c:2671:48: warning: dereferencing =91void *=92=
- pointer [enabled by default]
-  state->info =3D of_match_node(adv7604_of_id, np)->data;
-                                                ^
-drivers/media/i2c/adv7604.c:2671:48: error: request for member =91data=92=
- in something not a structure or union
-make[3]: *** [drivers/media/i2c/adv7604.o] Error 1
+That looks like a bug in the stubbed out version of of_match_node(). It=
+=20
+should be a inline function with a return type, rather than a macro.
 
->=20
->>> +{
->>> +	struct device_node *np;
->>> +	unsigned int i;
->>> +	int ret;
->>> +
->>> +	np =3D state->i2c_clients[ADV7604_PAGE_IO]->dev.of_node;
->>> +	state->info =3D of_match_node(adv7604_of_id, np)->data;
->>> +
->>> +	state->pdata.disable_pwrdnb =3D
->>> +		of_property_read_bool(np, "adi,disable-power-down");
->>> +	state->pdata.disable_cable_det_rst =3D
->>> +		of_property_read_bool(np, "adi,disable-cable-reset");
->>> +
->>> +	ret =3D of_property_read_u32(np, "adi,default-input",
->>> +				   &state->pdata.default_input);
->>> +	if (ret < 0)
->>> +		state->pdata.default_input =3D -1;
->>> +
->>> +	for (i =3D 0; i < state->info->num_dv_ports; ++i) {
->>> +		enum of_gpio_flags flags;
->>> +
->>> +		state->pdata.hpd_gpio[i] =3D
->>> +			of_get_named_gpio_flags(np, "hpd-gpios", i, &flags);
->>> +		if (IS_ERR_VALUE(state->pdata.hpd_gpio[i]))
->>> +			continue;
->>> +
->>> +		state->pdata.hpd_gpio_low[i] =3D flags =3D=3D OF_GPIO_ACTIVE_LOW=
-;
->>> +	}
->>> +
->>> +	/* Disable the interrupt for now as no DT-based board uses it. */
->>> +	state->pdata.int1_config =3D ADV7604_INT1_CONFIG_DISABLED;
->>> +
->>> +	/* Use the default I2C addresses. */
->>> +	state->pdata.i2c_addresses[ADV7604_PAGE_AVLINK] =3D 0x42;
->>> +	state->pdata.i2c_addresses[ADV7604_PAGE_CEC] =3D 0x40;
->>> +	state->pdata.i2c_addresses[ADV7604_PAGE_INFOFRAME] =3D 0x3e;
->>> +	state->pdata.i2c_addresses[ADV7604_PAGE_ESDP] =3D 0x38;
->>> +	state->pdata.i2c_addresses[ADV7604_PAGE_DPP] =3D 0x3c;
->>> +	state->pdata.i2c_addresses[ADV7604_PAGE_AFE] =3D 0x26;
->>> +	state->pdata.i2c_addresses[ADV7604_PAGE_REP] =3D 0x32;
->>> +	state->pdata.i2c_addresses[ADV7604_PAGE_EDID] =3D 0x36;
->>> +	state->pdata.i2c_addresses[ADV7604_PAGE_HDMI] =3D 0x34;
->>> +	state->pdata.i2c_addresses[ADV7604_PAGE_TEST] =3D 0x30;
->>> +	state->pdata.i2c_addresses[ADV7604_PAGE_CP] =3D 0x22;
->>> +	state->pdata.i2c_addresses[ADV7604_PAGE_VDP] =3D 0x24;
->>> +
->>> +	/* HACK: Hardcode the remaining platform data fields. */
->>> +	state->pdata.blank_data =3D 1;
->>> +	state->pdata.op_656_range =3D 1;
->>> +	state->pdata.alt_data_sat =3D 1;
->>> +	state->pdata.insert_av_codes =3D 1;
->>> +	state->pdata.op_format_mode_sel =3D ADV7604_OP_FORMAT_MODE0;
->>> +
->>> +	return 0;
->>> +}
->=20
+- Lars
