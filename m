@@ -1,115 +1,106 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 3/3] regulator: ti-abb-regulator: do not open-code counting and access of dt array elements
-Date: Wed, 12 Feb 2014 01:01:42 +0100
-Message-ID: <2193931.Kqcd3TrslU@phil>
-References: <2573561.oCYNnnL0gm@phil>
+From: Stephen N Chivers <schivers-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>
+Subject: Re: Linux-3.14-rc2: Order of serial node compatibles in DTS files.
+Date: Wed, 12 Feb 2014 10:21:58 +1000
+Message-ID: <OF9BA019D5.46DA1E29-ONCA257C7D.000089EA-CA257C7D.00020333@csc.com>
+References: <OF784BA598.ACFE9DA4-ONCA257C76.00827472-CA257C77.000BCFAD@csc.com> <20140206082635.GA7048@visitor2.iram.es> <OFA4C1AF9F.B23E83EC-ONCA257C78.00044235-CA257C78.00080D50@csc.com> <20140207101036.GA823@visitor2.iram.es> <alpine.LRH.2.00.1402071348380.10318@ra8135-ec1.am.freescale.net> <20140210110342.GA15806@visitor2.iram.es> <alpine.LRH.2.00.1402101056410.10318@ra8135-ec1.am.freescale.net> <20140211072606.GA26514@visitor2.iram.es> <OF6F6A0029.3B20EF5B-ONCA257C7C.0071BFDA-CA257C7C.00732AD3@csc.com> <63AEBD99-AA87-4FD7-BBDA-0CE419959F14@kernel.crashing.org> <52FAA97F.4060600@gmail.com> <1392162080.6733.404.camel@snotra.buserror.net> <52FAB65C.4090201@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="US-ASCII"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2573561.oCYNnnL0gm@phil>
+In-Reply-To: <52FAB65C.4090201-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Chris Proctor <cproctor-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen N Chivers <schivers-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner-HCpLIkUQxWGakBO8gow8eQ@public.gmane.org>
+Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote on 
+02/12/2014 10:46:36 AM:
 
-Open coding the counting of elements in a dt-property is abstracted by the newly
-introduced of_property_count_uXX_elems functions. Additionally the raw iteration
-over the states element exposes the endian conversion and dtb-format details,
-which according to Mark Rutland "would be nice to limit [...] to of_ helper
-functions".
+> From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Cc: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Stephen N Chivers 
+> <schivers-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, Chris Proctor <cproctor-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, 
+> linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, 
+> devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+> Date: 02/12/2014 11:04 AM
+> Subject: Re: Linux-3.14-rc2: Order of serial node compatibles in DTS 
+files.
+> 
+> On 02/12/2014 12:41 AM, Scott Wood wrote:
+> > On Tue, 2014-02-11 at 23:51 +0100, Sebastian Hesselbarth wrote:
+> >> On 02/11/2014 11:33 PM, Kumar Gala wrote:
+> >>> Hmm,
+> >>>
+> >>> Wondering if this caused the issue:
+> >>>
+> >>> commit 105353145eafb3ea919f5cdeb652a9d8f270228e
+> >>> Author: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >>> Date:   Tue Dec 3 14:52:00 2013 +0100
+> >>>
+> >>>       OF: base: match each node compatible against all given matches 
+first
+> >>
+> >> [adding Arnd on Cc]
+> >>
+> >> Could be. I checked tty/serial/of_serial.c and it does not provide a
+> >> compatible for "fsl,ns16550". Does reverting the patch fix the issue
+> >> observed?
+> >>
+> >> I don't think the missing compatible is causing it, but of_serial
+> >> provides a DT match for .type = "serial" just to fail later on
+> >> with the error seen above.
+> >>
+> >> The commit in question reorders of_match_device in a way that match
+> >> table order is not relevant anymore. This can cause it to match
+> >> .type = "serial" first here.
+> >>
+> >> Rather than touching the commit, I suggest to remove the problematic
+> >> .type = "serial" from the match table. It is of no use anyway.
+> >
+> > Regardless of whether .type = "serial" gets removed, it seems wrong 
+for
+> > of_match_node() to accept a .type-only match (or .name, or anything 
+else
+> > that doesn't involve .compatible) before it accepts a compatible match
+> > other than the first in the compatible property.
+> 
+> Right, I thought about it and came to the same conclusion. I sent a
+> patch a second ago to prefer .compatible != NULL matches over those
+> with .compatible == NULL.
+> 
+> Would be great if Stephen can re-test that. If it solves the issue, I
+> can send a patch tomorrow.
+Done.
 
-Thus change ti-abb-regulator to use the helper for element counting and
-of_property_read_u32_index for retrieval of individual values.
+But, the Interrupt Controller (MPIC)
+goes AWOL and it is down hill from there.
 
-This makes it possible to remove the raw access to the property entirely.
+The MPIC is specified in the DTS as:
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner-HCpLIkUQxWGakBO8gow8eQ@public.gmane.org>
----
- drivers/regulator/ti-abb-regulator.c |   43 ++++++++++++++++------------------
- 1 file changed, 20 insertions(+), 23 deletions(-)
+        mpic: pic@40000 {
+                        interrupt-controller;
+                        #address-cells = <0>;
+                        #interrupt-cells = <2>;
+                        reg = <0x40000 0x40000>;
+                        compatible = "chrp,open-pic";
+                        device_type = "open-pic";
+                        big-endian;
+                };
 
-diff --git a/drivers/regulator/ti-abb-regulator.c b/drivers/regulator/ti-abb-regulator.c
-index a97d0c5..804c83a 100644
---- a/drivers/regulator/ti-abb-regulator.c
-+++ b/drivers/regulator/ti-abb-regulator.c
-@@ -507,32 +507,24 @@ static int ti_abb_init_table(struct device *dev, struct ti_abb *abb,
- 			     struct regulator_init_data *rinit_data)
- {
- 	struct ti_abb_info *info;
--	const struct property *prop;
--	const __be32 *abb_info;
- 	const u32 num_values = 6;
- 	char *pname = "ti,abb_info";
--	u32 num_entries, i;
-+	u32 i;
- 	unsigned int *volt_table;
--	int min_uV = INT_MAX, max_uV = 0;
-+	int num_entries, min_uV = INT_MAX, max_uV = 0;
- 	struct regulation_constraints *c = &rinit_data->constraints;
- 
--	prop = of_find_property(dev->of_node, pname, NULL);
--	if (!prop) {
--		dev_err(dev, "No '%s' property?\n", pname);
--		return -ENODEV;
--	}
--
--	if (!prop->value) {
--		dev_err(dev, "Empty '%s' property?\n", pname);
--		return -ENODATA;
--	}
--
- 	/*
- 	 * Each abb_info is a set of n-tuple, where n is num_values, consisting
- 	 * of voltage and a set of detection logic for ABB information for that
- 	 * voltage to apply.
- 	 */
--	num_entries = prop->length / sizeof(u32);
-+	num_entries = of_property_count_u32_elems(dev->of_node, pname);
-+	if (num_entries < 0) {
-+		dev_err(dev, "No '%s' property?\n", pname);
-+		return -ENODEV;
-+	}
-+
- 	if (!num_entries || (num_entries % num_values)) {
- 		dev_err(dev, "All '%s' list entries need %d vals\n", pname,
- 			num_values);
-@@ -561,18 +553,23 @@ static int ti_abb_init_table(struct device *dev, struct ti_abb *abb,
- 	/* We do not know where the OPP voltage is at the moment */
- 	abb->current_info_idx = -EINVAL;
- 
--	abb_info = prop->value;
- 	for (i = 0; i < num_entries; i++, info++, volt_table++) {
- 		u32 efuse_offset, rbb_mask, fbb_mask, vset_mask;
- 		u32 efuse_val;
- 
- 		/* NOTE: num_values should equal to entries picked up here */
--		*volt_table = be32_to_cpup(abb_info++);
--		info->opp_sel = be32_to_cpup(abb_info++);
--		efuse_offset = be32_to_cpup(abb_info++);
--		rbb_mask = be32_to_cpup(abb_info++);
--		fbb_mask = be32_to_cpup(abb_info++);
--		vset_mask = be32_to_cpup(abb_info++);
-+		of_property_read_u32_index(dev->of_node, pname, i * num_values,
-+					   volt_table);
-+		of_property_read_u32_index(dev->of_node, pname,
-+					   i * num_values + 1, &info->opp_sel);
-+		of_property_read_u32_index(dev->of_node, pname,
-+					   i * num_values + 2, &efuse_offset);
-+		of_property_read_u32_index(dev->of_node, pname,
-+					   i * num_values + 3, &rbb_mask);
-+		of_property_read_u32_index(dev->of_node, pname,
-+					   i * num_values + 4, &fbb_mask);
-+		of_property_read_u32_index(dev->of_node, pname,
-+					   i * num_values + 5, &vset_mask);
- 
- 		dev_dbg(dev,
- 			"[%d]v=%d ABB=%d ef=0x%x rbb=0x%x fbb=0x%x vset=0x%x\n",
--- 
-1.7.10.4
+The board support file has the standard mechanism for allocating
+the PIC:
 
+        struct mpic *mpic;
+
+        mpic = mpic_alloc(NULL, 0, 0, 0, 256, " OpenPIC  ");
+        BUG_ON(mpic == NULL);
+
+        mpic_init(mpic);
+
+I checked for damage in applying the patch and it has applied
+correctly.
+
+Stephen Chivers,
+CSC Australia Pty. Ltd.
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
