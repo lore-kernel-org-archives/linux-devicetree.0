@@ -1,52 +1,34 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 4/4] ARM: dts: imx6qdl: Add PU power-domain
- information to gpc node
-Date: Wed, 12 Feb 2014 19:15:51 +0800
-Message-ID: <20140212111549.GC24834@S2101-09.ap.freescale.net>
-References: <1392125231-28387-1-git-send-email-p.zabel@pengutronix.de>
- <1392125231-28387-5-git-send-email-p.zabel@pengutronix.de>
- <20140212072510.GI31484@S2101-09.ap.freescale.net>
- <1392200455.5536.36.camel@pizza.hi.pengutronix.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 4/7] spi: pl022: attempt to get sspclk by name
+Date: Wed, 12 Feb 2014 12:21:50 +0100
+Message-ID: <201402121221.51233.arnd@arndb.de>
+References: <1392118632-11312-1-git-send-email-mark.rutland@arm.com> <201402111508.06267.arnd@arndb.de> <20140212103329.GC21992@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1392200455.5536.36.camel-/rZezPiN1rtR6QfukMTsflXZhhPuCNm+@public.gmane.org>
+In-Reply-To: <20140212103329.GC21992-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 12, 2014 at 11:20:55AM +0100, Philipp Zabel wrote:
-> > > @@ -598,9 +598,17 @@
-> > >  			};
-> > >  
-> > >  			gpc: gpc@020dc000 {
-> > > +				#address-cells = <1>;
-> > > +				#size-cells = <1>;
-> > >  				compatible = "fsl,imx6q-gpc";
-> > >  				reg = <0x020dc000 0x4000>;
-> > >  				interrupts = <0 89 0x04 0 90 0x04>;
-> > > +				pu-supply = <&reg_pu>;
-> > > +
-> > > +				pd_pu: power-domain@020dc260 {
-> > > +					compatible = "fsl,power-domain";
-> > > +					reg = <0x020dc260 0x10>;
-> > > +				};
-> > 
-> > It's time to have a binding doc for gpc/pgc?
-> 
-> Yes, I'll add one for the next version.
-> 
-> > And I'm not sure
-> > "fsl,power-domain" is a good compatible as it's so generic.
-> 
-> fsl,imx6q-power-domain ?
+On Wednesday 12 February 2014, Mark Rutland wrote:
+> To me it feels odd to require the last clock in the list (apb_pclk) to
+> be named, and the rest to be in a particular order. For the dt case it
+> seems saner to add new clocks with names as it allows arbitrary subsets
+> of clocks to be wired up and described (though obviously in this case a
+> missing sspclk would be problematic).
 
-It looks good to me.
+Yes, good point about the missing clocks, and I also agree mixing ordered
+and named clocks in one device is rather odd and can lead to trouble.
 
-Shawn
+I guess there isn't really a good way out here, and I certainly won't
+ask for it to be done one way or the other if someone else has a 
+good argument which way it should be implemented.
 
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
