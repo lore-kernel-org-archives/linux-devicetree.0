@@ -1,52 +1,54 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCH v2 1/2] of/gpio: Define OF_GPIO_OPEN_DRAIN and
- OF_GPIO_OPEN_SOURCE flags.
-Date: Wed, 12 Feb 2014 11:20:47 +0900
-Message-ID: <CAAVeFuKxoT-fvhNAqJYdXgwXiw6LbE1ks_upkWjCYee_YtQPnw@mail.gmail.com>
-References: <1392148200-5393-1-git-send-email-ddaney.cavm@gmail.com> <1392148200-5393-2-git-send-email-ddaney.cavm@gmail.com>
+From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] of/gpio: Automatically decode OF_GPIO_OPEN_DRAIN
+ and OF_GPIO_OPEN_SOURCE flags in gpiolib.
+Date: Wed, 12 Feb 2014 11:21:17 +0900
+Message-ID: <CAAVeFu+WekUizRz6G=Rwfbd8Tc1vY6DqV=JDeM_bg4GQ50xZNQ@mail.gmail.com>
+References: <1392148200-5393-1-git-send-email-ddaney.cavm@gmail.com> <1392148200-5393-3-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1392148200-5393-2-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Daney <david.daney@cavium.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392148200-5393-3-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 12, 2014 at 4:49 AM, David Daney <ddaney.cavm@gmail.com> wrote:
-> From: David Daney <david.daney@cavium.com>
+On Wed, Feb 12, 2014 at 4:50 AM, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 >
-> When we have a GPIO pin connected to an open-drain network, we want a
-> standard way of specifying this in the device tree.  So we choose bit
-> 1 of the flag field to indicate open drain.
+> Just as gpiod_get() automatically interprets the OF_GPIO_ACTIVE_LOW
+> flag from the device tree, add handling for OF_GPIO_OPEN_DRAIN and
+> OF_GPIO_OPEN_SOURCE.
 >
-> A typical use case would be something like:
+> This keeps the details of handling open-drain GPIOs in the core GPIO
+> code, and out of the individual drivers.
 >
->         enum of_gpio_flags f;
->         .
->         .
->         .
->         reset_gpio = of_get_named_gpio_flags(node, "reset", 0, &f);
->         .
->         .
->         .
->         ret = gpio_request_one(reset_gpio,
->                 (f & OF_GPIO_OPEN_DRAIN) ? GPIOF_OPEN_DRAIN : 0,
->                  "reset");
->         .
->         .
->         .
->         gpio_direction_output(reset_gpio, 1);
->         gpio_set_value(reset_gpio, 0);
->         msleep(20);
->         gpio_set_value(reset_gpio, 1);
->         .
->         .
->         .
+> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/gpio/gpiolib.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 >
-> Since the same arguments hold for open-source configurations, add a
-> definition for OF_GPIO_OPEN_SOURCE as well.
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 50c4922..7f596d0 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -2307,6 +2307,12 @@ static struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
+>         if (of_flags & OF_GPIO_ACTIVE_LOW)
+>                 *flags |= GPIO_ACTIVE_LOW;
 >
-> Signed-off-by: David Daney <david.daney@cavium.com>
+> +       if (of_flags & OF_GPIO_OPEN_DRAIN)
+> +               *flags |= GPIO_OPEN_DRAIN;
+> +
+> +       if (of_flags & OF_GPIO_OPEN_SOURCE)
+> +               *flags |= GPIO_OPEN_SOURCE;
+> +
+>         return desc;
+>  }
 
-Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
+Reviewed-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+
+Thanks for taking the time to do this!
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
