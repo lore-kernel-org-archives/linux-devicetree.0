@@ -1,52 +1,69 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 4/7] spi: pl022: attempt to get sspclk by name
-Date: Wed, 12 Feb 2014 11:47:40 +0000
-Message-ID: <20140212114740.GE21992@e106331-lin.cambridge.arm.com>
-References: <1392118632-11312-1-git-send-email-mark.rutland@arm.com>
- <201402111508.06267.arnd@arndb.de>
- <20140212103329.GC21992@e106331-lin.cambridge.arm.com>
- <201402121221.51233.arnd@arndb.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC/PATCH 0/3] Add devicetree scanning for randomness
+Date: Wed, 12 Feb 2014 12:51:05 +0100
+Message-ID: <201402121251.06280.arnd@arndb.de>
+References: <1392168805-14200-1-git-send-email-lauraa@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201402121221.51233.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1392168805-14200-1-git-send-email-lauraa@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Laura Abbott <lauraa@codeaurora.org>
+Cc: devicetree@vger.kernel.org, Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 12, 2014 at 11:21:50AM +0000, Arnd Bergmann wrote:
-> On Wednesday 12 February 2014, Mark Rutland wrote:
-> > To me it feels odd to require the last clock in the list (apb_pclk) to
-> > be named, and the rest to be in a particular order. For the dt case it
-> > seems saner to add new clocks with names as it allows arbitrary subsets
-> > of clocks to be wired up and described (though obviously in this case a
-> > missing sspclk would be problematic).
-> 
-> Yes, good point about the missing clocks, and I also agree mixing ordered
-> and named clocks in one device is rather odd and can lead to trouble.
-> 
-> I guess there isn't really a good way out here, and I certainly won't
-> ask for it to be done one way or the other if someone else has a 
-> good argument which way it should be implemented.
+On Wednesday 12 February 2014, Laura Abbott wrote:
+> This is an RFC to seed the random number pool earlier when using devicetree.
+> The big issue this is trying to solve is the fact that the stack canary for
+> ARM tends to be the same across bootups of the same device. This is because
+> the random number pools do not get initialized until after the canary has
+> been set up. The canary can be moved later, but in general there is still
+> no way to reliably get random numbers early for other features (e.g. vector
+> randomization).
 
-Having thought about it, all dts that for the ssp_pclk must have some
-name for the sspclk (though the specific name is arbitrary). I could get
-the driver to try each of those before falling back to the index
-(perhaps with a helper that takes a list of known aliases), so all
-existing dts (that we are aware of) would work with the clock requested
-by name.
+Implementation-wise this looks reasonable, and it obviously addresses a
+very real problem.
 
-I assume that for the non-dt case it's possible to name clock inputs to
-a device without the clock being associated with the name globally? If
-so we could get rid of the index usage entirely in this case.
+> The goal here is to allow devices to add to the random pools via
+> add_device_randomness or some other method of their chosing at FDT time.
+> I realize that ARCH_RANDOM is already available but this didn't work because
+> 1) ARCH_RANDOM is not multi-platform compatible without added
+> infrastructure to ARM
 
-Does that sound workable?
+That could certainly be done, but I agree that a more generic
+approach like you did is nicer. One thing that might be useful
+would be to wire up your OF_RANDOM infrastructure as a generic
+implementation of ARCH_RANDOM, and merge your header file into
+include/asm-generic/archrandom.h, with an added way to call
+arch_get_random_long() for the devices you add.
 
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> The big reason to skip ARCH_RANDOM though is that the random number generation
+> we have would be reasonable if only seeded earlier.
+
+Yes, makes sense.
+
+I also wonder if we should add a 'trivial' implementation that just
+reads a DT property full of random numbers to use as either an initial
+seed, or to feed into arch_get_random_long(). This would allow the
+boot loader to pass any entropy it has already gathered into the kernel,
+but leaves the danger that people might pass static not-so-random data
+through a precompiled dtb file ;-). If we get the boot loaders to be
+smart enough, doing only this would be a much simpler kernel implementation
+than your suggestion, but I'm not sure how far I want to trust boot loaders.
+
+Another possibilitiy is to mix in the any contents of a "local-mac-address"
+property into the entropy at early DT probing, which would still be
+deterministic for a given machine and should not count as entropty,
+but at least give each machine with this property a unique seed in the
+absence of any other entropy source.
+
+	Arnd
