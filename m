@@ -1,119 +1,110 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Linux-3.14-rc2: Order of serial node compatibles in DTS files.
-Date: Wed, 12 Feb 2014 12:26:14 +0100
-Message-ID: <52FB5A56.2050402@gmail.com>
-References: <alpine.LRH.2.00.1402101056410.10318@ra8135-ec1.am.freescale.net> <20140211072606.GA26514@visitor2.iram.es> <OF6F6A0029.3B20EF5B-ONCA257C7C.0071BFDA-CA257C7C.00732AD3@csc.com> <63AEBD99-AA87-4FD7-BBDA-0CE419959F14@kernel.crashing.org> <52FAA97F.4060600@gmail.com> <1392162080.6733.404.camel@snotra.buserror.net> <52FAB65C.4090201@gmail.com> <OF9BA019D5.46DA1E29-ONCA257C7D.000089EA-CA257C7D.00020333@csc.com> <20140212052816.GA15434@pek-khao-d1.corp.ad.wrs.com> <52FB3108.3000202@gmail.com> <20140212103153.GC15434@pek-khao-d1.corp.ad.wrs.com>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140212103153.GC15434-2Y/eJ/Q4tBKYoDLmhA0N63T7OC0tnCxdQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen N Chivers <schivers-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, Chris Proctor <cproctor-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: [RFC PATCH v2 00/21] Add DSI display support for Exynos based boards
+Date: Wed, 12 Feb 2014 12:31:07 +0100
+Message-ID: <1392204688-4591-1-git-send-email-a.hajda@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org
+Cc: Andrzej Hajda <a.hajda@samsung.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Sean Paul <seanpaul@chromium.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/12/14 11:31, Kevin Hao wrote:
-> On Wed, Feb 12, 2014 at 09:30:00AM +0100, Sebastian Hesselbarth wrote:
->> On 02/12/2014 06:28 AM, Kevin Hao wrote:
->>> On Wed, Feb 12, 2014 at 10:21:58AM +1000, Stephen N Chivers wrote:
->>>> But, the Interrupt Controller (MPIC)
->>>> goes AWOL and it is down hill from there.
->>>>
->>>> The MPIC is specified in the DTS as:
->>>>
->>>>          mpic: pic@40000 {
->>>>                          interrupt-controller;
->>>>                          #address-cells = <0>;
->>>>                          #interrupt-cells = <2>;
->>>>                          reg = <0x40000 0x40000>;
->>>>                          compatible = "chrp,open-pic";
->>>>                          device_type = "open-pic";
->>>>                          big-endian;
->>>>                  };
->>>>
->>>> The board support file has the standard mechanism for allocating
->>>> the PIC:
->>>>
->>>>          struct mpic *mpic;
->>>>
->>>>          mpic = mpic_alloc(NULL, 0, 0, 0, 256, " OpenPIC  ");
->>>>          BUG_ON(mpic == NULL);
->>>>
->>>>          mpic_init(mpic);
->>>>
->>>> I checked for damage in applying the patch and it has applied
->>>> correctly.
->>>
->>> How about the following fix?
->>>
->>> diff --git a/drivers/of/base.c b/drivers/of/base.c
->>> index ff85450d5683..ca91984d3c4b 100644
->>> --- a/drivers/of/base.c
->>> +++ b/drivers/of/base.c
->>> @@ -730,32 +730,40 @@ out:
->>>   }
->>>   EXPORT_SYMBOL(of_find_node_with_property);
->>>
->>> +static int of_match_type_name(const struct device_node *node,
->>> +				const struct of_device_id *m)
->>
->> I am fine with having a sub-function here, but it should rather be
->> named of_match_type_or_name.
->
-> OK.
->
->>
->>> +{
->>> +	int match = 1;
->>> +
->>> +	if (m->name[0])
->>> +		match &= node->name && !strcmp(m->name, node->name);
->>> +
->>> +	if (m->type[0])
->>> +		match &= node->type && !strcmp(m->type, node->type);
->>> +
->>> +	return match;
->>> +}
->> [...]
->>> +	/* Check against matches without compatible string */
->>> +	m = matches;
->>> +	while (!m->compatible[0] && (m->name[0] || m->type[0])) {
->>
->> We shouldn't check for anything else than the sentinel here.
->> Although I guess yours will not quit early as mine did but that
->> way we don't have to worry about it.
->
-> Yes, this is still buggy. I will change something like this:
->
-> 	m = matches;
-> 	/* Check against matches without compatible string */
-> 	while (m->name[0] || m->type[0] || m->compatible[0]) {
-> 		if (m->compatible[0]) {
-> 			m++;
-> 			continue;
-> 		}
->
-> 		match = of_match_type_name(node, m);
-> 		if (match)
-> 			return m;
-> 		m++;
-> 	}
+Hi,
 
-You can cook it down to:
+This patchset adds drivers and bindings to the following devices:
+- Exynos DSI master,
+- S6E8AA0 DSI panel,
+- TC358764 DSI/LVDS bridge,
+- HV070WSA-100 LVDS panel.
 
-	m = matches;
-	/* Check against matches without compatible string */
-	while (m->name[0] || m->type[0] || m->compatible[0]) {
-		if (!m->compatible[0] && of_match_type_or_name(node, m)
-			return m;
-		m++;
-	}
+It adds also display support in DTS files for the following boards:
+- Exynos4210/Trats,
+- Exynos4412/Trats2,
+- Exynos5250/Arndale.
+
+Things worth mentioning:
+
+1. I have implemented DSI/LVDS bridge using drm_panel framework, ie.
+the driver exposes drm_panel interface on DSI side, and interact with
+panels on LVDS side using drm_panel framework. This approach seems to
+me simpler and more natural than using drm_bridge.
+
+2. I have used video interface bindings to make link between bridge and LVDS panel.
+Other places where such links can be created are:
+a) link between DSI master and slave, I wonder if it is always neccessary,
+   DSI bus is also video bus,
+b) link between FIMD(display controller) and DSI Master, currently Exynos DRM
+   framework uses driver's hardcoded links, converting it to video interface
+   bindings should be done (if required) by separate patches.
+
+The patchset is based on Sean's Paul Exynos refactor patches v4 [1].
+To work properly porch calculation should be fixed according to my comment [2].
+
+It is the 2nd iteration of the patches, main changes:
+- based on v4 refactor patches,
+- added arndale related stuff.
+Other changes are described in individual patches.
+
+[1] http://permalink.gmane.org/gmane.comp.video.dri.devel/99264
+[2] http://permalink.gmane.org/gmane.comp.video.dri.devel/99826
+
+Regards
+Andrzej
 
 
+Andrzej Hajda (21):
+  drm_mipi_dsi: add flags to DSI messages
+  drm/exynos: delay fbdev initialization until an output is connected
+  exynos/dsim: add DT bindings
+  drm/exynos: add DSIM driver
+  panel/s6e8aa0: add DT bindings
+  drm/panel: add S6E8AA0 driver
+  panel/tc358764: add DT bindings
+  drm/panel: add TC358764 driver
+  panel/simple: add video interface DT bindings
+  panel/hv070wsa-100: add DT bindings
+  drm/panel: add support for BOE HV070WSA-100 panel to simple-panel
+  ARM: dts: exynos4: add MIPI DSI Master node
+  ARM: dts: exynos4210-trats: add panel node
+  ARM: dts: exynos4412-trats2: add panel node
+  ARM: dts: exynos5250: add mipi-phy node
+  ARM: dts: exynos5250: add display power domain node
+  ARM: dts: exynos5250: add DSI node
+  ARM: dts: exynos5250-arndale: add display regulators
+  ARM: dts: exynos5250-arndale: add dsi and panel nodes
+  ARM: dts: exynos4210-trats: enable exynos/fimd node
+  ARM: dts: exynos4412-trats2: enable exynos/fimd node
 
+ .../devicetree/bindings/panel/boe,hv070wsa-100.txt |    7 +
+ .../devicetree/bindings/panel/samsung,s6e8aa0.txt  |   51 +
+ .../devicetree/bindings/panel/simple-panel.txt     |    6 +
+ .../devicetree/bindings/panel/toshiba,tc358764.txt |   41 +
+ .../devicetree/bindings/video/exynos_dsim.txt      |   53 +
+ arch/arm/boot/dts/exynos4.dtsi                     |   14 +
+ arch/arm/boot/dts/exynos4210-trats.dts             |   42 +
+ arch/arm/boot/dts/exynos4412-trats2.dts            |   51 +
+ arch/arm/boot/dts/exynos5250-arndale.dts           |   63 +
+ arch/arm/boot/dts/exynos5250.dtsi                  |   25 +
+ drivers/gpu/drm/exynos/Kconfig                     |    9 +
+ drivers/gpu/drm/exynos/Makefile                    |    1 +
+ drivers/gpu/drm/exynos/exynos_drm_drv.c            |   26 +-
+ drivers/gpu/drm/exynos/exynos_drm_drv.h            |    1 +
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c            | 1402 ++++++++++++++++++++
+ drivers/gpu/drm/exynos/exynos_drm_fb.c             |    3 +
+ drivers/gpu/drm/exynos/exynos_drm_fbdev.c          |    4 +-
+ drivers/gpu/drm/panel/Kconfig                      |   14 +
+ drivers/gpu/drm/panel/Makefile                     |    2 +
+ drivers/gpu/drm/panel/panel-s6e8aa0.c              | 1064 +++++++++++++++
+ drivers/gpu/drm/panel/panel-simple.c               |   25 +
+ drivers/gpu/drm/panel/panel-tc358764.c             |  505 +++++++
+ include/drm/drm_mipi_dsi.h                         |    6 +
+ 23 files changed, 3402 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/panel/boe,hv070wsa-100.txt
+ create mode 100644 Documentation/devicetree/bindings/panel/samsung,s6e8aa0.txt
+ create mode 100644 Documentation/devicetree/bindings/panel/toshiba,tc358764.txt
+ create mode 100644 Documentation/devicetree/bindings/video/exynos_dsim.txt
+ create mode 100644 drivers/gpu/drm/exynos/exynos_drm_dsi.c
+ create mode 100644 drivers/gpu/drm/panel/panel-s6e8aa0.c
+ create mode 100644 drivers/gpu/drm/panel/panel-tc358764.c
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.8.3.2
