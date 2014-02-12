@@ -1,83 +1,51 @@
-From: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 3/3] devicetree: ad5064: Added devicetree bindings documentation
-Date: Wed, 12 Feb 2014 13:01:58 +0100
-Message-ID: <1392206518-1457-3-git-send-email-paul.cercueil@analog.com>
-References: <1392206518-1457-1-git-send-email-paul.cercueil@analog.com>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [RFC PATCH v2 02/21] drm/exynos: delay fbdev initialization until
+ an output is connected
+Date: Wed, 12 Feb 2014 17:33:56 +0530
+Message-ID: <CAK9yfHxyoew3L+k2sN_vHZuy=GWk5arYtQyyvAvUx_4U-y5f5g@mail.gmail.com>
+References: <1392204688-4591-1-git-send-email-a.hajda@samsung.com>
+	<1392204688-4591-3-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392206518-1457-1-git-send-email-paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1392204688-4591-3-git-send-email-a.hajda@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Sean Paul <seanpaul@chromium.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Inki Dae <inki.dae@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- .../devicetree/bindings/iio/dac/ad5064.txt         |   49 ++++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/dac/ad5064.txt
++cc Inki Dae
 
-diff --git a/Documentation/devicetree/bindings/iio/dac/ad5064.txt b/Documentation/devicetree/bindings/iio/dac/ad5064.txt
-new file mode 100644
-index 0000000..e5997b0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/dac/ad5064.txt
-@@ -0,0 +1,49 @@
-+Analog Devices AD5064 DAC device driver
-+
-+Required properties:
-+	- compatible: Must be one of:
-+		* "adi,ad5024"
-+		* "adi,ad5025"
-+		* "adi,ad5044"
-+		* "adi,ad5045"
-+		* "adi,ad5064"
-+		* "adi,ad5064-1"
-+		* "adi,ad5065"
-+		* "adi,ad5628-1"
-+		* "adi,ad5628-2"
-+		* "adi,ad5648-1"
-+		* "adi,ad5648-2"
-+		* "adi,ad5666-1"
-+		* "adi,ad5666-2"
-+		* "adi,ad5668-1"
-+		* "adi,ad5668-2"
-+		* "adi,ad5668-3"
-+	- reg: SPI chip select number for the device
-+	- spi-max-frequency: Max SPI frequency to use (< 30000000)
-+	- vrefA-supply, vrefB-supply: phandles to external reference voltage
-+	  supplies for channels 0 and 1 respectively.
-+	  This property must be present for ad5024, ad5025, ad5044, ad5045,
-+	  ad5064, ad5065.
-+	- vrefC-supply, vrefD-supply: phandles to external reference voltage
-+	  supplies for channels 2 and 3 respectively.
-+	  This property must be present for ad5024, ad5044, ad5064.
-+
-+Optional properties:
-+	- adi,use-external-reference: If set, the external reference voltage
-+	  supply is used. This should only be set if there is an external
-+	  reference voltage connected to the vref or vref[A-D] pins.
-+	  If the property is not set, the internal reference voltage supply
-+	  is used if present, or an error is issued by the driver.
-+	- vref-supply: phandle to the external reference voltage supply.
-+	  This property can be used with ad5064-1, ad5628-1, ad5628-2, ad5648-1,
-+	  ad5648-2, ad5666-1, ad5666-2, ad5668-1, ad5668-2, ad5668-3.
-+
-+Example:
-+
-+		ad5668-2@4 {
-+			compatible = "adi,ad5668-2";
-+			reg = <4>;
-+			spi-max-frequency = <10000000>;
-+			adi,use-external-reference;
-+			vref-supply = <&vref_supply>;
-+		};
+Looks like you missed CCing Exynos DRM maintainers.
+
+On 12 February 2014 17:01, Andrzej Hajda <a.hajda@samsung.com> wrote:
+> In case fbdev is initialized before any output is connected,
+> fb resolution defaults to 1024x768. After that any output with
+> bigger resolution is ignored and fbdev is not displayed.
+> The patch postpones fbdev initialization to avoid such situation.
+>
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> ---
+[snip]
+
+>  static const struct drm_mode_config_funcs exynos_drm_mode_config_funcs = {
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_fbdev.c b/drivers/gpu/drm/exynos/exynos_drm_fbdev.c
+> index e7c2f2d..9a5ec83 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_fbdev.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_fbdev.c
+> @@ -249,8 +249,10 @@ int exynos_drm_fbdev_init(struct drm_device *dev)
+>                 return 0;
+>
+>         fbdev = kzalloc(sizeof(*fbdev), GFP_KERNEL);
+> -       if (!fbdev)
+> +       if (!fbdev) {
+> +               DRM_ERROR("failed to allocate fbdev.\n");
+
+This message is not needed as kzalloc gives oom message.
+
+>                 return -ENOMEM;
+> +       }
+
 -- 
-1.7.10.4
+With warm regards,
+Sachin
