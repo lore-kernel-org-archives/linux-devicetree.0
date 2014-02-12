@@ -1,72 +1,107 @@
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 2/3] regulator: Add support for S2MPA01 regulator
-Date: Wed, 12 Feb 2014 18:02:23 +0000
-Message-ID: <20140212180223.GA23630@e106331-lin.cambridge.arm.com>
+Subject: Re: [PATCH v2 3/3] Documentation: mfd: Add binding document for
+ S2MPA01
+Date: Wed, 12 Feb 2014 18:10:43 +0000
+Message-ID: <20140212181043.GB23630@e106331-lin.cambridge.arm.com>
 References: <1389266554-23463-1-git-send-email-sachin.kamat@linaro.org>
- <1389266554-23463-2-git-send-email-sachin.kamat@linaro.org>
+ <1389266554-23463-3-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1389266554-23463-2-git-send-email-sachin.kamat@linaro.org>
+In-Reply-To: <1389266554-23463-3-git-send-email-sachin.kamat@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sachin Kamat <sachin.kamat@linaro.org>
 Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sbkim73@samsung.com" <sbkim73@samsung.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "patches@linaro.org" <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 09, 2014 at 11:22:33AM +0000, Sachin Kamat wrote:
-> Add support for S2MPA01 voltage and current regulator.
+Hi Sachin,
+
+Apologies for the delay on this.
+
+On Thu, Jan 09, 2014 at 11:22:34AM +0000, Sachin Kamat wrote:
+> Added initial binding documentation for S2MPA01 MFD.
 > 
 > Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
 > ---
-> * Addressed comments from Mark Brown
->  - Used module_platform_driver instead of subsys init call
+> * Re-organised as suggested by Mark Rutland.
 > ---
->  drivers/regulator/Kconfig   |    7 +
->  drivers/regulator/Makefile  |    1 +
->  drivers/regulator/s2mpa01.c |  482 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 490 insertions(+)
->  create mode 100644 drivers/regulator/s2mpa01.c
-
-[...]
-
-> +static int s2mpa01_pmic_probe(struct platform_device *pdev)
-> +{
-> +       struct sec_pmic_dev *iodev = dev_get_drvdata(pdev->dev.parent);
-> +       struct sec_platform_data *pdata = dev_get_platdata(iodev->dev);
-> +       struct of_regulator_match rdata[S2MPA01_REGULATOR_MAX];
-> +       struct device_node *reg_np = NULL;
-> +       struct regulator_config config = { };
-> +       struct s2mpa01_info *s2mpa01;
-> +       int i, ret;
+>  Documentation/devicetree/bindings/mfd/s2mpa01.txt |   86 +++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/s2mpa01.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/s2mpa01.txt b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
+> new file mode 100644
+> index 000000000000..70879b92b24b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
+> @@ -0,0 +1,86 @@
 > +
-> +       s2mpa01 = devm_kzalloc(&pdev->dev, sizeof(*s2mpa01), GFP_KERNEL);
-> +       if (!s2mpa01)
-> +               return -ENOMEM;
+> +* Samsung S2MPA01 Voltage and Current Regulator
 > +
-> +       for (i = 0; i < S2MPA01_REGULATOR_CNT; i++)
-> +               rdata[i].name = regulators[i].name;
+> +The Samsung S2MPA01 is a multi-function device which includes high
+> +efficiency buck converters including Dual-Phase buck converter, various LDOs,
+> +and an RTC. It is interfaced to the host controller using an I2C interface.
+> +Each sub-block is addressed by the host system using different I2C slave
+> +addresses.
 > +
-> +       if (iodev->dev->of_node) {
-> +               reg_np = of_find_node_by_name(iodev->dev->of_node,
-> +                                                       "regulators");
+> +Required properties:
+> +- compatible: Should be "samsung,s2mpa01-pmic".
+> +- reg: Specifies the I2C slave address of the PMIC block. It should be 0x66.
 
-This walks the allnodes list, and can thus walk outside of the parent
-node.
+Is the slave address not per-instance in I2C? If not why must is be 0x66?
 
-Use of_get_child_by_name instead.
-
-> +                       if (!reg_np) {
-> +                               dev_err(&pdev->dev,
-> +                                       "could not find regulators sub-node\n");
-> +                               return -EINVAL;
-> +                       }
 > +
-> +               of_regulator_match(&pdev->dev, reg_np, rdata,
-> +                                               S2MPA01_REGULATOR_MAX);
+> +Optional properties:
+> +- interrupt-parent: Specifies the phandle of the interrupt controller to which
+> +  the interrupts from s2mpa01 are delivered to.
+> +- interrupts: Interrupt specifier for interrupt source (connected to SoC).
 
-Is a reference to reg_np held beyond this? Do you need an
-of_node_put(reg_np)?
+The part in brackets can go. Assuming this is a single interrupt:
+
+- interrupts: An interrupt-specifier for the sole interrupt generated by
+  the device.
+
+If the interrupt has a name it would be nice to mention that. If there
+are more than one you should describe them.
+
+> +
+> +Optional nodes:
+> +- regulators: The regulators of s2mpa01 that have to be instantiated should be
+> +  included in a sub-node named 'regulators'. Regulator nodes and constraints
+> +  included in this sub-node use the standard regulator bindings which are
+> +  documented elsewhere.
+> +
+> +Properties for BUCK regulator nodes:
+> + regulator-ramp-delay for BUCKs = [6250/12500(default)/25000/50000] uV/us
+
+This could be made easier to read:
+
+- regulator-ramp-delay: ramp delay in uV/us. May be 6250, 12500
+  (default), 250000, or 50000. May be 0 for disabling the ramp delay on
+  BUCK{1,2,3,4}.
+
+> +
+> + BUCK[1/2/3/4] supports disabling ramp delay on hardware, so explictly
+> + regulator-ramp-delay = <0> can be used for them to disable ramp delay.
+> + In the absence of the regulator-ramp-delay property, the default ramp
+> + delay will be used.
+
+Can be folded into the above, as in my example.
+
+> +
+> +  NOTE: Some BUCKs share the ramp rate setting i.e. same ramp value will be set
+> +  for a particular group of BUCKs. So provide same regulator-ramp-delay<value>.
+
+Missing '=' before <value>?
+
+> +  Grouping of BUCKs sharing ramp rate setting is as follow : BUCK[1, 6],
+> +  BUCK[2, 4], and BUCK[8, 9, 10]
+
+The following BUCKs share ramp settings:
+* 1 and 6
+* 2 and 4
+* 8, 9, and 10
 
 Thanks,
 Mark.
