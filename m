@@ -1,78 +1,95 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH v3 0/11] Xilinx watchdog changes
-Date: Wed, 12 Feb 2014 14:34:31 +0100
-Message-ID: <cover.1392212059.git.michal.simek@xilinx.com>
-Content-Type: multipart/signed;
-    boundary="=_mimegpg-monstr-desktop-11813-1392212082-0001";
-    micalg=pgp-sha1; protocol="application/pgp-signature"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, monstr@monstr.eu
-Cc: Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Wim Van Sebroeck <wim@iguana.be>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+From: Mauro Carvalho Chehab <m.chehab@samsung.com>
+Subject: Re: [PATCH v2] [media] of: move graph helpers from
+ drivers/media/v4l2-core to drivers/media
+Date: Wed, 12 Feb 2014 22:35:15 +0900
+Message-ID: <20140212223515.71a445f4.m.chehab@samsung.com>
+References: <1392154905-12007-1-git-send-email-p.zabel@pengutronix.de>
+ <20140212065306.36a03e82.m.chehab@samsung.com>
+ <1392196314.5536.15.camel@pizza.hi.pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1392196314.5536.15.camel@pizza.hi.pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Philipp Zabel <philipp.zabel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This is a MIME GnuPG-signed message.  If you see this text, it means that
-your E-mail or Usenet software does not support MIME signed messages.
-The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
-To open this message correctly you will need to install E-mail or Usenet
-software that supports modern Internet standards.
+Em Wed, 12 Feb 2014 10:11:54 +0100
+Philipp Zabel <p.zabel@pengutronix.de> escreveu:
 
---=_mimegpg-monstr-desktop-11813-1392212082-0001
+> Hi Mauro,
+> 
+> Am Mittwoch, den 12.02.2014, 06:53 +0900 schrieb Mauro Carvalho Chehab:
+> [...]
+> > > diff --git a/include/media/of_graph.h b/include/media/of_graph.h
+> > > new file mode 100644
+> > > index 0000000..3bbeb60
+> > > --- /dev/null
+> > > +++ b/include/media/of_graph.h
+> > > @@ -0,0 +1,46 @@
+> > > +/*
+> > > + * OF graph binding parsing helpers
+> > > + *
+> > > + * Copyright (C) 2012 - 2013 Samsung Electronics Co., Ltd.
+> > > + * Author: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> > > + *
+> > > + * Copyright (C) 2012 Renesas Electronics Corp.
+> > > + * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> > > + *
+> > > + * This program is free software; you can redistribute it and/or modify
+> > > + * it under the terms of version 2 of the GNU General Public License as
+> > > + * published by the Free Software Foundation.
+> > > + */
+> > > +#ifndef __LINUX_OF_GRAPH_H
+> > > +#define __LINUX_OF_GRAPH_H
+> > > +
+> > > +#ifdef CONFIG_OF
+> > 
+> > As a matter of consistency, it would be better to test here for
+> > CONFIG_OF_GRAPH instead, to reflect the same symbol that enables such
+> > functions as used on Kconfig/Makefile.
+> 
+> Maybe I'm trying to be too clever for my own good, but my reasoning was
+> as follows:
+> 
+> Suppose I newly use the of_graph_ helpers in a subsystem that does not
+> yet select OF_GRAPH. In that case I'd rather get linking errors earlier
+> rather than stubbed out functions that silently fail to parse the DT
+> later.
 
-Hi,
+I see your point, but, imagining that someone pushed a patch using those
+symbols upstream, that would break compilation and git bisection, with 
+will hurt everyone, and not only the very few of us that would actually
+need the OF_GRAPH symbol for an specific driver.
 
-This series contains changes for Xilinx watchdog.
-The whole code series have been reviewed by Guenter
-and device-tree binding was acked by Arnd.
+Also, such push would mean that someone forgot to do his homework and
+to test if the committed functionality is actually working.
 
-I have also pushed this v3 to git repo
-for easier pulling here:
-git://git.monstr.eu/linux-2.6-microblaze.git watchdog
+So, it seems more fair that the one that did the mistake will be the one
+that will suffer the consequences for his errors instead of applying a
+penalty to everybody's else ;)
 
-Thanks,
-Michal
+> Since there is
+> config VIDEO_DEV
+> 	select OF_GRAPH if OF
+> already and the same should be added for other users of device tree
+> graphs, I think stubbing out the functions only if OF is disabled should
+> be enough.
 
-Changes in v3:
-- Remove one if checking and use variable directly
+Well, if you want to be sure that the graph will always be there if OF, then
+you could do, instead:
 
-Changes in v2:
-- Fix enable_once logic
-- Change patch subject
-- New patch in this series
+config OF_GRAPH
+	bool
+	default OF
 
-Michal Simek (11):
-  watchdog: xilinx: Convert driver to the watchdog framework
-  watchdog: xilinx: Move control_status_reg to functions
-  watchdog: xilinx: Simplify probe and remove functions
-  watchdog: xilinx: Move no_timeout to probe function
-  watchdog: xilinx: Allocate private structure per device
-  watchdog: xilinx: Fix all printk messages
-  watchdog: xilinx: Use of_property_read_u32
-  watchdog: xilinx: Use correct comment indentation
-  watchdog: xilinx: Add missing binding
-  watchdog: xilinx: Enable this driver for Zynq
-  watchdog: xilinx: Remove no_timeout variable
+(that would actually make OF_GRAPH just an alias to OF - so we could just
+use OF instead).
 
- .../devicetree/bindings/watchdog/of-xilinx-wdt.txt |  23 ++
- drivers/watchdog/Kconfig                           |  21 +-
- drivers/watchdog/of_xilinx_wdt.c                   | 389 ++++++---------------
- 3 files changed, 148 insertions(+), 285 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
+In any case, I think that we should use the same config name at Makefile, 
+Kconfig and of_graph.h (either OF_GRAPH or just OF).
 
---
-1.8.2.3
-
-
---=_mimegpg-monstr-desktop-11813-1392212082-0001
-Content-Type: application/pgp-signature
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEABECAAYFAlL7eHIACgkQykllyylKDCGYTwCfUU55kYNt9V5oEXsFda27HqgV
-lqAAoIYkTIAh/gOIUZlnIAjxLSQymP5O
-=M1ne
------END PGP SIGNATURE-----
-
---=_mimegpg-monstr-desktop-11813-1392212082-0001--
+Regards,
+Mauro
