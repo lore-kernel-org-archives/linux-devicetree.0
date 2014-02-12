@@ -1,43 +1,152 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] export of_irq_count
-Date: Wed, 12 Feb 2014 13:56:26 -0600
-Message-ID: <CAL_JsqLFAj_nCpuCg8qVchrfeSJ4HgOpt6ht9URkBuKZ6ztWow@mail.gmail.com>
-References: <1392226444-30507-1-git-send-email-delicious.quinoa@gmail.com>
-	<CAL_JsqLT=w5wDnFBcQdeF5KgpJK76xJhH=ZYJy24CEeV2uQ2aQ@mail.gmail.com>
-	<CANk1AXTbnBXzxf_WiQAbWKxNhm2wKVrj0O=nDcW7j27i4T3YBw@mail.gmail.com>
+From: Stephen N Chivers <schivers@csc.com.au>
+Subject: Re: [PATCH] of: give priority to the compatible match in
+ __of_match_node()
+Date: Thu, 13 Feb 2014 06:42:19 +1000
+Message-ID: <OFDE2BD1C1.39A6B15F-ONCA257C7D.006F7E2F-CA257C7D.0071BCDF@csc.com>
+References: <1392205084-2351-1-git-send-email-haokexin@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANk1AXTbnBXzxf_WiQAbWKxNhm2wKVrj0O=nDcW7j27i4T3YBw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: delicious quinoa <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Yves Vandervennet <rocket.yvanderv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1392205084-2351-1-git-send-email-haokexin@gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Kevin Hao <haokexin@gmail.com>
+Cc: Chris Proctor <cproctor@csc.com.au>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Stephen N Chivers <schivers@csc.com.au>, Scott Wood <scottwood@freescale.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, linuxppc-dev@lists.ozlabs.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 12, 2014 at 12:43 PM, delicious quinoa
-<delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Feb 12, 2014 at 12:32 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Wed, Feb 12, 2014 at 11:34 AM, delicious quinoa
->> <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> From: Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
->>>
->>> export of_irq_count so it can be used in drivers that are built
->>> as modules.
->>
->> What drivers? Drivers generally should be using resources rather than
->> this function directly.
->
-> It's for the DesignWare GPIO driver I've been upstreaming.  The
-> DesignWare IP can be configured to be one irq for all the gpios or one
-> irq per gpio.  I want to support both cases.  So I need to know how
-> many irqs are specified in the device tree.
+Kevin Hao <haokexin@gmail.com> wrote on 02/12/2014 10:38:04 PM:
 
-Okay. You should merge this as part of that then, so:
+> From: Kevin Hao <haokexin@gmail.com>
+> To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+> Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Stephen
+> N Chivers <schivers@csc.com.au>, Chris Proctor 
+> <cproctor@csc.com.au>, Arnd Bergmann <arnd@arndb.de>, Scott Wood 
+> <scottwood@freescale.com>, Grant Likely <grant.likely@linaro.org>, 
+> Rob Herring <robh+dt@kernel.org>
+> Date: 02/12/2014 10:38 PM
+> Subject: [PATCH] of: give priority to the compatible match in 
+> __of_match_node()
+> 
+> When the device node do have a compatible property, we definitely
+> prefer the compatible match besides the type and name. Only if
+> there is no such a match, we then consider the candidate which
+> doesn't have compatible entry but do match the type or name with
+> the device node.
+> 
+> This is based on a patch from Sebastian Hesselbarth.
+>   http://patchwork.ozlabs.org/patch/319434/
+> 
+> I did some code refactoring and also fixed a bug in the original patch.
+> 
+> Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> Signed-off-by: Kevin Hao <haokexin@gmail.com>
+Tested-by: Stephen Chivers <schivers@csc.com>
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Patch works for both orderings. Platform boots without problems and
+I get the normal serial console.
+> ---
+>  drivers/of/base.c | 55 ++++++++++++++++++++++++++++++++++++
+> +------------------
+>  1 file changed, 37 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index ff85450d5683..9d655df458bd 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -730,32 +730,45 @@ out:
+>  }
+>  EXPORT_SYMBOL(of_find_node_with_property);
+> 
+> +static int of_match_type_or_name(const struct device_node *node,
+> +            const struct of_device_id *m)
+> +{
+> +   int match = 1;
+> +
+> +   if (m->name[0])
+> +      match &= node->name && !strcmp(m->name, node->name);
+> +
+> +   if (m->type[0])
+> +      match &= node->type && !strcmp(m->type, node->type);
+> +
+> +   return match;
+> +}
+> +
+>  static
+>  const struct of_device_id *__of_match_node(const struct 
+> of_device_id *matches,
+>                    const struct device_node *node)
+>  {
+>     const char *cp;
+>     int cplen, l;
+> +   const struct of_device_id *m;
+> +   int match;
+> 
+>     if (!matches)
+>        return NULL;
+> 
+>     cp = __of_get_property(node, "compatible", &cplen);
+> -   do {
+> -      const struct of_device_id *m = matches;
+> +   while (cp && (cplen > 0)) {
+> +      m = matches;
+> 
+>        /* Check against matches with current compatible string */
+>        while (m->name[0] || m->type[0] || m->compatible[0]) {
+> -         int match = 1;
+> -         if (m->name[0])
+> -            match &= node->name
+> -               && !strcmp(m->name, node->name);
+> -         if (m->type[0])
+> -            match &= node->type
+> -               && !strcmp(m->type, node->type);
+> -         if (m->compatible[0])
+> -            match &= cp
+> -               && !of_compat_cmp(m->compatible, cp,
+> +         if (!m->compatible[0]) {
+> +            m++;
+> +            continue;
+> +         }
+> +
+> +         match = of_match_type_or_name(node, m);
+> +         match &= cp && !of_compat_cmp(m->compatible, cp,
+>                       strlen(m->compatible));
+>           if (match)
+>              return m;
+> @@ -763,12 +776,18 @@ const struct of_device_id *__of_match_node
+> (const struct of_device_id *matches,
+>        }
+> 
+>        /* Get node's next compatible string */ 
+> -      if (cp) {
+> -         l = strlen(cp) + 1;
+> -         cp += l;
+> -         cplen -= l;
+> -      }
+> -   } while (cp && (cplen > 0));
+> +      l = strlen(cp) + 1;
+> +      cp += l;
+> +      cplen -= l;
+> +   }
+> +
+> +   m = matches;
+> +   /* Check against matches without compatible string */
+> +   while (m->name[0] || m->type[0] || m->compatible[0]) {
+> +      if (!m->compatible[0] && of_match_type_or_name(node, m))
+> +         return m;
+> +      m++;
+> +   }
+> 
+>     return NULL;
+>  }
+> -- 
+> 1.8.5.3
+> 
