@@ -1,51 +1,36 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [RFC PATCH v2 02/21] drm/exynos: delay fbdev initialization until
- an output is connected
-Date: Wed, 12 Feb 2014 17:33:56 +0530
-Message-ID: <CAK9yfHxyoew3L+k2sN_vHZuy=GWk5arYtQyyvAvUx_4U-y5f5g@mail.gmail.com>
-References: <1392204688-4591-1-git-send-email-a.hajda@samsung.com>
-	<1392204688-4591-3-git-send-email-a.hajda@samsung.com>
+From: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] devicetree: ad7303: Updated documentation
+Date: Wed, 12 Feb 2014 13:08:23 +0100
+Message-ID: <1392206903-1662-1-git-send-email-paul.cercueil@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1392204688-4591-3-git-send-email-a.hajda@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Sean Paul <seanpaul@chromium.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Inki Dae <inki.dae@samsung.com>
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+cc Inki Dae
+Added documentation about the "adi,use-external-reference"
+property.
 
-Looks like you missed CCing Exynos DRM maintainers.
+Signed-off-by: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/iio/dac/ad7303.txt |    3 +++
+ 1 file changed, 3 insertions(+)
 
-On 12 February 2014 17:01, Andrzej Hajda <a.hajda@samsung.com> wrote:
-> In case fbdev is initialized before any output is connected,
-> fb resolution defaults to 1024x768. After that any output with
-> bigger resolution is ignored and fbdev is not displayed.
-> The patch postpones fbdev initialization to avoid such situation.
->
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> ---
-[snip]
-
->  static const struct drm_mode_config_funcs exynos_drm_mode_config_funcs = {
-> diff --git a/drivers/gpu/drm/exynos/exynos_drm_fbdev.c b/drivers/gpu/drm/exynos/exynos_drm_fbdev.c
-> index e7c2f2d..9a5ec83 100644
-> --- a/drivers/gpu/drm/exynos/exynos_drm_fbdev.c
-> +++ b/drivers/gpu/drm/exynos/exynos_drm_fbdev.c
-> @@ -249,8 +249,10 @@ int exynos_drm_fbdev_init(struct drm_device *dev)
->                 return 0;
->
->         fbdev = kzalloc(sizeof(*fbdev), GFP_KERNEL);
-> -       if (!fbdev)
-> +       if (!fbdev) {
-> +               DRM_ERROR("failed to allocate fbdev.\n");
-
-This message is not needed as kzalloc gives oom message.
-
->                 return -ENOMEM;
-> +       }
-
+diff --git a/Documentation/devicetree/bindings/iio/dac/ad7303.txt b/Documentation/devicetree/bindings/iio/dac/ad7303.txt
+index 914610f..de6b32f 100644
+--- a/Documentation/devicetree/bindings/iio/dac/ad7303.txt
++++ b/Documentation/devicetree/bindings/iio/dac/ad7303.txt
+@@ -7,6 +7,9 @@ Required properties:
+ 	- Vdd-supply: Phandle to the Vdd power supply
+ 
+ Optional properties:
++	- adi,use-external-reference: If set, the external reference voltage
++	  supply is used. Otherwise, the internal reference voltage supply is
++	  used.
+ 	- REF-supply: Phandle to the external reference voltage supply. This should
+ 	  only be set if there is an external reference voltage connected to the REF
+ 	  pin. If the property is not set Vdd/2 is used as the reference voltage.
 -- 
-With warm regards,
-Sachin
+1.7.10.4
