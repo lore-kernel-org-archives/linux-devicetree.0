@@ -1,89 +1,83 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2] [media] of: move graph helpers from
- drivers/media/v4l2-core to drivers/media
-Date: Wed, 12 Feb 2014 10:25:54 +0100
-Message-ID: <1392197154.5536.26.camel@pizza.hi.pengutronix.de>
-References: <1392154905-12007-1-git-send-email-p.zabel@pengutronix.de>
-	 <52FB1FA8.2070903@ti.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 01/02] ARM: shmobile: Add SDHI devices to r8a7791 DTSI
+Date: Wed, 12 Feb 2014 10:27:30 +0100
+Message-ID: <CAMuHMdU28GA23bQGqr8KsEcTcvbX=3UHrnfy90o7HjipYhkX3g@mail.gmail.com>
+References: <20140212074110.23493.41073.sendpatchset@w520>
+	<20140212074119.23493.28243.sendpatchset@w520>
+	<CAMuHMdVsh4hG0VruqJBatkGCvhtgUYXAYxR930UZS-QAdoN8gw@mail.gmail.com>
+	<CANqRtoQQs+CxTGgiyEH3jjwr4zY5KxrPSgns8Fd6PyHMst0iJg@mail.gmail.com>
+	<CAMuHMdUVSYtoaLvT-ZGw81q3jTXk2nB0zCYSsdx-u6QVZ8Z8WA@mail.gmail.com>
+	<CANqRtoQ8uYZcMQC5EQ6DLHGb3noOFsnTvtFTvPaMQarOdkD5Aw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52FB1FA8.2070903-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CANqRtoQ8uYZcMQC5EQ6DLHGb3noOFsnTvtFTvPaMQarOdkD5Aw@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: Linux-sh list <linux-sh@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomi,
+On Wed, Feb 12, 2014 at 9:51 AM, Magnus Damm <magnus.damm@gmail.com> wrote:
+>>>>>  - add r8a7790 suffix as fall back in case r8a7791 is missing from the driver
 
-Am Mittwoch, den 12.02.2014, 09:15 +0200 schrieb Tomi Valkeinen:
-> Hi,
-> 
-> On 11/02/14 23:41, Philipp Zabel wrote:
-> > From: Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > 
-> > This patch moves the parsing helpers used to parse connected graphs
-> > in the device tree, like the video interface bindings documented in
-> > Documentation/devicetree/bindings/media/video-interfaces.txt, from
-> > drivers/media/v4l2-core to drivers/media.
-> > 
-> > This allows to reuse the same parser code from outside the V4L2
-> > framework, most importantly from display drivers.
-> > The functions v4l2_of_get_next_endpoint, v4l2_of_get_remote_port,
-> > and v4l2_of_get_remote_port_parent are moved. They are renamed to
-> > of_graph_get_next_endpoint, of_graph_get_remote_port, and
-> > of_graph_get_remote_port_parent, respectively.
-> > Since there are not that many current users, switch all of them
-> > to the new functions right away.
-> > 
-> > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > Acked-by: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > Acked-by: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-> 
-> I don't think the graphs or the parsing code has anything video
-> specific. It could well be used for anything, whenever there's need to
-> describe connections between devices which are not handled by the normal
-> child-parent relationships. So the code could well reside in some
-> generic place, in my opinion.
-> 
-> Also, I have no problem with having it in drivers/media, but
-> drivers/video should work also. We already have other, generic, video
-> related things there like hdmi infoframes and display timings.
+>>>>> +       sdhi0: sd@ee100000 {
+>>>>> +               compatible = "renesas,sdhi-r8a7791", "renesas,sdhi-r8a7790";
 
-I agree. In case anybody wants to use this for audio in the future,
-media already sounds more generic than video.
-
-> And last, it's fine to move the funcs as-is in the first place, but I
-> think they should be improved a bit before non-v4l2 users use them.
-
-The get_remote_port(_parent) are fine, I think.
-
-> There are a couple of things I tried to accomplish with the omapdss
-> specific versions in
-> https://www.mail-archive.com/linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg100761.html:
+>>>> I'm afraid that's not such a good idea: what if r8a7791 SDHI turns out to have a
+>>>> slight incompatibility with r8a7790 SDHI later?
+>>>
+>>> It's a fallback so later we will simply use r8a7791 instead. r8a7790
+>>> is currently used with the v3.14-rc version of the SDHI driver. Future
+>>> ones always include r8a7791. How does that introduce any issues?
+>>
+>> Bummer, yes, it prefers the first compatible entry.
+>>
+>> Will refrain from sending more emails until my coffee has been digested ;-)
 >
-> - Iterating ports and endpoints separately. If a node has multiple
-> ports, I would think that the driver needs to know which port and
-> endpoint combination is the current one during iteration. It's not
-> enough to just get the endpoint.
+> Heheh. But I think you raise a valid point:
+>
+> Using the wrong SoC in the compatible string is pretty darn ugly.
+>
+> What is the best practise here?
 
-Yes, I'd already have a use-case for that in enumerating the
-encoders/panels connected to a single display interface (port).
+(adding devicetree)
 
-On the other hand if you just want to enumerate components from the
-device tree, iterating over all endpoints of all ports is useful, too.
+It should be a reference to the hardware block.
 
-> - Simplify cases when there's just one port and one endpoint, in which
-> case the port node can be omitted from the DT data.
+Before the advent of SoCs, a hardware block was an IC, with a part number
+(e.g. de21040), and sometimes a name (e.g. tulip). Further evolutions of the
+hardware block got (usually, but not always) different part numbers.
 
-Also, I'd like to drop the prev reference in get_next_endpoint, then a
-for_each_endpoint macro could be made from that.
+With SoCs, the part numbers of the hardware blocks were lost. Only the SoC
+still carries a part number. The hardware blocks (now called "IP cores") still
+have names (e.g. RSPI), but they're more abstract, and it's difficult to know
+what exact version of the hardware block they're referring to[*].
 
-regards
-Philipp
+Using "<manufacturer>,<name>-<soc>" is future-proof, but cumbersome.
+Having a more generic fallback name to group SoCs with the same IP core
+is convenient.
+
+So we have to "invent" generic fallback names with versioning ourselves?
+
+  - SoC family name? But there's no guarantee a new SoC from the same
+    family will be 100% compatible.
+  - "-v1", "-v2" suffixes? The new SoC may have something in between
+    v1 and v2
+  - ???
+
+[*] With OpenRISC it's easier, as we have the hardware source files, but
+    it's still cumbersome to find good version naming.
+    The OpenCores-mandated "<name>-rtlsvn<version>" is not such a good
+    match for todays distributed development, with IP cores being imported
+    into git repositories and modified there.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
