@@ -1,86 +1,70 @@
 From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ohci-platform: Change compatible
- string from usb-ohci to generic-ohci
-Date: Wed, 12 Feb 2014 10:45:05 +0200
-Message-ID: <52FB3491.3060206@ti.com>
-References: <1392136529-5060-1-git-send-email-hdegoede@redhat.com> <1392136529-5060-2-git-send-email-hdegoede@redhat.com>
+Subject: Re: [PATCH] phy-core: Don't allow building phy-core as
+ a module
+Date: Wed, 12 Feb 2014 10:46:54 +0200
+Message-ID: <52FB34FE.6030909@ti.com>
+References: <1392134631-32030-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBD45J6OZZMOBBHPJ5SLQKGQENSWON6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1392136529-5060-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-sunxi+bncBD45J6OZZMOBBBPK5SLQKGQELPNBPGA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1392134631-32030-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/11/2014 06:35 PM, Hans de Goede wrote:
-> The initial versions of the devicetree enablement patches for ohci-platform
-> used "ohci-platform" as compatible string. However this was disliked by various
-> reviewers because the platform bus is a Linux invention and devicetree is
-> supposed to be OS agnostic. After much discussion I gave up and went with
-> the generic usb-ohci as requested.
+On 02/11/2014 06:03 PM, Hans de Goede wrote:
+> include/phy/phy.h has stub code in there for when building without the
+> phy-core enabled. This is useful for generic drivers such as ahci-platform,
+> ehci-platoform and ohci-platform which have support for driving an optional
+> phy passed to them through the devicetree.
 > 
-> In retro-spect I should have chosen something different, the dts files for many
-> existing boards already claim to be compatible with "usb-ohci", ie they have:
+> Since on some boards this phy functionality is not needed, being able to
+> disable the phy subsystem without needing a lot of #ifdef magic in the
+> driver using it is quite useful.
 > 
-> 	compatible = "ti,ohci-omap3", "usb-ohci";
+> However this breaks when the module using the phy subsystem is build-in and
+> the phy-core is not, which leads to the build failing with missing symbol
+> errors in the linking stage of the zImage.
 > 
-> In theory this should not be a problem since the "ti,ohci-omap3" entry takes
-> presedence, but in practice using a conflicting compatible string is an issue,
-> because it makes which driver gets used depend on driver registration order.
+> Which leads to gems such as this being added to the Kconfig for achi_platform:
 > 
-> This patch changes the compatible string claimed by ohci-platform to
-> "generic-ohci", avoiding the driver registration / module loading ordering
-> problems.
+> 	depends on GENERIC_PHY || !GENERIC_PHY
+> 
+> Rather then duplicating this code in a lot of places using the phy-core,
+> I believe it is better to simply not allow the phy-core to be built as a
+> module. The phy core is quite small and has no external dependencies, so
+> always building it in when enabling it should not be an issue.
 > 
 > Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/usb/usb-ohci.txt | 4 ++--
->  drivers/usb/host/ohci-platform.c                   | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/usb-ohci.txt b/Documentation/devicetree/bindings/usb/usb-ohci.txt
-> index 6933b0c..45f67d9 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-ohci.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-ohci.txt
-> @@ -1,7 +1,7 @@
->  USB OHCI controllers
->  
->  Required properties:
-> -- compatible : "usb-ohci"
-> +- compatible : "generic-ohci"
->  - reg : ohci controller register range (address and length)
->  - interrupts : ohci controller interrupt
->  
-> @@ -16,7 +16,7 @@ Optional properties:
->  Example:
->  
->  	ohci0: usb@01c14400 {
-> -		compatible = "allwinner,sun4i-a10-ohci", "usb-ohci";
-> +		compatible = "allwinner,sun4i-a10-ohci", "generic-ohci";
->  		reg = <0x01c14400 0x100>;
->  		interrupts = <64>;
->  		clocks = <&usb_clk 6>, <&ahb_gates 2>;
-> diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
-> index e2c28fd..b6ca0b2 100644
-> --- a/drivers/usb/host/ohci-platform.c
-> +++ b/drivers/usb/host/ohci-platform.c
-> @@ -319,7 +319,7 @@ static int ohci_platform_resume(struct device *dev)
->  #endif /* CONFIG_PM */
->  
->  static const struct of_device_id ohci_platform_ids[] = {
-> -	{ .compatible = "usb-ohci", },
-> +	{ .compatible = "generic-ohci", },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(of, ohci_platform_ids);
-> 
-both v2 patches
 
 Acked-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+
+--
+cheers,
+-roger
+
+> ---
+>  drivers/phy/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index 6070c99..6e336b4 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -5,7 +5,7 @@
+>  menu "PHY Subsystem"
+>  
+>  config GENERIC_PHY
+> -	tristate "PHY Core"
+> +	bool "PHY Core"
+>  	help
+>  	  Generic PHY support.
+>  
+> 
