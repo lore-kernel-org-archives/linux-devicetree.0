@@ -1,55 +1,124 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 4/7] spi: pl022: attempt to get sspclk by name
-Date: Wed, 12 Feb 2014 14:03:26 +0100
-Message-ID: <1786282.mNUF0ZaUg2@wuerfel>
-References: <1392118632-11312-1-git-send-email-mark.rutland@arm.com> <201402121221.51233.arnd@arndb.de> <20140212114740.GE21992@e106331-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH RFC v7 0/6] MPC512x DMA slave s/g support, OF DMA lookup
+Date: Wed, 12 Feb 2014 17:25:02 +0400
+Message-ID: <1392211508-23615-1-git-send-email-a13xp0p0v88@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140212114740.GE21992-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 12 February 2014 11:47:40 Mark Rutland wrote:
-> On Wed, Feb 12, 2014 at 11:21:50AM +0000, Arnd Bergmann wrote:
-> > On Wednesday 12 February 2014, Mark Rutland wrote:
-> > > To me it feels odd to require the last clock in the list (apb_pclk) to
-> > > be named, and the rest to be in a particular order. For the dt case it
-> > > seems saner to add new clocks with names as it allows arbitrary subsets
-> > > of clocks to be wired up and described (though obviously in this case a
-> > > missing sspclk would be problematic).
-> > 
-> > Yes, good point about the missing clocks, and I also agree mixing ordered
-> > and named clocks in one device is rather odd and can lead to trouble.
-> > 
-> > I guess there isn't really a good way out here, and I certainly won't
-> > ask for it to be done one way or the other if someone else has a 
-> > good argument which way it should be implemented.
-> 
-> Having thought about it, all dts that for the ssp_pclk must have some
-> name for the sspclk (though the specific name is arbitrary). I could get
-> the driver to try each of those before falling back to the index
-> (perhaps with a helper that takes a list of known aliases), so all
-> existing dts (that we are aware of) would work with the clock requested
-> by name.
+v2013/7/14 Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>:
+> this series
+> - introduces slave s/g support (that's support for DMA transfers which
+>    involve peripherals in contrast to mem-to-mem transfers)
+> - adds device tree based lookup support for DMA channels
+> - combines floating patches and related feedback which already covered
+>    several aspects of what the suggested LPB driver needs, to demonstrate
+>    how integration might be done
+> - carries Q&D SD card support to enable another DMA client during test,
+>    while this patch needs to get dropped upon pickup
 
-Strange. Why do the even have names in there? What are those strings?
+Changes in v2:
+> - re-order mpc8308 related code paths for improved readability, no
+>    change in behaviour, introduction of symbolic channel names here
+>    already
+> - squash 'execute() start condition' and 'terminate all' into the
+>    introduction of 'slave s/g prep' and 'device control' support; refuse
+>    s/g lists with more than one item since slave support is operational
+>    yet proper s/g support is missing (can get addressed later)
+> - always start transfers from software on MPC8308 as there are no
+>    external request lines for peripheral flow control
+> - drop dt-bindings header file and symbolic channel names in OF nodes
 
-I noticed that ux500 has uses four different strings, one for each
-instance, which is obviously a bug and should just be fixed. There is
-no way this was intentional, and we can just rely on teh fallback
-if you want to have that anyway.
+Changes in v3 and v4:
+ Part 1/5:
+ - use #define instead of enum since individual channels don't require
+    special handling.
+ Part 2/5:
+ - add a flag "will_access_peripheral" to DMA transfer descriptor
+    according recommendations of Gerhard Sittig.
+    This flag is set in mpc_dma_prep_memcpy() and mpc_dma_prep_slave_sg()
+    and is evaluated in mpc_dma_execute() to choose a type of start for
+    the transfer.
+ - prevent descriptors of transfers which involve peripherals from
+    being chained together;
+    each of such transfers needs hardware initiated start.
+ - add locking while working with struct mpc_dma_chan
+    according recommendations of Lars-Peter Clausen.
+ - remove default nbytes value. Client kernel modules must set
+    src_maxburst and dst_maxburst fields of struct dma_slave_config (dmaengine.h).
 
-> I assume that for the non-dt case it's possible to name clock inputs to
-> a device without the clock being associated with the name globally? If
-> so we could get rid of the index usage entirely in this case.
+Changes in v5:
+ Part 2/5:
+ - add and improve comments;
+ - improve the code moving transfer descriptors from 'queued' to 'active' list
+    in mpc_dma_execute();
+ - allow mpc_dma_prep_slave_sg() to run with non-empty 'active' list;
+ - take 'mdesc' back to 'free' list in case of error in mpc_dma_prep_slave_sg();
+ - improve checks of the transfer parameters;
+ - provide the default value for 'maxburst' in mpc_dma_device_control().
 
-Sorry, I don't understand the question.
+Changes in v6:
+ Part 2/5:
+ - remove doubtful comment;
+ - fix coding style issues;
+ - set default value for 'maxburst' to 1 which applies to most cases;
+ Part 3/5:
+ - use dma_get_slave_channel() instead of dma_request_channel()
+    in new function of_dma_xlate_by_chan_id() according recommendations of
+    Arnd Bergmann;
+ Part 4/5:
+ - set DMA_PRIVATE flag for MPC512x DMA controller since its driver relies on
+    of_dma_xlate_by_chan_id() which doesn't use dma_request_channel()
+    any more; (removed in v7)
+ - resolve little patch conflict;
+ Part 5/5:
+ - resolve little patch conflict;
 
-	Arnd
+Changes in v7:
+ Part 2:
+ - improve comment;
+ Part 4:
+ - split in two separate patches. Part 4/6 contains device tree
+    binding document and in part 5/6 MPC512x DMA controller is registered
+    for device tree channel lookup;
+ - remove setting DMA_PRIVATE flag for MPC512x DMA controller from part 5/6;
+
+> known issues:
+> - it's yet to get confirmed whether MPC8308 can use slave support or
+>    whether the DMA controller's driver shall actively reject it, the
+>    information that's available so far suggests that peripheral transfers
+>    to IP bus attached I/O is useful and shall not get blocked right away
+ - adding support for transfers which don't increment the RAM address or
+    do increment the peripheral "port's" address is easy with
+    this implementation; but which options of the common API
+    should be used for specifying such transfers?
+ - device tree binding document for the MPC512x DMA controller needs
+    to be improved.
+
+
+Alexander Popov (3):
+  dma: mpc512x: reorder mpc8308 specific instructions
+  dma: mpc512x: add support for peripheral transfers
+  dma: of: Add common xlate function for matching by channel id
+
+Gerhard Sittig (3):
+  dma: mpc512x: add device tree binding document
+  dma: mpc512x: register for device tree channel lookup
+  HACK mmc: mxcmmc: enable clocks for the MPC512x
+
+ .../devicetree/bindings/dma/mpc512x-dma.txt        |  55 ++++
+ arch/powerpc/boot/dts/mpc5121.dtsi                 |   1 +
+ drivers/dma/mpc512x_dma.c                          | 293 +++++++++++++++++++--
+ drivers/dma/of-dma.c                               |  35 +++
+ drivers/mmc/host/mxcmmc.c                          |  42 ++-
+ include/linux/of_dma.h                             |   4 +
+ 6 files changed, 391 insertions(+), 39 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/mpc512x-dma.txt
+
+-- 
+1.8.4.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
