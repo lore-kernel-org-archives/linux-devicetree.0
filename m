@@ -1,88 +1,92 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 3/4] ARM: DT: STi: Add DT node for MiPHY365x
-Date: Wed, 12 Feb 2014 16:03:04 +0000
-Message-ID: <1392220985-28189-3-git-send-email-lee.jones@linaro.org>
-References: <1392220985-28189-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1392220985-28189-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: alexandre.torgue@st.com, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@st.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 4/7] spi: pl022: attempt to get sspclk by name
+Date: Wed, 12 Feb 2014 16:12:06 +0000
+Message-ID: <20140212161206.GD25957@e106331-lin.cambridge.arm.com>
+References: <1392118632-11312-1-git-send-email-mark.rutland@arm.com>
+ <201402121221.51233.arnd@arndb.de>
+ <20140212114740.GE21992@e106331-lin.cambridge.arm.com>
+ <1786282.mNUF0ZaUg2@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1786282.mNUF0ZaUg2@wuerfel>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The MiPHY365x is a Generic PHY which can serve various SATA or PCIe
-devices. It has 2 ports which it can use for either; both SATA, both
-PCIe or one of each in any configuration.
+On Wed, Feb 12, 2014 at 01:03:26PM +0000, Arnd Bergmann wrote:
+> On Wednesday 12 February 2014 11:47:40 Mark Rutland wrote:
+> > On Wed, Feb 12, 2014 at 11:21:50AM +0000, Arnd Bergmann wrote:
+> > > On Wednesday 12 February 2014, Mark Rutland wrote:
+> > > > To me it feels odd to require the last clock in the list (apb_pclk) to
+> > > > be named, and the rest to be in a particular order. For the dt case it
+> > > > seems saner to add new clocks with names as it allows arbitrary subsets
+> > > > of clocks to be wired up and described (though obviously in this case a
+> > > > missing sspclk would be problematic).
+> > > 
+> > > Yes, good point about the missing clocks, and I also agree mixing ordered
+> > > and named clocks in one device is rather odd and can lead to trouble.
+> > > 
+> > > I guess there isn't really a good way out here, and I certainly won't
+> > > ask for it to be done one way or the other if someone else has a 
+> > > good argument which way it should be implemented.
+> > 
+> > Having thought about it, all dts that for the ssp_pclk must have some
+> > name for the sspclk (though the specific name is arbitrary). I could get
+> > the driver to try each of those before falling back to the index
+> > (perhaps with a helper that takes a list of known aliases), so all
+> > existing dts (that we are aware of) would work with the clock requested
+> > by name.
+> 
+> Strange. Why do the even have names in there? What are those strings?
 
-Cc: devicetree@vger.kernel.org
-Cc: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- arch/arm/boot/dts/stih416-b2020-revE.dts |  6 +++++-
- arch/arm/boot/dts/stih416-b2020.dts      |  6 ++++++
- arch/arm/boot/dts/stih416.dtsi           | 13 +++++++++++++
- 3 files changed, 24 insertions(+), 1 deletion(-)
+I guess they're there as spacers to allow the AMBA bus code to get the
+right clock when it calls clk_get(&pcdev->dev, "apb_pclk").  Everyone
+seems to have worked around the binding rather than reporting the issue
+or fixing it.
 
-diff --git a/arch/arm/boot/dts/stih416-b2020-revE.dts b/arch/arm/boot/dts/stih416-b2020-revE.dts
-index a874570..dbe67fa 100644
---- a/arch/arm/boot/dts/stih416-b2020-revE.dts
-+++ b/arch/arm/boot/dts/stih416-b2020-revE.dts
-@@ -32,6 +32,10 @@
- 		ethernet1: ethernet@fef08000 {
- 			snps,reset-gpio 	= <&PIO0 7>;
- 		};
--	};
- 
-+		miphy365x_phy: miphy365x@0 {
-+			st,pcie_tx_pol_inv = <1>;
-+			st,sata_gen = "gen3";
-+		};
-+	};
- };
-diff --git a/arch/arm/boot/dts/stih416-b2020.dts b/arch/arm/boot/dts/stih416-b2020.dts
-index 276f28d..fd9cbad 100644
---- a/arch/arm/boot/dts/stih416-b2020.dts
-+++ b/arch/arm/boot/dts/stih416-b2020.dts
-@@ -13,4 +13,10 @@
- 	model = "STiH416 B2020";
- 	compatible = "st,stih416", "st,stih416-b2020";
- 
-+	soc {
-+		miphy365x_phy: miphy365x@0 {
-+			st,pcie_tx_pol_inv = <1>;
-+			st,sata_gen = "gen3";
-+		};
-+	};
- };
-diff --git a/arch/arm/boot/dts/stih416.dtsi b/arch/arm/boot/dts/stih416.dtsi
-index 85b8063..9fd8efb 100644
---- a/arch/arm/boot/dts/stih416.dtsi
-+++ b/arch/arm/boot/dts/stih416.dtsi
-@@ -9,6 +9,8 @@
- #include "stih41x.dtsi"
- #include "stih416-clock.dtsi"
- #include "stih416-pinctrl.dtsi"
-+
-+#include <dt-bindings/phy/phy-miphy365x.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/reset-controller/stih416-resets.h>
- / {
-@@ -140,5 +142,16 @@
- 			clocks		= <&CLK_S_ICN_REG_0>;
- 		};
- 
-+		miphy365x_phy: miphy365x@0 {
-+			compatible      = "st,miphy365x-phy";
-+			reg        	= <0xfe382000 0x100>,
-+					  <0xfe38a000 0x100>,
-+					  <0xfe394000 0x100>,
-+					  <0xfe804000 0x100>;
-+			reg-names  	= "sata0", "sata1", "pcie0", "pcie1";
-+
-+			#phy-cells 	= <2>;
-+			st,syscfg  	= <&syscfg_rear>;
-+		};
- 	};
- };
--- 
-1.8.3.2
+>From a quick grep, for pl022's SSPCLK we currently have the strings:
+
+* ssp{0,1}clk
+* spi_clk
+* spi{0,1,2,3}clk
+
+Though I may have missed a string or two where nodes get amended in more
+specific files. A grep for apb_clk to find neighbours didn't highlight
+any obvious ones.
+
+> 
+> I noticed that ux500 has uses four different strings, one for each
+> instance, which is obviously a bug and should just be fixed. There is
+> no way this was intentional, and we can just rely on teh fallback
+> if you want to have that anyway.
+
+Sure, I'll fix those up once we have a preferred name. I guess this
+would be SSPCLK by Russell's comments, I wasn't able to find a prior use
+in the git history, but it would be in keeping with KMIREFCLK as used by
+the pl050 driver.
+
+Given the general policy of trying to not break support for existing
+DTBs we'll need some fallback, either using the first clock or getting
+the driver to try the names above.
+
+> 
+> > I assume that for the non-dt case it's possible to name clock inputs to
+> > a device without the clock being associated with the name globally? If
+> > so we could get rid of the index usage entirely in this case.
+> 
+> Sorry, I don't understand the question.
+
+I thought one of the issues before dt was that clocks were in a global
+namespace. Mark's reply implies that's not necessarily the case, so I'll
+take a tour through clkdev to educate myself.
+
+Cheers,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
