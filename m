@@ -1,140 +1,69 @@
-From: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Linux-3.14-rc2: Order of serial node compatibles in DTS files.
-Date: Wed, 12 Feb 2014 18:31:53 +0800
-Message-ID: <20140212103153.GC15434@pek-khao-d1.corp.ad.wrs.com>
-References: <alpine.LRH.2.00.1402101056410.10318@ra8135-ec1.am.freescale.net>
- <20140211072606.GA26514@visitor2.iram.es>
- <OF6F6A0029.3B20EF5B-ONCA257C7C.0071BFDA-CA257C7C.00732AD3@csc.com>
- <63AEBD99-AA87-4FD7-BBDA-0CE419959F14@kernel.crashing.org>
- <52FAA97F.4060600@gmail.com>
- <1392162080.6733.404.camel@snotra.buserror.net>
- <52FAB65C.4090201@gmail.com>
- <OF9BA019D5.46DA1E29-ONCA257C7D.000089EA-CA257C7D.00020333@csc.com>
- <20140212052816.GA15434@pek-khao-d1.corp.ad.wrs.com>
- <52FB3108.3000202@gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 4/7] spi: pl022: attempt to get sspclk by name
+Date: Wed, 12 Feb 2014 10:33:29 +0000
+Message-ID: <20140212103329.GC21992@e106331-lin.cambridge.arm.com>
+References: <1392118632-11312-1-git-send-email-mark.rutland@arm.com>
+ <1392118632-11312-5-git-send-email-mark.rutland@arm.com>
+ <20140211120645.GH13533@sirena.org.uk>
+ <201402111508.06267.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2JFBq9zoW8cOFH7v"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <52FB3108.3000202-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen N Chivers <schivers-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, Chris Proctor <cproctor-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+In-Reply-To: <201402111508.06267.arnd@arndb.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Feb 11, 2014 at 02:08:06PM +0000, Arnd Bergmann wrote:
+> On Tuesday 11 February 2014, Mark Brown wrote:
+> > On Tue, Feb 11, 2014 at 11:37:09AM +0000, Mark Rutland wrote:
+> > 
+> > > -     pl022->clk = devm_clk_get(&adev->dev, NULL);
+> > > +     /*
+> > > +      * For compatibility with old DTBs and platform data, fall back to the
+> > > +      * first clock if there's not an explicitly named "sspclk" entry.
+> > > +      */
+> > > +     pl022->clk = devm_clk_get(&adev->dev, "sspclk");
+> > > +     if (IS_ERR(pl022->clk))
+> > > +             pl022->clk = devm_clk_get(&adev->dev, NULL);
+> > > +
+> > 
+> > I'll just have a bit of a grumble here and point out that this sort of
+> > stuff always worries me with the convention of using nameless clocks -
+> > it causes hassle adding further clocks.
+> 
+> I think the best solution for this is to continue with anonymous clocks
+> rather than adding names after the fact. This could be done (for DT-only
+> drivers) using the of_clk_get() interface that takes an index, or
+> we could add a generic dev_clk_get_index() or similar interface that
+> has the same behavior but also works for clkdev.
 
---2JFBq9zoW8cOFH7v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That works, and if taken alone patch 7 would codify that existing
+behaviour as the standard.
 
-On Wed, Feb 12, 2014 at 09:30:00AM +0100, Sebastian Hesselbarth wrote:
-> On 02/12/2014 06:28 AM, Kevin Hao wrote:
-> >On Wed, Feb 12, 2014 at 10:21:58AM +1000, Stephen N Chivers wrote:
-> >>But, the Interrupt Controller (MPIC)
-> >>goes AWOL and it is down hill from there.
-> >>
-> >>The MPIC is specified in the DTS as:
-> >>
-> >>         mpic: pic@40000 {
-> >>                         interrupt-controller;
-> >>                         #address-cells =3D <0>;
-> >>                         #interrupt-cells =3D <2>;
-> >>                         reg =3D <0x40000 0x40000>;
-> >>                         compatible =3D "chrp,open-pic";
-> >>                         device_type =3D "open-pic";
-> >>                         big-endian;
-> >>                 };
-> >>
-> >>The board support file has the standard mechanism for allocating
-> >>the PIC:
-> >>
-> >>         struct mpic *mpic;
-> >>
-> >>         mpic =3D mpic_alloc(NULL, 0, 0, 0, 256, " OpenPIC  ");
-> >>         BUG_ON(mpic =3D=3D NULL);
-> >>
-> >>         mpic_init(mpic);
-> >>
-> >>I checked for damage in applying the patch and it has applied
-> >>correctly.
-> >
-> >How about the following fix?
-> >
-> >diff --git a/drivers/of/base.c b/drivers/of/base.c
-> >index ff85450d5683..ca91984d3c4b 100644
-> >--- a/drivers/of/base.c
-> >+++ b/drivers/of/base.c
-> >@@ -730,32 +730,40 @@ out:
-> >  }
-> >  EXPORT_SYMBOL(of_find_node_with_property);
-> >
-> >+static int of_match_type_name(const struct device_node *node,
-> >+				const struct of_device_id *m)
->=20
-> I am fine with having a sub-function here, but it should rather be
-> named of_match_type_or_name.
+To me it feels odd to require the last clock in the list (apb_pclk) to
+be named, and the rest to be in a particular order. For the dt case it
+seems saner to add new clocks with names as it allows arbitrary subsets
+of clocks to be wired up and described (though obviously in this case a
+missing sspclk would be problematic).
 
-OK.
+For new bindings I'd really like to push people to always use named
+clocks as it makes things far more flexible, but I appreciate that here
+there are issues associated with modifying an existing binding.
 
->=20
-> >+{
-> >+	int match =3D 1;
-> >+
-> >+	if (m->name[0])
-> >+		match &=3D node->name && !strcmp(m->name, node->name);
-> >+
-> >+	if (m->type[0])
-> >+		match &=3D node->type && !strcmp(m->type, node->type);
-> >+
-> >+	return match;
-> >+}
-> [...]
-> >+	/* Check against matches without compatible string */
-> >+	m =3D matches;
-> >+	while (!m->compatible[0] && (m->name[0] || m->type[0])) {
->=20
-> We shouldn't check for anything else than the sentinel here.
-> Although I guess yours will not quit early as mine did but that
-> way we don't have to worry about it.
+Mark, do you have specific issues that named clocks cause that I could
+look into?
 
-Yes, this is still buggy. I will change something like this:
-
-	m =3D matches;
-	/* Check against matches without compatible string */
-	while (m->name[0] || m->type[0] || m->compatible[0]) {
-		if (m->compatible[0]) {
-			m++;
-			continue;
-		}
-
-		match =3D of_match_type_name(node, m);
-		if (match)
-			return m;
-		m++;
-	}
-
-Thanks,
-Kevin
-
---2JFBq9zoW8cOFH7v
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQEcBAEBAgAGBQJS+02ZAAoJEJNY7TDerrFx6eEH/0c9N4fQc6JtK8IGHhWFnc1J
-pispim0tMEah8kU8gXfLb4SLCZRz4pbu2BNduLAq0bQJe5131qaMTgeEyp2c+Cko
-tBGSHdwGxYfDh0H4gwouGOORup+Pcm9MGN+wEpoiIkXwpjKPgifOYBqL46a3zMz/
-LbNwcFnIVVoWmnjGwj+KJV+U7xaYe+HdoB98LPzE9JmhVD3R2n5zPxQGdpuFnqHn
-mAAmTxILQJQV+ZY/HUfqTw/NDrEvqI234TbfqV2SModJ4ZCH/GC9J9uF+43KdFtN
-2qPzNdJophfC284Lt1UXjwJZoMBkNoKQPRo6rOnjjIWR+baaD0tjYAA4yYQTA+0=
-=qVT2
------END PGP SIGNATURE-----
-
---2JFBq9zoW8cOFH7v--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Mark.
