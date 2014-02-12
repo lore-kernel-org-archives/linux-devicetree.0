@@ -1,56 +1,65 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] of: Turn of_match_node into a static inline when
- CONFIG_OF isn't set
-Date: Wed, 12 Feb 2014 22:54:37 +0100
-Message-ID: <CAMuHMdVOkUMxEkUK70Y=Y126XmqgKMpyqmGRG5us7vZPhP8WNw@mail.gmail.com>
-References: <1392122211-11422-1-git-send-email-laurent.pinchart@ideasonboard.com>
-	<20140211180845.GG841@joshc.qualcomm.com>
-	<CAMuHMdVkPLe5986hYPApoQr7oJSb6U2P71=nP+9mtvtaskdHXg@mail.gmail.com>
-	<3619654.tQqiI1EfTB@wuerfel>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC/PATCH 0/3] Add devicetree scanning for randomness
+Date: Wed, 12 Feb 2014 17:55:08 -0600
+Message-ID: <CAL_JsqJetHbdsJd5B-FnwHRPgP9J=SXBhiYptHZMk9dhe20Fgg@mail.gmail.com>
+References: <1392168805-14200-1-git-send-email-lauraa@codeaurora.org>
+	<1571508.yGAAZ8TNH0@wuerfel>
+	<20140212184521.GO27395@titan.lakedaemon.net>
+	<1882539.R1gpoLLYks@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3619654.tQqiI1EfTB@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Josh Cartwright <joshc@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1882539.R1gpoLLYks@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 11, 2014 at 9:06 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tuesday 11 February 2014 19:29:19 Geert Uytterhoeven wrote:
->> On Tue, Feb 11, 2014 at 7:08 PM, Josh Cartwright <joshc@codeaurora.org> wrote:
->> Ideally, all xxx_device_id look like
+On Wed, Feb 12, 2014 at 1:12 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Wednesday 12 February 2014 13:45:21 Jason Cooper wrote:
+>> On Wed, Feb 12, 2014 at 07:17:41PM +0100, Arnd Bergmann wrote:
+>> > On Wednesday 12 February 2014 12:45:54 Jason Cooper wrote:
+>> > > I brought this up at last weeks devicetree irc meeting.  My goal is to
+>> > > provide early randomness for kaslr on ARM.  Currently, my idea is modify
+>> > > the init script to save an additional random seed from /dev/urandom to
+>> > > /boot/random-seed.
+>> > >
+>> > > The bootloader would then load this file into ram, and pass the
+>> > > address/size to the kernel either via dt, or commandline.  kaslr (run in
+>> > > the decompressor) would consume some of this randomness, and then
+>> > > random.c would consume the rest in a non-crediting initialization.
+>> >
+>> > I like the idea, but wouldn't it be easier to pass actual random data
+>> > using DT, rather than the address/size?
 >>
->>     struct xxx_device_id {
->>             ... /* bus-specific ID information */
->>             kernel_ulong_t driver_data;
->>     };
+>> I thought about that at first, but that requires either that the
+>> bootloader be upgraded to insert the data, or that userspace is
+>> modifying the dtb at least twice per boot.
 >>
->> This may be formalized in some way, using a base class, but thay may
->> require reordering the fields, like:
->>
->>     struct base_device_id {
->>             kernel_ulong_t driver_data;
->>             long id[0];
->>     };
->>
+>> I chose address/size to facilitate modifying existing/fielded devices.
+>> The user could modify the dtb once, and modify the bootloader
+>> environment to load X amount to Y address.  As a fallback, it could be
+>> expressed on the commandline for non-DT bootloaders.
 >
-> You can't reorder the fields because they are shared with user
-> space in form of the module-init-tools.
+> Ah, so you are interested in boot loaders that can be scripted to do
+> what you had in mind but cannot be scripted to add or modify a DT
+> property. I hadn't considered that, but you are probably right that
+> this is at least 90% of the systems you'd find in the wild today.
+>
+> Thinking this a bit further, I wonder if (at least upstream) u-boot
+> has a way to modify DT properties in a scripted way that would allow
+> the direct property. It sounds like a generally useful feature not
+> just for randomness, so if that doesn't already work, maybe someone
+> can implement it. In the simplest case, you'd only need to find the
+> address of an existing property in the dtb and load a file to
+> that location.
 
-Sure, that's part of the ABI.
+You would be referring to the u-boot fdt command which can read and
+set properties. Of course, like all u-boot commands, that may or may
+not be enabled by a vendor's u-boot. :(
 
-But that doesn't mean we can't change the ID as stored in the platform_device.
-Many drivers don't want to know the ID, only the driver_data part.
-Having that in a uniform way across the different ID types would help.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+Rob
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
