@@ -1,88 +1,73 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [RFC/PATCH 0/3] Add devicetree scanning for randomness
-Date: Wed, 12 Feb 2014 12:45:54 -0500
-Message-ID: <20140212174554.GM27395@titan.lakedaemon.net>
-References: <1392168805-14200-1-git-send-email-lauraa@codeaurora.org>
- <201402121251.06280.arnd@arndb.de>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 0/2] ASoC: atmel_ssc_dai: add option to
+	choose clock
+Date: Wed, 12 Feb 2014 17:23:42 +0000
+Message-ID: <20140212172342.GI28112@sirena.org.uk>
+References: <1392012586-30790-1-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201402121251.06280.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============2586537175153997943=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1392012586-30790-1-git-send-email-voice.shen@atmel.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, Stephen Warren <swarren@wwwdotorg.org>, linux-doc@vger.kernel.org, Takashi Iwai <tiwai@suse.de>, nicolas.ferre@atmel.com, Liam Girdwood <lgirdwood@gmail.com>, Chas Williams <chas@cmf.nrl.navy.mil>, Lars-Peter Clausen <lars@metafoo.de>, Arnd Bergmann <arnd@arndb.de>, linux-atm-general@lists.sourceforge.net, plagnioj@jcrosoft.com, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-sound@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Richard Genoud <richard.genoud@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Laura,
 
-Sorry to hijack the thread (sort of).  :)
+--===============2586537175153997943==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+NAfxSaP7cKOSWOx"
+Content-Disposition: inline
 
-+ Kees Cook
 
-On Wed, Feb 12, 2014 at 12:51:05PM +0100, Arnd Bergmann wrote:
-> On Wednesday 12 February 2014, Laura Abbott wrote:
-> > This is an RFC to seed the random number pool earlier when using devicetree.
-> > The big issue this is trying to solve is the fact that the stack canary for
-> > ARM tends to be the same across bootups of the same device. This is because
-> > the random number pools do not get initialized until after the canary has
-> > been set up. The canary can be moved later, but in general there is still
-> > no way to reliably get random numbers early for other features (e.g. vector
-> > randomization).
-> 
-> Implementation-wise this looks reasonable, and it obviously addresses a
-> very real problem.
-> 
-> > The goal here is to allow devices to add to the random pools via
-> > add_device_randomness or some other method of their chosing at FDT time.
-> > I realize that ARCH_RANDOM is already available but this didn't work because
-> > 1) ARCH_RANDOM is not multi-platform compatible without added
-> > infrastructure to ARM
-> 
-> That could certainly be done, but I agree that a more generic
-> approach like you did is nicer. One thing that might be useful
-> would be to wire up your OF_RANDOM infrastructure as a generic
-> implementation of ARCH_RANDOM, and merge your header file into
-> include/asm-generic/archrandom.h, with an added way to call
-> arch_get_random_long() for the devices you add.
-> 
-> > The big reason to skip ARCH_RANDOM though is that the random number generation
-> > we have would be reasonable if only seeded earlier.
-> 
-> Yes, makes sense.
-> 
-> I also wonder if we should add a 'trivial' implementation that just
-> reads a DT property full of random numbers to use as either an initial
-> seed, or to feed into arch_get_random_long(). This would allow the
-> boot loader to pass any entropy it has already gathered into the kernel,
-> but leaves the danger that people might pass static not-so-random data
-> through a precompiled dtb file ;-). If we get the boot loaders to be
-> smart enough, doing only this would be a much simpler kernel implementation
-> than your suggestion, but I'm not sure how far I want to trust boot loaders.
+--+NAfxSaP7cKOSWOx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I brought this up at last weeks devicetree irc meeting.  My goal is to
-provide early randomness for kaslr on ARM.  Currently, my idea is modify
-the init script to save an additional random seed from /dev/urandom to
-/boot/random-seed.
+On Mon, Feb 10, 2014 at 02:09:44PM +0800, Bo Shen wrote:
+> When SSC work in slave mode, the clock can come from TK pin and also
+> can come from RK pin, this is hardware design decided. So, make it
+> available to choose where the clock from.
 
-The bootloader would then load this file into ram, and pass the
-address/size to the kernel either via dt, or commandline.  kaslr (run in
-the decompressor) would consume some of this randomness, and then
-random.c would consume the rest in a non-crediting initialization.
+Applied, thanks.
 
-While not ideal, it works in absence of an HRNG, and is no worse than
-the current situation of storing the seed in /var/lib/misc/random-seed.
-It also doesn't require modification of the bootloaders.  Just an
-updated kernel, and update the bootloader environment to load the
-seed.
+--+NAfxSaP7cKOSWOx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Unfortunately, it's an idea so far.  I have one project to get off of my
-plate, then this is next :)
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-thx,
+iQIcBAEBAgAGBQJS+64aAAoJELSic+t+oim9HdEP/1s3b2zCDKiZwxz8pMZEXXZL
+PLWDH6glrCLjH0UBXgXvlC2wVgjNlX8EK8HCBWTYBYKEEM0d1TrPojWFG+SMptDV
+41WSQhbPOA7zsuP8dWqk6DwGTgTKgfgSd9G6UZQ8EQ9C87xwvpeuCj0QQNsYYHt8
+7YhksW+zOl5qXuW1Vcf3UX7JFgQ/ihQOPAp+g5CBjM0BkX2a9bH44qWtWNnS9FJo
+vt4GWngybTU/NSB/PQ+bF0abpnGuu2qKjQjc73GBgtCtxkn6NNyQuqi0hPF/PiDP
+2ShBveB6k9UOrYw1qyxzh/ojXNRpBYyRAO1uEKU9dfBFVhri9I0sVGR447h69NEy
+068FPY7kjNYpasyK8OF9lUQzk8llZvenapVhjgaSCV7oqygix4p4S+TetsOJ+/3m
+MuY8Y8XGipyXxRTCI4aGynZp2I4XsQRCXQJWFjZdJWU6i1/2UZQ/YJIuyU1NcyhK
+vAD0qyigXsGaYLyGgyB4wQcG2q8ugL+DnqYygc2/QWPtu2fG4m2P5ca/tKXomBET
+ItcQoVKGOOBpuXY2IG+nRs991r9rDVsiMBYRxd1t9lX7gbTITigIln3JuW9Y8eQx
+Qpb/PnzvP7YSzSgkd2bKFMv9jxffekTlhG+PYATVlYY2gaps/5JnuHh3FwR/kRUq
+vCUR3GvJPsUlOPJRVskW
+=H++v
+-----END PGP SIGNATURE-----
 
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--+NAfxSaP7cKOSWOx--
+
+--===============2586537175153997943==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2586537175153997943==--
