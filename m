@@ -1,36 +1,56 @@
-From: Kees Cook <keescook@chromium.org>
-Subject: Re: [RFC/PATCH 0/3] Add devicetree scanning for randomness
-Date: Wed, 12 Feb 2014 13:35:54 -0800
-Message-ID: <CAGXu5j+BQzrgoAN-TiCaaoQaEjB+JQOCZLKq+_rFoWdFR-UpqQ@mail.gmail.com>
-References: <1392168805-14200-1-git-send-email-lauraa@codeaurora.org>
-	<201402121251.06280.arnd@arndb.de>
-	<20140212174554.GM27395@titan.lakedaemon.net>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] of: Turn of_match_node into a static inline when
+ CONFIG_OF isn't set
+Date: Wed, 12 Feb 2014 22:54:37 +0100
+Message-ID: <CAMuHMdVOkUMxEkUK70Y=Y126XmqgKMpyqmGRG5us7vZPhP8WNw@mail.gmail.com>
+References: <1392122211-11422-1-git-send-email-laurent.pinchart@ideasonboard.com>
+	<20140211180845.GG841@joshc.qualcomm.com>
+	<CAMuHMdVkPLe5986hYPApoQr7oJSb6U2P71=nP+9mtvtaskdHXg@mail.gmail.com>
+	<3619654.tQqiI1EfTB@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140212174554.GM27395@titan.lakedaemon.net>
+In-Reply-To: <3619654.tQqiI1EfTB@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Arnd Bergmann <arnd@arndb.de>, Laura Abbott <lauraa@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kumar Gala <galak@codeaurora.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Josh Cartwright <joshc@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 12, 2014 at 9:45 AM, Jason Cooper <jason@lakedaemon.net> wrote:
-> I brought this up at last weeks devicetree irc meeting.  My goal is to
-> provide early randomness for kaslr on ARM.  Currently, my idea is modify
-> the init script to save an additional random seed from /dev/urandom to
-> /boot/random-seed.
+On Tue, Feb 11, 2014 at 9:06 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tuesday 11 February 2014 19:29:19 Geert Uytterhoeven wrote:
+>> On Tue, Feb 11, 2014 at 7:08 PM, Josh Cartwright <joshc@codeaurora.org> wrote:
+>> Ideally, all xxx_device_id look like
+>>
+>>     struct xxx_device_id {
+>>             ... /* bus-specific ID information */
+>>             kernel_ulong_t driver_data;
+>>     };
+>>
+>> This may be formalized in some way, using a base class, but thay may
+>> require reordering the fields, like:
+>>
+>>     struct base_device_id {
+>>             kernel_ulong_t driver_data;
+>>             long id[0];
+>>     };
+>>
+>
+> You can't reorder the fields because they are shared with user
+> space in form of the module-init-tools.
 
-I'm all for a good entropy source for early boot. :)
+Sure, that's part of the ABI.
 
-I need to figure out what's needed for relocation support first
-though, before we can really tackle kernel base-address randomization
-on ARM. I haven't had a chance to look around too closely yet, but it
-seems like only x86 and ppc do this currently? Has anyone looked in
-detail and what would be needed on ARM for CONFIG_RELOCATABLE
-behavior?
+But that doesn't mean we can't change the ID as stored in the platform_device.
+Many drivers don't want to know the ID, only the driver_data part.
+Having that in a uniform way across the different ID types would help.
 
--Kees
+Gr{oetje,eeting}s,
 
--- 
-Kees Cook
-Chrome OS Security
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
