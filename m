@@ -1,103 +1,168 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 1/2] usb: dwc3: core: continue probing if usb phy library
- returns -ENODEV/-ENXIO
-Date: Wed, 12 Feb 2014 15:16:06 +0530
-Message-ID: <52FB42DE.4090203@ti.com>
-References: <1385373690-12170-1-git-send-email-kishon@ti.com> <1390299099-14764-1-git-send-email-kishon@ti.com> <20140121144725.GF30451@saruman.home> <20140127150855.GA17928@xps8300> <20140127160458.GF13268@saruman.home> <20140128153230.GA20991@xps8300> <20140128163036.GD28546@saruman.home> <20140129144659.GA22152@xps8300>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-sabresd: Do not place regulator
+ nodes under simple-bus
+Date: Wed, 12 Feb 2014 09:54:50 +0000
+Message-ID: <20140212095450.GB21992@e106331-lin.cambridge.arm.com>
+References: <1392165078-25794-1-git-send-email-festevam@gmail.com>
+ <20140212092227.GA24834@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140129144659.GA22152@xps8300>
-Sender: linux-doc-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@ti.com>
-Cc: george.cherian@ti.com, rogerq@ti.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.orgRoger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140212092227.GA24834-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 29 January 2014 08:17 PM, Heikki Krogerus wrote:
-> Hi,
+On Wed, Feb 12, 2014 at 09:22:30AM +0000, Shawn Guo wrote:
+> On Tue, Feb 11, 2014 at 10:31:18PM -0200, Fabio Estevam wrote:
+> > From: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > 
+> > According to Documentation/devicetree/bindings/regulator/regulator.txt 
+> > regulator nodes should not be placed under 'simple-bus'.
 > 
-> On Tue, Jan 28, 2014 at 10:30:36AM -0600, Felipe Balbi wrote:
->> On Tue, Jan 28, 2014 at 05:32:30PM +0200, Heikki Krogerus wrote:
->>> On Mon, Jan 27, 2014 at 10:05:20AM -0600, Felipe Balbi wrote:
->>> For the controller drivers the PHYs are just a resource like any
->>> other. The controller drivers can't have any responsibility of
->>> them. They should not care if PHY drivers are available for them or
->>> not, or even if the PHY framework is available or not.
->>
->> huh? If memory isn't available you don't continue probing, right ? If
->> your IORESOURCE_MEM is missing, you also don't continue probing, if your
->> IRQ line is missing, you bail too. Those are also nothing but resources
->> to the driver, what you're asking here is to treat PHY as a _different_
->> resource; which might be fine, but we need to make sure we don't
->> continue probing when a PHY is missing in a platform that certainly
->> needs a PHY.
-> 
-> Yes, true. In my head I was comparing the PHY only to resources like
-> gpios, clocks, dma channels, etc. that are often optional to the
-> drivers.
-> 
->>>>>> But I really want to see the argument against using no-op. As far as I
->>>>>> could see, everybody needs a PHY driver one way or another, some
->>>>>> platforms just haven't sent any PHY driver upstream and have their own
->>>>>> hacked up solution to avoid using the PHY layer.
->>>>>
->>>>> Not true in our case. Platforms using Intel's SoCs and chip sets may
->>>>> or may not have controllable USB PHY. Quite often they don't. The
->>>>> Baytrails have usually ULPI PHY for USB2, but that does not mean they
->>>>> provide any vendor specific functions or any need for a driver in any
->>>>> case.
->>>>
->>>> that's different from what I heard.
->>>
->>> I don't know where you got that impression, but it's not true. The
->>> Baytrail SoCs for example don't have internal USB PHYs, which means
->>> the manufacturers using it can select what they want. So we have
->>> boards where PHY driver(s) is needed and boards where it isn't.
->>
->> alright, that explains it ;-) So you have external USB2 and USB3 PHYs ?
->> You have an external PIPE3 interface ? That's quite an achievement,
->> kudos to your HW designers. Getting timing closure on PIPE3 is a
->> difficult task.
-> 
-> No, only the USB2 PHY is external. I'm giving you wrong information,
-> I'm sorry about that. Need to concentrate on what I'm writing.
-> 
-> <snip>
-> 
->>> This is really good to get. We have some projects where we are dealing
->>> with more embedded environments, like IVI, where the kernel should be
->>> stripped of everything useless. Since the PHYs are autonomous, we
->>> should be able to disable the PHY libraries/frameworks.
->>
->> hmmm, in that case it's a lot easier to treat. We can use
->> ERR_PTR(-ENXIO) as an indication that the framework is disabled, or
->> something like that.
->>
->> The difficult is really reliably supporting e.g. OMAP5 (which won't work
->> without a PHY) and your BayTrail with autonomous PHYs. What can we use
->> as an indication ?
-> 
-> OMAP has it's own glue driver, so shouldn't it depend on the PHY
-> layer?
+> I failed to read that statement from the binding doc.  Can you quote the
+> doc specifically on that statement?
 
-right, but the PHY is connected to the dwc3 core and not to the glue.
-> 
->> I mean, I need to know that a particular platform depends on a PHY
->> driver before I decide to return -EPROBE_DEFER or just assume the PHY
->> isn't needed ;-)
-> 
-> I don't think dwc3 (core) should care about that. The PHY layer needs
-> to tell us that. If the PHY driver that the platform depends is not
-> available yet, the PHY layer returns -EPROBE_DEFER and dwc3 ends up
-> returning -EPROBE_DEFER.
+The statement is slightly wrong. Rather, regulators are not required to
+be on a simple bus.
 
-I don't think the PHY layer can 'reliably' tell if PHY driver is available or
-not. Consider when the phy_provider_register fails, there is no way to know if
-PHY driver is available or not. There are a few cases where PHY layer returns
--EPROBE_DEFER but none of them can tell for sure that PHY driver is either
-available and failed or not available at all. It would be best for us to leave
-that to the platforms if we want to be sure if the platform needs a PHY or not.
+In this particular case the simple-bus is being used incorrectly. I
+describe some of this in the link Fabio provided immediately below, and
+I have further comments specific to this case.
 
-Thanks
-Kishon
+> 
+> > 
+> > Mark Rutland also explains about it at:
+> > http://www.spinics.net/lists/linux-usb/msg101497.html 
+> >  
+> > Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> > Shawn,
+> > 
+> > I can convert other dts files if you are fine with this approach.
+> 
+> I take it as an unnecessary churn, unless I see the consensus from most
+> of DT maintainers and arm-soc folks that we should make this change.
+> And see comment below ...
+
+My concern is that the simple-bus is being used in a nonsensical way,
+with a meaningless address space and reg values on children. While this
+currently works it is not correct, and it's not even necessary. I would
+like to limit the misuse of these constructs so as to prevent others
+from making the same mistakes.
+
+> 
+> > 
+> >  arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 51 ++++++++++++++--------------------
+> >  1 file changed, 21 insertions(+), 30 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> > index 0d816d3..d7df5b2 100644
+> > --- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> > +++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> > @@ -18,38 +18,29 @@
+> >  		reg = <0x10000000 0x40000000>;
+> >  	};
+> >  
+> > -	regulators {
+> > -		compatible = "simple-bus";
+> > -		#address-cells = <1>;
+> > -		#size-cells = <0>;
+> > -
+> > -		reg_usb_otg_vbus: regulator@0 {
+> > -			compatible = "regulator-fixed";
+> > -			reg = <0>;
+> > -			regulator-name = "usb_otg_vbus";
+> > -			regulator-min-microvolt = <5000000>;
+> > -			regulator-max-microvolt = <5000000>;
+> > -			gpio = <&gpio3 22 0>;
+> > -			enable-active-high;
+> > -		};
+> > +	reg_usb_otg_vbus: regulator@0 {
+> 
+> nodename@num should only be used for nodes that have 'reg' property.
+> Why are you dropping 'reg' property here?  Right, it does not compile if
+> you do not drop it.  You can take it as a reason of why I endorse
+> simple-bus regulators container.
+
+I don't think the logical jump from "it does not compile" to "I endorse
+simple-bus regulators container" makes any sense. They're two separate
+issues.
+
+The unit-addresses and reg values can be dropped. They are not in the
+regulator-fixed binding, and were never necessary. All that's necessary
+is a unique name, and unit-addresses (which required a reg) were misused
+to provide uniqueness. With that fixed, this will compile.
+
+The question to ask is what address space does the simple-bus represent?
+The regulators never defined one in their binding, and the simple-bus is
+missing a _required_ ranges property, so it's not in the MMIO space of
+the parent. Yet somehow it has a single address cell and no size cells.
+
+This is _clearly_ not a simple-bus. Either it needs to map to the parent
+address space in some way (which would mean dropping the reg values and
+unit addresses as they would be clearly wrong), or it needs to be
+replaced by something that isn't a simple-bus. For the latter case that
+would mean you couldn't have MMIO regulators in the same container as
+fixed regulators, which would be a bit useless.
+
+As far as I can see, a regulator container node is pointless. It
+describes no topological information yet pretends to.
+
+Mark.
+
+> 
+> Shawn
+> 
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "usb_otg_vbus";
+> > +		regulator-min-microvolt = <5000000>;
+> > +		regulator-max-microvolt = <5000000>;
+> > +		gpio = <&gpio3 22 0>;
+> > +		enable-active-high;
+> > +	};
+> >  
+> > -		reg_usb_h1_vbus: regulator@1 {
+> > -			compatible = "regulator-fixed";
+> > -			reg = <1>;
+> > -			regulator-name = "usb_h1_vbus";
+> > -			regulator-min-microvolt = <5000000>;
+> > -			regulator-max-microvolt = <5000000>;
+> > -			gpio = <&gpio1 29 0>;
+> > -			enable-active-high;
+> > -		};
+> > +	reg_usb_h1_vbus: regulator@1 {
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "usb_h1_vbus";
+> > +		regulator-min-microvolt = <5000000>;
+> > +		regulator-max-microvolt = <5000000>;
+> > +		gpio = <&gpio1 29 0>;
+> > +		enable-active-high;
+> > +	};
+> >  
+> > -		reg_audio: regulator@2 {
+> > -			compatible = "regulator-fixed";
+> > -			reg = <2>;
+> > -			regulator-name = "wm8962-supply";
+> > -			gpio = <&gpio4 10 0>;
+> > -			enable-active-high;
+> > -		};
+> > +	reg_audio: regulator@2 {
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "wm8962-supply";
+> > +		gpio = <&gpio4 10 0>;
+> > +		enable-active-high;
+> >  	};
+> >  
+> >  	gpio-keys {
+> > -- 
+> > 1.8.1.2
+> > 
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
