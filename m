@@ -1,92 +1,73 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 4/7] spi: pl022: attempt to get sspclk by name
-Date: Wed, 12 Feb 2014 16:12:06 +0000
-Message-ID: <20140212161206.GD25957@e106331-lin.cambridge.arm.com>
-References: <1392118632-11312-1-git-send-email-mark.rutland@arm.com>
- <201402121221.51233.arnd@arndb.de>
- <20140212114740.GE21992@e106331-lin.cambridge.arm.com>
- <1786282.mNUF0ZaUg2@wuerfel>
+From: delicious quinoa <delicious.quinoa@gmail.com>
+Subject: Re: [PATCH v11] gpio: add a driver for the Synopsys DesignWare APB
+ GPIO block
+Date: Wed, 12 Feb 2014 10:17:02 -0600
+Message-ID: <CANk1AXTnnhSnt_ayJYwDHRth44CWAwmxVA5kkbvnjqW39ssLQg@mail.gmail.com>
+References: <1391724370-30589-1-git-send-email-delicious.quinoa@gmail.com>
+	<CACRpkdYiC=nzVG4_nQuRVSNP9TB4W=3VL9QhBQjmqvLvmP6McA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1786282.mNUF0ZaUg2@wuerfel>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYiC=nzVG4_nQuRVSNP9TB4W=3VL9QhBQjmqvLvmP6McA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Jamie Iles <jamie@jamieiles.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Alan Tull <atull@altera.com>, Dinh Nguyen <dinguyen@altera.com>, Yves Vandervennet <rocket.yvanderv@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 12, 2014 at 01:03:26PM +0000, Arnd Bergmann wrote:
-> On Wednesday 12 February 2014 11:47:40 Mark Rutland wrote:
-> > On Wed, Feb 12, 2014 at 11:21:50AM +0000, Arnd Bergmann wrote:
-> > > On Wednesday 12 February 2014, Mark Rutland wrote:
-> > > > To me it feels odd to require the last clock in the list (apb_pclk) to
-> > > > be named, and the rest to be in a particular order. For the dt case it
-> > > > seems saner to add new clocks with names as it allows arbitrary subsets
-> > > > of clocks to be wired up and described (though obviously in this case a
-> > > > missing sspclk would be problematic).
-> > > 
-> > > Yes, good point about the missing clocks, and I also agree mixing ordered
-> > > and named clocks in one device is rather odd and can lead to trouble.
-> > > 
-> > > I guess there isn't really a good way out here, and I certainly won't
-> > > ask for it to be done one way or the other if someone else has a 
-> > > good argument which way it should be implemented.
-> > 
-> > Having thought about it, all dts that for the ssp_pclk must have some
-> > name for the sspclk (though the specific name is arbitrary). I could get
-> > the driver to try each of those before falling back to the index
-> > (perhaps with a helper that takes a list of known aliases), so all
-> > existing dts (that we are aware of) would work with the clock requested
-> > by name.
-> 
-> Strange. Why do the even have names in there? What are those strings?
+On Mon, Feb 10, 2014 at 5:06 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> Hi Alan, this is starting to look good. I's like an ACK from a DT
+> maintainer on the bindings but can't see anything really controversial
+> about them.
+>
+> On Thu, Feb 6, 2014 at 11:06 PM, Alan Tull <delicious.quinoa@gmail.com> wrote:
+>
+>> +static int dwapb_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
+>> +{
+>> +       struct bgpio_chip *bgc = to_bgpio_chip(gc);
+>> +       struct dwapb_gpio_port *port = container_of(bgc, struct
+>> +                                                   dwapb_gpio_port, bgc);
+>> +       struct dwapb_gpio *gpio = port->gpio;
+>> +
+>> +       return irq_create_mapping(gpio->domain, offset);
+>> +}
+>
+> I think you want to call irq_find_mapping() here. irq_create_mapping()
+> should be called for all valid IRQs on probe() instead.
+>
+>> +               ct = irq_gc->chip_types;
+>> +               ct->chip.irq_ack = irq_gc_ack_set_bit;
+>> +               ct->chip.irq_mask = irq_gc_mask_set_bit;
+>> +               ct->chip.irq_unmask = irq_gc_mask_clr_bit;
+>> +               ct->chip.irq_set_type = dwapb_irq_set_type;
+>> +               ct->chip.irq_enable = dwapb_irq_enable;
+>> +               ct->chip.irq_disable = dwapb_irq_disable;
+>> +               ct->regs.ack = GPIO_PORTA_EOI;
+>> +               ct->regs.mask = GPIO_INTMASK;
+>
+> Please add .startup() and .shutdown() callbacks marking the
+> respective lines as IRQs, compare to recent patches in the
+> GPIO subsystem such as this:
+> http://marc.info/?l=linux-gpio&m=138546100215235&w=2
+>
+> You probably want to call irq_create_mapping() for each
+> valid IRQ after registering the chip in this function.
 
-I guess they're there as spacers to allow the AMBA bus code to get the
-right clock when it calls clk_get(&pcdev->dev, "apb_pclk").  Everyone
-seems to have worked around the binding rather than reporting the issue
-or fixing it.
+Hi Linus,
 
->From a quick grep, for pl022's SSPCLK we currently have the strings:
+Thanks for the feedback.  I am working on making these changes.  The
+startup/shutdown were easy to add.
 
-* ssp{0,1}clk
-* spi_clk
-* spi{0,1,2,3}clk
+I am wondering about the change in usage of
+irq_find_mapping/irq_create_mapping.  It seems like all the GPIO
+drivers that use irq domains do it the way I was doing it (that's
+where I got the idea in the first place): irq_create_mapping is used
+in the to_irq() function.  I guess this is a general direction all the
+other drivers will be encouraged to go in also?
 
-Though I may have missed a string or two where nodes get amended in more
-specific files. A grep for apb_clk to find neighbours didn't highlight
-any obvious ones.
+Regards,
+Alan
 
-> 
-> I noticed that ux500 has uses four different strings, one for each
-> instance, which is obviously a bug and should just be fixed. There is
-> no way this was intentional, and we can just rely on teh fallback
-> if you want to have that anyway.
 
-Sure, I'll fix those up once we have a preferred name. I guess this
-would be SSPCLK by Russell's comments, I wasn't able to find a prior use
-in the git history, but it would be in keeping with KMIREFCLK as used by
-the pl050 driver.
-
-Given the general policy of trying to not break support for existing
-DTBs we'll need some fallback, either using the first clock or getting
-the driver to try the names above.
-
-> 
-> > I assume that for the non-dt case it's possible to name clock inputs to
-> > a device without the clock being associated with the name globally? If
-> > so we could get rid of the index usage entirely in this case.
-> 
-> Sorry, I don't understand the question.
-
-I thought one of the issues before dt was that clocks were in a global
-namespace. Mark's reply implies that's not necessarily the case, so I'll
-take a tour through clkdev to educate myself.
-
-Cheers,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Yours,
+> Linus Walleij
