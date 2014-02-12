@@ -1,66 +1,123 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2] [media] of: move graph helpers from
- drivers/media/v4l2-core to drivers/media
-Date: Wed, 12 Feb 2014 10:11:54 +0100
-Message-ID: <1392196314.5536.15.camel@pizza.hi.pengutronix.de>
-References: <1392154905-12007-1-git-send-email-p.zabel@pengutronix.de>
-	 <20140212065306.36a03e82.m.chehab@samsung.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-sabresd: Do not place regulator nodes
+ under simple-bus
+Date: Wed, 12 Feb 2014 17:22:30 +0800
+Message-ID: <20140212092227.GA24834@S2101-09.ap.freescale.net>
+References: <1392165078-25794-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140212065306.36a03e82.m.chehab@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <m.chehab@samsung.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Philipp Zabel <philipp.zabel@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1392165078-25794-1-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mauro,
-
-Am Mittwoch, den 12.02.2014, 06:53 +0900 schrieb Mauro Carvalho Chehab:
-[...]
-> > diff --git a/include/media/of_graph.h b/include/media/of_graph.h
-> > new file mode 100644
-> > index 0000000..3bbeb60
-> > --- /dev/null
-> > +++ b/include/media/of_graph.h
-> > @@ -0,0 +1,46 @@
-> > +/*
-> > + * OF graph binding parsing helpers
-> > + *
-> > + * Copyright (C) 2012 - 2013 Samsung Electronics Co., Ltd.
-> > + * Author: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> > + *
-> > + * Copyright (C) 2012 Renesas Electronics Corp.
-> > + * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of version 2 of the GNU General Public License as
-> > + * published by the Free Software Foundation.
-> > + */
-> > +#ifndef __LINUX_OF_GRAPH_H
-> > +#define __LINUX_OF_GRAPH_H
-> > +
-> > +#ifdef CONFIG_OF
+On Tue, Feb 11, 2014 at 10:31:18PM -0200, Fabio Estevam wrote:
+> From: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > 
-> As a matter of consistency, it would be better to test here for
-> CONFIG_OF_GRAPH instead, to reflect the same symbol that enables such
-> functions as used on Kconfig/Makefile.
+> According to Documentation/devicetree/bindings/regulator/regulator.txt 
+> regulator nodes should not be placed under 'simple-bus'.
 
-Maybe I'm trying to be too clever for my own good, but my reasoning was
-as follows:
+I failed to read that statement from the binding doc.  Can you quote the
+doc specifically on that statement?
 
-Suppose I newly use the of_graph_ helpers in a subsystem that does not
-yet select OF_GRAPH. In that case I'd rather get linking errors earlier
-rather than stubbed out functions that silently fail to parse the DT
-later.
+> 
+> Mark Rutland also explains about it at:
+> http://www.spinics.net/lists/linux-usb/msg101497.html 
+>  
+> Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+> Shawn,
+> 
+> I can convert other dts files if you are fine with this approach.
 
-Since there is
-config VIDEO_DEV
-	select OF_GRAPH if OF
-already and the same should be added for other users of device tree
-graphs, I think stubbing out the functions only if OF is disabled should
-be enough.
+I take it as an unnecessary churn, unless I see the consensus from most
+of DT maintainers and arm-soc folks that we should make this change.
+And see comment below ...
 
-regards
-Philipp
+> 
+>  arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 51 ++++++++++++++--------------------
+>  1 file changed, 21 insertions(+), 30 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> index 0d816d3..d7df5b2 100644
+> --- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> @@ -18,38 +18,29 @@
+>  		reg = <0x10000000 0x40000000>;
+>  	};
+>  
+> -	regulators {
+> -		compatible = "simple-bus";
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> -
+> -		reg_usb_otg_vbus: regulator@0 {
+> -			compatible = "regulator-fixed";
+> -			reg = <0>;
+> -			regulator-name = "usb_otg_vbus";
+> -			regulator-min-microvolt = <5000000>;
+> -			regulator-max-microvolt = <5000000>;
+> -			gpio = <&gpio3 22 0>;
+> -			enable-active-high;
+> -		};
+> +	reg_usb_otg_vbus: regulator@0 {
+
+nodename@num should only be used for nodes that have 'reg' property.
+Why are you dropping 'reg' property here?  Right, it does not compile if
+you do not drop it.  You can take it as a reason of why I endorse
+simple-bus regulators container.
+
+Shawn
+
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "usb_otg_vbus";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		gpio = <&gpio3 22 0>;
+> +		enable-active-high;
+> +	};
+>  
+> -		reg_usb_h1_vbus: regulator@1 {
+> -			compatible = "regulator-fixed";
+> -			reg = <1>;
+> -			regulator-name = "usb_h1_vbus";
+> -			regulator-min-microvolt = <5000000>;
+> -			regulator-max-microvolt = <5000000>;
+> -			gpio = <&gpio1 29 0>;
+> -			enable-active-high;
+> -		};
+> +	reg_usb_h1_vbus: regulator@1 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "usb_h1_vbus";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		gpio = <&gpio1 29 0>;
+> +		enable-active-high;
+> +	};
+>  
+> -		reg_audio: regulator@2 {
+> -			compatible = "regulator-fixed";
+> -			reg = <2>;
+> -			regulator-name = "wm8962-supply";
+> -			gpio = <&gpio4 10 0>;
+> -			enable-active-high;
+> -		};
+> +	reg_audio: regulator@2 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "wm8962-supply";
+> +		gpio = <&gpio4 10 0>;
+> +		enable-active-high;
+>  	};
+>  
+>  	gpio-keys {
+> -- 
+> 1.8.1.2
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
