@@ -1,127 +1,103 @@
-From: "Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH 2/2] ARM: imx: add speed grading check for i.mx6 soc
-Date: Wed, 12 Feb 2014 09:44:49 +0000
-Message-ID: <1660e5d9d8eb44cfbc29d504604db12d@BY2PR03MB315.namprd03.prod.outlook.com>
-References: <1392191777-15703-1-git-send-email-b20788@freescale.com>
- <1392191777-15703-2-git-send-email-b20788@freescale.com>
- <20140212093926.GB24834@S2101-09.ap.freescale.net>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 1/2] usb: dwc3: core: continue probing if usb phy library
+ returns -ENODEV/-ENXIO
+Date: Wed, 12 Feb 2014 15:16:06 +0530
+Message-ID: <52FB42DE.4090203@ti.com>
+References: <1385373690-12170-1-git-send-email-kishon@ti.com> <1390299099-14764-1-git-send-email-kishon@ti.com> <20140121144725.GF30451@saruman.home> <20140127150855.GA17928@xps8300> <20140127160458.GF13268@saruman.home> <20140128153230.GA20991@xps8300> <20140128163036.GD28546@saruman.home> <20140129144659.GA22152@xps8300>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140212093926.GB24834-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140129144659.GA22152@xps8300>
+Sender: linux-doc-owner@vger.kernel.org
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@ti.com>
+Cc: george.cherian@ti.com, rogerq@ti.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.orgRoger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Right, will improve it in V2, thanks.
+On Wednesday 29 January 2014 08:17 PM, Heikki Krogerus wrote:
+> Hi,
+> 
+> On Tue, Jan 28, 2014 at 10:30:36AM -0600, Felipe Balbi wrote:
+>> On Tue, Jan 28, 2014 at 05:32:30PM +0200, Heikki Krogerus wrote:
+>>> On Mon, Jan 27, 2014 at 10:05:20AM -0600, Felipe Balbi wrote:
+>>> For the controller drivers the PHYs are just a resource like any
+>>> other. The controller drivers can't have any responsibility of
+>>> them. They should not care if PHY drivers are available for them or
+>>> not, or even if the PHY framework is available or not.
+>>
+>> huh? If memory isn't available you don't continue probing, right ? If
+>> your IORESOURCE_MEM is missing, you also don't continue probing, if your
+>> IRQ line is missing, you bail too. Those are also nothing but resources
+>> to the driver, what you're asking here is to treat PHY as a _different_
+>> resource; which might be fine, but we need to make sure we don't
+>> continue probing when a PHY is missing in a platform that certainly
+>> needs a PHY.
+> 
+> Yes, true. In my head I was comparing the PHY only to resources like
+> gpios, clocks, dma channels, etc. that are often optional to the
+> drivers.
+> 
+>>>>>> But I really want to see the argument against using no-op. As far as I
+>>>>>> could see, everybody needs a PHY driver one way or another, some
+>>>>>> platforms just haven't sent any PHY driver upstream and have their own
+>>>>>> hacked up solution to avoid using the PHY layer.
+>>>>>
+>>>>> Not true in our case. Platforms using Intel's SoCs and chip sets may
+>>>>> or may not have controllable USB PHY. Quite often they don't. The
+>>>>> Baytrails have usually ULPI PHY for USB2, but that does not mean they
+>>>>> provide any vendor specific functions or any need for a driver in any
+>>>>> case.
+>>>>
+>>>> that's different from what I heard.
+>>>
+>>> I don't know where you got that impression, but it's not true. The
+>>> Baytrail SoCs for example don't have internal USB PHYs, which means
+>>> the manufacturers using it can select what they want. So we have
+>>> boards where PHY driver(s) is needed and boards where it isn't.
+>>
+>> alright, that explains it ;-) So you have external USB2 and USB3 PHYs ?
+>> You have an external PIPE3 interface ? That's quite an achievement,
+>> kudos to your HW designers. Getting timing closure on PIPE3 is a
+>> difficult task.
+> 
+> No, only the USB2 PHY is external. I'm giving you wrong information,
+> I'm sorry about that. Need to concentrate on what I'm writing.
+> 
+> <snip>
+> 
+>>> This is really good to get. We have some projects where we are dealing
+>>> with more embedded environments, like IVI, where the kernel should be
+>>> stripped of everything useless. Since the PHYs are autonomous, we
+>>> should be able to disable the PHY libraries/frameworks.
+>>
+>> hmmm, in that case it's a lot easier to treat. We can use
+>> ERR_PTR(-ENXIO) as an indication that the framework is disabled, or
+>> something like that.
+>>
+>> The difficult is really reliably supporting e.g. OMAP5 (which won't work
+>> without a PHY) and your BayTrail with autonomous PHYs. What can we use
+>> as an indication ?
+> 
+> OMAP has it's own glue driver, so shouldn't it depend on the PHY
+> layer?
 
-Best Regards.
-Anson Huang
-=A0
-=46reescale Semiconductor Shanghai
-Tel:021-28937058
+right, but the PHY is connected to the dwc3 core and not to the glue.
+> 
+>> I mean, I need to know that a particular platform depends on a PHY
+>> driver before I decide to return -EPROBE_DEFER or just assume the PHY
+>> isn't needed ;-)
+> 
+> I don't think dwc3 (core) should care about that. The PHY layer needs
+> to tell us that. If the PHY driver that the platform depends is not
+> available yet, the PHY layer returns -EPROBE_DEFER and dwc3 ends up
+> returning -EPROBE_DEFER.
 
->-----Original Message-----
->From: Shawn Guo [mailto:shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org]
->Sent: Wednesday, February 12, 2014 5:39 PM
->To: Huang Yongcai-B20788
->Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
->kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->Subject: Re: [PATCH 2/2] ARM: imx: add speed grading check for i.mx6 s=
-oc
->
->On Wed, Feb 12, 2014 at 03:56:17PM +0800, Anson Huang wrote:
->> The fuse map of speed_grading[1:0] defines the max speed of ARM, see
->> below the definition:
->>
->> 2b'11: 1200000000Hz;
->> 2b'10: 996000000Hz;
->> 2b'01: 852000000Hz; -- i.MX6Q Only, exclusive with 996MHz.
->> 2b'00: 792000000Hz;
->>
->> Need to remove all illegal setpoints according to fuse map.
->>
->> Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> ---
->>  arch/arm/mach-imx/mach-imx6q.c |   22 ++++++++++++++++++++--
->>  1 file changed, 20 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm/mach-imx/mach-imx6q.c
->> b/arch/arm/mach-imx/mach-imx6q.c index f9cbbf9..ad9da1f 100644
->> --- a/arch/arm/mach-imx/mach-imx6q.c
->> +++ b/arch/arm/mach-imx/mach-imx6q.c
->> @@ -219,8 +219,10 @@ static void __init imx6q_init_machine(void)
->>  #define OCOTP_CFG3			0x440
->>  #define OCOTP_CFG3_SPEED_SHIFT		16
->>  #define OCOTP_CFG3_SPEED_1P2GHZ		0x3
->> +#define OCOTP_CFG3_SPEED_996MHZ		0x2
->> +#define OCOTP_CFG3_SPEED_852MHZ		0x1
->>
->> -static void __init imx6q_opp_check_1p2ghz(struct device *cpu_dev)
->> +static void __init imx6q_opp_check_speed_grading(struct device
->> +*cpu_dev)
->>  {
->>  	struct device_node *np;
->>  	void __iomem *base;
->> @@ -238,11 +240,27 @@ static void __init imx6q_opp_check_1p2ghz(stru=
-ct
->device *cpu_dev)
->>  		goto put_node;
->>  	}
->>
->> +	/*
->> +	 * SPEED_GRADING[1:0] defines the max speed of ARM:
->> +	 * 2b'11: 1200000000Hz;
->> +	 * 2b'10: 996000000Hz;
->> +	 * 2b'01: 852000000Hz; -- i.MX6Q Only, exclusive with 996MHz.
->> +	 * 2b'00: 792000000Hz;
->> +	 * We need to set the max speed of ARM according to fuse map.
->> +	 */
->>  	val =3D readl_relaxed(base + OCOTP_CFG3);
->>  	val >>=3D OCOTP_CFG3_SPEED_SHIFT;
->
->	val &=3D 0x3;
->
->Then you do not need to do it in every if-clause below.
->
->>  	if ((val & 0x3) !=3D OCOTP_CFG3_SPEED_1P2GHZ)
->>  		if (dev_pm_opp_disable(cpu_dev, 1200000000))
->>  			pr_warn("failed to disable 1.2 GHz OPP\n");
->> +	if ((val & 0x3) < OCOTP_CFG3_SPEED_996MHZ)
->> +		if (dev_pm_opp_disable(cpu_dev, 996000000))
->> +			pr_warn("failed to disable 996 MHz OPP\n");
->> +	if (cpu_is_imx6q()) {
->> +		if ((val & 0x3) !=3D OCOTP_CFG3_SPEED_852MHZ)
->
->	if (cpu_is_imx6q() && val !=3D OCOTP_CFG3_SPEED_852MHZ)
->
->Shawn
->
->> +			if (dev_pm_opp_disable(cpu_dev, 852000000))
->> +				pr_warn("failed to disable 852 MHz OPP\n");
->> +	}
->>
->>  put_node:
->>  	of_node_put(np);
->> @@ -268,7 +286,7 @@ static void __init imx6q_opp_init(void)
->>  		goto put_node;
->>  	}
->>
->> -	imx6q_opp_check_1p2ghz(cpu_dev);
->> +	imx6q_opp_check_speed_grading(cpu_dev);
->>
->>  put_node:
->>  	of_node_put(np);
->> --
->> 1.7.9.5
->>
->>
+I don't think the PHY layer can 'reliably' tell if PHY driver is available or
+not. Consider when the phy_provider_register fails, there is no way to know if
+PHY driver is available or not. There are a few cases where PHY layer returns
+-EPROBE_DEFER but none of them can tell for sure that PHY driver is either
+available and failed or not available at all. It would be best for us to leave
+that to the platforms if we want to be sure if the platform needs a PHY or not.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
