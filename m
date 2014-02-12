@@ -1,152 +1,36 @@
-From: Stephen N Chivers <schivers@csc.com.au>
-Subject: Re: [PATCH] of: give priority to the compatible match in
- __of_match_node()
-Date: Thu, 13 Feb 2014 06:42:19 +1000
-Message-ID: <OFDE2BD1C1.39A6B15F-ONCA257C7D.006F7E2F-CA257C7D.0071BCDF@csc.com>
-References: <1392205084-2351-1-git-send-email-haokexin@gmail.com>
+From: Kees Cook <keescook@chromium.org>
+Subject: Re: [RFC/PATCH 0/3] Add devicetree scanning for randomness
+Date: Wed, 12 Feb 2014 13:35:54 -0800
+Message-ID: <CAGXu5j+BQzrgoAN-TiCaaoQaEjB+JQOCZLKq+_rFoWdFR-UpqQ@mail.gmail.com>
+References: <1392168805-14200-1-git-send-email-lauraa@codeaurora.org>
+	<201402121251.06280.arnd@arndb.de>
+	<20140212174554.GM27395@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1392205084-2351-1-git-send-email-haokexin@gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Kevin Hao <haokexin@gmail.com>
-Cc: Chris Proctor <cproctor@csc.com.au>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Stephen N Chivers <schivers@csc.com.au>, Scott Wood <scottwood@freescale.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, linuxppc-dev@lists.ozlabs.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140212174554.GM27395@titan.lakedaemon.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: Arnd Bergmann <arnd@arndb.de>, Laura Abbott <lauraa@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Kevin Hao <haokexin@gmail.com> wrote on 02/12/2014 10:38:04 PM:
+On Wed, Feb 12, 2014 at 9:45 AM, Jason Cooper <jason@lakedaemon.net> wrote:
+> I brought this up at last weeks devicetree irc meeting.  My goal is to
+> provide early randomness for kaslr on ARM.  Currently, my idea is modify
+> the init script to save an additional random seed from /dev/urandom to
+> /boot/random-seed.
 
-> From: Kevin Hao <haokexin@gmail.com>
-> To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-> Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Stephen
-> N Chivers <schivers@csc.com.au>, Chris Proctor 
-> <cproctor@csc.com.au>, Arnd Bergmann <arnd@arndb.de>, Scott Wood 
-> <scottwood@freescale.com>, Grant Likely <grant.likely@linaro.org>, 
-> Rob Herring <robh+dt@kernel.org>
-> Date: 02/12/2014 10:38 PM
-> Subject: [PATCH] of: give priority to the compatible match in 
-> __of_match_node()
-> 
-> When the device node do have a compatible property, we definitely
-> prefer the compatible match besides the type and name. Only if
-> there is no such a match, we then consider the candidate which
-> doesn't have compatible entry but do match the type or name with
-> the device node.
-> 
-> This is based on a patch from Sebastian Hesselbarth.
->   http://patchwork.ozlabs.org/patch/319434/
-> 
-> I did some code refactoring and also fixed a bug in the original patch.
-> 
-> Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> Signed-off-by: Kevin Hao <haokexin@gmail.com>
-Tested-by: Stephen Chivers <schivers@csc.com>
+I'm all for a good entropy source for early boot. :)
 
-Patch works for both orderings. Platform boots without problems and
-I get the normal serial console.
-> ---
->  drivers/of/base.c | 55 ++++++++++++++++++++++++++++++++++++
-> +------------------
->  1 file changed, 37 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index ff85450d5683..9d655df458bd 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -730,32 +730,45 @@ out:
->  }
->  EXPORT_SYMBOL(of_find_node_with_property);
-> 
-> +static int of_match_type_or_name(const struct device_node *node,
-> +            const struct of_device_id *m)
-> +{
-> +   int match = 1;
-> +
-> +   if (m->name[0])
-> +      match &= node->name && !strcmp(m->name, node->name);
-> +
-> +   if (m->type[0])
-> +      match &= node->type && !strcmp(m->type, node->type);
-> +
-> +   return match;
-> +}
-> +
->  static
->  const struct of_device_id *__of_match_node(const struct 
-> of_device_id *matches,
->                    const struct device_node *node)
->  {
->     const char *cp;
->     int cplen, l;
-> +   const struct of_device_id *m;
-> +   int match;
-> 
->     if (!matches)
->        return NULL;
-> 
->     cp = __of_get_property(node, "compatible", &cplen);
-> -   do {
-> -      const struct of_device_id *m = matches;
-> +   while (cp && (cplen > 0)) {
-> +      m = matches;
-> 
->        /* Check against matches with current compatible string */
->        while (m->name[0] || m->type[0] || m->compatible[0]) {
-> -         int match = 1;
-> -         if (m->name[0])
-> -            match &= node->name
-> -               && !strcmp(m->name, node->name);
-> -         if (m->type[0])
-> -            match &= node->type
-> -               && !strcmp(m->type, node->type);
-> -         if (m->compatible[0])
-> -            match &= cp
-> -               && !of_compat_cmp(m->compatible, cp,
-> +         if (!m->compatible[0]) {
-> +            m++;
-> +            continue;
-> +         }
-> +
-> +         match = of_match_type_or_name(node, m);
-> +         match &= cp && !of_compat_cmp(m->compatible, cp,
->                       strlen(m->compatible));
->           if (match)
->              return m;
-> @@ -763,12 +776,18 @@ const struct of_device_id *__of_match_node
-> (const struct of_device_id *matches,
->        }
-> 
->        /* Get node's next compatible string */ 
-> -      if (cp) {
-> -         l = strlen(cp) + 1;
-> -         cp += l;
-> -         cplen -= l;
-> -      }
-> -   } while (cp && (cplen > 0));
-> +      l = strlen(cp) + 1;
-> +      cp += l;
-> +      cplen -= l;
-> +   }
-> +
-> +   m = matches;
-> +   /* Check against matches without compatible string */
-> +   while (m->name[0] || m->type[0] || m->compatible[0]) {
-> +      if (!m->compatible[0] && of_match_type_or_name(node, m))
-> +         return m;
-> +      m++;
-> +   }
-> 
->     return NULL;
->  }
-> -- 
-> 1.8.5.3
-> 
+I need to figure out what's needed for relocation support first
+though, before we can really tackle kernel base-address randomization
+on ARM. I haven't had a chance to look around too closely yet, but it
+seems like only x86 and ppc do this currently? Has anyone looked in
+detail and what would be needed on ARM for CONFIG_RELOCATABLE
+behavior?
+
+-Kees
+
+-- 
+Kees Cook
+Chrome OS Security
