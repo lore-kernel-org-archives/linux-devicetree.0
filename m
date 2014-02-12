@@ -1,28 +1,70 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] export of_irq_count
-Date: Wed, 12 Feb 2014 12:32:08 -0600
-Message-ID: <CAL_JsqLT=w5wDnFBcQdeF5KgpJK76xJhH=ZYJy24CEeV2uQ2aQ@mail.gmail.com>
-References: <1392226444-30507-1-git-send-email-delicious.quinoa@gmail.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [RFC/PATCH 0/3] Add devicetree scanning for randomness
+Date: Wed, 12 Feb 2014 13:32:09 -0500
+Message-ID: <20140212183209.GN27395@titan.lakedaemon.net>
+References: <1392168805-14200-1-git-send-email-lauraa@codeaurora.org>
+ <201402121251.06280.arnd@arndb.de>
+ <20140212174554.GM27395@titan.lakedaemon.net>
+ <CAOesGMgNkdxW4znmns10-DPc4+OTWJLyx2fcJGTgdND6pp0zUQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392226444-30507-1-git-send-email-delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOesGMgNkdxW4znmns10-DPc4+OTWJLyx2fcJGTgdND6pp0zUQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: delicious quinoa <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Yves Vandervennet <rocket.yvanderv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 12, 2014 at 11:34 AM, delicious quinoa
-<delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
->
-> export of_irq_count so it can be used in drivers that are built
-> as modules.
+On Wed, Feb 12, 2014 at 10:13:59AM -0800, Olof Johansson wrote:
+> On Wed, Feb 12, 2014 at 9:45 AM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+> 
+> > I brought this up at last weeks devicetree irc meeting.  My goal is to
+> > provide early randomness for kaslr on ARM.  Currently, my idea is modify
+> > the init script to save an additional random seed from /dev/urandom to
+> > /boot/random-seed.
+> >
+> > The bootloader would then load this file into ram, and pass the
+> > address/size to the kernel either via dt, or commandline.  kaslr (run in
+> > the decompressor) would consume some of this randomness, and then
+> > random.c would consume the rest in a non-crediting initialization.
+> >
+> > While not ideal, it works in absence of an HRNG, and is no worse than
+> > the current situation of storing the seed in /var/lib/misc/random-seed.
+> > It also doesn't require modification of the bootloaders.  Just an
+> > updated kernel, and update the bootloader environment to load the
+> > seed.
+> 
+> Hmm. There are some drawbacks with this -- it assumes you can "just
+> update the bootloader environment" which in general isn't easy to do.
 
-What drivers? Drivers generally should be using resources rather than
-this function directly.
+true, the scope of my experience is consumer grade NASs, routers and
+APs.  At the very least, it's much easier than upgrading the bootloader.
 
-Rob
+Also, my pov is as a hobbyist modifying devices post-sale.  The idea is
+something I could add to my existing boxes without having to upgrade the
+bootloaders.
+
+> Also, you can't assume that /boot is writable or exists on all
+> embedded systems.
+
+In systems missing this capability, they often have the ability to
+update the kernel.  All that's needed is one block of flash.  Current
+random-seed size is 512 bytes.  I'm not saying it's easy or desirable.
+But for folks who feel it's necessary to have kaslr on embedded devices,
+it would facilitate better random numbers.  "Better" meaning much harder
+for an attacker to guess.
+
+> In general, taking both runtime and system-dependend data and using
+> that to see entropy is a good idea.
+
+Of course, I wasn't arguing for one or the other.  As you said later, in
+situations where you can't feed in a seed file, MAC addresses and serial
+numbers are better than nothing.
+
+thx,
+
+Jason.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
