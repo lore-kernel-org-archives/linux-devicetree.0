@@ -1,210 +1,229 @@
-From: Philippe De Muyter <phdm@macq.eu>
-Subject: Re: [PATCH] bus: imx-weim: support weim-cs-gpr for imx6q-weim
-Date: Wed, 12 Feb 2014 17:43:04 +0100
-Message-ID: <20140212164304.GA20251@frolo.macqel>
-References: <1392087011-31629-1-git-send-email-shawn.guo@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1392087011-31629-1-git-send-email-shawn.guo@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Huang Shijie <b32955@freescale.com>, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC/PATCH 1/3] of: Add early randomness hooks
+Date: Wed, 12 Feb 2014 16:47:51 +0000
+Message-ID: <20140212164751.703DFC407C9@trevor.secretlab.ca>
+References: <1392168805-14200-1-git-send-email-lauraa@codeaurora.org> < 1392168805-14200-2-git-send-email-lauraa@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392168805-14200-2-git-send-email-lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Shawn.
+On Tue, 11 Feb 2014 17:33:23 -0800, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> Until randomness is added to the kernel's pools, random
+> numbers returned may not be truly 'random'. Randomness comes
+> from a variety of sources in the kernel but much of the
+> randomness comes from device related initialization. This
+> means that any random numbers that are needed before drivers
+> are initialized (e.g. stack canary) may not be truely random.
+> Fix this by build a list of functions that can be used to add
+> randomness to the kernel's pools very early. The functions are
+> tied to particular compatible strings of devicetree nodes. The
+> flattened devicetree is scanned and if the node is present the
+> function is called. Note that this must happen on the flattened
+> devicetree to ensure the randomness gets added to the pool
+> early enough to make a difference.
+> 
+> Signed-off-by: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-On Tue, Feb 11, 2014 at 10:50:11AM +0800, Shawn Guo wrote:
-> For imx6q-weim type of device, there might a WEIM CS space configuration
-> register in General Purpose Register controller, e.g. IOMUXC_GPR1 on
-> i.MX6Q.
-> 
-> Depending on which configuration of the following 4 is chosen for given
-> system, IOMUXC_GPR1[11:0] should be set up as 0x5, 0x1b, 0x4b or 0x249
+Intriguing solution. Looks good to me, but some comments below...
 
-As the bits are actually grouped by 3, one could write:
-					... as 05, 033, 0113, or 01111
-> correspondingly.
-> 
-> 	CS0(128M) CS1(0M)  CS2(0M)  CS3(0M)
-> 	CS0(64M)  CS1(64M) CS2(0M)  CS3(0M)
-> 	CS0(64M)  CS1(32M) CS2(32M) CS3(0M)
-> 	CS0(32M)  CS1(32M) CS2(32M) CS3(32M)
-> 
-> The patch creates a table in the driver for above configurations, and
-> detects which one is being used for the booting system by looking at
-> 'ranges' property of WEIM node.  Thus the WEIM CS GPR can be set up
-> automatically at boot time.
-> 
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
 > ---
->  Documentation/devicetree/bindings/bus/imx-weim.txt |    6 ++
->  drivers/bus/imx-weim.c                             |   83 ++++++++++++++++++++
->  2 files changed, 89 insertions(+)
+>  drivers/of/Kconfig                |    7 ++++++
+>  drivers/of/Makefile               |    1 +
+>  drivers/of/fdt.c                  |    7 ++++++
+>  drivers/of/of_randomness.c        |   43 +++++++++++++++++++++++++++++++++++++
+>  include/asm-generic/vmlinux.lds.h |    5 ++++
+>  include/linux/of_randomness.h     |   42 ++++++++++++++++++++++++++++++++++++
+>  6 files changed, 105 insertions(+), 0 deletions(-)
+>  create mode 100644 drivers/of/of_randomness.c
+>  create mode 100644 include/linux/of_randomness.h
 > 
-> diff --git a/Documentation/devicetree/bindings/bus/imx-weim.txt b/Documentation/devicetree/bindings/bus/imx-weim.txt
-> index 0fd76c4..d114460f 100644
-> --- a/Documentation/devicetree/bindings/bus/imx-weim.txt
-> +++ b/Documentation/devicetree/bindings/bus/imx-weim.txt
-> @@ -19,6 +19,12 @@ Required properties:
+> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> index c6973f1..6ae4a38 100644
+> --- a/drivers/of/Kconfig
+> +++ b/drivers/of/Kconfig
+> @@ -75,4 +75,11 @@ config OF_MTD
+>  	depends on MTD
+>  	def_bool y
 >  
->  			   <cs-number> 0 <physical address of mapping> <size>
->  
-> +Optional properties:
-> +
-> + - fsl,weim-cs-gpr:	Should be the phandle to the General Purpose Register
-> +			controller that contains WEIM CS GPR register, e.g.
-> +			IOMUXC_GPR1 on i.MX6Q.
-> +
+> +config OF_RANDOMNESS
+> +	def_bool n
 
-Why require that new property ?  It makes things harder to use.
+There should be the option to turn this off, particularly if it turns
+out to be expensive in terms of boot time.
 
-And you could add the body of your commit log here.
+> +	depends on OF_FLATTREE && ARCH_WANT_OF_RANDOMNESS
+> +        help
+> +	  OpenFirmware hooks to scan for device randomness
+> +	  via flat devicetree
 
->  Timing property for child nodes. It is mandatory, not optional.
->  
->   - fsl,weim-cs-timing:	The timing array, contains timing values for the
-> diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
-> index 3ef58c8..9c8a522 100644
-> --- a/drivers/bus/imx-weim.c
-> +++ b/drivers/bus/imx-weim.c
-> @@ -11,6 +11,9 @@
->  #include <linux/clk.h>
->  #include <linux/io.h>
->  #include <linux/of_device.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
-> +#include <linux/regmap.h>
->  
->  struct imx_weim_devtype {
->  	unsigned int	cs_count;
-> @@ -56,6 +59,83 @@ static const struct of_device_id weim_id_table[] = {
->  };
->  MODULE_DEVICE_TABLE(of, weim_id_table);
->  
-> +struct imx6q_weim_gpr {
-> +	u32 cssize[4];
-> +	u32 gprval;
-> +};
+Inconsistent whitespace
+
 > +
-> +static const struct imx6q_weim_gpr imx6q_weim_gpr_data[] __initconst = {
-> +	{
-> +		/* CS0(128M) CS1(0M) CS2(0M) CS3(0M) */
-> +		.cssize = { 128, 0, 0, 0 },
-> +		.gprval = 0x5,
-			05
-> +	}, {
-> +		/* CS0(64M) CS1(64M) CS2(0M) CS3(0M) */
-> +		.cssize = { 64, 64, 0, 0 },
-> +		.gprval = 0x1b,
-			033
-> +	}, {
-> +		/* CS0(64M) CS1(32M) CS2(32M) CS3(0M) */
-> +		.cssize = { 64, 32, 32, 0 },
-> +		.gprval = 0x4b,
-			0113
-> +	}, {
-> +		/* CS0(64M) CS1(32M) CS2(32M) CS3(0M) */
-		/* CS0(32M) CS1(32M) CS2(32M) CS3(32M) */
-> +		.cssize = { 32, 32, 32, 32 },
-> +		.gprval = 0x249,
-			01111
-> +	},
-> +};
+>  endmenu # OF
+> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+> index efd0510..0ce02d1 100644
+> --- a/drivers/of/Makefile
+> +++ b/drivers/of/Makefile
+> @@ -9,3 +9,4 @@ obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
+>  obj-$(CONFIG_OF_PCI)	+= of_pci.o
+>  obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+>  obj-$(CONFIG_OF_MTD)	+= of_mtd.o
+> +obj-$(CONFIG_OF_RANDOMNESS)	+= of_randomness.o
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 758b4f8..c25960e 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/of_fdt.h>
+> +#include <linux/of_randomness.h>
+>  #include <linux/string.h>
+>  #include <linux/errno.h>
+>  #include <linux/slab.h>
+> @@ -889,6 +890,12 @@ bool __init early_init_dt_scan(void *params)
+>  	/* Setup memory, calling early_init_dt_add_memory_arch */
+>  	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
+>  
+> +#ifdef CONFIG_OF_RANDOMNESS
+> +	/* Add device randomness */
+> +	of_scan_flat_dt(early_init_dt_scan_early_randomness, NULL);
+> +#endif
+
+Drop the #ifdef in fdt.c and use static inlines in the header file. One
+that does the of_scan_flat_dt() call, and one empty stub for the
+!CONFIG_OF_RANDOMNESS case.
+
+I would also bypass the of_scan_flat_dt call entirely if the
+__early_random_funcs list is empty.
+
 > +
-> +static int __init imx6q_weim_gpr_setup(struct platform_device *pdev)
+> +
+>  	return true;
+>  }
+>  
+> diff --git a/drivers/of/of_randomness.c b/drivers/of/of_randomness.c
+> new file mode 100644
+> index 0000000..9d23624
+> --- /dev/null
+> +++ b/drivers/of/of_randomness.c
+> @@ -0,0 +1,43 @@
+> +/* Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/random.h>
+> +#include <linux/string.h>
+> +#include <linux/of_randomness.h>
+> +#include <linux/of_fdt.h>
+> +
+> +int __init early_init_dt_scan_early_randomness(unsigned long node,
+> +					const char *uname,
+> +					int depth, void *data)
 > +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	const struct property *prop;
-> +	struct regmap *gpr;
-> +	u32 cssize[4] = { 0, 0, 0, 0 };
-> +	int len;
-> +	int ret;
-> +	int i;
+> +	struct early_random_func *f;
+> +	void *prop;
+> +	unsigned long len;
 > +
-> +	gpr = syscon_regmap_lookup_by_phandle(np, "fsl,weim-cs-gpr");
-
-	gpr = syscon_regmap_lookup_by_compatible("fsl,imx6q-iomuxc-gpr");
-
-> +	if (IS_ERR(gpr)) {
-> +		dev_dbg(&pdev->dev, "No weim-cs-gpr to set up\n");
+> +	prop = of_get_flat_dt_prop(node, "compatible", &len);
+> +
+> +	if (!prop)
 > +		return 0;
+> +
+> +	for (f = __early_random_funcs_start;
+> +	     f < __early_random_funcs_end;
+> +	     f++) {
+> +		pr_debug("Check compat %s addr %p against %s\n",
+> +			f->compat_string, f->add_randomness, (char *)prop);
+> +		if (strcmp(prop, f->compat_string) == 0)
+> +			f->add_randomness(node);
 > +	}
 > +
-> +	prop = of_find_property(np, "ranges", &len);
-> +	if (prop == NULL)
-> +		return -ENOENT;
-> +	if (len % (sizeof(u32) * 4))
-> +		return -EINVAL;
-> +
-> +	for (i = 0; i < len / (sizeof(u32) * 4); i++) {
-> +		int cs;
-> +		/* read cs index */
-> +		ret = of_property_read_u32_index(np, "ranges", i * 4, &cs);
-> +		if (ret)
-> +			return ret;
-> +		/* read cs size */
-> +		ret = of_property_read_u32_index(np, "ranges", i * 4 + 3,
-> +						 &cssize[cs]);
-> +		if (ret)
-> +			return ret;
-> +		/* turn to MB */
-> +		cssize[cs] >>= 20;
-> +	}
-> +
-> +	for (i = 0; i < ARRAY_SIZE(imx6q_weim_gpr_data); i++) {
-> +		ret = memcmp(cssize, imx6q_weim_gpr_data[i].cssize,
-> +			     sizeof(cssize));
-> +		if (ret == 0) {
-> +			/* Find it. Set up IOMUXC_GPR1[11:0] with the gprval. */
-
-			Found it
-
-> +			regmap_update_bits(gpr, IOMUXC_GPR1, 0xfff,
-> +					   imx6q_weim_gpr_data[i].gprval);
-> +			return 0;
-> +		}
-> +	}
-> +
-> +	dev_err(&pdev->dev, "Invalid 'ranges' configuration\n");
-> +	return -EINVAL;
+> +	return 0;
 > +}
-> +
->  /* Parse and set the timing for this device. */
->  static int __init weim_timing_setup(struct device_node *np, void __iomem *base,
->  				    const struct imx_weim_devtype *devtype)
-> @@ -92,6 +172,9 @@ static int __init weim_parse_dt(struct platform_device *pdev,
->  	struct device_node *child;
->  	int ret;
+> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+> index bc2121f..e5b8be9 100644
+> --- a/include/asm-generic/vmlinux.lds.h
+> +++ b/include/asm-generic/vmlinux.lds.h
+> @@ -645,6 +645,11 @@
+>  		*(.security_initcall.init)				\
+>  		VMLINUX_SYMBOL(__security_initcall_end) = .;
 >  
-> +	if (of_device_is_compatible(pdev->dev.of_node, "fsl,imx6q-weim"))
-> +		imx6q_weim_gpr_setup(pdev);
+> +#define EARLY_RANDOM_FUNCS						\
+> +		VMLINUX_SYMBOL(__early_random_funcs_start) = .;		\
+> +		*(.earlyrandom.init)					\
+> +		VMLINUX_SYMBOL(__early_random_funcs_end) = .;
 > +
->  	for_each_child_of_node(pdev->dev.of_node, child) {
->  		if (!child->name)
->  			continue;
+>  #ifdef CONFIG_BLK_DEV_INITRD
+>  #define INIT_RAM_FS							\
+>  	. = ALIGN(4);							\
+> diff --git a/include/linux/of_randomness.h b/include/linux/of_randomness.h
+> new file mode 100644
+> index 0000000..b8b4532
+> --- /dev/null
+> +++ b/include/linux/of_randomness.h
+> @@ -0,0 +1,42 @@
+> +/* Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + */
+> +#ifndef LINUX_OF_RANDOMNESS_H
+> +#define LINUX_OF_RANDOMNESS_H
+> +
+> +extern int early_init_dt_scan_early_randomness(unsigned long node,
+> +					  const char *uname,
+> +					  int depth, void *data);
+> +
+> +#ifdef CONFIG_OF_RANDOMNESS
+> +
+> +struct early_random_func {
+> +	char *compat_string;
+> +	void (*add_randomness)(unsigned long fdt_node);
+> +};
+> +
+> +extern struct early_random_func __early_random_funcs_start[];
+> +extern struct early_random_func __early_random_funcs_end[];
+> +
+> +#define EARLY_RANDOM_FUNC(c, f)    \
+> +static struct early_random_func __early_rand##f __used \
+> +	__attribute((__section__(".earlyrandom.init"))) = { \
+> +		.compat_string = c, \
+> +		.add_randomness = f\
+> +	} \
+> +
+> +#else
+> +
+> +#define EARLY_RANDOM_FUNC(f, e)
+> +#endif
+> +
+> +#endif
 > -- 
-> 1.7.9.5
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> hosted by The Linux Foundation
 > 
 
-Now the most important : it works.  I have tested it successfully for the
-4 combinations.
-
-Code could probably be made shorter by using 'of_prop_next_u32' and building
-the gprval incrementally, then checking it against the four possible values,
-though.
-
-But, again, thanks, Shawn
-
--- 
-Philippe De Muyter +32 2 6101532 Macq SA rue de l'Aeronef 2 B-1140 Bruxelles
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
