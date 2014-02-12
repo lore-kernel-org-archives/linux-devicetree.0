@@ -1,96 +1,86 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Linux-3.14-rc2: Order of serial node compatibles in DTS files.
-Date: Wed, 12 Feb 2014 09:30:00 +0100
-Message-ID: <52FB3108.3000202@gmail.com>
-References: <alpine.LRH.2.00.1402071348380.10318@ra8135-ec1.am.freescale.net> <20140210110342.GA15806@visitor2.iram.es> <alpine.LRH.2.00.1402101056410.10318@ra8135-ec1.am.freescale.net> <20140211072606.GA26514@visitor2.iram.es> <OF6F6A0029.3B20EF5B-ONCA257C7C.0071BFDA-CA257C7C.00732AD3@csc.com> <63AEBD99-AA87-4FD7-BBDA-0CE419959F14@kernel.crashing.org> <52FAA97F.4060600@gmail.com> <1392162080.6733.404.camel@snotra.buserror.net> <52FAB65C.4090201@gmail.com> <OF9BA019D5.46DA1E29-ONCA257C7D.000089EA-CA257C7D.00020333@csc.com> <20140212052816.GA15434@pek-khao-d1.corp.ad.wrs.com>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140212052816.GA15434-2Y/eJ/Q4tBKYoDLmhA0N63T7OC0tnCxdQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen N Chivers <schivers-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>
-Cc: Chris Proctor <cproctor-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ohci-platform: Change compatible
+ string from usb-ohci to generic-ohci
+Date: Wed, 12 Feb 2014 10:45:05 +0200
+Message-ID: <52FB3491.3060206@ti.com>
+References: <1392136529-5060-1-git-send-email-hdegoede@redhat.com> <1392136529-5060-2-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBD45J6OZZMOBBHPJ5SLQKGQENSWON6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1392136529-5060-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/12/2014 06:28 AM, Kevin Hao wrote:
-> On Wed, Feb 12, 2014 at 10:21:58AM +1000, Stephen N Chivers wrote:
->> But, the Interrupt Controller (MPIC)
->> goes AWOL and it is down hill from there.
->>
->> The MPIC is specified in the DTS as:
->>
->>          mpic: pic@40000 {
->>                          interrupt-controller;
->>                          #address-cells = <0>;
->>                          #interrupt-cells = <2>;
->>                          reg = <0x40000 0x40000>;
->>                          compatible = "chrp,open-pic";
->>                          device_type = "open-pic";
->>                          big-endian;
->>                  };
->>
->> The board support file has the standard mechanism for allocating
->> the PIC:
->>
->>          struct mpic *mpic;
->>
->>          mpic = mpic_alloc(NULL, 0, 0, 0, 256, " OpenPIC  ");
->>          BUG_ON(mpic == NULL);
->>
->>          mpic_init(mpic);
->>
->> I checked for damage in applying the patch and it has applied
->> correctly.
->
-> How about the following fix?
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index ff85450d5683..ca91984d3c4b 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -730,32 +730,40 @@ out:
->   }
->   EXPORT_SYMBOL(of_find_node_with_property);
->
-> +static int of_match_type_name(const struct device_node *node,
-> +				const struct of_device_id *m)
+On 02/11/2014 06:35 PM, Hans de Goede wrote:
+> The initial versions of the devicetree enablement patches for ohci-platform
+> used "ohci-platform" as compatible string. However this was disliked by various
+> reviewers because the platform bus is a Linux invention and devicetree is
+> supposed to be OS agnostic. After much discussion I gave up and went with
+> the generic usb-ohci as requested.
+> 
+> In retro-spect I should have chosen something different, the dts files for many
+> existing boards already claim to be compatible with "usb-ohci", ie they have:
+> 
+> 	compatible = "ti,ohci-omap3", "usb-ohci";
+> 
+> In theory this should not be a problem since the "ti,ohci-omap3" entry takes
+> presedence, but in practice using a conflicting compatible string is an issue,
+> because it makes which driver gets used depend on driver registration order.
+> 
+> This patch changes the compatible string claimed by ohci-platform to
+> "generic-ohci", avoiding the driver registration / module loading ordering
+> problems.
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/usb/usb-ohci.txt | 4 ++--
+>  drivers/usb/host/ohci-platform.c                   | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/usb-ohci.txt b/Documentation/devicetree/bindings/usb/usb-ohci.txt
+> index 6933b0c..45f67d9 100644
+> --- a/Documentation/devicetree/bindings/usb/usb-ohci.txt
+> +++ b/Documentation/devicetree/bindings/usb/usb-ohci.txt
+> @@ -1,7 +1,7 @@
+>  USB OHCI controllers
+>  
+>  Required properties:
+> -- compatible : "usb-ohci"
+> +- compatible : "generic-ohci"
+>  - reg : ohci controller register range (address and length)
+>  - interrupts : ohci controller interrupt
+>  
+> @@ -16,7 +16,7 @@ Optional properties:
+>  Example:
+>  
+>  	ohci0: usb@01c14400 {
+> -		compatible = "allwinner,sun4i-a10-ohci", "usb-ohci";
+> +		compatible = "allwinner,sun4i-a10-ohci", "generic-ohci";
+>  		reg = <0x01c14400 0x100>;
+>  		interrupts = <64>;
+>  		clocks = <&usb_clk 6>, <&ahb_gates 2>;
+> diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
+> index e2c28fd..b6ca0b2 100644
+> --- a/drivers/usb/host/ohci-platform.c
+> +++ b/drivers/usb/host/ohci-platform.c
+> @@ -319,7 +319,7 @@ static int ohci_platform_resume(struct device *dev)
+>  #endif /* CONFIG_PM */
+>  
+>  static const struct of_device_id ohci_platform_ids[] = {
+> -	{ .compatible = "usb-ohci", },
+> +	{ .compatible = "generic-ohci", },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, ohci_platform_ids);
+> 
+both v2 patches
 
-I am fine with having a sub-function here, but it should rather be
-named of_match_type_or_name.
-
-> +{
-> +	int match = 1;
-> +
-> +	if (m->name[0])
-> +		match &= node->name && !strcmp(m->name, node->name);
-> +
-> +	if (m->type[0])
-> +		match &= node->type && !strcmp(m->type, node->type);
-> +
-> +	return match;
-> +}
-[...]
-> +	/* Check against matches without compatible string */
-> +	m = matches;
-> +	while (!m->compatible[0] && (m->name[0] || m->type[0])) {
-
-We shouldn't check for anything else than the sentinel here.
-Although I guess yours will not quit early as mine did but that
-way we don't have to worry about it.
-
-Sebastian
-
-> +		match = of_match_type_name(node, m);
-> +		if (match)
-> +			return m;
-> +		m++;
-> +	}
-> +
->   	return NULL;
->   }
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
