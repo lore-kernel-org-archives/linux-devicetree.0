@@ -1,69 +1,39 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v4] gpio: davinci: reuse for keystone soc
-Date: Wed, 12 Feb 2014 20:00:28 +0200
-Message-ID: <52FBB6BC.2060801@ti.com>
-References: <1391615244-12014-1-git-send-email-grygorii.strashko@ti.com>
- <CACRpkdbrs==tpUBs=WLWkt0frBcSMRDRokOn2tvP-1gt7Qq3+w@mail.gmail.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-sabresd: Do not place regulator nodes
+ under simple-bus
+Date: Wed, 12 Feb 2014 15:22:05 -0200
+Message-ID: <CAOMZO5DMbmh56AOZjRSB062o6u6y3TrFFk507ufd_QL9nr8gSQ@mail.gmail.com>
+References: <1392165078-25794-1-git-send-email-festevam@gmail.com>
+	<20140212092227.GA24834@S2101-09.ap.freescale.net>
+	<20140212095450.GB21992@e106331-lin.cambridge.arm.com>
+	<20140212122837.GD24834@S2101-09.ap.freescale.net>
+	<20140212135736.GB25957@e106331-lin.cambridge.arm.com>
+	<20140212152050.GA28749@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdbrs==tpUBs=WLWkt0frBcSMRDRokOn2tvP-1gt7Qq3+w@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, Alexandre Courbot <gnurou@gmail.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140212152050.GA28749-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-
-On 02/12/2014 05:03 PM, Linus Walleij wrote:
-> On Wed, Feb 5, 2014 at 4:47 PM, Grygorii Strashko
-> <grygorii.strashko@ti.com> wrote:
->
->> The similar GPIO HW block is used by keystone SoCs as
->> in Davinci SoCs.
->> Hence, reuse Davinci GPIO driver for Keystone taking into
->> account that Keystone contains ARM GIC IRQ controller which
->> is implemented using IRQ Chip.
+On Wed, Feb 12, 2014 at 1:20 PM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Feb 12, 2014 at 01:57:36PM +0000, Mark Rutland wrote:
+>> As it stands, the dts are buggy. I can appreciate that you don't feel
+>> this is important, but I do. It's not just an IMX issue, there is
+>> widespread misunderstanding and abuse of simple-bus.
 >>
->> Documentation:
->>          http://www.ti.com/lit/ug/sprugv1/sprugv1.pdf
->>
->> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
->> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->> ---
->> Changes in v4:
->> - rebased on top of v3.14 +
->>    [patch] gpio: davinci: signedness bug in davinci_gpio_irq_setup()
+>> Said abuse is relying on current Linux implementation details, and that
+>> can and will create problems if and when probing code is changed.
 >
-> I tried applying this and it does not apply on the "devel" branch
-> in the GPIO tree. Since I haven't touched one line of code in the
-> DaVinci driver since v3.14-rc1 I seriously doubt that this is
-> rebased on v3.14[-rc].
->
-> Can you please rebase the patch onto v3.14-rc1 for real and
-> resend it?
+> The reality is the code already gets no chance to change on this regard,
+> considering the requirement that we need to maintain the interface
+> between kernel and DT as ABI.  The dts have been there like this for
+> 10 kernel releases or so.
 
-Sorry, But I've to clarify that this patch is based on:
-http://www.spinics.net/lists/linux-kernel-janitors/msg18017.html
-[patch] gpio: davinci: signedness bug in davinci_gpio_irq_setup()
-
-And I did it to avoid merge conflicts between these two patches.
-
-Is it possible to apply above one first? It's not in any of your
-branches.
-
-Of Course, I can re-base this patch on clean v3.14-rc1, but then merge
-conflict will happen with "gpio: davinci: signedness.." patch.
-
-Regards,
-- grygorii
+What breakage do you see with this patch?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
