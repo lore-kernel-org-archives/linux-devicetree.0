@@ -1,104 +1,88 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2] [media] of: move graph helpers from
- drivers/media/v4l2-core to drivers/media
-Date: Wed, 12 Feb 2014 18:34:40 +0100
-Message-ID: <1392226480.5536.61.camel@pizza.hi.pengutronix.de>
-References: <1392154905-12007-1-git-send-email-p.zabel@pengutronix.de>
-	 <20140212065306.36a03e82.m.chehab@samsung.com>
-	 <1392196314.5536.15.camel@pizza.hi.pengutronix.de>
-	 <20140212223515.71a445f4.m.chehab@samsung.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [RFC/PATCH 0/3] Add devicetree scanning for randomness
+Date: Wed, 12 Feb 2014 12:45:54 -0500
+Message-ID: <20140212174554.GM27395@titan.lakedaemon.net>
+References: <1392168805-14200-1-git-send-email-lauraa@codeaurora.org>
+ <201402121251.06280.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140212223515.71a445f4.m.chehab@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <m.chehab@samsung.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Philipp Zabel <philipp.zabel@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201402121251.06280.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mauro,
+Laura,
 
-Am Mittwoch, den 12.02.2014, 22:35 +0900 schrieb Mauro Carvalho Chehab:
-> Em Wed, 12 Feb 2014 10:11:54 +0100
-> Philipp Zabel <p.zabel@pengutronix.de> escreveu:
-> 
-> > Hi Mauro,
-> > 
-> > Am Mittwoch, den 12.02.2014, 06:53 +0900 schrieb Mauro Carvalho Chehab:
-> > [...]
-> > > > diff --git a/include/media/of_graph.h b/include/media/of_graph.h
-> > > > new file mode 100644
-> > > > index 0000000..3bbeb60
-> > > > --- /dev/null
-> > > > +++ b/include/media/of_graph.h
-> > > > @@ -0,0 +1,46 @@
-> > > > +/*
-> > > > + * OF graph binding parsing helpers
-> > > > + *
-> > > > + * Copyright (C) 2012 - 2013 Samsung Electronics Co., Ltd.
-> > > > + * Author: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> > > > + *
-> > > > + * Copyright (C) 2012 Renesas Electronics Corp.
-> > > > + * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> > > > + *
-> > > > + * This program is free software; you can redistribute it and/or modify
-> > > > + * it under the terms of version 2 of the GNU General Public License as
-> > > > + * published by the Free Software Foundation.
-> > > > + */
-> > > > +#ifndef __LINUX_OF_GRAPH_H
-> > > > +#define __LINUX_OF_GRAPH_H
-> > > > +
-> > > > +#ifdef CONFIG_OF
-> > > 
-> > > As a matter of consistency, it would be better to test here for
-> > > CONFIG_OF_GRAPH instead, to reflect the same symbol that enables such
-> > > functions as used on Kconfig/Makefile.
-> > 
-> > Maybe I'm trying to be too clever for my own good, but my reasoning was
-> > as follows:
-> > 
-> > Suppose I newly use the of_graph_ helpers in a subsystem that does not
-> > yet select OF_GRAPH. In that case I'd rather get linking errors earlier
-> > rather than stubbed out functions that silently fail to parse the DT
-> > later.
-> 
-> I see your point, but, imagining that someone pushed a patch using those
-> symbols upstream, that would break compilation and git bisection, with 
-> will hurt everyone, and not only the very few of us that would actually
-> need the OF_GRAPH symbol for an specific driver.
-> 
-> Also, such push would mean that someone forgot to do his homework and
-> to test if the committed functionality is actually working.
-> 
-> So, it seems more fair that the one that did the mistake will be the one
-> that will suffer the consequences for his errors instead of applying a
-> penalty to everybody's else ;)
+Sorry to hijack the thread (sort of).  :)
 
-point taken.
++ Kees Cook
 
-> > Since there is
-> > config VIDEO_DEV
-> > 	select OF_GRAPH if OF
-> > already and the same should be added for other users of device tree
-> > graphs, I think stubbing out the functions only if OF is disabled should
-> > be enough.
+On Wed, Feb 12, 2014 at 12:51:05PM +0100, Arnd Bergmann wrote:
+> On Wednesday 12 February 2014, Laura Abbott wrote:
+> > This is an RFC to seed the random number pool earlier when using devicetree.
+> > The big issue this is trying to solve is the fact that the stack canary for
+> > ARM tends to be the same across bootups of the same device. This is because
+> > the random number pools do not get initialized until after the canary has
+> > been set up. The canary can be moved later, but in general there is still
+> > no way to reliably get random numbers early for other features (e.g. vector
+> > randomization).
 > 
-> Well, if you want to be sure that the graph will always be there if OF, then
-> you could do, instead:
+> Implementation-wise this looks reasonable, and it obviously addresses a
+> very real problem.
 > 
-> config OF_GRAPH
-> 	bool
-> 	default OF
+> > The goal here is to allow devices to add to the random pools via
+> > add_device_randomness or some other method of their chosing at FDT time.
+> > I realize that ARCH_RANDOM is already available but this didn't work because
+> > 1) ARCH_RANDOM is not multi-platform compatible without added
+> > infrastructure to ARM
 > 
-> (that would actually make OF_GRAPH just an alias to OF - so we could just
-> use OF instead).
+> That could certainly be done, but I agree that a more generic
+> approach like you did is nicer. One thing that might be useful
+> would be to wire up your OF_RANDOM infrastructure as a generic
+> implementation of ARCH_RANDOM, and merge your header file into
+> include/asm-generic/archrandom.h, with an added way to call
+> arch_get_random_long() for the devices you add.
 > 
-> In any case, I think that we should use the same config name at Makefile, 
-> Kconfig and of_graph.h (either OF_GRAPH or just OF).
+> > The big reason to skip ARCH_RANDOM though is that the random number generation
+> > we have would be reasonable if only seeded earlier.
+> 
+> Yes, makes sense.
+> 
+> I also wonder if we should add a 'trivial' implementation that just
+> reads a DT property full of random numbers to use as either an initial
+> seed, or to feed into arch_get_random_long(). This would allow the
+> boot loader to pass any entropy it has already gathered into the kernel,
+> but leaves the danger that people might pass static not-so-random data
+> through a precompiled dtb file ;-). If we get the boot loaders to be
+> smart enough, doing only this would be a much simpler kernel implementation
+> than your suggestion, but I'm not sure how far I want to trust boot loaders.
 
-If nobody states a strong preference, I'll just get rid of the
-CONFIG_OF_GRAPH option altogether and use CONFIG_OF directly.
+I brought this up at last weeks devicetree irc meeting.  My goal is to
+provide early randomness for kaslr on ARM.  Currently, my idea is modify
+the init script to save an additional random seed from /dev/urandom to
+/boot/random-seed.
 
-regards
-Philipp
+The bootloader would then load this file into ram, and pass the
+address/size to the kernel either via dt, or commandline.  kaslr (run in
+the decompressor) would consume some of this randomness, and then
+random.c would consume the rest in a non-crediting initialization.
+
+While not ideal, it works in absence of an HRNG, and is no worse than
+the current situation of storing the seed in /var/lib/misc/random-seed.
+It also doesn't require modification of the bootloaders.  Just an
+updated kernel, and update the bootloader environment to load the
+seed.
+
+Unfortunately, it's an idea so far.  I have one project to get off of my
+plate, then this is next :)
+
+thx,
+
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
