@@ -1,48 +1,22 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 8/8] cpufreq: ppc: make use of of_find_matching_node_and_match
-Date: Wed, 12 Feb 2014 10:31:17 +0530
-Message-ID: <CAKohponRmoV=hLcMfhULDUkaOuChdnAVFt4BpgSaz=0Qxr=yJA@mail.gmail.com>
-References: <1392135847-30791-1-git-send-email-joshc@codeaurora.org>
-	<1392135847-30791-9-git-send-email-joshc@codeaurora.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 1/2] BCM2835: Add dmaengine driver to device tree
+Date: Tue, 11 Feb 2014 22:05:06 -0700
+Message-ID: <52FB0102.3080108@wwwdotorg.org>
+References: <52D3C9EF.1030901@koalo.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1392135847-30791-9-git-send-email-joshc@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Josh Cartwright <joshc@codeaurora.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <52D3C9EF.1030901@koalo.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Meier <florian.meier@koalo.de>
+Cc: linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11 February 2014 21:54, Josh Cartwright <joshc@codeaurora.org> wrote:
-> Instead of the of_find_matching_node()/of_match_node() pair, which requires two
-> iterations through the match table, make use of of_find_matching_node_and_match(),
-> which only iterates through the table once.
->
-> Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
-> ---
->  drivers/cpufreq/ppc-corenet-cpufreq.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/drivers/cpufreq/ppc-corenet-cpufreq.c b/drivers/cpufreq/ppc-corenet-cpufreq.c
-> index 051000f..041ef3a 100644
-> --- a/drivers/cpufreq/ppc-corenet-cpufreq.c
-> +++ b/drivers/cpufreq/ppc-corenet-cpufreq.c
-> @@ -278,7 +278,7 @@ static int __init ppc_corenet_cpufreq_init(void)
->         const struct soc_data *data;
->         unsigned int cpu;
->
-> -       np = of_find_matching_node(NULL, node_matches);
-> +       np = of_find_matching_node_and_match(NULL, node_matches, &match);
->         if (!np)
->                 return -ENODEV;
->
-> @@ -288,7 +288,6 @@ static int __init ppc_corenet_cpufreq_init(void)
->                 cpumask_copy(per_cpu(cpu_mask, cpu), cpu_core_mask(cpu));
->         }
->
-> -       match = of_match_node(node_matches, np);
->         data = match->data;
->         if (data) {
->                 if (data->flag)
+On 01/13/2014 04:11 AM, Florian Meier wrote:
+> This adds the definitions for the BCM2835 dmaengine driver
+> to the device tree. The dma-channel-mask is currently
+> fixed. Later it should be set via the firmware.
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+I've applied patch 1, and the part of patch 2 which touches bcm2835.dtsi
+to bcm2835's for-3.15/dt branch, with minor fixes.
