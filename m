@@ -1,45 +1,65 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx6qdl-sabresd: Do not place regulator nodes
- under simple-bus
-Date: Wed, 12 Feb 2014 23:20:52 +0800
-Message-ID: <20140212152050.GA28749@S2101-09.ap.freescale.net>
-References: <1392165078-25794-1-git-send-email-festevam@gmail.com>
- <20140212092227.GA24834@S2101-09.ap.freescale.net>
- <20140212095450.GB21992@e106331-lin.cambridge.arm.com>
- <20140212122837.GD24834@S2101-09.ap.freescale.net>
- <20140212135736.GB25957@e106331-lin.cambridge.arm.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/3] regulator: ti-abb-regulator: do not open-code
+ counting and access of dt array elements
+Date: Wed, 12 Feb 2014 15:50:06 +0000
+Message-ID: <20140212155006.GY28112@sirena.org.uk>
+References: <2573561.oCYNnnL0gm@phil>
+ <2193931.Kqcd3TrslU@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="nSY6dmU9u4MMxp1o"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140212135736.GB25957-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+In-Reply-To: <2193931.Kqcd3TrslU@phil>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 12, 2014 at 01:57:36PM +0000, Mark Rutland wrote:
-> As it stands, the dts are buggy. I can appreciate that you don't feel
-> this is important, but I do. It's not just an IMX issue, there is
-> widespread misunderstanding and abuse of simple-bus.
-> 
-> Said abuse is relying on current Linux implementation details, and that
-> can and will create problems if and when probing code is changed.
 
-The reality is the code already gets no chance to change on this regard,
-considering the requirement that we need to maintain the interface
-between kernel and DT as ABI.  The dts have been there like this for
-10 kernel releases or so.
+--nSY6dmU9u4MMxp1o
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> There's no good reason for abusing the binding when we can get it right
-> today.
+On Wed, Feb 12, 2014 at 01:01:42AM +0100, Heiko St=FCbner wrote:
+> From: Heiko Stuebner <heiko.stuebner-HCpLIkUQxWGakBO8gow8eQ@public.gmane.org>
+>=20
+> Open coding the counting of elements in a dt-property is abstracted by th=
+e newly
+> introduced of_property_count_uXX_elems functions. Additionally the raw it=
+eration
+> over the states element exposes the endian conversion and dtb-format deta=
+ils,
+> which according to Mark Rutland "would be nice to limit [...] to of_ help=
+er
+> functions".
 
-As I said from the beginning, though I personally take it as a churn, I
-will still be happy take the change, as long as my upstream folks are
-also fine with it.
+Applied, thanks.
 
-Shawn
+--nSY6dmU9u4MMxp1o
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS+5grAAoJELSic+t+oim9EAkQAJn7aNfA+njghBy9NcAuyyJT
++Z2HlBW3tFUyulrH1OMQ8z5Ee6zOzI5zFUWsMWwOGiM/IAE0McwjjLz6M5ya1nF+
+ZhEYlygOY23uvEWp2NKSk5VwUodhGsjxSppIP0QZAU3OBWMnEIYQ3GdrzfJy2KAb
+bATwFEmmfrldxsSuFkG0XvyFjpJYWDpS9r0PhUrNHoAPoBr8z8UwVwAMc58tnKSQ
+9RsRyJswJwEWSYDNA3/e16cB3KmG5urvoB9d2P2yeXROTMp52Mn1bkx2IIN78m6p
+XHVf3ON7+0vqsOcfEWIyB2B1y+yvtNx5FAWAfURepuNNXxtHCYuqRIA7oyV/hLxQ
+28SVvKO2GjWeZXZVfCuHs4Gw2WydhC/rRDzDZWuasbicKnpAEPsT72dPZ5X3tzyd
+yGlLl3WIoQ5z2nZiMbm8dArCPBoDL+1o5gr7c+WTy2tRQ1ajDyoxpw1UB4eFcyik
+WZFbGgYvlyrflMDWo1Dcq4nUdyfaeHy5b+ZFO+vhK8K6qWTILOU/L5gSZ8s3mXbh
+rmKM5D6kUAZisDr/9HqP/kIDWBrI6FzDiOZuifpMDtaEDYAurzmkFv42Pw3boF9t
+lyfCzxFRIAgivq8TwrehFjQ50CWEJtmqvU1X6+mFHjSh6K/QyJwpJqDWk0rZ/kAe
+qGgqq5FLP+wBFKwBQebM
+=JAbe
+-----END PGP SIGNATURE-----
+
+--nSY6dmU9u4MMxp1o--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
