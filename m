@@ -1,92 +1,78 @@
-From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH RFC v7 5/6] dma: mpc512x: register for device tree channel lookup
-Date: Wed, 12 Feb 2014 17:25:07 +0400
-Message-ID: <1392211508-23615-6-git-send-email-a13xp0p0v88@gmail.com>
-References: <1392211508-23615-1-git-send-email-a13xp0p0v88@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392211508-23615-1-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH v3 0/11] Xilinx watchdog changes
+Date: Wed, 12 Feb 2014 14:34:31 +0100
+Message-ID: <cover.1392212059.git.michal.simek@xilinx.com>
+Content-Type: multipart/signed;
+    boundary="=_mimegpg-monstr-desktop-11813-1392212082-0001";
+    micalg=pgp-sha1; protocol="application/pgp-signature"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, monstr@monstr.eu
+Cc: Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Wim Van Sebroeck <wim@iguana.be>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+This is a MIME GnuPG-signed message.  If you see this text, it means that
+your E-mail or Usenet software does not support MIME signed messages.
+The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
+To open this message correctly you will need to install E-mail or Usenet
+software that supports modern Internet standards.
 
-register the controller for device tree based lookup of DMA channels
-(non-fatal for backwards compatibility with older device trees) and
-provide the '#dma-cells' property in the shared mpc5121.dtsi file
+--=_mimegpg-monstr-desktop-11813-1392212082-0001
 
-Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-[ a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org: resolve little patch conflict and put
-  MPC512x DMA controller bindings document to a separate patch ]
----
- arch/powerpc/boot/dts/mpc5121.dtsi |  1 +
- drivers/dma/mpc512x_dma.c          | 21 ++++++++++++++++++---
- 2 files changed, 19 insertions(+), 3 deletions(-)
+Hi,
 
-diff --git a/arch/powerpc/boot/dts/mpc5121.dtsi b/arch/powerpc/boot/dts/mpc5121.dtsi
-index 2c0e155..7f9d14f 100644
---- a/arch/powerpc/boot/dts/mpc5121.dtsi
-+++ b/arch/powerpc/boot/dts/mpc5121.dtsi
-@@ -498,6 +498,7 @@
- 			compatible = "fsl,mpc5121-dma";
- 			reg = <0x14000 0x1800>;
- 			interrupts = <65 0x8>;
-+			#dma-cells = <1>;
- 		};
- 	};
- 
-diff --git a/drivers/dma/mpc512x_dma.c b/drivers/dma/mpc512x_dma.c
-index b978ef1..1e0b8cf 100644
---- a/drivers/dma/mpc512x_dma.c
-+++ b/drivers/dma/mpc512x_dma.c
-@@ -50,6 +50,7 @@
- #include <linux/of_address.h>
- #include <linux/of_device.h>
- #include <linux/of_irq.h>
-+#include <linux/of_dma.h>
- #include <linux/of_platform.h>
- 
- #include <linux/random.h>
-@@ -1013,11 +1014,23 @@ static int mpc_dma_probe(struct platform_device *op)
- 	/* Register DMA engine */
- 	dev_set_drvdata(dev, mdma);
- 	retval = dma_async_device_register(dma);
--	if (retval) {
--		devm_free_irq(dev, mdma->irq, mdma);
--		irq_dispose_mapping(mdma->irq);
-+	if (retval)
-+		goto out_irq;
-+
-+	/* register with OF helpers for DMA lookups (nonfatal) */
-+	if (dev->of_node) {
-+		retval = of_dma_controller_register(dev->of_node,
-+						    of_dma_xlate_by_chan_id,
-+						    mdma);
-+		if (retval)
-+			dev_warn(dev, "could not register for OF lookup\n");
- 	}
- 
-+	return 0;
-+
-+out_irq:
-+	devm_free_irq(dev, mdma->irq, mdma);
-+	irq_dispose_mapping(mdma->irq);
- 	return retval;
- }
- 
-@@ -1026,6 +1039,8 @@ static int mpc_dma_remove(struct platform_device *op)
- 	struct device *dev = &op->dev;
- 	struct mpc_dma *mdma = dev_get_drvdata(dev);
- 
-+	if (dev->of_node)
-+		of_dma_controller_free(dev->of_node);
- 	dma_async_device_unregister(&mdma->dma);
- 	devm_free_irq(dev, mdma->irq, mdma);
- 	irq_dispose_mapping(mdma->irq);
--- 
-1.8.4.2
+This series contains changes for Xilinx watchdog.
+The whole code series have been reviewed by Guenter
+and device-tree binding was acked by Arnd.
+
+I have also pushed this v3 to git repo
+for easier pulling here:
+git://git.monstr.eu/linux-2.6-microblaze.git watchdog
+
+Thanks,
+Michal
+
+Changes in v3:
+- Remove one if checking and use variable directly
+
+Changes in v2:
+- Fix enable_once logic
+- Change patch subject
+- New patch in this series
+
+Michal Simek (11):
+  watchdog: xilinx: Convert driver to the watchdog framework
+  watchdog: xilinx: Move control_status_reg to functions
+  watchdog: xilinx: Simplify probe and remove functions
+  watchdog: xilinx: Move no_timeout to probe function
+  watchdog: xilinx: Allocate private structure per device
+  watchdog: xilinx: Fix all printk messages
+  watchdog: xilinx: Use of_property_read_u32
+  watchdog: xilinx: Use correct comment indentation
+  watchdog: xilinx: Add missing binding
+  watchdog: xilinx: Enable this driver for Zynq
+  watchdog: xilinx: Remove no_timeout variable
+
+ .../devicetree/bindings/watchdog/of-xilinx-wdt.txt |  23 ++
+ drivers/watchdog/Kconfig                           |  21 +-
+ drivers/watchdog/of_xilinx_wdt.c                   | 389 ++++++---------------
+ 3 files changed, 148 insertions(+), 285 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.2.3
+
+
+--=_mimegpg-monstr-desktop-11813-1392212082-0001
+Content-Type: application/pgp-signature
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEABECAAYFAlL7eHIACgkQykllyylKDCGYTwCfUU55kYNt9V5oEXsFda27HqgV
+lqAAoIYkTIAh/gOIUZlnIAjxLSQymP5O
+=M1ne
+-----END PGP SIGNATURE-----
+
+--=_mimegpg-monstr-desktop-11813-1392212082-0001--
