@@ -1,95 +1,147 @@
-From: Mauro Carvalho Chehab <m.chehab@samsung.com>
-Subject: Re: [PATCH v2] [media] of: move graph helpers from
- drivers/media/v4l2-core to drivers/media
-Date: Wed, 12 Feb 2014 22:35:15 +0900
-Message-ID: <20140212223515.71a445f4.m.chehab@samsung.com>
-References: <1392154905-12007-1-git-send-email-p.zabel@pengutronix.de>
- <20140212065306.36a03e82.m.chehab@samsung.com>
- <1392196314.5536.15.camel@pizza.hi.pengutronix.de>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-sabresd: Do not place regulator
+ nodes under simple-bus
+Date: Wed, 12 Feb 2014 13:57:36 +0000
+Message-ID: <20140212135736.GB25957@e106331-lin.cambridge.arm.com>
+References: <1392165078-25794-1-git-send-email-festevam@gmail.com>
+ <20140212092227.GA24834@S2101-09.ap.freescale.net>
+ <20140212095450.GB21992@e106331-lin.cambridge.arm.com>
+ <20140212122837.GD24834@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1392196314.5536.15.camel@pizza.hi.pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Philipp Zabel <philipp.zabel@gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20140212122837.GD24834@S2101-09.ap.freescale.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Em Wed, 12 Feb 2014 10:11:54 +0100
-Philipp Zabel <p.zabel@pengutronix.de> escreveu:
-
-> Hi Mauro,
-> 
-> Am Mittwoch, den 12.02.2014, 06:53 +0900 schrieb Mauro Carvalho Chehab:
-> [...]
-> > > diff --git a/include/media/of_graph.h b/include/media/of_graph.h
-> > > new file mode 100644
-> > > index 0000000..3bbeb60
-> > > --- /dev/null
-> > > +++ b/include/media/of_graph.h
-> > > @@ -0,0 +1,46 @@
-> > > +/*
-> > > + * OF graph binding parsing helpers
-> > > + *
-> > > + * Copyright (C) 2012 - 2013 Samsung Electronics Co., Ltd.
-> > > + * Author: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> > > + *
-> > > + * Copyright (C) 2012 Renesas Electronics Corp.
-> > > + * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> > > + *
-> > > + * This program is free software; you can redistribute it and/or modify
-> > > + * it under the terms of version 2 of the GNU General Public License as
-> > > + * published by the Free Software Foundation.
-> > > + */
-> > > +#ifndef __LINUX_OF_GRAPH_H
-> > > +#define __LINUX_OF_GRAPH_H
-> > > +
-> > > +#ifdef CONFIG_OF
+On Wed, Feb 12, 2014 at 12:28:39PM +0000, Shawn Guo wrote:
+> On Wed, Feb 12, 2014 at 09:54:50AM +0000, Mark Rutland wrote:
+> > > I take it as an unnecessary churn, unless I see the consensus from most
+> > > of DT maintainers and arm-soc folks that we should make this change.
+> > > And see comment below ...
 > > 
-> > As a matter of consistency, it would be better to test here for
-> > CONFIG_OF_GRAPH instead, to reflect the same symbol that enables such
-> > functions as used on Kconfig/Makefile.
+> > My concern is that the simple-bus is being used in a nonsensical way,
+> > with a meaningless address space and reg values on children. While this
+> > currently works it is not correct, and it's not even necessary. I would
+> > like to limit the misuse of these constructs so as to prevent others
+> > from making the same mistakes.
 > 
-> Maybe I'm trying to be too clever for my own good, but my reasoning was
-> as follows:
+> Unfortunately, it's already been used quite widely.  This is not IMX
+> specific, and you can grep arch/arm/boot/dts to get the idea.  I'm not
+> sure if it's worth the churn to 'fix' it.  In these days, arm-soc folks
+> are quite sensitive to the number of IMX patches and change sets.  50
+> LOC change for one board dts, and we now have ~70 files for IMX.  That's
+> why I would like to get the agreement from arm-soc folks that we should
+> really make such change. 
+
+As it stands, the dts are buggy. I can appreciate that you don't feel
+this is important, but I do. It's not just an IMX issue, there is
+widespread misunderstanding and abuse of simple-bus.
+
+Said abuse is relying on current Linux implementation details, and that
+can and will create problems if and when probing code is changed.
+There's no good reason for abusing the binding when we can get it right
+today.
+
+We don't necessarily have to get rid of every simple bus in use as a
+regulator container. While I don't like that use, I am happy to accept
+them as long as they are used correctly, with a valid ranges property
+and with children having sensible reg values (or no reg values if the
+children don't need them as part of their binding).
+
 > 
-> Suppose I newly use the of_graph_ helpers in a subsystem that does not
-> yet select OF_GRAPH. In that case I'd rather get linking errors earlier
-> rather than stubbed out functions that silently fail to parse the DT
-> later.
+> > 
+> > > 
+> > > > 
+> > > >  arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 51 ++++++++++++++--------------------
+> > > >  1 file changed, 21 insertions(+), 30 deletions(-)
+> > > > 
+> > > > diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> > > > index 0d816d3..d7df5b2 100644
+> > > > --- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> > > > +++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> > > > @@ -18,38 +18,29 @@
+> > > >  		reg = <0x10000000 0x40000000>;
+> > > >  	};
+> > > >  
+> > > > -	regulators {
+> > > > -		compatible = "simple-bus";
+> > > > -		#address-cells = <1>;
+> > > > -		#size-cells = <0>;
+> > > > -
+> > > > -		reg_usb_otg_vbus: regulator@0 {
+> > > > -			compatible = "regulator-fixed";
+> > > > -			reg = <0>;
+> > > > -			regulator-name = "usb_otg_vbus";
+> > > > -			regulator-min-microvolt = <5000000>;
+> > > > -			regulator-max-microvolt = <5000000>;
+> > > > -			gpio = <&gpio3 22 0>;
+> > > > -			enable-active-high;
+> > > > -		};
+> > > > +	reg_usb_otg_vbus: regulator@0 {
+> > > 
+> > > nodename@num should only be used for nodes that have 'reg' property.
+> > > Why are you dropping 'reg' property here?  Right, it does not compile if
+> > > you do not drop it.  You can take it as a reason of why I endorse
+> > > simple-bus regulators container.
+> > 
+> > I don't think the logical jump from "it does not compile" to "I endorse
+> > simple-bus regulators container" makes any sense. They're two separate
+> > issues.
+> 
+> You're right :)
+> 
+> > 
+> > The unit-addresses and reg values can be dropped. They are not in the
+> > regulator-fixed binding, and were never necessary. All that's necessary
+> > is a unique name, and unit-addresses (which required a reg) were misused
+> > to provide uniqueness. With that fixed, this will compile.
+> 
+> IIRC, ePAPR recommends to use generic node name and have
+> unit-addresses for uniqueness.  That's why I sent patch [1] to follow
+> the way that tegra and other platforms names them.  Now you're
+> suggesting to go back?
 
-I see your point, but, imagining that someone pushed a patch using those
-symbols upstream, that would break compilation and git bisection, with 
-will hurt everyone, and not only the very few of us that would actually
-need the OF_GRAPH symbol for an specific driver.
+As far as I can see, that's not what ePAPR says:
 
-Also, such push would mean that someone forgot to do his homework and
-to test if the committed functionality is actually working.
+  If the node has no reg property, the @ and unit-address must be
+  omitted and the node-name alone differentiates the node from other
+  nodes at the same level in the tree.
 
-So, it seems more fair that the one that did the mistake will be the one
-that will suffer the consequences for his errors instead of applying a
-penalty to everybody's else ;)
+If a binding doesn't require a reg property, then the node shouldn't
+have a reg property. If that's true then the node should not have a
+unit-address.
 
-> Since there is
-> config VIDEO_DEV
-> 	select OF_GRAPH if OF
-> already and the same should be added for other users of device tree
-> graphs, I think stubbing out the functions only if OF is disabled should
-> be enough.
+Using generic names can certainly help to make dts more legible, and we
+don't have to go against that. It's just as easy to understand
+regulator_1 and regulator@1.
 
-Well, if you want to be sure that the graph will always be there if OF, then
-you could do, instead:
+I can appreciate that this area may be unclear, and that fixing this up
+creates churn for what you feel is a minor issue. However, I don't see
+that as a reason to perpetuate wrongness.
 
-config OF_GRAPH
-	bool
-	default OF
+Thanks,
+Mark.
 
-(that would actually make OF_GRAPH just an alias to OF - so we could just
-use OF instead).
-
-In any case, I think that we should use the same config name at Makefile, 
-Kconfig and of_graph.h (either OF_GRAPH or just OF).
-
-Regards,
-Mauro
+> 
+> Shawn
+> 
+> [1] http://www.spinics.net/lists/arm-kernel/msg284474.html
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
