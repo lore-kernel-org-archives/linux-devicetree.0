@@ -1,46 +1,52 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: Linux-3.14-rc2: Order of serial node compatibles in DTS files.
-Date: Wed, 12 Feb 2014 12:00:04 +0100
-Message-ID: <201402121200.05074.arnd@arndb.de>
-References: <OF784BA598.ACFE9DA4-ONCA257C76.00827472-CA257C77.000BCFAD@csc.com> <OFB203CA90.B048F8AA-ONCA257C7C.0081A816-CA257C7C.0081DCE3@csc.com> <52FAB5A7.7080208@gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 4/4] ARM: dts: imx6qdl: Add PU power-domain
+ information to gpc node
+Date: Wed, 12 Feb 2014 19:15:51 +0800
+Message-ID: <20140212111549.GC24834@S2101-09.ap.freescale.net>
+References: <1392125231-28387-1-git-send-email-p.zabel@pengutronix.de>
+ <1392125231-28387-5-git-send-email-p.zabel@pengutronix.de>
+ <20140212072510.GI31484@S2101-09.ap.freescale.net>
+ <1392200455.5536.36.camel@pizza.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52FAB5A7.7080208-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1392200455.5536.36.camel-/rZezPiN1rtR6QfukMTsflXZhhPuCNm+@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen N Chivers <schivers-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, Chris Proctor <cproctor-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 12 February 2014, Sebastian Hesselbarth wrote:
-> On 02/12/2014 12:38 AM, Stephen N Chivers wrote:
-> > Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote on
-
-> >> I don't think the missing compatible is causing it, but of_serial
-> >> provides a DT match for .type = "serial" just to fail later on
-> >> with the error seen above.
-> >>
-> >> The commit in question reorders of_match_device in a way that match
-> >> table order is not relevant anymore. This can cause it to match
-> >> .type = "serial" first here.
-> >>
-> >> Rather than touching the commit, I suggest to remove the problematic
-> >> .type = "serial" from the match table. It is of no use anyway.
-> > Deleting the "serial" line from the match table fixes the problem.
-> > I tested it for both orderings of compatible.
+On Wed, Feb 12, 2014 at 11:20:55AM +0100, Philipp Zabel wrote:
+> > > @@ -598,9 +598,17 @@
+> > >  			};
+> > >  
+> > >  			gpc: gpc@020dc000 {
+> > > +				#address-cells = <1>;
+> > > +				#size-cells = <1>;
+> > >  				compatible = "fsl,imx6q-gpc";
+> > >  				reg = <0x020dc000 0x4000>;
+> > >  				interrupts = <0 89 0x04 0 90 0x04>;
+> > > +				pu-supply = <&reg_pu>;
+> > > +
+> > > +				pd_pu: power-domain@020dc260 {
+> > > +					compatible = "fsl,power-domain";
+> > > +					reg = <0x020dc260 0x10>;
+> > > +				};
+> > 
+> > It's time to have a binding doc for gpc/pgc?
 > 
-> I revert my statement about removing anything from of_serial.c. Instead
-> we should try to prefer matches with compatibles over type/name without
-> compatibles. Something like the patch below (compile tested only)
+> Yes, I'll add one for the next version.
+> 
+> > And I'm not sure
+> > "fsl,power-domain" is a good compatible as it's so generic.
+> 
+> fsl,imx6q-power-domain ?
 
-That would probably be a good idea. However, I think in this
-case we also want to remove the line from the driver, as it clearly
-never works on any hardware and the driver just errors out for the
-device_type match.
+It looks good to me.
 
-	Arnd
+Shawn
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
