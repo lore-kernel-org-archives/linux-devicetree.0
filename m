@@ -1,96 +1,54 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx6qdl-sabresd: Do not place regulator nodes
- under simple-bus
-Date: Wed, 12 Feb 2014 20:28:39 +0800
-Message-ID: <20140212122837.GD24834@S2101-09.ap.freescale.net>
-References: <1392165078-25794-1-git-send-email-festevam@gmail.com>
- <20140212092227.GA24834@S2101-09.ap.freescale.net>
- <20140212095450.GB21992@e106331-lin.cambridge.arm.com>
+From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: mm: cache-l2x0: Check for status property of DT node
+Date: Wed, 12 Feb 2014 13:42:49 +0100
+Message-ID: <52FB6C49.6010401@samsung.com>
+References: <1392206478-11530-1-git-send-email-tushar.behera@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140212095450.GB21992-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+In-reply-to: <1392206478-11530-1-git-send-email-tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 12, 2014 at 09:54:50AM +0000, Mark Rutland wrote:
-> > I take it as an unnecessary churn, unless I see the consensus from most
-> > of DT maintainers and arm-soc folks that we should make this change.
-> > And see comment below ...
-> 
-> My concern is that the simple-bus is being used in a nonsensical way,
-> with a meaningless address space and reg values on children. While this
-> currently works it is not correct, and it's not even necessary. I would
-> like to limit the misuse of these constructs so as to prevent others
-> from making the same mistakes.
+[making Cc list a bit more comprehensive]
 
-Unfortunately, it's already been used quite widely.  This is not IMX
-specific, and you can grep arch/arm/boot/dts to get the idea.  I'm not
-sure if it's worth the churn to 'fix' it.  In these days, arm-soc folks
-are quite sensitive to the number of IMX patches and change sets.  50
-LOC change for one board dts, and we now have ~70 files for IMX.  That's
-why I would like to get the agreement from arm-soc folks that we should
-really make such change. 
+On 12.02.2014 13:01, Tushar Behera wrote:
+> Currently only the DT node is checked during l2x0 cache initialization,
+> but it doesn't check the status of the DT node. Thus it gets called
+> even if the status of DT node for L2 controller is disabled.
+>
+> Add explicit check to ensure that L2 cache is initialized only for
+> desired boards.
+>
+> Reported-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>   arch/arm/mm/cache-l2x0.c |    3 +++
+>   1 file changed, 3 insertions(+)
+>
+> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+> index 7abde2c..f075cb1 100644
+> --- a/arch/arm/mm/cache-l2x0.c
+> +++ b/arch/arm/mm/cache-l2x0.c
+> @@ -978,6 +978,9 @@ int __init l2x0_of_init(u32 aux_val, u32 aux_mask)
+>   	if (!np)
+>   		return -ENODEV;
+>
+> +	if (!of_device_is_available(np))
+> +		return -ENODEV;
+> +
+>   	if (of_address_to_resource(np, 0, &res))
+>   		return -ENODEV;
+>
+>
 
-> 
-> > 
-> > > 
-> > >  arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 51 ++++++++++++++--------------------
-> > >  1 file changed, 21 insertions(+), 30 deletions(-)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-> > > index 0d816d3..d7df5b2 100644
-> > > --- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-> > > +++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-> > > @@ -18,38 +18,29 @@
-> > >  		reg = <0x10000000 0x40000000>;
-> > >  	};
-> > >  
-> > > -	regulators {
-> > > -		compatible = "simple-bus";
-> > > -		#address-cells = <1>;
-> > > -		#size-cells = <0>;
-> > > -
-> > > -		reg_usb_otg_vbus: regulator@0 {
-> > > -			compatible = "regulator-fixed";
-> > > -			reg = <0>;
-> > > -			regulator-name = "usb_otg_vbus";
-> > > -			regulator-min-microvolt = <5000000>;
-> > > -			regulator-max-microvolt = <5000000>;
-> > > -			gpio = <&gpio3 22 0>;
-> > > -			enable-active-high;
-> > > -		};
-> > > +	reg_usb_otg_vbus: regulator@0 {
-> > 
-> > nodename@num should only be used for nodes that have 'reg' property.
-> > Why are you dropping 'reg' property here?  Right, it does not compile if
-> > you do not drop it.  You can take it as a reason of why I endorse
-> > simple-bus regulators container.
-> 
-> I don't think the logical jump from "it does not compile" to "I endorse
-> simple-bus regulators container" makes any sense. They're two separate
-> issues.
+Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-You're right :)
-
-> 
-> The unit-addresses and reg values can be dropped. They are not in the
-> regulator-fixed binding, and were never necessary. All that's necessary
-> is a unique name, and unit-addresses (which required a reg) were misused
-> to provide uniqueness. With that fixed, this will compile.
-
-IIRC, ePAPR recommends to use generic node name and have
-unit-addresses for uniqueness.  That's why I sent patch [1] to follow
-the way that tegra and other platforms names them.  Now you're
-suggesting to go back?
-
-Shawn
-
-[1] http://www.spinics.net/lists/arm-kernel/msg284474.html
-
+Best regards,
+Tomasz
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
