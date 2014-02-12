@@ -1,128 +1,105 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH v2 3/3] Documentation: mfd: Add binding document for S2MPA01
-Date: Wed, 12 Feb 2014 15:02:36 +0530
-Message-ID: <CAK9yfHwkJv-KW4ey45NE8WvUior38szO_Z3=212+peeXJ_Lwvw@mail.gmail.com>
-References: <1389266554-23463-1-git-send-email-sachin.kamat@linaro.org>
-	<1389266554-23463-3-git-send-email-sachin.kamat@linaro.org>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: imx: add speed grading check for i.mx6 soc
+Date: Wed, 12 Feb 2014 17:39:28 +0800
+Message-ID: <20140212093926.GB24834@S2101-09.ap.freescale.net>
+References: <1392191777-15703-1-git-send-email-b20788@freescale.com>
+ <1392191777-15703-2-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1389266554-23463-3-git-send-email-sachin.kamat@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sangbeom Kim <sbkim73@samsung.com>, Lee Jones <lee.jones@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, Rob Herring <rob.herring@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1392191777-15703-2-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 9 January 2014 16:52, Sachin Kamat <sachin.kamat@linaro.org> wrote:
-> Added initial binding documentation for S2MPA01 MFD.
->
-> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+On Wed, Feb 12, 2014 at 03:56:17PM +0800, Anson Huang wrote:
+> The fuse map of speed_grading[1:0] defines the max speed
+> of ARM, see below the definition:
+> 
+> 2b'11: 1200000000Hz;
+> 2b'10: 996000000Hz;
+> 2b'01: 852000000Hz; -- i.MX6Q Only, exclusive with 996MHz.
+> 2b'00: 792000000Hz;
+> 
+> Need to remove all illegal setpoints according to fuse
+> map.
+> 
+> Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > ---
-> * Re-organised as suggested by Mark Rutland.
-> ---
->  Documentation/devicetree/bindings/mfd/s2mpa01.txt |   86 +++++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/s2mpa01.txt
->
-> diff --git a/Documentation/devicetree/bindings/mfd/s2mpa01.txt b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
-> new file mode 100644
-> index 000000000000..70879b92b24b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
-> @@ -0,0 +1,86 @@
-> +
-> +* Samsung S2MPA01 Voltage and Current Regulator
-> +
-> +The Samsung S2MPA01 is a multi-function device which includes high
-> +efficiency buck converters including Dual-Phase buck converter, various LDOs,
-> +and an RTC. It is interfaced to the host controller using an I2C interface.
-> +Each sub-block is addressed by the host system using different I2C slave
-> +addresses.
-> +
-> +Required properties:
-> +- compatible: Should be "samsung,s2mpa01-pmic".
-> +- reg: Specifies the I2C slave address of the PMIC block. It should be 0x66.
-> +
-> +Optional properties:
-> +- interrupt-parent: Specifies the phandle of the interrupt controller to which
-> +  the interrupts from s2mpa01 are delivered to.
-> +- interrupts: Interrupt specifier for interrupt source (connected to SoC).
-> +
-> +Optional nodes:
-> +- regulators: The regulators of s2mpa01 that have to be instantiated should be
-> +  included in a sub-node named 'regulators'. Regulator nodes and constraints
-> +  included in this sub-node use the standard regulator bindings which are
-> +  documented elsewhere.
-> +
-> +Properties for BUCK regulator nodes:
-> + regulator-ramp-delay for BUCKs = [6250/12500(default)/25000/50000] uV/us
-> +
-> + BUCK[1/2/3/4] supports disabling ramp delay on hardware, so explictly
-> + regulator-ramp-delay = <0> can be used for them to disable ramp delay.
-> + In the absence of the regulator-ramp-delay property, the default ramp
-> + delay will be used.
-> +
-> +  NOTE: Some BUCKs share the ramp rate setting i.e. same ramp value will be set
-> +  for a particular group of BUCKs. So provide same regulator-ramp-delay<value>.
-> +  Grouping of BUCKs sharing ramp rate setting is as follow : BUCK[1, 6],
-> +  BUCK[2, 4], and BUCK[8, 9, 10]
-> +
-> +The following are the names of the regulators that the s2mpa01 PMIC block
-> +supports. Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
-> +as per the datasheet of s2mpa01.
-> +
-> +       - LDOn
-> +                 - valid values for n are 1 to 26
-> +                 - Example: LDO1, LD02, LDO26
-> +       - BUCKn
-> +                 - valid values for n are 1 to 10.
-> +                 - Example: BUCK1, BUCK2, BUCK9
-> +
-> +Example:
-> +
-> +       s2mpa01_pmic@66 {
-> +               compatible = "samsung,s2mpa01-pmic";
-> +               reg = <0x66>;
-> +
-> +               regulators {
-> +                       ldo1_reg: LDO1 {
-> +                               regulator-name = "VDD_ALIVE";
-> +                               regulator-min-microvolt = <1000000>;
-> +                               regulator-max-microvolt = <1000000>;
-> +                       };
-> +
-> +                       ldo2_reg: LDO2 {
-> +                               regulator-name = "VDDQ_MMC2";
-> +                               regulator-min-microvolt = <2800000>;
-> +                               regulator-max-microvolt = <2800000>;
-> +                               regulator-always-on;
-> +                       };
-> +
-> +                       buck1_reg: BUCK1 {
-> +                               regulator-name = "vdd_mif";
-> +                               regulator-min-microvolt = <950000>;
-> +                               regulator-max-microvolt = <1350000>;
-> +                               regulator-always-on;
-> +                               regulator-boot-on;
-> +                       };
-> +
-> +                       buck2_reg: BUCK2 {
-> +                               regulator-name = "vdd_arm";
-> +                               regulator-min-microvolt = <950000>;
-> +                               regulator-max-microvolt = <1350000>;
-> +                               regulator-always-on;
-> +                               regulator-boot-on;
-> +                               regulator-ramp-delay = <50000>;
-> +                       };
-> +               };
-> +       };
-> --
+>  arch/arm/mach-imx/mach-imx6q.c |   22 ++++++++++++++++++++--
+>  1 file changed, 20 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
+> index f9cbbf9..ad9da1f 100644
+> --- a/arch/arm/mach-imx/mach-imx6q.c
+> +++ b/arch/arm/mach-imx/mach-imx6q.c
+> @@ -219,8 +219,10 @@ static void __init imx6q_init_machine(void)
+>  #define OCOTP_CFG3			0x440
+>  #define OCOTP_CFG3_SPEED_SHIFT		16
+>  #define OCOTP_CFG3_SPEED_1P2GHZ		0x3
+> +#define OCOTP_CFG3_SPEED_996MHZ		0x2
+> +#define OCOTP_CFG3_SPEED_852MHZ		0x1
+>  
+> -static void __init imx6q_opp_check_1p2ghz(struct device *cpu_dev)
+> +static void __init imx6q_opp_check_speed_grading(struct device *cpu_dev)
+>  {
+>  	struct device_node *np;
+>  	void __iomem *base;
+> @@ -238,11 +240,27 @@ static void __init imx6q_opp_check_1p2ghz(struct device *cpu_dev)
+>  		goto put_node;
+>  	}
+>  
+> +	/*
+> +	 * SPEED_GRADING[1:0] defines the max speed of ARM:
+> +	 * 2b'11: 1200000000Hz;
+> +	 * 2b'10: 996000000Hz;
+> +	 * 2b'01: 852000000Hz; -- i.MX6Q Only, exclusive with 996MHz.
+> +	 * 2b'00: 792000000Hz;
+> +	 * We need to set the max speed of ARM according to fuse map.
+> +	 */
+>  	val = readl_relaxed(base + OCOTP_CFG3);
+>  	val >>= OCOTP_CFG3_SPEED_SHIFT;
+
+	val &= 0x3;
+
+Then you do not need to do it in every if-clause below.
+
+>  	if ((val & 0x3) != OCOTP_CFG3_SPEED_1P2GHZ)
+>  		if (dev_pm_opp_disable(cpu_dev, 1200000000))
+>  			pr_warn("failed to disable 1.2 GHz OPP\n");
+> +	if ((val & 0x3) < OCOTP_CFG3_SPEED_996MHZ)
+> +		if (dev_pm_opp_disable(cpu_dev, 996000000))
+> +			pr_warn("failed to disable 996 MHz OPP\n");
+> +	if (cpu_is_imx6q()) {
+> +		if ((val & 0x3) != OCOTP_CFG3_SPEED_852MHZ)
+
+	if (cpu_is_imx6q() && val != OCOTP_CFG3_SPEED_852MHZ)
+
+Shawn
+
+> +			if (dev_pm_opp_disable(cpu_dev, 852000000))
+> +				pr_warn("failed to disable 852 MHz OPP\n");
+> +	}
+>  
+>  put_node:
+>  	of_node_put(np);
+> @@ -268,7 +286,7 @@ static void __init imx6q_opp_init(void)
+>  		goto put_node;
+>  	}
+>  
+> -	imx6q_opp_check_1p2ghz(cpu_dev);
+> +	imx6q_opp_check_speed_grading(cpu_dev);
+>  
+>  put_node:
+>  	of_node_put(np);
+> -- 
 > 1.7.9.5
->
+> 
+> 
 
-Can I please have an ack from the DT maintainers so that this series
-can be picked by Lee.
-
--- 
-With warm regards,
-Sachin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
