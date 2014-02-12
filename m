@@ -1,98 +1,104 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [RFC/PATCH 1/1] mtd: nand: =?utf-8?Q?A?=
- =?utf-8?Q?dd_a_devicetree_binding_for_ECC_strength_and_ECC_step_size?=
- =?utf-8?B?w6c=?=
-Date: Wed, 12 Feb 2014 14:32:22 -0300
-Message-ID: <20140212173221.GA2964@localhost>
-References: <1389960820-18696-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1389960820-18696-2-git-send-email-ezequiel.garcia@free-electrons.com>
- <20140212080014.GC3500@norris-Latitude-E6410>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v2] [media] of: move graph helpers from
+ drivers/media/v4l2-core to drivers/media
+Date: Wed, 12 Feb 2014 18:34:40 +0100
+Message-ID: <1392226480.5536.61.camel@pizza.hi.pengutronix.de>
+References: <1392154905-12007-1-git-send-email-p.zabel@pengutronix.de>
+	 <20140212065306.36a03e82.m.chehab@samsung.com>
+	 <1392196314.5536.15.camel@pizza.hi.pengutronix.de>
+	 <20140212223515.71a445f4.m.chehab@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140212080014.GC3500@norris-Latitude-E6410>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Seif Mazareeb <seif-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140212223515.71a445f4.m.chehab@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <m.chehab@samsung.com>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Philipp Zabel <philipp.zabel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 12, 2014 at 12:00:14AM -0800, Brian Norris wrote:
-> Hi Ezequiel,
->=20
-> On Fri, Jan 17, 2014 at 09:13:40AM -0300, Ezequiel Garcia wrote:
-> > Some flashes can only be properly accessed when the ECC mode is
-> > specified, and a way to describe such mode is required.
-> >=20
-> > Such ECC mode is completely driver-specific so instead of having on=
-e binding
-> > per compatible-string, let's add generic ECC strength and ECC step =
-size.
-> > Driver's can choose the appropriate ECC mode, based on this specifi=
-cation.
-> >=20
-> > Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/mtd/nand.txt | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Docum=
-entation/devicetree/bindings/mtd/nand.txt
-> > index 03855c8..683a310 100644
-> > --- a/Documentation/devicetree/bindings/mtd/nand.txt
-> > +++ b/Documentation/devicetree/bindings/mtd/nand.txt
-> > @@ -3,5 +3,9 @@
-> >  - nand-ecc-mode : String, operation mode of the NAND ecc mode.
-> >    Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_o=
-ob_first",
-> >    "soft_bch".
-> > +- nand-ecc-strength : integer ECC required strength.
-> > +- nand-ecc-size : integer step size associated to the ECC strength=
-=2E
->=20
-> Probably should be nand-ecc-step-size, to be clearer.
->=20
+Hi Mauro,
 
-No problem.
+Am Mittwoch, den 12.02.2014, 22:35 +0900 schrieb Mauro Carvalho Chehab:
+> Em Wed, 12 Feb 2014 10:11:54 +0100
+> Philipp Zabel <p.zabel@pengutronix.de> escreveu:
+> 
+> > Hi Mauro,
+> > 
+> > Am Mittwoch, den 12.02.2014, 06:53 +0900 schrieb Mauro Carvalho Chehab:
+> > [...]
+> > > > diff --git a/include/media/of_graph.h b/include/media/of_graph.h
+> > > > new file mode 100644
+> > > > index 0000000..3bbeb60
+> > > > --- /dev/null
+> > > > +++ b/include/media/of_graph.h
+> > > > @@ -0,0 +1,46 @@
+> > > > +/*
+> > > > + * OF graph binding parsing helpers
+> > > > + *
+> > > > + * Copyright (C) 2012 - 2013 Samsung Electronics Co., Ltd.
+> > > > + * Author: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> > > > + *
+> > > > + * Copyright (C) 2012 Renesas Electronics Corp.
+> > > > + * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> > > > + *
+> > > > + * This program is free software; you can redistribute it and/or modify
+> > > > + * it under the terms of version 2 of the GNU General Public License as
+> > > > + * published by the Free Software Foundation.
+> > > > + */
+> > > > +#ifndef __LINUX_OF_GRAPH_H
+> > > > +#define __LINUX_OF_GRAPH_H
+> > > > +
+> > > > +#ifdef CONFIG_OF
+> > > 
+> > > As a matter of consistency, it would be better to test here for
+> > > CONFIG_OF_GRAPH instead, to reflect the same symbol that enables such
+> > > functions as used on Kconfig/Makefile.
+> > 
+> > Maybe I'm trying to be too clever for my own good, but my reasoning was
+> > as follows:
+> > 
+> > Suppose I newly use the of_graph_ helpers in a subsystem that does not
+> > yet select OF_GRAPH. In that case I'd rather get linking errors earlier
+> > rather than stubbed out functions that silently fail to parse the DT
+> > later.
+> 
+> I see your point, but, imagining that someone pushed a patch using those
+> symbols upstream, that would break compilation and git bisection, with 
+> will hurt everyone, and not only the very few of us that would actually
+> need the OF_GRAPH symbol for an specific driver.
+> 
+> Also, such push would mean that someone forgot to do his homework and
+> to test if the committed functionality is actually working.
+> 
+> So, it seems more fair that the one that did the mistake will be the one
+> that will suffer the consequences for his errors instead of applying a
+> penalty to everybody's else ;)
 
-> > +  The exact meaning of the ECC strength and ECC size parameters is=
- completely
-> > +  driver-specific.
->=20
-> I think we can be much more specific than this. We need to at least
-> describe how the strength and size are related, and we need to mentio=
-n
-> how this represents the ECC scheme to use, rather than the minimum
-> requirement of the flash.
->=20
-> I'd say something like this. Feel free to improve it, but it covers t=
-he
-> gist of what I think we can say in a generic document:
->=20
->  - nand-ecc-strength: integer representing the number of bits to corr=
-ect
->    per ECC step
->  - nand-ecc-step-size: integer representing the number of data bytes
->    that are covered by a single ECC step
->=20
->    Together, the ECC strength and step size define the correction
->    capability, so that we say we will correct "X bit errors per Y
->    bytes". The interpretation of these parameters is
->    implementation-defined, but they often have ramifications on the
->    formation, interpretation, and placement of correction metadata on
->    the flash. Not all implementations must support all possible
->    combinations. Implementations are encouraged to further define the
->    value(s) they support.
->=20
+point taken.
 
-Much better, thanks!
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > Since there is
+> > config VIDEO_DEV
+> > 	select OF_GRAPH if OF
+> > already and the same should be added for other users of device tree
+> > graphs, I think stubbing out the functions only if OF is disabled should
+> > be enough.
+> 
+> Well, if you want to be sure that the graph will always be there if OF, then
+> you could do, instead:
+> 
+> config OF_GRAPH
+> 	bool
+> 	default OF
+> 
+> (that would actually make OF_GRAPH just an alias to OF - so we could just
+> use OF instead).
+> 
+> In any case, I think that we should use the same config name at Makefile, 
+> Kconfig and of_graph.h (either OF_GRAPH or just OF).
+
+If nobody states a strong preference, I'll just get rid of the
+CONFIG_OF_GRAPH option altogether and use CONFIG_OF directly.
+
+regards
+Philipp
