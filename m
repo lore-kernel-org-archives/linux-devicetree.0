@@ -1,97 +1,265 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v2] [media] of: move graph helpers from drivers/media/v4l2-core
- to drivers/media
-Date: Wed, 12 Feb 2014 09:15:52 +0200
-Message-ID: <52FB1FA8.2070903@ti.com>
-References: <1392154905-12007-1-git-send-email-p.zabel@pengutronix.de>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 1/4] ARM: imx6: gpc: Add PU power domain for GPU/VPU
+Date: Wed, 12 Feb 2014 15:17:33 +0800
+Message-ID: <20140212071731.GH31484@S2101-09.ap.freescale.net>
+References: <1392125231-28387-1-git-send-email-p.zabel@pengutronix.de>
+ <1392125231-28387-2-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="XwJKMSFSVwGLK8GCIkHvqebgFcNOmN8wB"
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1392154905-12007-1-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Philipp Zabel <philipp.zabel@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1392125231-28387-2-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---XwJKMSFSVwGLK8GCIkHvqebgFcNOmN8wB
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Tue, Feb 11, 2014 at 02:27:08PM +0100, Philipp Zabel wrote:
+> When generic pm domain support is enabled, the PGC can be used
+> to completely gate power to the PU power domain containing GPU3D,
+> GPU2D, and VPU cores.
+> This code triggers the PGC powerdown sequence to disable the GPU/VPU
+> isolation cells and gate power and then disables the PU regulator.
+> To reenable, the reverse powerup sequence is triggered after the PU
+> regulaotor is enabled again.
+> 
+> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  arch/arm/mach-imx/Kconfig |   2 +
+>  arch/arm/mach-imx/gpc.c   | 169 ++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 171 insertions(+)
+> 
+> diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+> index 33567aa..3c58f2e 100644
+> --- a/arch/arm/mach-imx/Kconfig
+> +++ b/arch/arm/mach-imx/Kconfig
+> @@ -808,6 +808,7 @@ config SOC_IMX6Q
+>  	select PL310_ERRATA_727915 if CACHE_PL310
+>  	select PL310_ERRATA_769419 if CACHE_PL310
+>  	select PM_OPP if PM
+> +	select PM_GENERIC_DOMAINS if PM
+>  
+>  	help
+>  	  This enables support for Freescale i.MX6 Quad processor.
+> @@ -827,6 +828,7 @@ config SOC_IMX6SL
+>  	select PL310_ERRATA_588369 if CACHE_PL310
+>  	select PL310_ERRATA_727915 if CACHE_PL310
+>  	select PL310_ERRATA_769419 if CACHE_PL310
+> +	select PM_GENERIC_DOMAINS if PM
+>  
+>  	help
+>  	  This enables support for Freescale i.MX6 SoloLite processor.
+> diff --git a/arch/arm/mach-imx/gpc.c b/arch/arm/mach-imx/gpc.c
+> index 586e017..c3ec2c5 100644
+> --- a/arch/arm/mach-imx/gpc.c
+> +++ b/arch/arm/mach-imx/gpc.c
+> @@ -10,19 +10,32 @@
+>   * http://www.gnu.org/copyleft/gpl.html
+>   */
+>  
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+>  #include <linux/io.h>
+>  #include <linux/irq.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_domain.h>
+> +#include <linux/regulator/consumer.h>
+>  #include <linux/irqchip/arm-gic.h>
+>  #include "common.h"
+> +#include "hardware.h"
+>  
+> +#define GPC_CNTR		0x000
+>  #define GPC_IMR1		0x008
+> +#define GPC_PGC_GPU_PDN		0x260
+> +#define GPC_PGC_GPU_PUPSCR	0x264
+> +#define GPC_PGC_GPU_PDNSCR	0x268
+>  #define GPC_PGC_CPU_PDN		0x2a0
+>  
+>  #define IMR_NUM			4
+>  
+> +#define GPU_VPU_PUP_REQ		BIT(1)
+> +#define GPU_VPU_PDN_REQ		BIT(0)
+> +
+>  static void __iomem *gpc_base;
+>  static u32 gpc_wake_irqs[IMR_NUM];
+>  static u32 gpc_saved_imrs[IMR_NUM];
+> @@ -138,3 +151,159 @@ void __init imx_gpc_init(void)
+>  	gic_arch_extn.irq_unmask = imx_gpc_irq_unmask;
+>  	gic_arch_extn.irq_set_wake = imx_gpc_irq_set_wake;
+>  }
+> +
+> +static struct regulator *pu_reg;
+> +
+> +static int imx6q_pm_pu_power_off(struct generic_pm_domain *genpd)
+> +{
+> +	u32 val;
+> +	int iso, iso2sw;
+> +
+> +	/* GPU3D, GPU2D, and VPU clocks should be disabled here */
 
-Hi,
+The comment should be dropped?
 
-On 11/02/14 23:41, Philipp Zabel wrote:
-> From: Philipp Zabel <philipp.zabel@gmail.com>
->=20
-> This patch moves the parsing helpers used to parse connected graphs
-> in the device tree, like the video interface bindings documented in
-> Documentation/devicetree/bindings/media/video-interfaces.txt, from
-> drivers/media/v4l2-core to drivers/media.
->=20
-> This allows to reuse the same parser code from outside the V4L2
-> framework, most importantly from display drivers.
-> The functions v4l2_of_get_next_endpoint, v4l2_of_get_remote_port,
-> and v4l2_of_get_remote_port_parent are moved. They are renamed to
-> of_graph_get_next_endpoint, of_graph_get_remote_port, and
-> of_graph_get_remote_port_parent, respectively.
-> Since there are not that many current users, switch all of them
-> to the new functions right away.
->=20
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> Acked-by: Mauro Carvalho Chehab <m.chehab@samsung.com>
-> Acked-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> +
+> +	/* Read ISO and ISO2SW power down delays */
+> +	val = readl_relaxed(gpc_base + GPC_PGC_GPU_PDNSCR);
+> +	iso = val & 0x3f;
+> +	iso2sw = (val >> 8) & 0x3f;
+> +
+> +	/* Gate off PU domain when GPU/VPU when powered down */
+> +	writel_relaxed(0x1, gpc_base + GPC_PGC_GPU_PDN);
+> +
+> +	/* Request GPC to power down GPU/VPU */
+> +	val = readl_relaxed(gpc_base + GPC_CNTR);
+> +	val |= GPU_VPU_PDN_REQ;
+> +	writel_relaxed(val, gpc_base + GPC_CNTR);
+> +
+> +	/* Wait ISO + ISO2SW IPG clock cycles */
+> +	ndelay((iso + iso2sw) * 1000 / 66);
+> +
+> +	regulator_disable(pu_reg);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx6q_pm_pu_power_on(struct generic_pm_domain *genpd)
+> +{
+> +	int ret;
+> +	u32 val;
+> +	int sw, sw2iso;
+> +
+> +	ret = regulator_enable(pu_reg);
+> +	if (ret) {
+> +		pr_err("%s: failed to enable regulator: %d\n", __func__, ret);
+> +		return ret;
+> +	}
+> +
+> +	/* Gate off PU domain when GPU/VPU when powered down */
+> +	writel_relaxed(0x1, gpc_base + GPC_PGC_GPU_PDN);
+> +
+> +	/* Read ISO and ISO2SW power down delays */
+> +	val = readl_relaxed(gpc_base + GPC_PGC_GPU_PUPSCR);
+> +	sw = val & 0x3f;
+> +	sw2iso = (val >> 8) & 0x3f;
+> +
+> +	/* Request GPC to power up GPU/VPU */
+> +	val = readl_relaxed(gpc_base + GPC_CNTR);
+> +	val |= GPU_VPU_PUP_REQ;
+> +	writel_relaxed(val, gpc_base + GPC_CNTR);
+> +
+> +	/* Wait ISO + ISO2SW IPG clock cycles */
+> +	ndelay((sw + sw2iso) * 1000 / 66);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct generic_pm_domain imx6q_pu_domain = {
+> +	.name = "PU",
+> +	.power_off = imx6q_pm_pu_power_off,
+> +	.power_on = imx6q_pm_pu_power_on,
+> +};
+> +
+> +static int imx6q_pm_notifier_call(struct notifier_block *nb,
+> +				  unsigned long event, void *data)
+> +{
+> +	struct generic_pm_domain *genpd;
+> +	struct device *dev = data;
+> +	struct device_node *np;
+> +	int ret;
+> +
+> +	switch (event) {
+> +	case BUS_NOTIFY_BIND_DRIVER:
+> +		np = of_parse_phandle(dev->of_node, "power-domain", 0);
+> +		if (!np)
+> +			return NOTIFY_DONE;
+> +
+> +		ret = pm_genpd_of_add_device(np, dev);
+> +		if (ret)
+> +			dev_err(dev, "failed to add to power domain: %d\n",
+> +				ret);
+> +		break;
+> +	case BUS_NOTIFY_UNBOUND_DRIVER:
+> +		genpd = dev_to_genpd(dev);
+> +		if (IS_ERR(genpd))
+> +			return NOTIFY_DONE;
+> +		ret = pm_genpd_remove_device(genpd, dev);
+> +		if (ret)
+> +			dev_err(dev, "failed to remove from power domain: %d\n",
+> +				ret);
+> +		break;
+> +	}
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static struct notifier_block imx6q_platform_nb = {
+> +	.notifier_call = imx6q_pm_notifier_call,
+> +};
+> +
+> +static int imx_gpc_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np;
+> +	int ret;
+> +
+> +	np = of_get_child_by_name(pdev->dev.of_node, "power-domain");
+> +	if (!np) {
+> +		dev_err(&pdev->dev, "missing power-domain node\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	pu_reg = devm_regulator_get(&pdev->dev, "pu");
+> +	if (IS_ERR(pu_reg)) {
+> +		ret = PTR_ERR(pu_reg);
+> +		dev_err(&pdev->dev, "failed to get pu regulator: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* The regulator is initially enabled */
+> +	ret = regulator_enable(pu_reg);
 
-I don't think the graphs or the parsing code has anything video
-specific. It could well be used for anything, whenever there's need to
-describe connections between devices which are not handled by the normal
-child-parent relationships. So the code could well reside in some
-generic place, in my opinion.
+That means the PU power domain will be always on when neither GPU nor
+VPU is enabled?
 
-Also, I have no problem with having it in drivers/media, but
-drivers/video should work also. We already have other, generic, video
-related things there like hdmi infoframes and display timings.
+Shawn
 
-And last, it's fine to move the funcs as-is in the first place, but I
-think they should be improved a bit before non-v4l2 users use them.
-There are a couple of things I tried to accomplish with the omapdss
-specific versions in
-https://www.mail-archive.com/linux-omap@vger.kernel.org/msg100761.html:
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "failed to enable pu regulator: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	imx6q_pu_domain.of_node = np;
+> +	pm_genpd_init(&imx6q_pu_domain, NULL, false);
+> +	bus_register_notifier(&platform_bus_type, &imx6q_platform_nb);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct of_device_id imx_gpc_dt_ids[] = {
+> +	{ .compatible = "fsl,imx6q-gpc" },
+> +	{ }
+> +};
+> +
+> +static struct platform_driver imx_gpc_driver = {
+> +	.driver = {
+> +		.name = "imx-gpc",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = imx_gpc_dt_ids,
+> +	},
+> +	.probe = imx_gpc_probe,
+> +};
+> +
+> +static int __init imx_pgc_init(void)
+> +{
+> +	return platform_driver_register(&imx_gpc_driver);
+> +}
+> +subsys_initcall(imx_pgc_init);
+> -- 
+> 1.8.5.3
+> 
 
-- Iterating ports and endpoints separately. If a node has multiple
-ports, I would think that the driver needs to know which port and
-endpoint combination is the current one during iteration. It's not
-enough to just get the endpoint.
-
-- Simplify cases when there's just one port and one endpoint, in which
-case the port node can be omitted from the DT data.
-
- Tomi
-
-
-
---XwJKMSFSVwGLK8GCIkHvqebgFcNOmN8wB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJS+x+oAAoJEPo9qoy8lh71uekP/1rhT/v5BSIVHRpWBiwda9+W
-yE7AEE8a+tGGyppPa9G/sRYszytnpnl3XY1hzk5oATxwbaIfnZ7Yc6vIincCIMNQ
-U/MgoM4SZDq8GkoodXnKfDZOVBzJfG4l0DHpqfVu9Q/+uRBoUUWnQTD5JMmXKEK/
-Sne+1aBnUmFy88LyPrnl71sREMrjAyoUBaeM4GXblY/dYfM6OtT7qH4asO3qAoqF
-X3GSELUe5upENcGdSkYR1wVxzUBgEaBHHRsUZD0dkbmjmfyMoNF8jmADcCkKOi23
-M32s6CAzjqV/OnklYpP8sxezNehLrXR+kJSWeRp3UjcgEEvwbEf1sZNjkzuM8Coh
-MP5wVAfgJbWjD5lILHcNipUY47jm6mPC3mriWp2x+YjsBuwN95RdW9AbcjFZmkNi
-0PMEWFqxsYCQc4ey2UY+75qdFLCfFLhNiI2pvOOWonJPFHUmIuKY6/mtxi/CZGgd
-HFXbrbnqJ5SVDkR3kSIoaG+4yL3+41bk6nmzJtSzxMdlR+OVHjpMzCrhMSXY4AZf
-K/WpKbnMuLj2sM993e7cG2lmlKk5klo0LRfoiQGyPDmMzQ2SV1iWxyu3BMKU77e6
-MQFqCoKJqJfKjXgYb/E7cgpjVVI7qT34OhmbpS1FIxO/HYKTkGrx1DS3cCs/ObLF
-bp2rljxQnWdmBebMF5q8
-=6pPK
------END PGP SIGNATURE-----
-
---XwJKMSFSVwGLK8GCIkHvqebgFcNOmN8wB--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
