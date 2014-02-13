@@ -1,106 +1,91 @@
-From: Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH] pci: Add support for creating a generic host_bridge from
- device tree
-Date: Thu, 13 Feb 2014 00:36:44 -0800
-Message-ID: <CACoXjc=epN8=tFQKw6kZ27hTA=a+c56q1pikX_SSMKK1rsScCw@mail.gmail.com>
-References: <1391452428-22917-1-git-send-email-Liviu.Dudau@arm.com>
-	<1391452428-22917-2-git-send-email-Liviu.Dudau@arm.com>
-	<7398333.9L5KlyFggU@wuerfel>
-	<CACoXjckKRQfR3CbC1JpgbhOumED+OqiMh1_Y73-h6q=ByMNanw@mail.gmail.com>
-	<20140206101814.GA4993@e106497-lin.cambridge.arm.com>
-	<000201cf2893$0f5e3710$2e1aa530$%han@samsung.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 1/3] mmc: add support for power-on sequencing through DT
+Date: Thu, 13 Feb 2014 09:56:56 +0100
+Message-ID: <CAPDyKFo9Xpxe0XzevPEeaofLeCNivnf3R_RttToP2h3aFyB4Yw@mail.gmail.com>
+References: <1390190215-22700-1-git-send-email-olof@lixom.net>
+	<52E700F0.7040708@gmail.com>
+	<CAPDyKFpOhQtiyCmzie3=sfg42Vv5_rReRNgUf8kALoE6TBe2cw@mail.gmail.com>
+	<201401281148.10670.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <000201cf2893$0f5e3710$2e1aa530$%han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <201401281148.10670.arnd@arndb.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Tomasz Figa <t.figa@samsung.com>, Olof Johansson <olof@lixom.net>, linux-mmc <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, robh+dt@kernel.org, mark.rutland@arm.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chris Ball <chris@printf.net>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 13, 2014 at 12:10 AM, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> On Thursday, February 06, 2014 7:18 PM, Liviu Dudau wrote:
->> On Wed, Feb 05, 2014 at 10:26:27PM +0000, Tanmay Inamdar wrote:
->> > Hello Liviu,
+On 28 January 2014 11:48, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tuesday 28 January 2014, Ulf Hansson wrote:
+>> On 28 January 2014 01:59, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+>> > On 27.01.2014 11:19, Ulf Hansson wrote:
+>> >> There is already a host capability that I think we could use to handle
+>> >> this. MMC_CAP_NONREMOVABLE, the corresponding DT binding string is
+>> >> "non-removable", and it may be set per host device.
+>> >>
+>> >> Using this cap means the mmc_rescan process that runs to detect new
+>> >> cards, will only be executed once and during boot. So, we need to make
+>> >> sure all resources and powers are provided to the card at this point.
+>> >> Otherwise the card will not be detected.
 >> >
->> > I did not get the first email of this particular patch on any of
->> > subscribed mailing lists (don't know why), hence replying here.
+>> > I don't quite like this requirement, especially if you consider
+>> > multi-platform kernels where a lot of drivers is going to be provided as
+>> > modules. WLAN drivers are especially good candidates. This means that even
+>> > if the card is powered off at boot-up, if user (or init system) loads
+>> > appropriate module, which powers the chip on, MMC core must be able to
+>> > notice this.
 >>
->> Strange, it shows in the MARC and GMANE archive for linux-pci, probably
->> a hickup on your receiving side?
+>> To be able to detect the card, the WLAN driver doesn't have to be
+>> probed, only the "power controller" driver. I suppose this is were it
+>> becomes a bit tricky.
 >>
->> >
->> > +struct pci_host_bridge *
->> > +pci_host_bridge_of_init(struct device *parent, int busno, struct pci_ops *ops,
->> > + void *host_data, struct list_head *resources)
->> > +{
->> > + struct pci_bus *root_bus;
->> > + struct pci_host_bridge *bridge;
->> > +
->> > + /* first parse the host bridge bus ranges */
->> > + if (pci_host_bridge_of_get_ranges(parent->of_node, resources))
->> > + return NULL;
->> > +
->> > + /* then create the root bus */
->> > + root_bus = pci_create_root_bus(parent, busno, ops, host_data, resources);
->> > + if (!root_bus)
->> > + return NULL;
->> > +
->> > + bridge = to_pci_host_bridge(root_bus->bridge);
->> > +
->> > + return bridge;
->> > +}
->> >
->> > You are keeping the domain_nr inside pci_host_bridge structure. In
->> > above API, domain_nr is required in 'pci_find_bus' function called
->> > from 'pci_create_root_bus'. Since the bridge is allocated after
->> > creating root bus, 'pci_find_bus' always gets domain_nr as 0. This
->> > will cause problem for scanning multiple domains.
->>
->> Good catch. I was switching between creating a pci_controller in arch/arm64 and
->> adding the needed bits in pci_host_bridge. After internal review I've decided to
->> add the domain_nr to pci_host_bridge, but forgot to update the code everywhere.
+>> Somehow the mmc core needs to be involved in the probe process of the
+>> power controller driver. Could perhaps the power controller bus be
+>> located in the mmc core and thus the power controller driver needs to
+>> register itself by using a new API from the mmc core? Similar how SDIO
+>> func driver's register themselves.
 >
-> Hi Liviu Dudau,
->
-> One more thing,
-> I am reviewing and compiling your patch.
-> Would you consider adding 'struct pci_sys_data' and 'struct hw_pci'?
->
-> Currently, 4 PCIe Host drivers (pci-mvebu.c, pci-tegra.c,
-> pci-rcar-gen2.c, pcie-designware.c) are using 'struct pci_sys_data'
-> and 'struct hw_pci' in their drivers. Without this, it makes build
-> errors.
->
-> In arm32, 'struct pci_sys_data' and 'struct hw_pci' is defined
-> in "arch/arm/include/asm/mach/pci.h".
->
-> Tanmay Inamdar,
-> Your 'APM X-Gene PCIe' patch also needs 'struct pci_sys_data' and
-> 'struct hw_pci'. With Liviu Dudau's patch, it will make build
-> errors. Would you check this?
+> I think there is another option, which does have its own pros and cons:
+> We could move all the power handling back into the sdio function driver
+> if we allow a secondary detection path using DT rather than the probing
+> of the SDIO bus. Essentially you'd have to list the class/vendor/device
+> ID for each function that cannot be autodetected in DT, and have the
+> SDIO core pretend that it found the device just by looking at the
+> device nodes, and register the struct sdio_func so it can be bound to
+> the driver. The driver then does all the power handling in a device
+> specific way. At some point the hardware gets registered at the
+> mmc host, and the sdio core connects the bus state to the already present
+> sdio_func, possibly notifying the function driver that it has become
+> usable.
 
-X-Gene PCIe host driver is dependent on arm64 PCI patch. My previous
-approach was based on 32bit arm PCI support. With Liviu's approach, I
-will have to make changes in host driver to get rid of hw_pci and
-pci_sys_data which are no longer required.
+It seems like an option we could try.
 
-IMO it should not cause build errors for PCI host drivers dependent on
-architectures other than arm64. Can you post the error?
+There are some tricky parts that needs to be taken care of by the
+mmc/sdio core, regarding the probe/removal and the suspend/resume
+sequence, but I suppose it should be possible.
+
+A minor concern is how do we handle devices that are fully powered at
+boot? Unless the sdio func driver will be loaded we can't power off
+them, right? Do we need to cover this case, do you think?
 
 >
-> Thank you.
+> Obviously, this can only work for CAP_NONREMOVABLE devices, but those
+> are exactly the ones we are worried about here. The advantage is that
+> the power sequencing for a particular device can then be in device
+> specific code and can have an arbitrarily complex in the driver without
+> needing the mmc code to handle all possible corner cases.
+
+Agree!
+
+I think a removable SDIO card won't l need this additional power
+controller mechanism.
+
+Kind regards
+Uffe
+
 >
-> Best regards,
-> Jingoo Han
->
->>
->> Thanks for reviewing this, will fix in v2.
->>
->> Do you find porting to the new API straight forward?
->>
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>         Arnd
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
