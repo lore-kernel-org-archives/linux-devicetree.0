@@ -1,147 +1,96 @@
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH net-next v2 06/10] net: bcmgenet: add main driver file
-Date: Thu, 13 Feb 2014 11:38:35 +0000
-Message-ID: <20140213113834.GA5871@e106331-lin.cambridge.arm.com>
+Subject: Re: [PATCH net-next v2 07/10] net: bcmgenet: add MDIO routines
+Date: Thu, 13 Feb 2014 11:50:08 +0000
+Message-ID: <20140213115008.GB5871@e106331-lin.cambridge.arm.com>
 References: <1392269395-23513-1-git-send-email-f.fainelli@gmail.com>
- <1392269395-23513-7-git-send-email-f.fainelli@gmail.com>
+ <1392269395-23513-8-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1392269395-23513-7-git-send-email-f.fainelli@gmail.com>
-Content-Language: en-US
+In-Reply-To: <1392269395-23513-8-git-send-email-f.fainelli@gmail.com>
 Sender: netdev-owner@vger.kernel.org
 To: Florian Fainelli <f.fainelli@gmail.com>
 Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "cernekee@gmail.com" <cernekee@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 13, 2014 at 05:29:51AM +0000, Florian Fainelli wrote:
-> This patch adds the BCMGENET main driver file which supports the
-> following:
->
-> - GENET hardware from V1 to V4
-> - support for reading the UniMAC MIB counters statistics
-> - support for the 5 transmit queues
-> - support for RX/TX checksum offload and SG
->
+On Thu, Feb 13, 2014 at 05:29:52AM +0000, Florian Fainelli wrote:
+> This patch adds support for configuring the port multiplexer hardware
+> which resides in front of the GENET Ethernet MAC controller. This allows
+> us to support:
+> 
+> - internal PHYs (using drivers/net/phy/bcm7xxx.c)
+> - MoCA PHYs which are an entirely separate hardware block not covered
+>   here
+> - external PHYs and switches
+> 
+> Note that MoCA and switches are currently supported using the emulated
+> "fixed PHY" driver.
+> 
 > Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
 > Changes since v1:
-> - use module_platform_driver boilerplate macro
-> - renamed bcmgenet_plat_drv to bcmgenet_driver
-> - renamed bcmgenet_drv_{probe,remove} to bcmgenet_{probe,remove}
-> - removed priv->phy_type usage and use priv->phy_interface which
->   contains the exact same value
-> - removed debug module parameters, unused
-> - added MODULDE_{AUTHOR,ALIAS,DESCRIPTION} macros
-> - remove hardcoded queue index check in bcmgenet_xmit
+> - fixed MDIO crash/warning when Device Tree probing fails
+> - removed the use of priv->phy_type and use priv->phy_interface
+>   directly
+> 
+>  drivers/net/ethernet/broadcom/genet/bcmmii.c | 481 +++++++++++++++++++++++++++
+>  1 file changed, 481 insertions(+)
+>  create mode 100644 drivers/net/ethernet/broadcom/genet/bcmmii.c
 
 [...]
 
-> +static int bcmgenet_probe(struct platform_device *pdev)
+> +static int bcmgenet_mii_of_init(struct bcmgenet_priv *priv)
 > +{
-> +       struct device_node *dn = pdev->dev.of_node;
-> +       struct bcmgenet_priv *priv;
-> +       struct net_device *dev;
-> +       const void *macaddr;
-> +       struct resource *r;
-> +       int err = -EIO;
+> +       struct device_node *dn = priv->pdev->dev.of_node;
+> +       struct device *kdev = &priv->pdev->dev;
+> +       struct device_node *mdio_dn;
+> +       const __be32 *fixed_link;
+
+This looks a bit odd. Could we not have a common parser for fixed-link
+properties?
+
+> +       u32 propval;
+> +       int ret, sz;
 > +
-> +       /* Up to GENET_MAX_MQ_CNT + 1 TX queues and a single RX queue */
-> +       dev = alloc_etherdev_mqs(sizeof(*priv), GENET_MAX_MQ_CNT + 1, 1);
-> +       if (!dev) {
-> +               dev_err(&pdev->dev, "can't allocate net device\n");
-> +               return -ENOMEM;
-> +       }
-> +
-> +       priv = netdev_priv(dev);
-> +       priv->irq0 = platform_get_irq(pdev, 0);
-> +       priv->irq1 = platform_get_irq(pdev, 1);
-> +       if (!priv->irq0 || !priv->irq1) {
-> +               dev_err(&pdev->dev, "can't find IRQs\n");
-> +               err = -EINVAL;
-> +               goto err;
+> +       mdio_dn = of_get_next_child(dn, NULL);
+> +       if (!mdio_dn) {
+> +               dev_err(kdev, "unable to find MDIO bus node\n");
+> +               return -ENODEV;
 > +       }
 
-The binding did not describe that there were two interrupts. What are
-each of them for? Are they named in the documentation?
+Could you please check that this is the node you expect (by looking at
+the compatible string list).
 
 > +
-> +       macaddr = of_get_mac_address(dn);
-> +       if (!macaddr) {
-> +               dev_err(&pdev->dev, "can't find MAC address\n");
-> +               err = -EINVAL;
-> +               goto err;
+> +       ret = of_mdiobus_register(priv->mii_bus, mdio_dn);
+> +       if (ret) {
+> +               dev_err(kdev, "failed to register MDIO bus\n");
+> +               return ret;
 > +       }
 > +
-> +       r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       priv->base = devm_request_and_ioremap(&pdev->dev, r);
-> +       if (!priv->base) {
-> +               dev_err(&pdev->dev, "can't ioremap\n");
-> +               err = -EINVAL;
-> +               goto err;
-> +       }
+> +       /* Check if we have an internal or external PHY */
+> +       priv->phy_dn = of_parse_phandle(dn, "phy-handle", 0);
+> +       if (priv->phy_dn) {
+> +               if (!of_property_read_u32(priv->phy_dn, "max-speed", &propval))
+> +                       priv->phy_speed = propval;
+
+Is there no way to find this out without reading values directly off of
+the PHY? It seems like something we should have an abstraction for.
+
+> +       } else {
+> +               /* Read the link speed from the fixed-link property */
+> +               fixed_link = of_get_property(dn, "fixed-link", &sz);
+> +               if (!fixed_link || sz < sizeof(*fixed_link)) {
+> +                       ret = -ENODEV;
+> +                       goto out;
+> +               }
 > +
-> +       dev->base_addr = (unsigned long)priv->base;
+> +               priv->phy_speed = be32_to_cpu(fixed_link[2]);
 
-Does the net core actually need this?
-
-I can't see anywhere else it's used in this file.
-
-[...]
-
-> +       if (of_device_is_compatible(dn, "brcm,genet-v4"))
-> +               priv->version = GENET_V4;
-> +       else if (of_device_is_compatible(dn, "brcm,genet-v3"))
-> +               priv->version = GENET_V3;
-> +       else if (of_device_is_compatible(dn, "brcm,genet-v2"))
-> +               priv->version = GENET_V2;
-> +       else if (of_device_is_compatible(dn, "brcm,genet-v1"))
-> +               priv->version = GENET_V1;
-> +       else {
-> +               dev_err(&pdev->dev, "unknown GENET version\n");
-> +               err = -EINVAL;
-> +               goto err;
-
-Surely you can't have probed if none of these are in the compatible
-list?
-
-Might it make more sense to place this value in of_device_id::data? You
-can get it it with of_match_node, and you only have to place the strings
-in one place, so no possible typo issues.
-
-> +       }
-> +
-> +       bcmgenet_set_hw_params(priv);
-> +
-> +       spin_lock_init(&priv->lock);
-> +       spin_lock_init(&priv->bh_lock);
-> +       mutex_init(&priv->mib_mutex);
-> +       /* Mii wait queue */
-> +       init_waitqueue_head(&priv->wq);
-> +       /* Always use RX_BUF_LENGTH (2KB) buffer for all chips */
-> +       priv->rx_buf_len = RX_BUF_LENGTH;
-> +       INIT_WORK(&priv->bcmgenet_irq_work, bcmgenet_irq_task);
-> +
-> +       priv->clk = devm_clk_get(&priv->pdev->dev, "enet");
-> +       if (IS_ERR(priv->clk))
-> +               dev_warn(&priv->pdev->dev, "failed to get enet clock\n");
-
-This wasn't in the binding.
-
-> +
-> +       priv->clk_wol = devm_clk_get(&priv->pdev->dev, "enet-wol");
-> +       if (IS_ERR(priv->clk_wol))
-> +               dev_warn(&priv->pdev->dev, "failed to get enet-wol clock\n");
-
-This is also missing from the binding.
-
-> +       /* Turn off the clocks */
-> +       if (!IS_ERR(priv->clk))
-> +               clk_disable_unprepare(priv->clk);
-
-Either the comment is misleading (s/clocks/clock/), or you're forgetting
-about the enet-wol clock here.
+Similarly can we not have a common fixed-link parser? Or abstraction
+such that you query the phy regardless of what it is and how its binding
+represents this?
 
 Thanks,
 Mark.
