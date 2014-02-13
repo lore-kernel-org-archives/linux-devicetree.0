@@ -1,94 +1,63 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/4] phy: miphy365x: Add Device Tree bindings for the
- MiPHY365x
-Date: Thu, 13 Feb 2014 11:03:14 +0000
-Message-ID: <20140213110314.GH32508@lee--X1>
-References: <1392220985-28189-1-git-send-email-lee.jones@linaro.org>
- <20140212164019.GE25957@e106331-lin.cambridge.arm.com>
+Subject: Re: [PATCH v3 7/7] devicetree: bindings: Document PM8921/8058 PMICs
+Date: Thu, 13 Feb 2014 11:06:19 +0000
+Message-ID: <20140213110619.GI32508@lee--X1>
+References: <1389206270-3728-1-git-send-email-sboyd@codeaurora.org>
+ <1389206270-3728-8-git-send-email-sboyd@codeaurora.org>
+ <20140211092937.GG32042@lee--X1>
+ <20140213053813.GB14769@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140212164019.GE25957@e106331-lin.cambridge.arm.com>
+In-Reply-To: <20140213053813.GB14769@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alexandre.torgue@st.com" <alexandre.torgue@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@st.com>
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> > The MiPHY365x is a Generic PHY which can serve various SATA or PCIe
-> > devices. It has 2 ports which it can use for either; both SATA, bot=
-h
-> > PCIe or one of each in any configuration.
+> > > +- interrupts:
+> > > +	Usage: required
+> > > +	Value type: <prop-encoded-array>
 > >=20
-> > Cc: devicetree@vger.kernel.org
-> > Cc: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  .../devicetree/bindings/phy/phy-miphy365x.txt      | 43 ++++++++++=
-++++++++++++
-> >  1 file changed, 43 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/phy-miphy=
-365x.txt
+> > Either provide an example or a comment to see the description of
+> > #interrupt-cells=20
+>=20
+> It is part of the example. We also state that the format is
+> defined by the interrupt parent binding.
+
+Okay, fair enough.
+
+> > > +	Definition: specifies the interrupt that indicates a subdevice
+> > > +		    has generated an interrupt (summary interrupt). The
+> > > +		    format of the specifier is defined by the binding document
+> > > +		    describing the node's interrupt parent.
+> > > +
+> > > +- #interrupt-cells:
+> > > +	Usage: required
+> > > +	Value type : <u32>
+> > > +	Definition: must be 2. Specifies the number of cells needed to =
+encode
+> > > +		    an interrupt source. The 1st cell contains the interrupt
+> > > +		    number. The 2nd cell is the trigger type and level flags
+> > > +		    encoded as follows:
+> > > +
+> > > +			1 =3D low-to-high edge triggered
+> > > +			2 =3D high-to-low edge triggered
+> > > +			4 =3D active high level-sensitive
+> > > +			8 =3D active low level-sensitive
 > >=20
-> > diff --git a/Documentation/devicetree/bindings/phy/phy-miphy365x.tx=
-t b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
-> > new file mode 100644
-> > index 0000000..fdfa7ca
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
-> > @@ -0,0 +1,43 @@
-> > +STMicroelectronics STi MIPHY365x PHY binding
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +This binding describes a miphy device that is used to control PHY =
-hardware
-> > +for SATA and PCIe.
-> > +
-> > +Required properties:
-> > +- compatible: Should be "st,miphy365x-phy"
-> > +- #phy-cells: Should be 2 (See example)
+> > Actually I'd prefer if you used the definitions in:
+> >   dt-bindings/interrupt-controller/irq.h
 >=20
-> The first example has #phy-cells =3D <1>.
+> These match the #defines in that file. I'd like to be explicit
+> about the numbers to prevent people from thinking they have to
+> use #defines and to match what other irq controllers have done
+> (gic, atmel-aic, etc.)
 
-Right, will fix. Should be 2.
-
-> What do the cells mean? What are the expected values?
-
-http://www.spinics.net/lists/arm-kernel/msg307209.html
-
-> > +- reg:	      Address and length of the register set for the device
-> > +- reg-names:  The names of the register addresses corresponding to=
- the
-> > +	      registers filled in "reg".
->=20
-> Whenever there is a ${PROP}-names property, there should be a list of
-> explicit values, and a description of how it relates to ${PROP}. With=
-out
-> that it's a bit useless.
->=20
-> Please provide an explicit list of expected names here.
->=20
-> I assume here what you want is something like:
->=20
-> - reg: a list of address + length pairs, one for each entry in reg-na=
-mes
-> - reg-names: should contain:
->   * "sata0" for the sata0 control registers...
->   * "sata1" ...
->   * "pcie0" ...
->   * "pcie1" ...
-
-Can do.
-
-> > +- st,syscfg : Should be a phandle of the syscfg node.
->=20
-> What's this used for?
-
-It's used to gain access to the system configuration
-registers. Specifically in this case the bits to choose between PCI or
-SATA mode.
+I believe people _do_ have to use the #defines? Is there a good reason
+for you not wanting to use them?
 
 --=20
 Lee Jones
