@@ -1,34 +1,43 @@
-From: Stefan =?ISO-8859-1?Q?S=F8rensen?=
+From: =?UTF-8?q?Stefan=20S=C3=B8rensen?=
 	<stefan.sorensen@spectralink.com>
-Subject: Re: [PATCH v2 2/2] dp83640: Get pin and master/slave configuration
- from DT
-Date: Thu, 13 Feb 2014 15:23:23 +0100
-Message-ID: <1392301403.2585.11.camel@e37108.spectralink.com>
-References: <1392132562-23644-1-git-send-email-stefan.sorensen@spectralink.com>
-	 <1392132562-23644-3-git-send-email-stefan.sorensen@spectralink.com>
-	 <20140211201917.GB4254@netboy>
+Subject: [PATCH v3 0/3] dp83640: Get pin and master/slave configuration from DT
+Date: Thu, 13 Feb 2014 15:35:22 +0100
+Message-ID: <1392302129-24947-1-git-send-email-stefan.sorensen@spectralink.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140211201917.GB4254@netboy>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: richardcochran@gmail.com, grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc: =?UTF-8?q?Stefan=20S=C3=B8rensen?= <stefan.sorensen@spectralink.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-02-11 at 21:19 +0100, Richard Cochran wrote:
-> > +- dp83640,slave: If present, this phy will be slave to another dp83640
-> > +  on the same mdio bus.
-> 
-> Wouldn't it be more natural to have one "dp83640,master" property
-> rather than multiple slave properties?
+This patch series add DT configuration to the DP83640 PHY driver and ma=
+kes
+the configuration of periodic output pins dynamic.
 
-I wanted to keep the common case of a single phy simple, i.e. no need to
-specify any master/slave properties. 
+Changes since v2:
+ - Add patch to properly configure perout triggers 0+1
+ - Keep extts and perout numbers separate
+ - Shorten pr_err lines
 
-> Most of these pr_err lines are a bit _way_ too long for coding style.
+Changes since v1:
+ - Add bindings documentation
+ - Keep module parameters
+ - Rename gpio->pin
+ - Split patch into DT part and dynamic periodic output support
 
-I will fix that in the next version.
+Stefan S=C3=B8rensen (3):
+  net:phy:dp83640: Program pulsewidth2 values of perout triggers 0 and =
+1
+  net:phy:dp83640: Support a configurable number of periodic outputs
+  net:phy:dp83640: Get pin and master/slave configuration from DT
 
-Stefan
+ Documentation/devicetree/bindings/net/dp83640.txt |  29 ++++
+ drivers/net/phy/dp83640.c                         | 199 ++++++++++++++=
++-------
+ 2 files changed, 170 insertions(+), 58 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/dp83640.txt
+
+--=20
+1.8.5.3
