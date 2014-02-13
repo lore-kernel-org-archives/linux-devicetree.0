@@ -1,79 +1,161 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v2 10/14] Documentation: mfd: s2mps11: Document support for
- S2MPS14
-Date: Thu, 13 Feb 2014 15:55:07 +0100
-Message-ID: <52FCDCCB.70908@samsung.com>
-References: <1392282847-25444-1-git-send-email-k.kozlowski@samsung.com>
- <1392282847-25444-11-git-send-email-k.kozlowski@samsung.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: [RESEND][PATCH v4] gpio: davinci: reuse for keystone soc
+Date: Thu, 13 Feb 2014 17:58:45 +0200
+Message-ID: <1392307125-27927-1-git-send-email-grygorii.strashko@ti.com>
+References: <52FBB6BC.2060801@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1392282847-25444-11-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Sangbeom Kim <sbkim73@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <52FBB6BC.2060801-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, santosh.shilimkar-l0cyMroinI0@public.gmane.org
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The similar GPIO HW block is used by keystone SoCs as
+in Davinci SoCs.
+Hence, reuse Davinci GPIO driver for Keystone taking into
+account that Keystone contains ARM GIC IRQ controller which
+is implemented using IRQ Chip.
 
-On 13.02.2014 10:14, Krzysztof Kozlowski wrote:
-> Add bindings documentation for S2MPS14 device to the s2mps11 driver.
->
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Tomasz Figa <t.figa@samsung.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> ---
->   Documentation/devicetree/bindings/mfd/s2mps11.txt |   12 ++++++++----
->   1 file changed, 8 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-> index 15ee89c3cc7b..f69bec294f02 100644
-> --- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
-> +++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-> @@ -1,5 +1,5 @@
->
-> -* Samsung S2MPS11 Voltage and Current Regulator
-> +* Samsung S2MPS11 and S2MPS14 Voltage and Current Regulator
->
->   The Samsung S2MPS11 is a multi-function device which includes voltage and
->   current regulators, RTC, charger controller and other sub-blocks. It is
-> @@ -7,7 +7,7 @@ interfaced to the host controller using an I2C interface. Each sub-block is
->   addressed by the host system using different I2C slave addresses.
->
->   Required properties:
-> -- compatible: Should be "samsung,s2mps11-pmic".
-> +- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-pmic".
->   - reg: Specifies the I2C slave address of the pmic block. It should be 0x66.
->
->   Optional properties:
-> @@ -59,10 +59,14 @@ supports. Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
->   as per the datasheet of s2mps11.
->
->   	- LDOn
-> -		  - valid values for n are 1 to 38
-> +		  - valid values for n are:
-> +			- S2MPS11: 1 to 38
-> +			- S2MPS14: 1 to 25
->   		  - Example: LDO1, LD02, LDO28
->   	- BUCKn
-> -		  - valid values for n are 1 to 10.
-> +		  - valid values for n are:
-> +			- S2MPS11: 1 to 10
-> +			- S2MPS14: 1 to 5
->   		  - Example: BUCK1, BUCK2, BUCK9
->
->   Example:
->
+Documentation:
+	http://www.ti.com/lit/ug/sprugv1/sprugv1.pdf
 
-Acked-by: Tomasz Figa <t.figa@samsung.com>
+Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+---
+- rebased on top of git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+  branch: devel
+  top commit: ef70bbe gpio: make gpiod_direction_output take a logical value
 
-Best regards,
-Tomasz
+ .../devicetree/bindings/gpio/gpio-davinci.txt      |    4 +-
+ drivers/gpio/gpio-davinci.c                        |   48 ++++++++++++++++----
+ 2 files changed, 42 insertions(+), 10 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+index a2e839d..4ce9862 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+@@ -1,7 +1,7 @@
+-Davinci GPIO controller bindings
++Davinci/Keystone GPIO controller bindings
+ 
+ Required Properties:
+-- compatible: should be "ti,dm6441-gpio"
++- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio"
+ 
+ - reg: Physical base address of the controller and the size of memory mapped
+        registers.
+diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+index 7629b4f..d0f135d 100644
+--- a/drivers/gpio/gpio-davinci.c
++++ b/drivers/gpio/gpio-davinci.c
+@@ -37,6 +37,8 @@ struct davinci_gpio_regs {
+ 	u32	intstat;
+ };
+ 
++typedef struct irq_chip *(*gpio_get_irq_chip_cb_t)(unsigned int irq);
++
+ #define BINTEN	0x8 /* GPIO Interrupt Per-Bank Enable Register */
+ 
+ #define chip2controller(chip)	\
+@@ -413,6 +415,26 @@ static const struct irq_domain_ops davinci_gpio_irq_ops = {
+ 	.xlate = irq_domain_xlate_onetwocell,
+ };
+ 
++static struct irq_chip *davinci_gpio_get_irq_chip(unsigned int irq)
++{
++	static struct irq_chip_type gpio_unbanked;
++
++	gpio_unbanked = *container_of(irq_get_chip(irq),
++				      struct irq_chip_type, chip);
++
++	return &gpio_unbanked.chip;
++};
++
++static struct irq_chip *keystone_gpio_get_irq_chip(unsigned int irq)
++{
++	static struct irq_chip gpio_unbanked;
++
++	gpio_unbanked = *irq_get_chip(irq);
++	return &gpio_unbanked;
++};
++
++static const struct of_device_id davinci_gpio_ids[];
++
+ /*
+  * NOTE:  for suspend/resume, probably best to make a platform_device with
+  * suspend_late/resume_resume calls hooking into results of the set_wake()
+@@ -433,6 +455,18 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+ 	struct davinci_gpio_platform_data *pdata = dev->platform_data;
+ 	struct davinci_gpio_regs __iomem *g;
+ 	struct irq_domain	*irq_domain = NULL;
++	const struct of_device_id *match;
++	struct irq_chip *irq_chip;
++	gpio_get_irq_chip_cb_t gpio_get_irq_chip;
++
++	/*
++	 * Use davinci_gpio_get_irq_chip by default to handle non DT cases
++	 */
++	gpio_get_irq_chip = davinci_gpio_get_irq_chip;
++	match = of_match_device(of_match_ptr(davinci_gpio_ids),
++				dev);
++	if (match)
++		gpio_get_irq_chip = (gpio_get_irq_chip_cb_t)match->data;
+ 
+ 	ngpio = pdata->ngpio;
+ 	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+@@ -489,8 +523,6 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+ 	 * IRQ mux conflicts; gpio_irq_type_unbanked() is only for GPIOs.
+ 	 */
+ 	if (pdata->gpio_unbanked) {
+-		static struct irq_chip_type gpio_unbanked;
+-
+ 		/* pass "bank 0" GPIO IRQs to AINTC */
+ 		chips[0].chip.to_irq = gpio_to_irq_unbanked;
+ 		chips[0].gpio_irq = bank_irq;
+@@ -499,10 +531,9 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+ 
+ 		/* AINTC handles mask/unmask; GPIO handles triggering */
+ 		irq = bank_irq;
+-		gpio_unbanked = *container_of(irq_get_chip(irq),
+-					      struct irq_chip_type, chip);
+-		gpio_unbanked.chip.name = "GPIO-AINTC";
+-		gpio_unbanked.chip.irq_set_type = gpio_irq_type_unbanked;
++		irq_chip = gpio_get_irq_chip(irq);
++		irq_chip->name = "GPIO-AINTC";
++		irq_chip->irq_set_type = gpio_irq_type_unbanked;
+ 
+ 		/* default trigger: both edges */
+ 		g = gpio2regs(0);
+@@ -511,7 +542,7 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+ 
+ 		/* set the direct IRQs up to use that irqchip */
+ 		for (gpio = 0; gpio < pdata->gpio_unbanked; gpio++, irq++) {
+-			irq_set_chip(irq, &gpio_unbanked.chip);
++			irq_set_chip(irq, irq_chip);
+ 			irq_set_handler_data(irq, &chips[gpio / 32]);
+ 			irq_set_status_flags(irq, IRQ_TYPE_EDGE_BOTH);
+ 		}
+@@ -554,7 +585,8 @@ done:
+ 
+ #if IS_ENABLED(CONFIG_OF)
+ static const struct of_device_id davinci_gpio_ids[] = {
+-	{ .compatible = "ti,dm6441-gpio", },
++	{ .compatible = "ti,keystone-gpio", keystone_gpio_get_irq_chip},
++	{ .compatible = "ti,dm6441-gpio", davinci_gpio_get_irq_chip},
+ 	{ /* sentinel */ },
+ };
+ MODULE_DEVICE_TABLE(of, davinci_gpio_ids);
+-- 
+1.7.9.5
