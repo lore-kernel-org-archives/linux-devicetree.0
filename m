@@ -1,47 +1,45 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCHv3 1/2] net: stmmac: Add SOCFPGA glue driver
-Date: Wed, 12 Feb 2014 19:35:39 -0500 (EST)
-Message-ID: <20140212.193539.38124529344029793.davem@davemloft.net>
-References: <1392061697-20193-1-git-send-email-dinguyen@altera.com>
+From: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [RFC/PATCH 2/3] arm: Add ARCH_WANT_OF_RANDOMNESS
+Date: Wed, 12 Feb 2014 16:54:07 -0800
+Message-ID: <52FC17AF.1080508@codeaurora.org>
+References: <1392168805-14200-1-git-send-email-lauraa@codeaurora.org> < 1392168805-14200-3-git-send-email-lauraa@codeaurora.org> <20140212164907.0E958C407C9@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1392061697-20193-1-git-send-email-dinguyen@altera.com>
-Sender: netdev-owner@vger.kernel.org
-To: dinguyen@altera.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, dinh.linux@gmail.com, peppe.cavallaro@st.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, vbridgers2013@gmail.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140212164907.0E958C407C9-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: <dinguyen@altera.com>
-Date: Mon, 10 Feb 2014 13:48:16 -0600
+On 2/12/2014 8:49 AM, Grant Likely wrote:
+> On Tue, 11 Feb 2014 17:33:24 -0800, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>> The stack canary for ARM is currently the same across reboots
+>> due to lack of randomness early enough. Add ARCH_WANT_OF_RANDOMNESS
+>> to allow devices to add whatever randomness they need.
+>>
+>> Signed-off-by: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>
+> Do you have a draft patch for a user of this yet?
+>
 
-> From: Dinh Nguyen <dinguyen@altera.com>
-> 
-> Like the STi series SOCs, Altera's SOCFPGA also needs a glue layer on top of the
-> Synopsys gmac IP.
-> 
-> This patch adds the platform driver for the glue layer which configures the IP
-> before the generic STMMAC driver takes over.
-> 
-> Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
-> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: Vince Bridgers <vbridgers2013@gmail.com>
-> ---
-> v3: Remove stray empty line at end of dwmac-socfpga.c.
-> v2: Use the dwmac-sti as an example for a glue layer and split patch up
-> to have dts as a separate patch. Also cc dts maintainers since there is
-> a new binding.
+I had a particular patch in mind but I need to re-work it to work with 
+the upstream tree. I wanted to at least send out the infrastructure to 
+see how open people were to the idea. After reading the comments, I have 
+a couple more ideas of users as well. I'll see if I can work that in for v2.
 
-The second patch for the DTS update doesn't apply cleanly at all to
-mainline.
+> g.
+>
 
-Why don't you push both of these patches through whatever tree that
-file is maintained under.  You can add my ack:
+Thanks,
+Laura
 
-Acked-by: David S. Miller <davem@davemloft.net>
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
