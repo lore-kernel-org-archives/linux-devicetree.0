@@ -1,117 +1,122 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM: dts: omap3 clocks: simplify ssi aliases
-Date: Thu, 13 Feb 2014 14:49:14 -0800
-Message-ID: <20140213224914.GD28216@atomide.com>
-References: <52DE24DA.8050104@ti.com>
- <1390315061-14441-1-git-send-email-sre@debian.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ARM: sunxi: dt: Convert to the new i2c compatibles
+Date: Thu, 13 Feb 2014 23:52:48 +0100
+Message-ID: <20140213225248.GB15350@lukather>
+References: <1391680285-16668-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1391680285-16668-3-git-send-email-maxime.ripard@free-electrons.com>
+ <20140213082630.GA3119@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="DKU6Jbt7q3WqK7+M"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1390315061-14441-1-git-send-email-sre@debian.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: Sebastian Reichel <sre@ring0.de>, Tero Kristo <t-kristo@ti.com>, mturquette@linaro.org, bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20140213082630.GA3119@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Sebastian Reichel <sre@debian.org> [140121 06:39]:
-> update aliases for the ssi clocks ssi_ssr_fck, ssi_sst_fck and ssi_ick
-> to make them consistent for omap34xx and omap36xx. This makes it
-> possible to reference the clocks from generic omap3 dts files.
 
-Is this needed as a fix for v3.14-rc? If so, please let me know
-and ack if you want me to take it.
+--DKU6Jbt7q3WqK7+M
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Tony
- 
-> Signed-off-by: Sebastian Reichel <sre@debian.org>
-> ---
->  arch/arm/boot/dts/omap3430es1-clocks.dtsi              | 10 +++++-----
->  arch/arm/boot/dts/omap36xx-omap3430es2plus-clocks.dtsi | 10 +++++-----
->  2 files changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/omap3430es1-clocks.dtsi b/arch/arm/boot/dts/omap3430es1-clocks.dtsi
-> index 02f6c7f..6f31954 100644
-> --- a/arch/arm/boot/dts/omap3430es1-clocks.dtsi
-> +++ b/arch/arm/boot/dts/omap3430es1-clocks.dtsi
-> @@ -82,16 +82,16 @@
->  		ti,dividers = <0>, <1>, <2>, <3>, <4>, <0>, <6>, <0>, <8>;
->  	};
->  
-> -	ssi_ssr_fck_3430es1: ssi_ssr_fck_3430es1 {
-> +	ssi_ssr_fck: ssi_ssr_fck_3430es1 {
->  		#clock-cells = <0>;
->  		compatible = "ti,composite-clock";
->  		clocks = <&ssi_ssr_gate_fck_3430es1>, <&ssi_ssr_div_fck_3430es1>;
->  	};
->  
-> -	ssi_sst_fck_3430es1: ssi_sst_fck_3430es1 {
-> +	ssi_sst_fck: ssi_sst_fck_3430es1 {
->  		#clock-cells = <0>;
->  		compatible = "fixed-factor-clock";
-> -		clocks = <&ssi_ssr_fck_3430es1>;
-> +		clocks = <&ssi_ssr_fck>;
->  		clock-mult = <1>;
->  		clock-div = <2>;
->  	};
-> @@ -120,7 +120,7 @@
->  		clock-div = <1>;
->  	};
->  
-> -	ssi_ick_3430es1: ssi_ick_3430es1 {
-> +	ssi_ick: ssi_ick_3430es1 {
->  		#clock-cells = <0>;
->  		compatible = "ti,omap3-no-wait-interface-clock";
->  		clocks = <&ssi_l4_ick>;
-> @@ -203,6 +203,6 @@
->  			 <&i2c1_ick>, <&uart2_ick>, <&uart1_ick>, <&gpt11_ick>,
->  			 <&gpt10_ick>, <&mcbsp5_ick>, <&mcbsp1_ick>,
->  			 <&omapctrl_ick>, <&aes2_ick>, <&sha12_ick>,
-> -			 <&fshostusb_fck>, <&fac_ick>, <&ssi_ick_3430es1>;
-> +			 <&fshostusb_fck>, <&fac_ick>, <&ssi_ick>;
->  	};
->  };
-> diff --git a/arch/arm/boot/dts/omap36xx-omap3430es2plus-clocks.dtsi b/arch/arm/boot/dts/omap36xx-omap3430es2plus-clocks.dtsi
-> index 8ed475d..877318c 100644
-> --- a/arch/arm/boot/dts/omap36xx-omap3430es2plus-clocks.dtsi
-> +++ b/arch/arm/boot/dts/omap36xx-omap3430es2plus-clocks.dtsi
-> @@ -25,16 +25,16 @@
->  		ti,dividers = <0>, <1>, <2>, <3>, <4>, <0>, <6>, <0>, <8>;
->  	};
->  
-> -	ssi_ssr_fck_3430es2: ssi_ssr_fck_3430es2 {
-> +	ssi_ssr_fck: ssi_ssr_fck_3430es2 {
->  		#clock-cells = <0>;
->  		compatible = "ti,composite-clock";
->  		clocks = <&ssi_ssr_gate_fck_3430es2>, <&ssi_ssr_div_fck_3430es2>;
->  	};
->  
-> -	ssi_sst_fck_3430es2: ssi_sst_fck_3430es2 {
-> +	ssi_sst_fck: ssi_sst_fck_3430es2 {
->  		#clock-cells = <0>;
->  		compatible = "fixed-factor-clock";
-> -		clocks = <&ssi_ssr_fck_3430es2>;
-> +		clocks = <&ssi_ssr_fck>;
->  		clock-mult = <1>;
->  		clock-div = <2>;
->  	};
-> @@ -55,7 +55,7 @@
->  		clock-div = <1>;
->  	};
->  
-> -	ssi_ick_3430es2: ssi_ick_3430es2 {
-> +	ssi_ick: ssi_ick_3430es2 {
->  		#clock-cells = <0>;
->  		compatible = "ti,omap3-ssi-interface-clock";
->  		clocks = <&ssi_l4_ick>;
-> @@ -193,6 +193,6 @@
->  			 <&i2c1_ick>, <&uart2_ick>, <&uart1_ick>, <&gpt11_ick>,
->  			 <&gpt10_ick>, <&mcbsp5_ick>, <&mcbsp1_ick>,
->  			 <&omapctrl_ick>, <&aes2_ick>, <&sha12_ick>,
-> -			 <&ssi_ick_3430es2>;
-> +			 <&ssi_ick>;
->  	};
->  };
-> -- 
-> 1.8.5.2
-> 
+On Thu, Feb 13, 2014 at 09:26:30AM +0100, Wolfram Sang wrote:
+>=20
+> Why is the devicetree list not on CC? (Added now)
+>=20
+> On Thu, Feb 06, 2014 at 10:51:25AM +0100, Maxime Ripard wrote:
+> > Switch the device tree to the new compatibles introduced in the i2c dri=
+vers
+> > to have a common pattern accross all Allwinner SoCs.
+> >=20
+> > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/sun4i-a10.dtsi  |  6 +++---
+> >  arch/arm/boot/dts/sun5i-a10s.dtsi |  6 +++---
+> >  arch/arm/boot/dts/sun5i-a13.dtsi  |  6 +++---
+> >  arch/arm/boot/dts/sun7i-a20.dtsi  | 10 +++++-----
+> >  4 files changed, 14 insertions(+), 14 deletions(-)
+> >=20
+> > diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i=
+-a10.dtsi
+> > index 28273f9..ac65c8a 100644
+> > --- a/arch/arm/boot/dts/sun4i-a10.dtsi
+> > +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+> > @@ -518,7 +518,7 @@
+> >  		};
+> > =20
+> >  		i2c0: i2c@01c2ac00 {
+> > -			compatible =3D "allwinner,sun4i-i2c";
+> > +			compatible =3D "allwinner,sun4i-a10-i2c";
+>=20
+> Can't we have:
+>=20
+> 	compatible =3D "allwinner,sun4i-a10-i2c", "allwinner,sun4i-i2c";
+>=20
+> ? And keep the old "allwinner,sun4i-i2c" and extend it with a SoC
+> specific a10 compatible entry when a distinction is needed?
+
+Actually, the two are exactly equivalent. The point is that the
+compatible naming scheme doesn't follow what we are using (which is
+<family>-<soc>-i2c), so we wan't to get rid of the old naming scheme
+all together.
+
+> > diff --git a/arch/arm/boot/dts/sun5i-a13.dtsi b/arch/arm/boot/dts/sun5i=
+-a13.dtsi
+> > index 6de40b6..537072c 100644
+> > --- a/arch/arm/boot/dts/sun5i-a13.dtsi
+> > +++ b/arch/arm/boot/dts/sun5i-a13.dtsi
+> > @@ -377,7 +377,7 @@
+> >  		};
+> > =20
+> >  		i2c0: i2c@01c2ac00 {
+> > -			compatible =3D "allwinner,sun4i-i2c";
+> > +			compatible =3D "allwinner,sun4i-a10-i2c";
+>=20
+> For non-a10, That should be at least
+>=20
+> 	compatible =3D "allwinner,sun4i-a13-i2c", "allwinner,sun4i-a10-i2c";
+>=20
+> or
+>=20
+> 	compatible =3D "allwinner,sun4i-a13-i2c", "allwinner,sun4i-i2c";
+>=20
+> depending on the outcome above.
+>=20
+> Or is my knowledge outdated already?
+>=20
+
+Since they are strictly compatible, we don't need to introduce any
+different compatible string here.
+
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--DKU6Jbt7q3WqK7+M
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS/UzAAAoJEBx+YmzsjxAgWqMP/2thalPTiivRYDtS1jiNsAxx
+RRf6cbCB8c2CI19YU4juNwRjy2IOoRZaeDW8aW7O3Coj7oBb+KGwOBDyU0Ldj1v7
+Nz/KOE8vikJjiBIEIhpkpPoau8JWrX8QkQvj8fgt7ZXwxRo4VEnIw6rx+wN4XsdL
+mxQEDvV7mYhGqD9JjlxRdq62Gnb5uWGvjqeIthWVshD1foyzDfSfzdEGu1YlVNcW
+sxlWfpCayD9lUrHB6CAc58xExpQwhQaEn3rwckotN8RhRezvV1abAIHZLOIg5aGL
+oWbWqeUjiS0Z7Ja6M56tuIdUIR8MkBqJBvYRKnZcDVRW7Lsv6y4pXczJNNg1yEX9
+dHlUwJ3HhT45CpMx8a/oI9VNMyeIg74JR6Tm/FLRyBc1F6QQfv9bEN3eHjAINvlu
+SI01rqd7UQ8wUksxtzPUM5QStMZCYeoVI42UKHpFG56dhuIBlkkRAAhOaE2jwVLd
+l4uFbSbnz8jOo9kOHnFStMoE52kjkuwcGIUx/4z9PUsnj3xfMg+NWPUpmoK/kPxC
+S7nbApYtYbwlIrhbeiABvaEvk115TTfVL4gplYTtPYkRSA6pfiZH/sTkGw3MvnzD
+HX7zLGMeJ6hGl5HSwNDSmkeZkcP+HffxMoXP46dAOcQ9eFnjnhJ+c6ddd4jqVxlV
+tw6GXJVR+cVgpNImJmTU
+=7c0p
+-----END PGP SIGNATURE-----
+
+--DKU6Jbt7q3WqK7+M--
