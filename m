@@ -1,29 +1,77 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH net-next v4 00/10] Support for the Broadcom GENET driver
-Date: Thu, 13 Feb 2014 18:38:06 -0500 (EST)
-Message-ID: <20140213.183806.278183709549075615.davem@davemloft.net>
-References: <1392334222-1089-1-git-send-email-f.fainelli@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] [RESEND] ARM/dts: hdmi-codec: panda/es dt entries
+Date: Thu, 13 Feb 2014 15:38:10 -0800
+Message-ID: <20140213233809.GV28216@atomide.com>
+References: <1392307081-12299-1-git-send-email-paolo.pisati@canonical.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1392334222-1089-1-git-send-email-f.fainelli@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: f.fainelli@gmail.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, cernekee@gmail.com, mark.rutland@arm.com, romieu@fr.zoreil.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1392307081-12299-1-git-send-email-paolo.pisati@canonical.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Paolo Pisati <paolo.pisati@canonical.com>
+Cc: bcousson@baylibre.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
-Date: Thu, 13 Feb 2014 15:30:12 -0800
+* Paolo Pisati <paolo.pisati@canonical.com> [140213 08:00]:
+> Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
 
-> This patchset adds support for the Broadcom GENET Gigabit Ethernet MAC
-> controller. This controller is found on the Broadcom BCM7xxx Set Top Box
-> System-on-a-chips.
-> 
-> Changes since v3:
-> - fixed Kconfig dependency on FIXED_PHY
-> 
-> Changes since v2:
-> - dropped the patch that adds an "internal" phy-mode
+Missing description? Please also Cc Peter Ujfalusi on this
+and let me know if this is needed as a fix for the -rc cycle.
 
-Looks better, series applied, thanks.
+Regards,
+
+Tony
+
+> ---
+>  arch/arm/boot/dts/omap4-panda-common.dtsi |    9 ++++++++-
+>  arch/arm/boot/dts/omap4-panda-es.dts      |    3 ++-
+>  2 files changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
+> index 88c6a05..f4aeaa1 100644
+> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
+> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+> @@ -36,9 +36,15 @@
+>  		};
+>  	};
+>  
+> +	hdmi_audio: hdmi_audio@0 {
+> +		compatible = "linux,hdmi-audio";
+> +		status = "okay";
+> +	};
+> +
+>  	sound: sound {
+>  		compatible = "ti,abe-twl6040";
+>  		ti,model = "PandaBoard";
+> +		ti,audio-codec = <&hdmi_audio>;
+>  
+>  		ti,mclk-freq = <38400000>;
+>  
+> @@ -57,7 +63,8 @@
+>  			"HSMIC", "Headset Mic",
+>  			"Headset Mic", "Headset Mic Bias",
+>  			"AFML", "Line In",
+> -			"AFMR", "Line In";
+> +			"AFMR", "Line In",
+> +			"HDMI Out", "TX";
+>  	};
+>  
+>  	/* HS USB Port 1 Power */
+> diff --git a/arch/arm/boot/dts/omap4-panda-es.dts b/arch/arm/boot/dts/omap4-panda-es.dts
+> index 816d1c9..70152d6 100644
+> --- a/arch/arm/boot/dts/omap4-panda-es.dts
+> +++ b/arch/arm/boot/dts/omap4-panda-es.dts
+> @@ -23,7 +23,8 @@
+>  		"Line Out", "AUXL",
+>  		"Line Out", "AUXR",
+>  		"AFML", "Line In",
+> -		"AFMR", "Line In";
+> +		"AFMR", "Line In",
+> +		"HDMI Out", "TX";
+>  };
+>  
+>  /* PandaboardES has external pullups on SCL & SDA */
+> -- 
+> 1.7.9.5
+> 
