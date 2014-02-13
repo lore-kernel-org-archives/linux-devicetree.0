@@ -1,100 +1,43 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: Re: [PATCH v2 1/5] drivers: of: add initialization code for reserved
- memory
-Date: Thu, 13 Feb 2014 13:48:40 -0600
-Message-ID: <20140213194840.GO841@joshc.qualcomm.com>
-References: <1391515773-6112-2-git-send-email-m.szyprowski@samsung.com>
- <20140205110538.99E47C40A89@trevor.secretlab.ca>
- <52FA0D6E.9090304@samsung.com>
- <20140211121316.24032C40C4D@trevor.secretlab.ca>
- <52FA33E2.4050004@samsung.com>
- <20140211190104.7E6C5C4140E@trevor.secretlab.ca>
- <1392148971.3835.15.camel@pasglop>
- <52FA8245.5050707@gmail.com>
- <20140211201933.GI841@joshc.qualcomm.com>
- <52FA87B8.8040203@gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH net-next v2 01/10] net: phy: add "internal" PHY mode
+Date: Thu, 13 Feb 2014 15:34:09 -0500 (EST)
+Message-ID: <20140213.153409.1193335923050383308.davem@davemloft.net>
+References: <1392269395-23513-1-git-send-email-f.fainelli@gmail.com>
+	<1392269395-23513-2-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52FA87B8.8040203@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Grant Likely <grant.likely@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@gmail.com>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1392269395-23513-2-git-send-email-f.fainelli@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: f.fainelli@gmail.com
+Cc: netdev@vger.kernel.org, cernekee@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 11, 2014 at 09:27:36PM +0100, Tomasz Figa wrote:
-> On 11.02.2014 21:19, Josh Cartwright wrote:
-> >On Tue, Feb 11, 2014 at 09:04:21PM +0100, Tomasz Figa wrote:
-> > >On 11.02.2014 21:02, Benjamin Herrenschmidt wrote:
-> > > >On Tue, 2014-02-11 at 19:01 +0000, Grant Likely wrote:
-> > > > > > except that the former IMHO better suits the definition of memory
-> > > > > > region, which I see as a single contiguous range of memory and can be
-> > > > > > simplified to have a single reg entry per region.
-> > > > >
-> > > > > My point is rather if multiple reg tuples are found in a reserved memory
-> > > > > node, the kernel must respect them and reserve the memory. I'm not
-> > > > > arguing about whether or not that makes for a good binding.
-> > > >
-> > > > agreed.
-> > >
-> > > My point is why, if the binding defines that just a single tuple should be
-> > > provided.
-> >
-> > FWIW, the usecase I had mentioned in reply to Grant in the patch 5/5
-> > thread [1] could make use of this.  The shared memory region is split
-> > into a main chunk and several "auxiliary" chunk, but collectively these
-> > regions all share the same heap state.
-> >
-> >   Josh
-> >
-> > 1: http://lkml.kernel.org/r/20140205192502.GO20228@joshc.qualcomm.com
->
-> The use case seems fine, but I believe it could be properly represented in
-> device tree using multiple single-reg regions as well, unless the consumer
-> can request a block of memory that crosses boundary of two sub-regions
-> specified by reg entries of single region.
+From: Florian Fainelli <f.fainelli@gmail.com>
+Date: Wed, 12 Feb 2014 21:29:46 -0800
 
-I could probably make a only-one-reg-entry policy work for me, but it
-makes things a bit more awkward.  I'd lose the ability to describe
-"this set of regions need to be logically handled together" directly in
-the reserved memory node, and would need to push it up a layer.
+> On some systems, the PHY can be internal, in the same package as the
+> Ethernet MAC, and still be responding to a specific address on the MDIO
+> bus, in that case, the Ethernet MAC might need to know about it to
+> properly configure a port multiplexer to switch to an internal or
+> external PHY. Add a new PHY interface mode for this and update the
+> Device Tree of_get_phy_mode() function to look for it.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+> Changes since v1:
+> - rebased against lastest net-next master branch
 
-	reserved-memory {
-		smem: smem {
-			reg = <...>;
-		};
-		aux1: auxiliary1 {
-			reg = <...>;
-		};
-		aux2: auxiliary2 {
-			reg = <...>;
-		};
-		...
-	};
+This is over-engineering.
 
-	heap : heap {
-		compatible = "qcom,shared-memory";
-		memory-region = <&smem &aux1 &aux2>;
-		#smem-cells = <2>;
-	};
+The only thing that even uses this value is phy_is_internal(), and
+the only user of phy_is_internal() is the generic PHY layer ethtool
+operation for get-settings.
 
-	actual_consumer1 {
-		compatible = "...";
-		smem = <&heap IDENTIFIER1 0x1000>;
-	};
+The PHY layer already has a place to indicate whether a PHY is
+internal or not, overriding that using the PHY mode is trouble
+waiting to happen.
 
-	actual_consumer2 {
-		compatible = "...";
-		smem = <&heap IDENTIFIER2 0x1000>;
-	};
-
-Maybe that's better off, I don't know.  This would also eliminate my
-need for a #memory-region-cells property.
-
-Thanks,
-  Josh
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Please, just provide some way to propagate this device tree property
+into phy->is_internal.
