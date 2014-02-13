@@ -1,146 +1,48 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: give priority to the compatible match in __of_match_node()
-Date: Thu, 13 Feb 2014 13:01:42 -0600
-Message-ID: <CAL_JsqKMi2H=vwoxrOt8QRA2xJeiLqBKKfLtt4QRCRoFk6JUHg@mail.gmail.com>
-References: <1392205084-2351-1-git-send-email-haokexin@gmail.com>
+Subject: Re: [PATCH 1/3] driver core & of: Mark of_nodes of added device as populated
+Date: Thu, 13 Feb 2014 13:15:13 -0600
+Message-ID: <CAL_JsqJQy7ob87=wPOLxn3X0fTrt2QhAEJ2nPTAmCMZqNZp+sw@mail.gmail.com>
+References: <1392137610-27842-1-git-send-email-pawel.moll@arm.com>
+	<1392137610-27842-2-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392205084-2351-1-git-send-email-haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1392137610-27842-2-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen N Chivers <schivers-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, Chris Proctor <cproctor-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 12, 2014 at 5:38 AM, Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> When the device node do have a compatible property, we definitely
-> prefer the compatible match besides the type and name. Only if
-> there is no such a match, we then consider the candidate which
-> doesn't have compatible entry but do match the type or name with
-> the device node.
+On Tue, Feb 11, 2014 at 10:53 AM, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org> wrote:
+> In "Device Tree powered" systems, platform devices are usually
+> massively populated with of_platform_populate() call, executed
+> at some level of initcalls, either by generic architecture
+> or by platform-specific code.
 >
-> This is based on a patch from Sebastian Hesselbarth.
->   http://patchwork.ozlabs.org/patch/319434/
+> There are situations though where certain devices must be
+> created (and bound with drivers) before all the others.
+> This presents small challenge in DT-driven systems, as
+> devices explicitly created in early code would be created
+> again by of_platform_populate().
 >
-> I did some code refactoring and also fixed a bug in the original patch.
+> This patch tries to solve that issue in a generic way,
+> adding a "populated" flag which is set in the device_node
+> structure when a device is being created in the core.
+> Later, of_platform_populate() skips such nodes (and
+> its children) in a similar way to the non-available ones.
+>
+> Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  drivers/base/core.c       |  4 ++++
+>  drivers/of/device.c       | 16 ++++++++++++++++
+>  drivers/of/platform.c     |  6 ++++--
+>  include/linux/of.h        |  6 ++++++
+>  include/linux/of_device.h | 11 +++++++++++
+>  5 files changed, 41 insertions(+), 2 deletions(-)
 
-I'm inclined to just revert this once again and avoid possibly
-breaking yet another platform.
-
-However, I think I would like to see this structured differently. We
-basically have 2 ways of matching: the existing pre-3.14 way and the
-desired match on best compatible only. All new bindings should match
-with the new way and the old way needs to be kept for compatibility.
-So lets structure the code that way. Search the match table first for
-best compatible with name and type NULL, then search the table the old
-way. I realize it appears you are doing this, but it is not clear this
-is the intent of the code. I would like to see this written as a patch
-with commit 105353145eafb3ea919 reverted first and you add a new match
-function to call first and then fallback to the existing function.
+Go read Grant's and my comments from your last posting.
 
 Rob
-
->
-> Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/of/base.c | 55 +++++++++++++++++++++++++++++++++++++------------------
->  1 file changed, 37 insertions(+), 18 deletions(-)
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index ff85450d5683..9d655df458bd 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -730,32 +730,45 @@ out:
->  }
->  EXPORT_SYMBOL(of_find_node_with_property);
->
-> +static int of_match_type_or_name(const struct device_node *node,
-> +                               const struct of_device_id *m)
-> +{
-> +       int match = 1;
-> +
-> +       if (m->name[0])
-> +               match &= node->name && !strcmp(m->name, node->name);
-> +
-> +       if (m->type[0])
-> +               match &= node->type && !strcmp(m->type, node->type);
-> +
-> +       return match;
-> +}
-> +
->  static
->  const struct of_device_id *__of_match_node(const struct of_device_id *matches,
->                                            const struct device_node *node)
->  {
->         const char *cp;
->         int cplen, l;
-> +       const struct of_device_id *m;
-> +       int match;
->
->         if (!matches)
->                 return NULL;
->
->         cp = __of_get_property(node, "compatible", &cplen);
-> -       do {
-> -               const struct of_device_id *m = matches;
-> +       while (cp && (cplen > 0)) {
-> +               m = matches;
->
->                 /* Check against matches with current compatible string */
->                 while (m->name[0] || m->type[0] || m->compatible[0]) {
-> -                       int match = 1;
-> -                       if (m->name[0])
-> -                               match &= node->name
-> -                                       && !strcmp(m->name, node->name);
-> -                       if (m->type[0])
-> -                               match &= node->type
-> -                                       && !strcmp(m->type, node->type);
-> -                       if (m->compatible[0])
-> -                               match &= cp
-> -                                       && !of_compat_cmp(m->compatible, cp,
-> +                       if (!m->compatible[0]) {
-> +                               m++;
-> +                               continue;
-> +                       }
-> +
-> +                       match = of_match_type_or_name(node, m);
-> +                       match &= cp && !of_compat_cmp(m->compatible, cp,
->                                                         strlen(m->compatible));
->                         if (match)
->                                 return m;
-> @@ -763,12 +776,18 @@ const struct of_device_id *__of_match_node(const struct of_device_id *matches,
->                 }
->
->                 /* Get node's next compatible string */
-> -               if (cp) {
-> -                       l = strlen(cp) + 1;
-> -                       cp += l;
-> -                       cplen -= l;
-> -               }
-> -       } while (cp && (cplen > 0));
-> +               l = strlen(cp) + 1;
-> +               cp += l;
-> +               cplen -= l;
-> +       }
-> +
-> +       m = matches;
-> +       /* Check against matches without compatible string */
-> +       while (m->name[0] || m->type[0] || m->compatible[0]) {
-> +               if (!m->compatible[0] && of_match_type_or_name(node, m))
-> +                       return m;
-> +               m++;
-> +       }
->
->         return NULL;
->  }
-> --
-> 1.8.5.3
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
