@@ -1,28 +1,133 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/2] Add Ether DT support for R8A7791/Koelsch reference
- board
-Date: Thu, 13 Feb 2014 15:03:12 +0900
-Message-ID: <20140213060312.GI17183@verge.net.au>
-References: <201402070110.18561.sergei.shtylyov@cogentembedded.com>
+From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] Documentation: mfd: Add binding document for S2MPA01
+Date: Thu, 13 Feb 2014 11:47:19 +0530
+Message-ID: <CAK9yfHyrKR27Z=S4ZuS5ZuJKjiVxFQXe4=izXyJMRs8c+-PuMg@mail.gmail.com>
+References: <1389266554-23463-1-git-send-email-sachin.kamat@linaro.org>
+	<1389266554-23463-3-git-send-email-sachin.kamat@linaro.org>
+	<20140212181043.GB23630@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201402070110.18561.sergei.shtylyov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140212181043.GB23630-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 07, 2014 at 01:10:17AM +0300, Sergei Shtylyov wrote:
-> Hello.
-> 
->    Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
-> 'renesas-devel-v3.14-rc1-20140206v2' tag. Here we add the Ether device tree
-> support working on the R8A7791/Koelsch reference board. The patchset requires
-> the 'sh_eth' driver device tree support posted earlier in order to work.
-> 
-> [1/2] ARM: shmobile: r8a7791: add Ether DT support
-> [2/2] ARM: shmobile: koelsch: add Ether DT support
+Hi Mark,
 
-Thanks. Please repost this series once the bindings have been accepted.
+On 12 February 2014 23:40, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> Hi Sachin,
+>
+> Apologies for the delay on this.
+
+No problem :). Thank you for your review. Please see my comments inline.
+
+>
+> On Thu, Jan 09, 2014 at 11:22:34AM +0000, Sachin Kamat wrote:
+>> Added initial binding documentation for S2MPA01 MFD.
+>>
+>> Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>> * Re-organised as suggested by Mark Rutland.
+>> ---
+>>  Documentation/devicetree/bindings/mfd/s2mpa01.txt |   86 +++++++++++++++++++++
+>>  1 file changed, 86 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mfd/s2mpa01.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/s2mpa01.txt b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
+>> new file mode 100644
+>> index 000000000000..70879b92b24b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
+>> @@ -0,0 +1,86 @@
+>> +
+>> +* Samsung S2MPA01 Voltage and Current Regulator
+>> +
+>> +The Samsung S2MPA01 is a multi-function device which includes high
+>> +efficiency buck converters including Dual-Phase buck converter, various LDOs,
+>> +and an RTC. It is interfaced to the host controller using an I2C interface.
+>> +Each sub-block is addressed by the host system using different I2C slave
+>> +addresses.
+>> +
+>> +Required properties:
+>> +- compatible: Should be "samsung,s2mpa01-pmic".
+>> +- reg: Specifies the I2C slave address of the PMIC block. It should be 0x66.
+>
+> Is the slave address not per-instance in I2C? If not why must is be 0x66?
+
+Mark Brown already replied to this. Thanks Mark.
+
+>
+>> +
+>> +Optional properties:
+>> +- interrupt-parent: Specifies the phandle of the interrupt controller to which
+>> +  the interrupts from s2mpa01 are delivered to.
+>> +- interrupts: Interrupt specifier for interrupt source (connected to SoC).
+>
+> The part in brackets can go. Assuming this is a single interrupt:
+
+OK.
+
+>
+> - interrupts: An interrupt-specifier for the sole interrupt generated by
+>   the device.
+>
+> If the interrupt has a name it would be nice to mention that. If there
+> are more than one you should describe them.
+>
+>> +
+>> +Optional nodes:
+>> +- regulators: The regulators of s2mpa01 that have to be instantiated should be
+>> +  included in a sub-node named 'regulators'. Regulator nodes and constraints
+>> +  included in this sub-node use the standard regulator bindings which are
+>> +  documented elsewhere.
+>> +
+>> +Properties for BUCK regulator nodes:
+>> + regulator-ramp-delay for BUCKs = [6250/12500(default)/25000/50000] uV/us
+>
+> This could be made easier to read:
+>
+> - regulator-ramp-delay: ramp delay in uV/us. May be 6250, 12500
+>   (default), 250000, or 50000. May be 0 for disabling the ramp delay on
+>   BUCK{1,2,3,4}.
+
+Yes. Will update.
+
+>
+>> +
+>> + BUCK[1/2/3/4] supports disabling ramp delay on hardware, so explictly
+>> + regulator-ramp-delay = <0> can be used for them to disable ramp delay.
+>> + In the absence of the regulator-ramp-delay property, the default ramp
+>> + delay will be used.
+>
+> Can be folded into the above, as in my example.
+
+Right.
+
+>
+>> +
+>> +  NOTE: Some BUCKs share the ramp rate setting i.e. same ramp value will be set
+>> +  for a particular group of BUCKs. So provide same regulator-ramp-delay<value>.
+>
+> Missing '=' before <value>?
+
+Yes. Thanks for pointing out.
+
+>
+>> +  Grouping of BUCKs sharing ramp rate setting is as follow : BUCK[1, 6],
+>> +  BUCK[2, 4], and BUCK[8, 9, 10]
+>
+> The following BUCKs share ramp settings:
+> * 1 and 6
+> * 2 and 4
+> * 8, 9, and 10
+
+OK.
+-- 
+With warm regards,
+Sachin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
