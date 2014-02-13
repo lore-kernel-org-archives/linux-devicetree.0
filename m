@@ -1,89 +1,84 @@
-From: Mohit KUMAR DCG <Mohit.KUMAR-qxv4g6HH51o@public.gmane.org>
-Subject: RE: [PATCH V6 03/12] phy: st-miphy40lp: Add binding information
-Date: Thu, 13 Feb 2014 13:19:11 +0800
-Message-ID: <2CC2A0A4A178534D93D5159BF3BCB66189FD2CAFB1@EAPEX1MAIL1.st.com>
-References: <cover.1392109054.git.mohit.kumar@st.com>
- <af50da74226a244dfc05aed3dc9d28b896d166a4.1392109054.git.mohit.kumar@st.com>
- <20140212182012.GC23630@e106331-lin.cambridge.arm.com>
+From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] regulator: Add support for S2MPA01 regulator
+Date: Thu, 13 Feb 2014 10:54:28 +0530
+Message-ID: <CAK9yfHzm5Z8Ajn2GQsjLeLxKeP+AuGXCBxsTX=1h7fOASqwekg@mail.gmail.com>
+References: <1389266554-23463-1-git-send-email-sachin.kamat@linaro.org>
+	<1389266554-23463-2-git-send-email-sachin.kamat@linaro.org>
+	<20140212180223.GA23630@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140212182012.GC23630-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20140212180223.GA23630-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Pratyush ANAND <pratyush.anand-qxv4g6HH51o@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
+On 12 February 2014 23:32, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Thu, Jan 09, 2014 at 11:22:33AM +0000, Sachin Kamat wrote:
+>> Add support for S2MPA01 voltage and current regulator.
+>>
+>> Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>> * Addressed comments from Mark Brown
+>>  - Used module_platform_driver instead of subsys init call
+>> ---
+>>  drivers/regulator/Kconfig   |    7 +
+>>  drivers/regulator/Makefile  |    1 +
+>>  drivers/regulator/s2mpa01.c |  482 +++++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 490 insertions(+)
+>>  create mode 100644 drivers/regulator/s2mpa01.c
+>
+> [...]
+>
+>> +static int s2mpa01_pmic_probe(struct platform_device *pdev)
+>> +{
+>> +       struct sec_pmic_dev *iodev = dev_get_drvdata(pdev->dev.parent);
+>> +       struct sec_platform_data *pdata = dev_get_platdata(iodev->dev);
+>> +       struct of_regulator_match rdata[S2MPA01_REGULATOR_MAX];
+>> +       struct device_node *reg_np = NULL;
+>> +       struct regulator_config config = { };
+>> +       struct s2mpa01_info *s2mpa01;
+>> +       int i, ret;
+>> +
+>> +       s2mpa01 = devm_kzalloc(&pdev->dev, sizeof(*s2mpa01), GFP_KERNEL);
+>> +       if (!s2mpa01)
+>> +               return -ENOMEM;
+>> +
+>> +       for (i = 0; i < S2MPA01_REGULATOR_CNT; i++)
+>> +               rdata[i].name = regulators[i].name;
+>> +
+>> +       if (iodev->dev->of_node) {
+>> +               reg_np = of_find_node_by_name(iodev->dev->of_node,
+>> +                                                       "regulators");
+>
+> This walks the allnodes list, and can thus walk outside of the parent
+> node.
+>
+> Use of_get_child_by_name instead.
 
-> -----Original Message-----
-> From: Mark Rutland [mailto:mark.rutland-5wv7dgnIgG8@public.gmane.org]
-> Sent: Wednesday, February 12, 2014 11:50 PM
-> To: Mohit KUMAR DCG
-> Cc: arnd-r2nGTMty4D4@public.gmane.org; Pratyush ANAND; Viresh Kumar; Kishon Vijay Abraham I;
-> spear-devel; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Subject: Re: [PATCH V6 03/12] phy: st-miphy40lp: Add binding information
-> 
-> On Tue, Feb 11, 2014 at 09:29:59AM +0000, Mohit Kumar wrote:
-> > From: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
-> >
-> > ST miphy40lp can be used with PCIe, SATA and Super Speed USB
-> > controllers. SPEAr13XX SoCs use this phy for PCIe and SATA.
-> >
-> > Signed-off-by: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
-> > Cc: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
-> > Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> > Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> > Cc: spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > ---
-> >  .../devicetree/bindings/phy/st-miphy40lp.txt       |   18
-> ++++++++++++++++++
-> >  1 files changed, 18 insertions(+), 0 deletions(-)  create mode 100644
-> > Documentation/devicetree/bindings/phy/st-miphy40lp.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/phy/st-miphy40lp.txt
-> > b/Documentation/devicetree/bindings/phy/st-miphy40lp.txt
-> > new file mode 100644
-> > index 0000000..1c8d04c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/st-miphy40lp.txt
-> > @@ -0,0 +1,18 @@
-> > +ST miphy40lp DT detail
-> > +===================================
-> > +
-> > +miphy40lp is a phy controller from ST Microelectronics which supports
-> > +PCIe, SATA and Super Speed USB host and devices. It has been used in
-> SPEAr13xx SOCs.
-> > +
-> > +Required properties:
-> > +- compatible : should be "st,miphy40lp-phy"
-> > +	Other supported soc specific compatible:
-> > +		"st,spear1310-miphy"
-> > +		"st,spear1340-miphy"
-> > +- reg : offset and length of the PHY register set.
-> > +- misc: phandle for the syscon node to access misc registers
-> 
-> This is very vague. What is this used for?
+OK.
 
-- These are Spear SoC specific miscellaneous registers. Here these are used for
-to configure sata/pcie  aux clock.
-> 
-> > +- phy-id: Instance id of the phy.
-> > +- #phy-cells : from the generic PHY bindings, must be 1.
-> > +	- 1st cell: phandle to the phy node.
-> > +	- 2nd cell: 0 if phy (in 1st cell) is to be used for SATA, 1 for PCIe
-> > +	  and 2 for Super Speed USB.
-> 
-> One cell or two?
+>
+>> +                       if (!reg_np) {
+>> +                               dev_err(&pdev->dev,
+>> +                                       "could not find regulators sub-node\n");
+>> +                               return -EINVAL;
+>> +                       }
+>> +
+>> +               of_regulator_match(&pdev->dev, reg_np, rdata,
+>> +                                               S2MPA01_REGULATOR_MAX);
+>
+> Is a reference to reg_np held beyond this? Do you need an
+> of_node_put(reg_np)?
 
-- No of cells are two, is this the question?
+Yes, you are right.
 
-Thanks
-Mohit
+Thanks for the review.
+
+-- 
+With warm regards,
+Sachin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
