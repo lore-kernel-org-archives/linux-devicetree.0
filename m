@@ -1,123 +1,68 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC] dt: bindings: add bindings for Broadcom bcm43xx sdio devices
-Date: Thu, 13 Feb 2014 10:13:23 +0100
-Message-ID: <52FC8CB3.4090305@gmail.com>
-References: <1392059868-8782-1-git-send-email-arend@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392059868-8782-1-git-send-email-arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH v2 10/14] Documentation: mfd: s2mps11: Document support for
+ S2MPS14
+Date: Thu, 13 Feb 2014 10:14:03 +0100
+Message-ID: <1392282847-25444-11-git-send-email-k.kozlowski@samsung.com>
+References: <1392282847-25444-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1392282847-25444-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sangbeom Kim <sbkim73@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Tomasz Figa <t.figa@samsung.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arend,
+Add bindings documentation for S2MPS14 device to the s2mps11 driver.
 
-On 10.02.2014 20:17, Arend van Spriel wrote:
-> The Broadcom bcm43xx sdio devices are fullmac devices that may be
-> integrated in ARM platforms. Currently, the brcmfmac driver for
-> these devices support use of platform data. This patch specifies
-> the bindings that allow this platform data to be expressed in the
-> devicetree.
->
-> Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Reviewed-by: Hante Meuleman <meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Pieter-Paul Giesberts <pieterpg-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> ---
-> This devicetree binding proposal is intended for platforms with
-> Broadcom wireless device in MMC sdio slot. These devices may
-> have their own interrupt and power line. Also the SDIO drive
-> strength is often hardware dependent and expressed in this
-> binding.
->
-> Not sure if this should go in staging or not. Feel free to
-> comment on this proposal.
->
-> Regards,
-> Arend
-> ---
->   .../staging/net/wireless/brcm,bcm43xx-fmac.txt     |   37 ++++++++++++++++++++
->   1 file changed, 37 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/staging/net/wireless/brcm,bcm43xx-fmac.txt
->
-> diff --git a/Documentation/devicetree/bindings/staging/net/wireless/brcm,bcm43xx-fmac.txt b/Documentation/devicetree/bindings/staging/net/wireless/brcm,bcm43xx-fmac.txt
-> new file mode 100644
-> index 0000000..535f343
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/staging/net/wireless/brcm,bcm43xx-fmac.txt
-> @@ -0,0 +1,37 @@
-> +Broadcom BCM43xx Fullmac wireless SDIO devices
-> +
-> +This node provides properties for controlling the Broadcom wireless device. The
-> +node is expected to be specified as a child node to the MMC controller that
-> +connects the device to the system.
-> +
-> +Required properties:
-> +
-> + - compatible : Should be "brcm,bcm43xx-fmac".
-> + - wlan-supply : phandle for fixed regulator used to control power for
-> +	the device/module.
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Tomasz Figa <t.figa@samsung.com>
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+---
+ Documentation/devicetree/bindings/mfd/s2mps11.txt |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-The BCM43xx WLAN chips I used to work always have been controlled by a 
-simple power enable GPIO of the chip itself. Has this changed in newer 
-chips?
-
-If you need to simply toggle a GPIO to control the power, you don't need 
-to use the regulator API at all, controlling the GPIO directly.
-
-> +
-> +Optional properties:
-> + - drive-strength : drive strength used for SDIO pins on device (default = 6mA).
-
-This should be a part of the MMC binding, I think. Probably also moved 
-under MMC controller's node, since it's a board-specific property 
-altering the parameters of the MMC controller, not the WLAN chip.
-
-> + - interrupt-parent : the phandle for the interrupt controller to which the
-> +	device interrupt (HOST_WAKE) is connected.
-> + - interrupts : interrupt specifier encoded according the interrupt controller
-> +	specified by interrupt-parent property.
-
-I would also add a clock here, since the BCM43xx chips usually need a 
-32k clock to operate (or at least the ones I used to work with did). It 
-can be optional, as not all systems can control this clock.
-
-> +
-> +Example:
-> +
-> +mmc3: mmc@01c20000 {
-> +	pinctrl-0 = <&mmc3_pins>;
-> +	pinctrl-1 = <&wifi_host_wake>;
-
-WLAN_HOST_WAKE pin (aka the OOB interrupt) is specific to the WLAN chip, 
-so this should be rather configured in a pinctrl state of the WLAN chip 
-itself.
-
-> +	vmmc-supply = <&mmc3_supply>;
-> +	bus-width = <4>;
-> +
-> +	bcm4335: bcm4335@0 {
-
-nit: Why @0, if there is no reg property under this node?
-
-Best regards,
-Tomasz
-
-> +		compatible = "brcm,bcm43xx-fmac";
-> +		wlan-supply = <&wlan-reg>;
-> +		drive-strength = <4>;
-> +		interrupt-parent = <&gpx2>;
-> +		interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "HOST_WAKE";
-> +	};
-> +};
-> +
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+index 15ee89c3cc7b..f69bec294f02 100644
+--- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
++++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+@@ -1,5 +1,5 @@
+ 
+-* Samsung S2MPS11 Voltage and Current Regulator
++* Samsung S2MPS11 and S2MPS14 Voltage and Current Regulator
+ 
+ The Samsung S2MPS11 is a multi-function device which includes voltage and
+ current regulators, RTC, charger controller and other sub-blocks. It is
+@@ -7,7 +7,7 @@ interfaced to the host controller using an I2C interface. Each sub-block is
+ addressed by the host system using different I2C slave addresses.
+ 
+ Required properties:
+-- compatible: Should be "samsung,s2mps11-pmic".
++- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-pmic".
+ - reg: Specifies the I2C slave address of the pmic block. It should be 0x66.
+ 
+ Optional properties:
+@@ -59,10 +59,14 @@ supports. Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
+ as per the datasheet of s2mps11.
+ 
+ 	- LDOn
+-		  - valid values for n are 1 to 38
++		  - valid values for n are:
++			- S2MPS11: 1 to 38
++			- S2MPS14: 1 to 25
+ 		  - Example: LDO1, LD02, LDO28
+ 	- BUCKn
+-		  - valid values for n are 1 to 10.
++		  - valid values for n are:
++			- S2MPS11: 1 to 10
++			- S2MPS14: 1 to 5
+ 		  - Example: BUCK1, BUCK2, BUCK9
+ 
+ Example:
+-- 
+1.7.9.5
