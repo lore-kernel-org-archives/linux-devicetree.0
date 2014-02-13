@@ -1,99 +1,106 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH] pci: Add support for creating a generic host_bridge from
- device tree
-Date: Thu, 13 Feb 2014 17:18:39 +0900
-Message-ID: <000401cf2894$333a3fc0$99aebf40$%han@samsung.com>
-References: <1391452428-22917-1-git-send-email-Liviu.Dudau@arm.com>
- <1391452428-22917-2-git-send-email-Liviu.Dudau@arm.com>
- <7398333.9L5KlyFggU@wuerfel>
- <CACoXjckKRQfR3CbC1JpgbhOumED+OqiMh1_Y73-h6q=ByMNanw@mail.gmail.com>
- <20140206101814.GA4993@e106497-lin.cambridge.arm.com>
- <000201cf2893$0f5e3710$2e1aa530$%han@samsung.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ARM: sunxi: dt: Convert to the new i2c compatibles
+Date: Thu, 13 Feb 2014 09:26:30 +0100
+Message-ID: <20140213082630.GA3119@katana>
+References: <1391680285-16668-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1391680285-16668-3-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-reply-to: <000201cf2893$0f5e3710$2e1aa530$%han@samsung.com>
-Content-language: ko
-Sender: linux-pci-owner@vger.kernel.org
-To: 'Liviu Dudau' <Liviu.Dudau@arm.com>, 'Tanmay Inamdar' <tinamdar@apm.com>
-Cc: 'Arnd Bergmann' <arnd@arndb.de>, devicetree@vger.kernel.org, 'linaro-kernel' <linaro-kernel@lists.linaro.org>, 'linux-pci' <linux-pci@vger.kernel.org>, 'Will Deacon' <Will.Deacon@arm.com>, 'LKML' <linux-kernel@vger.kernel.org>, 'Catalin Marinas' <Catalin.Marinas@arm.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'LAKML' <linux-arm-kernel@lists.infradead.org>, 'Jingoo Han' <jg1.han@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="FCuugMFkClbJLl1L"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1391680285-16668-3-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 
 
-> -----Original Message-----
-> From: Jingoo Han [mailto:jg1.han@samsung.com]
-> Sent: Thursday, February 13, 2014 5:10 PM
-> To: 'Liviu Dudau'; 'Tanmay Inamdar'
-> Cc: 'Arnd Bergmann'; devicetree@vger.kernel.org; 'linaro-kernel'; 'linux-pci'; 'Will Deacon'; 'LKML';
-> 'Catalin Marinas'; 'Bjorn Helgaas'; 'LAKML'; 'Jingoo Han'
-> Subject: Re: [PATCH] pci: Add support for creating a generic host_bridge from device tree
-> 
-> On Thursday, February 06, 2014 7:18 PM, Liviu Dudau wrote:
-> > On Wed, Feb 05, 2014 at 10:26:27PM +0000, Tanmay Inamdar wrote:
-> > > Hello Liviu,
-> > >
-> > > I did not get the first email of this particular patch on any of
-> > > subscribed mailing lists (don't know why), hence replying here.
-> >
-> > Strange, it shows in the MARC and GMANE archive for linux-pci, probably
-> > a hickup on your receiving side?
-> >
-> > >
-> > > +struct pci_host_bridge *
-> > > +pci_host_bridge_of_init(struct device *parent, int busno, struct pci_ops *ops,
-> > > + void *host_data, struct list_head *resources)
-> > > +{
-> > > + struct pci_bus *root_bus;
-> > > + struct pci_host_bridge *bridge;
-> > > +
-> > > + /* first parse the host bridge bus ranges */
-> > > + if (pci_host_bridge_of_get_ranges(parent->of_node, resources))
-> > > + return NULL;
-> > > +
-> > > + /* then create the root bus */
-> > > + root_bus = pci_create_root_bus(parent, busno, ops, host_data, resources);
-> > > + if (!root_bus)
-> > > + return NULL;
-> > > +
-> > > + bridge = to_pci_host_bridge(root_bus->bridge);
-> > > +
-> > > + return bridge;
-> > > +}
-> > >
-> > > You are keeping the domain_nr inside pci_host_bridge structure. In
-> > > above API, domain_nr is required in 'pci_find_bus' function called
-> > > from 'pci_create_root_bus'. Since the bridge is allocated after
-> > > creating root bus, 'pci_find_bus' always gets domain_nr as 0. This
-> > > will cause problem for scanning multiple domains.
-> >
-> > Good catch. I was switching between creating a pci_controller in arch/arm64 and
-> > adding the needed bits in pci_host_bridge. After internal review I've decided to
-> > add the domain_nr to pci_host_bridge, but forgot to update the code everywhere.
-> 
-> Hi Liviu Dudau,
-> 
-> One more thing,
-> I am reviewing and compiling your patch.
-> Would you consider adding 'struct pci_sys_data' and 'struct hw_pci'?
-> 
-> Currently, 4 PCIe Host drivers (pci-mvebu.c, pci-tegra.c,
-> pci-rcar-gen2.c, pcie-designware.c) are using 'struct pci_sys_data'
-> and 'struct hw_pci' in their drivers. Without this, it makes build
-> errors.
-> 
-> In arm32, 'struct pci_sys_data' and 'struct hw_pci' is defined
-> in "arch/arm/include/asm/mach/pci.h".
-> 
-> Tanmay Inamdar,
-> Your 'APM X-Gene PCIe' patch also needs 'struct pci_sys_data' and
-> 'struct hw_pci'. With Liviu Dudau's patch, it will make build
-> errors. Would you check this?
+--FCuugMFkClbJLl1L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I mean the patch '[PATCH] arm64: Add architecture support for PCI'.
-With this patch, it makes build errors in PCIe Host drivers such as
-pcie-designware.c.
 
-Best regards,
-Jingoo Han
+Why is the devicetree list not on CC? (Added now)
+
+On Thu, Feb 06, 2014 at 10:51:25AM +0100, Maxime Ripard wrote:
+> Switch the device tree to the new compatibles introduced in the i2c drive=
+rs
+> to have a common pattern accross all Allwinner SoCs.
+>=20
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun4i-a10.dtsi  |  6 +++---
+>  arch/arm/boot/dts/sun5i-a10s.dtsi |  6 +++---
+>  arch/arm/boot/dts/sun5i-a13.dtsi  |  6 +++---
+>  arch/arm/boot/dts/sun7i-a20.dtsi  | 10 +++++-----
+>  4 files changed, 14 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a=
+10.dtsi
+> index 28273f9..ac65c8a 100644
+> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
+> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+> @@ -518,7 +518,7 @@
+>  		};
+> =20
+>  		i2c0: i2c@01c2ac00 {
+> -			compatible =3D "allwinner,sun4i-i2c";
+> +			compatible =3D "allwinner,sun4i-a10-i2c";
+
+Can't we have:
+
+	compatible =3D "allwinner,sun4i-a10-i2c", "allwinner,sun4i-i2c";
+
+? And keep the old "allwinner,sun4i-i2c" and extend it with a SoC
+specific a10 compatible entry when a distinction is needed?
+
+> diff --git a/arch/arm/boot/dts/sun5i-a13.dtsi b/arch/arm/boot/dts/sun5i-a=
+13.dtsi
+> index 6de40b6..537072c 100644
+> --- a/arch/arm/boot/dts/sun5i-a13.dtsi
+> +++ b/arch/arm/boot/dts/sun5i-a13.dtsi
+> @@ -377,7 +377,7 @@
+>  		};
+> =20
+>  		i2c0: i2c@01c2ac00 {
+> -			compatible =3D "allwinner,sun4i-i2c";
+> +			compatible =3D "allwinner,sun4i-a10-i2c";
+
+For non-a10, That should be at least
+
+	compatible =3D "allwinner,sun4i-a13-i2c", "allwinner,sun4i-a10-i2c";
+
+or
+
+	compatible =3D "allwinner,sun4i-a13-i2c", "allwinner,sun4i-i2c";
+
+depending on the outcome above.
+
+Or is my knowledge outdated already?
+
+
+--FCuugMFkClbJLl1L
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS/IG2AAoJEBQN5MwUoCm2SLAP/1Cs2ezJL8MyqtUNk66tq5NW
+xQmUrk3bN7LBFgWyjzmbg0+lfOUNL6cKgPpgjqRVLEjbsl+ng+UCjLEwP/XQhDYT
+cppY2dDCNa6rtvgRqSvjxKW43uXHHo9YI2Dt0p8h9j7fzk4EVGnQgpH15qYU4vCL
+6vOiaV2nHASxAhSWsF8mPss9HHoBdTRL7Szxt0dvh11PFVqCiu7OnOkq5ZPQu02h
+vY44Kz47ouLIeurSbFrwvjqwvo0Z3RGv75sVXrW7cCVOO/yNzkXk0p/ooIvRfwPw
+U2lfA8V4Uz1bCP5+872sMzoqMMs1pRGX6gjpSMnPkBNe0z2iASD8aTguY1ETkWB0
+xomeBQ4fSkx4gdzEKJh1CkGh1r1Gsbum+ye94BPxodR8czZz26amVY6t+MtSsPJ4
+zl2IN+jzrxjmQj0lclKqH2cyW0T8XQcuoor2xP6JUADFQv0o/paagaY/IMKcL3Rt
+jVG6SUMJ0ZoKlmTdb5aOD+bK8so7o6pph9LyiicMQdNh0b3E3ZEYkiIkT3k7Xqr/
+2VeDXPjxFEGAFjuaNPoPpE9WGkayRdSSWxSTebcdK89tbn9j4Wv2fQlY38MyDB5R
+kbRfuUSQ7O+diGxglDFbDCDDsJPOKMeupSbClkv5A2dMkDpWJx04k5aGVo2AOZwP
+h5ibcS9oitV0Lt2DHbdj
+=h8kc
+-----END PGP SIGNATURE-----
+
+--FCuugMFkClbJLl1L--
