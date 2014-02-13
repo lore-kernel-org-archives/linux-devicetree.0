@@ -1,84 +1,76 @@
-From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] regulator: Add support for S2MPA01 regulator
-Date: Thu, 13 Feb 2014 10:54:28 +0530
-Message-ID: <CAK9yfHzm5Z8Ajn2GQsjLeLxKeP+AuGXCBxsTX=1h7fOASqwekg@mail.gmail.com>
-References: <1389266554-23463-1-git-send-email-sachin.kamat@linaro.org>
-	<1389266554-23463-2-git-send-email-sachin.kamat@linaro.org>
-	<20140212180223.GA23630@e106331-lin.cambridge.arm.com>
+From: Mohit KUMAR DCG <Mohit.KUMAR-qxv4g6HH51o@public.gmane.org>
+Subject: RE: [PATCH V6 05/12] SPEAr: misc: Add binding information
+Date: Thu, 13 Feb 2014 13:25:22 +0800
+Message-ID: <2CC2A0A4A178534D93D5159BF3BCB66189FD2CAFB7@EAPEX1MAIL1.st.com>
+References: <cover.1392109054.git.mohit.kumar@st.com>
+ <bfddafffd103bef179fef717793bf94652742b85.1392109054.git.mohit.kumar@st.com>
+ <20140212182101.GD23630@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140212180223.GA23630-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+In-Reply-To: <20140212182101.GD23630-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Pratyush ANAND <pratyush.anand-qxv4g6HH51o@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12 February 2014 23:32, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Thu, Jan 09, 2014 at 11:22:33AM +0000, Sachin Kamat wrote:
->> Add support for S2MPA01 voltage and current regulator.
->>
->> Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->> * Addressed comments from Mark Brown
->>  - Used module_platform_driver instead of subsys init call
->> ---
->>  drivers/regulator/Kconfig   |    7 +
->>  drivers/regulator/Makefile  |    1 +
->>  drivers/regulator/s2mpa01.c |  482 +++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 490 insertions(+)
->>  create mode 100644 drivers/regulator/s2mpa01.c
->
-> [...]
->
->> +static int s2mpa01_pmic_probe(struct platform_device *pdev)
->> +{
->> +       struct sec_pmic_dev *iodev = dev_get_drvdata(pdev->dev.parent);
->> +       struct sec_platform_data *pdata = dev_get_platdata(iodev->dev);
->> +       struct of_regulator_match rdata[S2MPA01_REGULATOR_MAX];
->> +       struct device_node *reg_np = NULL;
->> +       struct regulator_config config = { };
->> +       struct s2mpa01_info *s2mpa01;
->> +       int i, ret;
->> +
->> +       s2mpa01 = devm_kzalloc(&pdev->dev, sizeof(*s2mpa01), GFP_KERNEL);
->> +       if (!s2mpa01)
->> +               return -ENOMEM;
->> +
->> +       for (i = 0; i < S2MPA01_REGULATOR_CNT; i++)
->> +               rdata[i].name = regulators[i].name;
->> +
->> +       if (iodev->dev->of_node) {
->> +               reg_np = of_find_node_by_name(iodev->dev->of_node,
->> +                                                       "regulators");
->
-> This walks the allnodes list, and can thus walk outside of the parent
-> node.
->
-> Use of_get_child_by_name instead.
+Hello Mark,
 
-OK.
+> -----Original Message-----
+> From: Mark Rutland [mailto:mark.rutland-5wv7dgnIgG8@public.gmane.org]
+> Sent: Wednesday, February 12, 2014 11:51 PM
+> To: Mohit KUMAR DCG
+> Cc: arnd-r2nGTMty4D4@public.gmane.org; Pratyush ANAND; Viresh Kumar; spear-devel;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Subject: Re: [PATCH V6 05/12] SPEAr: misc: Add binding information
+> 
+> On Tue, Feb 11, 2014 at 09:30:01AM +0000, Mohit Kumar wrote:
+> > From: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
+> >
+> > SPEAr SOCs have some miscellaneous registers which are used to
+> > configure few properties of different peripheral controllers.
+> >
+> > Signed-off-by: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
+> > Cc: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
+> > Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> > Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Cc: spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org
+> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > ---
+> >  .../devicetree/bindings/arm/spear-misc.txt         |    9 +++++++++
+> >  1 files changed, 9 insertions(+), 0 deletions(-)  create mode 100644
+> > Documentation/devicetree/bindings/arm/spear-misc.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/spear-misc.txt
+> > b/Documentation/devicetree/bindings/arm/spear-misc.txt
+> > new file mode 100644
+> > index 0000000..ab324e1
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/spear-misc.txt
+> > @@ -0,0 +1,9 @@
+> > +SPEAr Misc configuration
+> > +===========================
+> > +SPEAr SOCs have some miscellaneous registers which are used to
+> > +configure few properties of different peripheral controllers.
+> > +
+> > +misc node required properties:
+> > +
+> > +- compatible Should be	"st,spear1340-misc", "syscon".
+> > +- reg: Address range of misc space
+> 
+> Is there no better name than misc?
 
->
->> +                       if (!reg_np) {
->> +                               dev_err(&pdev->dev,
->> +                                       "could not find regulators sub-node\n");
->> +                               return -EINVAL;
->> +                       }
->> +
->> +               of_regulator_match(&pdev->dev, reg_np, rdata,
->> +                                               S2MPA01_REGULATOR_MAX);
->
-> Is a reference to reg_np held beyond this? Do you need an
-> of_node_put(reg_np)?
+- We followed the convention used in SoC for these Miscellaneous (system
+ configuration) registers.
 
-Yes, you are right.
+> How big is this expected to be?
 
-Thanks for the review.
+- 8K, we will mention it in reg property also.
 
--- 
-With warm regards,
-Sachin
+Thanks
+Mohit
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
