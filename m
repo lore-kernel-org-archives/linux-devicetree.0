@@ -1,54 +1,92 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [RFC] dt: bindings: add bindings for Broadcom bcm43xx sdio devices
-Date: Thu, 13 Feb 2014 15:41:25 +0800
-Message-ID: <CAGb2v66ib=6NK1OpYct_5Cs6V-89PNHpk69J++e6ph85etF6sw@mail.gmail.com>
-References: <1392059868-8782-1-git-send-email-arend@broadcom.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH] pci: Add support for creating a generic host_bridge from
+ device tree
+Date: Thu, 13 Feb 2014 17:10:29 +0900
+Message-ID: <000201cf2893$0f5e3710$2e1aa530$%han@samsung.com>
+References: <1391452428-22917-1-git-send-email-Liviu.Dudau@arm.com>
+ <1391452428-22917-2-git-send-email-Liviu.Dudau@arm.com>
+ <7398333.9L5KlyFggU@wuerfel>
+ <CACoXjckKRQfR3CbC1JpgbhOumED+OqiMh1_Y73-h6q=ByMNanw@mail.gmail.com>
+ <20140206101814.GA4993@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1392059868-8782-1-git-send-email-arend@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arend van Spriel <arend@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-reply-to: <20140206101814.GA4993@e106497-lin.cambridge.arm.com>
+Content-language: ko
+Sender: linux-pci-owner@vger.kernel.org
+To: 'Liviu Dudau' <Liviu.Dudau@arm.com>, 'Tanmay Inamdar' <tinamdar@apm.com>
+Cc: 'Arnd Bergmann' <arnd@arndb.de>, devicetree@vger.kernel.org, 'linaro-kernel' <linaro-kernel@lists.linaro.org>, 'linux-pci' <linux-pci@vger.kernel.org>, 'Will Deacon' <Will.Deacon@arm.com>, 'LKML' <linux-kernel@vger.kernel.org>, 'Catalin Marinas' <Catalin.Marinas@arm.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'LAKML' <linux-arm-kernel@lists.infradead.org>, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 11, 2014 at 3:17 AM, Arend van Spriel <arend@broadcom.com> wrote:
-> The Broadcom bcm43xx sdio devices are fullmac devices that may be
-> integrated in ARM platforms. Currently, the brcmfmac driver for
-> these devices support use of platform data. This patch specifies
-> the bindings that allow this platform data to be expressed in the
-> devicetree.
->
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Tomasz Figa <tomasz.figa@gmail.com>
-> Reviewed-by: Hante Meuleman <meuleman@broadcom.com>
-> Reviewed-by: Pieter-Paul Giesberts <pieterpg@broadcom.com>
-> Signed-off-by: Arend van Spriel <arend@broadcom.com>
-> ---
-> This devicetree binding proposal is intended for platforms with
-> Broadcom wireless device in MMC sdio slot. These devices may
-> have their own interrupt and power line. Also the SDIO drive
-> strength is often hardware dependent and expressed in this
-> binding.
+On Thursday, February 06, 2014 7:18 PM, Liviu Dudau wrote:
+> On Wed, Feb 05, 2014 at 10:26:27PM +0000, Tanmay Inamdar wrote:
+> > Hello Liviu,
+> >
+> > I did not get the first email of this particular patch on any of
+> > subscribed mailing lists (don't know why), hence replying here.
+> 
+> Strange, it shows in the MARC and GMANE archive for linux-pci, probably
+> a hickup on your receiving side?
+> 
+> >
+> > +struct pci_host_bridge *
+> > +pci_host_bridge_of_init(struct device *parent, int busno, struct pci_ops *ops,
+> > + void *host_data, struct list_head *resources)
+> > +{
+> > + struct pci_bus *root_bus;
+> > + struct pci_host_bridge *bridge;
+> > +
+> > + /* first parse the host bridge bus ranges */
+> > + if (pci_host_bridge_of_get_ranges(parent->of_node, resources))
+> > + return NULL;
+> > +
+> > + /* then create the root bus */
+> > + root_bus = pci_create_root_bus(parent, busno, ops, host_data, resources);
+> > + if (!root_bus)
+> > + return NULL;
+> > +
+> > + bridge = to_pci_host_bridge(root_bus->bridge);
+> > +
+> > + return bridge;
+> > +}
+> >
+> > You are keeping the domain_nr inside pci_host_bridge structure. In
+> > above API, domain_nr is required in 'pci_find_bus' function called
+> > from 'pci_create_root_bus'. Since the bridge is allocated after
+> > creating root bus, 'pci_find_bus' always gets domain_nr as 0. This
+> > will cause problem for scanning multiple domains.
+> 
+> Good catch. I was switching between creating a pci_controller in arch/arm64 and
+> adding the needed bits in pci_host_bridge. After internal review I've decided to
+> add the domain_nr to pci_host_bridge, but forgot to update the code everywhere.
 
-Hi,
+Hi Liviu Dudau,
 
-I believe the interrupts and drive-strength properties are Ok.
-However, letting the platform driver power up the wifi chip does
-not guarantee proper ordering, does it? I mean, what if the MMC
-bus was probed before the (non-removable) chip was switched on?
+One more thing,
+I am reviewing and compiling your patch.
+Would you consider adding 'struct pci_sys_data' and 'struct hw_pci'?
 
-Being able to tie that to the mmc controller would be better IMO.
-I think this was discussed in Olof's "mmc: add support for
-power-on sequencing through DT" thread.
+Currently, 4 PCIe Host drivers (pci-mvebu.c, pci-tegra.c,
+pci-rcar-gen2.c, pcie-designware.c) are using 'struct pci_sys_data'
+and 'struct hw_pci' in their drivers. Without this, it makes build
+errors.
 
+In arm32, 'struct pci_sys_data' and 'struct hw_pci' is defined
+in "arch/arm/include/asm/mach/pci.h".
 
-Thanks!
-ChenYu
+Tanmay Inamdar,
+Your 'APM X-Gene PCIe' patch also needs 'struct pci_sys_data' and
+'struct hw_pci'. With Liviu Dudau's patch, it will make build
+errors. Would you check this?
 
->
-> Not sure if this should go in staging or not. Feel free to
-> comment on this proposal.
->
-> Regards,
-> Arend
+Thank you.
+
+Best regards,
+Jingoo Han
+
+> 
+> Thanks for reviewing this, will fix in v2.
+> 
+> Do you find porting to the new API straight forward?
+> 
