@@ -1,70 +1,36 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH net-next 00/10] Support for Broadcom GENET driver
-Date: Wed, 12 Feb 2014 16:23:03 -0800
-Message-ID: <CAGVrzcbrYXr4x3HJq=ztuYSMp7P63zgLohjAJe5jAGjeWb=LhA@mail.gmail.com>
-References: <1392178053-3143-1-git-send-email-f.fainelli@gmail.com>
+From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH RFC v7 0/6] MPC512x DMA slave s/g support, OF DMA lookup
+Date: Thu, 13 Feb 2014 01:32:53 +0100
+Message-ID: <20140213003253.GL4524@book.gsilab.sittig.org>
+References: <1392211508-23615-1-git-send-email-a13xp0p0v88@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1392178053-3143-1-git-send-email-f.fainelli@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: netdev <netdev@vger.kernel.org>
-Cc: David Miller <davem@davemloft.net>, Kevin Cernekee <cernekee@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1392211508-23615-1-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2014-02-11 20:07 GMT-08:00 Florian Fainelli <f.fainelli@gmail.com>:
-> Hi all,
->
-> This patchset adds support for the Broadcom GENET Gigabit Ethernet MAC
-> controller. This controller is found on the Broadcom BCM7xxx Set Top Box
-> System-on-a-Chip.
+For some reason you have kept the DMA maintainers, but dropped
+the dmaengine ML from Cc: -- was this intentional, given that the
+series is specifically about DMA and you want to get feedback?
 
-I just found a small bug in the main driver file, and due to my
-previous series touching libphy, this will not apply cleanly anymore.
-I will wait for some initial feedback before doing a second respin
-though.
-
->
-> Florian Fainelli (10):
->   net: phy: add "internal" PHY mode
->   net: phy: add MoCA PHY type
->   net: phy: update port type for MoCA PHYs
->   net: phy: add Broadcom BCM7xxx internal PHY driver
->   net: bcmgenet: add driver definitions and private structure
->   net: bcmgenet: add main driver file
->   net: bcmgenet: add MDIO routines
->   net: bcmgenet: hook into the build system
->   Documentation: add Device tree bindings for Broadcom GENET
->   MAINTAINERS: add entry for the Broadcom GENET driver
->
->  .../devicetree/bindings/net/broadcom-bcmgenet.txt  |  111 +
->  MAINTAINERS                                        |    6 +
->  drivers/net/ethernet/broadcom/Kconfig              |   10 +
->  drivers/net/ethernet/broadcom/Makefile             |    1 +
->  drivers/net/ethernet/broadcom/genet/Makefile       |    2 +
->  drivers/net/ethernet/broadcom/genet/bcmgenet.c     | 2685 ++++++++++++++++++++
->  drivers/net/ethernet/broadcom/genet/bcmgenet.h     |  631 +++++
->  drivers/net/ethernet/broadcom/genet/bcmmii.c       |  483 ++++
->  drivers/net/phy/Kconfig                            |    6 +
->  drivers/net/phy/Makefile                           |    1 +
->  drivers/net/phy/bcm7xxx.c                          |  322 +++
->  drivers/net/phy/phy.c                              |    5 +-
->  drivers/of/of_net.c                                |    2 +
->  include/linux/brcmphy.h                            |    9 +
->  include/linux/phy.h                                |    5 +-
->  15 files changed, 4277 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/broadcom-bcmgenet.txt
->  create mode 100644 drivers/net/ethernet/broadcom/genet/Makefile
->  create mode 100644 drivers/net/ethernet/broadcom/genet/bcmgenet.c
->  create mode 100644 drivers/net/ethernet/broadcom/genet/bcmgenet.h
->  create mode 100644 drivers/net/ethernet/broadcom/genet/bcmmii.c
->  create mode 100644 drivers/net/phy/bcm7xxx.c
->
-> --
-> 1.8.3.2
->
+And you may want to help DT people by not sending purely Linux
+implementation related stuff to them (they already are drinking
+from the firehose).  DT reviewers are foremost interested in
+bindings and policy and remaining OS agnostic, and leave
+mechanical .dts file updates to subsystem maintainers.
 
 
-
+virtually yours
+Gerhard Sittig
 -- 
-Florian
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
