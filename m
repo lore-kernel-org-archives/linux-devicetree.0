@@ -1,53 +1,26 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH net-next v2 01/10] net: phy: add "internal" PHY mode
-Date: Thu, 13 Feb 2014 12:41:15 -0800
-Message-ID: <CAGVrzcb07OhvCGD0JtTBY5=P5Tv9d+zvNOPbomZmELih3Uwq6w@mail.gmail.com>
-References: <1392269395-23513-1-git-send-email-f.fainelli@gmail.com>
- <1392269395-23513-2-git-send-email-f.fainelli@gmail.com> <20140213.153409.1193335923050383308.davem@davemloft.net>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v3 0/3] net: stmmac: Add STi GMAC ethernet
+Date: Thu, 13 Feb 2014 16:25:56 -0500 (EST)
+Message-ID: <20140213.162556.2217483759096236481.davem@davemloft.net>
+References: <1391770455-24291-1-git-send-email-srinivas.kandagatla@st.com>
+	<1392112716-30803-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20140213.153409.1193335923050383308.davem@davemloft.net>
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: netdev <netdev@vger.kernel.org>, Kevin Cernekee <cernekee@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1392112716-30803-1-git-send-email-srinivas.kandagatla@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: srinivas.kandagatla@st.com
+Cc: netdev@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, stuart.menefy@st.com, peppe.cavallaro@st.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-2014-02-13 12:34 GMT-08:00 David Miller <davem@davemloft.net>:
-> From: Florian Fainelli <f.fainelli@gmail.com>
-> Date: Wed, 12 Feb 2014 21:29:46 -0800
->
->> On some systems, the PHY can be internal, in the same package as the
->> Ethernet MAC, and still be responding to a specific address on the MDIO
->> bus, in that case, the Ethernet MAC might need to know about it to
->> properly configure a port multiplexer to switch to an internal or
->> external PHY. Add a new PHY interface mode for this and update the
->> Device Tree of_get_phy_mode() function to look for it.
->>
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->> ---
->> Changes since v1:
->> - rebased against lastest net-next master branch
->
-> This is over-engineering.
->
-> The only thing that even uses this value is phy_is_internal(), and
-> the only user of phy_is_internal() is the generic PHY layer ethtool
-> operation for get-settings.
->
-> The PHY layer already has a place to indicate whether a PHY is
-> internal or not, overriding that using the PHY mode is trouble
-> waiting to happen.
->
-> Please, just provide some way to propagate this device tree property
-> into phy->is_internal.
+From: <srinivas.kandagatla@st.com>
+Date: Tue, 11 Feb 2014 09:58:36 +0000
 
-I just realized that I am able to drop this change completely since I
-add a PHY driver for the Ethernet MAC which already flags particular
-devices of interest as internal PHYs. This change originally came up
-as I needed to know that before probing for the PHY, which can be
-resolved by doing some re-ordering.
+> Dave, Can I request you to take the first patch via net tree for v3.15, I can
+> request Arnd or Olof to take the DT patches via the arm-soc tree for v3.15.
 
-Thanks for the feedback.
--- 
-Florian
+Since it's a new driver, I decided to add it to the plain 'net' tree.
+
+Thanks.
+
