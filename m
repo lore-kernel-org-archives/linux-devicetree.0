@@ -1,179 +1,213 @@
-From: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
-Subject: Re: [PATCH] dt: platform driver: Fill the resources before probe and
- defer if needed
-Date: Thu, 13 Feb 2014 11:06:32 +0100
-Message-ID: <CACh+v5NOkkEJxRFg3dTFJ1xMXt9XgXKuBJq9usAtakzzVuNi7Q@mail.gmail.com>
-References: <1392285429-9325-1-git-send-email-jjhiblot@traphandler.com>
+From: Francois Romieu <romieu@fr.zoreil.com>
+Subject: Re: [PATCH net-next v2 04/10] net: phy: add Broadcom BCM7xxx
+ internal PHY driver
+Date: Thu, 13 Feb 2014 11:34:54 +0100
+Message-ID: <20140213103454.GA14941@electric-eye.fr.zoreil.com>
+References: <1392269395-23513-1-git-send-email-f.fainelli@gmail.com>
+ <1392269395-23513-5-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1392285429-9325-1-git-send-email-jjhiblot@traphandler.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
-Cc: gregkh <gregkh@linuxfoundation.org>, "grant.likely" <grant.likely@linaro.org>, robh+dt <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1392269395-23513-5-git-send-email-f.fainelli@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, cernekee@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
-
-I forgot to add the link to the discussion that lead to this patch:
-https://lkml.org/lkml/2014/2/12/306.
-
-Jean-Jacques
-
-2014-02-13 10:57 GMT+01:00 Jean-Jacques Hiblot <jjhiblot@traphandler.com>:
-> The goal of this patch is to allow drivers to be probed even if at the time of
-> the DT parsing some of their ressources are not available yet.
->
-> In the current situation, the resource of a platform device are filled from the
-> DT at the time the device is created (of_device_alloc()). The drawbackof this
-> is that a device sitting close to the top of the DT (ahb for example) but
-> depending on ressources that are initialized later (IRQ domain dynamically
-> created for example)  will fail to probe because the ressources don't exist
-> at this time.
->
-> This patch fills the resource structure only before the device is probed and
-> will defer the probe if the resource are not available yet.
->
-> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
-> Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> ---
->  drivers/base/platform.c     |  6 ++++
->  drivers/of/platform.c       | 71 +++++++++++++++++++++++++++++----------------
->  include/linux/of_platform.h | 10 +++++++
->  3 files changed, 62 insertions(+), 25 deletions(-)
->
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index bc78848..8e37d8b 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -481,6 +481,12 @@ static int platform_drv_probe(struct device *_dev)
->         struct platform_device *dev = to_platform_device(_dev);
->         int ret;
->
-> +       if (_dev->of_node) {
-> +               ret = of_platform_device_populate_resources(dev);
-> +               if (ret < 0)
-> +                       return drv->prevent_deferred_probe ? ret : -EPROBE_DEFER;
-> +       }
-> +
->         if (ACPI_HANDLE(_dev))
->                 acpi_dev_pm_attach(_dev, true);
->
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index 404d1da..64a8eb8 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -141,36 +141,11 @@ struct platform_device *of_device_alloc(struct device_node *np,
->                                   struct device *parent)
->  {
->         struct platform_device *dev;
-> -       int rc, i, num_reg = 0, num_irq;
-> -       struct resource *res, temp_res;
->
->         dev = platform_device_alloc("", -1);
->         if (!dev)
->                 return NULL;
->
-> -       /* count the io and irq resources */
-> -       if (of_can_translate_address(np))
-> -               while (of_address_to_resource(np, num_reg, &temp_res) == 0)
-> -                       num_reg++;
-> -       num_irq = of_irq_count(np);
-> -
-> -       /* Populate the resource table */
-> -       if (num_irq || num_reg) {
-> -               res = kzalloc(sizeof(*res) * (num_irq + num_reg), GFP_KERNEL);
-> -               if (!res) {
-> -                       platform_device_put(dev);
-> -                       return NULL;
-> -               }
-> -
-> -               dev->num_resources = num_reg + num_irq;
-> -               dev->resource = res;
-> -               for (i = 0; i < num_reg; i++, res++) {
-> -                       rc = of_address_to_resource(np, i, res);
-> -                       WARN_ON(rc);
-> -               }
-> -               WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
-> -       }
-> -
->         dev->dev.of_node = of_node_get(np);
->  #if defined(CONFIG_MICROBLAZE)
->         dev->dev.dma_mask = &dev->archdata.dma_mask;
-> @@ -233,6 +208,52 @@ static struct platform_device *of_platform_device_create_pdata(
->         return dev;
->  }
->
-> +int of_platform_device_populate_resources(struct platform_device *dev)
+Florian Fainelli <f.fainelli@gmail.com> :
+[...]
+> diff --git a/drivers/net/phy/bcm7xxx.c b/drivers/net/phy/bcm7xxx.c
+> new file mode 100644
+> index 0000000..6aea6e2
+> --- /dev/null
+> +++ b/drivers/net/phy/bcm7xxx.c
+[...]
+> +static int bcm7445_config_init(struct phy_device *phydev)
 > +{
-> +       struct device_node *np;
-> +       int rc = 0, i, nreg = 0, nirq;
+> +	int ret;
+
+It could be declared after 'i' below.
+
+> +	const struct bcm7445_regs {
+
+static const
+
+> +		int reg;
+> +		u16 value;
+> +	} bcm7445_regs_cfg[] = {
+> +		/* increases ADC latency by 24ns */
+> +		{ 0x17, 0x0038 },
+> +		{ 0x15, 0xAB95 },
+> +		/* increases internal 1V LDO voltage by 5% */
+> +		{ 0x17, 0x2038 },
+> +		{ 0x15, 0xBB22 },
+> +		/* reduce RX low pass filter corner frequency */
+> +		{ 0x17, 0x6038 },
+> +		{ 0x15, 0xFFC5 },
+> +		/* reduce RX high pass filter corner frequency */
+> +		{ 0x17, 0x003a },
+> +		{ 0x15, 0x2002 },
+> +	};
+> +	unsigned int i;
 > +
-> +       np = dev->dev.of_node;
+> +	for (i = 0; i < ARRAY_SIZE(bcm7445_regs_cfg); i++) {
+> +		ret = phy_write(phydev,
+> +				bcm7445_regs_cfg[i].reg,
+> +				bcm7445_regs_cfg[i].value);
+> +		if (ret)
+> +			return ret;
+> +	}
 > +
-> +       /* count the io and irq resources */
-> +       if (of_can_translate_address(np)) {
-> +               struct resource temp_res;
-> +               while (of_address_to_resource(np, nreg, &temp_res) == 0)
-> +                       nreg++;
-> +       }
-> +       nirq = of_irq_count(np);
-> +
-> +       /* Populate the resource table */
-> +       if (nirq || nreg) {
-> +               struct resource *res;
-> +
-> +               res = krealloc(dev->resource, sizeof(*res) * (nirq + nreg),
-> +                              GFP_KERNEL);
-> +               if (!res) {
-> +                       kfree(dev->resource);
-> +                       dev->resource = NULL;
-> +                       return -ENOMEM;
-> +               }
-> +               memset(res, 0, sizeof(*res) * (nirq + nreg));
-> +               dev->resource = res;
-> +               dev->num_resources = nreg + nirq;
-> +
-> +               for (i = 0; i < nreg; i++, res++) {
-> +                       rc = of_address_to_resource(np, i, res);
-> +                       WARN_ON(rc);
-> +                       if (rc)
-> +                               break;
-> +               }
-> +
-> +               if (!rc && of_irq_to_resource_table(np, res, nirq) != nirq) {
-> +                       rc = -ENOENT;
-> +                       WARN_ON(rc);
-> +               }
-> +       }
-> +       return rc;
+> +	return 0;
 > +}
-> +EXPORT_SYMBOL(of_platform_device_populate_resources);
 > +
->  /**
->   * of_platform_device_create - Alloc, initialize and register an of_device
->   * @np: pointer to node to create device for
-> diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-> index 05cb4a9..315e1e3 100644
-> --- a/include/linux/of_platform.h
-> +++ b/include/linux/of_platform.h
-> @@ -53,6 +53,16 @@ struct of_dev_auxdata {
->
->  extern const struct of_device_id of_default_bus_match_table[];
->
-> +/* Populate the resource for a platform device */
-> +#ifdef CONFIG_OF
-> +int of_platform_device_populate_resources(struct platform_device *dev);
-> +#else
-> +static inline int of_platform_device_populate_resources(
-> +       struct platform_device *)
+> +static void phy_write_exp(struct phy_device *phydev,
+> +					u16 reg, u16 value)
+
+static void phy_write_exp(struct phy_device *phydev, u16 reg, u16 value)
+
 > +{
-> +       return -ENOSYS;
+> +	phy_write(phydev, 0x17, 0xf00 | reg);
+> +	phy_write(phydev, 0x15, value);
 > +}
-> +#endif
->  /* Platform drivers register/unregister */
->  extern struct platform_device *of_device_alloc(struct device_node *np,
->                                          const char *bus_id,
-> --
-> 1.8.5.3
->
+> +
+> +static void phy_write_misc(struct phy_device *phydev,
+> +					u16 reg, u16 chl, u16 value)
+   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ all tabs that don't line up
+
+static void phy_write_misc(struct phy_device *phydev,
+			   u16 reg, u16 chl, u16 value)
+
+static void phy_write_misc(struct phy_device *phydev, u16 reg, u16 chl,
+			   u16 value)
+
+static void phy_write_misc(struct phy_device *phydev, u16 reg, u16 chl, u16 val)
+
+
+> +{
+> +	int tmp;
+> +
+> +	phy_write(phydev, 0x18, 0x7);
+> +
+> +	tmp = phy_read(phydev, 0x18);
+> +	tmp |= 0x800;
+> +	phy_write(phydev, 0x18, tmp);
+> +
+> +	tmp = (chl * 0x2000) | reg;
+> +	phy_write(phydev, 0x17, tmp);
+> +
+> +	phy_write(phydev, 0x15, value);
+
+You may use some #define for the 0x15, 0x17 and 0x18 values.
+
+> +}
+> +
+> +static int bcm7xxx_28nm_afe_config_init(struct phy_device *phydev)
+> +{
+> +	/* write AFE_RXCONFIG_0 */
+> +	phy_write_misc(phydev, 0x38, 0x0000, 0xeb19);
+> +
+> +	/* write AFE_RXCONFIG_1 */
+> +	phy_write_misc(phydev, 0x38, 0x0001, 0x9a3f);
+> +
+> +	/* write AFE_RX_LP_COUNTER */
+> +	phy_write_misc(phydev, 0x38, 0x0003, 0x7fc7);
+> +
+> +	/* write AFE_HPF_TRIM_OTHERS */
+> +	phy_write_misc(phydev, 0x3A, 0x0000, 0x000b);
+> +
+> +	/* write AFTE_TX_CONFIG */
+> +	phy_write_misc(phydev, 0x39, 0x0000, 0x0800);
+
+Some #define may be welcome to replace the comments.
+
+[...]
+> +static int bcm7xxx_28nm_config_init(struct phy_device *phydev)
+> +{
+> +	int ret;
+> +
+> +	ret = bcm7445_config_init(phydev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return bcm7xxx_28nm_afe_config_init(phydev);
+> +}
+> +
+> +static int phy_set_clr_bits(struct phy_device *dev, int location,
+> +					int set_mask, int clr_mask)
+> +{
+> +	int v, ret;
+> +
+> +	v = phy_read(dev, location);
+> +	if (v < 0)
+> +		return v;
+> +
+> +	v &= ~clr_mask;
+> +	v |= set_mask;
+> +
+> +	ret = phy_write(dev, location, v);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return v;
+> +}
+> +
+> +static int bcm7xxx_config_init(struct phy_device *phydev)
+> +{
+> +	/* Enable 64 clock MDIO */
+> +	phy_write(phydev, 0x1d, 0x1000);
+> +	phy_read(phydev, 0x1d);
+> +
+> +	/* Workaround only required for 100Mbits/sec */
+> +	if (!(phydev->dev_flags & PHY_BRCM_100MBPS_WAR))
+> +		return 0;
+> +
+> +	/* set shadow mode 2 */
+> +	phy_set_clr_bits(phydev, 0x1f, 0x0004, 0x0004);
+
+phy_set_clr_bits returned status code is not checked.
+
+> +
+> +	/* set iddq_clkbias */
+> +	phy_write(phydev, 0x14, 0x0F00);
+> +	udelay(10);
+> +
+> +	/* reset iddq_clkbias */
+> +	phy_write(phydev, 0x14, 0x0C00);
+> +
+> +	phy_write(phydev, 0x13, 0x7555);
+> +
+> +	/* reset shadow mode 2 */
+> +	phy_set_clr_bits(phydev, 0x1f, 0x0004, 0);
+
+phy_set_clr_bits returned status code is not checked.
+
+> +
+> +	return 0;
+> +}
+> +
+> +/* Workaround for putting the PHY in IDDQ mode, required
+> + * for all BCM7XXX PHYs
+> + */
+> +static int bcm7xxx_suspend(struct phy_device *phydev)
+
+Factor out with bcm7445_config_init and some helper ?
+
+> +{
+> +	int ret;
+> +	const struct bcm7xxx_regs {
+> +		int reg;
+> +		u16 value;
+> +	} bcm7xxx_suspend_cfg[] = {
+> +		{ 0x1f, 0x008b },
+> +		{ 0x10, 0x01c0 },
+> +		{ 0x14, 0x7000 },
+> +		{ 0x1f, 0x000f },
+> +		{ 0x10, 0x20d0 },
+> +		{ 0x1f, 0x000b },
+> +	};
+> +	unsigned int i;
+
+-- 
+Ueimor
