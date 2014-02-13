@@ -1,161 +1,63 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: [RESEND][PATCH v4] gpio: davinci: reuse for keystone soc
-Date: Thu, 13 Feb 2014 17:58:45 +0200
-Message-ID: <1392307125-27927-1-git-send-email-grygorii.strashko@ti.com>
-References: <52FBB6BC.2060801@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <52FBB6BC.2060801-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, santosh.shilimkar-l0cyMroinI0@public.gmane.org
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Paolo Pisati <paolo.pisati@canonical.com>
+Subject: [PATCH] ARM/dts: hdmi-codec: panda/es dt entries
+Date: Thu, 13 Feb 2014 16:25:58 +0100
+Message-ID: <1392305158-6667-1-git-send-email-paolo.pisati@canonical.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The similar GPIO HW block is used by keystone SoCs as
-in Davinci SoCs.
-Hence, reuse Davinci GPIO driver for Keystone taking into
-account that Keystone contains ARM GIC IRQ controller which
-is implemented using IRQ Chip.
-
-Documentation:
-	http://www.ti.com/lit/ug/sprugv1/sprugv1.pdf
-
-Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
 ---
-- rebased on top of git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
-  branch: devel
-  top commit: ef70bbe gpio: make gpiod_direction_output take a logical value
+ arch/arm/boot/dts/omap4-panda-common.dtsi |    9 ++++++++-
+ arch/arm/boot/dts/omap4-panda-es.dts      |    3 ++-
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
- .../devicetree/bindings/gpio/gpio-davinci.txt      |    4 +-
- drivers/gpio/gpio-davinci.c                        |   48 ++++++++++++++++----
- 2 files changed, 42 insertions(+), 10 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-index a2e839d..4ce9862 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-@@ -1,7 +1,7 @@
--Davinci GPIO controller bindings
-+Davinci/Keystone GPIO controller bindings
+diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
+index 88c6a05..f4aeaa1 100644
+--- a/arch/arm/boot/dts/omap4-panda-common.dtsi
++++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+@@ -36,9 +36,15 @@
+ 		};
+ 	};
  
- Required Properties:
--- compatible: should be "ti,dm6441-gpio"
-+- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio"
++	hdmi_audio: hdmi_audio@0 {
++		compatible = "linux,hdmi-audio";
++		status = "okay";
++	};
++
+ 	sound: sound {
+ 		compatible = "ti,abe-twl6040";
+ 		ti,model = "PandaBoard";
++		ti,audio-codec = <&hdmi_audio>;
  
- - reg: Physical base address of the controller and the size of memory mapped
-        registers.
-diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-index 7629b4f..d0f135d 100644
---- a/drivers/gpio/gpio-davinci.c
-+++ b/drivers/gpio/gpio-davinci.c
-@@ -37,6 +37,8 @@ struct davinci_gpio_regs {
- 	u32	intstat;
+ 		ti,mclk-freq = <38400000>;
+ 
+@@ -57,7 +63,8 @@
+ 			"HSMIC", "Headset Mic",
+ 			"Headset Mic", "Headset Mic Bias",
+ 			"AFML", "Line In",
+-			"AFMR", "Line In";
++			"AFMR", "Line In",
++			"HDMI Out", "TX";
+ 	};
+ 
+ 	/* HS USB Port 1 Power */
+diff --git a/arch/arm/boot/dts/omap4-panda-es.dts b/arch/arm/boot/dts/omap4-panda-es.dts
+index 816d1c9..70152d6 100644
+--- a/arch/arm/boot/dts/omap4-panda-es.dts
++++ b/arch/arm/boot/dts/omap4-panda-es.dts
+@@ -23,7 +23,8 @@
+ 		"Line Out", "AUXL",
+ 		"Line Out", "AUXR",
+ 		"AFML", "Line In",
+-		"AFMR", "Line In";
++		"AFMR", "Line In",
++		"HDMI Out", "TX";
  };
  
-+typedef struct irq_chip *(*gpio_get_irq_chip_cb_t)(unsigned int irq);
-+
- #define BINTEN	0x8 /* GPIO Interrupt Per-Bank Enable Register */
- 
- #define chip2controller(chip)	\
-@@ -413,6 +415,26 @@ static const struct irq_domain_ops davinci_gpio_irq_ops = {
- 	.xlate = irq_domain_xlate_onetwocell,
- };
- 
-+static struct irq_chip *davinci_gpio_get_irq_chip(unsigned int irq)
-+{
-+	static struct irq_chip_type gpio_unbanked;
-+
-+	gpio_unbanked = *container_of(irq_get_chip(irq),
-+				      struct irq_chip_type, chip);
-+
-+	return &gpio_unbanked.chip;
-+};
-+
-+static struct irq_chip *keystone_gpio_get_irq_chip(unsigned int irq)
-+{
-+	static struct irq_chip gpio_unbanked;
-+
-+	gpio_unbanked = *irq_get_chip(irq);
-+	return &gpio_unbanked;
-+};
-+
-+static const struct of_device_id davinci_gpio_ids[];
-+
- /*
-  * NOTE:  for suspend/resume, probably best to make a platform_device with
-  * suspend_late/resume_resume calls hooking into results of the set_wake()
-@@ -433,6 +455,18 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
- 	struct davinci_gpio_platform_data *pdata = dev->platform_data;
- 	struct davinci_gpio_regs __iomem *g;
- 	struct irq_domain	*irq_domain = NULL;
-+	const struct of_device_id *match;
-+	struct irq_chip *irq_chip;
-+	gpio_get_irq_chip_cb_t gpio_get_irq_chip;
-+
-+	/*
-+	 * Use davinci_gpio_get_irq_chip by default to handle non DT cases
-+	 */
-+	gpio_get_irq_chip = davinci_gpio_get_irq_chip;
-+	match = of_match_device(of_match_ptr(davinci_gpio_ids),
-+				dev);
-+	if (match)
-+		gpio_get_irq_chip = (gpio_get_irq_chip_cb_t)match->data;
- 
- 	ngpio = pdata->ngpio;
- 	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-@@ -489,8 +523,6 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
- 	 * IRQ mux conflicts; gpio_irq_type_unbanked() is only for GPIOs.
- 	 */
- 	if (pdata->gpio_unbanked) {
--		static struct irq_chip_type gpio_unbanked;
--
- 		/* pass "bank 0" GPIO IRQs to AINTC */
- 		chips[0].chip.to_irq = gpio_to_irq_unbanked;
- 		chips[0].gpio_irq = bank_irq;
-@@ -499,10 +531,9 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
- 
- 		/* AINTC handles mask/unmask; GPIO handles triggering */
- 		irq = bank_irq;
--		gpio_unbanked = *container_of(irq_get_chip(irq),
--					      struct irq_chip_type, chip);
--		gpio_unbanked.chip.name = "GPIO-AINTC";
--		gpio_unbanked.chip.irq_set_type = gpio_irq_type_unbanked;
-+		irq_chip = gpio_get_irq_chip(irq);
-+		irq_chip->name = "GPIO-AINTC";
-+		irq_chip->irq_set_type = gpio_irq_type_unbanked;
- 
- 		/* default trigger: both edges */
- 		g = gpio2regs(0);
-@@ -511,7 +542,7 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
- 
- 		/* set the direct IRQs up to use that irqchip */
- 		for (gpio = 0; gpio < pdata->gpio_unbanked; gpio++, irq++) {
--			irq_set_chip(irq, &gpio_unbanked.chip);
-+			irq_set_chip(irq, irq_chip);
- 			irq_set_handler_data(irq, &chips[gpio / 32]);
- 			irq_set_status_flags(irq, IRQ_TYPE_EDGE_BOTH);
- 		}
-@@ -554,7 +585,8 @@ done:
- 
- #if IS_ENABLED(CONFIG_OF)
- static const struct of_device_id davinci_gpio_ids[] = {
--	{ .compatible = "ti,dm6441-gpio", },
-+	{ .compatible = "ti,keystone-gpio", keystone_gpio_get_irq_chip},
-+	{ .compatible = "ti,dm6441-gpio", davinci_gpio_get_irq_chip},
- 	{ /* sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, davinci_gpio_ids);
+ /* PandaboardES has external pullups on SCL & SDA */
 -- 
 1.7.9.5
+
