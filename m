@@ -1,106 +1,102 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ARM: sunxi: dt: Convert to the new i2c compatibles
-Date: Thu, 13 Feb 2014 09:26:30 +0100
-Message-ID: <20140213082630.GA3119@katana>
-References: <1391680285-16668-1-git-send-email-maxime.ripard@free-electrons.com>
- <1391680285-16668-3-git-send-email-maxime.ripard@free-electrons.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: shmobile: r8a7778/r8a7779 dtsi: Improve and
+ correct HSPI bindings
+Date: Thu, 13 Feb 2014 09:31:54 +0100
+Message-ID: <CAMuHMdX9H5Nvvwy4J=UYE=82nx1nm+v5be2JHLWrUp2xkCO=Hg@mail.gmail.com>
+References: <1392109008-29941-1-git-send-email-geert@linux-m68k.org>
+	<20140213055600.GF17183@verge.net.au>
+	<87zjlvbi7l.wl%kuninori.morimoto.gx@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="FCuugMFkClbJLl1L"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1391680285-16668-3-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87zjlvbi7l.wl%kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Morimoto-san,
 
---FCuugMFkClbJLl1L
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Feb 13, 2014 at 8:11 AM, Kuninori Morimoto
+<kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> could you test this series as Geert does not have access to a bockw board?
+>>
+>> On Tue, Feb 11, 2014 at 09:56:47AM +0100, Geert Uytterhoeven wrote:
+>> > From: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+>> >
+>> > Binding documentation:
+>> >   - Add future-proof "renesas,hspi-<soctype>" compatible values,
+>> >   - Add "interrupt-parent", "#address-cells" and "#size-cells" properties,
+>> >   - Add reference to pinctrl documentation,
+>> >   - Add example bindings.
+>> >
+>> > r8a7778 and r8a7779 dtsi:
+>> >   - Add "renesas,hspi-r8a7778" resp. "renesas,hspi-r8a7779" compatible
+>> >     values,
+>> >   - Correct reference to parent interrupt controller
+>> >     (use "interrupt-parent" instead of "interrupt-controller"),
+>> >   - Add missing "#address-cells" and "#size-cells" properties, which are
+>> >     needed when populating the SPI buses.
+>> >
+>> > Signed-off-by: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+>> > Cc: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> > ---
+>
+> I tested this patch, and it works well.
+> But there are some notes
+>
+> 1) m25p80 driver DT support seems strange ??
+>
+>    ${LINUX}/Documentation/devicetree/bindings/mtd/m25p80.txt
+>    has explain about DT of m25p80 driver, but,
+>    ${LINUX}/drivers/mtd/devices/m25p80.c
+>    doesn't have driver :: of_match_table.
+>    but, it is using of_property_read_bool() on probe.
+>    Is it out-of-tree support ?? I'm not sure,
+>    anyway, m25p80 driver didn't probe.
 
+It probes based on the values in m25p_ids[].
 
-Why is the devicetree list not on CC? (Added now)
+See drivers/of/base.c:of_modalias_node():
 
-On Thu, Feb 06, 2014 at 10:51:25AM +0100, Maxime Ripard wrote:
-> Switch the device tree to the new compatibles introduced in the i2c drive=
-rs
-> to have a common pattern accross all Allwinner SoCs.
->=20
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun4i-a10.dtsi  |  6 +++---
->  arch/arm/boot/dts/sun5i-a10s.dtsi |  6 +++---
->  arch/arm/boot/dts/sun5i-a13.dtsi  |  6 +++---
->  arch/arm/boot/dts/sun7i-a20.dtsi  | 10 +++++-----
->  4 files changed, 14 insertions(+), 14 deletions(-)
->=20
-> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a=
-10.dtsi
-> index 28273f9..ac65c8a 100644
-> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
-> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-> @@ -518,7 +518,7 @@
->  		};
-> =20
->  		i2c0: i2c@01c2ac00 {
-> -			compatible =3D "allwinner,sun4i-i2c";
-> +			compatible =3D "allwinner,sun4i-a10-i2c";
+ * Based on the value of the compatible property, this routine will attempt
+ * to choose an appropriate modalias value for a particular device tree node.
+ * It does this by stripping the manufacturer prefix (as delimited by a ',')
+ * from the first entry in the compatible list property.
 
-Can't we have:
+Which is used by drivers/spi/spi.c:of_register_spi_devices().
 
-	compatible =3D "allwinner,sun4i-a10-i2c", "allwinner,sun4i-i2c";
+>    So, I quick-hacked this issue in my local environment.
 
-? And keep the old "allwinner,sun4i-i2c" and extend it with a SoC
-specific a10 compatible entry when a distinction is needed?
+Was there anything else you needed to do, besides adding support for
+s25fl008k to m25p80.c?
 
-> diff --git a/arch/arm/boot/dts/sun5i-a13.dtsi b/arch/arm/boot/dts/sun5i-a=
-13.dtsi
-> index 6de40b6..537072c 100644
-> --- a/arch/arm/boot/dts/sun5i-a13.dtsi
-> +++ b/arch/arm/boot/dts/sun5i-a13.dtsi
-> @@ -377,7 +377,7 @@
->  		};
-> =20
->  		i2c0: i2c@01c2ac00 {
-> -			compatible =3D "allwinner,sun4i-i2c";
-> +			compatible =3D "allwinner,sun4i-a10-i2c";
+> 2) it needs Geert's this patch
+>
+>    Subject: [PATCH] mtd: m25p80: add support for the Spansion s25fl008k chip
+>    Date:        Tue, 11 Feb 2014 09:51:18 +0100
+>
+>    Kernel will hung-up without this patch
 
-For non-a10, That should be at least
+Hang up? Not just ignoring the device?
 
-	compatible =3D "allwinner,sun4i-a13-i2c", "allwinner,sun4i-a10-i2c";
+> For HSPI / BockW point of view
+>
+> Tested-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 
-or
+Thanks!
 
-	compatible =3D "allwinner,sun4i-a13-i2c", "allwinner,sun4i-i2c";
+Gr{oetje,eeting}s,
 
-depending on the outcome above.
+                        Geert
 
-Or is my knowledge outdated already?
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-
---FCuugMFkClbJLl1L
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS/IG2AAoJEBQN5MwUoCm2SLAP/1Cs2ezJL8MyqtUNk66tq5NW
-xQmUrk3bN7LBFgWyjzmbg0+lfOUNL6cKgPpgjqRVLEjbsl+ng+UCjLEwP/XQhDYT
-cppY2dDCNa6rtvgRqSvjxKW43uXHHo9YI2Dt0p8h9j7fzk4EVGnQgpH15qYU4vCL
-6vOiaV2nHASxAhSWsF8mPss9HHoBdTRL7Szxt0dvh11PFVqCiu7OnOkq5ZPQu02h
-vY44Kz47ouLIeurSbFrwvjqwvo0Z3RGv75sVXrW7cCVOO/yNzkXk0p/ooIvRfwPw
-U2lfA8V4Uz1bCP5+872sMzoqMMs1pRGX6gjpSMnPkBNe0z2iASD8aTguY1ETkWB0
-xomeBQ4fSkx4gdzEKJh1CkGh1r1Gsbum+ye94BPxodR8czZz26amVY6t+MtSsPJ4
-zl2IN+jzrxjmQj0lclKqH2cyW0T8XQcuoor2xP6JUADFQv0o/paagaY/IMKcL3Rt
-jVG6SUMJ0ZoKlmTdb5aOD+bK8so7o6pph9LyiicMQdNh0b3E3ZEYkiIkT3k7Xqr/
-2VeDXPjxFEGAFjuaNPoPpE9WGkayRdSSWxSTebcdK89tbn9j4Wv2fQlY38MyDB5R
-kbRfuUSQ7O+diGxglDFbDCDDsJPOKMeupSbClkv5A2dMkDpWJx04k5aGVo2AOZwP
-h5ibcS9oitV0Lt2DHbdj
-=h8kc
------END PGP SIGNATURE-----
-
---FCuugMFkClbJLl1L--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
