@@ -1,173 +1,169 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [RFC] dt: bindings: add bindings for Broadcom bcm43xx sdio devices
-Date: Thu, 13 Feb 2014 17:28:53 +0800
-Message-ID: <CAGb2v67za+5yW3RE0pwBWk-NdTUSm-JkKE+j9NLjbBkE_Fc1hQ@mail.gmail.com>
-References: <1392059868-8782-1-git-send-email-arend@broadcom.com> <52FC8CB3.4090305@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
+Subject: [PATCH] dt: platform driver: Fill the resources before probe and defer if needed
+Date: Thu, 13 Feb 2014 10:57:09 +0100
+Message-ID: <1392285429-9325-1-git-send-email-jjhiblot@traphandler.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52FC8CB3.4090305-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The goal of this patch is to allow drivers to be probed even if at the time of
+the DT parsing some of their ressources are not available yet.
 
-On Thu, Feb 13, 2014 at 5:13 PM, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Arend,
->
->
-> On 10.02.2014 20:17, Arend van Spriel wrote:
->>
->> The Broadcom bcm43xx sdio devices are fullmac devices that may be
->> integrated in ARM platforms. Currently, the brcmfmac driver for
->> these devices support use of platform data. This patch specifies
->> the bindings that allow this platform data to be expressed in the
->> devicetree.
->>
->> Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Reviewed-by: Hante Meuleman <meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Reviewed-by: Pieter-Paul Giesberts <pieterpg-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Signed-off-by: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> ---
->> This devicetree binding proposal is intended for platforms with
->> Broadcom wireless device in MMC sdio slot. These devices may
->> have their own interrupt and power line. Also the SDIO drive
->> strength is often hardware dependent and expressed in this
->> binding.
->>
->> Not sure if this should go in staging or not. Feel free to
->> comment on this proposal.
->>
->> Regards,
->> Arend
->> ---
->>   .../staging/net/wireless/brcm,bcm43xx-fmac.txt     |   37
->> ++++++++++++++++++++
->>   1 file changed, 37 insertions(+)
->>   create mode 100644
->> Documentation/devicetree/bindings/staging/net/wireless/brcm,bcm43xx-fmac.txt
->>
->> diff --git
->> a/Documentation/devicetree/bindings/staging/net/wireless/brcm,bcm43xx-fmac.txt
->> b/Documentation/devicetree/bindings/staging/net/wireless/brcm,bcm43xx-fmac.txt
->> new file mode 100644
->> index 0000000..535f343
->> --- /dev/null
->> +++
->> b/Documentation/devicetree/bindings/staging/net/wireless/brcm,bcm43xx-fmac.txt
->> @@ -0,0 +1,37 @@
->> +Broadcom BCM43xx Fullmac wireless SDIO devices
->> +
->> +This node provides properties for controlling the Broadcom wireless
->> device. The
->> +node is expected to be specified as a child node to the MMC controller
->> that
->> +connects the device to the system.
->> +
->> +Required properties:
->> +
->> + - compatible : Should be "brcm,bcm43xx-fmac".
->> + - wlan-supply : phandle for fixed regulator used to control power for
->> +       the device/module.
->
->
-> The BCM43xx WLAN chips I used to work always have been controlled by a
-> simple power enable GPIO of the chip itself. Has this changed in newer
-> chips?
+In the current situation, the resource of a platform device are filled from the
+DT at the time the device is created (of_device_alloc()). The drawbackof this
+is that a device sitting close to the top of the DT (ahb for example) but
+depending on ressources that are initialized later (IRQ domain dynamically
+created for example)  will fail to probe because the ressources don't exist
+at this time.
 
-Actually some (I only have one kind) of the chips have 2 GPIO lines,
-but they are almost always tied together in the module or on the
-board.
+This patch fills the resource structure only before the device is probed and
+will defer the probe if the resource are not available yet.
 
-> If you need to simply toggle a GPIO to control the power, you don't need to
-> use the regulator API at all, controlling the GPIO directly.
->
->
->> +
->> +Optional properties:
->> + - drive-strength : drive strength used for SDIO pins on device (default
->> = 6mA).
->
->
-> This should be a part of the MMC binding, I think. Probably also moved under
-> MMC controller's node, since it's a board-specific property altering the
-> parameters of the MMC controller, not the WLAN chip.
+Signed-off-by: Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
+Reviewed-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ drivers/base/platform.c     |  6 ++++
+ drivers/of/platform.c       | 71 +++++++++++++++++++++++++++++----------------
+ include/linux/of_platform.h | 10 +++++++
+ 3 files changed, 62 insertions(+), 25 deletions(-)
 
-AFAIK, this controls the drive strength for MMC on the WLAN chip's MMC
-controller.
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index bc78848..8e37d8b 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -481,6 +481,12 @@ static int platform_drv_probe(struct device *_dev)
+ 	struct platform_device *dev = to_platform_device(_dev);
+ 	int ret;
+ 
++	if (_dev->of_node) {
++		ret = of_platform_device_populate_resources(dev);
++		if (ret < 0)
++			return drv->prevent_deferred_probe ? ret : -EPROBE_DEFER;
++	}
++
+ 	if (ACPI_HANDLE(_dev))
+ 		acpi_dev_pm_attach(_dev, true);
+ 
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 404d1da..64a8eb8 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -141,36 +141,11 @@ struct platform_device *of_device_alloc(struct device_node *np,
+ 				  struct device *parent)
+ {
+ 	struct platform_device *dev;
+-	int rc, i, num_reg = 0, num_irq;
+-	struct resource *res, temp_res;
+ 
+ 	dev = platform_device_alloc("", -1);
+ 	if (!dev)
+ 		return NULL;
+ 
+-	/* count the io and irq resources */
+-	if (of_can_translate_address(np))
+-		while (of_address_to_resource(np, num_reg, &temp_res) == 0)
+-			num_reg++;
+-	num_irq = of_irq_count(np);
+-
+-	/* Populate the resource table */
+-	if (num_irq || num_reg) {
+-		res = kzalloc(sizeof(*res) * (num_irq + num_reg), GFP_KERNEL);
+-		if (!res) {
+-			platform_device_put(dev);
+-			return NULL;
+-		}
+-
+-		dev->num_resources = num_reg + num_irq;
+-		dev->resource = res;
+-		for (i = 0; i < num_reg; i++, res++) {
+-			rc = of_address_to_resource(np, i, res);
+-			WARN_ON(rc);
+-		}
+-		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
+-	}
+-
+ 	dev->dev.of_node = of_node_get(np);
+ #if defined(CONFIG_MICROBLAZE)
+ 	dev->dev.dma_mask = &dev->archdata.dma_mask;
+@@ -233,6 +208,52 @@ static struct platform_device *of_platform_device_create_pdata(
+ 	return dev;
+ }
+ 
++int of_platform_device_populate_resources(struct platform_device *dev)
++{
++	struct device_node *np;
++	int rc = 0, i, nreg = 0, nirq;
++
++	np = dev->dev.of_node;
++
++	/* count the io and irq resources */
++	if (of_can_translate_address(np)) {
++		struct resource temp_res;
++		while (of_address_to_resource(np, nreg, &temp_res) == 0)
++			nreg++;
++	}
++	nirq = of_irq_count(np);
++
++	/* Populate the resource table */
++	if (nirq || nreg) {
++		struct resource *res;
++
++		res = krealloc(dev->resource, sizeof(*res) * (nirq + nreg),
++			       GFP_KERNEL);
++		if (!res) {
++			kfree(dev->resource);
++			dev->resource = NULL;
++			return -ENOMEM;
++		}
++		memset(res, 0, sizeof(*res) * (nirq + nreg));
++		dev->resource = res;
++		dev->num_resources = nreg + nirq;
++
++		for (i = 0; i < nreg; i++, res++) {
++			rc = of_address_to_resource(np, i, res);
++			WARN_ON(rc);
++			if (rc)
++				break;
++		}
++
++		if (!rc && of_irq_to_resource_table(np, res, nirq) != nirq) {
++			rc = -ENOENT;
++			WARN_ON(rc);
++		}
++	}
++	return rc;
++}
++EXPORT_SYMBOL(of_platform_device_populate_resources);
++
+ /**
+  * of_platform_device_create - Alloc, initialize and register an of_device
+  * @np: pointer to node to create device for
+diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
+index 05cb4a9..315e1e3 100644
+--- a/include/linux/of_platform.h
++++ b/include/linux/of_platform.h
+@@ -53,6 +53,16 @@ struct of_dev_auxdata {
+ 
+ extern const struct of_device_id of_default_bus_match_table[];
+ 
++/* Populate the resource for a platform device */
++#ifdef CONFIG_OF
++int of_platform_device_populate_resources(struct platform_device *dev);
++#else
++static inline int of_platform_device_populate_resources(
++	struct platform_device *)
++{
++	return -ENOSYS;
++}
++#endif
+ /* Platform drivers register/unregister */
+ extern struct platform_device *of_device_alloc(struct device_node *np,
+ 					 const char *bus_id,
+-- 
+1.8.5.3
 
->> + - interrupt-parent : the phandle for the interrupt controller to which
->> the
->> +       device interrupt (HOST_WAKE) is connected.
->> + - interrupts : interrupt specifier encoded according the interrupt
->> controller
->> +       specified by interrupt-parent property.
->
->
-> I would also add a clock here, since the BCM43xx chips usually need a 32k
-> clock to operate (or at least the ones I used to work with did). It can be
-> optional, as not all systems can control this clock.
-
-2, the main oscillator (MHz range) and the low power clock (32.768 KHz).
-In the other thread, someone mentioned they had to enable the main
-oscillator separately.
-
->> +
->> +Example:
->> +
->> +mmc3: mmc@01c20000 {
->> +       pinctrl-0 = <&mmc3_pins>;
->> +       pinctrl-1 = <&wifi_host_wake>;
->
->
-> WLAN_HOST_WAKE pin (aka the OOB interrupt) is specific to the WLAN chip, so
-> this should be rather configured in a pinctrl state of the WLAN chip itself.
-
-AFAIK, the pinctrl in tied to the device node, and is selected when the device
-is registered. The MMC subsystem currently does not register child nodes, so
-this would be useless.
-
-brcmfmac actually has to walk the whole DT to find the node with the right
-compatible.
-
->> +       vmmc-supply = <&mmc3_supply>;
->> +       bus-width = <4>;
->> +
->> +       bcm4335: bcm4335@0 {
->
->
-> nit: Why @0, if there is no reg property under this node?
-
-Off chance that you have 2 or more nodes with the same name?
-The node name should be more generic, too.
-
-This brings about a different problem, how should driver in its current
-state, differentiate between the two? And brcmfmac only supports one set
-of platform data ATM.
-
-
-Cheers
-ChenYu
-
-
-> Best regards,
-> Tomasz
->
->
->> +               compatible = "brcm,bcm43xx-fmac";
->> +               wlan-supply = <&wlan-reg>;
->> +               drive-strength = <4>;
->> +               interrupt-parent = <&gpx2>;
->> +               interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
->> +               interrupt-names = "HOST_WAKE";
->> +       };
->> +};
->> +
->>
->
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
