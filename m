@@ -1,7 +1,7 @@
 From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 5/9] Doc/DT: Add DT binding documentation for MIPI DPI Panel
-Date: Thu, 13 Feb 2014 14:32:28 +0200
-Message-ID: <1392294752-18762-6-git-send-email-tomi.valkeinen@ti.com>
+Subject: [PATCH 4/9] Doc/DT: Add DT binding documentation for HDMI Connector
+Date: Thu, 13 Feb 2014 14:32:27 +0200
+Message-ID: <1392294752-18762-5-git-send-email-tomi.valkeinen@ti.com>
 References: <1392294752-18762-1-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,62 +12,42 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY7
 Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT binding documentation for MIPI DPI Panel.
+Add DT binding documentation for HDMI Connector.
 
 Signed-off-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 ---
- .../devicetree/bindings/video/panel-dpi.txt        | 43 ++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/panel-dpi.txt
+ .../devicetree/bindings/video/hdmi-connector.txt   | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/hdmi-connector.txt
 
-diff --git a/Documentation/devicetree/bindings/video/panel-dpi.txt b/Documentation/devicetree/bindings/video/panel-dpi.txt
+diff --git a/Documentation/devicetree/bindings/video/hdmi-connector.txt b/Documentation/devicetree/bindings/video/hdmi-connector.txt
 new file mode 100644
-index 000000000000..72636c6f1c67
+index 000000000000..5d25f6a432bb
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/video/panel-dpi.txt
-@@ -0,0 +1,43 @@
-+Generic MIPI DPI Panel
-+======================
++++ b/Documentation/devicetree/bindings/video/hdmi-connector.txt
+@@ -0,0 +1,23 @@
++HDMI Connector
++==============
 +
 +Required properties:
-+- compatible: "panel-dpi"
++- compatible: "hdmi-connector"
 +
 +Optional properties:
-+- label: a symbolic name for the panel
-+- gpios: panel enable gpio and backlight enable gpio
++- label: a symbolic name for the connector
 +
 +Required nodes:
-+- "panel-timing" containing video timings
-+  (Documentation/devicetree/bindings/video/display-timing.txt)
-+- Video port for DPI input
++- Video port for HDMI input
 +
 +Example
 +-------
 +
-+lcd0: display@0 {
-+        compatible = "samsung,lte430wq-f0c", "panel-dpi";
-+        label = "lcd";
++hdmi0: connector@1 {
++	compatible = "hdmi-connector";
++	label = "hdmi";
 +
-+        lcd_in: endpoint {
-+                remote-endpoint = <&dpi_out>;
-+        };
-+
-+        panel-timing {
-+                clock-frequency = <9200000>;
-+                hactive = <480>;
-+                vactive = <272>;
-+                hfront-porch = <8>;
-+                hback-porch = <4>;
-+                hsync-len = <41>;
-+                vback-porch = <2>;
-+                vfront-porch = <4>;
-+                vsync-len = <10>;
-+
-+                hsync-active = <0>;
-+                vsync-active = <0>;
-+                de-active = <1>;
-+                pixelclk-active = <1>;
-+        };
++	hdmi_connector_in: endpoint {
++		remote-endpoint = <&tpd12s015_out>;
++	};
 +};
 -- 
 1.8.3.2
