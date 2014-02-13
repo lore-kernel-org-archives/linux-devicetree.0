@@ -1,46 +1,59 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 1/3] mmc: add support for power-on sequencing through DT
-Date: Thu, 13 Feb 2014 10:42:48 +0000
-Message-ID: <20140213104248.GU26684@n2100.arm.linux.org.uk>
-References: <1390190215-22700-1-git-send-email-olof@lixom.net> <52E700F0.7040708@gmail.com> <CAPDyKFpOhQtiyCmzie3=sfg42Vv5_rReRNgUf8kALoE6TBe2cw@mail.gmail.com> <201401281148.10670.arnd@arndb.de>
+From: Adam Thomson <adam.thomson@diasemi.com>
+Subject: [PATCH 1/2] mfd: da9055: Add DT support for PMIC
+Date: Thu, 13 Feb 2014 10:45:50 +0000
+Message-ID: <e11bde69763b77a6b17b851c7d18a892d193411f.1392286537.git.Adam.Thomson.Opensource@diasemi.com>
+References: <cover.1392286537.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201401281148.10670.arnd@arndb.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Tomasz Figa <t.figa@samsung.com>, Olof Johansson <olof@lixom.net>, linux-mmc <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, robh+dt@kernel.org, mark.rutland@arm.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chris Ball <chris@printf.net>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1392286537.git.Adam.Thomson.Opensource@diasemi.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 28, 2014 at 11:48:10AM +0100, Arnd Bergmann wrote:
-> I think there is another option, which does have its own pros and cons:
-> We could move all the power handling back into the sdio function driver
-> if we allow a secondary detection path using DT rather than the probing
-> of the SDIO bus.
+Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+---
+ drivers/mfd/da9055-i2c.c |    8 ++++++++
+ 1 files changed, 8 insertions(+), 0 deletions(-)
 
-No thanks.
+diff --git a/drivers/mfd/da9055-i2c.c b/drivers/mfd/da9055-i2c.c
+index 8103e43..d4d4c16 100644
+--- a/drivers/mfd/da9055-i2c.c
++++ b/drivers/mfd/da9055-i2c.c
+@@ -15,6 +15,8 @@
+ #include <linux/device.h>
+ #include <linux/i2c.h>
+ #include <linux/err.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
 
-What if we have a platform where things subtly change, like for instance,
-the wiring on the SD slot to fix a problem with UHS-1 cards, which means
-you don't have UHS-1 support for some platforms but do for others.
+ #include <linux/mfd/da9055/core.h>
 
-What if you have a platform which uses a brcm4329 chip for Wifi, but then
-later in the production run switch to using a different Wifi chipset?
+@@ -66,6 +68,11 @@ static struct i2c_device_id da9055_i2c_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, da9055_i2c_id);
 
-With this information encoded into DT, the number of DT files quickly
-increases, and then this presents its own problem - how do users get to
-know which DT file should be used for their platform when all they see
-externally is "a product of type A"?
++static const struct of_device_id da9055_of_match[] = {
++       { .compatible = "dlg,da9055-pmic", },
++       { }
++};
++
+ static struct i2c_driver da9055_i2c_driver = {
+        .probe = da9055_i2c_probe,
+        .remove = da9055_i2c_remove,
+@@ -73,6 +80,7 @@ static struct i2c_driver da9055_i2c_driver = {
+        .driver = {
+                .name = "da9055-pmic",
+                .owner = THIS_MODULE,
++               .of_match_table = of_match_ptr(da9055_of_match),
+        },
+ };
 
-Let's say that the board folk were kind enough to set some kind of
-identifing feature for the first but not the second (why would they,
-it's probe-able, damn it).
+--
+1.7.0.4
 
-The "we can do it in DT" approach just makes things unnecessarily more
-difficult from the _user_ and _hardware_ point of view.
+Legal Disclaimer: This e-mail communication (and any attachment/s) is confidential and contains proprietary information, some or all of which may be legally privileged. It is intended solely for the use of the individual or entity to which it is addressed. Access to this email by anyone else is unauthorized. If you are not the intended recipient, any disclosure, copying, distribution or any action taken or omitted to be taken in reliance on it, is prohibited and may be unlawful.
 
--- 
-FTTC broadband for 0.8mile line: 5.8Mbps down 500kbps up.  Estimation
-in database were 13.1 to 19Mbit for a good line, about 7.5+ for a bad.
-Estimate before purchase was "up to 13.2Mbit".
+Please consider the environment before printing this e-mail
