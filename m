@@ -1,62 +1,68 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/4] phy: miphy365x: Add Device Tree bindings for the
- MiPHY365x
-Date: Thu, 13 Feb 2014 12:23:17 +0000
-Message-ID: <20140213122317.GC5871@e106331-lin.cambridge.arm.com>
-References: <1392220985-28189-1-git-send-email-lee.jones@linaro.org>
- <20140212164019.GE25957@e106331-lin.cambridge.arm.com>
- <20140213110314.GH32508@lee--X1>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 0/9] OMAP DSS DT bindings documentation
+Date: Thu, 13 Feb 2014 14:32:23 +0200
+Message-ID: <1392294752-18762-1-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140213110314.GH32508@lee--X1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alexandre.torgue-qxv4g6HH51o@public.gmane.org" <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 13, 2014 at 11:03:14AM +0000, Lee Jones wrote:
-> > > The MiPHY365x is a Generic PHY which can serve various SATA or PCIe
-> > > devices. It has 2 ports which it can use for either; both SATA, both
-> > > PCIe or one of each in any configuration.
-> > > 
-> > > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > > Cc: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-> > > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > > ---
-> > >  .../devicetree/bindings/phy/phy-miphy365x.txt      | 43 ++++++++++++++++++++++
-> > >  1 file changed, 43 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/phy/phy-miphy365x.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/phy/phy-miphy365x.txt b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
-> > > new file mode 100644
-> > > index 0000000..fdfa7ca
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
-> > > @@ -0,0 +1,43 @@
-> > > +STMicroelectronics STi MIPHY365x PHY binding
-> > > +============================================
-> > > +
-> > > +This binding describes a miphy device that is used to control PHY hardware
-> > > +for SATA and PCIe.
-> > > +
-> > > +Required properties:
-> > > +- compatible: Should be "st,miphy365x-phy"
-> > > +- #phy-cells: Should be 2 (See example)
-> > 
-> > The first example has #phy-cells = <1>.
-> 
-> Right, will fix. Should be 2.
-> 
-> > What do the cells mean? What are the expected values?
-> 
-> http://www.spinics.net/lists/arm-kernel/msg307209.html
+Hi,
 
-Ok. Could that be mentioned in the binding document then?
+Here is DT binding documentation for OMAP Display Subsystem. I've sent these
+earlier as part of the whole DSS DT series, but I'm now sending them separately
+to get comments for them.
 
-Cheers,
-Mark.
+These patches are essentially the same as what I already sent earlier. The only
+difference is that I added clock information for omap3 and omap4 platforms.
+
+ Tomi
+
+Tomi Valkeinen (9):
+  Doc/DT: Add OMAP DSS DT Bindings
+  Doc/DT: Add DT binding documentation for Analog TV Connector
+  Doc/DT: Add DT binding documentation for DVI Connector
+  Doc/DT: Add DT binding documentation for HDMI Connector
+  Doc/DT: Add DT binding documentation for MIPI DPI Panel
+  Doc/DT: Add DT binding documentation for MIPI DSI CM Panel
+  Doc/DT: Add DT binding documentation for Sony acx565akm panel
+  Doc/DT: Add DT binding documentation for TFP410 encoder
+  Doc/DT: Add DT binding documentation for tpd12s015 encoder
+
+ .../bindings/video/analog-tv-connector.txt         |  23 +++
+ .../devicetree/bindings/video/dvi-connector.txt    |  26 +++
+ .../devicetree/bindings/video/hdmi-connector.txt   |  23 +++
+ .../devicetree/bindings/video/panel-dpi.txt        |  43 +++++
+ .../devicetree/bindings/video/panel-dsi-cm.txt     |  26 +++
+ .../devicetree/bindings/video/sony,acx565akm.txt   |  28 +++
+ .../devicetree/bindings/video/ti,omap-dss.txt      | 203 +++++++++++++++++++++
+ .../devicetree/bindings/video/ti,omap2-dss.txt     |  54 ++++++
+ .../devicetree/bindings/video/ti,omap3-dss.txt     |  83 +++++++++
+ .../devicetree/bindings/video/ti,omap4-dss.txt     | 111 +++++++++++
+ .../devicetree/bindings/video/ti,tfp410.txt        |  41 +++++
+ .../devicetree/bindings/video/ti,tpd12s015.txt     |  44 +++++
+ .../devicetree/bindings/video/video-ports.txt      |  22 +++
+ 13 files changed, 727 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/analog-tv-connector.txt
+ create mode 100644 Documentation/devicetree/bindings/video/dvi-connector.txt
+ create mode 100644 Documentation/devicetree/bindings/video/hdmi-connector.txt
+ create mode 100644 Documentation/devicetree/bindings/video/panel-dpi.txt
+ create mode 100644 Documentation/devicetree/bindings/video/panel-dsi-cm.txt
+ create mode 100644 Documentation/devicetree/bindings/video/sony,acx565akm.txt
+ create mode 100644 Documentation/devicetree/bindings/video/ti,omap-dss.txt
+ create mode 100644 Documentation/devicetree/bindings/video/ti,omap2-dss.txt
+ create mode 100644 Documentation/devicetree/bindings/video/ti,omap3-dss.txt
+ create mode 100644 Documentation/devicetree/bindings/video/ti,omap4-dss.txt
+ create mode 100644 Documentation/devicetree/bindings/video/ti,tfp410.txt
+ create mode 100644 Documentation/devicetree/bindings/video/ti,tpd12s015.txt
+ create mode 100644 Documentation/devicetree/bindings/video/video-ports.txt
+
+-- 
+1.8.3.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
