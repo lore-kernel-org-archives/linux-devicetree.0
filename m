@@ -1,77 +1,35 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] [RESEND] ARM/dts: hdmi-codec: panda/es dt entries
-Date: Thu, 13 Feb 2014 15:38:10 -0800
-Message-ID: <20140213233809.GV28216@atomide.com>
-References: <1392307081-12299-1-git-send-email-paolo.pisati@canonical.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH net-next v4 00/10] Support for the Broadcom GENET driver
+Date: Thu, 13 Feb 2014 18:39:14 -0500 (EST)
+Message-ID: <20140213.183914.1533527602267985176.davem@davemloft.net>
+References: <1392334222-1089-1-git-send-email-f.fainelli@gmail.com>
+	<20140213.183806.278183709549075615.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1392307081-12299-1-git-send-email-paolo.pisati@canonical.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Paolo Pisati <paolo.pisati@canonical.com>
-Cc: bcousson@baylibre.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: Text/Plain; charset=iso-8859-7
+Content-Transfer-Encoding: base64
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20140213.183806.278183709549075615.davem@davemloft.net>
+Sender: netdev-owner@vger.kernel.org
+To: f.fainelli@gmail.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, cernekee@gmail.com, mark.rutland@arm.com, romieu@fr.zoreil.com
 List-Id: devicetree@vger.kernel.org
 
-* Paolo Pisati <paolo.pisati@canonical.com> [140213 08:00]:
-> Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
-
-Missing description? Please also Cc Peter Ujfalusi on this
-and let me know if this is needed as a fix for the -rc cycle.
-
-Regards,
-
-Tony
-
-> ---
->  arch/arm/boot/dts/omap4-panda-common.dtsi |    9 ++++++++-
->  arch/arm/boot/dts/omap4-panda-es.dts      |    3 ++-
->  2 files changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
-> index 88c6a05..f4aeaa1 100644
-> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
-> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
-> @@ -36,9 +36,15 @@
->  		};
->  	};
->  
-> +	hdmi_audio: hdmi_audio@0 {
-> +		compatible = "linux,hdmi-audio";
-> +		status = "okay";
-> +	};
-> +
->  	sound: sound {
->  		compatible = "ti,abe-twl6040";
->  		ti,model = "PandaBoard";
-> +		ti,audio-codec = <&hdmi_audio>;
->  
->  		ti,mclk-freq = <38400000>;
->  
-> @@ -57,7 +63,8 @@
->  			"HSMIC", "Headset Mic",
->  			"Headset Mic", "Headset Mic Bias",
->  			"AFML", "Line In",
-> -			"AFMR", "Line In";
-> +			"AFMR", "Line In",
-> +			"HDMI Out", "TX";
->  	};
->  
->  	/* HS USB Port 1 Power */
-> diff --git a/arch/arm/boot/dts/omap4-panda-es.dts b/arch/arm/boot/dts/omap4-panda-es.dts
-> index 816d1c9..70152d6 100644
-> --- a/arch/arm/boot/dts/omap4-panda-es.dts
-> +++ b/arch/arm/boot/dts/omap4-panda-es.dts
-> @@ -23,7 +23,8 @@
->  		"Line Out", "AUXL",
->  		"Line Out", "AUXR",
->  		"AFML", "Line In",
-> -		"AFMR", "Line In";
-> +		"AFMR", "Line In",
-> +		"HDMI Out", "TX";
->  };
->  
->  /* PandaboardES has external pullups on SCL & SDA */
-> -- 
-> 1.7.9.5
-> 
+RnJvbTogRGF2aWQgTWlsbGVyIDxkYXZlbUBkYXZlbWxvZnQubmV0Pg0KRGF0ZTogVGh1LCAxMyBG
+ZWIgMjAxNCAxODozODowNiAtMDUwMCAoRVNUKQ0KDQo+IEZyb206IEZsb3JpYW4gRmFpbmVsbGkg
+PGYuZmFpbmVsbGlAZ21haWwuY29tPg0KPiBEYXRlOiBUaHUsIDEzIEZlYiAyMDE0IDE1OjMwOjEy
+IC0wODAwDQo+IA0KPj4gVGhpcyBwYXRjaHNldCBhZGRzIHN1cHBvcnQgZm9yIHRoZSBCcm9hZGNv
+bSBHRU5FVCBHaWdhYml0IEV0aGVybmV0IE1BQw0KPj4gY29udHJvbGxlci4gVGhpcyBjb250cm9s
+bGVyIGlzIGZvdW5kIG9uIHRoZSBCcm9hZGNvbSBCQ003eHh4IFNldCBUb3AgQm94DQo+PiBTeXN0
+ZW0tb24tYS1jaGlwcy4NCj4+IA0KPj4gQ2hhbmdlcyBzaW5jZSB2MzoNCj4+IC0gZml4ZWQgS2Nv
+bmZpZyBkZXBlbmRlbmN5IG9uIEZJWEVEX1BIWQ0KPj4gDQo+PiBDaGFuZ2VzIHNpbmNlIHYyOg0K
+Pj4gLSBkcm9wcGVkIHRoZSBwYXRjaCB0aGF0IGFkZHMgYW4gImludGVybmFsIiBwaHktbW9kZQ0K
+PiANCj4gTG9va3MgYmV0dGVyLCBzZXJpZXMgYXBwbGllZCwgdGhhbmtzLg0KDQpBY3R1YWxseSwg
+SSBoYXZlIHRvIHJldmVydCwgdGhpcyBicmVha3MgdGhlIGFsbG1vZGNvbmZpZyBidWlsZCBvbiB4
+ODZfNjQ6DQoNCmRyaXZlcnMvbmV0L2V0aGVybmV0L2Jyb2FkY29tL2dlbmV0L2JjbW1paS5jOiBJ
+biBmdW5jdGlvbiChYmNtZ2VuZXRfbWlpX29mX2luaXSiOg0KZHJpdmVycy9uZXQvZXRoZXJuZXQv
+YnJvYWRjb20vZ2VuZXQvYmNtbWlpLmM6NDA0OjI6IGVycm9yOiBpbXBsaWNpdCBkZWNsYXJhdGlv
+biBvZiBmdW5jdGlvbiChb2ZfZ2V0X25leHRfY2hpbGSiIFstV2Vycm9yPWltcGxpY2l0LWZ1bmN0
+aW9uLWRlY2xhcmF0aW9uXQ0KZHJpdmVycy9uZXQvZXRoZXJuZXQvYnJvYWRjb20vZ2VuZXQvYmNt
+bWlpLmM6NDA0OjEwOiB3YXJuaW5nOiBhc3NpZ25tZW50IG1ha2VzIHBvaW50ZXIgZnJvbSBpbnRl
+Z2VyIHdpdGhvdXQgYSBjYXN0IFtlbmFibGVkIGJ5IGRlZmF1bHRdDQpjYzE6IHNvbWUgd2Fybmlu
+Z3MgYmVpbmcgdHJlYXRlZCBhcyBlcnJvcnMNCg==
