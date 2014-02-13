@@ -1,66 +1,71 @@
-From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH] gpu:drm:tilcdc: backlight node never found
-Date: Thu, 13 Feb 2014 14:47:38 +0100
-Message-ID: <1392299258-16968-1-git-send-email-hs@denx.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Stefan =?ISO-8859-1?Q?S=F8rensen?=
+	<stefan.sorensen@spectralink.com>
+Subject: Re: [PATCH v2 1/2] dp83640: Support a configurable number of
+ periodic outputs
+Date: Thu, 13 Feb 2014 15:21:51 +0100
+Message-ID: <1392301311.2585.9.camel@e37108.spectralink.com>
+References: <1392132562-23644-1-git-send-email-stefan.sorensen@spectralink.com>
+	 <1392132562-23644-2-git-send-email-stefan.sorensen@spectralink.com>
+	 <20140211200922.GA4254@netboy>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140211200922.GA4254@netboy>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: grant.likely@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-In panel_probe() the backlight node is never found, correct this.
+On Tue, 2014-02-11 at 21:09 +0100, Richard Cochran wrote:
 
-Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Cc: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Cc: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
-Cc: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- drivers/gpu/drm/tilcdc/tilcdc_panel.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+> > -#define EXT_EVENT	1
+> 
+> Regarding this EXT_EVENT thing ...
+> 
+> > @@ -430,12 +419,12 @@ static int ptp_dp83640_enable(struct ptp_clock_info *ptp,
+> >  	switch (rq->type) {
+> >  	case PTP_CLK_REQ_EXTTS:
+> >  		index = rq->extts.index;
+> > -		if (index < 0 || index >= N_EXT_TS)
+> > +		if (index < 0 || index >= n_ext_ts)
+> >  			return -EINVAL;
+> > -		event_num = EXT_EVENT + index;
+> > +		event_num = index;
+> 
+> there was a mapping between the "event numbers" and the external time
+> stamp channels. I don't remember off the top of my head why this these
+> two differ by one, but there was a good reason.
 
-diff --git a/drivers/gpu/drm/tilcdc/tilcdc_panel.c b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-index 86c6732..0b97cf4 100644
---- a/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-+++ b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-@@ -356,6 +356,7 @@ static struct of_device_id panel_of_match[];
- static int panel_probe(struct platform_device *pdev)
- {
- 	struct device_node *node = pdev->dev.of_node;
-+	struct device_node *backlight_node;
- 	struct panel_module *panel_mod;
- 	struct tilcdc_module *mod;
- 	struct pinctrl *pinctrl;
-@@ -395,9 +396,15 @@ static int panel_probe(struct platform_device *pdev)
- 
- 	mod->preferred_bpp = panel_mod->info->bpp;
- 
--	panel_mod->backlight = of_find_backlight_by_node(node);
--	if (panel_mod->backlight)
--		dev_info(&pdev->dev, "found backlight\n");
-+	backlight_node = of_parse_phandle(pdev->dev.of_node, "backlight", 0);
-+	if (backlight_node) {
-+		panel_mod->backlight =
-+			of_find_backlight_by_node(backlight_node);
-+		if (panel_mod->backlight)
-+			dev_info(&pdev->dev, "found backlight\n");
-+	} else {
-+		dev_warn(&pdev->dev, "backlight node missing...\n");
-+	}
- 
- 	return 0;
- 
--- 
-1.8.3.1
+I haven't seen anything in the documentation regarding this, output
+triggers 0 and 1 are special, but the events should all behave the same.
+Could be be a mixup between events and pins? Pin0 means disable the
+event.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Are you sure this is still working with this change?
+
+It has been running with event 0 in one of our products for at least the
+last 3 months....
+
+> I am especially wondering about the event decoding here:
+> 
+> > @@ -642,7 +631,7 @@ static void recalibrate(struct dp83640_clock *clock)
+> >  
+> >  static inline u16 exts_chan_to_edata(int ch)
+> >  {
+> > -	return 1 << ((ch + EXT_EVENT) * 2);
+> > +	return 1 << ((ch) * 2);
+> >  }
+> 
+> Maybe I am just paranoid, but can you remind me how these event
+> numbers are supposed to work, before and after the change?
+
+The mapping was hardcoded to map events 0-5 to event channels 1-6, the
+periodic output trigger at channel 6 and the calibration event+trigger
+both at channel 7.
+
+The patch will (at least in v3 that I will post shortly) change both the
+event and trigger mapping to a direct mapping and keep the calibration
+at channel 7.
+
+Stefan
