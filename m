@@ -1,58 +1,28 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 Subject: Re: [PATCH net-next v4 00/10] Support for the Broadcom GENET driver
-Date: Thu, 13 Feb 2014 15:42:53 -0800
-Message-ID: <CAGVrzcau3=oKrOJhRvbtkE8d_Ywhj=H4q-WbDcORww7NZJf_6A@mail.gmail.com>
-References: <1392334222-1089-1-git-send-email-f.fainelli@gmail.com>
- <20140213.183806.278183709549075615.davem@davemloft.net> <20140213.183914.1533527602267985176.davem@davemloft.net>
- <CAGVrzcaJJBspF6o_0+kWHwh4hs7Q3YCknqZdFzS-ouyfBUecbQ@mail.gmail.com>
+Date: Thu, 13 Feb 2014 18:53:19 -0500 (EST)
+Message-ID: <20140213.185319.1984798829692586686.davem@davemloft.net>
+References: <20140213.183806.278183709549075615.davem@davemloft.net>
+	<20140213.183914.1533527602267985176.davem@davemloft.net>
+	<CAGVrzcaJJBspF6o_0+kWHwh4hs7Q3YCknqZdFzS-ouyfBUecbQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAGVrzcaJJBspF6o_0+kWHwh4hs7Q3YCknqZdFzS-ouyfBUecbQ@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Francois Romieu <romieu@fr.zoreil.com>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGVrzcaJJBspF6o_0+kWHwh4hs7Q3YCknqZdFzS-ouyfBUecbQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, romieu-W8zweXLXuWQS+FvcfC7Uqw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2014-02-13 15:41 GMT-08:00 Florian Fainelli <f.fainelli@gmail.com>:
-> 2014-02-13 15:39 GMT-08:00 David Miller <davem@davemloft.net>:
->> From: David Miller <davem@davemloft.net>
->> Date: Thu, 13 Feb 2014 18:38:06 -0500 (EST)
->>
->>> From: Florian Fainelli <f.fainelli@gmail.com>
->>> Date: Thu, 13 Feb 2014 15:30:12 -0800
->>>
->>>> This patchset adds support for the Broadcom GENET Gigabit Ethernet=
- MAC
->>>> controller. This controller is found on the Broadcom BCM7xxx Set T=
-op Box
->>>> System-on-a-chips.
->>>>
->>>> Changes since v3:
->>>> - fixed Kconfig dependency on FIXED_PHY
->>>>
->>>> Changes since v2:
->>>> - dropped the patch that adds an "internal" phy-mode
->>>
->>> Looks better, series applied, thanks.
->>
->> Actually, I have to revert, this breaks the allmodconfig build on x8=
-6_64:
->>
->> drivers/net/ethernet/broadcom/genet/bcmmii.c: In function =E2=80=98b=
-cmgenet_mii_of_init=E2=80=99:
->> drivers/net/ethernet/broadcom/genet/bcmmii.c:404:2: error: implicit =
-declaration of function =E2=80=98of_get_next_child=E2=80=99 [-Werror=3D=
-implicit-function-declaration]
->> drivers/net/ethernet/broadcom/genet/bcmmii.c:404:10: warning: assign=
-ment makes pointer from integer without a cast [enabled by default]
->> cc1: some warnings being treated as errors
->
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Date: Thu, 13 Feb 2014 15:41:03 -0800
+
 > Ok, would you agree in having a big fat "depends on OF" for now until
 > I can get an empty stub going with the DT people?
 
-There is an alternate solution which will not require such a big
-hammer Kconfig dependency.
---=20
-=46lorian
+Yes.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
