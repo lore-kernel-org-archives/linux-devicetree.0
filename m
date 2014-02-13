@@ -1,67 +1,79 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 1/3] mmc: add support for power-on sequencing through DT
-Date: Thu, 13 Feb 2014 14:41:06 +0000
-Message-ID: <20140213144106.GW26684@n2100.arm.linux.org.uk>
-References: <1390190215-22700-1-git-send-email-olof@lixom.net> <201401281148.10670.arnd@arndb.de> <20140213104248.GU26684@n2100.arm.linux.org.uk> <2874395.Ul86gYA57i@wuerfel>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH v2 10/14] Documentation: mfd: s2mps11: Document support for
+ S2MPS14
+Date: Thu, 13 Feb 2014 15:55:07 +0100
+Message-ID: <52FCDCCB.70908@samsung.com>
+References: <1392282847-25444-1-git-send-email-k.kozlowski@samsung.com>
+ <1392282847-25444-11-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2874395.Ul86gYA57i@wuerfel>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tomasz Figa <t.figa@samsung.com>, linux-mmc <linux-mmc@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Chris Ball <chris@printf.net>, robh+dt@kernel.org, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1392282847-25444-11-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Sangbeom Kim <sbkim73@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 13, 2014 at 01:48:55PM +0100, Arnd Bergmann wrote:
-> On Thursday 13 February 2014 10:42:48 Russell King - ARM Linux wrote:
-> > 
-> > What if we have a platform where things subtly change, like for instance,
-> > the wiring on the SD slot to fix a problem with UHS-1 cards, which means
-> > you don't have UHS-1 support for some platforms but do for others.
-> > 
-> > What if you have a platform which uses a brcm4329 chip for Wifi, but then
-> > later in the production run switch to using a different Wifi chipset?
-> 
-> As far as I can tell, the power sequencing is normally really
-> dependent on the device. If someone has an on-board brcm4329
-> that requires a specific set of clocks, resets, voltages etc
-> to be routed to the chip and enabled in the correct order to
-> allow probing, it seems unlikely that changing the wifi chipset
-> to something else would keep the exact same requirements.
+Hi,
 
-That's your assertion - however, do we /know/ whether there's a situation
-where Olof's solution doesn't work because the sequencing is wrong?
+On 13.02.2014 10:14, Krzysztof Kozlowski wrote:
+> Add bindings documentation for S2MPS14 device to the s2mps11 driver.
+>
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Tomasz Figa <t.figa@samsung.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> ---
+>   Documentation/devicetree/bindings/mfd/s2mps11.txt |   12 ++++++++----
+>   1 file changed, 8 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+> index 15ee89c3cc7b..f69bec294f02 100644
+> --- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
+> +++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+> @@ -1,5 +1,5 @@
+>
+> -* Samsung S2MPS11 Voltage and Current Regulator
+> +* Samsung S2MPS11 and S2MPS14 Voltage and Current Regulator
+>
+>   The Samsung S2MPS11 is a multi-function device which includes voltage and
+>   current regulators, RTC, charger controller and other sub-blocks. It is
+> @@ -7,7 +7,7 @@ interfaced to the host controller using an I2C interface. Each sub-block is
+>   addressed by the host system using different I2C slave addresses.
+>
+>   Required properties:
+> -- compatible: Should be "samsung,s2mps11-pmic".
+> +- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-pmic".
+>   - reg: Specifies the I2C slave address of the pmic block. It should be 0x66.
+>
+>   Optional properties:
+> @@ -59,10 +59,14 @@ supports. Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
+>   as per the datasheet of s2mps11.
+>
+>   	- LDOn
+> -		  - valid values for n are 1 to 38
+> +		  - valid values for n are:
+> +			- S2MPS11: 1 to 38
+> +			- S2MPS14: 1 to 25
+>   		  - Example: LDO1, LD02, LDO28
+>   	- BUCKn
+> -		  - valid values for n are 1 to 10.
+> +		  - valid values for n are:
+> +			- S2MPS11: 1 to 10
+> +			- S2MPS14: 1 to 5
+>   		  - Example: BUCK1, BUCK2, BUCK9
+>
+>   Example:
+>
 
-I see nothing unreasonable about the sequence:
+Acked-by: Tomasz Figa <t.figa@samsung.com>
 
-1. hold reset at low level
-2. apply power
-3. turn clock on
-4. apply reset
-5. release reset
-
-The points being:
-* never set a signal to a high level before power is applied, otherwise
-  we can end up supplying power through that signal (which may cause
-  damage.)  That goes for the reset and clock.
-* devices normally want clocks running to complete their reset sequencing.
-
-This is actually the sequence which MMC/SD cards do (except without the
-reset) anyway - it's spec'd that on the MMC/SD bus, power will be applied
-and will be stable before the clock signal is applied, and then the clock
-signal runs for a certain number of cycles before you even start talking
-to the card.
-
-That all said, we do have the problem that once we decide, we need to
-support it because it becomes part of DT - this is one of the things I
-hate about DT, it requires over-design.  Your point is "Olof's solution
-may break if we have a device which requires a different sequence" which
-is a valid point which has to be considered from the DT perspective and
-addressed whether or not we actually have a device which meets that
-criteria.  I don't see an easy solution to this.
-
--- 
-FTTC broadband for 0.8mile line: 5.8Mbps down 500kbps up.  Estimation
-in database were 13.1 to 19Mbit for a good line, about 7.5+ for a bad.
-Estimate before purchase was "up to 13.2Mbit".
+Best regards,
+Tomasz
