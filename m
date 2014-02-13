@@ -1,119 +1,90 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: [PATCH 1/4] clk: ti: mux: add support for default-parenting
-Date: Thu, 13 Feb 2014 11:00:45 +0200
-Message-ID: <1392282048-6284-2-git-send-email-t-kristo@ti.com>
-References: <1392282048-6284-1-git-send-email-t-kristo@ti.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 1/3] mmc: add support for power-on sequencing through
+ DT
+Date: Thu, 13 Feb 2014 10:01:20 +0100
+Message-ID: <52FC89E0.6050305@gmail.com>
+References: <1390190215-22700-1-git-send-email-olof@lixom.net>	<52E700F0.7040708@gmail.com>	<CAPDyKFpOhQtiyCmzie3=sfg42Vv5_rReRNgUf8kALoE6TBe2cw@mail.gmail.com>	<201401281148.10670.arnd@arndb.de> <CAPDyKFo9Xpxe0XzevPEeaofLeCNivnf3R_RttToP2h3aFyB4Yw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1392282048-6284-1-git-send-email-t-kristo@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, mturquette@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFo9Xpxe0XzevPEeaofLeCNivnf3R_RttToP2h3aFyB4Yw@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Tomasz Figa <t.figa@samsung.com>, Olof Johansson <olof@lixom.net>, linux-mmc <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, robh+dt@kernel.org, mark.rutland@arm.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chris Ball <chris@printf.net>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-ti,mux-clock now supports ti,default-parent property, which can be used
-to configure the default parent of the clock during boot. This property
-can be added to board specific files, or under the clock data itself.
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
- Documentation/devicetree/bindings/clock/ti/mux.txt |    7 ++++++
- drivers/clk/ti/mux.c                               |   24 ++++++++++++++++++--
- 2 files changed, 29 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/ti/mux.txt b/Documentation/devicetree/bindings/clock/ti/mux.txt
-index 2d0d170..4e291eb 100644
---- a/Documentation/devicetree/bindings/clock/ti/mux.txt
-+++ b/Documentation/devicetree/bindings/clock/ti/mux.txt
-@@ -48,6 +48,8 @@ Optional properties:
-   zero
- - ti,set-rate-parent : clk_set_rate is propagated to parent clock,
-   not supported by the composite-mux-clock subtype
-+- ti,default-parent : configures mux parent during boot to be the provided
-+  phandle clock
- 
- Examples:
- 
-@@ -65,6 +67,7 @@ abe_dpll_bypass_clk_mux_ck: abe_dpll_bypass_clk_mux_ck@4a306108 {
- 	clocks = <&sys_clkin_ck>, <&sys_32k_ck>;
- 	ti,bit-shift = <24>;
- 	reg = <0x0108>;
-+	ti,default-parent = <&sys_32k_ck>;
- };
- 
- mcbsp5_mux_fck: mcbsp5_mux_fck {
-@@ -74,3 +77,7 @@ mcbsp5_mux_fck: mcbsp5_mux_fck {
- 	ti,bit-shift = <4>;
- 	reg = <0x02d8>;
- };
-+
-+&mcbsp5_mux_fck {
-+	ti,default-parent = <&mcbsp_clks>;
-+};
-diff --git a/drivers/clk/ti/mux.c b/drivers/clk/ti/mux.c
-index 0197a47..557a7ce 100644
---- a/drivers/clk/ti/mux.c
-+++ b/drivers/clk/ti/mux.c
-@@ -108,7 +108,8 @@ static struct clk *_register_mux(struct device *dev, const char *name,
- 				 const char **parent_names, u8 num_parents,
- 				 unsigned long flags, void __iomem *reg,
- 				 u8 shift, u32 mask, u8 clk_mux_flags,
--				 u32 *table, spinlock_t *lock)
-+				 u32 *table, int default_parent,
-+				 spinlock_t *lock)
- {
- 	struct clk_mux *mux;
- 	struct clk *clk;
-@@ -136,6 +137,9 @@ static struct clk *_register_mux(struct device *dev, const char *name,
- 	mux->table = table;
- 	mux->hw.init = &init;
- 
-+	if (default_parent >= 0)
-+		ti_clk_mux_set_parent(&mux->hw, default_parent);
-+
- 	clk = clk_register(dev, &mux->hw);
- 
- 	if (IS_ERR(clk))
-@@ -161,6 +165,8 @@ static void of_mux_clk_setup(struct device_node *node)
- 	u32 mask = 0;
- 	u32 shift = 0;
- 	u32 flags = 0;
-+	struct device_node *default_parent;
-+	int default_parent_idx = -1;
- 
- 	num_parents = of_clk_get_parent_count(node);
- 	if (num_parents < 2) {
-@@ -174,6 +180,19 @@ static void of_mux_clk_setup(struct device_node *node)
- 	for (i = 0; i < num_parents; i++)
- 		parent_names[i] = of_clk_get_parent_name(node, i);
- 
-+	default_parent = of_parse_phandle(node, "ti,default-parent", 0);
-+
-+	if (default_parent) {
-+		for (i = 0; i < num_parents; i++) {
-+			struct device_node *tmp;
-+			tmp = of_parse_phandle(node, "clocks", i);
-+			if (tmp == default_parent) {
-+				default_parent_idx = i;
-+				break;
-+			}
-+		}
-+	}
-+
- 	reg = ti_clk_get_reg_addr(node, 0);
- 
- 	if (!reg)
-@@ -195,7 +214,8 @@ static void of_mux_clk_setup(struct device_node *node)
- 	mask = (1 << fls(mask)) - 1;
- 
- 	clk = _register_mux(NULL, node->name, parent_names, num_parents, flags,
--			    reg, shift, mask, clk_mux_flags, NULL, NULL);
-+			    reg, shift, mask, clk_mux_flags, NULL,
-+			    default_parent_idx, NULL);
- 
- 	if (!IS_ERR(clk))
- 		of_clk_add_provider(node, of_clk_src_simple_get, clk);
--- 
-1.7.9.5
+On 13.02.2014 09:56, Ulf Hansson wrote:
+> On 28 January 2014 11:48, Arnd Bergmann <arnd@arndb.de> wrote:
+>> On Tuesday 28 January 2014, Ulf Hansson wrote:
+>>> On 28 January 2014 01:59, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+>>>> On 27.01.2014 11:19, Ulf Hansson wrote:
+>>>>> There is already a host capability that I think we could use to handle
+>>>>> this. MMC_CAP_NONREMOVABLE, the corresponding DT binding string is
+>>>>> "non-removable", and it may be set per host device.
+>>>>>
+>>>>> Using this cap means the mmc_rescan process that runs to detect new
+>>>>> cards, will only be executed once and during boot. So, we need to make
+>>>>> sure all resources and powers are provided to the card at this point.
+>>>>> Otherwise the card will not be detected.
+>>>>
+>>>> I don't quite like this requirement, especially if you consider
+>>>> multi-platform kernels where a lot of drivers is going to be provided as
+>>>> modules. WLAN drivers are especially good candidates. This means that even
+>>>> if the card is powered off at boot-up, if user (or init system) loads
+>>>> appropriate module, which powers the chip on, MMC core must be able to
+>>>> notice this.
+>>>
+>>> To be able to detect the card, the WLAN driver doesn't have to be
+>>> probed, only the "power controller" driver. I suppose this is were it
+>>> becomes a bit tricky.
+>>>
+>>> Somehow the mmc core needs to be involved in the probe process of the
+>>> power controller driver. Could perhaps the power controller bus be
+>>> located in the mmc core and thus the power controller driver needs to
+>>> register itself by using a new API from the mmc core? Similar how SDIO
+>>> func driver's register themselves.
+>>
+>> I think there is another option, which does have its own pros and cons:
+>> We could move all the power handling back into the sdio function driver
+>> if we allow a secondary detection path using DT rather than the probing
+>> of the SDIO bus. Essentially you'd have to list the class/vendor/device
+>> ID for each function that cannot be autodetected in DT, and have the
+>> SDIO core pretend that it found the device just by looking at the
+>> device nodes, and register the struct sdio_func so it can be bound to
+>> the driver. The driver then does all the power handling in a device
+>> specific way. At some point the hardware gets registered at the
+>> mmc host, and the sdio core connects the bus state to the already present
+>> sdio_func, possibly notifying the function driver that it has become
+>> usable.
+>
+> It seems like an option we could try.
+>
+> There are some tricky parts that needs to be taken care of by the
+> mmc/sdio core, regarding the probe/removal and the suspend/resume
+> sequence, but I suppose it should be possible.
+>
+> A minor concern is how do we handle devices that are fully powered at
+> boot? Unless the sdio func driver will be loaded we can't power off
+> them, right? Do we need to cover this case, do you think?
+>
+>>
+>> Obviously, this can only work for CAP_NONREMOVABLE devices, but those
+>> are exactly the ones we are worried about here. The advantage is that
+>> the power sequencing for a particular device can then be in device
+>> specific code and can have an arbitrarily complex in the driver without
+>> needing the mmc code to handle all possible corner cases.
+>
+> Agree!
+>
+> I think a removable SDIO card won't l need this additional power
+> controller mechanism.
 
+Yes, sounds good to me too. It will be more tricky to implement than the 
+solution I initially proposed, but should end up being much cleaner and 
+possibly cover more cases.
+
+Best regards,
+Tomasz
