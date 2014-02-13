@@ -1,132 +1,82 @@
-From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] Documentation: mfd: Add binding document for S2MPA01
-Date: Thu, 13 Feb 2014 11:47:19 +0530
-Message-ID: <CAK9yfHyrKR27Z=S4ZuS5ZuJKjiVxFQXe4=izXyJMRs8c+-PuMg@mail.gmail.com>
-References: <1389266554-23463-1-git-send-email-sachin.kamat@linaro.org>
-	<1389266554-23463-3-git-send-email-sachin.kamat@linaro.org>
-	<20140212181043.GB23630@e106331-lin.cambridge.arm.com>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH] export of_irq_count
+Date: Thu, 13 Feb 2014 07:29:32 +0100
+Message-ID: <52FC664C.7040609@monstr.eu>
+References: <1392226444-30507-1-git-send-email-delicious.quinoa@gmail.com> <CAL_JsqLT=w5wDnFBcQdeF5KgpJK76xJhH=ZYJy24CEeV2uQ2aQ@mail.gmail.com> <CANk1AXTbnBXzxf_WiQAbWKxNhm2wKVrj0O=nDcW7j27i4T3YBw@mail.gmail.com> <CAL_JsqLFAj_nCpuCg8qVchrfeSJ4HgOpt6ht9URkBuKZ6ztWow@mail.gmail.com>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="7w8FftFIEubxxa6NpPdRUGIULL9FHQcKv"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140212181043.GB23630-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+In-Reply-To: <CAL_JsqLFAj_nCpuCg8qVchrfeSJ4HgOpt6ht9URkBuKZ6ztWow-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: delicious quinoa <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Yves Vandervennet <rocket.yvanderv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--7w8FftFIEubxxa6NpPdRUGIULL9FHQcKv
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On 12 February 2014 23:40, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> Hi Sachin,
->
-> Apologies for the delay on this.
+On 02/12/2014 08:56 PM, Rob Herring wrote:
+> On Wed, Feb 12, 2014 at 12:43 PM, delicious quinoa
+> <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Wed, Feb 12, 2014 at 12:32 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
+wrote:
+>>> On Wed, Feb 12, 2014 at 11:34 AM, delicious quinoa
+>>> <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>> From: Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+>>>>
+>>>> export of_irq_count so it can be used in drivers that are built
+>>>> as modules.
+>>>
+>>> What drivers? Drivers generally should be using resources rather than=
 
-No problem :). Thank you for your review. Please see my comments inline.
-
->
-> On Thu, Jan 09, 2014 at 11:22:34AM +0000, Sachin Kamat wrote:
->> Added initial binding documentation for S2MPA01 MFD.
+>>> this function directly.
 >>
->> Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->> * Re-organised as suggested by Mark Rutland.
->> ---
->>  Documentation/devicetree/bindings/mfd/s2mpa01.txt |   86 +++++++++++++++++++++
->>  1 file changed, 86 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mfd/s2mpa01.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/s2mpa01.txt b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
->> new file mode 100644
->> index 000000000000..70879b92b24b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
->> @@ -0,0 +1,86 @@
->> +
->> +* Samsung S2MPA01 Voltage and Current Regulator
->> +
->> +The Samsung S2MPA01 is a multi-function device which includes high
->> +efficiency buck converters including Dual-Phase buck converter, various LDOs,
->> +and an RTC. It is interfaced to the host controller using an I2C interface.
->> +Each sub-block is addressed by the host system using different I2C slave
->> +addresses.
->> +
->> +Required properties:
->> +- compatible: Should be "samsung,s2mpa01-pmic".
->> +- reg: Specifies the I2C slave address of the PMIC block. It should be 0x66.
->
-> Is the slave address not per-instance in I2C? If not why must is be 0x66?
+>> It's for the DesignWare GPIO driver I've been upstreaming.  The
+>> DesignWare IP can be configured to be one irq for all the gpios or one=
 
-Mark Brown already replied to this. Thanks Mark.
+>> irq per gpio.  I want to support both cases.  So I need to know how
+>> many irqs are specified in the device tree.
+>=20
+> Okay. You should merge this as part of that then, so:
+>=20
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
->
->> +
->> +Optional properties:
->> +- interrupt-parent: Specifies the phandle of the interrupt controller to which
->> +  the interrupts from s2mpa01 are delivered to.
->> +- interrupts: Interrupt specifier for interrupt source (connected to SoC).
->
-> The part in brackets can go. Assuming this is a single interrupt:
+I think we should be consistent and there are other methods how
+to solve this. I have sent the same patch long time ago.
+https://lkml.org/lkml/2013/5/30/265
 
-OK.
+Thanks,
+Michal
 
->
-> - interrupts: An interrupt-specifier for the sole interrupt generated by
->   the device.
->
-> If the interrupt has a name it would be nice to mention that. If there
-> are more than one you should describe them.
->
->> +
->> +Optional nodes:
->> +- regulators: The regulators of s2mpa01 that have to be instantiated should be
->> +  included in a sub-node named 'regulators'. Regulator nodes and constraints
->> +  included in this sub-node use the standard regulator bindings which are
->> +  documented elsewhere.
->> +
->> +Properties for BUCK regulator nodes:
->> + regulator-ramp-delay for BUCKs = [6250/12500(default)/25000/50000] uV/us
->
-> This could be made easier to read:
->
-> - regulator-ramp-delay: ramp delay in uV/us. May be 6250, 12500
->   (default), 250000, or 50000. May be 0 for disabling the ramp delay on
->   BUCK{1,2,3,4}.
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
 
-Yes. Will update.
 
->
->> +
->> + BUCK[1/2/3/4] supports disabling ramp delay on hardware, so explictly
->> + regulator-ramp-delay = <0> can be used for them to disable ramp delay.
->> + In the absence of the regulator-ramp-delay property, the default ramp
->> + delay will be used.
->
-> Can be folded into the above, as in my example.
 
-Right.
+--7w8FftFIEubxxa6NpPdRUGIULL9FHQcKv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
->
->> +
->> +  NOTE: Some BUCKs share the ramp rate setting i.e. same ramp value will be set
->> +  for a particular group of BUCKs. So provide same regulator-ramp-delay<value>.
->
-> Missing '=' before <value>?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-Yes. Thanks for pointing out.
+iEUEARECAAYFAlL8ZkwACgkQykllyylKDCFlFwCY4CBZsR8lxSiwlbWmCWIWUQpq
+rQCeOOkpgvfGkGTa7Hla5LYht89sWOU=
+=D722
+-----END PGP SIGNATURE-----
 
->
->> +  Grouping of BUCKs sharing ramp rate setting is as follow : BUCK[1, 6],
->> +  BUCK[2, 4], and BUCK[8, 9, 10]
->
-> The following BUCKs share ramp settings:
-> * 1 and 6
-> * 2 and 4
-> * 8, 9, and 10
-
-OK.
--- 
-With warm regards,
-Sachin
+--7w8FftFIEubxxa6NpPdRUGIULL9FHQcKv--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
