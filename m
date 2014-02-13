@@ -1,235 +1,147 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH net-next v2 04/10] net: phy: add Broadcom BCM7xxx internal
- PHY driver
-Date: Thu, 13 Feb 2014 10:41:25 -0800
-Message-ID: <CAGVrzcbs38nrkKFQ_QhOmeTGNkrp+ca+T-TSOYnXPm29ikqkJQ@mail.gmail.com>
-References: <1392269395-23513-1-git-send-email-f.fainelli@gmail.com>
- <1392269395-23513-5-git-send-email-f.fainelli@gmail.com> <20140213103454.GA14941@electric-eye.fr.zoreil.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: give priority to the compatible match in __of_match_node()
+Date: Thu, 13 Feb 2014 13:01:42 -0600
+Message-ID: <CAL_JsqKMi2H=vwoxrOt8QRA2xJeiLqBKKfLtt4QRCRoFk6JUHg@mail.gmail.com>
+References: <1392205084-2351-1-git-send-email-haokexin@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20140213103454.GA14941@electric-eye.fr.zoreil.com>
-Sender: netdev-owner@vger.kernel.org
-To: Francois Romieu <romieu@fr.zoreil.com>
-Cc: netdev <netdev@vger.kernel.org>, David Miller <davem@davemloft.net>, Kevin Cernekee <cernekee@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392205084-2351-1-git-send-email-haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen N Chivers <schivers-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, Chris Proctor <cproctor-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Francois,
+On Wed, Feb 12, 2014 at 5:38 AM, Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> When the device node do have a compatible property, we definitely
+> prefer the compatible match besides the type and name. Only if
+> there is no such a match, we then consider the candidate which
+> doesn't have compatible entry but do match the type or name with
+> the device node.
+>
+> This is based on a patch from Sebastian Hesselbarth.
+>   http://patchwork.ozlabs.org/patch/319434/
+>
+> I did some code refactoring and also fixed a bug in the original patch.
 
-2014-02-13 2:34 GMT-08:00 Francois Romieu <romieu@fr.zoreil.com>:
-> Florian Fainelli <f.fainelli@gmail.com> :
-> [...]
->> diff --git a/drivers/net/phy/bcm7xxx.c b/drivers/net/phy/bcm7xxx.c
->> new file mode 100644
->> index 0000000..6aea6e2
->> --- /dev/null
->> +++ b/drivers/net/phy/bcm7xxx.c
-> [...]
->> +static int bcm7445_config_init(struct phy_device *phydev)
->> +{
->> +     int ret;
->
-> It could be declared after 'i' below.
->
->> +     const struct bcm7445_regs {
->
-> static const
->
->> +             int reg;
->> +             u16 value;
->> +     } bcm7445_regs_cfg[] = {
->> +             /* increases ADC latency by 24ns */
->> +             { 0x17, 0x0038 },
->> +             { 0x15, 0xAB95 },
->> +             /* increases internal 1V LDO voltage by 5% */
->> +             { 0x17, 0x2038 },
->> +             { 0x15, 0xBB22 },
->> +             /* reduce RX low pass filter corner frequency */
->> +             { 0x17, 0x6038 },
->> +             { 0x15, 0xFFC5 },
->> +             /* reduce RX high pass filter corner frequency */
->> +             { 0x17, 0x003a },
->> +             { 0x15, 0x2002 },
->> +     };
->> +     unsigned int i;
->> +
->> +     for (i = 0; i < ARRAY_SIZE(bcm7445_regs_cfg); i++) {
->> +             ret = phy_write(phydev,
->> +                             bcm7445_regs_cfg[i].reg,
->> +                             bcm7445_regs_cfg[i].value);
->> +             if (ret)
->> +                     return ret;
->> +     }
->> +
->> +     return 0;
->> +}
->> +
->> +static void phy_write_exp(struct phy_device *phydev,
->> +                                     u16 reg, u16 value)
->
-> static void phy_write_exp(struct phy_device *phydev, u16 reg, u16 value)
->
->> +{
->> +     phy_write(phydev, 0x17, 0xf00 | reg);
->> +     phy_write(phydev, 0x15, value);
->> +}
->> +
->> +static void phy_write_misc(struct phy_device *phydev,
->> +                                     u16 reg, u16 chl, u16 value)
->    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ all tabs that don't line up
->
-> static void phy_write_misc(struct phy_device *phydev,
->                            u16 reg, u16 chl, u16 value)
->
-> static void phy_write_misc(struct phy_device *phydev, u16 reg, u16 chl,
->                            u16 value)
->
-> static void phy_write_misc(struct phy_device *phydev, u16 reg, u16 chl, u16 val)
->
->
->> +{
->> +     int tmp;
->> +
->> +     phy_write(phydev, 0x18, 0x7);
->> +
->> +     tmp = phy_read(phydev, 0x18);
->> +     tmp |= 0x800;
->> +     phy_write(phydev, 0x18, tmp);
->> +
->> +     tmp = (chl * 0x2000) | reg;
->> +     phy_write(phydev, 0x17, tmp);
->> +
->> +     phy_write(phydev, 0x15, value);
->
-> You may use some #define for the 0x15, 0x17 and 0x18 values.
+I'm inclined to just revert this once again and avoid possibly
+breaking yet another platform.
 
-Right, those are actually inherited from the BCM54xx PHY driver, I
-will move those register to a common location e.g: brcmphy.h
+However, I think I would like to see this structured differently. We
+basically have 2 ways of matching: the existing pre-3.14 way and the
+desired match on best compatible only. All new bindings should match
+with the new way and the old way needs to be kept for compatibility.
+So lets structure the code that way. Search the match table first for
+best compatible with name and type NULL, then search the table the old
+way. I realize it appears you are doing this, but it is not clear this
+is the intent of the code. I would like to see this written as a patch
+with commit 105353145eafb3ea919 reverted first and you add a new match
+function to call first and then fallback to the existing function.
+
+Rob
 
 >
->> +}
->> +
->> +static int bcm7xxx_28nm_afe_config_init(struct phy_device *phydev)
->> +{
->> +     /* write AFE_RXCONFIG_0 */
->> +     phy_write_misc(phydev, 0x38, 0x0000, 0xeb19);
->> +
->> +     /* write AFE_RXCONFIG_1 */
->> +     phy_write_misc(phydev, 0x38, 0x0001, 0x9a3f);
->> +
->> +     /* write AFE_RX_LP_COUNTER */
->> +     phy_write_misc(phydev, 0x38, 0x0003, 0x7fc7);
->> +
->> +     /* write AFE_HPF_TRIM_OTHERS */
->> +     phy_write_misc(phydev, 0x3A, 0x0000, 0x000b);
->> +
->> +     /* write AFTE_TX_CONFIG */
->> +     phy_write_misc(phydev, 0x39, 0x0000, 0x0800);
+> Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/of/base.c | 55 +++++++++++++++++++++++++++++++++++++------------------
+>  1 file changed, 37 insertions(+), 18 deletions(-)
 >
-> Some #define may be welcome to replace the comments.
-
-I would rather keep those as comments as they might change over time
-if I get to incorporate a new workaround sequence.
-
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index ff85450d5683..9d655df458bd 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -730,32 +730,45 @@ out:
+>  }
+>  EXPORT_SYMBOL(of_find_node_with_property);
 >
-> [...]
->> +static int bcm7xxx_28nm_config_init(struct phy_device *phydev)
->> +{
->> +     int ret;
->> +
->> +     ret = bcm7445_config_init(phydev);
->> +     if (ret)
->> +             return ret;
->> +
->> +     return bcm7xxx_28nm_afe_config_init(phydev);
->> +}
->> +
->> +static int phy_set_clr_bits(struct phy_device *dev, int location,
->> +                                     int set_mask, int clr_mask)
->> +{
->> +     int v, ret;
->> +
->> +     v = phy_read(dev, location);
->> +     if (v < 0)
->> +             return v;
->> +
->> +     v &= ~clr_mask;
->> +     v |= set_mask;
->> +
->> +     ret = phy_write(dev, location, v);
->> +     if (ret < 0)
->> +             return ret;
->> +
->> +     return v;
->> +}
->> +
->> +static int bcm7xxx_config_init(struct phy_device *phydev)
->> +{
->> +     /* Enable 64 clock MDIO */
->> +     phy_write(phydev, 0x1d, 0x1000);
->> +     phy_read(phydev, 0x1d);
->> +
->> +     /* Workaround only required for 100Mbits/sec */
->> +     if (!(phydev->dev_flags & PHY_BRCM_100MBPS_WAR))
->> +             return 0;
->> +
->> +     /* set shadow mode 2 */
->> +     phy_set_clr_bits(phydev, 0x1f, 0x0004, 0x0004);
+> +static int of_match_type_or_name(const struct device_node *node,
+> +                               const struct of_device_id *m)
+> +{
+> +       int match = 1;
+> +
+> +       if (m->name[0])
+> +               match &= node->name && !strcmp(m->name, node->name);
+> +
+> +       if (m->type[0])
+> +               match &= node->type && !strcmp(m->type, node->type);
+> +
+> +       return match;
+> +}
+> +
+>  static
+>  const struct of_device_id *__of_match_node(const struct of_device_id *matches,
+>                                            const struct device_node *node)
+>  {
+>         const char *cp;
+>         int cplen, l;
+> +       const struct of_device_id *m;
+> +       int match;
 >
-> phy_set_clr_bits returned status code is not checked.
+>         if (!matches)
+>                 return NULL;
 >
->> +
->> +     /* set iddq_clkbias */
->> +     phy_write(phydev, 0x14, 0x0F00);
->> +     udelay(10);
->> +
->> +     /* reset iddq_clkbias */
->> +     phy_write(phydev, 0x14, 0x0C00);
->> +
->> +     phy_write(phydev, 0x13, 0x7555);
->> +
->> +     /* reset shadow mode 2 */
->> +     phy_set_clr_bits(phydev, 0x1f, 0x0004, 0);
+>         cp = __of_get_property(node, "compatible", &cplen);
+> -       do {
+> -               const struct of_device_id *m = matches;
+> +       while (cp && (cplen > 0)) {
+> +               m = matches;
 >
-> phy_set_clr_bits returned status code is not checked.
+>                 /* Check against matches with current compatible string */
+>                 while (m->name[0] || m->type[0] || m->compatible[0]) {
+> -                       int match = 1;
+> -                       if (m->name[0])
+> -                               match &= node->name
+> -                                       && !strcmp(m->name, node->name);
+> -                       if (m->type[0])
+> -                               match &= node->type
+> -                                       && !strcmp(m->type, node->type);
+> -                       if (m->compatible[0])
+> -                               match &= cp
+> -                                       && !of_compat_cmp(m->compatible, cp,
+> +                       if (!m->compatible[0]) {
+> +                               m++;
+> +                               continue;
+> +                       }
+> +
+> +                       match = of_match_type_or_name(node, m);
+> +                       match &= cp && !of_compat_cmp(m->compatible, cp,
+>                                                         strlen(m->compatible));
+>                         if (match)
+>                                 return m;
+> @@ -763,12 +776,18 @@ const struct of_device_id *__of_match_node(const struct of_device_id *matches,
+>                 }
 >
->> +
->> +     return 0;
->> +}
->> +
->> +/* Workaround for putting the PHY in IDDQ mode, required
->> + * for all BCM7XXX PHYs
->> + */
->> +static int bcm7xxx_suspend(struct phy_device *phydev)
+>                 /* Get node's next compatible string */
+> -               if (cp) {
+> -                       l = strlen(cp) + 1;
+> -                       cp += l;
+> -                       cplen -= l;
+> -               }
+> -       } while (cp && (cplen > 0));
+> +               l = strlen(cp) + 1;
+> +               cp += l;
+> +               cplen -= l;
+> +       }
+> +
+> +       m = matches;
+> +       /* Check against matches without compatible string */
+> +       while (m->name[0] || m->type[0] || m->compatible[0]) {
+> +               if (!m->compatible[0] && of_match_type_or_name(node, m))
+> +                       return m;
+> +               m++;
+> +       }
 >
-> Factor out with bcm7445_config_init and some helper ?
-
-I would rather keep this function simple like it is today since this
-really is only required for entering suspend mode properly while
-bcm7445_config_init() as the name suggests is specific to 7445 only.
-
-Thanks for the review!
-
->
->> +{
->> +     int ret;
->> +     const struct bcm7xxx_regs {
->> +             int reg;
->> +             u16 value;
->> +     } bcm7xxx_suspend_cfg[] = {
->> +             { 0x1f, 0x008b },
->> +             { 0x10, 0x01c0 },
->> +             { 0x14, 0x7000 },
->> +             { 0x1f, 0x000f },
->> +             { 0x10, 0x20d0 },
->> +             { 0x1f, 0x000b },
->> +     };
->> +     unsigned int i;
+>         return NULL;
+>  }
+> --
+> 1.8.5.3
 >
 > --
-> Ueimor
-
-
-
--- 
-Florian
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
