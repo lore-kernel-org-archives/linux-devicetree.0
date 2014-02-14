@@ -1,7 +1,7 @@
 From: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/2] Revert "OF: base: match each node compatible against all given matches first"
-Date: Fri, 14 Feb 2014 13:22:45 +0800
-Message-ID: <1392355366-1445-2-git-send-email-haokexin@gmail.com>
+Subject: [PATCH 2/2] of: search the best compatible match first in __of_match_node()
+Date: Fri, 14 Feb 2014 13:22:46 +0800
+Message-ID: <1392355366-1445-3-git-send-email-haokexin@gmail.com>
 References: <1392355366-1445-1-git-send-email-haokexin@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1392355366-1445-1-git-send-email-haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,107 +10,92 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY
 Cc: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen N Chivers <schivers-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This reverts commit 105353145eafb3ea919f5cdeb652a9d8f270228e.
-Stephen Chivers reported this is broken as we will get a match
-entry '.type = "serial"' instead of the '.compatible = "ns16550"'
-in the following scenario:
-	serial0: serial@4500 {
-		compatible = "fsl,ns16550", "ns16550";
-	}
+Currently, of_match_node compares each given match against all node's
+compatible strings with of_device_is_compatible.
 
-	struct of_device_id of_platform_serial_table[] = {
-		{ .compatible = "ns8250",   .data = (void *)PORT_8250, },
-		{ .compatible = "ns16450",  .data = (void *)PORT_16450, },
-		{ .compatible = "ns16550a", .data = (void *)PORT_16550A, },
-		{ .compatible = "ns16550",  .data = (void *)PORT_16550, },
-		{ .compatible = "ns16750",  .data = (void *)PORT_16750, },
-		{ .compatible = "ns16850",  .data = (void *)PORT_16850, },
-		...
-		{ .type = "serial",         .data = (void *)PORT_UNKNOWN, },
-		{ /* end of list */ },
-	};
+To achieve multiple compatible strings per node with ordering from
+specific to generic, this requires given matches to be ordered from
+specific to generic. For most of the drivers this is not true and also
+an alphabetical ordering is more sane there.
 
-So just revert this patch, we will use another implementation to find
-the best compatible match in a follow-on patch.
+Therefore, this patch introduces a function to match each of the node's
+compatible strings against all given compatible matches without type and
+name first, before checking the next compatible string. This implies
+that node's compatibles are ordered from specific to generic while
+given matches can be in any order. If we fail to find such a match
+entry, then fall-back to the old method in order to keep compatibility.
 
-Reported-by: Stephen N Chivers <schivers-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>
 Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/of/base.c | 53 ++++++++++++++++-------------------------------------
- 1 file changed, 16 insertions(+), 37 deletions(-)
+ drivers/of/base.c | 43 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 42 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/of/base.c b/drivers/of/base.c
-index ff85450d5683..ba195fbce4c6 100644
+index ba195fbce4c6..10b51106c854 100644
 --- a/drivers/of/base.c
 +++ b/drivers/of/base.c
-@@ -734,42 +734,24 @@ static
+@@ -730,13 +730,49 @@ out:
+ }
+ EXPORT_SYMBOL(of_find_node_with_property);
+ 
++static const struct of_device_id *
++of_match_compatible(const struct of_device_id *matches,
++			const struct device_node *node)
++{
++	const char *cp;
++	int cplen, l;
++	const struct of_device_id *m;
++
++	cp = __of_get_property(node, "compatible", &cplen);
++	while (cp && (cplen > 0)) {
++		m = matches;
++		while (m->name[0] || m->type[0] || m->compatible[0]) {
++			/* Only match for the entries without type and name */
++			if (m->name[0] || m->type[0] ||
++				of_compat_cmp(m->compatible, cp,
++					 strlen(m->compatible)))
++				m++;
++			else
++				return m;
++		}
++
++		/* Get node's next compatible string */
++		l = strlen(cp) + 1;
++		cp += l;
++		cplen -= l;
++	}
++
++	return NULL;
++}
++
+ static
  const struct of_device_id *__of_match_node(const struct of_device_id *matches,
  					   const struct device_node *node)
  {
--	const char *cp;
--	int cplen, l;
--
++	const struct of_device_id *m;
++
  	if (!matches)
  		return NULL;
  
--	cp = __of_get_property(node, "compatible", &cplen);
--	do {
--		const struct of_device_id *m = matches;
--
--		/* Check against matches with current compatible string */
--		while (m->name[0] || m->type[0] || m->compatible[0]) {
--			int match = 1;
--			if (m->name[0])
--				match &= node->name
--					&& !strcmp(m->name, node->name);
--			if (m->type[0])
--				match &= node->type
--					&& !strcmp(m->type, node->type);
--			if (m->compatible[0])
--				match &= cp
--					&& !of_compat_cmp(m->compatible, cp,
--							strlen(m->compatible));
--			if (match)
--				return m;
--			m++;
--		}
--
--		/* Get node's next compatible string */ 
--		if (cp) {
--			l = strlen(cp) + 1;
--			cp += l;
--			cplen -= l;
--		}
--	} while (cp && (cplen > 0));
--
-+	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
-+		int match = 1;
-+		if (matches->name[0])
-+			match &= node->name
-+				&& !strcmp(matches->name, node->name);
-+		if (matches->type[0])
-+			match &= node->type
-+				&& !strcmp(matches->type, node->type);
-+		if (matches->compatible[0])
-+			match &= __of_device_is_compatible(node,
-+							   matches->compatible);
-+		if (match)
-+			return matches;
-+		matches++;
-+	}
- 	return NULL;
- }
- 
-@@ -778,10 +760,7 @@ const struct of_device_id *__of_match_node(const struct of_device_id *matches,
++	m = of_match_compatible(matches, node);
++	if (m)
++		return m;
++
+ 	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
+ 		int match = 1;
+ 		if (matches->name[0])
+@@ -760,7 +796,12 @@ const struct of_device_id *__of_match_node(const struct of_device_id *matches,
   *	@matches:	array of of device match structures to search in
   *	@node:		the of device structure to match against
   *
-- *	Low level utility function used by device matching. Matching order
-- *	is to compare each of the node's compatibles with all given matches
-- *	first. This implies node's compatible is sorted from specific to
-- *	generic while matches can be in any order.
-+ *	Low level utility function used by device matching.
+- *	Low level utility function used by device matching.
++ *	Low level utility function used by device matching. We have two ways
++ *	of matching:
++ *	- Try to find the best compatible match by comparing each compatible
++ *	  string of device node with all the given matches respectively.
++ *	- If the above method failed, then try to match the compatible by using
++ *	  __of_device_is_compatible() besides the match in type and name.
   */
  const struct of_device_id *of_match_node(const struct of_device_id *matches,
  					 const struct device_node *node)
