@@ -1,88 +1,102 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH net-next v5 09/10] Documentation: add Device tree
- bindings for Broadcom GENET
-Date: Fri, 14 Feb 2014 10:19:42 +0000
-Message-ID: <20140214101942.GA9907@e106331-lin.cambridge.arm.com>
-References: <1392336531-28875-1-git-send-email-f.fainelli@gmail.com>
- <1392336531-28875-10-git-send-email-f.fainelli@gmail.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] Documentation: Add GPIO reset binding to reset
+ binding documentation
+Date: Fri, 14 Feb 2014 11:20:59 +0100
+Message-ID: <1392373259.3937.8.camel@pizza.hi.pengutronix.de>
+References: <1389179464-11963-1-git-send-email-p.zabel@pengutronix.de>
+	 <201401081708.26679.arnd@arndb.de>
+	 <1389353136.5854.13.camel@pizza.hi.pengutronix.de>
+	 <1391701458.5008.15.camel@pizza.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1392336531-28875-10-git-send-email-f.fainelli@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "cernekee@gmail.com" <cernekee@gmail.com>, "romieu@fr.zoreil.com" <romieu@fr.zoreil.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1391701458.5008.15.camel-/rZezPiN1rtR6QfukMTsflXZhhPuCNm+@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 14, 2014 at 12:08:50AM +0000, Florian Fainelli wrote:
-> This patch adds the Device Tree bindings for the Broadcom GENET Gigabit
-> Ethernet controller. A bunch of examples are provided to illustrate the
-> versatile aspect of the hardare.
+Am Donnerstag, den 06.02.2014, 16:44 +0100 schrieb Philipp Zabel:
+> Hi Arnd,
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
-> Changes in v5:
-> - respin due to the CONFIG_OF dependency fix
+> Am Freitag, den 10.01.2014, 12:25 +0100 schrieb Philipp Zabel:
+> > Hi Arnd,
+> > 
+> > Am Mittwoch, den 08.01.2014, 17:08 +0100 schrieb Arnd Bergmann:
+> > > On Wednesday 08 January 2014, Philipp Zabel wrote:
+> > > > += GPIO Reset consumers =
+> > > > +
+> > > > +For the common case of reset lines controlled by GPIOs, the GPIO binding
+> > > > +documented in devicetree/bindings/gpio/gpio.txt should be used:
+> > > > +
+> > > > +Required properties:
+> > > > +reset-gpios or         Reset GPIO using standard GPIO bindings,
+> > > > +<name>-reset-gpios:    optionally named to specify the reset line
+> > > > +
+> > > > +Optional properties:
+> > > > +reset-boot-asserted or         Boolean. If set, the corresponding reset is
+> > > > +<name>-reset-boot-asserted:    initially asserted and should be kept that way
+> > > > +                               until released by the driver.
+> > > 
+> > > I don't get this one. Why would you use a different reset binding for the case
+> > > where the reset line is connected to the gpio controller rather than a
+> > > specialized reset controller?
+> > > 
+> > > I was expecting to see the definition of a generic reset controller that
+> > > in turn uses gpio lines, like
+> > > 
+> > > 
+> > >         reset { 
+> > >                 compatible = "gpio-reset";
+> > >                 /* provides three reset lines through these GPIOs */
+> > >                 gpios = <&gpioA 1 &gpioB 7 <gpioD 17>;
+> > >                 #reset-cells = <1>;
+> > >         };
+> > > 
+> > >         foo {
+> > >                 ...
+> > >                 resets = <&reset 0>; /* uses first reset line of the gpio-reset controller */
+> > >         };
+> > 
+> > That is what I initially proposed...
+> > 
+> > > I realize it would be a little more verbose, but it also seems more
+> > > regular and wouldn't stand out from the rest of the reset interfaces.
+> > 
+> > ... but it can also be argued that GPIO resets shouldn't stand out from
+> > other GPIOs.
+> > 
+> > Mark Rutland spoke out against having a 'GPIO reset device' node in the
+> > device tree:
+> > 
+> > http://comments.gmane.org/gmane.linux.drivers.devicetree/41596
+> > 
+> > and I see his point. Using different bindings for reset controller IPs
+> > and for single GPIOs better describes the actual hardware and it is less
+> > Linux specific: it still allows an OS without gpio-reset framework to
+> > let each driver handle the GPIO itself.
+> > 
+> > Also Stephen Warren pointed out that we'll have to support the existing
+> > GPIO bindings anyway: in the meantime there are a lot of GPIO resets in
+> > various device trees that use the GPIO bindings.
+> > 
+> > regards
+> > Philipp
 > 
-> Changes in v4:
-> - respin due to the Kconfig dependency
-> 
-> Changes in v3
-> - improve compatible property description to specify all compatible strings
->   supported
-> - move MDIO bus node to a separate section, to separate from the properties
-> - detail which exact phy-mode strings are supported and that this refers to
->   the ePAPR 'phy-connection-type' modes
-> - fixed MDIO bus node compatible string to match what is really provided by
->   the bootloader and use the same details as for the GENET compatible string
-> - add address-cells and size-cells required properties for the GENET device
->   tree node
-> - add a better description for the 'fixed-link' property with reference to
->   existing binding documentation
-> - add a reference to the Ethernet PHY device tree binding
-> - add a description for the interrupts properties
-> - add a documentation for the optional clocks properties
-> - removed unused and deprecated device_type properties
-> 
-> Changes in v2:
-> - rebased against net-next/master
-> 
->  .../devicetree/bindings/net/broadcom-bcmgenet.txt  | 121 +++++++++++++++++++++
->  1 file changed, 121 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/broadcom-bcmgenet.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/broadcom-bcmgenet.txt b/Documentation/devicetree/bindings/net/broadcom-bcmgenet.txt
-> new file mode 100644
-> index 0000000..afd31f9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/broadcom-bcmgenet.txt
-> @@ -0,0 +1,121 @@
-> +* Broadcom BCM7xxx Ethernet Controller (GENET)
-> +
-> +Required properties:
-> +- compatible: should contain one of "brcm,genet-v1", "brcm,genet-v2",
-> +  "brcm,genet-v3", "brcm,genet-v4".
-> +- reg: address and length of the register set for the device
-> +- interrupts: must be two cells, the first cell is the general purpose
-> +  interrupt line, while the second cell is the interrupt for the ring
-> +  RX and TX queues operating in ring mode
-> +- phy-mode: String, operation mode of the PHY interface. Supported values are
-> +  "mii", "rgmii", "rgmii-txid", "rev-mii", "moca". Analogous to ePAPR
-> +  "phy-connection-type" values
-> +- address-cells: should be 1
-> +- size-cells: should be 1
-> +
-> +Optional properties:
-> +- clocks: When provided, must be two cells, first one is the main GENET clock
-> +  and the second cell is the Genet Wake-on-LAN clock.
+> do you have further comments on this?
 
-Clocks aren't just cells. They are referred to with phandle +
-clock-specificer pairs.
+Yes? No? Maybe later?
 
-This doesn't document the names that the driver requests the clocks by.
-Just listing the clocks isn't sufficient, as any dts will have to add a
-clock-names property to get those clocks probed.
+> I'd like to request a pull of the changes in
+> http://git.pengutronix.de/?p=pza/linux.git;a=shortlog;h=refs/heads/reset/for_v3.15
+> and I wonder whether I should submit that now without the GPIO patches
+> or hold it back a bit and add them on top.
 
-Thanks,
-Mark.
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
