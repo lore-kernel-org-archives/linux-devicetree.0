@@ -1,64 +1,176 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: Re: [PATCH] ARM: dts: omap3 clocks: simplify ssi aliases
-Date: Fri, 14 Feb 2014 02:25:46 +0100
-Message-ID: <20140214012546.GA7996@earth.universe>
-References: <52DE24DA.8050104@ti.com>
- <1390315061-14441-1-git-send-email-sre@debian.org>
- <20140213224914.GD28216@atomide.com>
+From: Rahul Sharma <r.sh.open@gmail.com>
+Subject: Re: [PATCH V2 2/3] ARM: dts: add dts files for exynos5260 SoC
+Date: Fri, 14 Feb 2014 08:54:28 +0530
+Message-ID: <CAPdUM4Pu-CbuNwwjrd_8itbSbjKqTBLE5u_T_vO89jreOy4=kQ@mail.gmail.com>
+References: <1391577375-17625-1-git-send-email-rahul.sharma@samsung.com>
+	<1391577375-17625-3-git-send-email-rahul.sharma@samsung.com>
+	<52F38C42.5030508@samsung.com>
+	<CAPdUM4NBwXcnL2KK9Rsi46GWQz_KQsXF0EEeSmCb=wB8WfgUKQ@mail.gmail.com>
+	<52F9F59D.1090905@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="sm4nu43k4a2Rpi4c"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140213224914.GD28216@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Tero Kristo <t-kristo@ti.com>, mturquette@linaro.org, bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <52F9F59D.1090905@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Tomasz Figa <t.figa@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, sunil joshi <joshi@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Thanks Tomasz,
 
---sm4nu43k4a2Rpi4c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I will add these changes to v3.
 
-On Thu, Feb 13, 2014 at 02:49:14PM -0800, Tony Lindgren wrote:
-> * Sebastian Reichel <sre@debian.org> [140121 06:39]:
-> > update aliases for the ssi clocks ssi_ssr_fck, ssi_sst_fck and ssi_ick
-> > to make them consistent for omap34xx and omap36xx. This makes it
-> > possible to reference the clocks from generic omap3 dts files.
->=20
-> Is this needed as a fix for v3.14-rc? If so, please let me know
-> and ack if you want me to take it.
+Regards,
+Rahul Sharma.
 
-The SSI driver will not arrive before 3.15 and 3.14 dts files do not
-contain any SSI nodes.
-
-Thus it should be enough to queue it for 3.15 if it goes via the
-same tree as the SSI dts patches.
-
--- Sebastian
-
---sm4nu43k4a2Rpi4c
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJS/XCaAAoJENju1/PIO/qauL8P/0GuoERRyYGfiX1jsxga8OoN
-DSP13kLFV94HW5FvCp4tPLnFxYk110uNNP4+frhbXO6Dpt27+UIpoKieL+Pahreb
-1BMcpen/y3TQmiuEZG7wCpSDDNOe5Sf3e/aj78FSyD4l1A1uszDy63eXezAf3+Zq
-X+cyI37tYgA33Eri9XECEJlzOjObU/+GfS4nmqFyfoDQLhEDUOKhz1AyduGtOZJY
-E6IVLKcwCIm3/IXL6b2fwnGKWQP5Ij15kvkojMqbYg1SjWxZ7+OCpzh/D/rRbj5J
-bl7KdUE8lRczFyArVTvk/4thwH5cxREouYIbISOfKtnXGU4wu8u1uWXK5MmUPMf3
-1gbfXMMYK7Bo1VaBTEQHAlaogD1FaKaeH7iqzr/IigaIt2zOU/09T06ye9k5ujwN
-vpd6Tz+fvQRPc0LzcqcnRsE51VHXWHUw8j2XD22W45fAOxNoqISzHVfTOIcpXzPt
-yW/IjyvBhZhOin6hkFzY6y2nof3rskphb3067sMUj0AveAon/M9DSNjJPJ7SiNci
-Dp7ZcI8FT5UatcMQsfQiyEv0IIMzOX4b405hFHT/+jnORJBYTcclu2SMsKh0vyta
-7LDiuci6UVQo+dXp+d4chx/TGaPZoal630yaIsNpR5TvHnnM3vo+fHG2vEHzN7XQ
-Fys2cQO9PTqOrPq4vQHz
-=Pu0r
------END PGP SIGNATURE-----
-
---sm4nu43k4a2Rpi4c--
+On 11 February 2014 15:34, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> Hi Rahul,
+>
+>
+> On 11.02.2014 06:22, Rahul Sharma wrote:
+>>
+>> Hi Tomasz,
+>>
+>> On 6 February 2014 18:51, Tomasz Figa <t.figa@samsung.com> wrote:
+>>>
+>>> Hi Rahul, Pankaj, Arun,
+>>>
+>>> [adding linux-arm-kernel, devicetree MLs and DT people on Cc]
+>>>
+>>> I think it's good time to stop accepting DTS files like this and force
+>>> new
+>>> ones to use the proper structure with soc node, labels for every node and
+>>> node references.
+>>
+>>
+>> I am unable to find information on SoC node and grouping inside SoC node.
+>> Please
+>> share some pointers.
+>
+>
+> Well, there is not much information needed about this. Basically all the
+> devices built into the SoC should be listed under respective bus nodes or a
+> single soc node, instead of root level. Such node should be a "simple-bus"
+> and just group the components together to separate board-specific devices
+> (which are still at root level) from SoC devices.
+>
+> Even though it might seem useless, it improves DT readability a bit and
+> still most of the platforms use this approach, so for consistency, Exynos
+> should use too.
+>
+> Just for reference, back in April 2013, in his review of S3C64xx DT series
+> [1], Rob Herring requested that we don't submit any new device trees using
+> flat approach and start using bus hierarchy.
+>
+> [1]
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2013-April/163659.html
+>
+>
+>>>
+>>>> +               spi0_bus: spi0-bus {
+>>>> +                       samsung,pins = "gpa2-0", "gpa2-1", "gpa2-2",
+>>>> "gpa2-3";
+>>>
+>>>
+>>>
+>>> What is the reason for SPI0 to have 4 pins, while SPI1 has just 3?
+>>>
+>>
+>> I should align SPI1 with SPI0.
+>>
+>
+> Are you sure that SPI0 is the correct one? SPI usually uses four pins - SDI,
+> SDO, SCK and nCS, but we always used to treat nCS as a simple GPIO, due to
+> the fact that the controller can only support one dedicated chip select and
+> with direct GPIO control you can have more.
+>
+> What is the fourth pin here?
+>
+>
+>>>
+>>>> +               cpu@1 {
+>>>> +                       device_type = "cpu";
+>>>> +                       compatible = "arm,cortex-a15";
+>>>> +                       reg = <1>;
+>>>> +                       cci-control-port = <&cci_control1>;
+>>>> +               };
+>>>> +               cpu@100 {
+>>>> +                       device_type = "cpu";
+>>>> +                       compatible = "arm,cortex-a7";
+>>>> +                       reg = <0x100>;
+>>>> +                       cci-control-port = <&cci_control0>;
+>>>> +               };
+>>>> +               cpu@101 {
+>>>> +                       device_type = "cpu";
+>>>> +                       compatible = "arm,cortex-a7";
+>>>> +                       reg = <0x101>;
+>>>> +                       cci-control-port = <&cci_control0>;
+>>>> +               };
+>>>> +               cpu@102 {
+>>>> +                       device_type = "cpu";
+>>>> +                       compatible = "arm,cortex-a7";
+>>>> +                       reg = <0x102>;
+>>>> +                       cci-control-port = <&cci_control0>;
+>>>> +               };
+>>>> +               cpu@103 {
+>>>> +                       device_type = "cpu";
+>>>> +                       compatible = "arm,cortex-a7";
+>>>> +                       reg = <0x103>;
+>>>> +                       cci-control-port = <&cci_control0>;
+>>>> +               };
+>>>> +       };
+>>>> +
+>>>> +       cmus {
+>>>> +               #address-cells = <1>;
+>>>> +               #size-cells = <1>;
+>>>> +               ranges;
+>>>> +
+>>>
+>>>
+>>>
+>>> I don't think there is a need to group these nodes under a parent node
+>>> that
+>>> doesn't give any additional information, especially when the CMUs are
+>>> scattered trough the whole address space, while we'd like to keep the
+>>> nodes
+>>> ordered by their addresses, as most platforms do.
+>>>
+>>
+>> This is exactly the same case as "cpus". I mean, "cpus" also doesn't
+>> provide
+>> any common information about child cpu nodes. This looks to me as a
+>> logical
+>> grouping and I have implemented same thing for cmu nodes.
+>> I am ok with removing this grouping Just want to understand the rational
+>> behind
+>> grouping cpus which seems similar to cmus.
+>
+>
+> The "cpus" node is a defined standard node that should be present at root of
+> device tree and include subnodes for all CPUs. This is a standard binding
+> defined for low level code to be able to simply find nodes of all CPUs in
+> the system - so they can expect that at /cpus node all the subnodes are
+> subsequent CPUs.
+>
+>
+>> Similarly "soc" is just a logical entity used to group SoC elements which
+>> looks
+>> optional to me. What are we achieving with this? Please help me in
+>> understanding
+>> this better.
+>
+>
+> Also "soc" has a slightly wider meaning. It is a node grouping all nodes
+> from a single address space - the node specifies #address-cells and
+> #size-cells of this address space and all the devices under this
+> "simple-bus" can be accessed using addresses in this format. In addition, it
+> separates board-level devices from generic SoC devices.
+>
+> Now, in case of "cmus", the only purpose is to group all CMU nodes together
+> and, while this improves readability a bit, it doesn't make the DT better
+> express the hardware topology, because the CMUs in the hardware are in fact
+> scattered through the whole address space, not under a contiguous block of
+> it, as the grouping would suggest.
+>
+> Best regards,
+> Tomasz
