@@ -1,51 +1,51 @@
-From: "Dr.William Davies" <purchase-iWkfCuf1Dv8t08DiuWRmVZ/QNRX+jHPU@public.gmane.org>
-Subject: Re: Instructions to release your payment.
-Date: Fri, 14 Feb 2014 18:00:31 +0530
-Message-ID: <4def3476ba0d1d6a58e949f2ea8c32f2__23695.2415238649$1392384647$gmane$org@127.0.0.1>
-Reply-To: williamdavies54-/E1597aS9LT10XsdtD+oqA@public.gmane.org
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] hwmon: twl4030-madc-hwmon: Add device tree support.
+Date: Fri, 14 Feb 2014 13:31:01 +0000
+Message-ID: <20140214133101.GA17796@e106331-lin.cambridge.arm.com>
+References: <1392384058-14240-1-git-send-email-marek@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1392384058-14240-1-git-send-email-marek@goldelico.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Marek Belisko <marek@goldelico.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "jdelvare@suse.de" <jdelvare@suse.de>, "linux@roeck-us.net" <linux@roeck-us.net>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "hns@goldelico.com" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-Attention
+On Fri, Feb 14, 2014 at 01:20:58PM +0000, Marek Belisko wrote:
+> Signed-off-by: Marek Belisko <marek@goldelico.com>
+> ---
+>  Documentation/devicetree/bindings/hwmon/twl4030-madc-hwmon.txt |  9 +++++++++
+>  drivers/hwmon/twl4030-madc-hwmon.c                             | 10 ++++++++++
+>  2 files changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/twl4030-madc-hwmon.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/twl4030-madc-hwmon.txt b/Documentation/devicetree/bindings/hwmon/twl4030-madc-hwmon.txt
+> new file mode 100644
+> index 0000000..e8016d1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/twl4030-madc-hwmon.txt
+> @@ -0,0 +1,9 @@
+> +TWL4030 MADC hwmon.
+> +
+> +Required properties:
+> +- compatible: "ti,twl4030-madc-hwmon"
+> +
+> +Example:
+> +madc-hwmon {
+> +	compatible = "ti,twl4030-madc-hwmon";
+> +};
 
-Sir,
+Huh?
 
-Following an application brought, seeking the release of your due payment
-through British bank, I am directed to inform you that the application has
-been approved and Natwest bank of London has been mandated to make transfer
-of your payment to the bank account you will nominate. Please kindly reply
-for immediate release of your US$6.2 Million to you nominates account.
+What is this a binding for? From a look at the driver in mainline this
+just calls into functions from the twl4030 madc driver (which doesn't
+seem to have a binding).
 
-Sir, for the avoidance of doubts, reconfirm the following information to
-me to enable us forward same to Natwest bank to contact you for your
-payment.
+This doesn't look like a description of hardware, but rather a hack to
+get a Linux driver to probe. As far as I can see, no useful information
+is given by this binding.
 
-Name:
-
-Address:
-
-Tel/Fax No.:
-
-Nationality:
-
-Occupation:
-
-Date of birth: 
-
-As soon as I received the above information, I will forward them to
-Natwest bank to contact you for your approved payment. Please see in the
-attachment, letter I wrote to Natwest bank informing them of the
-transaction
-
-Yours faithfully
-
-Dr.William Davies
-Chairman,British Banking Regulatory Board.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Mark.
