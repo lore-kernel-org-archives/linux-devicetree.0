@@ -1,51 +1,81 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] hwmon: twl4030-madc-hwmon: Add device tree support.
-Date: Fri, 14 Feb 2014 13:31:01 +0000
-Message-ID: <20140214133101.GA17796@e106331-lin.cambridge.arm.com>
-References: <1392384058-14240-1-git-send-email-marek@goldelico.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v7 03/12] mfd: omap-usb-host: Use clock names as per
+ function for reference clocks
+Date: Fri, 14 Feb 2014 13:33:30 +0000
+Message-ID: <20140214133330.GC13293@lee--X1>
+References: <1392200333-28397-1-git-send-email-rogerq@ti.com>
+ <1392200333-28397-4-git-send-email-rogerq@ti.com>
+ <20140214100915.GD7380@lee--X1>
+ <52FE164F.80503@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1392384058-14240-1-git-send-email-marek@goldelico.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Marek Belisko <marek@goldelico.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "jdelvare@suse.de" <jdelvare@suse.de>, "linux@roeck-us.net" <linux@roeck-us.net>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "hns@goldelico.com" <hns@goldelico.com>
+In-Reply-To: <52FE164F.80503@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: tony@atomide.com, bcousson@baylibre.com, balbi@ti.com, nm@ti.com, khilman@linaro.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 14, 2014 at 01:20:58PM +0000, Marek Belisko wrote:
-> Signed-off-by: Marek Belisko <marek@goldelico.com>
-> ---
->  Documentation/devicetree/bindings/hwmon/twl4030-madc-hwmon.txt |  9 +++++++++
->  drivers/hwmon/twl4030-madc-hwmon.c                             | 10 ++++++++++
->  2 files changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/twl4030-madc-hwmon.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/twl4030-madc-hwmon.txt b/Documentation/devicetree/bindings/hwmon/twl4030-madc-hwmon.txt
-> new file mode 100644
-> index 0000000..e8016d1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/twl4030-madc-hwmon.txt
-> @@ -0,0 +1,9 @@
-> +TWL4030 MADC hwmon.
-> +
-> +Required properties:
-> +- compatible: "ti,twl4030-madc-hwmon"
-> +
-> +Example:
-> +madc-hwmon {
-> +	compatible = "ti,twl4030-madc-hwmon";
-> +};
+> >> Use a meaningful name for the reference clocks so that it indicate=
+s the function.
+> >>
+> >> CC: Lee Jones <lee.jones@linaro.org>
+> >> CC: Samuel Ortiz <sameo@linux.intel.com>
+> >> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> >> ---
+> >>  drivers/mfd/omap-usb-host.c | 6 +++---
+> >>  1 file changed, 3 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/drivers/mfd/omap-usb-host.c b/drivers/mfd/omap-usb-ho=
+st.c
+> >> index 60a3bed..ce620a8 100644
+> >> --- a/drivers/mfd/omap-usb-host.c
+> >> +++ b/drivers/mfd/omap-usb-host.c
+> >> @@ -714,21 +714,21 @@ static int usbhs_omap_probe(struct platform_=
+device *pdev)
+> >>  		goto err_mem;
+> >>  	}
+> >> =20
+> >> -	omap->xclk60mhsp1_ck =3D devm_clk_get(dev, "xclk60mhsp1_ck");
+> >> +	omap->xclk60mhsp1_ck =3D devm_clk_get(dev, "refclk_60m_ext_p1");
+> >=20
+> > You can't do that. These changes will have to be in the same patch =
+as
+> > the core change i.e. where they are initialised.
+>=20
+> I'm not touching them anywhere in this series. When core changes are =
+you
+> referring to?
 
-Huh?
+The ones in:
+  arch/arm/mach-omap2/cclock3xxx_data.c
 
-What is this a binding for? From a look at the driver in mainline this
-just calls into functions from the twl4030 madc driver (which doesn't
-seem to have a binding).
+> >>  	if (IS_ERR(omap->xclk60mhsp1_ck)) {
+> >>  		ret =3D PTR_ERR(omap->xclk60mhsp1_ck);
+> >>  		dev_err(dev, "xclk60mhsp1_ck failed error:%d\n", ret);
+> >>  		goto err_mem;
+> >>  	}
+> >> =20
+> >> -	omap->xclk60mhsp2_ck =3D devm_clk_get(dev, "xclk60mhsp2_ck");
+> >> +	omap->xclk60mhsp2_ck =3D devm_clk_get(dev, "refclk_60m_ext_p2");
+> >>  	if (IS_ERR(omap->xclk60mhsp2_ck)) {
+> >>  		ret =3D PTR_ERR(omap->xclk60mhsp2_ck);
+> >>  		dev_err(dev, "xclk60mhsp2_ck failed error:%d\n", ret);
+> >>  		goto err_mem;
+> >>  	}
+> >> =20
+> >> -	omap->init_60m_fclk =3D devm_clk_get(dev, "init_60m_fclk");
+> >> +	omap->init_60m_fclk =3D devm_clk_get(dev, "refclk_60m_int");
+> >>  	if (IS_ERR(omap->init_60m_fclk)) {
+> >>  		ret =3D PTR_ERR(omap->init_60m_fclk);
+> >>  		dev_err(dev, "init_60m_fclk failed error:%d\n", ret);
+> >=20
+>=20
 
-This doesn't look like a description of hardware, but rather a hack to
-get a Linux driver to probe. As far as I can see, no useful information
-is given by this binding.
-
-Thanks,
-Mark.
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
