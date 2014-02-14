@@ -1,61 +1,57 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH 1/2] clk: fixed-rate: use full DT node name
-Date: Thu, 13 Feb 2014 23:16:52 -0700
-Message-ID: <1392358613-19962-1-git-send-email-swarren@wwwdotorg.org>
+Subject: [PATCH 2/2] ARM: bcm2835: fix clock DT node names
+Date: Thu, 13 Feb 2014 23:16:53 -0700
+Message-ID: <1392358613-19962-2-git-send-email-swarren@wwwdotorg.org>
+References: <1392358613-19962-1-git-send-email-swarren@wwwdotorg.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392358613-19962-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-clk-fixed-rate currently names clocks according to a node's name without
-the unit address. When faced with the legal and technically correct DT
-structure below, this causes rgistration attempts for 3 clocks with the
-same name, 2 of which fail.
-
-	clocks {
-		compatible = "simple-bus";
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		clk_mmc: clock@0 {
-			compatible = "fixed-clock";
-			reg = <0>;
-...
-		clk_i2c: clock@1 {
-			compatible = "fixed-clock";
-			reg = <1>;
-...
-		clk_spi: clock@2 {
-			compatible = "fixed-clock";
-			reg = <2>;
-...
-
-Solve this by naming the clocks after the full node name rather than the
-short version (e.g. /clocks/clock@0).
+DT nodes should be named according to the type of object that they
+represent rather than the identity. DT nodes that contain a reg
+property should include a unit address in their name. Fix these issues.
 
 Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 ---
-Note that if this is accepted, I intend to submit a patch for the RPi DTS
-which uses the naming structure above, so it might be useful to place this
-patch in its own branch. Or, I could submit the cleanup after 3.15-rc1.
----
- drivers/clk/clk-fixed-rate.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This is the bcm2835 patch which depends on patch 1. I guess this could
+also go through the clk tree if that makes it easier, although there's
+always the small risk of conflicts if you do that.
 
-diff --git a/drivers/clk/clk-fixed-rate.c b/drivers/clk/clk-fixed-rate.c
-index 0fc56ab..3335b3c 100644
---- a/drivers/clk/clk-fixed-rate.c
-+++ b/drivers/clk/clk-fixed-rate.c
-@@ -115,7 +115,7 @@ EXPORT_SYMBOL_GPL(clk_register_fixed_rate);
- void of_fixed_clk_setup(struct device_node *node)
- {
- 	struct clk *clk;
--	const char *clk_name = node->name;
-+	const char *clk_name = node->full_name;
- 	u32 rate;
- 	u32 accuracy = 0;
+ arch/arm/boot/dts/bcm2835.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+index a2d4889..1cf1ae7 100644
+--- a/arch/arm/boot/dts/bcm2835.dtsi
++++ b/arch/arm/boot/dts/bcm2835.dtsi
+@@ -155,21 +155,21 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
  
+-		clk_mmc: mmc {
++		clk_mmc: clock@0 {
+ 			compatible = "fixed-clock";
+ 			reg = <0>;
+ 			#clock-cells = <0>;
+ 			clock-frequency = <100000000>;
+ 		};
+ 
+-		clk_i2c: i2c {
++		clk_i2c: clock@1 {
+ 			compatible = "fixed-clock";
+ 			reg = <1>;
+ 			#clock-cells = <0>;
+ 			clock-frequency = <250000000>;
+ 		};
+ 
+-		clk_spi: spi {
++		clk_spi: clock@2 {
+ 			compatible = "fixed-clock";
+ 			reg = <2>;
+ 			#clock-cells = <0>;
 -- 
 1.8.3.2
 
