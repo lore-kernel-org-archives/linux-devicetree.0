@@ -1,113 +1,59 @@
-From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH V2 2/3] ARM: dts: add dts files for exynos5260 SoC
-Date: Fri, 14 Feb 2014 12:49:38 +0100
-Message-ID: <52FE02D2.7050305@samsung.com>
-References: <1391577375-17625-1-git-send-email-rahul.sharma@samsung.com>
- <1391577375-17625-3-git-send-email-rahul.sharma@samsung.com>
- <52F38C42.5030508@samsung.com>
- <CAPdUM4NBwXcnL2KK9Rsi46GWQz_KQsXF0EEeSmCb=wB8WfgUKQ@mail.gmail.com>
- <52F9F59D.1090905@gmail.com>
- <CAPdUM4Pu-CbuNwwjrd_8itbSbjKqTBLE5u_T_vO89jreOy4=kQ@mail.gmail.com>
- <CAPdUM4Pr7UC3wzYMsO+sYQHRDGixSNsR3XQuHBomsi-H-dfOZw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <CAPdUM4Pr7UC3wzYMsO+sYQHRDGixSNsR3XQuHBomsi-H-dfOZw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rahul Sharma <r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, sunil joshi <joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 1/3] mmc: core: Add DT bindings for SD card's UHS bus speed modes
+Date: Fri, 14 Feb 2014 13:27:07 +0100
+Message-ID: <1392380829-8473-1-git-send-email-ulf.hansson@linaro.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org, Chris Ball <chris@printf.net>
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14.02.2014 12:28, Rahul Sharma wrote:
-> On 14 February 2014 08:54, Rahul Sharma <r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Thanks Tomasz,
->>
->> I will add these changes to v3.
->>
->> Regards,
->> Rahul Sharma.
->>
->> On 11 February 2014 15:34, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> Hi Rahul,
->>>
->>>
->>> On 11.02.2014 06:22, Rahul Sharma wrote:
->>>>
->>>> Hi Tomasz,
->>>>
->>>> On 6 February 2014 18:51, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>>>>
->>>>> Hi Rahul, Pankaj, Arun,
->>>>>
->>>>> [adding linux-arm-kernel, devicetree MLs and DT people on Cc]
->>>>>
->>>>> I think it's good time to stop accepting DTS files like this and force
->>>>> new
->>>>> ones to use the proper structure with soc node, labels for every node and
->>>>> node references.
->>>>
->>>>
->>>> I am unable to find information on SoC node and grouping inside SoC node.
->>>> Please
->>>> share some pointers.
->>>
->>>
->>> Well, there is not much information needed about this. Basically all the
->>> devices built into the SoC should be listed under respective bus nodes or a
->>> single soc node, instead of root level. Such node should be a "simple-bus"
->>> and just group the components together to separate board-specific devices
->>> (which are still at root level) from SoC devices.
->>>
->>> Even though it might seem useless, it improves DT readability a bit and
->>> still most of the platforms use this approach, so for consistency, Exynos
->>> should use too.
->>>
->>> Just for reference, back in April 2013, in his review of S3C64xx DT series
->>> [1], Rob Herring requested that we don't submit any new device trees using
->>> flat approach and start using bus hierarchy.
->>>
->>> [1]
->>> http://lists.infradead.org/pipermail/linux-arm-kernel/2013-April/163659.html
->>>
->>>
->>>>>
->>>>>> +               spi0_bus: spi0-bus {
->>>>>> +                       samsung,pins = "gpa2-0", "gpa2-1", "gpa2-2",
->>>>>> "gpa2-3";
->>>>>
->>>>>
->>>>>
->>>>> What is the reason for SPI0 to have 4 pins, while SPI1 has just 3?
->>>>>
->>>>
->>>> I should align SPI1 with SPI0.
->>>>
->>>
->>> Are you sure that SPI0 is the correct one? SPI usually uses four pins - SDI,
->>> SDO, SCK and nCS, but we always used to treat nCS as a simple GPIO, due to
->>> the fact that the controller can only support one dedicated chip select and
->>> with direct GPIO control you can have more.
->>>
->>> What is the fourth pin here?
->>>
->
-> As you said, these are CLK, SS, MISO, MOSI (gpa2-0 to gpa2-3). Fourth pin is
-> CS. It can be defined as a simple GPIO but better to include it in the
-> SPI pingroup
-> as it belongs to there.
+Provide the option to configure these speed modes per host, for those
+host driver's that can't distinguish this in runtime.
 
-I have to disagree here.
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+---
+ Documentation/devicetree/bindings/mmc/mmc.txt |    5 +++++
+ drivers/mmc/core/host.c                       |   10 ++++++++++
+ 2 files changed, 15 insertions(+)
 
-If you define a pin in pinctrl group then it is tied to this specific 
-hardware function and you can't use it as GPIO.
+diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+index 458b57f..bd2ce67 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+@@ -26,6 +26,11 @@ Optional properties:
+   this system, even if the controller claims it is.
+ - cap-sd-highspeed: SD high-speed timing is supported
+ - cap-mmc-highspeed: MMC high-speed timing is supported
++- sd-uhs-sdr12: SD UHS SDR12 speed is supported
++- sd-uhs-sdr25: SD UHS SDR25 speed is supported
++- sd-uhs-sdr50: SD UHS SDR50 speed is supported
++- sd-uhs-sdr104: SD UHS SDR104 speed is supported
++- sd-uhs-ddr50: SD UHS DDR50 speed is supported
+ - cap-power-off-card: powering off the card is safe
+ - cap-sdio-irq: enable SDIO IRQ signalling on this interface
+ - full-pwr-cycle: full power cycle of the card is supported
+diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+index 49bc403..2644d91 100644
+--- a/drivers/mmc/core/host.c
++++ b/drivers/mmc/core/host.c
+@@ -419,6 +419,16 @@ int mmc_of_parse(struct mmc_host *host)
+ 		host->caps |= MMC_CAP_SD_HIGHSPEED;
+ 	if (of_find_property(np, "cap-mmc-highspeed", &len))
+ 		host->caps |= MMC_CAP_MMC_HIGHSPEED;
++	if (of_find_property(np, "sd-uhs-sdr12", &len))
++		host->caps |= MMC_CAP_UHS_SDR12;
++	if (of_find_property(np, "sd-uhs-sdr25", &len))
++		host->caps |= MMC_CAP_UHS_SDR25;
++	if (of_find_property(np, "sd-uhs-sdr50", &len))
++		host->caps |= MMC_CAP_UHS_SDR50;
++	if (of_find_property(np, "sd-uhs-sdr104", &len))
++		host->caps |= MMC_CAP_UHS_SDR104;
++	if (of_find_property(np, "sd-uhs-ddr50", &len))
++		host->caps |= MMC_CAP_UHS_DDR50;
+ 	if (of_find_property(np, "cap-power-off-card", &len))
+ 		host->caps |= MMC_CAP_POWER_OFF_CARD;
+ 	if (of_find_property(np, "cap-sdio-irq", &len))
+-- 
+1.7.9.5
 
-Since it's board specific to use it as HW chip select or GPIO chip 
-select (the usual setup), it should not be included in this group.
-
-Best regards,
-Tomasz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
