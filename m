@@ -1,73 +1,100 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v7 03/12] mfd: omap-usb-host: Use clock names as per function
- for reference clocks
-Date: Fri, 14 Feb 2014 15:12:47 +0200
-Message-ID: <52FE164F.80503@ti.com>
-References: <1392200333-28397-1-git-send-email-rogerq@ti.com> <1392200333-28397-4-git-send-email-rogerq@ti.com> <20140214100915.GD7380@lee--X1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140214100915.GD7380@lee--X1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+From: Marek Belisko <marek@goldelico.com>
+Subject: [PATCH 1/2] mfd: twl4030-madc: Add devicetree support.
+Date: Fri, 14 Feb 2014 14:17:40 +0100
+Message-ID: <1392383861-14169-1-git-send-email-marek@goldelico.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, grant.likely@linaro.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, hns@goldelico.com, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/14/2014 12:09 PM, Lee Jones wrote:
->> Use a meaningful name for the reference clocks so that it indicates the function.
->>
->> CC: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> CC: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
->> ---
->>  drivers/mfd/omap-usb-host.c | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/mfd/omap-usb-host.c b/drivers/mfd/omap-usb-host.c
->> index 60a3bed..ce620a8 100644
->> --- a/drivers/mfd/omap-usb-host.c
->> +++ b/drivers/mfd/omap-usb-host.c
->> @@ -714,21 +714,21 @@ static int usbhs_omap_probe(struct platform_device *pdev)
->>  		goto err_mem;
->>  	}
->>  
->> -	omap->xclk60mhsp1_ck = devm_clk_get(dev, "xclk60mhsp1_ck");
->> +	omap->xclk60mhsp1_ck = devm_clk_get(dev, "refclk_60m_ext_p1");
-> 
-> You can't do that. These changes will have to be in the same patch as
-> the core change i.e. where they are initialised.
+Signed-off-by: Marek Belisko <marek@goldelico.com>
+---
+ .../devicetree/bindings/mfd/twl4030-madc.txt       | 18 +++++++++++++
+ drivers/mfd/twl4030-madc.c                         | 31 ++++++++++++++++++++--
+ 2 files changed, 47 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/twl4030-madc.txt
 
-I'm not touching them anywhere in this series. When core changes are you
-referring to?
+diff --git a/Documentation/devicetree/bindings/mfd/twl4030-madc.txt b/Documentation/devicetree/bindings/mfd/twl4030-madc.txt
+new file mode 100644
+index 0000000..9df66ab
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/twl4030-madc.txt
+@@ -0,0 +1,18 @@
++Texas Instruments TWL family (twl4030) analog signal conversion monitor module
++
++Required properties:
++- compatible : must be "ti,twl4030-madc"
++- interrupts : interrupt number
++
++Example:
++twl: twl@48 {
++	reg = <0x48>;
++	interrupts = <7>; /* SYS_NIRQ cascaded to intc */
++	interrupt-parent = <&intc>;
++
++	twl_madc: madc {
++		compatible = "ti,twl4030-madc";
++		interrupts = <1>;
++	};
++};
++
+diff --git a/drivers/mfd/twl4030-madc.c b/drivers/mfd/twl4030-madc.c
+index 4c583e4..9a2bbcf 100644
+--- a/drivers/mfd/twl4030-madc.c
++++ b/drivers/mfd/twl4030-madc.c
+@@ -695,6 +695,29 @@ static int twl4030_madc_set_power(struct twl4030_madc_data *madc, int on)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static struct twl4030_madc_platform_data *
++	twl4030_madc_of_parse(struct platform_device *pdev)
++{
++	struct twl4030_madc_platform_data *pdata;
++
++	pdata = devm_kzalloc(&pdev->dev,
++			sizeof(struct twl4030_madc_platform_data), GFP_KERNEL);
++	if (!pdata)
++		return ERR_PTR(-ENOMEM);
++
++	pdata->irq_line = platform_get_irq(pdev, 0);
++
++	return pdata;
++}
++
++static const struct of_device_id twl4030_madc_dt_match_table[] = {
++	{ .compatible = "ti,twl4030-madc" },
++	{},
++};
++
++#endif
++
+ /*
+  * Initialize MADC and request for threaded irq
+  */
+@@ -706,8 +729,11 @@ static int twl4030_madc_probe(struct platform_device *pdev)
+ 	u8 regval;
+ 
+ 	if (!pdata) {
+-		dev_err(&pdev->dev, "platform_data not available\n");
+-		return -EINVAL;
++		pdata = twl4030_madc_of_parse(pdev);
++		if (!pdata) {
++			dev_err(&pdev->dev, "platform_data not available\n");
++			return -EINVAL;
++		}
+ 	}
+ 	madc = kzalloc(sizeof(*madc), GFP_KERNEL);
+ 	if (!madc)
+@@ -807,6 +833,7 @@ static struct platform_driver twl4030_madc_driver = {
+ 	.driver = {
+ 		   .name = "twl4030_madc",
+ 		   .owner = THIS_MODULE,
++		   .of_match_table = of_match_ptr(twl4030_madc_dt_match_table),
+ 		   },
+ };
+ 
+-- 
+1.8.3.2
 
-> 
->>  	if (IS_ERR(omap->xclk60mhsp1_ck)) {
->>  		ret = PTR_ERR(omap->xclk60mhsp1_ck);
->>  		dev_err(dev, "xclk60mhsp1_ck failed error:%d\n", ret);
->>  		goto err_mem;
->>  	}
->>  
->> -	omap->xclk60mhsp2_ck = devm_clk_get(dev, "xclk60mhsp2_ck");
->> +	omap->xclk60mhsp2_ck = devm_clk_get(dev, "refclk_60m_ext_p2");
->>  	if (IS_ERR(omap->xclk60mhsp2_ck)) {
->>  		ret = PTR_ERR(omap->xclk60mhsp2_ck);
->>  		dev_err(dev, "xclk60mhsp2_ck failed error:%d\n", ret);
->>  		goto err_mem;
->>  	}
->>  
->> -	omap->init_60m_fclk = devm_clk_get(dev, "init_60m_fclk");
->> +	omap->init_60m_fclk = devm_clk_get(dev, "refclk_60m_int");
->>  	if (IS_ERR(omap->init_60m_fclk)) {
->>  		ret = PTR_ERR(omap->init_60m_fclk);
->>  		dev_err(dev, "init_60m_fclk failed error:%d\n", ret);
-> 
-
---
-cheers,
--roger
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
