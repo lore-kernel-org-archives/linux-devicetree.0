@@ -1,51 +1,75 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 10/10] Documentation: Add device tree bindings for TI LMU
- devices
-Date: Fri, 14 Feb 2014 20:44:24 +0000
-Message-ID: <20140214204424.GS4451@sirena.org.uk>
-References: <1392359564-7205-1-git-send-email-milo.kim@ti.com>
+Subject: Re: [PATCH 09/10] regulator: Add LM3631 driver
+Date: Fri, 14 Feb 2014 20:55:32 +0000
+Message-ID: <20140214205532.GU4451@sirena.org.uk>
+References: <1392359551-7170-1-git-send-email-milo.kim@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gh9b96O0vZdbsJLX"
+	protocol="application/pgp-signature"; boundary="Ivd6Nf4GAZ12BQqh"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1392359564-7205-1-git-send-email-milo.kim@ti.com>
+In-Reply-To: <1392359551-7170-1-git-send-email-milo.kim@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Milo Kim <milo.kim@ti.com>
 Cc: Lee Jones <lee.jones@linaro.org>, Jingoo Han <jg1.han@samsung.com>, Bryan Wu <cooloney@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
 
---gh9b96O0vZdbsJLX
+--Ivd6Nf4GAZ12BQqh
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, Feb 14, 2014 at 03:32:44PM +0900, Milo Kim wrote:
-> Bindings for TI LMU, backlight, LM3631 regulator and LM3633 LED are added.
+On Fri, Feb 14, 2014 at 03:32:31PM +0900, Milo Kim wrote:
+> LM3631 regulator driver has 5 regulators.
+> One boost output and four LDOs are used for the display module.
+> Boost voltage is configurable but always on.
+> Supported operations for LDOs are enabled/disabled and voltage change.
 
-I don't see actual documentation for the regulators here?  They're there
-in the examples but not in the binding section.
+This looks basically good, a couple of minor nits below but nothing
+substantial.
 
---gh9b96O0vZdbsJLX
+> +static const int lm3631_boost_vtbl[] = {
+> +	4500000, 4550000, 4600000, 4650000, 4700000, 4750000, 4800000, 4850000,
+> +	4900000, 4950000, 5000000, 5050000, 5100000, 5150000, 5200000, 5250000,
+> +	5300000, 5350000, 5400000, 5450000, 5500000, 5550000, 5600000, 5650000,
+> +	5700000, 5750000, 5800000, 5850000, 5900000, 5950000, 6000000, 6050000,
+> +	6100000, 6150000, 6200000, 6250000, 6300000, 6350000,
+> +};
+
+This looks like a linear range so could use the linear range helpers
+(4.5-6.35V in steps of 0.05V)?  Similarly for the LDO.
+
+> +static struct of_regulator_match lm3631_regulator_matches[] = {
+> +	{ .name = "vboost", .driver_data = (void *)LM3631_BOOST, },
+> +	{ .name = "vcont",  .driver_data = (void *)LM3631_LDO_CONT, },
+> +	{ .name = "voref",  .driver_data = (void *)LM3631_LDO_OREF, },
+> +	{ .name = "vpos",   .driver_data = (void *)LM3631_LDO_POS,  },
+> +	{ .name = "vneg",   .driver_data = (void *)LM3631_LDO_NEG,  },
+> +};
+
+These names don't correspond to what was in the binding document and
+there's a couple of extra LDOs.
+
+--Ivd6Nf4GAZ12BQqh
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJS/oAlAAoJELSic+t+oim91OIP/0v01vP3RZOAg8r0wJUUL0bz
-TaP7yARbibvdosSvVS0e/pJtUEqAw3+hqgeFpPrl2h9zpaT/lmeam7/EajZKZJno
-VntTVgLMyUHMq9hRuoof/g6fNRp74b6uDJyVgHXTEcmZL+TZ35S7jWfJJNhywBcX
-vOqWyKOm9l/4dxISKXcOyCDAIZD6EbIcYKGIlUxplMGkISH1/O5rAlX8nau8oBTc
-ECPhwSVKudb1B4GLI19TUFAoZ2/lyj+gDYhGcZ5m2ZIyGOgfhve0h2gTlwg7L1O+
-WQEa7KAuWYbcgDW7zR8I1Hs9i7h1+NB7JiqePsWCCuR31MB6Eh9543hWYATNcY2Z
-Z9Bpf8CzmJiDeKO3tWjNBxoHCLvPrPqcE+ZFzVcINOleByEnmlT7pN3yELeGenij
-6gEfkdsAfb5la+4ILitqUwUBsbRkY/GeytOq1MFTM+dgvGoy/tZ+fsPY37DxEQkX
-fa3l5L0r1TbHKK+7HzcUHpdVOVvMjyLA/9XM9qhvF5FcZPexEK1WRBUSpWtO1Mb0
-v3ogQrv6tS4WzHa/UFud118omrI2WaWoXzRgz73rfkwNFeMU45s/D2q9+NnNNB2m
-BcHmBSUbzK3HFzXa4+tyMswVu4cQZYYj3NqqsKHwwZXKaBY7nd7SGNG4VC+pB1CH
-5dbKovTIRLz8YBTjIQBw
-=ptHB
+iQIcBAEBAgAGBQJS/oLBAAoJELSic+t+oim9bFEP/jkCCe4C96CdrlH11eR62LDQ
+mRTDjV0IOhDKDf1f1pARF2g/as6yneDUobCQL85TWGz88niKxPX3r0tR7MW4azvB
+JfbVFkaX7HBTlkX4G6AdNMnngp9TTSxnosb36PvwycsAtdnqoy7Fbrgcsd9EsKHN
+cYEx0vaEfe4cDZ9Fvqk0lTmWU64yF4gzbSf38du29lEFxoqRiW33WCLzQZB5AFhT
++ugmfJs7ay1beK424avu3pUsfUfJp5LeahYCVsO4CKZzacJor5ESNlSvThzBlDBR
+eMvg2W1QCLPGfIkc+kq+CocLuVGG8hMNbJqsNHjysDYSKN0T9MD6WAfc3WoUD/dq
+XZbHFbR6+0kIMKWCs6Q4eOMiunbn8u8XD947hkpAO1k4moVWzsjF1DFodAmhzNiB
+zmqdaJ6RK1vgkOpR11Bg0pJ+m0xnYYSsH61Tabl34XRf8BTY2YpPZccmqzarbApv
+j4hfDsxkw93vctx3i9VW11UwOiJKTn9zgzI1WkOxriwcT/FHUvgQlbnhXrfXCRYx
+gcdDzBk+OKnIHVPNDH48y/2u5jBLUqIum6rEmCrEj9BG73MYVIacMJb1SDr8QSab
+WeaQyrGB+us4/G/M4FkM7+yh6oM5DuewDJ8FzP4T52mdctMGEao0N2sesreJaeCq
+jv9QCMRgqG6DIOhpzEGI
+=yC7R
 -----END PGP SIGNATURE-----
 
---gh9b96O0vZdbsJLX--
+--Ivd6Nf4GAZ12BQqh--
