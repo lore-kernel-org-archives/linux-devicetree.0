@@ -1,61 +1,122 @@
-From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3] phy: Add new Exynos5 USB 3.0 PHY driver
-Date: Fri, 14 Feb 2014 16:47:29 +0100
-Message-ID: <52FE3A91.1090107@samsung.com>
-References: <1386151747-3209-2-git-send-email-gautam.vivek@samsung.com>
- <1390225363-24210-1-git-send-email-gautam.vivek@samsung.com>
- <52F39710.80101@samsung.com>
- <CAFp+6iFYoN1w_BX7mMEa-Xx5ADaPTTKeDzjsSbQmwVKdSEsmOw@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] of: search the best compatible match first in __of_match_node()
+Date: Fri, 14 Feb 2014 09:53:40 -0600
+Message-ID: <CAL_JsqKq4_1K8EF+PZoP=0=H6tiRxbgdzs9UHHVdbHS014n74Q@mail.gmail.com>
+References: <1392355366-1445-1-git-send-email-haokexin@gmail.com>
+	<1392355366-1445-3-git-send-email-haokexin@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <CAFp+6iFYoN1w_BX7mMEa-Xx5ADaPTTKeDzjsSbQmwVKdSEsmOw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, kishon <kishon-l0cyMroinI0@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392355366-1445-3-git-send-email-haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen N Chivers <schivers-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vivek,
-
-On 14.02.2014 14:53, Vivek Gautam wrote:
->>> Changes from v2:
->>> 1) Added support for multiple PHYs (UTMI+ and PIPE3) and
->>>      related changes in the driver structuring.
->>
->>
->> I'm a bit skeptical about this separation. Can the PHY operate with just the
->> UTMI+ or PIPE3 part enabled alone without the other? Can any PHY consumer
->> operate this way?
+On Thu, Feb 13, 2014 at 11:22 PM, Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Currently, of_match_node compares each given match against all node's
+> compatible strings with of_device_is_compatible.
 >
-> Yes :-)
-> As also pointed by Kishon the PHY consumer (which is DWC3 in case of
-> Exynos5 SoC series)
-> should theoretically be able use either UTMI+ phy for High speed
-> operations or both (UTMI+ and PIPE3)
-> for Super Speed operations.
-
-OK, that's fine then. This is the explanation I needed, thanks.
-
->>
->> I believe the right thing to do here is to do all the initialization in
->> .power_on() and let the driver simply call phy_power_on() when it needs the
->> PHY and phy_power_off() otherwise.
+> To achieve multiple compatible strings per node with ordering from
+> specific to generic, this requires given matches to be ordered from
+> specific to generic. For most of the drivers this is not true and also
+> an alphabetical ordering is more sane there.
 >
-> If this is what we should be doing then what will be the purpose of
-> two separate APIs :
-> phy_power_on() and phy_init().
-> Am i missing while understanding the things.
+> Therefore, this patch introduces a function to match each of the node's
+> compatible strings against all given compatible matches without type and
+> name first, before checking the next compatible string. This implies
+> that node's compatibles are ordered from specific to generic while
+> given matches can be in any order. If we fail to find such a match
+> entry, then fall-back to the old method in order to keep compatibility.
 >
+> Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-I don't understand this separation as well. Operations that should be 
-done together shouldn't be separated. Is there any case when you can 
-call one of phy_power_on() and phy_init() without calling another one 
-right before/after it?
+Looks good to me. I'll put this in next for a few days. I'd really
+like to see some acks and tested-by's before sending to Linus.
 
-Best regards,
-Tomasz
+We could be a bit more strict here and fallback to the old matching if
+the match table has any entries with name or type. I don't think that
+should be necessary though.
+
+Rob
+
+> ---
+>  drivers/of/base.c | 43 ++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 42 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index ba195fbce4c6..10b51106c854 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -730,13 +730,49 @@ out:
+>  }
+>  EXPORT_SYMBOL(of_find_node_with_property);
+>
+> +static const struct of_device_id *
+> +of_match_compatible(const struct of_device_id *matches,
+> +                       const struct device_node *node)
+> +{
+> +       const char *cp;
+> +       int cplen, l;
+> +       const struct of_device_id *m;
+> +
+> +       cp = __of_get_property(node, "compatible", &cplen);
+> +       while (cp && (cplen > 0)) {
+> +               m = matches;
+> +               while (m->name[0] || m->type[0] || m->compatible[0]) {
+> +                       /* Only match for the entries without type and name */
+> +                       if (m->name[0] || m->type[0] ||
+> +                               of_compat_cmp(m->compatible, cp,
+> +                                        strlen(m->compatible)))
+> +                               m++;
+> +                       else
+> +                               return m;
+> +               }
+> +
+> +               /* Get node's next compatible string */
+> +               l = strlen(cp) + 1;
+> +               cp += l;
+> +               cplen -= l;
+> +       }
+> +
+> +       return NULL;
+> +}
+> +
+>  static
+>  const struct of_device_id *__of_match_node(const struct of_device_id *matches,
+>                                            const struct device_node *node)
+>  {
+> +       const struct of_device_id *m;
+> +
+>         if (!matches)
+>                 return NULL;
+>
+> +       m = of_match_compatible(matches, node);
+> +       if (m)
+> +               return m;
+> +
+>         while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
+>                 int match = 1;
+>                 if (matches->name[0])
+> @@ -760,7 +796,12 @@ const struct of_device_id *__of_match_node(const struct of_device_id *matches,
+>   *     @matches:       array of of device match structures to search in
+>   *     @node:          the of device structure to match against
+>   *
+> - *     Low level utility function used by device matching.
+> + *     Low level utility function used by device matching. We have two ways
+> + *     of matching:
+> + *     - Try to find the best compatible match by comparing each compatible
+> + *       string of device node with all the given matches respectively.
+> + *     - If the above method failed, then try to match the compatible by using
+> + *       __of_device_is_compatible() besides the match in type and name.
+>   */
+>  const struct of_device_id *of_match_node(const struct of_device_id *matches,
+>                                          const struct device_node *node)
+> --
+> 1.8.5.3
+>
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
