@@ -1,165 +1,37 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] power: twl4030_madc_battery: Add device tree support.
-Date: Fri, 14 Feb 2014 13:43:49 +0000
-Message-ID: <20140214134349.GB17796@e106331-lin.cambridge.arm.com>
-References: <1392384259-14311-1-git-send-email-marek@goldelico.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH] ARM: dts: omap3 clocks: simplify ssi aliases
+Date: Fri, 14 Feb 2014 15:47:57 +0200
+Message-ID: <52FE1E8D.7010807@ti.com>
+References: <52DE24DA.8050104@ti.com> <1390315061-14441-1-git-send-email-sre@debian.org> <20140213224914.GD28216@atomide.com> <20140214012546.GA7996@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1392384259-14311-1-git-send-email-marek@goldelico.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Marek Belisko <marek@goldelico.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "dbaryshkov@gmail.com" <dbaryshkov@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "hns@goldelico.com" <hns@goldelico.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140214012546.GA7996@earth.universe>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sebastian Reichel <sre@debian.org>, Tony Lindgren <tony@atomide.com>
+Cc: mturquette@linaro.org, bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 14, 2014 at 01:24:19PM +0000, Marek Belisko wrote:
-> Signed-off-by: Marek Belisko <marek@goldelico.com>
-> ---
->  .../bindings/power_supply/twl4030_madc_battery.txt |  15 +++
->  drivers/power/twl4030_madc_battery.c               | 109 +++++++++++=
-++++++++++
->  2 files changed, 124 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power_supply/tw=
-l4030_madc_battery.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/power_supply/twl4030_m=
-adc_battery.txt b/Documentation/devicetree/bindings/power_supply/twl403=
-0_madc_battery.txt
-> new file mode 100644
-> index 0000000..bebc876
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power_supply/twl4030_madc_bat=
-tery.txt
-> @@ -0,0 +1,15 @@
-> +twl4030_madc_battery
-> +
-> +Required properties:
-> + - compatible : "ti,twl4030-madc-battery"
-> + - capacity : battery capacity in uAh
-> + - charging-calibration-data : list of voltage(mV):level(%) values f=
-or charging calibration (see example)
-> + - discharging-calibration-data : list of voltage(mV):level(%) value=
-s for discharging calibration (see example)
-> +
-> +Example:
-> +	madc-battery {
-> +		compatible =3D "ti,twl4030-madc-battery";
-> +		capacity =3D <1200000>;
-> +		charging-calibration-data =3D <4200 100 4100 75 4000 55 3900 25 38=
-00 5 3700 2 3600 1 3300 0>;
-> +		discharging-calibration-data =3D <4200 100 4100 95 4000 70 3800 50=
- 3700 10 3600 5 3300 0>;
+On 02/14/2014 03:25 AM, Sebastian Reichel wrote:
+> On Thu, Feb 13, 2014 at 02:49:14PM -0800, Tony Lindgren wrote:
+>> * Sebastian Reichel <sre@debian.org> [140121 06:39]:
+>>> update aliases for the ssi clocks ssi_ssr_fck, ssi_sst_fck and ssi_ick
+>>> to make them consistent for omap34xx and omap36xx. This makes it
+>>> possible to reference the clocks from generic omap3 dts files.
+>>
+>> Is this needed as a fix for v3.14-rc? If so, please let me know
+>> and ack if you want me to take it.
+>
+> The SSI driver will not arrive before 3.15 and 3.14 dts files do not
+> contain any SSI nodes.
+>
+> Thus it should be enough to queue it for 3.15 if it goes via the
+> same tree as the SSI dts patches.
+>
+> -- Sebastian
+>
 
-Please bracket list entries individually.
+The patch itself looks good to me, so acked.
 
-> +	};
-> diff --git a/drivers/power/twl4030_madc_battery.c b/drivers/power/twl=
-4030_madc_battery.c
-> index 7ef445a..2843382 100644
-> --- a/drivers/power/twl4030_madc_battery.c
-> +++ b/drivers/power/twl4030_madc_battery.c
-> @@ -19,6 +19,7 @@
->  #include <linux/sort.h>
->  #include <linux/i2c/twl4030-madc.h>
->  #include <linux/power/twl4030_madc_battery.h>
-> +#include <linux/of.h>
-> =20
->  struct twl4030_madc_battery {
->  	struct power_supply psy;
-> @@ -188,6 +189,110 @@ static int twl4030_cmp(const void *a, const voi=
-d *b)
->  		((struct twl4030_madc_bat_calibration *)a)->voltage;
->  }
-> =20
-> +#ifdef CONFIG_OF
-> +static struct twl4030_madc_bat_platform_data *
-> +	twl4030_madc_dt_probe(struct platform_device *pdev)
-> +{
-> +	struct twl4030_madc_bat_platform_data *pdata;
-> +	struct device_node *np =3D pdev->dev.of_node;
-> +	struct property *prop;
-> +	int ret;
-> +	int sz, i, j =3D 0;
-> +
-> +	pdata =3D devm_kzalloc(&pdev->dev,
-> +			sizeof(struct twl4030_madc_bat_platform_data),
-> +			GFP_KERNEL);
-> +	if (!pdata)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	ret =3D of_property_read_u32(np, "capacity", &pdata->capacity);
-> +	if (ret !=3D 0)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	/* parse and prepare charging data */
-> +	prop =3D of_find_property(np, "charging-calibration-data", &sz);
-> +	if (!prop)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	if (sz % 2) {
-> +		dev_warn(&pdev->dev, "Count of charging-calibration-data must be e=
-ven!\n");
-> +		return ERR_PTR(-EINVAL);
-> +	}
-
-As sz is in bytes this checks that the property is a multiple of 2
-bytes, not that it has an even number of u32 elements.
-
-Heiko St=C3=BCbner recently added of_property_count_u32_elems [1,2]. Us=
-e that
-instead.
-
-> +
-> +	sz /=3D sizeof(u32);
-> +
-> +	{
-> +		u32 data[sz];
-> +
-> +		ret =3D of_property_read_u32_array(np,
-> +				"charging-calibration-data", &data[0], sz);
-> +		if (ret)
-> +			return ERR_PTR(ret);
-
-Why not just allocate then try to read, possibly having to free if the
-read fails?
-
-Otherwise we're trying to put an arbitrarily large value onto the stack
-for no good reason.
-
-> +
-> +		pdata->charging =3D devm_kzalloc(&pdev->dev,
-> +				sizeof(struct twl4030_madc_bat_calibration) * (sz / 2),
-> +				GFP_KERNEL);
-> +
-> +		for (i =3D 0; i < sz; i +=3D 2) {
-> +			pdata->charging[j].voltage =3D data[i];
-> +			pdata->charging[j].level =3D data[i+1];
-> +			j++;
-
-Why not have (i =3D 0; i < sz/2; i++), and get rid of j?
-
-> +		}
-> +
-> +		pdata->charging_size =3D sz / 2;
-> +	}
-> +
-> +	/* parse and prepare discharging data */
-> +	prop =3D of_find_property(np, "discharging-calibration-data", &sz);
-> +	if (!prop)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	if (sz % 2) {
-> +		dev_warn(&pdev->dev, "Count of discharging-calibration-data must b=
-e even!\n");
-> +		return ERR_PTR(-EINVAL);
-> +	}
-
-This has the same issues as with charging-calibration-data.
-
-Thanks,
-Mark.
-
-[1] http://www.spinics.net/lists/devicetree/msg21358.html
-[2] http://www.spinics.net/lists/devicetree/msg21502.html
+-Tero
