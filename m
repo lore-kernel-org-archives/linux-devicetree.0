@@ -1,140 +1,57 @@
-From: Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] mfd: twl4030-madc: Add devicetree support.
-Date: Fri, 14 Feb 2014 15:53:18 +0100
-Message-ID: <CAAfyv36FH364OPnktx_Qh6sUfwYe7hynqrc3Xs_tY4gPXqQWvA@mail.gmail.com>
-References: <1392383861-14169-1-git-send-email-marek@goldelico.com>
-	<20140214134815.GD13293@lee--X1>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v10 0/4] ata: Add APM X-Gene SoC SATA host controller
+ support
+Date: Fri, 14 Feb 2014 10:03:22 -0500
+Message-ID: <20140214150322.GB29516@htj.dyndns.org>
+References: <CAPw-ZTkbpOEHowGvp-_3DcW1qW0AK_ZbpdS1LESJfhFU-n_Mtw@mail.gmail.com>
+ <CAPw-ZTn5c=v+7pbetEjXWpw9i=cG+zdeHPxO1QD0e42uFrKnCg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140214134815.GD13293@lee--X1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Dr. H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPw-ZTn5c=v+7pbetEjXWpw9i=cG+zdeHPxO1QD0e42uFrKnCg@mail.gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Loc Ho <lho@apm.com>
+Cc: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Milburn <dmilburn@redhat.com>, Jon Masters <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 14, 2014 at 2:48 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote=
-:
->> Signed-off-by: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
->> ---
->>  .../devicetree/bindings/mfd/twl4030-madc.txt       | 18 +++++++++++=
-++
->>  drivers/mfd/twl4030-madc.c                         | 31
->> ++++++++++++++++++++--
->
-> Please separate these into different patches.
-OK.
->
->>  2 files changed, 47 insertions(+), 2 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/mfd/twl4030-ma=
-dc.txt
->
-> <snip>
->
->> +++ b/drivers/mfd/twl4030-madc.c
->> @@ -695,6 +695,29 @@ static int twl4030_madc_set_power(struct twl403=
-0_madc_data *madc, int on)
->>       return 0;
->>  }
->>
->> +#ifdef CONFIG_OF
->
-> I believe we're heading for a more:
->
->   if (IS_ENABLED(CONFIG_OF))
->
-> ... approach. I won't enforce it, but please consider using it.
-OK I'll use it in next version.
->
->> +static struct twl4030_madc_platform_data *
->> +     twl4030_madc_of_parse(struct platform_device *pdev)
->> +{
->> +     struct twl4030_madc_platform_data *pdata;
->> +
->> +     pdata =3D devm_kzalloc(&pdev->dev,
->> +                     sizeof(struct twl4030_madc_platform_data), GFP=
-_KERNEL);
->
-> s/struct twl4030_madc_platform_data/*pdata/
-Right typo.
->
->> +     if (!pdata)
->> +             return ERR_PTR(-ENOMEM);
->> +
->> +     pdata->irq_line =3D platform_get_irq(pdev, 0);
->
-> Why weren't 'resources' used in the original implementation?
-Not sure I'm not an author :). It's passed in platform data.
->
->> +     return pdata;
->> +}
->> +
->> +static const struct of_device_id twl4030_madc_dt_match_table[] =3D =
-{
->> +     { .compatible =3D "ti,twl4030-madc" },
->> +     {},
->> +};
->> +
->> +#endif
->> +
->>  /*
->>   * Initialize MADC and request for threaded irq
->>   */
->> @@ -706,8 +729,11 @@ static int twl4030_madc_probe(struct platform_d=
-evice *pdev)
->>       u8 regval;
->>
->>       if (!pdata) {
->> -             dev_err(&pdev->dev, "platform_data not available\n");
->> -             return -EINVAL;
->> +             pdata =3D twl4030_madc_of_parse(pdev);
->> +             if (!pdata) {
->
-> And if you received -ENOMEM?
-Hmm right. I'll fix that.
->
->> +                     dev_err(&pdev->dev, "platform_data not availab=
-le\n");
->> +                     return -EINVAL;
->> +             }
->>       }
->>       madc =3D kzalloc(sizeof(*madc), GFP_KERNEL);
->>       if (!madc)
->> @@ -807,6 +833,7 @@ static struct platform_driver twl4030_madc_drive=
-r =3D {
->>       .driver =3D {
->>                  .name =3D "twl4030_madc",
->>                  .owner =3D THIS_MODULE,
->> +                .of_match_table =3D of_match_ptr(twl4030_madc_dt_ma=
-tch_table),
->>                  },
->>  };
->>
->
-> --
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+Hello, Loc.
 
-BR,
+On Thu, Feb 13, 2014 at 03:28:01PM -0800, Loc Ho wrote:
+> 1. There are a number of errata that require workaround. Some can be
+> fixed by adding broken flags while others are better to just wrap
+> around the existent libahci library routines and not overly polluting
+> the libahci routines.
+> 2. There are additional controller programming sequences to configure.
+> 2a. By default, RAM are powered down and require brought out of shutdown.
+> 2b. The controller has an additional corresponding PHY part that needs
+> to be programmed after PHY configuration.
 
-marek
+Have you looked at the latest patchset Hans posted?  He added multiple
+PHY support and split up init to three steps so that each platform
+driver can mix and match as they see fit.  Looking at xgene driver,
+sure there are things specific to the driver but there also are
+non-insignificant amount of boilerplate code and that's what I'm
+primarily concerned about.  It may be okay when you have two or three
+drivers duplicating some code but it looks like we could have many
+more and I *really* want to avoid the situation where the same piece
+of code is copied over N times.  In addition, frankly, not many people
+except yourself would care about these drivers once they're merged and
+many of these are gonna be painful to test making later refactoring a
+lot harder.
 
---=20
-as simple and primitive as possible
--------------------------------------------------
-Marek Belisko - OPEN-NANDRA
-=46reelance Developer
+> 2c. The controller requires extra programming sequence for the
+> hardreset due to errata.
+> 2d. For the IO flush, it requires additional memory resources.
 
-Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
-Tel: +421 915 052 184
-skype: marekwhite
-twitter: #opennandra
-web: http://open-nandra.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sure, you'll need to override good parts of the driver.  What I'm
+saying is please try to reuse whatever you can.  If that takes
+refactoring and librarize ahci_platform, please do so and I do see
+healthy chunk of duplicated code in the init path.  Please take a look
+at Hans' patches and if necessary work with him so that your driver
+can be part of the refactoring.
+
+Thanks.
+
+-- 
+tejun
