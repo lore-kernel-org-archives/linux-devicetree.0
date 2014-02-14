@@ -1,76 +1,32 @@
-From: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v4 4/4] ARM: OMAP2+: Add pdata quirk for sys_clkout2 for omap3 DBB056
-Date: Fri, 14 Feb 2014 15:20:56 +0100
-Message-ID: <1392387656-15186-5-git-send-email-chf.fritz@googlemail.com>
-References: <1392387656-15186-1-git-send-email-chf.fritz@googlemail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392387656-15186-1-git-send-email-chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Subject: [PATCH 1/2] staging: iio: hmc5843: Add all available models to device tree id table.
+Date: Fri, 14 Feb 2014 15:25:28 +0100
+Message-ID: <1392387929-31491-1-git-send-email-marek@goldelico.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Full device tree support for clock control, especially to set frequencies,
-is not yet accomplished. Until then, configure the 24Mhz of sys_clkout2 to
-feed an USB-Hub here.
-
-Signed-off-by: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Signed-off-by: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 ---
- arch/arm/mach-omap2/pdata-quirks.c |   37 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ drivers/staging/iio/magnetometer/hmc5843.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-index 435a823..e36ac3f 100644
---- a/arch/arm/mach-omap2/pdata-quirks.c
-+++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -172,6 +172,43 @@ static void __init am3517_evm_legacy_init(void)
+diff --git a/drivers/staging/iio/magnetometer/hmc5843.c b/drivers/staging/iio/magnetometer/hmc5843.c
+index d4f4dd9..f595fdc 100644
+--- a/drivers/staging/iio/magnetometer/hmc5843.c
++++ b/drivers/staging/iio/magnetometer/hmc5843.c
+@@ -630,7 +630,9 @@ static const struct i2c_device_id hmc5843_id[] = {
+ MODULE_DEVICE_TABLE(i2c, hmc5843_id);
  
- static void __init omap3_dbb056_legacy_init(void)
- {
-+	struct clk *clkout2;
-+	struct clk *cm96fck;
-+
-+	/* Reparent clkout2 to 96M_FCK */
-+	pr_info("%s: Late Reparent clkout2 to 96M_FCK\n", __func__);
-+	clkout2 = clk_get(NULL, "clkout2_src_ck");
-+	if (clkout2 < 0) {
-+		pr_err("a83x-quirk: couldn't get clkout2_src_ck\n");
-+		return;
-+	}
-+	cm96fck = clk_get(NULL, "cm_96m_fck");
-+	if (cm96fck < 0) {
-+		pr_err("a83x-quirk: couldn't get cm_96m_fck\n");
-+		return;
-+	}
-+	if (clk_set_parent(clkout2, cm96fck) < 0) {
-+		pr_err("a83x-quirk: couldn't reparent clkout2_src_ck\n");
-+		return;
-+	}
-+
-+	/* Set clkout2 to 24MHz for internal usb hub*/
-+	pr_info("%s: Set clkout2 to 24MHz for internal usb hub\n", __func__);
-+	clkout2 = clk_get(NULL, "sys_clkout2");
-+	if (clkout2 < 0) {
-+		pr_err("%s: couldn't get sys_clkout2\n", __func__);
-+		return;
-+	}
-+	if (clk_set_rate(clkout2, 24000000) < 0) {
-+		pr_err("%s: couldn't set sys_clkout2 rate\n", __func__);
-+		return;
-+	}
-+	if (clk_prepare_enable(clkout2) < 0) {
-+		pr_err("%s: couldn't enable sys_clkout2\n", __func__);
-+		return;
-+	}
-+
-+	/* Initialize display */
- 	omap3_dbb056_display_init_of();
- }
- #endif /* CONFIG_ARCH_OMAP3 */
+ static const struct of_device_id hmc5843_of_match[] = {
+-	{ .compatible = "honeywell,hmc5843" },
++	{ .compatible = "honeywell,hmc5843", .data = (void *)HMC5843_ID },
++	{ .compatible = "honeywell,hmc5883", .data = (void *)HMC5883_ID },
++	{ .compatible = "honeywell,hmc5883l", .data = (void *)HMC5883L_ID },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, hmc5843_of_match);
 -- 
-1.7.10.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.3.2
