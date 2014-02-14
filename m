@@ -1,28 +1,49 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH net-next v4 00/10] Support for the Broadcom GENET driver
-Date: Thu, 13 Feb 2014 18:53:19 -0500 (EST)
-Message-ID: <20140213.185319.1984798829692586686.davem@davemloft.net>
-References: <20140213.183806.278183709549075615.davem@davemloft.net>
-	<20140213.183914.1533527602267985176.davem@davemloft.net>
-	<CAGVrzcaJJBspF6o_0+kWHwh4hs7Q3YCknqZdFzS-ouyfBUecbQ@mail.gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH net-next v5 10/10] MAINTAINERS: add entry for the Broadcom GENET driver
+Date: Thu, 13 Feb 2014 16:08:51 -0800
+Message-ID: <1392336531-28875-11-git-send-email-f.fainelli@gmail.com>
+References: <1392336531-28875-1-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGVrzcaJJBspF6o_0+kWHwh4hs7Q3YCknqZdFzS-ouyfBUecbQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, romieu-W8zweXLXuWQS+FvcfC7Uqw@public.gmane.org
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1392336531-28875-1-git-send-email-f.fainelli@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net, devicetree@vger.kernel.org, cernekee@gmail.com, mark.rutland@arm.com, romieu@fr.zoreil.com, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Date: Thu, 13 Feb 2014 15:41:03 -0800
+Add myself as a maintainer of the Broadcom GENET driver.
 
-> Ok, would you agree in having a big fat "depends on OF" for now until
-> I can get an empty stub going with the DT people?
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+Changes in v5:
+- respin due to the CONFIG_OF dependency fix
 
-Yes.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes in v4:
+- respin due to the Kconfig dependency fix
+
+Changes in v2, v3:
+- rebased against latest net-next/master
+
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 091b50e..5a7b3ec 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1845,6 +1845,12 @@ L:	netdev@vger.kernel.org
+ S:	Supported
+ F:	drivers/net/ethernet/broadcom/b44.*
+ 
++BROADCOM GENET ETHERNET DRIVER
++M:	Florian Fainelli <f.fainelli@gmail.com>
++L:	netdev@vger.kernel.org
++S:	Supported
++F:	drivers/net/ethernet/broadcom/genet/
++
+ BROADCOM BNX2 GIGABIT ETHERNET DRIVER
+ M:	Michael Chan <mchan@broadcom.com>
+ L:	netdev@vger.kernel.org
+-- 
+1.8.3.2
