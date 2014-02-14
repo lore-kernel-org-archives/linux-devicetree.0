@@ -1,75 +1,57 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 09/10] regulator: Add LM3631 driver
-Date: Fri, 14 Feb 2014 20:55:32 +0000
-Message-ID: <20140214205532.GU4451@sirena.org.uk>
-References: <1392359551-7170-1-git-send-email-milo.kim@ti.com>
+Subject: Re: [PATCH v2 3/4] Regulators: TPS65218: Add Regulator driver for
+ TPS65218 PMIC
+Date: Fri, 14 Feb 2014 20:21:08 +0000
+Message-ID: <20140214202108.GI4451@sirena.org.uk>
+References: <1391665814-18814-1-git-send-email-j-keerthy@ti.com>
+ <1391665814-18814-4-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Ivd6Nf4GAZ12BQqh"
+	protocol="application/pgp-signature"; boundary="6b3yLyRKT1M6kiA0"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1392359551-7170-1-git-send-email-milo.kim@ti.com>
+In-Reply-To: <1391665814-18814-4-git-send-email-j-keerthy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Milo Kim <milo.kim@ti.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Jingoo Han <jg1.han@samsung.com>, Bryan Wu <cooloney@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>
+To: Keerthy <j-keerthy@ti.com>
+Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, sameo@linux.intel.com, lee.jones@linaro.org, grant.likely@linaro.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---Ivd6Nf4GAZ12BQqh
+--6b3yLyRKT1M6kiA0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 14, 2014 at 03:32:31PM +0900, Milo Kim wrote:
-> LM3631 regulator driver has 5 regulators.
-> One boost output and four LDOs are used for the display module.
-> Boost voltage is configurable but always on.
-> Supported operations for LDOs are enabled/disabled and voltage change.
+On Thu, Feb 06, 2014 at 11:20:13AM +0530, Keerthy wrote:
+> This patch adds support for TPS65218 PMIC regulators.
+>=20
+> The regulators set consists of 6 DCDCs and 1 LDO. The output
+> voltages are configurable and are meant to supply power to the
+> main processor and other components.
 
-This looks basically good, a couple of minor nits below but nothing
-substantial.
+Applied, thanks.  Please use subject lines consistent with the
+subsystem.
 
-> +static const int lm3631_boost_vtbl[] = {
-> +	4500000, 4550000, 4600000, 4650000, 4700000, 4750000, 4800000, 4850000,
-> +	4900000, 4950000, 5000000, 5050000, 5100000, 5150000, 5200000, 5250000,
-> +	5300000, 5350000, 5400000, 5450000, 5500000, 5550000, 5600000, 5650000,
-> +	5700000, 5750000, 5800000, 5850000, 5900000, 5950000, 6000000, 6050000,
-> +	6100000, 6150000, 6200000, 6250000, 6300000, 6350000,
-> +};
-
-This looks like a linear range so could use the linear range helpers
-(4.5-6.35V in steps of 0.05V)?  Similarly for the LDO.
-
-> +static struct of_regulator_match lm3631_regulator_matches[] = {
-> +	{ .name = "vboost", .driver_data = (void *)LM3631_BOOST, },
-> +	{ .name = "vcont",  .driver_data = (void *)LM3631_LDO_CONT, },
-> +	{ .name = "voref",  .driver_data = (void *)LM3631_LDO_OREF, },
-> +	{ .name = "vpos",   .driver_data = (void *)LM3631_LDO_POS,  },
-> +	{ .name = "vneg",   .driver_data = (void *)LM3631_LDO_NEG,  },
-> +};
-
-These names don't correspond to what was in the binding document and
-there's a couple of extra LDOs.
-
---Ivd6Nf4GAZ12BQqh
+--6b3yLyRKT1M6kiA0
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJS/oLBAAoJELSic+t+oim9bFEP/jkCCe4C96CdrlH11eR62LDQ
-mRTDjV0IOhDKDf1f1pARF2g/as6yneDUobCQL85TWGz88niKxPX3r0tR7MW4azvB
-JfbVFkaX7HBTlkX4G6AdNMnngp9TTSxnosb36PvwycsAtdnqoy7Fbrgcsd9EsKHN
-cYEx0vaEfe4cDZ9Fvqk0lTmWU64yF4gzbSf38du29lEFxoqRiW33WCLzQZB5AFhT
-+ugmfJs7ay1beK424avu3pUsfUfJp5LeahYCVsO4CKZzacJor5ESNlSvThzBlDBR
-eMvg2W1QCLPGfIkc+kq+CocLuVGG8hMNbJqsNHjysDYSKN0T9MD6WAfc3WoUD/dq
-XZbHFbR6+0kIMKWCs6Q4eOMiunbn8u8XD947hkpAO1k4moVWzsjF1DFodAmhzNiB
-zmqdaJ6RK1vgkOpR11Bg0pJ+m0xnYYSsH61Tabl34XRf8BTY2YpPZccmqzarbApv
-j4hfDsxkw93vctx3i9VW11UwOiJKTn9zgzI1WkOxriwcT/FHUvgQlbnhXrfXCRYx
-gcdDzBk+OKnIHVPNDH48y/2u5jBLUqIum6rEmCrEj9BG73MYVIacMJb1SDr8QSab
-WeaQyrGB+us4/G/M4FkM7+yh6oM5DuewDJ8FzP4T52mdctMGEao0N2sesreJaeCq
-jv9QCMRgqG6DIOhpzEGI
-=yC7R
+iQIcBAEBAgAGBQJS/nqxAAoJELSic+t+oim9HuMQAJ1V+nCKHsVPaI/Gt13j4UI3
+SupKWLr7jay5rtAPV5Yun7Lugdpua8q2PL3v2aWEEE//SkAxvINNyKvcJTbTyZuh
+QzLJORzi4u4Zk/nb3jOfEZ/5LVI8mkZ3Danv4PlIUHzcoTLcfA7hF4UCX4le20WY
+DGgj4xQZ/OVyRe0Lbdy7LukwTzeJ5WUJvos9l57QXItrazridd8jWsl3G/4iyKcH
+xbYMxDgp1cdfH0JqWjIPjQFeXSa1RRotyo5ru0aeBqDiRZQHi7nPqsnnWfqdphTF
+2Fy8KJrgnSpFXD9wGQr1jwc7kjQRhzZSHyPaBlEvK9DiFHg6rJt125SNRPXNzRHh
+SQ0QGrVGB9tKAICWwz/bkT9Sx+7nebTLriBR/oUEodZmRvno3poSRlxbRPKnc3xN
+ZES51spULEWwZIuV703sp+z8xieN5uh5V95zx11TxDJblyL/PFAwLhVsmWm6ZL29
+AFwW9v1LD+47anX1IIcg25djdKFtRnkzCMdP90iG3xXMsqOGsal6qAt/JwRSt5xk
+WPCY1C8pJp9FJZPtiMYbSXggTNh+t3ql6I/u47jxQTn3feB7TLneCNams+8tSp0M
+qHHuieLP1krbON0kxLryVAXqPe9OiwCwNLjMQAzPZuTVMGxh+gqB6hCWHCCBq9YX
+ezsjSO9p2Nianw6bOAFZ
+=PXmD
 -----END PGP SIGNATURE-----
 
---Ivd6Nf4GAZ12BQqh--
+--6b3yLyRKT1M6kiA0--
