@@ -1,69 +1,61 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] mfd: twl4030-madc: Add devicetree support.
-Date: Fri, 14 Feb 2014 15:28:38 +0000
-Message-ID: <20140214152838.GA30687@lee--X1>
-References: <1392383861-14169-1-git-send-email-marek@goldelico.com>
- <20140214134815.GD13293@lee--X1>
- <CAAfyv36FH364OPnktx_Qh6sUfwYe7hynqrc3Xs_tY4gPXqQWvA@mail.gmail.com>
+From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3] phy: Add new Exynos5 USB 3.0 PHY driver
+Date: Fri, 14 Feb 2014 16:47:29 +0100
+Message-ID: <52FE3A91.1090107@samsung.com>
+References: <1386151747-3209-2-git-send-email-gautam.vivek@samsung.com>
+ <1390225363-24210-1-git-send-email-gautam.vivek@samsung.com>
+ <52F39710.80101@samsung.com>
+ <CAFp+6iFYoN1w_BX7mMEa-Xx5ADaPTTKeDzjsSbQmwVKdSEsmOw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAAfyv36FH364OPnktx_Qh6sUfwYe7hynqrc3Xs_tY4gPXqQWvA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Dr. H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <CAFp+6iFYoN1w_BX7mMEa-Xx5ADaPTTKeDzjsSbQmwVKdSEsmOw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, kishon <kishon-l0cyMroinI0@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> >> Signed-off-by: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-> >> ---
-> >>  .../devicetree/bindings/mfd/twl4030-madc.txt       | 18 +++++++++=
-++++
-> >>  drivers/mfd/twl4030-madc.c                         | 31
-> >> ++++++++++++++++++++--
-> >
-<snip>
+Hi Vivek,
 
-> >> +static struct twl4030_madc_platform_data *
-> >> +     twl4030_madc_of_parse(struct platform_device *pdev)
-> >> +{
-> >> +     struct twl4030_madc_platform_data *pdata;
-> >> +
-> >> +     pdata =3D devm_kzalloc(&pdev->dev,
-> >> +                     sizeof(struct twl4030_madc_platform_data), G=
-=46P_KERNEL);
-> >
-> > s/struct twl4030_madc_platform_data/*pdata/
-> Right typo.
+On 14.02.2014 14:53, Vivek Gautam wrote:
+>>> Changes from v2:
+>>> 1) Added support for multiple PHYs (UTMI+ and PIPE3) and
+>>>      related changes in the driver structuring.
+>>
+>>
+>> I'm a bit skeptical about this separation. Can the PHY operate with just the
+>> UTMI+ or PIPE3 part enabled alone without the other? Can any PHY consumer
+>> operate this way?
+>
+> Yes :-)
+> As also pointed by Kishon the PHY consumer (which is DWC3 in case of
+> Exynos5 SoC series)
+> should theoretically be able use either UTMI+ phy for High speed
+> operations or both (UTMI+ and PIPE3)
+> for Super Speed operations.
 
-Sorry, my comment of ambiguous.
+OK, that's fine then. This is the explanation I needed, thanks.
 
-I mean do this:
+>>
+>> I believe the right thing to do here is to do all the initialization in
+>> .power_on() and let the driver simply call phy_power_on() when it needs the
+>> PHY and phy_power_off() otherwise.
+>
+> If this is what we should be doing then what will be the purpose of
+> two separate APIs :
+> phy_power_on() and phy_init().
+> Am i missing while understanding the things.
+>
 
-  sizeof(*pdata)
+I don't understand this separation as well. Operations that should be 
+done together shouldn't be separated. Is there any case when you can 
+call one of phy_power_on() and phy_init() without calling another one 
+right before/after it?
 
-=2E.. instead of this:
-
-  sizeof(struct twl4030_madc_platform_data)
-
-> >> +     if (!pdata)
-> >> +             return ERR_PTR(-ENOMEM);
-> >> +
-> >> +     pdata->irq_line =3D platform_get_irq(pdev, 0);
-> >
-> > Why weren't 'resources' used in the original implementation?
-> Not sure I'm not an author :). It's passed in platform data.
-
-Yes, I saw that. It should be changed.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Best regards,
+Tomasz
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
