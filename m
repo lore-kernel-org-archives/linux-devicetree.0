@@ -1,7 +1,7 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Subject: Re: [PATCH 1/2] clk: fixed-rate: use full DT node name
-Date: Fri, 14 Feb 2014 09:43:04 -0700
-Message-ID: <52FE4798.3010605@wwwdotorg.org>
+Date: Fri, 14 Feb 2014 09:43:51 -0700
+Message-ID: <52FE47C7.3050509@wwwdotorg.org>
 References: <1392358613-19962-1-git-send-email-swarren@wwwdotorg.org> <20140214103556.GC9907@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
@@ -39,10 +39,7 @@ On 02/14/2014 03:35 AM, Mark Rutland wrote:
 >> ...
 > 
 > I'd argue that this case isn't valid.
-
-Well, it's very widely used, and was the result of numerous discussions
-of how this kind of thing should be represented:-/
-
+> 
 > The fixed-clock binding doesn't define a reg, yet simple bus binding
 > implies that the reg property of child nodes should be interpretted as
 > the same address space as their parent (MMIO in this case?). The
@@ -50,16 +47,9 @@ of how this kind of thing should be represented:-/
 > 
 > Additionally, the _requred_ ranges property is missing.
 
-Perhaps we need to invent a simple-container instead then?
+Oh, IIRC that was deliberate to indicate that the child address space
+was disjoint from the parent address space.
 
-> It's just nonsensical; rename them to clock_{0,1,..} instead and get rid
-> of the reg properties. Then they're named uniquely.
-
-That's not legal either. DT node names are supposed to represent the
-type of device/object (i.e. just "clock"), not the identity of the
-device/object (i.e. not include IDs etc.). Hence, the node name needs to
-be "clock" for all of them, and the unit address must be used to
-differentiate them.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
