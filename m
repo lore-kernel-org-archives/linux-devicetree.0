@@ -1,232 +1,113 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH RFC v3 3/3] Documentation: arm: define DT idle states
- bindings
-Date: Fri, 14 Feb 2014 11:27:56 +0000
-Message-ID: <20140214112756.GA25043@e102568-lin.cambridge.arm.com>
-References: <1392128273-8614-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1392128273-8614-4-git-send-email-lorenzo.pieralisi@arm.com>
- <20140213013153.18853.21632@capellas-linux>
- <20140213124731.GD26329@e102568-lin.cambridge.arm.com>
- <20140214002926.1014.3599@capellas-linux>
+From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH V2 2/3] ARM: dts: add dts files for exynos5260 SoC
+Date: Fri, 14 Feb 2014 12:49:38 +0100
+Message-ID: <52FE02D2.7050305@samsung.com>
+References: <1391577375-17625-1-git-send-email-rahul.sharma@samsung.com>
+ <1391577375-17625-3-git-send-email-rahul.sharma@samsung.com>
+ <52F38C42.5030508@samsung.com>
+ <CAPdUM4NBwXcnL2KK9Rsi46GWQz_KQsXF0EEeSmCb=wB8WfgUKQ@mail.gmail.com>
+ <52F9F59D.1090905@gmail.com>
+ <CAPdUM4Pu-CbuNwwjrd_8itbSbjKqTBLE5u_T_vO89jreOy4=kQ@mail.gmail.com>
+ <CAPdUM4Pr7UC3wzYMsO+sYQHRDGixSNsR3XQuHBomsi-H-dfOZw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140214002926.1014.3599@capellas-linux>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Capella <sebastian.capella@linaro.org>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Mark Hambleton <mark.hambleton@broadcom.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Dave P Martin <Dave.Martin@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, "pveerapa@broadcom.com" <pveerapa@broadcom.com>, Peter De Schrijver <pdeschrijver@nvidia.>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <CAPdUM4Pr7UC3wzYMsO+sYQHRDGixSNsR3XQuHBomsi-H-dfOZw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rahul Sharma <r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, sunil joshi <joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 14, 2014 at 12:29:26AM +0000, Sebastian Capella wrote:
-> Quoting Lorenzo Pieralisi (2014-02-13 04:47:32)
-> 
-> > Such as ? "idle-states" ?
-> 
-> That sounds good to me.  Our preference is for idle-states to be used
-> for name of the idle-states.txt node.
+On 14.02.2014 12:28, Rahul Sharma wrote:
+> On 14 February 2014 08:54, Rahul Sharma <r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Thanks Tomasz,
+>>
+>> I will add these changes to v3.
+>>
+>> Regards,
+>> Rahul Sharma.
+>>
+>> On 11 February 2014 15:34, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> Hi Rahul,
+>>>
+>>>
+>>> On 11.02.2014 06:22, Rahul Sharma wrote:
+>>>>
+>>>> Hi Tomasz,
+>>>>
+>>>> On 6 February 2014 18:51, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>>>>>
+>>>>> Hi Rahul, Pankaj, Arun,
+>>>>>
+>>>>> [adding linux-arm-kernel, devicetree MLs and DT people on Cc]
+>>>>>
+>>>>> I think it's good time to stop accepting DTS files like this and force
+>>>>> new
+>>>>> ones to use the proper structure with soc node, labels for every node and
+>>>>> node references.
+>>>>
+>>>>
+>>>> I am unable to find information on SoC node and grouping inside SoC node.
+>>>> Please
+>>>> share some pointers.
+>>>
+>>>
+>>> Well, there is not much information needed about this. Basically all the
+>>> devices built into the SoC should be listed under respective bus nodes or a
+>>> single soc node, instead of root level. Such node should be a "simple-bus"
+>>> and just group the components together to separate board-specific devices
+>>> (which are still at root level) from SoC devices.
+>>>
+>>> Even though it might seem useless, it improves DT readability a bit and
+>>> still most of the platforms use this approach, so for consistency, Exynos
+>>> should use too.
+>>>
+>>> Just for reference, back in April 2013, in his review of S3C64xx DT series
+>>> [1], Rob Herring requested that we don't submit any new device trees using
+>>> flat approach and start using bus hierarchy.
+>>>
+>>> [1]
+>>> http://lists.infradead.org/pipermail/linux-arm-kernel/2013-April/163659.html
+>>>
+>>>
+>>>>>
+>>>>>> +               spi0_bus: spi0-bus {
+>>>>>> +                       samsung,pins = "gpa2-0", "gpa2-1", "gpa2-2",
+>>>>>> "gpa2-3";
+>>>>>
+>>>>>
+>>>>>
+>>>>> What is the reason for SPI0 to have 4 pins, while SPI1 has just 3?
+>>>>>
+>>>>
+>>>> I should align SPI1 with SPI0.
+>>>>
+>>>
+>>> Are you sure that SPI0 is the correct one? SPI usually uses four pins - SDI,
+>>> SDO, SCK and nCS, but we always used to treat nCS as a simple GPIO, due to
+>>> the fact that the controller can only support one dedicated chip select and
+>>> with direct GPIO control you can have more.
+>>>
+>>> What is the fourth pin here?
+>>>
+>
+> As you said, these are CLK, SS, MISO, MOSI (gpa2-0 to gpa2-3). Fourth pin is
+> CS. It can be defined as a simple GPIO but better to include it in the
+> SPI pingroup
+> as it belongs to there.
 
-Ok, so s/cpu-idle-state/idle-state everywhere, inclusive of state nodes
-compatible properties ("arm,cpu-idle-state" becomes "arm,idle-state") ?
+I have to disagree here.
 
-> > > During last connect, we'd discussed that the small set of
-> > > states here could apply to a single node, which can represent a cpu, a
-> > > cluster with cache etc.  Then the complexities of the system power state
-> > > would be represented using a heirarchy, with each node in the
-> > > tree having its own state from the list above.  This would allow
-> > > a fairly rich system state while having just a few power states defined
-> > > at each level.  Is this how you're intending these bindings to go?
-> >
-> > Yes, CPUs point at states that can be reached by that CPU (eg a CPU core
-> > gating state is represented by a single node pointed at by all CPUs in the
-> > system - it the same state data, different power domains though).
-> > 
-> > States are hierarchical, which means that a parent state implies entry on all
-> > substates that's how cluster states are defined.
-> 
-> The cpu 0 node, in its cpu-idle-state array is also pointing at a cluster
-> node right?  STATE0 -> power-domains refers to <pd_clusters 0>.  Is it
-> correct that if the cpu's workload is such that it tolerates the
-> 500/1000/2500 entry/exit latency/min-residency, it will call the
-> entry-method with the psci-power-state of 0x10100000 matching that node?
+If you define a pin in pinctrl group then it is tied to this specific 
+hardware function and you can't use it as GPIO.
 
-Yes. As we know, since it is a cluster state, that might happen or not
-depending on the state of other CPUs.
+Since it's board specific to use it as HW chip select or GPIO chip 
+select (the usual setup), it should not be included in this group.
 
-> > > Also, would it be nice to have a name field for each state?
-> > 
-> > There is:
-> > 
-> > "The state node name shall be "stateN", where N = {0, 1, ...} is
-> > the node number; state nodes which are siblings within a single
-> > common parent node must be given a unique and sequential N value,
-> > starting from 0."
-> > I can remove the rule and allow people to call states as they wish
-> > since they already have a compatible property to match them.
-> > 
-> > Actually, states can be called with any name, provided it is unique.
-> 
-> Sorry, I was referring to a descriptive name string property.  Something
-> that can be useful to help a human understand what's going on.  Naming
-> the nodes might work too.
-
-I do not like that, but I can remove the naming scheme and let people
-find a naming scheme that complies with DT rules (nodes within a parent
-must have a unique name). Not sure this would make dts more readable, but
-I do not think it is a problem either.
-
-> > > > +       A state node can contain state child nodes. A state node with
-> > > > +       children represents a hierarchical state, which is a superset of
-> > > > +       the child states. Hierarchical states require all CPUs on which
-> > > > +       they are valid to request the state in order for it to be entered.
-> > > 
-> > > Is it possible for a cpu to request a deeper state and unblock other cpus
-> > > from entering this state?
-> > 
-> > That's not DT bindings business, hierarchical states define states that
-> > require all CPUs on which they are valid to enter that state for it to
-> > be considered "enabled".
-> > 
-> > It is a hard nut to crack. In x86 this stuff does not exist and it is
-> > managed in HW, basically an idle state is always per-cpu (but it might
-> > end up becoming a package state when all CPUs in a package enter that
-> > state). On ARM, we want to define hierarchical states explicitly to
-> > link resources (ie caches) to them.
-> > 
-> > CPUs are not prevented from requesting a hierarchical state, but the
-> > state only becomes "enabled" when all CPUs on which it is valid request
-> > it.
-> 
-> The way we've seen it work, is a cpu tries to enter the lowest state it can
-> tolerate (including for eg. cluster off).  The system level code then looks
-> at the allowable states from all the cpus and selects the lowest power
-> state permissible for the heirarchies.
-> 
-> Eg. this way, the last cpu preventing a cluster from going to sleep enters
-> cluster sleep state (where peer cpu's have already voted for cluster
-> sleep) and the cluster will sleep.  Alternately if the same cpu cannot
-> tolerate the additional latency of the cluster sleeping, it will vote
-> only for cpu-sleep, then the cluster remains in a state where all cpu's are
-> sleeping but the cluster remains up.
-
-That's exactly what these bindings are meant to describe too and I think they
-do. There is also loads of information that can be used for tuning (what
-caches are affected by an idle state, what CPUs "share" an idle-state
-and so on).
-
-> > I cannot think of any other way of to express this properly but still in
-> > a compact way.
-> 
-> You're doing a great job by the way!  Thanks! :)
-
-Thank you, we are almost there.
-
-> > > "all CPUs on which they are valid" is this determined by seeing which
-> > > state's phandle is in each cpu->cpu-idle-states?
-> > 
-> > Yes, does it make sense ?
-> 
-> Yup, maybe adding a little parenthetical text like below may help others
-> as well?
-> 
-> Hierarchical states require all CPUs on which they are valid (ie. CPU nodes
-> containing cpu-idle-state arrays having a phandle reference to the state)
-> to request the state in order for it to be entered.
-
-OK, applied.
-
-> > 
-> > > Definition: It represents an idle state index.
-> > > 
-> > >         Index 0 and 1 shall not be specified and are reserved for ARM
-> > >         states where index 0 is running, and index 1 is idle_standby
-> > >         entered by executing a wfi instruction (SBSA,[3])
-> > > 
-> > > What mechanism is used to order the power states WRT power consumption?
-> > 
-> > I think we should use index for that. The higher the index the lower the
-> > power consumption.
-> 
-> Ok, I think I get it now.
-> If we decouple index and SBSA states, do we really need to reserve index
-> 0 and 1 then?
-
-What I will do: move the entry-method to top-level cpu-idle-states node
-(soon to be idle-states node) and add a property there:
-
-"arm,has-idlewfi"
-
-which allows me to prevent people from adding an explicit state that just
-executes the wfi instruction on entry.
-
-This way we can have a *global* entry-method, and we can also detect if the
-platform supports wfi in its bare form.
-
-Yes, index can start from 0, disallowing 0 and 1 was a (odd) way to prevent
-people from adding wfi to DT. If the platform supports simple idlestandby
-(ie wfi) it has to add the boolean property above.
-
-How does that sound ?
-
-> > > Can this field be used to combine both psci and non-psci states in any order?
-> > 
-> > No. I will enforce a unique entry method.
-> 
-> So a single entry-method for all  states in idle-states node?
-> Should this be specified once only then?
-
-Yes, see above.
-
-> Should we not allow more flexibility here to mix methods where some
-> states use one method and some use others?  Is this mostly a security
-> concern?  What if a vendor wants to introduce a state between wfi and
-> cpu-sleep?
-
-entry-method-param is the way to differentiate. One interface/entry-method
-(PSCI or vendor specific), different state parameters.
-
-We are not installing multiple back-ends to enter different idle states,
-are we ? That would be awkward.
-
-ACK ?
-
-> > > I assume psci will be turning off the powerdomains not Linux right?
-> > 
-> > This is not a PSCI only document, and even if it was, we still need to deal
-> > with devices. Which means we need to know what we have to save/restore (PMU,
-> > arch timer, GIC), and power domains help us detect that.
-> 
-> > > > +
-> > > > +cpus {
-> > > > +       #size-cells = <0>;
-> > > > +       #address-cells = <2>;
-> > > > +
-> > > > +       cpu-idle-states {
-> > > > +
-> > > > +               STATE0: state0 {
-> > > > +                       compatible = "arm,cpu-idle-state";
-> > > > +                       index = <3>;
-> > > 
-> > > Are the index fields of nested states independent of each other or
-> > > sequential?
-> > ...
-> > I understand index is misleading and either I remove it, or I
-> > leave it there to define power savings scale as you mentioned.
-> 
-> I like index, but I was confused.  You cleared it up pretty quick with
-> your earlier comment.  Removing the numbering may help, but I think
-> keeping the index is useful.
-
-I will leave the index to sort the states according to power consumption.
-
-Thanks !
-Lorenzo
+Best regards,
+Tomasz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
