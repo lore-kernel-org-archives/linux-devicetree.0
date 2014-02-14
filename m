@@ -1,76 +1,64 @@
-From: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: give priority to the compatible match in
- __of_match_node()
-Date: Fri, 14 Feb 2014 09:20:10 +0800
-Message-ID: <20140214012010.GA26019@pek-khao-d1.corp.ad.wrs.com>
-References: <1392205084-2351-1-git-send-email-haokexin@gmail.com>
- <CAL_JsqKMi2H=vwoxrOt8QRA2xJeiLqBKKfLtt4QRCRoFk6JUHg@mail.gmail.com>
+From: Sebastian Reichel <sre@debian.org>
+Subject: Re: [PATCH] ARM: dts: omap3 clocks: simplify ssi aliases
+Date: Fri, 14 Feb 2014 02:25:46 +0100
+Message-ID: <20140214012546.GA7996@earth.universe>
+References: <52DE24DA.8050104@ti.com>
+ <1390315061-14441-1-git-send-email-sre@debian.org>
+ <20140213224914.GD28216@atomide.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PNTmBPCT7hxwcZjr"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="sm4nu43k4a2Rpi4c"
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqKMi2H=vwoxrOt8QRA2xJeiLqBKKfLtt4QRCRoFk6JUHg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen N Chivers <schivers-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, Chris Proctor <cproctor-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20140213224914.GD28216@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Tero Kristo <t-kristo@ti.com>, mturquette@linaro.org, bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---PNTmBPCT7hxwcZjr
+--sm4nu43k4a2Rpi4c
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 13, 2014 at 01:01:42PM -0600, Rob Herring wrote:
-> On Wed, Feb 12, 2014 at 5:38 AM, Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > When the device node do have a compatible property, we definitely
-> > prefer the compatible match besides the type and name. Only if
-> > there is no such a match, we then consider the candidate which
-> > doesn't have compatible entry but do match the type or name with
-> > the device node.
-> >
-> > This is based on a patch from Sebastian Hesselbarth.
-> >   http://patchwork.ozlabs.org/patch/319434/
-> >
-> > I did some code refactoring and also fixed a bug in the original patch.
+On Thu, Feb 13, 2014 at 02:49:14PM -0800, Tony Lindgren wrote:
+> * Sebastian Reichel <sre@debian.org> [140121 06:39]:
+> > update aliases for the ssi clocks ssi_ssr_fck, ssi_sst_fck and ssi_ick
+> > to make them consistent for omap34xx and omap36xx. This makes it
+> > possible to reference the clocks from generic omap3 dts files.
 >=20
-> I'm inclined to just revert this once again and avoid possibly
-> breaking yet another platform.
->=20
-> However, I think I would like to see this structured differently. We
-> basically have 2 ways of matching: the existing pre-3.14 way and the
-> desired match on best compatible only. All new bindings should match
-> with the new way and the old way needs to be kept for compatibility.
-> So lets structure the code that way. Search the match table first for
-> best compatible with name and type NULL, then search the table the old
-> way. I realize it appears you are doing this, but it is not clear this
-> is the intent of the code. I would like to see this written as a patch
-> with commit 105353145eafb3ea919 reverted first and you add a new match
-> function to call first and then fallback to the existing function.
+> Is this needed as a fix for v3.14-rc? If so, please let me know
+> and ack if you want me to take it.
 
-OK, I will git it a try.
+The SSI driver will not arrive before 3.15 and 3.14 dts files do not
+contain any SSI nodes.
 
-Thanks,
-Kevin
+Thus it should be enough to queue it for 3.15 if it goes via the
+same tree as the SSI dts patches.
 
---PNTmBPCT7hxwcZjr
-Content-Type: application/pgp-signature
+-- Sebastian
+
+--sm4nu43k4a2Rpi4c
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Version: GnuPG v1
 
-iQEcBAEBAgAGBQJS/W9KAAoJEJNY7TDerrFx1AIH/1eZ+ZP6oOR8Bj18Y8vEItDj
-a0Z2n2Qe3s2LWTxBR/kKHkMFS2aNcObrZ3nMZjgrZDyzfxd3Z/9gwi3Crhxqiq+j
-EbDDzB0u9IleT5oeDNHOdzl/8itf4hpbezU4FdaJUxdFPTi20ssYA0qKinkV9xVo
-GGAHpqQ8uyru2h8jcfIzZFSfuvPRWOdBT7vezTKlE+fgYvQKdzZGhGl/J9/olP1s
-+++v0TO8I/gtleOzZP5JEgoYT9X/9lrd1CDG6Zv/LYjFYBRPpY+Yl3uZB8x6CIo0
-rzdTxWrpUYRaceIx/O0VyFTLd3i8+wSA5Ng9HEupOp0iZa+TGbi0+ekAt07gQzM=
-=mV8L
+iQIcBAEBCgAGBQJS/XCaAAoJENju1/PIO/qauL8P/0GuoERRyYGfiX1jsxga8OoN
+DSP13kLFV94HW5FvCp4tPLnFxYk110uNNP4+frhbXO6Dpt27+UIpoKieL+Pahreb
+1BMcpen/y3TQmiuEZG7wCpSDDNOe5Sf3e/aj78FSyD4l1A1uszDy63eXezAf3+Zq
+X+cyI37tYgA33Eri9XECEJlzOjObU/+GfS4nmqFyfoDQLhEDUOKhz1AyduGtOZJY
+E6IVLKcwCIm3/IXL6b2fwnGKWQP5Ij15kvkojMqbYg1SjWxZ7+OCpzh/D/rRbj5J
+bl7KdUE8lRczFyArVTvk/4thwH5cxREouYIbISOfKtnXGU4wu8u1uWXK5MmUPMf3
+1gbfXMMYK7Bo1VaBTEQHAlaogD1FaKaeH7iqzr/IigaIt2zOU/09T06ye9k5ujwN
+vpd6Tz+fvQRPc0LzcqcnRsE51VHXWHUw8j2XD22W45fAOxNoqISzHVfTOIcpXzPt
+yW/IjyvBhZhOin6hkFzY6y2nof3rskphb3067sMUj0AveAon/M9DSNjJPJ7SiNci
+Dp7ZcI8FT5UatcMQsfQiyEv0IIMzOX4b405hFHT/+jnORJBYTcclu2SMsKh0vyta
+7LDiuci6UVQo+dXp+d4chx/TGaPZoal630yaIsNpR5TvHnnM3vo+fHG2vEHzN7XQ
+Fys2cQO9PTqOrPq4vQHz
+=Pu0r
 -----END PGP SIGNATURE-----
 
---PNTmBPCT7hxwcZjr--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--sm4nu43k4a2Rpi4c--
