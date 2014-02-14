@@ -1,37 +1,108 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH] ARM: dts: omap3 clocks: simplify ssi aliases
-Date: Fri, 14 Feb 2014 15:47:57 +0200
-Message-ID: <52FE1E8D.7010807@ti.com>
-References: <52DE24DA.8050104@ti.com> <1390315061-14441-1-git-send-email-sre@debian.org> <20140213224914.GD28216@atomide.com> <20140214012546.GA7996@earth.universe>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/2] mfd: twl4030-madc: Add devicetree support.
+Date: Fri, 14 Feb 2014 13:48:15 +0000
+Message-ID: <20140214134815.GD13293@lee--X1>
+References: <1392383861-14169-1-git-send-email-marek@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140214012546.GA7996@earth.universe>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>, Tony Lindgren <tony@atomide.com>
-Cc: mturquette@linaro.org, bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1392383861-14169-1-git-send-email-marek@goldelico.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Marek Belisko <marek@goldelico.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, hns@goldelico.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/14/2014 03:25 AM, Sebastian Reichel wrote:
-> On Thu, Feb 13, 2014 at 02:49:14PM -0800, Tony Lindgren wrote:
->> * Sebastian Reichel <sre@debian.org> [140121 06:39]:
->>> update aliases for the ssi clocks ssi_ssr_fck, ssi_sst_fck and ssi_ick
->>> to make them consistent for omap34xx and omap36xx. This makes it
->>> possible to reference the clocks from generic omap3 dts files.
->>
->> Is this needed as a fix for v3.14-rc? If so, please let me know
->> and ack if you want me to take it.
->
-> The SSI driver will not arrive before 3.15 and 3.14 dts files do not
-> contain any SSI nodes.
->
-> Thus it should be enough to queue it for 3.15 if it goes via the
-> same tree as the SSI dts patches.
->
-> -- Sebastian
->
+> Signed-off-by: Marek Belisko <marek@goldelico.com>
+> ---
+>  .../devicetree/bindings/mfd/twl4030-madc.txt       | 18 ++++++++++++=
++
+>  drivers/mfd/twl4030-madc.c                         | 31
+> ++++++++++++++++++++--
 
-The patch itself looks good to me, so acked.
+Please separate these into different patches.
 
--Tero
+>  2 files changed, 47 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/twl4030-mad=
+c.txt
+
+<snip>
+
+> +++ b/drivers/mfd/twl4030-madc.c
+> @@ -695,6 +695,29 @@ static int twl4030_madc_set_power(struct twl4030=
+_madc_data *madc, int on)
+>  	return 0;
+>  }
+> =20
+> +#ifdef CONFIG_OF
+
+I believe we're heading for a more:
+
+  if (IS_ENABLED(CONFIG_OF))
+
+=2E.. approach. I won't enforce it, but please consider using it.
+
+> +static struct twl4030_madc_platform_data *
+> +	twl4030_madc_of_parse(struct platform_device *pdev)
+> +{
+> +	struct twl4030_madc_platform_data *pdata;
+> +
+> +	pdata =3D devm_kzalloc(&pdev->dev,
+> +			sizeof(struct twl4030_madc_platform_data), GFP_KERNEL);
+
+s/struct twl4030_madc_platform_data/*pdata/
+
+> +	if (!pdata)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	pdata->irq_line =3D platform_get_irq(pdev, 0);
+
+Why weren't 'resources' used in the original implementation?
+
+> +	return pdata;
+> +}
+> +
+> +static const struct of_device_id twl4030_madc_dt_match_table[] =3D {
+> +	{ .compatible =3D "ti,twl4030-madc" },
+> +	{},
+> +};
+> +
+> +#endif
+> +
+>  /*
+>   * Initialize MADC and request for threaded irq
+>   */
+> @@ -706,8 +729,11 @@ static int twl4030_madc_probe(struct platform_de=
+vice *pdev)
+>  	u8 regval;
+> =20
+>  	if (!pdata) {
+> -		dev_err(&pdev->dev, "platform_data not available\n");
+> -		return -EINVAL;
+> +		pdata =3D twl4030_madc_of_parse(pdev);
+> +		if (!pdata) {
+
+And if you received -ENOMEM?
+
+> +			dev_err(&pdev->dev, "platform_data not available\n");
+> +			return -EINVAL;
+> +		}
+>  	}
+>  	madc =3D kzalloc(sizeof(*madc), GFP_KERNEL);
+>  	if (!madc)
+> @@ -807,6 +833,7 @@ static struct platform_driver twl4030_madc_driver=
+ =3D {
+>  	.driver =3D {
+>  		   .name =3D "twl4030_madc",
+>  		   .owner =3D THIS_MODULE,
+> +		   .of_match_table =3D of_match_ptr(twl4030_madc_dt_match_table),
+>  		   },
+>  };
+> =20
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
