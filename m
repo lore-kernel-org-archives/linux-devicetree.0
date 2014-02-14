@@ -1,177 +1,75 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH] [media] of: move common endpoint parsing to drivers/media
-Date: Fri, 14 Feb 2014 15:33:53 +0100
-Message-ID: <1392388433-11453-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Philipp Zabel <p.zabel@pengutronix.de>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v4 3/4] ARM: OMAP2+: add legacy display for omap3 DBB056
+Date: Fri, 14 Feb 2014 16:35:43 +0200
+Message-ID: <52FE29BF.9040307@ti.com>
+References: <1392387656-15186-1-git-send-email-chf.fritz@googlemail.com> <1392387656-15186-4-git-send-email-chf.fritz@googlemail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="0IPKaTqtmAitIxMGBUPfN13osjBusFdcI"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1392387656-15186-4-git-send-email-chf.fritz@googlemail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Christoph Fritz <chf.fritz@googlemail.com>
+Cc: bcousson@baylibre.com, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, Daniel Mack <zonque@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a new struct of_endpoint which is embedded in struct
-v4l2_of_endpoint and contains the endpoint properties that are not V4L2
-specific: port number, endpoint id, local device tree node.
-of_graph_parse_endpoint parses those properties and is used by
-v4l2_of_parse_endpoint, which just adds the V4L2 MBUS information
-to the containing v4l2_of_endpoint structure. of_graph_parse_endpoint
-is split out so that non-V4L2 drivers don't have to open code reading
-the port and endpoint ids from the reg properties.
+--0IPKaTqtmAitIxMGBUPfN13osjBusFdcI
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
----
- drivers/media/of_graph.c          | 32 ++++++++++++++++++++++++++++++++
- drivers/media/v4l2-core/v4l2-of.c | 16 +++-------------
- include/media/of_graph.h          | 20 ++++++++++++++++++++
- include/media/v4l2-of.h           |  9 +++------
- 4 files changed, 58 insertions(+), 19 deletions(-)
+Hi,
 
-diff --git a/drivers/media/of_graph.c b/drivers/media/of_graph.c
-index aa526d7..5d1448a 100644
---- a/drivers/media/of_graph.c
-+++ b/drivers/media/of_graph.c
-@@ -14,6 +14,38 @@
- #include <linux/kernel.h>
- #include <linux/of.h>
- #include <linux/types.h>
-+#include <media/of_graph.h>
-+
-+/**
-+ * of_graph_parse_endpoint() - parse common endpoint node properties
-+ * @node: pointer to endpoint device_node
-+ * @endpoint: pointer to the OF endpoint data structure
-+ *
-+ * All properties are optional. If none are found, we don't set any flags.
-+ * This means the port has a static configuration and no properties have
-+ * to be specified explicitly.
-+ * The caller should hold a reference to @node.
-+ */
-+int of_graph_parse_endpoint(const struct device_node *node,
-+			    struct of_endpoint *endpoint)
-+{
-+	struct device_node *port_node = of_get_parent(node);
-+
-+	memset(endpoint, 0, sizeof(*endpoint));
-+
-+	endpoint->local_node = node;
-+	/*
-+	 * It doesn't matter whether the two calls below succeed.
-+	 * If they don't then the default value 0 is used.
-+	 */
-+	of_property_read_u32(port_node, "reg", &endpoint->port);
-+	of_property_read_u32(node, "reg", &endpoint->id);
-+
-+	of_node_put(port_node);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(of_graph_parse_endpoint);
- 
- /**
-  * of_graph_get_next_endpoint() - get next endpoint node
-diff --git a/drivers/media/v4l2-core/v4l2-of.c b/drivers/media/v4l2-core/v4l2-of.c
-index f919db3..a338c88 100644
---- a/drivers/media/v4l2-core/v4l2-of.c
-+++ b/drivers/media/v4l2-core/v4l2-of.c
-@@ -127,17 +127,9 @@ static void v4l2_of_parse_parallel_bus(const struct device_node *node,
- int v4l2_of_parse_endpoint(const struct device_node *node,
- 			   struct v4l2_of_endpoint *endpoint)
- {
--	struct device_node *port_node = of_get_parent(node);
--
--	memset(endpoint, 0, offsetof(struct v4l2_of_endpoint, head));
--
--	endpoint->local_node = node;
--	/*
--	 * It doesn't matter whether the two calls below succeed.
--	 * If they don't then the default value 0 is used.
--	 */
--	of_property_read_u32(port_node, "reg", &endpoint->port);
--	of_property_read_u32(node, "reg", &endpoint->id);
-+	ret = of_graph_parse_endpoint(node, &endpoint->ep);
-+	endpoint->bus_type = 0;
-+	memset(&endpoint->bus, 0, sizeof(endpoint->bus));
- 
- 	v4l2_of_parse_csi_bus(node, endpoint);
- 	/*
-@@ -147,8 +139,6 @@ int v4l2_of_parse_endpoint(const struct device_node *node,
- 	if (endpoint->bus.mipi_csi2.flags == 0)
- 		v4l2_of_parse_parallel_bus(node, endpoint);
- 
--	of_node_put(port_node);
--
- 	return 0;
- }
- EXPORT_SYMBOL(v4l2_of_parse_endpoint);
-diff --git a/include/media/of_graph.h b/include/media/of_graph.h
-index 3bbeb60..2b233db 100644
---- a/include/media/of_graph.h
-+++ b/include/media/of_graph.h
-@@ -14,7 +14,21 @@
- #ifndef __LINUX_OF_GRAPH_H
- #define __LINUX_OF_GRAPH_H
- 
-+/**
-+ * struct of_endpoint - the OF graph endpoint data structure
-+ * @port: identifier (value of reg property) of a port this endpoint belongs to
-+ * @id: identifier (value of reg property) of this endpoint
-+ * @local_node: pointer to device_node of this endpoint
-+ */
-+struct of_endpoint {
-+	unsigned int port;
-+	unsigned int id;
-+	const struct device_node *local_node;
-+};
-+
- #ifdef CONFIG_OF
-+int of_graph_parse_endpoint(const struct device_node *node,
-+				struct of_endpoint *endpoint);
- struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
- 					struct device_node *previous);
- struct device_node *of_graph_get_remote_port_parent(
-@@ -22,6 +36,12 @@ struct device_node *of_graph_get_remote_port_parent(
- struct device_node *of_graph_get_remote_port(const struct device_node *node);
- #else
- 
-+static inline int of_graph_parse_endpoint(const struct device_node *node,
-+					struct of_endpoint *endpoint);
-+{
-+	return -ENOSYS;
-+}
-+
- static inline struct device_node *of_graph_get_next_endpoint(
- 					const struct device_node *parent,
- 					struct device_node *previous)
-diff --git a/include/media/v4l2-of.h b/include/media/v4l2-of.h
-index 8174282..d61def1 100644
---- a/include/media/v4l2-of.h
-+++ b/include/media/v4l2-of.h
-@@ -18,6 +18,7 @@
- #include <linux/types.h>
- #include <linux/errno.h>
- 
-+#include <media/of_graph.h>
- #include <media/v4l2-mediabus.h>
- 
- struct device_node;
-@@ -50,17 +51,13 @@ struct v4l2_of_bus_parallel {
- 
- /**
-  * struct v4l2_of_endpoint - the endpoint data structure
-- * @port: identifier (value of reg property) of a port this endpoint belongs to
-- * @id: identifier (value of reg property) of this endpoint
-- * @local_node: pointer to device_node of this endpoint
-+ * @ep: struct of_endpoint containing port, id, and local of_node
-  * @bus_type: bus type
-  * @bus: bus configuration data structure
-  * @head: list head for this structure
-  */
- struct v4l2_of_endpoint {
--	unsigned int port;
--	unsigned int id;
--	const struct device_node *local_node;
-+	struct of_endpoint ep;
- 	enum v4l2_mbus_type bus_type;
- 	union {
- 		struct v4l2_of_bus_parallel parallel;
--- 
-1.8.5.3
+On 14/02/14 16:20, Christoph Fritz wrote:
+> Full device tree support for omapdss is not yet accomplished. Until
+> then, init display by legacy platform code.
+>=20
+> Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
+> ---
+>  arch/arm/mach-omap2/dss-common.c   |   49 ++++++++++++++++++++++++++++=
+++++++++
+>  arch/arm/mach-omap2/dss-common.h   |    1 +
+>  arch/arm/mach-omap2/pdata-quirks.c |    8 +++++-
+>  3 files changed, 57 insertions(+), 1 deletion(-)
+
+I'm not nack'ing this, but I'm again hoping to get DSS DT support for
+3.15. I haven't done any bigger changes to my branch for some time now,
+and I'm just waiting to get some comments/acks for the bindings.
+
+So I suggest to also try out DSS DT for your board, based on the latest
+DSS DT branch:
+
+git://git.kernel.org/pub/scm/linux/kernel/git/tomba/linux.git work/dss-dt=
+
+
+That way you have it ready and tested if DSS DT goes forward.
+
+ Tomi
+
+
+
+--0IPKaTqtmAitIxMGBUPfN13osjBusFdcI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJS/im/AAoJEPo9qoy8lh71fwsQAKK7Ji5aWGdM4uKddovDuJUw
+n5TX66IB6VpAvWK5qC9CeAqm4LFby0wdJ/RNJE7z3I466SxHE5hAZkbKux4H0+0K
+KcCmDegglqmlfXL04F1g+ZWvWBJgKUdzaCtgjzuapdyqRIgPSiPpd1qrR6w6NC6M
++9sX+MrofS+4c3bsLvoTgPEcv4N65/S5YfynvZgBVEGD7J5XimZivPYgmcuYMSgt
+gJHuZ2U5+PtK+qFYkcgaFmELhZmvo0JwprYqpL1wnJBFj3MSI4ODfyIMtzygjSi7
+DBiBOGyRx7FGOy7gH8NLksFhqAX0YppyXdbOMS3pGW1DUs5J92g6oGm3Nm5gx1X4
+/RWxItfLSnKpZx6BZ17Q1y0xzNqjyWlAcbE3f4k77Iz8GF2bCiSifY3cUyKAE/0O
+0pEy94lzOvW3UlRHRJJC3lPyJsH9xWxAh4t/aJy3FYNYvJmslGEQF7WsCQWezmdV
+sTN2dyYUVaDVGjKTE1/XJj+QKufJICGVSOX5v48ePMcnXGFLf1fp2CiFl0n99fS4
+G9vyZpvZVPeX4m00Meo6az+02K40FqoLeF1rOaFozDcodmxLb0H+kDza0oR67HC0
+EU6FPeD0Fv3BGuO9KQDXQM5Pm+NcF3XscYvSk8RUonyWyOOBBKEgxgPhec6AMhA5
+IGp9WwAtduD5g7bqSt2e
+=2UK5
+-----END PGP SIGNATURE-----
+
+--0IPKaTqtmAitIxMGBUPfN13osjBusFdcI--
