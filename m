@@ -1,57 +1,76 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 3/4] Regulators: TPS65218: Add Regulator driver for
- TPS65218 PMIC
-Date: Fri, 14 Feb 2014 20:21:08 +0000
-Message-ID: <20140214202108.GI4451@sirena.org.uk>
-References: <1391665814-18814-1-git-send-email-j-keerthy@ti.com>
- <1391665814-18814-4-git-send-email-j-keerthy@ti.com>
+Subject: Re: [PATCH 10/10] Documentation: Add device tree bindings for TI LMU
+ devices
+Date: Fri, 14 Feb 2014 20:50:27 +0000
+Message-ID: <20140214205027.GT4451@sirena.org.uk>
+References: <1392359564-7205-1-git-send-email-milo.kim@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6b3yLyRKT1M6kiA0"
+	protocol="application/pgp-signature"; boundary="Yg/4YF7t1SayoUom"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1391665814-18814-4-git-send-email-j-keerthy@ti.com>
+In-Reply-To: <1392359564-7205-1-git-send-email-milo.kim@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, sameo@linux.intel.com, lee.jones@linaro.org, grant.likely@linaro.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+To: Milo Kim <milo.kim@ti.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Jingoo Han <jg1.han@samsung.com>, Bryan Wu <cooloney@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
 
---6b3yLyRKT1M6kiA0
+--Yg/4YF7t1SayoUom
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 06, 2014 at 11:20:13AM +0530, Keerthy wrote:
-> This patch adds support for TPS65218 PMIC regulators.
->=20
-> The regulators set consists of 6 DCDCs and 1 LDO. The output
-> voltages are configurable and are meant to supply power to the
-> main processor and other components.
+On Fri, Feb 14, 2014 at 03:32:44PM +0900, Milo Kim wrote:
+> Bindings for TI LMU, backlight, LM3631 regulator and LM3633 LED are added.
 
-Applied, thanks.  Please use subject lines consistent with the
-subsystem.
+Ah, sorry - I didn't notice that there were several different binding
+documents in the patch.
 
---6b3yLyRKT1M6kiA0
+> @@ -0,0 +1,49 @@
+> +TI LMU LM3631 regulator device tree bindings
+> +
+> +Required properties:
+> +  - compatible: "ti,lm3631-regulator"
+> +
+> +Optional properties:
+> +  - regulator-name
+> +  - regulator-min-microvolt
+> +  - regulator-max-microvolt
+> +  - regulator-always-on
+> +  - regulator-boot-on
+> +
+> +  For those properties, please refer to:
+> +  Documentation/devicetree/bindings/regulator/regulator.txt
+
+This doesn't correspond to the example which says that there is an
+optional property "regulators" which can contain regualators lcd_boost,
+lcd_vpos and lcd_vneg.  It's also better to not enumerate all the
+standard properties but just refer to the generic document (as you do).
+That avoids confusion if new properties are added to the generic
+regulator bindings.
+
+The actual binding is fine, it's just the way it's documented.
+
+--Yg/4YF7t1SayoUom
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJS/nqxAAoJELSic+t+oim9HuMQAJ1V+nCKHsVPaI/Gt13j4UI3
-SupKWLr7jay5rtAPV5Yun7Lugdpua8q2PL3v2aWEEE//SkAxvINNyKvcJTbTyZuh
-QzLJORzi4u4Zk/nb3jOfEZ/5LVI8mkZ3Danv4PlIUHzcoTLcfA7hF4UCX4le20WY
-DGgj4xQZ/OVyRe0Lbdy7LukwTzeJ5WUJvos9l57QXItrazridd8jWsl3G/4iyKcH
-xbYMxDgp1cdfH0JqWjIPjQFeXSa1RRotyo5ru0aeBqDiRZQHi7nPqsnnWfqdphTF
-2Fy8KJrgnSpFXD9wGQr1jwc7kjQRhzZSHyPaBlEvK9DiFHg6rJt125SNRPXNzRHh
-SQ0QGrVGB9tKAICWwz/bkT9Sx+7nebTLriBR/oUEodZmRvno3poSRlxbRPKnc3xN
-ZES51spULEWwZIuV703sp+z8xieN5uh5V95zx11TxDJblyL/PFAwLhVsmWm6ZL29
-AFwW9v1LD+47anX1IIcg25djdKFtRnkzCMdP90iG3xXMsqOGsal6qAt/JwRSt5xk
-WPCY1C8pJp9FJZPtiMYbSXggTNh+t3ql6I/u47jxQTn3feB7TLneCNams+8tSp0M
-qHHuieLP1krbON0kxLryVAXqPe9OiwCwNLjMQAzPZuTVMGxh+gqB6hCWHCCBq9YX
-ezsjSO9p2Nianw6bOAFZ
-=PXmD
+iQIcBAEBAgAGBQJS/oGQAAoJELSic+t+oim92qAP/0VrAUyl8xUcrnOMw4f2MPo3
+nWu1+VZvNGktXdGJgUmvFq/MZlpEehjhxpToe/SnJg8hYXtuWaVPPVeNMVXggrHh
+fUsuHtdsLWH4djXFBcPJCgBqRrmsjGMX0VODlyKfpP6IjIKLsjHC2INvwgsZY1sP
+duNEM7VAGO7zOkY9fEPbo629WkLXkiHiLZbwxiLVrNG4bOhsD0w9R4T2Vwq3p8EJ
+tsi44lzBjIGnc2+LaoFklZCEbggGA+eBPmT2kAbQuQiMhyHx4RIDJQ51hY/Pn/nV
+LAul0biMNUxPOEbDefcUzF1b6YdzZtZWJhdT9DwCp8pjWCCoiLlHjzDR9ypjCQBd
+yVEmoxvneESJ8zF6lno8Q9SMyO+zdgxm88icjcw6OzFHRKdyBINGrmNUJcvjx607
+Z5WRJlxftCwffuVBwL1gWGENWlJ/UMTAImA0T7ipCeHfC3sNAjBpr7L6xsuVbqBT
+7t7kTGlrehDDfqEX6bgMaBynycsRl8zH9VOLQteCyvPrjVhhr+s1LEKG9dS03bOZ
+Ze0l+Lyq1OYbqJvBUKHtz9asVed/KEAUPL0BBbQJpM/fxipRoS2r8v7UNnI0AQSf
+fKHZUzTXxfTvDsB3KCX4DgOY+JFExz3Z+C5DA2MIGMOwLdC8YHSfKHzVKpS5c6NZ
+Z5ljJ4Upsl6V1GDEOVoY
+=IIkP
 -----END PGP SIGNATURE-----
 
---6b3yLyRKT1M6kiA0--
+--Yg/4YF7t1SayoUom--
