@@ -1,32 +1,45 @@
-From: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Subject: [PATCH 1/2] staging: iio: hmc5843: Add all available models to device tree id table.
-Date: Fri, 14 Feb 2014 15:25:28 +0100
-Message-ID: <1392387929-31491-1-git-send-email-marek@goldelico.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+From: Marek Belisko <marek@goldelico.com>
+Subject: [PATCH 2/2] Documentation: iio: Extend documentation for hmc5843
+ bindings.
+Date: Fri, 14 Feb 2014 15:25:29 +0100
+Message-ID: <1392387929-31491-2-git-send-email-marek@goldelico.com>
+References: <1392387929-31491-1-git-send-email-marek@goldelico.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1392387929-31491-1-git-send-email-marek@goldelico.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, jic23@kernel.org
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-iio@vger.kernel.org, hns@goldelico.com, linux-kernel@vger.kernel.org, pmeerw@pmeerw.net, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Signed-off-by: Marek Belisko <marek@goldelico.com>
 ---
- drivers/staging/iio/magnetometer/hmc5843.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/iio/magnetometer/hmc5843.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/staging/iio/magnetometer/hmc5843.c b/drivers/staging/iio/magnetometer/hmc5843.c
-index d4f4dd9..f595fdc 100644
---- a/drivers/staging/iio/magnetometer/hmc5843.c
-+++ b/drivers/staging/iio/magnetometer/hmc5843.c
-@@ -630,7 +630,9 @@ static const struct i2c_device_id hmc5843_id[] = {
- MODULE_DEVICE_TABLE(i2c, hmc5843_id);
+diff --git a/Documentation/devicetree/bindings/iio/magnetometer/hmc5843.txt b/Documentation/devicetree/bindings/iio/magnetometer/hmc5843.txt
+index 90d5f34..b8cbdd5 100644
+--- a/Documentation/devicetree/bindings/iio/magnetometer/hmc5843.txt
++++ b/Documentation/devicetree/bindings/iio/magnetometer/hmc5843.txt
+@@ -3,6 +3,9 @@
+ Required properties:
  
- static const struct of_device_id hmc5843_of_match[] = {
--	{ .compatible = "honeywell,hmc5843" },
-+	{ .compatible = "honeywell,hmc5843", .data = (void *)HMC5843_ID },
-+	{ .compatible = "honeywell,hmc5883", .data = (void *)HMC5883_ID },
-+	{ .compatible = "honeywell,hmc5883l", .data = (void *)HMC5883L_ID },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, hmc5843_of_match);
+   - compatible : should be "honeywell,hmc5843"
++  Other models which are supported with driver are:
++	"honeywell,hmc5883"
++	"honeywell,hmc5883l"
+   - reg : the I2C address of the magnetometer - typically 0x1e
+ 
+ Optional properties:
 -- 
 1.8.3.2
