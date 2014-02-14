@@ -1,71 +1,74 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ARM: sunxi: dt: Convert to the new i2c compatibles
-Date: Fri, 14 Feb 2014 08:44:07 +0100
-Message-ID: <20140214074407.GA2569@katana>
-References: <1391680285-16668-1-git-send-email-maxime.ripard@free-electrons.com>
- <1391680285-16668-3-git-send-email-maxime.ripard@free-electrons.com>
- <20140213082630.GA3119@katana>
- <20140213225248.GB15350@lukather>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v2] can: xilinx CAN controller support.
+Date: Fri, 14 Feb 2014 09:55:26 +0100
+Message-ID: <52FDD9FE.8040908@monstr.eu>
+References: <\> <0dc128ac-e5cd-47bd-9ab1-3a545c3e2043@CO9EHSMHS012.ehs.local> <52FD1B16.6020600@pengutronix.de>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="pf9I7BMVVzbSWLtt"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140213225248.GB15350@lukather>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+ protocol="application/pgp-signature";
+ boundary="cafLha3RjWhHeNvLUaACRjLplUrb21vHE"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <52FD1B16.6020600@pengutronix.de>
+Sender: netdev-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Kedareswara rao Appana <appana.durga.rao@xilinx.com>, wg@grandegger.com, michal.simek@xilinx.com, grant.likely@linaro.org, robh+dt@kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kedareswara rao Appana <appanad@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-
---pf9I7BMVVzbSWLtt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--cafLha3RjWhHeNvLUaACRjLplUrb21vHE
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
+Hi Marc,
 
-> > For non-a10, That should be at least
-> >=20
-> > 	compatible =3D "allwinner,sun4i-a13-i2c", "allwinner,sun4i-a10-i2c";
-> >=20
-> > or
-> >=20
-> > 	compatible =3D "allwinner,sun4i-a13-i2c", "allwinner,sun4i-i2c";
-> >=20
-> > depending on the outcome above.
-> >=20
-> > Or is my knowledge outdated already?
-> >=20
+>> +	int waiting_ech_skb_num;
+>> +	int xcan_echo_skb_max_tx;
+>> +	int xcan_echo_skb_max_rx;
+>> +	struct napi_struct napi;
+>> +	spinlock_t ech_skb_lock;
+>> +	u32 (*read_reg)(const struct xcan_priv *priv, int reg);
+>> +	void (*write_reg)(const struct xcan_priv *priv, int reg, u32 val);
 >=20
-> Since they are strictly compatible, we don't need to introduce any
-> different compatible string here.
+> Please remove read_reg, write_reg, as long as there isn't any BE suppor=
+t
+> in the driver, call them directly.
 
-You never know all errata in advance. From what I know, one should
-always use the specfic naming first, and then the generic fallback. So,
-in case a distinction is needed later (think errata), then one doesn't
-need to change the devicetrees.
+That's not entirely truth. If you look at Microblaze then you will see
+that Microblaze can be BE and LE.
+There is just missing endian detection which we will add to the next vers=
+ion.
+
+But because MB io helper functions are broken for a while you should be
+able to use this driver on both endianess.
+
+btw: I would prefer to use ioread32 and ioread32be instead of readl.
+Is it OK for you?
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
 
 
---pf9I7BMVVzbSWLtt
+
+--cafLha3RjWhHeNvLUaACRjLplUrb21vHE
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iQIcBAEBAgAGBQJS/clHAAoJEBQN5MwUoCm21xkQAJEvbHtb3Mkklv4qLf+2QQvX
-X5kXko4ZnmCAZQg0Fe7e1UR+pd23XVWa4PthyMbubN8gehP6W2N91WeEx+QMgsFT
-ZzHdcklWU/klZgmFt2ebQ7qvRZ4XdGwzK+i1UMyD5LpR3A6fVxX6AHOBh88Mo4+I
-0AzsvJss5asQZcs5sroiXYwLTQ7qRwmBlYhkvyng51AwKVDK+h+0++c4GTvpGWn/
-A3vdsFVc4Tf7p5xmEhFQBfODanRBBQSifMwIJ7w8ra8EP/91qzc2oU8ImaToeswQ
-YB6M1GfuMP3ICPt9/30NHIJoqmlx0RXlTBYhQrTxKqDZB1NVO/UgCGDl7FbS+UwT
-DRXvOaHLK9GchJ4zCTqScrPw4rZD2OHQCB67NRl/t7ds2mNVuZz5zdeQ6fFHbxDt
-jHpZy5/7zZKs47NspcRclqJuEFui7CuB82WvB0WaG0Wk2EupDr9mL3dNc9mYb+k3
-ovYGFp0GC0gf+MAdN63liEagCp091RkJx6EjR4NEfNp9erosJYVZpXLcdp6icHuE
-5mjMtr9TKK0OmfuyYky+ddnnfCIVx+eNa4ANCtf7nqdXKU+99gd80KoF6oggvE5V
-iMoPIkpFn/y6Cmdqke1e+1u+sxf6QmSgsaybPK9fsAuKlj74hNInrB5gOLpfSmoV
-jqjgShw63d/1yVsoBYT4
-=oeWB
+iEYEARECAAYFAlL92f4ACgkQykllyylKDCFSbwCaAmXxeKjT7a64na83jdx4Dwv4
+t+gAoImSI59tzdRYMwx5PuSO2r2WBIdc
+=rhln
 -----END PGP SIGNATURE-----
 
---pf9I7BMVVzbSWLtt--
+--cafLha3RjWhHeNvLUaACRjLplUrb21vHE--
