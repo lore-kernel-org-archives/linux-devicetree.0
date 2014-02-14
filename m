@@ -1,51 +1,122 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC 1/6] mailbox: add core framework
-Date: Fri, 14 Feb 2014 20:48:25 +0100
-Message-ID: <201402142048.25456.arnd@arndb.de>
-References: <1391820619-25487-1-git-send-email-courtney.cavin@sonymobile.com> <1765844.1kjKsO2Rzo@wuerfel> <20140212183143.GD1706@sonymobile.com>
+From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+Subject: Re: How to select between different display timings?
+Date: Fri, 14 Feb 2014 21:06:35 +0100
+Message-ID: <20140214210635.1561d4b6@crub>
+References: <1375966287-6784-1-git-send-email-LW@KARO-electronics.de>
+	<1375966287-6784-8-git-send-email-LW@KARO-electronics.de>
+	<52FE1F2D.4010102@de.bosch.com>
+	<20140214150208.12417b11@ipc1.ka-ro>
+	<52FE53DD.7040102@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140212183143.GD1706@sonymobile.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Courtney Cavin <courtney.cavin@sonymobile.com>
-Cc: Rob Herring <robherring2@gmail.com>, Josh Cartwright <joshc@codeaurora.org>, "s-anna@ti.com" <s-anna@ti.com>, Rob Herring <rob.herring@calxeda.com>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, Mark Langsdorf <mark.langsdorf@calxeda.com>, Tony Lindgren <tony@atomide.com>, "omar.ramirez@copitl.com" <omar.ramirez@copitl.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52FE53DD.7040102-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 12 February 2014, Courtney Cavin wrote:
-> On Tue, Feb 11, 2014 at 09:35:01AM +0100, Arnd Bergmann wrote:
-> > On Monday 10 February 2014 16:23:48 Courtney Cavin wrote:
+On Fri, 14 Feb 2014 18:35:25 +0100
+Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+...
+> > You need to set the property 'native-mode' to the phandle of the
+> > display-timings entry like marked above.
+> 
+> Hmm, let's see if we talk about the same thing ;) Let me rephrase my 
+> questions:
+> 
+> Using above example and booting a system with the resulting .dtb, 
+> timing5 is selected at boot time, correct?
 
-> Then again, I think that the context management stuff is the exception as well,
-> and I think that can/should also be handled in a higher level.  Regardless, I
-> went ahead and drafted the async flags idea out anyway, so here's some
-> pseudo-code.  I also tried to shoe-horn in 'peek', and you can see how that
-> turns out.  Let me know if this is something like what you had in mind.
+yes.
 
-The async implementation looks good to me, assuming we actually need both
-sync and async operations, which I can't tell for sure.
+> Assuming I want to use timing1 instead: who would set when the 
+> property 'native-mode' to &timing1?
+> 
+> Can the switch to
+> 
+> native-mode = <&timing1>;
+> 
+> only be done at compile time of the dts -> dtb? Or can this be done at 
+> boot/kernel run time, too?
 
-For the peek operation, it wouldn't work for the ethernet case, which
-has to call it from atomic context in net_rx_action.
+it could be done in U-Boot before booting the kernel. You can load
+the dtb and patch the property as needed, i.e.:
 
-> 	/**
-> 	 * so this is where this lock makes things difficult, as this function
-> 	 * might_sleep(), but only really because of the lock.  Either we can
-> 	 * remove the lock and force the adapter to do its own locking
-> 	 * spinlock-style, or we can accept the sleep here, which seems a bit
-> 	 * stupid in a peek function.  Neither option is good.  Additionally,
-> 	 * there's no guarantee that the adapter doesn't operate over a bus
-> 	 * which itself might_sleep(), exacerbating the problem.
-> 	 */
-> 	mutex_lock(&mbox->adapter->lock);
-> 	rc = mbox->adapter->ops->peek_message(mbox->adapter, mbox->chan, msg);
-> 	mutex_lock(&mbox->adapter->lock);
+U-Boot > tftp 107f0000 ${fdtfile}
+U-Boot > fdt addr 107f0000
+U-Boot > fdt pri /soc/aips-bus@02000000/ldb@020e0008/lvds-channel@0/display-timings
+display-timings {
+	native-mode = <0x0000000d>;
+	hsd100pxn1 {
+		clock-frequency = <0x03dfd240>;
+		hactive = <0x00000400>;
+		vactive = <0x00000300>;
+		hback-porch = <0x000000dc>;
+		hfront-porch = <0x00000028>;
+		vback-porch = <0x00000015>;
+		vfront-porch = <0x00000007>;
+		hsync-len = <0x0000003c>;
+		vsync-len = <0x0000000a>;
+		linux,phandle = <0x0000000d>;
+		phandle = <0x0000000d>;
+	};
+	wvga {
+		clock-frequency = <0x019bfcc0>;
+		hactive = <0x00000320>;
+		vactive = <0x000001e0>;
+		hback-porch = <0x00000028>;
+		hfront-porch = <0x0000003c>;
+		vback-porch = <0x0000000a>;
+		vfront-porch = <0x0000000a>;
+		hsync-len = <0x00000014>;
+		vsync-len = <0x0000000a>;
+		hsync-active = <0x00000000>;
+		vsync-active = <0x00000000>;
+		de-active = <0x00000001>;
+		pixelclk-active = <0x00000000>;
+		linux,phandle = <0x0000000e>;
+		phandle = <0x0000000e>;
+	};
+};
 
-If we decide that peek() must not sleep, any driver that operates on a
-slow bus could just always report "no data" here.
- 
-Moving the locking into the mbox driver here sounds appropriate.
+U-Boot > fdt set /soc/aips-bus@02000000/ldb@020e0008/lvds-channel@0/display-timings native-mode <0x0000000e>
 
-	Arnd
+U-Boot > fdt list /soc/aips-bus@02000000/ldb@020e0008/lvds-channel@0/display-timings/          
+display-timings {
+	native-mode = <0x0000000e>;
+	hsd100pxn1 {
+	};
+	wvga {
+	};
+};
+
+native-mode is referencing second timing node now.
+
+But note that dtc could eliminate the phandles in the nodes if
+these are not referenced in dts. To avoid this, the nodes could
+contain a self-reference:
+
+ timing1: wvga {
+   ...
+   linux,phandle = <&timing1>;
+ };
+
+> In the end, I'm looking for a way to have several timings like above 
+> in the device tree, and select one at kernel boot time based on the 
+> display detected. Would this be possible?
+
+You could add a function in U-Boot to detect the display and
+update the dtb before booting. This function can be called
+before booting if you define CONFIG_OF_BOARD_SETUP in the
+U-Boot config file for your board and provide ft_board_setup()
+in your board code.
+
+HTH,
+
+Anatolij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
