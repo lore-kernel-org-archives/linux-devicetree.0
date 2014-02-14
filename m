@@ -1,89 +1,88 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/4] phy: miphy365x: Add Device Tree bindings for the MiPHY365x
-Date: Fri, 14 Feb 2014 11:23:53 +0000
-Message-ID: <1392377036-12816-1-git-send-email-lee.jones@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: alexandre.torgue-qxv4g6HH51o@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 3/4] ARM: DT: STi: Add DT node for MiPHY365x
+Date: Fri, 14 Feb 2014 11:23:55 +0000
+Message-ID: <1392377036-12816-3-git-send-email-lee.jones@linaro.org>
+References: <1392377036-12816-1-git-send-email-lee.jones@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1392377036-12816-1-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: alexandre.torgue@st.com, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@st.com>
 List-Id: devicetree@vger.kernel.org
 
 The MiPHY365x is a Generic PHY which can serve various SATA or PCIe
 devices. It has 2 ports which it can use for either; both SATA, both
 PCIe or one of each in any configuration.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree@vger.kernel.org
+Cc: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- .../devicetree/bindings/phy/phy-miphy365x.txt      | 54 ++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-miphy365x.txt
+ arch/arm/boot/dts/stih416-b2020-revE.dts |  6 +++++-
+ arch/arm/boot/dts/stih416-b2020.dts      |  6 ++++++
+ arch/arm/boot/dts/stih416.dtsi           | 13 +++++++++++++
+ 3 files changed, 24 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-miphy365x.txt b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
-new file mode 100644
-index 0000000..96f269f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-miphy365x.txt
-@@ -0,0 +1,54 @@
-+STMicroelectronics STi MIPHY365x PHY binding
-+============================================
-+
-+This binding describes a miphy device that is used to control PHY hardware
-+for SATA and PCIe.
-+
-+Required properties:
-+- compatible: Should be "st,miphy365x-phy"
-+- #phy-cells: Should be 2 (See second example)
-+		First cell is the port number; MIPHY_PORT_{0,1}
-+		Second cell is device type; MIPHY_TYPE_{SATA,PCI}
-+- reg:	      Address and length of the register set for the device
-+- reg-names:  The names of the register addresses corresponding to the
-+	      registers filled in "reg"
-+		Options are; sata{0,1} and pcie{0,1} (See first example)
-+- st,syscfg : Should be a phandle of the system configuration register group
-+	      which contain the SATA, PCIe mode setting bits
-+
-+Optional properties:
-+- st,sata-gen	     : Generation of locally attached SATA IP. Expected values
-+		       are {1,2,3). If not supplied generation 1 hardware will
-+		       be expected
-+- st,pcie-tx-pol-inv : Bool property to invert the polarity PCIe Tx (Txn/Txp)
-+- st,sata-tx-pol-inv : Bool property to invert the polarity SATA Tx (Txn/Txp)
-+
-+Example:
-+
-+	miphy365x_phy: miphy365x@0 {
-+		compatible = "st,miphy365x-phy";
-+		#phy-cells = <2>;
-+		reg =	<0xfe382000 0x100>,
-+			<0xfe38a000 0x100>,
-+			<0xfe394000 0x100>,
-+			<0xfe804000 0x100>;
-+		reg-names = "sata0", "sata1", "pcie0", "pcie1";
-+		st,syscfg= <&syscfg_rear>;
+diff --git a/arch/arm/boot/dts/stih416-b2020-revE.dts b/arch/arm/boot/dts/stih416-b2020-revE.dts
+index a874570..dbe67fa 100644
+--- a/arch/arm/boot/dts/stih416-b2020-revE.dts
++++ b/arch/arm/boot/dts/stih416-b2020-revE.dts
+@@ -32,6 +32,10 @@
+ 		ethernet1: ethernet@fef08000 {
+ 			snps,reset-gpio 	= <&PIO0 7>;
+ 		};
+-	};
+ 
++		miphy365x_phy: miphy365x@0 {
++			st,pcie_tx_pol_inv = <1>;
++			st,sata_gen = "gen3";
++		};
 +	};
-+
-+Specifying phy control of devices
-+=================================
-+
-+Device nodes should specify the configuration required in their "phys"
-+property, containing a phandle to the miphy device node, a port number
-+and a device type.
-+
-+Example:
+ };
+diff --git a/arch/arm/boot/dts/stih416-b2020.dts b/arch/arm/boot/dts/stih416-b2020.dts
+index 276f28d..fd9cbad 100644
+--- a/arch/arm/boot/dts/stih416-b2020.dts
++++ b/arch/arm/boot/dts/stih416-b2020.dts
+@@ -13,4 +13,10 @@
+ 	model = "STiH416 B2020";
+ 	compatible = "st,stih416", "st,stih416-b2020";
+ 
++	soc {
++		miphy365x_phy: miphy365x@0 {
++			st,pcie_tx_pol_inv = <1>;
++			st,sata_gen = "gen3";
++		};
++	};
+ };
+diff --git a/arch/arm/boot/dts/stih416.dtsi b/arch/arm/boot/dts/stih416.dtsi
+index 85b8063..9fd8efb 100644
+--- a/arch/arm/boot/dts/stih416.dtsi
++++ b/arch/arm/boot/dts/stih416.dtsi
+@@ -9,6 +9,8 @@
+ #include "stih41x.dtsi"
+ #include "stih416-clock.dtsi"
+ #include "stih416-pinctrl.dtsi"
 +
 +#include <dt-bindings/phy/phy-miphy365x.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/reset-controller/stih416-resets.h>
+ / {
+@@ -140,5 +142,16 @@
+ 			clocks		= <&CLK_S_ICN_REG_0>;
+ 		};
+ 
++		miphy365x_phy: miphy365x@0 {
++			compatible      = "st,miphy365x-phy";
++			reg        	= <0xfe382000 0x100>,
++					  <0xfe38a000 0x100>,
++					  <0xfe394000 0x100>,
++					  <0xfe804000 0x100>;
++			reg-names  	= "sata0", "sata1", "pcie0", "pcie1";
 +
-+	sata0: sata@fe380000 {
-+		...
-+		phys	  = <&miphy365x_phy MIPHY_PORT_0 MIPHY_TYPE_SATA>;
-+		...
-+	};
++			#phy-cells 	= <2>;
++			st,syscfg  	= <&syscfg_rear>;
++		};
+ 	};
+ };
 -- 
 1.8.3.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
