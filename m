@@ -1,84 +1,51 @@
-From: Rahul Sharma <r.sh.open@gmail.com>
-Subject: Re: [PATCH v3 3/3] ARM: dts: add dts files for xyref5260 board
-Date: Sat, 15 Feb 2014 14:54:45 +0530
-Message-ID: <CAPdUM4ONDr6x+CTXGXR_MzYAdktjp+4TO7FL+mJd3UdqFNkTEw@mail.gmail.com>
-References: <1392385032-22015-1-git-send-email-rahul.sharma@samsung.com>
-	<1392385032-22015-4-git-send-email-rahul.sharma@samsung.com>
-	<52FE672A.6070803@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 10/10] Documentation: Add device tree bindings for TI LMU
+ devices
+Date: Fri, 14 Feb 2014 20:44:24 +0000
+Message-ID: <20140214204424.GS4451@sirena.org.uk>
+References: <1392359564-7205-1-git-send-email-milo.kim@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <52FE672A.6070803@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kukjin Kim <kgene.kim@samsung.com>, sunil joshi <joshi@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="gh9b96O0vZdbsJLX"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1392359564-7205-1-git-send-email-milo.kim@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Milo Kim <milo.kim@ti.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Jingoo Han <jg1.han@samsung.com>, Bryan Wu <cooloney@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Tomasz,
 
-On 15 February 2014 00:27, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> Hi Rahul,
->
-> The patch looks good, except one issue pointed inline.
->
->
-> On 14.02.2014 14:37, Rahul Sharma wrote:
->>
->> diff --git a/arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts
->> b/arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts
->> new file mode 100644
->> index 0000000..c4efc1e
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts
->
->
-> [snip]
->
->
->> +&mmc_0 {
->> +       status = "okay";
->> +       num-slots = <1>;
->> +       broken-cd;
->> +       bypass-smu;
->> +       supports-highspeed;
->> +       supports-hs200-mode; /* 200 Mhz */
->> +       fifo-depth = <0x40>;
->
->
-> This is a SoC-level property and it is already specified in your
-> exynos5260.dtsi.
->
+--gh9b96O0vZdbsJLX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Tomasz,
+On Fri, Feb 14, 2014 at 03:32:44PM +0900, Milo Kim wrote:
+> Bindings for TI LMU, backlight, LM3631 regulator and LM3633 LED are added.
 
-yea correct. I will put these inside SoC node.
+I don't see actual documentation for the regulators here?  They're there
+in the examples but not in the binding section.
 
-Regards,
-Rahul Sharma.
+--gh9b96O0vZdbsJLX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
->
->> +       card-detect-delay = <200>;
->> +       samsung,dw-mshc-ciu-div = <3>;
->> +       samsung,dw-mshc-sdr-timing = <0 4>;
->> +       samsung,dw-mshc-ddr-timing = <0 2>;
->> +       pinctrl-names = "default";
->> +       pinctrl-0 = <&sd0_rdqs &sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4
->> &sd0_bus8>;
->> +
->> +       slot@0 {
->> +               reg = <0>;
->> +               bus-width = <8>;
->> +       };
->> +};
->> +
->> +&mmc_2 {
->> +       status = "okay";
->> +       num-slots = <1>;
->> +       supports-highspeed;
->> +       fifo-depth = <0x40>;
->
->
-> Ditto.
->
-> Best regards,
-> Tomasz
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS/oAlAAoJELSic+t+oim91OIP/0v01vP3RZOAg8r0wJUUL0bz
+TaP7yARbibvdosSvVS0e/pJtUEqAw3+hqgeFpPrl2h9zpaT/lmeam7/EajZKZJno
+VntTVgLMyUHMq9hRuoof/g6fNRp74b6uDJyVgHXTEcmZL+TZ35S7jWfJJNhywBcX
+vOqWyKOm9l/4dxISKXcOyCDAIZD6EbIcYKGIlUxplMGkISH1/O5rAlX8nau8oBTc
+ECPhwSVKudb1B4GLI19TUFAoZ2/lyj+gDYhGcZ5m2ZIyGOgfhve0h2gTlwg7L1O+
+WQEa7KAuWYbcgDW7zR8I1Hs9i7h1+NB7JiqePsWCCuR31MB6Eh9543hWYATNcY2Z
+Z9Bpf8CzmJiDeKO3tWjNBxoHCLvPrPqcE+ZFzVcINOleByEnmlT7pN3yELeGenij
+6gEfkdsAfb5la+4ILitqUwUBsbRkY/GeytOq1MFTM+dgvGoy/tZ+fsPY37DxEQkX
+fa3l5L0r1TbHKK+7HzcUHpdVOVvMjyLA/9XM9qhvF5FcZPexEK1WRBUSpWtO1Mb0
+v3ogQrv6tS4WzHa/UFud118omrI2WaWoXzRgz73rfkwNFeMU45s/D2q9+NnNNB2m
+BcHmBSUbzK3HFzXa4+tyMswVu4cQZYYj3NqqsKHwwZXKaBY7nd7SGNG4VC+pB1CH
+5dbKovTIRLz8YBTjIQBw
+=ptHB
+-----END PGP SIGNATURE-----
+
+--gh9b96O0vZdbsJLX--
