@@ -1,40 +1,66 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH V2 1/2] mmc: omap_hsmmc: Add support for quirky omap3
- hsmmc controller
-Date: Fri, 14 Feb 2014 08:31:03 -0800
-Message-ID: <20140214163102.GA21592@atomide.com>
-References: <1392356749-32091-1-git-send-email-nm@ti.com>
- <1392356749-32091-2-git-send-email-nm@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/2] clk: fixed-rate: use full DT node name
+Date: Fri, 14 Feb 2014 09:43:04 -0700
+Message-ID: <52FE4798.3010605@wwwdotorg.org>
+References: <1392358613-19962-1-git-send-email-swarren@wwwdotorg.org> <20140214103556.GC9907@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1392356749-32091-2-git-send-email-nm@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Balaji T K <balajitk@ti.com>, Chris Ball <chris@printf.net>, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Felipe Balbi <balbi@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140214103556.GC9907-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Nishanth Menon <nm@ti.com> [140213 21:48]:
-> When device is booted using devicetree, platforms impacted by Erratum
-> 2.1.1.128 is not detected easily in the mmc driver. This erratum
-> indicates that the module cannot do multi-block transfers. Platforms
-> such as LDP which use OMAP3 ES revision prior to ES3.0 are impacted by
-> this.
+On 02/14/2014 03:35 AM, Mark Rutland wrote:
+> On Fri, Feb 14, 2014 at 06:16:52AM +0000, Stephen Warren wrote:
+>> clk-fixed-rate currently names clocks according to a node's name without
+>> the unit address. When faced with the legal and technically correct DT
+>> structure below, this causes rgistration attempts for 3 clocks with the
+>> same name, 2 of which fail.
+>>
+>> 	clocks {
+>> 		compatible = "simple-bus";
+>> 		#address-cells = <1>;
+>> 		#size-cells = <0>;
+>>
+>> 		clk_mmc: clock@0 {
+>> 			compatible = "fixed-clock";
+>> 			reg = <0>;
+>> ...
+>> 		clk_i2c: clock@1 {
+>> 			compatible = "fixed-clock";
+>> 			reg = <1>;
+>> ...
+>> 		clk_spi: clock@2 {
+>> 			compatible = "fixed-clock";
+>> 			reg = <2>;
+>> ...
 > 
-> Provide a new compatible property "ti,omap3-pre-es3-hsmmc" to allow
-> driver to determine if driver needs to implement quirks associated
-> with the specific module version (primarily because the IP revision
-> information is not sufficient for the same).
+> I'd argue that this case isn't valid.
+
+Well, it's very widely used, and was the result of numerous discussions
+of how this kind of thing should be represented:-/
+
+> The fixed-clock binding doesn't define a reg, yet simple bus binding
+> implies that the reg property of child nodes should be interpretted as
+> the same address space as their parent (MMIO in this case?). The
+> fixed-clock nodes reg proeprties clearly aren't MMIO addresses.
 > 
-> Signed-off-by: Nishanth Menon <nm@ti.com>
+> Additionally, the _requred_ ranges property is missing.
 
-Looks good to me, would be good to get this into the -rc cycle
-as LDP is one of the automated boot testing boards for us.
+Perhaps we need to invent a simple-container instead then?
 
-If you guys want me to pick up both of the patches let me know,
-otherwise feel free to add my ack.
+> It's just nonsensical; rename them to clock_{0,1,..} instead and get rid
+> of the reg properties. Then they're named uniquely.
 
-Regards,
-
-Tony
+That's not legal either. DT node names are supposed to represent the
+type of device/object (i.e. just "clock"), not the identity of the
+device/object (i.e. not include IDs etc.). Hence, the node name needs to
+be "clock" for all of them, and the unit address must be used to
+differentiate them.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
