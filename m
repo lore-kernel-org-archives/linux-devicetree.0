@@ -1,56 +1,54 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v2 10/23] ARM: MM: Add DT binding for Feroceon L2 cache
-Date: Sat, 15 Feb 2014 14:59:30 +0100
-Message-ID: <20140215135930.GA26088@lunn.ch>
-References: <1392459621-24003-1-git-send-email-andrew@lunn.ch>
- <1392459621-24003-11-git-send-email-andrew@lunn.ch>
- <2979047.tn4oVevojb@wuerfel>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 01/17] Documentation: i2c: describe devicetree method for
+ instantiating devices
+Date: Sat, 15 Feb 2014 15:48:32 +0100
+Message-ID: <20140215144832.GC2579@katana>
+References: <1392026654-5343-1-git-send-email-wsa@the-dreams.de>
+ <1392026654-5343-2-git-send-email-wsa@the-dreams.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="V88s5gaDVPzZ0KCq"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2979047.tn4oVevojb@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1392026654-5343-2-git-send-email-wsa@the-dreams.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-i2c@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 15, 2014 at 02:23:23PM +0100, Arnd Bergmann wrote:
-> On Saturday 15 February 2014 11:20:08 Andrew Lunn wrote:
-> > Instantiate the L2 cache from DT. Indicate in DT where the cache
-> > control register is and if write through should be made.
-> > 
-> > Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> > cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > 
-> 
-> I guess this answers part of my question for patch 5, but I also
-> wonder if the run-time setting is correct now with the hardcoded
-> #ifdef in arch/arm/mm/proc-feroceon.S checkign for the
-> Kconfig option. Presumably the code should match whatever is
-> set in the cache control register.
 
-Humm, yes, good point.
+--V88s5gaDVPzZ0KCq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-None of the _defconfig's ever turn on
-CACHE_FEROCEON_L2_WRITETHROUGH. I also did a quick google and could
-not find any usage of it.
+On Mon, Feb 10, 2014 at 11:03:55AM +0100, Wolfram Sang wrote:
+> Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
 
-So i see two options:
-
-1) Remove the wr-override from the DT binding and use
-CACHE_FEROCEON_L2_WRITETHROUGH.
-
-2) Remove CACHE_FEROCEON_L2_WRITETHROUGH and make proc-feroceon.S do
-the right thing at runtime.
-
-I suspect i will go for 1), it is simpler.
-
-  Thanks
-	Andrew
+Applied to for-current, thanks!
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--V88s5gaDVPzZ0KCq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJS/35AAAoJEBQN5MwUoCm2GIYP/ReNt63f5cKc8A8DKV1507zk
+nAZGXkt8kDIGnt3sRSu2PijCWIPeN1glnQLZGz2eWsTDd79JjAQQVVQ7eemqnX4Z
+KGiAbzIn5nE3ZeL8FZhMSjSwWoBS2aHFCCVjcuY2EW55M/1h90XPAA9FO4t0qMYg
+Td6yaVx7MI2RBW4TBXwVUb5LW9o0CU4awsCj561NqnPAGneBQUWFhimPwZBjfF9o
+vbAjIZlD0/ypJ5X1GESsthA55D2z3e9OZb50KMLREhCmXjzLxP8uf88BBv07SY/C
+nICAlc29JaZk9qWJggR/7Jy1MudbybmWeLsM6/gzeX1jOv9wKjYbJz+dVIOfF97M
+IorDyTF/E9Tkr2PY0WsSHva+Eolzt8b68hxPISwW22AIv82hPi/M1HlRKnOa/mQk
+52RdWZDWNKde2tAfmZAYx+lLMzg8qrCJW0YuBsev942dsPi1xD807P6PUaHSVkuR
+DY3DkAd6Dmq2BWBHlV+KoKkgZCdXhXPltpYVqgbGR71I2h/b+PWh1Um9nhYozxRZ
+INIMmPIJBfKD7jO9ZSGGWmHlw81di4qL2uoO5Oze80+P3BkZvXU/hA+xYum0zoua
+2gPVDzB/u3BM/DUDhbaTrloQX87UCYMGFgTT5wZKhWq68uWBeB1Mm/7+Mf1WZzuG
+QGqd3yqx2Jxvucg1Xfw0
+=kK0N
+-----END PGP SIGNATURE-----
+
+--V88s5gaDVPzZ0KCq--
