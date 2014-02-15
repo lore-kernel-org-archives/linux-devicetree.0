@@ -1,67 +1,177 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 3/3] Documentation: add the binding file for Freescale
- vf610 ADC driver
-Date: Sat, 15 Feb 2014 10:19:33 +0000
-Message-ID: <52FF3F35.2040607@kernel.org>
-References: <1390714773-23066-1-git-send-email-B38611@freescale.com> <1390714773-23066-4-git-send-email-B38611@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1390714773-23066-4-git-send-email-B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: [PATCH v2 10/23] ARM: MM: Add DT binding for Feroceon L2 cache
+Date: Sat, 15 Feb 2014 11:20:08 +0100
+Message-ID: <1392459621-24003-11-git-send-email-andrew@lunn.ch>
+References: <1392459621-24003-1-git-send-email-andrew@lunn.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392459621-24003-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 26/01/14 05:39, Fugang Duan wrote:
-> The patch adds the binding file for Freescale vf610 ADC driver.
->
-> CC: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> CC: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> CC: Otavio Salvador <otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>
-> CC: Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-> CC: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-> Signed-off-by: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-It's been near enough 3 weeks without a comment from the Device Tree maintainers.
-(admittedly it wasn't cc'd to the devicetree list).  I'm going to take this through
-the IIO tree.
+Instantiate the L2 cache from DT. Indicate in DT where the cache
+control register is and if write through should be made.
 
-Applied to the togreg branch of
-git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git
-though will go out briefly as the testing branch to let the autobuilders play.
+Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+v2:
+Change compatible strings to follow l2x0 convention
+Only expect register for kirkwood-cache.
+Default to write through if no DT node.
+Rename writethrough to wt-override to follow l2cc binding.
+Split kirkwood.dtsi change into a patch of its own.
+---
+ .../devicetree/bindings/arm/mrvl/feroceon.txt      | 17 +++++++
+ arch/arm/include/asm/hardware/cache-feroceon-l2.h  |  2 +
+ arch/arm/mach-kirkwood/board-dt.c                  | 15 +------
+ arch/arm/mm/cache-feroceon-l2.c                    | 52 ++++++++++++++++++++++
+ 4 files changed, 72 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/mrvl/feroceon.txt
 
-> ---
->   .../devicetree/bindings/iio/adc/vf610-adc.txt      |   22 ++++++++++++++++++++
->   1 files changed, 22 insertions(+), 0 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
-> new file mode 100644
-> index 0000000..dcebff1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
-> @@ -0,0 +1,22 @@
-> +Freescale vf610 Analog to Digital Converter bindings
-> +
-> +The devicetree bindings are for the new ADC driver written for
-> +vf610/i.MX6slx and upward SoCs from Freescale.
-> +
-> +Required properties:
-> +- compatible: Should contain "fsl,vf610-adc"
-> +- reg: Offset and length of the register set for the device
-> +- interrupts: Should contain the interrupt for the device
-> +- clocks: The clock is needed by the ADC controller, ADC clock source is ipg clock.
-> +- clock-names: Must contain "adc", matching entry in the clocks property.
-> +- vref-supply: The regulator supply ADC refrence voltage.
-> +
-> +Example:
-> +adc0: adc@4003b000 {
-> +	compatible = "fsl,vf610-adc";
-> +	reg = <0x4003b000 0x1000>;
-> +	interrupts = <0 53 0x04>;
-> +	clocks = <&clks VF610_CLK_ADC0>;
-> +	clock-names = "adc";
-> +	vref-supply = <&reg_vcc_3v3_mcu>;
-> +};
->
+diff --git a/Documentation/devicetree/bindings/arm/mrvl/feroceon.txt b/Documentation/devicetree/bindings/arm/mrvl/feroceon.txt
+new file mode 100644
+index 000000000000..d6d7d6195ed1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/mrvl/feroceon.txt
+@@ -0,0 +1,17 @@
++* Marvell Feroceon Cache
++
++Required properties:
++- compatible : Should be either "marvell,ferocean-cache" or
++  	       "marvell,kirkwood-cache".
++
++Optional properties:
++- wt-override: If present then L2 is forced to Write through mode
++- reg        : Address of the L2 cache control register. Mandatory for
++  	       "marvell,kirkwood-cache", not used by "marvell,ferocean-cache"
++
++
++Example:
++		l2: l2-cache@20128 {
++			compatible = "marvell,kirkwood-cache";
++			reg = <0x20128 0x4>;
++		};
+diff --git a/arch/arm/include/asm/hardware/cache-feroceon-l2.h b/arch/arm/include/asm/hardware/cache-feroceon-l2.h
+index 8edd330aabf6..12e1588dc4f1 100644
+--- a/arch/arm/include/asm/hardware/cache-feroceon-l2.h
++++ b/arch/arm/include/asm/hardware/cache-feroceon-l2.h
+@@ -9,3 +9,5 @@
+  */
+ 
+ extern void __init feroceon_l2_init(int l2_wt_override);
++extern int __init feroceon_of_init(void);
++
+diff --git a/arch/arm/mach-kirkwood/board-dt.c b/arch/arm/mach-kirkwood/board-dt.c
+index 34c35510fd17..2ef59ee2182d 100644
+--- a/arch/arm/mach-kirkwood/board-dt.c
++++ b/arch/arm/mach-kirkwood/board-dt.c
+@@ -42,19 +42,6 @@ static void __init kirkwood_map_io(void)
+ 	iotable_init(kirkwood_io_desc, ARRAY_SIZE(kirkwood_io_desc));
+ }
+ 
+-static void __init kirkwood_l2_init(void)
+-{
+-#ifdef CONFIG_CACHE_FEROCEON_L2
+-#ifdef CONFIG_CACHE_FEROCEON_L2_WRITETHROUGH
+-	writel(readl(L2_CONFIG_REG) | L2_WRITETHROUGH, L2_CONFIG_REG);
+-	feroceon_l2_init(1);
+-#else
+-	writel(readl(L2_CONFIG_REG) & ~L2_WRITETHROUGH, L2_CONFIG_REG);
+-	feroceon_l2_init(0);
+-#endif
+-#endif
+-}
+-
+ static struct resource kirkwood_cpufreq_resources[] = {
+ 	[0] = {
+ 		.start  = CPU_CONTROL_PHYS,
+@@ -211,7 +198,7 @@ static void __init kirkwood_dt_init(void)
+ 
+ 	BUG_ON(mvebu_mbus_dt_init());
+ 
+-	kirkwood_l2_init();
++	feroceon_of_init();
+ 
+ 	kirkwood_cpufreq_init();
+ 	kirkwood_cpuidle_init();
+diff --git a/arch/arm/mm/cache-feroceon-l2.c b/arch/arm/mm/cache-feroceon-l2.c
+index 898362e7972b..17a1ecd7a40c 100644
+--- a/arch/arm/mm/cache-feroceon-l2.c
++++ b/arch/arm/mm/cache-feroceon-l2.c
+@@ -13,11 +13,16 @@
+  */
+ 
+ #include <linux/init.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
+ #include <linux/highmem.h>
++#include <linux/io.h>
+ #include <asm/cacheflush.h>
+ #include <asm/cp15.h>
+ #include <asm/hardware/cache-feroceon-l2.h>
+ 
++#define L2_WRITETHROUGH_KIRKWOOD	BIT(4)
++
+ /*
+  * Low-level cache maintenance operations.
+  *
+@@ -350,3 +355,50 @@ void __init feroceon_l2_init(int __l2_wt_override)
+ 	printk(KERN_INFO "Feroceon L2: Cache support initialised%s.\n",
+ 			 l2_wt_override ? ", in WT override mode" : "");
+ }
++#ifdef CONFIG_OF
++static const struct of_device_id feroceon_ids[] __initconst = {
++	{ .compatible = "marvell,kirkwood-cache"},
++	{ .compatible = "marvell,feroceon-cache"},
++	{}
++};
++
++int __init feroceon_of_init(void)
++{
++	struct device_node *node;
++	void __iomem *base;
++	bool l2_wt_override = false;
++	struct resource res;
++
++	node = of_find_matching_node(NULL, feroceon_ids);
++	if (!node) {
++		/*
++		 * If we don't know the write through state then
++		 * assume it is write back, as that is the safest
++		 * option.
++		 */
++		feroceon_l2_init(0);
++		return 0;
++	}
++
++	if (of_device_is_compatible(node, "marvell,kirkwood-cache")) {
++		if (of_property_read_bool(node, "wt-override"))
++			l2_wt_override = true;
++
++		if (of_address_to_resource(node, 0, &res))
++			return -ENODEV;
++
++		base = ioremap(res.start, resource_size(&res));
++		if (!base)
++			return -ENOMEM;
++
++		if (l2_wt_override)
++			writel(readl(base) | L2_WRITETHROUGH_KIRKWOOD, base);
++		else
++			writel(readl(base) & ~L2_WRITETHROUGH_KIRKWOOD, base);
++	}
++
++	feroceon_l2_init(l2_wt_override);
++
++	return 0;
++}
++#endif
+-- 
+1.8.5.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
