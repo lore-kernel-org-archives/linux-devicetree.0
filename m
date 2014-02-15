@@ -1,76 +1,67 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 10/10] Documentation: Add device tree bindings for TI LMU
- devices
-Date: Fri, 14 Feb 2014 20:50:27 +0000
-Message-ID: <20140214205027.GT4451@sirena.org.uk>
-References: <1392359564-7205-1-git-send-email-milo.kim@ti.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 3/3] Documentation: add the binding file for Freescale
+ vf610 ADC driver
+Date: Sat, 15 Feb 2014 10:19:33 +0000
+Message-ID: <52FF3F35.2040607@kernel.org>
+References: <1390714773-23066-1-git-send-email-B38611@freescale.com> <1390714773-23066-4-git-send-email-B38611@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Yg/4YF7t1SayoUom"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1392359564-7205-1-git-send-email-milo.kim@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Milo Kim <milo.kim@ti.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Jingoo Han <jg1.han@samsung.com>, Bryan Wu <cooloney@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1390714773-23066-4-git-send-email-B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 26/01/14 05:39, Fugang Duan wrote:
+> The patch adds the binding file for Freescale vf610 ADC driver.
+>
+> CC: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> CC: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> CC: Otavio Salvador <otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>
+> CC: Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+> CC: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+> Signed-off-by: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+It's been near enough 3 weeks without a comment from the Device Tree maintainers.
+(admittedly it wasn't cc'd to the devicetree list).  I'm going to take this through
+the IIO tree.
 
---Yg/4YF7t1SayoUom
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Applied to the togreg branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git
+though will go out briefly as the testing branch to let the autobuilders play.
 
-On Fri, Feb 14, 2014 at 03:32:44PM +0900, Milo Kim wrote:
-> Bindings for TI LMU, backlight, LM3631 regulator and LM3633 LED are added.
-
-Ah, sorry - I didn't notice that there were several different binding
-documents in the patch.
-
-> @@ -0,0 +1,49 @@
-> +TI LMU LM3631 regulator device tree bindings
+> ---
+>   .../devicetree/bindings/iio/adc/vf610-adc.txt      |   22 ++++++++++++++++++++
+>   1 files changed, 22 insertions(+), 0 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+> new file mode 100644
+> index 0000000..dcebff1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+> @@ -0,0 +1,22 @@
+> +Freescale vf610 Analog to Digital Converter bindings
+> +
+> +The devicetree bindings are for the new ADC driver written for
+> +vf610/i.MX6slx and upward SoCs from Freescale.
 > +
 > +Required properties:
-> +  - compatible: "ti,lm3631-regulator"
+> +- compatible: Should contain "fsl,vf610-adc"
+> +- reg: Offset and length of the register set for the device
+> +- interrupts: Should contain the interrupt for the device
+> +- clocks: The clock is needed by the ADC controller, ADC clock source is ipg clock.
+> +- clock-names: Must contain "adc", matching entry in the clocks property.
+> +- vref-supply: The regulator supply ADC refrence voltage.
 > +
-> +Optional properties:
-> +  - regulator-name
-> +  - regulator-min-microvolt
-> +  - regulator-max-microvolt
-> +  - regulator-always-on
-> +  - regulator-boot-on
-> +
-> +  For those properties, please refer to:
-> +  Documentation/devicetree/bindings/regulator/regulator.txt
-
-This doesn't correspond to the example which says that there is an
-optional property "regulators" which can contain regualators lcd_boost,
-lcd_vpos and lcd_vneg.  It's also better to not enumerate all the
-standard properties but just refer to the generic document (as you do).
-That avoids confusion if new properties are added to the generic
-regulator bindings.
-
-The actual binding is fine, it's just the way it's documented.
-
---Yg/4YF7t1SayoUom
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJS/oGQAAoJELSic+t+oim92qAP/0VrAUyl8xUcrnOMw4f2MPo3
-nWu1+VZvNGktXdGJgUmvFq/MZlpEehjhxpToe/SnJg8hYXtuWaVPPVeNMVXggrHh
-fUsuHtdsLWH4djXFBcPJCgBqRrmsjGMX0VODlyKfpP6IjIKLsjHC2INvwgsZY1sP
-duNEM7VAGO7zOkY9fEPbo629WkLXkiHiLZbwxiLVrNG4bOhsD0w9R4T2Vwq3p8EJ
-tsi44lzBjIGnc2+LaoFklZCEbggGA+eBPmT2kAbQuQiMhyHx4RIDJQ51hY/Pn/nV
-LAul0biMNUxPOEbDefcUzF1b6YdzZtZWJhdT9DwCp8pjWCCoiLlHjzDR9ypjCQBd
-yVEmoxvneESJ8zF6lno8Q9SMyO+zdgxm88icjcw6OzFHRKdyBINGrmNUJcvjx607
-Z5WRJlxftCwffuVBwL1gWGENWlJ/UMTAImA0T7ipCeHfC3sNAjBpr7L6xsuVbqBT
-7t7kTGlrehDDfqEX6bgMaBynycsRl8zH9VOLQteCyvPrjVhhr+s1LEKG9dS03bOZ
-Ze0l+Lyq1OYbqJvBUKHtz9asVed/KEAUPL0BBbQJpM/fxipRoS2r8v7UNnI0AQSf
-fKHZUzTXxfTvDsB3KCX4DgOY+JFExz3Z+C5DA2MIGMOwLdC8YHSfKHzVKpS5c6NZ
-Z5ljJ4Upsl6V1GDEOVoY
-=IIkP
------END PGP SIGNATURE-----
-
---Yg/4YF7t1SayoUom--
+> +Example:
+> +adc0: adc@4003b000 {
+> +	compatible = "fsl,vf610-adc";
+> +	reg = <0x4003b000 0x1000>;
+> +	interrupts = <0 53 0x04>;
+> +	clocks = <&clks VF610_CLK_ADC0>;
+> +	clock-names = "adc";
+> +	vref-supply = <&reg_vcc_3v3_mcu>;
+> +};
+>
