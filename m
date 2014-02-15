@@ -1,74 +1,71 @@
-From: David =?utf-8?q?Lanzend=C3=B6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
-Subject: [PATCH v6 8/8] ARM: sunxi: Add documentation for driver
- for SD/MMC hosts found on Allwinner sunxi SoCs
-Date: Sun, 16 Feb 2014 00:34:00 +0100
-Message-ID: <20140215233400.30460.59575.stgit@dizzy-6.o2s.ch>
-References: <20140215233011.30460.27261.stgit@dizzy-6.o2s.ch>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v5 1/6] spmi: Linux driver framework for SPMI
+Date: Sat, 15 Feb 2014 17:47:48 -0600
+Message-ID: <20140215234748.GA26494@saruman.home>
+References: <1391468739-20987-1-git-send-email-joshc@codeaurora.org>
+ <1391468739-20987-2-git-send-email-joshc@codeaurora.org>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBD2JL37LXEKRB27S76LQKGQEDDGZZVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140215233011.30460.27261.stgit-GPtPHOohwllnsqa/0SyWJQ@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Emilio =?utf-8?b?TMOzcGV6?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="wRRV7LY7NUeQGEoC"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1391468739-20987-2-git-send-email-joshc@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Josh Cartwright <joshc@codeaurora.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, Sagar Dharia <sdharia@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Michael Bohan <mbohan@codeaurora.org>, Kenneth Heitke <kheitke@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: David Lanzend=C3=B6rfer <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
----
- .../devicetree/bindings/mmc/sunxi-mmc.txt          |   32 ++++++++++++++++=
-++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
+--wRRV7LY7NUeQGEoC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt b/Document=
-ation/devicetree/bindings/mmc/sunxi-mmc.txt
-new file mode 100644
-index 0000000..5ce8c5e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
-@@ -0,0 +1,32 @@
-+* Allwinner sunxi MMC controller
-+
-+The highspeed MMC host controller on Allwinner SoCs provides an interface
-+for MMC, SD and SDIO types of memory cards.
-+
-+Supported maximum speeds are the ones of the eMMC standard 4.5 as well
-+as the speed of SD standard 3.0.
-+Absolute maximum transfer rate is 200MB/s
-+
-+Required properties:
-+- compatible: Should be "allwinner,<revision>-<chip>-mmc".
-+  The supported chips include a10, a10s, 13, a20 and a31.
-+- base registers are 0x1000 appart, so the base of mmc1
-+  would be 0x01c0f000+0x1000=3D0x01c10000(see example)
-+  and so on.
-+- clocks requires the reference at the ahb clock gate
-+  with the correct index (mmc0 -> 8, mmc1 -> 9, and so on)
-+  as well as the reference to the correct mod0 clock.
-+- interrupts requires the correct IRQ line
-+  (mmc0 -> 32, mmc1 -> 33, and so on)
-+
-+Examples:
-+
-+mmc0: mmc@01c0f000 {
-+	compatible =3D "allwinner,sun5i-a13-mmc";
-+	reg =3D <0x01c0f000 0x1000>;
-+	clocks =3D <&ahb_gates 8>, <&mmc0_clk>;
-+	clock-names =3D "ahb", "mod";
-+	interrupts =3D <0 32 4>;
-+	bus-width =3D <4>;
-+	status =3D "disabled";
-+};
+Hi,
+
+On Mon, Feb 03, 2014 at 05:05:33PM -0600, Josh Cartwright wrote:
+
+[ snip ]
+
+> +#ifdef CONFIG_PM_RUNTIME
+> +static int spmi_runtime_suspend(struct device *dev)
+> +{
+> +	struct spmi_device *sdev =3D to_spmi_device(dev);
+> +	int err;
+> +
+> +	err =3D pm_generic_runtime_suspend(dev);
+> +	if (err)
+> +		return err;
+> +
+> +	return spmi_command_sleep(sdev);
+
+shouldn't this too calls be swapped ? I mean, some pm_runtime
+implementations could be gating clocks at the driver's
+->runtime_suspend() callback.
 
 --=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/groups/opt_out.
+balbi
+
+--wRRV7LY7NUeQGEoC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJS//ykAAoJEIaOsuA1yqREcpcQAKwE8hajiRzBBbFwMxszTE5w
+zMwRFR3vNP3fQfgbwPJrx3M5c+cUzISkW4Jr+SoBCifiYi2Das+h5/9bdCzbqMav
+4rihjDIN+yGaxHEYWwjZ4WnMKp2zf6UOYayjIvXTKQ7WkB6hFoe3gIwIlWJ3cOLl
+cQGGCvuc/W2Bj/u7tkPcAnhwu9/NKNJw3Zh7LRDFTyaJFddgu/+5sV/h41B6E847
+2Cj2s3DyF9SUbnDFywi3GhGaqYE58r9L5VhOqlXZAtDodkff0ZX5bK2eEaCQ9lQP
+Ou4hNtNUHmIfn5p/vLysuUyRveGl/L6ItM3VvgJH0sCJCyq8enBIXAfVt5eX7vU3
+i3Wrr/1ECgGaIFoBVovuhxLR8A3A8iDFFM5MrnLB8s8NLfnRa1hsodYvTTHqKZW2
+n6rocO4HaFRP0Yo4JHqaQM4THEvrOvZK7gxWu9DubsZKsDT5Fh+YRNSy8/rE2OrS
+L5OnpWsZXoKP+KUFlWKen3u8hwViMf7VJK8EhVFemOH89rabrRfpJzuhA/Up6U5m
+yZausLt02cGjnY6T4nHhl111hEcWKcIEe8O+ZMs9+tugZKN0YpCYivg2hg5cuWwA
+NQUZKvjnDsTB+zK/Y/x9nnmz8AlPRgvVuNLwzaAtMq3wMYux5FMIWmnECPAg4v+j
+hyvAKdriNGeJuPrXIQj2
+=92Za
+-----END PGP SIGNATURE-----
+
+--wRRV7LY7NUeQGEoC--
