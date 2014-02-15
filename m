@@ -1,55 +1,127 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 0/6] IIO pulse capture support for TI ECAP
-Date: Sat, 15 Feb 2014 11:48:25 +0000
-Message-ID: <52FF5409.8050903@kernel.org>
-References: <1391626901-31684-1-git-send-email-mporter@linaro.org> <52F29DBD.9050305@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52F29DBD.9050305-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PWM List <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IIO List <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 1/3] dma: Support multiple interleaved frames with non-contiguous memory
+Date: Sat, 15 Feb 2014 17:30:17 +0530
+Message-ID: <1392465619-27614-2-git-send-email-sthokal@xilinx.com>
+References: <1392465619-27614-1-git-send-email-sthokal@xilinx.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392465619-27614-1-git-send-email-sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: levex-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/02/14 20:23, Sergei Shtylyov wrote:
-> Hello.
->
-> On 02/05/2014 10:01 PM, Matt Porter wrote:
->
-> [...]
->
->> This series adds support for PWM capture devices within IIO and
->> adds a TI ECAP IIO driver.
->
->> PWM capture devices are supported using a new IIO "pulse" channel type.
->
->> The IIO ECAP driver implements interrupt driven triggered buffer capture
->> only as raw sample reads are not applicable to this hardware.
->> Initially, the driver supports a single pulse width measurement with
->> configurable polarity. The ECAP hardware can support measurement of a
->> complete period and duty cycle but this is not yet implemented.
->
+The current implementation of interleaved DMA API support multiple
+frames only when the memory is contiguous by incrementing src_start/
+dst_start members of interleaved template.
 
-> How about pulse counting? I have the hardware that can also
-> countpulses in addition to measuring the periods, so I'm interested
-> in this work (initially I supported it in driver/misc/ but it got
-> turned down for iio).
->
-I'm afraid I'd forgotten this completely if you can dig out some links
-to that discussion it would be great. Only one I can find right now
-is a request that you post an ABI introducing this as a generic pulse
-counter rather than a speed measurement.
+But, when the memory is non-contiguous it will restrict slave device
+to not submit multiple frames in a batch.  This patch handles this
+issue by allowing the slave device to send array of interleaved dma
+templates each having a different memory location.
 
-Good point though - under my previous sketched outline, perhaps
+Signed-off-by: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/dmaengine.txt              |    2 +-
+ drivers/dma/imx-dma.c                    |    3 ++-
+ drivers/dma/sirf-dma.c                   |    3 ++-
+ drivers/media/platform/m2m-deinterlace.c |    2 +-
+ include/linux/dmaengine.h                |    6 +++---
+ 5 files changed, 9 insertions(+), 7 deletions(-)
 
-in_waveform_cyclecount_input?  (I would imagine that it doesn't come
-out needing scaling!)
+diff --git a/Documentation/dmaengine.txt b/Documentation/dmaengine.txt
+index 879b6e3..c642614 100644
+--- a/Documentation/dmaengine.txt
++++ b/Documentation/dmaengine.txt
+@@ -94,7 +94,7 @@ The slave DMA usage consists of following steps:
+ 		size_t period_len, enum dma_data_direction direction);
+ 
+ 	struct dma_async_tx_descriptor *(*device_prep_interleaved_dma)(
+-		struct dma_chan *chan, struct dma_interleaved_template *xt,
++		struct dma_chan *chan, struct dma_interleaved_template **xts,
+ 		unsigned long flags);
+ 
+    The peripheral driver is expected to have mapped the scatterlist for
+diff --git a/drivers/dma/imx-dma.c b/drivers/dma/imx-dma.c
+index 6f9ac20..e2c52ce 100644
+--- a/drivers/dma/imx-dma.c
++++ b/drivers/dma/imx-dma.c
+@@ -954,12 +954,13 @@ static struct dma_async_tx_descriptor *imxdma_prep_dma_memcpy(
+ }
+ 
+ static struct dma_async_tx_descriptor *imxdma_prep_dma_interleaved(
+-	struct dma_chan *chan, struct dma_interleaved_template *xt,
++	struct dma_chan *chan, struct dma_interleaved_template **xts,
+ 	unsigned long flags)
+ {
+ 	struct imxdma_channel *imxdmac = to_imxdma_chan(chan);
+ 	struct imxdma_engine *imxdma = imxdmac->imxdma;
+ 	struct imxdma_desc *desc;
++	struct dma_interleaved_template *xt = *xts;
+ 
+ 	dev_dbg(imxdma->dev, "%s channel: %d src_start=0x%llx dst_start=0x%llx\n"
+ 		"   src_sgl=%s dst_sgl=%s numf=%zu frame_size=%zu\n", __func__,
+diff --git a/drivers/dma/sirf-dma.c b/drivers/dma/sirf-dma.c
+index d4d3a31..b6a150b 100644
+--- a/drivers/dma/sirf-dma.c
++++ b/drivers/dma/sirf-dma.c
+@@ -509,12 +509,13 @@ sirfsoc_dma_tx_status(struct dma_chan *chan, dma_cookie_t cookie,
+ }
+ 
+ static struct dma_async_tx_descriptor *sirfsoc_dma_prep_interleaved(
+-	struct dma_chan *chan, struct dma_interleaved_template *xt,
++	struct dma_chan *chan, struct dma_interleaved_template **xts,
+ 	unsigned long flags)
+ {
+ 	struct sirfsoc_dma *sdma = dma_chan_to_sirfsoc_dma(chan);
+ 	struct sirfsoc_dma_chan *schan = dma_chan_to_sirfsoc_dma_chan(chan);
+ 	struct sirfsoc_dma_desc *sdesc = NULL;
++	struct dma_interleaved_template *xt = *xts;
+ 	unsigned long iflags;
+ 	int ret;
+ 
+diff --git a/drivers/media/platform/m2m-deinterlace.c b/drivers/media/platform/m2m-deinterlace.c
+index 6bb86b5..468110a 100644
+--- a/drivers/media/platform/m2m-deinterlace.c
++++ b/drivers/media/platform/m2m-deinterlace.c
+@@ -343,7 +343,7 @@ static void deinterlace_issue_dma(struct deinterlace_ctx *ctx, int op,
+ 	ctx->xt->dst_sgl = true;
+ 	flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
+ 
+-	tx = dmadev->device_prep_interleaved_dma(chan, ctx->xt, flags);
++	tx = dmadev->device_prep_interleaved_dma(chan, &ctx->xt, flags);
+ 	if (tx == NULL) {
+ 		v4l2_warn(&pcdev->v4l2_dev, "DMA interleaved prep error\n");
+ 		return;
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index c5c92d5..2f77a9a 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -675,7 +675,7 @@ struct dma_device {
+ 		size_t period_len, enum dma_transfer_direction direction,
+ 		unsigned long flags, void *context);
+ 	struct dma_async_tx_descriptor *(*device_prep_interleaved_dma)(
+-		struct dma_chan *chan, struct dma_interleaved_template *xt,
++		struct dma_chan *chan, struct dma_interleaved_template **xts,
+ 		unsigned long flags);
+ 	int (*device_control)(struct dma_chan *chan, enum dma_ctrl_cmd cmd,
+ 		unsigned long arg);
+@@ -752,10 +752,10 @@ static inline struct dma_async_tx_descriptor *dmaengine_prep_dma_cyclic(
+ }
+ 
+ static inline struct dma_async_tx_descriptor *dmaengine_prep_interleaved_dma(
+-		struct dma_chan *chan, struct dma_interleaved_template *xt,
++		struct dma_chan *chan, struct dma_interleaved_template **xts,
+ 		unsigned long flags)
+ {
+-	return chan->device->device_prep_interleaved_dma(chan, xt, flags);
++	return chan->device->device_prep_interleaved_dma(chan, xts, flags);
+ }
+ 
+ static inline int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
+-- 
+1.7.9.5
 
-> WBR, Sergei
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
