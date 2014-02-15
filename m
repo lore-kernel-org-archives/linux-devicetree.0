@@ -1,49 +1,114 @@
-From: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
-Subject: Re: [PATCH v2 10/23] ARM: MM: Add DT binding for Feroceon L2 cache
-Date: Sat, 15 Feb 2014 17:39:09 -0500 (EST)
-Message-ID: <alpine.LFD.2.11.1402151735300.17677@knanqh.ubzr>
-References: <1392459621-24003-1-git-send-email-andrew@lunn.ch>
- <2979047.tn4oVevojb@wuerfel> <20140215135930.GA26088@lunn.ch>
- <201402152212.02580.arnd@arndb.de>
+From: David =?utf-8?q?Lanzend=C3=B6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
+Subject: [PATCH v6 0/8]
+Date: Sun, 16 Feb 2014 00:33:12 +0100
+Message-ID: <20140215233011.30460.27261.stgit@dizzy-6.o2s.ch>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; CHARSET=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <201402152212.02580.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBD2JL37LXEKRBPHS76LQKGQEV73MTZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Emilio =?utf-8?b?TMOzcGV6?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 15 Feb 2014, Arnd Bergmann wrote:
+Hello
+The following patchset adds support for the SD/MMC host found in the Allwin=
+ner SoCs.
+It contains all the necessary modifications for clock environment and also =
+the device
+tree script modification which add it to all the boards using it.
+The clock environment function needed for phase offset configuration has
+been proposed and implemented by Emilio.
+A lot of work and cleanup has been done by Hans de Goede. Special thanks to=
+ him!
+This patchset is the 4th attempt to send this driver upstream.
 
-> On Saturday 15 February 2014, Andrew Lunn wrote:
-> > None of the _defconfig's ever turn on
-> > CACHE_FEROCEON_L2_WRITETHROUGH. I also did a quick google and could
-> > not find any usage of it.
-> > 
-> > So i see two options:
-> > 
-> > 1) Remove the wr-override from the DT binding and use
-> > CACHE_FEROCEON_L2_WRITETHROUGH.
-> > 
-> > 2) Remove CACHE_FEROCEON_L2_WRITETHROUGH and make proc-feroceon.S do
-> > the right thing at runtime.
-> > 
-> > I suspect i will go for 1), it is simpler.
-> 
-> Yes, fair enough. I'd hope we could just kill the option altogether,
-> but it's probably hard to find anyone who would remember what it
-> was introduced for, unless Nico knows.
+Changes since v1:
+-Using mmc_of_parse instead of diy dt parsing
+-Adding nodes for all mmc controller to the dtsi files,
+ including sofar unused controllers
+-Using generic GPIO slot library for WP/CD
+-Adding additional MMC device nodes into DTSI files
 
-There was a time when we didn't know what cache mode was the best 
-performance wise.  The right answer is "it depends on the work load" of 
-course.  Hence it was made optional for people to play with and choose 
-for themselves.
+Changes since v2:
+-Add missing Signed-off-by tags
+-Stop using __raw_readl / __raw_writel so that barriers are properly used
+-Adding missing new lines
+-Adding missing patch for automatic reparenting of clocks
+
+Changes since v3:
+-Move clk_enable / disable into host_init / exit (Hans)
+-Fix hang on boot caused by irq storm (Hans)
+
+Changes since v4:
+-moving sunxi-mci.{c/h} to sunxi-mmc.{c/h}
+-removing camel cases from the defines in  sunxi-mmc.h
+-moving defines out of the struct definition
+ since this is bad coding style
+-adding documentation for the device tree binding
+
+Changes since v5:
+-adding host initialization for when the sdio irq is enabled
+ (just to make sure having a defined state at all time)
+-add mmc support fixup: set pullup on cd pins
+-fixup: Don't set MMC_CAP_NEEDS_POLL /  MMC_CAP_4_BIT_DATA
+
+---
+
+David Lanzend=C3=B6rfer (5):
+      ARM: sunxi: Add driver for SD/MMC hosts found on Allwinner sunxi SoCs
+      ARM: dts: sun7i: Add support for mmc
+      ARM: dts: sun4i: Add support for mmc
+      ARM: dts: sun5i: Add support for mmc
+      ARM: sunxi: Add documentation for driver for SD/MMC hosts found on Al=
+lwinner sunxi SoCs
+
+Emilio L=C3=B3pez (2):
+      clk: sunxi: factors: automatic reparenting support
+      clk: sunxi: Implement MMC phase control
+
+Hans de Goede (1):
+      ARM: sunxi: clk: export clk_sunxi_mmc_phase_control
 
 
-Nicolas
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../devicetree/bindings/mmc/sunxi-mmc.txt          |   32 +
+ arch/arm/boot/dts/sun4i-a10-a1000.dts              |    8=20
+ arch/arm/boot/dts/sun4i-a10-cubieboard.dts         |    8=20
+ arch/arm/boot/dts/sun4i-a10.dtsi                   |   54 +
+ arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts   |   30 +
+ arch/arm/boot/dts/sun5i-a10s.dtsi                  |   44 +
+ arch/arm/boot/dts/sun5i-a13-olinuxino-micro.dts    |   15=20
+ arch/arm/boot/dts/sun5i-a13-olinuxino.dts          |   15=20
+ arch/arm/boot/dts/sun5i-a13.dtsi                   |   37 +
+ arch/arm/boot/dts/sun7i-a20-cubieboard2.dts        |    8=20
+ arch/arm/boot/dts/sun7i-a20-cubietruck.dts         |    8=20
+ arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts    |   23 +
+ arch/arm/boot/dts/sun7i-a20.dtsi                   |   61 +
+ drivers/clk/sunxi/clk-factors.c                    |   36 +
+ drivers/clk/sunxi/clk-sunxi.c                      |   35 +
+ drivers/mmc/host/Kconfig                           |    7=20
+ drivers/mmc/host/Makefile                          |    2=20
+ drivers/mmc/host/sunxi-mmc.c                       |  876 ++++++++++++++++=
+++++
+ drivers/mmc/host/sunxi-mmc.h                       |  239 +++++
+ include/linux/clk/sunxi.h                          |   22 +
+ 20 files changed, 1560 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
+ create mode 100644 drivers/mmc/host/sunxi-mmc.c
+ create mode 100644 drivers/mmc/host/sunxi-mmc.h
+ create mode 100644 include/linux/clk/sunxi.h
+
+--=20
+Signature
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/groups/opt_out.
