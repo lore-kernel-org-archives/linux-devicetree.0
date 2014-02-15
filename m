@@ -1,92 +1,201 @@
-From: Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [RFC 0/6] mailbox: add common framework and port drivers
-Date: Sat, 15 Feb 2014 09:44:55 +0530
-Message-ID: <CAJe_ZhegDnRHHtn3_2Oz_Mx_hRAzG6ta1n62=b2NSON4YeDbSQ@mail.gmail.com>
-References: <1391820619-25487-1-git-send-email-courtney.cavin@sonymobile.com>
-	<CAJe_ZhfgNUN5=azLrjyLLkh262zv2oBP-ioS8xtBWPonOPacrA@mail.gmail.com>
-	<20140215034046.GA26468@kroah.com>
-	<CAJe_Zhe-n6bYUYcbhfHhZ6Cc-8h5Ag7D69hd4G9AtFPjFkWsug@mail.gmail.com>
-	<20140215041119.GA29012@kroah.com>
+From: Stephen N Chivers <schivers-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>
+Subject: Re: [PATCH 2/2] of: search the best compatible match first in
+ __of_match_node()
+Date: Sat, 15 Feb 2014 15:19:01 +1000
+Message-ID: <OFE7538F6F.94B14E09-ONCA257C80.001BB296-CA257C80.001D350B@csc.com>
+References: <1392355366-1445-1-git-send-email-haokexin@gmail.com>	<1392355366-1445-3-git-send-email-haokexin@gmail.com> <CAL_JsqKq4_1K8EF+PZoP=0=H6tiRxbgdzs9UHHVdbHS014n74Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140215041119.GA29012@kroah.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Courtney Cavin <courtney.cavin@sonymobile.com>, "Anna, Suman" <s-anna@ti.com>, Rob Herring <rob.herring@calxeda.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Mark Langsdorf <mark.langsdorf@calxeda.com>, Tony Lindgren <tony@atomide.com>, "Omar Ramirez Luna (omar.ramirez@copitl.com)" <omar.ramirez@copitl.com>, Pawel Moll <pawel.moll@arm.com>, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, Loic Pallardy <loic.pallardy@st.com>, LeyFoon Tan <lftan.linux@gmail.com>, Craig McGeachie <slapdau@yahoo.com.au>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKq4_1K8EF+PZoP=0=H6tiRxbgdzs9UHHVdbHS014n74Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Stephen N Chivers <schivers-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Proctor <cproctor-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15 February 2014 09:41, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
-> On Sat, Feb 15, 2014 at 09:27:48AM +0530, Jassi Brar wrote:
->> On 15 February 2014 09:10, Greg Kroah-Hartman
->> <gregkh@linuxfoundation.org> wrote:
->> > On Sat, Feb 15, 2014 at 09:02:07AM +0530, Jassi Brar wrote:
->> >> Hi,
->> >>
->> >> On 8 February 2014 06:20, Courtney Cavin <courtney.cavin@sonymobile.com> wrote:
->> >> > There is currently no common framework for mailbox drivers, so this is my
->> >> > attempt to come up with something suitable.  There seems to be a need for
->> >> > making this generic, so I have attempted to do just that.  Most of this is
->> >> > modeled pretty strongly after the pwm core, with some influences from the clock
->> >> > core.
->> >> >
->> >> > Looking at the existing use-cases, and some new ones, it would appear that the
->> >> > requirements here are rather simple. We need essentially two things for
->> >> > consumers:
->> >> >         - put_message
->> >> >         - callback for receiving messages
->> >> >
->> >> > The code currently uses atomic notifiers for callbacks.  The common omap core
->> >> > deals with fifos and work-queues in order to escape atomic contexts, but from
->> >> > what I can see, this is unneeded.  I am also of the opinion that the contexts
->> >> > can be much better managed in the drivers which are working with these
->> >> > contexts, rather than generically.
->> >> >
->> >> > Hopefully this will be suitable for the plethora of other drivers around the
->> >> > kernel which implement mailboxes, as well.  In any case, I'm rather interested
->> >> > to see what the rest of the world thinks.
->> >> >
->> >> > Keep in mind that while the pl320 & omap code should compile, I don't currently
->> >> > have a platform on which I can perform proper testing.  I also removed the
->> >> > context save/restore code from omap2 mailbox support, because I think it should
->> >> > be able to be done via driver suspend/resume, but haven't done a full
->> >> > investigation just yet.
->> >> >
->> >> > I'm also aware that breaking omap, just to fix it again probably isn't the best
->> >> > course of action, and I'm open to suggestions.
->> >> >
->> >> Did you try to look up the history of mailbox api development?  Google
->> >> search: 'mailbox common api'
->> >>
->> >> I (Linaro/Fujitsu), Suman Anna (TI), LeyFoon Tan (Intel), Craig
->> >> McGeachie(Broadcom) and Loic Pallardy(ST) already worked a generic
->> >> Mailbox framework and infact have controller drivers working over
->> >> them.
->> >>  For some confidentiality and some lazy and some confusion or whatever
->> >> reasons the final version of drivers and API wasn't submitted upstream
->> >> yet.
->> >
->> > Then, in all reality, it doesn't exist at all, and so, we will evaluate
->> > this submission instead.
->> >
->> > Just because you all can't send something for merging, doesn't mean you
->> > get to block someone else who has got their act together, that's not
->> > fair.
->> >
->> Yup probably not much fair. But then also one usually look for any
->> early development efforts. IIRC only I and Anna started. Others later
->> joined us looking at archives. Not to vindicate our gang though.
->>
->>  Now we could either punish us and have this api tread the same
->> development path where everyone had their requirements (and the
->> only-waiting-for-approval controller drivers to convert) .... OR we
->> could see if our/original/old API just works for the purposes of Sony
->> as well (which it will most probably) and then we could upstream it
->> with one more 'works-for-me-too'.
->
-> What is stopping you submitting your patches right now?
->
-Nothing. I'll freshen it up and submit today.
+Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote on 02/15/2014 02:53:40 AM:
 
-Thanks.
+> From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> To: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, 
+> linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Sebastian Hesselbarth 
+> <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen N Chivers 
+> <schivers-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob 
+> Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Date: 02/15/2014 02:53 AM
+> Subject: Re: [PATCH 2/2] of: search the best compatible match first 
+> in __of_match_node()
+> 
+> On Thu, Feb 13, 2014 at 11:22 PM, Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > Currently, of_match_node compares each given match against all node's
+> > compatible strings with of_device_is_compatible.
+> >
+> > To achieve multiple compatible strings per node with ordering from
+> > specific to generic, this requires given matches to be ordered from
+> > specific to generic. For most of the drivers this is not true and also
+> > an alphabetical ordering is more sane there.
+> >
+> > Therefore, this patch introduces a function to match each of the 
+node's
+> > compatible strings against all given compatible matches without type 
+and
+> > name first, before checking the next compatible string. This implies
+> > that node's compatibles are ordered from specific to generic while
+> > given matches can be in any order. If we fail to find such a match
+> > entry, then fall-back to the old method in order to keep 
+compatibility.
+> >
+> > Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Signed-off-by: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Looks good to me. I'll put this in next for a few days. I'd really
+> like to see some acks and tested-by's before sending to Linus.
+> 
+Tested-by: Stephen Chivers <schivers-SmukeSwxQOQ@public.gmane.org>
+
+I have tested the patch for the four PowerPC platforms
+available to me.
+
+They are:
+
+MPC8349_MITXGP - Works.
+MVME5100        - Works.
+MVME4100 - Works.
+SAM440EP - Works.
+
+The MPC8349_MITXGP platform is present in Linux-3.13 and previous 
+releases.
+The MVME5100 is a "revived" platform that is in Linux-3.14-rc2.
+The MVME4100 is a work in progress and is the 85xx platform that the
+original failure report was for.
+The SAM440EP is present in Linux-3.13 and previous releases.
+
+The MPC8349_MITXGP is one of the 49 DTS files with the serial compatible:
+
+compatible = "fsl,ns16550", "ns16550";
+
+For the SAM440EP, the patch improves things from Linux-3.13. In that
+release the same sort of problem as reported in:
+
+"Linux-3.14-rc2: Order of serial node compatibles in DTS files."
+
+occurs with slightly different symptoms:
+
+of_serial ef600300.serial: Port found
+of_serial ef600300.serial: Port found
+of_serial ef600300.serial: Unknown serial port found, ignored
+of_serial ef600400.serial: Port found
+of_serial ef600400.serial: Port found
+of_serial ef600400.serial: Unknown serial port found, ignored
+of_serial ef600500.serial: Port found
+of_serial ef600500.serial: Port found
+of_serial ef600500.serial: Unknown serial port found, ignored
+of_serial ef600600.serial: Port found
+of_serial ef600600.serial: Port found
+of_serial ef600600.serial: Unknown serial port found, ignored
+
+The SAM440EP has a IBM/AMCC 440EP PowerPC CPU and so simply has
+"ns16550" as its serial compatible.
+
+
+> We could be a bit more strict here and fallback to the old matching if
+> the match table has any entries with name or type. I don't think that
+> should be necessary though.
+> 
+> Rob
+Stephen Chivers,
+CSC Australia Pty. Ltd.
+> 
+> > ---
+> >  drivers/of/base.c | 43 ++++++++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 42 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/of/base.c b/drivers/of/base.c
+> > index ba195fbce4c6..10b51106c854 100644
+> > --- a/drivers/of/base.c
+> > +++ b/drivers/of/base.c
+> > @@ -730,13 +730,49 @@ out:
+> >  }
+> >  EXPORT_SYMBOL(of_find_node_with_property);
+> >
+> > +static const struct of_device_id *
+> > +of_match_compatible(const struct of_device_id *matches,
+> > +                       const struct device_node *node)
+> > +{
+> > +       const char *cp;
+> > +       int cplen, l;
+> > +       const struct of_device_id *m;
+> > +
+> > +       cp = __of_get_property(node, "compatible", &cplen);
+> > +       while (cp && (cplen > 0)) {
+> > +               m = matches;
+> > +               while (m->name[0] || m->type[0] || m->compatible[0]) {
+> > +                       /* Only match for the entries without type
+> and name */
+> > +                       if (m->name[0] || m->type[0] ||
+> > +                               of_compat_cmp(m->compatible, cp,
+> > +                                        strlen(m->compatible)))
+> > +                               m++;
+> > +                       else
+> > +                               return m;
+> > +               }
+> > +
+> > +               /* Get node's next compatible string */
+> > +               l = strlen(cp) + 1;
+> > +               cp += l;
+> > +               cplen -= l;
+> > +       }
+> > +
+> > +       return NULL;
+> > +}
+> > +
+> >  static
+> >  const struct of_device_id *__of_match_node(const struct 
+> of_device_id *matches,
+> >                                            const struct device_node 
+*node)
+> >  {
+> > +       const struct of_device_id *m;
+> > +
+> >         if (!matches)
+> >                 return NULL;
+> >
+> > +       m = of_match_compatible(matches, node);
+> > +       if (m)
+> > +               return m;
+> > +
+> >         while (matches->name[0] || matches->type[0] || 
+> matches->compatible[0]) {
+> >                 int match = 1;
+> >                 if (matches->name[0])
+> > @@ -760,7 +796,12 @@ const struct of_device_id *__of_match_node
+> (const struct of_device_id *matches,
+> >   *     @matches:       array of of device match structures to search 
+in
+> >   *     @node:          the of device structure to match against
+> >   *
+> > - *     Low level utility function used by device matching.
+> > + *     Low level utility function used by device matching. We have 
+two ways
+> > + *     of matching:
+> > + *     - Try to find the best compatible match by comparing each 
+compatible
+> > + *       string of device node with all the given matches 
+respectively.
+> > + *     - If the above method failed, then try to match the 
+> compatible by using
+> > + *       __of_device_is_compatible() besides the match in type and 
+name.
+> >   */
+> >  const struct of_device_id *of_match_node(const struct 
+> of_device_id *matches,
+> >                                          const struct device_node 
+*node)
+> > --
+> > 1.8.5.3
+> >
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
