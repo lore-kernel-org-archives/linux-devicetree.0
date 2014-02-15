@@ -1,173 +1,118 @@
 From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: [PATCH v2 10/23] ARM: MM: Add DT binding for Feroceon L2 cache
-Date: Sat, 15 Feb 2014 11:20:08 +0100
-Message-ID: <1392459621-24003-11-git-send-email-andrew@lunn.ch>
-References: <1392459621-24003-1-git-send-email-andrew@lunn.ch>
+Subject: [PATCH v2 0/4] DT support for kirkwood based Synology NAS boxes
+Date: Sat, 15 Feb 2014 12:01:30 +0100
+Message-ID: <1392462094-25097-1-git-send-email-andrew@lunn.ch>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392459621-24003-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Instantiate the L2 cache from DT. Indicate in DT where the cache
-control register is and if write through should be made.
+This patchset adds support for around 30 kirkwood bases Synology NAS
+boxes. Patch #1 generalized the qnap power off driver so that i can
+also be used for Synology devices. Patch #2 and #3 document vendor
+prefixes and i2c trivial devices. Patch #4 adds the synology DT files.
 
-Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
 v2:
-Change compatible strings to follow l2x0 convention
-Only expect register for kirkwood-cache.
-Default to write through if no DT node.
-Rename writethrough to wt-override to follow l2cc binding.
-Split kirkwood.dtsi change into a patch of its own.
----
- .../devicetree/bindings/arm/mrvl/feroceon.txt      | 17 +++++++
- arch/arm/include/asm/hardware/cache-feroceon-l2.h  |  2 +
- arch/arm/mach-kirkwood/board-dt.c                  | 15 +------
- arch/arm/mm/cache-feroceon-l2.c                    | 52 ++++++++++++++++++++++
- 4 files changed, 72 insertions(+), 14 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/mrvl/feroceon.txt
+Typo fix in qnap-poweroff.c
+Use ricoy stock ticker instead of ricoh
+Describe the lego structure of the hardware
 
-diff --git a/Documentation/devicetree/bindings/arm/mrvl/feroceon.txt b/Documentation/devicetree/bindings/arm/mrvl/feroceon.txt
-new file mode 100644
-index 000000000000..d6d7d6195ed1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/mrvl/feroceon.txt
-@@ -0,0 +1,17 @@
-+* Marvell Feroceon Cache
-+
-+Required properties:
-+- compatible : Should be either "marvell,ferocean-cache" or
-+  	       "marvell,kirkwood-cache".
-+
-+Optional properties:
-+- wt-override: If present then L2 is forced to Write through mode
-+- reg        : Address of the L2 cache control register. Mandatory for
-+  	       "marvell,kirkwood-cache", not used by "marvell,ferocean-cache"
-+
-+
-+Example:
-+		l2: l2-cache@20128 {
-+			compatible = "marvell,kirkwood-cache";
-+			reg = <0x20128 0x4>;
-+		};
-diff --git a/arch/arm/include/asm/hardware/cache-feroceon-l2.h b/arch/arm/include/asm/hardware/cache-feroceon-l2.h
-index 8edd330aabf6..12e1588dc4f1 100644
---- a/arch/arm/include/asm/hardware/cache-feroceon-l2.h
-+++ b/arch/arm/include/asm/hardware/cache-feroceon-l2.h
-@@ -9,3 +9,5 @@
-  */
- 
- extern void __init feroceon_l2_init(int l2_wt_override);
-+extern int __init feroceon_of_init(void);
-+
-diff --git a/arch/arm/mach-kirkwood/board-dt.c b/arch/arm/mach-kirkwood/board-dt.c
-index 34c35510fd17..2ef59ee2182d 100644
---- a/arch/arm/mach-kirkwood/board-dt.c
-+++ b/arch/arm/mach-kirkwood/board-dt.c
-@@ -42,19 +42,6 @@ static void __init kirkwood_map_io(void)
- 	iotable_init(kirkwood_io_desc, ARRAY_SIZE(kirkwood_io_desc));
- }
- 
--static void __init kirkwood_l2_init(void)
--{
--#ifdef CONFIG_CACHE_FEROCEON_L2
--#ifdef CONFIG_CACHE_FEROCEON_L2_WRITETHROUGH
--	writel(readl(L2_CONFIG_REG) | L2_WRITETHROUGH, L2_CONFIG_REG);
--	feroceon_l2_init(1);
--#else
--	writel(readl(L2_CONFIG_REG) & ~L2_WRITETHROUGH, L2_CONFIG_REG);
--	feroceon_l2_init(0);
--#endif
--#endif
--}
--
- static struct resource kirkwood_cpufreq_resources[] = {
- 	[0] = {
- 		.start  = CPU_CONTROL_PHYS,
-@@ -211,7 +198,7 @@ static void __init kirkwood_dt_init(void)
- 
- 	BUG_ON(mvebu_mbus_dt_init());
- 
--	kirkwood_l2_init();
-+	feroceon_of_init();
- 
- 	kirkwood_cpufreq_init();
- 	kirkwood_cpuidle_init();
-diff --git a/arch/arm/mm/cache-feroceon-l2.c b/arch/arm/mm/cache-feroceon-l2.c
-index 898362e7972b..17a1ecd7a40c 100644
---- a/arch/arm/mm/cache-feroceon-l2.c
-+++ b/arch/arm/mm/cache-feroceon-l2.c
-@@ -13,11 +13,16 @@
-  */
- 
- #include <linux/init.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
- #include <linux/highmem.h>
-+#include <linux/io.h>
- #include <asm/cacheflush.h>
- #include <asm/cp15.h>
- #include <asm/hardware/cache-feroceon-l2.h>
- 
-+#define L2_WRITETHROUGH_KIRKWOOD	BIT(4)
-+
- /*
-  * Low-level cache maintenance operations.
-  *
-@@ -350,3 +355,50 @@ void __init feroceon_l2_init(int __l2_wt_override)
- 	printk(KERN_INFO "Feroceon L2: Cache support initialised%s.\n",
- 			 l2_wt_override ? ", in WT override mode" : "");
- }
-+#ifdef CONFIG_OF
-+static const struct of_device_id feroceon_ids[] __initconst = {
-+	{ .compatible = "marvell,kirkwood-cache"},
-+	{ .compatible = "marvell,feroceon-cache"},
-+	{}
-+};
-+
-+int __init feroceon_of_init(void)
-+{
-+	struct device_node *node;
-+	void __iomem *base;
-+	bool l2_wt_override = false;
-+	struct resource res;
-+
-+	node = of_find_matching_node(NULL, feroceon_ids);
-+	if (!node) {
-+		/*
-+		 * If we don't know the write through state then
-+		 * assume it is write back, as that is the safest
-+		 * option.
-+		 */
-+		feroceon_l2_init(0);
-+		return 0;
-+	}
-+
-+	if (of_device_is_compatible(node, "marvell,kirkwood-cache")) {
-+		if (of_property_read_bool(node, "wt-override"))
-+			l2_wt_override = true;
-+
-+		if (of_address_to_resource(node, 0, &res))
-+			return -ENODEV;
-+
-+		base = ioremap(res.start, resource_size(&res));
-+		if (!base)
-+			return -ENOMEM;
-+
-+		if (l2_wt_override)
-+			writel(readl(base) | L2_WRITETHROUGH_KIRKWOOD, base);
-+		else
-+			writel(readl(base) & ~L2_WRITETHROUGH_KIRKWOOD, base);
-+	}
-+
-+	feroceon_l2_init(l2_wt_override);
-+
-+	return 0;
-+}
-+#endif
+Andrew Lunn (4):
+  Power: Reset: Generalize qnap-poweroff to with on Synology devices.
+  DT: Vender prefixes: Add ricoh, ssi and synology
+  DT: i2c: Trivial: Add sii,s35390a, fix ricoh vendor prefix
+  ARM: Kirkwood: Add support for many Synology NAS devices
+
+ .../devicetree/bindings/i2c/trivial-devices.txt    |   3 +-
+ .../bindings/power_supply/qnap-poweroff.txt        |   5 +-
+ .../devicetree/bindings/vendor-prefixes.txt        |   3 +
+ arch/arm/boot/dts/Makefile                         |  15 +++
+ arch/arm/boot/dts/kirkwood-ds109.dts               |  33 ++++++
+ arch/arm/boot/dts/kirkwood-ds110jv10.dts           |  33 ++++++
+ arch/arm/boot/dts/kirkwood-ds111.dts               |  33 ++++++
+ arch/arm/boot/dts/kirkwood-ds112.dts               |  34 +++++++
+ arch/arm/boot/dts/kirkwood-ds209.dts               |  33 ++++++
+ arch/arm/boot/dts/kirkwood-ds210.dts               |  35 +++++++
+ arch/arm/boot/dts/kirkwood-ds212.dts               |  37 +++++++
+ arch/arm/boot/dts/kirkwood-ds212j.dts              |  34 +++++++
+ arch/arm/boot/dts/kirkwood-ds409.dts               |  34 +++++++
+ arch/arm/boot/dts/kirkwood-ds409slim.dts           |  32 ++++++
+ arch/arm/boot/dts/kirkwood-ds411.dts               |  35 +++++++
+ arch/arm/boot/dts/kirkwood-ds411j.dts              |  34 +++++++
+ arch/arm/boot/dts/kirkwood-ds411slim.dts           |  34 +++++++
+ arch/arm/boot/dts/kirkwood-rs212.dts               |  34 +++++++
+ arch/arm/boot/dts/kirkwood-rs409.dts               |  33 ++++++
+ arch/arm/boot/dts/kirkwood-rs411.dts               |  34 +++++++
+ arch/arm/boot/dts/synology/alarm-led-12.dtsi       |  28 ++++++
+ arch/arm/boot/dts/synology/common.dtsi             | 112 +++++++++++++++++++++
+ arch/arm/boot/dts/synology/ethernet-1.dtsi         |  15 +++
+ arch/arm/boot/dts/synology/fan-alarm-18.dtsi       |  22 ++++
+ arch/arm/boot/dts/synology/fan-alarm-35-1.dtsi     |  22 ++++
+ arch/arm/boot/dts/synology/fan-alarm-35-3.dtsi     |  32 ++++++
+ arch/arm/boot/dts/synology/fan-gpios-15.dtsi       |  34 +++++++
+ arch/arm/boot/dts/synology/fan-gpios-32.dtsi       |  34 +++++++
+ arch/arm/boot/dts/synology/fan-speed-100.dtsi      |  20 ++++
+ arch/arm/boot/dts/synology/fan-speed-120.dtsi      |  20 ++++
+ arch/arm/boot/dts/synology/fan-speed-150.dtsi      |  20 ++++
+ arch/arm/boot/dts/synology/hdd-leds-20.dtsi        |  90 +++++++++++++++++
+ arch/arm/boot/dts/synology/hdd-leds-21-1.dtsi      |  36 +++++++
+ arch/arm/boot/dts/synology/hdd-leds-21-2.dtsi      |  52 ++++++++++
+ arch/arm/boot/dts/synology/hdd-leds-36.dtsi        | 103 +++++++++++++++++++
+ arch/arm/boot/dts/synology/hdd-leds-38.dtsi        |  52 ++++++++++
+ arch/arm/boot/dts/synology/hdd-power-29.dtsi       |  56 +++++++++++
+ arch/arm/boot/dts/synology/hdd-power-30-1.dtsi     |  40 ++++++++
+ arch/arm/boot/dts/synology/hdd-power-30-2.dtsi     |  56 +++++++++++
+ arch/arm/boot/dts/synology/hdd-power-30-4.dtsi     |  89 ++++++++++++++++
+ arch/arm/boot/dts/synology/hdd-power-31.dtsi       |  40 ++++++++
+ arch/arm/boot/dts/synology/hdd-power-34.dtsi       |  73 ++++++++++++++
+ arch/arm/boot/dts/synology/i2c-rtc-ricoh.dtsi      |  18 ++++
+ arch/arm/boot/dts/synology/i2c-rtc-seiko.dtsi      |  18 ++++
+ arch/arm/boot/dts/synology/pcie-2.dtsi             |  19 ++++
+ drivers/power/reset/qnap-poweroff.c                |  46 +++++++--
+ 46 files changed, 1703 insertions(+), 12 deletions(-)
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds109.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds110jv10.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds111.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds112.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds209.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds210.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds212.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds212j.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds409.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds409slim.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds411.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds411j.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds411slim.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-rs212.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-rs409.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-rs411.dts
+ create mode 100644 arch/arm/boot/dts/synology/alarm-led-12.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/common.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/ethernet-1.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/fan-alarm-18.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/fan-alarm-35-1.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/fan-alarm-35-3.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/fan-gpios-15.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/fan-gpios-32.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/fan-speed-100.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/fan-speed-120.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/fan-speed-150.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/hdd-leds-20.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/hdd-leds-21-1.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/hdd-leds-21-2.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/hdd-leds-36.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/hdd-leds-38.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/hdd-power-29.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/hdd-power-30-1.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/hdd-power-30-2.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/hdd-power-30-4.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/hdd-power-31.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/hdd-power-34.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/i2c-rtc-ricoh.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/i2c-rtc-seiko.dtsi
+ create mode 100644 arch/arm/boot/dts/synology/pcie-2.dtsi
+
 -- 
 1.8.5.3
 
