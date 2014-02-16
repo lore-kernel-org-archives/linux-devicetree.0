@@ -1,29 +1,17 @@
-From: klightspeed@killerwolves.net
-Subject: [PATCH v3 4/4] ARM: Kirkwood: Add support for many Synology NAS
- devices
+From: klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org
+Subject: [PATCH v3 4/4] ARM: Kirkwood: Add support for many Synology NAS devices
 Date: Sun, 16 Feb 2014 20:27:51 +1000
-Message-ID: <5a55b4$em6if8@icp-osb-irony-out7.iinet.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, pawell.moll@arm.com, Ian Campbell <ijc@hellion.org.au>, Andrew Lunn <andrew@lunn.ch>, Kumar Gala <galak@codeaurora.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>
+Message-ID: <5a55b4$em6if8__1158.7948109538$1392548870$gmane$org@icp-osb-irony-out7.iinet.net.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kXUPNxK+0go4A@public.gmane.org>, pawell.moll-5wv7dgnIgG8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Add device tree fragments and files to support many of the kirkwood
 based Synology NAS devices. This is a modification of 
-Andrew Lunn's <andrew@lunn.ch> translation of the board setup file 
-maintained by Ben Peddell <klightspeed@killerwolves.net>
+Andrew Lunn's <andrew-g2DYL2Zd6BY@public.gmane.org> translation of the board setup file 
+maintained by Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 
 The Ricoh RS5C372 RTC was used in all 2009 units and some 2010 units.
 All other Synology Kirkwood-based DiskStations and RackStations use 
@@ -47,8 +35,8 @@ these boards, with all of the modules not common to all boards
 disabled.  The board dts files then enable the appropriate modules for
 their boards.
 
-Signed-off-by: Ben Peddell <klightspeed@killerwolves.net>
-Tested-by: Ben Peddell <klightspeed@killerwolves.net> (ds211j)
+Signed-off-by: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
+Tested-by: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org> (ds211j)
 ---
  arch/arm/boot/dts/Makefile                   |  15 +
  arch/arm/boot/dts/kirkwood-ds-rs-common.dtsi | 764 +++++++++++++++++++++++++++
@@ -129,8 +117,8 @@ index 0000000..65f0b9d
 +/*
 + * Nodes for Marvell 628x Synology devices
 + *
-+ * Andrew Lunn <andrew@lunn.ch>
-+ * Ben Peddell <klightspeed@killerwolves.net>
++ * Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
++ * Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 + *
 + * This file is licensed under the terms of the GNU General Public
 + * License version 2.  This program is licensed "as is" without any
@@ -897,8 +885,8 @@ index 0000000..9320166
 +++ b/arch/arm/boot/dts/kirkwood-ds109.dts
 @@ -0,0 +1,42 @@
 +/*
-+ * Andrew Lunn <andrew@lunn.ch>
-+ * Ben Peddell <klightspeed@killerwolves.net>
++ * Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
++ * Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 + *
 + * This file is licensed under the terms of the GNU General Public
 + * License version 2.  This program is licensed "as is" without any
@@ -945,8 +933,8 @@ index 0000000..09d4fbb
 +++ b/arch/arm/boot/dts/kirkwood-ds110jv10.dts
 @@ -0,0 +1,41 @@
 +/*
-+ * Andrew Lunn <andrew@lunn.ch>
-+ * Ben Peddell <klightspeed@killerwolves.net>
++ * Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
++ * Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 + *
 + * This file is licensed under the terms of the GNU General Public
 + * License version 2.  This program is licensed "as is" without any
@@ -992,8 +980,8 @@ index 0000000..0369204
 +++ b/arch/arm/boot/dts/kirkwood-ds111.dts
 @@ -0,0 +1,44 @@
 +/*
-+ * Andrew Lunn <andrew@lunn.ch>
-+ * Ben Peddell <klightspeed@killerwolves.net>
++ * Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
++ * Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 + *
 + * This file is licensed under the terms of the GNU General Public
 + * License version 2.  This program is licensed "as is" without any
@@ -1042,8 +1030,8 @@ index 0000000..9a70bf9
 +++ b/arch/arm/boot/dts/kirkwood-ds112.dts
 @@ -0,0 +1,48 @@
 +/*
-+ * Andrew Lunn <andrew@lunn.ch>
-+ * Ben Peddell <klightspeed@killerwolves.net>
++ * Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
++ * Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 + *
 + * This file is licensed under the terms of the GNU General Public
 + * License version 2.  This program is licensed "as is" without any
@@ -1096,8 +1084,8 @@ index 0000000..466f584
 +++ b/arch/arm/boot/dts/kirkwood-ds209.dts
 @@ -0,0 +1,44 @@
 +/*
-+ * Andrew Lunn <andrew@lunn.ch>
-+ * Ben Peddell <klightspeed@killerwolves.net>
++ * Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
++ * Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 + *
 + * This file is licensed under the terms of the GNU General Public
 + * License version 2.  This program is licensed "as is" without any
@@ -1146,8 +1134,8 @@ index 0000000..0d8a0e1
 +++ b/arch/arm/boot/dts/kirkwood-ds210.dts
 @@ -0,0 +1,46 @@
 +/*
-+ * Andrew Lunn <andrew@lunn.ch>
-+ * Ben Peddell <klightspeed@killerwolves.net>
++ * Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
++ * Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 + *
 + * This file is licensed under the terms of the GNU General Public
 + * License version 2.  This program is licensed "as is" without any
@@ -1198,8 +1186,8 @@ index 0000000..dd0374e
 +++ b/arch/arm/boot/dts/kirkwood-ds212.dts
 @@ -0,0 +1,47 @@
 +/*
-+ * Andrew Lunn <andrew@lunn.ch>
-+ * Ben Peddell <klightspeed@killerwolves.net>
++ * Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
++ * Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 + *
 + * This file is licensed under the terms of the GNU General Public
 + * License version 2.  This program is licensed "as is" without any
@@ -1251,8 +1239,8 @@ index 0000000..7328044
 +++ b/arch/arm/boot/dts/kirkwood-ds212j.dts
 @@ -0,0 +1,41 @@
 +/*
-+ * Andrew Lunn <andrew@lunn.ch>
-+ * Ben Peddell <klightspeed@killerwolves.net>
++ * Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
++ * Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 + *
 + * This file is licensed under the terms of the GNU General Public
 + * License version 2.  This program is licensed "as is" without any
@@ -1298,8 +1286,8 @@ index 0000000..c6aa57b
 +++ b/arch/arm/boot/dts/kirkwood-ds409.dts
 @@ -0,0 +1,48 @@
 +/*
-+ * Andrew Lunn <andrew@lunn.ch>
-+ * Ben Peddell <klightspeed@killerwolves.net>
++ * Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
++ * Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 + *
 + * This file is licensed under the terms of the GNU General Public
 + * License version 2.  This program is licensed "as is" without any
@@ -1352,8 +1340,8 @@ index 0000000..3c7b5bd
 +++ b/arch/arm/boot/dts/kirkwood-ds409slim.dts
 @@ -0,0 +1,40 @@
 +/*
-+ * Andrew Lunn <andrew@lunn.ch>
-+ * Ben Peddell <klightspeed@killerwolves.net>
++ * Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
++ * Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 + *
 + * This file is licensed under the terms of the GNU General Public
 + * License version 2.  This program is licensed "as is" without any
@@ -1398,8 +1386,8 @@ index 0000000..c8aa152
 +++ b/arch/arm/boot/dts/kirkwood-ds411.dts
 @@ -0,0 +1,52 @@
 +/*
-+ * Andrew Lunn <andrew@lunn.ch>
-+ * Ben Peddell <klightspeed@killerwolves.net>
++ * Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
++ * Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 + *
 + * This file is licensed under the terms of the GNU General Public
 + * License version 2.  This program is licensed "as is" without any
@@ -1456,8 +1444,8 @@ index 0000000..9546a2d
 +++ b/arch/arm/boot/dts/kirkwood-ds411j.dts
 @@ -0,0 +1,48 @@
 +/*
-+ * Andrew Lunn <andrew@lunn.ch>
-+ * Ben Peddell <klightspeed@killerwolves.net>
++ * Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
++ * Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 + *
 + * This file is licensed under the terms of the GNU General Public
 + * License version 2.  This program is licensed "as is" without any
@@ -1510,8 +1498,8 @@ index 0000000..b2d8ea8
 +++ b/arch/arm/boot/dts/kirkwood-ds411slim.dts
 @@ -0,0 +1,48 @@
 +/*
-+ * Andrew Lunn <andrew@lunn.ch>
-+ * Ben Peddell <klightspeed@killerwolves.net>
++ * Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
++ * Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 + *
 + * This file is licensed under the terms of the GNU General Public
 + * License version 2.  This program is licensed "as is" without any
@@ -1564,8 +1552,8 @@ index 0000000..3efad06
 +++ b/arch/arm/boot/dts/kirkwood-rs212.dts
 @@ -0,0 +1,48 @@
 +/*
-+ * Andrew Lunn <andrew@lunn.ch>
-+ * Ben Peddell <klightspeed@killerwolves.net>
++ * Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
++ * Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 + *
 + * This file is licensed under the terms of the GNU General Public
 + * License version 2.  This program is licensed "as is" without any
@@ -1618,8 +1606,8 @@ index 0000000..cddd620
 +++ b/arch/arm/boot/dts/kirkwood-rs409.dts
 @@ -0,0 +1,44 @@
 +/*
-+ * Andrew Lunn <andrew@lunn.ch>
-+ * Ben Peddell <klightspeed@killerwolves.net>
++ * Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
++ * Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 + *
 + * This file is licensed under the terms of the GNU General Public
 + * License version 2.  This program is licensed "as is" without any
@@ -1668,8 +1656,8 @@ index 0000000..a337a5c
 +++ b/arch/arm/boot/dts/kirkwood-rs411.dts
 @@ -0,0 +1,44 @@
 +/*
-+ * Andrew Lunn <andrew@lunn.ch>
-+ * Ben Peddell <klightspeed@killerwolves.net>
++ * Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
++ * Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 + *
 + * This file is licensed under the terms of the GNU General Public
 + * License version 2.  This program is licensed "as is" without any
@@ -1713,3 +1701,8 @@ index 0000000..a337a5c
 +};
 -- 
 1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
