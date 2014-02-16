@@ -1,171 +1,39 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v4] bus: imx-weim: support CS GPR configuration
-Date: Sun, 16 Feb 2014 22:03:01 +0800
-Message-ID: <1392559381-30842-1-git-send-email-shawn.guo@linaro.org>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2NF0gYnVzOiBpbXgtd2VpbTogc3VwcG9ydCBDUyBHUFIg?=
+ =?UTF-8?B?Y29uZmlndXJhdGlvbg==?=
+Date: Sun, 16 Feb 2014 18:22:44 +0400
+Message-ID: <1392560564.725313659@f356.i.mail.ru>
+References: <1392559381-30842-1-git-send-email-shawn.guo@linaro.org>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392559381-30842-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Philippe De Muyter <phdm-KobBqTBAxd8@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: =?UTF-8?B?U2hhd24gR3Vv?= <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?B?UGhpbGlwcGUgRGUgTXV5dGVy?= <phdm-KobBqTBAxd8@public.gmane.org>, =?UTF-8?B?SHVhbmcgU2hpamll?= <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-For imx50-weim and imx6q-weim type of devices, there might a WEIM CS
-space configuration register in General Purpose Register controller,
-e.g. IOMUXC_GPR1 on i.MX6Q.
-
-Depending on which configuration of the following 4 is chosen for given
-system, IOMUXC_GPR1[11:0] should be set up as 05, 033, 0113 or 01111
-correspondingly.
-
-	CS0(128M) CS1(0M)  CS2(0M)  CS3(0M)
-	CS0(64M)  CS1(64M) CS2(0M)  CS3(0M)
-	CS0(64M)  CS1(32M) CS2(32M) CS3(0M)
-	CS0(32M)  CS1(32M) CS2(32M) CS3(32M)
-
-The patch creates a function for such type of devices, which scans
-'ranges' property of WEIM node and build the GPR value incrementally.
-Thus the WEIM CS GPR can be set up automatically at boot time.
-
-Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-Changes since v3:
- - Add DT property fsl,weim-cs-gpr back, so that the support can work
-   for more i.MX SoCs than just i.MX6Q.
-
- Documentation/devicetree/bindings/bus/imx-weim.txt |   27 +++++++++-
- drivers/bus/imx-weim.c                             |   55 ++++++++++++++++++++
- 2 files changed, 81 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/bus/imx-weim.txt b/Documentation/devicetree/bindings/bus/imx-weim.txt
-index 0fd76c4..363c970 100644
---- a/Documentation/devicetree/bindings/bus/imx-weim.txt
-+++ b/Documentation/devicetree/bindings/bus/imx-weim.txt
-@@ -8,7 +8,12 @@ The actual devices are instantiated from the child nodes of a WEIM node.
- 
- Required properties:
- 
-- - compatible:		Should be set to "fsl,<soc>-weim"
-+ - compatible:		Should contain one of the following:
-+			  "fsl,imx1-weim"
-+			  "fsl,imx27-weim"
-+			  "fsl,imx51-weim"
-+			  "fsl,imx50-weim"
-+			  "fsl,imx6q-weim"
-  - reg:			A resource specifier for the register space
- 			(see the example below)
-  - clocks:		the clock, see the example below.
-@@ -19,6 +24,26 @@ Required properties:
- 
- 			   <cs-number> 0 <physical address of mapping> <size>
- 
-+Optional properties:
-+
-+ - fsl,weim-cs-gpr:	For "fsl,imx50-weim" and "fsl,imx6q-weim" type of
-+			devices, it should be the phandle to the system General
-+			Purpose Register controller that contains WEIM CS GPR
-+			register, e.g. IOMUXC_GPR1 on i.MX6Q.  IOMUXC_GPR1[11:0]
-+			should be set up as one of the following 4 possible
-+			values depending on the CS space configuration.
-+
-+			IOMUXC_GPR1[11:0]    CS0    CS1    CS2    CS3
-+			---------------------------------------------
-+				05	    128M     0M     0M     0M
-+				033          64M    64M     0M     0M
-+				0113         64M    32M    32M     0M
-+				01111        32M    32M    32M    32M
-+
-+			In case that the property is absent, the reset value or
-+			what bootloader sets up in IOMUXC_GPR1[11:0] will be
-+			used.
-+
- Timing property for child nodes. It is mandatory, not optional.
- 
-  - fsl,weim-cs-timing:	The timing array, contains timing values for the
-diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
-index 3ef58c8..35e9529 100644
---- a/drivers/bus/imx-weim.c
-+++ b/drivers/bus/imx-weim.c
-@@ -11,6 +11,9 @@
- #include <linux/clk.h>
- #include <linux/io.h>
- #include <linux/of_device.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
-+#include <linux/regmap.h>
- 
- struct imx_weim_devtype {
- 	unsigned int	cs_count;
-@@ -56,6 +59,55 @@ static const struct of_device_id weim_id_table[] = {
- };
- MODULE_DEVICE_TABLE(of, weim_id_table);
- 
-+static int __init imx_weim_gpr_setup(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct property *prop;
-+	const __be32 *p;
-+	struct regmap *gpr;
-+	u32 gprvals[4] = {
-+		05,	/* CS0(128M) CS1(0M)  CS2(0M)  CS3(0M) */
-+		033,	/* CS0(64M)  CS1(64M) CS2(0M)  CS3(0M) */
-+		0113,	/* CS0(64M)  CS1(32M) CS2(32M) CS3(0M) */
-+		01111,	/* CS0(64M)  CS1(32M) CS2(32M) CS3(0M) */
-+	};
-+	u32 gprval = 0;
-+	u32 val;
-+	int cs = 0;
-+	int i = 0;
-+
-+	gpr = syscon_regmap_lookup_by_phandle(np, "fsl,weim-cs-gpr");
-+	if (IS_ERR(gpr)) {
-+		dev_dbg(&pdev->dev, "failed to find weim-cs-gpr\n");
-+		return 0;
-+	}
-+
-+	of_property_for_each_u32(np, "ranges", prop, p, val) {
-+		if (i % 4 == 0) {
-+			cs = val;
-+		} else if (i % 4 == 3 && val) {
-+			val = (val / SZ_32M) | 1;
-+			gprval |= val << cs * 3;
-+		}
-+		i++;
-+	}
-+
-+	if (i == 0 || i % 4)
-+		goto err;
-+
-+	for (i = 0; i < ARRAY_SIZE(gprvals); i++) {
-+		if (gprval == gprvals[i]) {
-+			/* Found it. Set up IOMUXC_GPR1[11:0] with it. */
-+			regmap_update_bits(gpr, IOMUXC_GPR1, 0xfff, gprval);
-+			return 0;
-+		}
-+	}
-+
-+err:
-+	dev_err(&pdev->dev, "Invalid 'ranges' configuration\n");
-+	return -EINVAL;
-+}
-+
- /* Parse and set the timing for this device. */
- static int __init weim_timing_setup(struct device_node *np, void __iomem *base,
- 				    const struct imx_weim_devtype *devtype)
-@@ -92,6 +144,9 @@ static int __init weim_parse_dt(struct platform_device *pdev,
- 	struct device_node *child;
- 	int ret;
- 
-+	if (devtype == &imx50_weim_devtype)
-+		imx_weim_gpr_setup(pdev);
-+
- 	for_each_child_of_node(pdev->dev.of_node, child) {
- 		if (!child->name)
- 			continue;
--- 
-1.7.9.5
-
-
+0JLQvtGB0LrRgNC10YHQtdC90YzQtSwgMTYg0YTQtdCy0YDQsNC70Y8gMjAxNCwgMjI6MDMgKzA4
+OjAwINC+0YIgU2hhd24gR3VvIDxzaGF3bi5ndW9AbGluYXJvLm9yZz46Cj4gRm9yIGlteDUwLXdl
+aW0gYW5kIGlteDZxLXdlaW0gdHlwZSBvZiBkZXZpY2VzLCB0aGVyZSBtaWdodCBhIFdFSU0gQ1MK
+PiBzcGFjZSBjb25maWd1cmF0aW9uIHJlZ2lzdGVyIGluIEdlbmVyYWwgUHVycG9zZSBSZWdpc3Rl
+ciBjb250cm9sbGVyLAo+IGUuZy4gSU9NVVhDX0dQUjEgb24gaS5NWDZRLgouLi4KPiArc3RhdGlj
+IGludCBfX2luaXQgaW14X3dlaW1fZ3ByX3NldHVwKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBk
+ZXYpCj4gK3sKPiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBwZGV2LT5kZXYub2Zfbm9kZTsK
+PiArCXN0cnVjdCBwcm9wZXJ0eSAqcHJvcDsKPiArCWNvbnN0IF9fYmUzMiAqcDsKPiArCXN0cnVj
+dCByZWdtYXAgKmdwcjsKPiArCXUzMiBncHJ2YWxzWzRdID0gewo+ICsJCTA1LAkvKiBDUzAoMTI4
+TSkgQ1MxKDBNKSAgQ1MyKDBNKSAgQ1MzKDBNKSAqLwo+ICsJCTAzMywJLyogQ1MwKDY0TSkgIENT
+MSg2NE0pIENTMigwTSkgIENTMygwTSkgKi8KPiArCQkwMTEzLAkvKiBDUzAoNjRNKSAgQ1MxKDMy
+TSkgQ1MyKDMyTSkgQ1MzKDBNKSAqLwo+ICsJCTAxMTExLAkvKiBDUzAoNjRNKSAgQ1MxKDMyTSkg
+Q1MyKDMyTSkgQ1MzKDBNKSAqLwo+ICsJfTsKPiArCXUzMiBncHJ2YWwgPSAwOwo+ICsJdTMyIHZh
+bDsKPiArCWludCBjcyA9IDA7Cj4gKwlpbnQgaSA9IDA7Cj4gKwo+ICsJZ3ByID0gc3lzY29uX3Jl
+Z21hcF9sb29rdXBfYnlfcGhhbmRsZShucCwgImZzbCx3ZWltLWNzLWdwciIpOwo+ICsJaWYgKElT
+X0VSUihncHIpKSB7Cj4gKwkJZGV2X2RiZygmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIGZpbmQgd2Vp
+bS1jcy1ncHJcbiIpOwo+ICsJCXJldHVybiAwOwoKT25seSBvbmUgY29tbWVudDoKWW91IGRvIG5v
+dCB1c2UgdGhlc2UgZXJyb3IgY29kZXMgaW4gdGhlIHByb2JlKCksCnNvIGxldCdzIGRlY2xhcmUg
+dGhpcyBmdW5jdGlvbiBhcyB2b2lkLgoKLS0tCg==
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
