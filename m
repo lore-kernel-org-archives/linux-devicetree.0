@@ -1,45 +1,25 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2M10gYnVzOiBpbXgtd2VpbTogc3VwcG9ydCBDUyBHUFIg?=
- =?UTF-8?B?Y29uZmlnIGZvciBpbXg2cS13ZWlt?=
-Date: Sun, 16 Feb 2014 15:08:01 +0400
-Message-ID: <1392548881.675863030@f320.i.mail.ru>
-References: <1392539924-23583-1-git-send-email-shawn.guo@linaro.org>
- <20140216105636.GE2946@S2101-09.ap.freescale.net>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+From: Eleazar Molina Molina <emolinam-IUjJtHYRkWY@public.gmane.org>
+Subject: (unknown)
+Date: Sun, 16 Feb 2014 11:35:48 +0000
+Message-ID: <96981AF3F114A3449F8EF6BBFDE030B38E48778E@50EXCH50A.activedirectory.ipn.mx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140216105636.GE2946-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Subject: 
+Content-Language: es-MX
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?U2hhd24gR3Vv?= <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?B?SHVhbmcgU2hpamll?= <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, =?UTF-8?B?UGhpbGlwcGUgRGUgTXV5dGVy?= <phdm-KobBqTBAxd8@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-0JLQvtGB0LrRgNC10YHQtdC90YzQtSwgMTYg0YTQtdCy0YDQsNC70Y8gMjAxNCwgMTg6NTYgKzA4
-OjAwINC+0YIgU2hhd24gR3VvIDxzaGF3bi5ndW9AbGluYXJvLm9yZz46Cj4gT24gU3VuLCBGZWIg
-MTYsIDIwMTQgYXQgMDQ6Mzg6NDRQTSArMDgwMCwgU2hhd24gR3VvIHdyb3RlOgo+ID4gQEAgLTU2
-LDYgKzU5LDU1IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHdlaW1faWRfdGFi
-bGVbXSA9IHsKPiA+ICB9Owo+ID4gIE1PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIHdlaW1faWRfdGFi
-bGUpOwo+ID4gIAo+ID4gK3N0YXRpYyBpbnQgX19pbml0IGlteDZxX3dlaW1fZ3ByX3NldHVwKHN0
-cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gPiArewo+ID4gKwlzdHJ1Y3QgZGV2aWNlX25v
-ZGUgKm5wID0gcGRldi0+ZGV2Lm9mX25vZGU7Cj4gPiArCXN0cnVjdCBwcm9wZXJ0eSAqcHJvcDsK
-PiA+ICsJY29uc3QgX19iZTMyICpwOwo+ID4gKwlzdHJ1Y3QgcmVnbWFwICpncHI7Cj4gPiArCXUz
-MiBncHJ2YWxzWzRdID0gewo+ID4gKwkJMDUsCS8qIENTMCgxMjhNKSBDUzEoME0pICBDUzIoME0p
-ICBDUzMoME0pICovCj4gPiArCQkwMzMsCS8qIENTMCg2NE0pICBDUzEoNjRNKSBDUzIoME0pICBD
-UzMoME0pICovCj4gPiArCQkwMTEzLAkvKiBDUzAoNjRNKSAgQ1MxKDMyTSkgQ1MyKDMyTSkgQ1Mz
-KDBNKSAqLwo+ID4gKwkJMDExMTEsCS8qIENTMCg2NE0pICBDUzEoMzJNKSBDUzIoMzJNKSBDUzMo
-ME0pICovCj4gPiArCX07Cj4gPiArCXUzMiBncHJ2YWwgPSAwOwo+ID4gKwl1MzIgdmFsOwo+ID4g
-KwlpbnQgY3MgPSAwOwo+ID4gKwlpbnQgaSA9IDA7Cj4gPiArCj4gPiArCWdwciA9IHN5c2Nvbl9y
-ZWdtYXBfbG9va3VwX2J5X2NvbXBhdGlibGUoImZzbCxpbXg2cS1pb211eGMtZ3ByIik7Cj4gCj4g
-V2hlbiB0cnlpbmcgdG8gaW1wcm92ZSB0aGUgYmluZGluZ3MgZG9jIGlteC13ZWltLnR4dCwgSSBj
-aGVja2VkIGhhcmR3YXJlCj4gbWFudWFscyBhbmQgZm91bmQgdGhhdCBTb0NzIGlteDUwLCBpbXg1
-MywgaW14NnEsIGlteDZkbCBhbmQgaW14NnNsIGFsbAo+IG5lZWQgdGhlIHNhbWUgQ1MgR1BSIHNl
-dHVwLiAgSXQncyBpbmFwcHJvcHJpYXRlIHRvIGxvb2sgdXAgYnkgaGFyZC1jb2RlZAo+IGNvbXBh
-dGlibGUgImZzbCxpbXg2cS1pb211eGMtZ3ByIiB0aGVuLiAgU28gSSdtIGdvaW5nIHRvIGFkZCB0
-aGUKPiBwcm9wZXJ0eSBmc2wsd2VpbS1jcy1ncHIgYmFjaywgYW5kIHVwZGF0ZSBiaW5kaW5ncyBk
-b2MgYWNjb3JkaW5nbHkuCgpZb3UgY2FuIGFkZCBhZGRpdGlvbmFsIGNhbGwgaW50byBzdHJ1Y3Qg
-aW14X3dlaW1fZGV2dHlwZSBmb3IgaGFuZGxlCnNvYy1zcGVjaWZpYyBzdHVmZi4KCi0tLQo=
+DQoNCkdvb2QgZGF5LiBJIGFtIE1hcmsgUmV5ZXMgR3V1cywgSSBub3Qgd29yayB3aXRoIEFibiBB
+bXJvIEJhbmsgYXMgYW4gYXVkaXRvci4gSSBoYXZlIGEgcHJvcG9zaXRpb24gdG8gZGlzY3VzcyB3
+aXRoIHlvdS4gU2hvdWxkIHlvdSBiZSBpbnRlcmVzdGVkLCBQbGVhc2UgZS1tYWlsIGJhY2sgdG8g
+bWUuDQoNClByaXZhdGUgRW1haWw6IG1hcmtyZXllc2d1dXNAYWJubXJvYi5jby51ayBPUiBtYXJr
+Z3V1cy5yZXllczAxIEAgeWFob28ubmwNCg0KWW91cnMgU2luY2VyZWx5LA0KR3V1cyBNYXJrIFJl
+eWVzLg0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KDQpMYSBpbmZvcm1hY2nD
+s24gZGUgZXN0ZSBjb3JyZW8gYXPDrSBjb21vIGxhIGNvbnRlbmlkYSBlbiBsb3MgZG9jdW1lbnRv
+cyBxdWUgc2UgYWRqdW50YW4sIHB1ZWRlbiBzZXIgb2JqZXRvIGRlIHNvbGljaXR1ZGVzIGRlIGFj
+Y2VzbyBhIGxhIGluZm9ybWFjacOzbi4gVmlzw610YW5vczogaHR0cDovL3d3dy5pcG4ubXgNCg==
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
