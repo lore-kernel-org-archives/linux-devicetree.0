@@ -1,63 +1,56 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4] bus: imx-weim: support CS GPR configuration
-Date: Sun, 16 Feb 2014 22:31:16 +0800
-Message-ID: <20140216143114.GH2946@S2101-09.ap.freescale.net>
-References: <1392559381-30842-1-git-send-email-shawn.guo@linaro.org>
- <1392560564.725313659@f356.i.mail.ru>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] hwmon: twl4030-madc-hwmon: Add device tree support.
+Date: Sun, 16 Feb 2014 08:39:54 -0800
+Message-ID: <5300E9DA.501@roeck-us.net>
+References: <1392384058-14240-1-git-send-email-marek@goldelico.com>	<20140214133101.GA17796@e106331-lin.cambridge.arm.com> <CAAfyv36Eo578K1LAdFJdKKjs800Gz2_kfJqvEcdD_U1qRCKY6w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1392560564.725313659-xNJVu4UI9wlsdVUOrk1QfQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Philippe De Muyter <phdm-KobBqTBAxd8@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAAfyv36Eo578K1LAdFJdKKjs800Gz2_kfJqvEcdD_U1qRCKY6w@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Belisko Marek <marek.belisko@gmail.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "jdelvare@suse.de" <jdelvare@suse.de>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "hns@goldelico.com" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 16, 2014 at 06:22:44PM +0400, Alexander Shiyan wrote:
-> =D0=92=D0=BE=D1=81=D0=BA=D1=80=D0=B5=D1=81=D0=B5=D0=BD=D1=8C=D0=B5, 1=
-6 =D1=84=D0=B5=D0=B2=D1=80=D0=B0=D0=BB=D1=8F 2014, 22:03 +08:00 =D0=BE=D1=
-=82 Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
-> > For imx50-weim and imx6q-weim type of devices, there might a WEIM C=
-S
-> > space configuration register in General Purpose Register controller=
-,
-> > e.g. IOMUXC_GPR1 on i.MX6Q.
-> ...
-> > +static int __init imx_weim_gpr_setup(struct platform_device *pdev)
-> > +{
-> > +	struct device_node *np =3D pdev->dev.of_node;
-> > +	struct property *prop;
-> > +	const __be32 *p;
-> > +	struct regmap *gpr;
-> > +	u32 gprvals[4] =3D {
-> > +		05,	/* CS0(128M) CS1(0M)  CS2(0M)  CS3(0M) */
-> > +		033,	/* CS0(64M)  CS1(64M) CS2(0M)  CS3(0M) */
-> > +		0113,	/* CS0(64M)  CS1(32M) CS2(32M) CS3(0M) */
-> > +		01111,	/* CS0(64M)  CS1(32M) CS2(32M) CS3(0M) */
-> > +	};
-> > +	u32 gprval =3D 0;
-> > +	u32 val;
-> > +	int cs =3D 0;
-> > +	int i =3D 0;
-> > +
-> > +	gpr =3D syscon_regmap_lookup_by_phandle(np, "fsl,weim-cs-gpr");
-> > +	if (IS_ERR(gpr)) {
-> > +		dev_dbg(&pdev->dev, "failed to find weim-cs-gpr\n");
-> > +		return 0;
->=20
-> Only one comment:
-> You do not use these error codes in the probe(),
-> so let's declare this function as void.
+On 02/14/2014 06:08 AM, Belisko Marek wrote:
+> On Fri, Feb 14, 2014 at 2:31 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+>> On Fri, Feb 14, 2014 at 01:20:58PM +0000, Marek Belisko wrote:
+>>> Signed-off-by: Marek Belisko <marek@goldelico.com>
+>>> ---
+>>>   Documentation/devicetree/bindings/hwmon/twl4030-madc-hwmon.txt |  9 +++++++++
+>>>   drivers/hwmon/twl4030-madc-hwmon.c                             | 10 ++++++++++
+>>>   2 files changed, 19 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/hwmon/twl4030-madc-hwmon.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/hwmon/twl4030-madc-hwmon.txt b/Documentation/devicetree/bindings/hwmon/twl4030-madc-hwmon.txt
+>>> new file mode 100644
+>>> index 0000000..e8016d1
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/hwmon/twl4030-madc-hwmon.txt
+>>> @@ -0,0 +1,9 @@
+>>> +TWL4030 MADC hwmon.
+>>> +
+>>> +Required properties:
+>>> +- compatible: "ti,twl4030-madc-hwmon"
+>>> +
+>>> +Example:
+>>> +madc-hwmon {
+>>> +     compatible = "ti,twl4030-madc-hwmon";
+>>> +};
+>>
+>> Huh?
+>>
+>> What is this a binding for? From a look at the driver in mainline this
+>> just calls into functions from the twl4030 madc driver (which doesn't
+>> seem to have a binding).
+> I post bindings for twl4030-madc [1]. Without probing this driver
+> other things will not work (twl4030-madc-battery e.g.).
+> Is there better way to handle this situation?
 
-Oh, yes.  I should check return of imx_weim_gpr_setup() in probe().
-Will add in the next version.
+Since you are converting twl4030-madc to be an iio driver,
+can't you simply use the iio_hwmon bridge and declare this driver
+obsolete ?
 
-Shawn
+Guenter
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
