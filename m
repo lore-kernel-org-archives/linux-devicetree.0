@@ -1,74 +1,107 @@
-From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFCv1 2/4] mfd: twl4030-madc: Add DT support and convert to IIO
- framework
-Date: Sun, 16 Feb 2014 10:02:39 +0100
-Message-ID: <20140216090238.GA9066@earth.universe>
-References: <20140214174040.GB26969@earth.universe>
- <1392403586-30540-1-git-send-email-sre@debian.org>
- <1392403586-30540-2-git-send-email-sre@debian.org>
- <CAAfyv36yfd0tSe9G2AnX+DzE-gObdRxYfgK+NKT8zwYmqt=QcQ@mail.gmail.com>
+From: "Priit Laes" <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Subject: Re: [PATCH v6 4/8] ARM: sunxi: Add driver for SD/MMC
+ hosts found on Allwinner sunxi SoCs
+Date: Sun, 16 Feb 2014 11:22:28 +0200
+Message-ID: <1392542548.11093.13.camel@chi.lan>
+References: <20140216050933.728.25526.stgit@dizzy-6.o2s.ch>
+	 <20140216051133.728.36386.stgit@dizzy-6.o2s.ch>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="SUOF0GtieIMvvwua"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAAfyv36yfd0tSe9G2AnX+DzE-gObdRxYfgK+NKT8zwYmqt=QcQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDJLTBEBXENBBT4EQKMAKGQEMOZVIFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140216051133.728.36386.stgit-GPtPHOohwllnsqa/0SyWJQ@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Emilio =?ISO-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+=C3=9Chel kenal p=C3=A4eval, P, 16.02.2014 kell 06:11, kirjutas David
+Lanzend=C3=B6rfer:
+> This is based on the driver Allwinner ships in their Android kernel sourc=
+es.
 
---SUOF0GtieIMvvwua
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[...]
 
-Hi Marek,
+> +++ b/drivers/mmc/host/sunxi-mmc.c
+> @@ -0,0 +1,876 @@
+> +/*
+> + * Driver for sunxi SD/MMC host controllers
+> + * (C) Copyright 2014-2015 Reuuimlla Technology Co., Ltd.
+> + * (C) Copyright 2014-2015 Aaron Maoye <leafy.myeh-jFKXxz0WcGyYHARAtoI1EgC/G2K4zDHf@public.gmane.org>
+> + * (C) Copyright 2014-2015 O2S GmbH <www.o2s.ch>
+> + * (C) Copyright 2014-2015 David Lanzend=C3=B6rfer <david.lanzendoerfer@=
+o2s.ch>
+> + * (C) Copyright 2014-2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-On Sat, Feb 15, 2014 at 02:31:41PM +0100, Belisko Marek wrote:
-> >         /*
-> >          * Phoenix provides 2 interrupt lines. The first one is connected to
-> >          * the OMAP. The other one can be connected to the other processor such
-> >          * as modem. Hence two separate ISR and IMR registers.
-> >          */
-> > -       madc->imr = (pdata->irq_line == 1) ?
-> > +       if (pdata)
-> > +               madc->use_second_irq = pdata->irq_line != 1;
-> > +       else
-> > +               madc->use_second_irq = false;
->
-> Can we add some property to use second IRQ also in DT?
+ETIMETRAVEL
 
-Sure, a boolean property like this could be added:
+[...]
+> +++ b/drivers/mmc/host/sunxi-mmc.h
+> @@ -0,0 +1,239 @@
+> +/*
+> + * Driver for sunxi SD/MMC host controllers
+> + * (C) Copyright 2014-2015 Reuuimlla Technology Co., Ltd.
+> + * (C) Copyright 2014-2015 Aaron Maoye <leafy.myeh-jFKXxz0WcGyYHARAtoI1EgC/G2K4zDHf@public.gmane.org>
+> + * (C) Copyright 2014-2015 O2S GmbH <www.o2s.ch>
+> + * (C) Copyright 2014-2015 David Lanzend=C3=B6rfer <david.lanzendoerfer@=
+o2s.ch>
+> + * (C) Copyright 2014-2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-ti,system-uses-second-madc-irq;
+ETIMETRAVEL
 
-I did not add support for it initially, since I could not find any
-board in the mainline kernel with this setup. If such a board is
-added at some later point the driver can be extended easily.
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation; either version 2 of
+> + * the License, or (at your option) any later version.
+> + */
+> +
+> +#ifndef __SUNXI_MCI_H__
+> +#define __SUNXI_MCI_H__
 
--- Sebastian
+__SUNXI_MMC_H__=20
 
---SUOF0GtieIMvvwua
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> +
+> +/* register offset define */
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+s/define/definitions
 
-iQIcBAEBCgAGBQJTAH6uAAoJENju1/PIO/qaQm0P/1RmmaLyDoooZPnL95GpfOdR
-stcpRhg01JGctEp5sFB+q8dYd+SxqCB3/Kk+m7I5PfzgMx+jsrnr0e+lDl3cbjeE
-H3yvcfQiKa2AbdMscN6/uq7ju+7rxIQcRFUFq5vKFzwswGnPs373nb10rb9/I44B
-AcK99HcgTK376Q+1KuMjOCzFuvu3khpj8HX2uwsciZ/LJvYIl3Nu1NqPSZVyS2JH
-mJXluIIt0Y5HWtydvSyzF7YXBmITfN6Y9i0CMtzgFStAuMstot7BJ31edNilesma
-uA3b9YSyWm9JE/1g2NYfWD1VymAB62K/5onDwot11IzfI4tWUcxwBejpEVJvRY6r
-/WhPwqfXblreUqTPbgYxj1qlbB1l1klZxajUxeuddg1L9632zCiH+cgf9XEwzN1D
-1JwWXOvApKOUKxx1D9HIljx6SSAR+fRph/q5kYoTD8EooxdrDZBmpClxkKpJsy+A
-gZH6n10pc6uaw7IPFmoSyEV2533PGWEtHxaU+ipo8+IKF73v594E4NdjN37pssGY
-dqk1tceSzaR3Kb2T65Jv32nzqbAz1zphyp/+atWCE8PbdC8YwPRToH9/2giTcRwB
-hlxsFJu6NxSEjzpRwaDBmtURdCSJGVu8ptBoxd2RPGBKl3ZcgaJk2AEtVe8wyrkJ
-WaIoYgsKXv9fxIK2Hiao
-=yLlO
------END PGP SIGNATURE-----
+> +#define SDXC_REG_GCTRL	(0x00) /* SMC Global Control Register */
+> +#define SDXC_REG_CLKCR	(0x04) /* SMC Clock Control Register */
+> +#define SDXC_REG_TMOUT	(0x08) /* SMC Time Out Register */
 
---SUOF0GtieIMvvwua--
+[...]
+
+> +#define SDXC_FIFO_RUN_ERROR		BIT(11)
+> +#define SDXC_HARD_WARE_LOCKED	BIT(12)
+s/HARD_WARE/HARDWARE
+
+> +#define SDXC_START_BIT_ERROR	BIT(13)
+> +#define SDXC_AUTO_COMMAND_DONE	BIT(14)
+> +#define SDXC_END_BIT_ERROR		BIT(15)
+> +#define SDXC_SDIO_INTERRUPT		BIT(16)
+> +#define SDXC_CARD_INSERT		BIT(30)
+> +#define SDXC_CARD_REMOVE		BIT(31)
+> +#define SDXC_INTERRUPT_ERROR_BIT		(SDXC_RESPONSE_ERROR | SDXC_RESPONSE_C=
+RC_ERROR | \
+> +				 SDXC_DATA_CRC_ERROR | SDXC_RESPONSE_TIMEOUT | \
+> +				 SDXC_DATA_TIMEOUT | SDXC_FIFO_RUN_ERROR | \
+> +				 SDXC_HARD_WARE_LOCKED | SDXC_START_BIT_ERROR | \
+> +				 SDXC_END_BIT_ERROR) /* 0xbbc2 */
+same as above.
+
+Also, you may want to rename SDXC_RESPONSE_* to SDXC_RESP_*, which looks
+better next to the SDXC_DATA_* defines...
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/groups/opt_out.
