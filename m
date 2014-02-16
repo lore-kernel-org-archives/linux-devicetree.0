@@ -1,148 +1,180 @@
 From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/3] ARM: dts: vf610-twr: Add ADC support
-Date: Sun, 16 Feb 2014 15:48:53 +0800
-Message-ID: <20140216074850.GA2946@S2101-09.ap.freescale.net>
-References: <1390714773-23066-1-git-send-email-B38611@freescale.com>
- <1390714773-23066-2-git-send-email-B38611@freescale.com>
+Subject: Re: [PATCH v2] bus: imx-weim: support CS GPR config for imx6q-weim
+Date: Sun, 16 Feb 2014 16:34:21 +0800
+Message-ID: <20140216083419.GD2946@S2101-09.ap.freescale.net>
+References: <1392296342-21115-1-git-send-email-shawn.guo@linaro.org>
+ <20140213223825.GA31996@frolo.macqel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1390714773-23066-2-git-send-email-B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20140213223825.GA31996-NqYOdiUDesgPnqCj3zZnUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philippe De Muyter <phdm-KobBqTBAxd8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Copy more DT folks and lists, as I want to make sure everyone agrees on
-how the fixed regulators should organized in the device tree sources,
-before I apply the patch.
-
-On Sun, Jan 26, 2014 at 01:39:31PM +0800, Fugang Duan wrote:
-> vf610 has two ADC controllers, and vf610-twr board ADC0_SE5 pin connect
-> to sliding rheostat for ADC test, other ADC pins connect to connectors for
-> future use.
+On Thu, Feb 13, 2014 at 11:38:25PM +0100, Philippe De Muyter wrote:
+> Hi Shawn,
 > 
-> Add support for ADC0_SE5.
+> On Thu, Feb 13, 2014 at 08:59:02PM +0800, Shawn Guo wrote:
+> > For imx6q-weim type of device, there might a WEIM CS space configuration
+> > register in General Purpose Register controller, e.g. IOMUXC_GPR1 on
+> > i.MX6Q.
+> > 
+> > Depending on which configuration of the following 4 is chosen for given
+> > system, IOMUXC_GPR1[11:0] should be set up as 05, 033, 0113 or 01111
+> > correspondingly.
+> > 
+> > 	CS0(128M) CS1(0M)  CS2(0M)  CS3(0M)
+> > 	CS0(64M)  CS1(64M) CS2(0M)  CS3(0M)
+> > 	CS0(64M)  CS1(32M) CS2(32M) CS3(0M)
+> > 	CS0(32M)  CS1(32M) CS2(32M) CS3(32M)
+> > 
+> > The patch creates a function for imx6q-weim type of device, which scans
+> > 'ranges' property of WEIM node and build the GPR value incrementally.
+> > Thus the WEIM CS GPR can be set up automatically at boot time.
 > 
-> CC: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> CC: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> CC: Otavio Salvador <otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>
-> CC: Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-> CC: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-> Signed-off-by: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  arch/arm/boot/dts/vf610-twr.dts |   21 +++++++++++++++++++++
->  arch/arm/boot/dts/vf610.dtsi    |   26 ++++++++++++++++++++++++++
->  2 files changed, 47 insertions(+), 0 deletions(-)
+> Please add that text to Documentation/devicetree/bindings/bus/imx-weim.txt.
+
+Since the patch does not add any new device tree properties, I do not
+think we need to necessarily update bindings doc in this patch.  I
+prefer to improve the doc with another separate patch.
+
 > 
-> diff --git a/arch/arm/boot/dts/vf610-twr.dts b/arch/arm/boot/dts/vf610-twr.dts
-> index c8047ca..d867be3 100644
-> --- a/arch/arm/boot/dts/vf610-twr.dts
-> +++ b/arch/arm/boot/dts/vf610-twr.dts
-> @@ -34,6 +34,27 @@
->  		};
->  	};
->  
-> +	regulators {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		reg_vcc_3v3_mcu: regulator@0 {
-> +			compatible = "regulator-fixed";
-> +			reg = <0>;
-> +			regulator-name = "vcc_3v3_mcu";
-> +			regulator-min-microvolt = <3300000>;
-> +			regulator-max-microvolt = <3300000>;
-> +		};
-> +	};
+> > 
+> > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> > Changes since v1:
+> >  - Drop device tree property fsl,weim-cs-gpr
+> >  - Use octal value for IOMUXC_GPR1[11:0] bit field
+> >  - Use of_property_for_each_u32() to build gprval incrementally
+> > 
+> >  drivers/bus/imx-weim.c |   59 ++++++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 59 insertions(+)
+> > 
+> > diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
+> > index 3ef58c8..a120c93 100644
+> > --- a/drivers/bus/imx-weim.c
+> > +++ b/drivers/bus/imx-weim.c
+> > @@ -11,6 +11,9 @@
+> >  #include <linux/clk.h>
+> >  #include <linux/io.h>
+> >  #include <linux/of_device.h>
+> > +#include <linux/mfd/syscon.h>
+> > +#include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
+> > +#include <linux/regmap.h>
+> >  
+> >  struct imx_weim_devtype {
+> >  	unsigned int	cs_count;
+> > @@ -56,6 +59,59 @@ static const struct of_device_id weim_id_table[] = {
+> >  };
+> >  MODULE_DEVICE_TABLE(of, weim_id_table);
+> >  
+> > +static int __init imx6q_weim_gpr_setup(struct platform_device *pdev)
+> > +{
+> > +	struct device_node *np = pdev->dev.of_node;
+> > +	struct property *prop;
+> > +	const __be32 *p;
+> > +	struct regmap *gpr;
+> > +	u32 gprvals[4] = {
+> > +		05,	/* CS0(128M) CS1(0M)  CS2(0M)  CS3(0M) */
+> > +		033,	/* CS0(64M)  CS1(64M) CS2(0M)  CS3(0M) */
+> > +		0113,	/* CS0(64M)  CS1(32M) CS2(32M) CS3(0M) */
+> > +		0111,	/* CS0(64M)  CS1(32M) CS2(32M) CS3(0M) */
+> 
+> 		01111,	/* CS0(32M)  CS1(32M) CS2(32M) CS3(32M) */
 
-Per discussion [1], Mark Rutland suggests that instead of organizing
-the fixed regulator nodes in a simple-bus container, it should be put
-under root node directly like below.
+Oops, thanks.
 
-/ {
-	reg_vcc_3v3_mcu: regulator_0 {
-		compatible = "regulator-fixed";
-		regulator-name = "vcc_3v3_mcu";
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-	};
-};
+> 
+> > +	};
+> > +	u32 gprval = 0;
+> > +	u32 val;
+> > +	int len;
+> > +	int cs = 0;
+> > +	int i = 0;
+> > +
+> > +	gpr = syscon_regmap_lookup_by_compatible("fsl,imx6q-iomuxc-gpr");
+> > +	if (IS_ERR(gpr)) {
+> > +		dev_err(&pdev->dev, "failed to find fsl,imx6q-iomuxc-gpr\n");
+> > +		return -ENOENT;
+> > +	}
+> > +
+> > +	prop = of_find_property(np, "ranges", &len);
+> > +	if (prop == NULL)
+> > +		return -ENOENT;
+> > +	if (len % (sizeof(u32) * 4))
+> > +		return -EINVAL;
+> > +
+> > +	of_property_for_each_u32(np, "ranges", prop, p, val) {
+> > +		if (i % 4 == 0) {
+> > +			cs = val;
+> > +		} else if (i % 4 == 3 && val) {
+> > +			val /= SZ_64M;
+> > +			val = (val << 1) | 1;
+> 
+> or
+> 			val = (val / SZ_32M) | 1;
 
-Is this what all DT folks agree on?  At least the node name should be
-'regulator-0' since it's more idiomatic to use '-' than '_' in node
-name?
+Okay.
+
+> 
+> > +			gprval |= val << cs * 3;
+> > +		}
+> > +		i++;
+> > +	}
+> 
+> You may replace the tests above (from "prop = of_find_property" to "EINVAL;")
+> by :
+> 	if (i == 0 || (i % 4))
+> 		goto err;
+
+Yeah, it's better.
+
+I will roll these changes into v3.
+
+> > +
+> > +	for (i = 0; i < ARRAY_SIZE(gprvals); i++) {
+> > +		if (gprval == gprvals[i]) {
+> > +			/* Found it. Set up IOMUXC_GPR1[11:0] with it. */
+> > +			regmap_update_bits(gpr, IOMUXC_GPR1, 0xfff, gprval);
+> > +			return 0;
+> > +		}
+> > +	}
+> > +
+> 
+>    err:
+> 
+> > +	dev_err(&pdev->dev, "Invalid 'ranges' configuration\n");
+> > +	return -EINVAL;
+> > +}
+> > +
+> >  /* Parse and set the timing for this device. */
+> >  static int __init weim_timing_setup(struct device_node *np, void __iomem *base,
+> >  				    const struct imx_weim_devtype *devtype)
+> > @@ -92,6 +148,9 @@ static int __init weim_parse_dt(struct platform_device *pdev,
+> >  	struct device_node *child;
+> >  	int ret;
+> >  
+> > +	if (of_device_is_compatible(pdev->dev.of_node, "fsl,imx6q-weim"))
+> > +		imx6q_weim_gpr_setup(pdev);
+> > +
+> >  	for_each_child_of_node(pdev->dev.of_node, child) {
+> >  		if (!child->name)
+> >  			continue;
+> > -- 
+> > 1.7.9.5
+> > 
+> 
+> I have tested this v2 patch, and, except for the typo (0111 instead of 01111),
+> it works perfectly.
+
+Thanks for testing.
 
 Shawn
 
-[1] http://thread.gmane.org/gmane.linux.drivers.devicetree/61467/focus=300895
-
-> +
-> +};
-> +
-> +&adc0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_adc0_ad5>;
-> +	vref-supply = <&reg_vcc_3v3_mcu>;
-> +	status = "okay";
->  };
->  
->  &dspi0 {
-> diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
-> index d31ce1b..b5b21ea 100644
-> --- a/arch/arm/boot/dts/vf610.dtsi
-> +++ b/arch/arm/boot/dts/vf610.dtsi
-> @@ -152,6 +152,15 @@
->  				clock-names = "pit";
->  			};
->  
-> +			adc0: adc@4003b000 {
-> +				compatible = "fsl,vf610-adc";
-> +				reg = <0x4003b000 0x1000>;
-> +				interrupts = <0 53 0x04>;
-> +				clocks = <&clks VF610_CLK_ADC0>;
-> +				clock-names = "adc";
-> +				status = "disabled";
-> +			};
-> +
->  			wdog@4003e000 {
->  				compatible = "fsl,vf610-wdt", "fsl,imx21-wdt";
->  				reg = <0x4003e000 0x1000>;
-> @@ -178,6 +187,14 @@
->  
->  				/* functions and groups pins */
->  
-> +				adc0 {
-> +					pinctrl_adc0_ad5: adc0_ad5 {
-> +						fsl,pins = <
-> +						VF610_PAD_PTC30__ADC0_SE5	0xa1
-> +						>;
-> +					};
-> +				};
-> +
->  				dcu0 {
->  					pinctrl_dcu0_1: dcu0grp_1 {
->  						fsl,pins = <
-> @@ -450,6 +467,15 @@
->  				status = "disabled";
->  			};
->  
-> +			adc1: adc@400bb000 {
-> +				compatible = "fsl,vf610-adc";
-> +				reg = <0x400bb000 0x1000>;
-> +				interrupts = <0 54 0x04>;
-> +				clocks = <&clks VF610_CLK_ADC1>;
-> +				clock-names = "adc";
-> +				status = "disabled";
-> +			};
-> +
->  			fec0: ethernet@400d0000 {
->  				compatible = "fsl,mvf600-fec";
->  				reg = <0x400d0000 0x1000>;
-> -- 
-> 1.7.2.rc3
-> 
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
