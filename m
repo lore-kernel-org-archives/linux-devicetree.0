@@ -1,38 +1,40 @@
 From: Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 0/5] enable i2c on koelsch-dt (and cleanup lager)
-Date: Sun, 16 Feb 2014 10:40:53 +0100
-Message-ID: <1392543658-5030-1-git-send-email-wsa@the-dreams.de>
+Subject: [PATCH 5/5] ARM: shmobile: r8a7790: add i2c aliases to dtsi
+Date: Sun, 16 Feb 2014 10:40:58 +0100
+Message-ID: <1392543658-5030-6-git-send-email-wsa@the-dreams.de>
+References: <1392543658-5030-1-git-send-email-wsa@the-dreams.de>
 Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1392543658-5030-1-git-send-email-wsa@the-dreams.de>
 Sender: linux-sh-owner@vger.kernel.org
 To: linux-sh@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa@sang-engineering.com>
 List-Id: devicetree@vger.kernel.org
 
-This series adds all rcar cores to the r8a7791 dtsi and enables bus 2 on the
-koelsch board. Functionality was tested with reading/writing to an eeprom. Some
-rcar driver issues have been observed, but they are independent from the dt
-binding provided here. On the way, some cleanups were found which apply to
-r8a7790 as well, yet those are only compile tested since I don't have HW access
-to the lager board (yet).
+From: Wolfram Sang <wsa@sang-engineering.com>
 
-The series is based on tag 'renesas-devel-v3.14-rc2-20140213' and can be found here
-git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git renesas/r8a7791-i2c
+Signed-off-by: Wolfram Sang <wsa@sang-engineering.com>
+---
+ arch/arm/boot/dts/r8a7790.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Please review/apply.
-
-
-Wolfram Sang (5):
-  ARM: shmobile: r8a7791: remove superfluous interrupt-parents
-  ARM: shmobile: r8a7791: add i2c master nodes to dtsi
-  ARM: shmobile: r8a7791: add i2c2 bus to koelsch dt
-  ARM: shmobile: r8a7790: remove superfluous interrupt-parents
-  ARM: shmobile: r8a7790: add i2c aliases to dtsi
-
- arch/arm/boot/dts/r8a7790.dtsi        |  38 +++----------
- arch/arm/boot/dts/r8a7791-koelsch.dts |  19 +++++++
- arch/arm/boot/dts/r8a7791.dtsi        | 100 +++++++++++++++++++++++-----------
- 3 files changed, 95 insertions(+), 62 deletions(-)
-
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index a6e3713..a1e7c39 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -18,6 +18,13 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 
++	aliases {
++		i2c0 = &i2c0;
++		i2c1 = &i2c1;
++		i2c2 = &i2c2;
++		i2c3 = &i2c3;
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
 -- 
 1.8.5.1
 
