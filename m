@@ -1,7 +1,7 @@
 From: Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 5/5] ARM: shmobile: r8a7790: add i2c aliases to dtsi
-Date: Sun, 16 Feb 2014 10:40:58 +0100
-Message-ID: <1392543658-5030-6-git-send-email-wsa@the-dreams.de>
+Subject: [PATCH 3/5] ARM: shmobile: r8a7791: add i2c2 bus to koelsch dt
+Date: Sun, 16 Feb 2014 10:40:56 +0100
+Message-ID: <1392543658-5030-4-git-send-email-wsa@the-dreams.de>
 References: <1392543658-5030-1-git-send-email-wsa@the-dreams.de>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1392543658-5030-1-git-send-email-wsa@the-dreams.de>
@@ -14,27 +14,43 @@ From: Wolfram Sang <wsa@sang-engineering.com>
 
 Signed-off-by: Wolfram Sang <wsa@sang-engineering.com>
 ---
- arch/arm/boot/dts/r8a7790.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/r8a7791-koelsch.dts | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-index a6e3713..a1e7c39 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -18,6 +18,13 @@
- 	#address-cells = <2>;
- 	#size-cells = <2>;
+diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
+index d4b9bba..b3f75d7 100644
+--- a/arch/arm/boot/dts/r8a7791-koelsch.dts
++++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
+@@ -108,10 +108,29 @@
+ 	clock-frequency = <20000000>;
+ };
  
-+	aliases {
-+		i2c0 = &i2c0;
-+		i2c1 = &i2c1;
-+		i2c2 = &i2c2;
-+		i2c3 = &i2c3;
++&i2c2 {
++	pinctrl-0 = <&i2c2_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++	clock-frequency = <400000>;
++
++	eeprom@50 {
++		compatible = "renesas,24c02";
++		reg = <0x50>;
++		pagesize = <16>;
++	};
++};
++
+ &pfc {
+ 	pinctrl-0 = <&scif0_pins &scif1_pins>;
+ 	pinctrl-names = "default";
+ 
++	i2c2_pins: i2c {
++		renesas,groups = "i2c2";
++		renesas,function = "i2c2";
 +	};
 +
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+ 	scif0_pins: serial0 {
+ 		renesas,groups = "scif0_data_d";
+ 		renesas,function = "scif0";
 -- 
 1.8.5.1
 
