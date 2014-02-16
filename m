@@ -1,177 +1,115 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RFC v3 3/3] Documentation: arm: define DT idle states
- bindings
-Date: Sun, 16 Feb 2014 09:39:56 +0800
-Message-ID: <20140216013956.GV4451@sirena.org.uk>
-References: <1392128273-8614-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1392128273-8614-4-git-send-email-lorenzo.pieralisi@arm.com>
+From: David =?utf-8?q?Lanzend=C3=B6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
+Subject: [PATCH v6 0/8] ARM: sunxi: Add driver for SD/MMC hosts
+ found on allwinner sunxi SOCs
+Date: Sun, 16 Feb 2014 06:10:42 +0100
+Message-ID: <20140216050933.728.25526.stgit@dizzy-6.o2s.ch>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="RI0j69zTdciYrvy/"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1392128273-8614-4-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Martin <dave.martin-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Charles Garcia Tobin <Charles.Garcia-Tobin-5wv7dgnIgG8@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Hambleton <mark.hambleton-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Antti Miettinen <ananaza-X3B1VOXEql0@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kevin Hilman <khilman@linaro.o>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBD2JL37LXEKRBXMQQGMAKGQEPO6JFHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Emilio =?utf-8?b?TMOzcGV6?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hello
+The following patchset adds support for the SD/MMC host found in the Allwin=
+ner SoCs.
+It contains all the necessary modifications for clock environment and also =
+the device
+tree script modification which add it to all the boards using it.
+The clock environment function needed for phase offset configuration has
+been proposed and implemented by Emilio.
+A lot of work and cleanup has been done by Hans de Goede. Special thanks to=
+ him!
+This patchset is the 4th attempt to send this driver upstream.
 
---RI0j69zTdciYrvy/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changes since v1:
+-Using mmc_of_parse instead of diy dt parsing
+-Adding nodes for all mmc controller to the dtsi files,
+ including sofar unused controllers
+-Using generic GPIO slot library for WP/CD
+-Adding additional MMC device nodes into DTSI files
 
-On Tue, Feb 11, 2014 at 02:17:53PM +0000, Lorenzo Pieralisi wrote:
+Changes since v2:
+-Add missing Signed-off-by tags
+-Stop using __raw_readl / __raw_writel so that barriers are properly used
+-Adding missing new lines
+-Adding missing patch for automatic reparenting of clocks
 
-> +According to the Server Base System Architecture document (SBSA, [3]), t=
-he
-> +power states an ARM CPU can be put into are identified by the following =
-list:
+Changes since v3:
+-Move clk_enable / disable into host_init / exit (Hans)
+-Fix hang on boot caused by irq storm (Hans)
 
-> +1 - Running
-> +2 - Idle_standby
-> +3 - Idle_retention
-> +4 - Sleep
-> +5 - Off
+Changes since v4:
+-moving sunxi-mci.{c/h} to sunxi-mmc.{c/h}
+-removing camel cases from the defines in  sunxi-mmc.h
+-moving defines out of the struct definition
+ since this is bad coding style
+-adding documentation for the device tree binding
 
-> +ARM platforms implement the power states specified in the SBSA through p=
-ower
-> +management schemes that allow an OS PM implementation to put the process=
-or in
-> +different idle states (which include states 1 to 4 above; "off" state is=
- not
-> +an idle state since it does not have wake-up capabilities, hence it is n=
-ot
-> +considered in this document).
+Changes since v5:
+-adding host initialization for when the sdio irq is enabled
+ (just to make sure having a defined state at all time)
+-add mmc support fixup: set pullup on cd pins
+-fixup: Don't set MMC_CAP_NEEDS_POLL /  MMC_CAP_4_BIT_DATA
 
-This is explicitly talking about SBSA - is there any restriction with
-regard to non-SBSA systems?  I can't think of any right now and this
-seems purely informational but it might be worth mentioning that
-non-SBSA systems might potentially have other states if the intention is
-to allow that.
+---
 
-> +- state node
-> +
-> +	Description: must be child of either the cpu-idle-states node or
-> +		     a state node.
-> +
-> +	The state node name shall be "stateN", where N =3D {0, 1, ...} is
-> +	the node number; state nodes which are siblings within a single common
-> +	parent node must be given a unique and sequential N value, starting
-> +	from 0.
+David Lanzend=C3=B6rfer (5):
+      ARM: sunxi: Add driver for SD/MMC hosts found on Allwinner sunxi SoCs
+      ARM: dts: sun7i: Add support for mmc
+      ARM: dts: sun4i: Add support for mmc
+      ARM: dts: sun5i: Add support for mmc
+      ARM: sunxi: Add documentation for driver for SD/MMC hosts found on Al=
+lwinner sunxi SoCs
 
-This came up with the CPU bindings as well but I'm really not convinced
-that making the naming of the nodes important is great - it's not normal
-for DT and it makes the usual enumeration code not work.  Can we not
-just have a property for state number in the node instead and allow the
-name to be anything?  It seems we even have the index property
-already...
+Emilio L=C3=B3pez (2):
+      clk: sunxi: factors: automatic reparenting support
+      clk: sunxi: Implement MMC phase control
 
-> +	- compatible
-> +		Usage: Required
-> +		Value type: <stringlist>
-> +		Definition: Must be "arm,cpu-idle-state".
+Hans de Goede (1):
+      ARM: sunxi: clk: export clk_sunxi_mmc_phase_control
 
-Do we really need this given that the location in the tree is fixed -
-what would we extend it with in future?
 
-> +	- index
-> +		Usage: Required
-> +		Value type: <u32>
-> +		Definition: It represents an idle state index, starting from 2.
-> +			    Index 0 represents the processor state "running"
-> +			    and index 1 represents processor mode
-> +			    "idle_standby", entered by executing a wfi
-> +			    instruction (SBSA,[3]); indexes 0 and 1 are
-> +			    standard ARM states that need not be described.
+ .../devicetree/bindings/mmc/sunxi-mmc.txt          |   32 +
+ arch/arm/boot/dts/sun4i-a10-a1000.dts              |    8=20
+ arch/arm/boot/dts/sun4i-a10-cubieboard.dts         |    8=20
+ arch/arm/boot/dts/sun4i-a10.dtsi                   |   54 +
+ arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts   |   30 +
+ arch/arm/boot/dts/sun5i-a10s.dtsi                  |   44 +
+ arch/arm/boot/dts/sun5i-a13-olinuxino-micro.dts    |   15=20
+ arch/arm/boot/dts/sun5i-a13-olinuxino.dts          |   15=20
+ arch/arm/boot/dts/sun5i-a13.dtsi                   |   37 +
+ arch/arm/boot/dts/sun7i-a20-cubieboard2.dts        |    8=20
+ arch/arm/boot/dts/sun7i-a20-cubietruck.dts         |    8=20
+ arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts    |   23 +
+ arch/arm/boot/dts/sun7i-a20.dtsi                   |   61 +
+ drivers/clk/sunxi/clk-factors.c                    |   36 +
+ drivers/clk/sunxi/clk-sunxi.c                      |   35 +
+ drivers/mmc/host/Kconfig                           |    7=20
+ drivers/mmc/host/Makefile                          |    2=20
+ drivers/mmc/host/sunxi-mmc.c                       |  876 ++++++++++++++++=
+++++
+ drivers/mmc/host/sunxi-mmc.h                       |  239 +++++
+ include/linux/clk/sunxi.h                          |   22 +
+ 20 files changed, 1560 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
+ create mode 100644 drivers/mmc/host/sunxi-mmc.c
+ create mode 100644 drivers/mmc/host/sunxi-mmc.h
+ create mode 100644 include/linux/clk/sunxi.h
 
-=2E..but other numbers are valid.
+--=20
+Signature
 
-> +	- entry-method
-> +		Usage: Required
-> +		Value type: <stringlist>
-> +		Definition: Describes the method by which a CPU enters the
-> +			    idle state. This property is required and must be
-> +			    one of:
-> +
-> +			    - "arm,psci-cpu-suspend"
-> +			      ARM PSCI firmware interface, CPU suspend
-> +			      method[2].
-> +
-> +			    - "[vendor],[method]"
-> +			      An implementation dependent string with
-> +			      format "vendor,method", where vendor is a string
-> +			      denoting the name of the manufacturer and
-> +			      method is a string specifying the mechanism
-> +			      used to enter the idle state.
-
-Might be worth reversing these - arm,psci-cpu-suspend is just an example
-of a (hopefully very widely used) vendor method.  Given that everyone is
-supposed to be using PSCI might it even be worth making it the default
-and the property optional?
-
-> +	- power-state
-> +		Usage: See definition.
-> +		Value type: <u32>
-> +		Definition: Depends on the entry-method property value.
-> +			    If entry-method is "arm,psci-cpu-suspend":
-> +				# Property is required and represents
-> +				  psci-power-state parameter. Please refer to
-> +				  [2] for PSCI bindings definition.
-
-Should we just have the entry method nodes define their own properties
-for this stuff?  I guess this goes back to the comment I made on some
-other binding that it might be cleaner to have an explicit PSCI binding
-rather than put PSCI explicitly in indiidual bindings.
-
-> +	- entry-latency
-> +		Usage: Required
-> +		Value type: <prop-encoded-array>
-> +		Definition: u32 value representing worst case latency
-> +			    in microseconds required to enter the idle state.
-
-Why is this defined as an array?
-
-> +	- cache-state-retained
-> +		Usage: See definition
-> +		Value type: <none>
-> +		Definition: if present cache memory is retained on power down,
-> +			    otherwise it is lost.
-
-Might be better to define which caches?
-
-> +		STATE1: state1 {
-> +			compatible =3D "arm,cpu-idle-state";
-
-Even if we stick with the node name being meaningful it'd be nice to
-replace the STATEN here with a meaningful state name to improve
-legibility. =20
-
---RI0j69zTdciYrvy/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTABbpAAoJELSic+t+oim9GhgP/1w6ypJcGw0z7VT5rRHp5+mI
-DZOuktiMOsbKLdEsnakkokYHy01pXeVLjFr0RVM9Q8oX1BzL+Kq3OuhvMLv1kg/T
-C/Oq1XPtrbCLtdrsp0jsPtlLAy6yvP/oIvFDGSToqO8R+7Rgd+cEPUd5O1u+QTwN
-RsH8U1A9piipE8z+NUFXwX4pB2TbIwKUyK8kRV0uyafeBTdzAxAmKFKoLkAiI7T+
-4Q8uqF7f8AFpr1AIT1X/CYMkxgeVKAbkaOnoWXa2Cx0Xdb8ve508i81ad0caRiXZ
-MoJAHMjMP29UijWpFoY1+3IVlu0Fo6/9drJc/qL8sfF83naM2JtO2QQwCzp0QxQZ
-lprC1YY7flct3NI7jpqeqBMqnB7iI87pugAIHdOes0S8Q0CYbDAwiYl0qqhq8pbS
-9P4Ts2iee1+7S4vDBiuVGVuuknfJ9qOnt0H27NDKsmeVgFEMVYlU1c1L4CPP9c2z
-60XmmwLUDiJu4qgP2t/R/q7RysXLHrEIctEqnFu68bHuQWvtBKg/Vgdkqej9DBIW
-TaPNAoESStkYh09H36kHQAYAR0A8Xegt+lQ0liZTo1zrRZ3u8a0gjlAAXxCsSEk6
-s1RgYSrTw0MpV1HK3VnmEmTQK88pfj/QuBACFLH20kanFb7/PsCOUlJRhm04q81b
-qEWXR+35AyLhJrTcjCbO
-=JpF2
------END PGP SIGNATURE-----
-
---RI0j69zTdciYrvy/--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/groups/opt_out.
