@@ -1,100 +1,65 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 02/12] dt-bindings: document s3c24xx controller for external
- clock output
-Date: Sun, 16 Feb 2014 21:51:04 +0100
-Message-ID: <530124B8.9050209@gmail.com>
-References: <201312131356.40755.heiko@sntech.de> <201312131359.00450.heiko@sntech.de> <52F6DFE0.7030508@gmail.com> <5620516.DA2mHk7Kko@phil>
+From: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 00/10] Support TI Light Management Unit devices
+Date: Mon, 17 Feb 2014 08:51:39 +0900
+Message-ID: <53014F0B.6010708@ti.com>
+References: <1392359410-6852-1-git-send-email-milo.kim@ti.com> <20140214101439.GA9462@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5620516.DA2mHk7Kko@phil>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, t.figa@samsung.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140214101439.GA9462@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Lee,
 
-
-On 16.02.2014 21:33, Heiko St=FCbner wrote:
-> Am Sonntag, 9. Februar 2014, 02:54:40 schrieb Tomasz Figa:
->> Hi Heiko,
->>
->> On 13.12.2013 13:59, Heiko St=FCbner wrote:
->>> The clock settings are distributed over a regular register and part=
-s
->>> of the misccr register.
->>>
->>> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
->>> ---
->>>
->>>    .../bindings/clock/samsung,s3c2410-dclk.txt        |   53
->>>    ++++++++++++++++++++ 1 file changed, 53 insertions(+)
->>>    create mode 100644
->>>    Documentation/devicetree/bindings/clock/samsung,s3c2410-dclk.txt=
+On 02/14/2014 07:14 PM, Lee Jones wrote:
+>> Milo Kim (10):
+>>    mfd: Add TI LMU driver
+>>    backlight: Add TI LMU backlight common driver
+>>    backlight: ti-lmu-backlight: Add LM3532 driver
+>>    backlight: ti-lmu-backlight: Add LM3631 driver
+>>    backlight: ti-lmu-backlight: Add LM3633 driver
+>>    backlight: ti-lmu-backlight: Add LM3695 driver
+>>    backlight: ti-lmu-backlight: Add LM3697 driver
+>>    leds: Add LM3633 driver
+>>    regulator: Add LM3631 driver
+>>    Documentation: Add device tree bindings for TI LMU devices
 >
->>> diff --git
->>> a/Documentation/devicetree/bindings/clock/samsung,s3c2410-dclk.txt
->>> b/Documentation/devicetree/bindings/clock/samsung,s3c2410-dclk.txt =
-new
->>> file mode 100644
->>> index 0000000..0a1f7b1
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/clock/samsung,s3c2410-dclk.=
-txt
->>> @@ -0,0 +1,53 @@
->>> +* Samsung S3C24XX External Clock Output Controller
->>> +
->>> +The S3C24XX series can generate clock signals on two clock output =
-pads.
->>> +The clock binding described here is applicable to all SoCs in
->>> +the s3c24x family.
->>> +
->>> +Required Properties:
->>> +
->>> +- compatible: should be one of the following.
->>> +  - "samsung,s3c2410-dclk" - controller in S3C2410 SoCs.
->>> +  - "samsung,s3c2412-dclk" - controller in S3C2412 SoCs.
->>> +  - "samsung,s3c2440-dclk" - controller in S3C2440 and S3C2442 SoC=
-s.
->>> +  - "samsung,s3c2443-dclk" - controller in S3C2443 and later SoCs.
->>> +- reg: physical base address of the controller and length of memor=
-y
->>> mapped
->>> +  region.
->>> +- #clock-cells: should be 1.
->>> +- samsung,misccr: phandle to the syscon managing the misccr regist=
-er,
->>> which +  holds configuration settings for different soc-components
->>> (clocks, usb, ...).
->> Hmm, looking at the datasheet, DCLK and CLKOUT registers seem to be =
-part
->> of the pin controller. I wonder if there is really a need for differ=
-ent
->> driver and device node to handle them.
->>
->> Could this be simply made a part of the s3c24xx pinctrl driver,
->> extending it to register also a clock provider under the same DT nod=
-e?
+> It makes it much easier to track if you send your patch set (shallow)
+> threaded i.e. all patches attached to [PATCH 0/x]. Having all of the
+> patches sent individually they will get split up and spread out all
+> over the reviewers INBOX, which becomes unwieldy very quickly.
 >
-> it could, but of course the non-dt platforms would not be able to use=
- it in
-> this case.
+> Please see git send-email options:
+>    `--[no-]thread` and `--[no-]chain-reply-to`
+>
 
-Hmm, that's true.
+Oh, sorry. I made a mistake.
 
-> So I guess, we could get rid of this dt binding, implement the clkout=
- handling
-> in the pinctrl driver for dt platforms, but use the platform-driver t=
-his
-> binding described for the time we're still handling non-dt s3c24xx ma=
-chines.
+I copied patch files from my working machine and sent them by using git 
+send-email.
 
-I guess you could make this a separate driver that would be instantiate=
-d=20
-by pinctrl driver registering another platform device in DT case and a=20
-static platform device registered by board files in non-DT case.
+I should run
+   git send-email --thread --no-chain-reply-to *.patch
+
+but I did for each patch file, stupidly.
+   git send-email --thread --no-chain-reply-to 0000-cover.patch
+   git send-email --thread --no-chain-reply-to 
+0001-mfd-Add-TI-LMU-driver.patch
+..
+   git send-email --thread --no-chain-reply-to 
+0010-Documentation-Add-device-tree-bindings-for-TI-LMU-de.patch
+
+I'm so embarrassed..
+
+Thanks for your advice.
 
 Best regards,
-Tomasz
+Milo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
