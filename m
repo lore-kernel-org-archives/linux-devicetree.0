@@ -1,197 +1,95 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v2 10/23] ARM: MM: Add DT binding for Feroceon L2 cache
-Date: Mon, 17 Feb 2014 18:38:55 -0500
-Message-ID: <20140217233855.GI7862@titan.lakedaemon.net>
-References: <1392459621-24003-1-git-send-email-andrew@lunn.ch>
- <1392459621-24003-11-git-send-email-andrew@lunn.ch>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH RFC v3 3/3] Documentation: arm: define DT idle states
+ bindings
+Date: Tue, 18 Feb 2014 08:48:16 +0900
+Message-ID: <20140217234816.GC2669@sirena.org.uk>
+References: <1392128273-8614-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1392128273-8614-4-git-send-email-lorenzo.pieralisi@arm.com>
+ <20140216013956.GV4451@sirena.org.uk>
+ <20140217163421.GD20125@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1392459621-24003-11-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============5099062454696658546=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140217163421.GD20125@e102568-lin.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Mark Hambleton <mark.hambleton@broadcom.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Dave P Martin <Dave.Martin@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen Boyd <sboyd@codeaurora.org>, Amit
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 15, 2014 at 11:20:08AM +0100, Andrew Lunn wrote:
-> Instantiate the L2 cache from DT. Indicate in DT where the cache
-> control register is and if write through should be made.
-> 
-> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
-> v2:
-> Change compatible strings to follow l2x0 convention
-> Only expect register for kirkwood-cache.
-> Default to write through if no DT node.
-> Rename writethrough to wt-override to follow l2cc binding.
-> Split kirkwood.dtsi change into a patch of its own.
-> ---
->  .../devicetree/bindings/arm/mrvl/feroceon.txt      | 17 +++++++
->  arch/arm/include/asm/hardware/cache-feroceon-l2.h  |  2 +
->  arch/arm/mach-kirkwood/board-dt.c                  | 15 +------
->  arch/arm/mm/cache-feroceon-l2.c                    | 52 ++++++++++++++++++++++
->  4 files changed, 72 insertions(+), 14 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/mrvl/feroceon.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/mrvl/feroceon.txt b/Documentation/devicetree/bindings/arm/mrvl/feroceon.txt
-> new file mode 100644
-> index 000000000000..d6d7d6195ed1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/mrvl/feroceon.txt
-> @@ -0,0 +1,17 @@
-> +* Marvell Feroceon Cache
-> +
-> +Required properties:
-> +- compatible : Should be either "marvell,ferocean-cache" or
-> +  	       "marvell,kirkwood-cache".
-> +
-> +Optional properties:
-> +- wt-override: If present then L2 is forced to Write through mode
-> +- reg        : Address of the L2 cache control register. Mandatory for
-> +  	       "marvell,kirkwood-cache", not used by "marvell,ferocean-cache"
 
-s/ferocean/feroceon/
+--===============5099062454696658546==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="i7F3eY7HS/tUJxUd"
+Content-Disposition: inline
 
-If there's nothing else deserving a new series, I'll tweak this (and the
-other spelling nits that matter) when I pull in the series.
 
-thx,
+--i7F3eY7HS/tUJxUd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Jason.
+On Mon, Feb 17, 2014 at 04:34:21PM +0000, Lorenzo Pieralisi wrote:
+> On Sun, Feb 16, 2014 at 01:39:56AM +0000, Mark Brown wrote:
 
-> +
-> +
-> +Example:
-> +		l2: l2-cache@20128 {
-> +			compatible = "marvell,kirkwood-cache";
-> +			reg = <0x20128 0x4>;
-> +		};
-> diff --git a/arch/arm/include/asm/hardware/cache-feroceon-l2.h b/arch/arm/include/asm/hardware/cache-feroceon-l2.h
-> index 8edd330aabf6..12e1588dc4f1 100644
-> --- a/arch/arm/include/asm/hardware/cache-feroceon-l2.h
-> +++ b/arch/arm/include/asm/hardware/cache-feroceon-l2.h
-> @@ -9,3 +9,5 @@
->   */
->  
->  extern void __init feroceon_l2_init(int l2_wt_override);
-> +extern int __init feroceon_of_init(void);
-> +
-> diff --git a/arch/arm/mach-kirkwood/board-dt.c b/arch/arm/mach-kirkwood/board-dt.c
-> index 34c35510fd17..2ef59ee2182d 100644
-> --- a/arch/arm/mach-kirkwood/board-dt.c
-> +++ b/arch/arm/mach-kirkwood/board-dt.c
-> @@ -42,19 +42,6 @@ static void __init kirkwood_map_io(void)
->  	iotable_init(kirkwood_io_desc, ARRAY_SIZE(kirkwood_io_desc));
->  }
->  
-> -static void __init kirkwood_l2_init(void)
-> -{
-> -#ifdef CONFIG_CACHE_FEROCEON_L2
-> -#ifdef CONFIG_CACHE_FEROCEON_L2_WRITETHROUGH
-> -	writel(readl(L2_CONFIG_REG) | L2_WRITETHROUGH, L2_CONFIG_REG);
-> -	feroceon_l2_init(1);
-> -#else
-> -	writel(readl(L2_CONFIG_REG) & ~L2_WRITETHROUGH, L2_CONFIG_REG);
-> -	feroceon_l2_init(0);
-> -#endif
-> -#endif
-> -}
-> -
->  static struct resource kirkwood_cpufreq_resources[] = {
->  	[0] = {
->  		.start  = CPU_CONTROL_PHYS,
-> @@ -211,7 +198,7 @@ static void __init kirkwood_dt_init(void)
->  
->  	BUG_ON(mvebu_mbus_dt_init());
->  
-> -	kirkwood_l2_init();
-> +	feroceon_of_init();
->  
->  	kirkwood_cpufreq_init();
->  	kirkwood_cpuidle_init();
-> diff --git a/arch/arm/mm/cache-feroceon-l2.c b/arch/arm/mm/cache-feroceon-l2.c
-> index 898362e7972b..17a1ecd7a40c 100644
-> --- a/arch/arm/mm/cache-feroceon-l2.c
-> +++ b/arch/arm/mm/cache-feroceon-l2.c
-> @@ -13,11 +13,16 @@
->   */
->  
->  #include <linux/init.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
->  #include <linux/highmem.h>
-> +#include <linux/io.h>
->  #include <asm/cacheflush.h>
->  #include <asm/cp15.h>
->  #include <asm/hardware/cache-feroceon-l2.h>
->  
-> +#define L2_WRITETHROUGH_KIRKWOOD	BIT(4)
-> +
->  /*
->   * Low-level cache maintenance operations.
->   *
-> @@ -350,3 +355,50 @@ void __init feroceon_l2_init(int __l2_wt_override)
->  	printk(KERN_INFO "Feroceon L2: Cache support initialised%s.\n",
->  			 l2_wt_override ? ", in WT override mode" : "");
->  }
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id feroceon_ids[] __initconst = {
-> +	{ .compatible = "marvell,kirkwood-cache"},
-> +	{ .compatible = "marvell,feroceon-cache"},
-> +	{}
-> +};
-> +
-> +int __init feroceon_of_init(void)
-> +{
-> +	struct device_node *node;
-> +	void __iomem *base;
-> +	bool l2_wt_override = false;
-> +	struct resource res;
-> +
-> +	node = of_find_matching_node(NULL, feroceon_ids);
-> +	if (!node) {
-> +		/*
-> +		 * If we don't know the write through state then
-> +		 * assume it is write back, as that is the safest
-> +		 * option.
-> +		 */
-> +		feroceon_l2_init(0);
-> +		return 0;
-> +	}
-> +
-> +	if (of_device_is_compatible(node, "marvell,kirkwood-cache")) {
-> +		if (of_property_read_bool(node, "wt-override"))
-> +			l2_wt_override = true;
-> +
-> +		if (of_address_to_resource(node, 0, &res))
-> +			return -ENODEV;
-> +
-> +		base = ioremap(res.start, resource_size(&res));
-> +		if (!base)
-> +			return -ENOMEM;
-> +
-> +		if (l2_wt_override)
-> +			writel(readl(base) | L2_WRITETHROUGH_KIRKWOOD, base);
-> +		else
-> +			writel(readl(base) & ~L2_WRITETHROUGH_KIRKWOOD, base);
-> +	}
-> +
-> +	feroceon_l2_init(l2_wt_override);
-> +
-> +	return 0;
-> +}
-> +#endif
-> -- 
-> 1.8.5.3
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > > +	- cache-state-retained
+> > > +		Usage: See definition
+> > > +		Value type: <none>
+> > > +		Definition: if present cache memory is retained on power down,
+> > > +			    otherwise it is lost.
+
+> > Might be better to define which caches?
+
+> I do not expect caches in the same power domain to have different retention
+> capabilities, so a flag per-state should be enough. If anyone is unhappy
+> about this please flag it up. List of caches affected can be retrieved by
+> walking the power-domain specifiers and check those against the caches power
+> domains.
+
+OK, so it's caches located within the power domains referenced by the
+state node?  Might be good to say that say that just for clarity since
+the power domains are indirected.
+
+--i7F3eY7HS/tUJxUd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTAp+9AAoJELSic+t+oim9vNQP/iavmPVh9EzJ497LQvWlRsZ6
+JHaggKvVBrNTb9i5AtX9DInevb1e470LNUxIF5+XtH6dQEXhS45dBDxtaf1TZGAA
+NQKTVs/QwvRDsIHM6wZz751dTdwxqP7AkN48Yhbng5yLdKHm+uaq7/8LkBmacI0h
+ACRTF/vXin6YRgA0JfCbxxSIJdj1zYtZeWIcoeKGS49AzanNDPssntwiyoA1hW0p
+er+IqZ7rNCBbbU6MlolEhLPNkaTN1CJMJ9/DqOO3QTlEasf/L4MMs0aY5wQwub9U
+j2LAMmLKLil3QXosX0HtXQVyifvVjVQzfPEgdNWuIR7BI7aTZg3Ma78W3R1TquEC
+JBldsuicJpTJZRj4Y99kvFJ6WztTaXgfoAliPtqeP1b2UElteuRhENy496NjoZWj
+lk5lfAZVrENX9O6YorhdCwpHyxqxyy6k93L9C7CsvsguetNvtjcM8MrZPig/7Umt
+tbwnBpGbmeIP6QoYd2K6oRcQtC2c+kaQU2Ffu3PetYkwEfnTvKJJfHn73tQ6KQEh
+dXN/1KwUe/JF5BYp7q6G7BLa/x5nXgXEV+OzjOt+hzygiVV5r5bYX3dTcoJe7iH7
+W91tWNX2OeSJhQcw8yuN+EeDg8F8nNfIGzJIOWnJONogc2PPkOFQH15khs5aiqby
+kSjN5EAkBb6XnspscbwX
+=qVRM
+-----END PGP SIGNATURE-----
+
+--i7F3eY7HS/tUJxUd--
+
+
+--===============5099062454696658546==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============5099062454696658546==--
