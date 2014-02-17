@@ -1,47 +1,66 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH RFC v3 3/3] Documentation: arm: define DT idle states
- bindings
-Date: Mon, 17 Feb 2014 16:34:21 +0000
-Message-ID: <20140217163421.GD20125@e102568-lin.cambridge.arm.com>
-References: <1392128273-8614-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1392128273-8614-4-git-send-email-lorenzo.pieralisi@arm.com>
- <20140216013956.GV4451@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140216013956.GV4451@sirena.org.uk>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Mark Hambleton <mark.hambleton@broadcom.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Dave P Martin <Dave.Martin@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen Boyd <sboyd@codeaurora.org>, Amit
+From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Subject: [PATCH] of_mdio: fix phy interrupt passing
+Date: Mon, 17 Feb 2014 16:29:40 +0000
+Message-ID: <1392654580-3706-1-git-send-email-ben.dooks@codethink.co.uk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 16, 2014 at 01:39:56AM +0000, Mark Brown wrote:
+The of_mdiobus_register_phy() is not setting phy->irq this causing
+some drivers to incorrectly assume that the PHY does not have an
+IRQ associated with it or install an interrupt handler for the
+PHY.
 
-[...]
+Simplify the code setting irq and set the phy->irq at the same
+time so that the case if mdio->irq is not NULL is easier to read.
 
-> > +	- cache-state-retained
-> > +		Usage: See definition
-> > +		Value type: <none>
-> > +		Definition: if present cache memory is retained on power down,
-> > +			    otherwise it is lost.
-> 
-> Might be better to define which caches?
+This fixes the issue:
+ net eth0: attached PHY 1 (IRQ -1) to driver Micrel KSZ8041RNLI
 
-I do not expect caches in the same power domain to have different retention
-capabilities, so a flag per-state should be enough. If anyone is unhappy
-about this please flag it up. List of caches affected can be retrieved by
-walking the power-domain specifiers and check those against the caches power
-domains.
+to the correct:
+ net eth0: attached PHY 1 (IRQ 416) to driver Micrel KSZ8041RNLI
 
-Thanks,
-Lorenzo
+Signed-off-by: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+---
+ drivers/of/of_mdio.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index 875b7b6..7b3e7b0 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -44,7 +44,7 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
+ {
+ 	struct phy_device *phy;
+ 	bool is_c45;
+-	int rc, prev_irq;
++	int rc;
+ 	u32 max_speed = 0;
+ 
+ 	is_c45 = of_device_is_compatible(child,
+@@ -55,11 +55,11 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
+ 		return 1;
+ 
+ 	if (mdio->irq) {
+-		prev_irq = mdio->irq[addr];
+-		mdio->irq[addr] =
+-			irq_of_parse_and_map(child, 0);
+-		if (!mdio->irq[addr])
+-			mdio->irq[addr] = prev_irq;
++		rc = irq_of_parse_and_map(child, 0);
++		if (rc > 0) {
++			mdio->irq[addr] = rc;
++			phy->irq = rc;
++		}
+ 	}
+ 
+ 	/* Associate the OF node with the device structure so it
+-- 
+1.8.5.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
