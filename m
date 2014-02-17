@@ -1,73 +1,180 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] mfd: palmas: support IRQ inversion at the board level
-Date: Mon, 17 Feb 2014 09:26:58 +0000
-Message-ID: <20140217092658.GC17875@lee--X1>
-References: <1392415108-4365-1-git-send-email-swarren@wwwdotorg.org>
+From: Srikanth Thokala <sthokal@xilinx.com>
+Subject: Re: [PATCH v3 1/3] dma: Support multiple interleaved frames with
+ non-contiguous memory
+Date: Mon, 17 Feb 2014 14:59:23 +0530
+Message-ID: <CA+mB=1K4_RpgfpWCfLy=PYOCzPThNf0Z6oSEK5Vrjh=W_YabhQ@mail.gmail.com>
+References: <1392465619-27614-1-git-send-email-sthokal@xilinx.com>
+	<1392465619-27614-2-git-send-email-sthokal@xilinx.com>
+	<20140217084316.GY10628@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1392415108-4365-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, J Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Ian Lartey <ian-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140217084316.GY10628@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Srikanth Thokala <sthokal@xilinx.com>, dan.j.williams@intel.com, michal.simek@xilinx.com, Grant Likely <grant.likely@linaro.org>, robh+dt@kernel.org, Levente Kurusa <levex@linux.com>, Lars-Peter Clausen <lars@metafoo.de>, andriy.shevchenko@linux.jf.intel.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->=20
-> Some boards or SoCs have an inverter between the PMIC IRQ output pin =
-and
-> the IRQ controller input signal.
->=20
-> The IRQ specifier in DT is meant to represent the IRQ flags at the in=
-put
-> to the IRQ controller.
->=20
-> The Palmas HW's IRQ output has configurable polarity. The driver
-> currently selects the output polarity by querying the input polarity =
-at
-> the IRQ controller. This works fine if the IRQ signal is routed direc=
-tly
-> from the PMIC to the IRQ controller with no intervening logic. Howeve=
-r,
-> if the signal is inverted between the two, this automatic polarity
-> selection gets the wrong answer.
->=20
-> Add an additional optional DT and platform data parameter which indic=
-ates
-> that such an inversion occurs. If this option is enabled, the Palmas
-> driver will configure its IRQ output to the opposite polarity of the =
-IRQ
-> controller's input.
->=20
-> An alternative would have been to add a new non-optional DT parameter=
- to
-> indicate the exact desired output polarity. However, this would have =
-been
-> an incompatible change to the DT binding.
->=20
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
-> If this patch could be applied to its own branch (w/ signed tag) in t=
-he
-> MFD tree, that would great; then I can pull patch 1/2 into the Tegra =
-tree
-> so that I can apply patch 2/2 to the Tegra tree. Thanks.
-> ---
->  Documentation/devicetree/bindings/mfd/palmas.txt | 6 ++++++
->  drivers/mfd/palmas.c                             | 4 ++++
->  include/linux/mfd/palmas.h                       | 1 +
->  3 files changed, 11 insertions(+)
+On Mon, Feb 17, 2014 at 2:13 PM, Vinod Koul <vinod.koul@intel.com> wrote:
+> On Sat, Feb 15, 2014 at 05:30:17PM +0530, Srikanth Thokala wrote:
+>> The current implementation of interleaved DMA API support multiple
+>> frames only when the memory is contiguous by incrementing src_start/
+>> dst_start members of interleaved template.
+>>
+>> But, when the memory is non-contiguous it will restrict slave device
+>> to not submit multiple frames in a batch.  This patch handles this
+>> issue by allowing the slave device to send array of interleaved dma
+>> templates each having a different memory location.
+> This seems to be missing the numbers of templates you are sending, wouldnt this
+> require sending ARRAY_SiZE too?
+>
+> And why send double pointer?
 
-=46or the core changes:
-  Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Array size is not required, when we pass the double pointer.  The last
+element would be
+pointed to NULL and we could get the number of templates from this condition.
+Here is an example snippet,
 
-NB: The DT guys prefer documentation to be submitted in a separate
-patch these days.
+In slave device driver,
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+        struct dma_interleaved_template **xts;
+
+        xts = kcalloc(frm_cnt+1, sizeof(struct
+dma_interleaved_template *), GFP_KERNEL);
+        /* Error check for xts */
+        for (i = 0; i < frm_cnt; i++) {
+                xts[i] = kmalloc(sizeof(struct
+dma_interleaved_template), GFP_KERNEL);
+                /* Error check for xts[i] */
+        }
+        xts[i] = NULL;
+
+In DMA engine driver,  we could get the number of frames by,
+
+        for (; xts[frmno] != NULL; frmno++);
+
+I felt this way is simpler than adding an extra argument to the API.
+Please let me know
+your opinion and suggest me a better way.
+
+Thanks
+Srikanth
+
+>
+> --
+> ~Vinod
+>
+>>
+>> Signed-off-by: Srikanth Thokala <sthokal@xilinx.com>
+>> ---
+>>  Documentation/dmaengine.txt              |    2 +-
+>>  drivers/dma/imx-dma.c                    |    3 ++-
+>>  drivers/dma/sirf-dma.c                   |    3 ++-
+>>  drivers/media/platform/m2m-deinterlace.c |    2 +-
+>>  include/linux/dmaengine.h                |    6 +++---
+>>  5 files changed, 9 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/Documentation/dmaengine.txt b/Documentation/dmaengine.txt
+>> index 879b6e3..c642614 100644
+>> --- a/Documentation/dmaengine.txt
+>> +++ b/Documentation/dmaengine.txt
+>> @@ -94,7 +94,7 @@ The slave DMA usage consists of following steps:
+>>               size_t period_len, enum dma_data_direction direction);
+>>
+>>       struct dma_async_tx_descriptor *(*device_prep_interleaved_dma)(
+>> -             struct dma_chan *chan, struct dma_interleaved_template *xt,
+>> +             struct dma_chan *chan, struct dma_interleaved_template **xts,
+>>               unsigned long flags);
+>>
+>>     The peripheral driver is expected to have mapped the scatterlist for
+>> diff --git a/drivers/dma/imx-dma.c b/drivers/dma/imx-dma.c
+>> index 6f9ac20..e2c52ce 100644
+>> --- a/drivers/dma/imx-dma.c
+>> +++ b/drivers/dma/imx-dma.c
+>> @@ -954,12 +954,13 @@ static struct dma_async_tx_descriptor *imxdma_prep_dma_memcpy(
+>>  }
+>>
+>>  static struct dma_async_tx_descriptor *imxdma_prep_dma_interleaved(
+>> -     struct dma_chan *chan, struct dma_interleaved_template *xt,
+>> +     struct dma_chan *chan, struct dma_interleaved_template **xts,
+>>       unsigned long flags)
+>>  {
+>>       struct imxdma_channel *imxdmac = to_imxdma_chan(chan);
+>>       struct imxdma_engine *imxdma = imxdmac->imxdma;
+>>       struct imxdma_desc *desc;
+>> +     struct dma_interleaved_template *xt = *xts;
+>>
+>>       dev_dbg(imxdma->dev, "%s channel: %d src_start=0x%llx dst_start=0x%llx\n"
+>>               "   src_sgl=%s dst_sgl=%s numf=%zu frame_size=%zu\n", __func__,
+>> diff --git a/drivers/dma/sirf-dma.c b/drivers/dma/sirf-dma.c
+>> index d4d3a31..b6a150b 100644
+>> --- a/drivers/dma/sirf-dma.c
+>> +++ b/drivers/dma/sirf-dma.c
+>> @@ -509,12 +509,13 @@ sirfsoc_dma_tx_status(struct dma_chan *chan, dma_cookie_t cookie,
+>>  }
+>>
+>>  static struct dma_async_tx_descriptor *sirfsoc_dma_prep_interleaved(
+>> -     struct dma_chan *chan, struct dma_interleaved_template *xt,
+>> +     struct dma_chan *chan, struct dma_interleaved_template **xts,
+>>       unsigned long flags)
+>>  {
+>>       struct sirfsoc_dma *sdma = dma_chan_to_sirfsoc_dma(chan);
+>>       struct sirfsoc_dma_chan *schan = dma_chan_to_sirfsoc_dma_chan(chan);
+>>       struct sirfsoc_dma_desc *sdesc = NULL;
+>> +     struct dma_interleaved_template *xt = *xts;
+>>       unsigned long iflags;
+>>       int ret;
+>>
+>> diff --git a/drivers/media/platform/m2m-deinterlace.c b/drivers/media/platform/m2m-deinterlace.c
+>> index 6bb86b5..468110a 100644
+>> --- a/drivers/media/platform/m2m-deinterlace.c
+>> +++ b/drivers/media/platform/m2m-deinterlace.c
+>> @@ -343,7 +343,7 @@ static void deinterlace_issue_dma(struct deinterlace_ctx *ctx, int op,
+>>       ctx->xt->dst_sgl = true;
+>>       flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
+>>
+>> -     tx = dmadev->device_prep_interleaved_dma(chan, ctx->xt, flags);
+>> +     tx = dmadev->device_prep_interleaved_dma(chan, &ctx->xt, flags);
+>>       if (tx == NULL) {
+>>               v4l2_warn(&pcdev->v4l2_dev, "DMA interleaved prep error\n");
+>>               return;
+>> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+>> index c5c92d5..2f77a9a 100644
+>> --- a/include/linux/dmaengine.h
+>> +++ b/include/linux/dmaengine.h
+>> @@ -675,7 +675,7 @@ struct dma_device {
+>>               size_t period_len, enum dma_transfer_direction direction,
+>>               unsigned long flags, void *context);
+>>       struct dma_async_tx_descriptor *(*device_prep_interleaved_dma)(
+>> -             struct dma_chan *chan, struct dma_interleaved_template *xt,
+>> +             struct dma_chan *chan, struct dma_interleaved_template **xts,
+>>               unsigned long flags);
+>>       int (*device_control)(struct dma_chan *chan, enum dma_ctrl_cmd cmd,
+>>               unsigned long arg);
+>> @@ -752,10 +752,10 @@ static inline struct dma_async_tx_descriptor *dmaengine_prep_dma_cyclic(
+>>  }
+>>
+>>  static inline struct dma_async_tx_descriptor *dmaengine_prep_interleaved_dma(
+>> -             struct dma_chan *chan, struct dma_interleaved_template *xt,
+>> +             struct dma_chan *chan, struct dma_interleaved_template **xts,
+>>               unsigned long flags)
+>>  {
+>> -     return chan->device->device_prep_interleaved_dma(chan, xt, flags);
+>> +     return chan->device->device_prep_interleaved_dma(chan, xts, flags);
+>>  }
+>>
+>>  static inline int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
+>> --
+>> 1.7.9.5
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe dmaengine" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> --
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
