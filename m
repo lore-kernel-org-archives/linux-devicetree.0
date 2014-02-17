@@ -1,66 +1,41 @@
-From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Subject: [PATCH] of_mdio: fix phy interrupt passing
-Date: Mon, 17 Feb 2014 16:29:40 +0000
-Message-ID: <1392654580-3706-1-git-send-email-ben.dooks@codethink.co.uk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v2 1/5] drivers: of: add initialization code for reserved memory
+Date: Mon, 17 Feb 2014 16:47:08 +0000
+Message-ID: <20140217164708.B332BC403B4@trevor.secretlab.ca>
+References: <1391515773-6112-1-git-send-email-m.szyprowski@samsung.com>	 < 1391515773-6112-2-git-send-email-m.szyprowski@samsung.com>	 <20140205110538 . 99E47C40A89@trevor.secretlab.ca>	 <52FA0D6E.9090304@samsung.com>	 < 20140211121316.24032C40C4D@trevor.secretlab.ca>	 <52FA33E2.4050004@samsung. com>	 <20140211190104.7E6C5C4140E@trevor.secretlab.ca> <1392148971.3835.15. camel@pasglop> <52FA8245.5050707@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <52FA8245.5050707@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Tomasz Figa <t.figa@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@gmail.com>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The of_mdiobus_register_phy() is not setting phy->irq this causing
-some drivers to incorrectly assume that the PHY does not have an
-IRQ associated with it or install an interrupt handler for the
-PHY.
+On Tue, 11 Feb 2014 21:04:21 +0100, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> 
+> 
+> On 11.02.2014 21:02, Benjamin Herrenschmidt wrote:
+> > On Tue, 2014-02-11 at 19:01 +0000, Grant Likely wrote:
+> >
+> >>> except that the former IMHO better suits the definition of memory
+> >>> region, which I see as a single contiguous range of memory and can be
+> >>> simplified to have a single reg entry per region.
+> >>
+> >> My point is rather if multiple reg tuples are found in a reserved memory
+> >> node, the kernel must respect them and reserve the memory. I'm not
+> >> arguing about whether or not that makes for a good binding.
+> >
+> > agreed.
+> 
+> My point is why, if the binding defines that just a single tuple should 
+> be provided.
 
-Simplify the code setting irq and set the phy->irq at the same
-time so that the case if mdio->irq is not NULL is easier to read.
+It's irrelevant because it gets processed at a different level. It's
+important that the core early setup code can quickly parse all the
+reserved regions without having any idea what the end-user binding is.
+Multiple reg tuples is just fine in this regard.
 
-This fixes the issue:
- net eth0: attached PHY 1 (IRQ -1) to driver Micrel KSZ8041RNLI
+Whether or not multiple tuples makes sense is defined for each
+particular use case by the driver actually using it without impacting
+core initialization code one iota.
 
-to the correct:
- net eth0: attached PHY 1 (IRQ 416) to driver Micrel KSZ8041RNLI
-
-Signed-off-by: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
----
- drivers/of/of_mdio.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index 875b7b6..7b3e7b0 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -44,7 +44,7 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
- {
- 	struct phy_device *phy;
- 	bool is_c45;
--	int rc, prev_irq;
-+	int rc;
- 	u32 max_speed = 0;
- 
- 	is_c45 = of_device_is_compatible(child,
-@@ -55,11 +55,11 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
- 		return 1;
- 
- 	if (mdio->irq) {
--		prev_irq = mdio->irq[addr];
--		mdio->irq[addr] =
--			irq_of_parse_and_map(child, 0);
--		if (!mdio->irq[addr])
--			mdio->irq[addr] = prev_irq;
-+		rc = irq_of_parse_and_map(child, 0);
-+		if (rc > 0) {
-+			mdio->irq[addr] = rc;
-+			phy->irq = rc;
-+		}
- 	}
- 
- 	/* Associate the OF node with the device structure so it
--- 
-1.8.5.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+g.
