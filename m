@@ -1,58 +1,56 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH v3 1/3] ARM: EXYNOS: initial board support for exynos5260 SoC
-Date: Mon, 17 Feb 2014 08:40:43 +0530
-Message-ID: <CAK9yfHyb7ij0soCmrJvw9OrW2mKdY1QBpnqLdzeRHqdvOGN61g@mail.gmail.com>
-References: <1392385032-22015-1-git-send-email-rahul.sharma@samsung.com>
-	<1392385032-22015-2-git-send-email-rahul.sharma@samsung.com>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH 0/5] enable i2c on koelsch-dt (and cleanup lager)
+Date: Mon, 17 Feb 2014 12:13:09 +0900
+Message-ID: <CANqRtoRvB5zqEPFJBaC548+_S_+KXY5+acQ-zXFPG5DSxp2L7g@mail.gmail.com>
+References: <1392543658-5030-1-git-send-email-wsa@the-dreams.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1392385032-22015-2-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <rahul.sharma@samsung.com>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>, Pankaj Dubey <pankaj.dubey@samsung.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1392543658-5030-1-git-send-email-wsa@the-dreams.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: SH-Linux <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rahul,
+Hi Wolfram,
 
-On 14 February 2014 19:07, Rahul Sharma <rahul.sharma@samsung.com> wrote:
-> From: Pankaj Dubey <pankaj.dubey@samsung.com>
+On Sun, Feb 16, 2014 at 6:40 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
+> This series adds all rcar cores to the r8a7791 dtsi and enables bus 2 on the
+> koelsch board. Functionality was tested with reading/writing to an eeprom. Some
+> rcar driver issues have been observed, but they are independent from the dt
+> binding provided here. On the way, some cleanups were found which apply to
+> r8a7790 as well, yet those are only compile tested since I don't have HW access
+> to the lager board (yet).
 >
-> This patch add basic arch side support for exynos5260 SoC.
+> The series is based on tag 'renesas-devel-v3.14-rc2-20140213' and can be found here
+> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git renesas/r8a7791-i2c
 >
-> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
-> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-> ---
->  arch/arm/mach-exynos/Kconfig             |    9 +++++++++
->  arch/arm/mach-exynos/common.c            |   11 +++++++++++
->  arch/arm/mach-exynos/include/mach/map.h  |    1 +
->  arch/arm/mach-exynos/mach-exynos5-dt.c   |    1 +
->  arch/arm/plat-samsung/include/plat/cpu.h |    8 ++++++++
->  5 files changed, 30 insertions(+)
->
-> diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
-> index 4c414af..5c96248 100644
-> --- a/arch/arm/mach-exynos/Kconfig
-> +++ b/arch/arm/mach-exynos/Kconfig
-> @@ -91,6 +91,15 @@ config SOC_EXYNOS5250
->         help
->           Enable EXYNOS5250 SoC support
->
-> +config SOC_EXYNOS5260
-> +       bool "SAMSUNG EXYNOS5260"
-> +       default y
-> +       depends on ARCH_EXYNOS5
-> +       select AUTO_ZRELADDR
-> +       select SAMSUNG_DMADEV
-> +       help
-> +         Enable EXYNOS5260 SoC support
-> +
+> Please review/apply.
 
-Per SoC entries are no longer needed with the patch at [1].
+Thanks for your patches. I think they look good in general, but patch
+[2/5] needs to be reworked to exclude the r8a7790 compatible string.
+Patch [3/5] probably depends on [2/5] so it needs to wait too.
 
-[1] http://www.spinics.net/lists/linux-samsung-soc/msg26253.html
+> Wolfram Sang (5):
+>   ARM: shmobile: r8a7791: remove superfluous interrupt-parents
+[1/5] looks fine
 
--- 
-With warm regards,
-Sachin
+>   ARM: shmobile: r8a7791: add i2c master nodes to dtsi
+>   ARM: shmobile: r8a7791: add i2c2 bus to koelsch dt
+[2/5] needs rework
+[3/5] depends on [2/5] - needs to wait
+
+>   ARM: shmobile: r8a7790: remove superfluous interrupt-parents
+>   ARM: shmobile: r8a7790: add i2c aliases to dtsi
+[4/5] looks good
+[5/5] looks good
+
+For the patches [1/5], [4/5], [5/5]
+
+Acked-by: Magnus Damm <damm@opensource.se>
+
+Let us discuss [2/5] in a separate thread.
+
+Thanks for your help!
+
+/ magnus
