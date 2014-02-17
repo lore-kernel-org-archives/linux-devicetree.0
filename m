@@ -1,74 +1,126 @@
-From: David =?utf-8?q?Lanzend=C3=B6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
-Subject: [PATCH v7 8/8] ARM: sunxi: Add documentation for driver
- for SD/MMC hosts found on Allwinner sunxi SoCs
-Date: Mon, 17 Feb 2014 11:03:02 +0100
-Message-ID: <20140217100302.15040.56273.stgit@pagira.o2s.ch>
-References: <20140217095907.15040.81893.stgit@pagira.o2s.ch>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: [PATCH v5 1/4] ASoC: tlv320aic32x4: Support for master
+	clock
+Date: Mon, 17 Feb 2014 11:04:17 +0100
+Message-ID: <1392631460-32002-2-git-send-email-mpa@pengutronix.de>
+References: <1392575252-9222-1-git-send-email-mpa@pengutronix.de>
+ <1392631460-32002-1-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBD2JL37LXEKRBL55Q6MAKGQEBIFFB2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140217095907.15040.81893.stgit-pgFh0Jf6HD9Xzn/AsuzBOg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Emilio =?utf-8?b?TMOzcGV6?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1392631460-32002-1-git-send-email-mpa@pengutronix.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Kumar Gala <galak@codeaurora.org>, Markus Pargmann <mpa@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: David Lanzend=C3=B6rfer <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
+Add support for a master clock passed through DT. The master clock of
+the codec is only active when the codec is in use.
+
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
 ---
- .../devicetree/bindings/mmc/sunxi-mmc.txt          |   32 ++++++++++++++++=
-++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
+ .../devicetree/bindings/sound/tlv320aic32x4.txt    |  4 ++++
+ sound/soc/codecs/tlv320aic32x4.c                   | 23 ++++++++++++++++++++++
+ 2 files changed, 27 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt b/Document=
-ation/devicetree/bindings/mmc/sunxi-mmc.txt
-new file mode 100644
-index 0000000..5ce8c5e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
-@@ -0,0 +1,32 @@
-+* Allwinner sunxi MMC controller
+diff --git a/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt b/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
+index db05510..352be7b 100644
+--- a/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
++++ b/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
+@@ -8,6 +8,8 @@ Required properties:
+ 
+ Optional properties:
+  - reset-gpios: Reset-GPIO phandle with args as described in gpio/gpio.txt
++ - clocks/clock-names: Clock named 'mclk' for the master clock of the codec.
++   See clock/clock-bindings.txt for information about the detailed format.
+ 
+ 
+ Example:
+@@ -15,4 +17,6 @@ Example:
+ codec: tlv320aic32x4@18 {
+ 	compatible = "ti,tlv320aic32x4";
+ 	reg = <0x18>;
++	clocks = <&clks 201>;
++	clock-names = "mclk";
+ };
+diff --git a/sound/soc/codecs/tlv320aic32x4.c b/sound/soc/codecs/tlv320aic32x4.c
+index 1dd50e4..d96cb7c 100644
+--- a/sound/soc/codecs/tlv320aic32x4.c
++++ b/sound/soc/codecs/tlv320aic32x4.c
+@@ -33,6 +33,7 @@
+ #include <linux/i2c.h>
+ #include <linux/cdev.h>
+ #include <linux/slab.h>
++#include <linux/clk.h>
+ 
+ #include <sound/tlv320aic32x4.h>
+ #include <sound/core.h>
+@@ -67,6 +68,7 @@ struct aic32x4_priv {
+ 	u32 micpga_routing;
+ 	bool swapdacs;
+ 	int rstn_gpio;
++	struct clk *mclk;
+ };
+ 
+ /* 0dB min, 0.5dB steps */
+@@ -487,8 +489,21 @@ static int aic32x4_mute(struct snd_soc_dai *dai, int mute)
+ static int aic32x4_set_bias_level(struct snd_soc_codec *codec,
+ 				  enum snd_soc_bias_level level)
+ {
++	struct aic32x4_priv *aic32x4 = snd_soc_codec_get_drvdata(codec);
 +
-+The highspeed MMC host controller on Allwinner SoCs provides an interface
-+for MMC, SD and SDIO types of memory cards.
+ 	switch (level) {
+ 	case SND_SOC_BIAS_ON:
++		/* Switch on master clock */
++		if (!IS_ERR(aic32x4->mclk)) {
++			int ret;
 +
-+Supported maximum speeds are the ones of the eMMC standard 4.5 as well
-+as the speed of SD standard 3.0.
-+Absolute maximum transfer rate is 200MB/s
++			ret = clk_prepare_enable(aic32x4->mclk);
++			if (ret) {
++				dev_err(codec->dev, "Failed to enable master clock\n");
++				return ret;
++			}
++		}
 +
-+Required properties:
-+- compatible: Should be "allwinner,<revision>-<chip>-mmc".
-+  The supported chips include a10, a10s, 13, a20 and a31.
-+- base registers are 0x1000 appart, so the base of mmc1
-+  would be 0x01c0f000+0x1000=3D0x01c10000(see example)
-+  and so on.
-+- clocks requires the reference at the ahb clock gate
-+  with the correct index (mmc0 -> 8, mmc1 -> 9, and so on)
-+  as well as the reference to the correct mod0 clock.
-+- interrupts requires the correct IRQ line
-+  (mmc0 -> 32, mmc1 -> 33, and so on)
+ 		/* Switch on PLL */
+ 		snd_soc_update_bits(codec, AIC32X4_PLLPR,
+ 				    AIC32X4_PLLEN, AIC32X4_PLLEN);
+@@ -539,6 +554,10 @@ static int aic32x4_set_bias_level(struct snd_soc_codec *codec,
+ 		/* Switch off BCLK_N Divider */
+ 		snd_soc_update_bits(codec, AIC32X4_BCLKN,
+ 				    AIC32X4_BCLKEN, 0);
 +
-+Examples:
++		/* Switch off master clock */
++		if (!IS_ERR(aic32x4->mclk))
++			clk_disable_unprepare(aic32x4->mclk);
+ 		break;
+ 	case SND_SOC_BIAS_OFF:
+ 		break;
+@@ -717,6 +736,10 @@ static int aic32x4_i2c_probe(struct i2c_client *i2c,
+ 		aic32x4->rstn_gpio = -1;
+ 	}
+ 
++	aic32x4->mclk = devm_clk_get(&i2c->dev, "mclk");
++	if (IS_ERR(aic32x4->mclk))
++		dev_info(&i2c->dev, "No mclk found, continuing without clock\n");
 +
-+mmc0: mmc@01c0f000 {
-+	compatible =3D "allwinner,sun5i-a13-mmc";
-+	reg =3D <0x01c0f000 0x1000>;
-+	clocks =3D <&ahb_gates 8>, <&mmc0_clk>;
-+	clock-names =3D "ahb", "mod";
-+	interrupts =3D <0 32 4>;
-+	bus-width =3D <4>;
-+	status =3D "disabled";
-+};
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/groups/opt_out.
+ 	if (gpio_is_valid(aic32x4->rstn_gpio)) {
+ 		ret = devm_gpio_request_one(&i2c->dev, aic32x4->rstn_gpio,
+ 				GPIOF_OUT_INIT_LOW, "tlv320aic32x4 rstn");
+-- 
+1.8.5.3
