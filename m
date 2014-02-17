@@ -1,166 +1,87 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] net: add init-regs for of_phy support
-Date: Mon, 17 Feb 2014 13:15:18 -0800
-Message-ID: <CAGVrzcbT4qrPNuJA4AsFirEa73D9NR-jCnAYMXuNcZkgcafvAA@mail.gmail.com>
-References: <1392642484-19938-1-git-send-email-ben.dooks@codethink.co.uk>
- <1392642484-19938-2-git-send-email-ben.dooks@codethink.co.uk>
- <CAGVrzcYbw5xLj-gwcup5i0gBdKDDGdyy5wAaEBp7m2E7f2bytg@mail.gmail.com>
- <5302801F.6000903@cogentembedded.com> <CAGVrzcbZC3t0oexc5Aj-KyGj-qC8J9eYp8+rb8V-AqKtrSjyYw@mail.gmail.com>
- <53028857.8050206@cogentembedded.com>
+From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH] dt/bindings: update fsl-fec regarding compatible and
+ clocks
+Date: Mon, 17 Feb 2014 22:24:39 +0100
+Message-ID: <20140217212439.GZ4524@book.gsilab.sittig.org>
+References: <1392033008-20752-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <53028857.8050206@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, David Miller <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1392033008-20752-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Philippe De Muyter <phdm-KobBqTBAxd8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-02-17 14:08 GMT-08:00 Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>:
-> On 02/17/2014 11:48 PM, Florian Fainelli wrote:
->
->>>>> Add new init-regs field for of_phy nodes and make sure these
->>>>> get applied when the phy is configured.
->
->
->>>>> This allows any phy node in an fdt to initialise registers
->>>>> that may not be set as standard by the driver at initialisation
->>>>> time, such as LED controls.
->
->
->>>>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
->
-> [...]
->
->
->>>>> diff --git a/drivers/net/phy/phy_device.c
->>>>> b/drivers/net/phy/phy_device.c
->>>>> index 82514e7..6741cdb 100644
->>>>> --- a/drivers/net/phy/phy_device.c
->>>>> +++ b/drivers/net/phy/phy_device.c
->
->
->>> [...]
->
->
->>>>> @@ -532,6 +533,57 @@ static int phy_poll_reset(struct phy_device
->>>>> *phydev)
->>>>>           return 0;
->>>>>    }
->>>>>
->>>>> +#ifdef CONFIG_OF
->>>>> +static int of_phy_configure(struct phy_device *phydev)
->>>>> +{
->>>>> +       struct device *dev = &phydev->dev;
->>>>> +       struct device_node *of_node = dev->of_node;
->>>>> +       struct property *prop;
->>>>> +       const __be32 *ptr;
->>>>> +       u32 reg, set, clear;
->>>>> +       int len;
->>>>> +       int val;
->
->
->>>> This does not belong in the generic PHY code unless we are very clear
->>>> on what we want to do, and how to do it, which I do not think we are
->>>> yet. What exactly is needed here:
->
->
->>>> - fixing up some design mistake?
->>>> - accounting for a specific board design?
->
->
->>>     Kind of both. This was invented to defy the necessity of having
->>> platform
->>> fixup in the DT case (where there should be no board file to place it
->>> into).
->>> I have already described that platform fixup necessary on the Renesas
->>> Lager/Koelsch boards where the LED0 signat is connected to ETH_LINK
->>> signal
->>> on the SoC and the PHY reset sets the LED control bits to default 0 which
->>> means that LED0 will be LINK/ACTIVITY signal and thus blink on activity
->>> and
->>> cause ETH_LINK to bounce off/on after each packet.
->
->
->>>> In any case a PHY fixup would do the job for you.
->
->
->>>     Not in any case. In case of DT we have no place for it, so should
->>> invent
->>> something involving DT.
->
->
->> How is DT different than any machine probing mechanism here?
->
->
->    There supposed to be no board files. The purpose of DT is to get rid of
-> the board files, at least on ARM.
->
->
->> The way to involve DT is to do the following:
->
->
->> if (of_machine_is_compatible("renesas,foo-board-with-broken-micrel-phy"))
->>             phy_register_fixup(&foo_board_with_broken_micrel_phy);
->
->
->    Where are you suggesting to place such code?
-> arch/arm/mach-shmobile/setup-*.c?
+On Mon, Feb 10, 2014 at 19:50 +0800, Shawn Guo wrote:
+> 
+> Update fsl-fec to explicitly list the supported compatible strings
+> and add missing 'clocks' and 'clock-names' properties.  It does not
+> change anything about how kernel drive works.  Instead, it just reflects
+> how kernel driver works today.
+> 
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/net/fsl-fec.txt |   19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
+> index 845ff84..3ebd395 100644
+> --- a/Documentation/devicetree/bindings/net/fsl-fec.txt
+> +++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
+> @@ -1,9 +1,26 @@
+>  * Freescale Fast Ethernet Controller (FEC)
+>  
+>  Required properties:
+> -- compatible : Should be "fsl,<soc>-fec"
+> +- compatible : Should contain one of the following:
+> +		"fsl,imx25-fec"
+> +		"fsl,imx27-fec"
+> +		"fsl,imx28-fec"
+> +		"fsl,imx6q-fec"
+> +		"fsl,mvf600-fec"
 
-Somewhere along those lines, I am not familiar at all with the SH
-Mobile line of SoCs and how the DT/non-DT code used to look like.
-Although I would be naively thinking that hooking this into the
-init_machine() callback for the DT machine descriptor would do the
-job.
+This appears to miss all the PowerPC based SoCs.  See
+  git grep 'fsl,.*-fec' arch/*/boot/dts
 
->
->
->> If your machine compatible string does not allow you to uniquely
->> identify your machine, this is a DT problem, as this should really be
->> the case. If you do not want to add this code to wherever this is
->> relevant in arch/arm/mach-shmobile/board-*.c,
->
->
->    There just should be no such file for DT case.
+>  - reg : Address and length of the register set for the device
+>  - interrupts : Should contain fec interrupt
+> +- clocks: phandle to the clocks feeding the FEC controller and phy. The
+> +  following two are required:
+> +   - "ipg": the peripheral access clock
+> +   - "ahb": the bus clock for MAC
+> +  The following two are optional:
+> +   - "ptp": the sampling clock for PTP (IEEE 1588).  On SoC like i.MX6Q,
+> +     the clock could come from either the internal clock control module
+> +     or external oscillator via pad depending on board design.
+> +   - "enet_out": the phy reference clock provided by SoC via pad, which
+> +     is available on SoC like i.MX28.
+> +- clock-names: Must contain the clock names described just above
+> +
 
-There is still a generic file which catches all SH Mobile machines and
-registers some peripherals, as far as I look e.g; board-marzen.c that
-one is  still doing a bunch of platform_device_register_full() calls.
-Even if the DT board file was extremely generic to the point where it
-contains nothing, adding a custom init_machine() callback which
-registers PHY fixups would not be too crazy.
+Listing 'clocks' under the "required properties" all of a sudden
+invalidates existing device trees, if they don't carry the
+property which before the change was not required, not even
+documented.
 
->
->
->> neither is drivers/net/phy/phy_device.c this the place to add it.
->
->
->    Hey, I wasn't arguing with that! :-)
->
->
->> Dealing with quirks applying to industry standard blocks is to update
->> the relevant driver, based on information provided by the specifically
->> affected systems. Failure to identify either of those correctly is a
->> problem that must not lead to a generic "let's override PHY registers
->> from DT" type of solution.
->
->
->> As usual, mechanism vs policy applies even more when DT is involved.
->
->
->    Ah, so you're suggesting placing the fixup code in the driver itself?
-> That's a bit strange for the platform specific code, but would do I guess...
+The PowerPC based chips probably have differing sets of clocks.
+I'm aware of the MPC512x, where one "per" clock is sufficient,
+and even this spec is optional.  Other machines may not have yet
+been converted to CCF.
 
-PHY fixups are slightly different from say, traditional HW fixups,
-what I meant here was that the general use case for quirks is:
+Your description needs to get rephrased, it triggers Mark
+Rutland's regular "clocks are not just phandles" reply.  See how
+he suggested quite a few times a better wording.
 
-- board code detects the faulty hardware and sets a flag that gets
-passed down the relevant driver
-- the relevant driver checks for this flag to enable such a thing
 
-For the specific PHY devices, there are actually two ways to deal with this:
-
-- register a PHY fixup somewhere (TBD where this somewhere is)
-- set the phydev->dev_flags (just like what the TG3 driver does for instance
+virtually yours
+Gerhard Sittig
 -- 
-Florian
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
