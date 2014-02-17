@@ -1,86 +1,45 @@
-From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH] dt/bindings: update fsl-fec regarding compatible and
- clocks
-Date: Mon, 17 Feb 2014 22:24:39 +0100
-Message-ID: <20140217212439.GZ4524@book.gsilab.sittig.org>
-References: <1392033008-20752-1-git-send-email-shawn.guo@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org
+Subject: [PATCH v4 3/4] DT: i2c: Trivial: Add sii, s35390a, fix ricoh vendor prefix
+Date: Tue, 18 Feb 2014 07:45:36 +1000
+Message-ID: <1392673537-17308-4-git-send-email-klightspeed@killerwolves.net>
+References: <1392673537-17308-1-git-send-email-klightspeed@killerwolves.net>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1392033008-20752-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1392673537-17308-1-git-send-email-klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Philippe De Muyter <phdm-KobBqTBAxd8@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 10, 2014 at 19:50 +0800, Shawn Guo wrote:
-> 
-> Update fsl-fec to explicitly list the supported compatible strings
-> and add missing 'clocks' and 'clock-names' properties.  It does not
-> change anything about how kernel drive works.  Instead, it just reflects
-> how kernel driver works today.
-> 
-> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/net/fsl-fec.txt |   19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
-> index 845ff84..3ebd395 100644
-> --- a/Documentation/devicetree/bindings/net/fsl-fec.txt
-> +++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
-> @@ -1,9 +1,26 @@
->  * Freescale Fast Ethernet Controller (FEC)
->  
->  Required properties:
-> -- compatible : Should be "fsl,<soc>-fec"
-> +- compatible : Should contain one of the following:
-> +		"fsl,imx25-fec"
-> +		"fsl,imx27-fec"
-> +		"fsl,imx28-fec"
-> +		"fsl,imx6q-fec"
-> +		"fsl,mvf600-fec"
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 
-This appears to miss all the PowerPC based SoCs.  See
-  git grep 'fsl,.*-fec' arch/*/boot/dts
+Add the Seiko Instruments Inc S35390a to the list of trivial i2c
+devices. At the same time, correct the vendor prefix for ricoh, which
+should be the ticker symbol ricoy.
 
->  - reg : Address and length of the register set for the device
->  - interrupts : Should contain fec interrupt
-> +- clocks: phandle to the clocks feeding the FEC controller and phy. The
-> +  following two are required:
-> +   - "ipg": the peripheral access clock
-> +   - "ahb": the bus clock for MAC
-> +  The following two are optional:
-> +   - "ptp": the sampling clock for PTP (IEEE 1588).  On SoC like i.MX6Q,
-> +     the clock could come from either the internal clock control module
-> +     or external oscillator via pad depending on board design.
-> +   - "enet_out": the phy reference clock provided by SoC via pad, which
-> +     is available on SoC like i.MX28.
-> +- clock-names: Must contain the clock names described just above
-> +
+Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/i2c/trivial-devices.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Listing 'clocks' under the "required properties" all of a sudden
-invalidates existing device trees, if they don't carry the
-property which before the change was not required, not even
-documented.
-
-The PowerPC based chips probably have differing sets of clocks.
-I'm aware of the MPC512x, where one "per" clock is sufficient,
-and even this spec is optional.  Other machines may not have yet
-been converted to CCF.
-
-Your description needs to get rephrased, it triggers Mark
-Rutland's regular "clocks are not just phandles" reply.  See how
-he suggested quite a few times a better wording.
-
-
-virtually yours
-Gerhard Sittig
+diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+index 1a1ac2e..5f37191 100644
+--- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
++++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+@@ -56,8 +56,9 @@ ovti,ov5642		OV5642: Color CMOS QSXGA (5-megapixel) Image Sensor with OmniBSI an
+ pericom,pt7c4338	Real-time Clock Module
+ plx,pex8648		48-Lane, 12-Port PCI Express Gen 2 (5.0 GT/s) Switch
+ ramtron,24c64		i2c serial eeprom  (24cxx)
+-ricoh,rs5c372a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
++ricoy,rs5c372a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
+ samsung,24ad0xd1	S524AD0XF1 (128K/256K-bit Serial EEPROM for Low Power)
++sii,s35390a		2-wire CMOS real-time clock
+ st-micro,24c256		i2c serial eeprom  (24cxx)
+ stm,m41t00		Serial Access TIMEKEEPER
+ stm,m41t62		Serial real-time clock (RTC) with alarm
 -- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
-Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
+1.8.3.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
