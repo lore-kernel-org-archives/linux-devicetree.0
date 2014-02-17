@@ -1,98 +1,171 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH net-next v5 09/10] Documentation: add Device tree bindings
- for Broadcom GENET
-Date: Mon, 17 Feb 2014 14:18:47 -0800
-Message-ID: <CAGVrzcZSX8sJJs_ZbY0_OL5QgE9daiT0AZQyWadA1w2AcbErVw@mail.gmail.com>
-References: <1392336531-28875-1-git-send-email-f.fainelli@gmail.com>
- <1392336531-28875-10-git-send-email-f.fainelli@gmail.com> <53029702.6010803@cogentembedded.com>
+From: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v4 1/4] Power: Reset: Generalize qnap-poweroff to with on
+ Synology devices.
+Date: Mon, 17 Feb 2014 16:31:53 -0600
+Message-ID: <20140217223153.GA31116@joshc.qualcomm.com>
+References: <1392673537-17308-1-git-send-email-klightspeed@killerwolves.net>
+ <1392673537-17308-2-git-send-email-klightspeed@killerwolves.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <53029702.6010803@cogentembedded.com>
-Sender: netdev-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: netdev <netdev@vger.kernel.org>, David Miller <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Francois Romieu <romieu@fr.zoreil.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1392673537-17308-2-git-send-email-klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-02-17 15:10 GMT-08:00 Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>:
-> Hello.
->
->
-> On 02/14/2014 03:08 AM, Florian Fainelli wrote:
->
->> This patch adds the Device Tree bindings for the Broadcom GENET Gigabit
->> Ethernet controller. A bunch of examples are provided to illustrate the
->> versatile aspect of the hardare.
->
->
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->
-> [...]
->
->    Too bad I didn't read this patch before and now it has been already
-> applied.
->
-> [...]
->
->
->> diff --git a/Documentation/devicetree/bindings/net/broadcom-bcmgenet.txt
->> b/Documentation/devicetree/bindings/net/broadcom-bcmgenet.txt
->> new file mode 100644
->> index 0000000..afd31f9
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/broadcom-bcmgenet.txt
->> @@ -0,0 +1,121 @@
->> +* Broadcom BCM7xxx Ethernet Controller (GENET)
->> +
->> +Required properties:
->> +- compatible: should contain one of "brcm,genet-v1", "brcm,genet-v2",
->> +  "brcm,genet-v3", "brcm,genet-v4".
->> +- reg: address and length of the register set for the device
->> +- interrupts: must be two cells, the first cell is the general purpose
->> +  interrupt line, while the second cell is the interrupt for the ring
->> +  RX and TX queues operating in ring mode
->> +- phy-mode: String, operation mode of the PHY interface. Supported values
->> are
->> +  "mii", "rgmii", "rgmii-txid", "rev-mii", "moca". Analogous to ePAPR
->> +  "phy-connection-type" values
->> +- address-cells: should be 1
->> +- size-cells: should be 1
->
->
->    The above two prop names should have # in front of them. Examples seem to
-> be correct. Some words about the downstream bus wouldn't hurt too.
+Hello-
 
-Absolutely, let me follow up with a patch fixing this.
+Few nits below.
 
->
-> [...]
->
->> +Required child nodes:
->> +
->> +- mdio bus node: this node should always be present regarless of the PHY
->> +  configuration of the GENET instance
->> +
->> +MDIO bus node required properties:
->> +
->> +- compatible: should contain one of "brcm,genet-mdio-v1",
->> "brcm,genet-mdio-v2"
->> +  "brcm,genet-mdio-v3", "brcm,genet-mdio-v4", the version has to match
->> the
->> +  parent node compatible property (e.g: brcm,genet-v4 pairs with
->> +  brcm,genet-mdio-v4)
->> +- reg: address and length relative to the parent node base register
->> address
->> +- address-cells: address cell for MDIO bus addressing, should be 1
->> +- size-cells: size of the cells for MDIO bus addressing, should be 0
->
->
->    The above two props should have # in front of them as well. Examples seem
-> to be correct.
->
-> WBR, Sergei
->
+On Tue, Feb 18, 2014 at 07:45:34AM +1000, klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org wrote:
+> From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> 
+> The Synology NAS devices use a very similar mechanism to QNAP NAS
+> devices to power off. Both send a single charactor command to a PIC,
+> over the second serial port. However the baud rate and the command
+> differ. Generalize the driver to support this.
+> 
+> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+> Cc: Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>
+> Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+> ---
+>  .../bindings/power_supply/qnap-poweroff.txt        |  5 ++-
+>  drivers/power/reset/qnap-poweroff.c                | 46 +++++++++++++++++-----
+>  2 files changed, 40 insertions(+), 11 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt b/Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt
+> index 0347d83..af25e77 100644
+> --- a/Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt
+> +++ b/Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt
+> @@ -6,8 +6,11 @@ Orion5x SoCs. Sending the character 'A', at 19200 baud, tells the
+>  microcontroller to turn the power off. This driver adds a handler to
+>  pm_power_off which is called to turn the power off.
+>  
+> +Synology NAS devices use a similar scheme, but a different baud rate,
+> +9600, and a different character, '1'.
+> +
+>  Required Properties:
+> -- compatible: Should be "qnap,power-off"
+> +- compatible: Should be "qnap,power-off" or "synology,power-off"
 
+Hmm.. Neither 'qnap' or 'synology' are described in
+Documentation/devicetree/bindings/vendor-prefixes.txt.  Perhaps they
+should be added?
 
+>  
+>  - reg: Address and length of the register set for UART1
+>  - clocks: tclk clock
+> diff --git a/drivers/power/reset/qnap-poweroff.c b/drivers/power/reset/qnap-poweroff.c
+> index 37f56f7..10c91fa 100644
+> --- a/drivers/power/reset/qnap-poweroff.c
+> +++ b/drivers/power/reset/qnap-poweroff.c
+> @@ -1,5 +1,5 @@
+>  /*
+> - * QNAP Turbo NAS Board power off
+> + * QNAP Turbo NAS Board power off. Can also be used on Synology devices.
+>   *
+>   * Copyright (C) 2012 Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+>   *
+> @@ -25,17 +25,42 @@
+>  
+>  #define UART1_REG(x)	(base + ((UART_##x) << 2))
+>  
+> +struct power_off_cfg {
+> +	u32 baud;
+> +	char cmd;
+> +};
+> +
+> +static const struct power_off_cfg qnap_power_off_cfg = {
+> +	.baud = 19200,
+> +	.cmd = 'A',
+> +};
+> +
+> +static const struct power_off_cfg synology_power_off_cfg = {
+> +	.baud = 9600,
+> +	.cmd = '1',
+> +};
+> +
+> +static const struct of_device_id qnap_power_off_of_match_table[] = {
+> +	{ .compatible = "qnap,power-off",
+> +	  .data = (void *) &qnap_power_off_cfg,
+> +	},
+> +	{ .compatible = "synology,power-off",
+> +	  .data = (void *) &synology_power_off_cfg,
+
+The casts here should not be necessary.
+
+> +	},
+> +	{}
+> +};
+> +
+>  static void __iomem *base;
+>  static unsigned long tclk;
+> +static struct power_off_cfg *cfg;
+
+const?
+
+>  
+>  static void qnap_power_off(void)
+>  {
+> -	/* 19200 baud divisor */
+> -	const unsigned divisor = ((tclk + (8 * 19200)) / (16 * 19200));
+> +	const unsigned divisor = ((tclk + (8 * cfg->baud)) / (16 * cfg->baud));
+>  
+>  	pr_err("%s: triggering power-off...\n", __func__);
+>  
+> -	/* hijack UART1 and reset into sane state (19200,8n1) */
+> +	/* hijack UART1 and reset into sane state */
+>  	writel(0x83, UART1_REG(LCR));
+>  	writel(divisor & 0xff, UART1_REG(DLL));
+>  	writel((divisor >> 8) & 0xff, UART1_REG(DLM));
+> @@ -44,16 +69,21 @@ static void qnap_power_off(void)
+>  	writel(0x00, UART1_REG(FCR));
+>  	writel(0x00, UART1_REG(MCR));
+>  
+> -	/* send the power-off command 'A' to PIC */
+> -	writel('A', UART1_REG(TX));
+> +	/* send the power-off command to PIC */
+> +	writel(cfg->cmd, UART1_REG(TX));
+>  }
+>  
+>  static int qnap_power_off_probe(struct platform_device *pdev)
+>  {
+> +	struct device_node *np = pdev->dev.of_node;
+>  	struct resource *res;
+>  	struct clk *clk;
+>  	char symname[KSYM_NAME_LEN];
+>  
+> +	const struct of_device_id *match =
+> +		of_match_node(qnap_power_off_of_match_table, np);
+> +	cfg = (struct power_off_cfg *)match->data;
+
+This cast is not necessary.
+>
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	if (!res) {
+>  		dev_err(&pdev->dev, "Missing resource");
+> @@ -94,10 +124,6 @@ static int qnap_power_off_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> -static const struct of_device_id qnap_power_off_of_match_table[] = {
+> -	{ .compatible = "qnap,power-off", },
+> -	{}
+> -};
+>  MODULE_DEVICE_TABLE(of, qnap_power_off_of_match_table);
+
+You should probably move this up above with the table.
+
+  Josh
 
 -- 
-Florian
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
