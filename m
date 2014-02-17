@@ -1,87 +1,58 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v4 07/13] ARM: dts: mvebu: Add a new set of registers
- to the PMSU node
-Date: Sun, 16 Feb 2014 21:57:05 -0500
-Message-ID: <20140217025705.GJ7862@titan.lakedaemon.net>
-References: <1392312816-17657-1-git-send-email-gregory.clement@free-electrons.com>
- <1392312816-17657-8-git-send-email-gregory.clement@free-electrons.com>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH v3 1/3] ARM: EXYNOS: initial board support for exynos5260 SoC
+Date: Mon, 17 Feb 2014 08:40:43 +0530
+Message-ID: <CAK9yfHyb7ij0soCmrJvw9OrW2mKdY1QBpnqLdzeRHqdvOGN61g@mail.gmail.com>
+References: <1392385032-22015-1-git-send-email-rahul.sharma@samsung.com>
+	<1392385032-22015-2-git-send-email-rahul.sharma@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1392312816-17657-8-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, linux-pm@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1392385032-22015-2-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <rahul.sharma@samsung.com>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>, Pankaj Dubey <pankaj.dubey@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 13, 2014 at 06:33:30PM +0100, Gregory CLEMENT wrote:
-> The Power Management Unit Service block also controls the Coherency
-> Fabric subsystem. This new set of registers is needed for the CPU idle
-> implementation for the Armada XP, it allows to enter in a deep CPU
-> idle state where the Coherency Fabric and the L2 cache are powerdown.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Hi Rahul,
+
+On 14 February 2014 19:07, Rahul Sharma <rahul.sharma@samsung.com> wrote:
+> From: Pankaj Dubey <pankaj.dubey@samsung.com>
+>
+> This patch add basic arch side support for exynos5260 SoC.
+>
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
 > ---
->  Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt | 12 +++++++-----
->  arch/arm/boot/dts/armada-xp.dtsi                             |  2 +-
->  2 files changed, 8 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt b/Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt
-> index 926b4d6aae7e..8a9db0c32ba5 100644
-> --- a/Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt
-> +++ b/Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt
-> @@ -7,14 +7,16 @@ Required properties:
->  - compatible: "marvell,armada-370-xp-pmsu"
->  
->  - reg: Should contain PMSU registers location and length. First pair
-> -  for the per-CPU SW Reset Control registers, second pair for the
-> -  Power Management Service Unit.
-> +  for the per-CPU SW Reset Control registers, second pair for the CPU
-> +  Power Management Service Unit registers, third pair for the Fabric Power
-> +  Management Service Unit registers.
+>  arch/arm/mach-exynos/Kconfig             |    9 +++++++++
+>  arch/arm/mach-exynos/common.c            |   11 +++++++++++
+>  arch/arm/mach-exynos/include/mach/map.h  |    1 +
+>  arch/arm/mach-exynos/mach-exynos5-dt.c   |    1 +
+>  arch/arm/plat-samsung/include/plat/cpu.h |    8 ++++++++
+>  5 files changed, 30 insertions(+)
+>
+> diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+> index 4c414af..5c96248 100644
+> --- a/arch/arm/mach-exynos/Kconfig
+> +++ b/arch/arm/mach-exynos/Kconfig
+> @@ -91,6 +91,15 @@ config SOC_EXYNOS5250
+>         help
+>           Enable EXYNOS5250 SoC support
+>
+> +config SOC_EXYNOS5260
+> +       bool "SAMSUNG EXYNOS5260"
+> +       default y
+> +       depends on ARCH_EXYNOS5
+> +       select AUTO_ZRELADDR
+> +       select SAMSUNG_DMADEV
+> +       help
+> +         Enable EXYNOS5260 SoC support
+> +
 
-Please mention explicitly that previous versions of this binding only
-specified the first two registers.  I haven't dug through the rest of
-this series yet, but I assume the driver will behave sanely when
-encountering an old dtb w/o the third reg entry?
+Per SoC entries are no longer needed with the patch at [1].
 
-thx,
+[1] http://www.spinics.net/lists/linux-samsung-soc/msg26253.html
 
-Jason.
-
->  
->  Example:
->  
-> -armada-370-xp-pmsu@d0022000 {
-> +armada-370-xp-pmsu@22000 {
->  	compatible = "marvell,armada-370-xp-pmsu";
-> -	reg = <0xd0022100 0x430>,
-> -	      <0xd0020800 0x20>;
-> +	reg = <0x22100 0x430>,
-> +	      <0x20800 0x20>,
-> +	      <0x22000 0x24>;
->  };
->  
-> diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
-> index b8b84a22f0f3..f717da4f4d97 100644
-> --- a/arch/arm/boot/dts/armada-xp.dtsi
-> +++ b/arch/arm/boot/dts/armada-xp.dtsi
-> @@ -113,7 +113,7 @@
->  
->  			armada-370-xp-pmsu@22000 {
->  				compatible = "marvell,armada-370-xp-pmsu";
-> -				reg = <0x22100 0x400>, <0x20800 0x20>;
-> +				reg = <0x22100 0x400>, <0x20800 0x20>, <0x22000 0x24>;
->  			};
->  
->  			eth2: ethernet@30000 {
-> -- 
-> 1.8.1.2
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+-- 
+With warm regards,
+Sachin
