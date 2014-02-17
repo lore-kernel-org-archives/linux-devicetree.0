@@ -1,188 +1,73 @@
 From: Philippe De Muyter <phdm-KobBqTBAxd8@public.gmane.org>
 Subject: Re: [PATCH v4] bus: imx-weim: support CS GPR configuration
-Date: Mon, 17 Feb 2014 09:48:43 +0100
-Message-ID: <20140217084843.GA23095@frolo.macqel>
-References: <1392559381-30842-1-git-send-email-shawn.guo@linaro.org>
+Date: Mon, 17 Feb 2014 09:52:21 +0100
+Message-ID: <20140217085221.GB23095@frolo.macqel>
+References: <1392559381-30842-1-git-send-email-shawn.guo@linaro.org> <1392560564.725313659@f356.i.mail.ru> <20140216143114.GH2946@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1392559381-30842-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20140216143114.GH2946-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 16, 2014 at 10:03:01PM +0800, Shawn Guo wrote:
-> For imx50-weim and imx6q-weim type of devices, there might a WEIM CS
-> space configuration register in General Purpose Register controller,
-> e.g. IOMUXC_GPR1 on i.MX6Q.
-> 
-> Depending on which configuration of the following 4 is chosen for given
-> system, IOMUXC_GPR1[11:0] should be set up as 05, 033, 0113 or 01111
-> correspondingly.
-> 
-> 	CS0(128M) CS1(0M)  CS2(0M)  CS3(0M)
-> 	CS0(64M)  CS1(64M) CS2(0M)  CS3(0M)
-> 	CS0(64M)  CS1(32M) CS2(32M) CS3(0M)
-> 	CS0(32M)  CS1(32M) CS2(32M) CS3(32M)
-> 
-> The patch creates a function for such type of devices, which scans
-> 'ranges' property of WEIM node and build the GPR value incrementally.
-> Thus the WEIM CS GPR can be set up automatically at boot time.
-> 
-> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> Changes since v3:
->  - Add DT property fsl,weim-cs-gpr back, so that the support can work
->    for more i.MX SoCs than just i.MX6Q.
-> 
->  Documentation/devicetree/bindings/bus/imx-weim.txt |   27 +++++++++-
->  drivers/bus/imx-weim.c                             |   55 ++++++++++++++++++++
->  2 files changed, 81 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/bus/imx-weim.txt b/Documentation/devicetree/bindings/bus/imx-weim.txt
-> index 0fd76c4..363c970 100644
-> --- a/Documentation/devicetree/bindings/bus/imx-weim.txt
-> +++ b/Documentation/devicetree/bindings/bus/imx-weim.txt
-> @@ -8,7 +8,12 @@ The actual devices are instantiated from the child nodes of a WEIM node.
->  
->  Required properties:
->  
-> - - compatible:		Should be set to "fsl,<soc>-weim"
-> + - compatible:		Should contain one of the following:
-> +			  "fsl,imx1-weim"
-> +			  "fsl,imx27-weim"
-> +			  "fsl,imx51-weim"
-> +			  "fsl,imx50-weim"
-> +			  "fsl,imx6q-weim"
->   - reg:			A resource specifier for the register space
->  			(see the example below)
->   - clocks:		the clock, see the example below.
-> @@ -19,6 +24,26 @@ Required properties:
->  
->  			   <cs-number> 0 <physical address of mapping> <size>
->  
-> +Optional properties:
-> +
-> + - fsl,weim-cs-gpr:	For "fsl,imx50-weim" and "fsl,imx6q-weim" type of
-> +			devices, it should be the phandle to the system General
-> +			Purpose Register controller that contains WEIM CS GPR
-> +			register, e.g. IOMUXC_GPR1 on i.MX6Q.  IOMUXC_GPR1[11:0]
-> +			should be set up as one of the following 4 possible
-> +			values depending on the CS space configuration.
-> +
-> +			IOMUXC_GPR1[11:0]    CS0    CS1    CS2    CS3
-> +			---------------------------------------------
-> +				05	    128M     0M     0M     0M
-> +				033          64M    64M     0M     0M
-> +				0113         64M    32M    32M     0M
-> +				01111        32M    32M    32M    32M
-> +
-> +			In case that the property is absent, the reset value or
-> +			what bootloader sets up in IOMUXC_GPR1[11:0] will be
-> +			used.
-> +
->  Timing property for child nodes. It is mandatory, not optional.
->  
->   - fsl,weim-cs-timing:	The timing array, contains timing values for the
+On Sun, Feb 16, 2014 at 10:31:16PM +0800, Shawn Guo wrote:
+> On Sun, Feb 16, 2014 at 06:22:44PM +0400, Alexander Shiyan wrote:
+> > =D0=92=D0=BE=D1=81=D0=BA=D1=80=D0=B5=D1=81=D0=B5=D0=BD=D1=8C=D0=B5,=
+ 16 =D1=84=D0=B5=D0=B2=D1=80=D0=B0=D0=BB=D1=8F 2014, 22:03 +08:00 =D0=BE=
+=D1=82 Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> > > For imx50-weim and imx6q-weim type of devices, there might a WEIM=
+ CS
+> > > space configuration register in General Purpose Register controll=
+er,
+> > > e.g. IOMUXC_GPR1 on i.MX6Q.
+> > ...
+> > > +static int __init imx_weim_gpr_setup(struct platform_device *pde=
+v)
+> > > +{
+> > > +	struct device_node *np =3D pdev->dev.of_node;
+> > > +	struct property *prop;
+> > > +	const __be32 *p;
+> > > +	struct regmap *gpr;
+> > > +	u32 gprvals[4] =3D {
+> > > +		05,	/* CS0(128M) CS1(0M)  CS2(0M)  CS3(0M) */
+> > > +		033,	/* CS0(64M)  CS1(64M) CS2(0M)  CS3(0M) */
+> > > +		0113,	/* CS0(64M)  CS1(32M) CS2(32M) CS3(0M) */
+> > > +		01111,	/* CS0(64M)  CS1(32M) CS2(32M) CS3(0M) */
+> > > +	};
+> > > +	u32 gprval =3D 0;
+> > > +	u32 val;
+> > > +	int cs =3D 0;
+> > > +	int i =3D 0;
+> > > +
+> > > +	gpr =3D syscon_regmap_lookup_by_phandle(np, "fsl,weim-cs-gpr");
+> > > +	if (IS_ERR(gpr)) {
+> > > +		dev_dbg(&pdev->dev, "failed to find weim-cs-gpr\n");
+> > > +		return 0;
+> >=20
+> > Only one comment:
+> > You do not use these error codes in the probe(),
+> > so let's declare this function as void.
+>=20
+> Oh, yes.  I should check return of imx_weim_gpr_setup() in probe().
+> Will add in the next version.
 
-Could you also add the following line to the example in the same file :
+Well, as all the error cases are already covered by error messages, the=
+re is
+no added value in testing that again in probe().  As Alexander wrote, y=
+ou can
+declare imx_weim_gpr_setup() as 'void'.
 
-		fsl,weim-cs-gpr = <&gpr>;
+Philippe
 
-It took me some time to figure it out :)
-
-> diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
-> index 3ef58c8..35e9529 100644
-> --- a/drivers/bus/imx-weim.c
-> +++ b/drivers/bus/imx-weim.c
-> @@ -11,6 +11,9 @@
->  #include <linux/clk.h>
->  #include <linux/io.h>
->  #include <linux/of_device.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
-> +#include <linux/regmap.h>
->  
->  struct imx_weim_devtype {
->  	unsigned int	cs_count;
-> @@ -56,6 +59,55 @@ static const struct of_device_id weim_id_table[] = {
->  };
->  MODULE_DEVICE_TABLE(of, weim_id_table);
->  
-> +static int __init imx_weim_gpr_setup(struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct property *prop;
-> +	const __be32 *p;
-> +	struct regmap *gpr;
-> +	u32 gprvals[4] = {
-> +		05,	/* CS0(128M) CS1(0M)  CS2(0M)  CS3(0M) */
-> +		033,	/* CS0(64M)  CS1(64M) CS2(0M)  CS3(0M) */
-> +		0113,	/* CS0(64M)  CS1(32M) CS2(32M) CS3(0M) */
-> +		01111,	/* CS0(64M)  CS1(32M) CS2(32M) CS3(0M) */
-
-			   CS0(32M)			CS3(32M)
-
-> +	};
-> +	u32 gprval = 0;
-> +	u32 val;
-> +	int cs = 0;
-> +	int i = 0;
-> +
-> +	gpr = syscon_regmap_lookup_by_phandle(np, "fsl,weim-cs-gpr");
-> +	if (IS_ERR(gpr)) {
-> +		dev_dbg(&pdev->dev, "failed to find weim-cs-gpr\n");
-> +		return 0;
-> +	}
-> +
-> +	of_property_for_each_u32(np, "ranges", prop, p, val) {
-> +		if (i % 4 == 0) {
-> +			cs = val;
-> +		} else if (i % 4 == 3 && val) {
-> +			val = (val / SZ_32M) | 1;
-> +			gprval |= val << cs * 3;
-> +		}
-> +		i++;
-> +	}
-> +
-> +	if (i == 0 || i % 4)
-> +		goto err;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(gprvals); i++) {
-> +		if (gprval == gprvals[i]) {
-> +			/* Found it. Set up IOMUXC_GPR1[11:0] with it. */
-> +			regmap_update_bits(gpr, IOMUXC_GPR1, 0xfff, gprval);
-> +			return 0;
-> +		}
-> +	}
-> +
-> +err:
-> +	dev_err(&pdev->dev, "Invalid 'ranges' configuration\n");
-> +	return -EINVAL;
-> +}
-> +
->  /* Parse and set the timing for this device. */
->  static int __init weim_timing_setup(struct device_node *np, void __iomem *base,
->  				    const struct imx_weim_devtype *devtype)
-> @@ -92,6 +144,9 @@ static int __init weim_parse_dt(struct platform_device *pdev,
->  	struct device_node *child;
->  	int ret;
->  
-> +	if (devtype == &imx50_weim_devtype)
-> +		imx_weim_gpr_setup(pdev);
-> +
->  	for_each_child_of_node(pdev->dev.of_node, child) {
->  		if (!child->name)
->  			continue;
-> -- 
-> 1.7.9.5
-> 
-
--- 
-Philippe De Muyter +32 2 6101532 Macq SA rue de l'Aeronef 2 B-1140 Bruxelles
+--=20
+Philippe De Muyter +32 2 6101532 Macq SA rue de l'Aeronef 2 B-1140 Brux=
+elles
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
