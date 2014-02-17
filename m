@@ -1,33 +1,53 @@
-From: Grant Likely <grant.likely@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
 Subject: Re: [RFC/PATCH 0/3] Add devicetree scanning for randomness
-Date: Mon, 17 Feb 2014 15:54:19 +0000
-Message-ID: <20140217155419.682F7C401D4@trevor.secretlab.ca>
-References: <1392168805-14200-1-git-send-email-lauraa@codeaurora.org> < 201402121251.06280.arnd@arndb.de> <20140212174554.GM27395@titan.lakedaemon. net> <20140212182000.GJ5554@obsidianresearch.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140212182000.GJ5554@obsidianresearch.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Jason Cooper <jason@lakedaemon.net>
-Cc: Arnd Bergmann <arnd@arndb.de>, keescook@chromium.org, devicetree@vger.kernel.org, Laura Abbott <lauraa@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Date: Mon, 17 Feb 2014 17:13:07 +0100
+Message-ID: <1418981.0py7JxXCp8@wuerfel>
+References: <1392168805-14200-1-git-send-email-lauraa@codeaurora.org>
+ <201402121251.06280.arnd@arndb.de>
+ <20140217155419.682F7C401D4@trevor.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140217155419.682F7C401D4@trevor.secretlab.ca>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Laura Abbott <lauraa@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, keescook@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Feb 2014 11:20:00 -0700, Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
-> On Wed, Feb 12, 2014 at 12:45:54PM -0500, Jason Cooper wrote:
+On Monday 17 February 2014 15:54:19 Grant Likely wrote:
+> On Wed, 12 Feb 2014 11:20:00 -0700, Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
+> > On Wed, Feb 12, 2014 at 12:45:54PM -0500, Jason Cooper wrote:
+> > 
+> > > The bootloader would then load this file into ram, and pass the
+> > > address/size to the kernel either via dt, or commandline.  kaslr (run in
+> > > the decompressor) would consume some of this randomness, and then
+> > > random.c would consume the rest in a non-crediting initialization.
+> > 
+> > Sure is a neat idea, but I think in general it would probably be smart
+> > to include the entire FDT blob in the early random pool, that way you
+> > get MACs and other machine unique data too.
 > 
-> > The bootloader would then load this file into ram, and pass the
-> > address/size to the kernel either via dt, or commandline.  kaslr (run in
-> > the decompressor) would consume some of this randomness, and then
-> > random.c would consume the rest in a non-crediting initialization.
-> 
-> Sure is a neat idea, but I think in general it would probably be smart
-> to include the entire FDT blob in the early random pool, that way you
-> get MACs and other machine unique data too.
+> I applied a patch that did exactly that (109b623629), and then reverted
+> it (b920ecc82) shortly thereafter because add_device_randomness() is
+> a rather slow function and FDTs can get large. I'd like to see someone
+> do a reasonable analysis on the cost of using an FDT for randomness
+> before I reapply a patch doing something similar. An awful lot of the
+> FDT data is not very random, but there are certainly portions of it that
+> are appropriate for the random pool.
 
-I applied a patch that did exactly that (109b623629), and then reverted
-it (b920ecc82) shortly thereafter because add_device_randomness() is
-a rather slow function and FDTs can get large. I'd like to see someone
-do a reasonable analysis on the cost of using an FDT for randomness
-before I reapply a patch doing something similar. An awful lot of the
-FDT data is not very random, but there are certainly portions of it that
-are appropriate for the random pool.
+Could we use a faster hash function that scans the entire device tree and
+then just feed the output of that into add_device_randomness? We probably
+can't expect that there is a lot of entropy in the DT blob, so the
+result wouldn't be all that different in terms of quality of the random
+seed.
 
-g.
+	Arnd
