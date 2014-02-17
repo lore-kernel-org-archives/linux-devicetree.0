@@ -1,75 +1,70 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt/bindings: update fsl-fec regarding compatible and
- clocks
-Date: Mon, 17 Feb 2014 13:30:04 +0800
-Message-ID: <20140217053003.GI9879@S2101-09.ap.freescale.net>
-References: <1392033008-20752-1-git-send-email-shawn.guo@linaro.org>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH 1/3] mmc: core: Add DT bindings for SD card's UHS bus speed
+ modes
+Date: Mon, 17 Feb 2014 15:55:54 +0900
+Message-ID: <5301B27A.5080005@samsung.com>
+References: <1392380829-8473-1-git-send-email-ulf.hansson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1392033008-20752-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Philippe De Muyter <phdm-KobBqTBAxd8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <1392380829-8473-1-git-send-email-ulf.hansson@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, Chris Ball <chris@printf.net>
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob and DT folks,
+Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
 
-On Mon, Feb 10, 2014 at 07:50:08PM +0800, Shawn Guo wrote:
-> Update fsl-fec to explicitly list the supported compatible strings
-> and add missing 'clocks' and 'clock-names' properties.  It does not
-> change anything about how kernel drive works.  Instead, it just reflects
-> how kernel driver works today.
+Best Regards,
+Jaehoon Chung
+
+On 02/14/2014 09:27 PM, Ulf Hansson wrote:
+> Provide the option to configure these speed modes per host, for those
+> host driver's that can't distinguish this in runtime.
 > 
-> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-Any comments?  Or can it be applied?
-
-Shawn
-
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 > ---
->  Documentation/devicetree/bindings/net/fsl-fec.txt |   19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/mmc/mmc.txt |    5 +++++
+>  drivers/mmc/core/host.c                       |   10 ++++++++++
+>  2 files changed, 15 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
-> index 845ff84..3ebd395 100644
-> --- a/Documentation/devicetree/bindings/net/fsl-fec.txt
-> +++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
-> @@ -1,9 +1,26 @@
->  * Freescale Fast Ethernet Controller (FEC)
->  
->  Required properties:
-> -- compatible : Should be "fsl,<soc>-fec"
-> +- compatible : Should contain one of the following:
-> +		"fsl,imx25-fec"
-> +		"fsl,imx27-fec"
-> +		"fsl,imx28-fec"
-> +		"fsl,imx6q-fec"
-> +		"fsl,mvf600-fec"
->  - reg : Address and length of the register set for the device
->  - interrupts : Should contain fec interrupt
-> +- clocks: phandle to the clocks feeding the FEC controller and phy. The
-> +  following two are required:
-> +   - "ipg": the peripheral access clock
-> +   - "ahb": the bus clock for MAC
-> +  The following two are optional:
-> +   - "ptp": the sampling clock for PTP (IEEE 1588).  On SoC like i.MX6Q,
-> +     the clock could come from either the internal clock control module
-> +     or external oscillator via pad depending on board design.
-> +   - "enet_out": the phy reference clock provided by SoC via pad, which
-> +     is available on SoC like i.MX28.
-> +- clock-names: Must contain the clock names described just above
-> +
->  - phy-mode : String, operation mode of the PHY interface.
->    Supported values are: "mii", "gmii", "sgmii", "tbi", "rmii",
->    "rgmii", "rgmii-id", "rgmii-rxid", "rgmii-txid", "rtbi", "smii".
-> -- 
-> 1.7.9.5
-> 
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+> index 458b57f..bd2ce67 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+> @@ -26,6 +26,11 @@ Optional properties:
+>    this system, even if the controller claims it is.
+>  - cap-sd-highspeed: SD high-speed timing is supported
+>  - cap-mmc-highspeed: MMC high-speed timing is supported
+> +- sd-uhs-sdr12: SD UHS SDR12 speed is supported
+> +- sd-uhs-sdr25: SD UHS SDR25 speed is supported
+> +- sd-uhs-sdr50: SD UHS SDR50 speed is supported
+> +- sd-uhs-sdr104: SD UHS SDR104 speed is supported
+> +- sd-uhs-ddr50: SD UHS DDR50 speed is supported
+>  - cap-power-off-card: powering off the card is safe
+>  - cap-sdio-irq: enable SDIO IRQ signalling on this interface
+>  - full-pwr-cycle: full power cycle of the card is supported
+> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+> index 49bc403..2644d91 100644
+> --- a/drivers/mmc/core/host.c
+> +++ b/drivers/mmc/core/host.c
+> @@ -419,6 +419,16 @@ int mmc_of_parse(struct mmc_host *host)
+>  		host->caps |= MMC_CAP_SD_HIGHSPEED;
+>  	if (of_find_property(np, "cap-mmc-highspeed", &len))
+>  		host->caps |= MMC_CAP_MMC_HIGHSPEED;
+> +	if (of_find_property(np, "sd-uhs-sdr12", &len))
+> +		host->caps |= MMC_CAP_UHS_SDR12;
+> +	if (of_find_property(np, "sd-uhs-sdr25", &len))
+> +		host->caps |= MMC_CAP_UHS_SDR25;
+> +	if (of_find_property(np, "sd-uhs-sdr50", &len))
+> +		host->caps |= MMC_CAP_UHS_SDR50;
+> +	if (of_find_property(np, "sd-uhs-sdr104", &len))
+> +		host->caps |= MMC_CAP_UHS_SDR104;
+> +	if (of_find_property(np, "sd-uhs-ddr50", &len))
+> +		host->caps |= MMC_CAP_UHS_DDR50;
+>  	if (of_find_property(np, "cap-power-off-card", &len))
+>  		host->caps |= MMC_CAP_POWER_OFF_CARD;
+>  	if (of_find_property(np, "cap-sdio-irq", &len))
 > 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
