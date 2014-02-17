@@ -1,170 +1,99 @@
-From: <dinguyen@altera.com>
-Subject: [PATCH 3/3] dts: socfpga: Add support for SD/MMC on the SOCFPGA platform
-Date: Mon, 17 Feb 2014 01:30:44 -0600
-Message-ID: <1392622244-18015-3-git-send-email-dinguyen@altera.com>
-References: <1392622244-18015-1-git-send-email-dinguyen@altera.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 2/5] ARM: shmobile: r8a7791: add i2c master nodes to dtsi
+Date: Mon, 17 Feb 2014 08:54:10 +0100
+Message-ID: <20140217075410.GA2633@katana>
+References: <1392543658-5030-1-git-send-email-wsa@the-dreams.de>
+ <1392543658-5030-3-git-send-email-wsa@the-dreams.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1392622244-18015-1-git-send-email-dinguyen@altera.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org
-Cc: dinh.linux@gmail.com, devicetree@vger.kernel.org, Dinh Nguyen <dinguyen@altera.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="KsGdsel6WgEHnImy"
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1392543658-5030-3-git-send-email-wsa@the-dreams.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen@altera.com>
 
-Introduce "altr,socfpga-dw-mshc" to enable Altera's SOCFPGA platform specific
-implementation of the dwc_mmc driver.
+--KsGdsel6WgEHnImy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Also add the "syscon" binding to the "altr,sys-mgr" node. The clock
-driver can use the syscon driver to toggle the register for the SD/MMC
-clock phase shift settings.
+On Sun, Feb 16, 2014 at 10:40:55AM +0100, Wolfram Sang wrote:
+> From: Wolfram Sang <wsa@sang-engineering.com>
+>=20
+> Signed-off-by: Wolfram Sang <wsa@sang-engineering.com>
 
-Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Seungwon Jeon <tgih.jun@samsung.com>
-Cc: Jaehoon Chung <jh80.chung@samsung.com>
-Cc: Chris Ball <chris@printf.net>
----
- .../devicetree/bindings/mmc/socfpga-dw-mshc.txt    |   23 ++++++++++++++++++++
- arch/arm/boot/dts/socfpga.dtsi                     |   13 ++++++++++-
- arch/arm/boot/dts/socfpga_arria5.dtsi              |   11 ++++++++++
- arch/arm/boot/dts/socfpga_cyclone5.dtsi            |   11 ++++++++++
- arch/arm/boot/dts/socfpga_vt.dts                   |   11 ++++++++++
- 5 files changed, 68 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
+=46rom your other mail:
 
-diff --git a/Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
-new file mode 100644
-index 0000000..4897bea
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
-@@ -0,0 +1,23 @@
-+* Altera SOCFPGA specific extensions to the Synopsys Designware Mobile
-+  Storage Host Controller
-+
-+The Synopsys designware mobile storage host controller is used to interface
-+a SoC with storage medium such as eMMC or SD/MMC cards. This file documents
-+differences between the core Synopsys dw mshc controller properties described
-+by synopsys-dw-mshc.txt and the properties used by the Altera SOCFPGA specific
-+extensions to the Synopsys Designware Mobile Storage Host Controller.
-+
-+Required Properties:
-+
-+* compatible: should be
-+	- "altr,socfpga-dw-mshc": for Altera's SOCFPGA platform
-+
-+Example:
-+
-+	mmc: dwmmc0@ff704000 {
-+		compatible = "altr,socfpga-dw-mshc";
-+		reg = <0xff704000 0x1000>;
-+		interrupts = <0 129 4>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 3d62f47..967e27f 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -474,6 +474,17 @@
- 			arm,data-latency = <2 1 1>;
- 		};
- 
-+		mmc: dwmmc0@ff704000 {
-+			compatible = "altr,socfpga-dw-mshc";
-+			reg = <0xff704000 0x1000>;
-+			interrupts = <0 139 4>;
-+			fifo-depth = <0x400>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&l4_mp_clk>, <&sdmmc_clk>;
-+			clock-names = "biu", "ciu";
-+		};
-+
- 		/* Local timer */
- 		timer@fffec600 {
- 			compatible = "arm,cortex-a9-twd-timer";
-@@ -528,7 +539,7 @@
- 		};
- 
- 		sysmgr@ffd08000 {
--				compatible = "altr,sys-mgr";
-+				compatible = "altr,sys-mgr", "syscon";
- 				reg = <0xffd08000 0x4000>;
- 			};
- 	};
-diff --git a/arch/arm/boot/dts/socfpga_arria5.dtsi b/arch/arm/boot/dts/socfpga_arria5.dtsi
-index a85b404..6c87b70 100644
---- a/arch/arm/boot/dts/socfpga_arria5.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria5.dtsi
-@@ -27,6 +27,17 @@
- 			};
- 		};
- 
-+		dwmmc0@ff704000 {
-+			num-slots = <1>;
-+			supports-highspeed;
-+			broken-cd;
-+
-+			slot@0 {
-+				reg = <0>;
-+				bus-width = <4>;
-+			};
-+		};
-+
- 		serial0@ffc02000 {
- 			clock-frequency = <100000000>;
- 		};
-diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dtsi b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
-index a8716f6..ca41b0e 100644
---- a/arch/arm/boot/dts/socfpga_cyclone5.dtsi
-+++ b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
-@@ -28,6 +28,17 @@
- 			};
- 		};
- 
-+		dwmmc0@ff704000 {
-+			num-slots = <1>;
-+			supports-highspeed;
-+			broken-cd;
-+
-+			slot@0 {
-+				reg = <0>;
-+				bus-width = <4>;
-+			};
-+		};
-+
- 		ethernet@ff702000 {
- 			phy-mode = "rgmii";
- 			phy-addr = <0xffffffff>; /* probe for phy addr */
-diff --git a/arch/arm/boot/dts/socfpga_vt.dts b/arch/arm/boot/dts/socfpga_vt.dts
-index d1ec0ca..222313f 100644
---- a/arch/arm/boot/dts/socfpga_vt.dts
-+++ b/arch/arm/boot/dts/socfpga_vt.dts
-@@ -41,6 +41,17 @@
- 			};
- 		};
- 
-+		dwmmc0@ff704000 {
-+			num-slots = <1>;
-+			supports-highspeed;
-+			broken-cd;
-+
-+			slot@0 {
-+				reg = <0>;
-+				bus-width = <4>;
-+			};
-+		};
-+
- 		ethernet@ff700000 {
- 			phy-mode = "gmii";
- 			status = "okay";
--- 
-1.7.9.5
+"[2/5] needs to be reworked to exclude the r8a7790 compatible string."
 
+> +		compatible =3D "renesas,i2c-r8a7791", "renesas,i2c-r8a7790";
+
+Why is that? From my knowledge, you start with the exact compatible
+property and hardware compatible entries may follow. This is backed up
+by Documentation/devicetree/usage-model.txt:
+
+=3D=3D=3D
+
+The 'compatible' property contains a sorted list of strings starting
+with the exact name of the machine, followed by an optional list of
+boards it is compatible with sorted from most compatible to least.
+
+=3D=3D=3D
+
+And from the devicetree wiki [1]:
+
+=3D=3D=3D
+
+compatible is a list of strings. The first string in the list specifies
+the exact device that the node represents in the form
+"<manufacturer>,<model>". The following strings represent other devices
+that the device is compatible with.
+
+For example, the Freescale MPC8349 System on Chip (SoC) has a serial
+device which implements the National Semiconductor ns16550 register
+interface. The compatible property for the MPC8349 serial device should
+therefore be: compatible =3D "fsl,mpc8349-uart", "ns16550". In this case,
+fsl,mpc8349-uart specifies the exact device, and ns16550 states that it
+is register-level compatible with a National Semiconductor 16550 UART.
+
+Note: ns16550 doesn't have a manufacturer prefix purely for historical
+reasons. All new compatible values should use the manufacturer prefix.
+
+This practice allows existing device drivers to be bound to a newer
+device, while still uniquely identifying the exact hardware.
+
+=3D=3D=3D
+
+Has this changed?
+
+
+[1 ]http://www.devicetree.org/Device_Tree_Usage#Understanding_the_compatibl=
+e_Property
+
+--KsGdsel6WgEHnImy
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTAcAiAAoJEBQN5MwUoCm2Jz4P/irjokpgCIwmmN9zSwYYnfyN
+5lxs8ayfujF4lko7g+5UbaNiP0O/FcJj2czhx086hn97qDBTWLB92spr3OLZEkGs
+6+30Nokl1utcm3KLsmEf6IGQ9RusBUs6/MGC+S6pb6Ygcf5VnKOvnduLU6cuq5FD
+Ho54Lg0aiFb93D/jcAarg3WINRYdHDV4l35oC7yRzrvAEP5OeuCbDV0+tuPNMudE
+IZTZ8YIKkFPpzvLjUaSV+XE+Rn62JTyiKUy1wKVU7bUhKisn5tgZAaq1m+O2hGyn
+bRXWOl1rNWmfcTNmHxwzToRSTzvUp4ax3vQCUARIAMLbMw2vcLtTXbZ7JgpNNZqv
+DcdYYm+wtK2zxG/d2RMYktfpSoFLqCfnBXQpaS9c2EZRlUfGG8Qc3qAX163xObEO
+sMjwdc6hqC7c0v+jsECUGp8EtFR4v0MYxXzs4J1mIXHTj+BFCoCTgyTwK+fYv4kJ
+ikzzxHGoLS5kjcKqQL0y6ndyxwxlRTamKFJqItgNdBpG7kXHHniHjIkg9/I//wv/
+v9HU2+eoFwkgnGYcuMGe5XeygwabaMYXenCGxOMI6qA/NvnthViS47DlJa7OW1UU
+VmPduFbGthdG5fSpR8oPYdGyWFxbpCM8jLCcyv/FKNJ/j/Y+auXdrAZzfTiHFOEj
+HT8PENMF+IFB9AeRQ7WF
+=/EyY
+-----END PGP SIGNATURE-----
+
+--KsGdsel6WgEHnImy--
