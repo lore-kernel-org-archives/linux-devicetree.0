@@ -1,48 +1,76 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH 2/5] ARM: shmobile: r8a7791: add i2c master nodes to dtsi
-Date: Mon, 17 Feb 2014 17:02:27 +0900
-Message-ID: <CANqRtoSDxQfSw5PJB6-UcL-UuMySBkoCqfC+1H=o-EBA18ouLQ@mail.gmail.com>
-References: <1392543658-5030-1-git-send-email-wsa@the-dreams.de>
-	<1392543658-5030-3-git-send-email-wsa@the-dreams.de>
-	<20140217075410.GA2633@katana>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH 2/3] mmc: dw_mmc: Add support for SOCFPGA's platform
+ specific implementation
+Date: Mon, 17 Feb 2014 09:15:32 +0100
+Message-ID: <20140217081532.GB6972@pengutronix.de>
+References: <1392622244-18015-1-git-send-email-dinguyen@altera.com>
+ <1392622244-18015-2-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20140217075410.GA2633@katana>
-Sender: linux-sh-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: SH-Linux <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1392622244-18015-2-git-send-email-dinguyen@altera.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: dinguyen@altera.com
+Cc: linux-mmc@vger.kernel.org, dinh.linux@gmail.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
+Hi!
 
-On Mon, Feb 17, 2014 at 4:54 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
-> On Sun, Feb 16, 2014 at 10:40:55AM +0100, Wolfram Sang wrote:
->> From: Wolfram Sang <wsa@sang-engineering.com>
->>
->> Signed-off-by: Wolfram Sang <wsa@sang-engineering.com>
->
-> From your other mail:
->
-> "[2/5] needs to be reworked to exclude the r8a7790 compatible string."
->
->> +             compatible = "renesas,i2c-r8a7791", "renesas,i2c-r8a7790";
->
-> Why is that? From my knowledge, you start with the exact compatible
-> property and hardware compatible entries may follow.
+On Mon, Feb 17, 2014 at 01:30:43AM -0600, dinguyen@altera.com wrote:
+> From: Dinh Nguyen <dinguyen@altera.com>
+> 
+> Like the rockchip, Altera's SOCFPGA platform specific implementation of the
+> dw_mmc driver requires using the HOLD register for SD commands.
+> 
+> Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: Seungwon Jeon <tgih.jun@samsung.com>
+> Cc: Jaehoon Chung <jh80.chung@samsung.com>
+> Cc: Chris Ball <chris@printf.net>
+> ---
+>  drivers/mmc/host/dw_mmc-pltfm.c |    6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/mmc/host/dw_mmc-pltfm.c b/drivers/mmc/host/dw_mmc-pltfm.c
+> index 5c49656..88047cc 100644
+> --- a/drivers/mmc/host/dw_mmc-pltfm.c
+> +++ b/drivers/mmc/host/dw_mmc-pltfm.c
+> @@ -34,6 +34,10 @@ static const struct dw_mci_drv_data rockchip_drv_data = {
+>  	.prepare_command	= dw_mci_rockchip_prepare_command,
+>  };
+>  
+> +static const struct dw_mci_drv_data socfpga_drv_data = {
+> +	.prepare_command	= dw_mci_rockchip_prepare_command,
+> +};
+> +
+>  int dw_mci_pltfm_register(struct platform_device *pdev,
+>  			  const struct dw_mci_drv_data *drv_data)
+>  {
+> @@ -92,6 +96,8 @@ static const struct of_device_id dw_mci_pltfm_match[] = {
+>  	{ .compatible = "snps,dw-mshc", },
+>  	{ .compatible = "rockchip,rk2928-dw-mshc",
+>  		.data = &rockchip_drv_data },
+> +	{ .compatible = "altr,socfpga-dw-mshc",
+> +		.data = &socfpga_drv_data },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, dw_mci_pltfm_match);
+> -- 
 
-I think this boils down to if they really are compatible or not. If
-for instance a 16550 port would be compatible with 8250 on a hardware
-level then using them in the order of "16550", "8250" makes sense. In
-this case the r8a7791 i2c is not really strictly based on r8a7790 i2c,
-it is just that r8a7790 has support in the driver. So it's a short cut
-instead of actual hardware compatibility.
+Not really a bad problem, but wouldn't it be better to rename
+	dw_mci_rockchip_prepare_command -> dw_mci_hold_reg_prepare_command
+then? Has nothing to do with just rockchip anymore.
 
-So far we've dealt with this by updating the driver and only relying
-on the actual SoC name as suffix.
+Regards,
+Steffen
 
-I'm sure there are tons of opinions. =)
-
-Cheers,
-
-/ magnus
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
