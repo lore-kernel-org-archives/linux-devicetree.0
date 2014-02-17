@@ -1,78 +1,56 @@
 From: klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org
-Subject: [PATCH v4 0/4] DT support for kirkwood based Synology NAS boxes
-Date: Tue, 18 Feb 2014 07:45:33 +1000
-Message-ID: <1392673537-17308-1-git-send-email-klightspeed@killerwolves.net>
+Subject: [PATCH v4 2/4] DT: Vendor prefixes: Add ricoh, ssi and synology
+Date: Tue, 18 Feb 2014 07:45:35 +1000
+Message-ID: <1392673537-17308-3-git-send-email-klightspeed@killerwolves.net>
+References: <1392673537-17308-1-git-send-email-klightspeed@killerwolves.net>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392673537-17308-1-git-send-email-klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds support for around 30 kirkwood bases Synology NAS
-boxes. Patch #1 generalized the qnap power off driver so that it can
-also be used for Synology devices. Patch #2 and #3 document vendor
-prefixes and i2c trivial devices. Patch #4 adds the synology DT files.
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 
+The following patches make use of vendor names ricoh, ssi and
+synology.  Add them to the vendor prefix list.
+
+Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+---
 v2:
-Typo fix in qnap-poweroff.c
-Use ricoy stock ticker instead of ricoh
-Describe the lego structure of the hardware
+Use stock ticker for Ricoh as vendor name
+s/Richoh/Ricoh/
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-v3:
-Merge synology dtsi files into a single dtsi file
-
-v4:
-Various minor fixes to synology dtsi file
-
-Andrew Lunn (3):
-  Power: Reset: Generalize qnap-poweroff to with on Synology devices.
-  DT: Vendor prefixes: Add ricoh, ssi and synology
-  DT: i2c: Trivial: Add sii, s35390a, fix ricoh vendor prefix
-
-Ben Peddell (1):
-  ARM: Kirkwood: Add support for many Synology NAS devices
-
- .../devicetree/bindings/i2c/trivial-devices.txt    |   3 +-
- .../bindings/power_supply/qnap-poweroff.txt        |   5 +-
- .../devicetree/bindings/vendor-prefixes.txt        |   3 +
- arch/arm/boot/dts/Makefile                         |  15 +
- arch/arm/boot/dts/kirkwood-ds109.dts               |  41 +
- arch/arm/boot/dts/kirkwood-ds110jv10.dts           |  41 +
- arch/arm/boot/dts/kirkwood-ds111.dts               |  44 ++
- arch/arm/boot/dts/kirkwood-ds112.dts               |  48 ++
- arch/arm/boot/dts/kirkwood-ds209.dts               |  44 ++
- arch/arm/boot/dts/kirkwood-ds210.dts               |  46 ++
- arch/arm/boot/dts/kirkwood-ds212.dts               |  47 ++
- arch/arm/boot/dts/kirkwood-ds212j.dts              |  41 +
- arch/arm/boot/dts/kirkwood-ds409.dts               |  48 ++
- arch/arm/boot/dts/kirkwood-ds409slim.dts           |  40 +
- arch/arm/boot/dts/kirkwood-ds411.dts               |  52 ++
- arch/arm/boot/dts/kirkwood-ds411j.dts              |  48 ++
- arch/arm/boot/dts/kirkwood-ds411slim.dts           |  48 ++
- arch/arm/boot/dts/kirkwood-rs212.dts               |  48 ++
- arch/arm/boot/dts/kirkwood-rs409.dts               |  44 ++
- arch/arm/boot/dts/kirkwood-rs411.dts               |  44 ++
- arch/arm/boot/dts/kirkwood-synology.dtsi           | 871 +++++++++++++++++++++
- drivers/power/reset/qnap-poweroff.c                |  46 +-
- 22 files changed, 1655 insertions(+), 12 deletions(-)
- create mode 100644 arch/arm/boot/dts/kirkwood-ds109.dts
- create mode 100644 arch/arm/boot/dts/kirkwood-ds110jv10.dts
- create mode 100644 arch/arm/boot/dts/kirkwood-ds111.dts
- create mode 100644 arch/arm/boot/dts/kirkwood-ds112.dts
- create mode 100644 arch/arm/boot/dts/kirkwood-ds209.dts
- create mode 100644 arch/arm/boot/dts/kirkwood-ds210.dts
- create mode 100644 arch/arm/boot/dts/kirkwood-ds212.dts
- create mode 100644 arch/arm/boot/dts/kirkwood-ds212j.dts
- create mode 100644 arch/arm/boot/dts/kirkwood-ds409.dts
- create mode 100644 arch/arm/boot/dts/kirkwood-ds409slim.dts
- create mode 100644 arch/arm/boot/dts/kirkwood-ds411.dts
- create mode 100644 arch/arm/boot/dts/kirkwood-ds411j.dts
- create mode 100644 arch/arm/boot/dts/kirkwood-ds411slim.dts
- create mode 100644 arch/arm/boot/dts/kirkwood-rs212.dts
- create mode 100644 arch/arm/boot/dts/kirkwood-rs409.dts
- create mode 100644 arch/arm/boot/dts/kirkwood-rs411.dts
- create mode 100644 arch/arm/boot/dts/kirkwood-synology.dtsi
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 40ce2df..8427681 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -72,6 +72,7 @@ ralink	Mediatek/Ralink Technology Corp.
+ ramtron	Ramtron International
+ realtek Realtek Semiconductor Corp.
+ renesas	Renesas Electronics Corporation
++ricoy	Ricoh Co. Ltd.
+ rockchip	Fuzhou Rockchip Electronics Co., Ltd
+ samsung	Samsung Semiconductor
+ sbs	Smart Battery System
+@@ -79,11 +80,13 @@ schindler	Schindler
+ sil	Silicon Image
+ silabs	Silicon Laboratories
+ simtek
++sii	Seiko Instruments, Inc.
+ sirf	SiRF Technology, Inc.
+ snps 	Synopsys, Inc.
+ st	STMicroelectronics
+ ste	ST-Ericsson
+ stericsson	ST-Ericsson
++synology	Synology, Inc.
+ ti	Texas Instruments
+ tlm	Trusted Logic Mobility
+ toshiba	Toshiba Corporation
 -- 
 1.8.3.2
 
