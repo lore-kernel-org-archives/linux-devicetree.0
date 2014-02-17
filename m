@@ -1,48 +1,32 @@
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: Re: [PATCH] net: add init-regs for of_phy support
-Date: Mon, 17 Feb 2014 13:53:26 +0000
-Message-ID: <53021456.4020404@codethink.co.uk>
-References: <1392642484-19938-1-git-send-email-ben.dooks@codethink.co.uk> <1392642484-19938-2-git-send-email-ben.dooks@codethink.co.uk> <20140217134448.GA19308@e106331-lin.cambridge.arm.com>
+From: Stefan Monnier <monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org>
+Subject: Re: [PATCH v6 4/8] ARM: sunxi: Add driver for SD/MMC
+ hosts found on Allwinner sunxi SoCs
+Date: Mon, 17 Feb 2014 09:01:53 -0500
+Message-ID: <jwveh313klj.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi@gnu.org>
+References: <20140216050933.728.25526.stgit@dizzy-6.o2s.ch>
+	<20140216051133.728.36386.stgit@dizzy-6.o2s.ch>
+	<1392542548.11093.13.camel@chi.lan>
+	<1744603.zMUgfmoUUP__34248.3586668552$1392621049$gmane$org@pagira.o2s.ch>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20140217134448.GA19308@e106331-lin.cambridge.arm.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDMKFH665MBBB5FMRCMAKGQEXG7TXWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 17/02/14 13:44, Mark Rutland wrote:
-> On Mon, Feb 17, 2014 at 01:08:04PM +0000, Ben Dooks wrote:
->> Add new init-regs field for of_phy nodes and make sure these
->> get applied when the phy is configured.
->>
->> This allows any phy node in an fdt to initialise registers
->> that may not be set as standard by the driver at initialisation
->> time, such as LED controls.
->
-> Why not have a driver for the particular PHY? If it's not standard we
-> don't need to pretend it is. If it has some extensions then the standard
-> compatible string can be a fallback entry in the compatible list.
->
-> I think allocating a compatible string and handling it in the kernel is
-> better than having arbitrary register poke values in the dt.
+> I'm not really into this licensing and copyright stuff.
+> Could you maybe point out what the correct copyright would be?
 
->> +	prop = of_find_property(of_node, "init-regs", &len);
->> +	if (prop) {
->> +		if (len % (sizeof(__be32) * 3)) {
->> +			dev_err(dev, "init-regs not multiple of 3 entries\n");
->> +			return -EINVAL;
->> +		}
->> +
->> +		ptr = of_prop_next_u32(prop, ptr, &reg);
->> +		while (ptr != NULL) {
->> +			ptr = of_prop_next_u32(prop, ptr, &reg);
-
-oops, bad rebase fixup, this should have been deleted.
+The dates are when the code is disclosed to the public.  So 2014 would
+be fine, 2013-2014 might be as well, but 2014-2015 can't be right until
+next year.
 
 
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+        Stefan
