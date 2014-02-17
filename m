@@ -1,69 +1,56 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: Turn of_match_node into a static inline when CONFIG_OF isn't set
-Date: Mon, 17 Feb 2014 18:19:53 +0000
-Message-ID: <20140217181953.297FBC40372@trevor.secretlab.ca>
-References: <1392122211-11422-1-git-send-email-laurent.pinchart@ideasonboard .com> <20140211144108.GB841@joshc.qualcomm.com> <1596542.hkJp71u3OJ@avalon> <20140211164825.GC841@joshc.qualcomm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140211164825.GC841-OP5zVEFNDbfdOxZ39nK119BPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [RFC/PATCH 0/3] Add devicetree scanning for randomness
+Date: Mon, 17 Feb 2014 13:23:12 -0500
+Message-ID: <20140217182312.GV7862@titan.lakedaemon.net>
+References: <1392168805-14200-1-git-send-email-lauraa@codeaurora.org>
+ <201402121251.06280.arnd@arndb.de>
+ <20140217155419.682F7C401D4@trevor.secretlab.ca>
+ <1418981.0py7JxXCp8@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1418981.0py7JxXCp8@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, devicetree@vger.kernel.org, Laura Abbott <lauraa@codeaurora.org>, keescook@chromium.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Feb 2014 10:48:26 -0600, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> On Tue, Feb 11, 2014 at 03:55:35PM +0100, Laurent Pinchart wrote:
-> > Hi Josh,
+On Mon, Feb 17, 2014 at 05:13:07PM +0100, Arnd Bergmann wrote:
+> On Monday 17 February 2014 15:54:19 Grant Likely wrote:
+> > On Wed, 12 Feb 2014 11:20:00 -0700, Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
+> > > On Wed, Feb 12, 2014 at 12:45:54PM -0500, Jason Cooper wrote:
+> > > 
+> > > > The bootloader would then load this file into ram, and pass the
+> > > > address/size to the kernel either via dt, or commandline.  kaslr (run in
+> > > > the decompressor) would consume some of this randomness, and then
+> > > > random.c would consume the rest in a non-crediting initialization.
+> > > 
+> > > Sure is a neat idea, but I think in general it would probably be smart
+> > > to include the entire FDT blob in the early random pool, that way you
+> > > get MACs and other machine unique data too.
 > > 
-> > On Tuesday 11 February 2014 08:41:08 Josh Cartwright wrote:
-> > > On Tue, Feb 11, 2014 at 01:36:51PM +0100, Laurent Pinchart wrote:
-> > > > when CONFIG_OF is disabled of_match_node is defined as a macro that
-> > > > evaluates to NULL. This breaks compilation of drivers that dereference
-> > > > the function's return value directly. Fix it by turning the macro into a
-> > > > static inline function that returns NULL.
-> > > 
-> > > Just this past week I did the same thing, but noticed that it breaks the
-> > > following usecase:
-> > > 
-> > > 	#ifdef CONFIG_OF
-> > > 	static const struct of_device_id foobar_matches[] = {
-> > > 		{ .compatible = "foobar,whatsit", },
-> > > 		{ },
-> > > 	};
-> > > 	#endif
-> > > 
-> > > 	static int probeme(struct platform_device *pdev)
-> > > 	{
-> > > 		struct of_device_id *id;
-> > > 
-> > > 		id = of_match_node(foobar_matches, pdev->dev.of_node);
-> > > 		if (id) {
-> > > 			/* ... */
-> > > 		}
-> > > 		return 0;
-> > > 	}
-> > > 
-> > > When !CONFIG_OF and with your change, this will fail to build due to
-> > > foobar_matches being undefined.
-> > 
-> > Good point. What would you think about
-> > 
-> > #define of_match_node(_matches, _node)  ((const struct of_device_id *)NULL)
+> > I applied a patch that did exactly that (109b623629), and then reverted
+> > it (b920ecc82) shortly thereafter because add_device_randomness() is
+> > a rather slow function and FDTs can get large. I'd like to see someone
+> > do a reasonable analysis on the cost of using an FDT for randomness
+> > before I reapply a patch doing something similar. An awful lot of the
+> > FDT data is not very random, but there are certainly portions of it that
+> > are appropriate for the random pool.
 > 
-> I've just sent out a patchset that cleans up at least a couple of users
-> that directly do of_match_node(matches, np)->data using
-> of_find_matching_node_and_match.  Not sure if that will fix the usage
-> you have in mind, though.
-> 
-> I am a bit weary about having an of_match_node() user that both directly
-> dereferences the result (i.e. of_match_node(matches, np)->data) _and_
-> builds when !CONFIG_OF; most likely due to a traumatic childhood event
-> where demons flew out my nose.
+> Could we use a faster hash function that scans the entire device tree and
+> then just feed the output of that into add_device_randomness? We probably
+> can't expect that there is a lot of entropy in the DT blob, so the
+> result wouldn't be all that different in terms of quality of the random
+> seed.
 
-As is supposed to happen when code dereferrences pointers blindly.
+I think it would be easier to identify the few attributes that differ
+from board to board (mac address, serial number, etc), and differ from
+boot to boot (random-seed, timestamp) and just extract and feed those
+in.
 
-g.
+We already have the fdt parsing code in the decompressor...
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+thx,
+
+Jason.
