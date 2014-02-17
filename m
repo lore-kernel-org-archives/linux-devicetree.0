@@ -1,147 +1,122 @@
-From: Milo Kim <milo.kim@ti.com>
-Subject: Re: [PATCH 10/10] Documentation: Add device tree bindings for TI
- LMU devices
-Date: Mon, 17 Feb 2014 16:15:41 +0900
-Message-ID: <5301B71D.2010507@ti.com>
-References: <1392359564-7205-1-git-send-email-milo.kim@ti.com> <20140214205027.GT4451@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140214205027.GT4451@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Jingoo Han <jg1.han@samsung.com>, Bryan Wu <cooloney@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>
+From: Loc Ho <lho@apm.com>
+Subject: [PATCH v9 0/4] PHY: Add APM X-Gene SoC 15Gbps Multi-purpose PHY support
+Date: Mon, 17 Feb 2014 00:15:55 -0700
+Message-ID: <1392621359-5530-1-git-send-email-lho@apm.com>
+Return-path: <linux-scsi-owner@vger.kernel.org>
+Sender: linux-scsi-owner@vger.kernel.org
+To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
+Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+This patch adds support for APM X-Gene SoC 15Gbps Multi-purpose PHY. This
+is the physical layer interface for the corresponding host controller. This
+driver uses the PHY generic framework. In addition, the PHY generic
+framework is patched to provide an function to set the speed of the PHY.
 
-On 02/15/2014 05:50 AM, Mark Brown wrote:
-> On Fri, Feb 14, 2014 at 03:32:44PM +0900, Milo Kim wrote:
->> Bindings for TI LMU, backlight, LM3631 regulator and LM3633 LED are added.
->
-> Ah, sorry - I didn't notice that there were several different binding
-> documents in the patch.
->
->> @@ -0,0 +1,49 @@
->> +TI LMU LM3631 regulator device tree bindings
->> +
->> +Required properties:
->> +  - compatible: "ti,lm3631-regulator"
->> +
->> +Optional properties:
->> +  - regulator-name
->> +  - regulator-min-microvolt
->> +  - regulator-max-microvolt
->> +  - regulator-always-on
->> +  - regulator-boot-on
->> +
->> +  For those properties, please refer to:
->> +  Documentation/devicetree/bindings/regulator/regulator.txt
->
-> This doesn't correspond to the example which says that there is an
-> optional property "regulators" which can contain regualators lcd_boost,
-> lcd_vpos and lcd_vneg.  It's also better to not enumerate all the
-> standard properties but just refer to the generic document (as you do).
-> That avoids confusion if new properties are added to the generic
-> regulator bindings.
->
-> The actual binding is fine, it's just the way it's documented.
+v9
+* Update CMU parameter setting for register 13
+* Add required delay when configure CMU PLL, Manual Calibration PLL, and VCO
+  PLL
+* Add comment for CMU PLL calibration loop delay of 10us
+* Add required delay for stopping and starting summer calibrations
+* Update comment for summer and latch calibration delays
+* Update comment for PHY reset Rx delay and decrease max sleep time from 500
+  to 150us
+* Always program the DFE (equalizer) setting to 0x7e00 as with original version
+* Fix Tx speed selection to always using Gen3 setting when force to an
+  specified generation speed
 
-Thank you. I've fixed things based on your comments.
-Could you check the description below?
-I'd like to get your feedback before sending patch-set v2.
+v8
+* Update binding documentation
+* Remove XGENE_PHY_DTS and XGENE_PHY_EXT_DTS defines
+* Remove support for internal clock
+* Remove support for external reference CMU
+* Remove the need for external reference resource DTS entry and its related
+  code
 
+v7
+* Add/Update PHY CMU/lane parameters and its default values
+* Rename variable enable_manual_cal to preA3Chip
+* Remove function phy_rd, phy_wr, and phy_wr_flush
+* Change function cmu_wr, cmu_rd, cmu_toggle1to0, cmu_clrbits, cmu_setbits,
+  serdes_wr, serdes_rd, serdes_clrbits, and serdes_setbits to take context
+  instead void *
+* Remove function serdes_toggle1to0
+* Decrease the polling time from 10ms to 1ms on CMU calibration complete
+  detection
+* Move all SATA specify code in function xgene_phy_hw_initialize into
+  function xgene_phy_hw_init_sata
+* Add usleep_range after starting summer/latch calibrations
+* Add usleep_range between receiver reset (function xgene_phy_reset_rxd)
+* Save and restore PHY register 31 instead writing 0 in function
+  xgene_phy_gen_avg_val
+* Update function xgene_phy_sata_force_gen programming sequences
+* Add support to reset the receiver lane in function xgene_phy_set_speed
+  if speed is 0
+* Update PHY parameters in DTS per controller
+* Some minor code clean up
 
- From f0dcb9d8b21d38a6764c2e43cde4b41da3078c23 Mon Sep 17 00:00:00 2001
-From: Milo Kim <milo.kim@ti.com>
-Date: Mon, 17 Feb 2014 14:33:15 +0900
-Subject: [PATCH 2/2] Documentation: fix LM3631 regulator DT based on
-  maintainer's feedback
+v6
+* Move PHY document to Documentation/devicetree/binding/phy
+* Remove _ADDR from all register defines
+* Update clock-names property for sataphy1clk, sataphy2clk, and sataphy3clk
 
-Signed-off-by: Milo Kim <milo.kim@ti.com>
+v5
+* Update DTS binding documentation
+* Remove direct clock access and use clock interface instead
+* Change override parameters to decimal instead hex values
+* Change apm,tx-amplitude, apm,tx-pre-cursor1, apm,tx-pre-cursor2,
+  apm,tx-post-cursor to be unit of uV
+
+v4
+* Update documentation with 'apm,' instead 'apm-'
+* Change DTS override parameter to have 'apm,'
+* Add select GENERIC_PHY to Kconfig PHY_XGENE
+* Make override parameters to be pair of three values instead one
+* Some minor comment and indentation changes
+* Remove error register addition offset
+* Add ULL to constants
+* Use module_init instead subsys_initcall
+* Make DTS node based on first register address
+* Update override setting values
+
+v3
+* Major re-write of the code based on various review comments
+* Support external clock only at the moment
+* Support SATA mode only at the moment
+* No UEFI support at the moment
+
+v2
+* Remove port knowledge from functions
+* Make all functions static
+* Remove ID completely
+* Make resource requirement based on compatible type
+* Rename override PHY parameters with more descriptive name
+* Add override PHY parameter for per controller, per port, and per speed
+* Patch the generic PHY frame to expose set_speed operation
+
+v1
+* Initial version
+
+Signed-off-by: Loc Ho <lho@apm.com>
+Signed-off-by: Tuan Phan <tphan@apm.com>
+Signed-off-by: Suman Tripathi <stripathi@apm.com>
 ---
-  .../bindings/regulator/lm3631-regulator.txt        |   63 
-++++++++++++++++++++
-  1 file changed, 63 insertions(+)
-  create mode 100644 
-Documentation/devicetree/bindings/regulator/lm3631-regulator.txt
+Loc Ho (4):
+  PHY: Add function set_speed to generic PHY framework
+  Documentation: Add APM X-Gene SoC 15Gbps Multi-purpose PHY driver
+    binding documentation
+  PHY: add APM X-Gene SoC 15Gbps Multi-purpose PHY driver
+  arm64: Add APM X-Gene SoC 15Gbps Multi-purpose PHY DTS entries
 
-diff --git 
-a/Documentation/devicetree/bindings/regulator/lm3631-regulator.txt 
-b/Documentation/devicetree/bindings/regulator/lm3631-regulator.txt
-new file mode 100644
-index 0000000..272cdc1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/lm3631-regulator.txt
-@@ -0,0 +1,63 @@
-+TI LMU LM3631 regulator device tree bindings
-+
-+Required properties:
-+  - compatible: "ti,lm3631-regulator"
-+
-+Sub-nodes:
-+  - vboost
-+  - vcont
-+  - voref
-+  - vpos
-+  - vneg
-+
-+  Optional properties of each node:
-+  Please refer to Documentation/devicetree/bindings/regulator/regulator.txt
-+
-+LM3631 regulator is represented as a sub-node of the "ti,lm3631" device.
-+Please refer to "ti,lm3631" in 
-Documentation/devicetree/bindings/mfd/ti-lmu.txt
-+
-+Example:
-+
-+lm3631@29 {
-+	compatible = "ti,lm3631";
-+	reg = <0x29>;
-+
-+	ti,enable-gpio = <&gpio5 6 GPIO_ACTIVE_HIGH>;
-+
-+	regulators {
-+		compatible = "ti,lm3631-regulator";
-+
-+		vboost {
-+			regulator-name = "lcd_boost";
-+			regulator-min-microvolt = <4500000>;
-+			regulator-max-microvolt = <6350000>;
-+			regulator-always-on;
-+		};
-+
-+		vcont {
-+			regulator-name = "lcd_vcont";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+		};
-+
-+		voref {
-+			regulator-name = "lcd_voref";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <6000000>;
-+		};
-+
-+		vpos {
-+			regulator-name = "lcd_vpos";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <6000000>;
-+			regulator-boot-on;
-+		};
-+
-+		vneg {
-+			regulator-name = "lcd_vneg";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <6000000>;
-+			regulator-boot-on;
-+		};
-+	};
-+};
--- 
-1.7.9.5
+ .../devicetree/bindings/phy/apm-xgene-phy.txt      |   79 +
+ arch/arm64/boot/dts/apm-storm.dtsi                 |   75 +
+ drivers/phy/Kconfig                                |    7 +
+ drivers/phy/Makefile                               |    2 +
+ drivers/phy/phy-core.c                             |   21 +
+ drivers/phy/phy-xgene.c                            | 1824 ++++++++++++++++++++
+ include/linux/phy/phy.h                            |    8 +
+ 7 files changed, 2016 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/apm-xgene-phy.txt
+ create mode 100644 drivers/phy/phy-xgene.c
 
-
-Best regards,
-Milo
