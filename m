@@ -1,90 +1,92 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v2 1/5] drivers: of: add initialization code for reserved memory
-Date: Mon, 17 Feb 2014 16:53:46 +0000
-Message-ID: <20140217165346.4C5B3C403B4@trevor.secretlab.ca>
-References: <1391515773-6112-2-git-send-email-m.szyprowski@samsung.com> < 20140205110538.99E47C40A89@trevor.secretlab.ca> <52FA0D6E.9090304@samsung. com> <20140211121316.24032C40C4D@trevor.secretlab.ca> <52FA33E2.4050004@ samsung.com> <20140211190104.7E6C5C4140E@trevor.secretlab.ca> <1392148971. 3835.15.camel@pasglop> <52FA8245.5050707@gmail.com> <20140211201933.GI841@ joshc.qualcomm.com> <52FA87B8.8040203@gmail.com> <20140213194840.GO841@ joshc.qualcomm.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140213194840.GO841@joshc.qualcomm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Josh Cartwright <joshc@codeaurora.org>, Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Tomasz Figa <t.figa@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@gmail.com>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH] of_mdio: fix phy interrupt passing
+Date: Mon, 17 Feb 2014 09:26:29 -0800
+Message-ID: <CAGVrzcYeuTA0Yd5YyOTuWQfnwLw9zP87MaYJOLwprZRCtvuaXw@mail.gmail.com>
+References: <1392654580-3706-1-git-send-email-ben.dooks@codethink.co.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1392654580-3706-1-git-send-email-ben.dooks@codethink.co.uk>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Grant Likely <grant.likely@linaro.org>, linux-kernel@lists.codethink.co.uk, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, netdev <netdev@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 13 Feb 2014 13:48:40 -0600, Josh Cartwright <joshc@codeaurora.org> wrote:
-> On Tue, Feb 11, 2014 at 09:27:36PM +0100, Tomasz Figa wrote:
-> > On 11.02.2014 21:19, Josh Cartwright wrote:
-> > >On Tue, Feb 11, 2014 at 09:04:21PM +0100, Tomasz Figa wrote:
-> > > >On 11.02.2014 21:02, Benjamin Herrenschmidt wrote:
-> > > > >On Tue, 2014-02-11 at 19:01 +0000, Grant Likely wrote:
-> > > > > > > except that the former IMHO better suits the definition of memory
-> > > > > > > region, which I see as a single contiguous range of memory and can be
-> > > > > > > simplified to have a single reg entry per region.
-> > > > > >
-> > > > > > My point is rather if multiple reg tuples are found in a reserved memory
-> > > > > > node, the kernel must respect them and reserve the memory. I'm not
-> > > > > > arguing about whether or not that makes for a good binding.
-> > > > >
-> > > > > agreed.
-> > > >
-> > > > My point is why, if the binding defines that just a single tuple should be
-> > > > provided.
-> > >
-> > > FWIW, the usecase I had mentioned in reply to Grant in the patch 5/5
-> > > thread [1] could make use of this.  The shared memory region is split
-> > > into a main chunk and several "auxiliary" chunk, but collectively these
-> > > regions all share the same heap state.
-> > >
-> > >   Josh
-> > >
-> > > 1: http://lkml.kernel.org/r/20140205192502.GO20228@joshc.qualcomm.com
-> >
-> > The use case seems fine, but I believe it could be properly represented in
-> > device tree using multiple single-reg regions as well, unless the consumer
-> > can request a block of memory that crosses boundary of two sub-regions
-> > specified by reg entries of single region.
-> 
-> I could probably make a only-one-reg-entry policy work for me, but it
-> makes things a bit more awkward.  I'd lose the ability to describe
-> "this set of regions need to be logically handled together" directly in
-> the reserved memory node, and would need to push it up a layer.
-> 
-> 	reserved-memory {
-> 		smem: smem {
-> 			reg = <...>;
-> 		};
-> 		aux1: auxiliary1 {
-> 			reg = <...>;
-> 		};
-> 		aux2: auxiliary2 {
-> 			reg = <...>;
-> 		};
-> 		...
-> 	};
+Hi Ben,
 
-If the regions are used for different purposes, it makes sense I think
-to have a separate node for each. Multiple tuples would make more sense
-for something like valid DMA regions for a broken device that can only
-DMA into a few windows; you could have one tuple per window within a
-single node.
+2014-02-17 8:29 GMT-08:00 Ben Dooks <ben.dooks@codethink.co.uk>:
+> The of_mdiobus_register_phy() is not setting phy->irq this causing
+> some drivers to incorrectly assume that the PHY does not have an
+> IRQ associated with it or install an interrupt handler for the
+> PHY.
+>
+> Simplify the code setting irq and set the phy->irq at the same
+> time so that the case if mdio->irq is not NULL is easier to read.
 
-It would be possible to collect multiple associated nodes under one
-parent node which in turn has reserved-memory for its parent:
+The real bug fix, which is not properly explained here, is that
+irq_of_parse_and_map() should return values > 0 when the interrupt is
+valid, so this makes me wonder why we are not propagating the return
+value from irq_of_parse_and_map() in case the call to
+of_irq_parse_one() does return something non-zero?
 
-	reserved-memory {
-		ranges;
-		reserved-group {
-			ranges;
-			smem: smem {
-				reg = <...>;
-			};
-			aux1: auxiliary1 {
-				reg = <...>;
-			};
-			aux2: auxiliary2 {
-				reg = <...>;
-			};
-		};
-		...
-	};
+Other than that, I agree with the resolution, but it deserves a better
+commit message, and eventually doing this in two steps:
 
-g.
+- first fix the bug by changing the if (!mdio->irq[addr]) into a if
+(mdio->irq[addr] <= 0)
+- second submit a patch which cleanups the assignment
+
+>
+> This fixes the issue:
+>  net eth0: attached PHY 1 (IRQ -1) to driver Micrel KSZ8041RNLI
+>
+> to the correct:
+>  net eth0: attached PHY 1 (IRQ 416) to driver Micrel KSZ8041RNLI
+>
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> ---
+>  drivers/of/of_mdio.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> index 875b7b6..7b3e7b0 100644
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+> @@ -44,7 +44,7 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
+>  {
+>         struct phy_device *phy;
+>         bool is_c45;
+> -       int rc, prev_irq;
+> +       int rc;
+>         u32 max_speed = 0;
+>
+>         is_c45 = of_device_is_compatible(child,
+> @@ -55,11 +55,11 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
+>                 return 1;
+>
+>         if (mdio->irq) {
+> -               prev_irq = mdio->irq[addr];
+> -               mdio->irq[addr] =
+> -                       irq_of_parse_and_map(child, 0);
+> -               if (!mdio->irq[addr])
+> -                       mdio->irq[addr] = prev_irq;
+> +               rc = irq_of_parse_and_map(child, 0);
+> +               if (rc > 0) {
+> +                       mdio->irq[addr] = rc;
+> +                       phy->irq = rc;
+> +               }
+>         }
+>
+>         /* Associate the OF node with the device structure so it
+> --
+> 1.8.5.3
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
+-- 
+Florian
