@@ -1,70 +1,107 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: devicetree repository separation/migration
-Date: Mon, 17 Feb 2014 13:05:44 -0500
-Message-ID: <20140217180544.GU7862@titan.lakedaemon.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core to drivers/of
+Date: Mon, 17 Feb 2014 18:14:51 +0000
+Message-ID: <20140217181451.7EB7FC4044D@trevor.secretlab.ca>
+References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> < CAL_Jsq+U9zU1i+STLHMBjY5BeEP6djYnJVE5X1ix-D2q_zWztQ@mail.gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+U9zU1i+STLHMBjY5BeEP6djYnJVE5X1ix-D2q_zWztQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-All,
+On Tue, 11 Feb 2014 07:56:33 -0600, Rob Herring <robherring2@gmail.com> wrote:
+> On Tue, Feb 11, 2014 at 5:45 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> > From: Philipp Zabel <philipp.zabel@gmail.com>
+> >
+> > This patch moves the parsing helpers used to parse connected graphs
+> > in the device tree, like the video interface bindings documented in
+> > Documentation/devicetree/bindings/media/video-interfaces.txt, from
+> > drivers/media/v4l2-core to drivers/of.
+> 
+> This is the opposite direction things have been moving...
+> 
+> > This allows to reuse the same parser code from outside the V4L2 framework,
+> > most importantly from display drivers. There have been patches that duplicate
+> > the code (and I am going to send one of my own), such as
+> > http://lists.freedesktop.org/archives/dri-devel/2013-August/043308.html
+> > and others that parse the same binding in a different way:
+> > https://www.mail-archive.com/linux-omap@vger.kernel.org/msg100761.html
+> >
+> > I think that all common video interface parsing helpers should be moved to a
+> > single place, outside of the specific subsystems, so that it can be reused
+> > by all drivers.
+> 
+> Perhaps that should be done rather than moving to drivers/of now and
+> then again to somewhere else.
 
-At last weeks devicetree irc meeting, I took on the task of writing this
-email.  I'm a bit behind.
+This is just parsing helpers though, isn't it? I have no problem pulling
+helper functions into drivers/of if they are usable by multiple
+subsystems. I don't really understand the model being used though. I
+would appreciate a description of the usage model for these functions
+for poor folks like me who can't keep track of what is going on in
+subsystems.
 
-One of the outcomes of the ARM/devicetree discussion at the 2013 Kernel
-Summit was that we were going to hold off on separating the devicetree
-from the Linux kernel tree.  The primary reason for this was to get
-through the backlog of patches.
+g.
 
-It's been several months, and we're seeing evidence of other projects
-having difficulty keeping in sync with the kernel tree.  Specifically,
-barebox is having trouble syncing:
-
-  http://list-archives.org/2014/02/07/barebox-lists-infradead-org/devicetree-maintenance-in-barebox/f/5820726136
-
-U-boot has some questionable (admittedly from early on) nodes.  I'll
-refrain from singling out a board file or commit.  Interested
-individuals can look through the irc archives for #devicetree.  At any
-rate, reportedly, Wolfgang confirmed at the U-Boot minisummit that the
-dts files in U-Boot would match the ones from the kernel.  So U-Boot is
-in the same situation as barebox, wrt syncing.
-
-BSD is also adopting devicetree, but I'm not personally familiar with
-the status of that.  Nor whether it's diverged from what we have.
-
-On the Linux side, it appears to me that we have successfully removed
-the bottleneck, and patches seem to be flowing fairly well now.
-
-For the past few months, Ian has been maintaining a devicetree repo at
-
-  http://xenbits.xen.org/gitweb/?p=people/ianc/device-tree-rebasing.git;a=summary
-
-
-Now for the questions:
-
-  - Is the Linux development workflow ready for devicetree to move out
-    of the Linux Kernel?
-
-  - Would having the devicetree in it's own repo, with it's own workflow
-    and release schedule help the other users of it?
-
-  - Where should it be hosted?
-
-  - How do we envision projects will use it?  git submodule?  reference
-    a version tag?  (this is primarily targeted at bootloaders that need
-    to compile in a dtb or subset of a dtb into the bootloader)
-
-Other thoughts I may have missed?
-
-thx,
-
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> > I moved v4l2_of_get_next_endpoint, v4l2_of_get_remote_port,
+> > and v4l2_of_get_remote_port_parent. They are renamed to
+> > of_graph_get_next_endpoint, of_graph_get_remote_port, and
+> > of_graph_get_remote_port_parent, respectively.
+> >
+> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > ---
+> >  drivers/media/Kconfig             |   1 +
+> >  drivers/media/v4l2-core/v4l2-of.c | 117 ---------------------------------
+> >  drivers/of/Kconfig                |   3 +
+> >  drivers/of/Makefile               |   1 +
+> >  drivers/of/of_graph.c             | 133 ++++++++++++++++++++++++++++++++++++++
+> >  include/linux/of_graph.h          |  23 +++++++
+> >  include/media/v4l2-of.h           |  16 ++---
+> >  7 files changed, 167 insertions(+), 127 deletions(-)
+> >  create mode 100644 drivers/of/of_graph.c
+> >  create mode 100644 include/linux/of_graph.h
+> 
+> [snip]
+> 
+> > diff --git a/include/media/v4l2-of.h b/include/media/v4l2-of.h
+> > index 541cea4..404a493 100644
+> > --- a/include/media/v4l2-of.h
+> > +++ b/include/media/v4l2-of.h
+> > @@ -17,6 +17,7 @@
+> >  #include <linux/list.h>
+> >  #include <linux/types.h>
+> >  #include <linux/errno.h>
+> > +#include <linux/of_graph.h>
+> >
+> >  #include <media/v4l2-mediabus.h>
+> >
+> > @@ -72,11 +73,6 @@ struct v4l2_of_endpoint {
+> >  #ifdef CONFIG_OF
+> >  int v4l2_of_parse_endpoint(const struct device_node *node,
+> >                            struct v4l2_of_endpoint *endpoint);
+> > -struct device_node *v4l2_of_get_next_endpoint(const struct device_node *parent,
+> > -                                       struct device_node *previous);
+> > -struct device_node *v4l2_of_get_remote_port_parent(
+> > -                                       const struct device_node *node);
+> > -struct device_node *v4l2_of_get_remote_port(const struct device_node *node);
+> >  #else /* CONFIG_OF */
+> >
+> >  static inline int v4l2_of_parse_endpoint(const struct device_node *node,
+> > @@ -85,25 +81,25 @@ static inline int v4l2_of_parse_endpoint(const struct device_node *node,
+> >         return -ENOSYS;
+> >  }
+> >
+> > +#endif /* CONFIG_OF */
+> > +
+> >  static inline struct device_node *v4l2_of_get_next_endpoint(
+> >                                         const struct device_node *parent,
+> >                                         struct device_node *previous)
+> >  {
+> > -       return NULL;
+> > +       return of_graph_get_next_endpoint(parent, previous);
+> 
+> Won't this break for !OF?
+> 
+> Rob
