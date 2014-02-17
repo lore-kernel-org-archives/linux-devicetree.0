@@ -1,85 +1,70 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] net: add init-regs for of_phy support
-Date: Mon, 17 Feb 2014 18:04:15 +0000
-Message-ID: <20140217180415.GD19308@e106331-lin.cambridge.arm.com>
-References: <1392642484-19938-1-git-send-email-ben.dooks@codethink.co.uk>
- <1392642484-19938-2-git-send-email-ben.dooks@codethink.co.uk>
- <CAGVrzcYbw5xLj-gwcup5i0gBdKDDGdyy5wAaEBp7m2E7f2bytg@mail.gmail.com>
- <53024A62.4050208@codethink.co.uk>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: devicetree repository separation/migration
+Date: Mon, 17 Feb 2014 13:05:44 -0500
+Message-ID: <20140217180544.GU7862@titan.lakedaemon.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <53024A62.4050208@codethink.co.uk>
-Sender: netdev-owner@vger.kernel.org
-To: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 17, 2014 at 05:44:02PM +0000, Ben Dooks wrote:
-> On 17/02/14 17:33, Florian Fainelli wrote:
-> > Hi Ben,
-> >
-> > 2014-02-17 5:08 GMT-08:00 Ben Dooks <ben.dooks@codethink.co.uk>:
-> >> Add new init-regs field for of_phy nodes and make sure these
-> >> get applied when the phy is configured.
-> >>
-> >> This allows any phy node in an fdt to initialise registers
-> >> that may not be set as standard by the driver at initialisation
-> >> time, such as LED controls.
-> >>
-> >> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> >> ---
-> >>   Documentation/devicetree/bindings/net/phy.txt | 12 ++++++
-> >>   drivers/net/phy/phy_device.c                  | 59 ++++++++++++++++++++++++++-
-> >>   2 files changed, 70 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
-> >> index 58307d0..48d8ded 100644
-> >> --- a/Documentation/devicetree/bindings/net/phy.txt
-> >> +++ b/Documentation/devicetree/bindings/net/phy.txt
-> >> @@ -20,6 +20,8 @@ Optional Properties:
-> >>     assume clause 22. The compatible list may also contain other
-> >>     elements.
-> >>   - max-speed: Maximum PHY supported speed (10, 100, 1000...)
-> >> +- init-regs: Set of registers to modify at initialisation as a
-> >> +    a set of <register set clear>
-> >
-> > Should be:
-> >
-> > "micrel,led-control-init-val" or something like that.
-> >
-> > first cell is the register address, according to the IEEE 802.3 clause 22
-> > second cell is the set bitmask to apply to the register address
-> > specified in the first cell
-> > third cell is the clear bitmask to apply to the register address
-> > specified in the second cell
-> >
-> > I would rather see this as a specific PHY node DT property for setting
-> > the LED control register, because this is totally non-standard and you
-> > are touching a proprietary register here.
-> 
-> I'd rather stay with this than splattering lots and lots of
-> phy specific additions to each phy driver.
+All,
 
-For something that's PHY-specific anyway? Should we remove the rest of
-the "phy specific additions" that constitute a driver?
+At last weeks devicetree irc meeting, I took on the task of writing this
+email.  I'm a bit behind.
 
-> This has the plus it lets board developers set registers in
-> case of board specific initialisation values that are not
-> already in the drivers.
+One of the outcomes of the ARM/devicetree discussion at the 2013 Kernel
+Summit was that we were going to hold off on separating the devicetree
+from the Linux kernel tree.  The primary reason for this was to get
+through the backlog of patches.
 
-This also has the minus that it lets board developers set registers in
-arbitrary ways, creating new bugs that will require more effort to work
-around in drivers.
+It's been several months, and we're seeing evidence of other projects
+having difficulty keeping in sync with the kernel tree.  Specifically,
+barebox is having trouble syncing:
 
-If you update the DTs to describe the hardware to the kernel, then the
-kernel can later be updated to handle specific PHYs better. That cannot
-happen if you try to hide information from the kernel by giving it a
-list of arbitrary magic numbers.
+  http://list-archives.org/2014/02/07/barebox-lists-infradead-org/devicetree-maintenance-in-barebox/f/5820726136
 
-Drivers are the place such things should go. The DT is not a place for
-shoddy bytecode.
+U-boot has some questionable (admittedly from early on) nodes.  I'll
+refrain from singling out a board file or commit.  Interested
+individuals can look through the irc archives for #devicetree.  At any
+rate, reportedly, Wolfgang confirmed at the U-Boot minisummit that the
+dts files in U-Boot would match the ones from the kernel.  So U-Boot is
+in the same situation as barebox, wrt syncing.
 
-Thanks,
-Mark.
+BSD is also adopting devicetree, but I'm not personally familiar with
+the status of that.  Nor whether it's diverged from what we have.
+
+On the Linux side, it appears to me that we have successfully removed
+the bottleneck, and patches seem to be flowing fairly well now.
+
+For the past few months, Ian has been maintaining a devicetree repo at
+
+  http://xenbits.xen.org/gitweb/?p=people/ianc/device-tree-rebasing.git;a=summary
+
+
+Now for the questions:
+
+  - Is the Linux development workflow ready for devicetree to move out
+    of the Linux Kernel?
+
+  - Would having the devicetree in it's own repo, with it's own workflow
+    and release schedule help the other users of it?
+
+  - Where should it be hosted?
+
+  - How do we envision projects will use it?  git submodule?  reference
+    a version tag?  (this is primarily targeted at bootloaders that need
+    to compile in a dtb or subset of a dtb into the bootloader)
+
+Other thoughts I may have missed?
+
+thx,
+
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
