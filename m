@@ -1,187 +1,59 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH v3 15/15] mfd: max14577: Add device tree bindings document
-Date: Mon, 17 Feb 2014 10:05:50 +0100
-Message-ID: <1392627950-26927-16-git-send-email-k.kozlowski@samsung.com>
-References: <1392627950-26927-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1392627950-26927-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 2/5] ARM: shmobile: r8a7791: add i2c master nodes to dtsi
+Date: Mon, 17 Feb 2014 10:19:00 +0100
+Message-ID: <20140217091900.GD2633@katana>
+References: <1392543658-5030-1-git-send-email-wsa@the-dreams.de>
+ <1392543658-5030-3-git-send-email-wsa@the-dreams.de>
+ <20140217075410.GA2633@katana>
+ <CANqRtoSDxQfSw5PJB6-UcL-UuMySBkoCqfC+1H=o-EBA18ouLQ@mail.gmail.com>
+ <CAMuHMdW8MLknykkfu9XS5CDpuJcRNyPz+GV5bhUNGndxFacnQw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3Pql8miugIZX0722"
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdW8MLknykkfu9XS5CDpuJcRNyPz+GV5bhUNGndxFacnQw@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Magnus Damm <magnus.damm@gmail.com>, SH-Linux <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Add document describing device tree bindings for MAX14577 MFD
-drivers: MFD core, extcon, regulator and charger.
 
-Both MAX14577 and MAX77836 chipsets are documented.
+--3Pql8miugIZX0722
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Kyungmin Park <kyungmin.park@samsung.com>
-Cc: Tomasz Figa <t.figa@samsung.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
----
- Documentation/devicetree/bindings/mfd/max14577.txt |  149 ++++++++++++++++++++
- 1 file changed, 149 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/max14577.txt
 
-diff --git a/Documentation/devicetree/bindings/mfd/max14577.txt b/Documentation/devicetree/bindings/mfd/max14577.txt
-new file mode 100644
-index 000000000000..111115b0a6f3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/max14577.txt
-@@ -0,0 +1,149 @@
-+Maxim MAX14577/77836 Multi-Function Device
-+
-+MAX14577 is a Multi-Function Device with Micro-USB Interface Circuit, Li+
-+Battery Charger and SFOUT LDO output for powering USB devices. It is
-+interfaced to host controller using I2C.
-+
-+MAX77836 additionally contains PMIC (with two LDO regulators) and Fuel Gauge.
-+
-+
-+Required properties:
-+- compatible : Must be "maxim,max14577" or "maxim,max77836".
-+- reg : I2C slave address for the max14577 chip (0x25 for max14577/max77836)
-+- interrupts : IRQ line for the chip.
-+- interrupt-parent :  The parent interrupt controller.
-+
-+
-+Optional nodes:
-+- max14577-muic/max77836-muic :
-+	Node used only by extcon consumers.
-+	Required properties:
-+		- compatible : "maxim,max14577-muic" or "maxim,max77836-muic"
-+
-+- regulators :
-+	Required properties:
-+		- compatible : "maxim,max14577-regulator"
-+			or "maxim,max77836-regulator"
-+
-+	May contain a sub-node per regulator from the list below. Each
-+	sub-node should contain the constraints and initialization information
-+	for that regulator. See regulator.txt for a description of standard
-+	properties for these sub-nodes.
-+
-+	List of valid regulator names:
-+	- for max14577: CHARGER, SAFEOUT.
-+	- for max77836: CHARGER, SAFEOUT, LDO1, LDO2.
-+
-+	The SAFEOUT is a fixed voltage regulator so there is no need to specify
-+	voltages for it.
-+
-+ - charger :
-+	Required properties:
-+		- compatible : "maxim,max14577-charger"
-+			or "maxim,max77836-charger"
-+		- maxim,fast-charge-timer : Timer in hours to trigger the
-+			INT3/MBCCHGERR interrupt; Valid values:
-+			- 5, 6 or 7 (hours),
-+			- 0 to disable.
-+		- maxim,fast-charge-uamp : Current in uA for Fast Charge;
-+			Valid values:
-+			- for max14577: 90000 - 950000;
-+			- for max77836: 45000 - 475000;
-+		- maxim,eoc-uamp : Current in uA for End-Of-Charge mode;
-+			Valid values:
-+			- for max14577: 50000 - 200000;
-+			- for max77836: 5000 - 100000;
-+		- maxim,ovp-uvolt : OverVoltage Protection Threshold in uV;
-+			In an overvoltage condition, INT asserts and charging
-+			stops. Valid values:
-+			- 6000000, 6500000, 7000000, 7500000;
-+		- maxim,constant-uvolt : Battery Constant Voltage in uV;
-+			Valid values:
-+			- 4000000 - 4280000 (step by 20000);
-+			- 4350000;
-+
-+
-+Example:
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+max14577@25 {
-+	compatible = "maxim,max14577";
-+	reg = <0x25>;
-+	interrupt-parent = <&gpx1>;
-+	interrupts = <5 IRQ_TYPE_NONE>;
-+
-+	muic: max14577-muic {
-+		compatible = "maxim,max14577-muic";
-+	};
-+
-+	regulators {
-+		compatible = "maxim,max14577-regulator";
-+
-+		SAFEOUT {
-+			regulator-name = "SAFEOUT";
-+		};
-+		CHARGER {
-+			regulator-name = "CHARGER";
-+			regulator-min-microamp = <90000>;
-+			regulator-max-microamp = <950000>;
-+			regulator-boot-on;
-+		};
-+	};
-+
-+	charger {
-+		compatible = "maxim,max14577-charger";
-+
-+		maxim,fast-charge-timer = <6>;
-+		maxim,constant-uvolt = <4350000>;
-+		maxim,fast-charge-uamp = <450000>;
-+		maxim,eoc-uamp = <50000>;
-+		maxim,ovp-uvolt = <6500000>;
-+	};
-+};
-+
-+
-+max77836@25 {
-+	compatible = "maxim,max77836";
-+	reg = <0x25>;
-+	interrupt-parent = <&gpx1>;
-+	interrupts = <5 IRQ_TYPE_NONE>;
-+
-+	muic: max77836-muic {
-+		compatible = "maxim,max77836-muic";
-+	};
-+
-+	regulators {
-+		compatible = "maxim,max77836-regulator";
-+
-+		SAFEOUT {
-+			regulator-name = "SAFEOUT";
-+		};
-+		CHARGER {
-+			regulator-name = "CHARGER";
-+			regulator-min-microamp = <90000>;
-+			regulator-max-microamp = <950000>;
-+			regulator-boot-on;
-+		};
-+		LDO1 {
-+			regulator-name = "LDO1";
-+			regulator-min-microvolt = <2700000>;
-+			regulator-max-microvolt = <2700000>;
-+		};
-+		LDO2 {
-+			regulator-name = "LDO2";
-+			regulator-min-microvolt = <800000>;
-+			regulator-max-microvolt = <3950000>;
-+		};
-+	};
-+
-+	charger {
-+		compatible = "maxim,max77836-charger";
-+
-+		maxim,fast-charge-timer = <6>;
-+		maxim,constant-uvolt = <4350000>;
-+		maxim,fast-charge-uamp = <225000>;
-+		maxim,eoc-uamp = <7500>;
-+		maxim,ovp-uvolt = <6500000>;
-+	};
-+};
--- 
-1.7.9.5
+> I think the tricky part is when a driver for "renesas,i2c-r8a7790" is updated
+> with a new feature for r8a7790, which doesn't necessarily exist in r8a7791.
+> Then the compatible entry above will cause breakage.
+
+If the driver is updated in that way, then it MUST introduce an r8a7791
+compatible entry and make sure the new feature is only used on r8a7790.
+Otherwise it is a bug. If this is adhered, we won't have a breakage
+because the specific entry (here r8a7791) always comes first. Or?
+
+
+--3Pql8miugIZX0722
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTAdQEAAoJEBQN5MwUoCm2inQQAKPAf/ZOehERrp3k9klzMdKS
+3TfVjm6akOQ55VXdq8Un4cCauBK+6U5y33wiK9E1B45SQ5FT1KNE72fas93skrAf
+grhhNMVLavqwjCZGL0HpcZVgPvbtfwXE/qQw8GD58RZUi6baHWZnJC1Y3MVnKV1B
+mSNPbv8j53IUGUopP3fx7aJdrJfo/BuV83jgUa4r8P+lBkJedWO2CTLkyo72N+1B
+KQicq3X0JVUtm9ucWoZaM8A3Wo8IFEd6+fIx6rXo2KTayqS8dOe+DDP2e/ngfjBR
+higg6JlCaq3vPgAEpzLxI4KsZ+Ai4InNcZzIyuZLhOmOSy9iXOsgbmg3wgToIhuk
+7JaJobCM5V1EVk6GUfKeNg53J/Y4+1CgrGovXKKmYppvkEM/K2orClPevfHfLz3i
+JNnuylTvKO6fLC+9iUOQbDEHyw2ZfrR8Pqa2No7FsvR+rJMf4eRfqBrH/5FsQy6k
+3d+ymLq2SdNKlESJWKfne4HHOMvYX/2B7af6mrt4UhSnU55ggLm8bTlUPlWnjpwZ
+BGESkp43S5Q5ZLAAUj0Ed5IHjExLXU82RaKX1+GaT6Yk+ck9ORLnV1cVmfPusvsr
+FJVt/oYt0CiBrM7GIUMohHVcfs3GUC3PSQT2npXpUfxfnzY7d9IqI5sr95+Xq7XS
+rSia99pebejlwg8400bA
+=LLiB
+-----END PGP SIGNATURE-----
+
+--3Pql8miugIZX0722--
