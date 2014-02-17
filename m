@@ -1,56 +1,29 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [RFC/PATCH 0/3] Add devicetree scanning for randomness
-Date: Mon, 17 Feb 2014 13:23:12 -0500
-Message-ID: <20140217182312.GV7862@titan.lakedaemon.net>
-References: <1392168805-14200-1-git-send-email-lauraa@codeaurora.org>
- <201402121251.06280.arnd@arndb.de>
- <20140217155419.682F7C401D4@trevor.secretlab.ca>
- <1418981.0py7JxXCp8@wuerfel>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH] net: add init-regs for of_phy support
+Date: Mon, 17 Feb 2014 14:11:41 -0500 (EST)
+Message-ID: <20140217.141141.1113256967002583742.davem@davemloft.net>
+References: <CAGVrzcYbw5xLj-gwcup5i0gBdKDDGdyy5wAaEBp7m2E7f2bytg@mail.gmail.com>
+	<53024A62.4050208@codethink.co.uk>
+	<20140217180415.GD19308@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1418981.0py7JxXCp8@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, devicetree@vger.kernel.org, Laura Abbott <lauraa@codeaurora.org>, keescook@chromium.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20140217180415.GD19308@e106331-lin.cambridge.arm.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: mark.rutland@arm.com
+Cc: ben.dooks@codethink.co.uk, f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 17, 2014 at 05:13:07PM +0100, Arnd Bergmann wrote:
-> On Monday 17 February 2014 15:54:19 Grant Likely wrote:
-> > On Wed, 12 Feb 2014 11:20:00 -0700, Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
-> > > On Wed, Feb 12, 2014 at 12:45:54PM -0500, Jason Cooper wrote:
-> > > 
-> > > > The bootloader would then load this file into ram, and pass the
-> > > > address/size to the kernel either via dt, or commandline.  kaslr (run in
-> > > > the decompressor) would consume some of this randomness, and then
-> > > > random.c would consume the rest in a non-crediting initialization.
-> > > 
-> > > Sure is a neat idea, but I think in general it would probably be smart
-> > > to include the entire FDT blob in the early random pool, that way you
-> > > get MACs and other machine unique data too.
-> > 
-> > I applied a patch that did exactly that (109b623629), and then reverted
-> > it (b920ecc82) shortly thereafter because add_device_randomness() is
-> > a rather slow function and FDTs can get large. I'd like to see someone
-> > do a reasonable analysis on the cost of using an FDT for randomness
-> > before I reapply a patch doing something similar. An awful lot of the
-> > FDT data is not very random, but there are certainly portions of it that
-> > are appropriate for the random pool.
+From: Mark Rutland <mark.rutland@arm.com>
+Date: Mon, 17 Feb 2014 18:04:15 +0000
+
+> If you update the DTs to describe the hardware to the kernel, then the
+> kernel can later be updated to handle specific PHYs better. That cannot
+> happen if you try to hide information from the kernel by giving it a
+> list of arbitrary magic numbers.
 > 
-> Could we use a faster hash function that scans the entire device tree and
-> then just feed the output of that into add_device_randomness? We probably
-> can't expect that there is a lot of entropy in the DT blob, so the
-> result wouldn't be all that different in terms of quality of the random
-> seed.
+> Drivers are the place such things should go. The DT is not a place for
+> shoddy bytecode.
 
-I think it would be easier to identify the few attributes that differ
-from board to board (mac address, serial number, etc), and differ from
-boot to boot (random-seed, timestamp) and just extract and feed those
-in.
-
-We already have the fdt parsing code in the decompressor...
-
-thx,
-
-Jason.
++1
