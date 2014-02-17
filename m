@@ -1,107 +1,92 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Patch v5 1/2] dmaengine: add Qualcomm BAM dma driver
-Date: Mon, 17 Feb 2014 14:24:59 +0530
-Message-ID: <20140217085458.GB10628@intel.com>
-References: <1391546556-27702-1-git-send-email-agross@codeaurora.org>
- <1391546556-27702-2-git-send-email-agross@codeaurora.org>
- <20140211173048.GP10628@intel.com>
- <20140211205852.GA10744@qualcomm.com>
+From: Jingchang Lu <jingchang.lu@freescale.com>
+Subject: RE: [PATCHv11 2/2] dma: Add Freescale eDMA engine driver support
+Date: Mon, 17 Feb 2014 09:08:00 +0000
+Message-ID: <de84e857254848fb86dfcffa65617f47@BL2PR03MB467.namprd03.prod.outlook.com>
+References: <1390209831-15679-1-git-send-email-b35083@freescale.com>
+ <ca19105670be4af882ed72d3e004a6c7@BLUPR03MB472.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140211205852.GA10744-zC7DfRvBq/JWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ca19105670be4af882ed72d3e004a6c7@BLUPR03MB472.namprd03.prod.outlook.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "vinod.koul@intel.com" <vinod.koul@intel.com>
+Cc: "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "arnd@arndb.de" <arnd@arndb.de>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jingchang Lu <jingchang.lu@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 11, 2014 at 02:58:52PM -0600, Andy Gross wrote:
-> On Tue, Feb 11, 2014 at 11:00:48PM +0530, Vinod Koul wrote:
-> > On Tue, Feb 04, 2014 at 02:42:35PM -0600, Andy Gross wrote:
-> > > Add the DMA engine driver for the QCOM Bus Access Manager (BAM) DMA controller
-> > > found in the MSM 8x74 platforms.
-> > > 
-> 
-> > > +/**
-> > > + * bam_alloc_chan - Allocate channel resources for DMA channel.
-> > > + * @chan: specified channel
-> > > + *
-> > > + * This function allocates the FIFO descriptor memory
-> > > + */
-> > > +static int bam_alloc_chan(struct dma_chan *chan)
-> > > +{
-> > > +	struct bam_chan *bchan = to_bam_chan(chan);
-> > > +	struct bam_device *bdev = bchan->bdev;
-> > > +
-> > > +	/* allocate FIFO descriptor space, but only if necessary */
-> > > +	if (!bchan->fifo_virt) {
-> > > +		bchan->fifo_virt = dma_alloc_writecombine(bdev->dev,
-> > > +					BAM_DESC_FIFO_SIZE, &bchan->fifo_phys,
-> > > +					GFP_KERNEL);
-> > > +
-> > > +		if (!bchan->fifo_virt) {
-> > > +			dev_err(bdev->dev, "Failed to allocate desc fifo\n");
-> > > +			return -ENOMEM;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	return BAM_DESC_FIFO_SIZE;
-> > But you cna have SW descriptors more than HW ones and issue new ones once HW is
-> > done with them. Why tie the limit to what HW supports and not create a better
-> > driver?
-> 
-> Given that the virt-dma only allows me to have one outstanding transaction that
-> consumes the fifo, and that I allocate descriptors from kzalloc, this would be
-> as many as you can get until you go OOM.
-well you can update virt-dma to queue up multiple descriptors to HW is thats
-supported :)
-> 
-> The slave_sg() doesn't pull from a pool of descriptors.  It uses kzalloc.  So
-> what value should I use for return value?  Most drivers use 1.
-Lots do 0 as they dont allocate descriptor here, they allocate when the
-.prep_xxx call gets invoked, which is what I suspect from you case too.
-
-> 
-> [....]
-> 
-> > > +static void bam_slave_config(struct bam_chan *bchan,
-> > > +		struct dma_slave_config *cfg)
-> > > +{
-> > > +	struct bam_device *bdev = bchan->bdev;
-> > > +	u32 maxburst;
-> > > +
-> > > +	if (bchan->slave.direction == DMA_DEV_TO_MEM)
-> > > +		maxburst = bchan->slave.src_maxburst = cfg->src_maxburst;
-> > > +	else
-> > > +		maxburst = bchan->slave.dst_maxburst = cfg->dst_maxburst;
-> > can you remove usage of slave.direction have save both. I am going to remove
-> > this member...
-> > 
-> 
-> Yes. no problem.
-> 
-> [....]
-> 
-> > > +
-> > > +
-> > > +	/* allocate enough room to accomodate the number of entries */
-> > > +	async_desc = kzalloc(sizeof(*async_desc) +
-> > > +			(sg_len * sizeof(struct bam_desc_hw)), GFP_NOWAIT);
-> > this seems to assume that each sg entry length will not exceed the HW capablity.
-> > Does engine support any length descriptor, if not you may want to split to
-> > multiple.
-> 
-> Isn't this what the dma_set_max_seg_size supposed to fix?  The client is not
-> supposed to send segments larger than the max segment you can take.  If that is
-> true, then I have no issues.
-Thats is true too, but do we want to limit this in driver ? This is more of a SW
-limitation of who breaks up. for some like audio it makese sense but other not
-too sure...
-
--- 
-~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksIFZpbm9kLA0KDQogICAgQ291bGQgeW91IHBsZWFzZSBoZWxwIG1lcmdlIHRoaXMgcGF0Y2g/
+IFdlIGFyZSBoYXZpbmcgc29tZSBvdGhlciB1cHN0cmVhbWluZw0KcGF0Y2hlcyB1c2luZyB0aGUg
+ZG1hIGZ1bmN0aW9uYWxpdHkgcGVuZGluZyB0aGUgYWNjZXB0YW5jZSBvZiB0aGUgZURNQSBkcml2
+ZXIuDQogICAgTWFueSB0aGFua3MhDQoNCkJlc3QgUmVnYXJkcywNCkppbmdjaGFuZw0KDQo+IC0t
+LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEx1IEppbmdjaGFuZy1CMzUwODMNCj4g
+U2VudDogTW9uZGF5LCBKYW51YXJ5IDI3LCAyMDE0IDE6MjAgUE0NCj4gVG86IEx1IEppbmdjaGFu
+Zy1CMzUwODM7IHZpbm9kLmtvdWxAaW50ZWwuY29tDQo+IENjOiBkYW4uai53aWxsaWFtc0BpbnRl
+bC5jb207IGFybmRAYXJuZGIuZGU7IHNoYXduLmd1b0BsaW5hcm8ub3JnOw0KPiBwYXdlbC5tb2xs
+QGFybS5jb207IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzd2FycmVuQHd3d2RvdG9yZy5vcmc7IGxp
+bnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
+ZnJhZGVhZC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBXYW5nIEh1YW4tQjE4
+OTY1DQo+IFN1YmplY3Q6IFJFOiBbUEFUQ0h2MTEgMi8yXSBkbWE6IEFkZCBGcmVlc2NhbGUgZURN
+QSBlbmdpbmUgZHJpdmVyIHN1cHBvcnQNCj4gDQo+IEhpLCBWaW5vZCwNCj4gDQo+ICAgTGV0IG1l
+IGdpdmUgc29tZSBtb3JlIGV4cGxhbmF0aW9uIG9uIHRoZSBlRE1BIGVuZ2luZSBwYXVzZSBhbmQN
+Cj4gdGVybWluYXRpb24gaGVyZToNCj4gVGhlIGVETUEgZW5naW5lIGlzIGEgcmVxdWVzdC1kcml2
+ZW4gY29udHJvbGxlciwgaXQgbWFuYWdlIGFsbCBjaGFubmVscyBpbg0KPiBvbmUgZW5naW5lIGFu
+ZCBzY2hlZHVsZSB0aGVtIHRvIHBlcmZvcm0gZWFjaCBvbmUncyB0cmFuc2ZlciB3aGVuIG9uZSdz
+DQo+IGRtYSByZXF1ZXN0IGFycml2ZS4NCj4gV2hlbiBhIGRtYSByZXF1ZXN0IG9mIGEgc3BlY2lm
+aWMgY2hhbm5lbCBpcyByZWNlaXZlZCwgdGhlIGNoYW5uZWwncw0KPiBhcHByb3ByaWF0ZSBUQ0Qg
+UGFyYW1ldGVyIGNvbnRlbnRzIGFyZSBsb2FkZWQgaW50byB0aGUgZURNQSBlbmdpbmUsIGFuZA0K
+PiB0aGUgYXBwcm9wcmlhdGUgcmVhZHMgYW5kIHdyaXRlcyBQZXJmb3JtIHVudGlsIHRoZSBtaW5v
+ciBieXRlIHRyYW5zZmVyDQo+IGNvdW50IGhhcyB0cmFuc2ZlcnJlZCwgdGhlIG51bWJlciBvZiBi
+eXRlcyB0byB0cmFuc2ZlciBwZXIgcmVxdWVzdCBpcw0KPiBkZXRlcm1pbmVkIGJ5IHRoZSBzYWx2
+ZSdzIGNoYXJhY3RlcmlzdGljcywgc3VjaCBhcyB0aGUgRklGTyBzaXplLCBhbmQgdGhlDQo+IGRt
+YSByZXF1ZXN0IGNvbmRpdGlvbiBpcyBhbHNvIGRldGVybWluZWQgYnkgc3BlY2lmaWMgc2xhdmUs
+IHN1Y2ggYXMgRklGTw0KPiBlbXB0eS4NCj4gQW5kIHRvIHRoZSB0cmFuc2ZlciBhIGJ1bmNoIG9m
+IGRhdGEgbmVlZCBtYW55IGRtYSByZXF1ZXN0cy4NCj4gICBTbyBpZiB0aGUgZG1hIHJlcXVlc3Qg
+ZW5hYmxlIGJpdCBvZiBhIGNoYW5uZWwgaXMgY2xlYXJlZCwgdGhlcmUgd2lsbCBiZQ0KPiBubyBm
+dXJ0aGVyIGRtYSBSZXF1ZXN0IHJlY2VpdmVkIGJ5IHRoZSBlRE1BIGVuZ2luZSwgdGh1cyB0aGUg
+Y2hhbm5lbCB3aWxsDQo+IG5ldmVyIGJlIHNjaGVkdWxlZCB0byBydW4gYnkgdGhlIGVETUEgZW5n
+aW5lLCB0aGUgY2hhbm5lbCBpcyBwYXVzZWQsDQo+IGhhbHRlZCwgYWxzbyBhcyBzdG9wcGVkLiBJ
+ZiB0aGUgY2hhbm5lbCBuZWVkIHRvIHRyYW5zZmVyIHRoZSByZW1haW5lZA0KPiBkYXRhIHdpdGgg
+dGhlIHByZXZpb3VzIHNldHRpbmcsIGp1c3Qgc2V0IHRoZSBkbWEgcmVxdWVzdCBlbmFibGUgYml0
+LCB0aGUNCj4gdHJhbnNmZXIgd2lsbCBjb21wbGV0ZSB3aXRoIHNsYXZlJ3MgZG1hIHJlcXVlc3Qu
+KHJlc3VtZSkgSWYgdGhlDQo+IHBhcmFtZXRlcnMgbmVlZCBiZSBjaGFuZ2VkLCBjb3JyZXNwb25k
+aW5nIHJlZ2lzdGVyIHBhcmFtZXRlcnMgY2FuIGJlDQo+IHJlcHJvZ3JhbW1lZCwgYWZ0ZXIgYWxs
+IGlzIG9rLCB0aGUgZG1hIHJlcXVlc3QgZW5hYmxlIGJpdCBjYW4gYmUgc2V0IHRvDQo+IGVuYWJs
+ZSBhIG5ldyBkbWEgdHJhbnNmZXIuKHRlcm1pbmF0ZSkNCj4gICBTbyBpcyB0aGlzIG9rIGFuZCBj
+b3VsZCBpdCBiZSBtZXJnZWQsIHRoYW5rcyENCj4gDQo+IA0KPiBCZXN0IFJlZ2FyZHMsDQo+IEpp
+bmdjaGFuZw0KPiANCj4gDQo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiBGcm9t
+OiBKaW5nY2hhbmcgTHUgW21haWx0bzpiMzUwODNAZnJlZXNjYWxlLmNvbV0NCj4gPiBTZW50OiBN
+b25kYXksIEphbnVhcnkgMjAsIDIwMTQgNToyNCBQTQ0KPiA+IFRvOiB2aW5vZC5rb3VsQGludGVs
+LmNvbQ0KPiA+IENjOiBkYW4uai53aWxsaWFtc0BpbnRlbC5jb207IGFybmRAYXJuZGIuZGU7IHNo
+YXduLmd1b0BsaW5hcm8ub3JnOw0KPiA+IHBhd2VsLm1vbGxAYXJtLmNvbTsgbWFyay5ydXRsYW5k
+QGFybS5jb207IHN3YXJyZW5Ad3d3ZG90b3JnLm9yZzsgbGludXgtDQo+ID4ga2VybmVsQHZnZXIu
+a2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+IGRl
+dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBMdSBKaW5nY2hhbmctQjM1MDgzOyBXYW5nIEh1YW4t
+QjE4OTY1DQo+ID4gU3ViamVjdDogW1BBVENIdjExIDIvMl0gZG1hOiBBZGQgRnJlZXNjYWxlIGVE
+TUEgZW5naW5lIGRyaXZlciBzdXBwb3J0DQo+ID4NCj4gPiBBZGQgRnJlZXNjYWxlIGVuaGFuY2Vk
+IGRpcmVjdCBtZW1vcnkoZURNQSkgY29udHJvbGxlciBzdXBwb3J0Lg0KPiA+IFRoaXMgbW9kdWxl
+IGNhbiBiZSBmb3VuZCBvbiBWeWJyaWQgYW5kIExTLTEgU29Dcy4NCj4gPg0KPiA+IFNpZ25lZC1v
+ZmYtYnk6IEFsaXNvbiBXYW5nIDxiMTg5NjVAZnJlZXNjYWxlLmNvbT4NCj4gPiBTaWduZWQtb2Zm
+LWJ5OiBKaW5nY2hhbmcgTHUgPGIzNTA4M0BmcmVlc2NhbGUuY29tPg0KPiA+IEFja2VkLWJ5OiBB
+cm5kIEJlcmdtYW5uIDxhcm5kQGFybmRiLmRlPg0KPiA+IC0tLQ0KPiA+IGNoYW5nZXMgaW4gdjEx
+Og0KPiA+ICBBZGQgZG1hIGRldmljZV9zbGF2ZV9jYXBzIGRlZmluaXRpb24uDQo+ID4NCj4gPiBj
+aGFuZ2VzIGluIHYxMDoNCj4gPiAgZGVmaW5lIGZzbF9lZG1hX211dGV4IGluIGZzbF9lZG1hX2Vu
+Z2luZSBpbnN0ZWFkIG9mIGdsb2JhbC4NCj4gPiAgbWlub3IgY2hhbmdlcyBvZiBiaW5kaW5nIGRl
+c2NyaXB0aW9uLg0KPiA+DQo+ID4gY2hhbmdlcyBpbiB2OToNCj4gPiAgZGVmaW5lIGVuZGlhbidz
+IG9wZXJhdGluZyBmdW5jdGlvbnMgaW5zdGVhZCBvZiBtYWNybyBkZWZpbml0aW9uLg0KPiA+ICBy
+ZW1vdmUgdGhlIGZpbHRlciBmdW5jdGlvbiwgdXNpbmcgZG1hX2dldF9zbGF2ZV9jaGFubmVsIGlu
+c3RlYWQuDQo+ID4NCj4gPiBjaGFuZ2VzIGluIHY4Og0KPiA+ICBjaGFuZ2UgdGhlIGVkbWEgZHJp
+dmVyIGFjY29yZGluZyBlRE1BIGR0cyBjaGFuZ2UuDQo+ID4gIGFkZCBiaWctZW5kaWFuIGFuZCBs
+aXR0bGUtZW5kaWFuIGhhbmRsaW5nLg0KPiA+DQo+ID4gIG5vIGNoYW5nZXMgaW4gdjQgfiB2Ny4N
+Cj4gPg0KPiA+ICBjaGFuZ2VzIGluIHYzOg0KPiA+ICAgYWRkIHZmNjEwIGVkbWEgZHQtYmluZGlu
+Z3MgbmFtZXNwYWNlIHdpdGggcHJlZml4IFZGNjEwXyouDQo+ID4NCj4gPiAgY2hhbmdlcyBpbiB2
+MjoNCj4gPiAgIHVzaW5nIGdlbmVyaWMgZG1hLWNoYW5uZWxzIHByb3BlcnR5IGluc3RlYWQgb2Yg
+ZnNsLGRtYS1jaGFubmVscy4NCj4gPg0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZG1hL2ZzbC1lZG1hLnR4dCB8ICA3NiArKw0KPiA+ICBkcml2ZXJzL2RtYS9LY29uZmln
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxMCArDQo+ID4gIGRyaXZlcnMvZG1h
+L01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsNCj4gPiAgZHJp
+dmVycy9kbWEvZnNsLWVkbWEuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCA5NzUNCj4g
+PiArKysrKysrKysrKysrKysrKysrKysNCj4gPiAgNCBmaWxlcyBjaGFuZ2VkLCAxMDYyIGluc2Vy
+dGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kbWEvZnNsLWVkbWEudHh0DQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
+ZXJzL2RtYS9mc2wtZWRtYS5jDQoNCg==
