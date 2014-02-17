@@ -1,70 +1,87 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 0/6] Marvell Armada 375 and 38x clocks drivers
-Date: Sun, 16 Feb 2014 21:20:22 -0500
-Message-ID: <20140217022022.GF7862@titan.lakedaemon.net>
-References: <1392053569-28037-1-git-send-email-gregory.clement@free-electrons.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH v4 07/13] ARM: dts: mvebu: Add a new set of registers
+ to the PMSU node
+Date: Sun, 16 Feb 2014 21:57:05 -0500
+Message-ID: <20140217025705.GJ7862@titan.lakedaemon.net>
+References: <1392312816-17657-1-git-send-email-gregory.clement@free-electrons.com>
+ <1392312816-17657-8-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1392053569-28037-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1392312816-17657-8-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, linux-pm@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 10, 2014 at 06:32:43PM +0100, Gregory CLEMENT wrote:
-> Hi Mike,
+On Thu, Feb 13, 2014 at 06:33:30PM +0100, Gregory CLEMENT wrote:
+> The Power Management Unit Service block also controls the Coherency
+> Fabric subsystem. This new set of registers is needed for the CPU idle
+> implementation for the Armada XP, it allows to enter in a deep CPU
+> idle state where the Coherency Fabric and the L2 cache are powerdown.
 > 
-> Here are patches that add the clocks drivers for two new Marvell ARM
-> SOCs that belong to the mach-mvebu family: the Armada 375 and the
-> Armada 380/385. They are based on Cortex-A9 CPU cores, and share a
-> number of peripherals with their predecessors in the mach-mvebu
-> family.
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> ---
+>  Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt | 12 +++++++-----
+>  arch/arm/boot/dts/armada-xp.dtsi                             |  2 +-
+>  2 files changed, 8 insertions(+), 6 deletions(-)
 > 
-> The drivers added are similar to the one already used for the other
-> SoCs of this family, as usual only the data are different the logic
-> remains the same ans allow us to use the common part.
-> 
-> The core support (arch/arm/mach-mvebu) for these SOCs have just been
-> posted, and we're aiming at having this merged for 3.15 if possible.
-> 
-> Thanks,
-> 
-> Gregory
-> 
-> Gregory CLEMENT (4):
->   clk: mvebu: add clock support for Armada 375
->   dt: Update binding information for mvebu core clocks with Armada 375
->   dt: Update binding information for mvebu gating clocks with Armada 375
->   clk: mvebu: add clock support for Armada 380/385
-> 
-> Thomas Petazzoni (2):
->   dt: Update binding information for mvebu core clocks with Armada
->     380/385
->   dt: Update binding information for mvebu gating clocks with Armada
->     380/385
-> 
->  .../devicetree/bindings/clock/mvebu-core-clock.txt |  14 ++
->  .../bindings/clock/mvebu-gated-clock.txt           |  65 +++++++-
->  drivers/clk/mvebu/Kconfig                          |   8 +
->  drivers/clk/mvebu/Makefile                         |   2 +
->  drivers/clk/mvebu/armada-375.c                     | 184 +++++++++++++++++++++
->  drivers/clk/mvebu/armada-38x.c                     | 167 +++++++++++++++++++
->  6 files changed, 436 insertions(+), 4 deletions(-)
->  create mode 100644 drivers/clk/mvebu/armada-375.c
->  create mode 100644 drivers/clk/mvebu/armada-38x.c
+> diff --git a/Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt b/Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt
+> index 926b4d6aae7e..8a9db0c32ba5 100644
+> --- a/Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt
+> +++ b/Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt
+> @@ -7,14 +7,16 @@ Required properties:
+>  - compatible: "marvell,armada-370-xp-pmsu"
+>  
+>  - reg: Should contain PMSU registers location and length. First pair
+> -  for the per-CPU SW Reset Control registers, second pair for the
+> -  Power Management Service Unit.
+> +  for the per-CPU SW Reset Control registers, second pair for the CPU
+> +  Power Management Service Unit registers, third pair for the Fabric Power
+> +  Management Service Unit registers.
 
-Hey guys,
-
-I've tentatively applied this series to mvebu/clk-3xx.  I can't build
-test it until I pull in the core support.  So I'll keep it separate from
-the regular clock driver changes just in case.
+Please mention explicitly that previous versions of this binding only
+specified the first two registers.  I haven't dug through the rest of
+this series yet, but I assume the driver will behave sanely when
+encountering an old dtb w/o the third reg entry?
 
 thx,
 
 Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+>  
+>  Example:
+>  
+> -armada-370-xp-pmsu@d0022000 {
+> +armada-370-xp-pmsu@22000 {
+>  	compatible = "marvell,armada-370-xp-pmsu";
+> -	reg = <0xd0022100 0x430>,
+> -	      <0xd0020800 0x20>;
+> +	reg = <0x22100 0x430>,
+> +	      <0x20800 0x20>,
+> +	      <0x22000 0x24>;
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
+> index b8b84a22f0f3..f717da4f4d97 100644
+> --- a/arch/arm/boot/dts/armada-xp.dtsi
+> +++ b/arch/arm/boot/dts/armada-xp.dtsi
+> @@ -113,7 +113,7 @@
+>  
+>  			armada-370-xp-pmsu@22000 {
+>  				compatible = "marvell,armada-370-xp-pmsu";
+> -				reg = <0x22100 0x400>, <0x20800 0x20>;
+> +				reg = <0x22100 0x400>, <0x20800 0x20>, <0x22000 0x24>;
+>  			};
+>  
+>  			eth2: ethernet@30000 {
+> -- 
+> 1.8.1.2
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
