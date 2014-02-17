@@ -1,234 +1,665 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH 1/3] mmc: dw_mmc-socfpga: Remove the SOCFPGA specific
- platform for dw_mmc
-Date: Mon, 17 Feb 2014 09:22:42 +0100
-Message-ID: <20140217082242.GD6972@pengutronix.de>
-References: <1392622244-18015-1-git-send-email-dinguyen@altera.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [RFC PATCH] i2c: new bus driver for efm32
+Date: Mon, 17 Feb 2014 09:27:42 +0100
+Message-ID: <20140217082742.GC1844@pengutronix.de>
+References: <1392027598-29015-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1392622244-18015-1-git-send-email-dinguyen@altera.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: dinguyen@altera.com
-Cc: linux-mmc@vger.kernel.org, dinh.linux@gmail.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>
+In-Reply-To: <1392027598-29015-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 17, 2014 at 01:30:42AM -0600, dinguyen@altera.com wrote:
-> From: Dinh Nguyen <dinguyen@altera.com>
-> 
-> It turns now that the only really platform specific code that is needed for
-> SOCFPGA is using the SDMMC_CMD_USE_HOLD_REG in the prepare_command function.
-> Since the Rockchip already has this functionality, re-use the code that is
-> already in dw_mmc-pltfm.c.
-> 
-> Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
-> Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: Seungwon Jeon <tgih.jun@samsung.com>
-> Cc: Jaehoon Chung <jh80.chung@samsung.com>
-> Cc: Chris Ball <chris@printf.net>
+On Mon, Feb 10, 2014 at 11:19:58AM +0100, Uwe Kleine-K=F6nig wrote:
+> This was tested on a EFM32GG-DK3750 devboard that has a temperature
+> sensor and an eeprom on its i2c bus.
+>=20
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+ping
+
+Thanks
+Uwe
+
 > ---
->  drivers/mmc/host/Kconfig          |    8 ---
->  drivers/mmc/host/Makefile         |    1 -
->  drivers/mmc/host/dw_mmc-socfpga.c |  138 -------------------------------------
->  3 files changed, 147 deletions(-)
->  delete mode 100644 drivers/mmc/host/dw_mmc-socfpga.c
-> 
-> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> index 1384f67..82cc34d 100644
-> --- a/drivers/mmc/host/Kconfig
-> +++ b/drivers/mmc/host/Kconfig
-> @@ -580,14 +580,6 @@ config MMC_DW_EXYNOS
->  	  Synopsys DesignWare Memory Card Interface driver. Select this option
->  	  for platforms based on Exynos4 and Exynos5 SoC's.
->  
-> -config MMC_DW_SOCFPGA
-> -	tristate "SOCFPGA specific extensions for Synopsys DW Memory Card Interface"
-> -	depends on MMC_DW && MFD_SYSCON
-> -	select MMC_DW_PLTFM
-> -	help
-> -	  This selects support for Altera SoCFPGA specific extensions to the
-> -	  Synopsys DesignWare Memory Card Interface driver.
-> -
->  config MMC_DW_K3
->  	tristate "K3 specific extensions for Synopsys DW Memory Card Interface"
->  	depends on MMC_DW
-> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-> index 3483b6b..f162f87a0 100644
-> --- a/drivers/mmc/host/Makefile
-> +++ b/drivers/mmc/host/Makefile
-> @@ -43,7 +43,6 @@ obj-$(CONFIG_SDH_BFIN)		+= bfin_sdh.o
->  obj-$(CONFIG_MMC_DW)		+= dw_mmc.o
->  obj-$(CONFIG_MMC_DW_PLTFM)	+= dw_mmc-pltfm.o
->  obj-$(CONFIG_MMC_DW_EXYNOS)	+= dw_mmc-exynos.o
-> -obj-$(CONFIG_MMC_DW_SOCFPGA)	+= dw_mmc-socfpga.o
->  obj-$(CONFIG_MMC_DW_K3)		+= dw_mmc-k3.o
->  obj-$(CONFIG_MMC_DW_PCI)	+= dw_mmc-pci.o
->  obj-$(CONFIG_MMC_SH_MMCIF)	+= sh_mmcif.o
-> diff --git a/drivers/mmc/host/dw_mmc-socfpga.c b/drivers/mmc/host/dw_mmc-socfpga.c
-> deleted file mode 100644
-> index 3e8e53a..0000000
-> --- a/drivers/mmc/host/dw_mmc-socfpga.c
-> +++ /dev/null
-> @@ -1,138 +0,0 @@
-> -/*
-> - * Altera SoCFPGA Specific Extensions for Synopsys DW Multimedia Card Interface
-> - * driver
-> - *
-> - *  Copyright (C) 2012, Samsung Electronics Co., Ltd.
-> - *  Copyright (C) 2013 Altera Corporation
-> - *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License as published by
-> - * the Free Software Foundation; either version 2 of the License, or
-> - * (at your option) any later version.
-> - *
-> - * Taken from dw_mmc-exynos.c
-> - */
-> -#include <linux/clk.h>
-> -#include <linux/mfd/syscon.h>
-> -#include <linux/mmc/host.h>
-> -#include <linux/mmc/dw_mmc.h>
-> -#include <linux/module.h>
-> -#include <linux/of.h>
-> -#include <linux/platform_device.h>
-> -#include <linux/regmap.h>
-> -
-> -#include "dw_mmc.h"
-> -#include "dw_mmc-pltfm.h"
-> -
-> -#define SYSMGR_SDMMCGRP_CTRL_OFFSET		0x108
-> -#define DRV_CLK_PHASE_SHIFT_SEL_MASK	0x7
-> -#define SYSMGR_SDMMC_CTRL_SET(smplsel, drvsel)          \
-> -	((((smplsel) & 0x7) << 3) | (((drvsel) & 0x7) << 0))
-> -
-> -/* SOCFPGA implementation specific driver private data */
-> -struct dw_mci_socfpga_priv_data {
-> -	u8	ciu_div; /* card interface unit divisor */
-> -	u32	hs_timing; /* bitmask for CIU clock phase shift */
-> -	struct regmap   *sysreg; /* regmap for system manager register */
-> -};
-> -
-> -static int dw_mci_socfpga_priv_init(struct dw_mci *host)
-> -{
-> -	return 0;
-> -}
-> -
-> -static int dw_mci_socfpga_setup_clock(struct dw_mci *host)
-> -{
-> -	struct dw_mci_socfpga_priv_data *priv = host->priv;
-> -
-> -	clk_disable_unprepare(host->ciu_clk);
-> -	regmap_write(priv->sysreg, SYSMGR_SDMMCGRP_CTRL_OFFSET,
-> -		priv->hs_timing);
-> -	clk_prepare_enable(host->ciu_clk);
-> -
-> -	host->bus_hz /= (priv->ciu_div + 1);
-> -	return 0;
-> -}
-> -
-> -static void dw_mci_socfpga_prepare_command(struct dw_mci *host, u32 *cmdr)
-> -{
-> -	struct dw_mci_socfpga_priv_data *priv = host->priv;
-> -
-> -	if (priv->hs_timing & DRV_CLK_PHASE_SHIFT_SEL_MASK)
-> -		*cmdr |= SDMMC_CMD_USE_HOLD_REG;
-> -}
-> -
-> -static int dw_mci_socfpga_parse_dt(struct dw_mci *host)
-> -{
-> -	struct dw_mci_socfpga_priv_data *priv;
-> -	struct device_node *np = host->dev->of_node;
-> -	u32 timing[2];
-> -	u32 div = 0;
-> -	int ret;
-> -
-> -	priv = devm_kzalloc(host->dev, sizeof(*priv), GFP_KERNEL);
-> -	if (!priv) {
-> -		dev_err(host->dev, "mem alloc failed for private data\n");
-> -		return -ENOMEM;
-> -	}
-> -
-> -	priv->sysreg = syscon_regmap_lookup_by_compatible("altr,sys-mgr");
-> -	if (IS_ERR(priv->sysreg)) {
-> -		dev_err(host->dev, "regmap for altr,sys-mgr lookup failed.\n");
-> -		return PTR_ERR(priv->sysreg);
-> -	}
-> -
-> -	ret = of_property_read_u32(np, "altr,dw-mshc-ciu-div", &div);
-> -	if (ret)
-> -		dev_info(host->dev, "No dw-mshc-ciu-div specified, assuming 1");
-> -	priv->ciu_div = div;
-> -
-> -	ret = of_property_read_u32_array(np,
-> -			"altr,dw-mshc-sdr-timing", timing, 2);
-> -	if (ret)
-> -		return ret;
-> -
-> -	priv->hs_timing = SYSMGR_SDMMC_CTRL_SET(timing[0], timing[1]);
-> -	host->priv = priv;
-> -	return 0;
-> -}
-> -
-> -static const struct dw_mci_drv_data socfpga_drv_data = {
-> -	.init			= dw_mci_socfpga_priv_init,
-> -	.setup_clock		= dw_mci_socfpga_setup_clock,
-> -	.prepare_command	= dw_mci_socfpga_prepare_command,
-> -	.parse_dt		= dw_mci_socfpga_parse_dt,
-> -};
-> -
-> -static const struct of_device_id dw_mci_socfpga_match[] = {
-> -	{ .compatible = "altr,socfpga-dw-mshc",
-> -			.data = &socfpga_drv_data, },
-> -	{},
-> -};
-> -MODULE_DEVICE_TABLE(of, dw_mci_socfpga_match);
-> -
-> -static int dw_mci_socfpga_probe(struct platform_device *pdev)
-> -{
-> -	const struct dw_mci_drv_data *drv_data;
-> -	const struct of_device_id *match;
-> -
-> -	match = of_match_node(dw_mci_socfpga_match, pdev->dev.of_node);
-> -	drv_data = match->data;
-> -	return dw_mci_pltfm_register(pdev, drv_data);
-> -}
-> -
-> -static struct platform_driver dw_mci_socfpga_pltfm_driver = {
-> -	.probe		= dw_mci_socfpga_probe,
-> -	.remove		= __exit_p(dw_mci_pltfm_remove),
-> -	.driver		= {
-> -		.name		= "dwmmc_socfpga",
-> -		.of_match_table	= dw_mci_socfpga_match,
-> -		.pm		= &dw_mci_pltfm_pmops,
-> -	},
-> -};
-> -
-> -module_platform_driver(dw_mci_socfpga_pltfm_driver);
-> -
-> -MODULE_DESCRIPTION("Altera SOCFPGA Specific DW-MSHC Driver Extension");
-> -MODULE_LICENSE("GPL v2");
-> -MODULE_ALIAS("platform:dwmmc-socfpga");
-> -- 
+> Hello,
+>=20
+> there are two places marked with a triple-X where I don't know if I d=
+id
+> it right. The one is "Do I need to protect from .master_xfer being
+> called again before the previous call returned?" The other is what to
+> return in the .functionality callback.
+>=20
+> Also note there is a matching entry in MAINTAINERS for "ARM/ENERGY MI=
+CRO
+> (SILICON LABS) EFM32 SUPPORT".
+>=20
+> Best regards
+> Uwe
+>=20
+>  drivers/i2c/busses/Kconfig              |   7 +
+>  drivers/i2c/busses/Makefile             |   1 +
+>  drivers/i2c/busses/i2c-efm32.c          | 527 ++++++++++++++++++++++=
+++++++++++
+>  include/linux/platform_data/efm32-i2c.h |  15 +
+>  4 files changed, 550 insertions(+)
+>  create mode 100644 drivers/i2c/busses/i2c-efm32.c
+>  create mode 100644 include/linux/platform_data/efm32-i2c.h
+>=20
+> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+> index f5ed03164d86..7322ff0c4c60 100644
+> --- a/drivers/i2c/busses/Kconfig
+> +++ b/drivers/i2c/busses/Kconfig
+> @@ -432,6 +432,13 @@ config I2C_DESIGNWARE_PCI
+>  	  This driver can also be built as a module.  If so, the module
+>  	  will be called i2c-designware-pci.
+> =20
+> +config I2C_EFM32
+> +	tristate "EFM32 I2C controller"
+> +	depends on OF && (ARCH_EFM32 || COMPILE_TEST)
+> +	help
+> +	  This driver supports the i2c block found in Energy Micro's EFM32
+> +	  SoCs.
+> +
+>  config I2C_EG20T
+>  	tristate "Intel EG20T PCH/LAPIS Semicon IOH(ML7213/ML7223/ML7831) I=
+2C"
+>  	depends on PCI
+> diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefil=
+e
+> index a08931fe73e1..2a56ab181851 100644
+> --- a/drivers/i2c/busses/Makefile
+> +++ b/drivers/i2c/busses/Makefile
+> @@ -41,6 +41,7 @@ obj-$(CONFIG_I2C_DESIGNWARE_PLATFORM)	+=3D i2c-desi=
+gnware-platform.o
+>  i2c-designware-platform-objs :=3D i2c-designware-platdrv.o
+>  obj-$(CONFIG_I2C_DESIGNWARE_PCI)	+=3D i2c-designware-pci.o
+>  i2c-designware-pci-objs :=3D i2c-designware-pcidrv.o
+> +obj-$(CONFIG_I2C_EFM32)		+=3D i2c-efm32.o
+>  obj-$(CONFIG_I2C_EG20T)		+=3D i2c-eg20t.o
+>  obj-$(CONFIG_I2C_EXYNOS5)	+=3D i2c-exynos5.o
+>  obj-$(CONFIG_I2C_GPIO)		+=3D i2c-gpio.o
+> diff --git a/drivers/i2c/busses/i2c-efm32.c b/drivers/i2c/busses/i2c-=
+efm32.c
+> new file mode 100644
+> index 000000000000..9e860abcab63
+> --- /dev/null
+> +++ b/drivers/i2c/busses/i2c-efm32.c
+> @@ -0,0 +1,527 @@
+> +/*
+> + * Copyright (C) 2014 Uwe Kleine-Koenig for Pengutronix
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify it under
+> + * the terms of the GNU General Public License version 2 as publishe=
+d by the
+> + * Free Software Foundation.
+> + */
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/i2c.h>
+> +#include <linux/io.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/err.h>
+> +#include <linux/clk.h>
+> +#include <linux/platform_data/efm32-i2c.h>
+> +
+> +#define DRIVER_NAME "efm32-i2c"
+> +
+> +#define MASK_VAL(mask, val)		((val << __ffs(mask)) & mask)
+> +
+> +#define REG_CTRL		0x00
+> +#define REG_CTRL_EN			0x00001
+> +#define REG_CTRL_SLAVE			0x00002
+> +#define REG_CTRL_AUTOACK		0x00004
+> +#define REG_CTRL_AUTOSE			0x00008
+> +#define REG_CTRL_AUTOSN			0x00010
+> +#define REG_CTRL_ARBDIS			0x00020
+> +#define REG_CTRL_GCAMEN			0x00040
+> +#define REG_CTRL_CLHR__MASK		0x00300
+> +#define REG_CTRL_BITO__MASK		0x03000
+> +#define REG_CTRL_BITO_OFF		0x00000
+> +#define REG_CTRL_BITO_40PCC		0x01000
+> +#define REG_CTRL_BITO_80PCC		0x02000
+> +#define REG_CTRL_BITO_160PCC		0x03000
+> +#define REG_CTRL_GIBITO			0x08000
+> +#define REG_CTRL_CLTO__MASK		0x70000
+> +#define REG_CTRL_CLTO_OFF		0x00000
+> +
+> +#define REG_CMD			0x04
+> +#define REG_CMD_START			0x00001
+> +#define REG_CMD_STOP			0x00002
+> +#define REG_CMD_ACK			0x00004
+> +#define REG_CMD_NACK			0x00008
+> +#define REG_CMD_CONT			0x00010
+> +#define REG_CMD_ABORT			0x00020
+> +#define REG_CMD_CLEARTX			0x00040
+> +#define REG_CMD_CLEARPC			0x00080
+> +
+> +#define REG_STATE		0x08
+> +#define REG_STATE_BUSY			0x00001
+> +#define REG_STATE_MASTER		0x00002
+> +#define REG_STATE_TRANSMITTER		0x00004
+> +#define REG_STATE_NACKED		0x00008
+> +#define REG_STATE_BUSHOLD		0x00010
+> +#define REG_STATE_STATE__MASK		0x000e0
+> +#define REG_STATE_STATE_IDLE		0x00000
+> +#define REG_STATE_STATE_WAIT		0x00020
+> +#define REG_STATE_STATE_START		0x00040
+> +#define REG_STATE_STATE_ADDR		0x00060
+> +#define REG_STATE_STATE_ADDRACK		0x00080
+> +#define REG_STATE_STATE_DATA		0x000a0
+> +#define REG_STATE_STATE_DATAACK		0x000c0
+> +
+> +#define REG_STATUS		0x0c
+> +#define REG_STATUS_PSTART		0x00001
+> +#define REG_STATUS_PSTOP		0x00002
+> +#define REG_STATUS_PACK			0x00004
+> +#define REG_STATUS_PNACK		0x00008
+> +#define REG_STATUS_PCONT		0x00010
+> +#define REG_STATUS_PABORT		0x00020
+> +#define REG_STATUS_TXC			0x00040
+> +#define REG_STATUS_TXBL			0x00080
+> +#define REG_STATUS_RXDATAV		0x00100
+> +
+> +#define REG_CLKDIV		0x10
+> +#define REG_CLKDIV_DIV__MASK		0x001ff
+> +#define REG_CLKDIV_DIV(div)		MASK_VAL(REG_CLKDIV_DIV__MASK, (div))
+> +
+> +#define REG_SADDR		0x14
+> +#define REG_SADDRMASK		0x18
+> +#define REG_RXDATA		0x1c
+> +#define REG_RXDATAP		0x20
+> +#define REG_TXDATA		0x24
+> +#define REG_IF			0x28
+> +#define REG_IF_START			0x00001
+> +#define REG_IF_RSTART			0x00002
+> +#define REG_IF_ADDR			0x00004
+> +#define REG_IF_TXC			0x00008
+> +#define REG_IF_TXBL			0x00010
+> +#define REG_IF_RXDATAV			0x00020
+> +#define REG_IF_ACK			0x00040
+> +#define REG_IF_NACK			0x00080
+> +#define REG_IF_MSTOP			0x00100
+> +#define REG_IF_ARBLOST			0x00200
+> +#define REG_IF_BUSERR			0x00400
+> +#define REG_IF_BUSHOLD			0x00800
+> +#define REG_IF_TXOF			0x01000
+> +#define REG_IF_RXUF			0x02000
+> +#define REG_IF_BITO			0x04000
+> +#define REG_IF_CLTO			0x08000
+> +#define REG_IF_SSTOP			0x10000
+> +
+> +#define REG_IFS			0x2c
+> +#define REG_IFC			0x30
+> +#define REG_IFC__MASK			0x1ffcf
+> +
+> +#define REG_IEN			0x34
+> +
+> +#define REG_ROUTE		0x38
+> +#define REG_ROUTE_SDAPEN		0x00001
+> +#define REG_ROUTE_SCLPEN		0x00002
+> +#define REG_ROUTE_LOCATION__MASK	0x00700
+> +#define REG_ROUTE_LOCATION(n)		MASK_VAL(REG_ROUTE_LOCATION__MASK, (n=
+))
+> +
+> +struct efm32_i2c_ddata {
+> +	struct i2c_adapter adapter;
+> +	spinlock_t lock;
+> +
+> +	struct clk *clk;
+> +	void __iomem *base;
+> +	unsigned int irq;
+> +	struct efm32_i2c_pdata pdata;
+> +
+> +	/* transfer data */
+> +	struct completion done;
+> +	struct i2c_msg *msgs;
+> +	size_t num_msgs;
+> +	size_t current_word, current_msg;
+> +};
+> +
+> +static u32 efm32_i2c_read32(struct efm32_i2c_ddata *ddata, unsigned =
+offset)
+> +{
+> +	return readl(ddata->base + offset);
+> +}
+> +
+> +static void efm32_i2c_write32(struct efm32_i2c_ddata *ddata,
+> +		unsigned offset, u32 value)
+> +{
+> +	writel(value, ddata->base + offset);
+> +}
+> +
+> +static void efm32_i2c_send_next_msg(struct efm32_i2c_ddata *ddata)
+> +{
+> +	struct i2c_msg *cur_msg =3D &ddata->msgs[ddata->current_msg];
+> +
+> +	dev_dbg(&ddata->adapter.dev, "send msg %zu/%zu (addr =3D %x, flags =
+=3D %x, if =3D %08x)\n",
+> +			ddata->current_msg, ddata->num_msgs, cur_msg->addr,
+> +			cur_msg->flags, efm32_i2c_read32(ddata, REG_IF));
+> +	efm32_i2c_write32(ddata, REG_CMD, REG_CMD_START);
+> +	efm32_i2c_write32(ddata, REG_TXDATA, cur_msg->addr << 1 |
+> +			(cur_msg->flags & I2C_M_RD ? 1 : 0));
+> +}
+> +
+> +static void efm32_i2c_send_next_byte(struct efm32_i2c_ddata *ddata)
+> +{
+> +	struct i2c_msg *cur_msg =3D &ddata->msgs[ddata->current_msg];
+> +	dev_dbg(&ddata->adapter.dev, "%s, %zu %zu\n",
+> +			__func__, ddata->current_word, cur_msg->len);
+> +	if (ddata->current_word >=3D cur_msg->len) {
+> +		/* cur_msg completely transferred */
+> +		ddata->current_word =3D 0;
+> +		ddata->current_msg +=3D 1;
+> +
+> +		if (ddata->current_msg >=3D ddata->num_msgs) {
+> +			dev_dbg(&ddata->adapter.dev, "Stop\n");
+> +			efm32_i2c_write32(ddata, REG_CMD, REG_CMD_STOP);
+> +			complete(&ddata->done);
+> +		} else {
+> +			efm32_i2c_send_next_msg(ddata);
+> +		}
+> +	} else {
+> +		dev_dbg(&ddata->adapter.dev, "send byte %zu/%zu\n",
+> +				ddata->current_word, cur_msg->len);
+> +		efm32_i2c_write32(ddata, REG_TXDATA,
+> +				cur_msg->buf[ddata->current_word++]);
+> +	}
+> +}
+> +
+> +static void efm32_i2c_recv_next_byte(struct efm32_i2c_ddata *ddata)
+> +{
+> +	struct i2c_msg *cur_msg =3D &ddata->msgs[ddata->current_msg];
+> +
+> +	cur_msg->buf[ddata->current_word] =3D efm32_i2c_read32(ddata, REG_R=
+XDATA);
+> +	dev_dbg(&ddata->adapter.dev, "recv byte %zu/%zu: 0x%02hhx\n",
+> +			ddata->current_word, cur_msg->len, cur_msg->buf[ddata->current_wo=
+rd]);
+> +	ddata->current_word +=3D 1;
+> +	if (ddata->current_word >=3D cur_msg->len) {
+> +		/* cur_msg completely transferred */
+> +		ddata->current_word =3D 0;
+> +		ddata->current_msg +=3D 1;
+> +
+> +		efm32_i2c_write32(ddata, REG_CMD, REG_CMD_NACK);
+> +
+> +		if (ddata->current_msg >=3D ddata->num_msgs) {
+> +			efm32_i2c_write32(ddata, REG_CMD, REG_CMD_STOP);
+> +			complete(&ddata->done);
+> +		} else {
+> +			efm32_i2c_send_next_msg(ddata);
+> +		}
+> +	} else {
+> +		efm32_i2c_write32(ddata, REG_CMD, REG_CMD_ACK);
+> +	}
+> +}
+> +
+> +static irqreturn_t efm32_i2c_irq(int irq, void *dev_id)
+> +{
+> +	struct efm32_i2c_ddata *ddata =3D dev_id;
+> +	struct i2c_msg *cur_msg =3D &ddata->msgs[ddata->current_msg];
+> +	u32 irqflag =3D efm32_i2c_read32(ddata, REG_IF);
+> +	u32 state =3D efm32_i2c_read32(ddata, REG_STATE);
+> +
+> +	dev_dbg(&ddata->adapter.dev, "irq: if: %08x, state: %08x, status: %=
+08x\n",
+> +			irqflag, state, efm32_i2c_read32(ddata, REG_STATUS));
+> +	efm32_i2c_write32(ddata, REG_IFC, irqflag & REG_IFC__MASK);
+> +
+> +	switch (state & REG_STATE_STATE__MASK) {
+> +	case REG_STATE_STATE_IDLE:
+> +		/* arbitration lost? */
+> +		complete(&ddata->done);
+> +		break;
+> +	case REG_STATE_STATE_WAIT:
+> +		/* huh, this shouldn't happen */
+> +		BUG();
+> +		break;
+> +	case REG_STATE_STATE_START:
+> +		/* "caller" is expected to send an address */
+> +		break;
+> +	case REG_STATE_STATE_ADDR:
+> +		/* wait for Ack or NAck of slave */
+> +		break;
+> +	case REG_STATE_STATE_ADDRACK:
+> +		if (state & REG_STATE_NACKED) {
+> +			efm32_i2c_write32(ddata, REG_CMD, REG_CMD_STOP);
+> +			complete(&ddata->done);
+> +		} else if (cur_msg->flags & I2C_M_RD) {
+> +			/* wait for slave to send first data byte */
+> +		} else {
+> +			efm32_i2c_send_next_byte(ddata);
+> +		}
+> +		break;
+> +	case REG_STATE_STATE_DATA:
+> +		if (cur_msg->flags & I2C_M_RD) {
+> +			efm32_i2c_recv_next_byte(ddata);
+> +		} else {
+> +			/* wait for Ack or Nack of slave */
+> +		}
+> +		break;
+> +	case REG_STATE_STATE_DATAACK:
+> +		if (state & REG_STATE_NACKED) {
+> +			efm32_i2c_write32(ddata, REG_CMD, REG_CMD_STOP);
+> +			complete(&ddata->done);
+> +		} else {
+> +			efm32_i2c_send_next_byte(ddata);
+> +		}
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int efm32_i2c_master_xfer(struct i2c_adapter *adap,
+> +		struct i2c_msg *msgs, int num)
+> +{
+> +	struct efm32_i2c_ddata *ddata =3D i2c_get_adapdata(adap);
+> +	int ret =3D -EBUSY;
+> +
+> +	spin_lock_irq(&ddata->lock);
+> +
+> +	if (ddata->msgs)
+> +		/*
+> +		 * XXX: can .master_xfer be called when the previous is still
+> +		 * running?
+> +		 */
+> +		goto out_unlock;
+> +
+> +	ddata->msgs =3D msgs;
+> +	ddata->num_msgs =3D num;
+> +	ddata->current_word =3D 0;
+> +	ddata->current_msg =3D 0;
+> +
+> +	init_completion(&ddata->done);
+> +
+> +	dev_dbg(&ddata->adapter.dev, "state: %08x, status: %08x\n",
+> +			efm32_i2c_read32(ddata, REG_STATE),
+> +			efm32_i2c_read32(ddata, REG_STATUS));
+> +
+> +	efm32_i2c_send_next_msg(ddata);
+> +
+> +	spin_unlock_irq(&ddata->lock);
+> +
+> +	wait_for_completion(&ddata->done);
+> +
+> +	spin_lock_irq(&ddata->lock);
+> +
+> +	if (ddata->current_msg >=3D ddata->num_msgs)
+> +		ret =3D ddata->num_msgs;
+> +	else
+> +		ret =3D -EIO;
+> +
+> +	ddata->msgs =3D NULL;
+> +
+> +out_unlock:
+> +	spin_unlock_irq(&ddata->lock);
+> +	return ret;
+> +}
+> +
+> +static u32 efm32_i2c_functionality(struct i2c_adapter *adap)
+> +{
+> +	/* XXX: some more? */
+> +	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
+> +}
+> +
+> +static const struct i2c_algorithm efm32_i2c_algo =3D {
+> +	.master_xfer =3D efm32_i2c_master_xfer,
+> +	.functionality =3D efm32_i2c_functionality,
+> +};
+> +
+> +static u32 efm32_i2c_get_configured_location(struct efm32_i2c_ddata =
+*ddata)
+> +{
+> +	u32 reg =3D efm32_i2c_read32(ddata, REG_ROUTE);
+> +
+> +	return (reg & REG_ROUTE_LOCATION__MASK) >>
+> +		__ffs(REG_ROUTE_LOCATION__MASK);
+> +}
+> +
+> +static int efm32_i2c_probe_dt(struct platform_device *pdev,
+> +		struct efm32_i2c_ddata *ddata)
+> +{
+> +	struct device_node *np =3D pdev->dev.of_node;
+> +	u32 location, frequency;
+> +	int ret;
+> +
+> +	if (!np)
+> +		return 1;
+> +
+> +	ret =3D of_property_read_u32(np, "location", &location);
+> +	if (!ret) {
+> +		dev_dbg(&pdev->dev, "using location %u\n", location);
+> +	} else {
+> +		/* default to location configured in hardware */
+> +		location =3D efm32_i2c_get_configured_location(ddata);
+> +
+> +		dev_info(&pdev->dev, "fall back to location %u\n", location);
+> +	}
+> +
+> +	ddata->pdata.location =3D location;
+> +
+> +	ret =3D of_property_read_u32(np, "clock-frequency", &frequency);
+> +	if (!ret) {
+> +		dev_dbg(&pdev->dev, "using frequency %u\n", frequency);
+> +	} else {
+> +		frequency =3D 100000;
+> +		dev_info(&pdev->dev, "defaulting to 100 kHz\n");
+> +	}
+> +	ddata->pdata.frequency =3D frequency;
+> +
+> +	/* i2c core takes care about bus numbering using an alias */
+> +	ddata->adapter.nr =3D -1;
+> +
+> +	return 0;
+> +}
+> +
+> +static int efm32_i2c_probe(struct platform_device *pdev)
+> +{
+> +	struct efm32_i2c_ddata *ddata;
+> +	struct resource *res;
+> +	unsigned long rate;
+> +	int ret;
+> +	u32 clkdiv;
+> +
+> +	ddata =3D devm_kzalloc(&pdev->dev, sizeof(*ddata), GFP_KERNEL);
+> +	if (!ddata) {
+> +		dev_dbg(&pdev->dev, "failed to allocate private data\n");
+> +		return -ENOMEM;
+> +	}
+> +	platform_set_drvdata(pdev, ddata);
+> +
+> +	strlcpy(ddata->adapter.name, pdev->name, sizeof(ddata->adapter.name=
+));
+> +	ddata->adapter.owner =3D THIS_MODULE;
+> +	ddata->adapter.algo =3D &efm32_i2c_algo;
+> +	ddata->adapter.dev.parent =3D &pdev->dev;
+> +	ddata->adapter.dev.of_node =3D pdev->dev.of_node;
+> +	i2c_set_adapdata(&ddata->adapter, ddata);
+> +
+> +	spin_lock_init(&ddata->lock);
+> +
+> +	ddata->clk =3D devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(ddata->clk)) {
+> +		ret =3D PTR_ERR(ddata->clk);
+> +		dev_err(&pdev->dev, "failed to get clock: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res) {
+> +		dev_err(&pdev->dev, "failed to determine base address\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (resource_size(res) < 0x42) {
+> +		dev_err(&pdev->dev, "memory resource too small\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ddata->base =3D devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(ddata->base))
+> +		return PTR_ERR(ddata->base);
+> +
+> +	ret =3D platform_get_irq(pdev, 0);
+> +	if (ret <=3D 0) {
+> +		dev_err(&pdev->dev, "failed to get irq (%d)\n", ret);
+> +		if (!ret)
+> +			ret =3D -EINVAL;
+> +		return ret;
+> +	}
+> +
+> +	ddata->irq =3D ret;
+> +
+> +	ret =3D clk_prepare_enable(ddata->clk);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "failed to enable clock (%d)\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret =3D efm32_i2c_probe_dt(pdev, ddata);
+> +	if (ret > 0) {
+> +		/* not created by device tree */
+> +		const struct efm32_i2c_pdata *pdata =3D
+> +			dev_get_platdata(&pdev->dev);
+> +
+> +		if (pdata)
+> +			ddata->pdata =3D *pdata;
+> +		else {
+> +			ddata->pdata.location =3D
+> +				efm32_i2c_get_configured_location(ddata);
+> +			ddata->pdata.frequency =3D 100000;
+> +		}
+> +
+> +		ddata->adapter.nr =3D pdev->id;
+> +	} else if (ret < 0) {
+> +		goto err_disable_clk;
+> +	}
+> +
+> +	rate =3D clk_get_rate(ddata->clk);
+> +	if (!rate) {
+> +		dev_err(&pdev->dev, "there is no input clock available\n");
+> +		ret =3D -EIO;
+> +		goto err_disable_clk;
+> +	}
+> +	clkdiv =3D DIV_ROUND_UP(rate, 8 * ddata->pdata.frequency) - 1;
+> +	if (clkdiv >=3D 0x200) {
+> +		dev_err(&pdev->dev,
+> +				"input clock too fast (%lu) to divide down to bus freq (%lu)",
+> +				rate, ddata->pdata.frequency);
+> +		ret =3D -EIO;
+> +		goto err_disable_clk;
+> +	}
+> +
+> +	dev_dbg(&pdev->dev, "input clock =3D %lu, bus freq =3D %lu, clkdiv =
+=3D %lu\n",
+> +			rate, ddata->pdata.frequency, (unsigned long)clkdiv);
+> +	efm32_i2c_write32(ddata, REG_CLKDIV, REG_CLKDIV_DIV(clkdiv));
+> +
+> +	efm32_i2c_write32(ddata, REG_ROUTE, REG_ROUTE_SDAPEN |
+> +			REG_ROUTE_SCLPEN |
+> +			REG_ROUTE_LOCATION(ddata->pdata.location));
+> +
+> +	efm32_i2c_write32(ddata, REG_CTRL, REG_CTRL_EN |
+> +			REG_CTRL_BITO_160PCC | 0 * REG_CTRL_GIBITO);
+> +
+> +	efm32_i2c_write32(ddata, REG_IFC, REG_IFC__MASK);
+> +	efm32_i2c_write32(ddata, REG_IEN, REG_IF_TXC | REG_IF_ACK | REG_IF_=
+NACK
+> +			| REG_IF_ARBLOST | REG_IF_BUSERR | REG_IF_RXDATAV);
+> +
+> +	/* to make bus idle */
+> +	efm32_i2c_write32(ddata, REG_CMD, REG_CMD_ABORT);
+> +
+> +	ret =3D request_irq(ddata->irq, efm32_i2c_irq, 0, DRIVER_NAME, ddat=
+a);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "failed to request irq (%d)\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret =3D i2c_add_numbered_adapter(&ddata->adapter);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to add i2c adapter (%d)\n", ret);
+> +		free_irq(ddata->irq, ddata);
+> +
+> +err_disable_clk:
+> +		clk_disable_unprepare(ddata->clk);
+> +	}
+> +	return ret;
+> +}
+> +
+> +static int efm32_i2c_remove(struct platform_device *pdev)
+> +{
+> +	struct efm32_i2c_ddata *ddata =3D platform_get_drvdata(pdev);
+> +
+> +	free_irq(ddata->irq, ddata);
+> +	clk_disable_unprepare(ddata->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id efm32_i2c_dt_ids[] =3D {
+> +	{
+> +		.compatible =3D "efm32,i2c",
+> +	}, {
+> +		/* sentinel */
+> +	}
+> +};
+> +MODULE_DEVICE_TABLE(of, efm32_i2c_dt_ids);
+> +
+> +static struct platform_driver efm32_i2c_driver =3D {
+> +	.probe =3D efm32_i2c_probe,
+> +	.remove =3D efm32_i2c_remove,
+> +
+> +	.driver =3D {
+> +		.name =3D DRIVER_NAME,
+> +		.owner =3D THIS_MODULE,
+> +		.of_match_table =3D efm32_i2c_dt_ids,
+> +	},
+> +};
+> +module_platform_driver(efm32_i2c_driver);
+> +
+> +MODULE_AUTHOR("Uwe Kleine-Koenig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>");
+> +MODULE_DESCRIPTION("EFM32 i2c driver");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("platform:" DRIVER_NAME);
+> diff --git a/include/linux/platform_data/efm32-i2c.h b/include/linux/=
+platform_data/efm32-i2c.h
+> new file mode 100644
+> index 000000000000..5e175db68bb6
+> --- /dev/null
+> +++ b/include/linux/platform_data/efm32-i2c.h
+> @@ -0,0 +1,15 @@
+> +#ifndef __LINUX_PLATFORM_DATA_EFM32_I2C_H__
+> +#define __LINUX_PLATFORM_DATA_EFM32_I2C_H__
+> +
+> +#include <linux/types.h>
+> +
+> +/**
+> + * struct efm32_i2c_pdata
+> + * @location: pinmux location for the I/O pins (to be written to the=
+ ROUTE
+> + * 	register)
+> + */
+> +struct efm32_i2c_pdata {
+> +	u8 location;
+> +	unsigned long frequency; /* in Hz */
+> +};
+> +#endif /* ifndef __LINUX_PLATFORM_DATA_EFM32_I2C_H__ */
+> --=20
+> 1.8.5.2
+>=20
+>=20
 
-Apart from comments on 2/3 and 3/3, whole series
-
-	Acked-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-
-and
-
-	Tested-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-
-Regards,
-Steffen
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
