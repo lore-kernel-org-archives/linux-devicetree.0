@@ -1,72 +1,75 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH] of: Turn of_match_node into a static inline when CONFIG_OF isn't set
-Date: Mon, 17 Feb 2014 20:50:34 +0100
-Message-ID: <1740750.ctOzzXhXsT@avalon>
-References: <1392122211-11422-1-git-send-email-laurent.pinchart@ideasonboard.com> <20140217181829.B5F80C40372@trevor.secretlab.ca>
+From: <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv2 2/3] mmc: dw_mmc: Add support for SOCFPGA's platform specific implementation
+Date: Mon, 17 Feb 2014 13:55:10 -0600
+Message-ID: <1392666911-15985-2-git-send-email-dinguyen@altera.com>
+References: <1392666911-15985-1-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140217181829.B5F80C40372-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <1392666911-15985-1-git-send-email-dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 
-On Monday 17 February 2014 18:18:29 Grant Likely wrote:
-> On Tue, 11 Feb 2014 13:36:51 +0100, Laurent Pinchart wrote:
-> > when CONFIG_OF is disabled of_match_node is defined as a macro that
-> > evaluates to NULL. This breaks compilation of drivers that dereference
-> > the function's return value directly. Fix it by turning the macro into a
-> > static inline function that returns NULL.
-> 
-> Is it not more problematic that code is dereferencing the return value
-> directly *without* checking to see if it is NULL first? I suppose it
-> will cause a runtime oops on all platforms except no-mmu, but still.
-> Compile time catches are better.
+Like the rockchip, Altera's SOCFPGA platform specific implementation of the
+dw_mmc driver requires using the HOLD register for SD commands.
 
-There should be no risk of oops if the of_match_ptr() call is guarded by a 
-compiler (as opposed to preprocessor) IS_ENABLED(CONFIG_OF) check. Now, if the 
-check is missing, we'll oops at runtime, but the problem already exists before 
-this patch.
+Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Acked-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Tested-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>
+---
+v2: Use dw_mci_socfpga_prepare_command instead of
+    dw_mci_rockchip_prepare_command
+---
+ drivers/mmc/host/dw_mmc-pltfm.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Anyway I've decided to drop this patch and use an intermediate variable.
-
-> > Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> > ---
-> > 
-> >  include/linux/of.h | 8 +++++++-
-> >  1 file changed, 7 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/include/linux/of.h b/include/linux/of.h
-> > index 70c64ba..719e69f 100644
-> > --- a/include/linux/of.h
-> > +++ b/include/linux/of.h
-> > @@ -560,7 +560,13 @@ static inline const char *of_prop_next_string(struct
-> > property *prop,> 
-> >  }
-> >  
-> >  #define of_match_ptr(_ptr)	NULL
-> > 
-> > -#define of_match_node(_matches, _node)	NULL
-> > +
-> > +static inline const struct of_device_id *of_match_node(
-> > +	const struct of_device_id *matches, const struct device_node *node)
-> > +{
-> > +	return NULL;
-> > +}
-> > +
-> > 
-> >  #endif /* CONFIG_OF */
-> >  
-> >  #if defined(CONFIG_OF) && defined(CONFIG_NUMA)
-
+diff --git a/drivers/mmc/host/dw_mmc-pltfm.c b/drivers/mmc/host/dw_mmc-pltfm.c
+index 5c49656..5b87cc2 100644
+--- a/drivers/mmc/host/dw_mmc-pltfm.c
++++ b/drivers/mmc/host/dw_mmc-pltfm.c
+@@ -30,10 +30,19 @@ static void dw_mci_rockchip_prepare_command(struct dw_mci *host, u32 *cmdr)
+ 	*cmdr |= SDMMC_CMD_USE_HOLD_REG;
+ }
+ 
++static void dw_mci_socfpga_prepare_command(struct dw_mci *host, u32 *cmdr)
++{
++	*cmdr |= SDMMC_CMD_USE_HOLD_REG;
++}
++
+ static const struct dw_mci_drv_data rockchip_drv_data = {
+ 	.prepare_command	= dw_mci_rockchip_prepare_command,
+ };
+ 
++static const struct dw_mci_drv_data socfpga_drv_data = {
++	.prepare_command	= dw_mci_socfpga_prepare_command,
++};
++
+ int dw_mci_pltfm_register(struct platform_device *pdev,
+ 			  const struct dw_mci_drv_data *drv_data)
+ {
+@@ -92,6 +101,8 @@ static const struct of_device_id dw_mci_pltfm_match[] = {
+ 	{ .compatible = "snps,dw-mshc", },
+ 	{ .compatible = "rockchip,rk2928-dw-mshc",
+ 		.data = &rockchip_drv_data },
++	{ .compatible = "altr,socfpga-dw-mshc",
++		.data = &socfpga_drv_data },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, dw_mci_pltfm_match);
 -- 
-Regards,
-
-Laurent Pinchart
+1.7.9.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
