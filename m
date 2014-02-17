@@ -1,76 +1,101 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCHv2 3/3] dts: socfpga: Add support for SD/MMC on the
- SOCFPGA platform
-Date: Mon, 17 Feb 2014 21:22:07 +0100
-Message-ID: <20140217202207.GD8839@pengutronix.de>
-References: <1392666911-15985-1-git-send-email-dinguyen@altera.com>
- <1392666911-15985-3-git-send-email-dinguyen@altera.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] net: add init-regs for of_phy support
+Date: Tue, 18 Feb 2014 00:33:19 +0300
+Message-ID: <5302801F.6000903@cogentembedded.com>
+References: <1392642484-19938-1-git-send-email-ben.dooks@codethink.co.uk> <1392642484-19938-2-git-send-email-ben.dooks@codethink.co.uk> <CAGVrzcYbw5xLj-gwcup5i0gBdKDDGdyy5wAaEBp7m2E7f2bytg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1392666911-15985-3-git-send-email-dinguyen@altera.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: dinguyen@altera.com
-Cc: linux-mmc@vger.kernel.org, dinh.linux@gmail.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAGVrzcYbw5xLj-gwcup5i0gBdKDDGdyy5wAaEBp7m2E7f2bytg@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Hello.
 
-On Mon, Feb 17, 2014 at 01:55:11PM -0600, dinguyen@altera.com wrote:
-> From: Dinh Nguyen <dinguyen@altera.com>
-> 
-> Introduce "altr,socfpga-dw-mshc" to enable Altera's SOCFPGA platform specific
-> implementation of the dwc_mmc driver.
-> 
-> Also add the "syscon" binding to the "altr,sys-mgr" node. The clock
-> driver can use the syscon driver to toggle the register for the SD/MMC
-> clock phase shift settings.
-> 
-> Finally, fix an indentation error for the sysmgr node.
-> 
-> Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
-> Acked-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> Tested-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: Seungwon Jeon <tgih.jun@samsung.com>
-> Cc: Jaehoon Chung <jh80.chung@samsung.com>
-> Cc: Chris Ball <chris@printf.net>
-> ---
-> v2: Fix indentation for the sysmgr node
-> ---
->  .../devicetree/bindings/mmc/socfpga-dw-mshc.txt    |   23 ++++++++++++++++++++
->  arch/arm/boot/dts/socfpga.dtsi                     |   15 +++++++++++--
->  arch/arm/boot/dts/socfpga_arria5.dtsi              |   11 ++++++++++
->  arch/arm/boot/dts/socfpga_cyclone5.dtsi            |   11 ++++++++++
->  arch/arm/boot/dts/socfpga_vt.dts                   |   11 ++++++++++
->  5 files changed, 69 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
-> 
-> @@ -528,8 +539,8 @@
->  		};
->  
->  		sysmgr@ffd08000 {
-> -				compatible = "altr,sys-mgr";
-> -				reg = <0xffd08000 0x4000>;
-> +			compatible = "altr,sys-mgr", "syscon";
-> +			reg = <0xffd08000 0x4000>;
->  			};
->  	};
->  };
+On 02/17/2014 08:33 PM, Florian Fainelli wrote:
 
-Thanks for fixing this, but please don't forget the curly and
-the semicolon.
+>> Add new init-regs field for of_phy nodes and make sure these
+>> get applied when the phy is configured.
 
-Regards,
-Steffen
+>> This allows any phy node in an fdt to initialise registers
+>> that may not be set as standard by the driver at initialisation
+>> time, such as LED controls.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>> ---
+>>   Documentation/devicetree/bindings/net/phy.txt | 12 ++++++
+>>   drivers/net/phy/phy_device.c                  | 59 ++++++++++++++++++++++++++-
+>>   2 files changed, 70 insertions(+), 1 deletion(-)
+
+>> diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
+>> index 58307d0..48d8ded 100644
+>> --- a/Documentation/devicetree/bindings/net/phy.txt
+>> +++ b/Documentation/devicetree/bindings/net/phy.txt
+>> @@ -20,6 +20,8 @@ Optional Properties:
+>>     assume clause 22. The compatible list may also contain other
+>>     elements.
+>>   - max-speed: Maximum PHY supported speed (10, 100, 1000...)
+>> +- init-regs: Set of registers to modify at initialisation as a
+>> +    a set of <register set clear>
+
+> Should be:
+
+> "micrel,led-control-init-val" or something like that.
+
+> first cell is the register address, according to the IEEE 802.3 clause 22
+> second cell is the set bitmask to apply to the register address
+> specified in the first cell
+> third cell is the clear bitmask to apply to the register address
+> specified in the second cell
+
+> I would rather see this as a specific PHY node DT property for setting
+> the LED control register, because this is totally non-standard and you
+> are touching a proprietary register here.
+
+    Yes, I agree.
+
+>> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+>> index 82514e7..6741cdb 100644
+>> --- a/drivers/net/phy/phy_device.c
+>> +++ b/drivers/net/phy/phy_device.c
+[...]
+>> @@ -532,6 +533,57 @@ static int phy_poll_reset(struct phy_device *phydev)
+>>          return 0;
+>>   }
+>>
+>> +#ifdef CONFIG_OF
+>> +static int of_phy_configure(struct phy_device *phydev)
+>> +{
+>> +       struct device *dev = &phydev->dev;
+>> +       struct device_node *of_node = dev->of_node;
+>> +       struct property *prop;
+>> +       const __be32 *ptr;
+>> +       u32 reg, set, clear;
+>> +       int len;
+>> +       int val;
+
+> This does not belong in the generic PHY code unless we are very clear
+> on what we want to do, and how to do it, which I do not think we are
+> yet. What exactly is needed here:
+
+> - fixing up some design mistake?
+> - accounting for a specific board design?
+
+    Kind of both. This was invented to defy the necessity of having platform 
+fixup in the DT case (where there should be no board file to place it into).
+I have already described that platform fixup necessary on the Renesas 
+Lager/Koelsch boards where the LED0 signat is connected to ETH_LINK signal on 
+the SoC and the PHY reset sets the LED control bits to default 0 which means 
+that LED0 will be LINK/ACTIVITY signal and thus blink on activity and cause 
+ETH_LINK to bounce off/on after each packet.
+
+> In any case a PHY fixup would do the job for you.
+
+    Not in any case. In case of DT we have no place for it, so should invent 
+something involving DT.
+
+WBR, Sergei
+
