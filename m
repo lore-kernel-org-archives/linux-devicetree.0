@@ -1,42 +1,78 @@
 From: klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org
-Subject: [PATCH v4 3/4] DT: i2c: Trivial: Add sii, s35390a, fix ricoh vendor prefix
-Date: Tue, 18 Feb 2014 07:45:36 +1000
-Message-ID: <1392673537-17308-4-git-send-email-klightspeed@killerwolves.net>
-References: <1392673537-17308-1-git-send-email-klightspeed@killerwolves.net>
+Subject: [PATCH v4 0/4] DT support for kirkwood based Synology NAS boxes
+Date: Tue, 18 Feb 2014 07:45:33 +1000
+Message-ID: <1392673537-17308-1-git-send-email-klightspeed@killerwolves.net>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392673537-17308-1-git-send-email-klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+This patchset adds support for around 30 kirkwood bases Synology NAS
+boxes. Patch #1 generalized the qnap power off driver so that it can
+also be used for Synology devices. Patch #2 and #3 document vendor
+prefixes and i2c trivial devices. Patch #4 adds the synology DT files.
 
-Add the Seiko Instruments Inc S35390a to the list of trivial i2c
-devices. At the same time, correct the vendor prefix for ricoh, which
-should be the ticker symbol ricoy.
+v2:
+Typo fix in qnap-poweroff.c
+Use ricoy stock ticker instead of ricoh
+Describe the lego structure of the hardware
 
-Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
----
- Documentation/devicetree/bindings/i2c/trivial-devices.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+v3:
+Merge synology dtsi files into a single dtsi file
 
-diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-index 1a1ac2e..5f37191 100644
---- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-@@ -56,8 +56,9 @@ ovti,ov5642		OV5642: Color CMOS QSXGA (5-megapixel) Image Sensor with OmniBSI an
- pericom,pt7c4338	Real-time Clock Module
- plx,pex8648		48-Lane, 12-Port PCI Express Gen 2 (5.0 GT/s) Switch
- ramtron,24c64		i2c serial eeprom  (24cxx)
--ricoh,rs5c372a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-+ricoy,rs5c372a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
- samsung,24ad0xd1	S524AD0XF1 (128K/256K-bit Serial EEPROM for Low Power)
-+sii,s35390a		2-wire CMOS real-time clock
- st-micro,24c256		i2c serial eeprom  (24cxx)
- stm,m41t00		Serial Access TIMEKEEPER
- stm,m41t62		Serial real-time clock (RTC) with alarm
+v4:
+Various minor fixes to synology dtsi file
+
+Andrew Lunn (3):
+  Power: Reset: Generalize qnap-poweroff to with on Synology devices.
+  DT: Vendor prefixes: Add ricoh, ssi and synology
+  DT: i2c: Trivial: Add sii, s35390a, fix ricoh vendor prefix
+
+Ben Peddell (1):
+  ARM: Kirkwood: Add support for many Synology NAS devices
+
+ .../devicetree/bindings/i2c/trivial-devices.txt    |   3 +-
+ .../bindings/power_supply/qnap-poweroff.txt        |   5 +-
+ .../devicetree/bindings/vendor-prefixes.txt        |   3 +
+ arch/arm/boot/dts/Makefile                         |  15 +
+ arch/arm/boot/dts/kirkwood-ds109.dts               |  41 +
+ arch/arm/boot/dts/kirkwood-ds110jv10.dts           |  41 +
+ arch/arm/boot/dts/kirkwood-ds111.dts               |  44 ++
+ arch/arm/boot/dts/kirkwood-ds112.dts               |  48 ++
+ arch/arm/boot/dts/kirkwood-ds209.dts               |  44 ++
+ arch/arm/boot/dts/kirkwood-ds210.dts               |  46 ++
+ arch/arm/boot/dts/kirkwood-ds212.dts               |  47 ++
+ arch/arm/boot/dts/kirkwood-ds212j.dts              |  41 +
+ arch/arm/boot/dts/kirkwood-ds409.dts               |  48 ++
+ arch/arm/boot/dts/kirkwood-ds409slim.dts           |  40 +
+ arch/arm/boot/dts/kirkwood-ds411.dts               |  52 ++
+ arch/arm/boot/dts/kirkwood-ds411j.dts              |  48 ++
+ arch/arm/boot/dts/kirkwood-ds411slim.dts           |  48 ++
+ arch/arm/boot/dts/kirkwood-rs212.dts               |  48 ++
+ arch/arm/boot/dts/kirkwood-rs409.dts               |  44 ++
+ arch/arm/boot/dts/kirkwood-rs411.dts               |  44 ++
+ arch/arm/boot/dts/kirkwood-synology.dtsi           | 871 +++++++++++++++++++++
+ drivers/power/reset/qnap-poweroff.c                |  46 +-
+ 22 files changed, 1655 insertions(+), 12 deletions(-)
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds109.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds110jv10.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds111.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds112.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds209.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds210.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds212.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds212j.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds409.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds409slim.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds411.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds411j.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds411slim.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-rs212.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-rs409.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-rs411.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-synology.dtsi
+
 -- 
 1.8.3.2
 
