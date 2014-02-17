@@ -1,87 +1,61 @@
-From: Vivek Gautam <gautamvivek1987@gmail.com>
-Subject: Re: [PATCH v3] phy: Add new Exynos5 USB 3.0 PHY driver
-Date: Mon, 17 Feb 2014 15:31:41 +0530
-Message-ID: <CAFp+6iF+-C0KgRW9EXPxEeKnkWOjp2UueAGeSUUqs6coAftgFQ@mail.gmail.com>
-References: <1386151747-3209-2-git-send-email-gautam.vivek@samsung.com>
-	<1390225363-24210-1-git-send-email-gautam.vivek@samsung.com>
-	<52F39710.80101@samsung.com>
-	<CAFp+6iFYoN1w_BX7mMEa-Xx5ADaPTTKeDzjsSbQmwVKdSEsmOw@mail.gmail.com>
-	<52FE3A91.1090107@samsung.com>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH 2/5] ARM: shmobile: r8a7791: add i2c master nodes to dtsi
+Date: Mon, 17 Feb 2014 19:03:20 +0900
+Message-ID: <CANqRtoRgMaAzzvD9OK+=_J2Or5HZHzg4RUb899-bXjM7LKHSyw@mail.gmail.com>
+References: <1392543658-5030-1-git-send-email-wsa@the-dreams.de>
+	<1392543658-5030-3-git-send-email-wsa@the-dreams.de>
+	<20140217075410.GA2633@katana>
+	<CANqRtoSDxQfSw5PJB6-UcL-UuMySBkoCqfC+1H=o-EBA18ouLQ@mail.gmail.com>
+	<CAMuHMdW8MLknykkfu9XS5CDpuJcRNyPz+GV5bhUNGndxFacnQw@mail.gmail.com>
+	<20140217091900.GD2633@katana>
+	<CAMuHMdV5KNBcFh5E0bKaLNboZUbuXmMkzdYozqWLvro7Kwjhjw@mail.gmail.com>
+	<20140217093126.GE2633@katana>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <52FE3A91.1090107@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: Vivek Gautam <gautam.vivek@samsung.com>, Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, Kukjin Kim <kgene.kim@samsung.com>, Felipe Balbi <balbi@ti.com>, kishon <kishon@ti.com>, Kamil Debski <k.debski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Julius Werner <jwerner@chromium.org>, Jingoo Han <jg1.han@samsung.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20140217093126.GE2633@katana>
+Sender: linux-sh-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, SH-Linux <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
-
-
-On Fri, Feb 14, 2014 at 9:17 PM, Tomasz Figa <t.figa@samsung.com> wrote:
-
-mistakenly didn't do "Reply All", so sending it again.
-
-> Hi Vivek,
->
->
-> On 14.02.2014 14:53, Vivek Gautam wrote:
->>>>
->>>> Changes from v2:
->>>> 1) Added support for multiple PHYs (UTMI+ and PIPE3) and
->>>>      related changes in the driver structuring.
->>>
->>>
->>>
->>> I'm a bit skeptical about this separation. Can the PHY operate with just
->>> the
->>> UTMI+ or PIPE3 part enabled alone without the other? Can any PHY consumer
->>> operate this way?
+On Mon, Feb 17, 2014 at 6:31 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
+> On Mon, Feb 17, 2014 at 10:23:31AM +0100, Geert Uytterhoeven wrote:
+>> Hi Wolfram,
 >>
+>> On Mon, Feb 17, 2014 at 10:19 AM, Wolfram Sang <wsa@the-dreams.de> wrote:
+>> >> I think the tricky part is when a driver for "renesas,i2c-r8a7790" is updated
+>> >> with a new feature for r8a7790, which doesn't necessarily exist in r8a7791.
+>> >> Then the compatible entry above will cause breakage.
+>> >
+>> > If the driver is updated in that way, then it MUST introduce an r8a7791
+>> > compatible entry and make sure the new feature is only used on r8a7790.
+>> > Otherwise it is a bug. If this is adhered, we won't have a breakage
+>> > because the specific entry (here r8a7791) always comes first. Or?
 >>
->> Yes :-)
->> As also pointed by Kishon the PHY consumer (which is DWC3 in case of
->> Exynos5 SoC series)
->> should theoretically be able use either UTMI+ phy for High speed
->> operations or both (UTMI+ and PIPE3)
->> for Super Speed operations.
+>> That will indeed prevent breakage. But in the distributed development world,
+>> the person who modifies the driver may not be aware of the r8a7791.
 >
->
-> OK, that's fine then. This is the explanation I needed, thanks.
->
->
->>>
->>> I believe the right thing to do here is to do all the initialization in
->>> .power_on() and let the driver simply call phy_power_on() when it needs
->>> the
->>> PHY and phy_power_off() otherwise.
->>
->>
->> If this is what we should be doing then what will be the purpose of
->> two separate APIs :
->> phy_power_on() and phy_init().
->> Am i missing while understanding the things.
->>
->
-> I don't understand this separation as well. Operations that should be done
-> together shouldn't be separated. Is there any case when you can call one of
-> phy_power_on() and phy_init() without calling another one right before/after
-> it?
+> Then it will break even with a seperate r8a7791 compatible entry as
+> well, sadly. Currently, the only thing encoded in the .data field of all
+> compatibles, is which generation of the core is used. This is the same
+> for r8a7790 and r8a7791 (this is why they ARE compatible ;)). So, even
+> in the unlikely case of an r8a7790-only-feature, some code/reactoring to
+> make the distinction is absolutely necessary.
 
-Most of the PHY consumers need to call phy_power_on() as well as phy_init()
-to get PHY working (if the PHY provider gives callback to both).
-I think the idea would have been to separate out the initialization
-related and power related
-jobs (which may include setting up the PMUs and may be regulators ?)
-But, i think it's true, if the PHY provider callback for both
-phy_power_on() and phy_init()
-then the consumer __has__ to call both to get things working.
+It won't break because anyone who modifies r8a7790 support need to
+make it specific to that SoC to not pull in r8a7791 into some
+assumption. Just because the driver assumes something now doesn't mean
+the hardware actually is compatible.
 
+I think I understand your proposal with making an assumption of the
+current state of the driver and making sure to add the new SoC
+compatible value before adjusting the fallback. But this mainly seems
+like a optimization to improve throughput commit-wise. I actually
+proposed the same way for SDHI, but now when I think about it I
+realize that there is no shortcut for adding the compatible string to
+the driver. It has to be done sooner or later anyway.
 
+Or what am I missing? =)
 
--- 
-Best Regards
-Vivek Gautam
-Samsung R&D Institute, Bangalore
-India
+/ magnus
