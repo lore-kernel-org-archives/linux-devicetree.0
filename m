@@ -1,126 +1,258 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: [PATCH v5 1/4] ASoC: tlv320aic32x4: Support for master
-	clock
-Date: Mon, 17 Feb 2014 11:04:17 +0100
-Message-ID: <1392631460-32002-2-git-send-email-mpa@pengutronix.de>
-References: <1392575252-9222-1-git-send-email-mpa@pengutronix.de>
- <1392631460-32002-1-git-send-email-mpa@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1392631460-32002-1-git-send-email-mpa@pengutronix.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Kumar Gala <galak@codeaurora.org>, Markus Pargmann <mpa@pengutronix.de>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v3 2/7] ARM: imx6: gpc: Add PU power domain for GPU/VPU
+Date: Mon, 17 Feb 2014 11:04:58 +0100
+Message-ID: <1392631503-17283-3-git-send-email-p.zabel@pengutronix.de>
+References: <1392631503-17283-1-git-send-email-p.zabel@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392631503-17283-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for a master clock passed through DT. The master clock of
-the codec is only active when the codec is in use.
+When generic pm domain support is enabled, the PGC can be used
+to completely gate power to the PU power domain containing GPU3D,
+GPU2D, and VPU cores.
+This code triggers the PGC powerdown sequence to disable the GPU/VPU
+isolation cells and gate power and then disables the PU regulator.
+To reenable, the reverse powerup sequence is triggered after the PU
+regulaotor is enabled again.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- .../devicetree/bindings/sound/tlv320aic32x4.txt    |  4 ++++
- sound/soc/codecs/tlv320aic32x4.c                   | 23 ++++++++++++++++++++++
- 2 files changed, 27 insertions(+)
+Changes since v2:
+ - Only disable the power domain on boot if CONFIG_PM_RUNTIME is enabled
+ - Removed superfluous second assignment of imx6q_pu_domain.of_node
+---
+ arch/arm/mach-imx/Kconfig |   2 +
+ arch/arm/mach-imx/gpc.c   | 173 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 175 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt b/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
-index db05510..352be7b 100644
---- a/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
-+++ b/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
-@@ -8,6 +8,8 @@ Required properties:
+diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+index 33567aa..3c58f2e 100644
+--- a/arch/arm/mach-imx/Kconfig
++++ b/arch/arm/mach-imx/Kconfig
+@@ -808,6 +808,7 @@ config SOC_IMX6Q
+ 	select PL310_ERRATA_727915 if CACHE_PL310
+ 	select PL310_ERRATA_769419 if CACHE_PL310
+ 	select PM_OPP if PM
++	select PM_GENERIC_DOMAINS if PM
  
- Optional properties:
-  - reset-gpios: Reset-GPIO phandle with args as described in gpio/gpio.txt
-+ - clocks/clock-names: Clock named 'mclk' for the master clock of the codec.
-+   See clock/clock-bindings.txt for information about the detailed format.
+ 	help
+ 	  This enables support for Freescale i.MX6 Quad processor.
+@@ -827,6 +828,7 @@ config SOC_IMX6SL
+ 	select PL310_ERRATA_588369 if CACHE_PL310
+ 	select PL310_ERRATA_727915 if CACHE_PL310
+ 	select PL310_ERRATA_769419 if CACHE_PL310
++	select PM_GENERIC_DOMAINS if PM
  
+ 	help
+ 	  This enables support for Freescale i.MX6 SoloLite processor.
+diff --git a/arch/arm/mach-imx/gpc.c b/arch/arm/mach-imx/gpc.c
+index 586e017..c61126c 100644
+--- a/arch/arm/mach-imx/gpc.c
++++ b/arch/arm/mach-imx/gpc.c
+@@ -10,19 +10,32 @@
+  * http://www.gnu.org/copyleft/gpl.html
+  */
  
- Example:
-@@ -15,4 +17,6 @@ Example:
- codec: tlv320aic32x4@18 {
- 	compatible = "ti,tlv320aic32x4";
- 	reg = <0x18>;
-+	clocks = <&clks 201>;
-+	clock-names = "mclk";
- };
-diff --git a/sound/soc/codecs/tlv320aic32x4.c b/sound/soc/codecs/tlv320aic32x4.c
-index 1dd50e4..d96cb7c 100644
---- a/sound/soc/codecs/tlv320aic32x4.c
-+++ b/sound/soc/codecs/tlv320aic32x4.c
-@@ -33,6 +33,7 @@
- #include <linux/i2c.h>
- #include <linux/cdev.h>
- #include <linux/slab.h>
 +#include <linux/clk.h>
++#include <linux/delay.h>
+ #include <linux/io.h>
+ #include <linux/irq.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/of_irq.h>
++#include <linux/platform_device.h>
++#include <linux/pm_domain.h>
++#include <linux/regulator/consumer.h>
+ #include <linux/irqchip/arm-gic.h>
+ #include "common.h"
++#include "hardware.h"
  
- #include <sound/tlv320aic32x4.h>
- #include <sound/core.h>
-@@ -67,6 +68,7 @@ struct aic32x4_priv {
- 	u32 micpga_routing;
- 	bool swapdacs;
- 	int rstn_gpio;
-+	struct clk *mclk;
- };
++#define GPC_CNTR		0x000
+ #define GPC_IMR1		0x008
++#define GPC_PGC_GPU_PDN		0x260
++#define GPC_PGC_GPU_PUPSCR	0x264
++#define GPC_PGC_GPU_PDNSCR	0x268
+ #define GPC_PGC_CPU_PDN		0x2a0
  
- /* 0dB min, 0.5dB steps */
-@@ -487,8 +489,21 @@ static int aic32x4_mute(struct snd_soc_dai *dai, int mute)
- static int aic32x4_set_bias_level(struct snd_soc_codec *codec,
- 				  enum snd_soc_bias_level level)
- {
-+	struct aic32x4_priv *aic32x4 = snd_soc_codec_get_drvdata(codec);
-+
- 	switch (level) {
- 	case SND_SOC_BIAS_ON:
-+		/* Switch on master clock */
-+		if (!IS_ERR(aic32x4->mclk)) {
-+			int ret;
-+
-+			ret = clk_prepare_enable(aic32x4->mclk);
-+			if (ret) {
-+				dev_err(codec->dev, "Failed to enable master clock\n");
-+				return ret;
-+			}
-+		}
-+
- 		/* Switch on PLL */
- 		snd_soc_update_bits(codec, AIC32X4_PLLPR,
- 				    AIC32X4_PLLEN, AIC32X4_PLLEN);
-@@ -539,6 +554,10 @@ static int aic32x4_set_bias_level(struct snd_soc_codec *codec,
- 		/* Switch off BCLK_N Divider */
- 		snd_soc_update_bits(codec, AIC32X4_BCLKN,
- 				    AIC32X4_BCLKEN, 0);
-+
-+		/* Switch off master clock */
-+		if (!IS_ERR(aic32x4->mclk))
-+			clk_disable_unprepare(aic32x4->mclk);
- 		break;
- 	case SND_SOC_BIAS_OFF:
- 		break;
-@@ -717,6 +736,10 @@ static int aic32x4_i2c_probe(struct i2c_client *i2c,
- 		aic32x4->rstn_gpio = -1;
- 	}
+ #define IMR_NUM			4
  
-+	aic32x4->mclk = devm_clk_get(&i2c->dev, "mclk");
-+	if (IS_ERR(aic32x4->mclk))
-+		dev_info(&i2c->dev, "No mclk found, continuing without clock\n");
++#define GPU_VPU_PUP_REQ		BIT(1)
++#define GPU_VPU_PDN_REQ		BIT(0)
 +
- 	if (gpio_is_valid(aic32x4->rstn_gpio)) {
- 		ret = devm_gpio_request_one(&i2c->dev, aic32x4->rstn_gpio,
- 				GPIOF_OUT_INIT_LOW, "tlv320aic32x4 rstn");
+ static void __iomem *gpc_base;
+ static u32 gpc_wake_irqs[IMR_NUM];
+ static u32 gpc_saved_imrs[IMR_NUM];
+@@ -138,3 +151,163 @@ void __init imx_gpc_init(void)
+ 	gic_arch_extn.irq_unmask = imx_gpc_irq_unmask;
+ 	gic_arch_extn.irq_set_wake = imx_gpc_irq_set_wake;
+ }
++
++static struct regulator *pu_reg;
++
++static int imx6q_pm_pu_power_off(struct generic_pm_domain *genpd)
++{
++	u32 val;
++	int iso, iso2sw;
++
++	/* Read ISO and ISO2SW power down delays */
++	val = readl_relaxed(gpc_base + GPC_PGC_GPU_PDNSCR);
++	iso = val & 0x3f;
++	iso2sw = (val >> 8) & 0x3f;
++
++	/* Gate off PU domain when GPU/VPU when powered down */
++	writel_relaxed(0x1, gpc_base + GPC_PGC_GPU_PDN);
++
++	/* Request GPC to power down GPU/VPU */
++	val = readl_relaxed(gpc_base + GPC_CNTR);
++	val |= GPU_VPU_PDN_REQ;
++	writel_relaxed(val, gpc_base + GPC_CNTR);
++
++	/* Wait ISO + ISO2SW IPG clock cycles */
++	ndelay((iso + iso2sw) * 1000 / 66);
++
++	regulator_disable(pu_reg);
++
++	return 0;
++}
++
++static int imx6q_pm_pu_power_on(struct generic_pm_domain *genpd)
++{
++	int ret;
++	u32 val;
++	int sw, sw2iso;
++
++	ret = regulator_enable(pu_reg);
++	if (ret) {
++		pr_err("%s: failed to enable regulator: %d\n", __func__, ret);
++		return ret;
++	}
++
++	/* Gate off PU domain when GPU/VPU when powered down */
++	writel_relaxed(0x1, gpc_base + GPC_PGC_GPU_PDN);
++
++	/* Read ISO and ISO2SW power down delays */
++	val = readl_relaxed(gpc_base + GPC_PGC_GPU_PUPSCR);
++	sw = val & 0x3f;
++	sw2iso = (val >> 8) & 0x3f;
++
++	/* Request GPC to power up GPU/VPU */
++	val = readl_relaxed(gpc_base + GPC_CNTR);
++	val |= GPU_VPU_PUP_REQ;
++	writel_relaxed(val, gpc_base + GPC_CNTR);
++
++	/* Wait ISO + ISO2SW IPG clock cycles */
++	ndelay((sw + sw2iso) * 1000 / 66);
++
++	return 0;
++}
++
++static struct generic_pm_domain imx6q_pu_domain = {
++	.name = "PU",
++	.power_off = imx6q_pm_pu_power_off,
++	.power_on = imx6q_pm_pu_power_on,
++};
++
++static int imx6q_pm_notifier_call(struct notifier_block *nb,
++				  unsigned long event, void *data)
++{
++	struct generic_pm_domain *genpd;
++	struct device *dev = data;
++	struct device_node *np;
++	int ret;
++
++	switch (event) {
++	case BUS_NOTIFY_BIND_DRIVER:
++		np = of_parse_phandle(dev->of_node, "power-domain", 0);
++		if (!np || np != imx6q_pu_domain.of_node)
++			return NOTIFY_DONE;
++
++		ret = pm_genpd_of_add_device(np, dev);
++		if (ret)
++			dev_err(dev, "failed to add to power domain: %d\n",
++				ret);
++		break;
++	case BUS_NOTIFY_UNBOUND_DRIVER:
++		genpd = dev_to_genpd(dev);
++		if (IS_ERR(genpd) || genpd != &imx6q_pu_domain)
++			return NOTIFY_DONE;
++
++		ret = pm_genpd_remove_device(genpd, dev);
++		if (ret)
++			dev_err(dev, "failed to remove from power domain: %d\n",
++				ret);
++		break;
++	}
++
++	return NOTIFY_DONE;
++}
++
++static struct notifier_block imx6q_platform_nb = {
++	.notifier_call = imx6q_pm_notifier_call,
++};
++
++static int imx_gpc_probe(struct platform_device *pdev)
++{
++	struct device_node *np;
++	bool is_off;
++	int ret;
++
++	np = of_get_child_by_name(pdev->dev.of_node, "pu-power-domain");
++	if (!np) {
++		dev_err(&pdev->dev, "missing pu-power-domain node\n");
++		return -EINVAL;
++	}
++	imx6q_pu_domain.of_node = np;
++
++	pu_reg = devm_regulator_get(&pdev->dev, "pu");
++	if (IS_ERR(pu_reg)) {
++		ret = PTR_ERR(pu_reg);
++		dev_err(&pdev->dev, "failed to get pu regulator: %d\n", ret);
++		return ret;
++	}
++
++	/* The regulator is initially enabled */
++	ret = regulator_enable(pu_reg);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "failed to enable pu regulator: %d\n", ret);
++		return ret;
++	}
++
++	is_off = IS_ENABLED(CONFIG_PM_RUNTIME);
++	if (is_off)
++		imx6q_pm_pu_power_off(&imx6q_pu_domain);
++
++	pm_genpd_init(&imx6q_pu_domain, NULL, is_off);
++	bus_register_notifier(&platform_bus_type, &imx6q_platform_nb);
++
++	return 0;
++}
++
++static struct of_device_id imx_gpc_dt_ids[] = {
++	{ .compatible = "fsl,imx6q-gpc" },
++	{ }
++};
++
++static struct platform_driver imx_gpc_driver = {
++	.driver = {
++		.name = "imx-gpc",
++		.owner = THIS_MODULE,
++		.of_match_table = imx_gpc_dt_ids,
++	},
++	.probe = imx_gpc_probe,
++};
++
++static int __init imx_pgc_init(void)
++{
++	return platform_driver_register(&imx_gpc_driver);
++}
++subsys_initcall(imx_pgc_init);
 -- 
 1.8.5.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
