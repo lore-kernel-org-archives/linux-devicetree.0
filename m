@@ -1,15 +1,17 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC/PATCH 0/3] Add devicetree scanning for randomness
-Date: Mon, 17 Feb 2014 17:13:07 +0100
-Message-ID: <1418981.0py7JxXCp8@wuerfel>
-References: <1392168805-14200-1-git-send-email-lauraa@codeaurora.org>
- <201402121251.06280.arnd@arndb.de>
- <20140217155419.682F7C401D4@trevor.secretlab.ca>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH RFC v3 3/3] Documentation: arm: define DT idle states
+ bindings
+Date: Mon, 17 Feb 2014 16:34:21 +0000
+Message-ID: <20140217163421.GD20125@e102568-lin.cambridge.arm.com>
+References: <1392128273-8614-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1392128273-8614-4-git-send-email-lorenzo.pieralisi@arm.com>
+ <20140216013956.GV4451@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140217155419.682F7C401D4@trevor.secretlab.ca>
+In-Reply-To: <20140216013956.GV4451@sirena.org.uk>
+Content-Disposition: inline
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,35 +21,27 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Laura Abbott <lauraa@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, keescook@chromium.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Mark Hambleton <mark.hambleton@broadcom.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Dave P Martin <Dave.Martin@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen Boyd <sboyd@codeaurora.org>, Amit
 List-Id: devicetree@vger.kernel.org
 
-On Monday 17 February 2014 15:54:19 Grant Likely wrote:
-> On Wed, 12 Feb 2014 11:20:00 -0700, Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
-> > On Wed, Feb 12, 2014 at 12:45:54PM -0500, Jason Cooper wrote:
-> > 
-> > > The bootloader would then load this file into ram, and pass the
-> > > address/size to the kernel either via dt, or commandline.  kaslr (run in
-> > > the decompressor) would consume some of this randomness, and then
-> > > random.c would consume the rest in a non-crediting initialization.
-> > 
-> > Sure is a neat idea, but I think in general it would probably be smart
-> > to include the entire FDT blob in the early random pool, that way you
-> > get MACs and other machine unique data too.
+On Sun, Feb 16, 2014 at 01:39:56AM +0000, Mark Brown wrote:
+
+[...]
+
+> > +	- cache-state-retained
+> > +		Usage: See definition
+> > +		Value type: <none>
+> > +		Definition: if present cache memory is retained on power down,
+> > +			    otherwise it is lost.
 > 
-> I applied a patch that did exactly that (109b623629), and then reverted
-> it (b920ecc82) shortly thereafter because add_device_randomness() is
-> a rather slow function and FDTs can get large. I'd like to see someone
-> do a reasonable analysis on the cost of using an FDT for randomness
-> before I reapply a patch doing something similar. An awful lot of the
-> FDT data is not very random, but there are certainly portions of it that
-> are appropriate for the random pool.
+> Might be better to define which caches?
 
-Could we use a faster hash function that scans the entire device tree and
-then just feed the output of that into add_device_randomness? We probably
-can't expect that there is a lot of entropy in the DT blob, so the
-result wouldn't be all that different in terms of quality of the random
-seed.
+I do not expect caches in the same power domain to have different retention
+capabilities, so a flag per-state should be enough. If anyone is unhappy
+about this please flag it up. List of caches affected can be retrieved by
+walking the power-domain specifiers and check those against the caches power
+domains.
 
-	Arnd
+Thanks,
+Lorenzo
