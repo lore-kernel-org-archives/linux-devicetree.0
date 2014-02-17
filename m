@@ -1,73 +1,107 @@
-From: Philippe De Muyter <phdm-KobBqTBAxd8@public.gmane.org>
-Subject: Re: [PATCH v4] bus: imx-weim: support CS GPR configuration
-Date: Mon, 17 Feb 2014 09:52:21 +0100
-Message-ID: <20140217085221.GB23095@frolo.macqel>
-References: <1392559381-30842-1-git-send-email-shawn.guo@linaro.org> <1392560564.725313659@f356.i.mail.ru> <20140216143114.GH2946@S2101-09.ap.freescale.net>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Patch v5 1/2] dmaengine: add Qualcomm BAM dma driver
+Date: Mon, 17 Feb 2014 14:24:59 +0530
+Message-ID: <20140217085458.GB10628@intel.com>
+References: <1391546556-27702-1-git-send-email-agross@codeaurora.org>
+ <1391546556-27702-2-git-send-email-agross@codeaurora.org>
+ <20140211173048.GP10628@intel.com>
+ <20140211205852.GA10744@qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140216143114.GH2946-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+In-Reply-To: <20140211205852.GA10744-zC7DfRvBq/JWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 16, 2014 at 10:31:16PM +0800, Shawn Guo wrote:
-> On Sun, Feb 16, 2014 at 06:22:44PM +0400, Alexander Shiyan wrote:
-> > =D0=92=D0=BE=D1=81=D0=BA=D1=80=D0=B5=D1=81=D0=B5=D0=BD=D1=8C=D0=B5,=
- 16 =D1=84=D0=B5=D0=B2=D1=80=D0=B0=D0=BB=D1=8F 2014, 22:03 +08:00 =D0=BE=
-=D1=82 Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
-> > > For imx50-weim and imx6q-weim type of devices, there might a WEIM=
- CS
-> > > space configuration register in General Purpose Register controll=
-er,
-> > > e.g. IOMUXC_GPR1 on i.MX6Q.
-> > ...
-> > > +static int __init imx_weim_gpr_setup(struct platform_device *pde=
-v)
+On Tue, Feb 11, 2014 at 02:58:52PM -0600, Andy Gross wrote:
+> On Tue, Feb 11, 2014 at 11:00:48PM +0530, Vinod Koul wrote:
+> > On Tue, Feb 04, 2014 at 02:42:35PM -0600, Andy Gross wrote:
+> > > Add the DMA engine driver for the QCOM Bus Access Manager (BAM) DMA controller
+> > > found in the MSM 8x74 platforms.
+> > > 
+> 
+> > > +/**
+> > > + * bam_alloc_chan - Allocate channel resources for DMA channel.
+> > > + * @chan: specified channel
+> > > + *
+> > > + * This function allocates the FIFO descriptor memory
+> > > + */
+> > > +static int bam_alloc_chan(struct dma_chan *chan)
 > > > +{
-> > > +	struct device_node *np =3D pdev->dev.of_node;
-> > > +	struct property *prop;
-> > > +	const __be32 *p;
-> > > +	struct regmap *gpr;
-> > > +	u32 gprvals[4] =3D {
-> > > +		05,	/* CS0(128M) CS1(0M)  CS2(0M)  CS3(0M) */
-> > > +		033,	/* CS0(64M)  CS1(64M) CS2(0M)  CS3(0M) */
-> > > +		0113,	/* CS0(64M)  CS1(32M) CS2(32M) CS3(0M) */
-> > > +		01111,	/* CS0(64M)  CS1(32M) CS2(32M) CS3(0M) */
-> > > +	};
-> > > +	u32 gprval =3D 0;
-> > > +	u32 val;
-> > > +	int cs =3D 0;
-> > > +	int i =3D 0;
+> > > +	struct bam_chan *bchan = to_bam_chan(chan);
+> > > +	struct bam_device *bdev = bchan->bdev;
 > > > +
-> > > +	gpr =3D syscon_regmap_lookup_by_phandle(np, "fsl,weim-cs-gpr");
-> > > +	if (IS_ERR(gpr)) {
-> > > +		dev_dbg(&pdev->dev, "failed to find weim-cs-gpr\n");
-> > > +		return 0;
-> >=20
-> > Only one comment:
-> > You do not use these error codes in the probe(),
-> > so let's declare this function as void.
->=20
-> Oh, yes.  I should check return of imx_weim_gpr_setup() in probe().
-> Will add in the next version.
+> > > +	/* allocate FIFO descriptor space, but only if necessary */
+> > > +	if (!bchan->fifo_virt) {
+> > > +		bchan->fifo_virt = dma_alloc_writecombine(bdev->dev,
+> > > +					BAM_DESC_FIFO_SIZE, &bchan->fifo_phys,
+> > > +					GFP_KERNEL);
+> > > +
+> > > +		if (!bchan->fifo_virt) {
+> > > +			dev_err(bdev->dev, "Failed to allocate desc fifo\n");
+> > > +			return -ENOMEM;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	return BAM_DESC_FIFO_SIZE;
+> > But you cna have SW descriptors more than HW ones and issue new ones once HW is
+> > done with them. Why tie the limit to what HW supports and not create a better
+> > driver?
+> 
+> Given that the virt-dma only allows me to have one outstanding transaction that
+> consumes the fifo, and that I allocate descriptors from kzalloc, this would be
+> as many as you can get until you go OOM.
+well you can update virt-dma to queue up multiple descriptors to HW is thats
+supported :)
+> 
+> The slave_sg() doesn't pull from a pool of descriptors.  It uses kzalloc.  So
+> what value should I use for return value?  Most drivers use 1.
+Lots do 0 as they dont allocate descriptor here, they allocate when the
+.prep_xxx call gets invoked, which is what I suspect from you case too.
 
-Well, as all the error cases are already covered by error messages, the=
-re is
-no added value in testing that again in probe().  As Alexander wrote, y=
-ou can
-declare imx_weim_gpr_setup() as 'void'.
+> 
+> [....]
+> 
+> > > +static void bam_slave_config(struct bam_chan *bchan,
+> > > +		struct dma_slave_config *cfg)
+> > > +{
+> > > +	struct bam_device *bdev = bchan->bdev;
+> > > +	u32 maxburst;
+> > > +
+> > > +	if (bchan->slave.direction == DMA_DEV_TO_MEM)
+> > > +		maxburst = bchan->slave.src_maxburst = cfg->src_maxburst;
+> > > +	else
+> > > +		maxburst = bchan->slave.dst_maxburst = cfg->dst_maxburst;
+> > can you remove usage of slave.direction have save both. I am going to remove
+> > this member...
+> > 
+> 
+> Yes. no problem.
+> 
+> [....]
+> 
+> > > +
+> > > +
+> > > +	/* allocate enough room to accomodate the number of entries */
+> > > +	async_desc = kzalloc(sizeof(*async_desc) +
+> > > +			(sg_len * sizeof(struct bam_desc_hw)), GFP_NOWAIT);
+> > this seems to assume that each sg entry length will not exceed the HW capablity.
+> > Does engine support any length descriptor, if not you may want to split to
+> > multiple.
+> 
+> Isn't this what the dma_set_max_seg_size supposed to fix?  The client is not
+> supposed to send segments larger than the max segment you can take.  If that is
+> true, then I have no issues.
+Thats is true too, but do we want to limit this in driver ? This is more of a SW
+limitation of who breaks up. for some like audio it makese sense but other not
+too sure...
 
-Philippe
-
---=20
-Philippe De Muyter +32 2 6101532 Macq SA rue de l'Aeronef 2 B-1140 Brux=
-elles
+-- 
+~Vinod
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
