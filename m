@@ -1,107 +1,61 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/7] Documentation: Add device tree bindings for
- Freescale i.MX GPC
-Date: Mon, 17 Feb 2014 12:08:24 +0100
-Message-ID: <1392635304.3456.8.camel@pizza.hi.pengutronix.de>
-References: <1392631503-17283-1-git-send-email-p.zabel@pengutronix.de>
-	 <1392631503-17283-2-git-send-email-p.zabel@pengutronix.de>
-	 <20140217104936.GB18920@e106331-lin.cambridge.arm.com>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH V2 1/2] ARM: shmobile: r8a7791: add i2c master nodes to dtsi
+Date: Mon, 17 Feb 2014 21:06:23 +0900
+Message-ID: <CANqRtoQvvTQ5r1X7KiGwPoft-GZK8qp-X1z31Hi8FO0bcQ3yZA@mail.gmail.com>
+References: <1392633882-12142-1-git-send-email-wsa@the-dreams.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140217104936.GB18920-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1392633882-12142-1-git-send-email-wsa@the-dreams.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: SH-Linux <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa@sang-engineering.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Mon, Feb 17, 2014 at 7:44 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
+> From: Wolfram Sang <wsa@sang-engineering.com>
+>
+> Signed-off-by: Wolfram Sang <wsa@sang-engineering.com>
+> ---
+>  arch/arm/boot/dts/r8a7791.dtsi | 69 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
+> index 41194fe..1ab4f3d 100644
+> --- a/arch/arm/boot/dts/r8a7791.dtsi
+> +++ b/arch/arm/boot/dts/r8a7791.dtsi
+> @@ -19,6 +19,15 @@
+>         #address-cells = <2>;
+>         #size-cells = <2>;
+>
+> +       aliases {
+> +               i2c0 = &i2c0;
+> +               i2c1 = &i2c1;
+> +               i2c2 = &i2c2;
+> +               i2c3 = &i2c3;
+> +               i2c4 = &i2c4;
+> +               i2c5 = &i2c5;
+> +       };
+> +
+>         cpus {
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+> @@ -170,6 +179,66 @@
+>                              <0 17 IRQ_TYPE_LEVEL_HIGH>;
+>         };
+>
+> +       i2c0: i2c@e6508000 {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               compatible = "renesas,i2c-r8a7791";
 
-thank you for the comments.
+V2 of this patch looks good to me, thanks!
 
-Am Montag, den 17.02.2014, 10:49 +0000 schrieb Mark Rutland:
-> On Mon, Feb 17, 2014 at 10:04:57AM +0000, Philipp Zabel wrote:
-> > The i.MX6 contains a power controller that controls power gating and
-> > sequencing for the SoC's power domains.
-> > 
-> > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/power/fsl,imx-gpc.txt      | 61 ++++++++++++++++++++++
-> >  1 file changed, 61 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-> > new file mode 100644
-> > index 0000000..3ec8c0e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-> > @@ -0,0 +1,61 @@
-> > +Freescale i.MX General Power Controller
-> > +=======================================
-> > +
-> > +The i.MX6Q General Power Control (GPC) block contains DVFS load tracking
-> > +counters and Power Gating Control (PGC) for the CPU and PU (GPU/VPU) power
-> > +domains.
-> > +
-> > +Required properties:
-> > +- compatible: Should be "fsl,imx6q-gpc"
-> > +- reg: should be register base and length as documented in the
-> > +  datasheet
-> > +- interrupts: Should contain GPC interrupt request 1
-> 
-> Does the unit have multiple interrupts?
+Acked-by: Magnus Damm <damm@opensource.se>
 
-According to the i.MX6 Reference Manuals, interrupt 121 is the "GPC
-interrupt request 1". The following interrupt 122 (which also is listed
-in the current imx6qdl.dtsi) is "Reserved". I think the answer is no,
-maybe Shawn can correct me.
+When you have time, please send an incremental patch to add support
+for the three IIC channels as well.
 
-> If so it would be good to use interrupt-names so they can be describe
-> unambiguously.
-> 
-> > +- pu-supply: Link to the LDO regulator powering the PU power domain
-> > +- #address-cells, #size-cells: Should be <1>
-> 
-> This seems to be to map child nodes into the same address space. Is
-> there any need that these are precisely 1, or could they be anything
-> that maps the child nodes in?
+Cheers,
 
-I guess there is not. Should I just drop this line?
-
-> > +
-> > +The gpc node should contain 'power-domain' subnodes for each power domain.
-> > +These serve as phandle targets for devices belonging to the power domain:
-> > +
-> > +Power domains controlled by a PGC register set
-> > +==============================================
-> > +
-> > +Required properties:
-> > +- compatible: Should be "fsl,imx6q-power-domain"
-> > +- reg: should be register base and length as documented in the
-> > +  datasheet
-> > +
-> > +Specifying power domain for IP modules
-> > +======================================
-> > +
-> > +IP cores belonging to a power domain should contain a 'power-domain' property
-> > +that is a phandle pointing to the power-domain subnode of the gpc device node.
-> > +
-> > +Required properties:
-> > +- power-domain: A phandle pointing to the power-domain device tree node
-> 
-> This sounds a little generic. Is there a standard power-domain binding?
-> If not it might be better for the moment for this to be
-> fsl,power-domain.
-
-So far I am only aware of samsung,power-domain, so I'll change this to
-fsl,power-domain accordingly.
-
-regards
-Philipp
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+/ magnus
