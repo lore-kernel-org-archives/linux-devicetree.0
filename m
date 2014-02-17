@@ -1,92 +1,68 @@
-From: Jingchang Lu <jingchang.lu@freescale.com>
-Subject: RE: [PATCHv11 2/2] dma: Add Freescale eDMA engine driver support
-Date: Mon, 17 Feb 2014 09:08:00 +0000
-Message-ID: <de84e857254848fb86dfcffa65617f47@BL2PR03MB467.namprd03.prod.outlook.com>
-References: <1390209831-15679-1-git-send-email-b35083@freescale.com>
- <ca19105670be4af882ed72d3e004a6c7@BLUPR03MB472.namprd03.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/5] ARM: shmobile: r8a7791: add i2c master nodes to dtsi
+Date: Mon, 17 Feb 2014 10:11:37 +0100
+Message-ID: <CAMuHMdW8MLknykkfu9XS5CDpuJcRNyPz+GV5bhUNGndxFacnQw@mail.gmail.com>
+References: <1392543658-5030-1-git-send-email-wsa@the-dreams.de>
+	<1392543658-5030-3-git-send-email-wsa@the-dreams.de>
+	<20140217075410.GA2633@katana>
+	<CANqRtoSDxQfSw5PJB6-UcL-UuMySBkoCqfC+1H=o-EBA18ouLQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ca19105670be4af882ed72d3e004a6c7@BLUPR03MB472.namprd03.prod.outlook.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "vinod.koul@intel.com" <vinod.koul@intel.com>
-Cc: "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "arnd@arndb.de" <arnd@arndb.de>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jingchang Lu <jingchang.lu@freescale.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CANqRtoSDxQfSw5PJB6-UcL-UuMySBkoCqfC+1H=o-EBA18ouLQ@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, SH-Linux <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFZpbm9kLA0KDQogICAgQ291bGQgeW91IHBsZWFzZSBoZWxwIG1lcmdlIHRoaXMgcGF0Y2g/
-IFdlIGFyZSBoYXZpbmcgc29tZSBvdGhlciB1cHN0cmVhbWluZw0KcGF0Y2hlcyB1c2luZyB0aGUg
-ZG1hIGZ1bmN0aW9uYWxpdHkgcGVuZGluZyB0aGUgYWNjZXB0YW5jZSBvZiB0aGUgZURNQSBkcml2
-ZXIuDQogICAgTWFueSB0aGFua3MhDQoNCkJlc3QgUmVnYXJkcywNCkppbmdjaGFuZw0KDQo+IC0t
-LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEx1IEppbmdjaGFuZy1CMzUwODMNCj4g
-U2VudDogTW9uZGF5LCBKYW51YXJ5IDI3LCAyMDE0IDE6MjAgUE0NCj4gVG86IEx1IEppbmdjaGFu
-Zy1CMzUwODM7IHZpbm9kLmtvdWxAaW50ZWwuY29tDQo+IENjOiBkYW4uai53aWxsaWFtc0BpbnRl
-bC5jb207IGFybmRAYXJuZGIuZGU7IHNoYXduLmd1b0BsaW5hcm8ub3JnOw0KPiBwYXdlbC5tb2xs
-QGFybS5jb207IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzd2FycmVuQHd3d2RvdG9yZy5vcmc7IGxp
-bnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
-ZnJhZGVhZC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBXYW5nIEh1YW4tQjE4
-OTY1DQo+IFN1YmplY3Q6IFJFOiBbUEFUQ0h2MTEgMi8yXSBkbWE6IEFkZCBGcmVlc2NhbGUgZURN
-QSBlbmdpbmUgZHJpdmVyIHN1cHBvcnQNCj4gDQo+IEhpLCBWaW5vZCwNCj4gDQo+ICAgTGV0IG1l
-IGdpdmUgc29tZSBtb3JlIGV4cGxhbmF0aW9uIG9uIHRoZSBlRE1BIGVuZ2luZSBwYXVzZSBhbmQN
-Cj4gdGVybWluYXRpb24gaGVyZToNCj4gVGhlIGVETUEgZW5naW5lIGlzIGEgcmVxdWVzdC1kcml2
-ZW4gY29udHJvbGxlciwgaXQgbWFuYWdlIGFsbCBjaGFubmVscyBpbg0KPiBvbmUgZW5naW5lIGFu
-ZCBzY2hlZHVsZSB0aGVtIHRvIHBlcmZvcm0gZWFjaCBvbmUncyB0cmFuc2ZlciB3aGVuIG9uZSdz
-DQo+IGRtYSByZXF1ZXN0IGFycml2ZS4NCj4gV2hlbiBhIGRtYSByZXF1ZXN0IG9mIGEgc3BlY2lm
-aWMgY2hhbm5lbCBpcyByZWNlaXZlZCwgdGhlIGNoYW5uZWwncw0KPiBhcHByb3ByaWF0ZSBUQ0Qg
-UGFyYW1ldGVyIGNvbnRlbnRzIGFyZSBsb2FkZWQgaW50byB0aGUgZURNQSBlbmdpbmUsIGFuZA0K
-PiB0aGUgYXBwcm9wcmlhdGUgcmVhZHMgYW5kIHdyaXRlcyBQZXJmb3JtIHVudGlsIHRoZSBtaW5v
-ciBieXRlIHRyYW5zZmVyDQo+IGNvdW50IGhhcyB0cmFuc2ZlcnJlZCwgdGhlIG51bWJlciBvZiBi
-eXRlcyB0byB0cmFuc2ZlciBwZXIgcmVxdWVzdCBpcw0KPiBkZXRlcm1pbmVkIGJ5IHRoZSBzYWx2
-ZSdzIGNoYXJhY3RlcmlzdGljcywgc3VjaCBhcyB0aGUgRklGTyBzaXplLCBhbmQgdGhlDQo+IGRt
-YSByZXF1ZXN0IGNvbmRpdGlvbiBpcyBhbHNvIGRldGVybWluZWQgYnkgc3BlY2lmaWMgc2xhdmUs
-IHN1Y2ggYXMgRklGTw0KPiBlbXB0eS4NCj4gQW5kIHRvIHRoZSB0cmFuc2ZlciBhIGJ1bmNoIG9m
-IGRhdGEgbmVlZCBtYW55IGRtYSByZXF1ZXN0cy4NCj4gICBTbyBpZiB0aGUgZG1hIHJlcXVlc3Qg
-ZW5hYmxlIGJpdCBvZiBhIGNoYW5uZWwgaXMgY2xlYXJlZCwgdGhlcmUgd2lsbCBiZQ0KPiBubyBm
-dXJ0aGVyIGRtYSBSZXF1ZXN0IHJlY2VpdmVkIGJ5IHRoZSBlRE1BIGVuZ2luZSwgdGh1cyB0aGUg
-Y2hhbm5lbCB3aWxsDQo+IG5ldmVyIGJlIHNjaGVkdWxlZCB0byBydW4gYnkgdGhlIGVETUEgZW5n
-aW5lLCB0aGUgY2hhbm5lbCBpcyBwYXVzZWQsDQo+IGhhbHRlZCwgYWxzbyBhcyBzdG9wcGVkLiBJ
-ZiB0aGUgY2hhbm5lbCBuZWVkIHRvIHRyYW5zZmVyIHRoZSByZW1haW5lZA0KPiBkYXRhIHdpdGgg
-dGhlIHByZXZpb3VzIHNldHRpbmcsIGp1c3Qgc2V0IHRoZSBkbWEgcmVxdWVzdCBlbmFibGUgYml0
-LCB0aGUNCj4gdHJhbnNmZXIgd2lsbCBjb21wbGV0ZSB3aXRoIHNsYXZlJ3MgZG1hIHJlcXVlc3Qu
-KHJlc3VtZSkgSWYgdGhlDQo+IHBhcmFtZXRlcnMgbmVlZCBiZSBjaGFuZ2VkLCBjb3JyZXNwb25k
-aW5nIHJlZ2lzdGVyIHBhcmFtZXRlcnMgY2FuIGJlDQo+IHJlcHJvZ3JhbW1lZCwgYWZ0ZXIgYWxs
-IGlzIG9rLCB0aGUgZG1hIHJlcXVlc3QgZW5hYmxlIGJpdCBjYW4gYmUgc2V0IHRvDQo+IGVuYWJs
-ZSBhIG5ldyBkbWEgdHJhbnNmZXIuKHRlcm1pbmF0ZSkNCj4gICBTbyBpcyB0aGlzIG9rIGFuZCBj
-b3VsZCBpdCBiZSBtZXJnZWQsIHRoYW5rcyENCj4gDQo+IA0KPiBCZXN0IFJlZ2FyZHMsDQo+IEpp
-bmdjaGFuZw0KPiANCj4gDQo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiBGcm9t
-OiBKaW5nY2hhbmcgTHUgW21haWx0bzpiMzUwODNAZnJlZXNjYWxlLmNvbV0NCj4gPiBTZW50OiBN
-b25kYXksIEphbnVhcnkgMjAsIDIwMTQgNToyNCBQTQ0KPiA+IFRvOiB2aW5vZC5rb3VsQGludGVs
-LmNvbQ0KPiA+IENjOiBkYW4uai53aWxsaWFtc0BpbnRlbC5jb207IGFybmRAYXJuZGIuZGU7IHNo
-YXduLmd1b0BsaW5hcm8ub3JnOw0KPiA+IHBhd2VsLm1vbGxAYXJtLmNvbTsgbWFyay5ydXRsYW5k
-QGFybS5jb207IHN3YXJyZW5Ad3d3ZG90b3JnLm9yZzsgbGludXgtDQo+ID4ga2VybmVsQHZnZXIu
-a2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+IGRl
-dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBMdSBKaW5nY2hhbmctQjM1MDgzOyBXYW5nIEh1YW4t
-QjE4OTY1DQo+ID4gU3ViamVjdDogW1BBVENIdjExIDIvMl0gZG1hOiBBZGQgRnJlZXNjYWxlIGVE
-TUEgZW5naW5lIGRyaXZlciBzdXBwb3J0DQo+ID4NCj4gPiBBZGQgRnJlZXNjYWxlIGVuaGFuY2Vk
-IGRpcmVjdCBtZW1vcnkoZURNQSkgY29udHJvbGxlciBzdXBwb3J0Lg0KPiA+IFRoaXMgbW9kdWxl
-IGNhbiBiZSBmb3VuZCBvbiBWeWJyaWQgYW5kIExTLTEgU29Dcy4NCj4gPg0KPiA+IFNpZ25lZC1v
-ZmYtYnk6IEFsaXNvbiBXYW5nIDxiMTg5NjVAZnJlZXNjYWxlLmNvbT4NCj4gPiBTaWduZWQtb2Zm
-LWJ5OiBKaW5nY2hhbmcgTHUgPGIzNTA4M0BmcmVlc2NhbGUuY29tPg0KPiA+IEFja2VkLWJ5OiBB
-cm5kIEJlcmdtYW5uIDxhcm5kQGFybmRiLmRlPg0KPiA+IC0tLQ0KPiA+IGNoYW5nZXMgaW4gdjEx
-Og0KPiA+ICBBZGQgZG1hIGRldmljZV9zbGF2ZV9jYXBzIGRlZmluaXRpb24uDQo+ID4NCj4gPiBj
-aGFuZ2VzIGluIHYxMDoNCj4gPiAgZGVmaW5lIGZzbF9lZG1hX211dGV4IGluIGZzbF9lZG1hX2Vu
-Z2luZSBpbnN0ZWFkIG9mIGdsb2JhbC4NCj4gPiAgbWlub3IgY2hhbmdlcyBvZiBiaW5kaW5nIGRl
-c2NyaXB0aW9uLg0KPiA+DQo+ID4gY2hhbmdlcyBpbiB2OToNCj4gPiAgZGVmaW5lIGVuZGlhbidz
-IG9wZXJhdGluZyBmdW5jdGlvbnMgaW5zdGVhZCBvZiBtYWNybyBkZWZpbml0aW9uLg0KPiA+ICBy
-ZW1vdmUgdGhlIGZpbHRlciBmdW5jdGlvbiwgdXNpbmcgZG1hX2dldF9zbGF2ZV9jaGFubmVsIGlu
-c3RlYWQuDQo+ID4NCj4gPiBjaGFuZ2VzIGluIHY4Og0KPiA+ICBjaGFuZ2UgdGhlIGVkbWEgZHJp
-dmVyIGFjY29yZGluZyBlRE1BIGR0cyBjaGFuZ2UuDQo+ID4gIGFkZCBiaWctZW5kaWFuIGFuZCBs
-aXR0bGUtZW5kaWFuIGhhbmRsaW5nLg0KPiA+DQo+ID4gIG5vIGNoYW5nZXMgaW4gdjQgfiB2Ny4N
-Cj4gPg0KPiA+ICBjaGFuZ2VzIGluIHYzOg0KPiA+ICAgYWRkIHZmNjEwIGVkbWEgZHQtYmluZGlu
-Z3MgbmFtZXNwYWNlIHdpdGggcHJlZml4IFZGNjEwXyouDQo+ID4NCj4gPiAgY2hhbmdlcyBpbiB2
-MjoNCj4gPiAgIHVzaW5nIGdlbmVyaWMgZG1hLWNoYW5uZWxzIHByb3BlcnR5IGluc3RlYWQgb2Yg
-ZnNsLGRtYS1jaGFubmVscy4NCj4gPg0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZG1hL2ZzbC1lZG1hLnR4dCB8ICA3NiArKw0KPiA+ICBkcml2ZXJzL2RtYS9LY29uZmln
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxMCArDQo+ID4gIGRyaXZlcnMvZG1h
-L01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsNCj4gPiAgZHJp
-dmVycy9kbWEvZnNsLWVkbWEuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCA5NzUNCj4g
-PiArKysrKysrKysrKysrKysrKysrKysNCj4gPiAgNCBmaWxlcyBjaGFuZ2VkLCAxMDYyIGluc2Vy
-dGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kbWEvZnNsLWVkbWEudHh0DQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
-ZXJzL2RtYS9mc2wtZWRtYS5jDQoNCg==
+On Mon, Feb 17, 2014 at 9:02 AM, Magnus Damm <magnus.damm@gmail.com> wrote:
+> On Mon, Feb 17, 2014 at 4:54 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
+>> On Sun, Feb 16, 2014 at 10:40:55AM +0100, Wolfram Sang wrote:
+>>> From: Wolfram Sang <wsa@sang-engineering.com>
+>>>
+>>> Signed-off-by: Wolfram Sang <wsa@sang-engineering.com>
+>>
+>> From your other mail:
+>>
+>> "[2/5] needs to be reworked to exclude the r8a7790 compatible string."
+>>
+>>> +             compatible = "renesas,i2c-r8a7791", "renesas,i2c-r8a7790";
+>>
+>> Why is that? From my knowledge, you start with the exact compatible
+>> property and hardware compatible entries may follow.
+
+Thanks for posting the link to the device tree wiki/quoting from it.
+I had faint memories of that quote, but couldn't remember where I read it.
+
+> I think this boils down to if they really are compatible or not. If
+> for instance a 16550 port would be compatible with 8250 on a hardware
+> level then using them in the order of "16550", "8250" makes sense. In
+> this case the r8a7791 i2c is not really strictly based on r8a7790 i2c,
+> it is just that r8a7790 has support in the driver. So it's a short cut
+> instead of actual hardware compatibility.
+>
+> So far we've dealt with this by updating the driver and only relying
+> on the actual SoC name as suffix.
+>
+> I'm sure there are tons of opinions. =)
+
+Hehe ;-)
+
+I think the tricky part is when a driver for "renesas,i2c-r8a7790" is updated
+with a new feature for r8a7790, which doesn't necessarily exist in r8a7791.
+Then the compatible entry above will cause breakage.
+
+In our case, this probably won't happen, as we will have "renesas,i2c-r8a7791"
+in the driver, but the driver could be forked in between the addition of
+"renesas,i2c-r8a7790" and "renesas,i2c-r8a7791" in our non-ideal world.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
