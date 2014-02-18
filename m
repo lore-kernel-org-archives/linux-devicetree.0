@@ -1,104 +1,109 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] Revert "of: search the best compatible match first in __of_match_node()"
-Date: Tue, 18 Feb 2014 17:02:44 +0000
-Message-ID: <20140218170244.A7711C40517@trevor.secretlab.ca>
-References: <1392710250-29913-1-git-send-email-haokexin@gmail.com> < 1392710250-29913-2-git-send-email-haokexin@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392710250-29913-2-git-send-email-haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen N Chivers <schivers-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] of_mdio: fix phy interrupt passing
+Date: Tue, 18 Feb 2014 21:06:02 +0300
+Message-ID: <5303A10A.3060106@cogentembedded.com>
+References: <1392654580-3706-1-git-send-email-ben.dooks@codethink.co.uk> < 20140218093024.D0E94C403C8@trevor.secretlab.ca> <53032A97.8050201@codethink .co.uk> <20140218170202.424D7C40517@trevor.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20140218170202.424D7C40517@trevor.secretlab.ca>
+Sender: linux-sh-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: linux-kernel@lists.codethink.co.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 18 Feb 2014 15:57:29 +0800, Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> This reverts commit 06b29e76a74b2373e6f8b5a7938b3630b9ae98b2.
-> As pointed out by Grant Likely, we should also take the type and name
-> into account when searching the best compatible match. That means the
-> match with compatible, type and name should be better than the match
-> just with the same compatible string. So revert this and we will
-> implement another method to find the best match entry.
-> 
-> Signed-off-by: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Hello.
 
-Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On 02/18/2014 08:02 PM, Grant Likely wrote:
 
-> ---
->  drivers/of/base.c | 43 +------------------------------------------
->  1 file changed, 1 insertion(+), 42 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 10b51106c854..ba195fbce4c6 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -730,49 +730,13 @@ out:
->  }
->  EXPORT_SYMBOL(of_find_node_with_property);
->  
-> -static const struct of_device_id *
-> -of_match_compatible(const struct of_device_id *matches,
-> -			const struct device_node *node)
-> -{
-> -	const char *cp;
-> -	int cplen, l;
-> -	const struct of_device_id *m;
-> -
-> -	cp = __of_get_property(node, "compatible", &cplen);
-> -	while (cp && (cplen > 0)) {
-> -		m = matches;
-> -		while (m->name[0] || m->type[0] || m->compatible[0]) {
-> -			/* Only match for the entries without type and name */
-> -			if (m->name[0] || m->type[0] ||
-> -				of_compat_cmp(m->compatible, cp,
-> -					 strlen(m->compatible)))
-> -				m++;
-> -			else
-> -				return m;
-> -		}
-> -
-> -		/* Get node's next compatible string */
-> -		l = strlen(cp) + 1;
-> -		cp += l;
-> -		cplen -= l;
-> -	}
-> -
-> -	return NULL;
-> -}
-> -
->  static
->  const struct of_device_id *__of_match_node(const struct of_device_id *matches,
->  					   const struct device_node *node)
->  {
-> -	const struct of_device_id *m;
-> -
->  	if (!matches)
->  		return NULL;
->  
-> -	m = of_match_compatible(matches, node);
-> -	if (m)
-> -		return m;
-> -
->  	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
->  		int match = 1;
->  		if (matches->name[0])
-> @@ -796,12 +760,7 @@ const struct of_device_id *__of_match_node(const struct of_device_id *matches,
->   *	@matches:	array of of device match structures to search in
->   *	@node:		the of device structure to match against
->   *
-> - *	Low level utility function used by device matching. We have two ways
-> - *	of matching:
-> - *	- Try to find the best compatible match by comparing each compatible
-> - *	  string of device node with all the given matches respectively.
-> - *	- If the above method failed, then try to match the compatible by using
-> - *	  __of_device_is_compatible() besides the match in type and name.
-> + *	Low level utility function used by device matching.
->   */
->  const struct of_device_id *of_match_node(const struct of_device_id *matches,
->  					 const struct device_node *node)
-> -- 
-> 1.8.5.3
-> 
+>>> On Mon, 17 Feb 2014 16:29:40 +0000, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
+>>>> The of_mdiobus_register_phy() is not setting phy->irq this causing
+>>>> some drivers to incorrectly assume that the PHY does not have an
+>>>> IRQ associated with it or install an interrupt handler for the
+>>>> PHY.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>> Simplify the code setting irq and set the phy->irq at the same
+>>>> time so that the case if mdio->irq is not NULL is easier to read.
+
+>>>> This fixes the issue:
+>>>>    net eth0: attached PHY 1 (IRQ -1) to driver Micrel KSZ8041RNLI
+
+>>>> to the correct:
+>>>>    net eth0: attached PHY 1 (IRQ 416) to driver Micrel KSZ8041RNLI
+
+>>>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>>> ---
+>>>>    drivers/of/of_mdio.c | 12 ++++++------
+>>>>    1 file changed, 6 insertions(+), 6 deletions(-)
+
+>>>> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+>>>> index 875b7b6..7b3e7b0 100644
+>>>> --- a/drivers/of/of_mdio.c
+>>>> +++ b/drivers/of/of_mdio.c
+>>>> @@ -44,7 +44,7 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
+>>>>    {
+>>>>    	struct phy_device *phy;
+>>>>    	bool is_c45;
+>>>> -	int rc, prev_irq;
+>>>> +	int rc;
+>>>>    	u32 max_speed = 0;
+>>>>
+>>>>    	is_c45 = of_device_is_compatible(child,
+>>>> @@ -55,11 +55,11 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
+>>>>    		return 1;
+>>>>
+>>>>    	if (mdio->irq) {
+>>>> -		prev_irq = mdio->irq[addr];
+>>>> -		mdio->irq[addr] =
+>>>> -			irq_of_parse_and_map(child, 0);
+>>>> -		if (!mdio->irq[addr])
+>>>> -			mdio->irq[addr] = prev_irq;
+
+>>> I cannot for the life for me remeber why the code was structured that
+>>> way. Your change is better.
+
+>>>> +		rc = irq_of_parse_and_map(child, 0);
+>>>> +		if (rc > 0) {
+>>>> +			mdio->irq[addr] = rc;
+>>>> +			phy->irq = rc;
+>>>> +		}
+>>>>    	}
+
+>>> The outer if is merely protecting against no irq array being allocated
+>>> for the bus. Would not the following be better:
+
+>>> 	rc = irq_of_parse_and_map(child, 0);
+>>> 	if (rc > 0) {
+>>> 		phy->irq = rc;
+>>> 		if (mdio->irq)
+>>> 			mdio->irq[addr] = rc;
+>>> 	}
+
+>> Thanks, that makes sense, although we've both failed to work
+>> out if mdio->irq is set, and rc <= 0 case, so:
+
+>>    	rc = irq_of_parse_and_map(child, 0);
+>>    	if (rc > 0) {
+>>    		phy->irq = rc;
+>>    		if (mdio->irq)
+>>    			mdio->irq[addr] = rc;
+>>    	} else {
+>> 		if (mdio->irq)
+>> 			phy->irq = mdio->irq[addr];
+>> 	}
+
+> Is this actually a valid thing to do? I think the only time mdio->irq[]
+> is non-zero is when it is set to PHY_POLL. Is it valid to set phy->irq
+> to PHY_POLL? I didn't think it was.
+
+    It is valid, AFAIK.
+
+> g.
+
+>> --
+>> Ben Dooks				http://www.codethink.co.uk/
+>> Senior Engineer				Codethink - Providing Genius
+
+WBR, Sergei
+
