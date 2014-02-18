@@ -1,78 +1,40 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] mfd: palmas: support IRQ inversion at the board level
-Date: Tue, 18 Feb 2014 18:01:52 +0000
-Message-ID: <20140218180152.GB31706@lee--X1>
-References: <1392415108-4365-1-git-send-email-swarren@wwwdotorg.org>
- <20140217092658.GC17875@lee--X1>
- <53039B6D.8080004@wwwdotorg.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v4 1/7] Documentation: Add device tree bindings for Freescale i.MX GPC
+Date: Tue, 18 Feb 2014 19:10:03 +0100
+Message-ID: <2328803.HhaG6blXIR@wuerfel>
+References: <1392737687-25003-1-git-send-email-p.zabel@pengutronix.de> <1392737687-25003-2-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53039B6D.8080004-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, J Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Ian Lartey <ian-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392737687-25003-2-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> >> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >>
-> >> Some boards or SoCs have an inverter between the PMIC IRQ output p=
-in and
-> >> the IRQ controller input signal.
-> >>
-> >> The IRQ specifier in DT is meant to represent the IRQ flags at the=
- input
-> >> to the IRQ controller.
-> >>
-> >> The Palmas HW's IRQ output has configurable polarity. The driver
-> >> currently selects the output polarity by querying the input polari=
-ty at
-> >> the IRQ controller. This works fine if the IRQ signal is routed di=
-rectly
-> >> from the PMIC to the IRQ controller with no intervening logic. How=
-ever,
-> >> if the signal is inverted between the two, this automatic polarity
-> >> selection gets the wrong answer.
-> >>
-> >> Add an additional optional DT and platform data parameter which in=
-dicates
-> >> that such an inversion occurs. If this option is enabled, the Palm=
-as
-> >> driver will configure its IRQ output to the opposite polarity of t=
-he IRQ
-> >> controller's input.
-> >>
-> >> An alternative would have been to add a new non-optional DT parame=
-ter to
-> >> indicate the exact desired output polarity. However, this would ha=
-ve been
-> >> an incompatible change to the DT binding.
-> >>
-> >> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >> ---
-> >> If this patch could be applied to its own branch (w/ signed tag) i=
-n the
-> >> MFD tree, that would great; then I can pull patch 1/2 into the Teg=
-ra tree
-> >> so that I can apply patch 2/2 to the Tegra tree. Thanks.
-> >> ---
-> >>  Documentation/devicetree/bindings/mfd/palmas.txt | 6 ++++++
-> >>  drivers/mfd/palmas.c                             | 4 ++++
-> >>  include/linux/mfd/palmas.h                       | 1 +
-> >>  3 files changed, 11 insertions(+)
-> >=20
-> > For the core changes:
-> >   Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->=20
-> Thanks. Since you ack'd this and are an MFD maintainer, was that an
-> indication that I should take this patch through the Tegra tree?
+On Tuesday 18 February 2014 16:34:41 Philipp Zabel wrote:
+> +
+> +Example of a device that is part of a power domain:
+> +
+> +       vpu: vpu@02040000 {
+> +               reg = <0x02040000 0x3c000>;
+> +               /* ... */
+> +               fsl,power-domain = <&pd_pu>;
+> +               /* ... */
+> +       };
+> +
 
-No, it was an indication that we still require more Acks. :)
+I'm really not too happy about platforms starting to add random
+bindings for power domains. Unfortunately I didn't catch exynos
+doing this first, but I don't want to see another platform like
+that.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Can we please come up with a proper generic power domain binding
+first and then add platform specific users?
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
