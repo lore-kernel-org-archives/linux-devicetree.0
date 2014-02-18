@@ -1,73 +1,51 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: Re: [PATCH v2 2/3] usb: chipidea: msm: Add device tree support
-Date: Tue, 18 Feb 2014 08:08:54 -0600
-Message-ID: <20140218140854.GC31116@joshc.qualcomm.com>
-References: <1392729681-21022-1-git-send-email-iivanov@mm-sol.com>
- <1392729681-21022-3-git-send-email-iivanov@mm-sol.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 0/3] dtc handling unreferenced nodes and an imx board dts
+Date: Tue, 18 Feb 2014 15:15:36 +0100
+Message-ID: <10555869.uLtJmrqZh3@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1392729681-21022-3-git-send-email-iivanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Peter Chen <Peter.Chen@freescale.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hey Ivan-
+After showcasing my dtc change as RFC before, this series shows essentially
+where I want to go with the whole change - adding support for our ereaders
+without duplicating the generic pinconfig nodes :-) . And also provides with
+the dt change a user for the dtc flag addition.
 
-Nit below.
+That being said, the dtc change might need a bit more review and I also don't
+know if it should go through the scripts/dtc variant like this or some
+upstream and how the *_shipped files should be handled.
 
-On Tue, Feb 18, 2014 at 03:21:20PM +0200, Ivan T. Ivanov wrote:
-> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-> 
-> Allows controller to be specified via device tree.
-> Pass PHY phandle specified in DT to core driver.
-> 
-> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> ---
->  drivers/usb/chipidea/ci_hdrc_msm.c |   23 ++++++++++++++++++++++-
->  1 file changed, 22 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/chipidea/ci_hdrc_msm.c b/drivers/usb/chipidea/ci_hdrc_msm.c
-> index 2d51d85..3f67f1f 100644
-> --- a/drivers/usb/chipidea/ci_hdrc_msm.c
-> +++ b/drivers/usb/chipidea/ci_hdrc_msm.c
-> @@ -57,9 +57,21 @@ static struct ci_hdrc_platform_data ci_hdrc_msm_platdata = {
->  static int ci_hdrc_msm_probe(struct platform_device *pdev)
->  {
->  	struct platform_device *plat_ci;
-> +	struct usb_phy *phy;
->  
->  	dev_dbg(&pdev->dev, "ci_hdrc_msm_probe\n");
->  
-> +	/*
-> +	 * OTG(PHY) driver takes care of PHY initialization, clock management,
-> +	 * powering up VBUS, mapping of registers address space and power
-> +	 * management.
-> +	 */
-> +	phy = devm_usb_get_phy_by_phandle(&pdev->dev, "usb-phy", 0);
-> +	if (IS_ERR(phy))
-> +		return PTR_ERR(phy);
-> +
-> +	ci_hdrc_msm_platdata.phy = phy;
-> +
->  	plat_ci = ci_hdrc_add_device(&pdev->dev,
->  				pdev->resource, pdev->num_resources,
->  				&ci_hdrc_msm_platdata);
-> @@ -86,10 +98,19 @@ static int ci_hdrc_msm_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static struct of_device_id msm_ci_dt_match[] = {
+The patchset is done against linux-next from today, which includes both the
+pingroups moved to the individual board files and the bindings for the zforce
+touchscreen.
 
-const?
+Heiko Stuebner (3):
+  dtc: add ability to make nodes conditional on them being referenced
+  ARM: dts: imx6sl: move pingroups back into soc dtsi
+  ARM: dts: imx6sl: add board file for BQ Cervantes
 
-> +	{ .compatible = "qcom,ci-hdrc", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, msm_ci_dt_match);
+ arch/arm/boot/dts/imx6sl-bq-cervantes.dts | 133 +++++++++++++++++++++
+ arch/arm/boot/dts/imx6sl-evk.dts          | 181 -----------------------------
+ arch/arm/boot/dts/imx6sl.dtsi             | 185 ++++++++++++++++++++++++++++++
+ scripts/dtc/checks.c                      |   2 +
+ scripts/dtc/dtc-lexer.l                   |   7 ++
+ scripts/dtc/dtc-parser.y                  |   5 +
+ scripts/dtc/dtc.h                         |   4 +
+ scripts/dtc/flattree.c                    |   3 +
+ scripts/dtc/livetree.c                    |  14 +++
+ 9 files changed, 353 insertions(+), 181 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx6sl-bq-cervantes.dts
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+1.8.5.3
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
