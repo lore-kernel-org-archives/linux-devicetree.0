@@ -1,93 +1,69 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH V6 03/12] phy: st-miphy40lp: Add binding information
-Date: Tue, 18 Feb 2014 12:23:25 +0000
-Message-ID: <20140218122324.GA23267@e106331-lin.cambridge.arm.com>
-References: <cover.1392109054.git.mohit.kumar@st.com>
- <af50da74226a244dfc05aed3dc9d28b896d166a4.1392109054.git.mohit.kumar@st.com>
- <20140212182012.GC23630@e106331-lin.cambridge.arm.com>
- <2CC2A0A4A178534D93D5159BF3BCB66189FD2CAFB1@EAPEX1MAIL1.st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: [PATCH RFC 2/2] ARM: add support for Cubox-i PWM-driven front panel
+ LED
+Date: Tue, 18 Feb 2014 13:09:33 +0000
+Message-ID: <E1WFkQX-0005JX-OC@rmk-PC.arm.linux.org.uk>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2CC2A0A4A178534D93D5159BF3BCB66189FD2CAFB1-8vAmw3ZAcdzhJTuQ9jeba9BPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mohit KUMAR DCG <Mohit.KUMAR-qxv4g6HH51o@public.gmane.org>
-Cc: "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Pratyush ANAND <pratyush.anand-qxv4g6HH51o@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 13, 2014 at 05:19:11AM +0000, Mohit KUMAR DCG wrote:
-> Hello Mark,
-> 
-> > -----Original Message-----
-> > From: Mark Rutland [mailto:mark.rutland-5wv7dgnIgG8@public.gmane.org]
-> > Sent: Wednesday, February 12, 2014 11:50 PM
-> > To: Mohit KUMAR DCG
-> > Cc: arnd-r2nGTMty4D4@public.gmane.org; Pratyush ANAND; Viresh Kumar; Kishon Vijay Abraham I;
-> > spear-devel; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Subject: Re: [PATCH V6 03/12] phy: st-miphy40lp: Add binding information
-> > 
-> > On Tue, Feb 11, 2014 at 09:29:59AM +0000, Mohit Kumar wrote:
-> > > From: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
-> > >
-> > > ST miphy40lp can be used with PCIe, SATA and Super Speed USB
-> > > controllers. SPEAr13XX SoCs use this phy for PCIe and SATA.
-> > >
-> > > Signed-off-by: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
-> > > Cc: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
-> > > Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> > > Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> > > Cc: spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org
-> > > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > > ---
-> > >  .../devicetree/bindings/phy/st-miphy40lp.txt       |   18
-> > ++++++++++++++++++
-> > >  1 files changed, 18 insertions(+), 0 deletions(-)  create mode 100644
-> > > Documentation/devicetree/bindings/phy/st-miphy40lp.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/phy/st-miphy40lp.txt
-> > > b/Documentation/devicetree/bindings/phy/st-miphy40lp.txt
-> > > new file mode 100644
-> > > index 0000000..1c8d04c
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/phy/st-miphy40lp.txt
-> > > @@ -0,0 +1,18 @@
-> > > +ST miphy40lp DT detail
-> > > +===================================
-> > > +
-> > > +miphy40lp is a phy controller from ST Microelectronics which supports
-> > > +PCIe, SATA and Super Speed USB host and devices. It has been used in
-> > SPEAr13xx SOCs.
-> > > +
-> > > +Required properties:
-> > > +- compatible : should be "st,miphy40lp-phy"
-> > > +	Other supported soc specific compatible:
-> > > +		"st,spear1310-miphy"
-> > > +		"st,spear1340-miphy"
-> > > +- reg : offset and length of the PHY register set.
-> > > +- misc: phandle for the syscon node to access misc registers
-> > 
-> > This is very vague. What is this used for?
-> 
-> - These are Spear SoC specific miscellaneous registers. Here these are used for
-> to configure sata/pcie  aux clock.
-> > 
-> > > +- phy-id: Instance id of the phy.
-> > > +- #phy-cells : from the generic PHY bindings, must be 1.
-> > > +	- 1st cell: phandle to the phy node.
-> > > +	- 2nd cell: 0 if phy (in 1st cell) is to be used for SATA, 1 for PCIe
-> > > +	  and 2 for Super Speed USB.
-> > 
-> > One cell or two?
-> 
-> - No of cells are two, is this the question?
+The front panel LED on the Cubox-i is driven by one of the iMX6 PWM
+channels, and is wired between the PWM output and supply.  This means
+that outputting a low level results in the LED being turned on, so we
+need the duty cycle inverted.
 
-The description of #phy-cells says it must be 1. Presumably it must be
-2.
+There's a question about whether the output inversion should be at the
+pwm or pwm-leds level - setting the output inversion bit in the iMX6
+results in a PWM duty cycle of zero outputting logic zero, meaning that
+the LED is fully on.  This is undesirable, as it becomes impossible to
+turn the LED fully off.
 
-Thanks,
-Mark
+Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+=-DO NOT APPLY-=
+ arch/arm/boot/dts/imx6qdl-cubox-i.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+index 64daa3b311f6..d9fbd7ff17df 100644
+=-DO NOT APPLY-= a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+=+DO NOT APPLY+= b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+@@ -12,6 +12,20 @@
+ 		pinctrl-0 = <&pinctrl_cubox_i_ir>;
+ 	};
+ 
+=+DO NOT APPLY+=	pwmleds {
+=+DO NOT APPLY+=		compatible = "pwm-leds";
+=+DO NOT APPLY+=		pinctrl-names = "default";
+=+DO NOT APPLY+=		pinctrl-0 = <&pinctrl_cubox_i_pwm1>;
+=+DO NOT APPLY+=
+=+DO NOT APPLY+=		front {
+=+DO NOT APPLY+=			active-low;
+=+DO NOT APPLY+=			default-brightness = <128>;
+=+DO NOT APPLY+=			label = "imx6:red:front";
+=+DO NOT APPLY+=			max-brightness = <248>;
+=+DO NOT APPLY+=			pwms = <&pwm1 0 50000>;
+=+DO NOT APPLY+=		};
+=+DO NOT APPLY+=	};
+=+DO NOT APPLY+=
+ 	regulators {
+ 		compatible = "simple-bus";
+ 
+@@ -88,6 +102,10 @@
+ 			>;
+ 		};
+ 
+=+DO NOT APPLY+=		pinctrl_cubox_i_pwm1: cubox-i-pwm1-front-led {
+=+DO NOT APPLY+=			fsl,pins = <MX6QDL_PAD_DISP0_DAT8__PWM1_OUT 0x1b0b0>;
+=+DO NOT APPLY+=		};
+=+DO NOT APPLY+=
+ 		pinctrl_cubox_i_spdif: cubox-i-spdif {
+ 			fsl,pins = <MX6QDL_PAD_GPIO_17__SPDIF_OUT 0x1b0b0>;
+ 		};
+-- 
+1.8.3.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
