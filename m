@@ -1,52 +1,40 @@
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
 Subject: Re: [PATCH v2 2/3] usb: chipidea: msm: Add device tree support
-Date: Tue, 18 Feb 2014 19:14:08 +0200
-Message-ID: <1392743648.17130.17.camel@iivanov-dev>
+Date: Tue, 18 Feb 2014 19:14:54 +0200
+Message-ID: <1392743694.17130.18.camel@iivanov-dev>
 References: <1392729681-21022-1-git-send-email-iivanov@mm-sol.com>
 	 <1392729681-21022-3-git-send-email-iivanov@mm-sol.com>
-	 <53039E2E.2030503@cogentembedded.com>
+	 <20140218140854.GC31116@joshc.qualcomm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53039E2E.2030503-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20140218140854.GC31116@joshc.qualcomm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Josh Cartwright <joshc@codeaurora.org>
+Cc: Peter Chen <Peter.Chen@freescale.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 2014-02-18 at 08:08 -0600, Josh Cartwright wrote: 
+> Hey Ivan-
+> 
+> Nit below.
+> 
+> On Tue, Feb 18, 2014 at 03:21:20PM +0200, Ivan T. Ivanov wrote:
 
-Hi, 
+> >  
+> > +static struct of_device_id msm_ci_dt_match[] = {
+> 
+> const?
+> 
 
-On Tue, 2014-02-18 at 20:53 +0300, Sergei Shtylyov wrote: 
-> Hello.
-> 
-> On 02/18/2014 04:21 PM, Ivan T. Ivanov wrote:
-> 
-> > From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-> 
-> > Allows controller to be specified via device tree.
-> > Pass PHY phandle specified in DT to core driver.
-> 
-> > Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-> > ---
-> >   drivers/usb/chipidea/ci_hdrc_msm.c |   23 ++++++++++++++++++++++-
-> >   1 file changed, 22 insertions(+), 1 deletion(-)
-> 
->     You also need to describe the binding you're creating in 
-> Documentation/devicetree/bindings/usb/<file>.txt.
-
-Did you check "[PATCH v2 1/3]"?
+Thanks, will do.
 
 Regards,
 Ivan
 
+> > +	{ .compatible = "qcom,ci-hdrc", },
+> > +	{ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, msm_ci_dt_match);
 > 
-> WBR, Sergei
-> 
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
