@@ -1,134 +1,77 @@
-From: Balaji T K <balajitk@ti.com>
-Subject: Re: [PATCH V2 1/2] mmc: omap_hsmmc: Add support for quirky omap3
- hsmmc controller
-Date: Tue, 18 Feb 2014 20:06:45 +0530
-Message-ID: <53036FFD.1040008@ti.com>
-References: <1392356749-32091-1-git-send-email-nm@ti.com>
- <1392356749-32091-2-git-send-email-nm@ti.com>
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 0/2] Introduce AEMIF driver for Davinci/Keystone archs
+Date: Tue, 18 Feb 2014 09:41:23 -0500
+Message-ID: <53037113.3090105@ti.com>
+References: <1391629574-18955-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1392356749-32091-2-git-send-email-nm@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nishanth Menon <nm@ti.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-mmc@vger.kernel.org, Chris Ball <chris@printf.net>, Felipe Balbi <balbi@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1391629574-18955-1-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 14 February 2014 11:15 AM, Nishanth Menon wrote:
-> When device is booted using devicetree, platforms impacted by Erratum
-> 2.1.1.128 is not detected easily in the mmc driver. This erratum
-> indicates that the module cannot do multi-block transfers. Platforms
-> such as LDP which use OMAP3 ES revision prior to ES3.0 are impacted by
-> this.
->
-> Provide a new compatible property "ti,omap3-pre-es3-hsmmc" to allow
-> driver to determine if driver needs to implement quirks associated
-> with the specific module version (primarily because the IP revision
-> information is not sufficient for the same).
->
-> Signed-off-by: Nishanth Menon <nm@ti.com>
+Greg,
 
-looks good to me
-Acked-by: Balaji T K <balajitk@ti.com>
+On Wednesday 05 February 2014 02:46 PM, Ivan Khoronzhuk wrote:
+> These patches introduce Async External Memory Interface (EMIF16/AEMIF)
+> controller driver for Davinci/Keystone archs.
+> 
+> For more informations see documentation:
+> Davinci DM646x - http://www.ti.com/lit/ug/sprueq7c/sprueq7c.pdf
+> OMAP-L138 - http://www.ti.com/lit/ug/spruh77a/spruh77a.pdf
+> Kestone - http://www.ti.com/lit/ug/sprugz3a/sprugz3a.pdf
+> 
+Can you please have a look at the series ? It has been on the list for
+sometime and all the outstanding comments are addressed so far. If
+you are ok with it, I would like to get these queued up for 3.15
+via your tree.
 
-> ---
-> Changes since v1:
-> 	- new compatible flag as suggested by Tony which contains
-> 	  the relevant controller flag to work around the erratum
->
-> V1: https://patchwork.kernel.org/patch/3514851/
->
->   .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |    1 +
->   drivers/mmc/host/omap_hsmmc.c                      |   26 +++++++++++++++++---
->   2 files changed, 23 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-> index 8c8908a..ce80561 100644
-> --- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-> @@ -10,6 +10,7 @@ Required properties:
->   - compatible:
->    Should be "ti,omap2-hsmmc", for OMAP2 controllers
->    Should be "ti,omap3-hsmmc", for OMAP3 controllers
-> + Should be "ti,omap3-pre-es3-hsmmc" for OMAP3 controllers pre ES3.0
->    Should be "ti,omap4-hsmmc", for OMAP4 controllers
->   - ti,hwmods: Must be "mmc<n>", n is controller instance starting 1
->
-> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-> index 575f9cc..390f421 100644
-> --- a/drivers/mmc/host/omap_hsmmc.c
-> +++ b/drivers/mmc/host/omap_hsmmc.c
-> @@ -192,6 +192,11 @@ struct omap_hsmmc_host {
->   	struct	omap_mmc_platform_data	*pdata;
->   };
->
-> +struct omap_mmc_of_data {
-> +	u32 reg_offset;
-> +	u8 controller_flags;
-> +};
-> +
->   static int omap_hsmmc_card_detect(struct device *dev, int slot)
->   {
->   	struct omap_hsmmc_host *host = dev_get_drvdata(dev);
-> @@ -1678,18 +1683,29 @@ static void omap_hsmmc_debugfs(struct mmc_host *mmc)
->   #endif
->
->   #ifdef CONFIG_OF
-> -static u16 omap4_reg_offset = 0x100;
-> +static const struct omap_mmc_of_data omap3_pre_es3_mmc_of_data = {
-> +	/* See 35xx errata 2.1.1.128 in SPRZ278F */
-> +	.controller_flags = OMAP_HSMMC_BROKEN_MULTIBLOCK_READ,
-> +};
-> +
-> +static const struct omap_mmc_of_data omap4_mmc_of_data = {
-> +	.reg_offset = 0x100,
-> +};
->
->   static const struct of_device_id omap_mmc_of_match[] = {
->   	{
->   		.compatible = "ti,omap2-hsmmc",
->   	},
->   	{
-> +		.compatible = "ti,omap3-pre-es3-hsmmc",
-> +		.data = &omap3_pre_es3_mmc_of_data,
-> +	},
-> +	{
->   		.compatible = "ti,omap3-hsmmc",
->   	},
->   	{
->   		.compatible = "ti,omap4-hsmmc",
-> -		.data = &omap4_reg_offset,
-> +		.data = &omap4_mmc_of_data,
->   	},
->   	{},
->   };
-> @@ -1759,6 +1775,7 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
->   	dma_cap_mask_t mask;
->   	unsigned tx_req, rx_req;
->   	struct pinctrl *pinctrl;
-> +	const struct omap_mmc_of_data *data;
->
->   	match = of_match_device(of_match_ptr(omap_mmc_of_match), &pdev->dev);
->   	if (match) {
-> @@ -1768,8 +1785,9 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
->   			return PTR_ERR(pdata);
->
->   		if (match->data) {
-> -			const u16 *offsetp = match->data;
-> -			pdata->reg_offset = *offsetp;
-> +			data = match->data;
-> +			pdata->reg_offset = data->reg_offset;
-> +			pdata->controller_flags |= data->controller_flags;
->   		}
->   	}
->
->
+> Based on
+> git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git
+> keystone/master
+> 
+> v3..v4:
+> 	rebased on latest of linux-keystone.git keystone/master
+> 
+> v2..v3 (https://lkml.org/lkml/2013/12/11/148):
+> - memory: ti-aemif: introduce AEMIF driver
+> 	changed to work with multiple AEMIF controllers
+> 	corrected "copyright" to "authors" in header
+> 	changed compatible "ti,omap-L138-aemif" to "ti,da850-aeimf"
+> 	used NULL in clk_get() instead of "aemif" name
+> 	driver can be build as loadable module
+> 	treat all child nodes as cs nodes, it makes code simpler
+> 
+> - memory: ti-aemif: add bindings for AEMIF driver
+> 	deleted direct link driver/memory/ti-aemif.c
+> 	clarified description of controller ranges property
+> 	changed compatible "ti,omap-L138-aemif" to "ti,da850-aeimf"
+> 	added cs number information in commit log
+> 	removed compatible property from cs node, it makes code simpler
+> 
+> v1..v2 (https://lkml.org/lkml/2013/11/21/170):
+> - memory: ti-aemif: introduce AEMIF driver
+> - memory: ti-aemif: add bindings for AEMIF driver
+> 	added ti.cs-chipselect property instead of representing chipselect
+> 	number in cs node name.
+> 
+> Ivan Khoronzhuk (2):
+>   memory: ti-aemif: introduce AEMIF driver
+>   memory: ti-aemif: add bindings for AEMIF driver
+> 
+>  .../bindings/memory-controllers/ti-aemif.txt       | 210 ++++++++++
+>  drivers/memory/Kconfig                             |  11 +
+>  drivers/memory/Makefile                            |   1 +
+>  drivers/memory/ti-aemif.c                          | 429 +++++++++++++++++++++
+>  4 files changed, 651 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt
+>  create mode 100644 drivers/memory/ti-aemif.c
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
