@@ -1,182 +1,460 @@
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [RFC PATCH v3 4/9] staging: imx-drm: Document updated imx-drm device
- tree bindings
-Date: Tue, 18 Feb 2014 12:36:05 +0100
-Message-ID: <1392723370-4772-5-git-send-email-p.zabel@pengutronix.de>
+Subject: [RFC PATCH v3 8/9] ARM: dts: imx6qdl: Add IPU DI ports and endpoints,
+	move imx-drm node to dtsi
+Date: Tue, 18 Feb 2014 12:36:09 +0100
+Message-ID: <1392723370-4772-9-git-send-email-p.zabel@pengutronix.de>
 References: <1392723370-4772-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <1392723370-4772-1-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces@lists.freedesktop.org
+Errors-To: dri-devel-bounces@lists.freedesktop.org
 To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch updates the device tree binding documentation for i.MX IPU/display
-nodes using the OF graph bindings documented in
-Documentation/devicetree/bindings/media/video-interfaces.txt.
+This patch connects IPU and display encoder (HDMI, LVDS, MIPI)
+device tree nodes, as well as parallel displays on the DISP0
+and DISP1 outputs, using the OF graph bindings described in
+Documentation/devicetree/bindings/media/video-interfaces.txt
+
+The IPU ports correspond to the two display interfaces. The
+order of endpoints in the ports is arbitrary.
+
+Each encoder with an associated input multiplexer has multiple
+input ports in the device tree. The order and reg property of
+the ports must correspond to the multiplexer input order.
+
+Since the imx-drm node now only needs to contain links to the
+display interfaces, it can be moved to the SoC dtsi level. At
+the board level, only connections between the display interface
+ports and encoders or panels have to be added.
 
 Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- .../bindings/staging/imx-drm/fsl-imx-drm.txt       | 48 +++++++++++++++++++---
- .../devicetree/bindings/staging/imx-drm/ldb.txt    | 20 +++++++--
- 2 files changed, 59 insertions(+), 9 deletions(-)
+ arch/arm/boot/dts/imx6dl.dtsi          |  22 +++---
+ arch/arm/boot/dts/imx6q-sabresd.dts    |   4 -
+ arch/arm/boot/dts/imx6q.dtsi           | 124 +++++++++++++++++++++++++++--
+ arch/arm/boot/dts/imx6qdl-sabresd.dtsi |   6 --
+ arch/arm/boot/dts/imx6qdl.dtsi         | 138 ++++++++++++++++++++++++++++++++-
+ 5 files changed, 263 insertions(+), 31 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt b/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt
-index b876d49..bfa19a4 100644
---- a/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt
-+++ b/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt
-@@ -1,3 +1,22 @@
-+Freescale i.MX DRM master device
-+================================
+diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
+index 6dc3970..8ba94b8 100644
+--- a/arch/arm/boot/dts/imx6dl.dtsi
++++ b/arch/arm/boot/dts/imx6dl.dtsi
+@@ -70,6 +70,15 @@
+ 			};
+ 		};
+ 	};
 +
-+The freescale i.MX DRM master device is a virtual device needed to list all
-+IPU or other display interface nodes that comprise the graphics subsystem.
-+
-+Required properties:
-+- compatible: Should be "fsl,imx-drm"
-+- ports: Should contain a list of phandles pointing to display interface ports
-+  of IPU devices
-+
-+example:
-+
-+imx-drm {
-+	compatible = "fsl,imx-drm";
-+	ports = <&ipu_di0>;
++	imx-drm {
++		compatible = "fsl,imx-drm";
++		ports = <&ipu1_di0>, <&ipu1_di1>;
++	};
 +};
 +
++&hdmi {
++	compatible = "fsl,imx6dl-hdmi";
+ };
+ 
+ &ldb {
+@@ -79,17 +88,4 @@
+ 	clock-names = "di0_pll", "di1_pll",
+ 		      "di0_sel", "di1_sel",
+ 		      "di0", "di1";
+-
+-	lvds-channel@0 {
+-		crtcs = <&ipu1 0>, <&ipu1 1>;
+-	};
+-
+-	lvds-channel@1 {
+-		crtcs = <&ipu1 0>, <&ipu1 1>;
+-	};
+-};
+-
+-&hdmi {
+-	compatible = "fsl,imx6dl-hdmi";
+-	crtcs = <&ipu1 0>, <&ipu1 1>;
+ };
+diff --git a/arch/arm/boot/dts/imx6q-sabresd.dts b/arch/arm/boot/dts/imx6q-sabresd.dts
+index 66f220a..9cbdfe7 100644
+--- a/arch/arm/boot/dts/imx6q-sabresd.dts
++++ b/arch/arm/boot/dts/imx6q-sabresd.dts
+@@ -20,10 +20,6 @@
+ 	compatible = "fsl,imx6q-sabresd", "fsl,imx6q";
+ };
+ 
+-&imx_drm {
+-	crtcs = <&ipu1 0>, <&ipu1 1>, <&ipu2 0>, <&ipu2 1>;
+-};
+-
+ &sata {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index 187fe33..db356e6 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -132,13 +132,84 @@
+ 		};
+ 
+ 		ipu2: ipu@02800000 {
+-			#crtc-cells = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 			compatible = "fsl,imx6q-ipu";
+ 			reg = <0x02800000 0x400000>;
+ 			interrupts = <0 8 0x4 0 7 0x4>;
+ 			clocks = <&clks 133>, <&clks 134>, <&clks 137>;
+ 			clock-names = "bus", "di0", "di1";
+ 			resets = <&src 4>;
 +
- Freescale i.MX IPUv3
- ====================
- 
-@@ -7,18 +26,31 @@ Required properties:
-   datasheet
- - interrupts: Should contain sync interrupt and error interrupt,
-   in this order.
--- #crtc-cells: 1, See below
- - resets: phandle pointing to the system reset controller and
-           reset line index, see reset/fsl,imx-src.txt for details
-+Optional properties:
-+- port@[0-3]: Port nodes with endpoint definitions as defined in
-+  Documentation/devicetree/bindings/media/video-interfaces.txt.
-+  Ports 0 and 1 should correspond to CSI0 and CSI1,
-+  ports 2 and 3 should correspond to DI0 and DI1, respectively.
- 
- example:
- 
- ipu: ipu@18000000 {
--	#crtc-cells = <1>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	compatible = "fsl,imx53-ipu";
- 	reg = <0x18000000 0x080000000>;
- 	interrupts = <11 10>;
- 	resets = <&src 2>;
++			ipu2_di0: port@2 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <2>;
 +
-+	ipu_di0: port@2 {
++				ipu2_di0_disp0: endpoint@0 {
++				};
++
++				ipu2_di0_hdmi: endpoint@1 {
++					remote-endpoint = <&hdmi_mux_2>;
++				};
++
++				ipu2_di0_mipi: endpoint@2 {
++				};
++
++				ipu2_di0_lvds0: endpoint@3 {
++					remote-endpoint = <&lvds0_mux_2>;
++				};
++
++				ipu2_di0_lvds1: endpoint@4 {
++					remote-endpoint = <&lvds1_mux_2>;
++				};
++			};
++
++			ipu2_di1: port@3 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <3>;
++
++				ipu2_di1_hdmi: endpoint@1 {
++					remote-endpoint = <&hdmi_mux_3>;
++				};
++
++				ipu2_di1_mipi: endpoint@2 {
++				};
++
++				ipu2_di1_lvds0: endpoint@3 {
++					remote-endpoint = <&lvds0_mux_3>;
++				};
++
++				ipu2_di1_lvds1: endpoint@4 {
++					remote-endpoint = <&lvds1_mux_3>;
++				};
++			};
++		};
++	};
++
++	imx-drm {
++		compatible = "fsl,imx-drm";
++		ports = <&ipu1_di0>, <&ipu1_di1>, <&ipu2_di0>, <&ipu2_di1>;
++	};
++};
++
++&hdmi {
++	compatible = "fsl,imx6q-hdmi";
++
++	port@2 {
 +		reg = <2>;
 +
-+		ipu_di0_disp0: endpoint {
-+			remote-endpoint = <&display_in>;
++		hdmi_mux_2: endpoint {
++			remote-endpoint = <&ipu2_di0_hdmi>;
 +		};
 +	};
- };
- 
- Parallel display support
-@@ -26,19 +58,25 @@ Parallel display support
- 
- Required properties:
- - compatible: Should be "fsl,imx-parallel-display"
--- crtc: the crtc this display is connected to, see below
- Optional properties:
- - interface_pix_fmt: How this display is connected to the
--  crtc. Currently supported types: "rgb24", "rgb565", "bgr666"
-+  display interface. Currently supported types: "rgb24", "rgb565", "bgr666"
- - edid: verbatim EDID data block describing attached display.
- - ddc: phandle describing the i2c bus handling the display data
-   channel
-+- port: A port node with endpoint definitions as defined in
-+  Documentation/devicetree/bindings/media/video-interfaces.txt.
- 
- example:
- 
- display@di0 {
- 	compatible = "fsl,imx-parallel-display";
- 	edid = [edid-data];
--	crtc = <&ipu 0>;
- 	interface-pix-fmt = "rgb24";
 +
-+	port {
-+		display_in: endpoint {
-+			remote-endpoint = <&ipu_di0_disp0>;
-+		};
-+	};
++	port@3 {
++		reg = <3>;
++
++		hdmi_mux_3: endpoint {
++			remote-endpoint = <&ipu2_di1_hdmi>;
+ 		};
+ 	};
  };
-diff --git a/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt b/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt
-index ed93778..578a1fc 100644
---- a/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt
-+++ b/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt
-@@ -50,12 +50,14 @@ have a look at Documentation/devicetree/bindings/video/display-timing.txt.
- 
- Required properties:
-  - reg : should be <0> or <1>
-- - crtcs : a list of phandles with index pointing to the IPU display interfaces
--           that can be used as video source for this channel.
-  - fsl,data-mapping : should be "spwg" or "jeida"
-                       This describes how the color bits are laid out in the
-                       serialized LVDS signal.
-  - fsl,data-width : should be <18> or <24>
-+ - port: A port node with endpoint definitions as defined in
-+   Documentation/devicetree/bindings/media/video-interfaces.txt.
-+   On i.MX6, there should be four ports (port@[0-3]) that correspond
-+   to the four LVDS multiplexer inputs.
- 
- example:
- 
-@@ -77,23 +79,33 @@ ldb: ldb@53fa8008 {
+@@ -152,15 +223,56 @@
+ 		      "di0", "di1";
  
  	lvds-channel@0 {
- 		reg = <0>;
--		crtcs = <&ipu 0>;
- 		fsl,data-mapping = "spwg";
- 		fsl,data-width = <24>;
- 
- 		display-timings {
- 			/* ... */
- 		};
+-		crtcs = <&ipu1 0>, <&ipu1 1>, <&ipu2 0>, <&ipu2 1>;
++		port@2 {
++			reg = <2>;
 +
-+		port {
-+			lvds0_in: endpoint {
-+				remote-endpoint = <&ipu_di0_lvds0>;
++			lvds0_mux_2: endpoint {
++				remote-endpoint = <&ipu2_di0_lvds0>;
++			};
++		};
++
++		port@3 {
++			reg = <3>;
++
++			lvds0_mux_3: endpoint {
++				remote-endpoint = <&ipu2_di1_lvds0>;
 +			};
 +		};
  	};
  
  	lvds-channel@1 {
- 		reg = <1>;
--		crtcs = <&ipu 1>;
- 		fsl,data-mapping = "spwg";
- 		fsl,data-width = <24>;
- 
- 		display-timings {
- 			/* ... */
- 		};
+-		crtcs = <&ipu1 0>, <&ipu1 1>, <&ipu2 0>, <&ipu2 1>;
++		port@2 {
++			reg = <2>;
 +
-+		port {
-+			lvds1_in: endpoint {
-+				remote-endpoint = <&ipu_di1_lvds1>;
++			lvds1_mux_2: endpoint {
++				remote-endpoint = <&ipu2_di0_lvds1>;
 +			};
 +		};
++
++		port@3 {
++			reg = <3>;
++
++			lvds1_mux_3: endpoint {
++				remote-endpoint = <&ipu2_di1_lvds1>;
++			};
++		};
+ 	};
+ };
+ 
+-&hdmi {
+-	compatible = "fsl,imx6q-hdmi";
+-	crtcs = <&ipu1 0>, <&ipu1 1>, <&ipu2 0>, <&ipu2 1>;
++&mipi_dsi {
++	port@2 {
++		reg = <2>;
++
++		mipi_mux_2: endpoint {
++			remote-endpoint = <&ipu2_di0_mipi>;
++		};
++	};
++
++	port@3 {
++		reg = <3>;
++
++		mipi_mux_3: endpoint {
++			remote-endpoint = <&ipu2_di1_mipi>;
++		};
++	};
+ };
+diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+index dfca3e0..e75e11b 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+@@ -62,12 +62,6 @@
+ 		};
+ 	};
+ 
+-	imx_drm: imx-drm {
+-		compatible = "fsl,imx-drm";
+-		crtcs = <&ipu1 0>, <&ipu1 1>;
+-		connectors = <&ldb>;
+-	};
+-
+ 	sound {
+ 		compatible = "fsl,imx6q-sabresd-wm8962",
+ 			   "fsl,imx-audio-wm8962";
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 930ebe0..368168c 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -1358,23 +1358,87 @@
+ 				status = "disabled";
+ 
+ 				lvds-channel@0 {
++					#address-cells = <1>;
++					#size-cells = <0>;
+ 					reg = <0>;
+ 					status = "disabled";
++
++					port@0 {
++						reg = <0>;
++
++						lvds0_mux_0: endpoint {
++							remote-endpoint = <&ipu1_di0_lvds0>;
++						};
++					};
++
++					port@1 {
++						reg = <1>;
++
++						lvds0_mux_1: endpoint {
++							remote-endpoint = <&ipu1_di1_lvds0>;
++						};
++					};
++
++					port@4 {
++						lvds0: endpoint {
++						};
++					};
+ 				};
+ 
+ 				lvds-channel@1 {
++					#address-cells = <1>;
++					#size-cells = <0>;
+ 					reg = <1>;
+ 					status = "disabled";
++
++					port@0 {
++						reg = <0>;
++
++						lvds1_mux_0: endpoint {
++							remote-endpoint = <&ipu1_di0_lvds1>;
++						};
++					};
++
++					port@1 {
++						reg = <1>;
++
++						lvds1_mux_1: endpoint {
++							remote-endpoint = <&ipu1_di1_lvds1>;
++						};
++					};
++
++					port@4 {
++						lvds1: endpoint {
++						};
++					};
+ 				};
+ 			};
+ 
+ 			hdmi: hdmi@0120000 {
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				reg = <0x00120000 0x9000>;
+ 				interrupts = <0 115 0x04>;
+ 				gpr = <&gpr>;
+ 				clocks = <&clks 123>, <&clks 124>;
+ 				clock-names = "iahb", "isfr";
+ 				status = "disabled";
++
++				port@0 {
++					reg = <0>;
++
++					hdmi_mux_0: endpoint {
++						remote-endpoint = <&ipu1_di0_hdmi>;
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++
++					hdmi_mux_1: endpoint {
++						remote-endpoint = <&ipu1_di1_hdmi>;
++					};
++				};
+ 			};
+ 
+ 			dcic1: dcic@020e4000 {
+@@ -1588,8 +1652,27 @@
+ 				reg = <0x021dc000 0x4000>;
+ 			};
+ 
+-			mipi@021e0000 { /* MIPI-DSI */
++			mipi_dsi: mipi@021e0000 {
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				reg = <0x021e0000 0x4000>;
++				status = "disabled";
++
++				port@0 {
++					reg = <0>;
++
++					mipi_mux_0: endpoint {
++						remote-endpoint = <&ipu1_di0_mipi>;
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++
++					mipi_mux_1: endpoint {
++						remote-endpoint = <&ipu1_di1_mipi>;
++					};
++				};
+ 			};
+ 
+ 			vdoa@021e4000 {
+@@ -1643,13 +1726,64 @@
+ 		};
+ 
+ 		ipu1: ipu@02400000 {
+-			#crtc-cells = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 			compatible = "fsl,imx6q-ipu";
+ 			reg = <0x02400000 0x400000>;
+ 			interrupts = <0 6 0x4 0 5 0x4>;
+ 			clocks = <&clks 130>, <&clks 131>, <&clks 132>;
+ 			clock-names = "bus", "di0", "di1";
+ 			resets = <&src 2>;
++
++			ipu1_di0: port@2 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <2>;
++
++				ipu1_di0_disp0: endpoint@0 {
++				};
++
++				ipu1_di0_hdmi: endpoint@1 {
++					remote-endpoint = <&hdmi_mux_0>;
++				};
++
++				ipu1_di0_mipi: endpoint@2 {
++					remote-endpoint = <&mipi_mux_0>;
++				};
++
++				ipu1_di0_lvds0: endpoint@3 {
++					remote-endpoint = <&lvds0_mux_0>;
++				};
++
++				ipu1_di0_lvds1: endpoint@4 {
++					remote-endpoint = <&lvds1_mux_0>;
++				};
++			};
++
++			ipu1_di1: port@3 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <3>;
++
++				ipu1_di0_disp1: endpoint@0 {
++				};
++
++				ipu1_di1_hdmi: endpoint@1 {
++					remote-endpoint = <&hdmi_mux_1>;
++				};
++
++				ipu1_di1_mipi: endpoint@2 {
++					remote-endpoint = <&mipi_mux_1>;
++				};
++
++				ipu1_di1_lvds0: endpoint@3 {
++					remote-endpoint = <&lvds0_mux_1>;
++				};
++
++				ipu1_di1_lvds1: endpoint@4 {
++					remote-endpoint = <&lvds1_mux_1>;
++				};
++			};
+ 		};
  	};
  };
 -- 
