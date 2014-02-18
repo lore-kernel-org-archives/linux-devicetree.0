@@ -1,110 +1,52 @@
-From: Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH v3 1/3] dma: Support multiple interleaved frames with
- non-contiguous memory
-Date: Wed, 19 Feb 2014 00:33:39 +0530
-Message-ID: <CAJe_ZhfedP7Paf3Zq9chL0WUeLJrsy_DJL05sSbfqnfTtji=HQ@mail.gmail.com>
-References: <1392465619-27614-1-git-send-email-sthokal@xilinx.com>
-	<1392465619-27614-2-git-send-email-sthokal@xilinx.com>
-	<CAJe_Zhc_GNNSDWNFuk+cMHEqxfSCJB_ey=Bf+SwJK-nS=u9ceg@mail.gmail.com>
-	<CA+mB=1KdZZpTmpA0Xp_c4mhgFbjRZ6urYrCwdvoTCmcugQMDUA@mail.gmail.com>
-	<CAJe_ZhdOmu3k9gbPdQzPteyzwsMA8OzWHdhHnXudbF=X7JMhVQ@mail.gmail.com>
-	<CA+mB=1K43MDZj0Rx3q=ETQMaFsG1j7TXsH6v-7a26JdtqTJkbw@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: devicetree repository separation/migration
+Date: Tue, 18 Feb 2014 12:09:16 -0700
+Message-ID: <5303AFDC.9010908@wwwdotorg.org>
+References: <20140217180544.GU7862@titan.lakedaemon.net> <20140218155750.GS17250@pengutronix.de> <20140218181854.GB7862@titan.lakedaemon.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+mB=1K43MDZj0Rx3q=ETQMaFsG1j7TXsH6v-7a26JdtqTJkbw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srikanth Thokala <sthokal@xilinx.com>
-Cc: "Williams, Dan J" <dan.j.williams@intel.com>, "Koul, Vinod" <vinod.koul@intel.com>, michal.simek@xilinx.com, Grant Likely <grant.likely@linaro.org>, robh+dt@kernel.org, devicetree@vger.kernel.org, Levente Kurusa <levex@linux.com>, Lars-Peter Clausen <lars@metafoo.de>, lkml <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140218181854.GB7862-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 18 February 2014 23:16, Srikanth Thokala <sthokal@xilinx.com> wrote:
-> On Tue, Feb 18, 2014 at 10:20 PM, Jassi Brar <jaswinder.singh@linaro.org> wrote:
->> On 18 February 2014 16:58, Srikanth Thokala <sthokal@xilinx.com> wrote:
->>> On Mon, Feb 17, 2014 at 3:27 PM, Jassi Brar <jaswinder.singh@linaro.org> wrote:
->>>> On 15 February 2014 17:30, Srikanth Thokala <sthokal@xilinx.com> wrote:
->>>>> The current implementation of interleaved DMA API support multiple
->>>>> frames only when the memory is contiguous by incrementing src_start/
->>>>> dst_start members of interleaved template.
->>>>>
->>>>> But, when the memory is non-contiguous it will restrict slave device
->>>>> to not submit multiple frames in a batch.  This patch handles this
->>>>> issue by allowing the slave device to send array of interleaved dma
->>>>> templates each having a different memory location.
->>>>>
->>>> How fragmented could be memory in your case? Is it inefficient to
->>>> submit separate transfers for each segment/frame?
->>>> It will help if you could give a typical example (chunk size and gap
->>>> in bytes) of what you worry about.
->>>
->>> With scatter-gather engine feature in the hardware, submitting separate
->>> transfers for each frame look inefficient. As an example, our DMA engine
->>> supports up to 16 video frames, with each frame (a typical video frame
->>> size) being contiguous in memory but frames are scattered into different
->>> locations. We could not definitely submit frame by frame as it would be
->>> software overhead (HW interrupting for each frame) resulting in video lags.
->>>
->> IIUIC, it is 30fps and one dma interrupt per frame ... it doesn't seem
->> inefficient at all. Even poor-latency audio would generate a higher
->> interrupt-rate. So the "inefficiency concern" doesn't seem valid to
->> me.
+On 02/18/2014 11:18 AM, Jason Cooper wrote:
+> On Tue, Feb 18, 2014 at 04:57:50PM +0100, Sascha Hauer wrote:
+>> On Mon, Feb 17, 2014 at 01:05:44PM -0500, Jason Cooper wrote:
+> ...
+>>>   - Is the Linux development workflow ready for devicetree to move out
+>>>     of the Linux Kernel?
 >>
->> Not to mean we shouldn't strive to reduce the interrupt-rate further.
->> Another option is to emulate the ring-buffer scheme of ALSA.... which
->> should be possible since for a session of video playback the frame
->> buffers' locations wouldn't change.
+>> I hope so since keeping the devicetrees in sync with the kernel is a
+>> pain for all external users.
+> 
+> Well, I haven't heard any screams yet.  I suspect people are waiting for
+> details on the exact form it would take before complaining...
+> 
+>>>   - How do we envision projects will use it?  git submodule?  reference
+>>>     a version tag?  (this is primarily targeted at bootloaders that need
+>>>     to compile in a dtb or subset of a dtb into the bootloader)
 >>
->> Yet another option is to use the full potential of the
->> interleaved-xfer api as such. It seems you confuse a 'video frame'
->> with the interleaved-xfer api's 'frame'. They are different.
->>
->> Assuming your one video frame is F bytes long and Gk is the gap in
->> bytes between end of frame [k] and start of frame [k+1] and  Gi != Gj
->> for i!=j
->> In the context of interleaved-xfer api, you have just 1 Frame of 16
->> chunks. Each chunk is Fbytes and the inter-chunk-gap(ICG) is Gk  where
->> 0<=k<15
->> So for your use-case .....
->>   dma_interleaved_template.numf = 1   /* just 1 frame */
->>   dma_interleaved_template.frame_size = 16  /* containing 16 chunks */
->>    ...... //other parameters
->>
->> You have 3 options to choose from and all should work just as fine.
->> Otherwise please state your problem in real numbers (video-frames'
->> size, count & gap in bytes).
->
-> Initially I interpreted interleaved template the same.  But, Lars corrected me
-> in the subsequent discussion and let me put it here briefly,
->
-> In the interleaved template, each frame represents a line of size denoted by
-> chunk.size and the stride by icg.  'numf' represent number of frames i.e.
-> number of lines.
->
-> In video frame context,
-> chunk.size -> hsize
-> chunk.icg -> stride
-> numf -> vsize
-> and frame_size is always 1 as it will have only one chunk in a line.
->
-But you said in your last post
-  "with each frame (a typical video frame size) being contiguous in memory"
- ... which is not true from what you write above. Anyways, my first 2
-suggestions still hold.
+>> I would prefer to use it as a submodule.
+> 
+> ok.  I've often thought that was the right solution for several things
+> (dtc.git inside the kernel tree), but no one ever seemed to speak of it
+> or bring it up.  Kinda like leprosy.
+> 
+> It does add an extra step to build process for new users.  Although that
+> could be handled in the Makefile.
 
-> So, the API would not allow to pass multiple frames and we came up with a
-> resolution to pass an array of interleaved template structs to handle this.
->
-Yeah the API doesn't allow such xfers that don't fall into any
-'regular expression' of a transfer and also because no controller
-natively supports such xfers -- your controller will break your
-request up into 16 transfers and program them individually, right?
-   BTW if you insist you could still express the 16 video frames as 1
-interleaved-xfer frame with frame_size = (vsize + 1) * 16   ;)
+My limited experience of git submodules implies that comparing them to
+Leprosy isn't a bad comparison:-)
 
-Again, I would suggest you implement ring-buffer type scheme. Say
-prepare 16 interleaved xfer templates and queue them. Upon each
-xfer-done callback (i.e frame rendered), update the data and queue it
-back. It might be much simpler for your actual case. At 30fps, 33ms to
-queue a dma request should _not_ result in any frame-drop.
-
--Jassi
+If they are separated out, I'd vastly prefer they simply be a standalone
+project completed divorced from the kernel. Playing games with git
+submodules to try and make it easier seems more likely to actually make
+this more complicated.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
