@@ -1,96 +1,107 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: devicetree repository separation/migration
-Date: Tue, 18 Feb 2014 16:57:50 +0100
-Message-ID: <20140218155750.GS17250@pengutronix.de>
-References: <20140217180544.GU7862@titan.lakedaemon.net>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] net: add init-regs for of_phy support
+Date: Tue, 18 Feb 2014 20:00:03 +0300
+Message-ID: <53039193.4010500@cogentembedded.com>
+References: <1392642484-19938-1-git-send-email-ben.dooks@codethink.co.uk> <1392642484-19938-2-git-send-email-ben.dooks@codethink.co.uk> <CAGVrzcYbw5xLj-gwcup5i0gBdKDDGdyy5wAaEBp7m2E7f2bytg@mail.gmail.com> <5302801F.6000903@cogentembedded.com> <CAGVrzcbZC3t0oexc5Aj-KyGj-qC8J9eYp8+rb8V-AqKtrSjyYw@mail.gmail.com> <530316EE.5010104@codethink.co.uk> <20140218115443.GC6051@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140217180544.GU7862-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20140218115443.GC6051@e106331-lin.cambridge.arm.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, David Miller <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 17, 2014 at 01:05:44PM -0500, Jason Cooper wrote:
-> All,
-> 
-> At last weeks devicetree irc meeting, I took on the task of writing this
-> email.  I'm a bit behind.
-> 
-> One of the outcomes of the ARM/devicetree discussion at the 2013 Kernel
-> Summit was that we were going to hold off on separating the devicetree
-> from the Linux kernel tree.  The primary reason for this was to get
-> through the backlog of patches.
-> 
-> It's been several months, and we're seeing evidence of other projects
-> having difficulty keeping in sync with the kernel tree.  Specifically,
-> barebox is having trouble syncing:
-> 
->   http://list-archives.org/2014/02/07/barebox-lists-infradead-org/devicetree-maintenance-in-barebox/f/5820726136
-> 
-> U-boot has some questionable (admittedly from early on) nodes.  I'll
-> refrain from singling out a board file or commit.  Interested
-> individuals can look through the irc archives for #devicetree.  At any
-> rate, reportedly, Wolfgang confirmed at the U-Boot minisummit that the
-> dts files in U-Boot would match the ones from the kernel.  So U-Boot is
-> in the same situation as barebox, wrt syncing.
-> 
-> BSD is also adopting devicetree, but I'm not personally familiar with
-> the status of that.  Nor whether it's diverged from what we have.
-> 
-> On the Linux side, it appears to me that we have successfully removed
-> the bottleneck, and patches seem to be flowing fairly well now.
-> 
-> For the past few months, Ian has been maintaining a devicetree repo at
-> 
->   http://xenbits.xen.org/gitweb/?p=people/ianc/device-tree-rebasing.git;a=summary
-> 
-> 
-> Now for the questions:
-> 
->   - Is the Linux development workflow ready for devicetree to move out
->     of the Linux Kernel?
+Hello.
 
-I hope so since keeping the devicetrees in sync with the kernel is a
-pain for all external users.
+On 02/18/2014 02:54 PM, Mark Rutland wrote:
 
-> 
->   - Would having the devicetree in it's own repo, with it's own workflow
->     and release schedule help the other users of it?
-> 
->   - Where should it be hosted?
-> 
->   - How do we envision projects will use it?  git submodule?  reference
->     a version tag?  (this is primarily targeted at bootloaders that need
->     to compile in a dtb or subset of a dtb into the bootloader)
+>> [snip]
 
-I would prefer to use it as a submodule. I'll likely need some barebox
-specific additions to the devicetrees. Right now our idea is to leave
-the provided devicetrees untouched and instead of compiling the board
-dts files directly we create <boardname>-barebox.dts files which include
-the original board files. That would allow us to provide additional
-information to barebox without having to carry patches for the
-devicetrees.
+>>>>> - fixing up some design mistake?
+>>>>> - accounting for a specific board design?
 
-> 
-> Other thoughts I may have missed?
+>>>>      Kind of both. This was invented to defy the necessity of having platform
+>>>> fixup in the DT case (where there should be no board file to place it into).
+>>>> I have already described that platform fixup necessary on the Renesas
+>>>> Lager/Koelsch boards where the LED0 signat is connected to ETH_LINK signal
+>>>> on the SoC and the PHY reset sets the LED control bits to default 0 which
+>>>> means that LED0 will be LINK/ACTIVITY signal and thus blink on activity and
+>>>> cause ETH_LINK to bounce off/on after each packet.
 
-It will be interesting to see which rules should apply for merging new
-bindings. I know that devicetrees should be OS agnostic, but sometimes
-they are modelled after how Linux currently works. What happens when the
-*BSD guys have different ideas how a good binding looks like? How will
-such conflicts be resolved?
+>>>>> In any case a PHY fixup would do the job for you.
 
-Sascha
+>>>>      Not in any case. In case of DT we have no place for it, so should invent
+>>>> something involving DT.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>> How is DT different than any machine probing mechanism here? The way
+>>> to involve DT is to do the following:
+
+>>> if (of_machine_is_compatible("renesas,foo-board-with-broken-micrel-phy"))
+>>>              phy_register_fixup(&foo_board_with_broken_micrel_phy);
+
+>> Oh yes, but now I have to do that for Linux, for $BSD, and for
+>> anything else I want to run on the device. I thought dt was meant
+>> to allow us to describe the hardware.
+
+> It does allow you to describe the hardware. Arbitrary register writes
+> aren't a description of the hardware, they're a sequence of instructions
+> that tells the OS nothing about the hardware and limit the ability of an
+> OS to do something different that might be better.
+
+> It's already the case that the OS has to have some knowledge of the
+> hardware that's implicit in a binding. We don't expect to have to
+> include bytecode to tell the OS how to poke a particular UART when it
+> can figure that out from a compatible string.
+
+>> If this is the case, let's just call this linuxtree and let everyone
+>> else get on with their own thing again.
+
+> This doesn't follow at all. Any OS needs to have some understanding of
+> the hardware it will try to poke. Describing a specific sequence of
+> writes in a DT is no more operating system independent than identifying
+> the hardware and expecting the OS to have a driver for it. The
+> requirements aren't any more suited to an individual OS in either case.
+
+>> See also comment below.
+
+>>> If your machine compatible string does not allow you to uniquely
+>>> identify your machine, this is a DT problem, as this should really be
+>>> the case. If you do not want to add this code to wherever this is
+>>> relevant in arch/arm/mach-shmobile/board-*.c, neither is
+>>> drivers/net/phy/phy_device.c this the place to add it.
+
+>> So where should it be added? If we keep piling stuff into board files
+>> in arch/arm.... then we're just back to the pre-dt case and going to
+>> keep getting shouted at.
+
+> The general trend has been to allocate new compatible strings for
+> components and let individual drivers handle this.
+
+> As far as I can see your case doesn't involve any components external to
+> the PHY, so should probably live in a PHY driver. The PHY can have a
+
+    It does involve LEDs which should function in the way described by their 
+labels, and it does involve SoC for which ETH_LINK signal should remain stable 
+and not bouncing after each packet.
+
+> specific compatible string with the generic string as a fallback (if it
+> works to some degree without special poking).
+
+    It can but that doesn't solve this issue in any way. The issue is board 
+specific, not only PHY specific.
+
+> I don't see that we need anything board-specific.
+
+    Did you read the text substantially above this in this mail for more 
+complete description of the issue? We're trying to emulate the PHY *platform* 
+fixup here which didn't belong with the PHY driver.
+
+[...]
+
+> Cheers,
+> Mark.
+
+WBR, Sergei
+
