@@ -1,41 +1,63 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] staging: iio: hmc5843: Add all available models to
- device tree id table.
-Date: Tue, 18 Feb 2014 10:40:50 +0000
-Message-ID: <530338B2.603@kernel.org>
-References: <1392387929-31491-1-git-send-email-marek@goldelico.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v6 1/3] clocksource: timer-keystone: introduce clocksource
+ driver for Keystone
+Date: Tue, 18 Feb 2014 11:40:21 +0100
+Message-ID: <CABuKBeJNwe5VXi2SvPX6Cne-iMHP7bbZarJDNAzuCMbg0E-bCQ@mail.gmail.com>
+References: <1392027058-11680-1-git-send-email-ivan.khoronzhuk@ti.com>
+	<1392027058-11680-2-git-send-email-ivan.khoronzhuk@ti.com>
+	<52FA1E59.1000307@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392387929-31491-1-git-send-email-marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org
-Cc: pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <52FA1E59.1000307@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, santosh.shilimkar@ti.com, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, galak@codeaurora.org, mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, joshc@codeaurora.org, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, robh+dt@kernel.org, tglx@linutronix.de, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14/02/14 14:25, Marek Belisko wrote:
-> Signed-off-by: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-I wonder how this got missed.  However, for those data elements to be useful, you will
-need to read them somewhere in the driver I think.... (if there is any magic
-that puts this in the relevant i2c locations then point it out to me!)
-> ---
->   drivers/staging/iio/magnetometer/hmc5843.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
+2014-02-11 13:58 GMT+01:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
+> On 02/10/2014 11:10 AM, Ivan Khoronzhuk wrote:
+>>
+>> Add broadcast clock-event device for the Keystone arch.
+>>
+>> The timer can be configured as a general-purpose 64-bit timer,
+>> dual general-purpose 32-bit timers. When configured as dual 32-bit
+>> timers, each half can operate in conjunction (chain mode) or
+>> independently (unchained mode) of each other.
+>>
+>> Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
+>> Acked-by: Santosh shilimkar <santosh.shilimkar@ti.com>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+>> ---
 >
-> diff --git a/drivers/staging/iio/magnetometer/hmc5843.c b/drivers/staging/iio/magnetometer/hmc5843.c
-> index d4f4dd9..f595fdc 100644
-> --- a/drivers/staging/iio/magnetometer/hmc5843.c
-> +++ b/drivers/staging/iio/magnetometer/hmc5843.c
-> @@ -630,7 +630,9 @@ static const struct i2c_device_id hmc5843_id[] = {
->   MODULE_DEVICE_TABLE(i2c, hmc5843_id);
 >
->   static const struct of_device_id hmc5843_of_match[] = {
-> -	{ .compatible = "honeywell,hmc5843" },
-> +	{ .compatible = "honeywell,hmc5843", .data = (void *)HMC5843_ID },
-> +	{ .compatible = "honeywell,hmc5883", .data = (void *)HMC5883_ID },
-> +	{ .compatible = "honeywell,hmc5883l", .data = (void *)HMC5883L_ID },
->   	{}
->   };
->   MODULE_DEVICE_TABLE(of, hmc5843_of_match);
+> Applied to my tree for 3.15
+
+I wanted to send a trivial follow-up patch, but I can't find the tree
+to which you have applied this patch.
+Would you mind to indicate me where I can find it.
+
+Cheers,
+Matthias
+
 >
+> --
+>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software f=
+or ARM SoCs
+>
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+>
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
+
+--=20
+motzblog.wordpress.com
