@@ -1,7 +1,7 @@
 From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 1/3] dtc: add ability to make nodes conditional on them being referenced
-Date: Tue, 18 Feb 2014 15:16:27 +0100
-Message-ID: <1925873.9q11eLaP7L@phil>
+Subject: [PATCH 2/3] ARM: dts: imx6sl: move pingroups back into soc dtsi
+Date: Tue, 18 Feb 2014 15:17:08 +0100
+Message-ID: <2746462.2Wuo7TxMql@phil>
 References: <10555869.uLtJmrqZh3@phil>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -15,165 +15,405 @@ List-Id: devicetree@vger.kernel.org
 
 From: Heiko Stuebner <heiko.stuebner-HCpLIkUQxWGakBO8gow8eQ@public.gmane.org>
 
-On i.MX, which carries a lot of pin-groups of which most are unused on
-individual boards, they noticed that this plethora of nodes also results
-in the runtime-lookup-performance also degrading [0].
-
-A i.MX-specific solution defining the pingroups in the board files but
-using macros to reference the pingroup-data was not well received
-
-This patch is trying to solve this issue in a more general way, by
-adding the ability to mark nodes as needing to be referenced somewhere
-in the tree.
-
-To mark a node a needing to be referenced it must be prefixed with
-/delete-unreferenced/. This makes dtc check the nodes reference-status
-when creating the flattened tree, dropping it if unreferenced.
-
-For example, the i.MX6SL pingroup
-
-	/delete-unreferenced/ pinctrl_ecspi1_1: ecspi1grp-1 {
-		fsl,pins = <
-			MX6SL_PAD_ECSPI1_MISO__ECSPI1_MISO 0x100b1
-			MX6SL_PAD_ECSPI1_MOSI__ECSPI1_MOSI 0x100b1
-			MX6SL_PAD_ECSPI1_SCLK__ECSPI1_SCLK 0x100b1
-		>;
-	};
-
-would only be included in the dtb if it got referenced somewhere
-as pingroup via
-
-	node {
-		pinctrl-0 <&pinctrl_ecscpi1_1>;
-	};
-
-[0] http://thread.gmane.org/gmane.linux.ports.arm.kernel/275912/
+Using the delete-unreferenced flag, the pingroups can be kept globally but won't
+be unecessarily included in dts files not using them.
 
 Signed-off-by: Heiko Stuebner <heiko.stuebner-HCpLIkUQxWGakBO8gow8eQ@public.gmane.org>
 ---
- scripts/dtc/checks.c     |  2 ++
- scripts/dtc/dtc-lexer.l  |  7 +++++++
- scripts/dtc/dtc-parser.y |  5 +++++
- scripts/dtc/dtc.h        |  4 ++++
- scripts/dtc/flattree.c   |  3 +++
- scripts/dtc/livetree.c   | 14 ++++++++++++++
- 6 files changed, 35 insertions(+)
+ arch/arm/boot/dts/imx6sl-evk.dts | 181 --------------------------------------
+ arch/arm/boot/dts/imx6sl.dtsi    | 185 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 185 insertions(+), 181 deletions(-)
 
-diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
-index ee96a25..747ada8 100644
---- a/scripts/dtc/checks.c
-+++ b/scripts/dtc/checks.c
-@@ -472,6 +472,8 @@ static void fixup_phandle_references(struct check *c, struct node *dt,
+diff --git a/arch/arm/boot/dts/imx6sl-evk.dts b/arch/arm/boot/dts/imx6sl-evk.dts
+index 889422c..07876e0 100644
+--- a/arch/arm/boot/dts/imx6sl-evk.dts
++++ b/arch/arm/boot/dts/imx6sl-evk.dts
+@@ -267,192 +267,11 @@
+ 			>;
+ 		};
  
- 		phandle = get_node_phandle(dt, refnode);
- 		*((cell_t *)(prop->val.val + m->offset)) = cpu_to_fdt32(phandle);
-+
-+		reference_node(refnode);
- 	}
- }
- ERROR(phandle_references, NULL, NULL, fixup_phandle_references, NULL,
-diff --git a/scripts/dtc/dtc-lexer.l b/scripts/dtc/dtc-lexer.l
-index 3b41bfc..3b18e97 100644
---- a/scripts/dtc/dtc-lexer.l
-+++ b/scripts/dtc/dtc-lexer.l
-@@ -138,6 +138,13 @@ static int pop_input_file(void);
- 			return DT_DEL_NODE;
- 		}
- 
-+<*>"/delete-unreferenced/"	{
-+			DPRINT("Keyword: /delete-unreferenced/\n");
-+			DPRINT("<PROPNODENAME>\n");
-+			BEGIN(PROPNODENAME);
-+			return DT_DEL_UNREFERENCED;
-+		}
-+
- <*>{LABEL}:	{
- 			DPRINT("Label: %s\n", yytext);
- 			yylval.labelref = xstrdup(yytext);
-diff --git a/scripts/dtc/dtc-parser.y b/scripts/dtc/dtc-parser.y
-index f412460..ae9108b 100644
---- a/scripts/dtc/dtc-parser.y
-+++ b/scripts/dtc/dtc-parser.y
-@@ -64,6 +64,7 @@ static unsigned char eval_char_literal(const char *s);
- %token DT_BITS
- %token DT_DEL_PROP
- %token DT_DEL_NODE
-+%token DT_DEL_UNREFERENCED
- %token <propnodename> DT_PROPNODENAME
- %token <literal> DT_LITERAL
- %token <literal> DT_CHAR_LITERAL
-@@ -461,6 +462,10 @@ subnode:
- 		{
- 			$$ = name_node(build_node_delete(), $2);
- 		}
-+	| DT_DEL_UNREFERENCED subnode
-+		{
-+			$$ = check_node_referenced($2);
-+		}
- 	| DT_LABEL subnode
- 		{
- 			add_label(&$2->labels, $1);
-diff --git a/scripts/dtc/dtc.h b/scripts/dtc/dtc.h
-index 264a20c..289c62b 100644
---- a/scripts/dtc/dtc.h
-+++ b/scripts/dtc/dtc.h
-@@ -158,6 +158,8 @@ struct node {
- 	int addr_cells, size_cells;
- 
- 	struct label *labels;
-+
-+	int needs_reference, is_referenced;
+-		pinctrl_audmux3: audmux3grp {
+-			fsl,pins = <
+-				MX6SL_PAD_AUD_RXD__AUD3_RXD	  0x4130b0
+-				MX6SL_PAD_AUD_TXC__AUD3_TXC	  0x4130b0
+-				MX6SL_PAD_AUD_TXD__AUD3_TXD	  0x4110b0
+-				MX6SL_PAD_AUD_TXFS__AUD3_TXFS	  0x4130b0
+-			>;
+-		};
+-
+-		pinctrl_ecspi1: ecspi1grp {
+-			fsl,pins = <
+-				MX6SL_PAD_ECSPI1_MISO__ECSPI1_MISO	0x100b1
+-				MX6SL_PAD_ECSPI1_MOSI__ECSPI1_MOSI	0x100b1
+-				MX6SL_PAD_ECSPI1_SCLK__ECSPI1_SCLK	0x100b1
+-			>;
+-		};
+-
+-		pinctrl_fec: fecgrp {
+-			fsl,pins = <
+-				MX6SL_PAD_FEC_MDC__FEC_MDC		0x1b0b0
+-				MX6SL_PAD_FEC_MDIO__FEC_MDIO		0x1b0b0
+-				MX6SL_PAD_FEC_CRS_DV__FEC_RX_DV		0x1b0b0
+-				MX6SL_PAD_FEC_RXD0__FEC_RX_DATA0	0x1b0b0
+-				MX6SL_PAD_FEC_RXD1__FEC_RX_DATA1	0x1b0b0
+-				MX6SL_PAD_FEC_TX_EN__FEC_TX_EN		0x1b0b0
+-				MX6SL_PAD_FEC_TXD0__FEC_TX_DATA0	0x1b0b0
+-				MX6SL_PAD_FEC_TXD1__FEC_TX_DATA1	0x1b0b0
+-				MX6SL_PAD_FEC_REF_CLK__FEC_REF_OUT	0x4001b0a8
+-			>;
+-		};
+-
+-		pinctrl_i2c1: i2c1grp {
+-			fsl,pins = <
+-				MX6SL_PAD_I2C1_SCL__I2C1_SCL	0x4001b8b1
+-				MX6SL_PAD_I2C1_SDA__I2C1_SDA	0x4001b8b1
+-			>;
+-		};
+-
+-
+-		pinctrl_i2c2: i2c2grp {
+-			fsl,pins = <
+-				MX6SL_PAD_I2C2_SCL__I2C2_SCL	0x4001b8b1
+-				MX6SL_PAD_I2C2_SDA__I2C2_SDA	0x4001b8b1
+-			>;
+-		};
+-
+ 		pinctrl_led: ledgrp {
+ 			fsl,pins = <
+ 				MX6SL_PAD_HSIC_STROBE__GPIO3_IO20 0x17059
+ 			>;
+ 		};
+-
+-		pinctrl_kpp: kppgrp {
+-			fsl,pins = <
+-				MX6SL_PAD_KEY_ROW0__KEY_ROW0    0x1b010
+-				MX6SL_PAD_KEY_ROW1__KEY_ROW1    0x1b010
+-				MX6SL_PAD_KEY_ROW2__KEY_ROW2    0x1b0b0
+-				MX6SL_PAD_KEY_COL0__KEY_COL0    0x110b0
+-				MX6SL_PAD_KEY_COL1__KEY_COL1    0x110b0
+-				MX6SL_PAD_KEY_COL2__KEY_COL2    0x110b0
+-			>;
+-		};
+-
+-		pinctrl_uart1: uart1grp {
+-			fsl,pins = <
+-				MX6SL_PAD_UART1_RXD__UART1_RX_DATA	0x1b0b1
+-				MX6SL_PAD_UART1_TXD__UART1_TX_DATA	0x1b0b1
+-			>;
+-		};
+-
+-		pinctrl_usbotg1: usbotg1grp {
+-			fsl,pins = <
+-				MX6SL_PAD_EPDC_PWRCOM__USB_OTG1_ID	0x17059
+-			>;
+-		};
+-
+-		pinctrl_usdhc1: usdhc1grp {
+-			fsl,pins = <
+-				MX6SL_PAD_SD1_CMD__SD1_CMD		0x17059
+-				MX6SL_PAD_SD1_CLK__SD1_CLK		0x10059
+-				MX6SL_PAD_SD1_DAT0__SD1_DATA0		0x17059
+-				MX6SL_PAD_SD1_DAT1__SD1_DATA1		0x17059
+-				MX6SL_PAD_SD1_DAT2__SD1_DATA2		0x17059
+-				MX6SL_PAD_SD1_DAT3__SD1_DATA3		0x17059
+-				MX6SL_PAD_SD1_DAT4__SD1_DATA4		0x17059
+-				MX6SL_PAD_SD1_DAT5__SD1_DATA5		0x17059
+-				MX6SL_PAD_SD1_DAT6__SD1_DATA6		0x17059
+-				MX6SL_PAD_SD1_DAT7__SD1_DATA7		0x17059
+-			>;
+-		};
+-
+-		pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
+-			fsl,pins = <
+-				MX6SL_PAD_SD1_CMD__SD1_CMD		0x170b9
+-				MX6SL_PAD_SD1_CLK__SD1_CLK		0x100b9
+-				MX6SL_PAD_SD1_DAT0__SD1_DATA0		0x170b9
+-				MX6SL_PAD_SD1_DAT1__SD1_DATA1		0x170b9
+-				MX6SL_PAD_SD1_DAT2__SD1_DATA2		0x170b9
+-				MX6SL_PAD_SD1_DAT3__SD1_DATA3		0x170b9
+-				MX6SL_PAD_SD1_DAT4__SD1_DATA4		0x170b9
+-				MX6SL_PAD_SD1_DAT5__SD1_DATA5		0x170b9
+-				MX6SL_PAD_SD1_DAT6__SD1_DATA6		0x170b9
+-				MX6SL_PAD_SD1_DAT7__SD1_DATA7		0x170b9
+-			>;
+-		};
+-
+-		pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
+-			fsl,pins = <
+-				MX6SL_PAD_SD1_CMD__SD1_CMD		0x170f9
+-				MX6SL_PAD_SD1_CLK__SD1_CLK		0x100f9
+-				MX6SL_PAD_SD1_DAT0__SD1_DATA0		0x170f9
+-				MX6SL_PAD_SD1_DAT1__SD1_DATA1		0x170f9
+-				MX6SL_PAD_SD1_DAT2__SD1_DATA2		0x170f9
+-				MX6SL_PAD_SD1_DAT3__SD1_DATA3		0x170f9
+-				MX6SL_PAD_SD1_DAT4__SD1_DATA4		0x170f9
+-				MX6SL_PAD_SD1_DAT5__SD1_DATA5		0x170f9
+-				MX6SL_PAD_SD1_DAT6__SD1_DATA6		0x170f9
+-				MX6SL_PAD_SD1_DAT7__SD1_DATA7		0x170f9
+-			>;
+-		};
+-
+-		pinctrl_usdhc2: usdhc2grp {
+-			fsl,pins = <
+-				MX6SL_PAD_SD2_CMD__SD2_CMD		0x17059
+-				MX6SL_PAD_SD2_CLK__SD2_CLK		0x10059
+-				MX6SL_PAD_SD2_DAT0__SD2_DATA0		0x17059
+-				MX6SL_PAD_SD2_DAT1__SD2_DATA1		0x17059
+-				MX6SL_PAD_SD2_DAT2__SD2_DATA2		0x17059
+-				MX6SL_PAD_SD2_DAT3__SD2_DATA3		0x17059
+-			>;
+-		};
+-
+-		pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
+-			fsl,pins = <
+-				MX6SL_PAD_SD2_CMD__SD2_CMD		0x170b9
+-				MX6SL_PAD_SD2_CLK__SD2_CLK		0x100b9
+-				MX6SL_PAD_SD2_DAT0__SD2_DATA0		0x170b9
+-				MX6SL_PAD_SD2_DAT1__SD2_DATA1		0x170b9
+-				MX6SL_PAD_SD2_DAT2__SD2_DATA2		0x170b9
+-				MX6SL_PAD_SD2_DAT3__SD2_DATA3		0x170b9
+-			>;
+-		};
+-
+-		pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
+-			fsl,pins = <
+-				MX6SL_PAD_SD2_CMD__SD2_CMD		0x170f9
+-				MX6SL_PAD_SD2_CLK__SD2_CLK		0x100f9
+-				MX6SL_PAD_SD2_DAT0__SD2_DATA0		0x170f9
+-				MX6SL_PAD_SD2_DAT1__SD2_DATA1		0x170f9
+-				MX6SL_PAD_SD2_DAT2__SD2_DATA2		0x170f9
+-				MX6SL_PAD_SD2_DAT3__SD2_DATA3		0x170f9
+-			>;
+-		};
+-
+-		pinctrl_usdhc3: usdhc3grp {
+-			fsl,pins = <
+-				MX6SL_PAD_SD3_CMD__SD3_CMD		0x17059
+-				MX6SL_PAD_SD3_CLK__SD3_CLK		0x10059
+-				MX6SL_PAD_SD3_DAT0__SD3_DATA0		0x17059
+-				MX6SL_PAD_SD3_DAT1__SD3_DATA1		0x17059
+-				MX6SL_PAD_SD3_DAT2__SD3_DATA2		0x17059
+-				MX6SL_PAD_SD3_DAT3__SD3_DATA3		0x17059
+-			>;
+-		};
+-
+-		pinctrl_usdhc3_100mhz: usdhc3grp100mhz {
+-			fsl,pins = <
+-				MX6SL_PAD_SD3_CMD__SD3_CMD		0x170b9
+-				MX6SL_PAD_SD3_CLK__SD3_CLK		0x100b9
+-				MX6SL_PAD_SD3_DAT0__SD3_DATA0		0x170b9
+-				MX6SL_PAD_SD3_DAT1__SD3_DATA1		0x170b9
+-				MX6SL_PAD_SD3_DAT2__SD3_DATA2		0x170b9
+-				MX6SL_PAD_SD3_DAT3__SD3_DATA3		0x170b9
+-			>;
+-		};
+-
+-		pinctrl_usdhc3_200mhz: usdhc3grp200mhz {
+-			fsl,pins = <
+-				MX6SL_PAD_SD3_CMD__SD3_CMD		0x170f9
+-				MX6SL_PAD_SD3_CLK__SD3_CLK		0x100f9
+-				MX6SL_PAD_SD3_DAT0__SD3_DATA0		0x170f9
+-				MX6SL_PAD_SD3_DAT1__SD3_DATA1		0x170f9
+-				MX6SL_PAD_SD3_DAT2__SD3_DATA2		0x170f9
+-				MX6SL_PAD_SD3_DAT3__SD3_DATA3		0x170f9
+-			>;
+-		};
+ 	};
  };
  
- #define for_each_label_withdel(l0, l) \
-@@ -192,6 +194,8 @@ struct property *reverse_properties(struct property *first);
- struct node *build_node(struct property *proplist, struct node *children);
- struct node *build_node_delete(void);
- struct node *name_node(struct node *node, char *name);
-+struct node *check_node_referenced(struct node *node);
-+struct node *reference_node(struct node *node);
- struct node *chain_node(struct node *first, struct node *list);
- struct node *merge_nodes(struct node *old_node, struct node *new_node);
- 
-diff --git a/scripts/dtc/flattree.c b/scripts/dtc/flattree.c
-index 665dad7..a327592 100644
---- a/scripts/dtc/flattree.c
-+++ b/scripts/dtc/flattree.c
-@@ -266,6 +266,9 @@ static void flatten_tree(struct node *tree, struct emitter *emit,
- 	if (tree->deleted)
- 		return;
- 
-+	if (tree->needs_reference && !tree->is_referenced)
-+		return;
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index 3cb4941..2d176f0 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -797,3 +797,188 @@
+ 		};
+ 	};
+ };
 +
- 	emit->beginnode(etarget, tree->labels);
- 
- 	if (vi->flags & FTF_FULLPATH)
-diff --git a/scripts/dtc/livetree.c b/scripts/dtc/livetree.c
-index b61465f..98bb33d 100644
---- a/scripts/dtc/livetree.c
-+++ b/scripts/dtc/livetree.c
-@@ -134,6 +134,20 @@ struct node *name_node(struct node *node, char *name)
- 	return node;
- }
- 
-+struct node *check_node_referenced(struct node *node)
-+{
-+	node->needs_reference = 1;
 +
-+	return node;
-+}
++&iomuxc {
++	imx6sl {
++		/delete-unreferenced/ pinctrl_audmux3: audmux3grp {
++			fsl,pins = <
++				MX6SL_PAD_AUD_RXD__AUD3_RXD	  0x4130b0
++				MX6SL_PAD_AUD_TXC__AUD3_TXC	  0x4130b0
++				MX6SL_PAD_AUD_TXD__AUD3_TXD	  0x4110b0
++				MX6SL_PAD_AUD_TXFS__AUD3_TXFS	  0x4130b0
++			>;
++		};
 +
-+struct node *reference_node(struct node *node)
-+{
-+	node->is_referenced = 1;
++		/delete-unreferenced/ pinctrl_ecspi1: ecspi1grp {
++			fsl,pins = <
++				MX6SL_PAD_ECSPI1_MISO__ECSPI1_MISO	0x100b1
++				MX6SL_PAD_ECSPI1_MOSI__ECSPI1_MOSI	0x100b1
++				MX6SL_PAD_ECSPI1_SCLK__ECSPI1_SCLK	0x100b1
++			>;
++		};
 +
-+	return node;
-+}
++		/delete-unreferenced/ pinctrl_fec: fecgrp {
++			fsl,pins = <
++				MX6SL_PAD_FEC_MDC__FEC_MDC		0x1b0b0
++				MX6SL_PAD_FEC_MDIO__FEC_MDIO		0x1b0b0
++				MX6SL_PAD_FEC_CRS_DV__FEC_RX_DV		0x1b0b0
++				MX6SL_PAD_FEC_RXD0__FEC_RX_DATA0	0x1b0b0
++				MX6SL_PAD_FEC_RXD1__FEC_RX_DATA1	0x1b0b0
++				MX6SL_PAD_FEC_TX_EN__FEC_TX_EN		0x1b0b0
++				MX6SL_PAD_FEC_TXD0__FEC_TX_DATA0	0x1b0b0
++				MX6SL_PAD_FEC_TXD1__FEC_TX_DATA1	0x1b0b0
++				MX6SL_PAD_FEC_REF_CLK__FEC_REF_OUT	0x4001b0a8
++			>;
++		};
 +
- struct node *merge_nodes(struct node *old_node, struct node *new_node)
- {
- 	struct property *new_prop, *old_prop;
++		/delete-unreferenced/ pinctrl_i2c1: i2c1grp {
++			fsl,pins = <
++				MX6SL_PAD_I2C1_SCL__I2C1_SCL	0x4001b8b1
++				MX6SL_PAD_I2C1_SDA__I2C1_SDA	0x4001b8b1
++			>;
++		};
++
++		/delete-unreferenced/ pinctrl_i2c2: i2c2grp {
++			fsl,pins = <
++				MX6SL_PAD_I2C2_SCL__I2C2_SCL	0x4001b8b1
++				MX6SL_PAD_I2C2_SDA__I2C2_SDA	0x4001b8b1
++			>;
++		};
++
++		/delete-unreferenced/ pinctrl_kpp: kppgrp {
++			fsl,pins = <
++				MX6SL_PAD_KEY_ROW0__KEY_ROW0    0x1b010
++				MX6SL_PAD_KEY_ROW1__KEY_ROW1    0x1b010
++				MX6SL_PAD_KEY_ROW2__KEY_ROW2    0x1b0b0
++				MX6SL_PAD_KEY_COL0__KEY_COL0    0x110b0
++				MX6SL_PAD_KEY_COL1__KEY_COL1    0x110b0
++				MX6SL_PAD_KEY_COL2__KEY_COL2    0x110b0
++			>;
++		};
++
++		/delete-unreferenced/ pinctrl_uart1: uart1grp {
++			fsl,pins = <
++				MX6SL_PAD_UART1_RXD__UART1_RX_DATA	0x1b0b1
++				MX6SL_PAD_UART1_TXD__UART1_TX_DATA	0x1b0b1
++			>;
++		};
++
++		/delete-unreferenced/ pinctrl_usbotg1: usbotg1grp {
++			fsl,pins = <
++				MX6SL_PAD_EPDC_PWRCOM__USB_OTG1_ID	0x17059
++			>;
++		};
++
++		/delete-unreferenced/ pinctrl_usdhc1: usdhc1grp {
++			fsl,pins = <
++				MX6SL_PAD_SD1_CMD__SD1_CMD		0x17059
++				MX6SL_PAD_SD1_CLK__SD1_CLK		0x10059
++				MX6SL_PAD_SD1_DAT0__SD1_DATA0		0x17059
++				MX6SL_PAD_SD1_DAT1__SD1_DATA1		0x17059
++				MX6SL_PAD_SD1_DAT2__SD1_DATA2		0x17059
++				MX6SL_PAD_SD1_DAT3__SD1_DATA3		0x17059
++				MX6SL_PAD_SD1_DAT4__SD1_DATA4		0x17059
++				MX6SL_PAD_SD1_DAT5__SD1_DATA5		0x17059
++				MX6SL_PAD_SD1_DAT6__SD1_DATA6		0x17059
++				MX6SL_PAD_SD1_DAT7__SD1_DATA7		0x17059
++			>;
++		};
++
++		/delete-unreferenced/ pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
++			fsl,pins = <
++				MX6SL_PAD_SD1_CMD__SD1_CMD		0x170b9
++				MX6SL_PAD_SD1_CLK__SD1_CLK		0x100b9
++				MX6SL_PAD_SD1_DAT0__SD1_DATA0		0x170b9
++				MX6SL_PAD_SD1_DAT1__SD1_DATA1		0x170b9
++				MX6SL_PAD_SD1_DAT2__SD1_DATA2		0x170b9
++				MX6SL_PAD_SD1_DAT3__SD1_DATA3		0x170b9
++				MX6SL_PAD_SD1_DAT4__SD1_DATA4		0x170b9
++				MX6SL_PAD_SD1_DAT5__SD1_DATA5		0x170b9
++				MX6SL_PAD_SD1_DAT6__SD1_DATA6		0x170b9
++				MX6SL_PAD_SD1_DAT7__SD1_DATA7		0x170b9
++			>;
++		};
++
++		/delete-unreferenced/ pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
++			fsl,pins = <
++				MX6SL_PAD_SD1_CMD__SD1_CMD		0x170f9
++				MX6SL_PAD_SD1_CLK__SD1_CLK		0x100f9
++				MX6SL_PAD_SD1_DAT0__SD1_DATA0		0x170f9
++				MX6SL_PAD_SD1_DAT1__SD1_DATA1		0x170f9
++				MX6SL_PAD_SD1_DAT2__SD1_DATA2		0x170f9
++				MX6SL_PAD_SD1_DAT3__SD1_DATA3		0x170f9
++				MX6SL_PAD_SD1_DAT4__SD1_DATA4		0x170f9
++				MX6SL_PAD_SD1_DAT5__SD1_DATA5		0x170f9
++				MX6SL_PAD_SD1_DAT6__SD1_DATA6		0x170f9
++				MX6SL_PAD_SD1_DAT7__SD1_DATA7		0x170f9
++			>;
++		};
++
++		/delete-unreferenced/ pinctrl_usdhc2: usdhc2grp {
++			fsl,pins = <
++				MX6SL_PAD_SD2_CMD__SD2_CMD		0x17059
++				MX6SL_PAD_SD2_CLK__SD2_CLK		0x10059
++				MX6SL_PAD_SD2_DAT0__SD2_DATA0		0x17059
++				MX6SL_PAD_SD2_DAT1__SD2_DATA1		0x17059
++				MX6SL_PAD_SD2_DAT2__SD2_DATA2		0x17059
++				MX6SL_PAD_SD2_DAT3__SD2_DATA3		0x17059
++			>;
++		};
++
++		/delete-unreferenced/ pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
++			fsl,pins = <
++				MX6SL_PAD_SD2_CMD__SD2_CMD		0x170b9
++				MX6SL_PAD_SD2_CLK__SD2_CLK		0x100b9
++				MX6SL_PAD_SD2_DAT0__SD2_DATA0		0x170b9
++				MX6SL_PAD_SD2_DAT1__SD2_DATA1		0x170b9
++				MX6SL_PAD_SD2_DAT2__SD2_DATA2		0x170b9
++				MX6SL_PAD_SD2_DAT3__SD2_DATA3		0x170b9
++			>;
++		};
++
++		/delete-unreferenced/ pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
++			fsl,pins = <
++				MX6SL_PAD_SD2_CMD__SD2_CMD		0x170f9
++				MX6SL_PAD_SD2_CLK__SD2_CLK		0x100f9
++				MX6SL_PAD_SD2_DAT0__SD2_DATA0		0x170f9
++				MX6SL_PAD_SD2_DAT1__SD2_DATA1		0x170f9
++				MX6SL_PAD_SD2_DAT2__SD2_DATA2		0x170f9
++				MX6SL_PAD_SD2_DAT3__SD2_DATA3		0x170f9
++			>;
++		};
++
++		/delete-unreferenced/ pinctrl_usdhc3: usdhc3grp {
++			fsl,pins = <
++				MX6SL_PAD_SD3_CMD__SD3_CMD		0x17059
++				MX6SL_PAD_SD3_CLK__SD3_CLK		0x10059
++				MX6SL_PAD_SD3_DAT0__SD3_DATA0		0x17059
++				MX6SL_PAD_SD3_DAT1__SD3_DATA1		0x17059
++				MX6SL_PAD_SD3_DAT2__SD3_DATA2		0x17059
++				MX6SL_PAD_SD3_DAT3__SD3_DATA3		0x17059
++			>;
++		};
++
++		/delete-unreferenced/ pinctrl_usdhc3_100mhz: usdhc3grp100mhz {
++			fsl,pins = <
++				MX6SL_PAD_SD3_CMD__SD3_CMD		0x170b9
++				MX6SL_PAD_SD3_CLK__SD3_CLK		0x100b9
++				MX6SL_PAD_SD3_DAT0__SD3_DATA0		0x170b9
++				MX6SL_PAD_SD3_DAT1__SD3_DATA1		0x170b9
++				MX6SL_PAD_SD3_DAT2__SD3_DATA2		0x170b9
++				MX6SL_PAD_SD3_DAT3__SD3_DATA3		0x170b9
++			>;
++		};
++
++		/delete-unreferenced/ pinctrl_usdhc3_200mhz: usdhc3grp200mhz {
++			fsl,pins = <
++				MX6SL_PAD_SD3_CMD__SD3_CMD		0x170f9
++				MX6SL_PAD_SD3_CLK__SD3_CLK		0x100f9
++				MX6SL_PAD_SD3_DAT0__SD3_DATA0		0x170f9
++				MX6SL_PAD_SD3_DAT1__SD3_DATA1		0x170f9
++				MX6SL_PAD_SD3_DAT2__SD3_DATA2		0x170f9
++				MX6SL_PAD_SD3_DAT3__SD3_DATA3		0x170f9
++			>;
++		};
++	};
++};
 -- 
 1.8.5.3
 
