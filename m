@@ -1,42 +1,70 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V6 03/12] phy: st-miphy40lp: Add binding information
-Date: Tue, 18 Feb 2014 15:58:14 +0100
-Message-ID: <201402181558.14663.arnd@arndb.de>
-References: <cover.1392109054.git.mohit.kumar@st.com> <2CC2A0A4A178534D93D5159BF3BCB66189FD2CAFB1@EAPEX1MAIL1.st.com> <20140218122324.GA23267@e106331-lin.cambridge.arm.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 13/35] mtd: st_spi_fsm: Add device-tree binding documentation
+Date: Tue, 18 Feb 2014 14:55:40 +0000
+Message-ID: <1392735362-1245-14-git-send-email-lee.jones@linaro.org>
+References: <1392735362-1245-1-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140218122324.GA23267-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Mohit KUMAR DCG <Mohit.KUMAR-qxv4g6HH51o@public.gmane.org>, Pratyush ANAND <pratyush.anand-qxv4g6HH51o@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1392735362-1245-1-git-send-email-lee.jones@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Angus.Clark@st.com, devicetree@vger.kernel.org, lee.jones@linaro.org, DCG_UPD_stlinux_kernel@list.st.com, linux-mtd@lists.infradead.org, computersforpeace@gmail.com, dwmw2@infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 18 February 2014, Mark Rutland wrote:
-> > 
-> > - These are Spear SoC specific miscellaneous registers. Here these are used for
-> > to configure sata/pcie  aux clock.
-> > > 
-> > > > +- phy-id: Instance id of the phy.
-> > > > +- #phy-cells : from the generic PHY bindings, must be 1.
-> > > > + - 1st cell: phandle to the phy node.
-> > > > + - 2nd cell: 0 if phy (in 1st cell) is to be used for SATA, 1 for PCIe
-> > > > +   and 2 for Super Speed USB.
-> > > 
-> > > One cell or two?
-> > 
-> > - No of cells are two, is this the question?
-> 
-> The description of #phy-cells says it must be 1. Presumably it must be 2.
+Cc: devicetree@vger.kernel.org
+Acked-by Angus Clark <angus.clark@st.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ Documentation/devicetree/bindings/mtd/st-fsm.txt | 26 ++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/st-fsm.txt
 
-The description here is counting the phandle, while we normally only
-count the arguments following the phandle. #phy-cells=<1> is correct
-here, but the description should be written a bit clearer.
+diff --git a/Documentation/devicetree/bindings/mtd/st-fsm.txt b/Documentation/devicetree/bindings/mtd/st-fsm.txt
+new file mode 100644
+index 0000000..c248939
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/st-fsm.txt
+@@ -0,0 +1,26 @@
++* ST-Microelectronics SPI FSM Serial (NOR) Flash Controller
++
++Required properties:
++  - compatible : Should be "st,spi-fsm"
++  - reg        : Contains register's location and length.
++  - reg-names  : Should contain the reg names "spi-fsm"
++  - interrupts : The interrupt number
++  - pinctrl-0  : Standard Pinctrl phandle (see: pinctrl/pinctrl-bindings.txt)
++
++Optional properties:
++  - st,syscfg          : Phandle to boot-device system configuration registers
++  - st,boot-device-reg : Address of the aforementioned boot-device register(s)
++  - st,boot-device-spi : Expected boot-device value if booted via this device
++
++Example:
++	spifsm: spifsm@fe902000{
++	        compatible         = "st,spi-fsm";
++	        reg                =  <0xfe902000 0x1000>;
++	        reg-names          = "spi-fsm";
++	        pinctrl-0          = <&pinctrl_fsm>;
++		st,syscfg	   = <&syscfg_rear>;
++	        st,boot-device-reg = <0x958>;
++	        st,boot-device-spi = <0x1a>;
++		status = "okay";
++	};
++
+-- 
+1.8.3.2
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
