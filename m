@@ -1,29 +1,27 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: devicetree repository separation/migration
-Date: Tue, 18 Feb 2014 14:21:23 -0800
-Message-ID: <CAOesGMi8zJXhfj46CLB-_Kk2s4MY9da46DhMoCtRj=zSUiuOGA@mail.gmail.com>
-References: <20140217180544.GU7862@titan.lakedaemon.net>
-	<20140218155750.GS17250@pengutronix.de>
-	<20140218181854.GB7862@titan.lakedaemon.net>
-	<CAOesGMhvoB7vRf3H1kMaL5+MgZ2gJy=ZVNU0gsXVye9S4YGBOg@mail.gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v4] sh_eth: add device tree support
+Date: Tue, 18 Feb 2014 17:21:55 -0500 (EST)
+Message-ID: <20140218.172155.1805423700591358551.davem@davemloft.net>
+References: <201402180312.44775.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMhvoB7vRf3H1kMaL5+MgZ2gJy=ZVNU0gsXVye9S4YGBOg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <201402180312.44775.sergei.shtylyov@cogentembedded.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: sergei.shtylyov@cogentembedded.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, netdev@vger.kernel.org, nobuhiro.iwamatsu.yj@renesas.com, rob@landley.net, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 18, 2014 at 11:47 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
-> Breakage due to the move is something we should have to put up
-> with, etc.
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Date: Tue, 18 Feb 2014 03:12:43 +0300
 
-Typo. We absolutely must not have breakage due to this move.
+> Add support of the device tree probing for the Renesas SH-Mobile SoCs
+> documenting the device tree binding as necessary.
+> 
+> This work is loosely based on the original patch by Nobuhiro Iwamatsu
+> <nobuhiro.iwamatsu.yj@renesas.com>.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Also applied, thanks.
