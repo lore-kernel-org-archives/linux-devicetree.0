@@ -1,85 +1,49 @@
-From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: [PATCH RFC 1/2] leds: add DT support for LEDs wired to supply and
- default brightness
-Date: Tue, 18 Feb 2014 13:09:28 +0000
-Message-ID: <E1WFkQS-0005JS-L5@rmk-PC.arm.linux.org.uk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: [PATCH v2 1/3] usb: chipidea: msm: Add device tree binding information
+Date: Tue, 18 Feb 2014 15:21:19 +0200
+Message-ID: <1392729681-21022-2-git-send-email-iivanov@mm-sol.com>
+References: <1392729681-21022-1-git-send-email-iivanov@mm-sol.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1392729681-21022-1-git-send-email-iivanov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>
+Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some PWM outputs are wired such that the LED they're controlling is
-connected to supply rather than ground.  Therefore, the duty cycle
-needs to be inverted to make the LED behave as it should do.
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
 
-We also provide a way to specify the default brightness when a
-trigger is not specified.
+Document device tree binding information as required by
+the Qualcomm USB controller.
 
-Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-=-DO NOT APPLY-=
- Documentation/devicetree/bindings/leds/leds-pwm.txt |  3 +++
- drivers/leds/leds-pwm.c                             | 15 +++++++++++----
- 2 files changed, 14 insertions(+), 4 deletions(-)
+Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+---
+ .../devicetree/bindings/usb/msm-hsusb.txt          |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.txt b/Documentation/devicetree/bindings/leds/leds-pwm.txt
-index 7297107cf832..ffcb74ab61fd 100644
-=-DO NOT APPLY-= a/Documentation/devicetree/bindings/leds/leds-pwm.txt
-=+DO NOT APPLY+= b/Documentation/devicetree/bindings/leds/leds-pwm.txt
-@@ -13,6 +13,9 @@ node's name represents the name of the corresponding LED.
-   For the pwms and pwm-names property please refer to:
-   Documentation/devicetree/bindings/pwm/pwm.txt
- - max-brightness : Maximum brightness possible for the LED
-=+DO NOT APPLY+=- default-brightness : (optional) Default brightness for the LED
-=+DO NOT APPLY+=- active-low : (optional) For PWMs where the LED is wired to supply
-=+DO NOT APPLY+=  rather than ground.
- - label :  (optional)
-   see Documentation/devicetree/bindings/leds/common.txt
- - linux,default-trigger :  (optional)
-diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
-index 605047428b5a..fe2cd849b593 100644
-=-DO NOT APPLY-= a/drivers/leds/leds-pwm.c
-=+DO NOT APPLY+= b/drivers/leds/leds-pwm.c
-@@ -70,6 +70,10 @@ static void led_pwm_set(struct led_classdev *led_cdev,
+diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+index 5ea26c6..d4e7e41 100644
+--- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
++++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+@@ -15,3 +15,20 @@ Example EHCI controller device node:
+ 		usb-phy = <&usb_otg>;
+ 	};
  
- 	duty *= brightness;
- 	do_div(duty, max);
-=+DO NOT APPLY+=
-=+DO NOT APPLY+=	if (led_dat->active_low)
-=+DO NOT APPLY+=		duty = led_dat->period - duty;
-=+DO NOT APPLY+=
- 	led_dat->duty = duty;
- 
- 	if (led_dat->can_sleep)
-@@ -93,6 +97,10 @@ static int led_pwm_create_of(struct platform_device *pdev,
- 	for_each_child_of_node(pdev->dev.of_node, child) {
- 		struct led_pwm_data *led_dat = &priv->leds[priv->num_leds];
- 
-=+DO NOT APPLY+=		led_dat->cdev.brightness_set = led_pwm_set;
-=+DO NOT APPLY+=		led_dat->cdev.brightness = LED_OFF;
-=+DO NOT APPLY+=		led_dat->cdev.flags |= LED_CORE_SUSPENDRESUME;
-=+DO NOT APPLY+=
- 		led_dat->cdev.name = of_get_property(child, "label",
- 						     NULL) ? : child->name;
- 
-@@ -110,10 +118,9 @@ static int led_pwm_create_of(struct platform_device *pdev,
- 						"linux,default-trigger", NULL);
- 		of_property_read_u32(child, "max-brightness",
- 				     &led_dat->cdev.max_brightness);
--
--		led_dat->cdev.brightness_set = led_pwm_set;
--		led_dat->cdev.brightness = LED_OFF;
--		led_dat->cdev.flags |= LED_CORE_SUSPENDRESUME;
-=+DO NOT APPLY+=		of_property_read_u32(child, "default-brightness",
-=+DO NOT APPLY+=				     &led_dat->cdev.brightness);
-=+DO NOT APPLY+=		led_dat->active_low = of_property_read_bool(child, "active-low");
- 
- 		led_dat->can_sleep = pwm_can_sleep(led_dat->pwm);
- 		if (led_dat->can_sleep)
++CI13xxx (Chipidea) USB controllers
++
++Required properties:
++- compatible:   should contain "qcom,ci-hdrc"
++- reg:          offset and length of the register set in the memory map
++- interrupts:   interrupt-specifier for the controller interrupt.
++- usb-phy:      phandle for the PHY device
++- dr_mode:      Sould be "peripheral"
++
++	gadget@f9a55000 {
++		compatible = "qcom,ci-hdrc";
++		reg = <0xf9a55000 0x400>;
++		dr_mode = "peripheral";
++		interrupts = <0 134 0>;
++		usb-phy = <&usb_otg>;
++	};
++
 -- 
-1.8.3.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
