@@ -1,62 +1,40 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [RFC PATCH] [media]: of: move graph helpers from
- drivers/media/v4l2-core to drivers/of
-Date: Tue, 18 Feb 2014 08:06:24 +0100
-Message-ID: <20140218070624.GP17250@pengutronix.de>
-References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de>
- <CAL_Jsq+U9zU1i+STLHMBjY5BeEP6djYnJVE5X1ix-D2q_zWztQ@mail.gmail.com>
- <20140217181451.7EB7FC4044D@trevor.secretlab.ca>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH net-next v5 00/10] Support for the Broadcom GENET driver
+Date: Tue, 18 Feb 2014 08:37:50 +0100
+Message-ID: <20140218073750.GA6316@netboy>
+References: <1392336531-28875-1-git-send-email-f.fainelli@gmail.com>
+ <52FDC094.1020104@gmail.com>
+ <20140214091943.GB3906@netboy>
+ <12896228.bQPud9hHaP@lenovo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140217181451.7EB7FC4044D@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robherring2@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
+In-Reply-To: <12896228.bQPud9hHaP@lenovo>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: David Miller <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, cernekee@gmail.com, mark.rutland@arm.com, romieu@fr.zoreil.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+On Sun, Feb 16, 2014 at 10:34:16AM -0800, Florian Fainelli wrote:
+> Le vendredi 14 f=E9vrier 2014, 10:19:43 Richard Cochran a =E9crit :
+> > On Thu, Feb 13, 2014 at 11:07:00PM -0800, Florian Fainelli wrote:
+> > > Le 13/02/2014 21:29, David Miller a =E9crit :
+> > > >Series applied, thanks.
+> > >=20
+> > > Great, thanks David!
+> >=20
+> > Sorry for the late comment, but how about adding a call to
+> > skb_tx_timestamp(), in order to support so_timestamping?
+>=20
+> The MAC itself is capable of providing a HW timestamp, I will look in=
+to this a=20
+> little later.
 
-On Mon, Feb 17, 2014 at 06:14:51PM +0000, Grant Likely wrote:
-> On Tue, 11 Feb 2014 07:56:33 -0600, Rob Herring <robherring2@gmail.com> wrote:
-> > On Tue, Feb 11, 2014 at 5:45 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> > > From: Philipp Zabel <philipp.zabel@gmail.com>
-> > >
-> > > This patch moves the parsing helpers used to parse connected graphs
-> > > in the device tree, like the video interface bindings documented in
-> > > Documentation/devicetree/bindings/media/video-interfaces.txt, from
-> > > drivers/media/v4l2-core to drivers/of.
-> > 
-> > This is the opposite direction things have been moving...
-> > 
-> > > This allows to reuse the same parser code from outside the V4L2 framework,
-> > > most importantly from display drivers. There have been patches that duplicate
-> > > the code (and I am going to send one of my own), such as
-> > > http://lists.freedesktop.org/archives/dri-devel/2013-August/043308.html
-> > > and others that parse the same binding in a different way:
-> > > https://www.mail-archive.com/linux-omap@vger.kernel.org/msg100761.html
-> > >
-> > > I think that all common video interface parsing helpers should be moved to a
-> > > single place, outside of the specific subsystems, so that it can be reused
-> > > by all drivers.
-> > 
-> > Perhaps that should be done rather than moving to drivers/of now and
-> > then again to somewhere else.
-> 
-> This is just parsing helpers though, isn't it? I have no problem pulling
-> helper functions into drivers/of if they are usable by multiple
-> subsystems. I don't really understand the model being used though. I
-> would appreciate a description of the usage model for these functions
-> for poor folks like me who can't keep track of what is going on in
-> subsystems.
+Hardware time stamping is great to have, but it is more work to
+implement. In the mean time, adding transmit software time stamping is
+just adding a one-liner.
 
-You can find it under Documentation/devicetree/bindings/media/video-interfaces.txt
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Thanks,
+Richard
