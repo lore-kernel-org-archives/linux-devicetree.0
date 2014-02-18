@@ -1,8 +1,8 @@
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [RFC PATCH v3 8/9] ARM: dts: imx6qdl: Add IPU DI ports and endpoints,
+Subject: [RFC PATCH v3 7/9] ARM: dts: imx53: Add IPU DI ports and endpoints,
 	move imx-drm node to dtsi
-Date: Tue, 18 Feb 2014 12:36:09 +0100
-Message-ID: <1392723370-4772-9-git-send-email-p.zabel@pengutronix.de>
+Date: Tue, 18 Feb 2014 12:36:08 +0100
+Message-ID: <1392723370-4772-8-git-send-email-p.zabel@pengutronix.de>
 References: <1392723370-4772-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,17 +22,13 @@ To: Russell King - ARM Linux <linux@arm.linux.org.uk>
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch connects IPU and display encoder (HDMI, LVDS, MIPI)
+This patch connects IPU and display encoder (VGA, LVDS)
 device tree nodes, as well as parallel displays on the DISP0
 and DISP1 outputs, using the OF graph bindings described in
 Documentation/devicetree/bindings/media/video-interfaces.txt
 
 The IPU ports correspond to the two display interfaces. The
 order of endpoints in the ports is arbitrary.
-
-Each encoder with an associated input multiplexer has multiple
-input ports in the device tree. The order and reg property of
-the ports must correspond to the multiplexer input order.
 
 Since the imx-drm node now only needs to contain links to the
 display interfaces, it can be moved to the SoC dtsi level. At
@@ -41,421 +37,254 @@ ports and encoders or panels have to be added.
 
 Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- arch/arm/boot/dts/imx6dl.dtsi          |  22 +++---
- arch/arm/boot/dts/imx6q-sabresd.dts    |   4 -
- arch/arm/boot/dts/imx6q.dtsi           | 124 +++++++++++++++++++++++++++--
- arch/arm/boot/dts/imx6qdl-sabresd.dtsi |   6 --
- arch/arm/boot/dts/imx6qdl.dtsi         | 138 ++++++++++++++++++++++++++++++++-
- 5 files changed, 263 insertions(+), 31 deletions(-)
+ arch/arm/boot/dts/imx53-m53evk.dts | 17 +++++-----
+ arch/arm/boot/dts/imx53-mba53.dts  | 15 +++++----
+ arch/arm/boot/dts/imx53-qsb.dts    | 17 +++++-----
+ arch/arm/boot/dts/imx53.dtsi       | 64 +++++++++++++++++++++++++++++++++++---
+ 4 files changed, 89 insertions(+), 24 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
-index 6dc3970..8ba94b8 100644
---- a/arch/arm/boot/dts/imx6dl.dtsi
-+++ b/arch/arm/boot/dts/imx6dl.dtsi
-@@ -70,6 +70,15 @@
+diff --git a/arch/arm/boot/dts/imx53-m53evk.dts b/arch/arm/boot/dts/imx53-m53evk.dts
+index ee6107b..0298adc 100644
+--- a/arch/arm/boot/dts/imx53-m53evk.dts
++++ b/arch/arm/boot/dts/imx53-m53evk.dts
+@@ -23,7 +23,6 @@
+ 	soc {
+ 		display1: display@di1 {
+ 			compatible = "fsl,imx-parallel-display";
+-			crtcs = <&ipu 1>;
+ 			interface-pix-fmt = "bgr666";
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_ipu_disp2_1>;
+@@ -44,6 +43,12 @@
+ 				};
  			};
  		};
- 	};
 +
-+	imx-drm {
-+		compatible = "fsl,imx-drm";
-+		ports = <&ipu1_di0>, <&ipu1_di1>;
-+	};
++		port {
++			display1_in: endpoint {
++				remote-endpoint = <&ipu_di1_disp1>;
++			};
++		};
+ 	};
+ 
+ 	backlight {
+@@ -53,12 +58,6 @@
+ 		default-brightness-level = <6>;
+ 	};
+ 
+-	imx-drm {
+-		compatible = "fsl,imx-drm";
+-		crtcs = <&ipu 1>;
+-		connectors = <&display1>;
+-	};
+-
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -227,6 +226,10 @@
+ 	};
+ };
+ 
++&ipu_di1_disp1 {
++	remote-endpoint = <&display1_in>;
 +};
 +
-+&hdmi {
-+	compatible = "fsl,imx6dl-hdmi";
+ &nfc {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_nand_1>;
+diff --git a/arch/arm/boot/dts/imx53-mba53.dts b/arch/arm/boot/dts/imx53-mba53.dts
+index 9b6e769..3c3d69e 100644
+--- a/arch/arm/boot/dts/imx53-mba53.dts
++++ b/arch/arm/boot/dts/imx53-mba53.dts
+@@ -38,15 +38,14 @@
+ 		compatible = "fsl,imx-parallel-display";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_disp1_1>;
+-		crtcs = <&ipu 1>;
+ 		interface-pix-fmt = "rgb24";
+ 		status = "disabled";
+-	};
+ 
+-	imx-drm {
+-		compatible = "fsl,imx-drm";
+-		crtcs = <&ipu 1>;
+-		connectors = <&disp1>, <&tve>;
++		port {
++			display1_in: endpoint {
++				remote-endpoint = <&ipu_di1_disp1>;
++			};
++		};
+ 	};
+ 
+ 	reg_3p2v: 3p2v {
+@@ -147,6 +146,10 @@
+ 	};
  };
  
- &ldb {
-@@ -79,17 +88,4 @@
- 	clock-names = "di0_pll", "di1_pll",
- 		      "di0_sel", "di1_sel",
- 		      "di0", "di1";
--
--	lvds-channel@0 {
--		crtcs = <&ipu1 0>, <&ipu1 1>;
--	};
--
--	lvds-channel@1 {
--		crtcs = <&ipu1 0>, <&ipu1 1>;
--	};
--};
--
--&hdmi {
--	compatible = "fsl,imx6dl-hdmi";
--	crtcs = <&ipu1 0>, <&ipu1 1>;
- };
-diff --git a/arch/arm/boot/dts/imx6q-sabresd.dts b/arch/arm/boot/dts/imx6q-sabresd.dts
-index 66f220a..9cbdfe7 100644
---- a/arch/arm/boot/dts/imx6q-sabresd.dts
-+++ b/arch/arm/boot/dts/imx6q-sabresd.dts
-@@ -20,10 +20,6 @@
- 	compatible = "fsl,imx6q-sabresd", "fsl,imx6q";
- };
- 
--&imx_drm {
--	crtcs = <&ipu1 0>, <&ipu1 1>, <&ipu2 0>, <&ipu2 1>;
--};
--
- &sata {
++&ipu_di1_disp1 {
++	remote-endpoint = <&display1_in>;
++};
++
+ &cspi {
  	status = "okay";
  };
-diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-index 187fe33..db356e6 100644
---- a/arch/arm/boot/dts/imx6q.dtsi
-+++ b/arch/arm/boot/dts/imx6q.dtsi
-@@ -132,13 +132,84 @@
- 		};
+diff --git a/arch/arm/boot/dts/imx53-qsb.dts b/arch/arm/boot/dts/imx53-qsb.dts
+index 3cb4f77..8b25428 100644
+--- a/arch/arm/boot/dts/imx53-qsb.dts
++++ b/arch/arm/boot/dts/imx53-qsb.dts
+@@ -23,7 +23,6 @@
  
- 		ipu2: ipu@02800000 {
+ 	display0: display@di0 {
+ 		compatible = "fsl,imx-parallel-display";
+-		crtcs = <&ipu 0>;
+ 		interface-pix-fmt = "rgb565";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_ipu_disp0_1>;
+@@ -46,6 +45,12 @@
+ 				pixelclk-active = <0>;
+ 			};
+ 		};
++
++		port {
++			display0_in: endpoint {
++				remote-endpoint = <&ipu_di0_disp0>;
++			};
++		};
+ 	};
+ 
+ 	gpio-keys {
+@@ -72,12 +77,6 @@
+ 		};
+ 	};
+ 
+-	imx-drm {
+-		compatible = "fsl,imx-drm";
+-		crtcs = <&ipu 0>;
+-		connectors = <&display0>;
+-	};
+-
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -132,6 +131,10 @@
+ 	status = "okay";
+ };
+ 
++&ipu_di0_disp0 {
++	remote-endpoint = <&display0_in>;
++};
++
+ &ssi2 {
+ 	fsl,mode = "i2s-slave";
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+index 4307e80..5b89b91 100644
+--- a/arch/arm/boot/dts/imx53.dtsi
++++ b/arch/arm/boot/dts/imx53.dtsi
+@@ -45,6 +45,11 @@
+ 		};
+ 	};
+ 
++	imx-drm {
++		compatible = "fsl,imx-drm";
++		ports = <&ipu_di0>, <&ipu_di1>;
++	};
++
+ 	tzic: tz-interrupt-controller@0fffc000 {
+ 		compatible = "fsl,imx53-tzic", "fsl,tzic";
+ 		interrupt-controller;
+@@ -85,13 +90,49 @@
+ 		ranges;
+ 
+ 		ipu: ipu@18000000 {
 -			#crtc-cells = <1>;
 +			#address-cells = <1>;
 +			#size-cells = <0>;
- 			compatible = "fsl,imx6q-ipu";
- 			reg = <0x02800000 0x400000>;
- 			interrupts = <0 8 0x4 0 7 0x4>;
- 			clocks = <&clks 133>, <&clks 134>, <&clks 137>;
+ 			compatible = "fsl,imx53-ipu";
+ 			reg = <0x18000000 0x080000000>;
+ 			interrupts = <11 10>;
+ 			clocks = <&clks 59>, <&clks 110>, <&clks 61>;
  			clock-names = "bus", "di0", "di1";
- 			resets = <&src 4>;
+ 			resets = <&src 2>;
 +
-+			ipu2_di0: port@2 {
++			ipu_di0: port@2 {
 +				#address-cells = <1>;
 +				#size-cells = <0>;
 +				reg = <2>;
 +
-+				ipu2_di0_disp0: endpoint@0 {
++				ipu_di0_disp0: endpoint@0 {
++					reg = <0>;
 +				};
 +
-+				ipu2_di0_hdmi: endpoint@1 {
-+					remote-endpoint = <&hdmi_mux_2>;
-+				};
-+
-+				ipu2_di0_mipi: endpoint@2 {
-+				};
-+
-+				ipu2_di0_lvds0: endpoint@3 {
-+					remote-endpoint = <&lvds0_mux_2>;
-+				};
-+
-+				ipu2_di0_lvds1: endpoint@4 {
-+					remote-endpoint = <&lvds1_mux_2>;
++				ipu_di0_lvds0: endpoint@1 {
++					reg = <1>;
++					remote-endpoint = <&lvds0_in>;
 +				};
 +			};
 +
-+			ipu2_di1: port@3 {
++			ipu_di1: port@3 {
 +				#address-cells = <1>;
 +				#size-cells = <0>;
 +				reg = <3>;
 +
-+				ipu2_di1_hdmi: endpoint@1 {
-+					remote-endpoint = <&hdmi_mux_3>;
++				ipu_di1_disp1: endpoint@0 {
++					reg = <0>;
 +				};
 +
-+				ipu2_di1_mipi: endpoint@2 {
++				ipu_di1_lvds1: endpoint@1 {
++					reg = <1>;
++					remote-endpoint = <&lvds1_in>;
 +				};
 +
-+				ipu2_di1_lvds0: endpoint@3 {
-+					remote-endpoint = <&lvds0_mux_3>;
-+				};
-+
-+				ipu2_di1_lvds1: endpoint@4 {
-+					remote-endpoint = <&lvds1_mux_3>;
++				ipu_di1_tve: endpoint@2 {
++					reg = <2>;
++					remote-endpoint = <&tve_in>;
 +				};
 +			};
-+		};
-+	};
-+
-+	imx-drm {
-+		compatible = "fsl,imx-drm";
-+		ports = <&ipu1_di0>, <&ipu1_di1>, <&ipu2_di0>, <&ipu2_di1>;
-+	};
-+};
-+
-+&hdmi {
-+	compatible = "fsl,imx6q-hdmi";
-+
-+	port@2 {
-+		reg = <2>;
-+
-+		hdmi_mux_2: endpoint {
-+			remote-endpoint = <&ipu2_di0_hdmi>;
-+		};
-+	};
-+
-+	port@3 {
-+		reg = <3>;
-+
-+		hdmi_mux_3: endpoint {
-+			remote-endpoint = <&ipu2_di1_hdmi>;
  		};
- 	};
- };
-@@ -152,15 +223,56 @@
- 		      "di0", "di1";
  
- 	lvds-channel@0 {
--		crtcs = <&ipu1 0>, <&ipu1 1>, <&ipu2 0>, <&ipu2 1>;
-+		port@2 {
-+			reg = <2>;
-+
-+			lvds0_mux_2: endpoint {
-+				remote-endpoint = <&ipu2_di0_lvds0>;
-+			};
-+		};
-+
-+		port@3 {
-+			reg = <3>;
-+
-+			lvds0_mux_3: endpoint {
-+				remote-endpoint = <&ipu2_di1_lvds0>;
-+			};
-+		};
- 	};
- 
- 	lvds-channel@1 {
--		crtcs = <&ipu1 0>, <&ipu1 1>, <&ipu2 0>, <&ipu2 1>;
-+		port@2 {
-+			reg = <2>;
-+
-+			lvds1_mux_2: endpoint {
-+				remote-endpoint = <&ipu2_di0_lvds1>;
-+			};
-+		};
-+
-+		port@3 {
-+			reg = <3>;
-+
-+			lvds1_mux_3: endpoint {
-+				remote-endpoint = <&ipu2_di1_lvds1>;
-+			};
-+		};
- 	};
- };
- 
--&hdmi {
--	compatible = "fsl,imx6q-hdmi";
--	crtcs = <&ipu1 0>, <&ipu1 1>, <&ipu2 0>, <&ipu2 1>;
-+&mipi_dsi {
-+	port@2 {
-+		reg = <2>;
-+
-+		mipi_mux_2: endpoint {
-+			remote-endpoint = <&ipu2_di0_mipi>;
-+		};
-+	};
-+
-+	port@3 {
-+		reg = <3>;
-+
-+		mipi_mux_3: endpoint {
-+			remote-endpoint = <&ipu2_di1_mipi>;
-+		};
-+	};
- };
-diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-index dfca3e0..e75e11b 100644
---- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-@@ -62,12 +62,6 @@
- 		};
- 	};
- 
--	imx_drm: imx-drm {
--		compatible = "fsl,imx-drm";
--		crtcs = <&ipu1 0>, <&ipu1 1>;
--		connectors = <&ldb>;
--	};
--
- 	sound {
- 		compatible = "fsl,imx6q-sabresd-wm8962",
- 			   "fsl,imx-audio-wm8962";
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 930ebe0..368168c 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -1358,23 +1358,87 @@
- 				status = "disabled";
+ 		aips@50000000 { /* AIPS1 */
+@@ -838,14 +879,24 @@
  
  				lvds-channel@0 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
  					reg = <0>;
+-					crtcs = <&ipu 0>;
  					status = "disabled";
 +
-+					port@0 {
-+						reg = <0>;
-+
-+						lvds0_mux_0: endpoint {
-+							remote-endpoint = <&ipu1_di0_lvds0>;
-+						};
-+					};
-+
-+					port@1 {
-+						reg = <1>;
-+
-+						lvds0_mux_1: endpoint {
-+							remote-endpoint = <&ipu1_di1_lvds0>;
-+						};
-+					};
-+
-+					port@4 {
-+						lvds0: endpoint {
++					port {
++						lvds0_in: endpoint {
++							remote-endpoint = <&ipu_di0_lvds0>;
 +						};
 +					};
  				};
  
  				lvds-channel@1 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
  					reg = <1>;
+-					crtcs = <&ipu 1>;
  					status = "disabled";
 +
-+					port@0 {
-+						reg = <0>;
-+
-+						lvds1_mux_0: endpoint {
-+							remote-endpoint = <&ipu1_di0_lvds1>;
-+						};
-+					};
-+
-+					port@1 {
-+						reg = <1>;
-+
-+						lvds1_mux_1: endpoint {
-+							remote-endpoint = <&ipu1_di1_lvds1>;
-+						};
-+					};
-+
-+					port@4 {
-+						lvds1: endpoint {
++					port {
++						lvds1_in: endpoint {
++							remote-endpoint = <&ipu_di0_lvds0>;
 +						};
 +					};
  				};
  			};
  
- 			hdmi: hdmi@0120000 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
- 				reg = <0x00120000 0x9000>;
- 				interrupts = <0 115 0x04>;
- 				gpr = <&gpr>;
- 				clocks = <&clks 123>, <&clks 124>;
- 				clock-names = "iahb", "isfr";
+@@ -1103,8 +1154,13 @@
+ 				interrupts = <92>;
+ 				clocks = <&clks 69>, <&clks 116>;
+ 				clock-names = "tve", "di_sel";
+-				crtcs = <&ipu 1>;
  				status = "disabled";
 +
-+				port@0 {
-+					reg = <0>;
-+
-+					hdmi_mux_0: endpoint {
-+						remote-endpoint = <&ipu1_di0_hdmi>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+
-+					hdmi_mux_1: endpoint {
-+						remote-endpoint = <&ipu1_di1_hdmi>;
++				port {
++					tve_in: endpoint {
++						remote-endpoint = <&ipu_di1_tve>;
 +					};
 +				};
  			};
  
- 			dcic1: dcic@020e4000 {
-@@ -1588,8 +1652,27 @@
- 				reg = <0x021dc000 0x4000>;
- 			};
- 
--			mipi@021e0000 { /* MIPI-DSI */
-+			mipi_dsi: mipi@021e0000 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
- 				reg = <0x021e0000 0x4000>;
-+				status = "disabled";
-+
-+				port@0 {
-+					reg = <0>;
-+
-+					mipi_mux_0: endpoint {
-+						remote-endpoint = <&ipu1_di0_mipi>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+
-+					mipi_mux_1: endpoint {
-+						remote-endpoint = <&ipu1_di1_mipi>;
-+					};
-+				};
- 			};
- 
- 			vdoa@021e4000 {
-@@ -1643,13 +1726,64 @@
- 		};
- 
- 		ipu1: ipu@02400000 {
--			#crtc-cells = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 			compatible = "fsl,imx6q-ipu";
- 			reg = <0x02400000 0x400000>;
- 			interrupts = <0 6 0x4 0 5 0x4>;
- 			clocks = <&clks 130>, <&clks 131>, <&clks 132>;
- 			clock-names = "bus", "di0", "di1";
- 			resets = <&src 2>;
-+
-+			ipu1_di0: port@2 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				reg = <2>;
-+
-+				ipu1_di0_disp0: endpoint@0 {
-+				};
-+
-+				ipu1_di0_hdmi: endpoint@1 {
-+					remote-endpoint = <&hdmi_mux_0>;
-+				};
-+
-+				ipu1_di0_mipi: endpoint@2 {
-+					remote-endpoint = <&mipi_mux_0>;
-+				};
-+
-+				ipu1_di0_lvds0: endpoint@3 {
-+					remote-endpoint = <&lvds0_mux_0>;
-+				};
-+
-+				ipu1_di0_lvds1: endpoint@4 {
-+					remote-endpoint = <&lvds1_mux_0>;
-+				};
-+			};
-+
-+			ipu1_di1: port@3 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				reg = <3>;
-+
-+				ipu1_di0_disp1: endpoint@0 {
-+				};
-+
-+				ipu1_di1_hdmi: endpoint@1 {
-+					remote-endpoint = <&hdmi_mux_1>;
-+				};
-+
-+				ipu1_di1_mipi: endpoint@2 {
-+					remote-endpoint = <&mipi_mux_1>;
-+				};
-+
-+				ipu1_di1_lvds0: endpoint@3 {
-+					remote-endpoint = <&lvds0_mux_1>;
-+				};
-+
-+				ipu1_di1_lvds1: endpoint@4 {
-+					remote-endpoint = <&lvds1_mux_1>;
-+				};
-+			};
- 		};
- 	};
- };
+ 			vpu: vpu@63ff4000 {
 -- 
 1.8.5.3
