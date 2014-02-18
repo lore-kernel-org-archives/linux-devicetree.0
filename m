@@ -1,82 +1,94 @@
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: [PATCH v2] of_mdio: fix phy interrupt passing
-Date: Tue, 18 Feb 2014 12:16:58 +0000
-Message-ID: <1392725818-558-1-git-send-email-ben.dooks@codethink.co.uk>
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: grant.likely@linaro.org
-Cc: linux-kernel@lists.codethink.co.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org, sergei.shtylyov@cogentembedded.com, Ben Dooks <ben.dooks@codethink.co.uk>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V6 03/12] phy: st-miphy40lp: Add binding information
+Date: Tue, 18 Feb 2014 12:23:25 +0000
+Message-ID: <20140218122324.GA23267@e106331-lin.cambridge.arm.com>
+References: <cover.1392109054.git.mohit.kumar@st.com>
+ <af50da74226a244dfc05aed3dc9d28b896d166a4.1392109054.git.mohit.kumar@st.com>
+ <20140212182012.GC23630@e106331-lin.cambridge.arm.com>
+ <2CC2A0A4A178534D93D5159BF3BCB66189FD2CAFB1@EAPEX1MAIL1.st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <2CC2A0A4A178534D93D5159BF3BCB66189FD2CAFB1-8vAmw3ZAcdzhJTuQ9jeba9BPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mohit KUMAR DCG <Mohit.KUMAR-qxv4g6HH51o@public.gmane.org>
+Cc: "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Pratyush ANAND <pratyush.anand-qxv4g6HH51o@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The of_mdiobus_register_phy() is not setting phy->irq thus causing
-some drivers to incorrectly assume that the PHY does not have an
-IRQ associated with it. Not only do some drivers report no IRQ
-they do not install an interrupt handler for the PHY.
+On Thu, Feb 13, 2014 at 05:19:11AM +0000, Mohit KUMAR DCG wrote:
+> Hello Mark,
+> 
+> > -----Original Message-----
+> > From: Mark Rutland [mailto:mark.rutland-5wv7dgnIgG8@public.gmane.org]
+> > Sent: Wednesday, February 12, 2014 11:50 PM
+> > To: Mohit KUMAR DCG
+> > Cc: arnd-r2nGTMty4D4@public.gmane.org; Pratyush ANAND; Viresh Kumar; Kishon Vijay Abraham I;
+> > spear-devel; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Subject: Re: [PATCH V6 03/12] phy: st-miphy40lp: Add binding information
+> > 
+> > On Tue, Feb 11, 2014 at 09:29:59AM +0000, Mohit Kumar wrote:
+> > > From: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
+> > >
+> > > ST miphy40lp can be used with PCIe, SATA and Super Speed USB
+> > > controllers. SPEAr13XX SoCs use this phy for PCIe and SATA.
+> > >
+> > > Signed-off-by: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
+> > > Cc: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
+> > > Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> > > Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+> > > Cc: spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org
+> > > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > > ---
+> > >  .../devicetree/bindings/phy/st-miphy40lp.txt       |   18
+> > ++++++++++++++++++
+> > >  1 files changed, 18 insertions(+), 0 deletions(-)  create mode 100644
+> > > Documentation/devicetree/bindings/phy/st-miphy40lp.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/phy/st-miphy40lp.txt
+> > > b/Documentation/devicetree/bindings/phy/st-miphy40lp.txt
+> > > new file mode 100644
+> > > index 0000000..1c8d04c
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/phy/st-miphy40lp.txt
+> > > @@ -0,0 +1,18 @@
+> > > +ST miphy40lp DT detail
+> > > +===================================
+> > > +
+> > > +miphy40lp is a phy controller from ST Microelectronics which supports
+> > > +PCIe, SATA and Super Speed USB host and devices. It has been used in
+> > SPEAr13xx SOCs.
+> > > +
+> > > +Required properties:
+> > > +- compatible : should be "st,miphy40lp-phy"
+> > > +	Other supported soc specific compatible:
+> > > +		"st,spear1310-miphy"
+> > > +		"st,spear1340-miphy"
+> > > +- reg : offset and length of the PHY register set.
+> > > +- misc: phandle for the syscon node to access misc registers
+> > 
+> > This is very vague. What is this used for?
+> 
+> - These are Spear SoC specific miscellaneous registers. Here these are used for
+> to configure sata/pcie  aux clock.
+> > 
+> > > +- phy-id: Instance id of the phy.
+> > > +- #phy-cells : from the generic PHY bindings, must be 1.
+> > > +	- 1st cell: phandle to the phy node.
+> > > +	- 2nd cell: 0 if phy (in 1st cell) is to be used for SATA, 1 for PCIe
+> > > +	  and 2 for Super Speed USB.
+> > 
+> > One cell or two?
+> 
+> - No of cells are two, is this the question?
 
-Simplify the code setting irq and set the phy->irq at the same
-time so that we cover the following issues, which should cover
-all the cases the code will find:
+The description of #phy-cells says it must be 1. Presumably it must be
+2.
 
-- Set phy->irq if node has irq property and mdio->irq is NULL
-- Set phy->irq if node has no irq and mdio->irq is not NULL
-- Leave phy->irq as PHY_POLL default if none of the above
-
-This fixes the issue:
- net eth0: attached PHY 1 (IRQ -1) to driver Micrel KSZ8041RNLI
-
-to the correct:
- net eth0: attached PHY 1 (IRQ 416) to driver Micrel KSZ8041RNLI
-
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-
----
-Since v1:
-	- Updated phy->irq setting code
-	- Deal with issue if mdio->irq array NULL
-
-Notes:
-
-It was discussed if this should be two patches, but we end up
-making enough changes in #2 the same area as #1 means that we
-basically rewrite #1 in #2. So keep it as 1 patch.
----
- drivers/of/of_mdio.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index 875b7b6..46d95fc 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -44,7 +44,7 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
- {
- 	struct phy_device *phy;
- 	bool is_c45;
--	int rc, prev_irq;
-+	int rc;
- 	u32 max_speed = 0;
- 
- 	is_c45 = of_device_is_compatible(child,
-@@ -54,12 +54,14 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
- 	if (!phy || IS_ERR(phy))
- 		return 1;
- 
--	if (mdio->irq) {
--		prev_irq = mdio->irq[addr];
--		mdio->irq[addr] =
--			irq_of_parse_and_map(child, 0);
--		if (!mdio->irq[addr])
--			mdio->irq[addr] = prev_irq;
-+	rc = irq_of_parse_and_map(child, 0);
-+	if (rc > 0) {
-+		phy->irq = rc;
-+		if (mdio->irq)
-+			mdio->irq[addr] = rc;
-+	} else {
-+		if (mdio->irq)
-+			phy->irq = mdio->irq[addr];
- 	}
- 
- 	/* Associate the OF node with the device structure so it
--- 
-1.8.5.3
-
+Thanks,
+Mark
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
