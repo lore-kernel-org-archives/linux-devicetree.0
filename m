@@ -1,60 +1,68 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH v4 1/3] ARM: EXYNOS: initial board support for exynos5260 SoC
-Date: Tue, 18 Feb 2014 17:11:43 +0530
-Message-ID: <CAK9yfHwcteO78JG4OhRZtMcpAd-aN85sxqELJ3ZLW0D0PXoZ7w@mail.gmail.com>
-References: <1392721076-26630-1-git-send-email-rahul.sharma@samsung.com>
-	<1392721076-26630-2-git-send-email-rahul.sharma@samsung.com>
-	<2203874.7pS2uKgoKp@wuerfel>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH RFC v4 1/3] Documentation: devicetree: psci: define CPU
+ suspend parameter
+Date: Tue, 18 Feb 2014 11:47:29 +0000
+Message-ID: <1392724051-11950-2-git-send-email-lorenzo.pieralisi@arm.com>
+References: <1392724051-11950-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <2203874.7pS2uKgoKp@wuerfel>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>, Pankaj Dubey <pankaj.dubey@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1392724051-11950-1-git-send-email-lorenzo.pieralisi@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Mark Hambleton <mark.hambleton@broadcom.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Sebastian Capella <sebastian.capella@linaro.org>, Nicolas Pitre <nico@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Martin <dave.martin@arm.com>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Kevin Hilman <khilman@linaro.org>, linux-pm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen Boyd <sboyd@codeaurora.org>, Amit Kucheria <amit.kucheria@linaro.org>Mark
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+OS layers built on top of PSCI to enter low-power states require the
+power_state parameter to be passed to the PSCI CPU suspend method.
 
-On 18 February 2014 16:33, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tuesday 18 February 2014 16:27:54 Rahul Sharma wrote:
->> diff --git a/arch/arm/mach-exynos/common.c b/arch/arm/mach-exynos/common.c
->> index 7654f19..1cc52c9 100644
->> --- a/arch/arm/mach-exynos/common.c
->> +++ b/arch/arm/mach-exynos/common.c
->> @@ -176,6 +176,15 @@ static struct map_desc exynos5250_iodesc[] __initdata = {
->>       },
->>  };
->>
->> +static struct map_desc exynos5260_iodesc[] __initdata = {
->> +     {
->> +             .virtual        = (unsigned long)S5P_VA_SYSRAM_NS,
->> +             .pfn            = __phys_to_pfn(EXYNOS5260_PA_SYSRAM_NS),
->> +             .length         = SZ_4K,
->> +             .type           = MT_DEVICE,
->> +     },
->> +};
->> +
->>  static struct map_desc exynos5_iodesc[] __initdata = {
->>       {
->>               .virtual        = (unsigned long)S3C_VA_SYS,
->> @@ -331,6 +340,8 @@ static void __init exynos_map_io(void)
->>               iotable_init(exynos4x12_iodesc, ARRAY_SIZE(exynos4x12_iodesc));
->>       if (soc_is_exynos5250())
->>               iotable_init(exynos5250_iodesc, ARRAY_SIZE(exynos5250_iodesc));
->> +     if (soc_is_exynos5260())
->> +             iotable_init(exynos5260_iodesc, ARRAY_SIZE(exynos5260_iodesc));
->>  }
->
-> As I commented before, I think we really shouldn't do this any more: There
-> is no excuse why you still need to add SoC specific code here. Please put
-> the SYSRAM into DT and make a proper abstraction for it so you don't have
-> to modify the kernel every time a new SoC variant comes out.
+This parameter is specific to a power state and platform specific,
+therefore must be provided by firmware to the OS in order to enable
+proper call sequence.
 
-Do we have any bindings already defined for this kind of stuff or is
-this implemented in
-any other platform/architecture for reference?
+This patch adds a property in the PSCI bindings that describes how
+the CPU suspend power_state parameter should be defined in DT in
+all device nodes that rely on PSCI CPU suspend method usage.
 
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+---
+ Documentation/devicetree/bindings/arm/psci.txt | 11 +++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/psci.txt b/Documentation/devicetree/bindings/arm/psci.txt
+index 433afe9..797c48f 100644
+--- a/Documentation/devicetree/bindings/arm/psci.txt
++++ b/Documentation/devicetree/bindings/arm/psci.txt
+@@ -42,6 +42,14 @@ Main node optional properties:
+ 
+  - migrate       : Function ID for MIGRATE operation
+ 
++Device tree nodes that require usage of PSCI CPU_SUSPEND function (ie idle
++states bindings[1]) must specify the following properties:
++
++- entry-method-param
++		Usage: Required for idle states bindings [1].
++		Value type: <u32>
++		Definition: power_state parameter to pass to the PSCI
++			    suspend call.
+ 
+ Example:
+ 
+@@ -53,3 +61,6 @@ Example:
+ 		cpu_on		= <0x95c10002>;
+ 		migrate		= <0x95c10003>;
+ 	};
++
++[1] Kernel documentation - ARM idle states bindings
++    Documentation/devicetree/bindings/arm/idle-states.txt
 -- 
-With warm regards,
-Sachin
+1.8.4
