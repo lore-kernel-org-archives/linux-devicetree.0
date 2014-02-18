@@ -1,55 +1,103 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 10/10] Documentation: Add device tree bindings for TI LMU
- devices
-Date: Tue, 18 Feb 2014 10:50:07 +0900
-Message-ID: <20140218015007.GY2669@sirena.org.uk>
-References: <1392359564-7205-1-git-send-email-milo.kim@ti.com>
- <20140214205027.GT4451@sirena.org.uk>
- <5301B71D.2010507@ti.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dt/bindings: update fsl-fec regarding compatible and
+ clocks
+Date: Tue, 18 Feb 2014 10:09:04 +0800
+Message-ID: <20140218020901.GA15716@S2101-09.ap.freescale.net>
+References: <1392033008-20752-1-git-send-email-shawn.guo@linaro.org>
+ <20140217212439.GZ4524@book.gsilab.sittig.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xr11uZXTBybZk4CB"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5301B71D.2010507@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Milo Kim <milo.kim@ti.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Jingoo Han <jg1.han@samsung.com>, Bryan Wu <cooloney@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>
+In-Reply-To: <20140217212439.GZ4524-kDjWylLy9wD0K7fsECOQyeGNnDKD8DIp@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Philippe De Muyter <phdm-KobBqTBAxd8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Feb 17, 2014 at 10:24:39PM +0100, Gerhard Sittig wrote:
+> On Mon, Feb 10, 2014 at 19:50 +0800, Shawn Guo wrote:
+> > 
+> > Update fsl-fec to explicitly list the supported compatible strings
+> > and add missing 'clocks' and 'clock-names' properties.  It does not
+> > change anything about how kernel drive works.  Instead, it just reflects
+> > how kernel driver works today.
+> > 
+> > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/net/fsl-fec.txt |   19 ++++++++++++++++++-
+> >  1 file changed, 18 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
+> > index 845ff84..3ebd395 100644
+> > --- a/Documentation/devicetree/bindings/net/fsl-fec.txt
+> > +++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
+> > @@ -1,9 +1,26 @@
+> >  * Freescale Fast Ethernet Controller (FEC)
+> >  
+> >  Required properties:
+> > -- compatible : Should be "fsl,<soc>-fec"
+> > +- compatible : Should contain one of the following:
+> > +		"fsl,imx25-fec"
+> > +		"fsl,imx27-fec"
+> > +		"fsl,imx28-fec"
+> > +		"fsl,imx6q-fec"
+> > +		"fsl,mvf600-fec"
+> 
+> This appears to miss all the PowerPC based SoCs.  See
+>   git grep 'fsl,.*-fec' arch/*/boot/dts
 
---xr11uZXTBybZk4CB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hmm, this is a binding for IMX FEC/ENET, and the driver is
+drivers/net/ethernet/freescale/fec_main.c.  I think I've listed all the
+compatibles that the driver supports.
 
-On Mon, Feb 17, 2014 at 04:15:41PM +0900, Milo Kim wrote:
+> 
+> >  - reg : Address and length of the register set for the device
+> >  - interrupts : Should contain fec interrupt
+> > +- clocks: phandle to the clocks feeding the FEC controller and phy. The
+> > +  following two are required:
+> > +   - "ipg": the peripheral access clock
+> > +   - "ahb": the bus clock for MAC
+> > +  The following two are optional:
+> > +   - "ptp": the sampling clock for PTP (IEEE 1588).  On SoC like i.MX6Q,
+> > +     the clock could come from either the internal clock control module
+> > +     or external oscillator via pad depending on board design.
+> > +   - "enet_out": the phy reference clock provided by SoC via pad, which
+> > +     is available on SoC like i.MX28.
+> > +- clock-names: Must contain the clock names described just above
+> > +
+> 
+> Listing 'clocks' under the "required properties" all of a sudden
+> invalidates existing device trees, if they don't carry the
+> property which before the change was not required, not even
+> documented.
 
-> Thank you. I've fixed things based on your comments.
-> Could you check the description below?
-> I'd like to get your feedback before sending patch-set v2.
+Since the day we move to device tree clock lookup, the driver fec_main
+does not probe at all if the property is absent.
 
-Yes, this looks OK.
+> 
+> The PowerPC based chips probably have differing sets of clocks.
+> I'm aware of the MPC512x, where one "per" clock is sufficient,
+> and even this spec is optional.  Other machines may not have yet
+> been converted to CCF.
 
---xr11uZXTBybZk4CB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Again, the binding is created for IMX FEC/ENET controller and the driver
+fec_main, so I'm not sure you should look at this binding for
+PowerPC/MPC512x stuff at all.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+> 
+> Your description needs to get rephrased, it triggers Mark
+> Rutland's regular "clocks are not just phandles" reply.  See how
+> he suggested quite a few times a better wording.
 
-iQIcBAEBAgAGBQJTArxLAAoJELSic+t+oim9CssP/RKbtELHOHQ+K597ROdaMrLD
-PABEpFsY/MR3/QRXI33fCRLLG4PhMzBJ0qEwCvws9N/Lri/0UBKYyr9m+E4p+XZt
-0JN82wGWP7bFs3sVX4EGmhOmtb6t2KrJ6OvqmoA5nOipDjGMXOQl+uWOWZCbITOx
-geMCK7ewBs2vCaorVjphQuTDNO14OvkHHRPQ08z/Cc2PeufYO0DM3mTWFx0E329U
-mMBm41znTyn5YIRVvWyHuJ+BNN8k6q7rX2qUPVqPeptgfxYBdooshccdjAluYWGL
-ImK/v7+KkZknszRVcD6fzrwlkdpO+MFNGn0+6huxY7SnvRcm4b3kf3Df5SgXWLdB
-ylPosZZd1shonYpA0WZyeExpPSI5erNKeEr35e/A5p5vzMOQoNYSf5sHYfP4Fj3p
-y85vTZiDhAspCJmtLusAw/VL8cat0GxsalMMZoFyGRLGgJHN/POLL98Xx8Xm3gls
-jisobzLpLrOAxwK7Wdi/8B6vCERWtAS+LTm6TgFmZ37VB8n/R2DUtVuMjjmPvqOk
-iHE4cCB/vwpBAjRn8VFM0lSxaVNMWknQTmMloGQv+JjNeBq2g/UhD5kBiOQfEhSW
-uo9YJgcWqc4PXw6TTOBHsp+m6Pi9BlX3j7uVEl/JdDfQebSAixo8Lnw8+UnGinLw
-ENTclH2bqZ2cxOvE7iok
-=rEJg
------END PGP SIGNATURE-----
+Can you give a pointer or good example?  I worded it following an
+example [1] found on recent linux-next/spi tree. 
 
---xr11uZXTBybZk4CB--
+Shawn
+
+[1] https://git.kernel.org/cgit/linux/kernel/git/broonie/spi.git/commit/?h=topic/sunxi&id=3558fe900e8af6c3bfadeff24a12ffb19ac9b108
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
