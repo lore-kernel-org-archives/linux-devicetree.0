@@ -1,75 +1,112 @@
-From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 0/2] Introduce AEMIF driver for Davinci/Keystone archs
-Date: Tue, 18 Feb 2014 09:41:23 -0500
-Message-ID: <53037113.3090105@ti.com>
-References: <1391629574-18955-1-git-send-email-ivan.khoronzhuk@ti.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dt/bindings: update fsl-fec regarding compatible and
+ clocks
+Date: Tue, 18 Feb 2014 22:46:55 +0800
+Message-ID: <20140218144652.GG15716@S2101-09.ap.freescale.net>
+References: <1392033008-20752-1-git-send-email-shawn.guo@linaro.org>
+ <20140217212439.GZ4524@book.gsilab.sittig.org>
+ <20140218020901.GA15716@S2101-09.ap.freescale.net>
+ <20140218134430.GC4524@book.gsilab.sittig.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1391629574-18955-1-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140218134430.GC4524-kDjWylLy9wD0K7fsECOQyeGNnDKD8DIp@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
+To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Philippe De Muyter <phdm-KobBqTBAxd8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Greg,
+On Tue, Feb 18, 2014 at 02:44:30PM +0100, Gerhard Sittig wrote:
+> > > > @@ -1,9 +1,26 @@
+> > > >  * Freescale Fast Ethernet Controller (FEC)
+> > > >  
+> > > >  Required properties:
+> > > > -- compatible : Should be "fsl,<soc>-fec"
+> > > > +- compatible : Should contain one of the following:
+> > > > +		"fsl,imx25-fec"
+> > > > +		"fsl,imx27-fec"
+> > > > +		"fsl,imx28-fec"
+> > > > +		"fsl,imx6q-fec"
+> > > > +		"fsl,mvf600-fec"
+> > > 
+> > > This appears to miss all the PowerPC based SoCs.  See
+> > >   git grep 'fsl,.*-fec' arch/*/boot/dts
+> > 
+> > Hmm, this is a binding for IMX FEC/ENET, and the driver is
+> > drivers/net/ethernet/freescale/fec_main.c.
+> 
+> The binding text says otherwise.  It claims to apply for
+> "fsl,<soc>-fec" compatibles.
 
-On Wednesday 05 February 2014 02:46 PM, Ivan Khoronzhuk wrote:
-> These patches introduce Async External Memory Interface (EMIF16/AEMIF)
-> controller driver for Davinci/Keystone archs.
-> 
-> For more informations see documentation:
-> Davinci DM646x - http://www.ti.com/lit/ug/sprueq7c/sprueq7c.pdf
-> OMAP-L138 - http://www.ti.com/lit/ug/spruh77a/spruh77a.pdf
-> Kestone - http://www.ti.com/lit/ug/sprugz3a/sprugz3a.pdf
-> 
-Can you please have a look at the series ? It has been on the list for
-sometime and all the outstanding comments are addressed so far. If
-you are ok with it, I would like to get these queued up for 3.15
-via your tree.
+I should really list the compatibles specifically when I was creating
+the document at day one.  But honestly, I did not intend to cover
+PowerPC chips with this document.
 
-> Based on
-> git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git
-> keystone/master
 > 
-> v3..v4:
-> 	rebased on latest of linux-keystone.git keystone/master
+> It's funny how the first line of the source you point to talks
+> about being a FEC driver for MPC8xx. :)  But that doesn't matter
+> here, as it's just a comment in some code.
 > 
-> v2..v3 (https://lkml.org/lkml/2013/12/11/148):
-> - memory: ti-aemif: introduce AEMIF driver
-> 	changed to work with multiple AEMIF controllers
-> 	corrected "copyright" to "authors" in header
-> 	changed compatible "ti,omap-L138-aemif" to "ti,da850-aeimf"
-> 	used NULL in clk_get() instead of "aemif" name
-> 	driver can be build as loadable module
-> 	treat all child nodes as cs nodes, it makes code simpler
+> > I think I've listed all the compatibles that the driver
+> > supports.
 > 
-> - memory: ti-aemif: add bindings for AEMIF driver
-> 	deleted direct link driver/memory/ti-aemif.c
-> 	clarified description of controller ranges property
-> 	changed compatible "ti,omap-L138-aemif" to "ti,da850-aeimf"
-> 	added cs number information in commit log
-> 	removed compatible property from cs node, it makes code simpler
+> You got it backwards.  The binding is not the after-the-fact
+> documentation of a specific Linux driver.  Instead the Linux
+> driver is (supposed to be) an implementation of what the binding
+> specifies.
+
+Yes, theoretically.  But practically, well ...
+
+> And in this case, there are several drivers, each
+> managing a subset of the compatibles space, each supposed to
+> follow the spec.  See
 > 
-> v1..v2 (https://lkml.org/lkml/2013/11/21/170):
-> - memory: ti-aemif: introduce AEMIF driver
-> - memory: ti-aemif: add bindings for AEMIF driver
-> 	added ti.cs-chipselect property instead of representing chipselect
-> 	number in cs node name.
+>   git grep 'fsl,.*-fec' drivers/net/ethernet
 > 
-> Ivan Khoronzhuk (2):
->   memory: ti-aemif: introduce AEMIF driver
->   memory: ti-aemif: add bindings for AEMIF driver
+
+The spec was created without considering those drivers other than
+fec_main.  For example, the 'phy-mode' is documented as a required
+property in the spec.  But I do not think that's the case for drivers
+fec_mpc52xx and fs_enet-main.
+
+> > > >  - reg : Address and length of the register set for the device
+> > > >  - interrupts : Should contain fec interrupt
+> > > > +- clocks: phandle to the clocks feeding the FEC controller and phy. The
+> > > > +  following two are required:
+> > > > +   - "ipg": the peripheral access clock
+> > > > +   - "ahb": the bus clock for MAC
+> > > > +  The following two are optional:
+> > > > +   - "ptp": the sampling clock for PTP (IEEE 1588).  On SoC like i.MX6Q,
+> > > > +     the clock could come from either the internal clock control module
+> > > > +     or external oscillator via pad depending on board design.
+> > > > +   - "enet_out": the phy reference clock provided by SoC via pad, which
+> > > > +     is available on SoC like i.MX28.
+> > > > +- clock-names: Must contain the clock names described just above
+> > > > +
+> > > 
+> > > Listing 'clocks' under the "required properties" all of a sudden
+> > > invalidates existing device trees, if they don't carry the
+> > > property which before the change was not required, not even
+> > > documented.
+> > 
+> > Since the day we move to device tree clock lookup, the driver fec_main
+> > does not probe at all if the property is absent.
 > 
->  .../bindings/memory-controllers/ti-aemif.txt       | 210 ++++++++++
->  drivers/memory/Kconfig                             |  11 +
->  drivers/memory/Makefile                            |   1 +
->  drivers/memory/ti-aemif.c                          | 429 +++++++++++++++++++++
->  4 files changed, 651 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt
->  create mode 100644 drivers/memory/ti-aemif.c
+> That's an implementation detail.  It's not what the spec says,
+> and neither is what the spec is to blindly follow after the / a
+> driver created the fact.  Instead, a binding gets designed, and
+> the software follows.
 > 
+> In reality, the doc may be behind as developers are more
+> concerned about the code.  But still when you "update" the
+> binding, don't break compatibility!  Even if you'd adjust all
+> drivers you can spot, it's still only Linux and not all device
+> tree users.
+
+So what's your suggestion?  Add the properties as the optional?
+
+Shawn
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
