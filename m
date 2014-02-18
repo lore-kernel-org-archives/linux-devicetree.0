@@ -1,40 +1,72 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v4 1/7] Documentation: Add device tree bindings for Freescale i.MX GPC
-Date: Tue, 18 Feb 2014 19:10:03 +0100
-Message-ID: <2328803.HhaG6blXIR@wuerfel>
-References: <1392737687-25003-1-git-send-email-p.zabel@pengutronix.de> <1392737687-25003-2-git-send-email-p.zabel@pengutronix.de>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: devicetree repository separation/migration
+Date: Tue, 18 Feb 2014 13:18:54 -0500
+Message-ID: <20140218181854.GB7862@titan.lakedaemon.net>
+References: <20140217180544.GU7862@titan.lakedaemon.net>
+ <20140218155750.GS17250@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392737687-25003-2-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140218155750.GS17250-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 18 February 2014 16:34:41 Philipp Zabel wrote:
-> +
-> +Example of a device that is part of a power domain:
-> +
-> +       vpu: vpu@02040000 {
-> +               reg = <0x02040000 0x3c000>;
-> +               /* ... */
-> +               fsl,power-domain = <&pd_pu>;
-> +               /* ... */
-> +       };
-> +
+On Tue, Feb 18, 2014 at 04:57:50PM +0100, Sascha Hauer wrote:
+> On Mon, Feb 17, 2014 at 01:05:44PM -0500, Jason Cooper wrote:
+...
+> >   - Is the Linux development workflow ready for devicetree to move out
+> >     of the Linux Kernel?
+> 
+> I hope so since keeping the devicetrees in sync with the kernel is a
+> pain for all external users.
 
-I'm really not too happy about platforms starting to add random
-bindings for power domains. Unfortunately I didn't catch exynos
-doing this first, but I don't want to see another platform like
-that.
+Well, I haven't heard any screams yet.  I suspect people are waiting for
+details on the exact form it would take before complaining...
 
-Can we please come up with a proper generic power domain binding
-first and then add platform specific users?
+> >   - How do we envision projects will use it?  git submodule?  reference
+> >     a version tag?  (this is primarily targeted at bootloaders that need
+> >     to compile in a dtb or subset of a dtb into the bootloader)
+> 
+> I would prefer to use it as a submodule.
 
-	Arnd
+ok.  I've often thought that was the right solution for several things
+(dtc.git inside the kernel tree), but no one ever seemed to speak of it
+or bring it up.  Kinda like leprosy.
+
+It does add an extra step to build process for new users.  Although that
+could be handled in the Makefile.
+
+> I'll likely need some barebox specific additions to the devicetrees.
+> Right now our idea is to leave the provided devicetrees untouched and
+> instead of compiling the board dts files directly we create
+> <boardname>-barebox.dts files which include the original board files.
+> That would allow us to provide additional information to barebox
+> without having to carry patches for the devicetrees.
+
+So the resulting <boardname>-barebox.dtb is compiled into the barebox
+binary?  Is the dtb passed to the kernel independently upgradeable?
+
+Why not post binding/dts patches for 'barebox,...' attributes that you
+need?
+
+> > Other thoughts I may have missed?
+> 
+> It will be interesting to see which rules should apply for merging new
+> bindings. I know that devicetrees should be OS agnostic, but sometimes
+> they are modelled after how Linux currently works. What happens when the
+> *BSD guys have different ideas how a good binding looks like? How will
+> such conflicts be resolved?
+
+That's more a question for Grant.  I assume we'll all put on our big-boy
+pants and pick the best technical solution based on their merits. :)
+
+thx,
+
+Jason.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
