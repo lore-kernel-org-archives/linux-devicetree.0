@@ -1,75 +1,41 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH] of_mdio: fix phy interrupt passing
-Date: Tue, 18 Feb 2014 09:30:24 +0000
-Message-ID: <20140218093024.D0E94C403C8@trevor.secretlab.ca>
-References: <1392654580-3706-1-git-send-email-ben.dooks@codethink.co.uk>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1392654580-3706-1-git-send-email-ben.dooks@codethink.co.uk>
-Sender: netdev-owner@vger.kernel.org
-Cc: linux-kernel@lists.codethink.co.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org, sergei.shtylyov@cogentembedded.com, Ben Dooks <ben.dooks@codethink.co.uk>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH v2 10/23] ARM: MM: Add DT binding for Feroceon L2 cache
+Date: Tue, 18 Feb 2014 10:31:31 +0100
+Message-ID: <20140218093131.GC17984@lunn.ch>
+References: <1392459621-24003-1-git-send-email-andrew@lunn.ch>
+ <1392459621-24003-11-git-send-email-andrew@lunn.ch>
+ <20140217233855.GI7862@titan.lakedaemon.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140217233855.GI7862-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Feb 2014 16:29:40 +0000, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
-> The of_mdiobus_register_phy() is not setting phy->irq this causing
-> some drivers to incorrectly assume that the PHY does not have an
-> IRQ associated with it or install an interrupt handler for the
-> PHY.
+> > +Required properties:
+> > +- compatible : Should be either "marvell,ferocean-cache" or
+> > +  	       "marvell,kirkwood-cache".
+> > +
+> > +Optional properties:
+> > +- wt-override: If present then L2 is forced to Write through mode
+> > +- reg        : Address of the L2 cache control register. Mandatory for
+> > +  	       "marvell,kirkwood-cache", not used by "marvell,ferocean-cache"
 > 
-> Simplify the code setting irq and set the phy->irq at the same
-> time so that the case if mdio->irq is not NULL is easier to read.
-> 
-> This fixes the issue:
->  net eth0: attached PHY 1 (IRQ -1) to driver Micrel KSZ8041RNLI
-> 
-> to the correct:
->  net eth0: attached PHY 1 (IRQ 416) to driver Micrel KSZ8041RNLI
-> 
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> ---
->  drivers/of/of_mdio.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-> index 875b7b6..7b3e7b0 100644
-> --- a/drivers/of/of_mdio.c
-> +++ b/drivers/of/of_mdio.c
-> @@ -44,7 +44,7 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
->  {
->  	struct phy_device *phy;
->  	bool is_c45;
-> -	int rc, prev_irq;
-> +	int rc;
->  	u32 max_speed = 0;
->  
->  	is_c45 = of_device_is_compatible(child,
-> @@ -55,11 +55,11 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
->  		return 1;
->  
->  	if (mdio->irq) {
-> -		prev_irq = mdio->irq[addr];
-> -		mdio->irq[addr] =
-> -			irq_of_parse_and_map(child, 0);
-> -		if (!mdio->irq[addr])
-> -			mdio->irq[addr] = prev_irq;
+> s/ferocean/feroceon/
 
-I cannot for the life for me remeber why the code was structured that
-way. Your change is better.
+Arg. I thought i had fixed all of those.
+ 
+> If there's nothing else deserving a new series, I'll tweak this (and the
+> other spelling nits that matter) when I pull in the series.
 
-> +		rc = irq_of_parse_and_map(child, 0);
-> +		if (rc > 0) {
-> +			mdio->irq[addr] = rc;
-> +			phy->irq = rc;
-> +		}
->  	}
+This patch needs a major bit of re-working. There will definitely be a
+new series.
 
-The outer if is merely protecting against no irq array being allocated
-for the bus. Would not the following be better:
-
-	rc = irq_of_parse_and_map(child, 0);
-	if (rc > 0) {
-		phy->irq = rc;
-		if (mdio->irq)
-			mdio->irq[addr] = rc;
-	}
-
-g.
+    Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
