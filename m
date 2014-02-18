@@ -1,48 +1,78 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [RFC/PATCH 0/3] Add devicetree scanning for randomness
-Date: Tue, 18 Feb 2014 12:56:24 -0500
-Message-ID: <20140218175624.GY7862@titan.lakedaemon.net>
-References: <1392168805-14200-1-git-send-email-lauraa@codeaurora.org>
- <201402121251.06280.arnd@arndb.de>
- <20140217155419.682F7C401D4@trevor.secretlab.ca>
- <1418981.0py7JxXCp8@wuerfel>
- <20140217182312.GV7862@titan.lakedaemon.net>
- <CAMuHMdW7S=o4oHVsNtYo0i_giB5cgWhygo-GgSaA1Kur6m3vng@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] mfd: palmas: support IRQ inversion at the board level
+Date: Tue, 18 Feb 2014 18:01:52 +0000
+Message-ID: <20140218180152.GB31706@lee--X1>
+References: <1392415108-4365-1-git-send-email-swarren@wwwdotorg.org>
+ <20140217092658.GC17875@lee--X1>
+ <53039B6D.8080004@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdW7S=o4oHVsNtYo0i_giB5cgWhygo-GgSaA1Kur6m3vng-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <53039B6D.8080004-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, J Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Ian Lartey <ian-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 17, 2014 at 10:07:50PM +0100, Geert Uytterhoeven wrote:
-> On Mon, Feb 17, 2014 at 7:23 PM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
-> >> Could we use a faster hash function that scans the entire device tree and
-> >> then just feed the output of that into add_device_randomness? We probably
-> >> can't expect that there is a lot of entropy in the DT blob, so the
-> >> result wouldn't be all that different in terms of quality of the random
-> >> seed.
-> >
-> > I think it would be easier to identify the few attributes that differ
-> > from board to board (mac address, serial number, etc), and differ from
-> > boot to boot (random-seed, timestamp) and just extract and feed those
-> > in.
-> 
-> Isn't identifying those (mostly) a manual process?
-> Calculating a fast hash is fully automatic.
+> >> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >>
+> >> Some boards or SoCs have an inverter between the PMIC IRQ output p=
+in and
+> >> the IRQ controller input signal.
+> >>
+> >> The IRQ specifier in DT is meant to represent the IRQ flags at the=
+ input
+> >> to the IRQ controller.
+> >>
+> >> The Palmas HW's IRQ output has configurable polarity. The driver
+> >> currently selects the output polarity by querying the input polari=
+ty at
+> >> the IRQ controller. This works fine if the IRQ signal is routed di=
+rectly
+> >> from the PMIC to the IRQ controller with no intervening logic. How=
+ever,
+> >> if the signal is inverted between the two, this automatic polarity
+> >> selection gets the wrong answer.
+> >>
+> >> Add an additional optional DT and platform data parameter which in=
+dicates
+> >> that such an inversion occurs. If this option is enabled, the Palm=
+as
+> >> driver will configure its IRQ output to the opposite polarity of t=
+he IRQ
+> >> controller's input.
+> >>
+> >> An alternative would have been to add a new non-optional DT parame=
+ter to
+> >> indicate the exact desired output polarity. However, this would ha=
+ve been
+> >> an incompatible change to the DT binding.
+> >>
+> >> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >> ---
+> >> If this patch could be applied to its own branch (w/ signed tag) i=
+n the
+> >> MFD tree, that would great; then I can pull patch 1/2 into the Teg=
+ra tree
+> >> so that I can apply patch 2/2 to the Tegra tree. Thanks.
+> >> ---
+> >>  Documentation/devicetree/bindings/mfd/palmas.txt | 6 ++++++
+> >>  drivers/mfd/palmas.c                             | 4 ++++
+> >>  include/linux/mfd/palmas.h                       | 1 +
+> >>  3 files changed, 11 insertions(+)
+> >=20
+> > For the core changes:
+> >   Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>=20
+> Thanks. Since you ack'd this and are an MFD maintainer, was that an
+> indication that I should take this patch through the Tegra tree?
 
-The list would be pretty short, and once created wouldn't likely change
-too often.  But it really depends on the 'fast hash'.  if the two
-methods have comparable speed, I'd definitely prefer the hash.  Easier
-to maintain.
+No, it was an indication that we still require more Acks. :)
 
-thx,
-
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
