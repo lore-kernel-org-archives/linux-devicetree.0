@@ -1,54 +1,34 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 1/3] ARM: EXYNOS: initial board support for exynos5260
- SoC
-Date: Tue, 18 Feb 2014 12:55:46 +0100
-Message-ID: <3872362.HBjU7v1oSg@wuerfel>
-References: <1392721076-26630-1-git-send-email-rahul.sharma@samsung.com>
- <2203874.7pS2uKgoKp@wuerfel>
- <CAK9yfHwcteO78JG4OhRZtMcpAd-aN85sxqELJ3ZLW0D0PXoZ7w@mail.gmail.com>
+From: Archit Taneja <archit-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/9] OMAP DSS DT bindings documentation
+Date: Tue, 18 Feb 2014 17:39:19 +0530
+Message-ID: <53034D6F.9080405@ti.com>
+References: <1392294752-18762-1-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAK9yfHwcteO78JG4OhRZtMcpAd-aN85sxqELJ3ZLW0D0PXoZ7w@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Pankaj Dubey <pankaj.dubey@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Rahul Sharma <rahul.sharma@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392294752-18762-1-git-send-email-tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 18 February 2014 17:11:43 Sachin Kamat wrote:
-> On 18 February 2014 16:33, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Tuesday 18 February 2014 16:27:54 Rahul Sharma wrote:
-> >>
-> >> +static struct map_desc exynos5260_iodesc[] __initdata = {
-> >> +     {
-> >> +             .virtual        = (unsigned long)S5P_VA_SYSRAM_NS,
-> >> +             .pfn            = __phys_to_pfn(EXYNOS5260_PA_SYSRAM_NS),
-> >> +             .length         = SZ_4K,
-> >> +             .type           = MT_DEVICE,
-> >> +     },
-> >> +};
+Hi,
 
-> > As I commented before, I think we really shouldn't do this any more: There
-> > is no excuse why you still need to add SoC specific code here. Please put
-> > the SYSRAM into DT and make a proper abstraction for it so you don't have
-> > to modify the kernel every time a new SoC variant comes out.
-> 
-> Do we have any bindings already defined for this kind of stuff or is
-> this implemented in
-> any other platform/architecture for reference?
-> 
+On Thursday 13 February 2014 06:02 PM, Tomi Valkeinen wrote:
+> Hi,
+>
+> Here is DT binding documentation for OMAP Display Subsystem. I've sent these
+> earlier as part of the whole DSS DT series, but I'm now sending them separately
+> to get comments for them.
+>
+> These patches are essentially the same as what I already sent earlier. The only
+> difference is that I added clock information for omap3 and omap4 platforms.
 
+Reviewed-by: Archit Taneja <archit-l0cyMroinI0@public.gmane.org>
 
-It depends on how the sram is used. There is a generic binding in
-Documentation/devicetree/bindings/misc/sram.txt that may be appropriate here.
+Archit
 
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
