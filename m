@@ -1,172 +1,98 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: imx6sl: add board file for BQ Cervantes
-Date: Tue, 18 Feb 2014 15:17:45 +0100
-Message-ID: <7296658.gcHrKZZqIc@phil>
-References: <10555869.uLtJmrqZh3@phil>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v7 2/8] clk: sunxi: Implement MMC phase control
+Date: Tue, 18 Feb 2014 15:15:32 +0100
+Message-ID: <20140218141532.GH3142@lukather>
+References: <20140217095907.15040.81893.stgit@pagira.o2s.ch>
+ <20140217100221.15040.47203.stgit@pagira.o2s.ch>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <10555869.uLtJmrqZh3@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="CEUtFxTsmBsHRLs3"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBE6YRWMAKGQECIGUC2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140217100221.15040.47203.stgit-pgFh0Jf6HD9Xzn/AsuzBOg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David =?iso-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner-HCpLIkUQxWGakBO8gow8eQ@public.gmane.org>
 
-i.MX6SL based ebook-reader released in 2013.
+--CEUtFxTsmBsHRLs3
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner-HCpLIkUQxWGakBO8gow8eQ@public.gmane.org>
----
- arch/arm/boot/dts/imx6sl-bq-cervantes.dts | 133 ++++++++++++++++++++++++++++++
- 1 file changed, 133 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6sl-bq-cervantes.dts
+Hi,
 
-diff --git a/arch/arm/boot/dts/imx6sl-bq-cervantes.dts b/arch/arm/boot/dts/imx6sl-bq-cervantes.dts
-new file mode 100644
-index 0000000..c54f498
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6sl-bq-cervantes.dts
-@@ -0,0 +1,133 @@
-+/*
-+ * Copyright (C) 2014 MundoReader S.L.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include "imx6sl.dtsi"
-+
-+/ {
-+	model = "BQ Cervantes";
-+	compatible = "fsl,imx6sl";
-+
-+	memory {
-+		reg = <0x80000000 0x20000000>;
-+	};
-+
-+	regulators {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		reg_usdhc2_vmmc: regulator@0 {
-+			compatible = "regulator-fixed";
-+			reg = <0>;
-+			regulator-name = "usdhc2_vmmc";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			gpio = <&gpio3 29 0>;
-+			enable-active-high;
-+		};
-+	};
-+
-+	soc {
-+		gpio-keys {
-+			compatible = "gpio-keys";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			autorepeat;
-+
-+			button@0 {
-+				gpios = <&gpio5 8 GPIO_ACTIVE_LOW>;
-+				linux,code = <KEY_POWER>;
-+				label = "GPIO Key Power";
-+				linux,input-type = <1>;
-+				gpio-key,wakeup = <1>;
-+				debounce-interval = <100>;
-+			};
-+
-+			button@1 {
-+				gpios = <&gpio3 24 GPIO_ACTIVE_LOW>;
-+				linux,code = <KEY_HOME>;
-+				label = "GPIO Key Home";
-+				linux,input-type = <1>;
-+				gpio-key,wakeup = <1>;
-+				debounce-interval = <100>;
-+			};
-+		};
-+
-+		gpio-leds {
-+			compatible = "gpio-leds";
-+
-+			green {
-+				gpios = <&gpio5 7 GPIO_ACTIVE_LOW>;
-+			};
-+		};
-+	};
-+};
-+
-+&iomuxc {
-+	imx6sl-bqcervantes {
-+		pinctrl_zforce: zforcegrp {
-+			fsl,pins = <
-+				MX6SL_PAD_SD1_DAT3__GPIO5_IO06 0xc000
-+				MX6SL_PAD_SD1_DAT5__GPIO5_IO09 0x80000000
-+			>;
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+
-+	zforce@50 {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_zforce>;
-+
-+		compatible = "neonode,zforce";
-+		reg = <0x50>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <6 IRQ_TYPE_LEVEL_LOW>;
-+
-+		gpios = <&gpio5 6 0   /* INT */
-+			 &gpio5 9 0>; /* RST */
-+
-+		x-size = <758>;
-+		y-size = <1024>;
-+	};
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&usdhc2 {
-+	vmmc-supply = <&reg_usdhc2_vmmc>;
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	pinctrl-1 = <&pinctrl_usdhc2_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc2_200mhz>;
-+	cd-gpios = <&gpio5 2 0>;
-+	status = "okay";
-+};
-+
-+&usdhc3 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc3>;
-+	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
-+	broken-cd;
-+	status = "okay";
-+};
--- 
-1.8.5.3
+On Mon, Feb 17, 2014 at 11:02:21AM +0100, David Lanzend=F6rfer wrote:
+> From: Emilio L=F3pez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+>=20
+> Signed-off-by: Emilio L=F3pez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
 
+You're missing your Signed-off-by here too.  Remember, for every patch
+you send, your Signed-off-by must be there, regardless wether you're
+the author or not.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+A commit log would be very much welcome too.
+
+Now, down to the patch itself, I remember Mike saying that he would
+prefer adding a function in the framework instead of hardcoding
+it. Mike, what's your feeling on this? Would merging this seem
+reasonnable to you as is, or do you want to take this to the
+framework?
+
+> ---
+>  drivers/clk/sunxi/clk-sunxi.c |   35 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>=20
+> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+> index abb6c5a..33b9977 100644
+> --- a/drivers/clk/sunxi/clk-sunxi.c
+> +++ b/drivers/clk/sunxi/clk-sunxi.c
+> @@ -377,6 +377,41 @@ static void sun7i_a20_get_out_factors(u32 *freq, u32=
+ parent_rate,
+> =20
+> =20
+>  /**
+> + * clk_sunxi_mmc_phase_control() - configures MMC clock phase control
+> + */
+
+If you don't go the framework road, some documentation on what are the
+arguments it takes and what it's supposed to return would be great.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--CEUtFxTsmBsHRLs3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTA2sEAAoJEBx+YmzsjxAgCMkQAI2kyBm+/uq0g4rIozLMUInV
+exoluhSH0iqlEXJh6WK7/gAAPsR1NvQeYmzmblKR2QcmeQed3xIQ2iLl4VT+b8e6
+lMZLmxWgJzZNZpDiIQFFZv32KtvkY5thUqAemhgK1NPB4m0VoAPhtHZTi32NSuTN
+zG5a/YlCtXFqZKbpx81caPqrmwgFFTHGur/DS70MXRSYDmukq0FW3tNpZ28e+d62
+lZi3SdAy1TBJJ535XDnskdF7s9BDdmt7IdXXekLw7Qfz4Eu63thD1+DsO0qLayd4
+GYuOlWN1CYDNp0UwFNVQNhnfrDLx+NjsA+HK7UJbcRrCe24zqLujulaH9IdOKrj8
+tUa4m6q2mzhPCdFvCNzmefnjq4W3XYsEgAdAWaj95IEWY9IAD0lj5dUsow8wKq8Y
+aV/L37+I35tZznE3z87E/kZH70lzR7tE73bVBuX9vtiLRbWKjRUgqS20GKURxx4y
+jAdmD5c0CtmI0vBBqtIwQGN520iQKjOs60vqJyZC5G0B1nFZ8/iRa0K7Sew/8wBp
+uMqzW3YDlJMxZMHUJ3+1DdbW5KT3k7uVk3pvAh40PG0LuQrCpIzKM4We/GlakVDB
+yL/V1m7erqJJDfB6Gb5Fyq75UqEHDt1er63XIcmAspVwFYs4EnqBR8wAAaDhDE+h
+hGq4rhGkLqiLUI9B2Efa
+=YYKH
+-----END PGP SIGNATURE-----
+
+--CEUtFxTsmBsHRLs3--
