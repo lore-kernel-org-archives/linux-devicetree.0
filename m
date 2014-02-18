@@ -1,102 +1,89 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 1/3] ARM: EXYNOS: initial board support for exynos5260 SoC
-Date: Tue, 18 Feb 2014 12:03:19 +0100
-Message-ID: <2203874.7pS2uKgoKp@wuerfel>
-References: <1392721076-26630-1-git-send-email-rahul.sharma@samsung.com> <1392721076-26630-2-git-send-email-rahul.sharma@samsung.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/2] clk: fixed-rate: use full DT node name
+Date: Tue, 18 Feb 2014 11:23:24 +0000
+Message-ID: <20140218112323.GB6051@e106331-lin.cambridge.arm.com>
+References: <1392358613-19962-1-git-send-email-swarren@wwwdotorg.org>
+ <20140214103556.GC9907@e106331-lin.cambridge.arm.com>
+ <52FE4798.3010605@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1392721076-26630-2-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <rahul.sharma@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, Pankaj Dubey <pankaj.dubey@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52FE4798.3010605-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 18 February 2014 16:27:54 Rahul Sharma wrote:
-> diff --git a/arch/arm/mach-exynos/common.c b/arch/arm/mach-exynos/common.c
-> index 7654f19..1cc52c9 100644
-> --- a/arch/arm/mach-exynos/common.c
-> +++ b/arch/arm/mach-exynos/common.c
-> @@ -176,6 +176,15 @@ static struct map_desc exynos5250_iodesc[] __initdata = {
->  	},
->  };
->  
-> +static struct map_desc exynos5260_iodesc[] __initdata = {
-> +	{
-> +		.virtual	= (unsigned long)S5P_VA_SYSRAM_NS,
-> +		.pfn		= __phys_to_pfn(EXYNOS5260_PA_SYSRAM_NS),
-> +		.length		= SZ_4K,
-> +		.type		= MT_DEVICE,
-> +	},
-> +};
-> +
->  static struct map_desc exynos5_iodesc[] __initdata = {
->  	{
->  		.virtual	= (unsigned long)S3C_VA_SYS,
-> @@ -331,6 +340,8 @@ static void __init exynos_map_io(void)
->  		iotable_init(exynos4x12_iodesc, ARRAY_SIZE(exynos4x12_iodesc));
->  	if (soc_is_exynos5250())
->  		iotable_init(exynos5250_iodesc, ARRAY_SIZE(exynos5250_iodesc));
-> +	if (soc_is_exynos5260())
-> +		iotable_init(exynos5260_iodesc, ARRAY_SIZE(exynos5260_iodesc));
->  }
+On Fri, Feb 14, 2014 at 04:43:04PM +0000, Stephen Warren wrote:
+> On 02/14/2014 03:35 AM, Mark Rutland wrote:
+> > On Fri, Feb 14, 2014 at 06:16:52AM +0000, Stephen Warren wrote:
+> >> clk-fixed-rate currently names clocks according to a node's name without
+> >> the unit address. When faced with the legal and technically correct DT
+> >> structure below, this causes rgistration attempts for 3 clocks with the
+> >> same name, 2 of which fail.
+> >>
+> >> 	clocks {
+> >> 		compatible = "simple-bus";
+> >> 		#address-cells = <1>;
+> >> 		#size-cells = <0>;
+> >>
+> >> 		clk_mmc: clock@0 {
+> >> 			compatible = "fixed-clock";
+> >> 			reg = <0>;
+> >> ...
+> >> 		clk_i2c: clock@1 {
+> >> 			compatible = "fixed-clock";
+> >> 			reg = <1>;
+> >> ...
+> >> 		clk_spi: clock@2 {
+> >> 			compatible = "fixed-clock";
+> >> 			reg = <2>;
+> >> ...
+> > 
+> > I'd argue that this case isn't valid.
+> 
+> Well, it's very widely used, and was the result of numerous discussions
+> of how this kind of thing should be represented:-/
 
-As I commented before, I think we really shouldn't do this any more: There
-is no excuse why you still need to add SoC specific code here. Please put
-the SYSRAM into DT and make a proper abstraction for it so you don't have
-to modify the kernel every time a new SoC variant comes out.
+Maybe we have to live with it then. :/
 
-> diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
-> index 37ea261..790009e 100644
-> --- a/arch/arm/mach-exynos/mach-exynos5-dt.c
-> +++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
-> @@ -51,6 +51,7 @@ static void __init exynos5_dt_machine_init(void)
->  
->  static char const *exynos5_dt_compat[] __initdata = {
->  	"samsung,exynos5250",
-> +	"samsung,exynos5260",
->  	"samsung,exynos5420",
->  	"samsung,exynos5440",
->  	NULL
+> 
+> > The fixed-clock binding doesn't define a reg, yet simple bus binding
+> > implies that the reg property of child nodes should be interpretted as
+> > the same address space as their parent (MMIO in this case?). The
+> > fixed-clock nodes reg proeprties clearly aren't MMIO addresses.
+> > 
+> > Additionally, the _requred_ ranges property is missing.
+> 
+> Perhaps we need to invent a simple-container instead then?
 
-This one is ok, but I'd suggest also adding a generic "samsung,exynos5" string here,
-for the same reason.
+As you mention in your other reply, it makes some sense to omit ranges
+if the address space is disjoint. My concern is that the address space
+is meaningless and arbitrary. If we had a real disjoint address space
+we'd have another kind of bus node as the container.
 
-> diff --git a/arch/arm/plat-samsung/include/plat/cpu.h b/arch/arm/plat-samsung/include/plat/cpu.h
-> index 31164b3..0110df3 100644
-> --- a/arch/arm/plat-samsung/include/plat/cpu.h
-> +++ b/arch/arm/plat-samsung/include/plat/cpu.h
-> @@ -46,6 +46,7 @@ extern unsigned long samsung_cpu_id;
->  #define EXYNOS4_CPU_MASK	0xFFFE0000
->  
->  #define EXYNOS5250_SOC_ID	0x43520000
-> +#define EXYNOS5260_SOC_ID	0xE5260000
->  #define EXYNOS5420_SOC_ID	0xE5420000
->  #define EXYNOS5440_SOC_ID	0xE5440000
->  #define EXYNOS5_SOC_MASK	0xFFFFF000
-> @@ -68,6 +69,7 @@ IS_SAMSUNG_CPU(exynos4210, EXYNOS4210_CPU_ID, EXYNOS4_CPU_MASK)
->  IS_SAMSUNG_CPU(exynos4212, EXYNOS4212_CPU_ID, EXYNOS4_CPU_MASK)
->  IS_SAMSUNG_CPU(exynos4412, EXYNOS4412_CPU_ID, EXYNOS4_CPU_MASK)
->  IS_SAMSUNG_CPU(exynos5250, EXYNOS5250_SOC_ID, EXYNOS5_SOC_MASK)
-> +IS_SAMSUNG_CPU(exynos5260, EXYNOS5260_SOC_ID, EXYNOS5_SOC_MASK)
->  IS_SAMSUNG_CPU(exynos5420, EXYNOS5420_SOC_ID, EXYNOS5_SOC_MASK)
->  IS_SAMSUNG_CPU(exynos5440, EXYNOS5440_SOC_ID, EXYNOS5_SOC_MASK)
->  
-> @@ -148,6 +150,12 @@ IS_SAMSUNG_CPU(exynos5440, EXYNOS5440_SOC_ID, EXYNOS5_SOC_MASK)
->  # define soc_is_exynos5250()	0
->  #endif
->  
-> +#if defined(CONFIG_SOC_EXYNOS5260)
-> +# define soc_is_exynos5260()	is_samsung_exynos5260()
-> +#else
-> +# define soc_is_exynos5260()	0
-> +#endif
-> +
->  #if defined(CONFIG_SOC_EXYNOS5420)
->  # define soc_is_exynos5420()	is_samsung_exynos5420()
->  #else
+> 
+> > It's just nonsensical; rename them to clock_{0,1,..} instead and get rid
+> > of the reg properties. Then they're named uniquely.
+> 
+> That's not legal either. DT node names are supposed to represent the
+> type of device/object (i.e. just "clock"), not the identity of the
+> device/object (i.e. not include IDs etc.). Hence, the node name needs to
+> be "clock" for all of them, and the unit address must be used to
+> differentiate them.
 
-This doesn't seem to be used anywhere.
+As far as I can see from ePAPR, the only requriement is:
 
-	Arnd
+  The node-name shall start with a lower or uppercase character and
+  should describe the general class of device.
+
+IMO clock_1 describes the general class of device as well as clock@1,
+while also not filling a unexpected property with a meaningless value.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
