@@ -1,99 +1,83 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RESEND v11 1/2] ARM: dts: vf610: Add eDMA node
-Date: Tue, 18 Feb 2014 11:45:48 +0800
-Message-ID: <20140218034546.GE15716@S2101-09.ap.freescale.net>
-References: <1392689832-17011-1-git-send-email-b35083@freescale.com>
- <1392689832-17011-2-git-send-email-b35083@freescale.com>
+From: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] of: search the best compatible match first in
+ __of_match_node()
+Date: Tue, 18 Feb 2014 13:41:45 +0800
+Message-ID: <20140218054145.GD10028@pek-khao-d1.corp.ad.wrs.com>
+References: <1392355366-1445-1-git-send-email-haokexin@gmail.com>
+ <1392355366-1445-3-git-send-email-haokexin@gmail.com>
+ <20140217175834.62ED6C403C8@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ZJcv+A0YCCLh2VIg"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1392689832-17011-2-git-send-email-b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <20140217175834.62ED6C403C8-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen N Chivers <schivers-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 18, 2014 at 10:17:11AM +0800, Jingchang Lu wrote:
-> Signed-off-by: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 
-Applied, thanks.
+--ZJcv+A0YCCLh2VIg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Shawn
+On Mon, Feb 17, 2014 at 05:58:34PM +0000, Grant Likely wrote:
+> This seems wrong also. The compatible order should be checked for even
+> when m->name or m->type are set.  You actually need to score the entries
+> to do this properly. The pseudo-code should look like this:
+>=20
+> uint best_score =3D ~0;
+> of_device_id *best_match =3D NULL;
+> for_each(matches) {
+> 	uint score =3D ~0;
+> 	for_each_compatible(index) {
+> 		if (match->compatible =3D=3D compatible[index])
+> 			score =3D index * 10;
+> 	}
+>=20
+> 	/* Matching name is a bit better than not */
+> 	if (match->name =3D=3D node->name)
+> 		score--;
+>=20
+> 	/* Matching type is better than matching name */
+> 	/* (but matching both is even better than that */
+> 	if (match->type =3D=3D node->type)
+> 		score -=3D 2;
+>=20
+> 	if (score < best_score)
+> 		best_match =3D match;
+> }
+> return best_match;
+>=20
+> This is actually very similar to the original code. It is an easy
+> modification. This is very similar to how the of_fdt_is_compatible()
+> function works.
 
-> ---
-> no changes in v10 ~ v11.
-> 
-> changes in v9:
->  remove include/dt-bindings/dma/vf610-edma.h, the request source ID
->  is the same as SoC's reference manual.
-> 
-> changes in v8:
->  describe dmamux info in edma node to avoid confusion.
->  change eDMA requst source macro definitions.
-> 
->  changes in v7:
->  fix dmamux2 and dmamux3 register number.
-> 
->  no changes in v2 ~ v6.
-> 
->  arch/arm/boot/dts/vf610.dtsi | 30 ++++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
-> index 48dbfe5..8febb29f 100644
-> --- a/arch/arm/boot/dts/vf610.dtsi
-> +++ b/arch/arm/boot/dts/vf610.dtsi
-> @@ -88,6 +88,21 @@
->  				arm,tag-latency = <2 2 2>;
->  			};
->  
-> +			edma0: dma-controller@40018000 {
-> +				#dma-cells = <2>;
-> +				compatible = "fsl,vf610-edma";
-> +				reg = <0x40018000 0x2000>,
-> +					<0x40024000 0x1000>,
-> +					<0x40025000 0x1000>;
-> +				interrupts = <0 8 IRQ_TYPE_LEVEL_HIGH>,
-> +						<0 9 IRQ_TYPE_LEVEL_HIGH>;
-> +				interrupt-names = "edma-tx", "edma-err";
-> +				dma-channels = <32>;
-> +				clock-names = "dmamux0", "dmamux1";
-> +				clocks = <&clks VF610_CLK_DMAMUX0>,
-> +					<&clks VF610_CLK_DMAMUX1>;
-> +			};
-> +
->  			uart0: serial@40027000 {
->  				compatible = "fsl,vf610-lpuart";
->  				reg = <0x40027000 0x1000>;
-> @@ -263,6 +278,21 @@
->  			reg = <0x40080000 0x80000>;
->  			ranges;
->  
-> +			edma1: dma-controller@40098000 {
-> +				#dma-cells = <2>;
-> +				compatible = "fsl,vf610-edma";
-> +				reg = <0x40098000 0x2000>,
-> +					<0x400a1000 0x1000>,
-> +					<0x400a2000 0x1000>;
-> +				interrupts = <0 10 IRQ_TYPE_LEVEL_HIGH>,
-> +						<0 11 IRQ_TYPE_LEVEL_HIGH>;
-> +				interrupt-names = "edma-tx", "edma-err";
-> +				dma-channels = <32>;
-> +				clock-names = "dmamux0", "dmamux1";
-> +				clocks = <&clks VF610_CLK_DMAMUX2>,
-> +					<&clks VF610_CLK_DMAMUX3>;
-> +			};
-> +
->  			uart4: serial@400a9000 {
->  				compatible = "fsl,vf610-lpuart";
->  				reg = <0x400a9000 0x1000>;
-> -- 
-> 1.8.0
-> 
-> 
+I like this idea and will make a new patch based on this.
 
+Thanks,
+Kevin
+>=20
+> g.
+
+--ZJcv+A0YCCLh2VIg
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQEcBAEBAgAGBQJTAvKZAAoJEJNY7TDerrFx2QwH/im1TUhMORxD3cW861eZjPi1
++fgtodcxwYf15R6dmU0Pc5pNpt7sLaD0rqbuwYFKbaaBS5+uXIK44HT3nGGgT0ZB
+AO0Cel2X0KPuTtyFAlDgT4PNDlyMNV9xPgJ/zq2afNZKdHkZpeWdBwNgCWDcNRUt
+PvXLn+6a8mNG34yrSSSGHqQpVKgA/8OOEJOoMs/aQP5bhugivH1D7tcg9/TxWIpL
+l2EkB/+iD+5v5OnWAm/SECiyEHxBPt7wOCxBeMAAesDVmC/ghKJ+s6qQKbn22+FZ
+NL+wcbhT032ZxmIYTx79oncv8I+A3Nx495djFpryq0RBf3eiylZ37KvwcTVmO5k=
+=cRcK
+-----END PGP SIGNATURE-----
+
+--ZJcv+A0YCCLh2VIg--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
