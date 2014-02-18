@@ -1,157 +1,53 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: [PATCH 4/4] of: Add self test for of_match_node()
-Date: Tue, 18 Feb 2014 22:31:20 +0000
-Message-ID: <1392762680-1498-5-git-send-email-grant.likely@linaro.org>
-References: <1392762680-1498-1-git-send-email-grant.likely@linaro.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 2/3] usb: chipidea: msm: Add device tree support
+Date: Wed, 19 Feb 2014 02:32:42 +0300
+Message-ID: <5303ED9A.6020302@cogentembedded.com>
+References: <1392729681-21022-1-git-send-email-iivanov@mm-sol.com> <1392729681-21022-3-git-send-email-iivanov@mm-sol.com> <53039E2E.2030503@cogentembedded.com> <1392743648.17130.17.camel@iivanov-dev> <5303A71B.7060208@cogentembedded.com> <20140218213428.GM1706@sonymobile.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1392762680-1498-1-git-send-email-grant.likely@linaro.org>
+In-Reply-To: <20140218213428.GM1706@sonymobile.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Kevin Hao <haokexin@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Grant Likely <grant.likely@linaro.org>
+To: Courtney Cavin <courtney.cavin@sonymobile.com>
+Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Peter Chen <Peter.Chen@freescale.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds a selftest function for the of_match_node function. of_match_node
-is supposed to handle precedence for the compatible property as well as
-the name and device_type values. This patch adds some test case data and
-a function that makes sure each test node matches against the correct
-entry of an of_device_id table.
+Hello.
 
-This code was written to verify the new of_match_node() implementation
-that is an earlier part of this series.
+On 02/19/2014 12:34 AM, Courtney Cavin wrote:
 
-Currently all but one test passes. There is one scenario where the empty
-"b/name2" node is getting matched against an entry without any
-device_type property at all. It is unknown why this is, but it needs to
-be solved before this patch can be committed. (However, this is testing
-the new of_match_table implementation, which still does far better than
-the old implementation which gets the precedence completely wrong.)
+>>>>> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
 
-Signed-off-by: Grant Likely <grant.likely@linaro.org>
-Cc: Kevin Hau <haokexin@gmail.com>
----
- drivers/of/selftest.c                     | 67 +++++++++++++++++++++++++++++++
- drivers/of/testcase-data/testcases.dtsi   |  1 +
- drivers/of/testcase-data/tests-match.dtsi | 19 +++++++++
- 3 files changed, 87 insertions(+)
- create mode 100644 drivers/of/testcase-data/tests-match.dtsi
+>>>>> Allows controller to be specified via device tree.
+>>>>> Pass PHY phandle specified in DT to core driver.
 
-diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
-index e21012bde639..6643d1920985 100644
---- a/drivers/of/selftest.c
-+++ b/drivers/of/selftest.c
-@@ -300,6 +300,72 @@ static void __init of_selftest_parse_interrupts_extended(void)
- 	of_node_put(np);
- }
- 
-+static struct of_device_id match_node_table[] = {
-+	{ .data = "A", .name = "name0", }, /* Name alone is lowest priority */
-+	{ .data = "B", .type = "type1", }, /* followed by type alone */
-+
-+	{ .data = "Ca", .name = "name2", .type = "type1", }, /* followed by both together */
-+	{ .data = "Cb", .name = "name2", }, /* Only match when type doesn't match */
-+	{ .data = "Cc", .name = "name2", .type = "type2", },
-+
-+	{ .data = "E", .compatible = "compat3" },
-+	{ .data = "G", .compatible = "compat2", },
-+	{ .data = "H", .compatible = "compat2", .name = "name5", },
-+	{ .data = "I", .compatible = "compat2", .type = "type1", },
-+	{ .data = "J", .compatible = "compat2", .type = "type1", .name = "name8", },
-+	{ .data = "K", .compatible = "compat2", .name = "name9", },
-+	{}
-+};
-+
-+static struct {
-+	const char *path;
-+	const char *data;
-+} match_node_tests[] = {
-+	{ .path = "/testcase-data/match-node/name0", .data = "A", },
-+	{ .path = "/testcase-data/match-node/name1", .data = "B", },
-+	{ .path = "/testcase-data/match-node/a/name2", .data = "Ca", },
-+	{ .path = "/testcase-data/match-node/b/name2", .data = "Cb", },
-+	{ .path = "/testcase-data/match-node/c/name2", .data = "Cc", },
-+	{ .path = "/testcase-data/match-node/name3", .data = "E", },
-+	{ .path = "/testcase-data/match-node/name4", .data = "G", },
-+	{ .path = "/testcase-data/match-node/name5", .data = "H", },
-+	{ .path = "/testcase-data/match-node/name6", .data = "G", },
-+	{ .path = "/testcase-data/match-node/name7", .data = "I", },
-+	{ .path = "/testcase-data/match-node/name8", .data = "J", },
-+	{ .path = "/testcase-data/match-node/name9", .data = "K", },
-+};
-+
-+static void __init of_selftest_match_node(void)
-+{
-+	struct device_node *np;
-+	const struct of_device_id *match;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(match_node_tests); i++) {
-+		np = of_find_node_by_path(match_node_tests[i].path);
-+		if (!np) {
-+			selftest(0, "missing testcase node %s\n",
-+				match_node_tests[i].path);
-+			continue;
-+		}
-+
-+		match = of_match_node(match_node_table, np);
-+		if (!match) {
-+			selftest(0, "%s didn't match anything\n",
-+				match_node_tests[i].path);
-+			continue;
-+		}
-+
-+		if (strcmp(match->data, match_node_tests[i].data) != 0) {
-+			selftest(0, "%s got wrong match. expected %s, got %s\n",
-+				match_node_tests[i].path, match_node_tests[i].data,
-+				(const char *)match->data);
-+			continue;
-+		}
-+		selftest(1, "passed");
-+	}
-+}
-+
- static int __init of_selftest(void)
- {
- 	struct device_node *np;
-@@ -316,6 +382,7 @@ static int __init of_selftest(void)
- 	of_selftest_property_match_string();
- 	of_selftest_parse_interrupts();
- 	of_selftest_parse_interrupts_extended();
-+	of_selftest_match_node();
- 	pr_info("end of selftest - %i passed, %i failed\n",
- 		selftest_results.passed, selftest_results.failed);
- 	return 0;
-diff --git a/drivers/of/testcase-data/testcases.dtsi b/drivers/of/testcase-data/testcases.dtsi
-index 3cc2f55534ac..3a5b75a8e4d7 100644
---- a/drivers/of/testcase-data/testcases.dtsi
-+++ b/drivers/of/testcase-data/testcases.dtsi
-@@ -1,2 +1,3 @@
- #include "tests-phandle.dtsi"
- #include "tests-interrupts.dtsi"
-+#include "tests-match.dtsi"
-diff --git a/drivers/of/testcase-data/tests-match.dtsi b/drivers/of/testcase-data/tests-match.dtsi
-new file mode 100644
-index 000000000000..c9e541129534
---- /dev/null
-+++ b/drivers/of/testcase-data/tests-match.dtsi
-@@ -0,0 +1,19 @@
-+
-+/ {
-+	testcase-data {
-+		match-node {
-+			name0 { };
-+			name1 { device_type = "type1"; };
-+			a { name2 { device_type = "type1"; }; };
-+			b { name2 { }; };
-+			c { name2 { device_type = "type2"; }; };
-+			name3 { compatible = "compat3"; };
-+			name4 { compatible = "compat2", "compat3"; };
-+			name5 { compatible = "compat2", "compat3"; };
-+			name6 { compatible = "compat1", "compat2", "compat3"; };
-+			name7 { compatible = "compat2"; device_type = "type1"; };
-+			name8 { compatible = "compat2"; device_type = "type1"; };
-+			name9 { compatible = "compat2"; };
-+		};
-+	};
-+};
--- 
-1.8.3.2
+>>>>> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+>>>>> ---
+>>>>>     drivers/usb/chipidea/ci_hdrc_msm.c |   23 ++++++++++++++++++++++-
+>>>>>     1 file changed, 22 insertions(+), 1 deletion(-)
+
+>>>>       You also need to describe the binding you're creating in
+>>>> Documentation/devicetree/bindings/usb/<file>.txt.
+
+>>> Did you check "[PATCH v2 1/3]"?
+
+>>      Did you send it to 'linux-usb'? I just didn't get the patch.
+>> (Typically, the bindings are described in the same patch the DT support is
+>> added to the driver bu YMMV, of course.)
+
+> Although I would personally agree that this is the most logical method,
+> it would appear that the DT guys disagree with us [1].  Lately, they
+
+    Thank you for the reference.
+
+> seem to have either given up or are otherwise preoccupied, so perhaps
+> you can still slip a few patches by them. ;)
+
+    Yeah, I was at last able to get my Ethernet driver bindings applied. :-)
+
+> -Courtney
+
+> [1] https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/submitting-patches.txt
+
+WBR, Sergei
