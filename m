@@ -1,73 +1,68 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH V2 2/2] ARM: shmobile: r8a7791: add i2c2 bus to koelsch dt
-Date: Tue, 18 Feb 2014 09:34:28 +0900
-Message-ID: <20140218003428.GG4776@verge.net.au>
-References: <1392633882-12142-1-git-send-email-wsa@the-dreams.de>
- <1392633882-12142-2-git-send-email-wsa@the-dreams.de>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 1/4] ASoC: tlv320aic32x4: Support for master clock
+Date: Tue, 18 Feb 2014 10:23:29 +0900
+Message-ID: <20140218012329.GR2669@sirena.org.uk>
+References: <1392575252-9222-1-git-send-email-mpa@pengutronix.de>
+ <1392631460-32002-1-git-send-email-mpa@pengutronix.de>
+ <1392631460-32002-2-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+S4DbcR7QPeSsP0V"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1392633882-12142-2-git-send-email-wsa@the-dreams.de>
-Sender: linux-sh-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa@sang-engineering.com>
+In-Reply-To: <1392631460-32002-2-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 17, 2014 at 11:44:42AM +0100, Wolfram Sang wrote:
-> From: Wolfram Sang <wsa@sang-engineering.com>
-> 
-> Signed-off-by: Wolfram Sang <wsa@sang-engineering.com>
 
-Thanks, I have queued up the following after resolving a minor conflict.
+--+S4DbcR7QPeSsP0V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Mon, Feb 17, 2014 at 11:04:17AM +0100, Markus Pargmann wrote:
 
-From: Wolfram Sang <wsa@sang-engineering.com>
+>  Optional properties:
+>   - reset-gpios: Reset-GPIO phandle with args as described in gpio/gpio.txt
+> + - clocks/clock-names: Clock named 'mclk' for the master clock of the codec.
+> +   See clock/clock-bindings.txt for information about the detailed format.
 
-ARM: shmobile: r8a7791: add i2c2 bus to koelsch dt
+Looking at the code the clock isn't physically optional, why not make it
+mandatory?  There's only one mainline user, it looks like it should be
+straightforward to update with a fixed clock.
 
-Signed-off-by: Wolfram Sang <wsa@sang-engineering.com>
-Acked-by: Magnus Damm <damm@opensource.se>
-[horms+renesas@verge.net.au: resolved conflict]
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
----
- arch/arm/boot/dts/r8a7791-koelsch.dts | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+> +	aic32x4->mclk = devm_clk_get(&i2c->dev, "mclk");
+> +	if (IS_ERR(aic32x4->mclk))
+> +		dev_info(&i2c->dev, "No mclk found, continuing without clock\n");
 
-diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
-index f67d2d0..bf6ba0c 100644
---- a/arch/arm/boot/dts/r8a7791-koelsch.dts
-+++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
-@@ -108,10 +108,29 @@
- 	clock-frequency = <20000000>;
- };
- 
-+&i2c2 {
-+	pinctrl-0 = <&i2c2_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	eeprom@50 {
-+		compatible = "renesas,24c02";
-+		reg = <0x50>;
-+		pagesize = <16>;
-+	};
-+};
-+
- &pfc {
- 	pinctrl-0 = <&du_pins &scif0_pins &scif1_pins>;
- 	pinctrl-names = "default";
- 
-+	i2c2_pins: i2c {
-+		renesas,groups = "i2c2";
-+		renesas,function = "i2c2";
-+	};
-+
- 	du_pins: du {
- 		renesas,groups = "du_rgb666", "du_sync", "du_clk_out_0";
- 		renesas,function = "du";
--- 
-1.8.5.2
+This is going to break with deferred probe, we need to handle that at
+least.
 
+--+S4DbcR7QPeSsP0V
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTArYOAAoJELSic+t+oim9LVsP/jw5bK6KAx6H7RdNkvjaWMeh
+xpmGWHNAkbMms3XEO4/uxep729Z6xp0ZmMPfVmoiZISGqqngF19wjDSDwY39Lj1V
+Swkig/CmxNTNPKbNk1lHNGZLKIbpDXnxVlZZ5bh/KNj1Icmg3oGBJEGYAxrsIF/M
+An0e9+h4oDg7bTMbLSynpDhhKq2Php7qj/BqXuC/j7sU1eixzmRGJ70RcFCm2NIK
+l9+uzYSt6FnOLGElzDp6ivWmkDv0SoA/Jp2wsCiV+hhEnLnNGcjg/U2vjjYFp0W0
+RivJFnJT5vVDaymZ1bkaiNeOXbMtqf0eXsW1549XowBmDMwUKA+n7PZblnAsI2M5
+Hrbtegnb6meEDfxbCuVA3SgvGZALnVGEwlbzxlvfkdyDIOOwEipajLut5235GjdY
+MBxVTMrA2KKeIu0I5qBMst968zUZajSUrleXiOFLKlhuAq55y0Xy66fMvgVeL3FU
+khRgkwVRKF7/ubFazih3BoBiHfA4UHuuh8gNGcsqdwH3DlDbKb+QVR0PInXFdrCK
+RTSJEpqYBYe+gQm1s+L/eNMmFyyZeycPZgE+qp57ExaffAMsNv3vmGB7BidzjYFU
+DPuCWIvPo2igpAfloKLoQFH0+tMlVNIINEUI0oGE8xwtnrdSXT2fYe7xNVgKEkEG
+cx1knn15N9DFtxSjYlzl
+=lQgp
+-----END PGP SIGNATURE-----
+
+--+S4DbcR7QPeSsP0V--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
