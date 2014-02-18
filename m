@@ -1,39 +1,46 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] dt: platform driver: Fill the resources before probe and
- defer if needed
-Date: Tue, 18 Feb 2014 12:22:05 -0800
-Message-ID: <20140218202205.GA13835@kroah.com>
-References: <1392285429-9325-1-git-send-email-jjhiblot@traphandler.com>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v4 0/2] Introduce AEMIF driver for Davinci/Keystone archs
+Date: Tue, 18 Feb 2014 12:27:02 -0800
+Message-ID: <20140218202702.GA18642@kroah.com>
+References: <1391629574-18955-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <53037113.3090105@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1392285429-9325-1-git-send-email-jjhiblot@traphandler.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
-Cc: grant.likely@linaro.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gregory.clement@free-electrons.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <53037113.3090105-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Cc: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 13, 2014 at 10:57:09AM +0100, Jean-Jacques Hiblot wrote:
-> The goal of this patch is to allow drivers to be probed even if at the time of
-> the DT parsing some of their ressources are not available yet.
+On Tue, Feb 18, 2014 at 09:41:23AM -0500, Santosh Shilimkar wrote:
+> Greg,
 > 
-> In the current situation, the resource of a platform device are filled from the
-> DT at the time the device is created (of_device_alloc()). The drawbackof this
-> is that a device sitting close to the top of the DT (ahb for example) but
-> depending on ressources that are initialized later (IRQ domain dynamically
-> created for example)  will fail to probe because the ressources don't exist
-> at this time.
-> 
-> This patch fills the resource structure only before the device is probed and
-> will defer the probe if the resource are not available yet.
-> 
-> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
-> Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> ---
->  drivers/base/platform.c     |  6 ++++
->  drivers/of/platform.c       | 71 +++++++++++++++++++++++++++++----------------
->  include/linux/of_platform.h | 10 +++++++
->  3 files changed, 62 insertions(+), 25 deletions(-)
+> On Wednesday 05 February 2014 02:46 PM, Ivan Khoronzhuk wrote:
+> > These patches introduce Async External Memory Interface (EMIF16/AEMIF)
+> > controller driver for Davinci/Keystone archs.
+> > 
+> > For more informations see documentation:
+> > Davinci DM646x - http://www.ti.com/lit/ug/sprueq7c/sprueq7c.pdf
+> > OMAP-L138 - http://www.ti.com/lit/ug/spruh77a/spruh77a.pdf
+> > Kestone - http://www.ti.com/lit/ug/sprugz3a/sprugz3a.pdf
+> > 
+> Can you please have a look at the series ? It has been on the list for
+> sometime and all the outstanding comments are addressed so far. If
+> you are ok with it, I would like to get these queued up for 3.15
+> via your tree.
 
-I need some others to ack this before I can take it...
+Why my tree?  Am I the drivers/memory/ maintainer?
+
+/me digs in git...
+
+Ah, it looks like I might be...
+
+Ok, let me go review this.
+
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
