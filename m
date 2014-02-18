@@ -1,41 +1,35 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH] dt: platform driver: Fill the resources before probe and defer if needed
-Date: Tue, 18 Feb 2014 22:34:12 +0000
-Message-ID: <20140218223412.B0DBCC40517@trevor.secretlab.ca>
-References: <1392285429-9325-1-git-send-email-jjhiblot@traphandler.com> < 20140218202205.GA13835@kroah.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140218202205.GA13835@kroah.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>
-Cc: robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gregory.clement@free-electrons.com, linux-arm-kernel@lists.infradead.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 0/2] Add Ether DT support for R8A7790/Lager reference
+ board
+Date: Wed, 19 Feb 2014 02:40:12 +0300
+Message-ID: <5303EF5C.4090502@cogentembedded.com>
+References: <201402070054.39989.sergei.shtylyov@cogentembedded.com> <20140213060256.GH17183@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20140213060256.GH17183@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 18 Feb 2014 12:22:05 -0800, Greg KH <gregkh@linuxfoundation.org> wrote:
-> On Thu, Feb 13, 2014 at 10:57:09AM +0100, Jean-Jacques Hiblot wrote:
-> > The goal of this patch is to allow drivers to be probed even if at the time of
-> > the DT parsing some of their ressources are not available yet.
-> > 
-> > In the current situation, the resource of a platform device are filled from the
-> > DT at the time the device is created (of_device_alloc()). The drawbackof this
-> > is that a device sitting close to the top of the DT (ahb for example) but
-> > depending on ressources that are initialized later (IRQ domain dynamically
-> > created for example)  will fail to probe because the ressources don't exist
-> > at this time.
-> > 
-> > This patch fills the resource structure only before the device is probed and
-> > will defer the probe if the resource are not available yet.
-> > 
-> > Signed-off-by: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
-> > Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> > ---
-> >  drivers/base/platform.c     |  6 ++++
-> >  drivers/of/platform.c       | 71 +++++++++++++++++++++++++++++----------------
-> >  include/linux/of_platform.h | 10 +++++++
-> >  3 files changed, 62 insertions(+), 25 deletions(-)
-> 
-> I need some others to ack this before I can take it...
+Hello.
 
-Yes, please let me review it first, and I'll probably want to take it
-through the devicetree branch.
+On 02/13/2014 09:02 AM, Simon Horman wrote:
 
-g.
+>>     Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
+>> 'renesas-devel-v3.14-rc1-20140206v2' tag. Here we add the Ether device tree
+>> support working on the R8A7790/Lager reference board. The patchset requires the
+>> 'sh_eth' driver device tree support posted earlier in order to work.
+
+>> [1/2] ARM: shmobile: r8a7790: add Ether DT support
+>> [2/2] ARM: shmobile: lager: add Ether DT support
+
+> Thanks. Please repost this series once the bindings have been accepted.
+
+    DaveM has just merged the bindings into net-next. Time to repost these 2 
+series?
+
+WBR, Sergei
+
