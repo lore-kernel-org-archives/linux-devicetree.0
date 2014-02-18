@@ -1,46 +1,56 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2] of_mdio: fix phy interrupt passing
-Date: Tue, 18 Feb 2014 18:13:17 -0500 (EST)
-Message-ID: <20140218.181317.1712776234149210938.davem@davemloft.net>
-References: <1392725818-558-1-git-send-email-ben.dooks@codethink.co.uk>
-	<20140218161551.44A52C40517@trevor.secretlab.ca>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+From: Matt Porter <mporter@linaro.org>
+Subject: [PATCH v2 0/5] BCM59056 PMU regulator support
+Date: Tue, 18 Feb 2014 18:17:07 -0500
+Message-ID: <1392765432-9111-1-git-send-email-mporter@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140218161551.44A52C40517@trevor.secretlab.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-To: grant.likely@linaro.org
-Cc: ben.dooks@codethink.co.uk, linux-kernel@lists.codethink.co.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org, sergei.shtylyov@cogentembedded.com
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Christian Daudt <bcm@fixthebug.org>
+Cc: Devicetree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Grant Likely <grant.likely@linaro.org>
-Date: Tue, 18 Feb 2014 16:15:51 +0000
+The BCM59056 is a multi-function power management unit used with the
+BCM281xx family of SoCs. This series adds an MFD and voltage regulator
+driver to support the BCM59056. The bcm28155-ap DT support is updated
+to enable use of regulators on the otg and sdhci peripherals.
 
-> On Tue, 18 Feb 2014 12:16:58 +0000, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
->> The of_mdiobus_register_phy() is not setting phy->irq thus causing
->> some drivers to incorrectly assume that the PHY does not have an
->> IRQ associated with it. Not only do some drivers report no IRQ
->> they do not install an interrupt handler for the PHY.
->> 
->> Simplify the code setting irq and set the phy->irq at the same
->> time so that we cover the following issues, which should cover
->> all the cases the code will find:
->> 
->> - Set phy->irq if node has irq property and mdio->irq is NULL
->> - Set phy->irq if node has no irq and mdio->irq is not NULL
->> - Leave phy->irq as PHY_POLL default if none of the above
->> 
->> This fixes the issue:
->>  net eth0: attached PHY 1 (IRQ -1) to driver Micrel KSZ8041RNLI
->> 
->> to the correct:
->>  net eth0: attached PHY 1 (IRQ 416) to driver Micrel KSZ8041RNLI
->> 
->> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> 
-> Looks okay to me
-> 
-> Reviewed-by: Grant Likely <grant.likely@linaro.org>
+Changes since v1:
+        - renamed to bcm590xx to accomodate future family parts
+        - remove use of subsys_initcall
+        - fix BCM590XX_MAX_REGISTER value
+        - remove unused chip id in mfd of/i2c matching
+        - switch to of_platform_populate() in mfd
+        - update binding to single document with regulators as optional
+          properties in the regulator subdevice IP description
+        - remove unused regulator get/set mode ops
+        - remove unneeded regulator NULL constraint check
+        - regulators property is optional, allow the driver to probe
+          when it is missing
+        - move of_node presence check into bcm590xx_parse_dt_reg_data()
 
-Applied, thanks.
+Matt Porter (5):
+  mfd: add bcm590xx pmu DT binding
+  mfd: add bcm590xx pmu driver
+  regulator: add bcm590xx regulator driver
+  ARM: configs: bcm_defconfig: enable bcm590xx regulator support
+  ARM: dts: add bcm590xx pmu support and enable for bcm28155-ap
+
+ Documentation/devicetree/bindings/mfd/bcm590xx.txt |  49 +++
+ arch/arm/boot/dts/bcm28155-ap.dts                  |  43 ++-
+ arch/arm/boot/dts/bcm59056.dtsi                    | 162 ++++++++
+ arch/arm/configs/bcm_defconfig                     |   7 +
+ drivers/mfd/Kconfig                                |   8 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/bcm590xx.c                             |  86 +++++
+ drivers/regulator/Kconfig                          |   8 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/bcm590xx-regulator.c             | 419 +++++++++++++++++++++
+ include/linux/mfd/bcm590xx.h                       |  31 ++
+ 11 files changed, 814 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/bcm590xx.txt
+ create mode 100644 arch/arm/boot/dts/bcm59056.dtsi
+ create mode 100644 drivers/mfd/bcm590xx.c
+ create mode 100644 drivers/regulator/bcm590xx-regulator.c
+ create mode 100644 include/linux/mfd/bcm590xx.h
+
+-- 
+1.8.4
