@@ -1,206 +1,91 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [RFC PATCH v3 2/9] staging: imx-drm: Add temporary copies of v4l2-of
- parsing functions
-Date: Tue, 18 Feb 2014 12:36:03 +0100
-Message-ID: <1392723370-4772-3-git-send-email-p.zabel@pengutronix.de>
-References: <1392723370-4772-1-git-send-email-p.zabel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1392723370-4772-1-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Philipp Zabel <philipp.zabel@gmail.com>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [RFC PATCH v3 0/9] imx-drm dt bindings
+Date: Tue, 18 Feb 2014 12:36:01 +0100
+Message-ID: <1392723370-4772-1-git-send-email-p.zabel@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Philipp Zabel <philipp.zabel@gmail.com>
+Hi,
 
-The existing v4l2-of parser functions for the video interface bindings
-described in Documentation/device-tree/bindings/media/video-interfaces.txt
-are useful for DRM drivers, too. They will be moved to drivers/media
-so they can be used by drm drivers, too. Until then, duplicate the
-v4l2-of parser functions temporarily.
+here is an updated and more complete version of the imx-drm DT binding
+series. These patches apply on top of Russell's second preview of the
+imx-drm cleanup series on v3.14-rc2. I have added device tree bindings
+between IPU and the encoders as documented in
+Documentation/devicetree/bindings/media/video-interfaces.txt
+and used those to determine the possible_crtcs and mux_id.
 
-Signed-off-by: Philipp Zabel <philipp.zabel@gmail.com>
----
- drivers/staging/imx-drm/Makefile     |   2 +-
- drivers/staging/imx-drm/imx-drm-of.c | 132 +++++++++++++++++++++++++++++++++++
- drivers/staging/imx-drm/imx-drm.h    |   6 ++
- 3 files changed, 139 insertions(+), 1 deletion(-)
+The crtc cookie is replaced with a the port device tree node,
+which is unique and therefore allows to get rid of the di_id
+comparison. Storing the multiplexer input numbers in the device
+tree removes the need to know the ipu_id. This should also allow
+to replace IPU2 with LCDIF on i.MX6 Solo more easily.
+
+In v3 also connections between display interface ports and encoders are
+used to find all necessary components, so that only the display interfaces
+have to be configured in the imx-drm node. This allows to move the imx-drm
+node into the SoC level dtsi. I've also updated the existing i.MX51 and
+i.MX53 device trees this time and updated/added the devicetree binding
+documentation.
+
+Patch 2/9 adds a temporary copy of the v4l2_of parser functions. Those
+are going to be moved to some place where they can be used by drm drivers,
+eventually, so those local copies can be dropped again.
+
+regards
+Philipp
+
+Lucas Stach (1):
+  staging: imx-drm-core: don't request probe deferral in
+    imx_drm_encoder_parse_of
+
+Philipp Zabel (8):
+  staging: imx-drm: Add temporary copies of v4l2-of parsing functions
+  staging: imx-drm-core: Use OF graph to find components and connections
+    between encoder and crtcs
+  staging: imx-drm: Document updated imx-drm device tree bindings
+  staging: imx-drm: Document imx-hdmi device tree bindings
+  ARM: dts: imx51: Add IPU ports and endpoints, move imx-drm node to
+    dtsi
+  ARM: dts: imx53: Add IPU DI ports and endpoints, move imx-drm node to
+    dtsi
+  ARM: dts: imx6qdl: Add IPU DI ports and endpoints, move imx-drm node
+    to dtsi
+  staging: imx-drm: Update TODO
+
+ .../bindings/staging/imx-drm/fsl-imx-drm.txt       |  48 ++++-
+ .../devicetree/bindings/staging/imx-drm/hdmi.txt   |  53 +++++
+ .../devicetree/bindings/staging/imx-drm/ldb.txt    |  20 +-
+ arch/arm/boot/dts/imx51-apf51dev.dts               |  11 +-
+ arch/arm/boot/dts/imx51-babbage.dts                |  28 ++-
+ arch/arm/boot/dts/imx51.dtsi                       |  22 ++-
+ arch/arm/boot/dts/imx53-m53evk.dts                 |  17 +-
+ arch/arm/boot/dts/imx53-mba53.dts                  |  15 +-
+ arch/arm/boot/dts/imx53-qsb.dts                    |  17 +-
+ arch/arm/boot/dts/imx53.dtsi                       |  64 +++++-
+ arch/arm/boot/dts/imx6dl.dtsi                      |  22 +--
+ arch/arm/boot/dts/imx6q-sabresd.dts                |   4 -
+ arch/arm/boot/dts/imx6q.dtsi                       | 124 +++++++++++-
+ arch/arm/boot/dts/imx6qdl-sabresd.dtsi             |   6 -
+ arch/arm/boot/dts/imx6qdl.dtsi                     | 138 ++++++++++++-
+ drivers/staging/imx-drm/Makefile                   |   2 +-
+ drivers/staging/imx-drm/TODO                       |   5 -
+ drivers/staging/imx-drm/imx-drm-core.c             | 217 ++++++++++++++-------
+ drivers/staging/imx-drm/imx-drm-of.c               | 132 +++++++++++++
+ drivers/staging/imx-drm/imx-drm.h                  |  11 +-
+ drivers/staging/imx-drm/imx-hdmi.c                 |   2 +-
+ drivers/staging/imx-drm/imx-ldb.c                  |   4 +-
+ drivers/staging/imx-drm/ipuv3-crtc.c               |  47 ++++-
+ 23 files changed, 842 insertions(+), 167 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
  create mode 100644 drivers/staging/imx-drm/imx-drm-of.c
 
-diff --git a/drivers/staging/imx-drm/Makefile b/drivers/staging/imx-drm/Makefile
-index 129e3a3..743b875 100644
---- a/drivers/staging/imx-drm/Makefile
-+++ b/drivers/staging/imx-drm/Makefile
-@@ -1,5 +1,5 @@
- 
--imxdrm-objs := imx-drm-core.o
-+imxdrm-objs := imx-drm-core.o imx-drm-of.o
- 
- obj-$(CONFIG_DRM_IMX) += imxdrm.o
- 
-diff --git a/drivers/staging/imx-drm/imx-drm-of.c b/drivers/staging/imx-drm/imx-drm-of.c
-new file mode 100644
-index 0000000..e14b4f3
---- /dev/null
-+++ b/drivers/staging/imx-drm/imx-drm-of.c
-@@ -0,0 +1,132 @@
-+/*
-+ * Video Interface OF binding parsing library
-+ *
-+ * Copyright (C) 2012 - 2013 Samsung Electronics Co., Ltd.
-+ * Author: Sylwester Nawrocki <s.nawrocki@samsung.com>
-+ *
-+ * Copyright (C) 2012 Renesas Electronics Corp.
-+ * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of version 2 of the GNU General Public License as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/of.h>
-+
-+/**
-+ * imx_drm_of_get_next_endpoint() - get next endpoint node
-+ * @parent: pointer to the parent device node
-+ * @prev: previous endpoint node, or NULL to get first
-+ *
-+ * Return: An 'endpoint' node pointer with refcount incremented. Refcount
-+ * of the passed @prev node is decremented.
-+ */
-+struct device_node *imx_drm_of_get_next_endpoint(
-+		const struct device_node *parent, struct device_node *prev)
-+{
-+	struct device_node *endpoint;
-+	struct device_node *port = NULL;
-+
-+	if (!parent)
-+		return NULL;
-+
-+	if (!prev) {
-+		struct device_node *node;
-+		/*
-+		 * It's the first call, we have to find a port subnode
-+		 * within this node or within an optional 'ports' node.
-+		 */
-+		node = of_get_child_by_name(parent, "ports");
-+		if (node)
-+			parent = node;
-+
-+		port = of_get_child_by_name(parent, "port");
-+
-+		if (port) {
-+			/* Found a port, get an endpoint. */
-+			endpoint = of_get_next_child(port, NULL);
-+			of_node_put(port);
-+		} else {
-+			endpoint = NULL;
-+		}
-+
-+		if (!endpoint)
-+			pr_err("%s(): no endpoint nodes specified for %s\n",
-+			       __func__, parent->full_name);
-+		of_node_put(node);
-+	} else {
-+		port = of_get_parent(prev);
-+		if (!port) {
-+			/* Hm, has someone given us the root node ?... */
-+			of_node_put(prev);
-+			return NULL;
-+		}
-+
-+		endpoint = of_get_next_child(port, prev);
-+		if (endpoint) {
-+			of_node_put(port);
-+			return endpoint;
-+		}
-+
-+		/* No more endpoints under this port, try the next one. */
-+		do {
-+			port = of_get_next_child(parent, port);
-+			if (!port)
-+				return NULL;
-+		} while (of_node_cmp(port->name, "port"));
-+
-+		/* Pick up the first endpoint in this port. */
-+		endpoint = of_get_next_child(port, NULL);
-+		of_node_put(port);
-+	}
-+
-+	return endpoint;
-+}
-+EXPORT_SYMBOL_GPL(imx_drm_of_get_next_endpoint);
-+
-+/**
-+ * imx_drm_of_get_remote_port_parent() - get remote port's parent node
-+ * @node: pointer to a local endpoint device_node
-+ *
-+ * Return: Remote device node associated with remote endpoint node linked
-+ *	   to @node. Use of_node_put() on it when done.
-+ */
-+struct device_node *imx_drm_of_get_remote_port_parent(
-+			       const struct device_node *node)
-+{
-+	struct device_node *np;
-+	unsigned int depth;
-+
-+	/* Get remote endpoint node. */
-+	np = of_parse_phandle(node, "remote-endpoint", 0);
-+
-+	/* Walk 3 levels up only if there is 'ports' node. */
-+	for (depth = 3; depth && np; depth--) {
-+		np = of_get_next_parent(np);
-+		if (depth == 2 && of_node_cmp(np->name, "ports"))
-+			break;
-+	}
-+	return np;
-+}
-+EXPORT_SYMBOL(imx_drm_of_get_remote_port_parent);
-+
-+/**
-+ * imx_drm_of_get_remote_port() - get remote port node
-+ * @node: pointer to a local endpoint device_node
-+ *
-+ * Return: Remote port node associated with remote endpoint node linked
-+ *	   to @node. Use of_node_put() on it when done.
-+ */
-+struct device_node *imx_drm_of_get_remote_port(const struct device_node *node)
-+{
-+	struct device_node *np;
-+
-+	/* Get remote endpoint node. */
-+	np = of_parse_phandle(node, "remote-endpoint", 0);
-+	if (!np)
-+		return NULL;
-+	return of_get_next_parent(np);
-+}
-+EXPORT_SYMBOL_GPL(imx_drm_of_get_remote_port);
-diff --git a/drivers/staging/imx-drm/imx-drm.h b/drivers/staging/imx-drm/imx-drm.h
-index aa21028..793a80b 100644
---- a/drivers/staging/imx-drm/imx-drm.h
-+++ b/drivers/staging/imx-drm/imx-drm.h
-@@ -58,4 +58,10 @@ int imx_drm_connector_mode_valid(struct drm_connector *connector,
- void imx_drm_connector_destroy(struct drm_connector *connector);
- void imx_drm_encoder_destroy(struct drm_encoder *encoder);
- 
-+struct device_node *imx_drm_of_get_next_endpoint(
-+		const struct device_node *parent, struct device_node *prev);
-+struct device_node *imx_drm_of_get_remote_port_parent(
-+			       const struct device_node *node);
-+struct device_node *imx_drm_of_get_remote_port(const struct device_node *node);
-+
- #endif /* _IMX_DRM_H_ */
 -- 
 1.8.5.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
