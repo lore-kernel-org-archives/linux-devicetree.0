@@ -1,80 +1,51 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v6 1/3] clocksource: timer-keystone: introduce clocksource
- driver for Keystone
-Date: Tue, 18 Feb 2014 11:46:50 +0100
-Message-ID: <53033A1A.5050404@linaro.org>
-References: <1392027058-11680-1-git-send-email-ivan.khoronzhuk@ti.com>	<1392027058-11680-2-git-send-email-ivan.khoronzhuk@ti.com>	<52FA1E59.1000307@linaro.org> <CABuKBeJNwe5VXi2SvPX6Cne-iMHP7bbZarJDNAzuCMbg0E-bCQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CABuKBeJNwe5VXi2SvPX6Cne-iMHP7bbZarJDNAzuCMbg0E-bCQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, santosh.shilimkar@ti.com, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, galak@codeaurora.org, mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, joshc@codeaurora.org, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, robh+dt@kernel.org, tglx@linutronix.de, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH v4 0/3] exynos: arch: add support for exynos5260 SoC
+Date: Tue, 18 Feb 2014 16:27:53 +0530
+Message-ID: <1392721076-26630-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/18/2014 11:40 AM, Matthias Brugger wrote:
-> 2014-02-11 13:58 GMT+01:00 Daniel Lezcano <daniel.lezcano@linaro.org>=
-:
->> On 02/10/2014 11:10 AM, Ivan Khoronzhuk wrote:
->>>
->>> Add broadcast clock-event device for the Keystone arch.
->>>
->>> The timer can be configured as a general-purpose 64-bit timer,
->>> dual general-purpose 32-bit timers. When configured as dual 32-bit
->>> timers, each half can operate in conjunction (chain mode) or
->>> independently (unchained mode) of each other.
->>>
->>> Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
->>> Acked-by: Santosh shilimkar <santosh.shilimkar@ti.com>
->>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
->>> ---
->>
->>
->> Applied to my tree for 3.15
->
-> I wanted to send a trivial follow-up patch, but I can't find the tree
-> to which you have applied this patch.
-> Would you mind to indicate me where I can find it.
+From: Rahul Sharma <Rahul.Sharma@samsung.com>
 
-Sure.
+V4:
+  1) Removed duplicate MMC Soc property from Board file.
 
-git://git.linaro.org/people/daniel.lezcano/linux.git #clockevents/3.15
+V3:
+  1) Addressed review comments from Tomasz figa.
 
-Regards
-   -- Daniel
+V2:
+  1) Split up DT patch into SoC and Board patch.
 
->
-> Cheers,
-> Matthias
->
->>
->> --
->>   <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software=
- for ARM SoCs
->>
->> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
->> <http://twitter.com/#!/linaroorg> Twitter |
->> <http://www.linaro.org/linaro-blog/> Blog
->>
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
->
->
+This series is dependent on Sachin's patch
+"ARM: EXYNOS: Consolidate CPU init code" at
+http://comments.gmane.org/gmane.linux.kernel.samsung-soc/26560
 
+This series is based on Kukjin's for-next branch at
+http://git.kernel.org/?p=linux/kernel/git/kgene/linux-samsung.git
 
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
+Pankaj Dubey (1):
+  ARM: EXYNOS: initial board support for exynos5260 SoC
 
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Rahul Sharma (2):
+  ARM: dts: add dts files for exynos5260 SoC
+  ARM: dts: add dts files for xyref5260 board
 
+ arch/arm/boot/dts/Makefile                      |    1 +
+ arch/arm/boot/dts/exynos5260-pinctrl.dtsi       |  574 +++++++++++++++++++++++
+ arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts |  103 ++++
+ arch/arm/boot/dts/exynos5260.dtsi               |  304 ++++++++++++
+ arch/arm/mach-exynos/Kconfig                    |    4 +
+ arch/arm/mach-exynos/common.c                   |   11 +
+ arch/arm/mach-exynos/include/mach/map.h         |    1 +
+ arch/arm/mach-exynos/mach-exynos5-dt.c          |    1 +
+ arch/arm/plat-samsung/include/plat/cpu.h        |    8 +
+ 9 files changed, 1007 insertions(+)
+ create mode 100644 arch/arm/boot/dts/exynos5260-pinctrl.dtsi
+ create mode 100644 arch/arm/boot/dts/exynos5260-xyref5260-evt0.dts
+ create mode 100644 arch/arm/boot/dts/exynos5260.dtsi
+
+-- 
+1.7.9.5
