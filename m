@@ -1,31 +1,37 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v5] DT: net: document Ethernet bindings in one place
-Date: Tue, 18 Feb 2014 17:05:57 -0500 (EST)
-Message-ID: <20140218.170557.1748698882332547218.davem@davemloft.net>
-References: <201402180242.00796.sergei.shtylyov@cogentembedded.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH] ARM: dts: qcom: Add RNG device tree node
+Date: Tue, 18 Feb 2014 14:13:15 -0800
+Message-ID: <20140218221315.GC14769@codeaurora.org>
+References: <1391764987-17138-1-git-send-email-svarbanov@mm-sol.com>
+ <20140208033740.GD10784@codeaurora.org>
+ <52FB3EB5.4020207@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <201402180242.00796.sergei.shtylyov@cogentembedded.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: sergei.shtylyov@cogentembedded.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, rob@landley.net, linux-doc@vger.kernel.org, jcmvbkbc@gmail.com, linux-sh@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52FB3EB5.4020207@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, David Brown <davidb@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Date: Tue, 18 Feb 2014 02:41:59 +0300
-
-> This patch is an attempt to gather the Ethernet related bindings in one file,
-> like it's done in the MMC and some other subsystems. It should save some of
-> the trouble of documenting several properties over and over in each binding
-> document, instead only making reference to the main file.
+On 02/12, Stanimir Varbanov wrote:
+> Hi, Stephen
 > 
-> I have used the Embedded Power Architecture(TM) Platform Requirements (ePAPR)
-> standard as a base for the properties description, also documenting some ad-hoc
-> properties that have been introduced over time despite having direct analogs in
-> ePAPR.
+> On 02/08/2014 05:37 AM, Stephen Boyd wrote:
+> > On 02/07, Stanimir Varbanov wrote:
+> >> Add the necessary DT node to probe the rng driver on
+> >> msm8974 platforms.
+> >>
+> > 
+> > Looks good. We should add it to msm8960-cdp and enable the driver
+> > in the defconfig as well.
 > 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Sure, I can prepare a patch. Unfortunately I haven't msm8960 CDP to test it.
+> 
 
-Applied, thanks Sergei.
+No problem. I have one on my desk and can run a test if you like.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
