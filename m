@@ -1,40 +1,91 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 2/3] usb: chipidea: msm: Add device tree support
-Date: Tue, 18 Feb 2014 21:31:55 +0300
-Message-ID: <5303A71B.7060208@cogentembedded.com>
-References: <1392729681-21022-1-git-send-email-iivanov@mm-sol.com>	 <1392729681-21022-3-git-send-email-iivanov@mm-sol.com>	 <53039E2E.2030503@cogentembedded.com> <1392743648.17130.17.camel@iivanov-dev>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/2] clk: fixed-rate: use full DT node name
+Date: Tue, 18 Feb 2014 10:34:36 -0700
+Message-ID: <530399AC.2070204@wwwdotorg.org>
+References: <1392358613-19962-1-git-send-email-swarren@wwwdotorg.org> <20140214103556.GC9907@e106331-lin.cambridge.arm.com> <52FE4798.3010605@wwwdotorg.org> <20140218112323.GB6051@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1392743648.17130.17.camel@iivanov-dev>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Peter Chen <Peter.Chen@freescale.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140218112323.GB6051-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/18/2014 08:14 PM, Ivan T. Ivanov wrote:
+On 02/18/2014 04:23 AM, Mark Rutland wrote:
+> On Fri, Feb 14, 2014 at 04:43:04PM +0000, Stephen Warren wrote:
+>> On 02/14/2014 03:35 AM, Mark Rutland wrote:
+>>> On Fri, Feb 14, 2014 at 06:16:52AM +0000, Stephen Warren wrote:
+>>>> clk-fixed-rate currently names clocks according to a node's name without
+>>>> the unit address. When faced with the legal and technically correct DT
+>>>> structure below, this causes rgistration attempts for 3 clocks with the
+>>>> same name, 2 of which fail.
+>>>>
+>>>> 	clocks {
+>>>> 		compatible = "simple-bus";
+>>>> 		#address-cells = <1>;
+>>>> 		#size-cells = <0>;
+>>>>
+>>>> 		clk_mmc: clock@0 {
+>>>> 			compatible = "fixed-clock";
+>>>> 			reg = <0>;
+>>>> ...
+>>>> 		clk_i2c: clock@1 {
+>>>> 			compatible = "fixed-clock";
+>>>> 			reg = <1>;
+>>>> ...
+>>>> 		clk_spi: clock@2 {
+>>>> 			compatible = "fixed-clock";
+>>>> 			reg = <2>;
+>>>> ...
+>>>
+>>> I'd argue that this case isn't valid.
+>>
+>> Well, it's very widely used, and was the result of numerous discussions
+>> of how this kind of thing should be represented:-/
+> 
+> Maybe we have to live with it then. :/
 
->>> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Great:-)
 
->>> Allows controller to be specified via device tree.
->>> Pass PHY phandle specified in DT to core driver.
+...
+>>> It's just nonsensical; rename them to clock_{0,1,..} instead and get rid
+>>> of the reg properties. Then they're named uniquely.
+>>
+>> That's not legal either. DT node names are supposed to represent the
+>> type of device/object (i.e. just "clock"), not the identity of the
+>> device/object (i.e. not include IDs etc.). Hence, the node name needs to
+>> be "clock" for all of them, and the unit address must be used to
+>> differentiate them.
+> 
+> As far as I can see from ePAPR, the only requriement is:
+> 
+>   The node-name shall start with a lower or uppercase character and
+>   should describe the general class of device.
+> 
+> IMO clock_1 describes the general class of device as well as clock@1,
+> while also not filling a unexpected property with a meaningless value.
 
->>> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
->>> ---
->>>    drivers/usb/chipidea/ci_hdrc_msm.c |   23 ++++++++++++++++++++++-
->>>    1 file changed, 22 insertions(+), 1 deletion(-)
+I believe section 2.2.2 "Generic Names Recommendation" is the source of
+the rule that nodes should be named after the type of object rather than
+the identity.
 
->>      You also need to describe the binding you're creating in
->> Documentation/devicetree/bindings/usb/<file>.txt.
+"""
+The name of a node should be somewhat generic, reflecting the function
+of the device and not its precise programming model. If appropriate, the
+name should be one of the following choices:
 
-> Did you check "[PATCH v2 1/3]"?
+* atm
+* cache-controller
+* compact-flash
+* can
+* cpu
+...
+"""
 
-    Did you send it to 'linux-usb'? I just didn't get the patch.
-(Typically, the bindings are described in the same patch the DT support is 
-added to the driver bu YMMV, of course.)
-
-> Regards,
-> Ivan
-
-WBR, Sergei
+(I note e.g. "cpu" not "cpu-1", "cpu_2", etc.)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
