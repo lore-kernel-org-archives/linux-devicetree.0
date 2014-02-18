@@ -1,47 +1,60 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [RFC PATCH v3 9/9] staging: imx-drm: Update TODO
-Date: Tue, 18 Feb 2014 12:36:10 +0100
-Message-ID: <1392723370-4772-10-git-send-email-p.zabel@pengutronix.de>
-References: <1392723370-4772-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392723370-4772-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH v4 1/3] ARM: EXYNOS: initial board support for exynos5260 SoC
+Date: Tue, 18 Feb 2014 17:11:43 +0530
+Message-ID: <CAK9yfHwcteO78JG4OhRZtMcpAd-aN85sxqELJ3ZLW0D0PXoZ7w@mail.gmail.com>
+References: <1392721076-26630-1-git-send-email-rahul.sharma@samsung.com>
+	<1392721076-26630-2-git-send-email-rahul.sharma@samsung.com>
+	<2203874.7pS2uKgoKp@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <2203874.7pS2uKgoKp@wuerfel>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>, Pankaj Dubey <pankaj.dubey@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-The device tree bindings are updated regardless of the common display
-framework and in the meantime the HDMI driver was included.
+Hi Arnd,
 
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- drivers/staging/imx-drm/TODO | 5 -----
- 1 file changed, 5 deletions(-)
+On 18 February 2014 16:33, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tuesday 18 February 2014 16:27:54 Rahul Sharma wrote:
+>> diff --git a/arch/arm/mach-exynos/common.c b/arch/arm/mach-exynos/common.c
+>> index 7654f19..1cc52c9 100644
+>> --- a/arch/arm/mach-exynos/common.c
+>> +++ b/arch/arm/mach-exynos/common.c
+>> @@ -176,6 +176,15 @@ static struct map_desc exynos5250_iodesc[] __initdata = {
+>>       },
+>>  };
+>>
+>> +static struct map_desc exynos5260_iodesc[] __initdata = {
+>> +     {
+>> +             .virtual        = (unsigned long)S5P_VA_SYSRAM_NS,
+>> +             .pfn            = __phys_to_pfn(EXYNOS5260_PA_SYSRAM_NS),
+>> +             .length         = SZ_4K,
+>> +             .type           = MT_DEVICE,
+>> +     },
+>> +};
+>> +
+>>  static struct map_desc exynos5_iodesc[] __initdata = {
+>>       {
+>>               .virtual        = (unsigned long)S3C_VA_SYS,
+>> @@ -331,6 +340,8 @@ static void __init exynos_map_io(void)
+>>               iotable_init(exynos4x12_iodesc, ARRAY_SIZE(exynos4x12_iodesc));
+>>       if (soc_is_exynos5250())
+>>               iotable_init(exynos5250_iodesc, ARRAY_SIZE(exynos5250_iodesc));
+>> +     if (soc_is_exynos5260())
+>> +             iotable_init(exynos5260_iodesc, ARRAY_SIZE(exynos5260_iodesc));
+>>  }
+>
+> As I commented before, I think we really shouldn't do this any more: There
+> is no excuse why you still need to add SoC specific code here. Please put
+> the SYSRAM into DT and make a proper abstraction for it so you don't have
+> to modify the kernel every time a new SoC variant comes out.
 
-diff --git a/drivers/staging/imx-drm/TODO b/drivers/staging/imx-drm/TODO
-index 6a9da94..29636fb 100644
---- a/drivers/staging/imx-drm/TODO
-+++ b/drivers/staging/imx-drm/TODO
-@@ -1,15 +1,10 @@
- TODO:
- - get DRM Maintainer review for this code
--- Wait for common display framework to hit mainline and update the IPU
--  driver to use it. This will most probably make changes to the devicetree
--  bindings necessary.
--- Factor out more code to common helper functions
- - decide where to put the base driver. It is not specific to a subsystem
-   and would be used by DRM/KMS and media/V4L2
- 
- Missing features (not necessarily for moving out of staging):
- 
--- Add i.MX6 HDMI support
- - Add support for IC (Image converter)
- - Add support for CSI (CMOS Sensor interface)
- - Add support for VDIC (Video Deinterlacer)
+Do we have any bindings already defined for this kind of stuff or is
+this implemented in
+any other platform/architecture for reference?
+
 -- 
-1.8.5.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+With warm regards,
+Sachin
