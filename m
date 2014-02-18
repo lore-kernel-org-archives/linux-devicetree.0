@@ -1,83 +1,42 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2] of_mdio: fix phy interrupt passing
-Date: Tue, 18 Feb 2014 18:48:18 +0400
-Message-ID: <530372B2.8050900@cogentembedded.com>
-References: <1392725818-558-1-git-send-email-ben.dooks@codethink.co.uk>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH V6 03/12] phy: st-miphy40lp: Add binding information
+Date: Tue, 18 Feb 2014 15:58:14 +0100
+Message-ID: <201402181558.14663.arnd@arndb.de>
+References: <cover.1392109054.git.mohit.kumar@st.com> <2CC2A0A4A178534D93D5159BF3BCB66189FD2CAFB1@EAPEX1MAIL1.st.com> <20140218122324.GA23267@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1392725818-558-1-git-send-email-ben.dooks@codethink.co.uk>
-Sender: netdev-owner@vger.kernel.org
-To: Ben Dooks <ben.dooks@codethink.co.uk>, grant.likely@linaro.org
-Cc: linux-kernel@lists.codethink.co.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140218122324.GA23267-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Mohit KUMAR DCG <Mohit.KUMAR-qxv4g6HH51o@public.gmane.org>, Pratyush ANAND <pratyush.anand-qxv4g6HH51o@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Tuesday 18 February 2014, Mark Rutland wrote:
+> > 
+> > - These are Spear SoC specific miscellaneous registers. Here these are used for
+> > to configure sata/pcie  aux clock.
+> > > 
+> > > > +- phy-id: Instance id of the phy.
+> > > > +- #phy-cells : from the generic PHY bindings, must be 1.
+> > > > + - 1st cell: phandle to the phy node.
+> > > > + - 2nd cell: 0 if phy (in 1st cell) is to be used for SATA, 1 for PCIe
+> > > > +   and 2 for Super Speed USB.
+> > > 
+> > > One cell or two?
+> > 
+> > - No of cells are two, is this the question?
+> 
+> The description of #phy-cells says it must be 1. Presumably it must be 2.
 
-On 18-02-2014 16:16, Ben Dooks wrote:
+The description here is counting the phandle, while we normally only
+count the arguments following the phandle. #phy-cells=<1> is correct
+here, but the description should be written a bit clearer.
 
-> The of_mdiobus_register_phy() is not setting phy->irq thus causing
-> some drivers to incorrectly assume that the PHY does not have an
-> IRQ associated with it. Not only do some drivers report no IRQ
-> they do not install an interrupt handler for the PHY.
-
-> Simplify the code setting irq and set the phy->irq at the same
-> time so that we cover the following issues, which should cover
-> all the cases the code will find:
-
-> - Set phy->irq if node has irq property and mdio->irq is NULL
-> - Set phy->irq if node has no irq and mdio->irq is not NULL
-> - Leave phy->irq as PHY_POLL default if none of the above
-
-> This fixes the issue:
->   net eth0: attached PHY 1 (IRQ -1) to driver Micrel KSZ8041RNLI
-
-> to the correct:
->   net eth0: attached PHY 1 (IRQ 416) to driver Micrel KSZ8041RNLI
-
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-
-> ---
-> Since v1:
-> 	- Updated phy->irq setting code
-> 	- Deal with issue if mdio->irq array NULL
-
-> Notes:
-
-> It was discussed if this should be two patches, but we end up
-> making enough changes in #2 the same area as #1 means that we
-> basically rewrite #1 in #2. So keep it as 1 patch.
-> ---
->   drivers/of/of_mdio.c | 16 +++++++++-------
->   1 file changed, 9 insertions(+), 7 deletions(-)
-
-> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-> index 875b7b6..46d95fc 100644
-> --- a/drivers/of/of_mdio.c
-> +++ b/drivers/of/of_mdio.c
-[...]
-> @@ -54,12 +54,14 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
->   	if (!phy || IS_ERR(phy))
->   		return 1;
->
-> -	if (mdio->irq) {
-> -		prev_irq = mdio->irq[addr];
-> -		mdio->irq[addr] =
-> -			irq_of_parse_and_map(child, 0);
-> -		if (!mdio->irq[addr])
-> -			mdio->irq[addr] = prev_irq;
-> +	rc = irq_of_parse_and_map(child, 0);
-> +	if (rc > 0) {
-> +		phy->irq = rc;
-> +		if (mdio->irq)
-> +			mdio->irq[addr] = rc;
-> +	} else {
-> +		if (mdio->irq)
-
-    You could write that as *else if* and save a line of code...
-
-> +			phy->irq = mdio->irq[addr];
->   	}
-
-WBR, Sergei
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
