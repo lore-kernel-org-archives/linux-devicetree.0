@@ -1,46 +1,41 @@
-From: Alexander Shiyan <shc_work@mail.ru>
-Subject: Re: [PATCH v4] gpio: Driver for SYSCON-based GPIOs
-Date: Tue, 18 Feb 2014 18:46:34 +0400
-Message-ID: <20140218184634.ae9f28c42c4b9b8a8b9dfa60@mail.ru>
-References: <1389632203-22806-1-git-send-email-shc_work@mail.ru>
-	<CACRpkdaVn0iNFYKE3HXWxnb4iCJorF0HSVG4Uvz8Q18SiF5PUQ@mail.gmail.com>
+From: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+Subject: Re: [PATCH v4 1/5] clk: sunxi: Add support for PLL6 on
+ the A31
+Date: Tue, 18 Feb 2014 11:47:03 -0300
+Message-ID: <53037267.1000909@elopez.com.ar>
+References: <1391605507-30981-1-git-send-email-maxime.ripard@free-electrons.com> <1391605507-30981-2-git-send-email-maxime.ripard@free-electrons.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaVn0iNFYKE3HXWxnb4iCJorF0HSVG4Uvz8Q18SiF5PUQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBD73XIMS3EHBB67ERWMAKGQEDNJC7CQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1391605507-30981-2-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 30 Jan 2014 14:54:36 +0100
-Linus Walleij <linus.walleij@linaro.org> wrote:
+El 05/02/14 10:05, Maxime Ripard escribi=F3:
+> The A31 has a slightly different PLL6 clock. Add support for this new clo=
+ck in
+> our driver.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-> On Mon, Jan 13, 2014 at 5:56 PM, Alexander Shiyan <shc_work@mail.ru> wrote:
-> 
-> > SYSCON driver was designed for using memory areas (registers)
-> > that are used in several subsystems. There are systems (CPUs)
-> > which use bits in one register for various purposes and thus
-> > should be handled by various kernel subsystems. This driver
-> > allows you to use the individual SYSCON bits as GPIOs.
-> > ARM CLPS711X SYSFLG1 input lines has been added as first user
-> > of this driver.
-> >
-> > Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
-> 
-> Oh the pain. I am so ambivalent of this patch as it obfuscates
-> some stuff about the hardware that the driver should know,
-> while at the same time being elegant in a way.
-> 
-> What does the ARM SoC maintainers think about this approach?
-> 
-> Arnd, Olof, Kevin: is this something you'd like to see deployed?
-> 
-> Yours,
-> Linus Walleij
+Taken via sunxi-clk-for-mike.
 
-Ping.
+Thanks!
 
--- 
-Alexander Shiyan <shc_work@mail.ru>
+Emilio
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/groups/opt_out.
