@@ -1,41 +1,83 @@
-From: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
-Subject: Re: [PATCH v4 1/5] clk: sunxi: Add support for PLL6 on
- the A31
-Date: Tue, 18 Feb 2014 11:47:03 -0300
-Message-ID: <53037267.1000909@elopez.com.ar>
-References: <1391605507-30981-1-git-send-email-maxime.ripard@free-electrons.com> <1391605507-30981-2-git-send-email-maxime.ripard@free-electrons.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2] of_mdio: fix phy interrupt passing
+Date: Tue, 18 Feb 2014 18:48:18 +0400
+Message-ID: <530372B2.8050900@cogentembedded.com>
+References: <1392725818-558-1-git-send-email-ben.dooks@codethink.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBD73XIMS3EHBB67ERWMAKGQEDNJC7CQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1391605507-30981-2-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1392725818-558-1-git-send-email-ben.dooks@codethink.co.uk>
+Sender: netdev-owner@vger.kernel.org
+To: Ben Dooks <ben.dooks@codethink.co.uk>, grant.likely@linaro.org
+Cc: linux-kernel@lists.codethink.co.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-El 05/02/14 10:05, Maxime Ripard escribi=F3:
-> The A31 has a slightly different PLL6 clock. Add support for this new clo=
-ck in
-> our driver.
+Hello.
+
+On 18-02-2014 16:16, Ben Dooks wrote:
+
+> The of_mdiobus_register_phy() is not setting phy->irq thus causing
+> some drivers to incorrectly assume that the PHY does not have an
+> IRQ associated with it. Not only do some drivers report no IRQ
+> they do not install an interrupt handler for the PHY.
+
+> Simplify the code setting irq and set the phy->irq at the same
+> time so that we cover the following issues, which should cover
+> all the cases the code will find:
+
+> - Set phy->irq if node has irq property and mdio->irq is NULL
+> - Set phy->irq if node has no irq and mdio->irq is not NULL
+> - Leave phy->irq as PHY_POLL default if none of the above
+
+> This fixes the issue:
+>   net eth0: attached PHY 1 (IRQ -1) to driver Micrel KSZ8041RNLI
+
+> to the correct:
+>   net eth0: attached PHY 1 (IRQ 416) to driver Micrel KSZ8041RNLI
+
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+
+> ---
+> Since v1:
+> 	- Updated phy->irq setting code
+> 	- Deal with issue if mdio->irq array NULL
+
+> Notes:
+
+> It was discussed if this should be two patches, but we end up
+> making enough changes in #2 the same area as #1 means that we
+> basically rewrite #1 in #2. So keep it as 1 patch.
+> ---
+>   drivers/of/of_mdio.c | 16 +++++++++-------
+>   1 file changed, 9 insertions(+), 7 deletions(-)
+
+> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> index 875b7b6..46d95fc 100644
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+[...]
+> @@ -54,12 +54,14 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
+>   	if (!phy || IS_ERR(phy))
+>   		return 1;
 >
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> -	if (mdio->irq) {
+> -		prev_irq = mdio->irq[addr];
+> -		mdio->irq[addr] =
+> -			irq_of_parse_and_map(child, 0);
+> -		if (!mdio->irq[addr])
+> -			mdio->irq[addr] = prev_irq;
+> +	rc = irq_of_parse_and_map(child, 0);
+> +	if (rc > 0) {
+> +		phy->irq = rc;
+> +		if (mdio->irq)
+> +			mdio->irq[addr] = rc;
+> +	} else {
+> +		if (mdio->irq)
 
-Taken via sunxi-clk-for-mike.
+    You could write that as *else if* and save a line of code...
 
-Thanks!
+> +			phy->irq = mdio->irq[addr];
+>   	}
 
-Emilio
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/groups/opt_out.
+WBR, Sergei
