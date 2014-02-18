@@ -1,50 +1,103 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC/PATCH 0/3] Add devicetree scanning for randomness
-Date: Tue, 18 Feb 2014 09:39:40 +0000
-Message-ID: <20140218093940.7A822C403C8@trevor.secretlab.ca>
-References: <1392168805-14200-1-git-send-email-lauraa@codeaurora.org> < 201402121251.06280.arnd@arndb.de> <20140217155419.682F7C401D4@trevor. secretlab.ca> <1418981.0py7JxXCp8@wuerfel>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418981.0py7JxXCp8@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: Re: [PATCH] of_mdio: fix phy interrupt passing
+Date: Tue, 18 Feb 2014 09:40:39 +0000
+Message-ID: <53032A97.8050201@codethink.co.uk>
+References: <1392654580-3706-1-git-send-email-ben.dooks@codethink.co.uk> <20140218093024.D0E94C403C8@trevor.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20140218093024.D0E94C403C8@trevor.secretlab.ca>
+Sender: linux-sh-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: linux-kernel@lists.codethink.co.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org, sergei.shtylyov@cogentembedded.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Feb 2014 17:13:07 +0100, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Monday 17 February 2014 15:54:19 Grant Likely wrote:
-> > On Wed, 12 Feb 2014 11:20:00 -0700, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org> wrote:
-> > > On Wed, Feb 12, 2014 at 12:45:54PM -0500, Jason Cooper wrote:
-> > > 
-> > > > The bootloader would then load this file into ram, and pass the
-> > > > address/size to the kernel either via dt, or commandline.  kaslr (run in
-> > > > the decompressor) would consume some of this randomness, and then
-> > > > random.c would consume the rest in a non-crediting initialization.
-> > > 
-> > > Sure is a neat idea, but I think in general it would probably be smart
-> > > to include the entire FDT blob in the early random pool, that way you
-> > > get MACs and other machine unique data too.
-> > 
-> > I applied a patch that did exactly that (109b623629), and then reverted
-> > it (b920ecc82) shortly thereafter because add_device_randomness() is
-> > a rather slow function and FDTs can get large. I'd like to see someone
-> > do a reasonable analysis on the cost of using an FDT for randomness
-> > before I reapply a patch doing something similar. An awful lot of the
-> > FDT data is not very random, but there are certainly portions of it that
-> > are appropriate for the random pool.
-> 
-> Could we use a faster hash function that scans the entire device tree and
-> then just feed the output of that into add_device_randomness? We probably
-> can't expect that there is a lot of entropy in the DT blob, so the
-> result wouldn't be all that different in terms of quality of the random
-> seed.
-> 
-> 	Arnd
+On 18/02/14 09:30, Grant Likely wrote:
+> On Mon, 17 Feb 2014 16:29:40 +0000, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
+>> The of_mdiobus_register_phy() is not setting phy->irq this causing
+>> some drivers to incorrectly assume that the PHY does not have an
+>> IRQ associated with it or install an interrupt handler for the
+>> PHY.
+>>
+>> Simplify the code setting irq and set the phy->irq at the same
+>> time so that the case if mdio->irq is not NULL is easier to read.
+>>
+>> This fixes the issue:
+>>   net eth0: attached PHY 1 (IRQ -1) to driver Micrel KSZ8041RNLI
+>>
+>> to the correct:
+>>   net eth0: attached PHY 1 (IRQ 416) to driver Micrel KSZ8041RNLI
+>>
+>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>> ---
+>>   drivers/of/of_mdio.c | 12 ++++++------
+>>   1 file changed, 6 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+>> index 875b7b6..7b3e7b0 100644
+>> --- a/drivers/of/of_mdio.c
+>> +++ b/drivers/of/of_mdio.c
+>> @@ -44,7 +44,7 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
+>>   {
+>>   	struct phy_device *phy;
+>>   	bool is_c45;
+>> -	int rc, prev_irq;
+>> +	int rc;
+>>   	u32 max_speed = 0;
+>>
+>>   	is_c45 = of_device_is_compatible(child,
+>> @@ -55,11 +55,11 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
+>>   		return 1;
+>>
+>>   	if (mdio->irq) {
+>> -		prev_irq = mdio->irq[addr];
+>> -		mdio->irq[addr] =
+>> -			irq_of_parse_and_map(child, 0);
+>> -		if (!mdio->irq[addr])
+>> -			mdio->irq[addr] = prev_irq;
+>
+> I cannot for the life for me remeber why the code was structured that
+> way. Your change is better.
+>
+>> +		rc = irq_of_parse_and_map(child, 0);
+>> +		if (rc > 0) {
+>> +			mdio->irq[addr] = rc;
+>> +			phy->irq = rc;
+>> +		}
+>>   	}
+>
+> The outer if is merely protecting against no irq array being allocated
+> for the bus. Would not the following be better:
+>
+> 	rc = irq_of_parse_and_map(child, 0);
+> 	if (rc > 0) {
+> 		phy->irq = rc;
+> 		if (mdio->irq)
+> 			mdio->irq[addr] = rc;
+> 	}
 
-Yes, I think that is a good solution.
+Thanks, that makes sense, although we've both failed to work
+out if mdio->irq is set, and rc <= 0 case, so:
 
-g.
+  	rc = irq_of_parse_and_map(child, 0);
+  	if (rc > 0) {
+  		phy->irq = rc;
+  		if (mdio->irq)
+  			mdio->irq[addr] = rc;
+  	} else {
+		if (mdio->irq)
+			phy->irq = mdio->irq[addr];
+	}
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I think that covers all cases. This does rely on mdio->irq
+being initialised to PHY_POLL if allocated.
+
+Once this is in, it may be easier then to not allocate
+mdio->irq for the OF case by default unless the driver
+registering the PHY knows it has the interrupt number(s)
+for the PHY already.
+
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
