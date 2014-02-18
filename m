@@ -1,41 +1,93 @@
-From: Ashutosh singh <ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
-Subject: [PATCH v2 4/4] Phytec phyFLEX-i.MX6 : Added SATA Support
-Date: Tue, 18 Feb 2014 19:16:25 +0530
-Message-ID: <1392731185-4885-4-git-send-email-ashutosh.s@phytec.in>
-References: <1392731185-4885-1-git-send-email-ashutosh.s@phytec.in>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392731185-4885-1-git-send-email-ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, c.hemp-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Ashutosh singh <ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
+From: Seungwon Jeon <tgih.jun@samsung.com>
+Subject: RE: [PATCHv3 2/3] mmc: dw_mmc: Add support for SOCFPGA's platform
+ specific implementation
+Date: Tue, 18 Feb 2014 23:02:21 +0900
+Message-ID: <000001cf2cb2$0b787c00$22697400$%jun@samsung.com>
+References: <1392690662-19106-1-git-send-email-dinguyen@altera.com>
+ <1392690662-19106-2-git-send-email-dinguyen@altera.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=Windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <1392690662-19106-2-git-send-email-dinguyen@altera.com>
+Content-language: ko
+Sender: linux-mmc-owner@vger.kernel.org
+To: dinguyen@altera.com, linux-mmc@vger.kernel.org
+Cc: dinh.linux@gmail.com, devicetree@vger.kernel.org, 'Rob Herring' <robh+dt@kernel.org>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Kumar Gala' <galak@codeaurora.org>, 'Jaehoon Chung' <jh80.chung@samsung.com>, 'Chris Ball' <chris@printf.net>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for SATA on Phytec phyFLEX-i.MX6 Quad module.
+On Tue, February 18, 2014, Dinh Nguyen wrote:
+> From: Dinh Nguyen <dinguyen@altera.com>
+> 
+> Like the rockchip, Altera's SOCFPGA platform specific implementation of the
+> dw_mmc driver requires using the HOLD register for SD commands. This patch
+> renames dw_mci_rockchip_prepare_command to dw_mci_pltfm_prepare_command so
+> that SOCFPGA and Rockchip can use it.
+> 
+> Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
+> Acked-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> Tested-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: Seungwon Jeon <tgih.jun@samsung.com>
 
-Signed-off-by: Ashutosh singh <ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
----
- arch/arm/boot/dts/imx6q-phytec-pbab01.dts |    4 ++++
- 1 file changed, 4 insertions(+)
+Acked-by: Seungwon Jeon <tgih.jun@samsung.com>
 
-diff --git a/arch/arm/boot/dts/imx6q-phytec-pbab01.dts b/arch/arm/boot/dts/imx6q-phytec-pbab01.dts
-index 21c8b37..5607c33 100644
---- a/arch/arm/boot/dts/imx6q-phytec-pbab01.dts
-+++ b/arch/arm/boot/dts/imx6q-phytec-pbab01.dts
-@@ -25,6 +25,10 @@
- 	status = "okay";
- };
- 
-+&sata {
-+	status = "okay";
-+};
-+
- &uart4 {
- 	status = "okay";
- };
--- 
-1.7.9.5
+Thanks,
+Seungwon Jeon
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Cc: Jaehoon Chung <jh80.chung@samsung.com>
+> Cc: Chris Ball <chris@printf.net>
+> ---
+> v3: Renamed dw_mci_rockchip_prepare_command to
+>     dw_mci_pltfm_prepare_command
+> v2: Use dw_mci_socfpga_prepare_command instead of
+>     dw_mci_rockchip_prepare_command
+> ---
+>  drivers/mmc/host/dw_mmc-pltfm.c |   10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/dw_mmc-pltfm.c b/drivers/mmc/host/dw_mmc-pltfm.c
+> index 5c49656..3263327 100644
+> --- a/drivers/mmc/host/dw_mmc-pltfm.c
+> +++ b/drivers/mmc/host/dw_mmc-pltfm.c
+> @@ -25,13 +25,17 @@
+>  #include "dw_mmc.h"
+>  #include "dw_mmc-pltfm.h"
+> 
+> -static void dw_mci_rockchip_prepare_command(struct dw_mci *host, u32 *cmdr)
+> +static void dw_mci_pltfm_prepare_command(struct dw_mci *host, u32 *cmdr)
+>  {
+>  	*cmdr |= SDMMC_CMD_USE_HOLD_REG;
+>  }
+> 
+>  static const struct dw_mci_drv_data rockchip_drv_data = {
+> -	.prepare_command	= dw_mci_rockchip_prepare_command,
+> +	.prepare_command	= dw_mci_pltfm_prepare_command,
+> +};
+> +
+> +static const struct dw_mci_drv_data socfpga_drv_data = {
+> +	.prepare_command	= dw_mci_pltfm_prepare_command,
+>  };
+> 
+>  int dw_mci_pltfm_register(struct platform_device *pdev,
+> @@ -92,6 +96,8 @@ static const struct of_device_id dw_mci_pltfm_match[] = {
+>  	{ .compatible = "snps,dw-mshc", },
+>  	{ .compatible = "rockchip,rk2928-dw-mshc",
+>  		.data = &rockchip_drv_data },
+> +	{ .compatible = "altr,socfpga-dw-mshc",
+> +		.data = &socfpga_drv_data },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, dw_mci_pltfm_match);
+> --
+> 1.7.9.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
