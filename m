@@ -1,83 +1,79 @@
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: Re: [PATCH] net: add init-regs for of_phy support
-Date: Tue, 18 Feb 2014 08:16:46 +0000
-Message-ID: <530316EE.5010104@codethink.co.uk>
-References: <1392642484-19938-1-git-send-email-ben.dooks@codethink.co.uk> <1392642484-19938-2-git-send-email-ben.dooks@codethink.co.uk> <CAGVrzcYbw5xLj-gwcup5i0gBdKDDGdyy5wAaEBp7m2E7f2bytg@mail.gmail.com> <5302801F.6000903@cogentembedded.com> <CAGVrzcbZC3t0oexc5Aj-KyGj-qC8J9eYp8+rb8V-AqKtrSjyYw@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 01/10] mfd: Add TI LMU driver
+Date: Tue, 18 Feb 2014 08:21:27 +0000
+Message-ID: <20140218082127.GD20218@lee--X1>
+References: <1392359450-6890-1-git-send-email-milo.kim@ti.com>
+ <20140217095734.GD17875@lee--X1>
+ <53030F9C.8000605@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAGVrzcbZC3t0oexc5Aj-KyGj-qC8J9eYp8+rb8V-AqKtrSjyYw@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, David Miller <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <53030F9C.8000605-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
+Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17/02/14 20:48, Florian Fainelli wrote:
+> >>+static const struct resource lm3633_effect_resources[] =3D {
+> >>+	{
+> >>+		.name  =3D LM3633_EFFECT_BL0_RAMPUP,
+> >>+		.flags =3D IORESOURCE_REG,
+> >>+		.start =3D LM3633_EFFECT_REGISTER(BL0_RAMPUP),
+> >>+	},
 
-[snip]
+<snip>
 
->>> - fixing up some design mistake?
->>> - accounting for a specific board design?
->>
->>
->>     Kind of both. This was invented to defy the necessity of having platform
->> fixup in the DT case (where there should be no board file to place it into).
->> I have already described that platform fixup necessary on the Renesas
->> Lager/Koelsch boards where the LED0 signat is connected to ETH_LINK signal
->> on the SoC and the PHY reset sets the LED control bits to default 0 which
->> means that LED0 will be LINK/ACTIVITY signal and thus blink on activity and
->> cause ETH_LINK to bounce off/on after each packet.
->>
->>
->>> In any case a PHY fixup would do the job for you.
->>
->>
->>     Not in any case. In case of DT we have no place for it, so should invent
->> something involving DT.
->
-> How is DT different than any machine probing mechanism here? The way
-> to involve DT is to do the following:
->
-> if (of_machine_is_compatible("renesas,foo-board-with-broken-micrel-phy"))
->             phy_register_fixup(&foo_board_with_broken_micrel_phy);
+> >>+	{
+> >>+		.name  =3D LM3633_EFFECT_PTN_HIGHBRT,
+> >>+		.flags =3D IORESOURCE_REG,
+> >>+		.start =3D LM3633_EFFECT_REGISTER(HIGHBRT),
+> >>+	},
+> >>+};
+> >
+> >Can you define a MACRO to do all of these as one liners?
+>=20
+> Yes, resource definitions will be replaced by simple macro,
+> LMU_EFFECT_RESOURCE().
+>=20
+> For example,
+>=20
+> #define LMU_EFFECT_RESOURCE(chip, effect)               \
+> {                                                       \
+>         .name  =3D chip##_EFFECT_##effect,                \
+>         .flags =3D IORESOURCE_REG,                        \
+>         .start =3D LMU_EFFECT_REGISTER(chip, effect),     \
+> }
+>=20
+> static const struct resource lm3633_effect_resources[] =3D {
+>         LMU_EFFECT_RESOURCE(LM3633, BL0_RAMPUP),
 
-Oh yes, but now I have to do that for Linux, for $BSD, and for
-anything else I want to run on the device. I thought dt was meant
-to allow us to describe the hardware.
+<snip>
 
-If this is the case, let's just call this linuxtree and let everyone
-else get on with their own thing again.
+>         LMU_EFFECT_RESOURCE(LM3633, PTN_HIGHBRT),
+> };
+>=20
+> and so on.
 
-See also comment below.
+Yes, this is what I had in mind.
 
-> If your machine compatible string does not allow you to uniquely
-> identify your machine, this is a DT problem, as this should really be
-> the case. If you do not want to add this code to wherever this is
-> relevant in arch/arm/mach-shmobile/board-*.c, neither is
-> drivers/net/phy/phy_device.c this the place to add it.
+> >>+	pdata->en_gpio =3D of_get_named_gpio(node, "ti,enable-gpio", 0);
+> >
+> >There is a global DT property for this already.
+>=20
+> I've not found it yet, but I agree it looks like general property.
+> So I'll replace "ti,enable-gpio" with "ti,lmu-en-gpio".
 
-So where should it be added? If we keep piling stuff into board files
-in arch/arm.... then we're just back to the pre-dt case and going to
-keep getting shouted at.
+Just re-use "gpio-enable". No need for it to be vendor specific.
 
-> Dealing with quirks applying to industry standard blocks is to update
-> the relevant driver, based on information provided by the specifically
-> affected systems. Failure to identify either of those correctly is a
-> problem that must not lead to a generic "let's override PHY registers
-> from DT" type of solution.
->
-> As usual, mechanism vs policy applies even more when DT is involved.
-
-There's an industry standard for the access method, but every PHY seems
-to have different extra setup registers for their own cases.
-
-I will leave this out here in case anyone else finds it useful, there
-may be a case where there are PHYs that need an amount of register
-initialisation and this code may be smaller than putting a pile of
-dt properties in.
-
-
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
