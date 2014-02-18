@@ -1,78 +1,77 @@
 From: Ashutosh singh <ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
-Subject: [PATCH v3 1/4] Phytec phyFLEX-i.MX6 : Added USB_OTG Support
-Date: Tue, 18 Feb 2014 19:16:22 +0530
-Message-ID: <1392731185-4885-1-git-send-email-ashutosh.s@phytec.in>
+Subject: [PATCH v2 2/4] Phytec phyFLEX-i.MX6 : Added USB_HOST Support
+Date: Tue, 18 Feb 2014 19:16:23 +0530
+Message-ID: <1392731185-4885-2-git-send-email-ashutosh.s@phytec.in>
+References: <1392731185-4885-1-git-send-email-ashutosh.s@phytec.in>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392731185-4885-1-git-send-email-ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, c.hemp-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Ashutosh singh <ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for USB_OTG on Phytec phyFLEX-i.MX6 Quad module.
+This patch adds support for USB_HOST on Phytec phyFLEX-i.MX6 Quad module.
 
 Signed-off-by: Ashutosh singh <ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
 ---
  arch/arm/boot/dts/imx6q-phytec-pbab01.dts  |    4 ++++
- arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi |   17 +++++++++++++++++
- 2 files changed, 21 insertions(+)
+ arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi |   14 ++++++++++++++
+ 2 files changed, 18 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx6q-phytec-pbab01.dts b/arch/arm/boot/dts/imx6q-phytec-pbab01.dts
-index 7d37ec6..87c3702 100644
+index 87c3702..91aecba 100644
 --- a/arch/arm/boot/dts/imx6q-phytec-pbab01.dts
 +++ b/arch/arm/boot/dts/imx6q-phytec-pbab01.dts
 @@ -25,6 +25,10 @@
  	status = "okay";
  };
  
-+&usbotg {
++&usbh1 {
 +	status = "okay";
 +};
 +
- &usdhc2 {
+ &usbotg {
  	status = "okay";
  };
 diff --git a/arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi b/arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi
-index 1a3b50d..e025ad2 100644
+index e025ad2..12a02f7 100644
 --- a/arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi
 +++ b/arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi
-@@ -18,6 +18,14 @@
- 	memory {
- 		reg = <0x10000000 0x80000000>;
+@@ -26,6 +26,14 @@
+ 		regulator-max-microvolt = <5000000>;
+ 		gpio = <&gpio4 15 0>;
  	};
 +
-+	reg_usb_otg_vbus: regulator@0 {
++	reg_usb_h1_vbus: regulator@1 {
 +		compatible = "regulator-fixed";
-+		regulator-name = "usb_otg_vbus";
++		regulator-name = "usb_h1_vbus";
 +		regulator-min-microvolt = <5000000>;
 +		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio4 15 0>;
++		gpio = <&gpio1 0 0>;
 +	};
  };
  
  &ecspi3 {
-@@ -134,6 +142,7 @@
- 				MX6QDL_PAD_EIM_D23__GPIO3_IO23 0x80000000
+@@ -143,6 +151,7 @@
  				MX6QDL_PAD_DISP0_DAT3__GPIO4_IO24 0x80000000 /* SPI NOR chipselect */
  				MX6QDL_PAD_DI0_PIN15__GPIO4_IO17  0x80000000 /* PMIC interrupt */
-+				MX6QDL_PAD_KEY_ROW4__GPIO4_IO15   0x80000000 /* USB_OTG_PWR_EN */
+ 				MX6QDL_PAD_KEY_ROW4__GPIO4_IO15   0x80000000 /* USB_OTG_PWR_EN */
++				MX6QDL_PAD_GPIO_0__USB_H1_PWR     0x80000000 /* USB_H1_PWR_EN */
  			>;
  		};
  	};
-@@ -162,6 +171,14 @@
+@@ -171,6 +180,11 @@
  	status = "disabled";
  };
  
-+&usbotg {
-+	vbus-supply = <&reg_usb_otg_vbus>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg_1>;
-+	disable-over-current;
++&usbh1 {
++	vbus-supply = <&reg_usb_h1_vbus>;
 +	status = "disabled";
 +};
 +
- &usdhc2 {
+ &usbotg {
+ 	vbus-supply = <&reg_usb_otg_vbus>;
  	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usdhc2_2>;
 -- 
 1.7.9.5
 
