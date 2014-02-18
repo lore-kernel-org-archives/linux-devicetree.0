@@ -1,188 +1,206 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [RFC PATCH v3 6/9] ARM: dts: imx51: Add IPU ports and endpoints, move imx-drm node to dtsi
-Date: Tue, 18 Feb 2014 12:36:07 +0100
-Message-ID: <1392723370-4772-7-git-send-email-p.zabel@pengutronix.de>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [RFC PATCH v3 2/9] staging: imx-drm: Add temporary copies of v4l2-of
+ parsing functions
+Date: Tue, 18 Feb 2014 12:36:03 +0100
+Message-ID: <1392723370-4772-3-git-send-email-p.zabel@pengutronix.de>
 References: <1392723370-4772-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392723370-4772-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1392723370-4772-1-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Philipp Zabel <philipp.zabel@gmail.com>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch connects IPU and and parallel display device tree
-nodes using the OF graph bindings described in
-Documentation/devicetree/bindings/media/video-interfaces.txt
+From: Philipp Zabel <philipp.zabel@gmail.com>
 
-The IPU ports correspond to the two display interfaces. The
-order of endpoints in the ports is arbitrary.
+The existing v4l2-of parser functions for the video interface bindings
+described in Documentation/device-tree/bindings/media/video-interfaces.txt
+are useful for DRM drivers, too. They will be moved to drivers/media
+so they can be used by drm drivers, too. Until then, duplicate the
+v4l2-of parser functions temporarily.
 
-Since the imx-drm node now only needs to contain links to the
-display interfaces, it can be moved to the SoC dtsi level. At
-the board level, only connections between the display interface
-ports and panels have to be added.
-
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Philipp Zabel <philipp.zabel@gmail.com>
 ---
- arch/arm/boot/dts/imx51-apf51dev.dts | 11 ++++++++++-
- arch/arm/boot/dts/imx51-babbage.dts  | 28 ++++++++++++++++++++--------
- arch/arm/boot/dts/imx51.dtsi         | 22 +++++++++++++++++++++-
- 3 files changed, 51 insertions(+), 10 deletions(-)
+ drivers/staging/imx-drm/Makefile     |   2 +-
+ drivers/staging/imx-drm/imx-drm-of.c | 132 +++++++++++++++++++++++++++++++++++
+ drivers/staging/imx-drm/imx-drm.h    |   6 ++
+ 3 files changed, 139 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/staging/imx-drm/imx-drm-of.c
 
-diff --git a/arch/arm/boot/dts/imx51-apf51dev.dts b/arch/arm/boot/dts/imx51-apf51dev.dts
-index 5a7f552..d3f9814 100644
---- a/arch/arm/boot/dts/imx51-apf51dev.dts
-+++ b/arch/arm/boot/dts/imx51-apf51dev.dts
-@@ -18,7 +18,6 @@
+diff --git a/drivers/staging/imx-drm/Makefile b/drivers/staging/imx-drm/Makefile
+index 129e3a3..743b875 100644
+--- a/drivers/staging/imx-drm/Makefile
++++ b/drivers/staging/imx-drm/Makefile
+@@ -1,5 +1,5 @@
  
- 	display@di1 {
- 		compatible = "fsl,imx-parallel-display";
--		crtcs = <&ipu 0>;
- 		interface-pix-fmt = "bgr666";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_ipu_disp1_1>;
-@@ -41,6 +40,12 @@
- 				pixelclk-active = <0>;
- 			};
- 		};
-+
-+		port {
-+			display_in: endpoint {
-+				remote-endpoint = <&ipu_di0_disp0>;
-+			};
-+		};
- 	};
+-imxdrm-objs := imx-drm-core.o
++imxdrm-objs := imx-drm-core.o imx-drm-of.o
  
- 	gpio-keys {
-@@ -122,3 +127,7 @@
- 		};
- 	};
- };
-+
-+&ipu_di0_disp0 {
-+	remote-endpoint = <&display_in>;
-+};
-diff --git a/arch/arm/boot/dts/imx51-babbage.dts b/arch/arm/boot/dts/imx51-babbage.dts
-index 6ff15a0..6719271 100644
---- a/arch/arm/boot/dts/imx51-babbage.dts
-+++ b/arch/arm/boot/dts/imx51-babbage.dts
-@@ -23,7 +23,6 @@
+ obj-$(CONFIG_DRM_IMX) += imxdrm.o
  
- 	display0: display@di0 {
- 		compatible = "fsl,imx-parallel-display";
--		crtcs = <&ipu 0>;
- 		interface-pix-fmt = "rgb24";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_ipu_disp1_1>;
-@@ -41,11 +40,16 @@
- 				vsync-len = <10>;
- 			};
- 		};
+diff --git a/drivers/staging/imx-drm/imx-drm-of.c b/drivers/staging/imx-drm/imx-drm-of.c
+new file mode 100644
+index 0000000..e14b4f3
+--- /dev/null
++++ b/drivers/staging/imx-drm/imx-drm-of.c
+@@ -0,0 +1,132 @@
++/*
++ * Video Interface OF binding parsing library
++ *
++ * Copyright (C) 2012 - 2013 Samsung Electronics Co., Ltd.
++ * Author: Sylwester Nawrocki <s.nawrocki@samsung.com>
++ *
++ * Copyright (C) 2012 Renesas Electronics Corp.
++ * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of version 2 of the GNU General Public License as
++ * published by the Free Software Foundation.
++ */
 +
-+		port {
-+			display0_in: endpoint {
-+				remote-endpoint = <&ipu_di0_disp0>;
-+			};
-+		};
- 	};
++#include <linux/kernel.h>
++#include <linux/of.h>
++
++/**
++ * imx_drm_of_get_next_endpoint() - get next endpoint node
++ * @parent: pointer to the parent device node
++ * @prev: previous endpoint node, or NULL to get first
++ *
++ * Return: An 'endpoint' node pointer with refcount incremented. Refcount
++ * of the passed @prev node is decremented.
++ */
++struct device_node *imx_drm_of_get_next_endpoint(
++		const struct device_node *parent, struct device_node *prev)
++{
++	struct device_node *endpoint;
++	struct device_node *port = NULL;
++
++	if (!parent)
++		return NULL;
++
++	if (!prev) {
++		struct device_node *node;
++		/*
++		 * It's the first call, we have to find a port subnode
++		 * within this node or within an optional 'ports' node.
++		 */
++		node = of_get_child_by_name(parent, "ports");
++		if (node)
++			parent = node;
++
++		port = of_get_child_by_name(parent, "port");
++
++		if (port) {
++			/* Found a port, get an endpoint. */
++			endpoint = of_get_next_child(port, NULL);
++			of_node_put(port);
++		} else {
++			endpoint = NULL;
++		}
++
++		if (!endpoint)
++			pr_err("%s(): no endpoint nodes specified for %s\n",
++			       __func__, parent->full_name);
++		of_node_put(node);
++	} else {
++		port = of_get_parent(prev);
++		if (!port) {
++			/* Hm, has someone given us the root node ?... */
++			of_node_put(prev);
++			return NULL;
++		}
++
++		endpoint = of_get_next_child(port, prev);
++		if (endpoint) {
++			of_node_put(port);
++			return endpoint;
++		}
++
++		/* No more endpoints under this port, try the next one. */
++		do {
++			port = of_get_next_child(parent, port);
++			if (!port)
++				return NULL;
++		} while (of_node_cmp(port->name, "port"));
++
++		/* Pick up the first endpoint in this port. */
++		endpoint = of_get_next_child(port, NULL);
++		of_node_put(port);
++	}
++
++	return endpoint;
++}
++EXPORT_SYMBOL_GPL(imx_drm_of_get_next_endpoint);
++
++/**
++ * imx_drm_of_get_remote_port_parent() - get remote port's parent node
++ * @node: pointer to a local endpoint device_node
++ *
++ * Return: Remote device node associated with remote endpoint node linked
++ *	   to @node. Use of_node_put() on it when done.
++ */
++struct device_node *imx_drm_of_get_remote_port_parent(
++			       const struct device_node *node)
++{
++	struct device_node *np;
++	unsigned int depth;
++
++	/* Get remote endpoint node. */
++	np = of_parse_phandle(node, "remote-endpoint", 0);
++
++	/* Walk 3 levels up only if there is 'ports' node. */
++	for (depth = 3; depth && np; depth--) {
++		np = of_get_next_parent(np);
++		if (depth == 2 && of_node_cmp(np->name, "ports"))
++			break;
++	}
++	return np;
++}
++EXPORT_SYMBOL(imx_drm_of_get_remote_port_parent);
++
++/**
++ * imx_drm_of_get_remote_port() - get remote port node
++ * @node: pointer to a local endpoint device_node
++ *
++ * Return: Remote port node associated with remote endpoint node linked
++ *	   to @node. Use of_node_put() on it when done.
++ */
++struct device_node *imx_drm_of_get_remote_port(const struct device_node *node)
++{
++	struct device_node *np;
++
++	/* Get remote endpoint node. */
++	np = of_parse_phandle(node, "remote-endpoint", 0);
++	if (!np)
++		return NULL;
++	return of_get_next_parent(np);
++}
++EXPORT_SYMBOL_GPL(imx_drm_of_get_remote_port);
+diff --git a/drivers/staging/imx-drm/imx-drm.h b/drivers/staging/imx-drm/imx-drm.h
+index aa21028..793a80b 100644
+--- a/drivers/staging/imx-drm/imx-drm.h
++++ b/drivers/staging/imx-drm/imx-drm.h
+@@ -58,4 +58,10 @@ int imx_drm_connector_mode_valid(struct drm_connector *connector,
+ void imx_drm_connector_destroy(struct drm_connector *connector);
+ void imx_drm_encoder_destroy(struct drm_encoder *encoder);
  
- 	display1: display@di1 {
- 		compatible = "fsl,imx-parallel-display";
--		crtcs = <&ipu 1>;
- 		interface-pix-fmt = "rgb565";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_ipu_disp2_1>;
-@@ -68,6 +72,12 @@
- 				pixelclk-active = <0>;
- 			};
- 		};
++struct device_node *imx_drm_of_get_next_endpoint(
++		const struct device_node *parent, struct device_node *prev);
++struct device_node *imx_drm_of_get_remote_port_parent(
++			       const struct device_node *node);
++struct device_node *imx_drm_of_get_remote_port(const struct device_node *node);
 +
-+		port {
-+			display1_in: endpoint {
-+				remote-endpoint = <&ipu_di1_disp1>;
-+			};
-+		};
- 	};
- 
- 	gpio-keys {
-@@ -81,12 +91,6 @@
- 		};
- 	};
- 
--	imx-drm {
--		compatible = "fsl,imx-drm";
--		crtcs = <&ipu 0>, <&ipu 1>;
--		connectors = <&display0>, <&display1>;
--	};
--
- 	sound {
- 		compatible = "fsl,imx51-babbage-sgtl5000",
- 			     "fsl,imx-audio-sgtl5000";
-@@ -264,6 +268,14 @@
- 	};
- };
- 
-+&ipu_di0_disp0 {
-+	remote-endpoint = <&display0_in>;
-+};
-+
-+&ipu_di1_disp1 {
-+	remote-endpoint = <&display1_in>;
-+};
-+
- &ssi2 {
- 	fsl,mode = "i2s-slave";
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
-index 4bcdd3a..536644c 100644
---- a/arch/arm/boot/dts/imx51.dtsi
-+++ b/arch/arm/boot/dts/imx51.dtsi
-@@ -79,6 +79,11 @@
- 		};
- 	};
- 
-+	imx-drm {
-+		compatible = "fsl,imx-drm";
-+		ports = <&ipu_di0>, <&ipu_di1>;
-+	};
-+
- 	soc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -92,13 +97,28 @@
- 		};
- 
- 		ipu: ipu@40000000 {
--			#crtc-cells = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 			compatible = "fsl,imx51-ipu";
- 			reg = <0x40000000 0x20000000>;
- 			interrupts = <11 10>;
- 			clocks = <&clks 59>, <&clks 110>, <&clks 61>;
- 			clock-names = "bus", "di0", "di1";
- 			resets = <&src 2>;
-+
-+			ipu_di0: port@2 {
-+				reg = <2>;
-+
-+				ipu_di0_disp0: endpoint {
-+				};
-+			};
-+
-+			ipu_di1: port@3 {
-+				reg = <3>;
-+
-+				ipu_di1_disp1: endpoint {
-+				};
-+			};
- 		};
- 
- 		aips@70000000 { /* AIPS1 */
+ #endif /* _IMX_DRM_H_ */
 -- 
 1.8.5.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
