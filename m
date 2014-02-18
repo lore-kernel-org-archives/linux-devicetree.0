@@ -1,84 +1,96 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 1/6] usb: gadget: gr_udc: Make struct platform_device
- variable name clearer
-Date: Tue, 18 Feb 2014 09:52:53 -0600
-Message-ID: <20140218155253.GC9878@saruman.home>
-References: <1389264858-32664-1-git-send-email-andreas@gaisler.com>
- <1389264858-32664-2-git-send-email-andreas@gaisler.com>
-Reply-To: <balbi@ti.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: devicetree repository separation/migration
+Date: Tue, 18 Feb 2014 16:57:50 +0100
+Message-ID: <20140218155750.GS17250@pengutronix.de>
+References: <20140217180544.GU7862@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="GyRA7555PLgSTuth"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1389264858-32664-2-git-send-email-andreas@gaisler.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Larsson <andreas@gaisler.com>
-Cc: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, software@gaisler.com
+In-Reply-To: <20140217180544.GU7862-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---GyRA7555PLgSTuth
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Feb 17, 2014 at 01:05:44PM -0500, Jason Cooper wrote:
+> All,
+> 
+> At last weeks devicetree irc meeting, I took on the task of writing this
+> email.  I'm a bit behind.
+> 
+> One of the outcomes of the ARM/devicetree discussion at the 2013 Kernel
+> Summit was that we were going to hold off on separating the devicetree
+> from the Linux kernel tree.  The primary reason for this was to get
+> through the backlog of patches.
+> 
+> It's been several months, and we're seeing evidence of other projects
+> having difficulty keeping in sync with the kernel tree.  Specifically,
+> barebox is having trouble syncing:
+> 
+>   http://list-archives.org/2014/02/07/barebox-lists-infradead-org/devicetree-maintenance-in-barebox/f/5820726136
+> 
+> U-boot has some questionable (admittedly from early on) nodes.  I'll
+> refrain from singling out a board file or commit.  Interested
+> individuals can look through the irc archives for #devicetree.  At any
+> rate, reportedly, Wolfgang confirmed at the U-Boot minisummit that the
+> dts files in U-Boot would match the ones from the kernel.  So U-Boot is
+> in the same situation as barebox, wrt syncing.
+> 
+> BSD is also adopting devicetree, but I'm not personally familiar with
+> the status of that.  Nor whether it's diverged from what we have.
+> 
+> On the Linux side, it appears to me that we have successfully removed
+> the bottleneck, and patches seem to be flowing fairly well now.
+> 
+> For the past few months, Ian has been maintaining a devicetree repo at
+> 
+>   http://xenbits.xen.org/gitweb/?p=people/ianc/device-tree-rebasing.git;a=summary
+> 
+> 
+> Now for the questions:
+> 
+>   - Is the Linux development workflow ready for devicetree to move out
+>     of the Linux Kernel?
 
-On Thu, Jan 09, 2014 at 11:54:13AM +0100, Andreas Larsson wrote:
-> Rename struct platform_device pointers from ofdev to pdev for clarity.
-> Suggested by Mark Rutland.
->=20
-> Signed-off-by: Andreas Larsson <andreas@gaisler.com>
-> ---
->  drivers/usb/gadget/gr_udc.c |   18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
->=20
-> diff --git a/drivers/usb/gadget/gr_udc.c b/drivers/usb/gadget/gr_udc.c
-> index 914cbd8..e66dcf0 100644
-> --- a/drivers/usb/gadget/gr_udc.c
-> +++ b/drivers/usb/gadget/gr_udc.c
-> @@ -2071,9 +2071,9 @@ static int gr_udc_init(struct gr_udc *dev)
->  	return 0;
->  }
-> =20
-> -static int gr_remove(struct platform_device *ofdev)
-> +static int gr_remove(struct platform_device *pdev)
->  {
-> -	struct gr_udc *dev =3D dev_get_drvdata(&ofdev->dev);
-> +	struct gr_udc *dev =3D dev_get_drvdata(&pdev->dev);
+I hope so since keeping the devicetrees in sync with the kernel is a
+pain for all external users.
 
-you can use platform_get_drvdata()
+> 
+>   - Would having the devicetree in it's own repo, with it's own workflow
+>     and release schedule help the other users of it?
+> 
+>   - Where should it be hosted?
+> 
+>   - How do we envision projects will use it?  git submodule?  reference
+>     a version tag?  (this is primarily targeted at bootloaders that need
+>     to compile in a dtb or subset of a dtb into the bootloader)
 
-> @@ -2083,7 +2083,7 @@ static int gr_remove(struct platform_device *ofdev)
->  	gr_dfs_delete(dev);
->  	if (dev->desc_pool)
->  		dma_pool_destroy(dev->desc_pool);
-> -	dev_set_drvdata(&ofdev->dev, NULL);
-> +	dev_set_drvdata(&pdev->dev, NULL);
+I would prefer to use it as a submodule. I'll likely need some barebox
+specific additions to the devicetrees. Right now our idea is to leave
+the provided devicetrees untouched and instead of compiling the board
+dts files directly we create <boardname>-barebox.dts files which include
+the original board files. That would allow us to provide additional
+information to barebox without having to carry patches for the
+devicetrees.
 
-and platform_set_drvdata()
+> 
+> Other thoughts I may have missed?
 
---=20
-balbi
+It will be interesting to see which rules should apply for merging new
+bindings. I know that devicetrees should be OS agnostic, but sometimes
+they are modelled after how Linux currently works. What happens when the
+*BSD guys have different ideas how a good binding looks like? How will
+such conflicts be resolved?
 
---GyRA7555PLgSTuth
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Sascha
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTA4HVAAoJEIaOsuA1yqRESGYP/i/4KsBZ1RqwFvsQnx+YRKSt
-uhUFDf4XEiJKjHgiN7a3fqSgjIIVAHGmdn+rUqr7zq5qrIv9n0vQZSDLkX4Zjz/8
-DPyEjU01+vbv9/8oyQ/yEfztR53/Y7aTpR6lgamKY1NtnO10LXO59QYdgZw8H3bQ
-QNYN1H/Mrk44BK2RDttfUKBxD68KrpIL3yu8dOI4PqiU/w825+2goNPNwCMICabO
-MqSzTQ/mkHiq9UUMUHzQG8DYZ+cvB/6Xm6z0DSCczvDfv6iqfNQLBp1XyAnnuC9F
-ZRgCk8f5M+WzJQMOkrmNm6qebhZ/JMTWO83/gLQx0s7yeFDlsGYt1/KQbyS0dVAj
-ExVO8E8+5asURl9mr9U5IPd9+kmfXblS0PFph2wUdT0T7fqACwqp507rlolzSuQ2
-ZQuVcnLlNCQ1sTxMYiYzKBjKBsSVhw9ZAwkZZjxYsFoSYMyN/NfbAK7eG1YjI20s
-MF9cJP6zctsZIPxzXpntwt0lCAtvdqVKynpDhE0AQSk+iD97o3nRnnhNyovv8cNN
-4c2vwCcku6bWaukEQ11Zkxzf5d+QZmVfrAoq/HM5npybaM7ogG6jEbCyGyD2cEAj
-YC9eL6bnMGdTwzujkYsXaslZAMfQeLEymG+1TlF10uxCEwH4P5UOGFnLJbeVMJXK
-m5u0BkAmG7H1fr+kcYXB
-=gU2Y
------END PGP SIGNATURE-----
-
---GyRA7555PLgSTuth--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
