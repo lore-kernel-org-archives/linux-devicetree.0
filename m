@@ -1,52 +1,42 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: devicetree repository separation/migration
-Date: Tue, 18 Feb 2014 12:09:16 -0700
-Message-ID: <5303AFDC.9010908@wwwdotorg.org>
-References: <20140217180544.GU7862@titan.lakedaemon.net> <20140218155750.GS17250@pengutronix.de> <20140218181854.GB7862@titan.lakedaemon.net>
+From: Josh Cartwright <joshc@codeaurora.org>
+Subject: Re: [PATCH v2 1/3] usb: chipidea: msm: Add device tree binding
+ information
+Date: Tue, 18 Feb 2014 13:07:30 -0600
+Message-ID: <20140218190730.GG31116@joshc.qualcomm.com>
+References: <1392729681-21022-1-git-send-email-iivanov@mm-sol.com>
+ <1392729681-21022-2-git-send-email-iivanov@mm-sol.com>
+ <20140218161303.GD31116@joshc.qualcomm.com>
+ <1392744420.17130.24.camel@iivanov-dev>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140218181854.GB7862-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1392744420.17130.24.camel@iivanov-dev>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/18/2014 11:18 AM, Jason Cooper wrote:
-> On Tue, Feb 18, 2014 at 04:57:50PM +0100, Sascha Hauer wrote:
->> On Mon, Feb 17, 2014 at 01:05:44PM -0500, Jason Cooper wrote:
-> ...
->>>   - Is the Linux development workflow ready for devicetree to move out
->>>     of the Linux Kernel?
->>
->> I hope so since keeping the devicetrees in sync with the kernel is a
->> pain for all external users.
-> 
-> Well, I haven't heard any screams yet.  I suspect people are waiting for
-> details on the exact form it would take before complaining...
-> 
->>>   - How do we envision projects will use it?  git submodule?  reference
->>>     a version tag?  (this is primarily targeted at bootloaders that need
->>>     to compile in a dtb or subset of a dtb into the bootloader)
->>
->> I would prefer to use it as a submodule.
-> 
-> ok.  I've often thought that was the right solution for several things
-> (dtc.git inside the kernel tree), but no one ever seemed to speak of it
-> or bring it up.  Kinda like leprosy.
-> 
-> It does add an extra step to build process for new users.  Although that
-> could be handled in the Makefile.
+On Tue, Feb 18, 2014 at 07:27:00PM +0200, Ivan T. Ivanov wrote:
+> On Tue, 2014-02-18 at 10:13 -0600, Josh Cartwright wrote: 
+> > On Tue, Feb 18, 2014 at 03:21:19PM +0200, Ivan T. Ivanov wrote:
+> > >  .../devicetree/bindings/usb/msm-hsusb.txt          |   17 +++++++++++++++++
+> > 
+> > Is this really the appropriate place to document this?  It seems like
+> > this binding doc should be merged with the i.MX ci13xxx binding in a
+> > common ci13xxx doc.
+> > 
+>
+> This driver is a "glue" layer driver which control Qualcomm 
+> specific logic around Chipidea IP core. It is supposed to 
+> hold "non standard" Chipidea properties, but I suppose that
+> ci-hdrc-qcom.txt will be better name and will be similar to 
+> i.MX chosen name.
+>
+> What do you think?
 
-My limited experience of git submodules implies that comparing them to
-Leprosy isn't a bad comparison:-)
+Sounds like an improvement to me.
 
-If they are separated out, I'd vastly prefer they simply be a standalone
-project completed divorced from the kernel. Playing games with git
-submodules to try and make it easier seems more likely to actually make
-this more complicated.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
