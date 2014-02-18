@@ -1,47 +1,29 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [RFC/PATCH 0/3] Add devicetree scanning for randomness
-Date: Tue, 18 Feb 2014 11:19:27 -0700
-Message-ID: <20140218181927.GE29304@obsidianresearch.com>
-References: <1392168805-14200-1-git-send-email-lauraa@codeaurora.org>
- <201402121251.06280.arnd@arndb.de>
- <20140212174554.GM27395@titan.lakedaemon.net>
- <20140212182000.GJ5554@obsidianresearch.com>
- <20140217155419.682F7C401D4@trevor.secretlab.ca>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v3 7/7] devicetree: bindings: Document PM8921/8058 PMICs
+Date: Tue, 18 Feb 2014 10:44:06 -0800
+Message-ID: <5303A9F6.4030904@codeaurora.org>
+References: <1389206270-3728-1-git-send-email-sboyd@codeaurora.org> <1389206270-3728-8-git-send-email-sboyd@codeaurora.org> <20140211092937.GG32042@lee--X1> <20140213053813.GB14769@codeaurora.org> <20140213110619.GI32508@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140217155419.682F7C401D4@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, keescook@chromium.org, devicetree@vger.kernel.org, Laura Abbott <lauraa@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20140213110619.GI32508@lee--X1>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 17, 2014 at 03:54:19PM +0000, Grant Likely wrote:
+On 02/13/14 03:06, Lee Jones wrote:
+>> These match the #defines in that file. I'd like to be explicit
+>> about the numbers to prevent people from thinking they have to
+>> use #defines and to match what other irq controllers have done
+>> (gic, atmel-aic, etc.)
+> I believe people _do_ have to use the #defines? Is there a good reason
+> for you not wanting to use them?
+>
 
-> I applied a patch that did exactly that (109b623629), and then reverted
-> it (b920ecc82) shortly thereafter because add_device_randomness() is
-> a rather slow function and FDTs can get large. I'd like to see someone
-> do a reasonable analysis on the cost of using an FDT for randomness
-> before I reapply a patch doing something similar. An awful lot of the
-> FDT data is not very random, but there are certainly portions of it that
-> are appropriate for the random pool.
+No, there isn't any requirement to use #defines in DT.
 
-I read through the original thread from Tim Bird and FWIW I agree with
-the assessment that passing the FDT through MD5 first is a good
-approach.
-
-Thinking into the future, I'd expect to see similar variable data in
-DT on servers as we see in DMI, including:
-  - Vendor serial number for the HW, manufacturing date, model number,
-    and HW UUID
-  - Serial numbers and vendor part numbers for DIMMS
-  - MAC addresses for all the ethernet
-  - OEM specific data
-
-At worst a 'choosen/linux,no-dt-random = 1' value in the DT to disable
-it would solve the problem for those in embedded that care about
-microseconds during booting.
-
-Regards,
-Jason
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
