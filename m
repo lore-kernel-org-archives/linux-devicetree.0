@@ -1,56 +1,98 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/2] mfd: palmas: support IRQ inversion at the board level
-Date: Tue, 18 Feb 2014 10:42:05 -0700
-Message-ID: <53039B6D.8080004@wwwdotorg.org>
-References: <1392415108-4365-1-git-send-email-swarren@wwwdotorg.org> <20140217092658.GC17875@lee--X1>
+From: Srikanth Thokala <sthokal@xilinx.com>
+Subject: Re: [PATCH v3 1/3] dma: Support multiple interleaved frames with
+ non-contiguous memory
+Date: Tue, 18 Feb 2014 23:16:15 +0530
+Message-ID: <CA+mB=1K43MDZj0Rx3q=ETQMaFsG1j7TXsH6v-7a26JdtqTJkbw@mail.gmail.com>
+References: <1392465619-27614-1-git-send-email-sthokal@xilinx.com>
+	<1392465619-27614-2-git-send-email-sthokal@xilinx.com>
+	<CAJe_Zhc_GNNSDWNFuk+cMHEqxfSCJB_ey=Bf+SwJK-nS=u9ceg@mail.gmail.com>
+	<CA+mB=1KdZZpTmpA0Xp_c4mhgFbjRZ6urYrCwdvoTCmcugQMDUA@mail.gmail.com>
+	<CAJe_ZhdOmu3k9gbPdQzPteyzwsMA8OzWHdhHnXudbF=X7JMhVQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140217092658.GC17875@lee--X1>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, J Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Ian Lartey <ian-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJe_ZhdOmu3k9gbPdQzPteyzwsMA8OzWHdhHnXudbF=X7JMhVQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jassi Brar <jaswinder.singh@linaro.org>
+Cc: Srikanth Thokala <sthokal@xilinx.com>, "Williams, Dan J" <dan.j.williams@intel.com>, "Koul, Vinod" <vinod.koul@intel.com>, michal.simek@xilinx.com, Grant Likely <grant.likely@linaro.org>, robh+dt@kernel.org, devicetree@vger.kernel.org, Levente Kurusa <levex@linux.com>, Lars-Peter Clausen <lars@metafoo.de>, lkml <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/17/2014 02:26 AM, Lee Jones wrote:
->> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Tue, Feb 18, 2014 at 10:20 PM, Jassi Brar <jaswinder.singh@linaro.org> wrote:
+> On 18 February 2014 16:58, Srikanth Thokala <sthokal@xilinx.com> wrote:
+>> On Mon, Feb 17, 2014 at 3:27 PM, Jassi Brar <jaswinder.singh@linaro.org> wrote:
+>>> On 15 February 2014 17:30, Srikanth Thokala <sthokal@xilinx.com> wrote:
+>>>> The current implementation of interleaved DMA API support multiple
+>>>> frames only when the memory is contiguous by incrementing src_start/
+>>>> dst_start members of interleaved template.
+>>>>
+>>>> But, when the memory is non-contiguous it will restrict slave device
+>>>> to not submit multiple frames in a batch.  This patch handles this
+>>>> issue by allowing the slave device to send array of interleaved dma
+>>>> templates each having a different memory location.
+>>>>
+>>> How fragmented could be memory in your case? Is it inefficient to
+>>> submit separate transfers for each segment/frame?
+>>> It will help if you could give a typical example (chunk size and gap
+>>> in bytes) of what you worry about.
 >>
->> Some boards or SoCs have an inverter between the PMIC IRQ output pin and
->> the IRQ controller input signal.
+>> With scatter-gather engine feature in the hardware, submitting separate
+>> transfers for each frame look inefficient. As an example, our DMA engine
+>> supports up to 16 video frames, with each frame (a typical video frame
+>> size) being contiguous in memory but frames are scattered into different
+>> locations. We could not definitely submit frame by frame as it would be
+>> software overhead (HW interrupting for each frame) resulting in video lags.
 >>
->> The IRQ specifier in DT is meant to represent the IRQ flags at the input
->> to the IRQ controller.
->>
->> The Palmas HW's IRQ output has configurable polarity. The driver
->> currently selects the output polarity by querying the input polarity at
->> the IRQ controller. This works fine if the IRQ signal is routed directly
->> from the PMIC to the IRQ controller with no intervening logic. However,
->> if the signal is inverted between the two, this automatic polarity
->> selection gets the wrong answer.
->>
->> Add an additional optional DT and platform data parameter which indicates
->> that such an inversion occurs. If this option is enabled, the Palmas
->> driver will configure its IRQ output to the opposite polarity of the IRQ
->> controller's input.
->>
->> An alternative would have been to add a new non-optional DT parameter to
->> indicate the exact desired output polarity. However, this would have been
->> an incompatible change to the DT binding.
->>
->> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> ---
->> If this patch could be applied to its own branch (w/ signed tag) in the
->> MFD tree, that would great; then I can pull patch 1/2 into the Tegra tree
->> so that I can apply patch 2/2 to the Tegra tree. Thanks.
->> ---
->>  Documentation/devicetree/bindings/mfd/palmas.txt | 6 ++++++
->>  drivers/mfd/palmas.c                             | 4 ++++
->>  include/linux/mfd/palmas.h                       | 1 +
->>  3 files changed, 11 insertions(+)
-> 
-> For the core changes:
->   Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> IIUIC, it is 30fps and one dma interrupt per frame ... it doesn't seem
+> inefficient at all. Even poor-latency audio would generate a higher
+> interrupt-rate. So the "inefficiency concern" doesn't seem valid to
+> me.
+>
+> Not to mean we shouldn't strive to reduce the interrupt-rate further.
+> Another option is to emulate the ring-buffer scheme of ALSA.... which
+> should be possible since for a session of video playback the frame
+> buffers' locations wouldn't change.
+>
+> Yet another option is to use the full potential of the
+> interleaved-xfer api as such. It seems you confuse a 'video frame'
+> with the interleaved-xfer api's 'frame'. They are different.
+>
+> Assuming your one video frame is F bytes long and Gk is the gap in
+> bytes between end of frame [k] and start of frame [k+1] and  Gi != Gj
+> for i!=j
+> In the context of interleaved-xfer api, you have just 1 Frame of 16
+> chunks. Each chunk is Fbytes and the inter-chunk-gap(ICG) is Gk  where
+> 0<=k<15
+> So for your use-case .....
+>   dma_interleaved_template.numf = 1   /* just 1 frame */
+>   dma_interleaved_template.frame_size = 16  /* containing 16 chunks */
+>    ...... //other parameters
+>
+> You have 3 options to choose from and all should work just as fine.
+> Otherwise please state your problem in real numbers (video-frames'
+> size, count & gap in bytes).
 
-Thanks. Since you ack'd this and are an MFD maintainer, was that an
-indication that I should take this patch through the Tegra tree?
+Initially I interpreted interleaved template the same.  But, Lars corrected me
+in the subsequent discussion and let me put it here briefly,
+
+In the interleaved template, each frame represents a line of size denoted by
+chunk.size and the stride by icg.  'numf' represent number of frames i.e.
+number of lines.
+
+In video frame context,
+chunk.size -> hsize
+chunk.icg -> stride
+numf -> vsize
+and frame_size is always 1 as it will have only one chunk in a line.
+
+So, the API would not allow to pass multiple frames and we came up with a
+resolution to pass an array of interleaved template structs to handle this.
+
+Srikanth
+
+>
+> -Jassi
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
