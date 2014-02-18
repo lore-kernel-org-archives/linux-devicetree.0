@@ -1,57 +1,72 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core to drivers/of
-Date: Tue, 18 Feb 2014 16:26:27 +0000
-Message-ID: <20140218162627.32BA4C40517@trevor.secretlab.ca>
-References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de> < CAL_Jsq+U9zU1i+STLHMBjY5BeEP6djYnJVE5X1ix-D2q_zWztQ@mail.gmail.com> < 20140217181451.7EB7FC4044D@trevor.secretlab.ca> <20140218070624.GP17250@ pengutronix.de>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20140218070624.GP17250@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Rob Herring <robherring2@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
+From: Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH v3 1/3] dma: Support multiple interleaved frames with
+ non-contiguous memory
+Date: Tue, 18 Feb 2014 22:20:52 +0530
+Message-ID: <CAJe_ZhdOmu3k9gbPdQzPteyzwsMA8OzWHdhHnXudbF=X7JMhVQ@mail.gmail.com>
+References: <1392465619-27614-1-git-send-email-sthokal@xilinx.com>
+	<1392465619-27614-2-git-send-email-sthokal@xilinx.com>
+	<CAJe_Zhc_GNNSDWNFuk+cMHEqxfSCJB_ey=Bf+SwJK-nS=u9ceg@mail.gmail.com>
+	<CA+mB=1KdZZpTmpA0Xp_c4mhgFbjRZ6urYrCwdvoTCmcugQMDUA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+mB=1KdZZpTmpA0Xp_c4mhgFbjRZ6urYrCwdvoTCmcugQMDUA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srikanth Thokala <sthokal@xilinx.com>
+Cc: "Williams, Dan J" <dan.j.williams@intel.com>, "Koul, Vinod" <vinod.koul@intel.com>, michal.simek@xilinx.com, Grant Likely <grant.likely@linaro.org>, robh+dt@kernel.org, devicetree@vger.kernel.org, Levente Kurusa <levex@linux.com>, Lars-Peter Clausen <lars@metafoo.de>, lkml <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 18 Feb 2014 08:06:24 +0100, Sascha Hauer <s.hauer@pengutronix.de> wrote:
-> Hi Grant,
-> 
-> On Mon, Feb 17, 2014 at 06:14:51PM +0000, Grant Likely wrote:
-> > On Tue, 11 Feb 2014 07:56:33 -0600, Rob Herring <robherring2@gmail.com> wrote:
-> > > On Tue, Feb 11, 2014 at 5:45 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> > > > From: Philipp Zabel <philipp.zabel@gmail.com>
-> > > >
-> > > > This patch moves the parsing helpers used to parse connected graphs
-> > > > in the device tree, like the video interface bindings documented in
-> > > > Documentation/devicetree/bindings/media/video-interfaces.txt, from
-> > > > drivers/media/v4l2-core to drivers/of.
-> > > 
-> > > This is the opposite direction things have been moving...
-> > > 
-> > > > This allows to reuse the same parser code from outside the V4L2 framework,
-> > > > most importantly from display drivers. There have been patches that duplicate
-> > > > the code (and I am going to send one of my own), such as
-> > > > http://lists.freedesktop.org/archives/dri-devel/2013-August/043308.html
-> > > > and others that parse the same binding in a different way:
-> > > > https://www.mail-archive.com/linux-omap@vger.kernel.org/msg100761.html
-> > > >
-> > > > I think that all common video interface parsing helpers should be moved to a
-> > > > single place, outside of the specific subsystems, so that it can be reused
-> > > > by all drivers.
-> > > 
-> > > Perhaps that should be done rather than moving to drivers/of now and
-> > > then again to somewhere else.
-> > 
-> > This is just parsing helpers though, isn't it? I have no problem pulling
-> > helper functions into drivers/of if they are usable by multiple
-> > subsystems. I don't really understand the model being used though. I
-> > would appreciate a description of the usage model for these functions
-> > for poor folks like me who can't keep track of what is going on in
-> > subsystems.
-> 
-> You can find it under Documentation/devicetree/bindings/media/video-interfaces.txt
+On 18 February 2014 16:58, Srikanth Thokala <sthokal@xilinx.com> wrote:
+> On Mon, Feb 17, 2014 at 3:27 PM, Jassi Brar <jaswinder.singh@linaro.org> wrote:
+>> On 15 February 2014 17:30, Srikanth Thokala <sthokal@xilinx.com> wrote:
+>>> The current implementation of interleaved DMA API support multiple
+>>> frames only when the memory is contiguous by incrementing src_start/
+>>> dst_start members of interleaved template.
+>>>
+>>> But, when the memory is non-contiguous it will restrict slave device
+>>> to not submit multiple frames in a batch.  This patch handles this
+>>> issue by allowing the slave device to send array of interleaved dma
+>>> templates each having a different memory location.
+>>>
+>> How fragmented could be memory in your case? Is it inefficient to
+>> submit separate transfers for each segment/frame?
+>> It will help if you could give a typical example (chunk size and gap
+>> in bytes) of what you worry about.
+>
+> With scatter-gather engine feature in the hardware, submitting separate
+> transfers for each frame look inefficient. As an example, our DMA engine
+> supports up to 16 video frames, with each frame (a typical video frame
+> size) being contiguous in memory but frames are scattered into different
+> locations. We could not definitely submit frame by frame as it would be
+> software overhead (HW interrupting for each frame) resulting in video lags.
+>
+IIUIC, it is 30fps and one dma interrupt per frame ... it doesn't seem
+inefficient at all. Even poor-latency audio would generate a higher
+interrupt-rate. So the "inefficiency concern" doesn't seem valid to
+me.
 
-Okay, I think I'm okay with moving the helpers, but I will make one
-requirement. I would like to have a short binding document describing
-the pattern being used. The document above talks a lot about video
-specific issues, but the helpers appear to be specifically about the
-tree walking properties of the API.
+Not to mean we shouldn't strive to reduce the interrupt-rate further.
+Another option is to emulate the ring-buffer scheme of ALSA.... which
+should be possible since for a session of video playback the frame
+buffers' locations wouldn't change.
 
-g.
+Yet another option is to use the full potential of the
+interleaved-xfer api as such. It seems you confuse a 'video frame'
+with the interleaved-xfer api's 'frame'. They are different.
+
+Assuming your one video frame is F bytes long and Gk is the gap in
+bytes between end of frame [k] and start of frame [k+1] and  Gi != Gj
+for i!=j
+In the context of interleaved-xfer api, you have just 1 Frame of 16
+chunks. Each chunk is Fbytes and the inter-chunk-gap(ICG) is Gk  where
+0<=k<15
+So for your use-case .....
+  dma_interleaved_template.numf = 1   /* just 1 frame */
+  dma_interleaved_template.frame_size = 16  /* containing 16 chunks */
+   ...... //other parameters
+
+You have 3 options to choose from and all should work just as fine.
+Otherwise please state your problem in real numbers (video-frames'
+size, count & gap in bytes).
+
+-Jassi
