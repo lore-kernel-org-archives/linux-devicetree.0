@@ -1,84 +1,103 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] devicetree: bindings: Document Krait CPU/L1 EDAC
-Date: Tue, 18 Feb 2014 16:20:43 -0800
-Message-ID: <20140219002043.GE14769@codeaurora.org>
-References: <1389735034-21430-1-git-send-email-sboyd@codeaurora.org>
- <1389735034-21430-3-git-send-email-sboyd@codeaurora.org>
- <20140115102701.GA27314@e102568-lin.cambridge.arm.com>
- <20140115165623.GJ14405@codeaurora.org>
- <20140116013840.GA674@codeaurora.org>
- <20140116113332.GC25540@e102568-lin.cambridge.arm.com>
- <20140116180505.GA30925@codeaurora.org>
- <20140116183326.GG25540@e102568-lin.cambridge.arm.com>
- <20140116192617.GA13785@codeaurora.org>
- <20140117102109.GA22544@e102568-lin.cambridge.arm.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH][v2] powerpc/fsl: Add/update miscellaneous missing
+ bindings
+Date: Tue, 18 Feb 2014 18:20:55 -0600
+Message-ID: <1392769255.6733.752.camel@snotra.buserror.net>
+References: <1392276554-10368-1-git-send-email-harninder.rai@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140117102109.GA22544-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+In-Reply-To: <1392276554-10368-1-git-send-email-harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Harninder Rai <harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-(Sorry, this discussion stalled due to merge window + life events)
+On Thu, 2014-02-13 at 12:59 +0530, Harninder Rai wrote:
+> Missing bindings were found on running checkpatch.pl on bsc9132
+> device tree. This patch add/update the following
+> 
+> - Add bindings for L2 cache controller
+> - Add bindings for memory controller
+> - Update bindings for USB controller
+> 
+> Signed-off-by: Harninder Rai <harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+> Changes since base version:
+> Incorporated Scott's comments
+> - Rename l2cc.txt to l2cache.txt
+> - Add information about ePAPR compliance
+> - Add missing "cache" in compatible
+> - Miscellaneous minors
+> 
+>  .../devicetree/bindings/powerpc/fsl/l2cache.txt    |   26 ++++++++++++++++++++
+>  .../devicetree/bindings/powerpc/fsl/mem-ctrlr.txt  |   16 ++++++++++++
+>  Documentation/devicetree/bindings/usb/fsl-usb.txt  |    2 +
+>  3 files changed, 44 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/l2cache.txt
+>  create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/mem-ctrlr.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/l2cache.txt b/Documentation/devicetree/bindings/powerpc/fsl/l2cache.txt
+> new file mode 100644
+> index 0000000..79ef4a1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/l2cache.txt
+> @@ -0,0 +1,26 @@
+> +Freescale L2 Cache Controller
+> +
+> +L2 cache is present in Freescale's QorIQ and QorIQ Qonverge platforms.
+> +The cache bindings explained below are ePAPR compliant
+> +
+> +Required Properties:
+> +
+> +- compatible	: Should include "fsl,chip-l2-cache-controller" and "cache"
+> +		  where chip is the processor (bsc9132, npc8572 etc.)
+> +- reg		: Address and size of L2 cache controller registers
+> +- cache-size	: Size of the entire L2 cache
+> +- interrupts	: Error interrupt of L2 controller
+> +
+> +Optional Properties:
+> +
+> +- cache-line-size : Size of L2 cache lines
 
-On 01/17, Lorenzo Pieralisi wrote:
-> On Thu, Jan 16, 2014 at 07:26:17PM +0000, Stephen Boyd wrote:
-> > On 01/16, Lorenzo Pieralisi wrote:
-> > > On Thu, Jan 16, 2014 at 06:05:05PM +0000, Stephen Boyd wrote:
-> > > > On 01/16, Lorenzo Pieralisi wrote:
-> > > > > Do we really want to do that ? I am not sure. A cpus node is supposed to
-> > > > > be a container node, we should not define this binding just because we
-> > > > > know the kernel creates a platform device for it then.
-> > > > 
-> > > > This is just copying more of the ePAPR spec into this document.
-> > > > It just so happens that having a compatible field here allows a
-> > > > platform device to be created. I don't see why that's a problem.
-> > > 
-> > > I do not see why you cannot define a node like pmu or arch-timer and stick
-> > > a compatible property in there. cpus node does not represent a device, and
-> > > must not be created as a platform device, that's my opinion.
-> > > 
-> > 
-> > I had what you're suggesting before in the original revision of
-> > this patch. Please take a look at the original patch series[1]. I
-> > suppose it could be tweaked slightly to still have a cache node
-> > for the L2 interrupt and the next-level-cache pointer from the
-> > CPUs.
-> 
-> Ok, sorry, we are running around in circles here, basically you moved
-> the node to cpus according to reviews. I still think that treating cpus
-> as a device is not a great idea, even though I am in the same
-> position with C-states and probably will add C-state tables in the cpus
-> node.
-> 
-> http://comments.gmane.org/gmane.linux.power-management.general/41012
-> 
-> I just would like to see under cpus nodes and properties that apply to
-> all ARM systems, and avoid defining properties (eg interrupts) that
-> have different meanings for different ARM cores.
-> 
-> The question related to why the kernel should create a platform device
-> out of cpus is still open. I really do not want to block your series
-> for these simple issues but we have to make a decision and stick to that,
-> I am fine either way if we have a plan.
-> 
+cache-line-size is required as per ePAPR.
 
-Do you just want a backup plan in case we don't make a platform
-device out of the cpus node? I believe we can always add code
-somewhere to create a platform device at runtime if we detect the
-cpus node has a compatible string equal to "qcom,krait". We could
-probably change this driver's module_init() to scan the DT for
-such a compatible string and create the platform device right
-there. If we get more than one interrupt in the cpus node we can
-add interrupt-names and then have software look for interrupts by
-name instead of number.
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/mem-ctrlr.txt b/Documentation/devicetree/bindings/powerpc/fsl/mem-ctrlr.txt
+> new file mode 100644
+> index 0000000..70b42bb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/mem-ctrlr.txt
+> @@ -0,0 +1,16 @@
+> +Freescale DDR memory controller
+> +
+> +Properties:
+> +
+> +- compatible	: Should include "fsl,chip-memory-controller" where
+> +		  chip is the processor (bsc9132, mpc8572 etc.)
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Please also cover newer device trees that use
+"fsl,qoriq-memory-controller" and don't have
+"fsl,CHIP-memory-controller" (they also use a variant with the block
+version, but since the block version is readable in a register I don't
+think it's necessary to specify that here).
+
+> diff --git a/Documentation/devicetree/bindings/usb/fsl-usb.txt b/Documentation/devicetree/bindings/usb/fsl-usb.txt
+> index bd5723f..afa5809 100644
+> --- a/Documentation/devicetree/bindings/usb/fsl-usb.txt
+> +++ b/Documentation/devicetree/bindings/usb/fsl-usb.txt
+> @@ -9,6 +9,8 @@ Required properties :
+>   - compatible : Should be "fsl-usb2-mph" for multi port host USB
+>     controllers, or "fsl-usb2-dr" for dual role USB controllers
+>     or "fsl,mpc5121-usb2-dr" for dual role USB controllers of MPC5121
+> +   Wherever applicable, the IP version of the USB controller should
+> +   also be mentioned (for eg. fsl-usb2-dr-v2.2 for bsc9132).
+
+Please terminate the previous sentence with a period.
+
+-Scott
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
