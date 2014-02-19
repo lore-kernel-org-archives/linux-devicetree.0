@@ -1,126 +1,238 @@
-From: Harninder Rai <harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH][v3] powerpc/fsl: Add/update miscellaneous missing binding
-Date: Wed, 19 Feb 2014 18:11:26 +0530
-Message-ID: <1392813686-10249-1-git-send-email-harninder.rai@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Harninder Rai <harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v3 2/4] of: reimplement the matching method for __of_match_node()
+Date: Wed, 19 Feb 2014 12:48:13 +0000
+Message-ID: <20140219124813.8FD66C4088D@trevor.secretlab.ca>
+References: <20140219075812.GE14031@pek-khao-d1.corp.ad.wrs.com> < 1392797745-7561-1-git-send-email-haokexin@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1392797745-7561-1-git-send-email-haokexin@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Kevin Hao <haokexin@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Missing bindings were found on running checkpatch.pl on bsc9132
-device tree. This patch add/update the following
+On Wed, 19 Feb 2014 16:15:45 +0800, Kevin Hao <haokexin@gmail.com> wrote:
+> In the current implementation of __of_match_node(), it will compare
+> each given match entry against all the node's compatible strings
+> with of_device_is_compatible().
+> 
+> To achieve multiple compatible strings per node with ordering from
+> specific to generic, this requires given matches to be ordered from
+> specific to generic. For most of the drivers this is not true and
+> also an alphabetical ordering is more sane there.
+> 
+> Therefore, we define a following priority order for the match, and
+> then scan all the entries to find the best match.
+>   1. specific compatible && type && name
+>   2. specific compatible && type
+>   3. specific compatible && name
+>   4. specific compatible
+>   5. general compatible && type && name
+>   6. general compatible && type
+>   7. general compatible && name
+>   8. general compatible
+>   9. type && name
+>   10. type
+>   11. name
+> 
+> This is based on some pseudo-codes provided by Grant Likely.
+> 
+> Signed-off-by: Kevin Hao <haokexin@gmail.com>
+> [grant.likely: Changed multiplier to 4 which makes more sense]
+> Signed-off-by: Grant Likely <grant.likely@linaro.org>
+> ---
+> v3: Also need to bail out when there does have a compatible member in match
+>     entry, but it doesn't match with the device node's compatible.
+>  
+> v2: Fix the bug such as we get the same score for the following two match
+> entries:
+> 	name2 { }
+> 
+> 	struct of_device_id matches[] = {
+> 		{.name = "name2", },
+> 		{.name = "name2", .type = "type1", },
+> 		{}
+> 	};
+> 
+>  drivers/of/base.c | 96 ++++++++++++++++++++++++++++++++++++++++++++-----------
+>  1 file changed, 77 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index ba195fbce4c6..8f79f006d86f 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -342,21 +342,28 @@ struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
+>  }
+>  EXPORT_SYMBOL(of_get_cpu_node);
+>  
+> -/** Checks if the given "compat" string matches one of the strings in
+> - * the device's "compatible" property
+> +/*
+> + * Compare with the __of_device_is_compatible, this will return a score for the
+> + * matching strings. The smaller value indicates the match for the more specific
+> + * compatible string.
+>   */
+> -static int __of_device_is_compatible(const struct device_node *device,
+> -				     const char *compat)
+> +static int __of_device_is_compatible_score(const struct device_node *device,
+> +				     const char *compat, int *pscore)
+>  {
+>  	const char* cp;
+>  	int cplen, l;
+> +	int score = 0;
+>  
+>  	cp = __of_get_property(device, "compatible", &cplen);
+>  	if (cp == NULL)
+>  		return 0;
+>  	while (cplen > 0) {
+> -		if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
+> +		score++;
+> +		if (of_compat_cmp(cp, compat, strlen(compat)) == 0) {
+> +			if (pscore)
+> +				*pscore = score;
+>  			return 1;
+> +		}
+>  		l = strlen(cp) + 1;
+>  		cp += l;
+>  		cplen -= l;
+> @@ -368,6 +375,15 @@ static int __of_device_is_compatible(const struct device_node *device,
+>  /** Checks if the given "compat" string matches one of the strings in
+>   * the device's "compatible" property
+>   */
+> +static int __of_device_is_compatible(const struct device_node *device,
+> +				     const char *compat)
+> +{
+> +	return __of_device_is_compatible_score(device, compat, NULL);
+> +}
+> +
+> +/** Checks if the given "compat" string matches one of the strings in
+> + * the device's "compatible" property
+> + */
+>  int of_device_is_compatible(const struct device_node *device,
+>  		const char *compat)
+>  {
+> @@ -734,25 +750,55 @@ static
+>  const struct of_device_id *__of_match_node(const struct of_device_id *matches,
+>  					   const struct device_node *node)
+>  {
+> +	const struct of_device_id *best_match = NULL;
+> +	int best_score = 0;
+> +
+>  	if (!matches)
+>  		return NULL;
+>  
+>  	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
+> -		int match = 1;
+> -		if (matches->name[0])
+> -			match &= node->name
+> -				&& !strcmp(matches->name, node->name);
+> -		if (matches->type[0])
+> -			match &= node->type
+> -				&& !strcmp(matches->type, node->type);
+> -		if (matches->compatible[0])
+> -			match &= __of_device_is_compatible(node,
+> -							   matches->compatible);
+> -		if (match)
+> -			return matches;
+> +		int score = 0;
+> +
+> +		/*
+> +		 * Matching compatible is better than matching type and name,
+> +		 * and the specific compatible is better than the general.
+> +		 */
+> +		if (matches->compatible[0]) {
+> +			if (__of_device_is_compatible_score(node,
+> +						matches->compatible, &score))
+> +				score = INT_MAX - 4 * score;
+> +			else
+> +				score = INT_MIN;
+> +		}
+> +
+> +		/*
+> +		 * Matching type is better than matching name, but matching
+> +		 * both is even better than that.
+> +		 */
+> +		if (matches->type[0]) {
+> +			if (node->type && !strcmp(matches->type, node->type))
+> +				score += 2;
+> +			else
+> +				score = INT_MIN;
+> +		}
+> +
+> +		/* Matching name is a bit better than not */
+> +		if (matches->name[0]) {
+> +			if (node->name && !strcmp(matches->name, node->name))
+> +				score++;
+> +			else
+> +				score = INT_MIN;
+> +		}
 
-- Add bindings for L2 cache controller
-- Add bindings for memory controller
-- Update bindings for USB controller
+All that mucking about with setting the score to INT_MIN is pretty ugly.
+I've reworked the patch to 'continue;' whenever one of the above matches
+fail. That completely eliminates any possibility of accepting an entry
+that has a failed match. Here's my diff. I'll merge this change into the
+patch before committing. All of the test cases still pass with my
+rework.
 
-Signed-off-by: Harninder Rai <harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
-* Changes in v3:
-Incorporated Scott's comments
-- Move cache-line-size property under required properties
-- Update compatible for mem-ctrl to reflect "fsl,qoriq-memory-controller"
-- One minor
 
-* Changes since base version:
-Incorporated Scott's comments
-- Rename l2cc.txt to l2cache.txt
-- Add information about ePAPR compliance
-- Add missing "cache" in compatible
-- Miscellaneous minors
-
- .../devicetree/bindings/powerpc/fsl/l2cache.txt    |   23 +++++++++++++++++
- .../devicetree/bindings/powerpc/fsl/mem-ctrlr.txt  |   27 ++++++++++++++++++++
- Documentation/devicetree/bindings/usb/fsl-usb.txt  |    4 ++-
- 3 files changed, 53 insertions(+), 1 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/l2cache.txt
- create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/mem-ctrlr.txt
-
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/l2cache.txt b/Documentation/devicetree/bindings/powerpc/fsl/l2cache.txt
-new file mode 100644
-index 0000000..c41b218
---- /dev/null
-+++ b/Documentation/devicetree/bindings/powerpc/fsl/l2cache.txt
-@@ -0,0 +1,23 @@
-+Freescale L2 Cache Controller
-+
-+L2 cache is present in Freescale's QorIQ and QorIQ Qonverge platforms.
-+The cache bindings explained below are ePAPR compliant
-+
-+Required Properties:
-+
-+- compatible	: Should include "fsl,chip-l2-cache-controller" and "cache"
-+		  where chip is the processor (bsc9132, npc8572 etc.)
-+- reg		: Address and size of L2 cache controller registers
-+- cache-size	: Size of the entire L2 cache
-+- interrupts	: Error interrupt of L2 controller
-+- cache-line-size : Size of L2 cache lines
-+
-+Example:
-+
-+	L2: l2-cache-controller@20000 {
-+		compatible = "fsl,bsc9132-l2-cache-controller", "cache";
-+		reg = <0x20000 0x1000>;
-+		cache-line-size = <32>; // 32 bytes
-+		cache-size = <0x40000>; // L2,256K
-+		interrupts = <16 2 1 0>;
-+	};
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/mem-ctrlr.txt b/Documentation/devicetree/bindings/powerpc/fsl/mem-ctrlr.txt
-new file mode 100644
-index 0000000..f87856f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/powerpc/fsl/mem-ctrlr.txt
-@@ -0,0 +1,27 @@
-+Freescale DDR memory controller
-+
-+Properties:
-+
-+- compatible	: Should include "fsl,chip-memory-controller" where
-+		  chip is the processor (bsc9132, mpc8572 etc.), or
-+		  "fsl,qoriq-memory-controller".
-+- reg		: Address and size of DDR controller registers
-+- interrupts	: Error interrupt of DDR controller
-+
-+Example 1:
-+
-+	memory-controller@2000 {
-+		compatible = "fsl,bsc9132-memory-controller";
-+		reg = <0x2000 0x1000>;
-+		interrupts = <16 2 1 8>;
-+	};
-+
-+
-+Example 2:
-+
-+	ddr1: memory-controller@8000 {
-+		compatible = "fsl,qoriq-memory-controller-v4.7",
-+				"fsl,qoriq-memory-controller";
-+		reg = <0x8000 0x1000>;
-+		interrupts = <16 2 1 23>;
-+	};
-diff --git a/Documentation/devicetree/bindings/usb/fsl-usb.txt b/Documentation/devicetree/bindings/usb/fsl-usb.txt
-index bd5723f..4779c02 100644
---- a/Documentation/devicetree/bindings/usb/fsl-usb.txt
-+++ b/Documentation/devicetree/bindings/usb/fsl-usb.txt
-@@ -8,7 +8,9 @@ and additions :
- Required properties :
-  - compatible : Should be "fsl-usb2-mph" for multi port host USB
-    controllers, or "fsl-usb2-dr" for dual role USB controllers
--   or "fsl,mpc5121-usb2-dr" for dual role USB controllers of MPC5121
-+   or "fsl,mpc5121-usb2-dr" for dual role USB controllers of MPC5121.
-+   Wherever applicable, the IP version of the USB controller should
-+   also be mentioned (for eg. fsl-usb2-dr-v2.2 for bsc9132).
-  - phy_type : For multi port host USB controllers, should be one of
-    "ulpi", or "serial". For dual role USB controllers, should be
-    one of "ulpi", "utmi", "utmi_wide", or "serial".
--- 
-1.7.6.GIT
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 8f79f006d86f..fcb65d27d071 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -756,7 +756,7 @@ const struct of_device_id *__of_match_node(const struct of_device_id *matches,
+ 	if (!matches)
+ 		return NULL;
+ 
+-	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
++	for (; matches->name[0] || matches->type[0] || matches->compatible[0]; matches++) {
+ 		int score = 0;
+ 
+ 		/*
+@@ -764,11 +764,10 @@ const struct of_device_id *__of_match_node(const struct of_device_id *matches,
+ 		 * and the specific compatible is better than the general.
+ 		 */
+ 		if (matches->compatible[0]) {
+-			if (__of_device_is_compatible_score(node,
++			if (!__of_device_is_compatible_score(node,
+ 						matches->compatible, &score))
+-				score = INT_MAX - 4 * score;
+-			else
+-				score = INT_MIN;
++				continue;
++			score = INT_MAX - 4 * score;
+ 		}
+ 
+ 		/*
+@@ -776,26 +775,22 @@ const struct of_device_id *__of_match_node(const struct of_device_id *matches,
+ 		 * both is even better than that.
+ 		 */
+ 		if (matches->type[0]) {
+-			if (node->type && !strcmp(matches->type, node->type))
+-				score += 2;
+-			else
+-				score = INT_MIN;
++			if (!node->type || strcmp(matches->type, node->type))
++				continue;
++			score += 2;
+ 		}
+ 
+ 		/* Matching name is a bit better than not */
+ 		if (matches->name[0]) {
+-			if (node->name && !strcmp(matches->name, node->name))
+-				score++;
+-			else
+-				score = INT_MIN;
++			if (!node->name || strcmp(matches->name, node->name))
++				continue;
++			score++;
+ 		}
+ 
+ 		if (score > best_score) {
+ 			best_match = matches;
+ 			best_score = score;
+ 		}
+-
+-		matches++;
+ 	}
+ 
+ 	return best_match;
