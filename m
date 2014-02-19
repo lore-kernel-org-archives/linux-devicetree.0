@@ -1,86 +1,100 @@
-From: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] of: reimplement the matching method for
- __of_match_node()
-Date: Wed, 19 Feb 2014 11:09:47 +0800
-Message-ID: <20140219030947.GA14031@pek-khao-d1.corp.ad.wrs.com>
-References: <1392710250-29913-1-git-send-email-haokexin@gmail.com>
- <1392710250-29913-3-git-send-email-haokexin@gmail.com>
- <20140218222918.392D4C40517@trevor.secretlab.ca>
+From: Mohit KUMAR DCG <Mohit.KUMAR@st.com>
+Subject: RE: [PATCH V5 4/8] phy: st-miphy-40lp: Add skeleton driver
+Date: Wed, 19 Feb 2014 12:09:00 +0800
+Message-ID: <2CC2A0A4A178534D93D5159BF3BCB66189FD40D477@EAPEX1MAIL1.st.com>
+References: <cover.1391871170.git.pratyush.anand@st.com>
+ <201402101654.22187.arnd@arndb.de>
+ <2CC2A0A4A178534D93D5159BF3BCB66189FD2CAA9B@EAPEX1MAIL1.st.com>
+ <10315753.nkNxr0yDnp@wuerfel>
+ <2CC2A0A4A178534D93D5159BF3BCB66189FD2CAD14@EAPEX1MAIL1.st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140218222918.392D4C40517-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen N Chivers <schivers-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2CC2A0A4A178534D93D5159BF3BCB66189FD2CAD14@EAPEX1MAIL1.st.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mohit KUMAR DCG <Mohit.KUMAR@st.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Pratyush ANAND <pratyush.anand@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, spear-devel <spear-devel@list.st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello Arnd,
 
---tThc/1wpZn/ma/RB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> -----Original Message-----
+> From: Mohit KUMAR [mailto:mohit.kumar@st.com]
+> Sent: Wednesday, February 12, 2014 10:22 AM
+> To: Arnd Bergmann
+> Cc: Pratyush ANAND; Kishon Vijay Abraham I; spear-devel; linux-arm-
+> kernel@lists.infradead.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Lee Jones
+> Subject: RE: [PATCH V5 4/8] phy: st-miphy-40lp: Add skeleton driver
+> 
+> Hello Arnd,
+> 
+> > -----Original Message-----
+> > From: Arnd Bergmann [mailto:arnd@arndb.de]
+> > Sent: Tuesday, February 11, 2014 8:09 PM
+> > To: Mohit KUMAR DCG
+> > Cc: Pratyush ANAND; Kishon Vijay Abraham I; spear-devel; linux-arm-
+> > kernel@lists.infradead.org; devicetree@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; Lee Jones
+> > Subject: Re: [PATCH V5 4/8] phy: st-miphy-40lp: Add skeleton driver
+> >
+> > On Tuesday 11 February 2014 11:57:46 Mohit KUMAR DCG wrote:
+> > >
+> > > > Maybe mention that this phy is used inside the spear13xx SoC here
+> > > > rather than a standalone phy.
+> > >
+> > > - Yes, for spear13xx its used internally. Do you think that it
+> > > requires to be mentioned here?
+> > > We have few prototype boards that uses this as external phy.
+> >
+> > [adding Lee since he mentioned working on a similar part]
+> >
+> > I'm a bit confused. Is it actually the same IP block that can be used
+> > internally as part of a SoC and as a standalone chip?
+> >
+> > Since some of the settings of the PHY are controlled through the misc
+> > register in case of spear13xx, I assume that part is different on the
+> > standalone version. How do you actually select the mode in that case?
+> >
+> > It would certainly be helpful to explain this somewhere, and the
+> > binding might not be the worst place for this.
+> >
+> > On a related note, the driver in its current shape looks a bit silly
+> > since it doesn't contain any of the miphy specific code but only the
+> > SoC specific parts (as I suggested you do, so I'm not blaming you :-))
+> > and a multiplexer that switches between the two possible
+> implementations.
+> 
+> - yes, thats what we were explaining earlier. If it is integrated into some SoC
+> Then there are some soc specific configurations. Actual phy reg settings could
+> also vary for the different SoCs for the best tuning.
+> 
+> However we agreed to your idea as miphy40lp register definitions would
+> remain same across the SoCs.
+> 
+> >
+> > What is your plan for the future, do you intend to add the actual
+> > miphy code soon, or is that something you just want to leave as an
+> > option for the future but have no specific plans to do right now? If
+> > not, the driver would probably look nicer if it were split into two
+> > separate implementations, one for each spear13xx SoC and with a separate
+> set of phy_ops but no multiplexer.
+> 
+> Do you want  it to split the code into two different files like phy-
+> miphyspear1310.c and phy-miphyspear1340.c ?
 
-On Tue, Feb 18, 2014 at 10:29:18PM +0000, Grant Likely wrote:
-> On Tue, 18 Feb 2014 15:57:30 +0800, Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > In the current implementation of __of_match_node(), it will compare
-> > each given match entry against all the node's compatible strings
-> > with of_device_is_compatible().
-> >=20
-> > To achieve multiple compatible strings per node with ordering from
-> > specific to generic, this requires given matches to be ordered from
-> > specific to generic. For most of the drivers this is not true and
-> > also an alphabetical ordering is more sane there.
-> >=20
-> > Therefore, we define a following priority order for the match, and
-> > then scan all the entries to find the best match.
-> >   1. specific compatible && type && name
-> >   2. specific compatible && type
-> >   3. specific compatible && name
-> >   4. specific compatible
-> >   5. general compatible && type && name
-> >   6. general compatible && type
-> >   7. general compatible && name
-> >   8. general compatible
-> >   9. type && name
-> >   10. type
-> >   11. name
-> >=20
-> > This is based on some pseudo-codes provided by Grant Likely.
->=20
-> The patch looks good, but I wasn't confident applying it directly
-> without some validation, so I've written a test case for this function.
-> I'll resend the series to the list and cc you. Unfortunately I've found
-> one case that is failing on the test cases, but I'm too tired to debug
-> it now. Maybe you'd like to take a look. The test case may very well be
-> wrong.
+- Waiting for your final say about splitting into two different files or any
+ other comment for the  patch series?
 
-The test case looks great. Actually there is a bug in this patch. I will ma=
-ke
-new spin to fix it.
-
-Thanks,
-Kevin
-
---tThc/1wpZn/ma/RB
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQEcBAEBAgAGBQJTBCB7AAoJEJNY7TDerrFxtgMIAIGsIbDQtUvlVbR8rzZ+GGF9
-jFd9NMWd1S7dvbxsu6vca7iGTkq0APYRIfteKAMduKwVLpKYvCSczdxlIKppc6DI
-wnzGQltd09g2cUnZcjqCWpKGPaC0BLClTg9Kn3BF+ijEdgS2LNlb0Yvr1FOAGDhg
-U+Q29oqZGSdUCXaWzG5OrLnn0R4F/jtoQrQi7sWxfKJT21su95TPuCF3Scytr+tM
-kif8netRImbjHhuiODRxX+zIruEDBwJf99PDDTLEe19iMWS4oMmPdq/0Q8RphL3U
-O7UkTbfvSNYJTW9/0lIaMm9ZwM/vna4AMqY5ahkS+ydBLjn8BX3pCpjYsyYVqmM=
-=kixq
------END PGP SIGNATURE-----
-
---tThc/1wpZn/ma/RB--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Mohit
