@@ -1,100 +1,55 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: add device tree source for imx6sx SoC
-Date: Wed, 19 Feb 2014 17:42:36 +0000
-Message-ID: <20140219174236.GD25079@e106331-lin.cambridge.arm.com>
-References: <1392796036-19094-1-git-send-email-b20788@freescale.com>
+From: Courtney Cavin <courtney.cavin@sonymobile.com>
+Subject: Re: [PATCH v2 1/3] usb: chipidea: msm: Add device tree binding
+ information
+Date: Wed, 19 Feb 2014 09:46:56 -0800
+Message-ID: <20140219174655.GN1706@sonymobile.com>
+References: <1392729681-21022-1-git-send-email-iivanov@mm-sol.com>
+ <1392729681-21022-2-git-send-email-iivanov@mm-sol.com>
+ <20140218212659.GL1706@sonymobile.com>
+ <1392824602.17130.68.camel@iivanov-dev>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1392796036-19094-1-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392824602.17130.68.camel@iivanov-dev>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> +       intc: interrupt-controller@00a01000 {
-> +               compatible = "arm,cortex-a9-gic";
-> +               #interrupt-cells = <3>;
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
+On Wed, Feb 19, 2014 at 04:43:22PM +0100, Ivan T. Ivanov wrote:
+> 
+> Hi, 
+> 
+> On Tue, 2014-02-18 at 13:26 -0800, Courtney Cavin wrote: 
+> > On Tue, Feb 18, 2014 at 02:21:19PM +0100, Ivan T. Ivanov wrote:
+> > > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+> > > 
+> > > Document device tree binding information as required by
+> > > the Qualcomm USB controller.
+> > > 
+> > > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+> > > ---
+> > >  .../devicetree/bindings/usb/msm-hsusb.txt          |   17 +++++++++++++++++
+> > 
+> > Although you mentioned to Josh that this is intended for "non-standard"
+> > Chipidea properties, I don't see any other than requiring that 'dr_mode'
+> > must be "peripheral".  It would seem that this should all be integrated
+> > into a ci3xxx.txt.
+> 
+> Hm, there is no ci3xxx.txt. The closest match is ci-hdrc-imx.txt.
+> So it could be ci-hdrc-qcom.txt or my preferred name qcom,ci-hdrc.txt?
 
-Any reason for the #address-cells and #size-cells? The node has no
-children, and I don't see an interrupt-map.
+Sorry, I was referring to ci13xxx-imx.txt, which was apparently moved to
+ci-hdrc-imx.txt.  I was recommending to merge the two into one
+'ci13xxx.txt', as this binding seems to be a new compatible for the same
+basic chip.  Now perhaps 'ci-hdrc.txt'.
 
-> +               interrupt-controller;
-> +               reg = <0x00a01000 0x1000>,
-> +                     <0x00a00100 0x100>;
-> +       };
-> +
-> +       clocks {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               ckil {
-> +                       compatible = "fsl,imx-ckil", "fixed-clock";
-> +                       clock-frequency = <32768>;
-> +               };
-> +
-> +               osc {
-> +                       compatible = "fsl,imx-osc", "fixed-clock";
-> +                       clock-frequency = <24000000>;
-> +               };
-> +       };
+Although I agree with Josh that this name should be changed, and I think
+either of your two suggestions would be acceptable, I would like to at
+least discuss the possibility of actually merging the two in this
+series.
 
-What is this clocks container node? It has no compatible property. The
-children have no reg entries and thus #address-cells and #size cells are
-useless.
+Comments?
 
-Why have this at all? Why not put the clocks directly under the root?
-
-[...]
-
-> +                       anatop: anatop@020c8000 {
-> +                               compatible = "fsl,imx6sx-anatop", "fsl,imx6q-anatop",
-> +                                               "syscon", "simple-bus";
-
-NAK. That compatible list makes _no_ sense. Why are both simple-bus and
-syscon there?
-
-> +                               reg = <0x020c8000 0x1000>;
-> +                               interrupts = <0 49 0x04 0 54 0x04 0 127 0x04>;
-
-Please bracket list entries individually. It's not clear where one
-interrupt ends and the next begins.
-
-> +                       };
-> +
-> +                       snvs@020cc000 {
-> +                               compatible = "fsl,sec-v4.0-mon", "simple-bus";
-> +                               #address-cells = <1>;
-> +                               #size-cells = <1>;
-> +                               ranges = <0 0x020cc000 0x4000>;
-> +
-> +                               snvs-rtc-lp@34 {
-> +                                       compatible = "fsl,sec-v4.0-mon-rtc-lp";
-> +                                       reg = <0x34 0x58>;
-> +                                       interrupts = <0 19 0x04 0 20 0x04>;
-> +                               };
-> +                       };
-
-The binding document mentions nothing about fsl,sec-v4.0-mon being a
-bus, let alone one compatible with simple-bus. Are the child nodes
-usable in isolation, even if the parent node weren't probed?
-
-> +                       sdma: sdma@020ec000 {
-> +                               compatible = "fsl,imx6q-sdma", "fsl,imx35-sdma";
-> +                               reg = <0x020ec000 0x4000>;
-> +                               interrupts = <0 2 0x04>;
-> +                               clocks = <&clks IMX6SX_CLK_SDMA>, <&clks IMX6SX_CLK_SDMA>;
-> +                               clock-names = "ipg", "ahb";
-> +                               #dma-cells = <3>;
-> +                               fsl,sdma-ram-script-name = "imx/sdma/sdma-imx6sx.bin";
-
-This is insane. Why is this path in the DT at all?
-
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Courtney
