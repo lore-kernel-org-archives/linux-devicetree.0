@@ -1,183 +1,130 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v7 4/8] ARM: sunxi: Add driver for SD/MMC
- hosts found on Allwinner sunxi SoCs
-Date: Wed, 19 Feb 2014 13:14:58 +0100
-Message-ID: <5304A042.7090903@redhat.com>
-References: <20140217095907.15040.81893.stgit@pagira.o2s.ch> <20140217100234.15040.84232.stgit@pagira.o2s.ch> <20140218153731.GK3142@lukather> <5303C751.5090809@redhat.com> <20140219094615.GT3142@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/2] usb: dwc3: core: continue probing if usb phy library
+ returns -ENODEV/-ENXIO
+Date: Wed, 19 Feb 2014 14:37:32 +0200
+Message-ID: <5304A58C.2030306@ti.com>
+References: <1385373690-12170-1-git-send-email-kishon@ti.com> <1390299099-14764-1-git-send-email-kishon@ti.com> <20140121144725.GF30451@saruman.home> <20140127150855.GA17928@xps8300> <20140127160458.GF13268@saruman.home> <20140128153230.GA20991@xps8300> <20140128163036.GD28546@saruman.home> <20140129144659.GA22152@xps8300> <52FB42DE.4090203@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBY6ASKMAKGQE3I5KU3Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140219094615.GT3142@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: =?ISO-8859-1?Q?David_Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52FB42DE.4090203-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: george.cherian-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
-
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
 
 Hi,
 
-On 02/19/2014 10:46 AM, Maxime Ripard wrote:
-> Hi Hans,
->=20
-> On Tue, Feb 18, 2014 at 09:49:21PM +0100, Hans de Goede wrote:
+On 02/12/2014 11:46 AM, Kishon Vijay Abraham I wrote:
+> On Wednesday 29 January 2014 08:17 PM, Heikki Krogerus wrote:
 >> Hi,
->>=20
->> On 02/18/2014 04:37 PM, Maxime Ripard wrote:
->>=20
+>>
+>> On Tue, Jan 28, 2014 at 10:30:36AM -0600, Felipe Balbi wrote:
+>>> On Tue, Jan 28, 2014 at 05:32:30PM +0200, Heikki Krogerus wrote:
+>>>> On Mon, Jan 27, 2014 at 10:05:20AM -0600, Felipe Balbi wrote:
+>>>> For the controller drivers the PHYs are just a resource like any
+>>>> other. The controller drivers can't have any responsibility of
+>>>> them. They should not care if PHY drivers are available for them or
+>>>> not, or even if the PHY framework is available or not.
+>>>
+>>> huh? If memory isn't available you don't continue probing, right ? If
+>>> your IORESOURCE_MEM is missing, you also don't continue probing, if your
+>>> IRQ line is missing, you bail too. Those are also nothing but resources
+>>> to the driver, what you're asking here is to treat PHY as a _different_
+>>> resource; which might be fine, but we need to make sure we don't
+>>> continue probing when a PHY is missing in a platform that certainly
+>>> needs a PHY.
+>>
+>> Yes, true. In my head I was comparing the PHY only to resources like
+>> gpios, clocks, dma channels, etc. that are often optional to the
+>> drivers.
+>>
+>>>>>>> But I really want to see the argument against using no-op. As far as I
+>>>>>>> could see, everybody needs a PHY driver one way or another, some
+>>>>>>> platforms just haven't sent any PHY driver upstream and have their own
+>>>>>>> hacked up solution to avoid using the PHY layer.
+>>>>>>
+>>>>>> Not true in our case. Platforms using Intel's SoCs and chip sets may
+>>>>>> or may not have controllable USB PHY. Quite often they don't. The
+>>>>>> Baytrails have usually ULPI PHY for USB2, but that does not mean they
+>>>>>> provide any vendor specific functions or any need for a driver in any
+>>>>>> case.
+>>>>>
+>>>>> that's different from what I heard.
+>>>>
+>>>> I don't know where you got that impression, but it's not true. The
+>>>> Baytrail SoCs for example don't have internal USB PHYs, which means
+>>>> the manufacturers using it can select what they want. So we have
+>>>> boards where PHY driver(s) is needed and boards where it isn't.
+>>>
+>>> alright, that explains it ;-) So you have external USB2 and USB3 PHYs ?
+>>> You have an external PIPE3 interface ? That's quite an achievement,
+>>> kudos to your HW designers. Getting timing closure on PIPE3 is a
+>>> difficult task.
+>>
+>> No, only the USB2 PHY is external. I'm giving you wrong information,
+>> I'm sorry about that. Need to concentrate on what I'm writing.
+>>
 >> <snip>
->>=20
->>>> + +	for (i =3D 0; i < data->sg_len; i++) { +		pdes[i].config =3D SDXC_=
-IDMAC_DES0_CH | SDXC_IDMAC_DES0_OWN | +				 SDXC_IDMAC_DES0_DIC; + +		if (d=
-ata->sg[i].length =3D=3D max_len) +			pdes[i].buf_size =3D 0; /* 0 =3D=3D m=
-ax_len */ +		else +			pdes[i].buf_size =3D data->sg[i].length; + +		pdes[i]=
-.buf_addr_ptr1 =3D sg_dma_address(&data->sg[i]); +		pdes[i].buf_addr_ptr2 =
-=3D (u32)&pdes_pa[i + 1]; +	} + +	pdes[0].config |=3D SDXC_IDMAC_DES0_FD; +=
-	pdes[i - 1].config =3D SDXC_IDMAC_DES0_OWN | SDXC_IDMAC_DES0_LD; + +	wmb()=
-; /* Ensure idma_des hit main mem before we start the idmac */
->>>=20
->>> wmb ensure the proper ordering of the instructions, not flushing the ca=
-ches like what your comment implies.
->>=20
->> Since I put that comment there, allow me to explain. A modern ARM cpu co=
-re has 2 or more units handling stores. One for regular memory stores, and =
-one for io-mem stores. Regular mem stores can be re-ordered, io stores cann=
-ot. Normally there is no "syncing" between the 2 store units. Cache flushin=
-g is not an issue here since the memory holding the descriptors for the idm=
-a controller is allocated cache coherent, which on arm means it is not cach=
-ed.
->>=20
->> What is an issue here is the io-store starting the idmac hitting the io-=
-mem before the descriptors hit the main-mem, the wmb() ensures this does no=
-t happen.
->=20
-> To expand a bit, my point was not that it was functionnally wrong. Since =
-you put a barrier in there, and that it resides in a cache coherent section=
-, we're fine.
->=20
-> My point was that the comment itself was misleading.
+>>
+>>>> This is really good to get. We have some projects where we are dealing
+>>>> with more embedded environments, like IVI, where the kernel should be
+>>>> stripped of everything useless. Since the PHYs are autonomous, we
+>>>> should be able to disable the PHY libraries/frameworks.
+>>>
+>>> hmmm, in that case it's a lot easier to treat. We can use
+>>> ERR_PTR(-ENXIO) as an indication that the framework is disabled, or
+>>> something like that.
+>>>
+>>> The difficult is really reliably supporting e.g. OMAP5 (which won't work
+>>> without a PHY) and your BayTrail with autonomous PHYs. What can we use
+>>> as an indication ?
+>>
+>> OMAP has it's own glue driver, so shouldn't it depend on the PHY
+>> layer?
+> 
+> right, but the PHY is connected to the dwc3 core and not to the glue.
+>>
+>>> I mean, I need to know that a particular platform depends on a PHY
+>>> driver before I decide to return -EPROBE_DEFER or just assume the PHY
+>>> isn't needed ;-)
+>>
+>> I don't think dwc3 (core) should care about that. The PHY layer needs
+>> to tell us that. If the PHY driver that the platform depends is not
+>> available yet, the PHY layer returns -EPROBE_DEFER and dwc3 ends up
+>> returning -EPROBE_DEFER.
+> 
+> I don't think the PHY layer can 'reliably' tell if PHY driver is available or
+> not. Consider when the phy_provider_register fails, there is no way to know if
+> PHY driver is available or not. There are a few cases where PHY layer returns
+> -EPROBE_DEFER but none of them can tell for sure that PHY driver is either
+> available and failed or not available at all. It would be best for us to leave
+> that to the platforms if we want to be sure if the platform needs a PHY or not.
+> 
 
-Well as explained above, the purpose of the wmb is to ensure that
-the descriptors hit main memory, before the following writel (in the
-caller of this function) starts the controller. So I don't see exactly
-how the comment is wrong.
+Just to summarize this thread on what we need
 
-If you've a better wording for the comment, suggestions are welcome.
+1) dwc3 core shouldn't worry about platform specific stuff i.e. PHY needed or not.
+It should be as generic as possible.
 
-<snip>
+2) dwc3 core should continue probe even if PHY layer is not enabled, as not all platforms need it.
 
->>>> +static void sunxi_mmc_dump_errinfo(struct sunxi_mmc_host *smc_host) +=
-{ +	struct mmc_command *cmd =3D smc_host->mrq->cmd; +	struct mmc_data *data=
- =3D smc_host->mrq->data; + +	/* For some cmds timeout is normal with sd/mm=
-c cards */ +	if ((smc_host->int_sum & SDXC_INTERRUPT_ERROR_BIT) =3D=3D SDXC=
-_RESP_TIMEOUT && +			(cmd->opcode =3D=3D SD_IO_SEND_OP_COND || cmd->opcode =
-=3D=3D SD_IO_RW_DIRECT)) +		return; + +	dev_err(mmc_dev(smc_host->mmc),
->>>=20
->>> I'd rather put it at a debug loglevel.
->>=20
->> Erm, this only happens if something is seriously wrong.
->=20
-> Still. Something would be seriously wrong in the MMC driver/controller. Y=
-ou don't want to bloat the whole kernel logs with the dump of your register=
-s just because the MMC is failing. This is of no interest to anyone but som=
-eone that would actually try to debug what's wrong.
+3) dwc3 core should continue probe if PHY device is not available. (-ENODEV?)
 
-This is not a complete register dump, this writes a single line to the
-kernel log saying that an io error happened, and printing the error flags
-set in the status register. We cannot be much shorter then this without
-simply not notifying the user that an io error has happened, and not
-notifying the user is wrong IMHO.
+4) dwc3 core should error out on any error condition if PHY device is available and caused some error,
+e.g. init error.
 
->=20
->>>> +	/* Make sure the controller is in a sane state before enabling irqs =
-*/ +	ret =3D sunxi_mmc_init_host(host->mmc); +	if (ret) +		return ret; + +	=
-host->irq =3D platform_get_irq(pdev, 0); +	ret =3D devm_request_irq(&pdev->=
-dev, host->irq, sunxi_mmc_irq, 0, +			       "sunxi-mmc", host); +	if (ret =
-=3D=3D 0) +		disable_irq(host->irq);
->>>=20
->>> The disable_irq is useless here. Just exit.
->>=20
->> No it is not note the ret =3D=3D 0, this is not an error handling path!
->=20
-> Doh... Right. My bad.
->=20
->> This is done under an if because we want to do the sunxi_mmc_exit_host r=
-egardless of the request_irq succeeding or not.
->>=20
->>>=20
->>>> + +	/* And put it back in reset */ +	sunxi_mmc_exit_host(host);
->>>=20
->>> Hu? If it's in reset, how can it generate some IRQs?
->>=20
->> Yes, that is why we do the whole dance of init controller, get irq, disa=
-ble irq, drop it back in reset (until the mmc subsys does a power on of the=
- mmc card / sdio dev).
->>=20
->> Sometime the controller asserts the irq in reset for some reason, so wit=
-hout the dance as soon as we do the devm_request_irq we get an irq, and wor=
-se, not only do we get an irq, we cannot clear it since writing to the inte=
-rrupt status register does not work when the controller is in reset, so we =
-get stuck re-entering the irq handler.
->=20
-> Hmmm, I see. It probably deserves some commenting here too then.
+5) dwc3 core should return EPROBE_DEFER if PHY device is available but device driver is not yet loaded.
 
-This call is the mirror of the sunxi_mmc_init_host a few lines higher, whic=
-h
-has this comment:
+6) platform glue should do the necessary sanity checks for availability of all resources like PHY device, PHY layer, etc, before populating the dwc3 device. e.g. in OMAP5 case we could check if both usb2 and usb3 PHY
+nodes are available in the DT and PHY layer is enabled, from dwc3-omap.c? In J6 case we could check that at least usb2 phy node is there for the High-Speed only controller, and so on.
 
-/* Make sure the controller is in a sane state before enabling irqs */
+Let us first agree on the requirements and then we can think about implementation.
 
-Which attempts to explain why we do the init controller, claim irq,
-disable irq, put controller back in reset sequence. Again suggestions
-for a better comment are welcome.
-
-<snip>
-
->>>> +	ret =3D mmc_add_host(mmc); + +	if (ret) +		goto error_free_dma; + +	=
-dev_info(&pdev->dev, "base:0x%p irq:%u\n", host->reg_base, host->irq); +	pl=
-atform_set_drvdata(pdev, mmc);
->>>=20
->>> This should be before the registration. Otherwise, you're racy.
->>=20
->> Nope, we only need this to get the data on sunxi_mmc_remove, everywhere =
-else the data is found through the mmc-host struct.
->=20
-> Still, if anyone makes a following patch using the platform_device for so=
-me reason, we will have a race condition, without any way to notice it.
->=20
-> Plus, you're doing all the other bits of initialization of your structure=
-s much earlier, why not be consistent and having all of them at the same pl=
-ace?
-
-Most platform drivers I've worked on do platform_set_drvdata as late as pos=
-sible,
-so that the drvdata does not get set and never cleared in error paths.
-
-This is just following that pattern.
-
-Regards,
-
-Hans
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlMEoDYACgkQF3VEtJrzE/uAggCdGpdcz1Nli6JREPcUcGww7wXk
-r4QAoIZfwy2e5GkHjQvrdpz0aT62x9/W
-=3Dy0wO
------END PGP SIGNATURE-----
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/groups/opt_out.
+cheers,
+-roger
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
