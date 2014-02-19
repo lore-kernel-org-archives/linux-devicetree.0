@@ -1,78 +1,47 @@
-From: Balaji T K <balajitk@ti.com>
-Subject: [PATCH RESEND v11 7/7] mmc: omap_hsmmc: remove pbias workaround
-Date: Wed, 19 Feb 2014 20:26:41 +0530
-Message-ID: <1392821801-29673-8-git-send-email-balajitk@ti.com>
-References: <1389627375-9107-1-git-send-email-balajitk@ti.com>
- <1392821801-29673-1-git-send-email-balajitk@ti.com>
+From: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 07/18] ahci-platform: "Library-ise"
+ ahci_probe functionality
+Date: Wed, 19 Feb 2014 09:58:39 -0500
+Message-ID: <20140219145839.GF10134@htj.dyndns.org>
+References: <1392811320-3132-1-git-send-email-hdegoede@redhat.com>
+ <1392811320-3132-8-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1392821801-29673-1-git-send-email-balajitk@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, chris@printf.net, tony@atomide.com
-Cc: broonie@kernel.org, Balaji T K <balajitk@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDQ2FCEAWYLRBIUNSOMAKGQEBSQL5PA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1392811320-3132-8-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-remove pbias workaround
+On Wed, Feb 19, 2014 at 01:01:49PM +0100, Hans de Goede wrote:
+> ahci_probe consists of 3 steps:
+> 1) Get resources (get mmio, clks, regulator)
+> 2) Enable resources, handled by ahci_platform_enable_resouces
+> 3) The more or less standard ahci-host controller init sequence
+> 
+> This commit refactors step 1 and 3 into separate functions, so the platform
+> drivers for AHCI implementations which need a specific order in step 2,
+> and / or need to do some custom register poking at some time, can re-use
+> ahci-platform.c code without needing to copy and paste it.
+> 
+> Note that ahci_platform_init_host's prototype takes the 3 non function
+> members of ahci_platform_data as arguments, the idea is that drivers using
+> the new exported utility functions will not use ahci_platform_data at all,
+> and hopefully in the future ahci_platform_data can go away entirely.
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Signed-off-by: Balaji T K <balajitk@ti.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
----
- drivers/mmc/host/omap_hsmmc.c |   20 +-------------------
- 1 files changed, 1 insertions(+), 19 deletions(-)
+Heh, the lack of comments is getting kinda impressive. :)
 
-diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index 2287bda..014bfe5 100644
---- a/drivers/mmc/host/omap_hsmmc.c
-+++ b/drivers/mmc/host/omap_hsmmc.c
-@@ -170,7 +170,6 @@ struct omap_hsmmc_host {
- 	struct	regulator	*vcc_aux;
- 	struct	regulator	*pbias;
- 	bool			pbias_enabled;
--	int			pbias_disable;
- 	void	__iomem		*base;
- 	resource_size_t		mapbase;
- 	spinlock_t		irq_lock; /* Prevent races with irq handler */
-@@ -267,13 +266,6 @@ static int omap_hsmmc_set_power(struct device *dev, int slot, int power_on,
- 	 */
- 	if (!host->vcc)
- 		return 0;
--	/*
--	 * With DT, never turn OFF the regulator for MMC1. This is because
--	 * the pbias cell programming support is still missing when
--	 * booting with Device tree
--	 */
--	if (host->pbias_disable && !vdd)
--		return 0;
- 
- 	if (mmc_slot(host).before_set_reg)
- 		mmc_slot(host).before_set_reg(dev, slot, power_on, vdd);
-@@ -1539,13 +1531,7 @@ static void omap_hsmmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
- 		 * of external transceiver; but they all handle 1.8V.
- 		 */
- 		if ((OMAP_HSMMC_READ(host->base, HCTL) & SDVSDET) &&
--			(ios->vdd == DUAL_VOLT_OCR_BIT) &&
--			/*
--			 * With pbias cell programming missing, this
--			 * can't be allowed on MMC1 when booting with device
--			 * tree.
--			 */
--			!host->pbias_disable) {
-+			(ios->vdd == DUAL_VOLT_OCR_BIT)) {
- 				/*
- 				 * The mmc_select_voltage fn of the core does
- 				 * not seem to set the power_mode to
-@@ -1878,10 +1864,6 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
- 
- 	omap_hsmmc_context_save(host);
- 
--	/* This can be removed once we support PBIAS with DT */
--	if (host->dev->of_node && res->start == 0x4809c000)
--		host->pbias_disable = 1;
--
- 	host->dbclk = clk_get(&pdev->dev, "mmchsdb_fck");
- 	/*
- 	 * MMC can still work without debounce clock.
+Thanks.
+
 -- 
-1.7.5.4
-
+tejun
