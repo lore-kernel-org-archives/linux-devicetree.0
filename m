@@ -1,49 +1,91 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] usb: chipidea: msm: Add device tree support
-Date: Wed, 19 Feb 2014 23:24:17 +0300
-Message-ID: <530512F1.3060304@cogentembedded.com>
-References: <1392729681-21022-1-git-send-email-iivanov@mm-sol.com>		 <1392729681-21022-3-git-send-email-iivanov@mm-sol.com>		 <53039E2E.2030503@cogentembedded.com>	 <1392743648.17130.17.camel@iivanov-dev>	 <5303A71B.7060208@cogentembedded.com> <1392824921.17130.71.camel@iivanov-dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+From: klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org
+Subject: [PATCH v7 0/4] DT support for kirkwood based Synology NAS boxes
+Date: Thu, 20 Feb 2014 06:02:33 +1000
+Message-ID: <1392840157-31072-1-git-send-email-klightspeed@killerwolves.net>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392824921.17130.71.camel@iivanov-dev>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Cc: Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+This patchset adds support for around 30 kirkwood bases Synology NAS
+boxes. Patch #1 documents vendor prefixes. Patch #2 generalizes the qnap
+power off driver so that it can also be used for Synology devices.
+Patch #3 adds sii,s35390a to i2c trivial devices. Patch #4 adds the 
+synology DT files.
 
-On 02/19/2014 06:48 PM, Ivan T. Ivanov wrote:
+v2:
+Typo fix in qnap-poweroff.c
+Use ricoy stock ticker instead of ricoh
+Describe the lego structure of the hardware
 
->>>>> From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+v3:
+Merge synology dtsi files into a single dtsi file
 
->>>>> Allows controller to be specified via device tree.
->>>>> Pass PHY phandle specified in DT to core driver.
+v4:
+Various minor fixes to synology dtsi file
 
->>>>> Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
->>>>> ---
->>>>>     drivers/usb/chipidea/ci_hdrc_msm.c |   23 ++++++++++++++++++++++-
->>>>>     1 file changed, 22 insertions(+), 1 deletion(-)
+v5:
+Fix typos in commit messages
+Remove unnecessary casts in qnap-poweroff.c
 
->>>>       You also need to describe the binding you're creating in
->>>> Documentation/devicetree/bindings/usb/<file>.txt.
+v6:
+Revert qnap vendor prefix change from v5
 
->>> Did you check "[PATCH v2 1/3]"?
+v7:
+Revert ricoh vendor prefix change from v2
 
->>      Did you send it to 'linux-usb'?
+Andrew Lunn (3):
+  DT: Vendor prefixes: Add ricoh, qnap, sii and synology
+  Power: Reset: Generalize qnap-poweroff to with on Synology devices.
+  DT: i2c: Trivial: Add sii,s35390a
 
-> Opps, sorry. get_maintainer.pl did not list linux-usb and I forgot
-> to add it. Would like to resend it?
+Ben Peddell (1):
+  ARM: Kirkwood: Add support for many Synology NAS devices
 
-    I guess so, since the binding document would go in thru the USB tree 
-anyway, IIUC.
+ .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
+ .../bindings/power_supply/qnap-poweroff.txt        |   5 +-
+ .../devicetree/bindings/vendor-prefixes.txt        |   4 +
+ arch/arm/boot/dts/Makefile                         |  15 +
+ arch/arm/boot/dts/kirkwood-ds109.dts               |  41 +
+ arch/arm/boot/dts/kirkwood-ds110jv10.dts           |  41 +
+ arch/arm/boot/dts/kirkwood-ds111.dts               |  44 ++
+ arch/arm/boot/dts/kirkwood-ds112.dts               |  48 ++
+ arch/arm/boot/dts/kirkwood-ds209.dts               |  44 ++
+ arch/arm/boot/dts/kirkwood-ds210.dts               |  46 ++
+ arch/arm/boot/dts/kirkwood-ds212.dts               |  47 ++
+ arch/arm/boot/dts/kirkwood-ds212j.dts              |  41 +
+ arch/arm/boot/dts/kirkwood-ds409.dts               |  48 ++
+ arch/arm/boot/dts/kirkwood-ds409slim.dts           |  40 +
+ arch/arm/boot/dts/kirkwood-ds411.dts               |  52 ++
+ arch/arm/boot/dts/kirkwood-ds411j.dts              |  48 ++
+ arch/arm/boot/dts/kirkwood-ds411slim.dts           |  48 ++
+ arch/arm/boot/dts/kirkwood-rs212.dts               |  48 ++
+ arch/arm/boot/dts/kirkwood-rs409.dts               |  44 ++
+ arch/arm/boot/dts/kirkwood-rs411.dts               |  44 ++
+ arch/arm/boot/dts/kirkwood-synology.dtsi           | 871 +++++++++++++++++++++
+ drivers/power/reset/qnap-poweroff.c                |  49 +-
+ 22 files changed, 1656 insertions(+), 13 deletions(-)
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds109.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds110jv10.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds111.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds112.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds209.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds210.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds212.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds212j.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds409.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds409slim.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds411.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds411j.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds411slim.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-rs212.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-rs409.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-rs411.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-synology.dtsi
 
-> Regards,
-> Ivan
-
-WBR, Sergei
+-- 
+1.8.3.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
