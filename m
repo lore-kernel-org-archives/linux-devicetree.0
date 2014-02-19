@@ -1,60 +1,558 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 5/5] ARM: dts: add bcm590xx pmu support and enable for
- bcm28155-ap
-Date: Wed, 19 Feb 2014 13:44:58 +0900
-Message-ID: <20140219044458.GA2669@sirena.org.uk>
-References: <1392765432-9111-1-git-send-email-mporter@linaro.org>
- <1392765432-9111-6-git-send-email-mporter@linaro.org>
+From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 1/2] ARM: dts: add device tree source for imx6sx SoC
+Date: Wed, 19 Feb 2014 15:53:51 +0800
+Message-ID: <1392796432-19127-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="IuxWNXB0+C4YKz9o"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1392765432-9111-6-git-send-email-mporter@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <mporter@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Christian Daudt <bcm@fixthebug.org>, Devicetree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Tim Kryger <tim.kryger@linaro.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Add device tree support for i.MX6SoloX SOC.
 
---IuxWNXB0+C4YKz9o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6sx.dtsi |  524 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 524 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6sx.dtsi
 
-On Tue, Feb 18, 2014 at 06:17:12PM -0500, Matt Porter wrote:
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+new file mode 100644
+index 0000000..6703b25
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -0,0 +1,524 @@
++/*
++ * Copyright 2011, 2014 Freescale Semiconductor, Inc.
++ * Copyright 2011 Linaro Ltd.
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
++
++#include <dt-bindings/clock/imx6sx-clock.h>
++#include "imx6sx-pinfunc.h"
++#include "skeleton.dtsi"
++
++/ {
++	aliases {
++		serial0 = &uart1;
++		serial1 = &uart2;
++	};
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			compatible = "arm,cortex-a9";
++			device_type = "cpu";
++			reg = <0>;
++			next-level-cache = <&L2>;
++		};
++	};
++
++	intc: interrupt-controller@00a01000 {
++		compatible = "arm,cortex-a9-gic";
++		#interrupt-cells = <3>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		interrupt-controller;
++		reg = <0x00a01000 0x1000>,
++		      <0x00a00100 0x100>;
++	};
++
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ckil {
++			compatible = "fsl,imx-ckil", "fixed-clock";
++			clock-frequency = <32768>;
++		};
++
++		osc {
++			compatible = "fsl,imx-osc", "fixed-clock";
++			clock-frequency = <24000000>;
++		};
++	};
++
++	soc {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "simple-bus";
++		interrupt-parent = <&intc>;
++		ranges;
++
++		L2: l2-cache@00a02000 {
++			compatible = "arm,pl310-cache";
++			reg = <0x00a02000 0x1000>;
++			interrupts = <0 92 0x04>;
++			cache-unified;
++			cache-level = <2>;
++			arm,tag-latency = <4 2 3>;
++			arm,data-latency = <4 2 3>;
++		};
++
++		pmu {
++			compatible = "arm,cortex-a9-pmu";
++			interrupts = <0 94 0x04>;
++		};
++
++		aips-bus@02000000 {
++			compatible = "fsl,aips-bus", "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			reg = <0x02000000 0x100000>;
++			ranges;
++
++			spba-bus@02000000 {
++				compatible = "fsl,spba-bus", "simple-bus";
++				#address-cells = <1>;
++				#size-cells = <1>;
++				reg = <0x02000000 0x40000>;
++				ranges;
++
++				uart1: serial@02020000 {
++					compatible = "fsl,imx6q-uart", "fsl,imx21-uart";
++					reg = <0x02020000 0x4000>;
++					interrupts = <0 26 0x04>;
++					clocks = <&clks IMX6SX_CLK_UART_IPG>, <&clks IMX6SX_CLK_UART_SERIAL>;
++					clock-names = "ipg", "per";
++					dmas = <&sdma 25 4 0>, <&sdma 26 4 0>;
++					dma-names = "rx", "tx";
++					status = "disabled";
++				};
++
++				spba@0203c000 {
++					reg = <0x0203c000 0x4000>;
++				};
++			};
++
++			aipstz@0207c000 {
++				reg = <0x0207c000 0x4000>;
++			};
++
++			gpt: gpt@02098000 {
++				compatible = "fsl,imx6sx-gpt";
++				reg = <0x02098000 0x4000>;
++				interrupts = <0 55 0x04>;
++				clocks = <&clks IMX6SX_CLK_GPT_BUS>, <&clks IMX6SX_CLK_GPT_SERIAL>;
++				clock-names = "ipg", "per";
++			};
++
++			wdog1: wdog@020bc000 {
++				compatible = "fsl,imx6q-wdt", "fsl,imx21-wdt";
++				reg = <0x020bc000 0x4000>;
++				interrupts = <0 80 0x04>;
++				clocks = <&clks IMX6SX_CLK_DUMMY>;
++			};
++
++			clks: ccm@020c4000 {
++				compatible = "fsl,imx6sx-ccm";
++				reg = <0x020c4000 0x4000>;
++				interrupts = <0 87 0x04 0 88 0x04>;
++				#clock-cells = <1>;
++			};
++
++			anatop: anatop@020c8000 {
++				compatible = "fsl,imx6sx-anatop", "fsl,imx6q-anatop",
++						"syscon", "simple-bus";
++				reg = <0x020c8000 0x1000>;
++				interrupts = <0 49 0x04 0 54 0x04 0 127 0x04>;
++			};
++
++			snvs@020cc000 {
++				compatible = "fsl,sec-v4.0-mon", "simple-bus";
++				#address-cells = <1>;
++				#size-cells = <1>;
++				ranges = <0 0x020cc000 0x4000>;
++
++				snvs-rtc-lp@34 {
++					compatible = "fsl,sec-v4.0-mon-rtc-lp";
++					reg = <0x34 0x58>;
++					interrupts = <0 19 0x04 0 20 0x04>;
++				};
++			};
++
++			src: src@020d8000 {
++				compatible = "fsl,imx6q-src", "fsl,imx51-src";
++				reg = <0x020d8000 0x4000>;
++				interrupts = <0 91 0x04 0 96 0x04>;
++				#reset-cells = <1>;
++			};
++
++			gpc: gpc@020dc000 {
++				compatible = "fsl,imx6q-gpc";
++				reg = <0x020dc000 0x4000>;
++				interrupts = <0 89 0x04>;
++			};
++
++			iomuxc: iomuxc@020e0000 {
++				compatible = "fsl,imx6sx-iomuxc";
++				reg = <0x020e0000 0x4000>;
++			};
++
++			gpr: iomuxc-gpr@020e4000 {
++				compatible = "fsl,imx6sx-iomuxc-gpr", "syscon";
++				reg = <0x020e4000 0x4000>;
++			};
++
++			sdma: sdma@020ec000 {
++				compatible = "fsl,imx6q-sdma", "fsl,imx35-sdma";
++				reg = <0x020ec000 0x4000>;
++				interrupts = <0 2 0x04>;
++				clocks = <&clks IMX6SX_CLK_SDMA>, <&clks IMX6SX_CLK_SDMA>;
++				clock-names = "ipg", "ahb";
++				#dma-cells = <3>;
++				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx6sx.bin";
++			};
++		};
++
++		aips-bus@02100000 {
++			compatible = "fsl,aips-bus", "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			reg = <0x02100000 0x100000>;
++			ranges;
++
++			aipstz@0217c000 {
++				reg = <0x0217c000 0x4000>;
++			};
++
++			fec1: ethernet@02188000 {
++				compatible = "fsl,imx6sx-fec";
++				reg = <0x02188000 0x4000>;
++				interrupts = <0 118 0x04 0 119 0x04>;
++				clocks = <&clks IMX6SX_CLK_ENET>, <&clks IMX6SX_CLK_ENET_AHB>,
++					<&clks IMX6SX_CLK_ENET_PTP>, <&clks IMX6SX_CLK_ENET_REF>;
++				clock-names = "ipg", "ahb", "ptp", "enet_clk_ref";
++				status = "disabled";
++                        };
++
++			usdhc3: usdhc@02198000 {
++				compatible = "fsl,imx6sx-usdhc", "fsl,imx6sl-usdhc";
++				reg = <0x02198000 0x4000>;
++				interrupts = <0 24 0x04>;
++				clocks = <&clks IMX6SX_CLK_USDHC3>, <&clks IMX6SX_CLK_USDHC3>, <&clks IMX6SX_CLK_USDHC3>;
++				clock-names = "ipg", "ahb", "per";
++				bus-width = <4>;
++				status = "disabled";
++			};
++
++			usdhc4: usdhc@0219c000 {
++				compatible = "fsl,imx6sx-usdhc", "fsl,imx6sl-usdhc";
++				reg = <0x0219c000 0x4000>;
++				interrupts = <0 25 0x04>;
++				clocks = <&clks IMX6SX_CLK_USDHC4>, <&clks IMX6SX_CLK_USDHC4>, <&clks IMX6SX_CLK_USDHC4>;
++				clock-names = "ipg", "ahb", "per";
++				bus-width = <4>;
++				status = "disabled";
++			};
++
++			i2c1: i2c@021a0000 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				compatible = "fsl,imx6sx-i2c", "fsl,imx21-i2c";
++				reg = <0x021a0000 0x4000>;
++				interrupts = <0 36 0x04>;
++				clocks = <&clks IMX6SX_CLK_I2C1>;
++				status = "disabled";
++			};
++
++			i2c2: i2c@021a4000 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				compatible = "fsl,imx6sx-i2c", "fsl,imx21-i2c";
++				reg = <0x021a4000 0x4000>;
++				interrupts = <0 37 0x04>;
++				clocks = <&clks IMX6SX_CLK_I2C2>;
++				status = "disabled";
++			};
++
++			i2c3: i2c@021a8000 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				compatible = "fsl,imx6sx-i2c", "fsl,imx21-i2c";
++				reg = <0x021a8000 0x4000>;
++				interrupts = <0 38 0x04>;
++				clocks = <&clks IMX6SX_CLK_I2C3>;
++				status = "disabled";
++			};
++
++			romcp@021ac000 {
++				compatible = "fsl,imx6sx-romcp", "syscon";
++				reg = <0x021ac000 0x4000>;
++			};
++
++			mmdc0: mmdc@021b0000 {
++				compatible = "fsl,imx6q-mmdc";
++				reg = <0x021b0000 0x4000>;
++			};
++
++			fec2: ethernet@021b4000 {
++				compatible = "fsl,imx6sx-fec";
++				reg = <0x021b4000 0x4000>;
++				interrupts = <0 102 0x04 0 103 0x04>;
++				clocks = <&clks IMX6SX_CLK_ENET>, <&clks IMX6SX_CLK_ENET_AHB>,
++					<&clks IMX6SX_CLK_ENET_PTP>, <&clks IMX6SX_CLK_ENET2_REF_125M>;
++				clock-names = "ipg", "ahb", "ptp", "enet_clk_ref";
++				status = "disabled";
++			};
++
++			tzasc@021d0000 {
++				reg = <0x021d0000 0x4000>;
++				interrupts = <0 108 0x04>;
++			};
++
++			uart2: serial@021e8000 {
++				compatible = "fsl,imx6q-uart", "fsl,imx21-uart";
++				reg = <0x021e8000 0x4000>;
++				interrupts = <0 27 0x04>;
++				clocks = <&clks IMX6SX_CLK_UART_IPG>, <&clks IMX6SX_CLK_UART_SERIAL>;
++				clock-names = "ipg", "per";
++				dmas = <&sdma 27 4 0>, <&sdma 28 4 0>;
++				dma-names = "rx", "tx";
++				status = "disabled";
++			};
++
++			i2c4: i2c@021f8000 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				compatible = "fsl,imx6sx-i2c", "fsl,imx21-i2c";
++				reg = <0x021f8000 0x4000>;
++				interrupts = <0 35 0x04>;
++				clocks = <&clks IMX6SX_CLK_I2C4>;
++				status = "disabled";
++			};
++		};
++
++		aips-bus@02200000 {
++			compatible = "fsl,aips-bus", "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			reg = <0x02200000 0x100000>;
++			ranges;
++
++			spba-bus@02200000 {
++				compatible = "fsl,spba-bus", "simple-bus";
++				#address-cells = <1>;
++				#size-cells = <1>;
++				reg = <0x02240000 0x40000>;
++				ranges;
++
++				spba@0223c000 {
++					reg = <0x0223c000 0x4000>;
++				};
++			};
++
++			aipstz@0227c000 {
++				reg = <0x0227c000 0x4000>;
++			};
++		};
++	};
++};
++
++&iomuxc {
++
++	enet1 {
++		pinctrl_enet1_1: enet1grp-1 {
++			fsl,pins = <
++				MX6SX_PAD_ENET1_MDIO__ENET1_MDIO        0xa0b1
++				MX6SX_PAD_ENET1_MDC__ENET1_MDC          0xa0b1
++				MX6SX_PAD_RGMII1_TXC__ENET1_RGMII_TXC   0xa0b1
++				MX6SX_PAD_RGMII1_TD0__ENET1_TX_DATA_0   0xa0b1
++				MX6SX_PAD_RGMII1_TD1__ENET1_TX_DATA_1   0xa0b1
++				MX6SX_PAD_RGMII1_TD2__ENET1_TX_DATA_2   0xa0b1
++				MX6SX_PAD_RGMII1_TD3__ENET1_TX_DATA_3   0xa0b1
++				MX6SX_PAD_RGMII1_TX_CTL__ENET1_TX_EN    0xa0b1
++				MX6SX_PAD_RGMII1_RXC__ENET1_RX_CLK      0x3081
++				MX6SX_PAD_RGMII1_RD0__ENET1_RX_DATA_0   0x3081
++				MX6SX_PAD_RGMII1_RD1__ENET1_RX_DATA_1   0x3081
++				MX6SX_PAD_RGMII1_RD2__ENET1_RX_DATA_2   0x3081
++				MX6SX_PAD_RGMII1_RD3__ENET1_RX_DATA_3   0x3081
++				MX6SX_PAD_RGMII1_RX_CTL__ENET1_RX_EN    0x3081
++			>;
++		};
++	};
++
++	enet2 {
++		pinctrl_enet2_1: enet2grp-1 {
++			fsl,pins = <
++				MX6SX_PAD_RGMII2_TXC__ENET2_RGMII_TXC   0xa0b1
++				MX6SX_PAD_RGMII2_TD0__ENET2_TX_DATA_0   0xa0b1
++				MX6SX_PAD_RGMII2_TD1__ENET2_TX_DATA_1   0xa0b0
++				MX6SX_PAD_RGMII2_TD2__ENET2_TX_DATA_2   0xa0b0
++				MX6SX_PAD_RGMII2_TD3__ENET2_TX_DATA_3   0xa0b0
++				MX6SX_PAD_RGMII2_TX_CTL__ENET2_TX_EN    0xa0b0
++				MX6SX_PAD_RGMII2_RXC__ENET2_RX_CLK      0x3081
++				MX6SX_PAD_RGMII2_RD0__ENET2_RX_DATA_0   0x3081
++				MX6SX_PAD_RGMII2_RD1__ENET2_RX_DATA_1   0x3081
++				MX6SX_PAD_RGMII2_RD2__ENET2_RX_DATA_2   0x3081
++				MX6SX_PAD_RGMII2_RD3__ENET2_RX_DATA_3   0x3081
++				MX6SX_PAD_RGMII2_RX_CTL__ENET2_RX_EN    0x3081
++			>;
++		};
++	};
++
++	i2c1 {
++		pinctrl_i2c1_1: i2c1grp-1 {
++			fsl,pins = <
++				MX6SX_PAD_GPIO1_IO01__I2C1_SDA          0x4001b8b1
++				MX6SX_PAD_GPIO1_IO00__I2C1_SCL          0x4001b8b1
++			>;
++		};
++
++		pinctrl_i2c1_2: i2c1grp-2 {
++			fsl,pins = <
++				MX6SX_PAD_CSI_DATA01__I2C1_SDA          0x4001b8b1
++				MX6SX_PAD_CSI_DATA00__I2C1_SCL          0x4001b8b1
++			>;
++		};
++	};
++
++	i2c2 {
++		pinctrl_i2c2_1: i2c2grp-1 {
++			fsl,pins = <
++				MX6SX_PAD_GPIO1_IO03__I2C2_SDA          0x4001b8b1
++				MX6SX_PAD_GPIO1_IO02__I2C2_SCL          0x4001b8b1
++			>;
++		};
++	};
++
++	i2c3 {
++		pinctrl_i2c3_1: i2c3grp-1 {
++			fsl,pins = <
++				MX6SX_PAD_ENET2_TX_CLK__I2C3_SDA        0x4001b8b1
++				MX6SX_PAD_KEY_COL4__I2C3_SCL            0x4001b8b1
++			>;
++		};
++
++		pinctrl_i2c3_2: i2c3grp-2 {
++			fsl,pins = <
++				MX6SX_PAD_KEY_ROW4__I2C3_SDA            0x4001b8b1
++				MX6SX_PAD_KEY_COL4__I2C3_SCL            0x4001b8b1
++			>;
++		};
++	};
++
++	i2c4 {
++		pinctrl_i2c4_1: i2c4grp-1 {
++			fsl,pins = <
++				MX6SX_PAD_CSI_DATA07__I2C4_SDA          0x4001b8b1
++				MX6SX_PAD_CSI_DATA06__I2C4_SCL          0x4001b8b1
++			>;
++		};
++	};
++
++	uart1 {
++		pinctrl_uart1_1: uart1grp-1 {
++			fsl,pins = <
++				MX6SX_PAD_GPIO1_IO04__UART1_TX 0x1b0b1
++				MX6SX_PAD_GPIO1_IO05__UART1_RX 0x1b0b1
++			>;
++		};
++
++		pinctrl_uart1_2: uart1grp-2 {
++			fsl,pins = <
++				MX6SX_PAD_ENET2_COL__UART1_RX 0x1b0b1
++				MX6SX_PAD_ENET2_CRS__UART1_TX 0x1b0b1
++			>;
++		};
++	};
++
++	uart2 {
++		pinctrl_uart2_1: uart2grp-1 {
++			fsl,pins = <
++				MX6SX_PAD_GPIO1_IO07__UART2_RX 0x1b0b1
++				MX6SX_PAD_GPIO1_IO06__UART2_TX 0x1b0b1
++			>;
++		};
++
++		pinctrl_uart2_2: uart2grp-2 {
++			fsl,pins = <
++				MX6SX_PAD_SD1_DATA0__UART2_RX 0x1b0b1
++				MX6SX_PAD_SD1_DATA1__UART2_TX 0x1b0b1
++			>;
++		};
++	};
++
++	usdhc3 {
++		pinctrl_usdhc3_1: usdhc3grp-1 {
++			fsl,pins = <
++				MX6SX_PAD_SD3_CMD__USDHC3_CMD	  0x17059
++				MX6SX_PAD_SD3_CLK__USDHC3_CLK	  0x10059
++				MX6SX_PAD_SD3_DATA0__USDHC3_DATA0 0x17059
++				MX6SX_PAD_SD3_DATA1__USDHC3_DATA1 0x17059
++				MX6SX_PAD_SD3_DATA2__USDHC3_DATA2 0x17059
++				MX6SX_PAD_SD3_DATA3__USDHC3_DATA3 0x17059
++				MX6SX_PAD_SD3_DATA4__USDHC3_DATA4 0x17059
++				MX6SX_PAD_SD3_DATA5__USDHC3_DATA5 0x17059
++				MX6SX_PAD_SD3_DATA6__USDHC3_DATA6 0x17059
++				MX6SX_PAD_SD3_DATA7__USDHC3_DATA7 0x17059
++			>;
++		};
++
++		pinctrl_usdhc3_1_100mhz: usdhc3grp-1-100mhz {
++			fsl,pins = <
++				MX6SX_PAD_SD3_CMD__USDHC3_CMD	  0x170b9
++				MX6SX_PAD_SD3_CLK__USDHC3_CLK	  0x100b9
++				MX6SX_PAD_SD3_DATA0__USDHC3_DATA0 0x170b9
++				MX6SX_PAD_SD3_DATA1__USDHC3_DATA1 0x170b9
++				MX6SX_PAD_SD3_DATA2__USDHC3_DATA2 0x170b9
++				MX6SX_PAD_SD3_DATA3__USDHC3_DATA3 0x170b9
++				MX6SX_PAD_SD3_DATA4__USDHC3_DATA4 0x170b9
++				MX6SX_PAD_SD3_DATA5__USDHC3_DATA5 0x170b9
++				MX6SX_PAD_SD3_DATA6__USDHC3_DATA6 0x170b9
++				MX6SX_PAD_SD3_DATA7__USDHC3_DATA7 0x170b9
++			>;
++		};
++
++		pinctrl_usdhc3_1_200mhz: usdhc3grp-1-200mhz {
++			fsl,pins = <
++				MX6SX_PAD_SD3_CMD__USDHC3_CMD	  0x170f9
++				MX6SX_PAD_SD3_CLK__USDHC3_CLK	  0x100f9
++				MX6SX_PAD_SD3_DATA0__USDHC3_DATA0 0x170f9
++				MX6SX_PAD_SD3_DATA1__USDHC3_DATA1 0x170f9
++				MX6SX_PAD_SD3_DATA2__USDHC3_DATA2 0x170f9
++				MX6SX_PAD_SD3_DATA3__USDHC3_DATA3 0x170f9
++				MX6SX_PAD_SD3_DATA4__USDHC3_DATA4 0x170f9
++				MX6SX_PAD_SD3_DATA5__USDHC3_DATA5 0x170f9
++				MX6SX_PAD_SD3_DATA6__USDHC3_DATA6 0x170f9
++				MX6SX_PAD_SD3_DATA7__USDHC3_DATA7 0x170f9
++			>;
++		};
++
++	};
++
++	usdhc4 {
++		pinctrl_usdhc4_1: usdhc4grp-1 {
++			fsl,pins = <
++				MX6SX_PAD_SD4_CMD__USDHC4_CMD     0x17059
++				MX6SX_PAD_SD4_CLK__USDHC4_CLK     0x10059
++				MX6SX_PAD_SD4_DATA0__USDHC4_DATA0 0x17059
++				MX6SX_PAD_SD4_DATA1__USDHC4_DATA1 0x17059
++				MX6SX_PAD_SD4_DATA2__USDHC4_DATA2 0x17059
++				MX6SX_PAD_SD4_DATA3__USDHC4_DATA3 0x17059
++				MX6SX_PAD_SD4_DATA4__USDHC4_DATA4 0x17059
++				MX6SX_PAD_SD4_DATA5__USDHC4_DATA5 0x17059
++				MX6SX_PAD_SD4_DATA6__USDHC4_DATA6 0x17059
++				MX6SX_PAD_SD4_DATA7__USDHC4_DATA7 0x17059
++			>;
++		};
++	};
++};
+-- 
+1.7.9.5
 
-> +			csr_reg: regulator@13 {
-> +				reg = <13>;
-> +				regulator-compatible = "csr";
-> +				regulator-min-microvolt = <860000>;
-> +				regulator-max-microvolt = <1440000>;
-> +			};
 
-You should not be setting voltage ranges like this in a .dtsi - you've
-no idea if these voltage ranges are in fact valid for any given board so
-they can't be set safely.  In general I would not expect to see any
-configuration at all for regulators in an include file for the chip.
-
---IuxWNXB0+C4YKz9o
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTBDbGAAoJELSic+t+oim9HyUP/iejeqqfCwxpuLryX9gF/zid
-gBWJp8SdChOm+Tcnqkjad2Xj0jzQE1B4cwH05g06Ak2MTnkoQ+eac4G5q43r3pz2
-mj2RhlubkSuD8YuYiJp4AC3+vqa0haoYSZz7qMpOWjcwhuactM5Cd6v7ycgFssu/
-kEje6arpNwmW/dySCWZnf3NODXwVPe+vsntkGpiPOJGislw8ojoAc+1oyNWcR72l
-lxxJBireQOdx+D5QsQiShbo2IWTnsK/V21IvPBNb67m/JdAY50MsRXAD2PPH/BDG
-3SPCBY4FDD6ABV2AYj1hnXik519zD+SYO0NI3eiX0QWjU8QS9Ox0MksuKL+fg3Xb
-6iuAeVmA60klRTyABtXVZ2AVUuK9vdQl14vUgyn7fNpfMuplKyWij4+IWwcH9QNa
-9enMotRjA8a91fpm/brnJNRvk3dz7I3QoS6UIUk9LnQNzV6NaJydYFUVIlbUgVwJ
-tVNpox0e5ypBhBrslawt8bPjFSQX7boRgDvrtX2WsFXyMuOMCtec2TbL3Px/7TS9
-+tzCMO5sH5A81c/16jSiFOOarT2qGg5KdR7GIsjB23Xcm9F0q2JE/Y/Jaz8LukD7
-/ivgtbiUCJDOyAphJ5KLxHABL7qKDMkQRvZF+nGPEHYkqyB+65tiOvH8QI97PSlJ
-8TNCa5ZoXp8KtlzQOlP8
-=6XEW
------END PGP SIGNATURE-----
-
---IuxWNXB0+C4YKz9o--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
