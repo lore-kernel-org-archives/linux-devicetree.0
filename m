@@ -1,52 +1,70 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] Phytec phyFLEX-i.MX6 : Added USB_OTG Support
-Date: Wed, 19 Feb 2014 14:59:53 +0800
-Message-ID: <20140219065949.GD3010@S2101-09.ap.freescale.net>
-References: <1392731185-4885-1-git-send-email-ashutosh.s@phytec.in>
- <20140219022307.GL15716@S2101-09.ap.freescale.net>
- <20140219055824.GB3010@S2101-09.ap.freescale.net>
- <53045225.50509@phytec.in>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH 2/4] ARM: dts: Enable SAI ALSA SoC DAI device for Vybrid
+ VF610 TOWER board.
+Date: Wed, 19 Feb 2014 15:06:32 +0800
+Message-ID: <20140219070630.GE3010@S2101-09.ap.freescale.net>
+References: <1392788323-6092-1-git-send-email-Li.Xiubo@freescale.com>
+ <1392788323-6092-3-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <53045225.50509-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ashutosh <Ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, c.hemp-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+In-Reply-To: <1392788323-6092-3-git-send-email-Li.Xiubo@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Xiubo Li <Li.Xiubo@freescale.com>
+Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Do not send email in html.
+On Wed, Feb 19, 2014 at 01:38:41PM +0800, Xiubo Li wrote:
+> This patch adds and enables the SAI device.
+> 
+> Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
+> ---
+>  arch/arm/boot/dts/vf610-twr.dts | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/vf610-twr.dts b/arch/arm/boot/dts/vf610-twr.dts
+> index e3a3805..8217854 100644
+> --- a/arch/arm/boot/dts/vf610-twr.dts
+> +++ b/arch/arm/boot/dts/vf610-twr.dts
+> @@ -127,9 +127,27 @@
+>  				VF610_PAD_PTB5__UART1_RX		0x21a1
+>  			>;
+>  		};
+> +
+> +		pinctrl_sai2: sai2grp {
 
-On Wed, Feb 19, 2014 at 12:11:41PM +0530, Ashutosh wrote:
-> By seeing the discussion would the below changes is appropriate
-> 
-> regulators {
->                 compatible = "simple-bus";
->                 #address-cells = <1>;
->                 #size-cells = <0>;
-> 
->                 reg_usb_otg_vbus: regulator@0 {
->                                compatible = "regulator-fixed";
->                                 reg = <0>;
->                                 regulator-name = "usb_otg_vbus";
->                                 regulator-min-microvolt = <5000000>;
->                                 regulator-max-microvolt = <5000000>;
->                                 gpio = <&gpio4 15 0>;
->                 };
-> 
-> But as Mark [1] suggested not to use simple bus. Which one is more appropriate
-> ?
+To sort it alphabetically, the entry should be added before
+pinctrl_uart1.
 
-Since it's already been used so widely and provided us a nice way to use
-the generic node name, I believe Mark is giving up his position.
+> +		      fsl,pins = <
+> +			      VF610_PAD_PTA16__SAI2_TX_BCLK   0x02ed
+> +			      VF610_PAD_PTA18__SAI2_TX_DATA   0x02ee
+> +			      VF610_PAD_PTA19__SAI2_TX_SYNC   0x02ed
+> +			      VF610_PAD_PTA21__SAI2_RX_BCLK   0x02ed
+> +			      VF610_PAD_PTA22__SAI2_RX_DATA   0x02ed
+> +			      VF610_PAD_PTA23__SAI2_RX_SYNC   0x02ed
+> +			      VF610_PAD_PTB18__EXT_AUDIO_MCLK 0x02ed
+
+Use tabs instead of spaces.
 
 Shawn
 
+> +			>;
+> +		};
+>  	};
+>  };
+>  
+> +&sai2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_sai2>;
+> +	status = "okay";
+> +};
+> +
+>  &uart1 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_uart1>;
+> -- 
+> 1.8.4
 > 
-> [1] http://www.spinics.net/lists/linux-usb/msg101477.html
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
