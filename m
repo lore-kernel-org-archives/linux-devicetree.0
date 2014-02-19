@@ -1,130 +1,154 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/2] usb: dwc3: core: continue probing if usb phy library
- returns -ENODEV/-ENXIO
-Date: Wed, 19 Feb 2014 14:37:32 +0200
-Message-ID: <5304A58C.2030306@ti.com>
-References: <1385373690-12170-1-git-send-email-kishon@ti.com> <1390299099-14764-1-git-send-email-kishon@ti.com> <20140121144725.GF30451@saruman.home> <20140127150855.GA17928@xps8300> <20140127160458.GF13268@saruman.home> <20140128153230.GA20991@xps8300> <20140128163036.GD28546@saruman.home> <20140129144659.GA22152@xps8300> <52FB42DE.4090203@ti.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH v3 3/6] drivers: of: implement reserved-memory handling for
+ dma
+Date: Wed, 19 Feb 2014 13:39:01 +0100
+Message-ID: <5304A5E5.40706@samsung.com>
+References: <1392730681-14695-1-git-send-email-m.szyprowski@samsung.com>
+ <1392730681-14695-4-git-send-email-m.szyprowski@samsung.com>
+ <20140218165815.C7661C40517@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52FB42DE.4090203-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: george.cherian-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20140218165815.C7661C40517@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello,
 
-On 02/12/2014 11:46 AM, Kishon Vijay Abraham I wrote:
-> On Wednesday 29 January 2014 08:17 PM, Heikki Krogerus wrote:
->> Hi,
->>
->> On Tue, Jan 28, 2014 at 10:30:36AM -0600, Felipe Balbi wrote:
->>> On Tue, Jan 28, 2014 at 05:32:30PM +0200, Heikki Krogerus wrote:
->>>> On Mon, Jan 27, 2014 at 10:05:20AM -0600, Felipe Balbi wrote:
->>>> For the controller drivers the PHYs are just a resource like any
->>>> other. The controller drivers can't have any responsibility of
->>>> them. They should not care if PHY drivers are available for them or
->>>> not, or even if the PHY framework is available or not.
->>>
->>> huh? If memory isn't available you don't continue probing, right ? If
->>> your IORESOURCE_MEM is missing, you also don't continue probing, if your
->>> IRQ line is missing, you bail too. Those are also nothing but resources
->>> to the driver, what you're asking here is to treat PHY as a _different_
->>> resource; which might be fine, but we need to make sure we don't
->>> continue probing when a PHY is missing in a platform that certainly
->>> needs a PHY.
->>
->> Yes, true. In my head I was comparing the PHY only to resources like
->> gpios, clocks, dma channels, etc. that are often optional to the
->> drivers.
->>
->>>>>>> But I really want to see the argument against using no-op. As far as I
->>>>>>> could see, everybody needs a PHY driver one way or another, some
->>>>>>> platforms just haven't sent any PHY driver upstream and have their own
->>>>>>> hacked up solution to avoid using the PHY layer.
->>>>>>
->>>>>> Not true in our case. Platforms using Intel's SoCs and chip sets may
->>>>>> or may not have controllable USB PHY. Quite often they don't. The
->>>>>> Baytrails have usually ULPI PHY for USB2, but that does not mean they
->>>>>> provide any vendor specific functions or any need for a driver in any
->>>>>> case.
->>>>>
->>>>> that's different from what I heard.
->>>>
->>>> I don't know where you got that impression, but it's not true. The
->>>> Baytrail SoCs for example don't have internal USB PHYs, which means
->>>> the manufacturers using it can select what they want. So we have
->>>> boards where PHY driver(s) is needed and boards where it isn't.
->>>
->>> alright, that explains it ;-) So you have external USB2 and USB3 PHYs ?
->>> You have an external PIPE3 interface ? That's quite an achievement,
->>> kudos to your HW designers. Getting timing closure on PIPE3 is a
->>> difficult task.
->>
->> No, only the USB2 PHY is external. I'm giving you wrong information,
->> I'm sorry about that. Need to concentrate on what I'm writing.
->>
->> <snip>
->>
->>>> This is really good to get. We have some projects where we are dealing
->>>> with more embedded environments, like IVI, where the kernel should be
->>>> stripped of everything useless. Since the PHYs are autonomous, we
->>>> should be able to disable the PHY libraries/frameworks.
->>>
->>> hmmm, in that case it's a lot easier to treat. We can use
->>> ERR_PTR(-ENXIO) as an indication that the framework is disabled, or
->>> something like that.
->>>
->>> The difficult is really reliably supporting e.g. OMAP5 (which won't work
->>> without a PHY) and your BayTrail with autonomous PHYs. What can we use
->>> as an indication ?
->>
->> OMAP has it's own glue driver, so shouldn't it depend on the PHY
->> layer?
-> 
-> right, but the PHY is connected to the dwc3 core and not to the glue.
->>
->>> I mean, I need to know that a particular platform depends on a PHY
->>> driver before I decide to return -EPROBE_DEFER or just assume the PHY
->>> isn't needed ;-)
->>
->> I don't think dwc3 (core) should care about that. The PHY layer needs
->> to tell us that. If the PHY driver that the platform depends is not
->> available yet, the PHY layer returns -EPROBE_DEFER and dwc3 ends up
->> returning -EPROBE_DEFER.
-> 
-> I don't think the PHY layer can 'reliably' tell if PHY driver is available or
-> not. Consider when the phy_provider_register fails, there is no way to know if
-> PHY driver is available or not. There are a few cases where PHY layer returns
-> -EPROBE_DEFER but none of them can tell for sure that PHY driver is either
-> available and failed or not available at all. It would be best for us to leave
-> that to the platforms if we want to be sure if the platform needs a PHY or not.
-> 
+On 2014-02-18 17:58, Grant Likely wrote:
+> On Tue, 18 Feb 2014 14:37:58 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+> > From: Josh Cartwright <joshc@codeaurora.org>
+> >
+> > Add support for handling 'shared-dma-pool' reserved-memory nodes using
+> > dma exclusive driver (dma_alloc_coherent()).
+> >
+> > Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
+> > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > ---
+> >  drivers/of/Kconfig               |    7 ++++
+> >  drivers/of/Makefile              |    1 +
+> >  drivers/of/of_reserved_mem_dma.c |   65 ++++++++++++++++++++++++++++++++++++++
+>
+> I don't see any reason to have this separate from of_reserved_mem.c
 
-Just to summarize this thread on what we need
+Some architectures don't have support for dma_declare_coherent_memory()
+(CONFIG_HAVE_GENERIC_DMA_COHERENT), good examples are arc, c6x, metag 
+and extensa.
+This code will not work for them.
 
-1) dwc3 core shouldn't worry about platform specific stuff i.e. PHY needed or not.
-It should be as generic as possible.
+> >  3 files changed, 73 insertions(+)
+> >  create mode 100644 drivers/of/of_reserved_mem_dma.c
+> >
+> > diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> > index f25931dfc6db..7f00b801bcd2 100644
+> > --- a/drivers/of/Kconfig
+> > +++ b/drivers/of/Kconfig
+> > @@ -80,4 +80,11 @@ config OF_RESERVED_MEM
+> >  	help
+> >  	  Helpers to allow for reservation of memory regions
+> >
+> > +config OF_RESERVED_MEM_DMA
+> > +	depends on OF_RESERVED_MEM
+> > +	depends on HAVE_GENERIC_DMA_COHERENT
+> > +	def_bool y
+> > +	help
+> > +	  Helpers for reserving memory regions for DMA use
+> > +
+> >  endmenu # OF
+> > diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+> > index ed9660adad77..6142227ca854 100644
+> > --- a/drivers/of/Makefile
+> > +++ b/drivers/of/Makefile
+> > @@ -10,3 +10,4 @@ obj-$(CONFIG_OF_PCI)	+= of_pci.o
+> >  obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+> >  obj-$(CONFIG_OF_MTD)	+= of_mtd.o
+> >  obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
+> > +obj-$(CONFIG_OF_RESERVED_MEM_DMA) += of_reserved_mem_dma.o
+> > diff --git a/drivers/of/of_reserved_mem_dma.c b/drivers/of/of_reserved_mem_dma.c
+> > new file mode 100644
+> > index 000000000000..a3e596d1091d
+> > --- /dev/null
+> > +++ b/drivers/of/of_reserved_mem_dma.c
+> > @@ -0,0 +1,65 @@
+> > +/*
+> > + * Device tree based initialization code for DMA reserved regions.
+> > + *
+> > + * Copyright (c) 2013, The Linux Foundation. All Rights Reserved.
+> > + * Copyright (c) 2013,2014 Samsung Electronics Co., Ltd.
+> > + *		http://www.samsung.com
+> > + * Author: Marek Szyprowski <m.szyprowski@samsung.com>
+> > + * Author: Josh Cartwright <joshc@codeaurora.org>
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > + * modify it under the terms of the GNU General Public License as
+> > + * published by the Free Software Foundation; either version 2 of the
+> > + * License or (at your optional) any later version of the license.
+> > + */
+> > +#include <linux/memblock.h>
+> > +#include <linux/err.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_fdt.h>
+> > +#include <linux/of_platform.h>
+> > +#include <linux/mm.h>
+> > +#include <linux/sizes.h>
+> > +#include <linux/mm_types.h>
+> > +#include <linux/dma-mapping.h>
+> > +#include <linux/of_reserved_mem.h>
+> > +
+> > +static void rmem_dma_device_init(struct reserved_mem *rmem,
+> > +				 struct device *dev,
+> > +				 struct of_phandle_args *args)
+> > +{
+> > +	dma_declare_coherent_memory(dev, rmem->base, rmem->base,
+> > +		rmem->size, DMA_MEMORY_MAP | DMA_MEMORY_EXCLUSIVE);
+> > +}
+> > +
+> > +static void rmem_dma_device_release(struct reserved_mem *rmem,
+> > +				    struct device *dev)
+> > +{
+> > +	dma_release_declared_memory(dev);
+> > +}
+> > +
+> > +static const struct reserved_mem_ops rmem_dma_ops = {
+> > +	.device_init	= rmem_dma_device_init,
+> > +	.device_release	= rmem_dma_device_release,
+> > +};
+> > +
+> > +static int __init rmem_dma_setup(struct reserved_mem *rmem,
+> > +				 unsigned long node,
+> > +				 const char *uname)
+> > +{
+> > +	int err;
+> > +
+> > +	if (of_get_flat_dt_prop(node, "reusable", NULL))
+> > +		return -EINVAL;
+> > +
+> > +	err = memblock_remove(rmem->base, rmem->size);
+>
+> Isn't the memblock_remove() now handled by the core code? Or am I
+> mis-reading it?
 
-2) dwc3 core should continue probe even if PHY layer is not enabled, as not all platforms need it.
+I forgot to remove it...
 
-3) dwc3 core should continue probe if PHY device is not available. (-ENODEV?)
+> > +	if (err == 0) {
+> > +		rmem->ops = &rmem_dma_ops;
+> > +		pr_info("Reserved memory: created DMA memory pool at %pa, size %ld MiB\n",
+> > +			&rmem->base, (unsigned long)rmem->size / SZ_1M);
+> > +	} else {
+> > +		pr_err("Reserved memory: unable to setup '%s' memory region for DMA.\n",
+> > +		       uname);
+> > +	}
+> > +	return err;
+> > +}
+> > +RESERVEDMEM_OF_DECLARE(dma, "shared-dma-pool", rmem_dma_setup);
+> > --
+> > 1.7.9.5
+> >
 
-4) dwc3 core should error out on any error condition if PHY device is available and caused some error,
-e.g. init error.
-
-5) dwc3 core should return EPROBE_DEFER if PHY device is available but device driver is not yet loaded.
-
-6) platform glue should do the necessary sanity checks for availability of all resources like PHY device, PHY layer, etc, before populating the dwc3 device. e.g. in OMAP5 case we could check if both usb2 and usb3 PHY
-nodes are available in the DT and PHY layer is enabled, from dwc3-omap.c? In J6 case we could check that at least usb2 phy node is there for the High-Speed only controller, and so on.
-
-Let us first agree on the requirements and then we can think about implementation.
-
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
