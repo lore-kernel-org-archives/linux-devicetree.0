@@ -1,41 +1,95 @@
-From: Warner Losh <wlosh-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
-Subject: Re: devicetree repository separation/migration
-Date: Wed, 19 Feb 2014 14:43:58 -0700
-Message-ID: <88923CF8-5E0A-46A4-AAA0-AC277F5C9446@bsdimp.com>
-References: <20140217180544.GU7862@titan.lakedaemon.net> <20140218155750.GS17250@pengutronix.de> <20140218181854.GB7862@titan.lakedaemon.net> <CACxGe6vU3j4-UtUtxBkT=Mf+AeLVxBcWicGqQhcGVZXnEBUkig@mail.gmail.com>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6vU3j4-UtUtxBkT=Mf+AeLVxBcWicGqQhcGVZXnEBUkig-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, =?utf-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 1/2] of: Allows to use the PCI translator without the PCI core
+Date: Wed, 19 Feb 2014 23:14:55 +0100
+Message-ID: <1392848096-17838-2-git-send-email-gregory.clement@free-electrons.com>
+References: <1392848096-17838-1-git-send-email-gregory.clement@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392848096-17838-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Translating an address from a PCI node of the device-tree into a CPU
+physical address doesn't require the core PCI support. Those
+translations are just related to the device tree itself.
 
-On Feb 19, 2014, at 2:09 PM, Grant Likely wrote:
+The use case to translate an address from a PCI node without actually
+using the PCI core support is when one needs to access the PCI
+controller without accessing any PCI devices.
 
-> On Tue, Feb 18, 2014 at 6:18 PM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
->> On Tue, Feb 18, 2014 at 04:57:50PM +0100, Sascha Hauer wrote:
->>> It will be interesting to see which rules should apply for merging new
->>> bindings. I know that devicetrees should be OS agnostic, but sometimes
->>> they are modelled after how Linux currently works. What happens when the
->>> *BSD guys have different ideas how a good binding looks like? How will
->>> such conflicts be resolved?
->> 
->> That's more a question for Grant.  I assume we'll all put on our big-boy
->> pants and pick the best technical solution based on their merits. :)
-> 
-> I think you've answered it pretty competently.
+Marvell SoCs, such as Kirkwood, Dove or Armada XP for instance, come
+with an IP of a PCI controller. In the registers of this controller
+are stored the ID and the revision of a SoC. With this patch it will
+be possible to read the SoC ID of a board without any PCI device and
+then without the PCI core support.
 
-What, the BSDs don't get a free pass to dump junk into the process. I'm shocked :)
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ drivers/of/Kconfig   | 4 ++++
+ drivers/of/address.c | 8 +++++---
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-But we have bug-boy pants over in BSD land, so that shouldn't be a problem.
-
-Warner
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index c6973f101a3e..ffdcb11f75fb 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -44,6 +44,10 @@ config OF_DYNAMIC
+ config OF_ADDRESS
+ 	def_bool y
+ 	depends on !SPARC
++	select OF_ADDRESS_PCI if PCI
++
++config OF_ADDRESS_PCI
++	bool
+ 
+ config OF_IRQ
+ 	def_bool y
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 1a54f1ffaadb..cb4242a69cd5 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -91,7 +91,7 @@ static unsigned int of_bus_default_get_flags(const __be32 *addr)
+ 	return IORESOURCE_MEM;
+ }
+ 
+-#ifdef CONFIG_PCI
++#ifdef CONFIG_OF_ADDRESS_PCI
+ /*
+  * PCI bus specific translator
+  */
+@@ -166,7 +166,9 @@ static int of_bus_pci_translate(__be32 *addr, u64 offset, int na)
+ {
+ 	return of_bus_default_translate(addr + 1, offset, na - 1);
+ }
++#endif /* CONFIG_OF_ADDRESS_PCI */
+ 
++#ifdef CONFIG_PCI
+ const __be32 *of_get_pci_address(struct device_node *dev, int bar_no, u64 *size,
+ 			unsigned int *flags)
+ {
+@@ -356,7 +358,7 @@ static unsigned int of_bus_isa_get_flags(const __be32 *addr)
+  */
+ 
+ static struct of_bus of_busses[] = {
+-#ifdef CONFIG_PCI
++#ifdef CONFIG_OF_ADDRESS_PCI
+ 	/* PCI */
+ 	{
+ 		.name = "pci",
+@@ -367,7 +369,7 @@ static struct of_bus of_busses[] = {
+ 		.translate = of_bus_pci_translate,
+ 		.get_flags = of_bus_pci_get_flags,
+ 	},
+-#endif /* CONFIG_PCI */
++#endif /* CONFIG_OF_ADDRESS_PCI */
+ 	/* ISA */
+ 	{
+ 		.name = "isa",
+-- 
+1.8.1.2
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
