@@ -1,135 +1,80 @@
-From: Paolo Pisati <p.pisati@gmail.com>
-Subject: Re: [PATCH v2] ARM/dts: hdmi-codec: panda/es dt entries
-Date: Wed, 19 Feb 2014 11:54:34 +0100
-Message-ID: <20140219105434.GA5738@luxor.wired.org>
-References: <1392716606-7436-1-git-send-email-paolo.pisati@canonical.com>
- <5304681C.4010106@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5304681C.4010106@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Paolo Pisati <paolo.pisati@canonical.com>, bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [RFC PATCH v2 0/2] Syscon early initialization
+Date: Wed, 19 Feb 2014 12:04:03 +0100
+Message-ID: <cover.1392807832.git.michal.simek@xilinx.com>
+Content-Type: multipart/signed;
+    boundary="=_mimegpg-monstr-desktop-32437-1392807845-0001";
+    micalg=pgp-sha1; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+Cc: Mike Turquette <mturquette@linaro.org>, Kumar Gala <galak@codeaurora.org>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, James Hogan <james.hogan@imgtec.com>, Michal Simek <monstr@monstr.eu>, Felipe Pena <felipensp@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Soren Brinkmann <soren.brinkmann@xilinx.com>, Stephen Warren <swarren@nvidia.com>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robherring2@gmail.com>, Josh Cartwright <josh.cartwright@ni.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-kernel@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 19, 2014 at 10:15:24AM +0200, Peter Ujfalusi wrote:
-> > diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
-> > index 88c6a05..f4aeaa1 100644
-> > --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
-> > +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
-> > @@ -36,9 +36,15 @@
-> >  		};
-> >  	};
-> >  
-> > +	hdmi_audio: hdmi_audio@0 {
-> > +		compatible = "linux,hdmi-audio";
-> > +		status = "okay";
-> > +	};
-> > +
-> >  	sound: sound {
-> >  		compatible = "ti,abe-twl6040";
-> >  		ti,model = "PandaBoard";
-> > +		ti,audio-codec = <&hdmi_audio>;
-> 
-> I don't think this is going to work. The omap-abe-twl6040 machine driver only
-> handles mcpdm and dmic right know.
-> 'ti,audio-codec' is not even supported and it is kind of misleading naming in
-> this context since twl6040 is also a codec, so why only the dummy-hdmi codec
-> deserves to be called as codec.
+This is a MIME GnuPG-signed message.  If you see this text, it means that
+your E-mail or Usenet software does not support MIME signed messages.
+The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
+To open this message correctly you will need to install E-mail or Usenet
+software that supports modern Internet standards.
 
-i see what you mean: i thought that hdmi_audio to actually work had to be
-referenced inside the sound node (hence my inclusion there) but i was wrong and
-it had nothing to do with twl6040,
-would this one be ok for you?
+--=_mimegpg-monstr-desktop-32437-1392807845-0001
 
-diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
-index 88c6a05..b6dd458 100644
---- a/arch/arm/boot/dts/omap4-panda-common.dtsi
-+++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
-@@ -36,6 +36,11 @@
-                };
-        };
- 
-+       hdmi_audio: hdmi_audio@0 {
-+               compatible = "linux,hdmi-audio";
-+               status = "okay";
-+       };
-+
-        sound: sound {
-                compatible = "ti,abe-twl6040";
-                ti,model = "PandaBoard";
+Hi,
+
+this series come from my discussion with Arnd at KS and then
+on some other threads/IRCs(Arnd and Mark) that SoC vendors
+are more and more try to add misc functionality to
+one memory region. For this purpose syscon driver is in the kernel.
+But regular syscon driver is initialized too late
+and platforms are trying to create specific code to handle it.
+
+For this purpose the series have been created to provide
+early syscon initialization and regmap creation first
+and then attaching device.
+
+The last patch is zynq specific patch to clear slcr driver
+and clock driver can profit from it too when clk regmap is ready.
+
+Also moving syscon driver from mfs should be consider.
+
+Mark already applied the first part to his regmap repo
+git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/nodev
+
+Thanks for your comments,
+Michal
+
+Changes in v2:
+- Fix bad logic in early_syscon_probe
+- Fix compilation failure for x86_64 reported by zero day testing system
+- Regmap change available here
+  git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/nodev
+
+Michal Simek (2):
+  mfd: syscon: Support early initialization
+  ARM: zynq: Use early syscon initialization
+
+ arch/arm/boot/dts/zynq-7000.dtsi |   1 +
+ arch/arm/mach-zynq/common.c      |   6 +-
+ arch/arm/mach-zynq/slcr.c        |  42 +------------
+ drivers/clk/zynq/clkc.c          |  57 ++++++-----------
+ drivers/mfd/syscon.c             | 128 +++++++++++++++++++++++++++++++++------
+ include/linux/mfd/syscon.h       |  11 ++++
+ 6 files changed, 145 insertions(+), 100 deletions(-)
+
+--
+1.8.2.3
 
 
-> Furthermore: we have the omap-hdmi-card machine driver to handle the HDMI
-> audio. It lacks DT support AFAIK but should not be a big deal to add the bindings.
-> To get the hdmi audio working you also need to have phandle for the omap-hdmi
-> DAI, the codec alone is not enough.
->
- 
-you mean sound/soc/omap/omap-hdmi-card.c? that's exactly what i'm trying to fix.
+--=_mimegpg-monstr-desktop-32437-1392807845-0001
+Content-Type: application/pgp-signature
+Content-Transfer-Encoding: 7bit
 
-With the above patch, plus:
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
 
--CONFIG_DISPLAY_CONNECTOR_HDMI=m
-+CONFIG_DISPLAY_CONNECTOR_HDMI=y
- CONFIG_DISPLAY_ENCODER_TFP410=m
--CONFIG_DISPLAY_ENCODER_TPD12S015=m
-+CONFIG_DISPLAY_ENCODER_TPD12S015=y
+iEYEABECAAYFAlMEj6UACgkQykllyylKDCGb6wCfdne+g60RLdXb6xSWPWFQL/zt
+wMsAni+3jNNwl+yzcHbjcwOl7W5Im97x
+=4NI8
+-----END PGP SIGNATURE-----
 
-to make the omap-hdmi-audio-dai attach (sound/soc/omap/omap-hdmi.c)
-and something like this (that is not upstreamable as i understand
-but is an unfortunate fallout from the board removal[*]):
-
---- a/arch/arm/mach-omap2/devices.c
-+++ b/arch/arm/mach-omap2/devices.c
-@@ -335,6 +335,11 @@ static struct platform_device omap_hdmi_audio = {
-        .id     = -1,
- };
- 
-+static struct platform_device hdmi_audio_codec = {
-+       .name   = "hdmi-audio-codec",
-+       .id     = -1,
-+};
-+
- static void __init omap_init_hdmi_audio(void)
- {
-        struct omap_hwmod *oh;
-@@ -349,6 +354,7 @@ static void __init omap_init_hdmi_audio(void)
-             "Can't build omap_device for omap-hdmi-audio-dai.\n");
- 
-        platform_device_register(&omap_hdmi_audio);
-+       platform_device_register(&hdmi_audio_codec);
- }
- #else
- static inline void omap_init_hdmi_audio(void) {}
-
-i finally get my OMAPHDMI device back:
-
-flag@panda:~$ cat /proc/asound/cards 
- 0 [OMAPHDMI       ]: OMAPHDMI - OMAPHDMI
-                      OMAPHDMI
- 1 [PandaBoardES   ]: PandaBoardES - PandaBoardES
-                      PandaBoardES
-
-[*]: in arch/arm/mach-omap2/board-omap4panda.c we had:
-
--static struct platform_device panda_hdmi_audio_codec = {
--       .name   = "hdmi-audio-codec",
--       .id     = -1,
--};
-
--static struct platform_device *panda_devices[] __initdata = {
-...
--       &panda_hdmi_audio_codec,
-...
--};
-
-that was registered as part of omap4_panda_init():
-
--       platform_add_devices(panda_devices, ARRAY_SIZE(panda_devices));
-
--- 
-bye,
-p.
+--=_mimegpg-monstr-desktop-32437-1392807845-0001--
