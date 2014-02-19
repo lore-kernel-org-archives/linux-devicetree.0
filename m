@@ -1,56 +1,63 @@
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] usb: chipidea: msm: Add device tree support
-Date: Wed, 19 Feb 2014 17:48:41 +0200
-Message-ID: <1392824921.17130.71.camel@iivanov-dev>
-References: <1392729681-21022-1-git-send-email-iivanov@mm-sol.com>
-		 <1392729681-21022-3-git-send-email-iivanov@mm-sol.com>
-		 <53039E2E.2030503@cogentembedded.com>
-	 <1392743648.17130.17.camel@iivanov-dev>
-	 <5303A71B.7060208@cogentembedded.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 07/13] ARM: dts: mvebu: Add a new set of registers to
+ the PMSU node
+Date: Wed, 19 Feb 2014 17:00:33 +0100
+Message-ID: <20140219170033.4ca8343b@skate>
+References: <1392312816-17657-1-git-send-email-gregory.clement@free-electrons.com>
+	<1392312816-17657-8-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5303A71B.7060208-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392312816-17657-8-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Dear Gregory CLEMENT,
 
-Hi,
+On Thu, 13 Feb 2014 18:33:30 +0100, Gregory CLEMENT wrote:
 
-On Tue, 2014-02-18 at 21:31 +0300, Sergei Shtylyov wrote: 
-> On 02/18/2014 08:14 PM, Ivan T. Ivanov wrote:
-> 
-> >>> From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-> 
-> >>> Allows controller to be specified via device tree.
-> >>> Pass PHY phandle specified in DT to core driver.
-> 
-> >>> Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-> >>> ---
-> >>>    drivers/usb/chipidea/ci_hdrc_msm.c |   23 ++++++++++++++++++++++-
-> >>>    1 file changed, 22 insertions(+), 1 deletion(-)
-> 
-> >>      You also need to describe the binding you're creating in
-> >> Documentation/devicetree/bindings/usb/<file>.txt.
-> 
-> > Did you check "[PATCH v2 1/3]"?
-> 
->     Did you send it to 'linux-usb'?
+>  - reg: Should contain PMSU registers location and length. First pair
+> -  for the per-CPU SW Reset Control registers, second pair for the
+> -  Power Management Service Unit.
+> +  for the per-CPU SW Reset Control registers, second pair for the CPU
+> +  Power Management Service Unit registers, third pair for the Fabric Power
+> +  Management Service Unit registers.
+>  
+>  Example:
+>  
+> -armada-370-xp-pmsu@d0022000 {
+> +armada-370-xp-pmsu@22000 {
+>  	compatible = "marvell,armada-370-xp-pmsu";
+> -	reg = <0xd0022100 0x430>,
+> -	      <0xd0020800 0x20>;
+> +	reg = <0x22100 0x430>,
+> +	      <0x20800 0x20>,
+> +	      <0x22000 0x24>;
 
-Opps, sorry. get_maintainer.pl did not list linux-usb and I forgot 
-to add it. Would like to resend it?
+I am not too happy with this because:
 
-Regards,
-Ivan
+ *) We have to remove the second register pair from the PMSU. I haven't
+    yet posted the patches on LAKML for SMP on 375 and 38x, but the 375
+    doesn't have a PMSU. It however has the same CPU reset control
+    registers as 370 and XP. Therefore, these 0x20800 registers have to
+    be handled by a separate driver (that uses the reset framework),
+    and not handled by the PMSU driver. This way, Armada 370/XP can use
+    PMSU+CPU reset, while 375 will only use CPU reset.
 
-> 
-> WBR, Sergei
+ *) I think making the PMSU register start at 0x22100 was a mistake.
+    The PMSU registers actually start at 0x22000 and they seem to go all
+    the way to 0x23000. So we should have only one register pair. This
+    of course raises some backward compatibility questions for the DT.
 
-
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
