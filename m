@@ -1,253 +1,95 @@
-From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: [PATCH v5 2/2] memory: ti-aemif: add bindings for AEMIF driver
-Date: Wed, 19 Feb 2014 15:40:10 +0200
-Message-ID: <1392817210-14312-3-git-send-email-ivan.khoronzhuk@ti.com>
-References: <1392817210-14312-1-git-send-email-ivan.khoronzhuk@ti.com>
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [PATCH v2 0/6] ARM: STi reset controller support
+Date: Wed, 19 Feb 2014 14:57:29 +0100
+Message-ID: <5304B849.2080806@st.com>
+References: <1389696613-19683-1-git-send-email-srinivas.kandagatla@st.com>		<1391437665-11913-1-git-send-email-srinivas.kandagatla@st.com>	<1391592486.11239.4.camel@pizza.hi.pengutronix.de>
+ <52F4D76F.8070301@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1392817210-14312-1-git-send-email-ivan.khoronzhuk@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, santosh.shilimkar@ti.com, galak@kernel.crashing.org
-Cc: rob@landley.net, linux@arm.linux.org.uk, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, rob.herring@calxeda.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, grygorii.strashko@ti.com, dwmw2@infradead.org, nsekhar@ti.com, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <52F4D76F.8070301@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: srinivas kandagatla <srinivas.kandagatla@st.com>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, kernel@stlinux.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, stephen.gallimore@st.com, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add bindings for TI Async External Memory Interface (AEMIF) controller.
+Hi Philipp,
 
-The Async External Memory Interface (EMIF16/AEMIF) controller is intended to
-provide a glue-less interface to a variety of asynchronous memory devices like
-ASRA M, NOR and NAND memory. A total of 256M bytes of any of these memories
-can be accessed via 4 chip selects with 64M byte access per chip select.
+On 02/07/2014 01:54 PM, srinivas kandagatla wrote:
+> Hi Philipp,
+> Thankyou for looking at the patches.
+>
+>
+> On 05/02/14 09:28, Philipp Zabel wrote:
+>> Hi Srinivas,
+>>
+> ...
+>>
+>> the patchset looks good to me for the soft resets. But for the powerdown
+>> bits I am wondering whether the reset controller API is the right
+>> abstraction. Depending on whether those bits really just put the IPs
+>> into reset or there is some power gating / sequencing involved,
+>> shouldn't this rather be handled as a set of pm domains?
+>
+> The hardware name of these control signals into the devices is
+> slightly unfortunate and a bit misleading. We do not generally
+> have separate power domains for peripheral devices in our
+> current STB SoCs, in the sense that the voltage cannot actually be
+> removed from individual devices. In the USB case we believe the
+> powerdown signals internally gate off two of the three
+> incoming clocks to most of the USB controller's logic blocks,
+> essentially holding the device in a disabled (enable/disable
+> might have been a better name for the signal) state.
+>
+> The primary requirement to manipulate these signals is to bring
+> the device out of its cold boot default powerdown/disabled/reset
+> (whatever you want to call it) state when the device is probed or
+> after a SoC wide power loss when resuming from PM_SUSPEND_MEM.
+>
+>
+>> I see that for example on STiH415 there are both soft resets and
+>> powerdown bits for USB[012].
+>
+> Our IPs typically have two or sometimes three signals going into
+> them, controlled from outside of the IP block itself (typically using
+> SoC global system configuration registers) that you could view
+> as "reset-a-like"; that is toggling each of the signals puts the IP
+> into a state where it is in some way unusable and then back to
+> being useable again. The reset controller API appeared to be the
+> natural abstraction for the drivers to be given access to such control
+> signals, regardless of the precise effect the signals have on the
+> device's internal state.
+>
+> With regards to sequencing between these signals; it is the case that
+> there is a likely sequencing because at least in the USB case it is
+> thought that the "powerdown" stops the clock going to the reset chain
+> logic. But we did not see that as an issue as the reset controller
+> framework allows for multiple named "reset" lines being defined for
+> a device through its DT attributes. The driver knows which signal
+> is which and what each does, because it asks for them by name;
+> therefore, it knows how to impose any required ordering when changing
+> the state of those signals.
+>
 
-We are not encoding CS number in reg property, it's memory partition number.
-The CS number is encoded for Davinci NAND node using standalone property
-"ti,davinci-chipselect" and we need to provide two memory ranges to it,
-as result we can't encode CS number in "reg" for AEMIF child devices
-(NAND/NOR/etc), as it will break bindings compatibility.
+Did Srini's explanations convinced you?
 
-In this patch, NAND node is used just as an example of child node.
+If so, could you queue the series for v3.15?
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
----
- .../bindings/memory-controllers/ti-aemif.txt       | 210 +++++++++++++++++++++
- 1 file changed, 210 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt
+Thanks,
+Maxime
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt b/Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt
-new file mode 100644
-index 0000000..48f82e4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt
-@@ -0,0 +1,210 @@
-+* Device tree bindings for Texas instruments AEMIF controller
-+
-+The Async External Memory Interface (EMIF16/AEMIF) controller is intended to
-+provide a glue-less interface to a variety of asynchronous memory devices like
-+ASRA M, NOR and NAND memory. A total of 256M bytes of any of these memories
-+can be accessed at any given time via four chip selects with 64M byte access
-+per chip select. Synchronous memories such as DDR1 SD RAM, SDR SDRAM
-+and Mobile SDR are not supported.
-+
-+Documentation:
-+Davinci DM646x - http://www.ti.com/lit/ug/sprueq7c/sprueq7c.pdf
-+OMAP-L138 (DA850) - http://www.ti.com/lit/ug/spruh77a/spruh77a.pdf
-+Kestone - http://www.ti.com/lit/ug/sprugz3a/sprugz3a.pdf
-+
-+Required properties:
-+
-+- compatible:		"ti,davinci-aemif"
-+			"ti,keystone-aemif"
-+			"ti,da850-aemif"
-+
-+- reg:			contains offset/length value for AEMIF control registers
-+			space.
-+
-+- #address-cells:	Must be 2. The partition number has to be encoded in the
-+			first address cell and it may accept values 0..N-1
-+			(N - total number of partitions). It's recommended to
-+			assign N-1 number for the control partition. The second
-+			cell is the offset into the partition.
-+
-+- #size-cells:		Must be set to 1.
-+
-+- ranges:		Contains memory regions. There are two types of
-+			ranges/partitions:
-+			- CS-specific partition/range. If continuous, must be
-+			set up to reflect the memory layout for 4 chipselects,
-+			if not then additional range/partition can be added and
-+			child device can select the proper one.
-+			- control partition which is common for all CS
-+			interfaces.
-+
-+- clocks:		the clock feeding the controller clock. Required only
-+			if clock tree data present in device tree.
-+			See clock-bindings.txt
-+
-+- clock-names:		clock name. It has to be "aemif". Required only if clock
-+			tree data present in device tree, in another case don't
-+			use it.
-+			See clock-bindings.txt
-+
-+- clock-ranges:		Empty property indicating that child nodes can inherit
-+			named clocks. Required only if clock tree data present
-+			in device tree.
-+			See clock-bindings.txt
-+
-+
-+Child chip-select (cs) nodes contain the memory devices nodes connected to
-+such as NOR (e.g. cfi-flash) and NAND (ti,davinci-nand, see davinci-nand.txt).
-+There might be board specific devices like FPGAs.
-+
-+Required child cs node properties:
-+
-+- #address-cells:	Must be 2.
-+
-+- #size-cells:		Must be 1.
-+
-+- ranges:		Empty property indicating that child nodes can inherit
-+			memory layout.
-+
-+- clock-ranges:		Empty property indicating that child nodes can inherit
-+			named clocks. Required only if clock tree data present
-+			in device tree.
-+
-+- ti,cs-chipselect:	number of chipselect. Indicates on the aemif driver
-+			which chipselect is used for accessing the memory. For
-+			compatibles "ti,davinci-aemif" and "ti,keystone-aemif"
-+			it can be in range [0-3]. For compatible
-+			"ti,da850-aemif" range is [2-5].
-+
-+Optional child cs node properties:
-+
-+- ti,bus-width:			width of the asynchronous device's data bus
-+				8 or 16 if not preset 8
-+
-+- ti,cs-ss:		enable/disable select strobe mode
-+				In select strobe mode chip select behaves as
-+				the strobe and is active only during the strobe
-+				period. If present then enable.
-+
-+- ti,cs-ew:		enable/disable extended wait mode
-+				if set, the controller monitors the EMIFWAIT pin
-+				mapped to that chip select to determine if the
-+				device wants to extend the strobe period. If
-+				present then enable.
-+
-+- ti,cs-ta:		minimum turn around time, ns
-+				Time between the end of one asynchronous memory
-+				access and the start of another asynchronous
-+				memory access. This delay is not incurred
-+				between a read followed by read or a write
-+				followed by a write to same chip select.
-+
-+- ti,cs-rsetup:		read setup width, ns
-+				Time between the beginning of a memory cycle
-+				and the activation of read strobe.
-+				Minimum value is 1 (0 treated as 1).
-+
-+- ti,cs-rstobe:		read strobe width, ns
-+				Time between the activation and deactivation of
-+				the read strobe.
-+				Minimum value is 1 (0 treated as 1).
-+
-+- ti,cs-rhold:		read hold width, ns
-+				Time between the deactivation of the read
-+				strobe and the end of the cycle (which may be
-+				either an address change or the deactivation of
-+				the chip select signal.
-+				Minimum value is 1 (0 treated as 1).
-+
-+- ti,cs-wsetup:		write setup width, ns
-+				Time between the beginning of a memory cycle
-+				and the activation of write strobe.
-+				Minimum value is 1 (0 treated as 1).
-+
-+- ti,cs-wstrobe:	write strobe width, ns
-+				Time between the activation and deactivation of
-+				the write strobe.
-+				Minimum value is 1 (0 treated as 1).
-+
-+- ti,cs-whold:		write hold width, ns
-+				Time between the deactivation of the write
-+				strobe and the end of the cycle (which may be
-+				either an address change or the deactivation of
-+				the chip select signal.
-+				Minimum value is 1 (0 treated as 1).
-+
-+If any of the above parameters are absent, current parameter value will be taken
-+from the corresponding HW reg.
-+
-+Example for aemif, davinci nand and nor flash chip select shown below.
-+
-+memory-controller@21000A00 {
-+	compatible = "ti,davinci-aemif";
-+	#address-cells = <2>;
-+	#size-cells = <1>;
-+	clocks = <&clkaemif 0>;
-+	clock-names = "aemif";
-+	clock-ranges;
-+	reg = <0x21000A00 0x00000100>;
-+	ranges = <0 0 0x70000000 0x10000000
-+		  1 0 0x21000A00 0x00000100>;
-+		  /*
-+		   * Partition0: CS-specific memory range which is
-+		   * implemented as continuous physical memory region
-+		   * Partition1: control memory range
-+		   */
-+
-+	nand:cs2 {
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		clock-ranges;
-+		ranges;
-+
-+		ti,cs-chipselect = <2>;
-+		/* all timings in nanoseconds */
-+		ti,cs-ta = <0>;
-+		ti,cs-rhold = <7>;
-+		ti,cs-rstrobe = <42>;
-+		ti,cs-rsetup = <14>;
-+		ti,cs-whold = <7>;
-+		ti,cs-wstrobe = <42>;
-+		ti,cs-wsetup = <14>;
-+
-+		nand@0,0x8000000 {
-+			compatible = "ti,davinci-nand";
-+			reg = <0 0x8000000 0x4000000
-+			       1 0x0000000 0x0000100>;
-+			/*
-+			 * Partition0, offset 0x8000000, size 0x4000000
-+			 * Partition1, offset 0x0000000, size 0x0000100
-+			 */
-+
-+			.. see davinci-nand.txt
-+		};
-+	};
-+
-+	nor:cs0 {
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		clock-ranges;
-+		ranges;
-+
-+		ti,cs-chipselect = <0>;
-+		/* all timings in nanoseconds */
-+		ti,cs-ta = <0>;
-+		ti,cs-rhold = <8>;
-+		ti,cs-rstrobe = <40>;
-+		ti,cs-rsetup = <14>;
-+		ti,cs-whold = <7>;
-+		ti,cs-wstrobe = <40>;
-+		ti,cs-wsetup = <14>;
-+		ti,cs-asize = <1>;
-+
-+		flash@0,0x0000000 {
-+			compatible = "cfi-flash";
-+			reg = <0 0x0000000 0x4000000>;
-+
-+			...
-+		};
-+	};
-+};
--- 
-1.8.3.2
+>
+> Thanks,
+> srini
+>
+>
+> _______________________________________________
