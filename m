@@ -1,44 +1,38 @@
-From: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
-Subject: Re: [PATCH v5 4/5] ARM: Kirkwood: Fix qnap vendor prefix
-Date: Wed, 19 Feb 2014 23:14:16 +1000
-Message-ID: <5304AE28.6030209@killerwolves.net>
-References: <1392814154-11284-1-git-send-email-klightspeed@killerwolves.net> <1392814154-11284-5-git-send-email-klightspeed@killerwolves.net> <20140219130553.GO17984@lunn.ch>
+From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RFC v7 0/6] MPC512x DMA slave s/g support, OF DMA lookup
+Date: Wed, 19 Feb 2014 17:17:36 +0400
+Message-ID: <CAF0T0X5cQcdXU5-XEA2uZAoYSLyk4eONy+Jj6d4GeE-SrBpG2Q@mail.gmail.com>
+References: <1392211508-23615-1-git-send-email-a13xp0p0v88@gmail.com>
+	<20140213003253.GL4524@book.gsilab.sittig.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140219130553.GO17984-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <20140213003253.GL4524-kDjWylLy9wD0K7fsECOQyeGNnDKD8DIp@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 19/02/14 23:05, Andrew Lunn wrote:
->> diff --git a/drivers/power/reset/qnap-poweroff.c b/drivers/power/reset/qnap-poweroff.c
->> index a75db7f..d350ece 100644
->> --- a/drivers/power/reset/qnap-poweroff.c
->> +++ b/drivers/power/reset/qnap-poweroff.c
->> @@ -41,7 +41,7 @@ static const struct power_off_cfg synology_power_off_cfg = {
->>  };
->>  
->>  static const struct of_device_id qnap_power_off_of_match_table[] = {
->> -	{ .compatible = "qnap,power-off",
->> +	{ .compatible = "qnapsz,power-off",
->>  	  .data = &qnap_power_off_cfg,
->>  	},
-> 
-> Hi Ben
-> 
-> This causes issues for devices using old DT blobs. You need to keep
-> the old entry as well as supporting the new vendor prefix.
-> 
-> We need to consider, is it worth the hassle of changing the prefix,
-> since it has been in use for a long time. I think using the stock
-> ticker is a "rule of thumb" and not a strict requirement.
+Hello, Gerhard
 
-So, in this case it would be best to change qnapsz back to qnap in 
-patch #1, and completely remove this patch?
+2014-02-13 4:32 GMT+04:00 Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>:
+> For some reason you have kept the DMA maintainers, but dropped
+> the dmaengine ML from Cc: -- was this intentional, given that the
+> series is specifically about DMA and you want to get feedback?
+No, it was not done by intention, I'll fix that in the new version of the
+series.
 
+> And you may want to help DT people by not sending purely Linux
+> implementation related stuff to them (they already are drinking
+> from the firehose).  DT reviewers are foremost interested in
+> bindings and policy and remaining OS agnostic, and leave
+> mechanical .dts file updates to subsystem maintainers.
+Do you mean I should better Cc to devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+only parts 3, 4 and 5 of this series? How about cover letter?
+
+Thank you.
+
+Alexander
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
