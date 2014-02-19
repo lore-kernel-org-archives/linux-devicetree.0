@@ -1,107 +1,85 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] Phytec phyFLEX-i.MX6 : Added USB_OTG Support
-Date: Wed, 19 Feb 2014 10:23:09 +0800
-Message-ID: <20140219022307.GL15716@S2101-09.ap.freescale.net>
-References: <1392731185-4885-1-git-send-email-ashutosh.s@phytec.in>
+From: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] of: reimplement the matching method for
+ __of_match_node()
+Date: Wed, 19 Feb 2014 11:09:47 +0800
+Message-ID: <20140219030947.GA14031@pek-khao-d1.corp.ad.wrs.com>
+References: <1392710250-29913-1-git-send-email-haokexin@gmail.com>
+ <1392710250-29913-3-git-send-email-haokexin@gmail.com>
+ <20140218222918.392D4C40517@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1392731185-4885-1-git-send-email-ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
+In-Reply-To: <20140218222918.392D4C40517-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ashutosh singh <ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, c.hemp-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen N Chivers <schivers-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 18, 2014 at 07:16:22PM +0530, Ashutosh singh wrote:
-> This patch adds support for USB_OTG on Phytec phyFLEX-i.MX6 Quad module.
-> 
-> Signed-off-by: Ashutosh singh <ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
 
-Please have the prefix of patch subject be 'ARM: dts: imx6q-phytec: ...'
+--tThc/1wpZn/ma/RB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> ---
->  arch/arm/boot/dts/imx6q-phytec-pbab01.dts  |    4 ++++
->  arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi |   17 +++++++++++++++++
->  2 files changed, 21 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6q-phytec-pbab01.dts b/arch/arm/boot/dts/imx6q-phytec-pbab01.dts
-> index 7d37ec6..87c3702 100644
-> --- a/arch/arm/boot/dts/imx6q-phytec-pbab01.dts
-> +++ b/arch/arm/boot/dts/imx6q-phytec-pbab01.dts
-> @@ -25,6 +25,10 @@
->  	status = "okay";
->  };
->  
-> +&usbotg {
-> +	status = "okay";
-> +};
-> +
->  &usdhc2 {
->  	status = "okay";
->  };
-> diff --git a/arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi b/arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi
-> index 1a3b50d..e025ad2 100644
-> --- a/arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi
-> +++ b/arch/arm/boot/dts/imx6q-phytec-pfla02.dtsi
-> @@ -18,6 +18,14 @@
->  	memory {
->  		reg = <0x10000000 0x80000000>;
->  	};
-> +
-> +	reg_usb_otg_vbus: regulator@0 {
+On Tue, Feb 18, 2014 at 10:29:18PM +0000, Grant Likely wrote:
+> On Tue, 18 Feb 2014 15:57:30 +0800, Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > In the current implementation of __of_match_node(), it will compare
+> > each given match entry against all the node's compatible strings
+> > with of_device_is_compatible().
+> >=20
+> > To achieve multiple compatible strings per node with ordering from
+> > specific to generic, this requires given matches to be ordered from
+> > specific to generic. For most of the drivers this is not true and
+> > also an alphabetical ordering is more sane there.
+> >=20
+> > Therefore, we define a following priority order for the match, and
+> > then scan all the entries to find the best match.
+> >   1. specific compatible && type && name
+> >   2. specific compatible && type
+> >   3. specific compatible && name
+> >   4. specific compatible
+> >   5. general compatible && type && name
+> >   6. general compatible && type
+> >   7. general compatible && name
+> >   8. general compatible
+> >   9. type && name
+> >   10. type
+> >   11. name
+> >=20
+> > This is based on some pseudo-codes provided by Grant Likely.
+>=20
+> The patch looks good, but I wasn't confident applying it directly
+> without some validation, so I've written a test case for this function.
+> I'll resend the series to the list and cc you. Unfortunately I've found
+> one case that is failing on the test cases, but I'm too tired to debug
+> it now. Maybe you'd like to take a look. The test case may very well be
+> wrong.
 
-You do not have a 'reg' property in the node, so you shouldn't have
-'@num' in node name.  You may want to name it 'regulator-0'.
+The test case looks great. Actually there is a bug in this patch. I will ma=
+ke
+new spin to fix it.
 
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "usb_otg_vbus";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		gpio = <&gpio4 15 0>;
-> +	};
->  };
->  
->  &ecspi3 {
-> @@ -134,6 +142,7 @@
->  				MX6QDL_PAD_EIM_D23__GPIO3_IO23 0x80000000
->  				MX6QDL_PAD_DISP0_DAT3__GPIO4_IO24 0x80000000 /* SPI NOR chipselect */
->  				MX6QDL_PAD_DI0_PIN15__GPIO4_IO17  0x80000000 /* PMIC interrupt */
-> +				MX6QDL_PAD_KEY_ROW4__GPIO4_IO15   0x80000000 /* USB_OTG_PWR_EN */
+Thanks,
+Kevin
 
-Don't add it into hog group.  Define a pinctrl state in above regulator
-node for it.
+--tThc/1wpZn/ma/RB
+Content-Type: application/pgp-signature
 
->  			>;
->  		};
->  	};
-> @@ -162,6 +171,14 @@
->  	status = "disabled";
->  };
->  
-> +&usbotg {
-> +	vbus-supply = <&reg_usb_otg_vbus>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_usbotg_1>;
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-pinctrl_usbotg_1 is gone.  Please generate the patch against my for-next
-branch below.
+iQEcBAEBAgAGBQJTBCB7AAoJEJNY7TDerrFxtgMIAIGsIbDQtUvlVbR8rzZ+GGF9
+jFd9NMWd1S7dvbxsu6vca7iGTkq0APYRIfteKAMduKwVLpKYvCSczdxlIKppc6DI
+wnzGQltd09g2cUnZcjqCWpKGPaC0BLClTg9Kn3BF+ijEdgS2LNlb0Yvr1FOAGDhg
+U+Q29oqZGSdUCXaWzG5OrLnn0R4F/jtoQrQi7sWxfKJT21su95TPuCF3Scytr+tM
+kif8netRImbjHhuiODRxX+zIruEDBwJf99PDDTLEe19iMWS4oMmPdq/0Q8RphL3U
+O7UkTbfvSNYJTW9/0lIaMm9ZwM/vna4AMqY5ahkS+ydBLjn8BX3pCpjYsyYVqmM=
+=kixq
+-----END PGP SIGNATURE-----
 
- git://git.linaro.org/people/shawnguo/linux-2.6.git for-next
-
-Shawn
-
-> +	disable-over-current;
-> +	status = "disabled";
-> +};
-> +
->  &usdhc2 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_usdhc2_2>;
-> -- 
-> 1.7.9.5
-> 
-
+--tThc/1wpZn/ma/RB--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
