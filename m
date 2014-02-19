@@ -1,275 +1,78 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [RFC PATCH v2 2/2] ARM: zynq: Use early syscon initialization
-Date: Wed, 19 Feb 2014 12:04:05 +0100
-Message-ID: <2cf433e070759e1cb2b0e74eb3d702def738214d.1392807832.git.michal.simek@xilinx.com>
-References: <cover.1392807832.git.michal.simek@xilinx.com>
-Content-Type: multipart/signed;
-    boundary="=_mimegpg-monstr-desktop-32465-1392807858-0001";
-    micalg=pgp-sha1; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1392807832.git.michal.simek@xilinx.com>
-In-Reply-To: <cover.1392807832.git.michal.simek@xilinx.com>
-References: <cover.1392807832.git.michal.simek@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
-Cc: monstr@monstr.eu, Josh Cartwright <josh.cartwright@ni.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Soren Brinkmann <soren.brinkmann@xilinx.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@nvidia.com>, James Hogan <james.hogan@imgtec.com>, Felipe Pena <felipensp@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v6 00/18] ahci: library-ise ahci_platform, add
+ sunxi driver and cleanup imx driver
+Date: Wed, 19 Feb 2014 13:01:42 +0100
+Message-ID: <1392811320-3132-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBRV2SKMAKGQEFWVF2GI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is a MIME GnuPG-signed message.  If you see this text, it means that
-your E-mail or Usenet software does not support MIME signed messages.
-The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
-To open this message correctly you will need to install E-mail or Usenet
-software that supports modern Internet standards.
+Hi all,
 
---=_mimegpg-monstr-desktop-32465-1392807858-0001
+Here is v6 of my patchset for adding ahci-sunxi support. This has been
+tested with Allwinner A10, Allwinner A20 and Freeware imx6x SoCs, including
+suspend / resume. Note that since my last revision the ahci_imx driver has
+also grown imx53 sata support, it would be good if some-one could test that
+with this series.
 
-Use early syscon initialization to simplify slcr code.
-- Remove two slcr inits (zynq_slcr_init, zynq_early_slcr_init)
-- Directly use regmap accesses in zynq_slcr_read/write
-- Remove zynq_clock_init() and use addresses from syscon
-  (This is the most problematic part now because clock
-  doesn't support regmap accesses that's why reading
-  slcr base is ugly. There are some attempts to get
-  clk regmap to work - for example:
-  https://lkml.org/lkml/2013/10/16/112)
+History:
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+v1, by Olliver Schinagl:
+This was using the approach of having a platform device which probe method
+creates a new child platform device which gets driven by ahci_platform.c,
+as done by ahci_imx.c .
 
-Changes in v2: None
+v2, by Hans de Goede:
+Stand-alone platform driver based on Olliver's work
 
-Especially look at slcr.c which is much simpler than was before.
-clkc.c will be simpler when regmap support is added because then
-syscon_early_regmap_lookup_by_phandle() will be called
-without zynq_slcr_base search.
+v3, by Hans de Goede:
+patch-series, with 4 different parts
+a) Make ahci_platform.c more generic, handle more then 1 clk, target pwr
+   regulator
+b) New ahci-sunxi code only populating ahci_platform_data, passed to
+   ahci_platform.c to of_device_id matching.
+c) Refactor ahci-imx code to work the same as the new ahci-sunxi code, this
+   is the reason why v3 is an RFC, I'm waiting for the wandboard I ordered to
+   arrive so that I can actually test this.
+d) dts bindings for the sunxi ahci parts
 
----
- arch/arm/boot/dts/zynq-7000.dtsi |  1 +
- arch/arm/mach-zynq/common.c      |  6 ++---
- arch/arm/mach-zynq/slcr.c        | 42 ++---------------------------
- drivers/clk/zynq/clkc.c          | 57 ++++++++++++----------------------------
- 4 files changed, 23 insertions(+), 83 deletions(-)
+v4, by Hans de Goede:
+patch-series, with 5 different parts:
+a) Make ahci_platform.c more generic, handle more then 1 clk, target pwr
+   regulator
+b) Turn parts of ahci_platform.c into a library for use by other drivers
+c) New ahci-sunxi driver using the ahci_platform.c library functionality
+d) Refactor ahci-imx code to work the same as the new ahci-sunxi code
+e) dts bindings for the sunxi ahci parts
 
-diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-index 7284499..e414489 100644
---- a/arch/arm/boot/dts/zynq-7000.dtsi
-+++ b/arch/arm/boot/dts/zynq-7000.dtsi
-@@ -135,6 +135,7 @@
- 			compatible = "xlnx,zynq-slcr", "syscon";
- 			reg = <0xF8000000 0x1000>;
- 			ranges;
-+			syscon = <&slcr>;
- 			clkc: clkc@100 {
- 				#clock-cells = <1>;
- 				compatible = "xlnx,ps7-clkc";
-diff --git a/arch/arm/mach-zynq/common.c b/arch/arm/mach-zynq/common.c
-index 9d3c88e..78589e3 100644
---- a/arch/arm/mach-zynq/common.c
-+++ b/arch/arm/mach-zynq/common.c
-@@ -28,6 +28,7 @@
- #include <linux/of.h>
- #include <linux/irqchip.h>
- #include <linux/irqchip/arm-gic.h>
-+#include <linux/mfd/syscon.h>
- #include <linux/slab.h>
- #include <linux/sys_soc.h>
+v5:
+v4 + the following changes:
+1) fsl,imx6q driver is now tested
+2) fixed suspend / resume on fsl,imx6q
+3) Modifed devicetree node naming to match dt spec
+4) Reworked the busy waiting code in the sunxi-phy handling as suggested by
+   Russell King
 
-@@ -130,15 +131,14 @@ out:
- 	of_platform_populate(NULL, of_default_bus_match_table, NULL, parent);
+v6:
+v5 rebased on top of 3.14-rc3 + the following changes
+1) Added Roger Quadros' generic phy support series
+2) Added a "ARM: sun4i: dt: Remove grouping + simple-bus for regulators" dts
+   patch
 
- 	platform_device_register(&zynq_cpuidle_device);
--
--	zynq_slcr_init();
- }
+Tejun, can you please add patches 1-15 to your ata tree for 3.15 ?
 
- static void __init zynq_timer_init(void)
- {
-+	early_syscon_init();
-+
- 	zynq_early_slcr_init();
+Maxime, can you please add patch 16-18 to your dts tree for 3.15 ?
 
--	zynq_clock_init();
- 	of_clk_init(NULL);
- 	clocksource_of_init();
- }
-diff --git a/arch/arm/mach-zynq/slcr.c b/arch/arm/mach-zynq/slcr.c
-index 594b280..a89b082 100644
---- a/arch/arm/mach-zynq/slcr.c
-+++ b/arch/arm/mach-zynq/slcr.c
-@@ -35,7 +35,6 @@
- #define SLCR_PSS_IDCODE_DEVICE_SHIFT	12
- #define SLCR_PSS_IDCODE_DEVICE_MASK	0x1F
+Thanks & Regards,
 
--static void __iomem *zynq_slcr_base;
- static struct regmap *zynq_slcr_regmap;
-
- /**
-@@ -48,11 +47,6 @@ static struct regmap *zynq_slcr_regmap;
-  */
- static int zynq_slcr_write(u32 val, u32 offset)
- {
--	if (!zynq_slcr_regmap) {
--		writel(val, zynq_slcr_base + offset);
--		return 0;
--	}
--
- 	return regmap_write(zynq_slcr_regmap, offset, val);
- }
-
-@@ -66,12 +60,7 @@ static int zynq_slcr_write(u32 val, u32 offset)
-  */
- static int zynq_slcr_read(u32 *val, u32 offset)
- {
--	if (zynq_slcr_regmap)
--		return regmap_read(zynq_slcr_regmap, offset, val);
--
--	*val = readl(zynq_slcr_base + offset);
--
--	return 0;
-+	return regmap_read(zynq_slcr_regmap, offset, val);
- }
-
- /**
-@@ -169,24 +158,6 @@ void zynq_slcr_cpu_stop(int cpu)
- }
-
- /**
-- * zynq_slcr_init - Regular slcr driver init
-- *
-- * Return:	0 on success, negative errno otherwise.
-- *
-- * Called early during boot from platform code to remap SLCR area.
-- */
--int __init zynq_slcr_init(void)
--{
--	zynq_slcr_regmap = syscon_regmap_lookup_by_compatible("xlnx,zynq-slcr");
--	if (IS_ERR(zynq_slcr_regmap)) {
--		pr_err("%s: failed to find zynq-slcr\n", __func__);
--		return -ENODEV;
--	}
--
--	return 0;
--}
--
--/**
-  * zynq_early_slcr_init - Early slcr init function
-  *
-  * Return:	0 on success, negative errno otherwise.
-@@ -202,20 +173,11 @@ int __init zynq_early_slcr_init(void)
- 		pr_err("%s: no slcr node found\n", __func__);
- 		BUG();
- 	}
--
--	zynq_slcr_base = of_iomap(np, 0);
--	if (!zynq_slcr_base) {
--		pr_err("%s: Unable to map I/O memory\n", __func__);
--		BUG();
--	}
--
--	np->data = (__force void *)zynq_slcr_base;
-+	zynq_slcr_regmap = syscon_early_regmap_lookup_by_phandle(np, "syscon");
-
- 	/* unlock the SLCR so that registers can be changed */
- 	zynq_slcr_unlock();
-
--	pr_info("%s mapped to %p\n", np->name, zynq_slcr_base);
--
- 	of_node_put(np);
-
- 	return 0;
-diff --git a/drivers/clk/zynq/clkc.c b/drivers/clk/zynq/clkc.c
-index c812b93..b2fd160 100644
---- a/drivers/clk/zynq/clkc.c
-+++ b/drivers/clk/zynq/clkc.c
-@@ -214,6 +214,10 @@ err:
- 		clks[clk1] = ERR_PTR(-ENOMEM);
- }
-
-+struct syscon {
-+	void __iomem *base;
-+};
-+
- static void __init zynq_clk_setup(struct device_node *np)
- {
- 	int i;
-@@ -227,6 +231,19 @@ static void __init zynq_clk_setup(struct device_node *np)
- 	const char *periph_parents[4];
- 	const char *swdt_ext_clk_mux_parents[2];
- 	const char *can_mio_mux_parents[NUM_MIO_PINS];
-+	struct resource res;
-+	void __iomem *zynq_slcr_base;
-+
-+	struct device_node *slcr = of_get_parent(np);
-+	struct syscon *syscon = slcr->data;
-+	zynq_slcr_base = syscon->base;
-+
-+	if (of_address_to_resource(np, 0, &res)) {
-+		pr_err("%s: failed to get resource\n", np->name);
-+		return;
-+	}
-+
-+	zynq_clkc_base = zynq_slcr_base + res.start;
-
- 	pr_info("Zynq clock init\n");
-
-@@ -569,43 +586,3 @@ static void __init zynq_clk_setup(struct device_node *np)
- }
-
- CLK_OF_DECLARE(zynq_clkc, "xlnx,ps7-clkc", zynq_clk_setup);
--
--void __init zynq_clock_init(void)
--{
--	struct device_node *np;
--	struct device_node *slcr;
--	struct resource res;
--
--	np = of_find_compatible_node(NULL, NULL, "xlnx,ps7-clkc");
--	if (!np) {
--		pr_err("%s: clkc node not found\n", __func__);
--		goto np_err;
--	}
--
--	if (of_address_to_resource(np, 0, &res)) {
--		pr_err("%s: failed to get resource\n", np->name);
--		goto np_err;
--	}
--
--	slcr = of_get_parent(np);
--
--	if (slcr->data) {
--		zynq_clkc_base = (__force void __iomem *)slcr->data + res.start;
--	} else {
--		pr_err("%s: Unable to get I/O memory\n", np->name);
--		of_node_put(slcr);
--		goto np_err;
--	}
--
--	pr_info("%s: clkc starts at %p\n", __func__, zynq_clkc_base);
--
--	of_node_put(slcr);
--	of_node_put(np);
--
--	return;
--
--np_err:
--	of_node_put(np);
--	BUG();
--	return;
--}
---
-1.8.2.3
-
-
---=_mimegpg-monstr-desktop-32465-1392807858-0001
-Content-Type: application/pgp-signature
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEABECAAYFAlMEj7IACgkQykllyylKDCGQ1ACfbuI9pgsv2OiTwRWH5JBcItrp
-6zwAn26v9/LrCttLNZZCSfsL3iKtV3+p
-=J3ZU
------END PGP SIGNATURE-----
-
---=_mimegpg-monstr-desktop-32465-1392807858-0001--
+Hans 
