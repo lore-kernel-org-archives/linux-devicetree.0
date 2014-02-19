@@ -1,45 +1,94 @@
-From: klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org
-Subject: [PATCH v5 3/5] DT: i2c: Trivial: Add sii, s35390a, fix ricoh vendor prefix
-Date: Wed, 19 Feb 2014 22:49:12 +1000
-Message-ID: <1392814154-11284-4-git-send-email-klightspeed@killerwolves.net>
-References: <1392814154-11284-1-git-send-email-klightspeed@killerwolves.net>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] of: reimplement the matching method for __of_match_node()
+Date: Wed, 19 Feb 2014 12:57:55 +0000
+Message-ID: <20140219125755.9FA9CC4088D@trevor.secretlab.ca>
+References: <20140219075812.GE14031@pek-khao-d1.corp.ad.wrs.com> < 1392797745-7561-1-git-send-email-haokexin@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392814154-11284-1-git-send-email-klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
+In-Reply-To: <1392797745-7561-1-git-send-email-haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+On Wed, 19 Feb 2014 16:15:45 +0800, Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> In the current implementation of __of_match_node(), it will compare
+> each given match entry against all the node's compatible strings
+> with of_device_is_compatible().
+> 
+> To achieve multiple compatible strings per node with ordering from
+> specific to generic, this requires given matches to be ordered from
+> specific to generic. For most of the drivers this is not true and
+> also an alphabetical ordering is more sane there.
+> 
+> Therefore, we define a following priority order for the match, and
+> then scan all the entries to find the best match.
+>   1. specific compatible && type && name
+>   2. specific compatible && type
+>   3. specific compatible && name
+>   4. specific compatible
+>   5. general compatible && type && name
+>   6. general compatible && type
+>   7. general compatible && name
+>   8. general compatible
+>   9. type && name
+>   10. type
+>   11. name
+> 
+> This is based on some pseudo-codes provided by Grant Likely.
+> 
+> Signed-off-by: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> [grant.likely: Changed multiplier to 4 which makes more sense]
+> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> v3: Also need to bail out when there does have a compatible member in match
+>     entry, but it doesn't match with the device node's compatible.
+>  
+> v2: Fix the bug such as we get the same score for the following two match
+> entries:
+> 	name2 { }
+> 
+> 	struct of_device_id matches[] = {
+> 		{.name = "name2", },
+> 		{.name = "name2", .type = "type1", },
+> 		{}
+> 	};
 
-Add the Seiko Instruments Inc S35390a to the list of trivial i2c
-devices. At the same time, correct the vendor prefix for ricoh, which
-should be the ticker symbol ricoy.
+BTW, I prefer patch version information like the above to appear before
+the '---' line so that it shows up in the final commit log. It is often
+useful to have the revision history in mainline.
 
-Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
----
- Documentation/devicetree/bindings/i2c/trivial-devices.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+>  drivers/of/base.c | 96 ++++++++++++++++++++++++++++++++++++++++++++-----------
+>  1 file changed, 77 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index ba195fbce4c6..8f79f006d86f 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -342,21 +342,28 @@ struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
+>  }
+>  EXPORT_SYMBOL(of_get_cpu_node);
+>  
+> -/** Checks if the given "compat" string matches one of the strings in
+> - * the device's "compatible" property
+> +/*
+> + * Compare with the __of_device_is_compatible, this will return a score for the
+> + * matching strings. The smaller value indicates the match for the more specific
+> + * compatible string.
+>   */
+> -static int __of_device_is_compatible(const struct device_node *device,
+> -				     const char *compat)
+> +static int __of_device_is_compatible_score(const struct device_node *device,
+> +				     const char *compat, int *pscore)
+>  {
 
-diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-index 1a1ac2e..5f37191 100644
---- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-@@ -56,8 +56,9 @@ ovti,ov5642		OV5642: Color CMOS QSXGA (5-megapixel) Image Sensor with OmniBSI an
- pericom,pt7c4338	Real-time Clock Module
- plx,pex8648		48-Lane, 12-Port PCI Express Gen 2 (5.0 GT/s) Switch
- ramtron,24c64		i2c serial eeprom  (24cxx)
--ricoh,rs5c372a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-+ricoy,rs5c372a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
- samsung,24ad0xd1	S524AD0XF1 (128K/256K-bit Serial EEPROM for Low Power)
-+sii,s35390a		2-wire CMOS real-time clock
- st-micro,24c256		i2c serial eeprom  (24cxx)
- stm,m41t00		Serial Access TIMEKEEPER
- stm,m41t62		Serial real-time clock (RTC) with alarm
--- 
-1.8.3.2
+Another note: I've removed this new function. There are only three users
+of __of_device_is_compatible, and they are all in this file. Adding a
+field is just fine. I'm also considering rolling the name and
+device_type checks into this function, but that goes beyond the bug fix
+so it will wait until the next merge window.
 
+g.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
