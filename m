@@ -1,70 +1,86 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/4] ASoC: tlv320aic32x4: Support for master clock
-Date: Wed, 19 Feb 2014 12:54:06 +0900
-Message-ID: <20140219035406.GP2669@sirena.org.uk>
-References: <1392575252-9222-1-git-send-email-mpa@pengutronix.de>
- <1392631460-32002-1-git-send-email-mpa@pengutronix.de>
- <1392631460-32002-2-git-send-email-mpa@pengutronix.de>
- <20140218012329.GR2669@sirena.org.uk>
- <20140218204646.GB10590@pengutronix.de>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 1/3] ARM: dts: vf610-twr: Add ADC support
+Date: Wed, 19 Feb 2014 13:07:22 +0800
+Message-ID: <20140219050716.GA3010@S2101-09.ap.freescale.net>
+References: <1390714773-23066-1-git-send-email-B38611@freescale.com>
+ <1390714773-23066-2-git-send-email-B38611@freescale.com>
+ <20140216074850.GA2946@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3m6VNgM56Nljn+Yv"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140218204646.GB10590-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20140216074850.GA2946-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Sun, Feb 16, 2014 at 03:48:53PM +0800, Shawn Guo wrote:
+> Copy more DT folks and lists, as I want to make sure everyone agrees on
+> how the fixed regulators should organized in the device tree sources,
+> before I apply the patch.
+> 
+> On Sun, Jan 26, 2014 at 01:39:31PM +0800, Fugang Duan wrote:
+> > vf610 has two ADC controllers, and vf610-twr board ADC0_SE5 pin connect
+> > to sliding rheostat for ADC test, other ADC pins connect to connectors for
+> > future use.
+> > 
+> > Add support for ADC0_SE5.
+> > 
+> > CC: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > CC: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > CC: Otavio Salvador <otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>
+> > CC: Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+> > CC: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+> > Signed-off-by: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/vf610-twr.dts |   21 +++++++++++++++++++++
+> >  arch/arm/boot/dts/vf610.dtsi    |   26 ++++++++++++++++++++++++++
+> >  2 files changed, 47 insertions(+), 0 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/vf610-twr.dts b/arch/arm/boot/dts/vf610-twr.dts
+> > index c8047ca..d867be3 100644
+> > --- a/arch/arm/boot/dts/vf610-twr.dts
+> > +++ b/arch/arm/boot/dts/vf610-twr.dts
+> > @@ -34,6 +34,27 @@
+> >  		};
+> >  	};
+> >  
+> > +	regulators {
+> > +		compatible = "simple-bus";
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +
+> > +		reg_vcc_3v3_mcu: regulator@0 {
+> > +			compatible = "regulator-fixed";
+> > +			reg = <0>;
+> > +			regulator-name = "vcc_3v3_mcu";
+> > +			regulator-min-microvolt = <3300000>;
+> > +			regulator-max-microvolt = <3300000>;
+> > +		};
+> > +	};
+> 
+> Per discussion [1], Mark Rutland suggests that instead of organizing
+> the fixed regulator nodes in a simple-bus container, it should be put
+> under root node directly like below.
+> 
+> / {
+> 	reg_vcc_3v3_mcu: regulator_0 {
+> 		compatible = "regulator-fixed";
+> 		regulator-name = "vcc_3v3_mcu";
+> 		regulator-min-microvolt = <3300000>;
+> 		regulator-max-microvolt = <3300000>;
+> 	};
+> };
+> 
+> Is this what all DT folks agree on?  At least the node name should be
+> 'regulator-0' since it's more idiomatic to use '-' than '_' in node
+> name?
 
---3m6VNgM56Nljn+Yv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+It looks that Mark is giving up [1].  And we're fine with the original
+code then.
 
-On Tue, Feb 18, 2014 at 09:46:46PM +0100, Markus Pargmann wrote:
-> On Tue, Feb 18, 2014 at 10:23:29AM +0900, Mark Brown wrote:
+Shawn
 
-> > Looking at the code the clock isn't physically optional, why not make it
-> > mandatory?  There's only one mainline user, it looks like it should be
-> > straightforward to update with a fixed clock.
-
-> The masterclock is physically optional. There are several modes to use
-> this codec without master clock. The PLL can use different clock inputs,
-> BCLK, MCLK, etc. and even the PLL is not necessary. Instead BCLK and so
-> on can be used as direct codec clock input. However, most of this is not
-> supported by the driver yet and I can't test these cases.
-
-Are any of these modes supported by the driver yet?  If there's modes
-that don't use MCLK supported then I'd expect them to only enable MCLK
-if it's actively being used in the current configuration (triggered via
-set_sysclk()).
-
---3m6VNgM56Nljn+Yv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTBCrbAAoJELSic+t+oim9M/cP/i1Kg/KU66DlCHJpcmHmlGLr
-Pw+uH5nZc6YgnO/b7A9GEhPQsby7DPxXeBdlbFMIo3U+mQOUbG7PhIvDCajIL1vc
-hvVJmmlCbrVlBTuaVmy8YIl1SmYkmqHYp3WvD8hQ27tZo16zeBAnkWBMBU1f+T9D
-MZ5kZlLgaSwfZjLhGhvtVpBkbT698dqUO+VuQHOucSzkYzkU2TzxwYyCKSoTSnJM
-+st7OxqBnHNUdm4q/aNYqyKnlrLx1erVk+7jxgv63CHsDrHsx3kJAn4fCViU4owP
-K6IMlasFMnGTwqAHPVS8rIpDADUJF9JAPTNsesi2mHOdR1AVd4kpW0M33+C661yg
-M1nQlZ+sSQKKs3FyQIGujJ0vh04fkfKUo8lakhtn3PQway0MAzfv9qvFNqTuf1WB
-tjHH4zbNJWYlu09aoY+yQWcvlmxIMf5a16eVK5vOI8D1C99INp775m+Cd+GB7xXV
-TglUpx7guJZMjHsHaf7UPE/WF8AXg1SMOWpM8UaEsWdTEYBDzPi1Y4BgnfHhgZuK
-TIyjvZACo8lNOY/XfVFlYMCwltm2DG0VKn6dcA3T/dZpcA386B9DqwgjsGaoridn
-fQNhcNXzQ4sJR5eAVXTHf0g/m2N3fN24Pq2K+9XEGaWX5dPWh+VZLT8cFYK1rsXs
-dGkIEa5AnuwGYZNKJW8J
-=+LIA
------END PGP SIGNATURE-----
-
---3m6VNgM56Nljn+Yv--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1] http://thread.gmane.org/gmane.linux.drivers.devicetree/61894/focus=62405
