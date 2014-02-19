@@ -1,83 +1,155 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: devicetree repository separation/migration
-Date: Wed, 19 Feb 2014 13:50:54 -0500
-Message-ID: <20140219185054.GQ7862@titan.lakedaemon.net>
-References: <20140217180544.GU7862@titan.lakedaemon.net>
- <20140218155750.GS17250@pengutronix.de>
- <20140218181854.GB7862@titan.lakedaemon.net>
- <20140219083232.GV17250@pengutronix.de>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] of: give priority to the compatible match in
+ __of_match_node()
+Date: Wed, 19 Feb 2014 12:57:34 -0600
+Message-ID: <1392836254.6733.796.camel@snotra.buserror.net>
+References: <1392205084-2351-1-git-send-email-haokexin@gmail.com>
+	 <CAL_JsqKMi2H=vwoxrOt8QRA2xJeiLqBKKfLtt4QRCRoFk6JUHg@mail.gmail.com>
+	 <CAP=VYLr7hqnzW2HLS4GCMFeghCgPmrQZHYst+AUfZc_WNT-Wog@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140219083232.GV17250-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAP=VYLr7hqnzW2HLS4GCMFeghCgPmrQZHYst+AUfZc_WNT-Wog-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Chris Proctor <cproctor-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, Stephen N Chivers <schivers-znpAAEhiOVUQrrorzV6ljw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 19, 2014 at 09:32:32AM +0100, Sascha Hauer wrote:
-> On Tue, Feb 18, 2014 at 01:18:54PM -0500, Jason Cooper wrote:
-> > On Tue, Feb 18, 2014 at 04:57:50PM +0100, Sascha Hauer wrote:
-> > > On Mon, Feb 17, 2014 at 01:05:44PM -0500, Jason Cooper wrote:
-> > ...
-> > > >   - Is the Linux development workflow ready for devicetree to move out
-> > > >     of the Linux Kernel?
-> > > 
-> > > I hope so since keeping the devicetrees in sync with the kernel is a
-> > > pain for all external users.
-> > 
-> > Well, I haven't heard any screams yet.  I suspect people are waiting for
-> > details on the exact form it would take before complaining...
-> > 
-> > > >   - How do we envision projects will use it?  git submodule?  reference
-> > > >     a version tag?  (this is primarily targeted at bootloaders that need
-> > > >     to compile in a dtb or subset of a dtb into the bootloader)
-> > > 
-> > > I would prefer to use it as a submodule.
-> > 
-> > ok.  I've often thought that was the right solution for several things
-> > (dtc.git inside the kernel tree), but no one ever seemed to speak of it
-> > or bring it up.  Kinda like leprosy.
-> > 
-> > It does add an extra step to build process for new users.  Although that
-> > could be handled in the Makefile.
-> > 
-> > > I'll likely need some barebox specific additions to the devicetrees.
-> > > Right now our idea is to leave the provided devicetrees untouched and
-> > > instead of compiling the board dts files directly we create
-> > > <boardname>-barebox.dts files which include the original board files.
-> > > That would allow us to provide additional information to barebox
-> > > without having to carry patches for the devicetrees.
-> > 
-> > So the resulting <boardname>-barebox.dtb is compiled into the barebox
-> > binary?  Is the dtb passed to the kernel independently upgradeable?
+On Wed, 2014-02-19 at 13:25 -0500, Paul Gortmaker wrote:
+> On Thu, Feb 13, 2014 at 2:01 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > On Wed, Feb 12, 2014 at 5:38 AM, Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >> When the device node do have a compatible property, we definitely
+> >> prefer the compatible match besides the type and name. Only if
+> >> there is no such a match, we then consider the candidate which
+> >> doesn't have compatible entry but do match the type or name with
+> >> the device node.
+> >>
+> >> This is based on a patch from Sebastian Hesselbarth.
+> >>   http://patchwork.ozlabs.org/patch/319434/
+> >>
+> >> I did some code refactoring and also fixed a bug in the original patch.
+> >
+> > I'm inclined to just revert this once again and avoid possibly
+> > breaking yet another platform.
 > 
-> Yes, it's compiled into barebox. barebox uses it for probing from
-> devicetree. You can pass this devicetree to the kernel or provide
-> another one should you want or have to.
-
-Ok.
-
-> > Why not post binding/dts patches for 'barebox,...' attributes that you
-> > need?
+> Well, for what it is worth, today's (Feb19th) linux-next tree fails to boot
+> on my sbc8548.   It fails with:
+> -----------------------------------------------
+> libphy: Freescale PowerQUICC MII Bus: probed
+> mdio_bus ethernet@e002400: /soc8548@e0000000/ethernet@24000/mdio@520
+> PHY address 1312 is too large
+> libphy: Freescale PowerQUICC MII Bus: probed
+> libphy: Freescale PowerQUICC MII Bus: probed
+> mdio_bus ethernet@e002500: /soc8548@e0000000/ethernet@25000/mdio@520
+> PHY address 1312 is too large
+> libphy: Freescale PowerQUICC MII Bus: probed
+> TCP: cubic registered
+> Initializing XFRM netlink socket
+> NET: Registered protocol family 17
+> <fail nfs mount>
+> -----------------------------------------------
 > 
-> I wasn't clear. The bindings themselves should be posted and merged
-> mainline. mtd partitions are a good example for what I mean. I don't
-> want to see them in the mainline dts files because that would mean my
-> partitioning would change with each mainline change. Nevertheless I have
-> the partitions in the barebox dts files.
+> On a normal boot, we should see this:
+> -----------------------------------------------
+> libphy: Freescale PowerQUICC MII Bus: probed
+> libphy: Freescale PowerQUICC MII Bus: probed
+> fsl-gianfar e0024000.ethernet: enabled errata workarounds, flags: 0x4
+> fsl-gianfar e0024000.ethernet eth0: mac: 02:e0:0c:00:05:fd
+> fsl-gianfar e0024000.ethernet eth0: Running with NAPI enabled
+> fsl-gianfar e0024000.ethernet eth0: RX BD ring size for Q[0]: 256
+> fsl-gianfar e0024000.ethernet eth0: TX BD ring size for Q[0]: 256
+> fsl-gianfar e0025000.ethernet: enabled errata workarounds, flags: 0x4
+> fsl-gianfar e0025000.ethernet eth1: mac: 02:e0:0c:00:06:fd
+> fsl-gianfar e0025000.ethernet eth1: Running with NAPI enabled
+> fsl-gianfar e0025000.ethernet eth1: RX BD ring size for Q[0]: 256
+> fsl-gianfar e0025000.ethernet eth1: TX BD ring size for Q[0]: 256
+> TCP: cubic registered
+> Initializing XFRM netlink socket
+> NET: Registered protocol family 17
+> -----------------------------------------------
+> 
+> 
+> Git bisect says:
+> 
+> ee8b26ad943aa34acc03ae6cde2b81d8d3d483d4 is the first bad commit
+> commit ee8b26ad943aa34acc03ae6cde2b81d8d3d483d4
+> Author: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Date:   Tue Feb 18 15:57:30 2014 +0800
+> 
+>     of: reimplement the matching method for __of_match_node()
+> 
+>     In the current implementation of __of_match_node(), it will compare
+>     each given match entry against all the node's compatible strings
+>     with of_device_is_compatible().
+> 
+>     To achieve multiple compatible strings per node with ordering from
+>     specific to generic, this requires given matches to be ordered from
+>     specific to generic. For most of the drivers this is not true and
+>     also an alphabetical ordering is more sane there.
+> 
+>     Therefore, we define a following priority order for the match, and
+>     then scan all the entries to find the best match.
+>       1. specific compatible && type && name
+>       2. specific compatible && type
+>       3. specific compatible && name
+>       4. specific compatible
+>       5. general compatible && type && name
+>       6. general compatible && type
+>       7. general compatible && name
+>       8. general compatible
+>       9. type && name
+>       10. type
+>       11. name
+> 
+>     This is based on some pseudo-codes provided by Grant Likely.
+> 
+>     Signed-off-by: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>     [grant.likely: Changed multiplier to 4 which makes more sense]
+>     Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> :040000 040000 8f5dd19174417aece63b308ff299a5dbe2efa5a0
+> 8401b0e3903e23e973845ee75b26b04345d803d2 M      drivers
+> 
+> As a double check, I checked out the head of linux-next, and did a
+> revert of the above commit, and my sbc8548 can then boot properly.
+> 
+> Not doing anything fancy ; using the defconfig exactly as-is, and
+> ensuring the dtb is fresh from linux-next HEAD of today.
 
-Ack.  We should probably address those kinds of properties in a more
-uniform way.  A good example is the OpenBlocks platform.  It can use
-standard ram of various sizes in it's socket.  So the memory value in
-the mainline tree is completely bogus and needs to be rewritten at boot
-either by the bootloader or atags_to_fdt.
+It looks like the new matching function doesn't check the validity of
+the entire match (i.e. everything specified must match the node) before
+scoring it.
 
-thx,
+The ethernet driver has this match (among others):
+        {
+                .type = "network",
+                .compatible = "gianfar",
+        },
 
-Jason.
+...while the mdio driver has this match (among others):
+
+        {
+                .type = "mdio",
+                .compatible = "gianfar", 
+                .data = &(struct fsl_pq_mdio_data) {
+                        .mii_offset = offsetof(struct fsl_pq_mdio, mii),
+                        .get_tbipa = get_gfar_tbipa,
+                },
+        },
+
+(Yes, it's an awful device tree binding.)
+
+It seems that the ethernet device is being bound to the mdio driver due
+to the compatible match, even though type differs.
+
+You could also end up with a .type and/or .name based match,
+despite .compatible being present an a mismatch.
+
+-Scott
+
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
