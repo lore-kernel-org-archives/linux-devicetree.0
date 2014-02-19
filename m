@@ -1,197 +1,72 @@
-From: Kevin Hao <haokexin@gmail.com>
-Subject: [PATCH v2 2/4] of: reimplement the matching method for __of_match_node()
-Date: Wed, 19 Feb 2014 14:21:02 +0800
-Message-ID: <1392790862-18025-1-git-send-email-haokexin@gmail.com>
-References: <1392762680-1498-3-git-send-email-grant.likely@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1392762680-1498-3-git-send-email-grant.likely@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Kevin Hao <haokexin@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Grant Likely <grant.likely@linaro.org>
+From: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/4] of: Add self test for of_match_node()
+Date: Wed, 19 Feb 2014 14:31:31 +0800
+Message-ID: <20140219063130.GC14031@pek-khao-d1.corp.ad.wrs.com>
+References: <1392762680-1498-1-git-send-email-grant.likely@linaro.org>
+ <1392762680-1498-5-git-send-email-grant.likely@linaro.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6zdv2QT/q3FMhpsV"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1392762680-1498-5-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-In the current implementation of __of_match_node(), it will compare
-each given match entry against all the node's compatible strings
-with of_device_is_compatible().
 
-To achieve multiple compatible strings per node with ordering from
-specific to generic, this requires given matches to be ordered from
-specific to generic. For most of the drivers this is not true and
-also an alphabetical ordering is more sane there.
+--6zdv2QT/q3FMhpsV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Therefore, we define a following priority order for the match, and
-then scan all the entries to find the best match.
-  1. specific compatible && type && name
-  2. specific compatible && type
-  3. specific compatible && name
-  4. specific compatible
-  5. general compatible && type && name
-  6. general compatible && type
-  7. general compatible && name
-  8. general compatible
-  9. type && name
-  10. type
-  11. name
+On Tue, Feb 18, 2014 at 10:31:20PM +0000, Grant Likely wrote:
+> Adds a selftest function for the of_match_node function. of_match_node
+> is supposed to handle precedence for the compatible property as well as
+> the name and device_type values. This patch adds some test case data and
+> a function that makes sure each test node matches against the correct
+> entry of an of_device_id table.
+>=20
+> This code was written to verify the new of_match_node() implementation
+> that is an earlier part of this series.
+>=20
+> Currently all but one test passes. There is one scenario where the empty
+> "b/name2" node is getting matched against an entry without any
+> device_type property at all. It is unknown why this is, but it needs to
+> be solved before this patch can be committed. (However, this is testing
+> the new of_match_table implementation, which still does far better than
+> the old implementation which gets the precedence completely wrong.)
 
-This is based on some pseudo-codes provided by Grant Likely.
+We can drop the above paragraph now since all the test cases passed on
+the new version of of_match_node().
 
-Signed-off-by: Kevin Hao <haokexin@gmail.com>
-[grant.likely: Changed multiplier to 4 which makes more sense]
-Signed-off-by: Grant Likely <grant.likely@linaro.org>
----
-v2: Fix the bug such as we get the same score for the following two match
-entries:
-	name2 { }
+>=20
+> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Kevin Hau <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-	struct of_device_id matches[] = {
-		{.name = "name2", },
-		{.name = "name2", .type = "type1", },
-		{}
-	};
- 
- drivers/of/base.c | 93 +++++++++++++++++++++++++++++++++++++++++++------------
- 1 file changed, 74 insertions(+), 19 deletions(-)
+s/Hau/Hao/
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index ba195fbce4c6..4085e2af0b7f 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -342,21 +342,28 @@ struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
- }
- EXPORT_SYMBOL(of_get_cpu_node);
- 
--/** Checks if the given "compat" string matches one of the strings in
-- * the device's "compatible" property
-+/*
-+ * Compare with the __of_device_is_compatible, this will return a score for the
-+ * matching strings. The smaller value indicates the match for the more specific
-+ * compatible string.
-  */
--static int __of_device_is_compatible(const struct device_node *device,
--				     const char *compat)
-+static int __of_device_is_compatible_score(const struct device_node *device,
-+				     const char *compat, int *pscore)
- {
- 	const char* cp;
- 	int cplen, l;
-+	int score = 0;
- 
- 	cp = __of_get_property(device, "compatible", &cplen);
- 	if (cp == NULL)
- 		return 0;
- 	while (cplen > 0) {
--		if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
-+		score++;
-+		if (of_compat_cmp(cp, compat, strlen(compat)) == 0) {
-+			if (pscore)
-+				*pscore = score;
- 			return 1;
-+		}
- 		l = strlen(cp) + 1;
- 		cp += l;
- 		cplen -= l;
-@@ -368,6 +375,15 @@ static int __of_device_is_compatible(const struct device_node *device,
- /** Checks if the given "compat" string matches one of the strings in
-  * the device's "compatible" property
-  */
-+static int __of_device_is_compatible(const struct device_node *device,
-+				     const char *compat)
-+{
-+	return __of_device_is_compatible_score(device, compat, NULL);
-+}
-+
-+/** Checks if the given "compat" string matches one of the strings in
-+ * the device's "compatible" property
-+ */
- int of_device_is_compatible(const struct device_node *device,
- 		const char *compat)
- {
-@@ -734,25 +750,52 @@ static
- const struct of_device_id *__of_match_node(const struct of_device_id *matches,
- 					   const struct device_node *node)
- {
-+	const struct of_device_id *best_match = NULL;
-+	int best_score = 0;
-+
- 	if (!matches)
- 		return NULL;
- 
- 	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
--		int match = 1;
--		if (matches->name[0])
--			match &= node->name
--				&& !strcmp(matches->name, node->name);
--		if (matches->type[0])
--			match &= node->type
--				&& !strcmp(matches->type, node->type);
--		if (matches->compatible[0])
--			match &= __of_device_is_compatible(node,
--							   matches->compatible);
--		if (match)
--			return matches;
-+		int score = 0;
-+
-+		/*
-+		 * Matching compatible is better than matching type and name,
-+		 * and the specific compatible is better than the general.
-+		 */
-+		if (matches->compatible[0] &&
-+			 __of_device_is_compatible_score(node,
-+						matches->compatible, &score))
-+			score = INT_MAX - 4 * score;
-+
-+		/*
-+		 * Matching type is better than matching name, but matching
-+		 * both is even better than that.
-+		 */
-+		if (matches->type[0]) {
-+			if (node->type && !strcmp(matches->type, node->type))
-+				score += 2;
-+			else
-+				score = INT_MIN;
-+		}
-+
-+		/* Matching name is a bit better than not */
-+		if (matches->name[0]) {
-+			if (node->name && !strcmp(matches->name, node->name))
-+				score++;
-+			else
-+				score = INT_MIN;
-+		}
-+
-+		if (score > best_score) {
-+			best_match = matches;
-+			best_score = score;
-+		}
-+
- 		matches++;
- 	}
--	return NULL;
-+
-+	return best_match;
- }
- 
- /**
-@@ -760,7 +803,19 @@ const struct of_device_id *__of_match_node(const struct of_device_id *matches,
-  *	@matches:	array of of device match structures to search in
-  *	@node:		the of device structure to match against
-  *
-- *	Low level utility function used by device matching.
-+ *	Low level utility function used by device matching. The priority order
-+ *	for the matching is:
-+ *	  1. specific compatible && type && name
-+ *	  2. specific compatible && type
-+ *	  3. specific compatible && name
-+ *	  4. specific compatible
-+ *	  5. general compatible && type && name
-+ *	  6. general compatible && type
-+ *	  7. general compatible && name
-+ *	  8. general compatible
-+ *	  9. type && name
-+ *	  10. type
-+ *	  11. name
-  */
- const struct of_device_id *of_match_node(const struct of_device_id *matches,
- 					 const struct device_node *node)
--- 
-1.8.5.3
+Thanks,
+Kevin
+
+--6zdv2QT/q3FMhpsV
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQEcBAEBAgAGBQJTBE/CAAoJEJNY7TDerrFxSrUH/3Jr8oBBifVwicj6UbNkWpwA
+7qCsikQdidZLBq79gSbUVWA8maUumULh8oLUG8DMMyraVU1eFs9rvO7Wd7GMmTkN
++r2oFwTFxVumTNcvi2QYkbENwk2Z3477/dLCfIbJIUYKYKFf+Mxr4VS2kggd2qlw
+bK7jVWChOQrPWBqWCJYwFhZeIfVwLwL/0SXm8VpYlPKs9GMMMF0H35Sr5pD6/w/i
+Rvssz9XzmfMSpkVLzhRHhDhDLX40dshrrg3huKqIZ3D+5ORo2ZRdeBCUsILYardf
+F8QCkPfbi2jpTBjWbGRoxPV+kP7QcVgHrjT1BgUk0SnszJ/QK/4d8NtiJfi/34E=
+=/94d
+-----END PGP SIGNATURE-----
+
+--6zdv2QT/q3FMhpsV--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
