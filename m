@@ -1,58 +1,60 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 2/5] mfd: add bcm590xx pmu driver
-Date: Wed, 19 Feb 2014 13:46:05 +0900
-Message-ID: <20140219044605.GB2669@sirena.org.uk>
+Subject: Re: [PATCH v2 5/5] ARM: dts: add bcm590xx pmu support and enable for
+ bcm28155-ap
+Date: Wed, 19 Feb 2014 13:44:58 +0900
+Message-ID: <20140219044458.GA2669@sirena.org.uk>
 References: <1392765432-9111-1-git-send-email-mporter@linaro.org>
- <1392765432-9111-3-git-send-email-mporter@linaro.org>
+ <1392765432-9111-6-git-send-email-mporter@linaro.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lKKnPHJE/sHLsAX+"
+	protocol="application/pgp-signature"; boundary="IuxWNXB0+C4YKz9o"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1392765432-9111-3-git-send-email-mporter@linaro.org>
+In-Reply-To: <1392765432-9111-6-git-send-email-mporter@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Matt Porter <mporter@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Christian Daudt <bcm@fixthebug.org>, Devicetree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Christian Daudt <bcm@fixthebug.org>, Devicetree List <devicetree@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Tim Kryger <tim.kryger@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
 
---lKKnPHJE/sHLsAX+
+--IuxWNXB0+C4YKz9o
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Feb 18, 2014 at 06:17:09PM -0500, Matt Porter wrote:
+On Tue, Feb 18, 2014 at 06:17:12PM -0500, Matt Porter wrote:
 
-> +config MFD_BCM590XX
-> +	bool "Broadcom BCM590xx PMUs"
-> +	select MFD_CORE
-> +	select REGMAP_I2C
-> +	depends on I2C=y
-> +	help
-> +	  Support for the BCM590xx PMUs from Broadcom
-> +
+> +			csr_reg: regulator@13 {
+> +				reg = <13>;
+> +				regulator-compatible = "csr";
+> +				regulator-min-microvolt = <860000>;
+> +				regulator-max-microvolt = <1440000>;
+> +			};
 
-Why does this need to be built in?
+You should not be setting voltage ranges like this in a .dtsi - you've
+no idea if these voltage ranges are in fact valid for any given board so
+they can't be set safely.  In general I would not expect to see any
+configuration at all for regulators in an include file for the chip.
 
---lKKnPHJE/sHLsAX+
+--IuxWNXB0+C4YKz9o
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTBDcKAAoJELSic+t+oim9IokP/1zCBpRFHVKLvcArQOpmLhfb
-N4hgfcv9ID7mrrb8JuKSmdFfw8GH70Q32CbscyQLnxINEC+ui3dVsF1PI0EWTMzQ
-NSXR3h3BvgLau1CTBE/xs/n0nEmBJF9G61raMt25je/T1UjH4cgG/ykIWYKTjqDT
-4BCrV6gM9X9ogREtb/2CLctlXDI0OwMeLc5MKiQ3DlJXSczhmVuSuDKxJcYMwven
-k8g0YmvEc9si3QH9TNvsSQ0LfQgq0xmOEpvQD3jRHIrZKfOPY37pjrcbs53bKcVE
-OKFMkwktMdC/AgpX+mY6KEPF8jpLc+lDopNvGlJXhc3ZmQSXpJO7qXGHBtE52Thl
-IK9oAdW4ALYjA8Vb6Fov0AGG2uJUmIzrRWqGOJK8v/a8V5svXHUI2xxsTzSg++Mc
-sget9vZ59r79hhEhO69oAOuB8qDQtzX9TJx0ZkuPe6wmFrmkvUzN/pi69lCwRK12
-gEOabSFSKtQ3ZcCD+riBixZTo1SC/u6XQrgJyCJQCqND1V1B9OuChWYjG7+1jTRI
-zVxhnI6akBDf/1SQ95/xTatLfOThuvYaZlzhhDyiJUaqlbRVKfT727MDVDUdOr2/
-pMxy0pJFDmQik+oZnH04nUdLh0efizqEwR2WqNsiMPHZajpfVEm29PRW/mQR3Rmb
-5U8PBca2Zo4FDIf7VBlB
-=5bwz
+iQIcBAEBAgAGBQJTBDbGAAoJELSic+t+oim9HyUP/iejeqqfCwxpuLryX9gF/zid
+gBWJp8SdChOm+Tcnqkjad2Xj0jzQE1B4cwH05g06Ak2MTnkoQ+eac4G5q43r3pz2
+mj2RhlubkSuD8YuYiJp4AC3+vqa0haoYSZz7qMpOWjcwhuactM5Cd6v7ycgFssu/
+kEje6arpNwmW/dySCWZnf3NODXwVPe+vsntkGpiPOJGislw8ojoAc+1oyNWcR72l
+lxxJBireQOdx+D5QsQiShbo2IWTnsK/V21IvPBNb67m/JdAY50MsRXAD2PPH/BDG
+3SPCBY4FDD6ABV2AYj1hnXik519zD+SYO0NI3eiX0QWjU8QS9Ox0MksuKL+fg3Xb
+6iuAeVmA60klRTyABtXVZ2AVUuK9vdQl14vUgyn7fNpfMuplKyWij4+IWwcH9QNa
+9enMotRjA8a91fpm/brnJNRvk3dz7I3QoS6UIUk9LnQNzV6NaJydYFUVIlbUgVwJ
+tVNpox0e5ypBhBrslawt8bPjFSQX7boRgDvrtX2WsFXyMuOMCtec2TbL3Px/7TS9
++tzCMO5sH5A81c/16jSiFOOarT2qGg5KdR7GIsjB23Xcm9F0q2JE/Y/Jaz8LukD7
+/ivgtbiUCJDOyAphJ5KLxHABL7qKDMkQRvZF+nGPEHYkqyB+65tiOvH8QI97PSlJ
+8TNCa5ZoXp8KtlzQOlP8
+=6XEW
 -----END PGP SIGNATURE-----
 
---lKKnPHJE/sHLsAX+--
+--IuxWNXB0+C4YKz9o--
