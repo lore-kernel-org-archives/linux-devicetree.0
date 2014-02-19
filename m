@@ -1,23 +1,126 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2] of_mdio: fix phy interrupt passing
-Date: Wed, 19 Feb 2014 12:54:32 -0500 (EST)
-Message-ID: <20140219.125432.903199758409719335.davem@davemloft.net>
-References: <20140218161551.44A52C40517@trevor.secretlab.ca>
-	<20140218.181317.1712776234149210938.davem@davemloft.net>
-	<5304B14B.2070402@cogentembedded.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] memory: ti-aemif: add bindings for AEMIF driver
+Date: Wed, 19 Feb 2014 18:11:52 +0000
+Message-ID: <20140219181152.GG25079@e106331-lin.cambridge.arm.com>
+References: <1392817210-14312-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <1392817210-14312-3-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5304B14B.2070402@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sergei.shtylyov@cogentembedded.com
-Cc: grant.likely@linaro.org, ben.dooks@codethink.co.uk, linux-kernel@lists.codethink.co.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1392817210-14312-3-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "santosh.shilimkar-l0cyMroinI0@public.gmane.org" <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, "galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "grygorii.strashko-l0cyMroinI0@public.gmane.org" <grygorii.strashko-l0cyMroinI0@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "nsekhar-l0cyMroinI0@public.gmane.org" <nsekhar-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Date: Wed, 19 Feb 2014 17:27:39 +0400
+On Wed, Feb 19, 2014 at 01:40:10PM +0000, Ivan Khoronzhuk wrote:
+> Add bindings for TI Async External Memory Interface (AEMIF) controller.
+> 
+> The Async External Memory Interface (EMIF16/AEMIF) controller is intended to
+> provide a glue-less interface to a variety of asynchronous memory devices like
+> ASRA M, NOR and NAND memory. A total of 256M bytes of any of these memories
+> can be accessed via 4 chip selects with 64M byte access per chip select.
+> 
+> We are not encoding CS number in reg property, it's memory partition number.
+> The CS number is encoded for Davinci NAND node using standalone property
+> "ti,davinci-chipselect" and we need to provide two memory ranges to it,
+> as result we can't encode CS number in "reg" for AEMIF child devices
+> (NAND/NOR/etc), as it will break bindings compatibility.
+> 
+> In this patch, NAND node is used just as an example of child node.
+> 
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+> ---
+>  .../bindings/memory-controllers/ti-aemif.txt       | 210 +++++++++++++++++++++
+>  1 file changed, 210 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt
 
->    So, you decided to ignore my comment about unneeded *else* branch?
+[...]
 
-Not ignored, just figured that a follow-up patch could fix it.
+> +- ranges:		Contains memory regions. There are two types of
+> +			ranges/partitions:
+> +			- CS-specific partition/range. If continuous, must be
+> +			set up to reflect the memory layout for 4 chipselects,
+> +			if not then additional range/partition can be added and
+> +			child device can select the proper one.
+> +			- control partition which is common for all CS
+> +			interfaces.
+
+This really doesn't sound anything like the typical meaning of ranges on
+a bus.
+
+Why isn't this information encoded in reg properties on the child nodes?
+
+[...]
+
+> +- ti,cs-ss:		enable/disable select strobe mode
+> +				In select strobe mode chip select behaves as
+> +				the strobe and is active only during the strobe
+> +				period. If present then enable.
+> +
+> +- ti,cs-ew:		enable/disable extended wait mode
+> +				if set, the controller monitors the EMIFWAIT pin
+> +				mapped to that chip select to determine if the
+> +				device wants to extend the strobe period. If
+> +				present then enable.
+
+When would you have these two in the DT and when wouldn't you? Why can't
+the driver decide?
+
+These names are also opaque. We can clearly do better.
+
+> +
+> +- ti,cs-ta:		minimum turn around time, ns
+> +				Time between the end of one asynchronous memory
+> +				access and the start of another asynchronous
+> +				memory access. This delay is not incurred
+> +				between a read followed by read or a write
+> +				followed by a write to same chip select.
+
+The name is opaque. How about ti,min-turnaround-time-ns ?
+
+> +
+> +- ti,cs-rsetup:		read setup width, ns
+> +				Time between the beginning of a memory cycle
+> +				and the activation of read strobe.
+> +				Minimum value is 1 (0 treated as 1).
+> +
+> +- ti,cs-rstobe:		read strobe width, ns
+> +				Time between the activation and deactivation of
+> +				the read strobe.
+> +				Minimum value is 1 (0 treated as 1).
+> +
+> +- ti,cs-rhold:		read hold width, ns
+> +				Time between the deactivation of the read
+> +				strobe and the end of the cycle (which may be
+> +				either an address change or the deactivation of
+> +				the chip select signal.
+> +				Minimum value is 1 (0 treated as 1).
+> +
+> +- ti,cs-wsetup:		write setup width, ns
+> +				Time between the beginning of a memory cycle
+> +				and the activation of write strobe.
+> +				Minimum value is 1 (0 treated as 1).
+> +
+> +- ti,cs-wstrobe:	write strobe width, ns
+> +				Time between the activation and deactivation of
+> +				the write strobe.
+> +				Minimum value is 1 (0 treated as 1).
+> +
+> +- ti,cs-whold:		write hold width, ns
+> +				Time between the deactivation of the write
+> +				strobe and the end of the cycle (which may be
+> +				either an address change or the deactivation of
+> +				the chip select signal.
+> +				Minimum value is 1 (0 treated as 1).
+
+Likewise I think these can be given more descriptive names.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
