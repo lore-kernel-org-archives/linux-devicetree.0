@@ -1,104 +1,203 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v2] ARM/dts: hdmi-codec: panda/es dt entries
-Date: Wed, 19 Feb 2014 10:15:24 +0200
-Message-ID: <5304681C.4010106@ti.com>
-References: <1392716606-7436-1-git-send-email-paolo.pisati@canonical.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1392716606-7436-1-git-send-email-paolo.pisati@canonical.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Paolo Pisati <paolo.pisati@canonical.com>, bcousson@baylibre.com, tony@atomide.com
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+From: Kevin Hao <haokexin@gmail.com>
+Subject: [PATCH v3 2/4] of: reimplement the matching method for __of_match_node()
+Date: Wed, 19 Feb 2014 16:15:45 +0800
+Message-ID: <1392797745-7561-1-git-send-email-haokexin@gmail.com>
+References: <20140219075812.GE14031@pek-khao-d1.corp.ad.wrs.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140219075812.GE14031@pek-khao-d1.corp.ad.wrs.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Kevin Hao <haokexin@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+In the current implementation of __of_match_node(), it will compare
+each given match entry against all the node's compatible strings
+with of_device_is_compatible().
 
-On 02/18/2014 11:43 AM, Paolo Pisati wrote:
-> HDMI codec dummy entries for Panda/ES.
->=20
-> Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
-> ---
-> Depends on "0f7f3d1 ASoC: hdmi-codec: Add devicetree binding with doc=
-umentation", eligible for a 3.14-rcX fix.
->=20
->  arch/arm/boot/dts/omap4-panda-common.dtsi |    9 ++++++++-
->  arch/arm/boot/dts/omap4-panda-es.dts      |    3 ++-
->  2 files changed, 10 insertions(+), 2 deletions(-)
->=20
-> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boo=
-t/dts/omap4-panda-common.dtsi
-> index 88c6a05..f4aeaa1 100644
-> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
-> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
-> @@ -36,9 +36,15 @@
->  		};
->  	};
-> =20
-> +	hdmi_audio: hdmi_audio@0 {
-> +		compatible =3D "linux,hdmi-audio";
-> +		status =3D "okay";
-> +	};
-> +
->  	sound: sound {
->  		compatible =3D "ti,abe-twl6040";
->  		ti,model =3D "PandaBoard";
-> +		ti,audio-codec =3D <&hdmi_audio>;
+To achieve multiple compatible strings per node with ordering from
+specific to generic, this requires given matches to be ordered from
+specific to generic. For most of the drivers this is not true and
+also an alphabetical ordering is more sane there.
 
-I don't think this is going to work. The omap-abe-twl6040 machine drive=
-r only
-handles mcpdm and dmic right know.
-'ti,audio-codec' is not even supported and it is kind of misleading nam=
-ing in
-this context since twl6040 is also a codec, so why only the dummy-hdmi =
-codec
-deserves to be called as codec.
-=46urthermore: we have the omap-hdmi-card machine driver to handle the =
-HDMI
-audio. It lacks DT support AFAIK but should not be a big deal to add th=
-e bindings.
-To get the hdmi audio working you also need to have phandle for the oma=
-p-hdmi
-DAI, the codec alone is not enough.
+Therefore, we define a following priority order for the match, and
+then scan all the entries to find the best match.
+  1. specific compatible && type && name
+  2. specific compatible && type
+  3. specific compatible && name
+  4. specific compatible
+  5. general compatible && type && name
+  6. general compatible && type
+  7. general compatible && name
+  8. general compatible
+  9. type && name
+  10. type
+  11. name
 
-Is this patch actually works at all?
+This is based on some pseudo-codes provided by Grant Likely.
 
-> =20
->  		ti,mclk-freq =3D <38400000>;
-> =20
-> @@ -57,7 +63,8 @@
->  			"HSMIC", "Headset Mic",
->  			"Headset Mic", "Headset Mic Bias",
->  			"AFML", "Line In",
-> -			"AFMR", "Line In";
-> +			"AFMR", "Line In",
-> +			"HDMI Out", "TX";
->  	};
-> =20
->  	/* HS USB Port 1 Power */
-> diff --git a/arch/arm/boot/dts/omap4-panda-es.dts b/arch/arm/boot/dts=
-/omap4-panda-es.dts
-> index 816d1c9..70152d6 100644
-> --- a/arch/arm/boot/dts/omap4-panda-es.dts
-> +++ b/arch/arm/boot/dts/omap4-panda-es.dts
-> @@ -23,7 +23,8 @@
->  		"Line Out", "AUXL",
->  		"Line Out", "AUXR",
->  		"AFML", "Line In",
-> -		"AFMR", "Line In";
-> +		"AFMR", "Line In",
-> +		"HDMI Out", "TX";
->  };
-> =20
->  /* PandaboardES has external pullups on SCL & SDA */
->=20
+Signed-off-by: Kevin Hao <haokexin@gmail.com>
+[grant.likely: Changed multiplier to 4 which makes more sense]
+Signed-off-by: Grant Likely <grant.likely@linaro.org>
+---
+v3: Also need to bail out when there does have a compatible member in match
+    entry, but it doesn't match with the device node's compatible.
+ 
+v2: Fix the bug such as we get the same score for the following two match
+entries:
+	name2 { }
 
+	struct of_device_id matches[] = {
+		{.name = "name2", },
+		{.name = "name2", .type = "type1", },
+		{}
+	};
 
---=20
-P=E9ter
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ drivers/of/base.c | 96 ++++++++++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 77 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index ba195fbce4c6..8f79f006d86f 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -342,21 +342,28 @@ struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
+ }
+ EXPORT_SYMBOL(of_get_cpu_node);
+ 
+-/** Checks if the given "compat" string matches one of the strings in
+- * the device's "compatible" property
++/*
++ * Compare with the __of_device_is_compatible, this will return a score for the
++ * matching strings. The smaller value indicates the match for the more specific
++ * compatible string.
+  */
+-static int __of_device_is_compatible(const struct device_node *device,
+-				     const char *compat)
++static int __of_device_is_compatible_score(const struct device_node *device,
++				     const char *compat, int *pscore)
+ {
+ 	const char* cp;
+ 	int cplen, l;
++	int score = 0;
+ 
+ 	cp = __of_get_property(device, "compatible", &cplen);
+ 	if (cp == NULL)
+ 		return 0;
+ 	while (cplen > 0) {
+-		if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
++		score++;
++		if (of_compat_cmp(cp, compat, strlen(compat)) == 0) {
++			if (pscore)
++				*pscore = score;
+ 			return 1;
++		}
+ 		l = strlen(cp) + 1;
+ 		cp += l;
+ 		cplen -= l;
+@@ -368,6 +375,15 @@ static int __of_device_is_compatible(const struct device_node *device,
+ /** Checks if the given "compat" string matches one of the strings in
+  * the device's "compatible" property
+  */
++static int __of_device_is_compatible(const struct device_node *device,
++				     const char *compat)
++{
++	return __of_device_is_compatible_score(device, compat, NULL);
++}
++
++/** Checks if the given "compat" string matches one of the strings in
++ * the device's "compatible" property
++ */
+ int of_device_is_compatible(const struct device_node *device,
+ 		const char *compat)
+ {
+@@ -734,25 +750,55 @@ static
+ const struct of_device_id *__of_match_node(const struct of_device_id *matches,
+ 					   const struct device_node *node)
+ {
++	const struct of_device_id *best_match = NULL;
++	int best_score = 0;
++
+ 	if (!matches)
+ 		return NULL;
+ 
+ 	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
+-		int match = 1;
+-		if (matches->name[0])
+-			match &= node->name
+-				&& !strcmp(matches->name, node->name);
+-		if (matches->type[0])
+-			match &= node->type
+-				&& !strcmp(matches->type, node->type);
+-		if (matches->compatible[0])
+-			match &= __of_device_is_compatible(node,
+-							   matches->compatible);
+-		if (match)
+-			return matches;
++		int score = 0;
++
++		/*
++		 * Matching compatible is better than matching type and name,
++		 * and the specific compatible is better than the general.
++		 */
++		if (matches->compatible[0]) {
++			if (__of_device_is_compatible_score(node,
++						matches->compatible, &score))
++				score = INT_MAX - 4 * score;
++			else
++				score = INT_MIN;
++		}
++
++		/*
++		 * Matching type is better than matching name, but matching
++		 * both is even better than that.
++		 */
++		if (matches->type[0]) {
++			if (node->type && !strcmp(matches->type, node->type))
++				score += 2;
++			else
++				score = INT_MIN;
++		}
++
++		/* Matching name is a bit better than not */
++		if (matches->name[0]) {
++			if (node->name && !strcmp(matches->name, node->name))
++				score++;
++			else
++				score = INT_MIN;
++		}
++
++		if (score > best_score) {
++			best_match = matches;
++			best_score = score;
++		}
++
+ 		matches++;
+ 	}
+-	return NULL;
++
++	return best_match;
+ }
+ 
+ /**
+@@ -760,7 +806,19 @@ const struct of_device_id *__of_match_node(const struct of_device_id *matches,
+  *	@matches:	array of of device match structures to search in
+  *	@node:		the of device structure to match against
+  *
+- *	Low level utility function used by device matching.
++ *	Low level utility function used by device matching. The priority order
++ *	for the matching is:
++ *	  1. specific compatible && type && name
++ *	  2. specific compatible && type
++ *	  3. specific compatible && name
++ *	  4. specific compatible
++ *	  5. general compatible && type && name
++ *	  6. general compatible && type
++ *	  7. general compatible && name
++ *	  8. general compatible
++ *	  9. type && name
++ *	  10. type
++ *	  11. name
+  */
+ const struct of_device_id *of_match_node(const struct of_device_id *matches,
+ 					 const struct device_node *node)
+-- 
+1.8.5.3
