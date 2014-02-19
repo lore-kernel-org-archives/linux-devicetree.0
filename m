@@ -1,8 +1,8 @@
 From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH RFC v1 1/3] clk: Add function to parse an arbitrary clocks list
- property
-Date: Wed, 19 Feb 2014 17:58:42 +0100
-Message-ID: <1392829124-25705-2-git-send-email-s.nawrocki@samsung.com>
+Subject: [PATCH RFC v1 3/3] clk: Add handling of clk parent and rate assigned
+ from DT
+Date: Wed, 19 Feb 2014 17:58:44 +0100
+Message-ID: <1392829124-25705-4-git-send-email-s.nawrocki@samsung.com>
 References: <1392829124-25705-1-git-send-email-s.nawrocki@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-reply-to: <1392829124-25705-1-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
@@ -11,83 +11,160 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetr
 Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The of_clk_get_list_entry() function is like of_clk_get() except it allows
-to pass name of a DT property containing list of phandles and clock specifiers.
-For of_clk_get() it has been hard coded to "clocks".
+This function adds a notifier callback run before a driver is bound to
+its driver. It will configure parent clock and clock frequencies based
+on [clk-name]-clk-parent and [clk-name]-clk-rate' DT properties.
 
 Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/clk/clk.h    |    3 +++
- drivers/clk/clkdev.c |   25 +++++++++++++++++++++----
- 2 files changed, 24 insertions(+), 4 deletions(-)
+ .../devicetree/bindings/clock/clock-bindings.txt   |   24 +++++
+ drivers/clk/clk.c                                  |   92 ++++++++++++++++++++
+ 2 files changed, 116 insertions(+)
 
-diff --git a/drivers/clk/clk.h b/drivers/clk/clk.h
-index 795cc9f..dd9def1 100644
---- a/drivers/clk/clk.h
-+++ b/drivers/clk/clk.h
-@@ -10,7 +10,10 @@
-  */
-
- #if defined(CONFIG_OF) && defined(CONFIG_COMMON_CLK)
+diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+index 7c52c29..d618498 100644
+--- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
++++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+@@ -115,3 +115,27 @@ clock signal, and a UART.
+   ("pll" and "pll-switched").
+ * The UART has its baud clock connected the external oscillator and its
+   register clock connected to the PLL clock (the "pll-switched" signal)
 +
- struct clk *__of_clk_get_from_provider(struct of_phandle_args *clkspec);
- void of_clk_lock(void);
- void of_clk_unlock(void);
-+struct clk *of_clk_get_list_entry(struct device_node *np,
-+				  const char *list_name, int index);
- #endif
-diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
-index a360b2e..465662e 100644
---- a/drivers/clk/clkdev.c
-+++ b/drivers/clk/clkdev.c
-@@ -27,17 +27,28 @@ static LIST_HEAD(clocks);
- static DEFINE_MUTEX(clocks_mutex);
-
- #if defined(CONFIG_OF) && defined(CONFIG_COMMON_CLK)
--struct clk *of_clk_get(struct device_node *np, int index)
-+/**
-+ * of_clk_get_list_entry() - Parse and lookup a clock referenced by a device node
-+ * @np: pointer to clock consumer node
-+ * @list_name: name of the clock list property
-+ * @index: index to the clock list
-+ *
-+ * This function parses the @list_name property and together with @index
-+ * value indicating an entry of the list uses it to look up the struct clk
-+ * from the registered list of clock providers.
-+ */
-+struct clk *of_clk_get_list_entry(struct device_node *np,
-+				  const char *list_name, int index)
- {
- 	struct of_phandle_args clkspec;
- 	struct clk *clk;
- 	int rc;
-
--	if (index < 0)
-+	if (index < 0 || !list_name)
- 		return ERR_PTR(-EINVAL);
-
--	rc = of_parse_phandle_with_args(np, "clocks", "#clock-cells", index,
--					&clkspec);
-+	rc = of_parse_phandle_with_args(np, list_name, "#clock-cells",
-+					index, &clkspec);
- 	if (rc)
- 		return ERR_PTR(rc);
-
-@@ -51,6 +62,12 @@ struct clk *of_clk_get(struct device_node *np, int index)
- 	of_node_put(clkspec.np);
- 	return clk;
++==Static initial configuration of clock parent and clock frequency==
++
++Some platforms require static configuration of (parts of) the clock controller
++often determined by the board design. Such a configuration can be specified in
++a clock consumer node through [clk-name]-clk-parent and [clk-name]-clk-rate DT
++properties. The former should contain phandle and clock specifier of the parent
++clock, the latter the required clock's frequency value (one cell). "clk-name"
++should be listed in the clock-names property and a phandle and a clock specifier
++pair corresponding to it should be present in the clocks property.
++
++    uart@a000 {
++        compatible = "fsl,imx-uart";
++        reg = <0xa000 0x1000>;
++	...
++        clocks = <&clkcon 0>, <&clkcon 3>;
++        clock-names = "baud", "mux";
++
++	mux-clk-parent = <&pll 1>;
++	baud-clk-rate = <460800>;
++    };
++
++In this example the pll is set as parent of "mux" clock and frequency of "baud"
++clock is specified as 460800 Hz.
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 19f6f3f..9238e08 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -19,6 +19,7 @@
+ #include <linux/of.h>
+ #include <linux/device.h>
+ #include <linux/init.h>
++#include <linux/platform_device.h>
+ #include <linux/sched.h>
+ 
+ #include "clk.h"
+@@ -2527,6 +2528,97 @@ const char *of_clk_get_parent_name(struct device_node *np, int index)
  }
-+EXPORT_SYMBOL(of_clk_get_list_entry);
-+
-+struct clk *of_clk_get(struct device_node *np, int index)
+ EXPORT_SYMBOL_GPL(of_clk_get_parent_name);
+ 
++static void __of_clk_assigned_config_set(struct clk *clk, struct clk *pclk,
++					 u32 rate)
 +{
-+	return of_clk_get_list_entry(np, "clocks", index);
++	int rc;
++
++	if (rate) {
++		rc = clk_set_rate(clk, rate);
++		if (rc < 0)
++			pr_err("clk: couldn't set rate of clock %s (%d)\n",
++			       __clk_get_name(clk), rc);
++		else
++			pr_debug("clk: set rate of clock %s to %u\n",
++				 __clk_get_name(clk), rate);
++	}
++
++	if (!IS_ERR(pclk)) {
++		rc = clk_set_parent(clk, pclk);
++		if (rc < 0)
++			pr_err("clk: couldn't set %s as parent of %s (%d)\n",
++			       __clk_get_name(pclk), __clk_get_name(clk), rc);
++		else
++			pr_debug("clk: set %s as parent of %s\n",
++				 __clk_get_name(pclk), __clk_get_name(clk));
++	}
 +}
- EXPORT_SYMBOL(of_clk_get);
-
++
++static void of_clk_assigned_config_parse(struct device_node *node)
++{
++	char prop_name[OF_PROP_NAME_MAXLEN];
++	struct property *prop;
++	const char *clk_name;
++	int rc, index = 0;
++
++	of_property_for_each_string(node, "clock-names", prop, clk_name) {
++		struct clk *clk, *pclk;
++		u32 rate = 0;
++
++		snprintf(prop_name, OF_PROP_NAME_MAXLEN,
++					"%s-clk-parent", clk_name);
++		pclk = of_clk_get_list_entry(node, prop_name, 0);
++
++		snprintf(prop_name, OF_PROP_NAME_MAXLEN,
++					"%s-clk-rate", clk_name);
++		rc = of_property_read_u32(node, prop_name, &rate);
++
++		if (!rc || !IS_ERR(pclk)) {
++			/*
++			 * Assuming here of_property_for_each_string() returns
++			 * consecutive values of a DT property in ascending
++			 * index order.
++			 */
++			clk = of_clk_get(node, index);
++
++			if (!IS_ERR(clk))
++				__of_clk_assigned_config_set(clk, pclk, rate);
++			else
++				pr_err("clk: couldn't get clk %s\n", clk_name);
++		}
++		index++;
++	}
++}
++
++
++static int of_clk_setup_notifier_call(struct notifier_block *nb,
++					unsigned long event, void *data)
++{
++	struct device *dev = data;
++
++	if (!dev->of_node)
++		return NOTIFY_DONE;
++
++	switch (event) {
++	case BUS_NOTIFY_BIND_DRIVER:
++		/* Parse and configure DT assigned clock parents and rates */
++		of_clk_assigned_config_parse(dev->of_node);
++		break;
++	}
++
++	return NOTIFY_DONE;
++}
++
++static struct notifier_block of_clk_setup_nb = {
++	.notifier_call = of_clk_setup_notifier_call,
++};
++
++int __init of_clk_setup_notifier_init(void)
++{
++	return bus_register_notifier(&platform_bus_type, &of_clk_setup_nb);
++}
++subsys_initcall(of_clk_setup_notifier_init);
++
  /**
---
+  * of_clk_init() - Scan and init clock providers from the DT
+  * @matches: array of compatible values and init functions for providers.
+-- 
 1.7.9.5
 
 --
