@@ -1,130 +1,77 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH] gpio: document polarity flag best practices
-Date: Wed, 19 Feb 2014 11:43:26 -0700
-Message-ID: <1392835406-9380-1-git-send-email-swarren@wwwdotorg.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: devicetree repository separation/migration
+Date: Wed, 19 Feb 2014 13:46:26 -0500
+Message-ID: <20140219184626.GP7862@titan.lakedaemon.net>
+References: <20140217180544.GU7862@titan.lakedaemon.net>
+ <20140218155750.GS17250@pengutronix.de>
+ <20140218181854.GB7862@titan.lakedaemon.net>
+ <5303DB5B.2090505@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5303DB5B.2090505-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren@nvidia.com>
+On Tue, Feb 18, 2014 at 02:14:51PM -0800, Frank Rowand wrote:
+> On 2/18/2014 10:18 AM, Jason Cooper wrote:
+> > On Tue, Feb 18, 2014 at 04:57:50PM +0100, Sascha Hauer wrote:
+> >> On Mon, Feb 17, 2014 at 01:05:44PM -0500, Jason Cooper wrote:
+> > ...
+> >>>   - Is the Linux development workflow ready for devicetree to move out
+> >>>     of the Linux Kernel?
+> >>
+> >> I hope so since keeping the devicetrees in sync with the kernel is a
+> >> pain for all external users.
+> > 
+> > Well, I haven't heard any screams yet.  I suspect people are waiting for
+> > details on the exact form it would take before complaining...
+> 
+> < snip >
+> 
+> Let me join the chorus of screams.
+> 
+> I would venture that the number of linux kernel developers actively
+> touching device tree source files (and impacted by changes to them)
+> is vastly larger than any other set of developers.
+> 
+> My experience in the kernel is already that finding working device
+> tree fragments that match current under development code is difficult.
+> (I am not trying to generalize for all systems, just the ones I use.)
+> 
+> Moving the device tree source files out of the kernel git tree will
+> only make things worse.
 
-Document what we (Laurent and I, following a mailing list dicussion)
-believe are best practices for the polarity flag in a GPIO specifier.
+Having written/applied a significant portion of the arm devicetree files
+for several SoCs over the past couple of years, I share your concern.
+The reason I bring this up is because I keep seeing the little churn
+here and there because we _can_.
 
-While touching the doc, I made a few minor editing changes to other
-areas.
+I find it very similar to a teenager reaching adulthood.  At a certain
+point, the parents have to say "Get out, get a job, get your own place."
+It's hard for all parties involved, but it's the best thing for the
+young adult in the long run.  There's no substitute for living on your
+own and paying bills.
 
-Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
----
- Documentation/devicetree/bindings/gpio/gpio.txt | 60 +++++++++++++++++++++----
- 1 file changed, 52 insertions(+), 8 deletions(-)
+I think the long term health of the devicetree would benefit greatly
+from being more detached than it currently is.  It would force everyone
+to "Pay the bills".
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
-index 0c85bb6e3a80..3fb8f53071b8 100644
---- a/Documentation/devicetree/bindings/gpio/gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio.txt
-@@ -13,11 +13,11 @@ properties, each containing a 'gpio-list':
- 	gpio-specifier : Array of #gpio-cells specifying specific gpio
- 			 (controller specific)
- 
--GPIO properties should be named "[<name>-]gpios".  Exact
-+GPIO properties should be named "[<name>-]gpios". The exact
- meaning of each gpios property must be documented in the device tree
- binding for each device.
- 
--For example, the following could be used to describe gpios pins to use
-+For example, the following could be used to describe GPIO pins used
- as chip select lines; with chip selects 0, 1 and 3 populated, and chip
- select 2 left empty:
- 
-@@ -44,35 +44,79 @@ whether pin is open-drain and whether pin is logically inverted.
- Exact meaning of each specifier cell is controller specific, and must
- be documented in the device tree binding for the device.
- 
--Example of the node using GPIOs:
-+Example of a node using GPIOs:
- 
- 	node {
- 		gpios = <&qe_pio_e 18 0>;
- 	};
- 
- In this example gpio-specifier is "18 0" and encodes GPIO pin number,
--and empty GPIO flags as accepted by the "qe_pio_e" gpio-controller.
-+and GPIO flags as accepted by the "qe_pio_e" gpio-controller.
-+
-+1.1) GPIO specifier best practices
-+----------------------------------
-+
-+A gpio-specifier should contain a flag indicating the GPIO polarity; active-
-+high or active-low. If it does, the follow best practices should be followed:
-+
-+The gpio-specifier's polarity flag should represent the physical level at the
-+GPIO controller that achieves (or represents, for inputs) a logically asserted
-+value at the device. The exact definition of logically asserted should be
-+defined by the binding for the device. If the board inverts the signal between
-+the GPIO controller and the device, then the gpio-specifier will represent the
-+opposite physical level than the signal at the device's pin.
-+
-+When the device's signal polarity is configurable, the binding for the
-+device must either:
-+
-+a) Define a single static polarity for the signal, with the expectation that
-+any software using that binding would statically program the device to use
-+that signal polarity.
-+
-+The static choice of polarity may be either:
-+
-+a1) (Preferred) Dictated by a binding-specific DT property.
-+
-+or:
-+
-+a2) Defined statically by the DT binding itself.
-+
-+In particular, the polarity cannot be derived from the gpio-specifier, since
-+that would prevent the DT from separately representing the two orthogonal
-+concepts of configurable signal polarity in the device, and possible board-
-+level signal inversion.
-+
-+or:
-+
-+b) Pick a single option for device signal polarity, and document this choice
-+in the binding. The gpio-specifier should represent the polarity of the signal
-+(at the GPIO controller) assuming that the device is configured for this
-+particular signal polarity choice. If software chooses to program the device
-+to generate or receive a signal of the opposite polarity, software will be
-+responsible for correctly interpreting (inverting) the GPIO signal at the GPIO
-+controller.
- 
- 2) gpio-controller nodes
- ------------------------
- 
--Every GPIO controller node must both an empty "gpio-controller"
--property, and have #gpio-cells contain the size of the gpio-specifier.
-+Every GPIO controller node must contain both an empty "gpio-controller"
-+property, and a #gpio-cells integer property, which indicates the number of
-+cells in a gpio-specifier.
- 
- Example of two SOC GPIO banks defined as gpio-controller nodes:
- 
- 	qe_pio_a: gpio-controller@1400 {
--		#gpio-cells = <2>;
- 		compatible = "fsl,qe-pario-bank-a", "fsl,qe-pario-bank";
- 		reg = <0x1400 0x18>;
- 		gpio-controller;
-+		#gpio-cells = <2>;
- 	};
- 
- 	qe_pio_e: gpio-controller@1460 {
--		#gpio-cells = <2>;
- 		compatible = "fsl,qe-pario-bank-e", "fsl,qe-pario-bank";
- 		reg = <0x1460 0x18>;
- 		gpio-controller;
-+		#gpio-cells = <2>;
- 	};
- 
- 2.1) gpio- and pin-controller interaction
--- 
-1.8.1.5
+The time might not be right now, and it probably will take one of the
+more gradual forms Olof suggested.  But I think it should happen at some
+point to help it grow up.
+
+And we still have the short term problem of facilitating other projects
+use of the devicetree.  Which can only make it more robust and accepted
+by default.
+
+thx,
+
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
