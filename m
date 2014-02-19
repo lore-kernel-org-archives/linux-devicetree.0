@@ -1,33 +1,60 @@
-From: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v2 0/4] Add audio card DT node support for Vybird-TWR board
-Date: Wed, 19 Feb 2014 15:42:27 +0800
-Message-ID: <1392795751-13351-1-git-send-email-Li.Xiubo@freescale.com>
+From: Xiubo Li <Li.Xiubo@freescale.com>
+Subject: [PATCH v2 2/4] ARM: dts: vf610-twr: Enable SAI ALSA SoC DAI device
+Date: Wed, 19 Feb 2014 15:42:29 +0800
+Message-ID: <1392795751-13351-3-git-send-email-Li.Xiubo@freescale.com>
+References: <1392795751-13351-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1392795751-13351-1-git-send-email-Li.Xiubo@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Xiubo Li <Li.Xiubo@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Add audio card DT node support for Vybird-TWR board.
+This patch adds and enables the SAI device.
 
+Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>
+---
+ arch/arm/boot/dts/vf610-twr.dts | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-Xiubo Li (4):
-  ARM: dts: vf610: Add edma mux Tx and Rx support for SAI node.
-  ARM: dts: vf610-twr: Enable SAI ALSA SoC DAI device
-  ARM: dts: vf610-twr: Enable SGTL5000 codec.
-  ARM: dts: vf610-twr: Add simple-card support.
-
- arch/arm/boot/dts/vf610-twr.dts | 71 +++++++++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/vf610.dtsi    |  3 ++
- 2 files changed, 74 insertions(+)
-
+diff --git a/arch/arm/boot/dts/vf610-twr.dts b/arch/arm/boot/dts/vf610-twr.dts
+index e3a3805..bcee3bb 100644
+--- a/arch/arm/boot/dts/vf610-twr.dts
++++ b/arch/arm/boot/dts/vf610-twr.dts
+@@ -121,6 +121,18 @@
+ 			>;
+ 		};
+ 
++		pinctrl_sai2: sai2grp {
++		      fsl,pins = <
++				VF610_PAD_PTA16__SAI2_TX_BCLK		0x02ed
++				VF610_PAD_PTA18__SAI2_TX_DATA		0x02ee
++				VF610_PAD_PTA19__SAI2_TX_SYNC		0x02ed
++				VF610_PAD_PTA21__SAI2_RX_BCLK		0x02ed
++				VF610_PAD_PTA22__SAI2_RX_DATA		0x02ed
++				VF610_PAD_PTA23__SAI2_RX_SYNC		0x02ed
++				VF610_PAD_PTB18__EXT_AUDIO_MCLK		0x02ed
++			>;
++		};
++
+ 		pinctrl_uart1: uart1grp {
+ 			fsl,pins = <
+ 				VF610_PAD_PTB4__UART1_TX		0x21a2
+@@ -130,6 +142,12 @@
+ 	};
+ };
+ 
++&sai2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_sai2>;
++	status = "okay";
++};
++
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart1>;
 -- 
 1.8.4
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
