@@ -1,38 +1,84 @@
-From: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 01/10] mfd: Add TI LMU driver
-Date: Wed, 19 Feb 2014 08:58:45 +0900
-Message-ID: <5303F3B5.6050806@ti.com>
-References: <1392359450-6890-1-git-send-email-milo.kim@ti.com> <20140217095734.GD17875@lee--X1> <53030F9C.8000605@ti.com> <20140218082127.GD20218@lee--X1>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] devicetree: bindings: Document Krait CPU/L1 EDAC
+Date: Tue, 18 Feb 2014 16:20:43 -0800
+Message-ID: <20140219002043.GE14769@codeaurora.org>
+References: <1389735034-21430-1-git-send-email-sboyd@codeaurora.org>
+ <1389735034-21430-3-git-send-email-sboyd@codeaurora.org>
+ <20140115102701.GA27314@e102568-lin.cambridge.arm.com>
+ <20140115165623.GJ14405@codeaurora.org>
+ <20140116013840.GA674@codeaurora.org>
+ <20140116113332.GC25540@e102568-lin.cambridge.arm.com>
+ <20140116180505.GA30925@codeaurora.org>
+ <20140116183326.GG25540@e102568-lin.cambridge.arm.com>
+ <20140116192617.GA13785@codeaurora.org>
+ <20140117102109.GA22544@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140218082127.GD20218@lee--X1>
+Content-Disposition: inline
+In-Reply-To: <20140117102109.GA22544-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+(Sorry, this discussion stalled due to merge window + life events)
 
-On 02/18/2014 05:21 PM, Lee Jones wrote:
->>>> +	pdata->en_gpio = of_get_named_gpio(node, "ti,enable-gpio", 0);
->>>
->>> There is a global DT property for this already.
->>
->> I've not found it yet, but I agree it looks like general property.
->> So I'll replace "ti,enable-gpio" with "ti,lmu-en-gpio".
->
-> Just re-use "gpio-enable". No need for it to be vendor specific.
->
+On 01/17, Lorenzo Pieralisi wrote:
+> On Thu, Jan 16, 2014 at 07:26:17PM +0000, Stephen Boyd wrote:
+> > On 01/16, Lorenzo Pieralisi wrote:
+> > > On Thu, Jan 16, 2014 at 06:05:05PM +0000, Stephen Boyd wrote:
+> > > > On 01/16, Lorenzo Pieralisi wrote:
+> > > > > Do we really want to do that ? I am not sure. A cpus node is supposed to
+> > > > > be a container node, we should not define this binding just because we
+> > > > > know the kernel creates a platform device for it then.
+> > > > 
+> > > > This is just copying more of the ePAPR spec into this document.
+> > > > It just so happens that having a compatible field here allows a
+> > > > platform device to be created. I don't see why that's a problem.
+> > > 
+> > > I do not see why you cannot define a node like pmu or arch-timer and stick
+> > > a compatible property in there. cpus node does not represent a device, and
+> > > must not be created as a platform device, that's my opinion.
+> > > 
+> > 
+> > I had what you're suggesting before in the original revision of
+> > this patch. Please take a look at the original patch series[1]. I
+> > suppose it could be tweaked slightly to still have a cache node
+> > for the L2 interrupt and the next-level-cache pointer from the
+> > CPUs.
+> 
+> Ok, sorry, we are running around in circles here, basically you moved
+> the node to cpus according to reviews. I still think that treating cpus
+> as a device is not a great idea, even though I am in the same
+> position with C-states and probably will add C-state tables in the cpus
+> node.
+> 
+> http://comments.gmane.org/gmane.linux.power-management.general/41012
+> 
+> I just would like to see under cpus nodes and properties that apply to
+> all ARM systems, and avoid defining properties (eg interrupts) that
+> have different meanings for different ARM cores.
+> 
+> The question related to why the kernel should create a platform device
+> out of cpus is still open. I really do not want to block your series
+> for these simple issues but we have to make a decision and stick to that,
+> I am fine either way if we have a plan.
+> 
 
-Got it. Thanks!
+Do you just want a backup plan in case we don't make a platform
+device out of the cpus node? I believe we can always add code
+somewhere to create a platform device at runtime if we detect the
+cpus node has a compatible string equal to "qcom,krait". We could
+probably change this driver's module_init() to scan the DT for
+such a compatible string and create the platform device right
+there. If we get more than one interrupt in the cpus node we can
+add interrupt-names and then have software look for interrupts by
+name instead of number.
 
-This GPIO is used for enabling the device. So, "enable-gpio" is more 
-appropriate name, isn't it?
-
-Best regards,
-Milo
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
