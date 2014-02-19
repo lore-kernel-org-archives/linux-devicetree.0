@@ -1,92 +1,83 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] V4L: s5k6a3: Add DT binding documentation
-Date: Wed, 19 Feb 2014 17:47:26 +0000
-Message-ID: <20140219174726.GE25079@e106331-lin.cambridge.arm.com>
-References: <1387747620-24676-1-git-send-email-s.nawrocki@samsung.com>
- <53037F8F.3050302@samsung.com>
+From: Gregory CLEMENT <info@free-electrons.com>
+Subject: Re: [PATCH v4 07/13] ARM: dts: mvebu: Add a new set of registers
+ to the PMSU node
+Date: Wed, 19 Feb 2014 18:49:13 +0100
+Message-ID: <5304EE99.7000102@free-electrons.com>
+References: <1392312816-17657-1-git-send-email-gregory.clement@free-electrons.com>	<1392312816-17657-8-git-send-email-gregory.clement@free-electrons.com> <20140219170033.4ca8343b@skate>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53037F8F.3050302@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140219170033.4ca8343b@skate>
+Sender: linux-pm-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, linux-pm@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 18, 2014 at 03:43:11PM +0000, Sylwester Nawrocki wrote:
-> On 22/12/13 22:27, Sylwester Nawrocki wrote:
-> > This patch adds DT binding documentation for the Samsung S5K6A3(YX)
-> > raw image sensor.
-> > 
-> > Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> > Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> > ---
-> > This patch adds missing documentation [1] for the "samsung,s5k6a3"
-> > compatible. Rob, can you please merge it through your tree if it 
-> > looks OK ?
+On 19/02/2014 17:00, Thomas Petazzoni wrote:
+> Dear Gregory CLEMENT,
 > 
-> Anyone cares to Ack this patch so it can be merged through the media
-> tree ?
+> On Thu, 13 Feb 2014 18:33:30 +0100, Gregory CLEMENT wrote:
+> 
+>>  - reg: Should contain PMSU registers location and length. First pair
+>> -  for the per-CPU SW Reset Control registers, second pair for the
+>> -  Power Management Service Unit.
+>> +  for the per-CPU SW Reset Control registers, second pair for the CPU
+>> +  Power Management Service Unit registers, third pair for the Fabric Power
+>> +  Management Service Unit registers.
+>>  
+>>  Example:
+>>  
+>> -armada-370-xp-pmsu@d0022000 {
+>> +armada-370-xp-pmsu@22000 {
+>>  	compatible = "marvell,armada-370-xp-pmsu";
+>> -	reg = <0xd0022100 0x430>,
+>> -	      <0xd0020800 0x20>;
+>> +	reg = <0x22100 0x430>,
+>> +	      <0x20800 0x20>,
+>> +	      <0x22000 0x24>;
+> 
+> I am not too happy with this because:
+> 
+>  *) We have to remove the second register pair from the PMSU. I haven't
+>     yet posted the patches on LAKML for SMP on 375 and 38x, but the 375
+>     doesn't have a PMSU. It however has the same CPU reset control
+>     registers as 370 and XP. Therefore, these 0x20800 registers have to
+>     be handled by a separate driver (that uses the reset framework),
+>     and not handled by the PMSU driver. This way, Armada 370/XP can use
+>     PMSU+CPU reset, while 375 will only use CPU reset.
+> 
+>  *) I think making the PMSU register start at 0x22100 was a mistake.
+>     The PMSU registers actually start at 0x22000 and they seem to go all
+>     the way to 0x23000. So we should have only one register pair. This
+>     of course raises some backward compatibility questions for the DT.
 
-It looks fine to me:
+I agree to use something like:
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+armada-370-xp-pmsu@22000 {
+	compatible = "marvell,armada-xp-pmsu"; /* new compatible string */
+	reg = <0x22000 0x1000>;
+	};
+
+
+and I think the best option would be to introduce a new compatible string
+for this. In the same time we continue to support the old compatible string
+but we print a big warning during the kernel boot that this compatible string
+is deprecated, and we will finally remove it a few release.
 
 Thanks,
-Mark.
+
+Gregory
+
 
 > 
-> > Thanks,
-> > Sylwester
-> > 
-> > [1] http://www.spinics.net/lists/devicetree/msg10693.html
-> > 
-> > Changes since v3 (https://linuxtv.org/patch/20429):
-> >  - rephrased 'clocks' and 'clock-names' properties' description.
-> > ---
-> >  .../devicetree/bindings/media/samsung-s5k6a3.txt   |   33 ++++++++++++++++++++
-> >  1 files changed, 33 insertions(+), 0 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/media/samsung-s5k6a3.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/samsung-s5k6a3.txt b/Documentation/devicetree/bindings/media/samsung-s5k6a3.txt
-> > new file mode 100644
-> > index 0000000..cce01e8
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/samsung-s5k6a3.txt
-> > @@ -0,0 +1,33 @@
-> > +Samsung S5K6A3(YX) raw image sensor
-> > +---------------------------------
-> > +
-> > +S5K6A3(YX) is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
-> > +and CCI (I2C compatible) control bus.
-> > +
-> > +Required properties:
-> > +
-> > +- compatible	: "samsung,s5k6a3";
-> > +- reg		: I2C slave address of the sensor;
-> > +- svdda-supply	: core voltage supply;
-> > +- svddio-supply	: I/O voltage supply;
-> > +- afvdd-supply	: AF (actuator) voltage supply;
-> > +- gpios		: specifier of a GPIO connected to the RESET pin;
-> > +- clocks	: should contain list of phandle and clock specifier pairs
-> > +		  according to common clock bindings for the clocks described
-> > +		  in the clock-names property;
-> > +- clock-names	: should contain "extclk" entry for the sensor's EXTCLK clock;
-> > +
-> > +Optional properties:
-> > +
-> > +- clock-frequency : the frequency at which the "extclk" clock should be
-> > +		    configured to operate, in Hz; if this property is not
-> > +		    specified default 24 MHz value will be used.
-> > +
-> > +The common video interfaces bindings (see video-interfaces.txt) should be
-> > +used to specify link to the image data receiver. The S5K6A3(YX) device
-> > +node should contain one 'port' child node with an 'endpoint' subnode.
-> > +
-> > +Following properties are valid for the endpoint node:
-> > +
-> > +- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
-> > +  video-interfaces.txt.  The sensor supports only one data lane.
+> Thomas
 > 
-> 
+
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
++33 602 196 044
