@@ -1,55 +1,92 @@
-From: Courtney Cavin <courtney.cavin@sonymobile.com>
-Subject: Re: [PATCH v2 1/3] usb: chipidea: msm: Add device tree binding
- information
-Date: Wed, 19 Feb 2014 09:46:56 -0800
-Message-ID: <20140219174655.GN1706@sonymobile.com>
-References: <1392729681-21022-1-git-send-email-iivanov@mm-sol.com>
- <1392729681-21022-2-git-send-email-iivanov@mm-sol.com>
- <20140218212659.GL1706@sonymobile.com>
- <1392824602.17130.68.camel@iivanov-dev>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] V4L: s5k6a3: Add DT binding documentation
+Date: Wed, 19 Feb 2014 17:47:26 +0000
+Message-ID: <20140219174726.GE25079@e106331-lin.cambridge.arm.com>
+References: <1387747620-24676-1-git-send-email-s.nawrocki@samsung.com>
+ <53037F8F.3050302@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1392824602.17130.68.camel@iivanov-dev>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+In-Reply-To: <53037F8F.3050302@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 19, 2014 at 04:43:22PM +0100, Ivan T. Ivanov wrote:
-> 
-> Hi, 
-> 
-> On Tue, 2014-02-18 at 13:26 -0800, Courtney Cavin wrote: 
-> > On Tue, Feb 18, 2014 at 02:21:19PM +0100, Ivan T. Ivanov wrote:
-> > > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-> > > 
-> > > Document device tree binding information as required by
-> > > the Qualcomm USB controller.
-> > > 
-> > > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> > > ---
-> > >  .../devicetree/bindings/usb/msm-hsusb.txt          |   17 +++++++++++++++++
+On Tue, Feb 18, 2014 at 03:43:11PM +0000, Sylwester Nawrocki wrote:
+> On 22/12/13 22:27, Sylwester Nawrocki wrote:
+> > This patch adds DT binding documentation for the Samsung S5K6A3(YX)
+> > raw image sensor.
 > > 
-> > Although you mentioned to Josh that this is intended for "non-standard"
-> > Chipidea properties, I don't see any other than requiring that 'dr_mode'
-> > must be "peripheral".  It would seem that this should all be integrated
-> > into a ci3xxx.txt.
+> > Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> > Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> > ---
+> > This patch adds missing documentation [1] for the "samsung,s5k6a3"
+> > compatible. Rob, can you please merge it through your tree if it 
+> > looks OK ?
 > 
-> Hm, there is no ci3xxx.txt. The closest match is ci-hdrc-imx.txt.
-> So it could be ci-hdrc-qcom.txt or my preferred name qcom,ci-hdrc.txt?
+> Anyone cares to Ack this patch so it can be merged through the media
+> tree ?
 
-Sorry, I was referring to ci13xxx-imx.txt, which was apparently moved to
-ci-hdrc-imx.txt.  I was recommending to merge the two into one
-'ci13xxx.txt', as this binding seems to be a new compatible for the same
-basic chip.  Now perhaps 'ci-hdrc.txt'.
+It looks fine to me:
 
-Although I agree with Josh that this name should be changed, and I think
-either of your two suggestions would be acceptable, I would like to at
-least discuss the possibility of actually merging the two in this
-series.
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-Comments?
+Thanks,
+Mark.
 
--Courtney
+> 
+> > Thanks,
+> > Sylwester
+> > 
+> > [1] http://www.spinics.net/lists/devicetree/msg10693.html
+> > 
+> > Changes since v3 (https://linuxtv.org/patch/20429):
+> >  - rephrased 'clocks' and 'clock-names' properties' description.
+> > ---
+> >  .../devicetree/bindings/media/samsung-s5k6a3.txt   |   33 ++++++++++++++++++++
+> >  1 files changed, 33 insertions(+), 0 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/media/samsung-s5k6a3.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/samsung-s5k6a3.txt b/Documentation/devicetree/bindings/media/samsung-s5k6a3.txt
+> > new file mode 100644
+> > index 0000000..cce01e8
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/samsung-s5k6a3.txt
+> > @@ -0,0 +1,33 @@
+> > +Samsung S5K6A3(YX) raw image sensor
+> > +---------------------------------
+> > +
+> > +S5K6A3(YX) is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
+> > +and CCI (I2C compatible) control bus.
+> > +
+> > +Required properties:
+> > +
+> > +- compatible	: "samsung,s5k6a3";
+> > +- reg		: I2C slave address of the sensor;
+> > +- svdda-supply	: core voltage supply;
+> > +- svddio-supply	: I/O voltage supply;
+> > +- afvdd-supply	: AF (actuator) voltage supply;
+> > +- gpios		: specifier of a GPIO connected to the RESET pin;
+> > +- clocks	: should contain list of phandle and clock specifier pairs
+> > +		  according to common clock bindings for the clocks described
+> > +		  in the clock-names property;
+> > +- clock-names	: should contain "extclk" entry for the sensor's EXTCLK clock;
+> > +
+> > +Optional properties:
+> > +
+> > +- clock-frequency : the frequency at which the "extclk" clock should be
+> > +		    configured to operate, in Hz; if this property is not
+> > +		    specified default 24 MHz value will be used.
+> > +
+> > +The common video interfaces bindings (see video-interfaces.txt) should be
+> > +used to specify link to the image data receiver. The S5K6A3(YX) device
+> > +node should contain one 'port' child node with an 'endpoint' subnode.
+> > +
+> > +Following properties are valid for the endpoint node:
+> > +
+> > +- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
+> > +  video-interfaces.txt.  The sensor supports only one data lane.
+> 
+> 
