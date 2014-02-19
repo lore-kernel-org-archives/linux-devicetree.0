@@ -1,46 +1,102 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v3 15/15] mfd: max14577: Add device tree bindings document
-Date: Wed, 19 Feb 2014 16:17:43 +0100
-Message-ID: <5304CB17.6060807@samsung.com>
-References: <1392627950-26927-1-git-send-email-k.kozlowski@samsung.com>
- <1392627950-26927-16-git-send-email-k.kozlowski@samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATH v2 2/2] spi: Add Qualcomm QUP SPI controller support
+Date: Thu, 20 Feb 2014 00:28:49 +0900
+Message-ID: <20140219152849.GI2669@sirena.org.uk>
+References: <1392308498-30209-1-git-send-email-iivanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="rStesqTWVLwTUuyd"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1392627950-26927-16-git-send-email-k.kozlowski@samsung.com>
+Content-Disposition: inline
+In-Reply-To: <1392308498-30209-1-git-send-email-iivanov@mm-sol.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Alok Chauhan <alokc@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Kiran Gunda <kgunda@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>, dsneddon@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 17.02.2014 10:05, Krzysztof Kozlowski wrote:
-> Add document describing device tree bindings for MAX14577 MFD
-> drivers: MFD core, extcon, regulator and charger.
->
-> Both MAX14577 and MAX77836 chipsets are documented.
->
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Cc: Kyungmin Park <kyungmin.park@samsung.com>
-> Cc: Tomasz Figa <t.figa@samsung.com>
-> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> ---
->   Documentation/devicetree/bindings/mfd/max14577.txt |  149 ++++++++++++++++++++
->   1 file changed, 149 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/mfd/max14577.txt
+--rStesqTWVLwTUuyd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-OK, so the "maxim,max14577" compatible string somehow showed up in the 
-kernel without any documentation, interesting...
+On Thu, Feb 13, 2014 at 06:21:38PM +0200, Ivan T. Ivanov wrote:
 
-Anyway:
+> Qualcomm Universal Peripheral (QUP) core is an AHB slave that
+> provides a common data path (an output FIFO and an input FIFO)
+> for serial peripheral interface (SPI) mini-core. SPI in master
+> mode supports up to 50MHz, up to four chip selects, programmable
+> data path from 4 bits to 32 bits and numerous protocol variants.
 
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+I've applied this since it mostly looks good but there's a few small
+outstanding issues, please submit incremental patches fixing them.
 
-Best regards,
-Tomasz
+> +#define SPI_CONFIG			0x0300
+> +#define SPI_IO_CONTROL			0x0304
+> +#define SPI_ERROR_FLAGS			0x0308
+> +#define SPI_ERROR_FLAGS_EN		0x030c
+
+You've got lots of defines that are just plain SPI_ which is looking for
+namespace collisions - please prefix them.
+
+> +	if (spi->chip_select >= spi->master->num_chipselect) {
+> +		dev_err(controller->dev, "invalid chip_select %d\n",
+> +			spi->chip_select);
+> +		return -EINVAL;
+> +	}
+
+The core does this prior to allowing the slave to be registered at all.
+
+> +
+> +	if (spi->max_speed_hz > controller->max_speed_hz) {
+> +		dev_err(controller->dev, "invalid max_speed_hz %d\n",
+> +			spi->max_speed_hz);
+> +		return -EINVAL;
+> +	}
+
+The core will check this for you if you set master->max_speed_hz.
+
+> +#ifdef CONFIG_PM_RUNTIME
+> +static int spi_qup_pm_suspend_runtime(struct device *device)
+> +{
+> +	struct spi_master *master = dev_get_drvdata(device);
+> +	struct spi_qup *controller = spi_master_get_devdata(master);
+> +	u32 config;
+> +
+> +	/* Enable clocks auto gaiting */
+> +	config = readl(controller->base + QUP_CONFIG);
+> +	config |= QUP_CLOCK_AUTO_GATE;
+> +	writel_relaxed(config, controller->base + QUP_CONFIG);
+> +	return 0;
+> +}
+
+Why not just enable this all the time?  I'd have expected some clock API
+calls here similar to those in the main suspend and resume paths.
+
+> +MODULE_VERSION("0.4");
+
+Don't bother doing this, nobody will ever keep updating the version
+number - the kernel version should be enough.
+
+--rStesqTWVLwTUuyd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTBM2uAAoJELSic+t+oim9qhcP/Rdo0N7EoF57G2cLQydpX6A2
+1xJKoDBKry+n4asw95WNYmdilxHhFLhbEocJeq8w0y/IZW036nUyK/KIGcU6cc6E
+XA8E2vc9df9zV6PK2E+KAgpSssDvchwtVx9f/sRPcT7EbO5si+XIJtESbK46RGnX
+roULrwTRpWklaihOhxs215qEt9NRJ3UwuDn/7IzSF/U1zK8kJjDWAnBEpuGIKcHy
+UCpBa2PA3+g9FhUXpxz7C8NaDJmFRtqPF+A6TjymV9VKvEbrU+vpFR0MohL+K4gO
+Wp+FP1V6UA+4DzeiTMctx3AlODfJJukm0AwAathqz5USJkT8CjWI6WHl+HI89WfU
+P/gUGV32+zj3otoOP9ohlWnhyI8sFH1HIyz+ctLtY2ZxKA3Tq4iKui/4F3WKTzzA
+mDmP5Iixtog+OCbTuzl7KJjAfMzmgGRNlwO0GFl5GE4KOyMmM7NA5uB7avmnbQP0
+vbODqhNO02LRLAoAUpl6KE7mNeMU7bJTiB7YQlXdQR8/4vXogjoQXlgMMQnSjL5n
+uYdUhewbqjkjK86aaGMdVXBnujQ8hKfWJj3ngbNN7QsFeizmdFaQ+ltAUcouqh5/
+q26jW5WzPO3cU8mtYyzBx86n/n/8VpTsKXchO0AS9Lc6IfsQWRm+gZpeB94LkiMA
+UT3shcez0enjE169bqts
+=626M
+-----END PGP SIGNATURE-----
+
+--rStesqTWVLwTUuyd--
