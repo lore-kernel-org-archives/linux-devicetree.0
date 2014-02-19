@@ -1,28 +1,46 @@
-From: Aminata Conteh <aminata-060000-VGgt2q2+T+FeoWH0uzbU5w@public.gmane.org>
-Subject: HI
-Date: Wed, 19 Feb 2014 16:13:57 +0100 (CET)
-Message-ID: <2110664214.15315631392822837859.JavaMail.actor@webmail39>
-Reply-To: aminata.conteh-9uewiaClKEY@public.gmane.org
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH v3 15/15] mfd: max14577: Add device tree bindings document
+Date: Wed, 19 Feb 2014 16:17:43 +0100
+Message-ID: <5304CB17.6060807@samsung.com>
+References: <1392627950-26927-1-git-send-email-k.kozlowski@samsung.com>
+ <1392627950-26927-16-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain;charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1392627950-26927-16-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-Hello dear
+On 17.02.2014 10:05, Krzysztof Kozlowski wrote:
+> Add document describing device tree bindings for MAX14577 MFD
+> drivers: MFD core, extcon, regulator and charger.
+>
+> Both MAX14577 and MAX77836 chipsets are documented.
+>
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Cc: Kyungmin Park <kyungmin.park@samsung.com>
+> Cc: Tomasz Figa <t.figa@samsung.com>
+> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> ---
+>   Documentation/devicetree/bindings/mfd/max14577.txt |  149 ++++++++++++++++++++
+>   1 file changed, 149 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/mfd/max14577.txt
 
-My name is Aminata Conteh, am 26 years of age, and I will like to build a 
-relationship with you that will lead us for a better tomorrow to enable us 
-share many feelings with each other as soul mate because it would be my 
-pleasure to receive your positive respond towards my proposal through this e-
-mail (aminata.conteh1-9uewiaClKEY@public.gmane.org) of acceptance with my friendship and sincerity is 
-the strength of a good relationship.
+OK, so the "maxim,max14577" compatible string somehow showed up in the 
+kernel without any documentation, interesting...
 
-Yours Always,
-Aminata.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Anyway:
+
+Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+
+Best regards,
+Tomasz
