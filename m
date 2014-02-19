@@ -1,58 +1,37 @@
-From: Balaji T K <balajitk@ti.com>
-Subject: [PATCH RESEND v11 1/7] mmc: omap_hsmmc: use devm_regulator API
-Date: Wed, 19 Feb 2014 20:26:35 +0530
-Message-ID: <1392821801-29673-2-git-send-email-balajitk@ti.com>
-References: <1389627375-9107-1-git-send-email-balajitk@ti.com>
- <1392821801-29673-1-git-send-email-balajitk@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 1/7] Documentation: Add device tree bindings for
+ Freescale i.MX GPC
+Date: Wed, 19 Feb 2014 15:56:12 +0100
+Message-ID: <2846176.fTzGkcQEPX@wuerfel>
+References: <1392737687-25003-1-git-send-email-p.zabel@pengutronix.de>
+ <201402191538.08507.arnd@arndb.de> <5304C4E9.6090505@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1392821801-29673-1-git-send-email-balajitk@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, chris@printf.net, tony@atomide.com
-Cc: broonie@kernel.org, Balaji T K <balajitk@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5304C4E9.6090505@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, kernel@pengutronix.de, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Thomas Abraham <thomas.abraham@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Use devm_regulator API, while at it use
-devm_regulator_get_optional for optional vmmc_aux supply
+On Wednesday 19 February 2014 15:51:21 Tomasz Figa wrote:
+> 
+> Just wanted to share a link with you. 
+> 
+> http://www.spinics.net/lists/devicetree/msg18051.html
 
-Signed-off-by: Balaji T K <balajitk@ti.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
----
- drivers/mmc/host/omap_hsmmc.c |    6 ++----
- 1 files changed, 2 insertions(+), 4 deletions(-)
+Excellent, thanks for the heads-up.
 
-diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index dbd32ad..1eb4350 100644
---- a/drivers/mmc/host/omap_hsmmc.c
-+++ b/drivers/mmc/host/omap_hsmmc.c
-@@ -316,7 +316,7 @@ static int omap_hsmmc_reg_get(struct omap_hsmmc_host *host)
- 	struct regulator *reg;
- 	int ocr_value = 0;
- 
--	reg = regulator_get(host->dev, "vmmc");
-+	reg = devm_regulator_get(host->dev, "vmmc");
- 	if (IS_ERR(reg)) {
- 		dev_err(host->dev, "vmmc regulator missing\n");
- 		return PTR_ERR(reg);
-@@ -336,7 +336,7 @@ static int omap_hsmmc_reg_get(struct omap_hsmmc_host *host)
- 		}
- 
- 		/* Allow an aux regulator */
--		reg = regulator_get(host->dev, "vmmc_aux");
-+		reg = devm_regulator_get_optional(host->dev, "vmmc_aux");
- 		host->vcc_aux = IS_ERR(reg) ? NULL : reg;
- 
- 		/* For eMMC do not power off when not in sleep state */
-@@ -366,8 +366,6 @@ static int omap_hsmmc_reg_get(struct omap_hsmmc_host *host)
- 
- static void omap_hsmmc_reg_put(struct omap_hsmmc_host *host)
- {
--	regulator_put(host->vcc);
--	regulator_put(host->vcc_aux);
- 	mmc_slot(host).set_power = NULL;
- }
- 
--- 
-1.7.5.4
+Philipp, please review that patch and see if you can build on top of that
+for your work.
 
+	Arnd
