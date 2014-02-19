@@ -1,40 +1,68 @@
-From: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 00/18] ahci: library-ise ahci_platform,
- add sunxi driver and cleanup imx driver
-Date: Wed, 19 Feb 2014 10:02:49 -0500
-Message-ID: <20140219150249.GG10134@htj.dyndns.org>
-References: <1392811320-3132-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 01/19] clocksource: orion: Use atomic access for
+ shared registers
+Date: Wed, 19 Feb 2014 12:01:48 -0300
+Message-ID: <20140219150147.GA4954@localhost>
+References: <1391707226-18258-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1391707226-18258-2-git-send-email-ezequiel.garcia@free-electrons.com>
+ <52F96993.9090007@linaro.org>
+ <20140211083024.GA3687@localhost>
+ <52F9E947.5020004@linaro.org>
+ <20140211094730.GG3687@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDQ2FCEAWYLRBHMPSOMAKGQETFPOTLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1392811320-3132-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20140211094730.GG3687@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Tue, Feb 11, 2014 at 06:47:30AM -0300, Ezequiel Garcia wrote:
+> On Tue, Feb 11, 2014 at 10:11:35AM +0100, Daniel Lezcano wrote:
+> > On 02/11/2014 09:30 AM, Ezequiel Garcia wrote:
+> > > On Tue, Feb 11, 2014 at 01:06:43AM +0100, Daniel Lezcano wrote:
+> > >> On 02/06/2014 06:20 PM, Ezequiel Garcia wrote:
+> > >>> Replace the driver-specific thread-safe shared register API
+> > >>> by the recently introduced atomic_io_clear_set().
+> > >>>
+> > >>> Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > >>> Tested-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.c=
+om>
+> > >>> Tested-by: Willy Tarreau <w@1wt.eu>
+> > >>> Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+> > >>> Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.=
+com>
+> > >>
+> > >> The patch looks good for me.
+> > >>
+> > >> Acked-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > >>
+> > >
+> > > Daniel,
+> > >
+> > > Jason acked this patch for you to take it. Or do you prefer that =
+we
+> > > merge it with the rest of the watchdog series?
+> >=20
+> > I can pick it, but doesn't the watchdog series depend on it ?
+> >=20
+>=20
+> Nope. It's indepedent of it.
 
-On Wed, Feb 19, 2014 at 01:01:42PM +0100, Hans de Goede wrote:
-> Here is v6 of my patchset for adding ahci-sunxi support. This has been
-> tested with Allwinner A10, Allwinner A20 and Freeware imx6x SoCs, including
-> suspend / resume. Note that since my last revision the ahci_imx driver has
-> also grown imx53 sata support, it would be good if some-one could test that
-> with this series.
+Daniel,
 
-Stopping review here.  I really like where it's headed in general and
-most review points, except for lack of devres usage, are rather
-cosmetic.  I'm not completely decided yet whether we can defer devres
-until later or should go for it in the first round.
+Ping? This patch is independent of the watchdog series, and there won't
+be any conflicts with it, so I think it's safe for you to take it.
 
-Thanks.
-
--- 
-tejun
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
