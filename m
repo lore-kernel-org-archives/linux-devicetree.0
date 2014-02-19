@@ -1,51 +1,117 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] net: add init-regs for of_phy support
-Date: Wed, 19 Feb 2014 18:15:03 +0100
-Message-ID: <19899452.nJCbJf89OP@avalon>
-References: <1392642484-19938-1-git-send-email-ben.dooks@codethink.co.uk> <530213A4.4030400@codethink.co.uk> <20140217141222.GB19308@e106331-lin.cambridge.arm.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v6 00/18] ahci: library-ise ahci_platform,
+ add sunxi driver and cleanup imx driver
+Date: Wed, 19 Feb 2014 18:18:09 +0100
+Message-ID: <5304E751.5040608@redhat.com>
+References: <1392811320-3132-1-git-send-email-hdegoede@redhat.com> <20140219150249.GG10134@htj.dyndns.org> <5304CD33.1080704@redhat.com> <20140219162511.GJ10134@htj.dyndns.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20140217141222.GB19308@e106331-lin.cambridge.arm.com>
-Sender: netdev-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBWWOSOMAKGQE7GRIVXQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140219162511.GJ10134-Gd/HAXX7CRxy/B6EtB590w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ben,
+Hi,
 
-On Monday 17 February 2014 14:12:22 Mark Rutland wrote:
-> On Mon, Feb 17, 2014 at 01:50:28PM +0000, Ben Dooks wrote:
-> > On 17/02/14 13:44, Mark Rutland wrote:
-> > > On Mon, Feb 17, 2014 at 01:08:04PM +0000, Ben Dooks wrote:
-> > >> Add new init-regs field for of_phy nodes and make sure these
-> > >> get applied when the phy is configured.
-> > >> 
-> > >> This allows any phy node in an fdt to initialise registers
-> > >> that may not be set as standard by the driver at initialisation
-> > >> time, such as LED controls.
-> > > 
-> > > Why not have a driver for the particular PHY? If it's not standard we
-> > > don't need to pretend it is. If it has some extensions then the standard
-> > > compatible string can be a fallback entry in the compatible list.
-> > 
-> > I was trying to provide some useful and reasonably generic code
-> > to setup PHYs without having to add specific arguments to each of
-> > them.
-> > 
-> > I could have added something like ksz8041,led-mode1 = <1> and
-> > updated the micrel driver.
+On 02/19/2014 05:25 PM, Tejun Heo wrote:
+> Hello, Hans.
 > 
-> Perhaps. It depends on precisely what the property is describing.
+> On Wed, Feb 19, 2014 at 04:26:43PM +0100, Hans de Goede wrote:
+>> The devres usage are really 2 different issues:
+>>
+>> 1) There is the issue that we're getting clocks by index (this is by design as
+>> clk-names are not generic), but there is no devm_get_clk_by_index (or some
+>> such), this is a shortcoming of the clk-core, which needs a separate patch
+>> to fix. I would rather not delay this patch-set based on getting a patch
+>> into another subsys.
 > 
-> I think describing the hardware and letting Linux figure out what to do
-> is better than giving it a set of opaque instructions for it to blindly
-> follow.
+> Yes, that'd be my usual preference too.  The only reason I'm hesitant
+> is because nobody seems to be too interested in long term aspect of
+> the code base and the only leverage I have seems to be rejecting
+> drivers until things become right.
+> 
+>> Note that even with devm_get_clk_by_index we can unfortunately not get rid of
+>> ahci_platform_put_resources() as in Roger's follow-up patches it gets used for
+>> putting some runtime pm related resources too.
+>>
+>> I guess this argues for simply turning ahci_platform_get_resources into a
+>> devm_ahci_platform_get_resources doing its own devm handling, and then
+>> making ahci_platform_put_resources a private function called by the devm
+>> framework. If you agree I can do that for the next patch-set.
+> 
+> Note that libata core already does something similar.  Please take a
+> look at ata_host_alloc() for details.  You don't really need to create
+> a separate devm_ prefixed variant.  Just making the function register
+> devres automatically should be enough.  If this is too much work, I'm
+> okay with deferring it until later if you promise to do it soonish.
+> 
 
-I second that, I think a LED mode property would be better in this case.
+Ok, I'll try to do this for the next revision.
 
--- 
+>> 2) In some comments you also seem to want devm variants of enable / disable
+>> resources, or at least have ahci_platform_put_resources do the disable
+>> automatically. The problem is that most of the functions called here need to
+>> be balanced, they increment / decrement usage counters in the clk / regulator
+>> subsystems, so we cannot simply unconditional do an ahci_platform_disable_resources
+>> in ahci_platform_put_resources
+>>
+>> Doing the disable automatically requires tracking the enable state, and doing this
+>> per resource, since the whole idea of having a separate ahci_platform_enable_resources
+>> is that some drivers may want to override its behavior doing things in a different
+>> order.
+>>
+>> To ensure proper tracking we would then need to offer ahci_platform_enable_regulator,
+>> etc. functions, and ensure that all drivers using the ahci_platform framework
+>> always go through these, rather then calling directly into the relevant framework.
+>>
+>> This is all doable, and I'm not against doing this but before spending a couple of
+>> hours coding this all up, I would like to hear back from you whether you would like
+>> to see this, or would rather keep things as is.
+> 
+> Yes, in principle, I want every resource used by ahci_platform to be
+> devres managed.  I *think* devres should be flexible enough to handle
+> what you're describing (each devres resource can have data for state
+> tracking and devres resources can be looked up and modified, so the
+> different orders should be okay) but if not I'd be happy to help
+> extend it so that it can.
+
+Most of the resources are already devres managed (I use devm functions
+to get them), the problem is not in freeing our reference to the resources,
+the problem is that we've sequences like this:
+
+devm_get_foo
+enable_foo
+disable_foo
+(automatic release foo)
+
+Where enable / disable can be done repeatedly (ie each suspend / resume).
+
+>From your review comments, I take it that you want the final disable_foo
+on driver release to happen automatically.
+
+My preference for this would be to extend the devres tracking already present
+in the relevant subsystems to keep track of the enable count done through a
+specific reference, to allow automatic disable (if needed) on release.
+
+But thinking more about this, I think that doing this automatically is a bad
+idea, because then we fixate the shutdown sequence to a certain order (the
+order in which we did the _get_foo for the resources) and the correct order may
+be device specific.
+
+So TL;DR: Yes to making things so that ahci_platform_put_resources gets done
+automatically, no to automating the disable calls.
+
+If I don't hear back from you, then I'll respin the patch-set assuming that
+you agree to the above.
+
 Regards,
 
-Laurent Pinchart
+Hans
