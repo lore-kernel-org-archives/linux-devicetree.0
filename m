@@ -1,60 +1,64 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v4 2/4] of: reimplement the matching method for __of_match_node()
-Date: Wed, 19 Feb 2014 15:34:41 +0000
-Message-ID: <20140219153441.5A271C4088D@trevor.secretlab.ca>
-References: <1392819290-1044-1-git-send-email-grant.likely@linaro.org> < 1392819290-1044-3-git-send-email-grant.likely@linaro.org> < CAL_JsqLbjK02Z1qzfP9K+Grp2WwAth8rMctK9myf8ZwJA6PUGQ@mail.gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLbjK02Z1qzfP9K+Grp2WwAth8rMctK9myf8ZwJA6PUGQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kevin Hao <haokexin@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH v2 1/3] usb: chipidea: msm: Add device tree binding
+ information
+Date: Wed, 19 Feb 2014 17:43:22 +0200
+Message-ID: <1392824602.17130.68.camel@iivanov-dev>
+References: <1392729681-21022-1-git-send-email-iivanov@mm-sol.com>
+	 <1392729681-21022-2-git-send-email-iivanov@mm-sol.com>
+	 <20140218212659.GL1706@sonymobile.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20140218212659.GL1706@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Courtney Cavin <courtney.cavin@sonymobile.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 19 Feb 2014 08:54:57 -0600, Rob Herring <robherring2@gmail.com> wrote:
-> On Wed, Feb 19, 2014 at 8:14 AM, Grant Likely <grant.likely@linaro.org> wrote:
-> > From: Kevin Hao <haokexin@gmail.com>
-> >
-> > In the current implementation of __of_match_node(), it will compare
-> > each given match entry against all the node's compatible strings
-> > with of_device_is_compatible().
-> >
-> > To achieve multiple compatible strings per node with ordering from
-> > specific to generic, this requires given matches to be ordered from
-> > specific to generic. For most of the drivers this is not true and
-> > also an alphabetical ordering is more sane there.
-> >
-> > Therefore, we define a following priority order for the match, and
-> > then scan all the entries to find the best match.
-> >   1. specific compatible && type && name
-> >   2. specific compatible && type
-> >   3. specific compatible && name
-> >   4. specific compatible
-> >   5. general compatible && type && name
-> >   6. general compatible && type
-> >   7. general compatible && name
-> >   8. general compatible
-> >   9. type && name
-> >   10. type
-> >   11. name
+
+Hi, 
+
+On Tue, 2014-02-18 at 13:26 -0800, Courtney Cavin wrote: 
+> On Tue, Feb 18, 2014 at 02:21:19PM +0100, Ivan T. Ivanov wrote:
+> > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+> > 
+> > Document device tree binding information as required by
+> > the Qualcomm USB controller.
+> > 
+> > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+> > ---
+> >  .../devicetree/bindings/usb/msm-hsusb.txt          |   17 +++++++++++++++++
 > 
-> While I agree this should be the right order, I worry that this may be
-> changing the matching in some case as all previous attempts have done.
+> Although you mentioned to Josh that this is intended for "non-standard"
+> Chipidea properties, I don't see any other than requiring that 'dr_mode'
+> must be "peripheral".  It would seem that this should all be integrated
+> into a ci3xxx.txt.
 
-True, but they should be few and far between, and they can be
-fixed up with bugfixes in drivers. This time we actually have test cases
-that show the behaviour is correct. The previous versions failed the
-current test cases (I checked).
+Hm, there is no ci3xxx.txt. The closest match is ci-hdrc-imx.txt.
+So it could be ci-hdrc-qcom.txt or my preferred name qcom,ci-hdrc.txt?
 
-> > +       /* Compatible match has highest priority */
-> > +       if (compat && compat[0]) {
-> > +               cp = __of_get_property(device, "compatible", &cplen);
-> > +               if (!cp)
-> > +                       return 0;
-> > +               for (index = 0; cplen > 0; index++, cp += l, cplen -= l) {
-> > +                       l = strlen(cp) + 1;
+> > +CI13xxx (Chipidea) USB controllers
+> > +
+> > +Required properties:
+> > +- compatible:   should contain "qcom,ci-hdrc"
 > 
-> This could use of_property_for_each_string.
+> Is there nothing more specific you could put here?  Maybe a hardware
+> revision, or something?
+> 
 
-Good point. Changed.
+I am not aware of any version numbers here, sorry.
 
-g.
+
+> > +- reg:          offset and length of the register set in the memory map
+> > +- interrupts:   interrupt-specifier for the controller interrupt.
+> > +- usb-phy:      phandle for the PHY device
+> > +- dr_mode:      Sould be "peripheral"
+> 
+> s/Sould/should/
+
+Thanks, 
+Ivan
+
+> 
+> -Courtney
