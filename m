@@ -1,90 +1,130 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: devicetree repository separation/migration
-Date: Wed, 19 Feb 2014 13:32:21 -0500
-Message-ID: <20140219183221.GO7862@titan.lakedaemon.net>
-References: <20140217180544.GU7862@titan.lakedaemon.net>
- <20140218155750.GS17250@pengutronix.de>
- <20140218181854.GB7862@titan.lakedaemon.net>
- <CAOesGMhvoB7vRf3H1kMaL5+MgZ2gJy=ZVNU0gsXVye9S4YGBOg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOesGMhvoB7vRf3H1kMaL5+MgZ2gJy=ZVNU0gsXVye9S4YGBOg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: [PATCH] gpio: document polarity flag best practices
+Date: Wed, 19 Feb 2014 11:43:26 -0700
+Message-ID: <1392835406-9380-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 18, 2014 at 11:47:56AM -0800, Olof Johansson wrote:
-> On Tue, Feb 18, 2014 at 10:18 AM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
-> > On Tue, Feb 18, 2014 at 04:57:50PM +0100, Sascha Hauer wrote:
-> >> On Mon, Feb 17, 2014 at 01:05:44PM -0500, Jason Cooper wrote:
-> > ...
-> >> >   - Is the Linux development workflow ready for devicetree to move out
-> >> >     of the Linux Kernel?
-> >>
-> >> I hope so since keeping the devicetrees in sync with the kernel is a
-> >> pain for all external users.
-> >
-> > Well, I haven't heard any screams yet.  I suspect people are waiting for
-> > details on the exact form it would take before complaining...
-> 
-> I'M SCREAMING NOW. :-)
+From: Stephen Warren <swarren@nvidia.com>
 
-.:. I just pooped my pants. :)
+Document what we (Laurent and I, following a mailing list dicussion)
+believe are best practices for the polarity flag in a GPIO specifier.
 
-> Honestly though, I think we need to do this carefully. Even though we
-> don't like it, there are still lots of bindings in flux and
-> cross-dependencies between two independent repos will be a major pain.
+While touching the doc, I made a few minor editing changes to other
+areas.
 
-Agreed.
+Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+---
+ Documentation/devicetree/bindings/gpio/gpio.txt | 60 +++++++++++++++++++++----
+ 1 file changed, 52 insertions(+), 8 deletions(-)
 
-> I think we have two options:
-> 
-> 1. Bring out everything in the current kernel repo to a separate one,
-> but do it my mirroring over. Changes go into the kernel repo first and
-> then comes over to this one, but other projects can mirror the
-> standalone repo without downloading a whole kernel tree.
-
-I prefer this one.  Assuming that a separate repo is mostly agreed upon,
-this allows us to provide the tree in an easily digestible way without
-impacting the current workflow.
-
-Also, if it works for the other projects, no one says we have to move
-beyond this step.
-
-> 2. Remove the kernel contents and move it over to the new repo. This
-> should be done independently for each platform, and the maintainers
-> get to decide if, when and how they do it. Some platforms are ready
-> for it (some have been for a long time), others are not. And it's up
-> to the maintainer, since they are the ones we will yell at when they
-> make our life miserable by adding cross-dependencies with an external
-> repo. Breakage due to the move is something we should have to put up
-> with, etc.
-> 
-> >> I'll likely need some barebox specific additions to the devicetrees.
-> >> Right now our idea is to leave the provided devicetrees untouched and
-> >> instead of compiling the board dts files directly we create
-> >> <boardname>-barebox.dts files which include the original board files.
-> >> That would allow us to provide additional information to barebox
-> >> without having to carry patches for the devicetrees.
-> >
-> > So the resulting <boardname>-barebox.dtb is compiled into the barebox
-> > binary?  Is the dtb passed to the kernel independently upgradeable?
-> >
-> > Why not post binding/dts patches for 'barebox,...' attributes that you
-> > need?
-> 
-> +1. These should ideally be posted and reviewed too -- maybe they make
-> sense to share between barebox and other firmware stacks, for example.
-
-Agreed, so is there anything preventing that from happening currently?
-
-thx,
-
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+index 0c85bb6e3a80..3fb8f53071b8 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+@@ -13,11 +13,11 @@ properties, each containing a 'gpio-list':
+ 	gpio-specifier : Array of #gpio-cells specifying specific gpio
+ 			 (controller specific)
+ 
+-GPIO properties should be named "[<name>-]gpios".  Exact
++GPIO properties should be named "[<name>-]gpios". The exact
+ meaning of each gpios property must be documented in the device tree
+ binding for each device.
+ 
+-For example, the following could be used to describe gpios pins to use
++For example, the following could be used to describe GPIO pins used
+ as chip select lines; with chip selects 0, 1 and 3 populated, and chip
+ select 2 left empty:
+ 
+@@ -44,35 +44,79 @@ whether pin is open-drain and whether pin is logically inverted.
+ Exact meaning of each specifier cell is controller specific, and must
+ be documented in the device tree binding for the device.
+ 
+-Example of the node using GPIOs:
++Example of a node using GPIOs:
+ 
+ 	node {
+ 		gpios = <&qe_pio_e 18 0>;
+ 	};
+ 
+ In this example gpio-specifier is "18 0" and encodes GPIO pin number,
+-and empty GPIO flags as accepted by the "qe_pio_e" gpio-controller.
++and GPIO flags as accepted by the "qe_pio_e" gpio-controller.
++
++1.1) GPIO specifier best practices
++----------------------------------
++
++A gpio-specifier should contain a flag indicating the GPIO polarity; active-
++high or active-low. If it does, the follow best practices should be followed:
++
++The gpio-specifier's polarity flag should represent the physical level at the
++GPIO controller that achieves (or represents, for inputs) a logically asserted
++value at the device. The exact definition of logically asserted should be
++defined by the binding for the device. If the board inverts the signal between
++the GPIO controller and the device, then the gpio-specifier will represent the
++opposite physical level than the signal at the device's pin.
++
++When the device's signal polarity is configurable, the binding for the
++device must either:
++
++a) Define a single static polarity for the signal, with the expectation that
++any software using that binding would statically program the device to use
++that signal polarity.
++
++The static choice of polarity may be either:
++
++a1) (Preferred) Dictated by a binding-specific DT property.
++
++or:
++
++a2) Defined statically by the DT binding itself.
++
++In particular, the polarity cannot be derived from the gpio-specifier, since
++that would prevent the DT from separately representing the two orthogonal
++concepts of configurable signal polarity in the device, and possible board-
++level signal inversion.
++
++or:
++
++b) Pick a single option for device signal polarity, and document this choice
++in the binding. The gpio-specifier should represent the polarity of the signal
++(at the GPIO controller) assuming that the device is configured for this
++particular signal polarity choice. If software chooses to program the device
++to generate or receive a signal of the opposite polarity, software will be
++responsible for correctly interpreting (inverting) the GPIO signal at the GPIO
++controller.
+ 
+ 2) gpio-controller nodes
+ ------------------------
+ 
+-Every GPIO controller node must both an empty "gpio-controller"
+-property, and have #gpio-cells contain the size of the gpio-specifier.
++Every GPIO controller node must contain both an empty "gpio-controller"
++property, and a #gpio-cells integer property, which indicates the number of
++cells in a gpio-specifier.
+ 
+ Example of two SOC GPIO banks defined as gpio-controller nodes:
+ 
+ 	qe_pio_a: gpio-controller@1400 {
+-		#gpio-cells = <2>;
+ 		compatible = "fsl,qe-pario-bank-a", "fsl,qe-pario-bank";
+ 		reg = <0x1400 0x18>;
+ 		gpio-controller;
++		#gpio-cells = <2>;
+ 	};
+ 
+ 	qe_pio_e: gpio-controller@1460 {
+-		#gpio-cells = <2>;
+ 		compatible = "fsl,qe-pario-bank-e", "fsl,qe-pario-bank";
+ 		reg = <0x1460 0x18>;
+ 		gpio-controller;
++		#gpio-cells = <2>;
+ 	};
+ 
+ 2.1) gpio- and pin-controller interaction
+-- 
+1.8.1.5
