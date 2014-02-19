@@ -1,49 +1,58 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH] clk: shmobile: Fix typoe in MSTP clock DT bindings
-Date: Wed, 19 Feb 2014 18:13:24 +0100
-Message-ID: <1392830004-5706-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v5 4/5] ARM: Kirkwood: Fix qnap vendor prefix
+Date: Wed, 19 Feb 2014 17:10:45 +0000
+Message-ID: <20140219171045.GC25079@e106331-lin.cambridge.arm.com>
+References: <1392814154-11284-1-git-send-email-klightspeed@killerwolves.net>
+ <1392814154-11284-5-git-send-email-klightspeed@killerwolves.net>
+ <20140219130553.GO17984@lunn.ch>
+ <5304AE28.6030209@killerwolves.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <5304AE28.6030209@killerwolves.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ben Peddell <klightspeed@killerwolves.net>
+Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Anton Vorontsov <anton@enomsg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The DT bindings document a renesas,indices property, while the code, the
-DT example and the DT sources all use renesas,clock-indices. Fix the
-documentation.
+On Wed, Feb 19, 2014 at 01:14:16PM +0000, Ben Peddell wrote:
+> On 19/02/14 23:05, Andrew Lunn wrote:
+> >> diff --git a/drivers/power/reset/qnap-poweroff.c b/drivers/power/reset/qnap-poweroff.c
+> >> index a75db7f..d350ece 100644
+> >> --- a/drivers/power/reset/qnap-poweroff.c
+> >> +++ b/drivers/power/reset/qnap-poweroff.c
+> >> @@ -41,7 +41,7 @@ static const struct power_off_cfg synology_power_off_cfg = {
+> >>  };
+> >>  
+> >>  static const struct of_device_id qnap_power_off_of_match_table[] = {
+> >> -	{ .compatible = "qnap,power-off",
+> >> +	{ .compatible = "qnapsz,power-off",
+> >>  	  .data = &qnap_power_off_cfg,
+> >>  	},
+> > 
+> > Hi Ben
+> > 
+> > This causes issues for devices using old DT blobs. You need to keep
+> > the old entry as well as supporting the new vendor prefix.
+> > 
+> > We need to consider, is it worth the hassle of changing the prefix,
+> > since it has been in use for a long time. I think using the stock
+> > ticker is a "rule of thumb" and not a strict requirement.
+> 
+> So, in this case it would be best to change qnapsz back to qnap in 
+> patch #1, and completely remove this patch?
 
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
----
- Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+If we already have users of the qnap prefix, yes please.
 
-Mike, this is a v3.14 bug fix. You can find all three Renesas clock bugfixes
-for v3.14 in
-
-	git://linuxtv.org/pinchartl/fbdev.git clocks/next/drivers
-
-I'll wait a day and send a pull request just to make sure no patch gets
-forgotten.
-
-diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-index a6a352c..5992dce 100644
---- a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-+++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-@@ -21,9 +21,9 @@ Required Properties:
-     must appear in the same order as the output clocks.
-   - #clock-cells: Must be 1
-   - clock-output-names: The name of the clocks as free-form strings
--  - renesas,indices: Indices of the gate clocks into the group (0 to 31)
-+  - renesas,clock-indices: Indices of the gate clocks into the group (0 to 31)
- 
--The clocks, clock-output-names and renesas,indices properties contain one
-+The clocks, clock-output-names and renesas,clock-indices properties contain one
- entry per gate clock. The MSTP groups are sparsely populated. Unimplemented
- gate clocks must not be declared.
- 
--- 
-Regards,
-
-Laurent Pinchart
-
+Thanks,
+Mark.
