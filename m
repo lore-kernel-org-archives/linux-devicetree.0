@@ -1,59 +1,45 @@
-From: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] of: reimplement the matching method for
- __of_match_node()
-Date: Wed, 19 Feb 2014 15:58:12 +0800
-Message-ID: <20140219075812.GE14031@pek-khao-d1.corp.ad.wrs.com>
-References: <1392762680-1498-3-git-send-email-grant.likely@linaro.org>
- <1392790862-18025-1-git-send-email-haokexin@gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 01/10] mfd: Add TI LMU driver
+Date: Wed, 19 Feb 2014 08:13:50 +0000
+Message-ID: <20140219081350.GA10504@lee--X1>
+References: <1392359450-6890-1-git-send-email-milo.kim@ti.com>
+ <20140217095734.GD17875@lee--X1>
+ <53030F9C.8000605@ti.com>
+ <20140218082127.GD20218@lee--X1>
+ <5303F3B5.6050806@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JBi0ZxuS5uaEhkUZ"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1392790862-18025-1-git-send-email-haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <5303F3B5.6050806@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Milo Kim <milo.kim@ti.com>
+Cc: Jingoo Han <jg1.han@samsung.com>, Bryan Wu <cooloney@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
+> >>>>+	pdata->en_gpio =3D of_get_named_gpio(node, "ti,enable-gpio", 0)=
+;
+> >>>
+> >>>There is a global DT property for this already.
+> >>
+> >>I've not found it yet, but I agree it looks like general property.
+> >>So I'll replace "ti,enable-gpio" with "ti,lmu-en-gpio".
+> >
+> >Just re-use "gpio-enable". No need for it to be vendor specific.
+> >
+>=20
+> Got it. Thanks!
+>=20
+> This GPIO is used for enabling the device. So, "enable-gpio" is more
+> appropriate name, isn't it?
 
---JBi0ZxuS5uaEhkUZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes, I wrote it the wrong way round (typo).
 
-On Wed, Feb 19, 2014 at 02:21:02PM +0800, Kevin Hao wrote:
-> +		/*
-> +		 * Matching compatible is better than matching type and name,
-> +		 * and the specific compatible is better than the general.
-> +		 */
-> +		if (matches->compatible[0] &&
-> +			 __of_device_is_compatible_score(node,
-> +						matches->compatible, &score))
-> +			score = INT_MAX - 4 * score;
+Just grep for both, you will see which one to use.
 
-It seems that we also need to adjust the above as what we do for the type
-and name. The v3 is coming.
-
-Thanks,
-Kevin
-
---JBi0ZxuS5uaEhkUZ
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQEcBAEBAgAGBQJTBGQUAAoJEJNY7TDerrFx4LMH/0Nfvr8v1VbSaIrqqWwTeFO2
-nKkI0wjOQI6Ca1pJqC6GM3EcdO6aE1tS0hp385+7N0fnOUvg+RAzjA6gylTuEJIf
-DYtMQZkpQ+RAKlbIeqs/uzBD/YjuHuVQR4v5Vu7khsePb91Y+ZgcmmgOagu6iFa5
-yZn5UH98tosn1fo61p+p+ZwPl2qDM+xkPaHCdbslmqcKp4Pw3S9AmXmGKRgsruzo
-mk2X7omQ2O1Yw2tkWhGSMKLk82LvD4Zg0h+PXoIq1iMNP4JkpyXOZidLIDplqJzS
-T9xayZxoHBU6nGEGleORIBYuXIC0WYgOt41sKMY36WLssX0ZkZqD1tdahgkHOfA=
-=aXlQ
------END PGP SIGNATURE-----
-
---JBi0ZxuS5uaEhkUZ--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
