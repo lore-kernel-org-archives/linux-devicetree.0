@@ -1,83 +1,75 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/4] ARM: dts: Enable SGTL5000 codec based audio driver
- node for VF610 TOWER.
-Date: Wed, 19 Feb 2014 15:13:51 +0800
-Message-ID: <20140219071349.GH3010@S2101-09.ap.freescale.net>
-References: <1392788323-6092-1-git-send-email-Li.Xiubo@freescale.com>
- <1392788323-6092-4-git-send-email-Li.Xiubo@freescale.com>
+From: Liu Ying <Ying.Liu@freescale.com>
+Subject: [PATCH] ARM: dts: imx6qdl-sabreauto: Support debug LED
+Date: Wed, 19 Feb 2014 15:15:48 +0800
+Message-ID: <1392794148-335-1-git-send-email-Ying.Liu@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1392788323-6092-4-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawn.guo@linaro.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 19, 2014 at 01:38:42PM +0800, Xiubo Li wrote:
-> This patch adds and enables SGTL5000 codec support.
-> 
-> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  arch/arm/boot/dts/vf610-twr.dts | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/vf610-twr.dts b/arch/arm/boot/dts/vf610-twr.dts
-> index 8217854..29790c9 100644
-> --- a/arch/arm/boot/dts/vf610-twr.dts
-> +++ b/arch/arm/boot/dts/vf610-twr.dts
-> @@ -34,6 +34,17 @@
->  		};
->  	};
->  
-> +	regulators {
-> +		compatible = "simple-bus";
+The D9 LED controlled by gpio on the imx6qdl-sabreauto
+CPU board is a debug LED according to the board design.
+This patch adds the relevant device tree nodes to the
+imx6qdl-sabreauto device tree file to support this LED.
 
-		#address-cells = <1>;
-		#size-cells = <0>;
+Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
+---
+ arch/arm/boot/dts/imx6qdl-sabreauto.dtsi |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-> +
-> +		reg_3p3v: 3p3v {
-
-		reg_3p3v: regulator@0 {
-
-> +			compatible = "regulator-fixed";
-
-			reg = <0>;
-
-Shawn
-
-> +			regulator-name = "3P3V";
-> +			regulator-min-microvolt = <3300000>;
-> +			regulator-max-microvolt = <3300000>;
-> +			regulator-always-on;
-> +		};
-> +	};
->  };
->  
->  &dspi0 {
-> @@ -72,6 +83,14 @@
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_i2c0>;
->  	status = "okay";
-> +
-> +	codec: sgtl5000@0a {
-> +	       compatible = "fsl,sgtl5000";
-> +	       reg = <0x0a>;
-> +	       VDDA-supply = <&reg_3p3v>;
-> +	       VDDIO-supply = <&reg_3p3v>;
-> +	       clocks = <&clks VF610_CLK_SAI2>;
-> +       };
->  };
->  
->  &iomuxc {
-> -- 
-> 1.8.4
-> 
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+index 33e9bff..009abd6 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+@@ -10,11 +10,24 @@
+  * http://www.gnu.org/copyleft/gpl.html
+  */
+ 
++#include <dt-bindings/gpio/gpio.h>
++
+ / {
+ 	memory {
+ 		reg = <0x10000000 0x80000000>;
+ 	};
+ 
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpio_leds>;
++
++		user {
++			label = "debug";
++			gpios = <&gpio5 15 GPIO_ACTIVE_HIGH>;
++		};
++	};
++
+ 	sound-spdif {
+ 		compatible = "fsl,imx-audio-spdif",
+ 			   "fsl,imx-sabreauto-spdif";
+@@ -217,6 +230,12 @@
+ 			>;
+ 		};
+ 
++		pinctrl_gpio_leds: gpioledsgrp {
++			fsl,pins = <
++				MX6QDL_PAD_DISP0_DAT21__GPIO5_IO15	0x80000000
++			>;
++		};
++
+ 		pinctrl_gpmi_nand: gpminandgrp {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_NANDF_CLE__NAND_CLE		0xb0b1
+-- 
+1.7.9.5
