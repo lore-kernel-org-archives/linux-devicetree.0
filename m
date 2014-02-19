@@ -1,141 +1,145 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v6 18/18] ARM: sun7i: dt: Add ahci / sata support
-Date: Wed, 19 Feb 2014 13:02:00 +0100
-Message-ID: <1392811320-3132-19-git-send-email-hdegoede@redhat.com>
-References: <1392811320-3132-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v2] ARM/dts: hdmi-codec: panda/es dt entries
+Date: Wed, 19 Feb 2014 14:13:34 +0200
+Message-ID: <53049FEE.9070506@ti.com>
+References: <1392716606-7436-1-git-send-email-paolo.pisati@canonical.com> <5304681C.4010106@ti.com> <20140219105434.GA5738@luxor.wired.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBH53SKMAKGQEOVH7MBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1392811320-3132-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140219105434.GA5738@luxor.wired.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Paolo Pisati <p.pisati@gmail.com>
+Cc: Paolo Pisati <paolo.pisati@canonical.com>, bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>, "Sarha, Jyri" <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds sunxi sata support to A20 boards that have such a connector.
-Some boards also feature a regulator via a GPIO and support for this is also
-added.
+On 02/19/2014 12:54 PM, Paolo Pisati wrote:
+> On Wed, Feb 19, 2014 at 10:15:24AM +0200, Peter Ujfalusi wrote:
+>>> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/b=
+oot/dts/omap4-panda-common.dtsi
+>>> index 88c6a05..f4aeaa1 100644
+>>> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
+>>> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+>>> @@ -36,9 +36,15 @@
+>>>  		};
+>>>  	};
+>>> =20
+>>> +	hdmi_audio: hdmi_audio@0 {
+>>> +		compatible =3D "linux,hdmi-audio";
+>>> +		status =3D "okay";
+>>> +	};
+>>> +
+>>>  	sound: sound {
+>>>  		compatible =3D "ti,abe-twl6040";
+>>>  		ti,model =3D "PandaBoard";
+>>> +		ti,audio-codec =3D <&hdmi_audio>;
+>>
+>> I don't think this is going to work. The omap-abe-twl6040 machine dr=
+iver only
+>> handles mcpdm and dmic right know.
+>> 'ti,audio-codec' is not even supported and it is kind of misleading =
+naming in
+>> this context since twl6040 is also a codec, so why only the dummy-hd=
+mi codec
+>> deserves to be called as codec.
+>=20
+> i see what you mean: i thought that hdmi_audio to actually work had t=
+o be
+> referenced inside the sound node (hence my inclusion there) but i was=
+ wrong and
+> it had nothing to do with twl6040,
+> would this one be ok for you?
+>=20
+> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boo=
+t/dts/omap4-panda-common.dtsi
+> index 88c6a05..b6dd458 100644
+> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
+> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+> @@ -36,6 +36,11 @@
+>                 };
+>         };
+> =20
+> +       hdmi_audio: hdmi_audio@0 {
+> +               compatible =3D "linux,hdmi-audio";
+> +               status =3D "okay";
+> +       };
+> +
+>         sound: sound {
+>                 compatible =3D "ti,abe-twl6040";
+>                 ti,model =3D "PandaBoard";
+>=20
+>=20
+>> Furthermore: we have the omap-hdmi-card machine driver to handle the=
+ HDMI
+>> audio. It lacks DT support AFAIK but should not be a big deal to add=
+ the bindings.
+>> To get the hdmi audio working you also need to have phandle for the =
+omap-hdmi
+>> DAI, the codec alone is not enough.
+>>
+> =20
+> you mean sound/soc/omap/omap-hdmi-card.c? that's exactly what i'm try=
+ing to fix.
+>=20
+> With the above patch, plus:
+>=20
+> -CONFIG_DISPLAY_CONNECTOR_HDMI=3Dm
+> +CONFIG_DISPLAY_CONNECTOR_HDMI=3Dy
+>  CONFIG_DISPLAY_ENCODER_TFP410=3Dm
+> -CONFIG_DISPLAY_ENCODER_TPD12S015=3Dm
+> +CONFIG_DISPLAY_ENCODER_TPD12S015=3Dy
+>=20
+> to make the omap-hdmi-audio-dai attach (sound/soc/omap/omap-hdmi.c)
+> and something like this (that is not upstreamable as i understand
+> but is an unfortunate fallout from the board removal[*]):
+>=20
+> --- a/arch/arm/mach-omap2/devices.c
+> +++ b/arch/arm/mach-omap2/devices.c
+> @@ -335,6 +335,11 @@ static struct platform_device omap_hdmi_audio =3D=
+ {
+>         .id     =3D -1,
+>  };
+> =20
+> +static struct platform_device hdmi_audio_codec =3D {
+> +       .name   =3D "hdmi-audio-codec",
+> +       .id     =3D -1,
+> +};
+> +
+>  static void __init omap_init_hdmi_audio(void)
+>  {
+>         struct omap_hwmod *oh;
+> @@ -349,6 +354,7 @@ static void __init omap_init_hdmi_audio(void)
+>              "Can't build omap_device for omap-hdmi-audio-dai.\n");
+> =20
+>         platform_device_register(&omap_hdmi_audio);
+> +       platform_device_register(&hdmi_audio_codec);
+>  }
+>  #else
+>  static inline void omap_init_hdmi_audio(void) {}
+>=20
+> i finally get my OMAPHDMI device back:
+>=20
+> flag@panda:~$ cat /proc/asound/cards=20
+>  0 [OMAPHDMI       ]: OMAPHDMI - OMAPHDMI
+>                       OMAPHDMI
+>  1 [PandaBoardES   ]: PandaBoardES - PandaBoardES
+>                       PandaBoardES
+>=20
 
-Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20-cubieboard2.dts     |  6 ++++++
- arch/arm/boot/dts/sun7i-a20-cubietruck.dts      | 18 ++++++++++++++++++
- arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts |  6 ++++++
- arch/arm/boot/dts/sun7i-a20.dtsi                |  8 ++++++++
- 4 files changed, 38 insertions(+)
+Yeah, the OMAP4 hdmi audio got hit by the move to DT hard. In legacy bo=
+ot we
+did created the needed devices for us to use but we still lack the DT s=
+upport
+for the HDMI audio (along with the DSS AFAIK).
+The stack we have at the moment going to change for sure. I need to syn=
+c up
+with Tomi and Jyri regarding to this but right now there's no clean (ie
+upstreamable ) way to enable HDMI audio.
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-index 7bf4935..07823c2 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-@@ -13,12 +13,18 @@
- 
- /dts-v1/;
- /include/ "sun7i-a20.dtsi"
-+/include/ "sunxi-ahci-reg.dtsi"
- 
- / {
- 	model = "Cubietech Cubieboard2";
- 	compatible = "cubietech,cubieboard2", "allwinner,sun7i-a20";
- 
- 	soc@01c00000 {
-+		ahci: sata@01c18000 {
-+			target-supply = <&reg_ahci_5v>;
-+			status = "okay";
-+		};
-+
- 		pinctrl@01c20800 {
- 			led_pins_cubieboard2: led_pins@0 {
- 				allwinner,pins = "PH20", "PH21";
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-index 025ce52..403bd2e 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-@@ -13,13 +13,26 @@
- 
- /dts-v1/;
- /include/ "sun7i-a20.dtsi"
-+/include/ "sunxi-ahci-reg.dtsi"
- 
- / {
- 	model = "Cubietech Cubietruck";
- 	compatible = "cubietech,cubietruck", "allwinner,sun7i-a20";
- 
- 	soc@01c00000 {
-+		ahci: sata@01c18000 {
-+			target-supply = <&reg_ahci_5v>;
-+			status = "okay";
-+		};
-+
- 		pinctrl@01c20800 {
-+			ahci_pwr_pin_cubietruck: ahci_pwr_pin@1 {
-+				allwinner,pins = "PH12";
-+				allwinner,function = "gpio_out";
-+				allwinner,drive = <0>;
-+				allwinner,pull = <0>;
-+			};
-+
- 			led_pins_cubietruck: led_pins@0 {
- 				allwinner,pins = "PH7", "PH11", "PH20", "PH21";
- 				allwinner,function = "gpio_out";
-@@ -90,4 +103,9 @@
- 			gpios = <&pio 7 7 0>;
- 		};
- 	};
-+
-+	reg_ahci_5v: ahci-5v {
-+		pinctrl-0 = <&ahci_pwr_pin_cubietruck>;
-+		gpio = <&pio 7 12 0>;
-+	};
- };
-diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
-index b02a796..d5c6799 100644
---- a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
-@@ -13,12 +13,18 @@
- 
- /dts-v1/;
- /include/ "sun7i-a20.dtsi"
-+/include/ "sunxi-ahci-reg.dtsi"
- 
- / {
- 	model = "Olimex A20-Olinuxino Micro";
- 	compatible = "olimex,a20-olinuxino-micro", "allwinner,sun7i-a20";
- 
- 	soc@01c00000 {
-+		ahci: sata@01c18000 {
-+			target-supply = <&reg_ahci_5v>;
-+			status = "okay";
-+		};
-+
- 		pinctrl@01c20800 {
- 			led_pins_olinuxino: led_pins@0 {
- 				allwinner,pins = "PH2";
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index daaafd0..3385994 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -392,6 +392,14 @@
- 			#size-cells = <0>;
- 		};
- 
-+		ahci: sata@01c18000 {
-+			compatible = "allwinner,sun4i-a10-ahci";
-+			reg = <0x01c18000 0x1000>;
-+			interrupts = <0 56 4>;
-+			clocks = <&pll6 0>, <&ahb_gates 25>;
-+			status = "disabled";
-+		};
-+
- 		pio: pinctrl@01c20800 {
- 			compatible = "allwinner,sun7i-a20-pinctrl";
- 			reg = <0x01c20800 0x400>;
--- 
-1.8.5.3
+--=20
+P=E9ter
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
