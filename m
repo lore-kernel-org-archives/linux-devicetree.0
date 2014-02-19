@@ -1,171 +1,44 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH RFC v1 3/3] clk: Add handling of clk parent and rate assigned
- from DT
-Date: Wed, 19 Feb 2014 17:58:44 +0100
-Message-ID: <1392829124-25705-4-git-send-email-s.nawrocki@samsung.com>
-References: <1392829124-25705-1-git-send-email-s.nawrocki@samsung.com>
+From: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] memory: ti-aemif: introduce AEMIF driver
+Date: Wed, 19 Feb 2014 19:04:31 +0200
+Message-ID: <5304E41F.4080205@ti.com>
+References: <1391629574-18955-1-git-send-email-ivan.khoronzhuk@ti.com> <1391629574-18955-2-git-send-email-ivan.khoronzhuk@ti.com> <20140218203049.GA18647@kroah.com> <53048822.2080307@ti.com> <20140219143403.GA31063@kroah.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1392829124-25705-1-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20140219143403.GA31063-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: santosh.shilimkar-l0cyMroinI0@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, "[initial author] Murali Karicheri" <m-karicheri2-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This function adds a notifier callback run before a driver is bound to
-its driver. It will configure parent clock and clock frequencies based
-on [clk-name]-clk-parent and [clk-name]-clk-rate' DT properties.
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- .../devicetree/bindings/clock/clock-bindings.txt   |   24 +++++
- drivers/clk/clk.c                                  |   92 ++++++++++++++++++++
- 2 files changed, 116 insertions(+)
+On 02/19/2014 04:34 PM, Greg KH wrote:
+> On Wed, Feb 19, 2014 at 12:32:02PM +0200, Ivan Khoronzhuk wrote:
+>>>> +	aemif->clk = devm_clk_get(dev, NULL);
+>>>> +	if (IS_ERR(aemif->clk)) {
+>>>> +		dev_err(dev, "cannot get clock 'aemif'\n");
+>>>> +		return PTR_ERR(aemif->clk);
+>>> No freeing memory?
+>> There is no need to free memory explicitly.
+>> devm_kzalloc is used instead of kzalloc.
+> Yes, but where does the device on the error path get removed?
 
-diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-index 7c52c29..d618498 100644
---- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
-+++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-@@ -115,3 +115,27 @@ clock signal, and a UART.
-   ("pll" and "pll-switched").
- * The UART has its baud clock connected the external oscillator and its
-   register clock connected to the PLL clock (the "pll-switched" signal)
-+
-+==Static initial configuration of clock parent and clock frequency==
-+
-+Some platforms require static configuration of (parts of) the clock controller
-+often determined by the board design. Such a configuration can be specified in
-+a clock consumer node through [clk-name]-clk-parent and [clk-name]-clk-rate DT
-+properties. The former should contain phandle and clock specifier of the parent
-+clock, the latter the required clock's frequency value (one cell). "clk-name"
-+should be listed in the clock-names property and a phandle and a clock specifier
-+pair corresponding to it should be present in the clocks property.
-+
-+    uart@a000 {
-+        compatible = "fsl,imx-uart";
-+        reg = <0xa000 0x1000>;
-+	...
-+        clocks = <&clkcon 0>, <&clkcon 3>;
-+        clock-names = "baud", "mux";
-+
-+	mux-clk-parent = <&pll 1>;
-+	baud-clk-rate = <460800>;
-+    };
-+
-+In this example the pll is set as parent of "mux" clock and frequency of "baud"
-+clock is specified as 460800 Hz.
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 19f6f3f..9238e08 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -19,6 +19,7 @@
- #include <linux/of.h>
- #include <linux/device.h>
- #include <linux/init.h>
-+#include <linux/platform_device.h>
- #include <linux/sched.h>
- 
- #include "clk.h"
-@@ -2527,6 +2528,97 @@ const char *of_clk_get_parent_name(struct device_node *np, int index)
- }
- EXPORT_SYMBOL_GPL(of_clk_get_parent_name);
- 
-+static void __of_clk_assigned_config_set(struct clk *clk, struct clk *pclk,
-+					 u32 rate)
-+{
-+	int rc;
-+
-+	if (rate) {
-+		rc = clk_set_rate(clk, rate);
-+		if (rc < 0)
-+			pr_err("clk: couldn't set rate of clock %s (%d)\n",
-+			       __clk_get_name(clk), rc);
-+		else
-+			pr_debug("clk: set rate of clock %s to %u\n",
-+				 __clk_get_name(clk), rate);
-+	}
-+
-+	if (!IS_ERR(pclk)) {
-+		rc = clk_set_parent(clk, pclk);
-+		if (rc < 0)
-+			pr_err("clk: couldn't set %s as parent of %s (%d)\n",
-+			       __clk_get_name(pclk), __clk_get_name(clk), rc);
-+		else
-+			pr_debug("clk: set %s as parent of %s\n",
-+				 __clk_get_name(pclk), __clk_get_name(clk));
-+	}
-+}
-+
-+static void of_clk_assigned_config_parse(struct device_node *node)
-+{
-+	char prop_name[OF_PROP_NAME_MAXLEN];
-+	struct property *prop;
-+	const char *clk_name;
-+	int rc, index = 0;
-+
-+	of_property_for_each_string(node, "clock-names", prop, clk_name) {
-+		struct clk *clk, *pclk;
-+		u32 rate = 0;
-+
-+		snprintf(prop_name, OF_PROP_NAME_MAXLEN,
-+					"%s-clk-parent", clk_name);
-+		pclk = of_clk_get_list_entry(node, prop_name, 0);
-+
-+		snprintf(prop_name, OF_PROP_NAME_MAXLEN,
-+					"%s-clk-rate", clk_name);
-+		rc = of_property_read_u32(node, prop_name, &rate);
-+
-+		if (!rc || !IS_ERR(pclk)) {
-+			/*
-+			 * Assuming here of_property_for_each_string() returns
-+			 * consecutive values of a DT property in ascending
-+			 * index order.
-+			 */
-+			clk = of_clk_get(node, index);
-+
-+			if (!IS_ERR(clk))
-+				__of_clk_assigned_config_set(clk, pclk, rate);
-+			else
-+				pr_err("clk: couldn't get clk %s\n", clk_name);
-+		}
-+		index++;
-+	}
-+}
-+
-+
-+static int of_clk_setup_notifier_call(struct notifier_block *nb,
-+					unsigned long event, void *data)
-+{
-+	struct device *dev = data;
-+
-+	if (!dev->of_node)
-+		return NOTIFY_DONE;
-+
-+	switch (event) {
-+	case BUS_NOTIFY_BIND_DRIVER:
-+		/* Parse and configure DT assigned clock parents and rates */
-+		of_clk_assigned_config_parse(dev->of_node);
-+		break;
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static struct notifier_block of_clk_setup_nb = {
-+	.notifier_call = of_clk_setup_notifier_call,
-+};
-+
-+int __init of_clk_setup_notifier_init(void)
-+{
-+	return bus_register_notifier(&platform_bus_type, &of_clk_setup_nb);
-+}
-+subsys_initcall(of_clk_setup_notifier_init);
-+
- /**
-  * of_clk_init() - Scan and init clock providers from the DT
-  * @matches: array of compatible values and init functions for providers.
+Why these functions are needed in that case...
+
+As I see, memory allocated with these functions
+are automatically freed on driver detach.
+
+Additionally I've checked if resources are released after
+AEMIF driver probe error.
+And they're released completely in case of probe error.
+
+:-\
+
 -- 
-1.7.9.5
+Regards,
+Ivan Khoronzhuk
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
