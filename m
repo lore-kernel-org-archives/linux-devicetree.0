@@ -1,49 +1,81 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2] of_mdio: fix phy interrupt passing
-Date: Wed, 19 Feb 2014 17:27:39 +0400
-Message-ID: <5304B14B.2070402@cogentembedded.com>
-References: <1392725818-558-1-git-send-email-ben.dooks@codethink.co.uk>	<20140218161551.44A52C40517@trevor.secretlab.ca> <20140218.181317.1712776234149210938.davem@davemloft.net>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Subject: [PATCH v5 0/2] Introduce AEMIF driver for Davinci/Keystone archs
+Date: Wed, 19 Feb 2014 15:40:08 +0200
+Message-ID: <1392817210-14312-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140218.181317.1712776234149210938.davem@davemloft.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>, grant.likely@linaro.org
-Cc: ben.dooks@codethink.co.uk, linux-kernel@lists.codethink.co.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-sh@vger.kernel.org
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: gregkh@linuxfoundation.org, santosh.shilimkar@ti.com, galak@kernel.crashing.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, pawel.moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, nsekhar@ti.com, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, linux-mtd@lists.infradead.org, rob@landley.net, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+These patches introduce Async External Memory Interface (EMIF16/AEMIF)
+controller driver for Davinci/Keystone archs.
 
-On 19-02-2014 3:13, David Miller wrote:
+For more informations see documentation:
+Davinci DM646x - http://www.ti.com/lit/ug/sprueq7c/sprueq7c.pdf
+OMAP-L138 - http://www.ti.com/lit/ug/spruh77a/spruh77a.pdf
+Kestone - http://www.ti.com/lit/ug/sprugz3a/sprugz3a.pdf
 
->>> The of_mdiobus_register_phy() is not setting phy->irq thus causing
->>> some drivers to incorrectly assume that the PHY does not have an
->>> IRQ associated with it. Not only do some drivers report no IRQ
->>> they do not install an interrupt handler for the PHY.
+Based on v3.14-rc3.
 
->>> Simplify the code setting irq and set the phy->irq at the same
->>> time so that we cover the following issues, which should cover
->>> all the cases the code will find:
+v4..v5:
+- memory: ti-aemif: introduce AEMIF driver
+	deleted DRV_NAME in favour of KBUILD_MODNAME
+	deleted redundant err message in case of memory allocation
+	some cosmetic changes
 
->>> - Set phy->irq if node has irq property and mdio->irq is NULL
->>> - Set phy->irq if node has no irq and mdio->irq is not NULL
->>> - Leave phy->irq as PHY_POLL default if none of the above
+v3..v4:
+	rebased on latest of linux-keystone.git keystone/master
 
->>> This fixes the issue:
->>>   net eth0: attached PHY 1 (IRQ -1) to driver Micrel KSZ8041RNLI
+v2..v3 (https://lkml.org/lkml/2013/12/11/148):
+- memory: ti-aemif: introduce AEMIF driver
+	changed to work with multiple AEMIF controllers
+	corrected "copyright" to "authors" in header
+	changed compatible "ti,omap-L138-aemif" to "ti,da850-aeimf"
+	used NULL in clk_get() instead of "aemif" name
+	driver can be build as loadable module
+	treat all child nodes as cs nodes, it makes code simpler
 
->>> to the correct:
->>>   net eth0: attached PHY 1 (IRQ 416) to driver Micrel KSZ8041RNLI
+- memory: ti-aemif: add bindings for AEMIF driver
+	deleted direct link driver/memory/ti-aemif.c
+	clarified description of controller ranges property
+	changed compatible "ti,omap-L138-aemif" to "ti,da850-aeimf"
+	added cs number information in commit log
+	removed compatible property from cs node, it makes code simpler
 
->>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+v1..v2 (https://lkml.org/lkml/2013/11/21/170):
+- memory: ti-aemif: introduce AEMIF driver
+- memory: ti-aemif: add bindings for AEMIF driver
+	added ti.cs-chipselect property instead of representing chipselect
+	number in cs node name.
 
->> Looks okay to me
+Ivan Khoronzhuk (2):
+  memory: ti-aemif: introduce AEMIF driver
+  memory: ti-aemif: add bindings for AEMIF driver
 
->> Reviewed-by: Grant Likely <grant.likely@linaro.org>
+ .../bindings/memory-controllers/ti-aemif.txt       | 210 ++++++++++
+ drivers/memory/Kconfig                             |  11 +
+ drivers/memory/Makefile                            |   1 +
+ drivers/memory/ti-aemif.c                          | 427 +++++++++++++++++++++
+ 4 files changed, 649 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt
+ create mode 100644 drivers/memory/ti-aemif.c
 
-> Applied, thanks.
+-- 
+1.8.3.2
 
-    So, you decided to ignore my comment about unneeded *else* branch?
 
-WBR, Sergei
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
