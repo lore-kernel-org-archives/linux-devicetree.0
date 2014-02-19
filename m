@@ -1,65 +1,89 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: devicetree repository separation/migration
-Date: Wed, 19 Feb 2014 21:15:16 +0000
-Message-ID: <CACxGe6uhA6FMR76WJGVEt44x6bQOC=woCkDr6ZUH30hTd8f2wA@mail.gmail.com>
-References: <20140217180544.GU7862@titan.lakedaemon.net> <20140218155750.GS17250@pengutronix.de>
- <20140218181854.GB7862@titan.lakedaemon.net> <CAOesGMhvoB7vRf3H1kMaL5+MgZ2gJy=ZVNU0gsXVye9S4YGBOg@mail.gmail.com>
- <CAOesGMi8zJXhfj46CLB-_Kk2s4MY9da46DhMoCtRj=zSUiuOGA@mail.gmail.com>
- <CA+bK7J5+n2Se4cLv5WjR5B31ej7FdrGjPcjUULNrhb1UQ7=vmA@mail.gmail.com>
- <20140219090854.GW17250@pengutronix.de> <53051102.8060801@gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 1/4] DT: Vendor prefixes: Add ricoh, qnap, sii and synology
+Date: Wed, 19 Feb 2014 15:17:48 -0600
+Message-ID: <CAL_JsqLR4efVwHL4KCHqqLfj64Uf+TefwDrpKjTpQE5uS6HPTA@mail.gmail.com>
+References: <1392840157-31072-1-git-send-email-klightspeed@killerwolves.net>
+	<1392840157-31072-2-git-send-email-klightspeed@killerwolves.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53051102.8060801-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392840157-31072-2-git-send-email-klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 19, 2014 at 8:16 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 2/19/2014 1:08 AM, Sascha Hauer wrote:
->> On Tue, Feb 18, 2014 at 02:44:15PM -0800, Tim Bird wrote:
->>> I'm not in favor of separating the device tree information from the kernel.
->>>
->>> If we switch, then whatever synchronization issues other projects
->>> are having now with synching with the device tree info from the kernel will
->>> just then become the problem of the kernel developers, who will then
->>> have to sync with the device tree info from another repository.  If the
->>> sync issues can't be solved now for them, why or how would it be solved
->>> post-separation for us?  (It sounds like a zero-sum game of pain transfer
->>> to me.)
->>>
->>> I'm relatively unfamiliar with the arguments.  Can someone provide
->>> a brief list of reasons this is needed, and how the inconvenience to Linux
->>> kernel developers will be minimized, should it proceed?
->>
+On Wed, Feb 19, 2014 at 2:02 PM,  <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org> wrote:
+> From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 >
+> The following patches make use of vendor names:
+> * ricoh (Ricoh Co. Ltd.);
+> * qnap (QNAP Systems, Inc.);
+> * sii (Seiko Instruments, Inc.); and
+> * synology (Synology, Inc.)
 >
->> One of the reasons for doing devicetrees is to separate the hardware
->> description from the code so that:
->> - Other OSes (and bootloaders) can use the same description to start on
->>   a given hardware
->> - A generic Kernel can be started on any hardware
->> - A hardware describes itself, makes itself more introspecitve so we can
->>   go away from very specialized kernels
+> Add them to the vendor prefix list.
 >
-> Tim knows this ^^^^.  He was asking for the arguments for moving dts files
-> out of the linux kernel source tree.
+> Signed-off-by: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
+> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 
-We've made the decision that devicetree bindings need to be treated as
-ABI, but as long as the .dts files live in the kernel there will
-always be the temptation to just tweak things in lock-step and nobody
-will notice. Splitting the files out gives that extra push to think
-about whether changes to a binding will backwards compatible with a
-tree that doesn't have those changes because the chances are a lot
-higher that someone will hit that combination.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-The other argument is shared source between
-BSD/U-Boot/Barebox/Linux/etc. Until we have a separate .dts repo there
-is no good way to share the database of hardware descriptions.
-
-g.
+> ---
+> v2:
+> Use stock ticker for Ricoh as vendor name
+> s/Richoh/Ricoh/
+>
+> v5:
+> Add vendor prefix for QNAP
+>
+> v6:
+> Revert qnap vendor prefix change from v5
+> Now properly based on -rc1
+>
+> v7:
+> Revert ricoh vendor prefix change from v2
+>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 3f900cd..4a52fa9 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -65,10 +65,12 @@ picochip    Picochip Ltd
+>  powervr        PowerVR (deprecated, use img)
+>  qca    Qualcomm Atheros, Inc.
+>  qcom   Qualcomm, Inc.
+> +qnap   QNAP Systems, Inc.
+>  ralink Mediatek/Ralink Technology Corp.
+>  ramtron        Ramtron International
+>  realtek Realtek Semiconductor Corp.
+>  renesas        Renesas Electronics Corporation
+> +ricoh  Ricoh Co. Ltd.
+>  rockchip       Fuzhou Rockchip Electronics Co., Ltd
+>  samsung        Samsung Semiconductor
+>  sbs    Smart Battery System
+> @@ -76,11 +78,13 @@ schindler   Schindler
+>  sil    Silicon Image
+>  silabs Silicon Laboratories
+>  simtek
+> +sii    Seiko Instruments, Inc.
+>  sirf   SiRF Technology, Inc.
+>  snps   Synopsys, Inc.
+>  st     STMicroelectronics
+>  ste    ST-Ericsson
+>  stericsson     ST-Ericsson
+> +synology       Synology, Inc.
+>  ti     Texas Instruments
+>  tlm    Trusted Logic Mobility
+>  toshiba        Toshiba Corporation
+> --
+> 1.8.3.2
+>
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
