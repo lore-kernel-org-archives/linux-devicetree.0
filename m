@@ -1,238 +1,90 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v3 2/4] of: reimplement the matching method for __of_match_node()
-Date: Wed, 19 Feb 2014 12:48:13 +0000
-Message-ID: <20140219124813.8FD66C4088D@trevor.secretlab.ca>
-References: <20140219075812.GE14031@pek-khao-d1.corp.ad.wrs.com> < 1392797745-7561-1-git-send-email-haokexin@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1392797745-7561-1-git-send-email-haokexin@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Kevin Hao <haokexin@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+From: klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org
+Subject: [PATCH v5 0/5] DT support for kirkwood based Synology NAS boxes
+Date: Wed, 19 Feb 2014 22:49:09 +1000
+Message-ID: <1392814154-11284-1-git-send-email-klightspeed@killerwolves.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 19 Feb 2014 16:15:45 +0800, Kevin Hao <haokexin@gmail.com> wrote:
-> In the current implementation of __of_match_node(), it will compare
-> each given match entry against all the node's compatible strings
-> with of_device_is_compatible().
-> 
-> To achieve multiple compatible strings per node with ordering from
-> specific to generic, this requires given matches to be ordered from
-> specific to generic. For most of the drivers this is not true and
-> also an alphabetical ordering is more sane there.
-> 
-> Therefore, we define a following priority order for the match, and
-> then scan all the entries to find the best match.
->   1. specific compatible && type && name
->   2. specific compatible && type
->   3. specific compatible && name
->   4. specific compatible
->   5. general compatible && type && name
->   6. general compatible && type
->   7. general compatible && name
->   8. general compatible
->   9. type && name
->   10. type
->   11. name
-> 
-> This is based on some pseudo-codes provided by Grant Likely.
-> 
-> Signed-off-by: Kevin Hao <haokexin@gmail.com>
-> [grant.likely: Changed multiplier to 4 which makes more sense]
-> Signed-off-by: Grant Likely <grant.likely@linaro.org>
-> ---
-> v3: Also need to bail out when there does have a compatible member in match
->     entry, but it doesn't match with the device node's compatible.
->  
-> v2: Fix the bug such as we get the same score for the following two match
-> entries:
-> 	name2 { }
-> 
-> 	struct of_device_id matches[] = {
-> 		{.name = "name2", },
-> 		{.name = "name2", .type = "type1", },
-> 		{}
-> 	};
-> 
->  drivers/of/base.c | 96 ++++++++++++++++++++++++++++++++++++++++++++-----------
->  1 file changed, 77 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index ba195fbce4c6..8f79f006d86f 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -342,21 +342,28 @@ struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
->  }
->  EXPORT_SYMBOL(of_get_cpu_node);
->  
-> -/** Checks if the given "compat" string matches one of the strings in
-> - * the device's "compatible" property
-> +/*
-> + * Compare with the __of_device_is_compatible, this will return a score for the
-> + * matching strings. The smaller value indicates the match for the more specific
-> + * compatible string.
->   */
-> -static int __of_device_is_compatible(const struct device_node *device,
-> -				     const char *compat)
-> +static int __of_device_is_compatible_score(const struct device_node *device,
-> +				     const char *compat, int *pscore)
->  {
->  	const char* cp;
->  	int cplen, l;
-> +	int score = 0;
->  
->  	cp = __of_get_property(device, "compatible", &cplen);
->  	if (cp == NULL)
->  		return 0;
->  	while (cplen > 0) {
-> -		if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
-> +		score++;
-> +		if (of_compat_cmp(cp, compat, strlen(compat)) == 0) {
-> +			if (pscore)
-> +				*pscore = score;
->  			return 1;
-> +		}
->  		l = strlen(cp) + 1;
->  		cp += l;
->  		cplen -= l;
-> @@ -368,6 +375,15 @@ static int __of_device_is_compatible(const struct device_node *device,
->  /** Checks if the given "compat" string matches one of the strings in
->   * the device's "compatible" property
->   */
-> +static int __of_device_is_compatible(const struct device_node *device,
-> +				     const char *compat)
-> +{
-> +	return __of_device_is_compatible_score(device, compat, NULL);
-> +}
-> +
-> +/** Checks if the given "compat" string matches one of the strings in
-> + * the device's "compatible" property
-> + */
->  int of_device_is_compatible(const struct device_node *device,
->  		const char *compat)
->  {
-> @@ -734,25 +750,55 @@ static
->  const struct of_device_id *__of_match_node(const struct of_device_id *matches,
->  					   const struct device_node *node)
->  {
-> +	const struct of_device_id *best_match = NULL;
-> +	int best_score = 0;
-> +
->  	if (!matches)
->  		return NULL;
->  
->  	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
-> -		int match = 1;
-> -		if (matches->name[0])
-> -			match &= node->name
-> -				&& !strcmp(matches->name, node->name);
-> -		if (matches->type[0])
-> -			match &= node->type
-> -				&& !strcmp(matches->type, node->type);
-> -		if (matches->compatible[0])
-> -			match &= __of_device_is_compatible(node,
-> -							   matches->compatible);
-> -		if (match)
-> -			return matches;
-> +		int score = 0;
-> +
-> +		/*
-> +		 * Matching compatible is better than matching type and name,
-> +		 * and the specific compatible is better than the general.
-> +		 */
-> +		if (matches->compatible[0]) {
-> +			if (__of_device_is_compatible_score(node,
-> +						matches->compatible, &score))
-> +				score = INT_MAX - 4 * score;
-> +			else
-> +				score = INT_MIN;
-> +		}
-> +
-> +		/*
-> +		 * Matching type is better than matching name, but matching
-> +		 * both is even better than that.
-> +		 */
-> +		if (matches->type[0]) {
-> +			if (node->type && !strcmp(matches->type, node->type))
-> +				score += 2;
-> +			else
-> +				score = INT_MIN;
-> +		}
-> +
-> +		/* Matching name is a bit better than not */
-> +		if (matches->name[0]) {
-> +			if (node->name && !strcmp(matches->name, node->name))
-> +				score++;
-> +			else
-> +				score = INT_MIN;
-> +		}
+This patchset adds support for around 30 kirkwood bases Synology NAS
+boxes. Patch #1 documents vendor prefixes. Patch #2 generalizes the qnap
+power off driver so that it can also be used for Synology devices.
+Patch #3 and #4 fix i2c trivial device and qnap vendor prefixes.
+Patch #5 adds the synology DT files.
 
-All that mucking about with setting the score to INT_MIN is pretty ugly.
-I've reworked the patch to 'continue;' whenever one of the above matches
-fail. That completely eliminates any possibility of accepting an entry
-that has a failed match. Here's my diff. I'll merge this change into the
-patch before committing. All of the test cases still pass with my
-rework.
+v2:
+Typo fix in qnap-poweroff.c
+Use ricoy stock ticker instead of ricoh
+Describe the lego structure of the hardware
 
----
+v3:
+Merge synology dtsi files into a single dtsi file
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 8f79f006d86f..fcb65d27d071 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -756,7 +756,7 @@ const struct of_device_id *__of_match_node(const struct of_device_id *matches,
- 	if (!matches)
- 		return NULL;
- 
--	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
-+	for (; matches->name[0] || matches->type[0] || matches->compatible[0]; matches++) {
- 		int score = 0;
- 
- 		/*
-@@ -764,11 +764,10 @@ const struct of_device_id *__of_match_node(const struct of_device_id *matches,
- 		 * and the specific compatible is better than the general.
- 		 */
- 		if (matches->compatible[0]) {
--			if (__of_device_is_compatible_score(node,
-+			if (!__of_device_is_compatible_score(node,
- 						matches->compatible, &score))
--				score = INT_MAX - 4 * score;
--			else
--				score = INT_MIN;
-+				continue;
-+			score = INT_MAX - 4 * score;
- 		}
- 
- 		/*
-@@ -776,26 +775,22 @@ const struct of_device_id *__of_match_node(const struct of_device_id *matches,
- 		 * both is even better than that.
- 		 */
- 		if (matches->type[0]) {
--			if (node->type && !strcmp(matches->type, node->type))
--				score += 2;
--			else
--				score = INT_MIN;
-+			if (!node->type || strcmp(matches->type, node->type))
-+				continue;
-+			score += 2;
- 		}
- 
- 		/* Matching name is a bit better than not */
- 		if (matches->name[0]) {
--			if (node->name && !strcmp(matches->name, node->name))
--				score++;
--			else
--				score = INT_MIN;
-+			if (!node->name || strcmp(matches->name, node->name))
-+				continue;
-+			score++;
- 		}
- 
- 		if (score > best_score) {
- 			best_match = matches;
- 			best_score = score;
- 		}
--
--		matches++;
- 	}
- 
- 	return best_match;
+v4:
+Various minor fixes to synology dtsi file
+
+v5:
+Fix typos in commit messages
+Remove unnecessary casts in qnap-poweroff.c
+Fix qnap vendor prefix
+
+Andrew Lunn (3):
+  DT: Vendor prefixes: Add ricoh, qnap, sii and synology
+  Power: Reset: Generalize qnap-poweroff to work on Synology devices.
+  DT: i2c: Trivial: Add sii, s35390a, fix ricoh vendor prefix
+
+Ben Peddell (2):
+  ARM: Kirkwood: Fix qnap vendor prefix
+  ARM: Kirkwood: Add support for many Synology NAS devices
+
+ .../devicetree/bindings/i2c/trivial-devices.txt    |   3 +-
+ .../bindings/power_supply/qnap-poweroff.txt        |   5 +-
+ .../devicetree/bindings/vendor-prefixes.txt        |   4 +
+ arch/arm/boot/dts/Makefile                         |  15 +
+ arch/arm/boot/dts/kirkwood-ds109.dts               |  41 +
+ arch/arm/boot/dts/kirkwood-ds110jv10.dts           |  41 +
+ arch/arm/boot/dts/kirkwood-ds111.dts               |  44 ++
+ arch/arm/boot/dts/kirkwood-ds112.dts               |  48 ++
+ arch/arm/boot/dts/kirkwood-ds209.dts               |  44 ++
+ arch/arm/boot/dts/kirkwood-ds210.dts               |  46 ++
+ arch/arm/boot/dts/kirkwood-ds212.dts               |  47 ++
+ arch/arm/boot/dts/kirkwood-ds212j.dts              |  41 +
+ arch/arm/boot/dts/kirkwood-ds409.dts               |  48 ++
+ arch/arm/boot/dts/kirkwood-ds409slim.dts           |  40 +
+ arch/arm/boot/dts/kirkwood-ds411.dts               |  52 ++
+ arch/arm/boot/dts/kirkwood-ds411j.dts              |  48 ++
+ arch/arm/boot/dts/kirkwood-ds411slim.dts           |  48 ++
+ arch/arm/boot/dts/kirkwood-rs212.dts               |  48 ++
+ arch/arm/boot/dts/kirkwood-rs409.dts               |  44 ++
+ arch/arm/boot/dts/kirkwood-rs411.dts               |  44 ++
+ arch/arm/boot/dts/kirkwood-synology.dtsi           | 871 +++++++++++++++++++++
+ arch/arm/boot/dts/kirkwood-ts219.dtsi              |   4 +-
+ drivers/power/reset/qnap-poweroff.c                |  49 +-
+ 23 files changed, 1659 insertions(+), 16 deletions(-)
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds109.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds110jv10.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds111.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds112.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds209.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds210.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds212.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds212j.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds409.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds409slim.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds411.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds411j.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-ds411slim.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-rs212.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-rs409.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-rs411.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-synology.dtsi
+
+-- 
+1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
