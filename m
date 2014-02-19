@@ -1,39 +1,41 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/7] Documentation: Add device tree bindings for
- Freescale i.MX GPC
-Date: Wed, 19 Feb 2014 17:00:16 +0100
-Message-ID: <1392825616.3445.51.camel@pizza.hi.pengutronix.de>
-References: <1392737687-25003-1-git-send-email-p.zabel@pengutronix.de>
-	 <201402191538.08507.arnd@arndb.de> <5304C4E9.6090505@samsung.com>
-	 <2846176.fTzGkcQEPX@wuerfel>
+From: Sebastian Capella <sebastian.capella@linaro.org>
+Subject: Re: [PATCH RFC v4 3/3] Documentation: arm: define DT idle states
+ bindings
+Date: Wed, 19 Feb 2014 08:04:49 -0800
+Message-ID: <20140219160449.11460.93660@capellas-linux>
+References: <1392724051-11950-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1392724051-11950-4-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2846176.fTzGkcQEPX@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1392724051-11950-4-git-send-email-lorenzo.pieralisi@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Mark Hambleton <mark.hambleton@broadcom.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Martin <dave.martin@arm.com>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Kevin Hilman <khilman@linaro.org>, linux-pm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen Boyd <sboyd@codeaurora.org>, Amit Kucheria <amit.kucheria@linaro.org>, Mark Brown <broonie@kernel.org>, Santosh Shilimkar <santosh.sh>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, den 19.02.2014, 15:56 +0100 schrieb Arnd Bergmann:
-> On Wednesday 19 February 2014 15:51:21 Tomasz Figa wrote:
-> > 
-> > Just wanted to share a link with you. 
-> > 
-> > http://www.spinics.net/lists/devicetree/msg18051.html
-> 
-> Excellent, thanks for the heads-up.
-> 
-> Philipp, please review that patch and see if you can build on top of that
-> for your work.
+Quoting Lorenzo Pieralisi (2014-02-18 03:47:31)
+> +       - index
+> +               Usage: Required
+> +               Value type: <u32>
+> +               Definition: It represents the idle state index.
+> +                           An increasing index value implies less power
+> +                           consumption. Index must be given a sequential
+> +                           value = {0, 1, ....}, starting from 0.
+One minor comment.  In the example, it can be tricky to see how this is sequential
+since the states interleave.  Not sure if it merits rewording here?
 
-Thanks, I'll do that.
+These look good to me!
 
-regards
-Philipp
+Thanks!
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sebastian
