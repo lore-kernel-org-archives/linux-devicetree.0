@@ -1,50 +1,77 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: [PATCH RESEND v2 1/3] usb: chipidea: msm: Add device tree binding information
-Date: Thu, 20 Feb 2014 11:53:08 +0200
-Message-ID: <1392889988-24312-1-git-send-email-iivanov@mm-sol.com>
-References: <530512F1.3060304@cogentembedded.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <530512F1.3060304@cogentembedded.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>
-Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org
+From: Kevin Hao <haokexin@gmail.com>
+Subject: Re: [PATCH v4 0/4] Bugfix for of_match_node ordering
+Date: Thu, 20 Feb 2014 18:12:40 +0800
+Message-ID: <20140220101240.GA3745@pek-khao-d1.corp.ad.wrs.com>
+References: <1392819290-1044-1-git-send-email-grant.likely@linaro.org>
+ <CAK9yfHwwmZkFMRvxsxjBAfUbVXU3V+iPFDZO=DwQsFvJ3NQyKA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="h31gzZEtNLTqOjlF"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAK9yfHwwmZkFMRvxsxjBAfUbVXU3V+iPFDZO=DwQsFvJ3NQyKA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
 
-Document device tree binding information as required by
-the Qualcomm USB controller.
+--h31gzZEtNLTqOjlF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
----
- .../devicetree/bindings/usb/msm-hsusb.txt          |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+On Thu, Feb 20, 2014 at 02:09:08PM +0530, Sachin Kamat wrote:
+> Hi Grant,
+>=20
+> I observe the following boot failure with today's (next-20140220) linux-n=
+ext
+> tree on Exynos based boards with the default exynos_defconfig.
 
-diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-index 5ea26c6..d4e7e41 100644
---- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-+++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-@@ -15,3 +15,20 @@ Example EHCI controller device node:
- 		usb-phy = <&usb_otg>;
- 	};
- 
-+CI13xxx (Chipidea) USB controllers
+Does this help?
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 8a27fc907ab6..9cc893530b9a 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -381,12 +381,16 @@ static int __of_device_is_compatible(const struct dev=
+ice_node *device,
+=20
+ 	/* Compatible match has highest priority */
+ 	if (compat && compat[0]) {
+-		of_property_for_each_string(device, "compatible", prop, cp) {
++		prop =3D __of_find_property(device, "compatible", NULL);
++		if (!prop)
++			return 0;
 +
-+Required properties:
-+- compatible:   should contain "qcom,ci-hdrc"
-+- reg:          offset and length of the register set in the memory map
-+- interrupts:   interrupt-specifier for the controller interrupt.
-+- usb-phy:      phandle for the PHY device
-+- dr_mode:      Sould be "peripheral"
-+
-+	gadget@f9a55000 {
-+		compatible = "qcom,ci-hdrc";
-+		reg = <0xf9a55000 0x400>;
-+		dr_mode = "peripheral";
-+		interrupts = <0 134 0>;
-+		usb-phy = <&usb_otg>;
-+	};
-+
--- 
-1.7.9.5
++		for (cp =3D of_prop_next_string(prop, NULL); cp;
++				cp =3D of_prop_next_string(prop, cp), index++) {
+ 			if (of_compat_cmp(cp, compat, strlen(compat)) =3D=3D 0) {
+ 				score =3D INT_MAX/2 - (index << 2);
+ 				break;
+ 			}
+-			index++;
+ 		}
+ 		if (!score)
+ 			return 0;
 
+
+Thanks,
+Kevin
+
+--h31gzZEtNLTqOjlF
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQEcBAEBAgAGBQJTBdUYAAoJEJNY7TDerrFxGIIH/j6nTq5k3QJJdqpPeokBFEhQ
+G0nt02MLeaYQkL1rvf0geRlq8UJUefbu+BR6BQsbUn9hnZ7XQVJkzKqtzMi380w6
+HhEWLc2fhkcf/CG7ZhEzN8A0D+88PVe09DRa9aoYzuscEA3/LZIiHa0X+Yrd9ouy
+JvToiN8lLmCR6rplNHR1ZvLdTGDEupafpx/T8OzZ7sKpAuu+n2XchEY62jeWLjFs
+MGJogds8AjtR5Sram61EiFd5MkVXEDsMm9FPsGk9e5hgkTF/wqDqlK+KDXbqpn1c
+r3RJkmbL/N4FAjf6gtJrCD/IPUQEyeS+dR9mfDu8CHQ5pMGgCxUslILq20cf168=
+=YSCa
+-----END PGP SIGNATURE-----
+
+--h31gzZEtNLTqOjlF--
