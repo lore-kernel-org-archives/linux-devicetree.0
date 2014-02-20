@@ -1,63 +1,117 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH v4 0/4] Bugfix for of_match_node ordering
-Date: Thu, 20 Feb 2014 15:57:07 +0530
-Message-ID: <CAK9yfHzM_kyXMrnLC=M0qiLHKWxE41E-MdyGtipKA7AwoLnOqg@mail.gmail.com>
-References: <1392819290-1044-1-git-send-email-grant.likely@linaro.org>
-	<CAK9yfHwwmZkFMRvxsxjBAfUbVXU3V+iPFDZO=DwQsFvJ3NQyKA@mail.gmail.com>
-	<20140220101240.GA3745@pek-khao-d1.corp.ad.wrs.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140220101240.GA3745@pek-khao-d1.corp.ad.wrs.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hao <haokexin@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH v4 0/7] reserved-memory regions/CMA in devicetree, again
+Date: Thu, 20 Feb 2014 11:52:40 +0100
+Message-ID: <1392893567-31623-1-git-send-email-m.szyprowski@samsung.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Grant Likely <grant.likely@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Paul Mackerras <paulus@samba.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kevin,
+Hi all!
 
-On 20 February 2014 15:42, Kevin Hao <haokexin@gmail.com> wrote:
-> On Thu, Feb 20, 2014 at 02:09:08PM +0530, Sachin Kamat wrote:
->> Hi Grant,
->>
->> I observe the following boot failure with today's (next-20140220) linux-next
->> tree on Exynos based boards with the default exynos_defconfig.
->
-> Does this help?
+This is another quick update of the patches which add basic support for
+dynamic allocation of memory reserved regions defined in device tree.
 
-The below patch works for me. Thanks for the fix.
+This time I hope I've really managed to address all the issues reported
+by Grant Likely, see the change log for more details. As a bonus, I've
+added support for ARM64 and PowerPC, as those architectures had quite
+well defined place where early memory reservation can be done.
 
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 8a27fc907ab6..9cc893530b9a 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -381,12 +381,16 @@ static int __of_device_is_compatible(const struct device_node *device,
->
->         /* Compatible match has highest priority */
->         if (compat && compat[0]) {
-> -               of_property_for_each_string(device, "compatible", prop, cp) {
-> +               prop = __of_find_property(device, "compatible", NULL);
-> +               if (!prop)
-> +                       return 0;
-> +
-> +               for (cp = of_prop_next_string(prop, NULL); cp;
-> +                               cp = of_prop_next_string(prop, cp), index++) {
->                         if (of_compat_cmp(cp, compat, strlen(compat)) == 0) {
->                                 score = INT_MAX/2 - (index << 2);
->                                 break;
->                         }
-> -                       index++;
->                 }
->                 if (!score)
->                         return 0;
->
->
-> Thanks,
-> Kevin
+The initial code for this feature were posted here [1], merged as commit
+9d8eab7af79cb4ce2de5de39f82c455b1f796963 ("drivers: of: add
+initialization code for dma reserved memory") and later reverted by
+commit 1931ee143b0ab72924944bc06e363d837ba05063. For more information,
+see [2]. Finally a new bindings has been proposed [3] and Josh
+Cartwright a few days ago prepared some code which implements those
+bindings [4]. This finally pushed me again to find some time to finish
+this task and review the code. Josh agreed to give me the ownership of
+this series to continue preparing them for mainline inclusion.
 
+For more information please refer to the changlelog below.
 
+[1]: http://lkml.kernel.org/g/1377527959-5080-1-git-send-email-m.szyprowski@samsung.com
+[2]: http://lkml.kernel.org/g/1381476448-14548-1-git-send-email-m.szyprowski@samsung.com
+[3]: http://lkml.kernel.org/g/20131030134702.19B57C402A0@trevor.secretlab.ca
+[4]: http://thread.gmane.org/gmane.linux.documentation/19579
+
+Changelog:
+
+v4:
+- dynamic allocations are processed after all static reservations has been
+  done
+- moved code for handling static reservations to drivers/of/fdt.c
+- removed node matching by string comparison, now phandle values are used
+  directly
+- moved code for DMA and CMA handling directly to
+  drivers/base/dma-{coherent,contiguous}.c
+- added checks for proper #size-cells, #address-cells, ranges properties
+  in /reserved-memory node
+- even more code cleanup
+- added init code for ARM64 and PowerPC
+
+v3: http://article.gmane.org/gmane.linux.documentation/20169/
+- refactored memory reservation code, created common code to parse reg, size,
+  align, alloc-ranges properties
+- added support for multiple tuples in 'reg' property
+- memory is reserved regardless of presence of the driver for its compatible
+- prepared arch specific hooks for memory reservation (defaults use memblock
+  calls)
+- removed node matching by string during device initialization
+- CMA init code: added checks for required region alignment
+- more code cleanup here and there
+
+v2: http://thread.gmane.org/gmane.linux.documentation/19870/
+- removed copying of the node name
+- split shared-dma-pool handling into separate files (one for CMA and one
+  for dma_declare_coherent based implementations) for making the code easier
+  to understand
+- added support for AMBA devices, changed prototypes to use struct decice
+  instead of struct platform_device
+- renamed some functions to better match other names used in drivers/of/
+- restructured the rest of the code a bit for better readability
+- added 'reusable' property to exmaple linux,cma node in documentation
+- exclusive dma (dma_coherent) is used for only handling 'shared-dma-pool'
+  regions without 'reusable' property and CMA is used only for handling
+  'shared-dma-pool' regions with 'reusable' property.
+
+v1: http://thread.gmane.org/gmane.linux.documentation/19579
+- initial version prepared by Josh Cartwright
+
+Summary:
+
+Grant Likely (1):
+  of: document bindings for reserved-memory nodes
+
+Marek Szyprowski (6):
+  drivers: of: add initialization code for reserved memory
+  drivers: dma-coherent: add initialization from device tree
+  drivers: dma-contiguous: add initialization from device tree
+  arm: add support for reserved memory defined by device tree
+  arm64: add support for reserved memory defined by device tree
+  powerpc: add support for reserved memory defined by device tree
+
+ .../bindings/reserved-memory/reserved-memory.txt   |  138 +++++++++
+ arch/arm/Kconfig                                   |    1 +
+ arch/arm/mm/init.c                                 |    3 +
+ arch/arm64/Kconfig                                 |    1 +
+ arch/arm64/mm/init.c                               |    2 +
+ arch/powerpc/Kconfig                               |    1 +
+ arch/powerpc/kernel/prom.c                         |    3 +
+ drivers/base/dma-coherent.c                        |   41 +++
+ drivers/base/dma-contiguous.c                      |  130 +++++++--
+ drivers/of/Kconfig                                 |    6 +
+ drivers/of/Makefile                                |    1 +
+ drivers/of/fdt.c                                   |  145 ++++++++++
+ drivers/of/of_reserved_mem.c                       |  296 ++++++++++++++++++++
+ drivers/of/platform.c                              |    7 +
+ include/asm-generic/vmlinux.lds.h                  |   11 +
+ include/linux/of_reserved_mem.h                    |   65 +++++
+ 16 files changed, 829 insertions(+), 22 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+ create mode 100644 drivers/of/of_reserved_mem.c
+ create mode 100644 include/linux/of_reserved_mem.h
 
 -- 
-With warm regards,
-Sachin
+1.7.9.5
+
