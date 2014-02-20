@@ -1,142 +1,80 @@
-From: Alex Elder <elder@linaro.org>
-Subject: [PATCH 02/12] clk: bcm281xx: use init_data.name for clock name
-Date: Wed, 19 Feb 2014 18:12:52 -0600
-Message-ID: <1392855182-21155-3-git-send-email-elder@linaro.org>
-References: <1392855182-21155-1-git-send-email-elder@linaro.org>
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: Re: [PATCH 0/2] Translate of PCI address without PCI enabled
+Date: Wed, 19 Feb 2014 21:50:28 -0300
+Message-ID: <20140220005027.GA5721@localhost>
+References: <1392848096-17838-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1392855182-21155-1-git-send-email-elder@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: mturquette@linaro.org, bcm@fixthebug.org, mporter@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
-Cc: devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1392848096-17838-1-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Use the init_data.name field to hold the name of a Kona clock rather
-than duplicating it.
+On Wed, Feb 19, 2014 at 11:14:54PM +0100, Gregory CLEMENT wrote:
+> Hello,
+>=20
+> This patch set makes the use of the of PCI address translator less
+> restrictive. At the end it will allow to use the mvebu_get_soc_id
+> unconditionally.
+>=20
+> The mvebu SoC (such as Kirkwood, Dove or Armada XP for instance) come
+> with an IP of a PCI controller. The ID and the revision of a SoC are
+> stored in the registers of this controller. Being able to get this
+> information allows to deals with errata more dynamically.
+>=20
+> To manage to read this information, we need to map the registers, and
+> for this we need to use the of PCI translator which depend of the PCI
+> support.
+>=20
+> However there are mvebu board without any PCI devices, and where
+> selecting the PCI support would be useless.
+>=20
+> Moreover translating an address from a PCI node of the device-tree
+> into a CPU physical address doesn't require the core PCI
+> support. Those translations are just related to the device tree
+> itself.
+>=20
+> The 1st patch introduces a new config symbol: OF_ADDRESS_PCI, which
+> will be selected as soon as PCI will be selected, so we remains in th=
+e
+> same situation the current code. It should go to the of tree.
+>=20
+> The 2nd patch selects OF_ADDRESS_PCI as soon as ARCH_MVEBU will be
+> selected. This will make mvebu_get_soc_id available even without the
+> PCI support. It should go to the mvebu tree.
+>=20
+> Thanks,
+>=20
+> Gregory CLEMENT (2):
+>   of: Allows to use the PCI translator without the PCI core
+>   ARM: mvebu: Allows to get the SoC ID even without PCI enabled
+>=20
+>  arch/arm/mach-mvebu/Kconfig | 1 +
+>  drivers/of/Kconfig          | 4 ++++
+>  drivers/of/address.c        | 8 +++++---
+>  3 files changed, 10 insertions(+), 3 deletions(-)
+>=20
+> --=20
+> 1.8.1.2
+>=20
 
-Signed-off-by: Alex Elder <elder@linaro.org>
----
- drivers/clk/bcm/clk-kona-setup.c |    6 +++---
- drivers/clk/bcm/clk-kona.c       |   17 ++++++++++-------
- drivers/clk/bcm/clk-kona.h       |    3 +--
- 3 files changed, 14 insertions(+), 12 deletions(-)
+On XP GP and CONFIG_PCI=3Dn, without the patches I get this:
 
-diff --git a/drivers/clk/bcm/clk-kona-setup.c b/drivers/clk/bcm/clk-kona-setup.c
-index c7607fe..eed84f5 100644
---- a/drivers/clk/bcm/clk-kona-setup.c
-+++ b/drivers/clk/bcm/clk-kona-setup.c
-@@ -64,7 +64,7 @@ static bool peri_clk_data_offsets_valid(struct kona_clk *bcm_clk)
- 
- 	BUG_ON(bcm_clk->type != bcm_clk_peri);
- 	peri = bcm_clk->peri;
--	name = bcm_clk->name;
-+	name = bcm_clk->init_data.name;
- 	range = bcm_clk->ccu->range;
- 
- 	limit = range - sizeof(u32);
-@@ -329,7 +329,7 @@ peri_clk_data_valid(struct kona_clk *bcm_clk)
- 		return false;
- 
- 	peri = bcm_clk->peri;
--	name = bcm_clk->name;
-+	name = bcm_clk->init_data.name;
- 	gate = &peri->gate;
- 	if (gate_exists(gate) && !gate_valid(gate, "gate", name))
- 		return false;
-@@ -630,7 +630,7 @@ struct clk *kona_clk_setup(struct ccu_data *ccu, const char *name,
- 		return NULL;
- 	}
- 	bcm_clk->ccu = ccu;
--	bcm_clk->name = name;
-+	bcm_clk->init_data.name = name;
- 
- 	init_data = &bcm_clk->init_data;
- 	init_data->name = name;
-diff --git a/drivers/clk/bcm/clk-kona.c b/drivers/clk/bcm/clk-kona.c
-index c01d810..488ed1f 100644
---- a/drivers/clk/bcm/clk-kona.c
-+++ b/drivers/clk/bcm/clk-kona.c
-@@ -807,7 +807,7 @@ static int kona_peri_clk_enable(struct clk_hw *hw)
- 	struct kona_clk *bcm_clk = to_kona_clk(hw);
- 	struct bcm_clk_gate *gate = &bcm_clk->peri->gate;
- 
--	return clk_gate(bcm_clk->ccu, bcm_clk->name, gate, true);
-+	return clk_gate(bcm_clk->ccu, bcm_clk->init_data.name, gate, true);
- }
- 
- static void kona_peri_clk_disable(struct clk_hw *hw)
-@@ -815,7 +815,7 @@ static void kona_peri_clk_disable(struct clk_hw *hw)
- 	struct kona_clk *bcm_clk = to_kona_clk(hw);
- 	struct bcm_clk_gate *gate = &bcm_clk->peri->gate;
- 
--	(void)clk_gate(bcm_clk->ccu, bcm_clk->name, gate, false);
-+	(void)clk_gate(bcm_clk->ccu, bcm_clk->init_data.name, gate, false);
- }
- 
- static int kona_peri_clk_is_enabled(struct clk_hw *hw)
-@@ -873,12 +873,13 @@ static int kona_peri_clk_set_parent(struct clk_hw *hw, u8 index)
- 
- 	ret = selector_write(bcm_clk->ccu, &data->gate, sel, trig, index);
- 	if (ret == -ENXIO) {
--		pr_err("%s: gating failure for %s\n", __func__, bcm_clk->name);
-+		pr_err("%s: gating failure for %s\n", __func__,
-+			bcm_clk->init_data.name);
- 		ret = -EIO;	/* Don't proliferate weird errors */
- 	} else if (ret == -EIO) {
- 		pr_err("%s: %strigger failed for %s\n", __func__,
- 			trig == &data->pre_trig ? "pre-" : "",
--			bcm_clk->name);
-+			bcm_clk->init_data.name);
- 	}
- 
- 	return ret;
-@@ -937,10 +938,12 @@ static int kona_peri_clk_set_rate(struct clk_hw *hw, unsigned long rate,
- 	ret = divider_write(bcm_clk->ccu, &data->gate, &data->div,
- 				&data->trig, scaled_div);
- 	if (ret == -ENXIO) {
--		pr_err("%s: gating failure for %s\n", __func__, bcm_clk->name);
-+		pr_err("%s: gating failure for %s\n", __func__,
-+			bcm_clk->init_data.name);
- 		ret = -EIO;	/* Don't proliferate weird errors */
- 	} else if (ret == -EIO) {
--		pr_err("%s: trigger failed for %s\n", __func__, bcm_clk->name);
-+		pr_err("%s: trigger failed for %s\n", __func__,
-+			bcm_clk->init_data.name);
- 	}
- 
- 	return ret;
-@@ -962,7 +965,7 @@ static bool __peri_clk_init(struct kona_clk *bcm_clk)
- {
- 	struct ccu_data *ccu = bcm_clk->ccu;
- 	struct peri_clk_data *peri = bcm_clk->peri;
--	const char *name = bcm_clk->name;
-+	const char *name = bcm_clk->init_data.name;
- 	struct bcm_clk_trig *trig;
- 
- 	BUG_ON(bcm_clk->type != bcm_clk_peri);
-diff --git a/drivers/clk/bcm/clk-kona.h b/drivers/clk/bcm/clk-kona.h
-index 5e139ad..96fd0bc 100644
---- a/drivers/clk/bcm/clk-kona.h
-+++ b/drivers/clk/bcm/clk-kona.h
-@@ -373,8 +373,7 @@ struct peri_clk_data {
- 
- struct kona_clk {
- 	struct clk_hw hw;
--	struct clk_init_data init_data;
--	const char *name;	/* name of this clock */
-+	struct clk_init_data init_data;	/* includes name of this clock */
- 	struct ccu_data *ccu;	/* ccu this clock is associated with */
- 	enum bcm_clk_type type;
- 	union {
--- 
-1.7.9.5
+  mvebu-soc-id: cannot map registers
+
+and after applying the patches I have:
+
+  mvebu-soc-id: MVEBU SoC ID=3D0x7846, Rev=3D0x2
+
+Tested-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Reviewed-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+
+Thanks for taking care of this.
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
