@@ -1,38 +1,116 @@
-From: Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm/xen: Don't use xen DMA ops when the device is
- protected by an IOMMU
-Date: Thu, 20 Feb 2014 16:35:59 +0000
-Message-ID: <1392914159.32657.18.camel@kazak.uk.xensource.com>
-References: <1392913301-25524-1-git-send-email-julien.grall@linaro.org>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH 3/4] ARM: dts: OMAP5: Add device nodes for ABB
+Date: Thu, 20 Feb 2014 10:36:11 -0600
+Message-ID: <53062EFB.3080501@ti.com>
+References: <1391039177-25284-1-git-send-email-nm@ti.com> <1391039177-25284-4-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392913301-25524-1-git-send-email-julien.grall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Julien Grall <julien.grall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xen-devel-GuqFBffKawtpuQazS67q72D2FQJk+8+b@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1391039177-25284-4-git-send-email-nm@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, "Andrii.Tseglytskyi" <andrii.tseglytskyi@ti.com>, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2014-02-20 at 16:21 +0000, Julien Grall wrote:
-> Only Xen is able to know if a device can safely avoid to use xen-swiotlb.
-> This patch introduce a new property "protected-devices" for the hypervisor
-> node which list device which the IOMMU are been correctly programmed by Xen.
+On 01/29/2014 05:46 PM, Nishanth Menon wrote:
+> From: "Andrii.Tseglytskyi" <andrii.tseglytskyi@ti.com>
 > 
-> During Linux boot, Xen specific code will create an hash table which
-> contains all these devices. The hash table will be used in need_xen_dma_ops
-> to check if the Xen DMA ops needs to be used for the current device.
+> Add ABB device nodes for OMAP5 family of devices. Data is based on
+> OMAP543x Technical Reference Manual revision U (April 2013).
+> NOTE: clock node has been disabled in this patch due to the lack of
+> OMAP5 clock data.
+> 
+> [nm@ti.com: co-developer]
+> Signed-off-by: Nishanth Menon <nm@ti.com>
+> Signed-off-by: Andrii.Tseglytskyi <andrii.tseglytskyi@ti.com>
+> ---
 
-Is it out of the question to find a field within struct device itself to
-store this e.g. in struct device_dma_parameters perhaps and avoid the
-need for a hashtable lookup.
+I have been informed that there is an fix in TI official documentation
+which is due end of this month. So, I have to drop this patch from the
+series for the time being - I will refresh this along with necessary
+OMAP5 updates once the official documentation is available.
 
-device->iommu_group might be another option, if we can create our own
-group?
+>  arch/arm/boot/dts/omap5.dtsi |   63 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+> index a72813a..6159f20 100644
+> --- a/arch/arm/boot/dts/omap5.dtsi
+> +++ b/arch/arm/boot/dts/omap5.dtsi
+> @@ -801,6 +801,69 @@
+>  
+>  			#thermal-sensor-cells = <1>;
+>  		};
+> +
+> +		abb_mpu: regulator-abb-mpu {
+> +			compatible = "ti,abb-v2";
+> +			regulator-name = "abb_mpu";
+> +			#address-cells = <0>;
+> +			#size-cells = <0>;
+> +			clocks = <&sys_clkin>;
+> +			ti,settling-time = <50>;
+> +			ti,clock-cycles = <16>;
+> +
+> +			reg = <0x4ae07cdc 0x8>, <0x4ae06014 0x4>,
+> +			      <0x4a0021ac 0x18>, <0x4ae0C318 0x4>;
+> +			reg-names = "base-address", "int-address",
+> +				    "efuse-address", "ldo-address";
+> +			ti,tranxdone-status-mask = <0x80>;
+> +			/* LDOVBBMPU_MUX_CTRL */
+> +			ti,ldovbb-override-mask = <0x400>;
+> +			/* LDOVBBMPU_VSET_OUT */
+> +			ti,ldovbb-vset-mask = <0x1F>;
+> +
+> +			/*
+> +			 * NOTE: only FBB mode used but actual vset will
+> +			 * determine final biasing
+> +			 */
+> +			ti,abb_info = <
+> +			/*uV		ABB	efuse	rbb_m fbb_m	vset_m*/
+> +			880000		0	0x4	0 0x20000000 0x1F000000
+> +			1060000		0	0x8	0 0x20000000 0x1F000000
+> +			1250000		0	0x10	0 0x20000000 0x1F000000
+> +			1260000		1	0x14	0 0x20000000 0x1F000000
+> +			>;
+> +		};
+> +
+> +		abb_mm: regulator-abb-mm {
+> +			compatible = "ti,abb-v2";
+> +			regulator-name = "abb_mm";
+> +			#address-cells = <0>;
+> +			#size-cells = <0>;
+> +			clocks = <&sys_clkin>;
+> +			ti,settling-time = <50>;
+> +			ti,clock-cycles = <16>;
+> +
+> +			reg = <0x4ae07ce4 0x8>, <0x4ae06010 0x4>,
+> +			      <0x4a002194 0x14>, <0x4ae0C314 0x4>;
+> +			reg-names = "base-address", "int-address",
+> +				    "efuse-address", "ldo-address";
+> +			ti,tranxdone-status-mask = <0x80000000>;
+> +			/* LDOVBBMM_MUX_CTRL */
+> +			ti,ldovbb-override-mask = <0x400>;
+> +			/* LDOVBBMM_VSET_OUT */
+> +			ti,ldovbb-vset-mask = <0x1F>;
+> +
+> +			/*
+> +			 * NOTE: only FBB mode used but actual vset will
+> +			 * determine final biasing
+> +			 */
+> +			ti,abb_info = <
+> +			/*uV		ABB	efuse	rbb_m fbb_m	vset_m*/
+> +			880000		0	0x4	0 0x20000000 0x1F000000
+> +			1025000		0	0x8	0 0x20000000 0x1F000000
+> +			1120000		1	0x10	0 0x20000000 0x1F000000
+> +			>;
+> +		};
+>  	};
+>  };
+>  
+> 
 
-Ian.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Nishanth Menon
