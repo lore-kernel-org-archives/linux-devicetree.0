@@ -1,186 +1,52 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RFC v1 3/3] clk: Add handling of clk parent and rate assigned from DT
-Date: Thu, 20 Feb 2014 14:09:28 +0000
-Message-ID: <20140220140928.27132C4050F@trevor.secretlab.ca>
-References: <1392829124-25705-1-git-send-email-s.nawrocki@samsung.com> < 1392829124-25705-4-git-send-email-s.nawrocki@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392829124-25705-4-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: devicetree repository separation/migration
+Date: Thu, 20 Feb 2014 08:34:37 -0600
+Message-ID: <CAL_Jsq+uqNrjX-NYnC=sNiDKNOATM1vZEB9KG0njqTQv7192Zw@mail.gmail.com>
+References: <20140217180544.GU7862@titan.lakedaemon.net>
+	<20140218155750.GS17250@pengutronix.de>
+	<20140218181854.GB7862@titan.lakedaemon.net>
+	<CAOesGMhvoB7vRf3H1kMaL5+MgZ2gJy=ZVNU0gsXVye9S4YGBOg@mail.gmail.com>
+	<CAOesGMi8zJXhfj46CLB-_Kk2s4MY9da46DhMoCtRj=zSUiuOGA@mail.gmail.com>
+	<CA+bK7J5+n2Se4cLv5WjR5B31ej7FdrGjPcjUULNrhb1UQ7=vmA@mail.gmail.com>
+	<CAL_JsqJG+OXbT7sMiHV2dCx+nf--RidL8MmMd=dy6_gAa0yYcg@mail.gmail.com>
+	<CAOesGMiHOwSYTCUaptacN=_pbXnObU5gqpxQHQ+kRTaW-ow3rA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMiHOwSYTCUaptacN=_pbXnObU5gqpxQHQ+kRTaW-ow3rA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 19 Feb 2014 17:58:44 +0100, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> This function adds a notifier callback run before a driver is bound to
-> its driver. It will configure parent clock and clock frequencies based
-> on [clk-name]-clk-parent and [clk-name]-clk-rate' DT properties.
-> 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/clock/clock-bindings.txt   |   24 +++++
->  drivers/clk/clk.c                                  |   92 ++++++++++++++++++++
->  2 files changed, 116 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> index 7c52c29..d618498 100644
-> --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> @@ -115,3 +115,27 @@ clock signal, and a UART.
->    ("pll" and "pll-switched").
->  * The UART has its baud clock connected the external oscillator and its
->    register clock connected to the PLL clock (the "pll-switched" signal)
-> +
-> +==Static initial configuration of clock parent and clock frequency==
-> +
-> +Some platforms require static configuration of (parts of) the clock controller
-> +often determined by the board design. Such a configuration can be specified in
-> +a clock consumer node through [clk-name]-clk-parent and [clk-name]-clk-rate DT
-> +properties. The former should contain phandle and clock specifier of the parent
-> +clock, the latter the required clock's frequency value (one cell). "clk-name"
-> +should be listed in the clock-names property and a phandle and a clock specifier
-> +pair corresponding to it should be present in the clocks property.
-> +
-> +    uart@a000 {
-> +        compatible = "fsl,imx-uart";
-> +        reg = <0xa000 0x1000>;
-> +	...
-> +        clocks = <&clkcon 0>, <&clkcon 3>;
-> +        clock-names = "baud", "mux";
-> +
-> +	mux-clk-parent = <&pll 1>;
-> +	baud-clk-rate = <460800>;
+On Wed, Feb 19, 2014 at 3:20 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+> On Wed, Feb 19, 2014 at 1:12 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> One way to minimize the inconvenience is keep versioning and dev
+>> cycles in sync with the kernel. We could also start doing things to
+>> align the kernel workflow with how things will work when we do have a
+>> separate repository.
+>
+> I don't think aligning development cycles is what we want most here it
+> might be useful for us in Linux but it'll make things difficult for
+> other projects since they're not aware of our release cycles. The
+> device tree bindings and DT contents in that repo should be "always
+> stable", i.e. no merge window / rc concept. As soon as something goes
+> in it's live, and from then out only fixes to the DTS files (or
+> appending the binding).
 
-This mixes patterns for references to clocks. Plus it requires composing
-property names which is a little painful. I'd rather see a list of
-tuples to match the existing pattern already in use
+I agree we wouldn't really want or need to follow rc's and master
+always being stable should be the target, but people will want
+"releases." There is no reason you can't support both. Take dtc as an
+example, the release process is someone requests Jon to make a release
+because they want some feature not in a tagged release, so he tags
+master and we have a "release." So we can either make something up for
+versions and cadence, follow the kernel, or do both. I would view
+syncing with kernel versions to be only for a transition period to
+ease the concerns of those who are keeping their dtb version aligned
+to kernel version.
 
-	clocks = <&clkcon 0>, <&clkcon 3>;
-	clock-names = "baud", "mux";
-	clock-parents = <0> <&pll 1>;
-	clock-rates = <0> <460800>;
-
-g.
-
-> +    };
-> +
-> +In this example the pll is set as parent of "mux" clock and frequency of "baud"
-> +clock is specified as 460800 Hz.
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index 19f6f3f..9238e08 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -19,6 +19,7 @@
->  #include <linux/of.h>
->  #include <linux/device.h>
->  #include <linux/init.h>
-> +#include <linux/platform_device.h>
->  #include <linux/sched.h>
->  
->  #include "clk.h"
-> @@ -2527,6 +2528,97 @@ const char *of_clk_get_parent_name(struct device_node *np, int index)
->  }
->  EXPORT_SYMBOL_GPL(of_clk_get_parent_name);
->  
-> +static void __of_clk_assigned_config_set(struct clk *clk, struct clk *pclk,
-> +					 u32 rate)
-> +{
-> +	int rc;
-> +
-> +	if (rate) {
-> +		rc = clk_set_rate(clk, rate);
-> +		if (rc < 0)
-> +			pr_err("clk: couldn't set rate of clock %s (%d)\n",
-> +			       __clk_get_name(clk), rc);
-> +		else
-> +			pr_debug("clk: set rate of clock %s to %u\n",
-> +				 __clk_get_name(clk), rate);
-> +	}
-> +
-> +	if (!IS_ERR(pclk)) {
-> +		rc = clk_set_parent(clk, pclk);
-> +		if (rc < 0)
-> +			pr_err("clk: couldn't set %s as parent of %s (%d)\n",
-> +			       __clk_get_name(pclk), __clk_get_name(clk), rc);
-> +		else
-> +			pr_debug("clk: set %s as parent of %s\n",
-> +				 __clk_get_name(pclk), __clk_get_name(clk));
-> +	}
-> +}
-> +
-> +static void of_clk_assigned_config_parse(struct device_node *node)
-> +{
-> +	char prop_name[OF_PROP_NAME_MAXLEN];
-> +	struct property *prop;
-> +	const char *clk_name;
-> +	int rc, index = 0;
-> +
-> +	of_property_for_each_string(node, "clock-names", prop, clk_name) {
-> +		struct clk *clk, *pclk;
-> +		u32 rate = 0;
-> +
-> +		snprintf(prop_name, OF_PROP_NAME_MAXLEN,
-> +					"%s-clk-parent", clk_name);
-> +		pclk = of_clk_get_list_entry(node, prop_name, 0);
-> +
-> +		snprintf(prop_name, OF_PROP_NAME_MAXLEN,
-> +					"%s-clk-rate", clk_name);
-> +		rc = of_property_read_u32(node, prop_name, &rate);
-> +
-> +		if (!rc || !IS_ERR(pclk)) {
-> +			/*
-> +			 * Assuming here of_property_for_each_string() returns
-> +			 * consecutive values of a DT property in ascending
-> +			 * index order.
-> +			 */
-> +			clk = of_clk_get(node, index);
-> +
-> +			if (!IS_ERR(clk))
-> +				__of_clk_assigned_config_set(clk, pclk, rate);
-> +			else
-> +				pr_err("clk: couldn't get clk %s\n", clk_name);
-> +		}
-> +		index++;
-> +	}
-> +}
-> +
-> +
-> +static int of_clk_setup_notifier_call(struct notifier_block *nb,
-> +					unsigned long event, void *data)
-> +{
-> +	struct device *dev = data;
-> +
-> +	if (!dev->of_node)
-> +		return NOTIFY_DONE;
-> +
-> +	switch (event) {
-> +	case BUS_NOTIFY_BIND_DRIVER:
-> +		/* Parse and configure DT assigned clock parents and rates */
-> +		of_clk_assigned_config_parse(dev->of_node);
-> +		break;
-> +	}
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static struct notifier_block of_clk_setup_nb = {
-> +	.notifier_call = of_clk_setup_notifier_call,
-> +};
-> +
-> +int __init of_clk_setup_notifier_init(void)
-> +{
-> +	return bus_register_notifier(&platform_bus_type, &of_clk_setup_nb);
-> +}
-> +subsys_initcall(of_clk_setup_notifier_init);
-> +
->  /**
->   * of_clk_init() - Scan and init clock providers from the DT
->   * @matches: array of compatible values and init functions for providers.
-> -- 
-> 1.7.9.5
-> 
-
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
