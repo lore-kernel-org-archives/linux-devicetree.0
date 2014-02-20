@@ -1,97 +1,61 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v3 2/6] drivers: of: add initialization code for reserved memory
-Date: Thu, 20 Feb 2014 12:00:22 +0000
-Message-ID: <20140220120022.874A7C4050F@trevor.secretlab.ca>
-References: <1392730681-14695-1-git-send-email-m.szyprowski@samsung.com> < 1392730681-14695-3-git-send-email-m.szyprowski@samsung.com> <20140218165616 .E1755C40517@trevor.secretlab.ca> <53046935.3090900@samsung.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <53046935.3090900@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: Kyungmin Park <kyungmin.park@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 3/4] tty: serial: bcm63xx_uart: add support for DT probing
+Date: Thu, 20 Feb 2014 13:16:56 +0100
+Message-ID: <4709421.TpqQL1VssO@wuerfel>
+References: <1392852167-26243-1-git-send-email-f.fainelli@gmail.com> <CAGVrzcYEWJ6nKncSx3jjWFp9TXf8PFJnd-joPwSe0mDh-CeMiw@mail.gmail.com> <CAOiHx=mDYsGjtEXEK+8YUo4WZRQeXYvDJdfk2OQtqheeaD7icw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <CAOiHx=mDYsGjtEXEK+8YUo4WZRQeXYvDJdfk2OQtqheeaD7icw@mail.gmail.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Jonas Gorski <jogo@openwrt.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, linux-serial@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Bizon <mbizon@freebox.fr>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 19 Feb 2014 09:20:05 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
-> Hello,
-> 
-> On 2014-02-18 17:56, Grant Likely wrote:
-> > On Tue, 18 Feb 2014 14:37:57 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
-> > > This patch adds device tree support for contiguous and reserved memory
-> > > regions defined in device tree.
-> > >
-> > > Large memory blocks can be reliably reserved only during early boot.
-> > > This must happen before the whole memory management subsystem is
-> > > initialized, because we need to ensure that the given contiguous blocks
-> > > are not yet allocated by kernel. Also it must happen before kernel
-> > > mappings for the whole low memory are created, to ensure that there will
-> > > be no mappings (for reserved blocks) or mapping with special properties
-> > > can be created (for CMA blocks). This all happens before device tree
-> > > structures are unflattened, so we need to get reserved memory layout
-> > > directly from fdt.
-> > >
-> > > Later, those reserved memory regions are assigned to devices on each
-> > > device structure initialization.
-> > >
-> > > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > > [joshc: rework to implement new DT binding, provide mechanism for
-> > >  plugging in new reserved-memory node handlers via
-> > >  RESERVEDMEM_OF_DECLARE]
-> > > Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
-> > > [mszyprow: added generic memory reservation code]
-> > > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > > ---
-> > >  drivers/of/Kconfig                |    5 +
-> > >  drivers/of/Makefile               |    1 +
-> > >  drivers/of/fdt.c                  |    2 +
-> > >  drivers/of/of_reserved_mem.c      |  390 +++++++++++++++++++++++++++++++++++++
-> > >  drivers/of/platform.c             |    7 +
-> > >  include/asm-generic/vmlinux.lds.h |   11 ++
-> > >  include/linux/of_reserved_mem.h   |   65 +++++++
-> > >  7 files changed, 481 insertions(+)
-> > >  create mode 100644 drivers/of/of_reserved_mem.c
-> > >  create mode 100644 include/linux/of_reserved_mem.h
-> > >
-> > > diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> > > index c6973f101a3e..f25931dfc6db 100644
-> > > --- a/drivers/of/Kconfig
-> > > +++ b/drivers/of/Kconfig
-> > > @@ -75,4 +75,9 @@ config OF_MTD
-> > >  	depends on MTD
-> > >  	def_bool y
-> > >
-> > > +config OF_RESERVED_MEM
-> > > +	bool
-> > > +	help
-> > > +	  Helpers to allow for reservation of memory regions
-> > > +
-> > >  endmenu # OF
-> > > diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-> > > index efd05102c405..ed9660adad77 100644
-> > > --- a/drivers/of/Makefile
-> > > +++ b/drivers/of/Makefile
-> > > @@ -9,3 +9,4 @@ obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
-> > >  obj-$(CONFIG_OF_PCI)	+= of_pci.o
-> > >  obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
-> > >  obj-$(CONFIG_OF_MTD)	+= of_mtd.o
-> > > +obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
+On Thursday 20 February 2014 11:59:04 Jonas Gorski wrote:
+> On Thu, Feb 20, 2014 at 2:29 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> > 2014-02-19 16:00 GMT-08:00 Jonas Gorski <jogo@openwrt.org>:
+> >> On Thu, Feb 20, 2014 at 12:22 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> >>> @@ -857,6 +861,12 @@ static int bcm_uart_remove(struct platform_device *pdev)
+> >>>         return 0;
+> >>>  }
+> >>>
+> >>> +static const struct of_device_id bcm63xx_of_match[] = {
+> >>> +       { .compatible = "brcm,bcm63xx-uart" },
+> >>
+> >> From my understanding, this should be "brcm,bcm6345-uart", because
+> >> this kind of uart appeared first on bcm6345 (well, maybe bcm6335, no
+> >> idea which one of these two was first, but the latter was never
+> >> supported in mainline anyway).
 > >
-> > As mentioned previously, parts of this are absolutely non-optional and
-> > cannot be compiled out. If a region is marked as reserved with this
-> > binding, then the kernel must respect it. That part of the code must be
-> > always configured in.
+> > That's right, in fact, I think it might be desirable to handle both
+> > compatible string, just as a hint that it is compatible with the
+> > entire bcm63xx family. Would that work for you?
 > 
-> How can I make it non-optional if all this code must be called from arch
-> specific early-boot init code to properly reserve memory. Do you want me
-> to add those calls to every architecture which supports OF?
+> I think using a "generic" compatible string is rather frowned upon
+> (what do you do if there is eventually a bcm63xx chip with an
+> incompatible uart?), but I'm no device tree expert.
 
-As discussed on IRC, since the static and dynamic regions need to be
-parsed in separate passes anyway, it would be fine to do the static pass
-during early_init_dt_scan() and defer the dynamic allocation to later.
+It's ok to have a generic name, it's wildcards like the xx above
+that we try to avoid, since that breaks down when you get another
+device in the same SoC family that is not compatible. This is different
+from the Linux way of naming things.
 
-That said, it requires Laura's series to get rid of meminfo to be merged
-first. I'm fine with the calling point to still be done arch specific
-and I won't ask you to enable every platform in this patch. That can be
-a fixup after Laura's series goes in and I'll help you with the other
-architectures.
+brcm,bcm6345-uart sounds good, if that is the closest we can get
+to a generic name, working under the assumption that it's the oldest
+implementation of this UART. Ideally we'd find someone with access
+to the design documents of the SoC to tell us what the UART is really
+called by whoever designed it (which may not even be Broadcom).
 
-g.
+If we think there may be some level of variation between the UARTS
+in the various bcm63xx SoCs, it would be good to list both the
+specific model of the SoC as well as the generic name in "compatible",
+so the driver can later detect those differences without requiring
+an updated DT.
 
+A BCM63138 for instance could list this as
+
+	compatible = "brcm,bcm62138-uart", "brcm-bcm6345-uart";
+
+	Arnd
