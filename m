@@ -1,115 +1,157 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v6 1/4] ASoC: tlv320aic32x4: Support for master clock
-Date: Thu, 20 Feb 2014 18:22:58 +0100
-Message-ID: <1392916981-9333-2-git-send-email-mpa@pengutronix.de>
-References: <1392916981-9333-1-git-send-email-mpa@pengutronix.de>
+From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: Exynos: Add generic compatible string
+Date: Thu, 20 Feb 2014 18:34:23 +0100
+Message-ID: <53063C9F.4060307@samsung.com>
+References: <1392809645-631-1-git-send-email-sachin.kamat@linaro.org>
+ <CAK9yfHy7YHDLCfUGA-ua4iLzK2PMotVZvC=51t-bMkVZVBQFaA@mail.gmail.com>
+ <5306168F.1080400@samsung.com> <201402201800.49425.arnd@arndb.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392916981-9333-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-reply-to: <201402201800.49425.arnd-r2nGTMty4D4@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for a master clock passed through DT. The master clock of
-the codec is only active when the codec is in use.
+On 20.02.2014 18:00, Arnd Bergmann wrote:
+> On Thursday 20 February 2014, Tomasz Figa wrote:
+>> On 20.02.2014 05:14, Sachin Kamat wrote:
+>>> Hi Tomasz,
+>>>
+>>> On 19 February 2014 18:15, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>>>> Hi Sachin,
+>>>>
+>>>> [adding linux-arm-kernel ML to CC list]
+>>>>
+>>>>
+>>>> On 19.02.2014 12:34, Sachin Kamat wrote:
+>>>>>
+>>>>> To avoid modifying the kernel every time a new SoC variant
+>>>>> comes out.
+>>> <snip>
+>>>>
+>>>> Since all Exynos chips can be easily recognized using dedicated chip ID
+>>>> register, I wonder whether we really need to maintain two distinct board
+>>>> files for Exynos 4 and 5 series, especially when both of them are doing
+>>>> mostly the same set up, which can be simply generalized to cover all the
+>>>> cases.
+>>>>
+>>>> Instead of adding just another level of artificially fine grained compatible
+>>>> strings, I'd rather suggest merging both board files together and adding a
+>>>> single compatible string identifying all SoCs that can be further
+>>>> differentiated by using hardware chip ID register.
+>>>>
+>>>> What do you think?
+>>>
+>>> I agree with your idea of merging both the files as there is very little that is
+>>> different for now. However I am not really sure if having a single compatible
+>>> string for all SoCs would be good. What is achieved through compatible string
+>>> can very well be done using chip ID too. But wouldn't we need to maintain some
+>>> unique identity for the SoCs in human readable form at the DT level?
+>>
+>> Well, my understanding of Device Tree is that it should provide the
+>> information that can't be automatically retrieved from the hardware, not
+>> more.
+>>
+>> If you have a PCI or USB bus with enumerable devices, you don't list
+>> them in DT, but instead limit the description to just the host
+>> controller, if it can't be enumerated.
+>>
+>> Same goes for compatible string. My interpretation of it is that if you
+>> can identify the hardware by some automatic means, e.g. querying some ID
+>> register, then the compatible should be specific enough to identify the
+>> class of devices with the same method of querying such register, with no
+>> need for any additional redundant data in DT.
+>
+> There are some limitations to that, and you also have to apply common
+> sense and taste. In theory you could argue that a compatible string can
+> identify a board uniquely the same way that a board number did, and
+> everything else is implied by that. Clearly that's not what we want.
 
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- .../devicetree/bindings/sound/tlv320aic32x4.txt     |  4 ++++
- sound/soc/codecs/tlv320aic32x4.c                    | 21 +++++++++++++++++++++
- 2 files changed, 25 insertions(+)
+I'd argue about relevance of this example. What I'm talking about is 
+kind of data that can be retrieved directly from the hardware. Both 
+compatible string and board number are just artificial identifiers that 
+can be used by the kernel to decide (in a greatly simplified view) which 
+set of static (i.e. hardcoded) data (and code) to use.
 
-diff --git a/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt b/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
-index db05510..352be7b 100644
---- a/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
-+++ b/Documentation/devicetree/bindings/sound/tlv320aic32x4.txt
-@@ -8,6 +8,8 @@ Required properties:
- 
- Optional properties:
-  - reset-gpios: Reset-GPIO phandle with args as described in gpio/gpio.txt
-+ - clocks/clock-names: Clock named 'mclk' for the master clock of the codec.
-+   See clock/clock-bindings.txt for information about the detailed format.
- 
- 
- Example:
-@@ -15,4 +17,6 @@ Example:
- codec: tlv320aic32x4@18 {
- 	compatible = "ti,tlv320aic32x4";
- 	reg = <0x18>;
-+	clocks = <&clks 201>;
-+	clock-names = "mclk";
- };
-diff --git a/sound/soc/codecs/tlv320aic32x4.c b/sound/soc/codecs/tlv320aic32x4.c
-index 1dd50e4..643fa53 100644
---- a/sound/soc/codecs/tlv320aic32x4.c
-+++ b/sound/soc/codecs/tlv320aic32x4.c
-@@ -33,6 +33,7 @@
- #include <linux/i2c.h>
- #include <linux/cdev.h>
- #include <linux/slab.h>
-+#include <linux/clk.h>
- 
- #include <sound/tlv320aic32x4.h>
- #include <sound/core.h>
-@@ -67,6 +68,7 @@ struct aic32x4_priv {
- 	u32 micpga_routing;
- 	bool swapdacs;
- 	int rstn_gpio;
-+	struct clk *mclk;
- };
- 
- /* 0dB min, 0.5dB steps */
-@@ -487,8 +489,18 @@ static int aic32x4_mute(struct snd_soc_dai *dai, int mute)
- static int aic32x4_set_bias_level(struct snd_soc_codec *codec,
- 				  enum snd_soc_bias_level level)
- {
-+	struct aic32x4_priv *aic32x4 = snd_soc_codec_get_drvdata(codec);
-+	int ret;
-+
- 	switch (level) {
- 	case SND_SOC_BIAS_ON:
-+		/* Switch on master clock */
-+		ret = clk_prepare_enable(aic32x4->mclk);
-+		if (ret) {
-+			dev_err(codec->dev, "Failed to enable master clock\n");
-+			return ret;
-+		}
-+
- 		/* Switch on PLL */
- 		snd_soc_update_bits(codec, AIC32X4_PLLPR,
- 				    AIC32X4_PLLEN, AIC32X4_PLLEN);
-@@ -539,6 +551,9 @@ static int aic32x4_set_bias_level(struct snd_soc_codec *codec,
- 		/* Switch off BCLK_N Divider */
- 		snd_soc_update_bits(codec, AIC32X4_BCLKN,
- 				    AIC32X4_BCLKEN, 0);
-+
-+		/* Switch off master clock */
-+		clk_disable_unprepare(aic32x4->mclk);
- 		break;
- 	case SND_SOC_BIAS_OFF:
- 		break;
-@@ -717,6 +732,12 @@ static int aic32x4_i2c_probe(struct i2c_client *i2c,
- 		aic32x4->rstn_gpio = -1;
- 	}
- 
-+	aic32x4->mclk = devm_clk_get(&i2c->dev, "mclk");
-+	if (IS_ERR(aic32x4->mclk)) {
-+		dev_err(&i2c->dev, "Failed getting the mclk. The current implementation does not support the usage of this codec without mclk\n");
-+		return PTR_ERR(aic32x4->mclk);
-+	}
-+
- 	if (gpio_is_valid(aic32x4->rstn_gpio)) {
- 		ret = devm_gpio_request_one(&i2c->dev, aic32x4->rstn_gpio,
- 				GPIOF_OUT_INIT_LOW, "tlv320aic32x4 rstn");
--- 
-1.8.5.3
+If it happens that a new piece of hardware requires just exactly the 
+same set, because any possible differences can be obtained by reading 
+some registers, then there is no need for the kernel to support any new 
+compatible string and such hardware will work on older kernels as well.
 
+> On the other end of the scale, you could eliminate a lot of compatible
+> strings if you describe each register or each bit in some cases in
+> DT properties, and that would be just as wrong.
+
+I don't mind fine grained compatible strings. In fact, making them fine 
+grained is most likely to be the best choice most of the time. Still, 
+the simple fact is, though, that data which can be retrieved from the 
+hardware automatically should not be repeated in DT. This is called 
+redundancy and this is bad, from obvious reasons.
+
+>> Of course nothing stops you from retaining more specific compatible
+>> strings. In fact, this is probably the most appropriate solution,
+>> because in future you might find out that certain SoCs need some special
+>> differentiation, e.g. same ID value on two SoCs.
+>>
+>> So, to apply this to our case, our Exynos 5250 based Arndale board would
+>> be changed from
+>>
+>> compatible = "insignal,arndale", "samsung,exynos5260";
+>>
+>> to
+>>
+>> compatible = "insignal,arndale", "samsung,exynos5260", "samsung,exynos";
+>
+> Right, this would make sense.
+>
+>> Now, the board file will be able to match simply by "samsung,exynos"
+>> compatible string and SoC-specific code in mach-exynos (hopefully none
+>> after it gets cleaned up fully) will use soc_is_exynos*() macros (what
+>> AFAIK it is already doing at the moment).
+>
+> On principle, I would not take things out of the match list, if that
+> would break booting with old DT file that don't list "samsung,exynos"
+> as compatible. But for new SoCs that would work.
+
+My proposal was about simply adding a fully generic string, without 
+removing the specific ones. For already supported SoCs this is pretty 
+obvious, as existing DTBs would not have this generic string listed. But 
+the specific strings should be also present in DTSes of new SoCs, even 
+if not recognized by the kernel, to make sure that in future any 
+SoC-specific quirks could be easily handled.
+
+> Using soc_is_exynos*() too much of course also isn't good. A lot of
+> the things tested for should probably be checked from individual DT
+> properties, but again we have to find the right balance. I wouldn't
+> mind getting rid of the soc_is_exynos*() macros completely, because
+> a) we can't use them in device drivers
+> b) all platform code is supposed to be in drivers
+> c) both rules are enforced for arm64
+
+I fully agree. As I said, after cleaning up mach-exynos/ there should be 
+no more code left using soc_is_*() macros. Ideally, the whole 
+mach-exynos/ should collapse into a single, trivial file, with 
+everything done in dedicated drivers.
+
+>> Another benefit of this would be increased safety, because you are
+>> reading SoC type from actual hardware, not from externally supplied
+>> data. In conjunction with the more specific compatible string (e.g.
+>> "samsung,exynos5260") some validation could be performed at boot-up time
+>> to make sure that DT for correct SoC is used.
+>
+> I don't think that's necessary. If you get that part wrong, normally
+> all your hopes are lost with the rest of the information in DT. ;-)
+
+This would let you detect the problem earlier, though, without trying to 
+probe incorrect devices and activating unsuitable configurations on 
+devices that may happen to match on both SoCs. I agree, though, that 
+this is not anything essential.
+
+Best regards,
+Tomasz
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
