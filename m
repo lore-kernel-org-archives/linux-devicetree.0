@@ -1,480 +1,142 @@
 From: Alex Elder <elder@linaro.org>
-Subject: [PATCH 06/12] clk: bcm281xx: define CCU clock data statically
-Date: Wed, 19 Feb 2014 18:12:56 -0600
-Message-ID: <1392855182-21155-7-git-send-email-elder@linaro.org>
+Subject: [PATCH 02/12] clk: bcm281xx: use init_data.name for clock name
+Date: Wed, 19 Feb 2014 18:12:52 -0600
+Message-ID: <1392855182-21155-3-git-send-email-elder@linaro.org>
 References: <1392855182-21155-1-git-send-email-elder@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1392855182-21155-1-git-send-email-elder@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: mturquette@linaro.org, bcm@fixthebug.org, mporter@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
-Cc: bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Rather than "manually" setting up each CCU's clock entries at run
-time, define a flexible array of generic Kona clock structures
-within the CCU structure itself.  Each of these entries contains
-generic kona clock information (like its CCU pointer and clock
-framework initialization data).  Each also has a pointer to a
-structure contianing clock type-dependent initialization data
-(like register definitions).
-
-Since we'll iterate over these arrays we need to be sure they have
-slots for all potential clock index values.  (E.g. for the root CCU
-we must have at least BCM281XX_ROOT_CCU_CLOCK_COUNT slots.)  To
-ensure this we always define an extra entry and fill it using the
-special initializer LAST_KONA_CLK.
-
-Just about everything we need to know about a clock can be defined
-statically.  As a result, kona_clk_setup() can be changed to take
-just a kona_clk structure as its argument, and peri_clk_setup() can
-be simplified.  With the information pre-defined we are also able
-to handle most clock setup genericially.  We can do away with the
-CCU-specific callback functions that previously were needed to set
-up the entries in CCU's clock array.
-
-Move the definition of the ccu_data structure down in "clk-kona.h"
-to avoid a forward dependency.
+Use the init_data.name field to hold the name of a Kona clock rather
+than duplicating it.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/clk/bcm/clk-bcm281xx.c   |  132 ++++++++++++++++++--------------------
- drivers/clk/bcm/clk-kona-setup.c |   60 ++++++++---------
- drivers/clk/bcm/clk-kona.h       |   84 ++++++++++++------------
- 3 files changed, 133 insertions(+), 143 deletions(-)
+ drivers/clk/bcm/clk-kona-setup.c |    6 +++---
+ drivers/clk/bcm/clk-kona.c       |   17 ++++++++++-------
+ drivers/clk/bcm/clk-kona.h       |    3 +--
+ 3 files changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/clk/bcm/clk-bcm281xx.c b/drivers/clk/bcm/clk-bcm281xx.c
-index 432abba..43fa0b6 100644
---- a/drivers/clk/bcm/clk-bcm281xx.c
-+++ b/drivers/clk/bcm/clk-bcm281xx.c
-@@ -41,6 +41,11 @@ static struct peri_clk_data frac_1m_data = {
- 
- static struct ccu_data root_ccu_data = {
- 	BCM281XX_CCU_COMMON(root, ROOT),
-+	.kona_clks	= {
-+		[BCM281XX_ROOT_CCU_FRAC_1M] =
-+			KONA_CLK(root, frac_1m, peri),
-+		[BCM281XX_ROOT_CCU_CLOCK_COUNT] = LAST_KONA_CLK,
-+	},
- };
- 
- /* AON CCU */
-@@ -74,6 +79,15 @@ static struct peri_clk_data pmu_bsc_var_data = {
- 
- static struct ccu_data aon_ccu_data = {
- 	BCM281XX_CCU_COMMON(aon, AON),
-+	.kona_clks	= {
-+		[BCM281XX_AON_CCU_HUB_TIMER] =
-+			KONA_CLK(aon, hub_timer, peri),
-+		[BCM281XX_AON_CCU_PMU_BSC] =
-+			KONA_CLK(aon, pmu_bsc, peri),
-+		[BCM281XX_AON_CCU_PMU_BSC_VAR] =
-+			KONA_CLK(aon, pmu_bsc_var, peri),
-+		[BCM281XX_AON_CCU_CLOCK_COUNT] = LAST_KONA_CLK,
-+	},
- };
- 
- /* Hub CCU */
-@@ -88,6 +102,11 @@ static struct peri_clk_data tmon_1m_data = {
- 
- static struct ccu_data hub_ccu_data = {
- 	BCM281XX_CCU_COMMON(hub, HUB),
-+	.kona_clks	= {
-+		[BCM281XX_HUB_CCU_TMON_1M] =
-+			KONA_CLK(hub, tmon_1m, peri),
-+		[BCM281XX_HUB_CCU_CLOCK_COUNT] = LAST_KONA_CLK,
-+	},
- };
- 
- /* Master CCU */
-@@ -175,6 +194,23 @@ static struct peri_clk_data hsic2_12m_data = {
- 
- static struct ccu_data master_ccu_data = {
- 	BCM281XX_CCU_COMMON(master, MASTER),
-+	.kona_clks	= {
-+		[BCM281XX_MASTER_CCU_SDIO1] =
-+			KONA_CLK(master, sdio1, peri),
-+		[BCM281XX_MASTER_CCU_SDIO2] =
-+			KONA_CLK(master, sdio2, peri),
-+		[BCM281XX_MASTER_CCU_SDIO3] =
-+			KONA_CLK(master, sdio3, peri),
-+		[BCM281XX_MASTER_CCU_SDIO4] =
-+			KONA_CLK(master, sdio4, peri),
-+		[BCM281XX_MASTER_CCU_USB_IC] =
-+			KONA_CLK(master, usb_ic, peri),
-+		[BCM281XX_MASTER_CCU_HSIC2_48M] =
-+			KONA_CLK(master, hsic2_48m, peri),
-+		[BCM281XX_MASTER_CCU_HSIC2_12M] =
-+			KONA_CLK(master, hsic2_12m, peri),
-+		[BCM281XX_MASTER_CCU_CLOCK_COUNT] = LAST_KONA_CLK,
-+	},
- };
- 
- /* Slave CCU */
-@@ -287,96 +323,56 @@ static struct peri_clk_data pwm_data = {
- 
- static struct ccu_data slave_ccu_data = {
- 	BCM281XX_CCU_COMMON(slave, SLAVE),
-+	.kona_clks	= {
-+		[BCM281XX_SLAVE_CCU_UARTB] =
-+			KONA_CLK(slave, uartb, peri),
-+		[BCM281XX_SLAVE_CCU_UARTB2] =
-+			KONA_CLK(slave, uartb2, peri),
-+		[BCM281XX_SLAVE_CCU_UARTB3] =
-+			KONA_CLK(slave, uartb3, peri),
-+		[BCM281XX_SLAVE_CCU_UARTB4] =
-+			KONA_CLK(slave, uartb4, peri),
-+		[BCM281XX_SLAVE_CCU_SSP0] =
-+			KONA_CLK(slave, ssp0, peri),
-+		[BCM281XX_SLAVE_CCU_SSP2] =
-+			KONA_CLK(slave, ssp2, peri),
-+		[BCM281XX_SLAVE_CCU_BSC1] =
-+			KONA_CLK(slave, bsc1, peri),
-+		[BCM281XX_SLAVE_CCU_BSC2] =
-+			KONA_CLK(slave, bsc2, peri),
-+		[BCM281XX_SLAVE_CCU_BSC3] =
-+			KONA_CLK(slave, bsc3, peri),
-+		[BCM281XX_SLAVE_CCU_PWM] =
-+			KONA_CLK(slave, pwm, peri),
-+		[BCM281XX_SLAVE_CCU_CLOCK_COUNT] = LAST_KONA_CLK,
-+	},
- };
- 
--/*
-- * CCU setup routines
-- *
-- * These are called from kona_dt_ccu_setup() to initialize the array
-- * of clocks provided by the CCU.  Once allocated, the entries in
-- * the array are initialized by calling kona_clk_setup() with the
-- * initialization data for each clock.  They return 0 if successful
-- * or an error code otherwise.
-- */
--static int __init bcm281xx_root_ccu_clks_setup(struct ccu_data *ccu)
--{
--	PERI_CLK_SETUP(ccu, BCM281XX_ROOT_CCU_FRAC_1M, frac_1m);
--
--	return 0;
--}
--
--static int __init bcm281xx_aon_ccu_clks_setup(struct ccu_data *ccu)
--{
--	PERI_CLK_SETUP(ccu, BCM281XX_AON_CCU_HUB_TIMER, hub_timer);
--	PERI_CLK_SETUP(ccu, BCM281XX_AON_CCU_PMU_BSC, pmu_bsc);
--	PERI_CLK_SETUP(ccu, BCM281XX_AON_CCU_PMU_BSC_VAR, pmu_bsc_var);
--
--	return 0;
--}
--
--static int __init bcm281xx_hub_ccu_clks_setup(struct ccu_data *ccu)
--{
--	PERI_CLK_SETUP(ccu, BCM281XX_HUB_CCU_TMON_1M, tmon_1m);
--
--	return 0;
--}
--
--static int __init bcm281xx_master_ccu_clks_setup(struct ccu_data *ccu)
--{
--	PERI_CLK_SETUP(ccu, BCM281XX_MASTER_CCU_SDIO1, sdio1);
--	PERI_CLK_SETUP(ccu, BCM281XX_MASTER_CCU_SDIO2, sdio2);
--	PERI_CLK_SETUP(ccu, BCM281XX_MASTER_CCU_SDIO3, sdio3);
--	PERI_CLK_SETUP(ccu, BCM281XX_MASTER_CCU_SDIO4, sdio4);
--	PERI_CLK_SETUP(ccu, BCM281XX_MASTER_CCU_USB_IC, usb_ic);
--	PERI_CLK_SETUP(ccu, BCM281XX_MASTER_CCU_HSIC2_48M, hsic2_48m);
--	PERI_CLK_SETUP(ccu, BCM281XX_MASTER_CCU_HSIC2_12M, hsic2_12m);
--
--	return 0;
--}
--
--static int __init bcm281xx_slave_ccu_clks_setup(struct ccu_data *ccu)
--{
--	PERI_CLK_SETUP(ccu, BCM281XX_SLAVE_CCU_UARTB, uartb);
--	PERI_CLK_SETUP(ccu, BCM281XX_SLAVE_CCU_UARTB2, uartb2);
--	PERI_CLK_SETUP(ccu, BCM281XX_SLAVE_CCU_UARTB3, uartb3);
--	PERI_CLK_SETUP(ccu, BCM281XX_SLAVE_CCU_UARTB4, uartb4);
--	PERI_CLK_SETUP(ccu, BCM281XX_SLAVE_CCU_SSP0, ssp0);
--	PERI_CLK_SETUP(ccu, BCM281XX_SLAVE_CCU_SSP2, ssp2);
--	PERI_CLK_SETUP(ccu, BCM281XX_SLAVE_CCU_BSC1, bsc1);
--	PERI_CLK_SETUP(ccu, BCM281XX_SLAVE_CCU_BSC2, bsc2);
--	PERI_CLK_SETUP(ccu, BCM281XX_SLAVE_CCU_BSC3, bsc3);
--	PERI_CLK_SETUP(ccu, BCM281XX_SLAVE_CCU_PWM, pwm);
--
--	return 0;
--}
--
- /* Device tree match table callback functions */
- 
- static void __init kona_dt_root_ccu_setup(struct device_node *node)
- {
--	kona_dt_ccu_setup(&root_ccu_data, node, bcm281xx_root_ccu_clks_setup);
-+	kona_dt_ccu_setup(&root_ccu_data, node);
- }
- 
- static void __init kona_dt_aon_ccu_setup(struct device_node *node)
- {
--	kona_dt_ccu_setup(&aon_ccu_data, node, bcm281xx_aon_ccu_clks_setup);
-+	kona_dt_ccu_setup(&aon_ccu_data, node);
- }
- 
- static void __init kona_dt_hub_ccu_setup(struct device_node *node)
- {
--	kona_dt_ccu_setup(&hub_ccu_data, node, bcm281xx_hub_ccu_clks_setup);
-+	kona_dt_ccu_setup(&hub_ccu_data, node);
- }
- 
- static void __init kona_dt_master_ccu_setup(struct device_node *node)
- {
--	kona_dt_ccu_setup(&master_ccu_data, node,
--			bcm281xx_master_ccu_clks_setup);
-+	kona_dt_ccu_setup(&master_ccu_data, node);
- }
- 
- static void __init kona_dt_slave_ccu_setup(struct device_node *node)
- {
--	kona_dt_ccu_setup(&slave_ccu_data, node,
--			bcm281xx_slave_ccu_clks_setup);
-+	kona_dt_ccu_setup(&slave_ccu_data, node);
- }
- 
- CLK_OF_DECLARE(bcm281xx_root_ccu, BCM281XX_DT_ROOT_CCU_COMPAT,
 diff --git a/drivers/clk/bcm/clk-kona-setup.c b/drivers/clk/bcm/clk-kona-setup.c
-index 4468065..196922b 100644
+index c7607fe..eed84f5 100644
 --- a/drivers/clk/bcm/clk-kona-setup.c
 +++ b/drivers/clk/bcm/clk-kona-setup.c
-@@ -566,7 +566,6 @@ static void peri_clk_teardown(struct peri_clk_data *data,
- 				struct clk_init_data *init_data)
- {
- 	clk_sel_teardown(&data->sel, init_data);
--	init_data->ops = NULL;
+@@ -64,7 +64,7 @@ static bool peri_clk_data_offsets_valid(struct kona_clk *bcm_clk)
+ 
+ 	BUG_ON(bcm_clk->type != bcm_clk_peri);
+ 	peri = bcm_clk->peri;
+-	name = bcm_clk->name;
++	name = bcm_clk->init_data.name;
+ 	range = bcm_clk->ccu->range;
+ 
+ 	limit = range - sizeof(u32);
+@@ -329,7 +329,7 @@ peri_clk_data_valid(struct kona_clk *bcm_clk)
+ 		return false;
+ 
+ 	peri = bcm_clk->peri;
+-	name = bcm_clk->name;
++	name = bcm_clk->init_data.name;
+ 	gate = &peri->gate;
+ 	if (gate_exists(gate) && !gate_valid(gate, "gate", name))
+ 		return false;
+@@ -630,7 +630,7 @@ struct clk *kona_clk_setup(struct ccu_data *ccu, const char *name,
+ 		return NULL;
+ 	}
+ 	bcm_clk->ccu = ccu;
+-	bcm_clk->name = name;
++	bcm_clk->init_data.name = name;
+ 
+ 	init_data = &bcm_clk->init_data;
+ 	init_data->name = name;
+diff --git a/drivers/clk/bcm/clk-kona.c b/drivers/clk/bcm/clk-kona.c
+index c01d810..488ed1f 100644
+--- a/drivers/clk/bcm/clk-kona.c
++++ b/drivers/clk/bcm/clk-kona.c
+@@ -807,7 +807,7 @@ static int kona_peri_clk_enable(struct clk_hw *hw)
+ 	struct kona_clk *bcm_clk = to_kona_clk(hw);
+ 	struct bcm_clk_gate *gate = &bcm_clk->peri->gate;
+ 
+-	return clk_gate(bcm_clk->ccu, bcm_clk->name, gate, true);
++	return clk_gate(bcm_clk->ccu, bcm_clk->init_data.name, gate, true);
  }
  
- /*
-@@ -575,10 +574,9 @@ static void peri_clk_teardown(struct peri_clk_data *data,
-  * that can be assigned if the clock has one or more parent clocks
-  * associated with it.
-  */
--static int peri_clk_setup(struct ccu_data *ccu, struct peri_clk_data *data,
--			struct clk_init_data *init_data)
-+static int
-+peri_clk_setup(struct peri_clk_data *data, struct clk_init_data *init_data)
- {
--	init_data->ops = &kona_peri_clk_ops;
- 	init_data->flags = CLK_IGNORE_UNUSED;
+ static void kona_peri_clk_disable(struct clk_hw *hw)
+@@ -815,7 +815,7 @@ static void kona_peri_clk_disable(struct clk_hw *hw)
+ 	struct kona_clk *bcm_clk = to_kona_clk(hw);
+ 	struct bcm_clk_gate *gate = &bcm_clk->peri->gate;
  
- 	return clk_sel_setup(data->clocks, &data->sel, init_data);
-@@ -616,39 +614,26 @@ static void kona_clk_teardown(struct clk *clk)
- 	bcm_clk_teardown(bcm_clk);
+-	(void)clk_gate(bcm_clk->ccu, bcm_clk->name, gate, false);
++	(void)clk_gate(bcm_clk->ccu, bcm_clk->init_data.name, gate, false);
  }
  
--struct clk *kona_clk_setup(struct ccu_data *ccu, const char *name,
--			enum bcm_clk_type type, void *data)
-+struct clk *kona_clk_setup(struct kona_clk *bcm_clk)
+ static int kona_peri_clk_is_enabled(struct clk_hw *hw)
+@@ -873,12 +873,13 @@ static int kona_peri_clk_set_parent(struct clk_hw *hw, u8 index)
+ 
+ 	ret = selector_write(bcm_clk->ccu, &data->gate, sel, trig, index);
+ 	if (ret == -ENXIO) {
+-		pr_err("%s: gating failure for %s\n", __func__, bcm_clk->name);
++		pr_err("%s: gating failure for %s\n", __func__,
++			bcm_clk->init_data.name);
+ 		ret = -EIO;	/* Don't proliferate weird errors */
+ 	} else if (ret == -EIO) {
+ 		pr_err("%s: %strigger failed for %s\n", __func__,
+ 			trig == &data->pre_trig ? "pre-" : "",
+-			bcm_clk->name);
++			bcm_clk->init_data.name);
+ 	}
+ 
+ 	return ret;
+@@ -937,10 +938,12 @@ static int kona_peri_clk_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	ret = divider_write(bcm_clk->ccu, &data->gate, &data->div,
+ 				&data->trig, scaled_div);
+ 	if (ret == -ENXIO) {
+-		pr_err("%s: gating failure for %s\n", __func__, bcm_clk->name);
++		pr_err("%s: gating failure for %s\n", __func__,
++			bcm_clk->init_data.name);
+ 		ret = -EIO;	/* Don't proliferate weird errors */
+ 	} else if (ret == -EIO) {
+-		pr_err("%s: trigger failed for %s\n", __func__, bcm_clk->name);
++		pr_err("%s: trigger failed for %s\n", __func__,
++			bcm_clk->init_data.name);
+ 	}
+ 
+ 	return ret;
+@@ -962,7 +965,7 @@ static bool __peri_clk_init(struct kona_clk *bcm_clk)
  {
--	struct kona_clk *bcm_clk;
--	struct clk_init_data *init_data;
-+	struct clk_init_data *init_data = &bcm_clk->init_data;
- 	struct clk *clk = NULL;
+ 	struct ccu_data *ccu = bcm_clk->ccu;
+ 	struct peri_clk_data *peri = bcm_clk->peri;
+-	const char *name = bcm_clk->name;
++	const char *name = bcm_clk->init_data.name;
+ 	struct bcm_clk_trig *trig;
  
--	bcm_clk = kzalloc(sizeof(*bcm_clk), GFP_KERNEL);
--	if (!bcm_clk) {
--		pr_err("%s: failed to allocate bcm_clk for %s\n", __func__,
--			name);
--		return NULL;
--	}
--	bcm_clk->ccu = ccu;
--	bcm_clk->init_data.name = name;
--
--	init_data = &bcm_clk->init_data;
--	init_data->name = name;
--	switch (type) {
-+	switch (bcm_clk->type) {
- 	case bcm_clk_peri:
--		if (peri_clk_setup(ccu, data, init_data))
--			goto out_free;
-+		if (peri_clk_setup(bcm_clk->data, init_data))
-+			return NULL;
- 		break;
- 	default:
--		data = NULL;
--		break;
-+		pr_err("%s: clock type %d invalid for %s\n", __func__,
-+			(int)bcm_clk->type, init_data->name);
-+		return NULL;
- 	}
--	bcm_clk->type = type;
--	bcm_clk->data = data;
- 
- 	/* Make sure everything makes sense before we set it up */
- 	if (!kona_clk_valid(bcm_clk)) {
--		pr_err("%s: clock data invalid for %s\n", __func__, name);
-+		pr_err("%s: clock data invalid for %s\n", __func__,
-+			init_data->name);
- 		goto out_teardown;
- 	}
- 
-@@ -656,7 +641,7 @@ struct clk *kona_clk_setup(struct ccu_data *ccu, const char *name,
- 	clk = clk_register(NULL, &bcm_clk->hw);
- 	if (IS_ERR(clk)) {
- 		pr_err("%s: error registering clock %s (%ld)\n", __func__,
--				name, PTR_ERR(clk));
-+			init_data->name, PTR_ERR(clk));
- 		goto out_teardown;
- 	}
- 	BUG_ON(!clk);
-@@ -664,8 +649,6 @@ struct clk *kona_clk_setup(struct ccu_data *ccu, const char *name,
- 	return clk;
- out_teardown:
- 	bcm_clk_teardown(bcm_clk);
--out_free:
--	kfree(bcm_clk);
- 
- 	return NULL;
- }
-@@ -700,11 +683,11 @@ static void kona_ccu_teardown(struct ccu_data *ccu)
-  * initialize the array of clocks provided by the CCU.
-  */
- void __init kona_dt_ccu_setup(struct ccu_data *ccu,
--			struct device_node *node,
--			int (*ccu_clks_setup)(struct ccu_data *))
-+			struct device_node *node)
- {
- 	struct resource res = { 0 };
- 	resource_size_t range;
-+	unsigned int i;
- 	int ret;
- 
- 	if (ccu->clk_data.clk_num) {
-@@ -743,9 +726,16 @@ void __init kona_dt_ccu_setup(struct ccu_data *ccu,
- 	ccu->node = of_node_get(node);
- 	list_add_tail(&ccu->links, &ccu_list);
- 
--	/* Set up clocks array (in ccu->clk_data) */
--	if (ccu_clks_setup(ccu))
--		goto out_err;
-+	/*
-+	 * Set up each defined kona clock and save the result in
-+	 * the clock framework clock array (in ccu->data).  Then
-+	 * register as a provider for these clocks.
-+	 */
-+	for (i = 0; i < ccu->clk_data.clk_num; i++) {
-+		if (!ccu->kona_clks[i].ccu)
-+			continue;
-+		ccu->clk_data.clks[i] = kona_clk_setup(&ccu->kona_clks[i]);
-+	}
- 
- 	ret = of_clk_add_provider(node, of_clk_src_onecell_get, &ccu->clk_data);
- 	if (ret) {
+ 	BUG_ON(bcm_clk->type != bcm_clk_peri);
 diff --git a/drivers/clk/bcm/clk-kona.h b/drivers/clk/bcm/clk-kona.h
-index c32dd72..fba2740 100644
+index 5e139ad..96fd0bc 100644
 --- a/drivers/clk/bcm/clk-kona.h
 +++ b/drivers/clk/bcm/clk-kona.h
-@@ -71,35 +71,6 @@ enum bcm_clk_type {
- };
+@@ -373,8 +373,7 @@ struct peri_clk_data {
  
- /*
-- * Each CCU defines a mapped area of memory containing registers
-- * used to manage clocks implemented by the CCU.  Access to memory
-- * within the CCU's space is serialized by a spinlock.  Before any
-- * (other) address can be written, a special access "password" value
-- * must be written to its WR_ACCESS register (located at the base
-- * address of the range).  We keep track of the name of each CCU as
-- * it is set up, and maintain them in a list.
-- */
--struct ccu_data {
--	void __iomem *base;	/* base of mapped address space */
--	spinlock_t lock;	/* serialization lock */
--	bool write_enabled;	/* write access is currently enabled */
--	struct list_head links;	/* for ccu_list */
--	struct device_node *node;
--	struct clk_onecell_data clk_data;
--	const char *name;
--	u32 range;		/* byte range of address space */
--};
--
--/* Initialization for common fields in a Kona ccu_data structure */
--#define KONA_CCU_COMMON(_prefix, _name, _ccuname)			    \
--	.name		= #_name "_ccu",				    \
--	.lock		= __SPIN_LOCK_UNLOCKED(_name ## _ccu_data.lock),    \
--	.links		= LIST_HEAD_INIT(_name ## _ccu_data.links),	    \
--	.clk_data	= {						    \
--		.clk_num = _prefix ## _ ## _ccuname ## _CCU_CLOCK_COUNT,    \
--	}
--
--/*
-  * Gating control and status is managed by a 32-bit gate register.
-  *
-  * There are several types of gating available:
-@@ -393,17 +364,52 @@ struct kona_clk {
- #define to_kona_clk(_hw) \
- 	container_of(_hw, struct kona_clk, hw)
- 
--/* Exported globals */
-+/* Initialization macro for an entry in a CCU's kona_clks[] array. */
-+#define KONA_CLK(_ccu_name, _clk_name, _type)				\
-+	{								\
-+		.init_data	= {					\
-+			.name = #_clk_name,				\
-+			.ops = &kona_ ## _type ## _clk_ops,		\
-+		},							\
-+		.ccu		= &_ccu_name ## _ccu_data,		\
-+		.type		= bcm_clk_ ## _type,			\
-+		.data		= &_clk_name ## _data,			\
-+	}
-+#define LAST_KONA_CLK	{ .type = bcm_clk_none }
- 
--extern struct clk_ops kona_peri_clk_ops;
-+/*
-+ * Each CCU defines a mapped area of memory containing registers
-+ * used to manage clocks implemented by the CCU.  Access to memory
-+ * within the CCU's space is serialized by a spinlock.  Before any
-+ * (other) address can be written, a special access "password" value
-+ * must be written to its WR_ACCESS register (located at the base
-+ * address of the range).  We keep track of the name of each CCU as
-+ * it is set up, and maintain them in a list.
-+ */
-+struct ccu_data {
-+	void __iomem *base;	/* base of mapped address space */
-+	spinlock_t lock;	/* serialization lock */
-+	bool write_enabled;	/* write access is currently enabled */
-+	struct list_head links;	/* for ccu_list */
-+	struct device_node *node;
-+	struct clk_onecell_data clk_data;
-+	const char *name;
-+	u32 range;		/* byte range of address space */
-+	struct kona_clk kona_clks[];	/* must be last */
-+};
- 
--/* Help functions */
-+/* Initialization for common fields in a Kona ccu_data structure */
-+#define KONA_CCU_COMMON(_prefix, _name, _ccuname)			    \
-+	.name		= #_name "_ccu",				    \
-+	.lock		= __SPIN_LOCK_UNLOCKED(_name ## _ccu_data.lock),    \
-+	.links		= LIST_HEAD_INIT(_name ## _ccu_data.links),	    \
-+	.clk_data	= {						    \
-+		.clk_num = _prefix ## _ ## _ccuname ## _CCU_CLOCK_COUNT,    \
-+	}
- 
--#define KONA_CLK_SETUP(_ccu, _type, _name) \
--	kona_clk_setup((_ccu), #_name, bcm_clk_## _type, &_name ## _data)
-+/* Exported globals */
- 
--#define PERI_CLK_SETUP(_ccu, _id, _name) \
--	(_ccu)->clk_data.clks[_id] = KONA_CLK_SETUP((_ccu), peri, _name)
-+extern struct clk_ops kona_peri_clk_ops;
- 
- /* Externally visible functions */
- 
-@@ -412,11 +418,9 @@ extern u64 scaled_div_max(struct bcm_clk_div *div);
- extern u64 scaled_div_build(struct bcm_clk_div *div, u32 div_value,
- 				u32 billionths);
- 
--extern struct clk *kona_clk_setup(struct ccu_data *ccu, const char *name,
--			enum bcm_clk_type type, void *data);
-+extern struct clk *kona_clk_setup(struct kona_clk *bcm_clk);
- extern void __init kona_dt_ccu_setup(struct ccu_data *ccu,
--			struct device_node *node,
--			int (*ccu_clks_setup)(struct ccu_data *));
-+				struct device_node *node);
- extern bool __init kona_ccu_init(struct ccu_data *ccu);
- 
- #endif /* _CLK_KONA_H */
+ struct kona_clk {
+ 	struct clk_hw hw;
+-	struct clk_init_data init_data;
+-	const char *name;	/* name of this clock */
++	struct clk_init_data init_data;	/* includes name of this clock */
+ 	struct ccu_data *ccu;	/* ccu this clock is associated with */
+ 	enum bcm_clk_type type;
+ 	union {
 -- 
 1.7.9.5
