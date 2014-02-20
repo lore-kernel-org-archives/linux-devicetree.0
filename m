@@ -1,67 +1,64 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/4] ASoC: tlv320aic32x4: Support for master clock
-Date: Thu, 20 Feb 2014 20:47:49 +0900
-Message-ID: <20140220114749.GD2669@sirena.org.uk>
-References: <1392575252-9222-1-git-send-email-mpa@pengutronix.de>
- <1392631460-32002-1-git-send-email-mpa@pengutronix.de>
- <1392631460-32002-2-git-send-email-mpa@pengutronix.de>
- <20140218012329.GR2669@sirena.org.uk>
- <20140218204646.GB10590@pengutronix.de>
- <20140219035406.GP2669@sirena.org.uk>
- <20140220113749.GB16727@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5Y6yyRKXBtz3ep6u"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140220113749.GB16727-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v4 0/4] Bugfix for of_match_node ordering
+Date: Thu, 20 Feb 2014 11:53:51 +0000
+Message-ID: <20140220115351.0DF7BC4050F@trevor.secretlab.ca>
+References: <1392819290-1044-1-git-send-email-grant.likely@linaro.org> < CAK9yfHwwmZkFMRvxsxjBAfUbVXU3V+iPFDZO=DwQsFvJ3NQyKA@mail.gmail.com> < 20140220101240.GA3745@pek-khao-d1.corp.ad.wrs.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20140220101240.GA3745@pek-khao-d1.corp.ad.wrs.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kevin Hao <haokexin@gmail.com>, Sachin Kamat <sachin.kamat@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 20 Feb 2014 18:12:40 +0800, Kevin Hao <haokexin@gmail.com> wrote:
+> On Thu, Feb 20, 2014 at 02:09:08PM +0530, Sachin Kamat wrote:
+> > Hi Grant,
+> > 
+> > I observe the following boot failure with today's (next-20140220) linux-next
+> > tree on Exynos based boards with the default exynos_defconfig.
+> 
+> Does this help?
 
---5Y6yyRKXBtz3ep6u
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I've merged this in. I could get my unicore test platform to fail to
+boot by turning on lock debugging. I'll leave that option on from now
+one.
 
-On Thu, Feb 20, 2014 at 12:37:49PM +0100, Markus Pargmann wrote:
+I've pushed this out to the following branch. Please test and report. It
+will also be picked up by linux-next tomorrow.
 
-> It seems none of these modes are supported yet. aic32x4_hw_params setups
-> the clock tree relying on a master clock to be used for the PLL.
-> Otherwise hw_params fails. So currently mclk is not optional for the
-> driver. But it is still optional for the real hardware.
+git://git.secretlab.ca/git/linux devicetree/merge
 
-> What do you think about declaring the mclk as optional property in the
-> DT bindings documentation but to handle it as a required clock in the
-> driver?
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 8a27fc907ab6..9cc893530b9a 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -381,12 +381,16 @@ static int __of_device_is_compatible(const struct device_node *device,
+>  
+>  	/* Compatible match has highest priority */
+>  	if (compat && compat[0]) {
+> -		of_property_for_each_string(device, "compatible", prop, cp) {
+> +		prop = __of_find_property(device, "compatible", NULL);
+> +		if (!prop)
+> +			return 0;
 
-That's fine, makes sense.
+The above 2 lines are unnecessary. of_prop_next_string() will return
+NULL if prop is NULL.
 
---5Y6yyRKXBtz3ep6u
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+g.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTBetiAAoJELSic+t+oim9q3kP/23Y9mhvviVYhLMR0KqovX1M
-KRiUQG16/2CaKB4AB6nTHBa0oaWYZAIuffmFy57grwoamQpo+5VPEVN6czydZpmC
-+vK034bk3mDNgCRzLMMgordIHfYEV7KUDdz1SAQExSP/N8RFg8h+JZCLza414aCG
-NUYM9HWGWfyG4lqiUI/g6n0YocjmvNnYB3umbwMKw/74+q3QxFonw1SUPFYFFVOx
-zC731yI0dMudpZ8ER5OJx9vLTttcgshm8+ULAobUCvGqCGLwbILLREoDz+PHSwcz
-m95YEqfwwNakepioo6tpCt8xTlNZAGojULB7FU1SWBtWWT6YS0OScmBpVjN6NT+A
-hmXHslYUbJoq2u7o2W46joKxBF92htISca+93xWXbiqb09gEpn0vo7deiEwj8XOu
-wp49/Pk/jI4no03NZu2RaKndZ/s8JtbHzbTgVD5Cmw7/JP5AwGD07EBSG6ICRfaV
-RWDPXO3cVjvB8YWpa9E0+9CcCwe6guN2DwPvIi/TZd5hlYCeKonnQD7PYBf2D/iu
-SHVxWX0xwNG4w2qK1A8aly+YOBQHiuwoQdRxs8LyDXVGukNnfhzWVBJCn7Dvhivi
-+0WWTg0/sU0hLFieBV3sWlbEVwIHp0rN3vW8Z2bInTmPqQu+j8MIboMUaL4IjCHF
-2Ky20F8Efy+20eS8MIlt
-=HxYV
------END PGP SIGNATURE-----
-
---5Y6yyRKXBtz3ep6u--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +		for (cp = of_prop_next_string(prop, NULL); cp;
+> +				cp = of_prop_next_string(prop, cp), index++) {
+>  			if (of_compat_cmp(cp, compat, strlen(compat)) == 0) {
+>  				score = INT_MAX/2 - (index << 2);
+>  				break;
+>  			}
+> -			index++;
+>  		}
+>  		if (!score)
+>  			return 0;
+> 
+> 
+> Thanks,
+> Kevin
