@@ -1,56 +1,66 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH v4 5/7] arm: add support for reserved memory defined by device
- tree
-Date: Thu, 20 Feb 2014 11:52:45 +0100
-Message-ID: <1392893567-31623-6-git-send-email-m.szyprowski@samsung.com>
-References: <1392893567-31623-1-git-send-email-m.szyprowski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1392893567-31623-1-git-send-email-m.szyprowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Grant Likely <grant.likely@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Paul Mackerras <paulus@samba.org>
+From: Kevin Hao <haokexin@gmail.com>
+Subject: Re: [PATCH v4 0/4] Bugfix for of_match_node ordering
+Date: Thu, 20 Feb 2014 18:55:40 +0800
+Message-ID: <20140220105540.GB3745@pek-khao-d1.corp.ad.wrs.com>
+References: <1392819290-1044-1-git-send-email-grant.likely@linaro.org>
+ <CAK9yfHwwmZkFMRvxsxjBAfUbVXU3V+iPFDZO=DwQsFvJ3NQyKA@mail.gmail.com>
+ <20140220101240.GA3745@pek-khao-d1.corp.ad.wrs.com>
+ <CAK9yfHzM_kyXMrnLC=M0qiLHKWxE41E-MdyGtipKA7AwoLnOqg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="24zk1gE8NUlDmwG9"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAK9yfHzM_kyXMrnLC=M0qiLHKWxE41E-MdyGtipKA7AwoLnOqg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable reserved memory initialization from device tree.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- arch/arm/Kconfig   |    1 +
- arch/arm/mm/init.c |    3 +++
- 2 files changed, 4 insertions(+)
+--24zk1gE8NUlDmwG9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index e25419817791..d0262bea8020 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -1918,6 +1918,7 @@ config USE_OF
- 	select IRQ_DOMAIN
- 	select OF
- 	select OF_EARLY_FLATTREE
-+	select OF_RESERVED_MEM
- 	help
- 	  Include support for flattened device tree machine descriptions.
- 
-diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-index 804d61566a53..eee55d75bbfa 100644
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -17,6 +17,7 @@
- #include <linux/nodemask.h>
- #include <linux/initrd.h>
- #include <linux/of_fdt.h>
-+#include <linux/of_reserved_mem.h>
- #include <linux/highmem.h>
- #include <linux/gfp.h>
- #include <linux/memblock.h>
-@@ -323,6 +324,8 @@ void __init arm_memblock_init(struct meminfo *mi,
- 	if (mdesc->reserve)
- 		mdesc->reserve();
- 
-+	early_init_fdt_scan_reserved_mem();
-+
- 	/*
- 	 * reserve memory for DMA contigouos allocations,
- 	 * must come from DMA area inside low memory
--- 
-1.7.9.5
+On Thu, Feb 20, 2014 at 03:57:07PM +0530, Sachin Kamat wrote:
+> Hi Kevin,
+>=20
+> On 20 February 2014 15:42, Kevin Hao <haokexin@gmail.com> wrote:
+> > On Thu, Feb 20, 2014 at 02:09:08PM +0530, Sachin Kamat wrote:
+> >> Hi Grant,
+> >>
+> >> I observe the following boot failure with today's (next-20140220) linu=
+x-next
+> >> tree on Exynos based boards with the default exynos_defconfig.
+> >
+> > Does this help?
+>=20
+> The below patch works for me. Thanks for the fix.
+
+Thanks Sachin.
+
+Hi Grant,
+
+I assume you would fold this change into the original patch. But if you want
+a separate patch, please let me know.
+
+Thanks,
+Kevin
+
+--24zk1gE8NUlDmwG9
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQEcBAEBAgAGBQJTBd8sAAoJEJNY7TDerrFxtMYIALc7gLsCqgtdAzjMuIHk0T0W
+ILfOk3ZoPiRb6TtopmvbFxaYR+EGJUs4VI5cEhTa9ZidIR/+DlVPN4211PvwwJLm
+73/JUYBnPrGvt3QE5qkge2TynWogH9Isb8p3YFe9/CmDlrxqpvXH4gQq8548Dvt7
+lQL5s3GOk1YLdz6d07SorpQpDWx6+bBCTIG6PMUq2Ysw/i/LSR/dp1+XoQemJ91E
+isqUykgbBKMuPD0rgDk1BxMR8RyJfzG2HweQzE/PGKnxLuxcM5OBpJFpv6Z1naF/
+AprsacDjacyR2HeoZ/BA/3RabQntQLwSQohQhRo7wUYUUbgtjj4P1PxEkn+NBFw=
+=qp1m
+-----END PGP SIGNATURE-----
+
+--24zk1gE8NUlDmwG9--
