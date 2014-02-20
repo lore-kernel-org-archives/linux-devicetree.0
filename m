@@ -1,115 +1,57 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: Re: [PATCH v5 1/4] ASoC: tlv320aic32x4: Support for
-	master clock
-Date: Thu, 20 Feb 2014 12:37:49 +0100
-Message-ID: <20140220113749.GB16727@pengutronix.de>
-References: <1392575252-9222-1-git-send-email-mpa@pengutronix.de>
- <1392631460-32002-1-git-send-email-mpa@pengutronix.de>
- <1392631460-32002-2-git-send-email-mpa@pengutronix.de>
- <20140218012329.GR2669@sirena.org.uk>
- <20140218204646.GB10590@pengutronix.de>
- <20140219035406.GP2669@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6917742773091199290=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20140219035406.GP2669@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Kumar Gala <galak@codeaurora.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: devicetree repository separation/migration
+Date: Thu, 20 Feb 2014 11:38:32 +0000
+Message-ID: <20140220113832.D9E13C4050F@trevor.secretlab.ca>
+References: <20140217180544.GU7862@titan.lakedaemon.net> <20140218155750. GS17250@pengutronix.de> <20140218181854.GB7862@titan.lakedaemon.net> < CAOesGMhvoB7vRf3H1kMaL5+MgZ2gJy=ZVNU0gsXVye9S4YGBOg@mail.gmail.com> < CAOesGMi8zJXhfj46CLB-_Kk2s4MY9da46DhMoCtRj=zSUiuOGA@mail.gmail.com> < CA+bK7J5+n2Se4cLv5WjR5B31ej7FdrGjPcjUULNrhb1UQ7=vmA@mail.gmail.com> < CAL_JsqJG+OXbT7sMiHV2dCx+nf--RidL8MmMd=dy6_gAa0yYcg@mail.gmail.com> < CAOesGMiHOwSYTCUaptacN=_pbXnObU5gqpxQHQ+kRTaW-ow3rA@mail.gmail.com>
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMiHOwSYTCUaptacN=_pbXnObU5gqpxQHQ+kRTaW-ow3rA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 19 Feb 2014 13:20:15 -0800, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+> On Wed, Feb 19, 2014 at 1:12 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > One way to minimize the inconvenience is keep versioning and dev
+> > cycles in sync with the kernel. We could also start doing things to
+> > align the kernel workflow with how things will work when we do have a
+> > separate repository.
+> 
+> I don't think aligning development cycles is what we want most here it
+> might be useful for us in Linux but it'll make things difficult for
+> other projects since they're not aware of our release cycles. The
+> device tree bindings and DT contents in that repo should be "always
+> stable", i.e. no merge window / rc concept. As soon as something goes
+> in it's live, and from then out only fixes to the DTS files (or
+> appending the binding).
+> 
+> For example, I don't want to have to track two trees to test against
+> -- I'll want to keep one repo of the very latest DT files and always
+> use those to boot any and all boards.
 
---===============6917742773091199290==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
-Content-Disposition: inline
+This approach does have the subtle side effect that differs from what we
+discussed in Edinburgh.  We've talked about always being able to boot a
+new kernel on an old devicetree, but not a new devicetree on an old
+kernel. With a separate board database repo we are going to hit both
+cases. At least to a limited extent we're going to need older kernels
+booting with the latest devicetree, and we'll need some rules about how
+that gets applied.
 
+The alternative is that binding changes land in .dts files after a
+kernel release, and I don't think we want that situation at all.
 
---vkogqOf2sHV7VnPd
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is an issue for new bindings, only when a binding is getting
+extended or replaced. If the change is merely adding new properties then
+there shouldn't be a problem (the old kernel will ignore the new
+properties). If it removes properties or creates a new compatible string
+(dropping the one supported by an older kernel) then it won't boot.
 
-Hi,
+Ultimately this is probably the right thing to do, but it will be
+difficult. Keeping a staging process for new bindings in lock step
+with the kernel is probably the way to mitigate this.
 
-On Wed, Feb 19, 2014 at 12:54:06PM +0900, Mark Brown wrote:
-> On Tue, Feb 18, 2014 at 09:46:46PM +0100, Markus Pargmann wrote:
-> > On Tue, Feb 18, 2014 at 10:23:29AM +0900, Mark Brown wrote:
->=20
-> > > Looking at the code the clock isn't physically optional, why not make=
- it
-> > > mandatory?  There's only one mainline user, it looks like it should be
-> > > straightforward to update with a fixed clock.
->=20
-> > The masterclock is physically optional. There are several modes to use
-> > this codec without master clock. The PLL can use different clock inputs,
-> > BCLK, MCLK, etc. and even the PLL is not necessary. Instead BCLK and so
-> > on can be used as direct codec clock input. However, most of this is not
-> > supported by the driver yet and I can't test these cases.
->=20
-> Are any of these modes supported by the driver yet?  If there's modes
-> that don't use MCLK supported then I'd expect them to only enable MCLK
-> if it's actively being used in the current configuration (triggered via
-> set_sysclk()).
-
-It seems none of these modes are supported yet. aic32x4_hw_params setups
-the clock tree relying on a master clock to be used for the PLL.
-Otherwise hw_params fails. So currently mclk is not optional for the
-driver. But it is still optional for the real hardware.
-
-What do you think about declaring the mclk as optional property in the
-DT bindings documentation but to handle it as a required clock in the
-driver?
-
-Thanks,
-
-Markus
-
-
-
---=20
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---vkogqOf2sHV7VnPd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTBekNAAoJEEpcgKtcEGQQ6bAP/j0UopLnPK1coabSzTrLM0jI
-2AumHCHsmQZwu+n34P0N/btde/Ah3NmnVMqiaXzU4ATsjhOf5PpG4LHGrqdpkUBl
-7/6d7e39yO50BbDoi9viSIw58qy/qZUZWaa+Qh+8/uwVDItNgfHMO2XI/KfznZFQ
-r+54gDtsOXbtc6PRM5cJ7042dGcp+gB+Ti4s3SIzIKhp4Try0qk8PurEd04WxE9e
-ttnXUYWYwLLjaJW0Pw+Qg8EMDOU3qh5tTGfmwZSMzBTUtz7zr910pknlPPeAz7l4
-HwxxYOtlmrnc7Gz2qR6M5JfzeuHL2Tiarh0Gh+IJyJfYfZaUAffIT+CErx1wZehA
-019H5K7xjgp1nj2VZSxlWF7rGNSnZEsHei4KfHHtA9FihBp4K4+JSoQyzAa38icU
-F77JcsdMHZyh9ag6AbkZYUcNwHIqzLd6SqmmNgu5q6Jks5dPax3PkdP3PgVgz21z
-OokwmwsrGIy4e1jXkzkupJPBKxAUYKZTf9rZiXIOBOyC0oB9aNGMJjty+aZzGBXn
-GWBpV1cgaejAuIKm04XK9UncIqxhQf4R+gL/RzGO1hb7BRKcV+JqHJLbiV1GIipa
-G6vMBiqVGneHQN+bezsiutjwtpK6uQkn0GpYmoaKfd33OyT79p/eDfOWnX/LRG3+
-TbP6P4WvIbXMPANs1xJ2
-=baKn
------END PGP SIGNATURE-----
-
---vkogqOf2sHV7VnPd--
-
---===============6917742773091199290==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============6917742773091199290==--
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
