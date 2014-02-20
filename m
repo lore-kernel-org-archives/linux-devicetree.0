@@ -1,37 +1,136 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: [PATCH RESEND] ARM: dts: qcom-msm8960-cdp: Add RNG device tree node
-Date: Thu, 20 Feb 2014 18:49:02 +0200
-Message-ID: <1392914942-23191-1-git-send-email-svarbanov@mm-sol.com>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Cc: Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, David Brown <davidb@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Stanimir Varbanov <svarbanov@mm-sol.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH 2/2] ARM: dts: OMAP3+: add clock nodes for CPU
+Date: Thu, 20 Feb 2014 18:57:12 +0200
+Message-ID: <530633E8.3000608@ti.com>
+References: <1391019557-22313-1-git-send-email-nm@ti.com> <1391019557-22313-3-git-send-email-nm@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1391019557-22313-3-git-send-email-nm@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Mike Turquette <mturquette@linaro.org>
+Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the necessary DT node to probe the rng driver on
-msm8960-cdp platform.
+On 01/29/2014 08:19 PM, Nishanth Menon wrote:
+> OMAP34xx, AM3517 and OMAP36xx platforms use dpll1 clock.
+>
+> OMAP443x, OMAP446x, OMAP447x, OMAP5, DRA7, AM43xx platforms use
+> dpll_mpu clock.
+>
+> Latency used is the generic latency defined in omap-cpufreq
+> driver.
+>
+> Signed-off-by: Nishanth Menon <nm@ti.com>
 
-Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-Tested-by: Stephen Boyd <sboyd@codeaurora.org>
----
- arch/arm/boot/dts/qcom-msm8960-cdp.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+Looks good to me.
 
-diff --git a/arch/arm/boot/dts/qcom-msm8960-cdp.dts b/arch/arm/boot/dts/qcom-msm8960-cdp.dts
-index 7c30de4fa302..8fda9c90ba97 100644
---- a/arch/arm/boot/dts/qcom-msm8960-cdp.dts
-+++ b/arch/arm/boot/dts/qcom-msm8960-cdp.dts
-@@ -67,4 +67,11 @@
- 		reg = <0x500000 0x1000>;
- 		qcom,controller-type = "pmic-arbiter";
- 	};
-+
-+	rng@1a500000 {
-+		compatible = "qcom,prng";
-+		reg = <0x1a500000 0x200>;
-+		clocks = <&gcc PRNG_CLK>;
-+		clock-names = "core";
-+	};
- };
--- 
-1.8.4.4
+Acked-by: Tero Kristo <t-kristo@ti.com>
+
+> ---
+>   arch/arm/boot/dts/am33xx.dtsi |    4 ++++
+>   arch/arm/boot/dts/am4372.dtsi |    5 +++++
+>   arch/arm/boot/dts/dra7.dtsi   |    5 +++++
+>   arch/arm/boot/dts/omap3.dtsi  |    5 +++++
+>   arch/arm/boot/dts/omap4.dtsi  |    5 +++++
+>   arch/arm/boot/dts/omap5.dtsi  |    6 ++++++
+>   6 files changed, 30 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+> index 6d95d3d..4bbba26 100644
+> --- a/arch/arm/boot/dts/am33xx.dtsi
+> +++ b/arch/arm/boot/dts/am33xx.dtsi
+> @@ -58,6 +58,10 @@
+>   				275000  1125000
+>   			>;
+>   			voltage-tolerance = <2>; /* 2 percentage */
+> +
+> +			clocks = <&dpll_mpu_ck>;
+> +			clock-names = "cpu";
+> +
+>   			clock-latency = <300000>; /* From omap-cpufreq driver */
+>   		};
+>   	};
+> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+> index c6bd4d9..33798d9 100644
+> --- a/arch/arm/boot/dts/am4372.dtsi
+> +++ b/arch/arm/boot/dts/am4372.dtsi
+> @@ -33,6 +33,11 @@
+>   			compatible = "arm,cortex-a9";
+>   			device_type = "cpu";
+>   			reg = <0>;
+> +
+> +			clocks = <&dpll_mpu_ck>;
+> +			clock-names = "cpu";
+> +
+> +			clock-latency = <300000>; /* From omap-cpufreq driver */
+>   		};
+>   	};
+>
+> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> index 1fd75aa..ce591e5 100644
+> --- a/arch/arm/boot/dts/dra7.dtsi
+> +++ b/arch/arm/boot/dts/dra7.dtsi
+> @@ -47,6 +47,11 @@
+>   				1000000	1060000
+>   				1176000	1160000
+>   				>;
+> +
+> +			clocks = <&dpll_mpu_ck>;
+> +			clock-names = "cpu";
+> +
+> +			clock-latency = <300000>; /* From omap-cpufreq driver */
+>   		};
+>   		cpu@1 {
+>   			device_type = "cpu";
+> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+> index a5fc83b..01f2b3b 100644
+> --- a/arch/arm/boot/dts/omap3.dtsi
+> +++ b/arch/arm/boot/dts/omap3.dtsi
+> @@ -35,6 +35,11 @@
+>   			compatible = "arm,cortex-a8";
+>   			device_type = "cpu";
+>   			reg = <0x0>;
+> +
+> +			clocks = <&dpll1_ck>;
+> +			clock-names = "cpu";
+> +
+> +			clock-latency = <300000>; /* From omap-cpufreq driver */
+>   		};
+>   	};
+>
+> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+> index d3f8a6e..ce87996 100644
+> --- a/arch/arm/boot/dts/omap4.dtsi
+> +++ b/arch/arm/boot/dts/omap4.dtsi
+> @@ -36,6 +36,11 @@
+>   			device_type = "cpu";
+>   			next-level-cache = <&L2>;
+>   			reg = <0x0>;
+> +
+> +			clocks = <&dpll_mpu_ck>;
+> +			clock-names = "cpu";
+> +
+> +			clock-latency = <300000>; /* From omap-cpufreq driver */
+>   		};
+>   		cpu@1 {
+>   			compatible = "arm,cortex-a9";
+> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+> index a72813a..8bb4134 100644
+> --- a/arch/arm/boot/dts/omap5.dtsi
+> +++ b/arch/arm/boot/dts/omap5.dtsi
+> @@ -49,6 +49,12 @@
+>   				1000000 1060000
+>   				1500000 1250000
+>   			>;
+> +
+> +			clocks = <&dpll_mpu_ck>;
+> +			clock-names = "cpu";
+> +
+> +			clock-latency = <300000>; /* From omap-cpufreq driver */
+> +
+>   			/* cooling options */
+>   			cooling-min-level = <0>;
+>   			cooling-max-level = <2>;
+>
