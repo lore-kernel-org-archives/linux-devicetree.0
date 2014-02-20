@@ -1,67 +1,58 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: [PATCH v10 14/15] ARM: dts: imx6: add anatop phandle for usbphy
-Date: Thu, 20 Feb 2014 13:14:43 +0800
-Message-ID: <1392873284-9386-15-git-send-email-peter.chen@freescale.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v10 15/15] ARM: dts: imx6: add mxs phy controller id
+Date: Thu, 20 Feb 2014 13:14:44 +0800
+Message-ID: <1392873284-9386-16-git-send-email-peter.chen@freescale.com>
 References: <1392873284-9386-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1392873284-9386-1-git-send-email-peter.chen@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: balbi@ti.com, shawn.guo@linaro.org, robh+dt@kernel.org, grant.likely@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com
-Cc: alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, peter.chen@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392873284-9386-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, frank.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add anatop phandle for usbphy
+We need to use controller id to access different register regions
+for mxs phy.
 
-Signed-off-by: Peter Chen <peter.chen@freescale.com>
-Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
  arch/arm/boot/dts/imx6qdl.dtsi |    2 ++
  arch/arm/boot/dts/imx6sl.dtsi  |    2 ++
  2 files changed, 4 insertions(+), 0 deletions(-)
 
 diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index fb28b2e..047b147 100644
+index 047b147..581c4c9 100644
 --- a/arch/arm/boot/dts/imx6qdl.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -557,6 +557,7 @@
- 				reg = <0x020c9000 0x1000>;
- 				interrupts = <0 44 0x04>;
- 				clocks = <&clks 182>;
-+				fsl,anatop = <&anatop>;
- 			};
+@@ -33,6 +33,8 @@
+ 		spi1 = &ecspi2;
+ 		spi2 = &ecspi3;
+ 		spi3 = &ecspi4;
++		usbphy0 = &usbphy1;
++		usbphy1 = &usbphy2;
+ 	};
  
- 			usbphy2: usbphy@020ca000 {
-@@ -564,6 +565,7 @@
- 				reg = <0x020ca000 0x1000>;
- 				interrupts = <0 45 0x04>;
- 				clocks = <&clks 183>;
-+				fsl,anatop = <&anatop>;
- 			};
- 
- 			snvs@020cc000 {
+ 	intc: interrupt-controller@00a01000 {
 diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index 28558f1..30322b5 100644
+index 30322b5..a06d939 100644
 --- a/arch/arm/boot/dts/imx6sl.dtsi
 +++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -489,6 +489,7 @@
- 				reg = <0x020c9000 0x1000>;
- 				interrupts = <0 44 0x04>;
- 				clocks = <&clks IMX6SL_CLK_USBPHY1>;
-+				fsl,anatop = <&anatop>;
- 			};
+@@ -27,6 +27,8 @@
+ 		spi1 = &ecspi2;
+ 		spi2 = &ecspi3;
+ 		spi3 = &ecspi4;
++		usbphy0 = &usbphy1;
++		usbphy1 = &usbphy2;
+ 	};
  
- 			usbphy2: usbphy@020ca000 {
-@@ -496,6 +497,7 @@
- 				reg = <0x020ca000 0x1000>;
- 				interrupts = <0 45 0x04>;
- 				clocks = <&clks IMX6SL_CLK_USBPHY2>;
-+				fsl,anatop = <&anatop>;
- 			};
- 
- 			snvs@020cc000 {
+ 	cpus {
 -- 
 1.7.8
 
 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
