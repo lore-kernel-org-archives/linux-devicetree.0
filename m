@@ -1,64 +1,44 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 3/4] tty: serial: bcm63xx_uart: add support for DT
- probing
-Date: Thu, 20 Feb 2014 12:21:31 +0000
-Message-ID: <20140220122131.GA32745@e106331-lin.cambridge.arm.com>
-References: <1392852167-26243-1-git-send-email-f.fainelli@gmail.com>
- <1392852167-26243-4-git-send-email-f.fainelli@gmail.com>
- <CAOiHx==rYbsy66zRUc-QXTS7ZjaX8v9kiomp+m33+tcEtKC-dA@mail.gmail.com>
- <CAGVrzcYEWJ6nKncSx3jjWFp9TXf8PFJnd-joPwSe0mDh-CeMiw@mail.gmail.com>
- <CAOiHx=mDYsGjtEXEK+8YUo4WZRQeXYvDJdfk2OQtqheeaD7icw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAOiHx=mDYsGjtEXEK+8YUo4WZRQeXYvDJdfk2OQtqheeaD7icw@mail.gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Jonas Gorski <jogo@openwrt.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Bizon <mbizon@freebox.fr>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 1/7 fixup] drivers: of: add initialization code for reserved
+ memory (fixup)
+Date: Thu, 20 Feb 2014 13:40:08 +0100
+Message-ID: <1392900008-8331-1-git-send-email-m.szyprowski@samsung.com>
+References: <1392893567-31623-2-git-send-email-m.szyprowski@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1392893567-31623-2-git-send-email-m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 20, 2014 at 10:59:04AM +0000, Jonas Gorski wrote:
-> On Thu, Feb 20, 2014 at 2:29 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> > 2014-02-19 16:00 GMT-08:00 Jonas Gorski <jogo@openwrt.org>:
-> >> On Thu, Feb 20, 2014 at 12:22 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> >>> @@ -857,6 +861,12 @@ static int bcm_uart_remove(struct platform_device *pdev)
-> >>>         return 0;
-> >>>  }
-> >>>
-> >>> +static const struct of_device_id bcm63xx_of_match[] = {
-> >>> +       { .compatible = "brcm,bcm63xx-uart" },
-> >>
-> >> From my understanding, this should be "brcm,bcm6345-uart", because
-> >> this kind of uart appeared first on bcm6345 (well, maybe bcm6335, no
-> >> idea which one of these two was first, but the latter was never
-> >> supported in mainline anyway).
-> >
-> > That's right, in fact, I think it might be desirable to handle both
-> > compatible string, just as a hint that it is compatible with the
-> > entire bcm63xx family. Would that work for you?
-> 
-> I think using a "generic" compatible string is rather frowned upon
-> (what do you do if there is eventually a bcm63xx chip with an
-> incompatible uart?), but I'm no device tree expert.
+Rename 'align' property to 'alignment' to match documentation.
 
-As long as each compatible string entry describes something that has a
-compatible programming model, there's no problem. The new UART wouldn't
-be described with a string it's not compatible with.
+Signed-off-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ drivers/of/of_reserved_mem.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I think "brcm,bcm6345-uart," is a nicer name to use for the moment than
-"brcm,bcm63xx-uart" as it clearly describes a specific UART and is less
-likely to be problematic in future if an incompatible UART appears.
-Additionally, each compatible UART can have a more specific compatible
-string entry that allows them to be more uniquely identified in case
-they need to be handled specially in future. e.g:
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index cacf04810b87..49cf430a9e2a 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -112,10 +112,10 @@ __reserved_mem_alloc_size(unsigned long node, const char *uname,
+ 
+ 	nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
+ 
+-	prop = of_get_flat_dt_prop(node, "align", &len);
++	prop = of_get_flat_dt_prop(node, "alignment", &len);
+ 	if (prop) {
+ 		if (len != dt_root_addr_cells * sizeof(__be32)) {
+-			pr_err("Reserved memory: invalid align property in '%s' node.\n",
++			pr_err("Reserved memory: invalid alignment property in '%s' node.\n",
+ 				uname);
+ 			return -EINVAL;
+ 		}
+-- 
+1.7.9.5
 
-  compatible = "brcm,bcm634x-uart", "brcm,bcm6345-uart";
-
-Then if a bcm634y comes out with a UART that's not compatible with the
-bcm6345 UART, it just needs:
-
-  compatible = "brcm,bcm634y-uart";
-
-Thanks,
-Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
