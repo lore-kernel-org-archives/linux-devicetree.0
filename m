@@ -1,62 +1,78 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH 06/10] spi: sh-msiof: Improve binding documentation
-Date: Thu, 20 Feb 2014 15:43:05 +0100
-Message-ID: <1392907389-21798-7-git-send-email-geert@linux-m68k.org>
-References: <1392907389-21798-1-git-send-email-geert@linux-m68k.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1392907389-21798-1-git-send-email-geert@linux-m68k.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Takashi Yoshii <takasi-y@ops.dti.ne.jp>, Magnus Damm <magnus.damm@gmail.com>, linux-spi@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, devicetree@vger.kernel.org
+Subject: [PATCH 09/11] ARM: shmobile: r8a7791 dtsi: Add MSIOF nodes and aliases
+Date: Thu, 20 Feb 2014 15:49:37 +0100
+Message-ID: <1392907779-22053-10-git-send-email-geert@linux-m68k.org>
+References: <1392907779-22053-1-git-send-email-geert@linux-m68k.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1392907779-22053-1-git-send-email-geert@linux-m68k.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
 
-  - Add missing "interrupt-parent", "#address-cells", "#size-cells", and
-    "clocks" properties,
-  - Add missing default values for "renesas,tx-fifo-size" and
-    "renesas,rx-fifo-size",
-  - Add a reference to the pinctrl documentation.
-
 Signed-off-by: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
 Cc: devicetree@vger.kernel.org
 ---
- Documentation/devicetree/bindings/spi/sh-msiof.txt |   24 ++++++++++++++------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/r8a7791.dtsi |   39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-index e6222106ca36..52cf5c78705b 100644
---- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
-+++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-@@ -1,12 +1,22 @@
- Renesas MSIOF spi controller
+diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
+index da5ce503d214..c336ddecf75b 100644
+--- a/arch/arm/boot/dts/r8a7791.dtsi
++++ b/arch/arm/boot/dts/r8a7791.dtsi
+@@ -27,6 +27,9 @@
+ 		i2c4 = &i2c4;
+ 		i2c5 = &i2c5;
+ 		spi0 = &qspi;
++		spi1 = &msiof0;
++		spi2 = &msiof1;
++		spi3 = &msiof2;
+ 	};
  
- Required properties:
--- compatible : 	"renesas,sh-msiof" for SuperH or
--		"renesas,sh-mobile-msiof" for SH Mobile series
--- reg : Offset and length of the register set for the device
--- interrupts : interrupt line used by MSIOF
-+- compatible           : "renesas,sh-msiof" for SuperH, or
-+			 "renesas,sh-mobile-msiof" for SH Mobile series.
-+- reg                  : Offset and length of the register set for the device
-+- interrupt-parent     : The phandle for the interrupt controller that
-+			 services interrupts for this device
-+- interrupts           : Interrupt specifier
-+- #address-cells       : Must be <1>
-+- #size-cells          : Must be <0>
- 
- Optional properties:
--- num-cs		: total number of chip-selects
--- renesas,tx-fifo-size	: Overrides the default tx fifo size given in words
--- renesas,rx-fifo-size	: Overrides the default rx fifo size given in words
-+- clocks               : Must contain a reference to the functional clock.
-+- num-cs               : Total number of chip-selects
-+- renesas,tx-fifo-size : Overrides the default tx fifo size given in words
-+			 (default is 64)
-+- renesas,rx-fifo-size : Overrides the default rx fifo size given in words
-+			 (default is 64)
+ 	cpus {
+@@ -761,4 +764,40 @@
+ 		#size-cells = <0>;
+ 		status = "disabled";
+ 	};
 +
-+Pinctrl properties might be needed, too.  See
-+Documentation/devicetree/bindings/pinctrl/renesas,*.
++	msiof0: spi@e6e20000 {
++		compatible = "renesas,msiof-r8a7791";
++		reg = <0 0xe6e20000 0 0x0064>;
++		interrupts = <0 156 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp0_clks R8A7791_CLK_MSIOF0>;
++		num-cs = <1>;
++		renesas,rx-fifo-size = <256>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	msiof1: spi@e6e10000 {
++		compatible = "renesas,msiof-r8a7791";
++		reg = <0 0xe6e10000 0 0x0064>;
++		interrupts = <0 157 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp2_clks R8A7791_CLK_MSIOF1>;
++		num-cs = <1>;
++		renesas,rx-fifo-size = <256>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	msiof2: spi@e6e00000 {
++		compatible = "renesas,msiof-r8a7791";
++		reg = <0 0xe6e00000 0 0x0064>;
++		interrupts = <0 158 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp2_clks R8A7791_CLK_MSIOF2>;
++		num-cs = <1>;
++		renesas,rx-fifo-size = <256>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
+ };
 -- 
 1.7.9.5
+
