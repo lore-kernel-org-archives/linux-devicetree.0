@@ -1,66 +1,41 @@
-From: Kevin Hao <haokexin@gmail.com>
-Subject: Re: [PATCH v4 0/4] Bugfix for of_match_node ordering
-Date: Thu, 20 Feb 2014 18:55:40 +0800
-Message-ID: <20140220105540.GB3745@pek-khao-d1.corp.ad.wrs.com>
-References: <1392819290-1044-1-git-send-email-grant.likely@linaro.org>
- <CAK9yfHwwmZkFMRvxsxjBAfUbVXU3V+iPFDZO=DwQsFvJ3NQyKA@mail.gmail.com>
- <20140220101240.GA3745@pek-khao-d1.corp.ad.wrs.com>
- <CAK9yfHzM_kyXMrnLC=M0qiLHKWxE41E-MdyGtipKA7AwoLnOqg@mail.gmail.com>
+From: Jonas Gorski <jogo@openwrt.org>
+Subject: Re: [PATCH 3/4] tty: serial: bcm63xx_uart: add support for DT probing
+Date: Thu, 20 Feb 2014 11:59:04 +0100
+Message-ID: <CAOiHx=mDYsGjtEXEK+8YUo4WZRQeXYvDJdfk2OQtqheeaD7icw@mail.gmail.com>
+References: <1392852167-26243-1-git-send-email-f.fainelli@gmail.com>
+ <1392852167-26243-4-git-send-email-f.fainelli@gmail.com> <CAOiHx==rYbsy66zRUc-QXTS7ZjaX8v9kiomp+m33+tcEtKC-dA@mail.gmail.com>
+ <CAGVrzcYEWJ6nKncSx3jjWFp9TXf8PFJnd-joPwSe0mDh-CeMiw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="24zk1gE8NUlDmwG9"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAK9yfHzM_kyXMrnLC=M0qiLHKWxE41E-MdyGtipKA7AwoLnOqg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <CAGVrzcYEWJ6nKncSx3jjWFp9TXf8PFJnd-joPwSe0mDh-CeMiw@mail.gmail.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-serial@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Bizon <mbizon@freebox.fr>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Feb 20, 2014 at 2:29 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> 2014-02-19 16:00 GMT-08:00 Jonas Gorski <jogo@openwrt.org>:
+>> On Thu, Feb 20, 2014 at 12:22 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>>> @@ -857,6 +861,12 @@ static int bcm_uart_remove(struct platform_device *pdev)
+>>>         return 0;
+>>>  }
+>>>
+>>> +static const struct of_device_id bcm63xx_of_match[] = {
+>>> +       { .compatible = "brcm,bcm63xx-uart" },
+>>
+>> From my understanding, this should be "brcm,bcm6345-uart", because
+>> this kind of uart appeared first on bcm6345 (well, maybe bcm6335, no
+>> idea which one of these two was first, but the latter was never
+>> supported in mainline anyway).
+>
+> That's right, in fact, I think it might be desirable to handle both
+> compatible string, just as a hint that it is compatible with the
+> entire bcm63xx family. Would that work for you?
 
---24zk1gE8NUlDmwG9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I think using a "generic" compatible string is rather frowned upon
+(what do you do if there is eventually a bcm63xx chip with an
+incompatible uart?), but I'm no device tree expert.
 
-On Thu, Feb 20, 2014 at 03:57:07PM +0530, Sachin Kamat wrote:
-> Hi Kevin,
->=20
-> On 20 February 2014 15:42, Kevin Hao <haokexin@gmail.com> wrote:
-> > On Thu, Feb 20, 2014 at 02:09:08PM +0530, Sachin Kamat wrote:
-> >> Hi Grant,
-> >>
-> >> I observe the following boot failure with today's (next-20140220) linu=
-x-next
-> >> tree on Exynos based boards with the default exynos_defconfig.
-> >
-> > Does this help?
->=20
-> The below patch works for me. Thanks for the fix.
 
-Thanks Sachin.
-
-Hi Grant,
-
-I assume you would fold this change into the original patch. But if you want
-a separate patch, please let me know.
-
-Thanks,
-Kevin
-
---24zk1gE8NUlDmwG9
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQEcBAEBAgAGBQJTBd8sAAoJEJNY7TDerrFxtMYIALc7gLsCqgtdAzjMuIHk0T0W
-ILfOk3ZoPiRb6TtopmvbFxaYR+EGJUs4VI5cEhTa9ZidIR/+DlVPN4211PvwwJLm
-73/JUYBnPrGvt3QE5qkge2TynWogH9Isb8p3YFe9/CmDlrxqpvXH4gQq8548Dvt7
-lQL5s3GOk1YLdz6d07SorpQpDWx6+bBCTIG6PMUq2Ysw/i/LSR/dp1+XoQemJ91E
-isqUykgbBKMuPD0rgDk1BxMR8RyJfzG2HweQzE/PGKnxLuxcM5OBpJFpv6Z1naF/
-AprsacDjacyR2HeoZ/BA/3RabQntQLwSQohQhRo7wUYUUbgtjj4P1PxEkn+NBFw=
-=qp1m
------END PGP SIGNATURE-----
-
---24zk1gE8NUlDmwG9--
+Jonas
