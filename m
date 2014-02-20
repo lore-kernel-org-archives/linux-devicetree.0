@@ -1,41 +1,95 @@
-From: Ashutosh singh <ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
-Subject: [PATCH v3 4/4] ARM: dts: imx6q-phytec: Added SATA Support
-Date: Thu, 20 Feb 2014 11:20:18 +0530
-Message-ID: <1392875418-9034-4-git-send-email-ashutosh.s@phytec.in>
-References: <1392875418-9034-1-git-send-email-ashutosh.s@phytec.in>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392875418-9034-1-git-send-email-ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, c.hemp-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Ashutosh singh <ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: [PATCH v10 00/15] Add power management support for mxs phy
+Date: Thu, 20 Feb 2014 13:14:29 +0800
+Message-ID: <1392873284-9386-1-git-send-email-peter.chen@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: balbi@ti.com, shawn.guo@linaro.org, robh+dt@kernel.org, grant.likely@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com
+Cc: alexander.shishkin@linux.intel.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, peter.chen@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for SATA on Phytec phyFLEX-i.MX6 Quad module.
+Hi Felipe & Shawn,
 
-Signed-off-by: Ashutosh singh <ashutosh.s-mS2nBM426Az/PtFMR13I2A@public.gmane.org>
----
- arch/arm/boot/dts/imx6q-phytec-pbab01.dts |    4 ++++
- 1 file changed, 4 insertions(+)
+The serial adds power management support for MXS PHY, it includes:
 
-diff --git a/arch/arm/boot/dts/imx6q-phytec-pbab01.dts b/arch/arm/boot/dts/imx6q-phytec-pbab01.dts
-index 21c8b37..5607c33 100644
---- a/arch/arm/boot/dts/imx6q-phytec-pbab01.dts
-+++ b/arch/arm/boot/dts/imx6q-phytec-pbab01.dts
-@@ -25,6 +25,10 @@
- 	status = "okay";
- };
- 
-+&sata {
-+	status = "okay";
-+};
-+
- &uart4 {
- 	status = "okay";
- };
+- Add one PHY API .set_wakeup, and related API implementation at mxs phy driver
+- misc changes and bug fixes for mxs phy to support low power mode and wakeup.
+
+It is based on the lastest Greg's usb-next, 3.14-rc3.
+
+Changes for v10:
+- Nothing related with function change.
+- It adds dt maintainers to To list, and cc devicetree@vger.kernel.org,
+wait dt-maintainer's ack for 1/15, 4/15.
+- Add last three dts patches for reference which have already
+at Shawn's tree.
+
+Changes for v9:
+- Fix the build warning if CONFIG_SUSPEND is not set
+
+Changes for v8:
+- Shawn has already applied two dts patches, so delete them at
+  v8 version, http://marc.info/?l=linux-arm-kernel&m=138785188404939&w=2
+- Using of_get_property to avoid imx6 fail at probe when using old DTB [5/12]
+- Do not consider failure if alias id is not existed, it can avoid fail
+  at probe when using old DTB [8/12]
+- We don't need more changes for [8/12] change due to we use
+  "mxs_phy->port_id ==" as condition
+
+Changes for v7:
+- Fixed indentation problem at binding doc [1/14]
+- s/ganranteed/guaranteed, and add explanation for "auto setting" [3/14]
+- add static before SIMPLE_DEV_PM_OPS [13/14]
+- add one patch to change usb device description [7/14]
+- Delete the .nofity_suspend and .notify_resume due to Felipe
+  does not agree to add them as PHY API, will use other ways to implement
+  them in future.
+
+Changes for v6:
+- Add description for IC bug fixes logic. [9/15]
+- Move is_imx6q_phy and is_imx6sl_phy from [9/15] to [14/15] 
+- %s/mxs_phy_clock_switch/mxs_phy_clock_switch_delay to reflect
+the function meaning more precise [15/15]
+
+Changes for v5:
+Add Marc and Michael Grzeschik's commnets
+- typo error at [2/15]
+- sqhash patches which introducing mxs_phy_disconnect_line and
+fixed but at this function. [13/15]
+- Introducing flag MXS_PHY_NEED_IP_FIX who stands for the SoCs
+who have IC fixes. [2/15, 8/15]
+- Delete one patch for low speed connection problem at every rare
+situations due to the root cause has still not found.
+
+Peter Chen (15):
+  usb: doc: phy-mxs: Add more compatible strings
+  usb: phy-mxs: Add platform judgement code
+  usb: phy-mxs: Add auto clock and power setting
+  usb: doc: phy-mxs: update binding for adding anatop phandle
+  usb: phy-mxs: Add anatop regmap
+  usb: phy-mxs: change description of usb device speed
+  usb: phy-mxs: Enable IC fixes for related SoCs
+  usb: phy-mxs: add controller id
+  usb: phy: Add set_wakeup API
+  usb: phy-mxs: Add implementation of set_wakeup
+  usb: phy-mxs: Add system suspend/resume API
+  usb: phy-mxs: Add sync time after controller clear phcd
+  ARM: dts: mxs: add mxs phy controller id
+  ARM: dts: imx6: add anatop phandle for usbphy
+  ARM: dts: imx6: add mxs phy controller id
+
+ Documentation/devicetree/bindings/usb/mxs-phy.txt |    5 +-
+ arch/arm/boot/dts/imx23.dtsi                      |    1 +
+ arch/arm/boot/dts/imx28.dtsi                      |    2 +
+ arch/arm/boot/dts/imx6qdl.dtsi                    |    4 +
+ arch/arm/boot/dts/imx6sl.dtsi                     |    4 +
+ drivers/usb/phy/phy-mxs-usb.c                     |  310 ++++++++++++++++++++-
+ include/linux/usb/phy.h                           |   16 +
+ 7 files changed, 327 insertions(+), 15 deletions(-)
+
 -- 
-1.7.9.5
+1.7.8
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
