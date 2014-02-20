@@ -1,142 +1,115 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v4 0/4] Bugfix for of_match_node ordering
-Date: Thu, 20 Feb 2014 11:29:57 +0000
-Message-ID: <CACxGe6sg7FpJqAUjkU5DkUpiV_mDbtSV3RETtiQdACUXhRtRrg@mail.gmail.com>
-References: <1392819290-1044-1-git-send-email-grant.likely@linaro.org> <CAK9yfHwwmZkFMRvxsxjBAfUbVXU3V+iPFDZO=DwQsFvJ3NQyKA@mail.gmail.com>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCH v5 1/4] ASoC: tlv320aic32x4: Support for
+	master clock
+Date: Thu, 20 Feb 2014 12:37:49 +0100
+Message-ID: <20140220113749.GB16727@pengutronix.de>
+References: <1392575252-9222-1-git-send-email-mpa@pengutronix.de>
+ <1392631460-32002-1-git-send-email-mpa@pengutronix.de>
+ <1392631460-32002-2-git-send-email-mpa@pengutronix.de>
+ <20140218012329.GR2669@sirena.org.uk>
+ <20140218204646.GB10590@pengutronix.de>
+ <20140219035406.GP2669@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAK9yfHwwmZkFMRvxsxjBAfUbVXU3V+iPFDZO=DwQsFvJ3NQyKA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Kevin Hao <haokexin@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="===============6917742773091199290=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20140219035406.GP2669@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 20, 2014 at 8:39 AM, Sachin Kamat <sachin.kamat@linaro.org> wrote:
-> Hi Grant,
->
-> I observe the following boot failure with today's (next-20140220) linux-next
-> tree on Exynos based boards with the default exynos_defconfig.
 
-Ugh, nested locking. that is not good. Kevin's patch looks correct and
-I'll merge it in. I'm a little disturbed though that you're the only
-one who has reported problems. Looking at what it does I would expect
-pretty much every SMP platform for freak out about this, but I've
-heard nothing from the powerpc guys.
+--===============6917742773091199290==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
+Content-Disposition: inline
 
-I'll merge in the fix of course, but I'd like to know what I'm missing.
 
-g.
+--vkogqOf2sHV7VnPd
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
-> Uncompressing Linux... done, booting the kernel.
-> [    0.000000] Booting Linux on physical CPU 0x900
-> [    0.000000] Linux version 3.14.0-rc3-next-20140220 (sachin@linaro)
-> (gcc version 4.8.2 20130805 (prerelease) (crosstool-NG linaro-1.
-> 13.1-4.8-2013.08 - Linaro GCC 2013.08) ) #1132 SMP PREEMPT Thu Feb 20
-> 13:49:27 IST 2014
-> [    0.000000] CPU: ARMv7 Processor [412fc091] revision 1 (ARMv7), cr=10c5387d
-> [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing
-> instruction cache
-> [    0.000000] Machine model: Insignal Origen evaluation board based
-> on Exynos4210
-> [    0.000000] bootconsole [earlycon0] enabled
-> [    0.000000] Memory policy: Data cache writealloc
-> [    0.000000] CPU EXYNOS4210 (id 0x43210011)
-> [    0.000000] On node 0 totalpages: 258048
-> [    0.000000]   Normal zone: 1520 pages used for memmap
-> [    0.000000]   Normal zone: 0 pages reserved
-> [    0.000000]   Normal zone: 190464 pages, LIFO batch:31
-> [    0.000000]   HighMem zone: 528 pages used for memmap
-> [    0.000000]   HighMem zone: 67584 pages, LIFO batch:15
-> [    0.000000] BUG: spinlock recursion on CPU#0, swapper/0
-> [    0.000000]  lock: devtree_lock+0x0/0x10, .magic: dead4ead, .owner:
-> swapper/0, .owner_cpu: 0
-> [    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted
-> 3.14.0-rc3-next-20140220 #1132
-> [    0.000000] [<c0013e9c>] (unwind_backtrace) from [<c0011250>]
-> (show_stack+0x10/0x14)
-> [    0.000000] [<c0011250>] (show_stack) from [<c0386740>]
-> (dump_stack+0x7c/0xbc)
-> [    0.000000] [<c0386740>] (dump_stack) from [<c005501c>]
-> (do_raw_spin_lock+0x188/0x18c)
-> [    0.000000] [<c005501c>] (do_raw_spin_lock) from [<c038b614>]
-> (_raw_spin_lock_irqsave+0x20/0x28)
-> [    0.000000] [<c038b614>] (_raw_spin_lock_irqsave) from [<c02de37c>]
-> (of_find_property+0x20/0x4c)
-> [    0.000000] [<c02de37c>] (of_find_property) from [<c02df110>]
-> (__of_device_is_compatible+0xb4/0x110)
-> [    0.000000] [<c02df110>] (__of_device_is_compatible) from
-> [<c02df22c>] (of_find_compatible_node+0x4c/0x7c)
-> [    0.000000] [<c02df22c>] (of_find_compatible_node) from
-> [<c04cedf4>] (exynos_firmware_init+0x18/0x7c)
-> [    0.000000] [<c04cedf4>] (exynos_firmware_init) from [<c04caef0>]
-> (setup_arch+0x860/0x898)
-> [    0.000000] [<c04caef0>] (setup_arch) from [<c04c7820>]
-> (start_kernel+0x80/0x3dc)
-> [    0.000000] [<c04c7820>] (start_kernel) from [<40008074>] (0x40008074)
-> [    0.000000] BUG: spinlock lockup suspected on CPU#0, swapper/0
-> [    0.000000]  lock: devtree_lock+0x0/0x10, .magic: dead4ead, .owner:
-> swapper/0, .owner_cpu: 0
-> [    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted
-> 3.14.0-rc3-next-20140220 #1132
-> [    0.000000] [<c0013e9c>] (unwind_backtrace) from [<c0011250>]
-> (show_stack+0x10/0x14)
-> [    0.000000] [<c0011250>] (show_stack) from [<c0386740>]
-> (dump_stack+0x7c/0xbc)
-> [    0.000000] [<c0386740>] (dump_stack) from [<c0054fac>]
-> (do_raw_spin_lock+0x118/0x18c)
-> [    0.000000] [<c0054fac>] (do_raw_spin_lock) from [<c038b614>]
-> (_raw_spin_lock_irqsave+0x20/0x28)
-> [    0.000000] [<c038b614>] (_raw_spin_lock_irqsave) from [<c02de37c>]
-> (of_find_property+0x20/0x4c)
-> [    0.000000] [<c02de37c>] (of_find_property) from [<c02df110>]
-> (__of_device_is_compatible+0xb4/0x110)
-> [    0.000000] [<c02df110>] (__of_device_is_compatible) from
-> [<c02df22c>] (of_find_compatible_node+0x4c/0x7c)
-> [    0.000000] [<c02df22c>] (of_find_compatible_node) from
-> [<c04cedf4>] (exynos_firmware_init+0x18/0x7c)
-> [    0.000000] [<c04cedf4>] (exynos_firmware_init) from [<c04caef0>]
-> (setup_arch+0x860/0x898)
-> [    0.000000] [<c04caef0>] (setup_arch) from [<c04c7820>]
-> (start_kernel+0x80/0x3dc)
-> [    0.000000] [<c04c7820>] (start_kernel) from [<40008074>] (0x40008074)
->
-> Regards,
-> Sachin
->
->
->
-> On 19 February 2014 19:44, Grant Likely <grant.likely@linaro.org> wrote:
->> Hi all,
->>
->> I've taken Kevin's latest rework and done even more rework on it. :-) I
->> didn't quite like how it was looking so I rolled his scoring code
->> directly into __of_device_is_compatible() so that the function always
->> returns a score in a way that is still compatible with the existing
->> users (ie. non-zero == successful match). This eliminates the need for a
->> separate pscore argument and it also let me roll the type and name
->> checks into the same function. I'm a lot happier with it overall and it
->> makes for a slightly smaller number of lines of code changed. Please
->> take a look and give it a spin. This is basically a bug fix so I'll need
->> to push it out to Linus in the near future.
->>
->> Acks and Tested-bys would be particularly appreciated.
->>
->> Thanks,
->> g.
->>
->> Kevin Hao (2):
->>         Revert "of: search the best compatible match first in __of_match_node()"
->>         of: reimplement the matching method for __of_match_node()
->>
->> Grant Likely (2):
->>         of: Move testcase FDT data into drivers/of
->>         of: Add self test for of_match_node()
->>
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->> Please read the FAQ at  http://www.tux.org/lkml/
+Hi,
+
+On Wed, Feb 19, 2014 at 12:54:06PM +0900, Mark Brown wrote:
+> On Tue, Feb 18, 2014 at 09:46:46PM +0100, Markus Pargmann wrote:
+> > On Tue, Feb 18, 2014 at 10:23:29AM +0900, Mark Brown wrote:
+>=20
+> > > Looking at the code the clock isn't physically optional, why not make=
+ it
+> > > mandatory?  There's only one mainline user, it looks like it should be
+> > > straightforward to update with a fixed clock.
+>=20
+> > The masterclock is physically optional. There are several modes to use
+> > this codec without master clock. The PLL can use different clock inputs,
+> > BCLK, MCLK, etc. and even the PLL is not necessary. Instead BCLK and so
+> > on can be used as direct codec clock input. However, most of this is not
+> > supported by the driver yet and I can't test these cases.
+>=20
+> Are any of these modes supported by the driver yet?  If there's modes
+> that don't use MCLK supported then I'd expect them to only enable MCLK
+> if it's actively being used in the current configuration (triggered via
+> set_sysclk()).
+
+It seems none of these modes are supported yet. aic32x4_hw_params setups
+the clock tree relying on a master clock to be used for the PLL.
+Otherwise hw_params fails. So currently mclk is not optional for the
+driver. But it is still optional for the real hardware.
+
+What do you think about declaring the mclk as optional property in the
+DT bindings documentation but to handle it as a required clock in the
+driver?
+
+Thanks,
+
+Markus
+
+
+
+--=20
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--vkogqOf2sHV7VnPd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTBekNAAoJEEpcgKtcEGQQ6bAP/j0UopLnPK1coabSzTrLM0jI
+2AumHCHsmQZwu+n34P0N/btde/Ah3NmnVMqiaXzU4ATsjhOf5PpG4LHGrqdpkUBl
+7/6d7e39yO50BbDoi9viSIw58qy/qZUZWaa+Qh+8/uwVDItNgfHMO2XI/KfznZFQ
+r+54gDtsOXbtc6PRM5cJ7042dGcp+gB+Ti4s3SIzIKhp4Try0qk8PurEd04WxE9e
+ttnXUYWYwLLjaJW0Pw+Qg8EMDOU3qh5tTGfmwZSMzBTUtz7zr910pknlPPeAz7l4
+HwxxYOtlmrnc7Gz2qR6M5JfzeuHL2Tiarh0Gh+IJyJfYfZaUAffIT+CErx1wZehA
+019H5K7xjgp1nj2VZSxlWF7rGNSnZEsHei4KfHHtA9FihBp4K4+JSoQyzAa38icU
+F77JcsdMHZyh9ag6AbkZYUcNwHIqzLd6SqmmNgu5q6Jks5dPax3PkdP3PgVgz21z
+OokwmwsrGIy4e1jXkzkupJPBKxAUYKZTf9rZiXIOBOyC0oB9aNGMJjty+aZzGBXn
+GWBpV1cgaejAuIKm04XK9UncIqxhQf4R+gL/RzGO1hb7BRKcV+JqHJLbiV1GIipa
+G6vMBiqVGneHQN+bezsiutjwtpK6uQkn0GpYmoaKfd33OyT79p/eDfOWnX/LRG3+
+TbP6P4WvIbXMPANs1xJ2
+=baKn
+-----END PGP SIGNATURE-----
+
+--vkogqOf2sHV7VnPd--
+
+--===============6917742773091199290==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============6917742773091199290==--
