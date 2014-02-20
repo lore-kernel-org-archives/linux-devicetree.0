@@ -1,76 +1,134 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: devicetree repository separation/migration
-Date: Thu, 20 Feb 2014 08:14:38 +0000
-Message-ID: <CACxGe6ugF2_kzDPLdv-Z1LUnkX4DHq9R45o64kJHVBSQjWFiNg@mail.gmail.com>
-References: <20140217180544.GU7862@titan.lakedaemon.net> <20140218155750.GS17250@pengutronix.de>
- <20140218181854.GB7862@titan.lakedaemon.net> <CAOesGMhvoB7vRf3H1kMaL5+MgZ2gJy=ZVNU0gsXVye9S4YGBOg@mail.gmail.com>
- <CAOesGMi8zJXhfj46CLB-_Kk2s4MY9da46DhMoCtRj=zSUiuOGA@mail.gmail.com>
- <CA+bK7J5+n2Se4cLv5WjR5B31ej7FdrGjPcjUULNrhb1UQ7=vmA@mail.gmail.com>
- <20140219090854.GW17250@pengutronix.de> <53051102.8060801@gmail.com>
- <CACxGe6uhA6FMR76WJGVEt44x6bQOC=woCkDr6ZUH30hTd8f2wA@mail.gmail.com> <53058B69.4040502@gmail.com>
+From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 0/4] Bugfix for of_match_node ordering
+Date: Thu, 20 Feb 2014 14:09:08 +0530
+Message-ID: <CAK9yfHwwmZkFMRvxsxjBAfUbVXU3V+iPFDZO=DwQsFvJ3NQyKA@mail.gmail.com>
+References: <1392819290-1044-1-git-send-email-grant.likely@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53058B69.4040502-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392819290-1044-1-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 20, 2014 at 4:58 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 2/19/2014 1:15 PM, Grant Likely wrote:
->> On Wed, Feb 19, 2014 at 8:16 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> On 2/19/2014 1:08 AM, Sascha Hauer wrote:
->>>> On Tue, Feb 18, 2014 at 02:44:15PM -0800, Tim Bird wrote:
->>>>> I'm not in favor of separating the device tree information from the kernel.
->>>>>
->>>>> If we switch, then whatever synchronization issues other projects
->>>>> are having now with synching with the device tree info from the kernel will
->>>>> just then become the problem of the kernel developers, who will then
->>>>> have to sync with the device tree info from another repository.  If the
->>>>> sync issues can't be solved now for them, why or how would it be solved
->>>>> post-separation for us?  (It sounds like a zero-sum game of pain transfer
->>>>> to me.)
->>>>>
->>>>> I'm relatively unfamiliar with the arguments.  Can someone provide
->>>>> a brief list of reasons this is needed, and how the inconvenience to Linux
->>>>> kernel developers will be minimized, should it proceed?
->>>>
->>>
->>>
->>>> One of the reasons for doing devicetrees is to separate the hardware
->>>> description from the code so that:
->>>> - Other OSes (and bootloaders) can use the same description to start on
->>>>   a given hardware
->>>> - A generic Kernel can be started on any hardware
->>>> - A hardware describes itself, makes itself more introspecitve so we can
->>>>   go away from very specialized kernels
->>>
->>> Tim knows this ^^^^.  He was asking for the arguments for moving dts files
->>> out of the linux kernel source tree.
->>
->> We've made the decision that devicetree bindings need to be treated as
->> ABI, but as long as the .dts files live in the kernel there will
->> always be the temptation to just tweak things in lock-step and nobody
->> will notice. Splitting the files out gives that extra push to think
->> about whether changes to a binding will backwards compatible with a
->> tree that doesn't have those changes because the chances are a lot
->> higher that someone will hit that combination.
->>
->> The other argument is shared source between
->> BSD/U-Boot/Barebox/Linux/etc. Until we have a separate .dts repo there
->> is no good way to share the database of hardware descriptions.
+Hi Grant,
+
+I observe the following boot failure with today's (next-20140220) linux-next
+tree on Exynos based boards with the default exynos_defconfig.
+
+Uncompressing Linux... done, booting the kernel.
+[    0.000000] Booting Linux on physical CPU 0x900
+[    0.000000] Linux version 3.14.0-rc3-next-20140220 (sachin@linaro)
+(gcc version 4.8.2 20130805 (prerelease) (crosstool-NG linaro-1.
+13.1-4.8-2013.08 - Linaro GCC 2013.08) ) #1132 SMP PREEMPT Thu Feb 20
+13:49:27 IST 2014
+[    0.000000] CPU: ARMv7 Processor [412fc091] revision 1 (ARMv7), cr=10c5387d
+[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing
+instruction cache
+[    0.000000] Machine model: Insignal Origen evaluation board based
+on Exynos4210
+[    0.000000] bootconsole [earlycon0] enabled
+[    0.000000] Memory policy: Data cache writealloc
+[    0.000000] CPU EXYNOS4210 (id 0x43210011)
+[    0.000000] On node 0 totalpages: 258048
+[    0.000000]   Normal zone: 1520 pages used for memmap
+[    0.000000]   Normal zone: 0 pages reserved
+[    0.000000]   Normal zone: 190464 pages, LIFO batch:31
+[    0.000000]   HighMem zone: 528 pages used for memmap
+[    0.000000]   HighMem zone: 67584 pages, LIFO batch:15
+[    0.000000] BUG: spinlock recursion on CPU#0, swapper/0
+[    0.000000]  lock: devtree_lock+0x0/0x10, .magic: dead4ead, .owner:
+swapper/0, .owner_cpu: 0
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted
+3.14.0-rc3-next-20140220 #1132
+[    0.000000] [<c0013e9c>] (unwind_backtrace) from [<c0011250>]
+(show_stack+0x10/0x14)
+[    0.000000] [<c0011250>] (show_stack) from [<c0386740>]
+(dump_stack+0x7c/0xbc)
+[    0.000000] [<c0386740>] (dump_stack) from [<c005501c>]
+(do_raw_spin_lock+0x188/0x18c)
+[    0.000000] [<c005501c>] (do_raw_spin_lock) from [<c038b614>]
+(_raw_spin_lock_irqsave+0x20/0x28)
+[    0.000000] [<c038b614>] (_raw_spin_lock_irqsave) from [<c02de37c>]
+(of_find_property+0x20/0x4c)
+[    0.000000] [<c02de37c>] (of_find_property) from [<c02df110>]
+(__of_device_is_compatible+0xb4/0x110)
+[    0.000000] [<c02df110>] (__of_device_is_compatible) from
+[<c02df22c>] (of_find_compatible_node+0x4c/0x7c)
+[    0.000000] [<c02df22c>] (of_find_compatible_node) from
+[<c04cedf4>] (exynos_firmware_init+0x18/0x7c)
+[    0.000000] [<c04cedf4>] (exynos_firmware_init) from [<c04caef0>]
+(setup_arch+0x860/0x898)
+[    0.000000] [<c04caef0>] (setup_arch) from [<c04c7820>]
+(start_kernel+0x80/0x3dc)
+[    0.000000] [<c04c7820>] (start_kernel) from [<40008074>] (0x40008074)
+[    0.000000] BUG: spinlock lockup suspected on CPU#0, swapper/0
+[    0.000000]  lock: devtree_lock+0x0/0x10, .magic: dead4ead, .owner:
+swapper/0, .owner_cpu: 0
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted
+3.14.0-rc3-next-20140220 #1132
+[    0.000000] [<c0013e9c>] (unwind_backtrace) from [<c0011250>]
+(show_stack+0x10/0x14)
+[    0.000000] [<c0011250>] (show_stack) from [<c0386740>]
+(dump_stack+0x7c/0xbc)
+[    0.000000] [<c0386740>] (dump_stack) from [<c0054fac>]
+(do_raw_spin_lock+0x118/0x18c)
+[    0.000000] [<c0054fac>] (do_raw_spin_lock) from [<c038b614>]
+(_raw_spin_lock_irqsave+0x20/0x28)
+[    0.000000] [<c038b614>] (_raw_spin_lock_irqsave) from [<c02de37c>]
+(of_find_property+0x20/0x4c)
+[    0.000000] [<c02de37c>] (of_find_property) from [<c02df110>]
+(__of_device_is_compatible+0xb4/0x110)
+[    0.000000] [<c02df110>] (__of_device_is_compatible) from
+[<c02df22c>] (of_find_compatible_node+0x4c/0x7c)
+[    0.000000] [<c02df22c>] (of_find_compatible_node) from
+[<c04cedf4>] (exynos_firmware_init+0x18/0x7c)
+[    0.000000] [<c04cedf4>] (exynos_firmware_init) from [<c04caef0>]
+(setup_arch+0x860/0x898)
+[    0.000000] [<c04caef0>] (setup_arch) from [<c04c7820>]
+(start_kernel+0x80/0x3dc)
+[    0.000000] [<c04c7820>] (start_kernel) from [<40008074>] (0x40008074)
+
+Regards,
+Sachin
+
+
+
+On 19 February 2014 19:44, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Hi all,
 >
-> We could provide an easy export (see below).  What do you think?
-
-Ian Campbell is already maintaining an export tree as a staging area
-for an eventual split. He's had it up and running for almost a year
-now:
-
-http://xenbits.xen.org/gitweb/?p=people/ianc/device-tree-rebasing.git
-
-g.
+> I've taken Kevin's latest rework and done even more rework on it. :-) I
+> didn't quite like how it was looking so I rolled his scoring code
+> directly into __of_device_is_compatible() so that the function always
+> returns a score in a way that is still compatible with the existing
+> users (ie. non-zero == successful match). This eliminates the need for a
+> separate pscore argument and it also let me roll the type and name
+> checks into the same function. I'm a lot happier with it overall and it
+> makes for a slightly smaller number of lines of code changed. Please
+> take a look and give it a spin. This is basically a bug fix so I'll need
+> to push it out to Linus in the near future.
+>
+> Acks and Tested-bys would be particularly appreciated.
+>
+> Thanks,
+> g.
+>
+> Kevin Hao (2):
+>         Revert "of: search the best compatible match first in __of_match_node()"
+>         of: reimplement the matching method for __of_match_node()
+>
+> Grant Likely (2):
+>         of: Move testcase FDT data into drivers/of
+>         of: Add self test for of_match_node()
+>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
