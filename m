@@ -1,50 +1,102 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: devicetree repository separation/migration
-Date: Thu, 20 Feb 2014 11:39:16 +0000
-Message-ID: <20140220113916.A7C09C4050F@trevor.secretlab.ca>
-References: <20140217180544.GU7862@titan.lakedaemon.net> <20140218155750. GS17250@pengutronix.de> <20140218181854.GB7862@titan.lakedaemon.net> < CAOesGMhvoB7vRf3H1kMaL5+MgZ2gJy=ZVNU0gsXVye9S4YGBOg@mail.gmail.com> < 20140219183221.GO7862@titan.lakedaemon.net> < FC8FF4FE-E9F5-4C17-BF3A-01ADAA1584D7@bsdimp.com> <1392889831.23342.11.camel @kazak.uk.xensource.com>
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392889831.23342.11.camel-ommiHX4a84BXesXXhkcM7miJhflN2719@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Warner Losh <wlosh-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v8 00/14] USB Host support for OMAP5 uEVM
+Date: Thu, 20 Feb 2014 13:39:55 +0200
+Message-ID: <1392896409-5101-1-git-send-email-rogerq@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: tony@atomide.com, bcousson@baylibre.com, lee.jones@linaro.org
+Cc: nm@ti.com, devicetree@vger.kernel.org, khilman@linaro.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 20 Feb 2014 09:50:31 +0000, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org> wrote:
-> On Wed, 2014-02-19 at 13:23 -0700, Warner Losh wrote:
-> > On Feb 19, 2014, at 11:32 AM, Jason Cooper wrote:
-> > 
-> > > On Tue, Feb 18, 2014 at 11:47:56AM -0800, Olof Johansson wrote:
-> > >> On Tue, Feb 18, 2014 at 10:18 AM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
-> > >> I think we have two options:
-> > >> 
-> > >> 1. Bring out everything in the current kernel repo to a separate one,
-> > >> but do it my mirroring over. Changes go into the kernel repo first and
-> > >> then comes over to this one, but other projects can mirror the
-> > >> standalone repo without downloading a whole kernel tree.
-> > > 
-> > > I prefer this one.  Assuming that a separate repo is mostly agreed upon,
-> > > this allows us to provide the tree in an easily digestible way without
-> > > impacting the current workflow.
-> > > 
-> > > Also, if it works for the other projects, no one says we have to move
-> > > beyond this step.
-> > 
-> > I just joined this list...  What's the scope of what would move into the new
-> > repo? The dts files with the binding docs, or also the code to implement
-> > those bindings?
-> 
-> Just the dts(i) and Bindings docs, not the code.
-> 
-> e.g. something like
-> http://xenbits.xen.org/gitweb/?p=people/ianc/device-tree-rebasing.git
-> would be the ultimate goal.
+Hi Benoit, Tony & Lee,
 
-And schemas files when we have them.
+This patchset brings up USB Host ports and Ethernet port on
+the OMAP5 uEVM board.
 
-g.
+It also does some cleanup with respect to DT clock binding
+for the mfd/omap-usb-host driver.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please queue these for -next.
+
+Tested on:
+ - OMAP5 uEVM
+ - Pandaboard ES Rev. B1
+ - Beagleboard-XM Rev C2 (DT + Legacy)
+ - Beagleboard Rev C4 (DT + Legacy)
+
+Changelog:
+
+v8:
+- Addressed review comments and split patch
+  "mfd: omap-usb-host: Get clocks based on hardware revision"
+- Removed unnecessary usb host dummy clocks on OMAP3
+- Removed unnecessary clock alias "ehci_logic_fck" for OMAP3
+- Rebased on 3.14-rc3
+
+v7:
+- Rebased on 3.14-rc2
+- Removed incompatible ids from DT files and examples
+
+v6:
+- Initialized clocks to -ENODEV and split patch 3.
+
+v5:
+- Expose all clocks in the DT binding document for mfd:omap-usb-host
+and mfd:omap-usb-tll
+
+v4:
+- Updated DT binding document for clock binding
+
+v3:
+- Rebased on top of 3.13-rc7
+
+cheers,
+-roger
+
+---
+Roger Quadros (14):
+  mfd: omap-usb-host: Get clocks based on hardware revision
+  mfd: omap-usb-host: Always fail on clk_get() error
+  mfd: omap-usb-host: Use clock names as per function for reference
+    clocks
+  mfd: omap-usb-host: Update DT clock binding information
+  mfd: omap-usb-tll: Update DT clock binding information
+  CLK: TI: OMAP3: Get rid of unused USB Host dummy clocks
+  ARM: OMAP3: hwmod data: Remove optional clock from usb_host_hs module
+  ARM: dts: omap4: Update omap-usb-host node
+  ARM: dts: omap5: Update omap-usb-host node
+  ARM: dts: omap4-panda: Provide USB PHY clock
+  ARM: dts: omap5-uevm: Provide USB PHY clock
+  ARM: OMAP2+: Remove legacy_init_ehci_clk()
+  ARM: dts: OMAP2+: Get rid of incompatible ids for USB host nodes
+  usb: omap: dts: Update DT binding example usage
+
+ .../devicetree/bindings/mfd/omap-usb-host.txt      |  23 ++++
+ .../devicetree/bindings/mfd/omap-usb-tll.txt       |  10 ++
+ .../devicetree/bindings/usb/ehci-omap.txt          |   2 +-
+ .../devicetree/bindings/usb/ohci-omap3.txt         |   2 +-
+ arch/arm/boot/dts/omap3.dtsi                       |   4 +-
+ arch/arm/boot/dts/omap4-panda-common.dtsi          |   8 +-
+ arch/arm/boot/dts/omap4.dtsi                       |  10 +-
+ arch/arm/boot/dts/omap5-uevm.dts                   |   8 +-
+ arch/arm/boot/dts/omap5.dtsi                       |  10 +-
+ arch/arm/mach-omap2/cclock3xxx_data.c              |   4 -
+ arch/arm/mach-omap2/omap_hwmod_3xxx_data.c         |   6 --
+ arch/arm/mach-omap2/pdata-quirks.c                 |  16 ---
+ drivers/clk/ti/clk-3xxx.c                          |   4 -
+ drivers/mfd/omap-usb-host.c                        | 116 ++++++++++++++-------
+ 14 files changed, 135 insertions(+), 88 deletions(-)
+
+-- 
+1.8.3.2
