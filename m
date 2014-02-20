@@ -1,50 +1,76 @@
-From: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Subject: Re: devicetree repository separation/migration
-Date: Thu, 20 Feb 2014 09:40:14 +0000
-Message-ID: <1392889214.23342.3.camel@kazak.uk.xensource.com>
-References: <20140217180544.GU7862@titan.lakedaemon.net>
-	 <20140218155750.GS17250@pengutronix.de>
-	 <20140218181854.GB7862@titan.lakedaemon.net>
-	 <CAOesGMhvoB7vRf3H1kMaL5+MgZ2gJy=ZVNU0gsXVye9S4YGBOg@mail.gmail.com>
-	 <CAOesGMi8zJXhfj46CLB-_Kk2s4MY9da46DhMoCtRj=zSUiuOGA@mail.gmail.com>
-	 <CA+bK7J5+n2Se4cLv5WjR5B31ej7FdrGjPcjUULNrhb1UQ7=vmA@mail.gmail.com>
-	 <CAL_JsqJG+OXbT7sMiHV2dCx+nf--RidL8MmMd=dy6_gAa0yYcg@mail.gmail.com>
-	 <CAOesGMiHOwSYTCUaptacN=_pbXnObU5gqpxQHQ+kRTaW-ow3rA@mail.gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 4/4] Documentation: devicetree: add bindings
+ documentation for bcm63xx-uart
+Date: Thu, 20 Feb 2014 09:45:53 +0000
+Message-ID: <20140220094553.GA32707@e106331-lin.cambridge.arm.com>
+References: <1392852167-26243-1-git-send-email-f.fainelli@gmail.com>
+ <1392852167-26243-5-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMiHOwSYTCUaptacN=_pbXnObU5gqpxQHQ+kRTaW-ow3rA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1392852167-26243-5-git-send-email-f.fainelli@gmail.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mbizon@freebox.fr" <mbizon@freebox.fr>, "jogo@openwrt.org" <jogo@openwrt.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-02-19 at 13:20 -0800, Olof Johansson wrote:
-> On Wed, Feb 19, 2014 at 1:12 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > One way to minimize the inconvenience is keep versioning and dev
-> > cycles in sync with the kernel. We could also start doing things to
-> > align the kernel workflow with how things will work when we do have a
-> > separate repository.
+On Wed, Feb 19, 2014 at 11:22:47PM +0000, Florian Fainelli wrote:
+> Add the Device Tree binding documentation for the non-standard BCM63xx
+> UART hardware block found in the BCM63xx DSL SoCs.
 > 
-> I don't think aligning development cycles is what we want most here it
-> might be useful for us in Linux but it'll make things difficult for
-> other projects since they're not aware of our release cycles. The
-> device tree bindings and DT contents in that repo should be "always
-> stable", i.e. no merge window / rc concept. As soon as something goes
-> in it's live, and from then out only fixes to the DTS files (or
-> appending the binding).
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  .../devicetree/bindings/serial/bcm63xx-uart.txt    | 24 ++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/serial/bcm63xx-uart.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/bcm63xx-uart.txt b/Documentation/devicetree/bindings/serial/bcm63xx-uart.txt
+> new file mode 100644
+> index 0000000..829441d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/bcm63xx-uart.txt
+> @@ -0,0 +1,24 @@
+> +Broadcom BCM63xx UART: Non standard UART used in the Broadcom BCM63xx DSL SoCs
+> +
+> +Required properties:
+> +- compatible: must be "brcm,bcm63xx-uart"
+> +- reg: offset and length of the register set for the device
+> +- interrupts: device interrupt
+> +- clocks: a phandle to the functional clock node
+> +- clock-names: must be "periph"
 
-I agree, but I also think it would be useful to draw the occasional line
-in the sand and do e.g. monthly or quarterly tagged releases e.g. for
-distros who want a tarball package to work off.
+Minor issues: clocks aren't just phandles, and as the clock is expected
+to be named it would be nice to define clocks in terms of clock-names:
 
-There's no reason for that to be tied to any other projects dev cycle
-though.
+- clocks: a list of phandles + clock-specifiers, one for each entry in
+  clock-names
+- clock-names: should contain "periph" for the functional clock
 
-Ian.
+Thanks,
+Mark.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +Note: each UART port must have an alias correctly numbered in the "aliases"
+> +node, e.g:
+> +
+> +serial0: uart@600 {
+> +	compatible = "brcm,bcm63xx-uart";
+> +	reg = <0x600 0x1b>;
+> +	interrupts = <GIC_SPI 32 0>;
+> +	clocks = <&periph_clk>;
+> +	clock-names = "periph";
+> +};
+> +
+> +aliases {
+> +	uart0 = &serial0;
+> +	uart1 = &serial1;
+> +};
+> -- 
+> 1.8.3.2
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
