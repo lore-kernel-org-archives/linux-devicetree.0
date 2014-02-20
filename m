@@ -1,40 +1,38 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH 1/2] clk: ti: am335x: remove unecessary cpu0 clk node
-Date: Thu, 20 Feb 2014 18:43:44 +0200
-Message-ID: <530630C0.6050401@ti.com>
-References: <1391019557-22313-1-git-send-email-nm@ti.com> <1391019557-22313-2-git-send-email-nm@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1391019557-22313-2-git-send-email-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Mike Turquette <mturquette@linaro.org>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: [PATCH RESEND] ARM: dts: qcom-msm8974: Add RNG device tree node
+Date: Thu, 20 Feb 2014 18:48:52 +0200
+Message-ID: <1392914932-23145-1-git-send-email-svarbanov@mm-sol.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Cc: Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, David Brown <davidb@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Stanimir Varbanov <svarbanov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/29/2014 08:19 PM, Nishanth Menon wrote:
-> cpu0 clock node has no functionality, since cpufreq-cpu0 is already
-> capable of picking up the clock from dts.
->
-> Signed-off-by: Nishanth Menon <nm@ti.com>
+Add the necessary DT node to probe the rng driver on
+msm8974 platforms.
 
-Acked-by: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+Acked-by: Stephen Boyd <sboyd@codeaurora.org>
+---
+ arch/arm/boot/dts/qcom-msm8974.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-> ---
->   drivers/clk/ti/clk-33xx.c |    1 -
->   1 file changed, 1 deletion(-)
->
-> diff --git a/drivers/clk/ti/clk-33xx.c b/drivers/clk/ti/clk-33xx.c
-> index 776ee45..028b337 100644
-> --- a/drivers/clk/ti/clk-33xx.c
-> +++ b/drivers/clk/ti/clk-33xx.c
-> @@ -34,7 +34,6 @@ static struct ti_dt_clk am33xx_clks[] = {
->   	DT_CLK(NULL, "dpll_core_m5_ck", "dpll_core_m5_ck"),
->   	DT_CLK(NULL, "dpll_core_m6_ck", "dpll_core_m6_ck"),
->   	DT_CLK(NULL, "dpll_mpu_ck", "dpll_mpu_ck"),
-> -	DT_CLK("cpu0", NULL, "dpll_mpu_ck"),
->   	DT_CLK(NULL, "dpll_mpu_m2_ck", "dpll_mpu_m2_ck"),
->   	DT_CLK(NULL, "dpll_ddr_ck", "dpll_ddr_ck"),
->   	DT_CLK(NULL, "dpll_ddr_m2_ck", "dpll_ddr_m2_ck"),
->
+diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+index 9e5dadb101eb..ada0e8216c22 100644
+--- a/arch/arm/boot/dts/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+@@ -117,5 +117,12 @@
+ 			clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>, <&gcc GCC_BLSP1_AHB_CLK>;
+ 			clock-names = "core", "iface";
+ 		};
++
++		rng@f9bff000 {
++			compatible = "qcom,prng";
++			reg = <0xf9bff000 0x200>;
++			clocks = <&gcc GCC_PRNG_AHB_CLK>;
++			clock-names = "core";
++		};
+ 	};
+ };
+-- 
+1.8.4.4
