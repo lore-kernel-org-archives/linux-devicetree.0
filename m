@@ -1,42 +1,158 @@
-From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4 1/7 fixup] drivers: of: add initialization code for reserved
- memory (fixup)
-Date: Thu, 20 Feb 2014 13:40:08 +0100
-Message-ID: <1392900008-8331-1-git-send-email-m.szyprowski@samsung.com>
-References: <1392893567-31623-2-git-send-email-m.szyprowski@samsung.com>
+From: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] memory: ti-aemif: add bindings for AEMIF driver
+Date: Thu, 20 Feb 2014 14:44:08 +0200
+Message-ID: <5305F898.6020401@ti.com>
+References: <1392817210-14312-1-git-send-email-ivan.khoronzhuk@ti.com> <1392817210-14312-3-git-send-email-ivan.khoronzhuk@ti.com> <20140219181152.GG25079@e106331-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1392893567-31623-2-git-send-email-m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20140219181152.GG25079-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "santosh.shilimkar-l0cyMroinI0@public.gmane.org" <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, "galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "grygorii.strashko-l0cyMroinI0@public.gmane.org" <grygorii.strashko-l0cyMroinI0@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "nsekhar-l0cyMroinI0@public.gmane.org" <nsekhar-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Rename 'align' property to 'alignment' to match documentation.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- drivers/of/of_reserved_mem.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 02/19/2014 08:11 PM, Mark Rutland wrote:
+> On Wed, Feb 19, 2014 at 01:40:10PM +0000, Ivan Khoronzhuk wrote:
+>> Add bindings for TI Async External Memory Interface (AEMIF) controller.
+>>
+>> The Async External Memory Interface (EMIF16/AEMIF) controller is intended to
+>> provide a glue-less interface to a variety of asynchronous memory devices like
+>> ASRA M, NOR and NAND memory. A total of 256M bytes of any of these memories
+>> can be accessed via 4 chip selects with 64M byte access per chip select.
+>>
+>> We are not encoding CS number in reg property, it's memory partition number.
+>> The CS number is encoded for Davinci NAND node using standalone property
+>> "ti,davinci-chipselect" and we need to provide two memory ranges to it,
+>> as result we can't encode CS number in "reg" for AEMIF child devices
+>> (NAND/NOR/etc), as it will break bindings compatibility.
+>>
+>> In this patch, NAND node is used just as an example of child node.
+>>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+>> ---
+>>   .../bindings/memory-controllers/ti-aemif.txt       | 210 +++++++++++++++++++++
+>>   1 file changed, 210 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt
+> [...]
+>
+>> +- ranges:		Contains memory regions. There are two types of
+>> +			ranges/partitions:
+>> +			- CS-specific partition/range. If continuous, must be
+>> +			set up to reflect the memory layout for 4 chipselects,
+>> +			if not then additional range/partition can be added and
+>> +			child device can select the proper one.
+>> +			- control partition which is common for all CS
+>> +			interfaces.
+> This really doesn't sound anything like the typical meaning of ranges on
+> a bus.
+>
+> Why isn't this information encoded in reg properties on the child nodes?
+>
+> [...]
 
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index cacf04810b87..49cf430a9e2a 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -112,10 +112,10 @@ __reserved_mem_alloc_size(unsigned long node, const char *uname,
- 
- 	nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
- 
--	prop = of_get_flat_dt_prop(node, "align", &len);
-+	prop = of_get_flat_dt_prop(node, "alignment", &len);
- 	if (prop) {
- 		if (len != dt_root_addr_cells * sizeof(__be32)) {
--			pr_err("Reserved memory: invalid align property in '%s' node.\n",
-+			pr_err("Reserved memory: invalid alignment property in '%s' node.\n",
- 				uname);
- 			return -EINVAL;
- 		}
+Note that we do not introduce NAND device bindings here.
+The Davinci NAND bindings was introduced and accepted more then one year ago.
+And the CS number is encoded for Davinci NAND node using standalone property
+"ti,davinci-chipselect" and we need to provide two memory ranges to it,
+as result we can't encode CS number in "reg" for AEMIF child devices (NAND/NOR/etc),
+as it will break bindings compatibility.
+
+In this document, NAND node is used just as an example of child node.
+
+>> +- ti,cs-ss:		enable/disable select strobe mode
+>> +				In select strobe mode chip select behaves as
+>> +				the strobe and is active only during the strobe
+>> +				period. If present then enable.
+>> +
+>> +- ti,cs-ew:		enable/disable extended wait mode
+>> +				if set, the controller monitors the EMIFWAIT pin
+>> +				mapped to that chip select to determine if the
+>> +				device wants to extend the strobe period. If
+>> +				present then enable.
+> When would you have these two in the DT and when wouldn't you? Why can't
+> the driver decide?
+
+These are properties of cs node, not the driver itself.
+The driver cannot know what child device you are going to attach to cs node
+, as result it cannot decide what settings you are using for particular 
+cs node.
+
+> These names are also opaque. We can clearly do better.
+
+I propose the following names?:
+
+ti,cs-ss  --> ti,cs-select-strobe-mode
+ti,cs-ew --> ti,cs-extended-waite-mode
+
+Are you OK with it?
+
+>> +
+>> +- ti,cs-ta:		minimum turn around time, ns
+>> +				Time between the end of one asynchronous memory
+>> +				access and the start of another asynchronous
+>> +				memory access. This delay is not incurred
+>> +				between a read followed by read or a write
+>> +				followed by a write to same chip select.
+> The name is opaque. How about ti,min-turnaround-time-ns ?
+
+I like without -ns suffix and with cs- prefix:
+ti,cs-ta --> ti,cs-min-turnaround-time
+
+Is it OK?
+
+>> +
+>> +- ti,cs-rsetup:		read setup width, ns
+>> +				Time between the beginning of a memory cycle
+>> +				and the activation of read strobe.
+>> +				Minimum value is 1 (0 treated as 1).
+>> +
+>> +- ti,cs-rstobe:		read strobe width, ns
+>> +				Time between the activation and deactivation of
+>> +				the read strobe.
+>> +				Minimum value is 1 (0 treated as 1).
+>> +
+>> +- ti,cs-rhold:		read hold width, ns
+>> +				Time between the deactivation of the read
+>> +				strobe and the end of the cycle (which may be
+>> +				either an address change or the deactivation of
+>> +				the chip select signal.
+>> +				Minimum value is 1 (0 treated as 1).
+>> +
+>> +- ti,cs-wsetup:		write setup width, ns
+>> +				Time between the beginning of a memory cycle
+>> +				and the activation of write strobe.
+>> +				Minimum value is 1 (0 treated as 1).
+>> +
+>> +- ti,cs-wstrobe:	write strobe width, ns
+>> +				Time between the activation and deactivation of
+>> +				the write strobe.
+>> +				Minimum value is 1 (0 treated as 1).
+>> +
+>> +- ti,cs-whold:		write hold width, ns
+>> +				Time between the deactivation of the write
+>> +				strobe and the end of the cycle (which may be
+>> +				either an address change or the deactivation of
+>> +				the chip select signal.
+>> +				Minimum value is 1 (0 treated as 1).
+> Likewise I think these can be given more descriptive names.
+
+Ok. How about:
+
+ti,cs-rsetup --> ti,cs-read-setup-time
+ti,cs-rstobe --> ti,cs-read-strobe-time
+ti,cs-rhold  --> ti,cs-read-hold-time
+ti,cs-wsetup --> ti,cs-write-setup-time
+ti,cs-wstrobe --> ti,cs-write-strobe-time
+ti,cs-whold --> ti,cs-write-hold-time
+
+Thanks
+
 -- 
-1.7.9.5
+Regards,
+Ivan Khoronzhuk
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
