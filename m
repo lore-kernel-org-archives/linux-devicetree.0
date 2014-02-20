@@ -1,99 +1,196 @@
-From: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 07/10] spi: sh-msiof: Add support for R-Car H2 and M2
-Date: Fri, 21 Feb 2014 00:41:18 +0900
-Message-ID: <CANqRtoQVJzEgo_AdVxrPSRUY6ocyPaQ=RKQJyxoExDrfYxiJ3w@mail.gmail.com>
-References: <1392907389-21798-1-git-send-email-geert@linux-m68k.org>
-	<1392907389-21798-8-git-send-email-geert@linux-m68k.org>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Subject: Re: [PATCH v5 2/2] memory: ti-aemif: add bindings for AEMIF driver
+Date: Thu, 20 Feb 2014 17:49:49 +0200
+Message-ID: <5306241D.1030108@ti.com>
+References: <1392817210-14312-1-git-send-email-ivan.khoronzhuk@ti.com>	<1392817210-14312-3-git-send-email-ivan.khoronzhuk@ti.com>	<20140219181152.GG25079@e106331-lin.cambridge.arm.com>	<5305F898.6020401@ti.com> <CAL_JsqJ5hoQ3vWaQTo8--jiPPQ64OW_b4zKTe7aPLXN0td4DrA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392907389-21798-8-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Takashi Yoshii <takasi-y-nDL5PR/MsHhHfZP73Gtkiw@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJ5hoQ3vWaQTo8--jiPPQ64OW_b4zKTe7aPLXN0td4DrA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "grygorii.strashko@ti.com" <grygorii.strashko@ti.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "nsekhar@ti.com" <nsekhar@ti.com>, "galak@kernel.crashing.org" <galak@kernel.crashing.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "santosh.shilimkar@ti.com" <santosh.shilimkar@ti.com>, "rob@landley.net" <rob@landley.net>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lis>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 20, 2014 at 11:43 PM, Geert Uytterhoeven
-<geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
-> From: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
->
-> Add support for the MSIOF variant in the R-Car H2 (r8a7790) and M2
-> (r8a7791) SoCs.
->
-> Binding documentation:
->   - Add future-proof "renesas,msiof-<soctype>" compatible values,
->   - Add example bindings.
->
-> Implementation:
->   - MSIOF on R-Car H2 and M2 requires the transmission of dummy data if
->     data is being received only (cfr. "Set SICTR.TSCKE to 1" and "Write
->     dummy transmission data to SITFDR" in paragraph "Transmit and Receive
->     Procedures" of the Hardware User's Manual).
->   - As RX depends on TX, MSIOF on R-Car H2 and M2 also lacks the RSCR
->     register (Receive Clock Select Register), and some bits in the RMDR1
->     (Receive Mode Register 1) and TMDR2 (Transmit Mode Register 2)
->     registers.
->   - Use the recently introduced SPI_MASTER_MUST_TX flag to enable support
->     for dummy transmission in the SPI core, and to differentiate from other
->     MSIOF implementations in code paths that need this.
->   - New DT compatible values ("renesas,msiof-r8a7790" and
->     "renesas,msiof-r8a7791") are added, as well as new platform device
->     names ("spi_r8a7790_msiof" and "spi_r8a7791_msiof").
->   - Hardware features are indicated using a new struct sh_msiof_chipdata,
->     which is used for both DT and legacy binding. For now this contains the
->     SPI master flags only.
->
-> This is loosely based on a set of patches from Takashi Yoshii
-> <takasi-y-nDL5PR/MsHhHfZP73Gtkiw@public.gmane.org>.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> Cc: Takashi Yoshii <takasi-y-nDL5PR/MsHhHfZP73Gtkiw@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  Documentation/devicetree/bindings/spi/sh-msiof.txt |   21 +++++++-
->  drivers/spi/spi-sh-msiof.c                         |   57 ++++++++++++++++----
->  2 files changed, 66 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/spi/spi-sh-msiof.c b/drivers/spi/spi-sh-msiof.c
-> index 92515c1ececa..31624fb4997d 100644
-> --- a/drivers/spi/spi-sh-msiof.c
-> +++ b/drivers/spi/spi-sh-msiof.c
-> @@ -659,6 +671,23 @@ static u32 sh_msiof_spi_txrx_word(struct spi_device *spi, unsigned nsecs,
->  }
->
->  #ifdef CONFIG_OF
-> +static const struct sh_msiof_chipdata sh_data = {
-> +       .master_flags = 0,
-> +};
-> +
-> +static const struct sh_msiof_chipdata r8a779x_data = {
-> +       .master_flags = SPI_MASTER_MUST_TX,
-> +};
-> +
-> +static const struct of_device_id sh_msiof_match[] = {
-> +       { .compatible = "renesas,sh-msiof",        .data = &sh_data },
-> +       { .compatible = "renesas,sh-mobile-msiof", .data = &sh_data },
-> +       { .compatible = "renesas,msiof-r8a7790",   .data = &r8a779x_data },
-> +       { .compatible = "renesas,msiof-r8a7791",   .data = &r8a779x_data },
-> +       {},
-> +};
-> +MODULE_DEVICE_TABLE(of, sh_msiof_match);
 
-Hi Geert,
+On 02/20/2014 03:44 PM, Rob Herring wrote:
+> On Thu, Feb 20, 2014 at 6:44 AM, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com> wrote:
+>> On 02/19/2014 08:11 PM, Mark Rutland wrote:
+>>> On Wed, Feb 19, 2014 at 01:40:10PM +0000, Ivan Khoronzhuk wrote:
+>>>> Add bindings for TI Async External Memory Interface (AEMIF) controller.
+>>>>
+>>>> The Async External Memory Interface (EMIF16/AEMIF) controller is intended
+>>>> to
+>>>> provide a glue-less interface to a variety of asynchronous memory devices
+>>>> like
+>>>> ASRA M, NOR and NAND memory. A total of 256M bytes of any of these
+>>>> memories
+>>>> can be accessed via 4 chip selects with 64M byte access per chip select.
+>>>>
+>>>> We are not encoding CS number in reg property, it's memory partition
+>>>> number.
+>>>> The CS number is encoded for Davinci NAND node using standalone property
+>>>> "ti,davinci-chipselect" and we need to provide two memory ranges to it,
+>>>> as result we can't encode CS number in "reg" for AEMIF child devices
+>>>> (NAND/NOR/etc), as it will break bindings compatibility.
+>>>>
+>>>> In this patch, NAND node is used just as an example of child node.
+>>>>
+>>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+>>>> ---
+>>>>    .../bindings/memory-controllers/ti-aemif.txt       | 210
+>>>> +++++++++++++++++++++
+>>>>    1 file changed, 210 insertions(+)
+>>>>    create mode 100644
+>>>> Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt
+>>> [...]
+>>>
+>>>> +- ranges:              Contains memory regions. There are two types of
+>>>> +                       ranges/partitions:
+>>>> +                       - CS-specific partition/range. If continuous,
+>>>> must be
+>>>> +                       set up to reflect the memory layout for 4
+>>>> chipselects,
+>>>> +                       if not then additional range/partition can be
+>>>> added and
+>>>> +                       child device can select the proper one.
+>>>> +                       - control partition which is common for all CS
+>>>> +                       interfaces.
+>>> This really doesn't sound anything like the typical meaning of ranges on
+>>> a bus.
+>>>
+>>> Why isn't this information encoded in reg properties on the child nodes?
+>>>
+>>> [...]
+>>
+>> Note that we do not introduce NAND device bindings here.
+>> The Davinci NAND bindings was introduced and accepted more then one year
+>> ago.
+>> And the CS number is encoded for Davinci NAND node using standalone property
+>>
+>> "ti,davinci-chipselect" and we need to provide two memory ranges to it,
+>> as result we can't encode CS number in "reg" for AEMIF child devices
+>> (NAND/NOR/etc),
+>> as it will break bindings compatibility.
+>>
+>> In this document, NAND node is used just as an example of child node.
+>>
+>>
+>>>> +- ti,cs-ss:            enable/disable select strobe mode
+>>>> +                               In select strobe mode chip select behaves
+>>>> as
+>>>> +                               the strobe and is active only during the
+>>>> strobe
+>>>> +                               period. If present then enable.
+>>>> +
+>>>> +- ti,cs-ew:            enable/disable extended wait mode
+>>>> +                               if set, the controller monitors the
+>>>> EMIFWAIT pin
+>>>> +                               mapped to that chip select to determine
+>>>> if the
+>>>> +                               device wants to extend the strobe period.
+>>>> If
+>>>> +                               present then enable.
+>>> When would you have these two in the DT and when wouldn't you? Why can't
+>>> the driver decide?
+>>
+>> These are properties of cs node, not the driver itself.
+>> The driver cannot know what child device you are going to attach to cs node
+>> , as result it cannot decide what settings you are using for particular cs
+>> node.
+>>
+>>
+>>> These names are also opaque. We can clearly do better.
+>>
+>> I propose the following names?:
+>>
+>> ti,cs-ss  --> ti,cs-select-strobe-mode
+>> ti,cs-ew --> ti,cs-extended-waite-mode
+>>
+>> Are you OK with it?
+>>
+>>
+>>>> +
+>>>> +- ti,cs-ta:            minimum turn around time, ns
+>>>> +                               Time between the end of one asynchronous
+>>>> memory
+>>>> +                               access and the start of another
+>>>> asynchronous
+>>>> +                               memory access. This delay is not incurred
+>>>> +                               between a read followed by read or a
+>>>> write
+>>>> +                               followed by a write to same chip select.
+>>> The name is opaque. How about ti,min-turnaround-time-ns ?
+>>
+>> I like without -ns suffix and with cs- prefix:
+>> ti,cs-ta --> ti,cs-min-turnaround-time
+>>
+>> Is it OK?
+>>
+>>
+>>>> +
+>>>> +- ti,cs-rsetup:                read setup width, ns
+>>>> +                               Time between the beginning of a memory
+>>>> cycle
+>>>> +                               and the activation of read strobe.
+>>>> +                               Minimum value is 1 (0 treated as 1).
+>>>> +
+>>>> +- ti,cs-rstobe:                read strobe width, ns
+>>>> +                               Time between the activation and
+>>>> deactivation of
+>>>> +                               the read strobe.
+>>>> +                               Minimum value is 1 (0 treated as 1).
+>>>> +
+>>>> +- ti,cs-rhold:         read hold width, ns
+>>>> +                               Time between the deactivation of the read
+>>>> +                               strobe and the end of the cycle (which
+>>>> may be
+>>>> +                               either an address change or the
+>>>> deactivation of
+>>>> +                               the chip select signal.
+>>>> +                               Minimum value is 1 (0 treated as 1).
+>>>> +
+>>>> +- ti,cs-wsetup:                write setup width, ns
+>>>> +                               Time between the beginning of a memory
+>>>> cycle
+>>>> +                               and the activation of write strobe.
+>>>> +                               Minimum value is 1 (0 treated as 1).
+>>>> +
+>>>> +- ti,cs-wstrobe:       write strobe width, ns
+>>>> +                               Time between the activation and
+>>>> deactivation of
+>>>> +                               the write strobe.
+>>>> +                               Minimum value is 1 (0 treated as 1).
+>>>> +
+>>>> +- ti,cs-whold:         write hold width, ns
+>>>> +                               Time between the deactivation of the
+>>>> write
+>>>> +                               strobe and the end of the cycle (which
+>>>> may be
+>>>> +                               either an address change or the
+>>>> deactivation of
+>>>> +                               the chip select signal.
+>>>> +                               Minimum value is 1 (0 treated as 1).
+>>> Likewise I think these can be given more descriptive names.
+>>
+>> Ok. How about:
+>>
+>> ti,cs-rsetup --> ti,cs-read-setup-time
+>> ti,cs-rstobe --> ti,cs-read-strobe-time
+>> ti,cs-rhold  --> ti,cs-read-hold-time
+>> ti,cs-wsetup --> ti,cs-write-setup-time
+>> ti,cs-wstrobe --> ti,cs-write-strobe-time
+>> ti,cs-whold --> ti,cs-write-hold-time
+> Properties that have a unit of measure should have that unit in the
+> name. So replace "time" with "ns".
+>
+> Rob
 
-Thanks for your patches. They all look good in general I think.
+Ok, I will replace
 
-On thing stuck out a bit with the bindings. I can see that you specify
-both fifo size and use the SoC suffix for the r8a7790 and r8a7791
-bindings. Isn't that a bit of redundant information there, if we know
-that the SoC is r8a7790 or r8a7791 then can't we simply put that
-information in r8a779x_data above and perhaps keep the binding
-simpler? Perhaps same thing applies to other properties as well?
+Thanks!
 
-Cheers,
-
-/ magnus
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Ivan Khoronzhuk
