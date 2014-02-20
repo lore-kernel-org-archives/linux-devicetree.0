@@ -1,91 +1,194 @@
 From: Alex Elder <elder@linaro.org>
-Subject: [PATCH 03/12] clk: bcm281xx: change some symbol names
-Date: Wed, 19 Feb 2014 18:12:53 -0600
-Message-ID: <1392855182-21155-4-git-send-email-elder@linaro.org>
+Subject: [PATCH 08/12] clk: bcm281xx: add clock hysteresis support
+Date: Wed, 19 Feb 2014 18:12:58 -0600
+Message-ID: <1392855182-21155-9-git-send-email-elder@linaro.org>
 References: <1392855182-21155-1-git-send-email-elder@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1392855182-21155-1-git-send-email-elder@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: mturquette@linaro.org, bcm@fixthebug.org, mporter@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
-Cc: devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-As I developed the bcm281xx clock code I understood there were
-restrictions on device tree "compatible" strings names, and as a
-result "bcm11351" was used in places despite the part family being
-more properly called "bcm281xx".  This can be a little confusing.
-
-In some cases I went to far and needlessly named things using
-"bcm11351" when that was not necessary.
-
-This patch remedies this.  It renames the symbol used to define the
-"compatible" string (but not its value) so it uses "BCM281XX".
-Similarly, the name names provided to the CLK_OF_DECLARE() macro
-are changed, hoping to minimize the number of places that the
-confusing "11351" string is used.
+Add support for clock gate hysteresis control.  For now, if it's
+defined for a clock, it's enabled.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/clk/bcm/clk-bcm281xx.c |   27 ++++++++++++++++-----------
- 1 file changed, 16 insertions(+), 11 deletions(-)
+ drivers/clk/bcm/clk-kona-setup.c |   30 ++++++++++++++++++++++++++++++
+ drivers/clk/bcm/clk-kona.c       |   33 +++++++++++++++++++++++++++++++++
+ drivers/clk/bcm/clk-kona.h       |   19 +++++++++++++++++++
+ 3 files changed, 82 insertions(+)
 
-diff --git a/drivers/clk/bcm/clk-bcm281xx.c b/drivers/clk/bcm/clk-bcm281xx.c
-index 3c66de6..bb947af 100644
---- a/drivers/clk/bcm/clk-bcm281xx.c
-+++ b/drivers/clk/bcm/clk-bcm281xx.c
-@@ -15,12 +15,17 @@
- #include "clk-kona.h"
- #include "dt-bindings/clock/bcm281xx.h"
+diff --git a/drivers/clk/bcm/clk-kona-setup.c b/drivers/clk/bcm/clk-kona-setup.c
+index 5a49deb..757de19 100644
+--- a/drivers/clk/bcm/clk-kona-setup.c
++++ b/drivers/clk/bcm/clk-kona-setup.c
+@@ -81,6 +81,7 @@ static bool peri_clk_data_offsets_valid(struct kona_clk *bcm_clk)
+ 	struct peri_clk_data *peri;
+ 	struct bcm_clk_policy *policy;
+ 	struct bcm_clk_gate *gate;
++	struct bcm_clk_hyst *hyst;
+ 	struct bcm_clk_div *div;
+ 	struct bcm_clk_sel *sel;
+ 	struct bcm_clk_trig *trig;
+@@ -106,12 +107,25 @@ static bool peri_clk_data_offsets_valid(struct kona_clk *bcm_clk)
+ 	}
  
--/* bcm11351 CCU device tree "compatible" strings */
--#define BCM11351_DT_ROOT_CCU_COMPAT	"brcm,bcm11351-root-ccu"
--#define BCM11351_DT_AON_CCU_COMPAT	"brcm,bcm11351-aon-ccu"
--#define BCM11351_DT_HUB_CCU_COMPAT	"brcm,bcm11351-hub-ccu"
--#define BCM11351_DT_MASTER_CCU_COMPAT	"brcm,bcm11351-master-ccu"
--#define BCM11351_DT_SLAVE_CCU_COMPAT	"brcm,bcm11351-slave-ccu"
-+/*
-+ * These are the bcm281xx CCU device tree "compatible" strings.
-+ * We're stuck with using "bcm11351" in the string because wild
-+ * cards aren't allowed, and that name was the first one defined
-+ * in this family of devices.
-+ */
-+#define BCM281XX_DT_ROOT_CCU_COMPAT	"brcm,bcm11351-root-ccu"
-+#define BCM281XX_DT_AON_CCU_COMPAT	"brcm,bcm11351-aon-ccu"
-+#define BCM281XX_DT_HUB_CCU_COMPAT	"brcm,bcm11351-hub-ccu"
-+#define BCM281XX_DT_MASTER_CCU_COMPAT	"brcm,bcm11351-master-ccu"
-+#define BCM281XX_DT_SLAVE_CCU_COMPAT	"brcm,bcm11351-slave-ccu"
+ 	gate = &peri->gate;
++	hyst = &peri->hyst;
+ 	if (gate_exists(gate)) {
+ 		if (gate->offset > limit) {
+ 			pr_err("%s: bad gate offset for %s (%u > %u)\n",
+ 				__func__, name, gate->offset, limit);
+ 			return false;
+ 		}
++
++		if (hyst_exists(hyst)) {
++			if (hyst->offset > limit) {
++				pr_err("%s: bad hysteresis offset for %s "
++					"(%u > %u)\n", __func__,
++					name, hyst->offset, limit);
++				return false;
++			}
++		}
++	} else if (hyst_exists(hyst)) {
++		pr_err("%s: hysteresis but no gate for %s\n", __func__, name);
++		return false;
+ 	}
  
- /* Root CCU clocks */
- 
-@@ -404,13 +409,13 @@ static void __init kona_dt_slave_ccu_setup(struct device_node *node)
- 	kona_dt_ccu_setup(node, bcm281xx_slave_ccu_clks_setup);
+ 	div = &peri->div;
+@@ -261,6 +275,17 @@ static bool gate_valid(struct bcm_clk_gate *gate, const char *field_name,
+ 	return true;
  }
  
--CLK_OF_DECLARE(bcm11351_root_ccu, BCM11351_DT_ROOT_CCU_COMPAT,
-+CLK_OF_DECLARE(bcm281xx_root_ccu, BCM281XX_DT_ROOT_CCU_COMPAT,
- 			kona_dt_root_ccu_setup);
--CLK_OF_DECLARE(bcm11351_aon_ccu, BCM11351_DT_AON_CCU_COMPAT,
-+CLK_OF_DECLARE(bcm281xx_aon_ccu, BCM281XX_DT_AON_CCU_COMPAT,
- 			kona_dt_aon_ccu_setup);
--CLK_OF_DECLARE(bcm11351_hub_ccu, BCM11351_DT_HUB_CCU_COMPAT,
-+CLK_OF_DECLARE(bcm281xx_hub_ccu, BCM281XX_DT_HUB_CCU_COMPAT,
- 			kona_dt_hub_ccu_setup);
--CLK_OF_DECLARE(bcm11351_master_ccu, BCM11351_DT_MASTER_CCU_COMPAT,
-+CLK_OF_DECLARE(bcm281xx_master_ccu, BCM281XX_DT_MASTER_CCU_COMPAT,
- 			kona_dt_master_ccu_setup);
--CLK_OF_DECLARE(bcm11351_slave_ccu, BCM11351_DT_SLAVE_CCU_COMPAT,
-+CLK_OF_DECLARE(bcm281xx_slave_ccu, BCM281XX_DT_SLAVE_CCU_COMPAT,
- 			kona_dt_slave_ccu_setup);
++static bool hyst_valid(struct bcm_clk_hyst *hyst, const char *clock_name)
++{
++	if (!bit_posn_valid(hyst->en_bit, "hysteresis enable", clock_name))
++		return false;
++
++	if (!bit_posn_valid(hyst->val_bit, "hysteresis value", clock_name))
++		return false;
++
++	return true;
++}
++
+ /*
+  * A selector bitfield must be valid.  Its parent_sel array must
+  * also be reasonable for the field.
+@@ -378,6 +403,7 @@ peri_clk_data_valid(struct kona_clk *bcm_clk)
+ 	struct peri_clk_data *peri;
+ 	struct bcm_clk_policy *policy;
+ 	struct bcm_clk_gate *gate;
++	struct bcm_clk_hyst *hyst;
+ 	struct bcm_clk_sel *sel;
+ 	struct bcm_clk_div *div;
+ 	struct bcm_clk_div *pre_div;
+@@ -405,6 +431,10 @@ peri_clk_data_valid(struct kona_clk *bcm_clk)
+ 	if (gate_exists(gate) && !gate_valid(gate, "gate", name))
+ 		return false;
+ 
++	hyst = &peri->hyst;
++	if (hyst_exists(hyst) && !hyst_valid(hyst, name))
++		return false;
++
+ 	sel = &peri->sel;
+ 	if (selector_exists(sel)) {
+ 		if (!sel_valid(sel, "selector", name))
+diff --git a/drivers/clk/bcm/clk-kona.c b/drivers/clk/bcm/clk-kona.c
+index bf9661c..64b6361 100644
+--- a/drivers/clk/bcm/clk-kona.c
++++ b/drivers/clk/bcm/clk-kona.c
+@@ -527,6 +527,35 @@ static int clk_gate(struct ccu_data *ccu, const char *name,
+ 	return -EIO;
+ }
+ 
++/* Hysteresis operations */
++
++/*
++ * If a clock gate requires a turn-off delay it will have
++ * "hysteresis" register bits defined.  The first, if set, enables
++ * the delay; and if enabled, the second bit determines whether the
++ * delay is "low" or "high" (1 means high).  For now, if it's
++ * defined for a clock, we set it.
++ */
++static bool hyst_init(struct ccu_data *ccu, struct bcm_clk_hyst *hyst)
++{
++	u32 offset;
++	u32 reg_val;
++	u32 mask;
++
++	if (!hyst_exists(hyst))
++		return true;
++
++	offset = hyst->offset;
++	mask = (u32)1 << hyst->en_bit;
++	mask |= (u32)1 << hyst->val_bit;
++
++	reg_val = __ccu_read(ccu, offset);
++	reg_val |= mask;
++	__ccu_write(ccu, offset, reg_val);
++
++	return true;
++}
++
+ /* Trigger operations */
+ 
+ /*
+@@ -1129,6 +1158,10 @@ static bool __peri_clk_init(struct kona_clk *bcm_clk)
+ 		pr_err("%s: error initializing gate for %s\n", __func__, name);
+ 		return false;
+ 	}
++	if (!hyst_init(ccu, &peri->hyst)) {
++		pr_err("%s: error initializing hyst for %s\n", __func__, name);
++		return false;
++	}
+ 	if (!div_init(ccu, &peri->gate, &peri->div, &peri->trig)) {
+ 		pr_err("%s: error initializing divider for %s\n", __func__,
+ 			name);
+diff --git a/drivers/clk/bcm/clk-kona.h b/drivers/clk/bcm/clk-kona.h
+index c390ca4..c6285d2 100644
+--- a/drivers/clk/bcm/clk-kona.h
++++ b/drivers/clk/bcm/clk-kona.h
+@@ -60,6 +60,8 @@
+ 
+ #define gate_flip_enabled(gate)		FLAG_FLIP(gate, GATE, ENABLED)
+ 
++#define hyst_exists(hyst)		((hyst)->offset != 0)
++
+ #define divider_exists(div)		FLAG_TEST(div, DIV, EXISTS)
+ #define divider_is_fixed(div)		FLAG_TEST(div, DIV, FIXED)
+ #define divider_has_fraction(div)	(!divider_is_fixed(div) && \
+@@ -205,6 +207,22 @@ struct bcm_clk_gate {
+ 		.flags = FLAG(GATE, HW)|FLAG(GATE, EXISTS),		\
+ 	}
+ 
++/* Gate hysteresis for clocks */
++struct bcm_clk_hyst {
++	u32 offset;		/* hyst register offset (normally CLKGATE) */
++	u32 en_bit;		/* bit used to enable hysteresis */
++	u32 val_bit;		/* if enabled: 0 = low delay; 1 = high delay */
++};
++
++/* Hysteresis initialization macro */
++
++#define HYST(_offset, _en_bit, _val_bit)				\
++	{								\
++		.offset = (_offset),					\
++		.en_bit = (_en_bit),					\
++		.val_bit = (_val_bit),					\
++	}
++
+ /*
+  * Each clock can have zero, one, or two dividers which change the
+  * output rate of the clock.  Each divider can be either fixed or
+@@ -372,6 +390,7 @@ struct bcm_clk_trig {
+ struct peri_clk_data {
+ 	struct bcm_clk_policy policy;
+ 	struct bcm_clk_gate gate;
++	struct bcm_clk_hyst hyst;
+ 	struct bcm_clk_trig pre_trig;
+ 	struct bcm_clk_div pre_div;
+ 	struct bcm_clk_trig trig;
 -- 
 1.7.9.5
