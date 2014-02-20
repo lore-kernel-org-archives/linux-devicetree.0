@@ -1,136 +1,116 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH 2/2] ARM: dts: OMAP3+: add clock nodes for CPU
-Date: Thu, 20 Feb 2014 18:57:12 +0200
-Message-ID: <530633E8.3000608@ti.com>
-References: <1391019557-22313-1-git-send-email-nm@ti.com> <1391019557-22313-3-git-send-email-nm@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/1] ARM: Exynos: Add generic compatible string
+Date: Thu, 20 Feb 2014 18:00:49 +0100
+Message-ID: <201402201800.49425.arnd@arndb.de>
+References: <1392809645-631-1-git-send-email-sachin.kamat@linaro.org> <CAK9yfHy7YHDLCfUGA-ua4iLzK2PMotVZvC=51t-bMkVZVBQFaA@mail.gmail.com> <5306168F.1080400@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1391019557-22313-3-git-send-email-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Mike Turquette <mturquette@linaro.org>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5306168F.1080400@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Sachin Kamat <sachin.kamat@linaro.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Ian Campbell <ijc+devicetree@hellion.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 01/29/2014 08:19 PM, Nishanth Menon wrote:
-> OMAP34xx, AM3517 and OMAP36xx platforms use dpll1 clock.
->
-> OMAP443x, OMAP446x, OMAP447x, OMAP5, DRA7, AM43xx platforms use
-> dpll_mpu clock.
->
-> Latency used is the generic latency defined in omap-cpufreq
-> driver.
->
-> Signed-off-by: Nishanth Menon <nm@ti.com>
+On Thursday 20 February 2014, Tomasz Figa wrote:
+> On 20.02.2014 05:14, Sachin Kamat wrote:
+> > Hi Tomasz,
+> >
+> > On 19 February 2014 18:15, Tomasz Figa <t.figa@samsung.com> wrote:
+> >> Hi Sachin,
+> >>
+> >> [adding linux-arm-kernel ML to CC list]
+> >>
+> >>
+> >> On 19.02.2014 12:34, Sachin Kamat wrote:
+> >>>
+> >>> To avoid modifying the kernel every time a new SoC variant
+> >>> comes out.
+> > <snip>
+> >>
+> >> Since all Exynos chips can be easily recognized using dedicated chip ID
+> >> register, I wonder whether we really need to maintain two distinct board
+> >> files for Exynos 4 and 5 series, especially when both of them are doing
+> >> mostly the same set up, which can be simply generalized to cover all the
+> >> cases.
+> >>
+> >> Instead of adding just another level of artificially fine grained compatible
+> >> strings, I'd rather suggest merging both board files together and adding a
+> >> single compatible string identifying all SoCs that can be further
+> >> differentiated by using hardware chip ID register.
+> >>
+> >> What do you think?
+> >
+> > I agree with your idea of merging both the files as there is very little that is
+> > different for now. However I am not really sure if having a single compatible
+> > string for all SoCs would be good. What is achieved through compatible string
+> > can very well be done using chip ID too. But wouldn't we need to maintain some
+> > unique identity for the SoCs in human readable form at the DT level?
+> 
+> Well, my understanding of Device Tree is that it should provide the 
+> information that can't be automatically retrieved from the hardware, not 
+> more.
+> 
+> If you have a PCI or USB bus with enumerable devices, you don't list 
+> them in DT, but instead limit the description to just the host 
+> controller, if it can't be enumerated.
+> 
+> Same goes for compatible string. My interpretation of it is that if you 
+> can identify the hardware by some automatic means, e.g. querying some ID 
+> register, then the compatible should be specific enough to identify the 
+> class of devices with the same method of querying such register, with no 
+> need for any additional redundant data in DT.
 
-Looks good to me.
+There are some limitations to that, and you also have to apply common
+sense and taste. In theory you could argue that a compatible string can
+identify a board uniquely the same way that a board number did, and
+everything else is implied by that. Clearly that's not what we want.
+On the other end of the scale, you could eliminate a lot of compatible
+strings if you describe each register or each bit in some cases in
+DT properties, and that would be just as wrong.
 
-Acked-by: Tero Kristo <t-kristo@ti.com>
+> Of course nothing stops you from retaining more specific compatible 
+> strings. In fact, this is probably the most appropriate solution, 
+> because in future you might find out that certain SoCs need some special 
+> differentiation, e.g. same ID value on two SoCs.
+> 
+> So, to apply this to our case, our Exynos 5250 based Arndale board would 
+> be changed from
+> 
+> compatible = "insignal,arndale", "samsung,exynos5260";
+> 
+> to
+> 
+> compatible = "insignal,arndale", "samsung,exynos5260", "samsung,exynos";
 
-> ---
->   arch/arm/boot/dts/am33xx.dtsi |    4 ++++
->   arch/arm/boot/dts/am4372.dtsi |    5 +++++
->   arch/arm/boot/dts/dra7.dtsi   |    5 +++++
->   arch/arm/boot/dts/omap3.dtsi  |    5 +++++
->   arch/arm/boot/dts/omap4.dtsi  |    5 +++++
->   arch/arm/boot/dts/omap5.dtsi  |    6 ++++++
->   6 files changed, 30 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> index 6d95d3d..4bbba26 100644
-> --- a/arch/arm/boot/dts/am33xx.dtsi
-> +++ b/arch/arm/boot/dts/am33xx.dtsi
-> @@ -58,6 +58,10 @@
->   				275000  1125000
->   			>;
->   			voltage-tolerance = <2>; /* 2 percentage */
-> +
-> +			clocks = <&dpll_mpu_ck>;
-> +			clock-names = "cpu";
-> +
->   			clock-latency = <300000>; /* From omap-cpufreq driver */
->   		};
->   	};
-> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-> index c6bd4d9..33798d9 100644
-> --- a/arch/arm/boot/dts/am4372.dtsi
-> +++ b/arch/arm/boot/dts/am4372.dtsi
-> @@ -33,6 +33,11 @@
->   			compatible = "arm,cortex-a9";
->   			device_type = "cpu";
->   			reg = <0>;
-> +
-> +			clocks = <&dpll_mpu_ck>;
-> +			clock-names = "cpu";
-> +
-> +			clock-latency = <300000>; /* From omap-cpufreq driver */
->   		};
->   	};
->
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index 1fd75aa..ce591e5 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -47,6 +47,11 @@
->   				1000000	1060000
->   				1176000	1160000
->   				>;
-> +
-> +			clocks = <&dpll_mpu_ck>;
-> +			clock-names = "cpu";
-> +
-> +			clock-latency = <300000>; /* From omap-cpufreq driver */
->   		};
->   		cpu@1 {
->   			device_type = "cpu";
-> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-> index a5fc83b..01f2b3b 100644
-> --- a/arch/arm/boot/dts/omap3.dtsi
-> +++ b/arch/arm/boot/dts/omap3.dtsi
-> @@ -35,6 +35,11 @@
->   			compatible = "arm,cortex-a8";
->   			device_type = "cpu";
->   			reg = <0x0>;
-> +
-> +			clocks = <&dpll1_ck>;
-> +			clock-names = "cpu";
-> +
-> +			clock-latency = <300000>; /* From omap-cpufreq driver */
->   		};
->   	};
->
-> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-> index d3f8a6e..ce87996 100644
-> --- a/arch/arm/boot/dts/omap4.dtsi
-> +++ b/arch/arm/boot/dts/omap4.dtsi
-> @@ -36,6 +36,11 @@
->   			device_type = "cpu";
->   			next-level-cache = <&L2>;
->   			reg = <0x0>;
-> +
-> +			clocks = <&dpll_mpu_ck>;
-> +			clock-names = "cpu";
-> +
-> +			clock-latency = <300000>; /* From omap-cpufreq driver */
->   		};
->   		cpu@1 {
->   			compatible = "arm,cortex-a9";
-> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-> index a72813a..8bb4134 100644
-> --- a/arch/arm/boot/dts/omap5.dtsi
-> +++ b/arch/arm/boot/dts/omap5.dtsi
-> @@ -49,6 +49,12 @@
->   				1000000 1060000
->   				1500000 1250000
->   			>;
-> +
-> +			clocks = <&dpll_mpu_ck>;
-> +			clock-names = "cpu";
-> +
-> +			clock-latency = <300000>; /* From omap-cpufreq driver */
-> +
->   			/* cooling options */
->   			cooling-min-level = <0>;
->   			cooling-max-level = <2>;
->
+Right, this would make sense.
+
+> Now, the board file will be able to match simply by "samsung,exynos" 
+> compatible string and SoC-specific code in mach-exynos (hopefully none 
+> after it gets cleaned up fully) will use soc_is_exynos*() macros (what 
+> AFAIK it is already doing at the moment).
+
+On principle, I would not take things out of the match list, if that
+would break booting with old DT file that don't list "samsung,exynos"
+as compatible. But for new SoCs that would work.
+
+Using soc_is_exynos*() too much of course also isn't good. A lot of
+the things tested for should probably be checked from individual DT
+properties, but again we have to find the right balance. I wouldn't
+mind getting rid of the soc_is_exynos*() macros completely, because
+a) we can't use them in device drivers
+b) all platform code is supposed to be in drivers
+c) both rules are enforced for arm64
+
+> Another benefit of this would be increased safety, because you are 
+> reading SoC type from actual hardware, not from externally supplied 
+> data. In conjunction with the more specific compatible string (e.g. 
+> "samsung,exynos5260") some validation could be performed at boot-up time 
+> to make sure that DT for correct SoC is used.
+
+I don't think that's necessary. If you get that part wrong, normally
+all your hopes are lost with the rest of the information in DT. ;-)
+
+	Arnd
