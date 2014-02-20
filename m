@@ -1,67 +1,123 @@
-From: Matthew Thode <mthode-sh12bNGkds0dnm+yROfE0A@public.gmane.org>
-Subject: exynos4412-odroidx.dts doesn't boot
-Date: Wed, 19 Feb 2014 21:01:31 -0600
-Message-ID: <5305700B.5060905@mthode.org>
-Reply-To: mthode-sh12bNGkds0dnm+yROfE0A@public.gmane.org
+From: Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] usb: chipidea: msm: Clean and fix glue layer driver
+Date: Wed, 19 Feb 2014 20:07:21 -0800
+Message-ID: <CA+bK7J5LrV-Dh1tNhEwhJ4y+XbkDeQkwVWoUYFX46X9uV1HdUQ@mail.gmail.com>
+References: <1392729681-21022-1-git-send-email-iivanov@mm-sol.com>
+	<CA+bK7J7D1bgehNMaMtWWggZ5KDBfZ8LK0bEYUARmc8OD3wa89Q@mail.gmail.com>
+	<1392821911.17130.63.camel@iivanov-dev>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="TwTxJVjHlSqu7pRl2kQGkQ63g36cet91w"
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392821911.17130.63.camel@iivanov-dev>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.ag-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Steev Klimaszewski <steev-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+To: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---TwTxJVjHlSqu7pRl2kQGkQ63g36cet91w
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-doesn't show anything past Starting Linux... even with earlyprintk and
-debug_ll enabled (and S3C_UART1)
-
-It also seems to be missing the secure firmware bit (doesn't boot with it=
-).
-
-kernel command line was as follows
-
-setenv bootargs "console=3DttySAC1,115200n8 root=3D/dev/mmcblk0p2 rootwai=
-t
-ro mem=3D1023M verbose earlyprintk=3Dserial,ttySAC1,115200n8"
-
-tar'd up the boot dir for you as well.
-http://dev.gentoo.org/~prometheanfire/dist/kernels/odroidx-boot.tar
-
-What is missing from mainline to get this to work and why isn't it in?
-
---=20
--- Matthew Thode
+Thanks very much.  I will try out the things you mention and let you
+know if I make progress.
+ -- Tim
 
 
---TwTxJVjHlSqu7pRl2kQGkQ63g36cet91w
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+On Wed, Feb 19, 2014 at 6:58 AM, Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org> wrote:
+>
+> Hi Tim,
+>
+> On Tue, 2014-02-18 at 22:21 -0800, Tim Bird wrote:
+>> Ivan,
+>>
+>> I'm having tremendous problems getting this driver to initialize.  For
+>> some reason, I can't get the driver to actually transition the
+>> hardware into peripheral mode.  At first I was getting a lot of probe
+>> deferrals, based on not finding the regulators early enough in the
+>> boot, and I thought it was an issue with the gadget drivers loading
+>> before the driver could complete its setup.  However, I switched
+>> everything to loading via modules, and now have less probe deferrals,
+>> but I still can't get the driver to activate.
+>
+> My understanding for gadget drivers is that you can have only one
+> of them active in particular time. When compiled in kernel you can
+> chose only one of them, also you can have only one module (function)
+> loaded.
+>
+>
+>>   I see zero interrupts.
+>
+> Right, I think that we will not see interrupts until we have
+> SPMI drivers which could control PMIC chip, PMIC is responsible
+> to do ID line detection and generate IRQ to APQ/MSM chip.
+>
+>> In particular the routine hw_device_state (which turns on interrupts
+>> in the controller) is never called, because I can't get
+>> msm_otg_start_peripheral to actually kick the hardware.
+>>
+>
+> OTG state machine is not used at all. This phy-"otg" driver is
+> working only in "peripheral" mode, because of missing PMIC
+> communication.
+>
+> The only callback which you could see to be executed is
+> struct usb_otg::set_peripheral(), when you load gadget driver.
+>
+>
+> <snip>
+>
+> (Would you mind sharing your config?).
+>
+> Sure. Attached.
+>
+>
+>> I tried configuring the qcom,otg-control for user controlled mode
+>> setting (via debugfs),
+>
+> Never testes this. It was there before.
+>
+>>
+>> My kernel is based on an internal Sony 3.13-rc6 kernel with clock and
+>> regulator patches applied, as well as your phy-msm-usb.c patches from
+>> November and your chipidea patches from yesterday.
+>
+> You will need also 4th chipidea patch[1]. I have dropped it, because
+> I will like to upstream PHY driver changes first. They are depended
+> anyway.
+>
+> To reduce dependency to other drivers, I could recommend you to
+> use Zero gadget driver. It should be enough to test USB stack,
+> where APQ device will be peripheral and development workstation
+> will be a host[2].
+>
+>
+> # cat zero.sh
+> #!/bin/sh
+> cd /lib/modules/$(uname -r)/kernel/drivers/usb/gadget
+> insmod ./libcomposite.ko
+> insmod ./usb_f_ss_lb.ko
+> insmod ./g_zero.ko
+>
+>
+>> [   22.454287] [<c022afd8>] (warn_slowpath_common+0x68/0x88) from
+>> [<c022b08c>] (warn_slowpath_fmt+0x30/0x40)
+>> [   22.463060] [<c022b08c>] (warn_slowpath_fmt+0x30/0x40) from
+>> [<bf005024>] (msm_otg_probe+0x24/0x904 [phy_msm_usb])
+>> [   22.472703] [<bf005024>] (msm_otg_probe+0x24/0x904 [phy_msm_usb])
+>
+> This is know non-fatal issue. I will try to see how to fix it.
+>
+>
+> Regards,
+> Ivan
+>
+> [1] usb: chipidea: msm: Use USB PHY API to control PHY state
+> [2] http://www.linux-usb.org/usbtest/
+>
+>
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBCgAGBQJTBXA9AAoJECRx6z5ArFrD8HIQALVi3QdFLRov/6FxGgpjdWKJ
-nXjG/sYzLMsraZ8SV/nFdd84gei6Pr+PcRWPch9aqfXsIPPhQryvZhJDJveuQhd2
-ktOR9Pa2zNliq0C5nMN9FzEZG0f63NVPiV4nQV8byzeH+5/x2iKh0tl4gsHihWP5
-yxsNjOX9P/CGIMfb16wdujVmlkhrZWM2IbYpo84AbQCrh6HL9d2SLynwMIibqLMX
-KzQiVL/Ib5RFyLwKAKEc05EEuROj3bLZNx7VTVz2r/tc0ZU2UQnqeHpWOUT/QqqO
-u7nn/9a1WO6gbnc+htjDH5GJ3UEl9GUdSxMqMTCXMiViVn1meksjmmVtc4XPmU3g
-c7+c6H6gM3fgWody9BBNhZNdJ8vm1aDcOud2mhCIixcqr0c+sqGgA0QH7R7cZm6x
-7aSUU3+LapMWQwQ+sFo1+plD3Xf5iDG9jbTIOrRnSkxa6xcJ1z2oGwOTxVSfWpGb
-gaBWQbgT7+QxVSGsn1M+AoV11YEQnaI6SvQlR3BksUgDDf7GHwNz30mvWCXaLFU1
-HCeN1bU/TQSmvKrGdv2DfKoXof4tCck2udkBXaMU8iSafIeLiaeODfXUf4Ttt9kP
-UO1FG9aQvxl6u9FkG5STGd/91dMi6eJH4BjwRtP6woHtUHVjMxYdBWWqaQa6JyrQ
-cdaRb92sf1yuf7T0Gfsk
-=z8ci
------END PGP SIGNATURE-----
 
---TwTxJVjHlSqu7pRl2kQGkQ63g36cet91w--
+-- 
+ -- Tim Bird
+Senior Software Engineer, Sony Mobile
+Architecture Group Chair, CE Workgroup, Linux Foundation
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
