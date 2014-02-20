@@ -1,80 +1,86 @@
-From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: Re: [PATCH 0/2] Translate of PCI address without PCI enabled
-Date: Wed, 19 Feb 2014 21:50:28 -0300
-Message-ID: <20140220005027.GA5721@localhost>
-References: <1392848096-17838-1-git-send-email-gregory.clement@free-electrons.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 3/4] tty: serial: bcm63xx_uart: add support for DT probing
+Date: Wed, 19 Feb 2014 17:29:31 -0800
+Message-ID: <CAGVrzcYEWJ6nKncSx3jjWFp9TXf8PFJnd-joPwSe0mDh-CeMiw@mail.gmail.com>
+References: <1392852167-26243-1-git-send-email-f.fainelli@gmail.com>
+ <1392852167-26243-4-git-send-email-f.fainelli@gmail.com> <CAOiHx==rYbsy66zRUc-QXTS7ZjaX8v9kiomp+m33+tcEtKC-dA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1392848096-17838-1-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <CAOiHx==rYbsy66zRUc-QXTS7ZjaX8v9kiomp+m33+tcEtKC-dA@mail.gmail.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Jonas Gorski <jogo@openwrt.org>
+Cc: linux-serial@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Bizon <mbizon@freebox.fr>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 19, 2014 at 11:14:54PM +0100, Gregory CLEMENT wrote:
-> Hello,
->=20
-> This patch set makes the use of the of PCI address translator less
-> restrictive. At the end it will allow to use the mvebu_get_soc_id
-> unconditionally.
->=20
-> The mvebu SoC (such as Kirkwood, Dove or Armada XP for instance) come
-> with an IP of a PCI controller. The ID and the revision of a SoC are
-> stored in the registers of this controller. Being able to get this
-> information allows to deals with errata more dynamically.
->=20
-> To manage to read this information, we need to map the registers, and
-> for this we need to use the of PCI translator which depend of the PCI
-> support.
->=20
-> However there are mvebu board without any PCI devices, and where
-> selecting the PCI support would be useless.
->=20
-> Moreover translating an address from a PCI node of the device-tree
-> into a CPU physical address doesn't require the core PCI
-> support. Those translations are just related to the device tree
-> itself.
->=20
-> The 1st patch introduces a new config symbol: OF_ADDRESS_PCI, which
-> will be selected as soon as PCI will be selected, so we remains in th=
-e
-> same situation the current code. It should go to the of tree.
->=20
-> The 2nd patch selects OF_ADDRESS_PCI as soon as ARCH_MVEBU will be
-> selected. This will make mvebu_get_soc_id available even without the
-> PCI support. It should go to the mvebu tree.
->=20
-> Thanks,
->=20
-> Gregory CLEMENT (2):
->   of: Allows to use the PCI translator without the PCI core
->   ARM: mvebu: Allows to get the SoC ID even without PCI enabled
->=20
->  arch/arm/mach-mvebu/Kconfig | 1 +
->  drivers/of/Kconfig          | 4 ++++
->  drivers/of/address.c        | 8 +++++---
->  3 files changed, 10 insertions(+), 3 deletions(-)
->=20
-> --=20
-> 1.8.1.2
->=20
+2014-02-19 16:00 GMT-08:00 Jonas Gorski <jogo@openwrt.org>:
+> On Thu, Feb 20, 2014 at 12:22 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>> Add a matching table for the the bcm63xx_uart driver on the compatible
+>> string "brcm,bcm63xx-uart" which covers all BCM63xx implementations.
+>> Also make sure that we convert the id based on the uart aliases provided
+>> by the relevant Device Tree.
+>>
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>> ---
+>>  drivers/tty/serial/bcm63xx_uart.c | 11 +++++++++++
+>>  1 file changed, 11 insertions(+)
+>>
+>> diff --git a/drivers/tty/serial/bcm63xx_uart.c b/drivers/tty/serial/bcm63xx_uart.c
+>> index 37e7e33..538e84c 100644
+>> --- a/drivers/tty/serial/bcm63xx_uart.c
+>> +++ b/drivers/tty/serial/bcm63xx_uart.c
+>> @@ -31,6 +31,7 @@
+>>  #include <linux/serial_core.h>
+>>  #include <linux/serial_bcm63xx.h>
+>>  #include <linux/io.h>
+>> +#include <linux/of.h>
+>>
+>>  #define BCM63XX_NR_UARTS       2
+>>
+>> @@ -806,6 +807,9 @@ static int bcm_uart_probe(struct platform_device *pdev)
+>>         struct clk *clk;
+>>         int ret;
+>>
+>> +       if (pdev->dev.of_node)
+>> +               pdev->id = of_alias_get_id(pdev->dev.of_node, "uart");
+>> +
+>>         if (pdev->id < 0 || pdev->id >= BCM63XX_NR_UARTS)
+>>                 return -EINVAL;
+>>
+>> @@ -857,6 +861,12 @@ static int bcm_uart_remove(struct platform_device *pdev)
+>>         return 0;
+>>  }
+>>
+>> +static const struct of_device_id bcm63xx_of_match[] = {
+>> +       { .compatible = "brcm,bcm63xx-uart" },
+>
+> From my understanding, this should be "brcm,bcm6345-uart", because
+> this kind of uart appeared first on bcm6345 (well, maybe bcm6335, no
+> idea which one of these two was first, but the latter was never
+> supported in mainline anyway).
 
-On XP GP and CONFIG_PCI=3Dn, without the patches I get this:
+That's right, in fact, I think it might be desirable to handle both
+compatible string, just as a hint that it is compatible with the
+entire bcm63xx family. Would that work for you?
 
-  mvebu-soc-id: cannot map registers
+> The same applies to 4/4.
+>
+>> +       { /* sentinel */ }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, bcm63xx_of_match);
+>> +
+>>  /*
+>>   * platform driver stuff
+>>   */
+>> @@ -866,6 +876,7 @@ static struct platform_driver bcm_uart_platform_driver = {
+>>         .driver = {
+>>                 .owner = THIS_MODULE,
+>>                 .name  = "bcm63xx_uart",
+>> +               .of_match_table = bcm63xx_of_match,
+>
+> You could guard this one with of_match_ptr (and then bcm63xx_of_match
+> with CONFIG_OF. Probably not much, but it's the little things ;-)
 
-and after applying the patches I have:
-
-  mvebu-soc-id: MVEBU SoC ID=3D0x7846, Rev=3D0x2
-
-Tested-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Reviewed-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-
-Thanks for taking care of this.
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
+Good catch.
+-- 
+Florian
