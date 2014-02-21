@@ -1,154 +1,88 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v4 02/10] Documentation: dt: Add DT binding documentation
- for S5C73M3 camera
-Date: Fri, 21 Feb 2014 18:52:50 +0100
-Message-ID: <53079272.5090800@samsung.com>
-References: <1392925237-31394-1-git-send-email-s.nawrocki@samsung.com>
- <1392925237-31394-4-git-send-email-s.nawrocki@samsung.com>
- <20140221154240.GE20449@e106331-lin.cambridge.arm.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v12 2/3] ata: Add APM X-Gene SoC AHCI SATA host
+ controller driver
+Date: Fri, 21 Feb 2014 12:55:42 -0500
+Message-ID: <20140221175542.GA12830@htj.dyndns.org>
+References: <1393004853-25994-1-git-send-email-lho@apm.com>
+ <1393004853-25994-2-git-send-email-lho@apm.com>
+ <1393004853-25994-3-git-send-email-lho@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20140221154240.GE20449@e106331-lin.cambridge.arm.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "a.hajda@samsung.com" <a.hajda@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1393004853-25994-3-git-send-email-lho@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Loc Ho <lho@apm.com>
+Cc: olof@lixom.net, arnd@arndb.de, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 21/02/14 16:42, Mark Rutland wrote:
-[...]
->> +++ b/Documentation/devicetree/bindings/media/samsung-s5c73m3.txt
->> @@ -0,0 +1,97 @@
->> +Samsung S5C73M3 8Mp camera ISP
->> +------------------------------
->> +
->> +The S5C73M3 camera ISP supports MIPI CSI-2 and parallel (ITU-R BT.656) video
->> +data busses. The I2C bus is the main control bus and additionally the SPI bus
->> +is used, mostly for transferring the firmware to and from the device. Two
->> +slave device nodes corresponding to these control bus interfaces are required
->> +and should be placed under respective bus controller nodes.
-> 
-> So this has both an I2C interface and an SPI interface that are used at
-> the same time?
+Hello, Loc.
 
-Yes, both are needed. AFAIU SPI is added so the firmware upload is faster.
+On Fri, Feb 21, 2014 at 10:47:32AM -0700, Loc Ho wrote:
+> +/**
+> + * Custom Query ID command
+> + *
+> + * Due to HW errata, we must stop and re-start the port state machine after
+> + * read ID command. Also disable support for DEVSLP as hardware don't support
+> + * it.
+> + */
 
->> +I2C slave device node
->> +---------------------
->> +
->> +Required properties:
->> +
->> +- compatible	    : "samsung,s5c73m3";
->> +- reg		    : I2C slave address of the sensor;
->> +- vdd-int-supply    : digital power supply (1.2V);
->> +- vdda-supply	    : analog power supply (1.2V);
->> +- vdd-reg-supply    : regulator input power supply (2.8V);
->> +- vddio-host-supply : host I/O power supply (1.8V to 2.8V);
->> +- vddio-cis-supply  : CIS I/O power supply (1.2V to 1.8V);
->> +- vdd-af-supply     : lens power supply (2.8V);
->> +- xshutdown-gpios   : specifier of GPIO connected to the XSHUTDOWN pin;
->> +- standby-gpios     : specifier of GPIO connected to the STANDBY pin;
->> +- clocks	    : should contain list of phandle and clock specifier pairs
->> +		      according to common clock bindings for the clocks described
->> +		      in the clock-names property;
->> +- clock-names	    : should contain "cis_extclk" entry for the CIS_EXTCLK clock;
->> +
->> +Optional properties:
->> +
->> +- clock-frequency   : the frequency at which the "cis_extclk" clock should be
->> +		      configured to operate, in Hz; if this property is not
->> +		      specified default 24 MHz value will be used.
->> +
->> +The common video interfaces bindings (see video-interfaces.txt) should be used
->> +to specify link from the S5C73M3 to an external image data receiver. The S5C73M3
->> +device node should contain one 'port' child node with an 'endpoint' subnode for
->> +this purpose. The data link from a raw image sensor to the S5C73M3 can be
->> +similarly specified, but it is optional since the S5C73M3 ISP and a raw image
->> +sensor are usually inseparable and form a hybrid module.
->> +
->> +Following properties are valid for the endpoint node(s):
->> +
->> +endpoint subnode
->> +----------------
->> +
->> +- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
->> +  video-interfaces.txt. This sensor doesn't support data lane remapping
->> +  and physical lane indexes in subsequent elements of the array should
->> +  be only consecutive ascending values.
->> +
->> +SPI device node
->> +---------------
->> +
->> +Required properties:
->> +
->> +- compatible	    : "samsung,s5c73m3";
-> 
-> It might make sense to explicitly link these two nodes somehow, in case
-> multiple instances appear somewhere. However, that can come later in the
-> case of a multi-instance device, and isn't necessary now.
+Sorry about not being clear before but /** function comment means
+something like
 
-I guess a phandle at the I2C slave device node, pointing to the SPI node
-and/or the other way around would do. I don't expect these devices to be 
-used in multiple instances though and would prefer to address that when
-necessary.
+/**
+ * ata_scsi_port_error_handler - recover the port after the commands
+ * @host: SCSI host containing the port
+ * @ap: the ATA port
+ *
+ * Handle the recovery of the port @ap after all the commands have
+ * been recovered.
+ */
 
-We could try and create a root node for this device with an interesting 
-structure, if we wanted to go much into details. But it could get a bit 
-complicated given the scheme the I2C/SPI bus binding are structured now.
-Presumably that's something that could be handled later with a different 
-compatible string if required.
+> +static int xgene_ahci_do_hardreset(struct ata_link *link,
+> +				   unsigned long deadline, bool *online)
+> +{
+> +	const unsigned long *timing = sata_ehc_deb_timing(&link->eh_context);
+> +	struct ata_port *ap = link->ap;
+> +	struct ahci_host_priv *hpriv = ap->host->private_data;
+> +	struct xgene_ahci_context *ctx = pdata_to_ctx(hpriv->plat_data);
+> +	struct ahci_port_priv *pp = ap->private_data;
+> +	u8 *d2h_fis = pp->rx_fis + RX_FIS_D2H_REG;
+> +	void __iomem *port_mmio = ahci_port_base(ap);
+> +	struct ata_taskfile tf;
+> +	int first_time = 1;
+> +	int rc;
+> +	u32 val;
+> +	int i;
+> +
+> +hardreset_retry:
+> +	/* clear D2H reception area to properly wait for D2H FIS */
+> +	ata_tf_init(link->device, &tf);
+> +	tf.command = ATA_BUSY;
+> +	ata_tf_to_fis(&tf, 0, 0, d2h_fis);
+> +	rc = sata_link_hardreset(link, timing, deadline, online,
+> +				 ahci_check_ready);
+> +
+> +	if (*online) {
+> +		/* Check to ensure that the disk comes up in matching speed */
+> +		if (first_time) {
+> +			u32 gen_speed;
+> +
+> +			first_time = 0;
+> +			sata_scr_read(link, SCR_STATUS, &gen_speed);
+> +			gen_speed = (gen_speed >> 4) & 0xf;
+> +			if (gen_speed == 1 || gen_speed == 2) {
+> +				/*
+> +				 * For Gen2/1 and first time, let's check again
+> +				 * with Gen2/1 PHY to ensure actual Gen2/1 disk.
+> +				 */
 
->> +For more details see description of the SPI busses bindings
->> +(../spi/spi-bus.txt) and bindings of a specific bus controller.
->> +
->> +Example:
->> +
->> +i2c@138A000000 {
->> +	...
->> +	s5c73m3@3c {
->> +		compatible = "samsung,s5c73m3";
->> +		reg = <0x3c>;
->> +		vdd-int-supply = <&buck9_reg>;
->> +		vdda-supply = <&ldo17_reg>;
->> +		vdd-reg-supply = <&cam_io_reg>;
->> +		vddio-host-supply = <&ldo18_reg>;
->> +		vddio-cis-supply = <&ldo9_reg>;
->> +		vdd-af-supply = <&cam_af_reg>;
->> +		clock-frequency = <24000000>;
->> +		clocks = <&clk 0>;
->> +		clock-names = "cis_extclk";
->> +		reset-gpios = <&gpf1 3 1>;
->> +		standby-gpios = <&gpm0 1 1>;
->> +		port {
->> +			s5c73m3_ep: endpoint {
->> +				remote-endpoint = <&csis0_ep>;
->> +				data-lanes = <1 2 3 4>;
->> +			};
->> +		};
->> +	};
->> +};
->> +
->> +spi@1392000 {
->> +	...
->> +	s5c73m3_spi: s5c73m3 {
-> 
-> Nit: this should have a 0 unit-address to match the reg.
+Can you please go back two reviews and re-read what I requested?
+Also, if you're unsure, please don't hesitate to ask back.  It's
+usually a lot easier for both parties than iterating through patchsets
+without properly understanding each other.
 
-OK, I'll correct that.
+Thanks.
 
->> +		compatible = "samsung,s5c73m3";
->> +		reg = <0>;
->> +		...
->> +	};
->> +};
-> 
-> Otherwise I don't see anything problematic about the binding.
-> 
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Thanks for the review.
-
---
-Regards,
-Sylwester
+-- 
+tejun
