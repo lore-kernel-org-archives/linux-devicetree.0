@@ -1,60 +1,44 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v10 01/15] usb: doc: phy-mxs: Add more compatible
- strings
-Date: Fri, 21 Feb 2014 12:38:31 +0000
-Message-ID: <20140221123831.GG8783@e106331-lin.cambridge.arm.com>
-References: <1392873284-9386-1-git-send-email-peter.chen@freescale.com>
- <1392873284-9386-2-git-send-email-peter.chen@freescale.com>
- <20140221091345.GA7541@e106331-lin.cambridge.arm.com>
- <5e4d795b507a4ea7b9faa69dd05148c4@BL2PR03MB226.namprd03.prod.outlook.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH tty-next v2 4/4] Documentation: devicetree: add bindings documentation for bcm63xx-uart
+Date: Fri, 21 Feb 2014 13:49:05 +0100
+Message-ID: <3250738.VGSO94B75K@wuerfel>
+References: <1392920154-3642-1-git-send-email-f.fainelli@gmail.com> <1392920154-3642-5-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5e4d795b507a4ea7b9faa69dd05148c4@BL2PR03MB226.namprd03.prod.outlook.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Chen <Peter.Chen@freescale.com>
-Cc: "balbi@ti.com" <balbi@ti.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Pawel Moll <Pawel.Moll@arm.com>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "festevam@gmail.com" <festevam@gmail.com>, "marex@denx.de" <marex@denx.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>, "Frank.Li@freescale.com" <Frank.Li@freescale.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1392920154-3642-5-git-send-email-f.fainelli@gmail.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, mbizon@freebox.fr, jogo@openwrt.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, gregory.0xf0@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 21, 2014 at 09:40:29AM +0000, Peter Chen wrote:
->  
-> > >
-> > >  Required properties:
-> > > -- compatible: Should be "fsl,imx23-usbphy"
-> > > +- compatible: "fsl,imx23-usbphy" for imx23 and imx28, "fsl,imx6q-
-> > usbphy"
-> > > +  for imx6dq and imx6dl, "fsl,imx6sl-usbphy" for imx6sl
-> > 
-> > Minor nit, but could we restructure this as something like the following,
-> > with each string on a new line:
-> > 
-> > - compatible: should contain:
-> >     * "fsl,imx23-usbphy" for imx23 and imx28
-> >     * "fsl,imx6q-usbphy" for imx6dq and imx6dl
-> >     * "fsl,imx6sl-usbphy" for imx6sl
-> > 
-> > It makes it a bit easier to read.
-> 
-> Thanks, will change like above.
-> 
-> > 
-> > I see the existing "fsl,imx23-usbphy" is used as a fallback for
-> > "fsl,imx28-usbphy", "fsl,imx6q-usbphy", and "fsl,imx6sl-usbphy" in
-> > existing DTs.
-> > 
-> > Is this expected going forward? It might be worth mentioning.
-> > 
-> 
-> These SoCs used the same FSL imx PHY, but different versions.
-> imx23/imx28 are the first version, more improvements are at
-> later SoCs (like imx6x) version. Keep "fsl,imx23-usbphy" at
-> imx6 dts will be user know it is from imx23's. If you think
-> it does not need, I can delete "fsl,imx23-usbphy" from imx6 dts.
+Two more comments:
 
-I'm not arguing to remove it, I'm suggesting it might be worth
-mentioning that it's not mutually exclusive, and can be a fallback for
-the other strings.
+On Thursday 20 February 2014 10:15:54 Florian Fainelli wrote:
+> +- clock-names: should contain "periph" for the functional clock
 
-Cheers,
-Mark.
+I think we should really start standardizing on the clock names more.
+We don't have any uart that calls its functional clock "periph" so
+far.
+
+How about naming it "fclk" or "uart"?
+
+I'd actually prefer making it an anonymous clock, but I know that
+will just trigger comments about what might happen if it turns
+out we need more than one clock for a future version of this device.
+
+> +Example:
+> +
+> +serial0: uart@600 {
+> +       compatible = "brcm,bcm6345-uart";
+> +       reg = <0x600 0x1b>;
+> +       interrupts = <GIC_SPI 32 0>;
+> +       clocks = <&periph_clk>;
+> +       clock-names = "periph";
+> +};
+
+The device name for a uart is "serial" by convention, not "uart",
+so better make this serial@600.
+
+	Arnd
