@@ -1,47 +1,73 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: [PATCH 1/4] spi: rspi: List full example compatible properties in bindings
-Date: Fri, 21 Feb 2014 17:29:15 +0100
-Message-ID: <1393000158-6622-1-git-send-email-geert@linux-m68k.org>
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [Patch v6 1/2] dmaengine: qcom_bam_dma: Add device tree binding
+Date: Fri, 21 Feb 2014 10:30:53 -0600
+Message-ID: <20140221163053.GA3102@qualcomm.com>
+References: <1392964986-5207-1-git-send-email-agross@codeaurora.org>
+ <1392964986-5207-2-git-send-email-agross@codeaurora.org>
+ <20140221092657.GD7541@e106331-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140221092657.GD7541@e106331-lin.cambridge.arm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+On Fri, Feb 21, 2014 at 09:26:57AM +0000, Mark Rutland wrote:
+> On Fri, Feb 21, 2014 at 06:43:04AM +0000, Andy Gross wrote:
+> > Add device tree binding support for the QCOM BAM DMA driver.
+> > 
+[snip]
+> > +Required properties:
+> > +- compatible:	Must be "qcom,bam-v1.4.0" for MSM8974 V1
+> > +		Must be "qcom,bam-v1.4.1" for MSM8974 V2
+> 
+> This looks a bit odd. How about:
+> 
+> - compatible: must contain:
+>   * "qcom,bam-v1.4.0" for MSM8974 V1
+>   * "qcom,bam-v1.4.1" for MSM8974 V2
+> 
 
-List full example compatible properties with soctypes instead of just the
-soctypes, so checkpatch can validate DTSes.
+Agreed.  I'll fix that.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- Documentation/devicetree/bindings/spi/spi-rspi.txt |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+> > +- reg: Address range for DMA registers
+> > +- interrupts: single interrupt for this controller
+> 
+> This device only has a single interrupt? Or there's only one we care
+> about at the moment?
+> 
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-rspi.txt b/Documentation/devicetree/bindings/spi/spi-rspi.txt
-index 95f9b21d239f..e54924b2aff6 100644
---- a/Documentation/devicetree/bindings/spi/spi-rspi.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-rspi.txt
-@@ -7,9 +7,11 @@ Required properties:
- 		     "renesas,rspi-<soctype>", "renesas,rspi-rz" as fallback.
- 		     For Quad Serial Peripheral Interface on R-Car Gen2:
- 		     "renesas,qspi-<soctype>", "renesas,qspi" as fallback.
--		     Examples of valid soctypes are "sh7757" (SH),
--		     "r7s72100" (RZ/A1H), "r8a7790" (R-Car H2), and
--		     "r8a7791" (R-Car M2).
-+		     Examples with soctypes are:
-+		        - "renesas,rspi-sh7757" (SH)
-+			- "renesas,rspi-r7s72100" (RZ/A1H)
-+			- "renesas,qspi-r8a7790" (R-Car H2)
-+			- "renesas,qspi-r8a7791" (R-Car M2)
- - reg              : Address start and address range size of the device
- - interrupts       : A list of interrupt-specifiers, one for each entry in
- 		     interrupt-names.
+Yes only a single interrupt.  I can remove the s.
+
+> > +- #dma-cells: must be <1>
+> > +- clocks: required clock
+> > +- clock-names: name of clock
+> 
+> Either describe the _exact_ name this binding expects for any clocks
+> input, or get rid of clock-names. I would prefer the former.
+
+So then I'd use the full name in the driver file.  That's fine.
+
+[snip]
+> > +Client:
+> > +Required properties:
+> > +- dmas: List of dma channel requests
+> > +- dma-names: Names of aforementioned requested channels
+> 
+> Do we really need to describe the client binding? Do we not have a
+> generic DMA binding doc we can refer to?
+> 
+
+Originally there was more information in the entry.  It was pared down over time
+and I didn't go back to referencing the generic doc.  I'll do this and that'll
+fix this and your next comment.
+
+[snip]
+
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
