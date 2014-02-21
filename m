@@ -1,156 +1,107 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 02/10] Documentation: dt: Add DT binding
- documentation for S5C73M3 camera
-Date: Fri, 21 Feb 2014 15:42:41 +0000
-Message-ID: <20140221154240.GE20449@e106331-lin.cambridge.arm.com>
-References: <1392925237-31394-1-git-send-email-s.nawrocki@samsung.com>
- <1392925237-31394-4-git-send-email-s.nawrocki@samsung.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH RFC] usb: gadget: Add xilinx axi usb2 device support
+Date: Fri, 21 Feb 2014 09:42:44 -0600
+Message-ID: <20140221154244.GG31902@saruman.home>
+References: <774153d4-d33f-4bb4-813b-582762bc3af9@TX2EHSMHS021.ehs.local>
+ <20140220182257.GF23217@saruman.home>
+ <20140221120454.GD8783@e106331-lin.cambridge.arm.com>
+ <5307576F.5050506@monstr.eu>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="vbzKE9fGfpHIBC6T"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1392925237-31394-4-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "a.hajda@samsung.com" <a.hajda@samsung.com>
+In-Reply-To: <5307576F.5050506@monstr.eu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <monstr@monstr.eu>
+Cc: Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@ti.com>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 20, 2014 at 07:40:29PM +0000, Sylwester Nawrocki wrote:
-> This adds DT binding documentation for Samsung S5C73M3 camera sensor
-> with an embedded ISP.
-> 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
-> Changes since v3:
->  - DT binding documentation separated into this patch;
-> 
-> Changes since v2:
->  - rephrased 'clocks' and 'clock-names' properties' description;
-> ---
->  .../devicetree/bindings/media/samsung-s5c73m3.txt  |   97 ++++++++++++++++++++
->  1 file changed, 97 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/samsung-s5c73m3.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/samsung-s5c73m3.txt b/Documentation/devicetree/bindings/media/samsung-s5c73m3.txt
-> new file mode 100644
-> index 0000000..4dd3776
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/samsung-s5c73m3.txt
-> @@ -0,0 +1,97 @@
-> +Samsung S5C73M3 8Mp camera ISP
-> +------------------------------
-> +
-> +The S5C73M3 camera ISP supports MIPI CSI-2 and parallel (ITU-R BT.656) video
-> +data busses. The I2C bus is the main control bus and additionally the SPI bus
-> +is used, mostly for transferring the firmware to and from the device. Two
-> +slave device nodes corresponding to these control bus interfaces are required
-> +and should be placed under respective bus controller nodes.
+--vbzKE9fGfpHIBC6T
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So this has both an I2C interface and an SPI interface that are used at
-the same time?
+Hi,
 
-> +
-> +I2C slave device node
-> +---------------------
-> +
-> +Required properties:
-> +
-> +- compatible	    : "samsung,s5c73m3";
-> +- reg		    : I2C slave address of the sensor;
-> +- vdd-int-supply    : digital power supply (1.2V);
-> +- vdda-supply	    : analog power supply (1.2V);
-> +- vdd-reg-supply    : regulator input power supply (2.8V);
-> +- vddio-host-supply : host I/O power supply (1.8V to 2.8V);
-> +- vddio-cis-supply  : CIS I/O power supply (1.2V to 1.8V);
-> +- vdd-af-supply     : lens power supply (2.8V);
-> +- xshutdown-gpios   : specifier of GPIO connected to the XSHUTDOWN pin;
-> +- standby-gpios     : specifier of GPIO connected to the STANDBY pin;
-> +- clocks	    : should contain list of phandle and clock specifier pairs
-> +		      according to common clock bindings for the clocks described
-> +		      in the clock-names property;
-> +- clock-names	    : should contain "cis_extclk" entry for the CIS_EXTCLK clock;
-> +
-> +Optional properties:
-> +
-> +- clock-frequency   : the frequency at which the "cis_extclk" clock should be
-> +		      configured to operate, in Hz; if this property is not
-> +		      specified default 24 MHz value will be used.
-> +
-> +The common video interfaces bindings (see video-interfaces.txt) should be used
-> +to specify link from the S5C73M3 to an external image data receiver. The S5C73M3
-> +device node should contain one 'port' child node with an 'endpoint' subnode for
-> +this purpose. The data link from a raw image sensor to the S5C73M3 can be
-> +similarly specified, but it is optional since the S5C73M3 ISP and a raw image
-> +sensor are usually inseparable and form a hybrid module.
-> +
-> +Following properties are valid for the endpoint node(s):
-> +
-> +endpoint subnode
-> +----------------
-> +
-> +- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
-> +  video-interfaces.txt. This sensor doesn't support data lane remapping
-> +  and physical lane indexes in subsequent elements of the array should
-> +  be only consecutive ascending values.
-> +
-> +SPI device node
-> +---------------
-> +
-> +Required properties:
-> +
-> +- compatible	    : "samsung,s5c73m3";
+On Fri, Feb 21, 2014 at 02:41:03PM +0100, Michal Simek wrote:
+> >>> +	/* Map the registers */
+> >>> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >>> +	udc->base_address =3D devm_ioremap_nocache(&pdev->dev, res->start,
+> >>> +						 resource_size(res));
+> >>
+> >> use devm_ioremap_resource() instead.
+> >=20
+> > Also, res might be NULL. You should check that before dereferencing it.
+>=20
+> yes it is necessary for both cases with devm_ioremap_nocache
+> or with devm_ioremap_resource.
 
-It might make sense to explicitly link these two nodes somehow, in case
-multiple instances appear somewhere. However, that can come later in the
-case of a multi-instance device, and isn't necessary now.
+read the source Luke:
 
-> +
-> +For more details see description of the SPI busses bindings
-> +(../spi/spi-bus.txt) and bindings of a specific bus controller.
-> +
-> +Example:
-> +
-> +i2c@138A000000 {
-> +	...
-> +	s5c73m3@3c {
-> +		compatible = "samsung,s5c73m3";
-> +		reg = <0x3c>;
-> +		vdd-int-supply = <&buck9_reg>;
-> +		vdda-supply = <&ldo17_reg>;
-> +		vdd-reg-supply = <&cam_io_reg>;
-> +		vddio-host-supply = <&ldo18_reg>;
-> +		vddio-cis-supply = <&ldo9_reg>;
-> +		vdd-af-supply = <&cam_af_reg>;
-> +		clock-frequency = <24000000>;
-> +		clocks = <&clk 0>;
-> +		clock-names = "cis_extclk";
-> +		reset-gpios = <&gpf1 3 1>;
-> +		standby-gpios = <&gpm0 1 1>;
-> +		port {
-> +			s5c73m3_ep: endpoint {
-> +				remote-endpoint = <&csis0_ep>;
-> +				data-lanes = <1 2 3 4>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +spi@1392000 {
-> +	...
-> +	s5c73m3_spi: s5c73m3 {
+| void __iomem *devm_ioremap_resource(struct device *dev, struct resource *=
+res)
+| {
+| 	resource_size_t size;
+| 	const char *name;
+| 	void __iomem *dest_ptr;
+|=20
+| 	BUG_ON(!dev);
+|=20
+| 	if (!res || resource_type(res) !=3D IORESOURCE_MEM) {
+            ^^^^
+	    already done for you
 
-Nit: this should have a 0 unit-address to match the reg.
+| 		dev_err(dev, "invalid resource\n");
+| 		return ERR_PTR(-EINVAL);
+| 	}
+|=20
+| 	size =3D resource_size(res);
+| 	name =3D res->name ?: dev_name(dev);
+|=20
+| 	if (!devm_request_mem_region(dev, res->start, size, name)) {
+| 		dev_err(dev, "can't request region for resource %pR\n", res);
+| 		return ERR_PTR(-EBUSY);
+| 	}
+|=20
+| 	if (res->flags & IORESOURCE_CACHEABLE)
+| 		dest_ptr =3D devm_ioremap(dev, res->start, size);
+| 	else
+| 		dest_ptr =3D devm_ioremap_nocache(dev, res->start, size);
+|=20
+| 	if (!dest_ptr) {
+| 		dev_err(dev, "ioremap failed for resource %pR\n", res);
+| 		devm_release_mem_region(dev, res->start, size);
+| 		dest_ptr =3D ERR_PTR(-ENOMEM);
+| 	}
+|=20
+| 	return dest_ptr;
+| }
 
-> +		compatible = "samsung,s5c73m3";
-> +		reg = <0>;
-> +		...
-> +	};
-> +};
+--=20
+balbi
 
-Otherwise I don't see anything problematic about the binding.
+--vbzKE9fGfpHIBC6T
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Cheers,
-Mark.
+iQIcBAEBAgAGBQJTB3P0AAoJEIaOsuA1yqREXukQAKV+oUFFcb+GuSEeo0cJjyzr
+mjxdjft8wE0yqqp4/yqD73m1Wg9hOvD4/JNOYglqcJhRj3JOLmNUPRvAk36EwTI/
+Mqq82VTjb46abKovCKoji/Y8KlCN01bM6BjI1LxSxwAwD3w8g7CLnrRkUANeMcXP
+UAGAwnrSiADGGF+LKVurNXxPEPx4l2DaYDyOes3515RTsJtXvK9dTXE2umd1EhLZ
+nLmiMYo0dckUuoC/97f6pZxqupN9+ww6Ab0xTZISprMGlY4PnTW62iyDLZu9OHDc
+FRWwVBbHXuzvLuIa9BGyFu0tcbf9J7ylzQmX0BxzinHbrzfo3+lw8fY9OugT8Xyb
+Ck3CEdn0CqFcg/34uLQ1wOwp/RDBwfA2+Jhj8OqQrnxtL71JcXIc0XESufStAGFJ
+MR/NdvvL/pqvyfWu6xROnVFwab8qnBeJqDDZQNVoEJqgE3WuSaqwzj5n1O2PWECN
+qhTewFiVoJJajCxfhKj8MOTDEMtvvjnUpwc35mxe0RCwDZ3jYimFgR6uTa8EN++V
+0INGRXd/+ZD8CqOyDGuhmuE6NDbYIZPfeK0NaBtAmObdaM4xvPGkoEho+QR+C3DS
+NICk5NdLIR4TwgZEEq2/rbCTqlXOasPpAYV1XBOArExL0IOXAW5/ShdTM7TtZp5m
+AvIXjvKoBzcc+B7e6MJN
+=ThyS
+-----END PGP SIGNATURE-----
+
+--vbzKE9fGfpHIBC6T--
