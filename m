@@ -1,102 +1,82 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: SPDX-License-Identifier
-Date: Fri, 21 Feb 2014 18:26:08 +0100
-Message-ID: <53078C30.7060703@monstr.eu>
-References: <774153d4-d33f-4bb4-813b-582762bc3af9@TX2EHSMHS021.ehs.local> <20140220182257.GF23217@saruman.home> <5306F458.9010706@monstr.eu> <20140221160442.GA17506@kroah.com> <5307790A.4050806@monstr.eu> <20140221161246.GM31902@saruman.home> <53077C5F.9000407@monstr.eu> <20140221162045.GN31902@saruman.home> <20140221165633.GA5465@kroah.com>
-Reply-To: monstr@monstr.eu
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [Patch v6 1/2] dmaengine: qcom_bam_dma: Add device tree binding
+Date: Fri, 21 Feb 2014 17:36:47 +0000
+Message-ID: <20140221173647.GC28555@e106331-lin.cambridge.arm.com>
+References: <1392964986-5207-1-git-send-email-agross@codeaurora.org>
+ <1392964986-5207-2-git-send-email-agross@codeaurora.org>
+ <20140221092657.GD7541@e106331-lin.cambridge.arm.com>
+ <20140221163053.GA3102@qualcomm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="sVUURwXO8G1cO9er7ujFXgQ2S7tU3E3oM"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140221165633.GA5465@kroah.com>
+Content-Disposition: inline
+In-Reply-To: <20140221163053.GA3102@qualcomm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Felipe Balbi <balbi@ti.com>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>, devicetree@vger.kernel.org, Wolfgang Denk <wd@denx.de>
+To: Andy Gross <agross@codeaurora.org>
+Cc: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---sVUURwXO8G1cO9er7ujFXgQ2S7tU3E3oM
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Fri, Feb 21, 2014 at 04:30:53PM +0000, Andy Gross wrote:
+> On Fri, Feb 21, 2014 at 09:26:57AM +0000, Mark Rutland wrote:
+> > On Fri, Feb 21, 2014 at 06:43:04AM +0000, Andy Gross wrote:
+> > > Add device tree binding support for the QCOM BAM DMA driver.
+> > > 
+> [snip]
+> > > +Required properties:
+> > > +- compatible:	Must be "qcom,bam-v1.4.0" for MSM8974 V1
+> > > +		Must be "qcom,bam-v1.4.1" for MSM8974 V2
+> > 
+> > This looks a bit odd. How about:
+> > 
+> > - compatible: must contain:
+> >   * "qcom,bam-v1.4.0" for MSM8974 V1
+> >   * "qcom,bam-v1.4.1" for MSM8974 V2
+> > 
+> 
+> Agreed.  I'll fix that.
+> 
+> > > +- reg: Address range for DMA registers
+> > > +- interrupts: single interrupt for this controller
+> > 
+> > This device only has a single interrupt? Or there's only one we care
+> > about at the moment?
+> > 
+> 
+> Yes only a single interrupt.  I can remove the s.
 
-On 02/21/2014 05:56 PM, Greg Kroah-Hartman wrote:
-> On Fri, Feb 21, 2014 at 10:20:45AM -0600, Felipe Balbi wrote:
->> Hi,
->>
->> On Fri, Feb 21, 2014 at 05:18:39PM +0100, Michal Simek wrote:
->>> On 02/21/2014 05:12 PM, Felipe Balbi wrote:
->>>> On Fri, Feb 21, 2014 at 05:04:26PM +0100, Michal Simek wrote:
->>>>> On 02/21/2014 05:04 PM, Greg Kroah-Hartman wrote:
->>>>>> On Fri, Feb 21, 2014 at 07:38:16AM +0100, Michal Simek wrote:
->>>>>>> BTW: u-boot started to use SPDX-License-Identifier
->>>>>>> which will be nice to start to use.
->>>>>>
->>>>>> I agree, feel free to start sending patches to use this type of
->>>>>> identifier for drivers.
->>>>>
->>>>> But we probably need to add that Licenses to one location.
->>>>> Documentation/Licenses?
->>>>
->>>> Just add to the drivers themselves, just like u-boot is doing. A sim=
-ple:
->>>>
->>>> 	$ git grep -e SPDX-License-Identifier
->>>>
->>>> will tell you filename and license. Or did I misunderstand your ques=
-tion ?
->>>
->>> But for doing this it is probably necessary to have location where
->>> you will place that licenses and you will explain what it is how
->>> it is done by Wolfgang in this commit.
->>>
->>> http://git.denx.de/?p=3Du-boot.git;a=3Dcommitdiff;h=3Deca3aeb352c964b=
-db28b8e191d6326370245e03f
->>>
->>> Then yes, adding one line is enough.
->>
->> spdx.org has all licenses, why don't we just rely on that instead of
->> adding every other license to the kernel source ?
->=20
-> Yes, all that will be acceptable is a one-line identifier in the file.
-> No need to have all the different licenses in the kernel source, that's=
+Please don't, the interrupts proeprty is standard and shouldn't change.
 
-> crazy and not needed at all.
->
-> I've told the SPDX people this in the past, and they keep promising tha=
-t
-> they will do the comment work, but it's been months and I have yet to
-> see a single patch...
+I was only asking to ensure that all interrupts were described in the
+binding, which they are. :)
 
-But shouldn't we at least write somewhere
-that it has connection to spdx.org where you can find out that licenses.
+> 
+> > > +- #dma-cells: must be <1>
+> > > +- clocks: required clock
+> > > +- clock-names: name of clock
+> > 
+> > Either describe the _exact_ name this binding expects for any clocks
+> > input, or get rid of clock-names. I would prefer the former.
+> 
+> So then I'd use the full name in the driver file.  That's fine.
 
-I have no problem to use this one-line identifier at all.
+Yup. 
 
-Thanks,
-Michal
+> 
+> [snip]
+> > > +Client:
+> > > +Required properties:
+> > > +- dmas: List of dma channel requests
+> > > +- dma-names: Names of aforementioned requested channels
+> > 
+> > Do we really need to describe the client binding? Do we not have a
+> > generic DMA binding doc we can refer to?
+> > 
+> 
+> Originally there was more information in the entry.  It was pared down over time
+> and I didn't go back to referencing the generic doc.  I'll do this and that'll
+> fix this and your next comment.
 
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+Sounds good!
 
-
-
---sVUURwXO8G1cO9er7ujFXgQ2S7tU3E3oM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlMHjDAACgkQykllyylKDCFDRwCfbIM70ia5M3IKxYQQXI1haszJ
-rIYAmwQfK5LnKHsEwJNtd2cMdPtlSWk/
-=+OFf
------END PGP SIGNATURE-----
-
---sVUURwXO8G1cO9er7ujFXgQ2S7tU3E3oM--
+Cheers,
+Mark.
