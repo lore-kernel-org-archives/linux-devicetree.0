@@ -1,211 +1,103 @@
-From: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
-Subject: [PATCH v2] dt: platform driver: Fill the resources before probe and defer if needed
-Date: Fri, 21 Feb 2014 14:18:40 +0100
-Message-ID: <1392988720-20976-1-git-send-email-jjhiblot@traphandler.com>
-References: <20140220153042.DF053C4050F@trevor.secretlab.ca>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v4 1/7] drivers: of: add initialization code for reserved memory
+Date: Fri, 21 Feb 2014 13:38:08 +0000
+Message-ID: <20140221133808.65AF7C40575@trevor.secretlab.ca>
+References: <1392893567-31623-1-git-send-email-m.szyprowski@samsung.com> < 1392893567-31623-2-git-send-email-m.szyprowski@samsung.com> <20140220140100 .5BD65C4050F@trevor.secretlab.ca> <530731DC.2000400@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140220153042.DF053C4050F@trevor.secretlab.ca>
+In-Reply-To: <530731DC.2000400@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: grant.likely@linaro.org, gregkh@linuxfoundation.org, robh+dt@kernel.org
-Cc: gregory.clement@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jean-Jacques Hiblot <jjhiblot@traphandler.com>
+To: Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Paul Mackerras <paulus@samba.org>
 List-Id: devicetree@vger.kernel.org
 
-The goal of this patch is to allow drivers to be probed even if at the time of
-the DT parsing some of their ressources are not available yet.
+On Fri, 21 Feb 2014 12:00:44 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+> Hello,
+> 
+> On 2014-02-20 15:01, Grant Likely wrote:
+> > On Thu, 20 Feb 2014 11:52:41 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+> > > This patch adds device tree support for contiguous and reserved memory
+> > > regions defined in device tree.
+> > >
+> > > Large memory blocks can be reliably reserved only during early boot.
+> > > This must happen before the whole memory management subsystem is
+> > > initialized, because we need to ensure that the given contiguous blocks
+> > > are not yet allocated by kernel. Also it must happen before kernel
+> > > mappings for the whole low memory are created, to ensure that there will
+> > > be no mappings (for reserved blocks) or mapping with special properties
+> > > can be created (for CMA blocks). This all happens before device tree
+> > > structures are unflattened, so we need to get reserved memory layout
+> > > directly from fdt.
+> > >
+> > > Later, those reserved memory regions are assigned to devices on each
+> > > device structure initialization.
+> > >
+> > > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > > [joshc: rework to implement new DT binding, provide mechanism for
+> > >  plugging in new reserved-memory node handlers via
+> > >  RESERVEDMEM_OF_DECLARE]
+> > > Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
+> > > [mszyprow: added generic memory reservation code, refactored code to
+> > >  put it directly into fdt.c]
+> > > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > > ---
+> > >  drivers/of/Kconfig                |    6 +
+> > >  drivers/of/Makefile               |    1 +
+> > >  drivers/of/fdt.c                  |  145 ++++++++++++++++++
+> > >  drivers/of/of_reserved_mem.c      |  296 +++++++++++++++++++++++++++++++++++++
+> > >  drivers/of/platform.c             |    7 +
+> > >  include/asm-generic/vmlinux.lds.h |   11 ++
+> > >  include/linux/of_reserved_mem.h   |   65 ++++++++
+> > >  7 files changed, 531 insertions(+)
+> > >  create mode 100644 drivers/of/of_reserved_mem.c
+> > >  create mode 100644 include/linux/of_reserved_mem.h
+> >
+> > Hi Marek,
+> >
+> > There's a lot of moving parts in this patch. Can you split the patch up a bit please. There are parts that I'm not entierly comfortable with yet and it will help reviewing them if they are added separately. For instance, the attaching regions to devices is something that I want to have some discussion about, but the core reserving static ranges I think is pretty much ready to be merged. I can merge the later while still debating the former if they are split.
+> >
+> > I would recommend splitting into four:
+> > 1) reservation of static regions without the support code for referencing them later
+> > 2) code to also do dynamic allocations of reserved regions - again without any driver references
+> > 3) add hooks to reference specific regions.
+> > 4) hooks into drivers/of/platform.c for wiring into the driver model.
+> >
+> > Can you also make the binding doc the first patch?
+> 
+> Ok, I will slice the patch into 4 pieces.
+> >
+> > <off topic> Wow, the flattree parsing code has to be really verbose. We really need better
+> > flat tree parsing functions and helpers.
+> 
+> Yes, parsing fdt is a real pain, but please don't ask me to implement 
+> all the
+> helpers to make it easier together with this patch. I (and probably other
+> developers) would really like to get this piece merged asap.
 
-In the current situation, the resource of a platform device are filled from the
-DT at the time the device is created (of_device_alloc()). The drawbackof this
-is that a device sitting close to the top of the DT (ahb for example) but
-depending on ressources that are initialized later (IRQ domain dynamically
-created for example)  will fail to probe because the ressources don't exist
-at this time.
+I won't. Mostly I was thinking out loud.
 
-This patch fills the resource structure only before the device is probed and
-will defer the probe if the resource are not available yet.
+> > > +	for (i = __reservedmem_of_table; i < &__rmem_of_table_sentinel; i++) {
+> > > +		reservedmem_of_init_fn initfn = i->data;
+> > > +		const char *compat = i->compatible;
+> > > +
+> > > +		if (!of_flat_dt_is_compatible(rmem->fdt_node, compat))
+> > > +			continue;
+> >
+> > What if two entries both match the compatible list? Ideally score would
+> > be taken into account. (I won't block on this issue, it can be a future
+> > enhancement)
+> 
+> If two entries have same compatible value they will be probed in the order
+> of presence in the kernel binary. The return value is checked and the next
+> one is being tried if init fails for the given function. The provided code
+> already makes use of this feature. Both DMA coherent and CMA use
+> "shared-dma-pool" compatible. DMA coherent init fails if 'reusable'
+> property has been found. On the other hand, CMA fails initialization if
+> 'reusable' property is missing. Frankly I would like to change standard
+> DMA coherent compatible value to 'dma-pool' and keep 'shared-dma-pool'
+> only for CMA, but I've implemented it the way it has been described in
+> your binding documentation.
 
-Signed-off-by: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
-Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
----
+My binding document isn't gospel and it hasn't been merged yet. Reply to
+the binding patch and make your argument for the change.
 
-Hi Grant,
-
-I reworked the patch as you proposed. To keep the overhead minimum, nirq and
-nreg are computed only the first time.
-In this implementation, only the missing IRQ ressources are re-tried for. It could
-easily be changed to re-parse all the IRQs though (replace if (!res->flags)
-with if ((!res->flags) || (res->flags & IORESOURCE_IRQ)).
-
-drivers/base/platform.c     |   5 +++
- drivers/of/platform.c       | 100 +++++++++++++++++++++++++++++++++-----------
- include/linux/of_platform.h |  10 +++++
- 3 files changed, 90 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index bc78848..cee9b8d 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -481,6 +481,10 @@ static int platform_drv_probe(struct device *_dev)
- 	struct platform_device *dev = to_platform_device(_dev);
- 	int ret;
- 
-+	ret = of_platform_device_prepare(dev);
-+	if (ret)
-+		goto error;
-+
- 	if (ACPI_HANDLE(_dev))
- 		acpi_dev_pm_attach(_dev, true);
- 
-@@ -488,6 +492,7 @@ static int platform_drv_probe(struct device *_dev)
- 	if (ret && ACPI_HANDLE(_dev))
- 		acpi_dev_pm_detach(_dev, true);
- 
-+error:
- 	if (drv->prevent_deferred_probe && ret == -EPROBE_DEFER) {
- 		dev_warn(_dev, "probe deferral not supported\n");
- 		ret = -ENXIO;
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 404d1da..a4e2602 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -141,36 +141,11 @@ struct platform_device *of_device_alloc(struct device_node *np,
- 				  struct device *parent)
- {
- 	struct platform_device *dev;
--	int rc, i, num_reg = 0, num_irq;
--	struct resource *res, temp_res;
- 
- 	dev = platform_device_alloc("", -1);
- 	if (!dev)
- 		return NULL;
- 
--	/* count the io and irq resources */
--	if (of_can_translate_address(np))
--		while (of_address_to_resource(np, num_reg, &temp_res) == 0)
--			num_reg++;
--	num_irq = of_irq_count(np);
--
--	/* Populate the resource table */
--	if (num_irq || num_reg) {
--		res = kzalloc(sizeof(*res) * (num_irq + num_reg), GFP_KERNEL);
--		if (!res) {
--			platform_device_put(dev);
--			return NULL;
--		}
--
--		dev->num_resources = num_reg + num_irq;
--		dev->resource = res;
--		for (i = 0; i < num_reg; i++, res++) {
--			rc = of_address_to_resource(np, i, res);
--			WARN_ON(rc);
--		}
--		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
--	}
--
- 	dev->dev.of_node = of_node_get(np);
- #if defined(CONFIG_MICROBLAZE)
- 	dev->dev.dma_mask = &dev->archdata.dma_mask;
-@@ -233,6 +208,81 @@ static struct platform_device *of_platform_device_create_pdata(
- 	return dev;
- }
- 
-+static int of_reg_count(struct device_node *np)
-+{
-+	int nreg = 0;
-+	if (of_can_translate_address(np)) {
-+		struct resource temp_res;
-+		while (of_address_to_resource(np, nreg, &temp_res) == 0)
-+			nreg++;
-+	}
-+	return nreg;
-+}
-+
-+int of_platform_device_prepare(struct platform_device *dev)
-+{
-+	struct device_node *np;
-+	int i, irq_index;
-+	struct resource *res;
-+
-+	/*
-+	 * This function applies only devices described in the DT.
-+	 * Other platform devices have their ressources already populated.
-+	 */
-+	np = dev->dev.of_node;
-+	if (!np)
-+		return 0;
-+
-+	/* Populate the resource table */
-+	if (!dev->resource) {
-+		int rc, nreg = 0, nirq;
-+		/* count the io and irq resources */
-+		nreg = of_reg_count(np);
-+		nirq = of_irq_count(np);
-+
-+		if (!nirq && !nreg)
-+			return 0;
-+
-+		res = kzalloc(sizeof(*res) * (nirq + nreg), GFP_KERNEL);
-+		if (!res)
-+			return -ENOMEM;
-+
-+		dev->resource = res;
-+		dev->num_resources = nreg + nirq;
-+
-+		for (i = 0; i < nreg; i++, res++) {
-+			rc = of_address_to_resource(np, i, res);
-+			if (WARN_ON(rc)) {
-+				/* THIS IS BAD; don't try to defer probing */
-+				dev->num_resources = 0;
-+				dev->resource = NULL;
-+				kfree(res);
-+				return rc;
-+			}
-+		}
-+
-+		if (!rc && of_irq_to_resource_table(np, res, nirq) != nirq) {
-+			/* IRQ controller is yet available. defer probing */
-+			return -EPROBE_DEFER;
-+		}
-+
-+		return 0;
-+	}
-+
-+	/* See which IRQ resources need to be redone */
-+	irq_index = 0;
-+	for (i = 0, res = dev->resource; i < dev->num_resources; i++, res++) {
-+		if (!res->flags) {
-+			if (!of_irq_to_resource(np, irq_index, res))
-+				return -EPROBE_DEFER;
-+			irq_index++;
-+		} else if (res->flags & IORESOURCE_IRQ)
-+			irq_index++;
-+	}
-+	return 0;
-+}
-+EXPORT_SYMBOL(of_platform_device_prepare);
-+
- /**
-  * of_platform_device_create - Alloc, initialize and register an of_device
-  * @np: pointer to node to create device for
-diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-index 05cb4a9..4e487ff 100644
---- a/include/linux/of_platform.h
-+++ b/include/linux/of_platform.h
-@@ -53,6 +53,16 @@ struct of_dev_auxdata {
- 
- extern const struct of_device_id of_default_bus_match_table[];
- 
-+/* Populate the resource for a platform device */
-+#ifdef CONFIG_OF
-+int of_platform_device_prepare(struct platform_device *dev);
-+#else
-+static inline int of_platform_device_prepare(
-+	struct platform_device *dev)
-+{
-+	return 0;
-+}
-+#endif
- /* Platform drivers register/unregister */
- extern struct platform_device *of_device_alloc(struct device_node *np,
- 					 const char *bus_id,
--- 
-1.9.0
+g.
