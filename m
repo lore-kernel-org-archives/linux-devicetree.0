@@ -1,40 +1,85 @@
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH tty-next v2 4/4] Documentation: devicetree: add
- bindings documentation for bcm63xx-uart
-Date: Fri, 21 Feb 2014 13:49:46 +0000
-Message-ID: <20140221134946.GA20449@e106331-lin.cambridge.arm.com>
-References: <1392920154-3642-1-git-send-email-f.fainelli@gmail.com>
- <1392920154-3642-5-git-send-email-f.fainelli@gmail.com>
- <3250738.VGSO94B75K@wuerfel>
+Subject: Re: [PATCH RFC] usb: gadget: Add xilinx axi usb2 device support
+Date: Fri, 21 Feb 2014 13:57:13 +0000
+Message-ID: <20140221135713.GB20449@e106331-lin.cambridge.arm.com>
+References: <774153d4-d33f-4bb4-813b-582762bc3af9@TX2EHSMHS021.ehs.local>
+ <20140220182257.GF23217@saruman.home>
+ <20140221120454.GD8783@e106331-lin.cambridge.arm.com>
+ <5307576F.5050506@monstr.eu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <3250738.VGSO94B75K@wuerfel>
-Sender: linux-serial-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mbizon@freebox.fr" <mbizon@freebox.fr>, "jogo@openwrt.org" <jogo@openwrt.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "gregory.0xf0@gmail.com" <gregory.0xf0@gmail.com>
+In-Reply-To: <5307576F.5050506@monstr.eu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <monstr@monstr.eu>
+Cc: Felipe Balbi <balbi@ti.com>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 21, 2014 at 12:49:05PM +0000, Arnd Bergmann wrote:
-> Two more comments:
+On Fri, Feb 21, 2014 at 01:41:03PM +0000, Michal Simek wrote:
+> Hi Mark,
 > 
-> On Thursday 20 February 2014 10:15:54 Florian Fainelli wrote:
-> > +- clock-names: should contain "periph" for the functional clock
+> On 02/21/2014 01:04 PM, Mark Rutland wrote:
+> > 
+> > On Thu, Feb 20, 2014 at 06:23:13PM +0000, Felipe Balbi wrote:
+> >> Hi,
+> >>
+> >> On Wed, Feb 19, 2014 at 03:10:45PM +0530, Subbaraya Sundeep Bhatta wrote:
+> >>> This patch adds xilinx axi usb2 device driver support
+> >>>
+> >>> Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
+> >>> ---
+> >>>  .../devicetree/bindings/usb/xilinx_usb.txt         |   21 +
+> >>>  drivers/usb/gadget/Kconfig                         |   14 +
+> >>>  drivers/usb/gadget/Makefile                        |    1 +
+> >>>  drivers/usb/gadget/xilinx_udc.c                    | 2045 ++++++++++++++++++++
+> >>>  4 files changed, 2081 insertions(+), 0 deletions(-)
+> >>>  create mode 100644 Documentation/devicetree/bindings/usb/xilinx_usb.txt
+> >>>  create mode 100644 drivers/usb/gadget/xilinx_udc.c
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/usb/xilinx_usb.txt b/Documentation/devicetree/bindings/usb/xilinx_usb.txt
+> >>> new file mode 100644
+> >>> index 0000000..acf03ab
+> >>> --- /dev/null
+> >>> +++ b/Documentation/devicetree/bindings/usb/xilinx_usb.txt
+> >>> @@ -0,0 +1,21 @@
+> >>> +Xilinx AXI USB2 device controller
+> >>> +
+> >>> +Required properties:
+> >>> +- compatible		: Should be "xlnx,axi-usb2-device-4.00.a"
+> > 
+> > Is "axi-usb2-device" the official device name?
 > 
-> I think we should really start standardizing on the clock names more.
-> We don't have any uart that calls its functional clock "periph" so
-> far.
+> It is the name of IP which Xilinx have and we are using names in this format.
 > 
-> How about naming it "fclk" or "uart"?
 > 
-> I'd actually prefer making it an anonymous clock, but I know that
-> will just trigger comments about what might happen if it turns
-> out we need more than one clock for a future version of this device.
+> >>> +- reg			: Physical base address and size of the Axi USB2
+> >>> +			  device registers map.
+> >>> +- interrupts		: Property with a value describing the interrupt
+> >>> +			  number.
+> > 
+> > Does the device only have a single interrupt?
+> 
+> I believe so.
+> 
+> 
+> >>> +- interrupt-parent	: Must be core interrupt controller
+> > 
+> > Is this strictly necessary?
+> 
+> I am not sure what do you mean by that. If you mean that interrupt-parent
+> can be written to the root of DTS file then we can setup system with more
+> interrupt controllers that's why it is required.
 
-Yup ;)
+At which point it's not a required property of the node...
 
-I'm happy as long as we have a well-defined name for each clock input,
-regardless of what those particular names might be.
+> If we can point to standard interrupt description then please point me to
+> exact description you would like to see here and we can change it.
 
-Mark.
+Unfortunately I'm not aware of a generic interrupts document. I just
+don't see the point in each document listing interrupt-parent as a
+requiredp roeprty when it's not. That said this is a trivial detail and
+not really a blocker.
+
+Cheers,
+Mark
