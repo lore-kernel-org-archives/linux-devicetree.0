@@ -1,36 +1,82 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: Re: [Patch v6 1/2] dmaengine: qcom_bam_dma: Add device tree binding
-Date: Fri, 21 Feb 2014 13:02:06 -0600
-Message-ID: <20140221190206.GC3102@qualcomm.com>
-References: <1392964986-5207-1-git-send-email-agross@codeaurora.org>
- <1392964986-5207-2-git-send-email-agross@codeaurora.org>
- <20140221092657.GD7541@e106331-lin.cambridge.arm.com>
- <20140221163053.GA3102@qualcomm.com>
- <20140221173647.GC28555@e106331-lin.cambridge.arm.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH 7/7] powerpc: Added PCI MSI support using the HSTA module
+Date: Sat, 22 Feb 2014 07:41:26 +1100
+Message-ID: <1393015286.6771.110.camel@pasglop>
+References: <1392964293-13687-1-git-send-email-alistair@popple.id.au>
+ <1392964293-13687-8-git-send-email-alistair@popple.id.au>
+ <1574137.lzDhNaVqIe@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140221173647.GC28555@e106331-lin.cambridge.arm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1574137.lzDhNaVqIe@wuerfel>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Alistair Popple <alistair@popple.id.au>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 21, 2014 at 05:36:47PM +0000, Mark Rutland wrote:
-[snip]
-> > 
-> > Yes only a single interrupt.  I can remove the s.
-> 
-> Please don't, the interrupts proeprty is standard and shouldn't change.
-> 
-> I was only asking to ensure that all interrupts were described in the
-> binding, which they are. :)
-> 
-
-Responding to emails before coffee is bad.....
-
--- 
-sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+T24gRnJpLCAyMDE0LTAyLTIxIGF0IDE1OjMzICswMTAwLCBBcm5kIEJlcmdtYW5uIHdyb3RlOgoK
+PiA+IEBAIC0yNDIsOCArMjY0LDEwIEBACj4gPiAgCQkJcmFuZ2VzID0gPDB4MDIwMDAwMDAgMHgw
+MDAwMDAwMCAweDgwMDAwMDAwIDB4MDAwMDAxMTAgMHg4MDAwMDAwMCAweDAgMHg4MDAwMDAwMAo+
+ID4gIAkJCSAgICAgICAgICAweDAxMDAwMDAwIDB4MCAgICAgICAgMHgwICAgICAgICAweDAwMDAw
+MTQwIDB4MCAgICAgICAgMHgwIDB4MDAwMTAwMDA+Owo+ID4gIAo+ID4gLQkJCS8qIEluYm91bmQg
+c3RhcnRpbmcgYXQgMCB0byBtZW1zaXplIGZpbGxlZCBpbiBieSB6SW1hZ2UgKi8KPiA+IC0JCQlk
+bWEtcmFuZ2VzID0gPDB4NDIwMDAwMDAgMHgwIDB4MCAweDAgMHgwIDB4MCAweDA+Owo+ID4gKwkJ
+CS8qIEluYm91bmQgc3RhcnRpbmcgYXQgMHgwIHRvIDB4NDAwMDAwMDAwMDAuIEluIG9yZGVyIHRv
+IHVzZSBNU0kKPiA+ICsJCQkgKiBQQ0kgZGV2aWNlcyBtdXN0IGJlIGFibGUgdG8gd3JpdGUgdG8g
+dGhlIEhTVEEgbW9kdWxlLgo+ID4gKwkJCSAqLwo+ID4gKwkJCWRtYS1yYW5nZXMgPSA8MHg0MjAw
+MDAwMCAweDAgMHgwIDB4MCAweDAgMHg0MDAgMHgwPjsKClNob3VsZCB3ZSAocHJvdmlkZWQgaXQn
+cyBwb3NzaWJsZSBpbiBIVykgY3JlYXRlIHR3byByYW5nZXMgaW5zdGVhZCA/IE9uZQpjb3Zlcmlu
+ZyBSQU0gYW5kIG9uZSBjb3ZlcmluZyBNU0lzID8gVG8gYXZvaWQgc3RyYXkgRE1BcyB3aGFja2lu
+ZyByYW5kb20KSFcgcmVnaXN0ZXJzIGluIHRoZSBjaGlwIC4uLgoKPiA+ICAJCQkvKiBUaGlzIGRy
+aXZlcyBidXNzZXMgMCB0byAweGYgKi8KPiA+ICAJCQlidXMtcmFuZ2UgPSA8MHgwIDB4Zj47Cj4g
+Cj4gQWgsIEkgZmlyc3Qgb25seSBzYXcgdGhlIGxpbmUgeW91IGFyZSByZW1vdmluZyBhbmQgd2Fz
+IGFib3V0Cj4gdG8gc3VnZ2VzdCB3aGF0IHlvdSBkbyBhbnl3YXkuIEdyZWF0IQo+IAo+ID4gZGlm
+ZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9zeXNkZXYvcHBjNHh4X3BjaS5jIGIvYXJjaC9wb3dlcnBj
+L3N5c2Rldi9wcGM0eHhfcGNpLmMKPiA+IGluZGV4IDU0ZWMxZDUuLjdjYzNhY2MgMTAwNjQ0Cj4g
+PiAtLS0gYS9hcmNoL3Bvd2VycGMvc3lzZGV2L3BwYzR4eF9wY2kuYwo+ID4gKysrIGIvYXJjaC9w
+b3dlcnBjL3N5c2Rldi9wcGM0eHhfcGNpLmMKPiA+IEBAIC0xNzYsOCArMTc2LDEyIEBAIHN0YXRp
+YyBpbnQgX19pbml0IHBwYzR4eF9wYXJzZV9kbWFfcmFuZ2VzKHN0cnVjdCBwY2lfY29udHJvbGxl
+ciAqaG9zZSwKPiA+ICAJCXJldHVybiAtRU5YSU87Cj4gPiAgCX0KPiA+ICAKPiA+IC0JLyogQ2hl
+Y2sgdGhhdCB3ZSBhcmUgZnVsbHkgY29udGFpbmVkIHdpdGhpbiAzMiBiaXRzIHNwYWNlICovCj4g
+PiAtCWlmIChyZXMtPmVuZCA+IDB4ZmZmZmZmZmYpIHsKPiA+ICsJLyogQ2hlY2sgdGhhdCB3ZSBh
+cmUgZnVsbHkgY29udGFpbmVkIHdpdGhpbiAzMiBiaXRzIHNwYWNlIGlmIHdlIGFyZSBub3QKPiA+
+ICsJICogcnVubmluZyBvbiBhIDQ2MHN4IG9yIDQ3NmZwZSB3aGljaCBoYXZlIDY0IGJpdCBidXMg
+YWRkcmVzc2VzLgo+ID4gKwkgKi8KPiA+ICsJaWYgKHJlcy0+ZW5kID4gMHhmZmZmZmZmZiAmJgo+
+ID4gKwkgICAgIShvZl9kZXZpY2VfaXNfY29tcGF0aWJsZShob3NlLT5kbiwgImlibSxwbGItcGNp
+ZXgtNDYwc3giKQo+ID4gKwkgICAgICB8fCBvZl9kZXZpY2VfaXNfY29tcGF0aWJsZShob3NlLT5k
+biwgImlibSxwbGItcGNpZXgtNDc2ZnBlIikpKSB7Cj4gPiAgCQlwcmludGsoS0VSTl9FUlIgIiVz
+OiBkbWEtcmFuZ2VzIG91dHNpZGUgb2YgMzIgYml0cyBzcGFjZVxuIiwKPiA+ICAJCSAgICAgICBo
+b3NlLT5kbi0+ZnVsbF9uYW1lKTsKPiA+ICAJCXJldHVybiAtRU5YSU87Cj4gCj4gQSBtb3JlIGdl
+bmVyYWwgcXVlc3Rpb24gZm9yIEJlbkg6IEFwcGFyZW50bHkgdGhpcyBQQ0kgaW1wbGVtZW50YXRp
+b24gaXMKPiBnZXR0aW5nIHJldXNlZCBvbiBhcm02NCBmb3IgQVBNIFgtR2VuZS4gRG8geW91IHNl
+ZSBhbnkgdmFsdWUgaW4gdHJ5aW5nIHRvCj4gc2hhcmUgaG9zdCBjb250cm9sbGVyIGRyaXZlcnMg
+bGlrZSB0aGlzIG9uZSBhY3Jvc3MgcG93ZXJwYyBhbmQgYXJtNjQ/CgpJIHdvdWxkIHN0YXJ0IGR1
+cGxpY2F0aW5nLCBhbmQgc2VlIGhvdyBtdWNoIGNvbW1vbiBjb2RlIHJlbWFpbnMuLi4gVGhlbgpl
+dmVudHVhbGx5IG1lcmdlLgoKPiBJdCdzIHBvc3NpYmxlIHdlIGFyZSBnb2luZyB0byBzZWUgdGhl
+IHNhbWUgc2l0dWF0aW9uIHdpdGggZnNsX3BjaSBpbiB0aGUKPiBmdXR1cmUsIGlmIGFybSBhbmQg
+cG93ZXJwYyBxb3JpcSBjaGlwcyB1c2UgdGhlIHNhbWUgcGVyaXBoZXJhbHMuIE15Cj4gcGxhbiBm
+b3IgYXJtNjQgcmlnaHQgbm93IGlzIHRvIG1ha2UgUENJIHdvcmsgd2l0aG91dCBhbnkgY29kZSBp
+biBhcmNoLywKPiBqdXN0IHVzaW5nIG5ldyBoZWxwZXIgZnVuY3Rpb25zIGluIGRyaXZlcnMvcGNp
+IGFuZCBzdGlja2luZyB0aGUgaG9zdAo+IGRyaXZlcnMgaW50byBkcml2ZXJzL3BjaS9ob3N0IGFz
+IHdlIHN0YXJ0ZWQgZG9pbmcgZm9yIGFybTMyLCBidXQgaXQKPiBjYW4gcmVxdWlyZSBzaWduaWZp
+Y2FudCB3b3JrIHRvIG1ha2UgdGhvc2UgZHJpdmVycyBjb21wYXRpYmxlIHdpdGgKPiB0aGUgcG93
+ZXJwYyBwY2ktY29tbW9uLmMuCgpwb3dlcnBjIHBjaS1jb21tb24uYyBpcyBzaHJpbmtpbmcgOi0p
+IEF0IGxlYXN0IHRoZSBhZGRyZXNzIHJlbWFwcGluZyBpcwphbGwgaW4gdGhlIGNvcmUgbm93LCB3
+ZSBjb3VsZCBtb3ZlIG1vcmUgb3ZlciBJIHN1cHBvc2UuLi4KCkNoZWVycywKQmVuLgoKPiAJQXJu
+ZAo+IC0tCj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVu
+c3Vic2NyaWJlIGRldmljZXRyZWUiIGluCj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9y
+ZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdl
+ci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwKCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4
+cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5m
+by9saW51eHBwYy1kZXY=
