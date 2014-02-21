@@ -1,49 +1,35 @@
-From: Warner Losh <wlosh-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 Subject: Re: devicetree repository separation/migration
-Date: Fri, 21 Feb 2014 11:28:04 -0700
-Message-ID: <F59CF498-8B79-49FB-B9AC-D94C07179144@bsdimp.com>
-References: <20140217180544.GU7862@titan.lakedaemon.net> <20140218155750. GS17250@pengutronix.de> <20140218181854.GB7862@titan.lakedaemon.net> < CACxGe6vU3j4-UtUtxBkT=Mf+AeLVxBcWicGqQhcGVZXnEBUkig@mail.gmail.com> < 88923CF8-5E0A-46A4-AAA0-AC277F5C9446@bsdimp.com> <20140220113951.612DDC4050F@trevor.secretlab.ca>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140220113951.612DDC4050F-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, =?utf-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Date: Fri, 21 Feb 2014 10:47:09 -0800
+Message-ID: <CAOesGMjY2aDLPYLncxHs9gqmWCFy+e4sZK_ET-17qzEU-JwvdQ@mail.gmail.com>
+References: <20140217180544.GU7862@titan.lakedaemon.net>
+	<5306A6C0.9000206@gmail.com>
+	<20140221141136.GI17250@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140221141136.GI17250-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Feb 21, 2014 at 6:11 AM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> On Thu, Feb 20, 2014 at 05:07:12PM -0800, Frank Rowand wrote:
 
-On Feb 20, 2014, at 4:39 AM, Grant Likely wrote:
+>> Why are the changes not submitted upstream?  (Or if they were submitted, why
+>> were they not accepted?)
+>
+> The descriptions where to find the environment are obviously barebox
+> specific and not acceptable upstream.
 
-> On Wed, 19 Feb 2014 14:43:58 -0700, Warner Losh <wlosh-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org> wrote:
->> 
->> On Feb 19, 2014, at 2:09 PM, Grant Likely wrote:
->> 
->>> On Tue, Feb 18, 2014 at 6:18 PM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
->>>> On Tue, Feb 18, 2014 at 04:57:50PM +0100, Sascha Hauer wrote:
->>>>> It will be interesting to see which rules should apply for merging new
->>>>> bindings. I know that devicetrees should be OS agnostic, but sometimes
->>>>> they are modelled after how Linux currently works. What happens when the
->>>>> *BSD guys have different ideas how a good binding looks like? How will
->>>>> such conflicts be resolved?
->>>> 
->>>> That's more a question for Grant.  I assume we'll all put on our big-boy
->>>> pants and pick the best technical solution based on their merits. :)
->>> 
->>> I think you've answered it pretty competently.
->> 
->> What, the BSDs don't get a free pass to dump junk into the process. I'm shocked :)
->> 
->> But we have bug-boy pants over in BSD land, so that shouldn't be a problem.
-> 
-> Bug-boy pants? Sounds sticky.
+Why not? Wouldn't it be useful if you could find where the environment
+is from the running Linux image so that you can change variables
+without rebooting into Barebox first?
 
-Yea, gotta those accidental typos...
 
-Warner
-
+-Olof
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
+To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
