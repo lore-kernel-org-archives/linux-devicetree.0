@@ -1,64 +1,107 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH RFC] usb: gadget: Add xilinx axi usb2 device support
-Date: Fri, 21 Feb 2014 17:04:26 +0100
-Message-ID: <5307790A.4050806@monstr.eu>
-References: <774153d4-d33f-4bb4-813b-582762bc3af9@TX2EHSMHS021.ehs.local> <20140220182257.GF23217@saruman.home> <5306F458.9010706@monstr.eu> <20140221160442.GA17506@kroah.com>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 07/10] exynos4-is: Add clock provider for the
+ SCLK_CAM clock outputs
+Date: Fri, 21 Feb 2014 16:05:05 +0000
+Message-ID: <20140221160504.GG20449@e106331-lin.cambridge.arm.com>
+References: <1392925237-31394-1-git-send-email-s.nawrocki@samsung.com>
+ <1392925237-31394-9-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="NFBtoLn9bBvstbEFMJBCl4OhE42XGNsJJ"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140221160442.GA17506-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1392925237-31394-9-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "a.hajda@samsung.com" <a.hajda@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---NFBtoLn9bBvstbEFMJBCl4OhE42XGNsJJ
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Thu, Feb 20, 2014 at 07:40:34PM +0000, Sylwester Nawrocki wrote:
+> This patch adds clock provider so the the SCLK_CAM0/1 output clocks
+> can be accessed by image sensor devices through the clk API.
+> 
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+> Changes since v3:
+>  - use clock-output-names DT property instead of hard coding names
+>    of registered clocks in the driver; first two entries of the
+>    clock-names property value are used to specify parent clocks of
+>    cam_{a,b}_clkout clocks, rather than hard coding it to sclk_cam{0,1}
+>    in the driver.
+>  - addressed issues pointed out in review by Mauro.
+> 
+> Changes since v2:
+>  - use 'camera' DT node drirectly as clock provider node, rather than
+>   creating additional clock-controller child node.
+>  - DT binding documentation moved to a separate patch.
+> ---
+>  drivers/media/platform/exynos4-is/media-dev.c |  110 +++++++++++++++++++++++++
+>  drivers/media/platform/exynos4-is/media-dev.h |   19 ++++-
+>  2 files changed, 128 insertions(+), 1 deletion(-)
 
-On 02/21/2014 05:04 PM, Greg Kroah-Hartman wrote:
-> On Fri, Feb 21, 2014 at 07:38:16AM +0100, Michal Simek wrote:
->> BTW: u-boot started to use SPDX-License-Identifier
->> which will be nice to start to use.
->=20
-> I agree, feel free to start sending patches to use this type of
-> identifier for drivers.
+[...]
 
-But we probably need to add that Licenses to one location.
-Documentation/Licenses?
+> +static int fimc_md_register_clk_provider(struct fimc_md *fmd)
+> +{
+> +	struct cam_clk_provider *cp = &fmd->clk_provider;
+> +	struct device *dev = &fmd->pdev->dev;
+> +	int i, ret;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(cp->clks); i++) {
+> +		struct cam_clk *camclk = &cp->camclk[i];
+> +		struct clk_init_data init;
+> +
+> +		ret = of_property_read_string_index(dev->of_node,
+> +					"clock-output-names", i, &init.name);
+
+Are there not well-defined names for the clock outputs of the block?
+
+> +		if (ret < 0)
+> +			break;
+> +
+> +		ret = of_property_read_string_index(dev->of_node,
+> +					"clock-names", i, init.parent_names);
+
+This shouldn't be a parent name. It should be the input line name.
+
+I don't think this makes sense.
+
+Why do you need the name of the parent clock?
+
+> +		if (ret < 0)
+> +			break;
+> +
+> +		init.num_parents = 1;
+> +		init.ops = &cam_clk_ops;
+> +		init.flags = CLK_SET_RATE_PARENT;
+> +		camclk->hw.init = &init;
+> +		camclk->fmd = fmd;
+> +
+> +		cp->clks[i] = clk_register(NULL, &camclk->hw);
+> +		if (IS_ERR(cp->clks[i])) {
+> +			dev_err(dev, "failed to register clock: %s (%ld)\n",
+> +					init.name, PTR_ERR(cp->clks[i]));
+> +			ret = PTR_ERR(cp->clks[i]);
+> +			goto err;
+> +		}
+> +		cp->num_clocks++;
+> +	}
+> +
+> +	if (cp->num_clocks == 0) {
+> +		dev_warn(dev, "clk provider not registered\n");
+> +		return 0;
+> +	}
+> +
+> +	cp->clk_data.clks = cp->clks;
+> +	cp->clk_data.clk_num = cp->num_clocks;
+> +	cp->of_node = dev->of_node;
+> +	ret = of_clk_add_provider(dev->of_node, of_clk_src_onecell_get,
+> +				  &cp->clk_data);
+
+Are _all_ of the input clock lines available to children in hardware?
+
+The binding and commit message(s) implied only two clocks were, so
+what's the point in exporting clocks which aren't available?
 
 Thanks,
-Michal
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---NFBtoLn9bBvstbEFMJBCl4OhE42XGNsJJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlMHeQoACgkQykllyylKDCE0VgCeMlf17c37nXT/49QH6B5RjTZj
-//EAn2Al4c1nttfUka6upstB+VbMysl5
-=kwZC
------END PGP SIGNATURE-----
-
---NFBtoLn9bBvstbEFMJBCl4OhE42XGNsJJ--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Mark.
