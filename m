@@ -1,178 +1,393 @@
-Return-Path: <linaro-kernel-bounces@lists.linaro.org>
-Date: Mon, 3 Feb 2014 13:21:46 -0600
-From: kodiak furr <boxerapp@aol.com>
-Message-ID: <DB8F56A9-FD63-4361-A17E-2B3AF55ECCB3@aol.com>
-In-Reply-To: <20140203191837.GC4889@e106497-lin.cambridge.arm.com>
-References: <20140203191837.GC4889@e106497-lin.cambridge.arm.com>
-Subject: Re: [PATCH] arm64: Add architecture support for PCI
+Return-Path: <sriku.linux@gmail.com>
 MIME-Version: 1.0
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-kernel>,
- <mailto:linaro-kernel-request@lists.linaro.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-kernel>
-List-Post: <mailto:linaro-kernel@lists.linaro.org>
-List-Help: <mailto:linaro-kernel-request@lists.linaro.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-kernel>,
- <mailto:linaro-kernel-request@lists.linaro.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============7143198835380267376=="
-Errors-To: linaro-kernel-bounces@lists.linaro.org
-Sender: linaro-kernel-bounces@lists.linaro.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, LKML <linux-kernel@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
+Sender: sriku.linux@gmail.com
+In-Reply-To: <CAJe_ZheGP-9f659tOdCHEMrbh73MDi7VjoieFhdQbvjVwiEbJQ@mail.gmail.com>
+References: <1392465619-27614-1-git-send-email-sthokal@xilinx.com>
+	<1392465619-27614-2-git-send-email-sthokal@xilinx.com>
+	<CAJe_Zhc_GNNSDWNFuk+cMHEqxfSCJB_ey=Bf+SwJK-nS=u9ceg@mail.gmail.com>
+	<CA+mB=1KdZZpTmpA0Xp_c4mhgFbjRZ6urYrCwdvoTCmcugQMDUA@mail.gmail.com>
+	<CAJe_ZhdOmu3k9gbPdQzPteyzwsMA8OzWHdhHnXudbF=X7JMhVQ@mail.gmail.com>
+	<CA+mB=1K43MDZj0Rx3q=ETQMaFsG1j7TXsH6v-7a26JdtqTJkbw@mail.gmail.com>
+	<CAJe_ZhfedP7Paf3Zq9chL0WUeLJrsy_DJL05sSbfqnfTtji=HQ@mail.gmail.com>
+	<CA+mB=1LK+aVbvh741+PMnpj_mwZRvJZzR5Fh=hf72UWQvxUiVQ@mail.gmail.com>
+	<CAJe_ZheGP-9f659tOdCHEMrbh73MDi7VjoieFhdQbvjVwiEbJQ@mail.gmail.com>
+Date: Fri, 21 Feb 2014 20:07:30 +0530
+Message-ID: <CA+mB=1KqP=KgNZ_hYGbhin5TqokA+nCRPAA4Qa2R_2OWwv4yVw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] dma: Support multiple interleaved frames with
+ non-contiguous memory
+From: Srikanth Thokala <sthokal@xilinx.com>
+Content-Type: multipart/alternative; boundary=089e01229710d2468a04f2eb8f07
+To: Jassi Brar <jaswinder.singh@linaro.org>
+Cc: Srikanth Thokala <sthokal@xilinx.com>, "Williams, Dan J" <dan.j.williams@intel.com>, "Koul, Vinod" <vinod.koul@intel.com>, Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Levente Kurusa <levex@linux.com>, Lars-Peter Clausen <lars@metafoo.de>, lkml <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-ID: <devicetree@vger.kernel.org>
 
---===============7143198835380267376==
-Content-Type: multipart/alternative; boundary="52efec4a_327b23c6_a1"
+--089e01229710d2468a04f2eb8f07
+Content-Type: text/plain; charset=ISO-8859-1
 
---52efec4a_327b23c6_a1
-Content-Type: text/plain; charset="UTF-8"
+On Thu, Feb 20, 2014 at 3:23 PM, Jassi Brar <jaswinder.singh@linaro.org>
+wrote:
+> On 20 February 2014 14:54, Srikanth Thokala <sthokal@xilinx.com> wrote:
+>> On Wed, Feb 19, 2014 at 12:33 AM, Jassi Brar <jaswinder.singh@linaro.org>
+wrote:
+>>> On 18 February 2014 23:16, Srikanth Thokala <sthokal@xilinx.com> wrote:
+>>>> On Tue, Feb 18, 2014 at 10:20 PM, Jassi Brar <
+jaswinder.singh@linaro.org> wrote:
+>>>>> On 18 February 2014 16:58, Srikanth Thokala <sthokal@xilinx.com>
+wrote:
+>>>>>> On Mon, Feb 17, 2014 at 3:27 PM, Jassi Brar <
+jaswinder.singh@linaro.org> wrote:
+>>>>>>> On 15 February 2014 17:30, Srikanth Thokala <sthokal@xilinx.com>
+wrote:
+>>>>>>>> The current implementation of interleaved DMA API support multiple
+>>>>>>>> frames only when the memory is contiguous by incrementing
+src_start/
+>>>>>>>> dst_start members of interleaved template.
+>>>>>>>>
+>>>>>>>> But, when the memory is non-contiguous it will restrict slave
+device
+>>>>>>>> to not submit multiple frames in a batch.  This patch handles this
+>>>>>>>> issue by allowing the slave device to send array of interleaved dma
+>>>>>>>> templates each having a different memory location.
+>>>>>>>>
+>>>>>>> How fragmented could be memory in your case? Is it inefficient to
+>>>>>>> submit separate transfers for each segment/frame?
+>>>>>>> It will help if you could give a typical example (chunk size and gap
+>>>>>>> in bytes) of what you worry about.
+>>>>>>
+>>>>>> With scatter-gather engine feature in the hardware, submitting
+separate
+>>>>>> transfers for each frame look inefficient. As an example, our DMA
+engine
+>>>>>> supports up to 16 video frames, with each frame (a typical video
+frame
+>>>>>> size) being contiguous in memory but frames are scattered into
+different
+>>>>>> locations. We could not definitely submit frame by frame as it would
+be
+>>>>>> software overhead (HW interrupting for each frame) resulting in
+video lags.
+>>>>>>
+>>>>> IIUIC, it is 30fps and one dma interrupt per frame ... it doesn't seem
+>>>>> inefficient at all. Even poor-latency audio would generate a higher
+>>>>> interrupt-rate. So the "inefficiency concern" doesn't seem valid to
+>>>>> me.
+>>>>>
+>>>>> Not to mean we shouldn't strive to reduce the interrupt-rate further.
+>>>>> Another option is to emulate the ring-buffer scheme of ALSA.... which
+>>>>> should be possible since for a session of video playback the frame
+>>>>> buffers' locations wouldn't change.
+>>>>>
+>>>>> Yet another option is to use the full potential of the
+>>>>> interleaved-xfer api as such. It seems you confuse a 'video frame'
+>>>>> with the interleaved-xfer api's 'frame'. They are different.
+>>>>>
+>>>>> Assuming your one video frame is F bytes long and Gk is the gap in
+>>>>> bytes between end of frame [k] and start of frame [k+1] and  Gi != Gj
+>>>>> for i!=j
+>>>>> In the context of interleaved-xfer api, you have just 1 Frame of 16
+>>>>> chunks. Each chunk is Fbytes and the inter-chunk-gap(ICG) is Gk  where
+>>>>> 0<=k<15
+>>>>> So for your use-case .....
+>>>>>   dma_interleaved_template.numf = 1   /* just 1 frame */
+>>>>>   dma_interleaved_template.frame_size = 16  /* containing 16 chunks */
+>>>>>    ...... //other parameters
+>>>>>
+>>>>> You have 3 options to choose from and all should work just as fine.
+>>>>> Otherwise please state your problem in real numbers (video-frames'
+>>>>> size, count & gap in bytes).
+>>>>
+>>>> Initially I interpreted interleaved template the same.  But, Lars
+corrected me
+>>>> in the subsequent discussion and let me put it here briefly,
+>>>>
+>>>> In the interleaved template, each frame represents a line of size
+denoted by
+>>>> chunk.size and the stride by icg.  'numf' represent number of frames
+i.e.
+>>>> number of lines.
+>>>>
+>>>> In video frame context,
+>>>> chunk.size -> hsize
+>>>> chunk.icg -> stride
+>>>> numf -> vsize
+>>>> and frame_size is always 1 as it will have only one chunk in a line.
+>>>>
+>>> But you said in your last post
+>>>   "with each frame (a typical video frame size) being contiguous in
+memory"
+>>>  ... which is not true from what you write above. Anyways, my first 2
+>>> suggestions still hold.
+>>
+>> Yes, each video frame is contiguous and they can be scattered.
+>>
+> I assume by contiguous frame you mean as in framebuffer?  Which is an
+> array of bytes.
+> If yes, then you should do as I suggest first,  frame_size=16  and numf=1.
+
+I think am confusing you.  I would like to explain with an example.  Lets
+say
+each video frame is 4k size starting at address 0x10004000 (-0x10005000) and
+other frame at 0x20002000 (-0x20003000), and so on.  So, the frames are
+scattered in memory and as the template doesnt allow multiple src_start/
+dst_start we could not use single template to fill the HW descriptors (of
+frames).  So, I feel your suggestion might not work if the frames are
+scattered.
+Also, how could we get 'vsize' value in your approach?  More importantly,
+we are overriding the semantics of interleaved template members.
+
+>
+> If no, then it seems you are already doing the right thing.... the
+> ring-buffer scheme. Please share some stats how the current api is
+> causing you overhead because that is a very common case (many
+> controllers support LLI) and you have 467ms (@30fps with 16-frames
+> ring-buffer) to queue in before you see any frame drop.
+
+As I mentioned earlier in the thread, our hardware has a SG engine where by
+we could send multiple frames in a batch.  Using the original implementation
+of interleaved API, we have three options to transfer.
+
+One is to send frame by frame to the hardware.  We get a async_tx desc for
+each frame and then we submit it to hardware triggering it to transfer this
+BD.
+We queue the next descriptor on the pending queue and whenever there is
+a completion interrupt we submit the next BD on this queue to hardware. In
+this implementation we are not efficiently using the SG engine in the
+hardware
+as we transferring frame by frame even HW allows us to transfer multiple
+frames.
+
+The second option is to queue all the BDs until the maximum frames that HW
+is
+capable to transfer in a batch and then submit to SG engine in the HW.  With
+this approach I feel there will be additional software overhead to track
+the number
+of maximum transfers and few additional cycles to release the cookie of
+each desc.
+Here, each desc represents a frame.
+
+The last option is the current implementation of the driver along with this
+change in
+API.  It will allow us to send array of interleaved templates wherein we
+could allocate
+a single async desc which will handle multiple frames (or segments) and
+just submit
+this desc to HW.  Then we program the current to first frame, tail to last
+frame and
+HW will complete this transfer.  Here, each desc represents multiple frames.
+
+My point here is the driver should use hardware resources efficiently and I
+feel the
+driver will be inefficient if we dont use them.
+
+I request you to please go through our hardware specification to get an
+overview of
+implementation and provide me your suggestions.  Here is the link,
+http://www.xilinx.com/support/documentation/ip_documentation/axi_vdma/v6_1/pg020_axi_vdma.pdf
+
+Srikanth
+
+>
+> Regards,
+> Jassi
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+
+--089e01229710d2468a04f2eb8f07
+Content-Type: text/html; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-kodiak furr liked your message with Boxer. On =46ebruary 3, 2014 at 1:18:=
-38 PM CST, Liviu Dudau  wrote:On Mon, =46eb 03, 2014 at 06:58:56PM +0000,=
- Arnd Bergmann wrote:> On Monday 03 =46ebruary 2014 18:43:48 Liviu Dudau =
-wrote:> > diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/a=
-sm/io.h> > index 4cc813e..ce5bad2 100644> > --- a/arch/arm64/include/asm/=
-io.h> > +++ b/arch/arm64/include/asm/io.h> > =40=40 -120,9 +120,13 =40=40=
- static inline u64 =5F=5Fraw=5Freadq(const volatile void =5F=5Fiomem *add=
-r)> > /*> > * I/O port access primitives.> > */> > +=23define arch=5Fhas=5F=
-dev=5Fport() (0)> > Why not=3FMaybe I got it the wrong way around, but th=
-e comment in include/linux/io.h says:/* * Some systems do not have legacy=
- ISA devices. * /dev/port is not a valid interface on these systems. * So=
- for those archs,  should define the following symbol. */So ... defining =
-it should mean no legacy ISA devices, right=3F> > > =23define IO=5FSPACE=5F=
-LIMIT 0xffff> > You probably want to increase this a bit, to allow multip=
-le host bridges> to have their own I/O space.OK, but to what size=3F> > >=
- =23define PCI=5FIOBASE ((void =5F=5Fiomem *)(MODULES=5FVADDR - SZ=5F2M))=
-> > And modify this location: There is no particular reason to have the I=
-/O space> mapped exactly 2MB below the loadable modules, as virtual addre=
-ss space is> essentially free.Will talk with Catalin about where to place=
- this.> > > +=23define ioport=5Fmap(port, nr) (PCI=5FIOBASE + ((port) & I=
-O=5FSPACE=5FLIMIT))> > +=23define ioport=5Funmap(addr)> > inline function=
-s=3FWill do, thanks=21> > > static inline u8 inb(unsigned long addr)> > =7B=
-> > return readb(addr + PCI=5FIOBASE);> > diff --git a/arch/arm64/include=
-/asm/pci.h b/arch/arm64/include/asm/pci.h> > new file mode 100644> > inde=
-x 0000000..dd084a3> > --- /dev/null> > +++ b/arch/arm64/include/asm/pci.h=
-> > =40=40 -0,0 +1,35 =40=40> > +=23ifndef =5F=5FASM=5FPCI=5FH> > +=23def=
-ine =5F=5FASM=5FPCI=5FH> > +=23ifdef =5F=5FKERNEL=5F=5F> > +> > +=23inclu=
-de > > +=23include > > +=23include > > +> > +=23include > > +=23include >=
- > +=23include > > +> > +=23define PCIBIOS=5FMIN=5FIO 0> > +=23define PCI=
-BIOS=5FMIN=5FMEM 0> > PCIBIOS=5FMIN=5FIO is normally set to 0x1000, to st=
-ay out of the ISA range.:) No ISA support=21 (Die ISA, die=21=21) > > > d=
-iff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c> > new file=
- mode 100644> > index 0000000..7b652cf> > --- /dev/null> > +++ b/arch/arm=
-64/kernel/pci.c> > =40=40 -0,0 +1,112 =40=40> > None of this looks really=
- arm64 specific, nor should it be. I think> we should try a little harder=
- to move this as a default implementation> into common code, even if we s=
-tart out by having all architectures> override it.Agree. This is the R=46=
-C version. I didn't dare to post a patch with fixesfor all architectures.=
- :)> > > +int pci=5Fioremap=5Fio(unsigned int offset, phys=5Faddr=5Ft phy=
-s=5Faddr)> > +=7B> > + BUG=5FON(offset + SZ=5F64K - 1 > IO=5FSPACE=5FLIMI=
-T);> > +> > + return ioremap=5Fpage=5Frange((unsigned long)PCI=5FIOBASE +=
- offset,> > + (unsigned long)PCI=5FIOBASE + offset + SZ=5F64K,> > + phys=5F=
-addr,> > + =5F=5Fpgprot(PROT=5FDEVICE=5FnGnRE));> > +=7D> > Not sure if w=
-e want to treat this one as architecture specific though.> It certainly w=
-on't be portable to x86, but it could be shared with> a couple of others.=
- We may also want to redesign the interface.> I've been thinking we could=
- make this function allocate space in the> Linux virtual I/O space apertu=
-re, and pass two resources into it> (physical I/O aperture and bus I/O ra=
-nge), and get the actual> io=5Foffset as the return value, or a negative =
-error number.Not sure I completely follow your idea.> > That way, you cou=
-ld have an arbitrary number of host bridges in the> system and each one g=
-ets a share of the virtual aperture until> it's full.One still needs to f=
-ix the pci=5Frequest=5Fregion use that checks againstioport=5Fresource. B=
-ut it is an interesting idea.> > Arnd> > Thanks for reviewing this patch=21=
-Liviu--      
---52efec4a_327b23c6_a1
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+<div dir=3D"ltr">On Thu, Feb 20, 2014 at 3:23 PM, Jassi Brar &lt;<a href=3D=
+"mailto:jaswinder.singh@linaro.org" target=3D"_blank">jaswinder.singh@linar=
+o.org</a>&gt; wrote:<br>&gt; On 20 February 2014 14:54, Srikanth Thokala &l=
+t;<a href=3D"mailto:sthokal@xilinx.com" target=3D"_blank">sthokal@xilinx.co=
+m</a>&gt; wrote:<br>
 
-<html><body><div>kodiak furr liked your message with <a href=3D=22http://=
-ad.apps.fm/x3NHJParL2cT9cQ9WcgT1xM8G1T=5FLUvoWYXredpuoYBLq62ptJqsuhqD23uA=
-mN=5FARL=5FcKzXIyDOjqo=5F2b16qX20uaphn=46WU7uPwUiYWuOAT=46UAGQB7Cox3TWT3Z=
-KjzWyP=46IlhepnEZcRklQejqpibw=22>Boxer</a>.</div><br/><br/><div><div clas=
-s=3D=22quote=22>On =46ebruary 3, 2014 at 1:18:38 PM CST, Liviu Dudau <Liv=
-iu.Dudau=40arm.com> wrote:<br/><blockquote type=3D=22cite=22 style=3D=22b=
-order-left-style:solid;border-width:1px;margin-left:0px;padding-left:10px=
-;=22>On Mon, =46eb 03, 2014 at 06:58:56PM +0000, Arnd Bergmann wrote:<br =
-/>> On Monday 03 =46ebruary 2014 18:43:48 Liviu Dudau wrote:<br />> > dif=
-f --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/io.h<br />=
-> > index 4cc813e..ce5bad2 100644<br />> > --- a/arch/arm64/include/asm/i=
-o.h<br />> > +++ b/arch/arm64/include/asm/io.h<br />> > =40=40 -120,9 +12=
-0,13 =40=40 static inline u64 =5F=5Fraw=5Freadq(const volatile void =5F=5F=
-iomem *addr)<br />> >  /*<br />> >   *  I/O port access primitives.<br />=
-> >   */<br />> > +=23define arch=5Fhas=5Fdev=5Fport()	(0)<br />> <br />>=
- Why not=3F<br /><br />Maybe I got it the wrong way around, but the comme=
-nt in include/linux/io.h says:<br /><br />/*<br /> * Some systems do not =
-have legacy ISA devices.<br /> * /dev/port is not a valid interface on th=
-ese systems.<br /> * So for those archs, <asm/io.h> should define the fol=
-lowing symbol.<br /> */<br /><br />So ... defining it should mean no lega=
-cy ISA devices, right=3F<br /><br />> <br />> >  =23define IO=5FSPACE=5FL=
-IMIT		0xffff<br />> <br />> You probably want to increase this a bit, to =
-allow multiple host bridges<br />> to have their own I/O space.<br /><br =
-/>OK, but to what size=3F<br /><br />> <br />> >  =23define PCI=5FIOBASE	=
-	((void =5F=5Fiomem *)(MODULES=5FVADDR - SZ=5F2M))<br />> <br />> And mod=
-ify this location: There is no particular reason to have the I/O space<br=
- />> mapped exactly 2MB below the loadable modules, as virtual address sp=
-ace is<br />> essentially free.<br /><br />Will talk with Catalin about w=
-here to place this.<br /><br />> <br />> > +=23define ioport=5Fmap(port, =
-nr)	(PCI=5FIOBASE + ((port) & IO=5FSPACE=5FLIMIT))<br />> > +=23define io=
-port=5Funmap(addr)<br />> <br />> inline functions=3F<br /><br />Will do,=
- thanks=21<br /><br />> <br />> >  static inline u8 inb(unsigned long add=
-r)<br />> >  =7B<br />> >  	return readb(addr + PCI=5FIOBASE);<br />> > d=
-iff --git a/arch/arm64/include/asm/pci.h b/arch/arm64/include/asm/pci.h<b=
-r />> > new file mode 100644<br />> > index 0000000..dd084a3<br />> > ---=
- /dev/null<br />> > +++ b/arch/arm64/include/asm/pci.h<br />> > =40=40 -0=
-,0 +1,35 =40=40<br />> > +=23ifndef =5F=5FASM=5FPCI=5FH<br />> > +=23defi=
-ne =5F=5FASM=5FPCI=5FH<br />> > +=23ifdef =5F=5FKERNEL=5F=5F<br />> > +<b=
-r />> > +=23include <linux/types.h><br />> > +=23include <linux/slab.h><b=
-r />> > +=23include <linux/dma-mapping.h><br />> > +<br />> > +=23include=
- <asm/io.h><br />> > +=23include <asm-generic/pci-bridge.h><br />> > +=23=
-include <asm-generic/pci-dma-compat.h><br />> > +<br />> > +=23define PCI=
-BIOS=5FMIN=5FIO		0<br />> > +=23define PCIBIOS=5FMIN=5FMEM		0<br />> <br =
-/>> PCIBIOS=5FMIN=5FIO is normally set to 0x1000, to stay out of the ISA =
-range.<br /><br />:) No ISA support=21 (Die ISA, die=21=21) <br /><br />>=
- <br />> > diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c=
-<br />> > new file mode 100644<br />> > index 0000000..7b652cf<br />> > -=
--- /dev/null<br />> > +++ b/arch/arm64/kernel/pci.c<br />> > =40=40 -0,0 =
-+1,112 =40=40<br />> <br />> None of this looks really arm64 specific, no=
-r should it be. I think<br />> we should try a little harder to move this=
- as a default implementation<br />> into common code, even if we start ou=
-t by having all architectures<br />> override it.<br /><br />Agree. This =
-is the R=46C version. I didn't dare to post a patch with fixes<br />for a=
-ll architectures. :)<br /><br />> <br />> > +int pci=5Fioremap=5Fio(unsig=
-ned int offset, phys=5Faddr=5Ft phys=5Faddr)<br />> > +=7B<br />> > +	BUG=
-=5FON(offset + SZ=5F64K - 1 > IO=5FSPACE=5FLIMIT);<br />> > +<br />> > +	=
-return ioremap=5Fpage=5Frange((unsigned long)PCI=5FIOBASE + offset,<br />=
-> > +				(unsigned long)PCI=5FIOBASE + offset + SZ=5F64K,<br />> > +				p=
-hys=5Faddr,<br />> > +				=5F=5Fpgprot(PROT=5FDEVICE=5FnGnRE));<br />> > =
-+=7D<br />> <br />> Not sure if we want to treat this one as architecture=
- specific though.<br />> It certainly won't be portable to x86, but it co=
-uld be shared with<br />> a couple of others. We may also want to redesig=
-n the interface.<br />> I've been thinking we could make this function al=
-locate space in the<br />> Linux virtual I/O space aperture, and pass two=
- resources into it<br />> (physical I/O aperture and bus I/O range), and =
-get the actual<br />> io=5Foffset as the return value, or a negative erro=
-r number.<br /><br />Not sure I completely follow your idea.<br /><br />>=
- <br />> That way, you could have an arbitrary number of host bridges in =
-the<br />> system and each one gets a share of the virtual aperture until=
-<br />> it's full.<br /><br />One still needs to fix the pci=5Frequest=5F=
-region use that checks against<br />ioport=5Fresource. But it is an inter=
-esting idea.<br /><br />> <br />> 	Arnd<br />> <br />> <br /><br />Thanks=
- for reviewing this patch=21<br /><br />Liviu<br /><br />-- <br /></block=
-quote></div></div></body></html>
---52efec4a_327b23c6_a1--
+&gt;&gt; On Wed, Feb 19, 2014 at 12:33 AM, Jassi Brar &lt;<a href=3D"mailto=
+:jaswinder.singh@linaro.org" target=3D"_blank">jaswinder.singh@linaro.org</=
+a>&gt; wrote:<br>&gt;&gt;&gt; On 18 February 2014 23:16, Srikanth Thokala &=
+lt;<a href=3D"mailto:sthokal@xilinx.com" target=3D"_blank">sthokal@xilinx.c=
+om</a>&gt; wrote:<br>
 
+&gt;&gt;&gt;&gt; On Tue, Feb 18, 2014 at 10:20 PM, Jassi Brar &lt;<a href=
+=3D"mailto:jaswinder.singh@linaro.org" target=3D"_blank">jaswinder.singh@li=
+naro.org</a>&gt; wrote:<br>&gt;&gt;&gt;&gt;&gt; On 18 February 2014 16:58, =
+Srikanth Thokala &lt;<a href=3D"mailto:sthokal@xilinx.com" target=3D"_blank=
+">sthokal@xilinx.com</a>&gt; wrote:<br>
 
+&gt;&gt;&gt;&gt;&gt;&gt; On Mon, Feb 17, 2014 at 3:27 PM, Jassi Brar &lt;<a=
+ href=3D"mailto:jaswinder.singh@linaro.org" target=3D"_blank">jaswinder.sin=
+gh@linaro.org</a>&gt; wrote:<br>&gt;&gt;&gt;&gt;&gt;&gt;&gt; On 15 February=
+ 2014 17:30, Srikanth Thokala &lt;<a href=3D"mailto:sthokal@xilinx.com" tar=
+get=3D"_blank">sthokal@xilinx.com</a>&gt; wrote:<br>
 
---===============7143198835380267376==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; The current implementation of interleaved =
+DMA API support multiple<br>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; frames only wh=
+en the memory is contiguous by incrementing src_start/<br>&gt;&gt;&gt;&gt;&=
+gt;&gt;&gt;&gt; dst_start members of interleaved template.<br>
 
-_______________________________________________
-linaro-kernel mailing list
-linaro-kernel@lists.linaro.org
-http://lists.linaro.org/mailman/listinfo/linaro-kernel
+&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<br>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; But, w=
+hen the memory is non-contiguous it will restrict slave device<br>&gt;&gt;&=
+gt;&gt;&gt;&gt;&gt;&gt; to not submit multiple frames in a batch. =A0This p=
+atch handles this<br>
 
---===============7143198835380267376==--
+&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; issue by allowing the slave device to send=
+ array of interleaved dma<br>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; templates eac=
+h having a different memory location.<br>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;<b=
+r>
+
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; How fragmented could be memory in your case? I=
+s it inefficient to<br>&gt;&gt;&gt;&gt;&gt;&gt;&gt; submit separate transfe=
+rs for each segment/frame?<br>&gt;&gt;&gt;&gt;&gt;&gt;&gt; It will help if =
+you could give a typical example (chunk size and gap<br>
+
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; in bytes) of what you worry about.<br>&gt;&gt;=
+&gt;&gt;&gt;&gt;<br>&gt;&gt;&gt;&gt;&gt;&gt; With scatter-gather engine fea=
+ture in the hardware, submitting separate<br>&gt;&gt;&gt;&gt;&gt;&gt; trans=
+fers for each frame look inefficient. As an example, our DMA engine<br>
+
+&gt;&gt;&gt;&gt;&gt;&gt; supports up to 16 video frames, with each frame (a=
+ typical video frame<br>&gt;&gt;&gt;&gt;&gt;&gt; size) being contiguous in =
+memory but frames are scattered into different<br>&gt;&gt;&gt;&gt;&gt;&gt; =
+locations. We could not definitely submit frame by frame as it would be<br>
+
+&gt;&gt;&gt;&gt;&gt;&gt; software overhead (HW interrupting for each frame)=
+ resulting in video lags.<br>&gt;&gt;&gt;&gt;&gt;&gt;<br>&gt;&gt;&gt;&gt;&g=
+t; IIUIC, it is 30fps and one dma interrupt per frame ... it doesn&#39;t se=
+em<br>
+
+&gt;&gt;&gt;&gt;&gt; inefficient at all. Even poor-latency audio would gene=
+rate a higher<br>&gt;&gt;&gt;&gt;&gt; interrupt-rate. So the &quot;ineffici=
+ency concern&quot; doesn&#39;t seem valid to<br>&gt;&gt;&gt;&gt;&gt; me.<br=
+>
+
+&gt;&gt;&gt;&gt;&gt;<br>&gt;&gt;&gt;&gt;&gt; Not to mean we shouldn&#39;t s=
+trive to reduce the interrupt-rate further.<br>&gt;&gt;&gt;&gt;&gt; Another=
+ option is to emulate the ring-buffer scheme of ALSA.... which<br>&gt;&gt;&=
+gt;&gt;&gt; should be possible since for a session of video playback the fr=
+ame<br>
+
+&gt;&gt;&gt;&gt;&gt; buffers&#39; locations wouldn&#39;t change.<br>&gt;&gt=
+;&gt;&gt;&gt;<br>&gt;&gt;&gt;&gt;&gt; Yet another option is to use the full=
+ potential of the<br>&gt;&gt;&gt;&gt;&gt; interleaved-xfer api as such. It =
+seems you confuse a &#39;video frame&#39;<br>
+
+&gt;&gt;&gt;&gt;&gt; with the interleaved-xfer api&#39;s &#39;frame&#39;. T=
+hey are different.<br>&gt;&gt;&gt;&gt;&gt;<br>&gt;&gt;&gt;&gt;&gt; Assuming=
+ your one video frame is F bytes long and Gk is the gap in<br>&gt;&gt;&gt;&=
+gt;&gt; bytes between end of frame [k] and start of frame [k+1] and =A0Gi !=
+=3D Gj<br>
+
+&gt;&gt;&gt;&gt;&gt; for i!=3Dj<br>&gt;&gt;&gt;&gt;&gt; In the context of i=
+nterleaved-xfer api, you have just 1 Frame of 16<br>&gt;&gt;&gt;&gt;&gt; ch=
+unks. Each chunk is Fbytes and the inter-chunk-gap(ICG) is Gk =A0where<br>
+&gt;&gt;&gt;&gt;&gt; 0&lt;=3Dk&lt;15<br>
+&gt;&gt;&gt;&gt;&gt; So for your use-case .....<br>&gt;&gt;&gt;&gt;&gt; =A0=
+ dma_interleaved_template.numf =3D 1 =A0 /* just 1 frame */<br>&gt;&gt;&gt;=
+&gt;&gt; =A0 dma_interleaved_template.frame_size =3D 16 =A0/* containing 16=
+ chunks */<br>
+
+&gt;&gt;&gt;&gt;&gt; =A0 =A0...... //other parameters<br>&gt;&gt;&gt;&gt;&g=
+t;<br>&gt;&gt;&gt;&gt;&gt; You have 3 options to choose from and all should=
+ work just as fine.<br>&gt;&gt;&gt;&gt;&gt; Otherwise please state your pro=
+blem in real numbers (video-frames&#39;<br>
+
+&gt;&gt;&gt;&gt;&gt; size, count &amp; gap in bytes).<br>&gt;&gt;&gt;&gt;<b=
+r>&gt;&gt;&gt;&gt; Initially I interpreted interleaved template the same. =
+=A0But, Lars corrected me<br>&gt;&gt;&gt;&gt; in the subsequent discussion =
+and let me put it here briefly,<br>
+
+&gt;&gt;&gt;&gt;<br>&gt;&gt;&gt;&gt; In the interleaved template, each fram=
+e represents a line of size denoted by<br>&gt;&gt;&gt;&gt; chunk.size and t=
+he stride by icg. =A0&#39;numf&#39; represent number of frames i.e.<br>&gt;=
+&gt;&gt;&gt; number of lines.<br>
+
+&gt;&gt;&gt;&gt;<br>&gt;&gt;&gt;&gt; In video frame context,<br>&gt;&gt;&gt=
+;&gt; chunk.size -&gt; hsize<br>&gt;&gt;&gt;&gt; chunk.icg -&gt; stride<br>=
+&gt;&gt;&gt;&gt; numf -&gt; vsize<br>&gt;&gt;&gt;&gt; and frame_size is alw=
+ays 1 as it will have only one chunk in a line.<br>
+
+&gt;&gt;&gt;&gt;<br>&gt;&gt;&gt; But you said in your last post<br>&gt;&gt;=
+&gt; =A0 &quot;with each frame (a typical video frame size) being contiguou=
+s in memory&quot;<br>&gt;&gt;&gt; =A0... which is not true from what you wr=
+ite above. Anyways, my first 2<br>
+
+&gt;&gt;&gt; suggestions still hold.<br>&gt;&gt;<br>&gt;&gt; Yes, each vide=
+o frame is contiguous and they can be scattered.<br>&gt;&gt;<br>&gt; I assu=
+me by contiguous frame you mean as in framebuffer? =A0Which is an<br>&gt; a=
+rray of bytes.<br>
+
+&gt; If yes, then you should do as I suggest first, =A0frame_size=3D16 =A0a=
+nd numf=3D1.<br><br>I think am confusing you. =A0I would like to explain wi=
+th an example. =A0Lets say<br>each video frame is 4k size starting at addre=
+ss 0x10004000 (-0x10005000) and<div>
+other frame at=A00x20002000 (-0x20003000), and so on. =A0So, the frames are=
+</div><div>scattered in memory and as the=A0template doesnt allow multiple =
+src_start/</div><div>dst_start we could not use single=A0template to fill t=
+he HW descriptors (of=A0</div>
+<div>frames). =A0So, I feel your suggestion=A0might not work if the frames =
+are scattered.</div><div>Also, how could we get &#39;vsize&#39;=A0value in =
+your approach? =A0More importantly,=A0</div><div>we are overriding the sema=
+ntics=A0of interleaved template members.<br>
+<br>&gt;<br>&gt; If no, then it seems you are already doing the right thing=
+.... the<br>
+&gt; ring-buffer scheme. Please share some stats how the current api is<br>=
+&gt; causing you overhead because that is a very common case (many<br>&gt; =
+controllers support LLI) and you have 467ms (@30fps with 16-frames<br>
+&gt; ring-buffer) to queue in before you see any frame drop.<br>
+<br>As I mentioned earlier in the thread, our hardware has a SG engine wher=
+e by<br>we could send multiple frames in a batch. =A0Using the original imp=
+lementation<br>of interleaved API, we have three options to transfer. =A0<b=
+r>
+
+<br>One is to send frame by frame to the hardware. =A0We get a async_tx des=
+c for<br>each frame and then we submit it to hardware triggering it to tran=
+sfer this BD.<br>We queue the next descriptor on the pending queue and when=
+ever there is<br>
+
+a completion interrupt we submit the next BD on this queue to hardware. In<=
+br>this implementation we are not efficiently using the SG engine in the ha=
+rdware<br>as we transferring frame by frame even HW allows us to transfer m=
+ultiple frames.<br>
+
+<br>The second option is to queue all the BDs until the maximum frames that=
+ HW is<br>capable to transfer in a batch and then submit to SG engine in th=
+e HW. =A0With<br>this approach I feel there will be additional software ove=
+rhead to track the number<br>
+
+of maximum transfers and few additional cycles to release the cookie of eac=
+h desc.<div>Here, each desc represents a frame.<br><br>The last option is t=
+he current implementation of the driver along with this change in<br>API. =
+=A0It will allow us to send array of interleaved templates wherein we could=
+ allocate<br>
+
+a single async desc which will handle multiple frames (or segments) and jus=
+t submit<br>this desc to HW. =A0Then we program the current to first frame,=
+ tail to last frame and<br>HW will complete this transfer. =A0Here, each de=
+sc represents multiple frames.<br>
+
+<br>My point here is the driver should use hardware resources efficiently a=
+nd I feel the</div><div>driver will be inefficient if we dont use them.=A0<=
+/div><div><br>I request you to please go through our hardware specification=
+ to get an overview of<br>
+implementation and provide me your suggestions. =A0Here is the link,<br><a =
+href=3D"http://www.xilinx.com/support/documentation/ip_documentation/axi_vd=
+ma/v6_1/pg020_axi_vdma.pdf" target=3D"_blank">http://www.xilinx.com/support=
+/documentation/ip_documentation/axi_vdma/v6_1/pg020_axi_vdma.pdf</a><div>
+
+<br></div><div>Srikanth<br></div><div><br>&gt;<br>&gt; Regards,<br>&gt; Jas=
+si<br>&gt; --<br>&gt; To unsubscribe from this list: send the line &quot;un=
+subscribe linux-kernel&quot; in<br>&gt; the body of a message to <a href=3D=
+"mailto:majordomo@vger.kernel.org" target=3D"_blank">majordomo@vger.kernel.=
+org</a><br>
+
+&gt; More majordomo info at =A0<a href=3D"http://vger.kernel.org/majordomo-=
+info.html" target=3D"_blank">http://vger.kernel.org/majordomo-info.html</a>=
+<br>&gt; Please read the FAQ at =A0<a href=3D"http://www.tux.org/lkml/" tar=
+get=3D"_blank">http://www.tux.org/lkml/</a></div>
+
+</div></div></div>
+
+--089e01229710d2468a04f2eb8f07--
