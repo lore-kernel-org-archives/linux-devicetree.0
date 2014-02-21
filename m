@@ -1,254 +1,71 @@
-From: "Strashko, Grygorii" <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH v2] dt: platform driver: Fill the resources before probe
- and defer if needed
-Date: Fri, 21 Feb 2014 15:37:53 +0000
-Message-ID: <902E09E6452B0E43903E4F2D568737AB0B9D2959@DFRE01.ent.ti.com>
-References: <20140220153042.DF053C4050F@trevor.secretlab.ca>,<1392988720-20976-1-git-send-email-jjhiblot@traphandler.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH RFC] usb: gadget: Add xilinx axi usb2 device support
+Date: Fri, 21 Feb 2014 09:39:05 -0600
+Message-ID: <20140221153905.GE31902@saruman.home>
+References: <774153d4-d33f-4bb4-813b-582762bc3af9@TX2EHSMHS021.ehs.local>
+ <20140220182257.GF23217@saruman.home>
+ <a39ce44a-2f92-4067-be6d-7311a78bb195@VA3EHSMHS013.ehs.local>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392988720-20976-1-git-send-email-jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "Shilimkar, Santosh" <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="lqaZmxkhekPBfBzr"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <a39ce44a-2f92-4067-be6d-7311a78bb195@VA3EHSMHS013.ehs.local>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>
+Cc: "balbi@ti.com" <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <michals@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi  Jean-Jacques,
+--lqaZmxkhekPBfBzr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sorry for top posting.
+Hi,
 
-As I know, there have been several attempts to solve the same problem already:)
-[1] https://lkml.org/lkml/2013/9/18/216
-[2] https://lkml.org/lkml/2013/11/22/520
-[3] https://lkml.org/lkml/2014/1/8/240
+On Fri, Feb 21, 2014 at 11:27:07AM +0000, Subbaraya Sundeep Bhatta wrote:
+> > From the looks of it, I doubt this was actually tested, you need a lot
+> > of work on this driver.
+> Tested on both ARM and Microblaze architectures with Mass storage gadget.
+> Will send a v2 after addressing all your comments.
 
-There are some questions related to your approach:
-1) How to distinguish between cases "IRQ domain not ready" and "wrong IRQ data in DT" or other IRQ parsing errors?
-Otherwise, Driver's probe will be deffered wrongly and forever, 
-Thierry Reding has tried to solve this in [1].
+clearly you didn't try to remove and reinsert the module or you would
+see a whole bunch of errors.
 
-2) How will be handled driver reloading situation? 
-The worst case (sparse IRQ enabled):
-- remove driver A
-- remove driver B (irq-controller)
-- load driver B <--- different set of Linux IRQ numbers can be assigned 
-- load driver A <--- oops. IRQ resources table contains invalid data
+> This email and any attachments are intended for the sole use of the
+> named recipient(s) and contain(s) confidential information that may be
+> proprietary, privileged or copyrighted under applicable law. If you
+> are not the intended recipient, do not read, copy, or forward this
+> email message or any attachments. Delete this email message and any
+> attachments immediately.
 
+remove this footer message, btw, when sending emails to public mailing
+lists.
 
+--=20
+balbi
 
-Best regards,
-Grygorii Strashko 
+--lqaZmxkhekPBfBzr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-=============================================
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-The goal of this patch is to allow drivers to be probed even if at the time of
-the DT parsing some of their ressources are not available yet.
+iQIcBAEBAgAGBQJTB3MZAAoJEIaOsuA1yqREw7MP/2PCe42dNMiNbseVBAcFyptt
+LF85jcqOebK2WykWV0HacXmaP2LN+d8VOTMQyJXIFuNlQoocPQnX4GoGS8YMs8GF
+zPvrhGAiX/qHFl9GF46IWQWAVbNRHzJwdUnKSJH5X+MM80ya1jWCV7X7mDA/YPDE
+rH2MlxNq4pqJQfr18m6i7R5gQDzVtVwUTBXsbIWtR4HA5/KvYA/Tj9Orl51MqZuw
+epw/JX+FXgq0QbDfQKIVzTlvlReGCSdsN+5zQZ+pLv3PK6q+xBf1DfcZ3CSvz39F
+uXpn8M8xaj9V74l8M/E2FWBLAknbarTDGjW3E5ZHiMuYVc2oUihYWH03qa10kyxf
+YQ5GlRXs5medfBunZXs8gyaPb6RDwbSyQeSJxKFC+0nRUUTI091pS+SerOaRG+Ap
+u23BrWoiG4bTq/sw4a8NFpsMbnQEAIFw1WHRv8VgJYt1Pzof6ukjWMFacgvptSHY
+dWsWdIwVKROb9uip5o9qjVecx3+TP2nKnfnDIPgAUoSq1Yel7PlU4wdZrqKL9ojq
+Usa6Hubr6yrdH/XROvGOb4n1zS03NQle7BRVq+p073u3ikHI2oHFPTh1NLC1bcKU
+VATUQ5mNBnsBtrvUKvsyFbc03PwCTQCFilYwIINXBXDv5YAWkkumDnRM4VNmxeLs
+j86qJpSn/D4sq7RlvVcw
+=TYDi
+-----END PGP SIGNATURE-----
 
-In the current situation, the resource of a platform device are filled from the
-DT at the time the device is created (of_device_alloc()). The drawbackof this
-is that a device sitting close to the top of the DT (ahb for example) but
-depending on ressources that are initialized later (IRQ domain dynamically
-created for example)  will fail to probe because the ressources don't exist
-at this time.
-
-This patch fills the resource structure only before the device is probed and
-will defer the probe if the resource are not available yet.
-
-Signed-off-by: Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
-Reviewed-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
-
-Hi Grant,
-
-I reworked the patch as you proposed. To keep the overhead minimum, nirq and
-nreg are computed only the first time.
-In this implementation, only the missing IRQ ressources are re-tried for. It could
-easily be changed to re-parse all the IRQs though (replace if (!res->flags)
-with if ((!res->flags) || (res->flags & IORESOURCE_IRQ)).
-
-drivers/base/platform.c     |   5 +++
- drivers/of/platform.c       | 100 +++++++++++++++++++++++++++++++++-----------
- include/linux/of_platform.h |  10 +++++
- 3 files changed, 90 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index bc78848..cee9b8d 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -481,6 +481,10 @@ static int platform_drv_probe(struct device *_dev)
-        struct platform_device *dev = to_platform_device(_dev);
-        int ret;
-
-+       ret = of_platform_device_prepare(dev);
-+       if (ret)
-+               goto error;
-+
-        if (ACPI_HANDLE(_dev))
-                acpi_dev_pm_attach(_dev, true);
-
-@@ -488,6 +492,7 @@ static int platform_drv_probe(struct device *_dev)
-        if (ret && ACPI_HANDLE(_dev))
-                acpi_dev_pm_detach(_dev, true);
-
-+error:
-        if (drv->prevent_deferred_probe && ret == -EPROBE_DEFER) {
-                dev_warn(_dev, "probe deferral not supported\n");
-                ret = -ENXIO;
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 404d1da..a4e2602 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -141,36 +141,11 @@ struct platform_device *of_device_alloc(struct device_node *np,
-                                  struct device *parent)
- {
-        struct platform_device *dev;
--       int rc, i, num_reg = 0, num_irq;
--       struct resource *res, temp_res;
-
-        dev = platform_device_alloc("", -1);
-        if (!dev)
-                return NULL;
-
--       /* count the io and irq resources */
--       if (of_can_translate_address(np))
--               while (of_address_to_resource(np, num_reg, &temp_res) == 0)
--                       num_reg++;
--       num_irq = of_irq_count(np);
--
--       /* Populate the resource table */
--       if (num_irq || num_reg) {
--               res = kzalloc(sizeof(*res) * (num_irq + num_reg), GFP_KERNEL);
--               if (!res) {
--                       platform_device_put(dev);
--                       return NULL;
--               }
--
--               dev->num_resources = num_reg + num_irq;
--               dev->resource = res;
--               for (i = 0; i < num_reg; i++, res++) {
--                       rc = of_address_to_resource(np, i, res);
--                       WARN_ON(rc);
--               }
--               WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
--       }
--
-        dev->dev.of_node = of_node_get(np);
- #if defined(CONFIG_MICROBLAZE)
-        dev->dev.dma_mask = &dev->archdata.dma_mask;
-@@ -233,6 +208,81 @@ static struct platform_device *of_platform_device_create_pdata(
-        return dev;
- }
-
-+static int of_reg_count(struct device_node *np)
-+{
-+       int nreg = 0;
-+       if (of_can_translate_address(np)) {
-+               struct resource temp_res;
-+               while (of_address_to_resource(np, nreg, &temp_res) == 0)
-+                       nreg++;
-+       }
-+       return nreg;
-+}
-+
-+int of_platform_device_prepare(struct platform_device *dev)
-+{
-+       struct device_node *np;
-+       int i, irq_index;
-+       struct resource *res;
-+
-+       /*
-+        * This function applies only devices described in the DT.
-+        * Other platform devices have their ressources already populated.
-+        */
-+       np = dev->dev.of_node;
-+       if (!np)
-+               return 0;
-+
-+       /* Populate the resource table */
-+       if (!dev->resource) {
-+               int rc, nreg = 0, nirq;
-+               /* count the io and irq resources */
-+               nreg = of_reg_count(np);
-+               nirq = of_irq_count(np);
-+
-+               if (!nirq && !nreg)
-+                       return 0;
-+
-+               res = kzalloc(sizeof(*res) * (nirq + nreg), GFP_KERNEL);
-+               if (!res)
-+                       return -ENOMEM;
-+
-+               dev->resource = res;
-+               dev->num_resources = nreg + nirq;
-+
-+               for (i = 0; i < nreg; i++, res++) {
-+                       rc = of_address_to_resource(np, i, res);
-+                       if (WARN_ON(rc)) {
-+                               /* THIS IS BAD; don't try to defer probing */
-+                               dev->num_resources = 0;
-+                               dev->resource = NULL;
-+                               kfree(res);
-+                               return rc;
-+                       }
-+               }
-+
-+               if (!rc && of_irq_to_resource_table(np, res, nirq) != nirq) {
-+                       /* IRQ controller is yet available. defer probing */
-+                       return -EPROBE_DEFER;
-+               }
-+
-+               return 0;
-+       }
-+
-+       /* See which IRQ resources need to be redone */
-+       irq_index = 0;
-+       for (i = 0, res = dev->resource; i < dev->num_resources; i++, res++) {
-+               if (!res->flags) {
-+                       if (!of_irq_to_resource(np, irq_index, res))
-+                               return -EPROBE_DEFER;
-+                       irq_index++;
-+               } else if (res->flags & IORESOURCE_IRQ)
-+                       irq_index++;
-+       }
-+       return 0;
-+}
-+EXPORT_SYMBOL(of_platform_device_prepare);
-+
- /**
-  * of_platform_device_create - Alloc, initialize and register an of_device
-  * @np: pointer to node to create device for
-diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-index 05cb4a9..4e487ff 100644
---- a/include/linux/of_platform.h
-+++ b/include/linux/of_platform.h
-@@ -53,6 +53,16 @@ struct of_dev_auxdata {
-
- extern const struct of_device_id of_default_bus_match_table[];
-
-+/* Populate the resource for a platform device */
-+#ifdef CONFIG_OF
-+int of_platform_device_prepare(struct platform_device *dev);
-+#else
-+static inline int of_platform_device_prepare(
-+       struct platform_device *dev)
-+{
-+       return 0;
-+}
-+#endif
- /* Platform drivers register/unregister */
- extern struct platform_device *of_device_alloc(struct device_node *np,
-                                         const char *bus_id,
---
-1.9.0
-
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--lqaZmxkhekPBfBzr--
