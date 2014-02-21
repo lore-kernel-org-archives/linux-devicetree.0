@@ -1,73 +1,135 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: Re: [Patch v6 1/2] dmaengine: qcom_bam_dma: Add device tree binding
-Date: Fri, 21 Feb 2014 10:30:53 -0600
-Message-ID: <20140221163053.GA3102@qualcomm.com>
-References: <1392964986-5207-1-git-send-email-agross@codeaurora.org>
- <1392964986-5207-2-git-send-email-agross@codeaurora.org>
- <20140221092657.GD7541@e106331-lin.cambridge.arm.com>
+From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 8/8] ARM: brcmstb: dts: add a reference DTS for
+ Broadcom 7445
+Date: Fri, 21 Feb 2014 11:39:23 -0500
+Message-ID: <20140221163923.GL5038@beef>
+References: <1391463041-15241-1-git-send-email-marc.ceeeee@gmail.com>
+ <1391463041-15241-9-git-send-email-marc.ceeeee@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140221092657.GD7541@e106331-lin.cambridge.arm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <1391463041-15241-9-git-send-email-marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 21, 2014 at 09:26:57AM +0000, Mark Rutland wrote:
-> On Fri, Feb 21, 2014 at 06:43:04AM +0000, Andy Gross wrote:
-> > Add device tree binding support for the QCOM BAM DMA driver.
-> > 
-[snip]
-> > +Required properties:
-> > +- compatible:	Must be "qcom,bam-v1.4.0" for MSM8974 V1
-> > +		Must be "qcom,bam-v1.4.1" for MSM8974 V2
+On Mon, Feb 03, 2014 at 01:30:41PM -0800, Marc Carino wrote:
+> Add a sample DTS which will allow bootup of a board populated
+> with the BCM7445 chip.
 > 
-> This looks a bit odd. How about:
-> 
-> - compatible: must contain:
->   * "qcom,bam-v1.4.0" for MSM8974 V1
->   * "qcom,bam-v1.4.1" for MSM8974 V2
-> 
+> Signed-off-by: Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/bcm7445.dts |  111 +++++++++++++++++++++++++++++++++++++++++
+>  1 files changed, 111 insertions(+), 0 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/bcm7445.dts
 
-Agreed.  I'll fix that.
+Looking forward, I suspect you are going to have to move to a
+bcm7445.dtsi with your board specific implementations in something like
+bcm7445-myrefbrd.dts. It's probably better to split this now to
+encourage inclusion of the common SoC nodes from the board specific
+dts. Since it's not abstracted this way it'll encourage people to just
+copy the entire bcm7445.dts for their board.
 
-> > +- reg: Address range for DMA registers
-> > +- interrupts: single interrupt for this controller
-> 
-> This device only has a single interrupt? Or there's only one we care
-> about at the moment?
-> 
+> diff --git a/arch/arm/boot/dts/bcm7445.dts b/arch/arm/boot/dts/bcm7445.dts
+> new file mode 100644
+> index 0000000..ffa3305
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/bcm7445.dts
+> @@ -0,0 +1,111 @@
+> +/dts-v1/;
+> +/include/ "skeleton.dtsi"
+> +
+> +/ {
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +	model = "Broadcom STB (bcm7445)";
+> +	compatible = "brcm,bcm7445", "brcm,brcmstb";
+> +	interrupt-parent = <&gic>;
+> +
+> +	chosen {};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x00 0x00000000 0x00 0x40000000>,
+> +		      <0x00 0x40000000 0x00 0x40000000>,
+> +		      <0x00 0x80000000 0x00 0x40000000>;
+> +	};
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu@0 {
+> +			compatible = "brcm,brahma-b15";
+> +			device_type = "cpu";
+> +			reg = <0>;
+> +		};
+> +
+> +		cpu@1 {
+> +			compatible = "brcm,brahma-b15";
+> +			device_type = "cpu";
+> +			reg = <1>;
+> +		};
+> +
+> +		cpu@2 {
+> +			compatible = "brcm,brahma-b15";
+> +			device_type = "cpu";
+> +			reg = <2>;
+> +		};
+> +
+> +		cpu@3 {
+> +			compatible = "brcm,brahma-b15";
+> +			device_type = "cpu";
+> +			reg = <3>;
+> +		};
+> +	};
+> +
+> +	gic: interrupt-controller@ffd00000 {
+> +		compatible = "brcm,brahma-b15-gic", "arm,cortex-a15-gic";
+> +		reg = <0x00 0xffd01000 0x00 0x1000>,
+> +		      <0x00 0xffd02000 0x00 0x2000>,
+> +		      <0x00 0xffd04000 0x00 0x2000>,
+> +		      <0x00 0xffd06000 0x00 0x2000>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <3>;
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv7-timer";
+> +		interrupts = <1 13 0xf08>,
+> +			     <1 14 0xf08>,
+> +			     <1 11 0xf08>,
+> +			     <1 10 0xf08>;
 
-Yes only a single interrupt.  I can remove the s.
+These should leverage the preprocessor defines that are available
+e.g.
+		interrupts = <GIC_PPI 13 GIC_CPU_MASK_RAW(15)|IRQ_TYPE_LEVEL_LOW>,
+		...
 
-> > +- #dma-cells: must be <1>
-> > +- clocks: required clock
-> > +- clock-names: name of clock
-> 
-> Either describe the _exact_ name this binding expects for any clocks
-> input, or get rid of clock-names. I would prefer the former.
+> +	};
+> +
+> +	rdb {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "simple-bus";
+> +		ranges = <0 0x00 0xf0000000 0x1000000>;
+> +
+> +		serial@406b00 {
+> +			compatible = "ns16550a";
+> +			reg = <0x406b00 0x20>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			interrupts = <0 75 0x4>;
 
-So then I'd use the full name in the driver file.  That's fine.
+same here:
 
-[snip]
-> > +Client:
-> > +Required properties:
-> > +- dmas: List of dma channel requests
-> > +- dma-names: Names of aforementioned requested channels
-> 
-> Do we really need to describe the client binding? Do we not have a
-> generic DMA binding doc we can refer to?
-> 
+			interrupt = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
 
-Originally there was more information in the entry.  It was pared down over time
-and I didn't go back to referencing the generic doc.  I'll do this and that'll
-fix this and your next comment.
-
-[snip]
-
--- 
-sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+-Matt
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
