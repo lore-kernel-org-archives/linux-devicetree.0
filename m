@@ -1,157 +1,78 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] mfd: fsl imx25 Touchscreen ADC driver
-Date: Fri, 21 Feb 2014 11:18:39 +0100
-Message-ID: <20140221101839.GD24758@pengutronix.de>
-References: <1392913312-9030-1-git-send-email-mpa@pengutronix.de>
- <1392913312-9030-2-git-send-email-mpa@pengutronix.de>
- <CAOMZO5BDyyvXs9CxJQOkuEpxZ8fqamCPB67sNhJxES+XU2XkXQ@mail.gmail.com>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH RFC v1 3/3] clk: Add handling of clk parent and rate
+ assigned from DT
+Date: Fri, 21 Feb 2014 11:38:21 +0100
+Message-ID: <53072C9D.5040303@samsung.com>
+References: <1392829124-25705-1-git-send-email-s.nawrocki@samsung.com>
+ <1392829124-25705-4-git-send-email-s.nawrocki@samsung.com>
+ <20140220140928.27132C4050F@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="RIYY1s2vRbPFwWeW"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5BDyyvXs9CxJQOkuEpxZ8fqamCPB67sNhJxES+XU2XkXQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20140220140928.27132C4050F-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 20/02/14 15:09, Grant Likely wrote:
+[...]
+>> > diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> > index 7c52c29..d618498 100644
+>> > --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> > +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> > @@ -115,3 +115,27 @@ clock signal, and a UART.
+>> >    ("pll" and "pll-switched").
+>> >  * The UART has its baud clock connected the external oscillator and its
+>> >    register clock connected to the PLL clock (the "pll-switched" signal)
+>> > +
+>> > +==Static initial configuration of clock parent and clock frequency==
+>> > +
+>> > +Some platforms require static configuration of (parts of) the clock controller
+>> > +often determined by the board design. Such a configuration can be specified in
+>> > +a clock consumer node through [clk-name]-clk-parent and [clk-name]-clk-rate DT
+>> > +properties. The former should contain phandle and clock specifier of the parent
+>> > +clock, the latter the required clock's frequency value (one cell). "clk-name"
+>> > +should be listed in the clock-names property and a phandle and a clock specifier
+>> > +pair corresponding to it should be present in the clocks property.
+>> > +
+>> > +    uart@a000 {
+>> > +        compatible = "fsl,imx-uart";
+>> > +        reg = <0xa000 0x1000>;
+>> > +	...
+>> > +        clocks = <&clkcon 0>, <&clkcon 3>;
+>> > +        clock-names = "baud", "mux";
+>> > +
+>> > +	mux-clk-parent = <&pll 1>;
+>> > +	baud-clk-rate = <460800>;
+>
+> This mixes patterns for references to clocks. Plus it requires composing
+> property names which is a little painful. I'd rather see a list of
+> tuples to match the existing pattern already in use
+> 
+> 	clocks = <&clkcon 0>, <&clkcon 3>;
+> 	clock-names = "baud", "mux";
+> 	clock-parents = <0> <&pll 1>;
+> 	clock-rates = <0> <460800>;
 
---RIYY1s2vRbPFwWeW
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thank you for the review. This looks much better to me. My bad, I wasn't 
+aware 0 can be used to denote an empty phandle like this. ePAPR seems not 
+to be specifying exact meaning of the 'phandle' property values, except 
+they be unique. Anyway, it seems to be clearly documented within the
+__of_parse_phandle_with_args() function. 
 
-Hi Fabio,
+I'll try this modified binding instead, presumably it would be useful to 
+have a variant of __of_parse_phandle_with_args() function which would 
+accept a context data containing result of previous call within an iteration, 
+similarly as of_property_next_string() is written. So we don't iterate 
+from beginning of the list with each __of_parse_phandle_with_args() call. 
+But it's an optimization issue that could be considered separately I guess.
 
-On Thu, Feb 20, 2014 at 02:17:33PM -0300, Fabio Estevam wrote:
-> Hi Markus,
->=20
-> On Thu, Feb 20, 2014 at 1:21 PM, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wro=
-te:
-> > This is the core driver for imx25 touchscreen/adc driver. The module
-> > has one shared ADC and two different conversion queues which use the
-> > ADC. The two queues are identical. Both can be used for general purpose
-> > ADC but one is meant to be used for touchscreens.
-> >
-> > This driver is the core which manages the central components and
-> > registers of the TSC/ADC unit. It manages the IRQs and forwards them to
-> > the correct components.
-> >
-> > Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->=20
-> That's great :-) Nice work!
->=20
-> > ---
-> >  .../devicetree/bindings/mfd/fsl-imx25-tsadc.txt    |  46 ++++
-> >  drivers/mfd/Kconfig                                |   9 +
-> >  drivers/mfd/Makefile                               |   2 +
-> >  drivers/mfd/fsl-imx25-tsadc.c                      | 234 +++++++++++++=
-++++++++
-> >  include/linux/mfd/imx25-tsadc.h                    | 138 ++++++++++++
-> >  5 files changed, 429 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/fsl-imx25-tsa=
-dc.txt
-> >  create mode 100644 drivers/mfd/fsl-imx25-tsadc.c
-> >  create mode 100644 include/linux/mfd/imx25-tsadc.h
-> >
-> > diff --git a/Documentation/devicetree/bindings/mfd/fsl-imx25-tsadc.txt =
-b/Documentation/devicetree/bindings/mfd/fsl-imx25-tsadc.txt
-> > new file mode 100644
-> > index 0000000..a857af0e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/fsl-imx25-tsadc.txt
-> > @@ -0,0 +1,46 @@
-> > +Freescale mx25 ADC/TSC multifunction device
-> > +
-> > +This device combines two general purpose conversion queues one used fo=
-r general
-> > +ADC and the other used for touchscreens.
-> > +
-> > +Required properties:
-> > + - compatible: Should be "fsl,imx25-tsadc".
-> > + - reg: Memory range of the device.
-> > + - interrupts: Interrupt for this device as described in
-> > +   interrupts/interrupts.txt
-> > + - clocks: An 'ipg' clock defined as described in clocks/clock.txt
-> > + - interrupt-controller: This device is an interrupt controller. It co=
-ntrols
-> > +   the interrupts of both conversion queues.
-> > + - #interrupt-cells: Should be '<1>'.
-> > + - #address-cells: Should be '<1>'.
-> > + - #size-cells: Should be '<1>'.
-> > + - ranges
-> > +
-> > +This device includes two conversion queues which can be added as subno=
-des.
-> > +The first queue is for the touchscreen, the second for general purpose=
- ADC.
-> > +
-> > +Example:
-> > +       tscadc: tscadc@50030000 {
-> > +               compatible =3D "fsl,imx25-tsadc";
-> > +               reg =3D <0x50030000 0xc>;
-> > +               interrupts =3D <46>;
-> > +               clocks =3D <&clks 119>;
-> > +               clock-names =3D "ipg";
-> > +               interrupt-controller;
-> > +               #interrupt-cells =3D <1>;
-> > +               #address-cells =3D <1>;
-> > +               #size-cells =3D <1>;
-> > +               ranges;
-> > +
-> > +               tsc: tcq@50030400 {
-> > +                       compatible =3D "fsl,imx25-tcq";
-> > +                       reg =3D <0x50030400 0x60>;
-> > +                       ...
-> > +               };
-> > +
-> > +               adc: gcq@50030800 {
-> > +                       compatible =3D "fsl,imx25-gcq";
-> > +                       reg =3D <0x50030800 0x60>;
-> > +                       ...
-> > +               };
-> > +       };
->=20
-> The meaning of 'tcq' and 'gcq' acronyms are not obvious. Could they be
-> written more explicitily?
->=20
-> Also, what does the '...' mean?
-
-I forgot to answer this one. The bindings for tcq and gcq are described
-in the other files, so I didn't want to show any details that are not
-relevant for this driver.
-
-Regards,
-
-Markus
-
---=20
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---RIYY1s2vRbPFwWeW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIbBAEBAgAGBQJTByf/AAoJEEpcgKtcEGQQiXUP93rS5tDu5ityARC/KWbvzdMM
-F1kYSB5OC6Xq1mzNvZp50/1XdvBwTlgbI99L97IND2FkSffQ6af/vvGNPrfXqlz8
-eA8meJNcVTUcG0NKFyZaTRTKs8hNHgU0L6VsGUaIbwf2FJWfuFmQApkZcj7twIO/
-feIlH6Qhws3PG4GjcXo7dIUr4fMsU/6URYrJ8HFpDgCmFvR81dP9sI9GDziD2n9X
-lDJoI456mIfGcYqp2njge3MfP2LqnPj404KuEcRjkcI+TdNc6ytmeahyCnIt7tdL
-zdx3FoFhM8TnEvrlni6oWpcorjDpldQCw3rpZ1qMOsbvuiFcfxTxas3BWFqoT0Eo
-wvI/747v51PH8N+n0OT7/tTbXi+r1oprYDNhls5g1eHdxEAPD4z+1+Lr82lC5t9a
-oZTeTsr+78GWyEnb/8/GVAdMfHzngu7TD8mcI4CecrV6Btpf9vEvouExkxmaeSgP
-jU2WpjLcimz978A3YirMOCX9XqQ3HK6eg+luFvjbNV9Nd2XQ+xrR6zCbwmeYKaoR
-PrOtjo1eoeGFWv5hMUfiAfzgoTxI6vbqSIEXEECMcYCndU+SMHJb0IRUp6Vq6Ptq
-2d0xXPF4T5jc11poNIT/BEvJHcQSrFMMUzq19Rp1PKEgPmnjquvQH2jWsTls8zif
-YKbgnclHf4aC4LEuLwo=
-=y+Ov
------END PGP SIGNATURE-----
-
---RIYY1s2vRbPFwWeW--
+--
+Thanks,
+Sylwester
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
