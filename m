@@ -1,51 +1,84 @@
-From: "fugang.duan@freescale.com" <fugang.duan@freescale.com>
-Subject: RE: [PATCH v5 1/3] ARM: dts: vf610-twr: Add ADC support
-Date: Fri, 21 Feb 2014 06:06:28 +0000
-Message-ID: <83f633db31fb4591a9e7b0ffddc179b0@BLUPR03MB373.namprd03.prod.outlook.com>
-References: <1390714773-23066-1-git-send-email-B38611@freescale.com>
- <1390714773-23066-2-git-send-email-B38611@freescale.com>
- <20140216074850.GA2946@S2101-09.ap.freescale.net>
- <20140219050716.GA3010@S2101-09.ap.freescale.net>
- <da1f0ce0784e434d8a384aa34e271a18@BLUPR03MB373.namprd03.prod.outlook.com>
- <20140221053834.GT3010@S2101-09.ap.freescale.net>
+From: Alistair Popple <alistair@popple.id.au>
+Subject: [PATCH 0/7] IBM Akebono/PPC476GTR Support
+Date: Fri, 21 Feb 2014 17:31:26 +1100
+Message-ID: <1392964293-13687-1-git-send-email-alistair@popple.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140221053834.GT3010@S2101-09.ap.freescale.net>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lars@metafoo.de" <lars@metafoo.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "sachin.kamat@linaro.org" <sachin.kamat@linaro.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "jic23@kernel.org" <jic23@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: benh@kernel.crashing.org, gregkh@linuxfoundation.org, netdev@vger.kernel.org, linux-mmc@vger.kernel.org, cjb@laptop.org, linux-usb@vger.kernel.org
+Cc: Alistair Popple <alistair@popple.id.au>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Shawn Guo <shawn.guo@linaro.org>
-Data: Friday, February 21, 2014 1:39 PM + 0800
-
->To: Duan Fugang-B38611
->Cc: jic23@kernel.org; sachin.kamat@linaro.org; pmeerw@pmeerw.net;
->lars@metafoo.de; mark.rutland@arm.com; linux-iio@vger.kernel.org; Rob Herring;
->Grant Likely; Pawel Moll; Ian Campbell; Kumar Gala; devicetree@vger.kernel.org;
->linux-arm-kernel@lists.infradead.org
->Subject: Re: [PATCH v5 1/3] ARM: dts: vf610-twr: Add ADC support
->
->On Fri, Feb 21, 2014 at 05:17:20AM +0000, fugang.duan@freescale.com wrote:
->> So, you apply the original patch ? Do I need to resend it again ?
->
->You still need to rebase it against my for-next branch to resolve my comment on
->pinctrl setting.
->
->Shawn
-
-I send the patch to you after moving pinctrl setting to board dts.
-
-Thanks,
-Andy
+VGhlIElCTSBBa2Vib25vIGJvYXJkIGlzIGEgZGV2ZWxvcG1lbnQgYm9hcmQgZm9yIHRoZSBuZXcg
+UFBDNDc2R1RSCnN5c3RlbSBvbiBjaGlwIChTb0MpLgoKVGhpcyBpcyBqdXN0IGEgcmVzdWJtaXNz
+aW9uIG9mIHRoZSBwcmV2aW91cyBwYXRjaGVzIHJlYmFzZWQgb24ga2VybmVsCnYzLjEzLiBCZW4g
+SCBoYXMgaW5kaWNhdGVkIHRoZSBzdWJzeXN0ZW0gc3BlY2lmaWMgY2hhbmdlcyBzaG91bGQgYmUK
+bWVyZ2VkIHZpYSB0aGUgYXBwcm9wcmlhdGUga2VybmVsIHRyZWVzLgoKQWxpc3RhaXIgUG9wcGxl
+ICg3KToKICBJQk0gQWtlYm9ubzogQWRkIGEgU0RIQ0kgcGxhdGZvcm0gZHJpdmVyCiAgSUJNIEFr
+ZWJvbm86IEFkZCBzdXBwb3J0IGZvciBhIG5ldyBQSFkgaW50ZXJmYWNlIHRvIHRoZSBJQk0gZW1h
+YwogICAgZHJpdmVyCiAgSUJNIEFrZWJvbm86IEFkZCBzdXBwb3J0IHRvIHRoZSBPSENJIHBsYXRm
+b3JtIGRyaXZlciBmb3IgUFBDNDc2R1RSCiAgRUNISSBQbGF0Zm9ybTogTWVyZ2UgcHBjLW9mIEVI
+Q0kgZHJpdmVyIGludG8gdGhlIGVoY2ktcGxhdGZvcm0gZHJpdmVyCiAgSUJNIEN1cnJpdHVjazog
+Q2xlYW4gdXAgYm9hcmQgc3BlY2lmaWMgY29kZSBiZWZvcmUgYWRkaW5nIEFrZWJvbm8KICAgIGNv
+ZGUKICBJQk0gQWtlYm9ubzogQWRkIHRoZSBBa2Vib25vIHBsYXRmb3JtCiAgcG93ZXJwYzogQWRk
+ZWQgUENJIE1TSSBzdXBwb3J0IHVzaW5nIHRoZSBIU1RBIG1vZHVsZQoKIC4uLi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3Bvd2VycGMvNHh4L2FrZWJvbm8udHh0ICAgIHwgICA1NCArKysKIC4uLi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvNHh4L2VtYWMudHh0ICAgICAgIHwgICAgOSArCiBhcmNo
+L3Bvd2VycGMvYm9vdC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDMgKwog
+YXJjaC9wb3dlcnBjL2Jvb3QvZGNyLmggICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICA0
+ICsKIGFyY2gvcG93ZXJwYy9ib290L2R0cy9ha2Vib25vLmR0cyAgICAgICAgICAgICAgICAgIHwg
+IDQxNSArKysrKysrKysrKysrKysrKysrKwogYXJjaC9wb3dlcnBjL2Jvb3QvdHJlZWJvb3QtYWtl
+Ym9uby5jICAgICAgICAgICAgICAgfCAgMTYzICsrKysrKysrCiBhcmNoL3Bvd2VycGMvYm9vdC93
+cmFwcGVyICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDMgKwogYXJjaC9wb3dlcnBjL2Nv
+bmZpZ3MvNDR4L2FrZWJvbm9fZGVmY29uZmlnICAgICAgICAgfCAgMTQ4ICsrKysrKysKIGFyY2gv
+cG93ZXJwYy9wbGF0Zm9ybXMvNDR4L0tjb25maWcgICAgICAgICAgICAgICAgIHwgICAyOCArKwog
+YXJjaC9wb3dlcnBjL3BsYXRmb3Jtcy80NHgvTWFrZWZpbGUgICAgICAgICAgICAgICAgfCAgICAz
+ICstCiBhcmNoL3Bvd2VycGMvcGxhdGZvcm1zLzQ0eC9jdXJyaXR1Y2suYyAgICAgICAgICAgICB8
+ICAyMzMgLS0tLS0tLS0tLS0KIGFyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvNDR4L3BwYzQ3Ni5jICAg
+ICAgICAgICAgICAgIHwgIDI5OSArKysrKysrKysrKysrKwogYXJjaC9wb3dlcnBjL3N5c2Rldi9L
+Y29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgfCAgICA2ICsKIGFyY2gvcG93ZXJwYy9zeXNk
+ZXYvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgIHwgICAgMSArCiBhcmNoL3Bvd2VycGMv
+c3lzZGV2L3BwYzR4eF9oc3RhX21zaS5jICAgICAgICAgICAgICB8ICAyMTUgKysrKysrKysrKwog
+YXJjaC9wb3dlcnBjL3N5c2Rldi9wcGM0eHhfcGNpLmMgICAgICAgICAgICAgICAgICAgfCAgIDIx
+ICstCiBkcml2ZXJzL21tYy9ob3N0L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICB8
+ICAgMTIgKwogZHJpdmVycy9tbWMvaG9zdC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAg
+ICAgfCAgICAxICsKIGRyaXZlcnMvbW1jL2hvc3Qvc2RoY2ktb2YtNDc2Z3RyLmMgICAgICAgICAg
+ICAgICAgIHwgICA2MCArKysKIGRyaXZlcnMvbmV0L2V0aGVybmV0L2libS9lbWFjL0tjb25maWcg
+ICAgICAgICAgICAgIHwgICAgNCArCiBkcml2ZXJzL25ldC9ldGhlcm5ldC9pYm0vZW1hYy9NYWtl
+ZmlsZSAgICAgICAgICAgICB8ICAgIDEgKwogZHJpdmVycy9uZXQvZXRoZXJuZXQvaWJtL2VtYWMv
+Y29yZS5jICAgICAgICAgICAgICAgfCAgIDUwICsrLQogZHJpdmVycy9uZXQvZXRoZXJuZXQvaWJt
+L2VtYWMvY29yZS5oICAgICAgICAgICAgICAgfCAgIDEyICsKIGRyaXZlcnMvbmV0L2V0aGVybmV0
+L2libS9lbWFjL3JnbWlpX3dvbC5jICAgICAgICAgIHwgIDI0NCArKysrKysrKysrKysKIGRyaXZl
+cnMvbmV0L2V0aGVybmV0L2libS9lbWFjL3JnbWlpX3dvbC5oICAgICAgICAgIHwgICA2MiArKysK
+IGRyaXZlcnMvdXNiL2hvc3QvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAg
+NyArLQogZHJpdmVycy91c2IvaG9zdC9laGNpLWhjZC5jICAgICAgICAgICAgICAgICAgICAgICAg
+fCAgICA1IC0KIGRyaXZlcnMvdXNiL2hvc3QvZWhjaS1wbGF0Zm9ybS5jICAgICAgICAgICAgICAg
+ICAgIHwgICA4NyArKystCiBkcml2ZXJzL3VzYi9ob3N0L2VoY2ktcHBjLW9mLmMgICAgICAgICAg
+ICAgICAgICAgICB8ICAyMzggLS0tLS0tLS0tLS0KIGRyaXZlcnMvdXNiL2hvc3Qvb2hjaS1wbGF0
+Zm9ybS5jICAgICAgICAgICAgICAgICAgIHwgICAyMiArLQogMzAgZmlsZXMgY2hhbmdlZCwgMTkx
+MiBpbnNlcnRpb25zKCspLCA0OTggZGVsZXRpb25zKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvNHh4L2FrZWJvbm8udHh0CiBj
+cmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2FrZWJvbm8uZHRzCiBjcmVh
+dGUgbW9kZSAxMDA2NDQgYXJjaC9wb3dlcnBjL2Jvb3QvdHJlZWJvb3QtYWtlYm9uby5jCiBjcmVh
+dGUgbW9kZSAxMDA2NDQgYXJjaC9wb3dlcnBjL2NvbmZpZ3MvNDR4L2FrZWJvbm9fZGVmY29uZmln
+CiBkZWxldGUgbW9kZSAxMDA2NDQgYXJjaC9wb3dlcnBjL3BsYXRmb3Jtcy80NHgvY3Vycml0dWNr
+LmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL3Bvd2VycGMvcGxhdGZvcm1zLzQ0eC9wcGM0NzYu
+YwogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvcG93ZXJwYy9zeXNkZXYvcHBjNHh4X2hzdGFfbXNp
+LmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL21tYy9ob3N0L3NkaGNpLW9mLTQ3Nmd0ci5j
+CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9uZXQvZXRoZXJuZXQvaWJtL2VtYWMvcmdtaWlf
+d29sLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL25ldC9ldGhlcm5ldC9pYm0vZW1hYy9y
+Z21paV93b2wuaAogZGVsZXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvdXNiL2hvc3QvZWhjaS1wcGMt
+b2YuYwoKLS0gCjEuNy4xMC40CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5v
+emxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
