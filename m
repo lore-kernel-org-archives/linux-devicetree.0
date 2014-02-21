@@ -1,65 +1,66 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: SPDX-License-Identifier
-Date: Fri, 21 Feb 2014 08:56:33 -0800
-Message-ID: <20140221165633.GA5465@kroah.com>
-References: <774153d4-d33f-4bb4-813b-582762bc3af9@TX2EHSMHS021.ehs.local>
- <20140220182257.GF23217@saruman.home>
- <5306F458.9010706@monstr.eu>
- <20140221160442.GA17506@kroah.com>
- <5307790A.4050806@monstr.eu>
- <20140221161246.GM31902@saruman.home>
- <53077C5F.9000407@monstr.eu>
- <20140221162045.GN31902@saruman.home>
+From: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [Patch v6 2/2] dmaengine: add Qualcomm BAM dma driver
+Date: Fri, 21 Feb 2014 11:22:06 -0600
+Message-ID: <20140221172206.GB3102@qualcomm.com>
+References: <1392964986-5207-1-git-send-email-agross@codeaurora.org>
+ <1392964986-5207-3-git-send-email-agross@codeaurora.org>
+ <20140221093352.GE7541@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140221162045.GN31902@saruman.home>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Michal Simek <monstr@monstr.eu>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>, devicetree@vger.kernel.org, Wolfgang Denk <wd@denx.de>
+In-Reply-To: <20140221093352.GE7541-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 21, 2014 at 10:20:45AM -0600, Felipe Balbi wrote:
-> Hi,
+On Fri, Feb 21, 2014 at 09:33:52AM +0000, Mark Rutland wrote:
+> On Fri, Feb 21, 2014 at 06:43:05AM +0000, Andy Gross wrote:
+
+[snip]
+> > +       bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
 > 
-> On Fri, Feb 21, 2014 at 05:18:39PM +0100, Michal Simek wrote:
-> > On 02/21/2014 05:12 PM, Felipe Balbi wrote:
-> > > On Fri, Feb 21, 2014 at 05:04:26PM +0100, Michal Simek wrote:
-> > >> On 02/21/2014 05:04 PM, Greg Kroah-Hartman wrote:
-> > >>> On Fri, Feb 21, 2014 at 07:38:16AM +0100, Michal Simek wrote:
-> > >>>> BTW: u-boot started to use SPDX-License-Identifier
-> > >>>> which will be nice to start to use.
-> > >>>
-> > >>> I agree, feel free to start sending patches to use this type of
-> > >>> identifier for drivers.
-> > >>
-> > >> But we probably need to add that Licenses to one location.
-> > >> Documentation/Licenses?
-> > > 
-> > > Just add to the drivers themselves, just like u-boot is doing. A simple:
-> > > 
-> > > 	$ git grep -e SPDX-License-Identifier
-> > > 
-> > > will tell you filename and license. Or did I misunderstand your question ?
-> > 
-> > But for doing this it is probably necessary to have location where
-> > you will place that licenses and you will explain what it is how
-> > it is done by Wolfgang in this commit.
-> > 
-> > http://git.denx.de/?p=u-boot.git;a=commitdiff;h=eca3aeb352c964bdb28b8e191d6326370245e03f
-> > 
-> > Then yes, adding one line is enough.
+> The binding document should describe the "bam_clk" string in the
+> clock-names description.
 > 
-> spdx.org has all licenses, why don't we just rely on that instead of
-> adding every other license to the kernel source ?
 
-Yes, all that will be acceptable is a one-line identifier in the file.
-No need to have all the different licenses in the kernel source, that's
-crazy and not needed at all.
+OK.
 
-I've told the SPDX people this in the past, and they keep promising that
-they will do the comment work, but it's been months and I have yet to
-see a single patch...
+> > +       ret = of_property_read_u32(pdev->dev.of_node, "qcom,ee", &bdev->ee);
+> > +       if (ret) {
+> > +               dev_err(bdev->dev, "EE unspecified\n");
+> 
+> It would be nice to expand EE to what it stands for, at least in the
+> error but possibly the binding too.
 
-greg k-h
+I can expand it to execution environment.  This is a trustzone thing and is
+required from a security perspective.
+
+> > +static const struct of_device_id bam_of_match[] = {
+> > +       { .compatible = "qcom,bam-v1.4.0", },
+> > +       { .compatible = "qcom,bam-v1.4.1", },
+> 
+> What are the differences between the two?
+> 
+> Is v1.4.1 an extension of v1.4.0?
+
+On second look, the 1.4.1 has hardware fixes.  So the software API is the same.
+I thought there were some configuration changes, but that isn't the case.
+
+> Could you have the following in DTs:
+> 
+>   compatible = "qcom,bam-v1.4.1", "qcom,bam-v1.4.0";
+> 
+> Then you'd only need the v1.4.0 string in the driver for now.
+
+Good point.  That's easy to change.
+
+-- 
+sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
