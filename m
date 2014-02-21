@@ -1,84 +1,156 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH RFC] usb: gadget: Add xilinx axi usb2 device support
-Date: Fri, 21 Feb 2014 09:41:03 -0600
-Message-ID: <20140221154103.GF31902@saruman.home>
-References: <774153d4-d33f-4bb4-813b-582762bc3af9@TX2EHSMHS021.ehs.local>
- <20140220182257.GF23217@saruman.home>
- <20140221120454.GD8783@e106331-lin.cambridge.arm.com>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 02/10] Documentation: dt: Add DT binding
+ documentation for S5C73M3 camera
+Date: Fri, 21 Feb 2014 15:42:41 +0000
+Message-ID: <20140221154240.GE20449@e106331-lin.cambridge.arm.com>
+References: <1392925237-31394-1-git-send-email-s.nawrocki@samsung.com>
+ <1392925237-31394-4-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gBdJBemW82xJqIAr"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140221120454.GD8783-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392925237-31394-4-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "a.hajda@samsung.com" <a.hajda@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---gBdJBemW82xJqIAr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Feb 20, 2014 at 07:40:29PM +0000, Sylwester Nawrocki wrote:
+> This adds DT binding documentation for Samsung S5C73M3 camera sensor
+> with an embedded ISP.
+> 
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+> Changes since v3:
+>  - DT binding documentation separated into this patch;
+> 
+> Changes since v2:
+>  - rephrased 'clocks' and 'clock-names' properties' description;
+> ---
+>  .../devicetree/bindings/media/samsung-s5c73m3.txt  |   97 ++++++++++++++++++++
+>  1 file changed, 97 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/samsung-s5c73m3.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/samsung-s5c73m3.txt b/Documentation/devicetree/bindings/media/samsung-s5c73m3.txt
+> new file mode 100644
+> index 0000000..4dd3776
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/samsung-s5c73m3.txt
+> @@ -0,0 +1,97 @@
+> +Samsung S5C73M3 8Mp camera ISP
+> +------------------------------
+> +
+> +The S5C73M3 camera ISP supports MIPI CSI-2 and parallel (ITU-R BT.656) video
+> +data busses. The I2C bus is the main control bus and additionally the SPI bus
+> +is used, mostly for transferring the firmware to and from the device. Two
+> +slave device nodes corresponding to these control bus interfaces are required
+> +and should be placed under respective bus controller nodes.
 
-Hi,
+So this has both an I2C interface and an SPI interface that are used at
+the same time?
 
-On Fri, Feb 21, 2014 at 12:04:54PM +0000, Mark Rutland wrote:
-> > > +Example:
-> > > + 		axi-usb2-device@42e00000 {
-> > > +                        compatible =3D "xlnx,axi-usb2-device-4.00.a";
-> > > +                        interrupt-parent =3D <0x1>;
-> > > +                        interrupts =3D <0x0 0x39 0x1>;
-> > > +                        reg =3D <0x42e00000 0x10000>;
-> > > +                        xlnx,include-dma =3D <0x1>;
-> > > +                };
-> > > +
-> >=20
-> > you need to Cc devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org for this.
->=20
-> Cheers Filipe; thanks for adding us to Cc :)
+> +
+> +I2C slave device node
+> +---------------------
+> +
+> +Required properties:
+> +
+> +- compatible	    : "samsung,s5c73m3";
+> +- reg		    : I2C slave address of the sensor;
+> +- vdd-int-supply    : digital power supply (1.2V);
+> +- vdda-supply	    : analog power supply (1.2V);
+> +- vdd-reg-supply    : regulator input power supply (2.8V);
+> +- vddio-host-supply : host I/O power supply (1.8V to 2.8V);
+> +- vddio-cis-supply  : CIS I/O power supply (1.2V to 1.8V);
+> +- vdd-af-supply     : lens power supply (2.8V);
+> +- xshutdown-gpios   : specifier of GPIO connected to the XSHUTDOWN pin;
+> +- standby-gpios     : specifier of GPIO connected to the STANDBY pin;
+> +- clocks	    : should contain list of phandle and clock specifier pairs
+> +		      according to common clock bindings for the clocks described
+> +		      in the clock-names property;
+> +- clock-names	    : should contain "cis_extclk" entry for the CIS_EXTCLK clock;
+> +
+> +Optional properties:
+> +
+> +- clock-frequency   : the frequency at which the "cis_extclk" clock should be
+> +		      configured to operate, in Hz; if this property is not
+> +		      specified default 24 MHz value will be used.
+> +
+> +The common video interfaces bindings (see video-interfaces.txt) should be used
+> +to specify link from the S5C73M3 to an external image data receiver. The S5C73M3
+> +device node should contain one 'port' child node with an 'endpoint' subnode for
+> +this purpose. The data link from a raw image sensor to the S5C73M3 can be
+> +similarly specified, but it is optional since the S5C73M3 ISP and a raw image
+> +sensor are usually inseparable and form a hybrid module.
+> +
+> +Following properties are valid for the endpoint node(s):
+> +
+> +endpoint subnode
+> +----------------
+> +
+> +- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
+> +  video-interfaces.txt. This sensor doesn't support data lane remapping
+> +  and physical lane indexes in subsequent elements of the array should
+> +  be only consecutive ascending values.
+> +
+> +SPI device node
+> +---------------
+> +
+> +Required properties:
+> +
+> +- compatible	    : "samsung,s5c73m3";
 
-sure, but it's "Felipe" ;-)
+It might make sense to explicitly link these two nodes somehow, in case
+multiple instances appear somewhere. However, that can come later in the
+case of a multi-instance device, and isn't necessary now.
 
-> > > +	/* Map the registers */
-> > > +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > > +	udc->base_address =3D devm_ioremap_nocache(&pdev->dev, res->start,
-> > > +						 resource_size(res));
-> >=20
-> > use devm_ioremap_resource() instead.
->=20
-> Also, res might be NULL. You should check that before dereferencing it.
+> +
+> +For more details see description of the SPI busses bindings
+> +(../spi/spi-bus.txt) and bindings of a specific bus controller.
+> +
+> +Example:
+> +
+> +i2c@138A000000 {
+> +	...
+> +	s5c73m3@3c {
+> +		compatible = "samsung,s5c73m3";
+> +		reg = <0x3c>;
+> +		vdd-int-supply = <&buck9_reg>;
+> +		vdda-supply = <&ldo17_reg>;
+> +		vdd-reg-supply = <&cam_io_reg>;
+> +		vddio-host-supply = <&ldo18_reg>;
+> +		vddio-cis-supply = <&ldo9_reg>;
+> +		vdd-af-supply = <&cam_af_reg>;
+> +		clock-frequency = <24000000>;
+> +		clocks = <&clk 0>;
+> +		clock-names = "cis_extclk";
+> +		reset-gpios = <&gpf1 3 1>;
+> +		standby-gpios = <&gpm0 1 1>;
+> +		port {
+> +			s5c73m3_ep: endpoint {
+> +				remote-endpoint = <&csis0_ep>;
+> +				data-lanes = <1 2 3 4>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +spi@1392000 {
+> +	...
+> +	s5c73m3_spi: s5c73m3 {
 
-not needed when using devm_ioremap_resource(), see the implementation.
+Nit: this should have a 0 unit-address to match the reg.
 
---=20
-balbi
+> +		compatible = "samsung,s5c73m3";
+> +		reg = <0>;
+> +		...
+> +	};
+> +};
 
---gBdJBemW82xJqIAr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Otherwise I don't see anything problematic about the binding.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-iQIcBAEBAgAGBQJTB3OPAAoJEIaOsuA1yqRE9XQQAKCF8qE6Em3POwTf1G0zHjiY
-RUqPY1kpRzpUMjt8CFSpJfNNbK/tah1O4C4e+uhWyq96UNz6Duyak50n8A2zgd2b
-T0/ElEGpRIpr1HPoxWgwZCY9ixI6YZC/2Z4K6wMeQqKYAkn09Yxk54S4fFqoYzI5
-62qdceKo61ItYZ3XOXZCL3ouQxxX5qTDEZmiFwFgrBIEmtANKL6cOUgnGHWVp0sh
-Z92XwAYzEOoCK/0PuD6abm2kz/sVVzu1vWo53pkztHAaFqi8fxvPM4Leo+6I4pbe
-b6Vy4cIOcDlJNW5iJAUp0a626XcilD60g/fhmbDjwF0PpQJUK7/2OSov6GkbC+4K
-u4vegxyNbPVwrfTwuiAurw/4sVaj7i2goZnLOjuf1iobI3AKnGvqWa9e7W0rDYXb
-in3LAPcd0n6FocbR/e3NJ/3PlInGzKc1cUX5AWCGJIqJECzI19CsRnJgF2gPLH0l
-+OLo6d/LMSlmQQwOsh70ZrcjqP4UU7Ks82HzK6ToM/KQvHunK2pcuM6DpE/buI8d
-J/qF2N9ao5comj4kF9svmN2XNrqb8sAVvlm5FjAwdlMzm/JdWjfZ87yYodIksgpE
-Hly188GtWWok3oBA4IGG98LnV61rw/dFNF/SOjtG+uNd1EX9TfkjGNl+qbXl5GlI
-30r1UELSFOA8WjeSQcne
-=V8Hg
------END PGP SIGNATURE-----
-
---gBdJBemW82xJqIAr--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Mark.
