@@ -1,81 +1,158 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: SPDX-License-Identifier
-Date: Fri, 21 Feb 2014 09:57:20 -0800
-Message-ID: <20140221175720.GA21660@kroah.com>
-References: <774153d4-d33f-4bb4-813b-582762bc3af9@TX2EHSMHS021.ehs.local>
- <20140220182257.GF23217@saruman.home>
- <5306F458.9010706@monstr.eu>
- <20140221160442.GA17506@kroah.com>
- <5307790A.4050806@monstr.eu>
- <20140221161246.GM31902@saruman.home>
- <53077C5F.9000407@monstr.eu>
- <20140221162045.GN31902@saruman.home>
- <20140221165633.GA5465@kroah.com>
- <53078C30.7060703@monstr.eu>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 17/18] ARM: sun4i: dt: Add ahci / sata support
+Date: Fri, 21 Feb 2014 19:15:19 +0100
+Message-ID: <20140221181519.GC3931@lukather>
+References: <1392811320-3132-1-git-send-email-hdegoede@redhat.com>
+ <1392811320-3132-18-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="n/aVsWSeQ4JHkrmm"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBU5RT2MAKGQELNZLKCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <53078C30.7060703-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
+In-Reply-To: <1392811320-3132-18-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 21, 2014 at 06:26:08PM +0100, Michal Simek wrote:
-> On 02/21/2014 05:56 PM, Greg Kroah-Hartman wrote:
-> > On Fri, Feb 21, 2014 at 10:20:45AM -0600, Felipe Balbi wrote:
-> >> Hi,
-> >>
-> >> On Fri, Feb 21, 2014 at 05:18:39PM +0100, Michal Simek wrote:
-> >>> On 02/21/2014 05:12 PM, Felipe Balbi wrote:
-> >>>> On Fri, Feb 21, 2014 at 05:04:26PM +0100, Michal Simek wrote:
-> >>>>> On 02/21/2014 05:04 PM, Greg Kroah-Hartman wrote:
-> >>>>>> On Fri, Feb 21, 2014 at 07:38:16AM +0100, Michal Simek wrote:
-> >>>>>>> BTW: u-boot started to use SPDX-License-Identifier
-> >>>>>>> which will be nice to start to use.
-> >>>>>>
-> >>>>>> I agree, feel free to start sending patches to use this type of
-> >>>>>> identifier for drivers.
-> >>>>>
-> >>>>> But we probably need to add that Licenses to one location.
-> >>>>> Documentation/Licenses?
-> >>>>
-> >>>> Just add to the drivers themselves, just like u-boot is doing. A simple:
-> >>>>
-> >>>> 	$ git grep -e SPDX-License-Identifier
-> >>>>
-> >>>> will tell you filename and license. Or did I misunderstand your question ?
-> >>>
-> >>> But for doing this it is probably necessary to have location where
-> >>> you will place that licenses and you will explain what it is how
-> >>> it is done by Wolfgang in this commit.
-> >>>
-> >>> http://git.denx.de/?p=u-boot.git;a=commitdiff;h=eca3aeb352c964bdb28b8e191d6326370245e03f
-> >>>
-> >>> Then yes, adding one line is enough.
-> >>
-> >> spdx.org has all licenses, why don't we just rely on that instead of
-> >> adding every other license to the kernel source ?
-> > 
-> > Yes, all that will be acceptable is a one-line identifier in the file.
-> > No need to have all the different licenses in the kernel source, that's
-> > crazy and not needed at all.
-> >
-> > I've told the SPDX people this in the past, and they keep promising that
-> > they will do the comment work, but it's been months and I have yet to
-> > see a single patch...
-> 
-> But shouldn't we at least write somewhere
-> that it has connection to spdx.org where you can find out that licenses.
 
-Why?  Are these licenses so unknown that no one knows what they are?
-And, as part of the kernel-as-a-whole-work, they all resolve to GPLv2
-anyway, and we have that license in the source tree, so nothing else
-should be needed.
+--n/aVsWSeQ4JHkrmm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Hans,
+
+On Wed, Feb 19, 2014 at 01:01:59PM +0100, Hans de Goede wrote:
+> From: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+>=20
+> This patch adds sunxi sata support to A10 boards that have such a connect=
+or.
+> Some boards also feature a regulator via a GPIO and support for this is a=
+lso
+> added.
+>=20
+> Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun4i-a10-a1000.dts      |  4 ++++
+>  arch/arm/boot/dts/sun4i-a10-cubieboard.dts |  6 +++++
+>  arch/arm/boot/dts/sun4i-a10.dtsi           |  8 +++++++
+>  arch/arm/boot/dts/sunxi-ahci-reg.dtsi      | 36 ++++++++++++++++++++++++=
+++++++
+>  4 files changed, 54 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sunxi-ahci-reg.dtsi
+>=20
+> diff --git a/arch/arm/boot/dts/sun4i-a10-a1000.dts b/arch/arm/boot/dts/su=
+n4i-a10-a1000.dts
+> index cbd2e13..d6ec839 100644
+> --- a/arch/arm/boot/dts/sun4i-a10-a1000.dts
+> +++ b/arch/arm/boot/dts/sun4i-a10-a1000.dts
+> @@ -35,6 +35,10 @@
+>  			};
+>  		};
+> =20
+> +		ahci: sata@01c18000 {
+> +			status =3D "okay";
+> +		};
+> +
+>  		pinctrl@01c20800 {
+>  			emac_power_pin_a1000: emac_power_pin@0 {
+>  				allwinner,pins =3D "PH15";
+> diff --git a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts b/arch/arm/boot/d=
+ts/sun4i-a10-cubieboard.dts
+> index b139ee6..6df237d8 100644
+> --- a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+> +++ b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+> @@ -12,6 +12,7 @@
+> =20
+>  /dts-v1/;
+>  /include/ "sun4i-a10.dtsi"
+> +/include/ "sunxi-ahci-reg.dtsi"
+> =20
+>  / {
+>  	model =3D "Cubietech Cubieboard";
+> @@ -33,6 +34,11 @@
+>  			};
+>  		};
+> =20
+> +		ahci: sata@01c18000 {
+> +			target-supply =3D <&reg_ahci_5v>;
+> +			status =3D "okay";
+> +		};
+> +
+>  		pinctrl@01c20800 {
+>  			led_pins_cubieboard: led_pins@0 {
+>  				allwinner,pins =3D "PH20", "PH21";
+> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a=
+10.dtsi
+> index 336dbec..454077a 100644
+> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
+> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+> @@ -338,6 +338,14 @@
+>  			#size-cells =3D <0>;
+>  		};
+> =20
+> +		ahci: sata@01c18000 {
+> +			compatible =3D "allwinner,sun4i-a10-ahci";
+> +			reg =3D <0x01c18000 0x1000>;
+> +			interrupts =3D <56>;
+> +			clocks =3D <&pll6 0>, <&ahb_gates 25>;
+> +			status =3D "disabled";
+> +		};
+> +
+>  		intc: interrupt-controller@01c20400 {
+>  			compatible =3D "allwinner,sun4i-ic";
+>  			reg =3D <0x01c20400 0x400>;
+> diff --git a/arch/arm/boot/dts/sunxi-ahci-reg.dtsi b/arch/arm/boot/dts/su=
+nxi-ahci-reg.dtsi
+> new file mode 100644
+> index 0000000..7072af1
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sunxi-ahci-reg.dtsi
+> @@ -0,0 +1,36 @@
+> +/*
+> + * sunxi boards sata target power supply common code
+
+
+Since IIRC we have pretty much the same needs for the USB, can't we
+just drop the SATA specific mention and use it as the common DTSI for
+the usual regulators?
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--n/aVsWSeQ4JHkrmm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTB5e2AAoJEBx+YmzsjxAg4SoP/0Xi/q+CGFs0m2wDTl5v6NmT
+dJKbOI1zkWpjR7lmlQvWkkiKycxa+dfOJNKFn4eeYCMywyY7PsU+8sRTXjq+bz/w
+xWPikXEyhDiX0TEcXDMUTJGrLy/bWQIkvhy3sdfiCFOzVLhMIkBFo+x+DDad7Kms
++zy07p2CXo79oFFN4ijIgFmzhgzt9XneMWyGERAFZx9Qkxwx5O8ruw91vsn9JKo1
+FbHQw4ZcTO4eNuWHqYcBZkl7uQ2h909554wtCnduEA+CbeDZe1SSS0t+pPRnRkdj
+iP2jaKCZ8Rwi5jMQQyiZa5EO5+A3KAfalQf94wzi1jnp/PV/BTFN1ceaRjHmiMGa
+yEobu+QDIWY974VwUGCz3ou+pl/5oYak9kc+bH3SsMG3kP5q9aHJQUQILRuRQTRz
+3Pzs4jaoW98Uf5KAOuw2HcNSv/4TvssswTWCxdRR44q7E9WfGYYQUIEraYUxT3sC
+s0HowdiPJlgtQPIP+tQE7mGw1JpZKsCQ8L7um/VLW/8IANq0+g/K8Cs5v/xNf79W
+W079UzV6Hmp+XJ2azZETiFHq5My0tnidm5HsOL4TnG7YX7T9iJbOAUbCgGQW68RK
+60ZzLEobO0cDRHpy4aX1fLTsuAR9pZGDUQkCdlLc7UDesRJqPzrAJEI8OeNpz+P7
+HbjtBFPi8j2JKHmOUiTA
+=/XOp
+-----END PGP SIGNATURE-----
+
+--n/aVsWSeQ4JHkrmm--
