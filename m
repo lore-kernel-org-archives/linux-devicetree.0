@@ -1,77 +1,54 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [Patch v6 2/2] dmaengine: add Qualcomm BAM dma driver
-Date: Fri, 21 Feb 2014 09:33:52 +0000
-Message-ID: <20140221093352.GE7541@e106331-lin.cambridge.arm.com>
-References: <1392964986-5207-1-git-send-email-agross@codeaurora.org>
- <1392964986-5207-3-git-send-email-agross@codeaurora.org>
+From: Peter Chen <Peter.Chen@freescale.com>
+Subject: RE: [PATCH v10 01/15] usb: doc: phy-mxs: Add more compatible strings
+Date: Fri, 21 Feb 2014 09:40:29 +0000
+Message-ID: <5e4d795b507a4ea7b9faa69dd05148c4@BL2PR03MB226.namprd03.prod.outlook.com>
+References: <1392873284-9386-1-git-send-email-peter.chen@freescale.com>
+ <1392873284-9386-2-git-send-email-peter.chen@freescale.com>
+ <20140221091345.GA7541@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1392964986-5207-3-git-send-email-agross@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andy Gross <agross@codeaurora.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vinod Koul <vinod.koul@intel.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140221091345.GA7541@e106331-lin.cambridge.arm.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "balbi@ti.com" <balbi@ti.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Pawel Moll <Pawel.Moll@arm.com>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "festevam@gmail.com" <festevam@gmail.com>, "marex@denx.de" <marex@denx.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>, "Frank.Li@freescale.com" <Frank.Li@freescale.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 21, 2014 at 06:43:05AM +0000, Andy Gross wrote:
-> Add the DMA engine driver for the QCOM Bus Access Manager (BAM) DMA controller
-> found in the MSM 8x74 platforms.
+ 
+> >
+> >  Required properties:
+> > -- compatible: Should be "fsl,imx23-usbphy"
+> > +- compatible: "fsl,imx23-usbphy" for imx23 and imx28, "fsl,imx6q-
+> usbphy"
+> > +  for imx6dq and imx6dl, "fsl,imx6sl-usbphy" for imx6sl
 > 
-> Each BAM DMA device is associated with a specific on-chip peripheral.  Each
-> channel provides a uni-directional data transfer engine that is capable of
-> transferring data between the peripheral and system memory (System mode), or
-> between two peripherals (BAM2BAM).
+> Minor nit, but could we restructure this as something like the following,
+> with each string on a new line:
 > 
-> The initial release of this driver only supports slave transfers between
-> peripherals and system memory.
+> - compatible: should contain:
+>     * "fsl,imx23-usbphy" for imx23 and imx28
+>     * "fsl,imx6q-usbphy" for imx6dq and imx6dl
+>     * "fsl,imx6sl-usbphy" for imx6sl
 > 
-> Signed-off-by: Andy Gross <agross@codeaurora.org>
-> ---
->  drivers/dma/Kconfig        |    9 +
->  drivers/dma/Makefile       |    1 +
->  drivers/dma/qcom_bam_dma.c | 1107 ++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 1117 insertions(+)
->  create mode 100644 drivers/dma/qcom_bam_dma.c
+> It makes it a bit easier to read.
 
-[...]
+Thanks, will change like above.
 
-> +       bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
+> 
+> I see the existing "fsl,imx23-usbphy" is used as a fallback for
+> "fsl,imx28-usbphy", "fsl,imx6q-usbphy", and "fsl,imx6sl-usbphy" in
+> existing DTs.
+> 
+> Is this expected going forward? It might be worth mentioning.
+> 
 
-The binding document should describe the "bam_clk" string in the
-clock-names description.
+These SoCs used the same FSL imx PHY, but different versions.
+imx23/imx28 are the first version, more improvements are at
+later SoCs (like imx6x) version. Keep "fsl,imx23-usbphy" at
+imx6 dts will be user know it is from imx23's. If you think
+it does not need, I can delete "fsl,imx23-usbphy" from imx6 dts.
 
-[...]
+Peter
 
-> +       ret = of_property_read_u32(pdev->dev.of_node, "qcom,ee", &bdev->ee);
-> +       if (ret) {
-> +               dev_err(bdev->dev, "EE unspecified\n");
-
-It would be nice to expand EE to what it stands for, at least in the
-error but possibly the binding too.
-
-> +static const struct of_device_id bam_of_match[] = {
-> +       { .compatible = "qcom,bam-v1.4.0", },
-> +       { .compatible = "qcom,bam-v1.4.1", },
-
-What are the differences between the two?
-
-Is v1.4.1 an extension of v1.4.0?
-
-Could you have the following in DTs:
-
-  compatible = "qcom,bam-v1.4.1", "qcom,bam-v1.4.0";
-
-Then you'd only need the v1.4.0 string in the driver for now.
-
-Thanks,
-Mark.
