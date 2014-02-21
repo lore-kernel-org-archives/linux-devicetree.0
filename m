@@ -1,68 +1,26 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH V2] ARM: bcm2835: fix clock DT node names
-Date: Thu, 20 Feb 2014 22:29:47 -0700
-Message-ID: <1392960587-29355-1-git-send-email-swarren@wwwdotorg.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org
-Cc: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 1/3] ARM: dts: vf610-twr: Add ADC support
+Date: Fri, 21 Feb 2014 13:38:36 +0800
+Message-ID: <20140221053834.GT3010@S2101-09.ap.freescale.net>
+References: <1390714773-23066-1-git-send-email-B38611@freescale.com>
+ <1390714773-23066-2-git-send-email-B38611@freescale.com>
+ <20140216074850.GA2946@S2101-09.ap.freescale.net>
+ <20140219050716.GA3010@S2101-09.ap.freescale.net>
+ <da1f0ce0784e434d8a384aa34e271a18@BLUPR03MB373.namprd03.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <da1f0ce0784e434d8a384aa34e271a18-GeMU99GfrrsHjcGqcGfFzOO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "fugang.duan-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fugang.duan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org" <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DT nodes should be named according to the type of object that they
-represent rather than the identity. DT nodes that contain a reg
-property should include a unit address in their name. Fix these issues.
+On Fri, Feb 21, 2014 at 05:17:20AM +0000, fugang.duan-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
+> So, you apply the original patch ? Do I need to resend it again ?
 
-Add clock-output-names properties to the nodes so that the clocks get
-named something meaningful. This works around the fact that the fixed
-clock driver names clocks after the short node name, i.e. not including
-the unit address.
+You still need to rebase it against my for-next branch to resolve my
+comment on pinctrl setting.
 
-Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
----
-v2: Add clock-output-names properties.
----
- arch/arm/boot/dts/bcm2835.dtsi | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
-index a2d4889..b8473c4 100644
---- a/arch/arm/boot/dts/bcm2835.dtsi
-+++ b/arch/arm/boot/dts/bcm2835.dtsi
-@@ -155,24 +155,27 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		clk_mmc: mmc {
-+		clk_mmc: clock@0 {
- 			compatible = "fixed-clock";
- 			reg = <0>;
- 			#clock-cells = <0>;
-+			clock-output-names = "mmc";
- 			clock-frequency = <100000000>;
- 		};
- 
--		clk_i2c: i2c {
-+		clk_i2c: clock@1 {
- 			compatible = "fixed-clock";
- 			reg = <1>;
- 			#clock-cells = <0>;
-+			clock-output-names = "i2c";
- 			clock-frequency = <250000000>;
- 		};
- 
--		clk_spi: spi {
-+		clk_spi: clock@2 {
- 			compatible = "fixed-clock";
- 			reg = <2>;
- 			#clock-cells = <0>;
-+			clock-output-names = "spi";
- 			clock-frequency = <250000000>;
- 		};
- 	};
--- 
-1.8.3.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Shawn
