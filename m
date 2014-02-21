@@ -1,8 +1,8 @@
 From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH v5 11/11] powerpc: add support for reserved memory defined by
- device tree
-Date: Fri, 21 Feb 2014 13:25:27 +0100
-Message-ID: <1392985527-6260-12-git-send-email-m.szyprowski@samsung.com>
+Subject: [PATCH v5 07/11] drivers: dma-coherent: add initialization from device
+ tree
+Date: Fri, 21 Feb 2014 13:25:23 +0100
+Message-ID: <1392985527-6260-8-git-send-email-m.szyprowski@samsung.com>
 References: <1392985527-6260-1-git-send-email-m.szyprowski@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-reply-to: <1392985527-6260-1-git-send-email-m.szyprowski@samsung.com>
@@ -11,46 +11,64 @@ To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-m
 Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Grant Likely <grant.likely@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Paul Mackerras <paulus@samba.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable reserved memory initialization from device tree.
+Add support for handling 'shared-dma-pool' reserved-memory device tree
+nodes.
+
+Based on previous code provided by Josh Cartwright <joshc@codeaurora.org>
 
 Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 ---
- arch/powerpc/Kconfig       |    1 +
- arch/powerpc/kernel/prom.c |    3 +++
- 2 files changed, 4 insertions(+)
+ drivers/base/dma-coherent.c |   41 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 957bf344c0f5..3b6617fed8fc 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -90,6 +90,7 @@ config PPC
- 	select BINFMT_ELF
- 	select OF
- 	select OF_EARLY_FLATTREE
-+	select OF_RESERVED_MEM
- 	select HAVE_FTRACE_MCOUNT_RECORD
- 	select HAVE_DYNAMIC_FTRACE
- 	select HAVE_FUNCTION_TRACER
-diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-index f58c0d3aaeb4..591986215801 100644
---- a/arch/powerpc/kernel/prom.c
-+++ b/arch/powerpc/kernel/prom.c
-@@ -33,6 +33,7 @@
- #include <linux/irq.h>
- #include <linux/memblock.h>
- #include <linux/of.h>
-+#include <linux/of_fdt.h>
- 
- #include <asm/prom.h>
- #include <asm/rtas.h>
-@@ -588,6 +589,8 @@ static void __init early_reserve_mem_dt(void)
- 			memblock_reserve(base, size);
- 		}
- 	}
-+
-+	early_init_fdt_scan_reserved_mem();
+diff --git a/drivers/base/dma-coherent.c b/drivers/base/dma-coherent.c
+index bc256b641027..2343ba5d6d43 100644
+--- a/drivers/base/dma-coherent.c
++++ b/drivers/base/dma-coherent.c
+@@ -218,3 +218,44 @@ int dma_mmap_from_coherent(struct device *dev, struct vm_area_struct *vma,
+ 	return 0;
  }
- 
- static void __init early_reserve_mem(void)
+ EXPORT_SYMBOL(dma_mmap_from_coherent);
++
++/*
++ * Support for reserved memory regions defined in device tree
++ */
++#ifdef CONFIG_OF_RESERVED_MEM
++#include <linux/of.h>
++#include <linux/of_fdt.h>
++#include <linux/of_reserved_mem.h>
++
++static void rmem_dma_device_init(struct reserved_mem *rmem,
++			struct device *dev, struct of_phandle_args *args)
++{
++	dma_declare_coherent_memory(dev, rmem->base, rmem->base,
++		rmem->size, DMA_MEMORY_MAP | DMA_MEMORY_EXCLUSIVE);
++}
++
++static void rmem_dma_device_release(struct reserved_mem *rmem,
++				    struct device *dev)
++{
++	dma_release_declared_memory(dev);
++}
++
++static const struct reserved_mem_ops rmem_dma_ops = {
++	.device_init	= rmem_dma_device_init,
++	.device_release	= rmem_dma_device_release,
++};
++
++static int __init rmem_dma_setup(struct reserved_mem *rmem,
++				 unsigned long node,
++				 const char *uname)
++{
++	if (of_get_flat_dt_prop(node, "reusable", NULL))
++		return -EINVAL;
++
++	rmem->ops = &rmem_dma_ops;
++	pr_info("Reserved memory: created DMA memory pool at %pa, size %ld MiB\n",
++		&rmem->base, (unsigned long)rmem->size / SZ_1M);
++	return 0;
++}
++RESERVEDMEM_OF_DECLARE(dma, "shared-dma-pool", rmem_dma_setup);
++#endif
 -- 
 1.7.9.5
