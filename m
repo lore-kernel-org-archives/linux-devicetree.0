@@ -1,85 +1,211 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 1/1] ARM: Exynos: Add generic compatible string
-Date: Fri, 21 Feb 2014 14:18:49 +0100
-Message-ID: <53075239.4010603@samsung.com>
-References: <1392809645-631-1-git-send-email-sachin.kamat@linaro.org>
- <201402201800.49425.arnd@arndb.de> <53063C9F.4060307@samsung.com>
- <16785833.BhsvfRuRRo@wuerfel>
- <CAK9yfHyWG1ac6isTRSB3VWfxER9cSuDJHwY3b7svyEk9EozpWQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAK9yfHyWG1ac6isTRSB3VWfxER9cSuDJHwY3b7svyEk9EozpWQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Olof Johansson <olof@lixom.net>
+From: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
+Subject: [PATCH v2] dt: platform driver: Fill the resources before probe and defer if needed
+Date: Fri, 21 Feb 2014 14:18:40 +0100
+Message-ID: <1392988720-20976-1-git-send-email-jjhiblot@traphandler.com>
+References: <20140220153042.DF053C4050F@trevor.secretlab.ca>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140220153042.DF053C4050F@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: grant.likely@linaro.org, gregkh@linuxfoundation.org, robh+dt@kernel.org
+Cc: gregory.clement@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jean-Jacques Hiblot <jjhiblot@traphandler.com>
 List-Id: devicetree@vger.kernel.org
 
-On 21.02.2014 07:08, Sachin Kamat wrote:
-> On 20 February 2014 23:18, Arnd Bergmann <arnd@arndb.de> wrote:
->> On Thursday 20 February 2014 18:34:23 Tomasz Figa wrote:
->>> On 20.02.2014 18:00, Arnd Bergmann wrote:
->>>>> Of course nothing stops you from retaining more specific compatible
->>>>> strings. In fact, this is probably the most appropriate solution,
->>>>> because in future you might find out that certain SoCs need some special
->>>>> differentiation, e.g. same ID value on two SoCs.
->>>>>
->>>>> So, to apply this to our case, our Exynos 5250 based Arndale board would
->>>>> be changed from
->>>>>
->>>>> compatible = "insignal,arndale", "samsung,exynos5260";
->>>>>
->>>>> to
->>>>>
->>>>> compatible = "insignal,arndale", "samsung,exynos5260", "samsung,exynos";
->>>>
->>>> Right, this would make sense.
->>>>
->>>>> Now, the board file will be able to match simply by "samsung,exynos"
->>>>> compatible string and SoC-specific code in mach-exynos (hopefully none
->>>>> after it gets cleaned up fully) will use soc_is_exynos*() macros (what
->>>>> AFAIK it is already doing at the moment).
->>>>
->>>> On principle, I would not take things out of the match list, if that
->>>> would break booting with old DT file that don't list "samsung,exynos"
->>>> as compatible. But for new SoCs that would work.
->>>
->>> My proposal was about simply adding a fully generic string, without
->>> removing the specific ones. For already supported SoCs this is pretty
->>> obvious, as existing DTBs would not have this generic string listed. But
->>> the specific strings should be also present in DTSes of new SoCs, even
->>> if not recognized by the kernel, to make sure that in future any
->>> SoC-specific quirks could be easily handled.
->>
->> Yes, that's ideal.
->>
->>>> Using soc_is_exynos*() too much of course also isn't good. A lot of
->>>> the things tested for should probably be checked from individual DT
->>>> properties, but again we have to find the right balance. I wouldn't
->>>> mind getting rid of the soc_is_exynos*() macros completely, because
->>>> a) we can't use them in device drivers
->>>> b) all platform code is supposed to be in drivers
->>>> c) both rules are enforced for arm64
->>>
->>> I fully agree. As I said, after cleaning up mach-exynos/ there should be
->>> no more code left using soc_is_*() macros. Ideally, the whole
->>> mach-exynos/ should collapse into a single, trivial file, with
->>> everything done in dedicated drivers.
->>
->> Right.
->
-> Now that we have a broader agreement on this, I think we can go ahead with the
-> following steps as an initial approach:
-> 1. Have a common machine file for both exynos4 and 5 files, mach-exynos-dt.c.
-> 2. Introduce a generic compatible string "samsung,exynos".
-> 3. Append this to the compatible property list for existing boards.
->
-> If this plan looks OK, I can send across patches doing this.
->
+The goal of this patch is to allow drivers to be probed even if at the time of
+the DT parsing some of their ressources are not available yet.
 
-Looks good. I would also merge common.c with this resulting 
-mach-exynos-dt.c, as it would be the only user of the code there.
+In the current situation, the resource of a platform device are filled from the
+DT at the time the device is created (of_device_alloc()). The drawbackof this
+is that a device sitting close to the top of the DT (ahb for example) but
+depending on ressources that are initialized later (IRQ domain dynamically
+created for example)  will fail to probe because the ressources don't exist
+at this time.
 
-Best regards,
-Tomasz
+This patch fills the resource structure only before the device is probed and
+will defer the probe if the resource are not available yet.
+
+Signed-off-by: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
+Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+---
+
+Hi Grant,
+
+I reworked the patch as you proposed. To keep the overhead minimum, nirq and
+nreg are computed only the first time.
+In this implementation, only the missing IRQ ressources are re-tried for. It could
+easily be changed to re-parse all the IRQs though (replace if (!res->flags)
+with if ((!res->flags) || (res->flags & IORESOURCE_IRQ)).
+
+drivers/base/platform.c     |   5 +++
+ drivers/of/platform.c       | 100 +++++++++++++++++++++++++++++++++-----------
+ include/linux/of_platform.h |  10 +++++
+ 3 files changed, 90 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index bc78848..cee9b8d 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -481,6 +481,10 @@ static int platform_drv_probe(struct device *_dev)
+ 	struct platform_device *dev = to_platform_device(_dev);
+ 	int ret;
+ 
++	ret = of_platform_device_prepare(dev);
++	if (ret)
++		goto error;
++
+ 	if (ACPI_HANDLE(_dev))
+ 		acpi_dev_pm_attach(_dev, true);
+ 
+@@ -488,6 +492,7 @@ static int platform_drv_probe(struct device *_dev)
+ 	if (ret && ACPI_HANDLE(_dev))
+ 		acpi_dev_pm_detach(_dev, true);
+ 
++error:
+ 	if (drv->prevent_deferred_probe && ret == -EPROBE_DEFER) {
+ 		dev_warn(_dev, "probe deferral not supported\n");
+ 		ret = -ENXIO;
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 404d1da..a4e2602 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -141,36 +141,11 @@ struct platform_device *of_device_alloc(struct device_node *np,
+ 				  struct device *parent)
+ {
+ 	struct platform_device *dev;
+-	int rc, i, num_reg = 0, num_irq;
+-	struct resource *res, temp_res;
+ 
+ 	dev = platform_device_alloc("", -1);
+ 	if (!dev)
+ 		return NULL;
+ 
+-	/* count the io and irq resources */
+-	if (of_can_translate_address(np))
+-		while (of_address_to_resource(np, num_reg, &temp_res) == 0)
+-			num_reg++;
+-	num_irq = of_irq_count(np);
+-
+-	/* Populate the resource table */
+-	if (num_irq || num_reg) {
+-		res = kzalloc(sizeof(*res) * (num_irq + num_reg), GFP_KERNEL);
+-		if (!res) {
+-			platform_device_put(dev);
+-			return NULL;
+-		}
+-
+-		dev->num_resources = num_reg + num_irq;
+-		dev->resource = res;
+-		for (i = 0; i < num_reg; i++, res++) {
+-			rc = of_address_to_resource(np, i, res);
+-			WARN_ON(rc);
+-		}
+-		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
+-	}
+-
+ 	dev->dev.of_node = of_node_get(np);
+ #if defined(CONFIG_MICROBLAZE)
+ 	dev->dev.dma_mask = &dev->archdata.dma_mask;
+@@ -233,6 +208,81 @@ static struct platform_device *of_platform_device_create_pdata(
+ 	return dev;
+ }
+ 
++static int of_reg_count(struct device_node *np)
++{
++	int nreg = 0;
++	if (of_can_translate_address(np)) {
++		struct resource temp_res;
++		while (of_address_to_resource(np, nreg, &temp_res) == 0)
++			nreg++;
++	}
++	return nreg;
++}
++
++int of_platform_device_prepare(struct platform_device *dev)
++{
++	struct device_node *np;
++	int i, irq_index;
++	struct resource *res;
++
++	/*
++	 * This function applies only devices described in the DT.
++	 * Other platform devices have their ressources already populated.
++	 */
++	np = dev->dev.of_node;
++	if (!np)
++		return 0;
++
++	/* Populate the resource table */
++	if (!dev->resource) {
++		int rc, nreg = 0, nirq;
++		/* count the io and irq resources */
++		nreg = of_reg_count(np);
++		nirq = of_irq_count(np);
++
++		if (!nirq && !nreg)
++			return 0;
++
++		res = kzalloc(sizeof(*res) * (nirq + nreg), GFP_KERNEL);
++		if (!res)
++			return -ENOMEM;
++
++		dev->resource = res;
++		dev->num_resources = nreg + nirq;
++
++		for (i = 0; i < nreg; i++, res++) {
++			rc = of_address_to_resource(np, i, res);
++			if (WARN_ON(rc)) {
++				/* THIS IS BAD; don't try to defer probing */
++				dev->num_resources = 0;
++				dev->resource = NULL;
++				kfree(res);
++				return rc;
++			}
++		}
++
++		if (!rc && of_irq_to_resource_table(np, res, nirq) != nirq) {
++			/* IRQ controller is yet available. defer probing */
++			return -EPROBE_DEFER;
++		}
++
++		return 0;
++	}
++
++	/* See which IRQ resources need to be redone */
++	irq_index = 0;
++	for (i = 0, res = dev->resource; i < dev->num_resources; i++, res++) {
++		if (!res->flags) {
++			if (!of_irq_to_resource(np, irq_index, res))
++				return -EPROBE_DEFER;
++			irq_index++;
++		} else if (res->flags & IORESOURCE_IRQ)
++			irq_index++;
++	}
++	return 0;
++}
++EXPORT_SYMBOL(of_platform_device_prepare);
++
+ /**
+  * of_platform_device_create - Alloc, initialize and register an of_device
+  * @np: pointer to node to create device for
+diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
+index 05cb4a9..4e487ff 100644
+--- a/include/linux/of_platform.h
++++ b/include/linux/of_platform.h
+@@ -53,6 +53,16 @@ struct of_dev_auxdata {
+ 
+ extern const struct of_device_id of_default_bus_match_table[];
+ 
++/* Populate the resource for a platform device */
++#ifdef CONFIG_OF
++int of_platform_device_prepare(struct platform_device *dev);
++#else
++static inline int of_platform_device_prepare(
++	struct platform_device *dev)
++{
++	return 0;
++}
++#endif
+ /* Platform drivers register/unregister */
+ extern struct platform_device *of_device_alloc(struct device_node *np,
+ 					 const char *bus_id,
+-- 
+1.9.0
