@@ -1,97 +1,83 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 7/7] powerpc: Added PCI MSI support using the HSTA module
-Date: Fri, 21 Feb 2014 22:53:00 +0100
-Message-ID: <201402212253.01101.arnd@arndb.de>
-References: <1392964293-13687-1-git-send-email-alistair@popple.id.au> <1574137.lzDhNaVqIe@wuerfel> <1393015286.6771.110.camel@pasglop>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [GIT PULL] Device tree bug fix on compatible order
+Date: Fri, 21 Feb 2014 22:11:45 +0000
+Message-ID: <CACxGe6t=Aij59zHGzD2ZbEGeUALx1t=-KXKcfDPYFoQd_FnLeQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393015286.6771.110.camel@pasglop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 21 February 2014, Benjamin Herrenschmidt wrote:
-> On Fri, 2014-02-21 at 15:33 +0100, Arnd Bergmann wrote:
-> 
-> > > @@ -242,8 +264,10 @@
-> > >  			ranges = <0x02000000 0x00000000 0x80000000 0x00000110 0x80000000 0x0 0x80000000
-> > >  			          0x01000000 0x0        0x0        0x00000140 0x0        0x0 0x00010000>;
-> > >  
-> > > -			/* Inbound starting at 0 to memsize filled in by zImage */
-> > > -			dma-ranges = <0x42000000 0x0 0x0 0x0 0x0 0x0 0x0>;
-> > > +			/* Inbound starting at 0x0 to 0x40000000000. In order to use MSI
-> > > +			 * PCI devices must be able to write to the HSTA module.
-> > > +			 */
-> > > +			dma-ranges = <0x42000000 0x0 0x0 0x0 0x0 0x400 0x0>;
-> 
-> Should we (provided it's possible in HW) create two ranges instead ? One
-> covering RAM and one covering MSIs ? To avoid stray DMAs whacking random
-> HW registers in the chip ...
-> 
-> > >  			/* This drives busses 0 to 0xf */
-> > >  			bus-range = <0x0 0xf>;
-> > 
-> > Ah, I first only saw the line you are removing and was about
-> > to suggest what you do anyway. Great!
-> > 
-> > > diff --git a/arch/powerpc/sysdev/ppc4xx_pci.c b/arch/powerpc/sysdev/ppc4xx_pci.c
-> > > index 54ec1d5..7cc3acc 100644
-> > > --- a/arch/powerpc/sysdev/ppc4xx_pci.c
-> > > +++ b/arch/powerpc/sysdev/ppc4xx_pci.c
-> > > @@ -176,8 +176,12 @@ static int __init ppc4xx_parse_dma_ranges(struct pci_controller *hose,
-> > >  		return -ENXIO;
-> > >  	}
-> > >  
-> > > -	/* Check that we are fully contained within 32 bits space */
-> > > -	if (res->end > 0xffffffff) {
-> > > +	/* Check that we are fully contained within 32 bits space if we are not
-> > > +	 * running on a 460sx or 476fpe which have 64 bit bus addresses.
-> > > +	 */
-> > > +	if (res->end > 0xffffffff &&
-> > > +	    !(of_device_is_compatible(hose->dn, "ibm,plb-pciex-460sx")
-> > > +	      || of_device_is_compatible(hose->dn, "ibm,plb-pciex-476fpe"))) {
-> > >  		printk(KERN_ERR "%s: dma-ranges outside of 32 bits space\n",
-> > >  		       hose->dn->full_name);
-> > >  		return -ENXIO;
-> > 
-> > A more general question for BenH: Apparently this PCI implementation is
-> > getting reused on arm64 for APM X-Gene. Do you see any value in trying to
-> > share host controller drivers like this one across powerpc and arm64?
-> 
-> I would start duplicating, and see how much common code remains... Then
-> eventually merge.
+Hi Linus,
 
-Ok.
+Please pull the following tag for a devicetree bug fix (description below)
 
-> > It's possible we are going to see the same situation with fsl_pci in the
-> > future, if arm and powerpc qoriq chips use the same peripherals. My
-> > plan for arm64 right now is to make PCI work without any code in arch/,
-> > just using new helper functions in drivers/pci and sticking the host
-> > drivers into drivers/pci/host as we started doing for arm32, but it
-> > can require significant work to make those drivers compatible with
-> > the powerpc pci-common.c.
-> 
-> powerpc pci-common.c is shrinking :-) At least the address remapping is
-> all in the core now, we could move more over I suppose...
+Thanks,
+g.
 
-Ah, good. We're currently trying to work out a generic way to parse
-the DT and ioremap the I/O windows. That could probably be shared
-and while I hope what we need on arm64 is compatible with what you
-need on powerpc, I may always miss something. I'll make sure to add
-you to the discussions.
+The following changes since commit 60f76eab19e3903e810bdc3ec846c158efcd2e21:
 
-Some parts are easier because we assume that we always scan the
-entire PCI bus ourselves and don't do PCI_PROBE_DEVTREE. 
-Other parts are harder because for the generic case we actually
-want to support loading and unloading host bridge drivers,
-as well as supporting any combination of host bridges in the
-same system without platform specific code.
+  Merge tag 'dma-buf-for-3.14' of
+git://git.kernel.org/pub/scm/linux/kernel/git/sumits/dma-buf
+(2014-02-17 12:42:45 -0800)
 
-	Arnd
+are available in the git repository at:
+
+
+  git://git.secretlab.ca/git/linux tags/dt-for-linus
+
+for you to fetch changes up to 1f42e5dd5065963979bb53daadf5d4f1e71f0c5f:
+
+  of: Add self test for of_match_node() (2014-02-20 11:52:09 +0000)
+
+----------------------------------------------------------------
+Device tree compatible match order bug fix
+
+This branch contains a bug fix for the way devicetree code identifies
+the type of device. Device drivers can contain a list of of_device_ids,
+but it more than one entry will match, then the device driver may choose
+the wrong one. Commit 105353145e, "match each node compatible against
+all given matches first", was queued for v3.14 but ended up causing
+other bugs. Commit 06b29e76a7 attempted to fix it but it had other bugs.
+Merely reverting the fix and waiting until v3.15 isn't a good option
+because there is code in v3.14 that depends on the revised behaviour to
+boot.
+
+This branch should finally fixes the problem correctly. This time
+instead of just hoping that the patch is correct, this branch also adds
+new testcases that validate the behaviour.
+
+The changes in this branch are larger than I would like for a -rc pull,
+but moving the test case data out of out of arch/arm so that it could be
+validated on other architectures was important.
+
+----------------------------------------------------------------
+Grant Likely (2):
+      of: Move testcase FDT data into drivers/of
+      of: Add self test for of_match_node()
+
+Kevin Hao (2):
+      Revert "of: search the best compatible match first in __of_match_node()"
+      of: reimplement the matching method for __of_match_node()
+
+ arch/arm/boot/dts/testcases/tests.dtsi             |   2 -
+ arch/arm/boot/dts/versatile-pb.dts                 |   4 +-
+ drivers/of/base.c                                  | 150 ++++++++++-----------
+ drivers/of/selftest.c                              |  67 +++++++++
+ drivers/of/testcase-data/testcases.dtsi            |   3 +
+ .../of/testcase-data}/tests-interrupts.dtsi        |   0
+ drivers/of/testcase-data/tests-match.dtsi          |  19 +++
+ .../of/testcase-data}/tests-phandle.dtsi           |   0
+ scripts/Makefile.lib                               |   1 +
+ 9 files changed, 166 insertions(+), 80 deletions(-)
+ delete mode 100644 arch/arm/boot/dts/testcases/tests.dtsi
+ create mode 100644 drivers/of/testcase-data/testcases.dtsi
+ rename {arch/arm/boot/dts/testcases =>
+drivers/of/testcase-data}/tests-interrupts.dtsi (100%)
+ create mode 100644 drivers/of/testcase-data/tests-match.dtsi
+ rename {arch/arm/boot/dts/testcases =>
+drivers/of/testcase-data}/tests-phandle.dtsi (100%)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
