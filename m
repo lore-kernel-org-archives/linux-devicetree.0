@@ -1,53 +1,58 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v12 2/3] ata: Add APM X-Gene SoC AHCI SATA host
- controller driver
-Date: Fri, 21 Feb 2014 14:00:58 -0500
-Message-ID: <20140221190058.GB12830@htj.dyndns.org>
-References: <1393004853-25994-1-git-send-email-lho@apm.com>
- <1393004853-25994-2-git-send-email-lho@apm.com>
- <1393004853-25994-3-git-send-email-lho@apm.com>
- <20140221175542.GA12830@htj.dyndns.org>
- <CAPw-ZTkWbYfCKs+4ZJ7_zuuFZy5RH51319Pj=3i5kdg162UVXg@mail.gmail.com>
+From: Theodore Ts'o <tytso@mit.edu>
+Subject: Re: SPDX-License-Identifier
+Date: Fri, 21 Feb 2014 14:01:25 -0500
+Message-ID: <20140221190125.GL31047@thunk.org>
+References: <20140220182257.GF23217@saruman.home>
+ <5306F458.9010706@monstr.eu>
+ <20140221160442.GA17506@kroah.com>
+ <5307790A.4050806@monstr.eu>
+ <20140221161246.GM31902@saruman.home>
+ <53077C5F.9000407@monstr.eu>
+ <20140221162045.GN31902@saruman.home>
+ <20140221165633.GA5465@kroah.com>
+ <53078C30.7060703@monstr.eu>
+ <20140221175720.GA21660@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-scsi-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAPw-ZTkWbYfCKs+4ZJ7_zuuFZy5RH51319Pj=3i5kdg162UVXg@mail.gmail.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Loc Ho <lho@apm.com>
-Cc: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+In-Reply-To: <20140221175720.GA21660@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Michal Simek <monstr@monstr.eu>, Felipe Balbi <balbi@ti.com>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>, devicetree@vger.kernel.org, Wolfgang Denk <wd@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-Hello, Loc.
-
-On Fri, Feb 21, 2014 at 10:43:52AM -0800, Loc Ho wrote:
-> Do you want this for all functions or only one that with comment? Also,
-> for both drivers - host and PHY drivres?
-
-Oh, no need to do that for every function.  It's just customary to use
-function comment when there's sufficient amount to explain for the
-whole function.
-
-> > Can you please go back two reviews and re-read what I requested?
-> > Also, if you're unsure, please don't hesitate to ask back.  It's
-> > usually a lot easier for both parties than iterating through patchsets
-> > without properly understanding each other.
-> >
+On Fri, Feb 21, 2014 at 09:57:20AM -0800, Greg Kroah-Hartman wrote:
+> > But shouldn't we at least write somewhere
+> > that it has connection to spdx.org where you can find out that licenses.
 > 
-> Before posting this morning, I had gone over all response email from you
-> since we first interacted. I am not quite follow what you want here. Are
-> you suggesting that I should move this out as an errata patch?
+> Why?  Are these licenses so unknown that no one knows what they are?
+> And, as part of the kernel-as-a-whole-work, they all resolve to GPLv2
+> anyway, and we have that license in the source tree, so nothing else
+> should be needed.
 
-Hmmm... maybe I was too ambiguous.  Because the behavior is quite
-unusual and can make the error handling behavior deviate, I think it
-deserves to explain 1. why such behavior is necessary and 2. what the
-implications are (e.g. in corner cases, how long it could add to reset
-timeout) and preferably 3. rationale for choosing this specific
-approach given #1 and #2, so that when someone else reads the code
-later on [s]he doesn't have to second-guess the original intention of
-the workaround.
+Note that not all lawyers are in agreement about this, so if this is a
+driver being developed by a company, you may want to ask your
+corporate counsel if they have an opinion about this.  I've received
+advice of the form that it's not obvious that regardless of whether or
+not us *engineers* understand what all of the licensing terms mean,
+what's important is whether someone who is accused of "borrowing"
+GPL'ed code and dropping it in a driver for some other OS can convince
+a judge whether or not it's considered "obvious" from a legal
+perspective what an SPDX header means, and what is implied by an SPDX
+license identifer.
 
-Thanks.
+Also note that with the advent of web sites that allow people to do
+web searches and turn up a singleton file via some gitweb interface,
+the fact that the full license text is distributed alongside the
+tarball might or might have as much legal significance as it once had.
 
--- 
-tejun
+But of course, I'm not a lawyer, and if your company has is paying for
+the development of the driver, the Golden Rule applies (he who has the
+Gold, makes the Rules), and each of our respective corporate lawyers
+may have different opinions about what might happen if the question
+was ever to be adjudicated in court.
+
+Cheers,
+
+					- Ted
