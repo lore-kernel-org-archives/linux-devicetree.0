@@ -1,123 +1,90 @@
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 4/7] ECHI Platform: Merge ppc-of EHCI driver into the
- ehci-platform driver
-Date: Fri, 21 Feb 2014 11:48:03 +0000
-Message-ID: <20140221114803.GB8783@e106331-lin.cambridge.arm.com>
-References: <1392964293-13687-5-git-send-email-alistair@popple.id.au>
+Subject: Re: [PATCH RFC] usb: gadget: Add xilinx axi usb2 device support
+Date: Fri, 21 Feb 2014 12:04:54 +0000
+Message-ID: <20140221120454.GD8783@e106331-lin.cambridge.arm.com>
+References: <774153d4-d33f-4bb4-813b-582762bc3af9@TX2EHSMHS021.ehs.local>
+ <20140220182257.GF23217@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1392964293-13687-5-git-send-email-alistair@popple.id.au>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Alistair Popple <alistair@popple.id.au>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tony Prisk <linux@prisktech.co.nz>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+In-Reply-To: <20140220182257.GF23217@saruman.home>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "michals@xilinx.com" <michals@xilinx.com>, Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-W0FkZGluZyBUb255IFByaXNrIHRvIENjXQoKT24gRnJpLCBGZWIgMjEsIDIwMTQgYXQgMDY6MzE6
-MzBBTSArMDAwMCwgQWxpc3RhaXIgUG9wcGxlIHdyb3RlOgo+IEN1cnJlbnRseSB0aGUgcHBjLW9m
-IGRyaXZlciB1c2VzIHRoZSBjb21wYXRpYmlsaXR5IHN0cmluZwo+ICJ1c2ItZWhjaSIuIFRoaXMg
-bWVhbnMgcGxhdGZvcm1zIHRoYXQgdXNlIGRldmljZS10cmVlIGFuZCBpbXBsZW1lbnQgYW4KPiBF
-SENJIGNvbXBhdGlibGUgaW50ZXJmYWNlIGhhdmUgdG8gZWl0aGVyIHVzZSB0aGUgcHBjLW9mIGRy
-aXZlciBvciBhZGQKPiBhIGNvbXBhdGlibGUgbGluZSB0byB0aGUgZWhjaS1wbGF0Zm9ybSBkcml2
-ZXIuIEl0IHdvdWxkIGJlIG1vcmUKPiBhcHByb3ByaWF0ZSBmb3IgdGhlIHBsYXRmb3JtIGRyaXZl
-ciB0byBiZSBjb21wYXRpYmxlIHdpdGggInVzYi1laGNpIgo+IGFzIG5vbi1wb3dlcnBjIHBsYXRm
-b3JtcyBhcmUgYWxzbyBiZWdpbm5pbmcgdG8gdXRpbGlzZSBkZXZpY2UtdHJlZS4KPgo+IFRoaXMg
-cGF0Y2ggbWVyZ2VzIHRoZSBkZXZpY2UgdHJlZSBwcm9wZXJ0eSBwYXJzaW5nIGZyb20gZWhjaS1w
-cGMtb2YKPiBpbnRvIHRoZSBwbGF0Zm9ybSBkcml2ZXIgYW5kIGFkZHMgYSAidXNiLWVoY2kiIGNv
-bXBhdGliaWxpdHkKPiBzdHJpbmcuIFRoZSBleGlzdGluZyBlaGNpLXBwYy1vZiBkcml2ZXIgaXMg
-cmVtb3ZlZCBhbmQgdGhlIDQ0MEVQWAo+IHNwZWNpZmljIHF1aXJrcyBhcmUgYWRkZWQgdG8gdGhl
-IGVoY2ktcGxhdGZvcm0gZHJpdmVyLgo+Cj4gU2lnbmVkLW9mZi1ieTogQWxpc3RhaXIgUG9wcGxl
-IDxhbGlzdGFpckBwb3BwbGUuaWQuYXU+Cj4gLS0tCj4gIGRyaXZlcnMvdXNiL2hvc3QvS2NvbmZp
-ZyAgICAgICAgIHwgICAgNyArLQo+ICBkcml2ZXJzL3VzYi9ob3N0L2VoY2ktaGNkLmMgICAgICB8
-ICAgIDUgLQo+ICBkcml2ZXJzL3VzYi9ob3N0L2VoY2ktcGxhdGZvcm0uYyB8ICAgODcgKysrKysr
-KysrKysrKy0KPiAgZHJpdmVycy91c2IvaG9zdC9laGNpLXBwYy1vZi5jICAgfCAgMjM4IC0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gIDQgZmlsZXMgY2hhbmdlZCwgODkg
-aW5zZXJ0aW9ucygrKSwgMjQ4IGRlbGV0aW9ucygtKQo+ICBkZWxldGUgbW9kZSAxMDA2NDQgZHJp
-dmVycy91c2IvaG9zdC9laGNpLXBwYy1vZi5jCgpbLi4uXQoKPiArICAgICAgIC8qIERldmljZSB0
-cmVlIHByb3BlcnRpZXMgaWYgYXZhaWxhYmxlIHdpbGwgb3ZlcnJpZGUgcGxhdGZvcm0gZGF0YS4g
-Ki8KPiArICAgICAgIGRuID0gaGNkX3RvX2J1cyhoY2QpLT5jb250cm9sbGVyLT5vZl9ub2RlOwo+
-ICsgICAgICAgaWYgKGRuKSB7Cj4gKyAgICAgICAgICAgICAgIGlmIChvZl9nZXRfcHJvcGVydHko
-ZG4sICJiaWctZW5kaWFuIiwgTlVMTCkpIHsKPiArICAgICAgICAgICAgICAgICAgICAgICBlaGNp
-LT5iaWdfZW5kaWFuX21taW8gPSAxOwo+ICsgICAgICAgICAgICAgICAgICAgICAgIGVoY2ktPmJp
-Z19lbmRpYW5fZGVzYyA9IDE7Cj4gKyAgICAgICAgICAgICAgIH0KPiArICAgICAgICAgICAgICAg
-aWYgKG9mX2dldF9wcm9wZXJ0eShkbiwgImJpZy1lbmRpYW4tcmVncyIsIE5VTEwpKQo+ICsgICAg
-ICAgICAgICAgICAgICAgICAgIGVoY2ktPmJpZ19lbmRpYW5fbW1pbyA9IDE7Cj4gKyAgICAgICAg
-ICAgICAgIGlmIChvZl9nZXRfcHJvcGVydHkoZG4sICJiaWctZW5kaWFuLWRlc2MiLCBOVUxMKSkK
-PiArICAgICAgICAgICAgICAgICAgICAgICBlaGNpLT5iaWdfZW5kaWFuX2Rlc2MgPSAxOwo+ICsg
-ICAgICAgfQoKUGxlYXNlIHVzZSBvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wgZm9yIHRoZXNlLgoKVGhp
-cyBkcml2ZXIgYWxyZWFkeSBoYW5kbGVzICJ2aWEsdnQ4NTAwLWVoY2kiIGFuZCAid20scHJpem0t
-ZWhjaSIgd2hpY2gKYXJlbid0IGRvY3VtZW50ZWQgdG8gaGFuZGxlIHRoZXNlIHByb3BlcnRpZXMs
-IGJ1dCBub3cgZ2FpbiBzdXBwb3J0IGZvcgp0aGVtLiBJdCBtaWdodCBiZSB3b3J0aCB1bmlmeWlu
-ZyB0aGUgYmluZGluZyBkb2N1bWVudHMgaWYgdGhlcmUncwpub3RoaW5nIHNwZWNpYWwgYWJvdXQg
-dGhvc2UgdHdvIGhvc3QgY29udHJvbGxlcnMuCgpXZSBzZWVtIHRvIGhhdmUgdHdvIGJpbmRpbmcg
-ZG9jdW1lbnRzIGZvciAidmlhLHZ0ODUwMC1laGNpIiwgc28gc29tZQpjbGVhbnVwIGlzIGRlZmlu
-aXRlbHkgaW4gb3JkZXIuCgpUb255LCB5b3Ugc2VlbSB0byBoYXZlIHdyaXR0ZW4gYm90aCBkb2N1
-bWVudHMganVkZ2luZyBieSA5NWU5ZmQxMGYwNmMKYW5kIDhhZDU1MWQxNTBlMy4gRG8geW91IGhh
-dmUgYW55IGlzc3VlIHdpdGggbWVyZ2luZyBib3RoIG9mIHRoZXNlIGludG8KYSBjb21tb24gdXNi
-LWVoY2kgZG9jdW1lbnQ/Cgo+ICsKPiArICAgICAgIG5wID0gb2ZfZmluZF9jb21wYXRpYmxlX25v
-ZGUoTlVMTCwgTlVMTCwgImlibSx1c2Itb2hjaS00NDBlcHgiKTsKPiArICAgICAgIGlmIChucCAh
-PSBOVUxMKSB7Cj4gKyAgICAgICAgICAgICAgIC8qIGNsYWltIHdlIHJlYWxseSBhZmZlY3RlZCBi
-eSB1c2IyMyBlcnJhdHVtICovCj4gKyAgICAgICAgICAgICAgIGlmICghb2ZfYWRkcmVzc190b19y
-ZXNvdXJjZShucCwgMCwgJnJlcykpCj4gKyAgICAgICAgICAgICAgICAgICAgICAgZWhjaS0+b2hj
-aV9oY2N0cmxfcmVnID0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRldm1faW9y
-ZW1hcCgmcGRldi0+ZGV2LAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIHJlcy5zdGFydCArIE9IQ0lfSENDVFJMX09GRlNFVCwKPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBPSENJX0hDQ1RSTF9MRU4pOwo+ICsgICAgICAg
-ICAgICAgICBlbHNlCj4gKyAgICAgICAgICAgICAgICAgICAgICAgZWhjaV9kYmcoZWhjaSwgIiVz
-OiBubyBvaGNpIG9mZnNldCBpbiBmZHRcbiIsIF9fRklMRV9fKTsKPiArICAgICAgICAgICAgICAg
-aWYgKCFlaGNpLT5vaGNpX2hjY3RybF9yZWcpIHsKPiArICAgICAgICAgICAgICAgICAgICAgICBl
-aGNpX2RiZyhlaGNpLCAiJXM6IGlvcmVtYXAgZm9yIG9oY2kgaGNjdHJsIGZhaWxlZFxuIiwKPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9fRklMRV9fKTsKPiArICAgICAgICAgICAg
-ICAgfSBlbHNlIHsKPiArICAgICAgICAgICAgICAgICAgICAgICBlaGNpLT5oYXNfYW1jY191c2Iy
-MyA9IDE7Cj4gKyAgICAgICAgICAgICAgIH0KPiArICAgICAgIH0KCkFzIHRoaXMgaXMgYmVpbmcg
-ZHJvcHBlZCBpbnRvIGEgZ2VuZXJpYyBkcml2ZXIsIGl0IHdvdWxkIGJlIG5pY2UgdG8gaGF2ZQph
-IGNvbW1lbnQgZXhwbGFpbmluZyB3aHkgd2UgbmVlZCB0byBkbyB0aGlzIC0tIG5vdCBldmVyeW9u
-ZSB1c2luZyB0aGlzCndpbGwga25vdyB0aGUgcG93ZXJwYyBoaXN0b3J5LiBJdCBjZXJ0YWlubHkg
-c2VlbXMgb2RkIHRvIGxvb2sgZm9yCmFub3RoZXIgbm9kZSBpbiB0aGUgdHJlZSB0aGF0IHRoaXMg
-ZHJpdmVyIGlzbid0IG5lY2Vzc2FyaWx5IGhhbmRsaW5nLAphbmQgdGhhdCBzaG91bGQgcHJvYmFi
-bHkgYmUgZXhwbGFpbmVkLgoKQXMgdGhpcyBiaXQgb2YgZml4dXAgaXMgb25seSBuZWVkZWQgZm9y
-IHBvd2VycGMsIGl0IHdvdWxkIGJlIG5pY2UgdG8gbm90CmhhdmUgdG8gZG8gaXQgZWxzZXdoZXJl
-LiBQZXJoYXBzIHRoZXNlIGNvdWxkIGJlIGZhY3RvcmVkIG91dCBpbnRvIGEKcHBjX3BsYXRmb3Jt
-X3Jlc2V0IGZ1bmN0aW9uIHRoYXQgY291bGQgYmUgZW1wdHkgc3R1YiBmb3Igb3RoZXIKYXJjaGl0
-ZWN0dXJlcy4KCj4gKwo+ICsgICAgICAgaWYgKG9mX2RldmljZV9pc19jb21wYXRpYmxlKGRuLCAi
-aWJtLHVzYi1laGNpLTQ0MGVweCIpKSB7Cj4gKyAgICAgICAgICAgICAgIHJldHZhbCA9IHBwYzQ0
-eF9lbmFibGVfYm10KGRuKTsKPiArICAgICAgICAgICAgICAgZWhjaV9kYmcoZWhjaSwgIkJyZWFr
-IE1lbW9yeSBUcmFuc2ZlciAoQk1UKSBpcyAlc2VuYWJsZWQhXG4iLAo+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIHJldHZhbCA/ICJOT1QgIiA6ICIiKTsKPiArICAgICAgIH0KPiArCgpMaWtld2lz
-ZS4KClsuLi5dCgo+ICsgICAgICAgLyogdXNlIHJlcXVlc3RfbWVtX3JlZ2lvbiB0byB0ZXN0IGlm
-IHRoZSBvaGNpIGRyaXZlciBpcyBsb2FkZWQuICBpZiBzbwo+ICsgICAgICAgICogZW5zdXJlIHRo
-ZSBvaGNpIGNvcmUgaXMgb3BlcmF0aW9uYWwuCj4gKyAgICAgICAgKi8KCk5pdDogY29tbWVudCBj
-b2RlIHN0eWxlIChzaG91bGQgaGF2ZSBhIG5ld2xpbmUgYWZ0ZXIgdGhlIC8qIGFjY29yZGluZyB0
-bwpEb2N1bWVudGF0aW9uL0NvZGluZ1N0eWxlKS4KCj4gKyAgICAgICBpZiAoZWhjaS0+aGFzX2Ft
-Y2NfdXNiMjMpIHsKPiArICAgICAgICAgICAgICAgbnAgPSBvZl9maW5kX2NvbXBhdGlibGVfbm9k
-ZShOVUxMLCBOVUxMLCAiaWJtLHVzYi1vaGNpLTQ0MGVweCIpOwo+ICsgICAgICAgICAgICAgICBp
-ZiAobnAgIT0gTlVMTCkgewo+ICsgICAgICAgICAgICAgICAgICAgICAgIGlmICghb2ZfYWRkcmVz
-c190b19yZXNvdXJjZShucCwgMCwgJnJlcykpCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBpZiAoIXJlcXVlc3RfbWVtX3JlZ2lvbihyZXMuc3RhcnQsCj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHg0LCBoY2RfbmFt
-ZSkpCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNldF9vaGNpX2hj
-ZnMoZWhjaSwgMSk7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBlbHNlCj4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlbGVhc2VfbWVtX3JlZ2lvbihy
-ZXMuc3RhcnQsIDB4NCk7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgZWxzZQo+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgZWhjaV9kYmcoZWhjaSwgIiVzOiBubyBvaGNpIG9mZnNl
-dCBpbiBmZHRcbiIsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9f
-RklMRV9fKTsKPiArICAgICAgICAgICAgICAgICAgICAgICBvZl9ub2RlX3B1dChucCk7Cj4gKyAg
-ICAgICAgICAgICAgIH0KPiArICAgICAgIH0KCkFzIHdpdGggdGhlIGVhcmxpZXIgY29tbWVudCwg
-dGhpcyBsb29rcyBhIGJpdCBvZGQuIEEgY29tbWVudCBleHBsYWluaW5nCndoeSB3ZSdyZSBsb29r
-aW5nIGZvciBhbm90aGVyIG5vZGUgd291bGQgaGVscC4gQWxzbywgd2Ugc2hvdWxkIG9ubHkgbmVl
-ZAp0aGlzIGZvciBwb3dlcnBjLgoKQ2hlZXJzLApNYXJrLgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4
-cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5m
-by9saW51eHBwYy1kZXY=
+
+On Thu, Feb 20, 2014 at 06:23:13PM +0000, Felipe Balbi wrote:
+> Hi,
+> 
+> On Wed, Feb 19, 2014 at 03:10:45PM +0530, Subbaraya Sundeep Bhatta wrote:
+> > This patch adds xilinx axi usb2 device driver support
+> > 
+> > Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
+> > ---
+> >  .../devicetree/bindings/usb/xilinx_usb.txt         |   21 +
+> >  drivers/usb/gadget/Kconfig                         |   14 +
+> >  drivers/usb/gadget/Makefile                        |    1 +
+> >  drivers/usb/gadget/xilinx_udc.c                    | 2045 ++++++++++++++++++++
+> >  4 files changed, 2081 insertions(+), 0 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/usb/xilinx_usb.txt
+> >  create mode 100644 drivers/usb/gadget/xilinx_udc.c
+> > 
+> > diff --git a/Documentation/devicetree/bindings/usb/xilinx_usb.txt b/Documentation/devicetree/bindings/usb/xilinx_usb.txt
+> > new file mode 100644
+> > index 0000000..acf03ab
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/usb/xilinx_usb.txt
+> > @@ -0,0 +1,21 @@
+> > +Xilinx AXI USB2 device controller
+> > +
+> > +Required properties:
+> > +- compatible		: Should be "xlnx,axi-usb2-device-4.00.a"
+
+Is "axi-usb2-device" the official device name?
+
+> > +- reg			: Physical base address and size of the Axi USB2
+> > +			  device registers map.
+> > +- interrupts		: Property with a value describing the interrupt
+> > +			  number.
+
+Does the device only have a single interrupt?
+
+> > +- interrupt-parent	: Must be core interrupt controller
+
+Is this strictly necessary?
+
+> > +- xlnx,include-dma	: Must be 1 or 0 based on whether DMA is included
+> > +			  in IP or not.
+
+Perhaps xlnx,has-builtin-dma would better describe this?
+
+> > +
+> > +Example:
+> > + 		axi-usb2-device@42e00000 {
+> > +                        compatible = "xlnx,axi-usb2-device-4.00.a";
+> > +                        interrupt-parent = <0x1>;
+> > +                        interrupts = <0x0 0x39 0x1>;
+> > +                        reg = <0x42e00000 0x10000>;
+> > +                        xlnx,include-dma = <0x1>;
+> > +                };
+> > +
+> 
+> you need to Cc devicetree@vger.kernel.org for this.
+
+Cheers Filipe; thanks for adding us to Cc :)
+
+[...]
+
+> > +	/* Map the registers */
+> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	udc->base_address = devm_ioremap_nocache(&pdev->dev, res->start,
+> > +						 resource_size(res));
+> 
+> use devm_ioremap_resource() instead.
+
+Also, res might be NULL. You should check that before dereferencing it.
+
+Cheers,
+Mark.
