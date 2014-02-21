@@ -1,80 +1,70 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: devicetree repository separation/migration
-Date: Thu, 20 Feb 2014 13:15:58 -0800
-Message-ID: <5306708E.1000101@gmail.com>
-References: <20140217180544.GU7862@titan.lakedaemon.net> <20140218155750.GS17250@pengutronix.de> <20140218181854.GB7862@titan.lakedaemon.net> <CAOesGMhvoB7vRf3H1kMaL5+MgZ2gJy=ZVNU0gsXVye9S4YGBOg@mail.gmail.com> <CAOesGMi8zJXhfj46CLB-_Kk2s4MY9da46DhMoCtRj=zSUiuOGA@mail.gmail.com> <CA+bK7J5+n2Se4cLv5WjR5B31ej7FdrGjPcjUULNrhb1UQ7=vmA@mail.gmail.com> <20140219090854.GW17250@pengutronix.de> <53051102.8060801@gmail.com> <CACxGe6uhA6FMR76WJGVEt44x6bQOC=woCkDr6ZUH30hTd8f2wA@mail.gmail.com> <53058B69.4040502@gmail.com> <CACxGe6ugF2_kzDPLdv-Z1LUnkX4DHq9R45o64kJHVBSQjWFiNg@mail.gmail.com>
-Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: [PATCH v3 0/2] Qualcomm Universal Peripheral (QUP) I2C controller
+Date: Thu, 20 Feb 2014 16:38:08 -0800
+Message-ID: <1392943090-30556-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6ugF2_kzDPLdv-Z1LUnkX4DHq9R45o64kJHVBSQjWFiNg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2/20/2014 12:14 AM, Grant Likely wrote:
-> On Thu, Feb 20, 2014 at 4:58 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On 2/19/2014 1:15 PM, Grant Likely wrote:
->>> On Wed, Feb 19, 2014 at 8:16 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>> On 2/19/2014 1:08 AM, Sascha Hauer wrote:
->>>>> On Tue, Feb 18, 2014 at 02:44:15PM -0800, Tim Bird wrote:
->>>>>> I'm not in favor of separating the device tree information from the kernel.
->>>>>>
->>>>>> If we switch, then whatever synchronization issues other projects
->>>>>> are having now with synching with the device tree info from the kernel will
->>>>>> just then become the problem of the kernel developers, who will then
->>>>>> have to sync with the device tree info from another repository.  If the
->>>>>> sync issues can't be solved now for them, why or how would it be solved
->>>>>> post-separation for us?  (It sounds like a zero-sum game of pain transfer
->>>>>> to me.)
->>>>>>
->>>>>> I'm relatively unfamiliar with the arguments.  Can someone provide
->>>>>> a brief list of reasons this is needed, and how the inconvenience to Linux
->>>>>> kernel developers will be minimized, should it proceed?
->>>>>
->>>>
->>>>
->>>>> One of the reasons for doing devicetrees is to separate the hardware
->>>>> description from the code so that:
->>>>> - Other OSes (and bootloaders) can use the same description to start on
->>>>>   a given hardware
->>>>> - A generic Kernel can be started on any hardware
->>>>> - A hardware describes itself, makes itself more introspecitve so we can
->>>>>   go away from very specialized kernels
->>>>
->>>> Tim knows this ^^^^.  He was asking for the arguments for moving dts files
->>>> out of the linux kernel source tree.
->>>
->>> We've made the decision that devicetree bindings need to be treated as
->>> ABI, but as long as the .dts files live in the kernel there will
->>> always be the temptation to just tweak things in lock-step and nobody
->>> will notice. Splitting the files out gives that extra push to think
->>> about whether changes to a binding will backwards compatible with a
->>> tree that doesn't have those changes because the chances are a lot
->>> higher that someone will hit that combination.
->>>
->>> The other argument is shared source between
->>> BSD/U-Boot/Barebox/Linux/etc. Until we have a separate .dts repo there
->>> is no good way to share the database of hardware descriptions.
->>
->> We could provide an easy export (see below).  What do you think?
-> 
-> Ian Campbell is already maintaining an export tree as a staging area
-> for an eventual split. He's had it up and running for almost a year
-> now:
-> 
-> http://xenbits.xen.org/gitweb/?p=people/ianc/device-tree-rebasing.git
-> 
-> g.
-> 
+This third revision of the QUP I2C driver series comes with quite a bit of
+cleanup and corrections. Most notably is the removal of the "magic" delay loops
+and bug fixes related to larger than 32 byte reads and writes.
 
-So there already is a "good way to share the database of hardware
-descriptions" in addition to the one I provided.
+Special thanks to Andy Gross for helping answering questions regarding the
+inner working of this block.
 
--Frank
---
-To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Bjorn
+
+Changes from v3:
+ - Simplified interrupt handler
+ - Corrected the state transition poll timeout
+ - Refactored state transition code
+ - Refactored the polling functions waiting for transfers to finish
+ - Made the write fifo fill function care if there's space
+ - Corrected programmed length on writes
+ - Made block read and block write work
+ - Removed data duplicates from qup_i2c_dev
+ - Changed timeout to HZ, to give room for clock stretching
+ - Properly reject reads over 256 bytes, as limited by HW
+ - Dropped reinitialization of completions
+ - Made sure to not re-initiate reads for every block read
+ - Added QUP version number to compatible
+
+Changes from v2:
+ - Removed unused variables and includes
+ - Corrected read logic in irq handler
+ - Made the polling loop in qup_i2c_poll_state() less arbitrary
+ - Only building suspend/resume if CONFIG_PM_SLEEP
+
+Changes from v1:
+ - Cleaned up device tree binding example.
+ - Refrased device tree bindings.
+ - Following changes in the i2c framework.
+ - Use the core clock to calculate divider for the bus clock, instead of
+   explicitly setting it.
+ - Remove explicit pinctrl settting.
+ - Split/renamed qup_i2c_enable(bool) into enable/disable functions.
+ - Return value was overwritten on error in write_one/read_one.
+ - Initialize the i2c core every time, so that we actually can execute
+   more than 1 transmission per xfer.
+
+Bjorn Andersson (1):
+  i2c: New bus driver for the Qualcomm QUP I2C controller
+
+Ivan T. Ivanov (1):
+  i2c: qup: Add device tree bindings information
+
+ .../devicetree/bindings/i2c/qcom,i2c-qup.txt       |   44 ++
+ drivers/i2c/busses/Kconfig                         |   10 +
+ drivers/i2c/busses/Makefile                        |    1 +
+ drivers/i2c/busses/i2c-qup.c                       |  772 ++++++++++++++++++++
+ 4 files changed, 827 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt
+ create mode 100644 drivers/i2c/busses/i2c-qup.c
+
+-- 
+1.7.9.5
