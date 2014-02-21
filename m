@@ -1,82 +1,207 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH 7/7] powerpc: Added PCI MSI support using the HSTA module
-Date: Sat, 22 Feb 2014 07:41:26 +1100
-Message-ID: <1393015286.6771.110.camel@pasglop>
-References: <1392964293-13687-1-git-send-email-alistair@popple.id.au>
- <1392964293-13687-8-git-send-email-alistair@popple.id.au>
- <1574137.lzDhNaVqIe@wuerfel>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: devicetree repository separation/migration
+Date: Fri, 21 Feb 2014 13:04:24 -0800
+Message-ID: <5307BF58.1030002@gmail.com>
+References: <20140217180544.GU7862@titan.lakedaemon.net> <20140218155750.GS17250@pengutronix.de> <20140218181854.GB7862@titan.lakedaemon.net> <CAOesGMhvoB7vRf3H1kMaL5+MgZ2gJy=ZVNU0gsXVye9S4YGBOg@mail.gmail.com> <CAOesGMi8zJXhfj46CLB-_Kk2s4MY9da46DhMoCtRj=zSUiuOGA@mail.gmail.com> <CA+bK7J5+n2Se4cLv5WjR5B31ej7FdrGjPcjUULNrhb1UQ7=vmA@mail.gmail.com> <20140219090854.GW17250@pengutronix.de> <53051102.8060801@gmail.com> <CACxGe6uhA6FMR76WJGVEt44x6bQOC=woCkDr6ZUH30hTd8f2wA@mail.gmail.com> <53058B69.4040502@gmail.com> <7F6C2FEA-D330-4CFA-8DC2-554DB8908EC6@bsdimp.com>
+Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1574137.lzDhNaVqIe@wuerfel>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Alistair Popple <alistair@popple.id.au>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7F6C2FEA-D330-4CFA-8DC2-554DB8908EC6-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Warner Losh <wlosh-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE0LTAyLTIxIGF0IDE1OjMzICswMTAwLCBBcm5kIEJlcmdtYW5uIHdyb3RlOgoK
-PiA+IEBAIC0yNDIsOCArMjY0LDEwIEBACj4gPiAgCQkJcmFuZ2VzID0gPDB4MDIwMDAwMDAgMHgw
-MDAwMDAwMCAweDgwMDAwMDAwIDB4MDAwMDAxMTAgMHg4MDAwMDAwMCAweDAgMHg4MDAwMDAwMAo+
-ID4gIAkJCSAgICAgICAgICAweDAxMDAwMDAwIDB4MCAgICAgICAgMHgwICAgICAgICAweDAwMDAw
-MTQwIDB4MCAgICAgICAgMHgwIDB4MDAwMTAwMDA+Owo+ID4gIAo+ID4gLQkJCS8qIEluYm91bmQg
-c3RhcnRpbmcgYXQgMCB0byBtZW1zaXplIGZpbGxlZCBpbiBieSB6SW1hZ2UgKi8KPiA+IC0JCQlk
-bWEtcmFuZ2VzID0gPDB4NDIwMDAwMDAgMHgwIDB4MCAweDAgMHgwIDB4MCAweDA+Owo+ID4gKwkJ
-CS8qIEluYm91bmQgc3RhcnRpbmcgYXQgMHgwIHRvIDB4NDAwMDAwMDAwMDAuIEluIG9yZGVyIHRv
-IHVzZSBNU0kKPiA+ICsJCQkgKiBQQ0kgZGV2aWNlcyBtdXN0IGJlIGFibGUgdG8gd3JpdGUgdG8g
-dGhlIEhTVEEgbW9kdWxlLgo+ID4gKwkJCSAqLwo+ID4gKwkJCWRtYS1yYW5nZXMgPSA8MHg0MjAw
-MDAwMCAweDAgMHgwIDB4MCAweDAgMHg0MDAgMHgwPjsKClNob3VsZCB3ZSAocHJvdmlkZWQgaXQn
-cyBwb3NzaWJsZSBpbiBIVykgY3JlYXRlIHR3byByYW5nZXMgaW5zdGVhZCA/IE9uZQpjb3Zlcmlu
-ZyBSQU0gYW5kIG9uZSBjb3ZlcmluZyBNU0lzID8gVG8gYXZvaWQgc3RyYXkgRE1BcyB3aGFja2lu
-ZyByYW5kb20KSFcgcmVnaXN0ZXJzIGluIHRoZSBjaGlwIC4uLgoKPiA+ICAJCQkvKiBUaGlzIGRy
-aXZlcyBidXNzZXMgMCB0byAweGYgKi8KPiA+ICAJCQlidXMtcmFuZ2UgPSA8MHgwIDB4Zj47Cj4g
-Cj4gQWgsIEkgZmlyc3Qgb25seSBzYXcgdGhlIGxpbmUgeW91IGFyZSByZW1vdmluZyBhbmQgd2Fz
-IGFib3V0Cj4gdG8gc3VnZ2VzdCB3aGF0IHlvdSBkbyBhbnl3YXkuIEdyZWF0IQo+IAo+ID4gZGlm
-ZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9zeXNkZXYvcHBjNHh4X3BjaS5jIGIvYXJjaC9wb3dlcnBj
-L3N5c2Rldi9wcGM0eHhfcGNpLmMKPiA+IGluZGV4IDU0ZWMxZDUuLjdjYzNhY2MgMTAwNjQ0Cj4g
-PiAtLS0gYS9hcmNoL3Bvd2VycGMvc3lzZGV2L3BwYzR4eF9wY2kuYwo+ID4gKysrIGIvYXJjaC9w
-b3dlcnBjL3N5c2Rldi9wcGM0eHhfcGNpLmMKPiA+IEBAIC0xNzYsOCArMTc2LDEyIEBAIHN0YXRp
-YyBpbnQgX19pbml0IHBwYzR4eF9wYXJzZV9kbWFfcmFuZ2VzKHN0cnVjdCBwY2lfY29udHJvbGxl
-ciAqaG9zZSwKPiA+ICAJCXJldHVybiAtRU5YSU87Cj4gPiAgCX0KPiA+ICAKPiA+IC0JLyogQ2hl
-Y2sgdGhhdCB3ZSBhcmUgZnVsbHkgY29udGFpbmVkIHdpdGhpbiAzMiBiaXRzIHNwYWNlICovCj4g
-PiAtCWlmIChyZXMtPmVuZCA+IDB4ZmZmZmZmZmYpIHsKPiA+ICsJLyogQ2hlY2sgdGhhdCB3ZSBh
-cmUgZnVsbHkgY29udGFpbmVkIHdpdGhpbiAzMiBiaXRzIHNwYWNlIGlmIHdlIGFyZSBub3QKPiA+
-ICsJICogcnVubmluZyBvbiBhIDQ2MHN4IG9yIDQ3NmZwZSB3aGljaCBoYXZlIDY0IGJpdCBidXMg
-YWRkcmVzc2VzLgo+ID4gKwkgKi8KPiA+ICsJaWYgKHJlcy0+ZW5kID4gMHhmZmZmZmZmZiAmJgo+
-ID4gKwkgICAgIShvZl9kZXZpY2VfaXNfY29tcGF0aWJsZShob3NlLT5kbiwgImlibSxwbGItcGNp
-ZXgtNDYwc3giKQo+ID4gKwkgICAgICB8fCBvZl9kZXZpY2VfaXNfY29tcGF0aWJsZShob3NlLT5k
-biwgImlibSxwbGItcGNpZXgtNDc2ZnBlIikpKSB7Cj4gPiAgCQlwcmludGsoS0VSTl9FUlIgIiVz
-OiBkbWEtcmFuZ2VzIG91dHNpZGUgb2YgMzIgYml0cyBzcGFjZVxuIiwKPiA+ICAJCSAgICAgICBo
-b3NlLT5kbi0+ZnVsbF9uYW1lKTsKPiA+ICAJCXJldHVybiAtRU5YSU87Cj4gCj4gQSBtb3JlIGdl
-bmVyYWwgcXVlc3Rpb24gZm9yIEJlbkg6IEFwcGFyZW50bHkgdGhpcyBQQ0kgaW1wbGVtZW50YXRp
-b24gaXMKPiBnZXR0aW5nIHJldXNlZCBvbiBhcm02NCBmb3IgQVBNIFgtR2VuZS4gRG8geW91IHNl
-ZSBhbnkgdmFsdWUgaW4gdHJ5aW5nIHRvCj4gc2hhcmUgaG9zdCBjb250cm9sbGVyIGRyaXZlcnMg
-bGlrZSB0aGlzIG9uZSBhY3Jvc3MgcG93ZXJwYyBhbmQgYXJtNjQ/CgpJIHdvdWxkIHN0YXJ0IGR1
-cGxpY2F0aW5nLCBhbmQgc2VlIGhvdyBtdWNoIGNvbW1vbiBjb2RlIHJlbWFpbnMuLi4gVGhlbgpl
-dmVudHVhbGx5IG1lcmdlLgoKPiBJdCdzIHBvc3NpYmxlIHdlIGFyZSBnb2luZyB0byBzZWUgdGhl
-IHNhbWUgc2l0dWF0aW9uIHdpdGggZnNsX3BjaSBpbiB0aGUKPiBmdXR1cmUsIGlmIGFybSBhbmQg
-cG93ZXJwYyBxb3JpcSBjaGlwcyB1c2UgdGhlIHNhbWUgcGVyaXBoZXJhbHMuIE15Cj4gcGxhbiBm
-b3IgYXJtNjQgcmlnaHQgbm93IGlzIHRvIG1ha2UgUENJIHdvcmsgd2l0aG91dCBhbnkgY29kZSBp
-biBhcmNoLywKPiBqdXN0IHVzaW5nIG5ldyBoZWxwZXIgZnVuY3Rpb25zIGluIGRyaXZlcnMvcGNp
-IGFuZCBzdGlja2luZyB0aGUgaG9zdAo+IGRyaXZlcnMgaW50byBkcml2ZXJzL3BjaS9ob3N0IGFz
-IHdlIHN0YXJ0ZWQgZG9pbmcgZm9yIGFybTMyLCBidXQgaXQKPiBjYW4gcmVxdWlyZSBzaWduaWZp
-Y2FudCB3b3JrIHRvIG1ha2UgdGhvc2UgZHJpdmVycyBjb21wYXRpYmxlIHdpdGgKPiB0aGUgcG93
-ZXJwYyBwY2ktY29tbW9uLmMuCgpwb3dlcnBjIHBjaS1jb21tb24uYyBpcyBzaHJpbmtpbmcgOi0p
-IEF0IGxlYXN0IHRoZSBhZGRyZXNzIHJlbWFwcGluZyBpcwphbGwgaW4gdGhlIGNvcmUgbm93LCB3
-ZSBjb3VsZCBtb3ZlIG1vcmUgb3ZlciBJIHN1cHBvc2UuLi4KCkNoZWVycywKQmVuLgoKPiAJQXJu
-ZAo+IC0tCj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVu
-c3Vic2NyaWJlIGRldmljZXRyZWUiIGluCj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9y
-ZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdl
-ci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwKCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4
-cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5m
-by9saW51eHBwYy1kZXY=
+On 2/21/2014 10:22 AM, Warner Losh wrote:
+> 
+> On Feb 19, 2014, at 9:58 PM, Frank Rowand wrote:
+> 
+>> On 2/19/2014 1:15 PM, Grant Likely wrote:
+>>> On Wed, Feb 19, 2014 at 8:16 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>> On 2/19/2014 1:08 AM, Sascha Hauer wrote:
+>>>>> On Tue, Feb 18, 2014 at 02:44:15PM -0800, Tim Bird wrote:
+>>>>>> I'm not in favor of separating the device tree information from the kernel.
+>>>>>>
+>>>>>> If we switch, then whatever synchronization issues other projects
+>>>>>> are having now with synching with the device tree info from the kernel will
+>>>>>> just then become the problem of the kernel developers, who will then
+>>>>>> have to sync with the device tree info from another repository.  If the
+>>>>>> sync issues can't be solved now for them, why or how would it be solved
+>>>>>> post-separation for us?  (It sounds like a zero-sum game of pain transfer
+>>>>>> to me.)
+>>>>>>
+>>>>>> I'm relatively unfamiliar with the arguments.  Can someone provide
+>>>>>> a brief list of reasons this is needed, and how the inconvenience to Linux
+>>>>>> kernel developers will be minimized, should it proceed?
+>>>>>
+>>>>
+>>>>
+>>>>> One of the reasons for doing devicetrees is to separate the hardware
+>>>>> description from the code so that:
+>>>>> - Other OSes (and bootloaders) can use the same description to start on
+>>>>>  a given hardware
+>>>>> - A generic Kernel can be started on any hardware
+>>>>> - A hardware describes itself, makes itself more introspecitve so we can
+>>>>>  go away from very specialized kernels
+>>>>
+>>>> Tim knows this ^^^^.  He was asking for the arguments for moving dts files
+>>>> out of the linux kernel source tree.
+>>>
+>>> We've made the decision that devicetree bindings need to be treated as
+>>> ABI, but as long as the .dts files live in the kernel there will
+>>> always be the temptation to just tweak things in lock-step and nobody
+>>> will notice. Splitting the files out gives that extra push to think
+>>> about whether changes to a binding will backwards compatible with a
+>>> tree that doesn't have those changes because the chances are a lot
+>>> higher that someone will hit that combination.
+>>>
+>>> The other argument is shared source between
+>>> BSD/U-Boot/Barebox/Linux/etc. Until we have a separate .dts repo there
+>>> is no good way to share the database of hardware descriptions.
+>>
+>> We could provide an easy export (see below).  What do you think?
+> 
+> So what would the process be to get changes to those files upstream if you did this? It would make it marginally easier to USE, but once disconnected from the git world, a lot harder to track and fix.
+
+Changes would be through the normal upstream project (the Linux kernel).  Just like when
+the Linux kernel uses a driver from BSD, any changes to the upstream are done through
+the BSD process.
+
+> 
+> Also, you should export the device tree docs too, since they are, in theory, a set.
+
+Yes, absolutely.  And the kbuild docs need to be updated.  And ....  The patch was
+just a proof of concept to show the scope of the changes that would be required and
+that it was possible.
+
+> And honestly, the device tree doc files need more work than the .dts and .dtsi files.
+> 
+> Warner
+> 
+>> -Frank
+>>
+>>
+>>
+>> Proof of concept: export devicetree source and header files
+>>
+>> Not-signed-off-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+>>
+>>
+>> ---
+>> Makefile                   |   27 	26 +	1 -	0 !
+>> scripts/Makefile.dtsexport |   19 	19 +	0 -	0 !
+>> scripts/dts.sh             |   11 	11 +	0 -	0 !
+>> 3 files changed, 56 insertions(+), 1 deletion(-)
+>>
+>> Index: b/Makefile
+>> ===================================================================
+>> --- a/Makefile
+>> +++ b/Makefile
+>> @@ -234,6 +234,9 @@ endif
+>> # Where to locate arch specific headers
+>> hdr-arch  := $(SRCARCH)
+>>
+>> +# Where to locate arch specific dts
+>> +dts-arch  := $(SRCARCH)
+>> +
+>> KCONFIG_CONFIG	?= .config
+>> export KCONFIG_CONFIG
+>>
+>> @@ -463,7 +466,7 @@ version_h := include/generated/uapi/linu
+>> no-dot-config-targets := clean mrproper distclean \
+>> 			 cscope gtags TAGS tags help %docs check% coccicheck \
+>> 			 $(version_h) headers_% archheaders archscripts \
+>> -			 kernelversion %src-pkg
+>> +			 kernelversion %src-pkg dts_export%
+>>
+>> config-targets := 0
+>> mixed-targets  := 0
+>> @@ -933,6 +936,26 @@ firmware_install: FORCE
+>> 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.fwinst obj=firmware __fw_install
+>>
+>> # ---------------------------------------------------------------------------
+>> +# devicetree source and headers export
+>> +
+>> +#Default location for installed headers
+>> +export EXPORT_DTS_PATH = $(KBUILD_OUTPUT)/usr/dts
+>> +
+>> +PHONY += dts_export_headers
+>> +dts_export_headers: scripts_basic
+>> +	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.dtsexport obj=include/dt-bindings
+>> +	@echo $(KERNELRELEASE) >$(EXPORT_DTS_PATH)/linux_version
+>> +
+>> +PHONY += dts_export_all
+>> +dts_export_all: dts_export_headers
+>> +	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/dts.sh
+>> +
+>> +PHONY += dts_export
+>> +dts_export:
+>> +	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.dtsexport obj=arch/$(dts-arch)/boot/dts
+>> +
+>> +
+>> +# ---------------------------------------------------------------------------
+>> # Kernel headers
+>>
+>> #Default location for installed headers
+>> @@ -1160,6 +1183,8 @@ help:
+>> 	@echo  '  modules_prepare - Set up for building external modules'
+>> 	@echo  '  tags/TAGS	  - Generate tags file for editors'
+>> 	@echo  '  cscope	  - Generate cscope index'
+>> +	@echo  '  dts_export_all  - Export devicetree source and headers to EXPORT_DTS_PATH'
+>> +	@echo  '                    (default: $(EXPORT_DTS_PATH))'
+>> 	@echo  '  gtags           - Generate GNU GLOBAL index'
+>> 	@echo  '  kernelrelease	  - Output the release version string'
+>> 	@echo  '  kernelversion	  - Output the version stored in Makefile'
+>> Index: b/scripts/Makefile.dtsexport
+>> ===================================================================
+>> --- /dev/null
+>> +++ b/scripts/Makefile.dtsexport
+>> @@ -0,0 +1,19 @@
+>> +# ==========================================================================
+>> +# Exporting dts source and header files
+>> +#
+>> +# ==========================================================================
+>> +
+>> +srcpath := $(srctree)/$(obj)/*
+>> +dstpath := $(EXPORT_DTS_PATH)/$(obj)
+>> +
+>> +include scripts/Kbuild.include
+>> +
+>> +
+>> +quiet_cmd_install = EXPORT $(subst $(srctree)/,,$(srcpath))
+>> +      cmd_install = mkdir -p $(dstpath); cp -a $(srcpath) $(dstpath)
+>> +
+>> +
+>> +.PHONY: export
+>> +export:
+>> +	$(call cmd,install)
+>> +
+>> Index: b/scripts/dts.sh
+>> ===================================================================
+>> --- /dev/null
+>> +++ b/scripts/dts.sh
+>> @@ -0,0 +1,11 @@
+>> +#!/bin/sh
+>> +# Run dts_export command for all architectures
+>> +
+>> +# Stop on error
+>> +set -e
+>> +
+>> +for arch in $(ls ${srctree}/arch); do
+>> +	if [ -d ${srctree}/arch/${arch}/boot/dts ]; then
+>> +		make ARCH=${arch} dts_export
+>> +	fi
+>> +done
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
