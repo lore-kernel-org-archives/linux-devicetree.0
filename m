@@ -1,95 +1,77 @@
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [Patch v6 1/2] dmaengine: qcom_bam_dma: Add device tree binding
-Date: Fri, 21 Feb 2014 09:26:57 +0000
-Message-ID: <20140221092657.GD7541@e106331-lin.cambridge.arm.com>
+Subject: Re: [Patch v6 2/2] dmaengine: add Qualcomm BAM dma driver
+Date: Fri, 21 Feb 2014 09:33:52 +0000
+Message-ID: <20140221093352.GE7541@e106331-lin.cambridge.arm.com>
 References: <1392964986-5207-1-git-send-email-agross@codeaurora.org>
- <1392964986-5207-2-git-send-email-agross@codeaurora.org>
+ <1392964986-5207-3-git-send-email-agross@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1392964986-5207-2-git-send-email-agross@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+In-Reply-To: <1392964986-5207-3-git-send-email-agross@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Andy Gross <agross@codeaurora.org>
-Cc: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vinod Koul <vinod.koul@intel.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 21, 2014 at 06:43:04AM +0000, Andy Gross wrote:
-> Add device tree binding support for the QCOM BAM DMA driver.
+On Fri, Feb 21, 2014 at 06:43:05AM +0000, Andy Gross wrote:
+> Add the DMA engine driver for the QCOM Bus Access Manager (BAM) DMA controller
+> found in the MSM 8x74 platforms.
 > 
-> Acked-by: Kumar Gala <galak@codeaurora.org>
+> Each BAM DMA device is associated with a specific on-chip peripheral.  Each
+> channel provides a uni-directional data transfer engine that is capable of
+> transferring data between the peripheral and system memory (System mode), or
+> between two peripherals (BAM2BAM).
+> 
+> The initial release of this driver only supports slave transfers between
+> peripherals and system memory.
+> 
 > Signed-off-by: Andy Gross <agross@codeaurora.org>
 > ---
->  .../devicetree/bindings/dma/qcom_bam_dma.txt       |   48 ++++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> new file mode 100644
-> index 0000000..86344f1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> @@ -0,0 +1,48 @@
-> +QCOM BAM DMA controller
-> +
-> +Required properties:
-> +- compatible:	Must be "qcom,bam-v1.4.0" for MSM8974 V1
-> +		Must be "qcom,bam-v1.4.1" for MSM8974 V2
+>  drivers/dma/Kconfig        |    9 +
+>  drivers/dma/Makefile       |    1 +
+>  drivers/dma/qcom_bam_dma.c | 1107 ++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 1117 insertions(+)
+>  create mode 100644 drivers/dma/qcom_bam_dma.c
 
-This looks a bit odd. How about:
+[...]
 
-- compatible: must contain:
-  * "qcom,bam-v1.4.0" for MSM8974 V1
-  * "qcom,bam-v1.4.1" for MSM8974 V2
+> +       bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
 
-> +- reg: Address range for DMA registers
-> +- interrupts: single interrupt for this controller
+The binding document should describe the "bam_clk" string in the
+clock-names description.
 
-This device only has a single interrupt? Or there's only one we care
-about at the moment?
+[...]
 
-> +- #dma-cells: must be <1>
-> +- clocks: required clock
-> +- clock-names: name of clock
+> +       ret = of_property_read_u32(pdev->dev.of_node, "qcom,ee", &bdev->ee);
+> +       if (ret) {
+> +               dev_err(bdev->dev, "EE unspecified\n");
 
-Either describe the _exact_ name this binding expects for any clocks
-input, or get rid of clock-names. I would prefer the former.
+It would be nice to expand EE to what it stands for, at least in the
+error but possibly the binding too.
 
-> +- qcom,ee : indicates the active Execution Environment identifier (0-7)
-> +
-> +Example:
-> +
-> +	uart-bam: dma@f9984000 = {
-> +		compatible = "qcom,bam-v1.4.1";
-> +		reg = <0xf9984000 0x15000>;
-> +		interrupts = <0 94 0>;
-> +		clocks = <&gcc GCC_BAM_DMA_AHB_CLK>;
-> +		clock-names = "bam_clk";
-> +		#dma-cells = <1>;
-> +		qcom,ee = <0>;
-> +	};
-> +
-> +Client:
-> +Required properties:
-> +- dmas: List of dma channel requests
-> +- dma-names: Names of aforementioned requested channels
+> +static const struct of_device_id bam_of_match[] = {
+> +       { .compatible = "qcom,bam-v1.4.0", },
+> +       { .compatible = "qcom,bam-v1.4.1", },
 
-Do we really need to describe the client binding? Do we not have a
-generic DMA binding doc we can refer to?
+What are the differences between the two?
 
-> +
-> +Clients must use the format described in the dma.txt file, using a two cell
-> +specifier for each channel.
-> +
-> +The three cells in order are:
-> +  1. A phandle pointing to the DMA controller
-> +  2. The channel number
+Is v1.4.1 an extension of v1.4.0?
 
-s/three/two/
+Could you have the following in DTs:
 
-I think this can go if we refer to a generic document for the client
-binding and state in the #dma-cells description that the single dma cell
-is the channel number.
+  compatible = "qcom,bam-v1.4.1", "qcom,bam-v1.4.0";
+
+Then you'd only need the v1.4.0 string in the driver for now.
 
 Thanks,
 Mark.
