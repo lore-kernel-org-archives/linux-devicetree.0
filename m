@@ -1,71 +1,45 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH RFC] usb: gadget: Add xilinx axi usb2 device support
-Date: Fri, 21 Feb 2014 09:39:05 -0600
-Message-ID: <20140221153905.GE31902@saruman.home>
-References: <774153d4-d33f-4bb4-813b-582762bc3af9@TX2EHSMHS021.ehs.local>
- <20140220182257.GF23217@saruman.home>
- <a39ce44a-2f92-4067-be6d-7311a78bb195@VA3EHSMHS013.ehs.local>
-Reply-To: <balbi@ti.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH 4/7] ECHI Platform: Merge ppc-of EHCI driver into the
+ ehci-platform driver
+Date: Fri, 21 Feb 2014 10:41:50 -0500 (EST)
+Message-ID: <Pine.LNX.4.44L0.1402211037300.1273-100000@iolanthe.rowland.org>
+References: <1392964293-13687-5-git-send-email-alistair@popple.id.au>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lqaZmxkhekPBfBzr"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <a39ce44a-2f92-4067-be6d-7311a78bb195@VA3EHSMHS013.ehs.local>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>
-Cc: "balbi@ti.com" <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <michals@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392964293-13687-5-git-send-email-alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---lqaZmxkhekPBfBzr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, 21 Feb 2014, Alistair Popple wrote:
 
-Hi,
+> Currently the ppc-of driver uses the compatibility string
+> "usb-ehci". This means platforms that use device-tree and implement an
+> EHCI compatible interface have to either use the ppc-of driver or add
+> a compatible line to the ehci-platform driver. It would be more
+> appropriate for the platform driver to be compatible with "usb-ehci"
+> as non-powerpc platforms are also beginning to utilise device-tree.
+> 
+> This patch merges the device tree property parsing from ehci-ppc-of
+> into the platform driver and adds a "usb-ehci" compatibility
+> string. The existing ehci-ppc-of driver is removed and the 440EPX
+> specific quirks are added to the ehci-platform driver.
+> 
+> Signed-off-by: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
 
-On Fri, Feb 21, 2014 at 11:27:07AM +0000, Subbaraya Sundeep Bhatta wrote:
-> > From the looks of it, I doubt this was actually tested, you need a lot
-> > of work on this driver.
-> Tested on both ARM and Microblaze architectures with Mass storage gadget.
-> Will send a v2 after addressing all your comments.
+This patch is also out of date.  The compatibility string used by the 
+ehci-platform driver is "generic-ehci".
 
-clearly you didn't try to remove and reinsert the module or you would
-see a whole bunch of errors.
+There remains the question of whether to merge ehci-ppc-of into
+ehci-platform.  This would be a rather invasive change, but I suppose
+we could do it.  With adjustments along the lines suggested by Mark
+Rutland.
 
-> This email and any attachments are intended for the sole use of the
-> named recipient(s) and contain(s) confidential information that may be
-> proprietary, privileged or copyrighted under applicable law. If you
-> are not the intended recipient, do not read, copy, or forward this
-> email message or any attachments. Delete this email message and any
-> attachments immediately.
+Alan Stern
 
-remove this footer message, btw, when sending emails to public mailing
-lists.
-
---=20
-balbi
-
---lqaZmxkhekPBfBzr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTB3MZAAoJEIaOsuA1yqREw7MP/2PCe42dNMiNbseVBAcFyptt
-LF85jcqOebK2WykWV0HacXmaP2LN+d8VOTMQyJXIFuNlQoocPQnX4GoGS8YMs8GF
-zPvrhGAiX/qHFl9GF46IWQWAVbNRHzJwdUnKSJH5X+MM80ya1jWCV7X7mDA/YPDE
-rH2MlxNq4pqJQfr18m6i7R5gQDzVtVwUTBXsbIWtR4HA5/KvYA/Tj9Orl51MqZuw
-epw/JX+FXgq0QbDfQKIVzTlvlReGCSdsN+5zQZ+pLv3PK6q+xBf1DfcZ3CSvz39F
-uXpn8M8xaj9V74l8M/E2FWBLAknbarTDGjW3E5ZHiMuYVc2oUihYWH03qa10kyxf
-YQ5GlRXs5medfBunZXs8gyaPb6RDwbSyQeSJxKFC+0nRUUTI091pS+SerOaRG+Ap
-u23BrWoiG4bTq/sw4a8NFpsMbnQEAIFw1WHRv8VgJYt1Pzof6ukjWMFacgvptSHY
-dWsWdIwVKROb9uip5o9qjVecx3+TP2nKnfnDIPgAUoSq1Yel7PlU4wdZrqKL9ojq
-Usa6Hubr6yrdH/XROvGOb4n1zS03NQle7BRVq+p073u3ikHI2oHFPTh1NLC1bcKU
-VATUQ5mNBnsBtrvUKvsyFbc03PwCTQCFilYwIINXBXDv5YAWkkumDnRM4VNmxeLs
-j86qJpSn/D4sq7RlvVcw
-=TYDi
------END PGP SIGNATURE-----
-
---lqaZmxkhekPBfBzr--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
