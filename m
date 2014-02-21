@@ -1,37 +1,43 @@
-From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] Documentation: mfd: Add binding document for S2MPA01
-Date: Fri, 21 Feb 2014 16:39:04 +0530
-Message-ID: <CAK9yfHy-tB2ai16-yq5cqmFYt65+_0Q0E=5-pA_T5da9cjtrQg@mail.gmail.com>
-References: <1392273476-32736-1-git-send-email-sachin.kamat@linaro.org>
-	<1392273476-32736-3-git-send-email-sachin.kamat@linaro.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/7] IBM Akebono: Add support for a new PHY interface
+ to the IBM emac driver
+Date: Fri, 21 Feb 2014 11:18:23 +0000
+Message-ID: <20140221111823.GA8783@e106331-lin.cambridge.arm.com>
+References: <1392964293-13687-1-git-send-email-alistair@popple.id.au>
+ <1392964293-13687-3-git-send-email-alistair@popple.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392273476-32736-3-git-send-email-sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1392964293-13687-3-git-send-email-alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
+Cc: "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13 February 2014 12:07, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Added initial binding documentation for S2MPA01 MFD.
->
-> Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Fri, Feb 21, 2014 at 06:31:28AM +0000, Alistair Popple wrote:
+> The IBM PPC476GTR SoC that is used on the Akebono board uses a
+> different ethernet PHY interface that has wake on lan (WOL) support
+> with the IBM emac. This patch adds support to the IBM emac driver for
+> this new PHY interface.
+> 
+> At this stage the wake on lan functionality has not been implemented.
+> 
+> Signed-off-by: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
+> Acked-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 > ---
-> Changes since v2:
-> * Re-worded as suggested by Mark Rutland
-> ---
->  Documentation/devicetree/bindings/mfd/s2mpa01.txt |   90 +++++++++++++++++++++
->  1 file changed, 90 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/s2mpa01.txt
->
 
-Mark,
-Any comments on this patch?
+[...]
 
--- 
-With warm regards,
-Sachin
+> +       /* Check for RGMII flags */
+> +       if (of_get_property(ofdev->dev.of_node, "has-mdio", NULL))
+> +               dev->flags |= EMAC_RGMII_FLAG_HAS_MDIO;
+
+You can use of_property_read_bool here.
+
+Cheers,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
