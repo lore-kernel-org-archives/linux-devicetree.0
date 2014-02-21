@@ -1,50 +1,166 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 3/7] IBM Akebono: Add support to the OHCI platform driver for PPC476GTR
-Date: Fri, 21 Feb 2014 15:16:52 +0100
-Message-ID: <16991392.luyzl1NYP3@wuerfel>
-References: <1392964293-13687-1-git-send-email-alistair@popple.id.au> <1392964293-13687-4-git-send-email-alistair@popple.id.au>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [RESEND][PATCH v4] gpio: davinci: reuse for keystone soc
+Date: Fri, 21 Feb 2014 09:18:26 -0500
+Message-ID: <53076032.5080202@ti.com>
+References: <52FBB6BC.2060801@ti.com>
+ <1392307125-27927-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1392964293-13687-4-git-send-email-alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1392307125-27927-1-git-send-email-grygorii.strashko@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, davinci-linux-open-source@linux.davincidsp.com, Grygorii Strashko <grygorii.strashko@ti.com>, devicetree@vger.kernel.org, nsekhar@ti.com, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 21 February 2014 17:31:29 Alistair Popple wrote:
+Linus,
+
+On Thursday 13 February 2014 10:58 AM, Grygorii Strashko wrote:
+> The similar GPIO HW block is used by keystone SoCs as
+> in Davinci SoCs.
+> Hence, reuse Davinci GPIO driver for Keystone taking into
+> account that Keystone contains ARM GIC IRQ controller which
+> is implemented using IRQ Chip.
 > 
-> +static const struct of_device_id ohci_of_match[] = {
-> +       { .compatible = "usb-ohci", },
-> +       {},
-> +};
-> +
->  static const struct platform_device_id ohci_platform_table[] = {
->         { "ohci-platform", 0 },
->         { }
-> @@ -198,6 +209,7 @@ static struct platform_driver ohci_platform_driver = {
->                 .owner  = THIS_MODULE,
->                 .name   = "ohci-platform",
->                 .pm     = &ohci_platform_pm_ops,
-> +               .of_match_table = ohci_of_match,
->         }
+> Documentation:
+> 	http://www.ti.com/lit/ug/sprugv1/sprugv1.pdf
+> 
+> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> ---
+> - rebased on top of git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+>   branch: devel
+>   top commit: ef70bbe gpio: make gpiod_direction_output take a logical value
+> 
+Can you please pick this one ? Its rebased as per your suggestion.
+
+>  .../devicetree/bindings/gpio/gpio-davinci.txt      |    4 +-
+>  drivers/gpio/gpio-davinci.c                        |   48 ++++++++++++++++----
+>  2 files changed, 42 insertions(+), 10 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> index a2e839d..4ce9862 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> @@ -1,7 +1,7 @@
+> -Davinci GPIO controller bindings
+> +Davinci/Keystone GPIO controller bindings
+>  
+>  Required Properties:
+> -- compatible: should be "ti,dm6441-gpio"
+> +- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio"
+>  
+>  - reg: Physical base address of the controller and the size of memory mapped
+>         registers.
+> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+> index 7629b4f..d0f135d 100644
+> --- a/drivers/gpio/gpio-davinci.c
+> +++ b/drivers/gpio/gpio-davinci.c
+> @@ -37,6 +37,8 @@ struct davinci_gpio_regs {
+>  	u32	intstat;
 >  };
 >  
+> +typedef struct irq_chip *(*gpio_get_irq_chip_cb_t)(unsigned int irq);
+> +
+>  #define BINTEN	0x8 /* GPIO Interrupt Per-Bank Enable Register */
+>  
+>  #define chip2controller(chip)	\
+> @@ -413,6 +415,26 @@ static const struct irq_domain_ops davinci_gpio_irq_ops = {
+>  	.xlate = irq_domain_xlate_onetwocell,
+>  };
+>  
+> +static struct irq_chip *davinci_gpio_get_irq_chip(unsigned int irq)
+> +{
+> +	static struct irq_chip_type gpio_unbanked;
+> +
+> +	gpio_unbanked = *container_of(irq_get_chip(irq),
+> +				      struct irq_chip_type, chip);
+> +
+> +	return &gpio_unbanked.chip;
+> +};
+> +
+> +static struct irq_chip *keystone_gpio_get_irq_chip(unsigned int irq)
+> +{
+> +	static struct irq_chip gpio_unbanked;
+> +
+> +	gpio_unbanked = *irq_get_chip(irq);
+> +	return &gpio_unbanked;
+> +};
+> +
+> +static const struct of_device_id davinci_gpio_ids[];
+> +
+>  /*
+>   * NOTE:  for suspend/resume, probably best to make a platform_device with
+>   * suspend_late/resume_resume calls hooking into results of the set_wake()
+> @@ -433,6 +455,18 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+>  	struct davinci_gpio_platform_data *pdata = dev->platform_data;
+>  	struct davinci_gpio_regs __iomem *g;
+>  	struct irq_domain	*irq_domain = NULL;
+> +	const struct of_device_id *match;
+> +	struct irq_chip *irq_chip;
+> +	gpio_get_irq_chip_cb_t gpio_get_irq_chip;
+> +
+> +	/*
+> +	 * Use davinci_gpio_get_irq_chip by default to handle non DT cases
+> +	 */
+> +	gpio_get_irq_chip = davinci_gpio_get_irq_chip;
+> +	match = of_match_device(of_match_ptr(davinci_gpio_ids),
+> +				dev);
+> +	if (match)
+> +		gpio_get_irq_chip = (gpio_get_irq_chip_cb_t)match->data;
+>  
+>  	ngpio = pdata->ngpio;
+>  	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+> @@ -489,8 +523,6 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+>  	 * IRQ mux conflicts; gpio_irq_type_unbanked() is only for GPIOs.
+>  	 */
+>  	if (pdata->gpio_unbanked) {
+> -		static struct irq_chip_type gpio_unbanked;
+> -
+>  		/* pass "bank 0" GPIO IRQs to AINTC */
+>  		chips[0].chip.to_irq = gpio_to_irq_unbanked;
+>  		chips[0].gpio_irq = bank_irq;
+> @@ -499,10 +531,9 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+>  
+>  		/* AINTC handles mask/unmask; GPIO handles triggering */
+>  		irq = bank_irq;
+> -		gpio_unbanked = *container_of(irq_get_chip(irq),
+> -					      struct irq_chip_type, chip);
+> -		gpio_unbanked.chip.name = "GPIO-AINTC";
+> -		gpio_unbanked.chip.irq_set_type = gpio_irq_type_unbanked;
+> +		irq_chip = gpio_get_irq_chip(irq);
+> +		irq_chip->name = "GPIO-AINTC";
+> +		irq_chip->irq_set_type = gpio_irq_type_unbanked;
+>  
+>  		/* default trigger: both edges */
+>  		g = gpio2regs(0);
+> @@ -511,7 +542,7 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+>  
+>  		/* set the direct IRQs up to use that irqchip */
+>  		for (gpio = 0; gpio < pdata->gpio_unbanked; gpio++, irq++) {
+> -			irq_set_chip(irq, &gpio_unbanked.chip);
+> +			irq_set_chip(irq, irq_chip);
+>  			irq_set_handler_data(irq, &chips[gpio / 32]);
+>  			irq_set_status_flags(irq, IRQ_TYPE_EDGE_BOTH);
+>  		}
+> @@ -554,7 +585,8 @@ done:
+>  
+>  #if IS_ENABLED(CONFIG_OF)
+>  static const struct of_device_id davinci_gpio_ids[] = {
+> -	{ .compatible = "ti,dm6441-gpio", },
+> +	{ .compatible = "ti,keystone-gpio", keystone_gpio_get_irq_chip},
+> +	{ .compatible = "ti,dm6441-gpio", davinci_gpio_get_irq_chip},
+>  	{ /* sentinel */ },
+>  };
+>  MODULE_DEVICE_TABLE(of, davinci_gpio_ids);
 > 
-
-Linux-next already has a patch to add an of_match_table in this driver,
-using 
-
-static const struct of_device_id ohci_platform_ids[] = {
-        { .compatible = "generic-ohci", },
-        { }
-};
-
-I think you should just use that string on your platform.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
