@@ -1,47 +1,48 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v3 2/2] i2c: New bus driver for the Qualcomm QUP I2C
- controller
-Date: Thu, 20 Feb 2014 16:52:14 -0800
-Message-ID: <1392943934.2594.14.camel@joe-AO722>
-References: <1392943090-30556-1-git-send-email-bjorn.andersson@sonymobile.com>
-	 <1392943090-30556-3-git-send-email-bjorn.andersson@sonymobile.com>
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 2/3] NFC: trf7970a: Add ISO/IEC 15693 Support
+Date: Fri, 21 Feb 2014 02:00:44 +0100
+Message-ID: <20140221010044.GT18868@zurbaran>
+References: <1391206631-9862-1-git-send-email-mgreer@animalcreek.com>
+ <1391206631-9862-3-git-send-email-mgreer@animalcreek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1392943090-30556-3-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Andy Gross <agross@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1391206631-9862-3-git-send-email-mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Mark A. Greer" <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+Cc: Lauro Ramos Venancio <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Aloisio Almeida Jr <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Erick Macias <emacias-l0cyMroinI0@public.gmane.org>, Thierry Escande <thierry.escande-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2014-02-20 at 16:38 -0800, Bjorn Andersson wrote:
-> This bus driver supports the QUP i2c hardware controller in the Qualcomm SOCs.
-> The Qualcomm Universal Peripheral Engine (QUP) is a general purpose data path
-> engine with input/output FIFOs and an embedded i2c mini-core. The driver
-> supports FIFO mode (for low bandwidth applications) and block mode (interrupt
-> generated for each block-size data transfer).
+Hi Mark,
 
-trivia:
+Just one nitpick here:
 
-> diff --git a/drivers/i2c/busses/i2c-qup.c b/drivers/i2c/busses/i2c-qup.c
-[]
-> +#ifdef CONFIG_PM_SLEEP
-> +static int qup_i2c_suspend(struct device *device)
+> +static int trf7970a_is_iso15693_write_or_lock(u8 cmd)
 > +{
-> +	dev_dbg(device, "system suspend");
-> +	qup_i2c_pm_suspend_runtime(device);
-> +	return 0;
-> +}
+> +	int ret;
 > +
-> +static int qup_i2c_resume(struct device *device)
-> +{
-> +	dev_dbg(device, "system resume");
-> +	qup_i2c_pm_resume_runtime(device);
-> +	pm_runtime_mark_last_busy(device);
-> +	pm_request_autosuspend(device);
-> +	return 0;
-> +}
-> +#endif
+> +	switch (cmd) {
+> +	case ISO15693_CMD_WRITE_SINGLE_BLOCK:
+> +	case ISO15693_CMD_LOCK_BLOCK:
+> +	case ISO15693_CMD_WRITE_MULTIPLE_BLOCK:
+> +	case ISO15693_CMD_WRITE_AFI:
+> +	case ISO15693_CMD_LOCK_AFI:
+> +	case ISO15693_CMD_WRITE_DSFID:
+> +	case ISO15693_CMD_LOCK_DSFID:
+> +		ret = 1;
+return 1;
 
-Missing terminating newlines for dev_dbg statements.
+and return 0 on the default case.
+Simpler code and you don't need the ret variable.
+
+Cheers,
+Samuel.
+
+-- 
+Intel Open Source Technology Centre
+http://oss.intel.com/
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
