@@ -1,114 +1,108 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 03/10] Documentation: devicetree: Update Samsung
- FIMC DT binding
-Date: Fri, 21 Feb 2014 15:50:23 +0000
-Message-ID: <20140221155023.GF20449@e106331-lin.cambridge.arm.com>
-References: <1392925237-31394-1-git-send-email-s.nawrocki@samsung.com>
- <1392925237-31394-5-git-send-email-s.nawrocki@samsung.com>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH RFC] usb: gadget: Add xilinx axi usb2 device support
+Date: Fri, 21 Feb 2014 16:51:07 +0100
+Message-ID: <530775EB.6030004@monstr.eu>
+References: <774153d4-d33f-4bb4-813b-582762bc3af9@TX2EHSMHS021.ehs.local> <20140220182257.GF23217@saruman.home> <20140221120454.GD8783@e106331-lin.cambridge.arm.com> <5307576F.5050506@monstr.eu> <20140221154244.GG31902@saruman.home>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1392925237-31394-5-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "a.hajda@samsung.com" <a.hajda@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="OQoae23AXrotEhf3NrbaLv7qPAsXCjTKx"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140221154244.GG31902-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 20, 2014 at 07:40:30PM +0000, Sylwester Nawrocki wrote:
-> This patch documents following updates of the Exynos4 SoC camera subsystem
-> devicetree binding:
->  - addition of #clock-cells property to 'camera' node - the #clock-cells
->    property is needed when the sensor sub-devices use clock provided by
->    the camera host interface;
->  - addition of an optional clock-output-names property;
->  - change of the clock-frequency at image sensor node from mandatory to
->    an optional property - there should be no need to require this property
->    by the camera host device binding, a default frequency value can ofen
->    be used;
->  - addition of a requirement of specific order of values in clocks/
->    clock-names properties, so the first two entry in the clock-names
->    property can be used as parent clock names for the camera master
->    clock provider.  It happens all in-kernel dts files list the clock
->    in such order, thus there should be no regression as far as in-kernel
->    dts files are concerned.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--OQoae23AXrotEhf3NrbaLv7qPAsXCjTKx
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-I'm not sure I follow the reasoning here. Why does this matter? Why can
-child nodes not get these by name if they have to?
+On 02/21/2014 04:42 PM, Felipe Balbi wrote:
+> Hi,
+>=20
+> On Fri, Feb 21, 2014 at 02:41:03PM +0100, Michal Simek wrote:
+>>>>> +	/* Map the registers */
+>>>>> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>>>> +	udc->base_address =3D devm_ioremap_nocache(&pdev->dev, res->start=
+,
+>>>>> +						 resource_size(res));
+>>>>
+>>>> use devm_ioremap_resource() instead.
+>>>
+>>> Also, res might be NULL. You should check that before dereferencing i=
+t.
+>>
+>> yes it is necessary for both cases with devm_ioremap_nocache
+>> or with devm_ioremap_resource.
+>=20
+> read the source Luke:
+>=20
+> | void __iomem *devm_ioremap_resource(struct device *dev, struct resour=
+ce *res)
+> | {
+> | 	resource_size_t size;
+> | 	const char *name;
+> | 	void __iomem *dest_ptr;
+> |=20
+> | 	BUG_ON(!dev);
+> |=20
+> | 	if (!res || resource_type(res) !=3D IORESOURCE_MEM) {
+>             ^^^^
+> 	    already done for you
+>=20
+> | 		dev_err(dev, "invalid resource\n");
+> | 		return ERR_PTR(-EINVAL);
+> | 	}
+> |=20
+> | 	size =3D resource_size(res);
+> | 	name =3D res->name ?: dev_name(dev);
+> |=20
+> | 	if (!devm_request_mem_region(dev, res->start, size, name)) {
+> | 		dev_err(dev, "can't request region for resource %pR\n", res);
+> | 		return ERR_PTR(-EBUSY);
+> | 	}
+> |=20
+> | 	if (res->flags & IORESOURCE_CACHEABLE)
+> | 		dest_ptr =3D devm_ioremap(dev, res->start, size);
+> | 	else
+> | 		dest_ptr =3D devm_ioremap_nocache(dev, res->start, size);
 
-> 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
->  .../devicetree/bindings/media/samsung-fimc.txt     |   36 +++++++++++++++-----
->  1 file changed, 28 insertions(+), 8 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
-> index 96312f6..1a5820d 100644
-> --- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
-> +++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
-> @@ -20,6 +20,7 @@ Required properties:
->  		  the clock-names property;
->  - clock-names	: must contain "sclk_cam0", "sclk_cam1", "pxl_async0",
->  		  "pxl_async1" entries, matching entries in the clocks property.
-> +		  First two entries must be "sclk_cam0", "sclk_cam1".
-
-I don't think this is a good idea.
-
->  
->  The pinctrl bindings defined in ../pinctrl/pinctrl-bindings.txt must be used
->  to define a required pinctrl state named "default" and optional pinctrl states:
-> @@ -32,6 +33,22 @@ way around.
->  
->  The 'camera' node must include at least one 'fimc' child node.
->  
-> +Optional properties (*:
-
-Is that a smiley face?
-
-> +
-> +- #clock-cells: from the common clock bindings (../clock/clock-bindings.txt),
-> +  must be 1. A clock provider is associated with the 'camera' node and it should
-> +  be referenced by external sensors that use clocks provided by the SoC on
-> +  CAM_*_CLKOUT pins. The clock specifier cell stores an index of a clock.
-> +  The indices are 0, 1 for CAM_A_CLKOUT, CAM_B_CLKOUT clocks respectively.
-> +
-> +- clock-output-names: from the common clock bindings, should contain names of
-> +  clocks registered by the camera subsystem corresponding to CAM_A_CLKOUT,
-> +  CAM_B_CLKOUT output clocks, in this order. Parent clock of these clocks are
-> +  specified be first two entries of the clock-names property.
-
-Do you need this?
-
-That's not how clock-names is supposed to work. The clock-names property
-is for the names of the _input_ clock lines on the device, not the
-output names on whichever parent clock they came from.
-
-Any clock-names property description should define absolutely the set of
-names. As this does not, NAK.
-
-> +
-> +(* #clock-cells and clock-output-names are mandatory properties if external
-> +image sensor devices reference 'camera' device node as a clock provider.
-
-s/(*/Note:/
-
-> +
->  'fimc' device nodes
->  -------------------
->  
-> @@ -97,8 +114,8 @@ Image sensor nodes
->  The sensor device nodes should be added to their control bus controller (e.g.
->  I2C0) nodes and linked to a port node in the csis or the parallel-ports node,
->  using the common video interfaces bindings, defined in video-interfaces.txt.
-> -The implementation of this bindings requires clock-frequency property to be
-> -present in the sensor device nodes.
-> +An optional clock-frequency property needs to be present in the sensor device
-> +nodes. Default value when this property is not present is 24 MHz.
-
-s/needs to/should/ ?
-
-What is this the frequency of?
+I have read it just not sure if IORESOURCE_CACHEABLE is setup by default
+or not.
+If yes, then you have to setup res->flags in your driver and have to
+check it.
 
 Thanks,
-Mark.
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--OQoae23AXrotEhf3NrbaLv7qPAsXCjTKx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlMHdewACgkQykllyylKDCHguwCfa4W5mcq1rUx/9Jb+tuQPx+Fc
+EF4AoIBOoCOdqeZPYXNlb4630mjo+vY5
+=kCfQ
+-----END PGP SIGNATURE-----
+
+--OQoae23AXrotEhf3NrbaLv7qPAsXCjTKx--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
