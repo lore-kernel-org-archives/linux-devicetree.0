@@ -1,36 +1,58 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/1] ARM: Exynos: Add generic compatible string
+From: Jonas Gorski <jogo@openwrt.org>
+Subject: Re: [PATCH tty-next v2 4/4] Documentation: devicetree: add bindings
+ documentation for bcm63xx-uart
 Date: Fri, 21 Feb 2014 15:48:04 +0100
-Message-ID: <2200834.G3JJLYQl5i@wuerfel>
-References: <1392809645-631-1-git-send-email-sachin.kamat@linaro.org> <CAK9yfHyWG1ac6isTRSB3VWfxER9cSuDJHwY3b7svyEk9EozpWQ@mail.gmail.com> <53075239.4010603@samsung.com>
+Message-ID: <CAOiHx==LEMeLVxLv2r+btWQNcPitndpVTsjbu0Ji4_tzmap51A@mail.gmail.com>
+References: <1392920154-3642-1-git-send-email-f.fainelli@gmail.com>
+ <1392920154-3642-5-git-send-email-f.fainelli@gmail.com> <3250738.VGSO94B75K@wuerfel>
+ <20140221134946.GA20449@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <53075239.4010603@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: Sachin Kamat <sachin.kamat@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <20140221134946.GA20449@e106331-lin.cambridge.arm.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Florian Fainelli <f.fainelli@gmail.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mbizon@freebox.fr" <mbizon@freebox.fr>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "gregory.0xf0@gmail.com" <gregory.0xf0@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 21 February 2014 14:18:49 Tomasz Figa wrote:
-> 
-> > Now that we have a broader agreement on this, I think we can go ahead with the
-> > following steps as an initial approach:
-> > 1. Have a common machine file for both exynos4 and 5 files, mach-exynos-dt.c.
-> > 2. Introduce a generic compatible string "samsung,exynos".
-> > 3. Append this to the compatible property list for existing boards.
-> >
-> > If this plan looks OK, I can send across patches doing this.
-> >
-> 
-> Looks good. I would also merge common.c with this resulting 
-> mach-exynos-dt.c, as it would be the only user of the code there.
+On Fri, Feb 21, 2014 at 2:49 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Fri, Feb 21, 2014 at 12:49:05PM +0000, Arnd Bergmann wrote:
+>> Two more comments:
+>>
+>> On Thursday 20 February 2014 10:15:54 Florian Fainelli wrote:
+>> > +- clock-names: should contain "periph" for the functional clock
+>>
+>> I think we should really start standardizing on the clock names more.
+>> We don't have any uart that calls its functional clock "periph" so
+>> far.
+>>
+>> How about naming it "fclk" or "uart"?
+>>
+>> I'd actually prefer making it an anonymous clock, but I know that
+>> will just trigger comments about what might happen if it turns
+>> out we need more than one clock for a future version of this device.
+>
+> Yup ;)
+>
+> I'm happy as long as we have a well-defined name for each clock input,
+> regardless of what those particular names might be.
 
-Sounds good. While the naming is not important, I would just call the
-file 'exynos.c', in line with some of the other platforms we have.
-Both the 'mach-' and the '-dt' part of the file name are redundant.
+There already is a (non-OF) user for this driver that exports a
+"periph" clock, which is where the name comes from. It currently does
+all clock lookups purely based on the clock name, not the device name
+itself. Of course we can just make it get a different named clock when
+of_node is present; that should satisfy both.
 
-Alternatively, you could merge it all into common.c.
+Technically on BCM6345 there are actually two clocks (more or less),
+the "periph" for the reference clock rate, and a clock bit in the
+clock controller register for the uart block. All later chips do not
+expose a uart clock bit anymore, and the bootloader is expected to
+enable it on systems with the clock, so we can probably pretend that
+it does not exist. Also it's quite unlikely that BCM6345 will ever
+receive proper OF support, and if it does, we can add the second
+optional clock then if we find devices that need it.
 
-	Arnd
+
+
+Regards
+Jonas
