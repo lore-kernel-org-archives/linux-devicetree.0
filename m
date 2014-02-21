@@ -1,53 +1,52 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH tty-next v2 4/4] Documentation: devicetree: add bindings documentation for bcm63xx-uart
-Date: Fri, 21 Feb 2014 16:23:46 +0100
-Message-ID: <30959154.CHzZGsTM1h@wuerfel>
-References: <1392920154-3642-1-git-send-email-f.fainelli@gmail.com> <3851734.OkR5IG0DHF@wuerfel> <CAOiHx==mQ5Dg4P1AYSLg1G1vHiXAcThSb+n+8L9OAoU-fPgt6w@mail.gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V6 03/12] phy: st-miphy40lp: Add binding information
+Date: Fri, 21 Feb 2014 15:25:27 +0000
+Message-ID: <20140221152527.GC20449@e106331-lin.cambridge.arm.com>
+References: <cover.1392109054.git.mohit.kumar@st.com>
+ <2CC2A0A4A178534D93D5159BF3BCB66189FD2CAFB1@EAPEX1MAIL1.st.com>
+ <20140218122324.GA23267@e106331-lin.cambridge.arm.com>
+ <201402181558.14663.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <CAOiHx==mQ5Dg4P1AYSLg1G1vHiXAcThSb+n+8L9OAoU-fPgt6w@mail.gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Jonas Gorski <jogo@openwrt.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mbizon@freebox.fr" <mbizon@freebox.fr>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "gregory.0xf0@gmail.com" <gregory.0xf0@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201402181558.14663.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Mohit KUMAR DCG <Mohit.KUMAR-qxv4g6HH51o@public.gmane.org>, Pratyush ANAND <pratyush.anand-qxv4g6HH51o@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 21 February 2014 16:18:54 Jonas Gorski wrote:
-> On Fri, Feb 21, 2014 at 3:59 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Friday 21 February 2014 15:48:04 Jonas Gorski wrote:
-> >>
-> >> There already is a (non-OF) user for this driver that exports a
-> >> "periph" clock, which is where the name comes from. It currently does
-> >> all clock lookups purely based on the clock name, not the device name
-> >> itself. Of course we can just make it get a different named clock when
-> >> of_node is present; that should satisfy both.
-> >
-> > I think you are referring to arch/mips/bcm63xx/clk.c, but that doesn't
-> > actually use clkdev at all and instead expects device drivers to know
-> > the name of *output* of the clock controllers. You can't use that
-> > name in the binding for a device, which needs to know the name of
-> > the *input* from the clock consumer point of view.
+On Tue, Feb 18, 2014 at 02:58:14PM +0000, Arnd Bergmann wrote:
+> On Tuesday 18 February 2014, Mark Rutland wrote:
+> > > 
+> > > - These are Spear SoC specific miscellaneous registers. Here these are used for
+> > > to configure sata/pcie  aux clock.
+> > > > 
+> > > > > +- phy-id: Instance id of the phy.
+> > > > > +- #phy-cells : from the generic PHY bindings, must be 1.
+> > > > > + - 1st cell: phandle to the phy node.
+> > > > > + - 2nd cell: 0 if phy (in 1st cell) is to be used for SATA, 1 for PCIe
+> > > > > +   and 2 for Super Speed USB.
+> > > > 
+> > > > One cell or two?
+> > > 
+> > > - No of cells are two, is this the question?
+> > 
+> > The description of #phy-cells says it must be 1. Presumably it must be 2.
 > 
-> That's why I was suggesting making the driver do a lookup on the input
-> name in case of probing through OF (having an of_node), and using
-> the "legacy" output name else. That way the binding is not limited to
-> the output name of bcm63xx/mips anymore.
+> The description here is counting the phandle, while we normally only
+> count the arguments following the phandle. #phy-cells=<1> is correct
+> here, but the description should be written a bit clearer.
 
-Ok, fair enough.
+Ah, yes. I clearly hadn't read thoroughly enough.
 
-> > An easy solution would be to register a clkdev lookup table in
-> > the above clock driver.
-> 
-> Requiring bcm63xx/mips to implement clkdev would be IMHO an
-> unnecessary burden just so bcm63xx/arm using OF can reuse this driver.
-> Letting bcm63xx use a clkdev lookup table (or rather tables, as each
-> chip is different) is good mid or long term goal, but it should not
-> block other users.
+We could just drop mention of the phandle under the #phy-cells
+description; it's not relevant to the meaning of the single phy-specific
+cell, and per the phy binding it's obviously required in clients.
 
-Ah, that's probably right. I was assuming you'd only need to
-add a single function call to register a table, but I see now
-that using clkdev would impact the entire clk implementation
-on bcm63xx.
-
-	Arnd
+Cheers,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
