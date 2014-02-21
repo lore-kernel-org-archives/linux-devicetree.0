@@ -1,59 +1,175 @@
 From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH v5 09/11] arm: add support for reserved memory defined by
- device tree
-Date: Fri, 21 Feb 2014 13:25:25 +0100
-Message-ID: <1392985527-6260-10-git-send-email-m.szyprowski@samsung.com>
+Subject: [PATCH v5 01/11] of: document bindings for reserved-memory nodes
+Date: Fri, 21 Feb 2014 13:25:17 +0100
+Message-ID: <1392985527-6260-2-git-send-email-m.szyprowski@samsung.com>
 References: <1392985527-6260-1-git-send-email-m.szyprowski@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-reply-to: <1392985527-6260-1-git-send-email-m.szyprowski@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Tomasz Figa <t.figa@samsung.com>, Will Deacon <will.deacon@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Paul Mackerras <paulus@samba.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Josh Cartwright <joshc@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Grant Likely <grant.likely@linaro.org>, Laura Abbott <lauraa@codeaurora.org>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Sascha Hauer <s.hauer@pengutronix.de>, Michal Nazarewicz <mina86@mina86.com>, Marc <marc.ceeeee@gmail.com>, Nishanth Peethambaran <nishanth.p@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Grant Likely <grant.likely@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Paul Mackerras <paulus@samba.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable reserved memory initialization from device tree.
+From: Grant Likely <grant.likely@linaro.org>
 
+Reserved memory nodes allow for the reservation of static (fixed
+address) regions, or dynamically allocated regions for a specific
+purpose.
+
+Signed-off-by: Grant Likely <grant.likely@linaro.org>
+[joshc: Based on binding document proposed (in non-patch form) here:
+ http://lkml.kernel.org/g/20131030134702.19B57C402A0@trevor.secretlab.ca
+ adapted to support #memory-region-cells]
+Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
 Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 ---
- arch/arm/Kconfig   |    1 +
- arch/arm/mm/init.c |    2 ++
- 2 files changed, 3 insertions(+)
+ .../bindings/reserved-memory/reserved-memory.txt   |  138 ++++++++++++++++++++
+ 1 file changed, 138 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index e25419817791..d0262bea8020 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -1918,6 +1918,7 @@ config USE_OF
- 	select IRQ_DOMAIN
- 	select OF
- 	select OF_EARLY_FLATTREE
-+	select OF_RESERVED_MEM
- 	help
- 	  Include support for flattened device tree machine descriptions.
- 
-diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-index 804d61566a53..2a77ba8796ae 100644
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -323,6 +323,8 @@ void __init arm_memblock_init(struct meminfo *mi,
- 	if (mdesc->reserve)
- 		mdesc->reserve();
- 
-+	early_init_fdt_scan_reserved_mem();
+diff --git a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+new file mode 100644
+index 000000000000..a606ce90c9c4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+@@ -0,0 +1,138 @@
++*** Reserved memory regions ***
 +
- 	/*
- 	 * reserve memory for DMA contigouos allocations,
- 	 * must come from DMA area inside low memory
++Reserved memory is specified as a node under the /reserved-memory node.
++The operating system shall exclude reserved memory from normal usage
++one can create child nodes describing particular reserved (excluded from
++normal use) memory regions. Such memory regions are usually designed for
++the special usage by various device drivers.
++
++Parameters for each memory region can be encoded into the device tree
++with the following nodes:
++
++/reserved-memory node
++---------------------
++#address-cells, #size-cells (required) - standard definition
++    - Should use the same values as the root node
++#memory-region-cells (required) - dictates number of cells used in the child
++                                  nodes memory-region specifier
++ranges (required) - standard definition
++    - Should be empty
++
++/reserved-memory/ child nodes
++-----------------------------
++Each child of the reserved-memory node specifies one or more regions of
++reserved memory. Each child node may either use a 'reg' property to
++specify a specific range of reserved memory, or a 'size' property with
++optional constraints to request a dynamically allocated block of memory.
++
++Following the generic-names recommended practice, node names should
++reflect the purpose of the node (ie. "framebuffer" or "dma-pool"). Unit
++address (@<address>) should be appended to the name if the node is a
++static allocation.
++
++Properties:
++Requires either a) or b) below.
++a) static allocation
++   reg (required) - standard definition
++b) dynamic allocation
++   size (required) - length based on parent's #size-cells
++                   - Size in bytes of memory to reserve.
++   alignment (optional) - length based on parent's #size-cells
++                        - Address boundary for alignment of allocation.
++   alloc-ranges (optional) - prop-encoded-array (address, length pairs).
++                           - Specifies regions of memory that are
++                             acceptable to allocate from.
++
++If both reg and size are present, then the reg property takes precedence
++and size is ignored.
++
++Additional properties:
++compatible (optional) - standard definition
++    - may contain the following strings:
++        - shared-dma-pool: This indicates a region of memory meant to be
++          used as a shared pool of DMA buffers for a set of devices. It can
++          be used by an operating system to instanciate the necessary pool
++          management subsystem if necessary.
++        - vendor specific string in the form <vendor>,[<device>-]<usage>
++no-map (optional) - empty property
++    - Indicates the operating system must not create a virtual mapping
++      of the region as part of its standard mapping of system memory,
++      nor permit speculative access to it under any circumstances other
++      than under the control of the device driver using the region.
++reusable (optional) - empty property
++    - The operating system can use the memory in this region with the
++      limitation that the device driver(s) owning the region need to be
++      able to reclaim it back. Typically that means that the operating
++      system can use that region to store volatile or cached data that
++      can be otherwise regenerated or migrated elsewhere.
++
++Linux implementation note:
++- If a "linux,cma-default" property is present, then Linux will use the
++  region for the default pool of the contiguous memory allocator.
++
++Device node references to reserved memory
++-----------------------------------------
++Regions in the /reserved-memory node may be referenced by other device
++nodes by adding a memory-region property to the device node.
++
++memory-region (optional) - phandle, specifier pairs to children of /reserved-memory
++
++Example
++-------
++This example defines 3 contiguous regions are defined for Linux kernel:
++one default of all device drivers (named linux,cma@72000000 and 64MiB in size),
++one dedicated to the framebuffer device (named framebuffer@78000000, 8MiB), and
++one for multimedia processing (named multimedia-memory@77000000, 64MiB).
++
++/ {
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	memory {
++		reg = <0x40000000 0x40000000>;
++	};
++
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		/* global autoconfigured region for contiguous allocations */
++		linux,cma {
++			compatible = "shared-dma-pool";
++			reusable;
++			#memory-region-cells = <0>;
++			size = <0x4000000>;
++			alignment = <0x2000>;
++			linux,cma-default;
++		};
++
++		display_reserved: framebuffer@78000000 {
++			#memory-region-cells = <0>;
++			reg = <0x78000000 0x800000>;
++		};
++
++		multimedia_reserved: multimedia@77000000 {
++			compatible = "acme,multimedia-memory";
++			#memory-region-cells = <1>;
++			reg = <0x77000000 0x4000000>;
++		};
++	};
++
++	/* ... */
++
++	fb0: video@12300000 {
++		memory-region = <&display_reserved>;
++		/* ... */
++	};
++
++	scaler: scaler@12500000 {
++		memory-region = <&multimedia_reserved 0xdeadbeef>;
++		/* ... */
++	};
++
++	codec: codec@12600000 {
++		memory-region = <&multimedia_reserved 0xfeebdaed>;
++		/* ... */
++	};
++};
 -- 
 1.7.9.5
