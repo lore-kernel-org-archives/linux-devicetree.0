@@ -1,72 +1,62 @@
-From: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Subject: Re: [PATCH 4/7] ECHI Platform: Merge ppc-of EHCI driver into the
- ehci-platform driver
-Date: Sat, 22 Feb 2014 15:32:53 +1300
-Message-ID: <53080C55.3070001@prisktech.co.nz>
-References: <20140221114803.GB8783@e106331-lin.cambridge.arm.com>
+From: David =?ISO-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
+Subject: Re: [PATCH v7 8/8] ARM: sunxi: Add documentation for
+ driver for SD/MMC hosts found on Allwinner sunxi SoCs
+Date: Sat, 22 Feb 2014 08:32:03 +0100
+Message-ID: <1559221.mEv19UvCzF@pagira.o2s.ch>
+References: <20140217095907.15040.81893.stgit@pagira.o2s.ch> <20140217100302.15040.56273.stgit@pagira.o2s.ch> <20140218154212.GL3142@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140221114803.GB8783-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
-Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: multipart/signed; boundary="nextPart4305757.gxGONMhGcj"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Return-path: <linux-sunxi+bncBD2JL37LXEKRBU5FUGMAKGQE3ED7FZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140218154212.GL3142@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Emilio =?ISO-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
-On 22/02/14 00:48, Mark Rutland wrote:
-> [Adding Tony Prisk to Cc]
->
-> On Fri, Feb 21, 2014 at 06:31:30AM +0000, Alistair Popple wrote:
->> Currently the ppc-of driver uses the compatibility string
->> "usb-ehci". This means platforms that use device-tree and implement an
->> EHCI compatible interface have to either use the ppc-of driver or add
->> a compatible line to the ehci-platform driver. It would be more
->> appropriate for the platform driver to be compatible with "usb-ehci"
->> as non-powerpc platforms are also beginning to utilise device-tree.
->>
->> This patch merges the device tree property parsing from ehci-ppc-of
->> into the platform driver and adds a "usb-ehci" compatibility
->> string. The existing ehci-ppc-of driver is removed and the 440EPX
->> specific quirks are added to the ehci-platform driver.
->>
->> Signed-off-by: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
->> ---
->>   drivers/usb/host/Kconfig         |    7 +-
->>   drivers/usb/host/ehci-hcd.c      |    5 -
->>   drivers/usb/host/ehci-platform.c |   87 +++++++++++++-
->>   drivers/usb/host/ehci-ppc-of.c   |  238 --------------------------------------
->>   4 files changed, 89 insertions(+), 248 deletions(-)
->>   delete mode 100644 drivers/usb/host/ehci-ppc-of.c
-> Please use of_property_read_bool for these.
->
-> This driver already handles "via,vt8500-ehci" and "wm,prizm-ehci" which
-> aren't documented to handle these properties, but now gain support for
-> them. It might be worth unifying the binding documents if there's
-> nothing special about those two host controllers.
->
-> We seem to have two binding documents for "via,vt8500-ehci", so some
-> cleanup is definitely in order.
->
-> Tony, you seem to have written both documents judging by 95e9fd10f06c
-> and 8ad551d150e3. Do you have any issue with merging both of these into
-> a common usb-ehci document?
-......
-> Cheers,
-> Mark.
+--nextPart4305757.gxGONMhGcj
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-I'm not sure how we ended up with two bindings for the driver anyway. I 
-think this was an error on my part somewhere.
+Hi
 
-None of the in-tree dts files use "wm,prizm-ehci".
+> Please use the real compatibles here. It's much easier to search
+> for. Plus, your driver doesn't support all the SoCs you're mentionning here.
+> [...]
+> Please provide the real property name to use. No need for an example
+> here, you have a full-fledged one in a few lines.
+Fixed that.
+> Ditto. Plus, this is not a mod0 clock.
+Yes it is! But maybe the formulation hasn't been clear enough...
+> You never talked about the clock-names property, and which clocks were
+> supposed to be provided.
+Yes I did? But I expanded the text a little bit further...
+> > +	interrupts = <0 32 4>;
+> > +	bus-width = <4>;
+> And you never talked about bus-width either.
+I can throw in a line for refering to the mmc slot gpio lib docs.
+> Isn't the cd-gpios property requested too?
+I can refer to the docs there as well if you like... :-)
 
-I have no issue with merging all the documentation into a single 
-usb-ehci binding.
+cheers
+david
+--nextPart4305757.gxGONMhGcj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
-Regards
-Tony Prisk
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iEYEABECAAYFAlMIUncACgkQAeZw77btGjodSwCdEkcG+urkDQ/kg+g0djh46sfr
+QJoAnjY2CuqBqJeFhfHYTwSgil3241U0
+=lY4z
+-----END PGP SIGNATURE-----
+
+--nextPart4305757.gxGONMhGcj--
