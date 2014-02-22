@@ -1,187 +1,73 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v6 17/18] ARM: sun4i: dt: Add ahci / sata support
-Date: Sat, 22 Feb 2014 18:15:16 +0100
-Message-ID: <20140222171516.GA3610@lukather>
-References: <1392811320-3132-1-git-send-email-hdegoede@redhat.com>
- <1392811320-3132-18-git-send-email-hdegoede@redhat.com>
- <20140221181519.GC3931@lukather>
- <53087755.3090608@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: devicetree repository separation/migration
+Date: Sat, 22 Feb 2014 19:16:23 +0100
+Message-ID: <20140222181623.GK17250@pengutronix.de>
+References: <20140217180544.GU7862@titan.lakedaemon.net>
+ <20140218155750.GS17250@pengutronix.de>
+ <20140218181854.GB7862@titan.lakedaemon.net>
+ <CAOesGMhvoB7vRf3H1kMaL5+MgZ2gJy=ZVNU0gsXVye9S4YGBOg@mail.gmail.com>
+ <CAOesGMi8zJXhfj46CLB-_Kk2s4MY9da46DhMoCtRj=zSUiuOGA@mail.gmail.com>
+ <CA+bK7J5+n2Se4cLv5WjR5B31ej7FdrGjPcjUULNrhb1UQ7=vmA@mail.gmail.com>
+ <CAL_JsqJG+OXbT7sMiHV2dCx+nf--RidL8MmMd=dy6_gAa0yYcg@mail.gmail.com>
+ <CAOesGMiHOwSYTCUaptacN=_pbXnObU5gqpxQHQ+kRTaW-ow3rA@mail.gmail.com>
+ <20140220113832.D9E13C4050F@trevor.secretlab.ca>
+ <0F360BC4-77AC-44E4-85FA-A8AAA336BA4D@bsdimp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="T4sUOijqQbZv57TR"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBQ5YUOMAKGQENWAMU3Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <53087755.3090608-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <0F360BC4-77AC-44E4-85FA-A8AAA336BA4D-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Warner Losh <wlosh-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tim Bird <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Feb 21, 2014 at 11:27:29AM -0700, Warner Losh wrote:
+> 
+> On Feb 20, 2014, at 4:38 AM, Grant Likely wrote:
+> 
+> > On Wed, 19 Feb 2014 13:20:15 -0800, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+> >> On Wed, Feb 19, 2014 at 1:12 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >>> One way to minimize the inconvenience is keep versioning and dev
+> >>> cycles in sync with the kernel. We could also start doing things to
+> >>> align the kernel workflow with how things will work when we do have a
+> >>> separate repository.
+> >> 
+> >> I don't think aligning development cycles is what we want most here it
+> >> might be useful for us in Linux but it'll make things difficult for
+> >> other projects since they're not aware of our release cycles. The
+> >> device tree bindings and DT contents in that repo should be "always
+> >> stable", i.e. no merge window / rc concept. As soon as something goes
+> >> in it's live, and from then out only fixes to the DTS files (or
+> >> appending the binding).
+> >> 
+> >> For example, I don't want to have to track two trees to test against
+> >> -- I'll want to keep one repo of the very latest DT files and always
+> >> use those to boot any and all boards.
+> > 
+> > This approach does have the subtle side effect that differs from what we
+> > discussed in Edinburgh.  We've talked about always being able to boot a
+> > new kernel on an old devicetree, but not a new devicetree on an old
+> > kernel. With a separate board database repo we are going to hit both
+> > cases. At least to a limited extent we're going to need older kernels
+> > booting with the latest devicetree, and we'll need some rules about how
+> > that gets applied.
+> 
+> I wasn't in Edinburgh...  Was this at the binary level or at the
+> source level? I'm thinking specifically about the move to cpp in the
+> back of my mind...
 
---T4sUOijqQbZv57TR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Only the binary compatibility matters. The source can change
+without breaking compatibility between kernels and devicetrees.
 
-On Sat, Feb 22, 2014 at 11:09:25AM +0100, Hans de Goede wrote:
-> Hi Maxime,
->=20
-> On 02/21/2014 07:15 PM, Maxime Ripard wrote:
-> >Hi Hans,
-> >
-> >On Wed, Feb 19, 2014 at 01:01:59PM +0100, Hans de Goede wrote:
-> >>From: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-> >>
-> >>This patch adds sunxi sata support to A10 boards that have such a conne=
-ctor.
-> >>Some boards also feature a regulator via a GPIO and support for this is=
- also
-> >>added.
-> >>
-> >>Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-> >>Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> >>---
-> >>  arch/arm/boot/dts/sun4i-a10-a1000.dts      |  4 ++++
-> >>  arch/arm/boot/dts/sun4i-a10-cubieboard.dts |  6 +++++
-> >>  arch/arm/boot/dts/sun4i-a10.dtsi           |  8 +++++++
-> >>  arch/arm/boot/dts/sunxi-ahci-reg.dtsi      | 36 +++++++++++++++++++++=
-+++++++++
-> >>  4 files changed, 54 insertions(+)
-> >>  create mode 100644 arch/arm/boot/dts/sunxi-ahci-reg.dtsi
-> >>
-> >>diff --git a/arch/arm/boot/dts/sun4i-a10-a1000.dts b/arch/arm/boot/dts/=
-sun4i-a10-a1000.dts
-> >>index cbd2e13..d6ec839 100644
-> >>--- a/arch/arm/boot/dts/sun4i-a10-a1000.dts
-> >>+++ b/arch/arm/boot/dts/sun4i-a10-a1000.dts
-> >>@@ -35,6 +35,10 @@
-> >>  			};
-> >>  		};
-> >>
-> >>+		ahci: sata@01c18000 {
-> >>+			status =3D "okay";
-> >>+		};
-> >>+
-> >>  		pinctrl@01c20800 {
-> >>  			emac_power_pin_a1000: emac_power_pin@0 {
-> >>  				allwinner,pins =3D "PH15";
-> >>diff --git a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts b/arch/arm/boot=
-/dts/sun4i-a10-cubieboard.dts
-> >>index b139ee6..6df237d8 100644
-> >>--- a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
-> >>+++ b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
-> >>@@ -12,6 +12,7 @@
-> >>
-> >>  /dts-v1/;
-> >>  /include/ "sun4i-a10.dtsi"
-> >>+/include/ "sunxi-ahci-reg.dtsi"
-> >>
-> >>  / {
-> >>  	model =3D "Cubietech Cubieboard";
-> >>@@ -33,6 +34,11 @@
-> >>  			};
-> >>  		};
-> >>
-> >>+		ahci: sata@01c18000 {
-> >>+			target-supply =3D <&reg_ahci_5v>;
-> >>+			status =3D "okay";
-> >>+		};
-> >>+
-> >>  		pinctrl@01c20800 {
-> >>  			led_pins_cubieboard: led_pins@0 {
-> >>  				allwinner,pins =3D "PH20", "PH21";
-> >>diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i=
--a10.dtsi
-> >>index 336dbec..454077a 100644
-> >>--- a/arch/arm/boot/dts/sun4i-a10.dtsi
-> >>+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-> >>@@ -338,6 +338,14 @@
-> >>  			#size-cells =3D <0>;
-> >>  		};
-> >>
-> >>+		ahci: sata@01c18000 {
-> >>+			compatible =3D "allwinner,sun4i-a10-ahci";
-> >>+			reg =3D <0x01c18000 0x1000>;
-> >>+			interrupts =3D <56>;
-> >>+			clocks =3D <&pll6 0>, <&ahb_gates 25>;
-> >>+			status =3D "disabled";
-> >>+		};
-> >>+
-> >>  		intc: interrupt-controller@01c20400 {
-> >>  			compatible =3D "allwinner,sun4i-ic";
-> >>  			reg =3D <0x01c20400 0x400>;
-> >>diff --git a/arch/arm/boot/dts/sunxi-ahci-reg.dtsi b/arch/arm/boot/dts/=
-sunxi-ahci-reg.dtsi
-> >>new file mode 100644
-> >>index 0000000..7072af1
-> >>--- /dev/null
-> >>+++ b/arch/arm/boot/dts/sunxi-ahci-reg.dtsi
-> >>@@ -0,0 +1,36 @@
-> >>+/*
-> >>+ * sunxi boards sata target power supply common code
-> >
-> >
-> >Since IIRC we have pretty much the same needs for the USB, can't we
-> >just drop the SATA specific mention and use it as the common DTSI for
-> >the usual regulators?
->=20
-> On most boards with sata, there will also be 1 or 2 usb regulators,
-> so we need differently named regulator nodes for all 3 of ahci,
-> usb1 and usb2 vbus. On some boards how ever we may only need the
-> usb regulators.
+Sascha
 
-Yes, obviously...
-
-> So if you look in my current personal sunxi-devel tree you will see
-> separate dtsi files for both ahci and usb regulators,
-
-And this is precisely what I don't understand. Why do you *need*
-different DTSI files. If there's common regulators, that are used on
-most boards, fine, create a common regulators files. But why do you
-have to create a DTSI to define only one regulator.
-
-> another advantage of having these separate is that the gpio controlling
-> the regulator can be pre-populated with the reference design gpio which
-> is used in most boards, so that the ahci specific code in the dts
-> becomes only the ahci: sata@... node.
-
-I understand very well the advantages of what having a reference
-regulators bring. What I don't understand is the benefits of having
-"topics" regulators DTSI.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---T4sUOijqQbZv57TR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTCNsjAAoJEBx+YmzsjxAgMMgP/RLAqvGd8FLRBDuGA30Tm3Dj
-7FVvmqscbLZ2wRZl4CQVZAtaOPn3sC5BaWoEXfrHjSDoNymrCGtx5k7bd4qON7PH
-INbZVB4Uyot+93P/f7MabCnlXc8KuVEizza/Q0F8Q2PQ6awGxE+CwrXZ4jp8VxLR
-MdD2htf4hIamk9zJzUBEtueuqK+3G7TrlF6QUGxujkvW9PkbWURX3GdtznHhC8DF
-zeh0BaOYs5jyoohTlTeuCDTgKArVAgspRcYhcuygIgCMeFthjAjz/KGZMkpZKEoC
-T5J63OXRNws5QY9rAoVBOHpSYLUuxHf5R8GIMmbYGO6AYNOJsUEQadUQ3C2giiTO
-BYkXGZVfJSpVg2+wk+Ais3jBhyPhBXjWwfS8to0HF4/yy5oIOSQm/qWr64PZD+Pv
-ZOhPjNNkVJL9Sdh++Nm1iVLs+qpaBvPvh4wtqVyiP7B9e1Gb1CjPGN4uusVDsiMo
-4z0JcIch9NM0nyrSJApmBlNHS+/oiDn4qhYtDGM+0eaodxVuwAyXISFRVjzVVH25
-is8mB0b+uEJcruOkhV6hMKwOWxiLGqoURyBWjKBTnrUfzLscbNizwAvIVecOMMcB
-aPaKtThFjUD9rmhcLMyyWSoKuv4922V/P3XVWVocnKeHLt/5yS68XWp28gpLiC3k
-+0m2JAu2VUCqJWT5tzut
-=p533
------END PGP SIGNATURE-----
-
---T4sUOijqQbZv57TR--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
