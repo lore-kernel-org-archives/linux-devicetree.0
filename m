@@ -1,87 +1,72 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v7 0/4] DT support for kirkwood based Synology NAS boxes
-Date: Fri, 21 Feb 2014 20:56:40 -0500
-Message-ID: <20140222015640.GS7862@titan.lakedaemon.net>
-References: <1392840157-31072-1-git-send-email-klightspeed@killerwolves.net>
+From: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+Subject: Re: [PATCH 4/7] ECHI Platform: Merge ppc-of EHCI driver into the
+ ehci-platform driver
+Date: Sat, 22 Feb 2014 15:32:53 +1300
+Message-ID: <53080C55.3070001@prisktech.co.nz>
+References: <20140221114803.GB8783@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1392840157-31072-1-git-send-email-klightspeed@killerwolves.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: klightspeed@killerwolves.net
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140221114803.GB8783-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
+Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Ben,
 
-On Thu, Feb 20, 2014 at 06:02:33AM +1000, klightspeed@killerwolves.net wrote:
-> This patchset adds support for around 30 kirkwood bases Synology NAS
-> boxes. Patch #1 documents vendor prefixes. Patch #2 generalizes the qnap
-> power off driver so that it can also be used for Synology devices.
-> Patch #3 adds sii,s35390a to i2c trivial devices. Patch #4 adds the 
-> synology DT files.
-...
-> Andrew Lunn (3):
->   DT: Vendor prefixes: Add ricoh, qnap, sii and synology
->   Power: Reset: Generalize qnap-poweroff to with on Synology devices.
->   DT: i2c: Trivial: Add sii,s35390a
-> 
-> Ben Peddell (1):
->   ARM: Kirkwood: Add support for many Synology NAS devices
-> 
->  .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
->  .../bindings/power_supply/qnap-poweroff.txt        |   5 +-
->  .../devicetree/bindings/vendor-prefixes.txt        |   4 +
->  arch/arm/boot/dts/Makefile                         |  15 +
->  arch/arm/boot/dts/kirkwood-ds109.dts               |  41 +
->  arch/arm/boot/dts/kirkwood-ds110jv10.dts           |  41 +
->  arch/arm/boot/dts/kirkwood-ds111.dts               |  44 ++
->  arch/arm/boot/dts/kirkwood-ds112.dts               |  48 ++
->  arch/arm/boot/dts/kirkwood-ds209.dts               |  44 ++
->  arch/arm/boot/dts/kirkwood-ds210.dts               |  46 ++
->  arch/arm/boot/dts/kirkwood-ds212.dts               |  47 ++
->  arch/arm/boot/dts/kirkwood-ds212j.dts              |  41 +
->  arch/arm/boot/dts/kirkwood-ds409.dts               |  48 ++
->  arch/arm/boot/dts/kirkwood-ds409slim.dts           |  40 +
->  arch/arm/boot/dts/kirkwood-ds411.dts               |  52 ++
->  arch/arm/boot/dts/kirkwood-ds411j.dts              |  48 ++
->  arch/arm/boot/dts/kirkwood-ds411slim.dts           |  48 ++
->  arch/arm/boot/dts/kirkwood-rs212.dts               |  48 ++
->  arch/arm/boot/dts/kirkwood-rs409.dts               |  44 ++
->  arch/arm/boot/dts/kirkwood-rs411.dts               |  44 ++
->  arch/arm/boot/dts/kirkwood-synology.dtsi           | 871 +++++++++++++++++++++
->  drivers/power/reset/qnap-poweroff.c                |  49 +-
->  22 files changed, 1656 insertions(+), 13 deletions(-)
->  create mode 100644 arch/arm/boot/dts/kirkwood-ds109.dts
->  create mode 100644 arch/arm/boot/dts/kirkwood-ds110jv10.dts
->  create mode 100644 arch/arm/boot/dts/kirkwood-ds111.dts
->  create mode 100644 arch/arm/boot/dts/kirkwood-ds112.dts
->  create mode 100644 arch/arm/boot/dts/kirkwood-ds209.dts
->  create mode 100644 arch/arm/boot/dts/kirkwood-ds210.dts
->  create mode 100644 arch/arm/boot/dts/kirkwood-ds212.dts
->  create mode 100644 arch/arm/boot/dts/kirkwood-ds212j.dts
->  create mode 100644 arch/arm/boot/dts/kirkwood-ds409.dts
->  create mode 100644 arch/arm/boot/dts/kirkwood-ds409slim.dts
->  create mode 100644 arch/arm/boot/dts/kirkwood-ds411.dts
->  create mode 100644 arch/arm/boot/dts/kirkwood-ds411j.dts
->  create mode 100644 arch/arm/boot/dts/kirkwood-ds411slim.dts
->  create mode 100644 arch/arm/boot/dts/kirkwood-rs212.dts
->  create mode 100644 arch/arm/boot/dts/kirkwood-rs409.dts
->  create mode 100644 arch/arm/boot/dts/kirkwood-rs411.dts
->  create mode 100644 arch/arm/boot/dts/kirkwood-synology.dtsi
+On 22/02/14 00:48, Mark Rutland wrote:
+> [Adding Tony Prisk to Cc]
+>
+> On Fri, Feb 21, 2014 at 06:31:30AM +0000, Alistair Popple wrote:
+>> Currently the ppc-of driver uses the compatibility string
+>> "usb-ehci". This means platforms that use device-tree and implement an
+>> EHCI compatible interface have to either use the ppc-of driver or add
+>> a compatible line to the ehci-platform driver. It would be more
+>> appropriate for the platform driver to be compatible with "usb-ehci"
+>> as non-powerpc platforms are also beginning to utilise device-tree.
+>>
+>> This patch merges the device tree property parsing from ehci-ppc-of
+>> into the platform driver and adds a "usb-ehci" compatibility
+>> string. The existing ehci-ppc-of driver is removed and the 440EPX
+>> specific quirks are added to the ehci-platform driver.
+>>
+>> Signed-off-by: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
+>> ---
+>>   drivers/usb/host/Kconfig         |    7 +-
+>>   drivers/usb/host/ehci-hcd.c      |    5 -
+>>   drivers/usb/host/ehci-platform.c |   87 +++++++++++++-
+>>   drivers/usb/host/ehci-ppc-of.c   |  238 --------------------------------------
+>>   4 files changed, 89 insertions(+), 248 deletions(-)
+>>   delete mode 100644 drivers/usb/host/ehci-ppc-of.c
+> Please use of_property_read_bool for these.
+>
+> This driver already handles "via,vt8500-ehci" and "wm,prizm-ehci" which
+> aren't documented to handle these properties, but now gain support for
+> them. It might be worth unifying the binding documents if there's
+> nothing special about those two host controllers.
+>
+> We seem to have two binding documents for "via,vt8500-ehci", so some
+> cleanup is definitely in order.
+>
+> Tony, you seem to have written both documents judging by 95e9fd10f06c
+> and 8ad551d150e3. Do you have any issue with merging both of these into
+> a common usb-ehci document?
+......
+> Cheers,
+> Mark.
 
-I applied patches 1, 3, and 4 to mvebu/dt.
+I'm not sure how we ended up with two bindings for the driver anyway. I 
+think this was an error on my part somewhere.
 
-Thanks and good work!
+None of the in-tree dts files use "wm,prizm-ehci".
 
-Jason.
+I have no issue with merging all the documentation into a single 
+usb-ehci binding.
+
+Regards
+Tony Prisk
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
