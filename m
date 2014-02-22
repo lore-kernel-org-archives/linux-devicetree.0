@@ -1,81 +1,90 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: [PATCH v2 3/5] dt-bindings: add documentation for s3c2412 clock controller
-Date: Sat, 22 Feb 2014 23:48:55 +0100
-Message-ID: <1867331.yoDLNS1vhp@phil>
-References: <1835515.oOiOlPWUhB@phil>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH v4 03/10] Documentation: devicetree: Update Samsung FIMC
+ DT binding
+Date: Sat, 22 Feb 2014 23:52:50 +0100
+Message-ID: <53092A42.2000407@gmail.com>
+References: <1392925237-31394-1-git-send-email-s.nawrocki@samsung.com> <1392925237-31394-5-git-send-email-s.nawrocki@samsung.com> <20140221155023.GF20449@e106331-lin.cambridge.arm.com> <53091E72.3090107@gmail.com> <5309241B.5000702@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1835515.oOiOlPWUhB@phil>
+In-Reply-To: <5309241B.5000702@gmail.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: t.figa@samsung.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "a.hajda@samsung.com" <a.hajda@samsung.com>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Describe the clock controller of the s3c2412.
+On 02/22/2014 11:26 PM, Tomasz Figa wrote:
+> [Ccing Mike]
+>
+> On 22.02.2014 23:02, Sylwester Nawrocki wrote:
+>> On 02/21/2014 04:50 PM, Mark Rutland wrote:
+>>> On Thu, Feb 20, 2014 at 07:40:30PM +0000, Sylwester Nawrocki wrote:
+>>>> +- #clock-cells: from the common clock bindings
+>>>> (../clock/clock-bindings.txt),
+>>>> + must be 1. A clock provider is associated with the 'camera' node
+>>>> and it should
+>>>> + be referenced by external sensors that use clocks provided by the
+>>>> SoC on
+>>>> + CAM_*_CLKOUT pins. The clock specifier cell stores an index of a
+>>>> clock.
+>>>> + The indices are 0, 1 for CAM_A_CLKOUT, CAM_B_CLKOUT clocks
+>>>> respectively.
+>>>> +
+>>>> +- clock-output-names: from the common clock bindings, should contain
+>>>> names of
+>>>> + clocks registered by the camera subsystem corresponding to
+>>>> CAM_A_CLKOUT,
+>>>> + CAM_B_CLKOUT output clocks, in this order. Parent clock of these
+>>>> clocks are
+>>>> + specified be first two entries of the clock-names property.
+>>>
+>>> Do you need this?
+>>
+>> All right, that might have been a bad idea, it mixes names of clocks
+>> registered
+>> by the main clock controller with names of clock input lines at the
+>> device.
+>> It's a mistake I have been usually sensitive to and now made it
+>> myself. :/
+>>
+>> My intention was to maintain the clock tree, since the camera block
+>> doesn't
+>> generate the clock itself, it merely passes through the clocks from the
+>> SoC main
+>> clock controller (CMU). So clk parents need to be properly set and since
+>> there is no clock-output-names property at the CMU DT node,
+>> of_clk_get_parent_name() cannot be used.
+>>
+>> So presumably the DT binding would be only specifying that the sclk_cam0,
+>> sclk_cam1 clock input entries are associated with output clocks named as
+>> in clock-output-names property.
+>>
+>> And the driver could either:
+>> 1) hard code those (well defined) CMU clock (clk parent) names,
+>
+> I don't think this would be a good idea, as those CMU clock names may
+> vary between SoCs.
 
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
- .../bindings/clock/samsung,s3c2412-clock.txt       | 50 ++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/samsung,s3c2412-clock.txt
+For the record, I'm not in favour of this approach, even though these clock
+names happen to be same for all relevant SoCs.
 
-diff --git a/Documentation/devicetree/bindings/clock/samsung,s3c2412-clock.txt b/Documentation/devicetree/bindings/clock/samsung,s3c2412-clock.txt
-new file mode 100644
-index 0000000..2b43096
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/samsung,s3c2412-clock.txt
-@@ -0,0 +1,50 @@
-+* Samsung S3C2412 Clock Controller
-+
-+The S3C2412 clock controller generates and supplies clock to various controllers
-+within the SoC. The clock binding described here is applicable to the s3c2412
-+and s3c2413 SoCs in the s3c24x family.
-+
-+Required Properties:
-+
-+- compatible: should be "samsung,s3c2412-clock"
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+- #clock-cells: should be 1.
-+
-+Each clock is assigned an identifier and client nodes can use this identifier
-+to specify the clock which they consume. Some of the clocks are available only
-+on a particular SoC.
-+
-+All available clocks are defined as preprocessor macros in
-+dt-bindings/clock/s3c2412.h header and can be used in device
-+tree sources.
-+
-+External clocks:
-+
-+There are several clocks that are generated outside the SoC. It is expected
-+that they are defined using standard clock bindings with following
-+clock-output-names:
-+ - "xti" - crystal input - required,
-+ - "ext" - external clock source - optional,
-+
-+Example: Clock controller node:
-+
-+	clocks: clock-controller@4c000000 {
-+		compatible = "samsung,s3c2412-clock";
-+		reg = <0x4c000000 0x20>;
-+		#clock-cells = <1>;
-+	};
-+
-+Example: UART controller node that consumes the clock generated by the clock
-+  controller (refer to the standard clock bindings for information about
-+  "clocks" and "clock-names" properties):
-+
-+	serial@50004000 {
-+		compatible = "samsung,s3c2412-uart";
-+		reg = <0x50004000 0x4000>;
-+		interrupts = <1 23 3 4>, <1 23 4 4>;
-+		clock-names = "uart", "clk_uart_baud2", "clk_uart_baud3";
-+		clocks = <&clocks PCLK_UART0>, <&clocks PCLK_UART0>,
-+			 <&clocks SCLK_UART>;
-+		status = "disabled";
-+	};
--- 
-1.8.5.3
+>> 2) clk_get() its input clock, retrieve name with __clk_get_name() and
+>> pass
+>> it as parent name to clk_register() - it sounds a bit hacky though.
+>
+> This looks fine, at least until proper interface is added to CCF. Exynos
+> audio subsystem clock driver does exactly the same.
+
+Hmm, I looked at this driver and somehow missed that.
+
+> However, the right thing would be to make it possible to use pointers to
+> struct clk instead of strings to list parent(s). This could be done by
+> adding .parents field (struct clk **) to clk_init_data struct and make
+> clk_register() use it if available.
+
+We would just need to ensure the locking is done properly.
+
+--
+Regards,
+Sylwester
