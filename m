@@ -1,83 +1,168 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [GIT PULL] Device tree bug fix on compatible order
-Date: Fri, 21 Feb 2014 22:11:45 +0000
-Message-ID: <CACxGe6t=Aij59zHGzD2ZbEGeUALx1t=-KXKcfDPYFoQd_FnLeQ@mail.gmail.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v7 2/4] Power: Reset: Generalize qnap-poweroff to work
+ on Synology devices.
+Date: Fri, 21 Feb 2014 20:39:54 -0500
+Message-ID: <20140222013954.GR7862@titan.lakedaemon.net>
+References: <1392840157-31072-1-git-send-email-klightspeed@killerwolves.net>
+ <1392840157-31072-3-git-send-email-klightspeed@killerwolves.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1392840157-31072-3-git-send-email-klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+Dmitry, David,
 
-Please pull the following tag for a devicetree bug fix (description below)
+On Thu, Feb 20, 2014 at 06:02:35AM +1000, klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org wrote:
+> From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> 
+> The Synology NAS devices use a very similar mechanism to QNAP NAS
+> devices to power off. Both send a single charactor command to a PIC,
+> over the second serial port. However the baud rate and the command
+> differ. Generalize the driver to support this.
+> 
+> Signed-off-by: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
+> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+> Cc: Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>
+> Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+> ---
+>  .../bindings/power_supply/qnap-poweroff.txt        |  5 ++-
+>  drivers/power/reset/qnap-poweroff.c                | 49 ++++++++++++++++------
+>  2 files changed, 41 insertions(+), 13 deletions(-)
 
-Thanks,
-g.
+Do you guys want to take this, or me?  I'm fine either way, there's no
+dependencies.
 
-The following changes since commit 60f76eab19e3903e810bdc3ec846c158efcd2e21:
+thx,
 
-  Merge tag 'dma-buf-for-3.14' of
-git://git.kernel.org/pub/scm/linux/kernel/git/sumits/dma-buf
-(2014-02-17 12:42:45 -0800)
+Jason.
 
-are available in the git repository at:
-
-
-  git://git.secretlab.ca/git/linux tags/dt-for-linus
-
-for you to fetch changes up to 1f42e5dd5065963979bb53daadf5d4f1e71f0c5f:
-
-  of: Add self test for of_match_node() (2014-02-20 11:52:09 +0000)
-
-----------------------------------------------------------------
-Device tree compatible match order bug fix
-
-This branch contains a bug fix for the way devicetree code identifies
-the type of device. Device drivers can contain a list of of_device_ids,
-but it more than one entry will match, then the device driver may choose
-the wrong one. Commit 105353145e, "match each node compatible against
-all given matches first", was queued for v3.14 but ended up causing
-other bugs. Commit 06b29e76a7 attempted to fix it but it had other bugs.
-Merely reverting the fix and waiting until v3.15 isn't a good option
-because there is code in v3.14 that depends on the revised behaviour to
-boot.
-
-This branch should finally fixes the problem correctly. This time
-instead of just hoping that the patch is correct, this branch also adds
-new testcases that validate the behaviour.
-
-The changes in this branch are larger than I would like for a -rc pull,
-but moving the test case data out of out of arch/arm so that it could be
-validated on other architectures was important.
-
-----------------------------------------------------------------
-Grant Likely (2):
-      of: Move testcase FDT data into drivers/of
-      of: Add self test for of_match_node()
-
-Kevin Hao (2):
-      Revert "of: search the best compatible match first in __of_match_node()"
-      of: reimplement the matching method for __of_match_node()
-
- arch/arm/boot/dts/testcases/tests.dtsi             |   2 -
- arch/arm/boot/dts/versatile-pb.dts                 |   4 +-
- drivers/of/base.c                                  | 150 ++++++++++-----------
- drivers/of/selftest.c                              |  67 +++++++++
- drivers/of/testcase-data/testcases.dtsi            |   3 +
- .../of/testcase-data}/tests-interrupts.dtsi        |   0
- drivers/of/testcase-data/tests-match.dtsi          |  19 +++
- .../of/testcase-data}/tests-phandle.dtsi           |   0
- scripts/Makefile.lib                               |   1 +
- 9 files changed, 166 insertions(+), 80 deletions(-)
- delete mode 100644 arch/arm/boot/dts/testcases/tests.dtsi
- create mode 100644 drivers/of/testcase-data/testcases.dtsi
- rename {arch/arm/boot/dts/testcases =>
-drivers/of/testcase-data}/tests-interrupts.dtsi (100%)
- create mode 100644 drivers/of/testcase-data/tests-match.dtsi
- rename {arch/arm/boot/dts/testcases =>
-drivers/of/testcase-data}/tests-phandle.dtsi (100%)
+> diff --git a/Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt b/Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt
+> index 0347d83..af25e77 100644
+> --- a/Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt
+> +++ b/Documentation/devicetree/bindings/power_supply/qnap-poweroff.txt
+> @@ -6,8 +6,11 @@ Orion5x SoCs. Sending the character 'A', at 19200 baud, tells the
+>  microcontroller to turn the power off. This driver adds a handler to
+>  pm_power_off which is called to turn the power off.
+>  
+> +Synology NAS devices use a similar scheme, but a different baud rate,
+> +9600, and a different character, '1'.
+> +
+>  Required Properties:
+> -- compatible: Should be "qnap,power-off"
+> +- compatible: Should be "qnap,power-off" or "synology,power-off"
+>  
+>  - reg: Address and length of the register set for UART1
+>  - clocks: tclk clock
+> diff --git a/drivers/power/reset/qnap-poweroff.c b/drivers/power/reset/qnap-poweroff.c
+> index 37f56f7..a75db7f 100644
+> --- a/drivers/power/reset/qnap-poweroff.c
+> +++ b/drivers/power/reset/qnap-poweroff.c
+> @@ -1,5 +1,5 @@
+>  /*
+> - * QNAP Turbo NAS Board power off
+> + * QNAP Turbo NAS Board power off. Can also be used on Synology devices.
+>   *
+>   * Copyright (C) 2012 Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+>   *
+> @@ -25,17 +25,43 @@
+>  
+>  #define UART1_REG(x)	(base + ((UART_##x) << 2))
+>  
+> +struct power_off_cfg {
+> +	u32 baud;
+> +	char cmd;
+> +};
+> +
+> +static const struct power_off_cfg qnap_power_off_cfg = {
+> +	.baud = 19200,
+> +	.cmd = 'A',
+> +};
+> +
+> +static const struct power_off_cfg synology_power_off_cfg = {
+> +	.baud = 9600,
+> +	.cmd = '1',
+> +};
+> +
+> +static const struct of_device_id qnap_power_off_of_match_table[] = {
+> +	{ .compatible = "qnap,power-off",
+> +	  .data = &qnap_power_off_cfg,
+> +	},
+> +	{ .compatible = "synology,power-off",
+> +	  .data = &synology_power_off_cfg,
+> +	},
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, qnap_power_off_of_match_table);
+> +
+>  static void __iomem *base;
+>  static unsigned long tclk;
+> +static const struct power_off_cfg *cfg;
+>  
+>  static void qnap_power_off(void)
+>  {
+> -	/* 19200 baud divisor */
+> -	const unsigned divisor = ((tclk + (8 * 19200)) / (16 * 19200));
+> +	const unsigned divisor = ((tclk + (8 * cfg->baud)) / (16 * cfg->baud));
+>  
+>  	pr_err("%s: triggering power-off...\n", __func__);
+>  
+> -	/* hijack UART1 and reset into sane state (19200,8n1) */
+> +	/* hijack UART1 and reset into sane state */
+>  	writel(0x83, UART1_REG(LCR));
+>  	writel(divisor & 0xff, UART1_REG(DLL));
+>  	writel((divisor >> 8) & 0xff, UART1_REG(DLM));
+> @@ -44,16 +70,21 @@ static void qnap_power_off(void)
+>  	writel(0x00, UART1_REG(FCR));
+>  	writel(0x00, UART1_REG(MCR));
+>  
+> -	/* send the power-off command 'A' to PIC */
+> -	writel('A', UART1_REG(TX));
+> +	/* send the power-off command to PIC */
+> +	writel(cfg->cmd, UART1_REG(TX));
+>  }
+>  
+>  static int qnap_power_off_probe(struct platform_device *pdev)
+>  {
+> +	struct device_node *np = pdev->dev.of_node;
+>  	struct resource *res;
+>  	struct clk *clk;
+>  	char symname[KSYM_NAME_LEN];
+>  
+> +	const struct of_device_id *match =
+> +		of_match_node(qnap_power_off_of_match_table, np);
+> +	cfg = match->data;
+> +
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	if (!res) {
+>  		dev_err(&pdev->dev, "Missing resource");
+> @@ -94,12 +125,6 @@ static int qnap_power_off_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> -static const struct of_device_id qnap_power_off_of_match_table[] = {
+> -	{ .compatible = "qnap,power-off", },
+> -	{}
+> -};
+> -MODULE_DEVICE_TABLE(of, qnap_power_off_of_match_table);
+> -
+>  static struct platform_driver qnap_power_off_driver = {
+>  	.probe	= qnap_power_off_probe,
+>  	.remove	= qnap_power_off_remove,
+> -- 
+> 1.8.3.2
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
