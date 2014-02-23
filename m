@@ -1,55 +1,84 @@
-From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: [RFCv2 0/5] Convert twl4030-madc to IIO API
-Date: Sun, 23 Feb 2014 23:07:46 +0100
-Message-ID: <1393193271-16717-1-git-send-email-sre@debian.org>
+From: Sebastian Reichel <sre@debian.org>
+Subject: [RFCv2 1/5] mfd: twl4030-madc: Use managed resources
+Date: Sun, 23 Feb 2014 23:07:47 +0100
+Message-ID: <1393193271-16717-2-git-send-email-sre@debian.org>
 References: <20140223220140.GA1258@earth.universe>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140223220140.GA1258-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+ <1393193271-16717-1-git-send-email-sre@debian.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1393193271-16717-1-git-send-email-sre@debian.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@ring0.de>, Marek Belisko <marek@goldelico.com>, Jonathan Cameron <jic23@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Sebastian Reichel <sre@debian.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Update twl4030-madc driver to use managed resources.
 
-This is RFCv2 for converting twl4030-madc to the IIO API and
-adding DT support. The patchset compiles, but has not yet been
-tested on real hardware. I plan to convert rx51-battery to the
-IIO framework in the near future and test this patchset on my
-Nokia N900.
+Signed-off-by: Sebastian Reichel <sre@debian.org>
+---
+ drivers/mfd/twl4030-madc.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-Changes since RFCv1:
- * Add ti,system-uses-second-madc-irq DT property needed by Belisko Marek
- * Fix issues reported by Jonathan Cameron
-
-TODO:
- * Test patchset on real hardware
- * Convert consumer drivers to IIO API
-  - rx51-battery
-  - twl4030-madc-battery
-  - twl4030-madc-hwmon (=> deprecate in favour of iio-hwmon)
- * remove old kernel API from twl4030-madc
-
--- Sebastian
-
-Sebastian Reichel (5):
-  mfd: twl4030-madc: Use managed resources
-  mfd: twl4030-madc: Add DT support and convert to IIO framework
-  mfd: twl4030-madc: Cleanup driver
-  Documentation: DT: Document twl4030-madc binding
-  mfd: twl4030-madc: Move driver to drivers/iio/adc
-
- .../devicetree/bindings/iio/adc/twl4030-madc.txt   |  24 +
- drivers/iio/adc/Kconfig                            |  10 +
- drivers/iio/adc/Makefile                           |   1 +
- drivers/iio/adc/twl4030-madc.c                     | 914 +++++++++++++++++++++
- drivers/mfd/Kconfig                                |  10 -
- drivers/mfd/Makefile                               |   1 -
- drivers/mfd/twl4030-madc.c                         | 818 ------------------
- 7 files changed, 949 insertions(+), 829 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/twl4030-madc.txt
- create mode 100644 drivers/iio/adc/twl4030-madc.c
- delete mode 100644 drivers/mfd/twl4030-madc.c
-
+diff --git a/drivers/mfd/twl4030-madc.c b/drivers/mfd/twl4030-madc.c
+index 4c583e4..5458561 100644
+--- a/drivers/mfd/twl4030-madc.c
++++ b/drivers/mfd/twl4030-madc.c
+@@ -702,14 +702,14 @@ static int twl4030_madc_probe(struct platform_device *pdev)
+ {
+ 	struct twl4030_madc_data *madc;
+ 	struct twl4030_madc_platform_data *pdata = dev_get_platdata(&pdev->dev);
+-	int ret;
++	int irq, ret;
+ 	u8 regval;
+ 
+ 	if (!pdata) {
+ 		dev_err(&pdev->dev, "platform_data not available\n");
+ 		return -EINVAL;
+ 	}
+-	madc = kzalloc(sizeof(*madc), GFP_KERNEL);
++	madc = devm_kzalloc(&pdev->dev, sizeof(*madc), GFP_KERNEL);
+ 	if (!madc)
+ 		return -ENOMEM;
+ 
+@@ -726,7 +726,7 @@ static int twl4030_madc_probe(struct platform_device *pdev)
+ 	    TWL4030_MADC_ISR1 : TWL4030_MADC_ISR2;
+ 	ret = twl4030_madc_set_power(madc, 1);
+ 	if (ret < 0)
+-		goto err_power;
++		return ret;
+ 	ret = twl4030_madc_set_current_generator(madc, 0, 1);
+ 	if (ret < 0)
+ 		goto err_current_generator;
+@@ -770,7 +770,9 @@ static int twl4030_madc_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, madc);
+ 	mutex_init(&madc->lock);
+-	ret = request_threaded_irq(platform_get_irq(pdev, 0), NULL,
++
++	irq = platform_get_irq(pdev, 0);
++	ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
+ 				   twl4030_madc_threaded_irq_handler,
+ 				   IRQF_TRIGGER_RISING, "twl4030_madc", madc);
+ 	if (ret) {
+@@ -783,9 +785,6 @@ err_i2c:
+ 	twl4030_madc_set_current_generator(madc, 0, 0);
+ err_current_generator:
+ 	twl4030_madc_set_power(madc, 0);
+-err_power:
+-	kfree(madc);
+-
+ 	return ret;
+ }
+ 
+@@ -793,10 +792,8 @@ static int twl4030_madc_remove(struct platform_device *pdev)
+ {
+ 	struct twl4030_madc_data *madc = platform_get_drvdata(pdev);
+ 
+-	free_irq(platform_get_irq(pdev, 0), madc);
+ 	twl4030_madc_set_current_generator(madc, 0, 0);
+ 	twl4030_madc_set_power(madc, 0);
+-	kfree(madc);
+ 
+ 	return 0;
+ }
 -- 
 1.8.5.3
