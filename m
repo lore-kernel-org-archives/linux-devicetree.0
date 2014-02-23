@@ -1,85 +1,212 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH RFC 04/10] base: power: Add generic OF-based power domain
- look-up
-Date: Sun, 23 Feb 2014 18:07:43 +0100
-Message-ID: <530A2ADF.902@gmail.com>
-References: <1389469372-17199-1-git-send-email-tomasz.figa@gmail.com>	 <1389469372-17199-5-git-send-email-tomasz.figa@gmail.com> <1392828827.3445.54.camel@pizza.hi.pengutronix.de>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 2/8] clk: sunxi: Implement MMC phase control
+Date: Sun, 23 Feb 2014 12:31:43 -0800
+Message-ID: <20140223203143.22529.81640@quantum>
+References: <20140217095907.15040.81893.stgit@pagira.o2s.ch>
+ <20140217100221.15040.47203.stgit@pagira.o2s.ch>
+ <20140218141532.GH3142@lukather> <20140219052125.8345.70717@quantum>
+ <20140219083606.GR3142@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1392828827.3445.54.camel@pizza.hi.pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-pm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomasz Figa <t.figa@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Pavel Machek <pavel@ucw.cz>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDO333VC4INBBNFVVGMAKGQE7MRM4XY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140219083606.GR3142@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: =?utf-8?q?David_Lanzend=C3=B6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, =?utf-8?q?Emilio_L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+Quoting Maxime Ripard (2014-02-19 00:36:06)
+> Hi Mike,
+>=20
+> On Tue, Feb 18, 2014 at 09:21:25PM -0800, Mike Turquette wrote:
+> > Quoting Maxime Ripard (2014-02-18 06:15:32)
+> > > Hi,
+> > >=20
+> > > On Mon, Feb 17, 2014 at 11:02:21AM +0100, David Lanzend=C3=B6rfer wro=
+te:
+> > > > From: Emilio L=C3=B3pez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+> > > >=20
+> > > > Signed-off-by: Emilio L=C3=B3pez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+> > >=20
+> > > You're missing your Signed-off-by here too.  Remember, for every patc=
+h
+> > > you send, your Signed-off-by must be there, regardless wether you're
+> > > the author or not.
+> > >=20
+> > > A commit log would be very much welcome too.
+> > >=20
+> > > Now, down to the patch itself, I remember Mike saying that he would
+> > > prefer adding a function in the framework instead of hardcoding
+> > > it. Mike, what's your feeling on this? Would merging this seem
+> > > reasonnable to you as is, or do you want to take this to the
+> > > framework?
+> >=20
+> > Hi Maxime & Emilio,
+> >=20
+> > Maybe something like the following RFC? If it seems sufficient for this
+> > case then I will post to the wider list with an eye towards merging it
+> > for 3.15. I've Cc'd Dinh since this came up on the socfpga thread as
+> > well.
+> >=20
+> > Regards,
+> > Mike
+> >=20
+> >=20
+> >=20
+> > From 56fa297591be5c5e22df6d2ca43fccf285a45636 Mon Sep 17 00:00:00 2001
+> > From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Date: Tue, 18 Feb 2014 20:33:50 -0800
+> > Subject: [PATCH] clk: introduce clk_set_phase function & callback
+> >=20
+> > A common operation for a clock signal generator is to shift the phase o=
+f
+> > that signal. This patch introduces a new function to the clk.h API to
+> > dynamically adjust the phase of a clock signal. Additionally this patch
+> > introduces support for the new function in the common clock framework
+> > via the .set_phase call back in struct clk_ops.
+> >=20
+> > Signed-off-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> > This patch is totally untested. It may make your board burst into
+> > flames.
+> >=20
+> >  drivers/clk/clk.c            | 84 ++++++++++++++++++++++++++++++++++++=
++++++---
+> >  include/linux/clk-private.h  |  1 +
+> >  include/linux/clk-provider.h |  5 +++
+> >  include/linux/clk.h          | 29 +++++++++++++++
+> >  4 files changed, 115 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > index ea2ca9f..635170a 100644
+> > --- a/drivers/clk/clk.c
+> > +++ b/drivers/clk/clk.c
+> > @@ -106,11 +106,11 @@ static void clk_summary_show_one(struct seq_file =
+*s, struct clk *c, int level)
+> >       if (!c)
+> >               return;
+> > =20
+> > -     seq_printf(s, "%*s%-*s %-11d %-12d %-10lu %-11lu",
+> > +     seq_printf(s, "%*s%-*s %-11d %-12d %-10lu %-11lu %-3d",
+> >                  level * 3 + 1, "",
+> >                  30 - level * 3, c->name,
+> >                  c->enable_count, c->prepare_count, clk_get_rate(c),
+> > -                clk_get_accuracy(c));
+> > +                clk_get_accuracy(c), clk_get_phase(c));
+> >       seq_printf(s, "\n");
+> >  }
+> > =20
+> > @@ -132,8 +132,8 @@ static int clk_summary_show(struct seq_file *s, voi=
+d *data)
+> >  {
+> >       struct clk *c;
+> > =20
+> > -     seq_printf(s, "   clock                        enable_cnt  prepar=
+e_cnt  rate        accuracy\n");
+> > -     seq_printf(s, "--------------------------------------------------=
+-------------------------------\n");
+> > +     seq_printf(s, "   clock                        enable_cnt  prepar=
+e_cnt  rate        accuracy   phase\n");
+> > +     seq_printf(s, "--------------------------------------------------=
+---------------------------------------\n");
+> > =20
+> >       clk_prepare_lock();
+> > =20
+> > @@ -171,6 +171,7 @@ static void clk_dump_one(struct seq_file *s, struct=
+ clk *c, int level)
+> >       seq_printf(s, "\"prepare_count\": %d,", c->prepare_count);
+> >       seq_printf(s, "\"rate\": %lu", clk_get_rate(c));
+> >       seq_printf(s, "\"accuracy\": %lu", clk_get_accuracy(c));
+> > +     seq_printf(s, "\"phase\": %d", clk_get_phase(c));
+> >  }
+> > =20
+> >  static void clk_dump_subtree(struct seq_file *s, struct clk *c, int le=
+vel)
+> > @@ -257,6 +258,11 @@ static int clk_debug_create_one(struct clk *clk, s=
+truct dentry *pdentry)
+> >       if (!d)
+> >               goto err_out;
+> > =20
+> > +     d =3D debugfs_create_u32("clk_phase", S_IRUGO, clk->dentry,
+> > +                     (u32 *)&clk->phase);
+> > +     if (!d)
+> > +             goto err_out;
+> > +
+> >       d =3D debugfs_create_x32("clk_flags", S_IRUGO, clk->dentry,
+> >                       (u32 *)&clk->flags);
+> >       if (!d)
+> > @@ -1766,6 +1772,76 @@ out:
+> >  EXPORT_SYMBOL_GPL(clk_set_parent);
+> > =20
+> >  /**
+> > + * clk_set_phase - adjust the phase shift of a clock signal
+> > + * @clk: clock signal source
+> > + * @degrees: number of degrees the signal is shifted
+> > + *
+> > + * Shifts the phase of a clock signal by the specified degrees. Return=
+s 0 on
+> > + * success, -EERROR otherwise.
+> > + *
+> > + * This function makes no distiction about the input or reference sign=
+al that
+> > + * we adjust the clock signal phase against. For example phase locked-=
+loop
+> > + * clock signal generators we may shift phase with respect to feedback=
+ clock
+> > + * signal input, but for other cases the clock phase may be shifted wi=
+th
+> > + * respect to some other, unspecified signal.
+> > + *
+> > + * Additionally the concept of phase shift does not propagate through =
+the clock
+> > + * tree hierarchy, which sets it appart from clock rates and clock acc=
+uracy. A
+> > + * parent clock phase attribute does not have an impact on the phase a=
+ttribute
+> > + * of a child clock.
+> > + */
+> > +int clk_set_phase(struct clk *clk, int degrees)
+>=20
+> Actually, while this is what I had in mind too, we'd need a bit more
+> control here. We have two phases to control (namely, input and
+> sample).
+>=20
+> Maybe passing an additional enum to tell which phase we want to
+> adjust, that could easily be extended by new drivers need would fit
+> our need here?
 
-On 19.02.2014 17:53, Philipp Zabel wrote:
-> Am Samstag, den 11.01.2014, 20:42 +0100 schrieb Tomasz Figa:
+Maxime,
 
-[snip]
+Do you have any documentation you could share with me on your
+requirements? I'd like to better understand them so we can get the API
+right.
 
->> +	pd = of_genpd_get_from_provider(&pd_args);
->> +	if (IS_ERR(pd))
->> +		return PTR_ERR(pd);
->> +
->> +	dev_dbg(dev, "adding to power domain %s\n", pd->name);
->> +
->> +	while (1) {
->> +		ret = pm_genpd_add_device(pd, dev);
->
-> Since pm_genpd_add_device is used here, no gpd_timing_data can be
-> provided. Do you have a plan to solve this? Should the timing data be
-> provided from the device tree?
+Shifting phase with respect to an input signal makes a lot of sense to
+me, but I don't really understand "sample".
 
-Hmm, a quick grep over kernel sources for genpd_.*_add_device
-gives just a single user of __pm_genpd_name_add_device(), with custom 
-timing data:
+Thanks,
+Mike
 
-> arch/arm/mach-shmobile/pm-rmobile.c-void rmobile_add_device_to_domain_td(const char *domain_name,
-> arch/arm/mach-shmobile/pm-rmobile.c-                                 struct platform_device *pdev,
-> arch/arm/mach-shmobile/pm-rmobile.c-                                 struct gpd_timing_data *td)
-> arch/arm/mach-shmobile/pm-rmobile.c-{
-> arch/arm/mach-shmobile/pm-rmobile.c-    struct device *dev = &pdev->dev;
-> arch/arm/mach-shmobile/pm-rmobile.c-
-> arch/arm/mach-shmobile/pm-rmobile.c:    __pm_genpd_name_add_device(domain_name, dev, td);
-> arch/arm/mach-shmobile/pm-rmobile.c-    if (pm_clk_no_clocks(dev))
-> arch/arm/mach-shmobile/pm-rmobile.c-            pm_clk_add(dev, NULL);
-> arch/arm/mach-shmobile/pm-rmobile.c-}
-> arch/arm/mach-shmobile/pm-rmobile.c-
-> arch/arm/mach-shmobile/pm-rmobile.c-void rmobile_add_devices_to_domains(struct pm_domain_device data[],
-> arch/arm/mach-shmobile/pm-rmobile.c-                                int size)
-> arch/arm/mach-shmobile/pm-rmobile.c-{
-> arch/arm/mach-shmobile/pm-rmobile.c-    struct gpd_timing_data latencies = {
-> arch/arm/mach-shmobile/pm-rmobile.c-            .stop_latency_ns = DEFAULT_DEV_LATENCY_NS,
-> arch/arm/mach-shmobile/pm-rmobile.c-            .start_latency_ns = DEFAULT_DEV_LATENCY_NS,
-> arch/arm/mach-shmobile/pm-rmobile.c-            .save_state_latency_ns = DEFAULT_DEV_LATENCY_NS,
-> arch/arm/mach-shmobile/pm-rmobile.c-            .restore_state_latency_ns = DEFAULT_DEV_LATENCY_NS,
-> arch/arm/mach-shmobile/pm-rmobile.c-    };
-> arch/arm/mach-shmobile/pm-rmobile.c-    int j;
-> arch/arm/mach-shmobile/pm-rmobile.c-
-> arch/arm/mach-shmobile/pm-rmobile.c-    for (j = 0; j < size; j++)
-> arch/arm/mach-shmobile/pm-rmobile.c-            rmobile_add_device_to_domain_td(data[j].domain_name,
-> arch/arm/mach-shmobile/pm-rmobile.c-                                            data[j].pdev, &latencies);
-> arch/arm/mach-shmobile/pm-rmobile.c-}
+>=20
+> Thanks!
+> Maxime
+>=20
+>=20
+> --=20
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
 
-Moreover the timings used there are just defaults, which makes me wonder 
-if there is any reason to specify them explicitly. Even more interesting 
-is the fact that genpd code can measure those latencies itself.
-
-Do you have a particular use case for those timing data or just 
-wondering? I don't think we need to implement support for them right 
-away, if there is no real need to do so. The code and bindings can be 
-extended later to handle them, if needed.
-
-As for whether DT is appropriate place to define them, I'm not quite 
-sure. Stop and start latencies look like hardware parameters, but state 
-save and restore are likely to be driver-specific, as it depends on 
-driver code how much time it takes to save and restore needed state 
-(e.g. driver with register cache will not need to do any state save), if 
-I understand these timing data correctly.
-
-Best regards,
-Tomasz
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/groups/opt_out.
