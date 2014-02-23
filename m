@@ -1,33 +1,74 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [RFCv2 5/5] mfd: twl4030-madc: Move driver to drivers/iio/adc
-Date: Sun, 23 Feb 2014 14:15:17 -0800
-Message-ID: <1393193717.11020.12.camel@joe-AO722>
-References: <20140223220140.GA1258@earth.universe>
-	 <1393193271-16717-1-git-send-email-sre@debian.org>
-	 <1393193271-16717-6-git-send-email-sre@debian.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+From: Sebastian Reichel <sre@debian.org>
+Subject: [PATCHv1 0/6] OMAP SSI driver
+Date: Mon, 24 Feb 2014 00:49:55 +0100
+Message-ID: <1393199401-27197-1-git-send-email-sre@debian.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393193271-16717-6-git-send-email-sre@debian.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: Sebastian Reichel <sre@ring0.de>, Marek Belisko <marek@goldelico.com>, Jonathan Cameron <jic23@kernel.org>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org
+To: Sebastian Reichel <sre@ring0.de>, Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>
+Cc: Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, =?UTF-8?q?=D0=98=D0=B2=D0=B0=D0=B9=D0=BB=D0=BE=20=D0=94=D0=B8=D0=BC=D0=B8=D1=82=D1=80=D0=BE=D0=B2?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Sebastian Reichel <sre@debian.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2014-02-23 at 23:07 +0100, Sebastian Reichel wrote:
-> This is a driver for an A/D converter, which belongs into
-> drivers/iio/adc.
+Hi,
 
-Please use git format-patch -M
+This is the fifth round of the OMAP SSI driver patches. I think the OMAP SSI
+driver is ready for mainline and should be included in 3.15. I haven't heard
+anything from DT binding maintainers since some months though and would like
+to get some feedback about the binding from them.
 
-> diff --git a/drivers/iio/adc/twl4030-madc.c b/drivers/iio/adc/twl4030-madc.c
-[]
-> +static int twl4030_madc_read(struct iio_dev *iio_dev,
-> +			     const struct iio_chan_spec *chan,
-> +			     int *val, int *val2, long mask)
-> +{
-[]
-> +	req.do_avg = !!(mask & IIO_CHAN_INFO_AVERAGE_RAW);
+Changes since RFCv4 [0]:
+ * Removed patches for nokia-cmt and ssi-protocol, those are still WIP
+ * tested with CONFIG_DEBUG_ATOMIC_SLEEP
+ * tested with Russel's "OMAP dma engine rework" patchset
+ * acquire clocks from DT
+ * minor cleanups
+  - removed unused include of omap specific dma header
+ * updated patch subjects
 
-It looks like do_avg should be bool not u16
+TODO:
+* Central Message Queue
+  I did not yet implement a central message queue in the HSI framework.
+  I will do this after Nokia N900 modem is working in the mainline kernel.
+* Remove the hwmod DT hack
+  This depends on some future work merging hwmod data into DT.
+
+P.S.: It would be nice if I get some Reviewed-By/Acked-By.
+
+[0] http://marc.info/?l=linux-kernel&m=138715030530931&w=2
+
+-- Sebastian
+
+Sebastian Reichel (6):
+  HSI: add Device Tree support for HSI clients
+  HSI: method to unregister clients from an hsi port
+  HSI: hsi-char: add Device Tree support
+  HSI: hsi-char: fix driver for multiport scenarios
+  HSI: Introduce OMAP SSI driver
+  Documentation: DT: omap-ssi binding documentation
+
+ Documentation/devicetree/bindings/hsi/omap_ssi.txt |   82 ++
+ .../devicetree/bindings/hsi/trivial-devices.txt    |   36 +
+ drivers/hsi/Kconfig                                |    1 +
+ drivers/hsi/Makefile                               |    1 +
+ drivers/hsi/clients/hsi_char.c                     |   13 +-
+ drivers/hsi/controllers/Kconfig                    |   19 +
+ drivers/hsi/controllers/Makefile                   |    6 +
+ drivers/hsi/controllers/omap_ssi.c                 |  618 +++++++++
+ drivers/hsi/controllers/omap_ssi.h                 |  166 +++
+ drivers/hsi/controllers/omap_ssi_port.c            | 1401 ++++++++++++++++++++
+ drivers/hsi/controllers/omap_ssi_regs.h            |  171 +++
+ drivers/hsi/hsi.c                                  |   80 +-
+ include/dt-bindings/hsi/hsi.h                      |   17 +
+ include/linux/hsi/hsi.h                            |    3 +
+ 14 files changed, 2612 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/hsi/omap_ssi.txt
+ create mode 100644 Documentation/devicetree/bindings/hsi/trivial-devices.txt
+ create mode 100644 drivers/hsi/controllers/Kconfig
+ create mode 100644 drivers/hsi/controllers/Makefile
+ create mode 100644 drivers/hsi/controllers/omap_ssi.c
+ create mode 100644 drivers/hsi/controllers/omap_ssi.h
+ create mode 100644 drivers/hsi/controllers/omap_ssi_port.c
+ create mode 100644 drivers/hsi/controllers/omap_ssi_regs.h
+ create mode 100644 include/dt-bindings/hsi/hsi.h
+
+-- 
+1.8.5.3
