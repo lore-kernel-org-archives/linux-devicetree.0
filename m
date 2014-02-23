@@ -1,212 +1,274 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 2/8] clk: sunxi: Implement MMC phase control
-Date: Sun, 23 Feb 2014 12:31:43 -0800
-Message-ID: <20140223203143.22529.81640@quantum>
-References: <20140217095907.15040.81893.stgit@pagira.o2s.ch>
- <20140217100221.15040.47203.stgit@pagira.o2s.ch>
- <20140218141532.GH3142@lukather> <20140219052125.8345.70717@quantum>
- <20140219083606.GR3142@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFCv1 4/4] mfd: twl4030-madc: Move driver to drivers/iio/adc
+Date: Sun, 23 Feb 2014 23:01:40 +0100
+Message-ID: <20140223220140.GA1258@earth.universe>
+References: <20140214174040.GB26969@earth.universe>
+ <1392403586-30540-1-git-send-email-sre@debian.org>
+ <1392403586-30540-4-git-send-email-sre@debian.org>
+ <53089C47.5050404@kernel.org>
+ <20140223003504.GA28154@earth.universe>
+ <5309D536.9020404@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDO333VC4INBBNFVVGMAKGQE7MRM4XY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140219083606.GR3142@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: =?utf-8?q?David_Lanzend=C3=B6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, =?utf-8?q?Emilio_L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ZGiS0Q5IWpPtfppv"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5309D536.9020404-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Maxime Ripard (2014-02-19 00:36:06)
-> Hi Mike,
+
+--ZGiS0Q5IWpPtfppv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Sun, Feb 23, 2014 at 11:02:14AM +0000, Jonathan Cameron wrote:
+> On 23/02/14 00:35, Sebastian Reichel wrote:
+> >I think the optimal workflow is:
+> >
+> >1. convert madc driver to IIO
+> >2. convert twl4030-madc-battery driver to IIO API
+> >3. convert rx51-battery to IIO API
+> >4. convert twl4030-madc-hwmon to IIO API / deprecate it
+> >5. remove old in-kernel ABI from madc
+> >6. cleanup/simplify madc
+> >
+> >I guess its much simpler to do the driver cleanup/simplification
+> >once we can get rid of the old API.
 >=20
-> On Tue, Feb 18, 2014 at 09:21:25PM -0800, Mike Turquette wrote:
-> > Quoting Maxime Ripard (2014-02-18 06:15:32)
-> > > Hi,
-> > >=20
-> > > On Mon, Feb 17, 2014 at 11:02:21AM +0100, David Lanzend=C3=B6rfer wro=
-te:
-> > > > From: Emilio L=C3=B3pez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
-> > > >=20
-> > > > Signed-off-by: Emilio L=C3=B3pez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
-> > >=20
-> > > You're missing your Signed-off-by here too.  Remember, for every patc=
-h
-> > > you send, your Signed-off-by must be there, regardless wether you're
-> > > the author or not.
-> > >=20
-> > > A commit log would be very much welcome too.
-> > >=20
-> > > Now, down to the patch itself, I remember Mike saying that he would
-> > > prefer adding a function in the framework instead of hardcoding
-> > > it. Mike, what's your feeling on this? Would merging this seem
-> > > reasonnable to you as is, or do you want to take this to the
-> > > framework?
-> >=20
-> > Hi Maxime & Emilio,
-> >=20
-> > Maybe something like the following RFC? If it seems sufficient for this
-> > case then I will post to the wider list with an eye towards merging it
-> > for 3.15. I've Cc'd Dinh since this came up on the socfpga thread as
-> > well.
-> >=20
-> > Regards,
-> > Mike
-> >=20
-> >=20
-> >=20
-> > From 56fa297591be5c5e22df6d2ca43fccf285a45636 Mon Sep 17 00:00:00 2001
-> > From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Date: Tue, 18 Feb 2014 20:33:50 -0800
-> > Subject: [PATCH] clk: introduce clk_set_phase function & callback
-> >=20
-> > A common operation for a clock signal generator is to shift the phase o=
-f
-> > that signal. This patch introduces a new function to the clk.h API to
-> > dynamically adjust the phase of a clock signal. Additionally this patch
-> > introduces support for the new function in the common clock framework
-> > via the .set_phase call back in struct clk_ops.
-> >=20
-> > Signed-off-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> > This patch is totally untested. It may make your board burst into
-> > flames.
-> >=20
-> >  drivers/clk/clk.c            | 84 ++++++++++++++++++++++++++++++++++++=
-+++++---
-> >  include/linux/clk-private.h  |  1 +
-> >  include/linux/clk-provider.h |  5 +++
-> >  include/linux/clk.h          | 29 +++++++++++++++
-> >  4 files changed, 115 insertions(+), 4 deletions(-)
-> >=20
-> > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> > index ea2ca9f..635170a 100644
-> > --- a/drivers/clk/clk.c
-> > +++ b/drivers/clk/clk.c
-> > @@ -106,11 +106,11 @@ static void clk_summary_show_one(struct seq_file =
-*s, struct clk *c, int level)
-> >       if (!c)
-> >               return;
-> > =20
-> > -     seq_printf(s, "%*s%-*s %-11d %-12d %-10lu %-11lu",
-> > +     seq_printf(s, "%*s%-*s %-11d %-12d %-10lu %-11lu %-3d",
-> >                  level * 3 + 1, "",
-> >                  30 - level * 3, c->name,
-> >                  c->enable_count, c->prepare_count, clk_get_rate(c),
-> > -                clk_get_accuracy(c));
-> > +                clk_get_accuracy(c), clk_get_phase(c));
-> >       seq_printf(s, "\n");
-> >  }
-> > =20
-> > @@ -132,8 +132,8 @@ static int clk_summary_show(struct seq_file *s, voi=
-d *data)
-> >  {
-> >       struct clk *c;
-> > =20
-> > -     seq_printf(s, "   clock                        enable_cnt  prepar=
-e_cnt  rate        accuracy\n");
-> > -     seq_printf(s, "--------------------------------------------------=
--------------------------------\n");
-> > +     seq_printf(s, "   clock                        enable_cnt  prepar=
-e_cnt  rate        accuracy   phase\n");
-> > +     seq_printf(s, "--------------------------------------------------=
----------------------------------------\n");
-> > =20
-> >       clk_prepare_lock();
-> > =20
-> > @@ -171,6 +171,7 @@ static void clk_dump_one(struct seq_file *s, struct=
- clk *c, int level)
-> >       seq_printf(s, "\"prepare_count\": %d,", c->prepare_count);
-> >       seq_printf(s, "\"rate\": %lu", clk_get_rate(c));
-> >       seq_printf(s, "\"accuracy\": %lu", clk_get_accuracy(c));
-> > +     seq_printf(s, "\"phase\": %d", clk_get_phase(c));
-> >  }
-> > =20
-> >  static void clk_dump_subtree(struct seq_file *s, struct clk *c, int le=
-vel)
-> > @@ -257,6 +258,11 @@ static int clk_debug_create_one(struct clk *clk, s=
-truct dentry *pdentry)
-> >       if (!d)
-> >               goto err_out;
-> > =20
-> > +     d =3D debugfs_create_u32("clk_phase", S_IRUGO, clk->dentry,
-> > +                     (u32 *)&clk->phase);
-> > +     if (!d)
-> > +             goto err_out;
-> > +
-> >       d =3D debugfs_create_x32("clk_flags", S_IRUGO, clk->dentry,
-> >                       (u32 *)&clk->flags);
-> >       if (!d)
-> > @@ -1766,6 +1772,76 @@ out:
-> >  EXPORT_SYMBOL_GPL(clk_set_parent);
-> > =20
-> >  /**
-> > + * clk_set_phase - adjust the phase shift of a clock signal
-> > + * @clk: clock signal source
-> > + * @degrees: number of degrees the signal is shifted
-> > + *
-> > + * Shifts the phase of a clock signal by the specified degrees. Return=
-s 0 on
-> > + * success, -EERROR otherwise.
-> > + *
-> > + * This function makes no distiction about the input or reference sign=
-al that
-> > + * we adjust the clock signal phase against. For example phase locked-=
-loop
-> > + * clock signal generators we may shift phase with respect to feedback=
- clock
-> > + * signal input, but for other cases the clock phase may be shifted wi=
+> Perhaps.  I guess it depends on your planned schedule.  If you are
+> intending to plough through the above in the near future then fair
+> enough.  If the chances are it'll take a while, I'd be inclined to
+> fix some of the more glarringly hideous bits now (such as error
+> code reporting) and then visit your list above over time.
+
+I plan to update the rx51-battery driver, since that's the only one
+I can test. Actually I only did the changes to the twl4030-madc
+driver, so that I can use the standard DT API for AD converters for
+rx51-battery. I hope to get it updated ASAP.
+
+Marek seems to work on getting DT support for the other two
+consumers (twl4030-madc-battery and twl4030-madc-hwmon), so chances
+are, that the old API can be removed in the near future :)
+
+> Note that to my mind it is converted drivers like this that sneak some
+> nasty code into an a subsystem I look after.  We have a lot of 'interesti=
+ng'
+> code out in staging still, but for new submissions we are being increasin=
+gly
+> fussy about little bits.  So I hope I don't come across as being too mean
+> about this driver.  I'm glad you are putting in the work to convert
+> it over.  There are a quite a few similar drivers sculking through the tr=
+ee
+> so it's nice that someone has gotten started on bringing one over to IIO.
+
+If it makes you feel more at ease I will try to forward the errors
+and replace the error code with 0 at the end.
+
+> [...]
+>
+> >>Is the average have an adjustable number of samples?
+> >
+> >The TWL supports reading a value directly (1 sample) or reading
+> >the average of 4 samples.
+> >
+> >>If not I'd be tempted to use the more common option of IIO_CHAN_INFO_RAW
+> >>rather than the average version (tends only to be used in fairly obscure
+> >>cases where both a raw access and an averaged one are available).
+> >
+> >currently some drivers use the averaged read and some use the direct
+> >read.
+> >
+>=20
+> In that case I'd expose both the 1 sample and averaged versions via the
+> IIO interfaces. If you want to pick 1 then do IIO_CHAN_INFO_RAW not the
+> averaged version.
+
+That's what I intended to do. Now I see, that I forgot to expose
+IIO_CHAN_INFO_RAW. Sorry for the confusion.
+
+> >>>+static const struct iio_chan_spec twl4030_madc_iio_channels[] =3D {
+> >>>+	ADC_CHANNEL(0, IIO_VOLTAGE, "ADCIN0", BIT(IIO_CHAN_INFO_AVERAGE_RAW)=
+),
+> >>>+	ADC_CHANNEL(1, IIO_TEMP, "ADCIN1", BIT(IIO_CHAN_INFO_PROCESSED) |
+> >>>+					   BIT(IIO_CHAN_INFO_AVERAGE_RAW)),
+> >>>+	ADC_CHANNEL(2, IIO_VOLTAGE, "ADCIN2", BIT(IIO_CHAN_INFO_AVERAGE_RAW)=
+),
+> >>>+	ADC_CHANNEL(3, IIO_VOLTAGE, "ADCIN3", BIT(IIO_CHAN_INFO_AVERAGE_RAW)=
+),
+> >>>+	ADC_CHANNEL(4, IIO_VOLTAGE, "ADCIN4", BIT(IIO_CHAN_INFO_AVERAGE_RAW)=
+),
+> >>>+	ADC_CHANNEL(5, IIO_VOLTAGE, "ADCIN5", BIT(IIO_CHAN_INFO_AVERAGE_RAW)=
+),
+> >>>+	ADC_CHANNEL(6, IIO_VOLTAGE, "ADCIN6", BIT(IIO_CHAN_INFO_AVERAGE_RAW)=
+),
+> >>>+	ADC_CHANNEL(7, IIO_VOLTAGE, "ADCIN7", BIT(IIO_CHAN_INFO_AVERAGE_RAW)=
+),
+> >>>+	ADC_CHANNEL(8, IIO_VOLTAGE, "ADCIN8", BIT(IIO_CHAN_INFO_AVERAGE_RAW)=
+),
+> >>>+	ADC_CHANNEL(9, IIO_VOLTAGE, "ADCIN9", BIT(IIO_CHAN_INFO_AVERAGE_RAW)=
+),
+> >>>+	ADC_CHANNEL(10, IIO_CURRENT, "ADCIN10", BIT(IIO_CHAN_INFO_PROCESSED)=
+ |
+> >>>+						BIT(IIO_CHAN_INFO_AVERAGE_RAW)),
+> >>>+	ADC_CHANNEL(11, IIO_VOLTAGE, "ADCIN11", BIT(IIO_CHAN_INFO_AVERAGE_RA=
+W)),
+> >>>+	ADC_CHANNEL(12, IIO_VOLTAGE, "ADCIN12", BIT(IIO_CHAN_INFO_AVERAGE_RA=
+W)),
+> >>>+	ADC_CHANNEL(13, IIO_VOLTAGE, "ADCIN13", BIT(IIO_CHAN_INFO_AVERAGE_RA=
+W)),
+> >>>+	ADC_CHANNEL(14, IIO_VOLTAGE, "ADCIN14", BIT(IIO_CHAN_INFO_AVERAGE_RA=
+W)),
+> >>>+	ADC_CHANNEL(15, IIO_VOLTAGE, "ADCIN15", BIT(IIO_CHAN_INFO_AVERAGE_RA=
+W)),
+> >>>+};
+> >>>+
+> >>Why the artificial limitation of one of these devices?  I guess this is=
+ to
+> >>allow the exported function to work without needing to be associated wi=
 th
-> > + * respect to some other, unspecified signal.
-> > + *
-> > + * Additionally the concept of phase shift does not propagate through =
-the clock
-> > + * tree hierarchy, which sets it appart from clock rates and clock acc=
-uracy. A
-> > + * parent clock phase attribute does not have an impact on the phase a=
-ttribute
-> > + * of a child clock.
-> > + */
-> > +int clk_set_phase(struct clk *clk, int degrees)
+> >>any particular device...  Hmm.
+> >
+> >Artificial limitation? The madc is a ADC, which has some special
+> >functions defined for some pins in the datasheet:
+> >
+> >ADC0 =3D Battery Voltage
+> >ADC1 =3D Battery Temperature
+> >ADC10 =3D Battery Current
+> >
+> >Nokia misused some of those pins on the Nokia N900, though. For
+> >example they have their own conversion tables for the temperature,
+> >which is not compatible with the generic one for the madc module.
 >=20
-> Actually, while this is what I had in mind too, we'd need a bit more
-> control here. We have two phases to control (namely, input and
-> sample).
->=20
-> Maybe passing an additional enum to tell which phase we want to
-> adjust, that could easily be extended by new drivers need would fit
-> our need here?
+> *laughs*.  If someone documents a pin as having a particular purpose
+> but it isn't wired inside a package. Someone will always think they know
+> better.  Basic principal is to never limit ourselves to one instance of
+> a chip because the chances of someone deciding to do something interesting
+> with multiple chips is way to high.
 
-Maxime,
+;)
 
-Do you have any documentation you could share with me on your
-requirements? I'd like to better understand them so we can get the API
-right.
+> >
+> >I planned to convert the rx51-battery driver to simply read the raw
+> >values. All other users can use the processed information.
+> Makes sense.
 
-Shifting phase with respect to an input signal makes a lot of sense to
-me, but I don't really understand "sample".
+ok :)
 
-Thanks,
-Mike
+> [...]
+> >>>+	if (count_req)
+> >>>+		dev_err(madc->dev, "%d channel conversion failed\n", count_req);
+> >>>+
+> >>>+	return count;
+> >>This is already apparant from the errors emmited earlier. I'd drop this
+> >>and the count_req counter in general.
+> >>Personally I'd error out in those cases anyway rather than carrying on
+> >>with the rest of the channels. If it's worth of a dev_err it's worthy
+> >>of getting out as fast as possible rather than trying to muddle on.
+> >
+> >I also think this should be postponed until the old API is removed.
+> I'd prefer to see standalone cleanups and fixes integrated first as I sus=
+pect
+> it may be a little while before we manage to fully drop the old API.
 
->=20
-> Thanks!
-> Maxime
->=20
->=20
-> --=20
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
+ok. I have included this change in the fixup patch. This slightly
+changes the old API (callback may be called with negative error
+values), but the callback feature doesn't seem to be used by any
+mainline user.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/groups/opt_out.
+> [...]
+> >>Can this and the previous loop not be combined thus simplifying some te=
+sts?
+> >
+> >It probably can be, but I think this can wait until the old API is
+> >removed.
+> Hmm. As I state below, if this is moving over to IIO (which is sensible) =
+it
+> becomes my problem so I reserve the right to be fussy about less than opt=
+imal
+> code.  If it was coming in clean as a new driver I'd push back hard on a =
+lot
+> of this stuff before merging it.  I have plenty of slightly uggly drivers
+> in staging to look after as it is!
+
+I would feel more comfortable leaving the second loop as is for now.
+It's a speed optimization, which acknowledges all IRQs as fast as
+possible (=3D> before triggering further conversion of the raw data).
+
+> [...]
+> >>>+static int twl4030_madc_start_conversion(struct twl4030_madc_data *ma=
+dc,
+> >>>+					 int conv_method)
+> >>>+{
+> >>>+	const struct twl4030_madc_conversion_method *method;
+> >>>+	int ret =3D 0;
+> >>>+	method =3D &twl4030_conversion_methods[conv_method];
+> >>>+	switch (conv_method) {
+> >>Can we get here via any paths where these aren't the methods set?
+> >
+> >conv_method is set from outside of the driver, so it's probably
+> >safer to check. This can be simplified once the old API is removed.
+> Then we should be returning an error if it's not one of these.
+
+right and reading the code more carefully it should be tested before
+using it for array access.
+
+> >I assume, that the driver will get a huge cleanup once all consumers
+> >of the old API are converted. Maybe a deprecation flag should be
+> >added together with this patchset?
+> Probably not worth bothering for an inkernel interface that seems to have
+> relatively few users.  How many out of tree users will be moving to
+> new kernels and using this device?
+
+At least no new twl4030-madc consumer has been posted to
+linux-kernel or linux-omap in the last months. So I will
+ignore this.
+
+> [...]
+> >>Personally I'd rank the driver as rather to vebose on read error messag=
+es
+> >>given they are pretty unusual.  Ah well I guess each to their own.
+> >
+> >All of this is not written by me.
+> Sure.  Doesn't stop me moaning :)  At the end of the day you are proposin=
+g moving
+> this driver into a place where it becomes at least partly my problem.  As=
+ such
+> I'm keen on any tidying / cleaning occuring ASAP.
+
+Fair enough.
+
+-- Sebastian
+
+--ZGiS0Q5IWpPtfppv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJTCm/EAAoJENju1/PIO/qafkMP/iqIYx2kDY4gi2wMZ32oO7nz
+64IYo8w8yAxLyt1HnelnzmLlbbhkDTzcMPU/PEq9fFTHOIQNHZfWRWTBKAIJOLuk
+d7AzuQEJ/evzcLieERDaAUZBhXdm4KmH2+fF6Vze/OUr/NJs3w7ux2zoLGd0Aunp
+Umkz81SGV76UTItFTFHJpcUR7qFvYLaqtuxfNKpZZJkcKj47WxNMyvq4jDgFFFb5
++YiAdIYSKlSlkeWupattRf3HVjlAxOAvAb4qLebe/KjD4JtiWd3nxZ3740uujp+c
+wSN6EuRyOXXvMssqzXHMd3XWxUZiuge0s1Vkfo3QuJGGgpwudQQzDyIRNvdib+zi
+ph0lCigDTRr2i3ibSbwi91M3xfcDdgveJkEzjAm3KCqbZ03EyU+7EeGkOim4k7dY
+K6Jlwkcc2K/akNMA/sx7P/vXhGm5vrH5BaHuQ1xVvyrELciTckMqCMxPtBlXp9Zt
+9z9b+CA/TsrYS4oSsikpiycqrAwYVUPuTilaJM3nhXeN78PUFlraudKB0XYxnc4I
+n+ESB7zPz/DRnWxG6x4hEXappnoWo8y6fZk352KA0VHTdKukZfYmzoUeqkNcA7dc
+khmp7MBI1E56NB+ISsb/k91OanUF2G7KWREUH/m4POgZ7a+MFXZZbXX+n3SlgNa6
+9f1UU8vnUeVf/GYHIVzB
+=oxKL
+-----END PGP SIGNATURE-----
+
+--ZGiS0Q5IWpPtfppv--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
