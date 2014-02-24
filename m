@@ -1,45 +1,26 @@
-From: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Subject: Re: Movement of testcases.dtsi
-Date: Mon, 24 Feb 2014 20:05:48 +0000
-Message-ID: <1393272348.9640.4.camel@dagon.hellion.org.uk>
-References: <1393237542.16570.26.camel@kazak.uk.xensource.com>
-	 <20140224194821.3D196C409F3@trevor.secretlab.ca>
+From: Matt Porter <mporter@linaro.org>
+Subject: Re: [PATCH v2] ARM: dts: Leave sdio1 as disabled on bcm28155-ap
+Date: Mon, 24 Feb 2014 15:11:33 -0500
+Message-ID: <20140224201133.GX5038@beef>
+References: <1391556460-24218-1-git-send-email-tim.kryger@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140224194821.3D196C409F3-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1391556460-24218-1-git-send-email-tim.kryger@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tim Kryger <tim.kryger@linaro.org>
+Cc: Christian Daudt <bcm@fixthebug.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Device Tree List <devicetree@vger.kernel.org>, ARM Linux List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2014-02-24 at 19:48 +0000, Grant Likely wrote:
-> On Mon, 24 Feb 2014 10:25:42 +0000, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org> wrote:
-> > My device-tree-rebasing.git repo no longer builds, it fails with:
-> > src/arm/versatile-pb.dts:50:26: fatal error: testcases.dtsi: No such file or directory
-> > 
-> > I suspect this is due to b5190516b282 "of: Move testcase FDT data into
-> > drivers/of". I think I need to add drivers/of/testcase-data to the list
-> > of paths to convert, probably extracting it to /testcase-data in the dt
-> > repo and teach the build system about the new path in the obvious way.
-> > 
-> > Does that make sense?
+On Tue, Feb 04, 2014 at 03:27:40PM -0800, Tim Kryger wrote:
+> The sdio1 interface pins are routed to an unpopulated daughter card
+> connector on the bcm28155-ap board.  Thus there is no need to mark
+> this interface as enabled.
 > 
-> Yup, that's the right thing to do... 
+> Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
+> Reviewed-by: Matt Porter <matt.porter@linaro.org>
 
-Thanks, I'll look into it.
+Applied to mach-bcm armsoc/for-3.15/dt
 
-> although I would like it to be a
-> short term solution. Ultimately I want the testcase data to be loaded at
-> runtime by the selftest module.
-
-I suppose at this point linux.git will have a git rm done and my
-conversion script will just import that as expected?
-
-Ian.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Matt
