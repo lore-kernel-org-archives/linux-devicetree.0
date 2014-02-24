@@ -1,34 +1,53 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 00/10] pinctrl: mvebu: remove hard-coded addresses from
- Dove pinctrl
-Date: Mon, 24 Feb 2014 12:50:46 +0100
-Message-ID: <CACRpkdYptvexfwASCA3Y84oSpidGF6n9WLTEL2GtRQL9fLYsUg@mail.gmail.com>
-References: <1393231382-11078-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<CACRpkdZ1JR82m46YV5m=b6e3E3OYcNCka_8EiT2VcSPU=ZVLdQ@mail.gmail.com>
-	<530B1CF4.2060208@gmail.com>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH 1/1] ARM: Exynos: Add generic compatible string
+Date: Mon, 24 Feb 2014 17:32:53 +0530
+Message-ID: <CAK9yfHxcpX9eMpFHdJcjVas9u_4MtVLr6Pc9JrVOjM2YrZemiA@mail.gmail.com>
+References: <1392809645-631-1-git-send-email-sachin.kamat@linaro.org>
+	<CAK9yfHyWG1ac6isTRSB3VWfxER9cSuDJHwY3b7svyEk9EozpWQ@mail.gmail.com>
+	<53075239.4010603@samsung.com>
+	<2200834.G3JJLYQl5i@wuerfel>
+	<53076F00.7000001@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <530B1CF4.2060208-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <53076F00.7000001@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 24, 2014 at 11:20 AM, Sebastian Hesselbarth
-<sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On 21 February 2014 20:51, Tomasz Figa <t.figa@samsung.com> wrote:
+> On 21.02.2014 15:48, Arnd Bergmann wrote:
+>>
+>> On Friday 21 February 2014 14:18:49 Tomasz Figa wrote:
+>>>
+>>>
+>>>> Now that we have a broader agreement on this, I think we can go ahead
+>>>> with the
+>>>> following steps as an initial approach:
+>>>> 1. Have a common machine file for both exynos4 and 5 files,
+>>>> mach-exynos-dt.c.
+>>>> 2. Introduce a generic compatible string "samsung,exynos".
+>>>> 3. Append this to the compatible property list for existing boards.
+>>>>
+>>>> If this plan looks OK, I can send across patches doing this.
+>>>>
+>>>
+>>> Looks good. I would also merge common.c with this resulting
+>>> mach-exynos-dt.c, as it would be the only user of the code there.
+>>
+>>
+>> Sounds good. While the naming is not important, I would just call the
+>> file 'exynos.c', in line with some of the other platforms we have.
+>> Both the 'mach-' and the '-dt' part of the file name are redundant.
+>>
+>> Alternatively, you could merge it all into common.c.
+>
+>
+> exynos.c sounds good to me.
 
-> Although, I guess instead of applying them separately, it would have
-> been better to pull them from Jason's stable topic branch. But that is
-> also up to you and Jason may give valuable hints on how to proceed in
-> the future.
+Sounds good to me too.
 
-Yeah I concluded that I should take a branch pull instead, so I'm
-just waiting for an indication of which branch to pull in.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+With warm regards,
+Sachin
