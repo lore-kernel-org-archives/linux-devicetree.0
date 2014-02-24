@@ -1,107 +1,57 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH RFC v1 3/3] clk: Add handling of clk parent and rate
- assigned from DT
-Date: Mon, 24 Feb 2014 19:11:18 +0100
-Message-ID: <530B8B46.6060003@samsung.com>
-References: <1392829124-25705-1-git-send-email-s.nawrocki@samsung.com>
- <1392829124-25705-4-git-send-email-s.nawrocki@samsung.com>
- <20140220140928.27132C4050F@trevor.secretlab.ca>
- <53072C9D.5040303@samsung.com> <20140224004826.22529.87768@quantum>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCHv4 0/7] omap hwspinlock dt support
+Date: Mon, 24 Feb 2014 12:14:24 -0600
+Message-ID: <530B8C00.8020001@ti.com>
+References: <1389658764-39199-1-git-send-email-s-anna@ti.com>
+ <52F9282B.5000702@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20140224004826.22529.87768@quantum>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <52F9282B.5000702@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 24/02/14 01:48, Mike Turquette wrote:
-> Quoting Sylwester Nawrocki (2014-02-21 02:38:21)
->> > On 20/02/14 15:09, Grant Likely wrote:
->> > [...]
->>>>> > >> > diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
->>>>> > >> > index 7c52c29..d618498 100644
->>>>> > >> > --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
->>>>> > >> > +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
->>>>> > >> > @@ -115,3 +115,27 @@ clock signal, and a UART.
->>>>> > >> >    ("pll" and "pll-switched").
->>>>> > >> >  * The UART has its baud clock connected the external oscillator and its
->>>>> > >> >    register clock connected to the PLL clock (the "pll-switched" signal)
->>>>> > >> > +
->>>>> > >> > +==Static initial configuration of clock parent and clock frequency==
->>>>> > >> > +
->>>>> > >> > +Some platforms require static configuration of (parts of) the clock controller
->>>>> > >> > +often determined by the board design. Such a configuration can be specified in
->>>>> > >> > +a clock consumer node through [clk-name]-clk-parent and [clk-name]-clk-rate DT
->>>>> > >> > +properties. The former should contain phandle and clock specifier of the parent
->>>>> > >> > +clock, the latter the required clock's frequency value (one cell). "clk-name"
->>>>> > >> > +should be listed in the clock-names property and a phandle and a clock specifier
->>>>> > >> > +pair corresponding to it should be present in the clocks property.
->>>>> > >> > +
->>>>> > >> > +    uart@a000 {
->>>>> > >> > +        compatible = "fsl,imx-uart";
->>>>> > >> > +        reg = <0xa000 0x1000>;
->>>>> > >> > +  ...
->>>>> > >> > +        clocks = <&clkcon 0>, <&clkcon 3>;
->>>>> > >> > +        clock-names = "baud", "mux";
->>>>> > >> > +
->>>>> > >> > +  mux-clk-parent = <&pll 1>;
->>>>> > >> > +  baud-clk-rate = <460800>;
->>> > >
->>> > > This mixes patterns for references to clocks. Plus it requires composing
->>> > > property names which is a little painful. I'd rather see a list of
->>> > > tuples to match the existing pattern already in use
->>> > > 
->>> > >       clocks = <&clkcon 0>, <&clkcon 3>;
->>> > >       clock-names = "baud", "mux";
->>> > >       clock-parents = <0> <&pll 1>;
->>> > >       clock-rates = <0> <460800>;
->> > 
->> > Thank you for the review. This looks much better to me. My bad, I wasn't 
->> > aware 0 can be used to denote an empty phandle like this. ePAPR seems not 
->> > to be specifying exact meaning of the 'phandle' property values, except 
->> > they be unique. Anyway, it seems to be clearly documented within the
->> > __of_parse_phandle_with_args() function. 
->> > 
->> > I'll try this modified binding instead, presumably it would be useful to 
->> > have a variant of __of_parse_phandle_with_args() function which would 
->> > accept a context data containing result of previous call within an iteration, 
->> > similarly as of_property_next_string() is written. So we don't iterate 
->> > from beginning of the list with each __of_parse_phandle_with_args() call. 
->> > But it's an optimization issue that could be considered separately I guess.
+Mark, Ohad,
+
+On 02/10/2014 01:27 PM, Suman Anna wrote:
+> Mark,
 >
-> I was always partial to the regulator style of blahblah-supply but
-> Grant's suggestion is much cleaner with respect to the rest of the clock
-> binding.
+> On 01/13/2014 06:19 PM, Suman Anna wrote:
+>> Hi,
+>>
+>> This is an updated series mainly addressing Mark Rutland's comments
+>> about hwlock specifier being always one-cell. The series adds the
+>> support for #hwlock-cells property and adds a simple default OF
+>> translate function.
+>>
+>> The DTS patches from previous series have already been merged, and
+>> needs this property to be added. This is handled in a separate series
+>> that only deals with OMAP hwspinlock DTS patches.
+>>
+>> The series, along with the DTS patches, is tested on top of v3.13-rc8
+>> plus Tero's v13 clock DT series and Tony's 3.14 staged branches. The
+>> validation on OMAP5, DRA7, AM437 requires Tero's series with couple of
+>> additional base patches for AM43xx. AM43xx functionality needs a hwmod
+>> fix [1] for creating the associated omap_device as well.
+>>
+>
+> Can you please take a look at this series and give your ack on the
+> bindings if you do not have any further comments? The only comments so
+> far are from Bjorn on the OF helpers.
+>
 
-I don't have a strong opinion, I'm slightly inclined towards Grant's suggestion,
-which doesn't have a problem of limiting effective clk name to 21 characters.
+Gentle reminder, can you provide your acks/comments?
 
-Also DT property names with underscores coming from the clock names are a bit
-incorrect and it might be not immediately obvious which part of name is a 
-canonical property's name and which is clock's name. Let's consider property 
-names like:
-
-mux-clk-parent, divider-clk-rate, sclk_mmc0-clk-parent, sclk_uart_baud0-clk-parent,
-etc.
-
-> I guess it will be a bit ugly if a very long array is needed with a
-> sparse attribute. E.g. 20 clocks specified in the 'clocks' property and
-> only a single clock needs to have its parent or rate specified.
-
-It was also concerning me, but this inconvenience could be mitigated by 
-reordering content of clocks/clock-names properties so that the clocks for
-which parents and/or rates are being assigned are first on the list.
-Then number of padding zeros is minimized.
-
-> Is there a reason not to support both methods?
-
---
-Regards,
-Sylwester
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards
+Suman
