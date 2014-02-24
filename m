@@ -1,31 +1,119 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v13 3/3] arm64: Add APM X-Gene SoC AHCI SATA host
- controller DTS entries
-Date: Mon, 24 Feb 2014 13:32:18 -0500
-Message-ID: <20140224183218.GB2522@htj.dyndns.org>
-References: <1393221265-13057-1-git-send-email-lho@apm.com>
- <1393221265-13057-2-git-send-email-lho@apm.com>
- <1393221265-13057-3-git-send-email-lho@apm.com>
- <1393221265-13057-4-git-send-email-lho@apm.com>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Subject: [PATCH] ARM: dts: keystone: add AEMIF/NAND device entry
+Date: Mon, 24 Feb 2014 20:52:56 +0200
+Message-ID: <1393267976-15709-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-scsi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1393221265-13057-4-git-send-email-lho@apm.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Loc Ho <lho@apm.com>
-Cc: olof@lixom.net, arnd@arndb.de, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: santosh.shilimkar@ti.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 23, 2014 at 10:54:25PM -0700, Loc Ho wrote:
-> Signed-off-by: Loc Ho <lho@apm.com>
-> Signed-off-by: Tuan Phan <tphan@apm.com>
-> Signed-off-by: Suman Tripathi <stripathi@apm.com>
+Add AEMIF/NAND device entry.
 
-This doesn't apply cleanly to libata/for-3.15.  How should this be
-routed?
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+---
 
-Thanks.
+Based on
+git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git
+keystone/master
 
+ arch/arm/boot/dts/k2hk-evm.dts  | 52 +++++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/keystone.dtsi | 13 +++++++++++
+ 2 files changed, 65 insertions(+)
+
+diff --git a/arch/arm/boot/dts/k2hk-evm.dts b/arch/arm/boot/dts/k2hk-evm.dts
+index 1d8ea6e..a08581b 100644
+--- a/arch/arm/boot/dts/k2hk-evm.dts
++++ b/arch/arm/boot/dts/k2hk-evm.dts
+@@ -84,3 +84,55 @@
+ &usb {
+ 	status = "okay";
+ };
++
++&aemif {
++	cs0 {
++		#address-cells = <2>;
++		#size-cells = <1>;
++		clock-ranges;
++		ranges;
++
++		ti,cs-chipselect = <0>;
++		/* all timings in nanoseconds */
++		ti,cs-min-turnaround-ns = <12>;
++		ti,cs-read-hold-ns = <6>;
++		ti,cs-read-strobe-ns = <23>;
++		ti,cs-read-setup-ns = <9>;
++		ti,cs-write-hold-ns = <8>;
++		ti,cs-write-strobe-ns = <23>;
++		ti,cs-write-setup-ns = <8>;
++
++		nand@0,0 {
++			compatible = "ti,keystone-nand","ti,davinci-nand";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			reg = <0 0 0x4000000
++			       1 0 0x0000100>;
++
++			ti,davinci-chipselect = <0>;
++			ti,davinci-mask-ale = <0x2000>;
++			ti,davinci-mask-cle = <0x4000>;
++			ti,davinci-mask-chipsel = <0>;
++			nand-ecc-mode = "hw";
++			ti,davinci-ecc-bits = <4>;
++			nand-on-flash-bbt;
++
++			partition@0 {
++				label = "u-boot";
++				reg = <0x0 0x100000>;
++				read-only;
++			};
++
++			partition@100000 {
++				label = "params";
++				reg = <0x100000 0x80000>;
++				read-only;
++			};
++
++			partition@180000 {
++				label = "ubifs";
++				reg = <0x180000 0x7E80000>;
++			};
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+index 4eceb46..af80cb2 100644
+--- a/arch/arm/boot/dts/keystone.dtsi
++++ b/arch/arm/boot/dts/keystone.dtsi
+@@ -266,5 +266,18 @@
+ 			ti,ngpio = <32>;
+ 			ti,davinci-gpio-unbanked = <32>;
+ 		};
++
++		aemif: aemif@21000A00 {
++			compatible = "ti,keystone-aemif", "ti,davinci-aemif";
++			#address-cells = <2>;
++			#size-cells = <1>;
++			clocks = <&clkaemif>;
++			clock-names = "aemif";
++			clock-ranges;
++
++			reg = <0x21000A00 0x00000100>;
++			ranges = <0 0 0x30000000 0x10000000
++				  1 0 0x21000A00 0x00000100>;
++		};
+ 	};
+ };
 -- 
-tejun
+1.8.3.2
