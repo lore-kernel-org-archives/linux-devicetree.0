@@ -1,75 +1,61 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2] dt/bindings: fsl-fec: add clock properties
-Date: Mon, 24 Feb 2014 08:53:37 +0100
-Message-ID: <20140224075337.GN17250@pengutronix.de>
-References: <1393206490-25234-1-git-send-email-shawn.guo@linaro.org>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH 07/10] spi: sh-msiof: Add support for R-Car H2 and M2
+Date: Mon, 24 Feb 2014 17:09:15 +0900
+Message-ID: <CANqRtoT6G6mxce=cN05mNNtYCcyCvMPzpHQ7RyzPE8XfkFjMyQ@mail.gmail.com>
+References: <1392907389-21798-1-git-send-email-geert@linux-m68k.org>
+	<1392907389-21798-8-git-send-email-geert@linux-m68k.org>
+	<CANqRtoQVJzEgo_AdVxrPSRUY6ocyPaQ=RKQJyxoExDrfYxiJ3w@mail.gmail.com>
+	<CAMuHMdUByWPcYM8M_m5NVM4QP5cQE_tOLGQg=2fTNF7gqkUhig@mail.gmail.com>
+	<CANqRtoSJTROkkbGxV_p+B2S7b7jZ7jgHQ+q4_WG54m+Pxgfcpw@mail.gmail.com>
+	<CAMuHMdV1iDHz4ewFAG-QTba_wUF76Ei-VQpP+MRoNGV2mfHrpw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1393206490-25234-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Philippe De Muyter <phdm-KobBqTBAxd8@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdV1iDHz4ewFAG-QTba_wUF76Ei-VQpP+MRoNGV2mfHrpw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Brown <broonie@kernel.org>, Takashi Yoshii <takasi-y@ops.dti.ne.jp>, linux-spi <linux-spi@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 24, 2014 at 09:48:10AM +0800, Shawn Guo wrote:
-> Update fsl-fec.txt to add 'clocks' and 'clock-names' properties.
-> 
-> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> Changes since v1:
->  - Leave compatible change out, which should probably be addressed by
->    another patch
->  - Move clock properties into 'Optional properties:' section
+Hi Geert,
 
-As mentioned in the reply to v1: Marking the clocks as optional doesn't
-make sense when the driver actually requires them (Or be prepared when
-somebody sends in a patch 'fixing' the driver according to the binding).
-IMO we should just mention the clocks are optional on PowerPC.
+On Mon, Feb 24, 2014 at 4:39 PM, Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> Hi Magnus,
+>
+> On Mon, Feb 24, 2014 at 3:45 AM, Magnus Damm <magnus.damm@gmail.com> wrote:
+>> On Fri, Feb 21, 2014 at 1:13 AM, Geert Uytterhoeven
+>> <geert@linux-m68k.org> wrote:
+>>> On Thu, Feb 20, 2014 at 4:41 PM, Magnus Damm <magnus.damm@gmail.com> wrote:
+>>>> On thing stuck out a bit with the bindings. I can see that you specify
+>>>> both fifo size and use the SoC suffix for the r8a7790 and r8a7791
+>>>> bindings. Isn't that a bit of redundant information there, if we know
+>>>> that the SoC is r8a7790 or r8a7791 then can't we simply put that
+>>>> information in r8a779x_data above and perhaps keep the binding
+>>>> simpler? Perhaps same thing applies to other properties as well?
+>>>
+>>> "renesas,tx-fifo-size" and "renesas,rx-fifo-size" are part of the existing
+>>> bindings, so I'm a bit reluctant to change these.
+>>> Hmm, since the original bindings didn't specify the default values,
+>>> I could make them chip-specific, though.
+>>
+>> Thanks, yes I think treating the "renesas,tx-fifo-size" and
+>> "renesas,rx-fifo-size" bindings as optional and allow us to rely on
+>> chip-specific default values makes sense.
+>>
+>>> The only other property is "num-cs", which can have any value if you
+>>> start using the generic "cs-gpios".
+>>
+>> I see. It looks to me that such a setting is board-specific, so what
+>> is a sane default in the SoC DTSI? You seem to have it set to "1"
+>> today, but if the board is supposed to override it anyway then do we
+>> need to set it?
+>>
+>> Anyway, "num-cs" is a minor detail so no need to bother about that too much!
+>
+> In v2, I'll drop the "num-cs" from the dtsi, so it will default to the driver's
+> default (which is 1, for the simple case of using hardware controlled CS).
 
-Sascha
+Sounds good, thanks for your help!
 
-> 
->  Documentation/devicetree/bindings/net/fsl-fec.txt |    9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
-> index 845ff84..468736d 100644
-> --- a/Documentation/devicetree/bindings/net/fsl-fec.txt
-> +++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
-> @@ -16,6 +16,15 @@ Optional properties:
->    will have the duration be 1 millisecond.  Numbers greater than 1000 are
->    invalid and 1 millisecond will be used instead.
->  - phy-supply: regulator that powers the Ethernet PHY.
-> +- clocks: the clocks feeding the FEC controller and phy.
-> +   - "ipg": the peripheral access clock
-> +   - "ahb": the bus clock for MAC
-> +   - "ptp": the sampling clock for PTP (IEEE 1588).  On SoC like i.MX6Q,
-> +     the clock could come from either the internal clock control module
-> +     or external oscillator via pad depending on board design.
-> +   - "enet_out": the phy reference clock provided by SoC via pad, which
-> +     is available on SoC like i.MX28.
-> +- clock-names: Must contain the clock names described just above
->  
->  Example:
->  
-> -- 
-> 1.7.9.5
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+/ magnus
