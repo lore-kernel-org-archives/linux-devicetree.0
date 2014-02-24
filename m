@@ -1,245 +1,75 @@
-From: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>
-Subject: [PATCH V8 2/2] ARM: dts: Enable ahci sata and sata phy
-Date: Mon, 24 Feb 2014 19:02:55 +0530
-Message-ID: <1393248775-3283-3-git-send-email-yuvaraj.cd@samsung.com>
-References: <1393248775-3283-1-git-send-email-yuvaraj.cd@samsung.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1393248775-3283-1-git-send-email-yuvaraj.cd@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: kishon@ti.com, kgene.kim@samsung.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: grant.likely@linaro.org, rob.herring@calxeda.com, swarren@wwwdotorg.org, mark.rutland@arm.com, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+From: Theodore Ts'o <tytso-3s7WtUTddSA@public.gmane.org>
+Subject: Re: SPDX-License-Identifier
+Date: Mon, 24 Feb 2014 08:41:50 -0500
+Message-ID: <20140224134150.GB25357@thunk.org>
+References: <20140221160442.GA17506@kroah.com>
+ <5307790A.4050806@monstr.eu>
+ <20140221161246.GM31902@saruman.home>
+ <53077C5F.9000407@monstr.eu>
+ <20140221162045.GN31902@saruman.home>
+ <20140221165633.GA5465@kroah.com>
+ <53078C30.7060703@monstr.eu>
+ <20140221175720.GA21660@kroah.com>
+ <20140221190125.GL31047@thunk.org>
+ <530B1B25.5090601@monstr.eu>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <530B1B25.5090601-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds dt entry for ahci sata controller and its
-corresponding phy controller.phy node has been added w.r.t
-new generic phy framework.
+On Mon, Feb 24, 2014 at 11:12:53AM +0100, Michal Simek wrote:
+> > But of course, I'm not a lawyer, and if your company has is paying for
+> > the development of the driver, the Golden Rule applies (he who has the
+> > Gold, makes the Rules), and each of our respective corporate lawyers
+> > may have different opinions about what might happen if the question
+> > was ever to be adjudicated in court.
+> 
+> Aren't all these points already answered by SPDX project?
+> I believe that they should know how this should be handled properly.
 
-Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
----
-Changes since V7:syscon-phandle name updated.
+The SPDX can not give legal advice; not to you, and not to your
+company.  One lawyer might believe that 
 
-Changes since V6:none
+/*
+ * SPDX-License-Identifier: GPL-2.0
+ */
 
-Changes since V5:none
+Might be sufficient.  Others might believe you need to do:
 
-Changes since V4:
-	1.Used the new phandle "sata_phy_i2c" in the DT entry. 
-	2.Updated binding document.
+/*
+ * Copyright Ty Coon, 2012.
+ * 
+ * SPDX-License-Identifier: GPL-2.0
+ */
 
-Changes since V3:
-	1.Moved the binding info to the /bindings/phy/
+Still others might believe you need at the very least:
 
-Changes since V2:
-	1.Used syscon interface to PMU handling.
-	2.Changed "sata-phy-i2c" to "exynos-sataphy-i2c".
+/*
+ * Copyright Ty Coon, 2012.
+ * 
+ * All Rights Reserved.
+ *
+ * SPDX-License-Identifier: GPL-2.0
+ */
 
-Changes since V1:
-	1.Minor changes to node name convention.
-	2.Updated binding document.
+As far as I know, there is no case law on point about whether or not
+SPDX-License-Identifier has legal significance, or whether the court
+would consider that to be a valid copyright permission statement.  So
+any "answers" made by any lawyer would be guesses.  Of course, an
+guess by a lawyer which is retained by *you* or your company and fully
+informed with the unique parameters of your situation would constitute
+legal advice.  Anything else, including anything any of us could say
+on this mailing list, would be biovating.  :-)
 
+Cheers,
 
- .../devicetree/bindings/ata/exynos-sata-phy.txt    |   14 --------
- .../devicetree/bindings/ata/exynos-sata.txt        |   25 +++++++++-----
- .../devicetree/bindings/phy/samsung-phy.txt        |   36 ++++++++++++++++++++
- arch/arm/boot/dts/exynos5250-arndale.dts           |   11 ++++++
- arch/arm/boot/dts/exynos5250-smdk5250.dts          |    8 ++---
- arch/arm/boot/dts/exynos5250.dtsi                  |   17 ++++++---
- 6 files changed, 78 insertions(+), 33 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
-
-diff --git a/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt b/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
-deleted file mode 100644
-index 37824fa..0000000
---- a/Documentation/devicetree/bindings/ata/exynos-sata-phy.txt
-+++ /dev/null
-@@ -1,14 +0,0 @@
--* Samsung SATA PHY Controller
--
--SATA PHY nodes are defined to describe on-chip SATA Physical layer controllers.
--Each SATA PHY controller should have its own node.
--
--Required properties:
--- compatible        : compatible list, contains "samsung,exynos5-sata-phy"
--- reg               : <registers mapping>
--
--Example:
--        sata@ffe07000 {
--                compatible = "samsung,exynos5-sata-phy";
--                reg = <0xffe07000 0x1000>;
--        };
-diff --git a/Documentation/devicetree/bindings/ata/exynos-sata.txt b/Documentation/devicetree/bindings/ata/exynos-sata.txt
-index 0849f10..b2adb1f 100644
---- a/Documentation/devicetree/bindings/ata/exynos-sata.txt
-+++ b/Documentation/devicetree/bindings/ata/exynos-sata.txt
-@@ -4,14 +4,21 @@ SATA nodes are defined to describe on-chip Serial ATA controllers.
- Each SATA controller should have its own node.
- 
- Required properties:
--- compatible        : compatible list, contains "samsung,exynos5-sata"
--- interrupts        : <interrupt mapping for SATA IRQ>
--- reg               : <registers mapping>
--- samsung,sata-freq : <frequency in MHz>
-+- compatible		: compatible list, contains "samsung,exynos5-sata"
-+- interrupts		: <interrupt mapping for SATA IRQ>
-+- reg			: <registers mapping>
-+- samsung,sata-freq	: <frequency in MHz>
-+- phys			: as mentioned in phy-bindings.txt
-+- phy-names		: as mentioned in phy-bindings.txt
- 
- Example:
--        sata@ffe08000 {
--                compatible = "samsung,exynos5-sata";
--                reg = <0xffe08000 0x1000>;
--                interrupts = <115>;
--        };
-+	sata@122f0000 {
-+		compatible = "snps,dwc-ahci";
-+		samsung,sata-freq = <66>;
-+		reg = <0x122f0000 0x1ff>;
-+		interrupts = <0 115 0>;
-+		clocks = <&clock 277>, <&clock 143>;
-+		clock-names = "sata", "sclk_sata";
-+		phys = <&sata_phy>;
-+		phy-names = "sata-phy";
-+	};
-diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-index c0fccaa..a937f75 100644
---- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-@@ -20,3 +20,39 @@ Required properties:
- - compatible : should be "samsung,exynos5250-dp-video-phy";
- - reg : offset and length of the Display Port PHY register set;
- - #phy-cells : from the generic PHY bindings, must be 0;
-+
-+Samsung SATA PHY Controller
-+---------------------------
-+
-+SATA PHY nodes are defined to describe on-chip SATA Physical layer controllers.
-+Each SATA PHY controller should have its own node.
-+
-+Required properties:
-+- compatible        : compatible list, contains "samsung,exynos5250-sata-phy"
-+- reg : offset and length of the SATA PHY register set;
-+- #phy-cells : from the generic phy bindings;
-+
-+Example:
-+	sata_phy: sata-phy@12170000 {
-+		compatible = "samsung,exynos5250-sata-phy";
-+		reg = <0x12170000 0x1ff>;
-+		clocks = <&clock 287>;
-+		clock-names = "sata_phyctrl";
-+		#phy-cells = <0>;
-+		samsung,exynos-sataphy-i2c-phandle = <&sata_phy_i2c>;
-+		samsung,syscon-phandle = <&pmu_syscon>;
-+	};
-+
-+Device-Tree bindings for sataphy i2c client driver
-+--------------------------------------------------
-+
-+Required properties:
-+compatible: Should be "samsung,exynos-sataphy-i2c"
-+- reg: I2C address of the sataphy i2c device.
-+
-+Example:
-+
-+	sata_phy_i2c:sata-phy@38 {
-+		compatible = "samsung,exynos-sataphy-i2c";
-+		reg = <0x38>;
-+	};
-diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
-index 457112d..e0245a3 100644
---- a/arch/arm/boot/dts/exynos5250-arndale.dts
-+++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-@@ -371,6 +371,17 @@
- 		};
- 	};
- 
-+	i2c@121D0000 {
-+		samsung,i2c-sda-delay = <100>;
-+		samsung,i2c-max-bus-freq = <40000>;
-+		samsung,i2c-slave-addr = <0x38>;
-+
-+		sata_phy_i2c:sata-phy@38 {
-+			compatible = "samsung,exynos-sataphy-i2c";
-+			reg = <0x38>;
-+		};
-+	};
-+
- 	mmc_0: mmc@12200000 {
- 		status = "okay";
- 		num-slots = <1>;
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index 3e69837..e52eed8 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -96,16 +96,12 @@
- 		samsung,i2c-slave-addr = <0x38>;
- 		status = "okay";
- 
--		sata-phy {
--			compatible = "samsung,sata-phy";
-+		sata_phy_i2c:sata-phy@38 {
-+			compatible = "samsung,exynos-sataphy-i2c";
- 			reg = <0x38>;
- 		};
- 	};
- 
--	sata@122F0000 {
--		samsung,sata-freq = <66>;
--	};
--
- 	i2c@12C80000 {
- 		samsung,i2c-sda-delay = <100>;
- 		samsung,i2c-max-bus-freq = <66000>;
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index a76a189..8544199 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -46,6 +46,7 @@
- 		i2c6 = &i2c_6;
- 		i2c7 = &i2c_7;
- 		i2c8 = &i2c_8;
-+		i2c9 = &i2c_9;
- 		pinctrl0 = &pinctrl_0;
- 		pinctrl1 = &pinctrl_1;
- 		pinctrl2 = &pinctrl_2;
-@@ -233,16 +234,24 @@
- 	};
- 
- 	sata@122F0000 {
--		compatible = "samsung,exynos5-sata-ahci";
-+		compatible = "snps,dwc-ahci";
-+		samsung,sata-freq = <66>;
- 		reg = <0x122F0000 0x1ff>;
- 		interrupts = <0 115 0>;
- 		clocks = <&clock 277>, <&clock 143>;
- 		clock-names = "sata", "sclk_sata";
-+		phys = <&sata_phy>;
-+		phy-names = "sata-phy";
- 	};
- 
--	sata-phy@12170000 {
--		compatible = "samsung,exynos5-sata-phy";
-+	sata_phy: sata-phy@12170000 {
-+		compatible = "samsung,exynos5250-sata-phy";
- 		reg = <0x12170000 0x1ff>;
-+		clocks = <&clock 287>;
-+		clock-names = "sata_phyctrl";
-+		#phy-cells = <0>;
-+		samsung,exynos-sataphy-i2c-phandle = <&sata_phy_i2c>;
-+		samsung,syscon-phandle = <&pmu_system_controller>;
- 	};
- 
- 	i2c_0: i2c@12C60000 {
-@@ -360,7 +369,7 @@
- 		status = "disabled";
- 	};
- 
--	i2c@121D0000 {
-+	i2c_9: i2c@121D0000 {
-                 compatible = "samsung,exynos5-sata-phy-i2c";
-                 reg = <0x121D0000 0x100>;
-                 #address-cells = <1>;
--- 
-1.7.10.4
-
+					- Ted
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
