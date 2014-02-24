@@ -1,38 +1,85 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/7] spi: pl022: attempt to get sspclk by name
-Date: Mon, 24 Feb 2014 13:26:48 +0100
-Message-ID: <CACRpkdYKOTn9+6c6hJaoUq8pCJBpZrC_JF1AZJyt=Gt67WE4Vw@mail.gmail.com>
-References: <1392118632-11312-1-git-send-email-mark.rutland@arm.com>
-	<1786282.mNUF0ZaUg2@wuerfel>
-	<20140212161206.GD25957@e106331-lin.cambridge.arm.com>
-	<12776368.fUp5TWIUAS@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Subject: [PATCH 1/2] ARM: ux500: switch SSP/SPI clock name to "SSPCLK"
+Date: Mon, 24 Feb 2014 13:56:53 +0100
+Message-ID: <1393246613-16197-1-git-send-email-linus.walleij@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <12776368.fUp5TWIUAS@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 12, 2014 at 5:31 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+As noted in recent discussions the name of the core clock for
+the PL022 derived SPI blocks is erroneously named in the
+Ux500 device trees. The kernel doesn't currently use the name,
+but may do so soon so let use rename all these clocks in
+accordance with the name given in the PL022 TRM (ARM DDI 0194G).
 
-> Ok. Both ssp{0,1}clk and spi{0,1,2,3}clk /only/ appear in
-> arch/arm/boot/dts/ste-dbx5x0.dtsi and are clearly a bug, so unless
-> Linus Walleij has objections, I'd declare those to be bugs that
-> should be fixed by changing the DT file to spi_clk.
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/boot/dts/ste-dbx5x0.dtsi | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-OK I'll fix. But didn't Mark just say that the preferred name should be
-SSPCLK?
+diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+index e0853ea02df2..e41eedca3ce3 100644
+--- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
++++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+@@ -705,7 +705,7 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			clocks = <&prcc_kclk 3 1>, <&prcc_pclk 3 1>;
+-			clock-names = "ssp0clk", "apb_pclk";
++			clock-names = "SSPCLK", "apb_pclk";
+ 			dmas = <&dma 8 0 0x2>, /* Logical - DevToMem */
+ 			       <&dma 8 0 0x0>; /* Logical - MemToDev */
+ 			dma-names = "rx", "tx";
+@@ -718,7 +718,7 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			clocks = <&prcc_kclk 3 2>, <&prcc_pclk 3 2>;
+-			clock-names = "ssp1clk", "apb_pclk";
++			clock-names = "SSPCLK", "apb_pclk";
+ 			dmas = <&dma 9 0 0x2>, /* Logical - DevToMem */
+ 			       <&dma 9 0 0x0>; /* Logical - MemToDev */
+ 			dma-names = "rx", "tx";
+@@ -732,7 +732,7 @@
+ 			#size-cells = <0>;
+ 			/* Same clock wired to kernel and pclk */
+ 			clocks = <&prcc_pclk 2 8>, <&prcc_pclk 2 8>;
+-			clock-names = "spi0clk", "apb_pclk";
++			clock-names = "SSPCLK", "apb_pclk";
+ 			dmas = <&dma 0 0 0x2>, /* Logical - DevToMem */
+ 			       <&dma 0 0 0x0>; /* Logical - MemToDev */
+ 			dma-names = "rx", "tx";
+@@ -746,7 +746,7 @@
+ 			#size-cells = <0>;
+ 			/* Same clock wired to kernel and pclk */
+ 			clocks = <&prcc_pclk 2 2>, <&prcc_pclk 2 2>;
+-			clock-names = "spi1clk", "apb_pclk";
++			clock-names = "SSPCLK", "apb_pclk";
+ 			dmas = <&dma 35 0 0x2>, /* Logical - DevToMem */
+ 			       <&dma 35 0 0x0>; /* Logical - MemToDev */
+ 			dma-names = "rx", "tx";
+@@ -760,7 +760,7 @@
+ 			#size-cells = <0>;
+ 			/* Same clock wired to kernel and pclk */
+ 			clocks = <&prcc_pclk 2 1>, <&prcc_pclk 2 1>;
+-			clock-names = "spi2clk", "apb_pclk";
++			clock-names = "SSPCLK", "apb_pclk";
+ 			dmas = <&dma 33 0 0x2>, /* Logical - DevToMem */
+ 			       <&dma 33 0 0x0>; /* Logical - MemToDev */
+ 			dma-names = "rx", "tx";
+@@ -774,7 +774,7 @@
+ 			#size-cells = <0>;
+ 			/* Same clock wired to kernel and pclk */
+ 			clocks = <&prcc_pclk 1 7>, <&prcc_pclk 1 7>;
+-			clock-names = "spi3clk", "apb_pclk";
++			clock-names = "SSPCLK", "apb_pclk";
+ 			dmas = <&dma 40 0 0x2>, /* Logical - DevToMem */
+ 			       <&dma 40 0 0x0>; /* Logical - MemToDev */
+ 			dma-names = "rx", "tx";
+-- 
+1.8.5.3
 
-Here is the PL022 TRM:
-http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0194g/index.html
-
-The clock name on the silicon side is clearly "SSPCLK" so let's
-stick with this.
-
-Yours,
-Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
