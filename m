@@ -1,47 +1,78 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] dt/bindings: fsl-fec: add clock properties
-Date: Mon, 24 Feb 2014 16:34:24 +0800
-Message-ID: <20140224083422.GG25011@S2101-09.ap.freescale.net>
-References: <1393206490-25234-1-git-send-email-shawn.guo@linaro.org>
- <20140224075337.GN17250@pengutronix.de>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: [PATCH 01/10] devicetree: bindings: add missing Marvell Dove SoC
+ documentation
+Date: Mon, 24 Feb 2014 09:42:53 +0100
+Message-ID: <1393231382-11078-2-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <1393231382-11078-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140224075337.GN17250-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Philippe De Muyter <phdm-KobBqTBAxd8@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1393231382-11078-1-git-send-email-sebastian.hesselbarth@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 24, 2014 at 08:53:37AM +0100, Sascha Hauer wrote:
-> On Mon, Feb 24, 2014 at 09:48:10AM +0800, Shawn Guo wrote:
-> > Update fsl-fec.txt to add 'clocks' and 'clock-names' properties.
-> > 
-> > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> > Changes since v1:
-> >  - Leave compatible change out, which should probably be addressed by
-> >    another patch
-> >  - Move clock properties into 'Optional properties:' section
-> 
-> As mentioned in the reply to v1: Marking the clocks as optional doesn't
-> make sense when the driver actually requires them (Or be prepared when
-> somebody sends in a patch 'fixing' the driver according to the binding).
-> IMO we should just mention the clocks are optional on PowerPC.
+Marvell Dove SoC binding was not documented, yet. Add the documentation
+and also describe Global Configuration register node in it.
 
-Okay, the whole thing becomes quite uncertain to me.  The reason of this
-v2 is that I got reminded by Gerhard's comment that we've had a time the
-driver works with DT without these properties.  At that time, the clock
-driver provides the clock lookups for the device by calling
-clk_register_clkdev().  But on the other hand, I agree with you that it
-does not make sense to binding users, because the IP requires these
-clock inputs when it gets integrated on a SoC, and the driver requires
-these clocks to work.
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+---
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: Rob Landley <rob@landley.net>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Gregory Clement <gregory.clement@free-electrons.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ .../devicetree/bindings/arm/marvell,dove.txt       | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/marvell,dove.txt
 
-Shawn
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/arm/marvell,dove.txt b/Documentation/devicetree/bindings/arm/marvell,dove.txt
+new file mode 100644
+index 000000000000..aaaf64c56e44
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/marvell,dove.txt
+@@ -0,0 +1,22 @@
++Marvell Dove Platforms Device Tree Bindings
++-----------------------------------------------
++
++Boards with a Marvell Dove SoC shall have the following properties:
++
++Required root node property:
++- compatible: must contain "marvell,dove";
++
++* Global Configuration registers
++
++Global Configuration registers of Dove SoC are shared by a syscon node.
++
++Required properties:
++- compatible: must contain "marvell,dove-global-config" and "syscon".
++- reg: base address and size of the Global Configuration registers.
++
++Example:
++
++gconf: global-config@e802c {
++	compatible = "marvell,dove-global-config", "syscon";
++	reg = <0xe802c 0x14>;
++};
+-- 
+1.8.5.3
