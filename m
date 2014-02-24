@@ -1,471 +1,263 @@
-From: Florian Vaussard <florian.vaussard@epfl.ch>
-Subject: [PATCH 1/2] ARM: dts: Add support for OMAP4 Gumstix DuoVero/Parlor
-Date: Mon, 24 Feb 2014 18:07:48 +0100
-Message-ID: <1393261669-32039-2-git-send-email-florian.vaussard@epfl.ch>
-References: <1393261669-32039-1-git-send-email-florian.vaussard@epfl.ch>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1393261669-32039-1-git-send-email-florian.vaussard@epfl.ch>
-Sender: linux-omap-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, Ash Charles <ash@gumstix.com>, Florian Vaussard <florian.vaussard@epfl.ch>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Subject: [PATCH v6 2/2] memory: ti-aemif: add bindings for AEMIF driver
+Date: Mon, 24 Feb 2014 19:26:12 +0200
+Message-ID: <1393262772-24442-3-git-send-email-ivan.khoronzhuk@ti.com>
+References: <1393262772-24442-1-git-send-email-ivan.khoronzhuk@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1393262772-24442-1-git-send-email-ivan.khoronzhuk@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: gregkh@linuxfoundation.org, santosh.shilimkar@ti.com, galak@kernel.crashing.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, pawel.moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, nsekhar@ti.com, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, rob@landley.net, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, linux-mtd@lists.infradead.org, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Gumstix DuoVero is an OMAP4430-based Computer On Module.
-Parlor is one of the available expansion board.
+Add bindings for TI Async External Memory Interface (AEMIF) controller.
 
-Tested features:
-- GPMC ethernet
-- HSUSB2 and OTG
-- Audio out
-- WiFi and Bluetooth (w2cbw0015 SDIO module)
-- LED and button
+The Async External Memory Interface (EMIF16/AEMIF) controller is intended to
+provide a glue-less interface to a variety of asynchronous memory devices like
+ASRA M, NOR and NAND memory. A total of 256M bytes of any of these memories
+can be accessed via 4 chip selects with 64M byte access per chip select.
 
-Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
+We are not encoding CS number in reg property, it's memory partition number.
+The CS number is encoded for Davinci NAND node using standalone property
+"ti,davinci-chipselect" and we need to provide two memory ranges to it,
+as result we can't encode CS number in "reg" for AEMIF child devices
+(NAND/NOR/etc), as it will break bindings compatibility.
+
+In this patch, NAND node is used just as an example of child node.
+
+Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 ---
- .../devicetree/bindings/arm/omap/omap.txt          |   3 +
- arch/arm/boot/dts/Makefile                         |   1 +
- arch/arm/boot/dts/omap4-duovero-parlor.dts         | 146 ++++++++++++
- arch/arm/boot/dts/omap4-duovero.dtsi               | 252 +++++++++++++++++++++
- 4 files changed, 402 insertions(+)
- create mode 100644 arch/arm/boot/dts/omap4-duovero-parlor.dts
- create mode 100644 arch/arm/boot/dts/omap4-duovero.dtsi
+ .../bindings/memory-controllers/ti-aemif.txt       | 210 +++++++++++++++++++++
+ 1 file changed, 210 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt
 
-diff --git a/Documentation/devicetree/bindings/arm/omap/omap.txt b/Documentation/devicetree/bindings/arm/omap/omap.txt
-index af9b4a0..95b1372 100644
---- a/Documentation/devicetree/bindings/arm/omap/omap.txt
-+++ b/Documentation/devicetree/bindings/arm/omap/omap.txt
-@@ -99,6 +99,9 @@ Boards:
- - OMAP4 PandaBoard : Low cost community board
-   compatible = "ti,omap4-panda", "ti,omap4430"
- 
-+- OMAP4 DuoVero with Parlor : Commercial expansion board with daughter board
-+  compatible = "gumstix,omap4-duovero-parlor", "gumstix,omap4-duovero", "ti,omap4430", "ti,omap4";
-+
- - OMAP3 EVM : Software Development Board for OMAP35x, AM/DM37x
-   compatible = "ti,omap3-evm", "ti,omap3"
- 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 0320303..8b23abb 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -215,6 +215,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
- 	omap3-igep0020.dtb \
- 	omap3-igep0030.dtb \
- 	omap3-zoom3.dtb \
-+	omap4-duovero-parlor.dtb \
- 	omap4-panda.dtb \
- 	omap4-panda-a4.dtb \
- 	omap4-panda-es.dtb \
-diff --git a/arch/arm/boot/dts/omap4-duovero-parlor.dts b/arch/arm/boot/dts/omap4-duovero-parlor.dts
+diff --git a/Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt b/Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt
 new file mode 100644
-index 0000000..96f51d8
+index 0000000..9592717
 --- /dev/null
-+++ b/arch/arm/boot/dts/omap4-duovero-parlor.dts
-@@ -0,0 +1,146 @@
-+/*
-+ * Copyright (C) 2014 Florian Vaussard, EPFL Mobots group
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+/dts-v1/;
++++ b/Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt
+@@ -0,0 +1,210 @@
++* Device tree bindings for Texas instruments AEMIF controller
 +
-+#include "omap4-duovero.dtsi"
++The Async External Memory Interface (EMIF16/AEMIF) controller is intended to
++provide a glue-less interface to a variety of asynchronous memory devices like
++ASRA M, NOR and NAND memory. A total of 256M bytes of any of these memories
++can be accessed at any given time via four chip selects with 64M byte access
++per chip select. Synchronous memories such as DDR1 SD RAM, SDR SDRAM
++and Mobile SDR are not supported.
 +
-+#include <dt-bindings/input/input.h>
++Documentation:
++Davinci DM646x - http://www.ti.com/lit/ug/sprueq7c/sprueq7c.pdf
++OMAP-L138 (DA850) - http://www.ti.com/lit/ug/spruh77a/spruh77a.pdf
++Kestone - http://www.ti.com/lit/ug/sprugz3a/sprugz3a.pdf
 +
-+/ {
-+	model = "OMAP4430 Gumstix Duovero on Parlor";
-+	compatible = "gumstix,omap4-duovero-parlor", "gumstix,omap4-duovero", "ti,omap4430", "ti,omap4";
++Required properties:
 +
-+	leds {
-+		compatible = "gpio-leds";
-+		led0 {
-+			label = "duovero:blue:led0";
-+			gpios = <&gpio4 26 GPIO_ACTIVE_HIGH>;	/* gpio_122 */
-+			linux,default-trigger = "heartbeat";
++- compatible:		"ti,davinci-aemif"
++			"ti,keystone-aemif"
++			"ti,da850-aemif"
++
++- reg:			contains offset/length value for AEMIF control registers
++			space.
++
++- #address-cells:	Must be 2. The partition number has to be encoded in the
++			first address cell and it may accept values 0..N-1
++			(N - total number of partitions). It's recommended to
++			assign N-1 number for the control partition. The second
++			cell is the offset into the partition.
++
++- #size-cells:		Must be set to 1.
++
++- ranges:		Contains memory regions. There are two types of
++			ranges/partitions:
++			- CS-specific partition/range. If continuous, must be
++			set up to reflect the memory layout for 4 chipselects,
++			if not then additional range/partition can be added and
++			child device can select the proper one.
++			- control partition which is common for all CS
++			interfaces.
++
++- clocks:		the clock feeding the controller clock. Required only
++			if clock tree data present in device tree.
++			See clock-bindings.txt
++
++- clock-names:		clock name. It has to be "aemif". Required only if clock
++			tree data present in device tree, in another case don't
++			use it.
++			See clock-bindings.txt
++
++- clock-ranges:		Empty property indicating that child nodes can inherit
++			named clocks. Required only if clock tree data present
++			in device tree.
++			See clock-bindings.txt
++
++
++Child chip-select (cs) nodes contain the memory devices nodes connected to
++such as NOR (e.g. cfi-flash) and NAND (ti,davinci-nand, see davinci-nand.txt).
++There might be board specific devices like FPGAs.
++
++Required child cs node properties:
++
++- #address-cells:	Must be 2.
++
++- #size-cells:		Must be 1.
++
++- ranges:		Empty property indicating that child nodes can inherit
++			memory layout.
++
++- clock-ranges:		Empty property indicating that child nodes can inherit
++			named clocks. Required only if clock tree data present
++			in device tree.
++
++- ti,cs-chipselect:	number of chipselect. Indicates on the aemif driver
++			which chipselect is used for accessing the memory. For
++			compatibles "ti,davinci-aemif" and "ti,keystone-aemif"
++			it can be in range [0-3]. For compatible
++			"ti,da850-aemif" range is [2-5].
++
++Optional child cs node properties:
++
++- ti,cs-bus-width:		width of the asynchronous device's data bus
++				8 or 16 if not preset 8
++
++- ti,cs-select-strobe-mode:	enable/disable select strobe mode
++				In select strobe mode chip select behaves as
++				the strobe and is active only during the strobe
++				period. If present then enable.
++
++- ti,cs-extended-wait-mode:	enable/disable extended wait mode
++				if set, the controller monitors the EMIFWAIT pin
++				mapped to that chip select to determine if the
++				device wants to extend the strobe period. If
++				present then enable.
++
++- ti,cs-min-turnaround-ns:	minimum turn around time, ns
++				Time between the end of one asynchronous memory
++				access and the start of another asynchronous
++				memory access. This delay is not incurred
++				between a read followed by read or a write
++				followed by a write to same chip select.
++
++- ti,cs-read-setup-ns:		read setup width, ns
++				Time between the beginning of a memory cycle
++				and the activation of read strobe.
++				Minimum value is 1 (0 treated as 1).
++
++- ti,cs-read-strobe-ns:		read strobe width, ns
++				Time between the activation and deactivation of
++				the read strobe.
++				Minimum value is 1 (0 treated as 1).
++
++- ti,cs-read-hold-ns:		read hold width, ns
++				Time between the deactivation of the read
++				strobe and the end of the cycle (which may be
++				either an address change or the deactivation of
++				the chip select signal.
++				Minimum value is 1 (0 treated as 1).
++
++- ti,cs-write-setup-ns:		write setup width, ns
++				Time between the beginning of a memory cycle
++				and the activation of write strobe.
++				Minimum value is 1 (0 treated as 1).
++
++- ti,cs-write-strobe-ns:	write strobe width, ns
++				Time between the activation and deactivation of
++				the write strobe.
++				Minimum value is 1 (0 treated as 1).
++
++- ti,cs-write-hold-ns:		write hold width, ns
++				Time between the deactivation of the write
++				strobe and the end of the cycle (which may be
++				either an address change or the deactivation of
++				the chip select signal.
++				Minimum value is 1 (0 treated as 1).
++
++If any of the above parameters are absent, current parameter value will be taken
++from the corresponding HW reg.
++
++Example for aemif, davinci nand and nor flash chip select shown below.
++
++memory-controller@21000A00 {
++	compatible = "ti,davinci-aemif";
++	#address-cells = <2>;
++	#size-cells = <1>;
++	clocks = <&clkaemif 0>;
++	clock-names = "aemif";
++	clock-ranges;
++	reg = <0x21000A00 0x00000100>;
++	ranges = <0 0 0x70000000 0x10000000
++		  1 0 0x21000A00 0x00000100>;
++		  /*
++		   * Partition0: CS-specific memory range which is
++		   * implemented as continuous physical memory region
++		   * Partition1: control memory range
++		   */
++
++	nand:cs2 {
++		#address-cells = <2>;
++		#size-cells = <1>;
++		clock-ranges;
++		ranges;
++
++		ti,cs-chipselect = <2>;
++		/* all timings in nanoseconds */
++		ti,cs-min-turnaround-ns = <0>;
++		ti,cs-read-hold-ns = <7>;
++		ti,cs-read-strobe-ns = <42>;
++		ti,cs-read-setup-ns = <14>;
++		ti,cs-write-hold-ns = <7>;
++		ti,cs-write-strobe-ns = <42>;
++		ti,cs-write-setup-ns = <14>;
++
++		nand@0,0x8000000 {
++			compatible = "ti,davinci-nand";
++			reg = <0 0x8000000 0x4000000
++			       1 0x0000000 0x0000100>;
++			/*
++			 * Partition0, offset 0x8000000, size 0x4000000
++			 * Partition1, offset 0x0000000, size 0x0000100
++			 */
++
++			.. see davinci-nand.txt
 +		};
 +	};
 +
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		button0@121 {
-+			label = "button0";
-+			linux,code = <BTN_0>;
-+			gpios = <&gpio4 25 GPIO_ACTIVE_LOW>;	/* gpio_121 */
-+			gpio-key,wakeup;
++	nor:cs0 {
++		#address-cells = <2>;
++		#size-cells = <1>;
++		clock-ranges;
++		ranges;
++
++		ti,cs-chipselect = <0>;
++		/* all timings in nanoseconds */
++		ti,cs-min-turnaround-ns = <0>;
++		ti,cs-read-hold-ns = <8>;
++		ti,cs-read-strobe-ns = <40>;
++		ti,cs-read-setup-ns = <14>;
++		ti,cs-write-hold-ns = <7>;
++		ti,cs-write-strobe-ns = <40>;
++		ti,cs-write-setup-ns = <14>;
++		ti,cs-bus-width = <16>;
++
++		flash@0,0x0000000 {
++			compatible = "cfi-flash";
++			reg = <0 0x0000000 0x4000000>;
++
++			...
 +		};
 +	};
 +};
-+
-+&omap4_pmx_core {
-+	pinctrl-0 = <
-+			&led_pins
-+			&button_pins
-+			&smsc_pins
-+	>;
-+
-+	led_pins: pinmux_led_pins {
-+		pinctrl-single,pins = <
-+			0xd6 (PIN_OUTPUT | MUX_MODE3)		/* abe_dmic_din3.gpio_122 */
-+		>;
-+	};
-+
-+	button_pins: pinmux_button_pins {
-+		pinctrl-single,pins = <
-+			0xd4 (PIN_INPUT_PULLUP | MUX_MODE3)	/* abe_dmic_din2.gpio_121 */
-+		>;
-+	};
-+
-+	i2c2_pins: pinmux_i2c2_pins {
-+		pinctrl-single,pins = <
-+			0xe6 (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c2_scl */
-+			0xe8 (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c2_sda */
-+		>;
-+	};
-+
-+	i2c3_pins: pinmux_i2c3_pins {
-+		pinctrl-single,pins = <
-+			0xea (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c3_scl */
-+			0xec (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c3_sda */
-+		>;
-+	};
-+
-+	smsc_pins: pinmux_smsc_pins {
-+		pinctrl-single,pins = <
-+			0x28 (PIN_INPUT | MUX_MODE3)		/* gpmc_a20.gpio_44: IRQ */
-+			0x2a (PIN_INPUT_PULLUP | MUX_MODE3)	/* gpmc_a21.gpio_45: nReset */
-+			0x30 (PIN_INPUT_PULLUP | MUX_MODE3)	/* gpmc_a24.gpio_48: amdix enabled */
-+		>;
-+	};
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins>;
-+
-+	clock-frequency = <400000>;
-+};
-+
-+&i2c3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c3_pins>;
-+
-+	clock-frequency = <100000>;
-+
-+	/* optional 1K EEPROM with revision information */
-+	eeprom@51 {
-+		compatible = "atmel,24c01";
-+		reg = <0x51>;
-+		pagesize = <8>;
-+	};
-+};
-+
-+&mmc3 {
-+	status = "disabled";
-+};
-+
-+#include "omap-gpmc-smsc911x.dtsi"
-+
-+&gpmc {
-+	ranges = <5 0 0x2c000000 0x1000000>;			/* CS5 */
-+
-+	ethernet@gpmc {
-+		reg = <5 0 0xff>;
-+		interrupt-parent = <&gpio2>;
-+		interrupts = <12 IRQ_TYPE_LEVEL_LOW>;		/* gpio_44 */
-+
-+		phy-mode = "mii";
-+
-+		gpmc,cs-on-ns = <10>;
-+		gpmc,cs-rd-off-ns = <50>;
-+		gpmc,cs-wr-off-ns = <50>;
-+		gpmc,adv-on-ns = <0>;
-+		gpmc,adv-rd-off-ns = <10>;
-+		gpmc,adv-wr-off-ns = <10>;
-+		gpmc,oe-on-ns = <15>;
-+		gpmc,oe-off-ns = <50>;
-+		gpmc,we-on-ns = <15>;
-+		gpmc,we-off-ns = <50>;
-+		gpmc,rd-cycle-ns = <50>;
-+		gpmc,wr-cycle-ns = <50>;
-+		gpmc,access-ns = <50>;
-+		gpmc,page-burst-access-ns = <0>;
-+		gpmc,bus-turnaround-ns = <35>;
-+		gpmc,cycle2cycle-delay-ns = <35>;
-+		gpmc,wr-data-mux-bus-ns = <35>;
-+		gpmc,wr-access-ns = <50>;
-+
-+		gpmc,mux-add-data = <2>;
-+		gpmc,sync-read;
-+		gpmc,sync-write;
-+		gpmc,clk-activation-ns = <5>;
-+		gpmc,sync-clk-ps = <20000>;
-+	};
-+};
-+
-+
-diff --git a/arch/arm/boot/dts/omap4-duovero.dtsi b/arch/arm/boot/dts/omap4-duovero.dtsi
-new file mode 100644
-index 0000000..a514791
---- /dev/null
-+++ b/arch/arm/boot/dts/omap4-duovero.dtsi
-@@ -0,0 +1,252 @@
-+/*
-+ * Copyright (C) 2014 Florian Vaussard, EPFL Mobots group
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include "omap443x.dtsi"
-+
-+/ {
-+	model = "Gumstix Duovero";
-+	compatible = "gumstix,omap4-duovero", "ti,omap4430", "ti,omap4";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x80000000 0x40000000>; /* 1 GB */
-+	};
-+
-+	sound {
-+		compatible = "ti,abe-twl6040";
-+		ti,model = "DuoVero";
-+
-+		ti,mclk-freq = <38400000>;
-+
-+		ti,mcpdm = <&mcpdm>;
-+
-+		ti,twl6040 = <&twl6040>;
-+
-+		/* Audio routing */
-+		ti,audio-routing =
-+			"Headset Stereophone", "HSOL",
-+			"Headset Stereophone", "HSOR",
-+			"HSMIC", "Headset Mic",
-+			"Headset Mic", "Headset Mic Bias";
-+	};
-+
-+	/* HS USB Host PHY on PORT 1 */
-+	hsusb1_phy: hsusb1_phy {
-+		compatible = "usb-nop-xceiv";
-+		reset-gpios = <&gpio2 30 GPIO_ACTIVE_LOW>;	/* gpio_62 */
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&hsusb1phy_pins>;
-+
-+		clocks = <&auxclk3_ck>;
-+		clock-names = "main_clk";
-+		clock-frequency = <19200000>;
-+	};
-+
-+	/* regulator for w2cbw0015 on sdio5 */
-+	w2cbw0015_vmmc: w2cbw0015_vmmc {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&w2cbw0015_pins>;
-+		compatible = "regulator-fixed";
-+		regulator-name = "w2cbw0015";
-+		regulator-min-microvolt = <3000000>;
-+		regulator-max-microvolt = <3000000>;
-+		gpio = <&gpio2 11 GPIO_ACTIVE_LOW>;		/* gpio_43 */
-+		startup-delay-us = <70000>;
-+		enable-active-high;
-+		regulator-boot-on;
-+	};
-+};
-+
-+&omap4_pmx_core {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <
-+			&twl6040_pins
-+			&mcpdm_pins
-+			&mcbsp1_pins
-+			&hsusbb1_pins
-+	>;
-+
-+	twl6040_pins: pinmux_twl6040_pins {
-+		pinctrl-single,pins = <
-+			0x126 (PIN_OUTPUT | MUX_MODE3)		/* usbb2_ulpitll_nxt.gpio_160 */
-+			0x160 (PIN_INPUT | MUX_MODE0)		/* sys_nirq2.sys_nirq2 */
-+		>;
-+	};
-+
-+	mcpdm_pins: pinmux_mcpdm_pins {
-+		pinctrl-single,pins = <
-+			0xc6 (PIN_INPUT_PULLDOWN | MUX_MODE0)	/* abe_pdm_ul_data.abe_pdm_ul_data */
-+			0xc8 (PIN_INPUT_PULLDOWN | MUX_MODE0)	/* abe_pdm_dl_data.abe_pdm_dl_data */
-+			0xca (PIN_INPUT_PULLUP   | MUX_MODE0)	/* abe_pdm_frame.abe_pdm_frame */
-+			0xcc (PIN_INPUT_PULLDOWN | MUX_MODE0)	/* abe_pdm_lb_clk.abe_pdm_lb_clk */
-+			0xce (PIN_INPUT_PULLDOWN | MUX_MODE0)	/* abe_clks.abe_clks */
-+		>;
-+	};
-+
-+	mcbsp1_pins: pinmux_mcbsp1_pins {
-+		pinctrl-single,pins = <
-+			0xbe (PIN_INPUT | MUX_MODE0)		/* abe_mcbsp1_clkx.abe_mcbsp1_clkx */
-+			0xc0 (PIN_INPUT_PULLDOWN | MUX_MODE0)	/* abe_mcbsp1_dr.abe_mcbsp1_dr */
-+			0xc2 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* abe_mcbsp1_dx.abe_mcbsp1_dx */
-+			0xc4 (PIN_INPUT | MUX_MODE0)		/* abe_mcbsp1_fsx.abe_mcbsp1_fsx */
-+		>;
-+	};
-+
-+	hsusbb1_pins: pinmux_hsusbb1_pins {
-+		pinctrl-single,pins = <
-+			0x82 (PIN_INPUT_PULLDOWN | MUX_MODE4)	/* usbb1_ulpitll_clk.usbb1_ulpiphy_clk */
-+			0x84 (PIN_OUTPUT | MUX_MODE4)		/* usbb1_ulpitll_stp.usbb1_ulpiphy_stp */
-+			0x86 (PIN_INPUT_PULLDOWN | MUX_MODE4)	/* usbb1_ulpitll_dir.usbb1_ulpiphy_dir */
-+			0x88 (PIN_INPUT_PULLDOWN | MUX_MODE4)	/* usbb1_ulpitll_nxt.usbb1_ulpiphy_nxt */
-+			0x8a (PIN_INPUT_PULLDOWN | MUX_MODE4)	/* usbb1_ulpitll_dat0.usbb1_ulpiphy_dat0 */
-+			0x8c (PIN_INPUT_PULLDOWN | MUX_MODE4)	/* usbb1_ulpitll_dat1.usbb1_ulpiphy_dat1 */
-+			0x8e (PIN_INPUT_PULLDOWN | MUX_MODE4)	/* usbb1_ulpitll_dat2.usbb1_ulpiphy_dat2 */
-+			0x90 (PIN_INPUT_PULLDOWN | MUX_MODE4)	/* usbb1_ulpitll_dat3.usbb1_ulpiphy_dat3 */
-+			0x92 (PIN_INPUT_PULLDOWN | MUX_MODE4)	/* usbb1_ulpitll_dat4.usbb1_ulpiphy_dat4 */
-+			0x94 (PIN_INPUT_PULLDOWN | MUX_MODE4)	/* usbb1_ulpitll_dat5.usbb1_ulpiphy_dat5 */
-+			0x96 (PIN_INPUT_PULLDOWN | MUX_MODE4)	/* usbb1_ulpitll_dat6.usbb1_ulpiphy_dat6 */
-+			0x98 (PIN_INPUT_PULLDOWN | MUX_MODE4)	/* usbb1_ulpitll_dat7.usbb1_ulpiphy_dat7 */
-+		>;
-+	};
-+
-+	hsusb1phy_pins: pinmux_hsusb1phy_pins {
-+		pinctrl-single,pins = <
-+			0x4c (PIN_OUTPUT | MUX_MODE3)		/* gpmc_wait1.gpio_62 */
-+		>;
-+	};
-+
-+	w2cbw0015_pins: pinmux_w2cbw0015_pins {
-+		pinctrl-single,pins = <
-+			0x26 (PIN_OUTPUT | MUX_MODE3)		/* gpmc_a19.gpio_43 */
-+			0x3a (PIN_INPUT | MUX_MODE3)		/* gpmc_ncs3.gpio_53 */
-+		>;
-+	};
-+
-+	i2c1_pins: pinmux_i2c1_pins {
-+		pinctrl-single,pins = <
-+			0xe2 (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c1_scl */
-+			0xe4 (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c1_sda */
-+		>;
-+	};
-+
-+	i2c4_pins: pinmux_i2c4_pins {
-+		pinctrl-single,pins = <
-+			0xee (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c4_scl */
-+			0xf0 (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c4_sda */
-+		>;
-+	};
-+
-+	mmc1_pins: pinmux_mmc1_pins {
-+		pinctrl-single,pins = <
-+			0xa2 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc1_clk */
-+			0xa4 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmcc1_cmd */
-+			0xa6 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmcc1_dat0 */
-+			0xa8 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc1_dat1 */
-+			0xaa (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc1_dat2 */
-+			0xac (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc1_dat3 */
-+		>;
-+	};
-+
-+	mmc5_pins: pinmux_mmc5_pins {
-+		pinctrl-single,pins = <
-+			0x108 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc5_clk */
-+			0x10a (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmcc5_cmd */
-+			0x10c (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmcc5_dat0 */
-+			0x10e (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc5_dat1 */
-+			0x110 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc5_dat2 */
-+			0x112 (PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc5_dat3 */
-+		>;
-+	};
-+};
-+
-+/* PMIC */
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins>;
-+
-+	clock-frequency = <400000>;
-+
-+	twl: twl@48 {
-+		reg = <0x48>;
-+		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;		/* IRQ_SYS_1N cascaded to gic */
-+		interrupt-parent = <&gic>;
-+	};
-+
-+	twl6040: twl@4b {
-+		compatible = "ti,twl6040";
-+		reg = <0x4b>;
-+		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;		/* IRQ_SYS_2N cascaded to gic */
-+		interrupt-parent = <&gic>;
-+		ti,audpwron-gpio = <&gpio6 0 GPIO_ACTIVE_HIGH>;		/* gpio_160 */
-+
-+		vio-supply = <&v1v8>;
-+		v2v1-supply = <&v2v1>;
-+		enable-active-high;
-+	};
-+};
-+
-+#include "twl6030.dtsi"
-+#include "twl6030_omap4.dtsi"
-+
-+/* on-board bluetooth / WiFi module */
-+&i2c4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c4_pins>;
-+
-+	clock-frequency = <400000>;
-+};
-+
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins>;
-+
-+	vmmc-supply = <&vmmc>;
-+	ti,bus-width = <4>;
-+	ti,non-removable;		/* FIXME: use PMIC_MMC detect */
-+};
-+
-+&mmc2 {
-+	status = "disabled";
-+};
-+
-+/* mmc3 is available to the expansion board */
-+
-+&mmc4 {
-+	status = "disabled";
-+};
-+
-+/* on-board WiFi module */
-+&mmc5 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc5_pins>;
-+
-+	vmmc-supply = <&w2cbw0015_vmmc>;
-+	ti,bus-width = <4>;
-+	ti,non-removable;
-+	cap-power-off-card;
-+};
-+
-+&twl_usb_comparator {
-+	usb-supply = <&vusb>;
-+};
-+
-+&usb_otg_hs {
-+	interface-type = <1>;
-+	mode = <3>;
-+	power = <50>;
-+};
-+
-+&usbhshost {
-+	port1-mode = "ehci-phy";
-+};
-+
-+&usbhsehci {
-+	phys = <&hsusb1_phy>;
-+};
-+
 -- 
-1.8.1.2
-
+1.8.3.2
