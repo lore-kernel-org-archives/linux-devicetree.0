@@ -1,55 +1,104 @@
-From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] i2c: New bus driver for the Qualcomm QUP I2C
- controller
-Date: Mon, 24 Feb 2014 09:51:52 -0800
-Message-ID: <20140224175152.GB32621@sonymobile.com>
-References: <1392943090-30556-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1392943090-30556-3-git-send-email-bjorn.andersson@sonymobile.com>
- <1392943934.2594.14.camel@joe-AO722>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH] ASoC: cs42888: Add codec driver support
+Date: Mon, 24 Feb 2014 18:54:09 +0100
+Message-ID: <530B8741.3010302@metafoo.de>
+References: <1393224929-7555-1-git-send-email-Guangyu.Chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1392943934.2594.14.camel@joe-AO722>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1393224929-7555-1-git-send-email-Guangyu.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolin Chen <Guangyu.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 20 Feb 16:52 PST 2014, Joe Perches wrote:
+Hi,
 
-> On Thu, 2014-02-20 at 16:38 -0800, Bjorn Andersson wrote:
-> > This bus driver supports the QUP i2c hardware controller in the Qualcomm SOCs.
-> > The Qualcomm Universal Peripheral Engine (QUP) is a general purpose data path
-> > engine with input/output FIFOs and an embedded i2c mini-core. The driver
-> > supports FIFO mode (for low bandwidth applications) and block mode (interrupt
-> > generated for each block-size data transfer).
-> 
-> trivia:
-> 
-> > diff --git a/drivers/i2c/busses/i2c-qup.c b/drivers/i2c/busses/i2c-qup.c
-> []
-> > +#ifdef CONFIG_PM_SLEEP
-> > +static int qup_i2c_suspend(struct device *device)
-> > +{
-> > +	dev_dbg(device, "system suspend");
-> > +	qup_i2c_pm_suspend_runtime(device);
-> > +	return 0;
-> > +}
-> > +
-> > +static int qup_i2c_resume(struct device *device)
-> > +{
-> > +	dev_dbg(device, "system resume");
-> > +	qup_i2c_pm_resume_runtime(device);
-> > +	pm_runtime_mark_last_busy(device);
-> > +	pm_request_autosuspend(device);
-> > +	return 0;
-> > +}
-> > +#endif
-> 
-> Missing terminating newlines for dev_dbg statements.
+Couple of trivial things.
 
-Thanks Joe, missed those.
+On 02/24/2014 07:55 AM, Nicolin Chen wrote:
+[...]
+> +config SND_SOC_CS42888
+> +	tristate "Cirrus Logic CS42888 CODEC"
+> +	depends on I2C
 
-Regards,
-Bjorn
+should select REGMAP_I2C
+
+> +
+[...]
+> +#define CS42888_NUM_SUPPLIES 4
+> +static const char *cs42888_supply_names[CS42888_NUM_SUPPLIES] = {
+
+const char *const
+
+> +	"VA",
+> +	"VD",
+> +	"VLS",
+> +	"VLC",
+> +};
+> +
+> +static const char *cs42888_adc_single[] = { "Differential", "Single-Ended" };
+
+const char * const
+
+> +static const char *cs42888_szc[] = { "Immediate Change", "Zero Cross",
+> +				     "Soft Ramp", "Soft Ramp on Zero Cross" };
+> +
+
+const char * constr
+
+> +static const struct soc_enum cs42888_enum[] = {
+> +	SOC_ENUM_SINGLE(CS42888_ADCCTL, 4, 2, cs42888_adc_single),
+> +	SOC_ENUM_SINGLE(CS42888_ADCCTL, 3, 2, cs42888_adc_single),
+> +	SOC_ENUM_SINGLE(CS42888_TXCTL, 5, 4, cs42888_szc),
+> +	SOC_ENUM_SINGLE(CS42888_TXCTL, 0, 4, cs42888_szc),
+> +};
+
+Usually it makes things a bit more clearer when you have a variable with a 
+unique name for each enum rather then putting them into one large array.
+
+> +
+[...]
+> +static struct cs42888_ratios cs42888_ratios[] = {
+
+const
+
+[...]
+> +static struct snd_soc_dai_ops cs42888_dai_ops = {
+
+const
+
+> +	.set_fmt	= cs42888_set_dai_fmt,
+> +	.set_sysclk	= cs42888_set_dai_sysclk,
+> +	.hw_params	= cs42888_hw_params,
+> +	.digital_mute	= cs42888_digital_mute,
+> +};
+> +
+[...]
+> +
+> +static struct reg_default cs42888_reg[] = {
+
+const
+[...]
+> +
+> +static struct snd_soc_codec_driver cs42888_driver = {
+
+const
+
+> +	.probe = cs42888_probe,
+> +	.idle_bias_off = true,
+> +
+> +	.controls = cs42888_snd_controls,
+> +	.num_controls = ARRAY_SIZE(cs42888_snd_controls),
+> +	.dapm_widgets = cs42888_dapm_widgets,
+> +	.num_dapm_widgets = ARRAY_SIZE(cs42888_dapm_widgets),
+> +	.dapm_routes = cs42888_dapm_routes,
+> +	.num_dapm_routes = ARRAY_SIZE(cs42888_dapm_routes),
+> +};
+> +
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
