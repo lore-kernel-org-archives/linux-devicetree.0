@@ -1,30 +1,208 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 1/2] of/gpio: Define OF_GPIO_OPEN_DRAIN and
- OF_GPIO_OPEN_SOURCE flags.
-Date: Mon, 24 Feb 2014 13:11:13 +0100
-Message-ID: <CACRpkdaO5a6WBHHkDCFVN_Eg8P2Z7pkaONXCcxji9unOmkOsqw@mail.gmail.com>
-References: <1392148200-5393-1-git-send-email-ddaney.cavm@gmail.com>
-	<1392148200-5393-2-git-send-email-ddaney.cavm@gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH RFC 04/10] base: power: Add generic OF-based power domain look-up
+Date: Mon, 24 Feb 2014 13:11:00 +0100
+Message-ID: <CAPDyKFrvewrPKuhW8BTxcqH=SOxc8oWfrUuN-aZYnP2Kv+We7A@mail.gmail.com>
+References: <1389469372-17199-1-git-send-email-tomasz.figa@gmail.com>
+	<1389469372-17199-5-git-send-email-tomasz.figa@gmail.com>
+	<20140123001802.GF13785@codeaurora.org>
+	<52E062D8.1060206@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1392148200-5393-2-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Daney <david.daney@cavium.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <52E062D8.1060206@gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomasz Figa <t.figa@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Pavel Machek <pavel@ucw.cz>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kevin Hilman <khilman@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 11, 2014 at 8:49 PM, David Daney <ddaney.cavm@gmail.com> wrote:
+On 23 January 2014 01:31, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> Hi Stephen,
+>
+>
+> On 23.01.2014 01:18, Stephen Boyd wrote:
+>>
+>> On 01/11, Tomasz Figa wrote:
+>>>
+>>> +
+>>> +/**
+>>> + * of_genpd_lock() - Lock access to of_genpd_providers list
+>>> + */
+>>> +static void of_genpd_lock(void)
+>>> +{
+>>> +       mutex_lock(&of_genpd_mutex);
+>>> +}
+>>> +
+>>> +/**
+>>> + * of_genpd_unlock() - Unlock access to of_genpd_providers list
+>>> + */
+>>> +static void of_genpd_unlock(void)
+>>> +{
+>>> +       mutex_unlock(&of_genpd_mutex);
+>>> +}
+>>
+>>
+>> Why do we need these functions? Can't we just call
+>> mutex_lock/unlock directly?
+>
+>
+> That would be fine as well, I guess. Just duplicated the pattern used in
+> CCF, but can remove them in next version if it's found to be better.
+>
+>
+>>
+>>> +
+>>> +/**
+>>> + * of_genpd_add_provider() - Register a domain provider for a node
+>>> + * @np: Device node pointer associated with domain provider
+>>> + * @genpd_src_get: callback for decoding domain
+>>> + * @data: context pointer for @genpd_src_get callback.
+>>
+>>
+>> These look a little outdated.
+>
+>
+> Oops, missed this.
+>
+>
+>>
+>>> + */
+>>> +int of_genpd_add_provider(struct device_node *np, genpd_xlate_t xlate,
+>>> +                         void *data)
+>>> +{
+>>> +       struct of_genpd_provider *cp;
+>>> +
+>>> +       cp = kzalloc(sizeof(struct of_genpd_provider), GFP_KERNEL);
+>>
+>>
+>> Please use sizeof(*cp) instead.
+>
+>
+> Right.
+>
+>
+>>
+>>> +       if (!cp)
+>>> +               return -ENOMEM;
+>>> +
+>>> +       cp->node = of_node_get(np);
+>>> +       cp->data = data;
+>>> +       cp->xlate = xlate;
+>>> +
+>>> +       of_genpd_lock();
+>>> +       list_add(&cp->link, &of_genpd_providers);
+>>> +       of_genpd_unlock();
+>>> +       pr_debug("Added domain provider from %s\n", np->full_name);
+>>> +
+>>> +       return 0;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(of_genpd_add_provider);
+>>> +
+>>
+>> [...]
+>>>
+>>> +
+>>> +/* See of_genpd_get_from_provider(). */
+>>> +static struct generic_pm_domain *__of_genpd_get_from_provider(
+>>> +                                       struct of_phandle_args
+>>> *genpdspec)
+>>> +{
+>>> +       struct of_genpd_provider *provider;
+>>> +       struct generic_pm_domain *genpd = ERR_PTR(-ENOENT);
+>>
+>>
+>> Can this be -EPROBE_DEFER so that we can defer probe until a
+>> later time if the power domain provider hasn't registered yet?
+>
+>
+> Yes, this could be useful. Makes me wonder why clock code (on which I based
+> this code) doesn't have it done this way.
+>
+>
+>>
+>>> +
+>>> +       /* Check if we have such a provider in our array */
+>>> +       list_for_each_entry(provider, &of_genpd_providers, link) {
+>>> +               if (provider->node == genpdspec->np)
+>>> +                       genpd = provider->xlate(genpdspec,
+>>> provider->data);
+>>> +               if (!IS_ERR(genpd))
+>>> +                       break;
+>>> +       }
+>>> +
+>>> +       return genpd;
+>>> +}
+>>> +
+>>
+>> [...]
+>>>
+>>> +static int of_genpd_notifier_call(struct notifier_block *nb,
+>>> +                                 unsigned long event, void *data)
+>>> +{
+>>> +       struct device *dev = data;
+>>> +       int ret;
+>>> +
+>>> +       if (!dev->of_node)
+>>> +               return NOTIFY_DONE;
+>>> +
+>>> +       switch (event) {
+>>> +       case BUS_NOTIFY_BIND_DRIVER:
+>>> +               ret = of_genpd_add_to_domain(dev);
+>>> +               break;
+>>> +
+>>> +       case BUS_NOTIFY_UNBOUND_DRIVER:
+>>> +               ret = of_genpd_del_from_domain(dev);
+>>> +               break;
+>>> +
+>>> +       default:
+>>> +               return NOTIFY_DONE;
+>>> +       }
+>>> +
+>>> +       return notifier_from_errno(ret);
+>>> +}
+>>> +
+>>> +static struct notifier_block of_genpd_notifier_block = {
+>>> +       .notifier_call = of_genpd_notifier_call,
+>>> +};
+>>> +
+>>> +static int of_genpd_init(void)
+>>> +{
+>>> +       return bus_register_notifier(&platform_bus_type,
+>>> +                                       &of_genpd_notifier_block);
+>>> +}
+>>> +core_initcall(of_genpd_init);
+>>
+>>
+>> Would it be possible to call the of_genpd_add_to_domain() and
+>> of_genpd_del_from_domain() functions directly in the driver core,
+>> similar to how the pinctrl framework has a hook in there? That
+>> way we're not relying on any initcall ordering for this.
+>
+>
+> Hmm, the initcall here just registers a notifier, which needs to be done
+> just before any driver registers. So, IMHO, current variant is safe, given
+> an early enough initcall level is used.
+>
+> However, doing it the pinctrl way might still have an advantage of not
+> relying on specific bus type, so this is worth consideration indeed. I'd
+> like to hear Rafael's and Kevin's opinions on this (and other comments above
+> too).
 
->  enum of_gpio_flags {
->         OF_GPIO_ACTIVE_LOW = 0x1,
-> +       OF_GPIO_OPEN_DRAIN = 0x2,
-> +       OF_GPIO_OPEN_SOURCE = 0x4,
->  };
+As you say; certainly there will be other bus types that we need to
+support as well. For example the amba bus (drivers/amba/bus.c).
 
-BTW I think this enum shall be deleted and replaced by
-#include <dt-bindings/gpio/gpio.h> and use the definition from
-there.
+Additionally I believe similar reasons, why we added the pinctrl
+handling to driver core, applies to generic power domains. So I think
+we should give it a try!
 
-Yours,
-Linus Walleij
+Kind regards
+Ulf Hansson
+
+>
+> Best regards,
+> Tomasz
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
