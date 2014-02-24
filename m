@@ -1,225 +1,64 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] dma: Support multiple interleaved frames with
- non-contiguous memory
-Date: Mon, 24 Feb 2014 11:09:44 +0900
-Message-ID: <CAJe_ZhfSknzwMUo3nu14Hz5sr_hA6KojB=u4BvyT3byh5ViwXA@mail.gmail.com>
-References: <1392465619-27614-1-git-send-email-sthokal@xilinx.com>
-	<1392465619-27614-2-git-send-email-sthokal@xilinx.com>
-	<CAJe_Zhc_GNNSDWNFuk+cMHEqxfSCJB_ey=Bf+SwJK-nS=u9ceg@mail.gmail.com>
-	<CA+mB=1KdZZpTmpA0Xp_c4mhgFbjRZ6urYrCwdvoTCmcugQMDUA@mail.gmail.com>
-	<CAJe_ZhdOmu3k9gbPdQzPteyzwsMA8OzWHdhHnXudbF=X7JMhVQ@mail.gmail.com>
-	<CA+mB=1K43MDZj0Rx3q=ETQMaFsG1j7TXsH6v-7a26JdtqTJkbw@mail.gmail.com>
-	<CAJe_ZhfedP7Paf3Zq9chL0WUeLJrsy_DJL05sSbfqnfTtji=HQ@mail.gmail.com>
-	<CA+mB=1LK+aVbvh741+PMnpj_mwZRvJZzR5Fh=hf72UWQvxUiVQ@mail.gmail.com>
-	<CAJe_ZheGP-9f659tOdCHEMrbh73MDi7VjoieFhdQbvjVwiEbJQ@mail.gmail.com>
-	<CA+mB=1KqP=KgNZ_hYGbhin5TqokA+nCRPAA4Qa2R_2OWwv4yVw@mail.gmail.com>
+From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH 1/4] ASoC: simple-card: Fix device node locks
+Date: Mon, 24 Feb 2014 02:17:00 +0000
+Message-ID: <23e531e0edb34aa9b84799e558abaf26@BY2PR03MB505.namprd03.prod.outlook.com>
+References: <cover.1392995566.git.moinejf@free.fr>
+ <4dca81f45b67a4dcb21271e57409ba114c3b59cb.1392995566.git.moinejf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+mB=1KqP=KgNZ_hYGbhin5TqokA+nCRPAA4Qa2R_2OWwv4yVw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <4dca81f45b67a4dcb21271e57409ba114c3b59cb.1392995566.git.moinejf-GANU6spQydw@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: "Williams, Dan J" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Koul, Vinod" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Levente Kurusa <levex-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21 February 2014 23:37, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> On Thu, Feb 20, 2014 at 3:23 PM, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> wrote:
->> On 20 February 2014 14:54, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
->>> On Wed, Feb 19, 2014 at 12:33 AM, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> wrote:
->>>> On 18 February 2014 23:16, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
->>>>> On Tue, Feb 18, 2014 at 10:20 PM, Jassi Brar
->>>>> <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>>>> On 18 February 2014 16:58, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->>>>>> wrote:
->>>>>>> On Mon, Feb 17, 2014 at 3:27 PM, Jassi Brar
->>>>>>> <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>>>>>> On 15 February 2014 17:30, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->>>>>>>> wrote:
->>>>>>>>> The current implementation of interleaved DMA API support multiple
->>>>>>>>> frames only when the memory is contiguous by incrementing
->>>>>>>>> src_start/
->>>>>>>>> dst_start members of interleaved template.
->>>>>>>>>
->>>>>>>>> But, when the memory is non-contiguous it will restrict slave
->>>>>>>>> device
->>>>>>>>> to not submit multiple frames in a batch.  This patch handles this
->>>>>>>>> issue by allowing the slave device to send array of interleaved dma
->>>>>>>>> templates each having a different memory location.
->>>>>>>>>
->>>>>>>> How fragmented could be memory in your case? Is it inefficient to
->>>>>>>> submit separate transfers for each segment/frame?
->>>>>>>> It will help if you could give a typical example (chunk size and gap
->>>>>>>> in bytes) of what you worry about.
->>>>>>>
->>>>>>> With scatter-gather engine feature in the hardware, submitting
->>>>>>> separate
->>>>>>> transfers for each frame look inefficient. As an example, our DMA
->>>>>>> engine
->>>>>>> supports up to 16 video frames, with each frame (a typical video
->>>>>>> frame
->>>>>>> size) being contiguous in memory but frames are scattered into
->>>>>>> different
->>>>>>> locations. We could not definitely submit frame by frame as it would
->>>>>>> be
->>>>>>> software overhead (HW interrupting for each frame) resulting in video
->>>>>>> lags.
->>>>>>>
->>>>>> IIUIC, it is 30fps and one dma interrupt per frame ... it doesn't seem
->>>>>> inefficient at all. Even poor-latency audio would generate a higher
->>>>>> interrupt-rate. So the "inefficiency concern" doesn't seem valid to
->>>>>> me.
->>>>>>
->>>>>> Not to mean we shouldn't strive to reduce the interrupt-rate further.
->>>>>> Another option is to emulate the ring-buffer scheme of ALSA.... which
->>>>>> should be possible since for a session of video playback the frame
->>>>>> buffers' locations wouldn't change.
->>>>>>
->>>>>> Yet another option is to use the full potential of the
->>>>>> interleaved-xfer api as such. It seems you confuse a 'video frame'
->>>>>> with the interleaved-xfer api's 'frame'. They are different.
->>>>>>
->>>>>> Assuming your one video frame is F bytes long and Gk is the gap in
->>>>>> bytes between end of frame [k] and start of frame [k+1] and  Gi != Gj
->>>>>> for i!=j
->>>>>> In the context of interleaved-xfer api, you have just 1 Frame of 16
->>>>>> chunks. Each chunk is Fbytes and the inter-chunk-gap(ICG) is Gk  where
->>>>>> 0<=k<15
->>>>>> So for your use-case .....
->>>>>>   dma_interleaved_template.numf = 1   /* just 1 frame */
->>>>>>   dma_interleaved_template.frame_size = 16  /* containing 16 chunks */
->>>>>>    ...... //other parameters
->>>>>>
->>>>>> You have 3 options to choose from and all should work just as fine.
->>>>>> Otherwise please state your problem in real numbers (video-frames'
->>>>>> size, count & gap in bytes).
->>>>>
->>>>> Initially I interpreted interleaved template the same.  But, Lars
->>>>> corrected me
->>>>> in the subsequent discussion and let me put it here briefly,
->>>>>
->>>>> In the interleaved template, each frame represents a line of size
->>>>> denoted by
->>>>> chunk.size and the stride by icg.  'numf' represent number of frames
->>>>> i.e.
->>>>> number of lines.
->>>>>
->>>>> In video frame context,
->>>>> chunk.size -> hsize
->>>>> chunk.icg -> stride
->>>>> numf -> vsize
->>>>> and frame_size is always 1 as it will have only one chunk in a line.
->>>>>
->>>> But you said in your last post
->>>>   "with each frame (a typical video frame size) being contiguous in
->>>> memory"
->>>>  ... which is not true from what you write above. Anyways, my first 2
->>>> suggestions still hold.
->>>
->>> Yes, each video frame is contiguous and they can be scattered.
->>>
->> I assume by contiguous frame you mean as in framebuffer?  Which is an
->> array of bytes.
->> If yes, then you should do as I suggest first,  frame_size=16  and numf=1.
->
-> I think am confusing you.  I would like to explain with an example.  Lets
-> say
-> each video frame is 4k size starting at address 0x10004000 (-0x10005000) and
-> other frame at 0x20002000 (-0x20003000), and so on.
->
-As I said plz dont confuse video frame with DMA frame.... in video
-frame the stride is constant(zero or not) whereas in DMA context the
-stride must be zero for the frame to be called contiguous.
+> @@ -169,22 +164,26 @@ static int asoc_simple_card_parse_of(struct device_node
+> *node,
+>  	/* CPU sub-node */
+>  	ret = -EINVAL;
+>  	np = of_get_child_by_name(node, "simple-audio-card,cpu");
+> -	if (np)
+> +	if (np) {
+>  		ret = asoc_simple_card_sub_parse_of(np, priv->daifmt,
+>  						  &priv->cpu_dai,
+>  						  &dai_link->cpu_of_node,
+>  						  &dai_link->cpu_dai_name);
+> +		of_node_put(np);
 
-> So, the frames are
-> scattered in memory and as the template doesnt allow multiple src_start/
-> dst_start we could not use single template to fill the HW descriptors (of
-> frames).  So, I feel your suggestion might not work if the frames are
-> scattered.
-> Also, how could we get 'vsize' value in your approach?
->
-The client driver(video driver) should know the frame parameters.
-Practically you'll have to populate 16 transfer templates (frame
-attributes and locations won't change for a session) and submit to be
-transferred _cyclically_.
+Does the of_node_put(np) is really needed here ?
 
->  More importantly,
-> we are overriding the semantics of interleaved template members.
->
-Not at all. Interleaved-dma isn't meant for only constant stride/icg
-transfers. Rather it's for identical frames with random strides.
 
->
->>
->> If no, then it seems you are already doing the right thing.... the
->> ring-buffer scheme. Please share some stats how the current api is
->> causing you overhead because that is a very common case (many
->> controllers support LLI) and you have 467ms (@30fps with 16-frames
->> ring-buffer) to queue in before you see any frame drop.
->
-> As I mentioned earlier in the thread, our hardware has a SG engine where by
-> we could send multiple frames in a batch.  Using the original implementation
-> of interleaved API, we have three options to transfer.
->
-> One is to send frame by frame to the hardware.  We get a async_tx desc for
-> each frame and then we submit it to hardware triggering it to transfer this
-> BD.
-> We queue the next descriptor on the pending queue and whenever there is
-> a completion interrupt we submit the next BD on this queue to hardware. In
-> this implementation we are not efficiently using the SG engine in the
-> hardware
-> as we transferring frame by frame even HW allows us to transfer multiple
-> frames.
->
-Sending one frame at a time will likely cause jitters. That shouldn't be done.
+> +	}
+>  	if (ret < 0)
+>  		return ret;
+> 
+>  	/* CODEC sub-node */
+>  	ret = -EINVAL;
+>  	np = of_get_child_by_name(node, "simple-audio-card,codec");
+> -	if (np)
+> +	if (np) {
+>  		ret = asoc_simple_card_sub_parse_of(np, priv->daifmt,
+>  						  &priv->codec_dai,
+>  						  &dai_link->codec_of_node,
+>  						  &dai_link->codec_dai_name);
+> +		of_node_put(np);
 
-> The second option is to queue all the BDs until the maximum frames that HW
-> is
-> capable to transfer in a batch and then submit to SG engine in the HW.  With
-> this approach I feel there will be additional software overhead to track the
-> number
-> of maximum transfers and few additional cycles to release the cookie of each
-> desc.
-> Here, each desc represents a frame.
->
-APIs are written for the gcd of h/w. We should optimize only for
-majority and here isn't even anything gained after changing the api.
-What you want to 'optimize' has been there since ever. Nobody
-considers that overhead. BTW you don't even want to spend a few 'extra
-cycles' but what about every other platform that doesn't support this
-and will have to scan for such transfer requests?
+The same here...
 
-> The last option is the current implementation of the driver along with this
-> change in
-> API.  It will allow us to send array of interleaved templates wherein we
-> could allocate
-> a single async desc which will handle multiple frames (or segments) and just
-> submit
-> this desc to HW.  Then we program the current to first frame, tail to last
-> frame and
-> HW will complete this transfer.  Here, each desc represents multiple frames.
->
-> My point here is the driver should use hardware resources efficiently and I
-> feel the
-> driver will be inefficient if we dont use them.
->
-I am afraid you are getting carried away by the 'awesomeness' of your
-hardware. RingBuffers/Cyclic transfers  are meant for cases just like
-yours.
-Consider the following ... if you queue 16 frames and don't care to
-track before all are transmitted, you'll have very high latency. Video
-seeks will take unacceptably long and give the impression of a slow
-system. Whereas if you get callbacks for each frame rendered, you
-could updates frames from the next one thereby having very quick
-response time.
+> +	}
+>  	if (ret < 0)
+>  		return ret;
+> 
 
-Anyways there are already ways to achieve what you want (however a bad
-idea that might be). So I am not convinced the change to api is any
-useful (your hardware won't run any more efficiently with the change).
+Thanks,
 
-Regards,
-Jassi
+--
+Best Regards,
+Xiubo
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
