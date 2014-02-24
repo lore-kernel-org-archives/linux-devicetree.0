@@ -1,67 +1,80 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/6] ARM: STi reset controller support
-Date: Mon, 24 Feb 2014 16:16:22 +0100
-Message-ID: <1393254982.3091.44.camel@pizza.hi.pengutronix.de>
-References: <1389696613-19683-1-git-send-email-srinivas.kandagatla@st.com>
-				<1391437665-11913-1-git-send-email-srinivas.kandagatla@st.com>
-			<1391592486.11239.4.camel@pizza.hi.pengutronix.de>
-		 <52F4D76F.8070301@st.com> <5304B849.2080806@st.com>
-	 <1393237988.3091.14.camel@pizza.hi.pengutronix.de>
-	 <530B514A.4070209@st.com>
+From: Konstantin Tokarev <annulen@yandex.ru>
+Subject: Re: [PATCH v5 4/8] Documentation: add the document for the SPI NOR
+ framework
+Date: Mon, 24 Feb 2014 19:17:16 +0400
+Message-ID: <203101393255036@web29h.yandex.ru>
+References: <1393238262-8622-1-git-send-email-b32955@freescale.com>
+ <1393238262-8622-5-git-send-email-b32955@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <530B514A.4070209-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: srinivas kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Cc: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stephen.gallimore-qxv4g6HH51o@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="koi8-r"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1393238262-8622-5-git-send-email-b32955@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Huang Shijie <b32955@freescale.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>
+Cc: "angus.clark@st.com" <angus.clark@st.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "b44548@freescale.com" <b44548@freescale.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "broonie@linaro.org" <broonie@linaro.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "pekon@ti.com" <pekon@ti.com>, "sourav.poddar@ti.com" <sourav.poddar@ti.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Srinivas,
-
-Am Montag, den 24.02.2014, 14:03 +0000 schrieb srinivas kandagatla:
-> Thanks Philipp for your comments,
-> 
-> On 24/02/14 10:33, Philipp Zabel wrote:
-> >> > Did Srini's explanations convinced you?
-> >> > 
-> >> > If so, could you queue the series for v3.15?
-> > to be honest, I'm not comfortable with this explanation. If the
-> > "powerdown" bits only gate the clocks to those modules, calling it a
-> > reset control is clearly the wrong abstraction. If that is the case,
-> > couldn't you handle those bits via the clock framework?
-> I just had a re-look at the IPs specs for more information on where
-> these power-down signals are actually terminating on the IP side.
-> 
-> For example: ST-Synopsis Ethernet GMAC IP has two pins
-> power_down_req[IN] and power_down_ack[OUT]. power_down_req is used by
-> the software to either put the IP in powerdown or bring it out of
-> powerdown state.
-
-Now I'm a bit confused. There is no mention of GMAC in your patches,
-and for ETH[01] they contain only the SOFTRESET bits. I have no issue
-with the SOFTRESETs.
-
-> The IP itself drives power_down_ack to indicate when the power down
-> request is successfully finished. For power_down/power_up request the IP
-> will change the internal state accordingly including powering up/down
-> its internal blocks and/or clock gating.
-> 
-> > If on the other hand these powerdown bits also trigger reset machinery,
-> > such that asserting and deasserting that bit will change the module's
-> > internal state, I could be convinced to queue them like this.
-> This is true with ST IPs, these lines change the state of the IP as
-> described above. Reset framework seems to fits in very well with this
-> behavior rather than power-domains or clock framework.
-
-If you put the IP in power down when it is idle, and then power it up
-again, will the IP registers have kept their previous state?
-
-regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CgoyNC4wMi4yMDE0LCAxNToyNiwgIkh1YW5nIFNoaWppZSIgPGIzMjk1NUBmcmVlc2NhbGUuY29t
+PjoKPiBUaGlzIHBhdGNoIGFkZHMgdGhlIGRvY3VtZW50IGZvciB0aGUgU1BJIE5PUiBmcmFtZXdv
+cmsuCj4KPiBTaWduZWQtb2ZmLWJ5OiBIdWFuZyBTaGlqaWUgPGIzMjk1NUBmcmVlc2NhbGUuY29t
+Pgo+IC0tLQo+IJpEb2N1bWVudGF0aW9uL210ZC9zcGktbm9yLnR4dCB8IJqaNTkgKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiCaMSBmaWxlcyBjaGFuZ2VkLCA1OSBp
+bnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQo+IJpjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
+bnRhdGlvbi9tdGQvc3BpLW5vci50eHQKPgo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL210
+ZC9zcGktbm9yLnR4dCBiL0RvY3VtZW50YXRpb24vbXRkL3NwaS1ub3IudHh0Cj4gbmV3IGZpbGUg
+bW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi5iOTU4NWY4Cj4gLS0tIC9kZXYvbnVsbAo+ICsr
+KyBiL0RvY3VtZW50YXRpb24vbXRkL3NwaS1ub3IudHh0Cj4gQEAgLTAsMCArMSw1OSBAQAo+ICsg
+mpqampqampqampqampqampqampqampqamlNQSSBOT1IgZnJhbWV3b3JrCj4gKyCampqampqampqa
+mpqamj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4gKwo+ICtQ
+YXJ0IEkgLSB3aHkgd2UgbmVlZCB0aGlzIGZyYW1ld29yaz8KPiArLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLQo+ICsKPiArVGhlIFNQSSBidXMgY29udHJvbGxlciBvbmx5IGRl
+YWxzIHdpdGggdGhlIGJ5dGUgc3RyZWFtLgo+ICtTb21lIGNvbnRyb2xsZXIgZG9lcyBub3Qgd29y
+a3MgbGlrZSBhIFNQSSBidXMgY29udHJvbGxlciwgaXQgd29ya3MKPiArbGlrZSBhIFNQSSBOT1Ig
+Y29udHJvbGxlciBpbnN0ZWFkLCBzdWNoIGFzIHRoZSBGcmVlc2NhbGUncyBRdWFkU1BJIGNvbnRy
+b2xsZXIuCj4gKwo+ICtUaGUgRnJlZXNjYWxlJ3MgUXVhZFNQSSBjb250cm9sbGVyIHNob3VsZCBr
+bm93cyB0aGUgTk9SIGNvbW1hbmRzIHRvCj4gK2ZpbmQgdGhlIHJpZ2h0IExVVCBzZXF1ZW5jZS4g
+VW5mb3J0dW5hdGVseSwgdGhlIG9sZCBjb2RlIGNhbiBub3QgbWVldAo+ICt0aGlzIHJlcXVpcmVt
+ZW50LgoKc2hvdWxkIGtub3cKCj4gKwo+ICtQYXJ0IElJIC0gSG93IGRvZXMgdGhlIGZyYW1ld29y
+ayB3b3JrPwo+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gKwo+ICtU
+aGlzIGZyYW1ld29yayBqdXN0IGFkZHMgYSBuZXcgbGF5ZXIgYmV0d2VlbiB0aGUgTVREIGFuZCB0
+aGUgU1BJIGJ1cyBkcml2ZXIuCj4gK1dpdGggdGhpcyBuZXcgbGF5ZXIsIHRoZSBTUEkgTk9SIGNv
+bnRyb2xsZXIgZHJpdmVyIGRvZXMgbm90IGRlcGVuZCBvbiB0aGUKPiArbTI1cDgwIGNvZGUgYW55
+bW9yZS4KPiArCj4gKyCamkJlZm9yZSB0aGlzIGZyYW1ld29yaywgdGhlIGxheWVyIGlzIGxpa2U6
+Cj4gKwo+ICsgmpqampqampqampqampqampqaTVRECj4gKyCampqampqami0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLQo+ICsgmpqampqampqampqampqampptMjVwODAKPiArIJqampqampqaLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tCj4gKyCampqamppTUEkgYnVzIGRyaXZlcgo+ICsgmpqampqampot
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArIJqampqamppTUEkgTk9SIGNoaXAKPiArCj4gKyCa
+mkFmdGVyIHRoaXMgZnJhbWV3b3JrLCB0aGUgbGF5ZXIgaXMgbGlrZToKPiArIJqampqampqampqa
+mpqampqamk1URAo+ICsgmpqampqampotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArIJqampqa
+mpqampqamppTUEkgTk9SIGZyYW1ld29yawo+ICsgmpqampqampotLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0KPiArIJqampqampqampqampqampqabTI1cDgwCj4gKyCampqampqami0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLQo+ICsgmpqampqaU1BJIGJ1cyBkcml2ZXIKPiArIJqampqampqaLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tCj4gKyCampqamppTUEkgTk9SIGNoaXAKPiArCj4gKyCaV2l0aCB0
+aGUgU1BJIE5PUiBjb250cm9sbGVyIGRyaXZlcihGcmVlc2NhbGUgUXVhZFNQSSksIGl0IGxvb2tz
+IGxpa2U6Cj4gKyCampqampqampqampqampqamppNVEQKPiArIJqampqampqaLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tCj4gKyCampqampqampqampqaU1BJIE5PUiBmcmFtZXdvcmsKPiArIJqampqa
+mpqaLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gKyCampqampqampqampqamppmc2wtcXVhZFNQ
+SQo+ICsgmpqampqampotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArIJqampqamlNQSSBOT1Ig
+Y2hpcAo+ICsKPiArUGFydCBJSUkgLSBIb3cgY2FuIHRoZSBkcml2ZXJzIHVzZSB0aGUgZnJhbWV3
+b3JrCj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArCj4gK1RoZSBt
+YWluIEFQSSBpcyB0aGUgc3BpX25vcl9zY2FuKCkuIEJlZm9yZSB5b3UgY2FsbCB0aGUgaG9vaywg
+eW91IHNob3VsZAo+ICtpbml0aWFsaXplIHRoZSBuZWNlc3NhcnkgZmllbGRzIGZvciBzcGlfbm9y
+e30uCj4gK1BsZWFzZSBzZWUgdGhlIGRyaXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5jIGZvciBk
+ZXRhaWwuCj4gK1BsZWFzZSBhbHNvIHJlZmVyZW5jZSB0byB0aGUgZnNsLXF1YWRzcGkuYyB3aGVu
+IHlvdSB3YW50IHRvIHdyaXRlIGEgbmV3IGRyaXZlcgo+ICtmb3IgYSBTUEkgTk9SIGNvbnRyb2xs
+ZXIuCj4gLS0KPiAxLjcuMi5yYzMKPgo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwo+IExpbnV4IE1URCBkaXNjdXNzaW9uIG1haWxpbmcgbGlz
+dAo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbXRk
+LwoKUmVnYXJkcywKS29uc3RhbnRpbgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
