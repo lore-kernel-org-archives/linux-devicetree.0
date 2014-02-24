@@ -1,65 +1,63 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH] sdhci: Add a quirk to disable write-protect
-Date: Mon, 24 Feb 2014 07:59:48 +0100
-Message-ID: <1393225188-18000-1-git-send-email-mike.looijmans@topic.nl>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org, anton@enomsg.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, cjb@laptop.org, Mike Looijmans <mike.looijmans@topic.nl>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 07/10] spi: sh-msiof: Add support for R-Car H2 and M2
+Date: Mon, 24 Feb 2014 08:39:45 +0100
+Message-ID: <CAMuHMdV1iDHz4ewFAG-QTba_wUF76Ei-VQpP+MRoNGV2mfHrpw@mail.gmail.com>
+References: <1392907389-21798-1-git-send-email-geert@linux-m68k.org>
+	<1392907389-21798-8-git-send-email-geert@linux-m68k.org>
+	<CANqRtoQVJzEgo_AdVxrPSRUY6ocyPaQ=RKQJyxoExDrfYxiJ3w@mail.gmail.com>
+	<CAMuHMdUByWPcYM8M_m5NVM4QP5cQE_tOLGQg=2fTNF7gqkUhig@mail.gmail.com>
+	<CANqRtoSJTROkkbGxV_p+B2S7b7jZ7jgHQ+q4_WG54m+Pxgfcpw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CANqRtoSJTROkkbGxV_p+B2S7b7jZ7jgHQ+q4_WG54m+Pxgfcpw@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Takashi Yoshii <takasi-y@ops.dti.ne.jp>, linux-spi <linux-spi@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-When a board does not have the WP line wired at all, the card
-may be detected as read-only. Add a quirk and a device property
-to disable WP detection.
+Hi Magnus,
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
----
- drivers/mmc/host/sdhci-pltfm.c |    3 +++
- drivers/mmc/host/sdhci.c       |    3 ++-
- include/linux/mmc/sdhci.h      |    2 ++
- 3 files changed, 7 insertions(+), 1 deletion(-)
+On Mon, Feb 24, 2014 at 3:45 AM, Magnus Damm <magnus.damm@gmail.com> wrote:
+> On Fri, Feb 21, 2014 at 1:13 AM, Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+>> On Thu, Feb 20, 2014 at 4:41 PM, Magnus Damm <magnus.damm@gmail.com> wrote:
+>>> On thing stuck out a bit with the bindings. I can see that you specify
+>>> both fifo size and use the SoC suffix for the r8a7790 and r8a7791
+>>> bindings. Isn't that a bit of redundant information there, if we know
+>>> that the SoC is r8a7790 or r8a7791 then can't we simply put that
+>>> information in r8a779x_data above and perhaps keep the binding
+>>> simpler? Perhaps same thing applies to other properties as well?
+>>
+>> "renesas,tx-fifo-size" and "renesas,rx-fifo-size" are part of the existing
+>> bindings, so I'm a bit reluctant to change these.
+>> Hmm, since the original bindings didn't specify the default values,
+>> I could make them chip-specific, though.
+>
+> Thanks, yes I think treating the "renesas,tx-fifo-size" and
+> "renesas,rx-fifo-size" bindings as optional and allow us to rely on
+> chip-specific default values makes sense.
+>
+>> The only other property is "num-cs", which can have any value if you
+>> start using the generic "cs-gpios".
+>
+> I see. It looks to me that such a setting is board-specific, so what
+> is a sane default in the SoC DTSI? You seem to have it set to "1"
+> today, but if the board is supposed to override it anyway then do we
+> need to set it?
+>
+> Anyway, "num-cs" is a minor detail so no need to bother about that too much!
 
-diff --git a/drivers/mmc/host/sdhci-pltfm.c b/drivers/mmc/host/sdhci-pltfm.c
-index e2065a4..9e83ada 100644
---- a/drivers/mmc/host/sdhci-pltfm.c
-+++ b/drivers/mmc/host/sdhci-pltfm.c
-@@ -83,6 +83,9 @@ void sdhci_get_of_property(struct platform_device *pdev)
- 		if (sdhci_of_wp_inverted(np))
- 			host->quirks |= SDHCI_QUIRK_INVERTED_WRITE_PROTECT;
- 
-+		if (of_get_property(np, "disable-wp", NULL))
-+			host->quirks2 |= SDHCI_QUIRK2_DISABLE_WP;
-+
- 		if (of_get_property(np, "broken-cd", NULL))
- 			host->quirks |= SDHCI_QUIRK_BROKEN_CARD_DETECTION;
- 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 7a7fb4f..68f47fc 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -1635,7 +1635,8 @@ static int sdhci_check_ro(struct sdhci_host *host)
- 
- 	spin_lock_irqsave(&host->lock, flags);
- 
--	if (host->flags & SDHCI_DEVICE_DEAD)
-+	if ((host->flags & SDHCI_DEVICE_DEAD) ||
-+		(host->quirks2 & SDHCI_QUIRK2_DISABLE_WP))
- 		is_readonly = 0;
- 	else if (host->ops->get_ro)
- 		is_readonly = host->ops->get_ro(host);
-diff --git a/include/linux/mmc/sdhci.h b/include/linux/mmc/sdhci.h
-index 3e781b8..967dba0 100644
---- a/include/linux/mmc/sdhci.h
-+++ b/include/linux/mmc/sdhci.h
-@@ -98,6 +98,8 @@ struct sdhci_host {
- #define SDHCI_QUIRK2_CARD_ON_NEEDS_BUS_ON		(1<<4)
- /* Controller has a non-standard host control register */
- #define SDHCI_QUIRK2_BROKEN_HOST_CONTROL		(1<<5)
-+/* Controller lacks write protect detection */
-+#define SDHCI_QUIRK2_DISABLE_WP			(1<<6)
- 
- 	int irq;		/* Device IRQ */
- 	void __iomem *ioaddr;	/* Mapped address */
--- 
-1.7.9.5
+In v2, I'll drop the "num-cs" from the dtsi, so it will default to the driver's
+default (which is 1, for the simple case of using hardware controlled CS).
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
