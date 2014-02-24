@@ -1,121 +1,33 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: cs42888: Add codec driver support
-Date: Mon, 24 Feb 2014 20:30:11 +0900
-Message-ID: <20140224113011.GE25940@sirena.org.uk>
-References: <1393224929-7555-1-git-send-email-Guangyu.Chen@freescale.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 00/10] pinctrl: mvebu: remove hard-coded addresses from
+ Dove pinctrl
+Date: Mon, 24 Feb 2014 12:50:46 +0100
+Message-ID: <CACRpkdYptvexfwASCA3Y84oSpidGF6n9WLTEL2GtRQL9fLYsUg@mail.gmail.com>
+References: <1393231382-11078-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<CACRpkdZ1JR82m46YV5m=b6e3E3OYcNCka_8EiT2VcSPU=ZVLdQ@mail.gmail.com>
+	<530B1CF4.2060208@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="myda8z5PGMklj5Rc"
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1393224929-7555-1-git-send-email-Guangyu.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <530B1CF4.2060208-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolin Chen <Guangyu.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Feb 24, 2014 at 11:20 AM, Sebastian Hesselbarth
+<sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
---myda8z5PGMklj5Rc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Although, I guess instead of applying them separately, it would have
+> been better to pull them from Jason's stable topic branch. But that is
+> also up to you and Jason may give valuable hints on how to proceed in
+> the future.
 
-On Mon, Feb 24, 2014 at 02:55:29PM +0800, Nicolin Chen wrote:
-> This patch adds support for the Cirrus Logic CS42888 Audio CODEC that
-> has four 24-bit A/D and eight 24-bit D/A converters.
+Yeah I concluded that I should take a branch pull instead, so I'm
+just waiting for an indication of which branch to pull in.
 
-Looks generally good, some fairly small nits below.
-
-> [ CS42888 supports both I2C and SPI control ports. As initial patch,
->   this patch only adds the support for I2C. ]
-
->  5 files changed, 795 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/cs42888.txt
->  create mode 100644 sound/soc/codecs/cs42888.c
->  create mode 100644 sound/soc/codecs/cs42888.h
-
-Given that we're starting to split out separate bus drivers for the I2C
-and SPI CODECs (look at the recent submissions from Lars-Peter) it'd be
-good to start this off with a separate bus driver for I2C even if the
-SPI one is still to be done - that way the Kconfig stuff for machine
-drivers is all in place and doesn't need updating.
-
-> +  - clocks : phandle to the clock source for MCLK
-> +
-> +  - clock-names : must contain "mclk".
-
-These should really be lists though there's only one documented element
-so it's purely a documentation update.
-
-> +	/* Disable auto-mute */
-> +	regmap_update_bits(cs42888->regmap, CS42888_TXCTL,
-> +			   CS42888_TXCTL_AMUTE | CS42888_TXCTL_DAC_SZC_MASK,
-> +			   CS42888_TXCTL_DAC_SZC_SR);
-
-Does this interfere with the manual mute controls or is it a separate
-thing?  If it plays nicely with the manual controls it's probably better
-to leave it enabled since it improves performance in some benchmarks
-(that's why hardware tends to have the feature).
-
-> +	/*
-> +	 * We haven't marked the chip revision as volatile due to
-> +	 * sharing a register with the right input volume; explicitly
-> +	 * bypass the cache to read it.
-> +	 */
-> +	regcache_cache_bypass(cs42888->regmap, true);
-
-The other option here is to just not provide a default so that the first
-time it's read it goes to hardware.  It doesn't make much difference
-either way though.
-
-> +static int cs42888_i2c_remove(struct i2c_client *i2c_client)
-> +{
-> +	snd_soc_unregister_codec(&i2c_client->dev);
-> +	return 0;
-> +}
-
-The driver ought to disable runtime PM, the clock and the regulators here.
-
-> +	/*
-> +	 * In case the device was put to hard reset during sleep,
-> +	 * we need to wait 500ns here before any I2C communication
-> +	 */
-> +	mdelay(5);
-
-Do we need 500ns or 5ms? =20
-
-> +	regcache_sync(cs42888->regmap);
-
-Should really check the return value here.
-
-> +	if (!IS_ERR(cs42888->clk))
-> +		clk_disable_unprepare(cs42888->clk);
-
-Does the device work without MCLK?
-
---myda8z5PGMklj5Rc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTCy06AAoJELSic+t+oim9NacQAJVraT2HLnDfUAFCMZHgAWvo
-oe2rWCWlkqDqn/tKbsTHCDv3vEJ1HOw8rDFy7CvnS8jrK/TwzwLAi6VrctROFnvw
-coBs3ZHIWw0mFuu6qlNqVqL9ZKNeemESyKdkisJ3FDxaWt/W1nPYWdn8q0y4+6dW
-7TwnXAfWG9r2KNSPp7u7CeRxc+MLe5Z8NyKUPOfz0RfI153E8MHt7lqI1cgM8S2e
-UPM5xb0Tuvdv6bhcHd8sLwOkdVeSvyFdC1aGJfRWC6wPA6o8rdjsYpfKhBHATEwk
-ot1jn7vSTlLJlvTEkkoaWWDy001Xv8GI1CQkLJkFIF+6jbsl+CUoL+xq8bi9+yui
-T7sYceGbY6H5CYGg2OdFPM462FcYLN4PkUR4KfqjKIqCsT7dVuWUBqHKKMkiQQeg
-mf0O40K/DDcGVPzOe+NmeYCj5JS5jbPAtD3pxiYpqFfmheTsaHoiaY/sVHGuK87p
-liYFuk5Je13+krdYyfPg6jAKbqw03m3RO4hcsY4ioegP50fhzkMSU1FGLpmSQOW7
-oOrwNAyAJs4Qm/vSpBJT7RacuOsW0L7hlFO71Q4wPa2JAL17KSQ5NhtAWryc9G+v
-bZzPwzBm/AgBS36r2lkw/TXeZqtN761eK7P+rctPIpvbH2WOYuXOEr4dWd4I9F7+
-LdQ4GWixLlzjIzRoZ0Xp
-=VON1
------END PGP SIGNATURE-----
-
---myda8z5PGMklj5Rc--
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
