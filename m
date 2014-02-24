@@ -1,107 +1,45 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [RFC PATCH v3 0/9] imx-drm dt bindings
-Date: Mon, 24 Feb 2014 16:36:37 +0100
-Message-ID: <1393256197.3091.49.camel@pizza.hi.pengutronix.de>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [RFC PATCH v3 1/9] staging: imx-drm-core: don't request probe
+ deferral in imx_drm_encoder_parse_of
+Date: Mon, 24 Feb 2014 15:49:19 +0000
+Message-ID: <20140224154919.GL21483@n2100.arm.linux.org.uk>
 References: <1392723370-4772-1-git-send-email-p.zabel@pengutronix.de>
+ <1392723370-4772-2-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1392723370-4772-1-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces@lists.freedesktop.org
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <1392723370-4772-2-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 18.02.2014, 12:36 +0100 schrieb Philipp Zabel:
-> Hi,
+On Tue, Feb 18, 2014 at 12:36:02PM +0100, Philipp Zabel wrote:
+> From: Lucas Stach <l.stach@pengutronix.de>
 > 
-> here is an updated and more complete version of the imx-drm DT binding
-> series. These patches apply on top of Russell's second preview of the
-> imx-drm cleanup series on v3.14-rc2. I have added device tree bindings
-> between IPU and the encoders as documented in
-> Documentation/devicetree/bindings/media/video-interfaces.txt
-> and used those to determine the possible_crtcs and mux_id.
-> 
-> The crtc cookie is replaced with a the port device tree node,
-> which is unique and therefore allows to get rid of the di_id
-> comparison. Storing the multiplexer input numbers in the device
-> tree removes the need to know the ipu_id. This should also allow
-> to replace IPU2 with LCDIF on i.MX6 Solo more easily.
-> 
-> In v3 also connections between display interface ports and encoders are
-> used to find all necessary components, so that only the display interfaces
-> have to be configured in the imx-drm node. This allows to move the imx-drm
-> node into the SoC level dtsi. I've also updated the existing i.MX51 and
-> i.MX53 device trees this time and updated/added the devicetree binding
-> documentation.
-> 
-> Patch 2/9 adds a temporary copy of the v4l2_of parser functions. Those
-> are going to be moved to some place where they can be used by drm drivers,
-> eventually, so those local copies can be dropped again.
+> Since imx_drm_encoder_parse_of is called from the encoder bind callbacks,
+> it is too late to request probe deferral. Rather the core should make sure
+> that the crtcs are bound before the encoders, after all needed components
+> are probed.
 
-Russell has sent a pull request for the imx-drm component support series
-now, and we're at v3.13-rc4 already. This patch series still applies on
-top of
-git://ftp.arm.linux.org.uk/~rmk/linux-arm.git imx-drm-staging
-I'd appreciate some feedback on this. Or shall I resend without the RFC?
+Why is it too late?  -EPROBE_DEFER from this point will cause the driver
+initialisation to correctly unwind and return -EPROBE_DEFER to the
+last-to-be-added component.
 
-regards
-Philipp
+> This fixes probe failure when using the LDB on i.MX6.
 
-> regards
-> Philipp
-> 
-> Lucas Stach (1):
->   staging: imx-drm-core: don't request probe deferral in
->     imx_drm_encoder_parse_of
-> 
-> Philipp Zabel (8):
->   staging: imx-drm: Add temporary copies of v4l2-of parsing functions
->   staging: imx-drm-core: Use OF graph to find components and connections
->     between encoder and crtcs
->   staging: imx-drm: Document updated imx-drm device tree bindings
->   staging: imx-drm: Document imx-hdmi device tree bindings
->   ARM: dts: imx51: Add IPU ports and endpoints, move imx-drm node to
->     dtsi
->   ARM: dts: imx53: Add IPU DI ports and endpoints, move imx-drm node to
->     dtsi
->   ARM: dts: imx6qdl: Add IPU DI ports and endpoints, move imx-drm node
->     to dtsi
->   staging: imx-drm: Update TODO
-> 
->  .../bindings/staging/imx-drm/fsl-imx-drm.txt       |  48 ++++-
->  .../devicetree/bindings/staging/imx-drm/hdmi.txt   |  53 +++++
->  .../devicetree/bindings/staging/imx-drm/ldb.txt    |  20 +-
->  arch/arm/boot/dts/imx51-apf51dev.dts               |  11 +-
->  arch/arm/boot/dts/imx51-babbage.dts                |  28 ++-
->  arch/arm/boot/dts/imx51.dtsi                       |  22 ++-
->  arch/arm/boot/dts/imx53-m53evk.dts                 |  17 +-
->  arch/arm/boot/dts/imx53-mba53.dts                  |  15 +-
->  arch/arm/boot/dts/imx53-qsb.dts                    |  17 +-
->  arch/arm/boot/dts/imx53.dtsi                       |  64 +++++-
->  arch/arm/boot/dts/imx6dl.dtsi                      |  22 +--
->  arch/arm/boot/dts/imx6q-sabresd.dts                |   4 -
->  arch/arm/boot/dts/imx6q.dtsi                       | 124 +++++++++++-
->  arch/arm/boot/dts/imx6qdl-sabresd.dtsi             |   6 -
->  arch/arm/boot/dts/imx6qdl.dtsi                     | 138 ++++++++++++-
->  drivers/staging/imx-drm/Makefile                   |   2 +-
->  drivers/staging/imx-drm/TODO                       |   5 -
->  drivers/staging/imx-drm/imx-drm-core.c             | 217 ++++++++++++++-------
->  drivers/staging/imx-drm/imx-drm-of.c               | 132 +++++++++++++
->  drivers/staging/imx-drm/imx-drm.h                  |  11 +-
->  drivers/staging/imx-drm/imx-hdmi.c                 |   2 +-
->  drivers/staging/imx-drm/imx-ldb.c                  |   4 +-
->  drivers/staging/imx-drm/ipuv3-crtc.c               |  47 ++++-
->  23 files changed, 842 insertions(+), 167 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
->  create mode 100644 drivers/staging/imx-drm/imx-drm-of.c
-> 
+More details please.
+
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
