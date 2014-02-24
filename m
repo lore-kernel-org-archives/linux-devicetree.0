@@ -1,48 +1,46 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v11 09/15] usb: phy: Add set_wakeup API
-Date: Mon, 24 Feb 2014 21:41:07 +0300
-Message-ID: <530B9243.4020909@cogentembedded.com>
-References: <1393208467-6355-1-git-send-email-peter.chen@freescale.com> <1393208467-6355-10-git-send-email-peter.chen@freescale.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [RFC PATCH v3 1/9] staging: imx-drm-core: don't request probe
+	deferral in imx_drm_encoder_parse_of
+Date: Mon, 24 Feb 2014 18:41:21 +0100
+Message-ID: <1393263681.3091.84.camel@pizza.hi.pengutronix.de>
+References: <1392723370-4772-1-git-send-email-p.zabel@pengutronix.de>
+	<1392723370-4772-2-git-send-email-p.zabel@pengutronix.de>
+	<20140224154919.GL21483@n2100.arm.linux.org.uk>
+	<1393260998.3091.63.camel@pizza.hi.pengutronix.de>
+	<20140224170653.GO21483@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393208467-6355-10-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, frank.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20140224170653.GO21483@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces@lists.freedesktop.org
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Am Montag, den 24.02.2014, 17:06 +0000 schrieb Russell King - ARM Linux:
+> On Mon, Feb 24, 2014 at 05:56:38PM +0100, Philipp Zabel wrote:
+> > Am Montag, den 24.02.2014, 15:49 +0000 schrieb Russell King - ARM Linux:
+> > One issue was that the DT parsing code would try to add the imx-ldb
+> > component right after the first crtc, and then its bind would fail
+> > in imx_drm_encoder_parse_of because the three remaining crtcs were
+> > not yet registered. This is already fixed by adding the crtc
+> > components first.
+> 
+> That's what happens anyway - we add /all/ the CRTCs first before we
+> start adding the connectors.
 
-On 02/24/2014 05:21 AM, Peter Chen wrote:
+Yes, I know. I accidentally removed that feature when I switched to
+parsing the OF graph instead of the crtcs and encoder properties, but
+I've fixed this again in v3 without moving this patch out of the way.
 
-> This API is used to set wakeup enable at PHY registers, in that
-> case, the PHY can be waken up from suspend due to external events,
-> like vbus change, dp/dm change and id change.
-
-> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->   include/linux/usb/phy.h |   16 ++++++++++++++++
->   1 files changed, 16 insertions(+), 0 deletions(-)
-
-> diff --git a/include/linux/usb/phy.h b/include/linux/usb/phy.h
-> index 6c0b1c5..c2c6f49 100644
-> --- a/include/linux/usb/phy.h
-> +++ b/include/linux/usb/phy.h
-> @@ -111,6 +111,13 @@ struct usb_phy {
->   	int	(*set_suspend)(struct usb_phy *x,
->   				int suspend);
->
-> +	/*
-> +	 * Set wakeup enable for PHY, in that case, the PHY can be
-> +	 * waken up from suspend status due to external events,
-
-    s/waken/woken/
-
-WBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards
+Philipp
