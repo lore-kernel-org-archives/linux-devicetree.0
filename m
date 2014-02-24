@@ -1,7 +1,7 @@
 From: Peter Chen <peter.chen@freescale.com>
-Subject: [PATCH v11 01/15] usb: doc: phy-mxs: Add more compatible strings
-Date: Mon, 24 Feb 2014 10:20:53 +0800
-Message-ID: <1393208467-6355-2-git-send-email-peter.chen@freescale.com>
+Subject: [PATCH v11 03/15] usb: phy-mxs: Add auto clock and power setting
+Date: Mon, 24 Feb 2014 10:20:55 +0800
+Message-ID: <1393208467-6355-4-git-send-email-peter.chen@freescale.com>
 References: <1393208467-6355-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,32 +12,55 @@ To: balbi@ti.com, shawn.guo@linaro.org, robh+dt@kernel.org, grant.likely@linaro.
 Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, peter.chen@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add "fsl,imx6q-usbphy" for imx6dq and imx6dl, add
-"fsl,imx6sl-usbphy" for imx6sl, and "fsl,imx23-usbphy"
-is still a fallback for other strings.
+The auto setting is used to open related power and clocks
+automatically after receiving wakeup signal.
+
+With this feature, the PHY's clock and power can be recovered
+correctly from low power mode, it is guaranteed by IC logic.
 
 Signed-off-by: Peter Chen <peter.chen@freescale.com>
 ---
- Documentation/devicetree/bindings/usb/mxs-phy.txt |    6 +++++-
- 1 files changed, 5 insertions(+), 1 deletions(-)
+ drivers/usb/phy/phy-mxs-usb.c |   20 +++++++++++++++++---
+ 1 files changed, 17 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/mxs-phy.txt b/Documentation/devicetree/bindings/usb/mxs-phy.txt
-index 5835b27..ea5134a 100644
---- a/Documentation/devicetree/bindings/usb/mxs-phy.txt
-+++ b/Documentation/devicetree/bindings/usb/mxs-phy.txt
-@@ -1,7 +1,11 @@
- * Freescale MXS USB Phy Device
+diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
+index cf58d8e..d7adca3 100644
+--- a/drivers/usb/phy/phy-mxs-usb.c
++++ b/drivers/usb/phy/phy-mxs-usb.c
+@@ -31,6 +31,11 @@
  
- Required properties:
--- compatible: Should be "fsl,imx23-usbphy"
-+- compatible: should contain:
-+	* "fsl,imx23-usbphy" for imx23 and imx28
-+	* "fsl,imx6q-usbphy" for imx6dq and imx6dl
-+	* "fsl,imx6sl-usbphy" for imx6sl
-+  "fsl,imx23-usbphy" is still a fallback for other strings
- - reg: Should contain registers location and length
- - interrupts: Should contain phy interrupt
+ #define BM_USBPHY_CTRL_SFTRST			BIT(31)
+ #define BM_USBPHY_CTRL_CLKGATE			BIT(30)
++#define BM_USBPHY_CTRL_ENAUTOSET_USBCLKS	BIT(26)
++#define BM_USBPHY_CTRL_ENAUTOCLR_USBCLKGATE	BIT(25)
++#define BM_USBPHY_CTRL_ENAUTOCLR_PHY_PWD	BIT(20)
++#define BM_USBPHY_CTRL_ENAUTOCLR_CLKGATE	BIT(19)
++#define BM_USBPHY_CTRL_ENAUTO_PWRON_PLL		BIT(18)
+ #define BM_USBPHY_CTRL_ENUTMILEVEL3		BIT(15)
+ #define BM_USBPHY_CTRL_ENUTMILEVEL2		BIT(14)
+ #define BM_USBPHY_CTRL_ENHOSTDISCONDETECT	BIT(1)
+@@ -96,9 +101,18 @@ static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+ 	/* Power up the PHY */
+ 	writel(0, base + HW_USBPHY_PWD);
  
+-	/* enable FS/LS device */
+-	writel(BM_USBPHY_CTRL_ENUTMILEVEL2 |
+-	       BM_USBPHY_CTRL_ENUTMILEVEL3,
++	/*
++	 * USB PHY Ctrl Setting
++	 * - Auto clock/power on
++	 * - Enable full/low speed support
++	 */
++	writel(BM_USBPHY_CTRL_ENAUTOSET_USBCLKS |
++		BM_USBPHY_CTRL_ENAUTOCLR_USBCLKGATE |
++		BM_USBPHY_CTRL_ENAUTOCLR_PHY_PWD |
++		BM_USBPHY_CTRL_ENAUTOCLR_CLKGATE |
++		BM_USBPHY_CTRL_ENAUTO_PWRON_PLL |
++		BM_USBPHY_CTRL_ENUTMILEVEL2 |
++		BM_USBPHY_CTRL_ENUTMILEVEL3,
+ 	       base + HW_USBPHY_CTRL_SET);
+ 
+ 	return 0;
 -- 
 1.7.8
 
