@@ -1,44 +1,109 @@
-From: Alistair Popple <alistair@popple.id.au>
-Subject: Re: [PATCH 1/7] IBM Akebono: Add a SDHCI platform driver
-Date: Mon, 24 Feb 2014 11:38:30 +1100
-Message-ID: <278655068.asy5NBOYab@mexican>
-References: <1392964293-13687-1-git-send-email-alistair@popple.id.au> <1392964293-13687-2-git-send-email-alistair@popple.id.au> <1773685.WfxOP0FuHM@wuerfel>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC v1 1/3] clk: Add function to parse an arbitrary clocks list
+ property
+Date: Sun, 23 Feb 2014 16:43:35 -0800
+Message-ID: <20140224004335.22529.74369@quantum>
+References: <1392829124-25705-1-git-send-email-s.nawrocki@samsung.com>
+ <1392829124-25705-2-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1773685.WfxOP0FuHM@wuerfel>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-mmc@vger.kernel.org, cjb@laptop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1392829124-25705-2-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 21 Feb 2014 15:14:30 Arnd Bergmann wrote:
-> On Friday 21 February 2014 17:31:27 Alistair Popple wrote:
-> > +config MMC_SDHCI_OF_476GTR
-> > +	tristate "SDHCI OF support for the IBM PPC476GTR SoC"
-> > +	depends on MMC_SDHCI_PLTFM
-> > +	depends on PPC_OF
-> > +	help
-> > +	  This selects the Secure Digital Host Controller Interface (SDHCI)
-> > +	  found on the PPC476GTR SoC.
-> > +
-> > +	  If you have a controller with this interface, say Y or M here.
-> > +
-> > +	  If unsure, say N.
+Quoting Sylwester Nawrocki (2014-02-19 08:58:42)
+> The of_clk_get_list_entry() function is like of_clk_get() except it allows
+> to pass name of a DT property containing list of phandles and clock specifiers.
+> For of_clk_get() it has been hard coded to "clocks".
 > 
-> Your driver doesn't actually do anything beyond what is in the common
-> sdhci-pltfm.c infrastructure. IMHO you really shoulnd't need a SoC
-> specific abstraction for it at all and instead add a generic
-> platform driver registration into sdhci-pltfm.c. I'd suggest
-> you use "generic-sdhci" (similar to what we do for usb-ohci and usb-ehci
-> now) as the compatible string and change your device tree to claim
-> compatibility with that and your soc-specific string.
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/clk/clk.h    |    3 +++
+>  drivers/clk/clkdev.c |   25 +++++++++++++++++++++----
+>  2 files changed, 24 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/clk/clk.h b/drivers/clk/clk.h
+> index 795cc9f..dd9def1 100644
+> --- a/drivers/clk/clk.h
+> +++ b/drivers/clk/clk.h
+> @@ -10,7 +10,10 @@
+>   */
+> 
+>  #if defined(CONFIG_OF) && defined(CONFIG_COMMON_CLK)
+> +
+>  struct clk *__of_clk_get_from_provider(struct of_phandle_args *clkspec);
+>  void of_clk_lock(void);
+>  void of_clk_unlock(void);
+> +struct clk *of_clk_get_list_entry(struct device_node *np,
+> +                                 const char *list_name, int index);
+>  #endif
+> diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
+> index a360b2e..465662e 100644
+> --- a/drivers/clk/clkdev.c
+> +++ b/drivers/clk/clkdev.c
+> @@ -27,17 +27,28 @@ static LIST_HEAD(clocks);
+>  static DEFINE_MUTEX(clocks_mutex);
+> 
+>  #if defined(CONFIG_OF) && defined(CONFIG_COMMON_CLK)
+> -struct clk *of_clk_get(struct device_node *np, int index)
+> +/**
+> + * of_clk_get_list_entry() - Parse and lookup a clock referenced by a device node
+> + * @np: pointer to clock consumer node
+> + * @list_name: name of the clock list property
+> + * @index: index to the clock list
+> + *
+> + * This function parses the @list_name property and together with @index
+> + * value indicating an entry of the list uses it to look up the struct clk
+> + * from the registered list of clock providers.
+> + */
+> +struct clk *of_clk_get_list_entry(struct device_node *np,
+> +                                 const char *list_name, int index)
 
-That's a reasonable point. I guess I was just following the example set by the 
-other sdhci-* drivers. However on review they're not as generic as this one so 
-I will merge this into sdhci-pltfm.c as suggested.
+Bikeshed alert: how about of_clk_get_by_property or of_clk_get_by_prop?
 
-- Alistair
+No strong opinion on the topic though.
 
-> 	Arnd
+Regards,
+Mike
+
+>  {
+>         struct of_phandle_args clkspec;
+>         struct clk *clk;
+>         int rc;
+> 
+> -       if (index < 0)
+> +       if (index < 0 || !list_name)
+>                 return ERR_PTR(-EINVAL);
+> 
+> -       rc = of_parse_phandle_with_args(np, "clocks", "#clock-cells", index,
+> -                                       &clkspec);
+> +       rc = of_parse_phandle_with_args(np, list_name, "#clock-cells",
+> +                                       index, &clkspec);
+>         if (rc)
+>                 return ERR_PTR(rc);
+> 
+> @@ -51,6 +62,12 @@ struct clk *of_clk_get(struct device_node *np, int index)
+>         of_node_put(clkspec.np);
+>         return clk;
+>  }
+> +EXPORT_SYMBOL(of_clk_get_list_entry);
+> +
+> +struct clk *of_clk_get(struct device_node *np, int index)
+> +{
+> +       return of_clk_get_list_entry(np, "clocks", index);
+> +}
+>  EXPORT_SYMBOL(of_clk_get);
+> 
+>  /**
+> --
+> 1.7.9.5
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
