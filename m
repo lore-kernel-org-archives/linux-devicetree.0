@@ -1,57 +1,33 @@
-From: srinivas kandagatla <srinivas.kandagatla@st.com>
-Subject: Re: [PATCH v2 0/6] ARM: STi reset controller support
-Date: Mon, 24 Feb 2014 14:03:54 +0000
-Message-ID: <530B514A.4070209@st.com>
-References: <1389696613-19683-1-git-send-email-srinivas.kandagatla@st.com>			<1391437665-11913-1-git-send-email-srinivas.kandagatla@st.com>		<1391592486.11239.4.camel@pizza.hi.pengutronix.de>	
- <52F4D76F.8070301@st.com> <5304B849.2080806@st.com>
- <1393237988.3091.14.camel@pizza.hi.pengutronix.de>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: SPDX-License-Identifier
+Date: Mon, 24 Feb 2014 06:26:52 -0800
+Message-ID: <20140224142652.GA7469@kroah.com>
+References: <20140221161246.GM31902@saruman.home>
+ <53077C5F.9000407@monstr.eu>
+ <20140221162045.GN31902@saruman.home>
+ <20140221165633.GA5465@kroah.com>
+ <53078C30.7060703@monstr.eu>
+ <20140221175720.GA21660@kroah.com>
+ <20140221190125.GL31047@thunk.org>
+ <530B1B25.5090601@monstr.eu>
+ <20140224134150.GB25357@thunk.org>
+ <530B512D.8090308@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1393237988.3091.14.camel@pizza.hi.pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, Maxime Coquelin <maxime.coquelin@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, kernel@stlinux.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, stephen.gallimore@st.com, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <530B512D.8090308-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Cc: Theodore Ts'o <tytso-3s7WtUTddSA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Philipp for your comments,
+On Mon, Feb 24, 2014 at 03:03:25PM +0100, Michal Simek wrote:
+> 
+> BTW: Isn't this a good topic for kernel-summit? :-)
 
-On 24/02/14 10:33, Philipp Zabel wrote:
->> > Did Srini's explanations convinced you?
->> > 
->> > If so, could you queue the series for v3.15?
-> to be honest, I'm not comfortable with this explanation. If the
-> "powerdown" bits only gate the clocks to those modules, calling it a
-> reset control is clearly the wrong abstraction. If that is the case,
-> couldn't you handle those bits via the clock framework?
-I just had a re-look at the IPs specs for more information on where
-these power-down signals are actually terminating on the IP side.
-
-For example: ST-Synopsis Ethernet GMAC IP has two pins
-power_down_req[IN] and power_down_ack[OUT]. power_down_req is used by
-the software to either put the IP in powerdown or bring it out of
-powerdown state.
-
-The IP itself drives power_down_ack to indicate when the power down
-request is successfully finished. For power_down/power_up request the IP
-will change the internal state accordingly including powering up/down
-its internal blocks and/or clock gating.
-
-> If on the other hand these powerdown bits also trigger reset machinery,
-> such that asserting and deasserting that bit will change the module's
-> internal state, I could be convinced to queue them like this.
-This is true with ST IPs, these lines change the state of the IP as
-described above. Reset framework seems to fits in very well with this
-behavior rather than power-domains or clock framework.
-
-Thanks,
-srini
+No, lawyers don't go to the summit, developers do.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
