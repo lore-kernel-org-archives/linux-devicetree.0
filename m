@@ -1,134 +1,89 @@
 From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH RFC v8 0/5] MPC512x DMA slave s/g support, OF DMA lookup
-Date: Mon, 24 Feb 2014 15:09:27 +0400
-Message-ID: <1393240172-18769-1-git-send-email-a13xp0p0v88@gmail.com>
+Subject: [PATCH RFC v8 5/5] dma: mpc512x: register for device tree channel lookup
+Date: Mon, 24 Feb 2014 15:09:32 +0400
+Message-ID: <1393240172-18769-6-git-send-email-a13xp0p0v88@gmail.com>
+References: <1393240172-18769-1-git-send-email-a13xp0p0v88@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1393240172-18769-1-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2013/7/14 Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>:
-> this series
-> - introduces slave s/g support (that's support for DMA transfers which
->    involve peripherals in contrast to mem-to-mem transfers)
-> - adds device tree based lookup support for DMA channels
-> - combines floating patches and related feedback which already covered
->    several aspects of what the suggested LPB driver needs, to demonstrate
->    how integration might be done
-> - carries Q&D SD card support to enable another DMA client during test,
->    while this patch needs to get dropped upon pickup
+From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
 
-Changes in v2:
-> - re-order mpc8308 related code paths for improved readability, no
->    change in behaviour, introduction of symbolic channel names here
->    already
-> - squash 'execute() start condition' and 'terminate all' into the
->    introduction of 'slave s/g prep' and 'device control' support; refuse
->    s/g lists with more than one item since slave support is operational
->    yet proper s/g support is missing (can get addressed later)
-> - always start transfers from software on MPC8308 as there are no
->    external request lines for peripheral flow control
-> - drop dt-bindings header file and symbolic channel names in OF nodes
+register the controller for device tree based lookup of DMA channels
+(non-fatal for backwards compatibility with older device trees) and
+provide the '#dma-cells' property in the shared mpc5121.dtsi file
 
-Changes in v3 and v4:
- Part 1/5:
- - use #define instead of enum since individual channels don't require
-    special handling.
- Part 2/5:
- - add a flag "will_access_peripheral" to DMA transfer descriptor
-    according recommendations of Gerhard Sittig.
-    This flag is set in mpc_dma_prep_memcpy() and mpc_dma_prep_slave_sg()
-    and is evaluated in mpc_dma_execute() to choose a type of start for
-    the transfer.
- - prevent descriptors of transfers which involve peripherals from
-    being chained together;
-    each of such transfers needs hardware initiated start.
- - add locking while working with struct mpc_dma_chan
-    according recommendations of Lars-Peter Clausen.
- - remove default nbytes value. Client kernel modules must set
-    src_maxburst and dst_maxburst fields of struct dma_slave_config (dmaengine.h).
+Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+[ a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org: resolve little patch conflict and put
+  MPC512x DMA controller bindings document to a separate patch ]
+---
+ arch/powerpc/boot/dts/mpc5121.dtsi |  1 +
+ drivers/dma/mpc512x_dma.c          | 21 ++++++++++++++++++---
+ 2 files changed, 19 insertions(+), 3 deletions(-)
 
-Changes in v5:
- Part 2/5:
- - add and improve comments;
- - improve the code moving transfer descriptors from 'queued' to 'active' list
-    in mpc_dma_execute();
- - allow mpc_dma_prep_slave_sg() to run with non-empty 'active' list;
- - take 'mdesc' back to 'free' list in case of error in mpc_dma_prep_slave_sg();
- - improve checks of the transfer parameters;
- - provide the default value for 'maxburst' in mpc_dma_device_control().
-
-Changes in v6:
- Part 2/5:
- - remove doubtful comment;
- - fix coding style issues;
- - set default value for 'maxburst' to 1 which applies to most cases;
- Part 3/5:
- - use dma_get_slave_channel() instead of dma_request_channel()
-    in new function of_dma_xlate_by_chan_id() according recommendations of
-    Arnd Bergmann;
- Part 4/5:
- - set DMA_PRIVATE flag for MPC512x DMA controller since its driver relies on
-    of_dma_xlate_by_chan_id() which doesn't use dma_request_channel()
-    any more; (removed in v7)
- - resolve little patch conflict;
- Part 5/5:
- - resolve little patch conflict;
-
-Changes in v7:
- Part 2:
- - improve comment;
- Part 4:
- - split in two separate patches. Part 4/6 contains device tree
-    binding document and in part 5/6 MPC512x DMA controller is registered
-    for device tree channel lookup;
- - remove setting DMA_PRIVATE flag for MPC512x DMA controller from part 5/6;
-
-Changes in v8:
- Part 2:
- - improve comments;
- - fix style issues;
- Part 6:
- - remove since it has become obsolete;
-
-> known issues:
-> - it's yet to get confirmed whether MPC8308 can use slave support or
->    whether the DMA controller's driver shall actively reject it, the
->    information that's available so far suggests that peripheral transfers
->    to IP bus attached I/O is useful and shall not get blocked right away
- - adding support for transfers which don't increment the RAM address or
-    do increment the peripheral "port's" address is easy with
-    this implementation; but which options of the common API
-    should be used for specifying such transfers?
-2014/02/13 Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>:
-> - The MPC512x DMA completely lacks a binding document, so one
->    should get added.
-> - The MPC8308 hardware is similar and can re-use the MPC512x
->    binding, which should be stated.
-> - The Linux implementation currently has no OF based channel
->    lookup support, so '#dma-cells' is "a future feature".  I guess
->    the binding can and should already discuss the feature,
->    regardless of whether all implementations support it.
-
-
-Alexander Popov (3):
-  dma: mpc512x: reorder mpc8308 specific instructions
-  dma: mpc512x: add support for peripheral transfers
-  dma: of: Add common xlate function for matching by channel id
-
-Gerhard Sittig (2):
-  dma: mpc512x: add device tree binding document
-  dma: mpc512x: register for device tree channel lookup
-
- .../devicetree/bindings/dma/mpc512x-dma.txt        |  55 ++++
- arch/powerpc/boot/dts/mpc5121.dtsi                 |   1 +
- drivers/dma/mpc512x_dma.c                          | 298 +++++++++++++++++++--
- drivers/dma/of-dma.c                               |  35 +++
- include/linux/of_dma.h                             |   4 +
- 5 files changed, 368 insertions(+), 25 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/mpc512x-dma.txt
-
+diff --git a/arch/powerpc/boot/dts/mpc5121.dtsi b/arch/powerpc/boot/dts/mpc5121.dtsi
+index 2c0e155..7f9d14f 100644
+--- a/arch/powerpc/boot/dts/mpc5121.dtsi
++++ b/arch/powerpc/boot/dts/mpc5121.dtsi
+@@ -498,6 +498,7 @@
+ 			compatible = "fsl,mpc5121-dma";
+ 			reg = <0x14000 0x1800>;
+ 			interrupts = <65 0x8>;
++			#dma-cells = <1>;
+ 		};
+ 	};
+ 
+diff --git a/drivers/dma/mpc512x_dma.c b/drivers/dma/mpc512x_dma.c
+index 8f504cb..d9f8740 100644
+--- a/drivers/dma/mpc512x_dma.c
++++ b/drivers/dma/mpc512x_dma.c
+@@ -52,6 +52,7 @@
+ #include <linux/of_address.h>
+ #include <linux/of_device.h>
+ #include <linux/of_irq.h>
++#include <linux/of_dma.h>
+ #include <linux/of_platform.h>
+ 
+ #include <linux/random.h>
+@@ -1018,11 +1019,23 @@ static int mpc_dma_probe(struct platform_device *op)
+ 	/* Register DMA engine */
+ 	dev_set_drvdata(dev, mdma);
+ 	retval = dma_async_device_register(dma);
+-	if (retval) {
+-		devm_free_irq(dev, mdma->irq, mdma);
+-		irq_dispose_mapping(mdma->irq);
++	if (retval)
++		goto out_irq;
++
++	/* register with OF helpers for DMA lookups (nonfatal) */
++	if (dev->of_node) {
++		retval = of_dma_controller_register(dev->of_node,
++						    of_dma_xlate_by_chan_id,
++						    mdma);
++		if (retval)
++			dev_warn(dev, "could not register for OF lookup\n");
+ 	}
+ 
++	return 0;
++
++out_irq:
++	devm_free_irq(dev, mdma->irq, mdma);
++	irq_dispose_mapping(mdma->irq);
+ 	return retval;
+ }
+ 
+@@ -1031,6 +1044,8 @@ static int mpc_dma_remove(struct platform_device *op)
+ 	struct device *dev = &op->dev;
+ 	struct mpc_dma *mdma = dev_get_drvdata(dev);
+ 
++	if (dev->of_node)
++		of_dma_controller_free(dev->of_node);
+ 	dma_async_device_unregister(&mdma->dma);
+ 	devm_free_irq(dev, mdma->irq, mdma);
+ 	irq_dispose_mapping(mdma->irq);
 -- 
 1.8.4.2
 
