@@ -1,118 +1,88 @@
-From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: keystone: add AEMIF/NAND device entry
-Date: Mon, 24 Feb 2014 16:10:57 -0500
-Message-ID: <530BB561.8010104@ti.com>
-References: <1393267976-15709-1-git-send-email-ivan.khoronzhuk@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393267976-15709-1-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org
+From: Andy Gross <agross@codeaurora.org>
+Subject: [Patch v7 0/2] Add Qualcomm BAM dmaengine driver
+Date: Mon, 24 Feb 2014 17:11:38 -0600
+Message-ID: <1393283500-18599-1-git-send-email-agross@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Andy Gross <agross@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 24 February 2014 01:52 PM, Ivan Khoronzhuk wrote:
-> Add AEMIF/NAND device entry.
-> 
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-> ---
->
-Once the driver is in Greg's queue, I will pick this up and defconfig
-patch. 
+This patch set introduces the dmaengine driver for the Qualcomm Bus Access
+Manager (BAM) DMA controller present on MSM 8x74 devices.  A number of the
+on-chip devices have their own BAM DMA controller and use it to move data
+between system memory and peripherals or between two peripherals.
 
-> 
->  arch/arm/boot/dts/k2hk-evm.dts  | 52 +++++++++++++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/keystone.dtsi | 13 +++++++++++
->  2 files changed, 65 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/k2hk-evm.dts b/arch/arm/boot/dts/k2hk-evm.dts
-> index 1d8ea6e..a08581b 100644
-> --- a/arch/arm/boot/dts/k2hk-evm.dts
-> +++ b/arch/arm/boot/dts/k2hk-evm.dts
-> @@ -84,3 +84,55 @@
->  &usb {
->  	status = "okay";
->  };
-> +
-> +&aemif {
-> +	cs0 {
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		clock-ranges;
-> +		ranges;
-> +
-> +		ti,cs-chipselect = <0>;
-> +		/* all timings in nanoseconds */
-> +		ti,cs-min-turnaround-ns = <12>;
-> +		ti,cs-read-hold-ns = <6>;
-> +		ti,cs-read-strobe-ns = <23>;
-> +		ti,cs-read-setup-ns = <9>;
-> +		ti,cs-write-hold-ns = <8>;
-> +		ti,cs-write-strobe-ns = <23>;
-> +		ti,cs-write-setup-ns = <8>;
-> +
-> +		nand@0,0 {
-> +			compatible = "ti,keystone-nand","ti,davinci-nand";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			reg = <0 0 0x4000000
-> +			       1 0 0x0000100>;
-> +
-> +			ti,davinci-chipselect = <0>;
-> +			ti,davinci-mask-ale = <0x2000>;
-> +			ti,davinci-mask-cle = <0x4000>;
-> +			ti,davinci-mask-chipsel = <0>;
-> +			nand-ecc-mode = "hw";
-> +			ti,davinci-ecc-bits = <4>;
-> +			nand-on-flash-bbt;
-> +
-> +			partition@0 {
-> +				label = "u-boot";
-> +				reg = <0x0 0x100000>;
-> +				read-only;
-> +			};
-> +
-> +			partition@100000 {
-> +				label = "params";
-> +				reg = <0x100000 0x80000>;
-> +				read-only;
-> +			};
-> +
-> +			partition@180000 {
-> +				label = "ubifs";
-> +				reg = <0x180000 0x7E80000>;
-> +			};
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-> index 4eceb46..af80cb2 100644
-> --- a/arch/arm/boot/dts/keystone.dtsi
-> +++ b/arch/arm/boot/dts/keystone.dtsi
-> @@ -266,5 +266,18 @@
->  			ti,ngpio = <32>;
->  			ti,davinci-gpio-unbanked = <32>;
->  		};
-> +
-> +		aemif: aemif@21000A00 {
-> +			compatible = "ti,keystone-aemif", "ti,davinci-aemif";
-> +			#address-cells = <2>;
-> +			#size-cells = <1>;
-> +			clocks = <&clkaemif>;
-> +			clock-names = "aemif";
-> +			clock-ranges;
-> +
-> +			reg = <0x21000A00 0x00000100>;
-> +			ranges = <0 0 0x30000000 0x10000000
-> +				  1 0 0x21000A00 0x00000100>;
-> +		};
->  	};
->  };
-> 
+The initial version of this driver will only support slave DMA operations
+between system memory and peripherals.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes from v6:
+	- Changed KConfig dependency from ARCH_MSM_DT to ARCH_QCOM.
+	- Incorporated comments on DT binding.
+	- Changed driver source file to accomodate DT changes.
+
+Changes from v5:
+        - Separated copyright from BAM description
+        - Removed usage of slave dma direction
+        - Reworked slave config interface
+        - Removed max segment size restriction in slave_sg
+        - Added acked-by on DT patch
+        - Fixed nit comments
+
+Changes from v4:
+        - Add devm_free_irq() to .remove to avoid race condition
+        - Free FIFO memory in .remove
+
+Changes from v3:
+        - Remove unused bam_channel_dir.
+        - Remove incorrect write to BAM_IRQ_SRCS_EE (read only).
+        - Remove dma direction from DT binding and revise driver to use
+          direction from prep_slave_sg.
+        - Remove unnecessary channel reset from channel_init.  This could affect
+          channels controlled from other execution environments.
+        - Change terminate_all to also take care of the current active
+          descriptor.
+        - Rework .remove function to correctly mask interrupts and clean up
+          resources and tasklets.
+
+Changes from v2:
+        - Corrected Kconfig dependencies
+        - Moved execution environment ID to controller DT binding.  The EE is
+          a global setting across all of the channels on the controller.
+        - Combined header into source file.
+        - Corrected copyright date.
+        - Moved channel hardware initialization to occur when channel is used
+          for the first time.
+        - Converted dma_alloc_coherent to dma_alloc_writecombine
+        - Removed unecessary reset of channel from the dma terminate_all
+        - Corrected usage of EE in irq handler and channel configuration
+          functions.
+        - Changed resource functions inside probe to use correct APIs.
+        - Removed dma filter function and modified dma_xlate to use
+          dma_get_slave_channel API
+        - Fixed various nit comments
+
+Changes from v1:
+        - Converted driver to use virt-dma
+        - Reworked probe function per review comments
+        - tx_status function now computes and returns residuals
+        - Removed proprietary slave config.  Removed associated include file.
+        - Renamed files to reflect vendor name instead of specific device
+        - Converted to use (readl|writel)_relaxed w/ appropriate barriers
+        - Removed unions in favor of standard types.
+
+Andy Gross (2):
+  dmaengine: qcom_bam_dma: Add device tree binding
+  dmaengine: add Qualcomm BAM dma driver
+
+ .../devicetree/bindings/dma/qcom_bam_dma.txt       |   41 +
+ drivers/dma/Kconfig                                |    9 +
+ drivers/dma/Makefile                               |    1 +
+ drivers/dma/qcom_bam_dma.c                         | 1106 ++++++++++++++++++++
+ 4 files changed, 1157 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+ create mode 100644 drivers/dma/qcom_bam_dma.c
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
