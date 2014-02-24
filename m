@@ -1,63 +1,95 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 07/10] spi: sh-msiof: Add support for R-Car H2 and M2
-Date: Mon, 24 Feb 2014 08:39:45 +0100
-Message-ID: <CAMuHMdV1iDHz4ewFAG-QTba_wUF76Ei-VQpP+MRoNGV2mfHrpw@mail.gmail.com>
-References: <1392907389-21798-1-git-send-email-geert@linux-m68k.org>
-	<1392907389-21798-8-git-send-email-geert@linux-m68k.org>
-	<CANqRtoQVJzEgo_AdVxrPSRUY6ocyPaQ=RKQJyxoExDrfYxiJ3w@mail.gmail.com>
-	<CAMuHMdUByWPcYM8M_m5NVM4QP5cQE_tOLGQg=2fTNF7gqkUhig@mail.gmail.com>
-	<CANqRtoSJTROkkbGxV_p+B2S7b7jZ7jgHQ+q4_WG54m+Pxgfcpw@mail.gmail.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH] dt/bindings: update fsl-fec regarding compatible and
+ clocks
+Date: Mon, 24 Feb 2014 08:39:50 +0100
+Message-ID: <20140224073950.GM17250@pengutronix.de>
+References: <1392033008-20752-1-git-send-email-shawn.guo@linaro.org>
+ <20140217212439.GZ4524@book.gsilab.sittig.org>
+ <20140218020901.GA15716@S2101-09.ap.freescale.net>
+ <20140218134430.GC4524@book.gsilab.sittig.org>
+ <20140218144652.GG15716@S2101-09.ap.freescale.net>
+ <20140222182806.GF3327@book.gsilab.sittig.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CANqRtoSJTROkkbGxV_p+B2S7b7jZ7jgHQ+q4_WG54m+Pxgfcpw@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, Takashi Yoshii <takasi-y@ops.dti.ne.jp>, linux-spi <linux-spi@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20140222182806.GF3327@book.gsilab.sittig.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gerhard Sittig <gsi@denx.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Philippe De Muyter <phdm@macq.eu>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Magnus,
+On Sat, Feb 22, 2014 at 07:28:06PM +0100, Gerhard Sittig wrote:
+> On Tue, Feb 18, 2014 at 22:46 +0800, Shawn Guo wrote:
+> > 
+> > On Tue, Feb 18, 2014 at 02:44:30PM +0100, Gerhard Sittig wrote:
+> > > [ ... ]
+> > 
+> > > > > >  - reg : Address and length of the register set for the device
+> > > > > >  - interrupts : Should contain fec interrupt
+> > > > > > +- clocks: phandle to the clocks feeding the FEC controller and phy. The
+> > > > > > +  following two are required:
+> > > > > > +   - "ipg": the peripheral access clock
+> > > > > > +   - "ahb": the bus clock for MAC
+> > > > > > +  The following two are optional:
+> > > > > > +   - "ptp": the sampling clock for PTP (IEEE 1588).  On SoC like i.MX6Q,
+> > > > > > +     the clock could come from either the internal clock control module
+> > > > > > +     or external oscillator via pad depending on board design.
+> > > > > > +   - "enet_out": the phy reference clock provided by SoC via pad, which
+> > > > > > +     is available on SoC like i.MX28.
+> > > > > > +- clock-names: Must contain the clock names described just above
+> > > > > > +
+> > > > > 
+> > > > > Listing 'clocks' under the "required properties" all of a sudden
+> > > > > invalidates existing device trees, if they don't carry the
+> > > > > property which before the change was not required, not even
+> > > > > documented.
+> > > > 
+> > > > Since the day we move to device tree clock lookup, the driver fec_main
+> > > > does not probe at all if the property is absent.
+> > > 
+> > > That's an implementation detail.  It's not what the spec says,
+> > > and neither is what the spec is to blindly follow after the / a
+> > > driver created the fact.  Instead, a binding gets designed, and
+> > > the software follows.
+> > > 
+> > > In reality, the doc may be behind as developers are more
+> > > concerned about the code.  But still when you "update" the
+> > > binding, don't break compatibility!  Even if you'd adjust all
+> > > drivers you can spot, it's still only Linux and not all device
+> > > tree users.
+> > 
+> > So what's your suggestion?  Add the properties as the optional?
+> 
+> Have there been i.MX device trees in mainline releases which lack
+> the clock specs?  If so, making the clock specs mandatory breaks
+> backwards compatibility for these existing device trees as well.
+> 
+> I assume that listing the clocks as optional keeps the binding
+> most compatible.  You might as well list them as recommended, if
+> optional is "too weak" for you.
 
-On Mon, Feb 24, 2014 at 3:45 AM, Magnus Damm <magnus.damm@gmail.com> wrote:
-> On Fri, Feb 21, 2014 at 1:13 AM, Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
->> On Thu, Feb 20, 2014 at 4:41 PM, Magnus Damm <magnus.damm@gmail.com> wrote:
->>> On thing stuck out a bit with the bindings. I can see that you specify
->>> both fifo size and use the SoC suffix for the r8a7790 and r8a7791
->>> bindings. Isn't that a bit of redundant information there, if we know
->>> that the SoC is r8a7790 or r8a7791 then can't we simply put that
->>> information in r8a779x_data above and perhaps keep the binding
->>> simpler? Perhaps same thing applies to other properties as well?
->>
->> "renesas,tx-fifo-size" and "renesas,rx-fifo-size" are part of the existing
->> bindings, so I'm a bit reluctant to change these.
->> Hmm, since the original bindings didn't specify the default values,
->> I could make them chip-specific, though.
->
-> Thanks, yes I think treating the "renesas,tx-fifo-size" and
-> "renesas,rx-fifo-size" bindings as optional and allow us to rely on
-> chip-specific default values makes sense.
->
->> The only other property is "num-cs", which can have any value if you
->> start using the generic "cs-gpios".
->
-> I see. It looks to me that such a setting is board-specific, so what
-> is a sane default in the SoC DTSI? You seem to have it set to "1"
-> today, but if the board is supposed to override it anyway then do we
-> need to set it?
->
-> Anyway, "num-cs" is a minor detail so no need to bother about that too much!
+Why should we keep the binding compatible when the driver requires the
+clocks? The clocks are not at all optional for the driver. We made the
+clocks mandatory at a time when the bindings didn't make any promises
+about stability, so Shawn only documents what the driver requires
+anyway.
+If anything, we should doument that this binding is not valid for the
+PowerPC variants of the FEC.
 
-In v2, I'll drop the "num-cs" from the dtsi, so it will default to the driver's
-default (which is 1, for the simple case of using hardware controlled CS).
+Sascha
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
