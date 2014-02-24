@@ -1,61 +1,40 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH 07/10] spi: sh-msiof: Add support for R-Car H2 and M2
-Date: Mon, 24 Feb 2014 17:09:15 +0900
-Message-ID: <CANqRtoT6G6mxce=cN05mNNtYCcyCvMPzpHQ7RyzPE8XfkFjMyQ@mail.gmail.com>
-References: <1392907389-21798-1-git-send-email-geert@linux-m68k.org>
-	<1392907389-21798-8-git-send-email-geert@linux-m68k.org>
-	<CANqRtoQVJzEgo_AdVxrPSRUY6ocyPaQ=RKQJyxoExDrfYxiJ3w@mail.gmail.com>
-	<CAMuHMdUByWPcYM8M_m5NVM4QP5cQE_tOLGQg=2fTNF7gqkUhig@mail.gmail.com>
-	<CANqRtoSJTROkkbGxV_p+B2S7b7jZ7jgHQ+q4_WG54m+Pxgfcpw@mail.gmail.com>
-	<CAMuHMdV1iDHz4ewFAG-QTba_wUF76Ei-VQpP+MRoNGV2mfHrpw@mail.gmail.com>
+From: Peter Chen <Peter.Chen@freescale.com>
+Subject: RE: [PATCH RESEND v2 1/3] usb: chipidea: msm: Add device tree
+ binding information
+Date: Mon, 24 Feb 2014 08:15:43 +0000
+Message-ID: <94c57dc0d24f45a09985e05591a90bb2@BL2PR03MB226.namprd03.prod.outlook.com>
+References: <530512F1.3060304@cogentembedded.com>
+ <1392889988-24312-1-git-send-email-iivanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdV1iDHz4ewFAG-QTba_wUF76Ei-VQpP+MRoNGV2mfHrpw@mail.gmail.com>
+In-Reply-To: <1392889988-24312-1-git-send-email-iivanov@mm-sol.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mark Brown <broonie@kernel.org>, Takashi Yoshii <takasi-y@ops.dti.ne.jp>, linux-spi <linux-spi@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+ 
+> +CI13xxx (Chipidea) USB controllers
+> +
+> +Required properties:
+> +- compatible:   should contain "qcom,ci-hdrc"
+> +- reg:          offset and length of the register set in the memory map
+> +- interrupts:   interrupt-specifier for the controller interrupt.
+> +- usb-phy:      phandle for the PHY device
+> +- dr_mode:      Sould be "peripheral"
+> +
+> +	gadget@f9a55000 {
+> +		compatible = "qcom,ci-hdrc";
+> +		reg = <0xf9a55000 0x400>;
+> +		dr_mode = "peripheral";
+> +		interrupts = <0 134 0>;
+> +		usb-phy = <&usb_otg>;
+> +	};
+> +
 
-On Mon, Feb 24, 2014 at 4:39 PM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> Hi Magnus,
->
-> On Mon, Feb 24, 2014 at 3:45 AM, Magnus Damm <magnus.damm@gmail.com> wrote:
->> On Fri, Feb 21, 2014 at 1:13 AM, Geert Uytterhoeven
->> <geert@linux-m68k.org> wrote:
->>> On Thu, Feb 20, 2014 at 4:41 PM, Magnus Damm <magnus.damm@gmail.com> wrote:
->>>> On thing stuck out a bit with the bindings. I can see that you specify
->>>> both fifo size and use the SoC suffix for the r8a7790 and r8a7791
->>>> bindings. Isn't that a bit of redundant information there, if we know
->>>> that the SoC is r8a7790 or r8a7791 then can't we simply put that
->>>> information in r8a779x_data above and perhaps keep the binding
->>>> simpler? Perhaps same thing applies to other properties as well?
->>>
->>> "renesas,tx-fifo-size" and "renesas,rx-fifo-size" are part of the existing
->>> bindings, so I'm a bit reluctant to change these.
->>> Hmm, since the original bindings didn't specify the default values,
->>> I could make them chip-specific, though.
->>
->> Thanks, yes I think treating the "renesas,tx-fifo-size" and
->> "renesas,rx-fifo-size" bindings as optional and allow us to rely on
->> chip-specific default values makes sense.
->>
->>> The only other property is "num-cs", which can have any value if you
->>> start using the generic "cs-gpios".
->>
->> I see. It looks to me that such a setting is board-specific, so what
->> is a sane default in the SoC DTSI? You seem to have it set to "1"
->> today, but if the board is supposed to override it anyway then do we
->> need to set it?
->>
->> Anyway, "num-cs" is a minor detail so no need to bother about that too much!
->
-> In v2, I'll drop the "num-cs" from the dtsi, so it will default to the driver's
-> default (which is 1, for the simple case of using hardware controlled CS).
+usb_otg is not a good name for the node of usb phy.
 
-Sounds good, thanks for your help!
-
-/ magnus
+Peter
