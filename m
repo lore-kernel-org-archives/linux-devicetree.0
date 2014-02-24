@@ -1,57 +1,73 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCHv4 0/7] omap hwspinlock dt support
-Date: Mon, 24 Feb 2014 12:14:24 -0600
-Message-ID: <530B8C00.8020001@ti.com>
-References: <1389658764-39199-1-git-send-email-s-anna@ti.com>
- <52F9282B.5000702@ti.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v13 2/3] ata: Add APM X-Gene SoC AHCI SATA host
+ controller driver
+Date: Mon, 24 Feb 2014 13:31:29 -0500
+Message-ID: <20140224183129.GA2522@htj.dyndns.org>
+References: <1393221265-13057-1-git-send-email-lho@apm.com>
+ <1393221265-13057-2-git-send-email-lho@apm.com>
+ <1393221265-13057-3-git-send-email-lho@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52F9282B.5000702@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1393221265-13057-3-git-send-email-lho@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Loc Ho <lho@apm.com>
+Cc: olof@lixom.net, arnd@arndb.de, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Mark, Ohad,
+Hello, Loc.
 
-On 02/10/2014 01:27 PM, Suman Anna wrote:
-> Mark,
->
-> On 01/13/2014 06:19 PM, Suman Anna wrote:
->> Hi,
->>
->> This is an updated series mainly addressing Mark Rutland's comments
->> about hwlock specifier being always one-cell. The series adds the
->> support for #hwlock-cells property and adds a simple default OF
->> translate function.
->>
->> The DTS patches from previous series have already been merged, and
->> needs this property to be added. This is handled in a separate series
->> that only deals with OMAP hwspinlock DTS patches.
->>
->> The series, along with the DTS patches, is tested on top of v3.13-rc8
->> plus Tero's v13 clock DT series and Tony's 3.14 staged branches. The
->> validation on OMAP5, DRA7, AM437 requires Tero's series with couple of
->> additional base patches for AM43xx. AM43xx functionality needs a hwmod
->> fix [1] for creating the associated omap_device as well.
->>
->
-> Can you please take a look at this series and give your ack on the
-> bindings if you do not have any further comments? The only comments so
-> far are from Bjorn on the OF helpers.
->
+Almost there.  Just one more thing.
 
-Gentle reminder, can you provide your acks/comments?
+On Sun, Feb 23, 2014 at 10:54:24PM -0700, Loc Ho wrote:
+....
+> +static int xgene_ahci_init_memram(struct xgene_ahci_context *ctx)
+> +{
+> +	void __iomem *diagcsr = ctx->csr_base + SATA_DIAG_OFFSET;
+> +	int try;
+> +	u32 val;
+> +
+> +	val = readl(diagcsr + CFG_MEM_RAM_SHUTDOWN);
+> +	if (val == 0) {
+> +		dev_dbg(ctx->dev, "memory already released from shutdown\n");
+> +		return 0;
+> +	}
+> +	dev_dbg(ctx->dev, "Release memory from shutdown\n");
+> +	/* SATA controller memory in shutdown. Remove from shutdown. */
+> +	writel(0x0, diagcsr + CFG_MEM_RAM_SHUTDOWN);
+> +	readl(diagcsr + CFG_MEM_RAM_SHUTDOWN); /* Force a barrier */
+> +
+> +	/* Check for at least ~1ms */
+> +	try = 1000;
+> +	do {
+> +		val = readl(diagcsr + BLOCK_MEM_RDY);
+> +		if (val != 0xFFFFFFFF)
+> +			usleep_range(1, 100);
+> +	} while (val != 0xFFFFFFFF && try-- > 0);
+> +	if (try <= 0) {
+> +		dev_err(ctx->dev, "failed to release memory from shutdown\n");
+> +		return -ENODEV;
+> +	}
+> +	return 0;
+> +}
 
-regards
-Suman
+Hmm... ISTR raising this issue before but the above is way more
+elaborate than necessary.  This isn't in any sense a hot path and 1ms
+is short enough to handle it simply.  If the only thing being
+addressed here is that the init may take upto 1ms, you might as well
+just do
+
+	writel(0x0, diagcsr + CFG_MEM_RAM_SHUTDOWN);
+	readl(diagcsr + CFG_MEM_RAM_SHUTDOWN); /* Force a barrier */
+	msleep(1);	/* reset may take upto 1ms */
+	if (readl(diagcsr + BLOCK_MEM_RDY) != 0xFFFFFFFF) {
+		dev_err(...);
+		return -ENODEV;
+	}
+	return 0;
+
+Thanks.
+
+-- 
+tejun
