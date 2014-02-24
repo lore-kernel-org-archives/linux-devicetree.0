@@ -1,45 +1,63 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH 2/2] ARM: dts: duovero-parlor: Add HDMI output
-Date: Mon, 24 Feb 2014 17:22:27 -0300
-Message-ID: <CABxcv=kKxidVJWcMrueB+edW=g_6gcucvi6=7p=EZ_WooCpbMA@mail.gmail.com>
-References: <1393261669-32039-1-git-send-email-florian.vaussard@epfl.ch>
-	<1393261669-32039-3-git-send-email-florian.vaussard@epfl.ch>
-	<20140224180336.GU27282@n2100.arm.linux.org.uk>
+From: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+Subject: Re: [PATCH 2/2] arm/xen: Don't use xen DMA ops when the device is
+ protected by an IOMMU
+Date: Mon, 24 Feb 2014 20:49:49 +0000
+Message-ID: <alpine.DEB.2.02.1402242036490.31489@kaball.uk.xensource.com>
+References: <1392913301-25524-1-git-send-email-julien.grall@linaro.org> <1392914159.32657.18.camel@kazak.uk.xensource.com> <alpine.DEB.2.02.1402241214570.4471@kaball.uk.xensource.com> <20140224151636.GA13489@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140224180336.GU27282@n2100.arm.linux.org.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Florian Vaussard <florian.vaussard@epfl.ch>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Ash Charles <ash@gumstix.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140224151636.GA13489@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc: Stefano Stabellini <stefano.stabellini@eu.citrix.com>, Ian Campbell <Ian.Campbell@citrix.com>, Julien Grall <julien.grall@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, xen-devel@lists.xenproject.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
+On Mon, 24 Feb 2014, gregkh@linuxfoundation.org wrote:
+> On Mon, Feb 24, 2014 at 12:19:11PM +0000, Stefano Stabellini wrote:
+> > CC'ing Greg.
+> > 
+> > On Thu, 20 Feb 2014, Ian Campbell wrote:
+> > > On Thu, 2014-02-20 at 16:21 +0000, Julien Grall wrote:
+> > > > Only Xen is able to know if a device can safely avoid to use xen-swiotlb.
+> > > > This patch introduce a new property "protected-devices" for the hypervisor
+> > > > node which list device which the IOMMU are been correctly programmed by Xen.
+> > > > 
+> > > > During Linux boot, Xen specific code will create an hash table which
+> > > > contains all these devices. The hash table will be used in need_xen_dma_ops
+> > > > to check if the Xen DMA ops needs to be used for the current device.
+> > > 
+> > > Is it out of the question to find a field within struct device itself to
+> > > store this e.g. in struct device_dma_parameters perhaps and avoid the
+> > > need for a hashtable lookup.
+> > > 
+> > > device->iommu_group might be another option, if we can create our own
+> > > group?
+> > 
+> > I agree that a field in struct device would be ideal.
+> > Greg, get_maintainer.pl points at you as main maintainer of device.h, do
+> > you have an opinion on this?
+> 
+> I need a whole lot more context here please.  With a patch would be even
+> better so that I know exactly what you are referring to...
 
-On Mon, Feb 24, 2014 at 3:03 PM, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
-> On Mon, Feb 24, 2014 at 06:07:49PM +0100, Florian Vaussard wrote:
->> +     hdmi0: connector@0 {
->> +             compatible = "hdmi-connector";
->
-> This looks way to generic a compatible string.  Are you sure it's
-> correct?
->
+The Xen hypervisor tells Linux which devices are protected by an SMMU,
+preprogrammed by Xen, so that Linux can avoid the swiotlb and bounce
+buffers for DMA requests involving them.
+The information is present on device tree and parsed at boot time by
+Linux.
 
-That compatible string is correct according to the latest series
-posted by Tomi Valkeinen to add DT bindings for the OMAP Display
-SubSystem (DSS) [0].
+Julien is proposing to store the list of "safe" devices on an hash table
+in the Xen specific code (in arch/arm/xen/enlighten.c, see
+http://marc.info/?l=linux-kernel&m=139291370526082&w=2).
+Whenever Linux is about to do DMA, we would check in the hashtable to
+figure out whether we need to go through the swiotlb or we can simply
+use the native dma_ops.
 
-The property is added on this patch [1] and as far as I understood the
-idea is that it could be a generic DT binding that can be used by
-platform specific HDMI connectors like the omap dss HDMI connector
-[2].
+Ian and I were thinking that it would be much easier and faster to have
+a "xen_safe_device" parameter in struct device and just check for that.
+It doesn't actually need to be in struct device, it could simply be a
+flag in struct device_dma_parameters as Ian was suggesting.
 
-I'm adding Tomi to the cc list so he can a correct me if I'm wrong.
-
-Thanks a lot and best regards,
-Javier
-
-[0]: http://www.spinics.net/lists/linux-omap/msg102522.html
-[1]: http://www.spinics.net/lists/linux-omap/msg102559.html
-[2]: http://www.spinics.net/lists/arm-kernel/msg302197.html
+Julien, could you please come up with a simple patch to demonstrate the
+concept?
