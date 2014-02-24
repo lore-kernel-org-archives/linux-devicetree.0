@@ -1,75 +1,41 @@
-From: Florian Vaussard <florian.vaussard@epfl.ch>
-Subject: Re: [PATCHv2 03/16] Documentation: dt: add OMAP iommu bindings
-Date: Mon, 24 Feb 2014 13:57:17 +0100
-Message-ID: <530B41AD.2030608@epfl.ch>
-References: <1392315347-32967-1-git-send-email-s-anna@ti.com> <1392315347-32967-4-git-send-email-s-anna@ti.com>
-Reply-To: florian.vaussard@epfl.ch
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1392315347-32967-4-git-send-email-s-anna@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org
-Cc: Suman Anna <s-anna@ti.com>, Joerg Roedel <joro@8bytes.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 2/2] ARM: u300: switch SSP/SPI clock name to "SSPCLK"
+Date: Mon, 24 Feb 2014 13:57:18 +0100
+Message-ID: <1393246638-16236-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+As noted in recent discussions the name of the core clock for
+the PL022 derived SPI blocks is erroneously named in the
+U300 device tree. The kernel doesn't currently use the name,
+but may do so soon so let use rename all these clocks in
+accordance with the name given in the PL022 TRM (ARM DDI 0194G).
 
-On 02/13/2014 07:15 PM, Suman Anna wrote:
-> From: Florian Vaussard <florian.vaussard@epfl.ch>
-> 
-> This patch adds the iommu bindings for all OMAP2+ SoCs. Apart from
-> the standard bindings used by OMAP peripherals, this patch uses a
-> 'dma-window' (already used by Tegra SMMU) and adds two OMAP custom
-> bindings - 'ti,#tlb-entries' and 'ti,iommu-bus-err-back'.
-> 
-> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
-> [s-anna@ti.com: split bindings document, add dra7 and bus error back]
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> ---
->  .../devicetree/bindings/iommu/ti,omap-iommu.txt    | 28 ++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt b/Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt
-> new file mode 100644
-> index 0000000..116492d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt
-> @@ -0,0 +1,28 @@
-> +OMAP2+ IOMMU
-> +
-> +Required properties:
-> +- compatible : Should be one of,
-> +		"ti,omap2-iommu" for OMAP2/OMAP3 IOMMU instances
-> +		"ti,omap4-iommu" for OMAP4/OMAP5 IOMMU instances
-> +		"ti,dra7-iommu" for DRA7xx IOMMU instances
-> +- ti,hwmods  : Name of the hwmod associated with the IOMMU instance
-> +- reg        : Address space for the configuration registers
-> +- interrupts : Interrupt specifier for the IOMMU instance
-> +- dma-window : IOVA start address and length
-> +
-> +Optional properties:
-> +- ti,#tlb-entries : Number of entries in the translation look-aside buffer.
-> +                    Should be either 8 or 32 (default: 32)
-> +- ti,iommu-bus-err-back : Indicates the IOMMU instance supports throwing
-> +		          back a bus error response on MMU faults.
-> +
-> +Example:
-> +	/* OMAP3 ISP MMU */
-> +	mmu_isp: mmu@480bd400 {
-> +		compatible = "ti,omap2-iommu";
-> +		reg = <0x480bd400 0x80>;
-> +		interrupts = <24>;
-> +		ti,hwmods = "mmu_isp";
-> +		ti,#tlb-entries = <8>;
-> +		dma-window = <0 0xfffff000>;
-> +	};
-> 
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/boot/dts/ste-u300.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Any comments on this binding?
+diff --git a/arch/arm/boot/dts/ste-u300.dts b/arch/arm/boot/dts/ste-u300.dts
+index a9da4800daf0..6fe688e9e4da 100644
+--- a/arch/arm/boot/dts/ste-u300.dts
++++ b/arch/arm/boot/dts/ste-u300.dts
+@@ -457,7 +457,7 @@
+ 			interrupt-parent = <&vica>;
+ 			interrupts = <23>;
+ 			clocks = <&spi_clk>, <&spi_clk>;
+-			clock-names = "apb_pclk", "spi_clk";
++			clock-names = "SSPCLK", "apb_pclk";
+ 			dmas = <&dmac 27 &dmac 28>;
+ 			dma-names = "tx", "rx";
+ 			num-cs = <3>;
+-- 
+1.8.5.3
 
-Regards,
-Florian
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
