@@ -1,65 +1,51 @@
-From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH 1/4] ASoC: simple-card: Fix device node locks
-Date: Mon, 24 Feb 2014 02:17:00 +0000
-Message-ID: <23e531e0edb34aa9b84799e558abaf26@BY2PR03MB505.namprd03.prod.outlook.com>
-References: <cover.1392995566.git.moinejf@free.fr>
- <4dca81f45b67a4dcb21271e57409ba114c3b59cb.1392995566.git.moinejf@free.fr>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH 07/10] spi: sh-msiof: Add support for R-Car H2 and M2
+Date: Mon, 24 Feb 2014 11:45:19 +0900
+Message-ID: <CANqRtoSJTROkkbGxV_p+B2S7b7jZ7jgHQ+q4_WG54m+Pxgfcpw@mail.gmail.com>
+References: <1392907389-21798-1-git-send-email-geert@linux-m68k.org>
+	<1392907389-21798-8-git-send-email-geert@linux-m68k.org>
+	<CANqRtoQVJzEgo_AdVxrPSRUY6ocyPaQ=RKQJyxoExDrfYxiJ3w@mail.gmail.com>
+	<CAMuHMdUByWPcYM8M_m5NVM4QP5cQE_tOLGQg=2fTNF7gqkUhig@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4dca81f45b67a4dcb21271e57409ba114c3b59cb.1392995566.git.moinejf-GANU6spQydw@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUByWPcYM8M_m5NVM4QP5cQE_tOLGQg=2fTNF7gqkUhig@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Brown <broonie@kernel.org>, Takashi Yoshii <takasi-y@ops.dti.ne.jp>, linux-spi <linux-spi@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> @@ -169,22 +164,26 @@ static int asoc_simple_card_parse_of(struct device_node
-> *node,
->  	/* CPU sub-node */
->  	ret = -EINVAL;
->  	np = of_get_child_by_name(node, "simple-audio-card,cpu");
-> -	if (np)
-> +	if (np) {
->  		ret = asoc_simple_card_sub_parse_of(np, priv->daifmt,
->  						  &priv->cpu_dai,
->  						  &dai_link->cpu_of_node,
->  						  &dai_link->cpu_dai_name);
-> +		of_node_put(np);
+Hi Geert,
 
-Does the of_node_put(np) is really needed here ?
+On Fri, Feb 21, 2014 at 1:13 AM, Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> On Thu, Feb 20, 2014 at 4:41 PM, Magnus Damm <magnus.damm@gmail.com> wrote:
+>> On thing stuck out a bit with the bindings. I can see that you specify
+>> both fifo size and use the SoC suffix for the r8a7790 and r8a7791
+>> bindings. Isn't that a bit of redundant information there, if we know
+>> that the SoC is r8a7790 or r8a7791 then can't we simply put that
+>> information in r8a779x_data above and perhaps keep the binding
+>> simpler? Perhaps same thing applies to other properties as well?
+>
+> "renesas,tx-fifo-size" and "renesas,rx-fifo-size" are part of the existing
+> bindings, so I'm a bit reluctant to change these.
+> Hmm, since the original bindings didn't specify the default values,
+> I could make them chip-specific, though.
 
+Thanks, yes I think treating the "renesas,tx-fifo-size" and
+"renesas,rx-fifo-size" bindings as optional and allow us to rely on
+chip-specific default values makes sense.
 
-> +	}
->  	if (ret < 0)
->  		return ret;
-> 
->  	/* CODEC sub-node */
->  	ret = -EINVAL;
->  	np = of_get_child_by_name(node, "simple-audio-card,codec");
-> -	if (np)
-> +	if (np) {
->  		ret = asoc_simple_card_sub_parse_of(np, priv->daifmt,
->  						  &priv->codec_dai,
->  						  &dai_link->codec_of_node,
->  						  &dai_link->codec_dai_name);
-> +		of_node_put(np);
+> The only other property is "num-cs", which can have any value if you
+> start using the generic "cs-gpios".
 
-The same here...
+I see. It looks to me that such a setting is board-specific, so what
+is a sane default in the SoC DTSI? You seem to have it set to "1"
+today, but if the board is supposed to override it anyway then do we
+need to set it?
 
-> +	}
->  	if (ret < 0)
->  		return ret;
-> 
+Anyway, "num-cs" is a minor detail so no need to bother about that too much!
 
-Thanks,
+Cheers,
 
---
-Best Regards,
-Xiubo
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+/ magnus
