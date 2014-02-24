@@ -1,80 +1,99 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC PATCH 3/6] PM / Voltagedomain: introduce voltage domain
- driver support
-Date: Mon, 24 Feb 2014 10:58:26 +0900
-Message-ID: <20140224015826.GU25940@sirena.org.uk>
-References: <1392755543-28335-1-git-send-email-nm@ti.com>
- <1392755543-28335-4-git-send-email-nm@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="NIjw7+ppZq6Cg8/r"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1392755543-28335-4-git-send-email-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Mike Turquette <mturquette@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+From: Loc Ho <lho@apm.com>
+Subject: [PATCH v13 1/3] Documentation: Add documentation for APM X-Gene SoC SATA host controller DTS binding
+Date: Sun, 23 Feb 2014 22:54:23 -0700
+Message-ID: <1393221265-13057-2-git-send-email-lho@apm.com>
+References: <1393221265-13057-1-git-send-email-lho@apm.com>
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <1393221265-13057-1-git-send-email-lho@apm.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
+Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
+Signed-off-by: Loc Ho <lho@apm.com>
+Signed-off-by: Tuan Phan <tphan@apm.com>
+Signed-off-by: Suman Tripathi <stripathi@apm.com>
+---
+ .../devicetree/bindings/ata/apm-xgene.txt          |   70 ++++++++++++++++++++
+ 1 files changed, 70 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/ata/apm-xgene.txt
 
---NIjw7+ppZq6Cg8/r
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+diff --git a/Documentation/devicetree/bindings/ata/apm-xgene.txt b/Documentation/devicetree/bindings/ata/apm-xgene.txt
+new file mode 100644
+index 0000000..633eb3b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ata/apm-xgene.txt
+@@ -0,0 +1,70 @@
++* APM X-Gene 6.0 Gb/s SATA host controller nodes
++
++SATA host controller nodes are defined to describe on-chip Serial ATA
++controllers. Each SATA controller (pair of ports) have its own node.
++
++Required properties:
++- compatible		: Shall contain:
++  * "apm,xgene-ahci-sgmii" if mux'ed with SGMII
++  * "apm,xgene-ahci-pcie" if mux'ed with PCIe
++- reg			: First memory resource shall be the AHCI memory
++			  resource.
++			  Second memory resource shall be the host controller
++			  memory resource.
++- interrupts		: Interrupt-specifier for SATA host controller IRQ.
++- clocks		: Reference to the clock entry.
++- phys			: A list of phandles + phy-specifiers, one for each
++			  entry in phy-names.
++- phy-names		: Should contain:
++  * "sata-6g" for the SATA 6.0Gbps PHY
++
++Optional properties:
++- status		: Shall be "ok" if enabled or "disabled" if disabled.
++			  Default is "ok".
++- interrupt-parent	: Interrupt controller.
++
++Example:
++		sataclk: sataclk {
++			compatible = "fixed-clock";
++			#clock-cells = <1>;
++			clock-frequency = <100000000>;
++			clock-output-names = "sataclk";
++		};
++
++		phy2: phy@1f22a000 {
++			compatible = "apm,xgene-phy";
++			reg = <0x0 0x1f22a000 0x0 0x100>,
++			      <0x0 0x1f22c000 0x0 0x100>;
++			#phy-cells = <1>;
++		};
++
++		phy3: phy@1f23a000 {
++			compatible = "apm,xgene-phy";
++			reg = <0x0 0x1f23a000 0x0 0x100>,
++			      <0x0 0x1f23c000 0x0 0x100>;
++			#phy-cells = <1>;
++		};
++
++		sata2: sata@1a400000 {
++			compatible = "apm,xgene-ahci-sgmii";
++			reg = <0x0 0x1a400000 0x0 0x1000>,
++			      <0x0 0x1f220000 0x0 0x10000>;
++			interrupt-parent = <&gic>;
++			interrupts = <0x0 0x87 0x4>;
++			status = "ok";
++			clocks = <&sataclk 0>;
++			phys = <&phy2 0>;
++			phy-names = "sata-6g";
++		};
++
++		sata3: sata@1a800000 {
++			compatible = "apm,xgene-ahci-pcie";
++			reg = <0x0 0x1a800000 0x0 0x1000>,
++			      <0x0 0x1f230000 0x0 0x10000>;
++			interrupt-parent = <&gic>;
++			interrupts = <0x0 0x88 0x4>;
++			status = "ok";
++			clocks = <&sataclk 0>;
++			phys = <&phy3 0>;
++			phy-names = "sata-6g";
++		};
+-- 
+1.5.5
 
-On Tue, Feb 18, 2014 at 02:32:20PM -0600, Nishanth Menon wrote:
-
-> The current regulator model provides the basic building blocks for the
-> transitions, however SoC drivers specific to each of these devices, be
-> it cpufreq/devfreq have to replicate the logic for functionality.
-
-> To simply the logic, we can hence introduce a layer that takes care
-> of the mundane transition logic, registration mechanisms to provide
-> the "user drivers" such as cpufreq/devfreq a generic interface, whose
-> details are abstracted by the device tree description for the SoC on
-> which the driver operates on.
-
-This doesn't really provide a picture of what the generic interface
-that's being offered is and...
-
->  drivers/power/voltdm/Kconfig                  |    5 +
->  drivers/power/voltdm/Makefile                 |    3 +
->  drivers/power/voltdm/core.c                   |  347 +++++++++++++++++++++++--
->  drivers/power/voltdm/voltage_domain_private.h |   86 ++++++
->  4 files changed, 424 insertions(+), 17 deletions(-)
-
-...the diffstat doesn't make it obvious what the external interface is
-either.  It would be much easier to review this with a clearer picture
-of what it's aiming to implement.
-
-> +	voltdm_np = of_parse_phandle(np, prop_name, 0);
-> +	if (voltdm_np) {
-> +		ret = of_parse_phandle_with_args(np, prop_name, "#voltdm-cells",
-> +						 0, args);
-> +		if (ret)
-> +			return ERR_PTR(ret);
-
-There seems to be some DT stuff going on here, is the interface DT only?
-
---NIjw7+ppZq6Cg8/r
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTCqc/AAoJELSic+t+oim99JAQAIvNUcSKJZ4qH3VU6X2AgGLF
-FM0PjxD0KzEiS6YIduwO7lFodm0X45TFCwQ6XXtMpppHMMcnPK6tb9p4lVZqisyZ
-dMu/9GlurCLSbYcBaG2kjmMmdaAnxzh4qNP/FySe9R2f6MATRAZ/NmNM2HSRK2QS
-8+aRfk6OI0iv/qSh7q9KP4ondA0FuxA8oQ6a2fVtsz+SyfN5w5j8k30zQu5XCB8G
-EpbEr9XueWiFm0zeqUMSdNO9YRYqeyk7z+uUCtN5DJ/ytUG8RNWt/ppF/h7Ss6Wr
-Mlh9bzH1WkiUUcsAnXq6yvNfIbFZNxyxXKxrmYIH/5hzvydjbkqPedVnZX94eBKU
-d8l+N9supzjBlKeUSRd7BcDhZ4j0gtYfkzmQ5VlShp/cac/sgShHaSx3aEXmI7g8
-xY5L7JVE3K0WyCXVSQhqesfQtHWp8yUe5ErFV3Y+rhmjxEnRdetLOFiAe/BFWeZc
-w/7M9J4EMgpgz59XvPK/ADNOgoDweab/s86I6XBdB4KzQpf566hX7CiCExZw4tdo
-PhyvFtsfJC5Mtzd6X5OgITeP4nZjrmuA7OSiLkDXp1Km2z0Mok8YorzeRR4P49SW
-fzeEwb+2QRPivAVjvzHDMD2fI8Tv9YBqe2yejfgmdsTHnvN6OkFwVaMmcxORVIcc
-w0CjuzDTcDCDwNqYlPuu
-=E9AS
------END PGP SIGNATURE-----
-
---NIjw7+ppZq6Cg8/r--
