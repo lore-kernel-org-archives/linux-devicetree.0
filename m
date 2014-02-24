@@ -1,101 +1,115 @@
-From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH RFC v8 3/5] dma: of: Add common xlate function for matching by channel id
-Date: Mon, 24 Feb 2014 15:09:30 +0400
-Message-ID: <1393240172-18769-4-git-send-email-a13xp0p0v88@gmail.com>
-References: <1393240172-18769-1-git-send-email-a13xp0p0v88@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393240172-18769-1-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Huang Shijie <b32955@freescale.com>
+Subject: [PATCH v5 0/8] mtd: spi-nor: add a new framework for SPI NOR
+Date: Mon, 24 Feb 2014 18:37:34 +0800
+Message-ID: <1393238262-8622-1-git-send-email-b32955@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: dwmw2@infradead.org
+Cc: computersforpeace@gmail.com, angus.clark@st.com, lee.jones@linaro.org, pekon@ti.com, sourav.poddar@ti.com, broonie@linaro.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, b44548@freescale.com, b18965@freescale.com, devicetree@vger.kernel.org, shawn.guo@linaro.org, Huang Shijie <b32955@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a new common OF dma xlate callback function which will match a
-channel by it's id. The binding expects one integer argument which it will use to
-lookup the channel by the id.
+1.) Why add a new framework for SPI NOR?
+  The SPI-NOR controller such as Freescale's Quadspi controller is working
+  in a different way from the SPI bus. It should knows the NOR commands to
+  find the right LUT sequence. Unfortunately, the current code can not meet
+  this requirement.
 
-Unlike of_dma_simple_xlate this function is able to handle a system with
-multiple DMA controllers. When registering the of dma provider with
-of_dma_controller_register a pointer to the dma_device struct which is
-associated with the dt node needs to passed as the data parameter.
-New function will use this pointer to match only channels which belong to the
-specified DMA controller.
+2.) How does this patch set do?
+   This patch set adds a new spi-nor layer.
+   Before this patch, the layer is like:
 
-Signed-off-by: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/dma/of-dma.c   | 35 +++++++++++++++++++++++++++++++++++
- include/linux/of_dma.h |  4 ++++
- 2 files changed, 39 insertions(+)
+                   MTD
+         ------------------------
+                  m25p80
+         ------------------------
+	       spi bus driver
+         ------------------------
+	        SPI NOR chip
 
-diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
-index e8fe9dc..d5fbeaa 100644
---- a/drivers/dma/of-dma.c
-+++ b/drivers/dma/of-dma.c
-@@ -218,3 +218,38 @@ struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
- 			&dma_spec->args[0]);
- }
- EXPORT_SYMBOL_GPL(of_dma_simple_xlate);
-+
-+/**
-+ * of_dma_xlate_by_chan_id - Translate dt property to DMA channel by channel id
-+ * @dma_spec:	pointer to DMA specifier as found in the device tree
-+ * @of_dma:	pointer to DMA controller data
-+ *
-+ * This function can be used as the of xlate callback for DMA driver which wants
-+ * to match the channel based on the channel id. When using this xlate function
-+ * the #dma-cells propety of the DMA controller dt node needs to be set to 1.
-+ * The data parameter of of_dma_controller_register must be a pointer to the
-+ * dma_device struct the function should match upon.
-+ *
-+ * Returns pointer to appropriate dma channel on success or NULL on error.
-+ */
-+struct dma_chan *of_dma_xlate_by_chan_id(struct of_phandle_args *dma_spec,
-+					 struct of_dma *ofdma)
-+{
-+	struct dma_device *dev = ofdma->of_dma_data;
-+	struct dma_chan *chan, *candidate = NULL;
-+
-+	if (!dev || dma_spec->args_count != 1)
-+		return NULL;
-+
-+	list_for_each_entry(chan, &dev->channels, device_node)
-+		if (chan->chan_id == dma_spec->args[0]) {
-+			candidate = chan;
-+			break;
-+		}
-+
-+	if (!candidate)
-+		return NULL;
-+
-+	return dma_get_slave_channel(candidate);
-+}
-+EXPORT_SYMBOL_GPL(of_dma_xlate_by_chan_id);
-diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
-index ae36298..56bc026 100644
---- a/include/linux/of_dma.h
-+++ b/include/linux/of_dma.h
-@@ -41,6 +41,8 @@ extern struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
- 						     const char *name);
- extern struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
- 		struct of_dma *ofdma);
-+extern struct dma_chan *of_dma_xlate_by_chan_id(struct of_phandle_args *dma_spec,
-+		struct of_dma *ofdma);
- #else
- static inline int of_dma_controller_register(struct device_node *np,
- 		struct dma_chan *(*of_dma_xlate)
-@@ -66,6 +68,8 @@ static inline struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_s
- 	return NULL;
- }
- 
-+#define of_dma_xlate_by_chan_id NULL
-+
- #endif
- 
- #endif /* __LINUX_OF_DMA_H */
+   After this patch, the layer is like:
+                   MTD
+         ------------------------
+                  spi-nor
+         ------------------------
+                  m25p80
+         ------------------------
+	       spi bus driver
+         ------------------------
+	       SPI NOR chip
+
+  With the spi-nor controller driver(Freescale Quadspi), it looks like:
+                   MTD
+         ------------------------
+                  spi-nor
+         ------------------------
+                fsl-quadspi
+         ------------------------
+	       SPI NOR chip
+
+3.) more details
+    This patch set adds a new data structrue spi_nor{}, clones most the common
+  code to spi-nor.c. Add spi_nor_xfer_cfg {} for the fundamental primitives:
+  read_xfer/write_xfer.
+
+    Make the m25p80.c/fsl_quaspi.c use the new APIs. 
+
+4.) Change log:
+v4 --> v5:
+	[1] rebase the patch set on the l2-mtd tree.
+	[2] fixed bugs in the fsl-quadspi driver.
+	[3] tested the fsl-quadspi with imx6sx board.
+
+v3 --> v4:
+	[1] move the wait_till_ready to the @read hook.
+	[2] convert to linux-doc style comment.
+	[3] remove the some DT property for QuadSPI driver, such as
+	    "fsl,nor-size".
+	[4] others    
+
+v2 --> v3:
+	[1] add prepare/unprepare hooks for spi_nor{}.
+	[2] add a new "priv" field for spi_nor{}.
+	[3] add the Freescale Quadspi driver which supports the Quad read by
+             default. 
+
+v1 --> v2:
+	[1] follow Angus's advice, add more hooks and data structrures.
+	[2] others.
+
+*** BLURB HERE ***
+
+Huang Shijie (8):
+  mtd: spi-nor: copy the SPI NOR commands to a new header file
+  mtd: spi-nor: add the basic data structures
+  mtd: spi-nor: add the framework for SPI NOR
+  Documentation: add the document for the SPI NOR framework
+  mtd: m25p80: use the SPI nor framework
+  mtd: spi-nor: add a helper to find the spi_device_id
+  Documentation: add the binding file for Freescale QuadSPI driver
+  mtd: spi-nor: Add Freescale QuadSPI driver
+
+ .../devicetree/bindings/mtd/fsl-quadspi.txt        |   35 +
+ Documentation/mtd/spi-nor.txt                      |   59 +
+ drivers/mtd/Kconfig                                |    2 +
+ drivers/mtd/Makefile                               |    1 +
+ drivers/mtd/devices/m25p80.c                       | 1302 ++------------------
+ drivers/mtd/spi-nor/Kconfig                        |   12 +
+ drivers/mtd/spi-nor/Makefile                       |    2 +
+ drivers/mtd/spi-nor/fsl-quadspi.c                  | 1009 +++++++++++++++
+ drivers/mtd/spi-nor/spi-nor.c                      | 1099 +++++++++++++++++
+ include/linux/mtd/spi-nor.h                        |  197 +++
+ 10 files changed, 2521 insertions(+), 1197 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
+ create mode 100644 Documentation/mtd/spi-nor.txt
+ create mode 100644 drivers/mtd/spi-nor/Kconfig
+ create mode 100644 drivers/mtd/spi-nor/Makefile
+ create mode 100644 drivers/mtd/spi-nor/fsl-quadspi.c
+ create mode 100644 drivers/mtd/spi-nor/spi-nor.c
+ create mode 100644 include/linux/mtd/spi-nor.h
+
 -- 
-1.8.4.2
+1.7.2.rc3
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
