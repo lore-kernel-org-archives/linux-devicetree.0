@@ -1,53 +1,68 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [RFC PATCH v3 2/9] staging: imx-drm: Add temporary copies of
-	v4l2-of parsing functions
-Date: Mon, 24 Feb 2014 15:52:21 +0000
-Message-ID: <20140224155221.GM21483@n2100.arm.linux.org.uk>
-References: <1392723370-4772-1-git-send-email-p.zabel@pengutronix.de>
-	<1392723370-4772-3-git-send-email-p.zabel@pengutronix.de>
+From: "Austin, Brian" <Brian.Austin@cirrus.com>
+Subject: Re: [PATCH] ASoC: cs42888: Add codec driver support
+Date: Mon, 24 Feb 2014 15:52:24 +0000
+Message-ID: <B745DBDD-8A64-4B98-819B-72F8AFF602DE@cirrus.com>
+References: <1393224929-7555-1-git-send-email-Guangyu.Chen@freescale.com>
+ <20140224113011.GE25940@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1392723370-4772-3-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces@lists.freedesktop.org
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed;
+	boundary="Apple-Mail=_40263A3A-2A6A-4855-9209-EDC777C5FD00";
+	protocol="application/pgp-signature"; micalg=pgp-sha512
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140224113011.GE25940@sirena.org.uk>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Nicolin Chen <Guangyu.Chen@freescale.com>, "Handrigan, Paul" <Paul.Handrigan@cirrus.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, Liam Girdwood <lgirdwood@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 18, 2014 at 12:36:03PM +0100, Philipp Zabel wrote:
-> From: Philipp Zabel <philipp.zabel@gmail.com>
-> 
-> The existing v4l2-of parser functions for the video interface bindings
-> described in Documentation/device-tree/bindings/media/video-interfaces.txt
-> are useful for DRM drivers, too. They will be moved to drivers/media
-> so they can be used by drm drivers, too. Until then, duplicate the
-> v4l2-of parser functions temporarily.
-> 
-> Signed-off-by: Philipp Zabel <philipp.zabel@gmail.com>
+--Apple-Mail=_40263A3A-2A6A-4855-9209-EDC777C5FD00
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=windows-1252
 
-Ergh.  So, because we can't get agreement on where to put the common
-helpers, we have to put up with adding duplicate helpers into the
-staging directory, inflating not only the kernel source code size
-but also the binary size as well.
 
-Come on people, get agreement on how to deal with this.  Staging may
-be a dumping ground for drivers which aren't ready to be merged as
-proper drivers, but this is no reason to ignore proper process.
+>=20
+>> +	/* Disable auto-mute */
+>> +	regmap_update_bits(cs42888->regmap, CS42888_TXCTL,
+>> +			   CS42888_TXCTL_AMUTE | =
+CS42888_TXCTL_DAC_SZC_MASK,
+>> +			   CS42888_TXCTL_DAC_SZC_SR);
+>=20
+> Does this interfere with the manual mute controls or is it a separate
+> thing?  If it plays nicely with the manual controls it's probably =
+better
+> to leave it enabled since it improves performance in some benchmarks
+> (that's why hardware tends to have the feature).
 
-Do we, or do we not want to get imx-drm out of drivers/staging?  If
-we do, the only way that's going to happen is if we stop throwing in
-this kind of stuff.
+Auto-Mute should be enabled by default.
 
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+>=20
+>> +	if (!IS_ERR(cs42888->clk))
+>> +		clk_disable_unprepare(cs42888->clk);
+>=20
+> Does the device work without MCLK?
+Yes, MCLK is required. If you can=92t get the clock you should error =
+out.
+
+
+
+--Apple-Mail=_40263A3A-2A6A-4855-9209-EDC777C5FD00
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="signature.asc"
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Message signed with OpenPGP using GPGMail
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - https://gpgtools.org
+
+iQEcBAEBCgAGBQJTC2q4AAoJEHdXZdGWfiO70PIIALSgC5o02guz257kMTsyIXyQ
+tT+onHYqqS6ogOZwowzXu18KkX4GqSE/8hrrBf+bBTgGKoo8+TTydpUGfs8pT66B
+ttHKs0t+zMml55NzZUVGrejO5+3qy5OTMql9Prv3jMkKpZeGLCIy0dA3gWtwJ0Rl
+8R/OL+ti3XtLofZWKUyO4jYNB1+Air0iTX5PBg/jBe4mmi1CUfxhI2xZtiKM8Ut6
+OiKn14p9nHiAeojDT3hlnHs1a6mc3wsuE8Hpgc1d2+3llyxgFOrazySsdlEN96x0
+0kr5BQJtczTPKl7FQr3CqkmPRC1iSk0KM+oKRYo3x8zIRIun4160mokgX0G0l5w=
+=XQjd
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_40263A3A-2A6A-4855-9209-EDC777C5FD00--
