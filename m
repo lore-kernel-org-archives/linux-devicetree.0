@@ -1,37 +1,51 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 00/10] pinctrl: mvebu: remove hard-coded addresses from
- Dove pinctrl
-Date: Mon, 24 Feb 2014 11:17:02 +0100
-Message-ID: <CACRpkdZ1JR82m46YV5m=b6e3E3OYcNCka_8EiT2VcSPU=ZVLdQ@mail.gmail.com>
-References: <1393231382-11078-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Peter Chen <Peter.Chen@freescale.com>
+Subject: RE: [PATCH RESEND v2 1/3] usb: chipidea: msm: Add device tree
+ binding information
+Date: Mon, 24 Feb 2014 10:19:25 +0000
+Message-ID: <4ba05bf270f6482c97fdc920969f1f54@BL2PR03MB226.namprd03.prod.outlook.com>
+References: <530512F1.3060304@cogentembedded.com>
+	 <1392889988-24312-1-git-send-email-iivanov@mm-sol.com>
+	 <94c57dc0d24f45a09985e05591a90bb2@BL2PR03MB226.namprd03.prod.outlook.com>
+ <1393236562.6481.5.camel@iivanov-dev>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393231382-11078-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1393236562.6481.5.camel@iivanov-dev>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 24, 2014 at 9:42 AM, Sebastian Hesselbarth
-<sebastian.hesselbarth@gmail.com> wrote:
+ 
+> 
+> On Mon, 2014-02-24 at 08:15 +0000, Peter Chen wrote:
+> > > +CI13xxx (Chipidea) USB controllers
+> > > +
+> > > +Required properties:
+> > > +- compatible:   should contain "qcom,ci-hdrc"
+> > > +- reg:          offset and length of the register set in the memory
+> map
+> > > +- interrupts:   interrupt-specifier for the controller interrupt.
+> > > +- usb-phy:      phandle for the PHY device
+> > > +- dr_mode:      Sould be "peripheral"
+> > > +
+> > > +	gadget@f9a55000 {
+> > > +		compatible = "qcom,ci-hdrc";
+> > > +		reg = <0xf9a55000 0x400>;
+> > > +		dr_mode = "peripheral";
+> > > +		interrupts = <0 134 0>;
+> > > +		usb-phy = <&usb_otg>;
+> > > +	};
+> > > +
+> >
+> > usb_otg is not a good name for the node of usb phy.
+> 
+> Well, this is just an example. Is this better <&phy0>?
+> 
 
-> This is a patches separated from one sent earlier [1] with just the
-> removal of any hard-coded reg addresses from Dove pinctrl stub.
+<&usbphy0> is better since we have ethernet, sata, pcie phy.
 
-OK let's queue this a while later on top of the other stuff (that I'm working
-on applying right now).
+Peter
 
-> In the meantime, support for new Armada 375/38x was added that also
-> contain patches for pinctrl [2].
-
-I applied these first. Please look at the result once I push out the
-pinctrl tree with the 375/38x + your v4 series in combination
-(let's see how big mess it will be...)
-
-I'm sorry for not applying the nice patches earlier, forcing you to work
-on many parallel series like this, hopefully I'll be able to attend to
-them this week.
-
-Yours,
-Linus Walleij
