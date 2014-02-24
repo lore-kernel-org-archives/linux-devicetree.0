@@ -1,180 +1,53 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCHv1 5/6] HSI: Introduce OMAP SSI driver
-Date: Mon, 24 Feb 2014 15:51:32 +0000
-Message-ID: <20140224155132.GK28555@e106331-lin.cambridge.arm.com>
-References: <1393199401-27197-1-git-send-email-sre@debian.org>
- <1393199401-27197-6-git-send-email-sre@debian.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [RFC PATCH v3 2/9] staging: imx-drm: Add temporary copies of
+	v4l2-of parsing functions
+Date: Mon, 24 Feb 2014 15:52:21 +0000
+Message-ID: <20140224155221.GM21483@n2100.arm.linux.org.uk>
+References: <1392723370-4772-1-git-send-email-p.zabel@pengutronix.de>
+	<1392723370-4772-3-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1393199401-27197-6-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Carlos Chinea <cch.devel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?utf-8?B?0JjQstCw0LnQu9C+INCU0LjQvNC40YLRgNC+0LI=?= <freemangordon-uiMcrn6V0Vs@public.gmane.org>, Joni Lapilainen <joni.lapilainen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+In-Reply-To: <1392723370-4772-3-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces@lists.freedesktop.org
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 23, 2014 at 11:50:00PM +0000, Sebastian Reichel wrote:
-> Add OMAP SSI driver to the HSI subsystem.
+On Tue, Feb 18, 2014 at 12:36:03PM +0100, Philipp Zabel wrote:
+> From: Philipp Zabel <philipp.zabel@gmail.com>
 > 
-> The Synchronous Serial Interface (SSI) is a legacy version
-> of HSI. As in the case of HSI, it is mainly used to connect
-> Application engines (APE) with cellular modem engines (CMT)
-> in cellular handsets.
+> The existing v4l2-of parser functions for the video interface bindings
+> described in Documentation/device-tree/bindings/media/video-interfaces.txt
+> are useful for DRM drivers, too. They will be moved to drivers/media
+> so they can be used by drm drivers, too. Until then, duplicate the
+> v4l2-of parser functions temporarily.
 > 
-> It provides a multichannel, full-duplex, multi-core communication
-> with no reference clock. The OMAP SSI block is capable of reaching
-> speeds of 110 Mbit/s.
-> 
-> Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/hsi/Kconfig                     |    1 +
->  drivers/hsi/Makefile                    |    1 +
->  drivers/hsi/controllers/Kconfig         |   19 +
->  drivers/hsi/controllers/Makefile        |    6 +
->  drivers/hsi/controllers/omap_ssi.c      |  618 ++++++++++++++
->  drivers/hsi/controllers/omap_ssi.h      |  166 ++++
->  drivers/hsi/controllers/omap_ssi_port.c | 1401 +++++++++++++++++++++++++++++++
->  drivers/hsi/controllers/omap_ssi_regs.h |  171 ++++
->  8 files changed, 2383 insertions(+)
->  create mode 100644 drivers/hsi/controllers/Kconfig
->  create mode 100644 drivers/hsi/controllers/Makefile
->  create mode 100644 drivers/hsi/controllers/omap_ssi.c
->  create mode 100644 drivers/hsi/controllers/omap_ssi.h
->  create mode 100644 drivers/hsi/controllers/omap_ssi_port.c
->  create mode 100644 drivers/hsi/controllers/omap_ssi_regs.h
+> Signed-off-by: Philipp Zabel <philipp.zabel@gmail.com>
 
-[...]
+Ergh.  So, because we can't get agreement on where to put the common
+helpers, we have to put up with adding duplicate helpers into the
+staging directory, inflating not only the kernel source code size
+but also the binary size as well.
 
-> +       irq = platform_get_resource_byname(pd, IORESOURCE_IRQ, "gdd_mpu");
-> +       if (!irq) {
-> +               dev_err(&pd->dev, "GDD IRQ resource missing\n");
-> +               err = -ENXIO;
-> +               goto out_err;
-> +       }
-> +       omap_ssi->gdd_irq = irq->start;
+Come on people, get agreement on how to deal with this.  Staging may
+be a dumping ground for drivers which aren't ready to be merged as
+proper drivers, but this is no reason to ignore proper process.
 
-You can use platform_get_irq_byname here.
+Do we, or do we not want to get imx-drm out of drivers/staging?  If
+we do, the only way that's going to happen is if we stop throwing in
+this kind of stuff.
 
-[...]
-
-> +static inline int ssi_of_get_available_child_count(const struct device_node *np)
-> +{
-> +       struct device_node *child;
-> +       int num = 0;
-> +
-> +       for_each_child_of_node(np, child)
-> +               if (of_device_is_available(child))
-> +                       num++;
-> +
-> +       return num;
-> +}
-
-You can find of_get_available_child_count in <linux/of.h>.
-
-That said, this seems to be trying to count the numbero f ports, which
-should all be compatible with "ti,omap3-ssi-port", no?
-
-So maybe you should count all available child nodes compatible with
-that.
-
-> +
-> +static int __init ssi_probe(struct platform_device *pd)
-> +{
-> +       struct device_node *np = pd->dev.of_node;
-> +       struct hsi_controller *ssi;
-> +       int err;
-> +       int num_ports;
-> +
-> +       if (!np) {
-> +               dev_err(&pd->dev, "missing device tree data\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       num_ports = ssi_of_get_available_child_count(np);
-> +
-> +       ssi = hsi_alloc_controller(num_ports, GFP_KERNEL);
-> +       if (!ssi) {
-> +               dev_err(&pd->dev, "No memory for controller\n");
-> +               return -ENOMEM;
-> +       }
-> +
-> +       platform_set_drvdata(pd, ssi);
-> +
-> +       err = ssi_add_controller(ssi, pd);
-> +       if (err < 0)
-> +               goto out1;
-> +
-> +       pm_runtime_irq_safe(&pd->dev);
-> +       pm_runtime_enable(&pd->dev);
-> +
-> +       err = ssi_hw_init(ssi);
-> +       if (err < 0)
-> +               goto out2;
-> +#ifdef CONFIG_DEBUG_FS
-> +       err = ssi_debug_add_ctrl(ssi);
-> +       if (err < 0)
-> +               goto out2;
-> +#endif
-> +
-> +       err = of_platform_populate(pd->dev.of_node, NULL, NULL, &pd->dev);
-
-I'm not keen on doing this because it allows arbitrary devices which are
-not ssi ports to be placed in the ssi host controller node that will be
-probed, which is nonsensical and something I'd like to avoid by
-construction.
-
-Is there any reason the ports have to be platform devices at all?
-
-If so, is there no way we can register them directly and skip any other
-devices?
-
-[...]
-
-> +static int __exit ssi_remove(struct platform_device *pd)
-> +{
-> +       struct hsi_controller *ssi = platform_get_drvdata(pd);
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +       ssi_debug_remove_ctrl(ssi);
-> +#endif
-> +       ssi_remove_controller(ssi);
-> +       platform_set_drvdata(pd, NULL);
-> +
-> +       pm_runtime_disable(&pd->dev);
-> +
-> +       /* cleanup of of_platform_populate() call */
-> +       device_for_each_child(&pd->dev, NULL, ssi_remove_ports);
-
-This would certainly be broken for a non ssi port device.
-
-[...]
-
-> +static int omap_ssi_port_runtime_suspend(struct device *dev)
-> +{
-> +       struct hsi_port *port = dev_get_drvdata(dev);
-> +       struct omap_ssi_port *omap_port = hsi_port_drvdata(port);
-> +       struct hsi_controller *ssi = to_hsi_controller(port->device.parent);
-> +       struct omap_ssi_controller *omap_ssi = hsi_controller_drvdata(ssi);
-> +
-> +       dev_dbg(dev, "port runtime suspend!\n");
-> +
-> +       ssi_set_port_mode(omap_port, SSI_MODE_SLEEP);
-> +       if (omap_ssi->get_loss)
-> +               omap_port->loss_count =
-> +                               (*omap_ssi->get_loss)(ssi->device.parent);
-
-You don't need to do (*struct->func)(args) when invoking a function
-pointer. You can jsut have struct->func(args) as we do elsewhere. This
-can be:
-
-  omap_ssi->get_loss(ssi->device.parent)
-
-This should be fixed up in the other sites too.
-
-Cheers,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
