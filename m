@@ -1,80 +1,107 @@
-From: Konstantin Tokarev <annulen@yandex.ru>
-Subject: Re: [PATCH v5 4/8] Documentation: add the document for the SPI NOR
- framework
-Date: Mon, 24 Feb 2014 19:17:16 +0400
-Message-ID: <203101393255036@web29h.yandex.ru>
-References: <1393238262-8622-1-git-send-email-b32955@freescale.com>
- <1393238262-8622-5-git-send-email-b32955@freescale.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [RFC PATCH v3 0/9] imx-drm dt bindings
+Date: Mon, 24 Feb 2014 16:36:37 +0100
+Message-ID: <1393256197.3091.49.camel@pizza.hi.pengutronix.de>
+References: <1392723370-4772-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="koi8-r"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1393238262-8622-5-git-send-email-b32955@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Huang Shijie <b32955@freescale.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>
-Cc: "angus.clark@st.com" <angus.clark@st.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "b44548@freescale.com" <b44548@freescale.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "broonie@linaro.org" <broonie@linaro.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "pekon@ti.com" <pekon@ti.com>, "sourav.poddar@ti.com" <sourav.poddar@ti.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1392723370-4772-1-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces@lists.freedesktop.org
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-CgoyNC4wMi4yMDE0LCAxNToyNiwgIkh1YW5nIFNoaWppZSIgPGIzMjk1NUBmcmVlc2NhbGUuY29t
-PjoKPiBUaGlzIHBhdGNoIGFkZHMgdGhlIGRvY3VtZW50IGZvciB0aGUgU1BJIE5PUiBmcmFtZXdv
-cmsuCj4KPiBTaWduZWQtb2ZmLWJ5OiBIdWFuZyBTaGlqaWUgPGIzMjk1NUBmcmVlc2NhbGUuY29t
-Pgo+IC0tLQo+IJpEb2N1bWVudGF0aW9uL210ZC9zcGktbm9yLnR4dCB8IJqaNTkgKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiCaMSBmaWxlcyBjaGFuZ2VkLCA1OSBp
-bnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQo+IJpjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
-bnRhdGlvbi9tdGQvc3BpLW5vci50eHQKPgo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL210
-ZC9zcGktbm9yLnR4dCBiL0RvY3VtZW50YXRpb24vbXRkL3NwaS1ub3IudHh0Cj4gbmV3IGZpbGUg
-bW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi5iOTU4NWY4Cj4gLS0tIC9kZXYvbnVsbAo+ICsr
-KyBiL0RvY3VtZW50YXRpb24vbXRkL3NwaS1ub3IudHh0Cj4gQEAgLTAsMCArMSw1OSBAQAo+ICsg
-mpqampqampqampqampqampqampqampqamlNQSSBOT1IgZnJhbWV3b3JrCj4gKyCampqampqampqa
-mpqamj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4gKwo+ICtQ
-YXJ0IEkgLSB3aHkgd2UgbmVlZCB0aGlzIGZyYW1ld29yaz8KPiArLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLQo+ICsKPiArVGhlIFNQSSBidXMgY29udHJvbGxlciBvbmx5IGRl
-YWxzIHdpdGggdGhlIGJ5dGUgc3RyZWFtLgo+ICtTb21lIGNvbnRyb2xsZXIgZG9lcyBub3Qgd29y
-a3MgbGlrZSBhIFNQSSBidXMgY29udHJvbGxlciwgaXQgd29ya3MKPiArbGlrZSBhIFNQSSBOT1Ig
-Y29udHJvbGxlciBpbnN0ZWFkLCBzdWNoIGFzIHRoZSBGcmVlc2NhbGUncyBRdWFkU1BJIGNvbnRy
-b2xsZXIuCj4gKwo+ICtUaGUgRnJlZXNjYWxlJ3MgUXVhZFNQSSBjb250cm9sbGVyIHNob3VsZCBr
-bm93cyB0aGUgTk9SIGNvbW1hbmRzIHRvCj4gK2ZpbmQgdGhlIHJpZ2h0IExVVCBzZXF1ZW5jZS4g
-VW5mb3J0dW5hdGVseSwgdGhlIG9sZCBjb2RlIGNhbiBub3QgbWVldAo+ICt0aGlzIHJlcXVpcmVt
-ZW50LgoKc2hvdWxkIGtub3cKCj4gKwo+ICtQYXJ0IElJIC0gSG93IGRvZXMgdGhlIGZyYW1ld29y
-ayB3b3JrPwo+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gKwo+ICtU
-aGlzIGZyYW1ld29yayBqdXN0IGFkZHMgYSBuZXcgbGF5ZXIgYmV0d2VlbiB0aGUgTVREIGFuZCB0
-aGUgU1BJIGJ1cyBkcml2ZXIuCj4gK1dpdGggdGhpcyBuZXcgbGF5ZXIsIHRoZSBTUEkgTk9SIGNv
-bnRyb2xsZXIgZHJpdmVyIGRvZXMgbm90IGRlcGVuZCBvbiB0aGUKPiArbTI1cDgwIGNvZGUgYW55
-bW9yZS4KPiArCj4gKyCamkJlZm9yZSB0aGlzIGZyYW1ld29yaywgdGhlIGxheWVyIGlzIGxpa2U6
-Cj4gKwo+ICsgmpqampqampqampqampqampqaTVRECj4gKyCampqampqami0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLQo+ICsgmpqampqampqampqampqampptMjVwODAKPiArIJqampqampqaLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tCj4gKyCampqamppTUEkgYnVzIGRyaXZlcgo+ICsgmpqampqampot
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArIJqampqamppTUEkgTk9SIGNoaXAKPiArCj4gKyCa
-mkFmdGVyIHRoaXMgZnJhbWV3b3JrLCB0aGUgbGF5ZXIgaXMgbGlrZToKPiArIJqampqampqampqa
-mpqampqamk1URAo+ICsgmpqampqampotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArIJqampqa
-mpqampqamppTUEkgTk9SIGZyYW1ld29yawo+ICsgmpqampqampotLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0KPiArIJqampqampqampqampqampqabTI1cDgwCj4gKyCampqampqami0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLQo+ICsgmpqampqaU1BJIGJ1cyBkcml2ZXIKPiArIJqampqampqaLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tCj4gKyCampqamppTUEkgTk9SIGNoaXAKPiArCj4gKyCaV2l0aCB0
-aGUgU1BJIE5PUiBjb250cm9sbGVyIGRyaXZlcihGcmVlc2NhbGUgUXVhZFNQSSksIGl0IGxvb2tz
-IGxpa2U6Cj4gKyCampqampqampqampqampqamppNVEQKPiArIJqampqampqaLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tCj4gKyCampqampqampqampqaU1BJIE5PUiBmcmFtZXdvcmsKPiArIJqampqa
-mpqaLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gKyCampqampqampqampqamppmc2wtcXVhZFNQ
-SQo+ICsgmpqampqampotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArIJqampqamlNQSSBOT1Ig
-Y2hpcAo+ICsKPiArUGFydCBJSUkgLSBIb3cgY2FuIHRoZSBkcml2ZXJzIHVzZSB0aGUgZnJhbWV3
-b3JrCj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArCj4gK1RoZSBt
-YWluIEFQSSBpcyB0aGUgc3BpX25vcl9zY2FuKCkuIEJlZm9yZSB5b3UgY2FsbCB0aGUgaG9vaywg
-eW91IHNob3VsZAo+ICtpbml0aWFsaXplIHRoZSBuZWNlc3NhcnkgZmllbGRzIGZvciBzcGlfbm9y
-e30uCj4gK1BsZWFzZSBzZWUgdGhlIGRyaXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5jIGZvciBk
-ZXRhaWwuCj4gK1BsZWFzZSBhbHNvIHJlZmVyZW5jZSB0byB0aGUgZnNsLXF1YWRzcGkuYyB3aGVu
-IHlvdSB3YW50IHRvIHdyaXRlIGEgbmV3IGRyaXZlcgo+ICtmb3IgYSBTUEkgTk9SIGNvbnRyb2xs
-ZXIuCj4gLS0KPiAxLjcuMi5yYzMKPgo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwo+IExpbnV4IE1URCBkaXNjdXNzaW9uIG1haWxpbmcgbGlz
-dAo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbXRk
-LwoKUmVnYXJkcywKS29uc3RhbnRpbgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Am Dienstag, den 18.02.2014, 12:36 +0100 schrieb Philipp Zabel:
+> Hi,
+> 
+> here is an updated and more complete version of the imx-drm DT binding
+> series. These patches apply on top of Russell's second preview of the
+> imx-drm cleanup series on v3.14-rc2. I have added device tree bindings
+> between IPU and the encoders as documented in
+> Documentation/devicetree/bindings/media/video-interfaces.txt
+> and used those to determine the possible_crtcs and mux_id.
+> 
+> The crtc cookie is replaced with a the port device tree node,
+> which is unique and therefore allows to get rid of the di_id
+> comparison. Storing the multiplexer input numbers in the device
+> tree removes the need to know the ipu_id. This should also allow
+> to replace IPU2 with LCDIF on i.MX6 Solo more easily.
+> 
+> In v3 also connections between display interface ports and encoders are
+> used to find all necessary components, so that only the display interfaces
+> have to be configured in the imx-drm node. This allows to move the imx-drm
+> node into the SoC level dtsi. I've also updated the existing i.MX51 and
+> i.MX53 device trees this time and updated/added the devicetree binding
+> documentation.
+> 
+> Patch 2/9 adds a temporary copy of the v4l2_of parser functions. Those
+> are going to be moved to some place where they can be used by drm drivers,
+> eventually, so those local copies can be dropped again.
+
+Russell has sent a pull request for the imx-drm component support series
+now, and we're at v3.13-rc4 already. This patch series still applies on
+top of
+git://ftp.arm.linux.org.uk/~rmk/linux-arm.git imx-drm-staging
+I'd appreciate some feedback on this. Or shall I resend without the RFC?
+
+regards
+Philipp
+
+> regards
+> Philipp
+> 
+> Lucas Stach (1):
+>   staging: imx-drm-core: don't request probe deferral in
+>     imx_drm_encoder_parse_of
+> 
+> Philipp Zabel (8):
+>   staging: imx-drm: Add temporary copies of v4l2-of parsing functions
+>   staging: imx-drm-core: Use OF graph to find components and connections
+>     between encoder and crtcs
+>   staging: imx-drm: Document updated imx-drm device tree bindings
+>   staging: imx-drm: Document imx-hdmi device tree bindings
+>   ARM: dts: imx51: Add IPU ports and endpoints, move imx-drm node to
+>     dtsi
+>   ARM: dts: imx53: Add IPU DI ports and endpoints, move imx-drm node to
+>     dtsi
+>   ARM: dts: imx6qdl: Add IPU DI ports and endpoints, move imx-drm node
+>     to dtsi
+>   staging: imx-drm: Update TODO
+> 
+>  .../bindings/staging/imx-drm/fsl-imx-drm.txt       |  48 ++++-
+>  .../devicetree/bindings/staging/imx-drm/hdmi.txt   |  53 +++++
+>  .../devicetree/bindings/staging/imx-drm/ldb.txt    |  20 +-
+>  arch/arm/boot/dts/imx51-apf51dev.dts               |  11 +-
+>  arch/arm/boot/dts/imx51-babbage.dts                |  28 ++-
+>  arch/arm/boot/dts/imx51.dtsi                       |  22 ++-
+>  arch/arm/boot/dts/imx53-m53evk.dts                 |  17 +-
+>  arch/arm/boot/dts/imx53-mba53.dts                  |  15 +-
+>  arch/arm/boot/dts/imx53-qsb.dts                    |  17 +-
+>  arch/arm/boot/dts/imx53.dtsi                       |  64 +++++-
+>  arch/arm/boot/dts/imx6dl.dtsi                      |  22 +--
+>  arch/arm/boot/dts/imx6q-sabresd.dts                |   4 -
+>  arch/arm/boot/dts/imx6q.dtsi                       | 124 +++++++++++-
+>  arch/arm/boot/dts/imx6qdl-sabresd.dtsi             |   6 -
+>  arch/arm/boot/dts/imx6qdl.dtsi                     | 138 ++++++++++++-
+>  drivers/staging/imx-drm/Makefile                   |   2 +-
+>  drivers/staging/imx-drm/TODO                       |   5 -
+>  drivers/staging/imx-drm/imx-drm-core.c             | 217 ++++++++++++++-------
+>  drivers/staging/imx-drm/imx-drm-of.c               | 132 +++++++++++++
+>  drivers/staging/imx-drm/imx-drm.h                  |  11 +-
+>  drivers/staging/imx-drm/imx-hdmi.c                 |   2 +-
+>  drivers/staging/imx-drm/imx-ldb.c                  |   4 +-
+>  drivers/staging/imx-drm/ipuv3-crtc.c               |  47 ++++-
+>  23 files changed, 842 insertions(+), 167 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
+>  create mode 100644 drivers/staging/imx-drm/imx-drm-of.c
+> 
