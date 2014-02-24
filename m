@@ -1,93 +1,76 @@
-From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v2] dt/bindings: fsl-fec: add clock properties
-Date: Mon, 24 Feb 2014 09:51:43 +0100
-Message-ID: <20140224085143.GI3327@book.gsilab.sittig.org>
-References: <1393206490-25234-1-git-send-email-shawn.guo@linaro.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v7 13/15] ARM: sun4i: dt: Remove grouping +
+ simple-bus compatible for regulators
+Date: Mon, 24 Feb 2014 10:14:13 +0100
+Message-ID: <20140224091413.GD3468@lukather>
+References: <1393084424-31099-1-git-send-email-hdegoede@redhat.com>
+ <1393084424-31099-14-git-send-email-hdegoede@redhat.com>
+ <20140222214421.GC3610@lukather>
+ <5309AB64.7010603@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="UfEAyuTBtIjiZzX6"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBF43VSMAKGQEHOZIXFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1393206490-25234-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Philippe De Muyter <phdm-KobBqTBAxd8@public.gmane.org>
+In-Reply-To: <5309AB64.7010603-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, Richard Zhu <Hong-Xing.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 24, 2014 at 09:48 +0800, Shawn Guo wrote:
-> 
-> Update fsl-fec.txt to add 'clocks' and 'clock-names' properties.
-> 
-> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> Changes since v1:
->  - Leave compatible change out, which should probably be addressed by
->    another patch
->  - Move clock properties into 'Optional properties:' section
-> 
->  Documentation/devicetree/bindings/net/fsl-fec.txt |    9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
-> index 845ff84..468736d 100644
-> --- a/Documentation/devicetree/bindings/net/fsl-fec.txt
-> +++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
-> @@ -16,6 +16,15 @@ Optional properties:
->    will have the duration be 1 millisecond.  Numbers greater than 1000 are
->    invalid and 1 millisecond will be used instead.
->  - phy-supply: regulator that powers the Ethernet PHY.
-> +- clocks: the clocks feeding the FEC controller and phy.
-> +   - "ipg": the peripheral access clock
-> +   - "ahb": the bus clock for MAC
-> +   - "ptp": the sampling clock for PTP (IEEE 1588).  On SoC like i.MX6Q,
-> +     the clock could come from either the internal clock control module
-> +     or external oscillator via pad depending on board design.
-> +   - "enet_out": the phy reference clock provided by SoC via pad, which
-> +     is available on SoC like i.MX28.
-> +- clock-names: Must contain the clock names described just above
->  
->  Example:
 
-I can agree with that change.  It improves the situation for i.MX
-(provides missing information for ARM), and doesn't break MPC,
-while I'm not aware of other FEC (fast ethernet controller) uses.
+--UfEAyuTBtIjiZzX6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Sun, Feb 23, 2014 at 09:03:48AM +0100, Hans de Goede wrote:
+> Thanks, I assume this only applies to this patch, since we were still
+> discussing the common regulator bits of the ahci enablement dts patches ?
 
-For MPC though, I will have to provide a followup.
+Yes.
 
-Starting with v3.12 (2771399a "fs_enet: cleanup clock API use")
-the Linux drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c
-implementation looks up the "per" clock, while failure isn't
-fatal.  I will change this to lookup "ipg" first and fallback to
-"per" then.  Up to and including v3.13 no PowerPC .dts file
-provides clock specs for FEC nodes, so lookup always fails.  I'm
-guilty of not having provided a bindings update back then.
+> I'm not seeing any of your recent merges here:
+> https://github.com/mripard/linux/commits/sunxi/dt-for-3.15
+>=20
+> Did you not push them, or am I looking at the wrong tree ?
 
-Starting with v3.14-rc1 the MPC5121/23/25 platform does provide
-proper COMMON_CLK support, but comes with full backwards compat
-support, too.  So failure to lookup the clock spec still isn't
-fatal, the code works with both updated as well as pre-existing
-device trees.  And it will keep working across "incompatible"
-changes in the .dts, switching from "per" to "ipg" names for the
-FEC nodes.
+I forgot to push it. It's fixed now.
 
-So there are three changes that I will have to prepare:
-- documenting "per" as an (obsolete) alias for "ipg" in the
-  binding
-- looking up "ipg" before "per" in one of the FEC drivers
-- and switching from "per" to "ipg" in MPC .dts files
+Thanks!
+Maxime
 
-As outlined above, none of these changes depends on a specific
-order, nothing needs to get rushed into v3.14, although it would
-be nice to start shipping with a consistent state.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
+--UfEAyuTBtIjiZzX6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-virtually yours
-Gerhard Sittig
--- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
-Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTCw1kAAoJEBx+YmzsjxAgyqgP/R6g9yAOzpZZUFZriC3fdnJ5
+2btVN2qD/mkjC0lvVNysjZxLdoY4zKhy7LURkprxRJgHauxBLCNbLUy4SBZbNW3W
+FgBDNd8N2amvi8H/94PUmZbFER3Z7xs+XN+zqq2RJx3UwpGhJ971BOwHbMBIUfIp
+d5mjJNkz3byYgrPLGLdXLMQu0z4kG5M2smnSpwBOWQGvEKTcGXQwCYNL9eFFGcn2
+ne4mvT7uBVcYP9Ll+dBh0u/nuQ7WAcyePVy0eWuAV1YTjSb6jH0TUem3+aeyR+IS
+tdQ5dwnlYnJR5tpcIcvVT+A9dKQFP4U4Eh1MFJqJAHXc/VMCL9oMdpCBoaNfU01O
+aAsAzvV3UgUraKaZ+WfyCE+TlCujMTdWUkTV/kKpN2cKbzN0U3cuowtGgdGpUaiO
+V/SRJnMfPdJBajylnZOsyhFeSx6RtUSZa2LzKyyzAIY2wJsFWfQiA6TWWEVNyNeM
+mXf4+JgmI4rlGEEkJepL6OHBREcPUDjaosUCiWd4xgqbJZ7qXSiVXg741HKatm7U
+rY8pIHMIWY8u4U8ktHmTy0hIZXhr6OfMNq3JFsXLcnJ4WU6bMjr4fTjvm4wdFGxh
+2jtP7XWmQVNJD8PjDh1h69sW1RV4ggUIlme/Ux+rSB1tmZqKT7hz328ixgJIRhXO
+5VsriJWEaNSsQe0xFJTW
+=RdAh
+-----END PGP SIGNATURE-----
+
+--UfEAyuTBtIjiZzX6--
