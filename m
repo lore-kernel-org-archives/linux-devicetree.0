@@ -1,59 +1,50 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
 Subject: Re: [RFC PATCH v3 1/9] staging: imx-drm-core: don't request probe
- deferral in imx_drm_encoder_parse_of
-Date: Mon, 24 Feb 2014 18:03:58 +0100
-Message-ID: <1393261438.3091.67.camel@pizza.hi.pengutronix.de>
+	deferral in imx_drm_encoder_parse_of
+Date: Mon, 24 Feb 2014 17:06:53 +0000
+Message-ID: <20140224170653.GO21483@n2100.arm.linux.org.uk>
 References: <1392723370-4772-1-git-send-email-p.zabel@pengutronix.de>
- <1392723370-4772-2-git-send-email-p.zabel@pengutronix.de>
- <20140224154919.GL21483@n2100.arm.linux.org.uk>
- <1393260998.3091.63.camel@pizza.hi.pengutronix.de>
+	<1392723370-4772-2-git-send-email-p.zabel@pengutronix.de>
+	<20140224154919.GL21483@n2100.arm.linux.org.uk>
+	<1393260998.3091.63.camel@pizza.hi.pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
 In-Reply-To: <1393260998.3091.63.camel@pizza.hi.pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces@lists.freedesktop.org
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, den 24.02.2014, 17:56 +0100 schrieb Philipp Zabel:
+On Mon, Feb 24, 2014 at 05:56:38PM +0100, Philipp Zabel wrote:
 > Am Montag, den 24.02.2014, 15:49 +0000 schrieb Russell King - ARM Linux:
-> > On Tue, Feb 18, 2014 at 12:36:02PM +0100, Philipp Zabel wrote:
-> > > From: Lucas Stach <l.stach@pengutronix.de>
-> > > 
-> > > Since imx_drm_encoder_parse_of is called from the encoder bind callbacks,
-> > > it is too late to request probe deferral. Rather the core should make sure
-> > > that the crtcs are bound before the encoders, after all needed components
-> > > are probed.
-> > 
-> > Why is it too late?  -EPROBE_DEFER from this point will cause the driver
-> > initialisation to correctly unwind and return -EPROBE_DEFER to the
-> > last-to-be-added component.
-> 
-> Hmm, you are right. I have conflated two separate issues here. I'll back
-> that out.
-> 
-> > > This fixes probe failure when using the LDB on i.MX6.
-> > 
-> > More details please.
-> 
 > One issue was that the DT parsing code would try to add the imx-ldb
 > component right after the first crtc, and then its bind would fail
 > in imx_drm_encoder_parse_of because the three remaining crtcs were
 > not yet registered. This is already fixed by adding the crtc
 > components first.
 
-On second thought, now that the crtcs are all bound before the encoders,
-we'll never even reach this point until all crtcs are available.
+That's what happens anyway - we add /all/ the CRTCs first before we
+start adding the connectors.
 
-regards
-Philipp
+That means the CRTCs will be bound before the connectors (ldb).
+
+What you're probably missing is that with what's in my branch, if you
+want both CRTCs or the second CRTC in the IPU pair, you must specify
+both in the "crtcs" property - iow "crtcs = <&ipuX 0>, <&ipuX 1>".
+The reason is there's no way to differentiate the individual platform
+devices there without delving into the platform data.
+
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
