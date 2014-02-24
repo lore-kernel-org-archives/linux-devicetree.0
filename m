@@ -1,59 +1,50 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v11 06/15] usb: phy-mxs: change description of usb device speed
-Date: Mon, 24 Feb 2014 10:20:58 +0800
-Message-ID: <1393208467-6355-7-git-send-email-peter.chen@freescale.com>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: [PATCH v11 08/15] usb: phy-mxs: add controller id
+Date: Mon, 24 Feb 2014 10:21:00 +0800
+Message-ID: <1393208467-6355-9-git-send-email-peter.chen@freescale.com>
 References: <1393208467-6355-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393208467-6355-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-l0cyMroinI0@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, frank.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1393208467-6355-1-git-send-email-peter.chen@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: balbi@ti.com, shawn.guo@linaro.org, robh+dt@kernel.org, grant.likely@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com
+Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, peter.chen@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Change "high speed" to "HS"
-Change "non-high speed" to "FS/LS"
+It is used to access un-regulator registers according to
+different controllers.
 
-Implementation of notify_suspend and notify_resume will be different
-according to mxs_phy_data->flags.
-
-Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
 ---
- drivers/usb/phy/phy-mxs-usb.c |    8 ++++----
- 1 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/usb/phy/phy-mxs-usb.c |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
 
 diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-index 2411e05..1663a66 100644
+index cb71135..3009ab5 100644
 --- a/drivers/usb/phy/phy-mxs-usb.c
 +++ b/drivers/usb/phy/phy-mxs-usb.c
-@@ -168,8 +168,8 @@ static int mxs_phy_suspend(struct usb_phy *x, int suspend)
- static int mxs_phy_on_connect(struct usb_phy *phy,
- 		enum usb_device_speed speed)
- {
--	dev_dbg(phy->dev, "%s speed device has connected\n",
--		(speed == USB_SPEED_HIGH) ? "high" : "non-high");
-+	dev_dbg(phy->dev, "%s device has connected\n",
-+		(speed == USB_SPEED_HIGH) ? "HS" : "FS/LS");
+@@ -106,6 +106,7 @@ struct mxs_phy {
+ 	struct clk *clk;
+ 	const struct mxs_phy_data *data;
+ 	struct regmap *regmap_anatop;
++	int port_id;
+ };
  
- 	if (speed == USB_SPEED_HIGH)
- 		writel(BM_USBPHY_CTRL_ENHOSTDISCONDETECT,
-@@ -181,8 +181,8 @@ static int mxs_phy_on_connect(struct usb_phy *phy,
- static int mxs_phy_on_disconnect(struct usb_phy *phy,
- 		enum usb_device_speed speed)
- {
--	dev_dbg(phy->dev, "%s speed device has disconnected\n",
--		(speed == USB_SPEED_HIGH) ? "high" : "non-high");
-+	dev_dbg(phy->dev, "%s device has disconnected\n",
-+		(speed == USB_SPEED_HIGH) ? "HS" : "FS/LS");
+ static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+@@ -250,6 +251,11 @@ static int mxs_phy_probe(struct platform_device *pdev)
+ 		}
+ 	}
  
- 	if (speed == USB_SPEED_HIGH)
- 		writel(BM_USBPHY_CTRL_ENHOSTDISCONDETECT,
++	ret = of_alias_get_id(np, "usbphy");
++	if (ret < 0)
++		dev_dbg(&pdev->dev, "failed to get alias id, errno %d\n", ret);
++	mxs_phy->port_id = ret;
++
+ 	mxs_phy->phy.io_priv		= base;
+ 	mxs_phy->phy.dev		= &pdev->dev;
+ 	mxs_phy->phy.label		= DRIVER_NAME;
 -- 
 1.7.8
 
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
