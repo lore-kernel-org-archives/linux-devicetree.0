@@ -1,43 +1,46 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFCv1 4/4] mfd: twl4030-madc: Move driver to drivers/iio/adc
-Date: Mon, 24 Feb 2014 16:05:47 +0000
-Message-ID: <20140224160547.GD15847@lee--X1>
-References: <20140214174040.GB26969@earth.universe>
- <1392403586-30540-1-git-send-email-sre@debian.org>
- <1392403586-30540-4-git-send-email-sre@debian.org>
+From: Nicolin Chen <Guangyu.Chen@freescale.com>
+Subject: Re: [PATCH] ASoC: cs42888: Add codec driver support
+Date: Tue, 25 Feb 2014 00:06:49 +0800
+Message-ID: <20140224160648.GC6132@MrMyself>
+References: <1393224929-7555-1-git-send-email-Guangyu.Chen@freescale.com>
+ <20140224113011.GE25940@sirena.org.uk>
+ <B745DBDD-8A64-4B98-819B-72F8AFF602DE@cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <1392403586-30540-4-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <B745DBDD-8A64-4B98-819B-72F8AFF602DE@cirrus.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: "Austin, Brian" <Brian.Austin@cirrus.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Mark Brown <broonie@kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, "Handrigan,
+ Paul" <Paul.Handrigan@cirrus.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rob@landley.net" <rob@landley.net>, "galak@codeaurora.org" <galak@codeaurora.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-> This is a driver for an A/D converter, which belongs into
-> drivers/iio/adc.
->=20
-> Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/iio/adc/Kconfig        |  10 +
->  drivers/iio/adc/Makefile       |   1 +
->  drivers/iio/adc/twl4030-madc.c | 922 +++++++++++++++++++++++++++++++=
-++++++++++
->  drivers/mfd/Kconfig            |  10 -
->  drivers/mfd/Makefile           |   1 -
->  drivers/mfd/twl4030-madc.c     | 922 -------------------------------=
-----------
->  6 files changed, 933 insertions(+), 933 deletions(-)
->  create mode 100644 drivers/iio/adc/twl4030-madc.c
->  delete mode 100644 drivers/mfd/twl4030-madc.c
-
-=46or the MFD changes:
-  Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+T24gTW9uLCBGZWIgMjQsIDIwMTQgYXQgMDM6NTI6MjRQTSArMDAwMCwgQXVzdGluLCBCcmlhbiB3
+cm90ZToKPiA+PiArCWlmICghSVNfRVJSKGNzNDI4ODgtPmNsaykpCj4gPj4gKwkJY2xrX2Rpc2Fi
+bGVfdW5wcmVwYXJlKGNzNDI4ODgtPmNsayk7Cj4gPiAKPiA+IERvZXMgdGhlIGRldmljZSB3b3Jr
+IHdpdGhvdXQgTUNMSz8KPiBZZXMsIE1DTEsgaXMgcmVxdWlyZWQuIElmIHlvdSBjYW7igJl0IGdl
+dCB0aGUgY2xvY2sgeW91IHNob3VsZCBlcnJvciBvdXQuCgpXYWl0Li4uUmVnYXJkaW5nIHRoaXMg
+Y2xvY2sgcGFydCwgSSBqdXN0IGZvcmdvdCB0aGUgcmVhc29uIEkgcHV0IHRoZSBjb2RlOgoKMzg1
+ICAgICAgICAgY3M0Mjg4OC0+Y2xrID0gZGV2bV9jbGtfZ2V0KCZpMmMtPmRldiwgIm1jbGsiKTsK
+Mzg2ICAgICAgICAgaWYgKElTX0VSUihjczQyODg4LT5jbGspKQozODcgICAgICAgICAgICAgICAg
+IGRldl93YXJuKCZpMmMtPmRldiwgImZhaWxlZCB0byBnZXQgdGhlIGNsb2NrOiAlbGRcbiIsCjM4
+OCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFBUUl9FUlIoY3M0Mjg4OC0+Y2xrKSk7
+Cgp3YXMgYmVjYXVzZSB0aGUgTUNMSyBtaWdodCBiZSBwcm92aWRlZCBmcm9tIFNvQyAoREFJIG1h
+c3Rlcikgc28gaXQgY291bGQKYmUgdG90YWxseSBjb250cm9sbGVkIGJ5IENQVSBEQUkgZHJpdmVy
+LCBFU0FJIGZvciBleGFtcGxlIGhhcyBpdHMgb3duCmRpdmlkZXJzIHRvIGRlcml2ZSB0aGUgSENL
+VCBjbG9jayAoTUNMSyBmb3IgVHgpIGZyb20gYWhiIGNsb2NrIGluIFNvQwpjbG9jayB0cmVlLCBp
+biB3aGljaCBjYXNlIHdlIG1pZ2h0IG5vdCBlYXNpbHkgcGFzcyBhIHZhbGlkIGNsb2NrIHBoYW5k
+bGUKdmlhIERULiAoUkZDIHRvIHRoaXMgdGhvdWdodC4pCgpUaGFuayB5b3UsCk5pY29saW4gQ2hl
+bgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2Et
+ZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFp
+bG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
