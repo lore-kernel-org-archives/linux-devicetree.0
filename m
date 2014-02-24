@@ -1,68 +1,53 @@
-From: "Austin, Brian" <Brian.Austin@cirrus.com>
-Subject: Re: [PATCH] ASoC: cs42888: Add codec driver support
-Date: Mon, 24 Feb 2014 15:52:24 +0000
-Message-ID: <B745DBDD-8A64-4B98-819B-72F8AFF602DE@cirrus.com>
-References: <1393224929-7555-1-git-send-email-Guangyu.Chen@freescale.com>
- <20140224113011.GE25940@sirena.org.uk>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCHv1 5/6] HSI: Introduce OMAP SSI driver
+Date: Mon, 24 Feb 2014 09:56:51 -0600
+Message-ID: <530B6BC3.6070306@ti.com>
+References: <1393199401-27197-1-git-send-email-sre@debian.org> <1393199401-27197-6-git-send-email-sre@debian.org> <20140224155132.GK28555@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-	boundary="Apple-Mail=_40263A3A-2A6A-4855-9209-EDC777C5FD00";
-	protocol="application/pgp-signature"; micalg=pgp-sha512
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140224113011.GE25940@sirena.org.uk>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Nicolin Chen <Guangyu.Chen@freescale.com>, "Handrigan, Paul" <Paul.Handrigan@cirrus.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, Liam Girdwood <lgirdwood@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140224155132.GK28555@e106331-lin.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@debian.org>
+Cc: Sebastian Reichel <sre@ring0.de>, Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Tony Lindgren <tony@atomide.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, =?UTF-8?B?UGFsaSBSb2jDoXI=?= <pali.rohar@gmail.com>, =?UTF-8?B?0JjQstCw0Lk=?= =?UTF-8?B?0LvQviDQlNC40LzQuNGC0YDQvtCy?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
---Apple-Mail=_40263A3A-2A6A-4855-9209-EDC777C5FD00
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=windows-1252
+On 02/24/2014 09:51 AM, Mark Rutland wrote:
+> On Sun, Feb 23, 2014 at 11:50:00PM +0000, Sebastian Reichel wrote:
+
+[...]
+>> +static int omap_ssi_port_runtime_suspend(struct device *dev)
+>> +{
+>> +       struct hsi_port *port = dev_get_drvdata(dev);
+>> +       struct omap_ssi_port *omap_port = hsi_port_drvdata(port);
+>> +       struct hsi_controller *ssi = to_hsi_controller(port->device.parent);
+>> +       struct omap_ssi_controller *omap_ssi = hsi_controller_drvdata(ssi);
+>> +
+>> +       dev_dbg(dev, "port runtime suspend!\n");
+>> +
+>> +       ssi_set_port_mode(omap_port, SSI_MODE_SLEEP);
+>> +       if (omap_ssi->get_loss)
+>> +               omap_port->loss_count =
+>> +                               (*omap_ssi->get_loss)(ssi->device.parent);
+> 
+> You don't need to do (*struct->func)(args) when invoking a function
+> pointer. You can jsut have struct->func(args) as we do elsewhere. This
+> can be:
+> 
+>   omap_ssi->get_loss(ssi->device.parent)
+> 
+> This should be fixed up in the other sites too.
+
+in fact, we should stop expecting that service and drivers should
+manage their own context_loss detection
+Examples:
+MMC:
+http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=0a82e06e6183a252608df48cc4793b83e2d73dfd
+
+DSS: http://marc.info/?l=linux-omap&m=139272358619064&w=2
 
 
->=20
->> +	/* Disable auto-mute */
->> +	regmap_update_bits(cs42888->regmap, CS42888_TXCTL,
->> +			   CS42888_TXCTL_AMUTE | =
-CS42888_TXCTL_DAC_SZC_MASK,
->> +			   CS42888_TXCTL_DAC_SZC_SR);
->=20
-> Does this interfere with the manual mute controls or is it a separate
-> thing?  If it plays nicely with the manual controls it's probably =
-better
-> to leave it enabled since it improves performance in some benchmarks
-> (that's why hardware tends to have the feature).
-
-Auto-Mute should be enabled by default.
-
->=20
->> +	if (!IS_ERR(cs42888->clk))
->> +		clk_disable_unprepare(cs42888->clk);
->=20
-> Does the device work without MCLK?
-Yes, MCLK is required. If you can=92t get the clock you should error =
-out.
-
-
-
---Apple-Mail=_40263A3A-2A6A-4855-9209-EDC777C5FD00
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment; filename="signature.asc"
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Message signed with OpenPGP using GPGMail
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - https://gpgtools.org
-
-iQEcBAEBCgAGBQJTC2q4AAoJEHdXZdGWfiO70PIIALSgC5o02guz257kMTsyIXyQ
-tT+onHYqqS6ogOZwowzXu18KkX4GqSE/8hrrBf+bBTgGKoo8+TTydpUGfs8pT66B
-ttHKs0t+zMml55NzZUVGrejO5+3qy5OTMql9Prv3jMkKpZeGLCIy0dA3gWtwJ0Rl
-8R/OL+ti3XtLofZWKUyO4jYNB1+Air0iTX5PBg/jBe4mmi1CUfxhI2xZtiKM8Ut6
-OiKn14p9nHiAeojDT3hlnHs1a6mc3wsuE8Hpgc1d2+3llyxgFOrazySsdlEN96x0
-0kr5BQJtczTPKl7FQr3CqkmPRC1iSk0KM+oKRYo3x8zIRIun4160mokgX0G0l5w=
-=XQjd
------END PGP SIGNATURE-----
-
---Apple-Mail=_40263A3A-2A6A-4855-9209-EDC777C5FD00--
+-- 
+Regards,
+Nishanth Menon
