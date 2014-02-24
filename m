@@ -1,51 +1,98 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH 07/10] spi: sh-msiof: Add support for R-Car H2 and M2
-Date: Mon, 24 Feb 2014 11:45:19 +0900
-Message-ID: <CANqRtoSJTROkkbGxV_p+B2S7b7jZ7jgHQ+q4_WG54m+Pxgfcpw@mail.gmail.com>
-References: <1392907389-21798-1-git-send-email-geert@linux-m68k.org>
-	<1392907389-21798-8-git-send-email-geert@linux-m68k.org>
-	<CANqRtoQVJzEgo_AdVxrPSRUY6ocyPaQ=RKQJyxoExDrfYxiJ3w@mail.gmail.com>
-	<CAMuHMdUByWPcYM8M_m5NVM4QP5cQE_tOLGQg=2fTNF7gqkUhig@mail.gmail.com>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: [PATCH v11 00/15] Add power management support for mxs phy
+Date: Mon, 24 Feb 2014 10:20:52 +0800
+Message-ID: <1393208467-6355-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUByWPcYM8M_m5NVM4QP5cQE_tOLGQg=2fTNF7gqkUhig@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mark Brown <broonie@kernel.org>, Takashi Yoshii <takasi-y@ops.dti.ne.jp>, linux-spi <linux-spi@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: balbi@ti.com, shawn.guo@linaro.org, robh+dt@kernel.org, grant.likely@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com
+Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, festevam@gmail.com, marex@denx.de, kernel@pengutronix.de, m.grzeschik@pengutronix.de, frank.li@freescale.com, peter.chen@freescale.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+The serial adds power management support for MXS PHY, it includes:
 
-On Fri, Feb 21, 2014 at 1:13 AM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> On Thu, Feb 20, 2014 at 4:41 PM, Magnus Damm <magnus.damm@gmail.com> wrote:
->> On thing stuck out a bit with the bindings. I can see that you specify
->> both fifo size and use the SoC suffix for the r8a7790 and r8a7791
->> bindings. Isn't that a bit of redundant information there, if we know
->> that the SoC is r8a7790 or r8a7791 then can't we simply put that
->> information in r8a779x_data above and perhaps keep the binding
->> simpler? Perhaps same thing applies to other properties as well?
->
-> "renesas,tx-fifo-size" and "renesas,rx-fifo-size" are part of the existing
-> bindings, so I'm a bit reluctant to change these.
-> Hmm, since the original bindings didn't specify the default values,
-> I could make them chip-specific, though.
+- Add one PHY API .set_wakeup, and related API implementation at mxs phy driver
+- misc changes and bug fixes for mxs phy to support low power mode and wakeup.
 
-Thanks, yes I think treating the "renesas,tx-fifo-size" and
-"renesas,rx-fifo-size" bindings as optional and allow us to rely on
-chip-specific default values makes sense.
+It is based on the lastest Greg's usb-next, 3.14-rc3.
 
-> The only other property is "num-cs", which can have any value if you
-> start using the generic "cs-gpios".
+Changes for v11:
+- Change the descrition of adding compatible string, and
+  add mention that "fsl,imx23-usbphy" is still a fallback
+  for other strings. [1/15]
 
-I see. It looks to me that such a setting is board-specific, so what
-is a sane default in the SoC DTSI? You seem to have it set to "1"
-today, but if the board is supposed to override it anyway then do we
-need to set it?
+Changes for v10:
+- Nothing related with function change.
+- It adds dt maintainers to To list, and cc devicetree@vger.kernel.org,
+wait dt-maintainer's ack for 1/15, 4/15.
+- Add last three dts patches for reference which have already
+at Shawn's tree.
 
-Anyway, "num-cs" is a minor detail so no need to bother about that too much!
+Changes for v9:
+- Fix the build warning if CONFIG_SUSPEND is not set
 
-Cheers,
+Changes for v8:
+- Shawn has already applied two dts patches, so delete them at
+  v8 version, http://marc.info/?l=linux-arm-kernel&m=138785188404939&w=2
+- Using of_get_property to avoid imx6 fail at probe when using old DTB [5/12]
+- Do not consider failure if alias id is not existed, it can avoid fail
+  at probe when using old DTB [8/12]
+- We don't need more changes for [8/12] change due to we use
+  "mxs_phy->port_id ==" as condition
 
-/ magnus
+Changes for v7:
+- Fixed indentation problem at binding doc [1/14]
+- s/ganranteed/guaranteed, and add explanation for "auto setting" [3/14]
+- add static before SIMPLE_DEV_PM_OPS [13/14]
+- add one patch to change usb device description [7/14]
+- Delete the .nofity_suspend and .notify_resume due to Felipe
+  does not agree to add them as PHY API, will use other ways to implement
+  them in future.
+
+Changes for v6:
+- Add description for IC bug fixes logic. [9/15]
+- Move is_imx6q_phy and is_imx6sl_phy from [9/15] to [14/15] 
+- %s/mxs_phy_clock_switch/mxs_phy_clock_switch_delay to reflect
+the function meaning more precise [15/15]
+
+Changes for v5:
+Add Marc and Michael Grzeschik's commnets
+- typo error at [2/15]
+- sqhash patches which introducing mxs_phy_disconnect_line and
+fixed but at this function. [13/15]
+- Introducing flag MXS_PHY_NEED_IP_FIX who stands for the SoCs
+who have IC fixes. [2/15, 8/15]
+- Delete one patch for low speed connection problem at every rare
+situations due to the root cause has still not found.
+
+Peter Chen (15):
+  usb: doc: phy-mxs: Add more compatible strings
+  usb: phy-mxs: Add platform judgement code
+  usb: phy-mxs: Add auto clock and power setting
+  usb: doc: phy-mxs: update binding for adding anatop phandle
+  usb: phy-mxs: Add anatop regmap
+  usb: phy-mxs: change description of usb device speed
+  usb: phy-mxs: Enable IC fixes for related SoCs
+  usb: phy-mxs: add controller id
+  usb: phy: Add set_wakeup API
+  usb: phy-mxs: Add implementation of set_wakeup
+  usb: phy-mxs: Add system suspend/resume API
+  usb: phy-mxs: Add sync time after controller clear phcd
+  ARM: dts: mxs: add mxs phy controller id
+  ARM: dts: imx6: add anatop phandle for usbphy
+  ARM: dts: imx6: add mxs phy controller id
+
+ Documentation/devicetree/bindings/usb/mxs-phy.txt |    8 +-
+ arch/arm/boot/dts/imx23.dtsi                      |    1 +
+ arch/arm/boot/dts/imx28.dtsi                      |    2 +
+ arch/arm/boot/dts/imx6qdl.dtsi                    |    4 +
+ arch/arm/boot/dts/imx6sl.dtsi                     |    4 +
+ drivers/usb/phy/phy-mxs-usb.c                     |  310 ++++++++++++++++++++-
+ include/linux/usb/phy.h                           |   16 +
+ 7 files changed, 330 insertions(+), 15 deletions(-)
+
+-- 
+1.7.8
+
+
