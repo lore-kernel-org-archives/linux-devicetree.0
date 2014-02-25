@@ -1,61 +1,43 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [RFC PATCH 1/6] PM / Voltagedomain: Add generic clk notifier handler for
- regulator based dynamic voltage scaling
-Date: Mon, 24 Feb 2014 21:51:42 -0800
-Message-ID: <20140225055142.22529.21814@quantum>
-References: <1392755543-28335-1-git-send-email-nm@ti.com>
- <1392755543-28335-2-git-send-email-nm@ti.com>
+From: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
+Subject: Re: [PATCH 7/7] powerpc: Added PCI MSI support using the HSTA module
+Date: Tue, 25 Feb 2014 16:54:58 +1100
+Message-ID: <1541869.UgdfUgWYNB@mexican>
+References: <1392964293-13687-1-git-send-email-alistair@popple.id.au> <1574137.lzDhNaVqIe@wuerfel> <1393015286.6771.110.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <1392755543-28335-2-git-send-email-nm@ti.com>
-Sender: cpufreq-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, Nishanth Menon <nm@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1393015286.6771.110.camel@pasglop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Nishanth Menon (2014-02-18 12:32:18)
-> From: Mike Turquette <mturquette@linaro.org>
+On Sat, 22 Feb 2014 07:41:26 Benjamin Herrenschmidt wrote:
+> On Fri, 2014-02-21 at 15:33 +0100, Arnd Bergmann wrote:
+
+[...]
+
 > 
-> This patch provides helper functions for drivers that wish to scale
-> voltage through the clock rate-change notifiers. The approach taken
-> is that the user-driver(cpufreq/devfreq) do not care about the
-> details of the OPP table, nor does it care about handling the voltage
-> regulator directly.
+> Should we (provided it's possible in HW) create two ranges instead ? One
+> covering RAM and one covering MSIs ? To avoid stray DMAs whacking random
+> HW registers in the chip ...
 > 
-> By using the clk notifier flags, we are able to sequence the operations
-> in the right order. The current logic is heavily influenced by
-> implementation done in cpufreq-cpu0.
-> 
-> [nm@ti.com: Fixes in logic, and broken out from clk to allow building
-> a generic voltagedomain solution independent of cpufreq]
-> Signed-off-by: Nishanth Menon <nm@ti.com>
-> Signed-off-by: Mike Turquette <mturquette@linaro.org>
 
-Not-signed-off-by: Mike Turquette <mturquette@linaro.org>
+The thought occurred to me but I figured if we had stray DMAs then they could 
+already whack random bits of system memory which would likely break your 
+system anyway so I wasn't sure how much we'd gain. I guess whacking random HW 
+registers is arguably a bit worse though.
 
-I haven't reviewed this series and it is a pretty big deviation from my
-original RFC. You can have authorship of the patches if you want.
+I did a bit of digging into the HW documentation and it looks like it _may_ be 
+possible to create a second range that would limit access to a subset of HW 
+registers, although there doesn't seem to be much flexibility. Personally I'm 
+not sure it justifies the work, but I'm happy to look into it a bit more if 
+you feel it's important?
 
-I'm not sure about trying to capture the "voltdm" as a core concept. It
-feels a bit unwieldy to me. I have wondered about making an abstract
-"performance domain" which is the dvfs analogue to generic power
-domains. This a reasonable split since gpd are good for idle power
-savings (e.g. clock gate, power gate, sleep state, etc) and "perf
-domains" would be good for active power savings (dvfs).
+- Alistair
 
-Having a generic container for performance domains might make a good
-place to stuff all of this glue logic that we keep running into (e.g.
-CPU and GPU max frequencies that are related), and it might make another
-nice knob for the thermal folks to use.
-
-For the case of the OMAP voltage domains, it would be a place to stuff
-all of the VC/VP -> ABB -> Smart Reflex AVS stuff.
-
-Anyways, I don't have a real proposal. I just don't want my name on
-these patches since they are really yours now. I might resurrect them
-some day in a different context.
-
-Regards,
-Mike
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
