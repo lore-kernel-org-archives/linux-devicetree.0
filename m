@@ -1,103 +1,88 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: [PATCH v8 0/6] ARM: rockchip: add smp functionality
-Date: Tue, 25 Feb 2014 12:44:59 +0100
-Message-ID: <21117503.1c6iOkvYSr@phil>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v8 1/6] dt-bindings: sram: describe option to reserve parts of the memory
+Date: Tue, 25 Feb 2014 12:45:49 +0100
+Message-ID: <126672712.tufE5adZWC@phil>
+References: <21117503.1c6iOkvYSr@phil>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, arm@kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <21117503.1c6iOkvYSr@phil>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series enables the use of the additional cores on Rockchip
-Cortex-A9 SoCs.
+Some SoCs need parts of their sram for special purposes. So while being part
+of the peripheral, it should not be part of the genpool controlling the sram.
 
-To achieve this, add the scu, the needed sram and power-management-unit.
+Therefore add the option to define reserved regions as subnodes of the
+sram-node similar to defining reserved global memory regions.
 
-Tested on both a BQ Curie2 (rk3066a / dual core) and
-on a Radxa Rock (rk3188 / quad core).
+Originally
+Suggested-by: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-As this version again involves bigger changes to the way reserved sram-
-regions are handled, I've dropped the ACKs I had for binding and driver
-changes again and therefore would be very happy if I could get new ones
-if applicable (dt-maintainers and Philipp Zabel for sram.c).
+Using subnodes for reserved regions
+Suggested-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Tested-by: Ulrich Prinz <ulrich.prinz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+---
+ Documentation/devicetree/bindings/misc/sram.txt | 33 +++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-changes since v7:
-- move reserved sram regions to be described through subnodes, similar
-  to the general memory-reserve bindings, as suggested by Grant Likely.
-
-changes since v6:
-- address comments from Mark Rutland
-  - using of_property_read_u32_index instead of parsing the list manually
-  - include v4 of "of: add functions to count number of elements in a property"
-    to not have to count property-elements manually anymore
-
-changes since v5:
-- Grant Likely liked it better to "specify reserved regions of the
-  memory instead of the valid ranges", so go back to the mmio-sram-reserved
-  property originally suggested by Rob Herring
-
-changes since v4:
-- rebase on top of the recent rk3188 board support
-- implement suggestion from Matt Sealey in moving the sram-limit from
-  marking reserved regions to marking available regions - hopefully
-  I got the usage right 
-- remove __CPUINIT as suggested by Fabio Estevam
-
-changes since v3:
-- address comments from Rob Herring:
-  - split the gathering of the reserve-data into a separate loop
-  - spelling and style fixes
-- first patch only included for reference, already part of the
-  char-misc git tree
-
-changes since v2:
-- rework the sram allocation following the suggestion from Philipp Zabel
-
-changes since v1:
-- add reserved block feature for mmio-sram, to not use two logical
-  sram nodes
-- the sram content is kept intact while the device is running, so
-  copying the trampoline is only needed once
-
-Heiko Stuebner (6):
-  dt-bindings: sram: describe option to reserve parts of the memory
-  misc: sram: implement reserved sram areas
-  ARM: rockchip: add snoop-control-unit
-  ARM: rockchip: add sram dt nodes and documentation
-  ARM: rockchip: add power-management-unit
-  ARM: rockchip: add smp bringup code
-
- .../devicetree/bindings/arm/rockchip/pmu.txt       |  16 ++
- .../devicetree/bindings/arm/rockchip/smp-sram.txt  |  30 ++++
- Documentation/devicetree/bindings/misc/sram.txt    |  33 ++++
- arch/arm/boot/dts/rk3066a.dtsi                     |  13 ++
- arch/arm/boot/dts/rk3188.dtsi                      |  13 ++
- arch/arm/boot/dts/rk3xxx.dtsi                      |  10 ++
- arch/arm/mach-rockchip/Kconfig                     |   1 +
- arch/arm/mach-rockchip/Makefile                    |   1 +
- arch/arm/mach-rockchip/core.h                      |  22 +++
- arch/arm/mach-rockchip/headsmp.S                   |  30 ++++
- arch/arm/mach-rockchip/platsmp.c                   | 184 +++++++++++++++++++++
- arch/arm/mach-rockchip/rockchip.c                  |   2 +
- drivers/misc/sram.c                                | 125 +++++++++++++-
- 13 files changed, 473 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/rockchip/pmu.txt
- create mode 100644 Documentation/devicetree/bindings/arm/rockchip/smp-sram.txt
- create mode 100644 arch/arm/mach-rockchip/core.h
- create mode 100644 arch/arm/mach-rockchip/headsmp.S
- create mode 100644 arch/arm/mach-rockchip/platsmp.c
-
+diff --git a/Documentation/devicetree/bindings/misc/sram.txt b/Documentation/devicetree/bindings/misc/sram.txt
+index 4d0a00e..2d83758 100644
+--- a/Documentation/devicetree/bindings/misc/sram.txt
++++ b/Documentation/devicetree/bindings/misc/sram.txt
+@@ -8,9 +8,42 @@ Required properties:
+ 
+ - reg : SRAM iomem address range
+ 
++Reserving sram areas:
++---------------------
++
++Each child of the sram node specifies a region of reserved memory. Each
++child node should use a 'reg' property to specify a specific range of
++reserved memory.
++
++Following the generic-names recommended practice, node names should
++reflect the purpose of the node. Unit address (@<address>) should be
++appended to the name.
++
++Required properties in the sram node:
++
++- #address-cells, #size-cells : should use the same values as the root node
++- ranges : standard definition, should be empty
++
++Required properties in the area nodes:
++
++- reg : iomem address range
++
++Optional properties in the area nodes:
++
++- compatible : standard definition
++
+ Example:
+ 
+ sram: sram@5c000000 {
+ 	compatible = "mmio-sram";
+ 	reg = <0x5c000000 0x40000>; /* 256 KiB SRAM at address 0x5c000000 */
++
++	#adress-cells = <1>;
++	#size-cells = <1>;
++	ranges;
++
++	smp-sram@5c000100 {
++		compatible = "socvendor,smp-sram";
++		reg = <0x5c000100 0x50>;
++	};
+ };
 -- 
 1.8.5.3
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
