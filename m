@@ -1,90 +1,76 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v8 03/14] mfd: omap-usb-host: Use clock names as per
- function for reference clocks
-Date: Tue, 25 Feb 2014 11:02:33 +0200
-Message-ID: <530C5C29.1090503@ti.com>
-References: <1392896409-5101-1-git-send-email-rogerq@ti.com>
- <1392896409-5101-4-git-send-email-rogerq@ti.com>
- <20140225085234.GB19099@lee--X1>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/4] net: rfkill: gpio: remove gpio names
+Date: Tue, 25 Feb 2014 10:13:35 +0100
+Message-ID: <CACRpkdZBvKU31EDX=6=wVLXaQDAqD6VHtaE_mGnFLr1UYQAH9g@mail.gmail.com>
+References: <1392900697-27577-1-git-send-email-heikki.krogerus@linux.intel.com>
+	<1392900697-27577-3-git-send-email-heikki.krogerus@linux.intel.com>
+	<53062F97.3050407@wwwdotorg.org>
+	<CAGb2v66-tDZhrm9dnXe+PdQTaLZbw20sw3uYzLor2eXpVWmPMA@mail.gmail.com>
+	<5306E599.7020605@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140225085234.GB19099@lee--X1>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lee Jones <lee.jones@linaro.org>, tony@atomide.com, bcousson@baylibre.com
-Cc: nm@ti.com, devicetree@vger.kernel.org, khilman@linaro.org, Samuel Ortiz <sameo@linux.intel.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <5306E599.7020605@wwwdotorg.org>
+Sender: netdev-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Johannes Berg <johannes@sipsolutions.net>, "David S. Miller" <davem@davemloft.net>, Rhyland Klein <rklein@nvidia.com>, linux-wireless <linux-wireless@vger.kernel.org>, netdev <netdev@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mark Gross <mark.gross@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Feb 21, 2014 at 6:35 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 02/20/2014 06:55 PM, Chen-Yu Tsai wrote:
 
-On 02/25/2014 10:52 AM, Lee Jones wrote:
->> Use a meaningful name for the reference clocks so that it indicates the function.
->>
->> CC: Lee Jones <lee.jones@linaro.org>
->> CC: Samuel Ortiz <sameo@linux.intel.com>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> ---
->>  drivers/mfd/omap-usb-host.c | 12 ++++++------
->>  1 file changed, 6 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/mfd/omap-usb-host.c b/drivers/mfd/omap-usb-host.c
->> index 865c276..651e249 100644
->> --- a/drivers/mfd/omap-usb-host.c
->> +++ b/drivers/mfd/omap-usb-host.c
->> @@ -718,24 +718,24 @@ static int usbhs_omap_probe(struct platform_device *pdev)
->>  		goto err_mem;
->>  	}
->>  
->> -	omap->xclk60mhsp1_ck = devm_clk_get(dev, "xclk60mhsp1_ck");
->> +	omap->xclk60mhsp1_ck = devm_clk_get(dev, "refclk_60m_ext_p1");
->>  	if (IS_ERR(omap->xclk60mhsp1_ck)) {
->>  		ret = PTR_ERR(omap->xclk60mhsp1_ck);
->> -		dev_err(dev, "xclk60mhsp1_ck failed error:%d\n", ret);
->> +		dev_err(dev, "refclk_60m_ext_p1 failed error:%d\n", ret);
->>  		goto err_mem;
->>  	}
-> 
-> Will anything break if I were to apply the MFD patches seperately?
-> 
+>> That's correct. However using con_id to pass this results in different
+>> behavior across DT and ACPI. A better way is to export the labeling
+>> function so consumers can set meaningful labels themselves.
+>
+> But this code is the consumer of those GPIOs. IF the parameter to
+> devm_gpiod_get_index() isn't intended to be used, why does it exist?
 
-Nothing will break for OMAP3, but OMAP4 USB host will break (e.g. Panda board).
-OMAP5 USB host was never working so it doesn't matter there.
+Kerneldoc says:
 
-To make sure nothing breaks, we need at least these 2 patches to go in together with mfd changes.
+/**
+ * gpiod_get_index - obtain a GPIO from a multi-index GPIO function
+ * @dev:        GPIO consumer, can be NULL for system-global GPIOs
+ * @con_id:     function within the GPIO consumer
+ * @idx:        index of the GPIO to obtain in the consumer
+ *
 
-[PATCH v8 08/14] ARM: dts: omap4: Update omap-usb-host node
-[PATCH v8 09/14] ARM: dts: omap5: Update omap-usb-host node
+Basically it is just exposing the fact that of_find_gpio() and
+acpi_find_gpio() both take a con_id as argument.
 
-Any suggestions about how we can proceed?
+If we drill into this, we find that it is used to conjure the
+arbitrary string before the gpios in the DT case, like:
 
-cheers,
--roger
+foo-gpios = <...>;
 
->> -	omap->xclk60mhsp2_ck = devm_clk_get(dev, "xclk60mhsp2_ck");
->> +	omap->xclk60mhsp2_ck = devm_clk_get(dev, "refclk_60m_ext_p2");
->>  	if (IS_ERR(omap->xclk60mhsp2_ck)) {
->>  		ret = PTR_ERR(omap->xclk60mhsp2_ck);
->> -		dev_err(dev, "xclk60mhsp2_ck failed error:%d\n", ret);
->> +		dev_err(dev, "refclk_60m_ext_p2 failed error:%d\n", ret);
->>  		goto err_mem;
->>  	}
->>  
->> -	omap->init_60m_fclk = devm_clk_get(dev, "init_60m_fclk");
->> +	omap->init_60m_fclk = devm_clk_get(dev, "refclk_60m_int");
->>  	if (IS_ERR(omap->init_60m_fclk)) {
->>  		ret = PTR_ERR(omap->init_60m_fclk);
->> -		dev_err(dev, "init_60m_fclk failed error:%d\n", ret);
->> +		dev_err(dev, "refclk_60m_int failed error:%d\n", ret);
->>  		goto err_mem;
->>  	}
->>  
-> 
+As in tegra30-beaver.dts...
+
+    sdhci@78000000 {
+            status = "okay";
+            cd-gpios = <&gpio TEGRA_GPIO(I, 5) GPIO_ACTIVE_LOW>;
+            wp-gpios = <&gpio TEGRA_GPIO(T, 3) GPIO_ACTIVE_HIGH>;
+            power-gpios = <&gpio TEGRA_GPIO(D, 7) GPIO_ACTIVE_HIGH>;
+            bus-width = <4>;
+    };
+
+Instead of passing the GPIOs as index 0,1,2 they are named
+and I do admit this has a nice "things are under control" aspect
+to it.
+
+In the ACPI case the con_id is not used for anything.
+
+So it is basically there to satisfy the habit in some device
+tree bindings to name gpio arrays instead of just passing gpios = <...>;
+(The latter should be encouraged going forward.)
+
+As DT is ABI we need to keep this forever, and driver may need to
+look for foo-gpios=<> and gpios=<> alike for backward compatibility
+if we'd change it, sweet isn't it? :-)
+
+I don't quite like this, as it is adding stupid nonsens arguments for
+ACPI GPIO producers (which only take an index AFAICT), but it is a
+first sacrifice on the altar of trying to mask the differences between DT
+and ACPI probe paths about which I have mixed feelings.
+
+Yours,
+LInus Walleij
