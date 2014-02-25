@@ -1,88 +1,188 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: [PATCH v2 1/6] spi: sh-msiof: Improve bindings
-Date: Tue, 25 Feb 2014 11:21:08 +0100
-Message-ID: <1393323673-2751-2-git-send-email-geert@linux-m68k.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH v2 3/6] spi: sh-msiof: Add support for R-Car H2 and M2
+Date: Tue, 25 Feb 2014 11:21:10 +0100
+Message-ID: <1393323673-2751-4-git-send-email-geert@linux-m68k.org>
 References: <1393323673-2751-1-git-send-email-geert@linux-m68k.org>
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393323673-2751-1-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Takashi Yoshii <takasi-y-nDL5PR/MsHhHfZP73Gtkiw@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1393323673-2751-1-git-send-email-geert@linux-m68k.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Takashi Yoshii <takasi-y@ops.dti.ne.jp>, Magnus Damm <magnus.damm@gmail.com>, linux-spi@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
 
-Documentation:
-  - Add missing "interrupt-parent", "#address-cells", "#size-cells", and
-    "clocks" properties,
-  - Add missing default values for "num-cs", "renesas,tx-fifo-size" and
-    "renesas,rx-fifo-size",
-  - Add a reference to the pinctrl documentation.
+Add support for the MSIOF variant in the R-Car H2 (r8a7790) and M2
+(r8a7791) SoCs.
+
+Binding documentation:
+  - Add future-proof "renesas,msiof-<soctype>" compatible values,
+  - The default for "renesas,rx-fifo-size" is 256 on R-Car H2 and M2,
+  - "renesas,tx-fifo-size" and "renesas,rx-fifo-size" are deprecated for
+    soctype-specific bindings,
+  - Add example bindings.
 
 Implementation:
-  - As "num-cs" is marked optional, provide a sensible default.
+  - MSIOF on R-Car H2 and M2 requires the transmission of dummy data if
+    data is being received only (cfr. "Set SICTR.TSCKE to 1" and "Write
+    dummy transmission data to SITFDR" in paragraph "Transmit and Receive
+    Procedures" of the Hardware User's Manual).
+  - As RX depends on TX, MSIOF on R-Car H2 and M2 also lacks the RSCR
+    register (Receive Clock Select Register), and some bits in the RMDR1
+    (Receive Mode Register 1) and TMDR2 (Transmit Mode Register 2)
+    registers.
+  - Use the recently introduced SPI_MASTER_MUST_TX flag to enable support
+    for dummy transmission in the SPI core, and to differentiate from other
+    MSIOF implementations in code paths that need this.
+  - New DT compatible values ("renesas,msiof-r8a7790" and
+    "renesas,msiof-r8a7791") are added, as well as new platform device
+    names ("spi_r8a7790_msiof" and "spi_r8a7791_msiof").
+  - The default RX FIFO size is 256 words on R-Car H2 and M2.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+This is loosely based on a set of patches from Takashi Yoshii
+<takasi-y@ops.dti.ne.jp>.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
+Cc: Takashi Yoshii <takasi-y@ops.dti.ne.jp>
+Cc: devicetree@vger.kernel.org
 ---
 v2:
-  - As num-cs is marked optional, provide a sensible default
+  - Rebased on top of new "spi: sh-msiof: Move default FIFO sizes to device
+    ID data",
+  - The default RX FIFO size is 256 words on R-Car H2 and M2,
+  - Deprecated overriding the FIFO size,
+  - Synced DT example with node from real DTS.
 
- Documentation/devicetree/bindings/spi/sh-msiof.txt |   24 ++++++++++++++------
- drivers/spi/spi-sh-msiof.c                         |    2 +-
- 2 files changed, 18 insertions(+), 8 deletions(-)
+ Documentation/devicetree/bindings/spi/sh-msiof.txt |   23 ++++++++++++++++++--
+ drivers/spi/spi-sh-msiof.c                         |   23 +++++++++++++++++---
+ 2 files changed, 41 insertions(+), 5 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-index e6222106ca36..eae3c8c9300e 100644
+index eae3c8c9300e..1f0cb33763a1 100644
 --- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
 +++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-@@ -1,12 +1,22 @@
+@@ -1,8 +1,13 @@
  Renesas MSIOF spi controller
  
  Required properties:
--- compatible : 	"renesas,sh-msiof" for SuperH or
--		"renesas,sh-mobile-msiof" for SH Mobile series
--- reg : Offset and length of the register set for the device
--- interrupts : interrupt line used by MSIOF
-+- compatible           : "renesas,sh-msiof" for SuperH, or
-+			 "renesas,sh-mobile-msiof" for SH Mobile series.
-+- reg                  : Offset and length of the register set for the device
-+- interrupt-parent     : The phandle for the interrupt controller that
-+			 services interrupts for this device
-+- interrupts           : Interrupt specifier
-+- #address-cells       : Must be <1>
-+- #size-cells          : Must be <0>
- 
+-- compatible           : "renesas,sh-msiof" for SuperH, or
++- compatible           : "renesas,msiof-<soctype>" for SoCs,
++			 "renesas,sh-msiof" for SuperH, or
+ 			 "renesas,sh-mobile-msiof" for SH Mobile series.
++			 Examples with soctypes are:
++			 "renesas,msiof-sh7724" (SH)
++			 "renesas,msiof-r8a7790" (R-Car H2)
++			 "renesas,msiof-r8a7791" (R-Car M2)
+ - reg                  : Offset and length of the register set for the device
+ - interrupt-parent     : The phandle for the interrupt controller that
+ 			 services interrupts for this device
+@@ -13,10 +18,24 @@ Required properties:
  Optional properties:
--- num-cs		: total number of chip-selects
--- renesas,tx-fifo-size	: Overrides the default tx fifo size given in words
--- renesas,rx-fifo-size	: Overrides the default rx fifo size given in words
-+- clocks               : Must contain a reference to the functional clock.
-+- num-cs               : Total number of chip-selects (default is 1)
-+- renesas,tx-fifo-size : Overrides the default tx fifo size given in words
-+			 (default is 64)
-+- renesas,rx-fifo-size : Overrides the default rx fifo size given in words
-+			 (default is 64)
+ - clocks               : Must contain a reference to the functional clock.
+ - num-cs               : Total number of chip-selects (default is 1)
 +
-+Pinctrl properties might be needed, too.  See
-+Documentation/devicetree/bindings/pinctrl/renesas,*.
++Optional properties, deprecated for soctype-specific bindings:
+ - renesas,tx-fifo-size : Overrides the default tx fifo size given in words
+ 			 (default is 64)
+ - renesas,rx-fifo-size : Overrides the default rx fifo size given in words
+-			 (default is 64)
++			 (default is 64, or 256 on R-Car H2 and M2)
+ 
+ Pinctrl properties might be needed, too.  See
+ Documentation/devicetree/bindings/pinctrl/renesas,*.
++
++Example:
++
++	msiof0: spi@e6e20000 {
++		compatible = "renesas,msiof-r8a7791";
++		reg = <0 0xe6e20000 0 0x0064>;
++		interrupts = <0 156 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp0_clks R8A7791_CLK_MSIOF0>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
 diff --git a/drivers/spi/spi-sh-msiof.c b/drivers/spi/spi-sh-msiof.c
-index 92515c1ececa..bbe963018e1a 100644
+index bf389184924d..3baef2bacaed 100644
 --- a/drivers/spi/spi-sh-msiof.c
 +++ b/drivers/spi/spi-sh-msiof.c
-@@ -663,7 +663,7 @@ static struct sh_msiof_spi_info *sh_msiof_spi_parse_dt(struct device *dev)
- {
- 	struct sh_msiof_spi_info *info;
- 	struct device_node *np = dev->of_node;
--	u32 num_cs = 0;
-+	u32 num_cs = 1;
+@@ -34,6 +34,7 @@
+ struct sh_msiof_chipdata {
+ 	u16 tx_fifo_size;
+ 	u16 rx_fifo_size;
++	u16 master_flags;
+ };
  
- 	info = devm_kzalloc(dev, sizeof(struct sh_msiof_spi_info), GFP_KERNEL);
- 	if (!info) {
+ struct sh_msiof_spi_priv {
+@@ -214,7 +215,8 @@ static void sh_msiof_spi_set_clk_regs(struct sh_msiof_spi_priv *p,
+ 	k = min_t(int, k, ARRAY_SIZE(sh_msiof_spi_clk_table) - 1);
+ 
+ 	sh_msiof_write(p, TSCR, sh_msiof_spi_clk_table[k].scr);
+-	sh_msiof_write(p, RSCR, sh_msiof_spi_clk_table[k].scr);
++	if (!(p->chipdata->master_flags & SPI_MASTER_MUST_TX))
++		sh_msiof_write(p, RSCR, sh_msiof_spi_clk_table[k].scr);
+ }
+ 
+ static void sh_msiof_spi_set_pin_regs(struct sh_msiof_spi_priv *p,
+@@ -237,6 +239,10 @@ static void sh_msiof_spi_set_pin_regs(struct sh_msiof_spi_priv *p,
+ 	tmp |= !cs_high << MDR1_SYNCAC_SHIFT;
+ 	tmp |= lsb_first << MDR1_BITLSB_SHIFT;
+ 	sh_msiof_write(p, TMDR1, tmp | MDR1_TRMD | TMDR1_PCON);
++	if (p->chipdata->master_flags & SPI_MASTER_MUST_TX) {
++		/* These bits are reserved if RX needs TX */
++		tmp &= ~0x0000ffff;
++	}
+ 	sh_msiof_write(p, RMDR1, tmp);
+ 
+ 	tmp = 0;
+@@ -257,7 +263,7 @@ static void sh_msiof_spi_set_mode_regs(struct sh_msiof_spi_priv *p,
+ {
+ 	u32 dr2 = MDR2_BITLEN1(bits) | MDR2_WDLEN1(words);
+ 
+-	if (tx_buf)
++	if (tx_buf || (p->chipdata->master_flags & SPI_MASTER_MUST_TX))
+ 		sh_msiof_write(p, TMDR2, dr2);
+ 	else
+ 		sh_msiof_write(p, TMDR2, dr2 | MDR2_GRPMASK1);
+@@ -666,11 +672,20 @@ static u32 sh_msiof_spi_txrx_word(struct spi_device *spi, unsigned nsecs,
+ static const struct sh_msiof_chipdata sh_data = {
+ 	.tx_fifo_size = 64,
+ 	.rx_fifo_size = 64,
++	.master_flags = 0,
++};
++
++static const struct sh_msiof_chipdata r8a779x_data = {
++	.tx_fifo_size = 64,
++	.rx_fifo_size = 256,
++	.master_flags = SPI_MASTER_MUST_TX,
+ };
+ 
+ static const struct of_device_id sh_msiof_match[] = {
+ 	{ .compatible = "renesas,sh-msiof",        .data = &sh_data },
+ 	{ .compatible = "renesas,sh-mobile-msiof", .data = &sh_data },
++	{ .compatible = "renesas,msiof-r8a7790",   .data = &r8a779x_data },
++	{ .compatible = "renesas,msiof-r8a7791",   .data = &r8a779x_data },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, sh_msiof_match);
+@@ -789,7 +804,7 @@ static int sh_msiof_spi_probe(struct platform_device *pdev)
+ 	/* init master and bitbang code */
+ 	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
+ 	master->mode_bits |= SPI_LSB_FIRST | SPI_3WIRE;
+-	master->flags = 0;
++	master->flags = p->chipdata->master_flags;
+ 	master->bus_num = pdev->id;
+ 	master->dev.of_node = pdev->dev.of_node;
+ 	master->num_chipselect = p->info->num_chipselect;
+@@ -832,6 +847,8 @@ static int sh_msiof_spi_remove(struct platform_device *pdev)
+ 
+ static struct platform_device_id spi_driver_ids[] = {
+ 	{ "spi_sh_msiof",	(kernel_ulong_t)&sh_data },
++	{ "spi_r8a7790_msiof",	(kernel_ulong_t)&r8a779x_data },
++	{ "spi_r8a7791_msiof",	(kernel_ulong_t)&r8a779x_data },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(platform, spi_driver_ids);
 -- 
 1.7.9.5
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
