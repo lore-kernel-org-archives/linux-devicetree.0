@@ -1,84 +1,111 @@
-From: Florian Vaussard <florian.vaussard@epfl.ch>
-Subject: Re: [PATCH 2/2] ARM: dts: duovero-parlor: Add HDMI output
-Date: Tue, 25 Feb 2014 14:05:26 +0100
-Message-ID: <530C9516.7070501@epfl.ch>
-References: <1393261669-32039-1-git-send-email-florian.vaussard@epfl.ch> <1393261669-32039-3-git-send-email-florian.vaussard@epfl.ch> <20140224180336.GU27282@n2100.arm.linux.org.uk> <CABxcv=kKxidVJWcMrueB+edW=g_6gcucvi6=7p=EZ_WooCpbMA@mail.gmail.com> <20140225123921.GY27282@n2100.arm.linux.org.uk>
-Reply-To: florian.vaussard@epfl.ch
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v8 1/6] dt-bindings: sram: describe option to reserve
+ parts of the memory
+Date: Tue, 25 Feb 2014 14:19:30 +0100
+Message-ID: <201402251419.31151.arnd@arndb.de>
+References: <21117503.1c6iOkvYSr@phil> <126672712.tufE5adZWC@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140225123921.GY27282@n2100.arm.linux.org.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Javier Martinez Canillas <javier@dowhile0.org>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, =?ISO-8859-1?Q?Beno=EEt_Cou?= =?ISO-8859-1?Q?sson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Ash Charles <ash@gumstix.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <126672712.tufE5adZWC@phil>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Sachin Kamat <sachin.kamat@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, arm@kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tuesday 25 February 2014, Heiko St=FCbner wrote:
+> Some SoCs need parts of their sram for special purposes. So while being p=
+art
+> of the peripheral, it should not be part of the genpool controlling the s=
+ram.
+> =
 
-On 02/25/2014 01:39 PM, Russell King - ARM Linux wrote:
-> On Mon, Feb 24, 2014 at 05:22:27PM -0300, Javier Martinez Canillas wrote:
->> Hi Russell,
->>
->> On Mon, Feb 24, 2014 at 3:03 PM, Russell King - ARM Linux
->> <linux@arm.linux.org.uk> wrote:
->>> On Mon, Feb 24, 2014 at 06:07:49PM +0100, Florian Vaussard wrote:
->>>> +     hdmi0: connector@0 {
->>>> +             compatible = "hdmi-connector";
->>>
->>> This looks way to generic a compatible string.  Are you sure it's
->>> correct?
->>>
->>
->> That compatible string is correct according to the latest series
->> posted by Tomi Valkeinen to add DT bindings for the OMAP Display
->> SubSystem (DSS) [0].
-> 
-> in which case:
-> 
-> N    N   AA     CCCC  K  K
-> NN   N  A  A   C    C K K
-> N N  N A    A C       KK
-> N  N N AAAAAA C       KK
-> N   NN A    A  C    C K K
-> N    N A    A   CCCC  K  K
-> 
+> Therefore add the option to define reserved regions as subnodes of the
+> sram-node similar to defining reserved global memory regions.
 
-What a nice nack.
+[adding Sachin Kamat to Cc, he just had the same issue]
 
-> Yes, that's a very big nack.  Two things:
-> 
-> 1. OMAP really doesn't have the right to define a compatible string which
->    is as generic as "hdmi-connector".
-> 
-> 2. Even with "omapdss," before it, the convention that DT people have adopted
->    is for the prefix to be "companyname," and not a subsystem.
-> 
-> I'm not the only one with this concern - I discussed it with Arnd last
-> night and his comments were about it being "obviously bogus".
->
+> Originally
+> Suggested-by: Rob Herring <robherring2@gmail.com>
+> =
 
-I agree. It should probably be "ti,omapdss-hdmi-connector", or simply
-"ti,hdmi-connector", if any.
+> Using subnodes for reserved regions
+> Suggested-by: Grant Likely <grant.likely@linaro.org>
+> =
 
->> The property is added on this patch [1] and as far as I understood the
->> idea is that it could be a generic DT binding that can be used by
->> platform specific HDMI connectors like the omap dss HDMI connector [2].
-> 
-> Why do the physical connectors need a DT binding?  Surely what needs the
-> DT binding is the HDMI encoder - and that certainly should no way be a
-> generic name, because there's no such thing as a generic HDMI encoder
-> chip.
-> 
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> Tested-by: Ulrich Prinz <ulrich.prinz@googlemail.com>
+> ---
+>  Documentation/devicetree/bindings/misc/sram.txt | 33 +++++++++++++++++++=
+++++++
+>  1 file changed, 33 insertions(+)
+> =
 
-The HDMI IP is declared in omap4.dtsi, with the compatible
-"ti,omap4-hdmi". The code of the HDMI connector [1] seems to mainly call
-ops of the connected endpoint, so it seems to act as a logical
-termination in the DSS chain, but I may be wrong.
+> diff --git a/Documentation/devicetree/bindings/misc/sram.txt b/Documentat=
+ion/devicetree/bindings/misc/sram.txt
+> index 4d0a00e..2d83758 100644
+> --- a/Documentation/devicetree/bindings/misc/sram.txt
+> +++ b/Documentation/devicetree/bindings/misc/sram.txt
+> @@ -8,9 +8,42 @@ Required properties:
+>  =
 
-Regards,
-Florian
+>  - reg : SRAM iomem address range
+>  =
 
-[1]
-https://git.kernel.org/cgit/linux/kernel/git/tomba/linux.git/tree/drivers/video/omap2/displays-new/connector-hdmi.c?h=work%2Fdss-dt-review-3
+> +Reserving sram areas:
+> +---------------------
+> +
+> +Each child of the sram node specifies a region of reserved memory. Each
+> +child node should use a 'reg' property to specify a specific range of
+> +reserved memory.
+> +
+> +Following the generic-names recommended practice, node names should
+> +reflect the purpose of the node. Unit address (@<address>) should be
+> +appended to the name.
+> +
+> +Required properties in the sram node:
+> +
+> +- #address-cells, #size-cells : should use the same values as the root n=
+ode
+> +- ranges : standard definition, should be empty
 
+I think we should rather define the 'ranges' property to translate from
+addresses within the sram to bus addresses.
+
+> +Required properties in the area nodes:
+> +
+> +- reg : iomem address range
+> +
+> +Optional properties in the area nodes:
+> +
+> +- compatible : standard definition
+> +
+
+Is this enough? Normally we should define a list of "compatible" strings
+that people can add to, but not have an anything-allowed option.
+
+>  Example:
+>  =
+
+>  sram: sram@5c000000 {
+>  	compatible =3D "mmio-sram";
+>  	reg =3D <0x5c000000 0x40000>; /* 256 KiB SRAM at address 0x5c000000 */
+> +
+> +	#adress-cells =3D <1>;
+> +	#size-cells =3D <1>;
+> +	ranges;
+> +
+> +	smp-sram@5c000100 {
+> +		compatible =3D "socvendor,smp-sram";
+> +		reg =3D <0x5c000100 0x50>;
+> +	};
+>  };
