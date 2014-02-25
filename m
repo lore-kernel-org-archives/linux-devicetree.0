@@ -1,78 +1,47 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 2/3] ARM: DT: STi: Add DT node for ST's SATA device
-Date: Tue, 25 Feb 2014 11:41:20 +0000
-Message-ID: <1393328481-7251-2-git-send-email-lee.jones@linaro.org>
-References: <1393328481-7251-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393328481-7251-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: lee.jones@linaro.org, DCG_UPD_stlinux_kernel@list.st.com, devicetree@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@st.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/1] ARM: Exynos: Add generic compatible string
+Date: Tue, 25 Feb 2014 12:42:30 +0100
+Message-ID: <201402251242.30654.arnd@arndb.de>
+References: <1392809645-631-1-git-send-email-sachin.kamat@linaro.org> <CAK9yfHxXTbNmgTYqFH1Mm-X_sN2GpfLPp0MKixU=g2bKxz8e=g@mail.gmail.com> <CAOesGMiZXKRbrbmvKs4pF7HiXM1hsGjzbFUQmJ-n5-nar5uMBw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAOesGMiZXKRbrbmvKs4pF7HiXM1hsGjzbFUQmJ-n5-nar5uMBw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Sachin Kamat <sachin.kamat@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Cc: devicetree@vger.kernel.org
-Cc: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-Acked-by: Alexandre Torgue <alexandre.torgue@st.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- arch/arm/boot/dts/stih416-b2020-revE.dts |  4 ++++
- arch/arm/boot/dts/stih416-b2020.dts      |  4 ++++
- arch/arm/boot/dts/stih416.dtsi           | 16 ++++++++++++++++
- 3 files changed, 24 insertions(+)
+On Tuesday 25 February 2014, Olof Johansson wrote:
+> I disagree. I don't know what Samsung has in mind, but the revision of
+> the CPU doesn't have all that much to do with the rest of the SoC.
+> It's quite likely that some vendors (maybe not Samsung, but the same
+> concept applies) will ship 64-bit SoCs that are very similar to their
+> preceding 32-bit ones, same IP, similar busses, etc. I'm pretty sure
+> at least some vendors will do very close to that.
 
-diff --git a/arch/arm/boot/dts/stih416-b2020-revE.dts b/arch/arm/boot/dts/stih416-b2020-revE.dts
-index 693d0ec..7350a86 100644
---- a/arch/arm/boot/dts/stih416-b2020-revE.dts
-+++ b/arch/arm/boot/dts/stih416-b2020-revE.dts
-@@ -37,5 +37,9 @@
- 			st,pcie-tx-pol-inv;
- 			st,sata-gen = <3>;
- 		};
-+
-+		sata0: sata@fe380000{
-+			status = "okay";
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/stih416-b2020.dts b/arch/arm/boot/dts/stih416-b2020.dts
-index fd9cbad..ebd784b 100644
---- a/arch/arm/boot/dts/stih416-b2020.dts
-+++ b/arch/arm/boot/dts/stih416-b2020.dts
-@@ -18,5 +18,9 @@
- 			st,pcie_tx_pol_inv = <1>;
- 			st,sata_gen = "gen3";
- 		};
-+
-+		sata0: sata@fe380000{
-+			status = "okay";
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/stih416.dtsi b/arch/arm/boot/dts/stih416.dtsi
-index 0d3f59c..313d4fd 100644
---- a/arch/arm/boot/dts/stih416.dtsi
-+++ b/arch/arm/boot/dts/stih416.dtsi
-@@ -205,5 +205,21 @@
- 			#phy-cells 	= <2>;
- 			st,syscfg  	= <&syscfg_rear>;
- 		};
-+
-+		sata0: sata@fe380000 {
-+			compatible      = "st,ahci";
-+			reg             = <0xfe380000 0x1000>;
-+			interrupts      = <GIC_SPI 157 IRQ_TYPE_NONE>;
-+			interrupt-names = "hostc";
-+			phys	        = <&miphy365x_phy MIPHY_PORT_0 MIPHY_TYPE_SATA>;
-+			phy-names       = "sata-phy";
-+			resets	        = <&powerdown STIH416_SATA0_POWERDOWN>,
-+					  <&softreset STIH416_SATA0_SOFTRESET>;
-+			reset-names     = "pwr-dwn", "sw-rst";
-+			clock-names     = "ahci_clk";
-+			clocks	        = <&CLK_S_ICN_REG_0>;
-+
-+			status	        = "disabled";
-+		};
- 	};
- };
--- 
-1.8.3.2
+Right.
+
+> So, if EXYNOS4 and EXYNOS5 can share a compatible value when they use
+> different CPUs, then there's no reason that whatever future 64-bit
+> ones can also share it.
+
+How about putting both 'samsung,exynos' and 'samsung,exynos4' in DT then
+and having the platform code match exynos4 and exynos5 but not exynos?
+
+That way, I think we are consistent and future-proof. Any code that needs
+to know if it's running on some exynos version can just check for the
+'samsung,exynos' compatible value and that will work on both arm32 and
+arm64. Also, if we ever decide we want to run a 32-bit kernel on a 64-bit
+exynos, we can just add 'samsung,exynos6' (or whatever number that will
+be) to the list.
+
+My usual disclaimer for this: You should never ever consider actually
+running a 32-bit kernel on a 64-bit CPU, but at the same time there
+shouldn't be any reason why it won't work either, given that we require
+arm64 based systems to have all SoC specific code in drivers and we
+can use the same drivers on arm32.
+
+	Arnd
