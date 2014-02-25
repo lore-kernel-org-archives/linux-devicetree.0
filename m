@@ -1,93 +1,113 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [RFC] dt: bindings: add bindings for Broadcom bcm43xx sdio devices
-Date: Tue, 25 Feb 2014 15:51:21 -0700
-Message-ID: <530D1E69.7010504@wwwdotorg.org>
-References: <1392059868-8782-1-git-send-email-arend@broadcom.com>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv2 03/16] Documentation: dt: add OMAP iommu bindings
+Date: Tue, 25 Feb 2014 17:02:35 -0600
+Message-ID: <530D210B.3070602@ti.com>
+References: <1392315347-32967-1-git-send-email-s-anna@ti.com>
+	<1392315347-32967-4-git-send-email-s-anna@ti.com>
+	<13151454.2tbkC7YZsi@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1392059868-8782-1-git-send-email-arend@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arend van Spriel <arend@broadcom.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Tomasz Figa <tomasz.figa@gmail.com>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <13151454.2tbkC7YZsi@avalon>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/10/2014 12:17 PM, Arend van Spriel wrote:
-> The Broadcom bcm43xx sdio devices are fullmac devices that may be
-> integrated in ARM platforms. Currently, the brcmfmac driver for
-> these devices support use of platform data. This patch specifies
-> the bindings that allow this platform data to be expressed in the
-> devicetree.
+Hi Laurent,
 
-> diff --git a/Documentation/devicetree/bindings/staging/net/wireless/brcm,bcm43xx-fmac.txt b/Documentation/devicetree/bindings/staging/net/wireless/brcm,bcm43xx-fmac.txt
+On 02/25/2014 03:26 PM, Laurent Pinchart wrote:
+> Hi Suman,
+>
+> Thank you for the patch.
+>
+> On Thursday 13 February 2014 12:15:34 Suman Anna wrote:
+>> From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+>>
+>> This patch adds the iommu bindings for all OMAP2+ SoCs. Apart from
+>> the standard bindings used by OMAP peripherals, this patch uses a
+>> 'dma-window' (already used by Tegra SMMU) and adds two OMAP custom
+>> bindings - 'ti,#tlb-entries' and 'ti,iommu-bus-err-back'.
+>>
+>> Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+>> [s-anna-l0cyMroinI0@public.gmane.org: split bindings document, add dra7 and bus error back]
+>> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+>> ---
+>>   .../devicetree/bindings/iommu/ti,omap-iommu.txt    | 28 +++++++++++++++++++
+>>   1 file changed, 28 insertions(+)
+>>   create mode 100644
+>>   Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt
+>> b/Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt new file mode
+>> 100644
+>> index 0000000..116492d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt
+>> @@ -0,0 +1,28 @@
+>> +OMAP2+ IOMMU
+>> +
+>> +Required properties:
+>> +- compatible : Should be one of,
+>> +		"ti,omap2-iommu" for OMAP2/OMAP3 IOMMU instances
+>> +		"ti,omap4-iommu" for OMAP4/OMAP5 IOMMU instances
+>> +		"ti,dra7-iommu" for DRA7xx IOMMU instances
+>> +- ti,hwmods  : Name of the hwmod associated with the IOMMU instance
+>> +- reg        : Address space for the configuration registers
+>> +- interrupts : Interrupt specifier for the IOMMU instance
+>> +- dma-window : IOVA start address and length
+>
+> Isn't the dma window more of a system configuration property than a hardware
+> property ? How do you expect it to be set?
 
-> + - compatible : Should be "brcm,bcm43xx-fmac".
-> + - wlan-supply : phandle for fixed regulator used to control power for
-> +	the device/module.
+We are setting it based on the addressable range for the MMU. We are 
+reusing the existing defined property and it allows us to get rid of the 
+IOVA start and end addresses defined in the pre-DT OMAP iommu platform data.
 
-Ignoring the fact that perhaps this should just be a GPIO instead and
-assuming it actually make sense for this to be a regulator:
+>
+>> +Optional properties:
+>> +- ti,#tlb-entries : Number of entries in the translation look-aside buffer.
+>> +                    Should be either 8 or 32 (default: 32)
+>> +- ti,iommu-bus-err-back : Indicates the IOMMU instance supports throwing
+>> +		          back a bus error response on MMU faults.
+>
+> Do these features vary per IOMMU instance or per IOMMU model ? In the latter
+> case they could be inferred from the compatible string by the driver without
+> requiring them to be explicit in DT (whether you want to do so is left to you
+> though).
 
-Why "fixed regulator" not just "the regulator". There shouldn't be any
-requirement for the power supply to the device to be fixed; the driver
-should (a) set the voltage (which will be a no-op for a fixed regulator
-already providing that voltage), then (b) enable the regulator. That
-would allow a PMIC with programmable voltage to be feeding the device.
+Well, these are fixed features given an IOMMU instance, like the OMAP3 
+ISP is the only one that has 8 TLB entries, all the remaining ones have 
+32, and the IPU iommu instances are the only ones that support the bus 
+error response back. I have no preference to any particular way, and 
+sure the driver can infer these easily based on unique compatible 
+strings per subsystem per SoC. I just happened to go with defining 
+compatible strings per SoC, with the optional properties differentiating 
+the fixed behavior between different IOMMU instances on that SoC. This 
+is where I was looking for some inputs/guidance from the DT bindings 
+maintainers on what is the preferred method.
 
-Now, if this property was really intended to control some enable GPIO on
-the device, as others have said, this shouldn't be a regulator property
-but rather a GPIO property. However, there is definitely some power
-supply fed to the device, so you definitely need /some/ supply property
-here.
+regards
+Suman
 
-Aren't there other enable GPIOs required? These should be specified in DT.
-
-Doesn't the WiFi chip/module require a (32KHz?) clock? If so, that needs
-to be represented in DT. Preferably write the binding to require
-clock-names (name-based lookup) rather than just clocks (index-based
-lookup).
-
-> +Optional properties:
-> + - drive-strength : drive strength used for SDIO pins on device (default = 6mA).
-
-As mentioned elsewhere, since that's a binding-specific property, rename
-it brcm,drive-strength.
-
-> + - interrupt-parent : the phandle for the interrupt controller to which the
-> +	device interrupt (HOST_WAKE) is connected.
-
-That's such a common property, individual bindings don't typically
-mention it.
-
-> + - interrupts : interrupt specifier encoded according the interrupt controller
-> +	specified by interrupt-parent property.
-
-The description of the property should say which interrupt (name and/or
-description) it's describing, even if there's only 1.
-
-
-> +mmc3: mmc@01c20000 {
-> +	pinctrl-0 = <&mmc3_pins>;
-> +	pinctrl-1 = <&wifi_host_wake>;
-> +	vmmc-supply = <&mmc3_supply>;
-> +	bus-width = <4>;
-
-None of that is really relevant to this binding, and may vary from SDIO
-controller to SDIO controller, so may end up being wrong.
-
-I'm not sure whether it makes sense to show the example inside some
-arbitrary SDIO controller node. Perhaps /just/ put the WiFi node in the
-example? The text above should be enough to describe that the node
-should be inside an SDIO controller.
-
-> +	bcm4335: bcm4335@0 {
-> +		compatible = "brcm,bcm43xx-fmac";
-> +		wlan-supply = <&wlan-reg>;
-> +		drive-strength = <4>;
-> +		interrupt-parent = <&gpx2>;
-> +		interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "HOST_WAKE";
-
-interrupt-names wasn't documented in the list of properties above.
-Entries in *-names properties are usually lower-case.
+>
+>> +Example:
+>> +	/* OMAP3 ISP MMU */
+>> +	mmu_isp: mmu@480bd400 {
+>> +		compatible = "ti,omap2-iommu";
+>> +		reg = <0x480bd400 0x80>;
+>> +		interrupts = <24>;
+>> +		ti,hwmods = "mmu_isp";
+>> +		ti,#tlb-entries = <8>;
+>> +		dma-window = <0 0xfffff000>;
+>> +	};
+>
