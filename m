@@ -1,111 +1,29 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v8 1/6] dt-bindings: sram: describe option to reserve
- parts of the memory
-Date: Tue, 25 Feb 2014 14:19:30 +0100
-Message-ID: <201402251419.31151.arnd@arndb.de>
-References: <21117503.1c6iOkvYSr@phil> <126672712.tufE5adZWC@phil>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v5 04/10] V4L: Add driver for s5k6a3 image sensor
+Date: Tue, 25 Feb 2014 14:37:17 +0100
+Message-ID: <530C9C8D.2040800@samsung.com>
+References: <1393263322-28215-1-git-send-email-s.nawrocki@samsung.com>
+ <1393263322-28215-5-git-send-email-s.nawrocki@samsung.com>
+ <20140224193838.GL4869@tarshish> <530C6692.6090307@samsung.com>
+ <20140225095515.GV4869@tarshish>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <126672712.tufE5adZWC@phil>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Sachin Kamat <sachin.kamat@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, arm@kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20140225095515.GV4869@tarshish>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Baruch Siach <baruch@tkos.co.il>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, linux-samsung-soc@vger.kernel.org, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 25 February 2014, Heiko St=FCbner wrote:
-> Some SoCs need parts of their sram for special purposes. So while being p=
-art
-> of the peripheral, it should not be part of the genpool controlling the s=
-ram.
-> =
+On 25/02/14 10:55, Baruch Siach wrote:
+> Thanks for the explanation. However, I've found no reference to the 
+> s5k6a3_sd_internal_ops struct in the driver code. There surly has to be at 
+> least one reference for the upper layer to access these ops.
 
-> Therefore add the option to define reserved regions as subnodes of the
-> sram-node similar to defining reserved global memory regions.
+There is indeed an assignment missing to sd->internal_ops in probe().
+Thanks for spotting this, I've corrected that for next iteration.
 
-[adding Sachin Kamat to Cc, he just had the same issue]
-
-> Originally
-> Suggested-by: Rob Herring <robherring2@gmail.com>
-> =
-
-> Using subnodes for reserved regions
-> Suggested-by: Grant Likely <grant.likely@linaro.org>
-> =
-
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> Tested-by: Ulrich Prinz <ulrich.prinz@googlemail.com>
-> ---
->  Documentation/devicetree/bindings/misc/sram.txt | 33 +++++++++++++++++++=
-++++++
->  1 file changed, 33 insertions(+)
-> =
-
-> diff --git a/Documentation/devicetree/bindings/misc/sram.txt b/Documentat=
-ion/devicetree/bindings/misc/sram.txt
-> index 4d0a00e..2d83758 100644
-> --- a/Documentation/devicetree/bindings/misc/sram.txt
-> +++ b/Documentation/devicetree/bindings/misc/sram.txt
-> @@ -8,9 +8,42 @@ Required properties:
->  =
-
->  - reg : SRAM iomem address range
->  =
-
-> +Reserving sram areas:
-> +---------------------
-> +
-> +Each child of the sram node specifies a region of reserved memory. Each
-> +child node should use a 'reg' property to specify a specific range of
-> +reserved memory.
-> +
-> +Following the generic-names recommended practice, node names should
-> +reflect the purpose of the node. Unit address (@<address>) should be
-> +appended to the name.
-> +
-> +Required properties in the sram node:
-> +
-> +- #address-cells, #size-cells : should use the same values as the root n=
-ode
-> +- ranges : standard definition, should be empty
-
-I think we should rather define the 'ranges' property to translate from
-addresses within the sram to bus addresses.
-
-> +Required properties in the area nodes:
-> +
-> +- reg : iomem address range
-> +
-> +Optional properties in the area nodes:
-> +
-> +- compatible : standard definition
-> +
-
-Is this enough? Normally we should define a list of "compatible" strings
-that people can add to, but not have an anything-allowed option.
-
->  Example:
->  =
-
->  sram: sram@5c000000 {
->  	compatible =3D "mmio-sram";
->  	reg =3D <0x5c000000 0x40000>; /* 256 KiB SRAM at address 0x5c000000 */
-> +
-> +	#adress-cells =3D <1>;
-> +	#size-cells =3D <1>;
-> +	ranges;
-> +
-> +	smp-sram@5c000100 {
-> +		compatible =3D "socvendor,smp-sram";
-> +		reg =3D <0x5c000100 0x50>;
-> +	};
->  };
+--
+Regards,
+Sylwester
