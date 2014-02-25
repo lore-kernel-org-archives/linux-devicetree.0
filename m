@@ -1,183 +1,53 @@
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [RFC PATCH v4 3/8] staging: imx-drm: Document updated imx-drm device
-	tree bindings
-Date: Tue, 25 Feb 2014 15:23:18 +0100
-Message-ID: <1393338203-25051-4-git-send-email-p.zabel@pengutronix.de>
+Subject: [RFC PATCH v4 8/8] staging: imx-drm: Update TODO
+Date: Tue, 25 Feb 2014 15:23:23 +0100
+Message-ID: <1393338203-25051-9-git-send-email-p.zabel@pengutronix.de>
 References: <1393338203-25051-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 In-Reply-To: <1393338203-25051-1-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces@lists.freedesktop.org
-Errors-To: dri-devel-bounces@lists.freedesktop.org
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
 To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch updates the device tree binding documentation for i.MX IPU/display
-nodes using the OF graph bindings documented in
-Documentation/devicetree/bindings/media/video-interfaces.txt.
+The device tree bindings are updated regardless of the common display
+framework and in the meantime the HDMI driver was included.
 
 Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- .../bindings/staging/imx-drm/fsl-imx-drm.txt       | 48 +++++++++++++++++++---
- .../devicetree/bindings/staging/imx-drm/ldb.txt    | 20 +++++++--
- 2 files changed, 59 insertions(+), 9 deletions(-)
+ drivers/staging/imx-drm/TODO | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt b/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt
-index b876d49..bfa19a4 100644
---- a/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt
-+++ b/Documentation/devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt
-@@ -1,3 +1,22 @@
-+Freescale i.MX DRM master device
-+================================
-+
-+The freescale i.MX DRM master device is a virtual device needed to list all
-+IPU or other display interface nodes that comprise the graphics subsystem.
-+
-+Required properties:
-+- compatible: Should be "fsl,imx-drm"
-+- ports: Should contain a list of phandles pointing to display interface ports
-+  of IPU devices
-+
-+example:
-+
-+imx-drm {
-+	compatible = "fsl,imx-drm";
-+	ports = <&ipu_di0>;
-+};
-+
-+
- Freescale i.MX IPUv3
- ====================
+diff --git a/drivers/staging/imx-drm/TODO b/drivers/staging/imx-drm/TODO
+index 6a9da94..29636fb 100644
+--- a/drivers/staging/imx-drm/TODO
++++ b/drivers/staging/imx-drm/TODO
+@@ -1,15 +1,10 @@
+ TODO:
+ - get DRM Maintainer review for this code
+-- Wait for common display framework to hit mainline and update the IPU
+-  driver to use it. This will most probably make changes to the devicetree
+-  bindings necessary.
+-- Factor out more code to common helper functions
+ - decide where to put the base driver. It is not specific to a subsystem
+   and would be used by DRM/KMS and media/V4L2
  
-@@ -7,18 +26,31 @@ Required properties:
-   datasheet
- - interrupts: Should contain sync interrupt and error interrupt,
-   in this order.
--- #crtc-cells: 1, See below
- - resets: phandle pointing to the system reset controller and
-           reset line index, see reset/fsl,imx-src.txt for details
-+Optional properties:
-+- port@[0-3]: Port nodes with endpoint definitions as defined in
-+  Documentation/devicetree/bindings/media/video-interfaces.txt.
-+  Ports 0 and 1 should correspond to CSI0 and CSI1,
-+  ports 2 and 3 should correspond to DI0 and DI1, respectively.
+ Missing features (not necessarily for moving out of staging):
  
- example:
- 
- ipu: ipu@18000000 {
--	#crtc-cells = <1>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	compatible = "fsl,imx53-ipu";
- 	reg = <0x18000000 0x080000000>;
- 	interrupts = <11 10>;
- 	resets = <&src 2>;
-+
-+	ipu_di0: port@2 {
-+		reg = <2>;
-+
-+		ipu_di0_disp0: endpoint {
-+			remote-endpoint = <&display_in>;
-+		};
-+	};
- };
- 
- Parallel display support
-@@ -26,19 +58,25 @@ Parallel display support
- 
- Required properties:
- - compatible: Should be "fsl,imx-parallel-display"
--- crtc: the crtc this display is connected to, see below
- Optional properties:
- - interface_pix_fmt: How this display is connected to the
--  crtc. Currently supported types: "rgb24", "rgb565", "bgr666"
-+  display interface. Currently supported types: "rgb24", "rgb565", "bgr666"
- - edid: verbatim EDID data block describing attached display.
- - ddc: phandle describing the i2c bus handling the display data
-   channel
-+- port: A port node with endpoint definitions as defined in
-+  Documentation/devicetree/bindings/media/video-interfaces.txt.
- 
- example:
- 
- display@di0 {
- 	compatible = "fsl,imx-parallel-display";
- 	edid = [edid-data];
--	crtc = <&ipu 0>;
- 	interface-pix-fmt = "rgb24";
-+
-+	port {
-+		display_in: endpoint {
-+			remote-endpoint = <&ipu_di0_disp0>;
-+		};
-+	};
- };
-diff --git a/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt b/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt
-index ed93778..578a1fc 100644
---- a/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt
-+++ b/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt
-@@ -50,12 +50,14 @@ have a look at Documentation/devicetree/bindings/video/display-timing.txt.
- 
- Required properties:
-  - reg : should be <0> or <1>
-- - crtcs : a list of phandles with index pointing to the IPU display interfaces
--           that can be used as video source for this channel.
-  - fsl,data-mapping : should be "spwg" or "jeida"
-                       This describes how the color bits are laid out in the
-                       serialized LVDS signal.
-  - fsl,data-width : should be <18> or <24>
-+ - port: A port node with endpoint definitions as defined in
-+   Documentation/devicetree/bindings/media/video-interfaces.txt.
-+   On i.MX6, there should be four ports (port@[0-3]) that correspond
-+   to the four LVDS multiplexer inputs.
- 
- example:
- 
-@@ -77,23 +79,33 @@ ldb: ldb@53fa8008 {
- 
- 	lvds-channel@0 {
- 		reg = <0>;
--		crtcs = <&ipu 0>;
- 		fsl,data-mapping = "spwg";
- 		fsl,data-width = <24>;
- 
- 		display-timings {
- 			/* ... */
- 		};
-+
-+		port {
-+			lvds0_in: endpoint {
-+				remote-endpoint = <&ipu_di0_lvds0>;
-+			};
-+		};
- 	};
- 
- 	lvds-channel@1 {
- 		reg = <1>;
--		crtcs = <&ipu 1>;
- 		fsl,data-mapping = "spwg";
- 		fsl,data-width = <24>;
- 
- 		display-timings {
- 			/* ... */
- 		};
-+
-+		port {
-+			lvds1_in: endpoint {
-+				remote-endpoint = <&ipu_di1_lvds1>;
-+			};
-+		};
- 	};
- };
+-- Add i.MX6 HDMI support
+ - Add support for IC (Image converter)
+ - Add support for CSI (CMOS Sensor interface)
+ - Add support for VDIC (Video Deinterlacer)
 -- 
 1.8.5.3
