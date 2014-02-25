@@ -1,90 +1,97 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] ARM: tegra: add device tree for SHIELD
-Date: Tue, 25 Feb 2014 15:38:50 -0700
-Message-ID: <530D1B7A.9070209@wwwdotorg.org>
-References: <1393237593-28121-1-git-send-email-acourbot@nvidia.com> <530B952D.2000006@wwwdotorg.org> <530BFC58.6020003@nvidia.com>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv2 07/16] iommu/omap: allow enable/disable even without
+	pdata
+Date: Tue, 25 Feb 2014 16:41:03 -0600
+Message-ID: <530D1BFF.9040207@ti.com>
+References: <1392315347-32967-1-git-send-email-s-anna@ti.com>
+	<1392315347-32967-8-git-send-email-s-anna@ti.com>
+	<5986613.CineS9pX88@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <530BFC58.6020003-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <5986613.CineS9pX88@avalon>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/24/2014 07:13 PM, Alexandre Courbot wrote:
-> On 02/25/2014 03:53 AM, Stephen Warren wrote:
->> On 02/24/2014 03:26 AM, Alexandre Courbot wrote:
->>> Add a device tree for NVIDIA SHIELD. The set of enabled features is
->>> still minimal with no display option (although HDMI should be easy
->>> to get to work) and USB requiring external power.
+Hi Laurent,
 
->>> diff --git a/arch/arm/boot/dts/tegra114-roth.dts
->>> b/arch/arm/boot/dts/tegra114-roth.dts
+On 02/25/2014 03:15 PM, Laurent Pinchart wrote:
+> Hi Suman,
+>
+> Thank you for the patch.
+>
+> On Thursday 13 February 2014 12:15:38 Suman Anna wrote:
+>> From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
 >>
->>> +    memory {
->>> +        reg = <0x80000000 0x79600000>;
+>> When booting with a devicetree, no platform data is provided.
+>> Do not prematurely exit iommu_enable() and iommu_disable() in
+>> such a case.
 >>
->> It might be worth a comment here pointing out that the rest of RAM is
->> reserved for some carveouts/..., or at least that these values are set
->> this way in order to match what the bootloader usually passes to
->> downstream kernels in the command-line?
-> 
-> Yes, absolutely right. On a more general note I feel like DTs could gain
-> clarity if they had more comments (e.g. for pinmuxing which are a quite
-> heavy block otherwise), do you have any objection to this? (I guess not,
-> but so far the rule seems to be "no comment in DT" :P )
-
-I have no objection in particular. Specifically for pinmux, the values
-seem pretty obvious, so I'm not sure what extra the comment could
-convey, but I'll take a look at any proposed patch:-)
-
->>> +    /* Wifi */
->>> +    sdhci@78000000 {
->>> +        status = "okay";
->>> +        bus-width = <4>;
->>> +        broken-cd;
->>> +        keep-power-in-suspend;
->>> +        cap-sdio-irq;
+>> Note: As OMAP do not yet has a proper reset controller driver,
+>> IOMMUs requiring a reset signal should use pdata-quirks as a
+>> transitional solution.
 >>
->> Is non-removable better than broken-cd, or are they entirely unrelated?
-> 
-> They are unrelated actually. With non-removable the driver expects the
-> device to always be there since boot, and does not check for the card to
-> be removed/added after boot. broken-cd indicates there is no CD line and
-> the device should be polled regularly.
+>> Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+>
+> This looks good to me, but you should move this patch before 04/16, otherwise
+> you'll break bisection.
 
-It doesn't sound like that's what we want either; we should know exactly
-when the device is added/removed, based on when the relevant
-clocks/supplies/... are turned on/off.
+OK, I see the point w.r.t the OMAP3 ISP node. I will move it to before 
+03/16 (the DT bindings patch), it shouldn't make any difference.
 
-> For the Wifi chip, non-removable would be the correct setting
-> hardware-wise, but there is a trap: the chip has its reset line asserted
-> at boot-time, and you need to set GPIO 229 to de-assert it. Only after
-> that will the device be detected on the SDIO bus. Since it lacks a CD
-> line, it must be polled, hence the broken-cd property.
+regards
+Suman
 
-How does that GPIO get manipulated right now? I assume you must be
-manually configuring it via sysfs after boot or something? If so,
-perhaps it's best to just leave out the WiFi node until it works
-automatically.
-
-> This also raises another, redundant problem with DT bindings: AFAIK we
-> currently have no way to let the system know the device will only appear
-> after a given GPIO is set. It would also be nice to be able to give some
-> parameters to the Wifi driver through the DT (like the OOB interrupt).
-> Right now the Wifi chip is brought up by exporting the GPIO and writing
-> to it from user-space, and the OOB interrupt is not used.
-
-There was a thread on this topic on LAKML recently. I didn't really
-follow it, so I don't know if there was a useful resolution. I think it
-was "mmc: add support for power-on sequencing through DT", although
-there may have been other related threads. It was possibly tangentially
-related to power-sequences-in-DT...
-
-...
-> I'm not sure about cap-sdio-irq, it doesn't seem to make a difference
-> for SHIELD Wifi.
-
-I'd tend to leave it out then.
+>
+> Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+>
+>> ---
+>>   drivers/iommu/omap-iommu.c | 10 ++--------
+>>   1 file changed, 2 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/iommu/omap-iommu.c b/drivers/iommu/omap-iommu.c
+>> index f6afe8f..7672eb4 100644
+>> --- a/drivers/iommu/omap-iommu.c
+>> +++ b/drivers/iommu/omap-iommu.c
+>> @@ -149,13 +149,10 @@ static int iommu_enable(struct omap_iommu *obj)
+>>   	struct platform_device *pdev = to_platform_device(obj->dev);
+>>   	struct iommu_platform_data *pdata = pdev->dev.platform_data;
+>>
+>> -	if (!pdata)
+>> -		return -EINVAL;
+>> -
+>>   	if (!arch_iommu)
+>>   		return -ENODEV;
+>>
+>> -	if (pdata->deassert_reset) {
+>> +	if (pdata && pdata->deassert_reset) {
+>>   		err = pdata->deassert_reset(pdev, pdata->reset_name);
+>>   		if (err) {
+>>   			dev_err(obj->dev, "deassert_reset failed: %d\n", err);
+>> @@ -175,14 +172,11 @@ static void iommu_disable(struct omap_iommu *obj)
+>>   	struct platform_device *pdev = to_platform_device(obj->dev);
+>>   	struct iommu_platform_data *pdata = pdev->dev.platform_data;
+>>
+>> -	if (!pdata)
+>> -		return;
+>> -
+>>   	arch_iommu->disable(obj);
+>>
+>>   	pm_runtime_put_sync(obj->dev);
+>>
+>> -	if (pdata->assert_reset)
+>> +	if (pdata && pdata->assert_reset)
+>>   		pdata->assert_reset(pdev, pdata->reset_name);
+>>   }
+>
