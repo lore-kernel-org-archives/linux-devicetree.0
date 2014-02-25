@@ -1,64 +1,55 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH 1/1] ARM: Exynos: Add generic compatible string
-Date: Tue, 25 Feb 2014 08:33:04 +0530
-Message-ID: <CAK9yfHxXTbNmgTYqFH1Mm-X_sN2GpfLPp0MKixU=g2bKxz8e=g@mail.gmail.com>
-References: <1392809645-631-1-git-send-email-sachin.kamat@linaro.org>
-	<CAK9yfHyWG1ac6isTRSB3VWfxER9cSuDJHwY3b7svyEk9EozpWQ@mail.gmail.com>
-	<53075239.4010603@samsung.com>
-	<2200834.G3JJLYQl5i@wuerfel>
-	<53076F00.7000001@samsung.com>
-	<53077160.5030202@samsung.com>
-	<CAK9yfHxiHkrf1xmSFbfoKqFFSCU6w4QqwPnQNdv1m1PGtrwsLQ@mail.gmail.com>
-	<530BE557.20106@samsung.com>
-	<530BE93F.2070904@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [Patch v7 2/2] dmaengine: add Qualcomm BAM dma driver
+Date: Tue, 25 Feb 2014 12:05:00 +0900
+Message-ID: <20140225030459.GN25940@sirena.org.uk>
+References: <1393283500-18599-1-git-send-email-agross@codeaurora.org>
+ <1393283500-18599-3-git-send-email-agross@codeaurora.org>
+ <20140225000913.GA10801@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <530BE93F.2070904@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Olof Johansson <olof@lixom.net>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="t6FrQAmG0gROuB4j"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140225000913.GA10801@saruman.home>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Andy Gross <agross@codeaurora.org>, devicetree@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 25 February 2014 06:22, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> On 25.02.2014 01:35, Kukjin Kim wrote:
->>
->> On 02/24/14 21:03, Sachin Kamat wrote:
->>>
->>> On 21 February 2014 21:01, Tomasz Figa<t.figa@samsung.com>  wrote:
->>>>
->>>> On 21.02.2014 16:21, Tomasz Figa wrote:
->>>>>
->>>>>
->>>>> On 21.02.2014 15:48, Arnd Bergmann wrote:
->>>>>>
->>>>>>
->>>>>> On Friday 21 February 2014 14:18:49 Tomasz Figa wrote:
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>>> Now that we have a broader agreement on this, I think we can go
->>>>>>>> ahead with the
->>>>>>>> following steps as an initial approach:
->>>>>>>> 1. Have a common machine file for both exynos4 and 5 files,
->>>>>>>> mach-exynos-dt.c.
->>>>>>>> 2. Introduce a generic compatible string "samsung,exynos".
->>
->>
->> Well, I think, we need to consider to use compatible string
->> "samsung,exynos" again because "exynos" name can be used on ARMv8 as
->> well and I don't want to say that generic/common something is always
->> good. So IMHO still using exynos4 and exynos5 would be better.
->
->
-> You can create a new compatible string (e.g. "samsung,exynos-armv8") for
-> ARMv8 Exynos if support for one in mainline shows up and/or simply use
-> another name for ARMv7 Exynos (e.g. "samsung,exynos-armv7").
 
-I think "samsung,exynos-armv7" would be better in case we need to
-distinguish between
-v7 and v8.
+--t6FrQAmG0gROuB4j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-With warm regards,
-Sachin
+On Mon, Feb 24, 2014 at 06:09:13PM -0600, Felipe Balbi wrote:
+
+> > +	depends on ARCH_QCOM || (COMPILE_TEST && OF && ARM)
+
+> do you really want to make it depend on ARM even when COMPILE_TEST=y ?
+
+writel_relaxed() is unfortunately not generally available so it'd fail
+to build on platforms like x86.
+
+--t6FrQAmG0gROuB4j
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTDAhYAAoJELSic+t+oim9EXoP/0pAn6uqABX99rRXfhcQBd42
+HTm3E2GiYSmHJS6Gz5NgdYIG/ieM/dhv36Enw6lVEzU97nFgRkRYt3juTUe/ZbXD
+QVyFYySGedfWMdfExPHCeA5aO5JKvpzbIUHJoWrUoti4Rrpm5gZoIhiBuPZbXTX7
+Txk5Xyi5Vo5K3E9qwVYitQg5BupNX9uc+UuCy+joDDJl9SLIGrG2NrcDT7GlzP8E
+xKJAwM9U03E6DHu2aTp2w/ySOXOgY21A7ZDfT1kdrlLewpulPA3/AoNnDzkH+Osm
+PU8bTwikRaRL7uUVFPoWKbSQYIFcu0HkhDkL7Ht1bw6BLX3YJiNyGx/ZgqkgcNEu
+lkSwkFcpQYIiVLiwfMPgRlejIPao/GgV0S1eL6aEpGEYJSHGIBjUaivCfuJmFh8L
++RoK9zX2FgOEx3FunhZdkOmmad3hG2+FYsKuVlSy77H2PdSX3iv+ZC5oYFKEsWqM
+nwWppsVt8HGwG/tSTa9ZzFhDPWjuH0hgS8tCFDUs1YQCsn6NaTRl8C88qPFWFeSJ
+UTtMIutkyN6XigmsBzHbzGc7Bv8MQwtqUcEmg1HV9cVkaQI76D/WDkiibqElgSKE
+3w0Bp85wpX7z8GPwme9TZpCGqAnxhcaw8LO9nyKIm1YWa2dO1+evE7Niaih8MdYs
+Wr5wBU6DdsyzFd2SYSCW
+=s909
+-----END PGP SIGNATURE-----
+
+--t6FrQAmG0gROuB4j--
