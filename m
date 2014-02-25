@@ -1,178 +1,50 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v4 2/3] [media] of: move common endpoint parsing to drivers/of
-Date: Tue, 25 Feb 2014 15:58:23 +0100
-Message-ID: <1393340304-19005-3-git-send-email-p.zabel@pengutronix.de>
-References: <1393340304-19005-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393340304-19005-1-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Philipp Zabel <p.zabel@pengutronix.de>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [RFC PATCH v4 4/8] staging: imx-drm: Document imx-hdmi device
+ tree bindings
+Date: Tue, 25 Feb 2014 12:13:35 -0300
+Message-ID: <CAOMZO5AnXYEDB5PfQUNW_bY7ng8YkSYGK5y_Em04t6L-Eb2g+g@mail.gmail.com>
+References: <1393338203-25051-1-git-send-email-p.zabel@pengutronix.de>
+ <1393338203-25051-5-git-send-email-p.zabel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1393338203-25051-5-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devel@driverdev.osuosl.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, Sascha Hauer <kernel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a new struct of_endpoint which is then embedded in struct
-v4l2_of_endpoint and contains the endpoint properties that are not V4L2
-specific, or in fact not even media specific: port number, endpoint id,
-local device tree node and remote endpoint phandle.
-of_graph_parse_endpoint parses those properties and is used by
-v4l2_of_parse_endpoint, which just adds the V4L2 MBUS information
-to the containing v4l2_of_endpoint structure.
+On Tue, Feb 25, 2014 at 11:23 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> This patch adds device tree binding documentation for the HDMI transmitter
+> on i.MX6.
+>
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+>  .../devicetree/bindings/staging/imx-drm/hdmi.txt   | 53 ++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
+>
+> diff --git a/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt b/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
+> new file mode 100644
+> index 0000000..7dcd673a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
+> @@ -0,0 +1,53 @@
+> +Device-Tree bindings for HDMI Transmitter
+> +
+> +HDMI Transmitter
+> +================
+> +
+> +The LVDS Display Bridge device tree node contains up to two lvds-channel
+> +nodes describing each of the two LVDS encoder channels of the bridge.
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
----
- drivers/media/v4l2-core/v4l2-of.c | 16 +++-------------
- drivers/of/of_graph.c             | 32 ++++++++++++++++++++++++++++++++
- include/linux/of_graph.h          | 20 ++++++++++++++++++++
- include/media/v4l2-of.h           |  9 +++------
- 4 files changed, 58 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/media/v4l2-core/v4l2-of.c b/drivers/media/v4l2-core/v4l2-of.c
-index f919db3..222ed58 100644
---- a/drivers/media/v4l2-core/v4l2-of.c
-+++ b/drivers/media/v4l2-core/v4l2-of.c
-@@ -127,17 +127,9 @@ static void v4l2_of_parse_parallel_bus(const struct device_node *node,
- int v4l2_of_parse_endpoint(const struct device_node *node,
- 			   struct v4l2_of_endpoint *endpoint)
- {
--	struct device_node *port_node = of_get_parent(node);
--
--	memset(endpoint, 0, offsetof(struct v4l2_of_endpoint, head));
--
--	endpoint->local_node = node;
--	/*
--	 * It doesn't matter whether the two calls below succeed.
--	 * If they don't then the default value 0 is used.
--	 */
--	of_property_read_u32(port_node, "reg", &endpoint->port);
--	of_property_read_u32(node, "reg", &endpoint->id);
-+	of_graph_parse_endpoint(node, &endpoint->ep);
-+	endpoint->bus_type = 0;
-+	memset(&endpoint->bus, 0, sizeof(endpoint->bus));
- 
- 	v4l2_of_parse_csi_bus(node, endpoint);
- 	/*
-@@ -147,8 +139,6 @@ int v4l2_of_parse_endpoint(const struct device_node *node,
- 	if (endpoint->bus.mipi_csi2.flags == 0)
- 		v4l2_of_parse_parallel_bus(node, endpoint);
- 
--	of_node_put(port_node);
--
- 	return 0;
- }
- EXPORT_SYMBOL(v4l2_of_parse_endpoint);
-diff --git a/drivers/of/of_graph.c b/drivers/of/of_graph.c
-index 267d8f7..d0f1683 100644
---- a/drivers/of/of_graph.c
-+++ b/drivers/of/of_graph.c
-@@ -15,6 +15,38 @@
- #include <linux/of.h>
- #include <linux/of_graph.h>
- #include <linux/types.h>
-+#include <media/of_graph.h>
-+
-+/**
-+ * of_graph_parse_endpoint() - parse common endpoint node properties
-+ * @node: pointer to endpoint device_node
-+ * @endpoint: pointer to the OF endpoint data structure
-+ *
-+ * All properties are optional. If none are found, we don't set any flags.
-+ * This means the port has a static configuration and no properties have
-+ * to be specified explicitly.
-+ * The caller should hold a reference to @node.
-+ */
-+int of_graph_parse_endpoint(const struct device_node *node,
-+			    struct of_endpoint *endpoint)
-+{
-+	struct device_node *port_node = of_get_parent(node);
-+
-+	memset(endpoint, 0, sizeof(*endpoint));
-+
-+	endpoint->local_node = node;
-+	/*
-+	 * It doesn't matter whether the two calls below succeed.
-+	 * If they don't then the default value 0 is used.
-+	 */
-+	of_property_read_u32(port_node, "reg", &endpoint->port);
-+	of_property_read_u32(node, "reg", &endpoint->id);
-+
-+	of_node_put(port_node);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(of_graph_parse_endpoint);
- 
- /**
-  * of_graph_get_next_endpoint() - get next endpoint node
-diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
-index 3bbeb60..2b233db 100644
---- a/include/linux/of_graph.h
-+++ b/include/linux/of_graph.h
-@@ -14,7 +14,21 @@
- #ifndef __LINUX_OF_GRAPH_H
- #define __LINUX_OF_GRAPH_H
- 
-+/**
-+ * struct of_endpoint - the OF graph endpoint data structure
-+ * @port: identifier (value of reg property) of a port this endpoint belongs to
-+ * @id: identifier (value of reg property) of this endpoint
-+ * @local_node: pointer to device_node of this endpoint
-+ */
-+struct of_endpoint {
-+	unsigned int port;
-+	unsigned int id;
-+	const struct device_node *local_node;
-+};
-+
- #ifdef CONFIG_OF
-+int of_graph_parse_endpoint(const struct device_node *node,
-+				struct of_endpoint *endpoint);
- struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
- 					struct device_node *previous);
- struct device_node *of_graph_get_remote_port_parent(
-@@ -22,6 +36,12 @@ struct device_node *of_graph_get_remote_port_parent(
- struct device_node *of_graph_get_remote_port(const struct device_node *node);
- #else
- 
-+static inline int of_graph_parse_endpoint(const struct device_node *node,
-+					struct of_endpoint *endpoint);
-+{
-+	return -ENOSYS;
-+}
-+
- static inline struct device_node *of_graph_get_next_endpoint(
- 					const struct device_node *parent,
- 					struct device_node *previous)
-diff --git a/include/media/v4l2-of.h b/include/media/v4l2-of.h
-index 3a49735..2229a0e 100644
---- a/include/media/v4l2-of.h
-+++ b/include/media/v4l2-of.h
-@@ -19,6 +19,7 @@
- #include <linux/errno.h>
- #include <linux/of_graph.h>
- 
-+#include <media/of_graph.h>
- #include <media/v4l2-mediabus.h>
- 
- struct device_node;
-@@ -51,17 +52,13 @@ struct v4l2_of_bus_parallel {
- 
- /**
-  * struct v4l2_of_endpoint - the endpoint data structure
-- * @port: identifier (value of reg property) of a port this endpoint belongs to
-- * @id: identifier (value of reg property) of this endpoint
-- * @local_node: pointer to device_node of this endpoint
-+ * @ep: struct of_endpoint containing port, id, and local of_node
-  * @bus_type: bus type
-  * @bus: bus configuration data structure
-  * @head: list head for this structure
-  */
- struct v4l2_of_endpoint {
--	unsigned int port;
--	unsigned int id;
--	const struct device_node *local_node;
-+	struct of_endpoint ep;
- 	enum v4l2_mbus_type bus_type;
- 	union {
- 		struct v4l2_of_bus_parallel parallel;
--- 
-1.8.5.3
+Copy and paste error? ;-)
