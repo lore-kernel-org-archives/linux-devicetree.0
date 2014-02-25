@@ -1,49 +1,57 @@
-From: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Subject: Re: devicetree repository separation/migration
-Date: Tue, 25 Feb 2014 07:36:04 +0000
-Message-ID: <1393313764.9640.15.camel@dagon.hellion.org.uk>
-References: <20140217180544.GU7862@titan.lakedaemon.net>
-	 <5306A6C0.9000206@gmail.com> <20140221141136.GI17250@pengutronix.de>
-	 <1393257557.16570.94.camel@kazak.uk.xensource.com>
-	 <20140225072609.GW17250@pengutronix.de>
+From: Florian Vaussard <florian.vaussard@epfl.ch>
+Subject: Re: [PATCH 2/2] ARM: dts: duovero-parlor: Add HDMI output
+Date: Tue, 25 Feb 2014 08:54:22 +0100
+Message-ID: <530C4C2E.8040606@epfl.ch>
+References: <1393261669-32039-1-git-send-email-florian.vaussard@epfl.ch>	<1393261669-32039-3-git-send-email-florian.vaussard@epfl.ch>	<20140224180336.GU27282@n2100.arm.linux.org.uk> <CABxcv=kKxidVJWcMrueB+edW=g_6gcucvi6=7p=EZ_WooCpbMA@mail.gmail.com>
+Reply-To: florian.vaussard@epfl.ch
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140225072609.GW17250-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CABxcv=kKxidVJWcMrueB+edW=g_6gcucvi6=7p=EZ_WooCpbMA@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@dowhile0.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Ash Charles <ash@gumstix.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-02-25 at 08:26 +0100, Sascha Hauer wrote:
-> On Mon, Feb 24, 2014 at 03:59:17PM +0000, Ian Campbell wrote:
-> > On Fri, 2014-02-21 at 15:11 +0100, Sascha Hauer wrote:
-> > > Ians dts repository is a good start, but it contains a complete kernel
-> > > history and this is not very suitable as a submodule for other
-> > > projects. 
-> > 
-> > It only contains the full history for the files which it contains, not a
-> > complete kernel history. This is deliberate so that "git annotate" etc
-> > still works to tell you where a particular line came from.
+Hi Russell, Javier,
+
+On 02/24/2014 09:22 PM, Javier Martinez Canillas wrote:
+> Hi Russell,
 > 
-> I have cloned git://xenbits.xen.org/people/ianc/device-tree-rebasing.git.
-> .git is 843MB in size and after a 'git checkout v3.13' I see a vanilla v3.13
-> checked out. I may have done something wrong, but I don't see what it
-> could be.
+> On Mon, Feb 24, 2014 at 3:03 PM, Russell King - ARM Linux
+> <linux@arm.linux.org.uk> wrote:
+>> On Mon, Feb 24, 2014 at 06:07:49PM +0100, Florian Vaussard wrote:
+>>> +     hdmi0: connector@0 {
+>>> +             compatible = "hdmi-connector";
+>>
+>> This looks way to generic a compatible string.  Are you sure it's
+>> correct?
+>>
+> 
+> That compatible string is correct according to the latest series
+> posted by Tomi Valkeinen to add DT bindings for the OMAP Display
+> SubSystem (DSS) [0].
+> 
 
-There is a branch with the full Linux stuff in there too. It is needed
-in the tree doing the conversion but doesn't really need to be
-published. I pushed it in the early days without really thinking about
-the size impact. I'll remove that stuff from the published tree.
+Indeed, this compatible string comes from the DSS series.
 
-The master branch, which you should have got by default, contains the
-converted stuff and the tags have -dts appended (e.g. checkout
-v3.13-dts). Checkout one of those and you should see the expected thing.
+> The property is added on this patch [1] and as far as I understood the
+> idea is that it could be a generic DT binding that can be used by
+> platform specific HDMI connectors like the omap dss HDMI connector
+> [2].
+> 
 
-Ian.
+On the other side, looking at
+drivers/video/omap2/displays-new/connector-hdmi.c from the DSS series
+[1], the compatible string is "omapdss,hdmi-connector", which makes me
+wonder which one should be used :) BTW, "omapdss" seems a strange
+prefix, isn't it?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tomi, any inputs?
+
+Regards,
+Florian
+
+[1]
+https://git.kernel.org/cgit/linux/kernel/git/tomba/linux.git/tree/drivers/video/omap2/displays-new/connector-hdmi.c?h=work/dss-dt-review-3
