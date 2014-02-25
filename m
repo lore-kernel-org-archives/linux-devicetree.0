@@ -1,66 +1,75 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: cs42888: Add codec driver support
-Date: Tue, 25 Feb 2014 09:00:27 +0900
-Message-ID: <20140225000027.GI25940@sirena.org.uk>
-References: <1393224929-7555-1-git-send-email-Guangyu.Chen@freescale.com>
- <20140224113011.GE25940@sirena.org.uk>
- <B745DBDD-8A64-4B98-819B-72F8AFF602DE@cirrus.com>
- <20140224160648.GC6132@MrMyself>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 1/5] clk: sun6i: Protect CPU clock
+Date: Tue, 25 Feb 2014 00:01:54 +0000
+Message-ID: <20140225000154.GR21483@n2100.arm.linux.org.uk>
+References: <1393258967-4843-1-git-send-email-maxime.ripard@free-electrons.com> <1393258967-4843-2-git-send-email-maxime.ripard@free-electrons.com> <20140224163034.GN21483@n2100.arm.linux.org.uk> <530BD804.5090806@elopez.com.ar>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PcnNQAcZvbjJh8WA"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCUYRNXYZECRBAF3V6MAKGQEWJQYJAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <530BD804.5090806-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140224160648.GC6132@MrMyself>
-Sender: linux-doc-owner@vger.kernel.org
-To: Nicolin Chen <Guangyu.Chen@freescale.com>
-Cc: "Austin, Brian" <Brian.Austin@cirrus.com>, "Handrigan, Paul" <Paul.Handrigan@cirrus.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, Liam Girdwood <lgirdwood@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+To: Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Emilio.
 
---PcnNQAcZvbjJh8WA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Mon, Feb 24, 2014 at 08:38:44PM -0300, Emilio L=F3pez wrote:
+> Why is this so? Can't a clock be left enabled while nobody has a =20
+> reference to it? I have looked around in Documentation/ (rather quickly =
+=20
+> I must say) and have not found any explicit mention that it is required =
+=20
+> to keep a reference to the clock while it's enabled. I'd appreciate it =
+=20
+> if you could explain this a bit more verbosely or point me to the =20
+> relevant documents.
 
-On Tue, Feb 25, 2014 at 12:06:49AM +0800, Nicolin Chen wrote:
-> On Mon, Feb 24, 2014 at 03:52:24PM +0000, Austin, Brian wrote:
+First up, if you have a requirement that a clock be enabled, then is it
+not unreasonable to ensure that the clock is referenced?
 
-> Wait...Regarding this clock part, I just forgot the reason I put the code:
+Secondly, what if we have code which scans the clocks in the system,
+shutting down those leaf clocks which appear to be unreferenced?
 
-> 385         cs42888->clk = devm_clk_get(&i2c->dev, "mclk");
-> 386         if (IS_ERR(cs42888->clk))
-> 387                 dev_warn(&i2c->dev, "failed to get the clock: %ld\n",
-> 388                                 PTR_ERR(cs42888->clk));
+Thirdly, the API (as I designed it) says so:
 
-> was because the MCLK might be provided from SoC (DAI master) so it could
-> be totally controlled by CPU DAI driver, ESAI for example has its own
-> dividers to derive the HCKT clock (MCLK for Tx) from ahb clock in SoC
-> clock tree, in which case we might not easily pass a valid clock phandle
-> via DT. (RFC to this thought.)
+/**
+ * clk_put      - "free" the clock source
+ * @clk: clock source
+ *
+ * Note: drivers must ensure that all clk_enable calls made on this
+ * clock source are balanced by clk_disable calls prior to calling
+ * this function.
+ *
+ * clk_put should not be called from within interrupt context.
+ */
+void clk_put(struct clk *clk);
 
-We should be getting those clocks visible in the clock API rather than
-doing this.
+which has been there since the API was first created - it's part of the
+contract between drivers using the API and implementers creating something
+which conforms to the API - which today means CCF.
 
---PcnNQAcZvbjJh8WA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+The intention here is that while there are any users holding a clk_get()
+reference on a clock, the clock is assumed to be required for some
+device, and the struct clk may not be kfree'd, nor may its state be
+changed in an unpredictable way to those drivers holding a reference
+to it.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+--=20
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
 
-iQIcBAEBAgAGBQJTC90YAAoJELSic+t+oim9+tUQAJmsfJ5U9ZMR3D4G7qxQi6gy
-Q295xlQdHlWD9HzZlPqccF7xf6P1aDeSv1xBZ/Oczq/5e35w+PqZP4rOqofXqXi/
-EwfX2DLkkd6nOsCn9lOrGAwb3wRxp9rAb0FaGnbkg7bYeghN+9ssCsmICc+o3l8Y
-2f5h+h07T0rB/GPI65QdfU7yC/ojKGsGvHePi7xWnpxxchnkK9IENeGKpmYZlpU0
-lNcBrrI7ATyWOGcSvWJtmE4sRfGAkYCKXAQ9tJ+YeCbMIEZ+MovEosZ3pOMF92N2
-T62LxqVRud5YbskDdkZw7dPNsQ2lifD+P9jDFViBxciUXW0B3bYFh+EOFMXfppMA
-qanev9R7u39UkjUaIxBxPnoGC0bxui04a12GEZXc/9nIuKJ33PxTjtnIWzSDlZg6
-h5+c1LDvRfcL42HFNB7jMXJcgcf3q7Aw71oVQ9pc60txxbBP6cKxvQGXkbQlI/eC
-F8eDaBzfH0+wQU+fJZH9XZ70mB3zo6M3oTOW8c7wGwp5lILO5HwwBh+PO0DfSphP
-22CEMVE8LRjcJ3SZqmuUt+zQPnwtTHoqX/v9sjzemS5ZmRBTz+HXCwlOsiW5sk3T
-UbDCCsxLGEJ86F3sZ6HLdS/+BC5aGu9hKvZw1bboDZcqq9zGfY/5ovlaHc7pA+3a
-ykEEdEKQPlyCNBBrrwjh
-=VY5i
------END PGP SIGNATURE-----
-
---PcnNQAcZvbjJh8WA--
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/groups/opt_out.
