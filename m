@@ -1,52 +1,98 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/6] ARM: STi reset controller support
-Date: Tue, 25 Feb 2014 12:15:54 +0100
-Message-ID: <1393326954.4156.3.camel@pizza.hi.pengutronix.de>
-References: <1389696613-19683-1-git-send-email-srinivas.kandagatla@st.com>
-						<1391437665-11913-1-git-send-email-srinivas.kandagatla@st.com>
-					<1391592486.11239.4.camel@pizza.hi.pengutronix.de>
-				 <52F4D76F.8070301@st.com> <5304B849.2080806@st.com>
-			 <1393237988.3091.14.camel@pizza.hi.pengutronix.de>
-			 <530B514A.4070209@st.com>
-		 <1393254982.3091.44.camel@pizza.hi.pengutronix.de>
-		 <530C5D8C.1080809@st.com>
-	 <1393321661.4156.2.camel@pizza.hi.pengutronix.de> <530C76F0.8000909@st.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v5 2/4] devicetree: bindings: Document Krait CPU/L1 EDAC
+Date: Tue, 25 Feb 2014 11:16:56 +0000
+Message-ID: <20140225111655.GA6855@e102568-lin.cambridge.arm.com>
+References: <1389735034-21430-3-git-send-email-sboyd@codeaurora.org>
+ <20140115102701.GA27314@e102568-lin.cambridge.arm.com>
+ <20140115165623.GJ14405@codeaurora.org>
+ <20140116013840.GA674@codeaurora.org>
+ <20140116113332.GC25540@e102568-lin.cambridge.arm.com>
+ <20140116180505.GA30925@codeaurora.org>
+ <20140116183326.GG25540@e102568-lin.cambridge.arm.com>
+ <20140116192617.GA13785@codeaurora.org>
+ <20140117102109.GA22544@e102568-lin.cambridge.arm.com>
+ <20140219002043.GE14769@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <530C76F0.8000909-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: srinivas kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stephen.gallimore-qxv4g6HH51o@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20140219002043.GE14769@codeaurora.org>
+Content-Disposition: inline
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Borislav Petkov <bp@alien8.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Srinivas,
+Hi Stephen,
 
-Am Dienstag, den 25.02.2014, 10:56 +0000 schrieb srinivas kandagatla:
-> Thankyou Philipp,
-> On 25/02/14 09:47, Philipp Zabel wrote:
-> >> No, the context is lost, the IP needs re-initialization.
-> > alright then, I'll add them to the queue.
-> Thats Great..
-> Can I ask your Ack on these patches so that I can request Arnd/Olof to
-> take these patches via arm-soc tree.
+On Wed, Feb 19, 2014 at 12:20:43AM +0000, Stephen Boyd wrote:
+> (Sorry, this discussion stalled due to merge window + life events)
+
+Sorry for the delay in replying on my side too.
+
+> On 01/17, Lorenzo Pieralisi wrote:
+> > On Thu, Jan 16, 2014 at 07:26:17PM +0000, Stephen Boyd wrote:
+> > > On 01/16, Lorenzo Pieralisi wrote:
+> > > > On Thu, Jan 16, 2014 at 06:05:05PM +0000, Stephen Boyd wrote:
+> > > > > On 01/16, Lorenzo Pieralisi wrote:
+> > > > > > Do we really want to do that ? I am not sure. A cpus node is supposed to
+> > > > > > be a container node, we should not define this binding just because we
+> > > > > > know the kernel creates a platform device for it then.
+> > > > > 
+> > > > > This is just copying more of the ePAPR spec into this document.
+> > > > > It just so happens that having a compatible field here allows a
+> > > > > platform device to be created. I don't see why that's a problem.
+> > > > 
+> > > > I do not see why you cannot define a node like pmu or arch-timer and stick
+> > > > a compatible property in there. cpus node does not represent a device, and
+> > > > must not be created as a platform device, that's my opinion.
+> > > > 
+> > > 
+> > > I had what you're suggesting before in the original revision of
+> > > this patch. Please take a look at the original patch series[1]. I
+> > > suppose it could be tweaked slightly to still have a cache node
+> > > for the L2 interrupt and the next-level-cache pointer from the
+> > > CPUs.
+> > 
+> > Ok, sorry, we are running around in circles here, basically you moved
+> > the node to cpus according to reviews. I still think that treating cpus
+> > as a device is not a great idea, even though I am in the same
+> > position with C-states and probably will add C-state tables in the cpus
+> > node.
+> > 
+> > http://comments.gmane.org/gmane.linux.power-management.general/41012
+> > 
+> > I just would like to see under cpus nodes and properties that apply to
+> > all ARM systems, and avoid defining properties (eg interrupts) that
+> > have different meanings for different ARM cores.
+> > 
+> > The question related to why the kernel should create a platform device
+> > out of cpus is still open. I really do not want to block your series
+> > for these simple issues but we have to make a decision and stick to that,
+> > I am fine either way if we have a plan.
+> > 
 > 
-> Hi Arnd/Olof,
-> 
-> I have few more DT patches which depend on the reset controller header
-> file. Is is possible to take the reset controller patches with Philipp's
-> Acks via arm-soc tree?
+> Do you just want a backup plan in case we don't make a platform
+> device out of the cpus node? I believe we can always add code
+> somewhere to create a platform device at runtime if we detect the
+> cpus node has a compatible string equal to "qcom,krait". We could
+> probably change this driver's module_init() to scan the DT for
+> such a compatible string and create the platform device right
+> there. If we get more than one interrupt in the cpus node we can
+> add interrupt-names and then have software look for interrupts by
+> name instead of number.
 
-That's fine with me, too. Shall I back the patches out of the reset
-queue, then?
+As I mentioned, I do not like the idea of adding compatible properties
+just to force the kernel to create platform devices out of device tree
+nodes. On top of that I would avoid adding a compatible property
+to the cpus node (after all properties like enable-method are common for all
+cpus but still duplicated), my only concern being backward compatibility
+here (ie if we do that for interrupts, we should do that also for other
+common cpu nodes properties, otherwise we have different rules for
+different properties).
 
-Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+I think you can then add interrupts to cpu nodes ("qcom,krait" specific),
+and as you mentioned create a platform device for that.
 
-regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Lorenzo
