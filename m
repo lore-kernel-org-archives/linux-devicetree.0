@@ -1,54 +1,45 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH RESEND v10 1/4] PHY: Add function set_speed to generic
- PHY framework
-Date: Tue, 25 Feb 2014 17:35:37 +0530
-Message-ID: <530C8711.4000600@ti.com>
-References: <1393308882-3964-1-git-send-email-lho@apm.com>
- <1393308882-3964-2-git-send-email-lho@apm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1393308882-3964-2-git-send-email-lho@apm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Loc Ho <lho@apm.com>, tj@kernel.org
-Cc: devicetree@vger.kernel.org, arnd@arndb.de, jcm@redhat.com, patches@apm.com, linux-kernel@vger.kernel.org, ddutile@redhat.com, olof@lixom.net, linux-arm-kernel@lists.infradead.org
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: Movement of testcases.dtsi
+Date: Tue, 25 Feb 2014 12:09:48 +0000
+Message-ID: <20140225120949.DAB3DC41EDA@trevor.secretlab.ca>
+References: <1393237542.16570.26.camel@kazak.uk.xensource.com> < 20140224194821.3D196C409F3@trevor.secretlab.ca> <1393272348.9640.4.camel@ dagon.hellion.org.uk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1393272348.9640.4.camel-ztPmHsLffjjnO4AKDKe2m+kiAK3p4hvP@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Tuesday 25 February 2014 11:44 AM, Loc Ho wrote:
-> This patch adds function set_speed to the generic PHY framework operation
-> structure. This function can be called to instruct the PHY underlying layer
-> at specified lane to configure for specified speed in hertz.
+On Mon, 24 Feb 2014 20:05:48 +0000, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org> wrote:
+> On Mon, 2014-02-24 at 19:48 +0000, Grant Likely wrote:
+> > On Mon, 24 Feb 2014 10:25:42 +0000, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org> wrote:
+> > > My device-tree-rebasing.git repo no longer builds, it fails with:
+> > > src/arm/versatile-pb.dts:50:26: fatal error: testcases.dtsi: No such file or directory
+> > > 
+> > > I suspect this is due to b5190516b282 "of: Move testcase FDT data into
+> > > drivers/of". I think I need to add drivers/of/testcase-data to the list
+> > > of paths to convert, probably extracting it to /testcase-data in the dt
+> > > repo and teach the build system about the new path in the obvious way.
+> > > 
+> > > Does that make sense?
+> > 
+> > Yup, that's the right thing to do... 
 > 
-> Signed-off-by: Loc Ho <lho@apm.com>
-> ---
->  drivers/phy/phy-core.c  |   21 +++++++++++++++++++++
->  include/linux/phy/phy.h |    8 ++++++++
->  2 files changed, 29 insertions(+), 0 deletions(-)
+> Thanks, I'll look into it.
 > 
-> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-> index 645c867..44f2f63 100644
-> --- a/drivers/phy/phy-core.c
-> +++ b/drivers/phy/phy-core.c
-> @@ -257,6 +257,27 @@ int phy_power_off(struct phy *phy)
->  }
->  EXPORT_SYMBOL_GPL(phy_power_off);
->  
+> > although I would like it to be a
+> > short term solution. Ultimately I want the testcase data to be loaded at
+> > runtime by the selftest module.
+> 
+> I suppose at this point linux.git will have a git rm done and my
+> conversion script will just import that as expected?
 
-missing function comment :-s
+Yes. When versatile-pb.dts stops including the testcases it will become
+a non-issue.
 
-> +int phy_set_speed(struct phy *phy, int lane, u64 speed)
-> +{
+g.
 
-Thanks
-Kishon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
