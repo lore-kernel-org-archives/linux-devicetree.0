@@ -1,119 +1,58 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH RESEND v10 4/4] arm64: Add APM X-Gene SoC 15Gbps Multi-purpose PHY DTS entries
-Date: Mon, 24 Feb 2014 23:16:47 -0700
-Message-ID: <1393309007-4012-1-git-send-email-lho@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kishon-l0cyMroinI0@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Tuan Phan <tphan-qTEPVZfXA3Y@public.gmane.org>, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: devicetree repository separation/migration
+Date: Tue, 25 Feb 2014 08:26:10 +0100
+Message-ID: <20140225072609.GW17250@pengutronix.de>
+References: <20140217180544.GU7862@titan.lakedaemon.net>
+ <5306A6C0.9000206@gmail.com>
+ <20140221141136.GI17250@pengutronix.de>
+ <1393257557.16570.94.camel@kazak.uk.xensource.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1393257557.16570.94.camel-ommiHX4a84BXesXXhkcM7miJhflN2719@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the DTS entries for the APM X-Gene SoC 15Gbps Multi-purpose
-PHY driver. The PHY for SATA controller 2 and 3 are enabled by default.
+On Mon, Feb 24, 2014 at 03:59:17PM +0000, Ian Campbell wrote:
+> On Fri, 2014-02-21 at 15:11 +0100, Sascha Hauer wrote:
+> > Ians dts repository is a good start, but it contains a complete kernel
+> > history and this is not very suitable as a submodule for other
+> > projects. 
+> 
+> It only contains the full history for the files which it contains, not a
+> complete kernel history. This is deliberate so that "git annotate" etc
+> still works to tell you where a particular line came from.
 
-Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Signed-off-by: Tuan Phan <tphan-qTEPVZfXA3Y@public.gmane.org>
-Signed-off-by: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
----
- arch/arm64/boot/dts/apm-storm.dtsi |   75 ++++++++++++++++++++++++++++++++++++
- 1 files changed, 75 insertions(+), 0 deletions(-)
+I have cloned git://xenbits.xen.org/people/ianc/device-tree-rebasing.git.
+.git is 843MB in size and after a 'git checkout v3.13' I see a vanilla v3.13
+checked out. I may have done something wrong, but I don't see what it
+could be.
 
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index d37d736..c78ddcf 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -176,6 +176,51 @@
- 				reg-names = "csr-reg";
- 				clock-output-names = "eth8clk";
- 			};
-+
-+			sataphy1clk: sataphy1clk@1f21c000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				clock-names = "socplldiv2";
-+				reg = <0x0 0x1f21c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "sataphy1clk";
-+				status = "disabled";
-+				csr-offset = <0x4>;
-+				csr-mask = <0x00>;
-+				enable-offset = <0x0>;
-+				enable-mask = <0x06>;
-+			};
-+
-+			sataphy2clk: sataphy1clk@1f22c000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				clock-names = "socplldiv2";
-+				reg = <0x0 0x1f22c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "sataphy2clk";
-+				status = "ok";
-+				csr-offset = <0x4>;
-+				csr-mask = <0x3a>;
-+				enable-offset = <0x0>;
-+				enable-mask = <0x06>;
-+			};
-+
-+			sataphy3clk: sataphy1clk@1f23c000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				clock-names = "socplldiv2";
-+				reg = <0x0 0x1f23c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "sataphy3clk";
-+				status = "ok";
-+				csr-offset = <0x4>;
-+				csr-mask = <0x3a>;
-+				enable-offset = <0x0>;
-+				enable-mask = <0x06>;
-+			};
- 		};
- 
- 		serial0: serial@1c020000 {
-@@ -187,5 +232,35 @@
- 			interrupt-parent = <&gic>;
- 			interrupts = <0x0 0x4c 0x4>;
- 		};
-+
-+		phy1: phy@1f21a000 {
-+			compatible = "apm,xgene-phy";
-+			reg = <0x0 0x1f21a000 0x0 0x100>;
-+			#phy-cells = <1>;
-+			clocks = <&sataphy1clk 0>;
-+			status = "disabled";
-+			apm,tx-boost-gain = <30 30 30 30 30 30>;
-+			apm,tx-eye-tuning = <2 10 10 2 10 10>;
-+		};
-+
-+		phy2: phy@1f22a000 {
-+			compatible = "apm,xgene-phy";
-+			reg = <0x0 0x1f22a000 0x0 0x100>;
-+			#phy-cells = <1>;
-+			clocks = <&sataphy2clk 0>;
-+			status = "ok";
-+			apm,tx-boost-gain = <30 30 30 30 30 30>;
-+			apm,tx-eye-tuning = <1 10 10 2 10 10>;
-+		};
-+
-+		phy3: phy@1f23a000 {
-+			compatible = "apm,xgene-phy";
-+			reg = <0x0 0x1f23a000 0x0 0x100>;
-+			#phy-cells = <1>;
-+			clocks = <&sataphy3clk 0>;
-+			status = "ok";
-+			apm,tx-boost-gain = <31 31 31 31 31 31>;
-+			apm,tx-eye-tuning = <2 10 10 2 10 10>;
-+		};
- 	};
- };
+> 
+> The are a lot of merge NULL-commits which aren't strictly needed (they
+> have no content and only a single parent) but I didn't manage to get git
+> rewrite-branch to omit them. They are mostly harmless I think.
+> 
+> I'm not sure how any of that makes it unsuitable for use as a submodule
+> though, the history contained in a git tree seems pretty orthogonal to
+> that to me.
+
+My concerns are only about the size of the repository. Of cause if
+you're willing to wait long enough that problem is orthogonal. But
+anyway, what I cloned from your repository is likely not what it should
+look like.
+
+Sascha
+
 -- 
-1.5.5
-
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
