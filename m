@@ -1,99 +1,132 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/6] usb: gadget: gr_udc: Make struct platform_device
- variable name clearer
-Date: Tue, 25 Feb 2014 12:08:35 -0600
-Message-ID: <20140225180835.GE23275@saruman.home>
-References: <1389264858-32664-1-git-send-email-andreas@gaisler.com>
- <1389264858-32664-2-git-send-email-andreas@gaisler.com>
- <20140218155253.GC9878@saruman.home>
- <530AF761.2020107@gaisler.com>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WBsA/oQW3eTA3LlM"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <530AF761.2020107-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
+From: Loc Ho <lho@apm.com>
+Subject: [PATCH v11 0/4] PHY: Add APM X-Gene SoC 15Gbps Multi-purpose PHY support
+Date: Tue, 25 Feb 2014 11:41:35 -0700
+Message-ID: <1393353699-6443-1-git-send-email-lho@apm.com>
+Return-path: <linux-ide-owner@vger.kernel.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: kishon@ti.com, tj@kernel.org
+Cc: olof@lixom.net, arnd@arndb.de, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
---WBsA/oQW3eTA3LlM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch adds support for APM X-Gene SoC 15Gbps Multi-purpose PHY. This
+is the physical layer interface for the corresponding host controller. This
+driver uses the PHY generic framework. In addition, the PHY generic
+framework is patched to provide an function to set the speed of the PHY.
 
-On Mon, Feb 24, 2014 at 08:40:17AM +0100, Andreas Larsson wrote:
-> On 2014-02-18 16:52, Felipe Balbi wrote:
-> >On Thu, Jan 09, 2014 at 11:54:13AM +0100, Andreas Larsson wrote:
-> >>Rename struct platform_device pointers from ofdev to pdev for clarity.
-> >>Suggested by Mark Rutland.
-> >>
-> >>Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
-> >>---
-> >>  drivers/usb/gadget/gr_udc.c |   18 +++++++++---------
-> >>  1 file changed, 9 insertions(+), 9 deletions(-)
-> >>
-> >>diff --git a/drivers/usb/gadget/gr_udc.c b/drivers/usb/gadget/gr_udc.c
-> >>index 914cbd8..e66dcf0 100644
-> >>--- a/drivers/usb/gadget/gr_udc.c
-> >>+++ b/drivers/usb/gadget/gr_udc.c
-> >>@@ -2071,9 +2071,9 @@ static int gr_udc_init(struct gr_udc *dev)
-> >>  	return 0;
-> >>  }
-> >>
-> >>-static int gr_remove(struct platform_device *ofdev)
-> >>+static int gr_remove(struct platform_device *pdev)
-> >>  {
-> >>-	struct gr_udc *dev =3D dev_get_drvdata(&ofdev->dev);
-> >>+	struct gr_udc *dev =3D dev_get_drvdata(&pdev->dev);
-> >
-> >you can use platform_get_drvdata()
-> >
-> >>@@ -2083,7 +2083,7 @@ static int gr_remove(struct platform_device *ofde=
-v)
-> >>  	gr_dfs_delete(dev);
-> >>  	if (dev->desc_pool)
-> >>  		dma_pool_destroy(dev->desc_pool);
-> >>-	dev_set_drvdata(&ofdev->dev, NULL);
-> >>+	dev_set_drvdata(&pdev->dev, NULL);
-> >
-> >and platform_set_drvdata()
-> >
->=20
-> Yes, but wouldn't that be better handled in a separate patch?
+v11:
+* Add comment to function phy_set_speed
+* Add commit log for documentation patch file
+* Minor comment update to function xgene_phy_force_lat_summer_cal and
+  xgene_phy_sata_force_gen
 
-not necessary, you're adding the platform_device argument to this patch
-anyway.
+v10
+* Update comment for function xgene_phy_force_lat_summer_cal and
+  xgene_phy_sata_force_gen with function style fully-winged style
 
---=20
-balbi
+v9
+* Update CMU parameter setting for register 13
+* Add required delay when configure CMU PLL, Manual Calibration PLL, and VCO
+  PLL
+* Add comment for CMU PLL calibration loop delay of 10us
+* Add required delay for stopping and starting summer calibrations
+* Update comment for summer and latch calibration delays
+* Update comment for PHY reset Rx delay and decrease max sleep time from 500
+  to 150us
+* Always program the DFE (equalizer) setting to 0x7e00 as with original version
+* Fix Tx speed selection to always using Gen3 setting when force to an
+  specified generation speed
 
---WBsA/oQW3eTA3LlM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+v8
+* Update binding documentation
+* Remove XGENE_PHY_DTS and XGENE_PHY_EXT_DTS defines
+* Remove support for internal clock
+* Remove support for external reference CMU
+* Remove the need for external reference resource DTS entry and its related
+  code
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+v7
+* Add/Update PHY CMU/lane parameters and its default values
+* Rename variable enable_manual_cal to preA3Chip
+* Remove function phy_rd, phy_wr, and phy_wr_flush
+* Change function cmu_wr, cmu_rd, cmu_toggle1to0, cmu_clrbits, cmu_setbits,
+  serdes_wr, serdes_rd, serdes_clrbits, and serdes_setbits to take context
+  instead void *
+* Remove function serdes_toggle1to0
+* Decrease the polling time from 10ms to 1ms on CMU calibration complete
+  detection
+* Move all SATA specify code in function xgene_phy_hw_initialize into
+  function xgene_phy_hw_init_sata
+* Add usleep_range after starting summer/latch calibrations
+* Add usleep_range between receiver reset (function xgene_phy_reset_rxd)
+* Save and restore PHY register 31 instead writing 0 in function
+  xgene_phy_gen_avg_val
+* Update function xgene_phy_sata_force_gen programming sequences
+* Add support to reset the receiver lane in function xgene_phy_set_speed
+  if speed is 0
+* Update PHY parameters in DTS per controller
+* Some minor code clean up
 
-iQIcBAEBAgAGBQJTDNwjAAoJEIaOsuA1yqREuGAQAKBkyEx6jFVrLcOhRM4hXm8T
-b+U5pwsRr9HSqnMUaY8EaYEd9rKgAkKnOo/GL7e67LW0tMSXfM9YB32KRhv/4KXC
-ErMym6C6c4qZavFao1vfreRstTglKQ4P3WaQ2Y+exIJAjT36qfajVcQSmyz9dIvo
-eAJ4s/DXNuRUt+y4rTUdeXzbP9ewa0CgDEPeGJB2yHIz22jWC0FII7vz8keHwNWK
-0sGNuFXjHCh8lDLBslezA/eTWZ9m0nnN0Vtc1SYPjjh0QIgZusExKNcidi1dNDaP
-QF3PtWOKznKOf4LRhkeHQgA7YDYoclnROAUF2BOuVYGsFn2dZN9ssOJ1yG5KjK8T
-VW1tvc+F3Yutg6ONK1CBmylEZQV8gc9mCehu9jiwwPIMpSCd1CPJMPtBzjcRQLSB
-5iSFMgkjTMq9lJuergPLHw3hJm+etnuSNbCI+NpS9F2LMgbZACzqm82WO7AZzyeY
-r9CymnB/Yv6IFXmfthboGb/Gw+dF4cmZxhr7vdM8RoBnbIJMzanBI4oOne/XvHgG
-Ndyi/lASAjtviheXWENbkj9ESkmRUTT14Z0okEEEudkRftQVw9nwnJOXrN9PF3Sj
-gD3OMahMAhCy/JgaGxTBpx2vgoa6G+QIKMbTm5XZx9YzSu1tZDho/Sc7WjaEH0IY
-5iyLrtF/RvQKQ3zyR7b5
-=B+XK
------END PGP SIGNATURE-----
+v6
+* Move PHY document to Documentation/devicetree/binding/phy
+* Remove _ADDR from all register defines
+* Update clock-names property for sataphy1clk, sataphy2clk, and sataphy3clk
 
---WBsA/oQW3eTA3LlM--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+v5
+* Update DTS binding documentation
+* Remove direct clock access and use clock interface instead
+* Change override parameters to decimal instead hex values
+* Change apm,tx-amplitude, apm,tx-pre-cursor1, apm,tx-pre-cursor2,
+  apm,tx-post-cursor to be unit of uV
+
+v4
+* Update documentation with 'apm,' instead 'apm-'
+* Change DTS override parameter to have 'apm,'
+* Add select GENERIC_PHY to Kconfig PHY_XGENE
+* Make override parameters to be pair of three values instead one
+* Some minor comment and indentation changes
+* Remove error register addition offset
+* Add ULL to constants
+* Use module_init instead subsys_initcall
+* Make DTS node based on first register address
+* Update override setting values
+
+v3
+* Major re-write of the code based on various review comments
+* Support external clock only at the moment
+* Support SATA mode only at the moment
+* No UEFI support at the moment
+
+v2
+* Remove port knowledge from functions
+* Make all functions static
+* Remove ID completely
+* Make resource requirement based on compatible type
+* Rename override PHY parameters with more descriptive name
+* Add override PHY parameter for per controller, per port, and per speed
+* Patch the generic PHY frame to expose set_speed operation
+
+v1
+* Initial version
+
+Signed-off-by: Loc Ho <lho@apm.com>
+Signed-off-by: Tuan Phan <tphan@apm.com>
+Signed-off-by: Suman Tripathi <stripathi@apm.com>
+---
+Loc Ho (4):
+  PHY: Add function set_speed to generic PHY framework
+  Documentation: Add APM X-Gene SoC 15Gbps Multi-purpose PHY driver
+    binding documentation
+  PHY: add APM X-Gene SoC 15Gbps Multi-purpose PHY driver
+  arm64: Add APM X-Gene SoC 15Gbps Multi-purpose PHY DTS entries
+
+ .../devicetree/bindings/phy/apm-xgene-phy.txt      |   79 +
+ arch/arm64/boot/dts/apm-storm.dtsi                 |   75 +
+ drivers/phy/Kconfig                                |    7 +
+ drivers/phy/Makefile                               |    2 +
+ drivers/phy/phy-core.c                             |   30 +
+ drivers/phy/phy-xgene.c                            | 1827 ++++++++++++++++++++
+ include/linux/phy/phy.h                            |    8 +
+ 7 files changed, 2028 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/apm-xgene-phy.txt
+ create mode 100644 drivers/phy/phy-xgene.c
+
