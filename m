@@ -1,46 +1,28 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH 1/2] clk: ti: am335x: remove unecessary cpu0 clk node
-Date: Tue, 25 Feb 2014 00:24:11 -0800
-Message-ID: <20140225082411.22529.21466@quantum>
-References: <1391019557-22313-1-git-send-email-nm@ti.com>
- <1391019557-22313-2-git-send-email-nm@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] pinctrl: add pinctrl driver for imx6sx
+Date: Tue, 25 Feb 2014 09:43:31 +0100
+Message-ID: <CACRpkdaYAH+WfSm-0UoxCU5m86g8Q6M3qROs8j2u0EAi8vUqeg@mail.gmail.com>
+References: <1392793619-16767-1-git-send-email-b20788@freescale.com>
+	<20140219083920.GJ3010@S2101-09.ap.freescale.net>
+	<dda7bce900ca4b358d1ed6f167f60940@BY2PR03MB315.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1391019557-22313-2-git-send-email-nm@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: =?utf-8?q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
-Cc: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Nishanth Menon <nm@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <dda7bce900ca4b358d1ed6f167f60940@BY2PR03MB315.namprd03.prod.outlook.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Anson.Huang@freescale.com" <Anson.Huang@freescale.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "dong.aisheng@linaro.org" <dong.aisheng@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Nishanth Menon (2014-01-29 10:19:16)
-> cpu0 clock node has no functionality, since cpufreq-cpu0 is already
-> capable of picking up the clock from dts.
-> 
-> Signed-off-by: Nishanth Menon <nm@ti.com>
+On Wed, Feb 19, 2014 at 9:43 AM, Anson.Huang@freescale.com
+<Anson.Huang@freescale.com> wrote:
 
-Taken into clk-next!
+> Hi, Shawn
+>
+>         OK, I will hold on these patches until Freescale announce this SOC, please ignore the dts patches as well.
 
-Regards,
-Mike
+OK just don't hold back stuff for too long, usually this kind of infrastructure
+needs to go in as early as possible (with clocks and regulators...)
 
-> ---
->  drivers/clk/ti/clk-33xx.c |    1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/clk/ti/clk-33xx.c b/drivers/clk/ti/clk-33xx.c
-> index 776ee45..028b337 100644
-> --- a/drivers/clk/ti/clk-33xx.c
-> +++ b/drivers/clk/ti/clk-33xx.c
-> @@ -34,7 +34,6 @@ static struct ti_dt_clk am33xx_clks[] = {
->         DT_CLK(NULL, "dpll_core_m5_ck", "dpll_core_m5_ck"),
->         DT_CLK(NULL, "dpll_core_m6_ck", "dpll_core_m6_ck"),
->         DT_CLK(NULL, "dpll_mpu_ck", "dpll_mpu_ck"),
-> -       DT_CLK("cpu0", NULL, "dpll_mpu_ck"),
->         DT_CLK(NULL, "dpll_mpu_m2_ck", "dpll_mpu_m2_ck"),
->         DT_CLK(NULL, "dpll_ddr_ck", "dpll_ddr_ck"),
->         DT_CLK(NULL, "dpll_ddr_m2_ck", "dpll_ddr_m2_ck"),
-> -- 
-> 1.7.9.5
-> 
+Yours,
+Linus Walleij
