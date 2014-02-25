@@ -1,125 +1,94 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH RESEND v10 2/4] Documentation: Add APM X-Gene SoC 15Gbps
- Multi-purpose PHY driver binding documentation
-Date: Tue, 25 Feb 2014 19:21:45 +0530
-Message-ID: <530C9FF1.3060409@ti.com>
-References: <1393308882-3964-1-git-send-email-lho@apm.com>
- <1393308882-3964-2-git-send-email-lho@apm.com>
- <1393308882-3964-3-git-send-email-lho@apm.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [RFC PATCH v4 4/8] staging: imx-drm: Document imx-hdmi device tree
+ bindings
+Date: Tue, 25 Feb 2014 15:23:19 +0100
+Message-ID: <1393338203-25051-5-git-send-email-p.zabel@pengutronix.de>
+References: <1393338203-25051-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1393308882-3964-3-git-send-email-lho@apm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Loc Ho <lho@apm.com>, tj@kernel.org
-Cc: devicetree@vger.kernel.org, Suman Tripathi <stripathi@apm.com>, arnd@arndb.de, jcm@redhat.com, patches@apm.com, linux-kernel@vger.kernel.org, ddutile@redhat.com, olof@lixom.net, Tuan Phan <tphan@apm.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1393338203-25051-1-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 25 February 2014 11:44 AM, Loc Ho wrote:
+This patch adds device tree binding documentation for the HDMI transmitter
+on i.MX6.
 
-missing commit log..
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+ .../devicetree/bindings/staging/imx-drm/hdmi.txt   | 53 ++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
 
--Kishon
-> Signed-off-by: Loc Ho <lho@apm.com>
-> Signed-off-by: Tuan Phan <tphan@apm.com>
-> Signed-off-by: Suman Tripathi <stripathi@apm.com>
-> ---
->  .../devicetree/bindings/phy/apm-xgene-phy.txt      |   79 ++++++++++++++++++++
->  1 files changed, 79 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/phy/apm-xgene-phy.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/apm-xgene-phy.txt b/Documentation/devicetree/bindings/phy/apm-xgene-phy.txt
-> new file mode 100644
-> index 0000000..5f3a65a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/apm-xgene-phy.txt
-> @@ -0,0 +1,79 @@
-> +* APM X-Gene 15Gbps Multi-purpose PHY nodes
-> +
-> +PHY nodes are defined to describe on-chip 15Gbps Multi-purpose PHY. Each
-> +PHY (pair of lanes) has its own node.
-> +
-> +Required properties:
-> +- compatible		: Shall be "apm,xgene-phy".
-> +- reg			: PHY memory resource is the SDS PHY access resource.
-> +- #phy-cells		: Shall be 1 as it expects one argument for setting
-> +			  the mode of the PHY. Possible values are 0 (SATA),
-> +			  1 (SGMII), 2 (PCIe), 3 (USB), and 4 (XFI).
-> +
-> +Optional properties:
-> +- status		: Shall be "ok" if enabled or "disabled" if disabled.
-> +			  Default is "ok".
-> +- clocks		: Reference to the clock entry.
-> +- apm,tx-eye-tuning	: Manual control to fine tune the capture of the serial
-> +			  bit lines from the automatic calibrated position.
-> +			  Two set of 3-tuple setting for each (up to 3)
-> +			  supported link speed on the host. Range from 0 to
-> +			  127 in unit of one bit period. Default is 10.
-> +- apm,tx-eye-direction	: Eye tuning manual control direction. 0 means sample
-> +			  data earlier than the nominal sampling point. 1 means
-> +			  sample data later than the nominal sampling point.
-> +			  Two set of 3-tuple setting for each (up to 3)
-> +			  supported link speed on the host. Default is 0.
-> +- apm,tx-boost-gain	: Frequency boost AC (LSB 3-bit) and DC (2-bit)
-> +			  gain control. Two set of 3-tuple setting for each
-> +			  (up to 3) supported link speed on the host. Range is
-> +			  between 0 to 31 in unit of dB. Default is 3.
-> +- apm,tx-amplitude	: Amplitude control. Two set of 3-tuple setting for
-> +			  each (up to 3) supported link speed on the host.
-> +			  Range is between 0 to 199500 in unit of uV.
-> +			  Default is 199500 uV.
-> +- apm,tx-pre-cursor1	: 1st pre-cursor emphasis taps control. Two set of
-> +			  3-tuple setting for each (up to 3) supported link
-> +			  speed on the host. Range is 0 to 273000 in unit of
-> +			  uV. Default is 0.
-> +- apm,tx-pre-cursor2	: 2st pre-cursor emphasis taps control. Two set of
-> +			  3-tuple setting for each (up to 3) supported link
-> +			  speed on the host. Range is 0 to 127400 in unit uV.
-> +			  Default is 0x0.
-> +- apm,tx-post-cursor	: Post-cursor emphasis taps control. Two set of
-> +			  3-tuple setting for Gen1, Gen2, and Gen3. Range is
-> +			  between 0 to 0x1f in unit of 18.2mV. Default is 0xf.
-> +- apm,tx-speed		: Tx operating speed. One set of 3-tuple for each
-> +			  supported link speed on the host.
-> +			   0 = 1-2Gbps
-> +			   1 = 2-4Gbps (1st tuple default)
-> +			   2 = 4-8Gbps
-> +			   3 = 8-15Gbps (2nd tuple default)
-> +			   4 = 2.5-4Gbps
-> +			   5 = 4-5Gbps
-> +			   6 = 5-6Gbps
-> +			   7 = 6-16Gbps (3rd tuple default)
-> +
-> +NOTE: PHY override parameters are board specific setting.
-> +
-> +Example:
-> +		phy1: phy@1f21a000 {
-> +			compatible = "apm,xgene-phy";
-> +			reg = <0x0 0x1f21a000 0x0 0x100>;
-> +			#phy-cells = <1>;
-> +			status = "disabled";
-> +		};
-> +
-> +		phy2: phy@1f22a000 {
-> +			compatible = "apm,xgene-phy";
-> +			reg = <0x0 0x1f22a000 0x0 0x100>;
-> +			#phy-cells = <1>;
-> +			status = "ok";
-> +		};
-> +
-> +		phy3: phy@1f23a000 {
-> +			compatible = "apm,xgene-phy";
-> +			reg = <0x0 0x1f23a000 0x0 0x100>;
-> +			#phy-cells = <1>;
-> +			status = "ok";
-> +		};
-> 
+diff --git a/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt b/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
+new file mode 100644
+index 0000000..7dcd673a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
+@@ -0,0 +1,53 @@
++Device-Tree bindings for HDMI Transmitter
++
++HDMI Transmitter
++================
++
++The LVDS Display Bridge device tree node contains up to two lvds-channel
++nodes describing each of the two LVDS encoder channels of the bridge.
++
++Required properties:
++ - #address-cells : should be <1>
++ - #size-cells : should be <0>
++ - compatible : should be "fsl,imx6q-hdmi" or "fsl,imx6dl-hdmi".
++ - gpr : should be <&gpr>.
++   The phandle points to the iomuxc-gpr region containing the HDMI
++   multiplexer control register.
++ - clocks, clock-names : phandles to the HDMI iahb and isrf clocks, as described
++   in Documentation/devicetree/bindings/clock/clock-bindings.txt and
++   Documentation/devicetree/bindings/clock/imx6q-clock.txt.
++ - port@[0-4]: Up to four port nodes with endpoint definitions as defined in
++   Documentation/devicetree/bindings/media/video-interfaces.txt,
++   corresponding to the four inputs to the HDMI multiplexer.
++
++example:
++
++	gpr: iomuxc-gpr@020e0000 {
++		/* ... */
++	};
++
++        hdmi: hdmi@0120000 {
++                #address-cells = <1>;
++                #size-cells = <0>;
++                reg = <0x00120000 0x9000>;
++                interrupts = <0 115 0x04>;
++                gpr = <&gpr>;
++                clocks = <&clks 123>, <&clks 124>;
++                clock-names = "iahb", "isfr";
++
++                port@0 {
++                        reg = <0>;
++
++                        hdmi_mux_0: endpoint {
++                                remote-endpoint = <&ipu1_di0_hdmi>;
++                        };
++                };
++
++                port@1 {
++                        reg = <1>;
++
++                        hdmi_mux_1: endpoint {
++                                remote-endpoint = <&ipu1_di1_hdmi>;
++                        };
++                };
++        };
+-- 
+1.8.5.3
