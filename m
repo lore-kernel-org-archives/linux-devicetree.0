@@ -1,52 +1,60 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 2/4] net: rfkill: gpio: remove gpio names
-Date: Tue, 25 Feb 2014 10:35:22 -0700
-Message-ID: <530CD45A.8050803@wwwdotorg.org>
-References: <1392900697-27577-1-git-send-email-heikki.krogerus@linux.intel.com>	<1392900697-27577-3-git-send-email-heikki.krogerus@linux.intel.com>	<53062F97.3050407@wwwdotorg.org>	<CAGb2v66-tDZhrm9dnXe+PdQTaLZbw20sw3uYzLor2eXpVWmPMA@mail.gmail.com>	<5306E599.7020605@wwwdotorg.org> <CACRpkdZBvKU31EDX=6=wVLXaQDAqD6VHtaE_mGnFLr1UYQAH9g@mail.gmail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [RFC PATCH v4 4/8] staging: imx-drm: Document imx-hdmi device
+	tree bindings
+Date: Tue, 25 Feb 2014 19:03:30 +0100
+Message-ID: <1393351410.4156.8.camel@pizza.hi.pengutronix.de>
+References: <1393338203-25051-1-git-send-email-p.zabel@pengutronix.de>
+	<1393338203-25051-5-git-send-email-p.zabel@pengutronix.de>
+	<CAOMZO5AnXYEDB5PfQUNW_bY7ng8YkSYGK5y_Em04t6L-Eb2g+g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZBvKU31EDX=6=wVLXaQDAqD6VHtaE_mGnFLr1UYQAH9g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Johannes Berg <johannes@sipsolutions.net>, "David S. Miller" <davem@davemloft.net>, Rhyland Klein <rklein@nvidia.com>, linux-wireless <linux-wireless@vger.kernel.org>, netdev <netdev@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mark Gross <mark.gross@intel.com>
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAOMZO5AnXYEDB5PfQUNW_bY7ng8YkSYGK5y_Em04t6L-Eb2g+g@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces@lists.freedesktop.org
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: devel@driverdev.osuosl.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, Sascha Hauer <kernel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/25/2014 02:13 AM, Linus Walleij wrote:
-> On Fri, Feb 21, 2014 at 6:35 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
->> On 02/20/2014 06:55 PM, Chen-Yu Tsai wrote:
-> 
->>> That's correct. However using con_id to pass this results in different
->>> behavior across DT and ACPI. A better way is to export the labeling
->>> function so consumers can set meaningful labels themselves.
-...
-> As in tegra30-beaver.dts...
-> 
->     sdhci@78000000 {
->             status = "okay";
->             cd-gpios = <&gpio TEGRA_GPIO(I, 5) GPIO_ACTIVE_LOW>;
->             wp-gpios = <&gpio TEGRA_GPIO(T, 3) GPIO_ACTIVE_HIGH>;
->             power-gpios = <&gpio TEGRA_GPIO(D, 7) GPIO_ACTIVE_HIGH>;
->             bus-width = <4>;
->     };
-> 
-> Instead of passing the GPIOs as index 0,1,2 they are named
-> and I do admit this has a nice "things are under control" aspect
-> to it.
-> 
-> In the ACPI case the con_id is not used for anything.
-> 
-> So it is basically there to satisfy the habit in some device
-> tree bindings to name gpio arrays instead of just passing gpios = <...>;
-> (The latter should be encouraged going forward.)
+Hi Fabio,
 
-Do you really want to switch from named GPIO lookups to index-based GPIO
-lookups? Index-based lookups make it much harder to extend the DT
-binding in a backwards-compatible fashion, especially in the face of
-optional GPIOs (of which all of CD, WP, power are).
+Am Dienstag, den 25.02.2014, 12:13 -0300 schrieb Fabio Estevam:
+> On Tue, Feb 25, 2014 at 11:23 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> > This patch adds device tree binding documentation for the HDMI transmitter
+> > on i.MX6.
+> >
+> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > ---
+> >  .../devicetree/bindings/staging/imx-drm/hdmi.txt   | 53 ++++++++++++++++++++++
+> >  1 file changed, 53 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt b/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
+> > new file mode 100644
+> > index 0000000..7dcd673a
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
+> > @@ -0,0 +1,53 @@
+> > +Device-Tree bindings for HDMI Transmitter
+> > +
+> > +HDMI Transmitter
+> > +================
+> > +
+> > +The LVDS Display Bridge device tree node contains up to two lvds-channel
+> > +nodes describing each of the two LVDS encoder channels of the bridge.
+> 
+> Copy and paste error? ;-)
 
-If we switch to a single gpios property, I'd assert we should still do
-named-based lookups using a parallel gpio-names property, just like most
-(all?) other resource types now support. If we do that, we'll still need
-the name parameter.
+Thanks, yes. I don't have anything interesting to say about the HDMI TX
+there, so I'll just drop this sentence.
+
+regards
+Philipp
