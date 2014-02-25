@@ -1,37 +1,41 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCH 1/1] ARM: Exynos: Add generic compatible string
-Date: Tue, 25 Feb 2014 10:00:49 +0900
-Message-ID: <530BEB41.5070107@samsung.com>
-References: <1392809645-631-1-git-send-email-sachin.kamat@linaro.org>	<CAK9yfHyWG1ac6isTRSB3VWfxER9cSuDJHwY3b7svyEk9EozpWQ@mail.gmail.com>	<53075239.4010603@samsung.com>	<2200834.G3JJLYQl5i@wuerfel>	<53076F00.7000001@samsung.com>	<53077160.5030202@samsung.com> <CAK9yfHxiHkrf1xmSFbfoKqFFSCU6w4QqwPnQNdv1m1PGtrwsLQ@mail.gmail.com> <530BE557.20106@samsung.com> <530BE93F.2070904@gmail.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v13 2/3] ata: Add APM X-Gene SoC AHCI SATA host
+ controller driver
+Date: Mon, 24 Feb 2014 20:40:48 -0500
+Message-ID: <20140225014048.GA3450@htj.dyndns.org>
+References: <1393221265-13057-1-git-send-email-lho@apm.com>
+ <1393221265-13057-2-git-send-email-lho@apm.com>
+ <1393221265-13057-3-git-send-email-lho@apm.com>
+ <20140224183129.GA2522@htj.dyndns.org>
+ <CAPw-ZT=VHj+fO-7+G6Zdx+T+osJhXaR9AYHbx_TbWFWHBiDKYg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <530BE93F.2070904@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tomasz Figa <t.figa@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robh+dt@kernel.org>, Olof Johansson <olof@lixom.net>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPw-ZT=VHj+fO-7+G6Zdx+T+osJhXaR9AYHbx_TbWFWHBiDKYg@mail.gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Loc Ho <lho@apm.com>
+Cc: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/25/14 09:52, Tomasz Figa wrote:
-> On 25.02.2014 01:35, Kukjin Kim wrote:
+Hey,
 
-[...]
+On Mon, Feb 24, 2014 at 05:02:52PM -0800, Loc Ho wrote:
+> The completion of the RAM removal from shutdown is quite fast. As per
+> spec, the max time is 1ms but from the run-time code, it only take one
+> (1us) or two (2us) read for this to completed. An 1 ms hard delay is more
+> than 100 time slower. The code isn't that complex. If you strongly advise
+> that I should remove the while loop and use 1 ms, then okay. Otherwise, I
+> would prefer to keep the original code.
 
->> Well, let me see common.c and mach-exynos.c, one is for SoC specific
->> stuff and the other is for Board specific so I think, keeping current
->> file would be good, we can change the file name mach-exynos.c or
->> board-exynos.c though.
->
-> There is no board specific stuff in mach-exynos/ with DT, so there is no
-> need to keep those file separate, especially when stuff from common.c is
-> constantly being (re)moved.
->
-OK.
+The code is rather silly because as it's written the delay may be upto
+100ms.  If it's sitting in the hot path, using things like
+usleep_range() makes sense.  In probe / shutdown paths, it's just an
+unnecessary distraction.  If the timeout is as short as 1ms, it
+doesn't really matter whether the hardware can do it faster or not.
+It's just irrelevant.  Please just write simple code.
 
-> Also I'd rather stick to what other platforms use, which would be
-> exynos.c (like tegra.c), as Arnd proposed.
->
-agreed. OK.
+Thanks.
 
-- Kukjin
+-- 
+tejun
