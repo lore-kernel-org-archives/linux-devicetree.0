@@ -1,50 +1,80 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [RFC PATCH v4 4/8] staging: imx-drm: Document imx-hdmi device
- tree bindings
-Date: Tue, 25 Feb 2014 12:13:35 -0300
-Message-ID: <CAOMZO5AnXYEDB5PfQUNW_bY7ng8YkSYGK5y_Em04t6L-Eb2g+g@mail.gmail.com>
-References: <1393338203-25051-1-git-send-email-p.zabel@pengutronix.de>
- <1393338203-25051-5-git-send-email-p.zabel@pengutronix.de>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH 00/10] pinctrl: mvebu: remove hard-coded addresses from
+ Dove pinctrl
+Date: Tue, 25 Feb 2014 10:16:56 -0500
+Message-ID: <20140225151656.GI1010@titan.lakedaemon.net>
+References: <1393231382-11078-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <20140224181023.GA1010@titan.lakedaemon.net>
+ <CACRpkdZ+YGTyDj6i8c198MdRtz3GY-YBmVO9LysPCcmT4EC0cg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1393338203-25051-5-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devel@driverdev.osuosl.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, Sascha Hauer <kernel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZ+YGTyDj6i8c198MdRtz3GY-YBmVO9LysPCcmT4EC0cg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 25, 2014 at 11:23 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> This patch adds device tree binding documentation for the HDMI transmitter
-> on i.MX6.
->
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
->  .../devicetree/bindings/staging/imx-drm/hdmi.txt   | 53 ++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
->
-> diff --git a/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt b/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
-> new file mode 100644
-> index 0000000..7dcd673a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
-> @@ -0,0 +1,53 @@
-> +Device-Tree bindings for HDMI Transmitter
-> +
-> +HDMI Transmitter
-> +================
-> +
-> +The LVDS Display Bridge device tree node contains up to two lvds-channel
-> +nodes describing each of the two LVDS encoder channels of the bridge.
+On Tue, Feb 25, 2014 at 10:36:54AM +0100, Linus Walleij wrote:
+> On Mon, Feb 24, 2014 at 7:10 PM, Jason Cooper <jason@lakedaemon.net> wrote:
+> 
+> > Sebastian, Linus,
+> >
+> > I've now created mvebu/pinctrl-dove for this series.  It's based on
+> > v3.14-rc1, and depends on mvebu/pinctrl (which depends on
+> > mvebu/pinctrl-3xx).
+> >
+> > I've kept this series in a separate branch in case we encounter an
+> > unforeseen problem with something in here.  Then this branch can be
+> > dropped, and /pinctrl-3xx and /pinctrl will still make it in.
+> >
+> > So, all patches except 3 and 4 are in mvebu/pinctrl-dove.  3 and 4 are
+> > in mvebu/dt.
+> 
+> OK so what should I be pulling in first now?
 
-Copy and paste error? ;-)
+Of course I woke up this morning not happy with this :-/  Here's what it
+looks like currently:
+
+  /v3.14-rc1
+  |
+--+---+---+---+---+ mvebu/pinctrl-3xx
+  |               \
+  |---+---+---+---+---+---+---+ mvebu/pinctrl
+  \                           \
+   \---------------------------+---+---+---+ mvebu/pinctrl-dove
+
+Not to scale.
+
+
+I would prefer to do:
+
+  /v3.14-rc1
+  |
+--+---+---+---+---+ mvebu/pinctrl-cleanup
+  |               \
+  |----------------+--+---+---+ mvebu/pinctrl-3xx
+  \                \
+   \----------------+---+---+--+---+---+---+ mvebu/pinctrl-dove
+
+But this would mean moving some patches to branches other than what they
+were sent with.  The advantage is that /pinctrl-3xx and /pinctrl-dove
+don't depend on each other, and only depend on -cleanup.  Which is great
+if there is something wrong in either branch.
+
+Sebastian, I can cherry-pick the patches around, but you know the code
+better than any of us, do you foresee any problems with this scenario?
+
+thx,
+
+Jason.
