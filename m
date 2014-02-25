@@ -1,86 +1,48 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH 00/10] pinctrl: mvebu: remove hard-coded addresses from
- Dove pinctrl
-Date: Tue, 25 Feb 2014 10:43:47 -0500
-Message-ID: <20140225154347.GJ1010@titan.lakedaemon.net>
-References: <1393231382-11078-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <20140224181023.GA1010@titan.lakedaemon.net>
- <CACRpkdZ+YGTyDj6i8c198MdRtz3GY-YBmVO9LysPCcmT4EC0cg@mail.gmail.com>
- <20140225151656.GI1010@titan.lakedaemon.net>
- <530CB725.5070904@gmail.com>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2MiBSRVNFTkRdIHB3bTogQWRkIENMUFM3MTFYIFBXTSBz?=
+ =?UTF-8?B?dXBwb3J0?=
+Date: Tue, 25 Feb 2014 19:47:57 +0400
+Message-ID: <1393343277.220396804@f361.i.mail.ru>
+References: <1393342067-9086-1-git-send-email-shc_work@mail.ru>
+ <5560556.tENBsUTXbt@wuerfel>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <530CB725.5070904@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <5560556.tENBsUTXbt@wuerfel>
+Sender: linux-pwm-owner@vger.kernel.org
+To: =?UTF-8?B?QXJuZCBCZXJnbWFubg==?= <arnd@arndb.de>
+Cc: linux-pwm@vger.kernel.org, =?UTF-8?B?VGhpZXJyeSBSZWRpbmc=?= <thierry.reding@gmail.com>, devicetree@vger.kernel.org, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt@kernel.org>, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <pawel.moll@arm.com>, =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ijc+devicetree@hellion.org.uk>, =?UTF-8?B?S3VtYXIgR2FsYQ==?= <galak@codeaurora.org>, =?UTF-8?B?R3JhbnQgTGlrZWx5?= <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 25, 2014 at 04:30:45PM +0100, Sebastian Hesselbarth wrote:
-> On 02/25/14 16:16, Jason Cooper wrote:
-> >On Tue, Feb 25, 2014 at 10:36:54AM +0100, Linus Walleij wrote:
-> >>On Mon, Feb 24, 2014 at 7:10 PM, Jason Cooper <jason@lakedaemon.net> wrote:
-> >>>I've now created mvebu/pinctrl-dove for this series.  It's based on
-> >>>v3.14-rc1, and depends on mvebu/pinctrl (which depends on
-> >>>mvebu/pinctrl-3xx).
-> >>>
-> >>>I've kept this series in a separate branch in case we encounter an
-> >>>unforeseen problem with something in here.  Then this branch can be
-> >>>dropped, and /pinctrl-3xx and /pinctrl will still make it in.
-> >>>
-> >>>So, all patches except 3 and 4 are in mvebu/pinctrl-dove.  3 and 4 are
-> >>>in mvebu/dt.
-> >>
-> >>OK so what should I be pulling in first now?
-> >
-> >Of course I woke up this morning not happy with this :-/  Here's what it
-> >looks like currently:
-> >
-> >   /v3.14-rc1
-> >   |
-> >--+---+---+---+---+ mvebu/pinctrl-3xx
-> >   |               \
-> >   |---+---+---+---+---+---+---+ mvebu/pinctrl
-> >   \                           \
-> >    \---------------------------+---+---+---+ mvebu/pinctrl-dove
-> >
-> >Not to scale.
-> >
-> >
-> >I would prefer to do:
-> >
-> >   /v3.14-rc1
-> >   |
-> >--+---+---+---+---+ mvebu/pinctrl-cleanup
-> >   |               \
-> >   |----------------+--+---+---+ mvebu/pinctrl-3xx
-> >   \                \
-> >    \----------------+---+---+--+---+---+---+ mvebu/pinctrl-dove
-> >
-> >But this would mean moving some patches to branches other than what they
-> >were sent with.  The advantage is that /pinctrl-3xx and /pinctrl-dove
-> >don't depend on each other, and only depend on -cleanup.  Which is great
-> >if there is something wrong in either branch.
-> >
-> >Sebastian, I can cherry-pick the patches around, but you know the code
-> >better than any of us, do you foresee any problems with this scenario?
-> 
-> If Thomas agrees, I can rework Armada 375/38x pinctrl stubs to fit on
-> mvebu/pinctrl. That should allow you to have mvebu/pinctrl-dove
-> independent of mvebu/pinctrl-3xx.
-> 
-> Not a big deal, I'd just pick 375/38x patches from mvebu/pinctrl and
-> squash them into mvebu/pinctrl-3xx. The only "issue" is that DT
-> documentation update patches from mvebu/pinctrl-dove have to be split
-> too.
-> 
-> I'll prepare the three new branches for you and Thomas to look at
-> today.
-
-Ok, great.  Thanks Sebastian!
-
-thx,
-
-Jason.
+0JLRgtC+0YDQvdC40LosIDI1INGE0LXQstGA0LDQu9GPIDIwMTQsIDE2OjMzICswMTowMCDQvtGC
+IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+Ogo+IE9uIFR1ZXNkYXkgMjUgRmVicnVhcnkg
+MjAxNCAxOToyNzo0NyBBbGV4YW5kZXIgU2hpeWFuIHdyb3RlOgo+ID4gQWRkIGEgbmV3IGRyaXZl
+ciBmb3IgdGhlIEFSTSBDTFBTNzExWCBQdWxzZSBXaWR0aCBNb2R1bGF0b3IgKFBXTSkgaW50ZXJm
+YWNlLgo+ID4gVGhpcyBDUFUgY29udGFpbiB0d28gNC1iaXQgUFdNIG91dHB1dHMgd2l0aCBjb25z
+dGFudCBwZXJpb2QsIGJhc2VkIG9uIENQVQo+ID4gUExMIGZyZXF1ZW5jeS4gUFdNIHBvbGFyaXR5
+IGlzIGRldGVybWluZWQgYnkgaGFyZHdhcmUgYnkgcG93ZXIgb24gcmVzZXQuCj4gPiAKPiA+IFNp
+Z25lZC1vZmYtYnk6IEFsZXhhbmRlciBTaGl5YW4gPHNoY193b3JrQG1haWwucnU+Cj4gCj4gTG9v
+a3MgZ29vZCwganVzdCBvbmUgY29tbWVudAo+IAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3B3bS9jaXJydXMtY2xwczcxMXgtcHdtLnR4dAo+ID4gQEAgLTAsMCAr
+MSwxNSBAQAo+ID4gKyogQ2lycmlzIExvZ2ljIENMUFM3MTFYIFBXTSBjb250cm9sbGVyCj4gPiAr
+Cj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiA+ICstIGNvbXBhdGlibGU6IFNob3VsZCBiZSAi
+Y2lycnVzLGNscHM3MTF4LXB3bSIuCj4gPiArLSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBh
+bmQgbGVuZ3RoIG9mIHRoZSBjb250cm9sbGVyJ3MgcmVnaXN0ZXJzLgo+ID4gKy0gY2xvY2tzOiBw
+aGFuZGxlIHRvIHRoZSBQV00gcmVmZXJlbmNlIGNsb2NrLgo+ID4gKy0gI3B3bS1jZWxsczogU2hv
+dWxkIGJlIDEuIFRoZSBjZWxsIHNwZWNpZmllcyB0aGUgaW5kZXggb2YgdGhlIGNoYW5uZWwuCj4g
+PiArCj4gPiArRXhhbXBsZToKPiA+ICsJcHdtOiBwd21AODAwMDA0MDAgewo+ID4gKwkJY29tcGF0
+aWJsZSA9ICJjaXJydXMsY2xwczcxMXgtcHdtIjsKPiA+ICsJCXJlZyA9IDwweDgwMDAwNDAwIDB4
+ND47Cj4gPiArCQljbG9ja3MgPSA8JmNsa3MgOD47Cj4gPiArCQkjcHdtLWNlbGxzID0gPDE+Owo+
+ID4gKwl9Owo+IAo+IFdlIHJlYWxseSB3YW50IHRvIGF2b2lkIHdpbGRjYXJkcyBpbiBjb21wYXRp
+YmxlIHN0cmluZ3MuIENhbiB5b3UgY2FsbCB0aGlzCj4gImNpcnJ1cyxjczg5NzEyLXB3bSIgdG8g
+bWF0Y2ggdGhlIGZpcnN0IFNvQyB0aGF0IGNhbWUgd2l0aCB0aGlzIGhhcmR3YXJlPwo+IE9idmlv
+dXNseSBpZiB0aGVyZSB3YXMgc29tZSBjaGlwIGJlZm9yZSB0aGF0IChJJ20gbm90IGZhbWlsaWFy
+IHdpdGggdGhlCj4gbW9kZWwgbnVtYmVycyksIHVzZSB0aGF0IGluc3RlYWQuCj4gCj4gWW91IGNh
+biBlaXRoZXIgbGlzdCBhbGwgY2hpcHMgeW91IGtub3cgdGhhdCBoYXZlIHRoaXMgaW4gdGhlIGRy
+aXZlciwKPiBvciB5b3UgdXNlICJjaXJydXMsY3M4OTcxMi1wd20iIGFzIHRoZSBmYWxsYmFjaywg
+YW5kIHVzZSB0aGUgbmFtZSBvZgo+IHRoZSBTb0MgeW91IGhhdmUgYXMgdGhlIG1vcmUgc3BlY2lm
+aWMgc3RyaW5nLgoKSXQgc2VlbXMgdGhhdCBpbiB0aGlzIGNhc2Ugd2Ugd2lsbCBuZWVkIHRvIG1v
+ZGlmeSB0aGUgY29tcGF0aWJpbGl0eSBzdHJpbmcKZm9yIG90aGVyIGRyaXZlcnMgdGhhdCBhcmUg
+YWxyZWFkeSBhdmFpbGFibGUgaW4gdGhlIGtlcm5lbC4uLgoKLS0tCg==
