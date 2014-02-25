@@ -1,76 +1,76 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/4] net: rfkill: gpio: remove gpio names
-Date: Tue, 25 Feb 2014 10:13:35 +0100
-Message-ID: <CACRpkdZBvKU31EDX=6=wVLXaQDAqD6VHtaE_mGnFLr1UYQAH9g@mail.gmail.com>
-References: <1392900697-27577-1-git-send-email-heikki.krogerus@linux.intel.com>
-	<1392900697-27577-3-git-send-email-heikki.krogerus@linux.intel.com>
-	<53062F97.3050407@wwwdotorg.org>
-	<CAGb2v66-tDZhrm9dnXe+PdQTaLZbw20sw3uYzLor2eXpVWmPMA@mail.gmail.com>
-	<5306E599.7020605@wwwdotorg.org>
+From: srinivas kandagatla <srinivas.kandagatla@st.com>
+Subject: Re: [PATCH v2 0/6] ARM: STi reset controller support
+Date: Tue, 25 Feb 2014 09:08:28 +0000
+Message-ID: <530C5D8C.1080809@st.com>
+References: <1389696613-19683-1-git-send-email-srinivas.kandagatla@st.com>				<1391437665-11913-1-git-send-email-srinivas.kandagatla@st.com>			<1391592486.11239.4.camel@pizza.hi.pengutronix.de>		 <52F4D76F.8070301@st.com> <5304B849.2080806@st.com>	 <1393237988.3091.14.camel@pizza.hi.pengutronix.de>	 <530B514A.4070209@st.com> <1393254982.3091.44.camel@pizza.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <5306E599.7020605@wwwdotorg.org>
-Sender: netdev-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Johannes Berg <johannes@sipsolutions.net>, "David S. Miller" <davem@davemloft.net>, Rhyland Klein <rklein@nvidia.com>, linux-wireless <linux-wireless@vger.kernel.org>, netdev <netdev@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mark Gross <mark.gross@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1393254982.3091.44.camel@pizza.hi.pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Maxime Coquelin <maxime.coquelin@st.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, kernel@stlinux.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Olof Johansson <olof@lixom.net>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, stephen.gallimore@st.com, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 21, 2014 at 6:35 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 02/20/2014 06:55 PM, Chen-Yu Tsai wrote:
+On 24/02/14 15:16, Philipp Zabel wrote:
+> Hi Srinivas,
+> 
+> Am Montag, den 24.02.2014, 14:03 +0000 schrieb srinivas kandagatla:
+>> Thanks Philipp for your comments,
+>>
+>> On 24/02/14 10:33, Philipp Zabel wrote:
+>>>>> Did Srini's explanations convinced you?
+>>>>>
+>>>>> If so, could you queue the series for v3.15?
+>>> to be honest, I'm not comfortable with this explanation. If the
+>>> "powerdown" bits only gate the clocks to those modules, calling it a
+>>> reset control is clearly the wrong abstraction. If that is the case,
+>>> couldn't you handle those bits via the clock framework?
+>> I just had a re-look at the IPs specs for more information on where
+>> these power-down signals are actually terminating on the IP side.
+>>
+>> For example: ST-Synopsis Ethernet GMAC IP has two pins
+>> power_down_req[IN] and power_down_ack[OUT]. power_down_req is used by
+>> the software to either put the IP in powerdown or bring it out of
+>> powerdown state.
+> 
+> Now I'm a bit confused. There is no mention of GMAC in your patches,
+> and for ETH[01] they contain only the SOFTRESET bits. I have no issue
+> with the SOFTRESETs.
+Yes, GMAC was a bad example indeed. However this same logic applies to
+the USB IP as well.
 
->> That's correct. However using con_id to pass this results in different
->> behavior across DT and ACPI. A better way is to export the labeling
->> function so consumers can set meaningful labels themselves.
->
-> But this code is the consumer of those GPIOs. IF the parameter to
-> devm_gpiod_get_index() isn't intended to be used, why does it exist?
+GMAC power-down-reset can be added to the power-down-reset list for
+consistency.
 
-Kerneldoc says:
+We did not define the power-down-reset for GMAC because the reset state
+of GMAC will not be in power down. softreset should be enough to bring
+the IP in to a usable state. So the software never drives the power
+down-request but instead uses softreset in this particular case.
 
-/**
- * gpiod_get_index - obtain a GPIO from a multi-index GPIO function
- * @dev:        GPIO consumer, can be NULL for system-global GPIOs
- * @con_id:     function within the GPIO consumer
- * @idx:        index of the GPIO to obtain in the consumer
- *
+> 
+>> The IP itself drives power_down_ack to indicate when the power down
+>> request is successfully finished. For power_down/power_up request the IP
+>> will change the internal state accordingly including powering up/down
+>> its internal blocks and/or clock gating.
+>>
+>>> If on the other hand these powerdown bits also trigger reset machinery,
+>>> such that asserting and deasserting that bit will change the module's
+>>> internal state, I could be convinced to queue them like this.
+>> This is true with ST IPs, these lines change the state of the IP as
+>> described above. Reset framework seems to fits in very well with this
+>> behavior rather than power-domains or clock framework.
+> 
+> If you put the IP in power down when it is idle, and then power it up
+> again, will the IP registers have kept their previous state?
+No, the context is lost, the IP needs re-initialization.
 
-Basically it is just exposing the fact that of_find_gpio() and
-acpi_find_gpio() both take a con_id as argument.
-
-If we drill into this, we find that it is used to conjure the
-arbitrary string before the gpios in the DT case, like:
-
-foo-gpios = <...>;
-
-As in tegra30-beaver.dts...
-
-    sdhci@78000000 {
-            status = "okay";
-            cd-gpios = <&gpio TEGRA_GPIO(I, 5) GPIO_ACTIVE_LOW>;
-            wp-gpios = <&gpio TEGRA_GPIO(T, 3) GPIO_ACTIVE_HIGH>;
-            power-gpios = <&gpio TEGRA_GPIO(D, 7) GPIO_ACTIVE_HIGH>;
-            bus-width = <4>;
-    };
-
-Instead of passing the GPIOs as index 0,1,2 they are named
-and I do admit this has a nice "things are under control" aspect
-to it.
-
-In the ACPI case the con_id is not used for anything.
-
-So it is basically there to satisfy the habit in some device
-tree bindings to name gpio arrays instead of just passing gpios = <...>;
-(The latter should be encouraged going forward.)
-
-As DT is ABI we need to keep this forever, and driver may need to
-look for foo-gpios=<> and gpios=<> alike for backward compatibility
-if we'd change it, sweet isn't it? :-)
-
-I don't quite like this, as it is adding stupid nonsens arguments for
-ACPI GPIO producers (which only take an index AFAICT), but it is a
-first sacrifice on the altar of trying to mask the differences between DT
-and ACPI probe paths about which I have mixed feelings.
-
-Yours,
-LInus Walleij
+Thanks,
+srini
+> 
+> regards
+> Philipp
+> 
+> 
+> 
