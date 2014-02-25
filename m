@@ -1,64 +1,64 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 2/2] ARM: dts: duovero-parlor: Add HDMI output
-Date: Tue, 25 Feb 2014 12:39:21 +0000
-Message-ID: <20140225123921.GY27282@n2100.arm.linux.org.uk>
-References: <1393261669-32039-1-git-send-email-florian.vaussard@epfl.ch> <1393261669-32039-3-git-send-email-florian.vaussard@epfl.ch> <20140224180336.GU27282@n2100.arm.linux.org.uk> <CABxcv=kKxidVJWcMrueB+edW=g_6gcucvi6=7p=EZ_WooCpbMA@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] ASoC: simple-card: Fix device node locks
+Date: Tue, 25 Feb 2014 21:42:37 +0900
+Message-ID: <20140225124237.GG25940@sirena.org.uk>
+References: <cover.1392995566.git.moinejf@free.fr>
+ <4dca81f45b67a4dcb21271e57409ba114c3b59cb.1392995566.git.moinejf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="0AE7xBcoXTow8yBG"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CABxcv=kKxidVJWcMrueB+edW=g_6gcucvi6=7p=EZ_WooCpbMA@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Florian Vaussard <florian.vaussard@epfl.ch>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Ash Charles <ash@gumstix.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <4dca81f45b67a4dcb21271e57409ba114c3b59cb.1392995566.git.moinejf-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 24, 2014 at 05:22:27PM -0300, Javier Martinez Canillas wrote:
-> Hi Russell,
-> 
-> On Mon, Feb 24, 2014 at 3:03 PM, Russell King - ARM Linux
-> <linux@arm.linux.org.uk> wrote:
-> > On Mon, Feb 24, 2014 at 06:07:49PM +0100, Florian Vaussard wrote:
-> >> +     hdmi0: connector@0 {
-> >> +             compatible = "hdmi-connector";
-> >
-> > This looks way to generic a compatible string.  Are you sure it's
-> > correct?
-> >
-> 
-> That compatible string is correct according to the latest series
-> posted by Tomi Valkeinen to add DT bindings for the OMAP Display
-> SubSystem (DSS) [0].
 
-in which case:
+--0AE7xBcoXTow8yBG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-N    N   AA     CCCC  K  K
-NN   N  A  A   C    C K K
-N N  N A    A C       KK
-N  N N AAAAAA C       KK
-N   NN A    A  C    C K K
-N    N A    A   CCCC  K  K
+On Thu, Feb 20, 2014 at 06:25:12PM +0100, Jean-Francois Moine wrote:
+> Some device nodes stay locked and some other ones are not locked
+> while being used during the card lifetime.
 
-Yes, that's a very big nack.  Two things:
+Please pay more attention to describing your patches clearly in
+changelogs and to splitting them up for review.  This is a frequent
+issue and it does make it much harder to check what's happening.
 
-1. OMAP really doesn't have the right to define a compatible string which
-   is as generic as "hdmi-connector".
+In this case you're not actually working with locking but rather with
+reference counting and there's no real description of the actual errors
+either.  Saying something like "function X takes a reference which we
+need to drop" would help a lot, and it would let us think about if it's
+sensible for the function to return holding the reference in the first
+place and how long the reference needs to be held for.
 
-2. Even with "omapdss," before it, the convention that DT people have adopted
-   is for the prefix to be "companyname," and not a subsystem.
+--0AE7xBcoXTow8yBG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-I'm not the only one with this concern - I discussed it with Arnd last
-night and his comments were about it being "obviously bogus".
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-> The property is added on this patch [1] and as far as I understood the
-> idea is that it could be a generic DT binding that can be used by
-> platform specific HDMI connectors like the omap dss HDMI connector [2].
+iQIcBAEBAgAGBQJTDI+5AAoJELSic+t+oim9GL0QAIieIbNbLSitT8rabMy2nezx
+bczJ3Q+mvo/lKuBklY3mjK/3IpfVY0/HAvKKaKvdlP2N15pC2ftEfKgbHd4VyMm9
+o6hrJ2BmwXPKGl8v/VasBPar0lkI2N1wA/yXzsrapjsiLkT4QhtVHVgZ3EwOVTdE
+2wtZv56oz4IyAo0+kfhQ/hVOrElbujXPrUK+sCQYJ1a+hl3IGbxsxv/yDvM5zXrx
+JwEtDM0LuxH+/bpKWUMf2j8cWdGEoPR0CiPr8GCGZEoqy8YwBsnLiGUzA00pF7tM
+iO/GX4cv/mcIAMblhI+lA2rOT5y8lc1U1tEtQAd+bwPEThdzHxBerGksaRRpb9Ki
+PSLLHjocuai9B50COuugqCv7bypHgDeZx5aXCNNTcYyfoTw9b3FbnT/1Exuo4jIV
+efVI5fc9H80JZLro04M0b8jVMMCty7AdkhrZOxLAgk/Q3tx0Y+SRZmLq6BlsaVUd
+dp6bKeCRLA/z27+fE20yX8ZxqKtHMVw6I3yi8R5CXz5To1YYo3ctvuYqLIDAva5I
+ZLFkrgO+o/fygessg2Dk2QB05JDre/Xnq7w5MyDYTAgpr9Wiw7wVZBE1CFXqmr7k
+8mvFxj8wor2T8J+bqKsT2eoqyWsZ7qT543KsmOkmNSlNH9Ik6dJqzMvkMDoN4eNp
+09IHrwdP/HD+TRR4+ya2
+=AlD1
+-----END PGP SIGNATURE-----
 
-Why do the physical connectors need a DT binding?  Surely what needs the
-DT binding is the HDMI encoder - and that certainly should no way be a
-generic name, because there's no such thing as a generic HDMI encoder
-chip.
-
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+--0AE7xBcoXTow8yBG--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
