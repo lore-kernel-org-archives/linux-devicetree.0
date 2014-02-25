@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v2 10/11] ARM: shmobile: koelsch dts: Add MSIOF nodes
-Date: Tue, 25 Feb 2014 11:30:18 +0100
-Message-ID: <1393324219-3317-11-git-send-email-geert@linux-m68k.org>
+Subject: [PATCH v2 07/11] ARM: shmobile: r8a7790 dtsi: Add MSIOF nodes and aliases
+Date: Tue, 25 Feb 2014 11:30:15 +0100
+Message-ID: <1393324219-3317-8-git-send-email-geert@linux-m68k.org>
 References: <1393324219-3317-1-git-send-email-geert@linux-m68k.org>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1393324219-3317-1-git-send-email-geert@linux-m68k.org>
@@ -12,55 +12,75 @@ List-Id: devicetree@vger.kernel.org
 
 From: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
 
-Add pinctrl and SPI device for MSIOF on Koelsch.
-On this board, only MSIOF0 is in use. Its bus contains a single device
-(a Renesas R2A11302FT PMIC), for which no bindings are defined yet.
-
 Signed-off-by: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
 Cc: devicetree@vger.kernel.org
 ---
 v2:
-  - No changes
+  - Drop "num-cs" and "renesas,rx-fifo-size", as they match the defaults.
 
- arch/arm/boot/dts/r8a7791-koelsch.dts |   21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ arch/arm/boot/dts/r8a7790.dtsi |   44 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
-index 03508cc73e8b..f3eb83c4265d 100644
---- a/arch/arm/boot/dts/r8a7791-koelsch.dts
-+++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
-@@ -161,6 +161,12 @@
- 		renesas,groups = "qspi_ctrl", "qspi_data4";
- 		renesas,function = "qspi";
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index 9383b8436111..da69afc9e5cb 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -25,6 +25,10 @@
+ 		i2c2 = &i2c2;
+ 		i2c3 = &i2c3;
+ 		spi0 = &qspi;
++		spi1 = &msiof0;
++		spi2 = &msiof1;
++		spi3 = &msiof2;
++		spi4 = &msiof3;
  	};
-+
-+	msiof0_pins: spi1 {
-+		renesas,groups = "msiof0_clk", "msiof0_sync", "msiof0_rx",
-+				 "msiof0_tx";
-+		renesas,function = "msiof0";
-+	};
- };
  
- &ether {
-@@ -212,3 +218,18 @@
- 		};
+ 	cpus {
+@@ -776,4 +780,44 @@
+ 		#size-cells = <0>;
+ 		status = "disabled";
  	};
- };
 +
-+&msiof0 {
-+	pinctrl-0 = <&msiof0_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+
-+	pmic: pmic@0 {
-+		compatible = "renesas,r2a11302ft";
-+		reg = <0>;
-+		spi-max-frequency = <6000000>;
-+		spi-cpol;
-+		spi-cpha;
++	msiof0: spi@e6e20000 {
++		compatible = "renesas,msiof-r8a7790";
++		reg = <0 0xe6e20000 0 0x0064>;
++		interrupts = <0 156 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp0_clks R8A7790_CLK_MSIOF0>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
 +	};
-+};
++
++	msiof1: spi@e6e10000 {
++		compatible = "renesas,msiof-r8a7790";
++		reg = <0 0xe6e10000 0 0x0064>;
++		interrupts = <0 157 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp2_clks R8A7790_CLK_MSIOF1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	msiof2: spi@e6e00000 {
++		compatible = "renesas,msiof-r8a7790";
++		reg = <0 0xe6e00000 0 0x0064>;
++		interrupts = <0 158 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp2_clks R8A7790_CLK_MSIOF2>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	msiof3: spi@e6c90000 {
++		compatible = "renesas,msiof-r8a7790";
++		reg = <0 0xe6c90000 0 0x0064>;
++		interrupts = <0 159 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp2_clks R8A7790_CLK_MSIOF3>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
+ };
 -- 
 1.7.9.5
 
