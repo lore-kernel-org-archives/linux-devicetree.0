@@ -1,37 +1,49 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH 2/2] ARM: dts: MSM8974: Add pinctrl node
-Date: Tue, 25 Feb 2014 09:50:12 -0600
-Message-ID: <E723C437-3EEF-4485-9E11-8170FCB43461@codeaurora.org>
-References: <1391700529-11816-1-git-send-email-iivanov@mm-sol.com> <1391700529-11816-2-git-send-email-iivanov@mm-sol.com> <CACRpkdYDWdwsG1MqGfnPsRsKUCQUbvnsvjJmLe7hxNU05t8S6w@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.1 \(1827\))
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYDWdwsG1MqGfnPsRsKUCQUbvnsvjJmLe7hxNU05t8S6w@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 RESEND] pwm: Add CLPS711X PWM support
+Date: Tue, 25 Feb 2014 16:50:32 +0100
+Message-ID: <5211076.9eDkSrDagS@wuerfel>
+References: <1393342067-9086-1-git-send-email-shc_work@mail.ru> <5560556.tENBsUTXbt@wuerfel> <1393343277.220396804@f361.i.mail.ru>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1393343277.220396804@f361.i.mail.ru>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: linux-pwm@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 25 February 2014 19:47:57 Alexander Shiyan wrote:
+> =D0=92=D1=82=D0=BE=D1=80=D0=BD=D0=B8=D0=BA, 25 =D1=84=D0=B5=D0=B2=D1=80=
+=D0=B0=D0=BB=D1=8F 2014, 16:33 +01:00 =D0=BE=D1=82 Arnd Bergmann <arnd@=
+arndb.de>:
+> > On Tuesday 25 February 2014 19:27:47 Alexander Shiyan wrote:
+=3D> >=20
+> > We really want to avoid wildcards in compatible strings. Can you ca=
+ll this
+> > "cirrus,cs89712-pwm" to match the first SoC that came with this har=
+dware?
+> > Obviously if there was some chip before that (I'm not familiar with=
+ the
+> > model numbers), use that instead.
+> >=20
+> > You can either list all chips you know that have this in the driver=
+,
+> > or you use "cirrus,cs89712-pwm" as the fallback, and use the name o=
+f
+> > the SoC you have as the more specific string.
+>=20
+> It seems that in this case we will need to modify the compatibility s=
+tring
+> for other drivers that are already available in the kernel...
 
-On Feb 24, 2014, at 3:57 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+Ah, right. I missed the binding for gpio and serial going in.
 
-> On Thu, Feb 6, 2014 at 4:28 PM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
-> 
->> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
->> 
->> Add the pin control node and pin definitions of SPI8.
->> 
->> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> 
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> 
-> Kumar, please take this through your qcom tree.
+DT maintainers, any suggestion on how we should proceed here?
 
-applied to qcom/dt
+AFAICT, clps711x platform support is still work-in-progress, so we don'=
+t
+have any upstream users to worry about yet, but changing them is still
+going to be slightly messy.
 
-- k
-
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+	Arnd
