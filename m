@@ -1,49 +1,66 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 02/14] mfd: omap-usb-host: Always fail on clk_get()
- error
-Date: Tue, 25 Feb 2014 10:28:59 +0000
-Message-ID: <20140225102859.GB13246@lee--X1>
-References: <1392896409-5101-1-git-send-email-rogerq@ti.com>
- <1392896409-5101-3-git-send-email-rogerq@ti.com>
- <20140225095913.GA13143@lee--X1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140225095913.GA13143@lee--X1>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH v2 10/11] ARM: shmobile: koelsch dts: Add MSIOF nodes
+Date: Tue, 25 Feb 2014 11:30:18 +0100
+Message-ID: <1393324219-3317-11-git-send-email-geert@linux-m68k.org>
+References: <1393324219-3317-1-git-send-email-geert@linux-m68k.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1393324219-3317-1-git-send-email-geert@linux-m68k.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 25 Feb 2014, Lee Jones wrote:
+From: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
 
-> > Be more strict and always fail on clk_get() error.
-> >=20
-> > For OMAP3 platforms, get the 120MHz EHCI clock by its proper name
-> > 'usbhost_120m_fck' instead of its alias 'ehci_logic_fck'.
-> >=20
-> > CC: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > CC: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> > Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-> > ---
-> >  drivers/mfd/omap-usb-host.c | 65 +++++++++++++++++++++++++++++----=
-------------
-> >  1 file changed, 42 insertions(+), 23 deletions(-)
->=20
-> Appied, thanks.
+Add pinctrl and SPI device for MSIOF on Koelsch.
+On this board, only MSIOF0 is in use. Its bus contains a single device
+(a Renesas R2A11302FT PMIC), for which no bindings are defined yet.
 
-Won't apply. I guess this depends on the changes made in patch 1.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
+Cc: devicetree@vger.kernel.org
+---
+v2:
+  - No changes
 
-I'll wait for the next drop.
+ arch/arm/boot/dts/r8a7791-koelsch.dts |   21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
+index 03508cc73e8b..f3eb83c4265d 100644
+--- a/arch/arm/boot/dts/r8a7791-koelsch.dts
++++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
+@@ -161,6 +161,12 @@
+ 		renesas,groups = "qspi_ctrl", "qspi_data4";
+ 		renesas,function = "qspi";
+ 	};
++
++	msiof0_pins: spi1 {
++		renesas,groups = "msiof0_clk", "msiof0_sync", "msiof0_rx",
++				 "msiof0_tx";
++		renesas,function = "msiof0";
++	};
+ };
+ 
+ &ether {
+@@ -212,3 +218,18 @@
+ 		};
+ 	};
+ };
++
++&msiof0 {
++	pinctrl-0 = <&msiof0_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++
++	pmic: pmic@0 {
++		compatible = "renesas,r2a11302ft";
++		reg = <0>;
++		spi-max-frequency = <6000000>;
++		spi-cpol;
++		spi-cpha;
++	};
++};
+-- 
+1.7.9.5
+
