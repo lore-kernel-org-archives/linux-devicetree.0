@@ -1,60 +1,99 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [RFC PATCH v4 4/8] staging: imx-drm: Document imx-hdmi device
-	tree bindings
-Date: Tue, 25 Feb 2014 19:03:30 +0100
-Message-ID: <1393351410.4156.8.camel@pizza.hi.pengutronix.de>
-References: <1393338203-25051-1-git-send-email-p.zabel@pengutronix.de>
-	<1393338203-25051-5-git-send-email-p.zabel@pengutronix.de>
-	<CAOMZO5AnXYEDB5PfQUNW_bY7ng8YkSYGK5y_Em04t6L-Eb2g+g@mail.gmail.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/6] usb: gadget: gr_udc: Make struct platform_device
+ variable name clearer
+Date: Tue, 25 Feb 2014 12:08:35 -0600
+Message-ID: <20140225180835.GE23275@saruman.home>
+References: <1389264858-32664-1-git-send-email-andreas@gaisler.com>
+ <1389264858-32664-2-git-send-email-andreas@gaisler.com>
+ <20140218155253.GC9878@saruman.home>
+ <530AF761.2020107@gaisler.com>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAOMZO5AnXYEDB5PfQUNW_bY7ng8YkSYGK5y_Em04t6L-Eb2g+g@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces@lists.freedesktop.org
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: devel@driverdev.osuosl.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, Sascha Hauer <kernel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="WBsA/oQW3eTA3LlM"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <530AF761.2020107-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
+--WBsA/oQW3eTA3LlM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Am Dienstag, den 25.02.2014, 12:13 -0300 schrieb Fabio Estevam:
-> On Tue, Feb 25, 2014 at 11:23 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> > This patch adds device tree binding documentation for the HDMI transmitter
-> > on i.MX6.
+On Mon, Feb 24, 2014 at 08:40:17AM +0100, Andreas Larsson wrote:
+> On 2014-02-18 16:52, Felipe Balbi wrote:
+> >On Thu, Jan 09, 2014 at 11:54:13AM +0100, Andreas Larsson wrote:
+> >>Rename struct platform_device pointers from ofdev to pdev for clarity.
+> >>Suggested by Mark Rutland.
+> >>
+> >>Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+> >>---
+> >>  drivers/usb/gadget/gr_udc.c |   18 +++++++++---------
+> >>  1 file changed, 9 insertions(+), 9 deletions(-)
+> >>
+> >>diff --git a/drivers/usb/gadget/gr_udc.c b/drivers/usb/gadget/gr_udc.c
+> >>index 914cbd8..e66dcf0 100644
+> >>--- a/drivers/usb/gadget/gr_udc.c
+> >>+++ b/drivers/usb/gadget/gr_udc.c
+> >>@@ -2071,9 +2071,9 @@ static int gr_udc_init(struct gr_udc *dev)
+> >>  	return 0;
+> >>  }
+> >>
+> >>-static int gr_remove(struct platform_device *ofdev)
+> >>+static int gr_remove(struct platform_device *pdev)
+> >>  {
+> >>-	struct gr_udc *dev =3D dev_get_drvdata(&ofdev->dev);
+> >>+	struct gr_udc *dev =3D dev_get_drvdata(&pdev->dev);
 > >
-> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > ---
-> >  .../devicetree/bindings/staging/imx-drm/hdmi.txt   | 53 ++++++++++++++++++++++
-> >  1 file changed, 53 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
+> >you can use platform_get_drvdata()
 > >
-> > diff --git a/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt b/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
-> > new file mode 100644
-> > index 0000000..7dcd673a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/staging/imx-drm/hdmi.txt
-> > @@ -0,0 +1,53 @@
-> > +Device-Tree bindings for HDMI Transmitter
-> > +
-> > +HDMI Transmitter
-> > +================
-> > +
-> > +The LVDS Display Bridge device tree node contains up to two lvds-channel
-> > +nodes describing each of the two LVDS encoder channels of the bridge.
-> 
-> Copy and paste error? ;-)
+> >>@@ -2083,7 +2083,7 @@ static int gr_remove(struct platform_device *ofde=
+v)
+> >>  	gr_dfs_delete(dev);
+> >>  	if (dev->desc_pool)
+> >>  		dma_pool_destroy(dev->desc_pool);
+> >>-	dev_set_drvdata(&ofdev->dev, NULL);
+> >>+	dev_set_drvdata(&pdev->dev, NULL);
+> >
+> >and platform_set_drvdata()
+> >
+>=20
+> Yes, but wouldn't that be better handled in a separate patch?
 
-Thanks, yes. I don't have anything interesting to say about the HDMI TX
-there, so I'll just drop this sentence.
+not necessary, you're adding the platform_device argument to this patch
+anyway.
 
-regards
-Philipp
+--=20
+balbi
+
+--WBsA/oQW3eTA3LlM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTDNwjAAoJEIaOsuA1yqREuGAQAKBkyEx6jFVrLcOhRM4hXm8T
+b+U5pwsRr9HSqnMUaY8EaYEd9rKgAkKnOo/GL7e67LW0tMSXfM9YB32KRhv/4KXC
+ErMym6C6c4qZavFao1vfreRstTglKQ4P3WaQ2Y+exIJAjT36qfajVcQSmyz9dIvo
+eAJ4s/DXNuRUt+y4rTUdeXzbP9ewa0CgDEPeGJB2yHIz22jWC0FII7vz8keHwNWK
+0sGNuFXjHCh8lDLBslezA/eTWZ9m0nnN0Vtc1SYPjjh0QIgZusExKNcidi1dNDaP
+QF3PtWOKznKOf4LRhkeHQgA7YDYoclnROAUF2BOuVYGsFn2dZN9ssOJ1yG5KjK8T
+VW1tvc+F3Yutg6ONK1CBmylEZQV8gc9mCehu9jiwwPIMpSCd1CPJMPtBzjcRQLSB
+5iSFMgkjTMq9lJuergPLHw3hJm+etnuSNbCI+NpS9F2LMgbZACzqm82WO7AZzyeY
+r9CymnB/Yv6IFXmfthboGb/Gw+dF4cmZxhr7vdM8RoBnbIJMzanBI4oOne/XvHgG
+Ndyi/lASAjtviheXWENbkj9ESkmRUTT14Z0okEEEudkRftQVw9nwnJOXrN9PF3Sj
+gD3OMahMAhCy/JgaGxTBpx2vgoa6G+QIKMbTm5XZx9YzSu1tZDho/Sc7WjaEH0IY
+5iyLrtF/RvQKQ3zyR7b5
+=B+XK
+-----END PGP SIGNATURE-----
+
+--WBsA/oQW3eTA3LlM--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
