@@ -1,56 +1,52 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [RFC PATCH v4 4/8] staging: imx-drm: Document imx-hdmi device
-	tree bindings
-Date: Tue, 25 Feb 2014 14:32:03 -0300
-Message-ID: <CAOMZO5BpBi0nuejHQfV2DyBZmnbvBK+aZL+5oPhzBibNiX_Taw@mail.gmail.com>
-References: <1393338203-25051-1-git-send-email-p.zabel@pengutronix.de>
-	<1393338203-25051-5-git-send-email-p.zabel@pengutronix.de>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 2/4] net: rfkill: gpio: remove gpio names
+Date: Tue, 25 Feb 2014 10:35:22 -0700
+Message-ID: <530CD45A.8050803@wwwdotorg.org>
+References: <1392900697-27577-1-git-send-email-heikki.krogerus@linux.intel.com>	<1392900697-27577-3-git-send-email-heikki.krogerus@linux.intel.com>	<53062F97.3050407@wwwdotorg.org>	<CAGb2v66-tDZhrm9dnXe+PdQTaLZbw20sw3uYzLor2eXpVWmPMA@mail.gmail.com>	<5306E599.7020605@wwwdotorg.org> <CACRpkdZBvKU31EDX=6=wVLXaQDAqD6VHtaE_mGnFLr1UYQAH9g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1393338203-25051-5-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces@lists.freedesktop.org
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devel@driverdev.osuosl.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, Sascha Hauer <kernel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZBvKU31EDX=6=wVLXaQDAqD6VHtaE_mGnFLr1UYQAH9g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Johannes Berg <johannes@sipsolutions.net>, "David S. Miller" <davem@davemloft.net>, Rhyland Klein <rklein@nvidia.com>, linux-wireless <linux-wireless@vger.kernel.org>, netdev <netdev@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mark Gross <mark.gross@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 25, 2014 at 11:23 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> +Required properties:
-> + - #address-cells : should be <1>
-> + - #size-cells : should be <0>
-> + - compatible : should be "fsl,imx6q-hdmi" or "fsl,imx6dl-hdmi".
-> + - gpr : should be <&gpr>.
-> +   The phandle points to the iomuxc-gpr region containing the HDMI
-> +   multiplexer control register.
-> + - clocks, clock-names : phandles to the HDMI iahb and isrf clocks, as described
-> +   in Documentation/devicetree/bindings/clock/clock-bindings.txt and
-> +   Documentation/devicetree/bindings/clock/imx6q-clock.txt.
-> + - port@[0-4]: Up to four port nodes with endpoint definitions as defined in
-> +   Documentation/devicetree/bindings/media/video-interfaces.txt,
-> +   corresponding to the four inputs to the HDMI multiplexer.
-> +
-> +example:
-> +
-> +       gpr: iomuxc-gpr@020e0000 {
-> +               /* ... */
-> +       };
-> +
-> +        hdmi: hdmi@0120000 {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +                reg = <0x00120000 0x9000>;
-> +                interrupts = <0 115 0x04>;
-> +                gpr = <&gpr>;
-> +                clocks = <&clks 123>, <&clks 124>;
-> +                clock-names = "iahb", "isfr";
+On 02/25/2014 02:13 AM, Linus Walleij wrote:
+> On Fri, Feb 21, 2014 at 6:35 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>> On 02/20/2014 06:55 PM, Chen-Yu Tsai wrote:
+> 
+>>> That's correct. However using con_id to pass this results in different
+>>> behavior across DT and ACPI. A better way is to export the labeling
+>>> function so consumers can set meaningful labels themselves.
+...
+> As in tegra30-beaver.dts...
+> 
+>     sdhci@78000000 {
+>             status = "okay";
+>             cd-gpios = <&gpio TEGRA_GPIO(I, 5) GPIO_ACTIVE_LOW>;
+>             wp-gpios = <&gpio TEGRA_GPIO(T, 3) GPIO_ACTIVE_HIGH>;
+>             power-gpios = <&gpio TEGRA_GPIO(D, 7) GPIO_ACTIVE_HIGH>;
+>             bus-width = <4>;
+>     };
+> 
+> Instead of passing the GPIOs as index 0,1,2 they are named
+> and I do admit this has a nice "things are under control" aspect
+> to it.
+> 
+> In the ACPI case the con_id is not used for anything.
+> 
+> So it is basically there to satisfy the habit in some device
+> tree bindings to name gpio arrays instead of just passing gpios = <...>;
+> (The latter should be encouraged going forward.)
 
-The 'compatible' property is missing in the example.
+Do you really want to switch from named GPIO lookups to index-based GPIO
+lookups? Index-based lookups make it much harder to extend the DT
+binding in a backwards-compatible fashion, especially in the face of
+optional GPIOs (of which all of CD, WP, power are).
+
+If we switch to a single gpios property, I'd assert we should still do
+named-based lookups using a parallel gpio-names property, just like most
+(all?) other resource types now support. If we do that, we'll still need
+the name parameter.
