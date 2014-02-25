@@ -1,81 +1,66 @@
-From: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
-Subject: Re: [PATCH 1/5] clk: sun6i: Protect CPU clock
-Date: Mon, 24 Feb 2014 20:38:44 -0300
-Message-ID: <530BD804.5090806@elopez.com.ar>
-References: <1393258967-4843-1-git-send-email-maxime.ripard@free-electrons.com> <1393258967-4843-2-git-send-email-maxime.ripard@free-electrons.com> <20140224163034.GN21483@n2100.arm.linux.org.uk>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: cs42888: Add codec driver support
+Date: Tue, 25 Feb 2014 09:00:27 +0900
+Message-ID: <20140225000027.GI25940@sirena.org.uk>
+References: <1393224929-7555-1-git-send-email-Guangyu.Chen@freescale.com>
+ <20140224113011.GE25940@sirena.org.uk>
+ <B745DBDD-8A64-4B98-819B-72F8AFF602DE@cirrus.com>
+ <20140224160648.GC6132@MrMyself>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBD73XIMS3EHBBHFQV6MAKGQE5MF4WGA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140224163034.GN21483-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="PcnNQAcZvbjJh8WA"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140224160648.GC6132@MrMyself>
+Sender: linux-doc-owner@vger.kernel.org
+To: Nicolin Chen <Guangyu.Chen@freescale.com>
+Cc: "Austin, Brian" <Brian.Austin@cirrus.com>, "Handrigan, Paul" <Paul.Handrigan@cirrus.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, Liam Girdwood <lgirdwood@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Russell,
 
-El 24/02/14 13:30, Russell King - ARM Linux escribi=F3:
-> On Mon, Feb 24, 2014 at 05:22:43PM +0100, Maxime Ripard wrote:
->> Right now, AHB is an indirect child clock of the CPU clock. If that happ=
-ens to
->> change, since the CPU clock has no other consumers declared in Linux, it=
- would
->> be shut down, which is not really a good idea.
->>
->> Prevent this by forcing it enabled.
->>
->> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> ---
->>   drivers/clk/sunxi/clk-sunxi.c | 8 ++++++++
->>   1 file changed, 8 insertions(+)
->>
->> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi=
-.c
->> index 23baad9..cedaf4b 100644
->> --- a/drivers/clk/sunxi/clk-sunxi.c
->> +++ b/drivers/clk/sunxi/clk-sunxi.c
->> @@ -1301,6 +1301,14 @@ static void __init sunxi_clock_protect(void)
->>   		clk_prepare_enable(clk);
->>   		clk_put(clk);
->>   	}
->> +
->> +	/* CPU clocks - sun6i */
->> +	clk =3D clk_get(NULL, "cpu");
->> +	if (!IS_ERR(clk)) {
->> +		clk_prepare_enable(clk);
->> +		clk_put(clk);
->> +	}
->
-> This is broken.  I'm not sure what's difficult to grasp about the concept
-> of "while a clock is in use, you should keep a reference to that clock".
->
-> That implies that if you get a clock, and then enable it, you don't
-> put the clock until you've disabled it.
+--PcnNQAcZvbjJh8WA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Why is this so? Can't a clock be left enabled while nobody has a=20
-reference to it? I have looked around in Documentation/ (rather quickly=20
-I must say) and have not found any explicit mention that it is required=20
-to keep a reference to the clock while it's enabled. I'd appreciate it=20
-if you could explain this a bit more verbosely or point me to the=20
-relevant documents.
+On Tue, Feb 25, 2014 at 12:06:49AM +0800, Nicolin Chen wrote:
+> On Mon, Feb 24, 2014 at 03:52:24PM +0000, Austin, Brian wrote:
 
-For what it's worth, I've seen this same pattern on=20
-enable/disable_clock() on drivers/base/power/clock_ops.c as well.
+> Wait...Regarding this clock part, I just forgot the reason I put the code:
 
-Cheers,
+> 385         cs42888->clk = devm_clk_get(&i2c->dev, "mclk");
+> 386         if (IS_ERR(cs42888->clk))
+> 387                 dev_warn(&i2c->dev, "failed to get the clock: %ld\n",
+> 388                                 PTR_ERR(cs42888->clk));
 
-Emilio
+> was because the MCLK might be provided from SoC (DAI master) so it could
+> be totally controlled by CPU DAI driver, ESAI for example has its own
+> dividers to derive the HCKT clock (MCLK for Tx) from ahb clock in SoC
+> clock tree, in which case we might not easily pass a valid clock phandle
+> via DT. (RFC to this thought.)
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/groups/opt_out.
+We should be getting those clocks visible in the clock API rather than
+doing this.
+
+--PcnNQAcZvbjJh8WA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTC90YAAoJELSic+t+oim9+tUQAJmsfJ5U9ZMR3D4G7qxQi6gy
+Q295xlQdHlWD9HzZlPqccF7xf6P1aDeSv1xBZ/Oczq/5e35w+PqZP4rOqofXqXi/
+EwfX2DLkkd6nOsCn9lOrGAwb3wRxp9rAb0FaGnbkg7bYeghN+9ssCsmICc+o3l8Y
+2f5h+h07T0rB/GPI65QdfU7yC/ojKGsGvHePi7xWnpxxchnkK9IENeGKpmYZlpU0
+lNcBrrI7ATyWOGcSvWJtmE4sRfGAkYCKXAQ9tJ+YeCbMIEZ+MovEosZ3pOMF92N2
+T62LxqVRud5YbskDdkZw7dPNsQ2lifD+P9jDFViBxciUXW0B3bYFh+EOFMXfppMA
+qanev9R7u39UkjUaIxBxPnoGC0bxui04a12GEZXc/9nIuKJ33PxTjtnIWzSDlZg6
+h5+c1LDvRfcL42HFNB7jMXJcgcf3q7Aw71oVQ9pc60txxbBP6cKxvQGXkbQlI/eC
+F8eDaBzfH0+wQU+fJZH9XZ70mB3zo6M3oTOW8c7wGwp5lILO5HwwBh+PO0DfSphP
+22CEMVE8LRjcJ3SZqmuUt+zQPnwtTHoqX/v9sjzemS5ZmRBTz+HXCwlOsiW5sk3T
+UbDCCsxLGEJ86F3sZ6HLdS/+BC5aGu9hKvZw1bboDZcqq9zGfY/5ovlaHc7pA+3a
+ykEEdEKQPlyCNBBrrwjh
+=VY5i
+-----END PGP SIGNATURE-----
+
+--PcnNQAcZvbjJh8WA--
