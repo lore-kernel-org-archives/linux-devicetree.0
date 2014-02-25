@@ -1,88 +1,35 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [Patch v7 2/2] dmaengine: add Qualcomm BAM dma driver
-Date: Mon, 24 Feb 2014 23:00:53 -0600
-Message-ID: <20140225050053.GA15411@saruman.home>
-References: <1393283500-18599-1-git-send-email-agross@codeaurora.org>
- <1393283500-18599-3-git-send-email-agross@codeaurora.org>
- <20140225000913.GA10801@saruman.home>
- <20140225030459.GN25940@sirena.org.uk>
-Reply-To: balbi@ti.com
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH V8 1/2] PHY: Exynos: Add Exynos5250 SATA PHY driver
+Date: Tue, 25 Feb 2014 05:25:31 +0000 (GMT)
+Message-ID: <10341096.99771393305930937.JavaMail.weblogic@epml25>
+Reply-To: jg1.han@samsung.com
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3489877910867520300=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140225030459.GN25940@sirena.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Andy Gross <agross@codeaurora.org>, dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=euc-kr
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+MIME-version: 1.0
+Sender: linux-kernel-owner@vger.kernel.org
+To: kishon@ti.com, yuvaraj.cd@samsung.com
+Cc: kgene.kim@samsung.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, swarren@wwwdotorg.org, mark.rutland@arm.com, yuvaraj.cd@gmail.com, ks.giri@samsung.com, vasanth.a@samsung.com, Jingoo Han <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---===============3489877910867520300==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="J2SCkAp4GZ/dPZZf"
-Content-Disposition: inline
-
---J2SCkAp4GZ/dPZZf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Feb 25, 2014 at 12:05:00PM +0900, Mark Brown wrote:
-> On Mon, Feb 24, 2014 at 06:09:13PM -0600, Felipe Balbi wrote:
->=20
-> > > +	depends on ARCH_QCOM || (COMPILE_TEST && OF && ARM)
->=20
-> > do you really want to make it depend on ARM even when COMPILE_TEST=3Dy ?
->=20
-> writel_relaxed() is unfortunately not generally available so it'd fail
-> to build on platforms like x86.
-
-bummer
-
---=20
-balbi
-
---J2SCkAp4GZ/dPZZf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTDCOFAAoJEIaOsuA1yqRErRYP/j3hbkX09e6dLlK2Gw08v8Fg
-I0NdDr+beRSC40bauUAYH9EEOQ9vMDXMpM6rZm0ZWTcG/gpaQFbKPN3R53Q/ptFC
-BLZ6DH1t92jqkFuue24l4LRRAC/NGzr9CsXBcIdYYV48pnSQiS5RUC6Ke8M+loB0
-O1cxa+Mi4YxO8XZB+lnngKCcxr9cLhl1ovH2ji1N6klLbIl36WGM4w5l9pGeuGOf
-uyK0BHkQ8M50sKfeOwgSzPK9Zf51VPNW3eB9/xeb//P4dsQW56YwoHCuFr2C99tX
-k+Tf7FIwGr3DUNOz5JmorW3Uft4nmJrwes1bf6COYVuovyZb4IiQpzppquWra6yS
-1NAqg9FxyK/8WbqcJiNmcXq6TkEpBwvmchEeZvtTskPxnssdbrscPuQLGraE64A+
-jk5il4cU+RNZgZ8ecaweVkGVZbopWK7uKPvCzhXBlf13Kbcp+iI/Az619EDudMlo
-idmHFtDV1ITgexPUjFgIHALhkdzKhijBXeVEJWQao+bGOSs8exNq24ksAIemZpDF
-bhk1WBqHPMHvVFWBZXLSFQ1sJJskW6LDYMKjDM7+DbqSpIx1iOi57ZygUhfSspj0
-fITJe5WFOWyZ4YmfxU9KtGWgMPx3PGen/iaZm+Eze+mwQfBW/e+Zo7LeBAmHVdLA
-WIpHemjcMgw3yYKVDKUU
-=G9vX
------END PGP SIGNATURE-----
-
---J2SCkAp4GZ/dPZZf--
-
-
---===============3489877910867520300==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============3489877910867520300==--
+T24gTW9uLCAyNCBGZWIgMjAxNCAxOToyNjo0NCwgS2lzaG9uIFZpamF5IEFicmFoYW0gSSB3cm90
+ZTogDQo+IE9uIE1vbmRheSAyNCBGZWJydWFyeSAyMDE0IDA3OjAyIFBNLCBZdXZhcmFqIEt1bWFy
+IEMgRCB3cm90ZToNCj4gPiBUaGlzIHBhdGNoIGFkZHMgdGhlIFNBVEEgUEhZIGRyaXZlciBmb3Ig
+RXh5bm9zNTI1MC5FeHlub3M1MjUwIFNBVEENCj4gPiBQSFkgY29tcHJpc2VzIG9mIENNVSBhbmQg
+VFJTViBibG9ja3Mgd2hpY2ggYXJlIG9mIEkyQyByZWdpc3RlciBNYXAuDQo+ID4gU28gdGhpcyBw
+YXRjaCBhbHNvIGFkZHMgYSBpMmMgY2xpZW50IGRyaXZlciwgd2hpY2ggaXMgdXNlZCBjb25maWd1
+cmUNCj4gDQo+IFdlIG5vIGxvbmdlciBoYXZlIGkyYyBjbGllbnQgZHJpdmVyIGhlcmUuDQoNClJp
+Z2h0Lg0KDQo+ID4gdGhlIENNVSBhbmQgVFJTViBibG9jayBvZiBleHlub3M1MjUwIFNBVEEgUEhZ
+Lg0KPiA+IA0KPiA+IFRoaXMgcGF0Y2ggaW5jb3Jwb3JhdGVzIHRoZSBnZW5lcmljIFBIWSBmcmFt
+ZXdvcmsgdG8gZGVhbCB3aXRoIFNBVEENCj4gPiBQSFkuDQo+IA0KPiBJdCBzaG91bGQgYmUgcmVw
+aHJhc2VkIHRvIGhhdmUgKnVzZXMqIGdlbmVyaWMgUEhZIGZyYW1ld29yay4gSG93ZXZlciBJIGZl
+ZWwgd2UNCj4gY2FuIGRvIGF3YXkgd2l0aCB0aGlzIGxpbmUuDQoNClJpZ2h0LCAiaW5jb3Jwb3Jh
+dGVzIiBpcyBjb25mdXNpbmcuDQoNCj4gPiANCj4gPiBUaGlzIHBhdGNoIGRlcGVuZHMgb24gdGhl
+IGJlbG93IHBhdGNoIGZvciB0aGUgc2F0YSBmdW5jdGlvbmFsaXR5DQo+ID4gCVsxXS5hdGE6IGFo
+Y2lfcGxhdGZvcm06IE1hbmFnZSBTQVRBIFBIWQ0KPiA+IAkJYnkgUm9nZXIgUXVhZHJvcyA8cm9n
+ZXJxQHh4eHh4eD4NCj4gDQo+IGhhc24ndCB0aGlzIHBhdGNoIG1lcmdlZCB5ZXQ/DQoNCkN1cnJl
+bnRseSwgdGhpcyBwYXRjaCB3YXMgcXVldWVkIGludG8gbGliYXRhIHRyZWUsIGZvci1uZXh0LiBb
+MV0NCg0KWzFdIGh0dHA6Ly9naXQua2VybmVsLm9yZy9jZ2l0L2xpbnV4L2tlcm5lbC9naXQvdGov
+bGliYXRhLmdpdC9jb21taXQvP2g9Zm9yLW5leHQmaWQ9MjFiNWZhZWVjMjI5ZDRmNzBhN2Y2MGE3
+YjBiMDY1Yzk4MTk4ZjQ5MQ0KDQpCZXN0IHJlZ2FyZHMsDQpKaW5nb28gSGFu
