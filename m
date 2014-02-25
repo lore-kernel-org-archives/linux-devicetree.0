@@ -1,69 +1,52 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v2 09/11] ARM: shmobile: lager dts: Add MSIOF nodes
-Date: Tue, 25 Feb 2014 11:30:17 +0100
-Message-ID: <1393324219-3317-10-git-send-email-geert@linux-m68k.org>
-References: <1393324219-3317-1-git-send-email-geert@linux-m68k.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393324219-3317-1-git-send-email-geert@linux-m68k.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, devicetree@vger.kernel.org
+Subject: [PATCH v3 3/3] ARM: shmobile: bockw reference dts: Add SPI FLASH
+Date: Tue, 25 Feb 2014 11:37:21 +0100
+Message-ID: <1393324641-3690-2-git-send-email-geert@linux-m68k.org>
+References: <1393324641-3690-1-git-send-email-geert@linux-m68k.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1393324641-3690-1-git-send-email-geert@linux-m68k.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
 
-Add pinctrl and SPI device for MSIOF on Lager.
-On this board, only MSIOF1 is in use. Its bus contains a single device
-(a Renesas R2A11302FT PMIC), for which no bindings are defined yet.
+Add Spansion s25fl008k SPI FLASH and MTD partition, based on bockw legacy
+board code.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
-Cc: devicetree@vger.kernel.org
+Tested-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 ---
-v2:
+v3:
   - No changes
 
- arch/arm/boot/dts/r8a7790-lager.dts |   22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ arch/arm/boot/dts/r8a7778-bockw-reference.dts |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
-index 86dbdc10fe9c..cdec1af99be1 100644
---- a/arch/arm/boot/dts/r8a7790-lager.dts
-+++ b/arch/arm/boot/dts/r8a7790-lager.dts
-@@ -159,6 +159,12 @@
- 		renesas,groups = "qspi_ctrl", "qspi_data4";
- 		renesas,function = "qspi";
- 	};
-+
-+	msiof1_pins: spi2 {
-+		renesas,groups = "msiof1_clk", "msiof1_sync", "msiof1_rx",
-+				 "msiof1_tx";
-+		renesas,function = "msiof1";
-+	};
- };
- 
- &ether {
-@@ -221,6 +227,22 @@
- 	};
- };
- 
-+&msiof1 {
-+	pinctrl-0 = <&msiof1_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+
-+	pmic: pmic@0 {
-+		compatible = "renesas,r2a11302ft";
-+		reg = <0>;
-+		spi-max-frequency = <6000000>;
-+		spi-cpol;
-+		spi-cpha;
-+	};
-+
-+};
-+
- &sdhi0 {
- 	pinctrl-0 = <&sdhi0_pins>;
+diff --git a/arch/arm/boot/dts/r8a7778-bockw-reference.dts b/arch/arm/boot/dts/r8a7778-bockw-reference.dts
+index 06cda19dac6a..f76f6ec01e19 100644
+--- a/arch/arm/boot/dts/r8a7778-bockw-reference.dts
++++ b/arch/arm/boot/dts/r8a7778-bockw-reference.dts
+@@ -109,4 +109,18 @@
+ 	pinctrl-0 = <&hspi0_pins>;
  	pinctrl-names = "default";
+ 	status = "okay";
++
++	flash: flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "spansion,s25fl008k";
++		reg = <0>;
++		spi-max-frequency = <104000000>;
++		m25p,fast-read;
++
++		partition@0 {
++			label = "data(spi)";
++			reg = <0x00000000 0x00100000>;
++		};
++	};
+ };
 -- 
 1.7.9.5
+
