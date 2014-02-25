@@ -1,57 +1,88 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: u300: switch SSP/SPI clock name to "SSPCLK"
-Date: Tue, 25 Feb 2014 13:46:15 +0900
-Message-ID: <20140225044615.GZ25940@sirena.org.uk>
-References: <1393246638-16236-1-git-send-email-linus.walleij@linaro.org>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [Patch v7 2/2] dmaengine: add Qualcomm BAM dma driver
+Date: Mon, 24 Feb 2014 23:00:53 -0600
+Message-ID: <20140225050053.GA15411@saruman.home>
+References: <1393283500-18599-1-git-send-email-agross@codeaurora.org>
+ <1393283500-18599-3-git-send-email-agross@codeaurora.org>
+ <20140225000913.GA10801@saruman.home>
+ <20140225030459.GN25940@sirena.org.uk>
+Reply-To: balbi@ti.com
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="b1v6sQlvMa/Wgwt0"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1393246638-16236-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============3489877910867520300=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140225030459.GN25940@sirena.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Andy Gross <agross@codeaurora.org>, dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---b1v6sQlvMa/Wgwt0
-Content-Type: text/plain; charset=us-ascii
+--===============3489877910867520300==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="J2SCkAp4GZ/dPZZf"
 Content-Disposition: inline
 
-On Mon, Feb 24, 2014 at 01:57:18PM +0100, Linus Walleij wrote:
-> As noted in recent discussions the name of the core clock for
-> the PL022 derived SPI blocks is erroneously named in the
-> U300 device tree. The kernel doesn't currently use the name,
-> but may do so soon so let use rename all these clocks in
-> accordance with the name given in the PL022 TRM (ARM DDI 0194G).
+--J2SCkAp4GZ/dPZZf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Tue, Feb 25, 2014 at 12:05:00PM +0900, Mark Brown wrote:
+> On Mon, Feb 24, 2014 at 06:09:13PM -0600, Felipe Balbi wrote:
+>=20
+> > > +	depends on ARCH_QCOM || (COMPILE_TEST && OF && ARM)
+>=20
+> > do you really want to make it depend on ARM even when COMPILE_TEST=3Dy ?
+>=20
+> writel_relaxed() is unfortunately not generally available so it'd fail
+> to build on platforms like x86.
 
---b1v6sQlvMa/Wgwt0
+bummer
+
+--=20
+balbi
+
+--J2SCkAp4GZ/dPZZf
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Version: GnuPG v1
 
-iQIcBAEBAgAGBQJTDCAUAAoJELSic+t+oim9PsEP/iB5UFTIpbwT+kkA6Xu0MiM6
-lw6RElC4DrOAkVyc09tAMSBb47Dd2qvYJwz5ZxnntKikcOS9ib2tBrMXRaCzGi/+
-Y6o12NZeyvZmR/dHcpbQ1tvzV089gpMC1lUelMi2HAK8l1p50FCra7taz83S3Qc3
-c2JLRp1Wmg4SUSZgyst3G90mjL7aHVndiW5pvpqKPkeEWxZvz6+4vo7om5B/DwJ4
-pZAGF4fZmSEVwbA3z0IqodlFDuc+dU/P30bAltgK6CGONis1duVeUdgeOsqtHmze
-lzu5iMPc9k+0vuLtEf23T7H0YqszW/NLkhAQTpZe+zo1Imags3lNVVtJOgiZkB2l
-SC1vfcqCStbQHk8RUBZoMDXUAjgch0iFCWvE/ddOabxu5D5PrT6ZzFZ9IuxtXX6B
-dqzgyu0obr7O4fWxp0qrI+QU6pO29LcpPrfSJdzhPhlGzZR7T1VRuTC4NkmMQwrS
-APNa3YU/IWymYcbvawG1PG20+d8i646raJN0u0lxTAaLxu+vTIuVydOBIlPmC1Al
-4j95EJ3CELENpZk/awKRw+jgIYg1gQg7v2S6WDxqJfYi/kxjXR49jTXgyujxYi+z
-9yjuS+ynzt9RPQketIWrLXd4+7LG5Q/W1eagfOSoiqEDmhN/shdf4qSTeB59kDvF
-mT5XnQmYyf1MDVFLKhT5
-=7gpg
+iQIcBAEBAgAGBQJTDCOFAAoJEIaOsuA1yqRErRYP/j3hbkX09e6dLlK2Gw08v8Fg
+I0NdDr+beRSC40bauUAYH9EEOQ9vMDXMpM6rZm0ZWTcG/gpaQFbKPN3R53Q/ptFC
+BLZ6DH1t92jqkFuue24l4LRRAC/NGzr9CsXBcIdYYV48pnSQiS5RUC6Ke8M+loB0
+O1cxa+Mi4YxO8XZB+lnngKCcxr9cLhl1ovH2ji1N6klLbIl36WGM4w5l9pGeuGOf
+uyK0BHkQ8M50sKfeOwgSzPK9Zf51VPNW3eB9/xeb//P4dsQW56YwoHCuFr2C99tX
+k+Tf7FIwGr3DUNOz5JmorW3Uft4nmJrwes1bf6COYVuovyZb4IiQpzppquWra6yS
+1NAqg9FxyK/8WbqcJiNmcXq6TkEpBwvmchEeZvtTskPxnssdbrscPuQLGraE64A+
+jk5il4cU+RNZgZ8ecaweVkGVZbopWK7uKPvCzhXBlf13Kbcp+iI/Az619EDudMlo
+idmHFtDV1ITgexPUjFgIHALhkdzKhijBXeVEJWQao+bGOSs8exNq24ksAIemZpDF
+bhk1WBqHPMHvVFWBZXLSFQ1sJJskW6LDYMKjDM7+DbqSpIx1iOi57ZygUhfSspj0
+fITJe5WFOWyZ4YmfxU9KtGWgMPx3PGen/iaZm+Eze+mwQfBW/e+Zo7LeBAmHVdLA
+WIpHemjcMgw3yYKVDKUU
+=G9vX
 -----END PGP SIGNATURE-----
 
---b1v6sQlvMa/Wgwt0--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--J2SCkAp4GZ/dPZZf--
+
+
+--===============3489877910867520300==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============3489877910867520300==--
