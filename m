@@ -1,62 +1,76 @@
-From: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] ARM: tegra: add device tree for SHIELD
-Date: Tue, 25 Feb 2014 10:52:52 +0100
-Message-ID: <530C67F4.7010208@broadcom.com>
-References: <1393237593-28121-1-git-send-email-acourbot@nvidia.com> <530B952D.2000006@wwwdotorg.org> <530BFC58.6020003@nvidia.com>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: Re: [PATCH v5 04/10] V4L: Add driver for s5k6a3 image sensor
+Date: Tue, 25 Feb 2014 11:55:15 +0200
+Message-ID: <20140225095515.GV4869@tarshish>
+References: <1393263322-28215-1-git-send-email-s.nawrocki@samsung.com>
+ <1393263322-28215-5-git-send-email-s.nawrocki@samsung.com>
+ <20140224193838.GL4869@tarshish>
+ <530C6692.6090307@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <530BFC58.6020003-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <530C6692.6090307@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, linux-samsung-soc@vger.kernel.org, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/25/2014 03:13 AM, Alexandre Courbot wrote:
->>
->>> +    /* Wifi */
->>> +    sdhci@78000000 {
->>> +        status = "okay";
->>> +        bus-width = <4>;
->>> +        broken-cd;
->>> +        keep-power-in-suspend;
->>> +        cap-sdio-irq;
->>
->> Is non-removable better than broken-cd, or are they entirely unrelated?
+Hi Sylwester,
+
+On Tue, Feb 25, 2014 at 10:46:58AM +0100, Sylwester Nawrocki wrote:
+> On 24/02/14 20:38, Baruch Siach wrote:
+> > On Mon, Feb 24, 2014 at 06:35:16PM +0100, Sylwester Nawrocki wrote:
+> >> > This patch adds subdev driver for Samsung S5K6A3 raw image sensor.
+> >> > As it is intended at the moment to be used only with the Exynos
+> >> > FIMC-IS (camera ISP) subsystem it is pretty minimal subdev driver.
+> >> > It doesn't do any I2C communication since the sensor is controlled
+> >> > by the ISP and its own firmware.
+> >> > This driver, if needed, can be updated in future into a regular
+> >> > subdev driver where the main CPU communicates with the sensor
+> >> > directly.
+> >> > 
+> >> > Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> >> > Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> >
+> > [...]
+> > 
+> >> > +static int s5k6a3_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
+> >> > +{
+> >> > +	struct v4l2_mbus_framefmt *format = v4l2_subdev_get_try_format(fh, 0);
+> >> > +
+> >> > +	*format		= s5k6a3_formats[0];
+> >> > +	format->width	= S5K6A3_DEFAULT_WIDTH;
+> >> > +	format->height	= S5K6A3_DEFAULT_HEIGHT;
+> >> > +
+> >> > +	return 0;
+> >> > +}
+> >> > +
+> >> > +static const struct v4l2_subdev_internal_ops s5k6a3_sd_internal_ops = {
+> >> > +	.open = s5k6a3_open,
+> >> > +};
+> >
+> > Where is this used?
 > 
-> They are unrelated actually. With non-removable the driver expects the
-> device to always be there since boot, and does not check for the card to
-> be removed/added after boot. broken-cd indicates there is no CD line and
-> the device should be polled regularly.
+> This will be called when user process opens the corresponding /dev/v4l-subdev*
+> device node. More details on the v4l2 sub-device interface can be found at [1],
+> [2]. The device node is created by an aggregate media device driver, once all
+> required sub-devices are registered to it.
+> The above v4l2_subdev_internal_ops::open() implementation is pretty simple,
+> it just sets V4L2_SUBDEV_FORMAT_TRY format to some initial default value.
+> That's a per file handle value, so each process opening a set of sub-devices
+> can try pipeline configuration independently. 
 > 
-> For the Wifi chip, non-removable would be the correct setting
-> hardware-wise, but there is a trap: the chip has its reset line asserted
-> at boot-time, and you need to set GPIO 229 to de-assert it. Only after
-> that will the device be detected on the SDIO bus. Since it lacks a CD
-> line, it must be polled, hence the broken-cd property.
-> 
-> This also raises another, redundant problem with DT bindings: AFAIK we
-> currently have no way to let the system know the device will only appear
-> after a given GPIO is set. It would also be nice to be able to give some
-> parameters to the Wifi driver through the DT (like the OOB interrupt).
-> Right now the Wifi chip is brought up by exporting the GPIO and writing
-> to it from user-space, and the OOB interrupt is not used.
+> [1] http://linuxtv.org/downloads/v4l-dvb-apis/subdev.html
+> [2] http://linuxtv.org/downloads/v4l-dvb-apis/vidioc-subdev-g-fmt.html
 
-Hi Alexandre,
+Thanks for the explanation. However, I've found no reference to the 
+s5k6a3_sd_internal_ops struct in the driver code. There surly has to be at 
+least one reference for the upper layer to access these ops.
 
-I recently posted a proposal for brcmfmac DT binding [1]. I did receive
-some comments, but it would be great if you (and/or others involved) had
-a look at it as well and give me some feedback. DT work still needs to
-grow on me.
+baruch
 
-> Otherwise, Wifi works great with the brcmfmac driver and NVRAM file
-> extracted from Android.
-
-With in-band interrupts, indeed. The HOST_WAKE signal is the OOB
-interrupt which would need to be provided in the device-tree.
-
-Regards,
-Arend
-
-[1] http://mid.gmane.org/1392059868-8782-1-git-send-email-arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
