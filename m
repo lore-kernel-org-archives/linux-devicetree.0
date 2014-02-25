@@ -1,66 +1,88 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [Patch v7 2/2] dmaengine: add Qualcomm BAM dma driver
-Date: Mon, 24 Feb 2014 18:09:13 -0600
-Message-ID: <20140225000913.GA10801@saruman.home>
-References: <1393283500-18599-1-git-send-email-agross@codeaurora.org>
- <1393283500-18599-3-git-send-email-agross@codeaurora.org>
-Reply-To: <balbi@ti.com>
+From: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+Subject: Re: [PATCH 1/5] clk: sun6i: Protect CPU clock
+Date: Mon, 24 Feb 2014 21:30:05 -0300
+Message-ID: <530BE40D.8080506@elopez.com.ar>
+References: <1393258967-4843-1-git-send-email-maxime.ripard@free-electrons.com> <1393258967-4843-2-git-send-email-maxime.ripard@free-electrons.com> <20140224163034.GN21483@n2100.arm.linux.org.uk> <530BD804.5090806@elopez.com.ar> <20140225000154.GR21483@n2100.arm.linux.org.uk>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="wac7ysb48OaltWcw"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1393283500-18599-3-git-send-email-agross@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <agross@codeaurora.org>
-Cc: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBD73XIMS3EHBBHGIV6MAKGQETRZUA6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140225000154.GR21483-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rjw-KKrjLPT3xs0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---wac7ysb48OaltWcw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Russell,
 
-Hi,
+El 24/02/14 21:01, Russell King - ARM Linux escribi=F3:
+> Hi Emilio.
+>
+> On Mon, Feb 24, 2014 at 08:38:44PM -0300, Emilio L=F3pez wrote:
+>> Why is this so? Can't a clock be left enabled while nobody has a
+>> reference to it? I have looked around in Documentation/ (rather quickly
+>> I must say) and have not found any explicit mention that it is required
+>> to keep a reference to the clock while it's enabled. I'd appreciate it
+>> if you could explain this a bit more verbosely or point me to the
+>> relevant documents.
+>
+> First up, if you have a requirement that a clock be enabled, then is it
+> not unreasonable to ensure that the clock is referenced?
 
-On Mon, Feb 24, 2014 at 05:11:40PM -0600, Andy Gross wrote:
-> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> index 605b016..f87cef9 100644
-> --- a/drivers/dma/Kconfig
-> +++ b/drivers/dma/Kconfig
-> @@ -401,4 +401,13 @@ config DMATEST
->  config DMA_ENGINE_RAID
->  	bool
-> =20
-> +config QCOM_BAM_DMA
-> +	tristate "QCOM BAM DMA support"
-> +	depends on ARCH_QCOM || (COMPILE_TEST && OF && ARM)
+I was under the impression that the reference count was orthogonal to=20
+the clock status, but after getting that clarified, I can see your point.
 
-do you really want to make it depend on ARM even when COMPILE_TEST=3Dy ?
+> Secondly, what if we have code which scans the clocks in the system,
+> shutting down those leaf clocks which appear to be unreferenced?
+
+Indeed, that would break things.
+
+> Thirdly, the API (as I designed it) says so:
+>
+> /**
+>   * clk_put      - "free" the clock source
+>   * @clk: clock source
+>   *
+>   * Note: drivers must ensure that all clk_enable calls made on this
+>   * clock source are balanced by clk_disable calls prior to calling
+>   * this function.
+>   *
+>   * clk_put should not be called from within interrupt context.
+>   */
+> void clk_put(struct clk *clk);
+>
+> which has been there since the API was first created - it's part of the
+> contract between drivers using the API and implementers creating somethin=
+g
+> which conforms to the API - which today means CCF.
+
+That's enough of a reason on its own :) I should have checked clk.h
+
+> The intention here is that while there are any users holding a clk_get()
+> reference on a clock, the clock is assumed to be required for some
+> device, and the struct clk may not be kfree'd, nor may its state be
+> changed in an unpredictable way to those drivers holding a reference
+> to it.
+
+I understand now, thanks for the insight. I'll talk with Maxime and get=20
+this sorted out.
+
+As a side note, should drivers/base/power/clock_ops.c be fixed too? I=20
+have added Rafael to Cc.
+
+Cheers,
+
+Emilio
 
 --=20
-balbi
-
---wac7ysb48OaltWcw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTC98pAAoJEIaOsuA1yqREKWoP/1ndytYVrZlrSXoXdWRDlkeU
-Z/43bjqoun/P7iqXgyB/4eB1pYXTxJBEMzGqgHVuD9Z/2mM2wMWe+1pzFxAhAa2R
-HIrHEsteuufXRlQ9dKfM9OuvVfa3OZy8LIQXdO3g7G7VZyqqyn5xiF5F/bEcNeK/
-FmN0/pJf8nVWbqJI9Iv5WinQlQSAxcpGjboO3sET0zEXYezf7oRhOunwtV6CgZMU
-dCdJLK+l2cZ/pV1RKv2ak92Np9I91klmM4p16y9uo/bapXWGFQeL9TNTAAfj0bjD
-Vv17/qiSgOSXDfDV05FWoEzyOGWsAm5+yYU0kha4sZScysgRRck1g9tjmtpp+bxu
-nqSy3xgvbzxOG+GV5GQfRy42q9IZ3IxWGu1JpqoYWwTQU2zBmlgEMPOLGQKseWUz
-NuuZXNUEakLWM1c24+j8HsSlHaklQ/z1NisgFHVT+OK1t003xQJk3bBzPzNuUoi/
-598pggN1/Oz9pyZf2D2zcTLrMuvFOtiH8BhKaJdIvCmVx0TCzPo1GTXI5pHyIJJf
-eIdzSdGOdaweZKiZXbyIQrof87hGfvUvsqds248PNN6MpNNt/teomih68nrH2Z9f
-E2wmslozAlZAfRIIYJByI+7uK4ymheRb/JeGTVPSCNA9Y/jFQT26AryXuZ/Zo0xq
-UbdK4kIktjLwZQvLpTvx
-=0Hc7
------END PGP SIGNATURE-----
-
---wac7ysb48OaltWcw--
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/groups/opt_out.
