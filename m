@@ -1,53 +1,64 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: SPDX-License-Identifier
-Date: Tue, 25 Feb 2014 13:25:07 +0100
-Message-ID: <CAMuHMdUk8Bk17GwjzNEmGvjAsxGgZ89+zHyhKhR20PrQLbhJ4g@mail.gmail.com>
-References: <20140221161246.GM31902@saruman.home>
-	<53077C5F.9000407@monstr.eu>
-	<20140221162045.GN31902@saruman.home>
-	<20140221165633.GA5465@kroah.com>
-	<53078C30.7060703@monstr.eu>
-	<20140221175720.GA21660@kroah.com>
-	<20140221190125.GL31047@thunk.org>
-	<530B1B25.5090601@monstr.eu>
-	<20140224134150.GB25357@thunk.org>
-	<530B512D.8090308@monstr.eu>
-	<20140224142652.GA7469@kroah.com>
-	<20140225121034.6149e01f@alan.etchedpixels.co.uk>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 2/2] ARM: dts: duovero-parlor: Add HDMI output
+Date: Tue, 25 Feb 2014 12:39:21 +0000
+Message-ID: <20140225123921.GY27282@n2100.arm.linux.org.uk>
+References: <1393261669-32039-1-git-send-email-florian.vaussard@epfl.ch> <1393261669-32039-3-git-send-email-florian.vaussard@epfl.ch> <20140224180336.GU27282@n2100.arm.linux.org.uk> <CABxcv=kKxidVJWcMrueB+edW=g_6gcucvi6=7p=EZ_WooCpbMA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140225121034.6149e01f@alan.etchedpixels.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michal Simek <monstr@monstr.eu>, Theodore Ts'o <tytso@mit.edu>, Felipe Balbi <balbi@ti.com>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>, USB list <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Wolfgang Denk <wd@denx.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CABxcv=kKxidVJWcMrueB+edW=g_6gcucvi6=7p=EZ_WooCpbMA@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Florian Vaussard <florian.vaussard@epfl.ch>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Ash Charles <ash@gumstix.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 25, 2014 at 1:10 PM, One Thousand Gnomes
-<gnomes@lxorguk.ukuu.org.uk> wrote:
-> On Mon, 24 Feb 2014 06:26:52 -0800
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
->
->> On Mon, Feb 24, 2014 at 03:03:25PM +0100, Michal Simek wrote:
->> >
->> > BTW: Isn't this a good topic for kernel-summit? :-)
->>
->> No, lawyers don't go to the summit, developers do.
->
-> More of a topic for the LF. Particularly as any attempt to touch license
-> statements in existing drivers would end up needing the corporate lawyer
-> of every rights holder on the planet for the file in question to be
-> consulted, which is not I suspect going to happen!
+On Mon, Feb 24, 2014 at 05:22:27PM -0300, Javier Martinez Canillas wrote:
+> Hi Russell,
+> 
+> On Mon, Feb 24, 2014 at 3:03 PM, Russell King - ARM Linux
+> <linux@arm.linux.org.uk> wrote:
+> > On Mon, Feb 24, 2014 at 06:07:49PM +0100, Florian Vaussard wrote:
+> >> +     hdmi0: connector@0 {
+> >> +             compatible = "hdmi-connector";
+> >
+> > This looks way to generic a compatible string.  Are you sure it's
+> > correct?
+> >
+> 
+> That compatible string is correct according to the latest series
+> posted by Tomi Valkeinen to add DT bindings for the OMAP Display
+> SubSystem (DSS) [0].
 
-That's gonna be a BIG Linux Lawyer Summit ;-)
+in which case:
 
-Gr{oetje,eeting}s,
+N    N   AA     CCCC  K  K
+NN   N  A  A   C    C K K
+N N  N A    A C       KK
+N  N N AAAAAA C       KK
+N   NN A    A  C    C K K
+N    N A    A   CCCC  K  K
 
-                        Geert
+Yes, that's a very big nack.  Two things:
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+1. OMAP really doesn't have the right to define a compatible string which
+   is as generic as "hdmi-connector".
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2. Even with "omapdss," before it, the convention that DT people have adopted
+   is for the prefix to be "companyname," and not a subsystem.
+
+I'm not the only one with this concern - I discussed it with Arnd last
+night and his comments were about it being "obviously bogus".
+
+> The property is added on this patch [1] and as far as I understood the
+> idea is that it could be a generic DT binding that can be used by
+> platform specific HDMI connectors like the omap dss HDMI connector [2].
+
+Why do the physical connectors need a DT binding?  Surely what needs the
+DT binding is the HDMI encoder - and that certainly should no way be a
+generic name, because there's no such thing as a generic HDMI encoder
+chip.
+
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
