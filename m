@@ -1,85 +1,74 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCHv1 1/6] HSI: add Device Tree support for HSI clients
-Date: Mon, 24 Feb 2014 18:47:37 -0600
-Message-ID: <CAL_JsqJ5eHLSztBgjvi1TAEVeM6dfwnLwm4ygLnD+H0xrNXMfA@mail.gmail.com>
-References: <1393199401-27197-1-git-send-email-sre@debian.org>
-	<1393199401-27197-2-git-send-email-sre@debian.org>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 1/1] ARM: Exynos: Add generic compatible string
+Date: Tue, 25 Feb 2014 01:52:15 +0100
+Message-ID: <530BE93F.2070904@gmail.com>
+References: <1392809645-631-1-git-send-email-sachin.kamat@linaro.org>	<CAK9yfHyWG1ac6isTRSB3VWfxER9cSuDJHwY3b7svyEk9EozpWQ@mail.gmail.com>	<53075239.4010603@samsung.com>	<2200834.G3JJLYQl5i@wuerfel>	<53076F00.7000001@samsung.com>	<53077160.5030202@samsung.com> <CAK9yfHxiHkrf1xmSFbfoKqFFSCU6w4QqwPnQNdv1m1PGtrwsLQ@mail.gmail.com> <530BE557.20106@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393199401-27197-2-git-send-email-sre@debian.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: Sebastian Reichel <sre@ring0.de>, Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, =?ISO-8859-1?Q?Pali_Roh=E1r?= <pali.rohar@gmail.com>, =?windows-1251?B?yOLg6evuIMTo7Ojy8O7i?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <530BE557.20106@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>
+Cc: Tomasz Figa <t.figa@samsung.com>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 23, 2014 at 5:49 PM, Sebastian Reichel <sre@debian.org> wrote:
-> Add new method hsi_add_clients_from_dt, which can be used
-> to initialize HSI clients from a device tree node.
+On 25.02.2014 01:35, Kukjin Kim wrote:
+> On 02/24/14 21:03, Sachin Kamat wrote:
+>> On 21 February 2014 21:01, Tomasz Figa<t.figa@samsung.com>  wrote:
+>>> On 21.02.2014 16:21, Tomasz Figa wrote:
+>>>>
+>>>> On 21.02.2014 15:48, Arnd Bergmann wrote:
+>>>>>
+>>>>> On Friday 21 February 2014 14:18:49 Tomasz Figa wrote:
+>>>>>>
+>>>>>>
+>>>>>>> Now that we have a broader agreement on this, I think we can go
+>>>>>>> ahead with the
+>>>>>>> following steps as an initial approach:
+>>>>>>> 1. Have a common machine file for both exynos4 and 5 files,
+>>>>>>> mach-exynos-dt.c.
+>>>>>>> 2. Introduce a generic compatible string "samsung,exynos".
 >
-> The patch also documents the DT binding for trivial HSI
-> clients.
+> Well, I think, we need to consider to use compatible string
+> "samsung,exynos" again because "exynos" name can be used on ARMv8 as
+> well and I don't want to say that generic/common something is always
+> good. So IMHO still using exynos4 and exynos5 would be better.
+
+You can create a new compatible string (e.g. "samsung,exynos-armv8") for 
+ARMv8 Exynos if support for one in mainline shows up and/or simply use 
+another name for ARMv7 Exynos (e.g. "samsung,exynos-armv7").
+
+>>>>>>> 3. Append this to the compatible property list for existing boards.
+>>>>>>>
+>>>>>>> If this plan looks OK, I can send across patches doing this.
+>>>>>>>
+>>>>>>
+>>>>>> Looks good. I would also merge common.c with this resulting
+>>>>>> mach-exynos-dt.c, as it would be the only user of the code there.
+>>>>>
+>>>>>
+>>>>> Sounds good. While the naming is not important, I would just call the
+>>>>> file 'exynos.c', in line with some of the other platforms we have.
+>>>>> Both the 'mach-' and the '-dt' part of the file name are redundant.
+>>>>>
+>>>>> Alternatively, you could merge it all into common.c.
+>>>>
+>>>>
+>>>> exynos.c sounds good to me.
+>>>
 >
-> Signed-off-by: Sebastian Reichel <sre@debian.org>
-> ---
->  .../devicetree/bindings/hsi/trivial-devices.txt    | 36 +++++++++++
->  drivers/hsi/hsi.c                                  | 70 +++++++++++++++++++++-
->  include/dt-bindings/hsi/hsi.h                      | 17 ++++++
->  include/linux/hsi/hsi.h                            |  2 +
->  4 files changed, 124 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/hsi/trivial-devices.txt
->  create mode 100644 include/dt-bindings/hsi/hsi.h
->
-> diff --git a/Documentation/devicetree/bindings/hsi/trivial-devices.txt b/Documentation/devicetree/bindings/hsi/trivial-devices.txt
-> new file mode 100644
-> index 0000000..1ace14a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hsi/trivial-devices.txt
-> @@ -0,0 +1,36 @@
-> +This is a list of trivial hsi client devices that have simple
-> +device tree bindings, consisting only of a compatible field
-> +and the optional hsi configuration.
-> +
-> +If a device needs more specific bindings, such as properties to
-> +describe some aspect of it, there needs to be a specific binding
-> +document for it just like any other devices.
-> +
-> +Optional HSI configuration properties:
-> +
-> +- hsi,mode             Bit transmission mode (STREAM or FRAME)
+> Well, let me see common.c and mach-exynos.c, one is for SoC specific
+> stuff and the other is for Board specific so I think, keeping current
+> file would be good, we can change the file name mach-exynos.c or
+> board-exynos.c though.
 
-hsi is not a vendor prefix, so all these properties should be hsi-*.
+There is no board specific stuff in mach-exynos/ with DT, so there is no 
+need to keep those file separate, especially when stuff from common.c is 
+constantly being (re)moved.
 
-> +                       The first value is used for RX and the second one for
-> +                       TX configuration. If only one value is provided it will
-> +                       be used for RX and TX.
-> +                       The assignments may be found in header file
-> +                       <dt-bindings/hsi/hsi.h>.
-> +- hsi,channels         Number of channels to use [1..16]
-> +                       The first value is used for RX and the second one for
-> +                       TX configuration. If only one value is provided it will
-> +                       be used for RX and TX.
-> +- hsi,speed            Max bit transmission speed (Kbit/s)
+Also I'd rather stick to what other platforms use, which would be 
+exynos.c (like tegra.c), as Arnd proposed.
 
-Include the units in the prop name: hsi-speed-kbps
-
-> +                       The first value is used for RX and the second one for
-> +                       TX configuration. If only one value is provided it will
-> +                       be used for RX and TX.
-> +- hsi,flow             RX flow type (SYNCHRONIZED or PIPELINE)
-> +                       The assignments may be found in header file
-> +                       <dt-bindings/hsi/hsi.h>.
-> +- hsi,arb_mode         Arbitration mode for TX frame (Round robin, priority)
-> +                       The assignments may be found in header file
-> +                       <dt-bindings/hsi/hsi.h>.
-> +
-> +This is the list of trivial client devices:
-> +
-> +Compatible             Description
-> +==========             =============
-> +hsi-char               HSI character device
-
-
-I've gotten this far and still have no idea what HSI is.
-
-Rob
+Best regards,
+Tomasz
