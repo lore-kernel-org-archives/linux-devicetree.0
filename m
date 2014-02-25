@@ -1,55 +1,60 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [Patch v7 2/2] dmaengine: add Qualcomm BAM dma driver
-Date: Tue, 25 Feb 2014 12:05:00 +0900
-Message-ID: <20140225030459.GN25940@sirena.org.uk>
-References: <1393283500-18599-1-git-send-email-agross@codeaurora.org>
- <1393283500-18599-3-git-send-email-agross@codeaurora.org>
- <20140225000913.GA10801@saruman.home>
+Subject: Re: [PATCH] ASoC: cs42888: Add codec driver support
+Date: Tue, 25 Feb 2014 12:09:47 +0900
+Message-ID: <20140225030947.GO25940@sirena.org.uk>
+References: <1393224929-7555-1-git-send-email-Guangyu.Chen@freescale.com>
+ <20140224113011.GE25940@sirena.org.uk>
+ <B745DBDD-8A64-4B98-819B-72F8AFF602DE@cirrus.com>
+ <20140224160648.GC6132@MrMyself>
+ <20140225000027.GI25940@sirena.org.uk>
+ <20140225023840.GB7229@MrMyself>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="t6FrQAmG0gROuB4j"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="BvHHjgBzqS6ETPrS"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140225000913.GA10801@saruman.home>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Andy Gross <agross@codeaurora.org>, devicetree@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20140225023840.GB7229@MrMyself>
+Sender: linux-doc-owner@vger.kernel.org
+To: Nicolin Chen <Guangyu.Chen@freescale.com>
+Cc: "Austin, Brian" <Brian.Austin@cirrus.com>, "Handrigan, Paul" <Paul.Handrigan@cirrus.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, Liam Girdwood <lgirdwood@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
 List-Id: devicetree@vger.kernel.org
 
 
---t6FrQAmG0gROuB4j
+--BvHHjgBzqS6ETPrS
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Feb 24, 2014 at 06:09:13PM -0600, Felipe Balbi wrote:
+On Tue, Feb 25, 2014 at 10:38:41AM +0800, Nicolin Chen wrote:
 
-> > +	depends on ARCH_QCOM || (COMPILE_TEST && OF && ARM)
+> Hmm...my words might not be so clear last time: we have to handle the dividers
+> of ESAI in ESAI driver because the dividers is in the ESAI's IP, not in the SoC
+> clock controlling unit. So it's hard to get them visible in the clock tree.
 
-> do you really want to make it depend on ARM even when COMPILE_TEST=y ?
+We should be able to arrange to have the ESAI be a clock provider
+shouldn't we?  If the clocks need to interface to other things (and they
+do) then we should be able to use the standard interface we have to
+clocks.
 
-writel_relaxed() is unfortunately not generally available so it'd fail
-to build on platforms like x86.
-
---t6FrQAmG0gROuB4j
+--BvHHjgBzqS6ETPrS
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTDAhYAAoJELSic+t+oim9EXoP/0pAn6uqABX99rRXfhcQBd42
-HTm3E2GiYSmHJS6Gz5NgdYIG/ieM/dhv36Enw6lVEzU97nFgRkRYt3juTUe/ZbXD
-QVyFYySGedfWMdfExPHCeA5aO5JKvpzbIUHJoWrUoti4Rrpm5gZoIhiBuPZbXTX7
-Txk5Xyi5Vo5K3E9qwVYitQg5BupNX9uc+UuCy+joDDJl9SLIGrG2NrcDT7GlzP8E
-xKJAwM9U03E6DHu2aTp2w/ySOXOgY21A7ZDfT1kdrlLewpulPA3/AoNnDzkH+Osm
-PU8bTwikRaRL7uUVFPoWKbSQYIFcu0HkhDkL7Ht1bw6BLX3YJiNyGx/ZgqkgcNEu
-lkSwkFcpQYIiVLiwfMPgRlejIPao/GgV0S1eL6aEpGEYJSHGIBjUaivCfuJmFh8L
-+RoK9zX2FgOEx3FunhZdkOmmad3hG2+FYsKuVlSy77H2PdSX3iv+ZC5oYFKEsWqM
-nwWppsVt8HGwG/tSTa9ZzFhDPWjuH0hgS8tCFDUs1YQCsn6NaTRl8C88qPFWFeSJ
-UTtMIutkyN6XigmsBzHbzGc7Bv8MQwtqUcEmg1HV9cVkaQI76D/WDkiibqElgSKE
-3w0Bp85wpX7z8GPwme9TZpCGqAnxhcaw8LO9nyKIm1YWa2dO1+evE7Niaih8MdYs
-Wr5wBU6DdsyzFd2SYSCW
-=s909
+iQIcBAEBAgAGBQJTDAl4AAoJELSic+t+oim9GP8P/imLCGxvTsElxeKwyG2MnRVl
+8HvcyXUwrDBUrHU16QGBiGeVVQkr6JdNIHR1W4AGy7ZB0WzXrYY9V2wXx9A7zuLx
+qGw4bS1hoDldaVQNcIeoa7OEUDiq0nm+D784fGjWLo5IQGJUUkH3NpQzzCFDIVem
+CUTnqUuZmJ45uI9bBR91okGScso+cN0/lUzJE33tAHRYj7a+WKT9IHsri8+nttJd
++1ruSmfDBxXS3PkiRg9fPt1kX+7M4bt3bVM3zsp4HHokOWYmdkqfJKVRbVXJYmhs
+hZoxR7CXhO2IKFKUI5cBO5uH4ctZT8gihwxJWzBi0dayUiFjSUdveSRdw6uJ+ioG
+IHbauLHERnQC3XxdBV/bzRIbXMC7bJsjrgW9yMBMAjFbWe9l3I1+Tm5VQF1fVVta
+HZACr7moMDUAgBmumdg+rt/cRlugzEBy/yykIsTxWCAY/1qV0Kw6aP2YKk1gOfCM
+cZW+SoZr3tn5xjSikPwpnvXaxp1ONh249pwcmuscd7MXPmTxm7h3lRcpeekqIhOe
+BbxQDble+SkYT6ACky/lJGwc9IUaeK15jorgw6RdQ004c2xzcs9qRSpoYHsgENYi
+mtEyVOCdOfCsu7F9mVeFYNQVy19lJlMIpHfh0LwEGNqjzBUXFN1LojmInlsrhrMZ
+2Yl1fsi/4ti1AoMR9LJm
+=3ZVy
 -----END PGP SIGNATURE-----
 
---t6FrQAmG0gROuB4j--
+--BvHHjgBzqS6ETPrS--
