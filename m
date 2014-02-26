@@ -1,74 +1,190 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 5/6] pwm: enable TI PWMSS if the IIO tiecap driver is
- selected
-Date: Wed, 26 Feb 2014 15:15:10 +0100
-Message-ID: <20140226141508.GF29779@ulmo.nvidia.com>
-References: <1391626901-31684-1-git-send-email-mporter@linaro.org>
- <1391626901-31684-6-git-send-email-mporter@linaro.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [RFC PATCH] [media]: of: move graph helpers from
+ drivers/media/v4l2-core to drivers/of
+Date: Wed, 26 Feb 2014 15:48:49 +0100
+Message-ID: <1393426129.3248.64.camel@paszta.hi.pengutronix.de>
+References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de>
+	 < CAL_Jsq+U9zU1i+STLHMBjY5BeEP6djYnJVE5X1ix-D2q_zWztQ@mail.gmail.com>
+	 < 20140217181451.7EB7FC4044D@trevor.secretlab.ca>
+	 <20140218070624.GP17250@ pengutronix.de>
+	 <20140218162627.32BA4C40517@trevor.secretlab.ca>
+	 < 1393263389.3091.82.camel@pizza.hi.pengutronix.de>
+	 <20140226110114.CF2C7C40A89@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="nYySOmuH/HDX6pKp"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1391626901-31684-6-git-send-email-mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linux IIO List <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PWM List <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140226110114.CF2C7C40A89@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Grant,
 
---nYySOmuH/HDX6pKp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+thank you for the comments.
 
-On Wed, Feb 05, 2014 at 02:01:40PM -0500, Matt Porter wrote:
-> The IIO TI ECAP driver depends on the TI PWMSS management
-> driver in this subsystem. Enable PWMSS when the IIO TI ECAP
-> driver is selected.
+Am Mittwoch, den 26.02.2014, 11:01 +0000 schrieb Grant Likely:
+> On Mon, 24 Feb 2014 18:36:29 +0100, Philipp Zabel <p.zabel@pengutroni=
+x.de> wrote:
+> > Am Dienstag, den 18.02.2014, 16:26 +0000 schrieb Grant Likely:
+> > > >=20
+> > > > You can find it under Documentation/devicetree/bindings/media/v=
+ideo-interfaces.txt
+> > >=20
+> > > Okay, I think I'm okay with moving the helpers, but I will make o=
+ne
+> > > requirement. I would like to have a short binding document descri=
+bing
+> > > the pattern being used. The document above talks a lot about vide=
+o
+> > > specific issues, but the helpers appear to be specifically about =
+the
+> > > tree walking properties of the API.
+> >=20
+> > Reusing the non-video-secific parts of video-interfaces.txt, how ab=
+out
+> > the following:
 >=20
-> Signed-off-by: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/pwm/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> This is good, but I have some comments. This document describes itsel=
+f
+> as the common way for doing a device graph within the device tree, bu=
+t
+> there is already a well established pattern for device graphs that is
+> used by the interrupts-extended, clocks and other bindings. Those are
+> all domain-specific bindings, but the core concept is one device uses
+> a resource provided by another device. The resource references constr=
+uct
+> a graph independent from the natural FDT node graph. (ie. the interru=
+pts
+> binding forms the interrupt graph. Same for the clock binding).
 >=20
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 22f2f28..bd3cc65 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -219,7 +219,7 @@ config  PWM_TIEHRPWM
-> =20
->  config  PWM_TIPWMSS
->  	bool
-> -	default y if SOC_AM33XX && (PWM_TIECAP || PWM_TIEHRPWM)
-> +	default y if SOC_AM33XX && (IIO_TIECAP || PWM_TIECAP || PWM_TIEHRPWM)
->  	help
->  	  PWM Subsystem driver support for AM33xx SOC.
+> So, while this binding does describe a pattern for separate device
+> graphs, it is by no means the only common way of doing so.
+>=20
+> I would like the document to acknowledge the difference from the
+> phandle+args pattern used elsewhere and a description of when it woul=
+d
+> be appropriate to use this instead of a simpler binding.
 
-Perhaps this module should move out of drivers/pwm if it's no longer a
-PWM specific module.
+Alright. The main point of this binding is that the devices may have
+multiple distinct ports that each can be connected to other devices.
+So, contrary to the other graph bindings, devices are not simple nodes
+in a directed graph. For example a single capture device with two
+separate inputs connected to camera sensors:
 
-Thierry
+	,--------.
+	| cam [port]-.   ,-----------------.
+	`--------=C2=B4    `-[port@0] capture   |
+	,---------.   ,-[port@1] interface |
+	| cam [port]-=C2=B4   `-----------------=C2=B4
+	`---------=C2=B4
 
---nYySOmuH/HDX6pKp
-Content-Type: application/pgp-signature
+Or two separate display controllers with two parallel outputs each, a
+4-port multiplexer, and an encoder (e.g. lvds):
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+	,------------------.
+	| display    [port@0]--.   ,-------------.
+	| controller [port@1]-. `-[port@0]       |
+	`------------------=C2=B4   `--[port@1]  mux  |
+	,------------------.   ,--[port@2]       |    ,-------------.
+	| display    [port@0]-=C2=B4 ,-[port@3] [port@4]--[port] encoder |
+	| controller [port@1]--=C2=B4   `-------------=C2=B4    `-------------=
+=C2=B4
+	`------------------=C2=B4
 
-iQIcBAEBAgAGBQJTDfbsAAoJEN0jrNd/PrOhECAP/j2I0zpD7fFA5CK5JNLz4ZdF
-Fxp0JEtEAPHhw/36hcUiillkwbnl3bmPGEsFLjIOmyL22LvMkmiOGsAgkQjcPvcJ
-6cNwu/cn56t4L4k+jQAa0oSCqMIyQTASCUC13b+L/1tGUwBvoXnStarLcBQuWrTX
-fcNs8PCHXqe59+/xL81eIgFMxJuWJ8XvuDWW8jrL9ffg9RH6s5VqZcu5u0WhISlf
-jw+VJurPAZskB553Ve6QFMLAsf5xvfmu4R4Tm7U2vlDxzdYLbEQWCRf87HVipKQr
-3MC3Rm9W2vAFKFFJFwx5oz1WnsCkH7BYt0MyfSn3Tt8WP6TXgS7dZRa85zt42E4P
-4XdUaVTFJ3/ikuFQdVUlD3Hlp4fWZX1TxTBPHF7fiwUxSdkO+PtwYgdmAJvIjEIt
-gFzhX+6de9xBAbj6ei/1VWx9CUPUaKC00GpB9UwuwjYiWAuzuSmc9yIke515Vg8f
-fvtv+b9fgpeU3j5UZ2pXyZKsk2ONZfGQjavEZw99/rM/v+BKXs3PpiGKkOJex+s6
-Cgn0KbhGtvQwKWj55lKLW52G6QHpJlmSE/UCQrcI0sVenrQZt/5nld4JuTKMmKrY
-kSKE9dzozmTLVVHmufj2vojfIWLMXdwl7wGr+mOfxs/wb41Z7gDV1+uZZgpXZ/sT
-Wivk3DjAFknD5cmFYupo
-=gNT3
------END PGP SIGNATURE-----
+Optionally, the same with the multiplexer integrated into the
+encoder device:
 
---nYySOmuH/HDX6pKp--
+	,------------------.
+	| display    [port@0]--.   ,----------------.
+	| controller [port@1]-. `-[port@0]          |
+	`------------------=C2=B4   `--[port@1] encoder  |
+	,------------------.   ,--[port@2] with mux |
+	| display    [port@0]-=C2=B4 ,-[port@3]          |
+	| controller [port@1]--=C2=B4   `----------------=C2=B4
+	`------------------=C2=B4
+
+Or display controller, encoder, and panel:
+
+ ,--------.    ,---------.
+ | dc [port]--[port@0]   |
+ `--------=C2=B4    | encoder |    ,-----------.
+               |   [port@1]--[port] panel |
+               `---------=C2=B4    `-----------=C2=B4=20
+
+> > "Common bindings for device graphs"
+> >=20
+> > General concept
+> > ---------------
+> >=20
+> > The hierarchical organisation of the device tree is well suited to =
+describe
+> > control flow to devices, but data flow between devices that work to=
+gether to
+> > form a logical compound device can follow arbitrarily complex graph=
+s.
+>=20
+> I would argue that this pattern isn't necessarily restricted to data
+> flow descriptions. It wants to describe linkage between devices that =
+are
+> sufficiently complex that the simple binding doesn't do the job.
+
+Ok. In principle it would be possible to use the same scheme for other
+connections than data links.
+
+> > The device tree graph bindings allow to describe data bus connectio=
+ns between
+> > individual devices, that can't be inferred from device tree parent-=
+child
+> > relationships. The common bindings do not contain any information a=
+bout the
+> > direction or type of data flow, they just map connections. Specific=
+ properties
+> > of the connections can be set depending on the type of connection. =
+To see
+> > how this binding applies to video pipelines, see for example
+> > Documentation/device-tree/bindings/media/video-interfaces.txt.
+>=20
+> Even if you don't want to declare the direction of data flow, there d=
+oes
+> need to be some guidance as to how the binding is constructed. Does
+> device A point to device B? Or the other way around? Why would someon=
+e
+> choose one over the other? I don't want to see a situation where A & =
+B
+> point to each other. Things get complex if the graph is allowed to be
+> cyclical.
+
+According to video-interfaces.txt, it is expected that endpoints contai=
+n
+phandles pointing to the remote endpoint on both sides. I'd like to
+leave this up to the more specialized bindings, but I can see that this
+makes enumerating the connections starting from each device tree node
+easier, for example at probe time.
+If the back links are not provided in the device tree, a device at the
+receiving end of a remote-endpoint phandle can only know about connecte=
+d
+remote ports after the kernel parsed the whole graph and created the
+back links itself.
+
+> > Each endpoint can contain a 'remote-endpoint' phandle property that=
+ points to
+> > the corresponding endpoint in the port of the remote device. Two 'e=
+ndpoint'
+> > nodes are linked with each other through their 'remote-endpoint' ph=
+andles.
+>=20
+> I really don't like this aspect. It is far too easy to get wrong.
+
+On the other hand it is really easy to test for and warn about missing
+or misdirected backlinks.
+
+>  Graphs should be one direction only.
+
+But this is not what the current binding in video-interfaces.txt
+describes. I don't think it is a good idea to explicitly forbid
+backlinks in this binding.
+
+regards
+Philipp
