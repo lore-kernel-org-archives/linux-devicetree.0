@@ -1,71 +1,39 @@
-From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv1 1/2] rx51_battery: convert to iio consumer
-Date: Wed, 26 Feb 2014 22:54:52 +0100
-Message-ID: <20140226215452.GA11468@earth.universe>
-References: <1393375569-21751-1-git-send-email-sre@debian.org>
- <1393375569-21751-2-git-send-email-sre@debian.org>
- <CAAfyv37B=xn3AktnUxPDpuey+5S73vW0PJnuUZtorP4rajPKiw@mail.gmail.com>
+From: "Mark A. Greer" <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+Subject: Re: [PATCH 3/3] NFC: trf7970a: Add DTS Documentation
+Date: Wed, 26 Feb 2014 14:54:14 -0700
+Message-ID: <20140226215414.GC21867@animalcreek.com>
+References: <1391206631-9862-1-git-send-email-mgreer@animalcreek.com>
+ <1391206631-9862-4-git-send-email-mgreer@animalcreek.com>
+ <20140221010407.GU18868@zurbaran>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAAfyv37B=xn3AktnUxPDpuey+5S73vW0PJnuUZtorP4rajPKiw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20140221010407.GU18868@zurbaran>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Lauro Ramos Venancio <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Aloisio Almeida Jr <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Erick Macias <emacias-l0cyMroinI0@public.gmane.org>, Thierry Escande <thierry.escande-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Feb 21, 2014 at 02:04:07AM +0100, Samuel Ortiz wrote:
+> Hi Mark,
+> 
+> On Fri, Jan 31, 2014 at 03:17:11PM -0700, Mark A. Greer wrote:
+> > Describe the properies used by the trf7970a
+> > RFID/NFC/15693 transceiver driver.
+> > 
+> > Signed-off-by: Mark A. Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/net/nfc/trf7970a.txt       | 37 ++++++++++++++++++++++
+> >  1 file changed, 37 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+> Not a DT expert, but this looks good to me.
+> Could you please amend this patch by adding
+> Documentation/devicetree/bindings/net/nfc/ to the MAINTAINERS NFC
+> section ?
 
---oyUTqETQ0mS9luUI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi,
-
-On Wed, Feb 26, 2014 at 10:43:40PM +0100, Belisko Marek wrote:
-> [...]
-> > +       int val, err;
-> > +       err = iio_read_channel_average_raw(channel, &val);
-> Where this function comes from? I cannot find it in current linux-next
-> (only iio_read_channel_raw()). Am I missing some patches? Thx.
-
-Ah right. I planned to send a patch adding this function together
-with the rx51-battery patchset, but it seems I forgot to include it.
-
-Sorry for the inconvenience. I will send it out as a separate patch
-now.
-
-> BTW when I convert to iio consumer and use DT some of values work
-> but some of them just report 0 :( (I don't have latest twl4030-madc
-> iio patches).
-
-Can you retry with the twl4030-madc iio patch from today? The
-older patchsets, which do not contain the "tested on real hw"
-note are slightly broken.
-
--- Sebastian
-
---oyUTqETQ0mS9luUI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJTDmKsAAoJENju1/PIO/qauEUP/AwF+4r9Wk3+oFDongD2CCT+
-MPEIn3zhRnksdrOP5X/3pIAjFOFxcmZC3gi4mAkUCZ6G5asEDXwS4LwtdSgZTvuF
-W/zpOyFYPY7W0zVqU0jt2xCnpKzSbYfwGY7vSM4SE/2NHl0KYcPC56mUNuHX6r/K
-+7+4usAC7Nt5lFjLfwjkZfU5GsPBN69cOEg63M1eR8aC7pBIKxa0Qk1ww7lLz81m
-rPjWBOK8Adk60BOMZVBYoUD1kb0WT2Ow+CPzeJuxWGXdltrurrwoAU9R8Y47ukoH
-JrNv1hpSitBD5bldKygbwwsZpo+QyEX0LwyR8f2s3Zf6XJP1GYc/gfJAYiebm0UH
-K8YR6tH89IMBf5btTXuZvZdCQbcMJwSSUbZ0HZS0tzn345mtbwQsrztk1yl3b7Pu
-pVipWYXk6CzM9oCyYJeqtDIuJ6J5xcG6Dfmz6rUcL4PttnOeXwwt3IJXEtel+Y69
-rcPiqINWx2RNBfyKfbLzb+hfd/O8QCepA6goZ0FJ2pyXGVbH6+7qyr4FYXaIojU4
-kJOdJziTa9HZsblptH6PIp0Ql+qaEdpctl/VLetkQnlRlL8DXdDojZicd0SD9wW9
-mS1PkGR1iGd/uCoMpV2vKE91rQBl8L0EVWx5ci7ih8ikOV3E7LCWLOBzdik7EO0Y
-zqg+W6U86wqTQZPp+3MK
-=HVjH
------END PGP SIGNATURE-----
-
---oyUTqETQ0mS9luUI--
+Sure.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
