@@ -1,135 +1,91 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] Documentation: of: Document graph bindings
-Date: Wed, 26 Feb 2014 16:50:52 +0200
-Message-ID: <530DFF4C.8080807@ti.com>
-References: <1393340304-19005-1-git-send-email-p.zabel@pengutronix.de>	 <1393340304-19005-4-git-send-email-p.zabel@pengutronix.de>	 <530DE8A9.9050809@ti.com> <1393426623.3248.70.camel@paszta.hi.pengutronix.de>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 00/10] pinctrl: mvebu: remove hard-coded addresses from
+ Dove pinctrl
+Date: Wed, 26 Feb 2014 09:53:45 -0500
+Message-ID: <20140226145345.GG1872@titan.lakedaemon.net>
+References: <1393231382-11078-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <20140224181023.GA1010@titan.lakedaemon.net>
+ <CACRpkdZ+YGTyDj6i8c198MdRtz3GY-YBmVO9LysPCcmT4EC0cg@mail.gmail.com>
+ <20140226000940.GF1872@titan.lakedaemon.net>
+ <CACRpkdYQa2BG_qxf5zY=7rks6O31ZF-BX0af3_u1MOgwfwxFSQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="tEHsptXr4FFpWcoGvwDA40KVVAmjgkgcU"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393426623.3248.70.camel-+qGW7pzALmz7o/J7KWpOmN53zsg1cpMQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYQa2BG_qxf5zY=7rks6O31ZF-BX0af3_u1MOgwfwxFSQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---tEHsptXr4FFpWcoGvwDA40KVVAmjgkgcU
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Wed, Feb 26, 2014 at 10:43:45AM +0100, Linus Walleij wrote:
+> On Wed, Feb 26, 2014 at 1:09 AM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+> 
+> > Sebastian has now re-organized the branches as I asked, and I confirmed
+> > that the final result is the exact same as mine (diff is null).
+> 
+> Okay!
+> 
+> > Usually when I submit pull requests to arm-soc, they like to see the
+> > branches.  That way if there is an error in one of them, they just drop
+> > the one branch and the others remain.
+> >
+> > Would you like them the same way?  If so, I'll send the pulls to you
+> > tomorrow.
+> 
+> Send me one big branch with everything on it.
 
-On 26/02/14 16:57, Philipp Zabel wrote:
-> Hi Tomi,
->=20
-> Am Mittwoch, den 26.02.2014, 15:14 +0200 schrieb Tomi Valkeinen:
->> On 25/02/14 16:58, Philipp Zabel wrote:
->>
->>> +Optional endpoint properties
->>> +----------------------------
->>> +
->>> +- remote-endpoint: phandle to an 'endpoint' subnode of a remote devi=
-ce node.
->>
->> Why is that optional? What use is an endpoint, if it's not connected t=
-o
->> something?
->=20
-> This allows to include the an empty endpoint template in a SoC dtsi for=
+Sure.
 
-> the convenience of board dts writers. Also, the same property is
-> currently listed as optional in video-interfaces.txt.
->=20
->   soc.dtsi:
-> 	display-controller {
-> 		port {
-> 			disp0: endpoint { };
-> 		};
-> 	};
->=20
->   board.dts:
-> 	#include "soc.dtsi"
-> 	&disp0 {
-> 		remote-endpoint =3D <&panel_input>;
-> 	};
-> 	panel {
-> 		port {
-> 			panel_in: endpoint {
-> 				remote-endpoint =3D <&disp0>;
-> 			};
-> 		};
-> 	};
->=20
-> Any board not using that port can just leave the endpoint disconnected.=
+> Actually, I'd prefer to pull it in, rebase and sign off each patch
+> individually in my tree if that is not causing you problems.
 
+Actually, that would mess us up pretty badly. :(  One of the reasons we
+take the effort to base off of -rc1 and create stable topic branches is
+so that the commit IDs don't change.  This way, all the patches needed
+to boot the new mvebu SoCs (code intended for v3.15) can be boot tested
+from the mvebu/for-next branch, which is merge-tested and randconfig
+tested in linux-next.  This all happens _before_ the merge window for
+v3.15.
 
-Hmm I see. I'm against that.
+There have been huge benefits since we started doing this.  In fact,
+just yesterday I committed three patches to fix issues discovered as a
+result of this process:
 
-I think the SoC dtsi should not contain endpoint node, or even port node
-(at least usually). It doesn't know how many endpoints, if any, a
-particular board has. That part should be up to the board dts.
+  edd9d3cffc90 watchdog: orion_wdt: Use %pa to print 'phys_addr_t'
+  1b82af4f1749 ARM: kirkwood: select dtbs based on SoC
+  a02dd0271d01 ARM: mvebu: select dtbs from MACH_ARMADA_*
 
-I've done this with OMAP as (much simplified):
+The first was discovered by Olof's autobuilder, and the last two were
+discovered by Kevin's boot farm.
 
-SoC.dtsi:
+If you rebase the branch, I'll have to drop it from our for-next tree to
+prevent conflicts in linux-next with your -next branch.  Which means no
+one will be able to boot test the new SoCs without going through a lot
+of hunting to re-collect all the branches.
 
-dss: dss@58000000 {
-	status =3D "disabled";
-};
+The advantage of having mvebu/for-next in addition to linux-next is that
+should there be a boot failure, we can quickly determine whether it is a
+result of the mvebu code (mvebu/for-next fails) or something outside of
+mvebu (only linux-next fails).
 
-Nothing else (relevant here). The binding documentation states that dss
-has one port, and information what data is needed for the port and endpoi=
-nt.
+By keeping the commit IDs the same, the same branch can be in multiple
+trees all getting merged into linux-next.  Currently, mvebu does this
+with arm-soc, clk, and irqchip.  In those cases, those maintainers are
+the ones who send the pull requests to Linus, not us.
 
-board.dts:
+> That way it is visible that the patches were funneled through pin
+> control.
 
-&dss {
-        status =3D "ok";
+I'm a little confused by this.  Once you merge the branch into one of
+yours, that merge commit is a part of the history.  In fact, the branch
+is still intact for eternity.  So by merging the branch, adding other
+patches, and signing the tip of the result, it should be clear it came
+through pinctrl, no?
 
-        pinctrl-names =3D "default";
-        pinctrl-0 =3D <&dss_dpi_pins>;
+thx,
 
-        dpi_out: endpoint {
-
-                remote-endpoint =3D <&tfp410_in>;
-                data-lines =3D <24>;
-        };
-};
-
-That's using the shortened version without port node.
-
-Of course, it's up to the developer how his dts looks like. But to me it
-makes sense to require the remote-endpoint property, as the endpoint, or
-even the port, doesn't make much sense if there's nothing to connect to.
-
- Tomi
-
-
-
---tEHsptXr4FFpWcoGvwDA40KVVAmjgkgcU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJTDf9MAAoJEPo9qoy8lh71JaAQAJbPz+9VpNn17W+xOl/uxT2m
-7yfxwYtwoVzI3GP5CHS110ALyJh9cFQ0R/p2QEGESO1l/03gIVteCdypHUdzQDhT
-gVa7ALqhf5XrN7FneCWD4liAS1kh9vjT77p66RTKHDjH6NjSKDgPlKotUEkwasRC
-Bx1DwbEQ+6W92TyCp40rNK60buMvJr1yerA9WuPFz/nlynBvB742rYd+xBKS89oR
-kFq0ZzAeXeKrUxQ4kCk4o/Jlj+GW0QVwQiI4973m5/wfHAHVkxJ7yWD/CLRKHB0e
-82OHiHkyOBD6srbsbVGdZBSk/cdYFvpMPCBxyL1hFTWaaZ076sCDozU1RGBPyi8k
-41ERnfKWfz70aDwWo6EpG0kXDBSygwZHi20aMNi4gNQQwAHarO6zgZGGsZfyc3Z6
-pGomVCRZ4tpcEHyFmCUVm6NrocNFL9p3utQVOECC1VeLhT/Nbxaj96LKsFpBcd/d
-4yQjBPhtN22wgmT7maLOPqveUFvVItDLVWGoUeH2w5rOBzEnnTxDzzwV3R27fKvf
-T7NVF9xFTJnzt+NJChwrlTBgNTSMRThWf8YjmfWAJmk9V83esYHNo65m2DBCOcJE
-p7FiQOrG3pcrUUJD8HI98H0mEfLp52UB8kdLedJxI0NHCdO5HBHVge2M5sn3MPXT
-X+MSBcHoIVzFTpb6tGBZ
-=KzUA
------END PGP SIGNATURE-----
-
---tEHsptXr4FFpWcoGvwDA40KVVAmjgkgcU--
+Jason.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
