@@ -1,160 +1,125 @@
 From: Marc Carino <marc.ceeeee@gmail.com>
-Subject: [PATCH v7 9/9] ARM: brcmstb: dts: add a reference DTS for Broadcom 7445
-Date: Wed, 26 Feb 2014 02:29:12 -0800
-Message-ID: <1393410552-21497-10-git-send-email-marc.ceeeee@gmail.com>
+Subject: [PATCH v7 7/9] ARM: brcmstb: add misc. DT bindings for brcmstb
+Date: Wed, 26 Feb 2014 02:29:10 -0800
+Message-ID: <1393410552-21497-8-git-send-email-marc.ceeeee@gmail.com>
 References: <1393410552-21497-1-git-send-email-marc.ceeeee@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1393410552-21497-1-git-send-email-marc.ceeeee@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Christian Daudt <bcm@fixthebug.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Matt Porter <matt.porter@linaro.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Marc Carino <marc.ceeeee@gmail.com>, Matt Porter <mporter@linaro.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Matt Porter <matt.porter@linaro.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Marc Carino <marc.ceeeee@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a sample DTS which will allow bootup of a board populated
-with the BCM7445 chip.
+Document the bindings that the Broadcom STB platform needs
+for proper bootup.
 
 Signed-off-by: Marc Carino <marc.ceeeee@gmail.com>
 Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Matt Porter <mporter@linaro.org>
 ---
- arch/arm/boot/dts/bcm7445-bcm97445svmb.dts |   14 ++++
- arch/arm/boot/dts/bcm7445.dtsi             |  107 ++++++++++++++++++++++++++++
- 2 files changed, 121 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/boot/dts/bcm7445-bcm97445svmb.dts
- create mode 100644 arch/arm/boot/dts/bcm7445.dtsi
+ .../devicetree/bindings/arm/brcm-brcmstb.txt       |   95 ++++++++++++++++++++
+ 1 files changed, 95 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/brcm-brcmstb.txt
 
-diff --git a/arch/arm/boot/dts/bcm7445-bcm97445svmb.dts b/arch/arm/boot/dts/bcm7445-bcm97445svmb.dts
+diff --git a/Documentation/devicetree/bindings/arm/brcm-brcmstb.txt b/Documentation/devicetree/bindings/arm/brcm-brcmstb.txt
 new file mode 100644
-index 0000000..9eec2ac
+index 0000000..3c436cc
 --- /dev/null
-+++ b/arch/arm/boot/dts/bcm7445-bcm97445svmb.dts
-@@ -0,0 +1,14 @@
-+/dts-v1/;
-+#include "bcm7445.dtsi"
++++ b/Documentation/devicetree/bindings/arm/brcm-brcmstb.txt
+@@ -0,0 +1,95 @@
++ARM Broadcom STB platforms Device Tree Bindings
++-----------------------------------------------
++Boards with Broadcom Brahma15 ARM-based BCMxxxx (generally BCM7xxx variants)
++SoC shall have the following DT organization:
 +
++Required root node properties:
++    - compatible: "brcm,bcm<chip_id>", "brcm,brcmstb"
++
++example:
 +/ {
-+	model = "Broadcom STB (bcm7445), SVMB reference board";
-+	compatible = "brcm,bcm7445", "brcm,brcmstb";
++    #address-cells = <2>;
++    #size-cells = <2>;
++    model = "Broadcom STB (bcm7445)";
++    compatible = "brcm,bcm7445", "brcm,brcmstb";
 +
-+	memory {
-+		device_type = "memory";
-+		reg = <0x00 0x00000000 0x00 0x40000000>,
-+		      <0x00 0x40000000 0x00 0x40000000>,
-+		      <0x00 0x80000000 0x00 0x40000000>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/bcm7445.dtsi b/arch/arm/boot/dts/bcm7445.dtsi
-new file mode 100644
-index 0000000..f9c9633
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm7445.dtsi
-@@ -0,0 +1,107 @@
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
++Further, syscon nodes that map platform-specific registers used for general
++system control is required:
 +
-+#include "skeleton.dtsi"
++    - compatible: "brcm,bcm<chip_id>-sun-top-ctrl", "syscon"
++    - compatible: "brcm,bcm<chip_id>-hif-cpubiuctrl", "syscon"
++    - compatible: "brcm,bcm<chip_id>-hif-continuation", "syscon"
 +
-+/ {
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+	model = "Broadcom STB (bcm7445)";
-+	compatible = "brcm,bcm7445", "brcm,brcmstb";
-+	interrupt-parent = <&gic>;
++example:
++    rdb {
++        #address-cells = <1>;
++        #size-cells = <1>;
++        compatible = "simple-bus";
++        ranges = <0 0x00 0xf0000000 0x1000000>;
 +
-+	chosen {
-+		bootargs = "console=ttyS0,115200 earlyprintk";
-+	};
++        sun_top_ctrl: syscon@404000 {
++            compatible = "brcm,bcm7445-sun-top-ctrl", "syscon";
++            reg = <0x404000 0x51c>;
++        };
 +
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++        hif_cpubiuctrl: syscon@3e2400 {
++            compatible = "brcm,bcm7445-hif-cpubiuctrl", "syscon";
++            reg = <0x3e2400 0x5b4>;
++        };
 +
-+		cpu@0 {
-+			compatible = "brcm,brahma-b15";
-+			device_type = "cpu";
-+			reg = <0>;
-+		};
++        hif_continuation: syscon@452000 {
++            compatible = "brcm,bcm7445-hif-continuation", "syscon";
++            reg = <0x452000 0x100>;
++        };
++    };
 +
-+		cpu@1 {
-+			compatible = "brcm,brahma-b15";
-+			device_type = "cpu";
-+			reg = <1>;
-+		};
++Lastly, nodes that allow for support of SMP initialization and reboot are
++required:
 +
-+		cpu@2 {
-+			compatible = "brcm,brahma-b15";
-+			device_type = "cpu";
-+			reg = <2>;
-+		};
++smpboot
++-------
++Required properties:
 +
-+		cpu@3 {
-+			compatible = "brcm,brahma-b15";
-+			device_type = "cpu";
-+			reg = <3>;
-+		};
-+	};
++    - compatible
++        The string "brcm,brcmstb-smpboot".
 +
-+	gic: interrupt-controller@ffd00000 {
-+		compatible = "brcm,brahma-b15-gic", "arm,cortex-a15-gic";
-+		reg = <0x00 0xffd01000 0x00 0x1000>,
-+		      <0x00 0xffd02000 0x00 0x2000>,
-+		      <0x00 0xffd04000 0x00 0x2000>,
-+		      <0x00 0xffd06000 0x00 0x2000>;
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+	};
++    - syscon-cpu
++        A phandle / integer array property which lets the BSP know the location
++        of certain CPU power-on registers.
 +
-+	timer {
-+		compatible = "arm,armv7-timer";
-+		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_RAW(15) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14 (GIC_CPU_MASK_RAW(15) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11 (GIC_CPU_MASK_RAW(15) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10 (GIC_CPU_MASK_RAW(15) | IRQ_TYPE_LEVEL_LOW)>;
-+	};
++        The layout of the property is as follows:
++            o a phandle to the "hif_cpubiuctrl" syscon node
++            o offset to the base CPU power zone register
++            o offset to the base CPU reset register
 +
-+	rdb {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		ranges = <0 0x00 0xf0000000 0x1000000>;
++    - syscon-cont
++        A phandle pointing to the syscon node which describes the CPU boot
++        continuation registers.
++            o a phandle to the "hif_continuation" syscon node
 +
-+		serial@406b00 {
-+			compatible = "ns16550a";
-+			reg = <0x406b00 0x20>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-frequency = <0x4d3f640>;
-+		};
++example:
++    smpboot {
++        compatible = "brcm,brcmstb-smpboot";
++        syscon-cpu = <&hif_cpubiuctrl 0x88 0x178>;
++        syscon-cont = <&hif_continuation>;
++    };
 +
-+		sun_top_ctrl: syscon@404000 {
-+			compatible = "brcm,bcm7445-sun-top-ctrl",
-+				     "syscon";
-+			reg = <0x404000 0x51c>;
-+		};
++reboot
++-------
++Required properties
 +
-+		hif_cpubiuctrl: syscon@3e2400 {
-+			compatible = "brcm,bcm7445-hif-cpubiuctrl",
-+				     "syscon";
-+			reg = <0x3e2400 0x5b4>;
-+		};
++    - compatible
++        The string property "brcm,brcmstb-reboot".
 +
-+		hif_continuation: syscon@452000 {
-+			compatible = "brcm,bcm7445-hif-continuation",
-+				     "syscon";
-+			reg = <0x452000 0x100>;
-+		};
-+	};
++    - syscon
++        A phandle / integer array that points to the syscon node which describes
++        the general system reset registers.
++            o a phandle to "sun_top_ctrl"
++            o offset to the "reset source enable" register
++            o offset to the "software master reset" register
 +
-+	smpboot {
-+		compatible = "brcm,brcmstb-smpboot";
-+		syscon-cpu = <&hif_cpubiuctrl 0x88 0x178>;
-+		syscon-cont = <&hif_continuation>;
-+	};
-+
-+	reboot {
-+		compatible = "brcm,brcmstb-reboot";
-+		syscon = <&sun_top_ctrl 0x304 0x308>;
-+	};
-+};
++example:
++    reboot {
++        compatible = "brcm,brcmstb-reboot";
++        syscon = <&sun_top_ctrl 0x304 0x308>;
++    };
 -- 
 1.7.1
