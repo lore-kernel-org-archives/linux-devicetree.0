@@ -1,111 +1,71 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCHv2 03/16] Documentation: dt: add OMAP iommu bindings
-Date: Wed, 26 Feb 2014 03:13:46 +0100
-Message-ID: <1552997.8jd4jgn3Ze@avalon>
-References: <1392315347-32967-1-git-send-email-s-anna@ti.com> <13151454.2tbkC7YZsi@avalon> <530D210B.3070602@ti.com>
+From: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: add device tree for SHIELD
+Date: Wed, 26 Feb 2014 13:52:43 +0900
+Message-ID: <530D731B.5050305@nvidia.com>
+References: <1393237593-28121-1-git-send-email-acourbot@nvidia.com> <530B952D.2000006@wwwdotorg.org> <530BFC58.6020003@nvidia.com> <530C67F4.7010208@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <530D210B.3070602@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Tony Lindgren <tony@atomide.com>, Florian Vaussard <florian.vaussard@epfl.ch>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <530C67F4.7010208-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Suman,
-
-On Tuesday 25 February 2014 17:02:35 Suman Anna wrote:
-> On 02/25/2014 03:26 PM, Laurent Pinchart wrote:
-> > On Thursday 13 February 2014 12:15:34 Suman Anna wrote:
-> >> From: Florian Vaussard <florian.vaussard@epfl.ch>
-> >> 
-> >> This patch adds the iommu bindings for all OMAP2+ SoCs. Apart from
-> >> the standard bindings used by OMAP peripherals, this patch uses a
-> >> 'dma-window' (already used by Tegra SMMU) and adds two OMAP custom
-> >> bindings - 'ti,#tlb-entries' and 'ti,iommu-bus-err-back'.
-> >> 
-> >> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
-> >> [s-anna@ti.com: split bindings document, add dra7 and bus error back]
-> >> Signed-off-by: Suman Anna <s-anna@ti.com>
-> >> ---
-> >> 
-> >>   .../devicetree/bindings/iommu/ti,omap-iommu.txt    | 28
-> >>   +++++++++++++++++++
-> >>   1 file changed, 28 insertions(+)
-> >>   create mode 100644
-> >>   Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt
-> >> 
-> >> diff --git a/Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt
-> >> b/Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt new file mode
-> >> 100644
-> >> index 0000000..116492d
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt
-> >> @@ -0,0 +1,28 @@
-> >> +OMAP2+ IOMMU
-> >> +
-> >> +Required properties:
-> >> +- compatible : Should be one of,
-> >> +		"ti,omap2-iommu" for OMAP2/OMAP3 IOMMU instances
-> >> +		"ti,omap4-iommu" for OMAP4/OMAP5 IOMMU instances
-> >> +		"ti,dra7-iommu" for DRA7xx IOMMU instances
-> >> +- ti,hwmods  : Name of the hwmod associated with the IOMMU instance
-> >> +- reg        : Address space for the configuration registers
-> >> +- interrupts : Interrupt specifier for the IOMMU instance
-> >> +- dma-window : IOVA start address and length
-> > 
-> > Isn't the dma window more of a system configuration property than a
-> > hardware property ? How do you expect it to be set?
-> 
-> We are setting it based on the addressable range for the MMU.
-
-A quick look at the ISP and IVA IOMMUs in the OMAP3 shows that both support 
-the full 4GB VA space. Why do you need to restrict it ?
-
-> We are reusing the existing defined property and it allows us to get rid of
-> the IOVA start and end addresses defined in the pre-DT OMAP iommu platform
-> data.
+On 02/25/2014 06:52 PM, Arend van Spriel wrote:
+> On 02/25/2014 03:13 AM, Alexandre Courbot wrote:
+>>>
+>>>> +    /* Wifi */
+>>>> +    sdhci@78000000 {
+>>>> +        status = "okay";
+>>>> +        bus-width = <4>;
+>>>> +        broken-cd;
+>>>> +        keep-power-in-suspend;
+>>>> +        cap-sdio-irq;
+>>>
+>>> Is non-removable better than broken-cd, or are they entirely unrelated?
+>>
+>> They are unrelated actually. With non-removable the driver expects the
+>> device to always be there since boot, and does not check for the card to
+>> be removed/added after boot. broken-cd indicates there is no CD line and
+>> the device should be polled regularly.
+>>
+>> For the Wifi chip, non-removable would be the correct setting
+>> hardware-wise, but there is a trap: the chip has its reset line asserted
+>> at boot-time, and you need to set GPIO 229 to de-assert it. Only after
+>> that will the device be detected on the SDIO bus. Since it lacks a CD
+>> line, it must be polled, hence the broken-cd property.
+>>
+>> This also raises another, redundant problem with DT bindings: AFAIK we
+>> currently have no way to let the system know the device will only appear
+>> after a given GPIO is set. It would also be nice to be able to give some
+>> parameters to the Wifi driver through the DT (like the OOB interrupt).
+>> Right now the Wifi chip is brought up by exporting the GPIO and writing
+>> to it from user-space, and the OOB interrupt is not used.
 >
-> >> +Optional properties:
-> >> +- ti,#tlb-entries : Number of entries in the translation look-aside
-> >> buffer. +                    Should be either 8 or 32 (default: 32)
-> >> +- ti,iommu-bus-err-back : Indicates the IOMMU instance supports throwing
-> >> +		          back a bus error response on MMU faults.
-> > 
-> > Do these features vary per IOMMU instance or per IOMMU model ? In the
-> > latter case they could be inferred from the compatible string by the
-> > driver without requiring them to be explicit in DT (whether you want to
-> > do so is left to you though).
-> 
-> Well, these are fixed features given an IOMMU instance, like the OMAP3
-> ISP is the only one that has 8 TLB entries, all the remaining ones have
-> 32, and the IPU iommu instances are the only ones that support the bus
-> error response back. I have no preference to any particular way, and
-> sure the driver can infer these easily based on unique compatible
-> strings per subsystem per SoC. I just happened to go with defining
-> compatible strings per SoC, with the optional properties differentiating
-> the fixed behavior between different IOMMU instances on that SoC. This
-> is where I was looking for some inputs/guidance from the DT bindings
-> maintainers on what is the preferred method.
+> Hi Alexandre,
+>
+> I recently posted a proposal for brcmfmac DT binding [1]. I did receive
+> some comments, but it would be great if you (and/or others involved) had
+> a look at it as well and give me some feedback. DT work still needs to
+> grow on me.
 
-I think you've made the right choice. I wasn't sure whether those parameters 
-varied across IOMMU instances of compatible devices (from a compatible string 
-point of view) or were constant. As they vary they should be expressed in DT.
+Hi Arend, (and thanks again for all the help with getting the chip to work!)
 
-> >> +Example:
-> >> +	/* OMAP3 ISP MMU */
-> >> +	mmu_isp: mmu@480bd400 {
-> >> +		compatible = "ti,omap2-iommu";
-> >> +		reg = <0x480bd400 0x80>;
-> >> +		interrupts = <24>;
-> >> +		ti,hwmods = "mmu_isp";
-> >> +		ti,#tlb-entries = <8>;
-> >> +		dma-window = <0 0xfffff000>;
-> >> +	};
+Great, I'm not subscribed to the devicetree list and so have missed this 
+thread, but I'm glad to see it.
 
--- 
-Regards,
+I don't think I have much to add to the comments you already received 
+there. I'd need it to reference the 32K clock (which I currently 
+force-enable manually), the OOB interrupt, and the reset pin as a GPIO 
+(as for SHIELD the device needs to be put out of reset using an 
+active-low GPIO before anything can happen). That last property could be 
+optional as I suspect most designs won't use it.
 
-Laurent Pinchart
-
+Getting the device out of reset should be done before the bus probes the 
+non-removable device, so I wonder how this would fit wrt. the DT 
+power-on sequencing series by Olof. Something tells me this could rather 
+be a property of the bus, but physically speaking the pin is connected 
+to the wifi chip, so... Maybe we could get the platform driver to ask 
+the bus to probe again after enabling power/getting the device out of reset?
