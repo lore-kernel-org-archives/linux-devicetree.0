@@ -1,201 +1,158 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] phy-rcar-gen2-usb: add device tree support
-Date: Thu, 27 Feb 2014 03:12:50 +0300
-Message-ID: <201402270312.51588.sergei.shtylyov@cogentembedded.com>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv2 03/16] Documentation: dt: add OMAP iommu bindings
+Date: Wed, 26 Feb 2014 17:14:01 -0600
+Message-ID: <530E7539.6040106@ti.com>
+References: <1392315347-32967-1-git-send-email-s-anna@ti.com>
+	<530E682D.9070005@ti.com> <530E6A78.9060503@ti.com>
+	<2109933.259zooPLHZ@avalon>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: balbi@ti.com, linux-usb@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, linux-sh@vger.kernel.org, valentine.barshak@cogentembedded.com, rob@landley.net, linux-doc@vger.kernel.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <2109933.259zooPLHZ@avalon>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support of the device tree probing for the Renesas R-Car generation 2 SoCs
-documenting the device tree binding as necessary.
+Hi Laurent,
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+ >
+> On Wednesday 26 February 2014 16:28:08 Suman Anna wrote:
+>> On 02/26/2014 04:18 PM, Suman Anna wrote:
+>>> On 02/26/2014 02:36 PM, Laurent Pinchart wrote:
+>>>> On Wednesday 26 February 2014 14:23:03 Suman Anna wrote:
+>>>>>> On Wednesday 26 February 2014 11:02:24 Suman Anna wrote:
+>>>>>>> On 02/25/2014 08:13 PM, Laurent Pinchart wrote:
+>>>>>>>> On Tuesday 25 February 2014 17:02:35 Suman Anna wrote:
+>>>>>>>>> On 02/25/2014 03:26 PM, Laurent Pinchart wrote:
+>>>>>>>>>> On Thursday 13 February 2014 12:15:34 Suman Anna wrote:
+>>>>>>>>>>> From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+>>>>>>>>>>>
+>>>>>>>>>>> This patch adds the iommu bindings for all OMAP2+ SoCs. Apart from
+>>>>>>>>>>> the standard bindings used by OMAP peripherals, this patch uses a
+>>>>>>>>>>> 'dma-window' (already used by Tegra SMMU) and adds two OMAP custom
+>>>>>>>>>>> bindings - 'ti,#tlb-entries' and 'ti,iommu-bus-err-back'.
+>>>>>>>>>>>
+>>>>>>>>>>> Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+>>>>>>>>>>> [s-anna-l0cyMroinI0@public.gmane.org: split bindings document, add dra7 and bus error
+>>>>>>>>>>> back]
+>>>>>>>>>>> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+>>>>>>>>>>> ---
+>>>>>>>>>>>
+>>>>>>>>>>>   .../devicetree/bindings/iommu/ti,omap-iommu.txt    | 28 +++++++++
+>>>>>>>>>>>   1 file changed, 28 insertions(+)
+>>>>>>>>>>>   create mode 100644
+>>>>>>>>>>>   Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt
+>>>>>>>>>>>
+>>>>>>>>>>> diff --git
+>>>>>>>>>>> a/Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt
+>>>>>>>>>>> b/Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt new
+>>>>>>>>>>> file
+>>>>>>>>>>> mode 100644
+>>>>>>>>>>> index 0000000..116492d
+>>>>>>>>>>> --- /dev/null
+>>>>>>>>>>> +++ b/Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt
+>>>>>>>>>>> @@ -0,0 +1,28 @@
+>>>>>>>>>>> +OMAP2+ IOMMU
+>>>>>>>>>>> +
+>>>>>>>>>>> +Required properties:
+>>>>>>>>>>> +- compatible : Should be one of,
+>>>>>>>>>>> +        "ti,omap2-iommu" for OMAP2/OMAP3 IOMMU instances
+>>>>>>>>>>> +        "ti,omap4-iommu" for OMAP4/OMAP5 IOMMU instances
+>>>>>>>>>>> +        "ti,dra7-iommu" for DRA7xx IOMMU instances
+>>>>>>>>>>> +- ti,hwmods  : Name of the hwmod associated with the IOMMU
+>>>>>>>>>>> instance
+>>>>>>>>>>> +- reg        : Address space for the configuration registers
+>>>>>>>>>>> +- interrupts : Interrupt specifier for the IOMMU instance
+>>>>>>>>>>> +- dma-window : IOVA start address and length
+>>>>>>>>>>
+>>>>>>>>>> Isn't the dma window more of a system configuration property than a
+>>>>>>>>>> hardware property ? How do you expect it to be set?
+>>>>>>>>>
+>>>>>>>>> We are setting it based on the addressable range for the MMU.
+>>>>>>>>
+>>>>>>>> A quick look at the ISP and IVA IOMMUs in the OMAP3 shows that both
+>>>>>>>> support the full 4GB VA space. Why do you need to restrict it ?
+>>>>>>>
+>>>>>>> I should have rephrased it better when I said addressable range. While
+>>>>>>> the MMUs are capable of programming the full 4GB space, there are some
+>>>>>>> address ranges that are private from the processor view. This
+>>>>>>> window is currently used to set the range for the omap-iovmm driver
+>>>>>>> (which only OMAP3 ISP is using atm), and there is no point in allowing
+>>>>>>> the omap-iovmm driver the full range when the processor could never
+>>>>>>> reach/access those addresses.
+>>>>>>
+>>>>>> But the IOMMU VA space is from a device point of view, not from a CPU
+>>>>>> point of view. Could you point me to where those private ranges are
+>>>>>> documented, in order to understand the problem correctly ?
+>>>>>
+>>>>> Yes, they are indeed from the device perspective. I meant DSP and/or IPU
+>>>>> by processor.
+>>>>>
+>>>>> For example on OMAP3, you can refer to Table 2-9 in section 2.4.5 "DSP
+>>>>> Subsystem Memory Space Mapping" of the OMAP36xx TRM, and the external
+>>>>> addressable range starts from 0x11000000.
+>>>>
+>>>> OK, so it looks more like a property of the IOMMU master than a
+>>>> property of the IOMMU itself. It would be better to express it as such,
+>>>> but I wonder how that could be done, and if it would be worth it in this
+>>>> case.
+>>>
+>>> This property is currently solely used to configure the range for the
+>>> omap-iovmm module, which were supplied through platform data in the
+>>> non-DT case.
+>
+> If I'm not mistaken omap-iovmm is something we want to get rid of. I know that
+> the OMAP3 ISP driver is the only user of that module, and I've started working
+> on fixing that, but I'm currently lacking time to complete the work.
+>
+> Now, if we get rid of omap-iovmm, does that mean that the dma-window property
+> won't need to be specified anymore ? If so, given that the only omap-iovmm
+> user is the OMAP3 ISP driver, I would propose to drop the property and just
+> hardcode the value.
 
----
-This patch is against the 'next' branch of Felipe Balbi's 'usb.git' repo.
+Yeah, none of our OMAP4+ stacks use omap-iovmm, or similar dynamic 
+reservation scheme at the moment. I am perfectly fine with dropping the 
+property and hard-coding it in the driver with a note. DSP/Bridge has a 
+similar usage (in dmm.c), but that code is localized within the driver.
 
- Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt |   29 +++++++
- drivers/usb/phy/phy-rcar-gen2-usb.c                     |   64 ++++++++++++++--
- 2 files changed, 85 insertions(+), 8 deletions(-)
+Thanks for all the comments.
 
-Index: usb/Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt
-===================================================================
---- /dev/null
-+++ usb/Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt
-@@ -0,0 +1,29 @@
-+* Renesas R-Car generation 2 USB PHY
-+
-+This file provides information on what the device node for the R-Car generation
-+2 USB PHY contains.
-+
-+Required properties:
-+- compatible: "renesas,usb-phy-r8a7790" if the device is a part of R8A7790 SoC.
-+	      "renesas,usb-phy-r8a7791" if the device is a part of R8A7791 SoC.
-+- reg: offset and length of the register block.
-+- clocks: clock phandle and specifier pair.
-+- clock-names: string, clock input name, must be "usbhs".
-+
-+Optional properties:
-+- renesas,channel0-pci: boolean, specify when USB channel 0 should be connected
-+			to PCI EHCI/OHCI; otherwise, it will be connected to the
-+			USBHS controller.
-+- renesas,channel2-pci: boolean, specify when USB channel 2 should be connected
-+			to PCI EHCI/OHCI; otherwise, it will be connected to the
-+			USBSS controller (xHCI).
-+
-+Example (Lager board):
-+
-+	usb-phy@e6590100 {
-+		compatible = "renesas,usb-phy-r8a7790";
-+		reg = <0 0xe6590100 0 0x100>;
-+		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
-+		clock-names = "usbhs";
-+		renesas,channel2-pci;
-+	};
-Index: usb/drivers/usb/phy/phy-rcar-gen2-usb.c
-===================================================================
---- usb.orig/drivers/usb/phy/phy-rcar-gen2-usb.c
-+++ usb/drivers/usb/phy/phy-rcar-gen2-usb.c
-@@ -1,8 +1,8 @@
- /*
-  * Renesas R-Car Gen2 USB phy driver
-  *
-- * Copyright (C) 2013 Renesas Solutions Corp.
-- * Copyright (C) 2013 Cogent Embedded, Inc.
-+ * Copyright (C) 2013-2014 Renesas Solutions Corp.
-+ * Copyright (C) 2013-2014 Cogent Embedded, Inc.
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 as
-@@ -13,6 +13,7 @@
- #include <linux/delay.h>
- #include <linux/io.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/platform_data/usb-rcar-gen2-phy.h>
- #include <linux/platform_device.h>
- #include <linux/spinlock.h>
-@@ -167,9 +168,41 @@ out:
- 	spin_unlock_irqrestore(&priv->lock, flags);
- }
- 
-+#ifdef CONFIG_OF
-+static struct rcar_gen2_phy_platform_data *
-+rcar_gen2_usb_phy_parse_dt(struct device *dev)
-+{
-+	struct device_node *np = dev->of_node;
-+	struct rcar_gen2_phy_platform_data *pdata;
-+
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return NULL;
-+
-+	pdata->chan0_pci = of_property_read_bool(np, "renesas,channel0-pci");
-+	pdata->chan2_pci = of_property_read_bool(np, "renesas,channel2-pci");
-+
-+	return pdata;
-+}
-+
-+static const struct of_device_id rcar_gen2_usb_phy_match_table[] = {
-+	{ .compatible = "renesas,usb-phy-r8a7790" },
-+	{ .compatible = "renesas,usb-phy-r8a7791" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, rcar_gen2_usb_phy_match_table);
-+#else
-+static inline struct rcar_gen2_phy_platform_data *
-+rcar_gen2_usb_phy_parse_dt(struct device *dev)
-+{
-+	return NULL;
-+}
-+#endif
-+
- static int rcar_gen2_usb_phy_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
- 	struct rcar_gen2_phy_platform_data *pdata;
- 	struct rcar_gen2_usb_phy_priv *priv;
- 	struct resource *res;
-@@ -177,13 +210,19 @@ static int rcar_gen2_usb_phy_probe(struc
- 	struct clk *clk;
- 	int retval;
- 
--	pdata = dev_get_platdata(dev);
-+	if (np)
-+		pdata = rcar_gen2_usb_phy_parse_dt(dev);
-+	else
-+		pdata = dev_get_platdata(dev);
- 	if (!pdata) {
- 		dev_err(dev, "No platform data\n");
- 		return -EINVAL;
- 	}
- 
--	clk = devm_clk_get(dev, "usbhs");
-+	if (np)
-+		clk = of_clk_get_by_name(np, "usbhs");
-+	else
-+		clk = clk_get(dev, "usbhs");
- 	if (IS_ERR(clk)) {
- 		dev_err(dev, "Can't get the clock\n");
- 		return PTR_ERR(clk);
-@@ -191,13 +230,16 @@ static int rcar_gen2_usb_phy_probe(struc
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	base = devm_ioremap_resource(dev, res);
--	if (IS_ERR(base))
--		return PTR_ERR(base);
-+	if (IS_ERR(base)) {
-+		retval = PTR_ERR(base);
-+		goto error;
-+	}
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv) {
- 		dev_err(dev, "Memory allocation failed\n");
--		return -ENOMEM;
-+		retval = -ENOMEM;
-+		goto error;
- 	}
- 
- 	spin_lock_init(&priv->lock);
-@@ -216,12 +258,16 @@ static int rcar_gen2_usb_phy_probe(struc
- 	retval = usb_add_phy_dev(&priv->phy);
- 	if (retval < 0) {
- 		dev_err(dev, "Failed to add USB phy\n");
--		return retval;
-+		goto error;
- 	}
- 
- 	platform_set_drvdata(pdev, priv);
- 
- 	return retval;
-+
-+error:
-+	clk_put(clk);
-+	return retval;
- }
- 
- static int rcar_gen2_usb_phy_remove(struct platform_device *pdev)
-@@ -229,6 +275,7 @@ static int rcar_gen2_usb_phy_remove(stru
- 	struct rcar_gen2_usb_phy_priv *priv = platform_get_drvdata(pdev);
- 
- 	usb_remove_phy(&priv->phy);
-+	clk_put(priv->clk);
- 
- 	return 0;
- }
-@@ -236,6 +283,7 @@ static int rcar_gen2_usb_phy_remove(stru
- static struct platform_driver rcar_gen2_usb_phy_driver = {
- 	.driver = {
- 		.name = "usb_phy_rcar_gen2",
-+		.of_match_table = of_match_ptr(rcar_gen2_usb_phy_match_table),
- 	},
- 	.probe = rcar_gen2_usb_phy_probe,
- 	.remove = rcar_gen2_usb_phy_remove,
+regards
+Suman
+
+
+>
+> Please let me know if there's something I've missed.
+
+
+>
+>>> I am wondering if the way to go here is to use iommu_domain_set_attr() and
+>>> use the domain geometry values.
+>>
+>> The other option is to supply these as driver match data, and switching
+>> the compatible strings to identify the MMU instance precisely.
+>>
+>> regards
+>> Suman
+>>
+>>>> As not all masters (the OMAP3 ISP doesn't for instance) have restrictions
+>>>> regarding the VA range they can address, should this property be at
+>>>> least made
+>>>> optional ?
+>>>>
+>>>>>>>>> We are reusing the existing defined property and it allows us to get
+>>>>>>>>> rid of the IOVA start and end addresses defined in the pre-DT OMAP
+>>>>>>>>> iommu platform data.
+>
+> [snip]
+>
