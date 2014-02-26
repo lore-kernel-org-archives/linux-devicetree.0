@@ -1,96 +1,146 @@
-From: Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFCv3 0/7] Convert twl4030-madc to IIO API and add DT support
-Date: Wed, 26 Feb 2014 12:42:55 +0100
-Message-ID: <CAAfyv35C_a+OA1WAMVYwJquM7YEJy3Fdu+TgkNU9R30xhX6D3w@mail.gmail.com>
-References: <1393193271-16717-1-git-send-email-sre@debian.org>
-	<1393374270-20079-1-git-send-email-sre@debian.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393374270-20079-1-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Dr. H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: [PATCH] phy: micrel: add of configuration for LED mode
+Date: Wed, 26 Feb 2014 11:48:00 +0000
+Message-ID: <1393415280-10227-1-git-send-email-ben.dooks@codethink.co.uk>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: linux-kernel@lists.codethink.co.uk, devicetree@vger.kernel.org, netdev@vger.kernel.org
+Cc: f.fainelli@gmail.com, Ben Dooks <ben.dooks@codethink.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+Add support for the led-mode property for the following PHYs
+which have a single LED mode configuration value.
 
-On Wed, Feb 26, 2014 at 1:24 AM, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org> wrote:
-> Hi,
->
-> This is RFCv3 for converting twl4030-madc to the IIO API and
-> adding DT support. The patchset compiles and has been tested
-> on my Nokia N900.
->
-> Changes since RFCv2:
->  * Use "--find-renames" for the move from mfd/ to iio/adc/ ;)
->  * Added Acked-by from Lee Jones (MFD subsystem maintainer)
->  * Fixed issue found by Joe Perches
->   - twl4030_madc_request.do_avg should be bool instead of u16
->  * Fixed issues found by Peter Meerwald
->   - some style issues (e.g. /** instead of /*)
->   - typos
->   - usage of u16 read/write
->  * Tested with converted rx51-battery driver on Nokia N900
->
-> TODO:
->  * Remove twl4030-madc-hwmon in favour of iio-hwmon
->    This driver is currently only used by board-omap3beagle.c
->    and board-rx51-peripherals.c. The instanciation in the
->    rx51 boardcode is a bug, since actually only twl4030-madc
->    is needed. Thus board-omap3beagle.c needs to be updated to
->    iio-hwmon and board-rx51-peripherals.c to twl4030-madc.
->    Both tasks are pretty trivial and twl4030-madc-hwmon can
->    be removed afterwards :)
->  * Update twl4030-madc-battery to the IIO API. I guess Marek
->    will do this update in the near future, since he is currently
->    writing DT bindings for the driver.
-Yes I'm working on DT for twl4030-madc-battery. I'll convert it also to IIO
-and post for comments. Thanks for doing that it's really nice work!
->  * I updated twl4030-madc-battery already and will send it
->    in a separate patchset.
->  * Once all of the above steps happened the old API can be
->    removed from the driver, which allows some more cleanups.
->
-> -- Sebastian
->
-> Sebastian Reichel (7):
->   mfd: twl4030-madc: Use managed resources
->   mfd: twl4030-madc: Add DT support and convert to IIO framework
->   mfd: twl4030-madc: Cleanup driver
->   mfd: twl-core: Add twl_i2c_read/write_u16
->   mfd: twl4030-madc: Use twl_i2c_read/write_u16 for 16 bit registers
->   Documentation: DT: Document twl4030-madc binding
->   mfd: twl4030-madc: Move driver to drivers/iio/adc
->
->  .../devicetree/bindings/iio/adc/twl4030-madc.txt   |  24 ++
->  drivers/iio/adc/Kconfig                            |  10 +
->  drivers/iio/adc/Makefile                           |   1 +
->  drivers/{mfd => iio/adc}/twl4030-madc.c            | 278 +++++++++++++--------
->  drivers/mfd/Kconfig                                |  10 -
->  drivers/mfd/Makefile                               |   1 -
->  include/linux/i2c/twl.h                            |  12 +
->  include/linux/i2c/twl4030-madc.h                   |   2 +-
->  8 files changed, 224 insertions(+), 114 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/twl4030-madc.txt
->  rename drivers/{mfd => iio/adc}/twl4030-madc.c (77%)
->
-> --
-> 1.8.5.3
->
+KSZ8001 and KSZ8041 which both use register 0x1e bits 15,14 and
+KSZ8021, KSZ8031 and KSZ8051 which use register 0x1f bits 5,4
+to control the LED configuration.
 
-BR,
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+---
+ Documentation/devicetree/bindings/net/micrel.txt | 18 +++++++++
+ drivers/net/phy/micrel.c                         | 49 ++++++++++++++++++++++--
+ 2 files changed, 63 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/micrel.txt
 
-marek
-
+diff --git a/Documentation/devicetree/bindings/net/micrel.txt b/Documentation/devicetree/bindings/net/micrel.txt
+new file mode 100644
+index 0000000..98a3e61
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/micrel.txt
+@@ -0,0 +1,18 @@
++Micrel PHY properties.
++
++These properties cover the base properties Micrel PHYs.
++
++Optional properties:
++
++ - micrel,led-mode : LED mode value to set for PHYs with configurable LEDs.
++
++              Configure the LED mode with single value. The list of PHYs and
++	      the bits that are currently supported:
++
++	      KSZ8001: register 0x1e, bits 15..14
++	      KSZ8041: register 0x1e, bits 15..14
++	      KSZ8021: register 0x1f, bits 5..4
++	      KSZ8031: register 0x1f, bits 5..4
++	      KSZ8051: register 0x1f, bits 5..4
++
++              See the respective PHY datasheet for the mode values.
+diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+index 5a8993b..0c9e434 100644
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -148,15 +148,52 @@ static int ks8737_config_intr(struct phy_device *phydev)
+ 	return rc < 0 ? rc : 0;
+ }
+ 
++static int kszphy_setup_led(struct phy_device *phydev,
++			    unsigned int reg, unsigned int shift)
++{
++
++	struct device *dev = &phydev->dev;
++	struct device_node *of_node = dev->of_node;
++	int rc, temp;
++	u32 val;
++
++	if (!of_node && dev->parent->of_node)
++		of_node = dev->parent->of_node;
++
++	if (of_property_read_u32(of_node, "micrel,led-mode", &val))
++		return 0;
++
++	temp = phy_read(phydev, reg);
++	if (temp < 0)
++		return temp;
++
++	temp &= 3 << shift;
++	temp |= val << shift;
++	rc = phy_write(phydev, reg, temp);
++
++	return rc < 0 ? rc : 0;
++}
++
+ static int kszphy_config_init(struct phy_device *phydev)
+ {
+ 	return 0;
+ }
+ 
++static int kszphy_config_init_led8041(struct phy_device *phydev)
++{
++	/* single led control, register 0x1e bits 15..14 */
++	return kszphy_setup_led(phydev, 0x1e, 14);
++}
++
+ static int ksz8021_config_init(struct phy_device *phydev)
+ {
+-	int rc;
+ 	const u16 val = KSZPHY_OMSO_B_CAST_OFF | KSZPHY_OMSO_RMII_OVERRIDE;
++	int rc;
++
++	rc = kszphy_setup_led(phydev, 0x1f, 4);
++	if (rc)
++		dev_err(&phydev->dev, "failed to set led mode\n");
++
+ 	phy_write(phydev, MII_KSZPHY_OMSO, val);
+ 	rc = ksz_config_flags(phydev);
+ 	return rc < 0 ? rc : 0;
+@@ -166,6 +203,10 @@ static int ks8051_config_init(struct phy_device *phydev)
+ {
+ 	int rc;
+ 
++	rc = kszphy_setup_led(phydev, 0x1f, 4);
++	if (rc)
++		dev_err(&phydev->dev, "failed to set led mode\n");
++
+ 	rc = ksz_config_flags(phydev);
+ 	return rc < 0 ? rc : 0;
+ }
+@@ -327,7 +368,7 @@ static struct phy_driver ksphy_driver[] = {
+ 	.features	= (PHY_BASIC_FEATURES | SUPPORTED_Pause
+ 				| SUPPORTED_Asym_Pause),
+ 	.flags		= PHY_HAS_MAGICANEG | PHY_HAS_INTERRUPT,
+-	.config_init	= kszphy_config_init,
++	.config_init	= kszphy_config_init_led8041,
+ 	.config_aneg	= genphy_config_aneg,
+ 	.read_status	= genphy_read_status,
+ 	.ack_interrupt	= kszphy_ack_interrupt,
+@@ -342,7 +383,7 @@ static struct phy_driver ksphy_driver[] = {
+ 	.features	= PHY_BASIC_FEATURES |
+ 			  SUPPORTED_Pause | SUPPORTED_Asym_Pause,
+ 	.flags		= PHY_HAS_MAGICANEG | PHY_HAS_INTERRUPT,
+-	.config_init	= kszphy_config_init,
++	.config_init	= kszphy_config_init_led8041,
+ 	.config_aneg	= genphy_config_aneg,
+ 	.read_status	= genphy_read_status,
+ 	.ack_interrupt	= kszphy_ack_interrupt,
+@@ -371,7 +412,7 @@ static struct phy_driver ksphy_driver[] = {
+ 	.phy_id_mask	= 0x00ffffff,
+ 	.features	= (PHY_BASIC_FEATURES | SUPPORTED_Pause),
+ 	.flags		= PHY_HAS_MAGICANEG | PHY_HAS_INTERRUPT,
+-	.config_init	= kszphy_config_init,
++	.config_init	= kszphy_config_init_led8041,
+ 	.config_aneg	= genphy_config_aneg,
+ 	.read_status	= genphy_read_status,
+ 	.ack_interrupt	= kszphy_ack_interrupt,
 -- 
-as simple and primitive as possible
--------------------------------------------------
-Marek Belisko - OPEN-NANDRA
-Freelance Developer
-
-Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
-Tel: +421 915 052 184
-skype: marekwhite
-twitter: #opennandra
-web: http://open-nandra.com
+1.8.5.3
