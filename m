@@ -1,39 +1,71 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 00/10] pinctrl: mvebu: remove hard-coded addresses from
- Dove pinctrl
-Date: Wed, 26 Feb 2014 10:43:45 +0100
-Message-ID: <CACRpkdYQa2BG_qxf5zY=7rks6O31ZF-BX0af3_u1MOgwfwxFSQ@mail.gmail.com>
-References: <1393231382-11078-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<20140224181023.GA1010@titan.lakedaemon.net>
-	<CACRpkdZ+YGTyDj6i8c198MdRtz3GY-YBmVO9LysPCcmT4EC0cg@mail.gmail.com>
-	<20140226000940.GF1872@titan.lakedaemon.net>
+From: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
+Subject: Re: [PATCHv3 1/2] net: stmmac: Add SOCFPGA glue driver
+Date: Wed, 26 Feb 2014 10:44:33 +0100
+Message-ID: <530DB781.9050901@st.com>
+References: <1392061697-20193-1-git-send-email-dinguyen@altera.com> <20140212.193539.38124529344029793.davem@davemloft.net> <52FC4B0A.4010406@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140226000940.GF1872@titan.lakedaemon.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <52FC4B0A.4010406@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Dinh Nguyen <dinh.linux@gmail.com>, David Miller <davem@davemloft.net>, dinguyen@altera.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, vbridgers2013@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 26, 2014 at 1:09 AM, Jason Cooper <jason@lakedaemon.net> wrote:
-
-> Sebastian has now re-organized the branches as I asked, and I confirmed
-> that the final result is the exact same as mine (diff is null).
-
-Okay!
-
-> Usually when I submit pull requests to arm-soc, they like to see the
-> branches.  That way if there is an error in one of them, they just drop
-> the one branch and the others remain.
+On 2/13/2014 5:33 AM, Dinh Nguyen wrote:
 >
-> Would you like them the same way?  If so, I'll send the pulls to you
-> tomorrow.
+> On 2/12/14 6:35 PM, David Miller wrote:
+>> From: <dinguyen@altera.com>
+>> Date: Mon, 10 Feb 2014 13:48:16 -0600
+>>
+>>> From: Dinh Nguyen <dinguyen@altera.com>
+>>>
+>>> Like the STi series SOCs, Altera's SOCFPGA also needs a glue layer on top of the
+>>> Synopsys gmac IP.
+>>>
+>>> This patch adds the platform driver for the glue layer which configures the IP
+>>> before the generic STMMAC driver takes over.
+>>>
+>>> Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
+>>> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>> Cc: Pawel Moll <pawel.moll@arm.com>
+>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+>>> Cc: Kumar Gala <galak@codeaurora.org>
+>>> Cc: Vince Bridgers <vbridgers2013@gmail.com>
+>>> ---
+>>> v3: Remove stray empty line at end of dwmac-socfpga.c.
+>>> v2: Use the dwmac-sti as an example for a glue layer and split patch up
+>>> to have dts as a separate patch. Also cc dts maintainers since there is
+>>> a new binding.
+>> The second patch for the DTS update doesn't apply cleanly at all to
+>> mainline.
+> Yes, I'm planning to take the DTS bindings patch through arm-soc/next-dt
+> tree, so that is where patch 2 is based on.
+>>
+>> Why don't you push both of these patches through whatever tree that
+>> file is maintained under.  You can add my ack:
+> I'm not sure if Peppe has a tree, but it should go into his tree
+> if there is one. If not, can you apply patch 1 to your tree?
 
-Send me one big branch with everything on it. Actually, I'd prefer
-to pull it in, rebase and sign off each patch individually in my tree
-if that is not causing you problems. That way it is visible that the
-patches were funneled through pin control.
+Hello
 
-Yours,
-Linus Walleij
+I have not own tree but I am using net.git and net-next to do my patches
+and experiments.
+
+I ask you to keep these patches aligned to net-next.
+
+Also I ask you to review the glue-layer that is not in-line with what
+have been currently added for dwmac-sti and dwmac-sunxi.c.
+
+BR
+Peppe
+
+
+>>
+>> Acked-by: David S. Miller <davem@davemloft.net>
+> Thanks,
+> Dinh
+>
