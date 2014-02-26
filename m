@@ -1,80 +1,35 @@
-From: Marc Carino <marc.ceeeee@gmail.com>
-Subject: [PATCH v7 3/9] ARM: brcmstb: add debug UART for earlyprintk support
-Date: Wed, 26 Feb 2014 02:29:06 -0800
-Message-ID: <1393410552-21497-4-git-send-email-marc.ceeeee@gmail.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v7 5/9] ARM: Enable erratum 798181 for Broadcom Brahma-B15
+Date: Wed, 26 Feb 2014 10:47:02 +0000
+Message-ID: <20140226104702.GA8961@mudshark.cambridge.arm.com>
 References: <1393410552-21497-1-git-send-email-marc.ceeeee@gmail.com>
+ <1393410552-21497-6-git-send-email-marc.ceeeee@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1393410552-21497-1-git-send-email-marc.ceeeee@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Christian Daudt <bcm@fixthebug.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, Marc Carino <marc.ceeeee@gmail.com>, Matt Porter <matt.porter@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1393410552-21497-6-git-send-email-marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the UART definitions needed to support earlyprintk on brcmstb machines.
+On Wed, Feb 26, 2014 at 10:29:08AM +0000, Marc Carino wrote:
+> From: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Broadcom Brahma-B15 (r0p0..r0p2) is also affected by Cortex-A15
+> erratum 798181, so enable the workaround for Brahma-B15.
 
-Signed-off-by: Marc Carino <marc.ceeeee@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
----
- arch/arm/Kconfig.debug |   15 ++++++++++++++-
- 1 files changed, 14 insertions(+), 1 deletions(-)
+Really... *exactly* the same erratum? That sounds pretty unlikely, so I'd
+really like to be sure that the workaround we have indeed solves your
+problem (issuing a dummy TLBI to 0x0 + dsb, then followed by a dmb + clrex
+on each core). The point is that the workaround doesn't simply perform
+non-shareable invalidation on each core using IPIs.
 
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index 0531da8..5d7f76b 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -125,6 +125,17 @@ choice
- 		  Say Y here if you want kernel low-level debugging support
- 		  on Marvell Berlin SoC based platforms.
- 
-+	config DEBUG_BRCMSTB_UART
-+		bool "Use BRCMSTB UART for low-level debug"
-+		depends on ARCH_BRCMSTB
-+		select DEBUG_UART_8250
-+		help
-+		  Say Y here if you want the debug print routines to direct
-+		  their output to the first serial port on these devices.
-+
-+		  If you have a Broadcom STB chip and would like early print
-+		  messages to appear over the UART, select this option.
-+
- 	config DEBUG_CLPS711X_UART1
- 		bool "Kernel low-level debugging messages via UART1"
- 		depends on ARCH_CLPS711X
-@@ -1049,6 +1060,7 @@ config DEBUG_UART_PHYS
- 	default 0xd4018000 if DEBUG_MMP_UART3
- 	default 0xe0000000 if ARCH_SPEAR13XX
- 	default 0xf0000be0 if ARCH_EBSA110
-+	default 0xf0406b00 if DEBUG_BRCMSTB_UART
- 	default 0xf1012000 if DEBUG_MVEBU_UART_ALTERNATE
- 	default 0xf1012000 if ARCH_DOVE || ARCH_KIRKWOOD || ARCH_MV78XX0 || \
- 				ARCH_ORION5X
-@@ -1083,6 +1095,7 @@ config DEBUG_UART_VIRT
- 	default 0xf8090000 if DEBUG_VEXPRESS_UART0_RS1
- 	default 0xfb009000 if DEBUG_REALVIEW_STD_PORT
- 	default 0xfb10c000 if DEBUG_REALVIEW_PB1176_PORT
-+	default 0xfc406b00 if DEBUG_BRCMSTB_UART
- 	default 0xfd000000 if ARCH_SPEAR3XX || ARCH_SPEAR6XX
- 	default 0xfd000000 if ARCH_SPEAR13XX
- 	default 0xfd012000 if ARCH_MV78XX0
-@@ -1136,7 +1149,7 @@ config DEBUG_UART_8250_WORD
- 		ARCH_KEYSTONE || \
- 		DEBUG_DAVINCI_DMx_UART0 || DEBUG_DAVINCI_DA8XX_UART1 || \
- 		DEBUG_DAVINCI_DA8XX_UART2 || DEBUG_DAVINCI_TNETV107X_UART1 || \
--		DEBUG_BCM_KONA_UART
-+		DEBUG_BCM_KONA_UART || DEBUG_BRCMSTB_UART
- 
- config DEBUG_UART_8250_FLOW_CONTROL
- 	bool "Enable flow control for 8250 UART"
--- 
-1.7.1
+/me counts the days until we need this code in arch/arm64.
+
+Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
