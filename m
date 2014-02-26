@@ -1,250 +1,175 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] dma: Support multiple interleaved frames with
- non-contiguous memory
-Date: Thu, 27 Feb 2014 00:02:22 +0900
-Message-ID: <CAJe_ZhcyYaZk+=JWyV_nphrWt+17Kmb9rZ153f0tDEeD_kFW8A@mail.gmail.com>
-References: <1392465619-27614-1-git-send-email-sthokal@xilinx.com>
-	<1392465619-27614-2-git-send-email-sthokal@xilinx.com>
-	<CAJe_Zhc_GNNSDWNFuk+cMHEqxfSCJB_ey=Bf+SwJK-nS=u9ceg@mail.gmail.com>
-	<CA+mB=1KdZZpTmpA0Xp_c4mhgFbjRZ6urYrCwdvoTCmcugQMDUA@mail.gmail.com>
-	<CAJe_ZhdOmu3k9gbPdQzPteyzwsMA8OzWHdhHnXudbF=X7JMhVQ@mail.gmail.com>
-	<CA+mB=1K43MDZj0Rx3q=ETQMaFsG1j7TXsH6v-7a26JdtqTJkbw@mail.gmail.com>
-	<CAJe_ZhfedP7Paf3Zq9chL0WUeLJrsy_DJL05sSbfqnfTtji=HQ@mail.gmail.com>
-	<CA+mB=1LK+aVbvh741+PMnpj_mwZRvJZzR5Fh=hf72UWQvxUiVQ@mail.gmail.com>
-	<CAJe_ZheGP-9f659tOdCHEMrbh73MDi7VjoieFhdQbvjVwiEbJQ@mail.gmail.com>
-	<CA+mB=1KqP=KgNZ_hYGbhin5TqokA+nCRPAA4Qa2R_2OWwv4yVw@mail.gmail.com>
-	<CAJe_ZhfSknzwMUo3nu14Hz5sr_hA6KojB=u4BvyT3byh5ViwXA@mail.gmail.com>
-	<CA+mB=1KHuZb14zrb8K9Hs4qQMmYdWEuHpAnwE0FMYOQYv=g5-w@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] ARM: sunxi: Add driver for sunxi usb phy
+Date: Wed, 26 Feb 2014 23:12:04 +0800
+Message-ID: <CAGb2v64Gg6QKn4KRXQ2uGR_rFb1mFD1fgzN_6MJDnLuv_JYf6g@mail.gmail.com>
+References: <1393157352-21104-1-git-send-email-hdegoede@redhat.com> <1393157352-21104-2-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+mB=1KHuZb14zrb8K9Hs4qQMmYdWEuHpAnwE0FMYOQYv=g5-w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: "Williams, Dan J" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Koul, Vinod" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Levente Kurusa <levex-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBWEIXCMAKGQEW3DUXTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1393157352-21104-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 26 February 2014 23:21, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> On Mon, Feb 24, 2014 at 7:39 AM, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On 21 February 2014 23:37, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
->>> On Thu, Feb 20, 2014 at 3:23 PM, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> wrote:
->>>> On 20 February 2014 14:54, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
->>>>> On Wed, Feb 19, 2014 at 12:33 AM, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>> wrote:
->>>>>> On 18 February 2014 23:16, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
->>>>>>> On Tue, Feb 18, 2014 at 10:20 PM, Jassi Brar
->>>>>>> <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>>>>>> On 18 February 2014 16:58, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->>>>>>>> wrote:
->>>>>>>>> On Mon, Feb 17, 2014 at 3:27 PM, Jassi Brar
->>>>>>>>> <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>>>>>>>> On 15 February 2014 17:30, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->>>>>>>>>> wrote:
->>>>>>>>>>> The current implementation of interleaved DMA API support multiple
->>>>>>>>>>> frames only when the memory is contiguous by incrementing
->>>>>>>>>>> src_start/
->>>>>>>>>>> dst_start members of interleaved template.
->>>>>>>>>>>
->>>>>>>>>>> But, when the memory is non-contiguous it will restrict slave
->>>>>>>>>>> device
->>>>>>>>>>> to not submit multiple frames in a batch.  This patch handles this
->>>>>>>>>>> issue by allowing the slave device to send array of interleaved dma
->>>>>>>>>>> templates each having a different memory location.
->>>>>>>>>>>
->>>>>>>>>> How fragmented could be memory in your case? Is it inefficient to
->>>>>>>>>> submit separate transfers for each segment/frame?
->>>>>>>>>> It will help if you could give a typical example (chunk size and gap
->>>>>>>>>> in bytes) of what you worry about.
->>>>>>>>>
->>>>>>>>> With scatter-gather engine feature in the hardware, submitting
->>>>>>>>> separate
->>>>>>>>> transfers for each frame look inefficient. As an example, our DMA
->>>>>>>>> engine
->>>>>>>>> supports up to 16 video frames, with each frame (a typical video
->>>>>>>>> frame
->>>>>>>>> size) being contiguous in memory but frames are scattered into
->>>>>>>>> different
->>>>>>>>> locations. We could not definitely submit frame by frame as it would
->>>>>>>>> be
->>>>>>>>> software overhead (HW interrupting for each frame) resulting in video
->>>>>>>>> lags.
->>>>>>>>>
->>>>>>>> IIUIC, it is 30fps and one dma interrupt per frame ... it doesn't seem
->>>>>>>> inefficient at all. Even poor-latency audio would generate a higher
->>>>>>>> interrupt-rate. So the "inefficiency concern" doesn't seem valid to
->>>>>>>> me.
->>>>>>>>
->>>>>>>> Not to mean we shouldn't strive to reduce the interrupt-rate further.
->>>>>>>> Another option is to emulate the ring-buffer scheme of ALSA.... which
->>>>>>>> should be possible since for a session of video playback the frame
->>>>>>>> buffers' locations wouldn't change.
->>>>>>>>
->>>>>>>> Yet another option is to use the full potential of the
->>>>>>>> interleaved-xfer api as such. It seems you confuse a 'video frame'
->>>>>>>> with the interleaved-xfer api's 'frame'. They are different.
->>>>>>>>
->>>>>>>> Assuming your one video frame is F bytes long and Gk is the gap in
->>>>>>>> bytes between end of frame [k] and start of frame [k+1] and  Gi != Gj
->>>>>>>> for i!=j
->>>>>>>> In the context of interleaved-xfer api, you have just 1 Frame of 16
->>>>>>>> chunks. Each chunk is Fbytes and the inter-chunk-gap(ICG) is Gk  where
->>>>>>>> 0<=k<15
->>>>>>>> So for your use-case .....
->>>>>>>>   dma_interleaved_template.numf = 1   /* just 1 frame */
->>>>>>>>   dma_interleaved_template.frame_size = 16  /* containing 16 chunks */
->>>>>>>>    ...... //other parameters
->>>>>>>>
->>>>>>>> You have 3 options to choose from and all should work just as fine.
->>>>>>>> Otherwise please state your problem in real numbers (video-frames'
->>>>>>>> size, count & gap in bytes).
->>>>>>>
->>>>>>> Initially I interpreted interleaved template the same.  But, Lars
->>>>>>> corrected me
->>>>>>> in the subsequent discussion and let me put it here briefly,
->>>>>>>
->>>>>>> In the interleaved template, each frame represents a line of size
->>>>>>> denoted by
->>>>>>> chunk.size and the stride by icg.  'numf' represent number of frames
->>>>>>> i.e.
->>>>>>> number of lines.
->>>>>>>
->>>>>>> In video frame context,
->>>>>>> chunk.size -> hsize
->>>>>>> chunk.icg -> stride
->>>>>>> numf -> vsize
->>>>>>> and frame_size is always 1 as it will have only one chunk in a line.
->>>>>>>
->>>>>> But you said in your last post
->>>>>>   "with each frame (a typical video frame size) being contiguous in
->>>>>> memory"
->>>>>>  ... which is not true from what you write above. Anyways, my first 2
->>>>>> suggestions still hold.
->>>>>
->>>>> Yes, each video frame is contiguous and they can be scattered.
->>>>>
->>>> I assume by contiguous frame you mean as in framebuffer?  Which is an
->>>> array of bytes.
->>>> If yes, then you should do as I suggest first,  frame_size=16  and numf=1.
->>>
->>> I think am confusing you.  I would like to explain with an example.  Lets
->>> say
->>> each video frame is 4k size starting at address 0x10004000 (-0x10005000) and
->>> other frame at 0x20002000 (-0x20003000), and so on.
->>>
->> As I said plz dont confuse video frame with DMA frame.... in video
->> frame the stride is constant(zero or not) whereas in DMA context the
->> stride must be zero for the frame to be called contiguous.
->>
->>> So, the frames are
->>> scattered in memory and as the template doesnt allow multiple src_start/
->>> dst_start we could not use single template to fill the HW descriptors (of
->>> frames).  So, I feel your suggestion might not work if the frames are
->>> scattered.
->>> Also, how could we get 'vsize' value in your approach?
->>>
->> The client driver(video driver) should know the frame parameters.
->> Practically you'll have to populate 16 transfer templates (frame
->> attributes and locations won't change for a session) and submit to be
->> transferred _cyclically_.
->>
->>>  More importantly,
->>> we are overriding the semantics of interleaved template members.
->>>
->> Not at all. Interleaved-dma isn't meant for only constant stride/icg
->> transfers. Rather it's for identical frames with random strides.
->>
->>>
->>>>
->>>> If no, then it seems you are already doing the right thing.... the
->>>> ring-buffer scheme. Please share some stats how the current api is
->>>> causing you overhead because that is a very common case (many
->>>> controllers support LLI) and you have 467ms (@30fps with 16-frames
->>>> ring-buffer) to queue in before you see any frame drop.
->>>
->>> As I mentioned earlier in the thread, our hardware has a SG engine where by
->>> we could send multiple frames in a batch.  Using the original implementation
->>> of interleaved API, we have three options to transfer.
->>>
->>> One is to send frame by frame to the hardware.  We get a async_tx desc for
->>> each frame and then we submit it to hardware triggering it to transfer this
->>> BD.
->>> We queue the next descriptor on the pending queue and whenever there is
->>> a completion interrupt we submit the next BD on this queue to hardware. In
->>> this implementation we are not efficiently using the SG engine in the
->>> hardware
->>> as we transferring frame by frame even HW allows us to transfer multiple
->>> frames.
->>>
->> Sending one frame at a time will likely cause jitters. That shouldn't be done.
->>
->>> The second option is to queue all the BDs until the maximum frames that HW
->>> is
->>> capable to transfer in a batch and then submit to SG engine in the HW.  With
->>> this approach I feel there will be additional software overhead to track the
->>> number
->>> of maximum transfers and few additional cycles to release the cookie of each
->>> desc.
->>> Here, each desc represents a frame.
->>>
->> APIs are written for the gcd of h/w. We should optimize only for
->> majority and here isn't even anything gained after changing the api.
->> What you want to 'optimize' has been there since ever. Nobody
->> considers that overhead. BTW you don't even want to spend a few 'extra
->> cycles' but what about every other platform that doesn't support this
->> and will have to scan for such transfer requests?
->>
->>> The last option is the current implementation of the driver along with this
->>> change in
->>> API.  It will allow us to send array of interleaved templates wherein we
->>> could allocate
->>> a single async desc which will handle multiple frames (or segments) and just
->>> submit
->>> this desc to HW.  Then we program the current to first frame, tail to last
->>> frame and
->>> HW will complete this transfer.  Here, each desc represents multiple frames.
->>>
->>> My point here is the driver should use hardware resources efficiently and I
->>> feel the
->>> driver will be inefficient if we dont use them.
->>>
->> I am afraid you are getting carried away by the 'awesomeness' of your
->> hardware. RingBuffers/Cyclic transfers  are meant for cases just like
->> yours.
->> Consider the following ... if you queue 16 frames and don't care to
->> track before all are transmitted, you'll have very high latency. Video
->> seeks will take unacceptably long and give the impression of a slow
->> system. Whereas if you get callbacks for each frame rendered, you
->> could updates frames from the next one thereby having very quick
->> response time.
->
-> Not at all, at least in our hardware, when we submit transfers it is most
-> likely to be completed. There are few errors, but mostly are recoverable
-> and it doesnt stop the transfer unless there is a critical error which needs
-> a reset to the whole system.  So, at least in my use case there will be
-> no latency.  I am not saying hardware is great, but it is the IP implementation.
->
-I am not talking about the error cases.
-Apply your patch locally so that you queue 16frames and not get
-notified upon each frame 'rendered'...  now click on 'seek bar' of the
-video player. See how slow it is to jump to play from the new
-location.  Or if the frames are to be encoded after dma transfer...
-see the 'padding' that would need to be done at the end.  These
-concerns are common with audio subsystem using ring-buffers.
-Anyways that is just FYI, I don't care how you implement your platform.
+Hi,
 
-> Regarding this API change, I had earlier explained my use case in my
-> v2 thread.
-> Lars and Vinod came up with this resolution to allow array of
-> interleaved templates.
-> I also feel this is reasonable change for the subsystem.
+On Sun, Feb 23, 2014 at 8:09 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> The Allwinner A1x / A2x SoCs have 2 or 3 usb phys which are all accessed
+> through a single set of registers. Besides this there are also some other
+> phy related bits which need poking, which are per phy, but shared between the
+> ohci and ehci controllers, so these are also controlled from this new phy
+> driver.
 >
-I don't see you getting any better performance from your hardware and
-I certainly don't find your usecase anything new (many dma controllers
-support LLI and they work just fine as such). And I have already
-explained how you could do, whatever you want, without this change.
-So a polite NAK from me.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/phy/sun4i-usb-phy.txt      |  26 ++
+>  drivers/phy/Kconfig                                |  11 +
+>  drivers/phy/Makefile                               |   1 +
+>  drivers/phy/phy-sun4i-usb.c                        | 329 +++++++++++++++++++++
+>  4 files changed, 367 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+>  create mode 100644 drivers/phy/phy-sun4i-usb.c
+>
+[..]
+> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
+> new file mode 100644
+> index 0000000..31c4611
+> --- /dev/null
+> +++ b/drivers/phy/phy-sun4i-usb.c
+[..]
+> +static int sun4i_usb_phy_probe(struct platform_device *pdev)
+> +{
+> +       struct sun4i_usb_phy_data *data;
+> +       struct device *dev = &pdev->dev;
+> +       struct device_node *np = dev->of_node;
+> +       void __iomem *pmu = NULL;
+> +       struct phy_provider *phy_provider;
+> +       struct reset_control *reset;
+> +       struct regulator *vbus;
+> +       struct resource *res;
+> +       struct phy *phy;
+> +       char name[16];
+> +       int i;
+> +
+> +       data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+> +       if (!data)
+> +               return -ENOMEM;
+> +
+> +       mutex_init(&data->mutex);
+> +
+> +       if (of_device_is_compatible(np, "allwinner,sun5i-a13-usb-phy"))
+> +               data->num_phys = 2;
+> +       else
+> +               data->num_phys = 3;
+> +
+> +       if (of_device_is_compatible(np, "allwinner,sun4i-a10-usb-phy"))
+> +               data->disc_thresh = 3;
+> +       else
+> +               data->disc_thresh = 2;
+> +
+> +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy_ctrl");
+> +       data->base = devm_ioremap_resource(dev, res);
+> +       if (IS_ERR(data->base))
+> +               return PTR_ERR(data->base);
+> +
+> +       data->clk = devm_clk_get(dev, "usb_phy");
+> +       if (IS_ERR(data->clk)) {
+> +               dev_err(dev, "could not get usb_phy clock\n");
+> +               return PTR_ERR(data->clk);
+> +       }
+> +
+> +       /* Skip 0, 0 is the phy for otg which is not yet supported. */
+> +       for (i = 1; i < data->num_phys; i++) {
+> +               snprintf(name, sizeof(name), "usb%d_vbus", i);
+> +               vbus = devm_regulator_get_optional(dev, name);
+> +               if (IS_ERR(vbus)) {
+> +                       if (PTR_ERR(vbus) == -EPROBE_DEFER)
+> +                               return -EPROBE_DEFER;
+> +                       vbus = NULL;
+> +               }
+> +
+> +               snprintf(name, sizeof(name), "usb%d_reset", i);
+> +               reset = devm_reset_control_get(dev, name);
+> +               if (IS_ERR(reset)) {
+
+I got around to rebasing my musb tree. I see you fixed the reset
+control error path. You got one.
+
+> +                       dev_err(dev, "failed to get reset %s\n", name);
+> +                       return PTR_ERR(phy);
+
+But you missed one here. And phy is uninitialized until later,
+so this will break big time.
+
+
+Cheers
+ChenYu
+
+> +               }
+> +
+> +               if (i) { /* No pmu for usbc0 */
+> +                       snprintf(name, sizeof(name), "pmu%d", i);
+> +                       res = platform_get_resource_byname(pdev,
+> +                                                       IORESOURCE_MEM, name);
+> +                       pmu = devm_ioremap_resource(dev, res);
+> +                       if (IS_ERR(pmu))
+> +                               return PTR_ERR(pmu);
+> +               }
+> +
+> +               phy = devm_phy_create(dev, &sun4i_usb_phy_ops, NULL);
+> +               if (IS_ERR(phy)) {
+> +                       dev_err(dev, "failed to create PHY %d\n", i);
+> +                       return PTR_ERR(phy);
+> +               }
+> +
+> +               data->phys[i].phy = phy;
+> +               data->phys[i].pmu = pmu;
+> +               data->phys[i].vbus = vbus;
+> +               data->phys[i].reset = reset;
+> +               data->phys[i].index = i;
+> +               phy_set_drvdata(phy, &data->phys[i]);
+> +       }
+> +
+> +       dev_set_drvdata(dev, data);
+> +       phy_provider = devm_of_phy_provider_register(dev, sun4i_usb_phy_xlate);
+> +       if (IS_ERR(phy_provider))
+> +               return PTR_ERR(phy_provider);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id sun4i_usb_phy_of_match[] = {
+> +       { .compatible = "allwinner,sun4i-a10-usb-phy" },
+> +       { .compatible = "allwinner,sun5i-a13-usb-phy" },
+> +       { .compatible = "allwinner,sun7i-a20-usb-phy" },
+> +       { },
+> +};
+> +MODULE_DEVICE_TABLE(of, sun4i_usb_phy_of_match);
+> +
+> +static struct platform_driver sun4i_usb_phy_driver = {
+> +       .probe  = sun4i_usb_phy_probe,
+> +       .driver = {
+> +               .of_match_table = sun4i_usb_phy_of_match,
+> +               .name  = "sun4i-usb-phy",
+> +               .owner = THIS_MODULE,
+> +       }
+> +};
+> +module_platform_driver(sun4i_usb_phy_driver);
+> +
+> +MODULE_DESCRIPTION("Allwinner sun4i USB phy driver");
+> +MODULE_AUTHOR("Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 1.9.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/groups/opt_out.
