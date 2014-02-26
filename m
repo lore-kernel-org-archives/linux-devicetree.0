@@ -1,255 +1,340 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 2/2] ARM: dts: duovero-parlor: Add HDMI output
-Date: Wed, 26 Feb 2014 13:14:18 +0200
-Message-ID: <530DCC8A.6060708@ti.com>
-References: <1393261669-32039-1-git-send-email-florian.vaussard@epfl.ch>
- <20140225123921.GY27282@n2100.arm.linux.org.uk>
- <20140225134139.GA23898@earth.universe> <2364124.7r818M0xAj@avalon>
- <20140225205634.GZ27282@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6935275476016926794=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140225205634.GZ27282@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sebastian Reichel <sre@ring0.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, Ash Charles <ash@gumstix.com>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Javier Martinez Canillas <javier@dowhile0.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Florian Vaussard <florian.vaussard@epfl.ch>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v4 1/3] [media] of: move graph helpers from drivers/media/v4l2-core to drivers/of
+Date: Wed, 26 Feb 2014 11:37:29 +0000
+Message-ID: <20140226113729.A9D5AC40A89@trevor.secretlab.ca>
+References: <1393340304-19005-1-git-send-email-p.zabel@pengutronix.de> < 1393340304-19005-2-git-send-email-p.zabel@pengutronix.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1393340304-19005-2-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Philipp Zabel <philipp.zabel@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
---===============6935275476016926794==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="hM1PmSRfJVGw8ePw6eIAEEfSvbi6hsQtM"
+On Tue, 25 Feb 2014 15:58:22 +0100, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> From: Philipp Zabel <philipp.zabel@gmail.com>
+> 
+> This patch moves the parsing helpers used to parse connected graphs
+> in the device tree, like the video interface bindings documented in
+> Documentation/devicetree/bindings/media/video-interfaces.txt, from
+> drivers/media/v4l2-core to drivers/of.
+> 
+> This allows to reuse the same parser code from outside the V4L2
+> framework, most importantly from display drivers.
+> The functions v4l2_of_get_next_endpoint, v4l2_of_get_remote_port,
+> and v4l2_of_get_remote_port_parent are moved. They are renamed to
+> of_graph_get_next_endpoint, of_graph_get_remote_port, and
+> of_graph_get_remote_port_parent, respectively.
+> Since there are not that many current users yet, switch all of
+> them to the new functions right away.
+> 
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+> Changes since v3:
+>  - Moved back to drivers/of
+> ---
+>  drivers/media/i2c/adv7343.c                   |   4 +-
+>  drivers/media/i2c/mt9p031.c                   |   4 +-
+>  drivers/media/i2c/s5k5baf.c                   |   3 +-
+>  drivers/media/i2c/tvp514x.c                   |   3 +-
+>  drivers/media/i2c/tvp7002.c                   |   3 +-
+>  drivers/media/platform/exynos4-is/fimc-is.c   |   6 +-
+>  drivers/media/platform/exynos4-is/media-dev.c |   3 +-
+>  drivers/media/platform/exynos4-is/mipi-csis.c |   3 +-
+>  drivers/media/v4l2-core/v4l2-of.c             | 117 ----------------------
+>  drivers/of/Makefile                           |   1 +
+>  drivers/of/of_graph.c                         | 134 ++++++++++++++++++++++++++
 
---hM1PmSRfJVGw8ePw6eIAEEfSvbi6hsQtM
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Nah. Just put it into drivers/of/base.c. This isn't a separate subsystem
+and the functions are pretty basic.
 
-Hi,
+>  include/linux/of_graph.h                      |  46 +++++++++
+>  include/media/v4l2-of.h                       |  25 +----
+>  13 files changed, 199 insertions(+), 153 deletions(-)
+>  create mode 100644 drivers/of/of_graph.c
+>  create mode 100644 include/linux/of_graph.h
+> 
+[...]
+> diff --git a/drivers/of/of_graph.c b/drivers/of/of_graph.c
+> new file mode 100644
+> index 0000000..267d8f7
+> --- /dev/null
+> +++ b/drivers/of/of_graph.c
+> @@ -0,0 +1,134 @@
+> +/*
+> + * OF graph binding parsing library
+> + *
+> + * Copyright (C) 2012 - 2013 Samsung Electronics Co., Ltd.
+> + * Author: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> + *
+> + * Copyright (C) 2012 Renesas Electronics Corp.
+> + * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of version 2 of the GNU General Public License as
+> + * published by the Free Software Foundation.
+> + */
+> +#include <linux/kernel.h>
+> +#include <linux/of.h>
+> +#include <linux/of_graph.h>
+> +#include <linux/types.h>
+> +
+> +/**
+> + * of_graph_get_next_endpoint() - get next endpoint node
+> + * @parent: pointer to the parent device node
+> + * @prev: previous endpoint node, or NULL to get first
+> + *
+> + * Return: An 'endpoint' node pointer with refcount incremented. Refcount
+> + * of the passed @prev node is not decremented, the caller have to use
+> + * of_node_put() on it when done.
+> + */
+> +struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
+> +					struct device_node *prev)
+> +{
+> +	struct device_node *endpoint;
+> +	struct device_node *port = NULL;
+> +
+> +	if (!parent)
+> +		return NULL;
+> +
+> +	if (!prev) {
+> +		struct device_node *node;
+> +		/*
+> +		 * It's the first call, we have to find a port subnode
+> +		 * within this node or within an optional 'ports' node.
+> +		 */
+> +		node = of_get_child_by_name(parent, "ports");
+> +		if (node)
+> +			parent = node;
+> +
+> +		port = of_get_child_by_name(parent, "port");
 
-On 25/02/14 22:56, Russell King - ARM Linux wrote:
-> On Tue, Feb 25, 2014 at 05:51:21PM +0100, Laurent Pinchart wrote:
+If you've got a "ports" node, then I would expect every single child to
+be a port. Should not need the _by_name variant.
 
-First I want to summarize the omapdss DT bindings, even if it was
-already more or less covered earlier:
+It seems that this function is merely a helper to get all grandchildren
+of a node (with some very minor constraints). That could be generalized
+and simplified. If the function takes the "ports" node as an argument
+instead of the parent, then there is a greater likelyhood that other
+code can make use of it...
 
-We have a bunch of panels and encoders used on OMAP boards, and we have
-separate, omapdss specific, drivers for those. My plan is to continue
-improving those drivers until they can be platform independent. This
-would be the Common Display Framework that's been discussed (or a
-precursor to it).
+Thinking further. I think the semantics of this whole feature basically
+boil down to this:
 
-We need DT bindings for OMAP display, and one option would've been
-adding a compatible string of "ti,xxx" for every panel and encoder. That
-would obviously be wrong DT representation. So I wanted to do proper DT
-bindings, with proper compatible string.
+#define for_each_grandchild_of_node(parent, child, grandchild) \
+	for_each_child_of_node(parent, child) \
+		for_each_child_of_node(child, grandchild)
 
-This creates the problem that we don't have generic drivers for those
-components yet. For this, I created a hack that, on OMAP, appends
-"omapdss," to the display components at boot time. This way we can have
-OMAP specific drivers for the time being, but others could still use the
-same bindings for their platform and platform specific drivers with
-similar trick.
+Correct? Or in this specific case:
 
-Note that the above is not merged yet, but I'd really want to get it in
-for the next merge window, so if that general concept is bad, please
-nack it asap. And preferably give ideas for an alternative =3D).
+	parent = of_get_child_by_name(np, "ports")
+	for_each_grandchild_of_node(parent, child, grandchild) {
+		...
+	}
 
->> I don't think all physical connectors require a DT binding per-se, but=
- they=20
->> need to be represented in DT as they're part of the hardware. We could=
- push=20
->> connector-related information to the nodes of all chips that have inte=
-rfaces=20
->> wired directly to connectors, but that would result in more complex DT=
-=20
->> bindings and core. I believe modeling connectors using separate DT nod=
-es is be=20
->> best, and would allow easier support for more complex connectors that =
-carry=20
->> multiple streams/signals in parallel (video, audio, DDC, ...).
+Finally, looking at the actual patch, is any of this actually needed.
+All of the users updated by this patch only ever handle a single
+endpoint. Have I read it correctly? Are there any users supporting
+multiple endpoints?
 
-There are things we need to represent for the connectors. For example, a
-+5V going to the connector is not managed by any IP. In some cases
-neither is a hotplug detect GPIO. The i2c lines for the DDC need to be
-managed by someone (with DVI. HDMI DDC on OMAP is managed by by the HDMI
-IP).
+> +
+> +		if (port) {
+> +			/* Found a port, get an endpoint. */
+> +			endpoint = of_get_next_child(port, NULL);
+> +			of_node_put(port);
+> +		} else {
+> +			endpoint = NULL;
+> +		}
+> +
+> +		if (!endpoint)
+> +			pr_err("%s(): no endpoint nodes specified for %s\n",
+> +			       __func__, parent->full_name);
+> +		of_node_put(node);
 
-I guess one could argue that those are standard properties of HDMI or
-DVI, and thus could well be managed by the HDMI or DVI encoder, even if
-the encoder IP itself doesn't have anything to do with those. Maybe they
-could, but I think modeling the connector separately is more correct,
-and allows more freedom.
+If you 'return endpoint' here, then the else block can go down a level.
 
-Say, the HDMI could as well be directly wired to a panel, without any
-connector, although this is perhaps more common with eDP. In that case
-the connector related things can be just left out.
+> +	} else {
+> +		port = of_get_parent(prev);
+> +		if (!port)
+> +			/* Hm, has someone given us the root node ?... */
+> +			return NULL;
 
-Additionally, but perhaps not strictly needed, the connector represents
-a "termination" for the display pipeline, so there's a distinct display
-element at the end of the chain, sometimes a panel, sometimes a
-connector, which marks the end. This makes the pipeline consistent in
-the case where you've got an encoder, output of which goes on some
-boards to a connector and on some boards to a panel (compared to some
-boards having a panel after the encoder, and some having nothing).
+WARN_ONCE(). That's a very definite coding failure if that happens.
 
-> There is some sanity to representing physical connectors in DT, but it'=
-s
-> not for the reason you mention above.  If you consider that it's possib=
-le
-> on PCs to find out what connectors are on the motherboard and where the=
-y
-> are located, this is very useful information to be stored and presented=
-=2E
->=20
-> However, the idea that you combine streams at connectors is not a
-> universal truth, and is certainly false for HDMI.  HDMI combines video
-> and audio at the encoder stage, not at the connector stage, and many
-> HDMI encoders will provide everything required for driving the connecto=
-r.
->=20
-> However, my major objection here is not really that: my major objection=
+> +
+> +		/* Avoid dropping prev node refcount to 0. */
+> +		of_node_get(prev);
+> +		endpoint = of_get_next_child(port, prev);
+> +		if (endpoint) {
+> +			of_node_put(port);
+> +			return endpoint;
+> +		}
+> +
+> +		/* No more endpoints under this port, try the next one. */
+> +		do {
+> +			port = of_get_next_child(parent, port);
+> +			if (!port)
+> +				return NULL;
+> +		} while (of_node_cmp(port->name, "port"));
+> +
+> +		/* Pick up the first endpoint in this port. */
+> +		endpoint = of_get_next_child(port, NULL);
+> +		of_node_put(port);
+> +	}
+> +
+> +	return endpoint;
+> +}
+> +EXPORT_SYMBOL(of_graph_get_next_endpoint);
+> +
+> +/**
+> + * of_graph_get_remote_port_parent() - get remote port's parent node
+> + * @node: pointer to a local endpoint device_node
+> + *
+> + * Return: Remote device node associated with remote endpoint node linked
+> + *	   to @node. Use of_node_put() on it when done.
+> + */
+> +struct device_node *of_graph_get_remote_port_parent(
+> +			       const struct device_node *node)
+> +{
+> +	struct device_node *np;
+> +	unsigned int depth;
+> +
+> +	/* Get remote endpoint node. */
+> +	np = of_parse_phandle(node, "remote-endpoint", 0);
+> +
+> +	/* Walk 3 levels up only if there is 'ports' node. */
 
-> is using something as generic as "hdmi-connector" as a compatible strin=
-g.
-> The reason is that we have to remember that DT is not just "a Linux thi=
-ng".
-> It's /supposed/ to be an OS independent representation of the hardware.=
+This needs a some explaining. My reading of the binding pattern is that
+it will always be a fixed number of levels. Why is this test fuzzy?
 
->=20
-> If we invent something generic called a "hdmi-connector" then we had
-> better first do a thorough search to make sure we're not trampling on
-> anything which is standardized or becoming a standard - if there is,
-> we should work with them - and if that's not possible, then we need to
-> distingush ourselves from them.
-
-Yes, I agree that the connectors (DVI, analog-tv, and HDMI) are in a
-sense much more generic than bindings for a single IP, and thus more
-important to get right.
-
-> What we can't do is go around inventing generic stuff without having ou=
-r
-> eyes wide open.
->=20
-> So, here's a good question to probe how far this has been thought throu=
-gh
-> already: what has been done to discuss the creation of this generic
-> "hdmi-connector" thing with the various parties who are interested in
-> HDMI outputs under DRM using device tree?
-
-They have been discussed, in the context of Common Display Framework
-proposals, and in the context of OMAP DSS DT bindings. They've seen
-multiple review rounds, but I agree that finding about the connectors
-there may be rather difficult if one is not interested in OMAP DSS, or
-one see CDF as nonsense.
-
-Those OMAP bindings are used on both OMAP fbdev and DRM drivers, so at
-least in that case they've been proven to work on both frameworks.
-
-> If that hasn't happened, that's quite a failing - it means that we're
-> on the road to having two _implementation specific_ DT representations
-> for the same hardware - one for fbdev and one for DRM.  That really
-> isn't on.
-
-I hope not. Afais, the bindings are really about the HW. Not fbdev or DRM=
-=2E
-
-At the moment I do see that usually the existing fbdev and drm bindings
-are, in my opinion, quite bad. They don't give proper and detailed
-description of the hardware, in a way that should work on other
-platforms with very different display pipelines.
-
-The proposed bindings in my patches are the designed to be as generic as
-we've (mostly me and Laurent) been able to make them, and very similar
-ones have been used by Laurent on shmobile for his CDF patch series.
-
-The HDMI connector in particular doesn't even define much anything at
-all. At the moment, it only defines the connection to the previous item
-in the display pipeline, usually the HDMI encoder. The +5V I plan to add
-at some point, and it should be a clear addition, it's there by the
-spec. The same for HPD and i2c, although those should be optional so
-that an IP can handle those if the system is so designed.
-
-So while I fully confess that I haven't looked at other platform's HDMI,
-I don't see how the above could go badly wrong. The connector would
-obviously be extended later to add any missing features.
-
-> Yes, it then opens a pandora's box of problems about how we determine
-> whether DRM or fbdev should bind to the DT nodes, but that should be
-> an entirely separate issue (and, ideally of course, both should use
-> the same sub-drivers for the components.)
-
-Yes, this is what the common display framework tries to accomplish. But
-as you say, it's a separate issue. The DT bindings should just model the
-hardware so well that we're as confident as we can be that the current
-boards can be described with those.
-
-So how to go forward? It's very difficult to get feedback on complex DT
-bindings. I recently posted only the DT documentation part for OMAP DSS
-[1], in hopes to get some feedback for a smaller series, but nothing so
-far. It might be easier to look at the whole series [2] to see how the
-board dts files are changed, though.
-
-Maybe the subject "OMAP DSS DT bindings documentation" is not quite
-correct, as there's really nothing OMAP specific there except the SoC
-bindings itself. Perhaps re-sending with subject of "Generic display
-bindings" would catch more eyes.
-
- Tomi
-
-[1]
-http://mid.gmane.org/1392294752-18762-1-git-send-email-tomi.valkeinen@ti.=
-com
-
-[2]
-http://mid.gmane.org/1390301833-24944-1-git-send-email-tomi.valkeinen@ti.=
-com
-
-
-
---hM1PmSRfJVGw8ePw6eIAEEfSvbi6hsQtM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJTDcyKAAoJEPo9qoy8lh71j/kP/0a0jO8u6bIVZCm2c9WUXha8
-aRlsS05UrSJqVvKsE0bMIjxKtkxj66YOHYDS7pWhXBoZR/2BEgvGGe9hb8N0YfzR
-c8PkUinEURiAzECKOO0XE90TlxEbo7QKvvIr5wGIL9ms1TiH8iKLUH4WnWrriwbK
-VEDJeC0ZJ3oXXGw83qOwJ8lIZetkqHUZXExl3oeL28tYXWgC7SOFEXgo4dHcwT0R
-Fow/c77vps3NLhck0Jr4j8rBl/TRDzuUo4W9CrugHzdFwK3tO/i9oMR25sDJyZwv
-k31tBu1Vg7PgBdl054b3bg4WTS3oGih480ScKz+7fnM75fXAHBYpOpe3b7IVaSfg
-WMIE+LyESQqQuVQ/h8ilijfRhPwO5bGD0XK1HUVbCxLZN0fSzpkk66+4yMQ8Kav1
-QwGOdHWMhudguSDEmCi9dm1NfX38RpMeu1zkiB7YHL5K/KBbYrAm573Uh5UCdX7Q
-LhABL3rHIbjfde5j/8lNBwZn6R3ya0NIEyFO+CdufBA7bL4Yn1ZPH/wk0Jo72jwa
-v8JvncmXpvo8W7w+eH3S2CMlpByEoPjUQuybK+Mzym3dfX11NYiF+DCLMZ0dx7iD
-LW3r9FDh+/LOgy3FlF1SJhX8gl/j01lmwpLbNV3DHD26y7pw0RD2nUaUSDaVE2h3
-OrsuN2Vf9XEpaxoorZvy
-=MHYg
------END PGP SIGNATURE-----
-
---hM1PmSRfJVGw8ePw6eIAEEfSvbi6hsQtM--
-
-
---===============6935275476016926794==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============6935275476016926794==--
+> +	for (depth = 3; depth && np; depth--) {
+> +		np = of_get_next_parent(np);
+> +		if (depth == 2 && of_node_cmp(np->name, "ports"))
+> +			break;
+> +	}
+> +	return np;
+> +}
+> +EXPORT_SYMBOL(of_graph_get_remote_port_parent);
+> +
+> +/**
+> + * of_graph_get_remote_port() - get remote port node
+> + * @node: pointer to a local endpoint device_node
+> + *
+> + * Return: Remote port node associated with remote endpoint node linked
+> + *	   to @node. Use of_node_put() on it when done.
+> + */
+> +struct device_node *of_graph_get_remote_port(const struct device_node *node)
+> +{
+> +	struct device_node *np;
+> +
+> +	/* Get remote endpoint node. */
+> +	np = of_parse_phandle(node, "remote-endpoint", 0);
+> +	if (!np)
+> +		return NULL;
+> +	return of_get_next_parent(np);
+> +}
+> +EXPORT_SYMBOL(of_graph_get_remote_port);
+> diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
+> new file mode 100644
+> index 0000000..3bbeb60
+> --- /dev/null
+> +++ b/include/linux/of_graph.h
+> @@ -0,0 +1,46 @@
+> +/*
+> + * OF graph binding parsing helpers
+> + *
+> + * Copyright (C) 2012 - 2013 Samsung Electronics Co., Ltd.
+> + * Author: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> + *
+> + * Copyright (C) 2012 Renesas Electronics Corp.
+> + * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of version 2 of the GNU General Public License as
+> + * published by the Free Software Foundation.
+> + */
+> +#ifndef __LINUX_OF_GRAPH_H
+> +#define __LINUX_OF_GRAPH_H
+> +
+> +#ifdef CONFIG_OF
+> +struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
+> +					struct device_node *previous);
+> +struct device_node *of_graph_get_remote_port_parent(
+> +					const struct device_node *node);
+> +struct device_node *of_graph_get_remote_port(const struct device_node *node);
+> +#else
+> +
+> +static inline struct device_node *of_graph_get_next_endpoint(
+> +					const struct device_node *parent,
+> +					struct device_node *previous)
+> +{
+> +	return NULL;
+> +}
+> +
+> +static inline struct device_node *of_graph_get_remote_port_parent(
+> +					const struct device_node *node)
+> +{
+> +	return NULL;
+> +}
+> +
+> +static inline struct device_node *of_graph_get_remote_port(
+> +					const struct device_node *node)
+> +{
+> +	return NULL;
+> +}
+> +
+> +#endif /* CONFIG_OF */
+> +
+> +#endif /* __LINUX_OF_GRAPH_H */
+> diff --git a/include/media/v4l2-of.h b/include/media/v4l2-of.h
+> index 541cea4..3a49735 100644
+> --- a/include/media/v4l2-of.h
+> +++ b/include/media/v4l2-of.h
+> @@ -17,6 +17,7 @@
+>  #include <linux/list.h>
+>  #include <linux/types.h>
+>  #include <linux/errno.h>
+> +#include <linux/of_graph.h>
+>  
+>  #include <media/v4l2-mediabus.h>
+>  
+> @@ -72,11 +73,6 @@ struct v4l2_of_endpoint {
+>  #ifdef CONFIG_OF
+>  int v4l2_of_parse_endpoint(const struct device_node *node,
+>  			   struct v4l2_of_endpoint *endpoint);
+> -struct device_node *v4l2_of_get_next_endpoint(const struct device_node *parent,
+> -					struct device_node *previous);
+> -struct device_node *v4l2_of_get_remote_port_parent(
+> -					const struct device_node *node);
+> -struct device_node *v4l2_of_get_remote_port(const struct device_node *node);
+>  #else /* CONFIG_OF */
+>  
+>  static inline int v4l2_of_parse_endpoint(const struct device_node *node,
+> @@ -85,25 +81,6 @@ static inline int v4l2_of_parse_endpoint(const struct device_node *node,
+>  	return -ENOSYS;
+>  }
+>  
+> -static inline struct device_node *v4l2_of_get_next_endpoint(
+> -					const struct device_node *parent,
+> -					struct device_node *previous)
+> -{
+> -	return NULL;
+> -}
+> -
+> -static inline struct device_node *v4l2_of_get_remote_port_parent(
+> -					const struct device_node *node)
+> -{
+> -	return NULL;
+> -}
+> -
+> -static inline struct device_node *v4l2_of_get_remote_port(
+> -					const struct device_node *node)
+> -{
+> -	return NULL;
+> -}
+> -
+>  #endif /* CONFIG_OF */
+>  
+>  #endif /* _V4L2_OF_H */
+> -- 
+> 1.8.5.3
+> 
