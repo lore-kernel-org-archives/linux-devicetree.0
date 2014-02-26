@@ -1,190 +1,248 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [RFC PATCH] [media]: of: move graph helpers from
- drivers/media/v4l2-core to drivers/of
-Date: Wed, 26 Feb 2014 15:48:49 +0100
-Message-ID: <1393426129.3248.64.camel@paszta.hi.pengutronix.de>
-References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de>
-	 < CAL_Jsq+U9zU1i+STLHMBjY5BeEP6djYnJVE5X1ix-D2q_zWztQ@mail.gmail.com>
-	 < 20140217181451.7EB7FC4044D@trevor.secretlab.ca>
-	 <20140218070624.GP17250@ pengutronix.de>
-	 <20140218162627.32BA4C40517@trevor.secretlab.ca>
-	 < 1393263389.3091.82.camel@pizza.hi.pengutronix.de>
-	 <20140226110114.CF2C7C40A89@trevor.secretlab.ca>
+From: Srikanth Thokala <sthokal@xilinx.com>
+Subject: Re: [PATCH v3 1/3] dma: Support multiple interleaved frames with
+ non-contiguous memory
+Date: Wed, 26 Feb 2014 19:51:20 +0530
+Message-ID: <CA+mB=1KHuZb14zrb8K9Hs4qQMmYdWEuHpAnwE0FMYOQYv=g5-w@mail.gmail.com>
+References: <1392465619-27614-1-git-send-email-sthokal@xilinx.com>
+	<1392465619-27614-2-git-send-email-sthokal@xilinx.com>
+	<CAJe_Zhc_GNNSDWNFuk+cMHEqxfSCJB_ey=Bf+SwJK-nS=u9ceg@mail.gmail.com>
+	<CA+mB=1KdZZpTmpA0Xp_c4mhgFbjRZ6urYrCwdvoTCmcugQMDUA@mail.gmail.com>
+	<CAJe_ZhdOmu3k9gbPdQzPteyzwsMA8OzWHdhHnXudbF=X7JMhVQ@mail.gmail.com>
+	<CA+mB=1K43MDZj0Rx3q=ETQMaFsG1j7TXsH6v-7a26JdtqTJkbw@mail.gmail.com>
+	<CAJe_ZhfedP7Paf3Zq9chL0WUeLJrsy_DJL05sSbfqnfTtji=HQ@mail.gmail.com>
+	<CA+mB=1LK+aVbvh741+PMnpj_mwZRvJZzR5Fh=hf72UWQvxUiVQ@mail.gmail.com>
+	<CAJe_ZheGP-9f659tOdCHEMrbh73MDi7VjoieFhdQbvjVwiEbJQ@mail.gmail.com>
+	<CA+mB=1KqP=KgNZ_hYGbhin5TqokA+nCRPAA4Qa2R_2OWwv4yVw@mail.gmail.com>
+	<CAJe_ZhfSknzwMUo3nu14Hz5sr_hA6KojB=u4BvyT3byh5ViwXA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140226110114.CF2C7C40A89@trevor.secretlab.ca>
+In-Reply-To: <CAJe_ZhfSknzwMUo3nu14Hz5sr_hA6KojB=u4BvyT3byh5ViwXA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>
+To: Jassi Brar <jaswinder.singh@linaro.org>
+Cc: Srikanth Thokala <sthokal@xilinx.com>, "Williams, Dan J" <dan.j.williams@intel.com>, "Koul, Vinod" <vinod.koul@intel.com>, Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Levente Kurusa <levex@linux.com>, Lars-Peter Clausen <lars@metafoo.de>, lkml <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+On Mon, Feb 24, 2014 at 7:39 AM, Jassi Brar <jaswinder.singh@linaro.org> wrote:
+> On 21 February 2014 23:37, Srikanth Thokala <sthokal@xilinx.com> wrote:
+>> On Thu, Feb 20, 2014 at 3:23 PM, Jassi Brar <jaswinder.singh@linaro.org>
+>> wrote:
+>>> On 20 February 2014 14:54, Srikanth Thokala <sthokal@xilinx.com> wrote:
+>>>> On Wed, Feb 19, 2014 at 12:33 AM, Jassi Brar <jaswinder.singh@linaro.org>
+>>>> wrote:
+>>>>> On 18 February 2014 23:16, Srikanth Thokala <sthokal@xilinx.com> wrote:
+>>>>>> On Tue, Feb 18, 2014 at 10:20 PM, Jassi Brar
+>>>>>> <jaswinder.singh@linaro.org> wrote:
+>>>>>>> On 18 February 2014 16:58, Srikanth Thokala <sthokal@xilinx.com>
+>>>>>>> wrote:
+>>>>>>>> On Mon, Feb 17, 2014 at 3:27 PM, Jassi Brar
+>>>>>>>> <jaswinder.singh@linaro.org> wrote:
+>>>>>>>>> On 15 February 2014 17:30, Srikanth Thokala <sthokal@xilinx.com>
+>>>>>>>>> wrote:
+>>>>>>>>>> The current implementation of interleaved DMA API support multiple
+>>>>>>>>>> frames only when the memory is contiguous by incrementing
+>>>>>>>>>> src_start/
+>>>>>>>>>> dst_start members of interleaved template.
+>>>>>>>>>>
+>>>>>>>>>> But, when the memory is non-contiguous it will restrict slave
+>>>>>>>>>> device
+>>>>>>>>>> to not submit multiple frames in a batch.  This patch handles this
+>>>>>>>>>> issue by allowing the slave device to send array of interleaved dma
+>>>>>>>>>> templates each having a different memory location.
+>>>>>>>>>>
+>>>>>>>>> How fragmented could be memory in your case? Is it inefficient to
+>>>>>>>>> submit separate transfers for each segment/frame?
+>>>>>>>>> It will help if you could give a typical example (chunk size and gap
+>>>>>>>>> in bytes) of what you worry about.
+>>>>>>>>
+>>>>>>>> With scatter-gather engine feature in the hardware, submitting
+>>>>>>>> separate
+>>>>>>>> transfers for each frame look inefficient. As an example, our DMA
+>>>>>>>> engine
+>>>>>>>> supports up to 16 video frames, with each frame (a typical video
+>>>>>>>> frame
+>>>>>>>> size) being contiguous in memory but frames are scattered into
+>>>>>>>> different
+>>>>>>>> locations. We could not definitely submit frame by frame as it would
+>>>>>>>> be
+>>>>>>>> software overhead (HW interrupting for each frame) resulting in video
+>>>>>>>> lags.
+>>>>>>>>
+>>>>>>> IIUIC, it is 30fps and one dma interrupt per frame ... it doesn't seem
+>>>>>>> inefficient at all. Even poor-latency audio would generate a higher
+>>>>>>> interrupt-rate. So the "inefficiency concern" doesn't seem valid to
+>>>>>>> me.
+>>>>>>>
+>>>>>>> Not to mean we shouldn't strive to reduce the interrupt-rate further.
+>>>>>>> Another option is to emulate the ring-buffer scheme of ALSA.... which
+>>>>>>> should be possible since for a session of video playback the frame
+>>>>>>> buffers' locations wouldn't change.
+>>>>>>>
+>>>>>>> Yet another option is to use the full potential of the
+>>>>>>> interleaved-xfer api as such. It seems you confuse a 'video frame'
+>>>>>>> with the interleaved-xfer api's 'frame'. They are different.
+>>>>>>>
+>>>>>>> Assuming your one video frame is F bytes long and Gk is the gap in
+>>>>>>> bytes between end of frame [k] and start of frame [k+1] and  Gi != Gj
+>>>>>>> for i!=j
+>>>>>>> In the context of interleaved-xfer api, you have just 1 Frame of 16
+>>>>>>> chunks. Each chunk is Fbytes and the inter-chunk-gap(ICG) is Gk  where
+>>>>>>> 0<=k<15
+>>>>>>> So for your use-case .....
+>>>>>>>   dma_interleaved_template.numf = 1   /* just 1 frame */
+>>>>>>>   dma_interleaved_template.frame_size = 16  /* containing 16 chunks */
+>>>>>>>    ...... //other parameters
+>>>>>>>
+>>>>>>> You have 3 options to choose from and all should work just as fine.
+>>>>>>> Otherwise please state your problem in real numbers (video-frames'
+>>>>>>> size, count & gap in bytes).
+>>>>>>
+>>>>>> Initially I interpreted interleaved template the same.  But, Lars
+>>>>>> corrected me
+>>>>>> in the subsequent discussion and let me put it here briefly,
+>>>>>>
+>>>>>> In the interleaved template, each frame represents a line of size
+>>>>>> denoted by
+>>>>>> chunk.size and the stride by icg.  'numf' represent number of frames
+>>>>>> i.e.
+>>>>>> number of lines.
+>>>>>>
+>>>>>> In video frame context,
+>>>>>> chunk.size -> hsize
+>>>>>> chunk.icg -> stride
+>>>>>> numf -> vsize
+>>>>>> and frame_size is always 1 as it will have only one chunk in a line.
+>>>>>>
+>>>>> But you said in your last post
+>>>>>   "with each frame (a typical video frame size) being contiguous in
+>>>>> memory"
+>>>>>  ... which is not true from what you write above. Anyways, my first 2
+>>>>> suggestions still hold.
+>>>>
+>>>> Yes, each video frame is contiguous and they can be scattered.
+>>>>
+>>> I assume by contiguous frame you mean as in framebuffer?  Which is an
+>>> array of bytes.
+>>> If yes, then you should do as I suggest first,  frame_size=16  and numf=1.
+>>
+>> I think am confusing you.  I would like to explain with an example.  Lets
+>> say
+>> each video frame is 4k size starting at address 0x10004000 (-0x10005000) and
+>> other frame at 0x20002000 (-0x20003000), and so on.
+>>
+> As I said plz dont confuse video frame with DMA frame.... in video
+> frame the stride is constant(zero or not) whereas in DMA context the
+> stride must be zero for the frame to be called contiguous.
+>
+>> So, the frames are
+>> scattered in memory and as the template doesnt allow multiple src_start/
+>> dst_start we could not use single template to fill the HW descriptors (of
+>> frames).  So, I feel your suggestion might not work if the frames are
+>> scattered.
+>> Also, how could we get 'vsize' value in your approach?
+>>
+> The client driver(video driver) should know the frame parameters.
+> Practically you'll have to populate 16 transfer templates (frame
+> attributes and locations won't change for a session) and submit to be
+> transferred _cyclically_.
+>
+>>  More importantly,
+>> we are overriding the semantics of interleaved template members.
+>>
+> Not at all. Interleaved-dma isn't meant for only constant stride/icg
+> transfers. Rather it's for identical frames with random strides.
+>
+>>
+>>>
+>>> If no, then it seems you are already doing the right thing.... the
+>>> ring-buffer scheme. Please share some stats how the current api is
+>>> causing you overhead because that is a very common case (many
+>>> controllers support LLI) and you have 467ms (@30fps with 16-frames
+>>> ring-buffer) to queue in before you see any frame drop.
+>>
+>> As I mentioned earlier in the thread, our hardware has a SG engine where by
+>> we could send multiple frames in a batch.  Using the original implementation
+>> of interleaved API, we have three options to transfer.
+>>
+>> One is to send frame by frame to the hardware.  We get a async_tx desc for
+>> each frame and then we submit it to hardware triggering it to transfer this
+>> BD.
+>> We queue the next descriptor on the pending queue and whenever there is
+>> a completion interrupt we submit the next BD on this queue to hardware. In
+>> this implementation we are not efficiently using the SG engine in the
+>> hardware
+>> as we transferring frame by frame even HW allows us to transfer multiple
+>> frames.
+>>
+> Sending one frame at a time will likely cause jitters. That shouldn't be done.
+>
+>> The second option is to queue all the BDs until the maximum frames that HW
+>> is
+>> capable to transfer in a batch and then submit to SG engine in the HW.  With
+>> this approach I feel there will be additional software overhead to track the
+>> number
+>> of maximum transfers and few additional cycles to release the cookie of each
+>> desc.
+>> Here, each desc represents a frame.
+>>
+> APIs are written for the gcd of h/w. We should optimize only for
+> majority and here isn't even anything gained after changing the api.
+> What you want to 'optimize' has been there since ever. Nobody
+> considers that overhead. BTW you don't even want to spend a few 'extra
+> cycles' but what about every other platform that doesn't support this
+> and will have to scan for such transfer requests?
+>
+>> The last option is the current implementation of the driver along with this
+>> change in
+>> API.  It will allow us to send array of interleaved templates wherein we
+>> could allocate
+>> a single async desc which will handle multiple frames (or segments) and just
+>> submit
+>> this desc to HW.  Then we program the current to first frame, tail to last
+>> frame and
+>> HW will complete this transfer.  Here, each desc represents multiple frames.
+>>
+>> My point here is the driver should use hardware resources efficiently and I
+>> feel the
+>> driver will be inefficient if we dont use them.
+>>
+> I am afraid you are getting carried away by the 'awesomeness' of your
+> hardware. RingBuffers/Cyclic transfers  are meant for cases just like
+> yours.
+> Consider the following ... if you queue 16 frames and don't care to
+> track before all are transmitted, you'll have very high latency. Video
+> seeks will take unacceptably long and give the impression of a slow
+> system. Whereas if you get callbacks for each frame rendered, you
+> could updates frames from the next one thereby having very quick
+> response time.
 
-thank you for the comments.
+Not at all, at least in our hardware, when we submit transfers it is most
+likely to be completed. There are few errors, but mostly are recoverable
+and it doesnt stop the transfer unless there is a critical error which needs
+a reset to the whole system.  So, at least in my use case there will be
+no latency.  I am not saying hardware is great, but it is the IP implementation.
 
-Am Mittwoch, den 26.02.2014, 11:01 +0000 schrieb Grant Likely:
-> On Mon, 24 Feb 2014 18:36:29 +0100, Philipp Zabel <p.zabel@pengutroni=
-x.de> wrote:
-> > Am Dienstag, den 18.02.2014, 16:26 +0000 schrieb Grant Likely:
-> > > >=20
-> > > > You can find it under Documentation/devicetree/bindings/media/v=
-ideo-interfaces.txt
-> > >=20
-> > > Okay, I think I'm okay with moving the helpers, but I will make o=
-ne
-> > > requirement. I would like to have a short binding document descri=
-bing
-> > > the pattern being used. The document above talks a lot about vide=
-o
-> > > specific issues, but the helpers appear to be specifically about =
-the
-> > > tree walking properties of the API.
-> >=20
-> > Reusing the non-video-secific parts of video-interfaces.txt, how ab=
-out
-> > the following:
->=20
-> This is good, but I have some comments. This document describes itsel=
-f
-> as the common way for doing a device graph within the device tree, bu=
-t
-> there is already a well established pattern for device graphs that is
-> used by the interrupts-extended, clocks and other bindings. Those are
-> all domain-specific bindings, but the core concept is one device uses
-> a resource provided by another device. The resource references constr=
-uct
-> a graph independent from the natural FDT node graph. (ie. the interru=
-pts
-> binding forms the interrupt graph. Same for the clock binding).
->=20
-> So, while this binding does describe a pattern for separate device
-> graphs, it is by no means the only common way of doing so.
->=20
-> I would like the document to acknowledge the difference from the
-> phandle+args pattern used elsewhere and a description of when it woul=
-d
-> be appropriate to use this instead of a simpler binding.
+Regarding this API change, I had earlier explained my use case in my
+v2 thread.
+Lars and Vinod came up with this resolution to allow array of
+interleaved templates.
+I also feel this is reasonable change for the subsystem.
 
-Alright. The main point of this binding is that the devices may have
-multiple distinct ports that each can be connected to other devices.
-So, contrary to the other graph bindings, devices are not simple nodes
-in a directed graph. For example a single capture device with two
-separate inputs connected to camera sensors:
+Lars/Vinod, could you also comment on this thread for an early resolution?
+Based on everyone's opinion I can take a call for my v4 patch.
 
-	,--------.
-	| cam [port]-.   ,-----------------.
-	`--------=C2=B4    `-[port@0] capture   |
-	,---------.   ,-[port@1] interface |
-	| cam [port]-=C2=B4   `-----------------=C2=B4
-	`---------=C2=B4
+Thanks
+Srikanth
 
-Or two separate display controllers with two parallel outputs each, a
-4-port multiplexer, and an encoder (e.g. lvds):
-
-	,------------------.
-	| display    [port@0]--.   ,-------------.
-	| controller [port@1]-. `-[port@0]       |
-	`------------------=C2=B4   `--[port@1]  mux  |
-	,------------------.   ,--[port@2]       |    ,-------------.
-	| display    [port@0]-=C2=B4 ,-[port@3] [port@4]--[port] encoder |
-	| controller [port@1]--=C2=B4   `-------------=C2=B4    `-------------=
-=C2=B4
-	`------------------=C2=B4
-
-Optionally, the same with the multiplexer integrated into the
-encoder device:
-
-	,------------------.
-	| display    [port@0]--.   ,----------------.
-	| controller [port@1]-. `-[port@0]          |
-	`------------------=C2=B4   `--[port@1] encoder  |
-	,------------------.   ,--[port@2] with mux |
-	| display    [port@0]-=C2=B4 ,-[port@3]          |
-	| controller [port@1]--=C2=B4   `----------------=C2=B4
-	`------------------=C2=B4
-
-Or display controller, encoder, and panel:
-
- ,--------.    ,---------.
- | dc [port]--[port@0]   |
- `--------=C2=B4    | encoder |    ,-----------.
-               |   [port@1]--[port] panel |
-               `---------=C2=B4    `-----------=C2=B4=20
-
-> > "Common bindings for device graphs"
-> >=20
-> > General concept
-> > ---------------
-> >=20
-> > The hierarchical organisation of the device tree is well suited to =
-describe
-> > control flow to devices, but data flow between devices that work to=
-gether to
-> > form a logical compound device can follow arbitrarily complex graph=
-s.
->=20
-> I would argue that this pattern isn't necessarily restricted to data
-> flow descriptions. It wants to describe linkage between devices that =
-are
-> sufficiently complex that the simple binding doesn't do the job.
-
-Ok. In principle it would be possible to use the same scheme for other
-connections than data links.
-
-> > The device tree graph bindings allow to describe data bus connectio=
-ns between
-> > individual devices, that can't be inferred from device tree parent-=
-child
-> > relationships. The common bindings do not contain any information a=
-bout the
-> > direction or type of data flow, they just map connections. Specific=
- properties
-> > of the connections can be set depending on the type of connection. =
-To see
-> > how this binding applies to video pipelines, see for example
-> > Documentation/device-tree/bindings/media/video-interfaces.txt.
->=20
-> Even if you don't want to declare the direction of data flow, there d=
-oes
-> need to be some guidance as to how the binding is constructed. Does
-> device A point to device B? Or the other way around? Why would someon=
-e
-> choose one over the other? I don't want to see a situation where A & =
-B
-> point to each other. Things get complex if the graph is allowed to be
-> cyclical.
-
-According to video-interfaces.txt, it is expected that endpoints contai=
-n
-phandles pointing to the remote endpoint on both sides. I'd like to
-leave this up to the more specialized bindings, but I can see that this
-makes enumerating the connections starting from each device tree node
-easier, for example at probe time.
-If the back links are not provided in the device tree, a device at the
-receiving end of a remote-endpoint phandle can only know about connecte=
-d
-remote ports after the kernel parsed the whole graph and created the
-back links itself.
-
-> > Each endpoint can contain a 'remote-endpoint' phandle property that=
- points to
-> > the corresponding endpoint in the port of the remote device. Two 'e=
-ndpoint'
-> > nodes are linked with each other through their 'remote-endpoint' ph=
-andles.
->=20
-> I really don't like this aspect. It is far too easy to get wrong.
-
-On the other hand it is really easy to test for and warn about missing
-or misdirected backlinks.
-
->  Graphs should be one direction only.
-
-But this is not what the current binding in video-interfaces.txt
-describes. I don't think it is a good idea to explicitly forbid
-backlinks in this binding.
-
-regards
-Philipp
+>
+> Anyways there are already ways to achieve what you want (however a bad
+> idea that might be). So I am not convinced the change to api is any
+> useful (your hardware won't run any more efficiently with the change).
+>
+> Regards,
+> Jassi
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
