@@ -1,63 +1,102 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: devicetree repository separation/migration
-Date: Wed, 26 Feb 2014 10:18:57 +0100
-Message-ID: <20140226091856.GA17250@pengutronix.de>
-References: <20140217180544.GU7862@titan.lakedaemon.net>
- <5306A6C0.9000206@gmail.com>
- <20140221141136.GI17250@pengutronix.de>
- <1393257557.16570.94.camel@kazak.uk.xensource.com>
- <20140225072609.GW17250@pengutronix.de>
- <1393313764.9640.15.camel@dagon.hellion.org.uk>
- <1393405232.16570.106.camel@kazak.uk.xensource.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFCv3 2/7] mfd: twl4030-madc: Add DT support and convert to IIO
+ framework
+Date: Wed, 26 Feb 2014 09:26:59 +0000
+Message-ID: <20140226092659.GI9195@lee--X1>
+References: <1393193271-16717-1-git-send-email-sre@debian.org>
+ <1393374270-20079-1-git-send-email-sre@debian.org>
+ <1393374270-20079-3-git-send-email-sre@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1393405232.16570.106.camel-ommiHX4a84BXesXXhkcM7miJhflN2719@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1393374270-20079-3-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Cc: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 26, 2014 at 09:00:32AM +0000, Ian Campbell wrote:
-> On Tue, 2014-02-25 at 07:36 +0000, Ian Campbell wrote:
-> > On Tue, 2014-02-25 at 08:26 +0100, Sascha Hauer wrote:
-> > > On Mon, Feb 24, 2014 at 03:59:17PM +0000, Ian Campbell wrote:
-> > > > On Fri, 2014-02-21 at 15:11 +0100, Sascha Hauer wrote:
-> > > > > Ians dts repository is a good start, but it contains a complete kernel
-> > > > > history and this is not very suitable as a submodule for other
-> > > > > projects. 
-> > > > 
-> > > > It only contains the full history for the files which it contains, not a
-> > > > complete kernel history. This is deliberate so that "git annotate" etc
-> > > > still works to tell you where a particular line came from.
-> > > 
-> > > I have cloned git://xenbits.xen.org/people/ianc/device-tree-rebasing.git.
-> > > .git is 843MB in size and after a 'git checkout v3.13' I see a vanilla v3.13
-> > > checked out. I may have done something wrong, but I don't see what it
-> > > could be.
-> > 
-> > There is a branch with the full Linux stuff in there too. It is needed
-> > in the tree doing the conversion but doesn't really need to be
-> > published. I pushed it in the early days without really thinking about
-> > the size impact. I'll remove that stuff from the published tree.
-> 
-> Done. The tree now has only a master branch and the vX.Y-dts tags (it is
-> still pushing the historical ones, they'll be there soon).
-> 
-> .git of a fresh clone is now 22M, which is more like it ;-)
+> This converts twl4030-madc module to use the Industrial IO ADC
+> framework and adds device tree support.
+>=20
+> Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/mfd/twl4030-madc.c | 122 +++++++++++++++++++++++++++++++++++=
++++++++---
+>  1 file changed, 115 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/mfd/twl4030-madc.c b/drivers/mfd/twl4030-madc.c
+> index 5458561..81484ee 100644
+> --- a/drivers/mfd/twl4030-madc.c
+> +++ b/drivers/mfd/twl4030-madc.c
+> @@ -47,6 +47,8 @@
+>  #include <linux/gfp.h>
+>  #include <linux/err.h>
+> =20
+> +#include <linux/iio/iio.h>
+> +
+>  /*
+>   * struct twl4030_madc_data - a container for madc info
+>   * @dev - pointer to device structure for madc
+> @@ -59,10 +61,74 @@ struct twl4030_madc_data {
+>  	struct device *dev;
+>  	struct mutex lock;	/* mutex protecting this data structure */
+>  	struct twl4030_madc_request requests[TWL4030_MADC_NUM_METHODS];
+> +	bool use_second_irq;
 
-I just cloned it. This is much more managable now. Thanks for doing
-this.
+This should go into the same patch that adds the header doc, or visa
+versa.
 
-Sascha
+>  	int imr;
+>  	int isr;
+>  };
+> =20
+> +static int twl4030_madc_read(struct iio_dev *iio_dev,
+> +			     const struct iio_chan_spec *chan,
+> +			     int *val, int *val2, long mask)
+> +{
+> +	struct twl4030_madc_data *madc =3D iio_priv(iio_dev);
+> +	struct twl4030_madc_request req;
+> +	int channel =3D chan->channel;
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Does this really add anything you save 6 chars.
+
+<snip>
+
+>  	/*
+>  	 * Phoenix provides 2 interrupt lines. The first one is connected t=
+o
+>  	 * the OMAP. The other one can be connected to the other processor =
+such
+>  	 * as modem. Hence two separate ISR and IMR registers.
+>  	 */
+> -	madc->imr =3D (pdata->irq_line =3D=3D 1) ?
+> +	if (pdata)
+> +		madc->use_second_irq =3D pdata->irq_line !=3D 1;
+
+Unconventional an unclear.
+
+Stick the comparison in the if statement.
+
+> +	else
+> +		madc->use_second_irq =3D of_property_read_bool(np,
+> +				       "ti,system-uses-second-madc-irq");
+> +
+> +	madc->imr =3D (madc->use_second_irq =3D=3D 1) ?
+
+madc->imr =3D madc->use_second_irq ? <blah> : <blah>;
+
+>  	    TWL4030_MADC_IMR1 : TWL4030_MADC_IMR2;
+> -	madc->isr =3D (pdata->irq_line =3D=3D 1) ?
+> +	madc->isr =3D (madc->use_second_irq =3D=3D 1) ?
+
+Same here.
+
+<snip>
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
