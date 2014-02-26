@@ -1,132 +1,61 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv2 10/16] ARM: OMAP2+: use pdata quirks for iommu reset
-	lines
-Date: Wed, 26 Feb 2014 12:04:52 -0600
-Message-ID: <530E2CC4.2000006@ti.com>
-References: <1392315347-32967-1-git-send-email-s-anna@ti.com>
-	<1392315347-32967-11-git-send-email-s-anna@ti.com>
-	<20140226171731.GG11654@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20140226171731.GG11654-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: [PATCH v4 0/8] Modernize pm8921 with irqdomains, regmap, DT
+Date: Wed, 26 Feb 2014 10:59:18 -0800
+Message-ID: <1393441166-32692-1-git-send-email-sboyd@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+These patches lay the groundwork for converting the pm8921 sub-devices
+to devicetree as well as simplify the API by migrating the core code
+to use the regmap API instead of the custom pm8xxx read/write wrapper.
 
-On 02/26/2014 11:17 AM, Tony Lindgren wrote:
-> * Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [140213 10:19]:
->> The OMAP iommu driver performs the reset management for the
->> iommu instances in processor sub-systems using the omap_device
->> API which are currently supplied as platform data ops. Use pdata
->> quirks to maintain the functionality as the OMAP iommu driver
->> gets converted to use DT nodes, until the reset portions are
->> decoupled from omap_hwmod/omap_device into a separate reset
->> driver.
->>
->> This patch adds the pdata quirks for the reset management of
->> iommus within the DSP (OMAP3 & OMAP4) and IPU subsystems (OMAP4).
->>
->> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
->
-> Looks OK, but I suggest you separate out the remaining patches in
-> this series into another clean-up series. Then the clean-up series
-> can be merged later on as these have a good chance of conflicting
-> with other stuff.
+Changes since v3:
+ * Added irqdomain Kconfig select
+ * New patch to loosen Kconfig on PM8921 config
+ * Picked up acked-by
 
-Only patches 14 through 16 are cleanup patches. Patches 12 and 13 are 
-adding OMAP5 functionality, and Patch11 is fixing up OMAP3 IVA. I would 
-have to drop Patch14 and Patch16 until OMAP3 is completely DT, so will 
-drop them for now. Let me know if you want me to split out the remaining 
-applicable patches that are in arch/arm/ into a separate series.
+Changes since v2:
+ * Picked up reviewed-by tags
+ * Fixed irqdomain teardown in driver remove
+ * No magical 256 constant
+ * Renamed domain to irqdomain
+ * Clarified kzalloc call
+ * Pushed ssbi regmap helpers into header file
+ * Fixed whitespace noise in patch 6
 
-regards
-Suman
+Changes since v1:
+ * First 3 cleanup patches dropped because they're applied upstream
+ * New regmap read/write helpers
+ * New patch for DT match table
+ * New binding document
 
->
-> Tony
->
->> ---
->>   arch/arm/mach-omap2/pdata-quirks.c | 20 ++++++++++++++++++++
->>   1 file changed, 20 insertions(+)
->>
->> diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
->> index 3d5b24d..74e094a 100644
->> --- a/arch/arm/mach-omap2/pdata-quirks.c
->> +++ b/arch/arm/mach-omap2/pdata-quirks.c
->> @@ -16,12 +16,14 @@
->>   #include <linux/wl12xx.h>
->>
->>   #include <linux/platform_data/pinctrl-single.h>
->> +#include <linux/platform_data/iommu-omap.h>
->>
->>   #include "am35xx.h"
->>   #include "common.h"
->>   #include "common-board-devices.h"
->>   #include "dss-common.h"
->>   #include "control.h"
->> +#include "omap_device.h"
->>
->>   struct pdata_init {
->>   	const char *compatible;
->> @@ -92,6 +94,12 @@ static void __init hsmmc2_internal_input_clk(void)
->>   	omap_ctrl_writel(reg, OMAP343X_CONTROL_DEVCONF1);
->>   }
->>
->> +static struct iommu_platform_data omap3_iommu_pdata = {
->> +	.reset_name = "mmu",
->> +	.assert_reset = omap_device_assert_hardreset,
->> +	.deassert_reset = omap_device_deassert_hardreset,
->> +};
->> +
->>   static int omap3_sbc_t3730_twl_callback(struct device *dev,
->>   					   unsigned gpio,
->>   					   unsigned ngpio)
->> @@ -185,6 +193,12 @@ static void __init omap4_panda_legacy_init(void)
->>   	legacy_init_ehci_clk("auxclk3_ck");
->>   	legacy_init_wl12xx(WL12XX_REFCLOCK_38, 0, 53);
->>   }
->> +
->> +static struct iommu_platform_data omap4_iommu_pdata = {
->> +	.reset_name = "mmu_cache",
->> +	.assert_reset = omap_device_assert_hardreset,
->> +	.deassert_reset = omap_device_deassert_hardreset,
->> +};
->>   #endif
->>
->>   #ifdef CONFIG_SOC_OMAP5
->> @@ -240,6 +254,8 @@ struct of_dev_auxdata omap_auxdata_lookup[] __initdata = {
->>   #ifdef CONFIG_ARCH_OMAP3
->>   	OF_DEV_AUXDATA("ti,omap3-padconf", 0x48002030, "48002030.pinmux", &pcs_pdata),
->>   	OF_DEV_AUXDATA("ti,omap3-padconf", 0x48002a00, "48002a00.pinmux", &pcs_pdata),
->> +	OF_DEV_AUXDATA("ti,omap2-iommu", 0x5d000000, "5d000000.mmu",
->> +		       &omap3_iommu_pdata),
->>   	/* Only on am3517 */
->>   	OF_DEV_AUXDATA("ti,davinci_mdio", 0x5c030000, "davinci_mdio.0", NULL),
->>   	OF_DEV_AUXDATA("ti,am3517-emac", 0x5c000000, "davinci_emac.0",
->> @@ -248,6 +264,10 @@ struct of_dev_auxdata omap_auxdata_lookup[] __initdata = {
->>   #ifdef CONFIG_ARCH_OMAP4
->>   	OF_DEV_AUXDATA("ti,omap4-padconf", 0x4a100040, "4a100040.pinmux", &pcs_pdata),
->>   	OF_DEV_AUXDATA("ti,omap4-padconf", 0x4a31e040, "4a31e040.pinmux", &pcs_pdata),
->> +	OF_DEV_AUXDATA("ti,omap4-iommu", 0x4a066000, "4a066000.mmu",
->> +		       &omap4_iommu_pdata),
->> +	OF_DEV_AUXDATA("ti,omap4-iommu", 0x55082000, "55082000.mmu",
->> +		       &omap4_iommu_pdata),
->>   #endif
->>   	{ /* sentinel */ },
->>   };
->> --
->> 1.8.5.3
->>
+Stephen Boyd (8):
+  mfd: Move pm8xxx-irq.c contents into only driver that uses it
+  mfd: pm8921: Update for genirq changes
+  mfd: pm8921: Migrate to irqdomains
+  mfd: ssbi: Add regmap read/write helpers
+  mfd: pm8921: Use ssbi regmap
+  mfd: pm8921: Add DT match table
+  mfd: pm8921: Loosen Kconfig dependency
+  devicetree: bindings: Document PM8921/8058 PMICs
+
+ .../devicetree/bindings/mfd/qcom,pm8xxx.txt        |  63 +++
+ drivers/mfd/Kconfig                                |  15 +-
+ drivers/mfd/Makefile                               |   1 -
+ drivers/mfd/pm8921-core.c                          | 427 ++++++++++++++++++---
+ drivers/mfd/pm8xxx-irq.c                           | 371 ------------------
+ include/linux/mfd/pm8xxx/irq.h                     |  59 ---
+ include/linux/mfd/pm8xxx/pm8921.h                  |  30 --
+ include/linux/ssbi.h                               |  20 +
+ 8 files changed, 460 insertions(+), 526 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt
+ delete mode 100644 drivers/mfd/pm8xxx-irq.c
+ delete mode 100644 include/linux/mfd/pm8xxx/irq.h
+ delete mode 100644 include/linux/mfd/pm8xxx/pm8921.h
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
