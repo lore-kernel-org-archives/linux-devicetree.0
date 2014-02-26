@@ -1,74 +1,53 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFCv3 3/7] mfd: twl4030-madc: Cleanup driver
-Date: Wed, 26 Feb 2014 08:29:22 +0000
-Message-ID: <20140226082922.GH9195@lee--X1>
-References: <1393193271-16717-1-git-send-email-sre@debian.org>
- <1393374270-20079-1-git-send-email-sre@debian.org>
- <1393374270-20079-4-git-send-email-sre@debian.org>
+From: Stefan Roese <stefan.roese@gmail.com>
+Subject: Re: [PATCH RESEND v10 0/7] mmc: omap_hsmmc: pbias dt and cleanup
+Date: Wed, 26 Feb 2014 09:51:39 +0100
+Message-ID: <530DAB1B.6000406@gmail.com>
+References: <1389627375-9107-1-git-send-email-balajitk@ti.com> <1392821801-29673-1-git-send-email-balajitk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1393374270-20079-4-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1392821801-29673-1-git-send-email-balajitk@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Balaji T K <balajitk@ti.com>, linux-omap@vger.kernel.org, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, chris@printf.net, tony@atomide.com
+Cc: broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> Some style fixes in twl4030-madc driver.
->=20
-> Reported-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/mfd/twl4030-madc.c       | 108 ++++++++++++++++++-----------=
-----------
->  include/linux/i2c/twl4030-madc.h |   2 +-
->  2 files changed, 51 insertions(+), 59 deletions(-)
->=20
-> diff --git a/drivers/mfd/twl4030-madc.c b/drivers/mfd/twl4030-madc.c
-> index 81484ee..c23025b 100644
-> --- a/drivers/mfd/twl4030-madc.c
-> +++ b/drivers/mfd/twl4030-madc.c
+On 19.02.2014 15:56, Balaji T K wrote:
+> Few cleanups to reduce code indent,
+> Add pbias_regulator support and adapt omap_hsmmc to use pbias regulator
+> to configure required voltage on mmc1 pad(SD card) i/o rails on OMAP SoCs.
+>
+> Balaji T K (7):
+>    mmc: omap_hsmmc: use devm_regulator API
+>    mmc: omap_hsmmc: handle vcc and vcc_aux independently
+>    regulator: add pbias regulator support
+>    mmc: omap_hsmmc: adapt hsmmc to use pbias regulator
+>    ARM: dts: add pbias dt node
+>    ARM: OMAP: enable SYSCON and REGULATOR_PBIAS in omap2plus_defconfig
+>    mmc: omap_hsmmc: remove pbias workaround
+>
+>   .../bindings/regulator/pbias-regulator.txt         |   27 ++
+>   arch/arm/boot/dts/dra7.dtsi                        |   17 ++
+>   arch/arm/boot/dts/omap2430.dtsi                    |   17 ++
+>   arch/arm/boot/dts/omap3.dtsi                       |   17 ++
+>   arch/arm/boot/dts/omap4.dtsi                       |   17 ++
+>   arch/arm/boot/dts/omap5.dtsi                       |   17 ++
+>   arch/arm/configs/omap2plus_defconfig               |    2 +
+>   drivers/mmc/host/omap_hsmmc.c                      |  111 +++++----
+>   drivers/regulator/Kconfig                          |    9 +
+>   drivers/regulator/Makefile                         |    1 +
+>   drivers/regulator/pbias-regulator.c                |  255 ++++++++++++++++++++
+>   11 files changed, 441 insertions(+), 49 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/regulator/pbias-regulator.txt
+>   create mode 100644 drivers/regulator/pbias-regulator.c
 
->  /*
-> - * Return battery temperature
-> + * Return battery temperature in degree Celsius
+This patch series (its v11 even though this mail has the subject v10) 
+fixes problems I'm experiencing with MMC detection on some OMAP3 based 
+boards. So:
 
-degrees
+Tested-by: Stefan Roese <sr@denx.de>
 
-<snip>
+Thanks,
+Stefan
 
-> -	int count =3D 0, count_req =3D 0, i;
-> -	u8 reg;
-> +	int count =3D 0, i;
-
-Ugly, please declare on separate lines.
-
->  	for_each_set_bit(i, &channels, TWL4030_MADC_MAX_CHANNELS) {
-> -		reg =3D reg_base + 2 * i;
-
-Odd for this to be removed, as you calculate more than once now.
-
-> -		buf[i] =3D twl4030_madc_channel_raw_read(madc, reg);
-> +		buf[i] =3D twl4030_madc_channel_raw_read(madc, reg_base + 2 * i);
-
-Better to bracket the math for clarity.
-
-<snip>
-
-> +			dev_err(madc->dev, "Unable to read register 0x%X\n",
-> +				reg_base + 2 * i);
-
-Here's the other calculation.
-
-> +	regmask =3D (chan =3D=3D 0) ? TWL4030_BCI_TYPEN : TWL4030_BCI_ITHEN=
-;
-
-regmask =3D chan ? TWL4030_BCI_ITHEN : TWL4030_BCI_TYPEN;=20
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
