@@ -1,95 +1,55 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH v4 8/8] devicetree: bindings: Document PM8921/8058 PMICs
-Date: Wed, 26 Feb 2014 10:59:26 -0800
-Message-ID: <1393441166-32692-9-git-send-email-sboyd@codeaurora.org>
-References: <1393441166-32692-1-git-send-email-sboyd@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393441166-32692-1-git-send-email-sboyd@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH v3 0/9] Use regmap+devm+DT in pm8xxx input drivers
+Date: Wed, 26 Feb 2014 11:05:53 -0800
+Message-ID: <1393441562-685-1-git-send-email-sboyd@codeaurora.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-PM8921 and PM8058 are PMICs found paired with MSM8960 and MSM8660
-devices respectively. They contain subdevices such as keypads,
-RTC, regulators, clocks, etc.
+These patches move the pm8xxx input drivers over to use devm_* APIs
+and regmap. This breaks the dependency of these drivers on the pm8xxx
+specific read/write calls and also simplifies the probe code a bit.
+Finally we add devicetree support to these drivers so they can be probed
+on the platforms that are supported upstream.
 
-Cc: <devicetree@vger.kernel.org>
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
----
- .../devicetree/bindings/mfd/qcom,pm8xxx.txt        | 63 ++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt
+Changes since v2:
+ * Rebased to v3.14-rc3
 
-diff --git a/Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt b/Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt
-new file mode 100644
-index 000000000000..e3fe625ffd58
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt
-@@ -0,0 +1,63 @@
-+Qualcomm PM8xxx PMIC multi-function devices
-+
-+PROPERTIES
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be one of:
-+		    "qcom,pm8058"
-+		    "qcom,pm8921"
-+
-+- #address-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: must be 1
-+
-+- #size-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: must be 0
-+
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: specifies the interrupt that indicates a subdevice
-+		    has generated an interrupt (summary interrupt). The
-+		    format of the specifier is defined by the binding document
-+		    describing the node's interrupt parent.
-+
-+- #interrupt-cells:
-+	Usage: required
-+	Value type : <u32>
-+	Definition: must be 2. Specifies the number of cells needed to encode
-+		    an interrupt source. The 1st cell contains the interrupt
-+		    number. The 2nd cell is the trigger type and level flags
-+		    encoded as follows:
-+
-+			1 = low-to-high edge triggered
-+			2 = high-to-low edge triggered
-+			4 = active high level-sensitive
-+			8 = active low level-sensitive
-+
-+- interrupt-controller:
-+	Usage: required
-+	Value type: <empty>
-+	Definition: identifies this node as an interrupt controller
-+
-+EXAMPLE
-+
-+	pmicintc: pmic@0 {
-+		compatible = "qcom,pm8921";
-+		interrupts = <104 8>;
-+		#interrupt-cells = <2>;
-+		interrupt-controller;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		pwrkey {
-+			compatible = "qcom,pm8921-pwrkey";
-+			interrupt-parent = <&pmicintc>;
-+			interrupts = <50 1>, <51 1>;
-+		};
-+	};
+Changes since v1:
+ * Picked up Dmitry's version of devm for pwrkey
+ * Added DT bindings and parsing patches
+ * Dropped patches picked up by Dmitry
+
+
+Stephen Boyd (9):
+  Input: pmic8xxx-pwrkey - Migrate to regmap APIs
+  Input: pmic8xxx-keypad - Migrate to devm_* APIs
+  Input: pmic8xxx-keypad - Migrate to regmap APIs
+  Input: pmic8xxx-pwrkey - Migrate to DT
+  Input: pm8xxx-vibrator - Add DT match table
+  Input: pmic8xxx-keypad - Migrate to DT
+  devicetree: bindings: Document PM8921/8058 keypads
+  devicetree: bindings: Document PM8921/8058 power keys
+  devicetree: bindings: Document PM8921/8058 vibrators
+
+ .../bindings/input/qcom,pm8xxx-keypad.txt          |  72 +++++
+ .../bindings/input/qcom,pm8xxx-pwrkey.txt          |  39 +++
+ .../devicetree/bindings/input/qcom,pm8xxx-vib.txt  |  16 ++
+ drivers/input/keyboard/pmic8xxx-keypad.c           | 291 ++++++++++-----------
+ drivers/input/misc/pm8xxx-vibrator.c               |   8 +
+ drivers/input/misc/pmic8xxx-pwrkey.c               |  37 ++-
+ include/linux/input/pmic8xxx-keypad.h              |  52 ----
+ include/linux/input/pmic8xxx-pwrkey.h              |  31 ---
+ 8 files changed, 290 insertions(+), 256 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/qcom,pm8xxx-keypad.txt
+ create mode 100644 Documentation/devicetree/bindings/input/qcom,pm8xxx-pwrkey.txt
+ create mode 100644 Documentation/devicetree/bindings/input/qcom,pm8xxx-vib.txt
+ delete mode 100644 include/linux/input/pmic8xxx-keypad.h
+ delete mode 100644 include/linux/input/pmic8xxx-pwrkey.h
+
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 hosted by The Linux Foundation
+
