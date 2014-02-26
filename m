@@ -1,66 +1,101 @@
-From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Subject: Re: [PATCH v2 0/3] power_supply: modelgauge_battery: Add Maxim ModelGauge
- ICs gauge
-Date: Wed, 26 Feb 2014 14:21:07 +0400
-Message-ID: <530DC013.9040908@cogentembedded.com>
-References: <1391293385-27539-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1391293385-27539-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dbaryshkov@gmail.com
-Cc: "anton@enomsg.org" <anton@enomsg.org>, dwmw2@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mk7.kang@samsung.com, k.kozlowski@samsung.com, mark.rutland@arm.com
+From: Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v7 0/9] ARM: brcmstb: Add Broadcom STB SoC support
+Date: Wed, 26 Feb 2014 02:29:03 -0800
+Message-ID: <1393410552-21497-1-git-send-email-marc.ceeeee@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Dmitry,
+This patchset contains the board support package for the
+Broadcom BCM7445 ARM-based SoC [1]. These changes contain a
+minimal set of code needed for a BCM7445-based board to boot
+the Linux kernel.
 
-In accordance to this change you've taken the responsibility for power 
-supply maintainership.
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/MAINTAINERS?id=573189354b7c97cd2256b87cf083ee435584594e
+These changes heavily leverage the OF/devicetree framework. The
+machine is also built into the multi-platform ARMv7 image.
 
-It passed almost month and no answer from you.
-Does it make sense to apply this patch series?
+v7:
+- rebase to v3.14-rc4
+- detect and apply ARM erratum 798181 to Brahma15 CPUs
+- split-up bcm7445.dts into a common dtsi and board-specific dts
 
-Regards,
-Vladimir
+v6 (https://lkml.org/lkml/2014/2/3/493):
+- rebased to v3.14-rc1
+- utilize common APIs for handling CPU power-down
+- drop deprecated __cpuinit attributes
 
-On 02/02/2014 02:23 AM, Vladimir Barinov wrote:
-> Hello.
->
-> This adds the folowing:
-> - Maxim ModelGauge ICs gauge driver for MAX17040/41/43/44/48/49/58/59 chips
-> - Document DT bindings
-> - Remove superseded Maxim MAX17040 gauge driver
->
-> Vladimir Barinov (3):
->   [1/3] power_supply: modelgauge_battery: Maxim ModelGauge ICs gauge
->   [2/3] dt: Document ModelGauge gauge bindings
->   [3/3] power_supply: modelgauge_battery: Remove Maxim MAX17040 gauge
->
-> ---
-> This patchset is against the 'kernel/git/torvalds/linux.git' repo.
->
-> Changes since v1:
-> - switched to REGMAP API
-> - replaced request_threaded_irq with devm_request_threaded_irq
-> - replaced cancel_delayed_work with _sync version
-> - moved "empty_alert_threshold, soc_change_alert, hibernate_threshold,
->    active_threshold, undervoltage, overvoltage, resetvoltage" parameters
->    out from platform_data and DT
-> - removed unused parameters "empty_adjustment, empty_adjustment"
-> - added return value checks for of_property_read_XX functions
-> - removed irrelevant bindings
-> - fixed dt properties naming in documentation
-> - added binding size description in documentation
-> - removed satelite include file include/linux/max17040_battery.h
->
->   Documentation/devicetree/bindings/power_supply/modelgauge_battery.txt |   61
->   drivers/power/Kconfig                                                 |   17
->   drivers/power/Makefile                                                |    2
->   drivers/power/max17040_battery.c                                      |  297 ---
->   drivers/power/modelgauge_battery.c                                    |  838 ++++++++++
->   include/linux/max17040_battery.h                                      |   19
->   include/linux/platform_data/battery-modelgauge.h                      |   31
->   7 files changed, 940 insertions(+), 325 deletions(-)
+v5 (https://lkml.org/lkml/2014/1/21/640):
+- rebased to v3.13 tag
+- make UART DT node a child of 'rdb' node
+- fix ordering of debug UART entries
+
+v4 (https://lkml.org/lkml/2014/1/17/455):
+- make a reboot driver and put it in the drivers folder
+- rework DT bindings to leverage 'syscon'
+- rework BSP code to use 'syscon' for all register mappings
+- misc. tweaks per suggestions from v3
+
+v3 (https://lkml.org/lkml/2014/1/14/696):
+- rebased to v3.13-rc8
+- switched to using 'multi_v7_defconfig'
+- eliminated dependence on compile-time peripheral register access
+- moved DT node iomap out from 'init_early'
+- misc. minor cleanups from mailing-list discussion for v2
+
+v2 (https://lkml.org/lkml/2013/11/26/570):
+- rebased to v3.13-rc1
+- moved implementation to 'mach-bcm' folder
+- added CPU init for B16RM
+
+v1:
+- initial submission
+
+[1] http://www.broadcom.com/products/Cable/Cable-Set-Top-Box-Solutions/BCM7445
+
+Gregory Fong (1):
+  ARM: Enable erratum 798181 for Broadcom Brahma-B15
+
+Marc Carino (8):
+  ARM: brcmstb: add infrastructure for ARM-based Broadcom STB SoCs
+  power: reset: Add reboot driver for brcmstb
+  ARM: brcmstb: add debug UART for earlyprintk support
+  ARM: do CPU-specific init for Broadcom Brahma15 cores
+  ARM: brcmstb: add CPU binding for Broadcom Brahma15
+  ARM: brcmstb: add misc. DT bindings for brcmstb
+  ARM: brcmstb: gic: add compatible string for Broadcom Brahma15
+  ARM: brcmstb: dts: add a reference DTS for Broadcom 7445
+
+ .../devicetree/bindings/arm/brcm-brcmstb.txt       |   95 ++++++
+ Documentation/devicetree/bindings/arm/cpus.txt     |    1 +
+ Documentation/devicetree/bindings/arm/gic.txt      |    1 +
+ arch/arm/Kconfig.debug                             |   15 +-
+ arch/arm/boot/dts/bcm7445-bcm97445svmb.dts         |   14 +
+ arch/arm/boot/dts/bcm7445.dtsi                     |  107 +++++++
+ arch/arm/configs/multi_v7_defconfig                |    1 +
+ arch/arm/kernel/smp_tlb.c                          |   20 +-
+ arch/arm/mach-bcm/Kconfig                          |   15 +
+ arch/arm/mach-bcm/Makefile                         |    4 +
+ arch/arm/mach-bcm/brcmstb.c                        |  104 +++++++
+ arch/arm/mach-bcm/brcmstb.h                        |   38 +++
+ arch/arm/mach-bcm/headsmp-brcmstb.S                |   33 ++
+ arch/arm/mach-bcm/hotplug-brcmstb.c                |  311 ++++++++++++++++++++
+ arch/arm/mm/proc-v7.S                              |   11 +
+ drivers/power/reset/Kconfig                        |   10 +
+ drivers/power/reset/Makefile                       |    1 +
+ drivers/power/reset/brcmstb-reboot.c               |  120 ++++++++
+ 18 files changed, 892 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/brcm-brcmstb.txt
+ create mode 100644 arch/arm/boot/dts/bcm7445-bcm97445svmb.dts
+ create mode 100644 arch/arm/boot/dts/bcm7445.dtsi
+ create mode 100644 arch/arm/mach-bcm/brcmstb.c
+ create mode 100644 arch/arm/mach-bcm/brcmstb.h
+ create mode 100644 arch/arm/mach-bcm/headsmp-brcmstb.S
+ create mode 100644 arch/arm/mach-bcm/hotplug-brcmstb.c
+ create mode 100644 drivers/power/reset/brcmstb-reboot.c
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
