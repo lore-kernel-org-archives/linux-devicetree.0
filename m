@@ -1,91 +1,41 @@
-From: Alex Elder <elder@linaro.org>
-Subject: [PATCH v2 03/12] clk: bcm281xx: change some symbol names
-Date: Tue, 25 Feb 2014 18:15:43 -0600
-Message-ID: <1393373752-30875-4-git-send-email-elder@linaro.org>
+From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 12/12] ARM: dts: add bus clock bsc3_apb for bcm281xx
+Date: Tue, 25 Feb 2014 18:15:52 -0600
+Message-ID: <1393373752-30875-13-git-send-email-elder@linaro.org>
 References: <1393373752-30875-1-git-send-email-elder@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1393373752-30875-1-git-send-email-elder@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: mturquette@linaro.org, mporter@linaro.org, bcm@fixthebug.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1393373752-30875-1-git-send-email-elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-As I developed the bcm281xx clock code I understood there were
-restrictions on device tree "compatible" strings names, and as a
-result "bcm11351" was used in places despite the part family being
-more properly called "bcm281xx".  This can be a little confusing.
+Add the bus clock named "bsc3_apb" to the list of those provided by
+the slave CCU.
 
-In some cases I went to far and things using "bcm11351" when that
-was not necessary.
-
-This patch remedies this.  It renames the symbol used to define the
-"compatible" string (but not its value) so it uses "BCM281XX".
-Similarly, the name names provided to the CLK_OF_DECLARE() macro
-are changed, hoping to minimize the number of places that the
-confusing "11351" string is used.
-
-Signed-off-by: Alex Elder <elder@linaro.org>
+Signed-off-by: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/clk/bcm/clk-bcm281xx.c |   27 ++++++++++++++++-----------
- 1 file changed, 16 insertions(+), 11 deletions(-)
+ arch/arm/boot/dts/bcm11351.dtsi |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/bcm/clk-bcm281xx.c b/drivers/clk/bcm/clk-bcm281xx.c
-index 3c66de6..bb947af 100644
---- a/drivers/clk/bcm/clk-bcm281xx.c
-+++ b/drivers/clk/bcm/clk-bcm281xx.c
-@@ -15,12 +15,17 @@
- #include "clk-kona.h"
- #include "dt-bindings/clock/bcm281xx.h"
+diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
+index 94b36f6..ff56891 100644
+--- a/arch/arm/boot/dts/bcm11351.dtsi
++++ b/arch/arm/boot/dts/bcm11351.dtsi
+@@ -247,7 +247,8 @@
+ 					     "bsc1",
+ 					     "bsc2",
+ 					     "bsc3",
+-					     "pwm";
++					     "pwm",
++					     "bsc3_apb";
+ 		};
  
--/* bcm11351 CCU device tree "compatible" strings */
--#define BCM11351_DT_ROOT_CCU_COMPAT	"brcm,bcm11351-root-ccu"
--#define BCM11351_DT_AON_CCU_COMPAT	"brcm,bcm11351-aon-ccu"
--#define BCM11351_DT_HUB_CCU_COMPAT	"brcm,bcm11351-hub-ccu"
--#define BCM11351_DT_MASTER_CCU_COMPAT	"brcm,bcm11351-master-ccu"
--#define BCM11351_DT_SLAVE_CCU_COMPAT	"brcm,bcm11351-slave-ccu"
-+/*
-+ * These are the bcm281xx CCU device tree "compatible" strings.
-+ * We're stuck with using "bcm11351" in the string because wild
-+ * cards aren't allowed, and that name was the first one defined
-+ * in this family of devices.
-+ */
-+#define BCM281XX_DT_ROOT_CCU_COMPAT	"brcm,bcm11351-root-ccu"
-+#define BCM281XX_DT_AON_CCU_COMPAT	"brcm,bcm11351-aon-ccu"
-+#define BCM281XX_DT_HUB_CCU_COMPAT	"brcm,bcm11351-hub-ccu"
-+#define BCM281XX_DT_MASTER_CCU_COMPAT	"brcm,bcm11351-master-ccu"
-+#define BCM281XX_DT_SLAVE_CCU_COMPAT	"brcm,bcm11351-slave-ccu"
- 
- /* Root CCU clocks */
- 
-@@ -404,13 +409,13 @@ static void __init kona_dt_slave_ccu_setup(struct device_node *node)
- 	kona_dt_ccu_setup(node, bcm281xx_slave_ccu_clks_setup);
- }
- 
--CLK_OF_DECLARE(bcm11351_root_ccu, BCM11351_DT_ROOT_CCU_COMPAT,
-+CLK_OF_DECLARE(bcm281xx_root_ccu, BCM281XX_DT_ROOT_CCU_COMPAT,
- 			kona_dt_root_ccu_setup);
--CLK_OF_DECLARE(bcm11351_aon_ccu, BCM11351_DT_AON_CCU_COMPAT,
-+CLK_OF_DECLARE(bcm281xx_aon_ccu, BCM281XX_DT_AON_CCU_COMPAT,
- 			kona_dt_aon_ccu_setup);
--CLK_OF_DECLARE(bcm11351_hub_ccu, BCM11351_DT_HUB_CCU_COMPAT,
-+CLK_OF_DECLARE(bcm281xx_hub_ccu, BCM281XX_DT_HUB_CCU_COMPAT,
- 			kona_dt_hub_ccu_setup);
--CLK_OF_DECLARE(bcm11351_master_ccu, BCM11351_DT_MASTER_CCU_COMPAT,
-+CLK_OF_DECLARE(bcm281xx_master_ccu, BCM281XX_DT_MASTER_CCU_COMPAT,
- 			kona_dt_master_ccu_setup);
--CLK_OF_DECLARE(bcm11351_slave_ccu, BCM11351_DT_SLAVE_CCU_COMPAT,
-+CLK_OF_DECLARE(bcm281xx_slave_ccu, BCM281XX_DT_SLAVE_CCU_COMPAT,
- 			kona_dt_slave_ccu_setup);
+ 		ref_1m_clk: ref_1m {
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
