@@ -1,84 +1,130 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2MiBSRVNFTkRdIHB3bTogQWRkIENMUFM3MTFYIFBXTSBz?=
- =?UTF-8?B?dXBwb3J0?=
-Date: Wed, 26 Feb 2014 20:50:46 +0400
-Message-ID: <1393433446.816907298@f337.i.mail.ru>
-References: <1393342067-9086-1-git-send-email-shc_work@mail.ru>
- <5211076.9eDkSrDagS@wuerfel>
- <20140226160046.GD29659@e106331-lin.cambridge.arm.com>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: at91: sama5d3: get rid of atmel_tsadcc driver
+Date: Wed, 26 Feb 2014 18:00:02 +0100
+Message-ID: <20140226170002.GA20517@piout.net>
+References: <1393432190-8799-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20140226160046.GD29659@e106331-lin.cambridge.arm.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>
-Cc: =?UTF-8?B?QXJuZCBCZXJnbWFubg==?= <arnd@arndb.de>, =?UTF-8?B?bGludXgtcHdtQHZnZXIua2VybmVsLm9yZw==?= <linux-pwm@vger.kernel.org>, =?UTF-8?B?VGhpZXJyeSBSZWRpbmc=?= <thierry.reding@gmail.com>, =?UTF-8?B?ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc=?= <devicetree@vger.kernel.org>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt@kernel.org>, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <Pawel.Moll@arm.com>, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ijc+devicetree@hellion.org.uk>, =?UTF-8?B?S3VtYXIgR2FsYQ==?= <galak@codeaurora.org>, =?UTF-8?B?Z3JhbnQubGlrZWx5QGxpbmFyby5vcmc=?= <grant.likely@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1393432190-8799-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8uCgrQodGA0LXQtNCwLCAyNiDRhNC10LLRgNCw0LvRjyAyMDE0LCAxNjowMCBVVEMg0L7R
-giBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjoKPiBPbiBUdWUsIEZlYiAyNSwg
-MjAxNCBhdCAwMzo1MDozMlBNICswMDAwLCBBcm5kIEJlcmdtYW5uIHdyb3RlOgo+ID4gT24gVHVl
-c2RheSAyNSBGZWJydWFyeSAyMDE0IDE5OjQ3OjU3IEFsZXhhbmRlciBTaGl5YW4gd3JvdGU6Cj4g
-PiA+INCS0YLQvtGA0L3QuNC6LCAyNSDRhNC10LLRgNCw0LvRjyAyMDE0LCAxNjozMyArMDE6MDAg
-0L7RgiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRiLmRlPjoKPiA+ID4gPiBPbiBUdWVzZGF5IDI1
-IEZlYnJ1YXJ5IDIwMTQgMTk6Mjc6NDcgQWxleGFuZGVyIFNoaXlhbiB3cm90ZToKPiA+ID0+ID4g
-Cj4gPiA+ID4gV2UgcmVhbGx5IHdhbnQgdG8gYXZvaWQgd2lsZGNhcmRzIGluIGNvbXBhdGlibGUg
-c3RyaW5ncy4gQ2FuIHlvdSBjYWxsIHRoaXMKPiA+ID4gPiAiY2lycnVzLGNzODk3MTItcHdtIiB0
-byBtYXRjaCB0aGUgZmlyc3QgU29DIHRoYXQgY2FtZSB3aXRoIHRoaXMgaGFyZHdhcmU/Cj4gPiA+
-ID4gT2J2aW91c2x5IGlmIHRoZXJlIHdhcyBzb21lIGNoaXAgYmVmb3JlIHRoYXQgKEknbSBub3Qg
-ZmFtaWxpYXIgd2l0aCB0aGUKPiA+ID4gPiBtb2RlbCBudW1iZXJzKSwgdXNlIHRoYXQgaW5zdGVh
-ZC4KPiA+ID4gPiAKPiA+ID4gPiBZb3UgY2FuIGVpdGhlciBsaXN0IGFsbCBjaGlwcyB5b3Uga25v
-dyB0aGF0IGhhdmUgdGhpcyBpbiB0aGUgZHJpdmVyLAo+ID4gPiA+IG9yIHlvdSB1c2UgImNpcnJ1
-cyxjczg5NzEyLXB3bSIgYXMgdGhlIGZhbGxiYWNrLCBhbmQgdXNlIHRoZSBuYW1lIG9mCj4gPiA+
-ID4gdGhlIFNvQyB5b3UgaGF2ZSBhcyB0aGUgbW9yZSBzcGVjaWZpYyBzdHJpbmcuCj4gPiA+IAo+
-ID4gPiBJdCBzZWVtcyB0aGF0IGluIHRoaXMgY2FzZSB3ZSB3aWxsIG5lZWQgdG8gbW9kaWZ5IHRo
-ZSBjb21wYXRpYmlsaXR5IHN0cmluZwo+ID4gPiBmb3Igb3RoZXIgZHJpdmVycyB0aGF0IGFyZSBh
-bHJlYWR5IGF2YWlsYWJsZSBpbiB0aGUga2VybmVsLi4uCj4gPiAKPiA+IEFoLCByaWdodC4gSSBt
-aXNzZWQgdGhlIGJpbmRpbmcgZm9yIGdwaW8gYW5kIHNlcmlhbCBnb2luZyBpbi4KPiA+IAo+ID4g
-RFQgbWFpbnRhaW5lcnMsIGFueSBzdWdnZXN0aW9uIG9uIGhvdyB3ZSBzaG91bGQgcHJvY2VlZCBo
-ZXJlPwo+ID4gCj4gPiBBRkFJQ1QsIGNscHM3MTF4IHBsYXRmb3JtIHN1cHBvcnQgaXMgc3RpbGwg
-d29yay1pbi1wcm9ncmVzcywgc28gd2UgZG9uJ3QKPiA+IGhhdmUgYW55IHVwc3RyZWFtIHVzZXJz
-IHRvIHdvcnJ5IGFib3V0IHlldCwgYnV0IGNoYW5naW5nIHRoZW0gaXMgc3RpbGwKPiA+IGdvaW5n
-IHRvIGJlIHNsaWdodGx5IG1lc3N5Lgo+IAo+IFdoZW4gYWxsb2NhdGluZyBhbnkgbmV3IGNvbXBh
-dGlibGUgc3RyaW5ncywgYXMgQXJuZCBzYXlzLCB3ZSBzaG91bGQKPiBhdm9pZCB3aWxkY2FyZHMg
-YXMgdGhleSdyZSB1c3VhbGx5IGZhciB0b28gZW5jb21wYXNzaW5nIGFuZCBlbmQgdXAKPiBjYXVz
-aW5nIG1vcmUgdHJvdWJsZSB0aGFuIHRoZXkncmUgd29ydGguCj4gCj4gSW4gdGhpcyBjYXNlIGhv
-dyBwcm9ibGVtYXRpYyBhcmUgdGhlIHdpbGRjYXJkIHN0cmluZ3M/Cj4gCj4gSSBhc3N1bWUgd2Ug
-c3RpbGwgaGF2ZSBzcGVjaWZpYyBzdHJpbmdzIGVhcmxpZXIgaW4gYW55IGNvbXBhdGlibGUgbGlz
-dAo+IGluIGFueSBjYXNlPyBJZiBub3QsIGFuZCB0aGVyZSBhcmUgcG9zc2libGUgZGlmZmVyZW5j
-ZXMsIHRoYXQgc2hvdWxkIGJlCj4gZml4ZWQgcmlnaHQgYXdheS4KPiAKPiBXZSBoYXZlIGEgZmV3
-IG9wdGlvbnM6Cj4gCj4gYSkgVXBkYXRlIHRoZSBkb2NzIG9ubHkuCj4gCj4gICAgTm90ZSBpbiB0
-aGUgZG9jcyB0aGF0ICJjaXJydXMsY2xwczcxMXgtJFVOSVQiIG1lYW5zIGFueXRoaW5nCj4gICAg
-Y29tcGF0aWJsZSB3aXRoIHRoZSAkVU5JVCBpbiB0aGUgY3M4OTcxMi4gVGhpcyBtYXkgYmUKPiAg
-ICBjb3VudGVyLWludHVpdGl2ZSwgYW5kIGlmIGEgbmV3IGNscHM3MTF4IHBsYXRmb3JtIGNvbWVz
-IG91dCB3aXRoIGFuCj4gICAgaW5jb21wYXRpYmxlICRVTklUIGl0IHNob3VsZCBvbWl0ICJjaXJy
-dXMsY2xwczcxMXgtJFVOSVQiIGZyb20gaXRzCj4gICAgY29tcGF0aWJsZSBsaXN0LCBidXQgb3Ro
-ZXJ3aXNlIG5vIGhhcm0gZG9uZS4KPiAKPiBiKSBEZXByZWNhdGUgdGhlIGV4aXN0aW5nIHN0cmlu
-Zy4KPiAgIAo+ICAgIEFkZCAiY2lycnVzLGNzODk3MTItJFVOSVQiIHRvIHRoZSBiaW5kaW5nIGRv
-Y3MgYW5kIGRyaXZlci4gTWFyawo+ICAgICJjaXJydXMsY2xwczcxMXgtJFVOSVQiIGFzIGRlcHJl
-Y2F0ZWQgaW4gdGhlIGJpbmRpbmcgZG9jdW1lbnQuCj4gICAgUmVwbGFjZSAiY2lycnVzLGNscHM3
-MTF4LSRVTklUIiB3aXRoICJjaXJydXMsY3M4OTcxMi0kVU5JVCIgaW4gYWxsCj4gICAgRFRzLgo+
-IAo+ICAgIFRoaXMgd2lsbCBtZWFuIG5ldyBEVEJzIHdvbid0IHdvcmsgd2l0aCBhbiBvbGRlciBr
-ZXJuZWwsIGJ1dCBhcwo+ICAgIHN1cHBvcnQgaXMgYSB3b3JrIGluIHByb2dyZXNzIHRoYXQgbWln
-aHQgbm90IG1hdHRlci4gT2xkIERUQnMgd2lsbAo+ICAgIGNvbnRpbnVlIHRvIGZ1bmN0aW9uLgo+
-IAo+ICAgIElmZiB5b3UgY2FuIGd1YXJhbnRlZSB0aGF0IHRoZSBvbGQgc3RyaW5nIGlzIG5vdCBw
-b3NzaWJseSBiZWluZyB1c2VkCj4gICAgYnkgYW55b25lLCBpdCBjYW4gYmUgZHJvcHBlZCBmcm9t
-IHRoZSBkcml2ZXIuIElmIG5vdCBpdCBoYXMgdG8gcmVtYWluCj4gICAgKHRob3VnaCBjYW4gYmUg
-Y29tbWVudGVkIHRvIGJlIGRlcHJlY2F0ZWQpLCBzbyB0aGF0IG9sZCBEVEJzCj4gICAgZnVuY3Rp
-b24uIEl0J3MgcHJvYmFibHkgYmVzdCB0byBsZWF2ZSBpdCB0aGVyZS4KPiAgIAo+IGMpIERlcHJl
-Y2F0ZSwgbWFpbnRhaW5pbmcgKGZvcndhcmRzKSBjb21wYXRpYmlsaXR5Lgo+IAo+ICAgIEFzIGFi
-b3ZlLCBidXQgcmF0aGVyIHRoYW4gcmVwbGFjaW5nICJjaXJydXMsY2xwczcxMXgtJFVOSVQiIHdp
-dGgKPiAgICAiY2lycnVzLGNzODk3MTItJFVOSVQiIGluIERUcywgcGxhY2UgImNpcnJ1cyxjczg5
-NzEyLSRVTklUIiBiZWZvcmUKPiAgICAiY2lycnVzLGNscHM3MTF4LSRVTklUIiBpbiBEVHMuIFRo
-aXMgYWxsb3dzIG5ldyBEVEJzIHRvIHdvcmsgd2l0aAo+ICAgIG9sZGVyIGtlcm5lbHMgdG9vLiBE
-ZXBlbmRpbmcgb24gd2hhdCBsZXZlbCBvZiBzdXBwb3J0IHlvdSBoYXZlIGluCj4gICAgbWFpbmxp
-bmUgY3VycmVudGx5IHRoaXMgbWF5IG9yIG1heSBub3QgYmUgYW4gaW1wb3J0YW50IGNvbnNpZGVy
-YXRpb24uCgpJZiBJIHVuZGVyc3Rvb2QgY29ycmVjdGx5LCBpbiB0aGUgdmFyaWFudCAiYSIsIHdl
-IGNoYW5nZSBub3RoaW5nLgpJZSBjb21wYXRpYmlsaXR5IHN0cmluZyBpcyBhIGdsb2JhbCB0byBl
-bnRpcmUgcGxhdGZvcm0sIGFuZCBpbiBjYXNlIG9mIGFueQpDUFUgZGlmZmVyZW5jZXMsIHdlIHNp
-bXBseSBhZGQgdGhlIGFkZGl0aW9uYWwgY29tcGF0aWJpbGl0eSBzdHJpbmcgZnVsbHkKbWVldHMg
-dGhlIENQVSBuYW1lLCBmb3IgZXhhbXBsZSBmb3IgQ2lycnVzIExvZ2ljIEVQNzMxMiB0aGlzIHdp
-bGwgYmUKbGlrZTogImNpcnJ1cyxlcDczMTItaHciLCAiY2lycnVzLGNscHM3MTF4LWh3Ii4KQ29y
-cmVjdD8KClRoYW5rcy4KLS0tCg==
+
+--vtzGhvizbBRQ85DL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On 26/02/2014 at 17:29:50 +0100, Ludovic Desroches wrote :
+> From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>=20
+> Touchscreen support for at91_adc has been introduced so we can get rid of
+> atmel_tsadcc.
+>=20
+> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+
+Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+> ---
+>  arch/arm/boot/dts/sama5d3.dtsi    |   14 +-------------
+>  arch/arm/boot/dts/sama5d3xdm.dtsi |    7 +++----
+>  2 files changed, 4 insertions(+), 17 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.d=
+tsi
+> index 3d5faf8..26d7ed5 100644
+> --- a/arch/arm/boot/dts/sama5d3.dtsi
+> +++ b/arch/arm/boot/dts/sama5d3.dtsi
+> @@ -239,7 +239,7 @@
+>  			};
+> =20
+>  			adc0: adc@f8018000 {
+> -				compatible =3D "atmel,at91sam9260-adc";
+> +				compatible =3D "atmel,at91sam9x5-adc";
+>  				reg =3D <0xf8018000 0x100>;
+>  				interrupts =3D <29 IRQ_TYPE_LEVEL_HIGH 5>;
+>  				pinctrl-names =3D "default";
+> @@ -295,18 +295,6 @@
+>  				};
+>  			};
+> =20
+> -			tsadcc: tsadcc@f8018000 {
+> -				compatible =3D "atmel,at91sam9x5-tsadcc";
+> -				reg =3D <0xf8018000 0x4000>;
+> -				interrupts =3D <29 IRQ_TYPE_LEVEL_HIGH 5>;
+> -				atmel,tsadcc_clock =3D <300000>;
+> -				atmel,filtering_average =3D <0x03>;
+> -				atmel,pendet_debounce =3D <0x08>;
+> -				atmel,pendet_sensitivity =3D <0x02>;
+> -				atmel,ts_sample_hold_time =3D <0x0a>;
+> -				status =3D "disabled";
+> -			};
+> -
+>  			i2c2: i2c@f801c000 {
+>  				compatible =3D "atmel,at91sam9x5-i2c";
+>  				reg =3D <0xf801c000 0x4000>;
+> diff --git a/arch/arm/boot/dts/sama5d3xdm.dtsi b/arch/arm/boot/dts/sama5d=
+3xdm.dtsi
+> index f9bdde5..0b8f5d1 100644
+> --- a/arch/arm/boot/dts/sama5d3xdm.dtsi
+> +++ b/arch/arm/boot/dts/sama5d3xdm.dtsi
+> @@ -23,10 +23,9 @@
+>  			};
+> =20
+>  			adc0: adc@f8018000 {
+> -				status =3D "disabled";
+> -			};
+> -
+> -			tsadcc: tsadcc@f8018000 {
+> +				atmel,adc-clock-rate =3D <1000000>;
+> +				atmel,adc-ts-wires =3D <4>;
+> +				atmel,adc-ts-pressure-threshold =3D <10000>;
+>  				status =3D "okay";
+>  			};
+> =20
+> --=20
+> 1.7.9.5
+>=20
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--=20
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--vtzGhvizbBRQ85DL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBCAAGBQJTDh2SAAoJEKbNnwlvZCyzu38P/11ak8IbyZegBZBqrl+4cdtQ
+Ot6kgm4k23mPIJIyOuWgd6aB8qGSHjl097CHa3UJ6fG0ukmU5ozPImJ0QbESc7Tj
+bPCRoZK6IoF3vqSIGrcYWBNbbrlyBORfzI15xCoRoRhn+syEjFBWdOrACGBTwQBi
+eeP9SVkqNSEySvuMK7a7zpFJPuqvnmwiNswsA0qaVNdd64DxhltZ13x3sMDv3Ec0
+WOXVf7tgb1kgnHei7LFXvfMfyf8sisTuh4Q5DmEhtGMKSs2mxS1d/XFhQ3KeXFap
+ZqMa4So+xOfxhVIBBiWY2/7yh27px56RVWrsXv2fhRDaQ4CODQGaScG+6Z4U4iyc
+mOdR+mRsuwgLQq9MpevRf45KW/psajJ8N2VseGmoENyzUtdEhfeXf5cgukSCZPoM
+d9mEVcdtt7DChdKWPMzm3i5gu8j+zPzT4ME8jDWPq29caDz2CayxiMmyBB0EXAlX
+4jPrEAaAvsbBi1UMNuxmEf+LLqGO+SQ1vsQpGigAh+QwOt3WO7aaxqcF1Liob2Kt
+eWFqU/p8lwpICk1Cs7mn/e2CrULAUwCzKHVQ6U/ikxPMBtODFbHH8iuorfmMfJsh
+0VqIulF2mBwd6rAMSOjEXDhSv6yJFiQZ7Y4n8TFd2z6O3B3AnBNOctnpByZOIqRO
+2LNbegW4fGajHex4fKWN
+=G4ub
+-----END PGP SIGNATURE-----
+
+--vtzGhvizbBRQ85DL--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
