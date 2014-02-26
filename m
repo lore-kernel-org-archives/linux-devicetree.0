@@ -1,106 +1,135 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v4] can: xilinx CAN controller support.
-Date: Wed, 26 Feb 2014 14:46:43 +0000
-Message-ID: <678ca296-8687-4e7c-9014-ae69d886a068@CO9EHSMHS014.ehs.local>
-References: <74d607e9-ac9c-4a9b-ac49-e84ae49d20c2@TX2EHSMHS031.ehs.local>
- <530D0A9C.5090402@pengutronix.de>
- <cd00fb2d-c8a7-423d-8aa0-2b413e9ac101@CO9EHSMHS017.ehs.local>
- <530DEA7C.6010609@pengutronix.de>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 3/3] Documentation: of: Document graph bindings
+Date: Wed, 26 Feb 2014 16:50:52 +0200
+Message-ID: <530DFF4C.8080807@ti.com>
+References: <1393340304-19005-1-git-send-email-p.zabel@pengutronix.de>	 <1393340304-19005-4-git-send-email-p.zabel@pengutronix.de>	 <530DE8A9.9050809@ti.com> <1393426623.3248.70.camel@paszta.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="tEHsptXr4FFpWcoGvwDA40KVVAmjgkgcU"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <530DEA7C.6010609-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1393426623.3248.70.camel-+qGW7pzALmz7o/J7KWpOmN53zsg1cpMQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org" <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyYywNCg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE1hcmMg
-S2xlaW5lLUJ1ZGRlIFttYWlsdG86bWtsQHBlbmd1dHJvbml4LmRlXQ0KPiBTZW50OiBXZWRuZXNk
-YXksIEZlYnJ1YXJ5IDI2LCAyMDE0IDY6NTIgUE0NCj4gVG86IEFwcGFuYSBEdXJnYSBLZWRhcmVz
-d2FyYSBSYW87IHdnQGdyYW5kZWdnZXIuY29tOyBNaWNoYWwgU2ltZWs7DQo+IGdyYW50Lmxpa2Vs
-eUBsaW5hcm8ub3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7IGxpbnV4LWNhbkB2Z2VyLmtlcm5lbC5v
-cmcNCj4gQ2M6IG5ldGRldkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
-aW5mcmFkZWFkLm9yZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRy
-ZWVAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjRdIGNhbjogeGlsaW54
-IENBTiBjb250cm9sbGVyIHN1cHBvcnQuDQo+DQo+IE9uIDAyLzI2LzIwMTQgMDI6MDcgUE0sIEFw
-cGFuYSBEdXJnYSBLZWRhcmVzd2FyYSBSYW8gd3JvdGU6DQo+ID4+IFRoaXMgbG9vcCBsb29rcyBi
-cm9rZW4uIENhbiB5b3UgZXhwbGFpbiBob3cgaXQgd29ya3MuDQo+ID4+DQo+ID4+IFdoYXQgaXQg
-c2hvdWQgZG8gaXM6DQo+ID4+IFdlIGhhdmUgcHV0IChwcml2LT50eF9oZWFkIC0gcHJpdi0+dHhf
-dGFpbCkgQ0FOIGZyYW1lcyBpbnRvIHRoZSBGSUZPLg0KPiA+PiBUaGlzIG1lYW5zIGF0IG1heGlt
-dW0gdGhlcmUgY291bGQgYmUgdGhpcyBhbW91bnQgb2YgQ0FOIGZyYW1lcyB3aGljaA0KPiA+PiBo
-YXZlIGJlZW4gc3VjY2Vzc2Z1bGx5IHRyYW5zbWl0dGVkLiBGb3IgZXZlcnkgY3ljbGUgaW4gdGhp
-cyB3aGlsZQ0KPiA+PiBsb29wIHlvdQ0KPiA+PiBzaG91bGQ6DQo+ID4+IGEpIGNoZWNrIGlmIGEg
-Q0FOIGZyYW1lIGhhcyBzdWNjZXNzZnVsbHkgYmVlbiB0cmFuc21pdHRlZA0KPiA+PiAgICAoYXMg
-dGhpcyBDQU4gY29yZSB1c2VzIGEgRklGTyBpdCBzaG91bGQgYmUgIm9sZGVzdCIpDQo+ID4+ICAg
-IEEgcmVhZF9yZWcoKSBvZiBzb21lIGtpbmQgaXMgbWlzc2luZyBpbiB5b3VyIGxvb3AuDQo+ID4+
-IGIpIGlmIG5lZWRlZCwgcmVtb3ZlIHRoaXMgZXZlbnQgZnJvbSB0aGUgRklGTyBvcg0KPiA+PiAg
-ICBtYXJrIHRoZSBpbnRlcnJ1cHQgYXMgZG9uZS4gV2hhdGV2ZXIgeW91IGhhcmR3YXJlIG5lZWRz
-Lg0KPiA+PiBjKSB1cGRhdGUgeW91ciBzdGF0aXN0aWNzDQo+ID4+IGQpIFVzZSBjYW5fZ2V0X2Vj
-aG9fc2tiIHRvIHB1c2ggdGhpcyBmcmFtZSBpbnRvIHRoZSBuZXR3b3JraW5nIHN0YWNrDQo+ID4+
-IGUpIEFzIGEgQ0FOIGZyYW1lIGhhcyBiZWVuIHRyYW5zbWl0dGVkIHN1Y2Nlc3NmdWxseSwgd2Fr
-ZSB0aGUgdHhfcXVldWUuDQo+ID4+DQo+ID4+PiArICAgd2hpbGUgKHByaXYtPnR4X2hlYWQgLSBw
-cml2LT50eF90YWlsID4gMCkgew0KPiA+Pj4gKyAgICAgICAgICAgaWYgKGlzciAmIFhDQU5fSVhS
-X1RYRkxMX01BU0spIHsNCj4gPj4+ICsgICAgICAgICAgICAgICAgICAgcHJpdi0+d3JpdGVfcmVn
-KHByaXYsIFhDQU5fSUNSX09GRlNFVCwNCj4gPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIFhDQU5fSVhSX1RYRkxMX01BU0spOw0KPiA+Pj4gKyAgICAgICAgICAgICAgICAg
-ICBuZXRpZl9zdG9wX3F1ZXVlKG5kZXYpOw0KPiA+Pg0KPiA+PiBXaHkgZG8geW91IHN0b3AgdGhl
-IHF1ZXVlIGhlcmU/IEEgQ0FOIGZyYW1lIGhhcyBzdWNjZXNzZnVsbHkgYmVlbg0KPiA+PiB0cmFu
-c21pdHRlZCwgdGhlcmUgc2hvdWxkIGJlIHJvb20gaW4gdGhlIEZJRk8uDQo+ID4+DQo+ID4+PiAr
-ICAgICAgICAgICAgICAgICAgIGJyZWFrOw0KPiA+Pj4gKyAgICAgICAgICAgfQ0KPiA+Pj4gKyAg
-ICAgICAgICAgY2FuX2dldF9lY2hvX3NrYihuZGV2LCBwcml2LT50eF90YWlsICUNCj4gPj4+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHByaXYtPnhjYW5fZWNob19za2JfbWF4
-X3R4KTsNCj4gPj4+ICsgICAgICAgICAgIHByaXYtPnR4X3RhaWwrKzsNCj4gPj4+ICsgICB9DQo+
-ID4+PiArDQo+ID4NCj4gPiBUaGUgYmVsb3cgYXJlIHRoZSBiaXQgZmllbGRzIGF2YWlsYWJsZSBm
-b3IgdGhlIFRyYW5zbWl0IEZJRk8uDQo+ID4gMSkgSW4gdGhlIElTUihpbnRlcnJ1cHQgc3RhdHVz
-IHJlZ2lzdGVyKSAgVHggT2sgaW50ZXJydXB0IGFuZCBUeCBmaWZvIGZ1bGwNCj4gaW50ZXJydXB0
-Lg0KPiA+IDIpIGluIHRoZSBTUihTdGF0dXMgUmVnaXN0ZXIpIFR4IGZpZm8gZnVsbCBjb25kaXRp
-b24uDQo+ID4NCj4gPg0KPiA+IEkgYW0gbW9kaWZ5aW5nIHRoZSBlbnRpcmUgdHggaW50ZXJydXB0
-IGxvZ2ljIHRvIGxpa2UgYmVsb3cuDQo+ID4NCj4gPiBzdGF0aWMgdm9pZCB4Y2FuX3R4X2ludGVy
-cnVwdChzdHJ1Y3QgbmV0X2RldmljZSAqbmRldiwgdTMyIGlzcikgew0KPiA+ICAgICAgICAgc3Ry
-dWN0IHhjYW5fcHJpdiAqcHJpdiA9IG5ldGRldl9wcml2KG5kZXYpOw0KPiA+ICAgICAgICAgc3Ry
-dWN0IG5ldF9kZXZpY2Vfc3RhdHMgKnN0YXRzID0gJm5kZXYtPnN0YXRzOw0KPiA+DQo+ID4gICAg
-ICAgICAgICAgd2hpbGUgKHByaXYtPnR4X2hlYWQgLSBwcml2LT50eF90YWlsID4gMCkgew0KPiA+
-ICAgICAgICAgICAgICAgICBpZiAoaXNyICYgWENBTl9JWFJfVFhGTExfTUFTSykgew0KPiA+ICAg
-ICAgICAgICAgICAgICAgICAgICAgIHByaXYtPndyaXRlX3JlZyhwcml2LCBYQ0FOX0lDUl9PRkZT
-RVQsDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFhDQU5fSVhS
-X1RYRkxMX01BU0spOw0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7DQo+ID4g
-ICAgICAgICAgICAgICAgIH0NCj4gPiAgICAgICAgICAgICAgICAgY2FuX2dldF9lY2hvX3NrYihu
-ZGV2LCBwcml2LT50eF90YWlsICUNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgcHJpdi0+eGNhbl9lY2hvX3NrYl9tYXhfdHgpOw0KPiA+ICAgICAgICAgICAgICAg
-ICBwcml2LT50eF90YWlsKys7DQo+ID4gICAgICAgICAgc3RhdHMtPnR4X3BhY2tldHMrKzsNCj4g
-PiAgICAgICAgIG5ldGlmX3dha2VfcXVldWUobmRldik7DQo+ID4gICAgICAgICAgICAgICBjYW5f
-bGVkX2V2ZW50KG5kZXYsIENBTl9MRURfRVZFTlRfVFgpOw0KPiA+DQo+ID4gICAgICAgICB9DQo+
-DQo+IFlvdSBqdXN0IG5lZWQgdG8gd2FrZSB0aGUgcXVldWUgb25jZS4NCg0KT2sNCj4NCj4gPiB9
-DQo+ID4NCj4gPg0KPiA+IEFyZSB5b3UgT2sgd2l0aCB0aGUgYWJvdmUgbG9naWM/DQo+DQo+IE5v
-LCBob3cgY2FuIHlvdSB0ZWxsIGhvdyBtYW55IGZyYW1lcyBoYXZlIGJlZW4gdHJhbnNtaXR0ZWQ/
-DQoNClRoZXJlIGlzIG5vIHJlZ2lzdGVyIHRvIHJlYWQgaG93IG1hbnkgY2FuIGZyYW1lcyBhcmUg
-dHJhbnNtaXR0ZWQuDQpUaGUgb25seSB3YXkgdG8ga25vdyBJcyBieSByZWFkaW5nIHRoaXMgcGFy
-YW1ldGVyIChzdGF0cy0+dHhfcGFja2V0cysrOykgdGhyb3VnaCBpcCBjb21tYW5kDQppcCAtZCAt
-cyBsaW5rIHNob3cgY2FuDQpPciB1c2luZyBpZmNvbmZpZyBjb21tYW5kLg0KDQpBdCB0aGUgaC93
-IGxldmVsIGl0IGNhbiB0cmFuc21pdCBNYXggdXB0byA2NCBwYWNrZXRzIChNYXggZmlmbyBkZXB0
-aCkNCldlIG5lZWQgdG8gbW9uaXRvciB0aGUgVHggZmlmbyBmdWxsIGJpdCBpbiB0aGUgSVNSKElu
-dGVycnVwdCBTdGF0dXMgUmVnaXN0ZXIpICBvciBUeCBmaWZvIGZ1bGwgYml0IGluIHRoZSBTUihT
-dGF0dXMgUmVnaXN0ZXIpIGFuZCBpZiBpdCBpcyBmdWxsIHdlIG5lZWQgdG8gc3RvcCB0aGUgcXVl
-dWUgdGhhdCBpcw0KSSBhbSBkb2luZyBpbiB0aGUgX3htaXQgYnkgcmVhZGluZyB0aGUgc3RhdHVz
-IHJlZ2lzdGVyIGJlZm9yZSBwcm9jZWVkaW5nIHRoZSAgIHBhY2tldCB0cmFuc21pc3Npb24uDQoN
-ClJlZ2FyZHMsDQpLZWRhci4NCg0KDQo+DQo+IE1hcmMNCj4NCj4gLS0NCj4gUGVuZ3V0cm9uaXgg
-ZS5LLiAgICAgICAgICAgICAgICAgIHwgTWFyYyBLbGVpbmUtQnVkZGUgICAgICAgICAgIHwNCj4g
-SW5kdXN0cmlhbCBMaW51eCBTb2x1dGlvbnMgICAgICAgIHwgUGhvbmU6ICs0OS0yMzEtMjgyNi05
-MjQgICAgIHwNCj4gVmVydHJldHVuZyBXZXN0L0RvcnRtdW5kICAgICAgICAgIHwgRmF4OiAgICs0
-OS01MTIxLTIwNjkxNy01NTU1IHwNCj4gQW10c2dlcmljaHQgSGlsZGVzaGVpbSwgSFJBIDI2ODYg
-IHwgaHR0cDovL3d3dy5wZW5ndXRyb25peC5kZSAgIHwNCg0KDQoNClRoaXMgZW1haWwgYW5kIGFu
-eSBhdHRhY2htZW50cyBhcmUgaW50ZW5kZWQgZm9yIHRoZSBzb2xlIHVzZSBvZiB0aGUgbmFtZWQg
-cmVjaXBpZW50KHMpIGFuZCBjb250YWluKHMpIGNvbmZpZGVudGlhbCBpbmZvcm1hdGlvbiB0aGF0
-IG1heSBiZSBwcm9wcmlldGFyeSwgcHJpdmlsZWdlZCBvciBjb3B5cmlnaHRlZCB1bmRlciBhcHBs
-aWNhYmxlIGxhdy4gSWYgeW91IGFyZSBub3QgdGhlIGludGVuZGVkIHJlY2lwaWVudCwgZG8gbm90
-IHJlYWQsIGNvcHksIG9yIGZvcndhcmQgdGhpcyBlbWFpbCBtZXNzYWdlIG9yIGFueSBhdHRhY2ht
-ZW50cy4gRGVsZXRlIHRoaXMgZW1haWwgbWVzc2FnZSBhbmQgYW55IGF0dGFjaG1lbnRzIGltbWVk
-aWF0ZWx5Lg0KDQoKCg==
+--tEHsptXr4FFpWcoGvwDA40KVVAmjgkgcU
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+On 26/02/14 16:57, Philipp Zabel wrote:
+> Hi Tomi,
+>=20
+> Am Mittwoch, den 26.02.2014, 15:14 +0200 schrieb Tomi Valkeinen:
+>> On 25/02/14 16:58, Philipp Zabel wrote:
+>>
+>>> +Optional endpoint properties
+>>> +----------------------------
+>>> +
+>>> +- remote-endpoint: phandle to an 'endpoint' subnode of a remote devi=
+ce node.
+>>
+>> Why is that optional? What use is an endpoint, if it's not connected t=
+o
+>> something?
+>=20
+> This allows to include the an empty endpoint template in a SoC dtsi for=
+
+> the convenience of board dts writers. Also, the same property is
+> currently listed as optional in video-interfaces.txt.
+>=20
+>   soc.dtsi:
+> 	display-controller {
+> 		port {
+> 			disp0: endpoint { };
+> 		};
+> 	};
+>=20
+>   board.dts:
+> 	#include "soc.dtsi"
+> 	&disp0 {
+> 		remote-endpoint =3D <&panel_input>;
+> 	};
+> 	panel {
+> 		port {
+> 			panel_in: endpoint {
+> 				remote-endpoint =3D <&disp0>;
+> 			};
+> 		};
+> 	};
+>=20
+> Any board not using that port can just leave the endpoint disconnected.=
 
 
+Hmm I see. I'm against that.
+
+I think the SoC dtsi should not contain endpoint node, or even port node
+(at least usually). It doesn't know how many endpoints, if any, a
+particular board has. That part should be up to the board dts.
+
+I've done this with OMAP as (much simplified):
+
+SoC.dtsi:
+
+dss: dss@58000000 {
+	status =3D "disabled";
+};
+
+Nothing else (relevant here). The binding documentation states that dss
+has one port, and information what data is needed for the port and endpoi=
+nt.
+
+board.dts:
+
+&dss {
+        status =3D "ok";
+
+        pinctrl-names =3D "default";
+        pinctrl-0 =3D <&dss_dpi_pins>;
+
+        dpi_out: endpoint {
+
+                remote-endpoint =3D <&tfp410_in>;
+                data-lines =3D <24>;
+        };
+};
+
+That's using the shortened version without port node.
+
+Of course, it's up to the developer how his dts looks like. But to me it
+makes sense to require the remote-endpoint property, as the endpoint, or
+even the port, doesn't make much sense if there's nothing to connect to.
+
+ Tomi
+
+
+
+--tEHsptXr4FFpWcoGvwDA40KVVAmjgkgcU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJTDf9MAAoJEPo9qoy8lh71JaAQAJbPz+9VpNn17W+xOl/uxT2m
+7yfxwYtwoVzI3GP5CHS110ALyJh9cFQ0R/p2QEGESO1l/03gIVteCdypHUdzQDhT
+gVa7ALqhf5XrN7FneCWD4liAS1kh9vjT77p66RTKHDjH6NjSKDgPlKotUEkwasRC
+Bx1DwbEQ+6W92TyCp40rNK60buMvJr1yerA9WuPFz/nlynBvB742rYd+xBKS89oR
+kFq0ZzAeXeKrUxQ4kCk4o/Jlj+GW0QVwQiI4973m5/wfHAHVkxJ7yWD/CLRKHB0e
+82OHiHkyOBD6srbsbVGdZBSk/cdYFvpMPCBxyL1hFTWaaZ076sCDozU1RGBPyi8k
+41ERnfKWfz70aDwWo6EpG0kXDBSygwZHi20aMNi4gNQQwAHarO6zgZGGsZfyc3Z6
+pGomVCRZ4tpcEHyFmCUVm6NrocNFL9p3utQVOECC1VeLhT/Nbxaj96LKsFpBcd/d
+4yQjBPhtN22wgmT7maLOPqveUFvVItDLVWGoUeH2w5rOBzEnnTxDzzwV3R27fKvf
+T7NVF9xFTJnzt+NJChwrlTBgNTSMRThWf8YjmfWAJmk9V83esYHNo65m2DBCOcJE
+p7FiQOrG3pcrUUJD8HI98H0mEfLp52UB8kdLedJxI0NHCdO5HBHVge2M5sn3MPXT
+X+MSBcHoIVzFTpb6tGBZ
+=KzUA
+-----END PGP SIGNATURE-----
+
+--tEHsptXr4FFpWcoGvwDA40KVVAmjgkgcU--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
