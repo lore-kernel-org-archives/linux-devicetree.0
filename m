@@ -1,55 +1,65 @@
-From: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Subject: Re: devicetree repository separation/migration
-Date: Wed, 26 Feb 2014 09:00:32 +0000
-Message-ID: <1393405232.16570.106.camel@kazak.uk.xensource.com>
-References: <20140217180544.GU7862@titan.lakedaemon.net>
-	 <5306A6C0.9000206@gmail.com> <20140221141136.GI17250@pengutronix.de>
-	 <1393257557.16570.94.camel@kazak.uk.xensource.com>
-	 <20140225072609.GW17250@pengutronix.de>
-	 <1393313764.9640.15.camel@dagon.hellion.org.uk>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH RFC 2/5] ASoC: tlv320aic31xx: Add codec driver to Makefile and Kconfig
+Date: Wed, 26 Feb 2014 11:14:26 +0200
+Message-ID: <e5ddd051ac319649d50da0da804750c1c6619edb.1393405575.git.jsarha@ti.com>
+References: <cover.1393405575.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393313764.9640.15.camel-ztPmHsLffjjnO4AKDKe2m+kiAK3p4hvP@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <cover.1393405575.git.jsarha@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, bcousson@baylibre.com, broonie@kernel.org
+Cc: peter.ujfalusi@ti.com, detheridge@ti.com, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-02-25 at 07:36 +0000, Ian Campbell wrote:
-> On Tue, 2014-02-25 at 08:26 +0100, Sascha Hauer wrote:
-> > On Mon, Feb 24, 2014 at 03:59:17PM +0000, Ian Campbell wrote:
-> > > On Fri, 2014-02-21 at 15:11 +0100, Sascha Hauer wrote:
-> > > > Ians dts repository is a good start, but it contains a complete kernel
-> > > > history and this is not very suitable as a submodule for other
-> > > > projects. 
-> > > 
-> > > It only contains the full history for the files which it contains, not a
-> > > complete kernel history. This is deliberate so that "git annotate" etc
-> > > still works to tell you where a particular line came from.
-> > 
-> > I have cloned git://xenbits.xen.org/people/ianc/device-tree-rebasing.git.
-> > .git is 843MB in size and after a 'git checkout v3.13' I see a vanilla v3.13
-> > checked out. I may have done something wrong, but I don't see what it
-> > could be.
-> 
-> There is a branch with the full Linux stuff in there too. It is needed
-> in the tree doing the conversion but doesn't really need to be
-> published. I pushed it in the early days without really thinking about
-> the size impact. I'll remove that stuff from the published tree.
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+---
+ sound/soc/codecs/Kconfig  |    4 ++++
+ sound/soc/codecs/Makefile |    2 ++
+ 2 files changed, 6 insertions(+)
 
-Done. The tree now has only a master branch and the vX.Y-dts tags (it is
-still pushing the historical ones, they'll be there soon).
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index 983d087a..ead9dc5 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -74,6 +74,7 @@ config SND_SOC_ALL_CODECS
+ 	select SND_SOC_TLV320AIC23 if I2C
+ 	select SND_SOC_TLV320AIC26 if SPI_MASTER
+ 	select SND_SOC_TLV320AIC32X4 if I2C
++	select SND_SOC_TLV320AIC31XX if I2C
+ 	select SND_SOC_TLV320AIC3X if I2C
+ 	select SND_SOC_TPA6130A2 if I2C
+ 	select SND_SOC_TLV320DAC33 if I2C
+@@ -364,6 +365,9 @@ config SND_SOC_TLV320AIC26
+ config SND_SOC_TLV320AIC32X4
+ 	tristate
+ 
++config SND_SOC_TLV320AIC31XX
++        tristate
++
+ config SND_SOC_TLV320AIC3X
+ 	tristate
+ 
+diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
+index bc12676..23f8042 100644
+--- a/sound/soc/codecs/Makefile
++++ b/sound/soc/codecs/Makefile
+@@ -64,6 +64,7 @@ snd-soc-stac9766-objs := stac9766.o
+ snd-soc-tas5086-objs := tas5086.o
+ snd-soc-tlv320aic23-objs := tlv320aic23.o
+ snd-soc-tlv320aic26-objs := tlv320aic26.o
++snd-soc-tlv320aic31xx-objs := tlv320aic31xx.o
+ snd-soc-tlv320aic3x-objs := tlv320aic3x.o
+ snd-soc-tlv320aic32x4-objs := tlv320aic32x4.o
+ snd-soc-tlv320dac33-objs := tlv320dac33.o
+@@ -194,6 +195,7 @@ obj-$(CONFIG_SND_SOC_STAC9766)	+= snd-soc-stac9766.o
+ obj-$(CONFIG_SND_SOC_TAS5086)	+= snd-soc-tas5086.o
+ obj-$(CONFIG_SND_SOC_TLV320AIC23)	+= snd-soc-tlv320aic23.o
+ obj-$(CONFIG_SND_SOC_TLV320AIC26)	+= snd-soc-tlv320aic26.o
++obj-$(CONFIG_SND_SOC_TLV320AIC31XX)     += snd-soc-tlv320aic31xx.o
+ obj-$(CONFIG_SND_SOC_TLV320AIC3X)	+= snd-soc-tlv320aic3x.o
+ obj-$(CONFIG_SND_SOC_TLV320AIC32X4)     += snd-soc-tlv320aic32x4.o
+ obj-$(CONFIG_SND_SOC_TLV320DAC33)	+= snd-soc-tlv320dac33.o
+-- 
+1.7.9.5
 
-.git of a fresh clone is now 22M, which is more like it ;-)
-
-I've moved the tree with all the conversion state aside into
-device-tree-conversion.git. Most people won't need what is in there.
-
-Ian.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
