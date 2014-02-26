@@ -1,48 +1,149 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: [RFCv4 4/7] mfd: twl-core: Add twl_i2c_read/write_u16
-Date: Wed, 26 Feb 2014 21:03:07 +0100
-Message-ID: <1393444990-28140-5-git-send-email-sre@debian.org>
-References: <1393374270-20079-1-git-send-email-sre@debian.org>
- <1393444990-28140-1-git-send-email-sre@debian.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393444990-28140-1-git-send-email-sre@debian.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@ring0.de>, Marek Belisko <marek@goldelico.com>, Jonathan Cameron <jic23@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Sebastian Reichel <sre@debian.org>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv2 03/16] Documentation: dt: add OMAP iommu bindings
+Date: Wed, 26 Feb 2014 14:23:03 -0600
+Message-ID: <530E4D27.4010205@ti.com>
+References: <1392315347-32967-1-git-send-email-s-anna@ti.com>
+	<1552997.8jd4jgn3Ze@avalon> <530E1E20.9000301@ti.com>
+	<8258385.uITvkIdEvn@avalon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <8258385.uITvkIdEvn@avalon>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a simple twl_i2c_read/write_u16 wrapper over
-the twl_i2c_read/write, which is similar to the
-twl_i2c_read/write_u8 wrapper.
+Hi Laurent,
 
-Signed-off-by: Sebastian Reichel <sre@debian.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
----
- include/linux/i2c/twl.h | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+>
+> On Wednesday 26 February 2014 11:02:24 Suman Anna wrote:
+>> On 02/25/2014 08:13 PM, Laurent Pinchart wrote:
+>>> On Tuesday 25 February 2014 17:02:35 Suman Anna wrote:
+>>>> On 02/25/2014 03:26 PM, Laurent Pinchart wrote:
+>>>>> On Thursday 13 February 2014 12:15:34 Suman Anna wrote:
+>>>>>> From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+>>>>>>
+>>>>>> This patch adds the iommu bindings for all OMAP2+ SoCs. Apart from
+>>>>>> the standard bindings used by OMAP peripherals, this patch uses a
+>>>>>> 'dma-window' (already used by Tegra SMMU) and adds two OMAP custom
+>>>>>> bindings - 'ti,#tlb-entries' and 'ti,iommu-bus-err-back'.
+>>>>>>
+>>>>>> Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+>>>>>> [s-anna-l0cyMroinI0@public.gmane.org: split bindings document, add dra7 and bus error back]
+>>>>>> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+>>>>>> ---
+>>>>>>
+>>>>>>   .../devicetree/bindings/iommu/ti,omap-iommu.txt    | 28 ++++++++++++++
+>>>>>>   1 file changed, 28 insertions(+)
+>>>>>>   create mode 100644
+>>>>>>   Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt
+>>>>>> b/Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt new file
+>>>>>> mode 100644
+>>>>>> index 0000000..116492d
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt
+>>>>>> @@ -0,0 +1,28 @@
+>>>>>> +OMAP2+ IOMMU
+>>>>>> +
+>>>>>> +Required properties:
+>>>>>> +- compatible : Should be one of,
+>>>>>> +		"ti,omap2-iommu" for OMAP2/OMAP3 IOMMU instances
+>>>>>> +		"ti,omap4-iommu" for OMAP4/OMAP5 IOMMU instances
+>>>>>> +		"ti,dra7-iommu" for DRA7xx IOMMU instances
+>>>>>> +- ti,hwmods  : Name of the hwmod associated with the IOMMU instance
+>>>>>> +- reg        : Address space for the configuration registers
+>>>>>> +- interrupts : Interrupt specifier for the IOMMU instance
+>>>>>> +- dma-window : IOVA start address and length
+>>>>>
+>>>>> Isn't the dma window more of a system configuration property than a
+>>>>> hardware property ? How do you expect it to be set?
+>>>>
+>>>> We are setting it based on the addressable range for the MMU.
+>>>
+>>> A quick look at the ISP and IVA IOMMUs in the OMAP3 shows that both
+>>> support the full 4GB VA space. Why do you need to restrict it ?
+>>
+>> I should have rephrased it better when I said addressable range. While
+>> the MMUs are capable of programming the full 4GB space, there are some
+>> address ranges that are private from the processor view. This window is
+>> currently used to set the range for the omap-iovmm driver (which only
+>> OMAP3 ISP is using atm), and there is no point in allowing the
+>> omap-iovmm driver the full range when the processor could never
+>> reach/access those addresses.
+>
+> But the IOMMU VA space is from a device point of view, not from a CPU point of
+> view. Could you point me to where those private ranges are documented, in
+> order to understand the problem correctly ?
 
-diff --git a/include/linux/i2c/twl.h b/include/linux/i2c/twl.h
-index ade1c06..d2b1670 100644
---- a/include/linux/i2c/twl.h
-+++ b/include/linux/i2c/twl.h
-@@ -195,6 +195,18 @@ static inline int twl_i2c_read_u8(u8 mod_no, u8 *val, u8 reg) {
- 	return twl_i2c_read(mod_no, val, reg, 1);
- }
- 
-+static inline int twl_i2c_write_u16(u8 mod_no, u16 val, u8 reg) {
-+	val = cpu_to_le16(val);
-+	return twl_i2c_write(mod_no, (u8*) &val, reg, 2);
-+}
-+
-+static inline int twl_i2c_read_u16(u8 mod_no, u16 *val, u8 reg) {
-+	int ret;
-+	ret = twl_i2c_read(mod_no, (u8*) val, reg, 2);
-+	*val = le16_to_cpu(*val);
-+	return ret;
-+}
-+
- int twl_get_type(void);
- int twl_get_version(void);
- int twl_get_hfclk_rate(void);
--- 
-1.8.5.3
+Yes, they are indeed from the device perspective. I meant DSP and/or IPU 
+by processor.
+
+For example on OMAP3, you can refer to Table 2-9 in section 2.4.5 "DSP 
+Subsystem Memory Space Mapping" of the OMAP36xx TRM, and the external 
+addressable range starts from 0x11000000.
+
+regards
+Suman
+
+>
+>>>> We are reusing the existing defined property and it allows us to get rid
+>>>> of the IOVA start and end addresses defined in the pre-DT OMAP iommu
+>>>> platform data.
+>>>>
+>>>>>> +Optional properties:
+>>>>>> +- ti,#tlb-entries : Number of entries in the translation look-aside
+>>>>>> buffer. +                    Should be either 8 or 32 (default: 32)
+>>>>>> +- ti,iommu-bus-err-back : Indicates the IOMMU instance supports
+>>>>>> throwing
+>>>>>> +		          back a bus error response on MMU faults.
+>>>>>
+>>>>> Do these features vary per IOMMU instance or per IOMMU model ? In the
+>>>>> latter case they could be inferred from the compatible string by the
+>>>>> driver without requiring them to be explicit in DT (whether you want to
+>>>>> do so is left to you though).
+>>>>
+>>>> Well, these are fixed features given an IOMMU instance, like the OMAP3
+>>>> ISP is the only one that has 8 TLB entries, all the remaining ones have
+>>>> 32, and the IPU iommu instances are the only ones that support the bus
+>>>> error response back. I have no preference to any particular way, and
+>>>> sure the driver can infer these easily based on unique compatible
+>>>> strings per subsystem per SoC. I just happened to go with defining
+>>>> compatible strings per SoC, with the optional properties differentiating
+>>>> the fixed behavior between different IOMMU instances on that SoC. This
+>>>> is where I was looking for some inputs/guidance from the DT bindings
+>>>> maintainers on what is the preferred method.
+>>>
+>>> I think you've made the right choice. I wasn't sure whether those
+>>> parameters varied across IOMMU instances of compatible devices (from a
+>>> compatible string point of view) or were constant. As they vary they
+>>> should be expressed in DT.
+>>
+>> Yeah, I wasn't sure if these qualify as features (as per
+>> Documentation/devicetree/bindings/ABI.txt section II.2).
+>>
+>> regards
+>> Suman
+>>
+>>>>>> +Example:
+>>>>>> +	/* OMAP3 ISP MMU */
+>>>>>> +	mmu_isp: mmu@480bd400 {
+>>>>>> +		compatible = "ti,omap2-iommu";
+>>>>>> +		reg = <0x480bd400 0x80>;
+>>>>>> +		interrupts = <24>;
+>>>>>> +		ti,hwmods = "mmu_isp";
+>>>>>> +		ti,#tlb-entries = <8>;
+>>>>>> +		dma-window = <0 0xfffff000>;
+>>>>>> +	};
+>
