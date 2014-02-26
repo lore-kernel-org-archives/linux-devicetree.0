@@ -1,71 +1,66 @@
-From: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
-Subject: Re: [PATCHv3 1/2] net: stmmac: Add SOCFPGA glue driver
-Date: Wed, 26 Feb 2014 10:44:33 +0100
-Message-ID: <530DB781.9050901@st.com>
-References: <1392061697-20193-1-git-send-email-dinguyen@altera.com> <20140212.193539.38124529344029793.davem@davemloft.net> <52FC4B0A.4010406@gmail.com>
+From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Subject: Re: [PATCH v2 0/3] power_supply: modelgauge_battery: Add Maxim ModelGauge
+ ICs gauge
+Date: Wed, 26 Feb 2014 14:21:07 +0400
+Message-ID: <530DC013.9040908@cogentembedded.com>
+References: <1391293385-27539-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <52FC4B0A.4010406@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Dinh Nguyen <dinh.linux@gmail.com>, David Miller <davem@davemloft.net>, dinguyen@altera.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, vbridgers2013@gmail.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1391293385-27539-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dbaryshkov@gmail.com
+Cc: "anton@enomsg.org" <anton@enomsg.org>, dwmw2@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mk7.kang@samsung.com, k.kozlowski@samsung.com, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On 2/13/2014 5:33 AM, Dinh Nguyen wrote:
+Hello Dmitry,
+
+In accordance to this change you've taken the responsibility for power 
+supply maintainership.
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/MAINTAINERS?id=573189354b7c97cd2256b87cf083ee435584594e
+
+It passed almost month and no answer from you.
+Does it make sense to apply this patch series?
+
+Regards,
+Vladimir
+
+On 02/02/2014 02:23 AM, Vladimir Barinov wrote:
+> Hello.
 >
-> On 2/12/14 6:35 PM, David Miller wrote:
->> From: <dinguyen@altera.com>
->> Date: Mon, 10 Feb 2014 13:48:16 -0600
->>
->>> From: Dinh Nguyen <dinguyen@altera.com>
->>>
->>> Like the STi series SOCs, Altera's SOCFPGA also needs a glue layer on top of the
->>> Synopsys gmac IP.
->>>
->>> This patch adds the platform driver for the glue layer which configures the IP
->>> before the generic STMMAC driver takes over.
->>>
->>> Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
->>> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
->>> Cc: Rob Herring <robh+dt@kernel.org>
->>> Cc: Pawel Moll <pawel.moll@arm.com>
->>> Cc: Mark Rutland <mark.rutland@arm.com>
->>> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
->>> Cc: Kumar Gala <galak@codeaurora.org>
->>> Cc: Vince Bridgers <vbridgers2013@gmail.com>
->>> ---
->>> v3: Remove stray empty line at end of dwmac-socfpga.c.
->>> v2: Use the dwmac-sti as an example for a glue layer and split patch up
->>> to have dts as a separate patch. Also cc dts maintainers since there is
->>> a new binding.
->> The second patch for the DTS update doesn't apply cleanly at all to
->> mainline.
-> Yes, I'm planning to take the DTS bindings patch through arm-soc/next-dt
-> tree, so that is where patch 2 is based on.
->>
->> Why don't you push both of these patches through whatever tree that
->> file is maintained under.  You can add my ack:
-> I'm not sure if Peppe has a tree, but it should go into his tree
-> if there is one. If not, can you apply patch 1 to your tree?
-
-Hello
-
-I have not own tree but I am using net.git and net-next to do my patches
-and experiments.
-
-I ask you to keep these patches aligned to net-next.
-
-Also I ask you to review the glue-layer that is not in-line with what
-have been currently added for dwmac-sti and dwmac-sunxi.c.
-
-BR
-Peppe
-
-
->>
->> Acked-by: David S. Miller <davem@davemloft.net>
-> Thanks,
-> Dinh
+> This adds the folowing:
+> - Maxim ModelGauge ICs gauge driver for MAX17040/41/43/44/48/49/58/59 chips
+> - Document DT bindings
+> - Remove superseded Maxim MAX17040 gauge driver
 >
+> Vladimir Barinov (3):
+>   [1/3] power_supply: modelgauge_battery: Maxim ModelGauge ICs gauge
+>   [2/3] dt: Document ModelGauge gauge bindings
+>   [3/3] power_supply: modelgauge_battery: Remove Maxim MAX17040 gauge
+>
+> ---
+> This patchset is against the 'kernel/git/torvalds/linux.git' repo.
+>
+> Changes since v1:
+> - switched to REGMAP API
+> - replaced request_threaded_irq with devm_request_threaded_irq
+> - replaced cancel_delayed_work with _sync version
+> - moved "empty_alert_threshold, soc_change_alert, hibernate_threshold,
+>    active_threshold, undervoltage, overvoltage, resetvoltage" parameters
+>    out from platform_data and DT
+> - removed unused parameters "empty_adjustment, empty_adjustment"
+> - added return value checks for of_property_read_XX functions
+> - removed irrelevant bindings
+> - fixed dt properties naming in documentation
+> - added binding size description in documentation
+> - removed satelite include file include/linux/max17040_battery.h
+>
+>   Documentation/devicetree/bindings/power_supply/modelgauge_battery.txt |   61
+>   drivers/power/Kconfig                                                 |   17
+>   drivers/power/Makefile                                                |    2
+>   drivers/power/max17040_battery.c                                      |  297 ---
+>   drivers/power/modelgauge_battery.c                                    |  838 ++++++++++
+>   include/linux/max17040_battery.h                                      |   19
+>   include/linux/platform_data/battery-modelgauge.h                      |   31
+>   7 files changed, 940 insertions(+), 325 deletions(-)
