@@ -1,131 +1,46 @@
 From: Alex Elder <elder@linaro.org>
-Subject: [PATCH v2 02/12] clk: bcm281xx: use init_data.name for clock name
-Date: Tue, 25 Feb 2014 18:15:42 -0600
-Message-ID: <1393373752-30875-3-git-send-email-elder@linaro.org>
+Subject: [PATCH v2 01/12] clk: bcm281xx: warn if ccu_wait_bit() fails
+Date: Tue, 25 Feb 2014 18:15:41 -0600
+Message-ID: <1393373752-30875-2-git-send-email-elder@linaro.org>
 References: <1393373752-30875-1-git-send-email-elder@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1393373752-30875-1-git-send-email-elder@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: mturquette@linaro.org, mporter@linaro.org, bcm@fixthebug.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
-Cc: bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Use the init_data.name field to hold the name of a Kona clock rather
-than duplicating it.
+Don't let a failure of ccu_wait_bit() go unnoticed.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/clk/bcm/clk-kona-setup.c |    6 +++---
- drivers/clk/bcm/clk-kona.c       |   17 ++++++++++-------
- drivers/clk/bcm/clk-kona.h       |    3 +--
- 3 files changed, 14 insertions(+), 12 deletions(-)
+ drivers/clk/bcm/clk-kona.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/clk/bcm/clk-kona-setup.c b/drivers/clk/bcm/clk-kona-setup.c
-index c7607fe..eed84f5 100644
---- a/drivers/clk/bcm/clk-kona-setup.c
-+++ b/drivers/clk/bcm/clk-kona-setup.c
-@@ -64,7 +64,7 @@ static bool peri_clk_data_offsets_valid(struct kona_clk *bcm_clk)
- 
- 	BUG_ON(bcm_clk->type != bcm_clk_peri);
- 	peri = bcm_clk->peri;
--	name = bcm_clk->name;
-+	name = bcm_clk->init_data.name;
- 	range = bcm_clk->ccu->range;
- 
- 	limit = range - sizeof(u32);
-@@ -329,7 +329,7 @@ peri_clk_data_valid(struct kona_clk *bcm_clk)
- 		return false;
- 
- 	peri = bcm_clk->peri;
--	name = bcm_clk->name;
-+	name = bcm_clk->init_data.name;
- 	gate = &peri->gate;
- 	if (gate_exists(gate) && !gate_valid(gate, "gate", name))
- 		return false;
-@@ -630,7 +630,7 @@ struct clk *kona_clk_setup(struct ccu_data *ccu, const char *name,
- 		return NULL;
- 	}
- 	bcm_clk->ccu = ccu;
--	bcm_clk->name = name;
-+	bcm_clk->init_data.name = name;
- 
- 	init_data = &bcm_clk->init_data;
- 	init_data->name = name;
 diff --git a/drivers/clk/bcm/clk-kona.c b/drivers/clk/bcm/clk-kona.c
-index c01d810..488ed1f 100644
+index e3d339e..c01d810 100644
 --- a/drivers/clk/bcm/clk-kona.c
 +++ b/drivers/clk/bcm/clk-kona.c
-@@ -807,7 +807,7 @@ static int kona_peri_clk_enable(struct clk_hw *hw)
- 	struct kona_clk *bcm_clk = to_kona_clk(hw);
- 	struct bcm_clk_gate *gate = &bcm_clk->peri->gate;
- 
--	return clk_gate(bcm_clk->ccu, bcm_clk->name, gate, true);
-+	return clk_gate(bcm_clk->ccu, bcm_clk->init_data.name, gate, true);
+@@ -207,6 +207,9 @@ __ccu_wait_bit(struct ccu_data *ccu, u32 reg_offset, u32 bit, bool want)
+ 			return true;
+ 		udelay(1);
+ 	}
++	pr_warn("%s: %s/0x%04x bit %u was never %s\n", __func__,
++		ccu->name, reg_offset, bit, want ? "set" : "clear");
++
+ 	return false;
  }
  
- static void kona_peri_clk_disable(struct clk_hw *hw)
-@@ -815,7 +815,7 @@ static void kona_peri_clk_disable(struct clk_hw *hw)
- 	struct kona_clk *bcm_clk = to_kona_clk(hw);
- 	struct bcm_clk_gate *gate = &bcm_clk->peri->gate;
- 
--	(void)clk_gate(bcm_clk->ccu, bcm_clk->name, gate, false);
-+	(void)clk_gate(bcm_clk->ccu, bcm_clk->init_data.name, gate, false);
- }
- 
- static int kona_peri_clk_is_enabled(struct clk_hw *hw)
-@@ -873,12 +873,13 @@ static int kona_peri_clk_set_parent(struct clk_hw *hw, u8 index)
- 
- 	ret = selector_write(bcm_clk->ccu, &data->gate, sel, trig, index);
- 	if (ret == -ENXIO) {
--		pr_err("%s: gating failure for %s\n", __func__, bcm_clk->name);
-+		pr_err("%s: gating failure for %s\n", __func__,
-+			bcm_clk->init_data.name);
- 		ret = -EIO;	/* Don't proliferate weird errors */
- 	} else if (ret == -EIO) {
- 		pr_err("%s: %strigger failed for %s\n", __func__,
- 			trig == &data->pre_trig ? "pre-" : "",
--			bcm_clk->name);
-+			bcm_clk->init_data.name);
- 	}
- 
- 	return ret;
-@@ -937,10 +938,12 @@ static int kona_peri_clk_set_rate(struct clk_hw *hw, unsigned long rate,
- 	ret = divider_write(bcm_clk->ccu, &data->gate, &data->div,
- 				&data->trig, scaled_div);
- 	if (ret == -ENXIO) {
--		pr_err("%s: gating failure for %s\n", __func__, bcm_clk->name);
-+		pr_err("%s: gating failure for %s\n", __func__,
-+			bcm_clk->init_data.name);
- 		ret = -EIO;	/* Don't proliferate weird errors */
- 	} else if (ret == -EIO) {
--		pr_err("%s: trigger failed for %s\n", __func__, bcm_clk->name);
-+		pr_err("%s: trigger failed for %s\n", __func__,
-+			bcm_clk->init_data.name);
- 	}
- 
- 	return ret;
-@@ -962,7 +965,7 @@ static bool __peri_clk_init(struct kona_clk *bcm_clk)
- {
- 	struct ccu_data *ccu = bcm_clk->ccu;
- 	struct peri_clk_data *peri = bcm_clk->peri;
--	const char *name = bcm_clk->name;
-+	const char *name = bcm_clk->init_data.name;
- 	struct bcm_clk_trig *trig;
- 
- 	BUG_ON(bcm_clk->type != bcm_clk_peri);
-diff --git a/drivers/clk/bcm/clk-kona.h b/drivers/clk/bcm/clk-kona.h
-index 5e139ad..96fd0bc 100644
---- a/drivers/clk/bcm/clk-kona.h
-+++ b/drivers/clk/bcm/clk-kona.h
-@@ -373,8 +373,7 @@ struct peri_clk_data {
- 
- struct kona_clk {
- 	struct clk_hw hw;
--	struct clk_init_data init_data;
--	const char *name;	/* name of this clock */
-+	struct clk_init_data init_data;	/* includes name of this clock */
- 	struct ccu_data *ccu;	/* ccu this clock is associated with */
- 	enum bcm_clk_type type;
- 	union {
 -- 
 1.7.9.5
