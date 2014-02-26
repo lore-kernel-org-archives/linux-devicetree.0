@@ -1,80 +1,87 @@
-From: <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: at91: sama5d3: get rid of atmel_tsadcc driver
-Date: Wed, 26 Feb 2014 17:19:43 +0100
-Message-ID: <1393431584-27783-1-git-send-email-ludovic.desroches@atmel.com>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv2 02/16] iommu/omap: omap_iommu_attach() should return
+	ENODEV, not NULL
+Date: Wed, 26 Feb 2014 10:45:02 -0600
+Message-ID: <530E1A0E.4020609@ti.com>
+References: <1392315347-32967-1-git-send-email-s-anna@ti.com>
+	<2290716.T9AJoGfoRd@avalon> <530D19E3.9030407@ti.com>
+	<18584919.CMGx44dZjC@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <18584919.CMGx44dZjC@avalon>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Hi Laurent,
 
-Touchscreen support for at91_adc has been introduced so we can get rid of
-atmel_tsadcc.
+> On Tuesday 25 February 2014 16:32:03 Suman Anna wrote:
+>> On 02/25/2014 03:13 PM, Laurent Pinchart wrote:
+>>> On Thursday 13 February 2014 12:15:33 Suman Anna wrote:
+>>>> From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+>>>>
+>>>> omap_iommu_attach() returns NULL or ERR_PTR in case of error, but
+>>>> omap_iommu_attach_dev() only checks for IS_ERR. Thus a NULL return value
+>>>> (in case driver_find_device fails) will cause the kernel to panic when
+>>>> omap_iommu_attach_dev() dereferences the pointer.
+>>>>
+>>>> In such case, omap_iommu_attach() should return ENODEV, not NULL.
+>>>>
+>>>> Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+>>>> Acked-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+>>>> ---
+>>>>
+>>>>    drivers/iommu/omap-iommu.c | 4 ++--
+>>>>    1 file changed, 2 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/drivers/iommu/omap-iommu.c b/drivers/iommu/omap-iommu.c
+>>>> index fff2ffd..6272c36 100644
+>>>> --- a/drivers/iommu/omap-iommu.c
+>>>> +++ b/drivers/iommu/omap-iommu.c
+>>>> @@ -863,7 +863,7 @@ static int device_match_by_alias(struct device *dev,
+>>>> void *data) **/
+>>>>
+>>>>    static struct omap_iommu *omap_iommu_attach(const char *name, u32
+>>>>    *iopgd)
+>>>>    {
+>>>> -	int err = -ENOMEM;
+>>>> +	int err = -ENODEV;
+>>>>    	struct device *dev;
+>>>>    	struct omap_iommu *obj;
+>>>>
+>>>> @@ -871,7 +871,7 @@ static struct omap_iommu *omap_iommu_attach(const
+>>>> char *name, u32 *iopgd)
+>>>>    				(void *)name,
+>>>>    				device_match_by_alias);
+>>>>    	if (!dev)
+>>>> -		return NULL;
+>>>> +		return ERR_PTR(err);
+>>>
+>>> I would return ERR_PTR(-ENODEV) here, and remove the initialization at
+>>> declaration of err above.
+>>
+>> The initialization at the beginning is also serving one another exit
+>> path (a check for try_module_get), where err is not being set. If the
+>> initialization is removed, then the err has to be set explicitly at the
+>> other place. Let me know if you still want this changed.
+>
+> The return value of iommu_enable() is unconditionally stored in err before the
+> try_module_get() call, so that code patch is buggy anyway and should be fixed.
+> I would still remove the initialization at declaration and assign -ENODEV to
+> err explicitly when try_module_get() fails before the goto err_module.
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/sama5d3.dtsi    |   14 +-------------
- arch/arm/boot/dts/sama5d3xdm.dtsi |    7 +++----
- 2 files changed, 4 insertions(+), 17 deletions(-)
+OK, I will fix this up.
 
-diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index 3d5faf8..26d7ed5 100644
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -239,7 +239,7 @@
- 			};
- 
- 			adc0: adc@f8018000 {
--				compatible = "atmel,at91sam9260-adc";
-+				compatible = "atmel,at91sam9x5-adc";
- 				reg = <0xf8018000 0x100>;
- 				interrupts = <29 IRQ_TYPE_LEVEL_HIGH 5>;
- 				pinctrl-names = "default";
-@@ -295,18 +295,6 @@
- 				};
- 			};
- 
--			tsadcc: tsadcc@f8018000 {
--				compatible = "atmel,at91sam9x5-tsadcc";
--				reg = <0xf8018000 0x4000>;
--				interrupts = <29 IRQ_TYPE_LEVEL_HIGH 5>;
--				atmel,tsadcc_clock = <300000>;
--				atmel,filtering_average = <0x03>;
--				atmel,pendet_debounce = <0x08>;
--				atmel,pendet_sensitivity = <0x02>;
--				atmel,ts_sample_hold_time = <0x0a>;
--				status = "disabled";
--			};
--
- 			i2c2: i2c@f801c000 {
- 				compatible = "atmel,at91sam9x5-i2c";
- 				reg = <0xf801c000 0x4000>;
-diff --git a/arch/arm/boot/dts/sama5d3xdm.dtsi b/arch/arm/boot/dts/sama5d3xdm.dtsi
-index f9bdde5..0b8f5d1 100644
---- a/arch/arm/boot/dts/sama5d3xdm.dtsi
-+++ b/arch/arm/boot/dts/sama5d3xdm.dtsi
-@@ -23,10 +23,9 @@
- 			};
- 
- 			adc0: adc@f8018000 {
--				status = "disabled";
--			};
--
--			tsadcc: tsadcc@f8018000 {
-+				atmel,adc-clock-rate = <1000000>;
-+				atmel,adc-ts-wires = <4>;
-+				atmel,adc-ts-pressure-threshold = <10000>;
- 				status = "okay";
- 			};
- 
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards
+Suman
