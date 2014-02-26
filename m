@@ -1,46 +1,223 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: duovero-parlor: Add HDMI output
-Date: Wed, 26 Feb 2014 12:03:59 +0000
-Message-ID: <20140226120359.GA27282@n2100.arm.linux.org.uk>
-References: <1393261669-32039-1-git-send-email-florian.vaussard@epfl.ch> <20140225123921.GY27282@n2100.arm.linux.org.uk> <20140225134139.GA23898@earth.universe> <2364124.7r818M0xAj@avalon> <20140225205634.GZ27282@n2100.arm.linux.org.uk> <530DCC8A.6060708@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 02/11] drivers: of: add initialization code for static reserved memory
+Date: Wed, 26 Feb 2014 12:05:19 +0000
+Message-ID: <20140226120520.00CA9C40A89@trevor.secretlab.ca>
+References: <1392985527-6260-1-git-send-email-m.szyprowski@samsung.com> < 1392985527-6260-3-git-send-email-m.szyprowski@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <530DCC8A.6060708-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1392985527-6260-3-git-send-email-m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ash Charles <ash-EiDWdcs9+yZBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 26, 2014 at 01:14:18PM +0200, Tomi Valkeinen wrote:
-> We have a bunch of panels and encoders used on OMAP boards, and we have
-> separate, omapdss specific, drivers for those. My plan is to continue
-> improving those drivers until they can be platform independent. This
-> would be the Common Display Framework that's been discussed (or a
-> precursor to it).
+On Fri, 21 Feb 2014 13:25:18 +0100, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> This patch adds support for static (defined by 'reg' property) reserved
+> memory regions declared in device tree.
+> 
+> Memory blocks can be reliably reserved only during early boot. This must
+> happen before the whole memory management subsystem is initialized,
+> because we need to ensure that the given contiguous blocks are not yet
+> allocated by kernel. Also it must happen before kernel mappings for the
+> whole low memory are created, to ensure that there will be no mappings
+> (for reserved blocks). Typically, all this happens before device tree
+> structures are unflattened, so we need to get reserved memory layout
+> directly from fdt.
+> 
+> Based on previous code provided by Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> 
+> Signed-off-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/of/fdt.c       |  125 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_fdt.h |    3 ++
+>  2 files changed, 128 insertions(+)
+> 
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 758b4f8b30b7..12809e20ef71 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -440,6 +440,113 @@ struct boot_param_header *initial_boot_params;
+>  #ifdef CONFIG_OF_EARLY_FLATTREE
+>  
+>  /**
+> + * res_mem_reserve_reg() - reserve all memory described in 'reg' property
+> + */
+> +static int __init __reserved_mem_reserve_reg(unsigned long node,
+> +					     const char *uname)
+> +{
+> +	int t_len = (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32);
+> +	phys_addr_t base, size;
+> +	unsigned long len;
+> +	__be32 *prop;
+> +	int nomap;
+> +
+> +	prop = of_get_flat_dt_prop(node, "reg", &len);
+> +	if (!prop)
+> +		return -ENOENT;
+> +
+> +	if (len && len % t_len != 0) {
+> +		pr_err("Reserved memory: invalid reg property in '%s', skipping node.\n",
+> +		       uname);
+> +		return -EINVAL;
+> +	}
+> +
+> +	nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
+> +
+> +	while (len > 0) {
 
-I believe CDF has been knocked on the head.
+This is safer: while (len >= t_len) {
 
-Also - DRM is not going to ever support hotplugging components - this
-was discussed at kernel summit last year and David Airlie was quite
-adamant about that.  So, any "framework" which forces hotplugging of
-components on subsystems isn't going to fly.
+> +		base = dt_mem_next_cell(dt_root_addr_cells, &prop);
+> +		size = dt_mem_next_cell(dt_root_size_cells, &prop);
+> +
+> +		if (base && size &&
+> +		    early_init_dt_reserve_memory_arch(base, size, nomap) == 0)
+> +			pr_debug("Reserved memory: reserved region for node '%s': base %pa, size %ld MiB\n",
+> +				uname, &base, (unsigned long)size / SZ_1M);
+> +		else
+> +			pr_info("Reserved memory: failed to reserve memory for node '%s': base %pa, size %ld MiB\n",
+> +				uname, &base, (unsigned long)size / SZ_1M);
+> +
+> +		len -= t_len;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int __reserved_mem_check_root(unsigned long node)
 
-This is why we now have the component helpers in the driver model -
-to allow devices to be collected together into one logical subsystem
-group, and bound/unbound as a group.
+Please document the purpose of this function. This function reflects a Linux
+implementation limitation because it is easier than parsing a correctly
+formed ranges property. Sometime in the future it may be fixed. It is
+worth capturing all of that in a comment.
 
-Remember that "hotplugging" in this context does not mean that the
-user can physically do something with the hardware.  It means that
-they're separate devices which can be probed/removed at will.  Every
-device in Linux can be bound and unbound from its driver at any time
-by userspace, and that is something which is expected to be handled
-gracefully.
+> +{
+> +	__be32 *prop;
+> +
+> +	prop = of_get_flat_dt_prop(node, "#size-cells", NULL);
+> +	if (prop && be32_to_cpup(prop) != dt_root_size_cells)
+> +		return -EINVAL;
+> +
+> +	prop = of_get_flat_dt_prop(node, "#address-cells", NULL);
+> +	if (prop && be32_to_cpup(prop) != dt_root_addr_cells)
+> +		return -EINVAL;
+> +
+> +	prop = of_get_flat_dt_prop(node, "ranges", NULL);
+> +	if (!prop)
+> +		return -EINVAL;
+> +	return 0;
+> +}
+> +
+> +/**
+> + * fdt_scan_reserved_mem() - scan a single FDT node for reserved memory
+> + */
+> +static int __init __fdt_scan_reserved_mem(unsigned long node, const char *uname,
+> +					  int depth, void *data)
+> +{
+> +	static int found;
+> +	const char *status;
+> +
+> +	if (!found && depth == 1 && strcmp(uname, "reserved-memory") == 0) {
+> +		if (__reserved_mem_check_root(node) != 0) {
+> +			pr_err("Reserved memory: unsupported node format, ignoring\n");
+> +			/* break scan */
+> +			return 1;
+> +		}
+> +		found = 1;
+> +		/* scan next node */
+> +		return 0;
+> +	} else if (!found) {
+> +		/* scan next node */
+> +		return 0;
+> +	} else if (found && depth < 2) {
+> +		/* scanning of /reserved-memory has been finished */
+> +		return 1;
+> +	}
+> +
+> +	status = of_get_flat_dt_prop(node, "status", NULL);
+> +	if (status && strcmp(status, "okay") != 0 && strcmp(status, "ok") != 0)
+> +		return 0;
+> +
+> +	__reserved_mem_reserve_reg(node, uname);
+> +
+> +	/* scan next node */
+> +	return 0;
+> +}
+> +
+> +/**
+> + * early_init_fdt_scan_reserved_mem() - create reserved memory regions
+> + *
+> + * This function grabs memory from early allocator for device exclusive use
+> + * defined in device tree structures. It should be called by arch specific code
+> + * once the early allocator (i.e. memblock) has been fully activated.
+> + */
+> +void __init early_init_fdt_scan_reserved_mem(void)
+> +{
+> +	of_scan_flat_dt(__fdt_scan_reserved_mem, NULL);
+> +}
 
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+Looks good.
+
+> +
+> +/**
+>   * of_scan_flat_dt - scan flattened tree blob and call callback on each.
+>   * @it: callback function
+>   * @data: context data pointer
+> @@ -856,6 +963,16 @@ void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
+>  	memblock_add(base, size);
+>  }
+>  
+> +int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
+> +					phys_addr_t size, bool nomap)
+> +{
+> +	if (memblock_is_region_reserved(base, size))
+> +		return -EBUSY;
+> +	if (nomap)
+> +		return memblock_remove(base, size);
+> +	return memblock_reserve(base, size);
+> +}
+> +
+>  /*
+>   * called from unflatten_device_tree() to bootstrap devicetree itself
+>   * Architectures can override this definition if memblock isn't used
+> @@ -864,6 +981,14 @@ void * __init __weak early_init_dt_alloc_memory_arch(u64 size, u64 align)
+>  {
+>  	return __va(memblock_alloc(size, align));
+>  }
+> +#else
+> +int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
+> +					phys_addr_t size, bool nomap)
+> +{
+> +	pr_error("Reserved memory not supported, ignoring range 0x%llx - 0x%llx%s\n",
+> +		  base, size, nomap ? " (nomap)" : "");
+> +	return -ENOSYS;
+> +}
+>  #endif
+>  
+>  bool __init early_init_dt_scan(void *params)
+> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+> index 2b77058a7335..8610ad8d77d2 100644
+> --- a/include/linux/of_fdt.h
+> +++ b/include/linux/of_fdt.h
+> @@ -98,7 +98,10 @@ extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
+>  				     int depth, void *data);
+>  extern int early_init_dt_scan_memory(unsigned long node, const char *uname,
+>  				     int depth, void *data);
+> +extern void early_init_fdt_scan_reserved_mem(void);
+>  extern void early_init_dt_add_memory_arch(u64 base, u64 size);
+> +extern int early_init_dt_reserve_memory_arch(phys_addr_t base, phys_addr_t size,
+> +					     bool no_map);
+>  extern void * early_init_dt_alloc_memory_arch(u64 size, u64 align);
+>  extern u64 dt_mem_next_cell(int s, __be32 **cellp);
+
+I think I'm happy with this one. Address my comments above and add my
+Acked-by (so I remember I was okay with this one when you repost it) :-)
+
+Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+>  
+> -- 
+> 1.7.9.5
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
