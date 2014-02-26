@@ -1,34 +1,80 @@
 From: Marc Carino <marc.ceeeee@gmail.com>
-Subject: [PATCH v7 6/9] ARM: brcmstb: add CPU binding for Broadcom Brahma15
-Date: Wed, 26 Feb 2014 02:29:09 -0800
-Message-ID: <1393410552-21497-7-git-send-email-marc.ceeeee@gmail.com>
+Subject: [PATCH v7 3/9] ARM: brcmstb: add debug UART for earlyprintk support
+Date: Wed, 26 Feb 2014 02:29:06 -0800
+Message-ID: <1393410552-21497-4-git-send-email-marc.ceeeee@gmail.com>
 References: <1393410552-21497-1-git-send-email-marc.ceeeee@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1393410552-21497-1-git-send-email-marc.ceeeee@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Christian Daudt <bcm@fixthebug.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Matt Porter <matt.porter@linaro.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Marc Carino <marc.ceeeee@gmail.com>
+Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, Marc Carino <marc.ceeeee@gmail.com>, Matt Porter <matt.porter@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the Broadcom Brahma B15 CPU to the DT CPU binding list.
+Add the UART definitions needed to support earlyprintk on brcmstb machines.
 
 Signed-off-by: Marc Carino <marc.ceeeee@gmail.com>
 Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- Documentation/devicetree/bindings/arm/cpus.txt |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+ arch/arm/Kconfig.debug |   15 ++++++++++++++-
+ 1 files changed, 14 insertions(+), 1 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index 9130435..0cd1e25 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -163,6 +163,7 @@ nodes to be present and contain the properties described below.
- 			    "arm,cortex-r4"
- 			    "arm,cortex-r5"
- 			    "arm,cortex-r7"
-+			    "brcm,brahma-b15"
- 			    "faraday,fa526"
- 			    "intel,sa110"
- 			    "intel,sa1100"
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index 0531da8..5d7f76b 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -125,6 +125,17 @@ choice
+ 		  Say Y here if you want kernel low-level debugging support
+ 		  on Marvell Berlin SoC based platforms.
+ 
++	config DEBUG_BRCMSTB_UART
++		bool "Use BRCMSTB UART for low-level debug"
++		depends on ARCH_BRCMSTB
++		select DEBUG_UART_8250
++		help
++		  Say Y here if you want the debug print routines to direct
++		  their output to the first serial port on these devices.
++
++		  If you have a Broadcom STB chip and would like early print
++		  messages to appear over the UART, select this option.
++
+ 	config DEBUG_CLPS711X_UART1
+ 		bool "Kernel low-level debugging messages via UART1"
+ 		depends on ARCH_CLPS711X
+@@ -1049,6 +1060,7 @@ config DEBUG_UART_PHYS
+ 	default 0xd4018000 if DEBUG_MMP_UART3
+ 	default 0xe0000000 if ARCH_SPEAR13XX
+ 	default 0xf0000be0 if ARCH_EBSA110
++	default 0xf0406b00 if DEBUG_BRCMSTB_UART
+ 	default 0xf1012000 if DEBUG_MVEBU_UART_ALTERNATE
+ 	default 0xf1012000 if ARCH_DOVE || ARCH_KIRKWOOD || ARCH_MV78XX0 || \
+ 				ARCH_ORION5X
+@@ -1083,6 +1095,7 @@ config DEBUG_UART_VIRT
+ 	default 0xf8090000 if DEBUG_VEXPRESS_UART0_RS1
+ 	default 0xfb009000 if DEBUG_REALVIEW_STD_PORT
+ 	default 0xfb10c000 if DEBUG_REALVIEW_PB1176_PORT
++	default 0xfc406b00 if DEBUG_BRCMSTB_UART
+ 	default 0xfd000000 if ARCH_SPEAR3XX || ARCH_SPEAR6XX
+ 	default 0xfd000000 if ARCH_SPEAR13XX
+ 	default 0xfd012000 if ARCH_MV78XX0
+@@ -1136,7 +1149,7 @@ config DEBUG_UART_8250_WORD
+ 		ARCH_KEYSTONE || \
+ 		DEBUG_DAVINCI_DMx_UART0 || DEBUG_DAVINCI_DA8XX_UART1 || \
+ 		DEBUG_DAVINCI_DA8XX_UART2 || DEBUG_DAVINCI_TNETV107X_UART1 || \
+-		DEBUG_BCM_KONA_UART
++		DEBUG_BCM_KONA_UART || DEBUG_BRCMSTB_UART
+ 
+ config DEBUG_UART_8250_FLOW_CONTROL
+ 	bool "Enable flow control for 8250 UART"
 -- 
 1.7.1
