@@ -1,98 +1,214 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 3/4] ARM: dts: OMAP4: Add IOMMU nodes
-Date: Wed, 26 Feb 2014 16:06:50 -0600
-Message-ID: <530E657A.4080600@ti.com>
-References: <1392315776-33197-1-git-send-email-s-anna@ti.com>
-	<1392315776-33197-4-git-send-email-s-anna@ti.com>
-	<5025565.C2g8cq3k2V@avalon>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 3/6] spi: sh-msiof: Add support for R-Car H2 and M2
+Date: Wed, 26 Feb 2014 23:16:57 +0100
+Message-ID: <38730952.JbtPf2mapG@avalon>
+References: <1393323673-2751-1-git-send-email-geert@linux-m68k.org> <1393323673-2751-4-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <5025565.C2g8cq3k2V@avalon>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1393323673-2751-4-git-send-email-geert@linux-m68k.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Brown <broonie@kernel.org>, Takashi Yoshii <takasi-y@ops.dti.ne.jp>, Magnus Damm <magnus.damm@gmail.com>, linux-spi@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hi Geert,
 
-On 02/26/2014 03:05 PM, Laurent Pinchart wrote:
-> Hi Suman,
->
-> Thank you for the patch.
->
-> On Thursday 13 February 2014 12:22:55 Suman Anna wrote:
->> From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
->>
->> Add the IOMMU nodes for the DSP and IPU subsystems. The external
->> address space for DSP starts at 0x20000000 in OMAP4 compared to
->> 0x11000000 in OMAP3, and the addresses beyond 0xE0000000 are
->> private address space for the Cortex-M3 cores in the IPU subsystem.
->> The MMU within the IPU sub-system also supports a bus error back
->> capability, not available on the DSP MMU.
->>
->> Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
->> [s-anna-l0cyMroinI0@public.gmane.org: dma-window updates and bus error back addition]
->> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/omap4.dtsi | 17 +++++++++++++++++
->>   1 file changed, 17 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
->> index d3f8a6e..1885f90 100644
->> --- a/arch/arm/boot/dts/omap4.dtsi
->> +++ b/arch/arm/boot/dts/omap4.dtsi
->> @@ -461,6 +461,23 @@
->>   			dma-names = "tx", "rx";
->>   		};
->>
->> +		mmu_dsp: mmu@4a066000 {
->> +			compatible = "ti,omap4-iommu";
->> +			reg = <0x4a066000 0xff>;
->> +			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
->> +			ti,hwmods = "mmu_dsp";
->> +			dma-window = <0x20000000 0xdffff000>;
->> +		};
->> +
->> +		mmu_ipu: mmu@55082000 {
->> +			compatible = "ti,omap4-iommu";
->> +			reg = <0x55082000 0xff>;
->> +			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
->> +			ti,hwmods = "mmu_ipu";
->> +			dma-window = <0 0xdffff000>;
->
-> I'm not too familiar with the M3 MPU in the OMAP4, but doesn't its memory map
-> also include other reserved regions, such as 0x55040000- 0x5505ffff to access
-> the ISS ?
+Thank you for the patch.
 
-The MMU integration into the M3 MPU subsystem is actually slightly 
-different to that seen on DSP in OMAP3. The M3 MPU subsystem actually 
-has one additional type of MMU, called the Attribute MMU/Unicache MMU 
-immediately after the M3 processor. It is programmed completely from the 
-M3, and is used mainly for setting the cache attributes and valid 
-address ranges and translations for accessing address ranges like the 
-ISS space. The L2 MMU interprets the remaining addresses, so yes, there 
-are certain other address ranges that never go through the L2MMU. The 
-dma-window values are used by omap-iovmm, but OMAP4 does not make use of 
-omap-iovmm.
+Overall the series is great. I ran some time ago into issues with CCF due to 
+the driver use of spi-bitbang, I'm happy to see this being fixed, thanks a 
+lot. I have one small comment below though.
 
-regards
-Suman
+On Tuesday 25 February 2014 11:21:10 Geert Uytterhoeven wrote:
+> From: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
+> 
+> Add support for the MSIOF variant in the R-Car H2 (r8a7790) and M2
+> (r8a7791) SoCs.
+> 
+> Binding documentation:
+>   - Add future-proof "renesas,msiof-<soctype>" compatible values,
+>   - The default for "renesas,rx-fifo-size" is 256 on R-Car H2 and M2,
+>   - "renesas,tx-fifo-size" and "renesas,rx-fifo-size" are deprecated for
+>     soctype-specific bindings,
+>   - Add example bindings.
+> 
+> Implementation:
+>   - MSIOF on R-Car H2 and M2 requires the transmission of dummy data if
+>     data is being received only (cfr. "Set SICTR.TSCKE to 1" and "Write
+>     dummy transmission data to SITFDR" in paragraph "Transmit and Receive
+>     Procedures" of the Hardware User's Manual).
+>   - As RX depends on TX, MSIOF on R-Car H2 and M2 also lacks the RSCR
+>     register (Receive Clock Select Register), and some bits in the RMDR1
+>     (Receive Mode Register 1) and TMDR2 (Transmit Mode Register 2)
+>     registers.
+>   - Use the recently introduced SPI_MASTER_MUST_TX flag to enable support
+>     for dummy transmission in the SPI core, and to differentiate from other
+>     MSIOF implementations in code paths that need this.
+>   - New DT compatible values ("renesas,msiof-r8a7790" and
+>     "renesas,msiof-r8a7791") are added, as well as new platform device
+>     names ("spi_r8a7790_msiof" and "spi_r8a7791_msiof").
+>   - The default RX FIFO size is 256 words on R-Car H2 and M2.
+> 
+> This is loosely based on a set of patches from Takashi Yoshii
+> <takasi-y@ops.dti.ne.jp>.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@linux-m68k.org>
+> Cc: Takashi Yoshii <takasi-y@ops.dti.ne.jp>
+> Cc: devicetree@vger.kernel.org
+> ---
+> v2:
+>   - Rebased on top of new "spi: sh-msiof: Move default FIFO sizes to device
+>     ID data",
+>   - The default RX FIFO size is 256 words on R-Car H2 and M2,
+>   - Deprecated overriding the FIFO size,
+>   - Synced DT example with node from real DTS.
+> 
+>  Documentation/devicetree/bindings/spi/sh-msiof.txt |   23 +++++++++++++++--
+>  drivers/spi/spi-sh-msiof.c                         |   23 ++++++++++++++---
+>  2 files changed, 41 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt
+> b/Documentation/devicetree/bindings/spi/sh-msiof.txt index
+> eae3c8c9300e..1f0cb33763a1 100644
+> --- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
+> +++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+> @@ -1,8 +1,13 @@
+>  Renesas MSIOF spi controller
+> 
+>  Required properties:
+> -- compatible           : "renesas,sh-msiof" for SuperH, or
+> +- compatible           : "renesas,msiof-<soctype>" for SoCs,
+> +			 "renesas,sh-msiof" for SuperH, or
+>  			 "renesas,sh-mobile-msiof" for SH Mobile series.
+> +			 Examples with soctypes are:
+> +			 "renesas,msiof-sh7724" (SH)
 
->
->> +			ti,iommu-bus-err-back;
->> +		};
->> +
->>   		wdt2: wdt@4a314000 {
->>   			compatible = "ti,omap4-wdt", "ti,omap3-wdt";
->>   			reg = <0x4a314000 0x80>;
->
+Given that the driver doesn't handle the "renesas,msiof-sh7724" compatible 
+string this might not be a good example. Furthermore SuperH doesn't have DT 
+support. I would thus drop the "renesas,sh-msiof" compatible string from patch 
+1/6 and wouldn't mention sh7724 here. I very much doubt that someone would 
+have developed DT support for SuperH on the side and shipped products that 
+would be broken by this change :-)
+
+> +			 "renesas,msiof-r8a7790" (R-Car H2)
+> +			 "renesas,msiof-r8a7791" (R-Car M2)
+>  - reg                  : Offset and length of the register set for the
+> device - interrupt-parent     : The phandle for the interrupt controller
+> that services interrupts for this device
+> @@ -13,10 +18,24 @@ Required properties:
+>  Optional properties:
+>  - clocks               : Must contain a reference to the functional clock.
+>  - num-cs               : Total number of chip-selects (default is 1)
+> +
+> +Optional properties, deprecated for soctype-specific bindings:
+>  - renesas,tx-fifo-size : Overrides the default tx fifo size given in words
+>  			 (default is 64)
+>  - renesas,rx-fifo-size : Overrides the default rx fifo size given in words
+> -			 (default is 64)
+> +			 (default is 64, or 256 on R-Car H2 and M2)
+> 
+>  Pinctrl properties might be needed, too.  See
+>  Documentation/devicetree/bindings/pinctrl/renesas,*.
+> +
+> +Example:
+> +
+> +	msiof0: spi@e6e20000 {
+> +		compatible = "renesas,msiof-r8a7791";
+> +		reg = <0 0xe6e20000 0 0x0064>;
+> +		interrupts = <0 156 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&mstp0_clks R8A7791_CLK_MSIOF0>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		status = "disabled";
+> +	};
+> diff --git a/drivers/spi/spi-sh-msiof.c b/drivers/spi/spi-sh-msiof.c
+> index bf389184924d..3baef2bacaed 100644
+> --- a/drivers/spi/spi-sh-msiof.c
+> +++ b/drivers/spi/spi-sh-msiof.c
+> @@ -34,6 +34,7 @@
+>  struct sh_msiof_chipdata {
+>  	u16 tx_fifo_size;
+>  	u16 rx_fifo_size;
+> +	u16 master_flags;
+>  };
+> 
+>  struct sh_msiof_spi_priv {
+> @@ -214,7 +215,8 @@ static void sh_msiof_spi_set_clk_regs(struct
+> sh_msiof_spi_priv *p, k = min_t(int, k, ARRAY_SIZE(sh_msiof_spi_clk_table)
+> - 1);
+> 
+>  	sh_msiof_write(p, TSCR, sh_msiof_spi_clk_table[k].scr);
+> -	sh_msiof_write(p, RSCR, sh_msiof_spi_clk_table[k].scr);
+> +	if (!(p->chipdata->master_flags & SPI_MASTER_MUST_TX))
+> +		sh_msiof_write(p, RSCR, sh_msiof_spi_clk_table[k].scr);
+>  }
+> 
+>  static void sh_msiof_spi_set_pin_regs(struct sh_msiof_spi_priv *p,
+> @@ -237,6 +239,10 @@ static void sh_msiof_spi_set_pin_regs(struct
+> sh_msiof_spi_priv *p, tmp |= !cs_high << MDR1_SYNCAC_SHIFT;
+>  	tmp |= lsb_first << MDR1_BITLSB_SHIFT;
+>  	sh_msiof_write(p, TMDR1, tmp | MDR1_TRMD | TMDR1_PCON);
+> +	if (p->chipdata->master_flags & SPI_MASTER_MUST_TX) {
+> +		/* These bits are reserved if RX needs TX */
+> +		tmp &= ~0x0000ffff;
+> +	}
+>  	sh_msiof_write(p, RMDR1, tmp);
+> 
+>  	tmp = 0;
+> @@ -257,7 +263,7 @@ static void sh_msiof_spi_set_mode_regs(struct
+> sh_msiof_spi_priv *p, {
+>  	u32 dr2 = MDR2_BITLEN1(bits) | MDR2_WDLEN1(words);
+> 
+> -	if (tx_buf)
+> +	if (tx_buf || (p->chipdata->master_flags & SPI_MASTER_MUST_TX))
+>  		sh_msiof_write(p, TMDR2, dr2);
+>  	else
+>  		sh_msiof_write(p, TMDR2, dr2 | MDR2_GRPMASK1);
+> @@ -666,11 +672,20 @@ static u32 sh_msiof_spi_txrx_word(struct spi_device
+> *spi, unsigned nsecs, static const struct sh_msiof_chipdata sh_data = {
+>  	.tx_fifo_size = 64,
+>  	.rx_fifo_size = 64,
+> +	.master_flags = 0,
+> +};
+> +
+> +static const struct sh_msiof_chipdata r8a779x_data = {
+> +	.tx_fifo_size = 64,
+> +	.rx_fifo_size = 256,
+> +	.master_flags = SPI_MASTER_MUST_TX,
+>  };
+> 
+>  static const struct of_device_id sh_msiof_match[] = {
+>  	{ .compatible = "renesas,sh-msiof",        .data = &sh_data },
+>  	{ .compatible = "renesas,sh-mobile-msiof", .data = &sh_data },
+> +	{ .compatible = "renesas,msiof-r8a7790",   .data = &r8a779x_data },
+> +	{ .compatible = "renesas,msiof-r8a7791",   .data = &r8a779x_data },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, sh_msiof_match);
+> @@ -789,7 +804,7 @@ static int sh_msiof_spi_probe(struct platform_device
+> *pdev) /* init master and bitbang code */
+>  	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
+>  	master->mode_bits |= SPI_LSB_FIRST | SPI_3WIRE;
+> -	master->flags = 0;
+> +	master->flags = p->chipdata->master_flags;
+>  	master->bus_num = pdev->id;
+>  	master->dev.of_node = pdev->dev.of_node;
+>  	master->num_chipselect = p->info->num_chipselect;
+> @@ -832,6 +847,8 @@ static int sh_msiof_spi_remove(struct platform_device
+> *pdev)
+> 
+>  static struct platform_device_id spi_driver_ids[] = {
+>  	{ "spi_sh_msiof",	(kernel_ulong_t)&sh_data },
+> +	{ "spi_r8a7790_msiof",	(kernel_ulong_t)&r8a779x_data },
+> +	{ "spi_r8a7791_msiof",	(kernel_ulong_t)&r8a779x_data },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(platform, spi_driver_ids);
+
+-- 
+Regards,
+
+Laurent Pinchart
+
