@@ -1,244 +1,132 @@
-From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [RESEND PATCH v11] video: backlight: gpio-backlight: Add DT support.
-Date: Wed, 26 Feb 2014 19:04:05 +0100
-Message-ID: <1393437845-25564-1-git-send-email-denis@eukrea.com>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv2 10/16] ARM: OMAP2+: use pdata quirks for iommu reset
+	lines
+Date: Wed, 26 Feb 2014 12:04:52 -0600
+Message-ID: <530E2CC4.2000006@ti.com>
+References: <1392315347-32967-1-git-send-email-s-anna@ti.com>
+	<1392315347-32967-11-git-send-email-s-anna@ti.com>
+	<20140226171731.GG11654@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20140226171731.GG11654-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
----
-ChangeLog v11->v11-resend:
-- Removed the Cc list because it's only one patch.
+Hi Tony,
 
-ChangeLog v10->v11:
-- Shrinked the Cc list.
-- Fixed the of_match_table warning.
+On 02/26/2014 11:17 AM, Tony Lindgren wrote:
+> * Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [140213 10:19]:
+>> The OMAP iommu driver performs the reset management for the
+>> iommu instances in processor sub-systems using the omap_device
+>> API which are currently supplied as platform data ops. Use pdata
+>> quirks to maintain the functionality as the OMAP iommu driver
+>> gets converted to use DT nodes, until the reset portions are
+>> decoupled from omap_hwmod/omap_device into a separate reset
+>> driver.
+>>
+>> This patch adds the pdata quirks for the reset management of
+>> iommus within the DSP (OMAP3 & OMAP4) and IPU subsystems (OMAP4).
+>>
+>> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+>
+> Looks OK, but I suggest you separate out the remaining patches in
+> this series into another clean-up series. Then the clean-up series
+> can be merged later on as these have a good chance of conflicting
+> with other stuff.
 
-ChangeLog v9->v10:
-- Only the respective maintainers, or people who responded to the patch
-  were kept in the Cc.
-- The unnecessary of_match_ptr in of_match_table was removed.
+Only patches 14 through 16 are cleanup patches. Patches 12 and 13 are 
+adding OMAP5 functionality, and Patch11 is fixing up OMAP3 IVA. I would 
+have to drop Patch14 and Patch16 until OMAP3 is completely DT, so will 
+drop them for now. Let me know if you want me to split out the remaining 
+applicable patches that are in arch/arm/ into a separate series.
 
-ChangeLog v8->v9:
-- Added Shawn Guo in the Cc list.
-- The default-brightness-level is now a boolean default-on property,
-  the gpio is only touched if the gpio-backlight driver instance probes=
-=2E
-- The code and documentation was updated accordingly.
+regards
+Suman
 
-ChangeLog v7->v8:
-- The default-state was renamed to default-brightness-level.
-- default-brightness-level is now mandatory, like for backlight-pwm,
-  That way we avoid having to handle the case where it's not set,
-  which means that we would need not to set the gpio, but still
-  report a brightness value for sysfs, when not all gpio controllers ar=
-e
-  able to read the gpio value.
-- switched the default-brightness-level to boolean values (0 or 1) inst=
-ead
-  of using strings ("on", "off", "keep").
-- The documentation was updated accordingly.
-- The example in the documentation now uses the dts gpio defines.
-- The "backlight: gpio_backlight: Use a default state enum." patch was =
-then
-  dropped, becuase it is not necessary anymore.
-
-ChangeLog v6->v7:
-- removed a compilation warning with the removal of the useless ret dec=
-laration.
-
-ChangeLog v5->v6:
-- The default state handling was reworked:
-  - it's now called default-state, and looks like the gpio-leds default=
--state.
-  - it now has a "keep" option, like for the gpio-leds.
-  - that "keep" option is the default when the default-state property i=
-s not set.
-- The documentation was updated accordingly.
-
-ChangeLog v4->v5:
-- The default-brightness property now defaults to 0 in the driver.
-- def_value int becomes a bool.
-- The check for the gpio validity has been reworked.
----
- .../bindings/video/backlight/gpio-backlight.txt    |   19 +++++++
- drivers/video/backlight/gpio_backlight.c           |   60 ++++++++++++=
-+++++---
- 2 files changed, 72 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/video/backlight/g=
-pio-backlight.txt
-
-diff --git a/Documentation/devicetree/bindings/video/backlight/gpio-bac=
-klight.txt b/Documentation/devicetree/bindings/video/backlight/gpio-bac=
-klight.txt
-new file mode 100644
-index 0000000..a923193
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/backlight/gpio-backlight.=
-txt
-@@ -0,0 +1,19 @@
-+gpio-backlight bindings
-+
-+Required properties:
-+  - compatible: "gpio-backlight"
-+  - gpios: describes the gpio that is used for enabling/disabling the =
-backlight
-+    (see GPIO binding[0] for more details).
-+
-+Optional properties:
-+  - default-on: enable the backlight at boot.
-+
-+[0]: Documentation/devicetree/bindings/gpio/gpio.txt
-+
-+Example:
-+
-+	backlight {
-+		compatible =3D "gpio-backlight";
-+		gpios =3D <&gpio3 4 GPIO_ACTIVE_HIGH>;
-+		default-on;
-+	};
-diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/b=
-acklight/gpio_backlight.c
-index 81fb127..2422614 100644
---- a/drivers/video/backlight/gpio_backlight.c
-+++ b/drivers/video/backlight/gpio_backlight.c
-@@ -13,6 +13,8 @@
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
- #include <linux/platform_data/gpio_backlight.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-@@ -23,6 +25,7 @@ struct gpio_backlight {
-=20
- 	int gpio;
- 	int active;
-+	int def_value;
- };
-=20
- static int gpio_backlight_update_status(struct backlight_device *bl)
-@@ -60,6 +63,33 @@ static const struct backlight_ops gpio_backlight_ops=
- =3D {
- 	.check_fb	=3D gpio_backlight_check_fb,
- };
-=20
-+static int gpio_backlight_probe_dt(struct platform_device *pdev,
-+				   struct gpio_backlight *gbl)
-+{
-+	struct device_node *np =3D pdev->dev.of_node;
-+	enum of_gpio_flags gpio_flags;
-+	bool default_on =3D false;
-+
-+	gbl->fbdev =3D NULL;
-+	gbl->gpio =3D of_get_gpio_flags(np, 0, &gpio_flags);
-+
-+	if (!gpio_is_valid(gbl->gpio)) {
-+		if (gbl->gpio !=3D -EPROBE_DEFER) {
-+			dev_err(&pdev->dev,
-+				"Error: The gpios parameter is missing or invalid.\n");
-+		}
-+		return gbl->gpio;
-+	}
-+
-+	gbl->active =3D (gpio_flags & OF_GPIO_ACTIVE_LOW) ? 0 : 1;
-+
-+	default_on =3D of_property_read_bool(np, "default-on");
-+
-+	gbl->def_value =3D default_on;
-+
-+	return 0;
-+}
-+
- static int gpio_backlight_probe(struct platform_device *pdev)
- {
- 	struct gpio_backlight_platform_data *pdata =3D
-@@ -67,10 +97,12 @@ static int gpio_backlight_probe(struct platform_dev=
-ice *pdev)
- 	struct backlight_properties props;
- 	struct backlight_device *bl;
- 	struct gpio_backlight *gbl;
-+	struct device_node *np =3D pdev->dev.of_node;
- 	int ret;
-=20
--	if (!pdata) {
--		dev_err(&pdev->dev, "failed to find platform data\n");
-+	if (!pdata && !np) {
-+		dev_err(&pdev->dev,
-+			"failed to find platform data or device tree node.\n");
- 		return -ENODEV;
- 	}
-=20
-@@ -79,14 +111,22 @@ static int gpio_backlight_probe(struct platform_de=
-vice *pdev)
- 		return -ENOMEM;
-=20
- 	gbl->dev =3D &pdev->dev;
--	gbl->fbdev =3D pdata->fbdev;
--	gbl->gpio =3D pdata->gpio;
--	gbl->active =3D pdata->active_low ? 0 : 1;
-+
-+	if (np) {
-+		ret =3D gpio_backlight_probe_dt(pdev, gbl);
-+		if (ret)
-+			return ret;
-+	} else {
-+		gbl->fbdev =3D pdata->fbdev;
-+		gbl->gpio =3D pdata->gpio;
-+		gbl->active =3D pdata->active_low ? 0 : 1;
-+		gbl->def_value =3D pdata->def_value;
-+	}
-=20
- 	ret =3D devm_gpio_request_one(gbl->dev, gbl->gpio, GPIOF_DIR_OUT |
- 				    (gbl->active ? GPIOF_INIT_LOW
- 						 : GPIOF_INIT_HIGH),
--				    pdata->name);
-+				    pdata ? pdata->name : "backlight");
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "unable to request GPIO\n");
- 		return ret;
-@@ -103,17 +143,23 @@ static int gpio_backlight_probe(struct platform_d=
-evice *pdev)
- 		return PTR_ERR(bl);
- 	}
-=20
--	bl->props.brightness =3D pdata->def_value;
-+	bl->props.brightness =3D gbl->def_value;
- 	backlight_update_status(bl);
-=20
- 	platform_set_drvdata(pdev, bl);
- 	return 0;
- }
-=20
-+static struct of_device_id gpio_backlight_of_match[] =3D {
-+	{ .compatible =3D "gpio-backlight" },
-+	{ /* sentinel */ }
-+};
-+
- static struct platform_driver gpio_backlight_driver =3D {
- 	.driver		=3D {
- 		.name		=3D "gpio-backlight",
- 		.owner		=3D THIS_MODULE,
-+		.of_match_table =3D gpio_backlight_of_match,
- 	},
- 	.probe		=3D gpio_backlight_probe,
- };
---=20
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Tony
+>
+>> ---
+>>   arch/arm/mach-omap2/pdata-quirks.c | 20 ++++++++++++++++++++
+>>   1 file changed, 20 insertions(+)
+>>
+>> diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
+>> index 3d5b24d..74e094a 100644
+>> --- a/arch/arm/mach-omap2/pdata-quirks.c
+>> +++ b/arch/arm/mach-omap2/pdata-quirks.c
+>> @@ -16,12 +16,14 @@
+>>   #include <linux/wl12xx.h>
+>>
+>>   #include <linux/platform_data/pinctrl-single.h>
+>> +#include <linux/platform_data/iommu-omap.h>
+>>
+>>   #include "am35xx.h"
+>>   #include "common.h"
+>>   #include "common-board-devices.h"
+>>   #include "dss-common.h"
+>>   #include "control.h"
+>> +#include "omap_device.h"
+>>
+>>   struct pdata_init {
+>>   	const char *compatible;
+>> @@ -92,6 +94,12 @@ static void __init hsmmc2_internal_input_clk(void)
+>>   	omap_ctrl_writel(reg, OMAP343X_CONTROL_DEVCONF1);
+>>   }
+>>
+>> +static struct iommu_platform_data omap3_iommu_pdata = {
+>> +	.reset_name = "mmu",
+>> +	.assert_reset = omap_device_assert_hardreset,
+>> +	.deassert_reset = omap_device_deassert_hardreset,
+>> +};
+>> +
+>>   static int omap3_sbc_t3730_twl_callback(struct device *dev,
+>>   					   unsigned gpio,
+>>   					   unsigned ngpio)
+>> @@ -185,6 +193,12 @@ static void __init omap4_panda_legacy_init(void)
+>>   	legacy_init_ehci_clk("auxclk3_ck");
+>>   	legacy_init_wl12xx(WL12XX_REFCLOCK_38, 0, 53);
+>>   }
+>> +
+>> +static struct iommu_platform_data omap4_iommu_pdata = {
+>> +	.reset_name = "mmu_cache",
+>> +	.assert_reset = omap_device_assert_hardreset,
+>> +	.deassert_reset = omap_device_deassert_hardreset,
+>> +};
+>>   #endif
+>>
+>>   #ifdef CONFIG_SOC_OMAP5
+>> @@ -240,6 +254,8 @@ struct of_dev_auxdata omap_auxdata_lookup[] __initdata = {
+>>   #ifdef CONFIG_ARCH_OMAP3
+>>   	OF_DEV_AUXDATA("ti,omap3-padconf", 0x48002030, "48002030.pinmux", &pcs_pdata),
+>>   	OF_DEV_AUXDATA("ti,omap3-padconf", 0x48002a00, "48002a00.pinmux", &pcs_pdata),
+>> +	OF_DEV_AUXDATA("ti,omap2-iommu", 0x5d000000, "5d000000.mmu",
+>> +		       &omap3_iommu_pdata),
+>>   	/* Only on am3517 */
+>>   	OF_DEV_AUXDATA("ti,davinci_mdio", 0x5c030000, "davinci_mdio.0", NULL),
+>>   	OF_DEV_AUXDATA("ti,am3517-emac", 0x5c000000, "davinci_emac.0",
+>> @@ -248,6 +264,10 @@ struct of_dev_auxdata omap_auxdata_lookup[] __initdata = {
+>>   #ifdef CONFIG_ARCH_OMAP4
+>>   	OF_DEV_AUXDATA("ti,omap4-padconf", 0x4a100040, "4a100040.pinmux", &pcs_pdata),
+>>   	OF_DEV_AUXDATA("ti,omap4-padconf", 0x4a31e040, "4a31e040.pinmux", &pcs_pdata),
+>> +	OF_DEV_AUXDATA("ti,omap4-iommu", 0x4a066000, "4a066000.mmu",
+>> +		       &omap4_iommu_pdata),
+>> +	OF_DEV_AUXDATA("ti,omap4-iommu", 0x55082000, "55082000.mmu",
+>> +		       &omap4_iommu_pdata),
+>>   #endif
+>>   	{ /* sentinel */ },
+>>   };
+>> --
+>> 1.8.5.3
+>>
