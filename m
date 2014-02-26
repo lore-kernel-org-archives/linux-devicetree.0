@@ -1,7 +1,7 @@
 From: <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Subject: [PATCH] ARM: at91: sama5d3: get rid of atmel_tsadcc driver
-Date: Wed, 26 Feb 2014 17:29:50 +0100
-Message-ID: <1393432190-8799-1-git-send-email-ludovic.desroches@atmel.com>
+Date: Wed, 26 Feb 2014 17:19:43 +0100
+Message-ID: <1393431584-27783-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
