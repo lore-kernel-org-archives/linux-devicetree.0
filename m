@@ -1,75 +1,82 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 3/4] ARM: dts: OMAP4: Add IOMMU nodes
-Date: Wed, 26 Feb 2014 22:05:17 +0100
-Message-ID: <5025565.C2g8cq3k2V@avalon>
-References: <1392315776-33197-1-git-send-email-s-anna@ti.com> <1392315776-33197-4-git-send-email-s-anna@ti.com>
+From: Arend van Spriel <arend@broadcom.com>
+Subject: Re: [PATCH] ARM: tegra: add device tree for SHIELD
+Date: Wed, 26 Feb 2014 22:10:12 +0100
+Message-ID: <530E5834.4070805@broadcom.com>
+References: <1393237593-28121-1-git-send-email-acourbot@nvidia.com> <530B952D.2000006@wwwdotorg.org> <530BFC58.6020003@nvidia.com> <530C67F4.7010208@broadcom.com> <530D731B.5050305@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1392315776-33197-4-git-send-email-s-anna@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Florian Vaussard <florian.vaussard@epfl.ch>, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <530D731B.5050305@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Courbot <acourbot@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Suman,
-
-Thank you for the patch.
-
-On Thursday 13 February 2014 12:22:55 Suman Anna wrote:
-> From: Florian Vaussard <florian.vaussard@epfl.ch>
+On 02/26/2014 05:52 AM, Alexandre Courbot wrote:
+> On 02/25/2014 06:52 PM, Arend van Spriel wrote:
+>> On 02/25/2014 03:13 AM, Alexandre Courbot wrote:
+>>>>
+>>>>> +    /* Wifi */
+>>>>> +    sdhci@78000000 {
+>>>>> +        status = "okay";
+>>>>> +        bus-width = <4>;
+>>>>> +        broken-cd;
+>>>>> +        keep-power-in-suspend;
+>>>>> +        cap-sdio-irq;
+>>>>
+>>>> Is non-removable better than broken-cd, or are they entirely unrelated?
+>>>
+>>> They are unrelated actually. With non-removable the driver expects the
+>>> device to always be there since boot, and does not check for the card to
+>>> be removed/added after boot. broken-cd indicates there is no CD line and
+>>> the device should be polled regularly.
+>>>
+>>> For the Wifi chip, non-removable would be the correct setting
+>>> hardware-wise, but there is a trap: the chip has its reset line asserted
+>>> at boot-time, and you need to set GPIO 229 to de-assert it. Only after
+>>> that will the device be detected on the SDIO bus. Since it lacks a CD
+>>> line, it must be polled, hence the broken-cd property.
+>>>
+>>> This also raises another, redundant problem with DT bindings: AFAIK we
+>>> currently have no way to let the system know the device will only appear
+>>> after a given GPIO is set. It would also be nice to be able to give some
+>>> parameters to the Wifi driver through the DT (like the OOB interrupt).
+>>> Right now the Wifi chip is brought up by exporting the GPIO and writing
+>>> to it from user-space, and the OOB interrupt is not used.
+>>
+>> Hi Alexandre,
+>>
+>> I recently posted a proposal for brcmfmac DT binding [1]. I did receive
+>> some comments, but it would be great if you (and/or others involved) had
+>> a look at it as well and give me some feedback. DT work still needs to
+>> grow on me.
 > 
-> Add the IOMMU nodes for the DSP and IPU subsystems. The external
-> address space for DSP starts at 0x20000000 in OMAP4 compared to
-> 0x11000000 in OMAP3, and the addresses beyond 0xE0000000 are
-> private address space for the Cortex-M3 cores in the IPU subsystem.
-> The MMU within the IPU sub-system also supports a bus error back
-> capability, not available on the DSP MMU.
+> Hi Arend, (and thanks again for all the help with getting the chip to
+> work!)
 > 
-> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
-> [s-anna@ti.com: dma-window updates and bus error back addition]
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> ---
->  arch/arm/boot/dts/omap4.dtsi | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
+> Great, I'm not subscribed to the devicetree list and so have missed this
+> thread, but I'm glad to see it.
 > 
-> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-> index d3f8a6e..1885f90 100644
-> --- a/arch/arm/boot/dts/omap4.dtsi
-> +++ b/arch/arm/boot/dts/omap4.dtsi
-> @@ -461,6 +461,23 @@
->  			dma-names = "tx", "rx";
->  		};
+> I don't think I have much to add to the comments you already received
+> there. I'd need it to reference the 32K clock (which I currently
+> force-enable manually), the OOB interrupt, and the reset pin as a GPIO
+> (as for SHIELD the device needs to be put out of reset using an
+> active-low GPIO before anything can happen). That last property could be
+> optional as I suspect most designs won't use it.
 > 
-> +		mmu_dsp: mmu@4a066000 {
-> +			compatible = "ti,omap4-iommu";
-> +			reg = <0x4a066000 0xff>;
-> +			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
-> +			ti,hwmods = "mmu_dsp";
-> +			dma-window = <0x20000000 0xdffff000>;
-> +		};
-> +
-> +		mmu_ipu: mmu@55082000 {
-> +			compatible = "ti,omap4-iommu";
-> +			reg = <0x55082000 0xff>;
-> +			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
-> +			ti,hwmods = "mmu_ipu";
-> +			dma-window = <0 0xdffff000>;
+> Getting the device out of reset should be done before the bus probes the
+> non-removable device, so I wonder how this would fit wrt. the DT
+> power-on sequencing series by Olof. Something tells me this could rather
+> be a property of the bus, but physically speaking the pin is connected
+> to the wifi chip, so... Maybe we could get the platform driver to ask
+> the bus to probe again after enabling power/getting the device out of
+> reset?
 
-I'm not too familiar with the M3 MPU in the OMAP4, but doesn't its memory map 
-also include other reserved regions, such as 0x55040000- 0x5505ffff to access 
-the ISS ?
+Actually, brcmfmac provides a platform driver and a sdio driver. At the
+end of the platform probe it registers the sdio driver, which will
+trigger the bus to probe again. I am not sure how that would relate to
+the DT power-on sequencing you mentioned.
 
-> +			ti,iommu-bus-err-back;
-> +		};
-> +
->  		wdt2: wdt@4a314000 {
->  			compatible = "ti,omap4-wdt", "ti,omap3-wdt";
->  			reg = <0x4a314000 0x80>;
-
--- 
 Regards,
-
-Laurent Pinchart
-
+Arend
