@@ -1,92 +1,221 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 00/10] pinctrl: mvebu: remove hard-coded addresses from
- Dove pinctrl
-Date: Wed, 26 Feb 2014 09:53:45 -0500
-Message-ID: <20140226145345.GG1872@titan.lakedaemon.net>
-References: <1393231382-11078-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <20140224181023.GA1010@titan.lakedaemon.net>
- <CACRpkdZ+YGTyDj6i8c198MdRtz3GY-YBmVO9LysPCcmT4EC0cg@mail.gmail.com>
- <20140226000940.GF1872@titan.lakedaemon.net>
- <CACRpkdYQa2BG_qxf5zY=7rks6O31ZF-BX0af3_u1MOgwfwxFSQ@mail.gmail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v4 1/3] [media] of: move graph helpers from
+ drivers/media/v4l2-core to drivers/of
+Date: Wed, 26 Feb 2014 16:24:57 +0100
+Message-ID: <1393428297.3248.92.camel@paszta.hi.pengutronix.de>
+References: <1393340304-19005-1-git-send-email-p.zabel@pengutronix.de>
+	 < 1393340304-19005-2-git-send-email-p.zabel@pengutronix.de>
+	 <20140226113729.A9D5AC40A89@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYQa2BG_qxf5zY=7rks6O31ZF-BX0af3_u1MOgwfwxFSQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20140226113729.A9D5AC40A89@trevor.secretlab.ca>
+Sender: linux-media-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Philipp Zabel <philipp.zabel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 26, 2014 at 10:43:45AM +0100, Linus Walleij wrote:
-> On Wed, Feb 26, 2014 at 1:09 AM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+Hi Grant,
+
+Am Mittwoch, den 26.02.2014, 11:37 +0000 schrieb Grant Likely:
+[...]
+> >  drivers/media/v4l2-core/v4l2-of.c             | 117 ----------------------
+> >  drivers/of/Makefile                           |   1 +
+> >  drivers/of/of_graph.c                         | 134 ++++++++++++++++++++++++++
 > 
-> > Sebastian has now re-organized the branches as I asked, and I confirmed
-> > that the final result is the exact same as mine (diff is null).
+> Nah. Just put it into drivers/of/base.c. This isn't a separate subsystem
+> and the functions are pretty basic.
+
+Ok.
+
+[...]
+> > +struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
+> > +					struct device_node *prev)
+> > +{
+> > +	struct device_node *endpoint;
+> > +	struct device_node *port = NULL;
+> > +
+> > +	if (!parent)
+> > +		return NULL;
+> > +
+> > +	if (!prev) {
+> > +		struct device_node *node;
+> > +		/*
+> > +		 * It's the first call, we have to find a port subnode
+> > +		 * within this node or within an optional 'ports' node.
+> > +		 */
+> > +		node = of_get_child_by_name(parent, "ports");
+> > +		if (node)
+> > +			parent = node;
+> > +
+> > +		port = of_get_child_by_name(parent, "port");
 > 
-> Okay!
+> If you've got a "ports" node, then I would expect every single child to
+> be a port. Should not need the _by_name variant.
+
+The 'ports' node is optional. It is only needed if the parent node has
+its own #address-cells and #size-cells properties. If the ports are
+direct children of the device node, there might be other nodes than
+ports:
+
+	device {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		port@0 {
+			endpoint { ... };
+		};
+		port@1 {
+			endpoint { ... };
+		};
+
+		some-other-child { ... };
+	};
+
+	device {
+		#address-cells = <x>;
+		#size-cells = <y>;
+
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				endpoint { ... };
+			};
+			port@1 {
+				endpoint { ... };
+			};
+		};
+
+		some-other-child { ... };
+	};
+
+The helper should find the two endpoints in both cases.
+Tomi suggests an even more compact form for devices with just one port:
+
+	device {
+		endpoint { ... };
+
+		some-other-child { ... };
+	};
+
+> It seems that this function is merely a helper to get all grandchildren
+> of a node (with some very minor constraints). That could be generalized
+> and simplified. If the function takes the "ports" node as an argument
+> instead of the parent, then there is a greater likelyhood that other
+> code can make use of it...
 > 
-> > Usually when I submit pull requests to arm-soc, they like to see the
-> > branches.  That way if there is an error in one of them, they just drop
-> > the one branch and the others remain.
-> >
-> > Would you like them the same way?  If so, I'll send the pulls to you
-> > tomorrow.
+> Thinking further. I think the semantics of this whole feature basically
+> boil down to this:
 > 
-> Send me one big branch with everything on it.
+> #define for_each_grandchild_of_node(parent, child, grandchild) \
+> 	for_each_child_of_node(parent, child) \
+> 		for_each_child_of_node(child, grandchild)
+> 
+> Correct? Or in this specific case:
+> 
+> 	parent = of_get_child_by_name(np, "ports")
+> 	for_each_grandchild_of_node(parent, child, grandchild) {
+> 		...
+> 	}
 
-Sure.
+Hmm, that would indeed be a bit more generic, but it doesn't handle the
+optional 'ports' subnode and doesn't allow for other child nodes in the
+device node.
 
-> Actually, I'd prefer to pull it in, rebase and sign off each patch
-> individually in my tree if that is not causing you problems.
+> Finally, looking at the actual patch, is any of this actually needed.
+> All of the users updated by this patch only ever handle a single
+> endpoint. Have I read it correctly? Are there any users supporting
+> multiple endpoints?
 
-Actually, that would mess us up pretty badly. :(  One of the reasons we
-take the effort to base off of -rc1 and create stable topic branches is
-so that the commit IDs don't change.  This way, all the patches needed
-to boot the new mvebu SoCs (code intended for v3.15) can be boot tested
-from the mvebu/for-next branch, which is merge-tested and randconfig
-tested in linux-next.  This all happens _before_ the merge window for
-v3.15.
+Yes, mainline currently only contains simple cases. I have posted i.MX6
+patches that use this scheme for the output path:
+  http://www.spinics.net/lists/arm-kernel/msg310817.html
+  http://www.spinics.net/lists/arm-kernel/msg310821.html
 
-There have been huge benefits since we started doing this.  In fact,
-just yesterday I committed three patches to fix issues discovered as a
-result of this process:
+> > +
+> > +		if (port) {
+> > +			/* Found a port, get an endpoint. */
+> > +			endpoint = of_get_next_child(port, NULL);
+> > +			of_node_put(port);
+> > +		} else {
+> > +			endpoint = NULL;
+> > +		}
+> > +
+> > +		if (!endpoint)
+> > +			pr_err("%s(): no endpoint nodes specified for %s\n",
+> > +			       __func__, parent->full_name);
+> > +		of_node_put(node);
+> 
+> If you 'return endpoint' here, then the else block can go down a level.
 
-  edd9d3cffc90 watchdog: orion_wdt: Use %pa to print 'phys_addr_t'
-  1b82af4f1749 ARM: kirkwood: select dtbs based on SoC
-  a02dd0271d01 ARM: mvebu: select dtbs from MACH_ARMADA_*
+Note that this patch is a straight move of existing code.
+I can follow up with code beautification and ...
 
-The first was discovered by Olof's autobuilder, and the last two were
-discovered by Kevin's boot farm.
+> > +	} else {
+> > +		port = of_get_parent(prev);
+> > +		if (!port)
+> > +			/* Hm, has someone given us the root node ?... */
+> > +			return NULL;
+> 
+> WARN_ONCE(). That's a very definite coding failure if that happens.
 
-If you rebase the branch, I'll have to drop it from our for-next tree to
-prevent conflicts in linux-next with your -next branch.  Which means no
-one will be able to boot test the new SoCs without going through a lot
-of hunting to re-collect all the branches.
+... with a fix for this.
 
-The advantage of having mvebu/for-next in addition to linux-next is that
-should there be a boot failure, we can quickly determine whether it is a
-result of the mvebu code (mvebu/for-next fails) or something outside of
-mvebu (only linux-next fails).
+> > +
+> > +		/* Avoid dropping prev node refcount to 0. */
+> > +		of_node_get(prev);
+> > +		endpoint = of_get_next_child(port, prev);
+> > +		if (endpoint) {
+> > +			of_node_put(port);
+> > +			return endpoint;
+> > +		}
+> > +
+> > +		/* No more endpoints under this port, try the next one. */
+> > +		do {
+> > +			port = of_get_next_child(parent, port);
+> > +			if (!port)
+> > +				return NULL;
+> > +		} while (of_node_cmp(port->name, "port"));
+> > +
+> > +		/* Pick up the first endpoint in this port. */
+> > +		endpoint = of_get_next_child(port, NULL);
+> > +		of_node_put(port);
+> > +	}
+> > +
+> > +	return endpoint;
+> > +}
+> > +EXPORT_SYMBOL(of_graph_get_next_endpoint);
+> > +
+> > +/**
+> > + * of_graph_get_remote_port_parent() - get remote port's parent node
+> > + * @node: pointer to a local endpoint device_node
+> > + *
+> > + * Return: Remote device node associated with remote endpoint node linked
+> > + *	   to @node. Use of_node_put() on it when done.
+> > + */
+> > +struct device_node *of_graph_get_remote_port_parent(
+> > +			       const struct device_node *node)
+> > +{
+> > +	struct device_node *np;
+> > +	unsigned int depth;
+> > +
+> > +	/* Get remote endpoint node. */
+> > +	np = of_parse_phandle(node, "remote-endpoint", 0);
+> > +
+> > +	/* Walk 3 levels up only if there is 'ports' node. */
+> 
+> This needs a some explaining. My reading of the binding pattern is that
+> it will always be a fixed number of levels. Why is this test fuzzy?
+[...]
 
-By keeping the commit IDs the same, the same branch can be in multiple
-trees all getting merged into linux-next.  Currently, mvebu does this
-with arm-soc, clk, and irqchip.  In those cases, those maintainers are
-the ones who send the pull requests to Linus, not us.
+See above. The ports subnode level is optional. In most cases, the port
+nodes will be direct children of the device node.
+Walking up 3 levels from the endpoint node will return the device if
+there was a ports node. If there is no ports node, we only have to walk
+up two levels.
 
-> That way it is visible that the patches were funneled through pin
-> control.
-
-I'm a little confused by this.  Once you merge the branch into one of
-yours, that merge commit is a part of the history.  In fact, the branch
-is still intact for eternity.  So by merging the branch, adding other
-patches, and signing the tip of the result, it should be clear it came
-through pinctrl, no?
-
-thx,
-
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards
+Philipp
