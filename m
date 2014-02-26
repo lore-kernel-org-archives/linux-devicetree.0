@@ -1,160 +1,244 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv2 14/16] ARM: OMAP3: hwmod data: cleanup data for IOMMUs
-Date: Wed, 26 Feb 2014 11:59:03 -0600
-Message-ID: <530E2B67.9050300@ti.com>
-References: <1392315347-32967-1-git-send-email-s-anna@ti.com>
-	<1392315347-32967-15-git-send-email-s-anna@ti.com>
-	<20140226171824.GH11654@atomide.com>
+From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Subject: [RESEND PATCH v11] video: backlight: gpio-backlight: Add DT support.
+Date: Wed, 26 Feb 2014 19:04:05 +0100
+Message-ID: <1393437845-25564-1-git-send-email-denis@eukrea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20140226171824.GH11654-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Tony,
+Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Eric B=C3=A9nard <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+---
+ChangeLog v11->v11-resend:
+- Removed the Cc list because it's only one patch.
 
-On 02/26/2014 11:18 AM, Tony Lindgren wrote:
-> * Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [140213 10:19]:
->> From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
->>
->> The irq numbers, ocp address space and device attribute data
->> have all been cleaned up for OMAP3 IOMMUs. All this data is
->> populated via the corresponding dt node.
->>
->> Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
->> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
->
-> This will need to wait until we've made omap3 to be DT only
-> as this will break idling of things for the legacy booting.
->
+ChangeLog v10->v11:
+- Shrinked the Cc list.
+- Fixed the of_match_table warning.
 
-OK, will drop this and I will adjust Patch 9 to support the legacy boot 
-for OMAP3 ISP.
+ChangeLog v9->v10:
+- Only the respective maintainers, or people who responded to the patch
+  were kept in the Cc.
+- The unnecessary of_match_ptr in of_match_table was removed.
 
-regards
-Suman
+ChangeLog v8->v9:
+- Added Shawn Guo in the Cc list.
+- The default-brightness-level is now a boolean default-on property,
+  the gpio is only touched if the gpio-backlight driver instance probes=
+=2E
+- The code and documentation was updated accordingly.
 
->
->> ---
->>   arch/arm/mach-omap2/omap_hwmod_3xxx_data.c | 46 ------------------------------
->>   1 file changed, 46 deletions(-)
->>
->> diff --git a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
->> index 9c7e23a..d68c131 100644
->> --- a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
->> +++ b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
->> @@ -24,7 +24,6 @@
->>   #include "l4_3xxx.h"
->>   #include <linux/platform_data/asoc-ti-mcbsp.h>
->>   #include <linux/platform_data/spi-omap2-mcspi.h>
->> -#include <linux/platform_data/iommu-omap.h>
->>   #include <linux/platform_data/mailbox-omap.h>
->>   #include <plat/dmtimer.h>
->>
->> @@ -2991,83 +2990,39 @@ static struct omap_hwmod_class omap3xxx_mmu_hwmod_class = {
->>
->>   /* mmu isp */
->>
->> -static struct omap_mmu_dev_attr mmu_isp_dev_attr = {
->> -	.da_start	= 0x0,
->> -	.da_end		= 0xfffff000,
->> -	.nr_tlb_entries = 8,
->> -};
->> -
->>   static struct omap_hwmod omap3xxx_mmu_isp_hwmod;
->> -static struct omap_hwmod_irq_info omap3xxx_mmu_isp_irqs[] = {
->> -	{ .irq = 24 + OMAP_INTC_START, },
->> -	{ .irq = -1 }
->> -};
->> -
->> -static struct omap_hwmod_addr_space omap3xxx_mmu_isp_addrs[] = {
->> -	{
->> -		.pa_start	= 0x480bd400,
->> -		.pa_end		= 0x480bd47f,
->> -		.flags		= ADDR_TYPE_RT,
->> -	},
->> -	{ }
->> -};
->>
->>   /* l4_core -> mmu isp */
->>   static struct omap_hwmod_ocp_if omap3xxx_l4_core__mmu_isp = {
->>   	.master		= &omap3xxx_l4_core_hwmod,
->>   	.slave		= &omap3xxx_mmu_isp_hwmod,
->> -	.addr		= omap3xxx_mmu_isp_addrs,
->>   	.user		= OCP_USER_MPU | OCP_USER_SDMA,
->>   };
->>
->>   static struct omap_hwmod omap3xxx_mmu_isp_hwmod = {
->>   	.name		= "mmu_isp",
->>   	.class		= &omap3xxx_mmu_hwmod_class,
->> -	.mpu_irqs	= omap3xxx_mmu_isp_irqs,
->>   	.main_clk	= "cam_ick",
->> -	.dev_attr	= &mmu_isp_dev_attr,
->>   	.flags		= HWMOD_NO_IDLEST,
->>   };
->>
->>   /* mmu iva */
->>
->> -static struct omap_mmu_dev_attr mmu_iva_dev_attr = {
->> -	.da_start	= 0x11000000,
->> -	.da_end		= 0xfffff000,
->> -	.nr_tlb_entries = 32,
->> -};
->> -
->>   static struct omap_hwmod omap3xxx_mmu_iva_hwmod;
->> -static struct omap_hwmod_irq_info omap3xxx_mmu_iva_irqs[] = {
->> -	{ .irq = 28 + OMAP_INTC_START, },
->> -	{ .irq = -1 }
->> -};
->> -
->>   static struct omap_hwmod_rst_info omap3xxx_mmu_iva_resets[] = {
->>   	{ .name = "mmu", .rst_shift = 1, .st_shift = 9 },
->>   };
->>
->> -static struct omap_hwmod_addr_space omap3xxx_mmu_iva_addrs[] = {
->> -	{
->> -		.pa_start	= 0x5d000000,
->> -		.pa_end		= 0x5d00007f,
->> -		.flags		= ADDR_TYPE_RT,
->> -	},
->> -	{ }
->> -};
->> -
->>   /* l3_main -> iva mmu */
->>   static struct omap_hwmod_ocp_if omap3xxx_l3_main__mmu_iva = {
->>   	.master		= &omap3xxx_l3_main_hwmod,
->>   	.slave		= &omap3xxx_mmu_iva_hwmod,
->> -	.addr		= omap3xxx_mmu_iva_addrs,
->>   	.user		= OCP_USER_MPU | OCP_USER_SDMA,
->>   };
->>
->>   static struct omap_hwmod omap3xxx_mmu_iva_hwmod = {
->>   	.name		= "mmu_iva",
->>   	.class		= &omap3xxx_mmu_hwmod_class,
->> -	.mpu_irqs	= omap3xxx_mmu_iva_irqs,
->>   	.clkdm_name	= "iva2_clkdm",
->>   	.rst_lines	= omap3xxx_mmu_iva_resets,
->>   	.rst_lines_cnt	= ARRAY_SIZE(omap3xxx_mmu_iva_resets),
->> @@ -3080,7 +3035,6 @@ static struct omap_hwmod omap3xxx_mmu_iva_hwmod = {
->>   			.idlest_idle_bit = OMAP3430_ST_IVA2_SHIFT,
->>   		},
->>   	},
->> -	.dev_attr	= &mmu_iva_dev_attr,
->>   	.flags		= HWMOD_NO_IDLEST,
->>   };
->>
->> --
->> 1.8.5.3
->>
+ChangeLog v7->v8:
+- The default-state was renamed to default-brightness-level.
+- default-brightness-level is now mandatory, like for backlight-pwm,
+  That way we avoid having to handle the case where it's not set,
+  which means that we would need not to set the gpio, but still
+  report a brightness value for sysfs, when not all gpio controllers ar=
+e
+  able to read the gpio value.
+- switched the default-brightness-level to boolean values (0 or 1) inst=
+ead
+  of using strings ("on", "off", "keep").
+- The documentation was updated accordingly.
+- The example in the documentation now uses the dts gpio defines.
+- The "backlight: gpio_backlight: Use a default state enum." patch was =
+then
+  dropped, becuase it is not necessary anymore.
+
+ChangeLog v6->v7:
+- removed a compilation warning with the removal of the useless ret dec=
+laration.
+
+ChangeLog v5->v6:
+- The default state handling was reworked:
+  - it's now called default-state, and looks like the gpio-leds default=
+-state.
+  - it now has a "keep" option, like for the gpio-leds.
+  - that "keep" option is the default when the default-state property i=
+s not set.
+- The documentation was updated accordingly.
+
+ChangeLog v4->v5:
+- The default-brightness property now defaults to 0 in the driver.
+- def_value int becomes a bool.
+- The check for the gpio validity has been reworked.
+---
+ .../bindings/video/backlight/gpio-backlight.txt    |   19 +++++++
+ drivers/video/backlight/gpio_backlight.c           |   60 ++++++++++++=
++++++---
+ 2 files changed, 72 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/video/backlight/g=
+pio-backlight.txt
+
+diff --git a/Documentation/devicetree/bindings/video/backlight/gpio-bac=
+klight.txt b/Documentation/devicetree/bindings/video/backlight/gpio-bac=
+klight.txt
+new file mode 100644
+index 0000000..a923193
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/backlight/gpio-backlight.=
+txt
+@@ -0,0 +1,19 @@
++gpio-backlight bindings
++
++Required properties:
++  - compatible: "gpio-backlight"
++  - gpios: describes the gpio that is used for enabling/disabling the =
+backlight
++    (see GPIO binding[0] for more details).
++
++Optional properties:
++  - default-on: enable the backlight at boot.
++
++[0]: Documentation/devicetree/bindings/gpio/gpio.txt
++
++Example:
++
++	backlight {
++		compatible =3D "gpio-backlight";
++		gpios =3D <&gpio3 4 GPIO_ACTIVE_HIGH>;
++		default-on;
++	};
+diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/b=
+acklight/gpio_backlight.c
+index 81fb127..2422614 100644
+--- a/drivers/video/backlight/gpio_backlight.c
++++ b/drivers/video/backlight/gpio_backlight.c
+@@ -13,6 +13,8 @@
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
+ #include <linux/platform_data/gpio_backlight.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+@@ -23,6 +25,7 @@ struct gpio_backlight {
+=20
+ 	int gpio;
+ 	int active;
++	int def_value;
+ };
+=20
+ static int gpio_backlight_update_status(struct backlight_device *bl)
+@@ -60,6 +63,33 @@ static const struct backlight_ops gpio_backlight_ops=
+ =3D {
+ 	.check_fb	=3D gpio_backlight_check_fb,
+ };
+=20
++static int gpio_backlight_probe_dt(struct platform_device *pdev,
++				   struct gpio_backlight *gbl)
++{
++	struct device_node *np =3D pdev->dev.of_node;
++	enum of_gpio_flags gpio_flags;
++	bool default_on =3D false;
++
++	gbl->fbdev =3D NULL;
++	gbl->gpio =3D of_get_gpio_flags(np, 0, &gpio_flags);
++
++	if (!gpio_is_valid(gbl->gpio)) {
++		if (gbl->gpio !=3D -EPROBE_DEFER) {
++			dev_err(&pdev->dev,
++				"Error: The gpios parameter is missing or invalid.\n");
++		}
++		return gbl->gpio;
++	}
++
++	gbl->active =3D (gpio_flags & OF_GPIO_ACTIVE_LOW) ? 0 : 1;
++
++	default_on =3D of_property_read_bool(np, "default-on");
++
++	gbl->def_value =3D default_on;
++
++	return 0;
++}
++
+ static int gpio_backlight_probe(struct platform_device *pdev)
+ {
+ 	struct gpio_backlight_platform_data *pdata =3D
+@@ -67,10 +97,12 @@ static int gpio_backlight_probe(struct platform_dev=
+ice *pdev)
+ 	struct backlight_properties props;
+ 	struct backlight_device *bl;
+ 	struct gpio_backlight *gbl;
++	struct device_node *np =3D pdev->dev.of_node;
+ 	int ret;
+=20
+-	if (!pdata) {
+-		dev_err(&pdev->dev, "failed to find platform data\n");
++	if (!pdata && !np) {
++		dev_err(&pdev->dev,
++			"failed to find platform data or device tree node.\n");
+ 		return -ENODEV;
+ 	}
+=20
+@@ -79,14 +111,22 @@ static int gpio_backlight_probe(struct platform_de=
+vice *pdev)
+ 		return -ENOMEM;
+=20
+ 	gbl->dev =3D &pdev->dev;
+-	gbl->fbdev =3D pdata->fbdev;
+-	gbl->gpio =3D pdata->gpio;
+-	gbl->active =3D pdata->active_low ? 0 : 1;
++
++	if (np) {
++		ret =3D gpio_backlight_probe_dt(pdev, gbl);
++		if (ret)
++			return ret;
++	} else {
++		gbl->fbdev =3D pdata->fbdev;
++		gbl->gpio =3D pdata->gpio;
++		gbl->active =3D pdata->active_low ? 0 : 1;
++		gbl->def_value =3D pdata->def_value;
++	}
+=20
+ 	ret =3D devm_gpio_request_one(gbl->dev, gbl->gpio, GPIOF_DIR_OUT |
+ 				    (gbl->active ? GPIOF_INIT_LOW
+ 						 : GPIOF_INIT_HIGH),
+-				    pdata->name);
++				    pdata ? pdata->name : "backlight");
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "unable to request GPIO\n");
+ 		return ret;
+@@ -103,17 +143,23 @@ static int gpio_backlight_probe(struct platform_d=
+evice *pdev)
+ 		return PTR_ERR(bl);
+ 	}
+=20
+-	bl->props.brightness =3D pdata->def_value;
++	bl->props.brightness =3D gbl->def_value;
+ 	backlight_update_status(bl);
+=20
+ 	platform_set_drvdata(pdev, bl);
+ 	return 0;
+ }
+=20
++static struct of_device_id gpio_backlight_of_match[] =3D {
++	{ .compatible =3D "gpio-backlight" },
++	{ /* sentinel */ }
++};
++
+ static struct platform_driver gpio_backlight_driver =3D {
+ 	.driver		=3D {
+ 		.name		=3D "gpio-backlight",
+ 		.owner		=3D THIS_MODULE,
++		.of_match_table =3D gpio_backlight_of_match,
+ 	},
+ 	.probe		=3D gpio_backlight_probe,
+ };
+--=20
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
