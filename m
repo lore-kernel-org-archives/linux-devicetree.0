@@ -1,116 +1,104 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v4 3/3] Documentation: of: Document graph bindings
-Date: Wed, 26 Feb 2014 16:47:56 +0100
-Message-ID: <1393429676.3248.110.camel@paszta.hi.pengutronix.de>
-References: <1393340304-19005-1-git-send-email-p.zabel@pengutronix.de>
-		 <1393340304-19005-4-git-send-email-p.zabel@pengutronix.de>
-		 <530DE8A9.9050809@ti.com>
-	 <1393426623.3248.70.camel@paszta.hi.pengutronix.de>
-	 <530DFF4C.8080807@ti.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v2 1/8] Input: pixcir_i2c_ts: Use devres managed resource allocations
+Date: Wed, 26 Feb 2014 17:27:59 +0200
+Message-ID: <1393428486-15001-2-git-send-email-rogerq@ti.com>
+References: <1393428486-15001-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <530DFF4C.8080807@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1393428486-15001-1-git-send-email-rogerq@ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com
+Cc: rydberg@euromail.se, jcbian@pixcir.com.cn, balbi@ti.com, dmurphy@ti.com, mugunthanvnm@ti.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, den 26.02.2014, 16:50 +0200 schrieb Tomi Valkeinen:
-> On 26/02/14 16:57, Philipp Zabel wrote:
-> > Hi Tomi,
-> > 
-> > Am Mittwoch, den 26.02.2014, 15:14 +0200 schrieb Tomi Valkeinen:
-> >> On 25/02/14 16:58, Philipp Zabel wrote:
-> >>
-> >>> +Optional endpoint properties
-> >>> +----------------------------
-> >>> +
-> >>> +- remote-endpoint: phandle to an 'endpoint' subnode of a remote device node.
-> >>
-> >> Why is that optional? What use is an endpoint, if it's not connected to
-> >> something?
-> > 
-> > This allows to include the an empty endpoint template in a SoC dtsi for
-> > the convenience of board dts writers. Also, the same property is
-> > currently listed as optional in video-interfaces.txt.
-> > 
-> >   soc.dtsi:
-> > 	display-controller {
-> > 		port {
-> > 			disp0: endpoint { };
-> > 		};
-> > 	};
-> > 
-> >   board.dts:
-> > 	#include "soc.dtsi"
-> > 	&disp0 {
-> > 		remote-endpoint = <&panel_input>;
-> > 	};
-> > 	panel {
-> > 		port {
-> > 			panel_in: endpoint {
-> > 				remote-endpoint = <&disp0>;
-> > 			};
-> > 		};
-> > 	};
-> > 
-> > Any board not using that port can just leave the endpoint disconnected.
-> 
-> Hmm I see. I'm against that.
-> 
-> I think the SoC dtsi should not contain endpoint node, or even port node
-> (at least usually).
+Use devm_() and friends for allocating memory, input device
+and IRQ.
 
-Well, at least the port is a physical thing. I see no reason not to have
-it in the dtsi.
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Acked-by: Mugunthan V N <mugunthanvnm@ti.com>
+---
+ drivers/input/touchscreen/pixcir_i2c_ts.c | 34 ++++++++++++-------------------
+ 1 file changed, 13 insertions(+), 21 deletions(-)
 
-> It doesn't know how many endpoints, if any, a
-> particular board has. That part should be up to the board dts.
+diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
+index 02392d2..38e83a2 100644
+--- a/drivers/input/touchscreen/pixcir_i2c_ts.c
++++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
+@@ -130,6 +130,7 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+ {
+ 	const struct pixcir_ts_platform_data *pdata =
+ 			dev_get_platdata(&client->dev);
++	struct device *dev = &client->dev;
+ 	struct pixcir_i2c_ts_data *tsdata;
+ 	struct input_dev *input;
+ 	int error;
+@@ -139,12 +140,14 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+ 		return -EINVAL;
+ 	}
+ 
+-	tsdata = kzalloc(sizeof(*tsdata), GFP_KERNEL);
+-	input = input_allocate_device();
+-	if (!tsdata || !input) {
+-		dev_err(&client->dev, "Failed to allocate driver data!\n");
+-		error = -ENOMEM;
+-		goto err_free_mem;
++	tsdata = devm_kzalloc(dev, sizeof(*tsdata), GFP_KERNEL);
++	if (!tsdata)
++		return -ENOMEM;
++
++	input = devm_input_allocate_device(dev);
++	if (!input) {
++		dev_err(&client->dev, "Failed to allocate input device\n");
++		return -ENOMEM;
+ 	}
+ 
+ 	tsdata->client = client;
+@@ -165,29 +168,22 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+ 
+ 	input_set_drvdata(input, tsdata);
+ 
+-	error = request_threaded_irq(client->irq, NULL, pixcir_ts_isr,
++	error = devm_request_threaded_irq(dev, client->irq, NULL, pixcir_ts_isr,
+ 				     IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+ 				     client->name, tsdata);
+ 	if (error) {
+-		dev_err(&client->dev, "Unable to request touchscreen IRQ.\n");
+-		goto err_free_mem;
++		dev_err(dev, "failed to request irq %d\n", client->irq);
++		return error;
+ 	}
+ 
+ 	error = input_register_device(input);
+ 	if (error)
+-		goto err_free_irq;
++		return error;
+ 
+ 	i2c_set_clientdata(client, tsdata);
+ 	device_init_wakeup(&client->dev, 1);
+ 
+ 	return 0;
+-
+-err_free_irq:
+-	free_irq(client->irq, tsdata);
+-err_free_mem:
+-	input_free_device(input);
+-	kfree(tsdata);
+-	return error;
+ }
+ 
+ static int pixcir_i2c_ts_remove(struct i2c_client *client)
+@@ -198,10 +194,6 @@ static int pixcir_i2c_ts_remove(struct i2c_client *client)
+ 
+ 	tsdata->exiting = true;
+ 	mb();
+-	free_irq(client->irq, tsdata);
+-
+-	input_unregister_device(tsdata->input);
+-	kfree(tsdata);
+ 
+ 	return 0;
+ }
+-- 
+1.8.3.2
 
-...
-
-> I've done this with OMAP as (much simplified):
-> 
-> SoC.dtsi:
-> 
-> dss: dss@58000000 {
-> 	status = "disabled";
-> };
-> 
-> Nothing else (relevant here). The binding documentation states that dss
-> has one port, and information what data is needed for the port and endpoint.
-> 
-> board.dts:
-> 
-> &dss {
->         status = "ok";
-> 
->         pinctrl-names = "default";
->         pinctrl-0 = <&dss_dpi_pins>;
-> 
->         dpi_out: endpoint {
-> 
->                 remote-endpoint = <&tfp410_in>;
->                 data-lines = <24>;
->         };
-> };
-> 
-> That's using the shortened version without port node.
-
-Ok, that looks compact enough. I still don't see the need to change make
-the remote-endpoint property required to achieve this, though. On the
-other hand, I wouldn't object to making it mandatory either.
-
-> Of course, it's up to the developer how his dts looks like. But to me it
-> makes sense to require the remote-endpoint property, as the endpoint, or
-> even the port, doesn't make much sense if there's nothing to connect to.
-
-Please let's not make it mandatory for a port node to contain an
-endpoint. For any device with multiple ports we can't use the simplified
-form above, and only adding the (correctly numbered) port in all the
-board device trees would be a pain.
-
-regards
-Philipp
