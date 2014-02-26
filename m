@@ -1,87 +1,148 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v5 06/11] drivers: of: initialize and assign reserved memory to newly created devices
-Date: Wed, 26 Feb 2014 12:14:45 +0000
-Message-ID: <20140226121445.54D2DC40A89@trevor.secretlab.ca>
-References: <1392985527-6260-1-git-send-email-m.szyprowski@samsung.com> < 1392985527-6260-7-git-send-email-m.szyprowski@samsung.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1392985527-6260-7-git-send-email-m.szyprowski@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Paul Mackerras <paulus@samba.org>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 2/2] ARM: dts: duovero-parlor: Add HDMI output
+Date: Wed, 26 Feb 2014 14:44:02 +0200
+Message-ID: <530DE192.9030506@ti.com>
+References: <1393261669-32039-1-git-send-email-florian.vaussard@epfl.ch> <20140225123921.GY27282@n2100.arm.linux.org.uk> <20140225134139.GA23898@earth.universe> <2364124.7r818M0xAj@avalon> <20140225205634.GZ27282@n2100.arm.linux.org.uk> <530DCC8A.6060708@ti.com> <20140226120359.GA27282@n2100.arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="EqkDPQckwv74cXV7im2E0aGtgDUqon0DF"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140226120359.GA27282@n2100.arm.linux.org.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sebastian Reichel <sre@ring0.de>, Javier Martinez Canillas <javier@dowhile0.org>, Florian Vaussard <florian.vaussard@epfl.ch>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Ash Charles <ash@gumstix.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 21 Feb 2014 13:25:22 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
-> Use recently introduced of_reserved_mem_device_init() function to
-> automatically assign respective reserved memory region to the newly created
-> platform and amba device.
-> 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+--EqkDPQckwv74cXV7im2E0aGtgDUqon0DF
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-I'm wary on this patch. It hides the assignment of regions into the core
-code and I worry that it is the wrong level of abstraction. I would
-think that drivers should know that they need a reserved memory region
-and should be calling the API to obtain the region directly rather than
-doing it for them. The reason being is that there may be some situations
-where the common code isn't quite right and the driver needs to override
-the behaviour. If it is called automatically then the driver cannot do
-that.
+On 26/02/14 14:03, Russell King - ARM Linux wrote:
+> On Wed, Feb 26, 2014 at 01:14:18PM +0200, Tomi Valkeinen wrote:
+>> We have a bunch of panels and encoders used on OMAP boards, and we hav=
+e
+>> separate, omapdss specific, drivers for those. My plan is to continue
+>> improving those drivers until they can be platform independent. This
+>> would be the Common Display Framework that's been discussed (or a
+>> precursor to it).
+>=20
+> I believe CDF has been knocked on the head.
 
-Is it really a big burden to have the driver call the reserved memory
-init function?
+I refuse to believe that we can't have common drivers for display
+components. Maybe CDF as it's been proposed in its current form is not
+good (although I haven't seen any explanation why), we need something
+like it. So the "CDF" I speak of is not any particular set of patches
+already sent, but a framework that would allow us to have generic
+display drivers.
 
-g.
+I'd be very glad if someone can point me to the discussions where CDF
+has been knocked on the head.
 
-> ---
->  drivers/of/platform.c |    7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index 404d1daebefa..3df0b1826e8b 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -21,6 +21,7 @@
->  #include <linux/of_device.h>
->  #include <linux/of_irq.h>
->  #include <linux/of_platform.h>
-> +#include <linux/of_reserved_mem.h>
->  #include <linux/platform_device.h>
->  
->  const struct of_device_id of_default_bus_match_table[] = {
-> @@ -220,6 +221,8 @@ static struct platform_device *of_platform_device_create_pdata(
->  	dev->dev.bus = &platform_bus_type;
->  	dev->dev.platform_data = platform_data;
->  
-> +	of_reserved_mem_device_init(&dev->dev);
-> +
->  	/* We do not fill the DMA ops for platform devices by default.
->  	 * This is currently the responsibility of the platform code
->  	 * to do such, possibly using a device notifier
-> @@ -227,6 +230,7 @@ static struct platform_device *of_platform_device_create_pdata(
->  
->  	if (of_device_add(dev) != 0) {
->  		platform_device_put(dev);
-> +		of_reserved_mem_device_release(&dev->dev);
->  		return NULL;
->  	}
->  
-> @@ -282,6 +286,8 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
->  	else
->  		of_device_make_bus_id(&dev->dev);
->  
-> +	of_reserved_mem_device_init(&dev->dev);
-> +
->  	/* Allow the HW Peripheral ID to be overridden */
->  	prop = of_get_property(node, "arm,primecell-periphid", NULL);
->  	if (prop)
-> @@ -308,6 +314,7 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
->  	return dev;
->  
->  err_free:
-> +	of_reserved_mem_device_release(&dev->dev);
->  	amba_device_put(dev);
->  	return NULL;
->  }
-> -- 
-> 1.7.9.5
-> 
+> Also - DRM is not going to ever support hotplugging components - this
+> was discussed at kernel summit last year and David Airlie was quite
 
+Ok. Very odd stance. Maybe there's a reason for it that I just don't see.=
+
+
+> adamant about that.  So, any "framework" which forces hotplugging of
+> components on subsystems isn't going to fly.
+
+CDF doesn't force hotplugging.
+
+Although without hotplugging (hot-unplug not needed), or at least some
+minimal form of it, the system is a bit crippled. Leave one kernel
+module out, or have one driver probe fail, the whole display subsystem
+fails, even if some display pipelines would work fine.
+
+On OMAP4 SDP board, for example, this would mean that if the user
+doesn't compile PicoDLP driver, or the driver fails to probe, the two
+LCDs and the analog TV out would also fail. Many of the boards don't
+even have a PicoDLP module installed, so a fail there somewhere is
+guaranteed.
+
+> This is why we now have the component helpers in the driver model -
+> to allow devices to be collected together into one logical subsystem
+> group, and bound/unbound as a group.
+
+Yep, it's a good start. The component helpers could well be used with CDF=
+=2E
+
+But if I'm not mistaken, it suffers from the problems above, when there
+are multiple independent pipelines (simultaneous or non-simultaneous)
+handled by the same IPs.
+
+And, while I may be mistaken, it sounds that the component helpers leave
+mostly everything up to the display drivers. Everyone devising their own
+way to describe the hardware in DT, and the connections between the
+components. Of course, the core component system shouldn't define
+anything DT related, as it doesn't. But that part is still needed, which
+is where CDF comes in.
+
+In my opinion, the component helpers or similar would be used with CDF
+in the beginning, because DRM doesn't support hotplug. Eventually we
+should get some kind of basic hotplug support, so that we could add
+display pipelines when they are ready.
+
+I need to ask Dave why he is so strongly opposed to hotplugging component=
+s.
+
+> Remember that "hotplugging" in this context does not mean that the
+> user can physically do something with the hardware.  It means that
+> they're separate devices which can be probed/removed at will.  Every
+> device in Linux can be bound and unbound from its driver at any time
+> by userspace, and that is something which is expected to be handled
+> gracefully.
+
+Hmm, sorry, can you rephrase?
+
+My use of hotplug in this context means roughly "add a new display, and
+whatever is related to that, when the drivers required have been probed".=
+
+
+So with hotplug, a new fbdev or a combination of drm crtcs, encoders,
+etc, could appear even after the initial probe of the display controller.=
+
+
+But all this is, I think, a bit aside the original point. The original
+point was about DT bindings. What kind of framework we have in the
+kernel side to handle the bindings is an interesting and very important
+topic, but they are not strictly tied together.
+
+Even if CDF is the worst thing ever, and needs to die quickly, I think
+the proposed DT bindings are still valid. They describe the hardware as
+precisely and as future-proofly as we've been able to come up with.
+People can use component helpers with them if they see that's a good
+approach. Or if on some beautiful day we get an agreement on CDF or
+something similar, and we can support hotplugging components, we already
+have proper DT bindings for it.
+
+ Tomi
+
+
+
+--EqkDPQckwv74cXV7im2E0aGtgDUqon0DF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJTDeGSAAoJEPo9qoy8lh71yV4P/i57iaCy26szUpFZv/T4/saA
+iMG35fUGTefVgqhzh0GKaEQYDI8YQ6gNEgSzSaV6W37BaUBQrkKhPsneSjhNOkmU
+nUt+yoVpFWVbouZ/ROH0Z8Yjog/ndzdRc+Mxcl+HZ4fCPX978zPPO6oOuJcFF+nE
+GuqnSi6oqt3OGFDYGWU2rnN+xvvBj/AbZRZE8jVAVLGm4fycAzKq1WpqFZiNk5ME
+glmFy6GSQoeEY0tbd1WROUDwS4KIf6UukoCzZFSjNRwZbIffaXETe2ij65NRH3WG
+xo96QqkG/pUEhDjcIB77q7Wc7vqV33UZtZYNKIeOWddLU4JfIzQ8sngpCnh6fe8q
+Jb+z6cZZiRqxHH5ktxcLnOBGQtEmiYgipcQ0sswmXlXbEItuC8/HBS9626VK3lmE
+rhRAvVGJvztI9K4APL9RHGaoT/lis3NPtdDo0ku0RfVzhiTTyyJU7hael9s+Q5JG
+VmKQTcPCbL1AKaemjM1j5sKirnBWLTrunO8vSKbOt11pjJQWepqZcMieJBq5pxFo
+3wSYdL2PxjxXrtUDXhmtGDC7jnjCDEtRpPxNITL/cKSdgXiUfYkppZOnW/Y3LkBI
+M9H51SKxik7/te6V8exuTvEIvMzXNDzZvWOkPhbg6ESrhTjvAwMseND5oO21unZL
+uZgKbGcl5jwfMZ5+7zvH
+=R3oX
+-----END PGP SIGNATURE-----
+
+--EqkDPQckwv74cXV7im2E0aGtgDUqon0DF--
