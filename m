@@ -1,59 +1,35 @@
 From: Marc Carino <marc.ceeeee@gmail.com>
-Subject: [PATCH v7 5/9] ARM: Enable erratum 798181 for Broadcom Brahma-B15
-Date: Wed, 26 Feb 2014 02:29:08 -0800
-Message-ID: <1393410552-21497-6-git-send-email-marc.ceeeee@gmail.com>
+Subject: [PATCH v7 8/9] ARM: brcmstb: gic: add compatible string for Broadcom Brahma15
+Date: Wed, 26 Feb 2014 02:29:11 -0800
+Message-ID: <1393410552-21497-9-git-send-email-marc.ceeeee@gmail.com>
 References: <1393410552-21497-1-git-send-email-marc.ceeeee@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1393410552-21497-1-git-send-email-marc.ceeeee@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Christian Daudt <bcm@fixthebug.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Matt Porter <matt.porter@linaro.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Gregory Fong <gregory.0xf0@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Will Deacon <will.deacon@arm.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Matt Porter <matt.porter@linaro.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Marc Carino <marc.ceeeee@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Gregory Fong <gregory.0xf0@gmail.com>
+Document the Broadcom Brahma B15 GIC implementation as compatible
+with the ARM GIC standard.
 
-Broadcom Brahma-B15 (r0p0..r0p2) is also affected by Cortex-A15
-erratum 798181, so enable the workaround for Brahma-B15.
-
-Signed-off-by: Gregory Fong <gregory.0xf0@gmail.com>
-Acked-by: Marc Carino <marc.ceeeee@gmail.com>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Marc Carino <marc.ceeeee@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- arch/arm/kernel/smp_tlb.c |   20 ++++++++++++--------
- 1 files changed, 12 insertions(+), 8 deletions(-)
+ Documentation/devicetree/bindings/arm/gic.txt |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/kernel/smp_tlb.c b/arch/arm/kernel/smp_tlb.c
-index 95d0636..5518e3f 100644
---- a/arch/arm/kernel/smp_tlb.c
-+++ b/arch/arm/kernel/smp_tlb.c
-@@ -92,15 +92,19 @@ void erratum_a15_798181_init(void)
- 	unsigned int midr = read_cpuid_id();
- 	unsigned int revidr = read_cpuid(CPUID_REVIDR);
- 
--	/* Cortex-A15 r0p0..r3p2 w/o ECO fix affected */
--	if ((midr & 0xff0ffff0) != 0x410fc0f0 || midr > 0x413fc0f2 ||
--	    (revidr & 0x210) == 0x210) {
--		return;
--	}
--	if (revidr & 0x10)
--		erratum_a15_798181_handler = erratum_a15_798181_partial;
--	else
-+	/* Brahma-B15 r0p0..(not yet fixed) affected
-+	 * Cortex-A15 r0p0..r3p2 w/o ECO fix affected */
-+	if ((midr & 0xff0ffff0) == 0x420f00f0)
- 		erratum_a15_798181_handler = erratum_a15_798181_broadcast;
-+	else if ((midr & 0xff0ffff0) == 0x410fc0f0 && midr <= 0x413fc0f2 &&
-+		 (revidr & 0x210) != 0x210) {
-+		if (revidr & 0x10)
-+			erratum_a15_798181_handler =
-+				erratum_a15_798181_partial;
-+		else
-+			erratum_a15_798181_handler =
-+				erratum_a15_798181_broadcast;
-+	}
- }
- #endif
- 
+diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+index bae0d87..d1f0b98 100644
+--- a/Documentation/devicetree/bindings/arm/gic.txt
++++ b/Documentation/devicetree/bindings/arm/gic.txt
+@@ -16,6 +16,7 @@ Main node required properties:
+ 	"arm,cortex-a9-gic"
+ 	"arm,cortex-a7-gic"
+ 	"arm,arm11mp-gic"
++	"brcm,brahma-b15-gic"
+ - interrupt-controller : Identifies the node as an interrupt controller
+ - #interrupt-cells : Specifies the number of cells needed to encode an
+   interrupt source.  The type shall be a <u32> and the value shall be 3.
 -- 
 1.7.1
