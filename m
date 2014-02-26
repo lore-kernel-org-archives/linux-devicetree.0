@@ -1,48 +1,72 @@
-From: Alexandre Courbot <acourbot@nvidia.com>
-Subject: Re: [PATCH] ARM: tegra: add device tree for SHIELD
-Date: Wed, 26 Feb 2014 14:12:16 +0900
-Message-ID: <530D77B0.8080807@nvidia.com>
-References: <1393237593-28121-1-git-send-email-acourbot@nvidia.com> <530B952D.2000006@wwwdotorg.org> <530BFC58.6020003@nvidia.com> <530D1B7A.9070209@wwwdotorg.org> <530D748D.6010802@nvidia.com> <530D754A.60700@wwwdotorg.org>
+From: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv1 0/2] Convert rx51-battery to IIO API and add DT support
+Date: Wed, 26 Feb 2014 08:40:54 +0100
+Message-ID: <CAHYPw2EeEnDn2FUYSMWbywprmhJmcRRyaTPn1YZK0xPvuiJQFw@mail.gmail.com>
+References: <1393375569-21751-1-git-send-email-sre@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <530D754A.60700@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1393375569-21751-1-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Cc: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ivajlo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/26/2014 02:02 PM, Stephen Warren wrote:
-> On 02/25/2014 09:58 PM, Alexandre Courbot wrote:
->> On 02/26/2014 07:38 AM, Stephen Warren wrote:
->>> On 02/24/2014 07:13 PM, Alexandre Courbot wrote:
->>>> On 02/25/2014 03:53 AM, Stephen Warren wrote:
->>>>> On 02/24/2014 03:26 AM, Alexandre Courbot wrote:
->>>>>> Add a device tree for NVIDIA SHIELD. The set of enabled features is
->>>>>> still minimal with no display option (although HDMI should be easy
->>>>>> to get to work) and USB requiring external power.
-> ...
->>>> For the Wifi chip, non-removable would be the correct setting
->>>> hardware-wise, but there is a trap: the chip has its reset line asserted
->>>> at boot-time, and you need to set GPIO 229 to de-assert it. Only after
->>>> that will the device be detected on the SDIO bus. Since it lacks a CD
->>>> line, it must be polled, hence the broken-cd property.
->>>
->>> How does that GPIO get manipulated right now? I assume you must be
->>> manually configuring it via sysfs after boot or something? If so,
->>> perhaps it's best to just leave out the WiFi node until it works
->>> automatically.
->>
->> The GPIO needs to be set from user-space, yes. But if we leave the Wifi
->> node out, I'm concerned that wireless will not be usable at all,
->> wouldn't it?
->
-> True, but if we have no representation of the device in DT that works
-> without manually enabling clocks and/or GPIOs, it's not a
-> complete/accurate representation of the HW, so it doesn't make sense to
-> add it to DT. Yes, I admit that sucks.
+Hi!
 
-Well, I can always enable it in my out-of-tree branch until we can push 
-the complete binding in mainline, so I'm ok with taking it out of this 
-patch for now.
+2014-02-26 1:46 GMT+01:00 Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>:
+> Hi,
+>
+> This is PATCHv1 for converting rx51-battery to the IIO API
+> and adding DT support. The patchset compiles and has been
+> tested on my Nokia N900. It depends on another patchset
+> converting twl4030-madc to the IIO API:
+>
+> https://lkml.org/lkml/2014/2/25/627
+>
+> -- Sebastian
+>
+> Sebastian Reichel (2):
+>   rx51_battery: convert to iio consumer
+>   Documentation: DT: Document rx51-battery binding
+>
+>  .../devicetree/bindings/power/rx51-battery.txt     | 25 ++++++++
+>  drivers/power/rx51_battery.c                       | 68 ++++++++++++=
+++--------
+>  2 files changed, 70 insertions(+), 23 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/rx51-batt=
+ery.txt
+>
+> --
+> 1.8.5.3
+>
+
+Thanks for patch!
+
+I would like to ask other kernel developers what do you think about
+moving ADC channel numbers from rx51_battery.ko driver code to DT.
+Driver rx51_battery.ko is platform specific for Nokia RX-51 (N900) so
+it is usefull only for this one device.
+
+Before this patch all driver data (look-up tables, adc channel
+numbers, etc...) were in driver code. Now after this patch adc channel
+numbers were moved to DT. What do you think? It is better to have all
+data in one place (driver code) or some in DT and some in driver code?
+
+=46or me it does not make sense to move these numbers to DT, because
+driver is rx51 device specific and chaning it in DT does not make
+sense. And I think it is better to have add driver data in one place
+and not in two...
+
+Sebastian already wrote me that this is normal to have numbers in DT
+and other code in driver. But I think that driver which can be used
+only in one device (so specified only in one DT file) does not need to
+have configuration (via DT or board files).
+
+Or do you think that driver specified only for one device needs to
+have ADC numbers configuration via DT?
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
