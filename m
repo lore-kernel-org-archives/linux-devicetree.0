@@ -1,201 +1,79 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [RFC PATCH v4 3/8] staging: imx-drm: Document updated imx-drm
- device tree bindings
-Date: Thu, 27 Feb 2014 15:55:05 +0200
-Message-ID: <530F43B9.800@ti.com>
-References: <1393338203-25051-1-git-send-email-p.zabel@pengutronix.de>
- <1393338203-25051-4-git-send-email-p.zabel@pengutronix.de>
- <530F1C4C.2010504@ti.com> <1393506385.4507.49.camel@paszta.hi.pengutronix.de>
- <20140227130020.GJ21483@n2100.arm.linux.org.uk>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 1/4] pci: OF: Fix the conversion of IO ranges into IO resources.
+Date: Thu, 27 Feb 2014 14:58:34 +0100
+Message-ID: <23116993.AhiSYlcnvx@wuerfel>
+References: <1393506402-11474-1-git-send-email-Liviu.Dudau@arm.com> <1393506402-11474-2-git-send-email-Liviu.Dudau@arm.com> <CAPcvp5EqcKEWoH_--azp+sMykmEWtY5whHG=c9t3sZVXZyAPUg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6906942118107439063=="
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20140227130020.GJ21483@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAPcvp5EqcKEWoH_--azp+sMykmEWtY5whHG=c9t3sZVXZyAPUg@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Andrew Murray <amurray@embedded-bits.co.uk>
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
---===============6906942118107439063==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="KC2ta4x3FRL0qHx2TC7Smok3ENSs5oun2"
+On Thursday 27 February 2014 13:22:19 Andrew Murray wrote:
+> On 27 February 2014 13:06, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+> >
+> > The ranges property for a host bridge controller in DT describes
+> > the mapping between the PCI bus address and the CPU physical address.
+> > The resources framework however expects that the IO resources start
+> > at a pseudo "port" address 0 (zero) and have a maximum size of 64kb.
+> 
+> Is this just in the case of ARM? (I've tried to keep up with the
+> conversation, but apologies if I've misunderstood).
 
---KC2ta4x3FRL0qHx2TC7Smok3ENSs5oun2
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+We are a bit inconsistent on Linux. The limitation cited above is
+indeed something we came up with on ARM to simplify the possible
+cases we have to worry about.
 
-On 27/02/14 15:00, Russell King - ARM Linux wrote:
-> On Thu, Feb 27, 2014 at 02:06:25PM +0100, Philipp Zabel wrote:
->> For the i.MX6 display subsystem there is no clear single master device=
-,
->> and the physical configuration changes across the SoC family. The
->> i.MX6Q/i.MX6D SoCs have two separate display controller devices IPU1 a=
-nd
->> IPU2, with two output ports each.
->=20
-> Not also forgetting that there's another scenario too: you may wish
-> to drive IPU1 and IPU2 as two completely separate display subsystems
-> in some hardware, but as a combined display subsystem in others.
->=20
-> Here's another scenario.  You may have these two IPUs on the SoC, but
-> there's only one display output.  You want to leave the second IPU
-> disabled, as you wouldn't want it to be probed or even exposed to
-> userland.
+In theory, each PCI host can have its own 4GB I/O space, but in practice
+limiting to 64KB is the most reasonable way to use it, and that
+still provides plenty of room for I/O registers since most devices
+don't use any, and at most a few bytes of address space.
 
-I first want to say I don't see anything wrong with such a super node.
-As you say, it does describe hardware. But I also want to say that I
-still don't see a need for it. Or, maybe more exactly, I don't see a
-need for it in general. Maybe there are certain cases where two devices
-has to be controlled by a master device. Maybe this one is one of those.
+The limit we enforce on Linux is IO_SPACE_LIMIT, which is sometimes set
+to 0xffffffff, but I think most if not all of those cases are done so
+in error.
 
-In the imx case, why wouldn't this work, without any master node, with
-the IPU nodes separate in the DT data:
+> > + * of_pci_range_to_resource - Create a resource from an of_pci_range
+> > + * @range:     the PCI range that describes the resource
+> > + * @np:                device node where the range belongs to
+> > + * @res:       pointer to a valid resource that will be updated to
+> > + *              reflect the values contained in the range.
+> > + * Note that if the range is an IO range, the resource will be converted
+> > + * using pci_address_to_pio() which can fail if it is called to early or
+> > + * if the range cannot be matched to any host bridge IO space.
+> > + */
+> > +void of_pci_range_to_resource(struct of_pci_range *range,
+> > +       struct device_node *np, struct resource *res)
+> > +{
+> > +       res->flags = range->flags;
+> > +       if (res->flags & IORESOURCE_IO) {
+> > +               unsigned long port;
+> > +               port = pci_address_to_pio(range->pci_addr);
+> 
+> Is this likely to break existing users of of_pci_range_to_resource?
+> 
+> For example arch/mips: IO_SPACE_LIMIT defaults to 0xffff and there is
+> no overridden implementation for pci_address_to_pio, therefore this
+> will set res->start to OF_BAD_ADDR whereas previously it would have
+> been the CPU address for I/O (assuming the cpu_addr was previously >
+> 64K).
 
-- One IPU enabled, one disabled: nothing special here, just set the
-other IPU to status=3D"disabled" in the DT data. The driver for the
-enabled IPU would register the required DRM entities.
+The function is used on MIPS, Microblaze and ARM at the moment.
+MIPS currently gets it wrong, by calling pci_add_resource_offset
+on the CPU address for IORESOURCE_IO, which is the wrong space.
+Limiting to IO_SPACE_LIMIT will fix it for the first host bridge
+on MIPS, and the second one will still not work, until
+IO_SPACE_LIMIT is fixed.
 
-- Two IPUs as separate units: almost the same as above, but both would
-independently register the DRM entities.
+On ARM, I believe we have a couple of drivers that make the
+same mistake, and others that at the moment override the
+address with range->pci_addr, so they won't change.
 
-- Two IPUs in combined mode:
+Microblaze does 'range.cpu_addr = range.pci_addr;' for the I/O
+space window to fix it up. We should probably take a closer look there.
 
-Pick one IPU as the master, and one as slave. Link the IPU nodes in DT
-data with phandles, say: master=3D<&ipu1> on the slave IPU and
-slave=3D<&ipu0> on the master.
-
-The master one will register the DRM entities, and the slave one will
-just do what the master says.
-
-As for the probe time "are we ready yet?" problem, the IPU driver can
-just delay registering the DRM entities until all the nodes in its graph
-have been probed. The component helpers can probably be used here.
-
-> On the face of it, the top-level super-device node doesn't look very
-> hardware-y, but it actually is - it's about how a board uses the
-> hardware provided.  This is entirely in keeping with the spirit of DT,
-> which is to describe what hardware is present and how it's connected
-> together, whether it be at the chip or board level.
-
-No disagreement there. I'm mostly put off by the naming. The binding doc
-says it's a "DRM master device", compatible with "fsl,imx-drm". Now,
-naming may not be the most important thing in the world, but I'd rather
-use generic terms, not linux driver stack names.
-
-> If this wasn't the case, we wouldn't even attempt to describe what devi=
-ces
-> we have on which I2C buses - we'd just list the hardware on the board
-> without giving any information about how it's wired together.
->=20
-> This is no different - however, it doesn't have (and shouldn't) be
-> subsystem specific... but - and this is the challenge we then face - ho=
-w
-> do you decide that on one board with a single zImage kernel, with both
-> DRM and fbdev built-in, whether to use the DRM interfaces or the fbdev
-> interfaces?  We could have both matching the same compatible string, bu=
-t
-> we'd also need some way to tell each other that they're not allowed to
-> bind.
-
-Yes, that's an annoying problem, we have that on OMAP. It's a clear sign
-that our video support is rather messed up.
-
-My opinion is that the fbdev and drm drivers for a single hardware
-should be exclusive at compile time. We don't allow multiple drivers for
-single device for other subsystems either, do we? Eventually we should
-have only one driver for one hardware device.
-
-If that's not possible, then the drivers in question could have an
-option to enable or disable themselves, passed via the kernel command
-line, so that the user can select which subsystem to use.
-
-> Before anyone argues against "it isn't hardware-y", stop and think.
-> What if I design a board with two Epson LCD controllers on board and
-> put a muxing arrangement on their output.  Is that one or two devices?
-> What if I want them to operate as one combined system?  What if I have
-> two different LCD controllers on a board.  How is this any different
-> from the two independent IPU hardware blocks integrated inside an iMX6
-> SoC with a muxing arrangement on their output?
-
-Well, generally speaking, I think one option is to treat the two
-controllers separately and let the userspace handle it. That may or may
-not be viable, depending on the hardware, but to me it resembles very
-much a PC with two video cards.
-
-If you want the two controllers to operate together more closely, you
-always need special code for that particular case.
-
-This is what CDF has been trying to accomplish: individual drivers for
-each display entity, connected together via ports and endpoints. Driver
-for Epson LCD controller would expose an API, that can be used handle
-the LCD controller, it wouldn't make any other demands on how it's used,
-is it part of DRM or fbdev, what's before or after it, etc.
-
-Now, and I think this was your point, some kind of master device/driver
-is needed to register the required DRM or fbdev entities. Usually that
-can be the driver for the SoCs display controller, i.e. the first
-display entity in the display pipeline. Sometimes, if it's required to
-have multiple devices act together, it may be a driver specifically
-designed for that purpose.
-
-So no, I don't have a problem with master device nodes in DT. I have a
-problem having pure SW stack nomenclature in the DT data (or even worse,
-SW stack entities in the DT data), and I have a problem requiring
-everyone to have a master device node if it's only needed for special cas=
-es.
-
-And yes, this series is about IMX bindings, not generic ones. And I'm
-also fine with requiring everyone to have a master device node, if it
-can be shown that it's the only sensible approach.
-
- Tomi
-
-
-
---KC2ta4x3FRL0qHx2TC7Smok3ENSs5oun2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJTD0O5AAoJEPo9qoy8lh71e2sP/27kJznKWxiThUNcy5F3etD9
-CwDf4lKIgnDbGMREIak6xZSM/qmzOoiMX7dFO7suPYfIkCbQu0NhzKhiwm8AleuZ
-4VAnQQ0qWBNbTZJPVSgNO2P67Tgtd3KwBUNn1ezbzIbMCmpuqRI+VKYL4KZT14W7
-vdh5Dm5gAJ4tiTRgL8YjIIs3qbFia7QBIkNDQt+q4IwBVK9vwQPP88+XIh9ToJsi
-i++0WCwHEF6rR9xCIicRFBgm/Z0uRq2KgqyitI+gTY05CKImwSHQxAFi36Y6iysP
-I8uunJua+3/rdF5obBS8HcYiWN6EdR6HsgK7Xmq9FIBW77TCn78h3evKGQPYv5n3
-MYk31iUear3gyBMvKQ8U/x2mxkH9cGgRw1PoneXaa0lksFwI42pJ2m0qB5PQwQ6A
-Rjbn/+VuXbmbHeGrqT7vDLbIG1uFJZcTuAnGWYEBAZ61e8rnQ4V91MgANhHr0Gmr
-ZlOFNaaZGhjWXtIbxDpqF1wG132PVoztPa0phjNLKCHZh/UbEbT7jrUM8bTSMxEc
-pq+pDjLV/V/3PMwJxujKnJay2UI313NTG69lIwoFbskHdxcBajqWPTClPQ9wB4XD
-7+z7/iL6EsOwX9kbOY7Ix39QxPIVHCW4yj3Amb4eHFwT3PSG+jHw4XFN0fNV9g8P
-ZJqQbsqxeHL3wnVZsxs+
-=PNi1
------END PGP SIGNATURE-----
-
---KC2ta4x3FRL0qHx2TC7Smok3ENSs5oun2--
-
---===============6906942118107439063==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devel mailing list
-devel@linuxdriverproject.org
-http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
-
---===============6906942118107439063==--
+	Arnd
