@@ -1,189 +1,82 @@
 From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH v0 05/15] drivers: clk: st: Support for ClockGenA9/DDR/GPU
-Date: Thu, 27 Feb 2014 16:24:18 +0100
-Message-ID: <1393514668-17440-6-git-send-email-gabriel.fernandez@st.com>
-References: <1393514668-17440-1-git-send-email-gabriel.fernandez@st.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393514668-17440-1-git-send-email-gabriel.fernandez@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v0 00/15] clk: st: Add new driver
+Date: Thu, 27 Feb 2014 16:24:13 +0100
+Message-ID: <1393514668-17440-1-git-send-email-gabriel.fernandez@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: mturquette@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@st.com>, Pankaj Dev <pankaj.dev@st.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@st.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch added support for DT registration of ClockGenA9/DDR/GPU
+The goal of this series is to add Clocks support to ST SoCs.
+The DT definition is added for STiH415 and STiH416 SoCs on
+B2000 and B2020 boards.
 
-ClockgenA9/DDR : It includes c32 type PLL (also in ClockgenA1x), hence
-only CLK_OF_DECLARE implementation is required.
+The series has been tested working on STiH416-B2020 board.
+It applies on top of v3.14-rc3.
 
-ClockgenGPU : It includes c65 type PLL (also in ClockgenAx), hence
-only CLK_OF_DECLARE implementation is required.
+Gabriel Fernandez (15):
+  drivers: clk: st: Support for DIVMUX and PreDiv Clocks
+  drivers: clk: st: Support for PLLs inside ClockGenA(s)
+  drivers: clk: st: Support for VCC-mux and MUX clocks
+  drivers: clk: st: Support for QUADFS inside ClockGenB/C/D/E/F
+  drivers: clk: st: Support for ClockGenA9/DDR/GPU
+  drivers: clk: st: Support for A9 MUX clocks
+  clk: st: Adds divmux and prediv clock binding
+  clk: st: Adds clockgen clock binding
+  clk: st: Adds clockgen-vcc and clockgen-mux clock binding
+  clk: st: Adds quadfs clock binding
+  ARM: STi: DT: STiH416: 416 DT Entry for clockgen A0/1/10/11/12
+  ARM: STi: DT: STiH416: 416 DT Entry for clockgen B/C/D/E/F
+  ARM: STi: DT: STiH416: 416 DT Entry for clockgen A9/DDR/GPU
+  ARM: STi: DT: STiH415: 415 DT Entry for clockgen A0/1/10/11/12
+  ARM: STi: DT: STiH415: 415 DT Entry for clockgen A9
 
-Signed-off-by: Pankaj Dev <pankaj.dev@st.com>
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
----
- drivers/clk/st/clkgen-pll.c | 139 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 139 insertions(+)
+ .../bindings/clock/st/st,clkgen-divmux.txt         |   49 +
+ .../devicetree/bindings/clock/st/st,clkgen-mux.txt |   36 +
+ .../devicetree/bindings/clock/st/st,clkgen-pll.txt |   48 +
+ .../bindings/clock/st/st,clkgen-prediv.txt         |   36 +
+ .../devicetree/bindings/clock/st/st,clkgen-vcc.txt |   53 +
+ .../devicetree/bindings/clock/st/st,clkgen.txt     |   83 ++
+ .../devicetree/bindings/clock/st/st,quadfs.txt     |   45 +
+ arch/arm/boot/dts/stih415-clks.h                   |   11 +
+ arch/arm/boot/dts/stih415-clock.dtsi               |  530 +++++++++-
+ arch/arm/boot/dts/stih415.dtsi                     |    6 +-
+ arch/arm/boot/dts/stih416-clks.h                   |   11 +
+ arch/arm/boot/dts/stih416-clock.dtsi               |  717 +++++++++++++-
+ arch/arm/boot/dts/stih416.dtsi                     |    6 +-
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/st/Makefile                            |    1 +
+ drivers/clk/st/clkgen-fsyn.c                       | 1039 ++++++++++++++++++++
+ drivers/clk/st/clkgen-mux.c                        |  820 +++++++++++++++
+ drivers/clk/st/clkgen-pll.c                        |  698 +++++++++++++
+ drivers/clk/st/clkgen.h                            |   48 +
+ 19 files changed, 4214 insertions(+), 24 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/st/st,clkgen-divmux.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/st/st,clkgen-prediv.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/st/st,clkgen-vcc.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/st/st,clkgen.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/st/st,quadfs.txt
+ create mode 100644 arch/arm/boot/dts/stih415-clks.h
+ create mode 100644 arch/arm/boot/dts/stih416-clks.h
+ create mode 100644 drivers/clk/st/Makefile
+ create mode 100644 drivers/clk/st/clkgen-fsyn.c
+ create mode 100644 drivers/clk/st/clkgen-mux.c
+ create mode 100644 drivers/clk/st/clkgen-pll.c
+ create mode 100644 drivers/clk/st/clkgen.h
 
-diff --git a/drivers/clk/st/clkgen-pll.c b/drivers/clk/st/clkgen-pll.c
-index c6b38b0..bca0a0b 100644
---- a/drivers/clk/st/clkgen-pll.c
-+++ b/drivers/clk/st/clkgen-pll.c
-@@ -110,6 +110,76 @@ static struct clkgen_pll_data st_pll3200c32_a1x_1 = {
- 	.ops		= &stm_pll3200c32_ops,
- };
- 
-+/* 415 specific */
-+static struct clkgen_pll_data st_pll3200c32_a9_415 = {
-+	.pdn_status	= CLKGEN_FIELD(0x0,	0x1,			0),
-+	.locked_status	= CLKGEN_FIELD(0x6C,	0x1,			0),
-+	.ndiv		= CLKGEN_FIELD(0x0,	C32_NDIV_MASK,		9),
-+	.idf		= CLKGEN_FIELD(0x0,	C32_IDF_MASK,		22),
-+	.num_odfs = 1,
-+	.odf =		{ CLKGEN_FIELD(0x0,	C32_ODF_MASK,		3) },
-+	.odf_gate =	{ CLKGEN_FIELD(0x0,	0x1,			28) },
-+	.ops		= &stm_pll3200c32_ops,
-+};
-+
-+static struct clkgen_pll_data st_pll3200c32_ddr_415 = {
-+	.pdn_status	= CLKGEN_FIELD(0x0,	0x1,			0),
-+	.locked_status	= CLKGEN_FIELD(0x100,	0x1,			0),
-+	.ndiv		= CLKGEN_FIELD(0x8,	C32_NDIV_MASK,		0),
-+	.idf		= CLKGEN_FIELD(0x0,	C32_IDF_MASK,		25),
-+	.num_odfs = 2,
-+	.odf		= { CLKGEN_FIELD(0x8,	C32_ODF_MASK,		8),
-+			    CLKGEN_FIELD(0x8,	C32_ODF_MASK,		14) },
-+	.odf_gate	= { CLKGEN_FIELD(0x4,	0x1,			28),
-+			    CLKGEN_FIELD(0x4,	0x1,			29) },
-+	.ops		= &stm_pll3200c32_ops,
-+};
-+
-+static struct clkgen_pll_data st_pll1200c32_gpu_415 = {
-+	.pdn_status	= CLKGEN_FIELD(0x144,	0x1,			3),
-+	.locked_status	= CLKGEN_FIELD(0x168,	0x1,			0),
-+	.ldf		= CLKGEN_FIELD(0x0,	C32_LDF_MASK,		3),
-+	.idf		= CLKGEN_FIELD(0x0,	C32_IDF_MASK,		0),
-+	.num_odfs = 0,
-+	.odf		= { CLKGEN_FIELD(0x0,	C32_ODF_MASK,		10) },
-+	.ops		= &st_pll1200c32_ops,
-+};
-+
-+/* 416 specific */
-+static struct clkgen_pll_data st_pll3200c32_a9_416 = {
-+	.pdn_status	= CLKGEN_FIELD(0x0,	0x1,			0),
-+	.locked_status	= CLKGEN_FIELD(0x6C,	0x1,			0),
-+	.ndiv		= CLKGEN_FIELD(0x8,	C32_NDIV_MASK,		0),
-+	.idf		= CLKGEN_FIELD(0x0,	C32_IDF_MASK,		25),
-+	.num_odfs = 1,
-+	.odf		= { CLKGEN_FIELD(0x8,	C32_ODF_MASK,		8) },
-+	.odf_gate	= { CLKGEN_FIELD(0x4,	0x1,			28) },
-+	.ops		= &stm_pll3200c32_ops,
-+};
-+
-+static struct clkgen_pll_data st_pll3200c32_ddr_416 = {
-+	.pdn_status	= CLKGEN_FIELD(0x0,	0x1,			0),
-+	.locked_status	= CLKGEN_FIELD(0x10C,	0x1,			0),
-+	.ndiv		= CLKGEN_FIELD(0x8,	C32_NDIV_MASK,		0),
-+	.idf		= CLKGEN_FIELD(0x0,	C32_IDF_MASK,		25),
-+	.num_odfs = 2,
-+	.odf		= { CLKGEN_FIELD(0x8,	C32_ODF_MASK,		8),
-+			    CLKGEN_FIELD(0x8,	C32_ODF_MASK,		14) },
-+	.odf_gate	= { CLKGEN_FIELD(0x4,	0x1,			28),
-+			    CLKGEN_FIELD(0x4,	0x1,			29) },
-+	.ops		= &stm_pll3200c32_ops,
-+};
-+
-+static struct clkgen_pll_data st_pll1200c32_gpu_416 = {
-+	.pdn_status	= CLKGEN_FIELD(0x8E4,	0x1,			3),
-+	.locked_status	= CLKGEN_FIELD(0x90C,	0x1,			0),
-+	.ldf		= CLKGEN_FIELD(0x0,	C32_LDF_MASK,		3),
-+	.idf		= CLKGEN_FIELD(0x0,	C32_IDF_MASK,		0),
-+	.num_odfs = 0,
-+	.odf		= { CLKGEN_FIELD(0x0,	C32_ODF_MASK,		10) },
-+	.ops		= &st_pll1200c32_ops,
-+};
-+
- /**
-  * DOC: Clock Generated by PLL, rate set and enabled by bootloader
-  *
-@@ -484,6 +554,22 @@ static struct of_device_id c32_pll_of_match[] = {
- 		.compatible = "st,plls-c32-a1x-1",
- 		.data = &st_pll3200c32_a1x_1,
- 	},
-+	{
-+		.compatible = "st,stih415-plls-c32-a9",
-+		.data = &st_pll3200c32_a9_415,
-+	},
-+	{
-+		.compatible = "st,stih415-plls-c32-ddr",
-+		.data = &st_pll3200c32_ddr_415,
-+	},
-+	{
-+		.compatible = "st,stih416-plls-c32-a9",
-+		.data = &st_pll3200c32_a9_416,
-+	},
-+	{
-+		.compatible = "st,stih416-plls-c32-ddr",
-+		.data = &st_pll3200c32_ddr_416,
-+	},
- 	{}
- };
- 
-@@ -557,3 +643,56 @@ err:
- 	kfree(clk_data);
- }
- CLK_OF_DECLARE(clkgen_c32_pll, "st,clkgen-plls-c32", clkgen_c32_pll_setup);
-+
-+static struct of_device_id c32_gpu_pll_of_match[] = {
-+	{
-+		.compatible = "st,stih415-gpu-pll-c32",
-+		.data = &st_pll1200c32_gpu_415,
-+	},
-+	{
-+		.compatible = "st,stih416-gpu-pll-c32",
-+		.data = &st_pll1200c32_gpu_416,
-+	},
-+};
-+
-+static void __init clkgengpu_c32_pll_setup(struct device_node *np)
-+{
-+	const struct of_device_id *match;
-+	struct clk *clk;
-+	const char *parent_name;
-+	void __iomem *reg;
-+	const char *clk_name;
-+	struct clkgen_pll_data	*data;
-+
-+	match = of_match_node(c32_gpu_pll_of_match, np);
-+	if (!match) {
-+		pr_err("%s: No matching data\n", __func__);
-+		return;
-+	}
-+
-+	data = (struct clkgen_pll_data *)match->data;
-+
-+	parent_name = of_clk_get_parent_name(np, 0);
-+	if (!parent_name)
-+		return;
-+
-+	reg = clkgen_get_register_base(np);
-+	if (!reg)
-+		return;
-+
-+	if (of_property_read_string_index(np, "clock-output-names",
-+					  0, &clk_name))
-+		return;
-+
-+	/*
-+	 * PLL 1200MHz output
-+	 */
-+	clk = clkgen_pll_register(parent_name, data, reg, clk_name);
-+
-+	if (!IS_ERR(clk))
-+		of_clk_add_provider(np, of_clk_src_simple_get, clk);
-+
-+	return;
-+}
-+CLK_OF_DECLARE(clkgengpu_c32_pll,
-+	       "st,clkgengpu-pll-c32", clkgengpu_c32_pll_setup);
 -- 
 1.9.0
