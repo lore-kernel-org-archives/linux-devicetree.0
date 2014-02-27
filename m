@@ -1,70 +1,78 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [RFC PATCH v4 3/8] staging: imx-drm: Document updated imx-drm
-	device tree bindings
-Date: Thu, 27 Feb 2014 11:56:52 +0000
-Message-ID: <20140227115652.GI21483@n2100.arm.linux.org.uk>
-References: <1393338203-25051-1-git-send-email-p.zabel@pengutronix.de>
-	<1393338203-25051-4-git-send-email-p.zabel@pengutronix.de>
-	<530F1C4C.2010504@ti.com>
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [PATCH 1/4] ARM: STi: add stid127 soc support
+Date: Thu, 27 Feb 2014 13:23:02 +0100
+Message-ID: <530F2E26.1040304@st.com>
+References: <1391093744-19905-1-git-send-email-patrice.chotard@st.com>
+ <1391093744-19905-2-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <530F1C4C.2010504@ti.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces@lists.freedesktop.org
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1391093744-19905-2-git-send-email-patrice.chotard@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Patrice CHOTARD <patrice.chotard@st.com>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>, alexandre.torgue@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2014 at 01:06:52PM +0200, Tomi Valkeinen wrote:
-> On 25/02/14 16:23, Philipp Zabel wrote:
-> 
-> > +Freescale i.MX DRM master device
-> > +================================
-> > +
-> > +The freescale i.MX DRM master device is a virtual device needed to list all
-> > +IPU or other display interface nodes that comprise the graphics subsystem.
-> > +
-> > +Required properties:
-> > +- compatible: Should be "fsl,imx-drm"
-> > +- ports: Should contain a list of phandles pointing to display interface ports
-> > +  of IPU devices
-> > +
-> > +example:
-> > +
-> > +imx-drm {
-> > +	compatible = "fsl,imx-drm";
-> > +	ports = <&ipu_di0>;
-> > +};
-> 
-> I'm not a fan of having non-hardware related things in the DT data.
-> Especially if it makes direct references to our SW, in this case DRM.
-> There's no DRM on the board. I wanted to avoid all that with OMAP
-> display bindings.
-> 
-> Is there even need for such a master device? You can find all the
-> connected display devices from any single display device, by just
-> following the endpoint links.
+Hi Patrice,
 
-Please read up on what has been discussed over previous years:
+Could you add an overview documentation as it has been done for other 
+STi platforms?
 
-http://lists.freedesktop.org/archives/dri-devel/2013-July/041159.html
+See Documentation/arm/sti/stih416-overview.txt
 
-and please, let's not endlessly rehash old discussions because someone
-wasn't involved and has a different opinion, otherwise we're never going
-to get anywhere.
+Thanks,
+Maxime
 
-Thanks.
-
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+On 01/30/2014 03:55 PM, Patrice CHOTARD wrote:
+> From: Alexandre TORGUE <alexandre.torgue@st.com>
+>
+> This patch adds support to STiD127 SoC.
+> The main adaptation is the L2 cache way size compare to STiH41x SoCs.
+>
+> Signed-off-by: alexandre torgue <alexandre.torgue@st.com>
+> Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+> ---
+>   arch/arm/mach-sti/board-dt.c |    6 ++++++
+>   1 file changed, 6 insertions(+)
+>
+> diff --git a/arch/arm/mach-sti/board-dt.c b/arch/arm/mach-sti/board-dt.c
+> index 1217fb5..be018a9 100644
+> --- a/arch/arm/mach-sti/board-dt.c
+> +++ b/arch/arm/mach-sti/board-dt.c
+> @@ -9,6 +9,7 @@
+>
+>   #include <linux/irq.h>
+>   #include <linux/of_platform.h>
+> +#include <linux/of.h>
+>   #include <asm/hardware/cache-l2x0.h>
+>   #include <asm/mach/arch.h>
+>
+> @@ -18,6 +19,10 @@ void __init stih41x_l2x0_init(void)
+>   {
+>   	u32 way_size = 0x4;
+>   	u32 aux_ctrl;
+> +
+> +	if (of_machine_is_compatible("st,stid127"))
+> +		way_size = 0x3;
+> +
+>   	/* may be this can be encoded in macros like BIT*() */
+>   	aux_ctrl = (0x1 << L2X0_AUX_CTRL_SHARE_OVERRIDE_SHIFT) |
+>   		(0x1 << L2X0_AUX_CTRL_DATA_PREFETCH_SHIFT) |
+> @@ -36,6 +41,7 @@ static void __init stih41x_machine_init(void)
+>   static const char *stih41x_dt_match[] __initdata = {
+>   	"st,stih415",
+>   	"st,stih416",
+> +	"st,stid127",
+>   	NULL
+>   };
+>
+>
