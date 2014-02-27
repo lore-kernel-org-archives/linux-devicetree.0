@@ -1,70 +1,78 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v5 06/11] drivers: of: initialize and assign reserved
- memory to newly created devices
-Date: Thu, 27 Feb 2014 11:10:44 +0100
-Message-ID: <530F0F24.2080903@samsung.com>
-References: <1392985527-6260-1-git-send-email-m.szyprowski@samsung.com>
- <1392985527-6260-7-git-send-email-m.szyprowski@samsung.com>
- <20140226121445.54D2DC40A89@trevor.secretlab.ca>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: Re: [PATCH] phy: micrel: add of configuration for LED mode
+Date: Thu, 27 Feb 2014 10:22:22 +0000
+Message-ID: <530F11DE.2000309@codethink.co.uk>
+References: <1393415280-10227-1-git-send-email-ben.dooks@codethink.co.uk> <CAGVrzcbUShzdYgEgHJiG8gL11+1DANiJpAk3PL5=jKASqXAyGg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <20140226121445.54D2DC40A89@trevor.secretlab.ca>
-Sender: linux-doc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Paul Mackerras <paulus@samba.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAGVrzcbUShzdYgEgHJiG8gL11+1DANiJpAk3PL5=jKASqXAyGg@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-kernel <linux-kernel@lists.codethink.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, netdev <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On 2014-02-26 13:14, Grant Likely wrote:
-> On Fri, 21 Feb 2014 13:25:22 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
-> > Use recently introduced of_reserved_mem_device_init() function to
-> > automatically assign respective reserved memory region to the newly created
-> > platform and amba device.
-> >
-> > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+On 26/02/14 22:20, Florian Fainelli wrote:
+> Hi,
 >
-> I'm wary on this patch. It hides the assignment of regions into the core
-> code and I worry that it is the wrong level of abstraction. I would
-> think that drivers should know that they need a reserved memory region
-> and should be calling the API to obtain the region directly rather than
-> doing it for them. The reason being is that there may be some situations
-> where the common code isn't quite right and the driver needs to override
-> the behaviour. If it is called automatically then the driver cannot do
-> that.
+> 2014-02-26 3:48 GMT-08:00 Ben Dooks <ben.dooks@codethink.co.uk>:
 >
-> Is it really a big burden to have the driver call the reserved memory
-> init function?
+> [snip]
+>
+>> diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+>> index 5a8993b..0c9e434 100644
+>> --- a/drivers/net/phy/micrel.c
+>> +++ b/drivers/net/phy/micrel.c
+>> @@ -148,15 +148,52 @@ static int ks8737_config_intr(struct phy_device *phydev)
+>>          return rc < 0 ? rc : 0;
+>>   }
+>>
+>> +static int kszphy_setup_led(struct phy_device *phydev,
+>> +                           unsigned int reg, unsigned int shift)
+>> +{
+>> +
+>> +       struct device *dev = &phydev->dev;
+>> +       struct device_node *of_node = dev->of_node;
+>> +       int rc, temp;
+>> +       u32 val;
+>> +
+>> +       if (!of_node && dev->parent->of_node)
+>> +               of_node = dev->parent->of_node;
+>> +
+>> +       if (of_property_read_u32(of_node, "micrel,led-mode", &val))
+>> +               return 0;
+>
+> This breaks non-OF configuration because of_read_property_read_u32()
+> will return -ENOSYS, so you skip the LED register configuration
+> entirely, is that intended?
 
-If a device requires very special handling of the reserved memory region,
-it may simply provide its own reserved memory region driver which will do
-the required early initialization.
+Yes, it is only here for OF case. I should however check if
+of_node is available for the !OF case.
 
-If we assume that driver needs to initialize reserved region manually, then
-why do we ever bother with adding support for custom reserved memory drivers
-and assigning regions to a device node? We can simply stick with just a set
-of reserved regions and tell drivers to use them.
+>> +
+>> +       temp = phy_read(phydev, reg);
+>> +       if (temp < 0)
+>> +               return temp;
+>> +
+>> +       temp &= 3 << shift;
+>
+> The compiler cannot verify that we are not overflowing, you might want
+> to make sure that shift <= 14 (just in case)
 
-In my opinion for most typical use cases a board designer will assign
-'dma-shared-pool' driver to the given set of devices, which in turn ensures
-that all memory allocations for dma purposes for those device will be
-served from that region. It is really not a driver role to initialize it
-in such case. Driver should focus on controlling hw operations, regardless
-the way the hardware module has been integrated to the system.
+Ok, should I add a WARN_ON(shift > 14) ?
 
-I can perfectly imagine a generic driver which operates the same way in any
-of the following cases (depends mainly on the hw version): 1) restricted
-dma window, 2) iommu for all dma for the given device, 3) fully featured
-memory master for dma for the given device (no restrictions), if the
-respective kernel subsystems did the correct initialization and provide
-their own methods for managing DMA operation. I already have a working
-platform glue code for the above cases tested with Samsung multimedia
-drivers. No changes to the drivers were required.
+>> +       temp |= val << shift;
+>> +       rc = phy_write(phydev, reg, temp);
+>> +
+>> +       return rc < 0 ? rc : 0;
+>
+> You could have;
+>
+>               return phy_write(phydev, reg, temp);
 
-Best regards
+Thanks, will change to doing that.
+
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
