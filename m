@@ -1,121 +1,38 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [RFC PATCH v4 3/8] staging: imx-drm: Document updated imx-drm
- device tree bindings
-Date: Thu, 27 Feb 2014 14:06:25 +0100
-Message-ID: <1393506385.4507.49.camel@paszta.hi.pengutronix.de>
-References: <1393338203-25051-1-git-send-email-p.zabel@pengutronix.de>
- <1393338203-25051-4-git-send-email-p.zabel@pengutronix.de>
- <530F1C4C.2010504@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <530F1C4C.2010504@ti.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: [PATCH] spi: sh-msiof: Remove "renesas,msiof-sh7724" from bindings
+Date: Thu, 27 Feb 2014 13:47:17 +0100
+Message-ID: <1393505238-11954-1-git-send-email-geert@linux-m68k.org>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 27.02.2014, 13:06 +0200 schrieb Tomi Valkeinen:
-> On 25/02/14 16:23, Philipp Zabel wrote:
-> 
-> > +Freescale i.MX DRM master device
-> > +================================
-> > +
-> > +The freescale i.MX DRM master device is a virtual device needed to list all
-> > +IPU or other display interface nodes that comprise the graphics subsystem.
-> > +
-> > +Required properties:
-> > +- compatible: Should be "fsl,imx-drm"
-> > +- ports: Should contain a list of phandles pointing to display interface ports
-> > +  of IPU devices
-> > +
-> > +example:
-> > +
-> > +imx-drm {
-> > +	compatible = "fsl,imx-drm";
-> > +	ports = <&ipu_di0>;
-> > +};
-> 
-> I'm not a fan of having non-hardware related things in the DT data.
-> Especially if it makes direct references to our SW, in this case DRM.
-> There's no DRM on the board. I wanted to avoid all that with OMAP
-> display bindings.
-> 
-> Is there even need for such a master device? You can find all the
-> connected display devices from any single display device, by just
-> following the endpoint links.
+From: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 
-I don't particularly like this either, but it kind of has been decided.
+It's not implemented in the driver, so it's a bad example.
 
-For the i.MX6 display subsystem there is no clear single master device,
-and the physical configuration changes across the SoC family. The
-i.MX6Q/i.MX6D SoCs have two separate display controller devices IPU1 and
-IPU2, with two output ports each. The i.MX6DL/i.MX6S SoCs only have one
-IPU1, but it is accompanied by separate lower-power LCDIF display
-controller with a single output. These may or may not be connected
-indirectly across the encoder input multiplexers, so collecting them
-would require scanning the whole device tree from an always-enabled
-imx-drm platform device if we didn't have this node.
+Signed-off-by: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+---
+ Documentation/devicetree/bindings/spi/sh-msiof.txt |    1 -
+ 1 file changed, 1 deletion(-)
 
-Also, we are free to just ignore this node in the future, if a better
-way is found.
+diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+index 1f0cb33763a1..f24baf3b6cc1 100644
+--- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
++++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+@@ -5,7 +5,6 @@ Required properties:
+ 			 "renesas,sh-msiof" for SuperH, or
+ 			 "renesas,sh-mobile-msiof" for SH Mobile series.
+ 			 Examples with soctypes are:
+-			 "renesas,msiof-sh7724" (SH)
+ 			 "renesas,msiof-r8a7790" (R-Car H2)
+ 			 "renesas,msiof-r8a7791" (R-Car M2)
+ - reg                  : Offset and length of the register set for the device
+-- 
+1.7.9.5
 
-> >  display@di0 {
-> >  	compatible = "fsl,imx-parallel-display";
-> >  	edid = [edid-data];
-> > -	crtc = <&ipu 0>;
-> >  	interface-pix-fmt = "rgb24";
-> > +
-> > +	port {
-> > +		display_in: endpoint {
-> > +			remote-endpoint = <&ipu_di0_disp0>;
-> > +		};
-> > +	};
-> >  };
-> 
-> Shouldn't the pix-fmt be defined in the endpoint node? It is about pixel
-> format for a particular endpoint, isn't it?
-> 
-> > diff --git a/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt b/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt
-> > index ed93778..578a1fc 100644
-> > --- a/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt
-> > +++ b/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt
-> > @@ -50,12 +50,14 @@ have a look at Documentation/devicetree/bindings/video/display-timing.txt.
-> >  
-> >  Required properties:
-> >   - reg : should be <0> or <1>
-> > - - crtcs : a list of phandles with index pointing to the IPU display interfaces
-> > -           that can be used as video source for this channel.
-> >   - fsl,data-mapping : should be "spwg" or "jeida"
-> >                        This describes how the color bits are laid out in the
-> >                        serialized LVDS signal.
-> >   - fsl,data-width : should be <18> or <24>
-> > + - port: A port node with endpoint definitions as defined in
-> > +   Documentation/devicetree/bindings/media/video-interfaces.txt.
-> > +   On i.MX6, there should be four ports (port@[0-3]) that correspond
-> > +   to the four LVDS multiplexer inputs.
-> 
-> Is the ldb something that's on the imx SoC?
-
-Yes. It consists of two LVDS encoders. On i.MX5 each channel is
-connected to one display interface of the single IPU.
-On i.MX6Q its parallel input can be connected to any of the four IPU1/2
-display interfaces using a 4-port multiplexer (and on i.MX6DL it can be
-connected to IPU1 or LCDIF).
-
-> Do you have a public branch somewhere? It'd be easier to look at the
-> final result, as I'm not familiar with imx.
-
-Not yet, I will prepare a branch with the next version.
-
-regards
-Philipp
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
