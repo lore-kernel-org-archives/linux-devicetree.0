@@ -1,134 +1,63 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 05/31] sandbox: dts: Add display and keyboard to sandbox
-Date: Thu, 27 Feb 2014 13:25:59 -0700
-Message-ID: <1393532785-9020-6-git-send-email-sjg@chromium.org>
-References: <1393532785-9020-1-git-send-email-sjg@chromium.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393532785-9020-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: u-boot-review-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Discuss <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH V2 1/3] dt: palmas: support IRQ inversion at the board level
+Date: Thu, 27 Feb 2014 13:51:19 -0700
+Message-ID: <1393534281-30759-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, J Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Ian Lartey <ian-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add an LCD display and keyboard to the sandbox device tree so that these
-features can be used.
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Some boards or SoCs have an inverter between the PMIC IRQ output pin and
+the IRQ controller input signal.
+
+The IRQ specifier in DT is meant to represent the IRQ flags at the input
+to the IRQ controller.
+
+The Palmas HW's IRQ output has configurable polarity. Software needs to
+know which polarity to choose for the IRQ output. Software may be tempted
+to extract the IRQ polarity from the IRQ specifier in order to make this
+choice.
+
+That approach works fine if the IRQ signal is routed directly from the
+PMIC to the IRQ controller with no intervening logic. However, if the
+signal is inverted between the two, this approach gets the wrong answer.
+
+Add an additional optional DT property which indicates that such an
+inversion occurs. This allows DT to give complete information about the
+desired IRQ output polarity to software.
+
+An alternative would have been to add a new non-optional DT parameter to
+indicate the exact desired output polarity. However, this would have been
+an incompatible change to the DT binding.
+
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Acked-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
+v2: Split V1's patch 1/2 into separate patches 1/3 and 2/3.
+---
+ Documentation/devicetree/bindings/mfd/palmas.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Changes in v2: None
-
- arch/sandbox/dts/sandbox.dts | 95 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 95 insertions(+)
-
-diff --git a/arch/sandbox/dts/sandbox.dts b/arch/sandbox/dts/sandbox.dts
-index ea4b8ad..11afbc2 100644
---- a/arch/sandbox/dts/sandbox.dts
-+++ b/arch/sandbox/dts/sandbox.dts
-@@ -27,4 +27,99 @@
- 		sides = <6>;
- 	};
- 
-+	host@0 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "sandbox,host-emulation";
-+		cros-ec@0 {
-+			reg = <0>;
-+			compatible = "google,cros-ec";
-+
-+			/*
-+			 * This describes the flash memory within the EC. Note
-+			 * that the STM32L flash erases to 0, not 0xff.
-+			 */
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			flash@8000000 {
-+				reg = <0x08000000 0x20000>;
-+				erase-value = <0>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+
-+				/* Information for sandbox */
-+				ro {
-+					reg = <0 0xf000>;
-+				};
-+				wp-ro {
-+					reg = <0xf000 0x1000>;
-+				};
-+				rw {
-+					reg = <0x10000 0x10000>;
-+				};
-+			};
-+		};
-+	};
-+
-+	lcd {
-+		compatible = "sandbox,lcd-sdl";
-+		xres = <800>;
-+		yres = <600>;
-+	};
-+
-+	cros-ec-keyb {
-+		compatible = "google,cros-ec-keyb";
-+		google,key-rows = <8>;
-+		google,key-columns = <13>;
-+		google,repeat-delay-ms = <240>;
-+		google,repeat-rate-ms = <30>;
-+		google,ghost-filter;
-+		/*
-+		 * Keymap entries take the form of 0xRRCCKKKK where
-+		 * RR=Row CC=Column KKKK=Key Code
-+		 * The values below are for a US keyboard layout and
-+		 * are taken from the Linux driver. Note that the
-+		 * 102ND key is not used for US keyboards.
-+		 */
-+		linux,keymap = <
-+			/* CAPSLCK F1         B          F10     */
-+			0x0001003a 0x0002003b 0x00030030 0x00040044
-+			/* N       =          R_ALT      ESC     */
-+			0x00060031 0x0008000d 0x000a0064 0x01010001
-+			/* F4      G          F7         H       */
-+			0x0102003e 0x01030022 0x01040041 0x01060023
-+			/* '       F9         BKSPACE    L_CTRL  */
-+			0x01080028 0x01090043 0x010b000e 0x0200001d
-+			/* TAB     F3         T          F6      */
-+			0x0201000f 0x0202003d 0x02030014 0x02040040
-+			/* ]       Y          102ND      [       */
-+			0x0205001b 0x02060015 0x02070056 0x0208001a
-+			/* F8      GRAVE      F2         5       */
-+			0x02090042 0x03010029 0x0302003c 0x03030006
-+			/* F5      6          -          \       */
-+			0x0304003f 0x03060007 0x0308000c 0x030b002b
-+			/* R_CTRL  A          D          F       */
-+			0x04000061 0x0401001e 0x04020020 0x04030021
-+			/* S       K          J          ;       */
-+			0x0404001f 0x04050025 0x04060024 0x04080027
-+			/* L       ENTER      Z          C       */
-+			0x04090026 0x040b001c 0x0501002c 0x0502002e
-+			/* V       X          ,          M       */
-+			0x0503002f 0x0504002d 0x05050033 0x05060032
-+			/* L_SHIFT /          .          SPACE   */
-+			0x0507002a 0x05080035 0x05090034 0x050B0039
-+			/* 1       3          4          2       */
-+			0x06010002 0x06020004 0x06030005 0x06040003
-+			/* 8       7          0          9       */
-+			0x06050009 0x06060008 0x0608000b 0x0609000a
-+			/* L_ALT   DOWN       RIGHT      Q       */
-+			0x060a0038 0x060b006c 0x060c006a 0x07010010
-+			/* E       R          W          I       */
-+			0x07020012 0x07030013 0x07040011 0x07050017
-+			/* U       R_SHIFT    P          O       */
-+			0x07060016 0x07070036 0x07080019 0x07090018
-+			/* UP      LEFT    */
-+			0x070b0067 0x070c0069>;
-+	};
-+
- };
+diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt b/Documentation/devicetree/bindings/mfd/palmas.txt
+index e5f0f8303461..76ec509d5f87 100644
+--- a/Documentation/devicetree/bindings/mfd/palmas.txt
++++ b/Documentation/devicetree/bindings/mfd/palmas.txt
+@@ -18,6 +18,12 @@ Required properties:
+   ti,tps659038
+ and also the generic series names
+   ti,palmas
++- interrupts : Should contain a single entry for the IRQ output.
++- ti,irq-externally-inverted : If missing, the polarity of the Palmas IRQ
++  output should be set to the opposite of the polarity indicated by the IRQ
++  specifier in the interrupts property. If absent, the polarity should be
++  configured to match. This allows the representation of an inverter between
++  the Palmas IRQ output and the interrupt parent's IRQ input.
+ - interrupt-controller : palmas has its own internal IRQs
+ - #interrupt-cells : should be set to 2 for IRQ number and flags
+   The first cell is the IRQ number.
 -- 
-1.9.0.279.gdc9e3eb
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.1.5
