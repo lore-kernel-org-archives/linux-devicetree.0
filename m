@@ -1,93 +1,65 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] phy-rcar-gen2-usb: add device tree support
-Date: Thu, 27 Feb 2014 15:56:58 +0000
-Message-ID: <20140227155657.GD8647@e106331-lin.cambridge.arm.com>
-References: <201402270312.51588.sergei.shtylyov@cogentembedded.com>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: Re: [PATCH 4/6] phy-rcar-usb-gen2: add device tree support
+Date: Thu, 27 Feb 2014 16:03:16 +0000
+Message-ID: <530F61C4.7070706@codethink.co.uk>
+References: <1390057420-13226-1-git-send-email-ben.dooks@codethink.co.uk> <1390057420-13226-5-git-send-email-ben.dooks@codethink.co.uk> <52DAD3B3.1050807@cogentembedded.com> <52DCFF31.2040603@codethink.co.uk> <530F5FC2.1000608@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201402270312.51588.sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "valentine.barshak-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org" <valentine.barshak-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <530F5FC2.1000608@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-kernel@lists.codethink.co.uk, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2014 at 12:12:50AM +0000, Sergei Shtylyov wrote:
-> Add support of the device tree probing for the Renesas R-Car generation 2 SoCs
-> documenting the device tree binding as necessary.
-> 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> 
-> ---
-> This patch is against the 'next' branch of Felipe Balbi's 'usb.git' repo.
-> 
->  Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt |   29 +++++++
->  drivers/usb/phy/phy-rcar-gen2-usb.c                     |   64 ++++++++++++++--
->  2 files changed, 85 insertions(+), 8 deletions(-)
-> 
-> Index: usb/Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt
-> ===================================================================
-> --- /dev/null
-> +++ usb/Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt
-> @@ -0,0 +1,29 @@
-> +* Renesas R-Car generation 2 USB PHY
-> +
-> +This file provides information on what the device node for the R-Car generation
-> +2 USB PHY contains.
-> +
-> +Required properties:
-> +- compatible: "renesas,usb-phy-r8a7790" if the device is a part of R8A7790 SoC.
-> +	      "renesas,usb-phy-r8a7791" if the device is a part of R8A7791 SoC.
+On 27/02/14 15:54, Sergei Shtylyov wrote:
+> Hello.
+>
+> On 20-01-2014 14:49, Ben Dooks wrote:
+>
+>>>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>>> Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
+>>>> ---
+>>>> Cc: linux-usb@vger.kernel.org (open list:USB PHY LAYER)
+>>>> Cc: linux-sh@vger.kernel.org (open list:ARM/SHMOBILE ARM...)
+>>>> Cc: Magnus Damm <magnus.damm@gmail.com> (supporter:ARM/SHMOBILE ARM...)
+>>>> Cc: Simon Horman <horms@verge.net.au> (supporter:ARM/SHMOBILE ARM...)
+>>>> Cc: devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND...)
+>>>> ---
+>>>>   drivers/usb/phy/phy-rcar-gen2-usb.c | 35
+>>>> ++++++++++++++++++++++++++++++-----
+>>>>   1 file changed, 30 insertions(+), 5 deletions(-)
+>
+>>>> diff --git a/drivers/usb/phy/phy-rcar-gen2-usb.c
+>>>> b/drivers/usb/phy/phy-rcar-gen2-usb.c
+>>>> index db3ab34..906b74b 100644
+>>>> --- a/drivers/usb/phy/phy-rcar-gen2-usb.c
+>>>> +++ b/drivers/usb/phy/phy-rcar-gen2-usb.c
+>>> [...]
+>>>> @@ -203,16 +212,31 @@ static int rcar_gen2_usb_phy_probe(struct
+>>>> platform_device *pdev)
+>>> [...]
+>>>> +    if (of_id) {
+> [...]
+>>>> +        int len = 0;
+>>>> +
+>>>> +        if (of_get_property(dev->of_node, "renesas,usb0-hs", &len))
+>>>> +            priv->ugctrl2 = USBHS_UGCTRL2_USB0_HS;
+>>>> +        else
+>>>> +            priv->ugctrl2 = USBHS_UGCTRL2_USB0_PCI;
+>>>> +
+>>>> +        if (of_get_property(dev->of_node, "renesas,usb2-ss", &len))
+>>>> +            priv->ugctrl2 |= USBHS_UGCTRL2_USB2_SS;
+>
+>>>     Where is the bindings file you document these properties in?
+>
+>> Should have been in another patch in the series.
+>
+>     I didn't see it.
 
-Is the r8a7791's USB PHY known to be different to that of the r8a7790?
+I thought it went out, I will need to go check.
 
-If this is just to possibly handle the two differently in future, why
-not have "renesas,usb-phy-r8a7790" as a fallback in the compatible list?
-That was you only need it in the driver for now.
-
-> +- reg: offset and length of the register block.
-> +- clocks: clock phandle and specifier pair.
-> +- clock-names: string, clock input name, must be "usbhs".
-> +
-> +Optional properties:
-> +- renesas,channel0-pci: boolean, specify when USB channel 0 should be connected
-> +			to PCI EHCI/OHCI; otherwise, it will be connected to the
-> +			USBHS controller.
-> +- renesas,channel2-pci: boolean, specify when USB channel 2 should be connected
-> +			to PCI EHCI/OHCI; otherwise, it will be connected to the
-> +			USBSS controller (xHCI).
-
-When would you want this to connect to PCI, and when would you not? Why
-is this not a run-time decision?
-
-> +
-> +Example (Lager board):
-> +
-> +	usb-phy@e6590100 {
-> +		compatible = "renesas,usb-phy-r8a7790";
-> +		reg = <0 0xe6590100 0 0x100>;
-> +		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
-> +		clock-names = "usbhs";
-> +		renesas,channel2-pci;
-> +	};
-
-We're not using the generic phy bindings? How is the linkage to the host
-controller expressed?
-
-[...]
-
-> -	clk = devm_clk_get(dev, "usbhs");
-> +	if (np)
-> +		clk = of_clk_get_by_name(np, "usbhs");
-> +	else
-> +		clk = clk_get(dev, "usbhs");
-
-Doesn't clk_get (and hence devm_clk_get) call of_clk_get_by_name?
-
-Cheers,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
