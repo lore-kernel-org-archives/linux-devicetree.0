@@ -1,43 +1,67 @@
-From: Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 0/3] ARM: bcm21664: Add initial support.
-Date: Thu, 27 Feb 2014 13:56:03 -0800
-Message-ID: <1393538166-22868-1-git-send-email-markus.mayer@linaro.org>
+From: Markus Mayer <markus.mayer@linaro.org>
+Subject: [PATCH 1/3] ARM: DT: bcm21664: Device tree bindings
+Date: Thu, 27 Feb 2014 13:56:04 -0800
+Message-ID: <1393538166-22868-2-git-send-email-markus.mayer@linaro.org>
+References: <1393538166-22868-1-git-send-email-markus.mayer@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Broadcom Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1393538166-22868-1-git-send-email-markus.mayer@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christian Daudt <bcm@fixthebug.org>, Matt Porter <matt.porter@linaro.org>
+Cc: Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-This series adds initial support for the Broadcom BCM21664 mobile SoC.
+Add binding documents for the Broadcom BCM21664 SoC.
 
-The series depends on the series "ARM: bcm281xx: Consolidate code":
-    https://lkml.org/lkml/2014/2/25/548
-
-Markus Mayer (3):
-  ARM: DT: bcm21664: Device tree bindings
-  ARM: bcm21664: Add board support.
-  ARM: dts: bcm21664: Add device tree files.
-
- .../devicetree/bindings/arm/bcm/bcm21664.txt       |   15 +
- .../devicetree/bindings/arm/bcm/kona-resetmgr.txt  |   14 +
- arch/arm/boot/dts/Makefile                         |    3 +-
- arch/arm/boot/dts/bcm21664-garnet.dts              |   56 ++++
- arch/arm/boot/dts/bcm21664.dtsi                    |  292 ++++++++++++++++++++
- arch/arm/mach-bcm/Makefile                         |    6 +-
- arch/arm/mach-bcm/board_bcm21664.c                 |   78 ++++++
- 7 files changed, 461 insertions(+), 3 deletions(-)
+Signed-off-by: Markus Mayer <markus.mayer@linaro.org>
+---
+ .../devicetree/bindings/arm/bcm/bcm21664.txt       |   15 +++++++++++++++
+ .../devicetree/bindings/arm/bcm/kona-resetmgr.txt  |   14 ++++++++++++++
+ 2 files changed, 29 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/arm/bcm/bcm21664.txt
  create mode 100644 Documentation/devicetree/bindings/arm/bcm/kona-resetmgr.txt
- create mode 100644 arch/arm/boot/dts/bcm21664-garnet.dts
- create mode 100644 arch/arm/boot/dts/bcm21664.dtsi
- create mode 100644 arch/arm/mach-bcm/board_bcm21664.c
 
+diff --git a/Documentation/devicetree/bindings/arm/bcm/bcm21664.txt b/Documentation/devicetree/bindings/arm/bcm/bcm21664.txt
+new file mode 100644
+index 0000000..e077425
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/bcm/bcm21664.txt
+@@ -0,0 +1,15 @@
++Broadcom BCM21664 device tree bindings
++--------------------------------------
++
++This document describes the device tree bindings for boards with the BCM21664
++SoC.
++
++Required root node property:
++  - compatible: brcm,bcm21664
++
++Example:
++	/ {
++		model = "BCM21664 SoC";
++		compatible = "brcm,bcm21664";
++		[...]
++	}
+diff --git a/Documentation/devicetree/bindings/arm/bcm/kona-resetmgr.txt b/Documentation/devicetree/bindings/arm/bcm/kona-resetmgr.txt
+new file mode 100644
+index 0000000..93f31ca
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/bcm/kona-resetmgr.txt
+@@ -0,0 +1,14 @@
++Broadcom Kona Family Reset Manager
++----------------------------------
++
++The reset manager is used on the Broadcom BCM21664 SoC.
++
++Required properties:
++  - compatible: brcm,bcm21664-resetmgr
++  - reg: memory address & range
++
++Example:
++	brcm,resetmgr@35001f00 {
++		compatible = "brcm,bcm21664-resetmgr";
++		reg = <0x35001f00 0x24>;
++	};
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
