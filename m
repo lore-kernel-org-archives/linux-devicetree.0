@@ -1,17 +1,15 @@
-From: Liviu Dudau <liviu@dudau.co.uk>
-Subject: Re: [PATCH v2 1/4] pci: OF: Fix the conversion of IO ranges into IO
- resources.
-Date: Thu, 27 Feb 2014 19:12:59 +0000
-Message-ID: <20140227191259.GA31753@bart.dudau.co.uk>
-References: <1393506402-11474-1-git-send-email-Liviu.Dudau@arm.com>
- <1393506402-11474-2-git-send-email-Liviu.Dudau@arm.com>
- <20140227181951.GC24656@obsidianresearch.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v8.1 1/6] dt-bindings: sram: describe option to reserve
+ parts of the memory
+Date: Thu, 27 Feb 2014 20:16:23 +0100
+Message-ID: <201402272016.23521.arnd@arndb.de>
+References: <21117503.1c6iOkvYSr@phil> <201402251419.31151.arnd@arndb.de>
+ <2574291.evU61mFTUd@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20140227181951.GC24656@obsidianresearch.com>
+In-Reply-To: <2574291.evU61mFTUd@phil>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,47 +19,30 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, linux-pci <linux-pci@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
+To: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Sachin Kamat <sachin.kamat@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, arm@kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2014 at 11:19:51AM -0700, Jason Gunthorpe wrote:
-> On Thu, Feb 27, 2014 at 01:06:39PM +0000, Liviu Dudau wrote:
-> > +	if (res->flags & IORESOURCE_IO) {
-> > +		unsigned long port;
-> > +		port = pci_address_to_pio(range->pci_addr);
-> 
-> This looks very suspicious, pci_addr is not unique across all domains,
-> so there is no way to convert from a pci_addr to the virtual IO
-> address without knowing the domain number as well.
-> 
-> I would like to see it be:
->   port = pci_address_to_pio(range->cpu_addr);
-> 
-> cpu_addr is unique across all domains.
+On Wednesday 26 February 2014, Heiko St=FCbner wrote:
+> Some SoCs need parts of their sram for special purposes. So while being p=
+art
+> of the peripheral, it should not be part of the genpool controlling the s=
+ram.
+> =
 
-Jason,
+> Therefore add the option to define reserved regions as subnodes of the
+> sram-node similar to defining reserved global memory regions.
+> =
 
-First thanks for reviewing the updated series.
+> Originally
+> Suggested-by: Rob Herring <robherring2@gmail.com>
+> =
 
-We have agreed early on that indeed using range->cpu_addr is the correct aproach
-and me taking the lazy shortcut of using range->pci_addr because of the broken
-default implementation of pci_address_to_pio is wrong. I will fix this for v3.
+> Using subnodes for reserved regions
+> Suggested-by: Grant Likely <grant.likely@linaro.org>
+> =
 
-The outstanding issue is how to fix pci_address_to_pio() as it will not
-for for range->cpu_addr > IO_SPACE_LIMIT (16MB in my case).
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> Tested-by: Ulrich Prinz <ulrich.prinz@googlemail.com>
 
-Best regards,
-Liviu
-
-> 
-> Looking at the microblaze and PPC versions I think the above version
-> is actually correct (assuming io_base_phys is the CPU address of the
-> IO window)
-> 
-> Jason
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+Acked-by: Arnd Bergmann <arnd@arndb.de>
