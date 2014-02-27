@@ -1,67 +1,67 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [RFC PATCH v4 3/8] staging: imx-drm: Document updated imx-drm
-	device tree bindings
-Date: Thu, 27 Feb 2014 13:43:48 +0000
-Message-ID: <20140227134348.GK21483@n2100.arm.linux.org.uk>
-References: <1393338203-25051-1-git-send-email-p.zabel@pengutronix.de>
-	<1393338203-25051-4-git-send-email-p.zabel@pengutronix.de>
-	<530F1C4C.2010504@ti.com>
-	<20140227115652.GI21483@n2100.arm.linux.org.uk>
-	<530F3A93.501@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 4/4] pci: Add support for creating a generic
+ host_bridge from device tree
+Date: Thu, 27 Feb 2014 14:48:44 +0100
+Message-ID: <7910042.azG0y0Ppv9@wuerfel>
+References: <1393506402-11474-1-git-send-email-Liviu.Dudau@arm.com>
+ <1393506402-11474-5-git-send-email-Liviu.Dudau@arm.com>
+ <18746655.qWHLpMg2Yy@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <530F3A93.501@ti.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces@lists.freedesktop.org
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <18746655.qWHLpMg2Yy@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linaro-kernel@lists.linaro.org
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2014 at 03:16:03PM +0200, Tomi Valkeinen wrote:
-> On 27/02/14 13:56, Russell King - ARM Linux wrote:
+On Thursday 27 February 2014 14:38:32 Arnd Bergmann wrote:
+> > +     pr_debug("Parsing ranges property...\n");
+> > +     for_each_of_pci_range(&parser, &range) {
+> > +             /* Read next ranges element */
+> > +             pr_debug("pci_space: 0x%08x pci_addr:0x%016llx ",
+> > +                             range.pci_space, range.pci_addr);
+> > +             pr_debug("cpu_addr:0x%016llx size:0x%016llx\n",
+> > +                                     range.cpu_addr, range.size);
+> > +
+> > +             /*
+> > +              * If we failed translation or got a zero-sized region
+> > +              * then skip this range
+> > +              */
+> > +             if (range.cpu_addr == OF_BAD_ADDR || range.size == 0)
+> > +                     continue;
+> > +
+> > +             res = kzalloc(sizeof(struct resource), GFP_KERNEL);
+> > +             if (!res) {
+> > +                     err = -ENOMEM;
+> > +                     goto bridge_ranges_nomem;
+> > +             }
+> > +
+> > +             of_pci_range_to_resource(&range, dev, res);
+> > +
+> > +             if (resource_type(res) == IORESOURCE_IO)
+> > +                     *io_base = range.cpu_addr;
+> > +
+> > +             pci_add_resource_offset(resources, res,
+> > +                             res->start - range.pci_addr);
+> > +     }
 > 
-> >> Is there even need for such a master device? You can find all the
-> >> connected display devices from any single display device, by just
-> >> following the endpoint links.
-> > 
-> > Please read up on what has been discussed over previous years:
-> > 
-> > http://lists.freedesktop.org/archives/dri-devel/2013-July/041159.html
+> This is not the correct resource for I/O space at all. Please talk
+> to Will, I've been over this with him in detail and he probably
+> understands it now. I assume you are both working in the same
+> building.
 > 
-> Thanks, that was an interesting thread. Too bad I missed it, it was
-> during the holiday season. And seems Laurent missed it also, as he
-> didn't make any replies.
-> 
-> The thread seemed to go over the very same things that had already been
-> discussed with CDF.
 
-That may be - but the problem with CDF solving this problem is that it's
-wrong.  It's fixing what is in actual fact a *generic* problem in a much
-too specific way.  To put it another way, it's forcing everyone to fix
-the same problem in their own separate ways because no one is willing to
-take a step back and look at the larger picture.
+Sorry, I initially missed part of your changes in patch 1.
+I think it's actually correct now.
 
-We can see that because ASoC has exactly the same problem - it has to
-wait until all devices (DMA, CPU DAIs, codecs etc) are present before it
-can initialise, just like DRM.  Can you re-use the CDF solution for ASoC?
-No.  Can it be re-used elsewhere in non-display subsystems?  No.
-
-Therefore, CDF is yet another implementation specific solution to a
-generic problem which can't be re-used.
-
-Yes, I realise that CDF may do other stuff, but because of the above, it's
-a broken solution.
-
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+	Arnd
