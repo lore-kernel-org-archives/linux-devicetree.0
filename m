@@ -1,158 +1,373 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv2 03/16] Documentation: dt: add OMAP iommu bindings
-Date: Wed, 26 Feb 2014 17:14:01 -0600
-Message-ID: <530E7539.6040106@ti.com>
-References: <1392315347-32967-1-git-send-email-s-anna@ti.com>
-	<530E682D.9070005@ti.com> <530E6A78.9060503@ti.com>
-	<2109933.259zooPLHZ@avalon>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH] clk: hisilicon: add hi3620_mmc_clks
+Date: Wed, 26 Feb 2014 16:10:04 -0800
+Message-ID: <20140227001004.12081.62208@quantum>
+References: <1389604469-8064-2-git-send-email-zhangfei.gao@linaro.org>
+ <1389605852-10160-1-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <2109933.259zooPLHZ@avalon>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1389605852-10160-1-git-send-email-zhangfei.gao@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chris Ball <cjb@laptop.org>, Arnd Bergmann <arnd@arndb.de>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, brooke.wangzhigang@huawei.com
+Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org, Zhangfei Gao <zhangfei.gao@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Quoting Zhangfei Gao (2014-01-13 01:37:32)
+> Suggest by Arnd: abstract mmc tuning as clock behavior,
+> also because different soc have different tuning method and registers.
+> hi3620_mmc_clks is added to handle mmc clock specifically on hi3620.
+> 
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
 
- >
-> On Wednesday 26 February 2014 16:28:08 Suman Anna wrote:
->> On 02/26/2014 04:18 PM, Suman Anna wrote:
->>> On 02/26/2014 02:36 PM, Laurent Pinchart wrote:
->>>> On Wednesday 26 February 2014 14:23:03 Suman Anna wrote:
->>>>>> On Wednesday 26 February 2014 11:02:24 Suman Anna wrote:
->>>>>>> On 02/25/2014 08:13 PM, Laurent Pinchart wrote:
->>>>>>>> On Tuesday 25 February 2014 17:02:35 Suman Anna wrote:
->>>>>>>>> On 02/25/2014 03:26 PM, Laurent Pinchart wrote:
->>>>>>>>>> On Thursday 13 February 2014 12:15:34 Suman Anna wrote:
->>>>>>>>>>> From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
->>>>>>>>>>>
->>>>>>>>>>> This patch adds the iommu bindings for all OMAP2+ SoCs. Apart from
->>>>>>>>>>> the standard bindings used by OMAP peripherals, this patch uses a
->>>>>>>>>>> 'dma-window' (already used by Tegra SMMU) and adds two OMAP custom
->>>>>>>>>>> bindings - 'ti,#tlb-entries' and 'ti,iommu-bus-err-back'.
->>>>>>>>>>>
->>>>>>>>>>> Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
->>>>>>>>>>> [s-anna-l0cyMroinI0@public.gmane.org: split bindings document, add dra7 and bus error
->>>>>>>>>>> back]
->>>>>>>>>>> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
->>>>>>>>>>> ---
->>>>>>>>>>>
->>>>>>>>>>>   .../devicetree/bindings/iommu/ti,omap-iommu.txt    | 28 +++++++++
->>>>>>>>>>>   1 file changed, 28 insertions(+)
->>>>>>>>>>>   create mode 100644
->>>>>>>>>>>   Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt
->>>>>>>>>>>
->>>>>>>>>>> diff --git
->>>>>>>>>>> a/Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt
->>>>>>>>>>> b/Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt new
->>>>>>>>>>> file
->>>>>>>>>>> mode 100644
->>>>>>>>>>> index 0000000..116492d
->>>>>>>>>>> --- /dev/null
->>>>>>>>>>> +++ b/Documentation/devicetree/bindings/iommu/ti,omap-iommu.txt
->>>>>>>>>>> @@ -0,0 +1,28 @@
->>>>>>>>>>> +OMAP2+ IOMMU
->>>>>>>>>>> +
->>>>>>>>>>> +Required properties:
->>>>>>>>>>> +- compatible : Should be one of,
->>>>>>>>>>> +        "ti,omap2-iommu" for OMAP2/OMAP3 IOMMU instances
->>>>>>>>>>> +        "ti,omap4-iommu" for OMAP4/OMAP5 IOMMU instances
->>>>>>>>>>> +        "ti,dra7-iommu" for DRA7xx IOMMU instances
->>>>>>>>>>> +- ti,hwmods  : Name of the hwmod associated with the IOMMU
->>>>>>>>>>> instance
->>>>>>>>>>> +- reg        : Address space for the configuration registers
->>>>>>>>>>> +- interrupts : Interrupt specifier for the IOMMU instance
->>>>>>>>>>> +- dma-window : IOVA start address and length
->>>>>>>>>>
->>>>>>>>>> Isn't the dma window more of a system configuration property than a
->>>>>>>>>> hardware property ? How do you expect it to be set?
->>>>>>>>>
->>>>>>>>> We are setting it based on the addressable range for the MMU.
->>>>>>>>
->>>>>>>> A quick look at the ISP and IVA IOMMUs in the OMAP3 shows that both
->>>>>>>> support the full 4GB VA space. Why do you need to restrict it ?
->>>>>>>
->>>>>>> I should have rephrased it better when I said addressable range. While
->>>>>>> the MMUs are capable of programming the full 4GB space, there are some
->>>>>>> address ranges that are private from the processor view. This
->>>>>>> window is currently used to set the range for the omap-iovmm driver
->>>>>>> (which only OMAP3 ISP is using atm), and there is no point in allowing
->>>>>>> the omap-iovmm driver the full range when the processor could never
->>>>>>> reach/access those addresses.
->>>>>>
->>>>>> But the IOMMU VA space is from a device point of view, not from a CPU
->>>>>> point of view. Could you point me to where those private ranges are
->>>>>> documented, in order to understand the problem correctly ?
->>>>>
->>>>> Yes, they are indeed from the device perspective. I meant DSP and/or IPU
->>>>> by processor.
->>>>>
->>>>> For example on OMAP3, you can refer to Table 2-9 in section 2.4.5 "DSP
->>>>> Subsystem Memory Space Mapping" of the OMAP36xx TRM, and the external
->>>>> addressable range starts from 0x11000000.
->>>>
->>>> OK, so it looks more like a property of the IOMMU master than a
->>>> property of the IOMMU itself. It would be better to express it as such,
->>>> but I wonder how that could be done, and if it would be worth it in this
->>>> case.
->>>
->>> This property is currently solely used to configure the range for the
->>> omap-iovmm module, which were supplied through platform data in the
->>> non-DT case.
->
-> If I'm not mistaken omap-iovmm is something we want to get rid of. I know that
-> the OMAP3 ISP driver is the only user of that module, and I've started working
-> on fixing that, but I'm currently lacking time to complete the work.
->
-> Now, if we get rid of omap-iovmm, does that mean that the dma-window property
-> won't need to be specified anymore ? If so, given that the only omap-iovmm
-> user is the OMAP3 ISP driver, I would propose to drop the property and just
-> hardcode the value.
+Taken into clk-next (again! This one got lost when migrating my early
+branch from 3.14-rcX to the new clk-next)
 
-Yeah, none of our OMAP4+ stacks use omap-iovmm, or similar dynamic 
-reservation scheme at the moment. I am perfectly fine with dropping the 
-property and hard-coding it in the driver with a note. DSP/Bridge has a 
-similar usage (in dmm.c), but that code is localized within the driver.
+Regards,
+Mike
 
-Thanks for all the comments.
-
-regards
-Suman
-
-
->
-> Please let me know if there's something I've missed.
-
-
->
->>> I am wondering if the way to go here is to use iommu_domain_set_attr() and
->>> use the domain geometry values.
->>
->> The other option is to supply these as driver match data, and switching
->> the compatible strings to identify the MMU instance precisely.
->>
->> regards
->> Suman
->>
->>>> As not all masters (the OMAP3 ISP doesn't for instance) have restrictions
->>>> regarding the VA range they can address, should this property be at
->>>> least made
->>>> optional ?
->>>>
->>>>>>>>> We are reusing the existing defined property and it allows us to get
->>>>>>>>> rid of the IOVA start and end addresses defined in the pre-DT OMAP
->>>>>>>>> iommu platform data.
->
-> [snip]
->
+> ---
+>  .../bindings/arm/hisilicon/hisilicon.txt           |   14 +
+>  .../devicetree/bindings/clock/hi3620-clock.txt     |    1 +
+>  drivers/clk/hisilicon/clk-hi3620.c                 |  274 ++++++++++++++++++++
+>  include/dt-bindings/clock/hi3620-clock.h           |    5 +
+>  4 files changed, 294 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> index 8c7a4653508d..df0a452b8526 100644
+> --- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> +++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> @@ -30,3 +30,17 @@ Example:
+>                 resume-offset = <0x308>;
+>                 reboot-offset = <0x4>;
+>         };
+> +
+> +PCTRL: Peripheral misc control register
+> +
+> +Required Properties:
+> +- compatible: "hisilicon,pctrl"
+> +- reg: Address and size of pctrl.
+> +
+> +Example:
+> +
+> +       /* for Hi3620 */
+> +       pctrl: pctrl@fca09000 {
+> +               compatible = "hisilicon,pctrl";
+> +               reg = <0xfca09000 0x1000>;
+> +       };
+> diff --git a/Documentation/devicetree/bindings/clock/hi3620-clock.txt b/Documentation/devicetree/bindings/clock/hi3620-clock.txt
+> index 4b71ab41be53..dad6269f52c5 100644
+> --- a/Documentation/devicetree/bindings/clock/hi3620-clock.txt
+> +++ b/Documentation/devicetree/bindings/clock/hi3620-clock.txt
+> @@ -7,6 +7,7 @@ Required Properties:
+>  
+>  - compatible: should be one of the following.
+>    - "hisilicon,hi3620-clock" - controller compatible with Hi3620 SoC.
+> +  - "hisilicon,hi3620-mmc-clock" - controller specific for Hi3620 mmc.
+>  
+>  - reg: physical base address of the controller and length of memory mapped
+>    region.
+> diff --git a/drivers/clk/hisilicon/clk-hi3620.c b/drivers/clk/hisilicon/clk-hi3620.c
+> index f24ad6a3a797..38faa469d288 100644
+> --- a/drivers/clk/hisilicon/clk-hi3620.c
+> +++ b/drivers/clk/hisilicon/clk-hi3620.c
+> @@ -240,3 +240,277 @@ static void __init hi3620_clk_init(struct device_node *np)
+>                                    base);
+>  }
+>  CLK_OF_DECLARE(hi3620_clk, "hisilicon,hi3620-clock", hi3620_clk_init);
+> +
+> +struct hisi_mmc_clock {
+> +       unsigned int            id;
+> +       const char              *name;
+> +       const char              *parent_name;
+> +       unsigned long           flags;
+> +       u32                     clken_reg;
+> +       u32                     clken_bit;
+> +       u32                     div_reg;
+> +       u32                     div_off;
+> +       u32                     div_bits;
+> +       u32                     drv_reg;
+> +       u32                     drv_off;
+> +       u32                     drv_bits;
+> +       u32                     sam_reg;
+> +       u32                     sam_off;
+> +       u32                     sam_bits;
+> +};
+> +
+> +struct clk_mmc {
+> +       struct clk_hw   hw;
+> +       u32             id;
+> +       void __iomem    *clken_reg;
+> +       u32             clken_bit;
+> +       void __iomem    *div_reg;
+> +       u32             div_off;
+> +       u32             div_bits;
+> +       void __iomem    *drv_reg;
+> +       u32             drv_off;
+> +       u32             drv_bits;
+> +       void __iomem    *sam_reg;
+> +       u32             sam_off;
+> +       u32             sam_bits;
+> +};
+> +
+> +#define to_mmc(_hw) container_of(_hw, struct clk_mmc, hw)
+> +
+> +static struct hisi_mmc_clock hi3620_mmc_clks[] __initdata = {
+> +       { HI3620_SD_CIUCLK,     "sd_bclk1", "sd_clk", CLK_SET_RATE_PARENT, 0x1f8, 0, 0x1f8, 1, 3, 0x1f8, 4, 4, 0x1f8, 8, 4},
+> +       { HI3620_MMC_CIUCLK1,   "mmc_bclk1", "mmc_clk1", CLK_SET_RATE_PARENT, 0x1f8, 12, 0x1f8, 13, 3, 0x1f8, 16, 4, 0x1f8, 20, 4},
+> +       { HI3620_MMC_CIUCLK2,   "mmc_bclk2", "mmc_clk2", CLK_SET_RATE_PARENT, 0x1f8, 24, 0x1f8, 25, 3, 0x1f8, 28, 4, 0x1fc, 0, 4},
+> +       { HI3620_MMC_CIUCLK3,   "mmc_bclk3", "mmc_clk3", CLK_SET_RATE_PARENT, 0x1fc, 4, 0x1fc, 5, 3, 0x1fc, 8, 4, 0x1fc, 12, 4},
+> +};
+> +
+> +static unsigned long mmc_clk_recalc_rate(struct clk_hw *hw,
+> +                      unsigned long parent_rate)
+> +{
+> +       switch (parent_rate) {
+> +       case 26000000:
+> +               return 13000000;
+> +       case 180000000:
+> +               return 25000000;
+> +       case 360000000:
+> +               return 50000000;
+> +       case 720000000:
+> +               return 100000000;
+> +       case 1440000000:
+> +               return 180000000;
+> +       default:
+> +               return parent_rate;
+> +       }
+> +}
+> +
+> +static long mmc_clk_determine_rate(struct clk_hw *hw, unsigned long rate,
+> +                             unsigned long *best_parent_rate,
+> +                             struct clk **best_parent_p)
+> +{
+> +       struct clk_mmc *mclk = to_mmc(hw);
+> +       unsigned long best = 0;
+> +
+> +       if ((rate <= 13000000) && (mclk->id == HI3620_MMC_CIUCLK1)) {
+> +               rate = 13000000;
+> +               best = 26000000;
+> +       } else if (rate <= 26000000) {
+> +               rate = 25000000;
+> +               best = 180000000;
+> +       } else if (rate <= 52000000) {
+> +               rate = 50000000;
+> +               best = 360000000;
+> +       } else if (rate <= 100000000) {
+> +               rate = 100000000;
+> +               best = 720000000;
+> +       } else {
+> +               /* max is 180M */
+> +               rate = 180000000;
+> +               best = 1440000000;
+> +       }
+> +       *best_parent_rate = best;
+> +       return rate;
+> +}
+> +
+> +static u32 mmc_clk_delay(u32 val, u32 para, u32 off, u32 len)
+> +{
+> +       u32 i;
+> +
+> +       if (para >= 0) {
+> +               for (i = 0; i < len; i++) {
+> +                       if (para % 2)
+> +                               val |= 1 << (off + i);
+> +                       else
+> +                               val &= ~(1 << (off + i));
+> +                       para = para >> 1;
+> +               }
+> +       }
+> +       return val;
+> +}
+> +
+> +static int mmc_clk_set_timing(struct clk_hw *hw, unsigned long rate)
+> +{
+> +       struct clk_mmc *mclk = to_mmc(hw);
+> +       unsigned long flags;
+> +       u32 sam, drv, div, val;
+> +       static DEFINE_SPINLOCK(mmc_clk_lock);
+> +
+> +       switch (rate) {
+> +       case 13000000:
+> +               sam = 3;
+> +               drv = 1;
+> +               div = 1;
+> +               break;
+> +       case 25000000:
+> +               sam = 13;
+> +               drv = 6;
+> +               div = 6;
+> +               break;
+> +       case 50000000:
+> +               sam = 3;
+> +               drv = 6;
+> +               div = 6;
+> +               break;
+> +       case 100000000:
+> +               sam = 6;
+> +               drv = 4;
+> +               div = 6;
+> +               break;
+> +       case 180000000:
+> +               sam = 6;
+> +               drv = 4;
+> +               div = 7;
+> +               break;
+> +       default:
+> +               return -EINVAL;
+> +       }
+> +
+> +       spin_lock_irqsave(&mmc_clk_lock, flags);
+> +
+> +       val = readl_relaxed(mclk->clken_reg);
+> +       val &= ~(1 << mclk->clken_bit);
+> +       writel_relaxed(val, mclk->clken_reg);
+> +
+> +       val = readl_relaxed(mclk->sam_reg);
+> +       val = mmc_clk_delay(val, sam, mclk->sam_off, mclk->sam_bits);
+> +       writel_relaxed(val, mclk->sam_reg);
+> +
+> +       val = readl_relaxed(mclk->drv_reg);
+> +       val = mmc_clk_delay(val, drv, mclk->drv_off, mclk->drv_bits);
+> +       writel_relaxed(val, mclk->drv_reg);
+> +
+> +       val = readl_relaxed(mclk->div_reg);
+> +       val = mmc_clk_delay(val, div, mclk->div_off, mclk->div_bits);
+> +       writel_relaxed(val, mclk->div_reg);
+> +
+> +       val = readl_relaxed(mclk->clken_reg);
+> +       val |= 1 << mclk->clken_bit;
+> +       writel_relaxed(val, mclk->clken_reg);
+> +
+> +       spin_unlock_irqrestore(&mmc_clk_lock, flags);
+> +
+> +       return 0;
+> +}
+> +
+> +static int mmc_clk_prepare(struct clk_hw *hw)
+> +{
+> +       struct clk_mmc *mclk = to_mmc(hw);
+> +       unsigned long rate;
+> +
+> +       if (mclk->id == HI3620_MMC_CIUCLK1)
+> +               rate = 13000000;
+> +       else
+> +               rate = 25000000;
+> +
+> +       return mmc_clk_set_timing(hw, rate);
+> +}
+> +
+> +static int mmc_clk_set_rate(struct clk_hw *hw, unsigned long rate,
+> +                            unsigned long parent_rate)
+> +{
+> +       return mmc_clk_set_timing(hw, rate);
+> +}
+> +
+> +static struct clk_ops clk_mmc_ops = {
+> +       .prepare = mmc_clk_prepare,
+> +       .determine_rate = mmc_clk_determine_rate,
+> +       .set_rate = mmc_clk_set_rate,
+> +       .recalc_rate = mmc_clk_recalc_rate,
+> +};
+> +
+> +static struct clk *hisi_register_clk_mmc(struct hisi_mmc_clock *mmc_clk,
+> +                       void __iomem *base, struct device_node *np)
+> +{
+> +       struct clk_mmc *mclk;
+> +       struct clk *clk;
+> +       struct clk_init_data init;
+> +
+> +       mclk = kzalloc(sizeof(*mclk), GFP_KERNEL);
+> +       if (!mclk) {
+> +               pr_err("%s: fail to allocate mmc clk\n", __func__);
+> +               return ERR_PTR(-ENOMEM);
+> +       }
+> +
+> +       init.name = mmc_clk->name;
+> +       init.ops = &clk_mmc_ops;
+> +       init.flags = mmc_clk->flags | CLK_IS_BASIC;
+> +       init.parent_names = (mmc_clk->parent_name ? &mmc_clk->parent_name : NULL);
+> +       init.num_parents = (mmc_clk->parent_name ? 1 : 0);
+> +       mclk->hw.init = &init;
+> +
+> +       mclk->id = mmc_clk->id;
+> +       mclk->clken_reg = base + mmc_clk->clken_reg;
+> +       mclk->clken_bit = mmc_clk->clken_bit;
+> +       mclk->div_reg = base + mmc_clk->div_reg;
+> +       mclk->div_off = mmc_clk->div_off;
+> +       mclk->div_bits = mmc_clk->div_bits;
+> +       mclk->drv_reg = base + mmc_clk->drv_reg;
+> +       mclk->drv_off = mmc_clk->drv_off;
+> +       mclk->drv_bits = mmc_clk->drv_bits;
+> +       mclk->sam_reg = base + mmc_clk->sam_reg;
+> +       mclk->sam_off = mmc_clk->sam_off;
+> +       mclk->sam_bits = mmc_clk->sam_bits;
+> +
+> +       clk = clk_register(NULL, &mclk->hw);
+> +       if (WARN_ON(IS_ERR(clk)))
+> +               kfree(mclk);
+> +       return clk;
+> +}
+> +
+> +static void __init hi3620_mmc_clk_init(struct device_node *node)
+> +{
+> +       void __iomem *base;
+> +       int i, num = ARRAY_SIZE(hi3620_mmc_clks);
+> +       struct clk_onecell_data *clk_data;
+> +
+> +       if (!node) {
+> +               pr_err("failed to find pctrl node in DTS\n");
+> +               return;
+> +       }
+> +
+> +       base = of_iomap(node, 0);
+> +       if (!base) {
+> +               pr_err("failed to map pctrl\n");
+> +               return;
+> +       }
+> +
+> +       clk_data = kzalloc(sizeof(*clk_data), GFP_KERNEL);
+> +       if (WARN_ON(!clk_data))
+> +               return;
+> +
+> +       clk_data->clks = kzalloc(sizeof(struct clk *) * num, GFP_KERNEL);
+> +       if (!clk_data->clks) {
+> +               pr_err("%s: fail to allocate mmc clk\n", __func__);
+> +               return;
+> +       }
+> +
+> +       for (i = 0; i < num; i++) {
+> +               struct hisi_mmc_clock *mmc_clk = &hi3620_mmc_clks[i];
+> +               clk_data->clks[mmc_clk->id] =
+> +                       hisi_register_clk_mmc(mmc_clk, base, node);
+> +       }
+> +
+> +       clk_data->clk_num = num;
+> +       of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
+> +}
+> +
+> +CLK_OF_DECLARE(hi3620_mmc_clk, "hisilicon,hi3620-mmc-clock", hi3620_mmc_clk_init);
+> diff --git a/include/dt-bindings/clock/hi3620-clock.h b/include/dt-bindings/clock/hi3620-clock.h
+> index 6eaa6a45e110..21b9d0e2eb0c 100644
+> --- a/include/dt-bindings/clock/hi3620-clock.h
+> +++ b/include/dt-bindings/clock/hi3620-clock.h
+> @@ -147,6 +147,11 @@
+>  #define HI3620_MMC_CLK3                217
+>  #define HI3620_MCU_CLK         218
+>  
+> +#define HI3620_SD_CIUCLK       0
+> +#define HI3620_MMC_CIUCLK1     1
+> +#define HI3620_MMC_CIUCLK2     2
+> +#define HI3620_MMC_CIUCLK3     3
+> +
+>  #define HI3620_NR_CLKS         219
+>  
+>  #endif /* __DTS_HI3620_CLOCK_H */
+> -- 
+> 1.7.9.5
+> 
