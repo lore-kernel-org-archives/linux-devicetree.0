@@ -1,34 +1,129 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH V6] gpio: New driver for LSI ZEVIO SoCs
-Date: Thu, 27 Feb 2014 10:31:59 +0100
-Message-ID: <CACRpkdZqAMMvHiGwVDNnZ7Lg9RUVtjFGdfnZF3+QrX0KRPVJGA@mail.gmail.com>
-References: <1393271698-15829-1-git-send-email-fabian@ritter-vogt.de>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v4 3/3] Documentation: of: Document graph bindings
+Date: Thu, 27 Feb 2014 11:52:36 +0100
+Message-ID: <1393498356.4507.32.camel@paszta.hi.pengutronix.de>
+References: <1393340304-19005-1-git-send-email-p.zabel@pengutronix.de>
+			 <1393340304-19005-4-git-send-email-p.zabel@pengutronix.de>
+			 <530DE8A9.9050809@ti.com>
+		 <1393426623.3248.70.camel@paszta.hi.pengutronix.de>
+		 <530DFF4C.8080807@ti.com>
+	 <1393429676.3248.110.camel@paszta.hi.pengutronix.de>
+	 <530EF294.7070801@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1393271698-15829-1-git-send-email-fabian@ritter-vogt.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Fabian Vogt <fabian@ritter-vogt.de>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Rob Landley <rob@landley.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <530EF294.7070801@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 24, 2014 at 8:54 PM, Fabian Vogt <fabian@ritter-vogt.de> wrote:
+Hi Tomi,
 
-> This driver supports the GPIO controller found in LSI ZEVIO SoCs.
-> It has been successfully tested on a TI nspire CX calculator.
+Am Donnerstag, den 27.02.2014, 10:08 +0200 schrieb Tomi Valkeinen:
+> On 26/02/14 17:47, Philipp Zabel wrote:
+> > Please let's not make it mandatory for a port node to contain an
+> > endpoint. For any device with multiple ports we can't use the simplified
+> > form above, and only adding the (correctly numbered) port in all the
+> > board device trees would be a pain.
+> 
+> That's true. I went with having the ports in the board file, for example
+> on omap3 the dss has two ports, and N900 board uses the second one:
+> 
+> &dss {
+> 	status = "ok";
+> 
+> 	pinctrl-names = "default";
+> 	pinctrl-0 = <&dss_sdi_pins>;
+> 
+> 	vdds_sdi-supply = <&vaux1>;
+> 
+> 	ports {
+> 		#address-cells = <1>;
+> 		#size-cells = <0>;
+> 
+> 		port@1 {
+> 			reg = <1>;
+> 
+> 			sdi_out: endpoint {
+> 				remote-endpoint = <&lcd_in>;
+> 				datapairs = <2>;
+> 			};
+> 		};
+> 	};
+> };
+
+This is a bit verbose, and if your output port is on an encoder device
+with multiple inputs, the correct port number would become a bit
+unintuitive. For example, we'd have to use port@4 as the output encoder
+units that have a 4-port input multiplexer and port@1 for those that
+don't.
+
+> Here I guess I could have:
+> 
+> &dss {
+> 	status = "ok";
+> 
+> 	pinctrl-names = "default";
+> 	pinctrl-0 = <&dss_sdi_pins>;
+> 
+> 	vdds_sdi-supply = <&vaux1>;
+> };
+
+What is supplied by this regulator. Is it the PHY?
+
+> &dss_sdi_port {
+> 	sdi_out: endpoint {
+> 		remote-endpoint = <&lcd_in>;
+> 		datapairs = <2>;
+> 	};
+> };
+> 
+> But I didn't like that as it splits the pincontrol and regulator supply
+> from the port/endpoint, which are functionally linked together.
 >
-> Signed-off-by: Fabian Vogt <fabian@ritter-vogt.de>
+> Actually, somewhat aside the subject, I'd like to have the pinctrl and
+> maybe regulator supply also per endpoint, but I didn't see how that
+> would be possible with the current framework. If a board would need to
+> endpoints for the same port, most likely it would also need to different
+> sets of pinctrls.
 
-I like this version. Patch applied.
+I have a usecase for this the other way around. The i.MX6 DISP0 parallel
+display pads can be connected to two different display controllers via
+multiplexers in the pin control block.
 
-Q:
+parallel-display {
+	compatible = "fsl,imx-parallel-display";
+	#address-cells = <1>;
+	#size-cells = <0>;
 
-> +config GPIO_ZEVIO
-> +       bool "LSI ZEVIO SoC memory mapped GPIOs"
-> +       depends on OF
+	port@0 {
+		endpoint {
+			remote-endpoint = <&ipu1_di0>;
+		};
+	};
 
-So OF_GPIO is not needed for the systems using this driver?
-DT just used for probing the driver?
+	port@1 {
+		endpoint {
+			remote-endpoint = <&ipu2_di0>;
+		};
+	};
 
-Yours,
-Linus Walleij
+	disp0: port@2 {
+		endpoint {
+			pinctrl-names = "0", "1";
+			pinctrl-0 = <&pinctrl_disp0_ipu1>;
+			pinctrl-1 = <&pinctrl_disp0_ipu2>;
+			remote-endpoint = <&lcd_in>;
+		};
+	}
+};
+
+Here, depending on the active input port, the corresponding pin control
+on the output port could be set. This is probably quite driver specific,
+so I don't see yet how the framework should help with this. In any case,
+maybe this is a bit out of scope for the generic graph bindings.
+
+regards
+Philipp
