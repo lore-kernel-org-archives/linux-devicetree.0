@@ -1,45 +1,33 @@
-From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
-Subject: [PATCH] checkpatch: fix spurious vendor compatible warnings
-Date: Thu, 27 Feb 2014 20:56:59 +0100
-Message-ID: <1393531019-25134-1-git-send-email-florian.vaussard@epfl.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+From: Loc Ho <lho@apm.com>
+Subject: Re: [PATCH v12 1/4] PHY: Add function set_speed to generic PHY framework
+Date: Thu, 27 Feb 2014 11:57:44 -0800
+Message-ID: <CAPw-ZT=F07=T0=z=iT=hxJ0+609RBDYRL=MXF5dQoEowLjsRjQ@mail.gmail.com>
+References: <1393524848-8207-1-git-send-email-lho@apm.com>
+	<1393524848-8207-2-git-send-email-lho@apm.com>
+	<20140227190102.GB4862@saruman.home>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20140227190102.GB4862@saruman.home>
+Sender: linux-ide-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Tejun Heo <tj@kernel.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-With a compatible string like
+Hi Balbi,
 
-compatible = "foo";
+> On Thu, Feb 27, 2014 at 11:14:05AM -0700, Loc Ho wrote:
+>> This patch adds function set_speed to the generic PHY framework operation
+>> structure. This function can be called to instruct the PHY underlying layer
+>> at specified lane to configure for specified speed in hertz.
+>
+> why ? looks like clk_set_rate() is your friend here. Can you be more
+> descriptive of the use case ? When will this be used ?
+>
 
-checkpatch will currently try to find "foo" in  vendor-prefixes.txt,
-which is wrong since the vendor prefix is empty in this specific case.
+The phy_set_speed is used to configure the operation speed of the PHY
+at run-time. The clock interface in general is used to configure the
+clock input to the IP. I don't believe they are the same thing. Maybe
+it will be clear in my response to your second email
 
-Skip the vendor test if the compatible is not like
-
-compatible = "vendor,something";
-
-Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
----
- scripts/checkpatch.pl | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 464dcef..35ec185 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -2058,6 +2058,7 @@ sub process {
- 				my $vendor = $compat;
- 				my $vendor_path = $dt_path . "vendor-prefixes.txt";
- 				next if (! -f $vendor_path);
-+				next if not $vendor =~ /^[a-zA-Z0-9]+\,.*/;
- 				$vendor =~ s/^([a-zA-Z0-9]+)\,.*/$1/;
- 				`grep -Eq "$vendor" $vendor_path`;
- 				if ( $? >> 8 ) {
--- 
-1.8.5.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Loc
