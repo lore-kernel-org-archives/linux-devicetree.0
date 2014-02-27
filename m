@@ -1,222 +1,160 @@
-From: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv12] video: backlight: gpio-backlight: Add DT support.
-Date: Thu, 27 Feb 2014 15:28:33 +0100
-Message-ID: <1393511313-18756-1-git-send-email-denis@eukrea.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [RFC PATCH 1/6] PM / Voltagedomain: Add generic clk notifier
+ handler for regulator based dynamic voltage scaling
+Date: Thu, 27 Feb 2014 08:42:53 -0600
+Message-ID: <530F4EED.9050207@ti.com>
+References: <1392755543-28335-1-git-send-email-nm@ti.com> <1392755543-28335-2-git-send-email-nm@ti.com> <20140225055142.22529.21814@quantum> <530D0394.4020208@ti.com> <20140227023455.GA15712@kahuna> <20140227050043.12081.54173@quantum>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140227050043.12081.54173@quantum>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
----
-ChangeLog v11-resend->v12:
-- Moved the Cc from the commit message to the "email patch".
-- The documentation is now more clear.
-- The unnecessary default_on variable was removed.
-- gbl->fbdev was already NULL and didn't need to be re-assigned,
-  so the re-assignement was removed.
-- The of_device_id struct and .of_match_table are now guarded
-  against the driver beeing compiled without CONFIG_OF.
+On 02/26/2014 11:00 PM, Mike Turquette wrote:
+> Quoting Nishanth Menon (2014-02-26 18:34:55)
+>> +/**
+>> + * pm_runtime_get_rate() - Returns the device operational frequency
+>> + * @dev:       Device to handle
+>> + * @rate:      Returns rate in Hz.
+>> + *
+>> + * Returns appropriate error value in case of error conditions, else
+>> + * returns 0 and rate is updated. The pm_domain logic does all the necessary
+>> + * operation (which may consider magic hardware stuff) to provide the rate.
+>> + *
+>> + * NOTE: the rate returned is a snapshot and in many cases just a bypass
+>> + * to clk api to set the rate.
+>> + */
+>> +int pm_runtime_get_rate(struct device *dev, unsigned long *rate)
+> 
+> Instead of "rate", how about we use "level" and leave it undefined as to
+> what that means? It would be equally valid for level to represent a
+> clock rate, or an opp from a table of opp's, or a p-state, or some value
+> passed to a PM microcontroller.
 
-ChangeLog v11->v11-resend:
-- Removed the Cc list because it's only one patch.
+IMHO, from a driver which already exists for multiple SoCs/
+architectures, we cannot have variant definitions that a generic
+driver will be unable to depend upon. what should such a driver
+expect? level == rate OR level == index to p-state or magic PM
+controller value?
 
-ChangeLog v10->v11:
-- Shrinked the Cc list.
-- Fixed the of_match_table warning.
+Today the definitions are very clear to such a driver, pm_runtime APIs
+are used for device specific idle management, but for active
+management, use clk and regulator code as needed - ofcourse, that
+machine specificity triggers the need for the 50 odd cpufreq drivers
+we have today - intent was to be able to abstract it enough for a
+generic logic to exist.
 
-ChangeLog v9->v10:
-- Only the respective maintainers, or people who responded to the patch
-  were kept in the Cc.
-- The unnecessary of_match_ptr in of_match_table was removed.
+> 
+> Code that is tightly coupled to the hardware would simply know what
+> value to use with no extra sugar.
 
-ChangeLog v8->v9:
-- Added Shawn Guo in the Cc list.
-- The default-brightness-level is now a boolean default-on property,
-  the gpio is only touched if the gpio-backlight driver instance probes.
-- The code and documentation was updated accordingly.
+agreed on the machine specific implementation, but the logic at driver
+level will then get tied down to machine specific implementation as well
 
-ChangeLog v7->v8:
-- The default-state was renamed to default-brightness-level.
-- default-brightness-level is now mandatory, like for backlight-pwm,
-  That way we avoid having to handle the case where it's not set,
-  which means that we would need not to set the gpio, but still
-  report a brightness value for sysfs, when not all gpio controllers are
-  able to read the gpio value.
-- switched the default-brightness-level to boolean values (0 or 1) instead
-  of using strings ("on", "off", "keep").
-- The documentation was updated accordingly.
-- The example in the documentation now uses the dts gpio defines.
-- The "backlight: gpio_backlight: Use a default state enum." patch was then
-  dropped, becuase it is not necessary anymore.
+> 
+> Generic code would need to get the various supported "levels" populated
+> at run time, but a DT binding could do that, or a query to the ACPI
+> tables, or whatever.
 
-ChangeLog v6->v7:
-- removed a compilation warning with the removal of the useless ret declaration.
+then we'd also have to introduce a translator API for drivers that
+need frequency -> we go back to the old world of having specific
+functions depending on usage in the frequency world, ACPI world, PM
+controller world.
 
-ChangeLog v5->v6:
-- The default state handling was reworked:
-  - it's now called default-state, and looks like the gpio-leds default-state.
-  - it now has a "keep" option, like for the gpio-leds.
-  - that "keep" option is the default when the default-state property is not set.
-- The documentation was updated accordingly.
+That completely breaks the concept of having a higher level function,
+right?
 
-ChangeLog v4->v5:
-- The default-brightness property now defaults to 0 in the driver.
-- def_value int becomes a bool.
-- The check for the gpio validity has been reworked.
----
- .../bindings/video/backlight/gpio-backlight.txt    |   16 ++++++
- drivers/video/backlight/gpio_backlight.c           |   58 +++++++++++++++++---
- 2 files changed, 67 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/video/backlight/gpio-backlight.txt
+> 
+>> +{
+>> +       unsigned long flags;
+>> +       int error = -ENOSYS;
+>> +
+>> +       if (!rate || !dev)
+>> +               return -EINVAL;
+>> +
+>> +       spin_lock_irqsave(&dev->power.lock, flags);
+>> +       if (!pm_runtime_active(dev)) {
+>> +               error = -EINVAL;
+>> +               goto out;
+>> +       }
+>> +
+>> +       if (dev->pm_domain && dev->pm_domain->active_ops.get_rate)
+>> +               error = dev->pm_domain->active_ops.get_rate(dev, rate);
+>> +out:
+>> +       spin_unlock_irqrestore(&dev->power.lock, flags);
+>> +
+>> +       return error;
+>> +}
+>> +
+>> +/**
+>> + * pm_runtime_set_rate() - Set a specific rate for the device operation
+>> + * @dev:       Device to handle
+>> + * @rate:      Rate to set in Hz
+>> + *
+>> + * Returns appropriate error value in case of error conditions, else
+>> + * returns 0. The pm_domain logic does all the necessary operation (which
+>> + * may include voltage scale operations or other magic hardware stuff) to
+>> + * achieve the operation. It is guarenteed that the requested rate is achieved
+>> + * on returning from this function if return value is 0.
+>> + */
+>> +int pm_runtime_set_rate(struct device *dev, unsigned long rate)
+> 
+> Additionally I wonder if the function signature should include a way to
+> specify the sub-unit of a device that we are operating on? This is a way
+> to tackle the issues you raised regarding multiple clocks per device,
+> etc. Two approaches come to mind:
+> 
+> int pm_runtime_set_rate(struct device *dev, int index,
+> 				unsigned long rate);
+> 
+> Where index is a sub-unit of struct device *dev.
 
-diff --git a/Documentation/devicetree/bindings/video/backlight/gpio-backlight.txt b/Documentation/devicetree/bindings/video/backlight/gpio-backlight.txt
-new file mode 100644
-index 0000000..321be66
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/backlight/gpio-backlight.txt
-@@ -0,0 +1,16 @@
-+gpio-backlight bindings
-+
-+Required properties:
-+  - compatible: "gpio-backlight"
-+  - gpios: describes the gpio that is used for enabling/disabling the backlight.
-+    refer to bindings/gpio/gpio.txt for more details.
-+
-+Optional properties:
-+  - default-on: enable the backlight at boot.
-+
-+Example:
-+	backlight {
-+		compatible = "gpio-backlight";
-+		gpios = <&gpio3 4 GPIO_ACTIVE_HIGH>;
-+		default-on;
-+	};
-diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/backlight/gpio_backlight.c
-index 81fb127..a2eba12 100644
---- a/drivers/video/backlight/gpio_backlight.c
-+++ b/drivers/video/backlight/gpio_backlight.c
-@@ -13,6 +13,8 @@
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
- #include <linux/platform_data/gpio_backlight.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-@@ -23,6 +25,7 @@ struct gpio_backlight {
- 
- 	int gpio;
- 	int active;
-+	int def_value;
- };
- 
- static int gpio_backlight_update_status(struct backlight_device *bl)
-@@ -60,6 +63,29 @@ static const struct backlight_ops gpio_backlight_ops = {
- 	.check_fb	= gpio_backlight_check_fb,
- };
- 
-+static int gpio_backlight_probe_dt(struct platform_device *pdev,
-+				   struct gpio_backlight *gbl)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	enum of_gpio_flags gpio_flags;
-+
-+	gbl->gpio = of_get_gpio_flags(np, 0, &gpio_flags);
-+
-+	if (!gpio_is_valid(gbl->gpio)) {
-+		if (gbl->gpio != -EPROBE_DEFER) {
-+			dev_err(&pdev->dev,
-+				"Error: The gpios parameter is missing or invalid.\n");
-+		}
-+		return gbl->gpio;
-+	}
-+
-+	gbl->active = (gpio_flags & OF_GPIO_ACTIVE_LOW) ? 0 : 1;
-+
-+	gbl->def_value = of_property_read_bool(np, "default-on");
-+
-+	return 0;
-+}
-+
- static int gpio_backlight_probe(struct platform_device *pdev)
- {
- 	struct gpio_backlight_platform_data *pdata =
-@@ -67,10 +93,12 @@ static int gpio_backlight_probe(struct platform_device *pdev)
- 	struct backlight_properties props;
- 	struct backlight_device *bl;
- 	struct gpio_backlight *gbl;
-+	struct device_node *np = pdev->dev.of_node;
- 	int ret;
- 
--	if (!pdata) {
--		dev_err(&pdev->dev, "failed to find platform data\n");
-+	if (!pdata && !np) {
-+		dev_err(&pdev->dev,
-+			"failed to find platform data or device tree node.\n");
- 		return -ENODEV;
- 	}
- 
-@@ -79,14 +107,22 @@ static int gpio_backlight_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	gbl->dev = &pdev->dev;
--	gbl->fbdev = pdata->fbdev;
--	gbl->gpio = pdata->gpio;
--	gbl->active = pdata->active_low ? 0 : 1;
-+
-+	if (np) {
-+		ret = gpio_backlight_probe_dt(pdev, gbl);
-+		if (ret)
-+			return ret;
-+	} else {
-+		gbl->fbdev = pdata->fbdev;
-+		gbl->gpio = pdata->gpio;
-+		gbl->active = pdata->active_low ? 0 : 1;
-+		gbl->def_value = pdata->def_value;
-+	}
- 
- 	ret = devm_gpio_request_one(gbl->dev, gbl->gpio, GPIOF_DIR_OUT |
- 				    (gbl->active ? GPIOF_INIT_LOW
- 						 : GPIOF_INIT_HIGH),
--				    pdata->name);
-+				    pdata ? pdata->name : "backlight");
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "unable to request GPIO\n");
- 		return ret;
-@@ -103,17 +139,25 @@ static int gpio_backlight_probe(struct platform_device *pdev)
- 		return PTR_ERR(bl);
- 	}
- 
--	bl->props.brightness = pdata->def_value;
-+	bl->props.brightness = gbl->def_value;
- 	backlight_update_status(bl);
- 
- 	platform_set_drvdata(pdev, bl);
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static struct of_device_id gpio_backlight_of_match[] = {
-+	{ .compatible = "gpio-backlight" },
-+	{ /* sentinel */ }
-+};
-+#endif
-+
- static struct platform_driver gpio_backlight_driver = {
- 	.driver		= {
- 		.name		= "gpio-backlight",
- 		.owner		= THIS_MODULE,
-+		.of_match_table = of_match_ptr(gpio_backlight_of_match),
- 	},
- 	.probe		= gpio_backlight_probe,
- };
+Here the problem is trying to define what that index is. should it be
+clk index? how again would a generic driver be able to consistently
+function? lets, for a moment replace that with a string - "clk_name"
+to uniquely identify the clk -> but then, it still, in concept makes
+it no better than a clk_set_rate since we are uniquely identifying the
+clk to operate upon -> and we can definitely add "magic dvfs" stuff on
+existing clock framework without a need for additional wrappers (which
+what the original $subject series does).
+
+
+>The second approach is
+> to create a publicly declared structure representing the sub-unit. Some
+> variations on that theme:
+> 
+> int pm_runtime_set_rate(struct perf_domain *perfdm, unsigned long rate);
+> 
+> or,
+> 
+> int pm_runtime_set_rate(struct generic_power_domain *gpd,
+> 				unsigned long rate);
+> 
+> or whatever that sub-unit looks like. The gpd thing might be a total
+> layering violation, I don't know. Or perhaps it's a decent idea but it
+> shouldn't be as a PM runtime call. Again, I dunno.
+
+Again, we goes back to the same question, right? which clock in a
+power_domain/perf_domain are we intending with the rate? a device
+belongs to a perf domain -> Taking drivers/cpufreq/imx6q-cpufreq.c as
+an example.
+Clocks needed: arm_clk, pll1_sys_clk, pll1_sw_clk, step_clk,
+pll2_pfd2_396m_clk.
+regulators needed: arm_reg, pu_reg, soc_reg.
+
+The device we want to set a frequency is the ARM processor. by
+describing "perf_domain" or "generic power domain" as a single clock
+entity, we might as well use clk_set_rate instead to be specific,
+instead of writing one wrapper on top of the entire thing.
+
+
+I apologize, more I think in this angle, less I think such a generic
+api seems feasible.
+
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Nishanth Menon
