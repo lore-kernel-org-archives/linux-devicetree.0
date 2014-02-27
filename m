@@ -1,38 +1,24 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: [PATCH] spi: sh-msiof: Remove "renesas,msiof-sh7724" from bindings
-Date: Thu, 27 Feb 2014 13:47:17 +0100
-Message-ID: <1393505238-11954-1-git-send-email-geert@linux-m68k.org>
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: Re: [PATCH] phy-rcar-gen2-usb: add device tree support
+Date: Thu, 27 Feb 2014 12:57:27 +0000
+Message-ID: <530F3637.5050000@codethink.co.uk>
+References: <201402270312.51588.sergei.shtylyov@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <201402270312.51588.sergei.shtylyov@cogentembedded.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: balbi@ti.com, linux-usb@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-sh@vger.kernel.org, valentine.barshak@cogentembedded.com, rob@landley.net, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+On 27/02/14 00:12, Sergei Shtylyov wrote:
+> Add support of the device tree probing for the Renesas R-Car generation 2 SoCs
+> documenting the device tree binding as necessary.
 
-It's not implemented in the driver, so it's a bad example.
+So what happened w.r.t to my last set of patches for this?
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
----
- Documentation/devicetree/bindings/spi/sh-msiof.txt |    1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-index 1f0cb33763a1..f24baf3b6cc1 100644
---- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
-+++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-@@ -5,7 +5,6 @@ Required properties:
- 			 "renesas,sh-msiof" for SuperH, or
- 			 "renesas,sh-mobile-msiof" for SH Mobile series.
- 			 Examples with soctypes are:
--			 "renesas,msiof-sh7724" (SH)
- 			 "renesas,msiof-r8a7790" (R-Car H2)
- 			 "renesas,msiof-r8a7791" (R-Car M2)
- - reg                  : Offset and length of the register set for the device
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
