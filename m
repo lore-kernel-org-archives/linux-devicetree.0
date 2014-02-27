@@ -1,123 +1,61 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH v0 09/15] clk: st: Adds clockgen-vcc and clockgen-mux clock binding
-Date: Thu, 27 Feb 2014 16:24:22 +0100
-Message-ID: <1393514668-17440-10-git-send-email-gabriel.fernandez@st.com>
-References: <1393514668-17440-1-git-send-email-gabriel.fernandez@st.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393514668-17440-1-git-send-email-gabriel.fernandez@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@st.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 4/6] phy-rcar-usb-gen2: add device tree support
+Date: Thu, 27 Feb 2014 19:54:42 +0400
+Message-ID: <530F5FC2.1000608@cogentembedded.com>
+References: <1390057420-13226-1-git-send-email-ben.dooks@codethink.co.uk> <1390057420-13226-5-git-send-email-ben.dooks@codethink.co.uk> <52DAD3B3.1050807@cogentembedded.com> <52DCFF31.2040603@codethink.co.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <52DCFF31.2040603@codethink.co.uk>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: linux-kernel@lists.codethink.co.uk, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
----
- .../devicetree/bindings/clock/st/st,clkgen-mux.txt | 36 +++++++++++++++
- .../devicetree/bindings/clock/st/st,clkgen-vcc.txt | 53 ++++++++++++++++++++++
- 2 files changed, 89 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
- create mode 100644 Documentation/devicetree/bindings/clock/st/st,clkgen-vcc.txt
+Hello.
 
-diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
-new file mode 100644
-index 0000000..943e080
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
-@@ -0,0 +1,36 @@
-+Binding for a ST multiplexed clock driver.
-+
-+This binding supports only simple indexed multiplexers, it does not
-+support table based parent index to hardware value translations.
-+
-+This binding uses the common clock binding[1].
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Required properties:
-+
-+- compatible : shall be:
-+	"st,stih416-clkgenc-vcc-hd",	"st,clkgen-mux"
-+	"st,stih416-clkgenf-vcc-fvdp",	"st,clkgen-mux"
-+	"st,stih416-clkgenf-vcc-hva", 	"st,clkgen-mux"
-+	"st,stih416-clkgenf-vcc-hd",	"st,clkgen-mux"
-+	"st,stih416-clkgenf-vcc-sd",	"st,clkgen-mux"
-+	"st,stih415-clkgen-a9-mux",	"st,clkgen-mux"
-+	"st,stih416-clkgen-a9-mux",	"st,clkgen-mux"
-+
-+
-+- #clock-cells : from common clock binding; shall be set to 0.
-+
-+- reg : A Base address and length of the register set.
-+
-+- clocks : from common clock binding
-+
-+Example:
-+
-+	CLK_M_HVA: CLK_M_HVA {
-+		#clock-cells = <0>;
-+		compatible = "st,stih416-clkgenf-vcc-hva", "st,clkgen-mux";
-+		reg = <0xfd690868 4>;
-+
-+		clocks = <&CLOCKGEN_F 1>, <&CLK_M_A1_DIV0 3>;
-+	};
-diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-vcc.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-vcc.txt
-new file mode 100644
-index 0000000..4e3ff28
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-vcc.txt
-@@ -0,0 +1,53 @@
-+Binding for a type of STMicroelectronics clock crossbar (VCC).
-+
-+The crossbar can take up to 4 input clocks and control up to 16
-+output clocks. Not all inputs or outputs have to be in use in a
-+particular instantiation. Each output can be individually enabled,
-+select any of the input clocks and apply a divide (by 1,2,4 or 8) to
-+that selected clock.
-+
-+This binding uses the common clock binding[1].
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Required properties:
-+
-+- compatible : shall be:
-+	"st,stih416-clkgenc",		"st,vcc"
-+	"st,stih416-clkgenf",		"st,vcc"
-+
-+- #clock-cells : from common clock binding; shall be set to 1.
-+
-+- reg : A Base address and length of the register set.
-+
-+- clocks : from common clock binding
-+
-+- clock-output-names : From common clock binding. The block has 16
-+                       clock outputs but not all of them in a specific instance
-+                       have to be used in the SoC. If a clock name is left as
-+                       an empty string then no clock will be created for the
-+                       output associated with that string index. If fewer than
-+                       16 strings are provided then no clocks will be created
-+                       for the remaining outputs.
-+
-+Example:
-+
-+	CLOCKGEN_C_VCC: CLOCKGEN_C_VCC {
-+		#clock-cells = <1>;
-+		compatible = "st,stih416-clkgenc", "st,clkgen-vcc";
-+		reg = <0xfe8308ac 12>;
-+
-+		clocks = <&CLK_S_VCC_HD>, <&CLOCKGEN_C 1>,
-+			<&CLK_S_TMDS_FROMPHY>, <&CLOCKGEN_C 2>;
-+
-+		clock-output-names  =
-+			"CLK_S_PIX_HDMI",  "CLK_S_PIX_DVO",
-+			"CLK_S_OUT_DVO",   "CLK_S_PIX_HD",
-+			"CLK_S_HDDAC",     "CLK_S_DENC",
-+			"CLK_S_SDDAC",     "CLK_S_PIX_MAIN",
-+			"CLK_S_PIX_AUX",   "CLK_S_STFE_FRC_0",
-+			"CLK_S_REF_MCRU",  "CLK_S_SLAVE_MCRU",
-+			"CLK_S_TMDS_HDMI", "CLK_S_HDMI_REJECT_PLL",
-+			"CLK_S_THSENS";
-+	};
-+
--- 
-1.9.0
+On 20-01-2014 14:49, Ben Dooks wrote:
+
+>>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>> Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
+>>> ---
+>>> Cc: linux-usb@vger.kernel.org (open list:USB PHY LAYER)
+>>> Cc: linux-sh@vger.kernel.org (open list:ARM/SHMOBILE ARM...)
+>>> Cc: Magnus Damm <magnus.damm@gmail.com> (supporter:ARM/SHMOBILE ARM...)
+>>> Cc: Simon Horman <horms@verge.net.au> (supporter:ARM/SHMOBILE ARM...)
+>>> Cc: devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND...)
+>>> ---
+>>>   drivers/usb/phy/phy-rcar-gen2-usb.c | 35
+>>> ++++++++++++++++++++++++++++++-----
+>>>   1 file changed, 30 insertions(+), 5 deletions(-)
+
+>>> diff --git a/drivers/usb/phy/phy-rcar-gen2-usb.c
+>>> b/drivers/usb/phy/phy-rcar-gen2-usb.c
+>>> index db3ab34..906b74b 100644
+>>> --- a/drivers/usb/phy/phy-rcar-gen2-usb.c
+>>> +++ b/drivers/usb/phy/phy-rcar-gen2-usb.c
+>> [...]
+>>> @@ -203,16 +212,31 @@ static int rcar_gen2_usb_phy_probe(struct
+>>> platform_device *pdev)
+>> [...]
+>>> +    if (of_id) {
+[...]
+>>> +        int len = 0;
+>>> +
+>>> +        if (of_get_property(dev->of_node, "renesas,usb0-hs", &len))
+>>> +            priv->ugctrl2 = USBHS_UGCTRL2_USB0_HS;
+>>> +        else
+>>> +            priv->ugctrl2 = USBHS_UGCTRL2_USB0_PCI;
+>>> +
+>>> +        if (of_get_property(dev->of_node, "renesas,usb2-ss", &len))
+>>> +            priv->ugctrl2 |= USBHS_UGCTRL2_USB2_SS;
+
+>>     Where is the bindings file you document these properties in?
+
+> Should have been in another patch in the series.
+
+    I didn't see it.
+
+WBR, Sergei
+
