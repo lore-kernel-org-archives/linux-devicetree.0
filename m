@@ -1,373 +1,98 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH] clk: hisilicon: add hi3620_mmc_clks
-Date: Wed, 26 Feb 2014 16:10:04 -0800
-Message-ID: <20140227001004.12081.62208@quantum>
-References: <1389604469-8064-2-git-send-email-zhangfei.gao@linaro.org>
- <1389605852-10160-1-git-send-email-zhangfei.gao@linaro.org>
+From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv1 3/6] HSI: hsi-char: add Device Tree support
+Date: Thu, 27 Feb 2014 01:24:20 +0100
+Message-ID: <20140227002420.GA25804@earth.universe>
+References: <1393199401-27197-1-git-send-email-sre@debian.org>
+ <1393199401-27197-4-git-send-email-sre@debian.org>
+ <20140224151301.GJ28555@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1389605852-10160-1-git-send-email-zhangfei.gao@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chris Ball <cjb@laptop.org>, Arnd Bergmann <arnd@arndb.de>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, brooke.wangzhigang@huawei.com
-Cc: linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, patches@linaro.org, devicetree@vger.kernel.org, Zhangfei Gao <zhangfei.gao@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7JfCtLOvnd9MIVvH"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140224151301.GJ28555-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Carlos Chinea <cch.devel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?utf-8?B?0JjQstCw0LnQu9C+INCU0LjQvNC40YLRgNC+0LI=?= <freemangordon-uiMcrn6V0Vs@public.gmane.org>, Joni Lapilainen <joni.lapilainen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Zhangfei Gao (2014-01-13 01:37:32)
-> Suggest by Arnd: abstract mmc tuning as clock behavior,
-> also because different soc have different tuning method and registers.
-> hi3620_mmc_clks is added to handle mmc clock specifically on hi3620.
-> 
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
 
-Taken into clk-next (again! This one got lost when migrating my early
-branch from 3.14-rcX to the new clk-next)
+--7JfCtLOvnd9MIVvH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Mike
+On Mon, Feb 24, 2014 at 03:13:01PM +0000, Mark Rutland wrote:
+> On Sun, Feb 23, 2014 at 11:49:58PM +0000, Sebastian Reichel wrote:
+> > Add of_match_table to hsi_char driver, so that it can
+> > be referenced from Device Tree.
+> >=20
+> > Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  drivers/hsi/clients/hsi_char.c | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> >=20
+> > diff --git a/drivers/hsi/clients/hsi_char.c b/drivers/hsi/clients/hsi_c=
+har.c
+> > index e61e5f9..7f64bed 100644
+> > --- a/drivers/hsi/clients/hsi_char.c
+> > +++ b/drivers/hsi/clients/hsi_char.c
+> > @@ -42,6 +42,7 @@
+> >  #include <linux/stat.h>
+> >  #include <linux/hsi/hsi.h>
+> >  #include <linux/hsi/hsi_char.h>
+> > +#include <linux/of_device.h>
+> > =20
+> >  #define HSC_DEVS		16 /* Num of channels */
+> >  #define HSC_MSGS		4
+> > @@ -758,12 +759,22 @@ static int hsc_remove(struct device *dev)
+> >  	return 0;
+> >  }
+> > =20
+> > +#ifdef CONFIG_OF
+> > +static const struct of_device_id hsi_char_of_match[] =3D {
+> > +	{ .compatible =3D "ssi-char", },
+>=20
+> This string is undocumented.
+>=20
+> > +	{ .compatible =3D "hsi-char", },
+>=20
+> I'm not sure either string makes sense though; this feels like a binding
+> for the sake of the driver rather than describing the device and
+> allowing the driver to pick it up if it makes sense to do so.
+>=20
+> What exactly is a "ssi-char" device or a "hsi-char" device?
 
-> ---
->  .../bindings/arm/hisilicon/hisilicon.txt           |   14 +
->  .../devicetree/bindings/clock/hi3620-clock.txt     |    1 +
->  drivers/clk/hisilicon/clk-hi3620.c                 |  274 ++++++++++++++++++++
->  include/dt-bindings/clock/hi3620-clock.h           |    5 +
->  4 files changed, 294 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-> index 8c7a4653508d..df0a452b8526 100644
-> --- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-> +++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-> @@ -30,3 +30,17 @@ Example:
->                 resume-offset = <0x308>;
->                 reboot-offset = <0x4>;
->         };
-> +
-> +PCTRL: Peripheral misc control register
-> +
-> +Required Properties:
-> +- compatible: "hisilicon,pctrl"
-> +- reg: Address and size of pctrl.
-> +
-> +Example:
-> +
-> +       /* for Hi3620 */
-> +       pctrl: pctrl@fca09000 {
-> +               compatible = "hisilicon,pctrl";
-> +               reg = <0xfca09000 0x1000>;
-> +       };
-> diff --git a/Documentation/devicetree/bindings/clock/hi3620-clock.txt b/Documentation/devicetree/bindings/clock/hi3620-clock.txt
-> index 4b71ab41be53..dad6269f52c5 100644
-> --- a/Documentation/devicetree/bindings/clock/hi3620-clock.txt
-> +++ b/Documentation/devicetree/bindings/clock/hi3620-clock.txt
-> @@ -7,6 +7,7 @@ Required Properties:
->  
->  - compatible: should be one of the following.
->    - "hisilicon,hi3620-clock" - controller compatible with Hi3620 SoC.
-> +  - "hisilicon,hi3620-mmc-clock" - controller specific for Hi3620 mmc.
->  
->  - reg: physical base address of the controller and length of memory mapped
->    region.
-> diff --git a/drivers/clk/hisilicon/clk-hi3620.c b/drivers/clk/hisilicon/clk-hi3620.c
-> index f24ad6a3a797..38faa469d288 100644
-> --- a/drivers/clk/hisilicon/clk-hi3620.c
-> +++ b/drivers/clk/hisilicon/clk-hi3620.c
-> @@ -240,3 +240,277 @@ static void __init hi3620_clk_init(struct device_node *np)
->                                    base);
->  }
->  CLK_OF_DECLARE(hi3620_clk, "hisilicon,hi3620-clock", hi3620_clk_init);
-> +
-> +struct hisi_mmc_clock {
-> +       unsigned int            id;
-> +       const char              *name;
-> +       const char              *parent_name;
-> +       unsigned long           flags;
-> +       u32                     clken_reg;
-> +       u32                     clken_bit;
-> +       u32                     div_reg;
-> +       u32                     div_off;
-> +       u32                     div_bits;
-> +       u32                     drv_reg;
-> +       u32                     drv_off;
-> +       u32                     drv_bits;
-> +       u32                     sam_reg;
-> +       u32                     sam_off;
-> +       u32                     sam_bits;
-> +};
-> +
-> +struct clk_mmc {
-> +       struct clk_hw   hw;
-> +       u32             id;
-> +       void __iomem    *clken_reg;
-> +       u32             clken_bit;
-> +       void __iomem    *div_reg;
-> +       u32             div_off;
-> +       u32             div_bits;
-> +       void __iomem    *drv_reg;
-> +       u32             drv_off;
-> +       u32             drv_bits;
-> +       void __iomem    *sam_reg;
-> +       u32             sam_off;
-> +       u32             sam_bits;
-> +};
-> +
-> +#define to_mmc(_hw) container_of(_hw, struct clk_mmc, hw)
-> +
-> +static struct hisi_mmc_clock hi3620_mmc_clks[] __initdata = {
-> +       { HI3620_SD_CIUCLK,     "sd_bclk1", "sd_clk", CLK_SET_RATE_PARENT, 0x1f8, 0, 0x1f8, 1, 3, 0x1f8, 4, 4, 0x1f8, 8, 4},
-> +       { HI3620_MMC_CIUCLK1,   "mmc_bclk1", "mmc_clk1", CLK_SET_RATE_PARENT, 0x1f8, 12, 0x1f8, 13, 3, 0x1f8, 16, 4, 0x1f8, 20, 4},
-> +       { HI3620_MMC_CIUCLK2,   "mmc_bclk2", "mmc_clk2", CLK_SET_RATE_PARENT, 0x1f8, 24, 0x1f8, 25, 3, 0x1f8, 28, 4, 0x1fc, 0, 4},
-> +       { HI3620_MMC_CIUCLK3,   "mmc_bclk3", "mmc_clk3", CLK_SET_RATE_PARENT, 0x1fc, 4, 0x1fc, 5, 3, 0x1fc, 8, 4, 0x1fc, 12, 4},
-> +};
-> +
-> +static unsigned long mmc_clk_recalc_rate(struct clk_hw *hw,
-> +                      unsigned long parent_rate)
-> +{
-> +       switch (parent_rate) {
-> +       case 26000000:
-> +               return 13000000;
-> +       case 180000000:
-> +               return 25000000;
-> +       case 360000000:
-> +               return 50000000;
-> +       case 720000000:
-> +               return 100000000;
-> +       case 1440000000:
-> +               return 180000000;
-> +       default:
-> +               return parent_rate;
-> +       }
-> +}
-> +
-> +static long mmc_clk_determine_rate(struct clk_hw *hw, unsigned long rate,
-> +                             unsigned long *best_parent_rate,
-> +                             struct clk **best_parent_p)
-> +{
-> +       struct clk_mmc *mclk = to_mmc(hw);
-> +       unsigned long best = 0;
-> +
-> +       if ((rate <= 13000000) && (mclk->id == HI3620_MMC_CIUCLK1)) {
-> +               rate = 13000000;
-> +               best = 26000000;
-> +       } else if (rate <= 26000000) {
-> +               rate = 25000000;
-> +               best = 180000000;
-> +       } else if (rate <= 52000000) {
-> +               rate = 50000000;
-> +               best = 360000000;
-> +       } else if (rate <= 100000000) {
-> +               rate = 100000000;
-> +               best = 720000000;
-> +       } else {
-> +               /* max is 180M */
-> +               rate = 180000000;
-> +               best = 1440000000;
-> +       }
-> +       *best_parent_rate = best;
-> +       return rate;
-> +}
-> +
-> +static u32 mmc_clk_delay(u32 val, u32 para, u32 off, u32 len)
-> +{
-> +       u32 i;
-> +
-> +       if (para >= 0) {
-> +               for (i = 0; i < len; i++) {
-> +                       if (para % 2)
-> +                               val |= 1 << (off + i);
-> +                       else
-> +                               val &= ~(1 << (off + i));
-> +                       para = para >> 1;
-> +               }
-> +       }
-> +       return val;
-> +}
-> +
-> +static int mmc_clk_set_timing(struct clk_hw *hw, unsigned long rate)
-> +{
-> +       struct clk_mmc *mclk = to_mmc(hw);
-> +       unsigned long flags;
-> +       u32 sam, drv, div, val;
-> +       static DEFINE_SPINLOCK(mmc_clk_lock);
-> +
-> +       switch (rate) {
-> +       case 13000000:
-> +               sam = 3;
-> +               drv = 1;
-> +               div = 1;
-> +               break;
-> +       case 25000000:
-> +               sam = 13;
-> +               drv = 6;
-> +               div = 6;
-> +               break;
-> +       case 50000000:
-> +               sam = 3;
-> +               drv = 6;
-> +               div = 6;
-> +               break;
-> +       case 100000000:
-> +               sam = 6;
-> +               drv = 4;
-> +               div = 6;
-> +               break;
-> +       case 180000000:
-> +               sam = 6;
-> +               drv = 4;
-> +               div = 7;
-> +               break;
-> +       default:
-> +               return -EINVAL;
-> +       }
-> +
-> +       spin_lock_irqsave(&mmc_clk_lock, flags);
-> +
-> +       val = readl_relaxed(mclk->clken_reg);
-> +       val &= ~(1 << mclk->clken_bit);
-> +       writel_relaxed(val, mclk->clken_reg);
-> +
-> +       val = readl_relaxed(mclk->sam_reg);
-> +       val = mmc_clk_delay(val, sam, mclk->sam_off, mclk->sam_bits);
-> +       writel_relaxed(val, mclk->sam_reg);
-> +
-> +       val = readl_relaxed(mclk->drv_reg);
-> +       val = mmc_clk_delay(val, drv, mclk->drv_off, mclk->drv_bits);
-> +       writel_relaxed(val, mclk->drv_reg);
-> +
-> +       val = readl_relaxed(mclk->div_reg);
-> +       val = mmc_clk_delay(val, div, mclk->div_off, mclk->div_bits);
-> +       writel_relaxed(val, mclk->div_reg);
-> +
-> +       val = readl_relaxed(mclk->clken_reg);
-> +       val |= 1 << mclk->clken_bit;
-> +       writel_relaxed(val, mclk->clken_reg);
-> +
-> +       spin_unlock_irqrestore(&mmc_clk_lock, flags);
-> +
-> +       return 0;
-> +}
-> +
-> +static int mmc_clk_prepare(struct clk_hw *hw)
-> +{
-> +       struct clk_mmc *mclk = to_mmc(hw);
-> +       unsigned long rate;
-> +
-> +       if (mclk->id == HI3620_MMC_CIUCLK1)
-> +               rate = 13000000;
-> +       else
-> +               rate = 25000000;
-> +
-> +       return mmc_clk_set_timing(hw, rate);
-> +}
-> +
-> +static int mmc_clk_set_rate(struct clk_hw *hw, unsigned long rate,
-> +                            unsigned long parent_rate)
-> +{
-> +       return mmc_clk_set_timing(hw, rate);
-> +}
-> +
-> +static struct clk_ops clk_mmc_ops = {
-> +       .prepare = mmc_clk_prepare,
-> +       .determine_rate = mmc_clk_determine_rate,
-> +       .set_rate = mmc_clk_set_rate,
-> +       .recalc_rate = mmc_clk_recalc_rate,
-> +};
-> +
-> +static struct clk *hisi_register_clk_mmc(struct hisi_mmc_clock *mmc_clk,
-> +                       void __iomem *base, struct device_node *np)
-> +{
-> +       struct clk_mmc *mclk;
-> +       struct clk *clk;
-> +       struct clk_init_data init;
-> +
-> +       mclk = kzalloc(sizeof(*mclk), GFP_KERNEL);
-> +       if (!mclk) {
-> +               pr_err("%s: fail to allocate mmc clk\n", __func__);
-> +               return ERR_PTR(-ENOMEM);
-> +       }
-> +
-> +       init.name = mmc_clk->name;
-> +       init.ops = &clk_mmc_ops;
-> +       init.flags = mmc_clk->flags | CLK_IS_BASIC;
-> +       init.parent_names = (mmc_clk->parent_name ? &mmc_clk->parent_name : NULL);
-> +       init.num_parents = (mmc_clk->parent_name ? 1 : 0);
-> +       mclk->hw.init = &init;
-> +
-> +       mclk->id = mmc_clk->id;
-> +       mclk->clken_reg = base + mmc_clk->clken_reg;
-> +       mclk->clken_bit = mmc_clk->clken_bit;
-> +       mclk->div_reg = base + mmc_clk->div_reg;
-> +       mclk->div_off = mmc_clk->div_off;
-> +       mclk->div_bits = mmc_clk->div_bits;
-> +       mclk->drv_reg = base + mmc_clk->drv_reg;
-> +       mclk->drv_off = mmc_clk->drv_off;
-> +       mclk->drv_bits = mmc_clk->drv_bits;
-> +       mclk->sam_reg = base + mmc_clk->sam_reg;
-> +       mclk->sam_off = mmc_clk->sam_off;
-> +       mclk->sam_bits = mmc_clk->sam_bits;
-> +
-> +       clk = clk_register(NULL, &mclk->hw);
-> +       if (WARN_ON(IS_ERR(clk)))
-> +               kfree(mclk);
-> +       return clk;
-> +}
-> +
-> +static void __init hi3620_mmc_clk_init(struct device_node *node)
-> +{
-> +       void __iomem *base;
-> +       int i, num = ARRAY_SIZE(hi3620_mmc_clks);
-> +       struct clk_onecell_data *clk_data;
-> +
-> +       if (!node) {
-> +               pr_err("failed to find pctrl node in DTS\n");
-> +               return;
-> +       }
-> +
-> +       base = of_iomap(node, 0);
-> +       if (!base) {
-> +               pr_err("failed to map pctrl\n");
-> +               return;
-> +       }
-> +
-> +       clk_data = kzalloc(sizeof(*clk_data), GFP_KERNEL);
-> +       if (WARN_ON(!clk_data))
-> +               return;
-> +
-> +       clk_data->clks = kzalloc(sizeof(struct clk *) * num, GFP_KERNEL);
-> +       if (!clk_data->clks) {
-> +               pr_err("%s: fail to allocate mmc clk\n", __func__);
-> +               return;
-> +       }
-> +
-> +       for (i = 0; i < num; i++) {
-> +               struct hisi_mmc_clock *mmc_clk = &hi3620_mmc_clks[i];
-> +               clk_data->clks[mmc_clk->id] =
-> +                       hisi_register_clk_mmc(mmc_clk, base, node);
-> +       }
-> +
-> +       clk_data->clk_num = num;
-> +       of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-> +}
-> +
-> +CLK_OF_DECLARE(hi3620_mmc_clk, "hisilicon,hi3620-mmc-clock", hi3620_mmc_clk_init);
-> diff --git a/include/dt-bindings/clock/hi3620-clock.h b/include/dt-bindings/clock/hi3620-clock.h
-> index 6eaa6a45e110..21b9d0e2eb0c 100644
-> --- a/include/dt-bindings/clock/hi3620-clock.h
-> +++ b/include/dt-bindings/clock/hi3620-clock.h
-> @@ -147,6 +147,11 @@
->  #define HI3620_MMC_CLK3                217
->  #define HI3620_MCU_CLK         218
->  
-> +#define HI3620_SD_CIUCLK       0
-> +#define HI3620_MMC_CIUCLK1     1
-> +#define HI3620_MMC_CIUCLK2     2
-> +#define HI3620_MMC_CIUCLK3     3
-> +
->  #define HI3620_NR_CLKS         219
->  
->  #endif /* __DTS_HI3620_CLOCK_H */
-> -- 
-> 1.7.9.5
-> 
+mh. I guess I will update the hsi framework, so that it simply loads
+the client driver for each registered port. This is indeed only a
+binding to load the driver.
+
+-- Sebastian
+
+--7JfCtLOvnd9MIVvH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJTDoW0AAoJENju1/PIO/qaw4UP/jd4zbh+Q04KmMn1YwCNXFHu
+mF1xM6QxScm2sSCSRiYNaqf947u6FfKg7CE6zByQ5fcSTztSqmJsicEmNtxAI6/g
+s4gV6p+HdUjXmp2nULOx/wZcqLC2RCE4m3XvT24rKkiDrymCOXIrAgy5+TNQRXXx
+Q1lgShNYL7KPd42B9hlJIovM55zMxrSWwt4iidJtAxHYJy9z4H9MWTl5q2sLyypH
+9SAnfwWBIpf34MeFj4B66PBS+S7aTvkoXJuvWD9VWSjx8Qei4UZ4LbxR5iNavISG
+KVwTF0q10zBZO0q3QECdnaxoqfsJCmrUT8Y7N0C5Tlz3sHbna0WtlMjgjBXhc5hy
+lTlf14ydRg6R1uWai30wwhzDAsvnsyBySxusyoT4IQ3GfgBF097wtPkTnUZu+oC8
+jfVCMijyv0mDb5vA4JRRL/i014NPVC0G+C5JN376GueDX6XiX9ANe4oEgVMnYMl4
+ZzR1OkvvTQkoaWUlwxIxZIbqNrX/H+jGcqbi2JfdnCG+Blu8Tqj0Jy2Hjdxg4E73
+YmtR5uwKLkxqbfK8JbFhsBeNuC23DSRU+ckjOHGopAFhJ71PfPW7uXG3ypsGKiKp
+SHRUPh0lLMuOjfDALF1Ynu1dingvyshGHZbbFvNSbcsBNC5XkR4m5T/l3KQTFtWY
+ph0GfKj1AcvCSmlBLwa5
+=nTF4
+-----END PGP SIGNATURE-----
+
+--7JfCtLOvnd9MIVvH--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
