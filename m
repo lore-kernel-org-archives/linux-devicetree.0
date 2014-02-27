@@ -1,107 +1,96 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv12] video: backlight: gpio-backlight: Add DT support.
-Date: Thu, 27 Feb 2014 15:22:29 +0000
-Message-ID: <20140227152229.GB24910@lee--X1>
-References: <1393511313-18756-1-git-send-email-denis@eukrea.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1393511313-18756-1-git-send-email-denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Tim Harvey <tharvey@gateworks.com>
+Subject: [RFC PATCH] sky2: allow mac to come from dt
+Date: Thu, 27 Feb 2014 07:26:03 -0800
+Message-ID: <1393514763-8384-1-git-send-email-tharvey@gateworks.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 27 Feb 2014, Denis Carikli wrote:
+The sky2 driver currently reads the mac address from the device registers
+which would need to have been programmed by the bootloader.
 
-> Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
-> ---
-> ChangeLog v11-resend->v12:
-> - Moved the Cc from the commit message to the "email patch".
-> - The documentation is now more clear.
-> - The unnecessary default_on variable was removed.
-> - gbl->fbdev was already NULL and didn't need to be re-assigned,
->   so the re-assignement was removed.
-> - The of_device_id struct and .of_match_table are now guarded
->   against the driver beeing compiled without CONFIG_OF.
->=20
-> ChangeLog v11->v11-resend:
-> - Removed the Cc list because it's only one patch.
->=20
-> ChangeLog v10->v11:
-> - Shrinked the Cc list.
-> - Fixed the of_match_table warning.
->=20
-> ChangeLog v9->v10:
-> - Only the respective maintainers, or people who responded to the pat=
-ch
->   were kept in the Cc.
-> - The unnecessary of_match_ptr in of_match_table was removed.
->=20
-> ChangeLog v8->v9:
-> - Added Shawn Guo in the Cc list.
-> - The default-brightness-level is now a boolean default-on property,
->   the gpio is only touched if the gpio-backlight driver instance prob=
-es.
-> - The code and documentation was updated accordingly.
->=20
-> ChangeLog v7->v8:
-> - The default-state was renamed to default-brightness-level.
-> - default-brightness-level is now mandatory, like for backlight-pwm,
->   That way we avoid having to handle the case where it's not set,
->   which means that we would need not to set the gpio, but still
->   report a brightness value for sysfs, when not all gpio controllers =
-are
->   able to read the gpio value.
-> - switched the default-brightness-level to boolean values (0 or 1) in=
-stead
->   of using strings ("on", "off", "keep").
-> - The documentation was updated accordingly.
-> - The example in the documentation now uses the dts gpio defines.
-> - The "backlight: gpio_backlight: Use a default state enum." patch wa=
-s then
->   dropped, becuase it is not necessary anymore.
->=20
-> ChangeLog v6->v7:
-> - removed a compilation warning with the removal of the useless ret d=
-eclaration.
->=20
-> ChangeLog v5->v6:
-> - The default state handling was reworked:
->   - it's now called default-state, and looks like the gpio-leds defau=
-lt-state.
->   - it now has a "keep" option, like for the gpio-leds.
->   - that "keep" option is the default when the default-state property=
- is not set.
-> - The documentation was updated accordingly.
->=20
-> ChangeLog v4->v5:
-> - The default-brightness property now defaults to 0 in the driver.
-> - def_value int becomes a bool.
-> - The check for the gpio validity has been reworked.
-> ---
->  .../bindings/video/backlight/gpio-backlight.txt    |   16 ++++++
->  drivers/video/backlight/gpio_backlight.c           |   58 ++++++++++=
-+++++++---
->  2 files changed, 67 insertions(+), 7 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/video/backlight=
-/gpio-backlight.txt
+This patch adds the ability to pull the mac from devicetree via the
+aliases/sky2 node.
 
-Patch looks good to me now, I just want to see if Jingoo and/or Bryan
-with to add anything. If they don't respond within the next couple of
-days I'll apply the patch.
+The RFC is because I'm not clear if there is a better way to reference the
+devicetree node for a PCI device from both the bootloader perspective and
+the driver perspective.  Using an alias feels a bit like a hack.  An example
+of a dts that describes a marvell,sky2 sitting on bus8 of the PCI bus is:
 
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+aliases {
+	sky2 = &eth1;
+};
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+&pcie { 
+        eth1: sky2@8 { /* MAC/PHY on bus 8 */
+                compatible = "marvell,sky2";
+        };
+};
+
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+---
+ drivers/net/ethernet/marvell/sky2.c | 33 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 32 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
+index 55a37ae..4165fc0 100644
+--- a/drivers/net/ethernet/marvell/sky2.c
++++ b/drivers/net/ethernet/marvell/sky2.c
+@@ -44,6 +44,8 @@
+ #include <linux/prefetch.h>
+ #include <linux/debugfs.h>
+ #include <linux/mii.h>
++#include <linux/of_device.h>
++#include <linux/of_net.h>
+ 
+ #include <asm/irq.h>
+ 
+@@ -4748,6 +4750,7 @@ static struct net_device *sky2_init_netdev(struct sky2_hw *hw, unsigned port,
+ {
+ 	struct sky2_port *sky2;
+ 	struct net_device *dev = alloc_etherdev(sizeof(*sky2));
++	unsigned char *iap, tmpaddr[ETH_ALEN];
+ 
+ 	if (!dev)
+ 		return NULL;
+@@ -4805,8 +4808,36 @@ static struct net_device *sky2_init_netdev(struct sky2_hw *hw, unsigned port,
+ 
+ 	dev->features |= dev->hw_features;
+ 
++	/*
++	 * try to get mac address in the following order:
++	 * 1) from device tree data
++	 * 2) from internal registers set by bootloader
++	 */
++	iap = NULL;
++	if (IS_ENABLED(CONFIG_OF)) {
++		struct device_node *np;
++		np = of_find_node_by_path("/aliases");
++		if (np) {
++			const char *path = of_get_property(np, "sky2", NULL);
++			if (path)
++				np = of_find_node_by_path(path);
++			if (np)
++				path = of_get_mac_address(np);
++			if (path)
++				iap = (unsigned char *) path;
++		}
++	}
++
++	/*
++	 * 2) mac registers set by bootloader
++	 */
++	if (!iap || !is_valid_ether_addr(iap)) {
++		memcpy_fromio(&tmpaddr, hw->regs + B2_MAC_1 + port * 8, ETH_ALEN);
++		iap = &tmpaddr[0];
++	}
++
+ 	/* read the mac address */
+-	memcpy_fromio(dev->dev_addr, hw->regs + B2_MAC_1 + port * 8, ETH_ALEN);
++	memcpy(dev->dev_addr, iap, ETH_ALEN);
+ 
+ 	return dev;
+ }
+-- 
+1.8.3.2
