@@ -1,17 +1,17 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v12 3/4] PHY: add APM X-Gene SoC 15Gbps Multi-purpose PHY
- driver
-Date: Thu, 27 Feb 2014 13:02:59 -0600
-Message-ID: <20140227190259.GC4862@saruman.home>
-References: <1393524848-8207-1-git-send-email-lho@apm.com>
- <1393524848-8207-2-git-send-email-lho@apm.com>
- <1393524848-8207-3-git-send-email-lho@apm.com>
- <1393524848-8207-4-git-send-email-lho@apm.com>
-Reply-To: balbi@ti.com
+From: Liviu Dudau <liviu@dudau.co.uk>
+Subject: Re: [PATCH v2 1/4] pci: OF: Fix the conversion of IO ranges into IO
+ resources.
+Date: Thu, 27 Feb 2014 19:12:59 +0000
+Message-ID: <20140227191259.GA31753@bart.dudau.co.uk>
+References: <1393506402-11474-1-git-send-email-Liviu.Dudau@arm.com>
+ <1393506402-11474-2-git-send-email-Liviu.Dudau@arm.com>
+ <20140227181951.GC24656@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5909222516763479711=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1393524848-8207-4-git-send-email-lho@apm.com>
+Content-Disposition: inline
+In-Reply-To: <20140227181951.GC24656@obsidianresearch.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,72 +21,47 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Loc Ho <lho@apm.com>
-Cc: devicetree@vger.kernel.org, Suman Tripathi <stripathi@apm.com>, arnd@arndb.de, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, jcm@redhat.com, patches@apm.com, linux-kernel@vger.kernel.org, kishon@ti.com, olof@lixom.net, ddutile@redhat.com, tj@kernel.org, Tuan Phan <tphan@apm.com>, linux-arm-kernel@lists.infradead.org
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, linux-pci <linux-pci@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
---===============5909222516763479711==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="LwW0XdcUbUexiWVK"
-Content-Disposition: inline
+On Thu, Feb 27, 2014 at 11:19:51AM -0700, Jason Gunthorpe wrote:
+> On Thu, Feb 27, 2014 at 01:06:39PM +0000, Liviu Dudau wrote:
+> > +	if (res->flags & IORESOURCE_IO) {
+> > +		unsigned long port;
+> > +		port = pci_address_to_pio(range->pci_addr);
+> 
+> This looks very suspicious, pci_addr is not unique across all domains,
+> so there is no way to convert from a pci_addr to the virtual IO
+> address without knowing the domain number as well.
+> 
+> I would like to see it be:
+>   port = pci_address_to_pio(range->cpu_addr);
+> 
+> cpu_addr is unique across all domains.
 
---LwW0XdcUbUexiWVK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Jason,
 
-Hi,
+First thanks for reviewing the updated series.
 
-On Thu, Feb 27, 2014 at 11:14:07AM -0700, Loc Ho wrote:
-> +/*
-> + * This function is used to configure the PHY to operation as either SAT=
-A Gen1
-> + * or Gen2 speed.
-> + */
-> +static void xgene_phy_sata_force_gen(struct xgene_phy_ctx *ctx,
-> +				     int lane, int gen)
+We have agreed early on that indeed using range->cpu_addr is the correct aproach
+and me taking the lazy shortcut of using range->pci_addr because of the broken
+default implementation of pci_address_to_pio is wrong. I will fix this for v3.
 
-why do you need to *force* the generation ? Is this because of some
-silicon errata ? It almost seems like this should be done through link
-negotiation between both link partners.
+The outstanding issue is how to fix pci_address_to_pio() as it will not
+for for range->cpu_addr > IO_SPACE_LIMIT (16MB in my case).
 
---=20
-balbi
+Best regards,
+Liviu
 
---LwW0XdcUbUexiWVK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTD4vjAAoJEIaOsuA1yqREcU8P/3ZS9KNms08cXSMj1uAFPNFh
-3CPHf7MFJI0kwNaeSIvsvsMf9FelziGBtxsXKTTBKgKv0LmyaNcz6XHj8F/GtAdE
-hX6vjyB4ktxBFyU8VbeOkJqqddtVudEC/ZFl6iXxcVL6Jg3N1gEH/j8W4hosqyJU
-STMaV0Hj7hp1pOrYeMCjvRgHEkkAY3q9xqnJp1+4/9Js7wXpvt/YSPKjRJ303k0N
-dlCLy0vPNZiAaWZogdx+MvrJtpY3aOxKBHqSKTHmClaSrNlJVDUyHE6IT7ViigLM
-Nck5qYS3T2OLuZbirGGHmMtk/cLWIDCoGaRRkp8XrNX9/6oJBhjPdqvEbJDRzbko
-MqavfzzvhNXElWdxaVaWW0Hj51Fb+5k+kYuYoPOMNufDovpvjaFlzs7TJLcTkHy2
-qUHjz6qjQQ7rWKb0ITw4oZU+3vSfFsDKHAe+XXzuG+gF+0Rs+4C0ZxcDiHPgJXgE
-qLXt0vyX32Nd3h8ghb3UdstwWH7IYLjMna4vZ6rGy05SyOAPNHjZpPAL3QVHCTOB
-sGV0JGBx7cE+uFqr1xmpCVyYAa9RDFOT3n2ZyFUWI5HIcWkehjEzDwcwgaYn+Vl1
-xlr4IYmq4SMhSpREsaYalyxUximCSP9k8bUqFT1Oo/DxXqVOihcIX8ji8+0FM/M7
-DHMC4kpgLzarods/i/RK
-=cHF/
------END PGP SIGNATURE-----
-
---LwW0XdcUbUexiWVK--
-
-
---===============5909222516763479711==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5909222516763479711==--
+> 
+> Looking at the microblaze and PPC versions I think the above version
+> is actually correct (assuming io_base_phys is the CPU address of the
+> IO window)
+> 
+> Jason
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
