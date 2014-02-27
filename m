@@ -1,96 +1,75 @@
-From: Tim Harvey <tharvey@gateworks.com>
-Subject: [RFC PATCH] sky2: allow mac to come from dt
-Date: Thu, 27 Feb 2014 07:26:03 -0800
-Message-ID: <1393514763-8384-1-git-send-email-tharvey@gateworks.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: [PATCH v0 08/15] clk: st: Adds clockgen clock binding
+Date: Thu, 27 Feb 2014 16:24:21 +0100
+Message-ID: <1393514668-17440-9-git-send-email-gabriel.fernandez@st.com>
+References: <1393514668-17440-1-git-send-email-gabriel.fernandez@st.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1393514668-17440-1-git-send-email-gabriel.fernandez@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: mturquette@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@st.com>
 List-Id: devicetree@vger.kernel.org
 
-The sky2 driver currently reads the mac address from the device registers
-which would need to have been programmed by the bootloader.
-
-This patch adds the ability to pull the mac from devicetree via the
-aliases/sky2 node.
-
-The RFC is because I'm not clear if there is a better way to reference the
-devicetree node for a PCI device from both the bootloader perspective and
-the driver perspective.  Using an alias feels a bit like a hack.  An example
-of a dts that describes a marvell,sky2 sitting on bus8 of the PCI bus is:
-
-aliases {
-	sky2 = &eth1;
-};
-
-&pcie { 
-        eth1: sky2@8 { /* MAC/PHY on bus 8 */
-                compatible = "marvell,sky2";
-        };
-};
-
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
 ---
- drivers/net/ethernet/marvell/sky2.c | 33 ++++++++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/clock/st/st,clkgen-pll.txt | 48 ++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
 
-diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
-index 55a37ae..4165fc0 100644
---- a/drivers/net/ethernet/marvell/sky2.c
-+++ b/drivers/net/ethernet/marvell/sky2.c
-@@ -44,6 +44,8 @@
- #include <linux/prefetch.h>
- #include <linux/debugfs.h>
- #include <linux/mii.h>
-+#include <linux/of_device.h>
-+#include <linux/of_net.h>
- 
- #include <asm/irq.h>
- 
-@@ -4748,6 +4750,7 @@ static struct net_device *sky2_init_netdev(struct sky2_hw *hw, unsigned port,
- {
- 	struct sky2_port *sky2;
- 	struct net_device *dev = alloc_etherdev(sizeof(*sky2));
-+	unsigned char *iap, tmpaddr[ETH_ALEN];
- 
- 	if (!dev)
- 		return NULL;
-@@ -4805,8 +4808,36 @@ static struct net_device *sky2_init_netdev(struct sky2_hw *hw, unsigned port,
- 
- 	dev->features |= dev->hw_features;
- 
-+	/*
-+	 * try to get mac address in the following order:
-+	 * 1) from device tree data
-+	 * 2) from internal registers set by bootloader
-+	 */
-+	iap = NULL;
-+	if (IS_ENABLED(CONFIG_OF)) {
-+		struct device_node *np;
-+		np = of_find_node_by_path("/aliases");
-+		if (np) {
-+			const char *path = of_get_property(np, "sky2", NULL);
-+			if (path)
-+				np = of_find_node_by_path(path);
-+			if (np)
-+				path = of_get_mac_address(np);
-+			if (path)
-+				iap = (unsigned char *) path;
-+		}
-+	}
+diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+new file mode 100644
+index 0000000..81eb385
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+@@ -0,0 +1,48 @@
++Binding for a ST pll clock driver.
 +
-+	/*
-+	 * 2) mac registers set by bootloader
-+	 */
-+	if (!iap || !is_valid_ether_addr(iap)) {
-+		memcpy_fromio(&tmpaddr, hw->regs + B2_MAC_1 + port * 8, ETH_ALEN);
-+		iap = &tmpaddr[0];
-+	}
++This binding uses the common clock binding[1].
++Base address is located to the parent node. See clock binding[2]
 +
- 	/* read the mac address */
--	memcpy_fromio(dev->dev_addr, hw->regs + B2_MAC_1 + port * 8, ETH_ALEN);
-+	memcpy(dev->dev_addr, iap, ETH_ALEN);
- 
- 	return dev;
- }
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++[2] Documentation/devicetree/bindings/clock/st/st,clkgen.txt
++
++Required properties:
++
++- compatible : shall be:
++	"st,clkgena-prediv-c65",	"st,clkgena-prediv"
++	"st,clkgena-prediv-c32",	"st,clkgena-prediv"
++
++	"st,clkgena-plls-c65"
++	"st,plls-c32-a1x-0",		"st,clkgen-plls-c32"
++	"st,plls-c32-a1x-1",		"st,clkgen-plls-c32"
++	"st,stih415-plls-c32-a9",	"st,clkgen-plls-c32"
++	"st,stih415-plls-c32-ddr",	"st,clkgen-plls-c32"
++	"st,stih416-plls-c32-a9",	"st,clkgen-plls-c32"
++	"st,stih416-plls-c32-ddr",	"st,clkgen-plls-c32"
++
++	"st,stih415-gpu-pll-c32",	"st,clkgengpu-pll-c32"
++	"st,stih416-gpu-pll-c32",	"st,clkgengpu-pll-c32"
++
++
++- #clock-cells : From common clock binding; shall be set to 1.
++
++- clocks : From common clock binding
++
++- clock-output-names : From common clock binding.
++
++Example:
++
++	clockgenA@fee62000 {
++		reg = <0xfee62000 0xb48>;
++
++		CLK_S_A0_PLL: CLK_S_A0_PLL {
++			#clock-cells = <1>;
++			compatible = "st,clkgena-plls-c65";
++
++			clocks = <&CLK_SYSIN>;
++
++			clock-output-names = "CLK_S_A0_PLL0_HS",
++					     "CLK_S_A0_PLL0_LS",
++					     "CLK_S_A0_PLL1";
++		};
++	};
 -- 
-1.8.3.2
+1.9.0
+
