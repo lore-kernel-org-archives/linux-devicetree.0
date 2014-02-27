@@ -1,72 +1,94 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: [PATCH v2 2/3] arm64: Extend the PCI I/O space to 16MB
-Date: Thu, 27 Feb 2014 13:09:58 +0000
-Message-ID: <1393506599-11561-3-git-send-email-Liviu.Dudau@arm.com>
-References: <1393506599-11561-1-git-send-email-Liviu.Dudau@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393506599-11561-1-git-send-email-Liviu.Dudau@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [RFC PATCH v4 3/8] staging: imx-drm: Document updated imx-drm
+ device tree bindings
+Date: Thu, 27 Feb 2014 15:16:03 +0200
+Message-ID: <530F3A93.501@ti.com>
+References: <1393338203-25051-1-git-send-email-p.zabel@pengutronix.de>
+ <1393338203-25051-4-git-send-email-p.zabel@pengutronix.de>
+ <530F1C4C.2010504@ti.com> <20140227115652.GI21483@n2100.arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============8116069682168050974=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140227115652.GI21483@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, kernel@pengutronix.de, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Catalin Marinas <catalin.marinas@arm.com>
+--===============8116069682168050974==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="foqLoKuqlr442jmqXTjpwTjdJlmHBWwgd"
 
-The patch moves the PCI I/O space (currently at 64K) before the
-earlyprintk mapping and extends it to 16MB.
+--foqLoKuqlr442jmqXTjpwTjdJlmHBWwgd
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+On 27/02/14 13:56, Russell King - ARM Linux wrote:
 
-diff --git a/Documentation/arm64/memory.txt b/Documentation/arm64/memory.txt
-index 5e054bf..85e24c4 100644
---- a/Documentation/arm64/memory.txt
-+++ b/Documentation/arm64/memory.txt
-@@ -35,11 +35,13 @@ ffffffbc00000000	ffffffbdffffffff	   8GB		vmemmap
- 
- ffffffbe00000000	ffffffbffbbfffff	  ~8GB		[guard, future vmmemap]
- 
--ffffffbffbc00000	ffffffbffbdfffff	   2MB		earlyprintk device
-+ffffffbffa000000	ffffffbffaffffff	  16MB		PCI I/O space
-+
-+ffffffbffb000000	ffffffbffbbfffff	  12MB		[guard]
- 
--ffffffbffbe00000	ffffffbffbe0ffff	  64KB		PCI I/O space
-+ffffffbffbc00000	ffffffbffbdfffff	   2MB		earlyprintk device
- 
--ffffffbffbe10000	ffffffbcffffffff	  ~2MB		[guard]
-+ffffffbffbe00000	ffffffbffbffffff	   2MB		[guard]
- 
- ffffffbffc000000	ffffffbfffffffff	  64MB		modules
- 
-@@ -60,11 +62,13 @@ fffffdfc00000000	fffffdfdffffffff	   8GB		vmemmap
- 
- fffffdfe00000000	fffffdfffbbfffff	  ~8GB		[guard, future vmmemap]
- 
--fffffdfffbc00000	fffffdfffbdfffff	   2MB		earlyprintk device
-+fffffdfffa000000	fffffdfffaffffff	  16MB		PCI I/O space
-+
-+fffffdfffb000000	fffffdfffbbfffff	  12MB		[guard]
- 
--fffffdfffbe00000	fffffdfffbe0ffff	  64KB		PCI I/O space
-+fffffdfffbc00000	fffffdfffbdfffff	   2MB		earlyprintk device
- 
--fffffdfffbe10000	fffffdfffbffffff	  ~2MB		[guard]
-+fffffdfffbe00000	fffffdfffbffffff	   2MB		[guard]
- 
- fffffdfffc000000	fffffdffffffffff	  64MB		modules
- 
-diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/io.h
-index 4cc813e..7846a6b 100644
---- a/arch/arm64/include/asm/io.h
-+++ b/arch/arm64/include/asm/io.h
-@@ -121,7 +121,7 @@ static inline u64 __raw_readq(const volatile void __iomem *addr)
-  *  I/O port access primitives.
-  */
- #define IO_SPACE_LIMIT		0xffff
--#define PCI_IOBASE		((void __iomem *)(MODULES_VADDR - SZ_2M))
-+#define PCI_IOBASE		((void __iomem *)(MODULES_VADDR - SZ_32M))
- 
- static inline u8 inb(unsigned long addr)
- {
--- 
-1.9.0
+>> Is there even need for such a master device? You can find all the
+>> connected display devices from any single display device, by just
+>> following the endpoint links.
+>=20
+> Please read up on what has been discussed over previous years:
+>=20
+> http://lists.freedesktop.org/archives/dri-devel/2013-July/041159.html
+
+Thanks, that was an interesting thread. Too bad I missed it, it was
+during the holiday season. And seems Laurent missed it also, as he
+didn't make any replies.
+
+The thread seemed to go over the very same things that had already been
+discussed with CDF.
+
+ Tomi
+
+
+
+--foqLoKuqlr442jmqXTjpwTjdJlmHBWwgd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJTDzqTAAoJEPo9qoy8lh71yAIP/AxqvGdAgpRXjfLLkj6GmNeB
+Yi8AvICCa5PH3mXhwAMjDA3tzpjs//Cm+kbvdD/qXKxcsTQz3FmB3h0zQVMPi50S
+DSeZ4mqBxIBJhq/f6ohRlBac7IghVnSY+mnmi/eJjlFS4VbSxoahPObtW2a+dOHP
+66wRyQFd+2pvY8Wt3MBiPI5zjoXjoGcSrc1uB6av2ZsDKlDB0uTxxJuw4lHsP42N
+kJSOz/oYVxwEiOQyD4QtxSMQPsExV9/SImjA+e5jZpdwdRyijEc/dxL+u2yQsV6G
+KiH/yM8U0qVHR1+JwBPTyRz6XqqnxBK+g0EYrAi5Vba4j1nhchzpqNfJeMlF/DX+
+DDbina7LjmCagh8x2wTAPOgfo2wdgToTED5TuBpLPId4Ef8KLj/GjiYOp1n38gnq
+6z/RjZXfEIYYuTnm9sOp9ni6JUEAiw2kee7vAvjCqgxKFwirT+sQjhdMHfUNvsT+
+zAEnBRhnDXZrVMtRGQl0OVNwftndkkFsLasYbWxbCOi0lFPbXB1R3rOql75+B1vW
+eyWokZ4AwO+rKsMNoT2qnY6+cp6c68UJssdC50eDSAQGul+3cq9cqZxh6Sx7gXDJ
+h5lA1Pf4qtch3KTbCtPdSvvGlEkwe53R2qiz1TzKkitykFMFyBIMGlUE8bVABs3O
+pD5G218tucNul1H2maOo
+=XV+0
+-----END PGP SIGNATURE-----
+
+--foqLoKuqlr442jmqXTjpwTjdJlmHBWwgd--
+
+
+--===============8116069682168050974==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============8116069682168050974==--
