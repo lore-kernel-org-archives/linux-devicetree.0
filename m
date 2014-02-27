@@ -1,58 +1,109 @@
-From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] checkpatch: fix spurious vendor compatible warnings
-Date: Thu, 27 Feb 2014 12:10:08 -0800
-Message-ID: <1393531808.24588.119.camel@joe-AO722>
-References: <1393531019-25134-1-git-send-email-florian.vaussard@epfl.ch>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 1/4] pci: OF: Fix the conversion of IO ranges into IO
+ resources.
+Date: Thu, 27 Feb 2014 21:22:12 +0100
+Message-ID: <11097076.0C13zaKdYD@wuerfel>
+References: <1393506402-11474-1-git-send-email-Liviu.Dudau@arm.com>
+ <5379319.g8IPYmY2Zo@wuerfel> <20140227200729.GB7773@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393531019-25134-1-git-send-email-florian.vaussard-p8DiymsW2f8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
-Cc: Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140227200729.GB7773@obsidianresearch.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, linux-pci <linux-pci@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2014-02-27 at 20:56 +0100, Florian Vaussard wrote:
-> With a compatible string like
+On Thursday 27 February 2014 13:07:29 Jason Gunthorpe wrote:
+> On Thu, Feb 27, 2014 at 08:48:08PM +0100, Arnd Bergmann wrote:
+> > > It also looks correct for architectures that use the CPU MMIO address
+> > > as the IO address directly (where IO_SPACE_LIMIT would be 4G)
+> > 
+> > Are you aware of any that still do? I thought we had stopped doing
+> > that.
 > 
-> compatible = "foo";
-> 
-> checkpatch will currently try to find "foo" in  vendor-prefixes.txt,
-> which is wrong since the vendor prefix is empty in this specific case.
-> 
-> Skip the vendor test if the compatible is not like
-> 
-> compatible = "vendor,something";
-> 
-> Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
-> ---
->  scripts/checkpatch.pl | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 464dcef..35ec185 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -2058,6 +2058,7 @@ sub process {
->  				my $vendor = $compat;
->  				my $vendor_path = $dt_path . "vendor-prefixes.txt";
->  				next if (! -f $vendor_path);
-> +				next if not $vendor =~ /^[a-zA-Z0-9]+\,.*/;
->  				$vendor =~ s/^([a-zA-Z0-9]+)\,.*/$1/;
->  				`grep -Eq "$vendor" $vendor_path`;
->  				if ( $? >> 8 ) {
+> I thought ia64 used to, but it has been a long time since I've touched
+> one...
 
-Some vendor names have dashes.
-I don't know if underscores are allowed.
+They have a different way of doing it now, no idea how it looked in
+the past:
 
-$ grep -rP --include=*.[ch] -oh "compatible\s*=\s*\"[^,]+,\w" * | \
-  sed -r -e 's/\s//g' -e 's/,.$//' | sort | uniq -c | grep "[_-]"
-      1 compatible="active-semi
-      8 compatible="asahi-kasei
+#define IO_SPACE_LIMIT          0xffffffffffffffffUL
+
+#define MAX_IO_SPACES_BITS              8
+#define MAX_IO_SPACES                   (1UL << MAX_IO_SPACES_BITS)
+#define IO_SPACE_BITS                   24
+#define IO_SPACE_SIZE                   (1UL << IO_SPACE_BITS)
+
+#define IO_SPACE_NR(port)               ((port) >> IO_SPACE_BITS)
+#define IO_SPACE_BASE(space)            ((space) << IO_SPACE_BITS)
+#define IO_SPACE_PORT(port)             ((port) & (IO_SPACE_SIZE - 1))
+
+#define IO_SPACE_SPARSE_ENCODING(p)     ((((p) >> 2) << 12) | ((p) & 0xfff))
+
+So their port number is a logical token that contains the I/O space number
+and a 16MB offset.
+
+Apparently sparc64 uses physical memory addressing for I/O space, the
+same way they do for memory space, and they just set IO_SPACE_LIMIT to
+0xffffffffffffffffUL.
+
+> > > Architectures that use the virtual IO window technique will always
+> > > require a custom pci_address_to_pio implementation.
+> > 
+> > Hmm, at the moment we only call it from of_address_to_resource(),
+> > which in turn does not get called on PCI devices, and does not
+> > call pci_address_to_pio for 'simple' platform devices. The only
+> > case I can think of where it actually matters is when we have
+> > ISA devices in DT that use an I/O port address in the reg property,
+> > and that case hopefully won't happen on ARM32 or ARM64.
+> 
+> Sure, I ment, after Liviu's patch it will become required since he is
+> cleverly using it to figure out what the io mapping the bridge driver
+> setup before calling the helper.
+
+Ok. I was arguing more that we should add this dependency.
+
+> > > I think the legacy reasons for having all those layers of translation
+> > > are probably not applicable to ARM64, and it is much simpler without
+> > > the extra translation step....
+> > > 
+> > > Arnd, what do you think?
+> > 
+> > Either I don't like it or I misunderstand you ;-)
+> > 
+> > Most PCI drivers normally don't call ioport_map or pci_iomap, so
+> > we can't just do it there. If you are thinking of calling ioport_map
+> 
+> Okay, that was one of the 'legacy reasons'. Certainly lots of drivers
+> do call pci_iomap, but if you think legacy drivers that don't are
+> important to ARM64 then it makes sense to use the virtual IO window.
+
+I think all uses of I/O space are legacy, but I don't think that
+drivers doing inb/outb are more obsolete than those doing pci_iomap.
+It's got more to do with the subsystem requirements, e.g. libata
+requires the use of pci_iomap.
+
+> > for every PCI device that has an I/O BAR and storing the virtual
+> > address in the pci_dev resource, I don't see what that gains us
+> 
+> Mainly we get to drop the fancy dynamic allocation stuff for the fixed
+> virtual window, and it gives the option to have a 1:1 relationship
+> between CPU addresses and PCI BARs.
+
+I don't think the allocation is much of a problem, as long as we
+can localize it in one function that is shared by everyone.
+The problems I saw were all about explaining to people how it
+works, but they really shouldn't have to know.
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
