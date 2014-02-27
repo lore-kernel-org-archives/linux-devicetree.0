@@ -1,54 +1,79 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH V2 3/3] ARM: tegra: fix Dalmore PMIC IRQ polarity
-Date: Thu, 27 Feb 2014 13:51:21 -0700
-Message-ID: <1393534281-30759-3-git-send-email-swarren@wwwdotorg.org>
-References: <1393534281-30759-1-git-send-email-swarren@wwwdotorg.org>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393534281-30759-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, J Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Ian Lartey <ian-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v12 1/4] PHY: Add function set_speed to generic PHY
+ framework
+Date: Thu, 27 Feb 2014 14:50:39 -0600
+Message-ID: <20140227205039.GE5375@saruman.home>
+References: <1393524848-8207-1-git-send-email-lho@apm.com>
+ <1393524848-8207-2-git-send-email-lho@apm.com>
+ <20140227190102.GB4862@saruman.home>
+ <CAPw-ZT=F07=T0=z=iT=hxJ0+609RBDYRL=MXF5dQoEowLjsRjQ@mail.gmail.com>
+Reply-To: <balbi@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="lteA1dqeVaWQ9QQl"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPw-ZT=F07=T0=z=iT=hxJ0+609RBDYRL=MXF5dQoEowLjsRjQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Loc Ho <lho@apm.com>
+Cc: balbi@ti.com, Kishon Vijay Abraham I <kishon@ti.com>, Tejun Heo <tj@kernel.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+--lteA1dqeVaWQ9QQl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The Tegra PMC's resume-from-sleep logic wants an active-low IRQ input
-from the PMIC. However, the PMIC IRQ is also routed to the GIC, which
-only supports active high IRQs (or rising edge). Hence, the signal must
-be inverted in the PMC before being routed to the GIC. This implies that
-the PMC DT property nvidia,invert-interrupt must be set, and it is.
+Hi,
 
-The PMIC's DT interrupts property must represent the IRQ level at the
-GIC, since that is the PMIC's parent IRQ controller. Fix the PMIC's
-interrupts property to correctly describe the GIC input polarity.
+On Thu, Feb 27, 2014 at 11:57:44AM -0800, Loc Ho wrote:
+> > On Thu, Feb 27, 2014 at 11:14:05AM -0700, Loc Ho wrote:
+> >> This patch adds function set_speed to the generic PHY framework operat=
+ion
+> >> structure. This function can be called to instruct the PHY underlying =
+layer
+> >> at specified lane to configure for specified speed in hertz.
+> >
+> > why ? looks like clk_set_rate() is your friend here. Can you be more
+> > descriptive of the use case ? When will this be used ?
+> >
+>=20
+> The phy_set_speed is used to configure the operation speed of the PHY
+> at run-time. The clock interface in general is used to configure the
+> clock input to the IP. I don't believe they are the same thing. Maybe
+> it will be clear in my response to your second email
 
-However, the PMIC IRQ output's polarity is programmable in HW, and by
-default follows the parent IRQ controller's input polarity. We need to
-have an active-low output due to the inversion inside the Tegra PMC.
-Hence, add the ti,irq-externally-inverted property to the PMIC.
+The problem with this is that you end up adding SATA-specific details to
+something which is supposed to be generic. After negoatiation, don't you
+get any interrupt from your PHY indicating that link speed negotiation
+is done ? Or is that IRQ only on AHCI IP ?
 
-Reported-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Acked-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-v2: No change.
----
- arch/arm/boot/dts/tegra114-dalmore.dts | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/tegra114-dalmore.dts b/arch/arm/boot/dts/tegra114-dalmore.dts
-index 8de543777882..2977206cafc9 100644
---- a/arch/arm/boot/dts/tegra114-dalmore.dts
-+++ b/arch/arm/boot/dts/tegra114-dalmore.dts
-@@ -893,7 +893,8 @@
- 		palmas: tps65913@58 {
- 			compatible = "ti,palmas";
- 			reg = <0x58>;
--			interrupts = <0 86 IRQ_TYPE_LEVEL_LOW>;
-+			interrupts = <0 86 IRQ_TYPE_LEVEL_HIGH>;
-+			ti,irq-externally-inverted;
- 
- 			#interrupt-cells = <2>;
- 			interrupt-controller;
--- 
-1.8.1.5
+cheers
+
+--=20
+balbi
+
+--lteA1dqeVaWQ9QQl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTD6UfAAoJEIaOsuA1yqRERr8P/iDeKDJi1ZMvKmvSImZ0pI/Q
+lrufRgik17xRfpmkp/qfyWJZxVsBy8I995h13ZapXWaW/HpyrBsEASsXFEC1d+r7
+aZpmcVJgGcSIqzUZiSS2nZEqRjch2P+NVLy7IO4aJAYcQoX1GqTHXXDq3an7iY0G
+2BX7ycz1ApTaiOaMxYSNdr9t6j5KytDCFXvKdwzC9Q0AjAeWAZUefA6nIuoRzA3t
+qc7Yi6U9IW2RYkzuY3RkkHko1DoQReAKajQ6hpmxMX5tG8oqjkP67ZUt0HYDuwJt
+K3DfduE1MeQPygnyrX+IfGt7lEkgpqHxcC+9i5FmsqA738kPWMa5yY0olNxtgjkE
+wDDpmKcXDQX8tGF7ku6z5hhaOuLMHpiwh4eMLf0nbbSejWmrYu4AcwYj3zlayFvx
+djzJxXTDVYauiYNv4HLENb/ZpqKVfdi9fx+pJtYB1yiIWrtCNl/5ikumUSoIPdj+
+6z0XnY6hCah7rZDsFCTclNFP48zNy3znUR701lyf1ApraDKfH4qmAtY0ifwB474v
++2vXwOD598uPRF4urjF6bj3AgOQAlZ6ThAIsrbo46MBjTWbWYJstO+RzA3T3FDa6
+7ghCqLbHi0fDeUEOZ/o6ScPD5bXvpMwvQoCQ1OXbeoLzKja6BPljaUUKlxCuYlRP
+PeQ5ZAkBoaIVwd+jDb46
+=qKot
+-----END PGP SIGNATURE-----
+
+--lteA1dqeVaWQ9QQl--
