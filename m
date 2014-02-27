@@ -1,51 +1,69 @@
-From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 6/7] ARM: dts: keystone: Use dma-ranges property
-Date: Thu, 27 Feb 2014 16:17:51 -0500
-Message-ID: <1393535872-20915-7-git-send-email-santosh.shilimkar@ti.com>
-References: <1393535872-20915-1-git-send-email-santosh.shilimkar@ti.com>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: [PATCH v2 0/7] ARM: dma: Support dma-ranges and dma-coherent
+Date: Thu, 27 Feb 2014 16:17:45 -0500
+Message-ID: <1393535872-20915-1-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393535872-20915-1-git-send-email-santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arnd-r2nGTMty4D4@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arnd@arndb.de
+Cc: devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, linus.walleij@linaro.org, magnus.damm@gmail.com, Olof Johansson <olof@lixom.net>, robh+dt@kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, Greg Ungerer <gerg@uclinux.org>, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Following the RFC [1], [2] comments, suggestions and some IRC discussion
+with Arnd Bergmann, here is the refreshed series. Attempt is to use dma-ranges
+and dma-coherent properties to setup the dma for ARM platforms.
 
-The dma-ranges property has to be specified per bus and has format:
- < DMA addr > - Base DMA address for Bus (Bus format 32-bits)
- < CPU addr > - Corresponding base CPU address (CPU format 64-bits)
- < DMA range size > - Size of supported DMA range
+Platforms needing more funky stuff than the generic ones can use per
+platform device callbacks. Differnt buses like PCIE dma parsing still needs
+to be addressed though.
 
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/keystone.dtsi |    1 +
- 1 file changed, 1 insertion(+)
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Greg Ungerer <gerg@uclinux.org>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Olof Johansson <olof@lixom.net>
+CC: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-index b420290..171579d 100644
---- a/arch/arm/boot/dts/keystone.dtsi
-+++ b/arch/arm/boot/dts/keystone.dtsi
-@@ -96,6 +96,7 @@
- 		compatible = "ti,keystone","simple-bus";
- 		interrupt-parent = <&gic>;
- 		ranges = <0x0 0x0 0x0 0xc0000000>;
-+		dma-ranges = <0x80000000 0x8 0x00000000 0x80000000>;
- 
- 		rstctrl: reset-controller {
- 			compatible = "ti,keystone-reset";
+Grygorii Strashko (5):
+  ARM: mm: Introduce archdata.dma_pfn_offset
+  ARM: mm: Remove unsed dma_to_virt()
+  dma: of: introduce of_dma_get_range() helper
+  ARM: of: introduce common routine for DMA configuration
+  ARM: dts: keystone: Use dma-ranges property
+
+Santosh Shilimkar (2):
+  dma: of: introduce of_dma_is_coherent() helper
+  ARM: dts: keystone: Udate USB node for dma properties
+
+ arch/arm/boot/dts/keystone.dtsi             |    3 +
+ arch/arm/include/asm/device.h               |    1 +
+ arch/arm/include/asm/dma-mapping.h          |   25 +++----
+ arch/arm/include/asm/prom.h                 |    3 +
+ arch/arm/kernel/devtree.c                   |   61 +++++++++++++++
+ arch/arm/mach-iop13xx/include/mach/memory.h |   11 ---
+ arch/arm/mach-ks8695/include/mach/memory.h  |    2 -
+ arch/arm/mach-omap1/include/mach/memory.h   |    4 -
+ drivers/dma/of-dma.c                        |  108 +++++++++++++++++++++++++++
+ drivers/of/platform.c                       |    5 +-
+ include/linux/of.h                          |    2 +-
+ include/linux/of_dma.h                      |   13 ++++
+ 12 files changed, 205 insertions(+), 33 deletions(-)
+
+Regards,
+Santosh
+[1] http://www.spinics.net/lists/arm-kernel/msg304555.html
+[2] http://www.spinics.net/lists/arm-kernel/msg310562.html 
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
