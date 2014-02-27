@@ -1,203 +1,56 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 3/4] ARM: mvebu: move DT Dove to MVEBU
-Date: Thu, 27 Feb 2014 23:03:33 +0100
-Message-ID: <1393538613-28293-1-git-send-email-sebastian.hesselbarth@gmail.com>
-References: <1393536486-3827-4-git-send-email-sebastian.hesselbarth@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393536486-3827-4-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH] spi: sh-msiof: Remove "renesas,msiof-sh7724" from bindings
+Date: Thu, 27 Feb 2014 23:50:36 +0100
+Message-ID: <3183546.lDudat1pu0@avalon>
+References: <1393505238-11954-1-git-send-email-geert@linux-m68k.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1393505238-11954-1-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-With all the DT support preparation done, we are able to move Dove
-to MVEBU easily. Legacy non-DT mach-dove is left untouched to rot
-for a while before removal. Also, convert SATA PHY Kconfig entry,
-which is DT-only.
+Hi Geert,
 
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-Changelog:
-v1->v2:
-- just rename CONFIG_ARCH_DOVE to CONFIG_MACH_DOVE in dts/Makefile
-  (Suggested by Jason Cooper)
+Thank you for the patch.
 
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- arch/arm/boot/dts/Makefile                           |  2 +-
- arch/arm/mach-dove/Kconfig                           | 12 ------------
- arch/arm/mach-dove/Makefile                          |  1 -
- arch/arm/mach-mvebu/Kconfig                          | 12 ++++++++++++
- arch/arm/mach-mvebu/Makefile                         |  1 +
- arch/arm/{mach-dove/board-dt.c => mach-mvebu/dove.c} | 20 ++++++++------------
- drivers/phy/Kconfig                                  |  2 +-
- 7 files changed, 23 insertions(+), 27 deletions(-)
- rename arch/arm/{mach-dove/board-dt.c => mach-mvebu/dove.c} (61%)
+On Thursday 27 February 2014 13:47:17 Geert Uytterhoeven wrote:
+> From: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+> 
+> It's not implemented in the driver, so it's a bad example.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 032030361bef..21317af7fe48 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -55,7 +55,7 @@ dtb-$(CONFIG_ARCH_BERLIN) += \
- 	berlin2cd-google-chromecast.dtb
- dtb-$(CONFIG_ARCH_DAVINCI) += da850-enbw-cmc.dtb \
- 	da850-evm.dtb
--dtb-$(CONFIG_ARCH_DOVE) += dove-cm-a510.dtb \
-+dtb-$(CONFIG_MACH_DOVE) += dove-cm-a510.dtb \
- 	dove-cubox.dtb \
- 	dove-d2plug.dtb \
- 	dove-d3plug.dtb \
-diff --git a/arch/arm/mach-dove/Kconfig b/arch/arm/mach-dove/Kconfig
-index 0bc7cdf8cf46..d8c439c89ea9 100644
---- a/arch/arm/mach-dove/Kconfig
-+++ b/arch/arm/mach-dove/Kconfig
-@@ -20,18 +20,6 @@ config MACH_CM_A510
- 	  Say 'Y' here if you want your kernel to support the
- 	  CompuLab CM-A510 Board.
- 
--config MACH_DOVE_DT
--	bool "Marvell Dove Flattened Device Tree"
--	select DOVE_CLK
--	select ORION_IRQCHIP
--	select ORION_TIMER
--	select REGULATOR
--	select REGULATOR_FIXED_VOLTAGE
--	select USE_OF
--	help
--	  Say 'Y' here if you want your kernel to support the
--	  Marvell Dove using flattened device tree.
--
- endmenu
- 
- endif
-diff --git a/arch/arm/mach-dove/Makefile b/arch/arm/mach-dove/Makefile
-index cbc5c0618788..b608a21919fb 100644
---- a/arch/arm/mach-dove/Makefile
-+++ b/arch/arm/mach-dove/Makefile
-@@ -2,5 +2,4 @@ obj-y				+= common.o
- obj-$(CONFIG_DOVE_LEGACY)	+= irq.o mpp.o
- obj-$(CONFIG_PCI)		+= pcie.o
- obj-$(CONFIG_MACH_DOVE_DB)	+= dove-db-setup.o
--obj-$(CONFIG_MACH_DOVE_DT)	+= board-dt.o
- obj-$(CONFIG_MACH_CM_A510)	+= cm-a510.o
-diff --git a/arch/arm/mach-mvebu/Kconfig b/arch/arm/mach-mvebu/Kconfig
-index 5e269d7263ce..966e5c6b9944 100644
---- a/arch/arm/mach-mvebu/Kconfig
-+++ b/arch/arm/mach-mvebu/Kconfig
-@@ -46,6 +46,18 @@ config MACH_ARMADA_XP
- 	  Say 'Y' here if you want your kernel to support boards based
- 	  on the Marvell Armada XP SoC with device tree.
- 
-+config MACH_DOVE
-+	bool "Marvell Dove boards" if ARCH_MULTI_V7
-+	select CACHE_L2X0
-+	select CPU_PJ4
-+	select DOVE_CLK
-+	select ORION_IRQCHIP
-+	select ORION_TIMER
-+	select PINCTRL_DOVE
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  Marvell Dove using flattened device tree.
-+
- endmenu
- 
- endif
-diff --git a/arch/arm/mach-mvebu/Makefile b/arch/arm/mach-mvebu/Makefile
-index 878aebe98dcc..dd3e7188f75d 100644
---- a/arch/arm/mach-mvebu/Makefile
-+++ b/arch/arm/mach-mvebu/Makefile
-@@ -5,6 +5,7 @@ AFLAGS_coherency_ll.o		:= -Wa,-march=armv7-a
- 
- obj-y				 += system-controller.o mvebu-soc-id.o
- obj-$(CONFIG_MACH_ARMADA_370_XP) += armada-370-xp.o
-+obj-$(CONFIG_MACH_DOVE)		 += dove.o
- obj-$(CONFIG_ARCH_MVEBU)	 += coherency.o coherency_ll.o pmsu.o
- obj-$(CONFIG_SMP)                += platsmp.o headsmp.o
- obj-$(CONFIG_HOTPLUG_CPU)        += hotplug.o
-diff --git a/arch/arm/mach-dove/board-dt.c b/arch/arm/mach-mvebu/dove.c
-similarity index 61%
-rename from arch/arm/mach-dove/board-dt.c
-rename to arch/arm/mach-mvebu/dove.c
-index 49fa9abd09da..5e5a43624237 100644
---- a/arch/arm/mach-dove/board-dt.c
-+++ b/arch/arm/mach-mvebu/dove.c
-@@ -1,5 +1,5 @@
- /*
-- * arch/arm/mach-dove/board-dt.c
-+ * arch/arm/mach-mvebu/dove.c
-  *
-  * Marvell Dove 88AP510 System On Chip FDT Board
-  *
-@@ -9,17 +9,14 @@
-  */
- 
- #include <linux/init.h>
--#include <linux/clk-provider.h>
-+#include <linux/mbus.h>
- #include <linux/of.h>
- #include <linux/of_platform.h>
- #include <asm/hardware/cache-tauros2.h>
- #include <asm/mach/arch.h>
--#include <mach/dove.h>
--#include <mach/pm.h>
--#include <plat/common.h>
- #include "common.h"
- 
--static void __init dove_dt_init(void)
-+static void __init dove_init(void)
- {
- 	pr_info("Dove 88AP510 SoC\n");
- 
-@@ -30,14 +27,13 @@ static void __init dove_dt_init(void)
- 	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
- }
- 
--static const char * const dove_dt_board_compat[] = {
-+static const char * const dove_dt_compat[] = {
- 	"marvell,dove",
- 	NULL
- };
- 
--DT_MACHINE_START(DOVE_DT, "Marvell Dove (Flattened Device Tree)")
--	.map_io		= dove_map_io,
--	.init_machine	= dove_dt_init,
--	.restart	= dove_restart,
--	.dt_compat	= dove_dt_board_compat,
-+DT_MACHINE_START(DOVE_DT, "Marvell Dove")
-+	.init_machine	= dove_init,
-+	.restart	= mvebu_restart,
-+	.dt_compat	= dove_dt_compat,
- MACHINE_END
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index c7a551c2d5f1..ffd7f07adca3 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -24,7 +24,7 @@ config PHY_EXYNOS_MIPI_VIDEO
- 
- config PHY_MVEBU_SATA
- 	def_bool y
--	depends on ARCH_KIRKWOOD || ARCH_DOVE
-+	depends on ARCH_KIRKWOOD || MACH_DOVE
- 	depends on OF
- 	select GENERIC_PHY
- 
+Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+
+> ---
+>  Documentation/devicetree/bindings/spi/sh-msiof.txt |    1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt
+> b/Documentation/devicetree/bindings/spi/sh-msiof.txt index
+> 1f0cb33763a1..f24baf3b6cc1 100644
+> --- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
+> +++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+> @@ -5,7 +5,6 @@ Required properties:
+>  			 "renesas,sh-msiof" for SuperH, or
+>  			 "renesas,sh-mobile-msiof" for SH Mobile series.
+>  			 Examples with soctypes are:
+> -			 "renesas,msiof-sh7724" (SH)
+>  			 "renesas,msiof-r8a7790" (R-Car H2)
+>  			 "renesas,msiof-r8a7791" (R-Car M2)
+>  - reg                  : Offset and length of the register set for the
+> device
+
 -- 
-1.8.5.3
+Regards,
+
+Laurent Pinchart
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
