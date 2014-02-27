@@ -1,73 +1,40 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RFC PATCH] [media]: of: move graph helpers from drivers/media/v4l2-core
- to drivers/of
-Date: Thu, 27 Feb 2014 10:36:36 +0200
-Message-ID: <530EF914.3000407@ti.com>
-References: <1392119105-25298-1-git-send-email-p.zabel@pengutronix.de>	 < CAL_Jsq+U9zU1i+STLHMBjY5BeEP6djYnJVE5X1ix-D2q_zWztQ@mail.gmail.com>	 < 20140217181451.7EB7FC4044D@trevor.secretlab.ca>	 <20140218070624.GP17250@ pengutronix.de>	 <20140218162627.32BA4C40517@trevor.secretlab.ca>	 < 1393263389.3091.82.camel@pizza.hi.pengutronix.de>	 <20140226110114.CF2C7C40A89@trevor.secretlab.ca> <1393426129.3248.64.camel@paszta.hi.pengutronix.de>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 8/8] devicetree: bindings: Document PM8921/8058 PMICs
+Date: Thu, 27 Feb 2014 08:38:56 +0000
+Message-ID: <20140227083856.GB9195@lee--X1>
+References: <1393441166-32692-1-git-send-email-sboyd@codeaurora.org>
+ <1393441166-32692-9-git-send-email-sboyd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="tbslvQKphTF8vBEECJCkWDMkFG79k2pmB"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393426129.3248.64.camel-+qGW7pzALmz7o/J7KWpOmN53zsg1cpMQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1393441166-32692-9-git-send-email-sboyd@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---tbslvQKphTF8vBEECJCkWDMkFG79k2pmB
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-On 26/02/14 16:48, Philipp Zabel wrote:
-
->> I would like the document to acknowledge the difference from the
->> phandle+args pattern used elsewhere and a description of when it would=
-
->> be appropriate to use this instead of a simpler binding.
+> PM8921 and PM8058 are PMICs found paired with MSM8960 and MSM8660
+> devices respectively. They contain subdevices such as keypads,
+> RTC, regulators, clocks, etc.
 >=20
-> Alright. The main point of this binding is that the devices may have
-> multiple distinct ports that each can be connected to other devices.
+> Cc: <devicetree@vger.kernel.org>
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> ---
+>  .../devicetree/bindings/mfd/qcom,pm8xxx.txt        | 63 ++++++++++++=
+++++++++++
+>  1 file changed, 63 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/qcom,pm8xxx=
+=2Etxt
 
-The other main point with this binding are multiple endpoints per port.
-So you can have, say, a display controller, with single port, which has
-two endpoints going to two separate LCD panels.
+This patch has been on the MLs for some time now and hasn't received
+any feedback from the DT guys.
 
-In physical level that would usually mean that the same pins from the
-display controller are connected to two panels. Most likely this would
-mean that only one panel can be used at a time, possibly with different
-settings (say, 16 RGB pins for one panel, 24 RGB pins for the other).
+Patch looks good (despite the lack IRQ defines), applied.
 
- Tomi
-
-
-
---tbslvQKphTF8vBEECJCkWDMkFG79k2pmB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJTDvkUAAoJEPo9qoy8lh71ShEP/2H+TP+aNKfmsfd3A6pZl01T
-8Em17vHnfXjxX+7KxhoqJGiydt8NGKEZLrlEuBzyZws2h7tKcQIDh+uV9SKDRTZu
-qWPFWc734SR5kyuCfH9bRDyVQzi5lfLZs8PeQaglxgN6XWe9MQ9YzcLh2aQjZHyN
-f5LRJ3SdOG3rx46skL9kYdOmQw/NtoSIpJeU6X+CISYcoDcIXDKvgSlEYAOHy6oV
-tjORDF05GlsMotKOnehrhmmlXKrnGg21wD1adFYpMhR1ztFbkMpsn9SI9M6IMXno
-bbVa/Ik8BpT2qotMytu8sT83qWgP7DomMPAZkNLtn/D9rLqEntmSV2S8D99qa+Mo
-Zn81g/iUGY9AXF5L/GB935o6kTZAwaB5iXCyceLKaRFaBAoddEHg05hLOAvvmd0o
-D2GXp98N4S3S619dKg3jD634BwnwxeOAa9YJu7+4nvgx+Hi9uGH7kXYLwHOzsX9n
-jJDAZNggrhk4q3+EkM1TXaQ6NyRd8uMb6hK1x4MR9+wfsSQsT6jZlMJ2brndlgtT
-tK8UAR+m+n3mGkRWXx/+a0u5RCGy0YXJeqn25ctAsVE4hmUWgW6vm1bspCZdFA3O
-xvk40WhW6kafAWSbkeGt5BiDt8wD6L+9VQ/6ElT8ivlcMPv2S+GgDzmHgiC3T/40
-NXXecxeyuER7yZsCTjni
-=mQrO
------END PGP SIGNATURE-----
-
---tbslvQKphTF8vBEECJCkWDMkFG79k2pmB--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
