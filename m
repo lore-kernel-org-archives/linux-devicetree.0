@@ -1,67 +1,201 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 4/4] pci: Add support for creating a generic
- host_bridge from device tree
-Date: Thu, 27 Feb 2014 14:48:44 +0100
-Message-ID: <7910042.azG0y0Ppv9@wuerfel>
-References: <1393506402-11474-1-git-send-email-Liviu.Dudau@arm.com>
- <1393506402-11474-5-git-send-email-Liviu.Dudau@arm.com>
- <18746655.qWHLpMg2Yy@wuerfel>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [RFC PATCH v4 3/8] staging: imx-drm: Document updated imx-drm
+ device tree bindings
+Date: Thu, 27 Feb 2014 15:55:05 +0200
+Message-ID: <530F43B9.800@ti.com>
+References: <1393338203-25051-1-git-send-email-p.zabel@pengutronix.de>
+ <1393338203-25051-4-git-send-email-p.zabel@pengutronix.de>
+ <530F1C4C.2010504@ti.com> <1393506385.4507.49.camel@paszta.hi.pengutronix.de>
+ <20140227130020.GJ21483@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <18746655.qWHLpMg2Yy@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linaro-kernel@lists.linaro.org
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/mixed; boundary="===============6906942118107439063=="
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20140227130020.GJ21483@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 27 February 2014 14:38:32 Arnd Bergmann wrote:
-> > +     pr_debug("Parsing ranges property...\n");
-> > +     for_each_of_pci_range(&parser, &range) {
-> > +             /* Read next ranges element */
-> > +             pr_debug("pci_space: 0x%08x pci_addr:0x%016llx ",
-> > +                             range.pci_space, range.pci_addr);
-> > +             pr_debug("cpu_addr:0x%016llx size:0x%016llx\n",
-> > +                                     range.cpu_addr, range.size);
-> > +
-> > +             /*
-> > +              * If we failed translation or got a zero-sized region
-> > +              * then skip this range
-> > +              */
-> > +             if (range.cpu_addr == OF_BAD_ADDR || range.size == 0)
-> > +                     continue;
-> > +
-> > +             res = kzalloc(sizeof(struct resource), GFP_KERNEL);
-> > +             if (!res) {
-> > +                     err = -ENOMEM;
-> > +                     goto bridge_ranges_nomem;
-> > +             }
-> > +
-> > +             of_pci_range_to_resource(&range, dev, res);
-> > +
-> > +             if (resource_type(res) == IORESOURCE_IO)
-> > +                     *io_base = range.cpu_addr;
-> > +
-> > +             pci_add_resource_offset(resources, res,
-> > +                             res->start - range.pci_addr);
-> > +     }
-> 
-> This is not the correct resource for I/O space at all. Please talk
-> to Will, I've been over this with him in detail and he probably
-> understands it now. I assume you are both working in the same
-> building.
-> 
+--===============6906942118107439063==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="KC2ta4x3FRL0qHx2TC7Smok3ENSs5oun2"
 
-Sorry, I initially missed part of your changes in patch 1.
-I think it's actually correct now.
+--KC2ta4x3FRL0qHx2TC7Smok3ENSs5oun2
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-	Arnd
+On 27/02/14 15:00, Russell King - ARM Linux wrote:
+> On Thu, Feb 27, 2014 at 02:06:25PM +0100, Philipp Zabel wrote:
+>> For the i.MX6 display subsystem there is no clear single master device=
+,
+>> and the physical configuration changes across the SoC family. The
+>> i.MX6Q/i.MX6D SoCs have two separate display controller devices IPU1 a=
+nd
+>> IPU2, with two output ports each.
+>=20
+> Not also forgetting that there's another scenario too: you may wish
+> to drive IPU1 and IPU2 as two completely separate display subsystems
+> in some hardware, but as a combined display subsystem in others.
+>=20
+> Here's another scenario.  You may have these two IPUs on the SoC, but
+> there's only one display output.  You want to leave the second IPU
+> disabled, as you wouldn't want it to be probed or even exposed to
+> userland.
+
+I first want to say I don't see anything wrong with such a super node.
+As you say, it does describe hardware. But I also want to say that I
+still don't see a need for it. Or, maybe more exactly, I don't see a
+need for it in general. Maybe there are certain cases where two devices
+has to be controlled by a master device. Maybe this one is one of those.
+
+In the imx case, why wouldn't this work, without any master node, with
+the IPU nodes separate in the DT data:
+
+- One IPU enabled, one disabled: nothing special here, just set the
+other IPU to status=3D"disabled" in the DT data. The driver for the
+enabled IPU would register the required DRM entities.
+
+- Two IPUs as separate units: almost the same as above, but both would
+independently register the DRM entities.
+
+- Two IPUs in combined mode:
+
+Pick one IPU as the master, and one as slave. Link the IPU nodes in DT
+data with phandles, say: master=3D<&ipu1> on the slave IPU and
+slave=3D<&ipu0> on the master.
+
+The master one will register the DRM entities, and the slave one will
+just do what the master says.
+
+As for the probe time "are we ready yet?" problem, the IPU driver can
+just delay registering the DRM entities until all the nodes in its graph
+have been probed. The component helpers can probably be used here.
+
+> On the face of it, the top-level super-device node doesn't look very
+> hardware-y, but it actually is - it's about how a board uses the
+> hardware provided.  This is entirely in keeping with the spirit of DT,
+> which is to describe what hardware is present and how it's connected
+> together, whether it be at the chip or board level.
+
+No disagreement there. I'm mostly put off by the naming. The binding doc
+says it's a "DRM master device", compatible with "fsl,imx-drm". Now,
+naming may not be the most important thing in the world, but I'd rather
+use generic terms, not linux driver stack names.
+
+> If this wasn't the case, we wouldn't even attempt to describe what devi=
+ces
+> we have on which I2C buses - we'd just list the hardware on the board
+> without giving any information about how it's wired together.
+>=20
+> This is no different - however, it doesn't have (and shouldn't) be
+> subsystem specific... but - and this is the challenge we then face - ho=
+w
+> do you decide that on one board with a single zImage kernel, with both
+> DRM and fbdev built-in, whether to use the DRM interfaces or the fbdev
+> interfaces?  We could have both matching the same compatible string, bu=
+t
+> we'd also need some way to tell each other that they're not allowed to
+> bind.
+
+Yes, that's an annoying problem, we have that on OMAP. It's a clear sign
+that our video support is rather messed up.
+
+My opinion is that the fbdev and drm drivers for a single hardware
+should be exclusive at compile time. We don't allow multiple drivers for
+single device for other subsystems either, do we? Eventually we should
+have only one driver for one hardware device.
+
+If that's not possible, then the drivers in question could have an
+option to enable or disable themselves, passed via the kernel command
+line, so that the user can select which subsystem to use.
+
+> Before anyone argues against "it isn't hardware-y", stop and think.
+> What if I design a board with two Epson LCD controllers on board and
+> put a muxing arrangement on their output.  Is that one or two devices?
+> What if I want them to operate as one combined system?  What if I have
+> two different LCD controllers on a board.  How is this any different
+> from the two independent IPU hardware blocks integrated inside an iMX6
+> SoC with a muxing arrangement on their output?
+
+Well, generally speaking, I think one option is to treat the two
+controllers separately and let the userspace handle it. That may or may
+not be viable, depending on the hardware, but to me it resembles very
+much a PC with two video cards.
+
+If you want the two controllers to operate together more closely, you
+always need special code for that particular case.
+
+This is what CDF has been trying to accomplish: individual drivers for
+each display entity, connected together via ports and endpoints. Driver
+for Epson LCD controller would expose an API, that can be used handle
+the LCD controller, it wouldn't make any other demands on how it's used,
+is it part of DRM or fbdev, what's before or after it, etc.
+
+Now, and I think this was your point, some kind of master device/driver
+is needed to register the required DRM or fbdev entities. Usually that
+can be the driver for the SoCs display controller, i.e. the first
+display entity in the display pipeline. Sometimes, if it's required to
+have multiple devices act together, it may be a driver specifically
+designed for that purpose.
+
+So no, I don't have a problem with master device nodes in DT. I have a
+problem having pure SW stack nomenclature in the DT data (or even worse,
+SW stack entities in the DT data), and I have a problem requiring
+everyone to have a master device node if it's only needed for special cas=
+es.
+
+And yes, this series is about IMX bindings, not generic ones. And I'm
+also fine with requiring everyone to have a master device node, if it
+can be shown that it's the only sensible approach.
+
+ Tomi
+
+
+
+--KC2ta4x3FRL0qHx2TC7Smok3ENSs5oun2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJTD0O5AAoJEPo9qoy8lh71e2sP/27kJznKWxiThUNcy5F3etD9
+CwDf4lKIgnDbGMREIak6xZSM/qmzOoiMX7dFO7suPYfIkCbQu0NhzKhiwm8AleuZ
+4VAnQQ0qWBNbTZJPVSgNO2P67Tgtd3KwBUNn1ezbzIbMCmpuqRI+VKYL4KZT14W7
+vdh5Dm5gAJ4tiTRgL8YjIIs3qbFia7QBIkNDQt+q4IwBVK9vwQPP88+XIh9ToJsi
+i++0WCwHEF6rR9xCIicRFBgm/Z0uRq2KgqyitI+gTY05CKImwSHQxAFi36Y6iysP
+I8uunJua+3/rdF5obBS8HcYiWN6EdR6HsgK7Xmq9FIBW77TCn78h3evKGQPYv5n3
+MYk31iUear3gyBMvKQ8U/x2mxkH9cGgRw1PoneXaa0lksFwI42pJ2m0qB5PQwQ6A
+Rjbn/+VuXbmbHeGrqT7vDLbIG1uFJZcTuAnGWYEBAZ61e8rnQ4V91MgANhHr0Gmr
+ZlOFNaaZGhjWXtIbxDpqF1wG132PVoztPa0phjNLKCHZh/UbEbT7jrUM8bTSMxEc
+pq+pDjLV/V/3PMwJxujKnJay2UI313NTG69lIwoFbskHdxcBajqWPTClPQ9wB4XD
+7+z7/iL6EsOwX9kbOY7Ix39QxPIVHCW4yj3Amb4eHFwT3PSG+jHw4XFN0fNV9g8P
+ZJqQbsqxeHL3wnVZsxs+
+=PNi1
+-----END PGP SIGNATURE-----
+
+--KC2ta4x3FRL0qHx2TC7Smok3ENSs5oun2--
+
+--===============6906942118107439063==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devel mailing list
+devel@linuxdriverproject.org
+http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
+
+--===============6906942118107439063==--
