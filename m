@@ -1,200 +1,201 @@
-From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv1 5/6] HSI: Introduce OMAP SSI driver
-Date: Wed, 26 Feb 2014 23:49:25 +0100
-Message-ID: <20140226224924.GA12143@earth.universe>
-References: <1393199401-27197-1-git-send-email-sre@debian.org>
- <1393199401-27197-6-git-send-email-sre@debian.org>
- <20140224155132.GK28555@e106331-lin.cambridge.arm.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] phy-rcar-gen2-usb: add device tree support
+Date: Thu, 27 Feb 2014 03:12:50 +0300
+Message-ID: <201402270312.51588.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gBBFr7Ir9EOA20Yy"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140224155132.GK28555-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Carlos Chinea <cch.devel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?utf-8?B?0JjQstCw0LnQu9C+INCU0LjQvNC40YLRgNC+0LI=?= <freemangordon-uiMcrn6V0Vs@public.gmane.org>, Joni Lapilainen <joni.lapilainen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: balbi@ti.com, linux-usb@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, linux-sh@vger.kernel.org, valentine.barshak@cogentembedded.com, rob@landley.net, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Add support of the device tree probing for the Renesas R-Car generation 2 SoCs
+documenting the device tree binding as necessary.
 
---gBBFr7Ir9EOA20Yy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Hi Mark,
+---
+This patch is against the 'next' branch of Felipe Balbi's 'usb.git' repo.
 
-On Mon, Feb 24, 2014 at 03:51:32PM +0000, Mark Rutland wrote:
-> > +       irq =3D platform_get_resource_byname(pd, IORESOURCE_IRQ, "gdd_m=
-pu");
-> > +       if (!irq) {
-> > +               dev_err(&pd->dev, "GDD IRQ resource missing\n");
-> > +               err =3D -ENXIO;
-> > +               goto out_err;
-> > +       }
-> > +       omap_ssi->gdd_irq =3D irq->start;
->=20
-> You can use platform_get_irq_byname here.
+ Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt |   29 +++++++
+ drivers/usb/phy/phy-rcar-gen2-usb.c                     |   64 ++++++++++++++--
+ 2 files changed, 85 insertions(+), 8 deletions(-)
 
-Right. Will be changed in PATCHv2.
-
-> > +static inline int ssi_of_get_available_child_count(const struct device=
-_node *np)
-> > +{
-> > +       struct device_node *child;
-> > +       int num =3D 0;
-> > +
-> > +       for_each_child_of_node(np, child)
-> > +               if (of_device_is_available(child))
-> > +                       num++;
-> > +
-> > +       return num;
-> > +}
->=20
-> You can find of_get_available_child_count in <linux/of.h>.
-
-That did not exist when I started with the DT conversion of the
-driver.
-
-> That said, this seems to be trying to count the number of ports,
-> which should all be compatible with "ti,omap3-ssi-port", no?
->=20
-> So maybe you should count all available child nodes compatible with
-> that.
-
-I updated the function to check the compatible string
-and use for_each_available_child_of_node(), which has
-also been added after I wrote this function.
-
-> > +static int __init ssi_probe(struct platform_device *pd)
-> > +{
-> > +       struct device_node *np =3D pd->dev.of_node;
-> > +       struct hsi_controller *ssi;
-> > +       int err;
-> > +       int num_ports;
-> > +
-> > +       if (!np) {
-> > +               dev_err(&pd->dev, "missing device tree data\n");
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       num_ports =3D ssi_of_get_available_child_count(np);
-> > +
-> > +       ssi =3D hsi_alloc_controller(num_ports, GFP_KERNEL);
-> > +       if (!ssi) {
-> > +               dev_err(&pd->dev, "No memory for controller\n");
-> > +               return -ENOMEM;
-> > +       }
-> > +
-> > +       platform_set_drvdata(pd, ssi);
-> > +
-> > +       err =3D ssi_add_controller(ssi, pd);
-> > +       if (err < 0)
-> > +               goto out1;
-> > +
-> > +       pm_runtime_irq_safe(&pd->dev);
-> > +       pm_runtime_enable(&pd->dev);
-> > +
-> > +       err =3D ssi_hw_init(ssi);
-> > +       if (err < 0)
-> > +               goto out2;
-> > +#ifdef CONFIG_DEBUG_FS
-> > +       err =3D ssi_debug_add_ctrl(ssi);
-> > +       if (err < 0)
-> > +               goto out2;
-> > +#endif
-> > +
-> > +       err =3D of_platform_populate(pd->dev.of_node, NULL, NULL, &pd->=
-dev);
->=20
-> I'm not keen on doing this because it allows arbitrary devices which are
-> not ssi ports to be placed in the ssi host controller node that will be
-> probed, which is nonsensical and something I'd like to avoid by
-> construction.
->=20
-> Is there any reason the ports have to be platform devices at all?
-
-not strictly, but I get system resources via platform_get_resource_byname.
-
-> If so, is there no way we can register them directly and skip any other
-> devices?
-
-I set the second parameter (matches) of the of_platform_populate()
-call to a table containing the ssi-port compatible value.
-
-> > +static int __exit ssi_remove(struct platform_device *pd)
-> > +{
-> > +       struct hsi_controller *ssi =3D platform_get_drvdata(pd);
-> > +
-> > +#ifdef CONFIG_DEBUG_FS
-> > +       ssi_debug_remove_ctrl(ssi);
-> > +#endif
-> > +       ssi_remove_controller(ssi);
-> > +       platform_set_drvdata(pd, NULL);
-> > +
-> > +       pm_runtime_disable(&pd->dev);
-> > +
-> > +       /* cleanup of of_platform_populate() call */
-> > +       device_for_each_child(&pd->dev, NULL, ssi_remove_ports);
->=20
-> This would certainly be broken for a non ssi port device.
-
-I never intended to support other subdevices, but this only
-unregisters each subdevice, so its probably safe...
-
-> > +static int omap_ssi_port_runtime_suspend(struct device *dev)
-> > +{
-> > +       struct hsi_port *port =3D dev_get_drvdata(dev);
-> > +       struct omap_ssi_port *omap_port =3D hsi_port_drvdata(port);
-> > +       struct hsi_controller *ssi =3D to_hsi_controller(port->device.p=
-arent);
-> > +       struct omap_ssi_controller *omap_ssi =3D hsi_controller_drvdata=
-(ssi);
-> > +
-> > +       dev_dbg(dev, "port runtime suspend!\n");
-> > +
-> > +       ssi_set_port_mode(omap_port, SSI_MODE_SLEEP);
-> > +       if (omap_ssi->get_loss)
-> > +               omap_port->loss_count =3D
-> > +                               (*omap_ssi->get_loss)(ssi->device.paren=
-t);
->=20
-> You don't need to do (*struct->func)(args) when invoking a function
-> pointer. You can jsut have struct->func(args) as we do elsewhere. This
-> can be:
->=20
->   omap_ssi->get_loss(ssi->device.parent)
->=20
-> This should be fixed up in the other sites too.
-
-Thanks, fixed everywhere.
-
--- Sebastian
-
---gBBFr7Ir9EOA20Yy
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJTDm90AAoJENju1/PIO/qakjEP/0RIP3Q6tS1dkrokytDsBPjf
-cJ4VtbxzzhITCfkt34L2fNw3xQthJfzJTRvJcxEjstO/FTLoOp4soBawPD6iMWJr
-D7FtDmEX0+uKvFs/XYPZwP5qjBXvKX5aL2wOv2DMXI+oNs3iTGL8jswvT5SK8q66
-Ge1jg9HkB/Z6Cnc3xv0Y9CAbjPjXiO0gsDn/dznEgyxPiGB4xNf89kKWAgwjMKSn
-BhRVhJnBXSOC10UyfFD+QsmyZ15OFHl8Nx9HbIn/ap5vF6/YZKVi7IeNCaAXcOCd
-XIQZbBBMNeVw7RaKnI2AeRTDp7oKUdmXlqjsm6VDVMJIFsG8ucFdhOPvF7YsfJZ3
-42YHq8LT5WyFngrqZqQEM5B3DVxIVrVSwq2nMPZnLHNk6zswaGHpDMwmMam6xqfj
-5Bn8aqqw0LV4tYsGjTUxkksAYrnaT9L0MDiH9bKpx23krgdhprk24LaEd4z2zhK9
-RZNRgv2RdCsnEhfQmU9VKjg71R2lXi1SM2AjwN7ntR3gkcAlhO2gNK0+d2+1ApO8
-XqCfzI+oqvjrnagXJs+mUmOftNquNKKgBfruzVde6z+ocdRWAcH86wk4R2RuwAc5
-BtqEx08qk7ZplGfGmi3ivtl104g1bB8zeYdALYssmb0Wlmxl17hfMqRHEdvLSJWL
-rLIsDdpY5DZWRn9Lia89
-=fPlW
------END PGP SIGNATURE-----
-
---gBBFr7Ir9EOA20Yy--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Index: usb/Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt
+===================================================================
+--- /dev/null
++++ usb/Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt
+@@ -0,0 +1,29 @@
++* Renesas R-Car generation 2 USB PHY
++
++This file provides information on what the device node for the R-Car generation
++2 USB PHY contains.
++
++Required properties:
++- compatible: "renesas,usb-phy-r8a7790" if the device is a part of R8A7790 SoC.
++	      "renesas,usb-phy-r8a7791" if the device is a part of R8A7791 SoC.
++- reg: offset and length of the register block.
++- clocks: clock phandle and specifier pair.
++- clock-names: string, clock input name, must be "usbhs".
++
++Optional properties:
++- renesas,channel0-pci: boolean, specify when USB channel 0 should be connected
++			to PCI EHCI/OHCI; otherwise, it will be connected to the
++			USBHS controller.
++- renesas,channel2-pci: boolean, specify when USB channel 2 should be connected
++			to PCI EHCI/OHCI; otherwise, it will be connected to the
++			USBSS controller (xHCI).
++
++Example (Lager board):
++
++	usb-phy@e6590100 {
++		compatible = "renesas,usb-phy-r8a7790";
++		reg = <0 0xe6590100 0 0x100>;
++		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
++		clock-names = "usbhs";
++		renesas,channel2-pci;
++	};
+Index: usb/drivers/usb/phy/phy-rcar-gen2-usb.c
+===================================================================
+--- usb.orig/drivers/usb/phy/phy-rcar-gen2-usb.c
++++ usb/drivers/usb/phy/phy-rcar-gen2-usb.c
+@@ -1,8 +1,8 @@
+ /*
+  * Renesas R-Car Gen2 USB phy driver
+  *
+- * Copyright (C) 2013 Renesas Solutions Corp.
+- * Copyright (C) 2013 Cogent Embedded, Inc.
++ * Copyright (C) 2013-2014 Renesas Solutions Corp.
++ * Copyright (C) 2013-2014 Cogent Embedded, Inc.
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License version 2 as
+@@ -13,6 +13,7 @@
+ #include <linux/delay.h>
+ #include <linux/io.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/platform_data/usb-rcar-gen2-phy.h>
+ #include <linux/platform_device.h>
+ #include <linux/spinlock.h>
+@@ -167,9 +168,41 @@ out:
+ 	spin_unlock_irqrestore(&priv->lock, flags);
+ }
+ 
++#ifdef CONFIG_OF
++static struct rcar_gen2_phy_platform_data *
++rcar_gen2_usb_phy_parse_dt(struct device *dev)
++{
++	struct device_node *np = dev->of_node;
++	struct rcar_gen2_phy_platform_data *pdata;
++
++	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return NULL;
++
++	pdata->chan0_pci = of_property_read_bool(np, "renesas,channel0-pci");
++	pdata->chan2_pci = of_property_read_bool(np, "renesas,channel2-pci");
++
++	return pdata;
++}
++
++static const struct of_device_id rcar_gen2_usb_phy_match_table[] = {
++	{ .compatible = "renesas,usb-phy-r8a7790" },
++	{ .compatible = "renesas,usb-phy-r8a7791" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, rcar_gen2_usb_phy_match_table);
++#else
++static inline struct rcar_gen2_phy_platform_data *
++rcar_gen2_usb_phy_parse_dt(struct device *dev)
++{
++	return NULL;
++}
++#endif
++
+ static int rcar_gen2_usb_phy_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
+ 	struct rcar_gen2_phy_platform_data *pdata;
+ 	struct rcar_gen2_usb_phy_priv *priv;
+ 	struct resource *res;
+@@ -177,13 +210,19 @@ static int rcar_gen2_usb_phy_probe(struc
+ 	struct clk *clk;
+ 	int retval;
+ 
+-	pdata = dev_get_platdata(dev);
++	if (np)
++		pdata = rcar_gen2_usb_phy_parse_dt(dev);
++	else
++		pdata = dev_get_platdata(dev);
+ 	if (!pdata) {
+ 		dev_err(dev, "No platform data\n");
+ 		return -EINVAL;
+ 	}
+ 
+-	clk = devm_clk_get(dev, "usbhs");
++	if (np)
++		clk = of_clk_get_by_name(np, "usbhs");
++	else
++		clk = clk_get(dev, "usbhs");
+ 	if (IS_ERR(clk)) {
+ 		dev_err(dev, "Can't get the clock\n");
+ 		return PTR_ERR(clk);
+@@ -191,13 +230,16 @@ static int rcar_gen2_usb_phy_probe(struc
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	base = devm_ioremap_resource(dev, res);
+-	if (IS_ERR(base))
+-		return PTR_ERR(base);
++	if (IS_ERR(base)) {
++		retval = PTR_ERR(base);
++		goto error;
++	}
+ 
+ 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+ 	if (!priv) {
+ 		dev_err(dev, "Memory allocation failed\n");
+-		return -ENOMEM;
++		retval = -ENOMEM;
++		goto error;
+ 	}
+ 
+ 	spin_lock_init(&priv->lock);
+@@ -216,12 +258,16 @@ static int rcar_gen2_usb_phy_probe(struc
+ 	retval = usb_add_phy_dev(&priv->phy);
+ 	if (retval < 0) {
+ 		dev_err(dev, "Failed to add USB phy\n");
+-		return retval;
++		goto error;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, priv);
+ 
+ 	return retval;
++
++error:
++	clk_put(clk);
++	return retval;
+ }
+ 
+ static int rcar_gen2_usb_phy_remove(struct platform_device *pdev)
+@@ -229,6 +275,7 @@ static int rcar_gen2_usb_phy_remove(stru
+ 	struct rcar_gen2_usb_phy_priv *priv = platform_get_drvdata(pdev);
+ 
+ 	usb_remove_phy(&priv->phy);
++	clk_put(priv->clk);
+ 
+ 	return 0;
+ }
+@@ -236,6 +283,7 @@ static int rcar_gen2_usb_phy_remove(stru
+ static struct platform_driver rcar_gen2_usb_phy_driver = {
+ 	.driver = {
+ 		.name = "usb_phy_rcar_gen2",
++		.of_match_table = of_match_ptr(rcar_gen2_usb_phy_match_table),
+ 	},
+ 	.probe = rcar_gen2_usb_phy_probe,
+ 	.remove = rcar_gen2_usb_phy_remove,
