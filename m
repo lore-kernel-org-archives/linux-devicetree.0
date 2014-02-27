@@ -1,36 +1,28 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] pci: OF: Fix the conversion of IO ranges into IO resources.
-Date: Thu, 27 Feb 2014 14:20:54 +0100
-Message-ID: <14735193.MhDlU8yNYG@wuerfel>
-References: <1393506402-11474-1-git-send-email-Liviu.Dudau@arm.com> <1393506402-11474-2-git-send-email-Liviu.Dudau@arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 2/4] pci: Create pci_host_bridge before its associated bus in pci_create_root_bus.
+Date: Thu, 27 Feb 2014 14:22:13 +0100
+Message-ID: <6845675.ZDsMtaSPuS@wuerfel>
+References: <1393506402-11474-1-git-send-email-Liviu.Dudau@arm.com> <1393506402-11474-3-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393506402-11474-2-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1393506402-11474-3-git-send-email-Liviu.Dudau@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linaro-kernel@lists.linaro.org
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 27 February 2014 13:06:39 Liviu Dudau wrote:
-> +       res->flags = range->flags;
-> +       if (res->flags & IORESOURCE_IO) {
-> +               unsigned long port;
-> +               port = pci_address_to_pio(range->pci_addr);
-> +               if (port == (unsigned long)-1) {
-> +                       res->start = (resource_size_t)OF_BAD_ADDR;
-> +                       res->end = (resource_size_t)OF_BAD_ADDR;
-> +                       return;
-> +               }
+On Thursday 27 February 2014 13:06:40 Liviu Dudau wrote:
+> Before commit 7b5436635800 the pci_host_bridge was created before the root bus.
+> As that commit has added a needless dependency on the bus for pci_alloc_host_bridge()
+> the creation order has been changed for no good reason. Revert the order of
+> creation as we are going to depend on the pci_host_bridge structure to retrieve the
+> domain number of the root bus.
+> 
+> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
 > 
 
-I think this conflicts with the way that pci_address_to_pio() is
-defined on powerpc, where it expects a CPU address as the input,
-not a PCI i/o address.
+Looks good to me.
 
 	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
