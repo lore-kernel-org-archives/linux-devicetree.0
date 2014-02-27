@@ -1,158 +1,130 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 0/31] Add additional sandbox features and infrastructure
-Date: Thu, 27 Feb 2014 13:25:54 -0700
-Message-ID: <1393532785-9020-1-git-send-email-sjg@chromium.org>
+Subject: [PATCH v2 05/31] sandbox: dts: Add display and keyboard to sandbox
+Date: Thu, 27 Feb 2014 13:25:59 -0700
+Message-ID: <1393532785-9020-6-git-send-email-sjg@chromium.org>
+References: <1393532785-9020-1-git-send-email-sjg@chromium.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1393532785-9020-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: u-boot-review-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Devicetree Discuss <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jagannadha Sutradharudu Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jagannadha Sutradharudu Teki <jaganna-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: u-boot-review-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Discuss <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-At present sandbox only supports a basic set of features. To help address
-this, a recent series added SPI and SPI flash support; this series expands
-the coverage further.
+Add an LCD display and keyboard to the sandbox device tree so that these
+features can be used.
 
-Firstly SDL is used to provide LCD and audio support. Sandbox gains its own
-LCD driver which can display images, host a command line, etc. The audio
-support is basic and needs additional work, but it is a starting point.
-SDL also provides a keyboard emulation (using the Chrome OS EC code as a
-base).
+Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
 
-Secondly a TPM emulation is added. This does not include all features (the
-implementation is quite simplistic) but it is enough to do basic secure
-boot operations.
+Changes in v2: None
 
-Finally, various pieces of useful infrastructure are added, including:
+ arch/sandbox/dts/sandbox.dts | 95 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 95 insertions(+)
 
-- loading and saving of the emulated SDRAM to permit test runs to carry
-over state
-- loading and saving of general sandbox state (for example a driver can
-save its stage and reload it on the next run)
-- support for using bootm to load a kernel
-- providing a device tree for use by sandbox
-- a means to jump to another U-Boot while preserving state (useful for
-test environments which want to run a series of tests with
-script-selectable state)
-
-Major functions which still remain without sandbox support are I2C,
-networking and USB.
-
-Note:
-
-Much of this series was sent out in November. Due to problems with the
-LCD side it was not ready for the last release, although about a dozen
-patches from the series were applied. I have rebased and tidied things
-up. U-Boot now starts by default without the LCD visible since for
-much sandbox testing we don't want the LCD. The Chrome OS EC code has been
-updated and tidied up and full keyboard support is now present in the LCD
-window.
-
-Changes in v2:
-- Add new patch to adjust #ifdef position in cros_ec
-- Add new patch to sync with latest Chrome OS EC version
-- Add new patches to bring in protocol v3 support
-- Rebase to master
-- Update series to take account of patches now merges from original series
-
-Randall Spangler (2):
-  cros_ec: Clean up multiple EC protocol support
-  cros_ec: spi: Add support for EC protocol version 3
-
-Simon Glass (27):
-  Use a const pointer for map_to_sysmem()
-  sandbox: Increase memory size to 32MB
-  sandbox: Build a device tree file for sandbox
-  sandbox: Use os functions to read host device tree
-  sandbox: dts: Add display and keyboard to sandbox
-  cros_ec: Add an enum for the number of flash regions
-  cros_ec: Add a function for reading a flash map entry
-  cros_ec: Add a function for decoding the Chrome OS EC flashmap
-  cros_ec: Support systems with no EC interrupt
-  cros_ec: Move #ifdef to permit flash region access
-  cros_ec: Sync up with latest Chrome OS EC version
-  cros_ec: Add base support for protocol v3
-  cros_ec: Correct comparison between signed and unsigned numbers
-  cros_ec: sandbox: Add Chrome OS EC emulation
-  sandbox: Plumb in Chrome OS EC emulation
-  cros_ec: Implement I2C pass-through
-  sandbox: Add os_jump_to_image() to run another executable
-  sandbox: Add -j option to indicate a jump from a previous U-Boot
-  sandbox: Add SDL library for LCD, keyboard, audio
-  sandbox: Add a simple sound driver
-  sandbox: Add LCD driver
-  sound: Move Samsung-specific code into its own file
-  sandbox: Deal with conflicting getenv() for SDL
-  sandbox: Allow Ctrl-C to work in sandbox
-  sandbox: Add options to clean up temporary files
-  sandbox: Add implementation of spi_setup_slave_fdt()
-  sandbox: config: Enable cros_ec emulation and related items
-
-Vadim Bendebury (2):
-  cros_ec: Move EC interface into common library
-  cros_ec: Drop old EC version support from EC driver
-
- Makefile                                      |   3 +-
- arch/sandbox/config.mk                        |   5 +
- arch/sandbox/cpu/Makefile                     |   3 +
- arch/sandbox/cpu/cpu.c                        |   2 +-
- arch/sandbox/cpu/os.c                         | 108 ++++-
- arch/sandbox/cpu/sdl.c                        | 341 ++++++++++++++
- arch/sandbox/cpu/start.c                      |  60 +++
- arch/sandbox/cpu/state.c                      |   6 +-
- arch/sandbox/dts/Makefile                     |  11 +
- arch/sandbox/dts/sandbox.dts                  | 125 ++++++
- arch/sandbox/include/asm/arch-sandbox/sound.h |  14 +
- arch/sandbox/include/asm/sdl.h                | 118 +++++
- arch/sandbox/include/asm/state.h              |  29 +-
- arch/sandbox/include/asm/u-boot-sandbox.h     |   3 +
- board/samsung/common/board.c                  |  29 +-
- board/samsung/smdk5250/exynos5-dt.c           |   1 -
- board/sandbox/sandbox/sandbox.c               |  49 ++-
- common/Makefile                               |   1 +
- common/board_f.c                              |  48 +-
- common/cros_ec.c                              |  44 ++
- common/lcd.c                                  |  21 +-
- disk/part.c                                   |  17 -
- doc/device-tree-bindings/video/sandbox-fb.txt |  13 +
- drivers/input/cros_ec_keyb.c                  |  34 +-
- drivers/misc/Makefile                         |   1 +
- drivers/misc/cros_ec.c                        | 611 +++++++++++++++++++++++---
- drivers/misc/cros_ec_i2c.c                    |  64 ++-
- drivers/misc/cros_ec_lpc.c                    |  80 +---
- drivers/misc/cros_ec_sandbox.c                | 559 +++++++++++++++++++++++
- drivers/misc/cros_ec_spi.c                    |  30 ++
- drivers/serial/sandbox.c                      |  10 +-
- drivers/sound/Makefile                        |   4 +-
- drivers/sound/sandbox.c                       |  23 +
- drivers/sound/sound-i2s.c                     | 208 +++++++++
- drivers/sound/sound.c                         | 221 +---------
- drivers/spi/sandbox_spi.c                     |  13 +
- drivers/video/Makefile                        |   1 +
- drivers/video/sandbox_sdl.c                   |  79 ++++
- include/common.h                              |   6 +
- include/configs/exynos5250-dt.h               |   1 +
- include/configs/sandbox.h                     |  41 +-
- include/cros_ec.h                             |  94 +++-
- include/cros_ec_message.h                     |   2 +-
- include/ec_commands.h                         | 348 +++++++++++++--
- include/fdtdec.h                              |  20 +
- include/lcd.h                                 |   3 +
- include/os.h                                  |  27 +-
- include/sound.h                               |   9 +
- lib/fdtdec.c                                  |  26 ++
- 49 files changed, 3032 insertions(+), 534 deletions(-)
- create mode 100644 arch/sandbox/cpu/sdl.c
- create mode 100644 arch/sandbox/dts/Makefile
- create mode 100644 arch/sandbox/dts/sandbox.dts
- create mode 100644 arch/sandbox/include/asm/arch-sandbox/sound.h
- create mode 100644 arch/sandbox/include/asm/sdl.h
- create mode 100644 common/cros_ec.c
- create mode 100644 doc/device-tree-bindings/video/sandbox-fb.txt
- create mode 100644 drivers/misc/cros_ec_sandbox.c
- create mode 100644 drivers/sound/sandbox.c
- create mode 100644 drivers/sound/sound-i2s.c
- create mode 100644 drivers/video/sandbox_sdl.c
-
+diff --git a/arch/sandbox/dts/sandbox.dts b/arch/sandbox/dts/sandbox.dts
+index ea4b8ad..11afbc2 100644
+--- a/arch/sandbox/dts/sandbox.dts
++++ b/arch/sandbox/dts/sandbox.dts
+@@ -27,4 +27,99 @@
+ 		sides = <6>;
+ 	};
+ 
++	host@0 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "sandbox,host-emulation";
++		cros-ec@0 {
++			reg = <0>;
++			compatible = "google,cros-ec";
++
++			/*
++			 * This describes the flash memory within the EC. Note
++			 * that the STM32L flash erases to 0, not 0xff.
++			 */
++			#address-cells = <1>;
++			#size-cells = <1>;
++			flash@8000000 {
++				reg = <0x08000000 0x20000>;
++				erase-value = <0>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++
++				/* Information for sandbox */
++				ro {
++					reg = <0 0xf000>;
++				};
++				wp-ro {
++					reg = <0xf000 0x1000>;
++				};
++				rw {
++					reg = <0x10000 0x10000>;
++				};
++			};
++		};
++	};
++
++	lcd {
++		compatible = "sandbox,lcd-sdl";
++		xres = <800>;
++		yres = <600>;
++	};
++
++	cros-ec-keyb {
++		compatible = "google,cros-ec-keyb";
++		google,key-rows = <8>;
++		google,key-columns = <13>;
++		google,repeat-delay-ms = <240>;
++		google,repeat-rate-ms = <30>;
++		google,ghost-filter;
++		/*
++		 * Keymap entries take the form of 0xRRCCKKKK where
++		 * RR=Row CC=Column KKKK=Key Code
++		 * The values below are for a US keyboard layout and
++		 * are taken from the Linux driver. Note that the
++		 * 102ND key is not used for US keyboards.
++		 */
++		linux,keymap = <
++			/* CAPSLCK F1         B          F10     */
++			0x0001003a 0x0002003b 0x00030030 0x00040044
++			/* N       =          R_ALT      ESC     */
++			0x00060031 0x0008000d 0x000a0064 0x01010001
++			/* F4      G          F7         H       */
++			0x0102003e 0x01030022 0x01040041 0x01060023
++			/* '       F9         BKSPACE    L_CTRL  */
++			0x01080028 0x01090043 0x010b000e 0x0200001d
++			/* TAB     F3         T          F6      */
++			0x0201000f 0x0202003d 0x02030014 0x02040040
++			/* ]       Y          102ND      [       */
++			0x0205001b 0x02060015 0x02070056 0x0208001a
++			/* F8      GRAVE      F2         5       */
++			0x02090042 0x03010029 0x0302003c 0x03030006
++			/* F5      6          -          \       */
++			0x0304003f 0x03060007 0x0308000c 0x030b002b
++			/* R_CTRL  A          D          F       */
++			0x04000061 0x0401001e 0x04020020 0x04030021
++			/* S       K          J          ;       */
++			0x0404001f 0x04050025 0x04060024 0x04080027
++			/* L       ENTER      Z          C       */
++			0x04090026 0x040b001c 0x0501002c 0x0502002e
++			/* V       X          ,          M       */
++			0x0503002f 0x0504002d 0x05050033 0x05060032
++			/* L_SHIFT /          .          SPACE   */
++			0x0507002a 0x05080035 0x05090034 0x050B0039
++			/* 1       3          4          2       */
++			0x06010002 0x06020004 0x06030005 0x06040003
++			/* 8       7          0          9       */
++			0x06050009 0x06060008 0x0608000b 0x0609000a
++			/* L_ALT   DOWN       RIGHT      Q       */
++			0x060a0038 0x060b006c 0x060c006a 0x07010010
++			/* E       R          W          I       */
++			0x07020012 0x07030013 0x07040011 0x07050017
++			/* U       R_SHIFT    P          O       */
++			0x07060016 0x07070036 0x07080019 0x07090018
++			/* UP      LEFT    */
++			0x070b0067 0x070c0069>;
++	};
++
+ };
 -- 
 1.9.0.279.gdc9e3eb
 
