@@ -1,211 +1,76 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH v0 07/15] clk: st: Adds divmux and prediv clock binding
-Date: Thu, 27 Feb 2014 16:24:20 +0100
-Message-ID: <1393514668-17440-8-git-send-email-gabriel.fernandez@st.com>
+From: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH v0 10/15] clk: st: Adds quadfs clock binding
+Date: Thu, 27 Feb 2014 16:24:23 +0100
+Message-ID: <1393514668-17440-11-git-send-email-gabriel.fernandez@st.com>
 References: <1393514668-17440-1-git-send-email-gabriel.fernandez@st.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1393514668-17440-1-git-send-email-gabriel.fernandez@st.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: mturquette@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1393514668-17440-1-git-send-email-gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
 ---
- .../bindings/clock/st/st,clkgen-divmux.txt         | 49 +++++++++++++
- .../bindings/clock/st/st,clkgen-prediv.txt         | 36 ++++++++++
- .../devicetree/bindings/clock/st/st,clkgen.txt     | 83 ++++++++++++++++++++++
- 3 files changed, 168 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/st/st,clkgen-divmux.txt
- create mode 100644 Documentation/devicetree/bindings/clock/st/st,clkgen-prediv.txt
- create mode 100644 Documentation/devicetree/bindings/clock/st/st,clkgen.txt
+ .../devicetree/bindings/clock/st/st,quadfs.txt     | 45 ++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/st/st,quadfs.txt
 
-diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-divmux.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-divmux.txt
+diff --git a/Documentation/devicetree/bindings/clock/st/st,quadfs.txt b/Documentation/devicetree/bindings/clock/st/st,quadfs.txt
 new file mode 100644
-index 0000000..ae56315
+index 0000000..ec86d62
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-divmux.txt
-@@ -0,0 +1,49 @@
-+Binding for a ST divider and multiplexer clock driver.
-+
-+This binding uses the common clock binding[1].
-+Base address is located to the parent node. See clock binding[2]
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+[2] Documentation/devicetree/bindings/clock/st/st,clkgen.txt
-+
-+Required properties:
-+
-+- compatible : shall be:
-+	"st,clkgena-divmux-c65-hs",	"st,clkgena-divmux"
-+	"st,clkgena-divmux-c65-ls",	"st,clkgena-divmux"
-+	"st,clkgena-divmux-c32-odf0",	"st,clkgena-divmux"
-+	"st,clkgena-divmux-c32-odf1",	"st,clkgena-divmux"
-+	"st,clkgena-divmux-c32-odf2",	"st,clkgena-divmux"
-+	"st,clkgena-divmux-c32-odf3",	"st,clkgena-divmux"
-+
-+- #clock-cells : From common clock binding; shall be set to 1.
-+
-+- clocks : From common clock binding
-+
-+- clock-output-names : From common clock binding.
-+
-+Example:
-+
-+	clockgenA@fd345000 {
-+		reg = <0xfd345000 0xb50>;
-+
-+		CLK_M_A1_DIV1: CLK_M_A1_DIV1 {
-+			#clock-cells = <1>;
-+			compatible = "st,clkgena-divmux-c32-odf1",
-+				     "st,clkgena-divmux";
-+
-+			clocks = <&CLK_M_A1_OSC_PREDIV>,
-+				 <&CLK_M_A1_PLL0 1>, /* PLL0 PHI1 */
-+				 <&CLK_M_A1_PLL1 1>; /* PLL1 PHI1 */
-+
-+			clock-output-names = "CLK_M_RX_ICN_TS",
-+					     "CLK_M_RX_ICN_VDP_0",
-+					     "", /* Unused */
-+					     "CLK_M_PRV_T1_BUS",
-+					     "CLK_M_ICN_REG_12",
-+					     "CLK_M_ICN_REG_10",
-+					     "", /* Unused */
-+					     "CLK_M_ICN_ST231";
-+		};
-+	};
-+
-diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-prediv.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-prediv.txt
-new file mode 100644
-index 0000000..566c9d7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-prediv.txt
-@@ -0,0 +1,36 @@
-+Binding for a ST pre-divider clock driver.
-+
-+This binding uses the common clock binding[1].
-+Base address is located to the parent node. See clock binding[2]
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+[2] Documentation/devicetree/bindings/clock/st/st,clkgen.txt
-+
-+Required properties:
-+
-+- compatible : shall be:
-+	"st,clkgena-prediv-c65",	"st,clkgena-prediv"
-+	"st,clkgena-prediv-c32",	"st,clkgena-prediv"
-+
-+- #clock-cells : From common clock binding; shall be set to 0.
-+
-+- clocks : From common clock binding
-+
-+- clock-output-names : From common clock binding.
-+
-+Example:
-+
-+	clockgenA@fd345000 {
-+		reg = <0xfd345000 0xb50>;
-+
-+		CLK_M_A2_OSC_PREDIV: CLK_M_A2_OSC_PREDIV {
-+			#clock-cells = <0>;
-+			compatible = "st,clkgena-prediv-c32",
-+				     "st,clkgena-prediv";
-+
-+			clocks = <&CLK_SYSIN>;
-+
-+			clock-output-names = "CLK_M_A2_OSC_PREDIV";
-+		};
-+	};
-+
-diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
-new file mode 100644
-index 0000000..49ec5ae
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
-@@ -0,0 +1,83 @@
-+Binding for a Clockgen hardware block found on
++++ b/Documentation/devicetree/bindings/clock/st/st,quadfs.txt
+@@ -0,0 +1,45 @@
++Binding for a type of quad channel digital frequency synthesizer found on
 +certain STMicroelectronics consumer electronics SoC devices.
 +
-+A Clockgen node can contain pll, diviser or multiplexer nodes.
-+
-+We will find only the base address of the Clockgen, this base
-+address is common of all subnode.
-+
-+	clockgen_node {
-+		reg = <>;
-+
-+		pll_node {
-+			...
-+		};
-+
-+		prediv_node {
-+			...
-+		};
-+
-+		divmux_node {
-+			...
-+		};
-+
-+		quadfs_node {
-+			...
-+		};
-+		...
-+	};
++This version contains a programmable PLL which can generate up to 216, 432
++or 660MHz (from a 30MHz oscillator input) as the input to the digital
++synthesizers.
 +
 +This binding uses the common clock binding[1].
-+Each subnode should use the binding discribe in [2]..[4]
 +
 +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+[2] Documentation/devicetree/bindings/clock/st,quadfs.txt
-+[3] Documentation/devicetree/bindings/clock/st,quadfs.txt
-+[4] Documentation/devicetree/bindings/clock/st,quadfs.txt
 +
 +Required properties:
++- compatible : shall be:
++  "st,stih416-quadfs216",	"st,quadfs"
++  "st,stih416-quadfs432",	"st,quadfs"
++  "st,stih416-quadfs660-E",	"st,quadfs"
++  "st,stih416-quadfs660-F",	"st,quadfs"
++
++- #clock-cells : from common clock binding; shall be set to 1.
++
 +- reg : A Base address and length of the register set.
++
++- clocks : from common clock binding
++
++- clock-output-names : From common clock binding. The block has 4
++                       clock outputs but not all of them in a specific instance
++                       have to be used in the SoC. If a clock name is left as
++                       an empty string then no clock will be created for the
++                       output associated with that string index. If fewer than
++                       4 strings are provided then no clocks will be created
++                       for the remaining outputs.
 +
 +Example:
 +
-+	clockgenA@fee62000 {
++	CLOCKGEN_E: CLOCKGEN_E {
++                #clock-cells = <1>;
++                compatible = "st,stih416-quadfs660-E", "st,quadfs";
++                reg = <0xfd3208bc 0xB0>;
 +
-+		reg = <0xfee62000 0xb48>;
-+
-+		CLK_S_A0_PLL: CLK_S_A0_PLL {
-+			#clock-cells = <1>;
-+			compatible = "st,clkgena-plls-c65";
-+
-+			clocks = <&CLK_SYSIN>;
-+
-+			clock-output-names = "CLK_S_A0_PLL0_HS",
-+					     "CLK_S_A0_PLL0_LS",
-+					     "CLK_S_A0_PLL1";
-+		};
-+
-+		CLK_S_A0_OSC_PREDIV: CLK_S_A0_OSC_PREDIV {
-+			#clock-cells = <0>;
-+			compatible = "st,clkgena-prediv-c65",
-+				     "st,clkgena-prediv";
-+
-+			clocks = <&CLK_SYSIN>;
-+
-+			clock-output-names = "CLK_S_A0_OSC_PREDIV";
-+		};
-+
-+		CLK_S_A0_HS: CLK_S_A0_HS {
-+			#clock-cells = <1>;
-+			compatible = "st,clkgena-divmux-c65-hs",
-+				     "st,clkgena-divmux";
-+
-+			clocks = <&CLK_S_A0_OSC_PREDIV>,
-+				 <&CLK_S_A0_PLL 0>, /* PLL0 HS */
-+				 <&CLK_S_A0_PLL 2>; /* PLL1 */
-+
-+			clock-output-names = "CLK_S_FDMA_0",
-+					     "CLK_S_FDMA_1",
-+					     ""; /* CLK_S_JIT_SENSE */
-+					     /* Fourth output unused */
-+		};
-+	};
-+
++                clocks = <&CLK_SYSIN>;
++                clock-output-names = "CLK_M_PIX_MDTP_0",
++                                        "CLK_M_PIX_MDTP_1",
++                                        "CLK_M_PIX_MDTP_2",
++                                        "CLK_M_MPELPC";
++        };
 -- 
 1.9.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
