@@ -1,106 +1,42 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 3/4] ARM: mvebu: move DT Dove to MVEBU
-Date: Thu, 27 Feb 2014 16:47:37 -0500
-Message-ID: <20140227214737.GL1872@titan.lakedaemon.net>
-References: <1393536486-3827-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1393536486-3827-4-git-send-email-sebastian.hesselbarth@gmail.com>
- <20140227214039.GJ1872@titan.lakedaemon.net>
- <530FB19F.3050209@gmail.com>
+From: Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/3] ARM: bcm21664: Add initial support.
+Date: Thu, 27 Feb 2014 13:56:03 -0800
+Message-ID: <1393538166-22868-1-git-send-email-markus.mayer@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <530FB19F.3050209-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Broadcom Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2014 at 10:43:59PM +0100, Sebastian Hesselbarth wrote:
-> On 02/27/2014 10:40 PM, Jason Cooper wrote:
-> >On Thu, Feb 27, 2014 at 10:28:04PM +0100, Sebastian Hesselbarth wrote:
-> >>With all the DT support preparation done, we are able to move Dove
-> >>to MVEBU easily. Legacy non-DT mach-dove is left untouched to rot
-> >>for a while before removal. Also, convert SATA PHY Kconfig entry,
-> >>which is DT-only.
-> >>
-> >>Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>---
-> >>Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >>Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> >>Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> >>Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> >>Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> >>Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> >>Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> >>Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> >>Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> >>Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> >>Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >>Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> >>Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >>---
-> >>  arch/arm/boot/dts/Makefile                           | 12 ++++++------
-> >>  arch/arm/mach-dove/Kconfig                           | 12 ------------
-> >>  arch/arm/mach-dove/Makefile                          |  1 -
-> >>  arch/arm/mach-mvebu/Kconfig                          | 12 ++++++++++++
-> >>  arch/arm/mach-mvebu/Makefile                         |  1 +
-> >>  arch/arm/{mach-dove/board-dt.c => mach-mvebu/dove.c} | 20 ++++++++------------
-> >>  drivers/phy/Kconfig                                  |  2 +-
-> >>  7 files changed, 28 insertions(+), 32 deletions(-)
-> >>  rename arch/arm/{mach-dove/board-dt.c => mach-mvebu/dove.c} (61%)
-> >>
-> >>diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> >>index 032030361bef..376a2573e500 100644
-> >>--- a/arch/arm/boot/dts/Makefile
-> >>+++ b/arch/arm/boot/dts/Makefile
-> >>@@ -55,11 +55,6 @@ dtb-$(CONFIG_ARCH_BERLIN) += \
-> >>  	berlin2cd-google-chromecast.dtb
-> >>  dtb-$(CONFIG_ARCH_DAVINCI) += da850-enbw-cmc.dtb \
-> >>  	da850-evm.dtb
-> >>-dtb-$(CONFIG_ARCH_DOVE) += dove-cm-a510.dtb \
-> >>-	dove-cubox.dtb \
-> >>-	dove-d2plug.dtb \
-> >>-	dove-d3plug.dtb \
-> >>-	dove-dove-db.dtb
-> >>  dtb-$(CONFIG_ARCH_EFM32) += efm32gg-dk3750.dtb
-> >>  dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
-> >>  	exynos4210-smdkv310.dtb \
-> >>@@ -132,7 +127,12 @@ dtb-$(CONFIG_ARCH_MVEBU) += armada-370-db.dtb \
-> >>  	armada-xp-gp.dtb \
-> >>  	armada-xp-netgear-rn2120.dtb \
-> >>  	armada-xp-matrix.dtb \
-> >>-	armada-xp-openblocks-ax3-4.dtb
-> >>+	armada-xp-openblocks-ax3-4.dtb \
-> >>+	dove-cm-a510.dtb \
-> >>+	dove-cubox.dtb \
-> >>+	dove-d2plug.dtb \
-> >>+	dove-d3plug.dtb \
-> >>+	dove-dove-db.dtb
-> >
-> >This is going to conflict badly with
-> >
-> >   a02dd0271d01 ARM: mvebu: select dtbs from MACH_ARMADA_*
-> >
-> >Perhaps you could mimic what Andrew did in his series:
-> >
-> >dove := dove-cm-a510.dtb \
-> >	dove-cubox.dtb \
-> >	dove-d2plug.dtb \
-> >	dove-d3plug.dtb \
-> >	dove-dove-db.dtb
-> >dtb-$(CONFIG_ARCH_DOVE) += $(dove)
-> >dtb-$(CONFIG_MACH_DOVE) += $(dove)
-> 
-> Ok, will do - except dtb-$(CONFIG_ARCH_DOVE) above.. there is no
-> DT in ARCH_DOVE after this patch.
+This series adds initial support for the Broadcom BCM21664 mobile SoC.
 
-Ok, then there's no need for 'dove :=', just s/ARCH_DOVE/MACH_DOVE/ on
-the original without movement.
+The series depends on the series "ARM: bcm281xx: Consolidate code":
+    https://lkml.org/lkml/2014/2/25/548
 
-thx,
+Markus Mayer (3):
+  ARM: DT: bcm21664: Device tree bindings
+  ARM: bcm21664: Add board support.
+  ARM: dts: bcm21664: Add device tree files.
 
-Jason.
+ .../devicetree/bindings/arm/bcm/bcm21664.txt       |   15 +
+ .../devicetree/bindings/arm/bcm/kona-resetmgr.txt  |   14 +
+ arch/arm/boot/dts/Makefile                         |    3 +-
+ arch/arm/boot/dts/bcm21664-garnet.dts              |   56 ++++
+ arch/arm/boot/dts/bcm21664.dtsi                    |  292 ++++++++++++++++++++
+ arch/arm/mach-bcm/Makefile                         |    6 +-
+ arch/arm/mach-bcm/board_bcm21664.c                 |   78 ++++++
+ 7 files changed, 461 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/bcm21664.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/kona-resetmgr.txt
+ create mode 100644 arch/arm/boot/dts/bcm21664-garnet.dts
+ create mode 100644 arch/arm/boot/dts/bcm21664.dtsi
+ create mode 100644 arch/arm/mach-bcm/board_bcm21664.c
+
+-- 
+1.7.9.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
