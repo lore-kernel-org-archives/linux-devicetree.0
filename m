@@ -1,52 +1,51 @@
-From: Loc Ho <lho@apm.com>
-Subject: Re: [PATCH v12 1/4] PHY: Add function set_speed to generic PHY framework
-Date: Thu, 27 Feb 2014 13:09:57 -0800
-Message-ID: <CAPw-ZT=7cu1NoxrBL48RUJV04ofrnNkF=p=23VFfu8ZZWmkQWQ@mail.gmail.com>
-References: <1393524848-8207-1-git-send-email-lho@apm.com>
-	<1393524848-8207-2-git-send-email-lho@apm.com>
-	<20140227190102.GB4862@saruman.home>
-	<CAPw-ZT=F07=T0=z=iT=hxJ0+609RBDYRL=MXF5dQoEowLjsRjQ@mail.gmail.com>
-	<20140227205039.GE5375@saruman.home>
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 6/7] ARM: dts: keystone: Use dma-ranges property
+Date: Thu, 27 Feb 2014 16:17:51 -0500
+Message-ID: <1393535872-20915-7-git-send-email-santosh.shilimkar@ti.com>
+References: <1393535872-20915-1-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <20140227205039.GE5375@saruman.home>
-Sender: linux-scsi-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Tejun Heo <tj@kernel.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1393535872-20915-1-git-send-email-santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 
->> >> This patch adds function set_speed to the generic PHY framework operation
->> >> structure. This function can be called to instruct the PHY underlying layer
->> >> at specified lane to configure for specified speed in hertz.
->> >
->> > why ? looks like clk_set_rate() is your friend here. Can you be more
->> > descriptive of the use case ? When will this be used ?
->> >
->>
->> The phy_set_speed is used to configure the operation speed of the PHY
->> at run-time. The clock interface in general is used to configure the
->> clock input to the IP. I don't believe they are the same thing. Maybe
->> it will be clear in my response to your second email
->
-> The problem with this is that you end up adding SATA-specific details to
-> something which is supposed to be generic.
+The dma-ranges property has to be specified per bus and has format:
+ < DMA addr > - Base DMA address for Bus (Bus format 32-bits)
+ < CPU addr > - Corresponding base CPU address (CPU format 64-bits)
+ < DMA range size > - Size of supported DMA range
 
-Setting the operation speed is pretty generic from an interface point
-of view. An generic multi-purpose PHY can support multiple speed. If
-the upper layer wish to operate at an specified speed (say for testing
-purpose and etc), it can be allowed.
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/keystone.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
-> After negoatiation, don't you
-> get any interrupt from your PHY indicating that link speed negotiation
-> is done ? Or is that IRQ only on AHCI IP ?
+diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+index b420290..171579d 100644
+--- a/arch/arm/boot/dts/keystone.dtsi
++++ b/arch/arm/boot/dts/keystone.dtsi
+@@ -96,6 +96,7 @@
+ 		compatible = "ti,keystone","simple-bus";
+ 		interrupt-parent = <&gic>;
+ 		ranges = <0x0 0x0 0x0 0xc0000000>;
++		dma-ranges = <0x80000000 0x8 0x00000000 0x80000000>;
+ 
+ 		rstctrl: reset-controller {
+ 			compatible = "ti,keystone-reset";
+-- 
+1.7.9.5
 
-There is NO interrupt from the PHY. The IRQ is assoicated with the
-AHCI IP. With SATA host flow, it starts off with an COMRESET to start
-the link negotiation. At that point, it will poll for completion.
-
-Any other concerns?
-
--Loc
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
