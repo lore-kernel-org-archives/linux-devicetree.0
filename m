@@ -1,24 +1,73 @@
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: Re: [PATCH] phy-rcar-gen2-usb: add device tree support
-Date: Thu, 27 Feb 2014 12:57:27 +0000
-Message-ID: <530F3637.5050000@codethink.co.uk>
-References: <201402270312.51588.sergei.shtylyov@cogentembedded.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [RFC PATCH v4 3/8] staging: imx-drm: Document updated imx-drm
+ device tree bindings
+Date: Thu, 27 Feb 2014 13:00:21 +0000
+Message-ID: <20140227130020.GJ21483@n2100.arm.linux.org.uk>
+References: <1393338203-25051-1-git-send-email-p.zabel@pengutronix.de>
+ <1393338203-25051-4-git-send-email-p.zabel@pengutronix.de>
+ <530F1C4C.2010504@ti.com> <1393506385.4507.49.camel@paszta.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <201402270312.51588.sergei.shtylyov@cogentembedded.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: balbi@ti.com, linux-usb@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-sh@vger.kernel.org, valentine.barshak@cogentembedded.com, rob@landley.net, linux-doc@vger.kernel.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <1393506385.4507.49.camel@paszta.hi.pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 27/02/14 00:12, Sergei Shtylyov wrote:
-> Add support of the device tree probing for the Renesas R-Car generation 2 SoCs
-> documenting the device tree binding as necessary.
+On Thu, Feb 27, 2014 at 02:06:25PM +0100, Philipp Zabel wrote:
+> For the i.MX6 display subsystem there is no clear single master device,
+> and the physical configuration changes across the SoC family. The
+> i.MX6Q/i.MX6D SoCs have two separate display controller devices IPU1 and
+> IPU2, with two output ports each.
 
-So what happened w.r.t to my last set of patches for this?
+Not also forgetting that there's another scenario too: you may wish
+to drive IPU1 and IPU2 as two completely separate display subsystems
+in some hardware, but as a combined display subsystem in others.
+
+Here's another scenario.  You may have these two IPUs on the SoC, but
+there's only one display output.  You want to leave the second IPU
+disabled, as you wouldn't want it to be probed or even exposed to
+userland.
+
+On the face of it, the top-level super-device node doesn't look very
+hardware-y, but it actually is - it's about how a board uses the
+hardware provided.  This is entirely in keeping with the spirit of DT,
+which is to describe what hardware is present and how it's connected
+together, whether it be at the chip or board level.
+
+If this wasn't the case, we wouldn't even attempt to describe what devices
+we have on which I2C buses - we'd just list the hardware on the board
+without giving any information about how it's wired together.
+
+This is no different - however, it doesn't have (and shouldn't) be
+subsystem specific... but - and this is the challenge we then face - how
+do you decide that on one board with a single zImage kernel, with both
+DRM and fbdev built-in, whether to use the DRM interfaces or the fbdev
+interfaces?  We could have both matching the same compatible string, but
+we'd also need some way to tell each other that they're not allowed to
+bind.
+
+Before anyone argues against "it isn't hardware-y", stop and think.
+What if I design a board with two Epson LCD controllers on board and
+put a muxing arrangement on their output.  Is that one or two devices?
+What if I want them to operate as one combined system?  What if I have
+two different LCD controllers on a board.  How is this any different
+from the two independent IPU hardware blocks integrated inside an iMX6
+SoC with a muxing arrangement on their output?
+
+It's very easy to look at a SoC and make the wrong decision...
 
 -- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
