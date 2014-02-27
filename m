@@ -1,48 +1,67 @@
-From: Fabian Vogt <fabian-O+IgeCt+IhXFOn1fZuaZsg@public.gmane.org>
-Subject: Re: [PATCH V6] gpio: New driver for LSI ZEVIO SoCs
-Date: Thu, 27 Feb 2014 15:43:21 +0100
-Message-ID: <1584880.3T2YsxZdKp@fabians-laptop.fritz.box>
-References: <1393271698-15829-1-git-send-email-fabian@ritter-vogt.de> <CACRpkdZqAMMvHiGwVDNnZ7Lg9RUVtjFGdfnZF3+QrX0KRPVJGA@mail.gmail.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [RFC PATCH v4 3/8] staging: imx-drm: Document updated imx-drm
+	device tree bindings
+Date: Thu, 27 Feb 2014 13:43:48 +0000
+Message-ID: <20140227134348.GK21483@n2100.arm.linux.org.uk>
+References: <1393338203-25051-1-git-send-email-p.zabel@pengutronix.de>
+	<1393338203-25051-4-git-send-email-p.zabel@pengutronix.de>
+	<530F1C4C.2010504@ti.com>
+	<20140227115652.GI21483@n2100.arm.linux.org.uk>
+	<530F3A93.501@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdZqAMMvHiGwVDNnZ7Lg9RUVtjFGdfnZF3+QrX0KRPVJGA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <530F3A93.501@ti.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces@lists.freedesktop.org
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 24, 2014 at 10:31:59, Linux Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Feb 24, 2014 at 8:54 PM, Fabian Vogt <fabian-O+IgeCt+IhXFOn1fZuaZsg@public.gmane.org> wrote:
+On Thu, Feb 27, 2014 at 03:16:03PM +0200, Tomi Valkeinen wrote:
+> On 27/02/14 13:56, Russell King - ARM Linux wrote:
 > 
-> > This driver supports the GPIO controller found in LSI ZEVIO SoCs.
-> > It has been successfully tested on a TI nspire CX calculator.
-> >
-> > Signed-off-by: Fabian Vogt <fabian-O+IgeCt+IhXFOn1fZuaZsg@public.gmane.org>
+> >> Is there even need for such a master device? You can find all the
+> >> connected display devices from any single display device, by just
+> >> following the endpoint links.
+> > 
+> > Please read up on what has been discussed over previous years:
+> > 
+> > http://lists.freedesktop.org/archives/dri-devel/2013-July/041159.html
 > 
-> I like this version. Patch applied.
+> Thanks, that was an interesting thread. Too bad I missed it, it was
+> during the holiday season. And seems Laurent missed it also, as he
+> didn't make any replies.
 > 
-> Q:
-> 
-> > +config GPIO_ZEVIO
-> > +       bool "LSI ZEVIO SoC memory mapped GPIOs"
-> > +       depends on OF
-> 
-> So OF_GPIO is not needed for the systems using this driver?
-> DT just used for probing the driver?
-> 
-I'm using of_mm_gpiochip_add to register the gpiochip.
-In the platform's Kconfig only ARCH_WANT_OPTIONAL_GPIOLIB is needed, OF_GPIO seems to be selected automatically.
-If I disable it in the .config and start "make menuconfig", it's selected again.
-OF_GPIO seems to have the same state as GPIOLIB in menuconfig.
+> The thread seemed to go over the very same things that had already been
+> discussed with CDF.
 
-Bye,
-Fabian
+That may be - but the problem with CDF solving this problem is that it's
+wrong.  It's fixing what is in actual fact a *generic* problem in a much
+too specific way.  To put it another way, it's forcing everyone to fix
+the same problem in their own separate ways because no one is willing to
+take a step back and look at the larger picture.
 
-> Yours,
-> Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+We can see that because ASoC has exactly the same problem - it has to
+wait until all devices (DMA, CPU DAIs, codecs etc) are present before it
+can initialise, just like DRM.  Can you re-use the CDF solution for ASoC?
+No.  Can it be re-used elsewhere in non-display subsystems?  No.
+
+Therefore, CDF is yet another implementation specific solution to a
+generic problem which can't be re-used.
+
+Yes, I realise that CDF may do other stuff, but because of the above, it's
+a broken solution.
+
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
