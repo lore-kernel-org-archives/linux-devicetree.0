@@ -1,63 +1,51 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v4 3/3] ARM: sun7i/sun6i: irqchip: Update the documentation
-Date: Thu, 27 Feb 2014 20:34:22 +0100
-Message-ID: <1393529662-8663-4-git-send-email-carlo@caione.org>
-References: <1393529662-8663-1-git-send-email-carlo@caione.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] pci: OF: Fix the conversion of IO ranges into IO
+ resources.
+Date: Thu, 27 Feb 2014 12:36:27 -0700
+Message-ID: <20140227193627.GA7773@obsidianresearch.com>
+References: <1393506402-11474-1-git-send-email-Liviu.Dudau@arm.com>
+ <1393506402-11474-2-git-send-email-Liviu.Dudau@arm.com>
+ <20140227181951.GC24656@obsidianresearch.com>
+ <20140227191259.GA31753@bart.dudau.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDWJTUUC5UCBBOVGX2MAKGQED6DLIWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1393529662-8663-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140227191259.GA31753-hOhETlTuV5niMG9XS5x8Mg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Added documentation for NMI irqchip.
+On Thu, Feb 27, 2014 at 07:12:59PM +0000, Liviu Dudau wrote:
+> The outstanding issue is how to fix pci_address_to_pio() as it will not
+> for for range->cpu_addr > IO_SPACE_LIMIT (16MB in my case).
 
-Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
----
- .../allwinner,sun67i-sc-nmi.txt                    | 27 ++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/allwinner,sun67i-sc-nmi.txt
+The default actually looks fine to me, it is the correct behavior for
+systems that actually have a dedicated IO space (like x86) where the
+'CPU' value for IO is the exact value used in the IO accessor
+instructions. In this case the IO_SPACE_LIMIT test is appropriate.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun67i-sc-nmi.txt b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun67i-sc-nmi.txt
-new file mode 100644
-index 0000000..ac31487
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun67i-sc-nmi.txt
-@@ -0,0 +1,27 @@
-+Allwinner Sunxi NMI Controller
-+==============================
-+
-+Required properties:
-+
-+- compatible : should be "allwinner,sun7i-a20-sc-nmi" or
-+  "allwinner,sun6i-a31-sc-nmi"
-+- reg : Specifies base physical address and size of the registers.
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- #interrupt-cells : Specifies the number of cells needed to encode an
-+  interrupt source. The value shall be 2. The first cell is the IRQ number, the
-+  second cell the trigger type.
-+- interrupt-parent: Specifies the parent interrupt controller.
-+- interrupts: Specifies the list of interrupt lines which are handled by
-+  the interrupt controller in the parent controller's notation. This value
-+  shall be the NMI.
-+
-+Example:
-+
-+sc-nmi-intc@01c00030 {
-+	compatible = "allwinner,sun7i-a20-sc-nmi";
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+	reg = <0x01c00030 0x0c>;
-+	interrupt-parent = <&gic>;
-+	interrupts = <0 0 4>;
-+};
--- 
-1.8.3.2
+It also looks correct for architectures that use the CPU MMIO address
+as the IO address directly (where IO_SPACE_LIMIT would be 4G)
+
+Architectures that use the virtual IO window technique will always
+require a custom pci_address_to_pio implementation.
+
+BTW, something that occured to me after reading the patches:
+
+For ARM64 you might want to think about doing away with the fixed
+virtual IO window like we see in ARM32. Just use the CPU MMIO address
+directly within the kernel, and implement a ioport_map to setup the MM
+on demand.
+
+I think the legacy reasons for having all those layers of translation
+are probably not applicable to ARM64, and it is much simpler without
+the extra translation step....
+
+Arnd, what do you think?
+
+Jason
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
