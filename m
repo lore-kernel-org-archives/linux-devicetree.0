@@ -1,63 +1,54 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] phy: micrel: add of configuration for LED mode
-Date: Thu, 27 Feb 2014 09:15:06 +0000
-Message-ID: <20140227091505.GA6945@e106331-lin.cambridge.arm.com>
-References: <1393415280-10227-1-git-send-email-ben.dooks@codethink.co.uk>
+From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Subject: Re: [PATCHv2 14/16] ARM: OMAP3: hwmod data: cleanup data for IOMMUs
+Date: Thu, 27 Feb 2014 10:16:05 +0100
+Message-ID: <530F0255.0@epfl.ch>
+References: <1392315347-32967-1-git-send-email-s-anna@ti.com>
+	<1392315347-32967-15-git-send-email-s-anna@ti.com>
+	<20140226171824.GH11654@atomide.com> <530E2B67.9050300@ti.com>
+Reply-To: florian.vaussard-p8DiymsW2f8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1393415280-10227-1-git-send-email-ben.dooks@codethink.co.uk>
-Sender: netdev-owner@vger.kernel.org
-To: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: "linux-kernel@lists.codethink.co.uk" <linux-kernel@lists.codethink.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <530E2B67.9050300-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 26, 2014 at 11:48:00AM +0000, Ben Dooks wrote:
-> Add support for the led-mode property for the following PHYs
-> which have a single LED mode configuration value.
-> 
-> KSZ8001 and KSZ8041 which both use register 0x1e bits 15,14 and
-> KSZ8021, KSZ8031 and KSZ8051 which use register 0x1f bits 5,4
-> to control the LED configuration.
-> 
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> ---
->  Documentation/devicetree/bindings/net/micrel.txt | 18 +++++++++
->  drivers/net/phy/micrel.c                         | 49 ++++++++++++++++++++++--
->  2 files changed, 63 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/micrel.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/micrel.txt b/Documentation/devicetree/bindings/net/micrel.txt
-> new file mode 100644
-> index 0000000..98a3e61
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/micrel.txt
-> @@ -0,0 +1,18 @@
-> +Micrel PHY properties.
-> +
-> +These properties cover the base properties Micrel PHYs.
-> +
-> +Optional properties:
-> +
-> + - micrel,led-mode : LED mode value to set for PHYs with configurable LEDs.
-> +
-> +              Configure the LED mode with single value. The list of PHYs and
-> +	      the bits that are currently supported:
-> +
-> +	      KSZ8001: register 0x1e, bits 15..14
-> +	      KSZ8041: register 0x1e, bits 15..14
-> +	      KSZ8021: register 0x1f, bits 5..4
-> +	      KSZ8031: register 0x1f, bits 5..4
-> +	      KSZ8051: register 0x1f, bits 5..4
-> +
-> +              See the respective PHY datasheet for the mode values.
+Hi,
 
-What do these mean, roughly,, and why can the kernel not decide how to
-cnofigure these?
+On 02/26/2014 06:59 PM, Suman Anna wrote:
+> Tony,
+> 
+> On 02/26/2014 11:18 AM, Tony Lindgren wrote:
+>> * Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [140213 10:19]:
+>>> From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+>>>
+>>> The irq numbers, ocp address space and device attribute data
+>>> have all been cleaned up for OMAP3 IOMMUs. All this data is
+>>> populated via the corresponding dt node.
+>>>
+>>> Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+>>> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+>>
+>> This will need to wait until we've made omap3 to be DT only
+>> as this will break idling of things for the legacy booting.
+>>
+> 
+> OK, will drop this and I will adjust Patch 9 to support the legacy boot
+> for OMAP3 ISP.
+> 
 
-In general we prefer to not place raw register values in the DT, and I'd
-like to know why we'd have to here.
+BTW, Tony do you have a new window for omap3 to be DT onyl?
 
-Cheers,
-Mark.
+Regards,
+Florian
