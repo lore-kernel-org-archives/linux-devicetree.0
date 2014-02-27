@@ -1,64 +1,104 @@
 From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: Re: [PATCH 4/6] phy-rcar-usb-gen2: add device tree support
-Date: Thu, 27 Feb 2014 16:03:16 +0000
-Message-ID: <530F61C4.7070706@codethink.co.uk>
-References: <1390057420-13226-1-git-send-email-ben.dooks@codethink.co.uk> <1390057420-13226-5-git-send-email-ben.dooks@codethink.co.uk> <52DAD3B3.1050807@cogentembedded.com> <52DCFF31.2040603@codethink.co.uk> <530F5FC2.1000608@cogentembedded.com>
+Subject: Re: [PATCH] phy-rcar-gen2-usb: add device tree support
+Date: Thu, 27 Feb 2014 16:06:04 +0000
+Message-ID: <530F626C.5020900@codethink.co.uk>
+References: <201402270312.51588.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <530F5FC2.1000608@cogentembedded.com>
+In-Reply-To: <201402270312.51588.sergei.shtylyov@cogentembedded.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-kernel@lists.codethink.co.uk, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
+Cc: balbi@ti.com, linux-usb@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-sh@vger.kernel.org, valentine.barshak@cogentembedded.com, rob@landley.net, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 27/02/14 15:54, Sergei Shtylyov wrote:
-> Hello.
->
-> On 20-01-2014 14:49, Ben Dooks wrote:
->
->>>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
->>>> Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
->>>> ---
->>>> Cc: linux-usb@vger.kernel.org (open list:USB PHY LAYER)
->>>> Cc: linux-sh@vger.kernel.org (open list:ARM/SHMOBILE ARM...)
->>>> Cc: Magnus Damm <magnus.damm@gmail.com> (supporter:ARM/SHMOBILE ARM...)
->>>> Cc: Simon Horman <horms@verge.net.au> (supporter:ARM/SHMOBILE ARM...)
->>>> Cc: devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND...)
->>>> ---
->>>>   drivers/usb/phy/phy-rcar-gen2-usb.c | 35
->>>> ++++++++++++++++++++++++++++++-----
->>>>   1 file changed, 30 insertions(+), 5 deletions(-)
->
->>>> diff --git a/drivers/usb/phy/phy-rcar-gen2-usb.c
->>>> b/drivers/usb/phy/phy-rcar-gen2-usb.c
->>>> index db3ab34..906b74b 100644
->>>> --- a/drivers/usb/phy/phy-rcar-gen2-usb.c
->>>> +++ b/drivers/usb/phy/phy-rcar-gen2-usb.c
->>> [...]
->>>> @@ -203,16 +212,31 @@ static int rcar_gen2_usb_phy_probe(struct
->>>> platform_device *pdev)
->>> [...]
->>>> +    if (of_id) {
-> [...]
->>>> +        int len = 0;
->>>> +
->>>> +        if (of_get_property(dev->of_node, "renesas,usb0-hs", &len))
->>>> +            priv->ugctrl2 = USBHS_UGCTRL2_USB0_HS;
->>>> +        else
->>>> +            priv->ugctrl2 = USBHS_UGCTRL2_USB0_PCI;
->>>> +
->>>> +        if (of_get_property(dev->of_node, "renesas,usb2-ss", &len))
->>>> +            priv->ugctrl2 |= USBHS_UGCTRL2_USB2_SS;
->
->>>     Where is the bindings file you document these properties in?
->
->> Should have been in another patch in the series.
->
->     I didn't see it.
+On 27/02/14 00:12, Sergei Shtylyov wrote:
+> Add support of the device tree probing for the Renesas R-Car generation 2 SoCs
+> documenting the device tree binding as necessary.
 
-I thought it went out, I will need to go check.
+You've popped in some fixes for the driver probe in here as well.
+
+Could you do the fixes as a patch and send those before the devicetree
+code is done?
+
+> +
+>   static int rcar_gen2_usb_phy_probe(struct platform_device *pdev)
+>   {
+>   	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+>   	struct rcar_gen2_phy_platform_data *pdata;
+>   	struct rcar_gen2_usb_phy_priv *priv;
+>   	struct resource *res;
+> @@ -177,13 +210,19 @@ static int rcar_gen2_usb_phy_probe(struc
+>   	struct clk *clk;
+>   	int retval;
+>
+> -	pdata = dev_get_platdata(dev);
+> +	if (np)
+> +		pdata = rcar_gen2_usb_phy_parse_dt(dev);
+> +	else
+> +		pdata = dev_get_platdata(dev);
+>   	if (!pdata) {
+>   		dev_err(dev, "No platform data\n");
+>   		return -EINVAL;
+>   	}
+>
+> -	clk = devm_clk_get(dev, "usbhs");
+> +	if (np)
+> +		clk = of_clk_get_by_name(np, "usbhs");
+> +	else
+> +		clk = clk_get(dev, "usbhs");
+
+Can be removed, just add a clock-name of usbhs in the device node.
+
+>   	if (IS_ERR(clk)) {
+>   		dev_err(dev, "Can't get the clock\n");
+>   		return PTR_ERR(clk);
+> @@ -191,13 +230,16 @@ static int rcar_gen2_usb_phy_probe(struc
+>
+>   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>   	base = devm_ioremap_resource(dev, res);
+> -	if (IS_ERR(base))
+> -		return PTR_ERR(base);
+> +	if (IS_ERR(base)) {
+> +		retval = PTR_ERR(base);
+> +		goto error;
+> +	}
+>
+>   	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+>   	if (!priv) {
+>   		dev_err(dev, "Memory allocation failed\n");
+> -		return -ENOMEM;
+> +		retval = -ENOMEM;
+> +		goto error;
+>   	}
+
+Probably should be separate patch to fix probe issues.
+
+
+>
+>   	spin_lock_init(&priv->lock);
+> @@ -216,12 +258,16 @@ static int rcar_gen2_usb_phy_probe(struc
+>   	retval = usb_add_phy_dev(&priv->phy);
+>   	if (retval < 0) {
+>   		dev_err(dev, "Failed to add USB phy\n");
+> -		return retval;
+> +		goto error;
+>   	}
+>
+>   	platform_set_drvdata(pdev, priv);
+>
+>   	return retval;
+> +
+> +error:
+> +	clk_put(clk);
+> +	return retval;
+>   }
+
+Again, should have been rolled into fix patch.
+
+
 
 -- 
 Ben Dooks				http://www.codethink.co.uk/
