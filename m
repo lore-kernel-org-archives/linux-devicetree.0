@@ -1,87 +1,121 @@
-From: Patrice Chotard <patrice.chotard@st.com>
-Subject: Re: [PATCH 1/4] ARM: STi: add stid127 soc support
-Date: Thu, 27 Feb 2014 13:27:17 +0100
-Message-ID: <530F2F25.7000801@st.com>
-References: <1391093744-19905-1-git-send-email-patrice.chotard@st.com>
- <1391093744-19905-2-git-send-email-patrice.chotard@st.com>
- <530F2E26.1040304@st.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [RFC PATCH v4 3/8] staging: imx-drm: Document updated imx-drm
+ device tree bindings
+Date: Thu, 27 Feb 2014 14:06:25 +0100
+Message-ID: <1393506385.4507.49.camel@paszta.hi.pengutronix.de>
+References: <1393338203-25051-1-git-send-email-p.zabel@pengutronix.de>
+ <1393338203-25051-4-git-send-email-p.zabel@pengutronix.de>
+ <530F1C4C.2010504@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <530F2E26.1040304@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Coquelin <maxime.coquelin@st.com>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>, alexandre.torgue@st.com
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <530F1C4C.2010504@ti.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime
+Am Donnerstag, den 27.02.2014, 13:06 +0200 schrieb Tomi Valkeinen:
+> On 25/02/14 16:23, Philipp Zabel wrote:
+> 
+> > +Freescale i.MX DRM master device
+> > +================================
+> > +
+> > +The freescale i.MX DRM master device is a virtual device needed to list all
+> > +IPU or other display interface nodes that comprise the graphics subsystem.
+> > +
+> > +Required properties:
+> > +- compatible: Should be "fsl,imx-drm"
+> > +- ports: Should contain a list of phandles pointing to display interface ports
+> > +  of IPU devices
+> > +
+> > +example:
+> > +
+> > +imx-drm {
+> > +	compatible = "fsl,imx-drm";
+> > +	ports = <&ipu_di0>;
+> > +};
+> 
+> I'm not a fan of having non-hardware related things in the DT data.
+> Especially if it makes direct references to our SW, in this case DRM.
+> There's no DRM on the board. I wanted to avoid all that with OMAP
+> display bindings.
+> 
+> Is there even need for such a master device? You can find all the
+> connected display devices from any single display device, by just
+> following the endpoint links.
 
-Thanks for reviewing.
-Yes for sure, i will add additional board informations.
+I don't particularly like this either, but it kind of has been decided.
 
-Patrice
+For the i.MX6 display subsystem there is no clear single master device,
+and the physical configuration changes across the SoC family. The
+i.MX6Q/i.MX6D SoCs have two separate display controller devices IPU1 and
+IPU2, with two output ports each. The i.MX6DL/i.MX6S SoCs only have one
+IPU1, but it is accompanied by separate lower-power LCDIF display
+controller with a single output. These may or may not be connected
+indirectly across the encoder input multiplexers, so collecting them
+would require scanning the whole device tree from an always-enabled
+imx-drm platform device if we didn't have this node.
 
-On 02/27/2014 01:23 PM, Maxime Coquelin wrote:
-> Hi Patrice,
->
-> Could you add an overview documentation as it has been done for other 
-> STi platforms?
->
-> See Documentation/arm/sti/stih416-overview.txt
->
-> Thanks,
-> Maxime
->
-> On 01/30/2014 03:55 PM, Patrice CHOTARD wrote:
->> From: Alexandre TORGUE <alexandre.torgue@st.com>
->>
->> This patch adds support to STiD127 SoC.
->> The main adaptation is the L2 cache way size compare to STiH41x SoCs.
->>
->> Signed-off-by: alexandre torgue <alexandre.torgue@st.com>
->> Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
->> ---
->>   arch/arm/mach-sti/board-dt.c |    6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/arch/arm/mach-sti/board-dt.c b/arch/arm/mach-sti/board-dt.c
->> index 1217fb5..be018a9 100644
->> --- a/arch/arm/mach-sti/board-dt.c
->> +++ b/arch/arm/mach-sti/board-dt.c
->> @@ -9,6 +9,7 @@
->>
->>   #include <linux/irq.h>
->>   #include <linux/of_platform.h>
->> +#include <linux/of.h>
->>   #include <asm/hardware/cache-l2x0.h>
->>   #include <asm/mach/arch.h>
->>
->> @@ -18,6 +19,10 @@ void __init stih41x_l2x0_init(void)
->>   {
->>       u32 way_size = 0x4;
->>       u32 aux_ctrl;
->> +
->> +    if (of_machine_is_compatible("st,stid127"))
->> +        way_size = 0x3;
->> +
->>       /* may be this can be encoded in macros like BIT*() */
->>       aux_ctrl = (0x1 << L2X0_AUX_CTRL_SHARE_OVERRIDE_SHIFT) |
->>           (0x1 << L2X0_AUX_CTRL_DATA_PREFETCH_SHIFT) |
->> @@ -36,6 +41,7 @@ static void __init stih41x_machine_init(void)
->>   static const char *stih41x_dt_match[] __initdata = {
->>       "st,stih415",
->>       "st,stih416",
->> +    "st,stid127",
->>       NULL
->>   };
->>
->>
+Also, we are free to just ignore this node in the future, if a better
+way is found.
+
+> >  display@di0 {
+> >  	compatible = "fsl,imx-parallel-display";
+> >  	edid = [edid-data];
+> > -	crtc = <&ipu 0>;
+> >  	interface-pix-fmt = "rgb24";
+> > +
+> > +	port {
+> > +		display_in: endpoint {
+> > +			remote-endpoint = <&ipu_di0_disp0>;
+> > +		};
+> > +	};
+> >  };
+> 
+> Shouldn't the pix-fmt be defined in the endpoint node? It is about pixel
+> format for a particular endpoint, isn't it?
+> 
+> > diff --git a/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt b/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt
+> > index ed93778..578a1fc 100644
+> > --- a/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt
+> > +++ b/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt
+> > @@ -50,12 +50,14 @@ have a look at Documentation/devicetree/bindings/video/display-timing.txt.
+> >  
+> >  Required properties:
+> >   - reg : should be <0> or <1>
+> > - - crtcs : a list of phandles with index pointing to the IPU display interfaces
+> > -           that can be used as video source for this channel.
+> >   - fsl,data-mapping : should be "spwg" or "jeida"
+> >                        This describes how the color bits are laid out in the
+> >                        serialized LVDS signal.
+> >   - fsl,data-width : should be <18> or <24>
+> > + - port: A port node with endpoint definitions as defined in
+> > +   Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > +   On i.MX6, there should be four ports (port@[0-3]) that correspond
+> > +   to the four LVDS multiplexer inputs.
+> 
+> Is the ldb something that's on the imx SoC?
+
+Yes. It consists of two LVDS encoders. On i.MX5 each channel is
+connected to one display interface of the single IPU.
+On i.MX6Q its parallel input can be connected to any of the four IPU1/2
+display interfaces using a 4-port multiplexer (and on i.MX6DL it can be
+connected to IPU1 or LCDIF).
+
+> Do you have a public branch somewhere? It'd be easier to look at the
+> final result, as I'm not familiar with imx.
+
+Not yet, I will prepare a branch with the next version.
+
+regards
+Philipp
