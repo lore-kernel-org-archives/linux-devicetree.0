@@ -1,107 +1,37 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH v0 15/15] ARM: STi: DT: STiH415: 415 DT Entry for clockgen A9
-Date: Thu, 27 Feb 2014 16:24:28 +0100
-Message-ID: <1393514668-17440-16-git-send-email-gabriel.fernandez@st.com>
-References: <1393514668-17440-1-git-send-email-gabriel.fernandez@st.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1393514668-17440-1-git-send-email-gabriel.fernandez@st.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: mturquette@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@st.com>, Pankaj Dev <pankaj.dev@st.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] phy-rcar-gen2-usb: add device tree support
+Date: Thu, 27 Feb 2014 19:50:29 +0400
+Message-ID: <530F5EC5.7060309@cogentembedded.com>
+References: <201402270312.51588.sergei.shtylyov@cogentembedded.com> <530F3637.5050000@codethink.co.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <530F3637.5050000-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, valentine.barshak-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Patch adds DT entries for clockgen A9
+Hello.
 
-Signed-off-by: Pankaj Dev <pankaj.dev@st.com>
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
----
- arch/arm/boot/dts/stih415-clock.dtsi | 67 +++++++++++++++++++++++++++++++-----
- 1 file changed, 58 insertions(+), 9 deletions(-)
+On 27-02-2014 16:57, Ben Dooks wrote:
 
-diff --git a/arch/arm/boot/dts/stih415-clock.dtsi b/arch/arm/boot/dts/stih415-clock.dtsi
-index 24a7508..8563636 100644
---- a/arch/arm/boot/dts/stih415-clock.dtsi
-+++ b/arch/arm/boot/dts/stih415-clock.dtsi
-@@ -24,15 +24,6 @@
- 		};
- 
- 		/*
--		 * ARM Peripheral clock for timers
--		 */
--		arm_periph_clk: arm_periph_clk {
--			#clock-cells = <0>;
--			compatible = "fixed-clock";
--			clock-frequency = <500000000>;
--		};
--
--		/*
- 		 * ClockGenAs on SASG1
- 		 */
- 		clockgenA@fee62000 {
-@@ -499,5 +490,63 @@
- 						/* Remaining outputs unused */
- 			};
- 		};
-+
-+		/*
-+		 * A9 PLL.
-+		 *
-+		 */
-+		clockgenA9 {
-+			reg = <0xfdde00d8 0x70>;
-+
-+			CLOCKGEN_A9_PLL: CLOCKGEN_A9_PLL {
-+				#clock-cells = <1>;
-+				compatible = "st,stih415-plls-c32-a9", "st,clkgen-plls-c32";
-+
-+				clocks = <&CLK_SYSIN>;
-+				clock-output-names = "CLOCKGEN_A9_PLL_ODF";
-+			};
-+		};
-+
-+		/*
-+		 * ARM CPU related clocks.
-+		 */
-+		CLK_M_A9: CLK_M_A9 {
-+			#clock-cells = <0>;
-+			compatible = "st,stih415-clkgen-a9-mux", "st,clkgen-mux";
-+			reg = <0xfdde00d8 0x4>;
-+			clocks = <&CLOCKGEN_A9_PLL 0>, <&CLOCKGEN_A9_PLL 0>, <&CLK_M_A0_DIV1 2>, <&CLK_M_A9_EXT2F_DIV2>;
-+		};
-+
-+		/*
-+		 * ARM Peripheral clock for timers
-+		 */
-+		arm_periph_clk: CLK_M_A9_PERIPHS {
-+			#clock-cells = <0>;
-+			compatible = "fixed-factor-clock";
-+			clocks = <&CLK_M_A9>;
-+			clock-div = <2>;
-+			clock-mult = <1>;
-+		};
-+
-+		CLK_S_USB48: clockgenB0@0 {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <48000000>;
-+			clock-output-names = "CLK_S_USB48";
-+		};
-+
-+		CLKS_B_THSENS: clockgenB@3 {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <996000>;
-+			clock-output-names = "CLKS_B_THSENS";
-+		};
-+
-+		CLKM_MPETHSENS: clockgenE@3 {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <996000>;
-+			clock-output-names = "CLKM_MPETHSENS";
-+		};
- 	};
- };
--- 
-1.9.0
+>> Add support of the device tree probing for the Renesas R-Car generation 2 SoCs
+>> documenting the device tree binding as necessary.
 
+> So what happened w.r.t to my last set of patches for this?
+
+    Hm, I forgot you've posted the OF patch already (and I was tasked with the 
+PHY driver OF support). I have re-read the thread now, and the issue was that 
+Felipe wanted an ACK from one of DT maintainers. I had issues with the 
+"compatible" props the driver reacts on. Also, I didn't see your bindings doc 
+patch the last time you posted the driver patch. I have one more issue now and 
+will follow up to the patch with it...
+
+WBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
