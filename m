@@ -1,56 +1,129 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH] spi: sh-msiof: Remove "renesas,msiof-sh7724" from bindings
-Date: Thu, 27 Feb 2014 23:50:36 +0100
-Message-ID: <3183546.lDudat1pu0@avalon>
-References: <1393505238-11954-1-git-send-email-geert@linux-m68k.org>
+From: James Hogan <james.hogan@imgtec.com>
+Subject: Re: [PATCH v3 06/15] dt: binding: add binding for ImgTec IR block
+Date: Thu, 27 Feb 2014 22:52:10 +0000
+Message-ID: <2514111.qYAaEZbJqk@radagast>
+References: <CAL_JsqLL6MbwajCUAm+NJk=ofL5OHq8b0zwO3LFb-TKY6UtVMQ@mail.gmail.com> <1391788155-29191-1-git-send-email-james.hogan@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393505238-11954-1-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Content-Type: multipart/signed; boundary="nextPart3032664.G9CoYg8UyZ"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1391788155-29191-1-git-send-email-james.hogan@imgtec.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>, linux-media@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
 
-Thank you for the patch.
+--nextPart3032664.G9CoYg8UyZ
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Thursday 27 February 2014 13:47:17 Geert Uytterhoeven wrote:
-> From: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Hi Rob, Mark + DT maintainers,
+
+On Friday 07 February 2014 15:49:15 James Hogan wrote:
+> Add device tree binding for ImgTec Consumer Infrared block, specifically
+> major revision 1 of the hardware.
 > 
-> It's not implemented in the driver, so it's a bad example.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-
-Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-
+> Signed-off-by: James Hogan <james.hogan@imgtec.com>
+> Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>
+> Cc: linux-media@vger.kernel.org
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: Rob Landley <rob@landley.net>
+> Cc: linux-doc@vger.kernel.org
+> Cc: Tomasz Figa <tomasz.figa@gmail.com>
 > ---
->  Documentation/devicetree/bindings/spi/sh-msiof.txt |    1 -
->  1 file changed, 1 deletion(-)
+> v3:
+> - Rename compatible string to "img,ir-rev1" (Rob Herring).
+> - Specify ordering of clocks explicitly (Rob Herring).
+
+I'd appreciate if somebody could give this another glance after the two 
+changes listed above and Ack it (I'll probably be posting a v4 patchset 
+tomorrow).
+
+Thanks
+James
+
 > 
-> diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt
-> b/Documentation/devicetree/bindings/spi/sh-msiof.txt index
-> 1f0cb33763a1..f24baf3b6cc1 100644
-> --- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
-> +++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-> @@ -5,7 +5,6 @@ Required properties:
->  			 "renesas,sh-msiof" for SuperH, or
->  			 "renesas,sh-mobile-msiof" for SH Mobile series.
->  			 Examples with soctypes are:
-> -			 "renesas,msiof-sh7724" (SH)
->  			 "renesas,msiof-r8a7790" (R-Car H2)
->  			 "renesas,msiof-r8a7791" (R-Car M2)
->  - reg                  : Offset and length of the register set for the
-> device
+> v2:
+> - Future proof compatible string from "img,ir" to "img,ir1", where the 1
+>   corresponds to the major revision number of the hardware (Tomasz
+>   Figa).
+> - Added clock-names property and three specific clock names described in
+>   the manual, only one of which is used by the current driver (Tomasz
+>   Figa).
+> ---
+>  .../devicetree/bindings/media/img-ir-rev1.txt      | 34
+> ++++++++++++++++++++++ 1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/img-ir-rev1.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/img-ir-rev1.txt
+> b/Documentation/devicetree/bindings/media/img-ir-rev1.txt new file mode
+> 100644
+> index 000000000000..5434ce61b925
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/img-ir-rev1.txt
+> @@ -0,0 +1,34 @@
+> +* ImgTec Infrared (IR) decoder version 1
+> +
+> +This binding is for Imagination Technologies' Infrared decoder block,
+> +specifically major revision 1.
+> +
+> +Required properties:
+> +- compatible:		Should be "img,ir-rev1"
+> +- reg:			Physical base address of the controller and length of
+> +			memory mapped region.
+> +- interrupts:		The interrupt specifier to the cpu.
+> +
+> +Optional properties:
+> +- clocks:		List of clock specifiers as described in standard
+> +			clock bindings.
+> +			Up to 3 clocks may be specified in the following order:
+> +			1st:	Core clock (defaults to 32.768KHz if omitted).
+> +			2nd:	System side (fast) clock.
+> +			3rd:	Power modulation clock.
+> +- clock-names:		List of clock names corresponding to the clocks
+> +			specified in the clocks property.
+> +			Accepted clock names are:
+> +			"core":	Core clock.
+> +			"sys":	System clock.
+> +			"mod":	Power modulation clock.
+> +
+> +Example:
+> +
+> +	ir@02006200 {
+> +		compatible = "img,ir-rev1";
+> +		reg = <0x02006200 0x100>;
+> +		interrupts = <29 4>;
+> +		clocks = <&clk_32khz>;
+> +		clock-names =  "core";
+> +	};
 
--- 
-Regards,
+--nextPart3032664.G9CoYg8UyZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
-Laurent Pinchart
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAABAgAGBQJTD8GhAAoJEKHZs+irPybfoIgQAKicjFw7u+gGXjf4BLwamfvk
+0igzIf+/nPxYBmt/21UXkrhoEnk1pV8ECdwtnfqeUBUL7lOB7kLBh44X7Yf5Ynvw
+GHXV/SeFYfoT81RSg/VXA0bNDuStuAi8YqhM4jDjfTxBd5vP1jIJBkdxbsAHrA3Z
+voDoKeOwaJ4tVQ/JrADyj9YmoNwo7y7lma0hzKPg6sY9xMh2tcmta8aakX2g5lEW
+Xy+k4OuAlN0STB6hEiauJ2hLSKe7BRKF+6+DdL4Pu3v5hevwukQiv4jj/u4I9mNi
+AbtnisoI08BJ/3/GpVHhc5svU6TRKMZVvNXBQANEiAb2g9b1lav+xe7+Qc/P1vZN
+ItDm/IcOeQc7Sxq2CNLGnOaVuYgGHlewj3Rym3nZech5HAT5zped0LEWwwwUlKRt
+ixO7CAZGvd3ifFnW2XyG8f5G0JhCRJ8VuPV0m/Vpp3S+KNQAkfCmzz9Dba066fBD
+FCIsJvg2xKjFHuEs5D2BP9PhY1/mUM38XVyLWt3XEmV0xBHUtgBNqWpIFb1zxQ7E
+onFmycxLgiyHtt07jXpT6dKuC1ROhms5peZwT9xZN8fyff0/VaaLKC5jLsPeaWRF
+dDt5t8yRbuypMQ11V7yfAHGkVs1OrZaADWUay68zPpacz/dGmfq3K/hvlaEkKPBD
+E2zneM28RB6ZOcfthT06
+=c/1a
+-----END PGP SIGNATURE-----
+
+--nextPart3032664.G9CoYg8UyZ--
+
