@@ -1,105 +1,209 @@
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: Re: [PATCH] phy-rcar-gen2-usb: add device tree support
-Date: Thu, 27 Feb 2014 16:06:04 +0000
-Message-ID: <530F626C.5020900@codethink.co.uk>
-References: <201402270312.51588.sergei.shtylyov@cogentembedded.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 3/3] arm64: Add architecture support for PCI
+Date: Thu, 27 Feb 2014 17:06:24 +0100
+Message-ID: <5402126.Dbh9PNPIjR@wuerfel>
+References: <1393506599-11561-1-git-send-email-Liviu.Dudau@arm.com>
+ <1393506599-11561-4-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <201402270312.51588.sergei.shtylyov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: balbi@ti.com, linux-usb@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-sh@vger.kernel.org, valentine.barshak@cogentembedded.com, rob@landley.net, linux-doc@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1393506599-11561-4-git-send-email-Liviu.Dudau@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linaro-kernel@lists.linaro.org
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27/02/14 00:12, Sergei Shtylyov wrote:
-> Add support of the device tree probing for the Renesas R-Car generation 2 SoCs
-> documenting the device tree binding as necessary.
+On Thursday 27 February 2014 13:09:59 Liviu Dudau wrote:
 
-You've popped in some fixes for the driver probe in here as well.
-
-Could you do the fixes as a patch and send those before the devicetree
-code is done?
-
+> +/*
+> + * PCI address space differs from physical memory address space
+> + */
+> +#define PCI_DMA_BUS_IS_PHYS	(0)
 > +
->   static int rcar_gen2_usb_phy_probe(struct platform_device *pdev)
->   {
->   	struct device *dev = &pdev->dev;
-> +	struct device_node *np = dev->of_node;
->   	struct rcar_gen2_phy_platform_data *pdata;
->   	struct rcar_gen2_usb_phy_priv *priv;
->   	struct resource *res;
-> @@ -177,13 +210,19 @@ static int rcar_gen2_usb_phy_probe(struc
->   	struct clk *clk;
->   	int retval;
->
-> -	pdata = dev_get_platdata(dev);
-> +	if (np)
-> +		pdata = rcar_gen2_usb_phy_parse_dt(dev);
-> +	else
-> +		pdata = dev_get_platdata(dev);
->   	if (!pdata) {
->   		dev_err(dev, "No platform data\n");
->   		return -EINVAL;
->   	}
->
-> -	clk = devm_clk_get(dev, "usbhs");
-> +	if (np)
-> +		clk = of_clk_get_by_name(np, "usbhs");
-> +	else
-> +		clk = clk_get(dev, "usbhs");
+> +extern int isa_dma_bridge_buggy;
 
-Can be removed, just add a clock-name of usbhs in the device node.
+I got curious about isa_dma_bridge_buggy: apparently this is a quirk for
+some old x86 bridges. We don't have those on arm64, and we also don't have
+ISA_DMA_API, so just define this to (0).
 
->   	if (IS_ERR(clk)) {
->   		dev_err(dev, "Can't get the clock\n");
->   		return PTR_ERR(clk);
-> @@ -191,13 +230,16 @@ static int rcar_gen2_usb_phy_probe(struc
->
->   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->   	base = devm_ioremap_resource(dev, res);
-> -	if (IS_ERR(base))
-> -		return PTR_ERR(base);
-> +	if (IS_ERR(base)) {
-> +		retval = PTR_ERR(base);
-> +		goto error;
+> +static inline int pci_domain_nr(struct pci_bus *bus)
+> +{
+> +	struct pci_host_bridge *bridge = to_pci_host_bridge(bus->bridge);
+> +
+> +	if (bridge)
+> +		return bridge->domain_nr;
+> +
+> +	return 0;
+> +}
+> +
+> +static inline int pci_proc_domain(struct pci_bus *bus)
+> +{
+> +	return pci_domain_nr(bus);
+> +}
+
+And this one I would change to always return '1': we can deal with
+domain numbers showing up in /procfs for all buses, since there is
+no legacy software to worry about.
+
+> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
+> new file mode 100644
+> index 0000000..496df41
+> --- /dev/null
+> +++ b/arch/arm64/kernel/pci.c
+> @@ -0,1 +1,126 @@
+
+Ok, this is nice and short. Let's see if we can reduce it to nothing ;-)
+
+> +/*
+> + * Called after each bus is probed, but before its children are examined
+> + */
+> +void pcibios_fixup_bus(struct pci_bus *bus)
+> +{
+> +	struct pci_dev *dev;
+> +	struct resource *res;
+> +	int i;
+> +
+> +	if (!pci_is_root_bus(bus)) {
+> +		pci_read_bridge_bases(bus);
+> +
+> +		pci_bus_for_each_resource(bus, res, i) {
+> +			if (!res || !res->flags || res->parent)
+> +				continue;
+> +
+> +			/*
+> +			 * If we are going to reassign everything, we can
+> +			 * shrink the P2P resource to have zero size to
+> +			 * save space
+> +			 */
+> +			if (pci_has_flag(PCI_REASSIGN_ALL_RSRC)) {
+> +				res->flags |= IORESOURCE_UNSET;
+> +				res->start = 0;
+> +				res->end = -1;
+> +				continue;
+> +			}
+> +		}
 > +	}
->
->   	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->   	if (!priv) {
->   		dev_err(dev, "Memory allocation failed\n");
-> -		return -ENOMEM;
-> +		retval = -ENOMEM;
-> +		goto error;
->   	}
-
-Probably should be separate patch to fix probe issues.
-
-
->
->   	spin_lock_init(&priv->lock);
-> @@ -216,12 +258,16 @@ static int rcar_gen2_usb_phy_probe(struc
->   	retval = usb_add_phy_dev(&priv->phy);
->   	if (retval < 0) {
->   		dev_err(dev, "Failed to add USB phy\n");
-> -		return retval;
-> +		goto error;
->   	}
->
->   	platform_set_drvdata(pdev, priv);
->
->   	return retval;
 > +
-> +error:
-> +	clk_put(clk);
-> +	return retval;
->   }
+> +	list_for_each_entry(dev, &bus->devices, bus_list) {
+> +		/* Ignore fully discovered devices */
+> +		if (dev->is_added)
+> +			continue;
+> +
+> +		set_dev_node(&dev->dev, pcibus_to_node(dev->bus));
+> +
+> +		/* Read default IRQs and fixup if necessary */
+> +		dev->irq = of_irq_parse_and_map_pci(dev, 0, 0);
+> +	}
+> +}
+> +EXPORT_SYMBOL(pcibios_fixup_bus);
 
-Again, should have been rolled into fix patch.
+Shrinking the P2P resources I suppose is optional, but everything
+else is in fact needed for any DT based architecture. Could this
+be turned into a generic helper function in the PCI core that we
+can call from architecture code?
 
+If you name it pci_generic_fixup_bus(), we can add a weak helper
+like:
 
+void __weak pcibios_fixup_bus(struct pci_bus *bus)
+{
+	pci_generic_fixup_bus(bus);
+}
 
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+for architectures like arm64 that don't actually need to do anything
+else.
+
+> +/*
+> + * We don't have to worry about legacy ISA devices, so nothing to do here
+> + */
+> +resource_size_t pcibios_align_resource(void *data, const struct resource *res,
+> +				resource_size_t size, resource_size_t align)
+> +{
+> +	return ALIGN(res->start, align);
+> +}
+> +EXPORT_SYMBOL(pcibios_align_resource);
+
+Where did this come from? The most common implementation seems to be
+
+resource_size_t pcibios_align_resource(void *data, const struct resource *res,
+				resource_size_t size, resource_size_t align)
+{
+	return start;
+}
+EXPORT_SYMBOL(pcibios_align_resource);
+
+if you don't have to worry about ISA devices. The ALIGN() part seems to
+be handled by __find_resource() already.
+
+I'd say that should be made the default implementation in the PCI core.
+
+I'm also pretty sure you don't need the EXPORT_SYMBOL, since the PCI
+core cannot be a loadable module (yet).
+
+> +int pcibios_enable_device(struct pci_dev *dev, int mask)
+> +{
+> +	return pci_enable_resources(dev, mask);
+> +}
+> +
+> +void pcibios_fixup_bridge_ranges(struct list_head *resources)
+> +{
+> +}
+
+These are clearly the right implementations, but they should be weak
+functions, too.
+
+> +#define IO_SPACE_PAGES	((IO_SPACE_LIMIT + 1) / PAGE_SIZE)
+> +static DECLARE_BITMAP(pci_iospace, IO_SPACE_PAGES);
+> +
+> +unsigned long pci_ioremap_io(const struct resource *res, phys_addr_t phys_addr)
+> +{
+> +	unsigned long start, len, virt_start;
+> +	int err;
+> +
+> +	if (res->end > IO_SPACE_LIMIT)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * try finding free space for the whole size first,
+> +	 * fall back to 64K if not available
+> +	 */
+> +	len = resource_size(res);
+> +	start = bitmap_find_next_zero_area(pci_iospace, IO_SPACE_PAGES,
+> +				res->start / PAGE_SIZE, len / PAGE_SIZE, 0);
+> +	if (start == IO_SPACE_PAGES && len > SZ_64K) {
+> +		len = SZ_64K;
+> +		start = 0;
+> +		start = bitmap_find_next_zero_area(pci_iospace, IO_SPACE_PAGES,
+> +					start, len / PAGE_SIZE, 0);
+> +	}
+> +
+> +	/* no 64K area found */
+> +	if (start == IO_SPACE_PAGES)
+> +		return -ENOMEM;
+> +
+> +	/* ioremap physical aperture to virtual aperture */
+> +	virt_start = start * PAGE_SIZE + (unsigned long)PCI_IOBASE;
+> +	err = ioremap_page_range(virt_start, virt_start + len,
+> +				phys_addr, __pgprot(PROT_DEVICE_nGnRE));
+> +	if (err)
+> +		return err;
+> +
+> +	bitmap_set(pci_iospace, start, len / PAGE_SIZE);
+> +
+> +	/* return io_offset */
+> +	return start * PAGE_SIZE - res->start;
+> +}
+
+Maybe this can become an optional helper function with a separate Kconfig symbol
+to enable it.
+
+	Arnd
