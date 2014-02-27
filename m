@@ -1,94 +1,36 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [RFC PATCH v4 3/8] staging: imx-drm: Document updated imx-drm
- device tree bindings
-Date: Thu, 27 Feb 2014 15:16:03 +0200
-Message-ID: <530F3A93.501@ti.com>
-References: <1393338203-25051-1-git-send-email-p.zabel@pengutronix.de>
- <1393338203-25051-4-git-send-email-p.zabel@pengutronix.de>
- <530F1C4C.2010504@ti.com> <20140227115652.GI21483@n2100.arm.linux.org.uk>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] pci: OF: Fix the conversion of IO ranges into IO resources.
+Date: Thu, 27 Feb 2014 14:20:54 +0100
+Message-ID: <14735193.MhDlU8yNYG@wuerfel>
+References: <1393506402-11474-1-git-send-email-Liviu.Dudau@arm.com> <1393506402-11474-2-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8116069682168050974=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140227115652.GI21483@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, kernel@pengutronix.de, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1393506402-11474-2-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============8116069682168050974==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="foqLoKuqlr442jmqXTjpwTjdJlmHBWwgd"
+On Thursday 27 February 2014 13:06:39 Liviu Dudau wrote:
+> +       res->flags = range->flags;
+> +       if (res->flags & IORESOURCE_IO) {
+> +               unsigned long port;
+> +               port = pci_address_to_pio(range->pci_addr);
+> +               if (port == (unsigned long)-1) {
+> +                       res->start = (resource_size_t)OF_BAD_ADDR;
+> +                       res->end = (resource_size_t)OF_BAD_ADDR;
+> +                       return;
+> +               }
+> 
 
---foqLoKuqlr442jmqXTjpwTjdJlmHBWwgd
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+I think this conflicts with the way that pci_address_to_pio() is
+defined on powerpc, where it expects a CPU address as the input,
+not a PCI i/o address.
 
-On 27/02/14 13:56, Russell King - ARM Linux wrote:
-
->> Is there even need for such a master device? You can find all the
->> connected display devices from any single display device, by just
->> following the endpoint links.
->=20
-> Please read up on what has been discussed over previous years:
->=20
-> http://lists.freedesktop.org/archives/dri-devel/2013-July/041159.html
-
-Thanks, that was an interesting thread. Too bad I missed it, it was
-during the holiday season. And seems Laurent missed it also, as he
-didn't make any replies.
-
-The thread seemed to go over the very same things that had already been
-discussed with CDF.
-
- Tomi
-
-
-
---foqLoKuqlr442jmqXTjpwTjdJlmHBWwgd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJTDzqTAAoJEPo9qoy8lh71yAIP/AxqvGdAgpRXjfLLkj6GmNeB
-Yi8AvICCa5PH3mXhwAMjDA3tzpjs//Cm+kbvdD/qXKxcsTQz3FmB3h0zQVMPi50S
-DSeZ4mqBxIBJhq/f6ohRlBac7IghVnSY+mnmi/eJjlFS4VbSxoahPObtW2a+dOHP
-66wRyQFd+2pvY8Wt3MBiPI5zjoXjoGcSrc1uB6av2ZsDKlDB0uTxxJuw4lHsP42N
-kJSOz/oYVxwEiOQyD4QtxSMQPsExV9/SImjA+e5jZpdwdRyijEc/dxL+u2yQsV6G
-KiH/yM8U0qVHR1+JwBPTyRz6XqqnxBK+g0EYrAi5Vba4j1nhchzpqNfJeMlF/DX+
-DDbina7LjmCagh8x2wTAPOgfo2wdgToTED5TuBpLPId4Ef8KLj/GjiYOp1n38gnq
-6z/RjZXfEIYYuTnm9sOp9ni6JUEAiw2kee7vAvjCqgxKFwirT+sQjhdMHfUNvsT+
-zAEnBRhnDXZrVMtRGQl0OVNwftndkkFsLasYbWxbCOi0lFPbXB1R3rOql75+B1vW
-eyWokZ4AwO+rKsMNoT2qnY6+cp6c68UJssdC50eDSAQGul+3cq9cqZxh6Sx7gXDJ
-h5lA1Pf4qtch3KTbCtPdSvvGlEkwe53R2qiz1TzKkitykFMFyBIMGlUE8bVABs3O
-pD5G218tucNul1H2maOo
-=XV+0
------END PGP SIGNATURE-----
-
---foqLoKuqlr442jmqXTjpwTjdJlmHBWwgd--
-
-
---===============8116069682168050974==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============8116069682168050974==--
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
