@@ -1,37 +1,201 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] phy-rcar-gen2-usb: add device tree support
-Date: Thu, 27 Feb 2014 19:50:29 +0400
-Message-ID: <530F5EC5.7060309@cogentembedded.com>
-References: <201402270312.51588.sergei.shtylyov@cogentembedded.com> <530F3637.5050000@codethink.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <530F3637.5050000-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, valentine.barshak-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: [PATCH v0 12/15] ARM: STi: DT: STiH416: 416 DT Entry for clockgen B/C/D/E/F
+Date: Thu, 27 Feb 2014 16:24:25 +0100
+Message-ID: <1393514668-17440-13-git-send-email-gabriel.fernandez@st.com>
+References: <1393514668-17440-1-git-send-email-gabriel.fernandez@st.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1393514668-17440-1-git-send-email-gabriel.fernandez@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mturquette@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@st.com>, Pankaj Dev <pankaj.dev@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Patch adds DT entries for clockgen B/C/D/E/F
 
-On 27-02-2014 16:57, Ben Dooks wrote:
+Signed-off-by: Pankaj Dev <pankaj.dev@st.com>
+---
+ arch/arm/boot/dts/stih416-clock.dtsi | 170 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 170 insertions(+)
 
->> Add support of the device tree probing for the Renesas R-Car generation 2 SoCs
->> documenting the device tree binding as necessary.
-
-> So what happened w.r.t to my last set of patches for this?
-
-    Hm, I forgot you've posted the OF patch already (and I was tasked with the 
-PHY driver OF support). I have re-read the thread now, and the issue was that 
-Felipe wanted an ACK from one of DT maintainers. I had issues with the 
-"compatible" props the driver reacts on. Also, I didn't see your bindings doc 
-patch the last time you posted the driver patch. I have one more issue now and 
-will follow up to the patch with it...
-
-WBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/stih416-clock.dtsi b/arch/arm/boot/dts/stih416-clock.dtsi
+index f63b0a1..6b2e387 100644
+--- a/arch/arm/boot/dts/stih416-clock.dtsi
++++ b/arch/arm/boot/dts/stih416-clock.dtsi
+@@ -503,5 +503,175 @@
+ 						/* Remaining outputs unused */
+ 			};
+ 		};
++                /*
++                 * Frequency synthesizers on the SASG2.
++                 *
++                 */
++                CLOCKGEN_B0: CLOCKGEN_B0 {
++                        #clock-cells = <1>;
++                        compatible = "st,stih416-quadfs216", "st,quadfs";
++                        reg = <0xfee108b4 0x44>;
++
++                        clocks = <&CLK_SYSIN>;
++                        clock-output-names = "CLK_S_USB48",
++                                             "CLK_S_DSS",
++                                             "CLK_S_STFE_FRC_2",
++                                             "CLK_S_THSENS_SCARD";
++                };
++
++                CLOCKGEN_B1: CLOCKGEN_B1 {
++                        #clock-cells = <1>;
++                        compatible = "st,stih416-quadfs216", "st,quadfs";
++                        reg = <0xfe8308c4 0x44>;
++
++                        clocks = <&CLK_SYSIN>;
++                        clock-output-names = "CLK_S_PCM_0",
++                                             "CLK_S_PCM_1",
++                                             "CLK_S_PCM_2",
++                                             "CLK_S_PCM_3";
++                };
++
++                CLOCKGEN_C: CLOCKGEN_C {
++                        #clock-cells = <1>;
++                        compatible = "st,stih416-quadfs432", "st,quadfs";
++                        reg = <0xfe8307d0 0x44>;
++
++                        clocks = <&CLK_SYSIN>;
++                        clock-output-names = "CLK_S_C_FS0_CH0",
++                                             "CLK_S_C_VCC_SD",
++                                             "CLK_S_C_FS0_CH2";
++                };
++
++                CLK_S_VCC_HD: CLK_S_VCC_HD {
++                        #clock-cells = <0>;
++                        compatible = "st,stih416-clkgenc-vcc-hd", "st,clkgen-mux";
++                        reg = <0xfe8308b8 4>; /* SYSCFG2558 */
++
++                        clocks = <&CLK_SYSIN>, <&CLOCKGEN_C 0>;
++                };
++
++                /*
++                 * Add a dummy clock for the HDMI PHY for the VCC input mux
++                 */
++                CLK_S_TMDS_FROMPHY: CLK_S_TMDS_FROMPHY {
++                        #clock-cells = <0>;
++                        compatible = "fixed-clock";
++                        clock-frequency = <0>;
++                };
++
++                CLOCKGEN_C_VCC: CLOCKGEN_C_VCC {
++                        #clock-cells = <1>;
++                        compatible = "st,stih416-clkgenc", "st,clkgen-vcc";
++                        reg = <0xfe8308ac 12>; /* SYSCFG2555,2556,2557 */
++
++                        clocks = <&CLK_S_VCC_HD>, <&CLOCKGEN_C 1>,
++                                 <&CLK_S_TMDS_FROMPHY>, <&CLOCKGEN_C 2>;
++
++                        clock-output-names  =
++                                "CLK_S_PIX_HDMI",  "CLK_S_PIX_DVO",
++                                "CLK_S_OUT_DVO",   "CLK_S_PIX_HD",
++                                "CLK_S_HDDAC",     "CLK_S_DENC",
++                                "CLK_S_SDDAC",     "CLK_S_PIX_MAIN",
++                                "CLK_S_PIX_AUX",   "CLK_S_STFE_FRC_0",
++                                "CLK_S_REF_MCRU",  "CLK_S_SLAVE_MCRU",
++                                "CLK_S_TMDS_HDMI", "CLK_S_HDMI_REJECT_PLL",
++                                "CLK_S_THSENS";
++                };
++
++                CLOCKGEN_D: CLOCKGEN_D {
++                        #clock-cells = <1>;
++                        compatible = "st,stih416-quadfs216", "st,quadfs";
++                        reg = <0xfee107e0 0x44>;
++
++                        clocks = <&CLK_SYSIN>;
++                        clock-output-names = "CLK_S_CCSC",
++                                             "CLK_S_STFE_FRC_1",
++                                             "CLK_S_TSOUT_1",
++                                             "CLK_S_MCHI";
++                };
++
++		/*
++		 * Frequency synthesizers on the MPE42
++		 */
++                CLOCKGEN_E: CLOCKGEN_E {
++                        #clock-cells = <1>;
++                        compatible = "st,stih416-quadfs660-E", "st,quadfs";
++                        reg = <0xfd3208bc 0xB0>;
++
++                        clocks = <&CLK_SYSIN>;
++                        clock-output-names = "CLK_M_PIX_MDTP_0",
++                                             "CLK_M_PIX_MDTP_1",
++                                             "CLK_M_PIX_MDTP_2",
++                                             "CLK_M_MPELPC";
++                };
++
++                CLOCKGEN_F: CLOCKGEN_F {
++                        #clock-cells = <1>;
++                        compatible = "st,stih416-quadfs660-F", "st,quadfs";
++                        reg = <0xfd320878 0xF0>;
++
++                        clocks = <&CLK_SYSIN>;
++                        clock-output-names = "CLK_M_MAIN_VIDFS",
++                                             "CLK_M_HVA_FS",
++                                             "CLK_M_FVDP_VCPU",
++					     "CLK_M_FVDP_PROC_FS";
++                };
++
++                CLK_M_FVDP_PROC: CLK_M_FVDP_PROC {
++                        #clock-cells = <0>;
++                        compatible = "st,stih416-clkgenf-vcc-fvdp", "st,clkgen-mux";
++                        reg = <0xfd320910 4>; /* SYSCFG8580 */
++
++                        clocks = <&CLK_M_A1_DIV2 0>, <&CLOCKGEN_F 3>;
++                };
++
++                CLK_M_HVA: CLK_M_HVA {
++                        #clock-cells = <0>;
++                        compatible = "st,stih416-clkgenf-vcc-hva", "st,clkgen-mux";
++                        reg = <0xfd690868 4>; /* SYSCFG9538 */
++
++                        clocks = <&CLOCKGEN_F 1>, <&CLK_M_A1_DIV0 3>;
++                };
++
++                CLK_M_F_VCC_HD: CLK_M_F_VCC_HD {
++                        #clock-cells = <0>;
++                        compatible = "st,stih416-clkgenf-vcc-hd", "st,clkgen-mux";
++                        reg = <0xfd32086c 4>; /* SYSCFG8539 */
++
++                        clocks = <&CLOCKGEN_C_VCC 7>, <&CLOCKGEN_F 0>;
++                };
++
++                CLK_M_F_VCC_SD: CLK_M_F_VCC_SD {
++                        #clock-cells = <0>;
++                        compatible = "st,stih416-clkgenf-vcc-sd", "st,clkgen-mux";
++                        reg = <0xfd32086c 4>; /* SYSCFG8539 */
++
++                        clocks = <&CLOCKGEN_C_VCC 8>, <&CLOCKGEN_F 1>;
++                };
++
++                /*
++                 * Add a dummy clock for the HDMIRx external signal clock
++                 */
++                CLK_M_PIX_HDMIRX_SAS: CLK_M_PIX_HDMIRX_SAS {
++                        #clock-cells = <0>;
++                        compatible = "fixed-clock";
++                        clock-frequency = <0>;
++                };
++
++                CLOCKGEN_F_VCC: CLOCKGEN_F_VCC {
++                        #clock-cells = <1>;
++                        compatible = "st,stih416-clkgenf", "st,clkgen-vcc";
++                        reg = <0xfd32086c 12>; /* SYSCFG8539,8540,8541 */
++
++                        clocks = <&CLK_M_F_VCC_HD>, <&CLK_M_F_VCC_SD>,
++                                 <&CLOCKGEN_F 0>, <&CLK_M_PIX_HDMIRX_SAS>;
++
++                        clock-output-names  =
++                                "CLK_M_PIX_MAIN_PIPE",  "CLK_M_PIX_AUX_PIPE",
++                                "CLK_M_PIX_MAIN_CRU",   "CLK_M_PIX_AUX_CRU",
++                                "CLK_M_XFER_BE_COMPO",  "CLK_M_XFER_PIP_COMPO",
++                                "CLK_M_XFER_AUX_COMPO", "CLK_M_VSENS",
++                                "CLK_M_PIX_HDMIRX_0",   "CLK_M_PIX_HDMIRX_1";
++                };
+ 	};
+ };
+-- 
+1.9.0
