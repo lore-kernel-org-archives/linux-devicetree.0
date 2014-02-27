@@ -1,217 +1,89 @@
-From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v2 4/4] pci: Add support for creating a generic host_bridge from device tree
-Date: Thu, 27 Feb 2014 13:06:42 +0000
-Message-ID: <1393506402-11474-5-git-send-email-Liviu.Dudau@arm.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: [PATCH v2 1/4] pci: OF: Fix the conversion of IO ranges into IO resources.
+Date: Thu, 27 Feb 2014 13:06:39 +0000
+Message-ID: <1393506402-11474-2-git-send-email-Liviu.Dudau@arm.com>
 References: <1393506402-11474-1-git-send-email-Liviu.Dudau@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393506402-11474-1-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1393506402-11474-1-git-send-email-Liviu.Dudau@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Several platforms use a rather generic version of parsing
-the device tree to find the host bridge ranges. Move the common code
-into the generic PCI code and use it to create a pci_host_bridge
-structure that can be used by arch code.
+The ranges property for a host bridge controller in DT describes
+the mapping between the PCI bus address and the CPU physical address.
+The resources framework however expects that the IO resources start
+at a pseudo "port" address 0 (zero) and have a maximum size of 64kb.
+The conversion from pci ranges to resources failed to take that into
+account.
 
-Based on early attempts by Andrew Murray to unify the code.
-Used powerpc and microblaze PCI code as starting point.
+In the process move the function into drivers/of/address.c as it
+now depends on pci_address_to_pio() code.
 
-Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
 
-diff --git a/drivers/pci/host-bridge.c b/drivers/pci/host-bridge.c
-index 06ace62..feb8436 100644
---- a/drivers/pci/host-bridge.c
-+++ b/drivers/pci/host-bridge.c
-@@ -6,9 +6,13 @@
- #include <linux/init.h>
- #include <linux/pci.h>
- #include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/of_pci.h>
- 
- #include "pci.h"
- 
-+static int domain_nr;
-+
- static struct pci_bus *find_pci_root_bus(struct pci_bus *bus)
- {
- 	while (bus->parent)
-@@ -91,3 +95,133 @@ void pcibios_bus_to_resource(struct pci_bus *bus, struct resource *res,
- 	res->end = region->end + offset;
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 1a54f1f..7cf2b16 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -719,3 +719,34 @@ void __iomem *of_iomap(struct device_node *np, int index)
+ 	return ioremap(res.start, resource_size(&res));
  }
- EXPORT_SYMBOL(pcibios_bus_to_resource);
+ EXPORT_SYMBOL(of_iomap);
 +
 +/**
-+ * pci_host_bridge_of_get_ranges - Parse PCI host bridge resources from DT
-+ * @dev: device node of the host bridge having the range property
-+ * @resources: list where the range of resources will be added after DT parsing
-+ * @io_base: pointer to a variable that will contain the physical address for
-+ * the start of the I/O range.
-+ *
-+ * If this function returns an error then the @resources list will be freed.
-+ *
-+ * This function will parse the "ranges" property of a PCI host bridge device
-+ * node and setup the resource mapping based on its content. It is expected
-+ * that the property conforms with the Power ePAPR document.
-+ *
-+ * Each architecture is then offered the chance of applying their own
-+ * filtering of pci_host_bridge_windows based on their own restrictions by
-+ * calling pcibios_fixup_bridge_ranges(). The filtered list of windows
-+ * can then be used when creating a pci_host_bridge structure.
++ * of_pci_range_to_resource - Create a resource from an of_pci_range
++ * @range:	the PCI range that describes the resource
++ * @np:		device node where the range belongs to
++ * @res:	pointer to a valid resource that will be updated to
++ *              reflect the values contained in the range.
++ * Note that if the range is an IO range, the resource will be converted
++ * using pci_address_to_pio() which can fail if it is called to early or
++ * if the range cannot be matched to any host bridge IO space.
 + */
-+static int pci_host_bridge_of_get_ranges(struct device_node *dev,
-+		struct list_head *resources, resource_size_t *io_base)
++void of_pci_range_to_resource(struct of_pci_range *range,
++	struct device_node *np, struct resource *res)
 +{
-+	struct resource *res;
-+	struct of_pci_range range;
-+	struct of_pci_range_parser parser;
-+	int err;
-+
-+	pr_info("PCI host bridge %s ranges:\n", dev->full_name);
-+
-+	/* Check for ranges property */
-+	err = of_pci_range_parser_init(&parser, dev);
-+	if (err)
-+		return err;
-+
-+	pr_debug("Parsing ranges property...\n");
-+	for_each_of_pci_range(&parser, &range) {
-+		/* Read next ranges element */
-+		pr_debug("pci_space: 0x%08x pci_addr:0x%016llx ",
-+				range.pci_space, range.pci_addr);
-+		pr_debug("cpu_addr:0x%016llx size:0x%016llx\n",
-+					range.cpu_addr, range.size);
-+
-+		/*
-+		 * If we failed translation or got a zero-sized region
-+		 * then skip this range
-+		 */
-+		if (range.cpu_addr == OF_BAD_ADDR || range.size == 0)
-+			continue;
-+
-+		res = kzalloc(sizeof(struct resource), GFP_KERNEL);
-+		if (!res) {
-+			err = -ENOMEM;
-+			goto bridge_ranges_nomem;
++	res->flags = range->flags;
++	if (res->flags & IORESOURCE_IO) {
++		unsigned long port;
++		port = pci_address_to_pio(range->pci_addr);
++		if (port == (unsigned long)-1) {
++			res->start = (resource_size_t)OF_BAD_ADDR;
++			res->end = (resource_size_t)OF_BAD_ADDR;
++			return;
 +		}
-+
-+		of_pci_range_to_resource(&range, dev, res);
-+
-+		if (resource_type(res) == IORESOURCE_IO)
-+			*io_base = range.cpu_addr;
-+
-+		pci_add_resource_offset(resources, res,
-+				res->start - range.pci_addr);
++		res->start = port;
++	} else {
++		res->start = range->cpu_addr;
 +	}
-+
-+	/* Apply architecture specific fixups for the ranges */
-+	pcibios_fixup_bridge_ranges(resources);
-+
-+	return 0;
-+
-+bridge_ranges_nomem:
-+	pci_free_resource_list(resources);
-+	return err;
++	res->end = res->start + range->size - 1;
++	res->parent = res->child = res->sibling = NULL;
++	res->name = np->full_name;
 +}
-+
-+/**
-+ * of_create_pci_host_bridge - Create a PCI host bridge structure using
-+ * information passed in the DT.
-+ * @parent: device owning this host bridge
-+ * @ops: pci_ops associated with the host controller
-+ * @host_data: opaque data structure used by the host controller.
-+ *
-+ * returns a pointer to the newly created pci_host_bridge structure, or
-+ * NULL if the call failed.
-+ *
-+ * This function will try to obtain the host bridge domain number by
-+ * using of_alias_get_id() call with "pci-domain" as a stem. If that
-+ * fails, a local allocator will be used that will put each host bridge
-+ * in a new domain.
-+ */
-+struct pci_host_bridge *
-+of_create_pci_host_bridge(struct device *parent, struct pci_ops *ops, void *host_data)
-+{
-+	int err, domain, busno;
-+	struct resource bus_range;
-+	struct pci_bus *root_bus;
-+	struct pci_host_bridge *bridge;
-+	resource_size_t io_base;
-+	LIST_HEAD(res);
-+
-+	domain = of_alias_get_id(parent->of_node, "pci-domain");
-+	if (domain == -ENODEV)
-+		domain = domain_nr++;
-+
-+	err = of_pci_parse_bus_range(parent->of_node, &bus_range);
-+	if (err) {
-+		dev_info(parent, "No bus range for %s, using default [0-255]\n",
-+			parent->of_node->full_name);
-+		bus_range.start = 0;
-+		bus_range.end = 255;
-+		bus_range.flags = IORESOURCE_BUS;
-+	}
-+	busno = bus_range.start;
-+	pci_add_resource(&res, &bus_range);
-+
-+	/* now parse the rest of host bridge bus ranges */
-+	if (pci_host_bridge_of_get_ranges(parent->of_node, &res, &io_base))
-+		return NULL;
-+
-+	/* then create the root bus */
-+	root_bus = pci_create_root_bus_in_domain(parent, domain, busno,
-+						ops, host_data, &res);
-+	if (!root_bus)
-+		return NULL;
-+
-+	bridge = to_pci_host_bridge(root_bus->bridge);
-+	bridge->io_base = io_base;
-+
-+	return bridge;
-+}
-+EXPORT_SYMBOL_GPL(of_create_pci_host_bridge);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 1eed009..0c5e269 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -395,6 +395,7 @@ struct pci_host_bridge {
- 	struct device dev;
- 	struct pci_bus *bus;		/* root bus */
- 	int domain_nr;
-+	resource_size_t io_base;	/* physical address for the start of I/O area */
- 	struct list_head windows;	/* pci_host_bridge_windows */
- 	void (*release_fn)(struct pci_host_bridge *);
- 	void *release_data;
-@@ -1786,11 +1787,23 @@ static inline struct device_node *pci_bus_to_OF_node(struct pci_bus *bus)
- 	return bus ? bus->dev.of_node : NULL;
- }
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index 5f6ed6b..a667762 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -23,17 +23,8 @@ struct of_pci_range {
+ #define for_each_of_pci_range(parser, range) \
+ 	for (; of_pci_range_parser_one(parser, range);)
  
-+struct pci_host_bridge *
-+of_create_pci_host_bridge(struct device *parent, struct pci_ops *ops,
-+			void *host_data);
-+
-+void pcibios_fixup_bridge_ranges(struct list_head *resources);
- #else /* CONFIG_OF */
- static inline void pci_set_of_node(struct pci_dev *dev) { }
- static inline void pci_release_of_node(struct pci_dev *dev) { }
- static inline void pci_set_bus_of_node(struct pci_bus *bus) { }
- static inline void pci_release_bus_of_node(struct pci_bus *bus) { }
-+
-+static inline struct pci_host_bridge *
-+pci_host_bridge_of_init(struct device *parent, struct pci_ops *ops,
-+			void *host_data)
-+{
-+	return NULL;
-+}
- #endif  /* CONFIG_OF */
- 
- #ifdef CONFIG_EEH
+-static inline void of_pci_range_to_resource(struct of_pci_range *range,
+-					    struct device_node *np,
+-					    struct resource *res)
+-{
+-	res->flags = range->flags;
+-	res->start = range->cpu_addr;
+-	res->end = range->cpu_addr + range->size - 1;
+-	res->parent = res->child = res->sibling = NULL;
+-	res->name = np->full_name;
+-}
+-
++extern void of_pci_range_to_resource(struct of_pci_range *range,
++		struct device_node *np, struct resource *res);
+ /* Translate a DMA address from device space to CPU space */
+ extern u64 of_translate_dma_address(struct device_node *dev,
+ 				    const __be32 *in_addr);
 -- 
 1.9.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
