@@ -1,41 +1,77 @@
-From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v6 0/2]  Introduce AEMIF driver for Davinci/Keystone archs
-Date: Fri, 28 Feb 2014 10:43:36 -0500
-Message-ID: <5310AEA8.1070804@ti.com>
-References: <1393262772-24442-1-git-send-email-ivan.khoronzhuk@ti.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 3/9] Doc/DT: Add DT binding documentation for DVI
+	Connector
+Date: Fri, 28 Feb 2014 15:59:37 +0000
+Message-ID: <20140228155937.GQ21483@n2100.arm.linux.org.uk>
+References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com> <1393590016-9361-4-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1393262772-24442-1-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1393590016-9361-4-git-send-email-tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Greg,
+On Fri, Feb 28, 2014 at 02:20:10PM +0200, Tomi Valkeinen wrote:
+> Add DT binding documentation for DVI Connector.
+> 
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+> Reviewed-by: Archit Taneja <archit-l0cyMroinI0@public.gmane.org>
+> ---
+>  .../devicetree/bindings/video/dvi-connector.txt    | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/video/dvi-connector.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/video/dvi-connector.txt b/Documentation/devicetree/bindings/video/dvi-connector.txt
+> new file mode 100644
+> index 000000000000..6a0aff866c78
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/dvi-connector.txt
+> @@ -0,0 +1,26 @@
+> +DVI Connector
+> +==============
+> +
+> +Required properties:
+> +- compatible: "dvi-connector"
+> +
+> +Optional properties:
+> +- label: a symbolic name for the connector
+> +- i2c-bus: phandle to the i2c bus that is connected to DVI DDC
+> +
+> +Required nodes:
+> +- Video port for DVI input
+> +
+> +Example
+> +-------
+> +
+> +dvi0: connector@0 {
+> +	compatible = "dvi-connector";
+> +	label = "dvi";
+> +
+> +	i2c-bus = <&i2c3>;
+> +
+> +	dvi_connector_in: endpoint {
+> +		remote-endpoint = <&tfp410_out>;
+> +	};
+> +};
 
-On Monday 24 February 2014 12:26 PM, Ivan Khoronzhuk wrote:
-> These patches introduce Async External Memory Interface (EMIF16/AEMIF)
-> controller driver for Davinci/Keystone archs.
-> 
-> For more informations see documentation:
-> Davinci DM646x - http://www.ti.com/lit/ug/sprueq7c/sprueq7c.pdf
-> OMAP-L138 - http://www.ti.com/lit/ug/spruh77a/spruh77a.pdf
-> Kestone - http://www.ti.com/lit/ug/sprugz3a/sprugz3a.pdf
-> 
-[..]
+This looks far too simplistic.  There are different classes of DVI
+connector - there is:
 
-> 
-> v5..v6:
-> - memory: ti-aemif: introduce AEMIF driver
-> - memory: ti-aemif: add bindings for AEMIF driver
-> 	changed opaque names for cs node properties
-> 
-Can you please pick these two patches ? 
+DVI A - analogue only
+DVI D - digital only (single and dual link)
+DVI I - both (single and dual digital link)
 
-Regards,
-Santosh
+DRM at least makes a distinction between these three classes, and this
+disctinction is part of the user API.  How would a display system know
+which kind of DVI connector is wired up on the board from this DT
+description?
+
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
