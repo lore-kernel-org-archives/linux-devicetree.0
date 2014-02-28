@@ -1,13 +1,11 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 3/5] clk: sun6i: Protect SDRAM gating bit
-Date: Fri, 28 Feb 2014 17:37:18 +0100
-Message-ID: <1393605440-14643-4-git-send-email-maxime.ripard@free-electrons.com>
-References: <1393605440-14643-1-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH v2 0/5] Add support for the Allwinner A31 DMA Controller
+Date: Fri, 28 Feb 2014 17:37:15 +0100
+Message-ID: <1393605440-14643-1-git-send-email-maxime.ripard@free-electrons.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB2HXYKMAKGQEGJ3MJ5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1393605440-14643-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB2XXYKMAKGQEBAC6WIA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi>
@@ -18,29 +16,39 @@ To: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Dan Williams 
 Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Prevent the SDRAM controller from being gated by force-enabling it in the clock
-driver.
+Hi,
 
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- drivers/clk/sunxi/clk-sunxi.c | 5 +++++
- 1 file changed, 5 insertions(+)
+This patchset adds support for the DMA controller found in the
+Allwinner A31 and A23 SoCs.
 
-diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
-index a5c5882..bbbc5c0 100644
---- a/drivers/clk/sunxi/clk-sunxi.c
-+++ b/drivers/clk/sunxi/clk-sunxi.c
-@@ -1302,6 +1302,11 @@ static void __init sunxi_clock_protect(void)
- 		clk_put(clk);
- 	}
- 
-+	/* DDR Gating clock - sun6i */
-+	clk = clk_get(NULL, "ahb1_sdram");
-+	if (!IS_ERR(clk))
-+		clk_prepare_enable(clk);
-+
- 	/* CPU clocks - sun6i */
- 	clk = clk_get(NULL, "cpu");
- 	if (!IS_ERR(clk))
+This has been tested using the newly introduced SPI driver on an A31
+EVK. Support for DMA-driven SPI transfers will be the subject of
+another patch serie.
+
+Thanks,
+Maxime
+
+Changes from v1:
+  - Removed the clk_put call in the clocks protecting patches
+  - Minor fixes here and there as suggested by Andy Shevchenko: switch
+    to dmam_pool_create, switch to dev_dbg instead of pr_debug, etc.
+
+Maxime Ripard (5):
+  clk: sun6i: Protect CPU clock
+  clk: sun6i: Reparent AHB clock on PLL6
+  clk: sun6i: Protect SDRAM gating bit
+  DMA: sun6i: Add driver for the Allwinner A31 DMA controller
+  ARM: sun6i: dt: Add A31 DMA controller to DTSI
+
+ .../devicetree/bindings/dma/sun6i-dma.txt          |  45 +
+ arch/arm/boot/dts/sun6i-a31.dtsi                   |  29 +
+ drivers/clk/sunxi/clk-sunxi.c                      |  29 +-
+ drivers/dma/Kconfig                                |   8 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/sun6i-dma.c                            | 959 +++++++++++++++++++++
+ 6 files changed, 1070 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/sun6i-dma.txt
+ create mode 100644 drivers/dma/sun6i-dma.c
+
 -- 
 1.9.0
