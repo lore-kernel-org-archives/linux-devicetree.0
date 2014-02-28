@@ -1,179 +1,152 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Subject: RE: [PATCH v4] can: xilinx CAN controller support.
-Date: Fri, 28 Feb 2014 12:44:54 +0000
-Message-ID: <48409965-e214-43b7-8b6a-08bf075707e1@CO9EHSMHS001.ehs.local>
-References: <74d607e9-ac9c-4a9b-ac49-e84ae49d20c2@TX2EHSMHS031.ehs.local>
- <530D0A9C.5090402@pengutronix.de>
- <cd00fb2d-c8a7-423d-8aa0-2b413e9ac101@CO9EHSMHS017.ehs.local>
- <530DEA7C.6010609@pengutronix.de>
- <678ca296-8687-4e7c-9014-ae69d886a068@CO9EHSMHS014.ehs.local>
- <530E0B92.5010903@pengutronix.de>
- <2e3bfd38-37d5-4102-af79-821196c6c732@CH1EHSMHS006.ehs.local>
- <53104995.4010305@pengutronix.de>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v2 1/4] pci: OF: Fix the conversion of IO ranges into IO
+ resources.
+Date: Fri, 28 Feb 2014 12:50:45 +0000
+Message-ID: <20140228125045.GV1692@e106497-lin.cambridge.arm.com>
+References: <1393506402-11474-1-git-send-email-Liviu.Dudau@arm.com>
+ <5379319.g8IPYmY2Zo@wuerfel>
+ <20140227200729.GB7773@obsidianresearch.com>
+ <11097076.0C13zaKdYD@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <53104995.4010305@pengutronix.de>
-Content-Language: en-US
-Sender: linux-can-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>, "wg@grandegger.com" <wg@grandegger.com>, Michal Simek <michals@xilinx.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <11097076.0C13zaKdYD@wuerfel>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyYywNCg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE1hcmMg
-S2xlaW5lLUJ1ZGRlIFttYWlsdG86bWtsQHBlbmd1dHJvbml4LmRlXQ0KPiBTZW50OiBGcmlkYXks
-IEZlYnJ1YXJ5IDI4LCAyMDE0IDI6MDIgUE0NCj4gVG86IEFwcGFuYSBEdXJnYSBLZWRhcmVzd2Fy
-YSBSYW87IHdnQGdyYW5kZWdnZXIuY29tOyBNaWNoYWwgU2ltZWs7DQo+IGdyYW50Lmxpa2VseUBs
-aW5hcm8ub3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7IGxpbnV4LWNhbkB2Z2VyLmtlcm5lbC5vcmcN
-Cj4gQ2M6IG5ldGRldkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
-cmFkZWFkLm9yZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVA
-dmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjRdIGNhbjogeGlsaW54IENB
-TiBjb250cm9sbGVyIHN1cHBvcnQuDQo+DQo+IE9uIDAyLzI4LzIwMTQgMDY6NTAgQU0sIEFwcGFu
-YSBEdXJnYSBLZWRhcmVzd2FyYSBSYW8gd3JvdGU6DQo+ID4gSGkgTWFyYywNCj4gPg0KPiA+DQo+
-ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+IEZyb206IE1hcmMgS2xlaW5lLUJ1
-ZGRlIFttYWlsdG86bWtsQHBlbmd1dHJvbml4LmRlXQ0KPiA+PiBTZW50OiBXZWRuZXNkYXksIEZl
-YnJ1YXJ5IDI2LCAyMDE0IDk6MTMgUE0NCj4gPj4gVG86IEFwcGFuYSBEdXJnYSBLZWRhcmVzd2Fy
-YSBSYW87IHdnQGdyYW5kZWdnZXIuY29tOyBNaWNoYWwgU2ltZWs7DQo+ID4+IGdyYW50Lmxpa2Vs
-eUBsaW5hcm8ub3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+ID4+IGxpbnV4LWNhbkB2Z2VyLmtl
-cm5lbC5vcmcNCj4gPj4gQ2M6IG5ldGRldkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gPj4gbGludXgtIGtlcm5lbEB2Z2VyLmtlcm5lbC5v
-cmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+ID4+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
-djRdIGNhbjogeGlsaW54IENBTiBjb250cm9sbGVyIHN1cHBvcnQuDQo+ID4+DQo+ID4+IE9uIDAy
-LzI2LzIwMTQgMDM6NDYgUE0sIEFwcGFuYSBEdXJnYSBLZWRhcmVzd2FyYSBSYW8gd3JvdGU6DQo+
-ID4+PiBIaSBNYXJjLA0KPiA+Pj4NCj4gPj4+DQo+ID4+Pj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
-LS0tLS0NCj4gPj4+PiBGcm9tOiBNYXJjIEtsZWluZS1CdWRkZSBbbWFpbHRvOm1rbEBwZW5ndXRy
-b25peC5kZV0NCj4gPj4+PiBTZW50OiBXZWRuZXNkYXksIEZlYnJ1YXJ5IDI2LCAyMDE0IDY6NTIg
-UE0NCj4gPj4+PiBUbzogQXBwYW5hIER1cmdhIEtlZGFyZXN3YXJhIFJhbzsgd2dAZ3JhbmRlZ2dl
-ci5jb207IE1pY2hhbA0KPiBTaW1lazsNCj4gPj4+PiBncmFudC5saWtlbHlAbGluYXJvLm9yZzsg
-cm9iaCtkdEBrZXJuZWwub3JnOw0KPiA+Pj4+IGxpbnV4LWNhbkB2Z2VyLmtlcm5lbC5vcmcNCj4g
-Pj4+PiBDYzogbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
-bmZyYWRlYWQub3JnOw0KPiA+Pj4+IGxpbnV4LSBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkZXZp
-Y2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiA+Pj4+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjRdIGNh
-bjogeGlsaW54IENBTiBjb250cm9sbGVyIHN1cHBvcnQuDQo+ID4+Pj4NCj4gPj4+PiBPbiAwMi8y
-Ni8yMDE0IDAyOjA3IFBNLCBBcHBhbmEgRHVyZ2EgS2VkYXJlc3dhcmEgUmFvIHdyb3RlOg0KPiA+
-Pj4+Pj4gVGhpcyBsb29wIGxvb2tzIGJyb2tlbi4gQ2FuIHlvdSBleHBsYWluIGhvdyBpdCB3b3Jr
-cy4NCj4gPj4+Pj4+DQo+ID4+Pj4+PiBXaGF0IGl0IHNob3VkIGRvIGlzOg0KPiA+Pj4+Pj4gV2Ug
-aGF2ZSBwdXQgKHByaXYtPnR4X2hlYWQgLSBwcml2LT50eF90YWlsKSBDQU4gZnJhbWVzIGludG8g
-dGhlDQo+IEZJRk8uDQo+ID4+Pj4+PiBUaGlzIG1lYW5zIGF0IG1heGltdW0gdGhlcmUgY291bGQg
-YmUgdGhpcyBhbW91bnQgb2YgQ0FOIGZyYW1lcw0KPiA+Pj4+Pj4gd2hpY2ggaGF2ZSBiZWVuIHN1
-Y2Nlc3NmdWxseSB0cmFuc21pdHRlZC4gRm9yIGV2ZXJ5IGN5Y2xlIGluIHRoaXMNCj4gPj4+Pj4+
-IHdoaWxlIGxvb3AgeW91DQo+ID4+Pj4+PiBzaG91bGQ6DQo+ID4+Pj4+PiBhKSBjaGVjayBpZiBh
-IENBTiBmcmFtZSBoYXMgc3VjY2Vzc2Z1bGx5IGJlZW4gdHJhbnNtaXR0ZWQNCj4gPj4+Pj4+ICAg
-IChhcyB0aGlzIENBTiBjb3JlIHVzZXMgYSBGSUZPIGl0IHNob3VsZCBiZSAib2xkZXN0IikNCj4g
-Pj4+Pj4+ICAgIEEgcmVhZF9yZWcoKSBvZiBzb21lIGtpbmQgaXMgbWlzc2luZyBpbiB5b3VyIGxv
-b3AuDQo+ID4+Pj4+PiBiKSBpZiBuZWVkZWQsIHJlbW92ZSB0aGlzIGV2ZW50IGZyb20gdGhlIEZJ
-Rk8gb3INCj4gPj4+Pj4+ICAgIG1hcmsgdGhlIGludGVycnVwdCBhcyBkb25lLiBXaGF0ZXZlciB5
-b3UgaGFyZHdhcmUgbmVlZHMuDQo+ID4+Pj4+PiBjKSB1cGRhdGUgeW91ciBzdGF0aXN0aWNzDQo+
-ID4+Pj4+PiBkKSBVc2UgY2FuX2dldF9lY2hvX3NrYiB0byBwdXNoIHRoaXMgZnJhbWUgaW50byB0
-aGUgbmV0d29ya2luZw0KPiA+Pj4+Pj4gc3RhY2sNCj4gPj4+Pj4+IGUpIEFzIGEgQ0FOIGZyYW1l
-IGhhcyBiZWVuIHRyYW5zbWl0dGVkIHN1Y2Nlc3NmdWxseSwgd2FrZSB0aGUNCj4gPj4gdHhfcXVl
-dWUuDQo+ID4+Pj4+Pg0KPiA+Pj4+Pj4+ICsgICB3aGlsZSAocHJpdi0+dHhfaGVhZCAtIHByaXYt
-PnR4X3RhaWwgPiAwKSB7DQo+ID4+Pj4+Pj4gKyAgICAgICAgICAgaWYgKGlzciAmIFhDQU5fSVhS
-X1RYRkxMX01BU0spIHsNCj4gPj4+Pj4+PiArICAgICAgICAgICAgICAgICAgIHByaXYtPndyaXRl
-X3JlZyhwcml2LCBYQ0FOX0lDUl9PRkZTRVQsDQo+ID4+Pj4+Pj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgWENBTl9JWFJfVFhGTExfTUFTSyk7DQo+ID4+Pj4+Pj4gKyAgICAg
-ICAgICAgICAgICAgICBuZXRpZl9zdG9wX3F1ZXVlKG5kZXYpOw0KPiA+Pj4+Pj4NCj4gPj4+Pj4+
-IFdoeSBkbyB5b3Ugc3RvcCB0aGUgcXVldWUgaGVyZT8gQSBDQU4gZnJhbWUgaGFzIHN1Y2Nlc3Nm
-dWxseQ0KPiBiZWVuDQo+ID4+Pj4+PiB0cmFuc21pdHRlZCwgdGhlcmUgc2hvdWxkIGJlIHJvb20g
-aW4gdGhlIEZJRk8uDQo+ID4+Pj4+Pg0KPiA+Pj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgYnJl
-YWs7DQo+ID4+Pj4+Pj4gKyAgICAgICAgICAgfQ0KPiA+Pj4+Pj4+ICsgICAgICAgICAgIGNhbl9n
-ZXRfZWNob19za2IobmRldiwgcHJpdi0+dHhfdGFpbCAlDQo+ID4+Pj4+Pj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgcHJpdi0+eGNhbl9lY2hvX3NrYl9tYXhfdHgpOw0KPiA+
-Pj4+Pj4+ICsgICAgICAgICAgIHByaXYtPnR4X3RhaWwrKzsNCj4gPj4+Pj4+PiArICAgfQ0KPiA+
-Pj4+Pj4+ICsNCj4gPj4+Pj4NCj4gPj4+Pj4gVGhlIGJlbG93IGFyZSB0aGUgYml0IGZpZWxkcyBh
-dmFpbGFibGUgZm9yIHRoZSBUcmFuc21pdCBGSUZPLg0KPiA+Pj4+PiAxKSBJbiB0aGUgSVNSKGlu
-dGVycnVwdCBzdGF0dXMgcmVnaXN0ZXIpICBUeCBPayBpbnRlcnJ1cHQgYW5kIFR4DQo+ID4+Pj4+
-IGZpZm8gZnVsbA0KPiA+Pj4+IGludGVycnVwdC4NCj4gPj4+Pj4gMikgaW4gdGhlIFNSKFN0YXR1
-cyBSZWdpc3RlcikgVHggZmlmbyBmdWxsIGNvbmRpdGlvbi4NCj4gPj4+Pj4NCj4gPj4+Pj4NCj4g
-Pj4+Pj4gSSBhbSBtb2RpZnlpbmcgdGhlIGVudGlyZSB0eCBpbnRlcnJ1cHQgbG9naWMgdG8gbGlr
-ZSBiZWxvdy4NCj4gPj4+Pj4NCj4gPj4+Pj4gc3RhdGljIHZvaWQgeGNhbl90eF9pbnRlcnJ1cHQo
-c3RydWN0IG5ldF9kZXZpY2UgKm5kZXYsIHUzMiBpc3IpIHsNCj4gPj4+Pj4gICAgICAgICBzdHJ1
-Y3QgeGNhbl9wcml2ICpwcml2ID0gbmV0ZGV2X3ByaXYobmRldik7DQo+ID4+Pj4+ICAgICAgICAg
-c3RydWN0IG5ldF9kZXZpY2Vfc3RhdHMgKnN0YXRzID0gJm5kZXYtPnN0YXRzOw0KPiA+Pj4+Pg0K
-PiA+Pj4+PiAgICAgICAgICAgICB3aGlsZSAocHJpdi0+dHhfaGVhZCAtIHByaXYtPnR4X3RhaWwg
-PiAwKSB7DQo+ID4+Pj4+ICAgICAgICAgICAgICAgICBpZiAoaXNyICYgWENBTl9JWFJfVFhGTExf
-TUFTSykgew0KPiA+Pj4+PiAgICAgICAgICAgICAgICAgICAgICAgICBwcml2LT53cml0ZV9yZWco
-cHJpdiwgWENBTl9JQ1JfT0ZGU0VULA0KPiA+Pj4+PiAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgWENBTl9JWFJfVFhGTExfTUFTSyk7DQo+ID4+Pj4+ICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgYnJlYWs7DQo+ID4+Pj4+ICAgICAgICAgICAgICAgICB9DQo+ID4+Pj4+
-ICAgICAgICAgICAgICAgICBjYW5fZ2V0X2VjaG9fc2tiKG5kZXYsIHByaXYtPnR4X3RhaWwgJQ0K
-PiA+Pj4+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcHJpdi0+eGNh
-bl9lY2hvX3NrYl9tYXhfdHgpOw0KPiA+Pj4+PiAgICAgICAgICAgICAgICAgcHJpdi0+dHhfdGFp
-bCsrOw0KPiA+Pj4+PiAgICAgICAgICBzdGF0cy0+dHhfcGFja2V0cysrOw0KPiA+Pj4+PiAgICAg
-ICAgIG5ldGlmX3dha2VfcXVldWUobmRldik7DQo+ID4+Pj4+ICAgICAgICAgICAgICAgY2FuX2xl
-ZF9ldmVudChuZGV2LCBDQU5fTEVEX0VWRU5UX1RYKTsNCj4gPj4+Pj4NCj4gPj4+Pj4gICAgICAg
-ICB9DQo+ID4+Pj4NCj4gPj4+PiBZb3UganVzdCBuZWVkIHRvIHdha2UgdGhlIHF1ZXVlIG9uY2Uu
-DQo+ID4+Pg0KPiA+Pj4gT2sNCj4gPj4+Pg0KPiA+Pj4+PiB9DQo+ID4+Pj4+DQo+ID4+Pj4+DQo+
-ID4+Pj4+IEFyZSB5b3UgT2sgd2l0aCB0aGUgYWJvdmUgbG9naWM/DQo+ID4+Pj4NCj4gPj4+PiBO
-bywgaG93IGNhbiB5b3UgdGVsbCBob3cgbWFueSBmcmFtZXMgaGF2ZSBiZWVuIHRyYW5zbWl0dGVk
-Pw0KPiA+Pj4NCj4gPj4+IFRoZXJlIGlzIG5vIHJlZ2lzdGVyIHRvIHJlYWQgaG93IG1hbnkgY2Fu
-IGZyYW1lcyBhcmUgdHJhbnNtaXR0ZWQuDQo+ID4+PiBUaGUgb25seSB3YXkgdG8ga25vdyBJcyBi
-eSByZWFkaW5nIHRoaXMgcGFyYW1ldGVyDQo+ID4+PiAoc3RhdHMtPnR4X3BhY2tldHMrKzspIHRo
-cm91Z2ggaXAgY29tbWFuZA0KPiA+Pg0KPiA+PiBzdGF0cy0+dHhfcGFja2V0cyBpcyBjYWxjdWxh
-dGVkIGluIHRoZSBhYm92ZSBsb29wIGFuZCB0aGUgbG9vcCBpcw0KPiA+PiBicm9rZW4uIExldCBt
-ZSBpbGx1c3RyYXRlIHRoZSBwcm9ibGVtOg0KPiA+Pg0KPiA+PiAtIHhtaXQgaXMgY2FsbGVkIDEw
-IHRpbWVzIGluIGEgcm93DQo+ID4+IC0gdGhpcyBtZWFucyB5b3UgaGF2ZSAxMCBDQU4gZnJhbWVz
-IGluIHRoZSBUWCBGSUZPDQo+ID4+IC0gYSBzaW5nbGUgQ0FOIGZyYW1lIGdldHMgdHJhbnNtaXR0
-ZWQNCj4gPj4gLSB5b3UgZ2V0IGFuIGludGVycnVwdA0KPiA+PiAtIHlvdSBlbnRlciB0aGUgYWJv
-dmUgcm91dGluZSBhbmQgbG9vcCAxMCB0aW1lcyBhbmQgZWNobyB0aGUgQ0FOIGZyYW1lDQo+ID4+
-ICAgYmFjayBpbnRvIHRoZSBzdGFjaw0KPiA+Pg0KPiA+PiBOb3cgZXZlcnkgYXBwbGljYXRpb24g
-c2VlcyAxMCB0cmFuc21pdHRlZCBwYWNrYWdlcywgYnV0IHRoZXJlIGlzIG9ubHkNCj4gPj4gb25l
-IHRyYW5zbWl0dGVkLiBFdmVyeSB0aW1lIHlvdSBsb29wIHlvdSBoYXZlIHRvIGNoZWNrIGlmIHRo
-ZSBDQU4NCj4gPj4gZnJhbWUgaGFzIGFscmVhZHkgYmVlbiB0cmFuc21pdHRlZCBvciBub3QuIElz
-IHRoYXQgcG9zc2libGUgd2l0aCB0aGUNCj4gaGFyZHdhcmU/DQo+ID4NCj4gPiAgICAgICAgIFRo
-ZSBvbmx5IHdheSB0byBrbm93IHdoZXRoZXIgdGhlIFRYIHBhY2tldCBpcyB0cmFuc21pdHRlZA0K
-PiBzdWNjZXNzZnVsbHkgb3Igbm90IGlzIGJ5IHVzaW5nIHRoZSBUeCBPayBpbnRlcnJ1cHQgZnJv
-bSB0aGUgSVNSLg0KPiA+IFRoaXMgaW50ZXJydXB0IHdpbGwgY29tZSBmb3IgZXZlcnkgVHggUGFj
-a2V0Lg0KPiA+IFNvIEkgYW0gdGhpbmtpbmcgb2YgdGhlcmUgaXMgbm8gbG9vcCByZXF1aXJlZCBp
-biB0aGUgVFggaW50ZXJydXB0IHJvdXRpbmUuIEFzDQo+IGl0IGlzIGNhbGxlZCBmb3IgZWFjaCBh
-bmQgZXZlcnkgcGFja2V0Lg0KPg0KPiBXaGF0IGhhcHBlbnMgaWYgdGhlIGludGVycnVwdCBoYW5k
-bGVyIGlzIGRlbGF5ZWQ/IEZvciBleGFtcGxlIGluIGEgUlQNCj4gZW5hYmxlZCBzeXN0ZW0gdGhl
-IGludGVycnVwdCBoYW5kbGVyIHJ1bnMgYXMgYSB0aHJlYWQuIFRoZXJlIG1pZ2h0IGJlIG90aGVy
-DQo+IHRocmVhZHMgd2l0aCBoaWdoZXIgcHJpb3JpdHkuIFRoZSBoYXJkd2FyZSB3aWxsIHByb2Jh
-Ymx5IHNlbmQgYWxsIENBTg0KPiBmcmFtZXMgaW4gdGhlIEZJRk8sIHNvIHlvdSB3YW50IHRvIHJl
-ZHVjZSB0aGUgb3ZlcmhlYWQgYW5kIGxvb3AgaW4gdGhlIHR4DQo+IGNvbXBsZXRlIGhhbmRsZXIu
-DQo+DQpZZXMgSSBhZ3JlZSB3aXRoIHlvdXIgY29tbWVudC4NCkl0IHdpbGwgYmUgZ29vZCB0byBo
-YXZlIGEgbG9vcCBpbiB0aGUgVHggaW50ZXJydXB0IGhhbmRsZXINCkkgYW0gbW9kaWZ5aW5nIHRo
-ZSBUeCBpbnRlcnJ1cHQgaGFuZGxlciBsaWtlIGJlbG93Lg0KDQpzdGF0aWMgdm9pZCB4Y2FuX3R4
-X2ludGVycnVwdChzdHJ1Y3QgbmV0X2RldmljZSAqbmRldiwgdTMyIGlzcikNCnsNCiAgICAgICAg
-c3RydWN0IHhjYW5fcHJpdiAqcHJpdiA9IG5ldGRldl9wcml2KG5kZXYpOw0KICAgICAgICBzdHJ1
-Y3QgbmV0X2RldmljZV9zdGF0cyAqc3RhdHMgPSAmbmRldi0+c3RhdHM7DQoNCiAgICAgICAgd2hp
-bGUgKHByaXYtPnR4X2hlYWQgLSBwcml2LT50eF90YWlsID4gMCkgew0KICAgICAgICAgICAgICAg
-IGlmICghKGlzciAmIFhDQU5fSVhSX1RYT0tfTUFTSykpIHsNCiAgICAgICAgICAgICAgICAgICAg
-ICAgIGJyZWFrOw0KICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgICBjYW5fZ2V0X2Vj
-aG9fc2tiKG5kZXYsIHByaXYtPnR4X3RhaWwgJQ0KICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHByaXYtPnhjYW5fZWNob19za2JfbWF4X3R4KTsNCiAgICAgICAgICAgICAg
-ICBwcml2LT50eF90YWlsKys7DQogICAgICAgICAgICAgICAgc3RhdHMtPnR4X3BhY2tldHMrKzsN
-CiAgICAgICAgICAgICAgICBjYW5fbGVkX2V2ZW50KG5kZXYsIENBTl9MRURfRVZFTlRfVFgpOw0K
-ICAgICAgICAgICAgICAgIGlzciA9IHByaXYtPnJlYWRfcmVnKHByaXYsIFhDQU5fSVNSX09GRlNF
-VCk7DQogICAgICAgIH0NCiAgICAgICAgbmV0aWZfd2FrZV9xdWV1ZShuZGV2KTsNCn0NCg0KQXJl
-IHlvdSBPayB3aXRoIHRoaXM/DQoNCj4gPg0KPiA+IHN0YXRpYyB2b2lkIHhjYW5fdHhfaW50ZXJy
-dXB0KHN0cnVjdCBuZXRfZGV2aWNlICpuZGV2LCB1MzIgaXNyKSB7DQo+ID4gICAgICAgICBzdHJ1
-Y3QgeGNhbl9wcml2ICpwcml2ID0gbmV0ZGV2X3ByaXYobmRldik7DQo+ID4gICAgICAgICBzdHJ1
-Y3QgbmV0X2RldmljZV9zdGF0cyAqc3RhdHMgPSAmbmRldi0+c3RhdHM7DQo+ID4NCj4gPg0KPiA+
-ICAgICAgICAgY2FuX2dldF9lY2hvX3NrYihuZGV2LCBwcml2LT50eF90YWlsICUNCj4gPiAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHByaXYtPnhjYW5fZWNob19za2JfbWF4X3R4KTsN
-Cj4gPiAgICAgICAgIHByaXYtPnR4X3RhaWwrKzsNCj4gPiAgICAgICAgIHN0YXRzLT50eF9wYWNr
-ZXRzKys7DQo+ID4gICAgICAgICBjYW5fbGVkX2V2ZW50KG5kZXYsIENBTl9MRURfRVZFTlRfVFgp
-Ow0KPiA+ICAgICAgICAgbmV0aWZfd2FrZV9xdWV1ZShuZGV2KTsNCj4gPiB9DQo+ID4NCj4gPiBJ
-ZiB5b3Ugd2FudCBtZSB0byBwdXQgc29tZSBsb2NrcyBmb3IgdGhpcyBXaWxsIHB1dCBzb21lIHNw
-aW5fbG9ja3MgaW4gdGhlDQo+IF94bWl0IGFuZCBpbiB0aGUgdHggaW50ZXJydXB0IHJvdXRpbmUg
-KGZvciB0aGUgdHhfaGVhZCBhbmQgdHhfdGFpbCkuDQo+DQo+IFRoZXJlIGlzIG5vIG5lZWQgZm9y
-IGxvY2tpbmcgcmVnYXJkaW5nIHR4X3toZWFkLHRhaWx9LiBBcyB0aGUgdHggY29tcGxldGUNCj4g
-aGFuZGxlciBvbmx5IGluY3JlbWVudHMgdHhfdGFpbCBhbmQgdGhlIHhtaXQgcm91dGluZSBpbmNy
-ZW1lbnRzIHR4X2hlYWQuDQo+DQoNCk9rDQoNClJlZ2FyZHMsDQpLZWRhci4NCg0KPiBNYXJjDQo+
-DQo+IC0tDQo+IFBlbmd1dHJvbml4IGUuSy4gICAgICAgICAgICAgICAgICB8IE1hcmMgS2xlaW5l
-LUJ1ZGRlICAgICAgICAgICB8DQo+IEluZHVzdHJpYWwgTGludXggU29sdXRpb25zICAgICAgICB8
-IFBob25lOiArNDktMjMxLTI4MjYtOTI0ICAgICB8DQo+IFZlcnRyZXR1bmcgV2VzdC9Eb3J0bXVu
-ZCAgICAgICAgICB8IEZheDogICArNDktNTEyMS0yMDY5MTctNTU1NSB8DQo+IEFtdHNnZXJpY2h0
-IEhpbGRlc2hlaW0sIEhSQSAyNjg2ICB8IGh0dHA6Ly93d3cucGVuZ3V0cm9uaXguZGUgICB8DQoN
-Cg0KDQpUaGlzIGVtYWlsIGFuZCBhbnkgYXR0YWNobWVudHMgYXJlIGludGVuZGVkIGZvciB0aGUg
-c29sZSB1c2Ugb2YgdGhlIG5hbWVkIHJlY2lwaWVudChzKSBhbmQgY29udGFpbihzKSBjb25maWRl
-bnRpYWwgaW5mb3JtYXRpb24gdGhhdCBtYXkgYmUgcHJvcHJpZXRhcnksIHByaXZpbGVnZWQgb3Ig
-Y29weXJpZ2h0ZWQgdW5kZXIgYXBwbGljYWJsZSBsYXcuIElmIHlvdSBhcmUgbm90IHRoZSBpbnRl
-bmRlZCByZWNpcGllbnQsIGRvIG5vdCByZWFkLCBjb3B5LCBvciBmb3J3YXJkIHRoaXMgZW1haWwg
-bWVzc2FnZSBvciBhbnkgYXR0YWNobWVudHMuIERlbGV0ZSB0aGlzIGVtYWlsIG1lc3NhZ2UgYW5k
-IGFueSBhdHRhY2htZW50cyBpbW1lZGlhdGVseS4NCg0KCgo=
+On Thu, Feb 27, 2014 at 08:22:12PM +0000, Arnd Bergmann wrote:
+> On Thursday 27 February 2014 13:07:29 Jason Gunthorpe wrote:
+> > On Thu, Feb 27, 2014 at 08:48:08PM +0100, Arnd Bergmann wrote:
+> > > > It also looks correct for architectures that use the CPU MMIO a=
+ddress
+> > > > as the IO address directly (where IO_SPACE_LIMIT would be 4G)
+> > >=20
+> > > Are you aware of any that still do? I thought we had stopped doin=
+g
+> > > that.
+> >=20
+> > I thought ia64 used to, but it has been a long time since I've touc=
+hed
+> > one...
+>=20
+> They have a different way of doing it now, no idea how it looked in
+> the past:
+>=20
+> #define IO_SPACE_LIMIT          0xffffffffffffffffUL
+>=20
+> #define MAX_IO_SPACES_BITS              8
+> #define MAX_IO_SPACES                   (1UL << MAX_IO_SPACES_BITS)
+> #define IO_SPACE_BITS                   24
+> #define IO_SPACE_SIZE                   (1UL << IO_SPACE_BITS)
+>=20
+> #define IO_SPACE_NR(port)               ((port) >> IO_SPACE_BITS)
+> #define IO_SPACE_BASE(space)            ((space) << IO_SPACE_BITS)
+> #define IO_SPACE_PORT(port)             ((port) & (IO_SPACE_SIZE - 1)=
+)
+>=20
+> #define IO_SPACE_SPARSE_ENCODING(p)     ((((p) >> 2) << 12) | ((p) & =
+0xfff))
+>=20
+> So their port number is a logical token that contains the I/O space n=
+umber
+> and a 16MB offset.
+>=20
+> Apparently sparc64 uses physical memory addressing for I/O space, the
+> same way they do for memory space, and they just set IO_SPACE_LIMIT t=
+o
+> 0xffffffffffffffffUL.
+>=20
+> > > > Architectures that use the virtual IO window technique will alw=
+ays
+> > > > require a custom pci_address_to_pio implementation.
+> > >=20
+> > > Hmm, at the moment we only call it from of_address_to_resource(),
+> > > which in turn does not get called on PCI devices, and does not
+> > > call pci_address_to_pio for 'simple' platform devices. The only
+> > > case I can think of where it actually matters is when we have
+> > > ISA devices in DT that use an I/O port address in the reg propert=
+y,
+> > > and that case hopefully won't happen on ARM32 or ARM64.
+> >=20
+> > Sure, I ment, after Liviu's patch it will become required since he =
+is
+> > cleverly using it to figure out what the io mapping the bridge driv=
+er
+> > setup before calling the helper.
+>=20
+> Ok. I was arguing more that we should add this dependency.
 
+I've thought about this last night and I think I was trying to be too c=
+lever
+for my own good. As Jason points out, arm64 needs its own version of
+pci_address_to_pio(). I have an idea on how to borrow the powerpc/micro=
+blaze
+one and make it useful without the need for pci_controller *hose. It wo=
+uld
+be generic enough for other platforms that use virtual I/O windows can =
+use,
+but I'll start with it being defined for arm64 for discussions in this =
+list.
 
+I'll post v3 shortly.
+
+Best regards,
+Liviu
+
+>=20
+> > > > I think the legacy reasons for having all those layers of trans=
+lation
+> > > > are probably not applicable to ARM64, and it is much simpler wi=
+thout
+> > > > the extra translation step....
+> > > >=20
+> > > > Arnd, what do you think?
+> > >=20
+> > > Either I don't like it or I misunderstand you ;-)
+> > >=20
+> > > Most PCI drivers normally don't call ioport_map or pci_iomap, so
+> > > we can't just do it there. If you are thinking of calling ioport_=
+map
+> >=20
+> > Okay, that was one of the 'legacy reasons'. Certainly lots of drive=
+rs
+> > do call pci_iomap, but if you think legacy drivers that don't are
+> > important to ARM64 then it makes sense to use the virtual IO window=
+=2E
+>=20
+> I think all uses of I/O space are legacy, but I don't think that
+> drivers doing inb/outb are more obsolete than those doing pci_iomap.
+> It's got more to do with the subsystem requirements, e.g. libata
+> requires the use of pci_iomap.
+>=20
+> > > for every PCI device that has an I/O BAR and storing the virtual
+> > > address in the pci_dev resource, I don't see what that gains us
+> >=20
+> > Mainly we get to drop the fancy dynamic allocation stuff for the fi=
+xed
+> > virtual window, and it gives the option to have a 1:1 relationship
+> > between CPU addresses and PCI BARs.
+>=20
+> I don't think the allocation is much of a problem, as long as we
+> can localize it in one function that is shared by everyone.
+> The problems I saw were all about explaining to people how it
+> works, but they really shouldn't have to know.
+>=20
+>=20
+> 	Arnd
+>=20
+>=20
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
