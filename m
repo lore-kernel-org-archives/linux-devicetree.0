@@ -1,123 +1,81 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] phy-rcar-gen2-usb: add device tree support
-Date: Sat, 01 Mar 2014 01:23:31 +0300
-Message-ID: <53110C63.5020207@cogentembedded.com>
-References: <201402270312.51588.sergei.shtylyov@cogentembedded.com> <20140227155657.GD8647@e106331-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140227155657.GD8647-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "valentine.barshak-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org" <valentine.barshak-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Russell King <rmk+kernel@arm.linux.org.uk>
+Subject: [PATCH 1/2] leds: add DT support for LEDs wired to supply and default
+ brightness
+Date: Fri, 28 Feb 2014 21:25:17 +0000
+Message-ID: <E1WJUvl-0003wc-0S@rmk-PC.arm.linux.org.uk>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Some PWM outputs are wired such that the LED they're controlling is
+connected to supply rather than ground.  Therefore, the duty cycle
+needs to be inverted to make the LED behave as it should do.
 
-On 02/27/2014 06:56 PM, Mark Rutland wrote:
+We also provide a way to specify the default brightness when a
+trigger is not specified.
 
->> Add support of the device tree probing for the Renesas R-Car generation 2 SoCs
->> documenting the device tree binding as necessary.
+Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+---
+ Documentation/devicetree/bindings/leds/leds-pwm.txt |  3 +++
+ drivers/leds/leds-pwm.c                             | 15 +++++++++++----
+ 2 files changed, 14 insertions(+), 4 deletions(-)
 
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.txt b/Documentation/devicetree/bindings/leds/leds-pwm.txt
+index 7297107cf832..ffcb74ab61fd 100644
+--- a/Documentation/devicetree/bindings/leds/leds-pwm.txt
++++ b/Documentation/devicetree/bindings/leds/leds-pwm.txt
+@@ -13,6 +13,9 @@ node's name represents the name of the corresponding LED.
+   For the pwms and pwm-names property please refer to:
+   Documentation/devicetree/bindings/pwm/pwm.txt
+ - max-brightness : Maximum brightness possible for the LED
++- default-brightness : (optional) Default brightness for the LED
++- active-low : (optional) For PWMs where the LED is wired to supply
++  rather than ground.
+ - label :  (optional)
+   see Documentation/devicetree/bindings/leds/common.txt
+ - linux,default-trigger :  (optional)
+diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
+index 605047428b5a..fe2cd849b593 100644
+--- a/drivers/leds/leds-pwm.c
++++ b/drivers/leds/leds-pwm.c
+@@ -70,6 +70,10 @@ static void led_pwm_set(struct led_classdev *led_cdev,
+ 
+ 	duty *= brightness;
+ 	do_div(duty, max);
++
++	if (led_dat->active_low)
++		duty = led_dat->period - duty;
++
+ 	led_dat->duty = duty;
+ 
+ 	if (led_dat->can_sleep)
+@@ -93,6 +97,10 @@ static int led_pwm_create_of(struct platform_device *pdev,
+ 	for_each_child_of_node(pdev->dev.of_node, child) {
+ 		struct led_pwm_data *led_dat = &priv->leds[priv->num_leds];
+ 
++		led_dat->cdev.brightness_set = led_pwm_set;
++		led_dat->cdev.brightness = LED_OFF;
++		led_dat->cdev.flags |= LED_CORE_SUSPENDRESUME;
++
+ 		led_dat->cdev.name = of_get_property(child, "label",
+ 						     NULL) ? : child->name;
+ 
+@@ -110,10 +118,9 @@ static int led_pwm_create_of(struct platform_device *pdev,
+ 						"linux,default-trigger", NULL);
+ 		of_property_read_u32(child, "max-brightness",
+ 				     &led_dat->cdev.max_brightness);
+-
+-		led_dat->cdev.brightness_set = led_pwm_set;
+-		led_dat->cdev.brightness = LED_OFF;
+-		led_dat->cdev.flags |= LED_CORE_SUSPENDRESUME;
++		of_property_read_u32(child, "default-brightness",
++				     &led_dat->cdev.brightness);
++		led_dat->active_low = of_property_read_bool(child, "active-low");
+ 
+ 		led_dat->can_sleep = pwm_can_sleep(led_dat->pwm);
+ 		if (led_dat->can_sleep)
+-- 
+1.8.3.1
 
->> ---
->> This patch is against the 'next' branch of Felipe Balbi's 'usb.git' repo.
-
->>   Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt |   29 +++++++
->>   drivers/usb/phy/phy-rcar-gen2-usb.c                     |   64 ++++++++++++++--
->>   2 files changed, 85 insertions(+), 8 deletions(-)
-
->> Index: usb/Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt
->> ===================================================================
->> --- /dev/null
->> +++ usb/Documentation/devicetree/bindings/usb/rcar-gen2-phy.txt
->> @@ -0,0 +1,29 @@
->> +* Renesas R-Car generation 2 USB PHY
->> +
->> +This file provides information on what the device node for the R-Car generation
->> +2 USB PHY contains.
->> +
->> +Required properties:
->> +- compatible: "renesas,usb-phy-r8a7790" if the device is a part of R8A7790 SoC.
->> +	      "renesas,usb-phy-r8a7791" if the device is a part of R8A7791 SoC.
-
-> Is the r8a7791's USB PHY known to be different to that of the r8a7790?
-
-    Not at all, according to the preliminary manuals. The problem is the 
-SH-Mobile maintainers don't trust the manuals (translated from Japanese, they 
-are sometimes indeed of a questionable quality).
-
-> If this is just to possibly handle the two differently in future, why
-> not have "renesas,usb-phy-r8a7790" as a fallback in the compatible list?
-> That was you only need it in the driver for now.
-
-    The SH-Mobile maintainers are against that approach.
-
->> +- reg: offset and length of the register block.
->> +- clocks: clock phandle and specifier pair.
->> +- clock-names: string, clock input name, must be "usbhs".
->> +
->> +Optional properties:
->> +- renesas,channel0-pci: boolean, specify when USB channel 0 should be connected
->> +			to PCI EHCI/OHCI; otherwise, it will be connected to the
->> +			USBHS controller.
->> +- renesas,channel2-pci: boolean, specify when USB channel 2 should be connected
->> +			to PCI EHCI/OHCI; otherwise, it will be connected to the
->> +			USBSS controller (xHCI).
-
-> When would you want this to connect to PCI, and when would you not? Why
-> is this not a run-time decision?
-
-    I think it's mostly connector type thing: A (host) vs B (device), USB 2.0 
-vs 3.0. With B connector you certainly want USBHS controller which is includes 
-the function controller (testing has shown that it also has the host 
-controller but the manuals don't quite say that). With A connector, user would 
-probably prefer PCI EHCI/OHCI, unless you have a USB 3.0 port in which case 
-the preference would probably be xHCI. So it appears to be the board specific 
-thing. Some runtime switching (e.g. downgrading from xHCI to PCI EHCI/OHCI) 
-might be considered too but I don't quite have a picture how that would work yet.
-
->> +
->> +Example (Lager board):
->> +
->> +	usb-phy@e6590100 {
->> +		compatible = "renesas,usb-phy-r8a7790";
->> +		reg = <0 0xe6590100 0 0x100>;
->> +		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
->> +		clock-names = "usbhs";
->> +		renesas,channel2-pci;
->> +	};
-
-> We're not using the generic phy bindings?
-
-    It's not a driver/phy/ but driver/usb/phy/ code, so I guess we're not.
-
-> How is the linkage to the host controller expressed?
-
-    Looking at Documentation/devicetree/bindings/usb/, it's via "usb-phy" 
-property in the host device nodes.
-
-> [...]
-
->> -	clk = devm_clk_get(dev, "usbhs");
->> +	if (np)
->> +		clk = of_clk_get_by_name(np, "usbhs");
->> +	else
->> +		clk = clk_get(dev, "usbhs");
-
-> Doesn't clk_get (and hence devm_clk_get) call of_clk_get_by_name?
-
-    Indeed, stupid me. I just didn't expect it, so didn't even look there.
-
-> Cheers,
-> Mark.
-
-WBR, Sergei
-
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
