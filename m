@@ -1,49 +1,97 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v6 0/2]  Introduce AEMIF driver for Davinci/Keystone archs
-Date: Fri, 28 Feb 2014 11:18:11 -0500
-Message-ID: <5310B6C3.1020501@ti.com>
-References: <1393262772-24442-1-git-send-email-ivan.khoronzhuk@ti.com> <5310AEA8.1070804@ti.com> <20140228160635.GA6144@kroah.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 3/9] Doc/DT: Add DT binding documentation for DVI
+	Connector
+Date: Fri, 28 Feb 2014 16:23:27 +0000
+Message-ID: <20140228162327.GT21483@n2100.arm.linux.org.uk>
+References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com> <1393590016-9361-4-git-send-email-tomi.valkeinen@ti.com> <20140228155937.GQ21483@n2100.arm.linux.org.uk> <5310B567.7040605@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140228160635.GA6144@kroah.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, galak@kernel.crashing.org, rob@landley.net, robherring2@gmail.com, linux@arm.linux.org.uk, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, rob.herring@calxeda.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, grygorii.strashko@ti.com, dwmw2@infradead.org, nsekhar@ti.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5310B567.7040605-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 28 February 2014 11:06 AM, Greg KH wrote:
-> On Fri, Feb 28, 2014 at 10:43:36AM -0500, Santosh Shilimkar wrote:
->> Greg,
->>
->> On Monday 24 February 2014 12:26 PM, Ivan Khoronzhuk wrote:
->>> These patches introduce Async External Memory Interface (EMIF16/AEMIF)
->>> controller driver for Davinci/Keystone archs.
->>>
->>> For more informations see documentation:
->>> Davinci DM646x - http://www.ti.com/lit/ug/sprueq7c/sprueq7c.pdf
->>> OMAP-L138 - http://www.ti.com/lit/ug/spruh77a/spruh77a.pdf
->>> Kestone - http://www.ti.com/lit/ug/sprugz3a/sprugz3a.pdf
->>>
->> [..]
->>
->>>
->>> v5..v6:
->>> - memory: ti-aemif: introduce AEMIF driver
->>> - memory: ti-aemif: add bindings for AEMIF driver
->>> 	changed opaque names for cs node properties
->>>
->> Can you please pick these two patches ? 
+On Fri, Feb 28, 2014 at 06:12:23PM +0200, Tomi Valkeinen wrote:
+> On 28/02/14 17:59, Russell King - ARM Linux wrote:
 > 
-> Asking for a response with less than a weeks time is really bold:
->   $ ~/bin/mdfrm -c ~/mail/todo/
->   521 messages in /home/gregkh/mail/todo/
+> >> +dvi0: connector@0 {
+> >> +	compatible = "dvi-connector";
+> >> +	label = "dvi";
+> >> +
+> >> +	i2c-bus = <&i2c3>;
+> >> +
+> >> +	dvi_connector_in: endpoint {
+> >> +		remote-endpoint = <&tfp410_out>;
+> >> +	};
+> >> +};
+> > 
+> > This looks far too simplistic.  There are different classes of DVI
+> > connector - there is:
+> > 
+> > DVI A - analogue only
+> > DVI D - digital only (single and dual link)
+> > DVI I - both (single and dual digital link)
+> > 
+> > DRM at least makes a distinction between these three classes, and this
+> > disctinction is part of the user API.  How would a display system know
+> > which kind of DVI connector is wired up on the board from this DT
+> > description?
 > 
-> Give me a chance to catch up please...
-> 
-Sorry for that. This version was just minor update from previous
-version and hence asked it. 
+> Yes, I think that's a valid change. But do we also need to specify
+> single/dual link, in addition to the three types?
 
-Regards,
-Santosh
+I would argue that as it's a difference in physical hardware, then it
+should be described in DT, even if we don't use it.  The reasoning is
+that although we may not use it today, we may need to use it in the
+future, and as we're describing what the hardware actually is - and
+even in this case what pins may be present or missing on the connector,
+it's unlikely to be problematical (the only problem is when someone
+omits it...)
+
+> I guess the compatible string is the easiest way for differentation, at
+> least for the three main types, i.e. "dvi-d-connector" etc.
+> 
+> "dvi-d-1l-connector" and "dvi-d-2l-connector" for the single/dual link?
+> That looks a bit funny.
+
+I think that starts getting a tad messy:
+
+	dvi-a-connector
+	dvi-d-1l-connector
+	dvi-d-2l-connector
+	dvi-i-1l-connector
+	dvi-i-2l-connector
+
+That's rather a lot of compatible strings.  Another possibility is:
+
+	compatible = "dvi-connector";
+	analog;
+	digital;
+	single-link;
+	dual-link;
+
+I'm debating whether "-signalling" should be on the 2nd and 3rd (or...
+-signaling depending on how you prefer to spell that word.)  At least
+one of "analog" and/or "digital" must be specified, and if "digital"
+is specified, then exactly one of "single-link" or "dual-link" should
+be specified.
+
+So, this would mean we end up with:
+
+	compatible = "dvi-connector";
+	analog;
+	digital;
+	dual-link;
+
+for a DVI-I dual-link connector.
+
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
