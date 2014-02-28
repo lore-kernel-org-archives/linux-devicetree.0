@@ -1,59 +1,74 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH V2 1/2] mmc: omap_hsmmc: Add support for quirky omap3
- hsmmc controller
-Date: Fri, 28 Feb 2014 09:09:26 -0600
-Message-ID: <5310A6A6.6030803@ti.com>
-References: <1392356749-32091-1-git-send-email-nm@ti.com>
- <1392356749-32091-2-git-send-email-nm@ti.com>
- <20140214163102.GA21592@atomide.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 4/7] dma: of: introduce of_dma_is_coherent() helper
+Date: Fri, 28 Feb 2014 09:14:19 -0600
+Message-ID: <CAL_JsqL6-hoD4F7+adPhsOJXeM5f+wpEuBWg_6AWqj3k2v0NEw@mail.gmail.com>
+References: <1393535872-20915-1-git-send-email-santosh.shilimkar@ti.com>
+	<1393535872-20915-5-git-send-email-santosh.shilimkar@ti.com>
+	<10040083.PbPEQQPCjl@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140214163102.GA21592@atomide.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>, Chris Ball <chris@printf.net>
-Cc: devicetree@vger.kernel.org, Balaji T K <balajitk@ti.com>, linux-doc@vger.kernel.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <10040083.PbPEQQPCjl@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/14/2014 10:31 AM, Tony Lindgren wrote:
-> * Nishanth Menon <nm@ti.com> [140213 21:48]:
->> When device is booted using devicetree, platforms impacted by Erratum
->> 2.1.1.128 is not detected easily in the mmc driver. This erratum
->> indicates that the module cannot do multi-block transfers. Platforms
->> such as LDP which use OMAP3 ES revision prior to ES3.0 are impacted by
->> this.
+On Fri, Feb 28, 2014 at 3:39 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Thursday 27 February 2014 16:17:49 Santosh Shilimkar wrote:
+>> +
+>> +/**
+>> + * of_dma_is_coherent - Check if device is coherent
+>> + * @np:        device node
+>> + *
+>> + * It returns true if "dma-coherent" property was found
+>> + * for this device in DT.
+>> + */
+>> +bool of_dma_is_coherent(struct device_node *np)
+>> +{
+>> +       struct device_node *node = np;
+>> +
+>> +       while (node) {
+>> +               if (of_property_read_bool(node, "dma-coherent")) {
+>> +                       of_node_put(node);
+>> +                       return true;
+>> +               }
+>> +               node = of_get_next_parent(node);
+>> +       }
+>> +       return false;
+>> +}
+>> +EXPORT_SYMBOL_GPL(of_dma_is_coherent);
 >>
->> Provide a new compatible property "ti,omap3-pre-es3-hsmmc" to allow
->> driver to determine if driver needs to implement quirks associated
->> with the specific module version (primarily because the IP revision
->> information is not sufficient for the same).
->>
->> Signed-off-by: Nishanth Menon <nm@ti.com>
-> 
-> Looks good to me, would be good to get this into the -rc cycle
-> as LDP is one of the automated boot testing boards for us.
-> 
-> If you guys want me to pick up both of the patches let me know,
-> otherwise feel free to add my ack.
-> 
+>
+> This won't work on architectures that are always coherent and
+> did not need 'dma-coherent' properties before, such as IBM
+> Power servers.
+>
+> That said, I think the property makes sense, and we already have
+> platforms using it (highbank is the one I'm aware of).
+>
+> We probably need ways to override this function in both ways:
+> "always coherent" (powerpc, x86), and "never coherent" (keystone
+> without LPAE) from platform code, and it would be nice to put
+> either option into DT in a global location as well. We may have
+> to go through a few iterations of this patch to get the best
+> algorithm, but I think the interface is good at least.
 
-Chris,
-would you be picking up the series that fixes LDP dt boot behavior or
-should Tony pick it up?
+I know Will D was not a fan of this property. Primarily I believe
+because you may need to describe more than just a boolean in more
+complex bus topologies.
 
-https://patchwork.kernel.org/patch/3650061/
-https://patchwork.kernel.org/patch/3650031/
+Effectively, highbank is always coherent. It was only PCI that is
+non-coherent, but I can safely say PCI will never be enabled at this
+point. There are no designs with PCI beyond 1 or 2 validation boards
+(total boards, not designs), and getting PCI to work was quite hacky
+due to only a 1MB window. The other masters are programmable, but only
+the coherent path is used as the non-coherent path actually has some
+issues. I had expected the opposite believing the ACP port would
+actually have issues which is also why I made it configurable.
 
-
--- 
-Regards,
-Nishanth Menon
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
