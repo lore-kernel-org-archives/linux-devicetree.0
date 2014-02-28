@@ -1,60 +1,80 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCHv2 14/16] ARM: OMAP3: hwmod data: cleanup data for IOMMUs
-Date: Thu, 27 Feb 2014 16:25:03 -0800
-Message-ID: <20140228002502.GB14514@atomide.com>
-References: <1392315347-32967-1-git-send-email-s-anna@ti.com>
-	<1392315347-32967-15-git-send-email-s-anna@ti.com>
-	<20140226171824.GH11654@atomide.com> <530E2B67.9050300@ti.com>
-	<530F0255.0@epfl.ch>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH] dma: of: Move the functions under CONFIG_OF_DMA instead
+ of CONFIG_OF
+Date: Thu, 27 Feb 2014 19:27:03 -0500
+Message-ID: <530FD7D7.9000104@ti.com>
+References: <1393546850-13907-1-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <530F0255.0-p8DiymsW2f8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1393546850-13907-1-git-send-email-santosh.shilimkar@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-* Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org> [140227 01:19]:
-> Hi,
+On Thursday 27 February 2014 07:20 PM, Santosh Shilimkar wrote:
+> The of-dma.c is compiled out with !CONFIG_OF_DMA but the functions in
+> the header are kept under CONFIG_OF. Move them under CONFIG_OF_DMA
+> to avoid build errors with CONFIG_OFF && !CONFIG_OF_DMA
 > 
-> On 02/26/2014 06:59 PM, Suman Anna wrote:
-> > Tony,
-> > 
-> > On 02/26/2014 11:18 AM, Tony Lindgren wrote:
-> >> * Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [140213 10:19]:
-> >>> From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
-> >>>
-> >>> The irq numbers, ocp address space and device attribute data
-> >>> have all been cleaned up for OMAP3 IOMMUs. All this data is
-> >>> populated via the corresponding dt node.
-> >>>
-> >>> Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
-> >>> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-> >>
-> >> This will need to wait until we've made omap3 to be DT only
-> >> as this will break idling of things for the legacy booting.
-> >>
-> > 
-> > OK, will drop this and I will adjust Patch 9 to support the legacy boot
-> > for OMAP3 ISP.
-> > 
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> ---
+>  include/linux/of_dma.h |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> BTW, Tony do you have a new window for omap3 to be DT onyl?
+> diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
+> index 0322363..3d2beab 100644
+> --- a/include/linux/of_dma.h
+> +++ b/include/linux/of_dma.h
+> @@ -31,7 +31,7 @@ struct of_dma_filter_info {
+>  	dma_filter_fn	filter_fn;
+>  };
+>  
+> -#ifdef CONFIG_OF
+> +#ifdef CONFIG_OF_DMA
+Sorry.. Typo here.. Should have been CONFIG_DMA_OF
 
-I think a good point would be when we have DSS working with DT,
-and have a .dts file for the Pandora board.
+>From 31242461b6ba5e8c0c5ee26e394fa4cab61e3aa1 Mon Sep 17 00:00:00 2001
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Date: Thu, 27 Feb 2014 19:13:36 -0500
+Subject: [PATCH] dma: of: Move the functions under CONFIG_DMA_OF instead of
+ CONFIG_OF
 
-Regards,
+The of-dma.c is compiled out with !CONFIG_DMA_OF but the functions in
+the header are kept under CONFIG_OF. Move them under CONFIG_OF_DMA
+to avoid build errors with CONFIG_OFF && !CONFIG_DMA_OF
 
-Tony
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+---
+ include/linux/of_dma.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
+index 0322363..0ea24f4 100644
+--- a/include/linux/of_dma.h
++++ b/include/linux/of_dma.h
+@@ -31,7 +31,7 @@ struct of_dma_filter_info {
+ 	dma_filter_fn	filter_fn;
+ };
+ 
+-#ifdef CONFIG_OF
++#ifdef CONFIG_DMA_OF
+ extern int of_dma_controller_register(struct device_node *np,
+ 		struct dma_chan *(*of_dma_xlate)
+ 		(struct of_phandle_args *, struct of_dma *),
+-- 
+1.7.9.5
