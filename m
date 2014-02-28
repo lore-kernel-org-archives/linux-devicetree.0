@@ -1,108 +1,49 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 4/9] Doc/DT: Add DT binding documentation for HDMI
- Connector
-Date: Fri, 28 Feb 2014 18:15:05 +0200
-Message-ID: <5310B609.1010105@ti.com>
-References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
- <1393590016-9361-5-git-send-email-tomi.valkeinen@ti.com>
- <20140228160612.GR21483@n2100.arm.linux.org.uk>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH v6 0/2]  Introduce AEMIF driver for Davinci/Keystone archs
+Date: Fri, 28 Feb 2014 11:18:11 -0500
+Message-ID: <5310B6C3.1020501@ti.com>
+References: <1393262772-24442-1-git-send-email-ivan.khoronzhuk@ti.com> <5310AEA8.1070804@ti.com> <20140228160635.GA6144@kroah.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5972754723377052752=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140228160612.GR21483@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Tomasz Figa <tomasz.figa@gmail.com>, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Rob Clark <robdclark@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140228160635.GA6144@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, galak@kernel.crashing.org, rob@landley.net, robherring2@gmail.com, linux@arm.linux.org.uk, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, rob.herring@calxeda.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, grygorii.strashko@ti.com, dwmw2@infradead.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
---===============5972754723377052752==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="wO22fJMtX5rTcijmJOjQ2EpDMNFt4x0GI"
+On Friday 28 February 2014 11:06 AM, Greg KH wrote:
+> On Fri, Feb 28, 2014 at 10:43:36AM -0500, Santosh Shilimkar wrote:
+>> Greg,
+>>
+>> On Monday 24 February 2014 12:26 PM, Ivan Khoronzhuk wrote:
+>>> These patches introduce Async External Memory Interface (EMIF16/AEMIF)
+>>> controller driver for Davinci/Keystone archs.
+>>>
+>>> For more informations see documentation:
+>>> Davinci DM646x - http://www.ti.com/lit/ug/sprueq7c/sprueq7c.pdf
+>>> OMAP-L138 - http://www.ti.com/lit/ug/spruh77a/spruh77a.pdf
+>>> Kestone - http://www.ti.com/lit/ug/sprugz3a/sprugz3a.pdf
+>>>
+>> [..]
+>>
+>>>
+>>> v5..v6:
+>>> - memory: ti-aemif: introduce AEMIF driver
+>>> - memory: ti-aemif: add bindings for AEMIF driver
+>>> 	changed opaque names for cs node properties
+>>>
+>> Can you please pick these two patches ? 
+> 
+> Asking for a response with less than a weeks time is really bold:
+>   $ ~/bin/mdfrm -c ~/mail/todo/
+>   521 messages in /home/gregkh/mail/todo/
+> 
+> Give me a chance to catch up please...
+> 
+Sorry for that. This version was just minor update from previous
+version and hence asked it. 
 
---wO22fJMtX5rTcijmJOjQ2EpDMNFt4x0GI
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-On 28/02/14 18:06, Russell King - ARM Linux wrote:
-
->> +hdmi0: connector@1 {
->> +	compatible =3D "hdmi-connector";
->> +	label =3D "hdmi";
->> +
->> +	hdmi_connector_in: endpoint {
->> +		remote-endpoint =3D <&tpd12s015_out>;
->> +	};
->> +};
->=20
-> It seems rather weird to have DVI connectors having an optional I2C
-> property, but HDMI (which augments DVI) not having that as at least an
-> optional property.
-
-I have added only the properties that I have used. I did think about the
-i2c for HDMI also, but thought that I don't use it, and so can't test
-it, and so I could well create a bad binding.
-
-And, as I don't see any issue in adding it later, when someone uses it,
-I decided to leave it out.
-
-> I can quite well see the iMX HDMI support needing an i2c bus here.
->=20
-> Also, HDMI has two connector standards - type A and type B, much like
-> the single vs dual link of DVI.  Again, DRM exposes this to userspace.
-
-True, but isn't that just a form factor? No functional differences? But
-I agree, we can add the two types here also to the compatible string.
-
- Tomi
-
-
-
-
---wO22fJMtX5rTcijmJOjQ2EpDMNFt4x0GI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJTELYJAAoJEPo9qoy8lh71YC4QAJqARdB7SNHo0V9hyiiW04Un
-BZimno0VM9+E1oR4gs3B4C6I/XCuhf0iq4JUoygwWvqKNUAAn71BnbVZS95Bqo7T
-oC0x3m2WIR+AVeHN6qmS3nURlB8/ajNcJfHYOHvukYJUIttVzet1hGG4Cf7so4NE
-3Lxr22eWsr+tWiqPTzkrRd2nX3e6LCevh8vyTiKh5lcB01vgCF56pPPTVmWQlYnX
-TnmZbzUm+R7WHYmyy70y6Favl/fNXrAgMhXdXd6zXiDomcxkslZwgGwaNkwO+bFo
-zWMt7mVm/gN9DeIu+g9afLwd0i0hlQ08AOAUkqmtCXrmjGdJKBqHAPYrW3cq+tka
-HdPttrVNRzNGdEwAIkrAi2zU9EizKc9cKmijT0txy4pn8YojQH8e73qvMMP9th1l
-rJxZneEwP4CoX7nd/sS0Ip9s0UuOQv6JRYTMITQ7wiOGl8pkRqtyJ1wSUR7xSSX1
-h4C/0/Fta1qVA0DCkiX5bEly4FcdFo/hSI4jEVVve8JTL7p7D8HG5H7WQHrCfgOm
-NPQRfj1f22wsTpCyxs1lsZfs376A6G43Q1dvjwsKaA2cSklw3hLAtKEVOYX62nb/
-ITp/WPlcjZqvcQDLAboLi4wjTW64wu/cVTGNgi/ykCmYoTxdXnSW0RJc2n20/2s2
-r9UJi0TGP5jGNTBwCLYB
-=n3+l
------END PGP SIGNATURE-----
-
---wO22fJMtX5rTcijmJOjQ2EpDMNFt4x0GI--
-
-
---===============5972754723377052752==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5972754723377052752==--
+Regards,
+Santosh
