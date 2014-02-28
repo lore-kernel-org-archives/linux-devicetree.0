@@ -1,129 +1,66 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v2 2/2] checkpatch: fix spurious vendor compatible
- warnings
-Date: Fri, 28 Feb 2014 13:06:11 -0800
-Message-ID: <1393621571.10280.49.camel@joe-AO722>
-References: <1393604742-14317-1-git-send-email-florian.vaussard@epfl.ch>
-	 <1393604742-14317-3-git-send-email-florian.vaussard@epfl.ch>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v7 08/15] ahci-imx: Port to library-ised ahci_platform
+Date: Fri, 28 Feb 2014 21:08:20 +0000
+Message-ID: <20140228210820.GZ21483@n2100.arm.linux.org.uk>
+References: <1393084424-31099-1-git-send-email-hdegoede@redhat.com> <1393084424-31099-9-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393604742-14317-3-git-send-email-florian.vaussard@epfl.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Vaussard <florian.vaussard@epfl.ch>
-Cc: Andy Whitcroft <apw@canonical.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1393084424-31099-9-git-send-email-hdegoede@redhat.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Tejun Heo <tj@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org, Oliver Schinagl <oliver@schinagl.nl>, Richard Zhu <Hong-Xing.Zhu@freescale.com>, linux-sunxi@googlegroups.com, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi.
+On Sat, Feb 22, 2014 at 04:53:37PM +0100, Hans de Goede wrote:
+> +		/*
+> +		 * set PHY Paremeters, two steps to configure the GPR13,
+> +		 * one write for rest of parameters, mask of first write
+> +		 * is 0x07ffffff, and the other one write for setting
+> +		 * the mpll_clk_en.
+> +		 */
+> +		regmap_update_bits(imxpriv->gpr, IOMUXC_GPR13,
+> +				   IMX6Q_GPR13_SATA_RX_EQ_VAL_MASK |
+> +				   IMX6Q_GPR13_SATA_RX_LOS_LVL_MASK |
+> +				   IMX6Q_GPR13_SATA_RX_DPLL_MODE_MASK |
+> +				   IMX6Q_GPR13_SATA_SPD_MODE_MASK |
+> +				   IMX6Q_GPR13_SATA_MPLL_SS_EN |
+> +				   IMX6Q_GPR13_SATA_TX_ATTEN_MASK |
+> +				   IMX6Q_GPR13_SATA_TX_BOOST_MASK |
+> +				   IMX6Q_GPR13_SATA_TX_LVL_MASK |
+> +				   IMX6Q_GPR13_SATA_MPLL_CLK_EN |
+> +				   IMX6Q_GPR13_SATA_TX_EDGE_RATE,
+> +				   IMX6Q_GPR13_SATA_RX_EQ_VAL_3_0_DB |
+> +				   IMX6Q_GPR13_SATA_RX_LOS_LVL_SATA2M |
+> +				   IMX6Q_GPR13_SATA_RX_DPLL_MODE_2P_4F |
+> +				   IMX6Q_GPR13_SATA_SPD_MODE_3P0G |
+> +				   IMX6Q_GPR13_SATA_MPLL_SS_EN |
+> +				   IMX6Q_GPR13_SATA_TX_ATTEN_9_16 |
+> +				   IMX6Q_GPR13_SATA_TX_BOOST_3_33_DB |
+> +				   IMX6Q_GPR13_SATA_TX_LVL_1_025_V);
 
-A couple of suggestions and a couple of questions.
+While I see this, I'll stick an oar in.
 
-I made the patch below against your patches to.
+It is totally wrong for this to be hard-coded into the driver - many
+of these should be specified via DT, since they're board specific.
+These are already different from the reset default in this register.
 
-o Look for ".compatible = "foo" strings in .c and .h files too
-o Improve the vendor name match in vendor-prefix.txt by only
-  matching the exact vendor name at the beginning of lines.
+The side effect of this hard coding is that eSATA just doesn't work
+at all on some boards - the board I have requires TX_LVL_1_104V and
+TX_BOOST_0_00_DB.
 
-I then produced a file of all the compatible uses in dts
-and used checkpatch on it.  It's a long list and a longer
-checkpatch warning list.
+Hence, I'd ask that while you move stuff like this around, you bear
+in mind that we do need to add additional properties.
 
-$ git ls-files | grep -E "\.dtsi?$" | \
-  xargs grep -hE "^\s*compatible\s*="| \
-  sed -r -e 's/^\s*//' -e 's/\s*=\s*/ = /'| sort | uniq > tmp.dts
-$ .scripts/checkpatch.pl -f tmp.dts
+I'm in two minds about this - whether to make the existing binding
+with its compatible string always use these settings, and invent a
+new compatible string for one which is fully configurable (as it
+_should_ have been from the very start) or whether to make this
+the default if the various properties aren't specified.
 
-A couple of questions:
+Either way, this driver is electrically unusable as it stands here.
 
-How does the $compat2 variable actually work?
-What is it supposed to do?
-
-				my $compat2 = $compat;
-				$compat2 =~ s/\,[a-z]*\-/\,<\.\*>\-/;
-
-For instance:
-WARNING: DT compatible string "marvell,tauros2-cache" appears un-documented -- check ./Documentation/devicetree/bindings/
-
-The prefix "tauros2-" doesn't match '=~ s/[a-z]*-/
-
-Should it?  Should the '[a-z]*' be '[a-zA-Z0-9-]+'
-like the other test?
-
-Also the grep used when $compat2 is different than $compat
-has <.*>
-
-There aren't any descriptions I see in binding/ that have
-any <foo> like uses with the angle brackets.
-
-Are the angle brackets "<" and ">" necessary?
-
-I think the code block should look more like:
-
-				my $compat2 = $compat;
-				$compat2 =~ s/\,[a-zA-Z0-9]*\-/\,\.\*\-/g;
-				my $grepfor = "\Q$compat\E";
-				$grepfor .= "|\Q$compat2\E" if ($compat2 ne $compat);
-				`grep -Erq "$grepfor" $dt_path`;
-
-so that there's only 1 grep pattern when
-$compat2 is the same as $compat and the
-strings are escape quoted.
-
-There are a _lot_ of missing entries:
-
-o 164 vendor names
-o 2408 device names (maybe due to bad compat2 greps?)
-
-What, if anything, should be done about them?
-
----
- scripts/checkpatch.pl | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
-
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 4b5e7b3..7a9eed9 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -2051,29 +2051,29 @@ sub process {
- 		}
- 
- # check for DT compatible documentation
--		if (defined $root && $realfile =~ /\.dts/ &&
--		    $rawline =~ /^\+\s*compatible\s*=/) {
-+		if (defined $root &&
-+		    (($realfile =~ /\.dtsi?$/ && $line =~ /^\+\s*compatible\s*=\s*\"/) ||
-+		     ($realfile =~ /\.[ch]$/ && $line =~ /^\+.*\.compatible\s*=\s*\"/))) {
-+
- 			my @compats = $rawline =~ /\"([a-zA-Z0-9\-\,\.\+_]+)\"/g;
- 
-+			my $dt_path = $root . "/Documentation/devicetree/bindings/";
-+			my $vp_file = $root . "/Documentation/devicetree/bindings/vendor-prefixes.txt";
-+
- 			foreach my $compat (@compats) {
- 				my $compat2 = $compat;
--				my $dt_path =  $root . "/Documentation/devicetree/bindings/";
- 				$compat2 =~ s/\,[a-z]*\-/\,<\.\*>\-/;
- 				`grep -Erq "$compat|$compat2" $dt_path`;
- 				if ( $? >> 8 ) {
- 					WARN("UNDOCUMENTED_DT_STRING",
- 					     "DT compatible string \"$compat\" appears un-documented -- check $dt_path\n" . $herecurr);
- 				}
--
--				my $vendor = $compat;
--				my $vendor_path = $dt_path . "vendor-prefixes.txt";
--				next if (! -f $vendor_path);
--				next if not $vendor =~ /^[a-zA-Z0-9\-]+\,.*/;
--				$vendor =~ s/^([a-zA-Z0-9\-]+)\,.*/$1/;
--				`grep -Eq "$vendor" $vendor_path`;
-+				next if $compat !~ /^([a-zA-Z0-9\-]+)\,/;
-+				my $vendor = $1;
-+				`grep -Eq "^$vendor\\b" $vp_file`;
- 				if ( $? >> 8 ) {
- 					WARN("UNDOCUMENTED_DT_STRING",
--					     "DT compatible string vendor \"$vendor\" appears un-documented -- check $vendor_path\n" . $herecurr);
-+					     "DT compatible string vendor \"$vendor\" appears un-documented -- check $vp_file\n" . $herecurr);
- 				}
- 			}
- 		}
----
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
