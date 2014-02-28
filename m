@@ -1,44 +1,78 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 2/3] ARM: dts: imx6: extend PCIe interrupt list for MSI
-Date: Fri, 28 Feb 2014 11:22:26 +0100
-Message-ID: <59506012.lKQmfIR71j@wuerfel>
-References: <1393519305-15128-1-git-send-email-l.stach@pengutronix.de> <6495086.OFxrshKaiu@wuerfel> <1393582776.5219.2.camel@weser.hi.pengutronix.de>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/9] OMAP DSS DT bindings documentation
+Date: Fri, 28 Feb 2014 12:36:23 +0200
+Message-ID: <531066A7.8060804@ti.com>
+References: <1392294752-18762-1-git-send-email-tomi.valkeinen@ti.com> <53034D6F.9080405@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1393582776.5219.2.camel@weser.hi.pengutronix.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Richard Zhu <r65037@freescale.com>, Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawn.guo@linaro.org>, Mark Rutland <mark.rutland@arm.com>, kernel@pengutronix.de
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="afud3TvQlmMwHqD2XWOWU9df3bQIuJGNB"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53034D6F.9080405-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Archit Taneja <archit-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 28 February 2014 11:19:36 Lucas Stach wrote:
-> Am Donnerstag, den 27.02.2014, 17:44 +0100 schrieb Arnd Bergmann:
-> > On Thursday 27 February 2014 17:41:44 Lucas Stach wrote:
-> > >                         num-lanes = <1>;
-> > > -                       interrupts = <0 123 0x04>;
-> > > +                       interrupt-names = "inta", "intb", "intc", "intd/msi";
-> > > +                       interrupts = <0 123 0x04>, <0 122 0x04>, <0 121 0x04>, <0 120 0x04>;
-> > >                         clocks = <&clks 189>, <&clks 187>, <&clks 206>, <&clks 144>;
-> > > 
-> > 
-> > The standard PCI interrupts should not be listed here, you need to
-> > put them into the "interrupt-map" property so the of_irq_parse_and_map_pci()
-> > function can translate them.
-> > 
-> 
-> So as INTA is already listed and implemented in the driver this way,
-> this means the binding is totally bogus (taking into account that it
-> didn't match the documented designware binding in more places).
-> 
-> I wonder if we should just break the binding to sort things out, given
-> that there are not that many users of imx-pcie yet.
+--afud3TvQlmMwHqD2XWOWU9df3bQIuJGNB
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-That may be best, yes. If we have to provide backwards compatibility,
-the driver can have a fallback for the case where no interrupt-map
-property is present, but it should not try to handle multiple
-interrupt lines that way, only the trivial case where you have a single
-IntA line for all devices.
+On 18/02/14 14:09, Archit Taneja wrote:
+> Hi,
+>=20
+> On Thursday 13 February 2014 06:02 PM, Tomi Valkeinen wrote:
+>> Hi,
+>>
+>> Here is DT binding documentation for OMAP Display Subsystem. I've sent=
 
-	Arnd
+>> these
+>> earlier as part of the whole DSS DT series, but I'm now sending them
+>> separately
+>> to get comments for them.
+>>
+>> These patches are essentially the same as what I already sent earlier.=
+
+>> The only
+>> difference is that I added clock information for omap3 and omap4
+>> platforms.
+>=20
+> Reviewed-by: Archit Taneja <archit-l0cyMroinI0@public.gmane.org>
+>=20
+> Archit
+>=20
+
+Thanks!
+
+ Tomi
+
+
+
+--afud3TvQlmMwHqD2XWOWU9df3bQIuJGNB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJTEGanAAoJEPo9qoy8lh71KFoQAKCvwAtyt+tbzge0R/+IWq3v
+hvzFaLkkbYxwNSM8QogqrOnIO5oMwKlcNjIko6gSGI+FYTrWrkk/fzSE0lNeJzUC
+2n336trYO0RS8UvAUqbSPnXRZwDIaWauobVrEP78FMucS2EAOeTc+gwRUg1uBXJm
+lwh5pB5H+OoieBPOlXDqcgS9IVop3y/Wybq4ojsWRNMIlze74JZixjUuSoib3E9t
+NQ/rq4tcR3ewABGK5xa5cjO0M052qmVun9U3w+yNd0oVMLDLzxkPtA+PeVnle4Nj
+fXET/Dkrof6HHpaaKDzIX6xfOxT/ubyOsox0MuPI3JrD4j1G+twOm2xBiUdEYQ4H
+4Y4+YS90aUcGb4fvtF7L6bdiWypdbh+EBX1KioL6zkA7/3IL0xTzSnS9xFxV4Wkq
+8EQ/E7hQf5hBwdLZ+MpKWzGd1JedCxtLIl4l1Vn+CSg20UBsZkUquorJqFXyt5JR
+UOavWoLECJ+xffF3MsVAhD2i+8N7HkzgPFKWCXZ3QMIHA/JNyT1VmlOtTq1DrVQA
+3V6hYBgrDOaelLKrbG0mP1ck+eztOBoCxEZBfmrv3Of+EO6le2h1/Xz+9eX2sEtw
+Rhe51YkwGHogJC9Fs7uaz/5gCTc8hSufaUWXkTUc4GlXyqaarYKcWdeTtERgJDoc
+48KCUDF66w0rYDBwwBAl
+=DM8L
+-----END PGP SIGNATURE-----
+
+--afud3TvQlmMwHqD2XWOWU9df3bQIuJGNB--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
