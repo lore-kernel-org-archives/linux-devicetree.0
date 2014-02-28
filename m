@@ -1,124 +1,88 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 0/9] Doc/DT: DT bindings for various display components
-Date: Fri, 28 Feb 2014 15:14:04 +0200
-Message-ID: <53108B9C.5000006@ti.com>
-References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com>
- <531087C0.1090501@gmail.com>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v4] can: xilinx CAN controller support.
+Date: Fri, 28 Feb 2014 14:15:27 +0100
+Message-ID: <53108BEF.1020308@pengutronix.de>
+References: <74d607e9-ac9c-4a9b-ac49-e84ae49d20c2@TX2EHSMHS031.ehs.local> <530D0A9C.5090402@pengutronix.de> <cd00fb2d-c8a7-423d-8aa0-2b413e9ac101@CO9EHSMHS017.ehs.local> <530DEA7C.6010609@pengutronix.de> <678ca296-8687-4e7c-9014-ae69d886a068@CO9EHSMHS014.ehs.local> <530E0B92.5010903@pengutronix.de> <2e3bfd38-37d5-4102-af79-821196c6c732@CH1EHSMHS006.ehs.local> <53104995.4010305@pengutronix.de> <48409965-e214-43b7-8b6a-08bf075707e1@CO9EHSMHS001.ehs.local> <53108798.7090902@pengutronix.de> <4902b8d8-139a-4fd0-9e6e-a30ce7e6683b@CH1EHSMHS019.ehs.local>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8145802462075367738=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <531087C0.1090501@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Tomasz Figa <tomasz.figa@gmail.com>, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Rob Clark <robdclark@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="BqccfKe4b5F00xdVAJSqp3LTVQq5PE8IE"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <4902b8d8-139a-4fd0-9e6e-a30ce7e6683b@CH1EHSMHS019.ehs.local>
+Sender: linux-can-owner@vger.kernel.org
+To: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>, "wg@grandegger.com" <wg@grandegger.com>, Michal Simek <michals@xilinx.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---===============8145802462075367738==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="Gtu5vU8V650wFqLEo8P7fwcHnl389Qh5u"
-
---Gtu5vU8V650wFqLEo8P7fwcHnl389Qh5u
-Content-Type: text/plain; charset=ISO-8859-1
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--BqccfKe4b5F00xdVAJSqp3LTVQq5PE8IE
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On 28/02/14 14:57, Sebastian Hesselbarth wrote:
+On 02/28/2014 02:07 PM, Appana Durga Kedareswara Rao wrote:
+>>>> What happens if the interrupt handler is delayed? For example in a R=
+T
+>>>> enabled system the interrupt handler runs as a thread. There might b=
+e
+>>>> other threads with higher priority. The hardware will probably send
+>>>> all CAN frames in the FIFO, so you want to reduce the overhead and
+>>>> loop in the tx complete handler.
+>>>>
+>>> Yes I agree with your comment.
+>>> It will be good to have a loop in the Tx interrupt handler I am
+>>> modifying the Tx interrupt handler like below.
+>>>
+>>> static void xcan_tx_interrupt(struct net_device *ndev, u32 isr) {
+>>>         struct xcan_priv *priv =3D netdev_priv(ndev);
+>>>         struct net_device_stats *stats =3D &ndev->stats;
+>>>
+>>>         while (priv->tx_head - priv->tx_tail > 0) {
+>>>                 if (!(isr & XCAN_IXR_TXOK_MASK)) {
+>>>                         break;
+>>>                 }
+>>>                 can_get_echo_skb(ndev, priv->tx_tail %
+>>>                                         priv->xcan_echo_skb_max_tx);
+>>>                 priv->tx_tail++;
+>>>                 stats->tx_packets++;
+>>>                 can_led_event(ndev, CAN_LED_EVENT_TX);
 
-> Out of curiosity, will there be DT nodes for pull-up resistors soon,
-> too? ;)
+Probably first clear the interrupt, because you've just handled it, then
+check if it's still present. The question is, do you have to clear the
+IRQ for each transmitted frame, or does one clean of the interrupt clear
+the bit for more then one transmitted frame?
 
-If they don't work automatically, yes, we need DT nodes and drivers for
-them.
+>>>                 isr =3D priv->read_reg(priv, XCAN_ISR_OFFSET);
+>             --> clear Tx OK interrupt.
 
-> Honestly, TPD12S015 is a level shifter, there is nothing in it that
-> would justify a DT node nor a driver.
+>=20
+>>>         }
+>>>         netif_wake_queue(ndev);
+>>> }
+>>>
+>>> Are you Ok with this?
 
-TPD requires a power. Who turns that on? It also has two GPIOs, LS_OE
-and CT_CP_HPD, which need to be controlled based on what the user wants
-and the state of the HPD line. Who controls those?
+Were getting there :)
 
-> Above you already note, that connector nodes should offer HPD in the
-> future, but I guess the binding should represent that now already.
-
-I think it can be added when somebody uses it. I don't see why that
-would cause trouble later to those that don't use it.
-
-> I will be a DT stub anyway, the corresponding video sink driver will
-> have to look it up.
-
-I'm not sure what you mean with that. Yes, it's not the most complex DT
-nodes out there.
-
-> Looking through the bindings for DVI and HDMI, I guess HPD gpio is
-> better kept in those nodes. From the relevant (DT) properties DVI and
-> HDMI connectors are in no way different.
-
-Well, I think the HPD gpio should be where it's most logical to have it.
-
-I mean, you could have a setup where you have the SoC HDMI encoder and
-and the HDMI connector, and the HPD pin goes directly to the HDMI
-encoder, which has HW support for it. In that case, the HDMI encoder
-node should contain the HPD, and the HDMI encoder should handle it.
-
-Or, your HDMI encoder could not have any kind of support for HPD. In
-that case you could have the HDMI connector driver handle the hotplug
-event. You could of course make the HDMI encoder driver handle the HPD
-gpio, but I usually try to have the driver handle the hardware device in
-question.
-
-In OMAP's case, we have the TPD chip between the HDMI encoder and the
-connector, and the logical place to handle HPD GPIO in that case is the
-TPD driver, as that's where the HPD is connected to and the TPD needs to
-be configured according to the state of the HPD.
-
- Tomi
+Marc
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
 
-
---Gtu5vU8V650wFqLEo8P7fwcHnl389Qh5u
+--BqccfKe4b5F00xdVAJSqp3LTVQq5PE8IE
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+Version: GnuPG v1
+Comment: Using GnuPG with Icedove - http://www.enigmail.net/
 
-iQIcBAEBAgAGBQJTEIucAAoJEPo9qoy8lh71G8kP/RfFSLElGL/z1dyjwbWAmPmz
-eVj+7Tq5+cuTG7Y3dxE+G5xckYQhg+/Z57CPq6N5Yygk9Lpo03UlPcDY9TRosM0N
-Fr4bp/VN9fKOugS0uNyqgaXfjBUX+ZlqGOM+Ume6Mqsk1yFZQxBKuref/vK+DKgz
-vg+0r9JIR2Plid6OzSgwMgifH6231A+qLGgb2+pn/nnODLiErUrbFGBUqiOTDFW5
-1DjzcJbnVxkugu/uEc4/VNU1V5hwPcDNGuOg9RT9Dv0+KGRRW2NpFTkai1C/zS/t
-4rwGwHrOYTIMIL74ZAKBsw4lcH3qAZyESuiy62xEB7D38CyoYpf+3E87omYBd3Pe
-ijsPjNWk5aNAWDxEZCGww/kojARuZgMKWXv4zqbbVMhbgMgDpJmlD7IteuuUE3C5
-DrcnbRxR+r87Wf/UOXyClm02goBNKWf/n9tzLGyO1rW8I5fr9cKC/KH4FsGPyCeh
-wgKGIU0hE/jAbDSEHEHExkb0Qnl3iyYL3S/jBzMpv3J7WZbg2UdjpeZADIRHoMgn
-JyLPvGYd5fawoyYP2658aVynVtU6Wyko/hu7Vgk7qI2KQL6yjhAuw4x1Gw+bO2J4
-lexYWssKEhXtNfJDgvDFfkWYHKs959OjH2nCAMn+Z6uFZfl9yYoySsDLpW5n4jY1
-xT1dUXUYVb4d2kZp1qwt
-=j3cF
+iEYEARECAAYFAlMQi+8ACgkQjTAFq1RaXHPqFwCgidLsjs4bf60MlQaZsLvSmgvE
+hugAn1Et9bzUjDb07qlE8dv+dsDEfaV7
+=OMGk
 -----END PGP SIGNATURE-----
 
---Gtu5vU8V650wFqLEo8P7fwcHnl389Qh5u--
-
-
---===============8145802462075367738==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============8145802462075367738==--
+--BqccfKe4b5F00xdVAJSqp3LTVQq5PE8IE--
