@@ -1,8 +1,8 @@
 From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH v6 05/11] drivers: of: add automated assignment of reserved
- regions to client devices
-Date: Fri, 28 Feb 2014 14:42:50 +0100
-Message-ID: <1393594976-16728-6-git-send-email-m.szyprowski@samsung.com>
+Subject: [PATCH v6 04/11] drivers: of: add support for custom reserved memory
+ drivers
+Date: Fri, 28 Feb 2014 14:42:49 +0100
+Message-ID: <1393594976-16728-5-git-send-email-m.szyprowski@samsung.com>
 References: <1393594976-16728-1-git-send-email-m.szyprowski@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-reply-to: <1393594976-16728-1-git-send-email-m.szyprowski@samsung.com>
@@ -11,137 +11,151 @@ To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-m
 Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Grant Likely <grant.likely@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Paul Mackerras <paulus@samba.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds code for automated assignment of reserved memory regions
-to struct device. reserved_mem->ops->device_init()/device_cleanup()
-callbacks are called to perform reserved memory driver specific
-initialization and cleanup
+Add support for custom reserved memory drivers. Call their init() function
+for each reserved region and prepare for using operations provided by them
+with by the reserved_mem->ops array.
 
 Based on previous code provided by Josh Cartwright <joshc@codeaurora.org>
 
 Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 ---
- drivers/of/of_reserved_mem.c    |   70 +++++++++++++++++++++++++++++++++++++++
- include/linux/of_reserved_mem.h |    7 ++++
- 2 files changed, 77 insertions(+)
+ drivers/of/of_reserved_mem.c      |   29 +++++++++++++++++++++++++++++
+ include/asm-generic/vmlinux.lds.h |   11 +++++++++++
+ include/linux/of_reserved_mem.h   |   32 ++++++++++++++++++++++++++++++++
+ 3 files changed, 72 insertions(+)
 
 diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index daaaf935911d..5c45016efd31 100644
+index 69b811779585..daaaf935911d 100644
 --- a/drivers/of/of_reserved_mem.c
 +++ b/drivers/of/of_reserved_mem.c
-@@ -206,8 +206,16 @@ void __init fdt_init_reserved_mem(void)
- 	for (i = 0; i < reserved_mem_count; i++) {
- 		struct reserved_mem *rmem = &reserved_mem[i];
- 		unsigned long node = rmem->fdt_node;
-+		unsigned long len;
-+		__be32 *prop;
- 		int err = 0;
+@@ -170,6 +170,33 @@ static int __init __reserved_mem_alloc_size(unsigned long node,
+ 	return 0;
+ }
  
-+		prop = of_get_flat_dt_prop(node, "phandle", &len);
-+		if (!prop)
-+			prop = of_get_flat_dt_prop(node, "linux,phandle", &len);
-+		if (prop)
-+			rmem->phandle = of_read_number(prop, len/4);
++static const struct of_device_id __rmem_of_table_sentinel
++	__used __section(__reservedmem_of_table_end);
 +
++/**
++ * res_mem_init_node() - call region specific reserved memory init code
++ */
++static int __init __reserved_mem_init_node(struct reserved_mem *rmem)
++{
++	extern const struct of_device_id __reservedmem_of_table[];
++	const struct of_device_id *i;
++
++	for (i = __reservedmem_of_table; i < &__rmem_of_table_sentinel; i++) {
++		reservedmem_of_init_fn initfn = i->data;
++		const char *compat = i->compatible;
++
++		if (!of_flat_dt_is_compatible(rmem->fdt_node, compat))
++			continue;
++
++		if (initfn(rmem, rmem->fdt_node, rmem->name) == 0) {
++			pr_info("Reserved memory: initialized node %s, compatible id %s\n",
++				rmem->name, compat);
++			return 0;
++		}
++	}
++	return -ENOENT;
++}
++
+ /**
+  * fdt_init_reserved_mem - allocate and init all saved reserved memory regions
+  */
+@@ -184,5 +211,7 @@ void __init fdt_init_reserved_mem(void)
  		if (rmem->size == 0)
  			err = __reserved_mem_alloc_size(node, rmem->name,
  						 &rmem->base, &rmem->size);
-@@ -215,3 +223,65 @@ void __init fdt_init_reserved_mem(void)
- 			__reserved_mem_init_node(rmem);
++		if (err == 0)
++			__reserved_mem_init_node(rmem);
  	}
  }
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index bc2121fa9132..f10f64fcc815 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -167,6 +167,16 @@
+ #define CLK_OF_TABLES()
+ #endif
+ 
++#ifdef CONFIG_OF_RESERVED_MEM
++#define RESERVEDMEM_OF_TABLES()				\
++	. = ALIGN(8);					\
++	VMLINUX_SYMBOL(__reservedmem_of_table) = .;	\
++	*(__reservedmem_of_table)			\
++	*(__reservedmem_of_table_end)
++#else
++#define RESERVEDMEM_OF_TABLES()
++#endif
 +
-+static inline struct reserved_mem *__find_rmem(struct device_node *node)
-+{
-+	unsigned int i;
-+
-+	if (!node->phandle)
-+		return NULL;
-+
-+	for (i = 0; i < reserved_mem_count; i++)
-+		if (reserved_mem[i].phandle == node->phandle)
-+			return &reserved_mem[i];
-+	return NULL;
-+}
-+
-+/**
-+ * of_reserved_mem_device_init() - assign reserved memory region to given device
-+ *
-+ * This function assign memory region pointed by "memory-region" device tree
-+ * property to the given device.
-+ */
-+void of_reserved_mem_device_init(struct device *dev)
-+{
-+	struct reserved_mem *rmem;
-+	struct device_node *np;
-+
-+	np = of_parse_phandle(dev->of_node, "memory-region", 0);
-+	if (!np)
-+		return;
-+
-+	rmem = __find_rmem(np);
-+	of_node_put(np);
-+
-+	if (!rmem || !rmem->ops || !rmem->ops->device_init)
-+		return;
-+
-+	rmem->ops->device_init(rmem, dev);
-+	dev_info(dev, "assigned reserved memory node %s\n", rmem->name);
-+}
-+
-+/**
-+ * of_reserved_mem_device_release() - release reserved memory device structures
-+ *
-+ * This function releases structures allocated for memory region handling for
-+ * the given device.
-+ */
-+void of_reserved_mem_device_release(struct device *dev)
-+{
-+	struct reserved_mem *rmem;
-+	struct device_node *np;
-+
-+	np = of_parse_phandle(dev->of_node, "memory-region", 0);
-+	if (!np)
-+		return;
-+
-+	rmem = __find_rmem(np);
-+	of_node_put(np);
-+
-+	if (!rmem || !rmem->ops || !rmem->ops->device_release)
-+		return;
-+
-+	rmem->ops->device_release(rmem, dev);
-+}
+ #define KERNEL_DTB()							\
+ 	STRUCT_ALIGN();							\
+ 	VMLINUX_SYMBOL(__dtb_start) = .;				\
+@@ -490,6 +500,7 @@
+ 	TRACE_SYSCALLS()						\
+ 	MEM_DISCARD(init.rodata)					\
+ 	CLK_OF_TABLES()							\
++	RESERVEDMEM_OF_TABLES()						\
+ 	CLKSRC_OF_TABLES()						\
+ 	KERNEL_DTB()							\
+ 	IRQCHIP_OF_MATCH_TABLE()
 diff --git a/include/linux/of_reserved_mem.h b/include/linux/of_reserved_mem.h
-index 9b1fbb7f29fc..6a54e6565b89 100644
+index 89226ed7d954..9b1fbb7f29fc 100644
 --- a/include/linux/of_reserved_mem.h
 +++ b/include/linux/of_reserved_mem.h
-@@ -8,6 +8,7 @@ struct reserved_mem_ops;
+@@ -1,21 +1,53 @@
+ #ifndef __OF_RESERVED_MEM_H
+ #define __OF_RESERVED_MEM_H
+ 
++struct device;
++struct of_phandle_args;
++struct reserved_mem_ops;
++
  struct reserved_mem {
  	const char			*name;
  	unsigned long			fdt_node;
-+	unsigned long			phandle;
- 	const struct reserved_mem_ops	*ops;
++	const struct reserved_mem_ops	*ops;
  	phys_addr_t			base;
  	phys_addr_t			size;
-@@ -25,6 +26,9 @@ typedef int (*reservedmem_of_init_fn)(struct reserved_mem *rmem,
- 				      unsigned long node, const char *uname);
- 
- #ifdef CONFIG_OF_RESERVED_MEM
-+void of_reserved_mem_device_init(struct device *dev);
-+void of_reserved_mem_device_release(struct device *dev);
++	void				*priv;
++};
 +
++struct reserved_mem_ops {
++	void	(*device_init)(struct reserved_mem *rmem,
++			       struct device *dev);
++	void	(*device_release)(struct reserved_mem *rmem,
++				  struct device *dev);
+ };
+ 
++typedef int (*reservedmem_of_init_fn)(struct reserved_mem *rmem,
++				      unsigned long node, const char *uname);
++
+ #ifdef CONFIG_OF_RESERVED_MEM
  void fdt_init_reserved_mem(void);
  void fdt_reserved_mem_save_node(unsigned long node, const char *uname,
  			       phys_addr_t base, phys_addr_t size);
-@@ -37,6 +41,9 @@ void fdt_reserved_mem_save_node(unsigned long node, const char *uname,
- 				init : init }
- 
- #else
-+static inline void of_reserved_mem_device_init(struct device *dev) { }
-+static inline void of_reserved_mem_device_release(struct device *pdev) { }
 +
++#define RESERVEDMEM_OF_DECLARE(name, compat, init)			\
++	static const struct of_device_id __reservedmem_of_table_##name	\
++		__used __section(__reservedmem_of_table)		\
++		 = { .compatible = compat,				\
++		     .data = (init == (reservedmem_of_init_fn)NULL) ?	\
++				init : init }
++
+ #else
  static inline void fdt_init_reserved_mem(void) { }
  static inline void fdt_reserved_mem_save_node(unsigned long node,
  		const char *uname, phys_addr_t base, phys_addr_t size) { }
++
++#define RESERVEDMEM_OF_DECLARE(name, compat, init)			\
++	static const struct of_device_id __reservedmem_of_table_##name	\
++		__attribute__((unused))					\
++		 = { .compatible = compat,				\
++		     .data = (init == (reservedmem_of_init_fn)NULL) ?	\
++				init : init }
++
+ #endif
+ 
+ #endif /* __OF_RESERVED_MEM_H */
 -- 
 1.7.9.5
