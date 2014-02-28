@@ -1,43 +1,48 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: Re: [PATCH v9 3/3] mmc: sdhci-msm: Add platform_execute_tunning
- implementation
-Date: Fri, 28 Feb 2014 14:45:54 -0600
-Message-ID: <20140228204554.GI7308@joshc.qualcomm.com>
-References: <1393586675-14628-1-git-send-email-gdjakov@mm-sol.com>
- <1393586675-14628-4-git-send-email-gdjakov@mm-sol.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: [PATCHv2 0/4] OMAP IOMMU DTS nodes
+Date: Fri, 28 Feb 2014 14:49:50 -0600
+Message-ID: <1393620594-14957-1-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1393586675-14628-4-git-send-email-gdjakov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Georgi Djakov <gdjakov@mm-sol.com>
-Cc: linux-mmc@vger.kernel.org, cjb@laptop.org, ulf.hansson@linaro.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: Florian Vaussard <florian.vaussard@epfl.ch>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Suman Anna <s-anna@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Nit below.
+Hi,
 
-On Fri, Feb 28, 2014 at 01:24:35PM +0200, Georgi Djakov wrote:
-> This patch adds implementation for platform specific tuning in order to support
-> HS200 bus speed mode on Qualcomm SDHCI controller.
-> 
-> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
-> Signed-off-by: Venkat Gopalakrishnan <venkatg@codeaurora.org>
-> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
-> ---
->  drivers/mmc/host/sdhci-msm.c |  424 +++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 418 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index b4490a2..69f6887 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-[..]
->  
-> +int sdhci_msm_execute_tuning(struct sdhci_host *host, u32 opcode)
+This is an updated series of the OMAP IOMMU DTS nodes
+for OMAP3, OMAP4 and OMAP5. The main change is the removal
+of the dma-window property from all the IOMMU DT nodes, as
+per the discussion on the bindings posted previously [1].
 
-This wants to be static.
+This series goes along with the v3 version of the driver
+DT adaptation series [2]. The DTS patches are updated
+as per the new bindings document patch [3].
+
+[1] http://marc.info/?l=linux-omap&m=139345649217892&w=2
+[2] http://marc.info/?l=linux-omap&m=139362022805667&w=2
+[3] http://marc.info/?l=linux-omap&m=139362026905683&w=2
+
+v1:
+DTS patches as per v2 series of driver DT adaptation
+series.
+http://marc.info/?l=linux-omap&m=139231582217147&w=2
+
+Florian Vaussard (3):
+  ARM: dts: OMAP3: Update ISP IOMMU node
+  ARM: dts: OMAP3: Add IVA IOMMU node
+  ARM: dts: OMAP4: Add IOMMU nodes
+
+Suman Anna (1):
+  ARM: dts: OMAP5: Add IOMMU nodes
+
+ arch/arm/boot/dts/omap3.dtsi | 15 ++++++++++++---
+ arch/arm/boot/dts/omap4.dtsi | 15 +++++++++++++++
+ arch/arm/boot/dts/omap5.dtsi | 15 +++++++++++++++
+ 3 files changed, 42 insertions(+), 3 deletions(-)
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+1.9.0
+
