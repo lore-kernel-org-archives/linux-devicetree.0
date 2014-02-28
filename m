@@ -1,144 +1,112 @@
-From: Alex Elder <elder@linaro.org>
-Subject: [PATCH 2/5] ARM: dts: revise kona clock binding document
-Date: Fri, 28 Feb 2014 07:49:28 -0600
-Message-ID: <1393595371-3789-3-git-send-email-elder@linaro.org>
-References: <1393595371-3789-1-git-send-email-elder@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393595371-3789-1-git-send-email-elder@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@linaro.org, bcm@fixthebug.org, mporter@linaro.org, devicetree@vger.kernel.org
-Cc: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/9] Doc/DT: DT bindings for various display components
+Date: Fri, 28 Feb 2014 14:51:22 +0100
+Message-ID: <5310945A.9040106@gmail.com>
+References: <1393590016-9361-1-git-send-email-tomi.valkeinen@ti.com> <531087C0.1090501@gmail.com> <53108B9C.5000006@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53108B9C.5000006-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The next patch defines a binding for a new Broadcom SoC that uses
-Kona style CCUs for its clocks.  Update the generic Kona clock
-binding document so it's more natural to accomodate the definitions
-of additional SoC families.
+On 02/28/14 14:14, Tomi Valkeinen wrote:
+> On 28/02/14 14:57, Sebastian Hesselbarth wrote:
+>
+>> Out of curiosity, will there be DT nodes for pull-up resistors soon,
+>> too? ;)
+>
+> If they don't work automatically, yes, we need DT nodes and drivers for
+> them.
+>
+>> Honestly, TPD12S015 is a level shifter, there is nothing in it that
+>> would justify a DT node nor a driver.
+>
+> TPD requires a power. Who turns that on? It also has two GPIOs, LS_OE
+> and CT_CP_HPD, which need to be controlled based on what the user wants
+> and the state of the HPD line. Who controls those?
 
-Specifically:
-    - Define the compatible string values generically, referring
-      to specific per-model values later in the document.
-    - Put the device tree example immediately after the required
-      properties listing, before the tables of SoC-specific values.
-    - Clearly identify the start of the section defining specific
-      values related to the BCM281XX family
-    - Add a list of the specific BCM281XX family compatible strings.
-    - Reword the description of the table slightly.
+Strictly speaking TPD12S015 has _no_ GPIO but only buffers. It
+translates one voltage to another. The controlling instance is
+your "video card" that is really interested in the actual state
+of HPD signal.
 
-Signed-off-by: Alex Elder <elder@linaro.org>
----
- .../devicetree/bindings/clock/bcm-kona-clock.txt   |   87 +++++++++++---------
- 1 file changed, 47 insertions(+), 40 deletions(-)
+Also the same for power, TPD12S015 doesn't decide to be powered up
+or down but the "video card" does. We have GPIO regulators that
+deal with that situation already.
 
-diff --git a/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt b/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
-index 56d1f49..ebe3ab6 100644
---- a/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
-@@ -10,12 +10,12 @@ This binding uses the common clock binding:
- 
- Required properties:
- - compatible
--	Shall have one of the following values:
--	- "brcm,bcm11351-root-ccu"
--	- "brcm,bcm11351-aon-ccu"
--	- "brcm,bcm11351-hub-ccu"
--	- "brcm,bcm11351-master-ccu"
--	- "brcm,bcm11351-slave-ccu"
-+	Shall have a value of the form "brcm,<model>-<which>-ccu",
-+	where <model> is a Broadcom SoC model number and <which> is
-+	the name of a defined CCU.  For example:
-+	    "brcm,bcm11351-root-ccu"
-+	The compatible strings used for each supported SoC family
-+	are defined below.
- - reg
- 	Shall define the base and range of the address space
- 	containing clock control registers
-@@ -26,12 +26,48 @@ Required properties:
- 	Shall be an ordered list of strings defining the names of
- 	the clocks provided by the CCU.
- 
-+Device tree example:
- 
--BCM281XX family SoCs use Kona CCUs.  The following table defines
--the set of CCUs and clock specifiers for BCM281XX clocks.  When
--a clock consumer references a clocks, its symbolic specifier
--(rather than its numeric index value) should be used.  These
--specifiers are defined in "include/dt-bindings/clock/bcm281xx.h".
-+	slave_ccu: slave_ccu {
-+		compatible = "brcm,bcm11351-slave-ccu";
-+		reg = <0x3e011000 0x0f00>;
-+		#clock-cells = <1>;
-+		clock-output-names = "uartb",
-+				     "uartb2",
-+				     "uartb3",
-+				     "uartb4";
-+	};
-+
-+	ref_crystal_clk: ref_crystal {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <26000000>;
-+	};
-+
-+	uart@3e002000 {
-+		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
-+		status = "disabled";
-+		reg = <0x3e002000 0x1000>;
-+		clocks = <&slave_ccu BCM281XX_SLAVE_CCU_UARTB3>;
-+		interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+	};
-+
-+BCM281XX family
-+---------------
-+CCU compatible string values for SoCs in the BCM281XX family are:
-+    "brcm,bcm11351-root-ccu"
-+    "brcm,bcm11351-aon-ccu"
-+    "brcm,bcm11351-hub-ccu"
-+    "brcm,bcm11351-master-ccu"
-+    "brcm,bcm11351-slave-ccu"
-+
-+The following table defines the set of CCUs and clock specifiers for
-+BCM281XX family clocks.  When a clock consumer references a clocks,
-+its symbolic specifier (rather than its numeric index value) should
-+be used.  These specifiers are defined in:
-+    "include/dt-bindings/clock/bcm281xx.h"
- 
-     CCU     Clock           Type    Index   Specifier
-     ---     -----           ----    -----   ---------
-@@ -62,32 +98,3 @@ specifiers are defined in "include/dt-bindings/clock/bcm281xx.h".
-     slave   bsc2            peri      7     BCM281XX_SLAVE_CCU_BSC2
-     slave   bsc3            peri      8     BCM281XX_SLAVE_CCU_BSC3
-     slave   pwm             peri      9     BCM281XX_SLAVE_CCU_PWM
--
--
--Device tree example:
--
--	slave_ccu: slave_ccu {
--		compatible = "brcm,bcm11351-slave-ccu";
--		reg = <0x3e011000 0x0f00>;
--		#clock-cells = <1>;
--		clock-output-names = "uartb",
--				     "uartb2",
--				     "uartb3",
--				     "uartb4";
--	};
--
--	ref_crystal_clk: ref_crystal {
--		#clock-cells = <0>;
--		compatible = "fixed-clock";
--		clock-frequency = <26000000>;
--	};
--
--	uart@3e002000 {
--		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
--		status = "disabled";
--		reg = <0x3e002000 0x1000>;
--		clocks = <&slave_ccu BCM281XX_SLAVE_CCU_UARTB3>;
--		interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
--		reg-shift = <2>;
--		reg-io-width = <4>;
--	};
--- 
-1.7.9.5
+Consider the same board but replace TPD12S015 with another level-
+shifter, you still want OMAP video driver work with that out-of-the-box,
+don't you? Fact is, OMAP IP requires GPIOs to sense HPD status hence
+that GPIO is a property of the corresponding OMAP node. How level-
+translation happens is irrelevant here.
+
+>> Above you already note, that connector nodes should offer HPD in the
+>> future, but I guess the binding should represent that now already.
+>
+> I think it can be added when somebody uses it. I don't see why that
+> would cause trouble later to those that don't use it.
+
+Thinking about it again, HPD gpio shouldn't be a property of the
+connector at all but again the controlling instance. The connector
+cannot deal with the information provided by HPD nor can it determine
+if anyone is listening to HPD events.
+
+>> I will be a DT stub anyway, the corresponding video sink driver will
+>> have to look it up.
+>
+> I'm not sure what you mean with that. Yes, it's not the most complex DT
+> nodes out there.
+ >
+>> Looking through the bindings for DVI and HDMI, I guess HPD gpio is
+>> better kept in those nodes. From the relevant (DT) properties DVI and
+>> HDMI connectors are in no way different.
+>
+> Well, I think the HPD gpio should be where it's most logical to have it.
+
+Right, but this is usually the controlling instance and not the
+consuming one. E.g. to detect presence of an MMC card by GPIO, you'd
+put that into the MMC _controller_ not any card node.
+
+> I mean, you could have a setup where you have the SoC HDMI encoder and
+> and the HDMI connector, and the HPD pin goes directly to the HDMI
+> encoder, which has HW support for it. In that case, the HDMI encoder
+> node should contain the HPD, and the HDMI encoder should handle it.
+
+I wonder, if in case of an dedicated HPD pin, you would ever expose that
+in DT.
+
+> Or, your HDMI encoder could not have any kind of support for HPD. In
+> that case you could have the HDMI connector driver handle the hotplug
+> event. You could of course make the HDMI encoder driver handle the HPD
+> gpio, but I usually try to have the driver handle the hardware device in
+> question.
+
+Having a driver for a dumb connector seems to be a little exaggerated.
+Consider your generic HDMI connector "driver" connected to dedicated HPD
+case above. It is pretty useless then. OTOH video controllers with 
+dedicated HPD know very well they can control HPD themselves, video 
+controllers without dedicated HPD also know very well that they need
+GPIO for it.
+
+> In OMAP's case, we have the TPD chip between the HDMI encoder and the
+> connector, and the logical place to handle HPD GPIO in that case is the
+> TPD driver, as that's where the HPD is connected to and the TPD needs to
+> be configured according to the state of the HPD.
+
+Is it really the logical place to handle HPD? I'd have put it into the
+HDMI encoder because it's the unit most interested in the state of HPD.
+
+Please, don't get me wrong, I like all this to be baked into a binding -
+just wondering if a level-shifter driver plus corresponding DT node
+is too much detail in here.
+
+Sebastian
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
