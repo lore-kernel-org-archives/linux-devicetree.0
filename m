@@ -1,58 +1,55 @@
-From: Belisko Marek <marek.belisko@gmail.com>
-Subject: Re: [PATCHv1 1/2] rx51_battery: convert to iio consumer
-Date: Fri, 28 Feb 2014 21:32:12 +0100
-Message-ID: <CAAfyv36jJoMxZQ5e43pEC2rzNBHHW9Jt_4dg5O-fS8e+Aim7jA@mail.gmail.com>
-References: <1393375569-21751-1-git-send-email-sre@debian.org>
-	<1393375569-21751-2-git-send-email-sre@debian.org>
-	<CAAfyv37B=xn3AktnUxPDpuey+5S73vW0PJnuUZtorP4rajPKiw@mail.gmail.com>
-	<20140226215452.GA11468@earth.universe>
-	<CAAfyv340pA2ihUAoFytBgevLtedvtj5Z0aw_=G9Rbx5occtyqw@mail.gmail.com>
-	<20140228020536.GB5427@earth.universe>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv2 08/16] ARM: OMAP3: remove deprecated
+	CONFIG_OMAP_IOMMU_IVA2
+Date: Fri, 28 Feb 2014 14:42:06 -0600
+Message-ID: <5310F49E.4040804@ti.com>
+References: <1392315347-32967-1-git-send-email-s-anna@ti.com>
+	<1392315347-32967-9-git-send-email-s-anna@ti.com>
+	<alpine.DEB.2.02.1402281958170.453@utopia.booyaka.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140228020536.GB5427@earth.universe>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1402281958170.453-rwI8Ez+7Ko+d5PgPZx9QOdBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+Paul,
 
-On Fri, Feb 28, 2014 at 3:05 AM, Sebastian Reichel <sre@debian.org> wrote:
-> On Thu, Feb 27, 2014 at 10:34:35PM +0100, Belisko Marek wrote:
->> Well I've tried and it's worse :). I got during booting:
->> [    2.218383] ERROR: could not get IIO channel /battery:temp(0)
->> [    2.224639] platform battery.4: Driver twl4030_madc_battery
->> requests probe deferral
->> Not sure if it's just error or warning but temp is always reported as
->> 0 (and also other values in sysfs).
+On 02/28/2014 01:58 PM, Paul Walmsley wrote:
+> On Thu, 13 Feb 2014, Suman Anna wrote:
 >
-> This is an error, which basically means, that twl4030-madc has not
-> yet been loaded. Do you get proper values when you use the old madc
-> API with the patchset applied?
-It works without converting to iio consumer (at least I get some
-reasonable values).
-With conversion it fails with above error. I recheck (add printk to
-iio twl4030-madc) that
-madc driver is loaded. Could this be that twl4030_madc_battery is
-loaded earlier then
-twl4030_madc and than it fails to get iio channels?
+>> From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+>>
+>> CONFIG_OMAP_IOMMU_IVA2 was defined originally to avoid conflicting
+>> usage by tidspbridge and other iommu users. The same can be achieved
+>> by marking the DT node disabled, so remove this obsolete flag and
+>> the corresponding hwmod data can be enabled.
+>>
+>> Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+>> Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+>> [s-anna-l0cyMroinI0@public.gmane.org: revise commit log]
+>> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
 >
-> -- Sebastian
+> Acked-by: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+>
+> Am assuming that someone else will be merging this as part of the entire
+> series.
+>
 
-BR,
+Thanks, I am expecting Tony to pick up all the arch/arm/mach-omap2/ 
+patches. I am just about to send the v3 including all the acks received 
+so far.
 
-marek
-
--- 
-as simple and primitive as possible
--------------------------------------------------
-Marek Belisko - OPEN-NANDRA
-Freelance Developer
-
-Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
-Tel: +421 915 052 184
-skype: marekwhite
-twitter: #opennandra
-web: http://open-nandra.com
+regards
+Suman
