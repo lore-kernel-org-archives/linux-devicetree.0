@@ -1,55 +1,102 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 1/1] Memory leak in scripts/dtc/util.c
-Date: Thu, 27 Feb 2014 19:32:43 -0600
-Message-ID: <CAL_JsqK9Wquv6kgefyPvy0JqXNO7Cx2+iN_ss=CtgXnKEjrF-Q@mail.gmail.com>
-References: <1393525473-12238-1-git-send-email-xypron.glpk@gmx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1393525473-12238-1-git-send-email-xypron.glpk@gmx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: xypron.glpk@gmx.de, Jon Loeliger <jdl@jdl.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: [PATCH v4 7/9] devicetree: bindings: Document PM8921/8058 keypads
+Date: Thu, 27 Feb 2014 17:55:18 -0800
+Message-ID: <1393552520-9068-8-git-send-email-sboyd@codeaurora.org>
+References: <1393552520-9068-1-git-send-email-sboyd@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1393552520-9068-1-git-send-email-sboyd@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Josh Cartwright <joshc@codeaurora.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2014 at 12:24 PM,  <xypron.glpk@gmx.de> wrote:
-> From: Heinrich Schuchardt <xypron.glpk@gmx.de>
->
-> buf was leaked if out of memory
->
-> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-> ---
->  scripts/dtc/util.c |    2 ++
->  1 file changed, 2 insertions(+)
+Document the keypad device found on PM8921 and PM8058 PMICs.
 
-This needs to be made against upstream dtc repo (on kernel.org now).
-Also, there is a newly created list for dtc specific topics:
+Cc: <devicetree@vger.kernel.org>
+Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+---
+ .../bindings/input/qcom,pm8xxx-keypad.txt          | 72 ++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/qcom,pm8xxx-keypad.txt
 
-http://vger.kernel.org/vger-lists.html#devicetree-compiler
-
-Rob
-
->
-> diff --git a/scripts/dtc/util.c b/scripts/dtc/util.c
-> index 2422c34..a1e2e59 100644
-> --- a/scripts/dtc/util.c
-> +++ b/scripts/dtc/util.c
-> @@ -210,9 +210,11 @@ int utilfdt_read_err(const char *filename, char **buffp)
->         do {
->                 /* Expand the buffer to hold the next chunk */
->                 if (offset == bufsize) {
-> +                       char *buf_old = buf;
->                         bufsize *= 2;
->                         buf = realloc(buf, bufsize);
->                         if (!buf) {
-> +                               buf = buf_old;
->                                 ret = ENOMEM;
->                                 break;
->                         }
-> --
-> 1.7.10.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/input/qcom,pm8xxx-keypad.txt b/Documentation/devicetree/bindings/input/qcom,pm8xxx-keypad.txt
+new file mode 100644
+index 000000000000..aa5a9c6cf512
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/qcom,pm8xxx-keypad.txt
+@@ -0,0 +1,72 @@
++Qualcomm PM8xxx PMIC Keypad
++
++PROPERTIES
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be one of:
++		    "qcom,pm8058-keypad"
++		    "qcom,pm8921-keypad"
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: the first interrupt specifies the key sense interrupt
++		    and the second interrupt specifies the key stuck interrupt.
++		    The format of the specifier is defined by the binding
++		    document describing the node's interrupt parent.
++
++- linux,keymap:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: the linux keymap. More information can be found in
++		    input/matrix-keymap.txt.
++
++- keypad,num-rows:
++	Usage: required
++	Value type: <u32>
++	Definition: number of rows in the keymap. More information can be found
++		    in input/matrix-keymap.txt.
++
++- keypad,num-columns:
++	Usage: required
++	Value type: <u32>
++	Definition: number of columns in the keymap. More information can be
++		    found in input/matrix-keymap.txt.
++
++- debounce:
++	Usage: optional
++	Value type: <u32>
++	Definition: time in microseconds that key must be pressed or release
++		    for key sense interrupt to trigger.
++
++- scan-delay:
++	Usage: optional
++	Value type: <u32>
++	Definition: time in microseconds to pause between successive scans
++		    of the matrix array.
++
++- row-hold:
++	Usage: optional
++	Value type: <u32>
++	Definition: time in nanoseconds to pause between scans of each row in
++		    the matrix array.
++
++EXAMPLE
++
++	keypad {
++		compatible = "qcom,pm8921-keypad";
++		interrupt-parent = <&pmicintc>;
++		interrupts = <74 1>, <75 1>;
++		linux,keymap = <
++			MATRIX_KEY(0, 0, KEY_VOLUMEUP)
++			MATRIX_KEY(0, 1, KEY_VOLUMEDOWN)
++			MATRIX_KEY(0, 2, KEY_CAMERA_FOCUS)
++			MATRIX_KEY(0, 3, KEY_CAMERA)
++			>;
++		keypad,num-rows = <1>;
++		keypad,num-columns = <5>;
++		debounce = <15>;
++		scan-delay = <32>;
++		row-hold = <91500>;
++	};
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
