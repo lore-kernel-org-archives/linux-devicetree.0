@@ -1,54 +1,41 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 0/5] Add more device nodes for am43x-epos-evm
-Date: Fri, 28 Feb 2014 14:04:54 -0800
-Message-ID: <20140228220453.GG13624@atomide.com>
-References: <1385537447-6922-1-git-send-email-sourav.poddar@ti.com>
- <52A04C11.1030007@ti.com>
+From: Georgi Djakov <gdjakov@mm-sol.com>
+Subject: Re: [PATCH v9 3/3] mmc: sdhci-msm: Add platform_execute_tunning implementation
+Date: Sat, 01 Mar 2014 00:10:05 +0200
+Message-ID: <5311093D.3090409@mm-sol.com>
+References: <1393586675-14628-1-git-send-email-gdjakov@mm-sol.com> <1393586675-14628-4-git-send-email-gdjakov@mm-sol.com> <F9D8CFEF-1A3C-4B25-B593-419C56E3A168@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52A04C11.1030007@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sourav Poddar <sourav.poddar@ti.com>
-Cc: bcousson@baylibre.com, rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, devicetree@vger.kernel.org, balbi@ti.com, linux-omap@vger.kernel.org, nsekhar@ti.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <F9D8CFEF-1A3C-4B25-B593-419C56E3A168@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: linux-mmc@vger.kernel.org, cjb@laptop.org, ulf.hansson@linaro.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Sourav Poddar <sourav.poddar@ti.com> [131205 01:50]:
-> On Wednesday 27 November 2013 01:00 PM, Sourav Poddar wrote:
-> >The patch series adds support for enabling pwm backlight, i2c2, spi and
-> >matrix gpio keys on am43x-gp-evm.
-> >
-> >Done on top of 3.13-rc1 + tero clock series(1)
-> >
-> >[1]: https://patchwork.kernel.org/patch/3009541/
-> >
-> >Tested on am43x-gp-evm.
-> >
-> >There is a some bug while using regulators through backlight
-> >driver on 3.13-rc1. So, tested pwm part with this temporary patch[2].
-> >
-> >[2]: http://www.spinics.net/lists/arm-kernel/msg288215.html
-> >
-> >Darren Etheridge (1):
-> >   pinctrl: am43xx: dt-bindings: add MUX_MODE8
-> >
-> >Sourav Poddar (4):
-> >   arm: dts: am4372: Add pwm-cellsproperty for ecap device.
-> >   arm: dts: am43x-epos-evm: Add I2C data.
-> >   arm: dts: am43x-epos-evm: Add SPI data.
-> >   ARM: dts: am43x-epos-evm: Add pwm backlight support.
-> >
-> >  arch/arm/boot/dts/am4372.dtsi        |    9 +++++
-> >  arch/arm/boot/dts/am43x-epos-evm.dts |   67 ++++++++++++++++++++++++++++++++++
-> >  include/dt-bindings/pinctrl/am43xx.h |    1 +
-> >  3 files changed, 77 insertions(+), 0 deletions(-)
-> >
-> gentle ping on this..
+On 28.02.14, 18:51, Kumar Gala wrote:
+>=20
+> On Feb 28, 2014, at 5:24 AM, Georgi Djakov <gdjakov@mm-sol.com> wrote=
+:
+>=20
+>> This patch adds implementation for platform specific tuning in order=
+ to support
+>> HS200 bus speed mode on Qualcomm SDHCI controller.
+>>
+>> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+>> Signed-off-by: Venkat Gopalakrishnan <venkatg@codeaurora.org>
+>> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
+>> ---
+>> drivers/mmc/host/sdhci-msm.c |  424 ++++++++++++++++++++++++++++++++=
++++++++++-
+>> 1 file changed, 418 insertions(+), 6 deletions(-)
+>=20
+> minor nit, in subject (platform_execute_tuning, with one =E2=80=99n=E2=
+=80=99).
+>=20
+> - k
 
-FYI at least I don't even have these patches in my inbox any longer,
-so hopefully Benoit queues them.
+Oh, of course! Thanks!
 
-Regards,
-
-Tony
+BR,
+Georgi
