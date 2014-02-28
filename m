@@ -1,139 +1,112 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 5/7] ARM: of: introduce common routine for DMA
- configuration
-Date: Fri, 28 Feb 2014 12:14:04 +0100
-Message-ID: <8423517.a5cbRXVOQZ@wuerfel>
-References: <1393535872-20915-1-git-send-email-santosh.shilimkar@ti.com>
- <9618080.kpE3Kl6X8p@wuerfel> <531077CE.5050501@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <531077CE.5050501@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, linus.walleij@linaro.org, magnus.damm@gmail.com, grant.likely@linaro.org, robh+dt@kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, Olof Johansson <olof@lixom.net>
+From: Georgi Djakov <gdjakov@mm-sol.com>
+Subject: [PATCH v9 0/3] mmc: sdhci-msm: Add support for Qualcomm chipsets
+Date: Fri, 28 Feb 2014 13:24:32 +0200
+Message-ID: <1393586675-14628-1-git-send-email-gdjakov@mm-sol.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org, cjb@laptop.org, ulf.hansson@linaro.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Georgi Djakov <gdjakov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 28 February 2014 13:49:34 Grygorii Strashko wrote:
-> On 02/28/2014 12:00 PM, Arnd Bergmann wrote:
-> > On Thursday 27 February 2014 16:17:50 Santosh Shilimkar wrote:
-> >> diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
-> >> +
-> >> +void arm_dt_dma_configure(struct device *dev)
-> >> +{
-> >> +	dma_addr_t dma_addr;
-> >> +	phys_addr_t paddr, size;
-> >> +	dma_addr_t dma_mask;
-> >> +	int ret;
-> >> +
-> >> +	/*
-> >> +	 * if dma-ranges property doesn't exist - use 32 bits DMA mask
-> >> +	 * by default and don't set skip archdata.dma_pfn_offset
-> >> +	 */
-> >> +	ret = of_dma_get_range(dev->of_node, &dma_addr, &paddr, &size);
-> >> +	if (ret == -ENODEV) {
-> >> +		dev->coherent_dma_mask = DMA_BIT_MASK(32);
-> >> +		if (!dev->dma_mask)
-> >> +			dev->dma_mask = &dev->coherent_dma_mask;
-> >> +		return;
-> >> +	}
-> > 
-> > I think this is a reasonable default, but I also want Russell's
-> > opinion on this, since I suspect he will argue that we shouldn't
-> > default to setting a DMA mask for devices that are not DMA capable.
-> 
-> Just to note, that's current default behavior used in of_platform_device_create_pdata()
+This patchset adds basic support of the Secure Digital Host Controller
+Interface compliant controller found in Qualcomm SoCs.
 
-Right, I realized that later.
+Tested with eMMC and various micro SD cards on APQ8074 Dragonboard.
+Applies to linux-next.
 
-> > Maybe someone has an idea how we can detect all three important cases:
-> > 
-> > a) A device is marked as DMA capable using a dma-ranges property
-> > b) A device is known not to be DMA capable
-> > c) we don't have any dma-ranges properties in an old dtb file
-> >     but still want 32 bit masks by default.
-> 
-> Yep, This patch set supports [a, c]. But, case be [b] can be patched 
-> by arch/mach code using Platform Bus notifier if needed.
-> (Platform Bus notifiers will be called after arm_dt_dma_configure is 
-> finished).
+Changes from v8:
+- Added controller version suffix to the DT compatible string.
+- Switched Kconfig dependency from ARCH_MSM to the new ARCH_QCOM multiplatform.
+- Addressed comments from Stephen Boyd on the 2nd patch (execute tunning).
+- Added signed-off-by lines of the initial driver authors.
+- Picked up tested-by. https://lkml.org/lkml/2013/11/14/85
+- Minor changes on comments, prints and formatting.
 
-It would be nice to have a way to do it without a platform specific
-notifier, I just haven't found a nice way to express that in DT.
+Changes from v7:
+- Added call to sdhci_get_of_property().
+- Refactored sdhci_msm_dt_parse_vreg_info().
+- Fixed possible ERR_PTR() dereferencing.
+- Updated DT binding documentation.
+- Removed lpm and currents from DT.
+- Removed bus-speed-mode from DT.
+- Updated and moved the sanity checks.
+- Various typo and coding style fixes.
+- Added platform_execute_tunning implementation.
 
-> >> +	/* if failed - disable DMA for device */
-> >> +	if (ret < 0) {
-> >> +		dev_err(dev, "failed to configure DMA\n");
-> >> +		return;
-> >> +	}
-> > 
-> > I guess this is also where other platforms (shmobile, highbank, ...)
-> > will want the IOMMU detection to happen.
-> 
-> This error path handling - means, DT contains wrong data :)
+Changes from v6:
+- Fixed wrong pointer in sdhci_msm_pwr_irq().
+- Added platform_execute_tuning() callback as the MSM SDHC does not
+  support tuning as in SDHC 3.0 spec and will need custom implementation
+  in order to support SDR104, HS200 and HS400.
+- Removed the always-on devicetree property - if the regulator is
+  configured as always-on, it will not be disabled anyway.
+- Removed devm_pinctrl_get_select_default() - the default pins are 
+  already set from the device core.
+- Removed wrapper function sdhci_msm_set_vdd_io_vol() and enum
+  vdd_io_level and now calling regulator_set_voltage() directly.
+- Converted #defines to use BIT() macro.
+- Added IS_ERR(vreg->reg) check at the beginning of sdhci_msm_vreg
+  functions.
+- Do not print errors when regulators init return -EPROBE_DEFER as the
+  deffered init is not an actual error.
+- Handle each power irq status bit separately in sdhci_msm_pwr_irq().
+- Ensure that any pending power irq is acknowledged before enabling it,
+  otherwise the irq handler will be fired prematurely.
+- Minor changes.
 
-I wasn't referring to the error path here, sorry for being
-ambiguous. What I meant that we could add code after this line
-to look for an IOMMU.
+Changes from v5:
+- Driver is split into multiple patches
+- Do not initialize variables that are assigned later in code
+- Remove some useless comments
+- Use shorter variable names
+- Change pr_err() to dev_err()
+- Optimized sdhci_msm_setup_vreg()
+- Some code alignment fixes
+- Improved DT values sanity check
+- Added dev_dbg print for sdhci controller version in probe()
+- Added usleep_range() after SW reset - it can take some time
+- Added SDHCI_QUIRK_SINGLE_POWER_WRITE - power handled by PMIC
+- Renamed DT property vdd-io to vddio
 
-> >> +	/* DMA ranges found. Calculate and set dma_pfn_offset */
-> >> +	dev->archdata.dma_pfn_offset = PFN_DOWN(paddr - dma_addr);
-> >> +
-> >> +	/* Configure DMA mask */
-> >> +	dev->dma_mask = kmalloc(sizeof(*dev->dma_mask), GFP_KERNEL);
-> >> +	if (!dev->dma_mask)
-> >> +		return;
-> > 
-> > Do we have to worry about freeing this? We could in theory put the
-> > mask into pdev_archdata (as on microblaze), or point to
-> > coherent_dma_mask (as of_platform_device_create_pdata does).
-> > I can't think of a case where the latter won't actually work,
-> > since coherent_dma_mask!=*dma_mask doesn't happen on any platform
-> > device I have ever seen. coherent_dma_mask was introduced to handle
-> > some special requirements of PCI devices on ia64 or parisc.
-> 
-> I've used platform_device_register_full() as ref here. It actually contains
-> good comment regarding this mem leak issue:
-> /*
->  * This memory isn't freed when the device is put,
->  * I don't have a nice idea for that though.  Conceptually
->  * dma_mask in struct device should not be a pointer.
->  * See http://thread.gmane.org/gmane.linux.kernel.pci/9081
->  */
+Changes from v4:
+- Simplified sdhci_msm_vreg_disable() and sdhci_msm_set_vdd_io_vol()
+- Use devm_ioremap_resource() instead of devm_ioremap()
+- Converted IS_ERR_OR_NULL to IS_ERR
+- Disable regulators in sdhci_msm_remove()
+- Check for DT node at the beginning in sdhci_msm_probe()
+- Removed more redundant code
+- Changes in some error messages
+- Minor fixes
 
-Right. Maybe the best solution for that code path however is to
-make it the same as the of_platform code where we today set the
-mask pointer to &dev->coherent_mask.
+Changes from v3:
+- Allocate memory for all required structs at once
+- Added termination entry in sdhci_msm_dt_match[]
+- Fixed a missing sdhci_pltfm_free() in probe()
+- Removed redundant of_match_ptr
+- Removed the unneeded function sdhci_msm_vreg_reset()
 
-> > Again I'm hoping for Russell to provide the correct answer: Should we
-> > set the correct mask initially for the device here, or should we
-> > rely on dma_set_mask() to refuse a mask that is larger than we
-> > can handle?
-> > 
-> > For PCI devices, we normally assume that we can always set a 32-bit
-> > DMA mask, but drivers can set a smaller mask if the device can
-> > support a smaller space than the bus can. In this case, the mask
-> > is already the intersection of what the device and all the parent
-> > buses support, and I'm not sure how the API describe in
-> > Documentation/DMA-API-HOWTO.txt would deal with this.
-> 
-> As mentioned by Santosh in cover letter,
-> PCI (and other buses) is problem here as they may have different "dma-ranges"
-> prop format (PCI #address-cells = <3>) and need to handled in different way. 
-> 
-> May be, this code can be limited to platform_bus_type devices only somehow.
+Changes from v2:
+- Added DT bindings for clocks
+- Moved voltage regulators data to platform data
+- Removed unneeded includes
+- Removed obsolete and wrapper functions
+- Removed error checking where unnecessary
+- Removed redundant _clk suffix from clock names
+- Just return instead of goto where possible
+- Minor fixes
 
-Doesn't that already get handled correctly by of_bus_pci_translate()?
-We have bus specific translation functions that should work for
-both 'ranges' and 'dma-ranges'.
+Georgi Djakov (3):
+  mmc: sdhci-msm: Qualcomm SDHCI binding documentation
+  mmc: sdhci-msm: Initial support for Qualcomm chipsets
+  mmc: sdhci-msm: Add platform_execute_tunning implementation
 
-	Arnd
+ .../devicetree/bindings/mmc/sdhci-msm.txt          |   80 ++
+ drivers/mmc/host/Kconfig                           |   13 +
+ drivers/mmc/host/Makefile                          |    1 +
+ drivers/mmc/host/sdhci-msm.c                       |  940 ++++++++++++++++++++
+ 4 files changed, 1034 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+ create mode 100644 drivers/mmc/host/sdhci-msm.c
+
+-- 
+1.7.9.5
