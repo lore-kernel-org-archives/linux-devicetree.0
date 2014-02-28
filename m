@@ -1,152 +1,238 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v2 1/4] pci: OF: Fix the conversion of IO ranges into IO
- resources.
-Date: Fri, 28 Feb 2014 12:50:45 +0000
-Message-ID: <20140228125045.GV1692@e106497-lin.cambridge.arm.com>
-References: <1393506402-11474-1-git-send-email-Liviu.Dudau@arm.com>
- <5379319.g8IPYmY2Zo@wuerfel>
- <20140227200729.GB7773@obsidianresearch.com>
- <11097076.0C13zaKdYD@wuerfel>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v4] can: xilinx CAN controller support.
+Date: Fri, 28 Feb 2014 13:56:56 +0100
+Message-ID: <53108798.7090902@pengutronix.de>
+References: <74d607e9-ac9c-4a9b-ac49-e84ae49d20c2@TX2EHSMHS031.ehs.local> <530D0A9C.5090402@pengutronix.de> <cd00fb2d-c8a7-423d-8aa0-2b413e9ac101@CO9EHSMHS017.ehs.local> <530DEA7C.6010609@pengutronix.de> <678ca296-8687-4e7c-9014-ae69d886a068@CO9EHSMHS014.ehs.local> <530E0B92.5010903@pengutronix.de> <2e3bfd38-37d5-4102-af79-821196c6c732@CH1EHSMHS006.ehs.local> <53104995.4010305@pengutronix.de> <48409965-e214-43b7-8b6a-08bf075707e1@CO9EHSMHS001.ehs.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <11097076.0C13zaKdYD@wuerfel>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, linaro-kernel <linaro-kernel@lists.linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="7D2huhx9aobJdMq0U5vqmEUqrNprpCSNA"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <48409965-e214-43b7-8b6a-08bf075707e1@CO9EHSMHS001.ehs.local>
+Sender: linux-can-owner@vger.kernel.org
+To: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>, "wg@grandegger.com" <wg@grandegger.com>, Michal Simek <michals@xilinx.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2014 at 08:22:12PM +0000, Arnd Bergmann wrote:
-> On Thursday 27 February 2014 13:07:29 Jason Gunthorpe wrote:
-> > On Thu, Feb 27, 2014 at 08:48:08PM +0100, Arnd Bergmann wrote:
-> > > > It also looks correct for architectures that use the CPU MMIO a=
-ddress
-> > > > as the IO address directly (where IO_SPACE_LIMIT would be 4G)
-> > >=20
-> > > Are you aware of any that still do? I thought we had stopped doin=
-g
-> > > that.
-> >=20
-> > I thought ia64 used to, but it has been a long time since I've touc=
-hed
-> > one...
->=20
-> They have a different way of doing it now, no idea how it looked in
-> the past:
->=20
-> #define IO_SPACE_LIMIT          0xffffffffffffffffUL
->=20
-> #define MAX_IO_SPACES_BITS              8
-> #define MAX_IO_SPACES                   (1UL << MAX_IO_SPACES_BITS)
-> #define IO_SPACE_BITS                   24
-> #define IO_SPACE_SIZE                   (1UL << IO_SPACE_BITS)
->=20
-> #define IO_SPACE_NR(port)               ((port) >> IO_SPACE_BITS)
-> #define IO_SPACE_BASE(space)            ((space) << IO_SPACE_BITS)
-> #define IO_SPACE_PORT(port)             ((port) & (IO_SPACE_SIZE - 1)=
-)
->=20
-> #define IO_SPACE_SPARSE_ENCODING(p)     ((((p) >> 2) << 12) | ((p) & =
-0xfff))
->=20
-> So their port number is a logical token that contains the I/O space n=
-umber
-> and a 16MB offset.
->=20
-> Apparently sparc64 uses physical memory addressing for I/O space, the
-> same way they do for memory space, and they just set IO_SPACE_LIMIT t=
-o
-> 0xffffffffffffffffUL.
->=20
-> > > > Architectures that use the virtual IO window technique will alw=
-ays
-> > > > require a custom pci_address_to_pio implementation.
-> > >=20
-> > > Hmm, at the moment we only call it from of_address_to_resource(),
-> > > which in turn does not get called on PCI devices, and does not
-> > > call pci_address_to_pio for 'simple' platform devices. The only
-> > > case I can think of where it actually matters is when we have
-> > > ISA devices in DT that use an I/O port address in the reg propert=
-y,
-> > > and that case hopefully won't happen on ARM32 or ARM64.
-> >=20
-> > Sure, I ment, after Liviu's patch it will become required since he =
-is
-> > cleverly using it to figure out what the io mapping the bridge driv=
-er
-> > setup before calling the helper.
->=20
-> Ok. I was arguing more that we should add this dependency.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--7D2huhx9aobJdMq0U5vqmEUqrNprpCSNA
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-I've thought about this last night and I think I was trying to be too c=
-lever
-for my own good. As Jason points out, arm64 needs its own version of
-pci_address_to_pio(). I have an idea on how to borrow the powerpc/micro=
-blaze
-one and make it useful without the need for pci_controller *hose. It wo=
-uld
-be generic enough for other platforms that use virtual I/O windows can =
-use,
-but I'll start with it being defined for arm64 for discussions in this =
-list.
+On 02/28/2014 01:44 PM, Appana Durga Kedareswara Rao wrote:
+> Hi Marc,
+>=20
+>=20
+>> -----Original Message-----
+>> From: Marc Kleine-Budde [mailto:mkl@pengutronix.de]
+>> Sent: Friday, February 28, 2014 2:02 PM
+>> To: Appana Durga Kedareswara Rao; wg@grandegger.com; Michal Simek;
+>> grant.likely@linaro.org; robh+dt@kernel.org; linux-can@vger.kernel.org=
 
-I'll post v3 shortly.
+>> Cc: netdev@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linu=
+x-
+>> kernel@vger.kernel.org; devicetree@vger.kernel.org
+>> Subject: Re: [PATCH v4] can: xilinx CAN controller support.
+>>
+>> On 02/28/2014 06:50 AM, Appana Durga Kedareswara Rao wrote:
+>>> Hi Marc,
+>>>
+>>>
+>>>> -----Original Message-----
+>>>> From: Marc Kleine-Budde [mailto:mkl@pengutronix.de]
+>>>> Sent: Wednesday, February 26, 2014 9:13 PM
+>>>> To: Appana Durga Kedareswara Rao; wg@grandegger.com; Michal Simek;
+>>>> grant.likely@linaro.org; robh+dt@kernel.org;
+>>>> linux-can@vger.kernel.org
+>>>> Cc: netdev@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+>>>> linux- kernel@vger.kernel.org; devicetree@vger.kernel.org
+>>>> Subject: Re: [PATCH v4] can: xilinx CAN controller support.
+>>>>
+>>>> On 02/26/2014 03:46 PM, Appana Durga Kedareswara Rao wrote:
+>>>>> Hi Marc,
+>>>>>
+>>>>>
+>>>>>> -----Original Message-----
+>>>>>> From: Marc Kleine-Budde [mailto:mkl@pengutronix.de]
+>>>>>> Sent: Wednesday, February 26, 2014 6:52 PM
+>>>>>> To: Appana Durga Kedareswara Rao; wg@grandegger.com; Michal
+>> Simek;
+>>>>>> grant.likely@linaro.org; robh+dt@kernel.org;
+>>>>>> linux-can@vger.kernel.org
+>>>>>> Cc: netdev@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+>>>>>> linux- kernel@vger.kernel.org; devicetree@vger.kernel.org
+>>>>>> Subject: Re: [PATCH v4] can: xilinx CAN controller support.
+>>>>>>
+>>>>>> On 02/26/2014 02:07 PM, Appana Durga Kedareswara Rao wrote:
+>>>>>>>> This loop looks broken. Can you explain how it works.
+>>>>>>>>
+>>>>>>>> What it shoud do is:
+>>>>>>>> We have put (priv->tx_head - priv->tx_tail) CAN frames into the
+>> FIFO.
+>>>>>>>> This means at maximum there could be this amount of CAN frames
+>>>>>>>> which have been successfully transmitted. For every cycle in thi=
+s
+>>>>>>>> while loop you
+>>>>>>>> should:
+>>>>>>>> a) check if a CAN frame has successfully been transmitted
+>>>>>>>>    (as this CAN core uses a FIFO it should be "oldest")
+>>>>>>>>    A read_reg() of some kind is missing in your loop.
+>>>>>>>> b) if needed, remove this event from the FIFO or
+>>>>>>>>    mark the interrupt as done. Whatever you hardware needs.
+>>>>>>>> c) update your statistics
+>>>>>>>> d) Use can_get_echo_skb to push this frame into the networking
+>>>>>>>> stack
+>>>>>>>> e) As a CAN frame has been transmitted successfully, wake the
+>>>> tx_queue.
+>>>>>>>>
+>>>>>>>>> +   while (priv->tx_head - priv->tx_tail > 0) {
+>>>>>>>>> +           if (isr & XCAN_IXR_TXFLL_MASK) {
+>>>>>>>>> +                   priv->write_reg(priv, XCAN_ICR_OFFSET,
+>>>>>>>>> +                                   XCAN_IXR_TXFLL_MASK);
+>>>>>>>>> +                   netif_stop_queue(ndev);
+>>>>>>>>
+>>>>>>>> Why do you stop the queue here? A CAN frame has successfully
+>> been
+>>>>>>>> transmitted, there should be room in the FIFO.
+>>>>>>>>
+>>>>>>>>> +                   break;
+>>>>>>>>> +           }
+>>>>>>>>> +           can_get_echo_skb(ndev, priv->tx_tail %
+>>>>>>>>> +                                   priv->xcan_echo_skb_max_tx)=
+;
+>>>>>>>>> +           priv->tx_tail++;
+>>>>>>>>> +   }
+>>>>>>>>> +
+>>>>>>>
+>>>>>>> The below are the bit fields available for the Transmit FIFO.
+>>>>>>> 1) In the ISR(interrupt status register)  Tx Ok interrupt and Tx
+>>>>>>> fifo full
+>>>>>> interrupt.
+>>>>>>> 2) in the SR(Status Register) Tx fifo full condition.
+>>>>>>>
+>>>>>>>
+>>>>>>> I am modifying the entire tx interrupt logic to like below.
+>>>>>>>
+>>>>>>> static void xcan_tx_interrupt(struct net_device *ndev, u32 isr) {=
 
-Best regards,
-Liviu
+>>>>>>>         struct xcan_priv *priv =3D netdev_priv(ndev);
+>>>>>>>         struct net_device_stats *stats =3D &ndev->stats;
+>>>>>>>
+>>>>>>>             while (priv->tx_head - priv->tx_tail > 0) {
+>>>>>>>                 if (isr & XCAN_IXR_TXFLL_MASK) {
+>>>>>>>                         priv->write_reg(priv, XCAN_ICR_OFFSET,
+>>>>>>>                                         XCAN_IXR_TXFLL_MASK);
+>>>>>>>                           break;
+>>>>>>>                 }
+>>>>>>>                 can_get_echo_skb(ndev, priv->tx_tail %
+>>>>>>>                                         priv->xcan_echo_skb_max_t=
+x);
+>>>>>>>                 priv->tx_tail++;
+>>>>>>>          stats->tx_packets++;
+>>>>>>>         netif_wake_queue(ndev);
+>>>>>>>               can_led_event(ndev, CAN_LED_EVENT_TX);
+>>>>>>>
+>>>>>>>         }
+>>>>>>
+>>>>>> You just need to wake the queue once.
+>>>>>
+>>>>> Ok
+>>>>>>
+>>>>>>> }
+>>>>>>>
+>>>>>>>
+>>>>>>> Are you Ok with the above logic?
+>>>>>>
+>>>>>> No, how can you tell how many frames have been transmitted?
+>>>>>
+>>>>> There is no register to read how many can frames are transmitted.
+>>>>> The only way to know Is by reading this parameter
+>>>>> (stats->tx_packets++;) through ip command
+>>>>
+>>>> stats->tx_packets is calculated in the above loop and the loop is
+>>>> broken. Let me illustrate the problem:
+>>>>
+>>>> - xmit is called 10 times in a row
+>>>> - this means you have 10 CAN frames in the TX FIFO
+>>>> - a single CAN frame gets transmitted
+>>>> - you get an interrupt
+>>>> - you enter the above routine and loop 10 times and echo the CAN fra=
+me
+>>>>   back into the stack
+>>>>
+>>>> Now every application sees 10 transmitted packages, but there is onl=
+y
+>>>> one transmitted. Every time you loop you have to check if the CAN
+>>>> frame has already been transmitted or not. Is that possible with the=
 
+>> hardware?
+>>>
+>>>         The only way to know whether the TX packet is transmitted
+>> successfully or not is by using the Tx Ok interrupt from the ISR.
+>>> This interrupt will come for every Tx Packet.
+>>> So I am thinking of there is no loop required in the TX interrupt rou=
+tine. As
+>> it is called for each and every packet.
+>>
+>> What happens if the interrupt handler is delayed? For example in a RT
+>> enabled system the interrupt handler runs as a thread. There might be =
+other
+>> threads with higher priority. The hardware will probably send all CAN
+>> frames in the FIFO, so you want to reduce the overhead and loop in the=
+ tx
+>> complete handler.
+>>
+> Yes I agree with your comment.
+> It will be good to have a loop in the Tx interrupt handler
+> I am modifying the Tx interrupt handler like below.
 >=20
-> > > > I think the legacy reasons for having all those layers of trans=
-lation
-> > > > are probably not applicable to ARM64, and it is much simpler wi=
-thout
-> > > > the extra translation step....
-> > > >=20
-> > > > Arnd, what do you think?
-> > >=20
-> > > Either I don't like it or I misunderstand you ;-)
-> > >=20
-> > > Most PCI drivers normally don't call ioport_map or pci_iomap, so
-> > > we can't just do it there. If you are thinking of calling ioport_=
-map
-> >=20
-> > Okay, that was one of the 'legacy reasons'. Certainly lots of drive=
-rs
-> > do call pci_iomap, but if you think legacy drivers that don't are
-> > important to ARM64 then it makes sense to use the virtual IO window=
-=2E
+> static void xcan_tx_interrupt(struct net_device *ndev, u32 isr)
+> {
+>         struct xcan_priv *priv =3D netdev_priv(ndev);
+>         struct net_device_stats *stats =3D &ndev->stats;
 >=20
-> I think all uses of I/O space are legacy, but I don't think that
-> drivers doing inb/outb are more obsolete than those doing pci_iomap.
-> It's got more to do with the subsystem requirements, e.g. libata
-> requires the use of pci_iomap.
+>         while (priv->tx_head - priv->tx_tail > 0) {
+>                 if (!(isr & XCAN_IXR_TXOK_MASK)) {
+>                         break;
+>                 }
+>                 can_get_echo_skb(ndev, priv->tx_tail %
+>                                         priv->xcan_echo_skb_max_tx);
+>                 priv->tx_tail++;
+>                 stats->tx_packets++;
+>                 can_led_event(ndev, CAN_LED_EVENT_TX);
+>                 isr =3D priv->read_reg(priv, XCAN_ISR_OFFSET);
+>         }
+>         netif_wake_queue(ndev);
+> }
 >=20
-> > > for every PCI device that has an I/O BAR and storing the virtual
-> > > address in the pci_dev resource, I don't see what that gains us
-> >=20
-> > Mainly we get to drop the fancy dynamic allocation stuff for the fi=
-xed
-> > virtual window, and it gives the option to have a 1:1 relationship
-> > between CPU addresses and PCI BARs.
->=20
-> I don't think the allocation is much of a problem, as long as we
-> can localize it in one function that is shared by everyone.
-> The problems I saw were all about explaining to people how it
-> works, but they really shouldn't have to know.
->=20
->=20
-> 	Arnd
->=20
->=20
+> Are you Ok with this?
+
+Do you have to ACK the interrupt, so that TXOK_MASK is finally cleared?
+The use case is here: m CAN frames are put into the FIFO, n out of m CAN
+frames are transferred, where n < m. In this case you have to leave the
+loop after n, but "priv->tx_head - priv->tx_tail =3D=3D m".
+
+Marc
 
 --=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--7D2huhx9aobJdMq0U5vqmEUqrNprpCSNA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+Comment: Using GnuPG with Icedove - http://www.enigmail.net/
+
+iEYEARECAAYFAlMQh5gACgkQjTAFq1RaXHOtyACdEESsQId7xYGmcwoGaD8uMthI
+z24AmwcTTVKE8YAmEqDNKIvkkGqCeNi2
+=k2pi
+-----END PGP SIGNATURE-----
+
+--7D2huhx9aobJdMq0U5vqmEUqrNprpCSNA--
