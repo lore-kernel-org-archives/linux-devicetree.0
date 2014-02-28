@@ -1,45 +1,35 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH 11/12] ARM: OMAP2: PRM: add support for OMAP2 specific
- clock providers
-Date: Fri, 28 Feb 2014 13:17:01 -0600
-Message-ID: <5310E0AD.6080104@ti.com>
-References: <1393579384-23440-1-git-send-email-t-kristo@ti.com> <1393579384-23440-12-git-send-email-t-kristo@ti.com>
+From: Paul Walmsley <paul@pwsan.com>
+Subject: Re: [PATCHv2 08/16] ARM: OMAP3: remove deprecated
+ CONFIG_OMAP_IOMMU_IVA2
+Date: Fri, 28 Feb 2014 19:58:47 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1402281958170.453@utopia.booyaka.com>
+References: <1392315347-32967-1-git-send-email-s-anna@ti.com> <1392315347-32967-9-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1393579384-23440-12-git-send-email-t-kristo@ti.com>
+In-Reply-To: <1392315347-32967-9-git-send-email-s-anna@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, mturquette@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Suman Anna <s-anna@ti.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Tony Lindgren <tony@atomide.com>, Florian Vaussard <florian.vaussard@epfl.ch>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/28/2014 03:23 AM, Tero Kristo wrote:
-> This patch adds support for initializing also omap2-prcm and omap2-scrm
-> through DT.
-> 
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> ---
->  arch/arm/mach-omap2/prm_common.c |    2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm/mach-omap2/prm_common.c b/arch/arm/mach-omap2/prm_common.c
-> index b4c4ab9..878ae9f 100644
-> --- a/arch/arm/mach-omap2/prm_common.c
-> +++ b/arch/arm/mach-omap2/prm_common.c
-> @@ -475,6 +475,8 @@ static struct of_device_id omap_prcm_dt_match_table[] = {
->  	{ .compatible = "ti,am3-scrm" },
->  	{ .compatible = "ti,am4-prcm" },
->  	{ .compatible = "ti,am4-scrm" },
-> +	{ .compatible = "ti,omap2-prcm" },
-> +	{ .compatible = "ti,omap2-scrm" },
->  	{ .compatible = "ti,omap3-prm" },
->  	{ .compatible = "ti,omap3-cm" },
->  	{ .compatible = "ti,omap3-scrm" },
-> 
+On Thu, 13 Feb 2014, Suman Anna wrote:
 
-probably needs Bindings documentation as well.
+> From: Florian Vaussard <florian.vaussard@epfl.ch>
+> 
+> CONFIG_OMAP_IOMMU_IVA2 was defined originally to avoid conflicting
+> usage by tidspbridge and other iommu users. The same can be achieved
+> by marking the DT node disabled, so remove this obsolete flag and
+> the corresponding hwmod data can be enabled.
+> 
+> Cc: Paul Walmsley <paul@pwsan.com>
+> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
+> [s-anna@ti.com: revise commit log]
+> Signed-off-by: Suman Anna <s-anna@ti.com>
 
--- 
-Regards,
-Nishanth Menon
+Acked-by: Paul Walmsley <paul@pwsan.com>
+
+Am assuming that someone else will be merging this as part of the entire 
+series.
+
+- Paul
