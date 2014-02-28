@@ -1,66 +1,186 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v7 08/15] ahci-imx: Port to library-ised ahci_platform
-Date: Fri, 28 Feb 2014 21:08:20 +0000
-Message-ID: <20140228210820.GZ21483@n2100.arm.linux.org.uk>
-References: <1393084424-31099-1-git-send-email-hdegoede@redhat.com> <1393084424-31099-9-git-send-email-hdegoede@redhat.com>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH v5 2/7] Documentation: of: Document graph bindings
+Date: Fri, 28 Feb 2014 22:08:56 +0100
+Message-ID: <5310FAE8.5090305@gmail.com>
+References: <1393522540-22887-1-git-send-email-p.zabel@pengutronix.de> <1393522540-22887-3-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1393084424-31099-9-git-send-email-hdegoede@redhat.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Tejun Heo <tj@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org, Oliver Schinagl <oliver@schinagl.nl>, Richard Zhu <Hong-Xing.Zhu@freescale.com>, linux-sunxi@googlegroups.com, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1393522540-22887-3-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Grant Likely <grant.likely@linaro.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 22, 2014 at 04:53:37PM +0100, Hans de Goede wrote:
-> +		/*
-> +		 * set PHY Paremeters, two steps to configure the GPR13,
-> +		 * one write for rest of parameters, mask of first write
-> +		 * is 0x07ffffff, and the other one write for setting
-> +		 * the mpll_clk_en.
-> +		 */
-> +		regmap_update_bits(imxpriv->gpr, IOMUXC_GPR13,
-> +				   IMX6Q_GPR13_SATA_RX_EQ_VAL_MASK |
-> +				   IMX6Q_GPR13_SATA_RX_LOS_LVL_MASK |
-> +				   IMX6Q_GPR13_SATA_RX_DPLL_MODE_MASK |
-> +				   IMX6Q_GPR13_SATA_SPD_MODE_MASK |
-> +				   IMX6Q_GPR13_SATA_MPLL_SS_EN |
-> +				   IMX6Q_GPR13_SATA_TX_ATTEN_MASK |
-> +				   IMX6Q_GPR13_SATA_TX_BOOST_MASK |
-> +				   IMX6Q_GPR13_SATA_TX_LVL_MASK |
-> +				   IMX6Q_GPR13_SATA_MPLL_CLK_EN |
-> +				   IMX6Q_GPR13_SATA_TX_EDGE_RATE,
-> +				   IMX6Q_GPR13_SATA_RX_EQ_VAL_3_0_DB |
-> +				   IMX6Q_GPR13_SATA_RX_LOS_LVL_SATA2M |
-> +				   IMX6Q_GPR13_SATA_RX_DPLL_MODE_2P_4F |
-> +				   IMX6Q_GPR13_SATA_SPD_MODE_3P0G |
-> +				   IMX6Q_GPR13_SATA_MPLL_SS_EN |
-> +				   IMX6Q_GPR13_SATA_TX_ATTEN_9_16 |
-> +				   IMX6Q_GPR13_SATA_TX_BOOST_3_33_DB |
-> +				   IMX6Q_GPR13_SATA_TX_LVL_1_025_V);
+Hi Philipp,
 
-While I see this, I'll stick an oar in.
+Just couple minor comments...
 
-It is totally wrong for this to be hard-coded into the driver - many
-of these should be specified via DT, since they're board specific.
-These are already different from the reset default in this register.
+On 02/27/2014 06:35 PM, Philipp Zabel wrote:
+> The device tree graph bindings as used by V4L2 and documented in
+> Documentation/device-tree/bindings/media/video-interfaces.txt contain
+> generic parts that are not media specific but could be useful for any
+> subsystem with data flow between multiple devices. This document
+> describe the generic bindings.
 
-The side effect of this hard coding is that eSATA just doesn't work
-at all on some boards - the board I have requires TX_LVL_1_104V and
-TX_BOOST_0_00_DB.
+s/describe/describes/
 
-Hence, I'd ask that while you move stuff like this around, you bear
-in mind that we do need to add additional properties.
+> Signed-off-by: Philipp Zabel<p.zabel@pengutronix.de>
+> ---
+> Changes since v4:
+>   - Differentiate from graphs made by simple phandle links
+>   - Do not mention data flow except in video-interfaces example
+>   -
+> ---
+>   Documentation/devicetree/bindings/graph.txt | 129 ++++++++++++++++++++++++++++
+>   1 file changed, 129 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/graph.txt
+>
+> diff --git a/Documentation/devicetree/bindings/graph.txt b/Documentation/devicetree/bindings/graph.txt
+> new file mode 100644
+> index 0000000..554865b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/graph.txt
+> @@ -0,0 +1,129 @@
+> +Common bindings for device graphs
+> +
+> +General concept
+> +---------------
+> +
+> +The hierarchical organisation of the device tree is well suited to describe
+> +control flow to devices, but there can be more complex connections between
+> +devices that work together to form a logical compound device, following an
+> +arbitrarily complex graph.
+> +There already is a simple directed graph between devices tree nodes using
+> +phandle properties pointing to other nodes to describe connections that
+> +can not be inferred from device tree parent-child relationships. The device
+> +tree graph bindings described herein abstract more complex devices that can
+> +have multiple specifiable ports, each of which can be linked to one or more
+> +ports of other devices.
+> +
+> +These common bindings do not contain any information about the direction of
 
-I'm in two minds about this - whether to make the existing binding
-with its compatible string always use these settings, and invent a
-new compatible string for one which is fully configurable (as it
-_should_ have been from the very start) or whether to make this
-the default if the various properties aren't specified.
+s/of/or/ ?
 
-Either way, this driver is electrically unusable as it stands here.
+> +type of the connections, they just map their existence. Specific properties
+> +may be described by specialized bindings depending on the type of connection.
+> +
+> +To see how this binding applies to video pipelines, for example, see
+> +Documentation/device-tree/bindings/media/video-interfaces.txt.
+> +Here the ports describe data interfaces, and the links between them are
+> +the connecting data buses. A single port with multiple connections can
+> +correspond to multiple devices being connected to the same physical bus.
+> +
+> +Organisation of ports and endpoints
+> +-----------------------------------
+> +
+> +Ports are described by child 'port' nodes contained in the device node.
+> +Each port node contains an 'endpoint' subnode for each remote device port
+> +connected to this port. If a single port is connected to more than one
+> +remote device, an 'endpoint' child node must be provided for each link.
+> +If more than one port is present in a device node or there is more than one
+> +endpoint at a port, or a port node needs to be associated with a selected
+> +hardware interface, a common scheme using '#address-cells', '#size-cells'
+> +and 'reg' properties is used number the nodes.
+> +
+> +device {
+> +        ...
+> +        #address-cells =<1>;
+> +        #size-cells =<0>;
+> +
+> +        port@0 {
+> +	        #address-cells =<1>;
+> +	        #size-cells =<0>;
+> +		reg =<0>;
+> +
+> +                endpoint@0 {
+> +			reg =<0>;
+> +			...
+> +		};
+> +                endpoint@1 {
+> +			reg =<1>;
+> +			...
+> +		};
+> +        };
+> +
+> +        port@1 {
+> +		reg =<1>;
+> +
+> +		endpoint { ... };
+> +	};
+> +};
+> +
+> +All 'port' nodes can be grouped under an optional 'ports' node, which
+> +allows to specify #address-cells, #size-cells properties for the 'port'
+> +nodes independently from any other child device nodes a device might
+> +have.
+> +
+> +device {
+> +        ...
+> +        ports {
+> +                #address-cells =<1>;
+> +                #size-cells =<0>;
+> +
+> +                port@0 {
+> +                        ...
+> +                        endpoint@0 { ... };
+> +                        endpoint@1 { ... };
+> +                };
+> +
+> +                port@1 { ... };
+> +        };
+> +};
+> +
+> +Links between endpoints
+> +-----------------------
+> +
+> +Each endpoint should contain a 'remote-endpoint' phandle property that points
+> +to the corresponding endpoint in the port of the remote device. In turn, the
+> +remote endpoint should contain a 'remote-endpoint' property. If it has one,
+> +it must not point to another than the local endpoint. Two endpoints with their
+> +'remote-endpoint' phandles pointing at each other form a link between the
+> +containing ports.
+> +
+> +device_1 {
+> +        port {
+> +                device_1_output: endpoint {
+> +                        remote-endpoint =<&device_2_input>;
+> +                };
+> +        };
+> +};
+> +
+> +device_1 {
 
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+s/device_1/device_2/
+But it might be better to use dashes instead of underscores
+for the node names.
+
+> +        port {
+> +                device_2_input: endpoint {
+> +                        remote-endpoint =<&device_1_output>;
+> +                };
+> +        };
+> +};
+> +
+> +
+> +Required properties
+> +-------------------
+> +
+> +If there is more than one 'port' or more than one 'endpoint' node or 'reg'
+> +property is present in port and/or endpoint nodes the following properties
+> +are required in a relevant parent node:
+> +
+> + - #address-cells : number of cells required to define port/endpoint
+> +                    identifier, should be 1.
+> + - #size-cells    : should be zero.
+> +
+> +Optional endpoint properties
+> +----------------------------
+> +
+> +- remote-endpoint: phandle to an 'endpoint' subnode of a remote device node.
+> +
+
+--
+Regards,
+Sylwester
