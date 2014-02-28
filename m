@@ -1,12 +1,12 @@
 From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH v6 10/11] arm64: add support for reserved memory defined by
+Subject: [PATCH v6 11/11] powerpc: add support for reserved memory defined by
  device tree
-Date: Fri, 28 Feb 2014 14:42:55 +0100
-Message-ID: <1393594976-16728-11-git-send-email-m.szyprowski@samsung.com>
+Date: Fri, 28 Feb 2014 14:42:56 +0100
+Message-ID: <1393594976-16728-12-git-send-email-m.szyprowski@samsung.com>
 References: <1393594976-16728-1-git-send-email-m.szyprowski@samsung.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-reply-to: <1393594976-16728-1-git-send-email-m.szyprowski@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Grant Likely <grant.likely@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Paul Mackerras <paulus@samba.org>
 List-Id: devicetree@vger.kernel.org
@@ -15,34 +15,42 @@ Enable reserved memory initialization from device tree.
 
 Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 ---
- arch/arm64/Kconfig   |    1 +
- arch/arm64/mm/init.c |    1 +
- 2 files changed, 2 insertions(+)
+ arch/powerpc/Kconfig       |    1 +
+ arch/powerpc/kernel/prom.c |    3 +++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 27bbcfc7202a..6abf15407dca 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -43,6 +43,7 @@ config ARM64
- 	select NO_BOOTMEM
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 957bf344c0f5..3b6617fed8fc 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -90,6 +90,7 @@ config PPC
+ 	select BINFMT_ELF
  	select OF
  	select OF_EARLY_FLATTREE
 +	select OF_RESERVED_MEM
- 	select PERF_USE_VMALLOC
- 	select POWER_RESET
- 	select POWER_SUPPLY
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index d0b4c2efda90..3fb8d50dfdaa 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -160,6 +160,7 @@ void __init arm64_memblock_init(void)
- 		memblock_reserve(base, size);
+ 	select HAVE_FTRACE_MCOUNT_RECORD
+ 	select HAVE_DYNAMIC_FTRACE
+ 	select HAVE_FUNCTION_TRACER
+diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
+index f58c0d3aaeb4..591986215801 100644
+--- a/arch/powerpc/kernel/prom.c
++++ b/arch/powerpc/kernel/prom.c
+@@ -33,6 +33,7 @@
+ #include <linux/irq.h>
+ #include <linux/memblock.h>
+ #include <linux/of.h>
++#include <linux/of_fdt.h>
+ 
+ #include <asm/prom.h>
+ #include <asm/rtas.h>
+@@ -588,6 +589,8 @@ static void __init early_reserve_mem_dt(void)
+ 			memblock_reserve(base, size);
+ 		}
  	}
- 
++
 +	early_init_fdt_scan_reserved_mem();
- 	dma_contiguous_reserve(0);
+ }
  
- 	memblock_allow_resize();
+ static void __init early_reserve_mem(void)
 -- 
 1.7.9.5
-
