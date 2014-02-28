@@ -1,48 +1,45 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: devicetree repository separation/migration
-Date: Fri, 28 Feb 2014 09:00:25 +0100
-Message-ID: <20140228080025.GK24917@pengutronix.de>
-References: <20140217180544.GU7862@titan.lakedaemon.net>
- <5306A6C0.9000206@gmail.com>
- <20140221141136.GI17250@pengutronix.de>
- <CAOesGMjY2aDLPYLncxHs9gqmWCFy+e4sZK_ET-17qzEU-JwvdQ@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 3/6] spi: sh-msiof: Add support for R-Car H2 and M2
+Date: Fri, 28 Feb 2014 09:01:45 +0100
+Message-ID: <CAMuHMdVXFnzECcGoywZS=p=ZkkYEYJbaPQoseQSGWYBeT0Y9Tg@mail.gmail.com>
+References: <1393323673-2751-1-git-send-email-geert@linux-m68k.org>
+	<1462634.UcxrmdxVtK@avalon>
+	<CAMuHMdU6R_Wubsx2KCAXVBynzqquJekDNDZ-Sq1sKYEOM1RtTw@mail.gmail.com>
+	<10401513.fZZM0mLxSj@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOesGMjY2aDLPYLncxHs9gqmWCFy+e4sZK_ET-17qzEU-JwvdQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <10401513.fZZM0mLxSj@avalon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Bastian Hecht <hechtb@gmail.com>, Mark Brown <broonie@kernel.org>, Takashi Yoshii <takasi-y@ops.dti.ne.jp>, Magnus Damm <magnus.damm@gmail.com>, linux-spi <linux-spi@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 21, 2014 at 10:47:09AM -0800, Olof Johansson wrote:
-> On Fri, Feb 21, 2014 at 6:11 AM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > On Thu, Feb 20, 2014 at 05:07:12PM -0800, Frank Rowand wrote:
-> 
-> >> Why are the changes not submitted upstream?  (Or if they were submitted, why
-> >> were they not accepted?)
-> >
-> > The descriptions where to find the environment are obviously barebox
-> > specific and not acceptable upstream.
-> 
-> Why not? Wouldn't it be useful if you could find where the environment
-> is from the running Linux image so that you can change variables
-> without rebooting into Barebox first?
+Hi Laurent,
 
-Indeed that would be very useful. Generally that would require some
-generic binding for referring to partitions on mtd devices, partitions
-on block devices and EEPROMs. If you think such a binding would have a
-chance upstream I could try and come up with a binding.
+On Fri, Feb 28, 2014 at 12:02 AM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>> And if we remove "renesas,sh-msiof", we should probably remove
+>> "renesas,sh-mobile-msiof", too, as there are no current users, and it also
+>> assumes the same MSIOF implementation?
+>
+> I'm not too familiar with the MSIOF hardware, can "renesas,sh-mobile-msiof" be
+> used as a fallback for the currently support ARM SoCs ?
 
-Sascha
+r8a73a4/APE6: No
+r8a7740/A1: Maybe (not 100% clear to me from the datasheet)
+r8a7790/R-Car H2: No
+r8a7791/R-Car M2: No
+sh7372/AP4: No information
+sh73a0/AG5: No information
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
