@@ -1,88 +1,68 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] dma: Add Keystone Packet DMA Engine driver
-Date: Sat, 01 Mar 2014 00:14:01 +0100
-Message-ID: <21183060.JRdahJE8pQ@wuerfel>
-References: <1393628200-12317-1-git-send-email-santosh.shilimkar@ti.com>
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 0/3] soc: Introduce drivers/soc and add Keystone QMSS driver
+Date: Fri, 28 Feb 2014 18:18:37 -0500
+Message-ID: <1393629520-12713-1-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1393628200-12317-1-git-send-email-santosh.shilimkar@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, vinod.koul@intel.com, Sandeep Nair <sandeep_n@ti.com>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sandeep Nair <sandeep_n-l0cyMroinI0@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 28 February 2014 17:56:40 Santosh Shilimkar wrote:
-> The Packet DMA driver sets up the dma channels and flows for the
-> QMSS(Queue Manager SubSystem) who triggers the actual data movements
-> across clients using destination queues. Every client modules like
-> NETCP(Network Coprocessor), SRIO(Serial Rapid IO) and CRYPTO
-> Engines has its own instance of packet dma hardware. QMSS has also
-> an internal packet DMA module which is used as an infrastructure
-> DMA with zero copy.
-> 
-> Patch adds DMAEngine driver for Keystone Packet DMA hardware.
-> The specifics on the device tree bindings for Packet DMA can be
-> found in:
->         Documentation/devicetree/bindings/dma/keystone-pktdma.txt
-> 
-> The driver implements the configuration functions using standard DMAEngine
-> apis. The data movement is managed by QMSS device driver.
+Based on earlier thread "https://lkml.org/lkml/2013/10/7/662" and
+further discussion at Kernel Summit'2013, series creates 'driver/soc'
+for drivers which are very SOC specific.
 
-The description of this sounds a bit like the x-gene queue manager/tag
-manager, rather than a traditional DMA engine. For that driver, we
-decided to use the mailbox subsystem instead of the DMA subsystem.
+Then we add the Keystone QMSS (Queue Manager SubSystem) driver.
+The QMSS found on Keystone SOCs is one of the main hardware sub
+system which forms the backbone of the Keystone Multi-core Navigator.
+QMSS consist of queue managers, packed-data structure processors(PDSP),
+linking RAM, descriptor pools and infrastructure DMA.
 
-Can you explain what kind of data is actually getting transferred
-in by your hardware here? You say the DMA is performed by the QMSS,
-so do you use the pktdma driver to drive the data transfers of the
-QMSS or do you just use it for flow control by passing short (a few
-bytes) messages and also have to program the pktdma?
+Sandeep Nair (2):
+  soc: keystone: add QMSS driver
+  firmware: add Keystone QMSS PDSP accumulator firmware blob
 
-> +
-> +bool dma_keystone_filter_fn(struct dma_chan *chan, void *param)
-> +{
-> +       if (chan->device->dev->driver == &keystone_dma_driver.driver) {
-> +               struct keystone_dma_chan *kdma_chan = from_achan(chan);
-> +               unsigned chan_id = *(u32 *)param & KEYSTONE_DMA_CHAN_ID_MASK;
-> +               unsigned chan_type = *(u32 *)param >> KEYSTONE_DMA_TYPE_SHIFT;
-> +
-> +               if (chan_type == KEYSTONE_DMA_TX_CHAN_TYPE &&
-> +                   kdma_chan->direction == DMA_MEM_TO_DEV)
-> +                       return chan_id  == kdma_chan->channel;
-> +
-> +               if (chan_type == KEYSTONE_DMA_RX_FLOW_TYPE &&
-> +                   kdma_chan->direction == DMA_DEV_TO_MEM)
-> +                       return chan_id  == kdma_chan->flow;
-> +       }
-> +       return false;
-> +}
-> +EXPORT_SYMBOL_GPL(dma_keystone_filter_fn);
+Santosh Shilimkar (1):
+  soc: Introduce drivers/soc place-holder for SOC specific drivers
 
-The filter function should be removed here and replaced with a simpler
-custom xlate function calling dma_get_slave_chan() on the matching
-channel.
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Sandeep Nair <sandeep_n-l0cyMroinI0@public.gmane.org>
+Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
 
-> diff --git a/include/linux/keystone-pktdma.h b/include/linux/keystone-pktdma.h
-> new file mode 100644
-> index 0000000..e6a66c8
-> --- /dev/null
-> +++ b/include/linux/keystone-pktdma.h
-> @@ -0,0 +1,168 @@
+ .../devicetree/bindings/soc/keystone-qmss.txt      |  209 +++
+ drivers/Kconfig                                    |    4 +
+ drivers/Makefile                                   |    7 +
+ drivers/soc/Kconfig                                |    5 +
+ drivers/soc/Makefile                               |    5 +
+ drivers/soc/keystone/Kconfig                       |   15 +
+ drivers/soc/keystone/Makefile                      |    5 +
+ drivers/soc/keystone/qmss_acc.c                    |  591 ++++++++
+ drivers/soc/keystone/qmss_queue.c                  | 1533 ++++++++++++++++++++
+ drivers/soc/keystone/qmss_queue.h                  |  236 +++
+ firmware/Makefile                                  |    1 +
+ .../keystone/qmss_pdsp_acc48_k2_le_1_0_0_8.fw.ihex |  110 ++
+ include/linux/soc/keystone_qmss.h                  |  390 +++++
+ 13 files changed, 3111 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/keystone-qmss.txt
+ create mode 100644 drivers/soc/Kconfig
+ create mode 100644 drivers/soc/Makefile
+ create mode 100644 drivers/soc/keystone/Kconfig
+ create mode 100644 drivers/soc/keystone/Makefile
+ create mode 100644 drivers/soc/keystone/qmss_acc.c
+ create mode 100644 drivers/soc/keystone/qmss_queue.c
+ create mode 100644 drivers/soc/keystone/qmss_queue.h
+ create mode 100644 firmware/keystone/qmss_pdsp_acc48_k2_le_1_0_0_8.fw.ihex
+ create mode 100644 include/linux/soc/keystone_qmss.h
 
-A DMA engine driver should not have a public API. Please move all the
-contents of the two header files into the driver itself to ensure none
-of this is visible to slave drivers. If it turns out that you use
-declarations from this header in slave drivers at the moment, please
-explain what they are so we can discuss alternative solutions.
+-- 
+1.7.9.5
 
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
