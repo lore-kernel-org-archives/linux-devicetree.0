@@ -1,98 +1,53 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 4/4] pci: Add support for creating a generic host_bridge from device tree
-Date: Fri, 28 Feb 2014 09:46:39 +0100
-Message-ID: <41426943.fCMrEO9t9X@wuerfel>
-References: <1393506402-11474-1-git-send-email-Liviu.Dudau@arm.com> <18746655.qWHLpMg2Yy@wuerfel> <1393543924.14012.56.camel@pasglop>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] of: add vendor prefix for SMSC
+Date: Fri, 28 Feb 2014 09:08:14 +0000
+Message-ID: <20140228090814.GA29264@e106331-lin.cambridge.arm.com>
+References: <1393531494-25370-1-git-send-email-florian.vaussard@epfl.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1393543924.14012.56.camel@pasglop>
-Sender: linux-pci-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel@lists.linaro.org, linux-pci <linux-pci@vger.kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1393531494-25370-1-git-send-email-florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 28 February 2014 10:32:04 Benjamin Herrenschmidt wrote:
-> On Thu, 2014-02-27 at 14:38 +0100, Arnd Bergmann wrote:
-> > On Thursday 27 February 2014 13:06:42 Liviu Dudau wrote:
-> > > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> > 
-> > Please add Benjamin Herrenschmidt to Cc here, I think it would be helpful
-> > to get his input so we can make this work on powerpc as well.
+On Thu, Feb 27, 2014 at 08:04:54PM +0000, Florian Vaussard wrote:
+> Add a vendor prefix for Standard Microsystems Corporation, now part of
+> Microchip.
 > 
-> Tricky... We would need hooks which would turn the whole thing into a
-> pile of spaghetti. I think we should stick to using the range helpers
-> (Andrew latest patch), which makes the powerpc code a lot smaller,
-> and leave it at that.
+> Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
 
-We can certainly do both: small helpers that let you shrink the powerpc
-code, and a generic implementation that can be shared by some of the
-other architectures that you don't use. The PCI core already uses
-a number of 'weak' functions here, and we can expand on that.
+It's worth noting that this vendor prefix has been in active use for a
+while, but was simply undocumented.
 
- > > +		res = kzalloc(sizeof(struct resource), GFP_KERNEL);
-> > > +		if (!res) {
-> > > +			err = -ENOMEM;
-> > > +			goto bridge_ranges_nomem;
-> > > +		}
-> > > +
-> > > +		of_pci_range_to_resource(&range, dev, res);
-> > > +
-> > > +		if (resource_type(res) == IORESOURCE_IO)
-> > > +			*io_base = range.cpu_addr;
+Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+
+Cheers,
+Mark.
+
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> You don't care about the size of the IO space ?
-
-We probably should. The ARM code currently assumes that each I/O
-space is 64KB, but for a generic implementation we probably want
-to handle both smaller and larger windows. I suggested not supporting
-more than 1MB though, which is the maximum that I can see a reason
-for, i.e. the pci-mvebu fake host bridge that has to combine
-multiple per-port HW I/O spaces into one logical space.
-
-> > > +		pci_add_resource_offset(resources, res,
-> > > +				res->start - range.pci_addr);
-> > > +	}
-> > 
-> > This is not the correct resource for I/O space at all. Please talk
-> > to Will, I've been over this with him in detail and he probably
-> > understands it now. I assume you are both working in the same
-> > building.
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 40ce2df..7187c71 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -80,6 +80,7 @@ sil	Silicon Image
+>  silabs	Silicon Laboratories
+>  simtek
+>  sirf	SiRF Technology, Inc.
+> +smsc	Standard Microsystems Corporation
+>  snps 	Synopsys, Inc.
+>  spansion	Spansion Inc.
+>  st	STMicroelectronics
+> -- 
+> 1.8.5.3
 > 
-> Yes, the IO offsets work differently on powerpc as well
-
-As I noticed later, the first patch in the series actually changes
-the range_to_resource parser to return the logical start here, which
-would make the offset correct even on powerpc, but unfortunately
-I think that cannot work.
-
-> > > +struct pci_host_bridge *
-> > > +of_create_pci_host_bridge(struct device *parent, struct pci_ops *ops, void *host_data)
-> > > +{
-> > > +	int err, domain, busno;
-> > > +	struct resource bus_range;
-> > > +	struct pci_bus *root_bus;
-> > > +	struct pci_host_bridge *bridge;
-> > > +	resource_size_t io_base;
-> > > +	LIST_HEAD(res);
-> > > +
-> > > +	domain = of_alias_get_id(parent->of_node, "pci-domain");
-> > > +	if (domain == -ENODEV)
-> > > +		domain = domain_nr++;
-> > >
-> We probably want some uniqueness testing here.
-
-I thought this at first too, but as Liviu mentioned, this does
-get caught later when trying to create the root bus with
-a conflicting number.
-
-What the above code cannot do is to put multiple host bridges
-into the same domain, using distinct bus ranges. This is an
-intentional simplification over what some architectures currently
-do, and we could not see a reason why you would still need
-to put multiple host bridges into one domain in 2014.
-
-x86 with ACPI does it, but they won't call of_create_pci_host_bridge.
-
-	Arnd
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
