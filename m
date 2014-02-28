@@ -1,43 +1,85 @@
-From: Georgi Djakov <gdjakov@mm-sol.com>
-Subject: Re: [PATCH v9 3/3] mmc: sdhci-msm: Add platform_execute_tunning implementation
-Date: Sat, 01 Mar 2014 00:29:53 +0200
-Message-ID: <53110DE1.6070204@mm-sol.com>
-References: <1393586675-14628-1-git-send-email-gdjakov@mm-sol.com> <1393586675-14628-4-git-send-email-gdjakov@mm-sol.com> <20140228205119.GJ7308@joshc.qualcomm.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v4 4/4] ARM: OMAP2+: Add pdata quirk for sys_clkout2 for
+ omap3 DBB056
+Date: Fri, 28 Feb 2014 14:37:41 -0800
+Message-ID: <20140228223741.GM13624@atomide.com>
+References: <1392387656-15186-1-git-send-email-chf.fritz@googlemail.com>
+ <1392387656-15186-5-git-send-email-chf.fritz@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140228205119.GJ7308@joshc.qualcomm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Josh Cartwright <joshc@codeaurora.org>
-Cc: linux-mmc@vger.kernel.org, cjb@laptop.org, ulf.hansson@linaro.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1392387656-15186-5-git-send-email-chf.fritz@googlemail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Christoph Fritz <chf.fritz@googlemail.com>
+Cc: bcousson@baylibre.com, Tomi Valkeinen <tomi.valkeinen@ti.com>, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Daniel Mack <zonque@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 28.02.14, 22:51, Josh Cartwright wrote:
-[..]
->> +		sg_init_one(&sg, data_buf, sizeof(data_buf));
->> +		memset(data_buf, 0, sizeof(data_buf));
->> +		mmc_wait_for_req(mmc, &mrq);
->> +
->> +		if (!cmd.error && !data.error &&
->> +		    !memcmp(data_buf, tuning_block_pattern, sizeof(data_buf))) {
->=20
-> This memcmp is broken, sizeof(data_buf) is likely not what you want,
-> maybe you want 'size'?  Same thing for sg_init_one()/memset() above.
->=20
-> From sparse:
->=20
-> drivers/mmc/host/sdhci-msm.c: In function =C3=A2=E2=82=AC=CB=9Csdhci_=
-msm_execute_tuning=C3=A2=E2=82=AC=E2=84=A2:
-> drivers/mmc/host/sdhci-msm.c:461:53: warning: argument to =C3=A2=E2=82=
-=AC=CB=9Csizeof=C3=A2=E2=82=AC=E2=84=A2 in =C3=A2=E2=82=AC=CB=9Cmemcmp=C3=
-=A2=E2=82=AC=E2=84=A2 call is the same expression as the first source; =
-did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess=
-]
->        !memcmp(data_buf, tuning_block_pattern, sizeof(data_buf))) {
->=20
+* Christoph Fritz <chf.fritz@googlemail.com> [140214 06:24]:
+> Full device tree support for clock control, especially to set frequencies,
+> is not yet accomplished. Until then, configure the 24Mhz of sys_clkout2 to
+> feed an USB-Hub here.
 
-Nice catch, Josh! Thanks for reviewing!
+Hmm would like to see Tero's comments on this, I wonder if we should
+wait on this to avoid extra churn?
 
-BR,
-Georgi
+Regards,
+
+Tony
+ 
+> Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
+> ---
+>  arch/arm/mach-omap2/pdata-quirks.c |   37 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+> 
+> diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
+> index 435a823..e36ac3f 100644
+> --- a/arch/arm/mach-omap2/pdata-quirks.c
+> +++ b/arch/arm/mach-omap2/pdata-quirks.c
+> @@ -172,6 +172,43 @@ static void __init am3517_evm_legacy_init(void)
+>  
+>  static void __init omap3_dbb056_legacy_init(void)
+>  {
+> +	struct clk *clkout2;
+> +	struct clk *cm96fck;
+> +
+> +	/* Reparent clkout2 to 96M_FCK */
+> +	pr_info("%s: Late Reparent clkout2 to 96M_FCK\n", __func__);
+> +	clkout2 = clk_get(NULL, "clkout2_src_ck");
+> +	if (clkout2 < 0) {
+> +		pr_err("a83x-quirk: couldn't get clkout2_src_ck\n");
+> +		return;
+> +	}
+> +	cm96fck = clk_get(NULL, "cm_96m_fck");
+> +	if (cm96fck < 0) {
+> +		pr_err("a83x-quirk: couldn't get cm_96m_fck\n");
+> +		return;
+> +	}
+> +	if (clk_set_parent(clkout2, cm96fck) < 0) {
+> +		pr_err("a83x-quirk: couldn't reparent clkout2_src_ck\n");
+> +		return;
+> +	}
+> +
+> +	/* Set clkout2 to 24MHz for internal usb hub*/
+> +	pr_info("%s: Set clkout2 to 24MHz for internal usb hub\n", __func__);
+> +	clkout2 = clk_get(NULL, "sys_clkout2");
+> +	if (clkout2 < 0) {
+> +		pr_err("%s: couldn't get sys_clkout2\n", __func__);
+> +		return;
+> +	}
+> +	if (clk_set_rate(clkout2, 24000000) < 0) {
+> +		pr_err("%s: couldn't set sys_clkout2 rate\n", __func__);
+> +		return;
+> +	}
+> +	if (clk_prepare_enable(clkout2) < 0) {
+> +		pr_err("%s: couldn't enable sys_clkout2\n", __func__);
+> +		return;
+> +	}
+> +
+> +	/* Initialize display */
+>  	omap3_dbb056_display_init_of();
+>  }
+>  #endif /* CONFIG_ARCH_OMAP3 */
+> -- 
+> 1.7.10.4
+> 
