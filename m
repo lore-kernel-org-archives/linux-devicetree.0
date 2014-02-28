@@ -1,78 +1,337 @@
-From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v6 07/11] drivers: dma-coherent: add initialization from device
- tree
-Date: Fri, 28 Feb 2014 14:42:52 +0100
-Message-ID: <1393594976-16728-8-git-send-email-m.szyprowski@samsung.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH v6 03/11] drivers: of: add initialization code for dynamic
+ reserved memory
+Date: Fri, 28 Feb 2014 14:42:48 +0100
+Message-ID: <1393594976-16728-4-git-send-email-m.szyprowski@samsung.com>
 References: <1393594976-16728-1-git-send-email-m.szyprowski@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1393594976-16728-1-git-send-email-m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1393594976-16728-1-git-send-email-m.szyprowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Grant Likely <grant.likely@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Paul Mackerras <paulus@samba.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for handling 'shared-dma-pool' reserved-memory device tree
-nodes.
+This patch adds support for dynamically allocated reserved memory regions
+declared in device tree. Such regions are defined by 'size', 'alignment'
+and 'alloc-ranges' properties.
 
-Based on previous code provided by Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Based on previous code provided by Josh Cartwright <joshc@codeaurora.org>
 
-Signed-off-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Acked-by: Grant Likely <grant.likely@linaro.org>
 ---
- drivers/base/dma-coherent.c |   40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ drivers/of/Kconfig              |    6 ++
+ drivers/of/Makefile             |    1 +
+ drivers/of/fdt.c                |   13 ++-
+ drivers/of/of_reserved_mem.c    |  188 +++++++++++++++++++++++++++++++++++++++
+ include/linux/of_reserved_mem.h |   21 +++++
+ 5 files changed, 227 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/of/of_reserved_mem.c
+ create mode 100644 include/linux/of_reserved_mem.h
 
-diff --git a/drivers/base/dma-coherent.c b/drivers/base/dma-coherent.c
-index bc256b641027..0a5fc7f3d03e 100644
---- a/drivers/base/dma-coherent.c
-+++ b/drivers/base/dma-coherent.c
-@@ -218,3 +218,43 @@ int dma_mmap_from_coherent(struct device *dev, struct vm_area_struct *vma,
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index c6973f101a3e..30a7d87a8077 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -75,4 +75,10 @@ config OF_MTD
+ 	depends on MTD
+ 	def_bool y
+ 
++config OF_RESERVED_MEM
++	depends on OF_EARLY_FLATTREE
++	bool
++	help
++	  Helpers to allow for reservation of memory regions
++
+ endmenu # OF
+diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+index efd05102c405..ed9660adad77 100644
+--- a/drivers/of/Makefile
++++ b/drivers/of/Makefile
+@@ -9,3 +9,4 @@ obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
+ obj-$(CONFIG_OF_PCI)	+= of_pci.o
+ obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+ obj-$(CONFIG_OF_MTD)	+= of_mtd.o
++obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 819e11209718..510c0d8de8a0 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -15,6 +15,7 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_fdt.h>
++#include <linux/of_reserved_mem.h>
+ #include <linux/sizes.h>
+ #include <linux/string.h>
+ #include <linux/errno.h>
+@@ -450,7 +451,7 @@ static int __init __reserved_mem_reserve_reg(unsigned long node,
+ 	phys_addr_t base, size;
+ 	unsigned long len;
+ 	__be32 *prop;
+-	int nomap;
++	int nomap, first = 1;
+ 
+ 	prop = of_get_flat_dt_prop(node, "reg", &len);
+ 	if (!prop)
+@@ -477,6 +478,10 @@ static int __init __reserved_mem_reserve_reg(unsigned long node,
+ 				uname, &base, (unsigned long)size / SZ_1M);
+ 
+ 		len -= t_len;
++		if (first) {
++			fdt_reserved_mem_save_node(node, uname, base, size);
++			first = 0;
++		}
+ 	}
  	return 0;
  }
- EXPORT_SYMBOL(dma_mmap_from_coherent);
-+
+@@ -512,6 +517,7 @@ static int __init __fdt_scan_reserved_mem(unsigned long node, const char *uname,
+ {
+ 	static int found;
+ 	const char *status;
++	int err;
+ 
+ 	if (!found && depth == 1 && strcmp(uname, "reserved-memory") == 0) {
+ 		if (__reserved_mem_check_root(node) != 0) {
+@@ -534,7 +540,9 @@ static int __init __fdt_scan_reserved_mem(unsigned long node, const char *uname,
+ 	if (status && strcmp(status, "okay") != 0 && strcmp(status, "ok") != 0)
+ 		return 0;
+ 
+-	__reserved_mem_reserve_reg(node, uname);
++	err = __reserved_mem_reserve_reg(node, uname);
++	if (err == -ENOENT && of_get_flat_dt_prop(node, "size", NULL))
++		fdt_reserved_mem_save_node(node, uname, 0, 0);
+ 
+ 	/* scan next node */
+ 	return 0;
+@@ -550,6 +558,7 @@ static int __init __fdt_scan_reserved_mem(unsigned long node, const char *uname,
+ void __init early_init_fdt_scan_reserved_mem(void)
+ {
+ 	of_scan_flat_dt(__fdt_scan_reserved_mem, NULL);
++	fdt_init_reserved_mem();
+ }
+ 
+ /**
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+new file mode 100644
+index 000000000000..69b811779585
+--- /dev/null
++++ b/drivers/of/of_reserved_mem.c
+@@ -0,0 +1,188 @@
 +/*
-+ * Support for reserved memory regions defined in device tree
++ * Device tree based initialization code for reserved memory.
++ *
++ * Copyright (c) 2013, The Linux Foundation. All Rights Reserved.
++ * Copyright (c) 2013,2014 Samsung Electronics Co., Ltd.
++ *		http://www.samsung.com
++ * Author: Marek Szyprowski <m.szyprowski@samsung.com>
++ * Author: Josh Cartwright <joshc@codeaurora.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of the
++ * License or (at your optional) any later version of the license.
 + */
-+#ifdef CONFIG_OF_RESERVED_MEM
++
++#include <linux/err.h>
 +#include <linux/of.h>
 +#include <linux/of_fdt.h>
++#include <linux/of_platform.h>
++#include <linux/mm.h>
++#include <linux/sizes.h>
 +#include <linux/of_reserved_mem.h>
 +
-+static void rmem_dma_device_init(struct reserved_mem *rmem, struct device *dev)
++#define MAX_RESERVED_REGIONS	16
++static struct reserved_mem reserved_mem[MAX_RESERVED_REGIONS];
++static int reserved_mem_count;
++
++#if defined(CONFIG_HAVE_MEMBLOCK)
++#include <linux/memblock.h>
++int __init __weak early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
++	phys_addr_t align, phys_addr_t start, phys_addr_t end, bool nomap,
++	phys_addr_t *res_base)
 +{
-+	dma_declare_coherent_memory(dev, rmem->base, rmem->base,
-+		rmem->size, DMA_MEMORY_MAP | DMA_MEMORY_EXCLUSIVE);
-+}
++	/*
++	 * We use __memblock_alloc_base() because memblock_alloc_base()
++	 * panic()s on allocation failure.
++	 */
++	phys_addr_t base = __memblock_alloc_base(size, align, end);
++	if (!base)
++		return -ENOMEM;
 +
-+static void rmem_dma_device_release(struct reserved_mem *rmem,
-+				    struct device *dev)
-+{
-+	dma_release_declared_memory(dev);
-+}
++	/*
++	 * Check if the allocated region fits in to start..end window
++	 */
++	if (base < start) {
++		memblock_free(base, size);
++		return -ENOMEM;
++	}
 +
-+static const struct reserved_mem_ops rmem_dma_ops = {
-+	.device_init	= rmem_dma_device_init,
-+	.device_release	= rmem_dma_device_release,
-+};
-+
-+static int __init rmem_dma_setup(struct reserved_mem *rmem,
-+				 unsigned long node,
-+				 const char *uname)
-+{
-+	if (of_get_flat_dt_prop(node, "reusable", NULL))
-+		return -EINVAL;
-+
-+	rmem->ops = &rmem_dma_ops;
-+	pr_info("Reserved memory: created DMA memory pool at %pa, size %ld MiB\n",
-+		&rmem->base, (unsigned long)rmem->size / SZ_1M);
++	*res_base = base;
++	if (nomap)
++		return memblock_remove(base, size);
 +	return 0;
 +}
-+RESERVEDMEM_OF_DECLARE(dma, "shared-dma-pool", rmem_dma_setup);
++#else
++int __init __weak early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
++	phys_addr_t align, phys_addr_t start, phys_addr_t end, bool nomap,
++	phys_addr_t *res_base)
++{
++	pr_err("Reserved memory not supported, ignoring region 0x%llx%s\n",
++		  size, nomap ? " (nomap)" : "");
++	return -ENOSYS;
++}
 +#endif
++
++/**
++ * res_mem_save_node() - save fdt node for second pass initialization
++ */
++void __init fdt_reserved_mem_save_node(unsigned long node, const char *uname,
++				      phys_addr_t base, phys_addr_t size)
++{
++	struct reserved_mem *rmem = &reserved_mem[reserved_mem_count];
++
++	if (reserved_mem_count == ARRAY_SIZE(reserved_mem)) {
++		pr_err("Reserved memory: not enough space all defined regions.\n");
++		return;
++	}
++
++	rmem->fdt_node = node;
++	rmem->name = uname;
++	rmem->base = base;
++	rmem->size = size;
++
++	reserved_mem_count++;
++	return;
++}
++
++/**
++ * res_mem_alloc_size() - allocate reserved memory described by 'size', 'align'
++ *			  and 'alloc-ranges' properties
++ */
++static int __init __reserved_mem_alloc_size(unsigned long node,
++	const char *uname, phys_addr_t *res_base, phys_addr_t *res_size)
++{
++	int t_len = (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32);
++	phys_addr_t start = 0, end = 0;
++	phys_addr_t base = 0, align = 0, size;
++	unsigned long len;
++	__be32 *prop;
++	int nomap;
++	int ret;
++
++	prop = of_get_flat_dt_prop(node, "size", &len);
++	if (!prop)
++		return -EINVAL;
++
++	if (len != dt_root_size_cells * sizeof(__be32)) {
++		pr_err("Reserved memory: invalid size property in '%s' node.\n",
++				uname);
++		return -EINVAL;
++	}
++	size = dt_mem_next_cell(dt_root_size_cells, &prop);
++
++	nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
++
++	prop = of_get_flat_dt_prop(node, "alignment", &len);
++	if (prop) {
++		if (len != dt_root_addr_cells * sizeof(__be32)) {
++			pr_err("Reserved memory: invalid alignment property in '%s' node.\n",
++				uname);
++			return -EINVAL;
++		}
++		align = dt_mem_next_cell(dt_root_addr_cells, &prop);
++	}
++
++	prop = of_get_flat_dt_prop(node, "alloc-ranges", &len);
++	if (prop) {
++
++		if (len % t_len != 0) {
++			pr_err("Reserved memory: invalid alloc-ranges property in '%s', skipping node.\n",
++			       uname);
++			return -EINVAL;
++		}
++
++		base = 0;
++
++		while (len > 0) {
++			start = dt_mem_next_cell(dt_root_addr_cells, &prop);
++			end = start + dt_mem_next_cell(dt_root_size_cells,
++						       &prop);
++
++			ret = early_init_dt_alloc_reserved_memory_arch(size,
++					align, start, end, nomap, &base);
++			if (ret == 0) {
++				pr_debug("Reserved memory: allocated memory for '%s' node: base %pa, size %ld MiB\n",
++					uname, &base,
++					(unsigned long)size / SZ_1M);
++				break;
++			}
++			len -= t_len;
++		}
++
++	} else {
++		ret = early_init_dt_alloc_reserved_memory_arch(size, align,
++							0, 0, nomap, &base);
++		if (ret == 0)
++			pr_debug("Reserved memory: allocated memory for '%s' node: base %pa, size %ld MiB\n",
++				uname, &base, (unsigned long)size / SZ_1M);
++	}
++
++	if (base == 0) {
++		pr_info("Reserved memory: failed to allocate memory for node '%s'\n",
++			uname);
++		return -ENOMEM;
++	}
++
++	*res_base = base;
++	*res_size = size;
++
++	return 0;
++}
++
++/**
++ * fdt_init_reserved_mem - allocate and init all saved reserved memory regions
++ */
++void __init fdt_init_reserved_mem(void)
++{
++	int i;
++	for (i = 0; i < reserved_mem_count; i++) {
++		struct reserved_mem *rmem = &reserved_mem[i];
++		unsigned long node = rmem->fdt_node;
++		int err = 0;
++
++		if (rmem->size == 0)
++			err = __reserved_mem_alloc_size(node, rmem->name,
++						 &rmem->base, &rmem->size);
++	}
++}
+diff --git a/include/linux/of_reserved_mem.h b/include/linux/of_reserved_mem.h
+new file mode 100644
+index 000000000000..89226ed7d954
+--- /dev/null
++++ b/include/linux/of_reserved_mem.h
+@@ -0,0 +1,21 @@
++#ifndef __OF_RESERVED_MEM_H
++#define __OF_RESERVED_MEM_H
++
++struct reserved_mem {
++	const char			*name;
++	unsigned long			fdt_node;
++	phys_addr_t			base;
++	phys_addr_t			size;
++};
++
++#ifdef CONFIG_OF_RESERVED_MEM
++void fdt_init_reserved_mem(void);
++void fdt_reserved_mem_save_node(unsigned long node, const char *uname,
++			       phys_addr_t base, phys_addr_t size);
++#else
++static inline void fdt_init_reserved_mem(void) { }
++static inline void fdt_reserved_mem_save_node(unsigned long node,
++		const char *uname, phys_addr_t base, phys_addr_t size) { }
++#endif
++
++#endif /* __OF_RESERVED_MEM_H */
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
